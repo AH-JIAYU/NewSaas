@@ -113,3 +113,9 @@ import.meta.env.VITE_APP_DEBUG_TOOL === 'vconsole' && new VConsole()
     <SystemInfo />
   </Provider>
 </template>
+
+<style scoped>
+  .el-select {
+    width: 12rem;
+  }
+</style>

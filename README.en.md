@@ -1,7 +1,7 @@
-# 新框架-租户系统
+# 新框架-总控
 
 #### Description
-新框架-租户系统
+{**When you're done, you can delete the content in this README and update the file with details for others getting started with your repository**}
 
 #### Software Architecture
 Software architecture description
