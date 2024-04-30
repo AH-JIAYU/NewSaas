@@ -78,9 +78,8 @@ const asyncRoutes: Route.recordMainRaw[] = [
       i18n: 'route.demo',
       icon: 'i-uim:box',
     },
-    children: [
-      MultilevelMenuExample,
-    ],
+    children: MultilevelMenuExample,
+
   },
 ]
 
