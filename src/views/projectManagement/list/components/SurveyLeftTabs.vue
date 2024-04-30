@@ -65,6 +65,12 @@ function setclient(data: number) {
 </script> -->
 <script setup>
 import surveyTopTabs from './SurveyTopTabs.vue'
+import syncSettings from './syncSettings.vue'
+
+const settingsRef = ref('')
+function setHandler() {
+  settingsRef.value.isShow = true
+}
 </script>
 
 <template>
@@ -75,10 +81,11 @@ import surveyTopTabs from './SurveyTopTabs.vue'
     <el-tab-pane>
       <!-- 在每个左侧 Tab 中使用 TopTabs 组件 -->
       <el-button size="small" type="success">
-        同步主项目数据
+        同步数据
       </el-button>
-
+      <div style="margin-left: 10px;" class="i-icon-park-solid:setting h-1.5em w-1.5em" @click="setHandler" />
       <surveyTopTabs left-tab="" tab-index="" />
+      <syncSettings ref="settingsRef" />
     </el-tab-pane>
   </el-tabs>
 </template>

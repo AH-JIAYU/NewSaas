@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import distributionEdit from './components/distributionEdit.vue'
 import SurveysEdit from './components/SurveysEdit.vue'
+import ProjectDetails from './components/projectDetails.vue'
 import tableQuery from '@/components/tableQuery/index.vue'
 
 const fold = ref<boolean>(false)
@@ -11,6 +12,7 @@ const tableSortRef = ref('')
 const listLoading = ref<boolean>(true)
 const addDistribution = ref('')
 const addSurveysEdit = ref('')
+const projectDetailsRef = ref('')
 const queryForm = reactive<any>({
   pageNo: 1,
   pageSize: 10,
@@ -20,7 +22,7 @@ const queryForm = reactive<any>({
   },
   select: {},
 })
-const list = ref([])
+const list = ref<any>([])
 const dataList = {
   data: [
     {
@@ -45,11 +47,13 @@ total.value = dataList.total
 function distribution() {
   addDistribution.value.isShow = true
 }
+// 新增项目
 function surveysEdit() {
   addSurveysEdit.value.isShow = true
 }
-function resetPassword() {
-  addDistribution.value.isShow = true
+// 项目详情
+function projectDetails() {
+  projectDetailsRef.value.isShow = true
 }
 
 // 折叠查询表单
@@ -186,8 +190,8 @@ function onReset() {
           <el-button text type="primary" size="default">
             编辑
           </el-button>
-          <el-button text type="danger" size="default">
-            删除
+          <el-button text type="primary" size="default" @click="projectDetails">
+            详情
           </el-button>
         </el-table-column>
         <template #empty>
@@ -206,6 +210,7 @@ function onReset() {
     </PageMain>
     <distributionEdit ref="addDistribution" />
     <SurveysEdit ref="addSurveysEdit" />
+    <ProjectDetails ref="projectDetailsRef" />
   </div>
 </template>
 

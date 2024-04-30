@@ -114,10 +114,10 @@ watch(() => radio1, (newVal) => {
 function closeHandler() {
   // 移除校验
   // formRef.value.resetFields()
-
   // delete formData.id
   // // 重置表单
   // Object.assign(formData, defaultState)
+  isShow.value = false
 }
 defineExpose({ isShow })
 </script>
@@ -135,7 +135,7 @@ defineExpose({ isShow })
     >
       <surveyLeftTabs left-tabs-data="" validate-top-tabs="" />
       <template #footer>
-        <el-button @close="closeHandler">
+        <el-button @click="closeHandler">
           取消
         </el-button>
         <el-button type="primary" @click="onSubmit">
