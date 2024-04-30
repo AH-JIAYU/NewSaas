@@ -14,7 +14,7 @@ const routes
     name: 'multilevelMenuExample',
     meta: {
       title: '首页',
-      i18n: $t('route.multimenu.root'),
+      // i18n: $t('route.multimenu.root'),
       icon: 'i-heroicons-solid:menu-alt-3',
     },
     children: [
@@ -24,7 +24,7 @@ const routes
         component: () => import('@/views/index/index/index.vue'),
         meta: {
           title: '数据中心',
-          i18n: $t('route.multimenu.page'),
+          // i18n: $t('route.multimenu.page'),
         },
       },
       {
@@ -33,7 +33,7 @@ const routes
         component: () => import('@/views/index/data/index.vue'),
         meta: {
           title: '数据中心',
-          i18n: $t('route.multimenu.page'),
+          // i18n: $t('route.multimenu.page'),
         },
       },
     ],
@@ -45,7 +45,7 @@ const routes
     name: 'projectManagement',
     meta: {
       title: '项目管理',
-      i18n: $t('route.multimenu.root'),
+      // i18n: $t('route.multimenu.root'),
       icon: 'i-heroicons-solid:menu-alt-3',
     },
     children: [
@@ -55,7 +55,29 @@ const routes
         component: () => import('@/views/projectManagement/list/index.vue'),
         meta: {
           title: '数据中心',
-          i18n: $t('route.multimenu.page'),
+          // i18n: $t('route.multimenu.page'),
+        },
+      },
+    ],
+  },
+  {
+    path: '/user',
+    component: Layout,
+    redirect: '/user/customer',
+    name: 'user',
+    meta: {
+      title: '用户管理',
+      // i18n: $t('route.multimenu.root'),
+      icon: 'i-heroicons-solid:menu-alt-3',
+    },
+    children: [
+      {
+        path: 'customer',
+        name: 'customer',
+        component: () => import('@/views/user/customer/index.vue'),
+        meta: {
+          title: '客户列表',
+          // i18n: $t('route.multimenu.page'),
         },
       },
     ],
