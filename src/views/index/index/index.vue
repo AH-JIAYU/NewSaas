@@ -1,226 +1,319 @@
-<script setup lang="ts">
-import distributionEdit from './components/distributionEdit.vue'
-import SurveysEdit from './components/SurveysEdit.vue'
-import tableQuery from '@/components/tableQuery/index.vue'
+<route lang="yaml">
+  meta:
+    title: 导航1
+  </route>
 
-const fold = ref<boolean>(false)
-const layout = ref<string>('total, sizes, prev, pager, next, jumper')
-const total = ref<any>(0)
-const value1 = ref('')
-const tableSortRef = ref('')
-const listLoading = ref<boolean>(true)
-const addDistribution = ref('')
-const addSurveysEdit = ref('')
-const queryForm = reactive<any>({
-  pageNo: 1,
-  pageSize: 10,
-  title: '',
-  order: {
-    id: 'ASC',
-  },
-  select: {},
-})
-const list = ref([])
-const dataList = {
-  data: [
-    {
-      a: '111',
-      b: '222222',
-      c: '3333',
-      d: '444',
-      e: '5555555',
-      f: '66666666',
-      g: '777777777',
-      h: '8888888888',
-      i: '999999999',
-      j: '10101010',
-      k: '1212121212',
+<script setup>
+</script>
+
+<script setup>
+import * as echarts from 'echarts'
+import { onMounted } from 'vue'
+
+let chart1
+let chart2
+const chart1Ref = ref()
+const chart2Ref = ref()
+const tableData = [
+  { 'name': '供应商', 'money': 232, 'num': 124, 'B2B/B2C': '50%/50%', 'currency': 'RNB' },
+  { 'name': '供应商', 'money': 232, 'num': 124, 'B2B/B2C': '50%/50%', 'currency': 'RNB' },
+  { 'name': '供应商', 'money': 232, 'num': 124, 'B2B/B2C': '50%/50%', 'currency': 'RNB' },
+  { 'name': '供应商', 'money': 232, 'num': 124, 'B2B/B2C': '50%/50%', 'currency': 'RNB' },
+  { 'name': '供应商', 'money': 232, 'num': 124, 'B2B/B2C': '50%/50%', 'currency': 'RNB' },
+  { 'name': '供应商', 'money': 232, 'num': 124, 'B2B/B2C': '50%/50%', 'currency': 'RNB' },
+  { 'name': '供应商', 'money': 232, 'num': 124, 'B2B/B2C': '50%/50%', 'currency': 'RNB' },
+  { 'name': '供应商', 'money': 232, 'num': 124, 'B2B/B2C': '50%/50%', 'currency': 'RNB' },
+]
+// 营业额趋势
+function echarts1() {
+  chart1 = echarts.init(chart1Ref.value)
+  const option = {
+    title: {
+      text: '',
     },
-  ],
-  total: 3,
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'cross',
+        label: {
+          backgroundColor: '#6a7985',
+        },
+      },
+    },
+    legend: {
+      data: ['Email', 'Union Ads', 'Video Ads', 'Direct', 'Search Engine'],
+    },
+    toolbox: {
+      feature: {
+        saveAsImage: {},
+      },
+    },
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true,
+    },
+    xAxis: [
+      {
+        type: 'category',
+        boundaryGap: false,
+        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      },
+    ],
+    yAxis: [
+      {
+        type: 'value',
+      },
+    ],
+    series: [
+      {
+        name: 'Email',
+        type: 'line',
+        stack: 'Total',
+        areaStyle: {},
+        emphasis: {
+          focus: 'series',
+        },
+        data: [120, 132, 101, 134, 90, 230, 210],
+      },
+      {
+        name: 'Union Ads',
+        type: 'line',
+        stack: 'Total',
+        areaStyle: {},
+        emphasis: {
+          focus: 'series',
+        },
+        data: [220, 182, 191, 234, 290, 330, 310],
+      },
+      {
+        name: 'Video Ads',
+        type: 'line',
+        stack: 'Total',
+        areaStyle: {},
+        emphasis: {
+          focus: 'series',
+        },
+        data: [150, 232, 201, 154, 190, 330, 410],
+      },
+      {
+        name: 'Direct',
+        type: 'line',
+        stack: 'Total',
+        areaStyle: {},
+        emphasis: {
+          focus: 'series',
+        },
+        data: [320, 332, 301, 334, 390, 330, 320],
+      },
+      {
+        name: 'Search Engine',
+        type: 'line',
+        stack: 'Total',
+        label: {
+          show: true,
+          position: 'top',
+        },
+        areaStyle: {},
+        emphasis: {
+          focus: 'series',
+        },
+        data: [820, 932, 901, 934, 1290, 1330, 1320],
+      },
+    ],
+  }
+  chart1.setOption(option)
 }
-list.value = dataList.data
-total.value = dataList.total
-// 分配
-function distribution() {
-  addDistribution.value.isShow = true
-}
-function surveysEdit() {
-  addSurveysEdit.value.isShow = true
-}
-function resetPassword() {
-  addDistribution.value.isShow = true
+// 客户总览
+function echarts2() {
+  chart2 = echarts.init(chart2Ref.value)
+  // 配置数据
+  const option = {
+    title: {
+      text: '某站点用户访问来源',
+      subtext: '纯属虚构',
+      left: 'center',
+    },
+    tooltip: {
+      trigger: 'item',
+      formatter: '{a} <br/>{b} : {c} ({d}%)',
+    },
+    legend: {
+      orient: 'vertical',
+      left: 'left',
+      data: ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎'],
+    },
+    series: [
+      {
+        name: '访问来源',
+        type: 'pie',
+        radius: '55%',
+        center: ['50%', '60%'],
+        data: [
+          { value: 335, name: '直接访问' },
+          { value: 310, name: '邮件营销' },
+          { value: 234, name: '联盟广告' },
+          { value: 135, name: '视频广告' },
+          { value: 1548, name: '搜索引擎' },
+        ],
+        emphasis: {
+          itemStyle: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: 'rgba(0, 0, 0, 0.5)',
+          },
+        },
+      },
+    ],
+  }
+  // 传入数据
+  chart2.setOption(option)
 }
 
-// 折叠查询表单
-function handleFold() {
-  fold.value = !fold.value
-}
-// 查询数据
-function queryData() {
-  queryForm.pageNo = 1
-}
-// 选择每页多少条数据
-function handleSizeChange(value: number) {
-  queryForm.pageNo = 1
-  queryForm.pageSize = value
-}
-// 选择页数
-function handleCurrentChange(value: number) {
-  queryForm.pageNo = value
-}
-// 重置数据
-function onReset() {
-  Object.assign(queryForm, {
-    pageNo: 1,
-    pageSize: 10,
-    title: '',
-    order: {
-      id: 'ASC',
-    },
-    select: {},
+onMounted(() => {
+  echarts1()
+  echarts2()
+  window.addEventListener('resize', () => {
+    chart1.resize()
+    chart2.resize()
   })
-}
+})
 </script>
 
 <template>
   <div>
     <PageMain>
-      <el-form inline label-position="right" label-width="80px" :model="queryForm" @submit.prevent>
-        <el-form-item label="">
-          <el-input clearable placeholder="项目ID" />
-        </el-form-item>
-        <el-form-item v-show="!fold" label="">
-          <el-input clearable placeholder="项目名称" />
-        </el-form-item>
-        <el-form-item v-show="!fold" label="">
-          <el-input clearable placeholder="项目标识" />
-        </el-form-item>
-        <el-form-item v-show="!fold" label="">
-          <el-select placeholder="国家地区">
-            <el-option :key="11" :label="11" :value="111">
-              11111
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item v-show="!fold" label="">
-          <el-select placeholder="客户简称">
-            <el-option :key="11" :label="11" :value="111">
-              11111
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item v-show="!fold" label="">
-          <el-select placeholder="分配目标">
-            <el-option :key="11" :label="11" :value="111">
-              11111
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item v-show="!fold" label="">
-          <el-select placeholder="项目状态">
-            <el-option :key="11" :label="11" :value="111">
-              11111
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item v-show="!fold" label="">
-          <el-select placeholder="B2B/B2C">
-            <el-option :key="11" :label="11" :value="111">
-              11111
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item v-show="!fold">
-          <el-input clearable placeholder="创建人" />
-        </el-form-item>
-        <el-form-item v-show="!fold">
-          <el-date-picker
-            v-model="value1"
-            type="date"
-            placeholder="Pick a day"
-            size="default"
-          />
-        </el-form-item>
-        <tableQuery :fold="fold" :list-loading="listLoading" @handle-fold="handleFold" @on-reset="onReset" @query-data="queryData" />
-      </el-form>
-      <el-row :gutter="24">
-        <el-col :span="20">
-          <el-button type="primary" size="default" @click="surveysEdit">
-            新增项目
-          </el-button>
-          <el-button type="primary" size="default" @click="distribution">
-            分配
-          </el-button>
+      <el-row>
+        <SearchTab />
+      </el-row>
+      <ElRow :gutter="20">
+        <ElCol>
+          <ColorfulCard header="发布项目数" :num="123" icon="ep:discount" />
+        </ElCol>
+        <ElCol>
+          <ColorfulCard color-from="#fbaaa2" color-to="#fc5286" header="发布项目数" :num="12323" icon="ep:element-plus" />
+        </ElCol>
+        <ElCol>
+          <ColorfulCard color-from="#ff763b" color-to="#ffc480" header="发布项目数" :num="123" icon="ri:pages-line" />
+        </ElCol>
+        <ElCol>
+          <ColorfulCard color-from="#6a8eff" color-to="#0e4cfd" header="业务应用页面" :num="123" icon="ep:link" />
+        </ElCol>
+        <ElCol>
+          <ColorfulCard color-from="#ffd300" color-to="#ff9b0d" header="业务应用页面" :num="123" icon="ep:handbag" />
+        </ElCol>
+        <ElCol>
+          <ColorfulCard color-from="#f49494" color-to="#fcd98b" header="业务应用页面" :num="123" icon="ep:film" />
+        </ElCol>
+        <ElCol>
+          <ColorfulCard color-from="#c2005c" color-to="#ff980f" header="业务应用页面" :num="123" icon="ep:ice-tea" />
+        </ElCol>
+      </ElRow>
+      <!-- 营业额趋势 & 客户总览 -->
+      <el-row :gutter="20">
+        <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
+          <el-card>
+            <p class="title">
+              | 营业额趋势
+            </p>
+            <div id="echarts1" ref="chart1Ref" style="width: 100%;height: 500px;" />
+          </el-card>
         </el-col>
-        <el-col :span="4">
-          <el-button type="primary" size="default" @click="">
-            导出
-          </el-button>
+        <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
+          <el-card>
+            <p class="title">
+              | 客户总览
+            </p>
+            <div id="echarts2" ref="chart2Ref" style="width: 100%; height: 500px;" />
+          </el-card>
         </el-col>
       </el-row>
-      <el-table
-        ref="tableSortRef"
-        v-loading="false"
-        row-key="id"
-        :data="list"
-      >
-        <el-table-column type="selection" />
-        <el-table-column type="index" label="序号" width="55" />
-        <el-table-column prop="a" align="center" label="项目ID" />
-        <el-table-column prop="b" align="center" label="项目名称" />
-        <el-table-column prop="c" align="center" label="客户简称/标识" />
-        <el-table-column prop="d" align="center" label="分配目标" />
-        <el-table-column prop="e" align="center" label="参与/完成/配额/限量" />
-        <el-table-column prop="f" align="center" label="原价" />
-        <el-table-column prop="g" align="center" label="IR/NIR" />
-        <el-table-column prop="h" align="center" label="国家地区" />
-        <el-table-column prop="i" align="center" label="项目状态">
-          <el-switch
-            v-model="value1"
-          />
-        </el-table-column>
-        <el-table-column prop="j" align="center" label="创建人" />
-        <el-table-column prop="k" align="center" label="创建时间" />
-        <el-table-column align="center" label="操作" width="170">
-          <el-button text type="primary" size="default">
-            编辑
-          </el-button>
-          <el-button text type="danger" size="default">
-            删除
-          </el-button>
-        </el-table-column>
-        <template #empty>
-          <el-empty description="暂无数据" />
-        </template>
-      </el-table>
-      <el-pagination
-        background
-        :current-page="queryForm.pageNo"
-        :layout="layout"
-        :page-size="queryForm.pageSize"
-        :total="total"
-        @current-change="handleCurrentChange"
-        @size-change="handleSizeChange"
-      />
+      <!-- 今日完成排名 & 供应商佣金排行 -->
+      <el-row :gutter="20">
+        <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
+          <el-card>
+            <p class="title fx-b">
+              营业额趋势
+              <SearchTab />
+            </p>
+            <el-table :data="tableData" style="width: 100%;">
+              <el-table-column type="index" />
+              <el-table-column prop="name" label="供应商" />
+              <el-table-column prop="money" label="完成金额" />
+              <el-table-column prop="num" label="完成数量" />
+              <el-table-column prop="B2B/B2C" label="B2B/B2C" />
+              <el-table-column prop="currency" label="货币类型" />
+            </el-table>
+          </el-card>
+        </el-col>
+        <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
+          <el-card>
+            <p class="title fx-b">
+              客户总览
+              <SearchTab />
+            </p>
+            <el-table :data="tableData" style="width: 100%;">
+              <el-table-column type="index" />
+              <el-table-column prop="name" label="供应商" />
+              <el-table-column prop="money" label="完成金额" />
+              <el-table-column prop="num" label="完成数量" />
+              <el-table-column prop="B2B/B2C" label="B2B/B2C" />
+              <el-table-column prop="currency" label="货币类型" />
+            </el-table>
+          </el-card>
+        </el-col>
+      </el-row>
     </PageMain>
-    <distributionEdit ref="addDistribution" />
-    <SurveysEdit ref="addSurveysEdit" />
   </div>
 </template>
 
-<style scoped lang="scss">
-  .el-select {
-    width: 12rem;
-  }
+<style lang="scss" scoped>
+:deep {
+  .el-row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 20px 0;
 
-  :deep {
-    table {
-      width: 100% !important;
+    .el-col {
+      flex: 1;
+      text-align: center;
+
+      .title {
+        text-align: left;
+      }
+    }
+
+    .red {
+      color: red;
     }
   }
+  // 表格
+  .el-table__body {
+    tr:nth-of-type(1) {
+      td:nth-of-type(1) {
+        color: red !important;
+      }
+    }
 
-  .el-pagination {
-    margin-top: 15px;
+    tr:nth-of-type(2) {
+      td:nth-of-type(1) {
+        color: #bfbdbc !important;
+      }
+    }
+
+    tr:nth-of-type(3) {
+      td:nth-of-type(1) {
+        color: #a25316 !important;
+      }
+    }
   }
+}
+
+.fx-b {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 </style>

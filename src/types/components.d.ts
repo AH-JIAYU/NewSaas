@@ -39,6 +39,7 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SearchBar: typeof import('./../components/SearchBar/index.vue')['default']
+    SearchTab: typeof import('./../components/SearchTab/index.vue')['default']
     Sparkline: typeof import('./../components/Sparkline/index.vue')['default']
     SpinkitLoading: typeof import('./../components/SpinkitLoading/index.vue')['default']
     StorageBox: typeof import('./../components/StorageBox/index.vue')['default']

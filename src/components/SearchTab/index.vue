@@ -1,0 +1,45 @@
+<script setup>
+import { Back } from '@element-plus/icons-vue'
+
+const radio2 = ref('day')
+const value2 = ref('')
+function back() {
+  radio2.value = 'day'
+}
+</script>
+
+<template>
+  <div style="width: 200px;height: 33px;">
+    <el-radio-group v-if="radio2 !== 'search'" v-model="radio2">
+      <el-radio-button label="日" value="day" />
+      <el-radio-button label="月" value="month" />
+      <el-radio-button label="年" value="year" />
+      <el-radio-button label="搜索" value="search" />
+    </el-radio-group>
+    <div v-else class="fx-b">
+      <el-button size="default" style="width: 32px !important;" :icon="Back" @click="back" />
+      <el-date-picker
+        v-model="value2"
+        type="daterange"
+        unlink-panels
+        range-separator="-"
+        start-placeholder="开始时间"
+        end-placeholder="结束时间"
+        size="default"
+        style="flex: 1;"
+        clear-icon="true"
+      />
+      <el-button type="primary" style="width: 59px;" size="default">
+        搜索
+      </el-button>
+    </div>
+  </div>
+</template>
+
+<style lang="scss" scoped>
+.fx-b {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+</style>
