@@ -2,7 +2,7 @@
 <!-- eslint-disable ts/no-use-before-define -->
 <script setup>
 import { defineProps, toRefs } from 'vue'
-import VabDraggable from 'vuedraggable'
+// import VabDraggable from 'vuedraggable'
 
 defineOptions({
   name: 'TableControl',
@@ -81,7 +81,7 @@ const dragOptions = computed(() => {
           </el-button>
         </template>
         <el-checkbox-group v-model="checkList" @change="changeCheckbox">
-          <VabDraggable item-key="{ element }" :list="JSON.parse(JSON.stringify(columns))" v-bind="dragOptions">
+          <!-- <VabDraggable item-key="{ element }" :list="JSON.parse(JSON.stringify(columns))" v-bind="dragOptions"> -->
             <template #item="{ element }">
               <div>
                 <el-checkbox :disabled="element.disableCheck" :label="element.prop">
@@ -89,7 +89,7 @@ const dragOptions = computed(() => {
                 </el-checkbox>
               </div>
             </template>
-          </VabDraggable>
+          <!-- </VabDraggable> -->
         </el-checkbox-group>
       </el-popover>
     </div>

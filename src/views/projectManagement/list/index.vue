@@ -149,19 +149,23 @@ function onReset() {
         <tableQuery :fold="fold" :list-loading="listLoading" @handle-fold="handleFold" @on-reset="onReset" @query-data="queryData" />
       </el-form>
       <el-row :gutter="24">
-        <el-col :span="20">
+        <FormLeftPanel>
           <el-button type="primary" size="default" @click="surveysEdit">
             新增项目
           </el-button>
           <el-button type="primary" size="default" @click="distribution">
             分配
           </el-button>
-        </el-col>
-        <el-col :span="4">
-          <el-button type="primary" size="default" @click="">
+        </FormLeftPanel>
+
+          <FormRightPanel>
+            <el-button style="margin-right: 10px;" size="default" @click="">
             导出
           </el-button>
-        </el-col>
+          <TabelControl/>
+          </FormRightPanel>
+
+
       </el-row>
       <el-table
         ref="tableSortRef"
