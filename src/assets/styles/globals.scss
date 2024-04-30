@@ -206,3 +206,21 @@ textarea {
 .el-card {
   box-shadow: 0 0 12px rgb(0 0 0 / 7%) !important;
 }
+
+.el-select {
+  width: 192px;
+}
+
+/* 表格全屏 */
+.vab-table-fullscreen {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 9999 !important;
+  box-sizing: border-box !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  overflow: auto !important;
+  background-color: #fff;
+  border: 0 !important;
+  border-radius: 0 !important;
+}
