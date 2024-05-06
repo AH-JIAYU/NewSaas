@@ -80,6 +80,15 @@ const routes
           // i18n: $t('route.multimenu.page'),
         },
       },
+      {
+        path: 'supplier',
+        name: 'supplier',
+        component: () => import('@/views/user/supplier/index.vue'),
+        meta: {
+          title: '供应商列表',
+          // i18n: $t('route.multimenu.page'),
+        },
+      },
     ],
   },
 ]
