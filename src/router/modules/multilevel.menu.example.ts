@@ -54,7 +54,7 @@ const routes
         name: 'list',
         component: () => import('@/views/projectManagement/list/index.vue'),
         meta: {
-          title: '数据中心',
+          title: '项目列表',
           // i18n: $t('route.multimenu.page'),
         },
       },

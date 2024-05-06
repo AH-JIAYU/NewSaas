@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import distributionEdit from './components/distributionEdit.vue'
+import allocationEdit from './components/allocationEdit.vue'
 import SurveysEdit from './components/SurveysEdit.vue'
 import ProjectDetails from './components/projectDetails.vue'
 import tableQuery from '@/components/tableQuery/index.vue'
@@ -10,7 +10,7 @@ const total = ref<any>(0)
 const value1 = ref('')
 const tableSortRef = ref('')
 const listLoading = ref<boolean>(true)
-const addDistribution = ref('')
+const addAllocationEdit = ref('')
 const addSurveysEdit = ref('')
 const projectDetailsRef = ref('')
 const queryForm = reactive<any>({
@@ -45,7 +45,7 @@ list.value = dataList.data
 total.value = dataList.total
 // 分配
 function distribution() {
-  addDistribution.value.isShow = true
+  addAllocationEdit.value.isShow = true
 }
 // 新增项目
 function surveysEdit() {
@@ -212,7 +212,7 @@ function onReset() {
         @size-change="handleSizeChange"
       />
     </PageMain>
-    <distributionEdit ref="addDistribution" />
+    <allocationEdit ref="addAllocationEdit" />
     <SurveysEdit ref="addSurveysEdit" />
     <ProjectDetails ref="projectDetailsRef" />
   </div>

@@ -456,7 +456,7 @@ td {
 }
 th {
   width: 15%;
-  font-weight: bold; /* 表头加粗 */
+  font-weight: normal;
 }
 tr {
   width: 30%;
