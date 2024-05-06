@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { UploadFilled } from "@element-plus/icons-vue";
-import { Editor, Viewer } from "@bytemd/vue-next";
+defineOptions({
+  name: 'ProjectDetails',
+})
 import gfm from "@bytemd/plugin-gfm";
 import zhHans from "bytemd/locales/zh_Hans.json";
 import gfmLocale from "@bytemd/plugin-gfm/lib/locales/zh_Hans.json";
 import "bytemd/dist/index.css";
-import { ref, watch } from "vue";
-
+import { ref } from "vue";
+import logDetails from "../LogDetails/index.vue";
 const content = ref("# Fantastic-admin");
-// 详情弹框变量
-const dialogTableVisible = ref(false);
+const logDetailsRef = ref('')
 // 富文本编辑器
 const plugins = [
   gfm({
@@ -22,18 +22,15 @@ function handleChange(v: string) {
 function open(url: string) {
   window.open(url, "_blank");
 }
-
 const list = [
   { a: 1, b: 2, c: 3, id: 1 },
   { a: 1, b: 2, c: 3, id: 1 },
   { a: 1, b: 2, c: 3, id: 1 },
 ];
-const gridData = [
-  { a: 1, b: "最小时长20更为30", id: 1 },
-  { a: 1, b: "置顶开更为关", id: 1 },
-];
+
 function details() {
-  dialogTableVisible.value = true;
+  logDetailsRef.value.dialogTableVisible = true
+  // dialogTableVisible.value = true;
 }
 // 弹框开关变量
 const isShow = ref(false);
@@ -59,29 +56,10 @@ defineExpose({ isShow });
       :close-on-click-modal="false"
       destroy-on-close
       draggable
-      size="70%"
+      size="50%"
       title="项目详情"
     >
-      <el-dialog
-        v-model="dialogTableVisible"
-        style="height: 20.5rem"
-        title="详情"
-        width="800"
-      >
-        <el-divider content-position="left" />
-
-        <el-text class="mx-1"> 操作人: 迪迦 </el-text>
-        <el-text class="mx-1"> 操时间: 2024-05-21 13:14:21 </el-text>
-        <el-table style="margin-top: 10px" border :data="gridData">
-          <el-table-column
-            align="center"
-            type="index"
-            label="序号"
-            width="150"
-          />
-          <el-table-column align="center" property="b" label="操作内容" />
-        </el-table>
-      </el-dialog>
+    <logDetails ref="logDetailsRef"/>
       <template #header>
         <el-row :gutter="20">
           <el-col :span="2" />
@@ -102,17 +80,6 @@ defineExpose({ isShow });
         </el-row>
       </template>
 
-      <!-- <el-row :gutter="20">
-        <el-col :span="4">
-          <div class="one">
-            <div class="i-lets-icons:transfer-right-light h-10em w-10em" />
-            <span class="started">已开始</span>
-          </div>
-        </el-col>
-        <el-col :span="6" />
-        <el-col :span="6" />
-        <el-col :span="6" />
-      </el-row> -->
       <ElForm label-width="100px" model="" rules="rules">
         <el-card class="box-card">
           <template #header>
@@ -120,7 +87,7 @@ defineExpose({ isShow });
               <span>基本信息</span>
             </div>
           </template>
-          <!-- <el-row :gutter="10">
+          <el-row :gutter="10">
             <el-col :span="8">
               <el-form-item label="项目ID" prop="client" style="float: left; width: 20rem;">
                 <el-input clearable />
@@ -153,44 +120,8 @@ defineExpose({ isShow });
               </el-form-item>
             </el-col>
             <el-col :span="8" />
-          </el-row> -->
-          <table>
-            <tr>
-              <th>项目ID</th>
-              <td>项目ID</td>
-              <th>项目名称</th>
-              <td>项目名称</td>
-              <th>项目标识</th>
-              <td>项目标识</td>
-            </tr>
-            <tr>
-              <th>所属渠道</th>
-              <td></td>
-              <th>所属国家</th>
-              <td></td>
-              <th></th>
-              <td></td>
-            </tr>
-          </table>
+          </el-row>
           <el-divider content-position="left" />
-          <table>
-            <tr>
-              <th>原价(美元)</th>
-              <td></td>
-              <th>原价(人民币)</th>
-              <td></td>
-              <th>项目标识</th>
-              <td>项目标识</td>
-            </tr>
-            <tr>
-              <th>所属渠道</th>
-              <td></td>
-              <th>所属国家</th>
-              <td></td>
-              <th></th>
-              <td></td>
-            </tr>
-          </table>
           <el-row :gutter="10">
             <el-col :span="8">
               <el-form-item

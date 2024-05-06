@@ -1,4 +1,7 @@
-<script setup>
+<script setup lang="ts">
+defineOptions({
+  name: 'AllocationEdit',
+})
 import { ref, watch } from 'vue'
 
 const radio1 = ref(1)
@@ -19,6 +22,7 @@ function closeHandler() {
   // delete formData.id
   // // 重置表单
   // Object.assign(formData, defaultState)
+  isShow.value = false
 }
 defineExpose({ isShow })
 </script>

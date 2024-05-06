@@ -1,26 +1,27 @@
 <script setup lang="ts">
-  defineOptions({
-    name: 'list',
-  })
-import allocationEdit from './components/AllocationEdit/index.vue'
-import SurveysEdit from './components/SurveysEdit/index.vue'
-import ProjectDetails from './components/ProjectDetails/index.vue'
-import tableQuery from '@/components/tableQuery/index.vue'
-
+defineOptions({
+  name: 'projectMaterials',
+})
+import { ElMessage } from "element-plus";
+import {ref,reactive } from 'vue'
+import {Delete} from '@element-plus/icons-vue'
+import deletes from './components/Delete/index.vue'
+import edit from './components/Edit/index.vue'
+import detail from './components/Details/index.vue'
 const fold = ref<boolean>(false)
 const layout = ref<string>('total, sizes, prev, pager, next, jumper')
 const total = ref<any>(0)
-const value1 = ref('')
 const tableSortRef = ref('')
 const listLoading = ref<boolean>(true)
-const addAllocationEdit = ref('')
-const addSurveysEdit = ref('')
-const projectDetailsRef = ref('')
 const border = ref(true)
+const deleteRef = ref()
+const editRef = ref()
+const detailsRef = ref()
 const checkList = ref([])
 const isFullscreen = ref(false)
 const lineHeight = ref('default')
 const stripe = ref(false)
+const selectRows = ref<any>([]);
 const columns = ref([
   {
     label: '项目ID',
@@ -56,22 +57,40 @@ const dataList = {
       j: '10101010',
       k: '1212121212',
     },
+    {
+      a: '111',
+      b: '222222',
+      c: '3333',
+      d: '444',
+      e: '5555555',
+      f: '66666666',
+      g: '777777777',
+      h: '8888888888',
+      i: '999999999',
+      j: '10101010',
+      k: '1212121212',
+    },
   ],
   total: 3,
 }
 list.value = dataList.data
 total.value = dataList.total
-// 分配
-function distribution() {
-  addAllocationEdit.value.isShow = true
+// 编辑数据
+const editData = () =>{
+  if (!selectRows.value.length)
+  editRef.value.isShow = true
 }
-// 新增项目
-function surveysEdit() {
-  addSurveysEdit.value.isShow = true
+// 详情
+const projectDetails = () =>{
+  if (!selectRows.value.length)
+  detailsRef.value.isShow = true
 }
-// 项目详情
-function projectDetails() {
-  projectDetailsRef.value.isShow = true
+// 删除数据
+const deleteData = () =>{
+  if (!selectRows.value.length)
+    return ElMessage({ message: "请选择至少一条数据", type: "warning" });
+  deleteRef.value.isShow = true
+  deleteRef.value.replyData(selectRows.value)
 }
 
 // 折叠查询表单
@@ -81,6 +100,9 @@ function handleFold() {
 function clickFullScreen() {
   isFullscreen.value = !isFullscreen.value
 }
+const setSelectRows = (value: any) => {
+  selectRows.value = value;
+};
 // 查询数据
 function queryData() {
   queryForm.pageNo = 1
@@ -113,20 +135,16 @@ function onReset() {
     <PageMain>
       <el-form inline label-position="right" label-width="80px" :model="queryForm" @submit.prevent>
         <el-form-item label="">
+          <el-input clearable placeholder="供应商ID" />
+        </el-form-item>
+        <el-form-item v-show="!fold" label="">
+          <el-input clearable placeholder="子会员ID" />
+        </el-form-item>
+        <el-form-item v-show="!fold" label="">
           <el-input clearable placeholder="项目ID" />
         </el-form-item>
         <el-form-item v-show="!fold" label="">
           <el-input clearable placeholder="项目名称" />
-        </el-form-item>
-        <el-form-item v-show="!fold" label="">
-          <el-input clearable placeholder="项目标识" />
-        </el-form-item>
-        <el-form-item v-show="!fold" label="">
-          <el-select placeholder="国家地区">
-            <el-option :key="11" :label="11" :value="111">
-              11111
-            </el-option>
-          </el-select>
         </el-form-item>
         <el-form-item v-show="!fold" label="">
           <el-select placeholder="客户简称">
@@ -135,47 +153,12 @@ function onReset() {
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item v-show="!fold" label="">
-          <el-select placeholder="分配目标">
-            <el-option :key="11" :label="11" :value="111">
-              11111
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item v-show="!fold" label="">
-          <el-select placeholder="项目状态">
-            <el-option :key="11" :label="11" :value="111">
-              11111
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item v-show="!fold" label="">
-          <el-select placeholder="B2B/B2C">
-            <el-option :key="11" :label="11" :value="111">
-              11111
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item v-show="!fold">
-          <el-input clearable placeholder="创建人" />
-        </el-form-item>
-        <el-form-item v-show="!fold">
-          <el-date-picker
-            v-model="value1"
-            type="date"
-            placeholder="Pick a day"
-            size="default"
-          />
-        </el-form-item>
         <tableQuery :fold="fold" :list-loading="listLoading" @handle-fold="handleFold" @on-reset="onReset" @query-data="queryData" />
       </el-form>
       <el-row :gutter="24">
         <FormLeftPanel>
-          <el-button type="primary" size="default" @click="surveysEdit">
-            新增项目
-          </el-button>
-          <el-button type="primary" size="default" @click="distribution">
-            分配
+          <el-button type="danger" :icon="Delete" size="default" @click="deleteData">
+            删除
           </el-button>
         </FormLeftPanel>
 
@@ -206,26 +189,20 @@ function onReset() {
         :border="border"
         :size="lineHeight"
         :stripe="stripe"
+        @selection-change="setSelectRows"
       >
         <el-table-column type="selection" />
         <el-table-column type="index" label="序号" width="55" />
-        <el-table-column prop="a" align="center" label="项目ID" />
-        <el-table-column prop="b" align="center" label="项目名称" />
-        <el-table-column prop="c" align="center" label="客户简称/标识" />
-        <el-table-column prop="d" align="center" label="分配目标" />
-        <el-table-column prop="e" align="center" label="参与/完成/配额/限量" />
-        <el-table-column prop="f" align="center" label="原价" />
-        <el-table-column prop="g" align="center" label="IR/NIR" />
-        <el-table-column prop="h" align="center" label="国家地区" />
-        <el-table-column prop="i" align="center" label="项目状态">
-          <el-switch
-            v-model="value1"
-          />
-        </el-table-column>
-        <el-table-column prop="j" align="center" label="创建人" />
-        <el-table-column prop="k" align="center" label="创建时间" />
+        <el-table-column prop="a" align="center" label="供应商ID" />
+        <el-table-column prop="b" align="center" label="子会员ID" />
+        <el-table-column prop="c" align="center" label="子会员名称" />
+        <el-table-column prop="d" align="center" label="项目ID" />
+        <el-table-column prop="e" align="center" label="项目名称" />
+        <el-table-column prop="f" align="center" label="客户简称/标识" />
+        <el-table-column prop="g" align="center" label="说明" />
+        <el-table-column prop="h" align="center" label="创建时间" />
         <el-table-column align="center" label="操作" width="170">
-          <el-button text type="primary" size="default">
+          <el-button text type="primary" size="default" @click="editData">
             编辑
           </el-button>
           <el-button text type="primary" size="default" @click="projectDetails">
@@ -245,10 +222,10 @@ function onReset() {
         @current-change="handleCurrentChange"
         @size-change="handleSizeChange"
       />
+      <deletes ref="deleteRef"/>
+      <edit ref="editRef"/>
+      <detail ref="detailsRef"/>
     </PageMain>
-    <allocationEdit ref="addAllocationEdit" />
-    <SurveysEdit ref="addSurveysEdit" />
-    <ProjectDetails ref="projectDetailsRef" />
   </div>
 </template>
 

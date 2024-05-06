@@ -1,4 +1,7 @@
-<script setup>
+<script setup lang="ts">
+defineOptions({
+  name: 'SyncSettings',
+})
 import { ref, watch } from 'vue'
 
 const sync = [
@@ -83,9 +86,6 @@ defineExpose({ isShow })
           <el-switch inactive-text="指定项目同步" />
         </el-col>
       </el-row>
-
-      <!-- <el-divider content-position="left" /> -->
-
       <template #footer>
         <el-button @click="closeHandler">
           取消
