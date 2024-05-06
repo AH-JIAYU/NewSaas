@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { Refresh, Search } from '@element-plus/icons-vue'
+import { Refresh, Search,ArrowDownBold,ArrowUpBold } from '@element-plus/icons-vue'
 
 defineOptions({
   name: 'TableQuery',
@@ -20,8 +20,8 @@ const handleFold = () => emit('handleFold')
       重置
     </el-button>
     <el-button class="hidden-xs-only" text type="primary" @click="handleFold">
-      <span v-if="fold">展开</span>
-      <span v-else>合并</span>
+      <span v-if="fold">展开 <el-icon><ArrowDownBold /></el-icon></span>
+      <span v-else>合并 <el-icon><ArrowUpBold /></el-icon></span>
     </el-button>
   </el-form-item>
 </template>

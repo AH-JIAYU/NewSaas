@@ -32,7 +32,7 @@ const routes
         name: 'data',
         component: () => import('@/views/index/data/index.vue'),
         meta: {
-          title: '数据中心',
+          title: '客户报告',
           // i18n: $t('route.multimenu.page'),
         },
       },
@@ -89,8 +89,125 @@ const routes
           // i18n: $t('route.multimenu.page'),
         },
       },
+      {
+        path: 'subVip',
+        name: 'subVip',
+        component: () => import('@/views/user/subVip/index.vue'),
+        meta: {
+          title: '子会员列表',
+          // i18n: $t('route.multimenu.page'),
+        },
+      },
+      {
+        path: 'uidParsing',
+        name: 'uidParsing',
+        component: () => import('@/views/user/uidParsing/index.vue'),
+        meta: {
+          title: 'uid解析',
+          // i18n: $t('route.multimenu.page'),
+        },
+      },
+      {
+        path: 'dataExport',
+        name: 'dataExport',
+        component: () => import('@/views/user/dataExport/index.vue'),
+        meta: {
+          title: '数据导出',
+          // i18n: $t('route.multimenu.page'),
+        },
+      },
     ],
   },
+  {
+    path:'/record',
+    component: Layout,
+    redirect: '/record/survey ',
+    name: 'record',
+    meta: {
+      title: '记录管理',
+      // i18n: $t('route.multimenu.root'),
+      icon: 'i-heroicons-solid:menu-alt-3',
+    },
+    children:[
+      {
+        path: 'survey',
+        name: 'survey',
+        component: () => import('@/views/record/survey/index.vue'),
+        meta: {
+          title: '调查记录',
+          // i18n: $t('route.multimenu.page'),
+        },
+      },
+      {
+        path: 'callback',
+        name: 'callback',
+        component: () => import('@/views/record/callback/index.vue'),
+        meta: {
+          title: '回调记录',
+          // i18n: $t('route.multimenu.page'),
+        },
+      },
+      {
+        path: 'allocation',
+        name: 'allocation',
+        component: () => import('@/views/record/allocation/index.vue'),
+        meta: {
+          title: '分配记录',
+          // i18n: $t('route.multimenu.page'),
+        },
+      },
+      {
+        path: 'flowOrder',
+        name: 'flowOrder',
+        component: () => import('@/views/record/flowOrder/index.vue'),
+        meta: {
+          title: '流单记录',
+          // i18n: $t('route.multimenu.page'),
+        },
+      },
+      {
+        path: 'temination',
+        name: 'temination',
+        component: () => import('@/views/record/termination/index.vue'),
+        meta: {
+          title: '终止记录',
+          // i18n: $t('route.multimenu.page'),
+        },
+      },
+      {
+        path: 'customerManagement',
+        name: 'customerManagement',
+        component: () => import('@/views/record/customerManagement/index.vue'),
+        meta: {
+          title: '客户管理记录',
+          // i18n: $t('route.multimenu.page'),
+        },
+      },
+    ]
+  },
+  {
+    path:'/configuration',
+    component: Layout,
+    redirect: '/configuration/supplierLevel ',
+    name: 'configuration',
+    meta: {
+      title: '配置管理',
+      // i18n: $t('route.multimenu.root'),
+      icon: 'i-heroicons-solid:menu-alt-3',
+    },
+    children:[
+      {
+        path: 'supplierLevel',
+        name: 'supplierLevel',
+        component: () => import('@/views/configuration/supplierLevel/index.vue'),
+        meta: {
+          title: '供应商等级',
+          // i18n: $t('route.multimenu.page'),
+        },
+      },
+
+    ]
+  }
 ]
 
 //   {

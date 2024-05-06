@@ -1,8 +1,11 @@
-<script setup>
+<script setup lang="ts">
+defineOptions({
+  name: 'UserCustomerIndex',
+})
 import { onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import customerEdit from './components/customerEdit.vue'
-import customerCheck from './components/customerCheck.vue'
+import customerEdit from './components/CustomerEdit/index.vue'
+import customerDetail from './components/CustomerDetail/index.vue'
 
 const fold = ref(true)
 const listLoading = ref(false)
@@ -44,14 +47,14 @@ function clickFullScreen() {
 function handleDelete(row) {
   if (row.id) {
     ElMessageBox.confirm(`您确定要删除当前项吗?`, '确认信息').then(() => {
-    // apiManager.delete(row.id).then(() => {
-    //   getDataList()
-    //   ElMessage.success({
-    //     message: '模拟删除成功',
-    //     center: true,
-    //   })
-    // })
-    }).catch(() => {})
+      // apiManager.delete(row.id).then(() => {
+      //   getDataList()
+      //   ElMessage.success({
+      //     message: '模拟删除成功',
+      //     center: true,
+      //   })
+      // })
+    }).catch(() => { })
   }
   else {
     console.log(1)
@@ -65,7 +68,7 @@ function handleDelete(row) {
         //     center: true,
         //   })
         // })
-      }).catch(() => {})
+      }).catch(() => { })
     }
     else {
       // $baseMessage('您未选中任何行', 'warning', 'vab-hey-message-error')
@@ -145,7 +148,8 @@ onMounted(() => {
               <el-option label="关闭" value="false" />
             </el-select>
           </el-form-item>
-          <TableQuery :fold="fold" :list-loading="listLoading" @handle-fold="handleFold" @on-reset="onReset" @query-data="queryData" />
+          <TableQuery :fold="fold" :list-loading="listLoading" @handle-fold="handleFold" @on-reset="onReset"
+            @query-data="queryData" />
         </el-form>
       </el-row>
       <el-row>
@@ -161,21 +165,14 @@ onMounted(() => {
           <el-button size="default">
             导出
           </el-button>
-          <TabelControl
-            v-model:border="border"
-            v-model:checkList="checkList"
-            v-model:columns="columns"
-            v-model:is-fullscreen="isFullscreen"
-            v-model:line-height="lineHeight"
-            v-model:stripe="stripe"
-            style="margin-left: 12px;"
-            @click-full-screen="clickFullScreen"
-            @query-data="queryData"
-          />
+          <TabelControl v-model:border="border" v-model:checkList="checkList" v-model:columns="columns"
+            v-model:is-fullscreen="isFullscreen" v-model:line-height="lineHeight" v-model:stripe="stripe"
+            style="margin-left: 12px;" @click-full-screen="clickFullScreen" @query-data="queryData" />
         </FormRightPanel>
       </el-row>
       <el-row>
-        <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows">
+        <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
+          @selection-change="setSelectRows">
           <el-table-column align="center" prop="a" show-overflow-tooltip type="selection" />
           <el-table-column align="center" prop="b" show-overflow-tooltip label="客户名称" />
           <el-table-column align="center" prop="c" show-overflow-tooltip label="客户简称" />
@@ -204,17 +201,10 @@ onMounted(() => {
         </el-table>
       </el-row>
 
-      <el-pagination
-        background
-        :current-page="queryForm.pageNo"
-        :layout="layout"
-        :page-size="queryForm.pageSize"
-        :total="total"
-        @current-change="handleCurrentChange"
-        @size-change="handleSizeChange"
-      />
+      <el-pagination background :current-page="queryForm.pageNo" :layout="layout" :page-size="queryForm.pageSize"
+        :total="total" @current-change="handleCurrentChange" @size-change="handleSizeChange" />
     </PageMain>
     <customerEdit ref="editRef" @fetch-data="fetchData" />
-    <customerCheck ref="checkRef" @fetch-data="fetchData" />
+    <customerDetail ref="checkRef" @fetch-data="fetchData" />
   </div>
 </template>

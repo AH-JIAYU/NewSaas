@@ -2,7 +2,7 @@
 <!-- eslint-disable ts/no-use-before-define -->
 <script setup>
 import { defineProps, toRefs } from 'vue'
-// import VabDraggable from 'vuedraggable'
+import draggable from 'vuedraggable'
 
 defineOptions({
   name: 'TableControl',
@@ -10,13 +10,13 @@ defineOptions({
 const props = defineProps({
   border: Boolean,
   columns: Array,
-  isFullscreen: Boolean,
+
   lineHeight: String,
   stripe: Boolean,
   checkList: Array,
 })
 const emit = defineEmits(['clickFullScreen', 'queryData', 'update:stripe', 'update:border', 'update:lineHeight', 'update:checkList'])
-const { border, columns, isFullscreen, lineHeight, stripe, checkList } = toRefs(props)
+const { border, columns, lineHeight, stripe, checkList } = toRefs(props)
 const clickFullScreen = () => emit('clickFullScreen')
 const queryData = () => emit('queryData')
 function changeStripe() {
@@ -58,13 +58,13 @@ const dragOptions = computed(() => {
       </el-button>
       <el-popover trigger="hover" :width="162">
         <el-radio-group v-model="lineHeight" @change="changeRadio">
-          <el-radio-button label="large">
+          <el-radio-button value="large">
             大
           </el-radio-button>
-          <el-radio-button label="default">
+          <el-radio-button value="default">
             中
           </el-radio-button>
-          <el-radio-button label="small">
+          <el-radio-button value="small">
             小
           </el-radio-button>
         </el-radio-group>
@@ -81,15 +81,16 @@ const dragOptions = computed(() => {
           </el-button>
         </template>
         <el-checkbox-group v-model="checkList" @change="changeCheckbox">
-          <!-- <VabDraggable item-key="{ element }" :list="JSON.parse(JSON.stringify(columns))" v-bind="dragOptions"> -->
+          <!-- draggable：vuedraggable库中的组件  -->
+          <draggable item-key="{ element }" :list="JSON.parse(JSON.stringify(columns))" v-bind="dragOptions">
             <template #item="{ element }">
               <div>
-                <el-checkbox :disabled="element.disableCheck" :label="element.prop">
+                <el-checkbox :disabled="element.disableCheck" :value="element.prop">
                   {{ element.label }}
                 </el-checkbox>
               </div>
             </template>
-          <!-- </VabDraggable> -->
+          </draggable>
         </el-checkbox-group>
       </el-popover>
     </div>

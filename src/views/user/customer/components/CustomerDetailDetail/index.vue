@@ -1,10 +1,11 @@
-<script setup>
-const dialogTableVisible = ref(false)
+<script setup lang="ts">
+import { ref } from 'vue'
+const dialogTableVisible = ref<boolean>(false)
 function showEdit() {
   dialogTableVisible.value = true
 }
 
-const gridData = [
+const gridData: Array<object> = [
   { b: 1 },
   { b: 1 },
   { b: 1 },

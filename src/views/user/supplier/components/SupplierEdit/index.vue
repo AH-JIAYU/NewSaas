@@ -2,7 +2,7 @@
 import { provide, reactive, ref } from 'vue'
 // import { addSurvey, doEdit } from '~/src/api/surveyManagement'
 // import { useAclStore } from '~/src/store/modules/acl'
-import LeftTabs from './customerLeftTabs.vue'
+import LeftTabs from '../SupplierLeftTabs/index.vue'
 
 const emit = defineEmits(['fetch-data'])
 const drawerisible = ref<boolean>(false)
@@ -97,16 +97,8 @@ defineExpose({
 
 <template>
   <div>
-    <el-drawer
-      v-model="drawerisible"
-      append-to-body
-      :close-on-click-modal="false"
-      destroy-on-close
-      draggable
-      size="70%"
-      :title="title"
-      @close="close"
-    >
+    <el-drawer v-model="drawerisible" append-to-body :close-on-click-modal="false" destroy-on-close draggable size="70%"
+      :title="title" @close="close">
       <LeftTabs :left-tabs-data="leftTabsData" :validate-top-tabs="validateTopTabs" />
       <!-- <template #footer>
         <el-button @click="close">

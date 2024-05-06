@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { cloneDeep } from 'lodash-es'
 import { defineProps, provide, ref } from 'vue'
-import TopTabs from './customerTopTabs.vue'
+import TopTabs from '../SupplierTopTabs/index.vue'
 // import { useAclStore } from '/@/store/modules/acl'
 
 const props = defineProps({

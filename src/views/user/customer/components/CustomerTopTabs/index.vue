@@ -2,7 +2,7 @@
 import type { FormRules } from 'element-plus'
 import { ElForm } from 'element-plus'
 
-import { defineProps, inject, ref } from 'vue'
+import { defineProps, ref } from 'vue'
 // 如果希望默认展示第一个 Tab
 const props = defineProps({
   leftTab: Object,
@@ -25,13 +25,11 @@ const localToptTab = ref<any>(props.leftTab)
 
 <template>
   <div>
-    <ElForm ref="formRef" label-width="100px" model="" rules="rules">
-      <el-card class="box-card">
-        <template #header>
-          <div class="card-header">
-            <span>基本信息</span>
-          </div>
-        </template>
+    <el-card class="box-card">
+    <ElForm ref="formRef" label-width="100px" >
+      <el-divider content-position="left">
+        基本信息
+        </el-divider>
         <el-row :gutter="10">
           <el-col :span="12">
             <el-form-item label="客户名称" prop="name" style="float: left; width: 18.5rem;">
@@ -120,7 +118,20 @@ const localToptTab = ref<any>(props.leftTab)
             </el-form-item>
           </el-col>
         </el-row>
-      </el-card>
     </ElForm>
+  </el-card>
   </div>
 </template>
+<style scoped lang="scss">
+:deep{
+  .el-divider{
+    margin: 20px 0 !important;
+  }
+  .el-row{
+    width: 94% !important;
+    margin: auto  !important;
+  }
+}
+
+
+</style>
