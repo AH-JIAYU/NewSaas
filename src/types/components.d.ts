@@ -13,6 +13,8 @@ declare module 'vue' {
     ColorfulCard: typeof import('./../components/ColorfulCard/index.vue')['default']
     FileUpload: typeof import('./../components/FileUpload/index.vue')['default']
     FixedActionBar: typeof import('./../components/FixedActionBar/index.vue')['default']
+    FormLeftPanel: typeof import('./../components/FormLeftPanel/index.vue')['default']
+    FormRightPanel: typeof import('./../components/FormRightPanel/index.vue')['default']
     HBadge: typeof import('./../layouts/ui-kit/HBadge.vue')['default']
     HButton: typeof import('./../layouts/ui-kit/HButton.vue')['default']
     HCheckList: typeof import('./../layouts/ui-kit/HCheckList.vue')['default']
@@ -44,6 +46,7 @@ declare module 'vue' {
     StorageBox: typeof import('./../components/StorageBox/index.vue')['default']
     SvgIcon: typeof import('./../components/SvgIcon/index.vue')['default']
     SystemInfo: typeof import('./../components/SystemInfo/index.vue')['default']
+    TabelControl: typeof import('./../components/TabelControl/index.vue')['default']
     TableQuery: typeof import('./../components/tableQuery/index.vue')['default']
     Trend: typeof import('./../components/Trend/index.vue')['default']
   }

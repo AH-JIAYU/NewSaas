@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import distributionEdit from './components/distributionEdit.vue'
+import allocationEdit from './components/allocationEdit.vue'
 import SurveysEdit from './components/SurveysEdit.vue'
+import ProjectDetails from './components/projectDetails.vue'
 import tableQuery from '@/components/tableQuery/index.vue'
 
 const fold = ref<boolean>(false)
@@ -9,8 +10,9 @@ const total = ref<any>(0)
 const value1 = ref('')
 const tableSortRef = ref('')
 const listLoading = ref<boolean>(true)
-const addDistribution = ref('')
+const addAllocationEdit = ref('')
 const addSurveysEdit = ref('')
+const projectDetailsRef = ref('')
 const queryForm = reactive<any>({
   pageNo: 1,
   pageSize: 10,
@@ -20,7 +22,7 @@ const queryForm = reactive<any>({
   },
   select: {},
 })
-const list = ref([])
+const list = ref<any>([])
 const dataList = {
   data: [
     {
@@ -43,13 +45,15 @@ list.value = dataList.data
 total.value = dataList.total
 // 分配
 function distribution() {
-  addDistribution.value.isShow = true
+  addAllocationEdit.value.isShow = true
 }
+// 新增项目
 function surveysEdit() {
   addSurveysEdit.value.isShow = true
 }
-function resetPassword() {
-  addDistribution.value.isShow = true
+// 项目详情
+function projectDetails() {
+  projectDetailsRef.value.isShow = true
 }
 
 // 折叠查询表单
@@ -145,19 +149,23 @@ function onReset() {
         <tableQuery :fold="fold" :list-loading="listLoading" @handle-fold="handleFold" @on-reset="onReset" @query-data="queryData" />
       </el-form>
       <el-row :gutter="24">
-        <el-col :span="20">
+        <FormLeftPanel>
           <el-button type="primary" size="default" @click="surveysEdit">
             新增项目
           </el-button>
           <el-button type="primary" size="default" @click="distribution">
             分配
           </el-button>
-        </el-col>
-        <el-col :span="4">
-          <el-button type="primary" size="default" @click="">
+        </FormLeftPanel>
+
+          <FormRightPanel>
+            <el-button style="margin-right: 10px;" size="default" @click="">
             导出
           </el-button>
-        </el-col>
+          <TabelControl/>
+          </FormRightPanel>
+
+
       </el-row>
       <el-table
         ref="tableSortRef"
@@ -186,8 +194,8 @@ function onReset() {
           <el-button text type="primary" size="default">
             编辑
           </el-button>
-          <el-button text type="danger" size="default">
-            删除
+          <el-button text type="primary" size="default" @click="projectDetails">
+            详情
           </el-button>
         </el-table-column>
         <template #empty>
@@ -204,8 +212,9 @@ function onReset() {
         @size-change="handleSizeChange"
       />
     </PageMain>
-    <distributionEdit ref="addDistribution" />
+    <allocationEdit ref="addAllocationEdit" />
     <SurveysEdit ref="addSurveysEdit" />
+    <ProjectDetails ref="projectDetailsRef" />
   </div>
 </template>
 

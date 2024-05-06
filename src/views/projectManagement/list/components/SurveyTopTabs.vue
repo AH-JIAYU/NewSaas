@@ -210,7 +210,7 @@ import { ref } from 'vue'
 
 const value = ref([4, 8])
 const content = ref('# Fantastic-admin')
-
+const activeName = ref('basicSettings')
 const plugins = [
   gfm({
     locale: gfmLocale,
@@ -227,8 +227,8 @@ function open(url: string) {
 </script>
 
 <template>
-  <el-tabs>
-    <el-tab-pane label="基础设置" name="基础设置">
+  <el-tabs v-model="activeName">
+    <el-tab-pane label="基础设置" name="basicSettings">
       <ElForm label-width="100px" model="" rules="rules">
         <el-card class="box-card">
           <template #header>
@@ -249,7 +249,7 @@ function open(url: string) {
             </el-col>
             <el-col :span="6">
               <el-form-item label="所属客户" prop="client" style="float: left; width: 15.5rem;">
-                <el-select disabled="" placeholder="Select">
+                <el-select placeholder="Select">
                   <el-option />
                 </el-select>
               </el-form-item>
@@ -427,78 +427,14 @@ function open(url: string) {
                     女
                   </el-radio>
                 </el-radio-group>
-              </el-form-item >
+              </el-form-item>
             </el-col>
-
           </div>
         </el-row>
         <el-row>
           <el-col :span="24">
-              <el-form-item label="年龄">
-                <el-slider v-model="value" range show-stops :max="100" />
-              </el-form-item>
-            </el-col>
-        </el-row>
-      </el-card>
-      <el-card>
-        <el-divider content-position="left">
-          请选择国家后再回来
-        </el-divider>
-      </el-card>
-    </el-tab-pane>
-    <el-tab-pane label="translate('安全')">
-      <el-card>
-        <template #header>
-          <div class="card-header">
-            <span>安全设置</span>
-          </div>
-        </template>
-        <el-row :gutter="20">
-          <el-col :span="6">
-            <el-form-item label="translate('时差检测')" prop="timeDiff">
-              <el-switch
-
-                active-text="translate('开启')"
-                :active-value="1"
-                inactive-text="translate('关闭')"
-                :inactive-value="0"
-                inline-prompt
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="translate('重复IP检测')" prop="ipRepeat">
-              <el-switch
-                active-text="translate('开启')"
-                :active-value="1"
-                inactive-text="translate('关闭')"
-                :inactive-value="0"
-                inline-prompt
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="translate('IP一致性检测')" prop="ipCompare">
-              <el-switch
-
-                active-text="translate('开启')"
-                :active-value="1"
-                inactive-text="translate('关闭')"
-                :inactive-value="0"
-                inline-prompt
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="6">
-            <el-form-item label="translate('小时准入量')" prop="enterPerHour">
-              <el-input-number clearable />
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="translate('小时完成量')" prop="completePerHour">
-              <el-input-number clearable />
+            <el-form-item label="年龄">
+              <el-slider v-model="value" range show-stops :max="100" />
             </el-form-item>
           </el-col>
         </el-row>

@@ -1,15 +1,13 @@
-<!-- <script lang="ts" setup>
-import LeftTabs from './SurveyLeftTabs.vue'
-import { addSurvey, doEdit } from '@/api/modules/surveyManagement'
-import { useAclStore } from '@/store/modules/acl'
-import { translate } from '@/i18n'
+<script lang="ts" setup>
+import { provide, reactive, ref } from 'vue'
+// import { addSurvey, doEdit } from '~/src/api/surveyManagement'
+// import { useAclStore } from '~/src/store/modules/acl'
+import LeftTabs from './customerLeftTabs.vue'
 
 const emit = defineEmits(['fetch-data'])
 const drawerisible = ref<boolean>(false)
-const $baseMessage = inject<any>('$baseMessage')
 const title = ref<string>('')
-const acl = useAclStore()
-const { surveyconfig } = storeToRefs<any>(acl)
+// const { surveyconfig } = useAclStore()
 const validateTopTabs = ref<any>([])
 function pushData(data: any) {
   validateTopTabs.value.push(data)
@@ -24,8 +22,8 @@ async function showEdit(row: any) {
     title.value = '添加'
     leftTabsData = reactive([
       {
-        name: translate('主项目'),
-        currency: surveyconfig.currency,
+        name: '主项目',
+        // currency: surveyconfig.currency,
         platform: {},
         screen: {},
         security: {},
@@ -73,20 +71,20 @@ async function save() {
     const ispass = (await Promise.all(arr)).every((item: any) => item)
     if (ispass) {
       if (title.value === '添加') {
-        const { message }: any = await addSurvey(leftTabsData)
-        $baseMessage(message, 'success', 'hey')
+        // const { message }: any = await addSurvey(leftTabsData)
+        // $baseMessage(message, 'success', 'hey')
       }
       else {
         // 更新接口
-        const { message }: any = await doEdit(leftTabsData)
-        $baseMessage(message, 'success', 'hey')
+        // const { message }: any = await doEdit(leftTabsData)
+        // $baseMessage(message, 'success', 'hey')
       }
       emit('fetch-data')
       close()
     }
   }
   catch (error) {
-    $baseMessage('请完善信息', 'error', 'hey')
+    // $baseMessage('请完善信息', 'error', 'hey')
     console.error('Form validation failed:', error)
   }
 }
@@ -95,53 +93,29 @@ async function save() {
 defineExpose({
   showEdit,
 })
-</script> -->
-<script setup>
-import { ref, watch } from 'vue'
-import surveyLeftTabs from './SurveyLeftTabs.vue'
-
-const radio1 = ref(1)
-// 弹框开关变量
-const isShow = ref(false)
-// 提交数据
-function onSubmit() {
-
-}
-watch(() => radio1, (newVal) => {
-  console.log('val', newVal)
-})
-// 弹框关闭事件
-function closeHandler() {
-  // 移除校验
-  // formRef.value.resetFields()
-  // delete formData.id
-  // // 重置表单
-  // Object.assign(formData, defaultState)
-  isShow.value = false
-}
-defineExpose({ isShow })
 </script>
 
 <template>
   <div>
     <el-drawer
-      v-model="isShow"
+      v-model="drawerisible"
       append-to-body
       :close-on-click-modal="false"
       destroy-on-close
       draggable
       size="70%"
-      title=""
+      :title="title"
+      @close="close"
     >
-      <surveyLeftTabs left-tabs-data="" validate-top-tabs="" />
-      <template #footer>
-        <el-button @click="closeHandler">
+      <LeftTabs :left-tabs-data="leftTabsData" :validate-top-tabs="validateTopTabs" />
+      <!-- <template #footer>
+        <el-button @click="close">
           取消
         </el-button>
-        <el-button type="primary" @click="onSubmit">
+        <el-button type="primary" @click="save">
           确定
         </el-button>
-      </template>
+      </template> -->
     </el-drawer>
   </div>
 </template>

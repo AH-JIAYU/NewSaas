@@ -1,9 +1,8 @@
-<!-- <script lang="ts" setup>
+<script lang="ts" setup>
 import { cloneDeep } from 'lodash-es'
-import { ref } from 'vue'
-import topTabs from './SurveyTopTabs.vue'
-import { translate } from '@/i18n'
-import { useAclStore } from '@/store/modules/acl'
+import { defineProps, provide, ref } from 'vue'
+import TopTabs from './customerTopTabs.vue'
+// import { useAclStore } from '/@/store/modules/acl'
 
 const props = defineProps({
   leftTabsData: Array,
@@ -19,14 +18,13 @@ localLeftTab.value.forEach((tab: any, index: any) => {
   provide(`formRef${index}`, formRef)
 })
 
-const acl = useAclStore()
-const { surveyconfig } = storeToRefs<any>(acl)
+// const { surveyconfig } = useAclStore()
 let tabIndex = 0
 const activeLeftTab = ref(0)
 
 const initialTopTabsData = {
-  name: translate('新建项目'),
-  currency: surveyconfig.currency,
+  name: '新建项目',
+  // currency: surveyconfig.currency,
   platform: {},
   screen: {},
   security: {},
@@ -62,30 +60,19 @@ function setclient(data: number) {
   })
   client.value = data
 }
-</script> -->
-<script setup>
-import surveyTopTabs from './SurveyTopTabs.vue'
-import syncSettings from './syncSettings.vue'
-
-const settingsRef = ref('')
-function setHandler() {
-  settingsRef.value.isShow = true
-}
 </script>
 
 <template>
-  <el-button>
+  <el-button @click="addLeftTab()">
     添加子项目
   </el-button>
-  <el-tabs tab-position="left">
-    <el-tab-pane>
+  <el-tabs v-model="activeLeftTab" tab-position="left" @tab-remove="tabremove">
+    <el-tab-pane v-for="(leftTab, index) in localLeftTab" :key="index" closable :label="leftTab.name" :name="index">
       <!-- 在每个左侧 Tab 中使用 TopTabs 组件 -->
-      <el-button size="small" type="success">
-        同步数据
+      <el-button v-if="activeLeftTab > 0" size="small" type="success" @click="syncProject">
+        同步主项目数据
       </el-button>
-      <div style="margin-left: 10px;" class="i-icon-park-solid:setting h-1.5em w-1.5em" @click="setHandler" />
-      <surveyTopTabs left-tab="" tab-index="" />
-      <syncSettings ref="settingsRef" />
+      <TopTabs :left-tab="leftTab" :tab-index="index" @set-client="setclient" />
     </el-tab-pane>
   </el-tabs>
 </template>
