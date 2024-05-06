@@ -10,6 +10,7 @@ const total = ref()
 function onSubmit() {
 
 }
+// 父级传递数据
 const replyData = async (row:any) => {
   total.value = row.length
 }
@@ -23,6 +24,7 @@ function closeHandler() {
   // Object.assign(formData, defaultState)
   isShow.value = false
 }
+// 暴露方法
 defineExpose({ isShow,replyData })
 </script>
 

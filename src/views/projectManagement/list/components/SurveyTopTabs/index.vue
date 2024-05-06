@@ -2,6 +2,7 @@
 defineOptions({
   name: 'SurveyTopTabs',
 })
+// 配置富文本
 import { UploadFilled } from '@element-plus/icons-vue'
 import { Editor, Viewer } from '@bytemd/vue-next'
 import gfm from '@bytemd/plugin-gfm'

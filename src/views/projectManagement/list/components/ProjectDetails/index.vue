@@ -2,6 +2,7 @@
 defineOptions({
   name: 'ProjectDetails',
 })
+// 富文本编辑器配置
 import gfm from "@bytemd/plugin-gfm";
 import zhHans from "bytemd/locales/zh_Hans.json";
 import gfmLocale from "@bytemd/plugin-gfm/lib/locales/zh_Hans.json";
@@ -10,7 +11,6 @@ import { ref } from "vue";
 import logDetails from "../LogDetails/index.vue";
 const content = ref("# Fantastic-admin");
 const logDetailsRef = ref('')
-// 富文本编辑器
 const plugins = [
   gfm({
     locale: gfmLocale,
@@ -27,10 +27,9 @@ const list = [
   { a: 1, b: 2, c: 3, id: 1 },
   { a: 1, b: 2, c: 3, id: 1 },
 ];
-
+// 详情
 function details() {
   logDetailsRef.value.dialogTableVisible = true
-  // dialogTableVisible.value = true;
 }
 // 弹框开关变量
 const isShow = ref(false);
@@ -45,6 +44,7 @@ function closeHandler() {
   // Object.assign(formData, defaultState)
   isShow.value = false;
 }
+// 暴露方法
 defineExpose({ isShow });
 </script>
 

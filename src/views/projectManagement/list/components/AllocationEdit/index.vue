@@ -24,6 +24,7 @@ function closeHandler() {
   // Object.assign(formData, defaultState)
   isShow.value = false
 }
+// 暴露方法
 defineExpose({ isShow })
 </script>
 

@@ -8,7 +8,8 @@ import {ref} from 'vue'
   { a: 1, b: "最小时长20更为30", id: 1 },
   { a: 1, b: "置顶开更为关", id: 1 },
 ];
-  defineExpose({ dialogTableVisible });
+// 暴露方法
+defineExpose({ dialogTableVisible });
 </script>
 <template>
   <div>

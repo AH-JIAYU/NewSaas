@@ -4,6 +4,7 @@ defineOptions({
 })
 import {Position} from '@element-plus/icons-vue'
 const activeName = ref("first");
+// tabs切换事件
 const handleClick = (tab, event) => {
 };
 </script>

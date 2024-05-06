@@ -5,16 +5,21 @@ defineOptions({
 import { ElMessage } from "element-plus";
 import { ref, reactive } from "vue";
 import { Delete, Plus } from "@element-plus/icons-vue";
+// 查询组件变量
 const fold = ref<boolean>(false);
+// 分页
 const layout = ref<string>("total, sizes, prev, pager, next, jumper");
 const total = ref<any>(0);
 const tableSortRef = ref("");
+// loading加载
 const listLoading = ref<boolean>(true);
-const border = ref(true);
+// 获取组件变量
 const deleteRef = ref();
 const editRef = ref();
 const detailsRef = ref();
+// 右侧工具栏配置变量
 const checkList = ref([]);
+const border = ref(true);
 const isFullscreen = ref(false);
 const lineHeight = ref("default");
 const stripe = ref(false);
@@ -29,6 +34,7 @@ const columns = ref([
     checked: true,
   },
 ]);
+// 查询参数
 const queryForm = reactive<any>({
   pageNo: 1,
   pageSize: 10,
@@ -92,6 +98,7 @@ function handleFold() {
 function clickFullScreen() {
   isFullscreen.value = !isFullscreen.value;
 }
+// 获取列表选中数据
 const setSelectRows = (value: any) => {
   selectRows.value = value;
 };

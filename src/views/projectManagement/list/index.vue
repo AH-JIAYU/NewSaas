@@ -6,16 +6,20 @@ import allocationEdit from './components/AllocationEdit/index.vue'
 import SurveysEdit from './components/SurveysEdit/index.vue'
 import ProjectDetails from './components/ProjectDetails/index.vue'
 import tableQuery from '@/components/tableQuery/index.vue'
-
+// 查询组件变量
 const fold = ref<boolean>(false)
+// 分页
 const layout = ref<string>('total, sizes, prev, pager, next, jumper')
 const total = ref<any>(0)
 const value1 = ref('')
 const tableSortRef = ref('')
+// loading加载
 const listLoading = ref<boolean>(true)
+// 获取组件变量
 const addAllocationEdit = ref('')
 const addSurveysEdit = ref('')
 const projectDetailsRef = ref('')
+// 右侧工具栏配置变量
 const border = ref(true)
 const checkList = ref([])
 const isFullscreen = ref(false)
@@ -31,6 +35,7 @@ const columns = ref([
     checked: true,
   },
 ])
+// 查询参数
 const queryForm = reactive<any>({
   pageNo: 1,
   pageSize: 10,
@@ -78,6 +83,7 @@ function projectDetails() {
 function handleFold() {
   fold.value = !fold.value
 }
+// 工具配置项
 function clickFullScreen() {
   isFullscreen.value = !isFullscreen.value
 }

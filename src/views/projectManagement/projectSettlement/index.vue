@@ -10,18 +10,23 @@ import projectReview from "./components/ProjectReview/index.vue";
 import settlementEdit from "./components/SettlementEdit/index.vue";
 import refundDetail from "./components/RefundDetails/index.vue";
 import Settlement from "./components/AddSettlement/index.vue";
+// 查询组件变量
 const fold = ref<boolean>(false);
+// 分页
 const layout = ref<string>("total, sizes, prev, pager, next, jumper");
 const total = ref<any>(0);
 const value1 = ref("");
 const tableSortRef = ref("");
+// loading加载
 const listLoading = ref<boolean>(true);
+// 获取组件变量
 const invoicingRef = ref();
 const addSettlementRef = ref();
 const settlementRef = ref();
 const auditingRef = ref();
 const editRef = ref();
 const refundRef = ref();
+// 右侧工具栏配置变量
 const border = ref(true);
 const checkList = ref([]);
 const isFullscreen = ref(false);
@@ -38,6 +43,7 @@ const columns = ref([
     checked: true,
   },
 ]);
+// 查询参数
 const queryForm = reactive<any>({
   pageNo: 1,
   pageSize: 10,
@@ -81,7 +87,7 @@ const dataList = {
 };
 list.value = dataList.data;
 total.value = dataList.total;
-
+// 获取列表选中数据
 const setSelectRows = (value: any) => {
   selectRows.value = value;
 };
