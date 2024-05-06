@@ -58,6 +58,42 @@ const routes
           // i18n: $t('route.multimenu.page'),
         },
       },
+      {
+        path: 'projectSettlement',
+        name: 'projectSettlement',
+        component: () => import('@/views/projectManagement/projectSettlement/index.vue'),
+        meta: {
+          title: '项目结算',
+          // i18n: $t('route.multimenu.page'),
+        },
+      },
+      {
+        path: 'projectMaterials',
+        name: 'projectMaterials',
+        component: () => import('@/views/projectManagement/projectMaterials/index.vue'),
+        meta: {
+          title: '项目素材',
+          // i18n: $t('route.multimenu.page'),
+        },
+      },
+      {
+        path: 'supplementaryPaymentRefund',
+        name: 'supplementaryPaymentRefund',
+        component: () => import('@/views/projectManagement/supplementaryPaymentRefund/index.vue'),
+        meta: {
+          title: '项目补退款',
+          // i18n: $t('route.multimenu.page'),
+        },
+      },
+      {
+        path: 'projectScheduling',
+        name: 'projectScheduling',
+        component: () => import('@/views/projectManagement/projectScheduling/index.vue'),
+        meta: {
+          title: '项目调度',
+          // i18n: $t('route.multimenu.page'),
+        },
+      },
     ],
   },
   {
@@ -207,7 +243,29 @@ const routes
       },
 
     ]
-  }
+  },
+  {
+    path: '/finance',
+    component: Layout,
+    redirect: '/finance/supplierSettlement',
+    name: 'finance',
+    meta: {
+      title: '财务管理',
+      // i18n: $t('route.multimenu.root'),
+      icon: 'i-heroicons-solid:menu-alt-3',
+    },
+    children: [
+      {
+        path: 'supplierSettlement',
+        name: 'supplierSettlement',
+        component: () => import('@/views/finance/supplierSettlement/index.vue'),
+        meta: {
+          title: '供应商结算',
+          // i18n: $t('route.multimenu.page'),
+        },
+      },
+    ],
+  },
 ]
 
 //   {

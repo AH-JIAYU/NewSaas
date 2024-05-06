@@ -118,6 +118,7 @@ function closeHandler() {
   // delete formData.id
   // // 重置表单
   // Object.assign(formData, defaultState)
+  isShow.value = false
 }
 defineExpose({ isShow })
 </script>
