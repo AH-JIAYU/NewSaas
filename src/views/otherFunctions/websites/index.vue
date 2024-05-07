@@ -1,15 +1,18 @@
 <script setup lang="ts">
 defineOptions({
-  name: "FinanceSupplierSettlementIndex",
+  name: "FinanceInvoiceIndex",
 });
 import { ElMessage } from "element-plus";
 import { ref, reactive } from "vue";
+import Edit from "./components/Edit/index.vue";
+import Delete from "./components/Delete/index.vue";
 const { pagination, onSizeChange, onCurrentChange } = usePagination(); //分页
 // 分页
 const tableSortRef = ref("");
 // loading加载
 const listLoading = ref<boolean>(true);
 // 获取组件变量
+const deleteRef = ref();
 const editRef = ref();
 // 右侧工具栏配置变量
 const checkList = ref([]);
@@ -20,7 +23,7 @@ const stripe = ref(false);
 const selectRows = ref<any>([]);
 const columns = ref([
   {
-    label: "项目ID",
+    label: "选择渠道",
     prop: "ID",
     sortable: true,
     // 不可改变的
@@ -42,6 +45,13 @@ const list = ref<any>([]);
 // 编辑数据
 const editData = () => {
   if (!selectRows.value.length) editRef.value.isShow = true;
+};
+// 删除数据
+const deleteData = () => {
+  // if (!selectRows.value.length)
+  //   return ElMessage({ message: "请选择至少一条数据", type: "warning" });
+  deleteRef.value.isShow = true;
+  deleteRef.value.replyData(selectRows.value);
 };
 // 右侧工具方法
 function clickFullScreen() {
@@ -104,30 +114,20 @@ onMounted(() => {
             :model="queryForm"
             @submit.prevent
           >
-            <el-form-item label="">
-              <el-input clearable placeholder="供应商ID" />
-            </el-form-item>
-            <el-form-item v-show="!fold" label="账单日期">
-              <el-date-picker
-                type="daterange"
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                clearable
-                size=""
-              />
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-select
-                value-key=""
-                placeholder="状态"
-                clearable
-                filterable
-                @change=""
-              >
-                <el-option />
-              </el-select>
-            </el-form-item>
+          <el-form-item label="">
+         <el-input placeholder="供应商ID" />
+        </el-form-item>
+        <el-form-item v-show="!fold" label="">
+          <el-select
+            value-key=""
+            placeholder="所有"
+            clearable
+            filterable
+            @change=""
+          >
+            <el-option />
+          </el-select>
+        </el-form-item>
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">
                 <template #icon>
@@ -135,7 +135,7 @@ onMounted(() => {
                 </template>
                 筛选
               </ElButton>
-              <ElButton @click="onReset">
+              <ElButton  @click="onReset">
                 <template #icon>
                   <div class="i-grommet-icons:power-reset w-1em h-1em"></div>
                 </template>
@@ -143,19 +143,17 @@ onMounted(() => {
               </ElButton>
               <ElButton link @click="toggle">
                 <template #icon>
-                  <SvgIcon
-                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
-                  />
+                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
                 </template>
-                {{ fold ? "展开" : "收起" }}
+                {{ fold ? '展开' : '收起' }}
               </ElButton>
             </ElFormItem>
           </el-form>
         </template>
       </SearchBar>
       <el-row :gutter="24">
-        <FormLeftPanel> </FormLeftPanel>
-
+        <FormLeftPanel>
+        </FormLeftPanel>
         <FormRightPanel>
           <el-button style="margin-right: 10px" size="default" @click="">
             导出
@@ -184,19 +182,21 @@ onMounted(() => {
         :stripe="stripe"
         @selection-change="setSelectRows"
       >
-        <el-table-column type="expand" />
+        <el-table-column type="selection" />
         <el-table-column type="index" align="center" label="序号" width="55" />
-        <el-table-column prop="a" align="center" label="站长ID" />
-        <el-table-column prop="b" align="center" label="货币类型" />
-        <el-table-column prop="c" align="center" label="结算金额" />
-        <el-table-column prop="d" align="center" label="税费" />
-        <el-table-column prop="e" align="center" label="实付金额" />
-        <el-table-column prop="f" align="center" label="账户金额" />
-        <el-table-column prop="g" align="center" label="状态" />
-        <el-table-column prop="h" align="center" label="创建时间" />
+        <el-table-column prop="a" align="center" label="供应商ID" />
+        <el-table-column prop="b" align="center" label="开始日期" />
+        <el-table-column prop="c" align="center" label="结算日期" />
+        <el-table-column prop="d" align="center" label="状态" >
+          <el-switch >
+          </el-switch>
+        </el-table-column>
         <el-table-column align="center" label="操作" width="170">
           <el-button text type="primary" size="default" @click="editData">
-            确认收票
+            编辑
+          </el-button>
+          <el-button text type="danger" size="default" @click="deleteData">
+            删除
           </el-button>
         </el-table-column>
         <template #empty>
@@ -215,6 +215,8 @@ onMounted(() => {
         @size-change="sizeChange"
         @current-change="currentChange"
       />
+      <Edit ref="editRef" />
+      <Delete ref="deleteRef" />
     </PageMain>
   </div>
 </template>
@@ -233,6 +235,7 @@ onMounted(() => {
 .el-pagination {
   margin-top: 15px;
 }
+
 .absolute-container {
   position: absolute;
   display: flex;

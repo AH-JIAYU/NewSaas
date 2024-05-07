@@ -40,7 +40,6 @@ const globalSettings: Settings.all = {
     pageReload: true,
     colorScheme: true,
   },
-
 }
 
 export default defaultsDeep(globalSettings, settingsDefault) as RecursiveRequired<Settings.all>

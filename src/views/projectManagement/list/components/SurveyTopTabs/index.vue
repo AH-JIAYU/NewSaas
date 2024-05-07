@@ -10,16 +10,14 @@ import zhHans from 'bytemd/locales/zh_Hans.json'
 import gfmLocale from '@bytemd/plugin-gfm/lib/locales/zh_Hans.json'
 import 'bytemd/dist/index.css'
 import { ref } from 'vue'
-
-const value = ref([4, 8])
 const content = ref('# Fantastic-admin')
-const activeName = ref('basicSettings')
 const plugins = [
   gfm({
     locale: gfmLocale,
   }),
 ]
-
+const value = ref([4, 8])
+const activeName = ref('basicSettings')
 function handleChange(v: string) {
   content.value = v
 }
