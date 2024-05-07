@@ -2,9 +2,8 @@
 defineOptions({
   name: 'UserUidParsingIndex',
 })
-import { ElMessage, ElMessageBox } from "element-plus";
 import { DArrowRight } from '@element-plus/icons-vue'
-const form = ref<Object>({});
+const form = ref<any>({});
 const ParsingEncryption = (fold: number | string) => { //解析 | 加密
   switch (fold) {
     case 0: //解析

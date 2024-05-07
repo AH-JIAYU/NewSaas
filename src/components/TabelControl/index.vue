@@ -3,35 +3,37 @@
 <script setup>
 import { defineProps, toRefs } from 'vue'
 import draggable from 'vuedraggable'
+import useSettingsStore from '@/store/modules/settings'
 
 defineOptions({
   name: 'TableControl',
 })
+const settingsStore = useSettingsStore() //全屏
 const props = defineProps({
   border: Boolean,
   columns: Array,
-
+  tableAutoHeight: Boolean,
   lineHeight: String,
   stripe: Boolean,
   checkList: Array,
 })
-const emit = defineEmits(['clickFullScreen', 'queryData', 'update:stripe', 'update:border', 'update:lineHeight', 'update:checkList'])
-const { border, columns, lineHeight, stripe, checkList } = toRefs(props)
-const clickFullScreen = () => emit('clickFullScreen')
+const emit = defineEmits([ 'queryData', 'update:stripe', 'update:border','update:tableAutoHeight', 'update:lineHeight', 'update:checkList'])
+const { border, columns, tableAutoHeight, lineHeight, stripe, checkList } = toRefs(props)
 const queryData = () => emit('queryData')
-function changeStripe() {
+function changeStripe() { // 条纹
   emit('update:stripe', !stripe.value)
 }
-function changeBorder() {
+function changeBorder() { //边框
   emit('update:border', !border.value)
 }
-function changeRadio(a) {
+function changeTableAutoHeight() { //高度自适应
+  emit('update:tableAutoHeight', !tableAutoHeight.value)
+}
+function changeRadio(a) {  //表格大小
   emit('update:lineHeight', a)
 }
-function changeCheckbox(a) {
+function changeCheckbox(a) { //展示列
   emit('update:checkList', a)
-
-  // emit('update:lineHeight', a)
 }
 const dragOptions = computed(() => {
   return {
@@ -50,10 +52,13 @@ const dragOptions = computed(() => {
       <el-button class="hidden-xs-only" @click="changeBorder">
         <el-checkbox v-model="border" label="边框" />
       </el-button>
+      <el-button class="hidden-xs-only" @click="changeTableAutoHeight">
+        <el-checkbox v-model="tableAutoHeight" label="表格高度自适应" />
+      </el-button>
       <el-button @click="queryData">
         <div class="i-flowbite:refresh-outline h-1.5em w-1.5em" />
       </el-button>
-      <el-button @click="clickFullScreen">
+      <el-button @click="settingsStore.setMainPageMaximize()">
         <div class="i-material-symbols:fullscreen h-1.5em w-1.5em" />
       </el-button>
       <el-popover trigger="hover" :width="162">
