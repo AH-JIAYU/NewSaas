@@ -1,5 +1,7 @@
-<script setup>
+<script setup lang="ts">
 import check from './components/check.vue'
+
+const { pagination, onSizeChange, onCurrentChange } = usePagination() //分页
 
 const activeName = ref('report')
 const CheckRef = ref(null)
@@ -13,22 +15,29 @@ const tableData = [
   { name: 'name', cname: 'amr', fz: '张三', num1: 561, num2: 435, num3: 344, money1: 1344.11, money2: 111112 },
 ]
 
-const layout = 'total, sizes, prev, pager, next, jumper'
-const total = 100
-const queryForm = reactive({
+const queryForm = reactive<any>({
   pageNo: 1,
   pageSize: 10,
   select: {},
 })
-function handleSizeChange(value) {
-  queryForm.pageNo = 1
-  queryForm.pageSize = value
-  fetchData({ id: dicttype_id.value, key: '' })
+// function handleSizeChange(value) {
+//   queryForm.pageNo = 1
+//   queryForm.pageSize = value
+//   fetchData({ id: dicttype_id.value, key: '' })
+// }
+
+// function handleCurrentChange(value) {
+//   queryForm.pageNo = value
+//   fetchData({ id: dicttype_id.value, key: '' })
+// }
+// 每页数量切换
+function sizeChange(size: number) {
+  onSizeChange(size).then(() => fetchData())
 }
 
-function handleCurrentChange(value) {
-  queryForm.pageNo = value
-  fetchData({ id: dicttype_id.value, key: '' })
+// 当前页码切换（翻页）
+function currentChange(page = 1) {
+  onCurrentChange(page).then(() => fetchData())
 }
 // 查看
 function handleCheck(row) {
@@ -94,15 +103,9 @@ function handleCheck(row) {
         </el-table>
       </el-tab-pane>
     </el-tabs>
-    <el-pagination
-      background
-      :current-page="queryForm.pageNo"
-      :layout="layout"
-      :page-size="queryForm.pageSize"
-      :total="total"
-      @current-change="handleCurrentChange"
-      @size-change="handleSizeChange"
-    />
+    <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+        background @size-change="sizeChange" @current-change="currentChange" />
     <check ref="CheckRef" />
   </PageMain>
 </template>

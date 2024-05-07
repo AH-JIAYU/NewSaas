@@ -5,19 +5,18 @@ defineOptions({
 import { onMounted } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 
-const fold = ref<boolean>(true);
+const { pagination, onSizeChange, onCurrentChange } = usePagination() //分页
+
+
 const listLoading = ref<boolean>(false);
-const layout = ref<string>("total, sizes, prev, pager, next, jumper"); //分页配置
-const list = ref([]); //列表
-const selectRows = ref<string>(""); //表格-选中行
-const total = ref<number>(0); //总页数
+const list = ref<Array<Object>>([]); //列表
+const selectRows = ref<string>(); //表格-选中行
+const checkList = ref<any>([]); //表格-展示的列
 const border = ref<boolean>(true); //表格控件-是否展示边框
 const stripe = ref<boolean>(false); //表格控件-是否展示斑马条
-const lineHeight = ref<string>("default"); //表格控件-控制表格大小
-const isFullscreen = ref<boolean>(false); //表格控件-是否全屏
-const checkList = ref([]); //表格-展示的列
-const columns = ref([
-  //表格控件-展示列
+const lineHeight = ref<any>("default"); //表格控件-控制表格大小
+  const tableAutoHeight = ref(false)  // 表格控件-高度自适应
+const columns = ref([//表格控件-展示列
   {
     label: "等级名称",
     prop: "a",
@@ -26,49 +25,29 @@ const columns = ref([
     checked: true, //默认展示
   },
 ]);
-const queryForm = reactive({
+const queryForm = reactive<any>({
   //请求接口携带参数
   pageNo: 1,
   pageSize: 10,
   select: {},
 });
+// 每页数量切换
+function sizeChange(size: number) {
 
-// 全屏
-function clickFullScreen() {
-  isFullscreen.value = !isFullscreen.value;
+  onSizeChange(size).then(() => fetchData())
 }
 
-// 展开|合并
-function handleFold() {
-  fold.value = !fold.value;
+// 当前页码切换（翻页）
+function currentChange(page = 1) {
+  onCurrentChange(page).then(() => fetchData())
 }
 
-// 重置搜索内容
-function onReset() {
-  Object.assign(queryForm, {
-    pageNo: 1,
-    pageSize: 10,
-    select: {},
-    order: {
-      id: "ASC",
-    },
-  });
-}
 // 重置请求
 function queryData() {
   queryForm.pageNo = 1;
   fetchData();
 }
-// 分页-更改每页个数
-function handleSizeChange(val) {
-  queryForm.pageSize = val;
-  fetchData();
-}
-// 分页-更改页数
-function handleCurrentChange(val) {
-  queryForm.pageNo = val;
-  fetchData();
-}
+
 // 请求
 async function fetchData() {
   listLoading.value = true;
@@ -86,11 +65,11 @@ async function fetchData() {
   listLoading.value = false;
 }
 // 表格-单选框
-function setSelectRows(val) {
+function setSelectRows(val: string | undefined) {
   selectRows.value = val;
 }
 onMounted(() => {
-  columns.value.forEach((item) => {
+  columns.value.forEach((item:any) => {
     if (item.checked) checkList.value.push(item.prop);
   });
   fetchData();
@@ -98,53 +77,68 @@ onMounted(() => {
 </script>
 
 <template>
-  <div :class="{ 'vab-table-fullscreen': isFullscreen }">
+  <div :class="{ 'absolute-container': tableAutoHeight  }">
     <PageMain>
-      <el-row>
-        <el-form :inline="true" label-position="right" :model="queryForm" @submit.prevent>
-          <el-form-item>
+      <SearchBar :show-toggle="false">
+        <template #default="{ fold, toggle }">
+          <ElForm :model="queryForm.select" size="default" label-width="180px" inline-message inline
+            class="search-form">
+            <el-form-item label="组会员ID、子会员名称">
             <el-input v-model.trim="queryForm.select.id" clearable :inline="false" placeholder="组会员ID、子会员名称" />
           </el-form-item>
-          <el-form-item>
+          <el-form-item label="供应商ID"  v-show="!fold">
             <el-input v-model.trim="queryForm.select.name" clearable :inline="false" placeholder="供应商ID" />
           </el-form-item>
-          <el-form-item v-show="!fold">
+          <el-form-item label="子会员角色"  v-show="!fold">
             <el-select v-model="queryForm.select.default" clearable placeholder="子会员角色">
               <el-option label="默认" value="true" />
               <el-option label="关闭" value="false" />
             </el-select>
           </el-form-item>
-          <el-form-item v-show="!fold">
+          <el-form-item label="子会员状态"  v-show="!fold">
             <el-select v-model="queryForm.select.default" clearable placeholder="子会员状态">
               <el-option label="默认" value="true" />
               <el-option label="关闭" value="false" />
             </el-select>
           </el-form-item>
-          <el-form-item v-show="!fold">
+          <el-form-item label="所属组"  v-show="!fold">
             <el-select v-model="queryForm.select.default" clearable placeholder="所属组">
               <el-option label="默认" value="true" />
               <el-option label="关闭" value="false" />
             </el-select>
           </el-form-item>
-          <el-form-item v-show="!fold">
+          <el-form-item label="日期"  v-show="!fold">
             <el-date-picker v-model="queryForm.select.time" type="daterange" unlink-panels range-separator="-"
               start-placeholder="注册开始日期" end-placeholder="注册结束日期" size="default" style="width: 192px"
               clear-icon="true" />
           </el-form-item>
-          <TableQuery :fold="fold" :list-loading="listLoading" @handle-fold="handleFold" @on-reset="onReset"
-            @query-data="queryData" />
-        </el-form>
-      </el-row>
+            <ElFormItem>
+              <ElButton type="primary" @click="currentChange()">
+                <template #icon>
+                  <SvgIcon name="i-ep:search" />
+                </template>
+                筛选
+              </ElButton>
+              <ElButton link @click="toggle">
+                <template #icon>
+                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
+                </template>
+                {{ fold ? '展开' : '收起' }}
+              </ElButton>
+            </ElFormItem>
+          </ElForm>
+        </template>
+      </SearchBar>
+    <PageMain>
       <el-row>
         <FormLeftPanel> </FormLeftPanel>
         <FormRightPanel>
           <el-button size="default"> 导出 </el-button>
-          <TabelControl v-model:border="border" v-model:checkList="checkList" v-model:columns="columns"
-            v-model:is-fullscreen="isFullscreen" v-model:line-height="lineHeight" v-model:stripe="stripe"
-            style="margin-left: 12px" @click-full-screen="clickFullScreen" @query-data="queryData" />
+          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight"
+              v-model:checkList="checkList" v-model:columns="columns" v-model:line-height="lineHeight"
+              v-model:stripe="stripe" style="margin-left: 12px;" @query-data="queryData" />
         </FormRightPanel>
       </el-row>
-      <el-row>
         <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
           @selection-change="setSelectRows">
           <el-table-column align="center" prop="a" show-overflow-tooltip type="selection" />
@@ -164,10 +158,57 @@ onMounted(() => {
             <el-empty class="vab-data-empty" description="暂无数据" />
           </template>
         </el-table>
-      </el-row>
+        <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+          :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+          background @size-change="sizeChange" @current-change="currentChange" />
+        </PageMain>
 
-      <el-pagination background :current-page="queryForm.pageNo" :layout="layout" :page-size="queryForm.pageSize"
-        :total="total" @current-change="handleCurrentChange" @size-change="handleSizeChange" />
     </PageMain>
   </div>
 </template>
+<style scoped lang="scss">
+// 高度自适应
+.absolute-container {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+
+  .page-header {
+    margin-bottom: 0;
+  }
+
+  .page-main {
+    flex: 1;
+    overflow: auto;
+
+    :deep(.main-container) {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      overflow: auto;
+    }
+  }
+}
+// 筛选
+.page-main {
+  .search-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+    margin-bottom: -18px;
+
+    :deep(.el-form-item) {
+      grid-column: auto / span 1;
+
+      &:last-child {
+        grid-column-end: -1;
+
+        .el-form-item__content {
+          justify-content: flex-end;
+        }
+      }
+    }
+  }
+}
+</style>
