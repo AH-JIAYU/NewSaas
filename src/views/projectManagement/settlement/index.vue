@@ -1,20 +1,17 @@
 <script setup lang="ts">
 defineOptions({
-  name: 'projectSettlement',
-})
+  name: "ProjectManagementSettlementIndex",
+});
+import { ref, reactive } from "vue";
 import { ElMessage } from "element-plus";
-import tableQuery from "@/components/tableQuery/index.vue";
 import invoicingEdit from "./components/InvoicingEdit/index.vue";
 import moreOperations from "./components/MoreOperations/index.vue";
 import projectReview from "./components/ProjectReview/index.vue";
 import settlementEdit from "./components/SettlementEdit/index.vue";
 import refundDetail from "./components/RefundDetails/index.vue";
 import Settlement from "./components/AddSettlement/index.vue";
-// 查询组件变量
-const fold = ref<boolean>(false);
+const { pagination, onSizeChange, onCurrentChange } = usePagination(); //分页
 // 分页
-const layout = ref<string>("total, sizes, prev, pager, next, jumper");
-const total = ref<any>(0);
 const value1 = ref("");
 const tableSortRef = ref("");
 // loading加载
@@ -54,39 +51,6 @@ const queryForm = reactive<any>({
   select: {},
 });
 const list = ref<any>([]);
-const dataList = {
-  data: [
-    {
-      a: "111",
-      b: "222222",
-      c: "3333",
-      d: "444",
-      e: "5555555",
-      f: "66666666",
-      g: "777777777",
-      h: "8888888888",
-      i: "999999999",
-      j: "10101010",
-      k: "1212121212",
-    },
-    {
-      a: "111",
-      b: "222222",
-      c: "3333",
-      d: "444",
-      e: "5555555",
-      f: "66666666",
-      g: "777777777",
-      h: "8888888888",
-      i: "999999999",
-      j: "10101010",
-      k: "1212121212",
-    },
-  ],
-  total: 3,
-};
-list.value = dataList.data;
-total.value = dataList.total;
 // 获取列表选中数据
 const setSelectRows = (value: any) => {
   selectRows.value = value;
@@ -131,26 +95,17 @@ const edit = () => {
 const refundDetails = () => {
   refundRef.value.isShow = true;
 };
-// 折叠查询表单
-function handleFold() {
-  fold.value = !fold.value;
-}
 // 右侧工具
 function clickFullScreen() {
   isFullscreen.value = !isFullscreen.value;
 }
-// 查询数据
-function queryData() {
-  queryForm.pageNo = 1;
+// 每页数量切换
+function sizeChange(size: number) {
+  onSizeChange(size).then(() => fetchData());
 }
-// 选择每页多少条数据
-function handleSizeChange(value: number) {
-  queryForm.pageNo = 1;
-  queryForm.pageSize = value;
-}
-// 选择页数
-function handleCurrentChange(value: number) {
-  queryForm.pageNo = value;
+// 当前页码切换（翻页）
+function currentChange(page = 1) {
+  onCurrentChange(page).then(() => fetchData());
 }
 // 重置数据
 function onReset() {
@@ -164,71 +119,119 @@ function onReset() {
     select: {},
   });
 }
+async function fetchData() {
+  listLoading.value = true;
+  // const { data } = await getList(queryForm)
+  // list.value = data[0]
+  // total.value = data[0].length
+  list.value = [
+    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+  ];
+  pagination.value.total = 3;
+  listLoading.value = false;
+}
+onMounted(() => {
+  fetchData();
+});
 </script>
 
 <template>
   <div :class="{ 'vab-table-fullscreen': isFullscreen }">
     <PageMain>
-      <el-form
-        inline
-        label-position="right"
-        label-width="5rem"
-        :model="queryForm"
-        @submit.prevent
-      >
-        <el-form-item label="">
-          <el-input clearable placeholder="项目ID" />
-        </el-form-item>
-        <el-form-item v-show="!fold" label="">
-          <el-input clearable placeholder="项目名称" />
-        </el-form-item>
-        <el-form-item v-show="!fold" label="">
-          <el-input clearable placeholder="项目标识" />
-        </el-form-item>
-        <el-form-item v-show="!fold" label="">
-          <el-select placeholder="国家地区">
-            <el-option :key="11" :label="11" :value="111"> 11111 </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item v-show="!fold" label="">
-          <el-select placeholder="客户简称">
-            <el-option :key="11" :label="11" :value="111"> 11111 </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item v-show="!fold" label="">
-          <el-select placeholder="分配目标">
-            <el-option :key="11" :label="11" :value="111"> 11111 </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item v-show="!fold" label="">
-          <el-select placeholder="项目状态">
-            <el-option :key="11" :label="11" :value="111"> 11111 </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item v-show="!fold">
-          <el-input clearable placeholder="创建人" />
-        </el-form-item>
-        <el-form-item v-show="!fold" label="">
-          <el-select placeholder="时间类型">
-            <el-option :key="11" :label="11" :value="111"> 11111 </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item v-show="!fold">
-          <el-date-picker
-            v-model="value1"
-            type="date"
-            placeholder="Pick a day"
-            size="default"
-          />
-        </el-form-item>
-        <tableQuery
-          :fold="fold"
-          :list-loading="listLoading"
-          @handle-fold="handleFold"
-          @on-reset="onReset"
-          @query-data="queryData"
-        />
-      </el-form>
+      <SearchBar :show-toggle="false">
+        <template #default="{ fold, toggle }">
+          <el-form
+            inline
+            label-position="right"
+            label-width="80px"
+            :model="queryForm"
+            @submit.prevent
+          >
+            <el-form-item label="">
+              <el-input clearable placeholder="项目ID" />
+            </el-form-item>
+            <el-form-item v-show="!fold" label="">
+              <el-input clearable placeholder="项目名称" />
+            </el-form-item>
+            <el-form-item v-show="!fold" label="">
+              <el-input clearable placeholder="项目标识" />
+            </el-form-item>
+            <el-form-item v-show="!fold" label="">
+              <el-select placeholder="国家地区">
+                <el-option :key="11" :label="11" :value="111">
+                  11111
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item v-show="!fold" label="">
+              <el-select placeholder="客户简称">
+                <el-option :key="11" :label="11" :value="111">
+                  11111
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item v-show="!fold" label="">
+              <el-select placeholder="分配目标">
+                <el-option :key="11" :label="11" :value="111">
+                  11111
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item v-show="!fold" label="">
+              <el-select placeholder="项目状态">
+                <el-option :key="11" :label="11" :value="111">
+                  11111
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item v-show="!fold">
+              <el-input clearable placeholder="创建人" />
+            </el-form-item>
+            <el-form-item v-show="!fold" label="">
+              <el-select placeholder="时间类型">
+                <el-option :key="11" :label="11" :value="111">
+                  11111
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item style="width: 192px;" v-show="!fold">
+              <el-date-picker
+                v-model="value1"
+                type="date"
+                placeholder="Pick a day"
+                size="default"
+              />
+            </el-form-item>
+            <ElFormItem>
+              <ElButton type="primary" @click="currentChange()">
+                <template #icon>
+                  <SvgIcon name="i-ep:search" />
+                </template>
+                筛选
+              </ElButton>
+              <ElButton @click="onReset">
+                <template #icon>
+                  <div class="i-grommet-icons:power-reset w-1em h-1em"></div>
+                </template>
+                重置
+              </ElButton>
+              <ElButton link @click="toggle">
+                <template #icon>
+                  <SvgIcon
+                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
+                  />
+                </template>
+                {{ fold ? "展开" : "收起" }}
+              </ElButton>
+            </ElFormItem>
+          </el-form>
+        </template>
+      </SearchBar>
       <el-row :gutter="24">
         <FormLeftPanel>
           <el-button type="primary" size="default" @click="addSettlement">
@@ -254,7 +257,7 @@ function onReset() {
             v-model:stripe="stripe"
             style="margin-left: 0.75rem"
             @click-full-screen="clickFullScreen"
-            @query-data="queryData"
+            @query-data="currentChange"
           />
         </FormRightPanel>
       </el-row>
@@ -270,7 +273,7 @@ function onReset() {
         @selection-change="setSelectRows"
       >
         <el-table-column type="selection" />
-        <el-table-column type="index" label="序号" width="55" />
+        <el-table-column type="index" align="center" label="序号" width="55" />
         <el-table-column prop="a" align="center" label="项目ID" />
         <el-table-column prop="b" align="center" label="项目名称" />
         <el-table-column prop="c" align="center" label="客户简称/标识" />
@@ -299,14 +302,17 @@ function onReset() {
           <el-empty description="暂无数据" />
         </template>
       </el-table>
-      <el-pagination
+      <ElPagination
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
+        :page-sizes="pagination.sizes"
+        :layout="pagination.layout"
+        :hide-on-single-page="false"
+        class="pagination"
         background
-        :current-page="queryForm.pageNo"
-        :layout="layout"
-        :page-size="queryForm.pageSize"
-        :total="total"
-        @current-change="handleCurrentChange"
-        @size-change="handleSizeChange"
+        @size-change="sizeChange"
+        @current-change="currentChange"
       />
       <invoicingEdit ref="invoicingRef" />
       <moreOperations ref="settlementRef" />
@@ -331,5 +337,48 @@ function onReset() {
 
 .el-pagination {
   margin-top: 0.9375rem;
+}
+.absolute-container {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+
+  .page-header {
+    margin-bottom: 0;
+  }
+
+  .page-main {
+    flex: 1;
+    overflow: auto;
+
+    :deep(.main-container) {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      overflow: auto;
+    }
+  }
+}
+
+.page-main {
+  .search-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+    margin-bottom: -18px;
+
+    :deep(.el-form-item) {
+      grid-column: auto / span 1;
+
+      &:last-child {
+        grid-column-end: -1;
+
+        .el-form-item__content {
+          justify-content: flex-end;
+        }
+      }
+    }
+  }
 }
 </style>

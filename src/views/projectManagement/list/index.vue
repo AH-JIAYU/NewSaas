@@ -1,256 +1,292 @@
 <script setup lang="ts">
-  defineOptions({
-    name: 'list',
-  })
-import allocationEdit from './components/AllocationEdit/index.vue'
-import SurveysEdit from './components/SurveysEdit/index.vue'
-import ProjectDetails from './components/ProjectDetails/index.vue'
-import tableQuery from '@/components/tableQuery/index.vue'
-// 查询组件变量
-const fold = ref<boolean>(false)
+defineOptions({
+  name: "ProjectManagementListIndex",
+});
+import allocationEdit from "./components/AllocationEdit/index.vue";
+import SurveysEdit from "./components/SurveysEdit/index.vue";
+import ProjectDetails from "./components/ProjectDetails/index.vue";
+const { pagination, onSizeChange, onCurrentChange } = usePagination(); //分页
 // 分页
-const layout = ref<string>('total, sizes, prev, pager, next, jumper')
-const total = ref<any>(0)
-const value1 = ref('')
-const tableSortRef = ref('')
+const value1 = ref("");
+const tableSortRef = ref("");
 // loading加载
-const listLoading = ref<boolean>(true)
+const listLoading = ref<boolean>(true);
 // 获取组件变量
-const addAllocationEdit = ref('')
-const addSurveysEdit = ref('')
-const projectDetailsRef = ref('')
+const addAllocationEdit = ref("");
+const addSurveysEdit = ref("");
+const projectDetailsRef = ref("");
 // 右侧工具栏配置变量
-const border = ref(true)
-const checkList = ref([])
-const isFullscreen = ref(false)
-const lineHeight = ref('default')
-const stripe = ref(false)
+const border = ref(true);
+const checkList = ref([]);
+const tableAutoHeight = ref(false); // 表格控件-高度自适应
+const isFullscreen = ref(false); //表格控件-控制全屏
+const lineHeight = ref("default");
+const stripe = ref(false);
 const columns = ref([
   {
-    label: '项目ID',
-    prop: 'ID',
+    label: "项目ID",
+    prop: "ID",
     sortable: true,
     // 不可改变的
     disableCheck: true,
     checked: true,
   },
-])
+]);
 // 查询参数
 const queryForm = reactive<any>({
   pageNo: 1,
   pageSize: 10,
-  title: '',
+  title: "",
   order: {
-    id: 'ASC',
+    id: "ASC",
   },
   select: {},
-})
-const list = ref<any>([])
-const dataList = {
-  data: [
-    {
-      a: '111',
-      b: '222222',
-      c: '3333',
-      d: '444',
-      e: '5555555',
-      f: '66666666',
-      g: '777777777',
-      h: '8888888888',
-      i: '999999999',
-      j: '10101010',
-      k: '1212121212',
-    },
-  ],
-  total: 3,
-}
-list.value = dataList.data
-total.value = dataList.total
+});
+const list = ref<any>([]);
+
 // 分配
 function distribution() {
-  addAllocationEdit.value.isShow = true
+  addAllocationEdit.value.isShow = true;
 }
 // 新增项目
 function surveysEdit() {
-  addSurveysEdit.value.isShow = true
+  addSurveysEdit.value.isShow = true;
 }
 // 项目详情
 function projectDetails() {
-  projectDetailsRef.value.isShow = true
+  projectDetailsRef.value.isShow = true;
 }
 
-// 折叠查询表单
-function handleFold() {
-  fold.value = !fold.value
-}
-// 工具配置项
+//表格控件-控制全屏
 function clickFullScreen() {
-  isFullscreen.value = !isFullscreen.value
+  isFullscreen.value = !isFullscreen.value;
 }
-// 查询数据
-function queryData() {
-  queryForm.pageNo = 1
+// 每页数量切换
+function sizeChange(size: number) {
+  onSizeChange(size).then(() => fetchData());
 }
-// 选择每页多少条数据
-function handleSizeChange(value: number) {
-  queryForm.pageNo = 1
-  queryForm.pageSize = value
-}
-// 选择页数
-function handleCurrentChange(value: number) {
-  queryForm.pageNo = value
+// 当前页码切换（翻页）
+function currentChange(page = 1) {
+  onCurrentChange(page).then(() => fetchData());
 }
 // 重置数据
 function onReset() {
   Object.assign(queryForm, {
     pageNo: 1,
     pageSize: 10,
-    title: '',
+    title: "",
     order: {
-      id: 'ASC',
+      id: "ASC",
     },
     select: {},
-  })
+  });
 }
+async function fetchData() {
+  listLoading.value = true;
+  // const { data } = await getList(queryForm)
+  // list.value = data[0]
+  // total.value = data[0].length
+  list.value = [
+    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+  ];
+  pagination.value.total = 3;
+  listLoading.value = false;
+}
+onMounted(() => {
+  fetchData();
+});
 </script>
 
 <template>
-  <div :class="{ 'vab-table-fullscreen': isFullscreen }">
+  <div
+    :class="{
+      'vab-table-fullscreen': isFullscreen,
+      'absolute-container': tableAutoHeight,
+    }"
+  >
     <PageMain>
-      <el-form inline label-position="right" label-width="80px" :model="queryForm" @submit.prevent>
-        <el-form-item label="">
-          <el-input clearable placeholder="项目ID" />
-        </el-form-item>
-        <el-form-item v-show="!fold" label="">
-          <el-input clearable placeholder="项目名称" />
-        </el-form-item>
-        <el-form-item v-show="!fold" label="">
-          <el-input clearable placeholder="项目标识" />
-        </el-form-item>
-        <el-form-item v-show="!fold" label="">
-          <el-select placeholder="国家地区">
-            <el-option :key="11" :label="11" :value="111">
-              11111
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item v-show="!fold" label="">
-          <el-select placeholder="客户简称">
-            <el-option :key="11" :label="11" :value="111">
-              11111
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item v-show="!fold" label="">
-          <el-select placeholder="分配目标">
-            <el-option :key="11" :label="11" :value="111">
-              11111
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item v-show="!fold" label="">
-          <el-select placeholder="项目状态">
-            <el-option :key="11" :label="11" :value="111">
-              11111
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item v-show="!fold" label="">
-          <el-select placeholder="B2B/B2C">
-            <el-option :key="11" :label="11" :value="111">
-              11111
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item v-show="!fold">
-          <el-input clearable placeholder="创建人" />
-        </el-form-item>
-        <el-form-item v-show="!fold">
-          <el-date-picker
-            v-model="value1"
-            type="date"
-            placeholder="Pick a day"
-            size="default"
-          />
-        </el-form-item>
-        <tableQuery :fold="fold" :list-loading="listLoading" @handle-fold="handleFold" @on-reset="onReset" @query-data="queryData" />
-      </el-form>
+      <SearchBar :show-toggle="false">
+        <template #default="{ fold, toggle }">
+          <el-form
+            inline
+            label-position="right"
+            label-width="80px"
+            :model="queryForm"
+            @submit.prevent
+          >
+            <el-form-item label="">
+              <el-input clearable placeholder="项目ID" />
+            </el-form-item>
+            <el-form-item v-show="!fold" label="">
+              <el-input clearable placeholder="项目名称" />
+            </el-form-item>
+            <el-form-item v-show="!fold" label="">
+              <el-input clearable placeholder="项目标识" />
+            </el-form-item>
+            <el-form-item v-show="!fold" label="">
+              <el-select placeholder="国家地区">
+                <el-option :key="11" :label="11" :value="111">
+                  11111
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item v-show="!fold" label="">
+              <el-select placeholder="客户简称">
+                <el-option :key="11" :label="11" :value="111">
+                  11111
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item v-show="!fold" label="">
+              <el-select placeholder="分配目标">
+                <el-option :key="11" :label="11" :value="111">
+                  11111
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item v-show="!fold" label="">
+              <el-select placeholder="项目状态">
+                <el-option :key="11" :label="11" :value="111">
+                  11111
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item v-show="!fold" label="">
+              <el-select placeholder="B2B/B2C">
+                <el-option :key="11" :label="11" :value="111">
+                  11111
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item v-show="!fold">
+              <el-input clearable placeholder="创建人" />
+            </el-form-item>
+            <el-form-item style="width: 192px" v-show="!fold">
+              <el-date-picker
+                v-model="value1"
+                type="date"
+                placeholder="Pick a day"
+                size="default"
+              />
+            </el-form-item>
+            <ElFormItem>
+              <ElButton type="primary" @click="currentChange()">
+                <template #icon>
+                  <SvgIcon name="i-ep:search" />
+                </template>
+                筛选
+              </ElButton>
+              <ElButton  @click="onReset">
+                <template #icon>
+                  <div class="i-grommet-icons:power-reset w-1em h-1em"></div>
+                </template>
+                重置
+              </ElButton>
+              <ElButton link @click="toggle">
+                <template #icon>
+                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
+                </template>
+                {{ fold ? '展开' : '收起' }}
+              </ElButton>
+            </ElFormItem>
+          </el-form>
+        </template>
+      </SearchBar>
+
       <el-row :gutter="24">
-        <FormLeftPanel>
-          <el-button type="primary" size="default" @click="surveysEdit">
-            新增项目
-          </el-button>
-          <el-button type="primary" size="default" @click="distribution">
-            分配
-          </el-button>
-        </FormLeftPanel>
+          <FormLeftPanel>
+            <el-button type="primary" size="default" @click="surveysEdit">
+              添加项目
+            </el-button>
+            <el-button type="primary" size="default" @click="distribution">
+              分配
+            </el-button>
+          </FormLeftPanel>
 
           <FormRightPanel>
-            <el-button style="margin-right: 10px;" size="default" @click="">
-            导出
-          </el-button>
-          <TabelControl
-            v-model:border="border"
-            v-model:checkList="checkList"
-            v-model:columns="columns"
-            v-model:is-fullscreen="isFullscreen"
-            v-model:line-height="lineHeight"
-            v-model:stripe="stripe"
-            style="margin-left: 12px;"
-            @click-full-screen="clickFullScreen"
-            @query-data="queryData"/>
+            <el-button style="margin-right: 10px" size="default" @click="">
+              导出
+            </el-button>
+            <TabelControl
+              v-model:border="border"
+              v-model:tableAutoHeight="tableAutoHeight"
+              v-model:checkList="checkList"
+              v-model:columns="columns"
+              v-model:is-fullscreen="isFullscreen"
+              v-model:line-height="lineHeight"
+              v-model:stripe="stripe"
+              style="margin-left: 12px"
+              @click-full-screen="clickFullScreen"
+              @query-data="currentChange"
+            />
           </FormRightPanel>
-
-
-      </el-row>
-      <el-table
-        style="margin-top: 10px;"
-        ref="tableSortRef"
-        v-loading="false"
-        row-key="id"
-        :data="list"
-        :border="border"
-        :size="lineHeight"
-        :stripe="stripe"
-      >
-        <el-table-column type="selection" />
-        <el-table-column type="index" label="序号" width="55" />
-        <el-table-column prop="a" align="center" label="项目ID" />
-        <el-table-column prop="b" align="center" label="项目名称" />
-        <el-table-column prop="c" align="center" label="客户简称/标识" />
-        <el-table-column prop="d" align="center" label="分配目标" />
-        <el-table-column prop="e" align="center" label="参与/完成/配额/限量" />
-        <el-table-column prop="f" align="center" label="原价" />
-        <el-table-column prop="g" align="center" label="IR/NIR" />
-        <el-table-column prop="h" align="center" label="国家地区" />
-        <el-table-column prop="i" align="center" label="项目状态">
-          <el-switch
-            v-model="value1"
+        </el-row>
+        <el-table
+          style="margin-top: 10px"
+          ref="tableSortRef"
+          v-loading="false"
+          row-key="id"
+          :data="list"
+          :border="border"
+          :size="lineHeight"
+          :stripe="stripe"
+        >
+          <el-table-column type="selection" />
+          <el-table-column
+            type="index"
+            align="center"
+            label="序号"
+            width="55"
           />
-        </el-table-column>
-        <el-table-column prop="j" align="center" label="创建人" />
-        <el-table-column prop="k" align="center" label="创建时间" />
-        <el-table-column align="center" label="操作" width="170">
-          <el-button text type="primary" size="default">
-            编辑
-          </el-button>
-          <el-button text type="primary" size="default" @click="projectDetails">
-            详情
-          </el-button>
-        </el-table-column>
-        <template #empty>
-          <el-empty description="暂无数据" />
-        </template>
-      </el-table>
-      <el-pagination
-        background
-        :current-page="queryForm.pageNo"
-        :layout="layout"
-        :page-size="queryForm.pageSize"
-        :total="total"
-        @current-change="handleCurrentChange"
-        @size-change="handleSizeChange"
-      />
+          <el-table-column prop="a" align="center" label="项目ID" />
+          <el-table-column prop="b" align="center" label="项目名称" />
+          <el-table-column prop="c" align="center" label="客户简称/标识" />
+          <el-table-column prop="d" align="center" label="分配目标" />
+          <el-table-column
+            prop="e"
+            align="center"
+            label="参与/完成/配额/限量"
+          />
+          <el-table-column prop="f" align="center" label="原价" />
+          <el-table-column prop="g" align="center" label="IR/NIR" />
+          <el-table-column prop="h" align="center" label="国家地区" />
+          <el-table-column prop="i" align="center" label="项目状态">
+            <el-switch v-model="value1" />
+          </el-table-column>
+          <el-table-column prop="j" align="center" label="创建人" />
+          <el-table-column prop="k" align="center" label="创建时间" />
+          <el-table-column align="center" label="操作" width="170">
+            <el-button text type="primary" size="default"> 编辑 </el-button>
+            <el-button
+              text
+              type="primary"
+              size="default"
+              @click="projectDetails"
+            >
+              详情
+            </el-button>
+          </el-table-column>
+          <template #empty>
+            <el-empty description="暂无数据" />
+          </template>
+        </el-table>
+        <ElPagination
+          :current-page="pagination.page"
+          :total="pagination.total"
+          :page-size="pagination.size"
+          :page-sizes="pagination.sizes"
+          :layout="pagination.layout"
+          :hide-on-single-page="false"
+          class="pagination"
+          background
+          @size-change="sizeChange"
+          @current-change="currentChange"
+        />
     </PageMain>
     <allocationEdit ref="addAllocationEdit" />
     <SurveysEdit ref="addSurveysEdit" />
@@ -259,17 +295,52 @@ function onReset() {
 </template>
 
 <style scoped lang="scss">
-  .el-select {
-    width: 12rem;
+:deep {
+  table {
+    width: 100% !important;
+  }
+}
+.absolute-container {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+
+  .page-header {
+    margin-bottom: 0;
   }
 
-  :deep {
-    table {
-      width: 100% !important;
+  .page-main {
+    flex: 1;
+    overflow: auto;
+
+    :deep(.main-container) {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      overflow: auto;
     }
   }
+}
 
-  .el-pagination {
-    margin-top: 15px;
+.page-main {
+  .search-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+    margin-bottom: -18px;
+
+    :deep(.el-form-item) {
+      grid-column: auto / span 1;
+
+      &:last-child {
+        grid-column-end: -1;
+
+        .el-form-item__content {
+          justify-content: flex-end;
+        }
+      }
+    }
   }
+}
 </style>

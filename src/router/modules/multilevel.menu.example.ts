@@ -59,18 +59,18 @@ const routes
         },
       },
       {
-        path: 'projectSettlement',
-        name: 'projectSettlement',
-        component: () => import('@/views/projectManagement/projectSettlement/index.vue'),
+        path: 'settlement',
+        name: 'settlement',
+        component: () => import('@/views/projectManagement/settlement/index.vue'),
         meta: {
           title: '项目结算',
           // i18n: $t('route.multimenu.page'),
         },
       },
       {
-        path: 'projectMaterials',
-        name: 'projectMaterials',
-        component: () => import('@/views/projectManagement/projectMaterials/index.vue'),
+        path: 'materials',
+        name: 'materials',
+        component: () => import('@/views/projectManagement/materials/index.vue'),
         meta: {
           title: '项目素材',
           // i18n: $t('route.multimenu.page'),
@@ -86,9 +86,9 @@ const routes
         },
       },
       {
-        path: 'projectScheduling',
-        name: 'projectScheduling',
-        component: () => import('@/views/projectManagement/projectScheduling/index.vue'),
+        path: 'scheduling',
+        name: 'scheduling',
+        component: () => import('@/views/projectManagement/scheduling/index.vue'),
         meta: {
           title: '项目调度',
           // i18n: $t('route.multimenu.page'),
@@ -261,6 +261,46 @@ const routes
         component: () => import('@/views/finance/supplierSettlement/index.vue'),
         meta: {
           title: '供应商结算',
+          // i18n: $t('route.multimenu.page'),
+        },
+      },
+      {
+        path: 'invoice',
+        name: 'invoice',
+        component: () => import('@/views/finance/invoice/index.vue'),
+        meta: {
+          title: '发票管理',
+          // i18n: $t('route.multimenu.page'),
+        },
+      },
+    ],
+  },
+  {
+    path: '/otherFunctions',
+    component: Layout,
+    redirect: '/otherFunctions/announcement',
+    name: 'otherFunctions',
+    meta: {
+      title: '其他功能',
+      // i18n: $t('route.multimenu.root'),
+      icon: 'i-heroicons-solid:menu-alt-3',
+    },
+    children: [
+      {
+        path: 'announcement',
+        name: 'announcement',
+        component: () => import('@/views/otherFunctions/announcement/index.vue'),
+        meta: {
+          title: '文章公告',
+          // i18n: $t('route.multimenu.page'),
+        },
+      },
+      {
+        path: 'websites',
+        name: 'websites',
+        component: () => import('@/views/otherFunctions/websites/index.vue'),
+        meta: {
+          title: '内部站点',
           // i18n: $t('route.multimenu.page'),
         },
       },

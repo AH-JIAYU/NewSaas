@@ -1,19 +1,24 @@
 <script setup lang="ts">
 defineOptions({
-  name: "FinanceSupplierSettlementIndex",
+  name: "ProjectManagementMaterialsIndex",
 });
 import { ElMessage } from "element-plus";
 import { ref, reactive } from "vue";
+import deletes from "./components/Delete/index.vue";
+import edit from "./components/Edit/index.vue";
+import detail from "./components/Details/index.vue";
 const { pagination, onSizeChange, onCurrentChange } = usePagination(); //分页
 // 分页
 const tableSortRef = ref("");
 // loading加载
 const listLoading = ref<boolean>(true);
+const border = ref(true);
 // 获取组件变量
+const deleteRef = ref();
 const editRef = ref();
+const detailsRef = ref();
 // 右侧工具栏配置变量
 const checkList = ref([]);
-const border = ref(true);
 const isFullscreen = ref(false);
 const lineHeight = ref("default");
 const stripe = ref(false);
@@ -43,7 +48,18 @@ const list = ref<any>([]);
 const editData = () => {
   if (!selectRows.value.length) editRef.value.isShow = true;
 };
-// 右侧工具方法
+// 详情
+const projectDetails = () => {
+  if (!selectRows.value.length) detailsRef.value.isShow = true;
+};
+// 删除数据
+const deleteData = () => {
+  // if (!selectRows.value.length)
+  //   return ElMessage({ message: "请选择至少一条数据", type: "warning" });
+  deleteRef.value.isShow = true;
+  deleteRef.value.replyData(selectRows.value);
+};
+// 工具配置项
 function clickFullScreen() {
   isFullscreen.value = !isFullscreen.value;
 }
@@ -51,6 +67,14 @@ function clickFullScreen() {
 const setSelectRows = (value: any) => {
   selectRows.value = value;
 };
+// 每页数量切换
+function sizeChange(size: number) {
+  onSizeChange(size).then(() => fetchData());
+}
+// 当前页码切换（翻页）
+function currentChange(page = 1) {
+  onCurrentChange(page).then(() => fetchData());
+}
 // 重置数据
 function onReset() {
   Object.assign(queryForm, {
@@ -62,14 +86,6 @@ function onReset() {
     },
     select: {},
   });
-}
-// 每页数量切换
-function sizeChange(size: number) {
-  onSizeChange(size).then(() => fetchData());
-}
-// 当前页码切换（翻页）
-function currentChange(page = 1) {
-  onCurrentChange(page).then(() => fetchData());
 }
 async function fetchData() {
   listLoading.value = true;
@@ -107,25 +123,20 @@ onMounted(() => {
             <el-form-item label="">
               <el-input clearable placeholder="供应商ID" />
             </el-form-item>
-            <el-form-item v-show="!fold" label="账单日期">
-              <el-date-picker
-                type="daterange"
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                clearable
-                size=""
-              />
+            <el-form-item v-show="!fold" label="">
+              <el-input clearable placeholder="子会员ID" />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-select
-                value-key=""
-                placeholder="状态"
-                clearable
-                filterable
-                @change=""
-              >
-                <el-option />
+              <el-input clearable placeholder="项目ID" />
+            </el-form-item>
+            <el-form-item v-show="!fold" label="">
+              <el-input clearable placeholder="项目名称" />
+            </el-form-item>
+            <el-form-item v-show="!fold" label="">
+              <el-select placeholder="客户简称">
+                <el-option :key="11" :label="11" :value="111">
+                  11111
+                </el-option>
               </el-select>
             </el-form-item>
             <ElFormItem>
@@ -155,7 +166,6 @@ onMounted(() => {
       </SearchBar>
       <el-row :gutter="24">
         <FormLeftPanel> </FormLeftPanel>
-
         <FormRightPanel>
           <el-button style="margin-right: 10px" size="default" @click="">
             导出
@@ -184,19 +194,25 @@ onMounted(() => {
         :stripe="stripe"
         @selection-change="setSelectRows"
       >
-        <el-table-column type="expand" />
+        <el-table-column type="selection" />
         <el-table-column type="index" align="center" label="序号" width="55" />
-        <el-table-column prop="a" align="center" label="站长ID" />
-        <el-table-column prop="b" align="center" label="货币类型" />
-        <el-table-column prop="c" align="center" label="结算金额" />
-        <el-table-column prop="d" align="center" label="税费" />
-        <el-table-column prop="e" align="center" label="实付金额" />
-        <el-table-column prop="f" align="center" label="账户金额" />
-        <el-table-column prop="g" align="center" label="状态" />
+        <el-table-column prop="a" align="center" label="供应商ID" />
+        <el-table-column prop="b" align="center" label="子会员ID" />
+        <el-table-column prop="c" align="center" label="子会员名称" />
+        <el-table-column prop="d" align="center" label="项目ID" />
+        <el-table-column prop="e" align="center" label="项目名称" />
+        <el-table-column prop="f" align="center" label="客户简称/标识" />
+        <el-table-column prop="g" align="center" label="说明" />
         <el-table-column prop="h" align="center" label="创建时间" />
-        <el-table-column align="center" label="操作" width="170">
+        <el-table-column align="center" label="操作" width="240">
           <el-button text type="primary" size="default" @click="editData">
-            确认收票
+            编辑
+          </el-button>
+          <el-button text type="primary" size="default" @click="projectDetails">
+            详情
+          </el-button>
+          <el-button text type="danger" size="default" @click="deleteData">
+            删除
           </el-button>
         </el-table-column>
         <template #empty>
@@ -215,6 +231,9 @@ onMounted(() => {
         @size-change="sizeChange"
         @current-change="currentChange"
       />
+      <deletes ref="deleteRef" />
+      <edit ref="editRef" />
+      <detail ref="detailsRef" />
     </PageMain>
   </div>
 </template>

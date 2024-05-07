@@ -11,7 +11,7 @@ function onSubmit() {
 
 }
 // 父级传递数据
-const replyData = async (row) => {
+const replyData = async (row:any) => {
   total.value = row.length
 }
 // 弹框关闭事件
@@ -36,7 +36,7 @@ defineExpose({ isShow,replyData })
       width="500"
       :before-close="closeHandler"
     >
-      <div>确认删除{{total}}条项目调度吗?</div>
+      <div>确认删除这条项目素材吗?</div>
       <template #footer>
         <div style="flex: auto;">
           <el-button type="primary" @click="onSubmit">

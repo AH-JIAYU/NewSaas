@@ -33,7 +33,7 @@ defineExpose({ isShow })
       width="600"
       :before-close="closeHandler"
     >
-      <el-form ref="form" label-width="80px" :inline="false" size="normal">
+      <el-form ref="form" label-width="80px" :inline="false" >
         <el-form-item label="类型">
           <el-radio-group v-model="radio1" class="ml-4">
             <el-radio :value="1" size="large">
@@ -45,13 +45,13 @@ defineExpose({ isShow })
           </el-radio-group>
         </el-form-item>
         <el-form-item  label="项目ID">
-          <el-input placeholder="" size="normal" clearable @change=""></el-input>
+          <el-input placeholder=""  clearable @change=""></el-input>
         </el-form-item>
         <el-form-item v-if="radio1 === 1"  label="指定价格">
-          <el-input placeholder="" size="normal" clearable @change=""></el-input>
+          <el-input placeholder=""  clearable @change=""></el-input>
         </el-form-item>
         <el-form-item  label="会员">
-          <el-input placeholder="" size="normal" clearable @change=""></el-input>
+          <el-input placeholder=""  clearable @change=""></el-input>
         </el-form-item>
       </el-form>
       <template #footer>

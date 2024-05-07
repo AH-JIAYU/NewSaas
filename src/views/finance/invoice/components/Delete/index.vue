@@ -36,7 +36,7 @@ defineExpose({ isShow,replyData })
       width="500"
       :before-close="closeHandler"
     >
-      <div>确认删除{{total}}项目素材吗?</div>
+      <div>确认删除这条数据吗?</div>
       <template #footer>
         <div style="flex: auto;">
           <el-button type="primary" @click="onSubmit">
