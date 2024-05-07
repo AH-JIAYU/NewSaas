@@ -304,6 +304,15 @@ const routes
           // i18n: $t('route.multimenu.page'),
         },
       },
+      {
+        path: 'nationalTable',
+        name: 'nationalTable',
+        component: () => import('@/views/otherFunctions/nationalTable/index.vue'),
+        meta: {
+          title: '内部站点',
+          // i18n: $t('route.multimenu.page'),
+        },
+      },
     ],
   },
 ]
