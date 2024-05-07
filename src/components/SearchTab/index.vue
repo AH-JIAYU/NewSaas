@@ -23,8 +23,8 @@ function back() {
         type="daterange"
         unlink-panels
         range-separator="-"
-        start-placeholder="开始时间"
-        end-placeholder="结束时间"
+        start-placeholder="开始"
+        end-placeholder="结束"
         size="default"
         style="flex: 1;"
         clear-icon="true"

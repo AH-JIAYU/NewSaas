@@ -19,7 +19,7 @@ const routes
     },
     children: [
       {
-        path: '/homePage',
+        path: 'homePage',
         name: 'homePage',
         component: () => import('@/views/index/index/index.vue'),
         meta: {
@@ -28,8 +28,8 @@ const routes
         },
       },
       {
-        path: '/data',
-        name: 'data',
+        path: 'datacenter',
+        name: 'datacenter',
         component: () => import('@/views/index/data/index.vue'),
         meta: {
           title: '客户报告',
@@ -166,8 +166,8 @@ const routes
     },
     children:[
       {
-        path: 'survey',
-        name: 'survey',
+        path: 'recordsurvey',
+        name: 'recordsurvey',
         component: () => import('@/views/record/survey/index.vue'),
         meta: {
           title: '调查记录',
@@ -241,7 +241,26 @@ const routes
           // i18n: $t('route.multimenu.page'),
         },
       },
-
+      {
+        path: 'role',
+        name: 'role',
+        component: () => import('@/views/configuration/role/list.vue'),
+        meta: {
+          title: '角色管理',
+          i18n: $t('route.general.role.list'),
+          breadcrumb: false,
+        },
+      },
+      {
+        path: 'manager',
+        name: 'manager',
+        component: () => import('@/views/configuration/manager/list.vue'),
+        meta: {
+          title: '用户管理',
+          i18n: $t('route.general.role.list'),
+          breadcrumb: false,
+        },
+      },
     ]
   },
   {
@@ -270,6 +289,28 @@ const routes
         component: () => import('@/views/finance/invoice/index.vue'),
         meta: {
           title: '发票管理',
+          // i18n: $t('route.multimenu.page'),
+        },
+      },
+    ],
+  },
+  {
+    path: '/survey',
+    component: Layout,
+    redirect: '/survey/data',
+    name: 'survey',
+    meta: {
+      title: '调查系统',
+      // i18n: $t('route.multimenu.root'),
+      icon: 'i-heroicons-solid:menu-alt-3',
+    },
+    children: [
+      {
+        path: 'surveydata',
+        name: 'surveydata',
+        component: () => import('@/views/survey/data/list.vue'),
+        meta: {
+          title: '数据中心',
           // i18n: $t('route.multimenu.page'),
         },
       },

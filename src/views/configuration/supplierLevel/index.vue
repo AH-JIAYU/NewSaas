@@ -12,9 +12,6 @@ const { pagination, onSizeChange, onCurrentChange } = usePagination(); //分页
 
 const listLoading = ref(false);
 const EditRef = ref(); //组件ref 添加/编辑
-const state=reactive({
-  list:[]
-})
 const list = ref<any>([]); //列表
 const selectRows = ref(""); //表格-选中行
 const checkList = ref<any>([]); //表格-展示的列
@@ -86,8 +83,7 @@ async function fetchData() {
   // const { data } = await getList(queryForm)
   // list.value = data[0]
   // total.value = data[0].length
-  // list.value = [
- state.list= [
+  list.value = [
     { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
     { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 9 },
     { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 3 },
@@ -108,45 +104,9 @@ const elTableRef = ref();
 // 拖拽
 const rowDrop = () => {
   const el = elTableRef?.value?.$el.querySelector("tbody");
-  console.log("el", el, Sortable  );
   new Sortable(el, {
     animation: 180,
     delay: 0,
-    onStart: function (/**Event*/ evt) {
-      console.log("start");
-    },
-    // 列表内元素顺序更新的时候触发
-    onUpdate: function (/**Event*/ evt) {
-      console.log("更新");
-      ElMessageBox.confirm("是否拖拽到此位置?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(() => {
-          ElMessage({
-            type: "success",
-            message: "排序成功",
-          });
-          return true;
-          // 排序成功，可以调用下保存接口，将数据保存下来，然后更新下tableData数据
-        })
-        .catch(() => {
-          ElMessage({
-            type: "info",
-            message: "取消排序",
-          });
-          forceUpdate.value = Date.now();
-          // 重新调用下排序
-          nextTick(() => {
-            rowDrop();
-          });
-        });
-    },
-    onEnd: (evt: any) => {
-      //进行数据的处理，拖拽实际并不会改变绑定数据的顺序
-      console.log("拖动结束了,", evt);
-    },
   });
 };
 
@@ -156,7 +116,6 @@ onMounted(() => {
   });
   fetchData();
   nextTick(() => {
-    console.log(11)
     rowDrop();
   })
 });
@@ -178,9 +137,13 @@ onMounted(() => {
             @query-data="queryData" />
         </FormRightPanel>
       </el-row>
-      <el-table ref="elTableRef"  row-key="id" :key="forceUpdate" v-loading="listLoading" :border="border" :data="state.list"
+      <el-table ref="elTableRef"  row-key="id" :key="forceUpdate" v-loading="listLoading" :border="border" :data="list"
         :size="lineHeight" :stripe="stripe" fit @selection-change="setSelectRows">
-        <el-table-column align="center" prop="a" show-overflow-tooltip type="selection" />
+        <el-table-column align="center"  width="60" label="排序">
+          <template #default="{row}">
+            <div class="i-system-uicons:move w-1em h-1em"></div>
+          </template>
+        </el-table-column>
         <el-table-column v-if="checkList.includes('a')" align="center" prop="id" show-overflow-tooltip label="等级名称" />
         <el-table-column align="center" prop="b" show-overflow-tooltip label="加成比例(百分比)" />
         <el-table-column align="center" prop="c" show-overflow-tooltip label="成员数量" />
