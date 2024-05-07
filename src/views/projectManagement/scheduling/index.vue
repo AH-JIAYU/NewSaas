@@ -4,7 +4,7 @@ defineOptions({
 });
 import { ElMessage } from "element-plus";
 import { ref, reactive } from "vue";
-import {  Plus } from "@element-plus/icons-vue";
+import { Plus } from "@element-plus/icons-vue";
 import deletes from "./components/Delete/index.vue";
 import edit from "./components/Edit/index.vue";
 const { pagination, onSizeChange, onCurrentChange } = usePagination(); //分页
@@ -17,6 +17,7 @@ const border = ref(true);
 const deleteRef = ref();
 const editRef = ref();
 // 右侧工具栏配置变量
+const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const checkList = ref([]);
 const isFullscreen = ref(false);
 const lineHeight = ref("default");
@@ -109,7 +110,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <div :class="{ 'vab-table-fullscreen': isFullscreen }">
+  <div
+    :class="{
+      'vab-table-fullscreen': isFullscreen,
+      'absolute-container': tableAutoHeight,
+    }"
+  >
     <PageMain>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
@@ -120,12 +126,12 @@ onMounted(() => {
             :model="queryForm"
             @submit.prevent
           >
-          <el-form-item label="">
-          <el-input clearable placeholder="项目ID" />
-        </el-form-item>
-        <el-form-item v-show="!fold" label="">
-          <el-input clearable placeholder="项目名称" />
-        </el-form-item>
+            <el-form-item label="">
+              <el-input clearable placeholder="项目ID" />
+            </el-form-item>
+            <el-form-item v-show="!fold" label="">
+              <el-input clearable placeholder="项目名称" />
+            </el-form-item>
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">
                 <template #icon>
@@ -133,7 +139,7 @@ onMounted(() => {
                 </template>
                 筛选
               </ElButton>
-              <ElButton  @click="onReset">
+              <ElButton @click="onReset">
                 <template #icon>
                   <div class="i-grommet-icons:power-reset w-1em h-1em"></div>
                 </template>
@@ -141,9 +147,11 @@ onMounted(() => {
               </ElButton>
               <ElButton link @click="toggle">
                 <template #icon>
-                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
+                  <SvgIcon
+                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
+                  />
                 </template>
-                {{ fold ? '展开' : '收起' }}
+                {{ fold ? "展开" : "收起" }}
               </ElButton>
             </ElFormItem>
           </el-form>
@@ -167,6 +175,7 @@ onMounted(() => {
           </el-button>
           <TabelControl
             v-model:border="border"
+            v-model:tableAutoHeight="tableAutoHeight"
             v-model:checkList="checkList"
             v-model:columns="columns"
             v-model:is-fullscreen="isFullscreen"

@@ -24,6 +24,7 @@ const auditingRef = ref();
 const editRef = ref();
 const refundRef = ref();
 // 右侧工具栏配置变量
+const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const border = ref(true);
 const checkList = ref([]);
 const isFullscreen = ref(false);
@@ -141,7 +142,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <div :class="{ 'vab-table-fullscreen': isFullscreen }">
+  <div
+    :class="{
+      'vab-table-fullscreen': isFullscreen,
+      'absolute-container': tableAutoHeight,
+    }"
+  >
     <PageMain>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
@@ -199,7 +205,7 @@ onMounted(() => {
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item style="width: 192px;" v-show="!fold">
+            <el-form-item style="width: 192px" v-show="!fold">
               <el-date-picker
                 v-model="value1"
                 type="date"
@@ -250,12 +256,13 @@ onMounted(() => {
           </el-button>
           <TabelControl
             v-model:border="border"
+            v-model:tableAutoHeight="tableAutoHeight"
             v-model:checkList="checkList"
             v-model:columns="columns"
             v-model:is-fullscreen="isFullscreen"
             v-model:line-height="lineHeight"
             v-model:stripe="stripe"
-            style="margin-left: 0.75rem"
+            style="margin-left: 12px"
             @click-full-screen="clickFullScreen"
             @query-data="currentChange"
           />
@@ -284,19 +291,50 @@ onMounted(() => {
         <el-table-column prop="h" align="center" label="结算状态" />
         <el-table-column prop="j" align="center" label="创建人" />
         <el-table-column prop="k" align="center" label="创建时间" />
-        <el-table-column align="center" label="操作" width="170">
-          <el-button text type="primary" size="default" @click="auditing">
-            审核
-          </el-button>
-          <el-button text type="primary" size="default" @click="auditing">
-            重审
-          </el-button>
-          <el-button text type="primary" size="default" @click="edit">
-            编辑
-          </el-button>
-          <el-button text type="primary" size="default" @click="refundDetails">
-            详情
-          </el-button>
+        <el-table-column align="center" label="操作" width="190">
+          <template #default="{ row }">
+            <el-button
+              text
+              type="primary"
+              size="default"
+              @click="auditing(setSelectRows)"
+            >
+              审核
+            </el-button>
+            <ElDropdown>
+              <ElButton size="small">
+                更多操作
+                <SvgIcon name="i-ep:arrow-down" class="el-icon--right" />
+              </ElButton>
+              <template #dropdown>
+                <ElDropdownMenu>
+                  <ElDropdownItem command="auditing">
+                    <el-button
+                      text
+                      size="default"
+                      @click="auditing"
+                    >
+                      重审
+                    </el-button>
+                  </ElDropdownItem>
+                  <ElDropdownItem command="edit" divided>
+                    <el-button text  size="default" @click="edit">
+                      编辑
+                    </el-button>
+                  </ElDropdownItem>
+                  <ElDropdownItem command="refundDetails">
+                    <el-button
+                      text
+                      size="default"
+                      @click="refundDetails"
+                    >
+                      详情
+                    </el-button>
+                  </ElDropdownItem>
+                </ElDropdownMenu>
+              </template>
+            </ElDropdown>
+          </template>
         </el-table-column>
         <template #empty>
           <el-empty description="暂无数据" />

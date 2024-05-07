@@ -309,7 +309,16 @@ const routes
         name: 'nationalTable',
         component: () => import('@/views/otherFunctions/nationalTable/index.vue'),
         meta: {
-          title: '内部站点',
+          title: '国家对照表',
+          // i18n: $t('route.multimenu.page'),
+        },
+      },
+      {
+        path: 'queryIP',
+        name: 'queryIP',
+        component: () => import('@/views/otherFunctions/queryIP/index.vue'),
+        meta: {
+          title: 'IP查询',
           // i18n: $t('route.multimenu.page'),
         },
       },
