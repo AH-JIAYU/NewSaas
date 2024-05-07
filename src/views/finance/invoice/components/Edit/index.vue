@@ -35,7 +35,7 @@ defineExpose({ isShow,replyData })
       width="700"
       :before-close="closeHandler"
     >
-      <el-form ref="form" label-width="80px" :inline="false" >
+      <el-form label-width="80px" :inline="false" >
         <el-form-item >
          <el-tag type="success">cube</el-tag>
         </el-form-item>
