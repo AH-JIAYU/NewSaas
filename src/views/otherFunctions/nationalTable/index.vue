@@ -1,20 +1,14 @@
 <script setup lang="ts">
 defineOptions({
-  name: "OtherFunctionsAnnouncementIndex",
+  name: "OtherFunctionsNationalTableIndex",
 });
 import { ElMessage } from "element-plus";
-import { ref, reactive } from "vue";
-import { Plus } from "@element-plus/icons-vue";
-import Edit from "./components/Edit/index.vue";
-import Delete from "./components/Delete/index.vue";
+import { ref, reactive, onMounted } from "vue";
 const { pagination, onSizeChange, onCurrentChange } = usePagination(); //分页
 // 分页
 const tableSortRef = ref("");
 // loading加载
 const listLoading = ref<boolean>(true);
-// 获取组件变量
-const deleteRef = ref();
-const editRef = ref();
 // 右侧工具栏配置变量
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const checkList = ref([]);
@@ -44,21 +38,6 @@ const queryForm = reactive<any>({
   select: {},
 });
 const list = ref<any>([]);
-// 新增
-const addData = () => {
-  editRef.value.isShow = true;
-};
-// 编辑数据
-const editData = () => {
-  if (!selectRows.value.length) editRef.value.isShow = true;
-};
-// 删除数据
-const deleteData = () => {
-  // if (!selectRows.value.length)
-  //   return ElMessage({ message: "请选择至少一条数据", type: "warning" });
-  deleteRef.value.isShow = true;
-  deleteRef.value.replyData(selectRows.value);
-};
 // 右侧工具方法
 function clickFullScreen() {
   isFullscreen.value = !isFullscreen.value;
@@ -126,18 +105,13 @@ onMounted(() => {
             @submit.prevent
           >
             <el-form-item label="">
-              <el-input placeholder="请输入标题" />
+              <el-input placeholder="国家名称" />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-select
-                value-key=""
-                placeholder="所有"
-                clearable
-                filterable
-                @change=""
-              >
-                <el-option />
-              </el-select>
+              <el-input placeholder="国家编码" />
+            </el-form-item>
+            <el-form-item v-show="!fold" label="">
+              <el-input placeholder="国家序号" />
             </el-form-item>
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">
@@ -165,18 +139,7 @@ onMounted(() => {
         </template>
       </SearchBar>
       <el-row :gutter="24">
-        <FormLeftPanel>
-          <el-button
-            style="margin-right: 10px"
-            :icon="Plus"
-            type="primary"
-            size="default"
-            @click="addData"
-          >
-            添加
-          </el-button>
-        </FormLeftPanel>
-
+        <FormLeftPanel> </FormLeftPanel>
         <FormRightPanel>
           <el-button style="margin-right: 10px" size="default" @click="">
             导出
@@ -206,20 +169,10 @@ onMounted(() => {
         :stripe="stripe"
         @selection-change="setSelectRows"
       >
-        <el-table-column type="selection" />
-        <el-table-column type="index" align="center" label="序号" width="55" />
-        <el-table-column prop="a" align="center" label="ID" />
-        <el-table-column prop="b" align="center" label="类型" />
-        <el-table-column prop="c" align="center" label="标题" />
-        <el-table-column prop="d" align="center" label="添加日期" />
-        <el-table-column align="center" label="操作" width="170">
-          <el-button text type="primary" size="default" @click="editData">
-            编辑
-          </el-button>
-          <el-button text type="danger" size="default" @click="deleteData">
-            删除
-          </el-button>
-        </el-table-column>
+        <el-table-column type="index" align="center" label="序号" width="150" />
+        <el-table-column prop="a" align="center" label="国家编码" />
+        <el-table-column prop="b" align="center" label="国家(中文)" />
+        <el-table-column prop="c" align="center" label="国家(英文)" />
         <template #empty>
           <el-empty description="暂无数据" />
         </template>
@@ -236,8 +189,6 @@ onMounted(() => {
         @size-change="sizeChange"
         @current-change="currentChange"
       />
-      <Edit ref="editRef" />
-      <Delete ref="deleteRef" />
     </PageMain>
   </div>
 </template>

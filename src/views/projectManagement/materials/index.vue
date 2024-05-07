@@ -18,6 +18,7 @@ const deleteRef = ref();
 const editRef = ref();
 const detailsRef = ref();
 // 右侧工具栏配置变量
+const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const checkList = ref([]);
 const isFullscreen = ref(false);
 const lineHeight = ref("default");
@@ -109,7 +110,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <div :class="{ 'vab-table-fullscreen': isFullscreen }">
+  <div
+    :class="{
+      'vab-table-fullscreen': isFullscreen,
+      'absolute-container': tableAutoHeight,
+    }"
+  >
     <PageMain>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
@@ -172,6 +178,7 @@ onMounted(() => {
           </el-button>
           <TabelControl
             v-model:border="border"
+            v-model:tableAutoHeight="tableAutoHeight"
             v-model:checkList="checkList"
             v-model:columns="columns"
             v-model:is-fullscreen="isFullscreen"

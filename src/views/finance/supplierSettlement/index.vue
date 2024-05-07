@@ -12,6 +12,7 @@ const listLoading = ref<boolean>(true);
 // 获取组件变量
 const editRef = ref();
 // 右侧工具栏配置变量
+const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const checkList = ref([]);
 const border = ref(true);
 const isFullscreen = ref(false);
@@ -93,7 +94,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <div :class="{ 'vab-table-fullscreen': isFullscreen }">
+  <div
+    :class="{
+      'vab-table-fullscreen': isFullscreen,
+      'absolute-container': tableAutoHeight,
+    }"
+  >
     <PageMain>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
@@ -162,6 +168,7 @@ onMounted(() => {
           </el-button>
           <TabelControl
             v-model:border="border"
+            v-model:tableAutoHeight="tableAutoHeight"
             v-model:checkList="checkList"
             v-model:columns="columns"
             v-model:is-fullscreen="isFullscreen"
