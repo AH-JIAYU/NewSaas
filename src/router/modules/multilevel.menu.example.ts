@@ -52,7 +52,7 @@ const routes
       {
         path: 'list',
         name: 'list',
-        component: () => import('@/views/projectManagement/list/index.vue'),
+        component: () => import('@/views/projectManagement/list/list.vue'),
         meta: {
           title: '项目列表',
           // i18n: $t('route.multimenu.page'),
@@ -61,7 +61,7 @@ const routes
       {
         path: 'settlement',
         name: 'settlement',
-        component: () => import('@/views/projectManagement/settlement/index.vue'),
+        component: () => import('@/views/projectManagement/settlement/list.vue'),
         meta: {
           title: '项目结算',
           // i18n: $t('route.multimenu.page'),
@@ -70,7 +70,7 @@ const routes
       {
         path: 'materials',
         name: 'materials',
-        component: () => import('@/views/projectManagement/materials/index.vue'),
+        component: () => import('@/views/projectManagement/materials/list.vue'),
         meta: {
           title: '项目素材',
           // i18n: $t('route.multimenu.page'),
@@ -79,7 +79,7 @@ const routes
       {
         path: 'supplementaryPaymentRefund',
         name: 'supplementaryPaymentRefund',
-        component: () => import('@/views/projectManagement/supplementaryPaymentRefund/index.vue'),
+        component: () => import('@/views/projectManagement/supplementaryPaymentRefund/list.vue'),
         meta: {
           title: '项目补退款',
           // i18n: $t('route.multimenu.page'),
@@ -88,7 +88,7 @@ const routes
       {
         path: 'scheduling',
         name: 'scheduling',
-        component: () => import('@/views/projectManagement/scheduling/index.vue'),
+        component: () => import('@/views/projectManagement/scheduling/list.vue'),
         meta: {
           title: '项目调度',
           // i18n: $t('route.multimenu.page'),
@@ -277,7 +277,7 @@ const routes
       {
         path: 'supplierSettlement',
         name: 'supplierSettlement',
-        component: () => import('@/views/finance/supplierSettlement/index.vue'),
+        component: () => import('@/views/finance/supplierSettlement/list.vue'),
         meta: {
           title: '供应商结算',
           // i18n: $t('route.multimenu.page'),
@@ -286,7 +286,7 @@ const routes
       {
         path: 'invoice',
         name: 'invoice',
-        component: () => import('@/views/finance/invoice/index.vue'),
+        component: () => import('@/views/finance/invoice/list.vue'),
         meta: {
           title: '发票管理',
           // i18n: $t('route.multimenu.page'),
@@ -314,6 +314,33 @@ const routes
           // i18n: $t('route.multimenu.page'),
         },
       },
+      {
+        path: 'myProjeck',
+        name: 'myProjeck',
+        component: () => import('@/views/survey/myProjeck/list.vue'),
+        meta: {
+          title: '我的项目',
+          // i18n: $t('route.multimenu.page'),
+        },
+      },
+      {
+        path: 'vip',
+        name: 'vip',
+        component: () => import('@/views/survey/vip/list.vue'),
+        meta: {
+          title: '会员',
+          // i18n: $t('route.multimenu.page'),
+        },
+      },
+      {
+        path: 'vipGroup',
+        name: 'vipGroup',
+        component: () => import('@/views/survey/vipGroup/list.vue'),
+        meta: {
+          title: '会员组',
+          // i18n: $t('route.multimenu.page'),
+        },
+      },
     ],
   },
   {
@@ -330,7 +357,7 @@ const routes
       {
         path: 'announcement',
         name: 'announcement',
-        component: () => import('@/views/otherFunctions/announcement/index.vue'),
+        component: () => import('@/views/otherFunctions/announcement/list.vue'),
         meta: {
           title: '文章公告',
           // i18n: $t('route.multimenu.page'),
@@ -339,7 +366,7 @@ const routes
       {
         path: 'websites',
         name: 'websites',
-        component: () => import('@/views/otherFunctions/websites/index.vue'),
+        component: () => import('@/views/otherFunctions/websites/list.vue'),
         meta: {
           title: '内部站点',
           // i18n: $t('route.multimenu.page'),
@@ -348,7 +375,7 @@ const routes
       {
         path: 'nationalTable',
         name: 'nationalTable',
-        component: () => import('@/views/otherFunctions/nationalTable/index.vue'),
+        component: () => import('@/views/otherFunctions/nationalTable/list.vue'),
         meta: {
           title: '国家对照表',
           // i18n: $t('route.multimenu.page'),
@@ -357,9 +384,18 @@ const routes
       {
         path: 'queryIP',
         name: 'queryIP',
-        component: () => import('@/views/otherFunctions/queryIP/index.vue'),
+        component: () => import('@/views/otherFunctions/queryIP/list.vue'),
         meta: {
           title: 'IP查询',
+          // i18n: $t('route.multimenu.page'),
+        },
+      },
+      {
+        path: 'questionnaire',
+        name: 'questionnaire',
+        component: () => import('@/views/otherFunctions/questionnaire/list.vue'),
+        meta: {
+          title: '问卷',
           // i18n: $t('route.multimenu.page'),
         },
       },
