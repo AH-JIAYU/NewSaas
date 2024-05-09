@@ -1,58 +1,66 @@
 <script setup lang="ts">
-import check from './components/check.vue'
+import check from './components/check/index.vue'
+const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } = usePagination() //分页
 
-const { pagination, onSizeChange, onCurrentChange } = usePagination() //分页
-
-const activeName = ref('report')
-const CheckRef = ref(null)
-const tableData = [
-  { name: 'name', cname: 'amr', fz: '张三', num1: 561, num2: 435, num3: 344, money1: 1344.11, money2: 111112 },
-  { name: 'name1', cname: 'amr', fz: '张三', num1: 561, num2: 435, num3: 344, money1: 1344.11, money2: 111112 },
-  { name: 'name2', cname: 'amr', fz: '张三', num1: 561, num2: 435, num3: 344, money1: 1344.11, money2: 111112 },
-  { name: 'name', cname: 'amr', fz: '张三', num1: 561, num2: 435, num3: 344, money1: 1344.11, money2: 111112 },
-  { name: 'name', cname: 'amr', fz: '张三', num1: 561, num2: 435, num3: 344, money1: 1344.11, money2: 111112 },
-  { name: 'name', cname: 'amr', fz: '张三', num1: 561, num2: 435, num3: 344, money1: 1344.11, money2: 111112 },
-  { name: 'name', cname: 'amr', fz: '张三', num1: 561, num2: 435, num3: 344, money1: 1344.11, money2: 111112 },
-]
-
-const queryForm = reactive<any>({
+const data = reactive<any>({
+  activeName: "report", //tabs选中值
+  list: [], //表格
+  CheckRef: null,//查看组件ref
+  queryForm:{
   pageNo: 1,
   pageSize: 10,
   select: {},
+}
 })
-// function handleSizeChange(value) {
-//   queryForm.pageNo = 1
-//   queryForm.pageSize = value
-//   fetchData({ id: dicttype_id.value, key: '' })
-// }
 
-// function handleCurrentChange(value) {
-//   queryForm.pageNo = value
-//   fetchData({ id: dicttype_id.value, key: '' })
-// }
 // 每页数量切换
 function sizeChange(size: number) {
-  onSizeChange(size).then(() => fetchData())
+  onSizeChange(size).then(() => getDataList())
 }
 
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
-  onCurrentChange(page).then(() => fetchData())
+  onCurrentChange(page).then(() => getDataList())
+}
+// 获取列表
+async function getDataList() {
+  data.value.loading = true
+  const params = {
+    ...getParams(),
+    ...(data.value.search.title && { title: data.value.search.title }),
+  }
+  // api.list(params).then((res: any) => {
+  //   data.value.loading = false
+  //   data.value.dataList = res.data.list
+  //   pagination.value.total = res.data.total
+  // })
+  data.list = [
+    { name: 'name', cname: 'amr', fz: '张三', num1: 561, num2: 435, num3: 344, money1: 1344.11, money2: 111112 },
+    { name: 'name1', cname: 'amr', fz: '张三', num1: 561, num2: 435, num3: 344, money1: 1344.11, money2: 111112 },
+    { name: 'name2', cname: 'amr', fz: '张三', num1: 561, num2: 435, num3: 344, money1: 1344.11, money2: 111112 },
+    { name: 'name', cname: 'amr', fz: '张三', num1: 561, num2: 435, num3: 344, money1: 1344.11, money2: 111112 },
+    { name: 'name', cname: 'amr', fz: '张三', num1: 561, num2: 435, num3: 344, money1: 1344.11, money2: 111112 },
+    { name: 'name', cname: 'amr', fz: '张三', num1: 561, num2: 435, num3: 344, money1: 1344.11, money2: 111112 },
+    { name: 'name', cname: 'amr', fz: '张三', num1: 561, num2: 435, num3: 344, money1: 1344.11, money2: 111112 },
+  ]
 }
 // 查看
-function handleCheck(row) {
+function handleCheck(row: any) {
   if (row.name) {
-    CheckRef.value.showEdit(row)
+    data.CheckRef.showEdit(row)
   }
   else {
-    CheckRef.value.showEdit()
+    data.CheckRef.showEdit()
   }
 }
+onMounted(() => {
+  getDataList()
+})
 </script>
 
 <template>
   <PageMain>
-    <el-tabs v-model="activeName" class="demo-tabs">
+    <el-tabs v-model="data.activeName" type="border-card" class="demo-tabs">
       <el-tab-pane label="渠道报告" name="report">
         <el-row class="fx-b">
           <SearchTab />
@@ -61,7 +69,7 @@ function handleCheck(row) {
           </el-button>
         </el-row>
 
-        <el-table :data="tableData" border style="width: 100%;">
+        <el-table :data="data.list" border style="width: 100%;">
           <el-table-column align="center" prop="name" label="客户名称" width="180" />
           <el-table-column align="center" prop="cname" label="客户简称" width="180" />
           <el-table-column align="center" prop="fz" label="负责人" />
@@ -72,12 +80,7 @@ function handleCheck(row) {
           <el-table-column align="center" prop="money2" label="项目营业额" />
           <el-table-column align="center" label="国家分布详情">
             <template #default="{ row }" align="center">
-              <el-button
-                link
-                type="primary"
-                size="small"
-                @click="handleCheck(row)"
-              >
+              <el-button link type="primary" size="small" @click="handleCheck(row)">
                 详情
               </el-button>
             </template>
@@ -91,8 +94,7 @@ function handleCheck(row) {
             导出
           </el-button>
         </el-row>
-
-        <el-table :data="tableData" border style="width: 100%;">
+        <el-table :data="data.list" border style="width: 100%;">
           <el-table-column align="center" prop="name" label="渠道" width="180" />
           <el-table-column align="center" prop="cname" label="月份" width="180" />
           <el-table-column align="center" prop="fz" label="完成单数" />
@@ -104,9 +106,9 @@ function handleCheck(row) {
       </el-tab-pane>
     </el-tabs>
     <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
-        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-        background @size-change="sizeChange" @current-change="currentChange" />
-    <check ref="CheckRef" />
+      :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+      background @size-change="sizeChange" @current-change="currentChange" />
+    <check ref="data.CheckRef" />
   </PageMain>
 </template>
 

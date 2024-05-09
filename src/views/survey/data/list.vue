@@ -4,33 +4,82 @@ meta:
 </route>
 
 <script setup lang="ts">
-import { ElMessage, ElMessageBox } from 'element-plus'
-import eventBus from '@/utils/eventBus'
-import api from '@/api/modules/survey_data'
-import useSettingsStore from '@/store/modules/settings'
-import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { ElMessage, ElMessageBox } from "element-plus";
+import eventBus from "@/utils/eventBus";
+import api from "@/api/modules/survey_data";
+import useSettingsStore from "@/store/modules/settings";
+import { onBeforeUnmount, onMounted, ref } from "vue";
 // import useTabbar from '@/utils/composables/useTabbar'
-import { useRouter } from 'vue-router'
+import { useRouter } from "vue-router";
 
 defineOptions({
-  name: 'SurveyDataList',
-})
+  name: "SurveyDataList",
+});
 
-const router = useRouter()
-const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } = usePagination()
-const tabbar = useTabbar()
-const settingsStore = useSettingsStore()
+const router = useRouter();
+const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
+  usePagination();
+const tabbar = useTabbar();
+const settingsStore = useSettingsStore();
 
 const tableData = [
-  { 'name': '供应商', 'money': 232, 'num': 124, 'B2B/B2C': '50%/50%', 'currency': 'RNB' },
-  { 'name': '供应商', 'money': 232, 'num': 124, 'B2B/B2C': '50%/50%', 'currency': 'RNB' },
-  { 'name': '供应商', 'money': 232, 'num': 124, 'B2B/B2C': '50%/50%', 'currency': 'RNB' },
-  { 'name': '供应商', 'money': 232, 'num': 124, 'B2B/B2C': '50%/50%', 'currency': 'RNB' },
-  { 'name': '供应商', 'money': 232, 'num': 124, 'B2B/B2C': '50%/50%', 'currency': 'RNB' },
-  { 'name': '供应商', 'money': 232, 'num': 124, 'B2B/B2C': '50%/50%', 'currency': 'RNB' },
-  { 'name': '供应商', 'money': 232, 'num': 124, 'B2B/B2C': '50%/50%', 'currency': 'RNB' },
-  { 'name': '供应商', 'money': 232, 'num': 124, 'B2B/B2C': '50%/50%', 'currency': 'RNB' },
-]
+  {
+    name: "供应商",
+    money: 232,
+    num: 124,
+    "B2B/B2C": "50%/50%",
+    currency: "RNB",
+  },
+  {
+    name: "供应商",
+    money: 232,
+    num: 124,
+    "B2B/B2C": "50%/50%",
+    currency: "RNB",
+  },
+  {
+    name: "供应商",
+    money: 232,
+    num: 124,
+    "B2B/B2C": "50%/50%",
+    currency: "RNB",
+  },
+  {
+    name: "供应商",
+    money: 232,
+    num: 124,
+    "B2B/B2C": "50%/50%",
+    currency: "RNB",
+  },
+  {
+    name: "供应商",
+    money: 232,
+    num: 124,
+    "B2B/B2C": "50%/50%",
+    currency: "RNB",
+  },
+  {
+    name: "供应商",
+    money: 232,
+    num: 124,
+    "B2B/B2C": "50%/50%",
+    currency: "RNB",
+  },
+  {
+    name: "供应商",
+    money: 232,
+    num: 124,
+    "B2B/B2C": "50%/50%",
+    currency: "RNB",
+  },
+  {
+    name: "供应商",
+    money: 232,
+    num: 124,
+    "B2B/B2C": "50%/50%",
+    currency: "RNB",
+  },
+];
 
 const data = ref({
   loading: false,
@@ -42,15 +91,15 @@ const data = ref({
    * dialog 对话框
    * drawer 抽屉
    */
-  formMode: 'router' as 'router' | 'dialog' | 'drawer',
+  formMode: "router" as "router" | "dialog" | "drawer",
   // 详情
   formModeProps: {
     visible: false,
-    id: '',
+    id: "",
   },
   // 搜索
   search: {
-    title: '',
+    title: "",
   },
   // 批量操作
   batch: {
@@ -59,36 +108,35 @@ const data = ref({
   },
   // 列表数据
   dataList: [],
-})
+});
 
 onMounted(() => {
-  getDataList()
-  if (data.value.formMode === 'router') {
-    eventBus.on('get-data-list', () => {
-      getDataList()
-    })
+  getDataList();
+  if (data.value.formMode === "router") {
+    eventBus.on("get-data-list", () => {
+      getDataList();
+    });
   }
-})
+});
 
 onBeforeUnmount(() => {
-  if (data.value.formMode === 'router') {
-    eventBus.off('get-data-list')
+  if (data.value.formMode === "router") {
+    eventBus.off("get-data-list");
   }
-})
+});
 
 function getDataList() {
-  data.value.loading = true
+  data.value.loading = true;
   const params = {
     ...getParams(),
     ...(data.value.search.title && { title: data.value.search.title }),
-  }
+  };
   api.list(params).then((res: any) => {
-    data.value.loading = false
-    data.value.dataList = res.data.list
-    pagination.value.total = res.data.total
-  })
+    data.value.loading = false;
+    data.value.dataList = res.data.list;
+    pagination.value.total = res.data.total;
+  });
 }
-
 </script>
 
 <template>
@@ -98,42 +146,62 @@ function getDataList() {
         <SearchTab />
       </el-row>
       <ElRow :gutter="24">
-        <ElCol :xs="6" :sm="6" :md="6" :lg="6" :xl="6"  class="fx-b">
-            <PageHeader title="978" content="今日点击" />
-            <PageHeader title="978" content="昨日点击" />
+        <ElCol :xs="6" :sm="6" :md="6" :lg="6" :xl="6">
+          <el-card>
+            <div class="fx-b">
+              <PageHeader title="978" content="今日点击" />
+              <PageHeader title="978" content="昨日点击" />
+            </div>
+          </el-card>
         </ElCol>
-        <ElCol :xs="6" :sm="6" :md="6" :lg="6" :xl="6"  class="fx-b">
-            <PageHeader title="978" content="今日点击" />
-            <PageHeader title="978" content="昨日点击" />
+        <ElCol :xs="6" :sm="6" :md="6" :lg="6" :xl="6">
+          <el-card>
+            <div class="fx-b">
+              <PageHeader title="978" content="今日点击" />
+              <PageHeader title="978" content="昨日点击" />
+            </div>
+          </el-card>
         </ElCol>
-        <ElCol :xs="6" :sm="6" :md="6" :lg="6" :xl="6"  class="fx-b">
-            <PageHeader title="978" content="今日点击" />
-            <PageHeader title="978" content="昨日点击" />
+        <ElCol :xs="6" :sm="6" :md="6" :lg="6" :xl="6">
+          <el-card>
+            <div class="fx-b">
+              <PageHeader title="978" content="今日点击" />
+              <PageHeader title="978" content="昨日点击" />
+            </div>
+          </el-card>
         </ElCol>
-        <ElCol :xs="6" :sm="6" :md="6" :lg="6" :xl="6"  class="fx-b">
-            <PageHeader title="978" content="今日点击" />
-            <PageHeader title="978" content="昨日点击" />
+        <ElCol :xs="6" :sm="6" :md="6" :lg="6" :xl="6">
+          <el-card>
+            <div class="fx-b">
+              <PageHeader title="978" content="今日点击" />
+              <PageHeader title="978" content="昨日点击" />
+            </div>
+          </el-card>
         </ElCol>
       </ElRow>
       <ElRow :gutter="24">
         <ElCol :xs="6" :sm="6" :md="6" :lg="6" :xl="6">
-          <ColorfulCard color-from="#ffd300" color-to="#ff9b0d" header="业务应用页面" :num="123" icon="ep:handbag" />
+          <el-card>
+            <PageHeader title="11978.2" content="待审金额" />
+          </el-card>
         </ElCol>
         <ElCol :xs="6" :sm="6" :md="6" :lg="6" :xl="6">
-          <ColorfulCard color-from="#f49494" color-to="#fcd98b" header="业务应用页面" :num="123" icon="ep:film" />
+          <el-card>
+            <PageHeader title="11978.2" content="可用金额" />
+          </el-card>
         </ElCol>
         <ElCol :xs="6" :sm="6" :md="6" :lg="6" :xl="6">
-          <ColorfulCard color-from="#c2005c" color-to="#ff980f" header="业务应用页面" :num="123" icon="ep:ice-tea" />
+          <el-card>
+            <PageHeader title="10.7%" content="作废率" />
+          </el-card>
         </ElCol>
       </ElRow>
       <!-- 今日完成排名 & 供应商佣金排行 -->
       <el-row :gutter="24">
         <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
           <el-card>
-            <p class="title fx-b">
-              业绩排行榜
-            </p>
-            <el-table :data="tableData" style="width: 100%;">
+            <template #header> 业绩排行榜 </template>
+            <el-table :data="tableData" style="width: 100%">
               <el-table-column type="index" />
               <el-table-column prop="name" label="供应商" />
               <el-table-column prop="money" label="完成金额" />
@@ -145,10 +213,8 @@ function getDataList() {
         </el-col>
         <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
           <el-card>
-            <p class="title fx-b">
-              完成排行榜
-            </p>
-            <el-table :data="tableData" style="width: 100%;">
+            <template #header> 完成排行榜 </template>
+            <el-table :data="tableData" style="width: 100%">
               <el-table-column type="index" />
               <el-table-column prop="name" label="供应商" />
               <el-table-column prop="money" label="完成金额" />
@@ -160,10 +226,8 @@ function getDataList() {
         </el-col>
         <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
           <el-card>
-            <p class="title fx-b">
-              退款排行榜
-            </p>
-            <el-table :data="tableData" style="width: 100%;">
+            <template #header> 退款排行榜 </template>
+            <el-table :data="tableData" style="width: 100%">
               <el-table-column type="index" />
               <el-table-column prop="name" label="供应商" />
               <el-table-column prop="money" label="完成金额" />
@@ -175,8 +239,6 @@ function getDataList() {
         </el-col>
       </el-row>
     </PageMain>
-
-
   </div>
 </template>
 
@@ -225,6 +287,10 @@ function getDataList() {
   }
 }
 
+.page-header {
+  text-align: center;
+}
+
 .fx-b {
   display: flex;
   align-items: center;
@@ -232,11 +298,17 @@ function getDataList() {
 
   .page-header {
     flex: 1;
-    text-align: center;
+    :deep {
+      .text-2xl {
+        //pageheader 的title
+        font-weight: bold !important;
+        font-size: 30px !important;
+      }
+    }
   }
 
   div:nth-of-type(2) {
-    opacity: .5;
+    opacity: 0.5;
   }
 }
 </style>

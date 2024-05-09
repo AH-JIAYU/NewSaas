@@ -314,6 +314,46 @@ const routes
           // i18n: $t('route.multimenu.page'),
         },
       },
+      {
+        path: 'investigation_records',
+        name: 'investigation_records',
+        component: () => import('@/views/survey/investigation_records/list.vue'),
+        meta: {
+          title: '调查记录',
+        },
+      },
+      {
+        path: 'financialLogs',
+        name: 'financialLogs',
+        component: () => import('@/views/survey/financial_logs/list.vue'),
+        meta: {
+          title: '财务日志',
+        },
+      },
+      {
+        path: 'billManagement',
+        name: 'billManagement',
+        component: () => import('@/views/survey/bill_management/list.vue'),
+        meta: {
+          title: '账单管理',
+        },
+      },
+      {
+        path: 'irQuery',
+        name: 'irQuery',
+        component: () => import('@/views/survey/ir_query/list.vue'),
+        meta: {
+          title: 'IR查询',
+        },
+      },
+      {
+        path: 'setting',
+        name: 'setting',
+        component: () => import('@/views/survey/setting/list.vue'),
+        meta: {
+          title: '系统设置',
+        },
+      },
     ],
   },
   {

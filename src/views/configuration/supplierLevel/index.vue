@@ -103,11 +103,18 @@ const forceUpdate = ref(0);
 const elTableRef = ref();
 // 拖拽
 const rowDrop = () => {
-  const el = elTableRef?.value?.$el.querySelector("tbody");
-  new Sortable(el, {
-    animation: 180,
-    delay: 0,
-  });
+  const tbody = elTableRef.value.$el.querySelector('.el-table__body-wrapper tbody')
+  Sortable.create(tbody, {
+    handle: '.sortable',
+    animation: 300,
+    ghostClass: 'ghost',
+    onEnd: ({ newIndex, oldIndex }) => {
+      if (newIndex === undefined || oldIndex === undefined) {
+        return
+      }
+      nextTick(() => rowDrop())
+    },
+  })
 };
 
 onMounted(() => {
@@ -139,11 +146,16 @@ onMounted(() => {
       </el-row>
       <el-table ref="elTableRef"  row-key="id" :key="forceUpdate" v-loading="listLoading" :border="border" :data="list"
         :size="lineHeight" :stripe="stripe" fit @selection-change="setSelectRows">
-        <el-table-column align="center"  width="60" label="排序">
-          <template #default="{row}">
-            <div class="i-system-uicons:move w-1em h-1em"></div>
-          </template>
-        </el-table-column>
+        <ElTableColumn width="80" align="center" fixed>
+                <template #header>
+                  排序
+                </template>
+                <template #default>
+                  <ElTag type="info" class="sortable">
+                    <SvgIcon name="i-ep:d-caret" />
+                  </ElTag>
+                </template>
+              </ElTableColumn>
         <el-table-column v-if="checkList.includes('a')" align="center" prop="id" show-overflow-tooltip label="等级名称" />
         <el-table-column align="center" prop="b" show-overflow-tooltip label="加成比例(百分比)" />
         <el-table-column align="center" prop="c" show-overflow-tooltip label="成员数量" />
@@ -215,4 +227,9 @@ onMounted(() => {
     }
   }
 }
+// 拖拽
+.el-tag.sortable,
+            .el-tag.sortable .icon {
+              cursor: ns-resize;
+            }
 </style>

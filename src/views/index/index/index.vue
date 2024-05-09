@@ -233,10 +233,13 @@ onMounted(() => {
       <el-row :gutter="20">
         <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
           <el-card>
-            <p class="title fx-b">
+            <template #header>
+                <p class="title fx-b">
               营业额趋势
               <SearchTab />
             </p>
+            </template>
+
             <el-table :data="tableData" style="width: 100%;">
               <el-table-column type="index" />
               <el-table-column prop="name" label="供应商" />
@@ -249,10 +252,13 @@ onMounted(() => {
         </el-col>
         <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
           <el-card>
+            <template #header>
             <p class="title fx-b">
               客户总览
               <SearchTab />
             </p>
+            </template>
+
             <el-table :data="tableData" style="width: 100%;">
               <el-table-column type="index" />
               <el-table-column prop="name" label="供应商" />

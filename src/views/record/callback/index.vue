@@ -99,7 +99,6 @@ onMounted(() => {
           </el-form-item>
           <el-form-item label="选择渠道"  v-show="!fold">
             <el-select v-model="queryForm.select.default" clearable placeholder="选择渠道">
-
             </el-select>
           </el-form-item>
           <el-form-item label="日期"  v-show="!fold">

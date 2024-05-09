@@ -70,7 +70,7 @@ const systemRoutes: RouteRecordRaw[] = [
   },
 ]
 
-// 动态路由（异步路由、导航栏路由）
+// // 动态路由（异步路由、导航栏路由）
 const asyncRoutes: Route.recordMainRaw[] = [
   {
     meta: {
