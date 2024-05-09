@@ -56,7 +56,7 @@ defineExpose({ isShow });
       :close-on-click-modal="false"
       destroy-on-close
       draggable
-      size="50%"
+      size="60%"
       title="项目详情"
     >
     <logDetails ref="logDetailsRef"/>

@@ -7,7 +7,8 @@ import { ref } from "vue";
 const isShow = ref(false);
 // 提交数据
 function onSubmit() {}
-const replyData = async (row) => {};
+const replyData = async (row) => {
+};
 // 弹框关闭事件
 function closeHandler() {
   // 移除校验

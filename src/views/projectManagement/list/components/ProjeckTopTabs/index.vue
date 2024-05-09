@@ -145,7 +145,7 @@ function open(url: string) {
                 <el-date-picker
                   type="datetime"
                   placeholder="请选择时间"
-                  shortcuts=""
+                  :shortcuts="[]"
                 />
               </el-form-item>
             </el-col>

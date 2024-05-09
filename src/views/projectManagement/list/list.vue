@@ -3,7 +3,7 @@ defineOptions({
   name: "ProjectManagementListIndex",
 });
 import allocationEdit from "./components/AllocationEdit/index.vue";
-import SurveysEdit from "./components/SurveysEdit/index.vue";
+import SurveysEdit from "./components/ProjeckEdit/index.vue";
 import ProjectDetails from "./components/ProjectDetails/index.vue";
 const { pagination, onSizeChange, onCurrentChange } = usePagination(); //分页
 // 分页
@@ -50,7 +50,7 @@ function distribution() {
 }
 // 新增项目
 function surveysEdit() {
-  addSurveysEdit.value.isShow = true;
+  addSurveysEdit.value.showEdit()
 }
 // 项目详情
 function projectDetails() {

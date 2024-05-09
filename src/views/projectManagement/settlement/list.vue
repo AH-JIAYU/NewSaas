@@ -95,6 +95,7 @@ const edit = () => {
 // 详情
 const refundDetails = () => {
   refundRef.value.isShow = true;
+  refundRef.value.replyData()
 };
 // 右侧工具
 function clickFullScreen() {
