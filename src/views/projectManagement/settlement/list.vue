@@ -291,9 +291,10 @@ onMounted(() => {
         <el-table-column prop="h" align="center" label="结算状态" />
         <el-table-column prop="j" align="center" label="创建人" />
         <el-table-column prop="k" align="center" label="创建时间" />
-        <el-table-column align="center" label="操作" width="190">
+        <el-table-column  align="center" label="操作" width="190">
           <template #default="{ row }">
-            <el-button
+            <div class="centerss">
+              <el-button
               text
               type="primary"
               size="default"
@@ -334,6 +335,7 @@ onMounted(() => {
                 </ElDropdownMenu>
               </template>
             </ElDropdown>
+            </div>
           </template>
         </el-table-column>
         <template #empty>
@@ -419,4 +421,12 @@ onMounted(() => {
     }
   }
 }
+:deep {
+  .centerss {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
 </style>

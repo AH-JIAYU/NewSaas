@@ -9,7 +9,7 @@ const total = ref();
 // 提交数据
 function onSubmit() {}
 // 父级传递数据
-const replyData = async (row) => {
+const replyData = async (row:any) => {
   total.value = row.length;
 };
 // 弹框关闭事件
