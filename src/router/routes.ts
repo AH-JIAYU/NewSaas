@@ -70,17 +70,18 @@ const systemRoutes: RouteRecordRaw[] = [
   },
 ]
 
-// // 动态路由（异步路由、导航栏路由）
+// 动态路由（异步路由、导航栏路由）
 const asyncRoutes: Route.recordMainRaw[] = [
-  {
-    meta: {
-      title: '演示',
-      i18n: 'route.demo',
-      icon: 'i-uim:box',
-    },
-    children: MultilevelMenuExample,
+  ...MultilevelMenuExample
+  // {
+  //   meta: {
+  //     title: '演示',
+  //     i18n: 'route.demo',
+  //     icon: 'i-uim:box',
+  //   },
+  //   children: MultilevelMenuExample,
 
-  },
+  // },
 ]
 
 const constantRoutesByFilesystem = generatedRoutes.filter((item) => {

@@ -2,7 +2,7 @@
 defineOptions({
   name: 'SyncSettings',
 })
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 
 const sync = [
   { label: '所属客户', value: 1 },
@@ -25,15 +25,15 @@ const sync1 = [
   { label: '性别', value: 1 },
   { label: '年龄', value: 1 },
 ]
-const radio1 = ref(1)
 // 弹框开关变量
 const isShow = ref(false)
+const showEdit = () => {
+  isShow.value = true
+}
 // 提交数据
 function onSubmit() {
 
 }
-watch(() => radio1, (newVal) => {
-})
 // 弹框关闭事件
 function closeHandler() {
   // 移除校验
@@ -44,7 +44,7 @@ function closeHandler() {
   isShow.value = false
 }
 // 暴露方法
-defineExpose({ isShow })
+ defineExpose({showEdit})
 </script>
 
 <template>
