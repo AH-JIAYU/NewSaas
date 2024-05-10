@@ -5,7 +5,7 @@ defineOptions({
 import surveyTopTabs from '../SurveyTopTabs/index.vue'
 import syncSettings from '../SyncSettings/index.vue'
 
-const settingsRef = ref('')
+const settingsRef = ref<any>('')
 
 function setHandler() {
   settingsRef.value.isShow = true

@@ -19,10 +19,7 @@ const plugins = [
 function handleChange(v: string) {
   content.value = v;
 }
-
-function open(url: string) {
-  window.open(url, "_blank");
-}
+ 
 // 弹框开关变量
 const isShow = ref(false);
 // 提交数据
@@ -31,12 +28,6 @@ function onSubmit() {}
 const replyData = async () => {};
 // 弹框关闭事件
 function closeHandler() {
-  // 移除校验
-  // formRef.value.resetFields()
-
-  // delete formData.id
-  // // 重置表单
-  // Object.assign(formData, defaultState)
   isShow.value = false;
 }
 // 暴露方法
@@ -60,7 +51,6 @@ defineExpose({ isShow, replyData });
         </el-form-item>
         <el-form-item label="类型">
           <el-select>
-            <el-option />
           </el-select>
         </el-form-item>
         <el-form-item label="内容">

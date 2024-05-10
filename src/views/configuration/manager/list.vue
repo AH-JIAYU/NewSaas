@@ -190,19 +190,19 @@ function handleMoreOperating(command: string, row: any) {
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
           <ElForm :model="data.search" size="default" label-width="100px" inline-message inline class="search-form">
-            <ElFormItem label="帐号">
+            <ElFormItem >
               <ElInput v-model="data.search.account" placeholder="请输入帐号，支持模糊查询" clearable
                 @keydown.enter="currentChange()" @clear="currentChange()" />
             </ElFormItem>
-            <ElFormItem label="姓名">
+            <ElFormItem >
               <ElInput v-model="data.search.name" placeholder="请输入姓名，支持模糊查询" clearable @keydown.enter="currentChange()"
                 @clear="currentChange()" />
             </ElFormItem>
-            <ElFormItem v-show="!fold" label="手机号">
+            <ElFormItem v-show="!fold"  >
               <ElInput v-model="data.search.mobile" placeholder="请输入手机号" clearable @keydown.enter="currentChange()"
                 @clear="currentChange()" />
             </ElFormItem>
-            <ElFormItem v-show="!fold" label="性别">
+            <ElFormItem v-show="!fold" >
               <ElRadioGroup v-model="data.search.sex" @change="currentChange()">
                 <ElRadioButton label="">
                   全部

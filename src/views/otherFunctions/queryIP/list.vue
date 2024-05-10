@@ -153,7 +153,6 @@ const check = () => {};
               <el-input
                 v-model="form.b"
                 placeholder="输入项目ID或项目名称"
-                size="normal"
                 clearable
               ></el-input>
             </el-col>

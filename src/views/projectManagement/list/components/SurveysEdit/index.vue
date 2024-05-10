@@ -17,11 +17,6 @@ watch(() => radio1, (newVal) => {
 })
 // 弹框关闭事件
 function closeHandler() {
-  // 移除校验
-  // formRef.value.resetFields()
-  // delete formData.id
-  // // 重置表单
-  // Object.assign(formData, defaultState)
   isShow.value = false
 }
 // 暴露方法

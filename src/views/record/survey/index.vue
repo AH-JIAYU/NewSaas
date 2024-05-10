@@ -79,44 +79,43 @@ onMounted(() => {
         <template #default="{ fold, toggle }">
           <ElForm :model="queryForm.select" size="default" label-width="100px" inline-message inline
             class="search-form">
-            <el-form-item label="项目ID">
+            <el-form-item>
               <el-input v-model.trim="queryForm.select.id" clearable :inline="false" placeholder="项目ID" />
             </el-form-item>
-            <el-form-item label="项目名称" v-show="!fold">
+            <el-form-item v-show="!fold">
               <el-input v-model.trim="queryForm.select.name" clearable :inline="false" placeholder="项目名称" />
             </el-form-item>
-            <el-form-item label="项目标识" v-show="!fold">
+            <el-form-item v-show="!fold">
               <el-input v-model.trim="queryForm.select.name" clearable :inline="false" placeholder="项目标识" />
             </el-form-item>
-            <el-form-item label="供应商ID" v-show="!fold">
+            <el-form-item v-show="!fold">
               <el-input v-model.trim="queryForm.select.name" clearable :inline="false" placeholder="供应商ID" />
             </el-form-item>
-            <el-form-item label="子会员ID" v-show="!fold">
+            <el-form-item v-show="!fold">
               <el-input v-model.trim="queryForm.select.name" clearable :inline="false" placeholder="子会员ID" />
             </el-form-item>
-            <el-form-item label="IP地址" v-show="!fold">
+            <el-form-item v-show="!fold">
               <el-input v-model.trim="queryForm.select.name" clearable :inline="false" placeholder="IP地址" />
             </el-form-item>
-            <el-form-item label="所属国家" v-show="!fold">
+            <el-form-item v-show="!fold">
               <el-select v-model="queryForm.select.default" clearable placeholder="所属国家">
 
               </el-select>
             </el-form-item>
-            <el-form-item label="客户简称" v-show="!fold">
+            <el-form-item v-show="!fold">
               <el-select v-model="queryForm.select.default" clearable placeholder="客户简称">
               </el-select>
             </el-form-item>
-            <el-form-item label="调查状态" v-show="!fold">
+            <el-form-item v-show="!fold">
               <el-select v-model="queryForm.select.default" clearable placeholder="调查状态">
               </el-select>
             </el-form-item>
 
-            <el-form-item label="日期" v-show="!fold">
+            <el-form-item v-show="!fold">
               <el-date-picker v-model="queryForm.select.time" type="daterange" unlink-panels range-separator="-"
-                start-placeholder="注册开始日期" end-placeholder="注册结束日期" size="default" style="width: 192px"
-                clear-icon="true" />
+                start-placeholder="注册开始日期" end-placeholder="注册结束日期" size="default" clear-icon="true" />
             </el-form-item>
-            <el-form-item label="分配目标" v-show="!fold">
+            <el-form-item v-show="!fold">
               <el-select v-model="queryForm.select.default" clearable placeholder="分配目标">
               </el-select>
             </el-form-item>
@@ -137,7 +136,7 @@ onMounted(() => {
           </ElForm>
         </template>
       </SearchBar>
-    <PageMain>
+      <ElDivider border-style="dashed" />
       <el-row>
         <FormLeftPanel> </FormLeftPanel>
         <FormRightPanel>
@@ -147,27 +146,26 @@ onMounted(() => {
             style="margin-left: 12px;" @query-data="queryData" />
         </FormRightPanel>
       </el-row>
-        <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
-          @selection-change="setSelectRows">
-          <el-table-column align="center" prop="a" show-overflow-tooltip type="selection" />
-          <el-table-column v-if="checkList.includes('a')" align="center" prop="id" show-overflow-tooltip
-            label="供应商ID" />
-          <el-table-column align="center" prop="b" show-overflow-tooltip label="项目ID／客户／标识" />
-          <el-table-column align="center" prop="c" show-overflow-tooltip label="子会员ID" />
-          <el-table-column align="center" prop="d" show-overflow-tooltip label="分配目标" />
-          <el-table-column align="center" prop="e" show-overflow-tooltip label="IP／所属国" />
-          <el-table-column align="center" prop="f" show-overflow-tooltip label="价格" />
-          <el-table-column align="center" prop="g" show-overflow-tooltip label="状态" />
-          <el-table-column align="center" prop="h" show-overflow-tooltip label="时间" />
-          <template #empty>
-            <el-empty class="vab-data-empty" description="暂无数据" />
-          </template>
-        </el-table>
+      <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
+        @selection-change="setSelectRows">
+        <el-table-column align="center" prop="a" show-overflow-tooltip type="selection" />
+        <el-table-column v-if="checkList.includes('a')" align="center" prop="id" show-overflow-tooltip label="供应商ID" />
+        <el-table-column align="center" prop="b" show-overflow-tooltip label="项目ID／客户／标识" />
+        <el-table-column align="center" prop="c" show-overflow-tooltip label="子会员ID" />
+        <el-table-column align="center" prop="d" show-overflow-tooltip label="分配目标" />
+        <el-table-column align="center" prop="e" show-overflow-tooltip label="IP／所属国" />
+        <el-table-column align="center" prop="f" show-overflow-tooltip label="价格" />
+        <el-table-column align="center" prop="g" show-overflow-tooltip label="状态" />
+        <el-table-column align="center" prop="h" show-overflow-tooltip label="时间" />
+        <template #empty>
+          <el-empty class="vab-data-empty" description="暂无数据" />
+        </template>
+      </el-table>
 
       <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
         :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
         background @size-change="sizeChange" @current-change="currentChange" />
-      </PageMain>
+
     </PageMain>
   </div>
 </template>
@@ -197,6 +195,7 @@ onMounted(() => {
     }
   }
 }
+
 // 筛选
 .page-main {
   .search-form {

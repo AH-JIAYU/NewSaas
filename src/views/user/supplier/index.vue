@@ -128,28 +128,28 @@ onMounted(() => {
         <template #default="{ fold, toggle }">
           <ElForm :model="queryForm.select" size="default" label-width="100px" inline-message inline
             class="search-form">
-            <el-form-item label="供应商ID">
+            <el-form-item>
               <el-input v-model.trim="queryForm.select.id" clearable :inline="false" placeholder="供应商ID" />
             </el-form-item>
-            <el-form-item label="供应商简称" v-show="!fold">
+            <el-form-item v-show="!fold">
               <el-input v-model.trim="queryForm.select.name" clearable :inline="false" placeholder="供应商简称" />
             </el-form-item>
-            <el-form-item label="手机号码" v-show="!fold">
+            <el-form-item v-show="!fold">
               <el-input v-model.trim="queryForm.select.phone" clearable :inline="false" placeholder="手机号码" />
             </el-form-item>
-            <el-form-item label="账号名称" v-show="!fold">
+            <el-form-item v-show="!fold">
               <el-input v-model.trim="queryForm.select.name" clearable :inline="false" placeholder="账号名称" />
             </el-form-item>
-            <el-form-item label="邮箱" v-show="!fold">
+            <el-form-item v-show="!fold">
               <el-input v-model.trim="queryForm.select.email" clearable :inline="false" placeholder="邮箱" />
             </el-form-item>
-            <el-form-item label="客户状态" v-show="!fold">
+            <el-form-item v-show="!fold">
               <el-select v-model="queryForm.select.default" clearable placeholder="客户状态">
                 <el-option label="默认" value="true" />
                 <el-option label="关闭" value="false" />
               </el-select>
             </el-form-item>
-            <el-form-item label="日期" v-show="!fold">
+            <el-form-item v-show="!fold">
               <el-date-picker v-model="queryForm.select.time" type="daterange" unlink-panels range-separator="-"
                 start-placeholder="创建开始日期" end-placeholder="创建结束日期" size="default" style="width: 192px;"
                 clear-icon="true" />
@@ -171,7 +171,7 @@ onMounted(() => {
           </ElForm>
         </template>
       </SearchBar>
-      <PageMain>
+      <ElDivider border-style="dashed" />
         <el-row>
           <FormLeftPanel>
             <el-button type="primary" size="default" @click="handleAdd">
@@ -231,8 +231,6 @@ onMounted(() => {
           <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
         :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
         background @size-change="sizeChange" @current-change="currentChange" />
-      </PageMain>
-
     </PageMain>
     <customerEdit ref="editRef" @fetch-data="fetchData" />
     <customerDetail ref="checkRef" @fetch-data="fetchData" />

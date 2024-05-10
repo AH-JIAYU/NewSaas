@@ -99,7 +99,7 @@ onMounted(() => {
 <template>
   <div
     :class="{
-      'vab-table-fullscreen': isFullscreen,
+
       'absolute-container': tableAutoHeight,
     }"
   >
@@ -107,11 +107,8 @@ onMounted(() => {
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
           <el-form
-            inline
-            label-position="right"
-            label-width="80px"
-            :model="queryForm"
-            @submit.prevent
+          :model="queryForm.select" size="default" label-width="100px" inline-message inline
+            class="search-form"
           >
             <el-form-item label="">
               <el-input clearable placeholder="项目ID" />
@@ -160,13 +157,10 @@ onMounted(() => {
             <el-form-item v-show="!fold">
               <el-input clearable placeholder="创建人" />
             </el-form-item>
-            <el-form-item style="width: 192px" v-show="!fold">
-              <el-date-picker
-                v-model="value1"
-                type="date"
-                placeholder="创建日期"
-                size="default"
-              />
+            <el-form-item  v-show="!fold">
+              <el-date-picker  type="daterange" unlink-panels range-separator="-"
+                start-placeholder="开始日期" end-placeholder="结束日期" size="default" style="width: 192px" clear-icon="true" />
+
             </el-form-item>
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">
@@ -193,7 +187,7 @@ onMounted(() => {
           </el-form>
         </template>
       </SearchBar>
-
+      <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel> </FormLeftPanel>
         <FormRightPanel>
@@ -289,11 +283,7 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
-:deep {
-  table {
-    width: 100% !important;
-  }
-}
+
 .absolute-container {
   position: absolute;
   display: flex;

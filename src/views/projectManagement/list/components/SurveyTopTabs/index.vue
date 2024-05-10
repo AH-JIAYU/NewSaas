@@ -30,7 +30,7 @@ function open(url: string) {
 <template>
   <el-tabs v-model="activeName">
     <el-tab-pane label="基础设置" name="basicSettings">
-      <ElForm label-width="100px" model="" rules="rules">
+      <ElForm label-width="100px">
         <el-card class="box-card">
           <template #header>
             <div class="card-header">
@@ -51,16 +51,12 @@ function open(url: string) {
             <el-col :span="6">
               <el-form-item label="所属客户" prop="client" style="float: left; width: 15.5rem;">
                 <el-select placeholder="Select">
-                  <el-option />
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="所属国家" prop="currency" style="float: left; width: 15.5rem;">
-                <el-cascader
-                  clearable
-                  filterable
-                />
+                <el-cascader clearable filterable />
               </el-form-item>
             </el-col>
           </el-row>
@@ -95,10 +91,7 @@ function open(url: string) {
             </el-col>
             <el-col :span="6">
               <el-form-item label="最小时长/分" prop="category">
-                <el-cascader
-                  clearable
-                  filterable
-                />
+                <el-cascader clearable filterable />
               </el-form-item>
             </el-col>
             <el-col :span="11">
@@ -142,11 +135,7 @@ function open(url: string) {
             </el-col>
             <el-col :span="6">
               <el-form-item prop="top">
-                <el-date-picker
-                  type="datetime"
-                  placeholder="请选择时间"
-                  shortcuts=""
-                />
+                <el-date-picker type="datetime" placeholder="请选择时间" />
               </el-form-item>
             </el-col>
             <br>
@@ -167,12 +156,8 @@ function open(url: string) {
             </div>
           </template>
           <el-form-item label="上传图片" prop="tips">
-            <el-upload
-              class="upload-demo"
-              drag
-              action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
-              multiple
-            >
+            <el-upload class="upload-demo" drag action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+              multiple>
               <el-icon class="el-icon--upload">
                 <UploadFilled />
               </el-icon>

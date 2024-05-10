@@ -12,13 +12,7 @@ function onSubmit() {
 
 }
 // 弹框关闭事件
-function closeHandler() {
-  // 移除校验
-  // formRef.value.resetFields()
-
-  // delete formData.id
-  // // 重置表单
-  // Object.assign(formData, defaultState)
+function closeHandler() { 
   isShow.value = false
 }
 // 暴露方法

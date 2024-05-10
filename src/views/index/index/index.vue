@@ -215,7 +215,7 @@ onMounted(() => {
         <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
           <el-card>
             <p class="title">
-               营业额趋势
+              营业额趋势
             </p>
             <div id="echarts1" ref="chart1Ref" style="width: 100%;height: 500px;" />
           </el-card>
@@ -223,7 +223,7 @@ onMounted(() => {
         <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
           <el-card>
             <p class="title">
-               客户总览
+              客户总览
             </p>
             <div id="echarts2" ref="chart2Ref" style="width: 100%; height: 500px;" />
           </el-card>
@@ -234,10 +234,10 @@ onMounted(() => {
         <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
           <el-card>
             <template #header>
-                <p class="title fx-b">
-              营业额趋势
-              <SearchTab />
-            </p>
+              <p class="title fx-b">
+                营业额趋势
+                <SearchTab />
+              </p>
             </template>
 
             <el-table :data="tableData" style="width: 100%;">
@@ -253,10 +253,10 @@ onMounted(() => {
         <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
           <el-card>
             <template #header>
-            <p class="title fx-b">
-              客户总览
-              <SearchTab />
-            </p>
+              <p class="title fx-b">
+                客户总览
+                <SearchTab />
+              </p>
             </template>
 
             <el-table :data="tableData" style="width: 100%;">
@@ -295,6 +295,7 @@ onMounted(() => {
       color: red;
     }
   }
+
   // 表格
   .el-table__body {
     tr:nth-of-type(1) {

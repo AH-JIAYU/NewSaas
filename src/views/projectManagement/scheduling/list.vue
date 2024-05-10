@@ -20,7 +20,7 @@ const editRef = ref();
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const checkList = ref([]);
 const isFullscreen = ref(false);
-const lineHeight = ref("default");
+const lineHeight = ref<any>("default");
 const stripe = ref(false);
 const selectRows = ref<any>([]);
 const columns = ref([
@@ -112,7 +112,7 @@ onMounted(() => {
 <template>
   <div
     :class="{
-      'vab-table-fullscreen': isFullscreen,
+
       'absolute-container': tableAutoHeight,
     }"
   >
@@ -120,16 +120,13 @@ onMounted(() => {
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
           <el-form
-            inline
-            label-position="right"
-            label-width="80px"
-            :model="queryForm"
-            @submit.prevent
+          :model="queryForm.select" size="default" label-width="100px" inline-message inline
+            class="search-form"
           >
             <el-form-item label="">
               <el-input clearable placeholder="项目ID" />
             </el-form-item>
-            <el-form-item v-show="!fold" label="">
+            <el-form-item  label="">
               <el-input clearable placeholder="项目名称" />
             </el-form-item>
             <ElFormItem>
@@ -145,7 +142,7 @@ onMounted(() => {
                 </template>
                 重置
               </ElButton>
-              <ElButton link @click="toggle">
+              <ElButton disabled link @click="toggle">
                 <template #icon>
                   <SvgIcon
                     :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
@@ -157,6 +154,7 @@ onMounted(() => {
           </el-form>
         </template>
       </SearchBar>
+      <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>
           <el-button

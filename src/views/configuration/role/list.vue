@@ -158,7 +158,7 @@ function onDel(row: any) {
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
           <ElForm :model="data.search" size="default" label-width="100px" inline-message inline class="search-form">
-            <ElFormItem label="名称">
+            <ElFormItem  >
               <ElInput v-model="data.search.name" placeholder="请输入角色名称，支持模糊查询" clearable @keydown.enter="currentChange()" @clear="currentChange()" />
             </ElFormItem>
             <ElFormItem>

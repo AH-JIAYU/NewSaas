@@ -21,7 +21,7 @@ const detailsRef = ref();
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const checkList = ref([]);
 const isFullscreen = ref(false);
-const lineHeight = ref("default");
+const lineHeight = ref<any>("default");
 const stripe = ref(false);
 const selectRows = ref<any>([]);
 const columns = ref([
@@ -55,8 +55,6 @@ const projectDetails = () => {
 };
 // 删除数据
 const deleteData = () => {
-  // if (!selectRows.value.length)
-  //   return ElMessage({ message: "请选择至少一条数据", type: "warning" });
   deleteRef.value.isShow = true;
   deleteRef.value.replyData(selectRows.value);
 };
@@ -90,9 +88,6 @@ function onReset() {
 }
 async function fetchData() {
   listLoading.value = true;
-  // const { data } = await getList(queryForm)
-  // list.value = data[0]
-  // total.value = data[0].length
   list.value = [
     { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
     { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
@@ -112,7 +107,6 @@ onMounted(() => {
 <template>
   <div
     :class="{
-      'vab-table-fullscreen': isFullscreen,
       'absolute-container': tableAutoHeight,
     }"
   >
@@ -120,11 +114,8 @@ onMounted(() => {
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
           <el-form
-            inline
-            label-position="right"
-            label-width="80px"
-            :model="queryForm"
-            @submit.prevent
+          :model="queryForm.select" size="default" label-width="100px" inline-message inline
+            class="search-form"
           >
             <el-form-item label="">
               <el-input clearable placeholder="供应商ID" />
@@ -170,6 +161,7 @@ onMounted(() => {
           </el-form>
         </template>
       </SearchBar>
+      <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel> </FormLeftPanel>
         <FormRightPanel>
@@ -246,19 +238,7 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
-.el-select {
-  width: 12rem;
-}
-
-:deep {
-  table {
-    width: 100% !important;
-  }
-}
-
-.el-pagination {
-  margin-top: 15px;
-}
+// 高度自适应
 .absolute-container {
   position: absolute;
   display: flex;
@@ -282,7 +262,7 @@ onMounted(() => {
     }
   }
 }
-
+// 筛选
 .page-main {
   .search-form {
     display: grid;

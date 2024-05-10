@@ -28,7 +28,7 @@ const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const border = ref(true);
 const checkList = ref([]);
 const isFullscreen = ref(false);
-const lineHeight = ref("default");
+const lineHeight = ref<any>("default");
 const stripe = ref(false);
 const selectRows = ref<any>([]);
 const columns = ref([
@@ -85,7 +85,7 @@ function settlement(row: any) {
   }
 }
 // 审核
-const auditing = () => {
+const auditing = (row:any) => {
   auditingRef.value.isShow = true;
 };
 // 编辑
@@ -142,22 +142,13 @@ onMounted(() => {
 </script>
 
 <template>
-  <div
-    :class="{
-      'vab-table-fullscreen': isFullscreen,
-      'absolute-container': tableAutoHeight,
-    }"
-  >
+  <div :class="{
+    'absolute-container': tableAutoHeight,
+  }">
     <PageMain>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
-          <el-form
-            inline
-            label-position="right"
-            label-width="80px"
-            :model="queryForm"
-            @submit.prevent
-          >
+          <el-form :model="queryForm" size="default" label-width="100px" inline-message inline class="search-form">
             <el-form-item label="">
               <el-input clearable placeholder="项目ID" />
             </el-form-item>
@@ -205,13 +196,10 @@ onMounted(() => {
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item style="width: 192px" v-show="!fold">
-              <el-date-picker
-                v-model="value1"
-                type="date"
-                placeholder="Pick a day"
-                size="default"
-              />
+            <el-form-item  v-show="!fold">
+              <el-date-picker v-model="queryForm.select.time" type="daterange" unlink-panels range-separator="-"
+                start-placeholder="创建开始日期" end-placeholder="创建结束日期" size="default" style="width: 192px;"
+                clear-icon="true" />
             </el-form-item>
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">
@@ -228,9 +216,7 @@ onMounted(() => {
               </ElButton>
               <ElButton link @click="toggle">
                 <template #icon>
-                  <SvgIcon
-                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
-                  />
+                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
                 </template>
                 {{ fold ? "展开" : "收起" }}
               </ElButton>
@@ -238,6 +224,7 @@ onMounted(() => {
           </el-form>
         </template>
       </SearchBar>
+      <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>
           <el-button type="primary" size="default" @click="addSettlement">
@@ -254,31 +241,14 @@ onMounted(() => {
           <el-button style="margin-right: 0.625rem" size="default" @click="">
             导出
           </el-button>
-          <TabelControl
-            v-model:border="border"
-            v-model:tableAutoHeight="tableAutoHeight"
-            v-model:checkList="checkList"
-            v-model:columns="columns"
-            v-model:is-fullscreen="isFullscreen"
-            v-model:line-height="lineHeight"
-            v-model:stripe="stripe"
-            style="margin-left: 12px"
-            @click-full-screen="clickFullScreen"
-            @query-data="currentChange"
-          />
+          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
+            v-model:columns="columns" v-model:is-fullscreen="isFullscreen" v-model:line-height="lineHeight"
+            v-model:stripe="stripe" style="margin-left: 12px" @click-full-screen="clickFullScreen"
+            @query-data="currentChange" />
         </FormRightPanel>
       </el-row>
-      <el-table
-        style="margin-top: 0.625rem"
-        ref="tableSortRef"
-        v-loading="false"
-        row-key="id"
-        :data="list"
-        :border="border"
-        :size="lineHeight"
-        :stripe="stripe"
-        @selection-change="setSelectRows"
-      >
+      <el-table style="margin-top: 0.625rem" ref="tableSortRef" v-loading="false" row-key="id" :data="list"
+        :border="border" :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows">
         <el-table-column type="selection" />
         <el-table-column type="index" align="center" label="序号" width="55" />
         <el-table-column prop="a" align="center" label="项目ID" />
@@ -291,50 +261,37 @@ onMounted(() => {
         <el-table-column prop="h" align="center" label="结算状态" />
         <el-table-column prop="j" align="center" label="创建人" />
         <el-table-column prop="k" align="center" label="创建时间" />
-        <el-table-column  align="center" label="操作" width="190">
+        <el-table-column align="center" label="操作" width="190">
           <template #default="{ row }">
             <div class="centerss">
-              <el-button
-              text
-              type="primary"
-              size="default"
-              @click="auditing(setSelectRows)"
-            >
-              审核
-            </el-button>
-            <ElDropdown>
-              <ElButton size="small">
-                更多操作
-                <SvgIcon name="i-ep:arrow-down" class="el-icon--right" />
-              </ElButton>
-              <template #dropdown>
-                <ElDropdownMenu>
-                  <ElDropdownItem command="auditing">
-                    <el-button
-                      text
-                      size="default"
-                      @click="auditing"
-                    >
-                      重审
-                    </el-button>
-                  </ElDropdownItem>
-                  <ElDropdownItem command="edit" divided>
-                    <el-button text  size="default" @click="edit">
-                      编辑
-                    </el-button>
-                  </ElDropdownItem>
-                  <ElDropdownItem command="refundDetails">
-                    <el-button
-                      text
-                      size="default"
-                      @click="refundDetails"
-                    >
-                      详情
-                    </el-button>
-                  </ElDropdownItem>
-                </ElDropdownMenu>
-              </template>
-            </ElDropdown>
+              <el-button text type="primary" size="default" @click="auditing(row)">
+                审核
+              </el-button>
+              <ElDropdown>
+                <ElButton size="small">
+                  更多操作
+                  <SvgIcon name="i-ep:arrow-down" class="el-icon--right" />
+                </ElButton>
+                <template #dropdown>
+                  <ElDropdownMenu>
+                    <ElDropdownItem command="auditing">
+                      <el-button text size="default" @click="auditing">
+                        重审
+                      </el-button>
+                    </ElDropdownItem>
+                    <ElDropdownItem command="edit" divided>
+                      <el-button text size="default" @click="edit">
+                        编辑
+                      </el-button>
+                    </ElDropdownItem>
+                    <ElDropdownItem command="refundDetails">
+                      <el-button text size="default" @click="refundDetails">
+                        详情
+                      </el-button>
+                    </ElDropdownItem>
+                  </ElDropdownMenu>
+                </template>
+              </ElDropdown>
             </div>
           </template>
         </el-table-column>
@@ -342,18 +299,9 @@ onMounted(() => {
           <el-empty description="暂无数据" />
         </template>
       </el-table>
-      <ElPagination
-        :current-page="pagination.page"
-        :total="pagination.total"
-        :page-size="pagination.size"
-        :page-sizes="pagination.sizes"
-        :layout="pagination.layout"
-        :hide-on-single-page="false"
-        class="pagination"
-        background
-        @size-change="sizeChange"
-        @current-change="currentChange"
-      />
+      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+        background @size-change="sizeChange" @current-change="currentChange" />
       <invoicingEdit ref="invoicingRef" />
       <moreOperations ref="settlementRef" />
       <projectReview ref="auditingRef" />
@@ -365,19 +313,7 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
-.el-select {
-  width: 192px;
-}
-
-:deep {
-  table {
-    width: 100% !important;
-  }
-}
-
-.el-pagination {
-  margin-top: 0.9375rem;
-}
+// 高度自适应
 .absolute-container {
   position: absolute;
   display: flex;
@@ -401,7 +337,7 @@ onMounted(() => {
     }
   }
 }
-
+// 筛选
 .page-main {
   .search-form {
     display: grid;
@@ -421,12 +357,4 @@ onMounted(() => {
     }
   }
 }
-:deep {
-  .centerss {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-}
-
 </style>

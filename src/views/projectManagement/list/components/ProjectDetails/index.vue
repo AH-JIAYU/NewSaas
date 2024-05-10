@@ -10,7 +10,7 @@ import "bytemd/dist/index.css";
 import { ref } from "vue";
 import logDetails from "../LogDetails/index.vue";
 const content = ref("# Fantastic-admin");
-const logDetailsRef = ref('')
+const logDetailsRef = ref<any>('')
 const plugins = [
   gfm({
     locale: gfmLocale,
@@ -80,7 +80,7 @@ defineExpose({ isShow });
         </el-row>
       </template>
 
-      <ElForm label-width="100px" model="" rules="rules">
+      <ElForm label-width="100px" >
         <el-card class="box-card">
           <template #header>
             <div class="card-header">
@@ -101,7 +101,6 @@ defineExpose({ isShow });
             <el-col :span="8">
               <el-form-item label="项目标识" prop="client_pid" style="float: left; width: 20rem;">
                 <el-select placeholder="Select">
-                  <el-option />
                 </el-select>
               </el-form-item>
             </el-col>
@@ -115,7 +114,6 @@ defineExpose({ isShow });
             <el-col :span="8">
               <el-form-item label="所属国家" prop="name" style="float: left; width: 20rem;">
                 <el-select placeholder="Select">
-                  <el-option />
                 </el-select>
               </el-form-item>
             </el-col>

@@ -83,33 +83,33 @@ onMounted(() => {
         <template #default="{ fold, toggle }">
           <ElForm :model="queryForm.select" size="default" label-width="180px" inline-message inline
             class="search-form">
-            <el-form-item label="组会员ID、子会员名称">
+            <el-form-item>
             <el-input v-model.trim="queryForm.select.id" clearable :inline="false" placeholder="组会员ID、子会员名称" />
           </el-form-item>
-          <el-form-item label="供应商ID"  v-show="!fold">
+          <el-form-item  v-show="!fold">
             <el-input v-model.trim="queryForm.select.name" clearable :inline="false" placeholder="供应商ID" />
           </el-form-item>
-          <el-form-item label="子会员角色"  v-show="!fold">
+          <el-form-item  v-show="!fold">
             <el-select v-model="queryForm.select.default" clearable placeholder="子会员角色">
               <el-option label="默认" value="true" />
               <el-option label="关闭" value="false" />
             </el-select>
           </el-form-item>
-          <el-form-item label="子会员状态"  v-show="!fold">
+          <el-form-item  v-show="!fold">
             <el-select v-model="queryForm.select.default" clearable placeholder="子会员状态">
               <el-option label="默认" value="true" />
               <el-option label="关闭" value="false" />
             </el-select>
           </el-form-item>
-          <el-form-item label="所属组"  v-show="!fold">
+          <el-form-item  v-show="!fold">
             <el-select v-model="queryForm.select.default" clearable placeholder="所属组">
               <el-option label="默认" value="true" />
               <el-option label="关闭" value="false" />
             </el-select>
           </el-form-item>
-          <el-form-item label="日期"  v-show="!fold">
+          <el-form-item  v-show="!fold">
             <el-date-picker v-model="queryForm.select.time" type="daterange" unlink-panels range-separator="-"
-              start-placeholder="注册开始日期" end-placeholder="注册结束日期" size="default" style="width: 192px"
+              start-placeholder="注册开始日期" end-placeholder="注册结束日期" size="default"
               clear-icon="true" />
           </el-form-item>
             <ElFormItem>
@@ -129,7 +129,7 @@ onMounted(() => {
           </ElForm>
         </template>
       </SearchBar>
-    <PageMain>
+      <ElDivider border-style="dashed" />
       <el-row>
         <FormLeftPanel> </FormLeftPanel>
         <FormRightPanel>
@@ -161,8 +161,6 @@ onMounted(() => {
         <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
           :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
           background @size-change="sizeChange" @current-change="currentChange" />
-        </PageMain>
-
     </PageMain>
   </div>
 </template>

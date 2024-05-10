@@ -174,7 +174,7 @@ onMounted(() => {
                 <el-option label="关闭" value="false" />
               </el-select>
             </el-form-item>
-            <el-form-item label="日期" v-show="!fold">
+            <el-form-item  v-show="!fold">
               <el-date-picker
                 v-model="queryForm.select.time"
                 type="daterange"
@@ -183,7 +183,7 @@ onMounted(() => {
                 start-placeholder="创建开始日期"
                 end-placeholder="创建结束日期"
                 size="default"
-                style="width: 192px"
+
                 clear-icon="true"
               />
             </el-form-item>
@@ -206,6 +206,7 @@ onMounted(() => {
           </ElForm>
         </template>
       </SearchBar>
+      <ElDivider border-style="dashed" />
       <el-row>
         <FormLeftPanel>
           <el-button type="primary" size="default" @click="handleAdd">

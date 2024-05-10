@@ -48,9 +48,7 @@ const editData = () => {
   if (!selectRows.value.length) editRef.value.isShow = true;
 };
 // 删除数据
-const deleteData = () => {
-  // if (!selectRows.value.length)
-  //   return ElMessage({ message: "请选择至少一条数据", type: "warning" });
+const deleteData = () => { 
   deleteRef.value.isShow = true;
   deleteRef.value.replyData(selectRows.value);
 };
@@ -106,7 +104,7 @@ onMounted(() => {
 <template>
   <div
     :class="{
-      'vab-table-fullscreen': isFullscreen,
+
       'absolute-container': tableAutoHeight,
     }"
   >
@@ -114,16 +112,13 @@ onMounted(() => {
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
           <el-form
-            inline
-            label-position="right"
-            label-width="80px"
-            :model="queryForm"
-            @submit.prevent
+          :model="queryForm.select" size="default" label-width="100px" inline-message inline
+            class="search-form"
           >
             <el-form-item label="">
               <el-input placeholder="供应商ID" />
             </el-form-item>
-            <el-form-item v-show="!fold" label="">
+            <el-form-item  label="">
               <el-select
                 value-key=""
                 placeholder="所有"
@@ -147,7 +142,7 @@ onMounted(() => {
                 </template>
                 重置
               </ElButton>
-              <ElButton link @click="toggle">
+              <ElButton disabled link @click="toggle">
                 <template #icon>
                   <SvgIcon
                     :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
@@ -159,6 +154,7 @@ onMounted(() => {
           </el-form>
         </template>
       </SearchBar>
+      <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel> </FormLeftPanel>
         <FormRightPanel>
@@ -229,19 +225,7 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
-.el-select {
-  width: 12rem;
-}
 
-:deep {
-  table {
-    width: 100% !important;
-  }
-}
-
-.el-pagination {
-  margin-top: 15px;
-}
 
 .absolute-container {
   position: absolute;

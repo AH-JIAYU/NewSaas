@@ -139,7 +139,7 @@ function sortChange({ prop, order }: { prop: string, order: string }) {
             </ElFormItem>
             <el-form-item v-show="!fold">
               <el-date-picker v-model="data.search.time" type="daterange" unlink-panels range-separator="-"
-                start-placeholder="开始日期" end-placeholder="结束日期" size="default" style="width: 192px" clear-icon="true" />
+                start-placeholder="开始日期" end-placeholder="结束日期" size="default"  clear-icon="true" />
             </el-form-item>
             <ElFormItem v-show="!fold">
               <el-select v-model="data.search.title" value-key="" placeholder="请选择状态" clearable filterable @change="">

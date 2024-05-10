@@ -2,14 +2,16 @@
 import check from './components/check/index.vue'
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } = usePagination() //分页
 
-const data = reactive<any>({
+const CheckRef=ref()//查看组件ref
+const data = ref<any>({
   activeName: "report", //tabs选中值
   list: [], //表格
-  CheckRef: null,//查看组件ref
+  loading:false,
   queryForm:{
   pageNo: 1,
   pageSize: 10,
   select: {},
+
 }
 })
 
@@ -25,16 +27,7 @@ function currentChange(page = 1) {
 // 获取列表
 async function getDataList() {
   data.value.loading = true
-  const params = {
-    ...getParams(),
-    ...(data.value.search.title && { title: data.value.search.title }),
-  }
-  // api.list(params).then((res: any) => {
-  //   data.value.loading = false
-  //   data.value.dataList = res.data.list
-  //   pagination.value.total = res.data.total
-  // })
-  data.list = [
+  data.value.list = [
     { name: 'name', cname: 'amr', fz: '张三', num1: 561, num2: 435, num3: 344, money1: 1344.11, money2: 111112 },
     { name: 'name1', cname: 'amr', fz: '张三', num1: 561, num2: 435, num3: 344, money1: 1344.11, money2: 111112 },
     { name: 'name2', cname: 'amr', fz: '张三', num1: 561, num2: 435, num3: 344, money1: 1344.11, money2: 111112 },
@@ -43,14 +36,15 @@ async function getDataList() {
     { name: 'name', cname: 'amr', fz: '张三', num1: 561, num2: 435, num3: 344, money1: 1344.11, money2: 111112 },
     { name: 'name', cname: 'amr', fz: '张三', num1: 561, num2: 435, num3: 344, money1: 1344.11, money2: 111112 },
   ]
+  data.value.loading = false
 }
 // 查看
 function handleCheck(row: any) {
   if (row.name) {
-    data.CheckRef.showEdit(row)
+    CheckRef.value.showEdit(row)
   }
   else {
-    data.CheckRef.showEdit()
+    CheckRef.value.showEdit()
   }
 }
 onMounted(() => {
@@ -69,7 +63,7 @@ onMounted(() => {
           </el-button>
         </el-row>
 
-        <el-table :data="data.list" border style="width: 100%;">
+        <el-table v-loading="data.loading" :data="data.list" border style="width: 100%;">
           <el-table-column align="center" prop="name" label="客户名称" width="180" />
           <el-table-column align="center" prop="cname" label="客户简称" width="180" />
           <el-table-column align="center" prop="fz" label="负责人" />
@@ -94,7 +88,7 @@ onMounted(() => {
             导出
           </el-button>
         </el-row>
-        <el-table :data="data.list" border style="width: 100%;">
+        <el-table  v-loading="data.loading"  :data="data.list" border style="width: 100%;">
           <el-table-column align="center" prop="name" label="渠道" width="180" />
           <el-table-column align="center" prop="cname" label="月份" width="180" />
           <el-table-column align="center" prop="fz" label="完成单数" />
@@ -108,7 +102,7 @@ onMounted(() => {
     <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
       :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
       background @size-change="sizeChange" @current-change="currentChange" />
-    <check ref="data.CheckRef" />
+    <check ref="CheckRef" />
   </PageMain>
 </template>
 

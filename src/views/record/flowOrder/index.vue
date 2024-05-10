@@ -80,23 +80,23 @@ onMounted(() => {
         <template #default="{ fold, toggle }">
           <ElForm :model="queryForm.select" size="default" label-width="100px" inline-message inline
             class="search-form">
-             <el-form-item label="项目ID" >
+             <el-form-item  >
             <el-input v-model.trim="queryForm.select.id" clearable :inline="false" placeholder="项目ID" />
           </el-form-item>
-           <el-form-item label="项目名称"  v-show="!fold">
+           <el-form-item  v-show="!fold">
             <el-input v-model.trim="queryForm.select.name" clearable :inline="false" placeholder="项目名称" />
           </el-form-item>
-           <el-form-item label="供应商"  v-show="!fold">
+           <el-form-item  v-show="!fold">
             <el-input v-model.trim="queryForm.select.name" clearable :inline="false" placeholder="供应商" />
           </el-form-item>
 
-           <el-form-item label="分配组"  v-show="!fold">
+           <el-form-item  v-show="!fold">
             <el-select v-model="queryForm.select.default" clearable placeholder="分配组">
             </el-select>
           </el-form-item>
-           <el-form-item label="日期"  v-show="!fold">
+           <el-form-item   v-show="!fold">
             <el-date-picker v-model="queryForm.select.time" type="daterange" unlink-panels range-separator="-"
-              start-placeholder="开始日期" end-placeholder="结束日期" size="default" style="width: 192px" clear-icon="true" />
+              start-placeholder="开始日期" end-placeholder="结束日期" size="default"  clear-icon="true" />
           </el-form-item>
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">
@@ -115,7 +115,7 @@ onMounted(() => {
           </ElForm>
         </template>
       </SearchBar>
-    <PageMain>
+      <ElDivider border-style="dashed" />
       <el-row>
         <FormLeftPanel> </FormLeftPanel>
         <FormRightPanel>
@@ -140,7 +140,7 @@ onMounted(() => {
       <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
         :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
         background @size-change="sizeChange" @current-change="currentChange" />
-      </PageMain>
+
     </PageMain>
   </div>
 </template>

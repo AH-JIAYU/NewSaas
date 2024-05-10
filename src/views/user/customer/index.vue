@@ -105,14 +105,14 @@ onMounted(() => {
         <template #default="{ fold, toggle }">
           <ElForm :model="queryForm.select" size="default" label-width="100px" inline-message inline
             class="search-form">
-            <el-form-item label="客户简称">
+            <el-form-item>
               <el-input v-model.trim="queryForm.select.id" clearable :inline="false" placeholder="客户简称" />
             </el-form-item>
-            <el-form-item label="负责人" v-show="!fold">
+            <el-form-item v-show="!fold">
               <el-select v-model="queryForm.select.name" clearable placeholder="负责人">
                 <el-option label="name" value="name" />
               </el-select>
-            </el-form-item label="客户状态">
+            </el-form-item>
             <el-form-item v-show="!fold">
               <el-select v-model="queryForm.select.default" clearable placeholder="客户状态">
                 <el-option label="默认" value="true" />
@@ -136,63 +136,59 @@ onMounted(() => {
           </ElForm>
         </template>
       </SearchBar>
-
-      <PageMain>
-        <el-row>
-          <FormLeftPanel>
-            <el-button type="primary" size="default" @click="handleAdd">
-              <template #icon>
-                <SvgIcon name="i-ep:plus" />
-              </template>
-              新增
-            </el-button>
-          </FormLeftPanel>
-          <FormRightPanel>
-            <el-button size="default">
-              导出
-            </el-button>
-            <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight"
-              v-model:checkList="checkList" v-model:columns="columns" v-model:line-height="lineHeight"
-              v-model:stripe="stripe" style="margin-left: 12px;" @query-data="queryData" />
-          </FormRightPanel>
-        </el-row>
-        <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
-          @selection-change="setSelectRows">
-          <el-table-column align="center" prop="a" show-overflow-tooltip type="selection" />
-          <el-table-column align="center" prop="b" show-overflow-tooltip label="客户名称" />
-          <el-table-column align="center" prop="c" show-overflow-tooltip label="客户简称" />
-          <el-table-column align="center" prop="d" show-overflow-tooltip label="客户营业限额($/月)" />
-          <el-table-column align="center" prop="e" show-overflow-tooltip label="审核率Min值" />
-          <el-table-column align="center" prop="f" show-overflow-tooltip label="负责人" />
-          <el-table-column align="center" prop="g" show-overflow-tooltip label="创建人" />
-          <el-table-column align="center" prop="h" show-overflow-tooltip label="创建时间" />
-          <el-table-column align="center" prop="r" show-overflow-tooltip label="客户状态" />
-          <el-table-column align="center" prop="i" label="操作" show-overflow-tooltip width="300">
-            <template #default="{ row }">
-              <el-button text type="primary" @click="handleEdit(row)">
-                编辑
-              </el-button>
-              <el-button text type="primary" @click="handleCheck(row)">
-                详情
-              </el-button>
-              <el-button text type="danger" @click="handleDelete(row)">
-                删除
-              </el-button>
+      <ElDivider border-style="dashed" />
+      <el-row>
+        <FormLeftPanel>
+          <el-button type="primary" size="default" @click="handleAdd">
+            <template #icon>
+              <SvgIcon name="i-ep:plus" />
             </template>
-          </el-table-column>
-          <template #empty>
-            <el-empty class="vab-data-empty" description="暂无数据" />
+            新增
+          </el-button>
+        </FormLeftPanel>
+        <FormRightPanel>
+          <el-button size="default">
+            导出
+          </el-button>
+          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
+            v-model:columns="columns" v-model:line-height="lineHeight" v-model:stripe="stripe"
+            style="margin-left: 12px;" @query-data="queryData" />
+        </FormRightPanel>
+      </el-row>
+      <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
+        @selection-change="setSelectRows">
+        <el-table-column align="center" prop="a" show-overflow-tooltip type="selection" />
+        <el-table-column align="center" prop="b" show-overflow-tooltip label="客户名称" />
+        <el-table-column align="center" prop="c" show-overflow-tooltip label="客户简称" />
+        <el-table-column align="center" prop="d" show-overflow-tooltip label="客户营业限额($/月)" />
+        <el-table-column align="center" prop="e" show-overflow-tooltip label="审核率Min值" />
+        <el-table-column align="center" prop="f" show-overflow-tooltip label="负责人" />
+        <el-table-column align="center" prop="g" show-overflow-tooltip label="创建人" />
+        <el-table-column align="center" prop="h" show-overflow-tooltip label="创建时间" />
+        <el-table-column align="center" prop="r" show-overflow-tooltip label="客户状态" />
+        <el-table-column align="center" prop="i" label="操作" show-overflow-tooltip width="300">
+          <template #default="{ row }">
+            <el-button text type="primary" @click="handleEdit(row)">
+              编辑
+            </el-button>
+            <el-button text type="primary" @click="handleCheck(row)">
+              详情
+            </el-button>
+            <el-button text type="danger" @click="handleDelete(row)">
+              删除
+            </el-button>
           </template>
-        </el-table>
-     <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
-          :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-          background @size-change="sizeChange" @current-change="currentChange" />
-
-      </PageMain>
-
-      <customerEdit ref="editRef" @fetch-data="fetchData" />
-      <customerDetail ref="checkRef" @fetch-data="fetchData" />
+        </el-table-column>
+        <template #empty>
+          <el-empty class="vab-data-empty" description="暂无数据" />
+        </template>
+      </el-table>
+      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+        background @size-change="sizeChange" @current-change="currentChange" />
     </PageMain>
+    <customerEdit ref="editRef" @fetch-data="fetchData" />
+    <customerDetail ref="checkRef" @fetch-data="fetchData" />
   </div>
 </template>
 
@@ -221,6 +217,7 @@ onMounted(() => {
     }
   }
 }
+
 // 筛选
 .page-main {
   .search-form {

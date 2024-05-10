@@ -81,10 +81,10 @@ onMounted(() => {
         <template #default="{ fold, toggle }">
           <ElForm :model="queryForm.select" size="default" label-width="100px" inline-message inline
             class="search-form">
-             <el-form-item label="渠道简称" >
+             <el-form-item >
             <el-input v-model.trim="queryForm.select.id" clearable :inline="false" placeholder="渠道简称" />
           </el-form-item>
-           <el-form-item label="操作人"  v-show="!fold">
+           <el-form-item  v-show="!fold">
             <el-select v-model="queryForm.select.default" clearable placeholder="操作人">
             </el-select>
           </el-form-item>
@@ -105,7 +105,7 @@ onMounted(() => {
           </ElForm>
         </template>
       </SearchBar>
-    <PageMain>
+      <ElDivider border-style="dashed" />
       <el-row>
         <FormLeftPanel> </FormLeftPanel>
         <FormRightPanel>
@@ -130,7 +130,7 @@ onMounted(() => {
         <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
           :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
           background @size-change="sizeChange" @current-change="currentChange" />
-        </PageMain>
+
     </PageMain>
   </div>
 </template>
