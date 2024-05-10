@@ -82,6 +82,16 @@ function getDataList() {
     pagination.value.total = res.data.total
   })
 }
+// 重置筛选数据
+function onReset() {
+  Object.assign(data.value.search, {
+    account: '',
+    name: '',
+    mobile: '',
+    sex: '',
+  });
+  getDataList()
+}
 
 // 每页数量切换
 function sizeChange(size: number) {
@@ -194,7 +204,7 @@ function handleMoreOperating(command: string, row: any) {
               <ElInput v-model="data.search.account" placeholder="请输入帐号，支持模糊查询" clearable
                 @keydown.enter="currentChange()" @clear="currentChange()" />
             </ElFormItem>
-            <ElFormItem >
+            <ElFormItem v-show="!fold" >
               <ElInput v-model="data.search.name" placeholder="请输入姓名，支持模糊查询" clearable @keydown.enter="currentChange()"
                 @clear="currentChange()" />
             </ElFormItem>
@@ -224,6 +234,12 @@ function handleMoreOperating(command: string, row: any) {
                   <SvgIcon name="i-ep:search" />
                 </template>
                 筛选
+              </ElButton>
+              <ElButton @click="onReset">
+                <template #icon>
+                  <div class="i-grommet-icons:power-reset w-1em h-1em"></div>
+                </template>
+                重置
               </ElButton>
               <ElButton link @click="toggle">
                 <template #icon>

@@ -114,6 +114,14 @@ function onCreate() {
   }
 }
 
+// 重置筛选数据
+function onReset() {
+  Object.assign(data.value.search, {
+    name: '',
+  });
+  getDataList()
+}
+
 function onEdit(row: any) {
   if (data.value.formMode === 'router') {
     if (settingsStore.settings.tabbar.enable && settingsStore.settings.tabbar.mergeTabsBy !== 'activeMenu') {
@@ -167,6 +175,12 @@ function onDel(row: any) {
                   <SvgIcon name="i-ep:search" />
                 </template>
                 筛选
+              </ElButton>
+              <ElButton @click="onReset">
+                <template #icon>
+                  <div class="i-grommet-icons:power-reset w-1em h-1em"></div>
+                </template>
+                重置
               </ElButton>
               <ElButton link disabled @click="toggle">
                 <template #icon>

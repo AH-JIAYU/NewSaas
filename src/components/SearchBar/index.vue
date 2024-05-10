@@ -21,7 +21,7 @@ const emits = defineEmits<{
 }>()
 
 const fold = defineModel<boolean>('fold', {
-  default: true,
+  default: false,
 })
 
 function toggle() {

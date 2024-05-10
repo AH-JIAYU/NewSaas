@@ -54,7 +54,7 @@ onMounted(() => {
 
 <template>
   <PageMain>
-    <el-tabs v-model="data.activeName" type="border-card" class="demo-tabs">
+    <el-tabs v-model="data.activeName"  class="demo-tabs">
       <el-tab-pane label="渠道报告" name="report">
         <el-row class="fx-b">
           <SearchTab />

@@ -376,7 +376,7 @@ onUnmounted(() => {
     position: absolute;
     right: 0;
     left: 0;
-    padding-inline-end: 50px;
+    padding-inline-end: 70px;
     overflow-y: hidden;
     white-space: nowrap;
 
@@ -737,7 +737,7 @@ onUnmounted(() => {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 50px;
+    width: 70px;
     height: 100%;
     background-image: linear-gradient(to right, transparent, var(--g-bg));
 

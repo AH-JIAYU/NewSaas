@@ -15,7 +15,7 @@ const checkList = ref([]);
 const border = ref(true);
 const isFullscreen = ref(false);
 const lineHeight = ref<any>("default");
-const stripe = ref(false);
+const stripe = ref(true);
 const selectRows = ref<any>([]);
 const columns = ref([
   {
@@ -119,7 +119,7 @@ onMounted(() => {
                 </template>
                 重置
               </ElButton>
-              <ElButton link @click="toggle">
+              <ElButton disabled link @click="toggle">
                 <template #icon>
                   <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
                 </template>
@@ -134,8 +134,9 @@ onMounted(() => {
         <FormLeftPanel> </FormLeftPanel>
         <FormRightPanel>
           <el-button style="margin-right: 10px" size="default" @click="">
-            导出
+            导出   
           </el-button>
+
           <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
             v-model:columns="columns" v-model:is-fullscreen="isFullscreen" v-model:line-height="lineHeight"
             v-model:stripe="stripe" style="margin-left: 12px" @click-full-screen="clickFullScreen"

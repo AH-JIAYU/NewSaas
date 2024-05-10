@@ -16,7 +16,7 @@ const checkRef = ref('') //组件ref 查看
 
 const selectRows = ref() //表格选中行
 const border = ref(true)  //表格控件-边框
-const stripe = ref(false) //表格控件-条纹
+const stripe = ref(true) //表格控件-条纹
 const tableAutoHeight = ref(false)  // 表格控件-高度自适应
 const lineHeight = ref<any>('default') //表格控件-大小
 const checkList = ref([])  //表格控件-展示列
@@ -74,7 +74,14 @@ function sizeChange(size: number) {
 function currentChange(page = 1) {
   onCurrentChange(page).then(() => fetchData())
 }
-
+// 重置数据
+function onReset() {
+  Object.assign(queryForm, {
+    pageNo: 1,
+    pageSize: 10,
+    select: {},
+  });
+}
 async function fetchData() {
   listLoading.value = true
   // const { data } = await getList(queryForm)
@@ -126,7 +133,13 @@ onMounted(() => {
                 </template>
                 筛选
               </ElButton>
-              <ElButton link @click="toggle">
+              <ElButton @click="onReset">
+                <template #icon>
+                  <div class="i-grommet-icons:power-reset w-1em h-1em"></div>
+                </template>
+                重置
+              </ElButton>
+              <ElButton disabled link @click="toggle">
                 <template #icon>
                   <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
                 </template>

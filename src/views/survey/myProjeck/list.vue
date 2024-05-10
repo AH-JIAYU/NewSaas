@@ -11,15 +11,15 @@ const tableSortRef = ref("");
 // loading加载
 const listLoading = ref<boolean>(true);
 // 获取组件变量
-const addCheckEditEdit = ref("");
-const addQuotaEdit = ref("");
+const addCheckEditEdit = ref<any>();
+const addQuotaEdit = ref<any>();
 // 右侧工具栏配置变量
 const border = ref(true);
 const checkList = ref([]);
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const isFullscreen = ref(false); //表格控件-控制全屏
-const lineHeight = ref("default");
-const stripe = ref(false);
+const lineHeight = ref<any>("default");
+const stripe = ref(true);
 const columns = ref([
   {
     label: "项目ID",
@@ -77,9 +77,6 @@ function onReset() {
 }
 async function fetchData() {
   listLoading.value = true;
-  // const { data } = await getList(queryForm)
-  // list.value = data[0]
-  // total.value = data[0].length
   list.value = [
     { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
     { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },

@@ -21,7 +21,7 @@ const checkList = ref([]);
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const isFullscreen = ref(false); //表格控件-控制全屏
 const lineHeight = ref<any>("default");
-const stripe = ref(false);
+const stripe = ref(true);
 const columns = ref([
   {
     label: "项目ID",
@@ -110,10 +110,10 @@ onMounted(() => {
           <!-- <el-form inline label-position="right" label-width="80px" :model="queryForm" @submit.prevent> -->
             <el-form  :model="queryForm" size="default" label-width="100px" inline-message inline class="search-form">
             <el-form-item label="">
-              <el-input clearable placeholder="项目ID" />
+              <el-input clearable placeholder="项目ID" v-model="queryForm.select.a"/>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-input clearable placeholder="项目名称" />
+              <el-input clearable placeholder="项目名称"  v-model="queryForm.select.b" />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
               <el-input clearable placeholder="项目标识" />
@@ -201,7 +201,7 @@ onMounted(() => {
           </el-button>
           <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
             v-model:columns="columns" v-model:is-fullscreen="isFullscreen" v-model:line-height="lineHeight"
-            v-model:stripe="stripe" style="margin-left: 12px" @click-full-screen="clickFullScreen"
+            v-model:stripe="stripe"   @click-full-screen="clickFullScreen"
             @query-data="currentChange" />
         </FormRightPanel>
       </el-row>

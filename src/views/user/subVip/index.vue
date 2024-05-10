@@ -13,7 +13,7 @@ const list = ref<Array<Object>>([]); //列表
 const selectRows = ref<string>(); //表格-选中行
 const checkList = ref<any>([]); //表格-展示的列
 const border = ref<boolean>(true); //表格控件-是否展示边框
-const stripe = ref<boolean>(false); //表格控件-是否展示斑马条
+const stripe = ref<boolean>(true); //表格控件-是否展示斑马条
 const lineHeight = ref<any>("default"); //表格控件-控制表格大小
   const tableAutoHeight = ref(false)  // 表格控件-高度自适应
 const columns = ref([//表格控件-展示列
@@ -63,6 +63,15 @@ async function fetchData() {
     { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
   ];
   listLoading.value = false;
+}
+// 重置筛选数据
+function onReset() {
+  Object.assign(queryForm, {
+    pageNo: 1,
+    pageSize: 10,
+    select: {},
+  });
+  fetchData()
 }
 // 表格-单选框
 function setSelectRows(val: string | undefined) {
@@ -118,6 +127,12 @@ onMounted(() => {
                   <SvgIcon name="i-ep:search" />
                 </template>
                 筛选
+              </ElButton>
+              <ElButton @click="onReset">
+                <template #icon>
+                  <div class="i-grommet-icons:power-reset w-1em h-1em"></div>
+                </template>
+                重置
               </ElButton>
               <ElButton link @click="toggle">
                 <template #icon>

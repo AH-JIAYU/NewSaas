@@ -20,7 +20,7 @@ const checkList = ref([]);
 const border = ref(true);
 const isFullscreen = ref(false);
 const lineHeight = ref("default");
-const stripe = ref(false);
+const stripe = ref(true);
 const selectRows = ref<any>([]);
 const columns = ref([
   {
@@ -48,7 +48,7 @@ const editData = () => {
   if (!selectRows.value.length) editRef.value.isShow = true;
 };
 // 删除数据
-const deleteData = () => { 
+const deleteData = () => {
   deleteRef.value.isShow = true;
   deleteRef.value.replyData(selectRows.value);
 };

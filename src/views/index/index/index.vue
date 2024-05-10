@@ -1,47 +1,94 @@
 <route lang="yaml">
-  meta:
-    title: 导航1
-  </route>
+meta:
+  title: 导航1
+</route>
+
+<script setup></script>
 
 <script setup>
-</script>
+import * as echarts from "echarts";
+import { onMounted } from "vue";
 
-<script setup>
-import * as echarts from 'echarts'
-import { onMounted } from 'vue'
-
-let chart1
-let chart2
-const chart1Ref = ref()
-const chart2Ref = ref()
+let chart1;
+let chart2;
+const chart1Ref = ref();
+const chart2Ref = ref();
 const tableData = [
-  { 'name': '供应商', 'money': 232, 'num': 124, 'B2B/B2C': '50%/50%', 'currency': 'RNB' },
-  { 'name': '供应商', 'money': 232, 'num': 124, 'B2B/B2C': '50%/50%', 'currency': 'RNB' },
-  { 'name': '供应商', 'money': 232, 'num': 124, 'B2B/B2C': '50%/50%', 'currency': 'RNB' },
-  { 'name': '供应商', 'money': 232, 'num': 124, 'B2B/B2C': '50%/50%', 'currency': 'RNB' },
-  { 'name': '供应商', 'money': 232, 'num': 124, 'B2B/B2C': '50%/50%', 'currency': 'RNB' },
-  { 'name': '供应商', 'money': 232, 'num': 124, 'B2B/B2C': '50%/50%', 'currency': 'RNB' },
-  { 'name': '供应商', 'money': 232, 'num': 124, 'B2B/B2C': '50%/50%', 'currency': 'RNB' },
-  { 'name': '供应商', 'money': 232, 'num': 124, 'B2B/B2C': '50%/50%', 'currency': 'RNB' },
-]
+  {
+    name: "供应商",
+    money: 232,
+    num: 124,
+    "B2B/B2C": "50%/50%",
+    currency: "RNB",
+  },
+  {
+    name: "供应商",
+    money: 232,
+    num: 124,
+    "B2B/B2C": "50%/50%",
+    currency: "RNB",
+  },
+  {
+    name: "供应商",
+    money: 232,
+    num: 124,
+    "B2B/B2C": "50%/50%",
+    currency: "RNB",
+  },
+  {
+    name: "供应商",
+    money: 232,
+    num: 124,
+    "B2B/B2C": "50%/50%",
+    currency: "RNB",
+  },
+  {
+    name: "供应商",
+    money: 232,
+    num: 124,
+    "B2B/B2C": "50%/50%",
+    currency: "RNB",
+  },
+  {
+    name: "供应商",
+    money: 232,
+    num: 124,
+    "B2B/B2C": "50%/50%",
+    currency: "RNB",
+  },
+  {
+    name: "供应商",
+    money: 232,
+    num: 124,
+    "B2B/B2C": "50%/50%",
+    currency: "RNB",
+  },
+  {
+    name: "供应商",
+    money: 232,
+    num: 124,
+    "B2B/B2C": "50%/50%",
+    currency: "RNB",
+  },
+];
 // 营业额趋势
 function echarts1() {
-  chart1 = echarts.init(chart1Ref.value)
+  chart1 = echarts.init(chart1Ref.value);
   const option = {
     title: {
-      text: '',
+      text: "",
     },
     tooltip: {
-      trigger: 'axis',
+      trigger: "axis",
       axisPointer: {
-        type: 'cross',
+        type: "cross",
         label: {
-          backgroundColor: '#6a7985',
+          backgroundColor: "#6a7985",
         },
       },
     },
     legend: {
-      data: ['Email', 'Union Ads', 'Video Ads', 'Direct', 'Search Engine'],
+      data: ["Email", "Union Ads", "Video Ads", "Direct", "Search Engine"],
     },
     toolbox: {
       feature: {
@@ -49,136 +96,136 @@ function echarts1() {
       },
     },
     grid: {
-      left: '3%',
-      right: '4%',
-      bottom: '3%',
+      left: "3%",
+      right: "4%",
+      bottom: "3%",
       containLabel: true,
     },
     xAxis: [
       {
-        type: 'category',
+        type: "category",
         boundaryGap: false,
-        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
       },
     ],
     yAxis: [
       {
-        type: 'value',
+        type: "value",
       },
     ],
     series: [
       {
-        name: 'Email',
-        type: 'line',
-        stack: 'Total',
+        name: "Email",
+        type: "line",
+        stack: "Total",
         areaStyle: {},
         emphasis: {
-          focus: 'series',
+          disabled: true,
         },
         data: [120, 132, 101, 134, 90, 230, 210],
       },
       {
-        name: 'Union Ads',
-        type: 'line',
-        stack: 'Total',
+        name: "Union Ads",
+        type: "line",
+        stack: "Total",
         areaStyle: {},
         emphasis: {
-          focus: 'series',
+          focus: "series",
         },
         data: [220, 182, 191, 234, 290, 330, 310],
       },
       {
-        name: 'Video Ads',
-        type: 'line',
-        stack: 'Total',
+        name: "Video Ads",
+        type: "line",
+        stack: "Total",
         areaStyle: {},
         emphasis: {
-          focus: 'series',
+          focus: "series",
         },
         data: [150, 232, 201, 154, 190, 330, 410],
       },
       {
-        name: 'Direct',
-        type: 'line',
-        stack: 'Total',
+        name: "Direct",
+        type: "line",
+        stack: "Total",
         areaStyle: {},
         emphasis: {
-          focus: 'series',
+          focus: "series",
         },
         data: [320, 332, 301, 334, 390, 330, 320],
       },
       {
-        name: 'Search Engine',
-        type: 'line',
-        stack: 'Total',
+        name: "Search Engine",
+        type: "line",
+        stack: "Total",
         label: {
           show: true,
-          position: 'top',
+          position: "top",
         },
         areaStyle: {},
         emphasis: {
-          focus: 'series',
+          focus: "series",
         },
         data: [820, 932, 901, 934, 1290, 1330, 1320],
       },
     ],
-  }
-  chart1.setOption(option)
+  };
+  chart1.setOption(option);
 }
 // 客户总览
 function echarts2() {
-  chart2 = echarts.init(chart2Ref.value)
+  chart2 = echarts.init(chart2Ref.value);
   // 配置数据
   const option = {
     title: {
-      text: '某站点用户访问来源',
-      subtext: '纯属虚构',
-      left: 'center',
+      text: "某站点用户访问来源",
+      subtext: "纯属虚构",
+      left: "center",
     },
     tooltip: {
-      trigger: 'item',
-      formatter: '{a} <br/>{b} : {c} ({d}%)',
+      trigger: "item",
+      formatter: "{a} <br/>{b} : {c} ({d}%)",
     },
     legend: {
-      orient: 'vertical',
-      left: 'left',
-      data: ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎'],
+      orient: "vertical",
+      left: "left",
+      data: ["直接访问", "邮件营销", "联盟广告", "视频广告", "搜索引擎"],
     },
     series: [
       {
-        name: '访问来源',
-        type: 'pie',
-        radius: '55%',
-        center: ['50%', '60%'],
+        name: "访问来源",
+        type: "pie",
+        radius: "55%",
+        center: ["50%", "60%"],
         data: [
-          { value: 335, name: '直接访问' },
-          { value: 310, name: '邮件营销' },
-          { value: 234, name: '联盟广告' },
-          { value: 135, name: '视频广告' },
-          { value: 1548, name: '搜索引擎' },
+          { value: 335, name: "直接访问", title: "1111" },
+          { value: 310, name: "邮件营销", title: "1111" },
+          { value: 234, name: "联盟广告", title: "1111" },
+          { value: 135, name: "视频广告", title: "1111" },
+          { value: 1548, name: "搜索引擎", title: "1111" },
         ],
         emphasis: {
           itemStyle: {
             shadowBlur: 10,
             shadowOffsetX: 0,
-            shadowColor: 'rgba(0, 0, 0, 0.5)',
+            shadowColor: "rgba(0, 0, 0, 0.5)",
           },
         },
       },
     ],
-  }
+  };
   // 传入数据
-  chart2.setOption(option)
+  chart2.setOption(option);
 }
 
 onMounted(() => {
-  echarts1()
-  echarts2()
-  window.addEventListener('resize', () => {
-    chart1.resize()
-    chart2.resize()
-  })
-})
+  echarts1();
+  echarts2();
+  window.addEventListener("resize", () => {
+    chart1.resize();
+    chart2.resize();
+  });
+});
 </script>
 
 <template>
@@ -214,18 +261,20 @@ onMounted(() => {
       <el-row :gutter="20">
         <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
           <el-card>
-            <p class="title">
-              营业额趋势
-            </p>
-            <div id="echarts1" ref="chart1Ref" style="width: 100%;height: 500px;" />
+            <template #header>
+              <p class="title">营业额趋势</p>
+            </template>
+
+            <div id="echarts1" ref="chart1Ref" style="width: 100%; height: 500px" />
           </el-card>
         </el-col>
         <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
           <el-card>
-            <p class="title">
-              客户总览
-            </p>
-            <div id="echarts2" ref="chart2Ref" style="width: 100%; height: 500px;" />
+            <template #header>
+              <p class="title">客户总览</p>
+            </template>
+
+            <div id="echarts2" ref="chart2Ref" style="width: 100%; height: 500px" />
           </el-card>
         </el-col>
       </el-row>
@@ -239,8 +288,7 @@ onMounted(() => {
                 <SearchTab />
               </p>
             </template>
-
-            <el-table :data="tableData" style="width: 100%;">
+            <el-table :data="tableData" style="width: 100%">
               <el-table-column type="index" />
               <el-table-column prop="name" label="供应商" />
               <el-table-column prop="money" label="完成金额" />
@@ -259,7 +307,7 @@ onMounted(() => {
               </p>
             </template>
 
-            <el-table :data="tableData" style="width: 100%;">
+            <el-table :data="tableData" style="width: 100%">
               <el-table-column type="index" />
               <el-table-column prop="name" label="供应商" />
               <el-table-column prop="money" label="完成金额" />

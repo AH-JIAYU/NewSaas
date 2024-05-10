@@ -202,9 +202,7 @@ function open(url: string) {
       <el-card class="box-card">
         <template #header>
           <div class="card-header">
-            <el-checkbox-group size="small">
-              <el-checkbox-button />
-            </el-checkbox-group>
+            配置信息
           </div>
         </template>
         <el-row :gutter="20">

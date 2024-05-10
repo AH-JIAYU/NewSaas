@@ -16,7 +16,7 @@ const selectRows = ref<any>(); //表格-选中行
 const editRef = ref(); //添加|编辑 组件ref
 const checkRef = ref(); //查看 组件ref
 const border = ref<any>(true); //表格控件-是否展示边框
-const stripe = ref<any>(false); //表格控件-是否展示斑马条
+const stripe = ref<any>(true); //表格控件-是否展示斑马条
 const lineHeight = ref<any>("default"); //表格控件-控制表格大小
 const checkList = ref<Array<Object>>([]); //表格-展示的列
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
@@ -111,6 +111,15 @@ async function fetchData() {
   ];
   listLoading.value = false;
 }
+// 重置筛选数据
+function onReset() {
+  Object.assign(queryForm, {
+    pageNo: 1,
+    pageSize: 10,
+    select: {},
+  });
+  fetchData()
+}
 // 表格-单选框
 function setSelectRows(val: any) {
   selectRows.value = val;
@@ -199,6 +208,12 @@ onMounted(() => {
                   <SvgIcon name="i-ep:search" />
                 </template>
                 筛选
+              </ElButton>
+              <ElButton @click="onReset">
+                <template #icon>
+                  <div class="i-grommet-icons:power-reset w-1em h-1em"></div>
+                </template>
+                重置
               </ElButton>
               <ElButton link @click="toggle">
                 <template #icon>

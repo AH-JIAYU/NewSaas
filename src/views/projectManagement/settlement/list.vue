@@ -29,7 +29,7 @@ const border = ref(true);
 const checkList = ref([]);
 const isFullscreen = ref(false);
 const lineHeight = ref<any>("default");
-const stripe = ref(false);
+const stripe = ref(true);
 const selectRows = ref<any>([]);
 const columns = ref([
   {
