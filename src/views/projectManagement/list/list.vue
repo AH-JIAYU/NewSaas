@@ -13,14 +13,14 @@ const tableSortRef = ref("");
 const listLoading = ref<boolean>(true);
 // 获取组件变量
 const addAllocationEdit = ref("");
-const addSurveysEdit = ref("");
+const addProjeckRef = ref("");
 const projectDetailsRef = ref("");
 // 右侧工具栏配置变量
 const border = ref(true);
 const checkList = ref([]);
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const isFullscreen = ref(false); //表格控件-控制全屏
-const lineHeight = ref("default");
+const lineHeight = ref<any>("default");
 const stripe = ref(false);
 const columns = ref([
   {
@@ -45,16 +45,20 @@ const queryForm = reactive<any>({
 const list = ref<any>([]);
 
 // 分配
-function distribution() {
-  addAllocationEdit.value.isShow = true;
+function distribution(row: any) {
+  addAllocationEdit.value.showEdit(row);
 }
 // 新增项目
-function surveysEdit() {
-  addSurveysEdit.value.showEdit()
+function addProject() {
+  addProjeckRef.value.showEdit();
+}
+// 编辑项目
+function projectEdit(row: any) {
+  addProjeckRef.value.showEdit(row);
 }
 // 项目详情
-function projectDetails() {
-  projectDetailsRef.value.isShow = true;
+function projectDetails(row: any) {
+  projectDetailsRef.value.showEdit(row);
 }
 
 //表格控件-控制全屏
@@ -181,7 +185,7 @@ onMounted(() => {
                 </template>
                 筛选
               </ElButton>
-              <ElButton  @click="onReset">
+              <ElButton @click="onReset">
                 <template #icon>
                   <div class="i-grommet-icons:power-reset w-1em h-1em"></div>
                 </template>
@@ -189,107 +193,108 @@ onMounted(() => {
               </ElButton>
               <ElButton link @click="toggle">
                 <template #icon>
-                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
+                  <SvgIcon
+                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
+                  />
                 </template>
-                {{ fold ? '展开' : '收起' }}
+                {{ fold ? "展开" : "收起" }}
               </ElButton>
             </ElFormItem>
           </el-form>
         </template>
       </SearchBar>
-
       <el-row :gutter="24">
-          <FormLeftPanel>
-            <el-button type="primary" size="default" @click="surveysEdit">
-              添加项目
-            </el-button>
-            <el-button type="primary" size="default" @click="distribution">
-              分配
-            </el-button>
-          </FormLeftPanel>
+        <FormLeftPanel>
+          <el-button type="primary" size="default" @click="addProject">
+            添加项目
+          </el-button>
+          <el-button type="primary" size="default" @click="distribution">
+            分配
+          </el-button>
+        </FormLeftPanel>
 
-          <FormRightPanel>
-            <el-button style="margin-right: 10px" size="default" @click="">
-              导出
-            </el-button>
-            <TabelControl
-              v-model:border="border"
-              v-model:tableAutoHeight="tableAutoHeight"
-              v-model:checkList="checkList"
-              v-model:columns="columns"
-              v-model:is-fullscreen="isFullscreen"
-              v-model:line-height="lineHeight"
-              v-model:stripe="stripe"
-              style="margin-left: 12px"
-              @click-full-screen="clickFullScreen"
-              @query-data="currentChange"
-            />
-          </FormRightPanel>
-        </el-row>
-        <el-table
-          style="margin-top: 10px"
-          ref="tableSortRef"
-          v-loading="false"
-          row-key="id"
-          :data="list"
-          :border="border"
-          :size="lineHeight"
-          :stripe="stripe"
-        >
-          <el-table-column type="selection" />
-          <el-table-column
-            type="index"
-            align="center"
-            label="序号"
-            width="55"
+        <FormRightPanel>
+          <el-button style="margin-right: 10px" size="default" @click="">
+            导出
+          </el-button>
+          <TabelControl
+            v-model:border="border"
+            v-model:tableAutoHeight="tableAutoHeight"
+            v-model:checkList="checkList"
+            v-model:columns="columns"
+            v-model:is-fullscreen="isFullscreen"
+            v-model:line-height="lineHeight"
+            v-model:stripe="stripe"
+            style="margin-left: 12px"
+            @click-full-screen="clickFullScreen"
+            @query-data="currentChange"
           />
-          <el-table-column prop="a" align="center" label="项目ID" />
-          <el-table-column prop="b" align="center" label="项目名称" />
-          <el-table-column prop="c" align="center" label="客户简称/标识" />
-          <el-table-column prop="d" align="center" label="分配目标" />
-          <el-table-column
-            prop="e"
-            align="center"
-            label="参与/完成/配额/限量"
-          />
-          <el-table-column prop="f" align="center" label="原价" />
-          <el-table-column prop="g" align="center" label="IR/NIR" />
-          <el-table-column prop="h" align="center" label="国家地区" />
-          <el-table-column prop="i" align="center" label="项目状态">
-            <el-switch v-model="value1" />
-          </el-table-column>
-          <el-table-column prop="j" align="center" label="创建人" />
-          <el-table-column prop="k" align="center" label="创建时间" />
-          <el-table-column align="center" label="操作" width="170">
-            <el-button text type="primary" size="default"> 编辑 </el-button>
+        </FormRightPanel>
+      </el-row>
+      <el-table
+        style="margin-top: 10px"
+        ref="tableSortRef"
+        v-loading="false"
+        row-key="id"
+        :data="list"
+        :border="border"
+        :size="lineHeight"
+        :stripe="stripe"
+      >
+        <el-table-column type="selection" />
+        <el-table-column type="index" align="center" label="序号" width="55" />
+        <el-table-column  show-overflow-tooltip prop="a" align="center" label="项目ID" />
+        <el-table-column show-overflow-tooltip prop="b" align="center" label="项目名称" />
+        <el-table-column show-overflow-tooltip prop="c" align="center" label="客户简称/标识" />
+        <el-table-column show-overflow-tooltip prop="d" align="center" label="分配目标" />
+        <el-table-column show-overflow-tooltip prop="e" align="center" label="参与/完成/配额/限量" />
+        <el-table-column show-overflow-tooltip prop="f" align="center" label="原价" />
+        <el-table-column show-overflow-tooltip prop="g" align="center" label="IR/NIR" />
+        <el-table-column show-overflow-tooltip prop="h" align="center" label="国家地区" />
+        <el-table-column show-overflow-tooltip prop="i" align="center" label="项目状态">
+          <ElSwitch inline-prompt active-text="启用" inactive-text="禁用" />
+        </el-table-column>
+        <el-table-column show-overflow-tooltip prop="j" align="center" label="创建人" />
+        <el-table-column show-overflow-tooltip prop="k" align="center" label="创建时间" />
+        <el-table-column align="center" label="操作" width="170">
+          <template #default="{ row }">
             <el-button
-              text
               type="primary"
-              size="default"
-              @click="projectDetails"
+              plain
+              size="small"
+              @click="projectEdit(row)"
+            >
+              编辑
+            </el-button>
+            <el-button
+              type="primary"
+              size="small"
+              plain
+              @click="projectDetails(row)"
             >
               详情
             </el-button>
-          </el-table-column>
-          <template #empty>
-            <el-empty description="暂无数据" />
           </template>
-        </el-table>
-        <ElPagination
-          :current-page="pagination.page"
-          :total="pagination.total"
-          :page-size="pagination.size"
-          :page-sizes="pagination.sizes"
-          :layout="pagination.layout"
-          :hide-on-single-page="false"
-          class="pagination"
-          background
-          @size-change="sizeChange"
-          @current-change="currentChange"
-        />
+        </el-table-column>
+        <template #empty>
+          <el-empty description="暂无数据" />
+        </template>
+      </el-table>
+      <ElPagination
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
+        :page-sizes="pagination.sizes"
+        :layout="pagination.layout"
+        :hide-on-single-page="false"
+        class="pagination"
+        background
+        @size-change="sizeChange"
+        @current-change="currentChange"
+      />
     </PageMain>
     <allocationEdit ref="addAllocationEdit" />
-    <SurveysEdit ref="addSurveysEdit" />
+    <SurveysEdit ref="addProjeckRef" />
     <ProjectDetails ref="projectDetailsRef" />
   </div>
 </template>
@@ -298,6 +303,10 @@ onMounted(() => {
 :deep {
   table {
     width: 100% !important;
+  }
+  thead {
+    z-index: 999;
+    background-color: #f2f3f5 !important;
   }
 }
 .absolute-container {

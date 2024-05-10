@@ -96,6 +96,16 @@ function setSelectRows(val: any) {
 onMounted(() => {
   fetchData()
 })
+function handleMoreOperating(command: string, row: any) {
+  switch (command) {
+    case "handleCheck":
+      handleCheck(row)
+      break;
+    case "handleDelete":
+      handleDelete(row)
+      break;
+  }
+}
 </script>
 
 <template>
@@ -137,59 +147,65 @@ onMounted(() => {
         </template>
       </SearchBar>
 
-      <PageMain>
-        <el-row>
-          <FormLeftPanel>
-            <el-button type="primary" size="default" @click="handleAdd">
-              <template #icon>
-                <SvgIcon name="i-ep:plus" />
-              </template>
-              新增
-            </el-button>
-          </FormLeftPanel>
-          <FormRightPanel>
-            <el-button size="default">
-              导出
-            </el-button>
-            <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight"
-              v-model:checkList="checkList" v-model:columns="columns" v-model:line-height="lineHeight"
-              v-model:stripe="stripe" style="margin-left: 12px;" @query-data="queryData" />
-          </FormRightPanel>
-        </el-row>
-        <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
-          @selection-change="setSelectRows">
-          <el-table-column align="center" prop="a" show-overflow-tooltip type="selection" />
-          <el-table-column align="center" prop="b" show-overflow-tooltip label="客户名称" />
-          <el-table-column align="center" prop="c" show-overflow-tooltip label="客户简称" />
-          <el-table-column align="center" prop="d" show-overflow-tooltip label="客户营业限额($/月)" />
-          <el-table-column align="center" prop="e" show-overflow-tooltip label="审核率Min值" />
-          <el-table-column align="center" prop="f" show-overflow-tooltip label="负责人" />
-          <el-table-column align="center" prop="g" show-overflow-tooltip label="创建人" />
-          <el-table-column align="center" prop="h" show-overflow-tooltip label="创建时间" />
-          <el-table-column align="center" prop="r" show-overflow-tooltip label="客户状态" />
-          <el-table-column align="center" prop="i" label="操作" show-overflow-tooltip width="300">
-            <template #default="{ row }">
-              <el-button text type="primary" @click="handleEdit(row)">
+      <el-row>
+        <FormLeftPanel>
+          <el-button type="primary" size="default" @click="handleAdd">
+            <template #icon>
+              <SvgIcon name="i-ep:plus" />
+            </template>
+            新增
+          </el-button>
+        </FormLeftPanel>
+        <FormRightPanel>
+          <el-button size="default">
+            导出
+          </el-button>
+          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
+            v-model:columns="columns" v-model:line-height="lineHeight" v-model:stripe="stripe"
+            style="margin-left: 12px;" @query-data="queryData" />
+        </FormRightPanel>
+      </el-row>
+      <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
+        @selection-change="setSelectRows">
+        <el-table-column align="center" prop="a" show-overflow-tooltip type="selection" />
+        <el-table-column align="center" prop="b" show-overflow-tooltip label="客户名称" />
+        <el-table-column align="center" prop="c" show-overflow-tooltip label="客户简称" />
+        <el-table-column align="center" prop="d" show-overflow-tooltip label="客户营业限额($/月)" />
+        <el-table-column align="center" prop="e" show-overflow-tooltip label="审核率Min值" />
+        <el-table-column align="center" prop="f" show-overflow-tooltip label="负责人" />
+        <el-table-column align="center" prop="g" show-overflow-tooltip label="创建人" />
+        <el-table-column align="center" prop="h" show-overflow-tooltip label="创建时间" />
+        <el-table-column align="center" prop="r" show-overflow-tooltip label="客户状态" />
+        <el-table-column align="center" prop="i" label="操作" show-overflow-tooltip width="180">
+          <template #default="{ row }">
+            <ElSpace>
+              <el-button size="small" plain type="primary" @click="handleEdit(row)">
                 编辑
               </el-button>
-              <el-button text type="primary" @click="handleCheck(row)">
-                详情
-              </el-button>
-              <el-button text type="danger" @click="handleDelete(row)">
-                删除
-              </el-button>
-            </template>
-          </el-table-column>
-          <template #empty>
-            <el-empty class="vab-data-empty" description="暂无数据" />
+              <ElDropdown @command="handleMoreOperating($event, row)">
+                <ElButton size="small">
+                  更多操作
+                  <SvgIcon name="i-ep:arrow-down" class="el-icon--right" />
+                </ElButton>
+                <template #dropdown>
+                  <ElDropdownMenu>
+                    <ElDropdownItem command="handleCheck"> 详情 </ElDropdownItem>
+                    <ElDropdownItem command="handleDelete" divided>
+                      删除
+                    </ElDropdownItem>
+                  </ElDropdownMenu>
+                </template>
+              </ElDropdown>
+            </ElSpace>
           </template>
-        </el-table>
-     <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
-          :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-          background @size-change="sizeChange" @current-change="currentChange" />
-
-      </PageMain>
-
+        </el-table-column>
+        <template #empty>
+          <el-empty class="vab-data-empty" description="暂无数据" />
+        </template>
+      </el-table>
+      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+        background @size-change="sizeChange" @current-change="currentChange" />
       <customerEdit ref="editRef" @fetch-data="fetchData" />
       <customerDetail ref="checkRef" @fetch-data="fetchData" />
     </PageMain>
@@ -221,6 +237,7 @@ onMounted(() => {
     }
   }
 }
+
 // 筛选
 .page-main {
   .search-form {

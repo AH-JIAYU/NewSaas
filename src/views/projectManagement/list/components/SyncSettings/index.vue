@@ -26,9 +26,9 @@ const sync1 = [
   { label: '年龄', value: 1 },
 ]
 // 弹框开关变量
-const isShow = ref(false)
+const dialogTableVisible = ref(false)
 const showEdit = () => {
-  isShow.value = true
+  dialogTableVisible.value = true
 }
 // 提交数据
 function onSubmit() {
@@ -41,7 +41,7 @@ function closeHandler() {
   // delete formData.id
   // // 重置表单
   // Object.assign(formData, defaultState)
-  isShow.value = false
+  dialogTableVisible.value = false
 }
 // 暴露方法
  defineExpose({showEdit})
@@ -50,7 +50,7 @@ function closeHandler() {
 <template>
   <div>
     <el-drawer
-      v-model="isShow"
+      v-model="dialogTableVisible"
       append-to-body
       :close-on-click-modal="false"
       destroy-on-close

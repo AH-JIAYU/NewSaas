@@ -290,7 +290,7 @@ onMounted(() => {
           show-overflow-tooltip
           label="组状态"
         >
-          <el-switch />
+        <ElSwitch inline-prompt active-text="启用" inactive-text="禁用" />
         </el-table-column>
         <el-table-column
           align="center"
@@ -298,20 +298,20 @@ onMounted(() => {
           show-overflow-tooltip
           label="接单授权"
         >
-          <el-switch />
+        <ElSwitch inline-prompt active-text="启用" inactive-text="禁用" />
         </el-table-column>
         <el-table-column
           align="center"
           prop="i"
           label="操作"
           show-overflow-tooltip
-          width="300"
+          width="180"
         >
           <template #default="{ row }">
-            <el-button text type="primary" @click="handleEdit(row)">
+            <el-button size="small" plain type="primary" @click="handleEdit(row)">
               编辑
             </el-button>
-            <el-button text type="primary" @click="handleCheck(row)">
+            <el-button size="small" plain type="primary" @click="handleCheck(row)">
               详情
             </el-button>
           </template>

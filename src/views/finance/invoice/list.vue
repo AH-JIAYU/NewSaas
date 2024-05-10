@@ -46,18 +46,17 @@ const queryForm = reactive<any>({
 const list = ref<any>([]);
 // 新增
 const addData = () => {
-  editRef.value.isShow = true;
+  editRef.value.showEdit();
 };
 // 编辑数据
-const editData = () => {
-  if (!selectRows.value.length) editRef.value.isShow = true;
+const editData = (row: any) => {
+  if (!selectRows.value.length) editRef.value.showEdit(row);
 };
 // 删除数据
-const deleteData = () => {
+const deleteData = (row: any) => {
   // if (!selectRows.value.length)
   //   return ElMessage({ message: "请选择至少一条数据", type: "warning" });
-  deleteRef.value.isShow = true;
-  deleteRef.value.replyData(selectRows.value);
+  deleteRef.value.showEdit(row);
 };
 // 右侧工具方法
 function clickFullScreen() {
@@ -248,12 +247,14 @@ onMounted(() => {
         <el-table-column prop="h" align="center" label="状态" />
         <el-table-column prop="j" align="center" label="备注" />
         <el-table-column align="center" label="操作" width="170">
-          <el-button text type="primary" size="default" @click="editData">
-            编辑
-          </el-button>
-          <el-button text type="danger" size="default" @click="deleteData">
-            删除
-          </el-button>
+          <template #default="{ row }">
+            <el-button size="small" plain type="primary" @click="editData">
+              编辑
+            </el-button>
+            <el-button size="small" plain type="danger" @click="deleteData">
+              删除
+            </el-button>
+          </template>
         </el-table-column>
         <template #empty>
           <el-empty description="暂无数据" />

@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import SupplierDetailDetail from "../SupplierDetailDetail/index.vue";
 
 const emit = defineEmits(["fetch-data"]);

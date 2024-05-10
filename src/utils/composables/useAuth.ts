@@ -9,7 +9,7 @@ export default function useAuth() {
       return userStore.permissions.includes(permission)
     }
     else {
-      return true
+      return userStore.permissions.includes(permission)
     }
   }
 

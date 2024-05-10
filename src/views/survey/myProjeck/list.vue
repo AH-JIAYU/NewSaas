@@ -41,15 +41,15 @@ const queryForm = reactive<any>({
   select: {},
 });
 const list = ref<any>([]);
-// 分配
+// 测查
 function check(row: any) {
-  addCheckEditEdit.value.isShow = true;
-  addCheckEditEdit.value.replyData(row)
+  addCheckEditEdit.value.showEdit(row)
 }
+// 附件
+const attachment = () => {}
 // 配额
 function quota(row: any) {
-  addQuotaEdit.value.isShow = true;
-  addQuotaEdit.value.replyData(row)
+  addQuotaEdit.value.showEdit(row)
 }
 //表格控件-控制全屏
 function clickFullScreen() {
@@ -94,6 +94,16 @@ async function fetchData() {
 onMounted(() => {
   fetchData();
 });
+function handleMoreOperating(command: string, row: any) {
+  switch (command) {
+    case "check":
+      check(row)
+      break;
+    case "attachment":
+      attachment(row)
+      break;
+  }
+}
 </script>
 
 <template>
@@ -235,35 +245,25 @@ onMounted(() => {
         <el-table-column prop="g" align="center" label="IR/NIR" />
         <el-table-column prop="h" align="center" label="国家地区" />
         <el-table-column prop="k" align="center" label="创建时间" />
-        <el-table-column align="center" label="操作" width="170">
+        <el-table-column align="center" label="操作" width="200">
           <template #default="{ row }">
-            <div class="centerss">
-              <el-button type="primary" text size="default" @click="quota(row)"> 配额 </el-button>
-              <ElDropdown>
-                <ElButton size="small">
+            <ElSpace>
+              <el-button size="small" plain type="primary" @click="quota(row)"> 配额 </el-button>
+              <ElDropdown @command="handleMoreOperating($event, row)">
+                <ElButton plain type="" size="small">
                   更多操作
                   <SvgIcon name="i-ep:arrow-down" class="el-icon--right" />
                 </ElButton>
                 <template #dropdown>
                   <ElDropdownMenu>
-                    <ElDropdownItem command="auditing">
-                      <el-button
-                        text
-                        size="default"
-                        @click="check(row)"
-                      >
-                        测查
-                      </el-button>
-                    </ElDropdownItem>
-                    <ElDropdownItem command="edit" divided>
-                      <el-button text size="default" @click="">
-                        附件
-                      </el-button>
+                    <ElDropdownItem command="check"> 测查 </ElDropdownItem>
+                    <ElDropdownItem command="attachment" divided>
+                      附件
                     </ElDropdownItem>
                   </ElDropdownMenu>
                 </template>
               </ElDropdown>
-            </div>
+            </ElSpace>
           </template>
         </el-table-column>
         <template #empty>
@@ -335,13 +335,6 @@ onMounted(() => {
         }
       }
     }
-  }
-}
-:deep {
-  .centerss {
-    display: flex;
-    justify-content: center;
-    align-items: center;
   }
 }
 </style>

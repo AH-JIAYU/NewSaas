@@ -3,13 +3,16 @@ defineOptions({
   name: 'LogDetails',
 })
 import {ref} from 'vue'
-  const dialogTableVisible = ref(false);
+  const dialogTableVisible = ref<any>(false);
   const gridData = [
   { a: 1, b: "最小时长20更为30", id: 1 },
   { a: 1, b: "置顶开更为关", id: 1 },
 ];
+const showEdit = (row:any) => {
+  dialogTableVisible.value = true;
+}
 // 暴露方法
-defineExpose({ dialogTableVisible });
+defineExpose({ showEdit });
 </script>
 <template>
   <div>

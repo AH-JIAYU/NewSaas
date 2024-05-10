@@ -9,6 +9,7 @@ const { pagination, onSizeChange, onCurrentChange } = usePagination(); //分页
 const tableSortRef = ref("");
 // loading加载
 const listLoading = ref<boolean>(true);
+const isShow = ref(false)
 // 获取组件变量
 const editRef = ref();
 // 右侧工具栏配置变量
@@ -42,7 +43,8 @@ const queryForm = reactive<any>({
 const list = ref<any>([]);
 // 编辑数据
 const editData = () => {
-  if (!selectRows.value.length) editRef.value.isShow = true;
+  // if (!selectRows.value.length) editRef.value.dialogTableVisible = true;
+  isShow.value = true
 };
 // 右侧工具方法
 function clickFullScreen() {
@@ -202,8 +204,14 @@ onMounted(() => {
         <el-table-column prop="g" align="center" label="状态" />
         <el-table-column prop="h" align="center" label="创建时间" />
         <el-table-column align="center" label="操作" width="170">
-          <el-button text type="primary" size="default" @click="editData">
+          <el-button v-if="!isShow" size="small" plain type="primary"  @click="editData">
             确认收票
+          </el-button>
+          <el-button v-if="isShow" size="small" plain  @click="">
+            支付
+          </el-button>
+          <el-button v-if="isShow" size="small" plain type="danger"  @click="">
+            拒绝
           </el-button>
         </el-table-column>
         <template #empty>

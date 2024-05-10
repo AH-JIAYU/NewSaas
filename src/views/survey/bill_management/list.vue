@@ -184,21 +184,21 @@ function onRefused(row: any) {
         @selection-change="data.batch.selectionDataList = $event">
         <el-table-column align="center" prop="a" show-overflow-tooltip type="selection" />
         <ElTableColumn v-if="data.batch.enable" type="selection" align="center" fixed />
-        <ElTableColumn prop="" label="会员" />
-        <ElTableColumn prop="title" label="姓名" />
-        <ElTableColumn prop="" label="账单日期" />
-        <ElTableColumn prop="" label="账单金额" />
-        <ElTableColumn prop="" label="税" />
-        <ElTableColumn prop="" label="实际金额" />
-        <ElTableColumn prop="" label="支付时间" />
-        <ElTableColumn prop="" label="说明" />
-        <ElTableColumn prop="" label="账单状态" />
-        <el-table-column align="center" prop="i" label="操作" show-overflow-tooltip width="400">
+        <ElTableColumn align="center" prop="" label="会员" />
+        <ElTableColumn align="center" prop="title" label="姓名" />
+        <ElTableColumn align="center" prop="" label="账单日期" />
+        <ElTableColumn align="center" prop="" label="账单金额" />
+        <ElTableColumn align="center" prop="" label="税" />
+        <ElTableColumn align="center" prop="" label="实际金额" />
+        <ElTableColumn align="center" prop="" label="支付时间" />
+        <ElTableColumn align="center" prop="" label="说明" />
+        <ElTableColumn align="center" prop="" label="账单状态" />
+        <el-table-column align="center" prop="i" label="操作" show-overflow-tooltip width="260">
           <template #default="{ row }">
-            <el-button  type="primary" @click="onCompleted(row)">
+            <el-button size="small" plain type="primary" @click="onCompleted(row)">
               处理完成
             </el-button>
-            <el-button  type="danger" @click="onRefused(row)">
+            <el-button size="small" plain type="danger" @click="onRefused(row)">
               拒绝支付
             </el-button>
           </template>
@@ -209,7 +209,7 @@ function onRefused(row: any) {
         background @size-change="sizeChange" @current-change="currentChange" />
     </PageMain>
     <FormMode v-if="data.formMode === 'dialog' || data.formMode === 'drawer'" :id="data.formModeProps.id" v-model="data.formModeProps.visible" :mode="data.formMode" @success="getDataList" />
- 
+
   </div>
 </template>
 

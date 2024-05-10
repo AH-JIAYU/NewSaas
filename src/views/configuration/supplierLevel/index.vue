@@ -161,10 +161,10 @@ onMounted(() => {
         <el-table-column align="center" prop="c" show-overflow-tooltip label="成员数量" />
         <el-table-column align="center" show-overflow-tooltip label="操作">
           <template #default="{ row }">
-            <el-button size="default" link type="primary" @click="handleEdit(row)">
+            <el-button size="small" plain type="primary" @click="handleEdit(row)">
               编辑
             </el-button>
-            <el-button size="default" link type="danger" @click="handleDelete(row)">
+            <el-button size="small" plain type="danger" @click="handleDelete(row)">
               删除
             </el-button>
           </template>

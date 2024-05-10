@@ -1,10 +1,10 @@
 <script setup lang="ts">
 defineOptions({
-  name: 'RecordCallbackIndex',
-})
+  name: "RecordCallbackIndex",
+});
 import { onMounted } from "vue";
 
-const { pagination, onSizeChange, onCurrentChange } = usePagination() //分页
+const { pagination, onSizeChange, onCurrentChange } = usePagination(); //分页
 
 const listLoading = ref(false);
 const list = ref<Array<Object>>([]); //列表
@@ -13,7 +13,7 @@ const checkList = ref<Array<Object>>([]); //表格-展示的列
 const border = ref(true); //表格控件-是否展示边框
 const stripe = ref(false); //表格控件-是否展示斑马条
 const lineHeight = ref<any>("default"); //表格控件-控制表格大小
-const tableAutoHeight = ref(false)  // 表格控件-高度自适应
+const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const columns = ref([
   //表格控件-展示列
   {
@@ -33,12 +33,11 @@ const queryForm = reactive<any>({
 
 // 每页数量切换
 function sizeChange(size: number) {
-
-  onSizeChange(size).then(() => fetchData())
+  onSizeChange(size).then(() => fetchData());
 }
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
-  onCurrentChange(page).then(() => fetchData())
+  onCurrentChange(page).then(() => fetchData());
 }
 // 重置请求
 function queryData() {
@@ -77,35 +76,77 @@ onMounted(() => {
 <template>
   <div :class="{ 'absolute-container': tableAutoHeight }">
     <PageMain>
-    <PageMain>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
-          <ElForm :model="queryForm.select" size="default" label-width="100px" inline-message inline
-            class="search-form">
-            <el-form-item label="供应商" >
-            <el-input v-model.trim="queryForm.select.id" clearable :inline="false" placeholder="供应商" />
-          </el-form-item>
-          <el-form-item label="子会员"  v-show="!fold">
-            <el-input v-model.trim="queryForm.select.name" clearable :inline="false" placeholder="子会员" />
-          </el-form-item>
-          <el-form-item label="项目ID"  v-show="!fold">
-            <el-input v-model.trim="queryForm.select.name" clearable :inline="false" placeholder="项目ID" />
-          </el-form-item>
-          <el-form-item label="项目名称"  v-show="!fold">
-            <el-input v-model.trim="queryForm.select.name" clearable :inline="false" placeholder="项目名称" />
-          </el-form-item>
-          <el-form-item label="Guid"  v-show="!fold">
-            <el-input v-model.trim="queryForm.select.name" clearable :inline="false" placeholder="Guid" />
-          </el-form-item>
-          <el-form-item label="选择渠道"  v-show="!fold">
-            <el-select v-model="queryForm.select.default" clearable placeholder="选择渠道">
-            </el-select>
-          </el-form-item>
-          <el-form-item label="日期"  v-show="!fold">
-            <el-date-picker v-model="queryForm.select.time" type="daterange" unlink-panels range-separator="-"
-              start-placeholder="创建开始日期" end-placeholder="创建结束日期" size="default" style="width: 192px"
-              clear-icon="true" />
-          </el-form-item>
+          <ElForm
+            :model="queryForm.select"
+            size="default"
+            label-width="100px"
+            inline-message
+            inline
+            class="search-form"
+          >
+            <el-form-item label="供应商">
+              <el-input
+                v-model.trim="queryForm.select.id"
+                clearable
+                :inline="false"
+                placeholder="供应商"
+              />
+            </el-form-item>
+            <el-form-item label="子会员" v-show="!fold">
+              <el-input
+                v-model.trim="queryForm.select.name"
+                clearable
+                :inline="false"
+                placeholder="子会员"
+              />
+            </el-form-item>
+            <el-form-item label="项目ID" v-show="!fold">
+              <el-input
+                v-model.trim="queryForm.select.name"
+                clearable
+                :inline="false"
+                placeholder="项目ID"
+              />
+            </el-form-item>
+            <el-form-item label="项目名称" v-show="!fold">
+              <el-input
+                v-model.trim="queryForm.select.name"
+                clearable
+                :inline="false"
+                placeholder="项目名称"
+              />
+            </el-form-item>
+            <el-form-item label="Guid" v-show="!fold">
+              <el-input
+                v-model.trim="queryForm.select.name"
+                clearable
+                :inline="false"
+                placeholder="Guid"
+              />
+            </el-form-item>
+            <el-form-item label="选择渠道" v-show="!fold">
+              <el-select
+                v-model="queryForm.select.default"
+                clearable
+                placeholder="选择渠道"
+              >
+              </el-select>
+            </el-form-item>
+            <el-form-item label="日期" v-show="!fold">
+              <el-date-picker
+                v-model="queryForm.select.time"
+                type="daterange"
+                unlink-panels
+                range-separator="-"
+                start-placeholder="创建开始日期"
+                end-placeholder="创建结束日期"
+                size="default"
+                style="width: 192px"
+                clear-icon="true"
+              />
+            </el-form-item>
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">
                 <template #icon>
@@ -115,9 +156,11 @@ onMounted(() => {
               </ElButton>
               <ElButton link @click="toggle">
                 <template #icon>
-                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
+                  <SvgIcon
+                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
+                  />
                 </template>
-                {{ fold ? '展开' : '收起' }}
+                {{ fold ? "展开" : "收起" }}
               </ElButton>
             </ElFormItem>
           </ElForm>
@@ -127,30 +170,92 @@ onMounted(() => {
         <FormLeftPanel> </FormLeftPanel>
         <FormRightPanel>
           <el-button size="default"> 导出 </el-button>
-          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight"
-              v-model:checkList="checkList" v-model:columns="columns" v-model:line-height="lineHeight"
-              v-model:stripe="stripe" style="margin-left: 12px;" @query-data="queryData" />
+          <TabelControl
+            v-model:border="border"
+            v-model:tableAutoHeight="tableAutoHeight"
+            v-model:checkList="checkList"
+            v-model:columns="columns"
+            v-model:line-height="lineHeight"
+            v-model:stripe="stripe"
+            style="margin-left: 12px"
+            @query-data="queryData"
+          />
         </FormRightPanel>
       </el-row>
-        <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
-          @selection-change="setSelectRows">
-          <el-table-column align="center" prop="a" show-overflow-tooltip type="selection" />
+      <el-table
+        v-loading="listLoading"
+        :border="border"
+        :data="list"
+        :size="lineHeight"
+        :stripe="stripe"
+        @selection-change="setSelectRows"
+      >
+        <el-table-column
+          align="center"
+          prop="a"
+          show-overflow-tooltip
+          type="selection"
+        />
 
-          <el-table-column v-if="checkList.includes('a')" align="center" prop="b" show-overflow-tooltip label="客户简称" />
-          <el-table-column align="center" prop="c" show-overflow-tooltip label="对象" />
-          <el-table-column align="center" prop="d" show-overflow-tooltip label="项目ID" />
-          <el-table-column align="center" prop="e" show-overflow-tooltip label="项目名称" />
-          <el-table-column align="center" prop="f" show-overflow-tooltip label="回调URL" />
-          <el-table-column align="center" prop="g" show-overflow-tooltip label="下级URL" />
-          <el-table-column align="center" prop="h" show-overflow-tooltip label="创建时间" />
-          <template #empty>
-            <el-empty class="vab-data-empty" description="暂无数据" />
-          </template>
-        </el-table>
-      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
-          :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-          background @size-change="sizeChange" @current-change="currentChange" />
-        </PageMain>
+        <el-table-column
+          v-if="checkList.includes('a')"
+          align="center"
+          prop="b"
+          show-overflow-tooltip
+          label="客户简称"
+        />
+        <el-table-column
+          align="center"
+          prop="c"
+          show-overflow-tooltip
+          label="对象"
+        />
+        <el-table-column
+          align="center"
+          prop="d"
+          show-overflow-tooltip
+          label="项目ID"
+        />
+        <el-table-column
+          align="center"
+          prop="e"
+          show-overflow-tooltip
+          label="项目名称"
+        />
+        <el-table-column
+          align="center"
+          prop="f"
+          show-overflow-tooltip
+          label="回调URL"
+        />
+        <el-table-column
+          align="center"
+          prop="g"
+          show-overflow-tooltip
+          label="下级URL"
+        />
+        <el-table-column
+          align="center"
+          prop="h"
+          show-overflow-tooltip
+          label="创建时间"
+        />
+        <template #empty>
+          <el-empty class="vab-data-empty" description="暂无数据" />
+        </template>
+      </el-table>
+      <ElPagination
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
+        :page-sizes="pagination.sizes"
+        :layout="pagination.layout"
+        :hide-on-single-page="false"
+        class="pagination"
+        background
+        @size-change="sizeChange"
+        @current-change="currentChange"
+      />
     </PageMain>
   </div>
 </template>

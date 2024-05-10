@@ -6,7 +6,11 @@ import { ref, watch } from 'vue'
 
 const radio1 = ref(1)
 // 弹框开关变量
-const isShow = ref(false)
+const dialogTableVisible = ref(false)
+// 获取数据
+const showEdit = (row:any) => {
+  dialogTableVisible.value = true
+}
 // 提交数据
 function onSubmit() {
 
@@ -22,16 +26,16 @@ function closeHandler() {
   // delete formData.id
   // // 重置表单
   // Object.assign(formData, defaultState)
-  isShow.value = false
+  dialogTableVisible.value = false
 }
 // 暴露方法
-defineExpose({ isShow })
+defineExpose({ showEdit })
 </script>
 
 <template>
   <div>
     <el-dialog
-      v-model="isShow"
+      v-model="dialogTableVisible"
       title="分配"
       width="500"
       :before-close="closeHandler"
@@ -81,7 +85,7 @@ defineExpose({ isShow })
           <el-button type="primary" @click="onSubmit">
             确定
           </el-button>
-          <el-button @click="isShow = false">
+          <el-button @click="dialogTableVisible = false">
             取消
           </el-button>
         </div>

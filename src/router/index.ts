@@ -87,7 +87,8 @@ router.beforeEach(async (to, from, next) => {
     }
     else {
       // 获取用户权限
-      settingsStore.settings.app.enablePermission && await userStore.getPermissions()
+      // settingsStore.settings.app.enablePermission && await userStore.getPermissions()
+      await userStore.getPermissions()
       // 获取用户偏好设置
       settingsStore.settings.userPreferences.enable && await userStore.getPreferences()
       // 复原固定标签页

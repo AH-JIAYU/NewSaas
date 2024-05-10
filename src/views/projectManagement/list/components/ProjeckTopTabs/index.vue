@@ -11,6 +11,7 @@ import gfmLocale from '@bytemd/plugin-gfm/lib/locales/zh_Hans.json'
 import 'bytemd/dist/index.css'
 import { ref } from 'vue'
 const content = ref('# Fantastic-admin')
+const form = ref<any>({})
 const plugins = [
   gfm({
     locale: gfmLocale,
@@ -39,24 +40,23 @@ function open(url: string) {
           </template>
           <el-row :gutter="10">
             <el-col :span="6">
-              <el-form-item label="项目名称" prop="name" style="float: left; width: 18.5rem;">
+              <el-form-item label="项目名称" prop="name" style="float: left; width: 17rem;">
                 <el-input clearable />
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="项目标识" prop="client_pid" style="float: left; width: 18.5rem;">
+              <el-form-item label="项目标识" prop="client_pid" style="float: left; width: 17rem;">
                 <el-input clearable />
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="所属客户" prop="client" style="float: left; width: 15.5rem;">
+              <el-form-item label="所属客户" prop="client" style="float: left; width: 17rem;">
                 <el-select placeholder="Select">
-                  <el-option />
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="所属国家" prop="currency" style="float: left; width: 15.5rem;">
+              <el-form-item label="所属国家" prop="currency" style="float: left; ">
                 <el-cascader
                   clearable
                   filterable
@@ -68,40 +68,37 @@ function open(url: string) {
           <el-row :gutter="20">
             <el-col :span="6">
               <el-form-item label="原价(美元)" prop="money">
-                <el-input type="number" />
+                <el-input v-model="form.number"  type="number"/>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="配额" prop="quota">
-                <el-input-number clearable :min="1" />
+                <el-input v-model="form.number" type="number"/>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="限量/h" prop="ir">
-                <el-input-number clearable :min="1" />
+                <el-input v-model="form.number" type="number"/>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="准入量" prop="loi">
-                <el-input-number clearable :min="1" />
+                <el-input v-model="form.number" type="number"/>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="20">
             <el-col :span="6">
               <el-form-item label="IR" prop="location">
-                <el-input-number clearable :min="1" />
+                <el-input v-model="form.number" type="number"/>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="最小时长/分" prop="category">
-                <el-cascader
-                  clearable
-                  filterable
-                />
+                <el-input v-model="form.number" type="number"/>
               </el-form-item>
             </el-col>
-            <el-col :span="11">
+            <el-col :span="12">
               <el-form-item label="互斥ID" prop="location">
                 <el-input clearable />
               </el-form-item>
@@ -153,9 +150,9 @@ function open(url: string) {
           </el-row>
           <el-divider content-position="left" />
           <el-row :gutter="20">
-            <el-col :span="9">
+            <el-col :span="15">
               <el-form-item label="备注" prop="platform">
-                <el-input />
+                <el-input maxlength="200" show-word-limit style="width: 29rem" type="textarea" :rows="5" />
               </el-form-item>
             </el-col>
           </el-row>

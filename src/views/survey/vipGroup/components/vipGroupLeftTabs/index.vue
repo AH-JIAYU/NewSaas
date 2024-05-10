@@ -67,7 +67,7 @@ function setclient(data: number) {
     添加子项目
   </el-button>
   <el-tabs v-model="activeLeftTab" tab-position="left" @tab-remove="tabremove">
-    <el-tab-pane v-for="(leftTab, index) in localLeftTab" :key="index" closable :label="leftTab.name" :name="index">
+    <el-tab-pane v-for="(leftTab, index) in localLeftTab" :key="index" :closable="localLeftTab.length !== 1" :label="leftTab.name" :name="index">
       <!-- 在每个左侧 Tab 中使用 TopTabs 组件 -->
       <el-button v-if="activeLeftTab > 0" size="small" type="success" @click="syncProject">
         同步主项目数据

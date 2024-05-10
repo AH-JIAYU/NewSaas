@@ -74,7 +74,7 @@ function setclient(data: number) {
       <el-button v-if="activeLeftTab > 0" size="small" type="success" @click="syncProject">
         同步主项目数据
       </el-button>
-      <div style="margin-left: 10px;" class="i-icon-park-solid:setting h-1.5em w-1.5em" @click="setHandler" />
+      <div style="margin-left: 10px;" class="i-tabler:settings w-2em h-2em" @click="setHandler"/>
       <TopTabs :left-tab="leftTab" :tab-index="index" @set-client="setclient" />
     </el-tab-pane>
     <SyncSettings ref="settingsRef"/>

@@ -28,7 +28,7 @@ const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const border = ref(true);
 const checkList = ref([]);
 const isFullscreen = ref(false);
-const lineHeight = ref("default");
+const lineHeight = ref<any>("default");
 const stripe = ref(false);
 const selectRows = ref<any>([]);
 const columns = ref([
@@ -61,41 +61,36 @@ function invoicing(row: any) {
   if (!selectRows.value.length)
     return ElMessage({ message: "请选择至少一条数据", type: "warning" });
   if (selectRows.value.length === 1) {
-    invoicingRef.value.replyData(row);
-    invoicingRef.value.isShow = true;
+    invoicingRef.value.showEdit(row);
   } else {
-    settlementRef.value.replyData(row, selectRows.value);
-    settlementRef.value.isShow = true;
+    settlementRef.value.showEdit(row, selectRows.value);
   }
 }
 // 新增结算
 function addSettlement() {
-  addSettlementRef.value.isShow = true;
+  addSettlementRef.value.showEdit();
 }
 // 结算
 function settlement(row: any) {
   if (!selectRows.value.length)
     return ElMessage({ message: "请选择至少一条数据", type: "warning" });
   if (selectRows.value.length === 1) {
-    invoicingRef.value.replyData(row);
-    invoicingRef.value.isShow = true;
+    invoicingRef.value.showEdit(row);
   } else if (selectRows.value.length > 1) {
-    settlementRef.value.replyData(row, selectRows.value);
-    settlementRef.value.isShow = true;
+    settlementRef.value.showEdit(row, selectRows.value);
   }
 }
 // 审核
-const auditing = () => {
-  auditingRef.value.isShow = true;
+const auditing = (row: any) => {
+  auditingRef.value.showEdit();
 };
 // 编辑
-const edit = () => {
-  editRef.value.isShow = true;
+const edit = (row: any) => {
+  editRef.value.showEdit();
 };
 // 详情
-const refundDetails = () => {
-  refundRef.value.isShow = true;
-  refundRef.value.replyData()
+const refundDetails = (row: any) => {
+  refundRef.value.showEdit();
 };
 // 右侧工具
 function clickFullScreen() {
@@ -140,6 +135,19 @@ async function fetchData() {
 onMounted(() => {
   fetchData();
 });
+function handleMoreOperating(command: string, row: any) {
+  switch (command) {
+    case "auditing":
+      auditing(row);
+      break;
+    case "edit":
+      edit(row);
+      break;
+    case "refundDetails":
+      refundDetails(row);
+      break;
+  }
+}
 </script>
 
 <template>
@@ -282,61 +290,45 @@ onMounted(() => {
       >
         <el-table-column type="selection" />
         <el-table-column type="index" align="center" label="序号" width="55" />
-        <el-table-column prop="a" align="center" label="项目ID" />
-        <el-table-column prop="b" align="center" label="项目名称" />
-        <el-table-column prop="c" align="center" label="客户简称/标识" />
-        <el-table-column prop="d" align="center" label="原价" />
-        <el-table-column prop="e" align="center" label="所属国家" />
-        <el-table-column prop="f" align="center" label="系统完成数" />
-        <el-table-column prop="g" align="center" label="结算完成数" />
-        <el-table-column prop="h" align="center" label="结算状态" />
-        <el-table-column prop="j" align="center" label="创建人" />
-        <el-table-column prop="k" align="center" label="创建时间" />
-        <el-table-column  align="center" label="操作" width="190">
+        <el-table-column show-overflow-tooltip prop="a" align="center" label="项目ID" />
+        <el-table-column show-overflow-tooltip prop="b" align="center" label="项目名称" />
+        <el-table-column show-overflow-tooltip prop="c" align="center" label="客户简称/标识" />
+        <el-table-column show-overflow-tooltip prop="d" align="center" label="原价" />
+        <el-table-column show-overflow-tooltip prop="e" align="center" label="所属国家" />
+        <el-table-column show-overflow-tooltip prop="f" align="center" label="系统完成数" />
+        <el-table-column show-overflow-tooltip prop="g" align="center" label="结算完成数" />
+        <el-table-column show-overflow-tooltip prop="h" align="center" label="结算状态" />
+        <el-table-column show-overflow-tooltip prop="j" align="center" label="创建人" />
+        <el-table-column show-overflow-tooltip prop="k" align="center" label="创建时间" />
+        <el-table-column align="center" label="操作" width="190">
           <template #default="{ row }">
-            <div class="centerss">
+            <ElSpace>
               <el-button
-              text
-              type="primary"
-              size="default"
-              @click="auditing(setSelectRows)"
-            >
-              审核
-            </el-button>
-            <ElDropdown>
-              <ElButton size="small">
-                更多操作
-                <SvgIcon name="i-ep:arrow-down" class="el-icon--right" />
-              </ElButton>
-              <template #dropdown>
-                <ElDropdownMenu>
-                  <ElDropdownItem command="auditing">
-                    <el-button
-                      text
-                      size="default"
-                      @click="auditing"
-                    >
-                      重审
-                    </el-button>
-                  </ElDropdownItem>
-                  <ElDropdownItem command="edit" divided>
-                    <el-button text  size="default" @click="edit">
+                type="primary"
+                size="small"
+                plain
+                @click="auditing(setSelectRows)"
+              >
+                审核
+              </el-button>
+              <ElDropdown @command="handleMoreOperating($event, row)">
+                <ElButton size="small">
+                  更多操作
+                  <SvgIcon name="i-ep:arrow-down" class="el-icon--right" />
+                </ElButton>
+                <template #dropdown>
+                  <ElDropdownMenu>
+                    <ElDropdownItem command="auditing"> 重审 </ElDropdownItem>
+                    <ElDropdownItem command="edit" divided>
                       编辑
-                    </el-button>
-                  </ElDropdownItem>
-                  <ElDropdownItem command="refundDetails">
-                    <el-button
-                      text
-                      size="default"
-                      @click="refundDetails"
-                    >
+                    </ElDropdownItem>
+                    <ElDropdownItem command="refundDetails">
                       详情
-                    </el-button>
-                  </ElDropdownItem>
-                </ElDropdownMenu>
-              </template>
-            </ElDropdown>
-            </div>
+                    </ElDropdownItem>
+                  </ElDropdownMenu>
+                </template>
+              </ElDropdown>
+            </ElSpace>
           </template>
         </el-table-column>
         <template #empty>
@@ -422,12 +414,4 @@ onMounted(() => {
     }
   }
 }
-:deep {
-  .centerss {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-}
-
 </style>

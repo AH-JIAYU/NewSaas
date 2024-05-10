@@ -10,10 +10,8 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['setClient'])
-const isShow = ref(false)
 const isTrue = ref(true)
 function showEdit() {
-  isShow.value = true
 }
 defineExpose({ showEdit })
 

@@ -20,7 +20,7 @@ const editRef = ref();
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const checkList = ref([]);
 const isFullscreen = ref(false);
-const lineHeight = ref("default");
+const lineHeight = ref<any>("default");
 const stripe = ref(false);
 const selectRows = ref<any>([]);
 const columns = ref([
@@ -46,17 +46,17 @@ const queryForm = reactive<any>({
 const list = ref<any>([]);
 // 新增数据
 const addData = () => {
-  if (!selectRows.value.length) editRef.value.isShow = true;
+  if (!selectRows.value.length) editRef.value.showEdit();
 };
 // 编辑数据
-const editData = () => {
-  if (!selectRows.value.length) editRef.value.isShow = true;
+const editData = (row: any) => {
+  if (!selectRows.value.length) editRef.value.showEdit(row);
 };
 // 删除数据
-const deleteData = () => {
+const deleteData = (row: any) => {
   // if (!selectRows.value.length)
   //   return ElMessage({ message: "请选择至少一条数据", type: "warning" });
-  deleteRef.value.isShow = true;
+  deleteRef.value.showEdit(row);
   deleteRef.value.replyData(selectRows.value);
 };
 
@@ -200,20 +200,22 @@ onMounted(() => {
       >
         <el-table-column type="selection" />
         <el-table-column type="index" align="center" label="序号" width="55" />
-        <el-table-column prop="e" align="center" label="类型" />
-        <el-table-column prop="d" align="center" label="项目ID" />
-        <el-table-column prop="e" align="center" label="项目名称" />
-        <el-table-column prop="a" align="center" label="指定供应商" />
-        <el-table-column prop="b" align="center" label="国家" />
-        <el-table-column prop="c" align="center" label="原价" />
-        <el-table-column prop="h" align="center" label="创建时间" />
+        <el-table-column show-overflow-tooltip prop="e" align="center" label="类型" />
+        <el-table-column show-overflow-tooltip prop="d" align="center" label="项目ID" />
+        <el-table-column show-overflow-tooltip prop="e" align="center" label="项目名称" />
+        <el-table-column show-overflow-tooltip prop="a" align="center" label="指定供应商" />
+        <el-table-column show-overflow-tooltip prop="b" align="center" label="国家" />
+        <el-table-column show-overflow-tooltip prop="c" align="center" label="原价" />
+        <el-table-column show-overflow-tooltip prop="h" align="center" label="创建时间" />
         <el-table-column align="center" label="操作" width="170">
-          <el-button text type="primary" size="default" @click="editData">
-            编辑
-          </el-button>
-          <el-button text type="danger" size="default" @click="deleteData">
-            删除
-          </el-button>
+          <template #default="{ row }">
+            <el-button type="primary" plain size="small" @click="editData(row)">
+              编辑
+            </el-button>
+            <el-button type="danger" plain size="small" @click="deleteData(row)">
+              删除
+            </el-button>
+          </template>
         </el-table-column>
         <template #empty>
           <el-empty description="暂无数据" />

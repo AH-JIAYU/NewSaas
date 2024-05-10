@@ -4,13 +4,13 @@ defineOptions({
 });
 import { ref } from "vue";
 // 弹框开关变量
-const isShow = ref(false);
+const dialogTableVisible = ref(false);
 const total = ref();
 // 提交数据
 function onSubmit() {}
-// 父级传递数据
-const replyData = async (row: any) => {
-  total.value = row.length;
+// 获取数据
+const showEdit = async (row:any) => {
+  dialogTableVisible.value = true;
 };
 // 弹框关闭事件
 function closeHandler() {
@@ -19,15 +19,15 @@ function closeHandler() {
   // delete formData.id
   // // 重置表单
   // Object.assign(formData, defaultState)
-  isShow.value = false;
+  dialogTableVisible.value = false;
 }
 // 暴露方法
-defineExpose({ isShow, replyData });
+defineExpose({ showEdit });
 </script>
 <template>
   <div>
     <el-drawer
-      v-model="isShow"
+      v-model="dialogTableVisible"
       title="配额详情"
       direction="rtl"
       :before-close="closeHandler"
@@ -152,7 +152,7 @@ defineExpose({ isShow, replyData });
       <template #footer>
         <div style="flex: auto">
           <el-button type="primary" @click="onSubmit"> 确定 </el-button>
-          <el-button @click="isShow = false"> 取消 </el-button>
+          <el-button @click="dialogTableVisible = false"> 取消 </el-button>
         </div>
       </template>
     </el-drawer>

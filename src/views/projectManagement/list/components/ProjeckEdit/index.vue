@@ -6,7 +6,7 @@ import { provide, reactive, ref } from 'vue'
 import LeftTabs from '../ProjeckLeftTabs/index.vue'
 
 const emit = defineEmits(['fetch-data'])
-const drawerisible = ref<boolean>(false)
+const dialogTableVisible = ref<boolean>(false)
 const title = ref<string>('')
 const validateTopTabs = ref<any>([])
 function pushData(data: any) {
@@ -34,7 +34,7 @@ async function showEdit(row: any) {
     title.value = '编辑'
     initializeLeftTabsData(row)
   }
-  drawerisible.value = true
+  dialogTableVisible.value = true
 }
 
 function initializeLeftTabsData(data: any) {
@@ -62,7 +62,7 @@ function onSubmit() {
 function closeHandler() {
   leftTabsData = reactive<any>([])
   emit('fetch-data')
-  drawerisible.value = false
+  dialogTableVisible.value = false
   validateTopTabs.value = []
 }
 
@@ -103,8 +103,8 @@ defineExpose({
 <template>
   <div>
     <el-drawer
-    v-model="drawerisible" append-to-body :close-on-click-modal="false" destroy-on-close draggable size="70%"
-      :title="title" @close="closeHandler"
+    v-model="dialogTableVisible" append-to-body :close-on-click-modal="false" destroy-on-close draggable size="70%"
+      title="" @close="closeHandler"
     >
     <LeftTabs :left-tabs-data="leftTabsData" :validate-top-tabs="validateTopTabs" />
       <template #footer>

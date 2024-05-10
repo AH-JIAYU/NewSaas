@@ -2,6 +2,7 @@
 defineOptions({
   name: 'ProjectDetails',
 })
+import { CircleCheck,Position,Select } from '@element-plus/icons-vue'
 // 富文本编辑器配置
 import gfm from "@bytemd/plugin-gfm";
 import zhHans from "bytemd/locales/zh_Hans.json";
@@ -11,6 +12,7 @@ import { ref } from "vue";
 import logDetails from "../LogDetails/index.vue";
 const content = ref("# Fantastic-admin");
 const logDetailsRef = ref('')
+const active = ref(1)
 const plugins = [
   gfm({
     locale: gfmLocale,
@@ -32,9 +34,12 @@ function details() {
   logDetailsRef.value.dialogTableVisible = true
 }
 // 弹框开关变量
-const isShow = ref(false);
+const dialogTableVisible = ref(false);
 // 提交数据
 function onSubmit() {}
+const showEdit = () => {
+  dialogTableVisible.value = true;
+}
 // 弹框关闭事件
 function closeHandler() {
   // 移除校验
@@ -42,21 +47,21 @@ function closeHandler() {
   // delete formData.id
   // // 重置表单
   // Object.assign(formData, defaultState)
-  isShow.value = false;
+  dialogTableVisible.value = false;
 }
 // 暴露方法
-defineExpose({ isShow });
+defineExpose({ showEdit });
 </script>
 
 <template>
   <div>
     <el-drawer
-      v-model="isShow"
+      v-model="dialogTableVisible"
       append-to-body
       :close-on-click-modal="false"
       destroy-on-close
       draggable
-      size="60%"
+      size="55%"
       title="项目详情"
     >
     <logDetails ref="logDetailsRef"/>
@@ -64,23 +69,17 @@ defineExpose({ isShow });
         <el-row :gutter="20">
           <el-col :span="2" />
           <el-col :span="20">
-            <el-steps
-              style="max-width: 100%"
-              :active="1"
-              finish-status="success"
-              simple
-            >
-              <el-step title="已开始" />
-              <el-step title="已确认" />
-              <el-step title="已开票" />
-              <el-step title="已完结" />
+            <el-steps style="max-width:  100%" finish-status="success" align-center :active="active">
+              <el-step title="已开始" description="2021-09-09 11:11:11" :icon="Select" />
+              <el-step title="已确认" description="2021-09-09 11:11:11" :icon="active >= 2 ? CircleCheck : Position" />
+              <el-step title="已开票" description="2021-09-09 11:11:11" :icon="active >= 3 ? CircleCheck : Position" />
+              <el-step title="已完结" description="2021-09-09 11:11:11" :icon="active >= 4 ? CircleCheck : Position" />
             </el-steps>
           </el-col>
           <el-col :span="2" />
         </el-row>
       </template>
-
-      <ElForm label-width="100px" model="" rules="rules">
+      <ElForm label-width="100px">
         <el-card class="box-card">
           <template #header>
             <div class="card-header">
@@ -89,34 +88,30 @@ defineExpose({ isShow });
           </template>
           <el-row :gutter="10">
             <el-col :span="8">
-              <el-form-item label="项目ID" prop="client" style="float: left; width: 20rem;">
-                <el-input clearable />
+              <el-form-item label="项目ID" prop="client" style="float: left; width: 18rem;">
+                <el-text class="mx-1">PC\平板\Mobile</el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="项目名称" prop="name" style="float: left; width: 20rem;">
-                <el-input clearable />
+              <el-form-item label="项目名称" prop="name" style="float: left; width: 18rem;">
+                <el-text class="mx-1">PC\平板\Mobile</el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="项目标识" prop="client_pid" style="float: left; width: 20rem;">
-                <el-select placeholder="Select">
-                  <el-option />
-                </el-select>
+              <el-form-item label="项目标识" prop="client_pid" style="float: left; width: 18rem;">
+                <el-text class="mx-1">PC\平板\Mobile</el-text>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="10">
             <el-col :span="8">
-              <el-form-item label="所属渠道" prop="client" style="float: left; width: 20rem;">
-                <el-input clearable />
+              <el-form-item label="所属渠道" prop="client" style="float: left; width: 18rem;">
+                <el-text class="mx-1">PC\平板\Mobile</el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="所属国家" prop="name" style="float: left; width: 20rem;">
-                <el-select placeholder="Select">
-                  <el-option />
-                </el-select>
+              <el-form-item label="所属国家" prop="name" style="float: left; width: 18rem;">
+                <el-text class="mx-1">PC\平板\Mobile</el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8" />
@@ -127,27 +122,27 @@ defineExpose({ isShow });
               <el-form-item
                 label="原价(美元)"
                 prop="client"
-                style="float: left; width: 20rem"
+                style="float: left; width: 18rem"
               >
-                <el-input clearable />
+              <el-text class="mx-1">PC\平板\Mobile</el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item
                 label="原价(人民币)"
                 prop="name"
-                style="float: left; width: 20rem"
+                style="float: left; width: 18rem"
               >
-                <el-input clearable />
+              <el-text class="mx-1">PC\平板\Mobile</el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item
                 label="配额"
                 prop="name"
-                style="float: left; width: 20rem"
+                style="float: left; width: 18rem"
               >
-                <el-input clearable />
+              <el-text class="mx-1">PC\平板\Mobile</el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8" />
@@ -157,27 +152,27 @@ defineExpose({ isShow });
               <el-form-item
                 label="限量/h"
                 prop="client"
-                style="float: left; width: 20rem"
+                style="float: left; width: 18rem"
               >
-                <el-input clearable />
+              <el-text class="mx-1">PC\平板\Mobile</el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item
                 label="准入量"
                 prop="name"
-                style="float: left; width: 20rem"
+                style="float: left; width: 18rem"
               >
-                <el-input clearable />
+              <el-text class="mx-1">PC\平板\Mobile</el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item
                 label="IR"
                 prop="name"
-                style="float: left; width: 20rem"
+                style="float: left; width: 18rem"
               >
-                <el-input clearable />
+              <el-text class="mx-1">PC\平板\Mobile</el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8" />
@@ -187,27 +182,27 @@ defineExpose({ isShow });
               <el-form-item
                 label="最小时长"
                 prop="client"
-                style="float: left; width: 20rem"
+                style="float: left; width: 18rem"
               >
-                <el-input clearable />
+              <el-text class="mx-1">PC\平板\Mobile</el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item
                 label="互斥ID"
                 prop="name"
-                style="float: left; width: 20rem"
+                style="float: left; width: 18rem"
               >
-                <el-input clearable />
+              <el-text class="mx-1">PC\平板\Mobile</el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item
                 label="URL"
                 prop="name"
-                style="float: left; width: 20rem"
+                style="float: left; width: 18rem"
               >
-                <el-input clearable />
+              <el-text class="mx-1">PC\平板\Mobile</el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8" />
@@ -217,27 +212,27 @@ defineExpose({ isShow });
               <el-form-item
                 label="置顶"
                 prop="client"
-                style="float: left; width: 20rem"
+                style="float: left; width: 18rem"
               >
-                <el-switch />
+              <el-text class="mx-1">PC\平板\Mobile</el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item
                 label="资料"
                 prop="name"
-                style="float: left; width: 20rem"
+                style="float: left; width: 18rem"
               >
-                <el-input clearable />
+              <el-text class="mx-1">PC\平板\Mobile</el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item
                 label="B2B"
                 prop="name"
-                style="float: left; width: 20rem"
+                style="float: left; width: 18rem"
               >
-                <el-input clearable />
+              <el-text class="mx-1">PC\平板\Mobile</el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8" />
@@ -247,27 +242,27 @@ defineExpose({ isShow });
               <el-form-item
                 label="信用"
                 prop="client"
-                style="float: left; width: 20rem"
+                style="float: left; width: 18rem"
               >
-                <el-input clearable />
+              <el-text class="mx-1">PC\平板\Mobile</el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item
                 label="定时发布"
                 prop="name"
-                style="float: left; width: 20rem"
+                style="float: left; width: 18rem"
               >
-                <el-input clearable />
+              <el-text class="mx-1">PC\平板\Mobile</el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item
                 label="备注"
                 prop="name"
-                style="float: left; width: 20rem"
+                style="float: left; width: 18rem"
               >
-                <el-input clearable />
+              <el-text class="mx-1">PC\平板\Mobile</el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8" />
@@ -278,27 +273,27 @@ defineExpose({ isShow });
               <el-form-item
                 label="终端"
                 prop="client"
-                style="float: left; width: 20rem"
+                style="float: left; width: 18rem"
               >
-                <el-input clearable />
+              <el-text class="mx-1">PC\平板\Mobile</el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item
                 label="性别"
                 prop="name"
-                style="float: left; width: 20rem"
+                style="float: left; width: 18rem"
               >
-                <el-input clearable />
+              <el-text class="mx-1">PC\平板\Mobile</el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item
                 label="年龄"
                 prop="name"
-                style="float: left; width: 20rem"
+                style="float: left; width: 18rem"
               >
-                <el-input clearable />
+              <el-text class="mx-1">PC\平板\Mobile</el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8" />

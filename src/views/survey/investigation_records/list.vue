@@ -188,7 +188,7 @@ function sortChange({ prop, order }: { prop: string, order: string }) {
         <ElTableColumn prop="" label="分配类型" />
         <ElTableColumn prop="" label="IP／所属国" />
         <ElTableColumn prop="" label="价格" />
-        <ElTableColumn prop="" label="调查开始－调查结束" />
+        <ElTableColumn prop="" width="160" label="调查开始－调查结束" />
         <ElTableColumn prop="" label="总耗时" />
         <ElTableColumn prop="" label="审核事件" />
         <ElTableColumn prop="" label="状态" />

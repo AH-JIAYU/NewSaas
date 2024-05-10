@@ -21,7 +21,7 @@ const detailsRef = ref();
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const checkList = ref([]);
 const isFullscreen = ref(false);
-const lineHeight = ref("default");
+const lineHeight = ref<any>("default");
 const stripe = ref(false);
 const selectRows = ref<any>([]);
 const columns = ref([
@@ -46,19 +46,18 @@ const queryForm = reactive<any>({
 });
 const list = ref<any>([]);
 // 编辑数据
-const editData = () => {
-  if (!selectRows.value.length) editRef.value.isShow = true;
+const editData = (row: any) => {
+  if (!selectRows.value.length) editRef.value.showEdit(row);
 };
 // 详情
-const projectDetails = () => {
-  if (!selectRows.value.length) detailsRef.value.isShow = true;
+const projectDetails = (row: any) => {
+  if (!selectRows.value.length) detailsRef.value.showEdit(row);
 };
 // 删除数据
-const deleteData = () => {
+const deleteData = (row: any) => {
   // if (!selectRows.value.length)
   //   return ElMessage({ message: "请选择至少一条数据", type: "warning" });
-  deleteRef.value.isShow = true;
-  deleteRef.value.replyData(selectRows.value);
+  deleteRef.value.showEdit(row);
 };
 // 工具配置项
 function clickFullScreen() {
@@ -107,6 +106,16 @@ async function fetchData() {
 onMounted(() => {
   fetchData();
 });
+function handleMoreOperating(command: string, row: any) {
+  switch (command) {
+    case "projectDetails":
+      projectDetails(row);
+      break;
+    case "deleteData":
+      deleteData(row);
+      break;
+  }
+}
 </script>
 
 <template>
@@ -203,24 +212,41 @@ onMounted(() => {
       >
         <el-table-column type="selection" />
         <el-table-column type="index" align="center" label="序号" width="55" />
-        <el-table-column prop="a" align="center" label="供应商ID" />
-        <el-table-column prop="b" align="center" label="子会员ID" />
-        <el-table-column prop="c" align="center" label="子会员名称" />
-        <el-table-column prop="d" align="center" label="项目ID" />
-        <el-table-column prop="e" align="center" label="项目名称" />
-        <el-table-column prop="f" align="center" label="客户简称/标识" />
-        <el-table-column prop="g" align="center" label="说明" />
-        <el-table-column prop="h" align="center" label="创建时间" />
+        <el-table-column show-overflow-tooltip prop="a" align="center" label="供应商ID" />
+        <el-table-column show-overflow-tooltip prop="b" align="center" label="子会员ID" />
+        <el-table-column show-overflow-tooltip prop="c" align="center" label="子会员名称" />
+        <el-table-column show-overflow-tooltip prop="d" align="center" label="项目ID" />
+        <el-table-column show-overflow-tooltip prop="e" align="center" label="项目名称" />
+        <el-table-column show-overflow-tooltip prop="f" align="center" label="客户简称/标识" />
+        <el-table-column show-overflow-tooltip prop="g" align="center" label="说明" />
+        <el-table-column show-overflow-tooltip prop="h" align="center" label="创建时间" />
         <el-table-column align="center" label="操作" width="240">
-          <el-button text type="primary" size="default" @click="editData">
-            编辑
-          </el-button>
-          <el-button text type="primary" size="default" @click="projectDetails">
-            详情
-          </el-button>
-          <el-button text type="danger" size="default" @click="deleteData">
-            删除
-          </el-button>
+          <template #default="{ row }">
+            <ElSpace>
+              <el-button
+                type="primary"
+                plain
+                size="small"
+                @click="editData(row)"
+              >
+                编辑
+              </el-button>
+              <ElDropdown @command="handleMoreOperating($event, row)">
+                <ElButton size="small">
+                  更多操作
+                  <SvgIcon name="i-ep:arrow-down" class="el-icon--right" />
+                </ElButton>
+                <template #dropdown>
+                  <ElDropdownMenu>
+                    <ElDropdownItem command="projectDetails">
+                      详情
+                    </ElDropdownItem>
+                    <ElDropdownItem command="deleteData">删除</ElDropdownItem>
+                  </ElDropdownMenu>
+                </template>
+              </ElDropdown>
+            </ElSpace>
+          </template>
         </el-table-column>
         <template #empty>
           <el-empty description="暂无数据" />
