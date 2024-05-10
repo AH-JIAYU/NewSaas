@@ -203,12 +203,34 @@ textarea {
   margin: 20px 0;
 }
 
+// 后加的
+*{
+  padding: 0;
+  margin: 0;
+}
+
+
+
 .el-card {
   box-shadow: 0 0 12px rgb(0 0 0 / 7%) !important;
 }
+.el-card__header{
+  position: relative;
+}
+.el-card__header::after{
+  position: absolute;
+  left:0;
+  top: 50%;
+  transform: translateY(-50%);
+  content:'';
+  width: 3px;
+  height: 20px;
+  background: linear-gradient(to bottom ,#0081ff,#22cce2);
+  border-radius: 0 3px 3px 0;
 
+}
 .el-select {
-  min-width: 192px;
+  min-width: 192px !important;
 }
 
 /* 表格全屏 */
@@ -237,7 +259,3 @@ textarea {
   height: 100%;
 }
 
-*{
-  padding: 0;
-  margin: 0;
-}

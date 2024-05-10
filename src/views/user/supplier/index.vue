@@ -86,6 +86,17 @@ function queryData() {
   queryForm.pageNo = 1;
   fetchData();
 }
+// 重置筛选数据
+function onReset() {
+  Object.assign(queryForm, {
+    pageNo: 1,
+    pageSize: 10,
+    select: {},
+  });
+  fetchData()
+}
+
+
 // 每页数量切换
 function sizeChange(size: number) {
   onSizeChange(size).then(() => fetchData());
@@ -205,6 +216,12 @@ onMounted(() => {
                   <SvgIcon name="i-ep:search" />
                 </template>
                 筛选
+              </ElButton>
+              <ElButton @click="onReset">
+                <template #icon>
+                  <div class="i-grommet-icons:power-reset w-1em h-1em"></div>
+                </template>
+                重置
               </ElButton>
               <ElButton link @click="toggle">
                 <template #icon>

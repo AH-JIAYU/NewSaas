@@ -114,6 +114,14 @@ function onCreate() {
   }
 }
 
+// 重置筛选数据
+function onReset() {
+  Object.assign(data.value.search, {
+    name: '',
+  });
+  getDataList()
+}
+
 function onEdit(row: any) {
   if (data.value.formMode === 'router') {
     if (settingsStore.settings.tabbar.enable && settingsStore.settings.tabbar.mergeTabsBy !== 'activeMenu') {
@@ -158,7 +166,7 @@ function onDel(row: any) {
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
           <ElForm :model="data.search" size="default" label-width="100px" inline-message inline class="search-form">
-            <ElFormItem label="名称">
+            <ElFormItem  >
               <ElInput v-model="data.search.name" placeholder="请输入角色名称，支持模糊查询" clearable @keydown.enter="currentChange()" @clear="currentChange()" />
             </ElFormItem>
             <ElFormItem>
@@ -167,6 +175,12 @@ function onDel(row: any) {
                   <SvgIcon name="i-ep:search" />
                 </template>
                 筛选
+              </ElButton>
+              <ElButton @click="onReset">
+                <template #icon>
+                  <div class="i-grommet-icons:power-reset w-1em h-1em"></div>
+                </template>
+                重置
               </ElButton>
               <ElButton link disabled @click="toggle">
                 <template #icon>

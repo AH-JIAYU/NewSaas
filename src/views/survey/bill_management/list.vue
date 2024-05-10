@@ -35,7 +35,7 @@ const data = ref({
 
   tableAutoHeight: false,  // 表格是否自适应高度
   border: true, //表格控件-是否展示边框
-  stripe: false, //表格控件-是否展示斑马条
+  stripe: true, //表格控件-是否展示斑马条
   lineHeight: 'default', //表格控件-控制表格大小
   checkList: [],
   /**
@@ -90,7 +90,13 @@ function getDataList() {
     pagination.value.total = res.data.total
   })
 }
-
+// 重置筛选数据
+function onReset() {
+  Object.assign(data.value.search, {
+    title: '',
+  });
+  getDataList()
+}
 // 每页数量切换
 function sizeChange(size: number) {
   onSizeChange(size).then(() => getDataList())
@@ -156,6 +162,12 @@ function onRefused(row: any) {
                   <SvgIcon name="i-ep:search" />
                 </template>
                 筛选
+              </ElButton>
+              <ElButton @click="onReset">
+                <template #icon>
+                  <div class="i-grommet-icons:power-reset w-1em h-1em"></div>
+                </template>
+                重置
               </ElButton>
               <ElButton disabled link @click="toggle">
                 <template #icon>

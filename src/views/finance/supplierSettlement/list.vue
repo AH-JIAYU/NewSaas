@@ -18,7 +18,7 @@ const checkList = ref([]);
 const border = ref(true);
 const isFullscreen = ref(false);
 const lineHeight = ref("default");
-const stripe = ref(false);
+const stripe = ref(true);
 const selectRows = ref<any>([]);
 const columns = ref([
   {
@@ -96,44 +96,24 @@ onMounted(() => {
 </script>
 
 <template>
-  <div
-    :class="{
-      'vab-table-fullscreen': isFullscreen,
-      'absolute-container': tableAutoHeight,
-    }"
-  >
+  <div :class="{
+
+    'absolute-container': tableAutoHeight,
+  }">
     <PageMain>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
-          <el-form
-            inline
-            label-position="right"
-            label-width="80px"
-            :model="queryForm"
-            @submit.prevent
-          >
+          <el-form :model="queryForm.select" size="default" label-width="100px" inline-message inline
+            class="search-form">
             <el-form-item label="">
-              <el-input clearable placeholder="供应商ID" />
+              <el-input clearable v-model="queryForm.select.a" placeholder="供应商ID" />
             </el-form-item>
-            <el-form-item v-show="!fold" label="账单日期">
-              <el-date-picker
-                type="daterange"
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                clearable
-                size=""
-              />
+            <el-form-item v-show="!fold">
+              <el-date-picker type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"
+                clearable size="" />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-select
-                value-key=""
-                placeholder="状态"
-                clearable
-                filterable
-                @change=""
-              >
-                <el-option />
+              <el-select value-key="" placeholder="状态" clearable filterable @change="">
               </el-select>
             </el-form-item>
             <ElFormItem>
@@ -149,11 +129,9 @@ onMounted(() => {
                 </template>
                 重置
               </ElButton>
-              <ElButton link @click="toggle">
+              <ElButton disabled link @click="toggle">
                 <template #icon>
-                  <SvgIcon
-                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
-                  />
+                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
                 </template>
                 {{ fold ? "展开" : "收起" }}
               </ElButton>
@@ -161,6 +139,7 @@ onMounted(() => {
           </el-form>
         </template>
       </SearchBar>
+      <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel> </FormLeftPanel>
 
@@ -168,31 +147,14 @@ onMounted(() => {
           <el-button style="margin-right: 10px" size="default" @click="">
             导出
           </el-button>
-          <TabelControl
-            v-model:border="border"
-            v-model:tableAutoHeight="tableAutoHeight"
-            v-model:checkList="checkList"
-            v-model:columns="columns"
-            v-model:is-fullscreen="isFullscreen"
-            v-model:line-height="lineHeight"
-            v-model:stripe="stripe"
-            style="margin-left: 12px"
-            @click-full-screen="clickFullScreen"
-            @query-data="currentChange"
-          />
+          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
+            v-model:columns="columns" v-model:is-fullscreen="isFullscreen" v-model:line-height="lineHeight"
+            v-model:stripe="stripe" style="margin-left: 12px" @click-full-screen="clickFullScreen"
+            @query-data="currentChange" />
         </FormRightPanel>
       </el-row>
-      <el-table
-        style="margin-top: 10px"
-        ref="tableSortRef"
-        v-loading="false"
-        row-key="id"
-        :data="list"
-        :border="border"
-        :size="lineHeight"
-        :stripe="stripe"
-        @selection-change="setSelectRows"
-      >
+      <el-table style="margin-top: 10px" ref="tableSortRef" v-loading="false" row-key="id" :data="list" :border="border"
+        :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows">
         <el-table-column type="expand" />
         <el-table-column type="index" align="center" label="序号" width="55" />
         <el-table-column prop="a" align="center" label="站长ID" />
@@ -218,36 +180,18 @@ onMounted(() => {
           <el-empty description="暂无数据" />
         </template>
       </el-table>
-      <ElPagination
-        :current-page="pagination.page"
-        :total="pagination.total"
-        :page-size="pagination.size"
-        :page-sizes="pagination.sizes"
-        :layout="pagination.layout"
-        :hide-on-single-page="false"
-        class="pagination"
-        background
-        @size-change="sizeChange"
-        @current-change="currentChange"
-      />
+      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+        background @size-change="sizeChange" @current-change="currentChange" />
     </PageMain>
   </div>
 </template>
 
 <style scoped lang="scss">
-.el-select {
-  width: 12rem;
-}
-
-:deep {
-  table {
-    width: 100% !important;
-  }
-}
-
 .el-pagination {
   margin-top: 15px;
 }
+
 .absolute-container {
   position: absolute;
   display: flex;

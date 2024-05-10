@@ -48,7 +48,7 @@ defineExpose({ showEdit })
         <el-table-column align="center" label="项目编码" />
         <el-table-column align="center" label="项目名称" />
       </el-table>
-      <el-form ref="form" label-width="80px" :inline="false" size="normal">
+      <el-form ref="form" label-width="80px" :inline="false">
         <el-form-item label="分配目标">
           <el-radio-group v-model="radio1" class="ml-4">
             <el-radio :value="1" size="large">

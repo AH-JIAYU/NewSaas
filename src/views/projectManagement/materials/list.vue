@@ -89,9 +89,6 @@ function onReset() {
 }
 async function fetchData() {
   listLoading.value = true;
-  // const { data } = await getList(queryForm)
-  // list.value = data[0]
-  // total.value = data[0].length
   list.value = [
     { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
     { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
@@ -121,7 +118,6 @@ function handleMoreOperating(command: string, row: any) {
 <template>
   <div
     :class="{
-      'vab-table-fullscreen': isFullscreen,
       'absolute-container': tableAutoHeight,
     }"
   >
@@ -129,11 +125,8 @@ function handleMoreOperating(command: string, row: any) {
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
           <el-form
-            inline
-            label-position="right"
-            label-width="80px"
-            :model="queryForm"
-            @submit.prevent
+          :model="queryForm.select" size="default" label-width="100px" inline-message inline
+            class="search-form"
           >
             <el-form-item label="">
               <el-input clearable placeholder="供应商ID" />
@@ -179,6 +172,7 @@ function handleMoreOperating(command: string, row: any) {
           </el-form>
         </template>
       </SearchBar>
+      <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel> </FormLeftPanel>
         <FormRightPanel>
@@ -272,19 +266,7 @@ function handleMoreOperating(command: string, row: any) {
 </template>
 
 <style scoped lang="scss">
-.el-select {
-  width: 12rem;
-}
-
-:deep {
-  table {
-    width: 100% !important;
-  }
-}
-
-.el-pagination {
-  margin-top: 15px;
-}
+// 高度自适应
 .absolute-container {
   position: absolute;
   display: flex;
@@ -308,7 +290,7 @@ function handleMoreOperating(command: string, row: any) {
     }
   }
 }
-
+// 筛选
 .page-main {
   .search-form {
     display: grid;

@@ -131,9 +131,10 @@ async function getDataList() {
 // 查看
 function handleCheck(row: any) {
   if (row.name) {
-    data.CheckRef.showEdit(row);
-  } else {
-    data.CheckRef.showEdit();
+    CheckRef.value.showEdit(row)
+  }
+  else {
+    CheckRef.value.showEdit()
   }
 }
 onMounted(() => {

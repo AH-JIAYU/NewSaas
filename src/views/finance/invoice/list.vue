@@ -21,7 +21,7 @@ const checkList = ref([]);
 const border = ref(true);
 const isFullscreen = ref(false);
 const lineHeight = ref("default");
-const stripe = ref(false);
+const stripe = ref(true);
 const selectRows = ref<any>([]);
 const columns = ref([
   {
@@ -110,7 +110,7 @@ onMounted(() => {
 <template>
   <div
     :class="{
-      'vab-table-fullscreen': isFullscreen,
+
       'absolute-container': tableAutoHeight,
     }"
   >
@@ -118,11 +118,9 @@ onMounted(() => {
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
           <el-form
-            inline
-            label-position="right"
-            label-width="80px"
-            :model="queryForm"
-            @submit.prevent
+          :model="queryForm.select" size="default" label-width="100px" inline-message inline
+            class="search-form"
+
           >
             <el-form-item label="">
               <el-select
@@ -157,7 +155,7 @@ onMounted(() => {
                 <el-option />
               </el-select>
             </el-form-item>
-            <el-form-item v-show="!fold" label="时间日期">
+            <el-form-item v-show="!fold" >
               <el-date-picker
                 type="daterange"
                 range-separator="至"
@@ -193,6 +191,7 @@ onMounted(() => {
           </el-form>
         </template>
       </SearchBar>
+      <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>
           <el-button
@@ -279,15 +278,6 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
-.el-select {
-  width: 12rem;
-}
-
-:deep {
-  table {
-    width: 100% !important;
-  }
-}
 
 .el-pagination {
   margin-top: 15px;

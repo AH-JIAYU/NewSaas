@@ -11,31 +11,20 @@ function onSubmit() {
 
 }
 // 父级传递数据
-const replyData = async (row:any) => {
+const replyData = async (row: any) => {
   total.value = row.length
 }
 // 弹框关闭事件
 function closeHandler() {
-  // 移除校验
-  // formRef.value.resetFields()
-
-  // delete formData.id
-  // // 重置表单
-  // Object.assign(formData, defaultState)
   isShow.value = false
 }
 // 暴露方法
-defineExpose({ isShow,replyData })
+defineExpose({ isShow, replyData })
 </script>
 
 <template>
   <div>
-    <el-dialog
-      v-model="isShow"
-      title="删除"
-      width="500"
-      :before-close="closeHandler"
-    >
+    <el-dialog v-model="isShow" title="删除" width="500" :before-close="closeHandler">
       <div>确认删除这条数据吗?</div>
       <template #footer>
         <div style="flex: auto;">

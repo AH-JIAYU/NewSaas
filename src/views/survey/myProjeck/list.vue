@@ -11,15 +11,15 @@ const tableSortRef = ref("");
 // loading加载
 const listLoading = ref<boolean>(true);
 // 获取组件变量
-const addCheckEditEdit = ref("");
-const addQuotaEdit = ref("");
+const addCheckEditEdit = ref<any>();
+const addQuotaEdit = ref<any>();
 // 右侧工具栏配置变量
 const border = ref(true);
 const checkList = ref([]);
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const isFullscreen = ref(false); //表格控件-控制全屏
-const lineHeight = ref("default");
-const stripe = ref(false);
+const lineHeight = ref<any>("default");
+const stripe = ref(true);
 const columns = ref([
   {
     label: "项目ID",
@@ -77,9 +77,6 @@ function onReset() {
 }
 async function fetchData() {
   listLoading.value = true;
-  // const { data } = await getList(queryForm)
-  // list.value = data[0]
-  // total.value = data[0].length
   list.value = [
     { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
     { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
@@ -109,7 +106,7 @@ function handleMoreOperating(command: string, row: any) {
 <template>
   <div
     :class="{
-      'vab-table-fullscreen': isFullscreen,
+
       'absolute-container': tableAutoHeight,
     }"
   >
@@ -117,11 +114,8 @@ function handleMoreOperating(command: string, row: any) {
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
           <el-form
-            inline
-            label-position="right"
-            label-width="80px"
-            :model="queryForm"
-            @submit.prevent
+          :model="queryForm.select" size="default" label-width="100px" inline-message inline
+            class="search-form"
           >
             <el-form-item label="">
               <el-input clearable placeholder="项目ID" />
@@ -170,13 +164,10 @@ function handleMoreOperating(command: string, row: any) {
             <el-form-item v-show="!fold">
               <el-input clearable placeholder="创建人" />
             </el-form-item>
-            <el-form-item style="width: 192px" v-show="!fold">
-              <el-date-picker
-                v-model="value1"
-                type="date"
-                placeholder="创建日期"
-                size="default"
-              />
+            <el-form-item  v-show="!fold">
+              <el-date-picker  type="daterange" unlink-panels range-separator="-"
+                start-placeholder="开始日期" end-placeholder="结束日期" size="default" style="width: 192px" clear-icon="true" />
+
             </el-form-item>
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">
@@ -203,7 +194,7 @@ function handleMoreOperating(command: string, row: any) {
           </el-form>
         </template>
       </SearchBar>
-
+      <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel> </FormLeftPanel>
         <FormRightPanel>
@@ -289,11 +280,7 @@ function handleMoreOperating(command: string, row: any) {
 </template>
 
 <style scoped lang="scss">
-:deep {
-  table {
-    width: 100% !important;
-  }
-}
+
 .absolute-container {
   position: absolute;
   display: flex;

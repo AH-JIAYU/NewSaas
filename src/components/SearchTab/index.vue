@@ -18,17 +18,8 @@ function back() {
     </el-radio-group>
     <div v-else class="fx-b">
       <el-button size="default" style="width: 32px !important;" :icon="Back" @click="back" />
-      <el-date-picker
-        v-model="value2"
-        type="daterange"
-        unlink-panels
-        range-separator="-"
-        start-placeholder="开始"
-        end-placeholder="结束"
-        size="default"
-        style="flex: 1;"
-        clear-icon="true"
-      />
+      <el-date-picker v-model="value2" type="daterange" unlink-panels range-separator="-" start-placeholder="开始"
+        end-placeholder="结束" size="default" style="flex: 1;" clear-icon="true" />
       <el-button type="primary" style="width: 59px;" size="default">
         搜索
       </el-button>
@@ -41,5 +32,21 @@ function back() {
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  :deep {
+    .el-date-editor {
+      border-radius: 0 !important;
+    }
+
+    .el-button:nth-of-type(1) {
+      border-radius: 4px 0 0 4px !important;
+      border-right: 0px;
+    }
+
+    .el-button:nth-of-type(2) {
+      border-radius: 0 4px 4px 0 !important;
+    }
+  }
+
 }
 </style>

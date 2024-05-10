@@ -21,12 +21,12 @@ const exportID = () => { //id导出
           <el-divider content-position="left"> 按项目导出会员资料 </el-divider>
           <el-row :gutter="24">
             <el-col :span="6">
-              <el-form-item label="项目ID／名称">
+              <el-form-item>
                 <el-input  v-model="form.a"  placeholder="请输入" />
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="项目状态">
+              <el-form-item>
                 <el-select  v-model="form.b"  placeholder="请选择" style="width:100%" />
               </el-form-item>
             </el-col>
@@ -38,7 +38,7 @@ const exportID = () => { //id导出
           <el-divider content-position="left"> 按会员ID导出资料(站长ID＿会员ID) </el-divider>
           <el-row :gutter="24">
             <el-col :span="12">
-              <el-form-item label="项目ID／名称">
+              <el-form-item>
                 <el-input v-model="form.c" type="textarea" rows="5" placeholder="请输入" />
               </el-form-item>
             </el-col>

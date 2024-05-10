@@ -87,9 +87,6 @@ function onReset() {
 }
 async function fetchData() {
   listLoading.value = true;
-  // const { data } = await getList(queryForm)
-  // list.value = data[0]
-  // total.value = data[0].length
   list.value = [
     { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
     { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
@@ -107,27 +104,20 @@ onMounted(() => {
 </script>
 
 <template>
-  <div
-    :class="{
-      'vab-table-fullscreen': isFullscreen,
-      'absolute-container': tableAutoHeight,
-    }"
-  >
+  <div :class="{
+
+    'absolute-container': tableAutoHeight,
+  }">
     <PageMain>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
-          <el-form
-            inline
-            label-position="right"
-            label-width="80px"
-            :model="queryForm"
-            @submit.prevent
-          >
+          <!-- <el-form inline label-position="right" label-width="80px" :model="queryForm" @submit.prevent> -->
+            <el-form  :model="queryForm" size="default" label-width="100px" inline-message inline class="search-form">
             <el-form-item label="">
-              <el-input clearable placeholder="项目ID" />
+              <el-input clearable placeholder="项目ID" v-model="queryForm.select.a"/>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-input clearable placeholder="项目名称" />
+              <el-input clearable placeholder="项目名称"  v-model="queryForm.select.b" />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
               <el-input clearable placeholder="项目标识" />
@@ -170,13 +160,10 @@ onMounted(() => {
             <el-form-item v-show="!fold">
               <el-input clearable placeholder="创建人" />
             </el-form-item>
-            <el-form-item style="width: 192px" v-show="!fold">
-              <el-date-picker
-                v-model="value1"
-                type="date"
-                placeholder="Pick a day"
-                size="default"
-              />
+            <el-form-item   v-show="!fold">
+              <el-date-picker v-model="queryForm.select.time" type="daterange" unlink-panels range-separator="-"
+                start-placeholder="创建开始日期" end-placeholder="创建结束日期" size="default" style="width: 192px;"
+                clear-icon="true" />
             </el-form-item>
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">
@@ -185,6 +172,7 @@ onMounted(() => {
                 </template>
                 筛选
               </ElButton>
+              <ElButton @click="onReset">
               <ElButton @click="onReset">
                 <template #icon>
                   <div class="i-grommet-icons:power-reset w-1em h-1em"></div>
