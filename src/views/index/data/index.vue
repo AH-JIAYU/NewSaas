@@ -2,8 +2,10 @@
 import check from "./components/check/index.vue";
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination(); //分页
+  const CheckRef = ref();
 // 右侧工具栏配置变量
 const border = ref(true);
+
 const checkList = ref([]);
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const isFullscreen = ref(false); //表格控件-控制全屏
@@ -320,7 +322,7 @@ onMounted(() => {
         @size-change="sizeChange"
         @current-change="currentChange"
       />
-      <check ref="data.CheckRef" />
+      <check ref="CheckRef" />
     </PageMain>
   </div>
 </template>
