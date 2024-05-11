@@ -24,12 +24,12 @@ const columns = ref([
     checked: true, //默认展示
   },
 ]);
-const data = ref({
+const data = ref<any>({
   loading: false,
 
   tableAutoHeight: false,  // 表格是否自适应高度
   border: true, //表格控件-是否展示边框
-  stripe: true, //表格控件-是否展示斑马条
+  stripe: false, //表格控件-是否展示斑马条
   lineHeight: 'default', //表格控件-控制表格大小
   checkList: [],
   /**
@@ -118,11 +118,11 @@ function sortChange({ prop, order }: { prop: string, order: string }) {
               <ElInput v-model="data.search.title" placeholder="会员ID" clearable @keydown.enter="currentChange()"
                 @clear="currentChange()" />
             </ElFormItem>
-            <ElFormItem v-show="!fold">
+            <ElFormItem>
               <ElInput v-model="data.search.title" placeholder="会员名称" clearable @keydown.enter="currentChange()"
                 @clear="currentChange()" />
             </ElFormItem>
-            <ElFormItem v-show="!fold">
+            <ElFormItem >
               <el-select v-model="data.search.title" value-key="" placeholder="状态" clearable filterable @change="">
               </el-select>
             </ElFormItem>
@@ -167,15 +167,15 @@ function sortChange({ prop, order }: { prop: string, order: string }) {
         :data="data.dataList" highlight-current-row height="100%" @sort-change="sortChange"
         @selection-change="data.batch.selectionDataList = $event">
         <el-table-column align="center" prop="a" show-overflow-tooltip type="selection" />
-        <ElTableColumn v-if="data.batch.enable" type="selection" align="center" fixed />
-        <ElTableColumn prop="" label="会员" />
-        <ElTableColumn prop="title" label="用户名" />
-        <ElTableColumn prop="" label="变动前" />
-        <ElTableColumn prop="" label="变动值" />
-        <ElTableColumn prop="" label="变动后" />
-        <ElTableColumn prop="" label="类型" />
-        <ElTableColumn prop="" label="说明" />
-        <ElTableColumn prop="" label="变更事件" />
+        <ElTableColumn v-if="data.batch.enable" type="selection" show-overflow-tooltip align="center" fixed />
+        <ElTableColumn show-overflow-tooltip align="center" prop="" label="会员" />
+        <ElTableColumn show-overflow-tooltip align="center" prop="title" label="用户名" />
+        <ElTableColumn show-overflow-tooltip align="center" prop="" label="变动前" />
+        <ElTableColumn show-overflow-tooltip align="center" prop="" label="变动值" />
+        <ElTableColumn show-overflow-tooltip align="center" prop="" label="变动后" />
+        <ElTableColumn show-overflow-tooltip align="center" prop="" label="类型" />
+        <ElTableColumn show-overflow-tooltip align="center" prop="" label="说明" />
+        <ElTableColumn show-overflow-tooltip align="center" prop="" label="变更事件" />
       </ElTable>
       <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
         :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
@@ -231,6 +231,13 @@ function sortChange({ prop, order }: { prop: string, order: string }) {
   .el-divider {
     margin-inline: -20px;
     width: calc(100% + 40px);
+  }
+}
+:deep {
+  .el-table__header {
+    th {
+      background: var(--el-fill-color-lighter) !important;
+    }
   }
 }
 </style>

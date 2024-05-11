@@ -73,7 +73,7 @@ creator.onUploadFile.add((_, options) => {
 </script>
 
 <template>
-  <div>
+  <div style="width: 100%; height: 95%;">
     <survey-creator-component :model="creator" />
   </div>
 </template>

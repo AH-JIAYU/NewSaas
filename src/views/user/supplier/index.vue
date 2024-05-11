@@ -93,9 +93,8 @@ function onReset() {
     pageSize: 10,
     select: {},
   });
-  fetchData()
+  fetchData();
 }
-
 
 // 每页数量切换
 function sizeChange(size: number) {
@@ -147,7 +146,7 @@ onMounted(() => {
             inline
             class="search-form"
           >
-            <el-form-item label="供应商ID">
+            <el-form-item label="">
               <el-input
                 v-model.trim="queryForm.select.id"
                 clearable
@@ -155,7 +154,7 @@ onMounted(() => {
                 placeholder="供应商ID"
               />
             </el-form-item>
-            <el-form-item label="供应商简称" v-show="!fold">
+            <el-form-item label="">
               <el-input
                 v-model.trim="queryForm.select.name"
                 clearable
@@ -163,7 +162,7 @@ onMounted(() => {
                 placeholder="供应商简称"
               />
             </el-form-item>
-            <el-form-item label="手机号码" v-show="!fold">
+            <el-form-item label="">
               <el-input
                 v-model.trim="queryForm.select.phone"
                 clearable
@@ -171,7 +170,7 @@ onMounted(() => {
                 placeholder="手机号码"
               />
             </el-form-item>
-            <el-form-item label="账号名称" v-show="!fold">
+            <el-form-item label="" v-show="!fold">
               <el-input
                 v-model.trim="queryForm.select.name"
                 clearable
@@ -179,7 +178,7 @@ onMounted(() => {
                 placeholder="账号名称"
               />
             </el-form-item>
-            <el-form-item label="邮箱" v-show="!fold">
+            <el-form-item label="" v-show="!fold">
               <el-input
                 v-model.trim="queryForm.select.email"
                 clearable
@@ -187,7 +186,7 @@ onMounted(() => {
                 placeholder="邮箱"
               />
             </el-form-item>
-            <el-form-item label="客户状态" v-show="!fold">
+            <el-form-item label="" v-show="!fold">
               <el-select
                 v-model="queryForm.select.default"
                 clearable
@@ -197,7 +196,7 @@ onMounted(() => {
                 <el-option label="关闭" value="false" />
               </el-select>
             </el-form-item>
-            <el-form-item label="日期" v-show="!fold">
+            <el-form-item label="" v-show="!fold">
               <el-date-picker
                 v-model="queryForm.select.time"
                 type="daterange"
@@ -235,6 +234,7 @@ onMounted(() => {
           </ElForm>
         </template>
       </SearchBar>
+      <ElDivider border-style="dashed" />
       <el-row>
         <FormLeftPanel>
           <el-button type="primary" size="default" @click="handleAdd">
@@ -328,12 +328,14 @@ onMounted(() => {
           show-overflow-tooltip
           label="结算周期"
         />
-        <el-table-column
+        <ElTableColumn
           align="center"
-          prop="r"
           show-overflow-tooltip
+          prop=""
           label="供应商状态"
-        />
+        >
+          <ElSwitch inline-prompt active-text="启用" inactive-text="禁用" />
+        </ElTableColumn>
         <el-table-column
           align="center"
           prop="r"
@@ -354,10 +356,20 @@ onMounted(() => {
           width="180"
         >
           <template #default="{ row }">
-            <el-button size="small" plain type="primary" @click="handleEdit(row)">
+            <el-button
+              size="small"
+              plain
+              type="primary"
+              @click="handleEdit(row)"
+            >
               编辑
             </el-button>
-            <el-button size="small" plain type="primary" @click="handleCheck(row)">
+            <el-button
+              size="small"
+              plain
+              type="primary"
+              @click="handleCheck(row)"
+            >
               详情
             </el-button>
           </template>
@@ -425,6 +437,13 @@ onMounted(() => {
           justify-content: flex-end;
         }
       }
+    }
+  }
+}
+:deep {
+  .el-table__header {
+    th {
+      background: var(--el-fill-color-lighter) !important;
     }
   }
 }

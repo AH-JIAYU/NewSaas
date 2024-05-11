@@ -19,8 +19,8 @@ const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const checkList = ref([]);
 const border = ref(true);
 const isFullscreen = ref(false);
-const lineHeight = ref("default");
-const stripe = ref(true);
+const lineHeight = ref<any>("default");
+const stripe = ref(false);
 const selectRows = ref<any>([]);
 const columns = ref([
   {
@@ -45,12 +45,11 @@ const queryForm = reactive<any>({
 const list = ref<any>([]);
 // 编辑数据
 const editData = () => {
-  if (!selectRows.value.length) editRef.value.isShow = true;
+  if (!selectRows.value.length) editRef.value.showEdit();
 };
 // 删除数据
 const deleteData = () => {
-  deleteRef.value.isShow = true;
-  deleteRef.value.replyData(selectRows.value);
+  deleteRef.value.showEdit();
 };
 // 右侧工具方法
 function clickFullScreen() {
@@ -104,7 +103,6 @@ onMounted(() => {
 <template>
   <div
     :class="{
-
       'absolute-container': tableAutoHeight,
     }"
   >
@@ -112,13 +110,17 @@ onMounted(() => {
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
           <el-form
-          :model="queryForm.select" size="default" label-width="100px" inline-message inline
+            :model="queryForm.select"
+            size="default"
+            label-width="100px"
+            inline-message
+            inline
             class="search-form"
           >
             <el-form-item label="">
               <el-input placeholder="供应商ID" />
             </el-form-item>
-            <el-form-item  label="">
+            <el-form-item label="">
               <el-select
                 value-key=""
                 placeholder="所有"
@@ -126,7 +128,6 @@ onMounted(() => {
                 filterable
                 @change=""
               >
-                <el-option />
               </el-select>
             </el-form-item>
             <ElFormItem>
@@ -158,7 +159,7 @@ onMounted(() => {
       <el-row :gutter="24">
         <FormLeftPanel> </FormLeftPanel>
         <FormRightPanel>
-          <el-button style="margin-right: 10px" size="default" @click="">
+          <el-button size="default" @click="">
             导出
           </el-button>
           <TabelControl
@@ -188,17 +189,17 @@ onMounted(() => {
       >
         <el-table-column type="selection" />
         <el-table-column type="index" align="center" label="序号" width="55" />
-        <el-table-column prop="a" align="center" label="供应商ID" />
-        <el-table-column prop="b" align="center" label="开始日期" />
-        <el-table-column prop="c" align="center" label="结算日期" />
-        <el-table-column prop="d" align="center" label="状态">
-          <el-switch> </el-switch>
+        <el-table-column show-overflow-tooltip prop="a" align="center" label="供应商ID" />
+        <el-table-column show-overflow-tooltip prop="b" align="center" label="开始日期" />
+        <el-table-column show-overflow-tooltip prop="c" align="center" label="结算日期" />
+        <el-table-column show-overflow-tooltip prop="d" align="center" label="状态">
+          <ElSwitch inline-prompt active-text="启用" inactive-text="禁用" />
         </el-table-column>
         <el-table-column align="center" label="操作" width="170">
-          <el-button text type="primary" size="default" @click="editData">
+          <el-button plain size="small" type="primary" @click="editData">
             编辑
           </el-button>
-          <el-button text type="danger" size="default" @click="deleteData">
+          <el-button plain size="small" type="danger" @click="deleteData">
             删除
           </el-button>
         </el-table-column>
@@ -225,8 +226,6 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
-
-
 .absolute-container {
   position: absolute;
   display: flex;
@@ -267,6 +266,13 @@ onMounted(() => {
           justify-content: flex-end;
         }
       }
+    }
+  }
+}
+:deep {
+  .el-table__header {
+    th {
+      background: var(--el-fill-color-lighter) !important;
     }
   }
 }

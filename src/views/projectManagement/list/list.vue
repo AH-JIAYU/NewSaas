@@ -3,8 +3,8 @@ defineOptions({
   name: "ProjectManagementListIndex",
 });
 import allocationEdit from "./components/AllocationEdit/index.vue";
-import SurveysEdit from "./components/ProjeckEdit/index.vue";
-import ProjectDetails from "./components/ProjectDetails/index.vue";
+import ProjeckEdit from "./components/ProjeckEdit/index.vue";
+import ProjectDetail from "./components/ProjectDetails/index.vue";
 const { pagination, onSizeChange, onCurrentChange } = usePagination(); //分页
 // 分页
 const value1 = ref("");
@@ -12,9 +12,9 @@ const tableSortRef = ref("");
 // loading加载
 const listLoading = ref<boolean>(true);
 // 获取组件变量
-const addAllocationEdit = ref("");
-const addProjeckRef = ref("");
-const projectDetailsRef = ref("");
+const addAllocationEdit = ref();
+const addProjeckRef = ref();
+const projectDetailsRef = ref();
 // 右侧工具栏配置变量
 const border = ref(true);
 const checkList = ref([]);
@@ -60,7 +60,6 @@ function projectEdit(row: any) {
 function projectDetails(row: any) {
   projectDetailsRef.value.showEdit(row);
 }
-
 //表格控件-控制全屏
 function clickFullScreen() {
   isFullscreen.value = !isFullscreen.value;
@@ -104,22 +103,37 @@ onMounted(() => {
 </script>
 
 <template>
-  <div :class="{
-
-    'absolute-container': tableAutoHeight,
-  }">
+  <div
+    :class="{
+      'absolute-container': tableAutoHeight,
+    }"
+  >
     <PageMain>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
-          <!-- <el-form inline label-position="right" label-width="80px" :model="queryForm" @submit.prevent> -->
-            <el-form  :model="queryForm" size="default" label-width="100px" inline-message inline class="search-form">
+          <el-form
+            :model="queryForm"
+            size="default"
+            label-width="100px"
+            inline-message
+            inline
+            class="search-form"
+          >
             <el-form-item label="">
-              <el-input clearable placeholder="项目ID" v-model="queryForm.select.a"/>
+              <el-input
+                clearable
+                placeholder="项目ID"
+                v-model="queryForm.select.a"
+              />
             </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-input clearable placeholder="项目名称"  v-model="queryForm.select.b" />
+            <el-form-item label="">
+              <el-input
+                clearable
+                placeholder="项目名称"
+                v-model="queryForm.select.b"
+              />
             </el-form-item>
-            <el-form-item v-show="!fold" label="">
+            <el-form-item label="">
               <el-input clearable placeholder="项目标识" />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
@@ -160,10 +174,18 @@ onMounted(() => {
             <el-form-item v-show="!fold">
               <el-input clearable placeholder="创建人" />
             </el-form-item>
-            <el-form-item   v-show="!fold">
-              <el-date-picker v-model="queryForm.select.time" type="daterange" unlink-panels range-separator="-"
-                start-placeholder="创建开始日期" end-placeholder="创建结束日期" size="default" style="width: 192px;"
-                clear-icon="true" />
+            <el-form-item v-show="!fold">
+              <el-date-picker
+                v-model="queryForm.select.time"
+                type="daterange"
+                unlink-panels
+                range-separator="-"
+                start-placeholder="创建开始日期"
+                end-placeholder="创建结束日期"
+                size="default"
+                style="width: 192px"
+                clear-icon="true"
+              />
             </el-form-item>
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">
@@ -172,7 +194,6 @@ onMounted(() => {
                 </template>
                 筛选
               </ElButton>
-              <ElButton @click="onReset">
               <ElButton @click="onReset">
                 <template #icon>
                   <div class="i-grommet-icons:power-reset w-1em h-1em"></div>
@@ -191,6 +212,7 @@ onMounted(() => {
           </el-form>
         </template>
       </SearchBar>
+      <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>
           <el-button type="primary" size="default" @click="addProject">
@@ -202,7 +224,7 @@ onMounted(() => {
         </FormLeftPanel>
 
         <FormRightPanel>
-          <el-button style="margin-right: 10px" size="default" @click="">
+          <el-button size="default" @click="">
             导出
           </el-button>
           <TabelControl
@@ -231,19 +253,74 @@ onMounted(() => {
       >
         <el-table-column type="selection" />
         <el-table-column type="index" align="center" label="序号" width="55" />
-        <el-table-column  show-overflow-tooltip prop="a" align="center" label="项目ID" />
-        <el-table-column show-overflow-tooltip prop="b" align="center" label="项目名称" />
-        <el-table-column show-overflow-tooltip prop="c" align="center" label="客户简称/标识" />
-        <el-table-column show-overflow-tooltip prop="d" align="center" label="分配目标" />
-        <el-table-column show-overflow-tooltip prop="e" align="center" label="参与/完成/配额/限量" />
-        <el-table-column show-overflow-tooltip prop="f" align="center" label="原价" />
-        <el-table-column show-overflow-tooltip prop="g" align="center" label="IR/NIR" />
-        <el-table-column show-overflow-tooltip prop="h" align="center" label="国家地区" />
-        <el-table-column show-overflow-tooltip prop="i" align="center" label="项目状态">
+        <el-table-column
+          show-overflow-tooltip
+          prop="a"
+          align="center"
+          label="项目ID"
+        />
+        <el-table-column
+          show-overflow-tooltip
+          prop="b"
+          align="center"
+          label="项目名称"
+        />
+        <el-table-column
+          show-overflow-tooltip
+          prop="c"
+          align="center"
+          label="客户简称/标识"
+        />
+        <el-table-column
+          show-overflow-tooltip
+          prop="d"
+          align="center"
+          label="分配目标"
+        />
+        <el-table-column
+          show-overflow-tooltip
+          prop="e"
+          align="center"
+          label="参与/完成/配额/限量"
+        />
+        <el-table-column
+          show-overflow-tooltip
+          prop="f"
+          align="center"
+          label="原价"
+        />
+        <el-table-column
+          show-overflow-tooltip
+          prop="g"
+          align="center"
+          label="IR/NIR"
+        />
+        <el-table-column
+          show-overflow-tooltip
+          prop="h"
+          align="center"
+          label="国家地区"
+        />
+        <el-table-column
+          show-overflow-tooltip
+          prop="i"
+          align="center"
+          label="项目状态"
+        >
           <ElSwitch inline-prompt active-text="启用" inactive-text="禁用" />
         </el-table-column>
-        <el-table-column show-overflow-tooltip prop="j" align="center" label="创建人" />
-        <el-table-column show-overflow-tooltip prop="k" align="center" label="创建时间" />
+        <el-table-column
+          show-overflow-tooltip
+          prop="j"
+          align="center"
+          label="创建人"
+        />
+        <el-table-column
+          show-overflow-tooltip
+          prop="k"
+          align="center"
+          label="创建时间"
+        />
         <el-table-column align="center" label="操作" width="170">
           <template #default="{ row }">
             <el-button
@@ -282,8 +359,8 @@ onMounted(() => {
       />
     </PageMain>
     <allocationEdit ref="addAllocationEdit" />
-    <SurveysEdit ref="addProjeckRef" />
-    <ProjectDetails ref="projectDetailsRef" />
+    <ProjeckEdit ref="addProjeckRef" />
+    <ProjectDetail ref="projectDetailsRef" />
   </div>
 </template>
 
@@ -295,6 +372,11 @@ onMounted(() => {
   thead {
     z-index: 999;
     background-color: #f2f3f5 !important;
+  }
+  .el-table__header {
+    th {
+      background: var(--el-fill-color-lighter) !important;
+    }
   }
 }
 .absolute-container {

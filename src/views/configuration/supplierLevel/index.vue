@@ -16,7 +16,7 @@ const list = ref<any>([]); //列表
 const selectRows = ref(""); //表格-选中行
 const checkList = ref<any>([]); //表格-展示的列
 const border = ref(true); //表格控件-是否展示边框
-const stripe = ref(true); //表格控件-是否展示斑马条
+const stripe = ref(false); //表格控件-是否展示斑马条
 const lineHeight = ref<any>("default"); //表格控件-控制表格大小
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const columns = ref([
@@ -51,7 +51,7 @@ function handleDelete(row: any) {
         //   })
         // })
       })
-      .catch(() => { });
+      .catch(() => {});
   }
 }
 
@@ -103,18 +103,20 @@ const forceUpdate = ref(0);
 const elTableRef = ref();
 // 拖拽
 const rowDrop = () => {
-  const tbody = elTableRef.value.$el.querySelector('.el-table__body-wrapper tbody')
+  const tbody = elTableRef.value.$el.querySelector(
+    ".el-table__body-wrapper tbody"
+  );
   Sortable.create(tbody, {
-    handle: '.sortable',
+    handle: ".sortable",
     animation: 300,
-    ghostClass: 'ghost',
+    ghostClass: "ghost",
     onEnd: ({ newIndex, oldIndex }) => {
       if (newIndex === undefined || oldIndex === undefined) {
-        return
+        return;
       }
-      nextTick(() => rowDrop())
+      nextTick(() => rowDrop());
     },
-  })
+  });
 };
 
 onMounted(() => {
@@ -124,7 +126,7 @@ onMounted(() => {
   fetchData();
   nextTick(() => {
     rowDrop();
-  })
+  });
 });
 </script>
 
@@ -139,32 +141,73 @@ onMounted(() => {
         </FormLeftPanel>
         <FormRightPanel>
           <el-button size="default"> 导出 </el-button>
-          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
-            v-model:columns="columns" v-model:line-height="lineHeight" v-model:stripe="stripe" style="margin-left: 12px"
-            @query-data="queryData" />
+          <TabelControl
+            v-model:border="border"
+            v-model:tableAutoHeight="tableAutoHeight"
+            v-model:checkList="checkList"
+            v-model:columns="columns"
+            v-model:line-height="lineHeight"
+            v-model:stripe="stripe"
+            style="margin-left: 12px"
+            @query-data="queryData"
+          />
         </FormRightPanel>
       </el-row>
-      <el-table ref="elTableRef"  row-key="id" :key="forceUpdate" v-loading="listLoading" :border="border" :data="list"
-        :size="lineHeight" :stripe="stripe" fit @selection-change="setSelectRows">
+      <el-table
+        ref="elTableRef"
+        row-key="id"
+        :key="forceUpdate"
+        v-loading="listLoading"
+        :border="border"
+        :data="list"
+        :size="lineHeight"
+        :stripe="stripe"
+        fit
+        @selection-change="setSelectRows"
+      >
         <ElTableColumn width="80" align="center" fixed>
-                <template #header>
-                  排序
-                </template>
-                <template #default>
-                  <ElTag type="info" class="sortable">
-                    <SvgIcon name="i-ep:d-caret" />
-                  </ElTag>
-                </template>
-              </ElTableColumn>
-        <el-table-column v-if="checkList.includes('a')" align="center" prop="id" show-overflow-tooltip label="等级名称" />
-        <el-table-column align="center" prop="b" show-overflow-tooltip label="加成比例(百分比)" />
-        <el-table-column align="center" prop="c" show-overflow-tooltip label="成员数量" />
+          <template #header> 排序 </template>
+          <template #default>
+            <ElTag type="info" class="sortable">
+              <SvgIcon name="i-ep:d-caret" />
+            </ElTag>
+          </template>
+        </ElTableColumn>
+        <el-table-column
+          v-if="checkList.includes('a')"
+          align="center"
+          prop="id"
+          show-overflow-tooltip
+          label="等级名称"
+        />
+        <el-table-column
+          align="center"
+          prop="b"
+          show-overflow-tooltip
+          label="加成比例(百分比)"
+        />
+        <el-table-column
+          align="center"
+          prop="c"
+          show-overflow-tooltip
+          label="成员数量"
+        />
         <el-table-column align="center" show-overflow-tooltip label="操作">
           <template #default="{ row }">
-            <el-button size="small" plain type="primary" @click="handleEdit(row)">
+            <el-button
+              size="small"
+              plain
+              type="primary"
+              @click="handleEdit(row)"
+            >
               编辑
             </el-button>
-            <el-button size="small" plain type="danger" @click="handleDelete(row)">
+            <el-button
+              size="small"
+              plain
+              type="danger"
+              @click="handleDelete(row)"
+            >
               删除
             </el-button>
           </template>
@@ -173,9 +216,18 @@ onMounted(() => {
           <el-empty class="vab-data-empty" description="暂无数据" />
         </template>
       </el-table>
-      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
-        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-        background @size-change="sizeChange" @current-change="currentChange" />
+      <ElPagination
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
+        :page-sizes="pagination.sizes"
+        :layout="pagination.layout"
+        :hide-on-single-page="false"
+        class="pagination"
+        background
+        @size-change="sizeChange"
+        @current-change="currentChange"
+      />
     </PageMain>
     <edit ref="EditRef"></edit>
   </div>
@@ -229,7 +281,14 @@ onMounted(() => {
 }
 // 拖拽
 .el-tag.sortable,
-            .el-tag.sortable .icon {
-              cursor: ns-resize;
-            }
+.el-tag.sortable .icon {
+  cursor: ns-resize;
+}
+:deep {
+  .el-table__header {
+    th {
+      background: var(--el-fill-color-lighter) !important;
+    }
+  }
+}
 </style>

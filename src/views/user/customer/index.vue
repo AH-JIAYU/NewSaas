@@ -16,7 +16,7 @@ const checkRef = ref('') //组件ref 查看
 
 const selectRows = ref() //表格选中行
 const border = ref(true)  //表格控件-边框
-const stripe = ref(true) //表格控件-条纹
+const stripe = ref(false) //表格控件-条纹
 const tableAutoHeight = ref(false)  // 表格控件-高度自适应
 const lineHeight = ref<any>('default') //表格控件-大小
 const checkList = ref([])  //表格控件-展示列
@@ -159,7 +159,7 @@ function handleMoreOperating(command: string, row: any) {
           </ElForm>
         </template>
       </SearchBar>
-
+      <ElDivider border-style="dashed" />
       <el-row>
         <FormLeftPanel>
           <el-button type="primary" size="default" @click="handleAdd">
@@ -188,7 +188,9 @@ function handleMoreOperating(command: string, row: any) {
         <el-table-column align="center" prop="f" show-overflow-tooltip label="负责人" />
         <el-table-column align="center" prop="g" show-overflow-tooltip label="创建人" />
         <el-table-column align="center" prop="h" show-overflow-tooltip label="创建时间" />
-        <el-table-column align="center" prop="r" show-overflow-tooltip label="客户状态" />
+        <ElTableColumn align="center" show-overflow-tooltip prop="" label="客户状态" >
+          <ElSwitch inline-prompt active-text="启用" inactive-text="禁用" />
+        </ElTableColumn>
         <el-table-column align="center" prop="i" label="操作" show-overflow-tooltip width="180">
           <template #default="{ row }">
             <ElSpace>
@@ -268,6 +270,13 @@ function handleMoreOperating(command: string, row: any) {
           justify-content: flex-end;
         }
       }
+    }
+  }
+}
+:deep {
+  .el-table__header {
+    th {
+      background: var(--el-fill-color-lighter) !important;
     }
   }
 }

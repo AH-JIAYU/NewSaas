@@ -16,7 +16,7 @@ const selectRows = ref<any>(); //表格-选中行
 const editRef = ref(); //添加|编辑 组件ref
 const checkRef = ref(); //查看 组件ref
 const border = ref<any>(true); //表格控件-是否展示边框
-const stripe = ref<any>(true); //表格控件-是否展示斑马条
+const stripe = ref<any>(false); //表格控件-是否展示斑马条
 const lineHeight = ref<any>("default"); //表格控件-控制表格大小
 const checkList = ref<Array<Object>>([]); //表格-展示的列
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
@@ -395,6 +395,13 @@ onMounted(() => {
           justify-content: flex-end;
         }
       }
+    }
+  }
+}
+:deep {
+  .el-table__header {
+    th {
+      background: var(--el-fill-color-lighter) !important;
     }
   }
 }

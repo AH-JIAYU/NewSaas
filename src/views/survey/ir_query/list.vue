@@ -29,12 +29,12 @@ const columns = ref([
     checked: true, //默认展示
   },
 ]);
-const data = ref({
+const data = ref<any>({
   loading: false,
 
   tableAutoHeight: false,  // 表格是否自适应高度
   border: true, //表格控件-是否展示边框
-  stripe: true, //表格控件-是否展示斑马条
+  stripe: false, //表格控件-是否展示斑马条
   lineHeight: 'default', //表格控件-控制表格大小
   checkList: [],
   /**
@@ -168,14 +168,14 @@ function sortChange({ prop, order }: { prop: string, order: string }) {
         :data="data.dataList" highlight-current-row height="100%" @sort-change="sortChange"
         @selection-change="data.batch.selectionDataList = $event">
         <el-table-column align="center" prop="a" show-overflow-tooltip type="selection" />
-        <ElTableColumn v-if="data.batch.enable" type="selection" align="center" fixed />
-        <ElTableColumn prop="" label="项目ID" />
-        <ElTableColumn prop="title" label="项目名称" />
-        <ElTableColumn prop="" label="我的完成" />
-        <ElTableColumn prop="" label="要求IR" />
-        <ElTableColumn prop="" label="站点IR" />
-        <ElTableColumn prop="" label="小组IR" />
-        <ElTableColumn prop="" label="我的IR" />
+        <ElTableColumn v-if="data.batch.enable" type="selection" show-overflow-tooltip align="center" fixed />
+        <ElTableColumn show-overflow-tooltip align="center" prop="" label="项目ID" />
+        <ElTableColumn show-overflow-tooltip align="center" prop="title" label="项目名称" />
+        <ElTableColumn show-overflow-tooltip align="center" prop="" label="我的完成" />
+        <ElTableColumn show-overflow-tooltip align="center" prop="" label="要求IR" />
+        <ElTableColumn show-overflow-tooltip align="center" prop="" label="站点IR" />
+        <ElTableColumn show-overflow-tooltip align="center" prop="" label="小组IR" />
+        <ElTableColumn show-overflow-tooltip align="center" prop="" label="我的IR" />
       </ElTable>
       <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
         :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
@@ -231,6 +231,13 @@ function sortChange({ prop, order }: { prop: string, order: string }) {
   .el-divider {
     margin-inline: -20px;
     width: calc(100% + 40px);
+  }
+}
+:deep {
+  .el-table__header {
+    th {
+      background: var(--el-fill-color-lighter) !important;
+    }
   }
 }
 </style>

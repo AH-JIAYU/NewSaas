@@ -12,7 +12,7 @@ const list = ref<Array<Object>>([]); //列表
 const selectRows = ref(""); //表格-选中行
 const checkList = ref<Array<Object>>([]); //表格-展示的列
 const border = ref(true); //表格控件-是否展示边框
-const stripe = ref(true); //表格控件-是否展示斑马条
+const stripe = ref(false); //表格控件-是否展示斑马条
 const lineHeight = ref<any>("default"); //表格控件-控制表格大小
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const columns = ref([
@@ -96,7 +96,7 @@ onMounted(() => {
             inline
             class="search-form"
           >
-            <el-form-item label="渠道简称">
+            <el-form-item label="">
               <el-input
                 v-model.trim="queryForm.select.id"
                 clearable
@@ -104,7 +104,7 @@ onMounted(() => {
                 placeholder="渠道简称"
               />
             </el-form-item>
-            <el-form-item label="操作人" v-show="!fold">
+            <el-form-item label="">
               <el-select
                 v-model="queryForm.select.default"
                 clearable
@@ -137,6 +137,7 @@ onMounted(() => {
           </ElForm>
         </template>
       </SearchBar>
+      <ElDivider border-style="dashed" />
       <el-row>
         <FormLeftPanel> </FormLeftPanel>
         <FormRightPanel>
@@ -153,7 +154,6 @@ onMounted(() => {
           />
         </FormRightPanel>
       </el-row>
-
       <el-table
         v-loading="listLoading"
         :border="border"
@@ -254,6 +254,13 @@ onMounted(() => {
           justify-content: flex-end;
         }
       }
+    }
+  }
+}
+:deep {
+  .el-table__header {
+    th {
+      background: var(--el-fill-color-lighter) !important;
     }
   }
 }

@@ -168,7 +168,7 @@ onMounted(() => {
         </FormLeftPanel>
 
         <FormRightPanel>
-          <el-button style="margin-right: 10px" size="default" @click="">
+          <el-button size="default" @click="">
             导出
           </el-button>
           <TabelControl
@@ -291,6 +291,13 @@ onMounted(() => {
           justify-content: flex-end;
         }
       }
+    }
+  }
+}
+:deep {
+  .el-table__header {
+    th {
+      background: var(--el-fill-color-lighter) !important;
     }
   }
 }

@@ -11,7 +11,7 @@ import "bytemd/dist/index.css";
 import { ref } from "vue";
 import logDetails from "../LogDetails/index.vue";
 const content = ref("# Fantastic-admin");
-const logDetailsRef = ref('')
+const logDetailsRef = ref()
 const active = ref(1)
 const plugins = [
   gfm({
@@ -30,8 +30,8 @@ const list = [
   { a: 1, b: 2, c: 3, id: 1 },
 ];
 // 详情
-function details() {
-  logDetailsRef.value.dialogTableVisible = true
+function details(row:any) {
+  logDetailsRef.value.showEdit(row)
 }
 // 弹框开关变量
 const dialogTableVisible = ref(false);
@@ -64,7 +64,6 @@ defineExpose({ showEdit });
       size="55%"
       title="项目详情"
     >
-    <logDetails ref="logDetailsRef"/>
       <template #header>
         <el-row :gutter="20">
           <el-col :span="2" />
@@ -336,12 +335,12 @@ defineExpose({ showEdit });
           </el-table>
         </el-card>
       </ElForm>
-
       <template #footer>
         <el-button @click="closeHandler"> 取消 </el-button>
         <el-button type="primary" @click="onSubmit"> 确定 </el-button>
       </template>
     </el-drawer>
+    <logDetails ref="logDetailsRef"/>
   </div>
 </template>
 

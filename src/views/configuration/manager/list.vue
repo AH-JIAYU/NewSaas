@@ -204,11 +204,11 @@ function handleMoreOperating(command: string, row: any) {
               <ElInput v-model="data.search.account" placeholder="请输入帐号，支持模糊查询" clearable
                 @keydown.enter="currentChange()" @clear="currentChange()" />
             </ElFormItem>
-            <ElFormItem v-show="!fold" >
+            <ElFormItem>
               <ElInput v-model="data.search.name" placeholder="请输入姓名，支持模糊查询" clearable @keydown.enter="currentChange()"
                 @clear="currentChange()" />
             </ElFormItem>
-            <ElFormItem v-show="!fold"  >
+            <ElFormItem>
               <ElInput v-model="data.search.mobile" placeholder="请输入手机号" clearable @keydown.enter="currentChange()"
                 @clear="currentChange()" />
             </ElFormItem>
@@ -279,7 +279,7 @@ function handleMoreOperating(command: string, row: any) {
             <ElTag v-else type="info" size="small">
               保密
             </ElTag>
-          </template> 
+          </template>
         </ElTableColumn>
         <ElTableColumn prop="mobile" label="手机号" width="150" align="center" />
         <ElTableColumn label="状态" width="100" align="center">
@@ -370,6 +370,13 @@ function handleMoreOperating(command: string, row: any) {
   .el-divider {
     width: calc(100% + 40px);
     margin-inline: -20px;
+  }
+}
+:deep {
+  .el-table__header {
+    th {
+      background: var(--el-fill-color-lighter) !important;
+    }
   }
 }
 </style>

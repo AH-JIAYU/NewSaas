@@ -21,7 +21,7 @@ const checkList = ref([]);
 const border = ref(true);
 const isFullscreen = ref(false);
 const lineHeight = ref<any>("default");
-const stripe = ref(true);
+const stripe = ref(false);
 const selectRows = ref<any>([]);
 const columns = ref([
   {
@@ -46,16 +46,15 @@ const queryForm = reactive<any>({
 const list = ref<any>([]);
 // 新增
 const addData = () => {
-  editRef.value.isShow = true;
+  editRef.value.showEdit();
 };
 // 编辑数据
-const editData = () => {
-  if (!selectRows.value.length) editRef.value.isShow = true;
+const editData = (row: any) => {
+  if (!selectRows.value.length) editRef.value.showEdit(row);
 };
 // 删除数据
-const deleteData = () => {
-  deleteRef.value.isShow = true;
-  deleteRef.value.replyData(selectRows.value);
+const deleteData = (row: any) => {
+  deleteRef.value.showEdit(row);
 };
 // 右侧工具方法
 function clickFullScreen() {
@@ -107,20 +106,33 @@ onMounted(() => {
 </script>
 
 <template>
-  <div :class="{
-
-    'absolute-container': tableAutoHeight,
-  }">
+  <div
+    :class="{
+      'absolute-container': tableAutoHeight,
+    }"
+  >
     <PageMain>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
-          <el-form :model="queryForm.select" size="default" label-width="100px" inline-message inline
-            class="search-form">
+          <el-form
+            :model="queryForm.select"
+            size="default"
+            label-width="100px"
+            inline-message
+            inline
+            class="search-form"
+          >
             <el-form-item label="">
               <el-input placeholder="请输入标题" />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-select value-key="" placeholder="所有" clearable filterable @change="">
+              <el-select
+                value-key=""
+                placeholder="所有"
+                clearable
+                filterable
+                @change=""
+              >
               </el-select>
             </el-form-item>
             <ElFormItem>
@@ -136,9 +148,11 @@ onMounted(() => {
                 </template>
                 重置
               </ElButton>
-              <ElButton disabled  link @click="toggle">
+              <ElButton disabled link @click="toggle">
                 <template #icon>
-                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
+                  <SvgIcon
+                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
+                  />
                 </template>
                 {{ fold ? "展开" : "收起" }}
               </ElButton>
@@ -149,44 +163,83 @@ onMounted(() => {
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>
-          <el-button style="margin-right: 10px" :icon="Plus" type="primary" size="default" @click="addData">
+          <el-button
+            style="margin-right: 10px"
+            :icon="Plus"
+            type="primary"
+            size="default"
+            @click="addData"
+          >
             添加
           </el-button>
         </FormLeftPanel>
 
         <FormRightPanel>
-          <el-button style="margin-right: 10px" size="default" @click="">
+          <el-button size="default" @click="">
             导出
           </el-button>
-          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
-            v-model:columns="columns" v-model:is-fullscreen="isFullscreen" v-model:line-height="lineHeight"
-            v-model:stripe="stripe" style="margin-left: 12px" @click-full-screen="clickFullScreen"
-            @query-data="currentChange" />
+          <TabelControl
+            v-model:border="border"
+            v-model:tableAutoHeight="tableAutoHeight"
+            v-model:checkList="checkList"
+            v-model:columns="columns"
+            v-model:is-fullscreen="isFullscreen"
+            v-model:line-height="lineHeight"
+            v-model:stripe="stripe"
+            style="margin-left: 12px"
+            @click-full-screen="clickFullScreen"
+            @query-data="currentChange"
+          />
         </FormRightPanel>
       </el-row>
-      <el-table style="margin-top: 10px" ref="tableSortRef" v-loading="false" row-key="id" :data="list" :border="border"
-        :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows">
+      <el-table
+        style="margin-top: 10px"
+        ref="tableSortRef"
+        v-loading="false"
+        row-key="id"
+        :data="list"
+        :border="border"
+        :size="lineHeight"
+        :stripe="stripe"
+        @selection-change="setSelectRows"
+      >
         <el-table-column type="selection" />
         <el-table-column type="index" align="center" label="序号" width="55" />
-        <el-table-column prop="a" align="center" label="ID" />
-        <el-table-column prop="b" align="center" label="类型" />
-        <el-table-column prop="c" align="center" label="标题" />
-        <el-table-column prop="d" align="center" label="添加日期" />
+        <el-table-column show-overflow-tooltip prop="a" align="center" label="ID" />
+        <el-table-column show-overflow-tooltip prop="b" align="center" label="类型" />
+        <el-table-column show-overflow-tooltip prop="c" align="center" label="标题" />
+        <el-table-column show-overflow-tooltip prop="d" align="center" label="添加日期" />
         <el-table-column align="center" label="操作" width="170">
-          <el-button text type="primary" size="default" @click="editData">
-            编辑
-          </el-button>
-          <el-button text type="danger" size="default" @click="deleteData">
-            删除
-          </el-button>
+          <template #default="{ row }">
+            <el-button size="small" plain type="primary" @click="editData(row)">
+              编辑
+            </el-button>
+            <el-button
+              size="small"
+              plain
+              type="danger"
+              @click="deleteData(row)"
+            >
+              删除
+            </el-button>
+          </template>
         </el-table-column>
         <template #empty>
           <el-empty description="暂无数据" />
         </template>
       </el-table>
-      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
-        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-        background @size-change="sizeChange" @current-change="currentChange" />
+      <ElPagination
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
+        :page-sizes="pagination.sizes"
+        :layout="pagination.layout"
+        :hide-on-single-page="false"
+        class="pagination"
+        background
+        @size-change="sizeChange"
+        @current-change="currentChange"
+      />
       <Edit ref="editRef" />
       <Delete ref="deleteRef" />
     </PageMain>
@@ -238,6 +291,13 @@ onMounted(() => {
           justify-content: flex-end;
         }
       }
+    }
+  }
+}
+:deep {
+  .el-table__header {
+    th {
+      background: var(--el-fill-color-lighter) !important;
     }
   }
 }

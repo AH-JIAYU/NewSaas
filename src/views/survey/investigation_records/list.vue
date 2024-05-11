@@ -28,12 +28,12 @@ const columns = ref([
     checked: true, //默认展示
   },
 ]);
-const data = ref({
+const data = ref<any>({
   loading: false,
 
   tableAutoHeight: false,  // 表格是否自适应高度
   border: true, //表格控件-是否展示边框
-  stripe: true, //表格控件-是否展示斑马条
+  stripe: false, //表格控件-是否展示斑马条
   lineHeight: 'default', //表格控件-控制表格大小
   checkList: [],
   /**
@@ -123,11 +123,11 @@ function sortChange({ prop, order }: { prop: string, order: string }) {
               <ElInput v-model="data.search.title" placeholder="请输入标题" clearable @keydown.enter="currentChange()"
                 @clear="currentChange()" />
             </ElFormItem>
-            <ElFormItem v-show="!fold">
+            <ElFormItem>
               <ElInput v-model="data.search.title" placeholder="请输入项目名称" clearable @keydown.enter="currentChange()"
                 @clear="currentChange()" />
             </ElFormItem>
-            <ElFormItem v-show="!fold">
+            <ElFormItem>
               <ElInput v-model="data.search.title" placeholder="请输入项目标识" clearable @keydown.enter="currentChange()"
                 @clear="currentChange()" />
             </ElFormItem>
@@ -193,17 +193,19 @@ function sortChange({ prop, order }: { prop: string, order: string }) {
         @selection-change="data.batch.selectionDataList = $event">
         <el-table-column align="center" prop="a" show-overflow-tooltip type="selection" />
         <ElTableColumn v-if="data.batch.enable" type="selection" align="center" fixed />
-        <ElTableColumn prop="title" label="会员ID" />
-        <ElTableColumn prop="" label="项目ID" />
-        <ElTableColumn prop="" label="项目名称" />
-        <ElTableColumn prop="" label="客户简称／标识" />
-        <ElTableColumn prop="" label="分配类型" />
-        <ElTableColumn prop="" label="IP／所属国" />
-        <ElTableColumn prop="" label="价格" />
-        <ElTableColumn prop="" width="160" label="调查开始－调查结束" />
-        <ElTableColumn prop="" label="总耗时" />
-        <ElTableColumn prop="" label="审核事件" />
-        <ElTableColumn prop="" label="状态" />
+        <ElTableColumn align="center" show-overflow-tooltip prop="title" label="会员ID" />
+        <ElTableColumn align="center" show-overflow-tooltip prop="" label="项目ID" />
+        <ElTableColumn align="center" show-overflow-tooltip prop="" label="项目名称" />
+        <ElTableColumn align="center" show-overflow-tooltip prop="" label="客户简称／标识" />
+        <ElTableColumn align="center" show-overflow-tooltip prop="" label="分配类型" />
+        <ElTableColumn align="center" show-overflow-tooltip prop="" label="IP／所属国" />
+        <ElTableColumn align="center" show-overflow-tooltip prop="" label="价格" />
+        <ElTableColumn align="center" show-overflow-tooltip prop="" width="160" label="调查开始－调查结束" />
+        <ElTableColumn align="center" show-overflow-tooltip prop="" label="总耗时" />
+        <ElTableColumn align="center" show-overflow-tooltip prop="" label="审核事件" />
+        <ElTableColumn align="center" show-overflow-tooltip prop="" label="状态" >
+          <ElSwitch inline-prompt active-text="启用" inactive-text="禁用" />
+        </ElTableColumn>
       </ElTable>
       <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
         :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
@@ -259,6 +261,13 @@ function sortChange({ prop, order }: { prop: string, order: string }) {
   .el-divider {
     margin-inline: -20px;
     width: calc(100% + 40px);
+  }
+}
+:deep {
+  .el-table__header {
+    th {
+      background: var(--el-fill-color-lighter) !important;
+    }
   }
 }
 </style>

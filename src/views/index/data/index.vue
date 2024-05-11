@@ -157,7 +157,7 @@ onMounted(() => {
           <el-row class="fx-b">
             <SearchTab />
             <FormRightPanel>
-              <el-button style="margin-right: 10px" size="default" @click="">
+              <el-button size="default" @click="">
                 导出
               </el-button>
               <TabelControl

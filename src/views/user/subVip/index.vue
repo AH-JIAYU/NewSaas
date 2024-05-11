@@ -97,7 +97,7 @@ onMounted(() => {
             inline
             class="search-form"
           >
-            <el-form-item label="组会员ID、子会员名称">
+            <el-form-item label="">
               <el-input
                 v-model.trim="queryForm.select.id"
                 clearable
@@ -105,7 +105,7 @@ onMounted(() => {
                 placeholder="组会员ID、子会员名称"
               />
             </el-form-item>
-            <el-form-item label="供应商ID" v-show="!fold">
+            <el-form-item label="">
               <el-input
                 v-model.trim="queryForm.select.name"
                 clearable
@@ -113,7 +113,7 @@ onMounted(() => {
                 placeholder="供应商ID"
               />
             </el-form-item>
-            <el-form-item label="子会员角色" v-show="!fold">
+            <el-form-item label="">
               <el-select
                 v-model="queryForm.select.default"
                 clearable
@@ -123,7 +123,7 @@ onMounted(() => {
                 <el-option label="关闭" value="false" />
               </el-select>
             </el-form-item>
-            <el-form-item label="子会员状态" v-show="!fold">
+            <el-form-item label="" v-show="!fold">
               <el-select
                 v-model="queryForm.select.default"
                 clearable
@@ -133,7 +133,7 @@ onMounted(() => {
                 <el-option label="关闭" value="false" />
               </el-select>
             </el-form-item>
-            <el-form-item label="所属组" v-show="!fold">
+            <el-form-item label="" v-show="!fold">
               <el-select
                 v-model="queryForm.select.default"
                 clearable
@@ -143,7 +143,7 @@ onMounted(() => {
                 <el-option label="关闭" value="false" />
               </el-select>
             </el-form-item>
-            <el-form-item label="日期" v-show="!fold">
+            <el-form-item label="" v-show="!fold">
               <el-date-picker
                 v-model="queryForm.select.time"
                 type="daterange"
@@ -181,6 +181,7 @@ onMounted(() => {
           </ElForm>
         </template>
       </SearchBar>
+      <ElDivider border-style="dashed" />
       <el-row>
         <FormLeftPanel> </FormLeftPanel>
         <FormRightPanel>
@@ -260,12 +261,9 @@ onMounted(() => {
           show-overflow-tooltip
           label="所属组"
         />
-        <el-table-column
-          align="center"
-          prop="r"
-          show-overflow-tooltip
-          label="会员状态"
-        />
+        <ElTableColumn align="center" show-overflow-tooltip prop="" label="会员状态" >
+          <ElSwitch inline-prompt active-text="启用" inactive-text="禁用" />
+        </ElTableColumn>
         <el-table-column
           align="center"
           prop="r"
@@ -339,6 +337,13 @@ onMounted(() => {
           justify-content: flex-end;
         }
       }
+    }
+  }
+}
+:deep {
+  .el-table__header {
+    th {
+      background: var(--el-fill-color-lighter) !important;
     }
   }
 }

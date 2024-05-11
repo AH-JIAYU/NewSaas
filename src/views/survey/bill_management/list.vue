@@ -30,12 +30,12 @@ const columns = ref([
     checked: true, //默认展示
   },
 ]);
-const data = ref({
+const data = ref<any>({
   loading: false,
 
   tableAutoHeight: false,  // 表格是否自适应高度
   border: true, //表格控件-是否展示边框
-  stripe: true, //表格控件-是否展示斑马条
+  stripe: false, //表格控件-是否展示斑马条
   lineHeight: 'default', //表格控件-控制表格大小
   checkList: [],
   /**
@@ -195,16 +195,18 @@ function onRefused(row: any) {
         :data="data.dataList" highlight-current-row height="100%" @sort-change="sortChange"
         @selection-change="data.batch.selectionDataList = $event">
         <el-table-column align="center" prop="a" show-overflow-tooltip type="selection" />
-        <ElTableColumn v-if="data.batch.enable" type="selection" align="center" fixed />
-        <ElTableColumn align="center" prop="" label="会员" />
-        <ElTableColumn align="center" prop="title" label="姓名" />
-        <ElTableColumn align="center" prop="" label="账单日期" />
-        <ElTableColumn align="center" prop="" label="账单金额" />
-        <ElTableColumn align="center" prop="" label="税" />
-        <ElTableColumn align="center" prop="" label="实际金额" />
-        <ElTableColumn align="center" prop="" label="支付时间" />
-        <ElTableColumn align="center" prop="" label="说明" />
-        <ElTableColumn align="center" prop="" label="账单状态" />
+        <ElTableColumn v-if="data.batch.enable" type="selection" show-overflow-tooltip align="center" fixed />
+        <ElTableColumn show-overflow-tooltip align="center" prop="" label="会员" />
+        <ElTableColumn show-overflow-tooltip align="center" prop="title" label="姓名" />
+        <ElTableColumn show-overflow-tooltip align="center" prop="" label="账单日期" />
+        <ElTableColumn show-overflow-tooltip align="center" prop="" label="账单金额" />
+        <ElTableColumn show-overflow-tooltip align="center" prop="" label="税" />
+        <ElTableColumn show-overflow-tooltip align="center" prop="" label="实际金额" />
+        <ElTableColumn show-overflow-tooltip align="center" prop="" label="支付时间" />
+        <ElTableColumn show-overflow-tooltip align="center" prop="" label="说明" />
+        <ElTableColumn align="center" show-overflow-tooltip prop="" label="账单状态" >
+          <ElSwitch inline-prompt active-text="启用" inactive-text="禁用" />
+        </ElTableColumn>
         <el-table-column align="center" prop="i" label="操作" show-overflow-tooltip width="260">
           <template #default="{ row }">
             <el-button size="small" plain type="primary" @click="onCompleted(row)">
@@ -272,6 +274,13 @@ function onRefused(row: any) {
   .el-divider {
     margin-inline: -20px;
     width: calc(100% + 40px);
+  }
+}
+:deep {
+  .el-table__header {
+    th {
+      background: var(--el-fill-color-lighter) !important;
+    }
   }
 }
 </style>

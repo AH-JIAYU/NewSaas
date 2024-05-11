@@ -207,5 +207,11 @@ defineExpose({
 </template>
 
 <style lang="scss" scoped>
-// scss
+:deep {
+  .el-table__header {
+    th {
+      background: var(--el-fill-color-lighter) !important;
+    }
+  }
+}
 </style>

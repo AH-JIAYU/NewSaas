@@ -20,8 +20,8 @@ const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const checkList = ref([]);
 const border = ref(true);
 const isFullscreen = ref(false);
-const lineHeight = ref("default");
-const stripe = ref(true);
+const lineHeight = ref<any>("default");
+const stripe = ref(false);
 const selectRows = ref<any>([]);
 const columns = ref([
   {
@@ -130,10 +130,9 @@ onMounted(() => {
                 filterable
                 @change=""
               >
-                <el-option />
               </el-select>
             </el-form-item>
-            <el-form-item v-show="!fold" label="">
+            <el-form-item label="">
               <el-select
                 value-key=""
                 placeholder="发票状态"
@@ -141,10 +140,9 @@ onMounted(() => {
                 filterable
                 @change=""
               >
-                <el-option />
               </el-select>
             </el-form-item>
-            <el-form-item v-show="!fold" label="">
+            <el-form-item label="">
               <el-select
                 value-key=""
                 placeholder="时间类型"
@@ -152,13 +150,12 @@ onMounted(() => {
                 filterable
                 @change=""
               >
-                <el-option />
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold" >
               <el-date-picker
                 type="daterange"
-                range-separator="至"
+                range-separator="-"
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"
                 clearable
@@ -206,7 +203,7 @@ onMounted(() => {
         </FormLeftPanel>
 
         <FormRightPanel>
-          <el-button style="margin-right: 10px" size="default" @click="">
+          <el-button size="default" @click="">
             导出
           </el-button>
           <TabelControl
@@ -236,21 +233,23 @@ onMounted(() => {
       >
         <el-table-column type="selection" />
         <el-table-column type="index" align="center" label="序号" width="55" />
-        <el-table-column prop="a" align="center" label="渠道" />
-        <el-table-column prop="b" align="center" label="发票编号" />
-        <el-table-column prop="c" align="center" label="金额" />
-        <el-table-column prop="d" align="center" label="手续费(税)" />
-        <el-table-column prop="e" align="center" label="实收款" />
-        <el-table-column prop="f" align="center" label="开票日期" />
-        <el-table-column prop="g" align="center" label="收款日期" />
-        <el-table-column prop="h" align="center" label="状态" />
+        <el-table-column prop="a" show-overflow-tooltip align="center" label="渠道" />
+        <el-table-column prop="b" show-overflow-tooltip align="center" label="发票编号" />
+        <el-table-column prop="c" show-overflow-tooltip align="center" label="金额" />
+        <el-table-column prop="d" show-overflow-tooltip align="center" label="手续费(税)" />
+        <el-table-column prop="e" show-overflow-tooltip align="center" label="实收款" />
+        <el-table-column prop="f" show-overflow-tooltip align="center" label="开票日期" />
+        <el-table-column prop="g" show-overflow-tooltip align="center" label="收款日期" />
+        <ElTableColumn align="center" show-overflow-tooltip prop="" label="状态" >
+          <ElSwitch inline-prompt active-text="启用" inactive-text="禁用" />
+        </ElTableColumn>
         <el-table-column prop="j" align="center" label="备注" />
         <el-table-column align="center" label="操作" width="170">
           <template #default="{ row }">
-            <el-button size="small" plain type="primary" @click="editData">
+            <el-button size="small" plain type="primary" @click="editData(row)">
               编辑
             </el-button>
-            <el-button size="small" plain type="danger" @click="deleteData">
+            <el-button size="small" plain type="danger" @click="deleteData(row)">
               删除
             </el-button>
           </template>
@@ -322,6 +321,13 @@ onMounted(() => {
           justify-content: flex-end;
         }
       }
+    }
+  }
+}
+:deep {
+  .el-table__header {
+    th {
+      background: var(--el-fill-color-lighter) !important;
     }
   }
 }

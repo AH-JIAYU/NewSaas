@@ -15,7 +15,7 @@ const checkList = ref([]);
 const border = ref(true);
 const isFullscreen = ref(false);
 const lineHeight = ref<any>("default");
-const stripe = ref(true);
+const stripe = ref(false);
 const selectRows = ref<any>([]);
 const columns = ref([
   {
@@ -133,8 +133,8 @@ onMounted(() => {
       <el-row :gutter="24">
         <FormLeftPanel> </FormLeftPanel>
         <FormRightPanel>
-          <el-button style="margin-right: 10px" size="default" @click="">
-            导出   
+          <el-button size="default" @click="">
+            导出
           </el-button>
 
           <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
@@ -146,9 +146,9 @@ onMounted(() => {
       <el-table style="margin-top: 10px" ref="tableSortRef" v-loading="false" row-key="id" :data="list" :border="border"
         :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows">
         <el-table-column type="index" align="center" label="序号" width="150" />
-        <el-table-column prop="a" align="center" label="国家编码" />
-        <el-table-column prop="b" align="center" label="国家(中文)" />
-        <el-table-column prop="c" align="center" label="国家(英文)" />
+        <el-table-column prop="a" show-overflow-tooltip align="center" label="国家编码" />
+        <el-table-column prop="b" show-overflow-tooltip align="center" label="国家(中文)" />
+        <el-table-column prop="c" show-overflow-tooltip align="center" label="国家(英文)" />
         <template #empty>
           <el-empty description="暂无数据" />
         </template>
@@ -215,6 +215,13 @@ onMounted(() => {
           justify-content: flex-end;
         }
       }
+    }
+  }
+}
+:deep {
+  .el-table__header {
+    th {
+      background: var(--el-fill-color-lighter) !important;
     }
   }
 }

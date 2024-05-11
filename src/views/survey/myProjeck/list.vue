@@ -19,7 +19,7 @@ const checkList = ref([]);
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const isFullscreen = ref(false); //表格控件-控制全屏
 const lineHeight = ref<any>("default");
-const stripe = ref(true);
+const stripe = ref(false);
 const columns = ref([
   {
     label: "项目ID",
@@ -198,7 +198,7 @@ function handleMoreOperating(command: string, row: any) {
       <el-row :gutter="24">
         <FormLeftPanel> </FormLeftPanel>
         <FormRightPanel>
-          <el-button style="margin-right: 10px" size="default" @click="">
+          <el-button size="default" @click="">
             导出
           </el-button>
           <TabelControl
@@ -227,15 +227,15 @@ function handleMoreOperating(command: string, row: any) {
       >
         <el-table-column type="selection" />
         <el-table-column type="index" align="center" label="序号" width="55" />
-        <el-table-column prop="a" align="center" label="项目ID" />
-        <el-table-column prop="b" align="center" label="项目名称" />
-        <el-table-column prop="c" align="center" label="客户简称/标识" />
-        <el-table-column prop="d" align="center" label="分配目标" />
-        <el-table-column prop="e" align="center" label="参与/完成/配额/限量" />
-        <el-table-column prop="f" align="center" label="原价USA/RMB" />
-        <el-table-column prop="g" align="center" label="IR/NIR" />
-        <el-table-column prop="h" align="center" label="国家地区" />
-        <el-table-column prop="k" align="center" label="创建时间" />
+        <el-table-column show-overflow-tooltip prop="a" align="center" label="项目ID" />
+        <el-table-column show-overflow-tooltip prop="b" align="center" label="项目名称" />
+        <el-table-column show-overflow-tooltip prop="c" align="center" label="客户简称/标识" />
+        <el-table-column show-overflow-tooltip prop="d" align="center" label="分配目标" />
+        <el-table-column show-overflow-tooltip prop="e" align="center" label="参与/完成/配额/限量" />
+        <el-table-column show-overflow-tooltip prop="f" align="center" label="原价USA/RMB" />
+        <el-table-column show-overflow-tooltip prop="g" align="center" label="IR/NIR" />
+        <el-table-column show-overflow-tooltip prop="h" align="center" label="国家地区" />
+        <el-table-column show-overflow-tooltip prop="k" align="center" label="创建时间" />
         <el-table-column align="center" label="操作" width="200">
           <template #default="{ row }">
             <ElSpace>
@@ -321,6 +321,13 @@ function handleMoreOperating(command: string, row: any) {
           justify-content: flex-end;
         }
       }
+    }
+  }
+}
+:deep {
+  .el-table__header {
+    th {
+      background: var(--el-fill-color-lighter) !important;
     }
   }
 }

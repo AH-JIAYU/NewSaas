@@ -19,25 +19,27 @@ const plugins = [
 function handleChange(v: string) {
   content.value = v;
 }
- 
+
 // 弹框开关变量
-const isShow = ref(false);
+const dialogTableVisible = ref(false);
 // 提交数据
 function onSubmit() {}
-// 父级传递数据
-const replyData = async () => {};
+// 获取数据
+const showEdit = async (row:any) => {
+  dialogTableVisible.value = true;
+};
 // 弹框关闭事件
 function closeHandler() {
-  isShow.value = false;
+  dialogTableVisible.value = false;
 }
 // 暴露方法
-defineExpose({ isShow, replyData });
+defineExpose({ showEdit });
 </script>
 
 <template>
   <div>
     <el-dialog
-      v-model="isShow"
+      v-model="dialogTableVisible"
       title="编辑"
       width="1000"
       :before-close="closeHandler"
@@ -79,7 +81,7 @@ defineExpose({ isShow, replyData });
       <template #footer>
         <div style="flex: auto">
           <el-button type="primary" @click="onSubmit"> 确定 </el-button>
-          <el-button type="" @click="isShow = false"> 取消 </el-button>
+          <el-button type="" @click="dialogTableVisible = false"> 取消 </el-button>
         </div>
       </template>
     </el-dialog>

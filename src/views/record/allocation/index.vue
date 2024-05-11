@@ -11,7 +11,7 @@ const list = ref<Array<Object>>([]); //列表
 const selectRows = ref(""); //表格-选中行
 const checkList = ref<Array<Object>>([]); //表格控件-展示的列
 const border = ref(true); //表格控件-是否展示边框
-const stripe = ref(true); //表格控件-是否展示斑马条
+const stripe = ref(false); //表格控件-是否展示斑马条
 const lineHeight = ref<any>("default"); //表格控件-控制表格大小
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const columns = ref([
@@ -96,7 +96,7 @@ onMounted(() => {
             inline
             class="search-form"
           >
-            <el-form-item label="项目ID">
+            <el-form-item label="">
               <el-input
                 v-model.trim="queryForm.select.id"
                 clearable
@@ -104,7 +104,7 @@ onMounted(() => {
                 placeholder="项目ID"
               />
             </el-form-item>
-            <el-form-item label="项目名称" v-show="!fold">
+            <el-form-item label="">
               <el-input
                 v-model.trim="queryForm.select.name"
                 clearable
@@ -112,7 +112,7 @@ onMounted(() => {
                 placeholder="项目名称"
               />
             </el-form-item>
-            <el-form-item label="供应商" v-show="!fold">
+            <el-form-item label="">
               <el-input
                 v-model.trim="queryForm.select.name"
                 clearable
@@ -121,7 +121,7 @@ onMounted(() => {
               />
             </el-form-item>
 
-            <el-form-item label="分配组" v-show="!fold">
+            <el-form-item label="" v-show="!fold">
               <el-select
                 v-model="queryForm.select.default"
                 clearable
@@ -129,7 +129,7 @@ onMounted(() => {
               >
               </el-select>
             </el-form-item>
-            <el-form-item label="状态" v-show="!fold">
+            <el-form-item label="" v-show="!fold">
               <el-select
                 v-model="queryForm.select.default"
                 clearable
@@ -137,7 +137,7 @@ onMounted(() => {
               >
               </el-select>
             </el-form-item>
-            <el-form-item label="日期" v-show="!fold">
+            <el-form-item label="" v-show="!fold">
               <el-date-picker
                 v-model="queryForm.select.time"
                 type="daterange"
@@ -169,6 +169,7 @@ onMounted(() => {
           </ElForm>
         </template>
       </SearchBar>
+      <ElDivider border-style="dashed" />
       <el-row>
         <FormLeftPanel> </FormLeftPanel>
         <FormRightPanel>
@@ -248,6 +249,7 @@ onMounted(() => {
               v-model="row.k"
               :active-value="true"
               :inactive-value="false"
+              inline-prompt
               active-text="有效"
               inactive-text="失效"
             >
@@ -323,6 +325,13 @@ onMounted(() => {
           justify-content: flex-end;
         }
       }
+    }
+  }
+}
+:deep {
+  .el-table__header {
+    th {
+      background: var(--el-fill-color-lighter) !important;
     }
   }
 }

@@ -93,22 +93,18 @@ function sortChange({ prop, order }: { prop: string, order: string }) {
 
 function onCreate() {
   if (data.value.formMode === 'router') {
-    console.log(1)
     if (settingsStore.settings.tabbar.enable && settingsStore.settings.tabbar.mergeTabsBy !== 'activeMenu') {
-      console.log(2)
       tabbar.open({
         name: 'pagesExampleGeneralRoleCreate',
       })
     }
     else {
-      console.log(3)
       router.push({
         name: 'pagesExampleGeneralRoleCreate',
       })
     }
   }
   else {
-    console.log(4)
     data.value.formModeProps.id = ''
     data.value.formModeProps.visible = true
   }
@@ -279,6 +275,13 @@ function onDel(row: any) {
   .el-divider {
     width: calc(100% + 40px);
     margin-inline: -20px;
+  }
+}
+:deep {
+  .el-table__header {
+    th {
+      background: var(--el-fill-color-lighter) !important;
+    }
   }
 }
 </style>

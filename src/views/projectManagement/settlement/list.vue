@@ -161,10 +161,10 @@ function handleMoreOperating(command: string, row: any) {
             <el-form-item label="">
               <el-input clearable placeholder="项目ID" />
             </el-form-item>
-            <el-form-item v-show="!fold" label="">
+            <el-form-item label="">
               <el-input clearable placeholder="项目名称" />
             </el-form-item>
-            <el-form-item v-show="!fold" label="">
+            <el-form-item label="">
               <el-input clearable placeholder="项目标识" />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
@@ -247,7 +247,7 @@ function handleMoreOperating(command: string, row: any) {
           </el-button>
         </FormLeftPanel>
         <FormRightPanel>
-          <el-button style="margin-right: 0.625rem" size="default" @click="">
+          <el-button size="default" @click="">
             导出
           </el-button>
           <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
@@ -360,6 +360,13 @@ function handleMoreOperating(command: string, row: any) {
           justify-content: flex-end;
         }
       }
+    }
+  }
+}
+:deep {
+  .el-table__header {
+    th {
+      background: var(--el-fill-color-lighter) !important;
     }
   }
 }

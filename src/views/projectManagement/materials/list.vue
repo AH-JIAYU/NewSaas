@@ -131,10 +131,10 @@ function handleMoreOperating(command: string, row: any) {
             <el-form-item label="">
               <el-input clearable placeholder="供应商ID" />
             </el-form-item>
-            <el-form-item v-show="!fold" label="">
+            <el-form-item label="">
               <el-input clearable placeholder="子会员ID" />
             </el-form-item>
-            <el-form-item v-show="!fold" label="">
+            <el-form-item label="">
               <el-input clearable placeholder="项目ID" />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
@@ -176,7 +176,7 @@ function handleMoreOperating(command: string, row: any) {
       <el-row :gutter="24">
         <FormLeftPanel> </FormLeftPanel>
         <FormRightPanel>
-          <el-button style="margin-right: 10px" size="default" @click="">
+          <el-button size="default" @click="">
             导出
           </el-button>
           <TabelControl
@@ -307,6 +307,13 @@ function handleMoreOperating(command: string, row: any) {
           justify-content: flex-end;
         }
       }
+    }
+  }
+}
+:deep {
+  .el-table__header {
+    th {
+      background: var(--el-fill-color-lighter) !important;
     }
   }
 }
