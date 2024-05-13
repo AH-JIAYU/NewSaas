@@ -132,6 +132,7 @@ const localToptTab = ref<any>(props.leftTab);
               prop="top"
             >
               <el-select />
+              <template #append>%</template>
             </el-form-item>
           </el-col>
           <el-col :span="8">

@@ -119,3 +119,12 @@ defineExpose({
     </el-drawer>
   </div>
 </template>
+<style lang="scss" scoped>
+:deep {
+  .el-drawer,
+  .el-drawer__body,
+  .el-tabs.el-tabs--left{
+    overflow: visible !important;
+  }
+}
+</style>

@@ -9,7 +9,7 @@ const props = defineProps({
   validateTopTabs: Array,
 });
 const client = ref();
-const settingsRef = ref(null);
+const settingsRef = ref();
 const localLeftTab = ref<any>(props.leftTabsData);
 const validateTopTabs = ref<any>(props.validateTopTabs);
 
@@ -19,7 +19,7 @@ localLeftTab.value.forEach((tab: any, index: any) => {
   provide(`formRef${index}`, formRef);
 });
 
-let tabIndex = 0;
+const tabIndex = ref(0);
 const activeLeftTab = ref(0);
 
 const initialTopTabsData = {
@@ -40,7 +40,7 @@ function syncProject() {
 
 function addLeftTab() {
   const syncdata = cloneDeep(localLeftTab.value[0]);
-  activeLeftTab.value = ++tabIndex;
+  activeLeftTab.value = ++tabIndex.value;
   localLeftTab.value.push({
     ...initialTopTabsData,
     client: client.value,
@@ -49,11 +49,12 @@ function addLeftTab() {
   });
 }
 
-function tabremove(tabIndex: any) {
-  localLeftTab.value.splice(tabIndex, 1);
-  validateTopTabs.value.splice(tabIndex, 1);
+function tabremove(tabIndexs: any) {
+  localLeftTab.value.splice(tabIndexs, 1);
+  validateTopTabs.value.splice(tabIndexs, 1);
   if (activeLeftTab.value >= localLeftTab.value.length) {
     activeLeftTab.value = Math.max(0, localLeftTab.value.length - 1);
+    tabIndex.value = Math.max(0, localLeftTab.value.length - 1);
   }
 }
 function setclient(data: number) {
@@ -75,38 +76,54 @@ function setclient(data: number) {
       :label="leftTab.name"
       :name="index"
     >
-      <!-- 在每个左侧 Tab 中使用 TopTabs 组件 -->
-      <el-button
-        style="position: absolute; left: 185px; top: 41px; z-index: 999"
-        v-if="activeLeftTab > 0"
-        size="small"
-        type="primary"
-        round
-        plain
-        @click="syncProject"
-      >
-        同步主项目数据
-      </el-button>
-      <HTooltip
+      <div
         style="
           position: absolute;
-          left: 300px;
-          top: 44px;
-          z-index: 9;
-          color: #48a2ff;
+          left: 185px;
+          top: 41px;
+          z-index: 999;
+          display: flex;
+          justify-content: center;
+          align-items: center;
         "
-        text="注意噢！"
-        v-if="activeLeftTab > 0"
       >
-        <div class="i-bi:exclamation-circle h-1em w-1em" />
-      </HTooltip>
+        <el-button
+          v-if="activeLeftTab > 0"
+          size="small"
+          type="primary"
+          round
+          plain
+          @click="syncProject"
+        >
+          同步数据
+        </el-button>
+        <HTooltip
+          style="z-index: 9; color: #48a2ff; margin-left: 5px"
+          text="注意噢！"
+          v-if="activeLeftTab > 0"
+        >
+          <div class="i-bi:exclamation-circle h-1em w-1em" />
+        </HTooltip>
+      </div>
+
       <div
         style="margin-left: 10px"
         class="i-solar:settings-line-duotone w-2em h-2em"
         @click="setHandler"
       />
+      <!-- 在每个左侧 Tab 中使用 TopTabs 组件 -->
       <TopTabs :left-tab="leftTab" :tab-index="index" @set-client="setclient" />
     </el-tab-pane>
     <SyncSettings ref="settingsRef" />
   </el-tabs>
 </template>
+
+<style lang="scss" scoped>
+// :deep {
+//   .el-drawer,
+//   .el-drawer__body,
+//   .el-tabs.el-tabs--left{
+//     overflow: visible !important;
+//   }
+// }
+</style>
