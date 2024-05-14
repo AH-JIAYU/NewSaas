@@ -55,7 +55,7 @@ const editData = (row: any) => {
 // 删除数据
 const deleteData = (row: any) => {
   // if (!selectRows.value.length)
-  //   return ElMessage({ message: "请选择至少一条数据", type: "warning" });
+  //   return ElMessage({ message: "请选择至少一条数据", type: "warning" })
   deleteRef.value.showEdit(row);
 };
 // 右侧工具方法
@@ -108,59 +108,30 @@ onMounted(() => {
 </script>
 
 <template>
-  <div
-    :class="{
+  <div :class="{
 
-      'absolute-container': tableAutoHeight,
-    }"
-  >
+    'absolute-container': tableAutoHeight,
+  }">
     <PageMain>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
-          <el-form
-          :model="queryForm.select" size="default" label-width="100px" inline-message inline
-            class="search-form"
-
-          >
+          <el-form :model="queryForm.select" size="default" label-width="100px" inline-message inline
+            class="search-form">
             <el-form-item label="">
-              <el-select
-                value-key=""
-                placeholder="选择渠道"
-                clearable
-                filterable
-                @change=""
-              >
+              <el-select value-key="" placeholder="选择渠道" clearable filterable @change="">
               </el-select>
             </el-form-item>
             <el-form-item label="">
-              <el-select
-                value-key=""
-                placeholder="发票状态"
-                clearable
-                filterable
-                @change=""
-              >
+              <el-select value-key="" placeholder="发票状态" clearable filterable @change="">
               </el-select>
             </el-form-item>
             <el-form-item label="">
-              <el-select
-                value-key=""
-                placeholder="时间类型"
-                clearable
-                filterable
-                @change=""
-              >
+              <el-select value-key="" placeholder="时间类型" clearable filterable @change="">
               </el-select>
             </el-form-item>
-            <el-form-item v-show="!fold" >
-              <el-date-picker
-                type="daterange"
-                range-separator="-"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                clearable
-                size=""
-              />
+            <el-form-item v-show="!fold">
+              <el-date-picker type="daterange" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期"
+                clearable size="" />
             </el-form-item>
 
             <ElFormItem>
@@ -178,9 +149,7 @@ onMounted(() => {
               </ElButton>
               <ElButton link @click="toggle">
                 <template #icon>
-                  <SvgIcon
-                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
-                  />
+                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
                 </template>
                 {{ fold ? "展开" : "收起" }}
               </ElButton>
@@ -191,13 +160,7 @@ onMounted(() => {
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>
-          <el-button
-            style="margin-right: 10px"
-            :icon="Plus"
-            type="primary"
-            size="default"
-            @click="addData"
-          >
+          <el-button style="margin-right: 10px" :icon="Plus" type="primary" size="default" @click="addData">
             添加发票
           </el-button>
         </FormLeftPanel>
@@ -206,31 +169,14 @@ onMounted(() => {
           <el-button size="default" @click="">
             导出
           </el-button>
-          <TabelControl
-            v-model:border="border"
-            v-model:tableAutoHeight="tableAutoHeight"
-            v-model:checkList="checkList"
-            v-model:columns="columns"
-            v-model:is-fullscreen="isFullscreen"
-            v-model:line-height="lineHeight"
-            v-model:stripe="stripe"
-            style="margin-left: 12px"
-            @click-full-screen="clickFullScreen"
-            @query-data="currentChange"
-          />
+          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
+            v-model:columns="columns" v-model:is-fullscreen="isFullscreen" v-model:line-height="lineHeight"
+            v-model:stripe="stripe" style="margin-left: 12px" @click-full-screen="clickFullScreen"
+            @query-data="currentChange" />
         </FormRightPanel>
       </el-row>
-      <el-table
-        style="margin-top: 10px"
-        ref="tableSortRef"
-        v-loading="false"
-        row-key="id"
-        :data="list"
-        :border="border"
-        :size="lineHeight"
-        :stripe="stripe"
-        @selection-change="setSelectRows"
-      >
+      <el-table style="margin-top: 10px" ref="tableSortRef" v-loading="false" row-key="id" :data="list" :border="border"
+        :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows">
         <el-table-column type="selection" />
         <el-table-column type="index" align="center" label="序号" width="55" />
         <el-table-column prop="a" show-overflow-tooltip align="center" label="渠道" />
@@ -240,7 +186,7 @@ onMounted(() => {
         <el-table-column prop="e" show-overflow-tooltip align="center" label="实收款" />
         <el-table-column prop="f" show-overflow-tooltip align="center" label="开票日期" />
         <el-table-column prop="g" show-overflow-tooltip align="center" label="收款日期" />
-        <ElTableColumn align="center" show-overflow-tooltip prop="" label="状态" >
+        <ElTableColumn align="center" show-overflow-tooltip prop="" label="状态">
           <ElSwitch inline-prompt active-text="启用" inactive-text="禁用" />
         </ElTableColumn>
         <el-table-column prop="j" align="center" label="备注" />
@@ -258,18 +204,9 @@ onMounted(() => {
           <el-empty description="暂无数据" />
         </template>
       </el-table>
-      <ElPagination
-        :current-page="pagination.page"
-        :total="pagination.total"
-        :page-size="pagination.size"
-        :page-sizes="pagination.sizes"
-        :layout="pagination.layout"
-        :hide-on-single-page="false"
-        class="pagination"
-        background
-        @size-change="sizeChange"
-        @current-change="currentChange"
-      />
+      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+        background @size-change="sizeChange" @current-change="currentChange" />
       <Edit ref="editRef" />
       <Delete ref="deleteRef" />
     </PageMain>
@@ -277,10 +214,10 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
-
 .el-pagination {
   margin-top: 15px;
 }
+
 .absolute-container {
   position: absolute;
   display: flex;
@@ -324,6 +261,7 @@ onMounted(() => {
     }
   }
 }
+
 :deep {
   .el-table__header {
     th {
