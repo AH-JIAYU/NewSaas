@@ -184,12 +184,19 @@ function echarts2() {
     },
     tooltip: {
       trigger: "item",
-      formatter: "{a} <br/>{b} : {c} ({d}%)",
+      // formatter: "{a} <br/>{b} : {c} ({d}%)",
+      formatter:function(data){
+              return("程序号："+data['name']
+              +"</br>项目完成数: "+ data['data'].datas[2].com
+              +"</br>审核率: "+data['data'].datas[0].aud
+              +"</br>审核成功率: "+data['data'].datas[1].audR
+              )
+    },
     },
     legend: {
       orient: "vertical",
       left: "right",
-      data: ["直接访问", "邮件营销", "联盟广告", "视频广告", "搜索引擎"],
+      data: ["张三", "李四", "王五", "赵六", "老王"],
     },
     series: [
       {
@@ -198,11 +205,11 @@ function echarts2() {
         radius: "55%",
         center: ["50%", "60%"],
         data: [
-          { value: 335, name: "直接访问", title: "1111" },
-          { value: 310, name: "邮件营销", title: "1111" },
-          { value: 234, name: "联盟广告", title: "1111" },
-          { value: 135, name: "视频广告", title: "1111" },
-          { value: 1548, name: "搜索引擎", title: "1111" },
+          { value: 335,name: "张三", title: "1111" ,datas:[{aud:'333'},{audR:'333'},{com:'123123'}]},
+          { value: 335,name: "李四", title: "1111" ,datas:[{aud:'333'},{audR:'333'},{com:'123123'}]},
+          { value: 335,name: "王五", title: "1111" ,datas:[{aud:'333'},{audR:'333'},{com:'123123'}]},
+          { value: 335,name: "赵六", title: "1111" ,datas:[{aud:'333'},{audR:'333'},{com:'123123'}]},
+          { value: 335,name: "老王", title: "1111" ,datas:[{aud:'333'},{audR:'333'},{com:'123123'}]},
         ],
         emphasis: {
           itemStyle: {

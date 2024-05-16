@@ -289,7 +289,7 @@ function handleMoreOperating(command: string, row: any) {
                 <template #dropdown>
                   <ElDropdownMenu>
                     <ElDropdownItem command="auditing"> 重审 </ElDropdownItem>
-                    <ElDropdownItem command="edit" divided>
+                    <ElDropdownItem command="edit">
                       编辑
                     </ElDropdownItem>
                     <ElDropdownItem command="refundDetails">

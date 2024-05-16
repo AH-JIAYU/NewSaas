@@ -2,7 +2,7 @@
 defineOptions({
   name: 'ProjectDetails',
 })
-import { CircleCheck,Position,Select } from '@element-plus/icons-vue'
+import { CircleCheck, Position, Select } from '@element-plus/icons-vue'
 // 富文本编辑器配置
 import gfm from "@bytemd/plugin-gfm";
 import zhHans from "bytemd/locales/zh_Hans.json";
@@ -30,13 +30,13 @@ const list = [
   { a: 1, b: 2, c: 3, id: 1 },
 ];
 // 详情
-function details(row:any) {
+function details(row: any) {
   logDetailsRef.value.showEdit(row)
 }
 // 弹框开关变量
 const dialogTableVisible = ref(false);
 // 提交数据
-function onSubmit() {}
+function onSubmit() { }
 const showEdit = () => {
   dialogTableVisible.value = true;
 }
@@ -55,15 +55,8 @@ defineExpose({ showEdit });
 
 <template>
   <div>
-    <el-drawer
-      v-model="dialogTableVisible"
-      append-to-body
-      :close-on-click-modal="false"
-      destroy-on-close
-      draggable
-      size="55%"
-      title="项目详情"
-    >
+    <el-drawer v-model="dialogTableVisible" append-to-body :close-on-click-modal="false" destroy-on-close draggable
+      size="55%" title="项目详情">
       <template #header>
         <el-row :gutter="20">
           <el-col :span="2" />
@@ -118,229 +111,167 @@ defineExpose({ showEdit });
           <el-divider content-position="left" />
           <el-row :gutter="10">
             <el-col :span="8">
-              <el-form-item
-                label="原价(美元)"
-                prop="client"
-                style="float: left; width: 18rem"
-              >
-              <el-text class="mx-1">PC\平板\Mobile</el-text>
+              <el-form-item label="原价(美元)" prop="client" style="float: left; width: 18rem">
+                <el-text class="mx-1">PC\平板\Mobile</el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item
-                label="原价(人民币)"
-                prop="name"
-                style="float: left; width: 18rem"
-              >
-              <el-text class="mx-1">PC\平板\Mobile</el-text>
+              <el-form-item label="原价(人民币)" prop="name" style="float: left; width: 18rem">
+                <el-text class="mx-1">PC\平板\Mobile</el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item
-                label="配额"
-                prop="name"
-                style="float: left; width: 18rem"
-              >
-              <el-text class="mx-1">PC\平板\Mobile</el-text>
+              <el-form-item label="配额" prop="name" style="float: left; width: 18rem">
+                <el-text class="mx-1">PC\平板\Mobile</el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8" />
           </el-row>
           <el-row :gutter="10">
             <el-col :span="8">
-              <el-form-item
-                label="限量/h"
-                prop="client"
-                style="float: left; width: 18rem"
-              >
-              <el-text class="mx-1">PC\平板\Mobile</el-text>
+              <el-form-item label="限量/h" prop="client" style="float: left; width: 18rem">
+                <el-text class="mx-1">PC\平板\Mobile</el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item
-                label="准入量"
-                prop="name"
-                style="float: left; width: 18rem"
-              >
-              <el-text class="mx-1">PC\平板\Mobile</el-text>
+              <el-form-item label="准入量" prop="name" style="float: left; width: 18rem">
+                <el-text class="mx-1">PC\平板\Mobile</el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item
-                label="IR"
-                prop="name"
-                style="float: left; width: 18rem"
-              >
-              <el-text class="mx-1">PC\平板\Mobile</el-text>
+              <el-form-item label="IR" prop="name" style="float: left; width: 18rem">
+                <el-text class="mx-1">PC\平板\Mobile</el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8" />
           </el-row>
           <el-row :gutter="10">
             <el-col :span="8">
-              <el-form-item
-                label="最小时长"
-                prop="client"
-                style="float: left; width: 18rem"
-              >
-              <el-text class="mx-1">PC\平板\Mobile</el-text>
+              <el-form-item label="最小时长" prop="client" style="float: left; width: 18rem">
+                <el-text class="mx-1">PC\平板\Mobile</el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item
-                label="互斥ID"
-                prop="name"
-                style="float: left; width: 18rem"
-              >
-              <el-text class="mx-1">PC\平板\Mobile</el-text>
+              <el-form-item label="互斥ID" prop="name" style="float: left; width: 18rem">
+                <el-text class="mx-1">PC\平板\Mobile</el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item
-                label="URL"
-                prop="name"
-                style="float: left; width: 18rem"
-              >
-              <el-text class="mx-1">PC\平板\Mobile</el-text>
+              <el-form-item label="URL" prop="name" style="float: left; width: 18rem">
+                <el-text class="mx-1">PC\平板\Mobile</el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8" />
           </el-row>
           <el-row :gutter="10">
             <el-col :span="8">
-              <el-form-item
-                label="置顶"
-                prop="client"
-                style="float: left; width: 18rem"
-              >
-              <el-text class="mx-1">PC\平板\Mobile</el-text>
+              <el-form-item label="置顶" prop="client" style="float: left; width: 18rem">
+                <el-text class="mx-1">PC\平板\Mobile</el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item
-                label="资料"
-                prop="name"
-                style="float: left; width: 18rem"
-              >
-              <el-text class="mx-1">PC\平板\Mobile</el-text>
+              <el-form-item label="资料" prop="name" style="float: left; width: 18rem">
+                <el-text class="mx-1">PC\平板\Mobile</el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item
-                label="B2B"
-                prop="name"
-                style="float: left; width: 18rem"
-              >
-              <el-text class="mx-1">PC\平板\Mobile</el-text>
+              <el-form-item label="B2B" prop="name" style="float: left; width: 18rem">
+                <el-text class="mx-1">PC\平板\Mobile</el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8" />
           </el-row>
           <el-row :gutter="10">
             <el-col :span="8">
-              <el-form-item
-                label="信用"
-                prop="client"
-                style="float: left; width: 18rem"
-              >
-              <el-text class="mx-1">PC\平板\Mobile</el-text>
+              <el-form-item label="信用" prop="client" style="float: left; width: 18rem">
+                <el-text class="mx-1">PC\平板\Mobile</el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item
-                label="定时发布"
-                prop="name"
-                style="float: left; width: 18rem"
-              >
-              <el-text class="mx-1">PC\平板\Mobile</el-text>
+              <el-form-item label="定时发布" prop="name" style="float: left; width: 18rem">
+                <el-text class="mx-1">PC\平板\Mobile</el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item
-                label="备注"
-                prop="name"
-                style="float: left; width: 18rem"
-              >
-              <el-text class="mx-1">PC\平板\Mobile</el-text>
+              <el-form-item label="备注" prop="name" style="float: left; width: 18rem">
+                <el-text class="mx-1">PC\平板\Mobile</el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8" />
           </el-row>
-          <el-divider content-position="left"> 配置信息 </el-divider>
-          <el-row :gutter="10">
-            <el-col :span="8">
-              <el-form-item
-                label="终端"
-                prop="client"
-                style="float: left; width: 18rem"
-              >
-              <el-text class="mx-1">PC\平板\Mobile</el-text>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item
-                label="性别"
-                prop="name"
-                style="float: left; width: 18rem"
-              >
-              <el-text class="mx-1">PC\平板\Mobile</el-text>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item
-                label="年龄"
-                prop="name"
-                style="float: left; width: 18rem"
-              >
-              <el-text class="mx-1">PC\平板\Mobile</el-text>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8" />
-          </el-row>
-          <el-divider content-position="left"> 描述及配额 </el-divider>
-          <el-button style="margin: 25px" type="primary" text>
-            UIUGF.JPF下载
-          </el-button>
-          <el-row :gutter="20">
-            <el-col :span="24">
-              <el-form-item prop="describes">
-                <!-- key解决富文本编译器   先添加  再编辑  富文本右侧值还在的问题    key值变了会刷新组件 -->
-                <Editor
-                  class="editor"
-                  :value="content"
-                  :plugins="plugins"
-                  :locale="zhHans"
-                  @change="handleChange"
-                />
-                <Viewer :value="content" />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-divider content-position="left"> 操作日志 </el-divider>
-          <el-table :data="list" border style="width: 100%">
-            <el-table-column
-              align="center"
-              type="index"
-              width="80"
-              label="序号"
-            />
-            <el-table-column align="center" prop="a" label="操作时间" />
-            <el-table-column align="center" prop="b" label="操作人" />
-            <el-table-column align="center" prop="c" label="操作事项" />
-            <el-table-column align="center" prop="d" label="详情">
-              <el-button text type="primary" size="default" @click="details">
-                详情
-              </el-button>
-            </el-table-column>
-          </el-table>
         </el-card>
+        <el-card class="box-card">
+          <template #header>
+            <div class="card-header">
+              <span>配置信息</span>
+            </div>
+          </template>
+          <el-row :gutter="10">
+            <el-col :span="8">
+              <el-form-item label="终端" prop="client" style="float: left; width: 18rem">
+                <el-text class="mx-1">PC\平板\Mobile</el-text>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="性别" prop="name" style="float: left; width: 18rem">
+                <el-text class="mx-1">PC\平板\Mobile</el-text>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="年龄" prop="name" style="float: left; width: 18rem">
+                <el-text class="mx-1">PC\平板\Mobile</el-text>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8" />
+          </el-row>
+        </el-card>
+        <el-card class="box-card">
+                 <template #header>
+            <div class="card-header">
+              <span>描述及配额</span>
+            </div>
+            <el-button style="margin: 25px" type="primary" text>
+          UIUGF.JPF下载
+        </el-button>
+        <el-row :gutter="20">
+          <el-col :span="24">
+            <el-form-item prop="describes">
+              <!-- key解决富文本编译器   先添加  再编辑  富文本右侧值还在的问题    key值变了会刷新组件 -->
+              <Editor class="editor" :value="content" :plugins="plugins" :locale="zhHans" @change="handleChange" />
+              <Viewer :value="content" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+          </template>
+        </el-card>
+        <el-card class="box-card">
+                    <template #header>
+            <div class="card-header">
+              <span>操作日志</span>
+            </div>
+          </template>
+          <el-table :data="list" border style="width: 100%">
+          <el-table-column align="center" type="index" width="80" label="序号" />
+          <el-table-column align="center" prop="a" label="操作时间" />
+          <el-table-column align="center" prop="b" label="操作人" />
+          <el-table-column align="center" prop="c" label="操作事项" />
+          <el-table-column align="center" prop="d" label="详情">
+            <el-button text type="primary" size="default" @click="details">
+              详情
+            </el-button>
+          </el-table-column>
+        </el-table>
+        </el-card>
+
+
+
       </ElForm>
       <template #footer>
         <el-button @click="closeHandler"> 取消 </el-button>
         <el-button type="primary" @click="onSubmit"> 确定 </el-button>
       </template>
     </el-drawer>
-    <logDetails ref="logDetailsRef"/>
+    <logDetails ref="logDetailsRef" />
   </div>
 </template>
 
@@ -365,24 +296,34 @@ defineExpose({ showEdit });
 :deep(.bytemd-fullscreen) {
   z-index: 2000;
 }
-
+:deep(.el-card) {
+  margin: 10px 0;
+}
 :deep(.editor) {
   width: 100%;
 }
+
 table {
-  width: 100%; /* 表格宽度设置为100% */
-  border-collapse: collapse; /* 合并边框 */
+  width: 100%;
+  /* 表格宽度设置为100% */
+  border-collapse: collapse;
+  /* 合并边框 */
 }
+
 th,
 td {
-  padding: 10px; /* 单元格内边距 */
-  border: 1px solid #ccc; /* 边框 */
+  padding: 10px;
+  /* 单元格内边距 */
+  border: 1px solid #ccc;
+  /* 边框 */
   text-align: center;
 }
+
 th {
   width: 15%;
   font-weight: normal;
 }
+
 tr {
   width: 30%;
 }

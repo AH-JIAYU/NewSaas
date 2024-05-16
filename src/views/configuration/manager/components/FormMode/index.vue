@@ -45,7 +45,7 @@ function onCancel() {
       </template>
     </ElDialog>
     <ElDrawer v-else-if="props.mode === 'drawer'" v-model="visible" :title="title" size="600px" :close-on-click-modal="false" destroy-on-close>
-      <DetailForm ref="formRef" v-bind="props" />
+      <DetailForm ref="formRef" v-bind="props"/>
       <div class="buttons">
         <ElButton size="large" @click="onCancel">
           取 消
@@ -57,3 +57,11 @@ function onCancel() {
     </ElDrawer>
   </div>
 </template>
+
+<style lang="scss" scoped>
+.buttons{
+  display: flex;
+  justify-content:end;
+  align-items: center;
+}
+</style>

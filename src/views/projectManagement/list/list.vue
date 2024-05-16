@@ -190,9 +190,6 @@ onMounted(() => {
           <el-button type="primary" size="default" @click="addProject">
             添加项目
           </el-button>
-          <el-button type="primary" size="default" @click="distribution">
-            分配
-          </el-button>
         </FormLeftPanel>
 
         <FormRightPanel>
@@ -222,8 +219,11 @@ onMounted(() => {
         </el-table-column>
         <el-table-column show-overflow-tooltip prop="j" align="center" label="创建人" />
         <el-table-column show-overflow-tooltip prop="k" align="center" label="创建时间" />
-        <el-table-column align="center" label="操作" width="170">
+        <el-table-column align="center" label="操作" width="250">
           <template #default="{ row }">
+            <el-button plain type="primary" size="small" @click="distribution">
+              重新分配
+          </el-button>
             <el-button type="primary" plain size="small" @click="projectEdit(row)">
               编辑
             </el-button>
