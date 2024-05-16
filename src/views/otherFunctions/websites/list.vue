@@ -81,9 +81,6 @@ function currentChange(page = 1) {
 }
 async function fetchData() {
   listLoading.value = true;
-  // const { data } = await getList(queryForm)
-  // list.value = data[0]
-  // total.value = data[0].length
   list.value = [
     { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
     { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
