@@ -67,7 +67,7 @@ creator.onUploadFile.add((_, options) => {
       );
     })
     .catch((error) => {
-      options.callback(error);
+      options.callback(error,'error');
     });
 });
 </script>

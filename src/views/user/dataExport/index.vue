@@ -4,7 +4,7 @@ defineOptions({
 });
 import { ElMessage, ElMessageBox } from "element-plus";
 
-const form = ref<Object>({
+const form = ref<any>({
   a:'',
   b:'',
   c:'',

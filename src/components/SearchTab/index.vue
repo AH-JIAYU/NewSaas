@@ -1,11 +1,16 @@
 <script setup>
 import { Back } from '@element-plus/icons-vue'
-
+import { h, ref, shallowRef } from 'vue'
 const radio2 = ref('day')
 const value2 = ref('')
 function back() {
   radio2.value = 'day'
 }
+const customPrefix = shallowRef({ // 去除icon
+  render() {
+    return h('p', '')
+  },
+})
 </script>
 
 <template>
@@ -19,7 +24,7 @@ function back() {
     <div v-else class="fx-b">
       <el-button size="default" style="width: 32px !important;" :icon="Back" @click="back" />
       <el-date-picker v-model="value2" type="daterange" unlink-panels range-separator="-" start-placeholder="开始"
-        end-placeholder="结束" size="default" style="flex: 1;" clear-icon="true" />
+        end-placeholder="结束" size="default" style="flex: 1;" :prefix-icon="customPrefix" />
       <el-button type="primary" style="width: 59px;" size="default">
         搜索
       </el-button>
@@ -45,6 +50,9 @@ function back() {
 
     .el-button:nth-of-type(2) {
       border-radius: 0 4px 4px 0 !important;
+    }
+    .el-icon.el-input__icon.el-range__icon{
+      display:none !important;
     }
   }
 

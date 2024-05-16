@@ -3,12 +3,13 @@ import SupplierDetailDetail from "../SupplierDetailDetail/index.vue";
 
 const emit = defineEmits(["fetch-data"]);
 const drawerisible = ref(false);
-const checkRef = ref("");
+const checkRef = ref<any>();
 const title = ref("详情");
-async function showEdit(row) {
+async function showEdit(row:any) {
+  console.log('row',row);
   drawerisible.value = true;
 }
-function handleCheck(row) {
+function handleCheck(row:any) {
   checkRef.value.showEdit(row);
 }
 function close() {

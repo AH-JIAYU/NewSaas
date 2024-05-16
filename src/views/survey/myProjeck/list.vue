@@ -97,7 +97,7 @@ function handleMoreOperating(command: string, row: any) {
       check(row)
       break;
     case "attachment":
-      attachment(row)
+      attachment()
       break;
   }
 }
