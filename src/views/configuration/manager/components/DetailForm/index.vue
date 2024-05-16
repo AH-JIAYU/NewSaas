@@ -24,7 +24,7 @@ const form = ref({
   account: '',
   name: '',
   mobile: '',
-  sex: '2',
+  sex: '1',
   role_id: '',
 })
 const formRules = ref<FormRules>({
@@ -126,9 +126,6 @@ defineExpose({
       </ElFormItem>
       <ElFormItem label="性别" prop="sex">
         <ElRadioGroup v-model="form.sex">
-          <ElRadioButton label="2">
-            保密
-          </ElRadioButton>
           <ElRadioButton label="1">
             男
           </ElRadioButton>

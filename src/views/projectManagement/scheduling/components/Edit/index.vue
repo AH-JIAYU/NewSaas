@@ -38,7 +38,7 @@ defineExpose({ showEdit })
       :before-close="closeHandler"
     >
       <el-form ref="form" label-width="80px" :inline="false" >
-        <el-form-item label="类型">
+        <el-form-item label="类型" style="align-items: center">
           <el-radio-group v-model="radio1" class="ml-4">
             <el-radio :value="1" size="large">
               指定价格

@@ -35,10 +35,9 @@ defineExpose({ showEdit })
 
 <template>
   <el-dialog v-model="dialogTableVisible" style="height: 20.5rem;" :title="title" width="600">
-    <el-divider content-position="left" />
       <el-form :model="form" ref="formRef" :rules="rules" label-width="80px" :inline="false">
       <el-form-item label="等级名称" prop="name">
-      <el-input   maxlength="100" v-model="form.name"></el-input>
+      <el-input  maxlength="100" v-model="form.name"></el-input>
       </el-form-item>
       <el-form-item label="加成比例"  prop="number">
       <el-input v-model="form.number" type="number">
