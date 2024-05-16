@@ -178,7 +178,7 @@ function echarts2() {
   // 配置数据
   const option = {
     title: {
-      text: "用户访问来源",
+      text: "某站点用户访问来源",
       subtext: "",
       left: "center",
     },
