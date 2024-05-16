@@ -55,7 +55,7 @@ const editData = (row: any) => {
 // 删除数据
 const deleteData = (row: any) => {
   // if (!selectRows.value.length)
-  //   return ElMessage({ message: "请选择至少一条数据", type: "warning" });
+  //   return ElMessage({ message: "请选择至少一条数据", type: "warning" })
   deleteRef.value.showEdit(row);
 };
 // 右侧工具方法
