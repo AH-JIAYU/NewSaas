@@ -32,14 +32,14 @@ defineExpose({ showEdit });
       width="600"
       :before-close="closeHandler"
     >
-      <el-form ref="form" label-width="100px" :inline="false" size="normal">
+      <el-form ref="form" label-width="100px" :inline="false" >
         <el-form-item label="项目ID">
           <el-text class="mx-1">3236382</el-text>
         </el-form-item>
         <el-form-item label="项目名称">
           <el-input
             placeholder=""
-            size="normal"
+
             clearable
             @change=""
           />
@@ -47,7 +47,7 @@ defineExpose({ showEdit });
         <el-form-item label="价格$">
           <el-input
             placeholder=""
-            size="normal"
+
             clearable
             @change=""
           />
@@ -55,7 +55,7 @@ defineExpose({ showEdit });
         <el-form-item label="tc完成数">
           <el-input
             placeholder=""
-            size="normal"
+
             clearable
             @change=""
           />
@@ -63,7 +63,7 @@ defineExpose({ showEdit });
         <el-form-item label="结算完成数">
           <el-input
             placeholder=""
-            size="normal"
+
             clearable
             @change=""
           />
@@ -71,7 +71,7 @@ defineExpose({ showEdit });
         <el-form-item label="备注">
           <el-input
             placeholder=""
-            size="normal"
+
             clearable
             @change=""
           />
@@ -79,24 +79,20 @@ defineExpose({ showEdit });
         <el-form-item label="结算PO号">
           <el-input
             placeholder=""
-            size="normal"
             clearable
             @change=""
           />
         </el-form-item>
         <el-form-item label="状态">
           <el-select >
-          <el-option>
-          </el-option>
+            <el-option v-for="item in  4 " :key="item" :lable="item" :value="item"></el-option>
           </el-select>
 
         </el-form-item>
         <el-form-item label="客户简称">
           <el-select >
-          <el-option>
-          </el-option>
+            <el-option v-for="item in  4 " :key="item" :lable="item" :value="item"></el-option>
           </el-select>
-
         </el-form-item>
       </el-form>
       <template #footer>

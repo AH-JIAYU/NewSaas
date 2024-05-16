@@ -4,6 +4,8 @@ defineOptions({
 })
 import { ref } from "vue";
 
+const radio1=ref('')
+
 // 弹框开关变量
 const dialogTableVisible = ref(false);
 // 提交数据
@@ -33,13 +35,12 @@ defineExpose({ showEdit });
       :before-close="closeHandler"
     >
       <el-divider content-position="left" />
-      <el-form ref="form" label-width="80px" :inline="false" size="normal">
+      <el-form ref="form" label-width="80px" :inline="false" >
         <el-row :gutter="20">
           <el-col :span="8">
             <el-form-item label="项目编码">
               <el-input
                 placeholder=""
-                size="normal"
                 clearable
                 @change=""
               ></el-input>
@@ -49,7 +50,6 @@ defineExpose({ showEdit });
             <el-form-item label="项目名称">
               <el-input
                 placeholder=""
-                size="normal"
                 clearable
                 @change=""
               ></el-input>
@@ -59,7 +59,6 @@ defineExpose({ showEdit });
             <el-form-item label="创建人">
               <el-input
                 placeholder=""
-                size="normal"
                 clearable
                 @change=""
               />
@@ -78,7 +77,6 @@ defineExpose({ showEdit });
         <el-form-item label="备注">
           <el-input
             placeholder=""
-            size="normal"
             clearable
             @change=""
           />
@@ -86,7 +84,6 @@ defineExpose({ showEdit });
         <el-form-item label="结算PO号">
           <el-input
             placeholder=""
-            size="normal"
             clearable
             @change=""
           />
@@ -94,7 +91,6 @@ defineExpose({ showEdit });
         <el-form-item label="通过ID">
           <el-input
             placeholder=""
-            size="normal"
             clearable
             @change=""
             :rows="5"

@@ -11,8 +11,8 @@ const { pagination, onSizeChange, onCurrentChange } = usePagination() //分页
 
 const listLoading = ref(false)  //加载
 const list = ref<Array<Object>>([])  //表格数据
-const editRef = ref('') //组件ref 添加编辑
-const checkRef = ref('') //组件ref 查看
+const editRef = ref<any>() //组件ref 添加编辑
+const checkRef = ref<any>() //组件ref 查看
 
 const selectRows = ref() //表格选中行
 const border = ref(true)  //表格控件-边框

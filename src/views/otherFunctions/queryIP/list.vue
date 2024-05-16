@@ -177,7 +177,7 @@ const check = () => {};
         <el-tab-pane label="测试" name="fourth">
           <el-row :gutter="20">
           <el-col :span="5">
-           <el-form-item label="折叠展示Tag" size="normal">
+           <el-form-item label="折叠展示Tag">
             <el-cascader
               :options="options"
               :props="props"
@@ -189,7 +189,7 @@ const check = () => {};
           </el-col>
           <el-col :span="8">
             <el-button type="primary" size="default" @click="">确定</el-button>
-            <el-button type="primary" size="danger" @click="">确定2</el-button>
+            <el-button type="danger"  size="default" @click="">确定2</el-button>
           </el-col>
           </el-row>
         </el-tab-pane>

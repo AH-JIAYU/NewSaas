@@ -16,6 +16,7 @@ const formRef = ref<FormInstance>()
 const form = ref({
   id: props.id,
   title: '',
+  radio:'',
 })
 const formRules = ref<FormRules>({
   // 校验

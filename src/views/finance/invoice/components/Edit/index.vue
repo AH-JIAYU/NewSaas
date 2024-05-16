@@ -42,7 +42,7 @@ defineExpose({ showEdit })
         </el-form-item>
         <el-form-item  label="渠道">
           <el-select >
-          <el-option/>
+            <el-option v-for="item in  4 " :key="item" :lable="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item  label="发票编号">
@@ -59,7 +59,7 @@ defineExpose({ showEdit })
         </el-form-item>
         <el-form-item  label="发票状态">
           <el-select >
-          <el-option/>
+            <el-option v-for="item in  4 " :key="item" :lable="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item  label="开票日期">

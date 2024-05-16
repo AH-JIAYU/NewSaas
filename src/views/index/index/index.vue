@@ -179,7 +179,7 @@ function echarts2() {
   const option = {
     title: {
       text: "某站点用户访问来源",
-      subtext: "纯属虚构",
+      subtext: "",
       left: "center",
     },
     tooltip: {
@@ -188,7 +188,7 @@ function echarts2() {
     },
     legend: {
       orient: "vertical",
-      left: "left",
+      left: "right",
       data: ["直接访问", "邮件营销", "联盟广告", "视频广告", "搜索引擎"],
     },
     series: [

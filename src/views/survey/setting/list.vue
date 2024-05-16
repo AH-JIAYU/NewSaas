@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ElMessage, ElMessageBox } from 'element-plus'
-import FormMode from './components/FormMode/index.vue'
 import eventBus from '@/utils/eventBus'
 import api from '@/api/modules/survey_setting'
 import useSettingsStore from '@/store/modules/settings'

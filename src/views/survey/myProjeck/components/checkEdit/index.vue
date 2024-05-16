@@ -37,7 +37,7 @@ defineExpose({ showEdit })
       width="500"
       :before-close="closeHandler"
     >
-      <el-form ref="form" label-width="80px" :inline="false" size="normal">
+      <el-form ref="form" label-width="80px" :inline="false" >
         <el-form-item  label="PID">
           <el-text class="mx-1" type="success">3241479</el-text>
         </el-form-item>
