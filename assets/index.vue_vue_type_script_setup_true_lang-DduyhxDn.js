@@ -1,9 +1,0 @@
-
-/**
- * 由 Fantastic-admin 提供技术支持
- * Powered by Fantastic-admin
- * Gitee  https://fantastic-admin.gitee.io
- * Github https://fantastic-admin.github.io
- */
-
-import{d as v,r as s,a as d,o as b,b as x,f as l,w as t,j as u,g as i}from"./index-RsT8ijpm.js";const V=u("div",null,"确认删除这条数据吗?",-1),w={style:{flex:"auto"}},k=v({name:"Delete",__name:"index",setup(C,{expose:r}){const e=s(!1);s();function c(){}const _=async m=>{e.value=!0};function f(){e.value=!1}return r({showEdit:_}),(m,o)=>{const a=d("el-button"),p=d("el-dialog");return b(),x("div",null,[l(p,{modelValue:e.value,"onUpdate:modelValue":o[1]||(o[1]=n=>e.value=n),title:"删除",width:"500","before-close":f},{footer:t(()=>[u("div",w,[l(a,{type:"primary",onClick:c},{default:t(()=>[i(" 确定 ")]),_:1}),l(a,{onClick:o[0]||(o[0]=n=>e.value=!1)},{default:t(()=>[i(" 取消 ")]),_:1})])]),default:t(()=>[V]),_:1},8,["modelValue"])])}}});export{k as _};
