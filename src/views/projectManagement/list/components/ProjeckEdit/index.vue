@@ -96,8 +96,9 @@ defineExpose({
 </script>
 
 <template>
-  <div>
+  <div class="hide-drawer-header">
     <el-drawer
+      class="hide-drawer-header"
       v-model="dialogTableVisible"
       append-to-body
       :close-on-click-modal="false"

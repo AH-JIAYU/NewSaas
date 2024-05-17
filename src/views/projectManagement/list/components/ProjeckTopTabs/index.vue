@@ -97,7 +97,7 @@ const isHieght = () => {
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="限量/h" prop="ir">
+              <el-form-item label="最小时长/分" prop="category">
                 <el-input-number
                   v-model="form.number"
                   :min="1"
@@ -107,19 +107,6 @@ const isHieght = () => {
                 />
               </el-form-item>
             </el-col>
-            <el-col :span="6">
-              <el-form-item label="准入量" prop="loi">
-                <el-input-number
-                  v-model="form.number"
-                  :min="1"
-                  :max="10"
-                  controls-position="right"
-                  size="large"
-                />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="20">
             <el-col :span="6">
               <el-form-item label="IR" prop="location">
                 <el-input-number
@@ -131,30 +118,20 @@ const isHieght = () => {
                 />
               </el-form-item>
             </el-col>
-            <el-col :span="6">
-              <el-form-item label="最小时长/分" prop="category">
-                <el-input-number
-                  v-model="form.number"
-                  :min="1"
-                  :max="10"
-                  controls-position="right"
-                  size="large"
-                />
-              </el-form-item>
-            </el-col>
+          </el-row>
+          <el-row :gutter="20">
             <el-col :span="12">
               <el-form-item label="URL" prop="location">
                 <el-input clearable />
               </el-form-item>
             </el-col>
-            <el-col :span="12">
-              <el-form-item v-if="form.checked1" label="互斥ID" prop="location">
+            <el-col :span="12" v-if="form.checked1" >
+              <el-form-item label="互斥ID" prop="location">
                 <el-input clearable />
               </el-form-item>
             </el-col>
-            <el-col :span="9" />
             <el-col :span="3">
-              <el-form-item label="互斥ID" prop="location">
+              <el-form-item label="填写互斥ID" prop="location">
                 <el-checkbox
                   style="top: -4px"
                   v-model="form.checked1"
@@ -345,6 +322,54 @@ const isHieght = () => {
         </el-row> -->
       </el-card>
     </el-tab-pane>
+    <el-tab-pane label="安全信息">
+      <el-card class="box-card">
+        <template #header>
+          <div class="card-header">安全信息</div>
+        </template>
+        <el-row :gutter="20">
+          <el-col :span="6">
+              <el-form-item label="小时准入量" prop="money">
+                <el-input-number
+                  v-model="form.number"
+                  :min="1"
+                  :max="10"
+                  controls-position="right"
+                  size="large"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="小时完成量" prop="money">
+                <el-input-number
+                  v-model="form.number"
+                  :min="1"
+                  :max="10"
+                  controls-position="right"
+                  size="large"
+                />
+              </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="4">
+              <el-form-item label="时差检测" prop="top">
+                <el-switch />
+              </el-form-item>
+            </el-col>
+            <el-col :span="4">
+              <el-form-item label="重复IP检测" prop="top">
+                <el-switch />
+              </el-form-item>
+            </el-col>
+            <el-col :span="4">
+              <el-form-item label="IP一致性检测" prop="top">
+                <el-switch />
+              </el-form-item>
+            </el-col>
+        </el-row>
+      </el-card>
+    </el-tab-pane>
   </el-tabs>
 </template>
 
@@ -376,6 +401,9 @@ const isHieght = () => {
   }
 }
 :deep {
+  .el-input{
+    min-width: 172px !important;
+  }
   .box-card {
     margin-bottom: 10px;
     border: 1px solid #fafafa;

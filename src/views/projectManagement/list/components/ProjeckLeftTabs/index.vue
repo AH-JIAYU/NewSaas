@@ -66,7 +66,7 @@ function setclient(data: number) {
 </script>
 
 <template>
-  <el-button @click="addLeftTab()"> 添加子项目 </el-button>
+  <el-button class="button" @click="addLeftTab()"> 新增 </el-button>
   <el-tabs v-model="activeLeftTab" tab-position="left" @tab-remove="tabremove">
     <el-tab-pane
       style="position: relative"
@@ -79,8 +79,8 @@ function setclient(data: number) {
       <div
         style="
           position: absolute;
-          left: 185px;
-          top: 41px;
+          left: 300px;
+          top: 9px;
           z-index: 999;
           display: flex;
           justify-content: center;
@@ -97,20 +97,20 @@ function setclient(data: number) {
         >
           同步数据
         </el-button>
-        <HTooltip
+        <!-- <HTooltip
           style="z-index: 9; color: #48a2ff; margin-left: 5px"
           text="注意噢！"
           v-if="activeLeftTab > 0"
         >
           <div class="i-bi:exclamation-circle h-1em w-1em" />
-        </HTooltip>
+        </HTooltip> -->
       </div>
 
-      <div
+      <!-- <div
         style="margin-left: 10px"
         class="i-solar:settings-line-duotone w-2em h-2em"
         @click="setHandler"
-      />
+      /> -->
       <!-- 在每个左侧 Tab 中使用 TopTabs 组件 -->
       <TopTabs :left-tab="leftTab" :tab-index="index" @set-client="setclient" />
     </el-tab-pane>

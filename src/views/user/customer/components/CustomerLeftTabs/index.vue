@@ -64,7 +64,7 @@ function setclient(data: number) {
 </script>
 
 <template>
-  <el-button @click="addLeftTab()"> 添加子项目 </el-button>
+  <el-button @click="addLeftTab()"> 新增 </el-button>
   <el-tabs v-model="activeLeftTab" tab-position="left" @tab-remove="tabremove">
     <el-tab-pane
       v-for="(leftTab, index) in localLeftTab"

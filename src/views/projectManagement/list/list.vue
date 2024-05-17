@@ -105,7 +105,7 @@ onMounted(() => {
   <div :class="{
     'absolute-container': tableAutoHeight,
   }">
-    <PageMain>
+    <PageMain class="hide-drawer-header">
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
           <el-form :model="queryForm" size="default" label-width="100px" inline-message inline class="search-form">

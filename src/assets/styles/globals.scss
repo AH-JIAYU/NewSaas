@@ -259,3 +259,74 @@ textarea {
   height: 100%;
 }
 
+// drawer样式
+.hide-drawer-header {
+  .el-drawer__header{
+    height: 0;
+    padding: 0;
+    margin: 0;
+    .el-drawer__close-btn{
+      position: fixed;
+      right: 5px;
+      top: 5px;
+      z-index: 9999999;
+    }
+  }
+  .el-drawer__header::after{
+    z-index: 0;
+    background-color: #efefef;
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 125px;
+    content: '';
+  }
+  .el-drawer__body{
+    z-index: 99999;
+    padding-left: 0;
+    padding-top: 0;
+    >.el-button{
+      color: #fff;
+      background-color: #5d97ff !important;
+      width: 126px;
+      height: 40px;
+      margin: 5px 0;
+      margin-left: -1px;
+      transform: translateY(85px);
+      padding: 5px 15px;
+      border-radius: 0;
+    }
+  }
+  .el-tabs.el-tabs--top{
+    margin-left: 20px;
+  }
+  .el-tabs.el-tabs--left{
+    margin-top: -50px;
+   .el-tabs__header.is-left{
+    margin-top: 135px;
+   }
+  }
+  .el-tabs.el-tabs--left>.el-tabs__item.is-left{
+    height: 100vh;
+  }
+  .el-tabs__item.is-left{
+    margin: 5px 0;
+    background-color: #fff;
+    width: 125px;
+    justify-content: center;
+  }
+  .el-tabs__active-bar.is-left{ // 高亮
+    display: none;
+  }
+  .el-card{
+    margin-bottom: 15px !important;
+    box-shadow: 0px 2px 5px rgba(0,0,0,0.12) !important;
+  }
+  .el-tabs__nav-wrap.is-top::after{
+    width: 0;
+  }
+  .el-tabs__item.is-top.is-active{
+    font-size: 16px;
+  }
+}
