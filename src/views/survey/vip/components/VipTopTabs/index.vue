@@ -12,6 +12,7 @@ const props = defineProps({
 const emit = defineEmits(["setClient"]);
 const isShow = ref(false);
 const isTrue = ref(true);
+const activeName=ref('basicSettings')
 function showEdit() {
   isShow.value = true;
 }
@@ -25,7 +26,9 @@ const localToptTab = ref<any>(props.leftTab);
 
 <template>
   <div>
-    <ElForm ref="formRef" label-width="100px">
+    <el-tabs v-model="activeName">
+    <el-tab-pane label="基础设置" name="basicSettings">
+      <ElForm ref="formRef" label-width="100px">
       <el-card class="box-card">
         <el-divider content-position="left"> |基本信息 </el-divider>
         <el-row :gutter="10">
@@ -35,7 +38,7 @@ const localToptTab = ref<any>(props.leftTab);
               prop="name"
               style="float: left; width: 18.5rem"
             >
-              <el-input clearable />
+              <el-input clearable  v-model="localToptTab.name" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -165,6 +168,9 @@ const localToptTab = ref<any>(props.leftTab);
         </el-col>
       </el-row>
     </ElForm>
+    </el-tab-pane>
+  </el-tabs>
+
   </div>
 </template>
 <style scoped lang="scss">

@@ -38,10 +38,10 @@ defineExpose({ showEdit });
 
 <template>
   <div>
-    <el-dialog
+    <el-drawer
       v-model="dialogTableVisible"
       title="编辑"
-      width="1000"
+      size="60%"
       :before-close="closeHandler"
     >
       <el-form ref="form" label-width="80px" :inline="false">
@@ -64,7 +64,6 @@ defineExpose({ showEdit });
             :locale="zhHans"
             @change="handleChange"
           />
-          <Viewer :value="content" />
         </el-form-item>
         <el-form-item label="内容(EN)">
           <!-- key解决富文本编译器   先添加  再编辑  富文本右侧值还在的问题    key值变了会刷新组件 -->
@@ -75,7 +74,6 @@ defineExpose({ showEdit });
             :locale="zhHans"
             @change="handleChange"
           />
-          <Viewer :value="content" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -84,7 +82,7 @@ defineExpose({ showEdit });
           <el-button type="" @click="dialogTableVisible = false"> 取消 </el-button>
         </div>
       </template>
-    </el-dialog>
+    </el-drawer>
   </div>
 </template>
 
@@ -92,7 +90,11 @@ defineExpose({ showEdit });
 :deep(.bytemd-fullscreen) {
   z-index: 2000;
 }
-
+:deep{
+  .bytemd-body {
+    height: calc(100% - 41px);
+  }
+}
 :deep(.editor) {
   width: 100%;
 }

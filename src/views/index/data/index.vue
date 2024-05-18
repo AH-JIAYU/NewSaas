@@ -253,7 +253,23 @@ onMounted(() => {
         <el-tab-pane label="渠道审核" name="auditing">
           <el-row class="fx-b">
             <SearchTab />
-            <el-button> 导出 </el-button>
+            <FormRightPanel>
+              <el-button size="default" @click="">
+                导出
+              </el-button>
+              <TabelControl
+                v-model:border="border"
+                v-model:tableAutoHeight="tableAutoHeight"
+                v-model:checkList="checkList"
+                v-model:columns="columns"
+                v-model:is-fullscreen="isFullscreen"
+                v-model:line-height="lineHeight"
+                v-model:stripe="stripe"
+                style="margin-left: 12px"
+                @click-full-screen="clickFullScreen"
+                @query-data="currentChange"
+              />
+            </FormRightPanel>
           </el-row>
           <el-table
             class="el-table__row--striped"

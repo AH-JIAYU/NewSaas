@@ -12,6 +12,7 @@ const props = defineProps({
 const emit = defineEmits(["setClient"]);
 const isShow = ref(false);
 const isTrue = ref(true);
+const activeName = ref('basicSettings')
 function showEdit() {
   isShow.value = true;
 }
@@ -25,96 +26,77 @@ const localToptTab = ref<any>(props.leftTab);
 
 <template>
   <div>
-    <ElForm ref="formRef" label-width="100px">
-      <el-card class="box-card">
-        <el-divider content-position="left"> |基本信息 </el-divider>
-        <el-row :gutter="10">
-          <el-col :span="8">
-            <el-form-item
-              label="会员组名称"
-              prop="name"
-              style="float: left; width: 18.5rem"
-            >
-              <el-input clearable />
-            </el-form-item>
-          </el-col>
-          <el-col :span="8" />
-          <el-col :span="8" />
-        </el-row>
-        <el-row :gutter="10">
-          <el-col :span="8">
-            <el-form-item
-              label="组状态"
-              prop="client_pid"
-              style="float: left; width: 18.5rem"
-            >
-              <el-switch v-model="isTrue" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item
-              label="接单授权"
-              prop="name"
-              style="float: left; width: 18.5rem"
-            >
-              <el-switch v-model="isTrue" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="8"> </el-col>
-        </el-row>
-        <el-row :gutter="10">
-          <el-col :span="24">
-            <el-form-item
-              label="组成员"
-              prop="name"
-              style="float: left; width: 18.5rem"
-            >
-              <el-cascader placeholder="模糊搜索" clearable />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="10">
-          <el-col :span="24">
-            <el-form-item prop="name" style="float: left; width: 39rem">
-              <el-input type="textarea" :rows="5" placeholder="" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="10">
-          <el-col :span="24">
-            <el-form-item
-              style="float: left; width: 18.5rem"
-              label="组长"
-              prop="top"
-            >
-              <el-select placeholder="模糊搜索" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="10">
-          <el-col :span="24">
-            <el-form-item
-              style="float: left; width: 18.5rem"
-              label="小组长"
-              prop="top"
-            >
-              <el-select placeholder="模糊搜索" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-card>
-      <el-row :gutter="20">
-        <el-col :span="16" />
-        <el-col :span="8">
-          <el-form-item prop="platform">
-            <el-button size="default" @click=""> 暂存 </el-button>
-            <el-button type="primary" size="default" @click="">
-              添加
-            </el-button>
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </ElForm>
+    <el-tabs v-model="activeName">
+      <el-tab-pane label="基础设置" name="basicSettings">
+        <ElForm ref="formRef" label-width="100px">
+          <el-card class="box-card">
+            <template #header>基本信息</template>
+            <el-row :gutter="10">
+              <el-col :span="8">
+                <el-form-item label="会员组名称" prop="name" style="float: left; width: 18.5rem">
+                  <el-input clearable v-model="localToptTab.name" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8" />
+              <el-col :span="8" />
+            </el-row>
+            <el-row :gutter="10">
+              <el-col :span="8">
+                <el-form-item label="组状态" prop="client_pid" style="float: left; width: 18.5rem">
+                  <el-switch v-model="isTrue" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="接单授权" prop="name" style="float: left; width: 18.5rem">
+                  <el-switch v-model="isTrue" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8"> </el-col>
+            </el-row>
+            <el-row :gutter="10">
+              <el-col :span="24">
+                <el-form-item label="组成员" prop="name" style="float: left; width: 18.5rem">
+                  <el-cascader placeholder="模糊搜索" clearable />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="10">
+              <el-col :span="24">
+                <el-form-item prop="name" style="float: left; width: 39rem">
+                  <el-input type="textarea" :rows="5" placeholder="" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="10">
+              <el-col :span="24">
+                <el-form-item style="float: left; width: 18.5rem" label="组长" prop="top">
+                  <el-select placeholder="模糊搜索" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="10">
+              <el-col :span="24">
+                <el-form-item style="float: left; width: 18.5rem" label="小组长" prop="top">
+                  <el-select placeholder="模糊搜索" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-card>
+          <el-row :gutter="20">
+            <el-col :span="16" />
+            <el-col :span="8">
+              <el-form-item prop="platform">
+                <el-button size="default" @click=""> 暂存 </el-button>
+                <el-button type="primary" size="default" @click="">
+                  添加
+                </el-button>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </ElForm>
+      </el-tab-pane>
+    </el-tabs>
+
   </div>
 </template>
 <style scoped lang="scss">

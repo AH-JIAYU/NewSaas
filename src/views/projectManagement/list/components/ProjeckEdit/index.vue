@@ -22,7 +22,7 @@ async function showEdit(row: any) {
     title.value = "添加";
     leftTabsData = reactive([
       {
-        name: "添加项目",
+        name: "项目名称",
         // currency: surveyconfig.currency,
         platform: {},
         screen: {},

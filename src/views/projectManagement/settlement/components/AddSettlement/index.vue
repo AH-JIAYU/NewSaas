@@ -31,7 +31,7 @@ defineExpose({ showEdit });
       :before-close="closeHandler"
     >
       <el-form label-width="100px" :inline="false">
-        <el-tabs type="card">
+        <el-tabs>
           <el-tab-pane label="遗漏项目添加">
             <el-form-item label="项目ID">
               <el-input />
@@ -54,7 +54,7 @@ defineExpose({ showEdit });
               <el-input />
             </el-form-item>
             <el-form-item label="GUID">
-              <el-input type="textarea" :rows="15" />
+              <el-input type="textarea" :rows="5" />
             </el-form-item>
           </el-tab-pane>
           <el-tab-pane label="已完结项目补加">

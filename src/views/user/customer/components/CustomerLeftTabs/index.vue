@@ -23,7 +23,7 @@ const tabIndex = ref(0);
 const activeLeftTab = ref(0);
 
 const initialTopTabsData = {
-  name: "新建项目",
+  name: "客户名称",
   // currency: surveyconfig.currency,
   platform: {},
   screen: {},
@@ -64,7 +64,7 @@ function setclient(data: number) {
 </script>
 
 <template>
-  <el-button @click="addLeftTab()"> 新增 </el-button>
+  <el-button @click="addLeftTab()"> 新增客户 </el-button>
   <el-tabs v-model="activeLeftTab" tab-position="left" @tab-remove="tabremove">
     <el-tab-pane
       v-for="(leftTab, index) in localLeftTab"
@@ -74,7 +74,7 @@ function setclient(data: number) {
       :name="index"
     >
       <!-- 在每个左侧 Tab 中使用 TopTabs 组件 -->
-      <el-button
+      <!-- <el-button
         style="margin-bottom: 5px"
         v-if="activeLeftTab > 0"
         size="small"
@@ -91,7 +91,7 @@ function setclient(data: number) {
         v-if="activeLeftTab > 0"
       >
         <div class="i-bi:exclamation-circle h-1em w-1em" />
-      </HTooltip>
+      </HTooltip> -->
       <TopTabs :left-tab="leftTab" :tab-index="index" @set-client="setclient" />
     </el-tab-pane>
   </el-tabs>

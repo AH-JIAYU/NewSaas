@@ -38,7 +38,6 @@ const data = ref({
     account: '',
     name: '',
     mobile: '',
-    sex: '',
   },
   // 批量操作
   batch: {
@@ -70,8 +69,7 @@ function getDataList() {
     ...getParams(),
     ...(data.value.search.account && { account: data.value.search.account }),
     ...(data.value.search.name && { name: data.value.search.name }),
-    ...(data.value.search.mobile && { mobile: data.value.search.mobile }),
-    ...(data.value.search.sex !== '' && { sex: data.value.search.sex }),
+    ...(data.value.search.mobile && { mobile: data.value.search.mobile })
   }
   apiManager.list(params).then((res: any) => {
     data.value.loading = false
@@ -212,22 +210,6 @@ function handleMoreOperating(command: string, row: any) {
               <ElInput v-model="data.search.mobile" placeholder="请输入手机号" clearable @keydown.enter="currentChange()"
                 @clear="currentChange()" />
             </ElFormItem>
-            <ElFormItem v-show="!fold" >
-              <ElRadioGroup v-model="data.search.sex" @change="currentChange()">
-                <ElRadioButton label="">
-                  全部
-                </ElRadioButton>
-                <ElRadioButton :label="1">
-                  男
-                </ElRadioButton>
-                <ElRadioButton :label="0">
-                  女
-                </ElRadioButton>
-                <ElRadioButton :label="2">
-                  保密
-                </ElRadioButton>
-              </ElRadioGroup>
-            </ElFormItem>
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">
                 <template #icon>
@@ -241,7 +223,7 @@ function handleMoreOperating(command: string, row: any) {
                 </template>
                 重置
               </ElButton>
-              <ElButton link @click="toggle">
+              <ElButton disabled link @click="toggle">
                 <template #icon>
                   <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
                 </template>

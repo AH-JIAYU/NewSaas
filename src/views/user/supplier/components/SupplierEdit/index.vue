@@ -98,7 +98,7 @@ defineExpose({
 <template>
   <div>
     <el-drawer v-model="drawerisible" append-to-body :close-on-click-modal="false" destroy-on-close draggable size="70%"
-      :title="title" @close="close">
+      :title="title" @close="close" class="hide-drawer-header">
       <LeftTabs :left-tabs-data="leftTabsData" :validate-top-tabs="validateTopTabs" />
       <!-- <template #footer>
         <el-button @click="close">

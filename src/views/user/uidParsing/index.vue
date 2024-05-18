@@ -45,7 +45,13 @@ const ParsingEncryption = (fold: number | string) => { //解析 | 加密
     </PageMain>
   </div>
 </template>
-<style>
+<style lang="scss" scoped>
+:deep {
+  .el-row {
+    margin-top: 0;
+  }
+}
+
 .flex-c {
   height: 100%;
   display: flex;

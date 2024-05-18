@@ -69,7 +69,7 @@ defineExpose({ showEdit })
           <el-input placeholder=""  clearable @change=""></el-input>
         </el-form-item>
         <el-form-item  label="备注">
-          <el-input placeholder="备注说明"  clearable :rows="15"  type="textarea"></el-input>
+          <el-input placeholder="备注说明"  clearable :rows="5"  type="textarea"></el-input>
         </el-form-item>
       </el-form>
       <template #footer>

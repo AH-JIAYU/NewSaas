@@ -157,7 +157,7 @@ function handleMoreOperating(command: string, row: any) {
     <PageMain>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
-          <el-form :model="queryForm" size="default" label-width="100px" inline-message inline class="search-form">
+          <el-form :model="queryForm" size="default" label-width="6.25rem" inline-message inline class="search-form">
             <el-form-item label="">
               <el-input clearable placeholder="项目ID" />
             </el-form-item>
@@ -207,7 +207,7 @@ function handleMoreOperating(command: string, row: any) {
             </el-form-item>
             <el-form-item  v-show="!fold">
               <el-date-picker v-model="queryForm.select.time" type="daterange" unlink-panels range-separator="-"
-                start-placeholder="创建开始日期" end-placeholder="创建结束日期" size="default" style="width: 192px;"
+                start-placeholder="创建开始日期" end-placeholder="创建结束日期" size="default" style="width: 12rem;"
                 clear-icon="true" />
             </el-form-item>
             <ElFormItem>
@@ -252,11 +252,11 @@ function handleMoreOperating(command: string, row: any) {
           </el-button>
           <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
             v-model:columns="columns" v-model:is-fullscreen="isFullscreen" v-model:line-height="lineHeight"
-            v-model:stripe="stripe" style="margin-left: 12px" @click-full-screen="clickFullScreen"
+            v-model:stripe="stripe" style="margin-left: .75rem" @click-full-screen="clickFullScreen"
             @query-data="currentChange" />
         </FormRightPanel>
       </el-row>
-      <el-table style="margin-top: 0.625rem" ref="tableSortRef" v-loading="false" row-key="id" :data="list"
+      <el-table style="margin-top: 10px" ref="tableSortRef" v-loading="false" row-key="id" :data="list"
         :border="border" :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows">
         <el-table-column type="selection" />
         <el-table-column type="index" align="center" label="序号" width="55" />
@@ -347,8 +347,8 @@ function handleMoreOperating(command: string, row: any) {
 .page-main {
   .search-form {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
-    margin-bottom: -18px;
+    grid-template-columns: repeat(auto-fit, minmax(20.625rem, 1fr));
+    margin-bottom: -1.125rem;
 
     :deep(.el-form-item) {
       grid-column: auto / span 1;

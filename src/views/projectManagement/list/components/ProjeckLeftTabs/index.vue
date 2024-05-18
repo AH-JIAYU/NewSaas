@@ -23,7 +23,7 @@ const tabIndex = ref(0);
 const activeLeftTab = ref(0);
 
 const initialTopTabsData = {
-  name: "新建项目",
+  name: "项目名称",
   platform: {},
   screen: {},
   security: {},

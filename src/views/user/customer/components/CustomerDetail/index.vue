@@ -36,116 +36,126 @@ defineExpose({
     :title="title"
     @close="close"
   >
-  <el-card>
     <el-form   label-width="100px" label-position="right"  >
-    <el-divider content-position="left">
-      基本信息
-    </el-divider>
-    <el-row :gutter="24">
-      <el-col :span="8">
-        <el-form-item label="客户编码">
-          <el-input  disabled placeholder="" />
-        </el-form-item>
-      </el-col>
-      <el-col :span="8">
-        <el-form-item label="客户名称">
-          <el-input disabled placeholder="" />
-        </el-form-item>
-      </el-col>
-      <el-col :span="8">
-        <el-form-item label="客户简称">
-          <el-input disabled placeholder="" />
-        </el-form-item>
-      </el-col>
-      <el-col :span="8">
-        <el-form-item label="公司名称">
-          <el-input disabled placeholder="" />
-        </el-form-item>
-      </el-col>
-      <el-col :span="8">
-        <el-form-item label="客户姓名">
-          <el-input disabled placeholder="" />
-        </el-form-item>
-      </el-col>
-      <el-col :span="8">
-        <el-form-item label="手机号码">
-          <el-input disabled placeholder="" />
-        </el-form-item>
-      </el-col>
-      <el-col :span="8">
-        <el-form-item label="电子邮箱">
-          <el-input disabled placeholder="" />
-        </el-form-item>
-      </el-col>
-      <el-col :span="8">
-        <el-form-item label="创建人">
-          <el-input disabled placeholder="" />
-        </el-form-item>
-      </el-col>
-      <el-col :span="8">
-        <el-form-item label="创建时间">
-          <el-input disabled placeholder="" />
-        </el-form-item>
-      </el-col>
-      <el-col :span="8">
-        <el-form-item label="负责人">
-          <el-input disabled placeholder="" />
-        </el-form-item>
-      </el-col>
-      <el-col :span="8">
-        <el-form-item label="结算周期">
-          <el-input disabled placeholder="" />
-        </el-form-item>
-      </el-col>
-    </el-row>
+    <el-card class="box-card">
+                <template #header>
+            <div class="card-header">
+              <span>基本信息</span>
+            </div>
+          </template>
+<el-row :gutter="24">
+  <el-col :span="8">
+    <el-form-item label="客户编码">
+      <el-text class="mx-1">xxxxxx</el-text>
+    </el-form-item>
+  </el-col>
+  <el-col :span="8">
+    <el-form-item label="客户名称">
+      <el-text class="mx-1">xxxxxx</el-text>
+    </el-form-item>
+  </el-col>
+  <el-col :span="8">
+    <el-form-item label="客户简称">
+      <el-text class="mx-1">xxxxxx</el-text>
+    </el-form-item>
+  </el-col>
+  <el-col :span="8">
+    <el-form-item label="公司名称">
+      <el-text class="mx-1">xxxxxx</el-text>
+    </el-form-item>
+  </el-col>
+  <el-col :span="8">
+    <el-form-item label="客户姓名">
+      <el-text class="mx-1">xxxxxx</el-text>
+    </el-form-item>
+  </el-col>
+  <el-col :span="8">
+    <el-form-item label="手机号码">
+      <el-text class="mx-1">xxxxxx</el-text>
+    </el-form-item>
+  </el-col>
+  <el-col :span="8">
+    <el-form-item label="电子邮箱">
+      <el-text class="mx-1">xxxxxx</el-text>
+    </el-form-item>
+  </el-col>
+  <el-col :span="8">
+    <el-form-item label="创建人">
+      <el-text class="mx-1">xxxxxx</el-text>
+    </el-form-item>
+  </el-col>
+  <el-col :span="8">
+    <el-form-item label="创建时间">
+      <el-text class="mx-1">xxxxxx</el-text>
+    </el-form-item>
+  </el-col>
+  <el-col :span="8">
+    <el-form-item label="负责人">
+      <el-text class="mx-1">xxxxxx</el-text>
+    </el-form-item>
+  </el-col>
+  <el-col :span="8">
+    <el-form-item label="结算周期">
+      <el-text class="mx-1">xxxxxx</el-text>
+    </el-form-item>
+  </el-col>
+</el-row>
+</el-card>
 
-    <el-divider content-position="left">
-      权限信息
-    </el-divider>
-    <el-row :gutter="24">
-      <el-col :span="8">
-        <el-form-item label="风险控制">
-          <el-input disabled placeholder="" />
-        </el-form-item>
-      </el-col>
-      <el-col :span="8">
-        <el-form-item label="营业限额/月">
-          <el-input disabled placeholder="" />
-        </el-form-item>
-      </el-col>
-      <el-col :span="8">
-        <el-form-item label="审核率Min值">
-          <el-input disabled placeholder="" />
-        </el-form-item>
-      </el-col>
-      <el-col :span="8">
-        <el-form-item label="风险控制">
-          <el-input disabled placeholder="" />
-        </el-form-item>
-      </el-col>
-    </el-row>
+<el-card class="box-card">
+  <template #header>
+            <div class="card-header">
+              <span>权限信息</span>
+            </div>
+          </template>
+  <el-row :gutter="24">
+    <el-col :span="8">
+      <el-form-item label="风险控制">
+        <el-text class="mx-1">xxxxxx</el-text>
+      </el-form-item>
+    </el-col>
+    <el-col :span="8">
+      <el-form-item label="营业限额/月">
+        <el-text class="mx-1">xxxxxx</el-text>
+      </el-form-item>
+    </el-col>
+    <el-col :span="8">
+      <el-form-item label="审核率Min值">
+        <el-text class="mx-1">xxxxxx</el-text>
+      </el-form-item>
+    </el-col>
+    <el-col :span="8">
+      <el-form-item label="风险控制">
+        <el-text class="mx-1">xxxxxx</el-text>
+      </el-form-item>
+    </el-col>
+  </el-row>
+</el-card>
 
-    <el-divider content-position="left">
-      操作日志
-    </el-divider>
-
-    <el-table :data="list" stripe border  >
-      <el-table-column type="index" label="序号" width="50" />
-      <el-table-column prop="a" label="操作时间" />
-      <el-table-column prop="b" label="操作人" />
-      <el-table-column prop="c" label="操作事项" />
-      <el-table-column label="详情">
-        <template #default="{ row }">
+<el-card class="box-card">
+  <template #header>
+            <div class="card-header">
+              <span>操作日志</span>
+            </div>
+          </template>
+  <el-table :data="list" stripe border>
+    <el-table-column type="index" label="序号" width="50" />
+    <el-table-column prop="a" label="操作时间" />
+    <el-table-column prop="b" label="操作人" />
+    <el-table-column prop="c" label="操作事项" />
+    <el-table-column label="详情">
+      <template #default="{ row }">
           <el-button type="primary" link @click="handleCheck(row)">
             详情
           </el-button>
         </template>
-</el-table-column>
-</el-table>
-<customerDetailDetail ref="checkRef" />
-
-</el-form>
+    </el-table-column>
+  </el-table>
 </el-card>
+
+
+<customerDetailDetail ref="checkRef" />
+</el-form>
 </el-drawer>
 </template>
 
@@ -153,6 +163,10 @@ defineExpose({
 :deep {
   .el-divider {
     margin: 20px 0;
+  }
+
+  .el-card {
+    margin: 10px 0;
   }
 
   .el-drawer__header {

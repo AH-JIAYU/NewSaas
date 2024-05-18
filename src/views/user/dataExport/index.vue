@@ -20,10 +20,13 @@ const exportID = () => {
 <template>
   <div>
     <PageMain>
-      <el-card>
         <el-form label-width="100px" label-position="right">
-          <el-divider content-position="left"> 按项目导出会员资料 </el-divider>
-          <el-row :gutter="24">
+          <!-- <el-divider content-position="left">  </el-divider> -->
+          <el-card>
+            <template #header>
+              按项目导出会员资料
+            </template>
+            <el-row :gutter="24">
             <el-col :span="6">
               <el-form-item>
                 <el-input v-model="form.a" placeholder="请输入" />
@@ -44,10 +47,13 @@ const exportID = () => {
               </el-button>
             </el-col>
           </el-row>
-          <el-divider content-position="left">
-            按会员ID导出资料(站长ID＿会员ID)
-          </el-divider>
-          <el-row :gutter="24">
+          </el-card>
+
+          <el-card>
+            <template #header>
+              按会员ID导出资料(站长ID＿会员ID)
+            </template>
+            <el-row :gutter="24">
             <el-col :span="12">
               <el-form-item>
                 <el-input
@@ -64,8 +70,8 @@ const exportID = () => {
               </el-button>
             </el-col>
           </el-row>
+          </el-card>
         </el-form>
-      </el-card>
     </PageMain>
   </div>
 </template>
@@ -73,6 +79,9 @@ const exportID = () => {
 :deep {
   .el-divider {
     margin: 20px 0;
+  }
+  .el-card{
+    margin-bottom: 10px;
   }
 
   .el-row,

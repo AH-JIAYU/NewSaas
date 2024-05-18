@@ -35,7 +35,7 @@ const save = () => {
   <div :class="{ 'absolute-container': data.tableAutoHeight }">
     <PageMain>
       <el-tabs v-model="data.activeTopTab">
-        <el-form ref="formRef" label-position="left" label-width="120px" :model="data.formData" style="width: 500px;  ">
+        <el-form ref="formRef" label-position="right" label-width="120px" :model="data.formData" style="width: 500px;  ">
           <el-tab-pane label="基本设置" name="基本设置">
             <el-form-item label="网站名称" prop="username">
               <el-input v-model="data.formData.username" placeholder="" />

@@ -51,8 +51,7 @@ function handleCheck(row: any) {
   checkRef.value.showEdit(row);
 }
 // 更改状态
-function handleChange(fold: any) {
-  if (selectRows.value.length > 0) {
+function handleChange(fold: any, row: any) {
     let msg = "";
     switch (fold) {
       case 0:
@@ -75,10 +74,7 @@ function handleChange(fold: any) {
         //   })
         // })
       })
-      .catch(() => {});
-  } else {
-    ElMessage.error("您未选中任何行");
-  }
+      .catch(() => { });
 }
 
 // 重置请求
@@ -125,6 +121,26 @@ async function fetchData() {
 function setSelectRows(val: any) {
   selectRows.value = val;
 }
+// 更多操作
+function handleMoreOperating(command: string, row: any) {
+  switch (command) {
+    case "handleApproval": // 审批
+      handleChange(0, row)
+      break;
+    case "handleEnable": // 启用
+      handleChange(1, row)
+      break;
+    case "handleDisabled": // 禁用
+      handleChange(2, row)
+      break;
+    case "handleDelete": // 删除
+      break;
+    case "handleCheck":
+      handleCheck(row)
+      break;
+  }
+}
+
 onMounted(() => {
   columns.value.forEach((item: any) => {
     if (item.checked) checkList.value.push(item.prop);
@@ -138,76 +154,33 @@ onMounted(() => {
     <PageMain>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
-          <ElForm
-            :model="queryForm.select"
-            size="default"
-            label-width="100px"
-            inline-message
-            inline
-            class="search-form"
-          >
+          <ElForm :model="queryForm.select" size="default" label-width="100px" inline-message inline
+            class="search-form">
             <el-form-item label="">
-              <el-input
-                v-model.trim="queryForm.select.id"
-                clearable
-                :inline="false"
-                placeholder="供应商ID"
-              />
+              <el-input v-model.trim="queryForm.select.id" clearable :inline="false" placeholder="供应商ID" />
             </el-form-item>
             <el-form-item label="">
-              <el-input
-                v-model.trim="queryForm.select.name"
-                clearable
-                :inline="false"
-                placeholder="供应商简称"
-              />
+              <el-input v-model.trim="queryForm.select.name" clearable :inline="false" placeholder="供应商简称" />
             </el-form-item>
             <el-form-item label="">
-              <el-input
-                v-model.trim="queryForm.select.phone"
-                clearable
-                :inline="false"
-                placeholder="手机号码"
-              />
+              <el-input v-model.trim="queryForm.select.phone" clearable :inline="false" placeholder="手机号码" />
             </el-form-item>
             <el-form-item label="" v-show="!fold">
-              <el-input
-                v-model.trim="queryForm.select.name"
-                clearable
-                :inline="false"
-                placeholder="账号名称"
-              />
+              <el-input v-model.trim="queryForm.select.name" clearable :inline="false" placeholder="账号名称" />
             </el-form-item>
             <el-form-item label="" v-show="!fold">
-              <el-input
-                v-model.trim="queryForm.select.email"
-                clearable
-                :inline="false"
-                placeholder="邮箱"
-              />
+              <el-input v-model.trim="queryForm.select.email" clearable :inline="false" placeholder="邮箱" />
             </el-form-item>
             <el-form-item label="" v-show="!fold">
-              <el-select
-                v-model="queryForm.select.default"
-                clearable
-                placeholder="客户状态"
-              >
+              <el-select v-model="queryForm.select.default" clearable placeholder="客户状态">
                 <el-option label="默认" value="true" />
                 <el-option label="关闭" value="false" />
               </el-select>
             </el-form-item>
             <el-form-item label="" v-show="!fold">
-              <el-date-picker
-                v-model="queryForm.select.time"
-                type="daterange"
-                unlink-panels
-                range-separator="-"
-                start-placeholder="创建开始日期"
-                end-placeholder="创建结束日期"
-                size="default"
-                style="width: 192px"
-                clear-icon="true"
-              />
+              <el-date-picker v-model="queryForm.select.time" type="daterange" unlink-panels range-separator="-"
+                start-placeholder="创建开始日期" end-placeholder="创建结束日期" size="default" style="width: 192px"
+                clear-icon="true" />
             </el-form-item>
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">
@@ -224,9 +197,7 @@ onMounted(() => {
               </ElButton>
               <ElButton link @click="toggle">
                 <template #icon>
-                  <SvgIcon
-                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
-                  />
+                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
                 </template>
                 {{ fold ? "展开" : "收起" }}
               </ElButton>
@@ -240,156 +211,74 @@ onMounted(() => {
           <el-button type="primary" size="default" @click="handleAdd">
             新增
           </el-button>
-          <el-button type="primary" size="default" @click="handleChange(0)">
-            审批
-          </el-button>
-          <el-button type="primary" size="default" @click="handleChange(1)">
-            启用
-          </el-button>
-          <el-button type="primary" size="default" @click="handleChange(2)">
-            禁用
-          </el-button>
-          <el-button type="primary" size="default"> 加减款 </el-button>
         </FormLeftPanel>
         <FormRightPanel>
           <el-button size="default"> 导出 </el-button>
-          <TabelControl
-            v-model:border="border"
-            v-model:tableAutoHeight="tableAutoHeight"
-            v-model:checkList="checkList"
-            v-model:columns="columns"
-            v-model:line-height="lineHeight"
-            v-model:stripe="stripe"
-            style="margin-left: 12px"
-            @query-data="queryData"
-          />
+          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
+            v-model:columns="columns" v-model:line-height="lineHeight" v-model:stripe="stripe" style="margin-left: 12px"
+            @query-data="queryData" />
         </FormRightPanel>
       </el-row>
-      <el-table
-        v-loading="listLoading"
-        :border="border"
-        :data="list"
-        :size="lineHeight"
-        :stripe="stripe"
-        @selection-change="setSelectRows"
-      >
-        <el-table-column
-          align="center"
-          prop="a"
-          show-overflow-tooltip
-          type="selection"
-        />
-        <el-table-column
-          v-if="checkList.includes('a')"
-          align="center"
-          prop="id"
-          show-overflow-tooltip
-          label="供应商ID"
-        />
-        <el-table-column
-          align="center"
-          prop="b"
-          show-overflow-tooltip
-          label="供应商名称"
-        />
-        <el-table-column
-          align="center"
-          prop="c"
-          show-overflow-tooltip
-          label="余额($)"
-        />
-        <el-table-column
-          align="center"
-          prop="d"
-          show-overflow-tooltip
-          label="余额(￥)"
-        />
-        <el-table-column
-          align="center"
-          prop="e"
-          show-overflow-tooltip
-          label="待审金额"
-        />
-        <el-table-column
-          align="center"
-          prop="f"
-          show-overflow-tooltip
-          label="供应商等级"
-        />
-        <el-table-column
-          align="center"
-          prop="g"
-          show-overflow-tooltip
-          label="B2B|B2C"
-        />
-        <el-table-column
-          align="center"
-          prop="h"
-          show-overflow-tooltip
-          label="结算周期"
-        />
-        <ElTableColumn
-          align="center"
-          show-overflow-tooltip
-          prop=""
-          label="供应商状态"
-        >
+      <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
+        @selection-change="setSelectRows">
+        <el-table-column align="center" prop="a" show-overflow-tooltip type="selection" />
+        <el-table-column v-if="checkList.includes('a')" align="center" prop="id" show-overflow-tooltip label="供应商ID" />
+        <el-table-column align="center" prop="b" show-overflow-tooltip label="供应商名称" />
+        <el-table-column align="center" prop="c" show-overflow-tooltip label="余额($)" />
+        <el-table-column align="center" prop="d" show-overflow-tooltip label="余额(￥)" />
+        <el-table-column align="center" prop="e" show-overflow-tooltip label="待审金额" />
+        <el-table-column align="center" prop="f" show-overflow-tooltip label="供应商等级" />
+        <el-table-column align="center" prop="g" show-overflow-tooltip label="B2B|B2C" />
+        <el-table-column align="center" prop="h" show-overflow-tooltip label="结算周期" />
+        <ElTableColumn align="center" show-overflow-tooltip prop="" label="供应商状态">
           <ElSwitch inline-prompt active-text="启用" inactive-text="禁用" />
         </ElTableColumn>
-        <el-table-column
-          align="center"
-          prop="r"
-          show-overflow-tooltip
-          label="创建日期"
-        />
-        <el-table-column
-          align="center"
-          prop="r"
-          show-overflow-tooltip
-          label="备注"
-        />
-        <el-table-column
-          align="center"
-          prop="i"
-          label="操作"
-          show-overflow-tooltip
-          width="180"
-        >
+        <el-table-column align="center" prop="r" show-overflow-tooltip label="创建日期" />
+        <el-table-column align="center" prop="r" show-overflow-tooltip label="备注" />
+        <el-table-column align="center" prop="i" label="操作" show-overflow-tooltip width="250">
           <template #default="{ row }">
-            <el-button
-              size="small"
-              plain
-              type="primary"
-              @click="handleEdit(row)"
-            >
-              编辑
-            </el-button>
-            <el-button
-              size="small"
-              plain
-              type="primary"
-              @click="handleCheck(row)"
-            >
-              详情
-            </el-button>
+            <ElSpace>
+              <el-button size="small" plain type="primary">
+                加减款
+              </el-button>
+              <el-button size="small" plain type="primary" @click="handleEdit(row)">
+                编辑
+              </el-button>
+
+              <ElDropdown @command="handleMoreOperating($event, row)">
+                <ElButton size="small">
+                  更多操作
+                  <SvgIcon name="i-ep:arrow-down" class="el-icon--right" />
+                </ElButton>
+                <template #dropdown>
+                  <ElDropdownMenu>
+                    <ElDropdownItem command="handleApproval">
+                      审批
+                    </ElDropdownItem>
+                    <ElDropdownItem command="handleEnable" divided>
+                      启用
+                    </ElDropdownItem>
+                    <ElDropdownItem command="handleDisabled" divided>
+                      禁用
+                    </ElDropdownItem>
+                    <ElDropdownItem command="handleCheck" divided> 详情 </ElDropdownItem>
+                    <ElDropdownItem command="handleDelete" divided>
+                      删除
+                    </ElDropdownItem>
+
+                  </ElDropdownMenu>
+                </template>
+              </ElDropdown>
+            </ElSpace>
           </template>
         </el-table-column>
         <template #empty>
           <el-empty class="vab-data-empty" description="暂无数据" />
         </template>
       </el-table>
-      <ElPagination
-        :current-page="pagination.page"
-        :total="pagination.total"
-        :page-size="pagination.size"
-        :page-sizes="pagination.sizes"
-        :layout="pagination.layout"
-        :hide-on-single-page="false"
-        class="pagination"
-        background
-        @size-change="sizeChange"
-        @current-change="currentChange"
-      />
+      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+        background @size-change="sizeChange" @current-change="currentChange" />
     </PageMain>
     <customerEdit ref="editRef" @fetch-data="fetchData" />
     <customerDetail ref="checkRef" @fetch-data="fetchData" />
@@ -420,6 +309,7 @@ onMounted(() => {
     }
   }
 }
+
 // 筛选
 .page-main {
   .search-form {
@@ -440,6 +330,7 @@ onMounted(() => {
     }
   }
 }
+
 :deep {
   .el-table__header {
     th {
