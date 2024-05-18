@@ -1,0 +1,9 @@
+
+/**
+ * 由 Fantastic-admin 提供技术支持
+ * Powered by Fantastic-admin
+ * Gitee  https://fantastic-admin.gitee.io
+ * Github https://fantastic-admin.github.io
+ */
+
+import{d as p,s as g,t as _,i as t,o as s,b as o,f as h,D as a,j as i,F as y,K as d,ax as m,ay as l,l as u,_ as f}from"./index-DQumISPN.js";const k=n=>(m("data-v-29026974"),n=n(),l(),n),b={key:0,class:"copyright"},S=k(()=>u("span",null,"Copyright",-1)),x={key:0},C=["href"],I={key:1},v={key:2,href:"https://beian.miit.gov.cn/",target:"_blank",rel:"noopener"},w=p({name:"Copyright",__name:"index",setup(n){const r=g(),e=_();return(B,N)=>{const c=d;return t(r).meta.copyright??t(e).settings.copyright.enable?(s(),o("footer",b,[S,h(c,{name:"i-ri:copyright-line",size:18}),t(e).settings.copyright.dates?(s(),o("span",x,a(t(e).settings.copyright.dates),1)):i("",!0),t(e).settings.copyright.company?(s(),o(y,{key:1},[t(e).settings.copyright.website?(s(),o("a",{key:0,href:t(e).settings.copyright.website,target:"_blank",rel:"noopener"},a(t(e).settings.copyright.company),9,C)):(s(),o("span",I,a(t(e).settings.copyright.company),1))],64)):i("",!0),t(e).settings.copyright.beian?(s(),o("a",v,a(t(e).settings.copyright.beian),1)):i("",!0)])):i("",!0)}}}),D=f(w,[["__scopeId","data-v-29026974"]]);export{D as default};
