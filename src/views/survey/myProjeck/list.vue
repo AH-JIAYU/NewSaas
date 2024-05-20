@@ -1,10 +1,12 @@
 <script setup lang="ts">
+import checkEdit from "./components/checkEdit/index.vue";
+import quotaEdit from "./components/quotaEdit/index.vue";
+
 defineOptions({
   name: "SurveyMyProjeckList",
 });
-import checkEdit from "./components/checkEdit/index.vue";
-import quotaEdit from "./components/quotaEdit/index.vue";
-const { pagination, onSizeChange, onCurrentChange } = usePagination(); //分页
+
+const { pagination, onSizeChange, onCurrentChange } = usePagination(); // 分页
 // 分页
 const value1 = ref("");
 const tableSortRef = ref("");
@@ -17,7 +19,7 @@ const addQuotaEdit = ref<any>();
 const border = ref(true);
 const checkList = ref([]);
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
-const isFullscreen = ref(false); //表格控件-控制全屏
+const isFullscreen = ref(false); // 表格控件-控制全屏
 const lineHeight = ref<any>("default");
 const stripe = ref(false);
 const columns = ref([
@@ -43,15 +45,15 @@ const queryForm = reactive<any>({
 const list = ref<any>([]);
 // 测查
 function check(row: any) {
-  addCheckEditEdit.value.showEdit(row)
+  addCheckEditEdit.value.showEdit(row);
 }
 // 附件
-const attachment = () => {}
+function attachment() {}
 // 配额
 function quota(row: any) {
-  addQuotaEdit.value.showEdit(row)
+  addQuotaEdit.value.showEdit(row);
 }
-//表格控件-控制全屏
+// 表格控件-控制全屏
 function clickFullScreen() {
   isFullscreen.value = !isFullscreen.value;
 }
@@ -91,22 +93,11 @@ async function fetchData() {
 onMounted(() => {
   fetchData();
 });
-function handleMoreOperating(command: string, row: any) {
-  switch (command) {
-    case "check":
-      check(row)
-      break;
-    case "attachment":
-      attachment()
-      break;
-  }
-}
 </script>
 
 <template>
   <div
     :class="{
-
       'absolute-container': tableAutoHeight,
     }"
   >
@@ -114,7 +105,11 @@ function handleMoreOperating(command: string, row: any) {
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
           <el-form
-          :model="queryForm.select" size="default" label-width="100px" inline-message inline
+            :model="queryForm.select"
+            size="default"
+            label-width="100px"
+            inline-message
+            inline
             class="search-form"
           >
             <el-form-item label="">
@@ -164,10 +159,17 @@ function handleMoreOperating(command: string, row: any) {
             <el-form-item v-show="!fold">
               <el-input clearable placeholder="创建人" />
             </el-form-item>
-            <el-form-item  v-show="!fold">
-              <el-date-picker  type="daterange" unlink-panels range-separator="-"
-                start-placeholder="开始日期" end-placeholder="结束日期" size="default" style="width: 192px" clear-icon="true" />
-
+            <el-form-item v-show="!fold">
+              <el-date-picker
+                type="daterange"
+                unlink-panels
+                range-separator="-"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                size="default"
+                style="width: 192px"
+                clear-icon="true"
+              />
             </el-form-item>
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">
@@ -178,7 +180,7 @@ function handleMoreOperating(command: string, row: any) {
               </ElButton>
               <ElButton @click="onReset">
                 <template #icon>
-                  <div class="i-grommet-icons:power-reset w-1em h-1em"></div>
+                  <div class="i-grommet-icons:power-reset h-1em w-1em" />
                 </template>
                 重置
               </ElButton>
@@ -196,11 +198,9 @@ function handleMoreOperating(command: string, row: any) {
       </SearchBar>
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
-        <FormLeftPanel> </FormLeftPanel>
+        <FormLeftPanel />
         <FormRightPanel>
-          <el-button size="default" @click="">
-            导出
-          </el-button>
+          <el-button size="default" @click=""> 导出 </el-button>
           <TabelControl
             v-model:border="border"
             v-model:tableAutoHeight="tableAutoHeight"
@@ -216,9 +216,9 @@ function handleMoreOperating(command: string, row: any) {
         </FormRightPanel>
       </el-row>
       <el-table
-        style="margin-top: 10px"
         ref="tableSortRef"
         v-loading="false"
+        style="margin-top: 10px"
         row-key="id"
         :data="list"
         :border="border"
@@ -227,33 +227,72 @@ function handleMoreOperating(command: string, row: any) {
       >
         <el-table-column type="selection" />
         <el-table-column type="index" align="center" label="序号" width="55" />
-        <el-table-column show-overflow-tooltip prop="a" align="center" label="项目ID" />
-        <el-table-column show-overflow-tooltip prop="b" align="center" label="项目名称" />
-        <el-table-column show-overflow-tooltip prop="c" align="center" label="客户简称/标识" />
-        <el-table-column show-overflow-tooltip prop="d" align="center" label="分配目标" />
-        <el-table-column show-overflow-tooltip prop="e" align="center" label="参与/完成/配额/限量" />
-        <el-table-column show-overflow-tooltip prop="f" align="center" label="原价USA/RMB" />
-        <el-table-column show-overflow-tooltip prop="g" align="center" label="IR/NIR" />
-        <el-table-column show-overflow-tooltip prop="h" align="center" label="国家地区" />
-        <el-table-column show-overflow-tooltip prop="k" align="center" label="创建时间" />
+        <el-table-column
+          show-overflow-tooltip
+          prop="a"
+          align="center"
+          label="项目ID"
+        />
+        <el-table-column
+          show-overflow-tooltip
+          prop="b"
+          align="center"
+          label="项目名称"
+        />
+        <el-table-column
+          show-overflow-tooltip
+          prop="c"
+          align="center"
+          label="客户简称/标识"
+        />
+        <el-table-column
+          show-overflow-tooltip
+          prop="d"
+          align="center"
+          label="分配目标"
+        />
+        <el-table-column
+          show-overflow-tooltip
+          prop="e"
+          align="center"
+          label="参与/完成/配额/限量"
+        />
+        <el-table-column
+          show-overflow-tooltip
+          prop="f"
+          align="center"
+          label="原价USA/RMB"
+        />
+        <el-table-column
+          show-overflow-tooltip
+          prop="g"
+          align="center"
+          label="IR/NIR"
+        />
+        <el-table-column
+          show-overflow-tooltip
+          prop="h"
+          align="center"
+          label="国家地区"
+        />
+        <el-table-column
+          show-overflow-tooltip
+          prop="k"
+          align="center"
+          label="创建时间"
+        />
         <el-table-column align="center" label="操作" width="200">
           <template #default="{ row }">
             <ElSpace>
-              <el-button size="small" plain type="primary" @click="quota(row)"> 配额 </el-button>
-              <ElDropdown @command="handleMoreOperating($event, row)">
-                <ElButton plain type="" size="small">
-                  更多操作
-                  <SvgIcon name="i-ep:arrow-down" class="el-icon--right" />
-                </ElButton>
-                <template #dropdown>
-                  <ElDropdownMenu>
-                    <ElDropdownItem command="check"> 测查 </ElDropdownItem>
-                    <ElDropdownItem command="attachment" divided>
-                      附件
-                    </ElDropdownItem>
-                  </ElDropdownMenu>
-                </template>
-              </ElDropdown>
+              <el-button size="small" plain type="primary" @click="quota(row)">
+                配额
+              </el-button>
+              <el-button type="primary" plain size="small" @click="check(row)">
+                测查
+              </el-button>
+              <el-button type="primary" plain size="small" @click="attachment()">
+                附件
+              </el-button>
             </ElSpace>
           </template>
         </el-table-column>
@@ -280,7 +319,6 @@ function handleMoreOperating(command: string, row: any) {
 </template>
 
 <style scoped lang="scss">
-
 .absolute-container {
   position: absolute;
   display: flex;
@@ -324,11 +362,5 @@ function handleMoreOperating(command: string, row: any) {
     }
   }
 }
-:deep {
-  .el-table__header {
-    th {
-      background: var(--el-fill-color-lighter) !important;
-    }
-  }
-}
+
 </style>

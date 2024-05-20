@@ -1,24 +1,23 @@
 <script lang="ts" setup>
-import type { FormRules } from "element-plus";
-import { ElForm } from "element-plus";
-const activeName = ref('basicSettings')
+import { ElForm } from 'element-plus'
 
-import { defineProps, ref } from "vue";
+import { defineProps, ref } from 'vue'
+
 // 如果希望默认展示第一个 Tab
 const props = defineProps({
   leftTab: Object,
   tabIndex: Number,
-});
-
-const emit = defineEmits(["setClient"]);
-const isTrue = ref(true);
+})
+const emit = defineEmits(['setClient'])
+const activeName = ref('basicSettings')
+const isTrue = ref(true)
 function showEdit() { }
-defineExpose({ showEdit });
+defineExpose({ showEdit })
 
 // 使用 InstanceType 来获取 ElForm 实例的类型
-const formRef = ref(null);
+const formRef = ref(null)
 // 注入主组件中的提供者
-const localToptTab = ref<any>(props.leftTab);
+const localToptTab = ref<any>(props.leftTab)
 </script>
 
 <template>
@@ -34,32 +33,32 @@ const localToptTab = ref<any>(props.leftTab);
             </template>
             <el-row :gutter="24">
               <el-col :span="12">
-                <el-form-item label="客户名称" prop="name" >
-                  <el-input clearable  v-model="localToptTab.name" />
+                <el-form-item label="客户名称" prop="name">
+                  <el-input v-model="localToptTab.name" clearable />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="客户简称" prop="client_pid" >
+                <el-form-item label="客户简称" prop="client_pid">
                   <el-input clearable />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="公司名称" prop="name" >
+                <el-form-item label="公司名称" prop="name">
                   <el-input clearable />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="客户姓名" prop="client_pid" >
+                <el-form-item label="客户姓名" prop="client_pid">
                   <el-input clearable />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="手机号码" prop="name" >
+                <el-form-item label="手机号码" prop="name">
                   <el-input clearable />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="电子邮箱" prop="client_pid" >
+                <el-form-item label="电子邮箱" prop="client_pid">
                   <el-input clearable />
                 </el-form-item>
               </el-col>
@@ -84,34 +83,22 @@ const localToptTab = ref<any>(props.leftTab);
             <el-row :gutter="24">
               <el-col :span="24">
                 <el-form-item label="客户状态" prop="top">
-                <el-switch />
-              </el-form-item>
+                  <el-switch />
+                </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="风险控制" prop="top">
-                <el-switch v-model="isTrue" />
-              </el-form-item>
+                  <el-switch v-model="isTrue" />
+                </el-form-item>
               </el-col>
-              <el-col  v-if="isTrue" :span="12">
-                  <el-form-item label="营业限额/月" prop="top">
+              <el-col v-if="isTrue" :span="12">
+                <el-form-item label="营业限额/月" prop="top">
                   <el-input clearable />
                 </el-form-item>
-                </el-col>
-                <el-col  v-if="isTrue" :span="12">
-                  <el-form-item label="审核率Min值" prop="top">
+              </el-col>
+              <el-col v-if="isTrue" :span="12">
+                <el-form-item label="审核率Min值" prop="top">
                   <el-input clearable />
-                </el-form-item>
-                </el-col>
-            </el-row>
-            <el-divider content-position="left" />
-            <el-row :gutter="20">
-              <el-col :span="16" />
-              <el-col :span="8">
-                <el-form-item prop="platform">
-                  <el-button size="default" @click=""> 暂存 </el-button>
-                  <el-button type="primary" size="default" @click="">
-                    添加
-                  </el-button>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -119,10 +106,9 @@ const localToptTab = ref<any>(props.leftTab);
         </ElForm>
       </el-tab-pane>
     </el-tabs>
-
-
   </div>
 </template>
+
 <style scoped lang="scss">
 :deep {
   .el-divider {

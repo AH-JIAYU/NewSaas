@@ -4,7 +4,6 @@ meta:
 </route>
 
 <script setup lang="ts">
-import { ElMessage, ElMessageBox } from 'element-plus'
 import eventBus from '@/utils/eventBus'
 import api from '@/api/modules/survey_irQuery'
 import useSettingsStore from '@/store/modules/settings'
@@ -20,22 +19,22 @@ const settingsStore = useSettingsStore()
 
 // 表格控件-展示列
 const columns = ref([
-  //表格控件-展示列
+  // 表格控件-展示列
   {
-    label: "等级名称",
-    prop: "a",
+    label: '等级名称',
+    prop: 'a',
     sortable: true,
-    disableCheck: false, //不可更改
-    checked: true, //默认展示
+    disableCheck: false, // 不可更改
+    checked: true, // 默认展示
   },
-]);
+])
 const data = ref<any>({
   loading: false,
 
-  tableAutoHeight: false,  // 表格是否自适应高度
-  border: true, //表格控件-是否展示边框
-  stripe: false, //表格控件-是否展示斑马条
-  lineHeight: 'default', //表格控件-控制表格大小
+  tableAutoHeight: false, // 表格是否自适应高度
+  border: true, // 表格控件-是否展示边框
+  stripe: false, // 表格控件-是否展示斑马条
+  lineHeight: 'default', // 表格控件-控制表格大小
   checkList: [],
   /**
    * 详情展示模式
@@ -92,7 +91,7 @@ function getDataList() {
 function onReset() {
   Object.assign(data.value.search, {
     title: '',
-  });
+  })
   getDataList()
 }
 // 每页数量切换
@@ -109,9 +108,7 @@ function currentChange(page = 1) {
 function sortChange({ prop, order }: { prop: string, order: string }) {
   onSortChange(prop, order).then(() => getDataList())
 }
-
 </script>
-
 
 <template>
   <div :class="{ 'absolute-container': data.tableAutoHeight }">
@@ -120,16 +117,22 @@ function sortChange({ prop, order }: { prop: string, order: string }) {
         <template #default="{ fold, toggle }">
           <ElForm :model="data.search" size="default" label-width="100px" inline-message inline class="search-form">
             <ElFormItem>
-              <ElInput v-model="data.search.title" placeholder="项目ID" clearable @keydown.enter="currentChange()"
-                @clear="currentChange()" />
+              <ElInput
+                v-model="data.search.title" placeholder="项目ID" clearable @keydown.enter="currentChange()"
+                @clear="currentChange()"
+              />
             </ElFormItem>
             <ElFormItem v-show="!fold">
-              <ElInput v-model="data.search.title" placeholder="项目名称" clearable @keydown.enter="currentChange()"
-                @clear="currentChange()" />
+              <ElInput
+                v-model="data.search.title" placeholder="项目名称" clearable @keydown.enter="currentChange()"
+                @clear="currentChange()"
+              />
             </ElFormItem>
             <ElFormItem v-show="!fold">
-              <ElInput v-model="data.search.title" placeholder="会员ID" clearable @keydown.enter="currentChange()"
-                @clear="currentChange()" />
+              <ElInput
+                v-model="data.search.title" placeholder="会员ID" clearable @keydown.enter="currentChange()"
+                @clear="currentChange()"
+              />
             </ElFormItem>
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">
@@ -140,7 +143,7 @@ function sortChange({ prop, order }: { prop: string, order: string }) {
               </ElButton>
               <ElButton @click="onReset">
                 <template #icon>
-                  <div class="i-grommet-icons:power-reset w-1em h-1em"></div>
+                  <div class="i-grommet-icons:power-reset h-1em w-1em" />
                 </template>
                 重置
               </ElButton>
@@ -156,17 +159,23 @@ function sortChange({ prop, order }: { prop: string, order: string }) {
       </SearchBar>
       <ElDivider border-style="dashed" />
       <el-row>
-        <FormLeftPanel> </FormLeftPanel>
+        <FormLeftPanel />
         <FormRightPanel>
-          <el-button size="default"> 导出 </el-button>
-          <TabelControl v-model:border="data.border" v-model:tableAutoHeight="data.tableAutoHeight"
+          <el-button size="default">
+            导出
+          </el-button>
+          <TabelControl
+            v-model:border="data.border" v-model:tableAutoHeight="data.tableAutoHeight"
             v-model:checkList="data.checkList" v-model:columns="columns" v-model:line-height="data.lineHeight"
-            v-model:stripe="data.stripe" style="margin-left: 12px;" @query-data="getDataList" />
+            v-model:stripe="data.stripe" style="margin-left: 12px;" @query-data="getDataList"
+          />
         </FormRightPanel>
       </el-row>
-      <ElTable :border="data.border" :size="data.lineHeight" :stripe="data.stripe" v-loading="data.loading" class="my-4"
+      <ElTable
+        v-loading="data.loading" :border="data.border" :size="data.lineHeight" :stripe="data.stripe" class="my-4"
         :data="data.dataList" highlight-current-row height="100%" @sort-change="sortChange"
-        @selection-change="data.batch.selectionDataList = $event">
+        @selection-change="data.batch.selectionDataList = $event"
+      >
         <el-table-column align="center" prop="a" show-overflow-tooltip type="selection" />
         <ElTableColumn v-if="data.batch.enable" type="selection" show-overflow-tooltip align="center" fixed />
         <ElTableColumn show-overflow-tooltip align="center" prop="" label="项目ID" />
@@ -177,9 +186,11 @@ function sortChange({ prop, order }: { prop: string, order: string }) {
         <ElTableColumn show-overflow-tooltip align="center" prop="" label="小组IR" />
         <ElTableColumn show-overflow-tooltip align="center" prop="" label="我的IR" />
       </ElTable>
-      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+      <ElPagination
+        :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
         :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-        background @size-change="sizeChange" @current-change="currentChange" />
+        background @size-change="sizeChange" @current-change="currentChange"
+      />
     </PageMain>
   </div>
 </template>
@@ -233,11 +244,5 @@ function sortChange({ prop, order }: { prop: string, order: string }) {
     width: calc(100% + 40px);
   }
 }
-:deep {
-  .el-table__header {
-    th {
-      background: var(--el-fill-color-lighter) !important;
-    }
-  }
-}
+
 </style>

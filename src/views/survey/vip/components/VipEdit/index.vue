@@ -97,9 +97,22 @@ defineExpose({
 
 <template>
   <div>
-    <el-drawer class="hide-drawer-header" v-model="drawerisible" append-to-body :close-on-click-modal="false" destroy-on-close draggable size="60%"
-      :title="title" @close="close">
+    <el-drawer
+      v-model="drawerisible" :class="title === '添加' ? 'hide-drawer-header' : 'edit-drawer'" append-to-body :close-on-click-modal="false" destroy-on-close draggable size="60%"
+      @close="close"
+    >
       <LeftTabs :left-tabs-data="leftTabsData" :validate-top-tabs="validateTopTabs" />
+      <template #footer>
+        <el-button @click="close">
+          取消
+        </el-button>
+        <el-button type="warning" @click="">
+          暂存
+        </el-button>
+        <el-button type="primary" @click="save">
+          确定
+        </el-button>
+      </template>
     </el-drawer>
   </div>
 </template>

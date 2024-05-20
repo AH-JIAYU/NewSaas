@@ -204,7 +204,7 @@ textarea {
 }
 
 // 后加的
-*{
+* {
   padding: 0;
   margin: 0;
 }
@@ -214,21 +214,24 @@ textarea {
 .el-card {
   box-shadow: 0 0 12px rgb(0 0 0 / 7%) !important;
 }
-.el-card__header{
+
+.el-card__header {
   position: relative;
 }
-.el-card__header::after{
+
+.el-card__header::after {
   position: absolute;
-  left:0;
+  left: 0;
   top: 50%;
   transform: translateY(-50%);
-  content:'';
+  content: '';
   width: 3px;
   height: 20px;
-  background: linear-gradient(to bottom ,#0081ff,#22cce2);
+  background: linear-gradient(to bottom, #0081ff, #22cce2);
   border-radius: 0 3px 3px 0;
 
 }
+
 .el-select {
   min-width: 192px !important;
 }
@@ -250,6 +253,7 @@ textarea {
 .el-row {
   margin: 20px 0;
 }
+
 // 表格自适应高度
 .absolute-container {
   position: absolute;
@@ -259,25 +263,38 @@ textarea {
   height: 100%;
 }
 
-// drawer样式
-.hide-drawer-header {
-  .el-card{
-    margin-bottom: 10px;
+
+.el-drawer__body {
+  padding: 0 20px;
+
+  .el-card {
+    margin-bottom: 15px !important;
+    box-shadow: 0px 1px 5px #899aab50 !important;
     border: 1px solid #fafafa;
     background-color: #fafcfe;
   }
-  .el-drawer__header{
+}
+
+.el-drawer__header {
+  margin-bottom: 20px;
+}
+
+// drawer样式 项目列表添加
+.hide-drawer-header {
+  .el-drawer__header {
     height: 0;
     padding: 0;
-    margin: 0;
-    .el-drawer__close-btn{
+    margin: 0 !important;
+
+    .el-drawer__close-btn {
       position: fixed;
       right: 20px;
       top: 20px;
       z-index: 9999999;
     }
   }
-  .el-drawer__header::after{
+
+  .el-drawer__header::after {
     z-index: 0;
     background-color: #efefef;
     position: absolute;
@@ -287,12 +304,13 @@ textarea {
     width: 125px;
     content: '';
   }
-  .el-drawer__body{
+
+  .el-drawer__body {
     padding-right: 11px;
     z-index: 99999;
     padding-left: 0;
-    padding-top: 0;
-    >.el-button{
+
+    .el-button.button {
       position: sticky;
       top: 0;
       color: #fff;
@@ -306,13 +324,17 @@ textarea {
       z-index: 9999;
     }
   }
-  .el-tabs__content{
+
+  .el-tabs__content {
     margin-left: 65px;
   }
-  .el-tabs__content,.el-tabs.el-tabs--left{
+
+  .el-tabs__content,
+  .el-tabs.el-tabs--left {
     overflow: visible;
   }
-  .el-tabs__header.is-top{
+
+  .el-tabs__header.is-top {
     position: sticky;
     top: 0;
     z-index: 9999;
@@ -323,43 +345,107 @@ textarea {
     padding-bottom: 10px;
     box-shadow: 5px 0px 5px #fff !important;
   }
-  .el-tabs.el-tabs--top{
+
+  .el-tabs.el-tabs--top {
     margin-left: 15px;
   }
-  .el-tabs.el-tabs--left{
+
+  .el-tabs.el-tabs--left {
     margin-top: -50px;
-   .el-tabs__header.is-left{
-    position: sticky;
-    top: 129px;
-    z-index: 9999;
-   }
+
+    .el-tabs__header.is-left {
+      position: sticky;
+      top: 129px;
+      z-index: 9999;
+    }
   }
-  .el-tabs.el-tabs--left>.el-tabs__item.is-left{
+
+  .el-tabs.el-tabs--left>.el-tabs__item.is-left {
     height: 100vh;
   }
-  .el-tabs__item.is-left{
+
+  .el-tabs__item.is-left {
     margin: 5px 0;
     background-color: #fafcfe;
     width: 125px;
     justify-content: center;
   }
-  .el-tabs__active-bar.is-left{ // 高亮
+
+  .el-tabs__active-bar.is-left {
+    // 高亮
     display: none;
   }
-  .el-card{
-    margin-bottom: 15px !important;
-    box-shadow: 0px 2px 5px rgba(0,0,0,0.12) !important;
-  }
-  .el-tabs__nav-wrap.is-left::after{
+
+  .el-tabs__nav-wrap.is-left::after {
     width: 0 !important;
   }
-  .el-tabs__nav-wrap.is-top::after{
+
+  .el-tabs__nav-wrap.is-top::after {
     width: 0 !important;
   }
-  .el-tabs__item.is-top.is-active{
+
+  .el-tabs__item.is-top.is-active {
     font-size: 16px;
   }
-  .el-drawer__footer{
+
+  .el-drawer__footer {
     padding: 20px;
+  }
+}
+
+// 项目列表编辑
+.edit-drawer {
+  .el-drawer__header {
+    height: 0;
+    padding: 0;
+    margin: 0 !important;
+
+    .el-drawer__close-btn {
+      position: fixed;
+      right: 20px;
+      top: 20px;
+      z-index: 9999999;
+    }
+  }
+
+  .el-tabs__content {
+    margin-left: 15px;
+  }
+
+  .el-tabs__content,
+  .el-tabs.el-tabs--left {
+    overflow: visible;
+  }
+
+  .el-drawer__body {
+    padding: 0 10px 0 5px;
+  }
+
+  .el-tabs__nav-wrap.is-top::after {
+    width: 0 !important;
+  }
+
+  .el-tabs__header.is-top {
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+    background-color: #fff;
+    padding-left: 10px;
+    margin-left: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    box-shadow: 5px 0px 5px #fff !important;
+  }
+
+  .el-card {
+    margin-bottom: 15px !important;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.12) !important;
+  }
+}
+
+// 表格表头颜色
+.el-table__header {
+  th {
+    background: var(--el-fill-color-lighter) !important;
   }
 }

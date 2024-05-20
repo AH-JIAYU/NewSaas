@@ -1,23 +1,21 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+
 defineOptions({
   name: 'AllocationEdit',
 })
-import { ref, watch } from 'vue'
 
 const radio1 = ref(1)
 // 弹框开关变量
 const dialogTableVisible = ref(false)
 // 获取数据
-const showEdit = (row:any) => {
+function showEdit(row: any) {
   dialogTableVisible.value = true
 }
 // 提交数据
 function onSubmit() {
 
 }
-watch(() => radio1, (newVal) => {
-  console.log('val', newVal)
-})
 // 弹框关闭事件
 function closeHandler() {
   // 移除校验
@@ -49,7 +47,7 @@ defineExpose({ showEdit })
         <el-table-column align="center" label="项目名称" />
       </el-table>
       <el-form ref="form" label-width="80px" :inline="false">
-        <el-form-item label="分配目标" >
+        <el-form-item label="分配目标">
           <el-radio-group v-model="radio1" class="ml-4">
             <el-radio :value="1" size="large">
               自动分配
@@ -101,6 +99,4 @@ defineExpose({ showEdit })
 }
 
 }
-
-
 </style>

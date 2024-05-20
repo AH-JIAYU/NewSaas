@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import creator from './components/Creator/index.vue'
+
 defineOptions({
   name: 'OtherFunctionsQuestionnaireIndex',
 })
-import creator from './components/Creator/index.vue'
 </script>
 
 <template>
@@ -14,5 +15,3 @@ import creator from './components/Creator/index.vue'
 <style lang="scss" scoped>
 // 样式
 </style>
-
-

@@ -1,18 +1,19 @@
 <script setup lang="ts">
+import { DArrowRight } from '@element-plus/icons-vue'
+
 defineOptions({
   name: 'UserUidParsingIndex',
 })
-import { DArrowRight } from '@element-plus/icons-vue'
-const form = ref<any>({});
-const ParsingEncryption = (fold: number | string) => { //解析 | 加密
+const form = ref<any>({})
+function ParsingEncryption(fold: number | string) { // 解析 | 加密
   switch (fold) {
-    case 0: //解析
+    case 0: // 解析
       // 逻辑
-      break;
+      break
 
-    case 1: //加密
+    case 1: // 加密
       // 逻辑
-      break;
+      break
   }
 }
 </script>
@@ -45,6 +46,7 @@ const ParsingEncryption = (fold: number | string) => { //解析 | 加密
     </PageMain>
   </div>
 </template>
+
 <style lang="scss" scoped>
 :deep {
   .el-row {

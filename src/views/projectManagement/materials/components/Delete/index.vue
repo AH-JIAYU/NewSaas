@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+
 defineOptions({
   name: 'Delete',
 })
-import { ref } from 'vue'
 // 弹框开关变量
 const dialogTableVisible = ref(false)
 const total = ref()
@@ -11,7 +12,7 @@ function onSubmit() {
 
 }
 // 父级传递数据
-const showEdit = async (row:any) => {
+async function showEdit(row: any) {
   total.value = row.length
   dialogTableVisible.value = true
 }

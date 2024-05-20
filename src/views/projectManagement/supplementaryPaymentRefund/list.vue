@@ -1,14 +1,15 @@
 <script setup lang="ts">
+import { Position } from '@element-plus/icons-vue'
+
 defineOptions({
   name: 'ProjectManagementSupplementaryPaymentRefundIndex',
 })
-import { Position } from '@element-plus/icons-vue'
-const activeName = ref("first");
+const activeName = ref('first')
 // tabs切换事件
-const handleClick = (tab: any, event: any) => {
-};
+function handleClick(tab: any, event: any) {
+}
 // 提交数据
-const onSubmit = () => { }
+function onSubmit() { }
 </script>
 
 <template>
@@ -20,72 +21,84 @@ const onSubmit = () => { }
             <el-tab-pane label="按失败ID">
               <el-form label-width="" :inline="false">
                 <el-form-item>
-                  <el-input placeholder="项目ID"></el-input>
+                  <el-input placeholder="项目ID" />
                 </el-form-item>
                 <el-form-item>
-                  <el-input placeholder="请粘贴GUID,每行一个" type="textarea" :rows="20"></el-input>
+                  <el-input placeholder="请粘贴GUID,每行一个" type="textarea" :rows="20" />
                 </el-form-item>
                 <el-form-item>
-                  <el-button type="primary" :icon="Position" @click="onSubmit">开始</el-button>
+                  <el-button type="primary" :icon="Position" @click="onSubmit">
+                    开始
+                  </el-button>
                 </el-form-item>
               </el-form>
             </el-tab-pane>
             <el-tab-pane label="按成功ID">
               <el-form label-width="" :inline="false">
                 <el-form-item>
-                  <el-input placeholder="项目ID"></el-input>
+                  <el-input placeholder="项目ID" />
                 </el-form-item>
                 <el-form-item>
-                  <el-input placeholder="请粘贴GUID,每行一个" type="textarea" :rows="20"></el-input>
+                  <el-input placeholder="请粘贴GUID,每行一个" type="textarea" :rows="20" />
                 </el-form-item>
                 <el-form-item>
-                  <el-button type="primary" :icon="Position" @click="onSubmit">开始</el-button>
+                  <el-button type="primary" :icon="Position" @click="onSubmit">
+                    开始
+                  </el-button>
                 </el-form-item>
               </el-form>
             </el-tab-pane>
             <el-tab-pane label="按记录ID">
               <el-form label-width="" :inline="false">
                 <el-form-item>
-                  <el-input placeholder="请粘贴记录ID,每行一个" type="textarea" :rows="20"></el-input>
+                  <el-input placeholder="请粘贴记录ID,每行一个" type="textarea" :rows="20" />
                 </el-form-item>
                 <el-form-item>
-                  <el-button type="primary" :icon="Position" @click="onSubmit">开始</el-button>
+                  <el-button type="primary" :icon="Position" @click="onSubmit">
+                    开始
+                  </el-button>
                 </el-form-item>
               </el-form>
             </el-tab-pane>
             <el-tab-pane label="按转化ID(CB)">
               <el-form label-width="" :inline="false">
                 <el-form-item>
-                  <el-input placeholder="请粘贴转化ID,每行一个" type="textarea" :rows="20"></el-input>
+                  <el-input placeholder="请粘贴转化ID,每行一个" type="textarea" :rows="20" />
                 </el-form-item>
                 <el-form-item>
-                  <el-button type="primary" :icon="Position" @click="onSubmit">开始</el-button>
+                  <el-button type="primary" :icon="Position" @click="onSubmit">
+                    开始
+                  </el-button>
                 </el-form-item>
               </el-form>
             </el-tab-pane>
             <el-tab-pane label="全部退款">
               <el-form label-width="" :inline="false">
                 <el-form-item>
-                  <el-input placeholder="项目ID"></el-input>
+                  <el-input placeholder="项目ID" />
                 </el-form-item>
                 <el-form-item>
-                  <el-button placeholder="" :icon="Position" type="primary" @click="onSubmit">开始</el-button>
+                  <el-button placeholder="" :icon="Position" type="primary" @click="onSubmit">
+                    开始
+                  </el-button>
                 </el-form-item>
               </el-form>
             </el-tab-pane>
             <el-tab-pane label="子系统退款">
               <el-form label-width="" :inline="false">
                 <el-form-item>
-                  <el-input placeholder="项目ID"></el-input>
+                  <el-input placeholder="项目ID" />
                 </el-form-item>
                 <el-form-item>
-                  <el-input placeholder="说明"></el-input>
+                  <el-input placeholder="说明" />
                 </el-form-item>
                 <el-form-item>
-                  <el-input placeholder="请粘贴GUID,每行一个" type="textarea" :rows="20"></el-input>
+                  <el-input placeholder="请粘贴GUID,每行一个" type="textarea" :rows="20" />
                 </el-form-item>
                 <el-form-item>
-                  <el-button type="primary" :icon="Position" @click="onSubmit">开始</el-button>
+                  <el-button type="primary" :icon="Position" @click="onSubmit">
+                    开始
+                  </el-button>
                 </el-form-item>
               </el-form>
             </el-tab-pane>
@@ -94,16 +107,18 @@ const onSubmit = () => { }
         <el-tab-pane label="项目补款" name="second">
           <el-form label-width="" :inline="false">
             <el-form-item>
-              <el-input placeholder="项目ID"></el-input>
+              <el-input placeholder="项目ID" />
             </el-form-item>
             <el-form-item>
-              <el-input placeholder="说明"></el-input>
+              <el-input placeholder="说明" />
             </el-form-item>
             <el-form-item>
-              <el-input placeholder="请粘贴GUID,每行一个" type="textarea" :rows="20"></el-input>
+              <el-input placeholder="请粘贴GUID,每行一个" type="textarea" :rows="20" />
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" :icon="Position" @click="onSubmit">开始</el-button>
+              <el-button type="primary" :icon="Position" @click="onSubmit">
+                开始
+              </el-button>
             </el-form-item>
           </el-form>
         </el-tab-pane>
@@ -118,6 +133,4 @@ const onSubmit = () => { }
   width: 627px;
 }
 }
-
-
 </style>

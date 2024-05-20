@@ -1,119 +1,123 @@
 <script setup lang="ts">
+import allocationEdit from './components/AllocationEdit/index.vue'
+import ProjeckEdit from './components/ProjeckEdit/index.vue'
+import ProjectDetail from './components/ProjectDetails/index.vue'
+
 defineOptions({
-  name: "ProjectManagementListIndex",
-});
-import allocationEdit from "./components/AllocationEdit/index.vue";
-import ProjeckEdit from "./components/ProjeckEdit/index.vue";
-import ProjectDetail from "./components/ProjectDetails/index.vue";
-const { pagination, onSizeChange, onCurrentChange } = usePagination(); //分页
+  name: 'ProjectManagementListIndex',
+})
+
+const { pagination, onSizeChange, onCurrentChange } = usePagination() // 分页
 // 分页
-const tableSortRef = ref("");
+const tableSortRef = ref('')
 // loading加载
-const listLoading = ref<boolean>(true);
+const listLoading = ref<boolean>(true)
 // 获取组件变量
-const addAllocationEdit = ref();
-const addProjeckRef = ref();
-const projectDetailsRef = ref();
+const addAllocationEdit = ref()
+const addProjeckRef = ref()
+const projectDetailsRef = ref()
 // 右侧工具栏配置变量
-const border = ref(true);
-const checkList = ref([]);
-const tableAutoHeight = ref(false); // 表格控件-高度自适应
-const isFullscreen = ref(false); //表格控件-控制全屏
-const lineHeight = ref<any>("default");
-const stripe = ref(false);
+const border = ref(true)
+const checkList = ref([])
+const tableAutoHeight = ref(false) // 表格控件-高度自适应
+const isFullscreen = ref(false) // 表格控件-控制全屏
+const lineHeight = ref<any>('default')
+const stripe = ref(false)
 const columns = ref([
   {
-    label: "项目ID",
-    prop: "ID",
+    label: '项目ID',
+    prop: 'ID',
     sortable: true,
     // 不可改变的
     disableCheck: true,
     checked: true,
   },
-]);
+])
 // 查询参数
 const queryForm = reactive<any>({
   pageNo: 1,
   pageSize: 10,
-  title: "",
+  title: '',
   order: {
-    id: "ASC",
+    id: 'ASC',
   },
   select: {},
-});
-const list = ref<any>([]);
+})
+const list = ref<any>([])
 
 // 分配
 function distribution(row: any) {
-  addAllocationEdit.value.showEdit(row);
+  addAllocationEdit.value.showEdit(row)
 }
 // 新增项目
 function addProject() {
-  addProjeckRef.value.showEdit();
+  addProjeckRef.value.showEdit()
 }
 // 编辑项目
 function projectEdit(row: any) {
-  addProjeckRef.value.showEdit(row);
+  addProjeckRef.value.showEdit(row)
 }
 // 项目详情
 function projectDetails(row: any) {
-  projectDetailsRef.value.showEdit(row);
+  projectDetailsRef.value.showEdit(row)
 }
-//表格控件-控制全屏
+// 表格控件-控制全屏
 function clickFullScreen() {
-  isFullscreen.value = !isFullscreen.value;
+  isFullscreen.value = !isFullscreen.value
 }
 // 每页数量切换
 function sizeChange(size: number) {
-  onSizeChange(size).then(() => fetchData());
+  onSizeChange(size).then(() => fetchData())
 }
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
-  onCurrentChange(page).then(() => fetchData());
+  onCurrentChange(page).then(() => fetchData())
 }
 // 重置数据
 function onReset() {
   Object.assign(queryForm, {
     pageNo: 1,
     pageSize: 10,
-    title: "",
+    title: '',
     order: {
-      id: "ASC",
+      id: 'ASC',
     },
     select: {},
-  });
+  })
 }
 async function fetchData() {
-  listLoading.value = true;
+  listLoading.value = true
   list.value = [
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-  ];
-  pagination.value.total = 3;
-  listLoading.value = false;
+    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1, name: 'name' },
+    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1, name: 'name' },
+    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1, name: 'name' },
+    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1, name: 'name' },
+    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1, name: 'name' },
+    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1, name: 'name' },
+  ]
+  pagination.value.total = 3
+  listLoading.value = false
 }
 onMounted(() => {
-  fetchData();
-});
+  fetchData()
+})
 </script>
 
 <template>
-  <div :class="{
-    'absolute-container': tableAutoHeight,
-  }">
+  <div
+    :class="{
+      'absolute-container': tableAutoHeight,
+    }"
+  >
     <PageMain class="hide-drawer-header">
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
           <el-form :model="queryForm" size="default" label-width="100px" inline-message inline class="search-form">
             <el-form-item label="">
-              <el-input clearable placeholder="项目ID" v-model="queryForm.select.a" />
+              <el-input v-model="queryForm.select.a" clearable placeholder="项目ID" />
             </el-form-item>
             <el-form-item label="">
-              <el-input clearable placeholder="项目名称" v-model="queryForm.select.b" />
+              <el-input v-model="queryForm.select.b" clearable placeholder="项目名称" />
             </el-form-item>
             <el-form-item label="">
               <el-input clearable placeholder="项目标识" />
@@ -157,9 +161,11 @@ onMounted(() => {
               <el-input clearable placeholder="创建人" />
             </el-form-item>
             <el-form-item v-show="!fold">
-              <el-date-picker v-model="queryForm.select.time" type="daterange" unlink-panels range-separator="-"
+              <el-date-picker
+                v-model="queryForm.select.time" type="daterange" unlink-panels range-separator="-"
                 start-placeholder="创建开始日期" end-placeholder="创建结束日期" size="default" style="width: 192px"
-                clear-icon="true" />
+                clear-icon="true"
+              />
             </el-form-item>
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">
@@ -170,7 +176,7 @@ onMounted(() => {
               </ElButton>
               <ElButton @click="onReset">
                 <template #icon>
-                  <div class="i-grommet-icons:power-reset w-1em h-1em"></div>
+                  <div class="i-grommet-icons:power-reset h-1em w-1em" />
                 </template>
                 重置
               </ElButton>
@@ -196,14 +202,18 @@ onMounted(() => {
           <el-button size="default" @click="">
             导出
           </el-button>
-          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
+          <TabelControl
+            v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
             v-model:columns="columns" v-model:is-fullscreen="isFullscreen" v-model:line-height="lineHeight"
             v-model:stripe="stripe" style="margin-left: 12px" @click-full-screen="clickFullScreen"
-            @query-data="currentChange" />
+            @query-data="currentChange"
+          />
         </FormRightPanel>
       </el-row>
-      <el-table style="margin-top: 10px" ref="tableSortRef" v-loading="false" row-key="id" :data="list" :border="border"
-        :size="lineHeight" :stripe="stripe">
+      <el-table
+        ref="tableSortRef" v-loading="false" style="margin-top: 10px" row-key="id" :data="list" :border="border"
+        :size="lineHeight" :stripe="stripe"
+      >
         <el-table-column type="selection" />
         <el-table-column type="index" align="center" label="序号" width="55" />
         <el-table-column show-overflow-tooltip prop="a" align="center" label="项目ID" />
@@ -223,7 +233,7 @@ onMounted(() => {
           <template #default="{ row }">
             <el-button plain type="primary" size="small" @click="distribution">
               重新分配
-          </el-button>
+            </el-button>
             <el-button type="primary" plain size="small" @click="projectEdit(row)">
               编辑
             </el-button>
@@ -236,9 +246,11 @@ onMounted(() => {
           <el-empty description="暂无数据" />
         </template>
       </el-table>
-      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+      <ElPagination
+        :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
         :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-        background @size-change="sizeChange" @current-change="currentChange" />
+        background @size-change="sizeChange" @current-change="currentChange"
+      />
     </PageMain>
     <allocationEdit ref="addAllocationEdit" />
     <ProjeckEdit ref="addProjeckRef" />

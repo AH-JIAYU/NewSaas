@@ -11,6 +11,7 @@ declare module 'vue' {
     AuthAll: typeof import('./../components/AuthAll/index.vue')['default']
     Chip: typeof import('./../components/Chip/index.vue')['default']
     ColorfulCard: typeof import('./../components/ColorfulCard/index.vue')['default']
+    ColorfulCard2: typeof import('./../components/ColorfulCard2/index.vue')['default']
     FileUpload: typeof import('./../components/FileUpload/index.vue')['default']
     FixedActionBar: typeof import('./../components/FixedActionBar/index.vue')['default']
     FormLeftPanel: typeof import('./../components/FormLeftPanel/index.vue')['default']

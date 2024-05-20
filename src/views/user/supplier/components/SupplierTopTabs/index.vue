@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import type { FormRules } from "element-plus";
 import { ElForm } from "element-plus";
 
 import { defineProps, ref } from "vue";
@@ -12,7 +11,7 @@ const props = defineProps({
 const emit = defineEmits(["setClient"]);
 const isShow = ref(false);
 const isTrue = ref(true);
-const activeName = ref('basicSettings')
+const activeName = ref("basicSettings");
 function showEdit() {
   isShow.value = true;
 }
@@ -20,6 +19,7 @@ defineExpose({ showEdit });
 
 // 使用 InstanceType 来获取 ElForm 实例的类型
 const formRef = ref(null);
+const form = ref<any>({});
 // 注入主组件中的提供者
 const localToptTab = ref<any>(props.leftTab);
 </script>
@@ -38,7 +38,7 @@ const localToptTab = ref<any>(props.leftTab);
             <el-row :gutter="10">
               <el-col :span="8">
                 <el-form-item label="供应商名称" prop="name">
-                  <el-input clearable />
+                  <el-input v-model="localToptTab.name" clearable />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
@@ -112,29 +112,9 @@ const localToptTab = ref<any>(props.leftTab);
             <el-row :gutter="20">
               <el-col :span="8">
                 <el-form-item label="付款方式" prop="top">
-                  <el-select />
-                </el-form-item>
-              </el-col>
-              <el-col :span="8">
-                <el-form-item label="账户名称" prop="top">
-                  <el-select />
-                </el-form-item>
-              </el-col>
-              <el-col :span="8">
-                <el-form-item label="收款账户" prop="top">
-                  <el-select />
-                </el-form-item>
-              </el-col>
-              <el-col :span="8">
-                <el-form-item label="结算周期" prop="top">
-                  <el-select />
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row :gutter="20">
-              <el-col :span="8">
-                <el-form-item label="付款方式" prop="top">
-                  <el-select />
+                  <el-select v-model="form.payment">
+                    <el-option label="银行卡" value="bankCard"></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
@@ -147,7 +127,8 @@ const localToptTab = ref<any>(props.leftTab);
                   <el-select />
                 </el-form-item>
               </el-col>
-              <el-col :span="8">
+              <!-- 当付款方式为银行卡支付时显示 银行名称 -->
+              <el-col :span="8" v-if="form.payment === 'bankCard'">
                 <el-form-item label="银行名称" prop="top">
                   <el-select />
                 </el-form-item>
@@ -159,29 +140,10 @@ const localToptTab = ref<any>(props.leftTab);
               </el-col>
             </el-row>
           </el-card>
-          <el-row :gutter="20">
-            <el-col :span="16" />
-            <el-col :span="8">
-              <el-form-item prop="platform">
-                <el-button size="default" @click=""> 暂存 </el-button>
-                <el-button type="primary" size="default" @click="">
-                  添加
-                </el-button>
-              </el-form-item>
-            </el-col>
-          </el-row>
         </ElForm>
       </el-tab-pane>
     </el-tabs>
-
-
   </div>
 </template>
-<style scoped lang="scss">
-:deep {
-  .el-card {
-    margin: 10px 0 !important;
-    box-shadow: none !important;
-  }
-}
-</style>
+
+<style scoped lang="scss"></style>

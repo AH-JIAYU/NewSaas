@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { ElMessage, ElMessageBox } from 'element-plus'
-import eventBus from '@/utils/eventBus'
-import api from '@/api/modules/survey_setting'
 import useSettingsStore from '@/store/modules/settings'
 
 defineOptions({
@@ -22,13 +19,9 @@ const data = ref<any>({
 onMounted(() => {
 
 })
-const save = () => {
+function save() {
   console.log('提交')
 }
-
-
-
-
 </script>
 
 <template>
@@ -57,9 +50,13 @@ const save = () => {
             </el-form-item>
             <el-form-item label="LOGO" prop="account">
               <!-- <el-input v-model="data.formData.account" placeholder="" /> -->
-              <el-upload v-model:file-list="data.formData.fileList" class="upload-demo"
-                action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15" multiple :limit="3">
-                <el-button type="primary">上传</el-button>
+              <el-upload
+                v-model:file-list="data.formData.fileList" class="upload-demo"
+                action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15" multiple :limit="3"
+              >
+                <el-button type="primary">
+                  上传
+                </el-button>
                 <template #tip>
                   <div class="el-upload__tip">
                     jpg/png files with a size less than 500KB.
@@ -67,20 +64,28 @@ const save = () => {
                 </template>
               </el-upload>
             </el-form-item>
-            <el-button style="width: 100%" type="primary" @click="save">提交</el-button>
+            <el-button style="width: 100%" type="primary" @click="save">
+              提交
+            </el-button>
           </el-tab-pane>
           <el-tab-pane label="高级设置" name="高级设置">
             <el-form-item label="注册开关" prop="originalPassword">
-              <el-switch v-model="data.formData.value2" class="ml-2"
-                style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949" />
+              <el-switch
+                v-model="data.formData.value2" class="ml-2"
+                style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+              />
             </el-form-item>
             <el-form-item label="注册审核" prop="newPassword">
-              <el-switch v-model="data.formData.value2" class="ml-2"
-                style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949" />
+              <el-switch
+                v-model="data.formData.value2" class="ml-2"
+                style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+              />
             </el-form-item>
             <el-form-item label="会员推荐" prop="confirmPassword">
-              <el-switch v-model="data.formData.value2" class="ml-2"
-                style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949" />
+              <el-switch
+                v-model="data.formData.value2" class="ml-2"
+                style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+              />
             </el-form-item>
             <el-form-item label="价格比例设置(高)" prop="confirmPassword">
               <el-input v-model="data.formData.confirmPassword" placeholder="" />
@@ -93,14 +98,22 @@ const save = () => {
             </el-form-item>
             <el-form-item label="提现方式" prop="confirmPassword">
               <el-radio-group v-model="data.formData.radio1" class="ml-4">
-                <el-radio value="1" size="large">手动提现</el-radio>
-                <el-radio value="2" size="large">生成账单</el-radio>
+                <el-radio value="1" size="large">
+                  手动提现
+                </el-radio>
+                <el-radio value="2" size="large">
+                  生成账单
+                </el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item label="提款方式" prop="confirmPassword">
               <el-radio-group v-model="data.formData.radio2" class="ml-4">
-                <el-radio value="1" size="large">审核</el-radio>
-                <el-radio value="2" size="large">免审</el-radio>
+                <el-radio value="1" size="large">
+                  审核
+                </el-radio>
+                <el-radio value="2" size="large">
+                  免审
+                </el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item label="抵扣税点" prop="confirmPassword">
@@ -112,7 +125,9 @@ const save = () => {
             <el-form-item label="负责人UID" prop="confirmPassword">
               <el-input v-model="data.formData.confirmPassword" placeholder="" />
             </el-form-item>
-            <el-button style="width: 100%" type="primary" @click="save">提交</el-button>
+            <el-button style="width: 100%" type="primary" @click="save">
+              提交
+            </el-button>
           </el-tab-pane>
           <el-tab-pane label="联系我们" name="联系我们">
             <el-form-item label="Email" prop="originalPassword">
@@ -127,7 +142,9 @@ const save = () => {
             <el-form-item label="公司地址" prop="confirmPassword">
               <el-input v-model="data.formData.confirmPassword" placeholder="" />
             </el-form-item>
-              <el-button style="width: 100%" type="primary" @click="save">提交</el-button>
+            <el-button style="width: 100%" type="primary" @click="save">
+              提交
+            </el-button>
           </el-tab-pane>
         </el-form>
       </el-tabs>

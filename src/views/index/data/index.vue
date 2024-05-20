@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import check from "./components/check/index.vue";
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
-  usePagination(); //分页
-  const CheckRef = ref();
+  usePagination(); // 分页
+const CheckRef = ref();
 // 右侧工具栏配置变量
 const border = ref(true);
 
 const checkList = ref([]);
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
-const isFullscreen = ref(false); //表格控件-控制全屏
+const isFullscreen = ref(false); // 表格控件-控制全屏
 const lineHeight = ref<any>("default");
 const stripe = ref(false);
 const columns = ref([
@@ -22,9 +22,9 @@ const columns = ref([
   },
 ]);
 const data = reactive<any>({
-  activeName: "report", //tabs选中值
-  list: [], //表格
-  CheckRef: null, //查看组件ref
+  activeName: "report", // tabs选中值
+  list: [], // 表格
+  CheckRef: null, // 查看组件ref
   queryForm: {
     pageNo: 1,
     pageSize: 10,
@@ -40,7 +40,7 @@ function sizeChange(size: number) {
 function currentChange(page = 1) {
   onCurrentChange(page).then(() => getDataList());
 }
-//表格控件-控制全屏
+// 表格控件-控制全屏
 function clickFullScreen() {
   isFullscreen.value = !isFullscreen.value;
 }
@@ -133,10 +133,9 @@ async function getDataList() {
 // 查看
 function handleCheck(row: any) {
   if (row.name) {
-    CheckRef.value.showEdit(row)
-  }
-  else {
-    CheckRef.value.showEdit()
+    CheckRef.value.showEdit(row);
+  } else {
+    CheckRef.value.showEdit();
   }
 }
 onMounted(() => {
@@ -157,9 +156,7 @@ onMounted(() => {
           <el-row class="fx-b">
             <SearchTab />
             <FormRightPanel>
-              <el-button size="default" @click="">
-                导出
-              </el-button>
+              <el-button size="default" @click=""> 导出 </el-button>
               <TabelControl
                 v-model:border="border"
                 v-model:tableAutoHeight="tableAutoHeight"
@@ -254,9 +251,7 @@ onMounted(() => {
           <el-row class="fx-b">
             <SearchTab />
             <FormRightPanel>
-              <el-button size="default" @click="">
-                导出
-              </el-button>
+              <el-button size="default" @click=""> 导出 </el-button>
               <TabelControl
                 v-model:border="border"
                 v-model:tableAutoHeight="tableAutoHeight"
@@ -350,18 +345,15 @@ onMounted(() => {
     color: #b6b5b562;
   }
 }
+
 .fx-b {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-:deep {
-  .el-table__header {
-    th {
-      background: var(--el-fill-color-lighter) !important;
-    }
-  }
-}
+
+
+
 .absolute-container {
   position: absolute;
   display: flex;
@@ -385,6 +377,7 @@ onMounted(() => {
     }
   }
 }
+
 .page-main {
   .search-form {
     display: grid;

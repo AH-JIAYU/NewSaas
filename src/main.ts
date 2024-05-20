@@ -10,6 +10,8 @@ import VWave from 'v-wave'
 
 import 'overlayscrollbars/overlayscrollbars.css'
 
+import { surveyPlugin } from 'survey-vue3-ui'
+import { surveyCreatorPlugin } from 'survey-creator-vue'
 import App from './App.vue'
 import pinia from './store'
 import router from './router'
@@ -34,8 +36,6 @@ import 'virtual:uno.css'
 // 全局样式
 import '@/assets/styles/globals.scss'
 // 调查
-import { surveyPlugin } from 'survey-vue3-ui'
-import { surveyCreatorPlugin } from 'survey-creator-vue'
 
 const app = createApp(App)
 app.use(FloatingVue, {

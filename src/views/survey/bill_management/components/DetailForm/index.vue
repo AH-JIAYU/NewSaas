@@ -16,7 +16,7 @@ const formRef = ref<FormInstance>()
 const form = ref({
   id: props.id,
   title: '',
-  radio:'',
+  radio: '',
 })
 const formRules = ref<FormRules>({
   // 校验
@@ -74,13 +74,16 @@ defineExpose({
   <div v-loading="loading">
     <ElForm ref="formRef" :model="form" :rules="formRules" label-width="120px" label-suffix="：">
       <ElFormItem label="结算方式">
-        <!-- <ElInput v-model="form.title" placeholder="请输入标题" /> -->
-        <el-radio-group v-model="form.radio" class="ml-4">
-          <el-radio :value="0" size="large">全部结算</el-radio>
-          <el-radio :value="1" size="large">指定结算</el-radio>
+        <el-radio-group v-model="form.radio">
+          <el-radio :value="0" size="large">
+            全部结算
+          </el-radio>
+          <el-radio :value="1" size="large">
+            指定结算
+          </el-radio>
         </el-radio-group>
       </ElFormItem>
-      <ElFormItem label="指定会员" v-if="!!form.radio">
+      <ElFormItem v-if="!!form.radio" label="指定会员">
         <ElInput v-model="form.title" placeholder="请输入标题" />
       </ElFormItem>
       <ElFormItem label="最低结算额度">
@@ -94,4 +97,9 @@ defineExpose({
 </template>
 
 <style lang="scss" scoped>
-// scss</style>
+  :deep{
+    .el-radio.el-radio--large{
+      height: 32px;
+    }
+  }
+</style>

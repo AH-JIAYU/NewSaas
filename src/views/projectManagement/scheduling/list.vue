@@ -1,95 +1,96 @@
 <script setup lang="ts">
+import { reactive, ref } from 'vue'
+import { Plus } from '@element-plus/icons-vue'
+import deletes from './components/Delete/index.vue'
+import edit from './components/Edit/index.vue'
+
 defineOptions({
-  name: "ProjectManagementSchedulingIndex",
-});
-import { ElMessage } from "element-plus";
-import { ref, reactive } from "vue";
-import { Plus } from "@element-plus/icons-vue";
-import deletes from "./components/Delete/index.vue";
-import edit from "./components/Edit/index.vue";
-const { pagination, onSizeChange, onCurrentChange } = usePagination(); //分页
+  name: 'ProjectManagementSchedulingIndex',
+})
+
+const { pagination, onSizeChange, onCurrentChange } = usePagination() // 分页
 // 分页
-const tableSortRef = ref("");
+const tableSortRef = ref('')
 // loading加载
-const listLoading = ref<boolean>(true);
-const border = ref(true);
+const listLoading = ref<boolean>(true)
+const border = ref(true)
 // 获取组件变量
-const deleteRef = ref();
-const editRef = ref();
+const deleteRef = ref()
+const editRef = ref()
 // 右侧工具栏配置变量
-const tableAutoHeight = ref(false); // 表格控件-高度自适应
-const checkList = ref([]);
-const isFullscreen = ref(false);
-const lineHeight = ref<any>("default");
-const stripe = ref(false);
-const selectRows = ref<any>([]);
+const tableAutoHeight = ref(false) // 表格控件-高度自适应
+const checkList = ref([])
+const isFullscreen = ref(false)
+const lineHeight = ref<any>('default')
+const stripe = ref(false)
+const selectRows = ref<any>([])
 const columns = ref([
   {
-    label: "项目ID",
-    prop: "ID",
+    label: '项目ID',
+    prop: 'ID',
     sortable: true,
     // 不可改变的
     disableCheck: true,
     checked: true,
   },
-]);
+])
 // 查询参数
 const queryForm = reactive<any>({
   pageNo: 1,
   pageSize: 10,
-  title: "",
+  title: '',
   order: {
-    id: "ASC",
+    id: 'ASC',
   },
   select: {},
-});
-const list = ref<any>([]);
+})
+const list = ref<any>([])
 // 新增数据
-const addData = () => {
-  if (!selectRows.value.length) editRef.value.showEdit();
-};
+function addData() {
+  if (!selectRows.value.length) { editRef.value.showEdit() }
+}
 // 编辑数据
-const editData = (row: any) => {
-  if (!selectRows.value.length) editRef.value.showEdit(row);
-};
+function editData(row: any) {
+  if (!selectRows.value.length) { editRef.value.showEdit(row) }
+}
 // 删除数据
-const deleteData = (row: any) => {
+function deleteData(row: any) {
   // if (!selectRows.value.length)
   //   return ElMessage({ message: "请选择至少一条数据", type: "warning" });
-  deleteRef.value.showEdit(row);
-  deleteRef.value.replyData(selectRows.value);
-};
+  deleteRef.value.showEdit(row)
+  deleteRef.value.replyData(selectRows.value)
+}
 
 // 工具配置项
 function clickFullScreen() {
-  isFullscreen.value = !isFullscreen.value;
+  isFullscreen.value = !isFullscreen.value
 }
 // 获取列表选中数据
-const setSelectRows = (value: any) => {
-  selectRows.value = value;
-};
+function setSelectRows(value: any) {
+  selectRows.value = value
+}
 // 每页数量切换
 function sizeChange(size: number) {
-  onSizeChange(size).then(() => fetchData());
+  onSizeChange(size).then(() => fetchData())
 }
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
-  onCurrentChange(page).then(() => fetchData());
+  onCurrentChange(page).then(() => fetchData())
 }
 // 重置数据
 function onReset() {
   Object.assign(queryForm, {
     pageNo: 1,
     pageSize: 10,
-    title: "",
+    title: '',
     order: {
-      id: "ASC",
+      id: 'ASC',
     },
     select: {},
-  });
+  })
 }
 async function fetchData() {
-  listLoading.value = true;
+  listLoading.value = true
   // const { data } = await getList(queryForm)
   // list.value = data[0]
   // total.value = data[0].length
@@ -100,13 +101,13 @@ async function fetchData() {
     { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
     { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
     { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-  ];
-  pagination.value.total = 3;
-  listLoading.value = false;
+  ]
+  pagination.value.total = 3
+  listLoading.value = false
 }
 onMounted(() => {
-  fetchData();
-});
+  fetchData()
+})
 </script>
 
 <template>
@@ -120,13 +121,13 @@ onMounted(() => {
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
           <el-form
-          :model="queryForm.select" size="default" label-width="100px" inline-message inline
+            :model="queryForm.select" size="default" label-width="100px" inline-message inline
             class="search-form"
           >
             <el-form-item label="">
               <el-input clearable placeholder="项目ID" />
             </el-form-item>
-            <el-form-item  label="">
+            <el-form-item label="">
               <el-input clearable placeholder="项目名称" />
             </el-form-item>
             <ElFormItem>
@@ -138,7 +139,7 @@ onMounted(() => {
               </ElButton>
               <ElButton @click="onReset">
                 <template #icon>
-                  <div class="i-grommet-icons:power-reset w-1em h-1em"></div>
+                  <div class="i-grommet-icons:power-reset h-1em w-1em" />
                 </template>
                 重置
               </ElButton>
@@ -186,9 +187,9 @@ onMounted(() => {
         </FormRightPanel>
       </el-row>
       <el-table
-        style="margin-top: 10px"
         ref="tableSortRef"
         v-loading="false"
+        style="margin-top: 10px"
         row-key="id"
         :data="list"
         :border="border"
@@ -294,11 +295,5 @@ onMounted(() => {
     }
   }
 }
-:deep {
-  .el-table__header {
-    th {
-      background: var(--el-fill-color-lighter) !important;
-    }
-  }
-}
+
 </style>

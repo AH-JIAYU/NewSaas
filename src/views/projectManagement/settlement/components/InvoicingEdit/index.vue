@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+
 defineOptions({
   name: 'InvoicingEdit',
 })
-import { ref } from 'vue'
 const title = ref()
 // 弹框开关变量
 const dialogTableVisible = ref(false)
@@ -11,7 +12,7 @@ function onSubmit() {
 
 }
 // 获取数据
-const showEdit  = async (row:any) => {
+async function showEdit(row: any) {
   title.value = row.id === 1 ? '开票' : '结算'
   dialogTableVisible.value = true
 }
@@ -25,7 +26,7 @@ function closeHandler() {
   // Object.assign(formData, defaultState)
   dialogTableVisible.value = false
 }
-defineExpose({ showEdit  })
+defineExpose({ showEdit })
 </script>
 
 <template>
@@ -36,7 +37,7 @@ defineExpose({ showEdit  })
       width="500"
       :before-close="closeHandler"
     >
-      <div>确认对项目ID+项目名称进行{{title}}操作吗?</div>
+      <div>确认对项目ID+项目名称进行{{ title }}操作吗?</div>
       <template #footer>
         <div style="flex: auto;">
           <el-button type="primary" @click="onSubmit">

@@ -1,21 +1,27 @@
 <script setup lang="ts">
-defineOptions({
-  name: "SurveyTopTabs",
-});
 // 配置富文本
-import { UploadFilled } from "@element-plus/icons-vue";
-import { Editor, Viewer } from "@bytemd/vue-next";
-import gfm from "@bytemd/plugin-gfm";
-import zhHans from "bytemd/locales/zh_Hans.json";
-import gfmLocale from "@bytemd/plugin-gfm/lib/locales/zh_Hans.json";
-import "bytemd/dist/index.css";
-import { ref } from "vue";
-const content = ref("# Fantastic-admin");
-const fold = ref(true);
+import { UploadFilled } from '@element-plus/icons-vue'
+import { Editor } from '@bytemd/vue-next'
+import gfm from '@bytemd/plugin-gfm'
+import zhHans from 'bytemd/locales/zh_Hans.json'
+import gfmLocale from '@bytemd/plugin-gfm/lib/locales/zh_Hans.json'
+import 'bytemd/dist/index.css'
+import { ref } from 'vue'
+
+defineOptions({
+  name: 'SurveyTopTabs',
+})
+
+const props = defineProps({
+  leftTab: Object,
+  tabIndex: Number,
+})
+const content = ref('# Fantastic-admin')
+const fold = ref(true)
 const form = ref<any>({
   checked1: false,
   select: [],
-});
+})
 const options = ref([
   {
     value: '终端',
@@ -34,25 +40,26 @@ const plugins = [
   gfm({
     locale: gfmLocale,
   }),
-];
-const value = ref([4, 8]);
-const activeName = ref("basicSettings");
+]
+const value = ref([4, 8])
+const activeName = ref('basicSettings')
 function handleChange(v: string) {
-  content.value = v;
+  content.value = v
 }
 function open(url: string) {
-  window.open(url, "_blank");
+  window.open(url, '_blank')
 }
-const isHieght = () => {
-  fold.value = !fold.value;
-};
+function isHieght() {
+  fold.value = !fold.value
+}
+const localToptTab = ref<any>(props.leftTab)
 </script>
 
 <template>
   <el-tabs v-model="activeName">
     <el-tab-pane label="基础设置" name="basicSettings">
       <ElForm label-width="100px" :model="form">
-        <el-card body-style="" >
+        <el-card body-style="">
           <template #header>
             <div class="card-header">
               <span>基本信息</span>
@@ -61,7 +68,7 @@ const isHieght = () => {
           <el-row :gutter="20">
             <el-col :span="6">
               <el-form-item label="项目名称" prop="name">
-                <el-input clearable />
+                <el-input v-model="localToptTab.name" clearable />
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -71,8 +78,7 @@ const isHieght = () => {
             </el-col>
             <el-col :span="6">
               <el-form-item label="所属客户" prop="client">
-                <el-select placeholder="Select">
-                </el-select>
+                <el-select placeholder="Select" />
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -109,31 +115,35 @@ const isHieght = () => {
                 <el-input clearable />
               </el-form-item>
             </el-col>
-            <el-col :span="12" v-if="form.checked1">
+            <el-col v-if="form.checked1" :span="12">
               <el-form-item label="互斥ID" prop="location">
                 <el-input clearable />
               </el-form-item>
             </el-col>
             <el-col :span="3">
               <el-form-item label="填写互斥ID" prop="location">
-                <el-checkbox style="top: -4px" v-model="form.checked1" size="large" />
+                <el-checkbox v-model="form.checked1" style="top: -4px" size="large" />
               </el-form-item>
             </el-col>
           </el-row>
         </el-card>
-        <el-card >
+        <el-card>
           <template #header>
             <div style="display: flex; justify-content: space-between" class="card-header">
               <span>描述配额</span>
-              <el-button type="primary" link size="default" @click="isHieght">{{
-    fold ? "收起" : "展开"
-  }}</el-button>
+              <el-button type="primary" link size="default" @click="isHieght">
+                {{
+                  fold ? "收起" : "展开"
+                }}
+              </el-button>
             </div>
           </template>
           <div v-if="fold">
             <el-form-item label="上传图片" prop="tips">
-              <el-upload class="upload-demo" drag action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
-                multiple>
+              <el-upload
+                class="upload-demo" drag action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+                multiple
+              >
                 <el-icon class="el-icon--upload">
                   <UploadFilled />
                 </el-icon>
@@ -157,7 +167,7 @@ const isHieght = () => {
             </el-row>
           </div>
         </el-card>
-        <el-card >
+        <el-card>
           <template #header>
             <div class="card-header">
               <span>其他设置</span>
@@ -194,7 +204,7 @@ const isHieght = () => {
                 <el-date-picker type="datetime" placeholder="请选择时间" />
               </el-form-item>
             </el-col>
-            <br />
+            <br>
           </el-row>
           <el-row :gutter="20">
             <el-col :span="15">
@@ -207,20 +217,21 @@ const isHieght = () => {
       </ElForm>
     </el-tab-pane>
     <el-tab-pane label="配置信息">
-      <el-card >
+      <el-card>
         <template #header>
-          <div class="card-header">配置信息</div>
+          <div class="card-header">
+            配置信息
+          </div>
         </template>
         <el-row :gutter="20">
           <!-- 等字典接口 -->
           <el-col :span="6">
             <el-form-item label="配置选择">
-            <el-select v-model="form.select" multiple collapse-tags collapse-tags-tooltip placeholder="Select">
-              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-            </el-select>
-          </el-form-item>
+              <el-select v-model="form.select" multiple collapse-tags collapse-tags-tooltip placeholder="Select">
+                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+              </el-select>
+            </el-form-item>
           </el-col>
-
 
           <table>
             <tr>
@@ -247,8 +258,12 @@ const isHieght = () => {
               <td>
                 <el-form-item>
                   <el-radio-group>
-                    <el-radio value="1" size="large"> 男 </el-radio>
-                    <el-radio value="2" size="large"> 女 </el-radio>
+                    <el-radio value="1" size="large">
+                      男
+                    </el-radio>
+                    <el-radio value="2" size="large">
+                      女
+                    </el-radio>
                   </el-radio-group>
                 </el-form-item>
               </td>
@@ -258,7 +273,7 @@ const isHieght = () => {
               <td>年龄</td>
               <td>
                 <el-form-item style="width: 30rem">
-                  <el-slider v-model="value" range show-stops :max="100"></el-slider>
+                  <el-slider v-model="value" range show-stops :max="100" />
                 </el-form-item>
               </td>
             </tr>
@@ -293,9 +308,11 @@ const isHieght = () => {
       </el-card>
     </el-tab-pane>
     <el-tab-pane label="安全信息">
-      <el-card >
+      <el-card>
         <template #header>
-          <div class="card-header">安全信息</div>
+          <div class="card-header">
+            安全信息
+          </div>
         </template>
         <el-row :gutter="20">
           <el-col :span="6">

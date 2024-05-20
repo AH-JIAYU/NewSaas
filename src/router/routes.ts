@@ -72,7 +72,7 @@ const systemRoutes: RouteRecordRaw[] = [
 
 // 动态路由（异步路由、导航栏路由）
 const asyncRoutes: Route.recordMainRaw[] = [
-  ...MultilevelMenuExample
+  ...MultilevelMenuExample,
   // {
   //   meta: {
   //     title: '演示',

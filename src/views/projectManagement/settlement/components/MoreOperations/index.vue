@@ -1,8 +1,9 @@
 <script setup lang="ts">
-  defineOptions({
-    name: 'MoreOperations',
-  })
 import { ref } from 'vue'
+
+defineOptions({
+  name: 'MoreOperations',
+})
 const title = ref()
 // 弹框开关变量
 const dialogTableVisible = ref(false)
@@ -11,9 +12,9 @@ function onSubmit() {
 
 }
 // 获取数据
-const showEdit  = async (row:any) => {
+async function showEdit(row: any) {
   title.value = row === 1 ? '开票' : '结算'
-  dialogTableVisible.value = true;
+  dialogTableVisible.value = true
 }
 // 弹框关闭事件
 function closeHandler() {
@@ -25,7 +26,7 @@ function closeHandler() {
   // Object.assign(formData, defaultState)
   dialogTableVisible.value = false
 }
-defineExpose({ showEdit  })
+defineExpose({ showEdit })
 </script>
 
 <template>
@@ -36,7 +37,7 @@ defineExpose({ showEdit  })
       width="600"
       :before-close="closeHandler"
     >
-      <div>确认对一下项目进行{{title}}操作吗?</div>
+      <div>确认对一下项目进行{{ title }}操作吗?</div>
       <el-table
         v-loading="false"
         row-key="id"

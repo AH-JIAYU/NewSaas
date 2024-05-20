@@ -1,28 +1,27 @@
 <script setup lang="ts">
-import SupplierDetailDetail from "../SupplierDetailDetail/index.vue";
+import SupplierDetailDetail from '../SupplierDetailDetail/index.vue'
 
-const emit = defineEmits(["fetch-data"]);
-const drawerisible = ref(false);
-const checkRef = ref<any>();
-const title = ref("详情");
-async function showEdit(row:any) {
-  console.log('row',row);
-  drawerisible.value = true;
+const emit = defineEmits(['fetch-data'])
+const drawerisible = ref(false)
+const checkRef = ref<any>()
+const title = ref('详情')
+async function showEdit(row: any) {
+  drawerisible.value = true
 }
-function handleCheck(row:any) {
-  checkRef.value.showEdit(row);
+function handleCheck(row: any) {
+  checkRef.value.showEdit(row)
 }
 function close() {
-  emit("fetch-data");
-  drawerisible.value = false;
+  emit('fetch-data')
+  drawerisible.value = false
 }
 const list = [
   { a: 1, b: 2, c: 3, id: 1 },
   { a: 1, b: 2, c: 3, id: 1 },
-];
+]
 defineExpose({
   showEdit,
-});
+})
 </script>
 
 <template lang="">
@@ -38,7 +37,9 @@ defineExpose({
   >
     <el-card>
       <el-form label-width="100px" label-position="right">
-        <el-divider content-position="left"> 基本信息 </el-divider>
+        <el-divider content-position="left">
+          基本信息
+        </el-divider>
         <el-row :gutter="24">
           <el-col :span="8">
             <el-form-item label="供应商ID">
@@ -77,7 +78,9 @@ defineExpose({
           </el-col>
         </el-row>
 
-        <el-divider content-position="left"> 权限信息 </el-divider>
+        <el-divider content-position="left">
+          权限信息
+        </el-divider>
         <el-row :gutter="24">
           <el-col :span="8">
             <el-form-item label="调查系统">
@@ -105,7 +108,9 @@ defineExpose({
             </el-form-item>
           </el-col>
         </el-row>
-        <el-divider content-position="left"> 操作日志 </el-divider>
+        <el-divider content-position="left">
+          操作日志
+        </el-divider>
         <el-row :gutter="24">
           <el-col :span="12">
             <el-form-item label="付款方式">
@@ -129,7 +134,9 @@ defineExpose({
           </el-col>
         </el-row>
 
-        <el-divider content-position="left"> 操作日志 </el-divider>
+        <el-divider content-position="left">
+          操作日志
+        </el-divider>
 
         <el-table :data="list" stripe border>
           <el-table-column type="index" label="序号" width="50" />
@@ -149,6 +156,7 @@ defineExpose({
     <SupplierDetailDetail ref="checkRef" />
   </el-drawer>
 </template>
+
 <style scoped lang="scss">
 :deep {
   .el-divider {

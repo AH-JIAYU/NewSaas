@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { Refresh, Search,ArrowDownBold,ArrowUpBold } from '@element-plus/icons-vue'
+import { ArrowDownBold, ArrowUpBold, Refresh, Search } from '@element-plus/icons-vue'
 
 defineOptions({
   name: 'TableQuery',

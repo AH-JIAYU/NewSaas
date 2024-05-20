@@ -218,7 +218,6 @@ const useRouteStore = defineStore(
     // 生成路由（后端获取）
     async function generateRoutesAtBack() {
       await apiApp.routeList().then((res) => {
-        console.log('res', res)
         // 设置 routes 数据
         routesRaw.value = converDeprecatedAttribute(convertSingleRoutes(formatBackRoutes(res.data) as any))
         isGenerate.value = true

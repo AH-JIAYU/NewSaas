@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+
 defineOptions({
   name: 'Edit',
 })
-import { ref } from 'vue'
 
 // 弹框开关变量
 const dialogTableVisible = ref(false)
@@ -11,9 +12,9 @@ function onSubmit() {
 
 }
 // 获取数据
-const showEdit = async (row:any) => {
-  dialogTableVisible.value = true;
-};
+async function showEdit(row: any) {
+  dialogTableVisible.value = true
+}
 // 弹框关闭事件
 function closeHandler() {
   // 移除校验
@@ -36,40 +37,42 @@ defineExpose({ showEdit })
       width="700"
       :before-close="closeHandler"
     >
-      <el-form label-width="80px" :inline="false" >
-        <el-form-item >
-         <el-tag type="success">cube</el-tag>
+      <el-form label-width="80px" :inline="false">
+        <el-form-item>
+          <el-tag type="success">
+            cube
+          </el-tag>
         </el-form-item>
-        <el-form-item  label="渠道">
-          <el-select >
-            <el-option v-for="item in  4 " :key="item" :lable="item" :value="item"></el-option>
+        <el-form-item label="渠道">
+          <el-select>
+            <el-option v-for="item in 4 " :key="item" :lable="item" :value="item" />
           </el-select>
         </el-form-item>
-        <el-form-item  label="发票编号">
-          <el-input placeholder=""  clearable @change=""></el-input>
+        <el-form-item label="发票编号">
+          <el-input placeholder="" clearable @change="" />
         </el-form-item>
-        <el-form-item  label="发票金额">
-          <el-input placeholder=""  clearable @change=""></el-input>
+        <el-form-item label="发票金额">
+          <el-input placeholder="" clearable @change="" />
         </el-form-item>
-        <el-form-item  label="手续费(税)">
-          <el-input placeholder=""  clearable @change=""></el-input>
+        <el-form-item label="手续费(税)">
+          <el-input placeholder="" clearable @change="" />
         </el-form-item>
-        <el-form-item  label="实际收款">
-          <el-input placeholder=""  clearable @change=""></el-input>
+        <el-form-item label="实际收款">
+          <el-input placeholder="" clearable @change="" />
         </el-form-item>
-        <el-form-item  label="发票状态">
-          <el-select >
-            <el-option v-for="item in  4 " :key="item" :lable="item" :value="item"></el-option>
+        <el-form-item label="发票状态">
+          <el-select>
+            <el-option v-for="item in 4 " :key="item" :lable="item" :value="item" />
           </el-select>
         </el-form-item>
-        <el-form-item  label="开票日期">
-          <el-input placeholder=""  clearable @change=""></el-input>
+        <el-form-item label="开票日期">
+          <el-input placeholder="" clearable @change="" />
         </el-form-item>
-        <el-form-item  label="收款日期">
-          <el-input placeholder=""  clearable @change=""></el-input>
+        <el-form-item label="收款日期">
+          <el-input placeholder="" clearable @change="" />
         </el-form-item>
-        <el-form-item  label="备注">
-          <el-input placeholder="备注说明"  clearable :rows="5"  type="textarea"></el-input>
+        <el-form-item label="备注">
+          <el-input placeholder="备注说明" clearable :rows="5" type="textarea" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -77,7 +80,7 @@ defineExpose({ showEdit })
           <el-button type="primary" @click="onSubmit">
             确定
           </el-button>
-          <el-button type="" @click="dialogTableVisible=false">
+          <el-button type="" @click="dialogTableVisible = false">
             取消
           </el-button>
         </div>

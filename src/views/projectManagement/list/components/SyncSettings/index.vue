@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+
 defineOptions({
   name: 'SyncSettings',
 })
-import { ref } from 'vue'
 
 const sync = [
   { label: '所属客户', value: 1 },
@@ -27,7 +28,7 @@ const sync1 = [
 ]
 // 弹框开关变量
 const dialogTableVisible = ref(false)
-const showEdit = () => {
+function showEdit() {
   dialogTableVisible.value = true
 }
 // 提交数据
@@ -44,7 +45,7 @@ function closeHandler() {
   dialogTableVisible.value = false
 }
 // 暴露方法
- defineExpose({showEdit})
+defineExpose({ showEdit })
 </script>
 
 <template>

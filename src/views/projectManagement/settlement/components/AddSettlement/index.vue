@@ -1,15 +1,16 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+
 defineOptions({
-  name: "AddSettlement",
-});
-import { ref } from "vue";
+  name: 'AddSettlement',
+})
 // 弹框开关变量
-const dialogTableVisible = ref(false);
+const dialogTableVisible = ref(false)
 // 提交数据
 function onSubmit() {}
-const showEdit = async (row: any) => {
-  dialogTableVisible.value = true;
-};
+async function showEdit(row: any) {
+  dialogTableVisible.value = true
+}
 // 弹框关闭事件
 function closeHandler() {
   // 移除校验
@@ -17,9 +18,9 @@ function closeHandler() {
   // delete formData.id
   // // 重置表单
   // Object.assign(formData, defaultState)
-  dialogTableVisible.value = false;
+  dialogTableVisible.value = false
 }
-defineExpose({ showEdit });
+defineExpose({ showEdit })
 </script>
 
 <template>
@@ -30,7 +31,7 @@ defineExpose({ showEdit });
       width="700"
       :before-close="closeHandler"
     >
-      <el-form label-width="100px" :inline="false">
+      <el-form label-width="85 px" :inline="false">
         <el-tabs>
           <el-tab-pane label="遗漏项目添加">
             <el-form-item label="项目ID">
@@ -74,15 +75,19 @@ defineExpose({ showEdit });
               <el-input />
             </el-form-item>
             <el-form-item label="渠道">
-              <el-select> </el-select>
+              <el-select />
             </el-form-item>
           </el-tab-pane>
         </el-tabs>
       </el-form>
       <template #footer>
         <div style="flex: auto">
-          <el-button type="primary" @click="onSubmit"> 确定 </el-button>
-          <el-button @click="dialogTableVisible = false"> 取消 </el-button>
+          <el-button type="primary" @click="onSubmit">
+            确定
+          </el-button>
+          <el-button @click="dialogTableVisible = false">
+            取消
+          </el-button>
         </div>
       </template>
     </el-dialog>

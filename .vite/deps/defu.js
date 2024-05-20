@@ -1,75 +1,77 @@
 // node_modules/.pnpm/defu@6.1.4/node_modules/defu/dist/defu.mjs
 function isPlainObject(value) {
-  if (value === null || typeof value !== "object") {
-    return false;
+  if (value === null || typeof value !== 'object') {
+    return false
   }
-  const prototype = Object.getPrototypeOf(value);
+  const prototype = Object.getPrototypeOf(value)
   if (prototype !== null && prototype !== Object.prototype && Object.getPrototypeOf(prototype) !== null) {
-    return false;
+    return false
   }
   if (Symbol.iterator in value) {
-    return false;
+    return false
   }
   if (Symbol.toStringTag in value) {
-    return Object.prototype.toString.call(value) === "[object Module]";
+    return Object.prototype.toString.call(value) === '[object Module]'
   }
-  return true;
+  return true
 }
-function _defu(baseObject, defaults, namespace = ".", merger) {
+function _defu(baseObject, defaults, namespace = '.', merger) {
   if (!isPlainObject(defaults)) {
-    return _defu(baseObject, {}, namespace, merger);
+    return _defu(baseObject, {}, namespace, merger)
   }
-  const object = Object.assign({}, defaults);
+  const object = Object.assign({}, defaults)
   for (const key in baseObject) {
-    if (key === "__proto__" || key === "constructor") {
-      continue;
+    if (key === '__proto__' || key === 'constructor') {
+      continue
     }
-    const value = baseObject[key];
+    const value = baseObject[key]
     if (value === null || value === void 0) {
-      continue;
+      continue
     }
     if (merger && merger(object, key, value, namespace)) {
-      continue;
+      continue
     }
     if (Array.isArray(value) && Array.isArray(object[key])) {
-      object[key] = [...value, ...object[key]];
-    } else if (isPlainObject(value) && isPlainObject(object[key])) {
+      object[key] = [...value, ...object[key]]
+    }
+    else if (isPlainObject(value) && isPlainObject(object[key])) {
       object[key] = _defu(
         value,
         object[key],
-        (namespace ? `${namespace}.` : "") + key.toString(),
-        merger
-      );
-    } else {
-      object[key] = value;
+        (namespace ? `${namespace}.` : '') + key.toString(),
+        merger,
+      )
+    }
+    else {
+      object[key] = value
     }
   }
-  return object;
+  return object
 }
 function createDefu(merger) {
   return (...arguments_) => (
-    // eslint-disable-next-line unicorn/no-array-reduce
-    arguments_.reduce((p, c) => _defu(p, c, "", merger), {})
-  );
+
+    arguments_.reduce((p, c) => _defu(p, c, '', merger), {})
+  )
 }
-var defu = createDefu();
-var defuFn = createDefu((object, key, currentValue) => {
-  if (object[key] !== void 0 && typeof currentValue === "function") {
-    object[key] = currentValue(object[key]);
-    return true;
+const defu = createDefu()
+const defuFn = createDefu((object, key, currentValue) => {
+  if (object[key] !== void 0 && typeof currentValue === 'function') {
+    object[key] = currentValue(object[key])
+    return true
   }
-});
-var defuArrayFn = createDefu((object, key, currentValue) => {
-  if (Array.isArray(object[key]) && typeof currentValue === "function") {
-    object[key] = currentValue(object[key]);
-    return true;
+})
+const defuArrayFn = createDefu((object, key, currentValue) => {
+  if (Array.isArray(object[key]) && typeof currentValue === 'function') {
+    object[key] = currentValue(object[key])
+    return true
   }
-});
+})
 export {
   createDefu,
   defu as default,
   defu,
   defuArrayFn,
-  defuFn
-};
-//# sourceMappingURL=defu.js.map
+  defuFn,
+}
+// # sourceMappingURL=defu.js.map

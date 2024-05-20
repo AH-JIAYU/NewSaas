@@ -1,91 +1,92 @@
 <script setup lang="ts">
-import Sortable from "sortablejs";
-import { OverlayScrollbarsComponent } from "overlayscrollbars-vue";
-import { useI18n } from "vue-i18n";
-import useSettingsStore from "@/store/modules/settings";
-import useTabbarStore from "@/store/modules/tabbar";
-import eventBus from "@/utils/eventBus";
-import { i18nTitleInjectionKey } from "@/utils/injectionKeys";
-import type { Tabbar } from "#/global";
+import Sortable from 'sortablejs'
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-vue'
+import { useI18n } from 'vue-i18n'
+import useSettingsStore from '@/store/modules/settings'
+import useTabbarStore from '@/store/modules/tabbar'
+import eventBus from '@/utils/eventBus'
+import { i18nTitleInjectionKey } from '@/utils/injectionKeys'
+import type { Tabbar } from '#/global'
 
 defineOptions({
-  name: "TabbarMoreAction",
-});
+  name: 'TabbarMoreAction',
+})
 
-const router = useRouter();
+const router = useRouter()
 
-const settingsStore = useSettingsStore();
-const tabbarStore = useTabbarStore();
+const settingsStore = useSettingsStore()
+const tabbarStore = useTabbarStore()
 
-const tabbar = useTabbar();
+const tabbar = useTabbar()
 
-const { t } = useI18n();
+const { t } = useI18n()
 
-const generateI18nTitle = inject(i18nTitleInjectionKey, Function, true);
+const generateI18nTitle = inject(i18nTitleInjectionKey, Function, true)
 
-const activedTabId = computed(() => tabbar.getId());
+const activedTabId = computed(() => tabbar.getId())
 
-const dropdownTabContainerRef = ref();
+const dropdownTabContainerRef = ref()
 
-const isDragging = ref(false);
+const isDragging = ref(false)
 // eslint-disable-next-line unused-imports/no-unused-vars
-let dropdownTabSortable: Sortable;
+let dropdownTabSortable: Sortable
 watch(
   () => dropdownTabContainerRef.value,
   (val) => {
     if (val) {
       dropdownTabSortable = new Sortable(dropdownTabContainerRef.value.$el, {
         animation: 200,
-        ghostClass: "ghost",
-        draggable: ".tab",
-        filter: ".no-drag",
+        ghostClass: 'ghost',
+        draggable: '.tab',
+        filter: '.no-drag',
         onStart: () => {
-          isDragging.value = true;
+          isDragging.value = true
         },
         onEnd: () => {
-          isDragging.value = false;
+          isDragging.value = false
         },
         onUpdate: (e) => {
           if (e.newIndex !== undefined && e.oldIndex !== undefined) {
-            tabbarStore.sort(e.newIndex, e.oldIndex);
+            tabbarStore.sort(e.newIndex, e.oldIndex)
           }
         },
-      });
+      })
     }
-  }
-);
+  },
+)
 
 function actionCommand(
-  command: "search-tabs" | "other-side" | "left-side" | "right-side"
+  command: 'search-tabs' | 'other-side' | 'left-side' | 'right-side',
 ) {
   switch (command) {
-    case "search-tabs":
-      eventBus.emit("global-search-toggle", "tab");
-      break;
-    case "other-side":
-      tabbar.closeOtherSide();
-      break;
-    case "left-side":
-      tabbar.closeLeftSide();
-      break;
-    case "right-side":
-      tabbar.closeRightSide();
-      break;
+    case 'search-tabs':
+      eventBus.emit('global-search-toggle', 'tab')
+      break
+    case 'other-side':
+      tabbar.closeOtherSide()
+      break
+    case 'left-side':
+      tabbar.closeLeftSide()
+      break
+    case 'right-side':
+      tabbar.closeRightSide()
+      break
   }
 }
 
 function iconName(
   isActive: boolean,
-  icon: Tabbar.recordRaw["icon"],
-  activeIcon: Tabbar.recordRaw["activeIcon"]
+  icon: Tabbar.recordRaw['icon'],
+  activeIcon: Tabbar.recordRaw['activeIcon'],
 ) {
-  let name;
+  let name
   if ((!isActive && icon) || (isActive && !activeIcon)) {
-    name = icon;
-  } else if (isActive && activeIcon) {
-    name = activeIcon;
+    name = icon
   }
-  return name;
+  else if (isActive && activeIcon) {
+    name = activeIcon
+  }
+  return name
 }
 </script>
 
@@ -94,17 +95,18 @@ function iconName(
     <div style="margin-right: 5px;">
       <div
         class="h-6 w-6 flex-center cursor-pointer rounded-1 bg-[var(--g-container-bg)] text-lg shadow transition-background-color transition-shadow"
-        @click="actionCommand('other-side')">
+        @click="actionCommand('other-side')"
+      >
         <HTooltip :text="t('app.tabbar.closeOtherSide')">
           <SvgIcon name="i-ri:close-fill" />
         </HTooltip>
       </div>
     </div>
 
-
     <HDropdown placement="bottom-end" popper-class="tabbar-dropdown">
       <div
-        class="h-6 w-6 flex-center cursor-pointer rounded-1 bg-[var(--g-container-bg)] text-lg shadow transition-background-color transition-shadow">
+        class="h-6 w-6 flex-center cursor-pointer rounded-1 bg-[var(--g-container-bg)] text-lg shadow transition-background-color transition-shadow"
+      >
         <SvgIcon name="i-ri:arrow-down-s-fill" />
       </div>
       <template #dropdown>
@@ -130,35 +132,49 @@ function iconName(
             </HTooltip>
           </button>
         </div>
-        <OverlayScrollbarsComponent :options="{ scrollbars: { autoHide: 'leave', autoHideDelay: 300 } }" defer
-          class="max-h-[300px]">
-          <TransitionGroup ref="dropdownTabContainerRef" :name="!isDragging ? 'dropdown-tab' : undefined" tag="div"
-            class="tabs" :class="{ dragging: isDragging }">
-            <div v-for="element in tabbarStore.list" :key="element.tabId" class="tab" :class="{
-          actived: element.tabId === activedTabId,
-          'no-drag': element.isPermanent || element.isPin,
-        }">
-              <div :key="element.tabId" class="title" :title="element.customTitleList.find(
-          (item) => item.fullPath === element.fullPath
-        )?.title || generateI18nTitle(element.i18n, element.title)
-          " @click="router.push(element.fullPath)">
-                <SvgIcon v-if="settingsStore.settings.tabbar.enableIcon &&
-          iconName(
-            element.tabId === activedTabId,
-            element.icon,
-            element.activeIcon
-          )
-          " :name="iconName(element.tabId === activedTabId, element.icon, element.activeIcon)!" />
+        <OverlayScrollbarsComponent
+          :options="{ scrollbars: { autoHide: 'leave', autoHideDelay: 300 } }" defer
+          class="max-h-[300px]"
+        >
+          <TransitionGroup
+            ref="dropdownTabContainerRef" :name="!isDragging ? 'dropdown-tab' : undefined" tag="div"
+            class="tabs" :class="{ dragging: isDragging }"
+          >
+            <div
+              v-for="element in tabbarStore.list" :key="element.tabId" class="tab" :class="{
+                'actived': element.tabId === activedTabId,
+                'no-drag': element.isPermanent || element.isPin,
+              }"
+            >
+              <div
+                :key="element.tabId" class="title" :title="element.customTitleList.find(
+                  (item) => item.fullPath === element.fullPath,
+                )?.title || generateI18nTitle(element.i18n, element.title)
+                " @click="router.push(element.fullPath)"
+              >
+                <SvgIcon
+                  v-if="settingsStore.settings.tabbar.enableIcon
+                    && iconName(
+                      element.tabId === activedTabId,
+                      element.icon,
+                      element.activeIcon,
+                    )
+                  " :name="iconName(element.tabId === activedTabId, element.icon, element.activeIcon)!"
+                />
                 {{
-          element.customTitleList.find(
-            (item) => item.fullPath === element.fullPath
-          )?.title || generateI18nTitle(element.i18n, element.title)
-        }}
+                  element.customTitleList.find(
+                    (item) => item.fullPath === element.fullPath,
+                  )?.title || generateI18nTitle(element.i18n, element.title)
+                }}
               </div>
-              <SvgIcon v-if="!element.isPermanent && element.isPin" name="i-ri:pushpin-2-fill" class="action-icon"
-                @click.stop="tabbarStore.unPin(element.tabId)" />
-              <SvgIcon v-else-if="!element.isPermanent && tabbarStore.list.length > 1" name="ri:close-fill"
-                class="action-icon" @click.stop="tabbar.closeById(element.tabId)" />
+              <SvgIcon
+                v-if="!element.isPermanent && element.isPin" name="i-ri:pushpin-2-fill" class="action-icon"
+                @click.stop="tabbarStore.unPin(element.tabId)"
+              />
+              <SvgIcon
+                v-else-if="!element.isPermanent && tabbarStore.list.length > 1" name="ri:close-fill"
+                class="action-icon" @click.stop="tabbar.closeById(element.tabId)"
+              />
             </div>
           </TransitionGroup>
         </OverlayScrollbarsComponent>

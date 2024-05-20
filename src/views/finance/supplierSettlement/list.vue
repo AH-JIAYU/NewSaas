@@ -1,81 +1,81 @@
 <script setup lang="ts">
+import { reactive, ref } from 'vue'
+
 defineOptions({
-  name: "FinanceSupplierSettlementIndex",
-});
-import { ElMessage } from "element-plus";
-import { ref, reactive } from "vue";
-const { pagination, onSizeChange, onCurrentChange } = usePagination(); //分页
+  name: 'FinanceSupplierSettlementIndex',
+})
+const { pagination, onSizeChange, onCurrentChange } = usePagination() // 分页
 // 分页
-const tableSortRef = ref("");
+const tableSortRef = ref('')
 // loading加载
-const listLoading = ref<boolean>(true);
-const isShow = ref(false);
+const listLoading = ref<boolean>(true)
+const isShow = ref(false)
 // 获取组件变量
-const editRef = ref();
+const editRef = ref()
 // 右侧工具栏配置变量
-const tableAutoHeight = ref(false); // 表格控件-高度自适应
-const checkList = ref([]);
-const border = ref(true);
-const isFullscreen = ref(false);
-const lineHeight = ref<any>("default");
-const stripe = ref(false);
-const selectRows = ref<any>([]);
+const tableAutoHeight = ref(false) // 表格控件-高度自适应
+const checkList = ref([])
+const border = ref(true)
+const isFullscreen = ref(false)
+const lineHeight = ref<any>('default')
+const stripe = ref(false)
+const selectRows = ref<any>([])
 const columns = ref([
   {
-    label: "项目ID",
-    prop: "ID",
+    label: '项目ID',
+    prop: 'ID',
     sortable: true,
     // 不可改变的
     disableCheck: true,
     checked: true,
   },
-]);
+])
 // 查询参数
 const queryForm = reactive<any>({
   pageNo: 1,
   pageSize: 10,
-  title: "",
+  title: '',
   order: {
-    id: "ASC",
+    id: 'ASC',
   },
   select: {},
-});
-const list = ref<any>([]);
+})
+const list = ref<any>([])
 // 编辑数据
-const editData = () => {
+function editData() {
   // if (!selectRows.value.length) editRef.value.dialogTableVisible = true;
-  isShow.value = true;
-};
+  isShow.value = true
+}
 // 右侧工具方法
 function clickFullScreen() {
-  isFullscreen.value = !isFullscreen.value;
+  isFullscreen.value = !isFullscreen.value
 }
 // 获取列表选中数据
-const setSelectRows = (value: any) => {
-  selectRows.value = value;
-};
+function setSelectRows(value: any) {
+  selectRows.value = value
+}
 // 重置数据
 function onReset() {
   Object.assign(queryForm, {
     pageNo: 1,
     pageSize: 10,
-    title: "",
+    title: '',
     order: {
-      id: "ASC",
+      id: 'ASC',
     },
     select: {},
-  });
+  })
 }
 // 每页数量切换
 function sizeChange(size: number) {
-  onSizeChange(size).then(() => fetchData());
+  onSizeChange(size).then(() => fetchData())
 }
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
-  onCurrentChange(page).then(() => fetchData());
+  onCurrentChange(page).then(() => fetchData())
 }
 async function fetchData() {
-  listLoading.value = true;
+  listLoading.value = true
   // const { data } = await getList(queryForm)
   // list.value = data[0]
   // total.value = data[0].length
@@ -86,13 +86,13 @@ async function fetchData() {
     { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
     { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
     { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-  ];
-  pagination.value.total = 3;
-  listLoading.value = false;
+  ]
+  pagination.value.total = 3
+  listLoading.value = false
 }
 onMounted(() => {
-  fetchData();
-});
+  fetchData()
+})
 </script>
 
 <template>
@@ -114,8 +114,8 @@ onMounted(() => {
           >
             <el-form-item label="">
               <el-input
-                clearable
                 v-model="queryForm.select.a"
+                clearable
                 placeholder="供应商ID"
               />
             </el-form-item>
@@ -136,8 +136,7 @@ onMounted(() => {
                 clearable
                 filterable
                 @change=""
-              >
-              </el-select>
+              />
             </el-form-item>
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">
@@ -148,7 +147,7 @@ onMounted(() => {
               </ElButton>
               <ElButton @click="onReset">
                 <template #icon>
-                  <div class="i-grommet-icons:power-reset w-1em h-1em"></div>
+                  <div class="i-grommet-icons:power-reset h-1em w-1em" />
                 </template>
                 重置
               </ElButton>
@@ -166,10 +165,12 @@ onMounted(() => {
       </SearchBar>
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
-        <FormLeftPanel> </FormLeftPanel>
+        <FormLeftPanel />
 
         <FormRightPanel>
-          <el-button size="default" @click=""> 导出 </el-button>
+          <el-button size="default" @click="">
+            导出
+          </el-button>
           <TabelControl
             v-model:border="border"
             v-model:tableAutoHeight="tableAutoHeight"
@@ -185,9 +186,9 @@ onMounted(() => {
         </FormRightPanel>
       </el-row>
       <el-table
-        style="margin-top: 10px"
         ref="tableSortRef"
         v-loading="false"
+        style="margin-top: 10px"
         row-key="id"
         :data="list"
         :border="border"
@@ -332,11 +333,5 @@ onMounted(() => {
     }
   }
 }
-:deep {
-  .el-table__header {
-    th {
-      background: var(--el-fill-color-lighter) !important;
-    }
-  }
-}
+
 </style>

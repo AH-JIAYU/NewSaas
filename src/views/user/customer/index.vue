@@ -1,26 +1,27 @@
 <script setup lang="ts">
-defineOptions({
-  name: 'UserCustomerIndex',
-})
 import { onMounted } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessageBox } from 'element-plus'
 import customerEdit from './components/CustomerEdit/index.vue'
 import customerDetail from './components/CustomerDetail/index.vue'
 
-const { pagination, onSizeChange, onCurrentChange } = usePagination() //分页
+defineOptions({
+  name: 'UserCustomerIndex',
+})
 
-const listLoading = ref(false)  //加载
-const list = ref<Array<Object>>([])  //表格数据
-const editRef = ref<any>() //组件ref 添加编辑
-const checkRef = ref<any>() //组件ref 查看
+const { pagination, onSizeChange, onCurrentChange } = usePagination() // 分页
 
-const selectRows = ref() //表格选中行
-const border = ref(true)  //表格控件-边框
-const stripe = ref(false) //表格控件-条纹
-const tableAutoHeight = ref(false)  // 表格控件-高度自适应
-const lineHeight = ref<any>('default') //表格控件-大小
-const checkList = ref([])  //表格控件-展示列
-const columns = ref([ //表格控件-展示列配置
+const listLoading = ref(false) // 加载
+const list = ref<Array<Object>>([]) // 表格数据
+const editRef = ref<any>() // 组件ref 添加编辑
+const checkRef = ref<any>() // 组件ref 查看
+
+const selectRows = ref() // 表格选中行
+const border = ref(true) // 表格控件-边框
+const stripe = ref(false) // 表格控件-条纹
+const tableAutoHeight = ref(false) // 表格控件-高度自适应
+const lineHeight = ref<any>('default') // 表格控件-大小
+const checkList = ref([]) // 表格控件-展示列
+const columns = ref([ // 表格控件-展示列配置
   {
     label: '等级名称',
     prop: 'name',
@@ -31,13 +32,13 @@ const columns = ref([ //表格控件-展示列配置
   },
 ])
 
-function handleAdd() { //添加
+function handleAdd() { // 添加
   editRef.value.showEdit()
 }
-function handleEdit(row: Object) { //编辑
+function handleEdit(row: Object) { // 编辑
   editRef.value.showEdit(row)
 }
-function handleCheck(row: Object) { //查看
+function handleCheck(row: Object) { // 查看
   checkRef.value.showEdit(row)
 }
 
@@ -80,7 +81,7 @@ function onReset() {
     pageNo: 1,
     pageSize: 10,
     select: {},
-  });
+  })
 }
 async function fetchData() {
   listLoading.value = true
@@ -88,12 +89,12 @@ async function fetchData() {
   // list.value = data[0]
   // total.value = data[0].length
   list.value = [
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+    { name: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+    { name: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+    { name: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+    { name: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+    { name: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+    { name: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
   ]
   listLoading.value = false
 }
@@ -103,16 +104,6 @@ function setSelectRows(val: any) {
 onMounted(() => {
   fetchData()
 })
-function handleMoreOperating(command: string, row: any) {
-  switch (command) {
-    case "handleCheck":
-      handleCheck(row)
-      break;
-    case "handleDelete":
-      handleDelete(row)
-      break;
-  }
-}
 </script>
 
 <template>
@@ -120,8 +111,10 @@ function handleMoreOperating(command: string, row: any) {
     <PageMain>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
-          <ElForm :model="queryForm.select" size="default" label-width="100px" inline-message inline
-            class="search-form">
+          <ElForm
+            :model="queryForm.select" size="default" label-width="100px" inline-message inline
+            class="search-form"
+          >
             <el-form-item>
               <el-input v-model.trim="queryForm.select.id" clearable :inline="false" placeholder="客户简称" />
             </el-form-item>
@@ -145,7 +138,7 @@ function handleMoreOperating(command: string, row: any) {
               </ElButton>
               <ElButton @click="onReset">
                 <template #icon>
-                  <div class="i-grommet-icons:power-reset w-1em h-1em"></div>
+                  <div class="i-grommet-icons:power-reset h-1em w-1em" />
                 </template>
                 重置
               </ElButton>
@@ -173,13 +166,17 @@ function handleMoreOperating(command: string, row: any) {
           <el-button size="default">
             导出
           </el-button>
-          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
+          <TabelControl
+            v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
             v-model:columns="columns" v-model:line-height="lineHeight" v-model:stripe="stripe"
-            style="margin-left: 12px;" @query-data="queryData" />
+            style="margin-left: 12px;" @query-data="queryData"
+          />
         </FormRightPanel>
       </el-row>
-      <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
-        @selection-change="setSelectRows">
+      <el-table
+        v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
+        @selection-change="setSelectRows"
+      >
         <el-table-column align="center" prop="a" show-overflow-tooltip type="selection" />
         <el-table-column align="center" prop="b" show-overflow-tooltip label="客户名称" />
         <el-table-column align="center" prop="c" show-overflow-tooltip label="客户简称" />
@@ -188,29 +185,31 @@ function handleMoreOperating(command: string, row: any) {
         <el-table-column align="center" prop="f" show-overflow-tooltip label="负责人" />
         <el-table-column align="center" prop="g" show-overflow-tooltip label="创建人" />
         <el-table-column align="center" prop="h" show-overflow-tooltip label="创建时间" />
-        <ElTableColumn align="center" show-overflow-tooltip prop="" label="客户状态" >
+        <ElTableColumn align="center" show-overflow-tooltip prop="" label="客户状态">
           <ElSwitch inline-prompt active-text="启用" inactive-text="禁用" />
         </ElTableColumn>
-        <el-table-column align="center" prop="i" label="操作" show-overflow-tooltip width="180">
+        <el-table-column align="center" prop="i" label="操作" show-overflow-tooltip width="200">
           <template #default="{ row }">
             <ElSpace>
               <el-button size="small" plain type="primary" @click="handleEdit(row)">
                 编辑
               </el-button>
-              <ElDropdown @command="handleMoreOperating($event, row)">
-                <ElButton size="small">
-                  更多操作
-                  <SvgIcon name="i-ep:arrow-down" class="el-icon--right" />
-                </ElButton>
-                <template #dropdown>
-                  <ElDropdownMenu>
-                    <ElDropdownItem command="handleCheck"> 详情 </ElDropdownItem>
-                    <ElDropdownItem command="handleDelete" divided>
-                      删除
-                    </ElDropdownItem>
-                  </ElDropdownMenu>
-                </template>
-              </ElDropdown>
+              <el-button
+                type="primary"
+                plain
+                size="small"
+                @click="handleCheck(row)"
+              >
+                详情
+              </el-button>
+              <el-button
+                type="danger"
+                plain
+                size="small"
+                @click="handleDelete(row)"
+              >
+                删除
+              </el-button>
             </ElSpace>
           </template>
         </el-table-column>
@@ -218,9 +217,11 @@ function handleMoreOperating(command: string, row: any) {
           <el-empty class="vab-data-empty" description="暂无数据" />
         </template>
       </el-table>
-      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+      <ElPagination
+        :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
         :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-        background @size-change="sizeChange" @current-change="currentChange" />
+        background @size-change="sizeChange" @current-change="currentChange"
+      />
       <customerEdit ref="editRef" @fetch-data="fetchData" />
       <customerDetail ref="checkRef" @fetch-data="fetchData" />
     </PageMain>
@@ -273,11 +274,5 @@ function handleMoreOperating(command: string, row: any) {
     }
   }
 }
-:deep {
-  .el-table__header {
-    th {
-      background: var(--el-fill-color-lighter) !important;
-    }
-  }
-}
+
 </style>

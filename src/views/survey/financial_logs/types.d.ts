@@ -1,3 +1,3 @@
-export type DetailFormProps = {
+export interface DetailFormProps {
   id?: number | string
 }

@@ -1,18 +1,19 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+
 defineOptions({
   name: 'Details',
 })
-import { ref } from "vue";
 // 弹框开关变量
-const dialogTableVisible = ref(false);
-const total = ref();
+const dialogTableVisible = ref(false)
+const total = ref()
 // 提交数据
 function onSubmit() {}
 // 父级传递数据
-const showEdit = async (row:any) => {
-  total.value = row.length;
-  dialogTableVisible.value = true;
-};
+async function showEdit(row: any) {
+  total.value = row.length
+  dialogTableVisible.value = true
+}
 // 弹框关闭事件
 function closeHandler() {
   // 移除校验
@@ -23,8 +24,9 @@ function closeHandler() {
   dialogTableVisible.value = false
 }
 // 暴露方法
-defineExpose({ showEdit });
+defineExpose({ showEdit })
 </script>
+
 <template>
   <div>
     <el-drawer
@@ -43,7 +45,7 @@ defineExpose({ showEdit });
                 placeholder=""
                 clearable
                 @change=""
-              ></el-input>
+              />
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -52,7 +54,7 @@ defineExpose({ showEdit });
                 placeholder=""
                 clearable
                 @change=""
-              ></el-input>
+              />
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -61,11 +63,15 @@ defineExpose({ showEdit });
             </el-form-item>
           </el-col>
         </el-row>
-        <el-button type="primary">下载</el-button>
+        <el-button type="primary">
+          下载
+        </el-button>
       </el-form>
       <template #footer>
         <div style="flex: auto">
-          <el-button @click="dialogTableVisible = false"> 关闭 </el-button>
+          <el-button @click="dialogTableVisible = false">
+            关闭
+          </el-button>
         </div>
       </template>
     </el-drawer>

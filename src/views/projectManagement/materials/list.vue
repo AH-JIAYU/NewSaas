@@ -1,13 +1,14 @@
 <script setup lang="ts">
-defineOptions({
-  name: "ProjectManagementMaterialsIndex",
-});
-import { ElMessage } from "element-plus";
-import { ref, reactive } from "vue";
+import { reactive, ref } from "vue";
 import deletes from "./components/Delete/index.vue";
 import edit from "./components/Edit/index.vue";
 import detail from "./components/Details/index.vue";
-const { pagination, onSizeChange, onCurrentChange } = usePagination(); //分页
+
+defineOptions({
+  name: "ProjectManagementMaterialsIndex",
+});
+
+const { pagination, onSizeChange, onCurrentChange } = usePagination(); // 分页
 // 分页
 const tableSortRef = ref("");
 // loading加载
@@ -46,27 +47,31 @@ const queryForm = reactive<any>({
 });
 const list = ref<any>([]);
 // 编辑数据
-const editData = (row: any) => {
-  if (!selectRows.value.length) editRef.value.showEdit(row);
-};
+function editData(row: any) {
+  if (!selectRows.value.length) {
+    editRef.value.showEdit(row);
+  }
+}
 // 详情
-const projectDetails = (row: any) => {
-  if (!selectRows.value.length) detailsRef.value.showEdit(row);
-};
+function projectDetails(row: any) {
+  if (!selectRows.value.length) {
+    detailsRef.value.showEdit(row);
+  }
+}
 // 删除数据
-const deleteData = (row: any) => {
+function deleteData(row: any) {
   // if (!selectRows.value.length)
   //   return ElMessage({ message: "请选择至少一条数据", type: "warning" });
   deleteRef.value.showEdit(row);
-};
+}
 // 工具配置项
 function clickFullScreen() {
   isFullscreen.value = !isFullscreen.value;
 }
 // 获取列表选中数据
-const setSelectRows = (value: any) => {
+function setSelectRows(value: any) {
   selectRows.value = value;
-};
+}
 // 每页数量切换
 function sizeChange(size: number) {
   onSizeChange(size).then(() => fetchData());
@@ -103,16 +108,6 @@ async function fetchData() {
 onMounted(() => {
   fetchData();
 });
-function handleMoreOperating(command: string, row: any) {
-  switch (command) {
-    case "projectDetails":
-      projectDetails(row);
-      break;
-    case "deleteData":
-      deleteData(row);
-      break;
-  }
-}
 </script>
 
 <template>
@@ -125,7 +120,11 @@ function handleMoreOperating(command: string, row: any) {
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
           <el-form
-          :model="queryForm.select" size="default" label-width="100px" inline-message inline
+            :model="queryForm.select"
+            size="default"
+            label-width="100px"
+            inline-message
+            inline
             class="search-form"
           >
             <el-form-item label="">
@@ -156,7 +155,7 @@ function handleMoreOperating(command: string, row: any) {
               </ElButton>
               <ElButton @click="onReset">
                 <template #icon>
-                  <div class="i-grommet-icons:power-reset w-1em h-1em"></div>
+                  <div class="i-grommet-icons:power-reset h-1em w-1em" />
                 </template>
                 重置
               </ElButton>
@@ -174,11 +173,9 @@ function handleMoreOperating(command: string, row: any) {
       </SearchBar>
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
-        <FormLeftPanel> </FormLeftPanel>
+        <FormLeftPanel />
         <FormRightPanel>
-          <el-button size="default" @click="">
-            导出
-          </el-button>
+          <el-button size="default" @click=""> 导出 </el-button>
           <TabelControl
             v-model:border="border"
             v-model:tableAutoHeight="tableAutoHeight"
@@ -194,9 +191,9 @@ function handleMoreOperating(command: string, row: any) {
         </FormRightPanel>
       </el-row>
       <el-table
-        style="margin-top: 10px"
         ref="tableSortRef"
         v-loading="false"
+        style="margin-top: 10px"
         row-key="id"
         :data="list"
         :border="border"
@@ -206,14 +203,54 @@ function handleMoreOperating(command: string, row: any) {
       >
         <el-table-column type="selection" />
         <el-table-column type="index" align="center" label="序号" width="55" />
-        <el-table-column show-overflow-tooltip prop="a" align="center" label="供应商ID" />
-        <el-table-column show-overflow-tooltip prop="b" align="center" label="子会员ID" />
-        <el-table-column show-overflow-tooltip prop="c" align="center" label="子会员名称" />
-        <el-table-column show-overflow-tooltip prop="d" align="center" label="项目ID" />
-        <el-table-column show-overflow-tooltip prop="e" align="center" label="项目名称" />
-        <el-table-column show-overflow-tooltip prop="f" align="center" label="客户简称/标识" />
-        <el-table-column show-overflow-tooltip prop="g" align="center" label="说明" />
-        <el-table-column show-overflow-tooltip prop="h" align="center" label="创建时间" />
+        <el-table-column
+          show-overflow-tooltip
+          prop="a"
+          align="center"
+          label="供应商ID"
+        />
+        <el-table-column
+          show-overflow-tooltip
+          prop="b"
+          align="center"
+          label="子会员ID"
+        />
+        <el-table-column
+          show-overflow-tooltip
+          prop="c"
+          align="center"
+          label="子会员名称"
+        />
+        <el-table-column
+          show-overflow-tooltip
+          prop="d"
+          align="center"
+          label="项目ID"
+        />
+        <el-table-column
+          show-overflow-tooltip
+          prop="e"
+          align="center"
+          label="项目名称"
+        />
+        <el-table-column
+          show-overflow-tooltip
+          prop="f"
+          align="center"
+          label="客户简称/标识"
+        />
+        <el-table-column
+          show-overflow-tooltip
+          prop="g"
+          align="center"
+          label="说明"
+        />
+        <el-table-column
+          show-overflow-tooltip
+          prop="h"
+          align="center"
+          label="创建时间"
+        />
         <el-table-column align="center" label="操作" width="240">
           <template #default="{ row }">
             <ElSpace>
@@ -225,20 +262,22 @@ function handleMoreOperating(command: string, row: any) {
               >
                 编辑
               </el-button>
-              <ElDropdown @command="handleMoreOperating($event, row)">
-                <ElButton size="small">
-                  更多操作
-                  <SvgIcon name="i-ep:arrow-down" class="el-icon--right" />
-                </ElButton>
-                <template #dropdown>
-                  <ElDropdownMenu>
-                    <ElDropdownItem command="projectDetails">
-                      详情
-                    </ElDropdownItem>
-                    <ElDropdownItem command="deleteData">删除</ElDropdownItem>
-                  </ElDropdownMenu>
-                </template>
-              </ElDropdown>
+              <el-button
+                type="primary"
+                plain
+                size="small"
+                @click="projectDetails(row)"
+              >
+                详情
+              </el-button>
+              <el-button
+                type="danger"
+                plain
+                size="small"
+                @click="deleteData(row)"
+              >
+                删除
+              </el-button>
             </ElSpace>
           </template>
         </el-table-column>
@@ -310,11 +349,5 @@ function handleMoreOperating(command: string, row: any) {
     }
   }
 }
-:deep {
-  .el-table__header {
-    th {
-      background: var(--el-fill-color-lighter) !important;
-    }
-  }
-}
+
 </style>

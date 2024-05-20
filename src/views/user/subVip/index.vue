@@ -1,55 +1,55 @@
 <script setup lang="ts">
+import { onMounted } from 'vue'
+
 defineOptions({
-  name: "UserSubVipIndex",
-});
-import { onMounted } from "vue";
-import { ElMessage, ElMessageBox } from "element-plus";
+  name: 'UserSubVipIndex',
+})
 
-const { pagination, onSizeChange, onCurrentChange } = usePagination(); //分页
+const { pagination, onSizeChange, onCurrentChange } = usePagination() // 分页
 
-const listLoading = ref<boolean>(false);
-const list = ref<Array<Object>>([]); //列表
-const selectRows = ref<string>(); //表格-选中行
-const checkList = ref<any>([]); //表格-展示的列
-const border = ref<boolean>(true); //表格控件-是否展示边框
-const stripe = ref<boolean>(true); //表格控件-是否展示斑马条
-const lineHeight = ref<any>("default"); //表格控件-控制表格大小
-const tableAutoHeight = ref(false); // 表格控件-高度自适应
+const listLoading = ref<boolean>(false)
+const list = ref<Array<Object>>([]) // 列表
+const selectRows = ref<string>() // 表格-选中行
+const checkList = ref<any>([]) // 表格-展示的列
+const border = ref<boolean>(true) // 表格控件-是否展示边框
+const stripe = ref<boolean>(true) // 表格控件-是否展示斑马条
+const lineHeight = ref<any>('default') // 表格控件-控制表格大小
+const tableAutoHeight = ref(false) // 表格控件-高度自适应
 const columns = ref([
-  //表格控件-展示列
+  // 表格控件-展示列
   {
-    label: "等级名称",
-    prop: "a",
+    label: '等级名称',
+    prop: 'a',
     sortable: true,
-    disableCheck: false, //不可更改
-    checked: true, //默认展示
+    disableCheck: false, // 不可更改
+    checked: true, // 默认展示
   },
-]);
+])
 const queryForm = reactive<any>({
-  //请求接口携带参数
+  // 请求接口携带参数
   pageNo: 1,
   pageSize: 10,
   select: {},
-});
+})
 // 每页数量切换
 function sizeChange(size: number) {
-  onSizeChange(size).then(() => fetchData());
+  onSizeChange(size).then(() => fetchData())
 }
 
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
-  onCurrentChange(page).then(() => fetchData());
+  onCurrentChange(page).then(() => fetchData())
 }
 
 // 重置请求
 function queryData() {
-  queryForm.pageNo = 1;
-  fetchData();
+  queryForm.pageNo = 1
+  fetchData()
 }
 
 // 请求
 async function fetchData() {
-  listLoading.value = true;
+  listLoading.value = true
   // const { data } = await getList(queryForm)
   // list.value = data[0]
   // total.value = data[0].length
@@ -60,8 +60,8 @@ async function fetchData() {
     { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
     { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
     { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-  ];
-  listLoading.value = false;
+  ]
+  listLoading.value = false
 }
 // 重置筛选数据
 function onReset() {
@@ -69,19 +69,19 @@ function onReset() {
     pageNo: 1,
     pageSize: 10,
     select: {},
-  });
+  })
   fetchData()
 }
 // 表格-单选框
 function setSelectRows(val: string | undefined) {
-  selectRows.value = val;
+  selectRows.value = val
 }
 onMounted(() => {
   columns.value.forEach((item: any) => {
-    if (item.checked) checkList.value.push(item.prop);
-  });
-  fetchData();
-});
+    if (item.checked) { checkList.value.push(item.prop) }
+  })
+  fetchData()
+})
 </script>
 
 <template>
@@ -123,7 +123,7 @@ onMounted(() => {
                 <el-option label="关闭" value="false" />
               </el-select>
             </el-form-item>
-            <el-form-item label="" v-show="!fold">
+            <el-form-item v-show="!fold" label="">
               <el-select
                 v-model="queryForm.select.default"
                 clearable
@@ -133,7 +133,7 @@ onMounted(() => {
                 <el-option label="关闭" value="false" />
               </el-select>
             </el-form-item>
-            <el-form-item label="" v-show="!fold">
+            <el-form-item v-show="!fold" label="">
               <el-select
                 v-model="queryForm.select.default"
                 clearable
@@ -143,7 +143,7 @@ onMounted(() => {
                 <el-option label="关闭" value="false" />
               </el-select>
             </el-form-item>
-            <el-form-item label="" v-show="!fold">
+            <el-form-item v-show="!fold" label="">
               <el-date-picker
                 v-model="queryForm.select.time"
                 type="daterange"
@@ -165,7 +165,7 @@ onMounted(() => {
               </ElButton>
               <ElButton @click="onReset">
                 <template #icon>
-                  <div class="i-grommet-icons:power-reset w-1em h-1em"></div>
+                  <div class="i-grommet-icons:power-reset h-1em w-1em" />
                 </template>
                 重置
               </ElButton>
@@ -183,9 +183,11 @@ onMounted(() => {
       </SearchBar>
       <ElDivider border-style="dashed" />
       <el-row>
-        <FormLeftPanel> </FormLeftPanel>
+        <FormLeftPanel />
         <FormRightPanel>
-          <el-button size="default"> 导出 </el-button>
+          <el-button size="default">
+            导出
+          </el-button>
           <TabelControl
             v-model:border="border"
             v-model:tableAutoHeight="tableAutoHeight"
@@ -261,7 +263,7 @@ onMounted(() => {
           show-overflow-tooltip
           label="所属组"
         />
-        <ElTableColumn align="center" show-overflow-tooltip prop="" label="会员状态" >
+        <ElTableColumn align="center" show-overflow-tooltip prop="" label="会员状态">
           <ElSwitch inline-prompt active-text="启用" inactive-text="禁用" />
         </ElTableColumn>
         <el-table-column
@@ -295,6 +297,7 @@ onMounted(() => {
     </PageMain>
   </div>
 </template>
+
 <style scoped lang="scss">
 // 高度自适应
 .absolute-container {
@@ -340,11 +343,5 @@ onMounted(() => {
     }
   }
 }
-:deep {
-  .el-table__header {
-    th {
-      background: var(--el-fill-color-lighter) !important;
-    }
-  }
-}
+
 </style>

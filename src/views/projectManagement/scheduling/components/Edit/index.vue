@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+
 defineOptions({
   name: 'Edit',
 })
-import { ref } from 'vue'
 
 const radio1 = ref(1)
 // 弹框开关变量
@@ -12,9 +13,9 @@ function onSubmit() {
 
 }
 // 获取数据
-const showEdit = async (row:any) => {
-  dialogTableVisible.value = true;
-};
+async function showEdit(row: any) {
+  dialogTableVisible.value = true
+}
 // 弹框关闭事件
 function closeHandler() {
   // 移除校验
@@ -37,7 +38,7 @@ defineExpose({ showEdit })
       width="600"
       :before-close="closeHandler"
     >
-      <el-form ref="form" label-width="80px" :inline="false" >
+      <el-form ref="form" label-width="80px" :inline="false">
         <el-form-item label="类型" style="align-items: center">
           <el-radio-group v-model="radio1" class="ml-4">
             <el-radio :value="1" size="large">
@@ -48,14 +49,14 @@ defineExpose({ showEdit })
             </el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item  label="项目ID">
-          <el-input placeholder=""  clearable @change=""></el-input>
+        <el-form-item label="项目ID">
+          <el-input placeholder="" clearable @change="" />
         </el-form-item>
-        <el-form-item v-if="radio1 === 1"  label="指定价格">
-          <el-input placeholder=""  clearable @change=""></el-input>
+        <el-form-item v-if="radio1 === 1" label="指定价格">
+          <el-input placeholder="" clearable @change="" />
         </el-form-item>
-        <el-form-item  label="会员">
-          <el-input placeholder=""  clearable @change=""></el-input>
+        <el-form-item label="会员">
+          <el-input placeholder="" clearable @change="" />
         </el-form-item>
       </el-form>
       <template #footer>

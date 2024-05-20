@@ -64,17 +64,29 @@ function setclient(data: number) {
 </script>
 
 <template>
-  <el-button @click="addLeftTab()"> 添加子项目 </el-button>
-  <el-tabs v-model="activeLeftTab" tab-position="left" @tab-remove="tabremove">
-    <el-tab-pane
-      v-for="(leftTab, index) in localLeftTab"
-      :key="index"
-      :closable="localLeftTab.length !== 1"
-      :label="leftTab.name"
-      :name="index"
-    >
-      <!-- 在每个左侧 Tab 中使用 TopTabs 组件 -->
-      <!-- <el-button
+  <div>
+    <template v-if="!localLeftTab[0].id">
+      <el-button
+        class="button"
+        :disabled="localLeftTab.length > 9"
+        @click="addLeftTab()"
+      >
+        添加子项目
+      </el-button>
+      <el-tabs
+        v-model="activeLeftTab"
+        tab-position="left"
+        @tab-remove="tabremove"
+      >
+        <el-tab-pane
+          v-for="(leftTab, index) in localLeftTab"
+          :key="index"
+          :closable="localLeftTab.length !== 1"
+          :label="leftTab.name"
+          :name="index"
+        >
+          <!-- 在每个左侧 Tab 中使用 TopTabs 组件 -->
+          <!-- <el-button
         style="margin-bottom: 5px"
         v-if="activeLeftTab > 0"
         size="small"
@@ -92,7 +104,19 @@ function setclient(data: number) {
       >
         <div class="i-bi:exclamation-circle h-1em w-1em" />
       </HTooltip> -->
-      <TopTabs :left-tab="leftTab" :tab-index="index" @set-client="setclient" />
-    </el-tab-pane>
-  </el-tabs>
+          <TopTabs
+            :left-tab="leftTab"
+            :tab-index="index"
+            @set-client="setclient"
+          />
+        </el-tab-pane>
+      </el-tabs>
+    </template>
+    <template v-else>
+      <TopTabs
+        :left-tab="localLeftTab[0]"
+        @set-client="setclient"
+      />
+    </template>
+  </div>
 </template>

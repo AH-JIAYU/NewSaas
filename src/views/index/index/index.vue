@@ -174,49 +174,185 @@ function echarts1() {
 }
 // 客户总览
 function echarts2() {
+  const data = [
+    {
+      value: 100,
+      name: "张三",
+      title: "1111",
+      datas: [{ aud: "333" }, { audR: "333" }, { com: "123123" }],
+    },
+    {
+      value: 20,
+      name: "李四",
+      title: "1111",
+      datas: [{ aud: "444" }, { audR: "333" }, { com: "123123" }],
+    },
+    {
+      value: 30,
+      name: "王五",
+      title: "1111",
+      datas: [{ aud: "333" }, { audR: "333" }, { com: "123123" }],
+    },
+    {
+      value: 40,
+      name: "赵六",
+      title: "1111",
+      datas: [{ aud: "333" }, { audR: "333" }, { com: "123123" }],
+    },
+    {
+      value: 50,
+      name: "老王",
+      title: "1111",
+      datas: [{ aud: "333" }, { audR: "333" }, { com: "123123" }],
+    },
+    {
+      value: 60,
+      name: "老王1",
+      title: "1111",
+      datas: [{ aud: "333" }, { audR: "333" }, { com: "123123" }],
+    },
+    {
+      value: 70,
+      name: "老王2",
+      title: "1111",
+      datas: [{ aud: "333" }, { audR: "333" }, { com: "123123" }],
+    },
+    {
+      value: 80,
+      name: "老王3",
+      title: "1111",
+      datas: [{ aud: "333" }, { audR: "333" }, { com: "123123" }],
+    },
+    {
+      value: 200,
+      name: "老王4",
+      title: "1111",
+      datas: [{ aud: "333" }, { audR: "333" }, { com: "123123" }],
+    },
+    {
+      value: 100,
+      name: "老王5",
+      title: "1111",
+      datas: [{ aud: "333" }, { audR: "333" }, { com: "123123" }],
+    },
+    {
+      value: 110,
+      name: "老王6",
+      title: "1111",
+      datas: [{ aud: "333" }, { audR: "333" }, { com: "123123" }],
+    },
+    {
+      value: 120,
+      name: "老王7",
+      title: "1111",
+      datas: [{ aud: "333" }, { audR: "333" }, { com: "123123" }],
+    },
+    {
+      value: 130,
+      name: "老王8",
+      title: "1111",
+      datas: [{ aud: "333" }, { audR: "333" }, { com: "123123" }],
+    },
+    {
+      value: 140,
+      name: "老王9",
+      title: "1111",
+      datas: [{ aud: "333" }, { audR: "333" }, { com: "123123" }],
+    },
+  ];
   chart2 = echarts.init(chart2Ref.value);
   // 配置数据
   const option = {
     title: {
-      text: "用户访问来源",
+      left: "10%",
+      text: "总金额",
+      radius: ["40%", "60%"],
+      center: ["25%", "50%"],
       subtext: "",
-      left: "center",
     },
     tooltip: {
       trigger: "item",
-      // formatter: "{a} <br/>{b} : {c} ({d}%)",
-      formatter:function(data){
-              return("程序号："+data['name']
-              +"</br>项目完成数: "+ data['data'].datas[2].com
-              +"</br>审核率: "+data['data'].datas[0].aud
-              +"</br>审核成功率: "+data['data'].datas[1].audR
-              )
+      formatter(data) {
+        return `程序号：${data.name}</br>项目完成数: ${data.data.datas[2].com}</br>审核率: ${data.data.datas[0].aud}</br>审核成功率: ${data.data.datas[1].audR}`;
+      },
     },
-    },
-    legend: {
-      orient: "vertical",
-      left: "right",
-      data: ["张三", "李四", "王五", "赵六", "老王"],
-    },
+
+    legend: [
+      {
+        orient: "vertical",
+        x: "65%",
+        y: "center",
+        bottom: "10",
+        itemGap: 20, // 设置图例图形的宽
+        data: ["张三", "李四", "王五", "赵六", "老王", "老王1", "老王2"],
+        formatter(name) {
+          let target, percentage;
+          for (let i = 0; i < data.length; i++) {
+            if (data[i].name === name) {
+              target = data[i].value;
+            }
+          }
+          const arr = [`${name} `, ` ${target}`];
+          return arr.join(" ");
+        },
+      },
+      {
+        orient: "vertical",
+        x: "80%",
+        y: "center",
+        bottom: "10",
+        itemGap: 20, // 设置图例图形的高
+        data: ["老王3", "老王4", "老王5", "老王6", "老王7", "老王8", "老王9"],
+        formatter(name) {
+          let target, percentage;
+          for (let i = 0; i < data.length; i++) {
+            if (data[i].name === name) {
+              target = data[i].value;
+            }
+          }
+          const arr = [`${name} `, ` ${target}`];
+          return arr.join(" ");
+        },
+      },
+    ],
     series: [
       {
         name: "访问来源",
         type: "pie",
-        radius: "55%",
-        center: ["50%", "60%"],
-        data: [
-          { value: 335,name: "张三", title: "1111" ,datas:[{aud:'333'},{audR:'333'},{com:'123123'}]},
-          { value: 335,name: "李四", title: "1111" ,datas:[{aud:'333'},{audR:'333'},{com:'123123'}]},
-          { value: 335,name: "王五", title: "1111" ,datas:[{aud:'333'},{audR:'333'},{com:'123123'}]},
-          { value: 335,name: "赵六", title: "1111" ,datas:[{aud:'333'},{audR:'333'},{com:'123123'}]},
-          { value: 335,name: "老王", title: "1111" ,datas:[{aud:'333'},{audR:'333'},{com:'123123'}]},
-        ],
-        emphasis: {
-          itemStyle: {
-            shadowBlur: 10,
-            shadowOffsetX: 0,
-            shadowColor: "rgba(0, 0, 0, 0.5)",
+        radius: ["40%", "60%"],
+        center: ["25%", "50%"],
+        text: "省市公司",
+        data,
+        label: {
+          normal: {
+            position: "inner",
+            show: false,
           },
+        },
+      },
+    ],
+    graphic: [
+      {
+        type: "text",
+        left: "22.5%",
+        top: "44%",
+        style: {
+          text: `合计`,
+          textAlign: "center",
+          fill: "#333",
+          fontSize: 18,
+          fontWeight: "",
+        },
+      },
+      {
+        type: "text",
+        left: "20%",
+        top: "50%",
+        style: {
+          text: `${data.reduce((total, item) => total + item.value, 0)}`,
+          textAlign: "center",
+          fill: "#333",
+          fontSize: 30,
         },
       },
     ],
@@ -243,25 +379,65 @@ onMounted(() => {
       </el-row>
       <ElRow :gutter="20">
         <ElCol>
-          <ColorfulCard header="发布项目数" :num="123" icon="ep:discount" />
+          <ColorfulCard2
+            header="发布项目数"
+            :num="123"
+            icon="ant-design:file-outlined"
+          />
         </ElCol>
         <ElCol>
-          <ColorfulCard color-from="#fbaaa2" color-to="#fc5286" header="发布项目数" :num="12323" icon="ep:element-plus" />
+          <ColorfulCard2
+            color-from="#fbaaa2"
+            color-to="#fc5286"
+            header="发布项目数"
+            :num="12323"
+            icon="ant-design:file-outlined"
+          />
         </ElCol>
         <ElCol>
-          <ColorfulCard color-from="#ff763b" color-to="#ffc480" header="发布项目数" :num="123" icon="ri:pages-line" />
+          <ColorfulCard2
+            color-from="#ff763b"
+            color-to="#ffc480"
+            header="发布项目数"
+            :num="123"
+            icon="ant-design:file-outlined"
+          />
         </ElCol>
         <ElCol>
-          <ColorfulCard color-from="#6a8eff" color-to="#0e4cfd" header="业务应用页面" :num="123" icon="ep:link" />
+          <ColorfulCard2
+            color-from="#6a8eff"
+            color-to="#0e4cfd"
+            header="业务应用页面"
+            :num="123"
+            icon="ant-design:file-outlined"
+          />
         </ElCol>
         <ElCol>
-          <ColorfulCard color-from="#ffd300" color-to="#ff9b0d" header="业务应用页面" :num="123" icon="ep:handbag" />
+          <ColorfulCard2
+            color-from="#ffd300"
+            color-to="#ff9b0d"
+            header="业务应用页面"
+            :num="123"
+            icon="ant-design:file-outlined"
+          />
         </ElCol>
         <ElCol>
-          <ColorfulCard color-from="#f49494" color-to="#fcd98b" header="业务应用页面" :num="123" icon="ep:film" />
+          <ColorfulCard2
+            color-from="#f49494"
+            color-to="#fcd98b"
+            header="业务应用页面"
+            :num="123"
+            icon="ant-design:file-outlined"
+          />
         </ElCol>
         <ElCol>
-          <ColorfulCard color-from="#c2005c" color-to="#ff980f" header="业务应用页面" :num="123" icon="ep:ice-tea" />
+          <ColorfulCard2
+            color-from="#c2005c"
+            color-to="#ff980f"
+            header="业务应用页面"
+            :num="123"
+            icon="ant-design:file-outlined"
+          />
         </ElCol>
       </ElRow>
       <!-- 营业额趋势 & 客户总览 -->
@@ -272,7 +448,11 @@ onMounted(() => {
               <p class="title">营业额趋势</p>
             </template>
 
-            <div id="echarts1" ref="chart1Ref" style="width: 100%; height: 500px" />
+            <div
+              id="echarts1"
+              ref="chart1Ref"
+              style="width: 100%; height: 500px"
+            />
           </el-card>
         </el-col>
         <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
@@ -281,7 +461,11 @@ onMounted(() => {
               <p class="title">客户总览</p>
             </template>
 
-            <div id="echarts2" ref="chart2Ref" style="width: 100%; height: 500px" />
+            <div
+              id="echarts2"
+              ref="chart2Ref"
+              style="width: 100%; height: 500px"
+            />
           </el-card>
         </el-col>
       </el-row>
@@ -339,7 +523,6 @@ onMounted(() => {
 
     .el-col {
       flex: 1;
-      text-align: center;
 
       .title {
         text-align: left;

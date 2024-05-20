@@ -114,7 +114,7 @@ function onCreate() {
 function onReset() {
   Object.assign(data.value.search, {
     name: '',
-  });
+  })
   getDataList()
 }
 
@@ -162,7 +162,7 @@ function onDel(row: any) {
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
           <ElForm :model="data.search" size="default" label-width="100px" inline-message inline class="search-form">
-            <ElFormItem  >
+            <ElFormItem>
               <ElInput v-model="data.search.name" placeholder="请输入角色名称，支持模糊查询" clearable @keydown.enter="currentChange()" @clear="currentChange()" />
             </ElFormItem>
             <ElFormItem>
@@ -174,7 +174,7 @@ function onDel(row: any) {
               </ElButton>
               <ElButton @click="onReset">
                 <template #icon>
-                  <div class="i-grommet-icons:power-reset w-1em h-1em"></div>
+                  <div class="i-grommet-icons:power-reset h-1em w-1em" />
                 </template>
                 重置
               </ElButton>
@@ -277,11 +277,5 @@ function onDel(row: any) {
     margin-inline: -20px;
   }
 }
-:deep {
-  .el-table__header {
-    th {
-      background: var(--el-fill-color-lighter) !important;
-    }
-  }
-}
+
 </style>

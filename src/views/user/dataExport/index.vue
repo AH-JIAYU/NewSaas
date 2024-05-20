@@ -1,32 +1,30 @@
 <script setup lang="ts">
 defineOptions({
-  name: "UserDataExport",
-});
-import { ElMessage, ElMessageBox } from "element-plus";
+  name: 'UserDataExport',
+})
 
 const form = ref<any>({
-  a:'',
-  b:'',
-  c:'',
-});
-const exportDemo = () => {
-  //项目导出
-};
-const exportID = () => {
-  //id导出
-};
+  a: '',
+  b: '',
+  c: '',
+})
+function exportDemo() {
+  // 项目导出
+}
+function exportID() {
+  // id导出
+}
 </script>
 
 <template>
   <div>
     <PageMain>
-        <el-form label-width="100px" label-position="right">
-          <!-- <el-divider content-position="left">  </el-divider> -->
-          <el-card>
-            <template #header>
-              按项目导出会员资料
-            </template>
-            <el-row :gutter="24">
+      <el-form  label-position="right">
+        <el-card>
+          <template #header>
+            按项目导出会员资料
+          </template>
+          <el-row :gutter="24">
             <el-col :span="6">
               <el-form-item>
                 <el-input v-model="form.a" placeholder="请输入" />
@@ -47,13 +45,13 @@ const exportID = () => {
               </el-button>
             </el-col>
           </el-row>
-          </el-card>
+        </el-card>
 
-          <el-card>
-            <template #header>
-              按会员ID导出资料(站长ID＿会员ID)
-            </template>
-            <el-row :gutter="24">
+        <el-card>
+          <template #header>
+            按会员ID导出资料(站长ID＿会员ID)
+          </template>
+          <el-row :gutter="24">
             <el-col :span="12">
               <el-form-item>
                 <el-input
@@ -70,15 +68,19 @@ const exportID = () => {
               </el-button>
             </el-col>
           </el-row>
-          </el-card>
-        </el-form>
+        </el-card>
+      </el-form>
     </PageMain>
   </div>
 </template>
+
 <style scoped lang="scss">
 :deep {
+  .el-col{
+    padding-left: 0 !important;
+  }
   .el-divider {
-    margin: 20px 0;
+    margin:  0;
   }
   .el-card{
     margin-bottom: 10px;
@@ -87,7 +89,7 @@ const exportID = () => {
   .el-row,
   .el-table {
     width: 94% !important;
-    margin: auto !important;
+    margin: 0 !important;
   }
 }
 </style>
