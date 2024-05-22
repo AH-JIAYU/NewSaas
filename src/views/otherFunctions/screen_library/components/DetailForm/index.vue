@@ -115,7 +115,7 @@ defineExpose({
     });
   },
 });
-const typeMap = {
+const typeMap: any = {
   text: 1, // 输入框
   radiogroup: 2, //单选
   checkbox: 3, // 复选
