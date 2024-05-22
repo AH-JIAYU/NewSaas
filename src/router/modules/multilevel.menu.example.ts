@@ -482,15 +482,6 @@ const routes = [
             },
           },
           {
-            path: "questionnaire",
-            name: "questionnaire",
-            component: () =>
-              import("@/views/otherFunctions/questionnaire/list.vue"),
-            meta: {
-              title: "问卷",
-            },
-          },
-          {
             path: "screenLibrary",
             name: "screenLibrary",
             component: () =>
@@ -516,37 +507,6 @@ const routes = [
                   import("@/views/otherFunctions/screen_library/detail.vue"),
                 meta: {
                   title: "编辑筛选库",
-                  menu:false,
-                },
-              },
-            ],
-          },
-          {
-            path: "questionLibrary",
-            name: "questionLibrary",
-            component: () =>
-              import("@/views/otherFunctions/question_library/list.vue"),
-            meta: {
-              title: "问题库",
-            },
-            children: [
-              {
-                path: "questionLibraryCreate",
-                name: "questionLibraryCreate",
-                component: () =>
-                  import("@/views/otherFunctions/question_library/detail.vue"),
-                meta: {
-                  title: "新增问题库",
-                  menu:false,
-                },
-              },
-              {
-                path: "questionLibraryEdit/:id",
-                name: "questionLibraryEdit",
-                component: () =>
-                  import("@/views/otherFunctions/question_library/detail.vue"),
-                meta: {
-                  title: "编辑问题库",
                   menu:false,
                 },
               },

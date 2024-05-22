@@ -41,16 +41,6 @@ function goBack() {
 
 <template>
   <div class="absolute-container">
-    <PageHeader
-      :title="route.name === 'routerName' ? '新增筛选库' : '编辑筛选库'"
-    >
-      <ElButton size="default" round @click="goBack">
-        <template #icon>
-          <SvgIcon name="i-ep:arrow-left" />
-        </template>
-        返回
-      </ElButton>
-    </PageHeader>
     <PageMain>
           <DetailForm :id="route.params.id as string" ref="formRef" />
     </PageMain>

@@ -1,12 +1,7 @@
 <script setup lang="ts">
 import type { DetailFormProps } from "../../types";
-import DetailForm from "../DetailForm/index.vue";
 
-const props = defineProps<
-  {
-    mode: "dialog" | "drawer";
-  } & DetailFormProps
->();
+const props = defineProps(["id", "row"]);
 
 const emits = defineEmits<{
   success: [];
@@ -17,18 +12,22 @@ const visible = defineModel<boolean>({
 });
 
 const formRef = ref();
-const form = ref({
+const form = ref<any>({
   id: props.id,
-  title: '',
-  detail:'',
-})
+});
 const formRules = ref<any>({
-  title: [
-    { required: true, message: '请输入标题', trigger: 'blur' },
-  ],
-})
+  title: [{ required: true, message: "请输入名称", trigger: "blur" }],
+  country: [{ required: true, message: "请选择国家", trigger: "blur" }],
+});
 
-const title = computed(() => (props.id === "" ? "新增筛选库" : "编辑筛选库"));
+const title = computed(() => {
+  form.value = {}; // 默认form为空
+  if (props.id) {
+    // 有id form为row
+    form.value = JSON.parse(props.row);
+  }
+  return props.id === "" ? "新增" : "编辑";
+});
 
 function onSubmit() {
   // submit() 为组件内部方法
@@ -48,7 +47,7 @@ function onCancel() {
     <ElDialog
       v-model="visible"
       :title="title"
-      width="80%"
+      width="50%"
       :close-on-click-modal="false"
       append-to-body
       destroy-on-close
@@ -60,8 +59,17 @@ function onCancel() {
         label-width="120px"
         label-suffix="："
       >
-        <ElFormItem label="标题" prop="title">
-          <ElInput v-model="form.title" placeholder="请输入标题" />
+        <ElFormItem label="名称" prop="title">
+          <ElInput v-model="form.title" placeholder="请输入名称" />
+        </ElFormItem>
+        <ElFormItem label="国家" prop="country">
+          <ElSelect v-model="form.country" placeholder="请输入国家" />
+        </ElFormItem>
+        <ElFormItem label="状态">
+          <ElSwitch v-model="form.state" placeholder="请输入状态" />
+        </ElFormItem>
+        <ElFormItem label="默认">
+          <ElSwitch v-model="form.default" placeholder="请输入默认" />
         </ElFormItem>
       </ElForm>
       <template #footer>

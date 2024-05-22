@@ -1,18 +1,20 @@
 <script setup lang="ts">
-import { ElMessage, ElMessageBox } from 'element-plus'
-import FormMode from './components/FormMode/index.vue'
-import eventBus from '@/utils/eventBus'
-import api from '@/api/modules/otherFunctions_screenLibrary'
-import useSettingsStore from '@/store/modules/settings'
+import { ElMessage, ElMessageBox } from "element-plus";
+import FormMode from "./components/FormMode/index.vue";
+import eventBus from "@/utils/eventBus";
+import api from "@/api/modules/otherFunctions_screenLibrary";
+import useSettingsStore from "@/store/modules/settings";
+import Edit from "./components/Edit/index.vue";
 
 defineOptions({
-  name: 'OtherFunctionsScreenLibraryList',
-})
+  name: "OtherFunctionsScreenLibraryList",
+});
 
-const router = useRouter()
-const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } = usePagination()
-const tabbar = useTabbar()
-const settingsStore = useSettingsStore()
+const router = useRouter();
+const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
+  usePagination();
+const tabbar = useTabbar();
+const settingsStore = useSettingsStore();
 
 const data = ref({
   loading: false,
@@ -24,15 +26,22 @@ const data = ref({
    * dialog 对话框
    * drawer 抽屉
    */
-  formMode: 'router' as 'router' | 'dialog' | 'drawer',
-  // 详情
+  formMode: "router" as "router" | "dialog" | "drawer",
+  // 设计问卷
   formModeProps: {
     visible: false,
-    id: '',
+    id: "",
+    details: "",
+  },
+  // 新增
+  editProps: {
+    id: "",
+    visible: false,
+    row: "",
   },
   // 搜索
   search: {
-    title: '',
+    title: "",
   },
   // 批量操作
   batch: {
@@ -41,117 +50,128 @@ const data = ref({
   },
   // 列表数据
   dataList: [],
-})
+});
 
 onMounted(() => {
-  getDataList()
-  if (data.value.formMode === 'router') {
-    eventBus.on('get-data-list', () => {
-      getDataList()
-    })
+  getDataList();
+  if (data.value.formMode === "router") {
+    eventBus.on("get-data-list", () => {
+      getDataList();
+    });
   }
-})
+});
 
 onBeforeUnmount(() => {
-  if (data.value.formMode === 'router') {
-    eventBus.off('get-data-list')
+  if (data.value.formMode === "router") {
+    eventBus.off("get-data-list");
   }
-})
+});
 
 function getDataList() {
-  data.value.loading = true
+  data.value.loading = true;
   const params = {
     ...getParams(),
     ...(data.value.search.title && { title: data.value.search.title }),
-  }
+  };
   api.list(params).then((res: any) => {
-    data.value.loading = false
-    data.value.dataList = res.data.list
-    pagination.value.total = res.data.total
-  })
+    data.value.loading = false;
+    data.value.dataList = res.data.list;
+    pagination.value.total = res.data.total;
+  });
 }
 
 // 每页数量切换
 function sizeChange(size: number) {
-  onSizeChange(size).then(() => getDataList())
+  onSizeChange(size).then(() => getDataList());
 }
 
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
-  onCurrentChange(page).then(() => getDataList())
+  onCurrentChange(page).then(() => getDataList());
 }
 
 // 字段排序
-function sortChange({ prop, order }: { prop: string, order: string }) {
-  onSortChange(prop, order).then(() => getDataList())
+function sortChange({ prop, order }: { prop: string; order: string }) {
+  onSortChange(prop, order).then(() => getDataList());
 }
 
+// 添加国家标题
 function onCreate() {
-  if (data.value.formMode === 'router') {
-    if (settingsStore.settings.tabbar.enable && settingsStore.settings.tabbar.mergeTabsBy !== 'activeMenu') {
-      tabbar.open({
-        name: 'screenLibraryCreate',
-      })
-    }
-    else {
-      router.push({
-        name: 'screenLibraryCreate',
-      })
-    }
-  }
-  else {
-    data.value.formModeProps.id = ''
-    data.value.formModeProps.visible = true
-  }
+  data.value.editProps.id = "";
+  data.value.editProps.row = "";
+  data.value.editProps.visible = true;
 }
-
+// 编辑国家标题
 function onEdit(row: any) {
-  if (data.value.formMode === 'router') {
-    if (settingsStore.settings.tabbar.enable && settingsStore.settings.tabbar.mergeTabsBy !== 'activeMenu') {
+  console.log("row.id", row.id);
+  data.value.editProps.id = row.id;
+  data.value.editProps.row = JSON.stringify(row);
+  data.value.editProps.visible = true;
+}
+// 设计模板
+function EditSurvey(row: any) {
+  if (data.value.formMode === "router") {
+    if (
+      settingsStore.settings.tabbar.enable &&
+      settingsStore.settings.tabbar.mergeTabsBy !== "activeMenu"
+    ) {
       tabbar.open({
-        name: 'screenLibraryEdit',
+        name: "screenLibraryEdit",
         params: {
           id: row.id,
         },
-      })
-    }
-    else {
+      });
+    } else {
       router.push({
-        name: 'screenLibraryEdit',
+        name: "screenLibraryEdit",
         params: {
           id: row.id,
         },
-      })
+      });
     }
-  }
-  else {
-    data.value.formModeProps.id = row.id
-    data.value.formModeProps.visible = true
+  } else {
+    data.value.formModeProps.id = row.id;
+    data.value.formModeProps.details = row.details;
+    data.value.formModeProps.visible = true;
   }
 }
 
 function onDel(row: any) {
-  ElMessageBox.confirm(`确认删除「${row.title}」吗？`, '确认信息').then(() => {
-    api.delete(row.id).then(() => {
-      getDataList()
-      ElMessage.success({
-        message: '模拟删除成功',
-        center: true,
-      })
+  ElMessageBox.confirm(`确认删除「${row.title}」吗？`, "确认信息")
+    .then(() => {
+      api.delete(row.id).then(() => {
+        getDataList();
+        ElMessage.success({
+          message: "模拟删除成功",
+          center: true,
+        });
+      });
     })
-  }).catch(() => {})
+    .catch(() => {});
 }
 </script>
 
 <template>
   <div :class="{ 'absolute-container': data.tableAutoHeight }">
-    <PageHeader title="筛选库管理" />
     <PageMain>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
-          <ElForm :model="data.search" size="default" label-width="100px" inline-message inline class="search-form">
+          <ElForm
+            :model="data.search"
+            size="default"
+            label-width="100px"
+            inline-message
+            inline
+            class="search-form"
+          >
             <ElFormItem label="标题">
-              <ElInput v-model="data.search.title" placeholder="请输入标题，支持模糊查询" clearable @keydown.enter="currentChange()" @clear="currentChange()" />
+              <ElInput
+                v-model="data.search.title"
+                placeholder="请输入标题，支持模糊查询"
+                clearable
+                @keydown.enter="currentChange()"
+                @clear="currentChange()"
+              />
             </ElFormItem>
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">
@@ -162,9 +182,11 @@ function onDel(row: any) {
               </ElButton>
               <ElButton link disabled @click="toggle">
                 <template #icon>
-                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top' " />
+                  <SvgIcon
+                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
+                  />
                 </template>
-                {{ fold ? '展开' : '收起' }}
+                {{ fold ? "展开" : "收起" }}
               </ElButton>
             </ElFormItem>
           </ElForm>
@@ -178,35 +200,112 @@ function onDel(row: any) {
           </template>
           新增筛选库
         </ElButton>
-        <ElButton v-if="data.batch.enable" size="default" :disabled="!data.batch.selectionDataList.length">
+        <ElButton
+          v-if="data.batch.enable"
+          size="default"
+          :disabled="!data.batch.selectionDataList.length"
+        >
           单个批量操作按钮
         </ElButton>
         <ElButtonGroup v-if="data.batch.enable">
-          <ElButton size="default" :disabled="!data.batch.selectionDataList.length">
+          <ElButton
+            size="default"
+            :disabled="!data.batch.selectionDataList.length"
+          >
             批量操作按钮组1
           </ElButton>
-          <ElButton size="default" :disabled="!data.batch.selectionDataList.length">
+          <ElButton
+            size="default"
+            :disabled="!data.batch.selectionDataList.length"
+          >
             批量操作按钮组2
           </ElButton>
         </ElButtonGroup>
       </ElSpace>
-      <ElTable v-loading="data.loading" class="my-4" :data="data.dataList" stripe highlight-current-row border height="100%" @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
-        <ElTableColumn v-if="data.batch.enable" type="selection" align="center" fixed />
+      <ElTable
+        v-loading="data.loading"
+        class="my-4"
+        :data="data.dataList"
+        stripe
+        highlight-current-row
+        border
+        height="100%"
+        @sort-change="sortChange"
+        @selection-change="data.batch.selectionDataList = $event"
+      >
+        <ElTableColumn
+          v-if="data.batch.enable"
+          type="selection"
+          align="center"
+          fixed
+        />
         <ElTableColumn prop="title" label="标题" />
+        <ElTableColumn prop="country" label="国家" />
+        <ElTableColumn prop="default" label="默认">
+          <template #default="scope">
+            <ElSwitch v-model="scope.row.default"/>
+          </template>
+        </ElTableColumn>
+        <ElTableColumn prop="state" label="状态">
+          <template #default="scope">
+            <ElSwitch v-model="scope.row.state"/>
+          </template>
+        </ElTableColumn>
         <ElTableColumn label="操作" width="250" align="center" fixed="right">
           <template #default="scope">
-            <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">
+            <ElButton
+              type="primary"
+              size="small"
+              plain
+              @click="onEdit(scope.row)"
+            >
               编辑
             </ElButton>
-            <ElButton type="danger" size="small" plain @click="onDel(scope.row)">
+            <ElButton
+              type="primary"
+              size="small"
+              plain
+              @click="EditSurvey(scope.row)"
+            >
+              设计问卷
+            </ElButton>
+            <ElButton
+              type="danger"
+              size="small"
+              plain
+              @click="onDel(scope.row)"
+            >
               删除
             </ElButton>
           </template>
         </ElTableColumn>
       </ElTable>
-      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size" :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination" background @size-change="sizeChange" @current-change="currentChange" />
+      <ElPagination
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
+        :page-sizes="pagination.sizes"
+        :layout="pagination.layout"
+        :hide-on-single-page="false"
+        class="pagination"
+        background
+        @size-change="sizeChange"
+        @current-change="currentChange"
+      />
     </PageMain>
-    <FormMode v-if="data.formMode === 'dialog' || data.formMode === 'drawer'" :id="data.formModeProps.id" v-model="data.formModeProps.visible" :mode="data.formMode" @success="getDataList" />
+    <Edit
+      :id="data.editProps.id"
+      v-model="data.editProps.visible"
+      :row="data.editProps.row"
+    ></Edit>
+    <FormMode
+      v-if="data.formMode === 'dialog' || data.formMode === 'drawer'"
+      :id="data.formModeProps.id"
+      v-model="data.formModeProps.visible"
+      :mode="data.formMode"
+      :details="data.formModeProps.details"
+      @success="getDataList"
+    />
   </div>
 </template>
 
