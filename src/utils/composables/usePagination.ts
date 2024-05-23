@@ -11,8 +11,10 @@ export default function usePagination() {
 
   function getParams() {
     return {
-      page: pagination.value.page,
-      size: pagination.value.size,
+      // page: pagination.value.page,
+      // size: pagination.value.size,
+      pageNum: pagination.value.page,
+      pageSize: pagination.value.size,
       from: (pagination.value.page - 1) * pagination.value.size,
       limit: pagination.value.size,
       ...(

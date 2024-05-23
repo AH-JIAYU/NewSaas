@@ -42,7 +42,7 @@ function goBack() {
 <template>
   <div class="absolute-container">
     <PageMain>
-          <DetailForm :id="route.params.id as string" ref="formRef" />
+          <DetailForm :id="route.params.id as string" ref="formRef"  @onSubmit="onSubmit" />
     </PageMain>
     <FixedActionBar>
       <ElButton type="primary" size="large" @click="onSubmit"> 提交 </ElButton>

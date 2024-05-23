@@ -21,7 +21,6 @@ const formRef = ref();
 const title = computed(() => (props.id === "" ? "新增筛选库" : "编辑筛选库"));
 
 function onSubmit() {
-  console.log('调用方法')
   // submit() 为组件内部方法
   formRef.value.submit().then(() => {
     emits("success");

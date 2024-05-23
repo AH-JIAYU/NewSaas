@@ -19,9 +19,9 @@ api.interceptors.request.use(
     // 设置请求头
     if (request.headers) {
       request.headers['Accept-Language'] = settingsStore.lang
-      if (userStore.isLogin) {
-        request.headers.Token = userStore.token
-      }
+      // if (userStore.isLogin) {
+      //   request.headers.Token = userStore.token
+      // }
     }
     // 是否将 POST 请求参数进行字符串化处理
     if (request.method === 'post') {
@@ -42,7 +42,7 @@ api.interceptors.response.use(
      * 请求出错时 error 会返回错误信息
      */
     if (response.data.status === 1) {
-      if (response.data.error !== '') {
+      if (response.data.error !== 'success' && response.data.error !== '') {
         // 错误提示
         Message.error(response.data.error, {
           zIndex: 2000,

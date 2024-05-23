@@ -482,6 +482,15 @@ const routes = [
             },
           },
           {
+            path: "dictionary",
+            name: "dictionary",
+            component: () =>
+              import("@/views/otherFunctions/dictionary/index.vue"),
+            meta: {
+              title: "字典管理",
+            },
+          },
+          {
             path: "screenLibrary",
             name: "screenLibrary",
             component: () =>
@@ -497,7 +506,7 @@ const routes = [
                   import("@/views/otherFunctions/screen_library/detail.vue"),
                 meta: {
                   title: "新增筛选库",
-                  menu:false,
+                  menu: false,
                 },
               },
               {
@@ -507,7 +516,7 @@ const routes = [
                   import("@/views/otherFunctions/screen_library/detail.vue"),
                 meta: {
                   title: "编辑筛选库",
-                  menu:false,
+                  menu: false,
                 },
               },
             ],

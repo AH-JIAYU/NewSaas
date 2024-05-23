@@ -265,7 +265,7 @@ function echarts2() {
   const option = {
     title: {
       left: "10%",
-      text: "总金额",
+      text: "",
       radius: ["40%", "60%"],
       center: ["25%", "50%"],
       subtext: "",
@@ -302,6 +302,7 @@ function echarts2() {
         y: "center",
         bottom: "10",
         itemGap: 20, // 设置图例图形的高
+        center: ["50%", "50%"],
         data: ["老王3", "老王4", "老王5", "老王6", "老王7", "老王8", "老王9"],
         formatter(name) {
           let target, percentage;
@@ -333,27 +334,30 @@ function echarts2() {
     ],
     graphic: [
       {
-        type: "text",
-        left: "22.5%",
-        top: "44%",
-        style: {
-          text: `合计`,
-          textAlign: "center",
-          fill: "#333",
-          fontSize: 18,
-          fontWeight: "",
-        },
-      },
-      {
-        type: "text",
-        left: "20%",
-        top: "50%",
-        style: {
-          text: `${data.reduce((total, item) => total + item.value, 0)}`,
-          textAlign: "center",
-          fill: "#333",
-          fontSize: 30,
-        },
+        type: "group",
+        left: "25%",
+        top: "center",
+        bounding: "raw",
+        children: [
+          {
+            type: "text",
+            style: {
+              text: `合计`,
+              fontSize: 18,
+              textAlign: "center",
+              textVerticalAlign: "bottom",
+            },
+          },
+          {
+            type: "text",
+            style: {
+              text: `${data.reduce((total, item) => total + item.value, 0)}`,
+              textAlign: "center",
+              textVerticalAlign: "top",
+              fontSize: 30,
+            },
+          },
+        ],
       },
     ],
   };

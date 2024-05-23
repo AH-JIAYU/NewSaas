@@ -36,28 +36,12 @@ const creatorOptions: ICreatorOptions = {
   showTranslationTab: true,
 };
 
-// 问卷默认展示数据
-const defaultJson = {
-  pages: [
-    {
-      name: "Name",
-      elements: [
-        {
-          name: "country",
-          type: "dropdown",
-          placeholder: "Select a country...",
-          choicesByUrl: {
-            url: "https://surveyjs.io/api/CountriesExample",
-          },
-        },
-      ],
-    },
-  ],
-};
-
 const creator = new SurveyCreatorModel(creatorOptions);
-creator.text =
-  window.localStorage.getItem("survey-json") || JSON.stringify(defaultJson);
+//以下代码将调查左侧的工具箱进行类型分类。
+//通过https://surveyjs.io/form-library/documentation/api-reference/question#getType 来查看工具类名称
+creator.toolbox.allowExpandMultipleCategories = true; // 允许用户展开多个类别
+creator.toolbox.showCategoryTitles = true; // 分类显示
+creator.text = "";
 creator.saveSurveyFunc = (saveNo: number, callback: any) => {
   window.localStorage.setItem("survey-json", creator.text);
   callback(saveNo, true);
@@ -86,32 +70,37 @@ creator.onUploadFile.add((_, options) => {
 
 const loading = ref(false);
 const form = ref({
-  id: props.id,
+  projectProblemCategoryId: props.id,
   addProjectProblemInfoList: [], // 问卷对象 后端用
   projectJson: "", // 问卷json 前端用
 });
 
 creator.saveSurveyFunc = (saveNo: number, callback: any) => {
   callback(saveNo, true);
-  console.log("保存");
   emits("onSubmit");
 };
+
+onMounted(async () => {
+  const { data } = await api.getSurvey(props.id);
+  creator.text = data.projectJson || "";
+});
 
 defineExpose({
   submit() {
     return new Promise<void>(async (resolve) => {
       form.value.projectJson = JSON.stringify(creator.JSON);
+      const locale = creator.JSON.locale || editorLocalization.currentLocale;
       form.value.addProjectProblemInfoList = await convertData(
-        creator.JSON.pages
+        creator.JSON.pages,
+        locale
       );
-      console.log("form.value", form.value);
-      // api.edit(form.value).then(() => {
-      //   ElMessage.success({
-      //     message: "模拟编辑成功",
-      //     center: true,
-      //   });
-      //   resolve();
-      // });
+      api.setSurvey(form.value).then(() => {
+        ElMessage.success({
+          message: "设置成功",
+          center: true,
+        });
+        resolve();
+      });
     });
   },
 });
@@ -122,31 +111,33 @@ const typeMap: any = {
   dropdown: 4, // 下拉
 };
 // 转换数据
-function convertData(originalData: any) {
+function convertData(originalData: any, locale: any) {
   const transformedData = originalData.flatMap((item: any) => {
     return item.elements.map((element: any) => {
       const questionType = typeMap[element.type] || 0;
-
       let question = element.name;
-
-      if (element.title && element.title["zh-cn"]) {
-        question = element.title["zh-cn"];
+      if (element.title) {
+        question =
+          element?.title.default || element?.title[locale] || element.name;
       }
+      // 新增一个问题，默认标题为name 改变标题后 字段在title里
 
       let addProjectAnswerInfoList = [];
 
       if (Array.isArray(element.choices)) {
         addProjectAnswerInfoList = element.choices.map((choice: any) => {
-          let answerValue = "";
+          let answerValue = choice.value || choice;
           let anotherName = "";
-
           if (typeof choice === "object") {
-            answerValue = choice.value || "";
-            if (choice.text && choice.text["zh-cn"]) {
-              anotherName = choice.text["zh-cn"];
+            //choice为对象说明至少改了显示文本
+            //choice.text为对象 说明他改变了语言或者配置了译文 改变语言choice.text里没default字段
+            if (typeof choice.text === "object") {
+              // 默认为default 如果default不存在说明他一开始就切换了语言
+              anotherName = choice.text.default || choice.text[locale];
+            } else {
+              anotherName = choice.text;
             }
           } else {
-            answerValue = choice;
             anotherName = choice;
           }
 

@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import type { DetailFormProps } from "../../types";
+import { ElMessage } from "element-plus";
+import api from "@/api/modules/otherFunctions_screenLibrary";
 
 const props = defineProps(["id", "row"]);
 
@@ -11,13 +13,15 @@ const visible = defineModel<boolean>({
   default: false,
 });
 
-const formRef = ref();
+const formRef = ref<any>();
 const form = ref<any>({
   id: props.id,
+  status: 2,
+  isDefault: 2,
 });
 const formRules = ref<any>({
-  title: [{ required: true, message: "请输入名称", trigger: "blur" }],
-  country: [{ required: true, message: "请选择国家", trigger: "blur" }],
+  categoryName: [{ required: true, message: "请输入名称", trigger: "blur" }],
+  countryId: [{ required: true, message: "请选择国家", trigger: "blur" }],
 });
 
 const title = computed(() => {
@@ -29,12 +33,26 @@ const title = computed(() => {
   return props.id === "" ? "新增" : "编辑";
 });
 
-function onSubmit() {
-  // submit() 为组件内部方法
-  formRef.value.submit().then(() => {
-    emits("success");
-    onCancel();
-  });
+async function onSubmit() {
+  if (!props.id) {
+    // 新增
+    const { data, status } = await api.create(form.value);
+    status === 1 &&
+      ElMessage.success({
+        message: "新增成功",
+        center: true,
+      });
+  } else {
+    // 编辑
+    const { data, status } = await api.edit(form.value);
+    status === 1 &&
+      ElMessage.success({
+        message: "新增成功",
+        center: true,
+      });
+  }
+  onCancel();
+  emits("success");
 }
 
 function onCancel() {
@@ -59,17 +77,28 @@ function onCancel() {
         label-width="120px"
         label-suffix="："
       >
-        <ElFormItem label="名称" prop="title">
-          <ElInput v-model="form.title" placeholder="请输入名称" />
+        <ElFormItem label="名称" prop="categoryName">
+          <ElInput v-model="form.categoryName" placeholder="请输入名称" />
         </ElFormItem>
-        <ElFormItem label="国家" prop="country">
-          <ElSelect v-model="form.country" placeholder="请输入国家" />
+        <ElFormItem label="国家" prop="countryId">
+          <!-- <ElSelect v-model="form.countryId" placeholder="请输入国家" /> -->
+          <ElInput v-model="form.countryId" placeholder="请输入国家" />
         </ElFormItem>
         <ElFormItem label="状态">
-          <ElSwitch v-model="form.state" placeholder="请输入状态" />
+          <ElSwitch
+            v-model="form.status"
+            :active-value="1"
+            :inactive-value="2"
+            placeholder="请输入状态"
+          />
         </ElFormItem>
         <ElFormItem label="默认">
-          <ElSwitch v-model="form.default" placeholder="请输入默认" />
+          <ElSwitch
+            v-model="form.isDefault"
+            :active-value="1"
+            :inactive-value="2"
+            placeholder="请输入默认"
+          />
         </ElFormItem>
       </ElForm>
       <template #footer>

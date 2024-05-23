@@ -26,7 +26,7 @@ const data = ref({
    * dialog 对话框
    * drawer 抽屉
    */
-  formMode: "router" as "router" | "dialog" | "drawer",
+  formMode: "drawer" as "router" | "dialog" | "drawer",
   // 设计问卷
   formModeProps: {
     visible: false,
@@ -75,7 +75,7 @@ function getDataList() {
   };
   api.list(params).then((res: any) => {
     data.value.loading = false;
-    data.value.dataList = res.data.list;
+    data.value.dataList = res.data.getProjectProblemCategoryInfoList;
     pagination.value.total = res.data.total;
   });
 }
@@ -103,8 +103,7 @@ function onCreate() {
 }
 // 编辑国家标题
 function onEdit(row: any) {
-  console.log("row.id", row.id);
-  data.value.editProps.id = row.id;
+  data.value.editProps.id = row.projectProblemCategoryId;
   data.value.editProps.row = JSON.stringify(row);
   data.value.editProps.visible = true;
 }
@@ -118,19 +117,19 @@ function EditSurvey(row: any) {
       tabbar.open({
         name: "screenLibraryEdit",
         params: {
-          id: row.id,
+          id: row.projectProblemCategoryId,
         },
       });
     } else {
       router.push({
         name: "screenLibraryEdit",
         params: {
-          id: row.id,
+          id: row.projectProblemCategoryId,
         },
       });
     }
   } else {
-    data.value.formModeProps.id = row.id;
+    data.value.formModeProps.id = row.projectProblemCategoryId;
     data.value.formModeProps.details = row.details;
     data.value.formModeProps.visible = true;
   }
@@ -139,7 +138,7 @@ function EditSurvey(row: any) {
 function onDel(row: any) {
   ElMessageBox.confirm(`确认删除「${row.title}」吗？`, "确认信息")
     .then(() => {
-      api.delete(row.id).then(() => {
+      api.delete(row.projectProblemCategoryId).then(() => {
         getDataList();
         ElMessage.success({
           message: "模拟删除成功",
@@ -239,16 +238,16 @@ function onDel(row: any) {
           align="center"
           fixed
         />
-        <ElTableColumn prop="title" label="标题" />
-        <ElTableColumn prop="country" label="国家" />
-        <ElTableColumn prop="default" label="默认">
+        <ElTableColumn prop="categoryName" label="标题" />
+        <ElTableColumn prop="countryId" label="国家" />
+        <ElTableColumn prop="isDefault" label="默认">
           <template #default="scope">
-            <ElSwitch v-model="scope.row.default"/>
+            <ElSwitch v-model="scope.row.isDefault" />
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="state" label="状态">
+        <ElTableColumn prop="status" label="状态">
           <template #default="scope">
-            <ElSwitch v-model="scope.row.state"/>
+            <ElSwitch v-model="scope.row.status" />
           </template>
         </ElTableColumn>
         <ElTableColumn label="操作" width="250" align="center" fixed="right">
@@ -297,6 +296,7 @@ function onDel(row: any) {
       :id="data.editProps.id"
       v-model="data.editProps.visible"
       :row="data.editProps.row"
+      @success="getDataList"
     ></Edit>
     <FormMode
       v-if="data.formMode === 'dialog' || data.formMode === 'drawer'"
