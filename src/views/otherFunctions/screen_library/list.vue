@@ -107,6 +107,16 @@ function onEdit(row: any) {
   data.value.editProps.row = JSON.stringify(row);
   data.value.editProps.visible = true;
 }
+// 修改状态
+async function changeIsDefault(item: any) {
+  const { status } = await api.edit(item);
+  status === 1 &&
+    ElMessage.success({
+      message: "编辑成功",
+      center: true,
+    });
+  getDataList();
+}
 // 设计模板
 function EditSurvey(row: any) {
   if (data.value.formMode === "router") {
@@ -134,7 +144,7 @@ function EditSurvey(row: any) {
     data.value.formModeProps.visible = true;
   }
 }
-
+// 删除
 function onDel(row: any) {
   ElMessageBox.confirm(`确认删除「${row.title}」吗？`, "确认信息")
     .then(() => {
@@ -197,7 +207,7 @@ function onDel(row: any) {
           <template #icon>
             <SvgIcon name="i-ep:plus" />
           </template>
-          新增筛选库
+          新增前置问卷库
         </ElButton>
         <ElButton
           v-if="data.batch.enable"
@@ -242,12 +252,22 @@ function onDel(row: any) {
         <ElTableColumn prop="countryId" label="国家" />
         <ElTableColumn prop="isDefault" label="默认">
           <template #default="scope">
-            <ElSwitch v-model="scope.row.isDefault" />
+            <ElSwitch
+              @change="changeIsDefault(scope.row)"
+              v-model="scope.row.isDefault"
+              :active-value="1"
+              :inactive-value="2"
+            />
           </template>
         </ElTableColumn>
         <ElTableColumn prop="status" label="状态">
           <template #default="scope">
-            <ElSwitch v-model="scope.row.status" />
+            <ElSwitch
+              @change="changeIsDefault(scope.row)"
+              v-model="scope.row.status"
+              :active-value="1"
+              :inactive-value="2"
+            />
           </template>
         </ElTableColumn>
         <ElTableColumn label="操作" width="250" align="center" fixed="right">

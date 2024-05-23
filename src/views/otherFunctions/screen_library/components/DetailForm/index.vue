@@ -140,7 +140,6 @@ function convertData(originalData: any, locale: any) {
           } else {
             anotherName = choice;
           }
-
           return {
             answerValue: answerValue,
             anotherName: anotherName,

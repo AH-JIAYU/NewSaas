@@ -47,7 +47,7 @@ async function onSubmit() {
     const { data, status } = await api.edit(form.value);
     status === 1 &&
       ElMessage.success({
-        message: "新增成功",
+        message: "编辑成功",
         center: true,
       });
   }

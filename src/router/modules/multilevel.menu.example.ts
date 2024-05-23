@@ -496,7 +496,7 @@ const routes = [
             component: () =>
               import("@/views/otherFunctions/screen_library/list.vue"),
             meta: {
-              title: "筛选库",
+              title: "前置问卷库",
             },
             children: [
               {
@@ -505,7 +505,7 @@ const routes = [
                 component: () =>
                   import("@/views/otherFunctions/screen_library/detail.vue"),
                 meta: {
-                  title: "新增筛选库",
+                  title: "新增前置问卷库",
                   menu: false,
                 },
               },
@@ -515,7 +515,7 @@ const routes = [
                 component: () =>
                   import("@/views/otherFunctions/screen_library/detail.vue"),
                 meta: {
-                  title: "编辑筛选库",
+                  title: "编辑前置问卷库",
                   menu: false,
                 },
               },
