@@ -38,11 +38,12 @@ export default {
 
   edit: (data: any) =>
     api.post("projectProblem/updateProjectProblemCategory", data),
+    // 修改默认国家
+  update: (data: any) =>
+    api.post("projectProblem/updateCountryDefault", data),
 
-  delete: (projectProblemCategoryId: number | string) =>
-    api.post("projectProblem/deleteProjectProblemCategory", {
-      projectProblemCategoryId,
-    }),
+  delete: (data: any) =>
+    api.post("projectProblem/deleteProjectProblemCategory", data),
   // 设计问卷
   setSurvey: (data: any) => api.post("projectProblem/addProjectProblem", data),
   // 获取问卷

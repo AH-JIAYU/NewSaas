@@ -3,11 +3,11 @@ meta:
   title: 导航1
 </route>
 
-<script setup></script>
-
 <script setup>
 import * as echarts from "echarts";
 import { onMounted } from "vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
 
 let chart1;
 let chart2;
@@ -207,57 +207,61 @@ function echarts2() {
     },
     {
       value: 60,
-      name: "老王1",
+      name: "老张",
       title: "1111",
       datas: [{ aud: "333" }, { audR: "333" }, { com: "123123" }],
     },
     {
       value: 70,
-      name: "老王2",
+      name: "老李",
       title: "1111",
       datas: [{ aud: "333" }, { audR: "333" }, { com: "123123" }],
     },
     {
       value: 80,
-      name: "老王3",
+      name: "老赵",
       title: "1111",
       datas: [{ aud: "333" }, { audR: "333" }, { com: "123123" }],
     },
     {
       value: 200,
-      name: "老王4",
+      name: "王总",
       title: "1111",
       datas: [{ aud: "333" }, { audR: "333" }, { com: "123123" }],
     },
     {
       value: 100,
-      name: "老王5",
+      name: "张总",
       title: "1111",
       datas: [{ aud: "333" }, { audR: "333" }, { com: "123123" }],
     },
     {
       value: 110,
-      name: "老王6",
+      name: "李总",
       title: "1111",
       datas: [{ aud: "333" }, { audR: "333" }, { com: "123123" }],
     },
     {
       value: 120,
-      name: "老王7",
+      name: "王总",
       title: "1111",
       datas: [{ aud: "333" }, { audR: "333" }, { com: "123123" }],
     },
     {
       value: 130,
-      name: "老王8",
+      name: "赵总",
       title: "1111",
       datas: [{ aud: "333" }, { audR: "333" }, { com: "123123" }],
     },
     {
       value: 140,
-      name: "老王9",
+      name: "老钱",
       title: "1111",
       datas: [{ aud: "333" }, { audR: "333" }, { com: "123123" }],
+    },
+    {
+      value: 0,
+      name: "查看更多",
     },
   ];
   chart2 = echarts.init(chart2Ref.value);
@@ -278,13 +282,48 @@ function echarts2() {
     },
 
     legend: [
+      // {
+      //   orient: "vertical",
+      //   x: "55%",
+      //   y: "center",
+      //   bottom: "10",
+      //   itemGap: 20, // 设置图例图形的宽
+      //   data: ["张三", "李四", "王五", "赵六", "老王", "老张", "老李"],
+      //   formatter(name) {
+      //     let target, percentage;
+      //     for (let i = 0; i < data.length; i++) {
+      //       if (data[i].name === name) {
+      //         target = data[i].value;
+      //       }
+      //     }
+      //     const arr = [`${name}`, ` ${target}`];
+      //     return arr.join(" ");
+      //   },
+      // },
       {
-        orient: "vertical",
-        x: "65%",
+        orient: "horizontal",
+        x: "55%",
         y: "center",
-        bottom: "10",
+        bottom: "20",
         itemGap: 20, // 设置图例图形的宽
-        data: ["张三", "李四", "王五", "赵六", "老王", "老王1", "老王2"],
+        center: ["50%", "50%"],
+        data: [
+          "张三",
+          "李四",
+          "王五",
+          "赵六",
+          "老王",
+          "老张",
+          "老李",
+          "老赵",
+          "王总",
+          "张总",
+          "李总",
+          "王总",
+          "赵总",
+          "老钱",
+          "查看更多",
+        ],
         formatter(name) {
           let target, percentage;
           for (let i = 0; i < data.length; i++) {
@@ -292,27 +331,23 @@ function echarts2() {
               target = data[i].value;
             }
           }
-          const arr = [`${name} `, ` ${target}`];
+          if (name == "查看更多") {
+            return name;
+          }
+          const arr = [`{a|${name}} `, `{b| ${target}}`];
           return arr.join(" ");
         },
-      },
-      {
-        orient: "vertical",
-        x: "80%",
-        y: "center",
-        bottom: "10",
-        itemGap: 20, // 设置图例图形的高
-        center: ["50%", "50%"],
-        data: ["老王3", "老王4", "老王5", "老王6", "老王7", "老王8", "老王9"],
-        formatter(name) {
-          let target, percentage;
-          for (let i = 0; i < data.length; i++) {
-            if (data[i].name === name) {
-              target = data[i].value;
-            }
-          }
-          const arr = [`${name} `, ` ${target}`];
-          return arr.join(" ");
+        textStyle: {
+          rich: {
+            a: {
+              width: 50,
+              backgroundColor: "transparent",
+            },
+            b: {
+              width: 60,
+              backgroundColor: "transparent",
+            },
+          },
         },
       },
     ],
@@ -361,6 +396,14 @@ function echarts2() {
       },
     ],
   };
+  chart2.on("legendselectchanged", function (params) {
+    console.log("params", params);
+    // 如果点击的图例是 '需要添加超链接的图例名称'
+    if (params.name === "查看更多") {
+      // 执行跳转到链接的操作
+      router.push("/datacenter");
+    }
+  });
   // 传入数据
   chart2.setOption(option);
 }

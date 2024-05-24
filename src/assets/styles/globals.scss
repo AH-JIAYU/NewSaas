@@ -325,6 +325,10 @@ textarea {
     }
   }
 
+  .el-tabs {
+    min-height: 99vh;
+  }
+
   .el-tabs__content {
     margin-left: 65px;
   }
@@ -357,6 +361,9 @@ textarea {
       position: sticky;
       top: 129px;
       z-index: 9999;
+      height: 60vh;
+      overflow-y: auto;
+      overflow-x: hidden;
     }
   }
 

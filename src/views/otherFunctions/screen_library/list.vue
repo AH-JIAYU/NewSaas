@@ -41,7 +41,7 @@ const data = ref({
   },
   // 搜索
   search: {
-    title: "",
+    countryId: "",
   },
   // 批量操作
   batch: {
@@ -71,28 +71,37 @@ function getDataList() {
   data.value.loading = true;
   const params = {
     ...getParams(),
-    ...(data.value.search.title && { title: data.value.search.title }),
+    ...(data.value.search.countryId && {
+      countryId: data.value.search.countryId,
+    }),
   };
   api.list(params).then((res: any) => {
     data.value.loading = false;
-    data.value.dataList = res.data.getProjectProblemCategoryInfoList;
-    pagination.value.total = res.data.total;
+    data.value.dataList = res.data.getCountryListInfoList;
+    pagination.value.total = res.data.getCountryListInfoList.length;
   });
 }
+// 分页 后端(刘)这块不好做分页，所有返回全部数据，前端做分页
+const DataList = computed(() => {
+  return data.value.dataList.slice(
+    (pagination.value.page - 1) * pagination.value.size,
+    pagination.value.page * pagination.value.size
+  );
+});
 
 // 每页数量切换
 function sizeChange(size: number) {
-  onSizeChange(size).then(() => getDataList());
+  onSizeChange(size);
 }
 
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
-  onCurrentChange(page).then(() => getDataList());
+  onCurrentChange(page);
 }
 
 // 字段排序
 function sortChange({ prop, order }: { prop: string; order: string }) {
-  onSortChange(prop, order).then(() => getDataList());
+  onSortChange(prop, order);
 }
 
 // 添加国家标题
@@ -107,12 +116,22 @@ function onEdit(row: any) {
   data.value.editProps.row = JSON.stringify(row);
   data.value.editProps.visible = true;
 }
-// 修改状态
+// 修改默认
 async function changeIsDefault(item: any) {
+  const { status } = await api.update(item);
+  status === 1 &&
+    ElMessage.success({
+      message: "修改「默认国家」成功",
+      center: true,
+    });
+  getDataList();
+}
+// 修改状态
+async function changeStatus(item: any) {
   const { status } = await api.edit(item);
   status === 1 &&
     ElMessage.success({
-      message: "编辑成功",
+      message: "修改「状态」成功",
       center: true,
     });
   getDataList();
@@ -144,17 +163,33 @@ function EditSurvey(row: any) {
     data.value.formModeProps.visible = true;
   }
 }
-// 删除
-function onDel(row: any) {
-  ElMessageBox.confirm(`确认删除「${row.title}」吗？`, "确认信息")
+// 删除国家
+function onDelCountry(row: any) {
+  ElMessageBox.confirm(`确认删除「${row.countryId}」吗？`, "确认信息")
     .then(() => {
-      api.delete(row.projectProblemCategoryId).then(() => {
+      api.delete({ countryId: row.countryId }).then(() => {
         getDataList();
         ElMessage.success({
-          message: "模拟删除成功",
+          message: "删除成功",
           center: true,
         });
       });
+    })
+    .catch(() => {});
+}
+// 删除标题
+function onDelProject(row: any) {
+  ElMessageBox.confirm(`确认删除「${row.categoryName}」吗？`, "确认信息")
+    .then(() => {
+      api
+        .delete({ projectProblemCategoryId: row.projectProblemCategoryId })
+        .then(() => {
+          getDataList();
+          ElMessage.success({
+            message: "删除成功",
+            center: true,
+          });
+        });
     })
     .catch(() => {});
 }
@@ -173,10 +208,10 @@ function onDel(row: any) {
             inline
             class="search-form"
           >
-            <ElFormItem label="标题">
+            <ElFormItem label="国家">
               <ElInput
-                v-model="data.search.title"
-                placeholder="请输入标题，支持模糊查询"
+                v-model="data.search.countryId"
+                placeholder="请输入国家，支持模糊查询"
                 clearable
                 @keydown.enter="currentChange()"
                 @clear="currentChange()"
@@ -234,21 +269,75 @@ function onDel(row: any) {
       <ElTable
         v-loading="data.loading"
         class="my-4"
-        :data="data.dataList"
-        stripe
-        highlight-current-row
         border
+        stripe
+        :data="DataList"
+        highlight-current-row
         height="100%"
         @sort-change="sortChange"
         @selection-change="data.batch.selectionDataList = $event"
       >
-        <ElTableColumn
-          v-if="data.batch.enable"
-          type="selection"
-          align="center"
-          fixed
-        />
-        <ElTableColumn prop="categoryName" label="标题" />
+        <el-table-column type="expand" width="55">
+          <template #default="{ row }">
+            <div m="4">
+              <div m="4"><h2>该国家下所有问卷</h2></div>
+              <el-table
+                :data="row.getProjectProblemCategoryInfoList"
+                highlight-current-row
+                class="hide-table-header"
+              >
+                <!-- <el-table-column width="55" /> -->
+                <el-table-column prop="categoryName" label="标题" />
+                <!-- <ElTableColumn label="默认"> </ElTableColumn> -->
+                <ElTableColumn prop="status" label="状态">
+                  <template #default="scope">
+                    <ElSwitch
+                      @change="changeStatus(scope.row)"
+                      v-model="scope.row.status"
+                      :active-value="1"
+                      :inactive-value="2"
+                    />
+                  </template>
+                </ElTableColumn>
+                <el-table-column prop="createTime" label="创建时间" />
+                <ElTableColumn
+                  width="250"
+                  align="center"
+                  label="操作"
+                  fixed="right"
+                >
+                  <template #default="scope">
+                    <ElButton
+                      type="primary"
+                      size="small"
+                      plain
+                      @click="onEdit(scope.row)"
+                    >
+                      编辑
+                    </ElButton>
+                    <ElButton
+                      type="primary"
+                      size="small"
+                      plain
+                      @click="EditSurvey(scope.row)"
+                    >
+                      设计问卷
+                    </ElButton>
+                    <ElButton
+                      type="danger"
+                      size="small"
+                      plain
+                      @click="onDelProject(scope.row)"
+                    >
+                      删除
+                    </ElButton>
+                  </template>
+                </ElTableColumn>
+              </el-table>
+            </div>
+          </template>
+        </el-table-column>
+        <!-- <ElTableColumn prop="categoryName" label="标题" /> -->
         <ElTableColumn prop="countryId" label="国家" />
         <ElTableColumn prop="isDefault" label="默认">
           <template #default="scope">
@@ -260,39 +349,24 @@ function onDel(row: any) {
             />
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="status" label="状态">
+        <!-- <ElTableColumn prop="status" label="状态">
           <template #default="scope">
             <ElSwitch
+              v-if="scope.row.status"
               @change="changeIsDefault(scope.row)"
               v-model="scope.row.status"
               :active-value="1"
               :inactive-value="2"
             />
           </template>
-        </ElTableColumn>
+        </ElTableColumn> -->
         <ElTableColumn label="操作" width="250" align="center" fixed="right">
           <template #default="scope">
-            <ElButton
-              type="primary"
-              size="small"
-              plain
-              @click="onEdit(scope.row)"
-            >
-              编辑
-            </ElButton>
-            <ElButton
-              type="primary"
-              size="small"
-              plain
-              @click="EditSurvey(scope.row)"
-            >
-              设计问卷
-            </ElButton>
             <ElButton
               type="danger"
               size="small"
               plain
-              @click="onDel(scope.row)"
+              @click="onDelCountry(scope.row)"
             >
               删除
             </ElButton>
@@ -330,6 +404,16 @@ function onDel(row: any) {
 </template>
 
 <style lang="scss" scoped>
+:deep {
+  // .hide-table-header {
+  //   .el-table__header-wrapper {
+  //     display: none !important;
+  //   }
+  // }
+  // .el-table__cell.el-table__expanded-cell {
+  //     padding: 0;
+  //   }
+}
 .absolute-container {
   position: absolute;
   width: 100%;

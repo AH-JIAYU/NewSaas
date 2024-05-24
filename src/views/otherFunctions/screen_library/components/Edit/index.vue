@@ -15,7 +15,6 @@ const visible = defineModel<boolean>({
 
 const formRef = ref<any>();
 const form = ref<any>({
-  id: props.id,
   status: 2,
   isDefault: 2,
 });
@@ -57,6 +56,7 @@ async function onSubmit() {
 
 function onCancel() {
   visible.value = false;
+  form.value = {};
 }
 </script>
 
@@ -92,7 +92,7 @@ function onCancel() {
             placeholder="请输入状态"
           />
         </ElFormItem>
-        <ElFormItem label="默认">
+        <ElFormItem label="默认" v-if="!form.projectProblemCategoryId">
           <ElSwitch
             v-model="form.isDefault"
             :active-value="1"

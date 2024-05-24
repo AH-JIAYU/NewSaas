@@ -17,7 +17,7 @@ const props = defineProps({
   tabIndex: Number,
 });
 const content = ref("# Fantastic-admin");
-const fold = ref(true);
+const fold = ref(false);
 const form = ref<any>({
   checked1: false,
   select: [],
@@ -90,22 +90,46 @@ const localToptTab = ref<any>(props.leftTab);
           <el-row :gutter="20">
             <el-col :span="6">
               <el-form-item label="原价(美元)" prop="money">
-                <el-input-number v-model="form.number" :min="1" :max="10" controls-position="right" size="large" />
+                <el-input-number
+                  v-model="form.number"
+                  :min="1"
+                  :max="10"
+                  controls-position="right"
+                  size="large"
+                />
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="配额" prop="quota">
-                <el-input-number v-model="form.number" :min="1" :max="10" controls-position="right" size="large" />
+                <el-input-number
+                  v-model="form.number"
+                  :min="1"
+                  :max="10"
+                  controls-position="right"
+                  size="large"
+                />
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="最小时长/分" prop="category">
-                <el-input-number v-model="form.number" :min="1" :max="10" controls-position="right" size="large" />
+              <el-form-item label="最小分长" prop="category">
+                <el-input-number
+                  v-model="form.number"
+                  :min="1"
+                  :max="10"
+                  controls-position="right"
+                  size="large"
+                />
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="IR" prop="location">
-                <el-input-number v-model="form.number" :min="1" :max="10" controls-position="right" size="large" />
+                <el-input-number
+                  v-model="form.number"
+                  :min="1"
+                  :max="10"
+                  controls-position="right"
+                  size="large"
+                />
               </el-form-item>
             </el-col>
           </el-row>
@@ -122,14 +146,21 @@ const localToptTab = ref<any>(props.leftTab);
             </el-col>
             <el-col :span="3">
               <el-form-item label="填写互斥ID" prop="location">
-                <el-checkbox v-model="form.checked1" style="top: -4px" size="large" />
+                <el-checkbox
+                  v-model="form.checked1"
+                  style="top: -4px"
+                  size="large"
+                />
               </el-form-item>
             </el-col>
           </el-row>
         </el-card>
         <el-card>
           <template #header>
-            <div style="display: flex; justify-content: space-between" class="card-header">
+            <div
+              style="display: flex; justify-content: space-between"
+              class="card-header"
+            >
               <span>描述配额</span>
               <el-button type="primary" link size="default" @click="isHieght">
                 {{ fold ? "收起" : "展开" }}
@@ -138,8 +169,12 @@ const localToptTab = ref<any>(props.leftTab);
           </template>
           <div v-if="fold">
             <el-form-item label="上传图片" prop="tips">
-              <el-upload class="upload-demo" drag action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
-                multiple>
+              <el-upload
+                class="upload-demo"
+                drag
+                action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+                multiple
+              >
                 <el-icon class="el-icon--upload">
                   <UploadFilled />
                 </el-icon>
@@ -157,7 +192,13 @@ const localToptTab = ref<any>(props.leftTab);
               <el-col :span="24">
                 <el-form-item label="项目描述" prop="describes">
                   <!-- key解决富文本编译器   先添加  再编辑  富文本右侧值还在的问题    key值变了会刷新组件 -->
-                  <Editor class="editor" :value="content" :plugins="plugins" :locale="zhHans" @change="handleChange" />
+                  <Editor
+                    class="editor"
+                    :value="content"
+                    :plugins="plugins"
+                    :locale="zhHans"
+                    @change="handleChange"
+                  />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -182,7 +223,7 @@ const localToptTab = ref<any>(props.leftTab);
             </el-col>
             <el-col :span="3">
               <el-form-item label="资料" prop="top">
-                <el-switch />
+                <el-switch v-model="form.data" />
               </el-form-item>
             </el-col>
             <el-col :span="3">
@@ -192,10 +233,11 @@ const localToptTab = ref<any>(props.leftTab);
             </el-col>
             <el-col :span="3">
               <el-form-item label="定时发布" prop="top">
-                <el-switch />
+                <el-switch v-model="form.timedRelease" />
               </el-form-item>
             </el-col>
-            <el-col :span="6">
+            <!-- 定时发布开显示时间，关隐藏 -->
+            <el-col :span="6" v-if="form.timedRelease">
               <el-form-item style="margin-left: -100px" prop="top">
                 <el-date-picker type="datetime" placeholder="请选择时间" />
               </el-form-item>
@@ -205,14 +247,20 @@ const localToptTab = ref<any>(props.leftTab);
           <el-row :gutter="20">
             <el-col :span="15">
               <el-form-item label="备注" prop="platform">
-                <el-input maxlength="200" show-word-limit style="width: 29rem" type="textarea" :rows="5" />
+                <el-input
+                  maxlength="200"
+                  show-word-limit
+                  style="width: 29rem"
+                  type="textarea"
+                  :rows="5"
+                />
               </el-form-item>
             </el-col>
           </el-row>
         </el-card>
       </ElForm>
     </el-tab-pane>
-    <el-tab-pane label="配置信息">
+    <el-tab-pane label="配置信息" v-if="form.data">
       <el-card>
         <template #header>
           <div class="card-header">配置信息</div>
@@ -220,9 +268,38 @@ const localToptTab = ref<any>(props.leftTab);
         <el-row :gutter="20">
           <!-- 等字典接口 -->
           <el-col :span="6">
+            <el-form-item label="选择国家">
+              <el-select
+                v-model="form.select"
+                multiple
+                collapse-tags
+                collapse-tags-tooltip
+                placeholder="Select"
+              >
+                <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
             <el-form-item label="问卷名称">
-              <el-select v-model="form.select" multiple collapse-tags collapse-tags-tooltip placeholder="Select">
-                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+              <el-select
+                v-model="form.select"
+                multiple
+                collapse-tags
+                collapse-tags-tooltip
+                placeholder="Select"
+              >
+                <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
               </el-select>
             </el-form-item>
           </el-col>
@@ -277,12 +354,24 @@ const localToptTab = ref<any>(props.leftTab);
         <el-row :gutter="20">
           <el-col :span="6">
             <el-form-item label="小时准入量" prop="money">
-              <el-input-number v-model="form.number" :min="1" :max="10" controls-position="right" size="large" />
+              <el-input-number
+                v-model="form.number"
+                :min="1"
+                :max="10"
+                controls-position="right"
+                size="large"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="小时完成量" prop="money">
-              <el-input-number v-model="form.number" :min="1" :max="10" controls-position="right" size="large" />
+              <el-input-number
+                v-model="form.number"
+                :min="1"
+                :max="10"
+                controls-position="right"
+                size="large"
+              />
             </el-form-item>
           </el-col>
         </el-row>
@@ -344,7 +433,6 @@ const localToptTab = ref<any>(props.leftTab);
 }
 
 :deep {
-
   .el-input-number,
   .el-select,
   .el-select__wrapper,

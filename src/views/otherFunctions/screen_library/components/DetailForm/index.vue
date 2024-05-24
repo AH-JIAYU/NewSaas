@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { FormInstance, FormRules } from "element-plus";
+import { loadingHide, loadingShow } from "@/components/SpinkitLoading/index"; //加载
 import { ElMessage } from "element-plus";
-import type { DetailFormProps } from "../../types";
 import api from "@/api/modules/otherFunctions_screenLibrary";
 import useUserStore from "@/store/modules/user";
 
@@ -81,8 +81,15 @@ creator.saveSurveyFunc = (saveNo: number, callback: any) => {
 };
 
 onMounted(async () => {
+  loadingShow({
+    type: "circle-fade",
+    size: 50,
+    color: "#fff",
+    text: "数据加载中……",
+  });
   const { data } = await api.getSurvey(props.id);
   creator.text = data.projectJson || "";
+  loadingHide();
 });
 
 defineExpose({

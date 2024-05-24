@@ -31,7 +31,7 @@ defineExpose({ showEdit })
       width="700"
       :before-close="closeHandler"
     >
-      <el-form label-width="85 px" :inline="false">
+      <el-form label-width="100px" :inline="false">
         <el-tabs>
           <el-tab-pane label="遗漏项目添加">
             <el-form-item label="项目ID">
