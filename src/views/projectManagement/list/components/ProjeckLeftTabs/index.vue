@@ -24,9 +24,10 @@ const activeLeftTab = ref(0);
 
 const initialTopTabsData = {
   name: "项目名称",
-  platform: {},
-  screen: {},
-  security: {},
+  addProjectQuotaInfoList: {}, //配置信息
+  // platform: {},
+  // screen: {},
+  // security: {},
 };
 // 同步配置项
 function setHandler() {
@@ -35,7 +36,8 @@ function setHandler() {
 // 同步主项目
 function syncProject() {
   const syncdata = cloneDeep(localLeftTab.value[0]);
-  localLeftTab.value[activeLeftTab.value] = syncdata;
+  // localLeftTab.value[activeLeftTab.value] = syncdata;
+  localLeftTab.value.splice(activeLeftTab.value, 1, syncdata);
 }
 
 function addLeftTab() {
@@ -67,76 +69,71 @@ function setclient(data: number) {
 
 <template>
   <div>
-    <template v-if="!localLeftTab[0].id">
-      <el-button
-        class="button"
-        :disabled="localLeftTab.length > 29"
-        @click="addLeftTab()"
+    <el-button
+      class="button"
+      :disabled="localLeftTab.length > 29"
+      @click="addLeftTab()"
+    >
+      新增
+    </el-button>
+    <el-tabs
+      v-model="activeLeftTab"
+      tab-position="left"
+      @tab-remove="tabremove"
+    >
+      <el-tab-pane
+        v-for="(leftTab, index) in localLeftTab"
+        :key="index"
+        style="position: relative"
+        :closable="localLeftTab.length !== 1"
+        :label="leftTab.name"
+        :name="index"
       >
-        新增
-      </el-button>
-      <el-tabs
-        v-model="activeLeftTab"
-        tab-position="left"
-        @tab-remove="tabremove"
-      >
-        <el-tab-pane
-          v-for="(leftTab, index) in localLeftTab"
-          :key="index"
-          style="position: relative"
-          :closable="localLeftTab.length !== 1"
-          :label="leftTab.name"
-          :name="index"
+        <div
+          style="
+            float: right;
+            position: sticky;
+            top: 19px;
+            width: 48vw;
+            z-index: 9999999;
+            display: flex;
+            justify-content: start;
+            align-items: start;
+          "
         >
-          <div
-            style="
-              float: right;
-              position: sticky;
-              top: 19px;
-              width: 48vw;
-              z-index: 9999999;
-              display: flex;
-              justify-content: start;
-              align-items: start;
-            "
+          <el-button
+            v-if="activeLeftTab > 0"
+            size="small"
+            type="primary"
+            round
+            plain
+            @click="syncProject"
           >
-            <el-button
-              v-if="activeLeftTab > 0"
-              size="small"
-              type="primary"
-              round
-              plain
-              @click="syncProject"
-            >
-              同步数据
-            </el-button>
-            <!-- <HTooltip
+            同步数据
+          </el-button>
+          <!-- <HTooltip
               style="z-index: 99999; color: #48a2ff; margin-left: 5px"
               text="注意噢！"
               v-if="activeLeftTab > 0"
             >
               <div class="i-bi:exclamation-circle h-1em w-1em" />
             </HTooltip> -->
-          </div>
+        </div>
 
-          <!-- <div
+        <!-- <div
         style="margin-left: 10px"
         class="i-solar:settings-line-duotone w-2em h-2em"
         @click="setHandler"
       /> -->
-          <!-- 在每个左侧 Tab 中使用 TopTabs 组件 -->
-          <TopTabs
-            :left-tab="leftTab"
-            :tab-index="index"
-            @set-client="setclient"
-          />
-        </el-tab-pane>
-        <SyncSettings ref="settingsRef" />
-      </el-tabs>
-    </template>
-    <template v-else>
-      <TopTabs :left-tab="localLeftTab[0]" @set-client="setclient" />
-    </template>
+        <!-- 在每个左侧 Tab 中使用 TopTabs 组件 -->
+        <TopTabs
+          :left-tab="leftTab"
+          :tab-index="index"
+          @set-client="setclient"
+        />
+      </el-tab-pane>
+      <SyncSettings ref="settingsRef" />
+    </el-tabs>
   </div>
 </template>
 

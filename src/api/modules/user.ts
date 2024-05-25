@@ -8,6 +8,11 @@ export default {
   }) => api.post('user/login', data, {
     baseURL: '/mock/',
   }),
+  // // 登录
+  // login: (data: {
+  //   account: string
+  //   password: string
+  // }) => api.post('user/loginByAccount', data),
 
   // 获取权限
   permission: () => api.get('user/permission', {

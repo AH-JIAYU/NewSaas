@@ -400,55 +400,55 @@ textarea {
   }
 }
 
-// 项目列表编辑
-.edit-drawer {
-  .el-drawer__header {
-    height: 0;
-    padding: 0;
-    margin: 0 !important;
+// // 项目列表编辑
+// .edit-drawer {
+//   .el-drawer__header {
+//     height: 0;
+//     padding: 0;
+//     margin: 0 !important;
 
-    .el-drawer__close-btn {
-      position: fixed;
-      right: 20px;
-      top: 20px;
-      z-index: 9999999;
-    }
-  }
+//     .el-drawer__close-btn {
+//       position: fixed;
+//       right: 20px;
+//       top: 20px;
+//       z-index: 9999999;
+//     }
+//   }
 
-  .el-tabs__content {
-    margin-left: 15px;
-  }
+//   .el-tabs__content {
+//     margin-left: 15px;
+//   }
 
-  .el-tabs__content,
-  .el-tabs.el-tabs--left {
-    overflow: visible;
-  }
+//   .el-tabs__content,
+//   .el-tabs.el-tabs--left {
+//     overflow: visible;
+//   }
 
-  .el-drawer__body {
-    padding: 0 10px 0 5px;
-  }
+//   .el-drawer__body {
+//     padding: 0 10px 0 5px;
+//   }
 
-  .el-tabs__nav-wrap.is-top::after {
-    width: 0 !important;
-  }
+//   .el-tabs__nav-wrap.is-top::after {
+//     width: 0 !important;
+//   }
 
-  .el-tabs__header.is-top {
-    position: sticky;
-    top: 0;
-    z-index: 9999;
-    background-color: #fff;
-    padding-left: 10px;
-    margin-left: 10px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    box-shadow: 5px 0px 5px #fff !important;
-  }
+//   .el-tabs__header.is-top {
+//     position: sticky;
+//     top: 0;
+//     z-index: 9999;
+//     background-color: #fff;
+//     padding-left: 10px;
+//     margin-left: 10px;
+//     padding-top: 10px;
+//     padding-bottom: 10px;
+//     box-shadow: 5px 0px 5px #fff !important;
+//   }
 
-  .el-card {
-    margin-bottom: 15px !important;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.12) !important;
-  }
-}
+//   .el-card {
+//     margin-bottom: 15px !important;
+//     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.12) !important;
+//   }
+// }
 
 // 表格表头颜色
 .el-table__header {
