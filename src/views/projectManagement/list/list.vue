@@ -2,18 +2,18 @@
 import allocationEdit from "./components/AllocationEdit/index.vue";
 import ProjeckEdit from "./components/ProjeckEdit/index.vue";
 import ProjectDetail from "./components/ProjectDetails/index.vue";
+import api from "@/api/modules/projectManagement";
+const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
+  usePagination();
 
 defineOptions({
   name: "ProjectManagementListIndex",
 });
-
-const { pagination, onSizeChange, onCurrentChange } = usePagination(); // 分页
-// 分页
 const tableSortRef = ref("");
 // loading加载
 const listLoading = ref<boolean>(true);
 // 获取组件变量
-const addAllocationEdit = ref();
+const addAllocationEditRef = ref();
 const addProjeckRef = ref();
 const projectDetailsRef = ref();
 // 右侧工具栏配置变量
@@ -33,21 +33,12 @@ const columns = ref([
     checked: true,
   },
 ]);
-// 查询参数
-const queryForm = reactive<any>({
-  pageNo: 1,
-  pageSize: 10,
-  title: "",
-  order: {
-    id: "ASC",
-  },
-  select: {},
-});
+const search = reactive<any>({}); // 搜索
 const list = ref<any>([]);
 
 // 分配
 function distribution(row: any) {
-  addAllocationEdit.value.showEdit(row);
+  addAllocationEditRef.value.showEdit(row);
 }
 // 新增项目
 function addProject() {
@@ -75,18 +66,12 @@ function currentChange(page = 1) {
 }
 // 重置数据
 function onReset() {
-  Object.assign(queryForm, {
-    pageNo: 1,
-    pageSize: 10,
-    title: "",
-    order: {
-      id: "ASC",
-    },
-    select: {},
-  });
+  search.value = {};
+  fetchData();
 }
 async function fetchData() {
   listLoading.value = true;
+  // list.value =await api.list()
   list.value = [
     {
       a: 1,
@@ -191,6 +176,13 @@ async function fetchData() {
   ];
   pagination.value.total = 3;
   listLoading.value = false;
+  // const params = {
+  //   ...getParams(),
+  //   ...search.value,
+  //   }
+  // api.list(params).then((res: any) => {
+  //   console.log('res',res)
+  // });
 }
 onMounted(() => {
   fetchData();
@@ -207,7 +199,7 @@ onMounted(() => {
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
           <el-form
-            :model="queryForm"
+            :model="search"
             size="default"
             label-width="100px"
             inline-message
@@ -215,18 +207,10 @@ onMounted(() => {
             class="search-form"
           >
             <el-form-item label="">
-              <el-input
-                v-model="queryForm.select.a"
-                clearable
-                placeholder="项目ID"
-              />
+              <el-input v-model="search.a" clearable placeholder="项目ID" />
             </el-form-item>
             <el-form-item label="">
-              <el-input
-                v-model="queryForm.select.b"
-                clearable
-                placeholder="项目名称"
-              />
+              <el-input v-model="search.b" clearable placeholder="项目名称" />
             </el-form-item>
             <el-form-item label="">
               <el-input clearable placeholder="项目标识" />
@@ -271,7 +255,7 @@ onMounted(() => {
             </el-form-item>
             <el-form-item v-show="!fold">
               <el-date-picker
-                v-model="queryForm.select.time"
+                v-model="search.time"
                 type="daterange"
                 unlink-panels
                 range-separator="-"
@@ -469,7 +453,7 @@ onMounted(() => {
         @current-change="currentChange"
       />
     </PageMain>
-    <allocationEdit ref="addAllocationEdit" />
+    <allocationEdit ref="addAllocationEditRef" />
     <ProjeckEdit ref="addProjeckRef" />
     <ProjectDetail ref="projectDetailsRef" />
   </div>

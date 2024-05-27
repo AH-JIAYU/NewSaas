@@ -1,156 +1,182 @@
 <script setup lang="ts">
-import type { FormInstance, FormRules } from 'element-plus'
-import { ElMessage } from 'element-plus'
-import apiDictionary from '@/api/modules/dictionary'
-
+import type { FormInstance, FormRules } from "element-plus";
+import { ElMessage } from "element-plus";
+import api from "@/api/modules/tenantDictionary";
+// 父级传递的数据
 const props = withDefaults(
   defineProps<{
-    parentId?: string | number
-    id?: string | number
-    tree: any[]
+    parentId?: string | number;
+    id?: string | number;
+    tree: any[];
+    row: string;
   }>(),
   {
-    parentId: '',
-    id: '',
-  },
-)
-
+    parentId: "",
+    id: "",
+  }
+);
+// 更新数据
 const emits = defineEmits<{
-  addNode: [
-    node: {
-      id: string | number
-      label: string
-      code: string
-    },
-  ]
-  editNode: [
-    node: {
-      id: string | number
-      label: string
-      code: string
-    },
-    parentId: string | number,
-  ]
-}>()
+  getList: any;
+}>();
 
 const visible = defineModel<boolean>({
   default: false,
-})
+});
+// 弹窗标题
+const title = computed(() => (props.id === "" ? "新增字典" : "编辑字典"));
 
-const title = computed(() => props.id === '' ? '新增字典' : '编辑字典')
-function formatTree(tree: any[], id: string | number, childrenDisabled = false) {
-  const data: any[] = []
-  tree.forEach((item) => {
-    const temp = { ...item }
-    if (temp.id === id || childrenDisabled) {
-      temp.disabled = true
-      if (temp.children) {
-        temp.children = formatTree(temp.children, id, true)
-      }
-    }
-    else {
-      temp.disabled = false
-      if (temp.children) {
-        temp.children = formatTree(temp.children, id, childrenDisabled)
-      }
-    }
-    data.push(temp)
-  })
-  return data
-}
-const myTree = computed(() => formatTree(props.tree, props.id))
+// function formatTree(
+//   tree: any[],
+//   id: string | number,
+//   childrenDisabled = false
+// ) {
+//   const data: any[] = [];
+//   if (tree) {
+//     tree.forEach((item) => {
+//       const temp = { ...item };
+//       if (temp.id === id || childrenDisabled) {
+//         temp.disabled = true;
+//         if (temp.children) {
+//           temp.children = formatTree(temp.children, id, true);
+//         }
+//       } else {
+//         temp.disabled = false;
+//         if (temp.children) {
+//           temp.children = formatTree(temp.children, id, childrenDisabled);
+//         }
+//       }
+//       data.push(temp);
+//     });
+//   }
 
-const formRef = ref<FormInstance>()
-const form = ref({
-  parentId: props.parentId,
+//   return data;
+// }
+// const myTree = computed(() => formatTree(props.tree, props.id));
+
+const formRef = ref<FormInstance>();
+const flat = ref([]);
+// 表单
+const form = ref<any>({
+  tenantCatalogueId: props.parentId,
   id: props.id,
-  name: '',
-  code: '',
-})
+  englishName: "",
+  chineseName: "",
+  code: "",
+  remark: "",
+  level: 1,
+});
+// 校验
 const formRules = ref<FormRules>({
-  name: [
-    { required: true, message: '请输入字典名称' },
-  ],
-  code: [
-    { required: true, message: '请输入字典编码' },
-  ],
-})
+  chineseName: [{ required: true, message: "请输入中文名称" }],
+  englishName: [{ required: true, message: "请输入英文名称" }],
+  code: [{ required: true, message: "请输入编码" }],
+});
+// 设置level
+const setLevel = (id: any) => {
+  const row: any = flat.value.find((item: any) => item.id === id);
+  form.value.level = Number(row.level) + 1;
+};
 
-onMounted(() => {
-  if (props.id !== '') {
-    apiDictionary.detail(props.id).then((res) => {
-      // form.value.parentId = res.data.parentId
-      form.value.id = res.data.id
-      form.value.name = res.data.name
-      form.value.code = res.data.code
-    })
-  }
-})
-
-function onSubmit() {
-  if (form.value.id === '') {
-    formRef.value && formRef.value.validate((valid) => {
+// 提交数据
+async function onSubmit() {
+  formRef.value &&
+    formRef.value.validate(async (valid) => {
       if (valid) {
-        apiDictionary.create(form.value).then((res) => {
-          ElMessage.success({
-            message: '模拟新增成功',
-            center: true,
-          })
-          emits('addNode', {
-            id: res.data.data,
-            label: form.value.name,
-            code: form.value.code,
-          })
-          onCancel()
-        })
+        if (form.value.id === "") {
+          const { status } = await api.create(form.value);
+          status === 1 &&
+            ElMessage.success({
+              message: "新增成功",
+              center: true,
+            });
+        } else {
+          const { status } = await api.edit(form.value);
+          status === 1 &&
+            ElMessage.success({
+              message: "编辑成功",
+              center: true,
+            });
+        }
+        await emits("getList");
+        onCancel();
       }
-    })
-  }
-  else {
-    formRef.value && formRef.value.validate((valid) => {
-      if (valid) {
-        apiDictionary.edit(form.value).then(() => {
-          ElMessage.success({
-            message: '模拟编辑成功',
-            center: true,
-          })
-          emits('editNode', {
-            id: form.value.id,
-            label: form.value.name,
-            code: form.value.code,
-          }, form.value.parentId)
-          onCancel()
-        })
-      }
-    })
-  }
+    });
 }
-
+// 关闭弹框
 function onCancel() {
-  visible.value = false
+  visible.value = false;
 }
+// 处理数据扁平化
+const flattenDeep = (arr: any) => {
+  return arr.reduce(
+    (acc: any, val: any) =>
+      Array.isArray(val) ? acc.concat(flattenDeep(val)) : acc.concat(val),
+    []
+  );
+};
+onMounted(() => {
+  if (props.id !== "") {
+    const { id, englishName, chineseName } = JSON.parse(props.row);
+    form.value.id = id;
+    form.value.chineseName = chineseName;
+    form.value.englishName = englishName;
+  }
+  flat.value = flattenDeep(props.tree);
+});
 </script>
 
 <template>
-  <ElDialog v-model="visible" :title="title" width="400px" :close-on-click-modal="false" append-to-body destroy-on-close @closed="onCancel">
+  <ElDialog
+    v-model="visible"
+    :title="title"
+    width="400px"
+    :close-on-click-modal="false"
+    append-to-body
+    destroy-on-close
+    @closed="onCancel"
+  >
     <ElForm ref="formRef" :model="form" :rules="formRules" label-width="80px">
-      <ElFormItem label="父级字典" prop="parentId">
-        <ElCascader v-model="form.parentId" :options="myTree" :props="{ value: 'id', emitPath: false, checkStrictly: true }" :show-all-levels="false" placeholder="请选择父级字典，默认为根字典" clearable />
+      <ElFormItem label="所属字典" prop="parentId">
+        <ElCascader
+          v-model="form.tenantCatalogueId"
+          :options="props.tree"
+          :props="{
+            value: 'id',
+            label: 'name',
+            emitPath: false,
+            checkStrictly: true,
+          }"
+          :show-all-levels="false"
+          placeholder="请选择父级字典，默认为根字典"
+          clearable
+          @change="setLevel"
+        />
       </ElFormItem>
-      <ElFormItem label="字典名称" prop="name">
-        <ElInput v-model="form.name" placeholder="请输入字典名称" clearable />
+      <ElFormItem label="中文" prop="chineseName">
+        <ElInput
+          v-model="form.chineseName"
+          placeholder="请输入中文名称"
+          clearable
+        />
+      </ElFormItem>
+      <ElFormItem label="英文" prop="englishName">
+        <ElInput
+          v-model="form.englishName"
+          placeholder="请输入英文名称"
+          clearable
+        />
       </ElFormItem>
       <ElFormItem label="字典编码" prop="code">
         <ElInput v-model="form.code" placeholder="请输入字典编码" clearable />
       </ElFormItem>
+      <ElFormItem label="备注">
+        <ElInput v-model="form.remark" placeholder="请输入备注" clearable />
+      </ElFormItem>
     </ElForm>
     <template #footer>
-      <ElButton size="large" @click="onCancel">
-        取消
-      </ElButton>
-      <ElButton type="primary" size="large" @click="onSubmit">
-        确定
-      </ElButton>
+      <ElButton size="large" @click="onCancel"> 取消 </ElButton>
+      <ElButton type="primary" size="large" @click="onSubmit"> 确定 </ElButton>
     </template>
   </ElDialog>
 </template>

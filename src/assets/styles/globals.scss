@@ -321,12 +321,16 @@ textarea {
       transform: translateY(85px);
       padding: 5px 15px;
       border-radius: 0;
-      z-index: 9999;
+      z-index: 999;
     }
   }
 
   .el-tabs {
     min-height: 99vh;
+  }
+
+  div:has(>.validateRejected) {
+    box-shadow: 0 0 1px 1px red; // 校验未通过左侧边红
   }
 
   .el-tabs__content {
@@ -341,7 +345,7 @@ textarea {
   .el-tabs__header.is-top {
     position: sticky;
     top: 0;
-    z-index: 9999;
+    z-index: 999;
     background-color: #fff;
     padding-left: 10px;
     margin-left: 60px;
@@ -360,7 +364,7 @@ textarea {
     .el-tabs__header.is-left {
       position: sticky;
       top: 129px;
-      z-index: 9999;
+      z-index: 999;
       height: 60vh;
       overflow-y: auto;
       overflow-x: hidden;

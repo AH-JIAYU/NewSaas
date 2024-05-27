@@ -4,10 +4,12 @@ import { defineProps, provide, ref } from "vue";
 import TopTabs from "../ProjeckTopTabs/index.vue";
 import SyncSettings from "../SyncSettings/index.vue";
 
-const props = defineProps({
+const props: any = defineProps({
   leftTabsData: Array,
   validateTopTabs: Array,
+  validateAll: Array,
 });
+const emits: any = defineEmits(["validate"]);
 const client = ref();
 const settingsRef = ref();
 const localLeftTab = ref<any>(props.leftTabsData);
@@ -24,7 +26,7 @@ const activeLeftTab = ref(0);
 
 const initialTopTabsData = {
   name: "项目名称",
-  addProjectQuotaInfoList: {}, //配置信息
+  addProjectQuotaInfoList: [], //配置信息
   // platform: {},
   // screen: {},
   // security: {},
@@ -65,6 +67,31 @@ function setclient(data: number) {
   });
   client.value = data;
 }
+/**
+ * 监听activeLeftTab.value左侧焦点的tabs
+ *  props.validateAll 是点击确认后所有组件的校验结果
+ * validateIndex 是props.validateAll中值为rejected(校验未通过)的值的索引
+ * 当activeLeftTab改变，并且改变前的值 在validateIndex中存在，
+ * 声明他刚改完表单 重更进行校验，取消符合校验规则的lefTabs的红色阴影
+ */
+watch(
+  () => activeLeftTab.value,
+  (newVal, oldVal) => {
+    const validateIndex = props.validateAll.reduce(
+      (acc: any, value: any, index: any) => {
+        if (value === "rejected") {
+          acc.push(index);
+        }
+        return acc;
+      },
+      []
+    );
+    if (validateIndex.includes(oldVal)) {
+      emits("validate");
+    }
+  }
+);
+defineExpose({ activeLeftTab });
 </script>
 
 <template>
@@ -86,16 +113,27 @@ function setclient(data: number) {
         :key="index"
         style="position: relative"
         :closable="localLeftTab.length !== 1"
-        :label="leftTab.name"
         :name="index"
       >
+        <template #label>
+          <div
+            :class="
+              props.validateAll[index] &&
+              props.validateAll[index] === 'rejected'
+                ? 'validateRejected'
+                : ''
+            "
+          >
+            {{ leftTab.name }}
+          </div>
+        </template>
         <div
           style="
             float: right;
             position: sticky;
             top: 19px;
             width: 48vw;
-            z-index: 9999999;
+            z-index: 999;
             display: flex;
             justify-content: start;
             align-items: start;

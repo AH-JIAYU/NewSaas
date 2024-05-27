@@ -1,28 +1,32 @@
 <script setup lang="ts">
 // 配置富文本
-import { UploadFilled } from "@element-plus/icons-vue";
 import { Editor } from "@bytemd/vue-next";
 import gfm from "@bytemd/plugin-gfm";
 import zhHans from "bytemd/locales/zh_Hans.json";
 import gfmLocale from "@bytemd/plugin-gfm/lib/locales/zh_Hans.json";
 import "bytemd/dist/index.css";
-import { ref } from "vue";
+import { Plus } from "@element-plus/icons-vue";
+import type { UploadProps, UploadUserFile } from "element-plus";
+import { ElMessage, ElMessageBox } from "element-plus";
+import { UploadFilled } from "@element-plus/icons-vue";
+import fileApi from "@/api/modules/file";
 
 defineOptions({
   name: "SurveyTopTabs",
 });
-
+const validate = inject<any>("validateTopTabs"); //注入Ref
 const props: any = defineProps({
   leftTab: Object,
   tabIndex: Number,
 });
+const formRef = ref<any>(); // Ref 在edit中进行校验
 const fold = ref(false);
 const rules = ref<any>({
   name: [{ required: true, message: "请输入项目名称" }],
   projectIdentification: [{ required: true, message: "请输入项目标识" }],
+  countryId: [{ required: true, message: "请选择所属国家" }],
   clientId: [{ required: true, message: "请选择所属客户" }],
   uidUrl: [{ required: true, message: "请输入UidUrl" }],
-  countryId: [{ required: true, message: "请选择所属国家" }],
   doMoneyPrice: [{ required: true, message: "请输入原价(美元)" }],
   num: [{ required: true, message: "请输入配额" }],
 });
@@ -56,12 +60,54 @@ function open(url: string) {
 function isHieght() {
   fold.value = !fold.value;
 }
+
+// 上传
+const dialogImageUrl = ref("");
+const dialogVisible = ref(false);
+
+// 删除
+const handleRemove: any = async (uploadFile: any, uploadFiles: any) => {
+  const { status } = await fileApi.delete({
+    fileName: props.leftTab.descriptionUrl,
+  });
+  status === 1 &&
+    ElMessage.success({
+      message: "删除成功",
+      center: true,
+    });
+};
+// 上传图片成功
+const handleSuccess: any = (uploadFile: any, uploadFiles: any) => {
+  props.leftTab.descriptionUrl = uploadFile.data.qiNiuUrl;
+};
+// 超出限制
+const handleExceed: any = async (uploadFile: any, uploadFiles: any) => {
+  ElMessage.warning({
+    message: "只能上传一个,删除原文件后重新上传",
+    center: true,
+  });
+};
+// 查看
+const handlePictureCardPreview: UploadProps["onPreview"] = (uploadFile) => {
+  dialogImageUrl.value = uploadFile.url!;
+  dialogVisible.value = true;
+};
+
+nextTick(() => {
+  // 表单验证方法
+  validate(formRef.value);
+});
 </script>
 
 <template>
   <el-tabs v-model="activeName">
     <el-tab-pane label="基础设置" name="basicSettings">
-      <ElForm label-width="100px" :rules="rules" :model="props.leftTab">
+      <ElForm
+        label-width="100px"
+        :rules="rules"
+        ref="formRef"
+        :model="props.leftTab"
+      >
         <el-card body-style="">
           <template #header>
             <div class="card-header">
@@ -85,16 +131,25 @@ function isHieght() {
             <el-col :span="6">
               <!-- 单个 -->
               <el-form-item label="所属客户" prop="clientId">
-                <el-select
+                <!-- <el-select
                   placeholder="Select"
                   v-model="props.leftTab.clientId"
+                /> -->
+                <el-input
+                  placeholder="Select"
+                  v-model.number="props.leftTab.clientId"
                 />
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <!-- 可以选多个， 字符串格式 以,分割 -->
               <el-form-item label="所属国家" prop="countryId">
-                <el-cascader
+                <!-- <el-cascader
+                  clearable
+                  filterable
+                  v-model="props.leftTab.countryId"
+                /> -->
+                <el-input
                   clearable
                   filterable
                   v-model="props.leftTab.countryId"
@@ -150,8 +205,8 @@ function isHieght() {
           </el-row>
           <el-row :gutter="20">
             <el-col :span="12">
-              <el-form-item label="UidUrl" prop="url">
-                <el-input clearable v-model="props.leftTab.url" />
+              <el-form-item label="UidUrl" prop="uidUrl">
+                <el-input clearable v-model="props.leftTab.uidUrl" />
               </el-form-item>
             </el-col>
 
@@ -187,7 +242,7 @@ function isHieght() {
           </template>
           <div v-if="fold">
             <el-form-item label="上传图片">
-              <el-upload
+              <!-- <el-upload
                 class="upload-demo"
                 drag
                 action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
@@ -204,7 +259,35 @@ function isHieght() {
                     jpg/png files with a size less than 500kb
                   </div>
                 </template>
+              </el-upload> -->
+              <el-upload
+                action="http://saas-api.surveysaas.com/project/uploadQiniu"
+                list-type="picture-card"
+                :limit="1"
+                :on-preview="handlePictureCardPreview"
+                :on-remove="handleRemove"
+                :on-success="handleSuccess"
+                :on-exceed="handleExceed"
+              >
+                <el-icon class="el-icon--upload">
+                  <UploadFilled />
+                </el-icon>
+                <div class="el-upload__text">上传</div>
+                <template #tip>
+                  <div class="el-upload__tip">jpg/png单文件大小小于10 mb</div>
+                </template>
               </el-upload>
+
+              <el-dialog
+                v-model="dialogVisible"
+                style="
+                  z-index: 1000;
+                  transform: translate(0);
+                  position: relative;
+                "
+              >
+                <img w-full :src="dialogImageUrl" alt="Preview Image" />
+              </el-dialog>
             </el-form-item>
             <el-row :gutter="20">
               <el-col :span="24">
@@ -318,7 +401,7 @@ function isHieght() {
           <el-col :span="6">
             <el-form-item label="选择国家">
               <el-select
-                v-model="props.leftTab.addProjectQuotaInfoList"
+                v-model="props.leftTab.addProjectQuotaInfoList.country"
                 multiple
                 collapse-tags
                 collapse-tags-tooltip
@@ -336,7 +419,7 @@ function isHieght() {
           <el-col :span="6">
             <el-form-item label="问卷名称">
               <el-select
-                v-model="props.leftTab.select"
+                v-model="props.leftTab.addProjectQuotaInfoList.projectProblemId"
                 multiple
                 collapse-tags
                 collapse-tags-tooltip

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { provide, reactive, ref } from "vue";
 import LeftTabs from "../ProjeckLeftTabs/index.vue";
+import { ElMessage, ElMessageBox } from "element-plus";
+import api from "@/api/modules/projectManagement";
 
 defineOptions({
   name: "ProjeckEdit",
@@ -9,15 +11,17 @@ defineOptions({
 const emit = defineEmits(["fetch-data"]);
 const dialogTableVisible = ref<boolean>(false);
 const title = ref<string>("");
-const validateTopTabs = ref<any>([]);
+const validateTopTabs = ref<any>([]); // 校验的promise数组
 function pushData(data: any) {
+  // 传递给孙组件,用于获取所有孙组件的Ref
   validateTopTabs.value.push(data);
 }
-const leftTabsRef = ref<any>(null); // lefttabs组件
 // 提供一个方法，孙组件可以使用这个方法来触发验证
 provide("validateTopTabs", pushData);
+const validateAll = ref<any>([]); // 校验结果，用于在leftTabs中的tabs中给予提示
 
 let leftTabsData = reactive<any>([]); // 明确指定类型为 LeftTab[]
+const LeftTabsRef = ref<any>(); // Ref
 
 async function showEdit(row: any) {
   if (!row) {
@@ -25,7 +29,7 @@ async function showEdit(row: any) {
     leftTabsData = reactive([
       {
         name: "项目名称",
-        addProjectQuotaInfoList: {}, //配置信息
+        addProjectQuotaInfoList: [], //配置信息
       },
     ]);
   } else {
@@ -52,10 +56,39 @@ function initializeLeftTabsData(data: any) {
     });
   }
 }
+// 校验所有组件
+async function validate() {
+  const arr: any = [];
+  validateTopTabs.value.forEach((element: any) => {
+    arr.push(element.validate());
+  });
+  const validateResult = await Promise.allSettled(arr);
+  validateAll.value = validateResult.map((item) => item.status);
+}
+
 // 提交数据
-function onSubmit() {
-  leftTabsData[0].addProjectInfoList = leftTabsData.slice(1);
-  console.log("leftTabsRef", leftTabsData);
+async function onSubmit() {
+  await validate();
+  // 校验通过
+  if (validateAll.value.every((item: any) => item === "fulfilled")) {
+    // 处理数据
+    const masterData = leftTabsData[0];
+    masterData.addProjectInfoList = leftTabsData.slice(1);
+    console.log("masterData", masterData);
+    const { status } = await api.create(masterData);
+    status === 1 &&
+      ElMessage.success({
+        message: "新增成功",
+        center: true,
+      });
+  } else {
+    // 跳转到第一个未通过校验的组件
+    LeftTabsRef.value.activeLeftTab = validateAll.value.indexOf("rejected");
+    ElMessage.warning({
+      message: "请完善表单",
+      center: true,
+    });
+  }
 }
 // 弹框关闭事件
 function closeHandler() {
@@ -63,32 +96,6 @@ function closeHandler() {
   emit("fetch-data");
   dialogTableVisible.value = false;
   validateTopTabs.value = [];
-}
-
-async function save() {
-  const arr: any = [];
-  validateTopTabs.value.forEach((element: any) => {
-    arr.push(element.validate());
-  });
-  try {
-    // 实现全部校验  validateTopTabs为数组，每个元素为子组件的ref
-    const ispass = (await Promise.all(arr)).every((item: any) => item);
-    if (ispass) {
-      if (title.value === "添加") {
-        // const { message }: any = await addSurvey(leftTabsData)
-        // $baseMessage(message, 'success', 'hey')
-      } else {
-        // 更新接口
-        // const { message }: any = await doEdit(leftTabsData)
-        // $baseMessage(message, 'success', 'hey')
-      }
-      emit("fetch-data");
-      close();
-    }
-  } catch (error) {
-    // $baseMessage('请完善信息', 'error', 'hey')
-    console.error("Form validation failed:", error);
-  }
 }
 
 // 暴露方法
@@ -111,10 +118,11 @@ defineExpose({
       @close="closeHandler"
     >
       <LeftTabs
-        ref=""
-        leftTabsRef
+        @validate="validate"
+        ref="LeftTabsRef"
         :left-tabs-data="leftTabsData"
         :validate-top-tabs="validateTopTabs"
+        :validate-all="validateAll"
       />
       <template #footer>
         <el-button @click="closeHandler"> 取消 </el-button>
