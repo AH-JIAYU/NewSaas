@@ -34,6 +34,7 @@ watch(() => userStore.avatar, () => {
       :items="[
         [
           { label: generateI18nTitle('route.home', settingsStore.settings.home.title), handle: () => router.push({ path: settingsStore.settings.home.fullPath }), hide: !settingsStore.settings.home.enable },
+          { label: t('app.profile'), handle: () => router.push({ name: 'personalSetting' }) },
           { label: t('app.preferences'), handle: () => eventBus.emit('global-preferences-toggle'), hide: !settingsStore.settings.userPreferences.enable },
         ],
         [

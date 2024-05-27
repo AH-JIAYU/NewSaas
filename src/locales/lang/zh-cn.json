@@ -8,6 +8,7 @@
     "logout": "退出登录",
     "newPassword": "新密码",
     "password": "密码",
+    "profile": "个人设置",
     "preferences": "偏好设置",
     "hotkeys": "快捷键介绍",
     "sendCaptcha": "发送验证码",
