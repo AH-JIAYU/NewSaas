@@ -66,6 +66,16 @@ const systemRoutes: RouteRecordRaw[] = [
           i18n: $t('route.personal.notification'),
         },
       },
+      {
+        path: 'personal/setting',
+        name: 'personalSetting',
+        component: () => import('@/views/personal/index.vue'),
+        meta: {
+          title: '个人设置',
+          i18n: $t('route.personal.setting'),
+          cache: 'personalEditPassword',
+        },
+      },
     ],
   },
 ]
