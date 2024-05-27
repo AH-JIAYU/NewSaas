@@ -491,6 +491,15 @@ const routes = [
             },
           },
           {
+            path: "tenantDictionary",
+            name: "tenantDictionary",
+            component: () =>
+              import("@/views/otherFunctions/tenantDictionary/index.vue"),
+            meta: {
+              title: "租户字典管理",
+            },
+          },
+          {
             path: "screenLibrary",
             name: "screenLibrary",
             component: () =>

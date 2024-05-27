@@ -12,15 +12,19 @@ defineOptions({
   name: "SurveyTopTabs",
 });
 
-const props = defineProps({
+const props: any = defineProps({
   leftTab: Object,
   tabIndex: Number,
 });
-const content = ref("# Fantastic-admin");
 const fold = ref(false);
-const form = ref<any>({
-  checked1: false,
-  select: [],
+const rules = ref<any>({
+  name: [{ required: true, message: "请输入项目名称" }],
+  projectIdentification: [{ required: true, message: "请输入项目标识" }],
+  clientId: [{ required: true, message: "请选择所属客户" }],
+  uidUrl: [{ required: true, message: "请输入UidUrl" }],
+  countryId: [{ required: true, message: "请选择所属国家" }],
+  doMoneyPrice: [{ required: true, message: "请输入原价(美元)" }],
+  num: [{ required: true, message: "请输入配额" }],
 });
 const options = ref([
   {
@@ -44,7 +48,7 @@ const plugins = [
 const value = ref([4, 8]);
 const activeName = ref("basicSettings");
 function handleChange(v: string) {
-  content.value = v;
+  props.leftTab.richText = v;
 }
 function open(url: string) {
   window.open(url, "_blank");
@@ -52,13 +56,12 @@ function open(url: string) {
 function isHieght() {
   fold.value = !fold.value;
 }
-const localToptTab = ref<any>(props.leftTab);
 </script>
 
 <template>
   <el-tabs v-model="activeName">
     <el-tab-pane label="基础设置" name="basicSettings">
-      <ElForm label-width="100px" :model="form">
+      <ElForm label-width="100px" :rules="rules" :model="props.leftTab">
         <el-card body-style="">
           <template #header>
             <div class="card-header">
@@ -68,65 +71,77 @@ const localToptTab = ref<any>(props.leftTab);
           <el-row :gutter="20">
             <el-col :span="6">
               <el-form-item label="项目名称" prop="name">
-                <el-input v-model="localToptTab.name" clearable />
+                <el-input v-model="props.leftTab.name" clearable />
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="项目标识" prop="client_pid">
-                <el-input clearable />
+              <el-form-item label="项目标识" prop="projectIdentification">
+                <el-input
+                  clearable
+                  v-model="props.leftTab.projectIdentification"
+                />
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="所属客户" prop="client">
-                <el-select placeholder="Select" />
+              <!-- 单个 -->
+              <el-form-item label="所属客户" prop="clientId">
+                <el-select
+                  placeholder="Select"
+                  v-model="props.leftTab.clientId"
+                />
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="所属国家" prop="currency">
-                <el-cascader clearable filterable />
+              <!-- 可以选多个， 字符串格式 以,分割 -->
+              <el-form-item label="所属国家" prop="countryId">
+                <el-cascader
+                  clearable
+                  filterable
+                  v-model="props.leftTab.countryId"
+                />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="20">
             <el-col :span="6">
-              <el-form-item label="原价(美元)" prop="money">
+              <el-form-item label="原价(美元)" prop="doMoneyPrice">
                 <el-input-number
-                  v-model="form.number"
+                  v-model="props.leftTab.doMoneyPrice"
                   :min="1"
-                  :max="10"
                   controls-position="right"
                   size="large"
                 />
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="配额" prop="quota">
+              <el-form-item label="配额" prop="num">
                 <el-input-number
-                  v-model="form.number"
+                  v-model="props.leftTab.num"
+                  :step="1"
+                  step-strictly
                   :min="1"
-                  :max="10"
                   controls-position="right"
                   size="large"
                 />
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="最小分长" prop="category">
+              <el-form-item label="最小分长">
                 <el-input-number
-                  v-model="form.number"
+                  v-model="props.leftTab.minimumDuration"
                   :min="1"
-                  :max="10"
+                  :step="1"
+                  step-strictly
                   controls-position="right"
                   size="large"
                 />
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="IR" prop="location">
+              <el-form-item label="IR">
                 <el-input-number
-                  v-model="form.number"
+                  v-model="props.leftTab.ir"
                   :min="1"
-                  :max="10"
                   controls-position="right"
                   size="large"
                 />
@@ -135,22 +150,25 @@ const localToptTab = ref<any>(props.leftTab);
           </el-row>
           <el-row :gutter="20">
             <el-col :span="12">
-              <el-form-item label="URL" prop="location">
-                <el-input clearable />
+              <el-form-item label="UidUrl" prop="url">
+                <el-input clearable v-model="props.leftTab.url" />
               </el-form-item>
             </el-col>
-            <el-col v-if="form.checked1" :span="12">
-              <el-form-item label="互斥ID" prop="location">
-                <el-input clearable />
-              </el-form-item>
-            </el-col>
+
             <el-col :span="3">
-              <el-form-item label="填写互斥ID" prop="location">
+              <el-form-item label="填写互斥ID">
                 <el-checkbox
-                  v-model="form.checked1"
+                  v-model="props.leftTab.mutualExclusion"
                   style="top: -4px"
                   size="large"
+                  :true-value="1"
+                  :false-value="2"
                 />
+              </el-form-item>
+            </el-col>
+            <el-col v-if="props.leftTab.mutualExclusion === 1" :span="12">
+              <el-form-item label="互斥ID">
+                <el-input clearable />
               </el-form-item>
             </el-col>
           </el-row>
@@ -168,7 +186,7 @@ const localToptTab = ref<any>(props.leftTab);
             </div>
           </template>
           <div v-if="fold">
-            <el-form-item label="上传图片" prop="tips">
+            <el-form-item label="上传图片">
               <el-upload
                 class="upload-demo"
                 drag
@@ -190,11 +208,11 @@ const localToptTab = ref<any>(props.leftTab);
             </el-form-item>
             <el-row :gutter="20">
               <el-col :span="24">
-                <el-form-item label="项目描述" prop="describes">
+                <el-form-item label="项目描述">
                   <!-- key解决富文本编译器   先添加  再编辑  富文本右侧值还在的问题    key值变了会刷新组件 -->
                   <Editor
                     class="editor"
-                    :value="content"
+                    :value="props.leftTab.richText"
                     :plugins="plugins"
                     :locale="zhHans"
                     @change="handleChange"
@@ -212,47 +230,77 @@ const localToptTab = ref<any>(props.leftTab);
           </template>
           <el-row :gutter="20">
             <el-col :span="3">
-              <el-form-item label="置顶" prop="top">
-                <el-switch />
+              <el-form-item label="置顶">
+                <el-switch
+                  :active-value="1"
+                  :inactive-value="2"
+                  v-model="props.leftTab.isPinned"
+                />
               </el-form-item>
             </el-col>
             <el-col :span="3">
-              <el-form-item label="在线" prop="top">
-                <el-switch />
+              <el-form-item label="在线">
+                <el-switch
+                  :active-value="1"
+                  :inactive-value="2"
+                  v-model="props.leftTab.isOnline"
+                />
               </el-form-item>
             </el-col>
             <el-col :span="3">
-              <el-form-item label="资料" prop="top">
-                <el-switch v-model="form.data" />
+              <el-form-item label="资料">
+                <el-switch
+                  :active-value="1"
+                  :inactive-value="2"
+                  v-model="props.leftTab.isProfile"
+                />
               </el-form-item>
             </el-col>
             <el-col :span="3">
-              <el-form-item label="B2B" prop="top">
-                <el-switch />
+              <el-form-item label="B2B">
+                <el-switch
+                  :active-value="1"
+                  :inactive-value="2"
+                  v-model="props.leftTab.isB2b"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="6" v-if="props.leftTab.isB2b === 1">
+              <el-form-item label="项目类型">
+                <el-select v-model="props.leftTab.projectType"></el-select>
               </el-form-item>
             </el-col>
             <el-col :span="3">
-              <el-form-item label="定时发布" prop="top">
-                <el-switch v-model="form.timedRelease" />
+              <el-form-item label="定时发布">
+                <el-switch
+                  :active-value="1"
+                  :inactive-value="2"
+                  v-model="props.leftTab.isTimeReleases"
+                />
               </el-form-item>
             </el-col>
             <!-- 定时发布开显示时间，关隐藏 -->
-            <el-col :span="6" v-if="form.timedRelease">
-              <el-form-item style="margin-left: -100px" prop="top">
-                <el-date-picker type="datetime" placeholder="请选择时间" />
+            <el-col :span="6" v-if="props.leftTab.isTimeReleases === 1">
+              <el-form-item label="发布时间">
+                <el-date-picker
+                  type="datetime"
+                  v-model="props.leftTab.releaseTime"
+                  placeholder="请选择时间"
+                />
               </el-form-item>
             </el-col>
             <br />
           </el-row>
           <el-row :gutter="20">
             <el-col :span="15">
-              <el-form-item label="备注" prop="platform">
+              <el-form-item label="备注">
                 <el-input
                   maxlength="200"
                   show-word-limit
                   style="width: 29rem"
                   type="textarea"
                   :rows="5"
+                  v-model="props.leftTab.remark"
                 />
               </el-form-item>
             </el-col>
@@ -260,7 +308,7 @@ const localToptTab = ref<any>(props.leftTab);
         </el-card>
       </ElForm>
     </el-tab-pane>
-    <el-tab-pane label="配置信息" v-if="form.data">
+    <el-tab-pane label="配置信息" v-if="props.leftTab.isProfile === 1">
       <el-card>
         <template #header>
           <div class="card-header">配置信息</div>
@@ -270,7 +318,7 @@ const localToptTab = ref<any>(props.leftTab);
           <el-col :span="6">
             <el-form-item label="选择国家">
               <el-select
-                v-model="form.select"
+                v-model="props.leftTab.addProjectQuotaInfoList"
                 multiple
                 collapse-tags
                 collapse-tags-tooltip
@@ -288,7 +336,7 @@ const localToptTab = ref<any>(props.leftTab);
           <el-col :span="6">
             <el-form-item label="问卷名称">
               <el-select
-                v-model="form.select"
+                v-model="props.leftTab.select"
                 multiple
                 collapse-tags
                 collapse-tags-tooltip
@@ -353,22 +401,24 @@ const localToptTab = ref<any>(props.leftTab);
         </template>
         <el-row :gutter="20">
           <el-col :span="6">
-            <el-form-item label="小时准入量" prop="money">
+            <el-form-item label="小时准入量">
               <el-input-number
-                v-model="form.number"
+                v-model="props.leftTab.preNum"
                 :min="1"
-                :max="10"
+                :step="1"
+                step-strictly
                 controls-position="right"
                 size="large"
               />
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="小时完成量" prop="money">
+            <el-form-item label="小时完成量">
               <el-input-number
-                v-model="form.number"
+                v-model="props.leftTab.limitedQuantity"
                 :min="1"
-                :max="10"
+                :step="1"
+                step-strictly
                 controls-position="right"
                 size="large"
               />
@@ -377,18 +427,30 @@ const localToptTab = ref<any>(props.leftTab);
         </el-row>
         <el-row :gutter="20">
           <el-col :span="4">
-            <el-form-item label="时差检测" prop="top">
-              <el-switch />
+            <el-form-item label="时差检测">
+              <el-switch
+                v-model="props.leftTab.timeDifferenceDetection"
+                :active-value="1"
+                :inactive-value="2"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-form-item label="重复IP检测" prop="top">
-              <el-switch />
+            <el-form-item label="重复IP检测">
+              <el-switch
+                v-model="props.leftTab.ipDifferenceDetection"
+                :active-value="1"
+                :inactive-value="2"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-form-item label="IP一致性检测" prop="top">
-              <el-switch />
+            <el-form-item label="IP一致性检测">
+              <el-switch
+                v-model="props.leftTab.ipConsistency"
+                :active-value="1"
+                :inactive-value="2"
+              />
             </el-form-item>
           </el-col>
         </el-row>
