@@ -1,0 +1,9 @@
+
+/**
+ * 由 Fantastic-admin 提供技术支持
+ * Powered by Fantastic-admin
+ * Gitee  https://fantastic-admin.gitee.io
+ * Github https://fantastic-admin.github.io
+ */
+
+import{_}from"./index.vue_vue_type_script_setup_true_lang-F7Sdmuk4.js";import{d as E,m as k,u as b,r as w,c as z,a as m,o as c,b as D,e as V,w as e,f as o,g as n,h as y,i as v,l as M,j as N,_ as R}from"./index-CR_Og9_c.js";import"./role-BpstLszC.js";const h={class:"buttons"},U=E({__name:"index",props:k({mode:{},id:{}},{modelValue:{type:Boolean,default:!1},modelModifiers:{}}),emits:k(["success"],["update:modelValue"]),setup(u,{emit:g}){const l=u,C=g,t=b(u,"modelValue"),d=w(),f=z(()=>l.id===""?"新增用户":"编辑用户");function p(){d.value.submit().then(()=>{C("success"),r()})}function r(){t.value=!1}return(j,a)=>{const s=m("ElButton"),x=m("ElDialog"),B=m("ElDrawer");return c(),D("div",null,[l.mode==="dialog"?(c(),V(x,{key:0,modelValue:t.value,"onUpdate:modelValue":a[0]||(a[0]=i=>t.value=i),title:v(f),width:"600px","close-on-click-modal":!1,"append-to-body":"","destroy-on-close":""},{footer:e(()=>[o(s,{size:"large",onClick:r},{default:e(()=>[n(" 取 消 ")]),_:1}),o(s,{type:"primary",size:"large",onClick:p},{default:e(()=>[n(" 确 定 ")]),_:1})]),default:e(()=>[o(_,y({ref_key:"formRef",ref:d},l),null,16)]),_:1},8,["modelValue","title"])):l.mode==="drawer"?(c(),V(B,{key:1,modelValue:t.value,"onUpdate:modelValue":a[1]||(a[1]=i=>t.value=i),title:v(f),size:"40%","close-on-click-modal":!1,"destroy-on-close":""},{footer:e(()=>[M("div",h,[o(s,{size:"large",onClick:r},{default:e(()=>[n(" 取 消 ")]),_:1}),o(s,{type:"primary",size:"large",onClick:p},{default:e(()=>[n(" 确 定 ")]),_:1})])]),default:e(()=>[o(_,y({ref_key:"formRef",ref:d},l),null,16)]),_:1},8,["modelValue","title"])):N("",!0)])}}}),S=R(U,[["__scopeId","data-v-0676a6ad"]]);export{S as default};
