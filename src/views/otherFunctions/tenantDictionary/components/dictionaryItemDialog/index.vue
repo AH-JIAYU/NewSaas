@@ -5,7 +5,7 @@ import api from "@/api/modules/tenantDictionary";
 // 父级传递的数据
 const props = withDefaults(
   defineProps<{
-    dictionaryId: string | number;
+    catalogueId: string | number;
     parentId: string | number;
     id?: string | number;
     tree: any[];
@@ -14,7 +14,7 @@ const props = withDefaults(
     level: any;
   }>(),
   {
-    dictionaryId: "",
+    catalogueId: "",
     parentId: "",
     id: "",
     level: 1,
@@ -37,7 +37,7 @@ const flat = ref([]); // 扁平化
 const form = ref<any>({
   id: props.id,
   parentId: props.parentId, // 父id
-  catalogueId: props.dictionaryId, // 目录id
+  catalogueId: props.catalogueId, // 目录id
   englishName: "", // 英文名称
   chineseName: "", // 中文名称
   code: "", // 编码

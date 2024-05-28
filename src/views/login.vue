@@ -114,15 +114,20 @@ const registerRules = ref<FormRules>({
 // 获取验证码
 const mobileVerificationCode = async () => {
   console.log("registerForm", registerForm.value.type);
+  const params = {
+    type: "register_phone_number", // 默认手机号
+    email: registerForm.value.email,
+    phone: registerForm.value.phoneNumber,
+  };
   if (registerForm.value.type === "phone") {
-    const data = await api.sendSms(registerForm.value.phoneNumber);
-    countdown();
+    const data = await api.sendCode(params);
     console.log("phone", data);
   } else {
-    const data = await api.sendEmail(registerForm.value.email);
-    countdown();
+    params.type = "register_email";
+    const data = await api.sendCode(params);
     console.log("email", data);
   }
+  countdown();
 };
 const countdown = () => {
   isGetPhone.value = true;
@@ -140,16 +145,15 @@ const countdown = () => {
   }, 1000);
 };
 async function handleRegister() {
-  // ElMessage({
-  //   message: "注册模块仅提供界面演示，无实际功能，需开发者自行扩展",
-  //   type: "warning",
-  // });
   registerFormRef.value &&
     registerFormRef.value.validate(async (valid) => {
       if (valid) {
         // 这里编写业务代码
-        const data = await api.register(registerForm.value);
-        console.log("data", data);
+        const { status } = await api.register(registerForm.value);
+        status === 1 &&
+          ElMessage.success({
+            message: "注册成功",
+          });
       }
     });
 }

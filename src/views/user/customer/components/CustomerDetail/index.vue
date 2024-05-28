@@ -1,28 +1,28 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import customerDetailDetail from '../CustomerDetailDetail/index.vue'
+import { ref } from "vue";
+import customerDetailDetail from "../CustomerDetailDetail/index.vue";
 
-const emit = defineEmits(['fetch-data'])
-const drawerisible = ref<boolean>(false)
-const checkRef = ref<any>()
-const title = ref<string>('详情')
+const emit = defineEmits(["fetch-data"]);
+const drawerisible = ref<boolean>(false);
+const checkRef = ref<any>();
+const title = ref<string>("详情");
 async function showEdit(row: any) {
-  drawerisible.value = true
+  drawerisible.value = true;
 }
 function handleCheck(row: object) {
-  checkRef.value.showEdit(row)
+  checkRef.value.showEdit(row);
 }
 function close() {
-  emit('fetch-data')
-  drawerisible.value = false
+  emit("fetch-data");
+  drawerisible.value = false;
 }
 const list: Array<object> = [
-  { a: 1, b: 2, c: 3, id: 1 },
-  { a: 1, b: 2, c: 3, id: 1 },
-]
+  { a: 1, b: 2, c: "编辑", id: 1 },
+  { a: 1, b: 2, c: "新增", id: 1 },
+];
 defineExpose({
   showEdit,
-})
+});
 </script>
 
 <template lang="">
@@ -41,84 +41,67 @@ defineExpose({
         <template #header>
           <div class="card-header">
             <span>基本信息</span>
+
+            <div class="status">
+              <div class="i-ph:seal-light w-1em h-1em"></div>
+              <div>开启</div>
+            </div>
           </div>
         </template>
         <el-row :gutter="24">
           <el-col :span="8">
             <el-form-item label="客户编码">
-              <el-text class="mx-1">
-                xxxxxx
-              </el-text>
+              <el-text class="mx-1"> xxxxxx </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="客户名称">
-              <el-text class="mx-1">
-                xxxxxx
-              </el-text>
+              <el-text class="mx-1"> xxxxxx </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="客户简称">
-              <el-text class="mx-1">
-                xxxxxx
-              </el-text>
+              <el-text class="mx-1"> xxxxxx </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="公司名称">
-              <el-text class="mx-1">
-                xxxxxx
-              </el-text>
+              <el-text class="mx-1"> xxxxxx </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="客户姓名">
-              <el-text class="mx-1">
-                xxxxxx
-              </el-text>
+              <el-text class="mx-1"> xxxxxx </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="手机号码">
-              <el-text class="mx-1">
-                xxxxxx
-              </el-text>
+              <el-text class="mx-1"> xxxxxx </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="电子邮箱">
-              <el-text class="mx-1">
-                xxxxxx
-              </el-text>
+              <el-text class="mx-1"> xxxxxx </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="创建人">
-              <el-text class="mx-1">
-                xxxxxx
-              </el-text>
+              <el-text class="mx-1"> xxxxxx </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="创建时间">
-              <el-text class="mx-1">
-                xxxxxx
-              </el-text>
+              <el-text class="mx-1"> xxxxxx </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="负责人">
-              <el-text class="mx-1">
-                xxxxxx
-              </el-text>
+              <el-text class="mx-1"> xxxxxx </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="结算周期">
-              <el-text class="mx-1">
-                xxxxxx
-              </el-text>
+              <el-text class="mx-1"> xxxxxx </el-text>
             </el-form-item>
           </el-col>
         </el-row>
@@ -132,31 +115,28 @@ defineExpose({
         </template>
         <el-row :gutter="24">
           <el-col :span="8">
+            <el-form-item label="客户状态">
+              <el-text class="mx-1"> 开 </el-text>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="资料">
+              <el-text class="mx-1"> 关 </el-text>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
             <el-form-item label="风险控制">
-              <el-text class="mx-1">
-                xxxxxx
-              </el-text>
+              <el-text class="mx-1"> 开 </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="营业限额/月">
-              <el-text class="mx-1">
-                xxxxxx
-              </el-text>
+              <el-text class="mx-1"> xxxxxx </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="审核率Min值">
-              <el-text class="mx-1">
-                xxxxxx
-              </el-text>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="风险控制">
-              <el-text class="mx-1">
-                xxxxxx
-              </el-text>
+              <el-text class="mx-1"> xxxxxx </el-text>
             </el-form-item>
           </el-col>
         </el-row>
@@ -189,6 +169,21 @@ defineExpose({
 </template>
 
 <style scoped lang="scss">
+.status {
+  position: relative;
+  width: 8rem;
+
+  > div {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.3rem;
+  }
+  > div:nth-child(1) {
+    font-size: 8rem;
+  }
+}
 :deep {
   .el-divider {
     margin: 20px 0;
@@ -196,6 +191,11 @@ defineExpose({
 
   .el-card {
     margin: 10px 0;
+  }
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
   }
 
   .el-drawer__header {

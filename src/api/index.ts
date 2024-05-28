@@ -47,7 +47,7 @@ api.interceptors.response.use(
         Message.error(response.data.error, {
           zIndex: 2000,
         })
-        return Promise.reject(response.data)
+        return Promise.resolve(response.data)
       }
     }
     else {

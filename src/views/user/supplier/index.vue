@@ -1,71 +1,73 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
-import { ElMessageBox } from 'element-plus'
-import customerEdit from './components/SupplierEdit/index.vue'
-import customerDetail from './components/SupplierDetail/index.vue'
+import { onMounted } from "vue";
+import { ElMessageBox } from "element-plus";
+import customerEdit from "./components/SupplierEdit/index.vue";
+import customerDetail from "./components/SupplierDetail/index.vue";
+import plusMinusPayments from "./components/SupplierPlusMinusPayments/index.vue";
 
 defineOptions({
-  name: 'UserSupplierIndex',
-})
+  name: "UserSupplierIndex",
+});
 
-const { pagination, onSizeChange, onCurrentChange } = usePagination() // 分页
+const { pagination, onSizeChange, onCurrentChange } = usePagination(); // 分页
 
-const listLoading = ref(false)
+const listLoading = ref(false);
 
-const list = ref<Array<Object>>([]) // 列表
-const selectRows = ref<any>() // 表格-选中行
-const editRef = ref() // 添加|编辑 组件ref
-const checkRef = ref() // 查看 组件ref
-const border = ref<any>(true) // 表格控件-是否展示边框
-const stripe = ref<any>(false) // 表格控件-是否展示斑马条
-const lineHeight = ref<any>('default') // 表格控件-控制表格大小
-const checkList = ref<Array<Object>>([]) // 表格-展示的列
-const tableAutoHeight = ref(false) // 表格控件-高度自适应
+const list = ref<Array<Object>>([]); // 列表
+const selectRows = ref<any>(); // 表格-选中行
+const editRef = ref(); // 添加|编辑 组件ref
+const checkRef = ref(); // 查看 组件ref
+const plusMinusPaymentsRef = ref(); // 加减款 组件ref
+const border = ref<any>(true); // 表格控件-是否展示边框
+const stripe = ref<any>(false); // 表格控件-是否展示斑马条
+const lineHeight = ref<any>("default"); // 表格控件-控制表格大小
+const checkList = ref<Array<Object>>([]); // 表格-展示的列
+const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const columns = ref<Array<Object>>([
   // 表格控件-展示列
   {
-    label: '等级名称',
-    prop: 'a',
+    label: "等级名称",
+    prop: "a",
     sortable: true,
     disableCheck: false, // 不可更改
     checked: true, // 默认展示
   },
-])
+]);
 
 const queryForm = reactive<any>({
   // 请求接口携带参数
   pageNo: 1,
   pageSize: 10,
   select: {},
-})
+});
 
 // 添加
 function handleAdd() {
-  editRef.value.showEdit()
+  editRef.value.showEdit();
 }
 // 编辑
 function handleEdit(row: any) {
-  editRef.value.showEdit(row)
+  editRef.value.showEdit(row);
 }
 // 查看
 function handleCheck(row: any) {
-  checkRef.value.showEdit(row)
+  checkRef.value.showEdit(row);
 }
 // 更改状态
 function handleChange(fold: any, row: any) {
-  let msg = ''
+  let msg = "";
   switch (fold) {
     case 0:
-      msg = '该注册用户成为'
-      break
+      msg = "该注册用户成为";
+      break;
     case 1:
-      msg = '启用该'
-      break
+      msg = "启用该";
+      break;
     case 2:
-      msg = '禁用该'
-      break
+      msg = "禁用该";
+      break;
   }
-  ElMessageBox.confirm(`您确${msg}供应商吗?`, '确认信息')
+  ElMessageBox.confirm(`您确${msg}供应商吗?`, "确认信息")
     .then(() => {
       // apiManager.delete(row.id).then(() => {
       //   getDataList()
@@ -75,13 +77,13 @@ function handleChange(fold: any, row: any) {
       //   })
       // })
     })
-    .catch(() => { })
+    .catch(() => {});
 }
 
 // 重置请求
 function queryData() {
-  queryForm.pageNo = 1
-  fetchData()
+  queryForm.pageNo = 1;
+  fetchData();
 }
 // 重置筛选数据
 function onReset() {
@@ -89,65 +91,128 @@ function onReset() {
     pageNo: 1,
     pageSize: 10,
     select: {},
-  })
-  fetchData()
+  });
+  fetchData();
 }
-
+function handlePlusMinusPayments(row: any) {
+  plusMinusPaymentsRef.value.showEdit(row);
+}
 // 每页数量切换
 function sizeChange(size: number) {
-  onSizeChange(size).then(() => fetchData())
+  onSizeChange(size).then(() => fetchData());
 }
 
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
-  onCurrentChange(page).then(() => fetchData())
+  onCurrentChange(page).then(() => fetchData());
 }
 // 请求
 async function fetchData() {
-  listLoading.value = true
+  listLoading.value = true;
   // const { data } = await getList(queryForm)
   // list.value = data[0]
   // total.value = data[0].length
   list.value = [
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1, name: 'name' },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1, name: 'name' },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1, name: 'name' },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1, name: 'name' },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1, name: 'name' },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1, name: 'name' },
-  ]
-  listLoading.value = false
+    {
+      a: 1,
+      b: 2,
+      c: "张3(中国)",
+      d: 4,
+      e: 5,
+      f: 6,
+      g: 7,
+      h: 8,
+      r: 9,
+      i: 10,
+      id: 1,
+      name: "name",
+    },
+    {
+      a: 1,
+      b: 2,
+      c: "张3(中国)",
+      d: 4,
+      e: 5,
+      f: 6,
+      g: 7,
+      h: 8,
+      r: 9,
+      i: 10,
+      id: 1,
+      name: "name",
+    },
+    {
+      a: 1,
+      b: 2,
+      c: "张3(中国)",
+      d: 4,
+      e: 5,
+      f: 6,
+      g: 7,
+      h: 8,
+      r: 9,
+      i: 10,
+      id: 1,
+      name: "name",
+    },
+    {
+      a: 1,
+      b: 2,
+      c: "张3(中国)",
+      d: 4,
+      e: 5,
+      f: 6,
+      g: 7,
+      h: 8,
+      r: 9,
+      i: 10,
+      id: 1,
+      name: "name",
+    },
+    {
+      a: 1,
+      b: 2,
+      c: "张3(中国)",
+      d: 4,
+      e: 5,
+      f: 6,
+      g: 7,
+      h: 8,
+      r: 9,
+      i: 10,
+      id: 1,
+      name: "name",
+    },
+    {
+      a: 1,
+      b: 2,
+      c: "张3(中国)",
+      d: 4,
+      e: 5,
+      f: 6,
+      g: 7,
+      h: 8,
+      r: 9,
+      i: 10,
+      id: 1,
+      name: "name",
+    },
+  ];
+  listLoading.value = false;
 }
 // 表格-单选框
 function setSelectRows(val: any) {
-  selectRows.value = val
-}
-// 更多操作
-function handleMoreOperating(command: string, row: any) {
-  switch (command) {
-    case 'handleApproval': // 审批
-      handleChange(0, row)
-      break
-    case 'handleEnable': // 启用
-      handleChange(1, row)
-      break
-    case 'handleDisabled': // 禁用
-      handleChange(2, row)
-      break
-    case 'handleDelete': // 删除
-      break
-    case 'handleCheck':
-      handleCheck(row)
-      break
-  }
+  selectRows.value = val;
 }
 
 onMounted(() => {
   columns.value.forEach((item: any) => {
-    if (item.checked) { checkList.value.push(item.prop) }
-  })
-  fetchData()
-})
+    if (item.checked) {
+      checkList.value.push(item.prop);
+    }
+  });
+  fetchData();
+});
 </script>
 
 <template>
@@ -156,34 +221,73 @@ onMounted(() => {
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
           <ElForm
-            :model="queryForm.select" size="default" label-width="100px" inline-message inline
+            :model="queryForm.select"
+            size="default"
+            label-width="100px"
+            inline-message
+            inline
             class="search-form"
           >
             <el-form-item label="">
-              <el-input v-model.trim="queryForm.select.id" clearable :inline="false" placeholder="供应商ID" />
+              <el-input
+                v-model.trim="queryForm.select.id"
+                clearable
+                :inline="false"
+                placeholder="供应商ID"
+              />
             </el-form-item>
             <el-form-item label="">
-              <el-input v-model.trim="queryForm.select.name" clearable :inline="false" placeholder="供应商简称" />
+              <el-input
+                v-model.trim="queryForm.select.name"
+                clearable
+                :inline="false"
+                placeholder="供应商简称"
+              />
             </el-form-item>
             <el-form-item label="">
-              <el-input v-model.trim="queryForm.select.phone" clearable :inline="false" placeholder="手机号码" />
+              <el-input
+                v-model.trim="queryForm.select.phone"
+                clearable
+                :inline="false"
+                placeholder="手机号码"
+              />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-input v-model.trim="queryForm.select.name" clearable :inline="false" placeholder="账号名称" />
+              <el-input
+                v-model.trim="queryForm.select.name"
+                clearable
+                :inline="false"
+                placeholder="账号名称"
+              />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-input v-model.trim="queryForm.select.email" clearable :inline="false" placeholder="邮箱" />
+              <el-input
+                v-model.trim="queryForm.select.email"
+                clearable
+                :inline="false"
+                placeholder="邮箱"
+              />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-select v-model="queryForm.select.default" clearable placeholder="客户状态">
+              <el-select
+                v-model="queryForm.select.default"
+                clearable
+                placeholder="客户状态"
+              >
                 <el-option label="默认" value="true" />
                 <el-option label="关闭" value="false" />
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
               <el-date-picker
-                v-model="queryForm.select.time" type="daterange" unlink-panels range-separator="-"
-                start-placeholder="创建开始日期" end-placeholder="创建结束日期" size="default" style="width: 192px"
+                v-model="queryForm.select.time"
+                type="daterange"
+                unlink-panels
+                range-separator="-"
+                start-placeholder="创建开始日期"
+                end-placeholder="创建结束日期"
+                size="default"
+                style="width: 192px"
                 clear-icon="true"
               />
             </el-form-item>
@@ -202,7 +306,9 @@ onMounted(() => {
               </ElButton>
               <ElButton link @click="toggle">
                 <template #icon>
-                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
+                  <SvgIcon
+                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
+                  />
                 </template>
                 {{ fold ? "展开" : "收起" }}
               </ElButton>
@@ -218,69 +324,135 @@ onMounted(() => {
           </el-button>
         </FormLeftPanel>
         <FormRightPanel>
-          <el-button size="default">
-            导出
-          </el-button>
+          <el-button size="default"> 导出 </el-button>
           <TabelControl
-            v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
-            v-model:columns="columns" v-model:line-height="lineHeight" v-model:stripe="stripe" style="margin-left: 12px"
+            v-model:border="border"
+            v-model:tableAutoHeight="tableAutoHeight"
+            v-model:checkList="checkList"
+            v-model:columns="columns"
+            v-model:line-height="lineHeight"
+            v-model:stripe="stripe"
+            style="margin-left: 12px"
             @query-data="queryData"
           />
         </FormRightPanel>
       </el-row>
       <el-table
-        v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
+        v-loading="listLoading"
+        :border="border"
+        :data="list"
+        :size="lineHeight"
+        :stripe="stripe"
         @selection-change="setSelectRows"
       >
-        <el-table-column align="center" prop="a" show-overflow-tooltip type="selection" />
-        <el-table-column v-if="checkList.includes('a')" align="center" prop="id" show-overflow-tooltip label="供应商ID" />
-        <el-table-column align="center" prop="b" show-overflow-tooltip label="供应商名称" />
-        <el-table-column align="center" prop="c" show-overflow-tooltip label="余额($)" />
-        <el-table-column align="center" prop="d" show-overflow-tooltip label="余额(￥)" />
-        <el-table-column align="center" prop="e" show-overflow-tooltip label="待审金额" />
-        <el-table-column align="center" prop="f" show-overflow-tooltip label="供应商等级" />
-        <el-table-column align="center" prop="g" show-overflow-tooltip label="B2B|B2C" />
-        <el-table-column align="center" prop="h" show-overflow-tooltip label="结算周期" />
-        <ElTableColumn align="center" show-overflow-tooltip prop="" label="供应商状态">
+        <el-table-column
+          align="center"
+          prop="a"
+          show-overflow-tooltip
+          type="selection"
+        />
+        <el-table-column
+          v-if="checkList.includes('a')"
+          align="center"
+          prop="id"
+          show-overflow-tooltip
+          label="供应商ID"
+        />
+        <el-table-column
+          align="center"
+          prop="b"
+          show-overflow-tooltip
+          label="供应商名称(所属国家)"
+        />
+        <el-table-column
+          align="center"
+          prop="c"
+          show-overflow-tooltip
+          label="余额($)"
+        />
+        <el-table-column
+          align="center"
+          prop="d"
+          show-overflow-tooltip
+          label="余额(￥)"
+        />
+        <el-table-column
+          align="center"
+          prop="e"
+          show-overflow-tooltip
+          label="待审金额"
+        />
+        <el-table-column
+          align="center"
+          prop="f"
+          show-overflow-tooltip
+          label="供应商等级"
+        />
+        <el-table-column
+          align="center"
+          prop="g"
+          show-overflow-tooltip
+          label="B2B|B2C"
+        />
+        <el-table-column
+          align="center"
+          prop="h"
+          show-overflow-tooltip
+          label="结算周期"
+        />
+        <ElTableColumn
+          align="center"
+          show-overflow-tooltip
+          prop=""
+          label="供应商状态"
+        >
           <ElSwitch inline-prompt active-text="启用" inactive-text="禁用" />
         </ElTableColumn>
-        <el-table-column align="center" prop="r" show-overflow-tooltip label="创建日期" />
-        <el-table-column align="center" prop="r" show-overflow-tooltip label="备注" />
-        <el-table-column align="center" prop="i" label="操作" show-overflow-tooltip width="250">
+        <el-table-column
+          align="center"
+          prop="r"
+          show-overflow-tooltip
+          label="创建日期"
+        />
+        <el-table-column
+          align="center"
+          prop="r"
+          show-overflow-tooltip
+          label="备注"
+        />
+        <el-table-column
+          align="center"
+          prop="i"
+          label="操作"
+          show-overflow-tooltip
+          width="250"
+        >
           <template #default="{ row }">
             <ElSpace>
-              <el-button size="small" plain type="primary">
+              <el-button
+                size="small"
+                plain
+                type="primary"
+                @click="handlePlusMinusPayments"
+              >
                 加减款
               </el-button>
-              <el-button size="small" plain type="primary" @click="handleEdit(row)">
+              <el-button
+                size="small"
+                plain
+                type="primary"
+                @click="handleEdit(row)"
+              >
                 编辑
               </el-button>
-
-              <ElDropdown @command="handleMoreOperating($event, row)">
-                <ElButton size="small">
-                  更多操作
-                  <SvgIcon name="i-ep:arrow-down" class="el-icon--right" />
-                </ElButton>
-                <template #dropdown>
-                  <ElDropdownMenu>
-                    <ElDropdownItem command="handleApproval">
-                      审批
-                    </ElDropdownItem>
-                    <ElDropdownItem command="handleEnable" divided>
-                      启用
-                    </ElDropdownItem>
-                    <ElDropdownItem command="handleDisabled" divided>
-                      禁用
-                    </ElDropdownItem>
-                    <ElDropdownItem command="handleCheck" divided>
-                      详情
-                    </ElDropdownItem>
-                    <ElDropdownItem command="handleDelete" divided>
-                      删除
-                    </ElDropdownItem>
-                  </ElDropdownMenu>
-                </template>
-              </ElDropdown>
+              <el-button
+                size="small"
+                plain
+                type="primary"
+                @click="handleCheck(row)"
+              >
+                详情
+              </el-button>
             </ElSpace>
           </template>
         </el-table-column>
@@ -289,13 +461,21 @@ onMounted(() => {
         </template>
       </el-table>
       <ElPagination
-        :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
-        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-        background @size-change="sizeChange" @current-change="currentChange"
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
+        :page-sizes="pagination.sizes"
+        :layout="pagination.layout"
+        :hide-on-single-page="false"
+        class="pagination"
+        background
+        @size-change="sizeChange"
+        @current-change="currentChange"
       />
     </PageMain>
     <customerEdit ref="editRef" @fetch-data="fetchData" />
     <customerDetail ref="checkRef" @fetch-data="fetchData" />
+    <plusMinusPayments ref="plusMinusPaymentsRef" @fetch-data="fetchData" />
   </div>
 </template>
 
@@ -345,6 +525,4 @@ onMounted(() => {
     }
   }
 }
-
-
 </style>
