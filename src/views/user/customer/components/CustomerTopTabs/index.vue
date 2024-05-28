@@ -81,12 +81,17 @@ const localToptTab = ref<any>(props.leftTab)
               </div>
             </template>
             <el-row :gutter="24">
-              <el-col :span="24">
+              <el-col :span="3">
                 <el-form-item label="客户状态" prop="top">
                   <el-switch />
                 </el-form-item>
               </el-col>
-              <el-col :span="24">
+              <el-col :span="3">
+                <el-form-item label="前置问卷" prop="top">
+                  <el-switch />
+                </el-form-item>
+              </el-col>
+              <el-col :span="18">
                 <el-form-item label="风险控制" prop="top">
                   <el-switch v-model="isTrue" />
                 </el-form-item>

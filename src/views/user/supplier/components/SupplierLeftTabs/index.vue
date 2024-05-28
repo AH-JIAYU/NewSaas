@@ -85,18 +85,30 @@ function setclient(data: number) {
           :label="leftTab.name"
           :name="index"
         >
-          <!-- 在每个左侧 Tab 中使用 TopTabs 组件 -->
-          <!-- <el-button
-        style="margin-bottom: 5px"
-        v-if="activeLeftTab > 0"
-        size="small"
-        type="primary"
-        round
-        plain
-        @click="syncProject"
-      >
-        同步主项目数据
-      </el-button>
+          <div
+            style="
+              float: right;
+              position: sticky;
+              top: 19px;
+              width: 85%;
+              z-index: 1000;
+              display: flex;
+              justify-content: start;
+              align-items: start;
+            "
+          >
+            <!-- 在每个左侧 Tab 中使用 TopTabs 组件 -->
+            <el-button
+              v-if="activeLeftTab > 0"
+              size="small"
+              type="primary"
+              round
+              plain
+              @click="syncProject"
+            >
+              同步主项目数据
+            </el-button>
+            <!--
       <HTooltip
         style="z-index: 9; color: #48a2ff; margin-left: 5px"
         text="注意噢！"
@@ -104,6 +116,8 @@ function setclient(data: number) {
       >
         <div class="i-bi:exclamation-circle h-1em w-1em" />
       </HTooltip> -->
+          </div>
+
           <TopTabs
             :left-tab="leftTab"
             :tab-index="index"

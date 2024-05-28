@@ -71,118 +71,14 @@ function onReset() {
 }
 async function fetchData() {
   listLoading.value = true;
-  // list.value =await api.list()
-  list.value = [
-    {
-      a: 1,
-      b: 2,
-      c: 3,
-      d: 4,
-      e: 5,
-      f: 6,
-      g: 7,
-      h: 8,
-      r: 9,
-      i: 10,
-      id: 1,
-      name: "name",
-      children: [
-        {
-          a: 1,
-          b: 2,
-          c: 3,
-          d: 4,
-          e: 5,
-          f: 6,
-          g: 7,
-          h: 8,
-          r: 9,
-          i: 10,
-          id: 100,
-          name: "name",
-        },
-      ],
-    },
-    {
-      a: 1,
-      b: 2,
-      c: 3,
-      d: 4,
-      e: 5,
-      f: 6,
-      g: 7,
-      h: 8,
-      r: 9,
-      i: 10,
-      id: 2,
-      name: "name",
-    },
-    {
-      a: 1,
-      b: 2,
-      c: 3,
-      d: 4,
-      e: 5,
-      f: 6,
-      g: 7,
-      h: 8,
-      r: 9,
-      i: 10,
-      id: 3,
-      name: "name",
-    },
-    {
-      a: 1,
-      b: 2,
-      c: 3,
-      d: 4,
-      e: 5,
-      f: 6,
-      g: 7,
-      h: 8,
-      r: 9,
-      i: 10,
-      id: 4,
-      name: "name",
-    },
-    {
-      a: 1,
-      b: 2,
-      c: 3,
-      d: 4,
-      e: 5,
-      f: 6,
-      g: 7,
-      h: 8,
-      r: 9,
-      i: 10,
-      id: 5,
-      name: "name",
-    },
-    {
-      a: 1,
-      b: 2,
-      c: 3,
-      d: 4,
-      e: 5,
-      f: 6,
-      g: 7,
-      h: 8,
-      r: 9,
-      i: 10,
-      id: 6,
-      name: "name",
-    },
-  ];
-  pagination.value.total = 3;
+  const params = {
+    ...getParams(),
+    ...search.value,
+  };
+  const { data } = await api.list(params);
+  list.value = data.getChildrenProjectInfoList;
+  pagination.value.total = data.total;
   listLoading.value = false;
-  // const params = {
-  //   ...getParams(),
-  //   ...search.value,
-  //   }
-  // api.list(params).then((res: any) => {
-  //   console.log('res',res)
-  // });
 }
 onMounted(() => {
   fetchData();
@@ -328,34 +224,42 @@ onMounted(() => {
         <el-table-column type="selection" />
         <el-table-column
           show-overflow-tooltip
-          prop="a"
+          prop="projectId"
           align="center"
           label="项目ID"
         />
         <el-table-column
           show-overflow-tooltip
-          prop="b"
+          prop="name"
           align="center"
           label="项目名称"
         />
         <el-table-column
           show-overflow-tooltip
-          prop="c"
+          prop="clientName"
           align="center"
           label="客户简称/标识"
         />
         <el-table-column
           show-overflow-tooltip
-          prop="e"
           align="center"
           label="参与/完成/配额/限量"
-        />
+        >
+          <template #default="{ row }">
+            {{ row.participation }}/ {{ row.complete }}/ {{ row.num }}/
+            {{ row.limitedQuantity }}
+          </template>
+        </el-table-column>
         <el-table-column
           show-overflow-tooltip
-          prop="f"
           align="center"
           label="原价"
-        />
+        >
+          <template #default="{ row }">
+           $ {{ row.doMoneyPrice }}
+           ￥{{ row.memberPrice }}
+          </template>
+        </el-table-column>
         <el-table-column
           show-overflow-tooltip
           prop="f"
@@ -364,31 +268,31 @@ onMounted(() => {
         />
         <el-table-column
           show-overflow-tooltip
-          prop="g"
+          prop="ir"
           align="center"
           label="IR/NIR"
         />
         <el-table-column
           show-overflow-tooltip
-          prop="h"
+          prop="countryId"
           align="center"
           label="国家地区"
         />
         <el-table-column
           show-overflow-tooltip
-          prop="h"
+          prop="allocationType"
           align="center"
           label="分配类型"
         />
         <el-table-column
           show-overflow-tooltip
-          prop="h"
+          prop="allocationStatus"
           align="center"
           label="分配状态"
         />
         <el-table-column
           show-overflow-tooltip
-          prop="i"
+          prop="isOnline"
           align="center"
           label="项目状态"
         >
@@ -397,19 +301,19 @@ onMounted(() => {
 
         <el-table-column
           show-overflow-tooltip
-          prop="h"
+          prop="remark"
           align="center"
           label="备注"
         />
         <el-table-column
           show-overflow-tooltip
-          prop="j"
+          prop="createName"
           align="center"
           label="创建人"
         />
         <el-table-column
           show-overflow-tooltip
-          prop="k"
+          prop="createTime"
           align="center"
           label="创建时间"
         />

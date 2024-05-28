@@ -4,39 +4,39 @@ export default function usePagination() {
     size: 10,
     total: 0,
     sizes: [10, 20, 50, 100],
-    layout: 'total, sizes, ->, prev, pager, next, jumper',
+    layout: "total, sizes, ->, prev, pager, next, jumper",
     sort: null as string | null,
     order: null as string | null,
-  })
+  });
 
   function getParams() {
     return {
-      // page: pagination.value.page,
-      // size: pagination.value.size,
-      pageNum: pagination.value.page,
-      pageSize: pagination.value.size,
-      from: (pagination.value.page - 1) * pagination.value.size,
+      page: pagination.value.page,
       limit: pagination.value.size,
-      ...(
-        pagination.value.sort && pagination.value.order && {
+      // size: pagination.value.size,
+      // pageNum: pagination.value.page,
+      // pageSize: pagination.value.size,
+      from: (pagination.value.page - 1) * pagination.value.size,
+
+      ...(pagination.value.sort &&
+        pagination.value.order && {
           sort: pagination.value.sort,
           order: pagination.value.order,
-        }
-      ),
-    }
+        }),
+    };
   }
 
   async function onSizeChange(size: number) {
-    pagination.value.size = size
+    pagination.value.size = size;
   }
 
   async function onCurrentChange(page: number) {
-    pagination.value.page = page
+    pagination.value.page = page;
   }
 
   async function onSortChange(prop: string, order: string) {
-    pagination.value.sort = prop
-    pagination.value.order = order === 'ascending' ? 'asc' : 'desc'
+    pagination.value.sort = prop;
+    pagination.value.order = order === "ascending" ? "asc" : "desc";
   }
 
   return {
@@ -45,5 +45,5 @@ export default function usePagination() {
     onSizeChange,
     onCurrentChange,
     onSortChange,
-  }
+  };
 }

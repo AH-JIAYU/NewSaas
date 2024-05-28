@@ -183,9 +183,13 @@ onMounted(() => {
         <el-table-column align="center" prop="d" show-overflow-tooltip label="客户营业限额($/月)" />
         <el-table-column align="center" prop="e" show-overflow-tooltip label="审核率Min值" />
         <el-table-column align="center" prop="f" show-overflow-tooltip label="负责人" />
-        <el-table-column align="center" prop="g" show-overflow-tooltip label="创建人" />
-        <el-table-column align="center" prop="h" show-overflow-tooltip label="创建时间" />
         <ElTableColumn align="center" show-overflow-tooltip prop="" label="客户状态">
+          <ElSwitch inline-prompt active-text="启用" inactive-text="禁用" />
+        </ElTableColumn>
+        <ElTableColumn align="center" show-overflow-tooltip prop="" label="前置问卷">
+          <ElSwitch inline-prompt active-text="启用" inactive-text="禁用" />
+        </ElTableColumn>
+        <ElTableColumn align="center" show-overflow-tooltip prop="" label="风险控制">
           <ElSwitch inline-prompt active-text="启用" inactive-text="禁用" />
         </ElTableColumn>
         <el-table-column align="center" prop="i" label="操作" show-overflow-tooltip width="200">

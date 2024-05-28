@@ -14,7 +14,8 @@ import api from "@/api/modules/tenantDictionary";
 defineOptions({
   name: "PagesExampleDictionary",
 });
-
+const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
+  usePagination();
 interface Dict {
   id: string | number;
   label: string;
@@ -24,7 +25,9 @@ interface Dict {
 const dictionaryRef = ref();
 // 字典
 const dictionary = ref({
-  search: "",
+  search: {
+    chineseName: "",
+  },
   tree: [] as Dict[],
   currentNode: undefined as Node | undefined,
   currentData: undefined as Dict | undefined,
@@ -36,18 +39,15 @@ const dictionary = ref({
   row: "",
   loading: false,
 });
-
-const { pagination, onSizeChange, onCurrentChange, onSortChange } =
-  usePagination();
-pagination.value.size = 20;
-pagination.value.sizes = [20, 50, 100];
+// pagination.value.size = 20;
+// pagination.value.sizes = [20, 50, 100];
 const dictionaryItemRef = ref();
 // 字典下的数据
 const dictionaryItem = ref<any>({
   loading: false,
   // 搜索
   search: {
-    dictionaryId: "" as Dict["id"],
+    catalogueId: "" as Dict["id"],
     chineseName: "",
   },
   // 列表数据
@@ -62,13 +62,15 @@ const dictionaryItem = ref<any>({
   },
 });
 // 获取字典
-function getDictionaryList() {
+async function getDictionaryList() {
   dictionary.value.loading = true;
-  dictionaryItem.value.search.dictionaryId = "";
-  api.list({ chineseName: dictionary.value.search }).then((res) => {
-    dictionary.value.tree = res.data;
-    dictionary.value.loading = false;
-  });
+  dictionaryItem.value.search.catalogueId = "";
+  const params = {
+    ...dictionary.value.search,
+  };
+  const res = await api.list(params);
+  dictionary.value.tree = res.data;
+  dictionary.value.loading = false;
 }
 onMounted(() => {
   getDictionaryList();
@@ -123,32 +125,29 @@ function dictionaryDelete(node: Node, data: any) {
 // 字典项详情
 function dictionaryClick(data: Dict) {
   pagination.value.page = 1;
-  dictionaryItem.value.search.dictionaryId = data.id;
+  dictionaryItem.value.search.catalogueId = data.id;
 }
 // 监听id变化
 watch(
-  () => dictionaryItem.value.search.dictionaryId,
+  () => dictionaryItem.value.search.catalogueId,
   () => {
     getDictionaryItemList();
   }
 );
 // 获取字典项
-function getDictionaryItemList() {
+async function getDictionaryItemList() {
   dictionaryItem.value.loading = true;
-  api
-    .itemlist({
-      ...dictionaryItem.value.search,
-      page: 1,
-      limit: 10,
-    })
-    .then((res: any) => {
-      dictionaryItem.value.loading = false;
-      dictionaryItem.value.dataList = res.data;
-      dictionaryItem.value.dataList.forEach((item: any) => {
-        item.enableLoading = false;
-      });
-      pagination.value.total = res.data.length;
-    });
+  const params = {
+    ...getParams(),
+    ...dictionaryItem.value.search,
+  };
+  const res = await api.itemlist(params);
+  dictionaryItem.value.loading = false;
+  dictionaryItem.value.dataList = res.data;
+  dictionaryItem.value.dataList.forEach((item: any) => {
+    item.enableLoading = false;
+  });
+  pagination.value.total = res.data.length;
 }
 
 // 每页数量切换
@@ -222,18 +221,20 @@ function onDeleteMulti(rows: any[]) {
             <ElButton type="primary" class="add" @click="dictionaryAdd()">
               新增字典
             </ElButton>
-            <ElButton @click="getDictionaryList">
-              <template #icon>
-                <SvgIcon name="i-ep:refresh" />
-              </template>
-            </ElButton>
           </ElButtonGroup>
           <ElInput
-            v-model="dictionary.search"
+            v-model="dictionary.search.chineseName"
             placeholder="请输入关键词筛选字典"
             clearable
             class="search"
-          />
+            @keydown.enter="getDictionaryList"
+          >
+            <template #append>
+              <ElButton @click="getDictionaryList">
+                <SvgIcon name="i-ep:search" />
+              </ElButton>
+            </template>
+          </ElInput>
           <ElScrollbar class="tree">
             <ElTree
               ref="dictionaryRef"
@@ -291,7 +292,7 @@ function onDeleteMulti(rows: any[]) {
           </ElScrollbar>
         </template>
         <div
-          v-show="dictionaryItem.search.dictionaryId"
+          v-show="dictionaryItem.search.catalogueId"
           class="dictionary-container"
         >
           <ElSpace wrap>
@@ -314,6 +315,7 @@ function onDeleteMulti(rows: any[]) {
               placeholder="请输入关键词筛选字典项"
               clearable
               style="width: 200px"
+              @keydown.enter="getDictionaryItemList"
             />
             <ElButton @click="getDictionaryItemList">
               <template #icon>
@@ -389,7 +391,7 @@ function onDeleteMulti(rows: any[]) {
           />
         </div>
         <div
-          v-show="!dictionaryItem.search.dictionaryId"
+          v-show="!dictionaryItem.search.catalogueId"
           class="dictionary-container"
         >
           <div class="empty">请在左侧新增或选择一个字典</div>
@@ -408,7 +410,7 @@ function onDeleteMulti(rows: any[]) {
         v-if="dictionaryItem.dialog.visible"
         :id="dictionaryItem.dialog.id"
         v-model="dictionaryItem.dialog.visible"
-        :dictionary-id="dictionaryItem.search.dictionaryId"
+        :catalogue-id="dictionaryItem.search.catalogueId"
         :parent-id="dictionaryItem.dialog.parentId"
         :level="dictionaryItem.dialog.level"
         :tree="dictionary.tree"
