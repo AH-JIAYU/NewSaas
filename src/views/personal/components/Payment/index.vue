@@ -4,7 +4,10 @@ import { ref } from 'vue'
 defineOptions({
   name: 'Edit',
 })
-
+const form = ref({
+  version:1,
+  radio:7,
+})
 // 弹框开关变量
 const dialogTableVisible = ref(false)
 // 提交数据
@@ -55,30 +58,35 @@ defineExpose({ showEdit })
           </div>
           <div class="select">
             <p class="p">|方案选择</p>
-            <ul>
-              <li>
-                <div class="selectTop">基础版</div>
-                <span class="selectbtm">500元/月</span>
-              </li>
-              <li>
-                <div class="selectTop">高级版</div>
-                <span class="selectbtm">80%用户选择</span>
-              </li>
-              <li>
-                <div class="selectTop">旗舰版</div>
-                <span class="selectbtm">低至4.5元/天</span>
-              </li>
-            </ul>
+            <el-radio-group v-model="form.version">
+              <el-radio :value="1" size="large" border>
+                <p class="radius">基础版</p>
+                <p class="radiusP">500元/月</p>
+              </el-radio>
+              <el-radio :value="2" size="large" border>专业版
+                <p class="radiusP">80%用户选择</p>
+              </el-radio>
+              <el-radio :value="3" size="large" border>旗舰版
+                <p class="radiusP">低至4.5元/天</p>
+              </el-radio>
+            </el-radio-group>
           </div>
           <div class="selects">
             <p class="p">|时长选择</p>
-            <div class="ul">
-              <div class="selectTops">代替区间</div>
-              <div class="selectTops">代替区间</div>
-              <div class="selectTops">代替区间</div>
-              <div class="selectTops">代替区间</div>
-              <div class="selectTops">代替区间</div>
-            </div>
+            <!-- <el-radio-group v-model="radio" size="large">
+              <el-radio-button border label="7天" :value="7" />
+              <el-radio-button border label="30天" :value="30" />
+              <el-radio-button border label="90天" :value="90" />
+              <el-radio-button border label="180天" :value="180" />
+              <el-radio-button border label="365天" :value="365" />
+            </el-radio-group> -->
+            <el-radio-group v-model="form.radio">
+              <el-radio :value="7" size="large" border>7天</el-radio>
+              <el-radio :value="30" size="large" border>30天</el-radio>
+              <el-radio :value="90" size="large" border>90天</el-radio>
+              <el-radio :value="180" size="large" border>180天</el-radio>
+              <el-radio :value="365" size="large" border>365天</el-radio>
+            </el-radio-group>
           </div>
           <div class="personal">
             <div class="personalLeft">
@@ -158,6 +166,38 @@ li {
     }
   }
 
+  :deep(.el-radio-group) {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-content: space-between;
+
+    .el-radio-button {
+      width: 6.75rem;
+      border-radius: 3px !important;
+      border: 1px solid #5681c8;
+    }
+
+    .el-radio-button__inner {
+      width: 100%;
+      height: 100%;
+    }
+
+    .el-radio {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+      width: 6.75rem;
+      border-radius: 3px !important;
+    }
+
+    .el-radio__input {
+      display: none;
+    }
+  }
+
   .right {
     padding: 20px;
     width: 75%;
@@ -188,40 +228,44 @@ li {
     .select {
       margin-bottom: 20px;
 
-      .p {
-        margin-bottom: 15px;
+      :deep() {
+        .el-radio {
+          display: flex;
+          justify-content: center;
+          align-items: flex-end;
+          text-align: center;
+          margin: 0;
+          padding: 0;
+          width: 12.75rem;
+          height: 7.5rem;
+          border-radius: 3px !important;
+        }
+
+        .el-radio__input {
+          display: none;
+        }
+        .el-radio__label {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-wrap: wrap;
+          width: 100%;
+          padding: 0;
+        }
+        .radiusP {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 100%;
+          height: 1.875rem;
+          background-color: #cbd8ee;
+          margin-top: 1.25rem;
+        }
+
       }
 
-      ul {
-        display: flex;
-        justify-content: space-between;
-        width: 100%;
-        height: 120px;
-        background-color: #fff;
-
-        li {
-          width: 30%;
-          height: 100%;
-          border: 1.5px solid #5681c8;
-          border-radius: 3px;
-
-          .selectTop {
-            width: 100%;
-            height: 75%;
-            text-align: center;
-            line-height: 120px;
-            color: #6087cb;
-          }
-
-          .selectbtm {
-            display: block;
-            width: 100%;
-            height: 25%;
-            text-align: center;
-            line-height: 30px;
-            background-color: #cbd8ee;
-          }
-        }
+      .p {
+        margin-bottom: 15px;
       }
     }
 
@@ -256,23 +300,28 @@ li {
       display: flex;
       width: 100%;
       height: 200px;
+
       .bottom {
         width: 100%;
         height: 100%;
         margin-left: 20px;
         padding-top: 100px;
+
         .money {
           color: #d10027;
           margin-bottom: 5px;
+
           .size {
             font-weight: 700;
             font-size: 22px;
           }
         }
+
         img {
           width: 155px;
           height: 155px;
         }
+
         .zhifu {
           margin-bottom: 10px;
         }

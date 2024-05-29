@@ -1,14 +1,19 @@
 <script setup lang="ts">
 import Payment from './components/Payment/index.vue'
+import setting from './setting.vue'
 const editRef = ref()
+const settingRef = ref()
 // 新增
 function payment() {
   editRef.value.showEdit()
 }
+function edit() {
+  settingRef.value.showEdit()
+}
 </script>
 <template>
-  <div>
-    <PageMain>
+  <div >
+    <PageMain style="background-color: #f3f5f7;">
       <div class="personal">
         <div class="avater">
           <el-avatar style="margin-right: 15px;" :size="50" src="" />
@@ -18,11 +23,11 @@ function payment() {
             <p class="cn"><span class="bule">中国</span>15212345678</p>
           </div>
         </div>
-        <ElButton style="margin-left: 95%;" type="primary" link>编辑个人信息>></ElButton>
+        <ElButton style="margin-left: 20%;margin-top: -3%;" type="primary" link @click="edit">编辑个人信息>></ElButton>
       </div>
       <div class="center">
         <div class="version">
-          <h2>ICON 基础版</h2>
+          <h2 style="color: #555555;">ICON 试用版</h2>
           <h1>￥ 999 <span class="yare">/ 年</span></h1>
           <el-button class="btn" type="info" size="default" @click="">已开通</el-button>
           <div class="time">
@@ -39,6 +44,23 @@ function payment() {
           </ul>
         </div>
         <div class="version">
+          <h2>ICON 基础版</h2>
+          <h1>￥ 999 <span class="yare">/ 年</span></h1>
+          <el-button class="btns" size="default" @click="payment">立即开通</el-button>
+          <div class="time">
+            <p>每日只需：￥9999元</p>
+          </div>
+          <ul>
+            <li>icon500名会员系统</li>
+            <li>icon500名会员系统</li>
+            <li>icon500名会员系统</li>
+            <li>icon500名会员系统</li>
+            <li>icon500名会员系统</li>
+            <li>icon500名会员系统</li>
+          </ul>
+          <ElButton style="margin-left: 26%;margin-bottom: .625rem;" type="primary" link>功能特权,了解特权及对比>></ElButton>
+        </div>
+        <div class="version">
           <h2 style="color: #f6403f;">ICON 高级版</h2>
           <h1>￥ 9999 <span class="yare">/ 年</span></h1>
           <el-button class="butn" size="default" @click="payment">立即开通</el-button>
@@ -53,7 +75,7 @@ function payment() {
             <li>icon500名会员系统</li>
             <li>icon500名会员系统</li>
           </ul>
-          <ElButton style="margin-left: 26%;" type="primary" link>功能特权,了解特权及对比>></ElButton>
+          <ElButton style="margin-left: 26%;margin-bottom: .625rem;color: #f6403f;" type="primary" link>功能特权,了解特权及对比>></ElButton>
         </div>
         <div class="version">
           <h2 style="color: #d9a550;">ICON 旗舰版</h2>
@@ -70,10 +92,11 @@ function payment() {
             <li>icon500名会员系统</li>
             <li>icon500名会员系统</li>
           </ul>
-          <ElButton style="margin-left: 26%;" type="primary" link>功能特权,了解特权及对比>></ElButton>
+          <ElButton style="margin-left: 26%;margin-bottom: .625rem;color: #d9a550;" type="primary" link>功能特权,了解特权及对比>></ElButton>
         </div>
       </div>
       <Payment ref="editRef" />
+      <setting ref="settingRef" />
     </PageMain>
   </div>
 </template>
@@ -83,8 +106,14 @@ li {
 }
 
 .personal {
-  width: 600px;
-  margin-bottom: 50px;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+  height: 8rem;
+  margin-bottom: 1.875rem;
+  background-color: #f39c1b;
   .avater {
     display: flex;
     align-items: self-start;
@@ -125,9 +154,8 @@ li {
   justify-content: space-between;
 }
 .version {
-  width: 30%;
-  height: 100%;
-
+  width: 24%;
+  background-color: #fff;
   h2 {
     display: flex;
     justify-content: center;
@@ -135,7 +163,6 @@ li {
     width: 100%;
     height: 100px;
     color: #4c99ff;
-    background-color: #aaaaaa;
     margin-bottom: 20px;
   }
 
@@ -165,11 +192,10 @@ li {
   }
   ul {
     width: 100%;
-    height: 100%;
     padding: 0 10%;
     display: flex;
     flex-wrap: wrap;
-    margin-bottom: 18%;
+    margin-bottom: 22%;
     li {
       width: 50%;
       margin-bottom: 20px;
@@ -184,6 +210,15 @@ li {
     font-size: 16px;
     color: #f6403f;
     border: 1px solid #f6403f;
+}
+.btns {
+    width: 80%;
+    height: 50px;
+    margin-left: 10%;
+    margin-bottom: 15px;
+    font-size: 16px;
+    color: #4c99ff;
+    border: 1px solid #4c99ff;
 }
 .buttn {
     width: 80%;
