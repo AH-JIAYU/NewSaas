@@ -36,6 +36,8 @@ const useUserStore = defineStore(
       password: string
     }) {
       const res = await apiUser.login(data)
+      console.log('res',res);
+
       storage.local.set('account', res.data.account)
       storage.local.set('token', res.data.token)
       storage.local.set('avatar', res.data.avatar)
@@ -65,7 +67,7 @@ const useUserStore = defineStore(
     // 获取权限
     async function getPermissions() {
       const res = await apiUser.permission()
-      permissions.value = res.data.permissions
+      permissions.value = res.data?.permissions
     }
 
     // 修改密码

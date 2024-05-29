@@ -19,9 +19,9 @@ api.interceptors.request.use(
     // 设置请求头
     if (request.headers) {
       request.headers['Accept-Language'] = settingsStore.lang
-      // if (userStore.isLogin) {
-      //   request.headers.Token = userStore.token
-      // }
+      if (userStore.isLogin) {
+        request.headers.Token = userStore.token
+      }
     }
     // 是否将 POST 请求参数进行字符串化处理
     if (request.method === 'post') {

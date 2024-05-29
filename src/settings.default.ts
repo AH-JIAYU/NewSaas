@@ -14,7 +14,7 @@ const globalSettingsDefault: RecursiveRequired<Settings.all> = {
     storagePrefix: 'fa_',
     enableWatermark: false,
     enableErrorLog: false,
-    routeBaseOn: 'frontend',
+    routeBaseOn: 'backend',
     direction: 'ltr',
   },
   userPreferences: {

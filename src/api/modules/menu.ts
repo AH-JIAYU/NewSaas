@@ -1,9 +1,10 @@
 import api from '../index'
 
 export default {
-  list: () => api.get('menu/list', {
-    baseURL: '/mock/',
-  }),
+  list: () => api.post('tenant-menu/getMenuList',),
+  // list: () => api.get('menu/list', {
+  //   baseURL: '/mock/',
+  // }),
 
   detail: (id: number | string) => api.get('menu/detail', {
     params: {

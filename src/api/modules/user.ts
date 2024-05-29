@@ -5,9 +5,7 @@ export default {
   login: (data: {
     account: string
     password: string
-  }) => api.post('user/login', data, {
-    baseURL: '/mock/',
-  }),
+  }) => api.post('user/loginByAccount', data),
   // // 登录
   // login: (data: {
   //   account: string
@@ -15,9 +13,11 @@ export default {
   // }) => api.post('user/loginByAccount', data),
 
   // 获取权限
-  permission: () => api.get('user/permission', {
-    baseURL: '/mock/',
-  }),
+  // permission: () => api.get('user/permission', {
+  //   baseURL: '/mock/',
+  // }),
+  // 获取权限
+  permission: () => api.post('tenant-button/getButtonList'),
 
   // 修改密码
   passwordEdit: (data: {
