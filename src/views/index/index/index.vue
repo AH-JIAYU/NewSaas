@@ -260,8 +260,8 @@ function echarts2() {
       datas: [{ aud: "333" }, { audR: "333" }, { com: "123123" }],
     },
     {
-      value: 0,
-      name: "查看更多",
+      value: "",
+      name: "查看更多>>",
     },
   ];
   chart2 = echarts.init(chart2Ref.value);
@@ -307,6 +307,7 @@ function echarts2() {
         bottom: "20",
         itemGap: 20, // 设置图例图形的宽
         center: ["50%", "50%"],
+        icon: "stack",
         data: [
           "张三",
           "李四",
@@ -322,7 +323,15 @@ function echarts2() {
           "王总",
           "赵总",
           "老钱",
-          "查看更多",
+          {
+            name: "查看更多>>",
+            icon: "none",
+            textStyle: {
+              fontSize: 12,
+              fontWeight: "bolder",
+              color: "#3a2acd",
+            },
+          },
         ],
         formatter(name) {
           let target, percentage;
