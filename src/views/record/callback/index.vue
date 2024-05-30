@@ -108,7 +108,7 @@ onMounted(() => {
                 v-model.trim="queryForm.select.name"
                 clearable
                 :inline="false"
-                placeholder="子会员"
+                placeholder="供应商ID"
               />
             </el-form-item>
             <el-form-item label="">
@@ -132,7 +132,7 @@ onMounted(() => {
                 v-model.trim="queryForm.select.name"
                 clearable
                 :inline="false"
-                placeholder="Guid"
+                placeholder="子会员ID"
               />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
@@ -255,7 +255,7 @@ onMounted(() => {
           align="center"
           prop="h"
           show-overflow-tooltip
-          label="创建时间"
+          label="回调时间"
         />
         <template #empty>
           <el-empty class="vab-data-empty" description="暂无数据" />

@@ -98,18 +98,25 @@ onMounted(() => {
             class="search-form"
           >
             <el-form-item label="">
-              <el-input
-                v-model.trim="queryForm.select.id"
+              <el-select
+                v-model="queryForm.select.default"
                 clearable
-                :inline="false"
-                placeholder="渠道简称"
+                placeholder="客户简称"
               />
             </el-form-item>
             <el-form-item label="">
               <el-select
                 v-model="queryForm.select.default"
                 clearable
-                placeholder="操作人"
+                placeholder="操作员"
+              />
+            </el-form-item>
+            <el-form-item label="">
+              <el-input
+                v-model.trim="queryForm.select.id"
+                clearable
+                :inline="false"
+                placeholder="内容关键字"
               />
             </el-form-item>
             <ElFormItem>
@@ -181,13 +188,13 @@ onMounted(() => {
           align="center"
           prop="b"
           show-overflow-tooltip
-          label="日期"
+          label="变更内容"
         />
         <el-table-column
           align="center"
-          prop="c"
+          prop="b"
           show-overflow-tooltip
-          label="备注"
+          label="变更时间"
         />
         <el-table-column
           align="center"
@@ -195,6 +202,14 @@ onMounted(() => {
           show-overflow-tooltip
           label="操作人"
         />
+        <el-table-column
+          align="center"
+          prop="d"
+          show-overflow-tooltip
+          label="操作"
+        >
+      <el-button type="primary" link size="default" @click="">跳转</el-button>
+      </el-table-column>
         <template #empty>
           <el-empty class="vab-data-empty" description="暂无数据" />
         </template>

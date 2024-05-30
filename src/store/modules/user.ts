@@ -36,8 +36,6 @@ const useUserStore = defineStore(
       password: string
     }) {
       const res = await apiUser.login(data)
-      console.log('res',res);
-
       storage.local.set('account', res.data.account)
       storage.local.set('token', res.data.token)
       storage.local.set('avatar', res.data.avatar)
