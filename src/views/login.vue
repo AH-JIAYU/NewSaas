@@ -41,26 +41,132 @@ const redirect = ref(
 );
 
 // 登录
-const loginFormRef = ref<FormInstance>();
-const loginForm = ref({
+const loginFormRef = ref<any>();
+const loginType = ref("code"); // 登录方式
+const loginCode = ref<any>("获取验证码");
+const loginGetCaptcha = ref(false); // 验证码按钮是否禁用
+const loginForm = ref<any>({
   account: storage.local.get("login_account") || "",
-  password: "",
   remember: storage.local.has("login_account"),
 });
-const loginRules = ref<FormRules>({
-  account: [{ required: true, trigger: "blur", message: "请输入用户名" }],
+// 自定义校验手机号
+const validatePhone = (rule: any, value: any, callback: any) => {
+  const regExpPhone: any =
+    /^(?:(?:\+|00)86)?1(?:(?:3[\d])|(?:4[5-79])|(?:5[0-35-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\d])|(?:9[189]))\d{8}$/;
+  if (!regExpPhone.test(loginForm.value.account)) {
+    //
+    callback(new Error("请输入合法手机号"));
+  } else {
+    callback();
+  }
+};
+// 自定义校验邮箱
+const validateEmail = (rule: any, value: any, callback: any) => {
+  const regExpEmail: any =
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  if (!regExpEmail.test(loginForm.value.account)) {
+    callback(new Error("请输入合法邮箱"));
+  } else {
+    callback();
+  }
+};
+const loginRules = ref<any>({
+  account: [{ required: true, trigger: "blur", message: "请输入手机号/邮箱" }],
+  code: [{ required: true, trigger: "blur", message: "请输入验证码" }],
   password: [
     { required: true, trigger: "blur", message: "请输入密码" },
     { min: 6, max: 18, trigger: "blur", message: "密码长度为6到18位" },
   ],
+  agreeToTheAgreement: [
+    {
+      validator: (rule: any, value: any) => value === true,
+      message: "请阅读并勾选协议",
+      trigger: "change",
+    },
+  ],
 });
+// 动态表单校验
+const chengAccount = () => {
+  // 邮箱
+  if (!loginForm.value.account.includes("@")) {
+    loginRules.value.account = [
+      { required: true, trigger: "blur", message: "请输入手机号/邮箱" },
+      { validator: validatePhone, trigger: "blur" },
+    ];
+  } else {
+    //手机号
+    loginRules.value.account = [
+      { required: true, trigger: "blur", message: "请输入手机号/邮箱" },
+      { validator: validateEmail, trigger: "blur" },
+    ];
+  }
+  console.log("loginRules", loginRules.value);
+};
+// 获取验证码
+async function loginCaptcha() {
+  loginFormRef.value.validateField("account", async (valid: any) => {
+    // 校验通过
+    if (valid) {
+      let params: any;
+      // 邮箱
+      if (loginForm.value.account.includes("@")) {
+        params = {
+          email: loginForm.value.account,
+          type: "login_email",
+        };
+      } else {
+        // 手机号
+        params = {
+          phone: loginForm.value.account,
+          type: "login_phone_number",
+        };
+      }
+      const { status } = await api.sendCode(params);
+      status === 1 &&
+        ElMessage.success({
+          message: "已发送",
+        });
+    }
+  });
+  loginCountdown();
+}
+// 倒计时
+const loginCountdown = () => {
+  loginGetCaptcha.value = true;
+  let n = 60;
+  getPhoneInterval.value = setInterval(() => {
+    if (n > 0) {
+      n--;
+      loginCode.value = `请在${n}s后重新获取`;
+    } else {
+      clearInterval(getPhoneInterval.value);
+      loginCode.value = "获取验证码";
+      getPhoneInterval.value = null;
+      loginGetCaptcha.value = false;
+    }
+  }, 1000);
+};
 function handleLogin() {
   loginFormRef.value &&
-    loginFormRef.value.validate((valid) => {
+    loginFormRef.value.validate((valid: any) => {
       if (valid) {
+        let params: any = {
+          ...loginForm.value,
+        };
+        if (loginType.value === "password") {
+          params.type = 1;
+        } else {
+          // 邮箱
+          if (loginForm.value.account.includes("@")) {
+            params.type = 3;
+          } else {
+            // 手机号
+            params.type = 2;
+          }
+        }
         loading.value = true;
         userStore
-          .login(loginForm.value)
+          .login(params)
           .then(() => {
             loading.value = false;
             if (loginForm.value.remember) {
@@ -81,7 +187,7 @@ function handleLogin() {
 const getPhoneInterval = ref<any>(null); // 倒计时
 const phoneCode = ref<any>("获取验证码");
 const isGetPhone = ref<boolean>(false); // 禁用获取验证码按钮
-const registerFormRef = ref<FormInstance>();
+const registerFormRef = ref<any>();
 const registerForm = ref<any>({
   account: "", // 账号
   password: "", // 密码
@@ -91,29 +197,62 @@ const registerForm = ref<any>({
   country: "", //国家
   type: "phone", // 注册方式 phone/email
 });
+// 自定义校验手机号
+const validatePhoneRegistered = (rule: any, value: any, callback: any) => {
+  const regExpPhone: any =
+    /^(?:(?:\+|00)86)?1(?:(?:3[\d])|(?:4[5-79])|(?:5[0-35-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\d])|(?:9[189]))\d{8}$/;
+  if (!regExpPhone.test(registerForm.value.phoneNumber)) {
+    //
+    callback(new Error("请输入合法手机号"));
+  } else {
+    callback();
+  }
+};
+// 自定义校验邮箱
+const validateEmailRegistered = (rule: any, value: any, callback: any) => {
+  const regExpEmail: any =
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  if (!regExpEmail.test(registerForm.value.email)) {
+    callback(new Error("请输入合法邮箱"));
+  } else {
+    callback();
+  }
+};
 const typeSelect = [
   {
     value: "phone",
-    label: "手机号注册",
+    label: "中国",
   },
   {
     value: "email",
-    label: "邮箱注册",
+    label: "美国",
   },
 ];
 const registerRules = ref<FormRules>({
   account: [{ required: true, trigger: "blur", message: "请输入用户名" }],
-  email: [{ required: true, trigger: "blur", message: "请输入邮箱" }],
-  phoneNumber: [{ required: true, trigger: "blur", message: "请输入手机号码" }],
+  email: [
+    { required: true, trigger: "blur", message: "请输入邮箱" },
+    { validator: validateEmailRegistered, trigger: "blur" },
+  ],
+  phoneNumber: [
+    { required: true, trigger: "blur", message: "请输入手机号码" },
+    { validator: validatePhoneRegistered, trigger: "blur" },
+  ],
   code: [{ required: true, trigger: "blur", message: "请输入验证码" }],
   password: [
     { required: true, trigger: "blur", message: "请输入密码" },
     { min: 6, max: 18, trigger: "blur", message: "密码长度为6到18位" },
   ],
+  agreeToTheAgreement: [
+    {
+      validator: (rule, value) => value === true,
+      message: "请阅读并勾选协议",
+      trigger: "change",
+    },
+  ],
 });
 // 获取验证码
 const mobileVerificationCode = async () => {
-  console.log("registerForm", registerForm.value.type);
   const params = {
     type: "register_phone_number", // 默认手机号
     email: registerForm.value.email,
@@ -121,11 +260,9 @@ const mobileVerificationCode = async () => {
   };
   if (registerForm.value.type === "phone") {
     const data = await api.sendCode(params);
-    console.log("phone", data);
   } else {
     params.type = "register_email";
     const data = await api.sendCode(params);
-    console.log("email", data);
   }
   countdown();
 };
@@ -146,7 +283,7 @@ const countdown = () => {
 };
 async function handleRegister() {
   registerFormRef.value &&
-    registerFormRef.value.validate(async (valid) => {
+    registerFormRef.value.validate(async (valid: any) => {
       if (valid) {
         // 这里编写业务代码
         const { status } = await api.register(registerForm.value);
@@ -159,7 +296,7 @@ async function handleRegister() {
 }
 
 // 重置密码
-const resetFormRef = ref<FormInstance>();
+const resetFormRef = ref<any>();
 const resetForm = ref({
   account: storage.local.get("login_account"),
   code: "",
@@ -179,23 +316,21 @@ function handleReset() {
     type: "info",
   });
   resetFormRef.value &&
-    resetFormRef.value.validate((valid) => {
+    resetFormRef.value.validate((valid: any) => {
       if (valid) {
         // 这里编写业务代码
       }
     });
-}
-
-function testAccount(account: string) {
-  loginForm.value.account = account;
-  loginForm.value.password = "123456";
-  handleLogin();
 }
 // 清除定时器
 onUnmounted(() => {
   clearInterval(getPhoneInterval.value);
   getPhoneInterval.value = null;
 });
+// 重置校验
+const resetCheck = () => {
+  loginFormRef.value.resetFields();
+};
 </script>
 
 <template>
@@ -206,8 +341,12 @@ onUnmounted(() => {
     </I18nSelector>
     <div id="login-box">
       <div class="login-banner">
-        <img :src="logo" class="logo" />
-        <img :src="banner" class="banner" />
+        <!-- <img :src="logo" class="logo" />
+        <img :src="banner" class="banner" /> -->
+        <h1 style="font-size: 50px; font-weight: normal">欢迎 !</h1>
+        <h3 h1 style="font-size: 30px; font-weight: normal">
+          来到租户系统 ! 👋🏻
+        </h3>
       </div>
       <ElForm
         v-show="formType === 'login'"
@@ -217,7 +356,16 @@ onUnmounted(() => {
         class="login-form"
       >
         <div class="title-container">
-          <h3 class="title">欢迎来到 {{ title }} ! 👋🏻</h3>
+          <div class="fx-c">
+            <el-radio-group
+              v-model="loginType"
+              size="large"
+              @change="resetCheck"
+            >
+              <el-radio-button label="验证码登录" value="code" />
+              <el-radio-button label="密码登录" value="password" />
+            </el-radio-group>
+          </div>
         </div>
         <div>
           <ElFormItem prop="account">
@@ -230,9 +378,17 @@ onUnmounted(() => {
               <template #prefix>
                 <SvgIcon name="i-ri:user-3-fill" />
               </template>
+              <template #append v-if="loginType === 'code'">
+                <el-button
+                  type="primary"
+                  :disabled="loginGetCaptcha"
+                  @click="loginCaptcha"
+                  >{{ loginCode }}</el-button
+                >
+              </template>
             </ElInput>
           </ElFormItem>
-          <ElFormItem prop="password">
+          <ElFormItem prop="password" v-if="loginType === 'password'">
             <ElInput
               v-model="loginForm.password"
               type="password"
@@ -247,12 +403,38 @@ onUnmounted(() => {
               </template>
             </ElInput>
           </ElFormItem>
+          <ElFormItem prop="code" v-if="loginType === 'code'">
+            <ElInput
+              v-model="loginForm.code"
+              type="password"
+              :placeholder="t('app.captcha')"
+              tabindex="2"
+              @keyup.enter="handleLogin"
+            >
+              <template #prefix>
+                <SvgIcon name="i-ep:message" />
+              </template>
+            </ElInput>
+          </ElFormItem>
+          <ElFormItem prop="agreeToTheAgreement">
+            <div class="flex-bar" style="margin: 0; width: 100%">
+              <!-- {{loginForm.agreeToTheAgreement}} -->
+              <ElCheckbox v-model="loginForm.agreeToTheAgreement"
+                >我已阅读并同意《xxxx协议》
+              </ElCheckbox>
+              <ElLink
+                v-if="loginType === 'password'"
+                type="primary"
+                :underline="false"
+                @click="formType = 'reset'"
+              >
+                忘记密码了?
+              </ElLink>
+            </div>
+          </ElFormItem>
         </div>
         <div class="flex-bar">
-          <ElCheckbox v-model="loginForm.remember"> 记住我 </ElCheckbox>
-          <ElLink type="primary" :underline="false" @click="formType = 'reset'">
-            忘记密码了?
-          </ElLink>
+          <ElCheckbox v-model="loginForm.remember"> 保持登录 </ElCheckbox>
         </div>
         <ElButton
           :loading="loading"
@@ -264,28 +446,14 @@ onUnmounted(() => {
           {{ t("app.login") }}
         </ElButton>
         <div class="sub-link">
-          <span class="text">还没有帐号?</span>
+          <span class="text">还不是会员?</span>
           <ElLink
             type="primary"
             :underline="false"
             @click="formType = 'register'"
           >
-            创建新帐号
+            立即注册
           </ElLink>
-        </div>
-        <div style="margin-top: 20px; margin-bottom: -20px; text-align: center">
-          <ElDivider>演示账号一键登录</ElDivider>
-          <ElButton
-            type="primary"
-            size="small"
-            plain
-            @click="testAccount('admin')"
-          >
-            admin
-          </ElButton>
-          <ElButton size="small" plain @click="testAccount('test')">
-            test
-          </ElButton>
         </div>
       </ElForm>
       <ElForm
@@ -296,9 +464,6 @@ onUnmounted(() => {
         class="login-form"
         auto-complete="on"
       >
-        <div class="title-container">
-          <h3 class="title">探索从这里开始! 🚀</h3>
-        </div>
         <div>
           <ElFormItem prop="account">
             <ElInput
@@ -381,7 +546,15 @@ onUnmounted(() => {
               </template>
             </ElInput>
           </ElFormItem>
+          <ElFormItem prop="agreeToTheAgreement">
+            <div class="flex-bar" style="margin: 0">
+              <ElCheckbox v-model="registerForm.agreeToTheAgreement">
+                我已阅读并同意《xxxx协议》
+              </ElCheckbox>
+            </div>
+          </ElFormItem>
         </div>
+
         <ElButton
           :loading="loading"
           type="primary"
@@ -471,6 +644,12 @@ onUnmounted(() => {
 </template>
 
 <style lang="scss" scoped>
+.fx-c {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 50px;
+}
 [data-mode="mobile"] {
   #login-box {
     position: relative;
@@ -535,11 +714,12 @@ onUnmounted(() => {
   z-index: 0;
   width: 100%;
   height: 100%;
-  background: radial-gradient(
-    circle at center,
-    var(--g-container-bg),
-    var(--g-bg)
-  );
+  background: url("http://localhost:15000/static/img/background.463e5eee.jpg");
+  // background: radial-gradient(
+  //   circle at center,
+  //   var(--g-container-bg),
+  //   var(--g-bg)
+  // );
 }
 
 #login-box {
@@ -549,16 +729,19 @@ onUnmounted(() => {
   display: flex;
   justify-content: space-between;
   overflow: hidden;
-  background-color: var(--g-container-bg);
   border-radius: 10px;
-  box-shadow: var(--el-box-shadow);
   transform: translateX(-50%) translateY(-50%);
+  width: 100%;
+  padding: 0 20%;
+  box-sizing: border-box;
 
   .login-banner {
     position: relative;
+    // width: 60%;
     width: 450px;
     overflow: hidden;
-    background-color: var(--g-bg);
+    color: #fff;
+    // background-color: var(--g-bg);
 
     .banner {
       width: 100%;
@@ -577,9 +760,13 @@ onUnmounted(() => {
   }
 
   .login-form {
+    background-color: var(--g-container-bg);
+    box-shadow: var(--el-box-shadow);
+    border-radius: 10px;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    // width: 40%;
     width: 500px;
     min-height: 500px;
     padding: 50px;
@@ -599,11 +786,13 @@ onUnmounted(() => {
 
   .el-form-item {
     margin-bottom: 24px;
+
     :deep(.el-select__wrapper) {
       width: 100%;
       height: 48px;
       line-height: inherit;
     }
+
     :deep(.el-input) {
       width: 100%;
       height: 48px;
