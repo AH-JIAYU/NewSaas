@@ -31,7 +31,7 @@ const globalSettingsDefault: RecursiveRequired<Settings.all> = {
     enableMobileAdaptation: false,
   },
   menu: {
-    baseOn: 'frontend',
+    baseOn: 'backend',
     menuMode: 'side',
     isRounded: false,
     menuActiveStyle: '',
