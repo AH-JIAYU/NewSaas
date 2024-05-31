@@ -1,7 +1,8 @@
 <script lang="ts" setup>
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { provide, reactive, ref } from "vue";
 import LeftTabs from "../CustomerLeftTabs/index.vue";
-
+import api from '@/api/modules/user_customer'
 const emit = defineEmits(["fetch-data"]);
 const drawerisible = ref<boolean>(false);
 const title = ref<string>("");
@@ -14,17 +15,28 @@ function pushData(data: any) {
 provide("validateTopTabs", pushData);
 
 let leftTabsData = reactive<any>([]); // 明确指定类型为 LeftTab[]
-
 async function showEdit(row: any) {
   if (!row) {
     title.value = "添加";
     leftTabsData = reactive([
       {
-        name: "客户名称",
+        customerAccord: "客户名称", //客户名称
+        customerShortName: "", //客户简称
+        companyName: "", //公司名称
+        customerName: "", //客户姓名
+        customerPhone: "", //手机号码
+        emailAddress: "", //电子邮箱
+        chargeName: "李林桂", //负责人
+        settlementCycle: 7, //结算周期
+        customerStatus: null, //客户状态
+        antecedentQuestionnaire: null, //前置问卷
+        riskControl: null, //风险控制
+        turnover: null, //营业限额
+        rateAudit: null, //审核Min值
         // currency: surveyconfig.currency,
-        platform: {},
-        screen: {},
-        security: {},
+        // platform: {},
+        // screen: {},
+        // security: {},
       },
     ]);
   } else {
@@ -68,8 +80,15 @@ async function save() {
     const ispass = (await Promise.all(arr)).every((item: any) => item);
     if (ispass) {
       if (title.value === "添加") {
-        // const { message }: any = await addSurvey(leftTabsData)
-        // $baseMessage(message, 'success', 'hey')
+        const dataList = {
+          tenantCustomerInfoList: leftTabsData
+        }
+        const res = await api.create(dataList)
+        console.log('res', res);
+        ElMessage.success({
+        message: res.data.flag ? '新增成功' : '新增失败',
+        center: true,
+      })
       } else {
         // 更新接口
         // const { message }: any = await doEdit(leftTabsData)
@@ -89,20 +108,9 @@ defineExpose({
 
 <template>
   <div>
-    <el-drawer
-      v-model="drawerisible"
-      :class="title === '添加' ? 'hide-drawer-header' : 'edit-drawer'"
-      append-to-body
-      :close-on-click-modal="false"
-      destroy-on-close
-      draggable
-      size="70%"
-      @close="close"
-    >
-      <LeftTabs
-        :left-tabs-data="leftTabsData"
-        :validate-top-tabs="validateTopTabs"
-      />
+    <el-drawer v-model="drawerisible" :class="title === '添加' ? 'hide-drawer-header' : 'edit-drawer'" append-to-body
+      :close-on-click-modal="false" destroy-on-close draggable size="70%" @close="close">
+      <LeftTabs :left-tabs-data="leftTabsData" :validate-top-tabs="validateTopTabs" />
       <template #footer>
         <el-button @click="close"> 取消 </el-button>
         <el-button type="warning" @click=""> 暂存 </el-button>

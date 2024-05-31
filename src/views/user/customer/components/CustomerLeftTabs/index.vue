@@ -23,11 +23,23 @@ const tabIndex = ref(0)
 const activeLeftTab = ref(0)
 
 const initialTopTabsData = {
-  name: '客户名称',
+  customerAccord: "客户名称", //客户名称
+  customerShortName: "", //客户简称
+  companyName: "", //公司名称
+  customerName: "", //客户姓名
+  customerPhone: "", //手机号码
+  emailAddress: "", //电子邮箱
+  chargeName: "李林桂", //负责人
+  settlementCycle: 7, //结算周期
+  customerStatus: null, //客户状态
+  antecedentQuestionnaire: null, //前置问卷
+  riskControl: null, //风险控制
+  turnover: null, //营业限额
+  rateAudit: null, //审核Min值
   // currency: surveyconfig.currency,
-  platform: {},
-  screen: {},
-  security: {},
+  // platform: {},
+  // screen: {},
+  // security: {},
 }
 
 // 同步主项目
@@ -41,9 +53,9 @@ function addLeftTab() {
   activeLeftTab.value = ++tabIndex.value
   localLeftTab.value.push({
     ...initialTopTabsData,
-    client: client.value,
-    await: syncdata.await,
-    multi: syncdata.multi,
+    // client: client.value,
+    // // await: syncdata.await,
+    // multi: syncdata.multi,
   })
 }
 
@@ -70,10 +82,8 @@ function setclient(data: number) {
         新增客户
       </el-button>
       <el-tabs v-model="activeLeftTab" tab-position="left" @tab-remove="tabremove">
-        <el-tab-pane
-          v-for="(leftTab, index) in localLeftTab" :key="index" :closable="localLeftTab.length !== 1"
-          :label="leftTab.name" :name="index"
-        >
+        <el-tab-pane v-for="(leftTab, index) in localLeftTab" :key="index" :closable="localLeftTab.length !== 1"
+          :label="leftTab.customerAccord" :name="index">
           <!-- 在每个左侧 Tab 中使用 TopTabs 组件 -->
           <!-- <el-button
         style="margin-bottom: 5px"
@@ -98,7 +108,7 @@ function setclient(data: number) {
       </el-tabs>
     </template>
     <template v-else>
-      <TopTabs :left-tab="localLeftTab[0]"  @set-client="setclient" />
+      <TopTabs :left-tab="localLeftTab[0]" @set-client="setclient" />
     </template>
   </div>
 </template>

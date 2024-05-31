@@ -3,7 +3,7 @@ import { onMounted } from 'vue'
 import { ElMessageBox } from 'element-plus'
 import customerEdit from './components/CustomerEdit/index.vue'
 import customerDetail from './components/CustomerDetail/index.vue'
-
+import api from '@/api/modules/user_customer'
 defineOptions({
   name: 'UserCustomerIndex',
 })
@@ -14,7 +14,7 @@ const listLoading = ref(false) // 加载
 const list = ref<Array<Object>>([]) // 表格数据
 const editRef = ref<any>() // 组件ref 添加编辑
 const checkRef = ref<any>() // 组件ref 查看
-
+const total = ref()
 const selectRows = ref() // 表格选中行
 const border = ref(true) // 表格控件-边框
 const stripe = ref(false) // 表格控件-条纹
@@ -57,9 +57,10 @@ function handleDelete(row: any) {
 }
 
 const queryForm = reactive<any>({
-  pageNo: 1,
-  pageSize: 10,
-  select: {},
+  page: 1,
+  limit: 10,
+  customerShortName: "",
+  customerStatus: null
 })
 function queryData() {
   queryForm.pageNo = 1
@@ -78,24 +79,25 @@ function currentChange(page = 1) {
 // 重置数据
 function onReset() {
   Object.assign(queryForm, {
-    pageNo: 1,
-    pageSize: 10,
-    select: {},
+    page: 1,
+    limit: 10,
+    customerShortName: "",
+    customerStatus: null
   })
 }
 async function fetchData() {
   listLoading.value = true
-  // const { data } = await getList(queryForm)
-  // list.value = data[0]
-  // total.value = data[0].length
-  list.value = [
-    { name: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { name: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { name: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { name: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { name: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { name: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-  ]
+  const {data} = await api.list(queryForm)
+  list.value = data.getTenantCustomerInfoList
+  total.value = data.total
+  // list.value = [
+  //   { name: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+  //   { name: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+  //   { name: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+  //   { name: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+  //   { name: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+  //   { name: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+  // ]
   listLoading.value = false
 }
 function setSelectRows(val: any) {
@@ -111,22 +113,21 @@ onMounted(() => {
     <PageMain>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
-          <ElForm
-            :model="queryForm.select" size="default" label-width="100px" inline-message inline
-            class="search-form"
-          >
-            <el-form-item>
+          <ElForm :model="queryForm.select" size="default" label-width="100px" inline-message inline
+            class="search-form">
+            <!-- <el-form-item>
               <el-input v-model.trim="queryForm.select.id" clearable :inline="false" placeholder="客户简称" />
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item v-show="!fold">
-              <el-select v-model="queryForm.select.name" clearable placeholder="负责人">
+              <el-select v-model="queryForm.customerShortName" clearable placeholder="负责人">
                 <el-option label="name" value="name" />
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold">
-              <el-select v-model="queryForm.select.default" clearable placeholder="客户状态">
-                <el-option label="默认" value="true" />
-                <el-option label="关闭" value="false" />
+              <el-select v-model="queryForm.customerStatus" clearable placeholder="客户状态">
+                <el-option label="禁用" :value="1" />
+                <el-option label="启用" :value="2" />
+                <el-option label="风险暂停" :value="3" />
               </el-select>
             </el-form-item>
             <ElFormItem>
@@ -166,31 +167,27 @@ onMounted(() => {
           <el-button size="default">
             导出
           </el-button>
-          <TabelControl
-            v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
+          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
             v-model:columns="columns" v-model:line-height="lineHeight" v-model:stripe="stripe"
-            style="margin-left: 12px;" @query-data="queryData"
-          />
+            style="margin-left: 12px;" @query-data="queryData" />
         </FormRightPanel>
       </el-row>
-      <el-table
-        v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
-        @selection-change="setSelectRows"
-      >
+      <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
+        @selection-change="setSelectRows">
         <el-table-column align="center" prop="a" show-overflow-tooltip type="selection" />
-        <el-table-column align="center" prop="b" show-overflow-tooltip label="客户名称" />
-        <el-table-column align="center" prop="c" show-overflow-tooltip label="客户简称" />
-        <el-table-column align="center" prop="d" show-overflow-tooltip label="客户营业限额($/月)" />
-        <el-table-column align="center" prop="e" show-overflow-tooltip label="审核率Min值" />
-        <el-table-column align="center" prop="f" show-overflow-tooltip label="负责人" />
-        <ElTableColumn align="center" show-overflow-tooltip prop="" label="客户状态">
-          <ElSwitch inline-prompt active-text="启用" inactive-text="禁用" />
+        <el-table-column align="center" prop="customerAccord" show-overflow-tooltip label="客户名称" />
+        <el-table-column align="center" prop="customerShortName" show-overflow-tooltip label="客户简称" />
+        <el-table-column align="center" prop="turnover" show-overflow-tooltip label="客户营业限额($/月)" />
+        <el-table-column align="center" prop="rateAudit" show-overflow-tooltip label="审核率Min值" />
+        <el-table-column align="center" prop="chargeName" show-overflow-tooltip label="负责人" />
+        <ElTableColumn align="center" show-overflow-tooltip prop="customerStatus" label="客户状态">
+          <ElSwitch inline-prompt :inactive-value="1" :active-value="2" active-text="启用" inactive-text="禁用" />
         </ElTableColumn>
-        <ElTableColumn align="center" show-overflow-tooltip prop="" label="前置问卷">
-          <ElSwitch inline-prompt active-text="启用" inactive-text="禁用" />
+        <ElTableColumn align="center" show-overflow-tooltip prop="antecedentQuestionnaire" label="前置问卷">
+          <ElSwitch inline-prompt :inactive-value="1" :active-value="2" active-text="启用" inactive-text="禁用" />
         </ElTableColumn>
-        <ElTableColumn align="center" show-overflow-tooltip prop="" label="风险控制">
-          <ElSwitch inline-prompt active-text="启用" inactive-text="禁用" />
+        <ElTableColumn align="center" show-overflow-tooltip prop="riskControl" label="风险控制">
+          <ElSwitch inline-prompt :inactive-value="1" :active-value="2" active-text="启用" inactive-text="禁用" />
         </ElTableColumn>
         <el-table-column align="center" prop="i" label="操作" show-overflow-tooltip width="200">
           <template #default="{ row }">
@@ -198,20 +195,10 @@ onMounted(() => {
               <el-button size="small" plain type="primary" @click="handleEdit(row)">
                 编辑
               </el-button>
-              <el-button
-                type="primary"
-                plain
-                size="small"
-                @click="handleCheck(row)"
-              >
+              <el-button type="primary" plain size="small" @click="handleCheck(row)">
                 详情
               </el-button>
-              <el-button
-                type="danger"
-                plain
-                size="small"
-                @click="handleDelete(row)"
-              >
+              <el-button type="danger" plain size="small" @click="handleDelete(row)">
                 删除
               </el-button>
             </ElSpace>
@@ -221,11 +208,9 @@ onMounted(() => {
           <el-empty class="vab-data-empty" description="暂无数据" />
         </template>
       </el-table>
-      <ElPagination
-        :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
         :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-        background @size-change="sizeChange" @current-change="currentChange"
-      />
+        background @size-change="sizeChange" @current-change="currentChange" />
       <customerEdit ref="editRef" @fetch-data="fetchData" />
       <customerDetail ref="checkRef" @fetch-data="fetchData" />
     </PageMain>
@@ -278,5 +263,4 @@ onMounted(() => {
     }
   }
 }
-
 </style>

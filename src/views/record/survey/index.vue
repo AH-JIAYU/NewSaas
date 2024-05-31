@@ -99,26 +99,10 @@ onMounted(() => {
                 v-model.trim="queryForm.select.id"
                 clearable
                 :inline="false"
-                placeholder="项目ID"
+                placeholder="子会员ID"
               />
             </el-form-item>
             <el-form-item label="">
-              <el-input
-                v-model.trim="queryForm.select.name"
-                clearable
-                :inline="false"
-                placeholder="项目名称"
-              />
-            </el-form-item>
-            <el-form-item label="">
-              <el-input
-                v-model.trim="queryForm.select.name"
-                clearable
-                :inline="false"
-                placeholder="项目标识"
-              />
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
               <el-input
                 v-model.trim="queryForm.select.name"
                 clearable
@@ -126,12 +110,27 @@ onMounted(() => {
                 placeholder="供应商ID"
               />
             </el-form-item>
+            <el-form-item label="">
+              <el-input
+                v-model.trim="queryForm.select.name"
+                clearable
+                :inline="false"
+                placeholder="项目ID"
+              />
+            </el-form-item>
             <el-form-item v-show="!fold" label="">
               <el-input
                 v-model.trim="queryForm.select.name"
                 clearable
                 :inline="false"
-                placeholder="子会员ID"
+                placeholder="项目名称"
+              />
+            </el-form-item>
+            <el-form-item v-show="!fold" label="">
+              <el-select
+                v-model="queryForm.select.default"
+                clearable
+                placeholder="客户简称"
               />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
@@ -153,14 +152,7 @@ onMounted(() => {
               <el-select
                 v-model="queryForm.select.default"
                 clearable
-                placeholder="客户简称"
-              />
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-select
-                v-model="queryForm.select.default"
-                clearable
-                placeholder="调查状态"
+                placeholder="组"
               />
             </el-form-item>
 
@@ -170,8 +162,8 @@ onMounted(() => {
                 type="daterange"
                 unlink-panels
                 range-separator="-"
-                start-placeholder="注册开始日期"
-                end-placeholder="注册结束日期"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
                 size="default"
                 style="width: 192px"
                 clear-icon="true"
@@ -181,7 +173,14 @@ onMounted(() => {
               <el-select
                 v-model="queryForm.select.default"
                 clearable
-                placeholder="分配目标"
+                placeholder="调查状态"
+              />
+            </el-form-item>
+            <el-form-item v-show="!fold" label="">
+              <el-select
+                v-model="queryForm.select.default"
+                clearable
+                placeholder="分配类型"
               />
             </el-form-item>
             <ElFormItem>
@@ -247,47 +246,59 @@ onMounted(() => {
           align="center"
           prop="id"
           show-overflow-tooltip
-          label="供应商ID"
+          label="子会员ID"
         />
         <el-table-column
           align="center"
           prop="b"
           show-overflow-tooltip
-          label="项目ID／客户／标识"
+          label="所属组"
         />
         <el-table-column
           align="center"
           prop="c"
           show-overflow-tooltip
-          label="子会员ID"
+          label="供应商ID"
         />
         <el-table-column
           align="center"
           prop="d"
           show-overflow-tooltip
-          label="分配目标"
+          label="项目ID"
         />
         <el-table-column
           align="center"
           prop="e"
           show-overflow-tooltip
-          label="IP／所属国"
+          label="项目名称/客户简称"
         />
         <el-table-column
           align="center"
           prop="f"
           show-overflow-tooltip
-          label="价格"
+          label="分配类型"
         />
-        <ElTableColumn align="center" show-overflow-tooltip prop="" label="状态">
-          <ElSwitch inline-prompt active-text="启用" inactive-text="禁用" />
-        </ElTableColumn>
         <el-table-column
           align="center"
           prop="h"
           show-overflow-tooltip
-          label="时间"
+          label="会员价/原价"
         />
+        <el-table-column
+          align="center"
+          prop="h"
+          show-overflow-tooltip
+          label="IP/所属国"
+        />
+        <el-table-column
+          align="center"
+          prop="h"
+          show-overflow-tooltip
+          label="调查开始时间~结束时间"
+        />
+        <ElTableColumn align="center" show-overflow-tooltip prop="" label="状态">
+          <el-text style="color: hotpink;" class="mx-1">未完成</el-text>
+        </ElTableColumn>
         <template #empty>
           <el-empty class="vab-data-empty" description="暂无数据" />
         </template>

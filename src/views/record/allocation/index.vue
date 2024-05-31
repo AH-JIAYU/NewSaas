@@ -118,7 +118,7 @@ onMounted(() => {
                 v-model.trim="queryForm.select.name"
                 clearable
                 :inline="false"
-                placeholder="供应商"
+                placeholder="客户简称"
               />
             </el-form-item>
 
@@ -126,14 +126,14 @@ onMounted(() => {
               <el-select
                 v-model="queryForm.select.default"
                 clearable
-                placeholder="分配组"
+                placeholder="分配类型"
               />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
               <el-select
                 v-model="queryForm.select.default"
                 clearable
-                placeholder="状态"
+                placeholder="分配人"
               />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
@@ -219,43 +219,26 @@ onMounted(() => {
           align="center"
           prop="c"
           show-overflow-tooltip
-          label="供应商"
+          label="客户简称"
         />
         <el-table-column
           align="center"
           prop="d"
           show-overflow-tooltip
-          label="会员小组"
+          label="分配类型"
         />
         <el-table-column
           align="center"
           prop="e"
           show-overflow-tooltip
-          label="组长ID"
+          label="分配目标"
         />
         <el-table-column
           align="center"
           prop="f"
           show-overflow-tooltip
-          label="项目渠道"
+          label="分配人"
         />
-        <el-table-column
-          align="center"
-          prop="g"
-          show-overflow-tooltip
-          label="状态"
-        >
-          <template #default="{ row }">
-            <el-switch
-              v-model="row.k"
-              :active-value="true"
-              :inactive-value="false"
-              inline-prompt
-              active-text="有效"
-              inactive-text="失效"
-            />
-          </template>
-        </el-table-column>
         <el-table-column
           align="center"
           prop="h"

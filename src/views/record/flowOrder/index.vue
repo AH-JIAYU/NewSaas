@@ -116,7 +116,7 @@ onMounted(() => {
                 v-model.trim="queryForm.select.name"
                 clearable
                 :inline="false"
-                placeholder="供应商"
+                placeholder="客户简称"
               />
             </el-form-item>
 
@@ -124,7 +124,7 @@ onMounted(() => {
               <el-select
                 v-model="queryForm.select.default"
                 clearable
-                placeholder="分配组"
+                placeholder="分配类型"
               />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
@@ -215,19 +215,31 @@ onMounted(() => {
           align="center"
           prop="c"
           show-overflow-tooltip
-          label="供应商"
+          label="客户简称"
         />
         <el-table-column
           align="center"
           prop="d"
           show-overflow-tooltip
-          label="子会员小组"
+          label="分配类型"
         />
         <el-table-column
           align="center"
           prop="h"
           show-overflow-tooltip
-          label="流单日期"
+          label="分配目标"
+        />
+        <el-table-column
+          align="center"
+          prop="h"
+          show-overflow-tooltip
+          label="分配人"
+        />
+        <el-table-column
+          align="center"
+          prop="h"
+          show-overflow-tooltip
+          label="流单时间"
         />
         <template #empty>
           <el-empty class="vab-data-empty" description="暂无数据" />

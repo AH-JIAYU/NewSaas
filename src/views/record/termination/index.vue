@@ -103,7 +103,7 @@ onMounted(() => {
                 v-model.trim="queryForm.select.id"
                 clearable
                 :inline="false"
-                placeholder="供应商"
+                placeholder="子会员ID"
               />
             </el-form-item>
             <el-form-item label="">
@@ -111,7 +111,7 @@ onMounted(() => {
                 v-model.trim="queryForm.select.name"
                 clearable
                 :inline="false"
-                placeholder="子会员"
+                placeholder="供应商ID"
               />
             </el-form-item>
             <el-form-item label="">
@@ -131,18 +131,25 @@ onMounted(() => {
               />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
+              <el-select
+                v-model="queryForm.select.default"
+                clearable
+                placeholder="客户简称"
+              />
+            </el-form-item>
+            <el-form-item v-show="!fold" label="">
               <el-input
                 v-model.trim="queryForm.select.name"
                 clearable
                 :inline="false"
-                placeholder="客户简称"
+                placeholder="IP地址"
               />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
               <el-select
                 v-model="queryForm.select.default"
                 clearable
-                placeholder="国家"
+                placeholder="所属国家"
               />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
@@ -218,17 +225,17 @@ onMounted(() => {
           type="selection"
         />
         <el-table-column
-          v-if="checkList.includes('a')"
-          align="center"
-          prop="id"
-          show-overflow-tooltip
-          label="供应商"
-        />
-        <el-table-column
           align="center"
           prop="b"
           show-overflow-tooltip
           label="子会员"
+        />
+        <el-table-column
+          v-if="checkList.includes('a')"
+          align="center"
+          prop="id"
+          show-overflow-tooltip
+          label="供应商ID"
         />
         <el-table-column
           align="center"
@@ -240,25 +247,13 @@ onMounted(() => {
           align="center"
           prop="d"
           show-overflow-tooltip
-          label="项目名称"
+          label="项目名称/客户简称"
         />
         <el-table-column
           align="center"
           prop="d"
           show-overflow-tooltip
-          label="客户简称"
-        />
-        <el-table-column
-          align="center"
-          prop="d"
-          show-overflow-tooltip
-          label="IP"
-        />
-        <el-table-column
-          align="center"
-          prop="d"
-          show-overflow-tooltip
-          label="国家"
+          label="IP/所属国"
         />
         <el-table-column
           align="center"
