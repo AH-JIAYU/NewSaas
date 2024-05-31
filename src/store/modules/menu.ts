@@ -206,11 +206,11 @@ const useMenuStore = defineStore(
     }
     // 生成导航（前端生成）
     function generateMenusAtFront() {
-      filesystemMenusRaw.value = menu.filter(item => item.children.length !== 0)
+      filesystemMenusRaw.value = menu.filter((item:any) => item.children.length !== 0)
     }
     // 生成导航（后端生成）
     async function generateMenusAtBack() {
-      await apiApp.menuList().then((res) => {
+      await apiApp.menuList().then((res:any) => {
         filesystemMenusRaw.value = (res.data as Menu.recordMainRaw[]).filter(item => item.children.length !== 0)
       }).catch(() => {})
     }
@@ -222,7 +222,7 @@ const useMenuStore = defineStore(
       }
       else {
         // 如果是 string 类型，则认为是路由，需要查找对应的主导航索引
-        const findIndex = allMenus.value.findIndex(item => item.children.some(r => data.indexOf(`${r.path}/`) === 0 || data === r.path))
+        const findIndex = allMenus.value.findIndex((item:any) => item.children.some((r:any) => data.indexOf(`${r.path}/`) === 0 || data === r.path))
         if (findIndex >= 0) {
           actived.value = findIndex
         }

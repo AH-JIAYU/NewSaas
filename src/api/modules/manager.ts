@@ -1,14 +1,7 @@
 import api from '../index'
 
 export default {
-  list: (data: {
-    account?: string
-    name?: string
-    mobile?: string
-    sex?: number | string
-    from: number
-    limit: number
-  }) => api.get('manager/list', {
+  list: (data: any) => api.get('manager/list', {
     params: data,
     baseURL: '/mock/',
   }),

@@ -56,7 +56,7 @@ const dictionaryItem = ref({
 
 function getDictionaryList() {
   dictionaryItem.value.search.dictionaryId = ''
-  apiDictionary.list().then((res) => {
+  apiDictionary.list().then((res:any) => {
     dictionary.value.tree = res.data
   })
 }

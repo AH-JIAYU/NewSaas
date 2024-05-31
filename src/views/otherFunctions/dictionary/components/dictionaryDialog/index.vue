@@ -78,7 +78,7 @@ const formRules = ref<FormRules>({
 
 onMounted(() => {
   if (props.id !== '') {
-    apiDictionary.detail(props.id).then((res) => {
+    apiDictionary.detail(props.id).then((res:any) => {
       // form.value.parentId = res.data.parentId
       form.value.id = res.data.id
       form.value.name = res.data.name
@@ -91,7 +91,7 @@ function onSubmit() {
   if (form.value.id === '') {
     formRef.value && formRef.value.validate((valid) => {
       if (valid) {
-        apiDictionary.create(form.value).then((res) => {
+        apiDictionary.create(form.value).then((res:any) => {
           ElMessage.success({
             message: '模拟新增成功',
             center: true,

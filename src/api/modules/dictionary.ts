@@ -26,12 +26,7 @@ export default {
     baseURL: '/mock/',
   }),
 
-  itemList: (data: {
-    dictionary_id: number | string
-    title?: string
-    from: number
-    limit: number
-  }) => api.get('dictionary/item/list', {
+  itemList: (data:any) => api.get('dictionary/item/list', {
     params: data,
     baseURL: '/mock/',
   }),

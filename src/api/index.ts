@@ -55,7 +55,7 @@ api.interceptors.response.use(
     }
     return Promise.resolve(response.data);
   },
-  (error) => {
+  (error: any) => {
     let message = error.message;
     if (message === "Network Error") {
       message = "后端网络故障";

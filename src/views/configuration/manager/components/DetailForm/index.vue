@@ -13,7 +13,7 @@ const props = withDefaults(
 )
 
 const roleList = ref<any>([])
-apiRole.allList().then((res) => {
+apiRole.allList().then((res:any) => {
   roleList.value = res.data.list
 })
 
