@@ -406,7 +406,7 @@ const resetCheck = () => {
           <ElFormItem prop="code" v-if="loginType === 'code'">
             <ElInput
               v-model="loginForm.code"
-              type="password"
+              type="text"
               :placeholder="t('app.captcha')"
               tabindex="2"
               @keyup.enter="handleLogin"
@@ -714,7 +714,7 @@ const resetCheck = () => {
   z-index: 0;
   width: 100%;
   height: 100%;
-  background: url("http://localhost:15000/static/img/background.463e5eee.jpg");
+  background: url("../assets/images/background.jpg");
   // background: radial-gradient(
   //   circle at center,
   //   var(--g-container-bg),
