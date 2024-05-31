@@ -1,9 +1,0 @@
-
-/**
- * 由 Fantastic-admin 提供技术支持
- * Powered by Fantastic-admin
- * Gitee  https://fantastic-admin.gitee.io
- * Github https://fantastic-admin.github.io
- */
-
-import f from"./index-BMzgQOz-.js";import{d as V,r as l,a0 as D,a as c,o as s,b as i,F as T,f as m,w as b,g as L,n as S,e as _,al as B}from"./index-1E3Ahbco.js";const w=V({__name:"index",props:{leftTabsData:Array,validateTopTabs:Array},setup(h){const v=h,g=l(),e=l(v.leftTabsData),k=l(v.validateTopTabs);e.value.forEach((t,a)=>{const u=l(null);D(`formRef${a}`,u)});const d=l(0),n=l(0),C={customerAccord:"客户名称",customerShortName:"",companyName:"",customerName:"",customerPhone:"",emailAddress:"",chargeName:"李林桂",settlementCycle:7,customerStatus:null,antecedentQuestionnaire:null,riskControl:null,turnover:null,rateAudit:null};function x(){B(e.value[0]),n.value=++d.value,e.value.push({...C})}function y(t){e.value.splice(t,1),k.value.splice(t,1),n.value>=e.value.length&&(n.value=Math.max(0,e.value.length-1),d.value=Math.max(0,e.value.length-1))}function p(t){e.value.forEach(a=>{a.client=t}),g.value=t}return(t,a)=>{const u=c("el-button"),A=c("el-tab-pane"),N=c("el-tabs");return s(),i("div",null,[e.value[0].id?(s(),_(f,{key:1,"left-tab":e.value[0],onSetClient:p},null,8,["left-tab"])):(s(),i(T,{key:0},[m(u,{class:"button",disabled:e.value.length>9,onClick:a[0]||(a[0]=o=>x())},{default:b(()=>[L(" 新增客户 ")]),_:1},8,["disabled"]),m(N,{modelValue:n.value,"onUpdate:modelValue":a[1]||(a[1]=o=>n.value=o),"tab-position":"left",onTabRemove:y},{default:b(()=>[(s(!0),i(T,null,S(e.value,(o,r)=>(s(),_(A,{key:r,closable:e.value.length!==1,label:o.customerAccord,name:r},{default:b(()=>[m(f,{"left-tab":o,"tab-index":r,onSetClient:p},null,8,["left-tab","tab-index"])]),_:2},1032,["closable","label","name"]))),128))]),_:1},8,["modelValue"])],64))])}}});export{w as _};
