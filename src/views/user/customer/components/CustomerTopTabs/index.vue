@@ -1,24 +1,22 @@
 <script lang="ts" setup>
-import { ElForm } from 'element-plus'
-import { defineProps, ref } from 'vue'
+import { ElForm } from "element-plus";
+import { defineProps, ref } from "vue";
 
 // 如果希望默认展示第一个 Tab
 const props = defineProps({
   leftTab: Object,
   tabIndex: Number,
-})
-const emit = defineEmits(['setClient'])
-const activeName = ref('basicSettings')
-const form = ref({
-
-})
-const isTrue = ref(true)
-function showEdit() { }
-defineExpose({ showEdit })
+});
+const emit = defineEmits(["setClient"]);
+const activeName = ref("basicSettings");
+const form = ref({});
+const isTrue = ref(true);
+function showEdit() {}
+defineExpose({ showEdit });
 // 使用 InstanceType 来获取 ElForm 实例的类型
-const formRef = ref(null)
+const formRef = ref(null);
 // 注入主组件中的提供者
-const localToptTab = ref<any>(props.leftTab)
+const localToptTab = ref<any>(props.leftTab);
 </script>
 
 <template>
@@ -40,7 +38,10 @@ const localToptTab = ref<any>(props.leftTab)
               </el-col>
               <el-col :span="12">
                 <el-form-item label="客户简称" prop="customerShortName">
-                  <el-input v-model="localToptTab.customerShortName" clearable />
+                  <el-input
+                    v-model="localToptTab.customerShortName"
+                    clearable
+                  />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
@@ -65,12 +66,16 @@ const localToptTab = ref<any>(props.leftTab)
               </el-col>
               <el-col :span="12">
                 <el-form-item label="负责人" prop="chargeName">
-                  <!-- <el-select v-model="localToptTab.chargeName" /> -->
+                  <el-input v-model="localToptTab.chargeName" />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item label="结算周期" prop="settlementCycle">
-                  <!-- <el-select v-model="localToptTab.settlementCycle" /> -->
+                  <el-input-number
+                    v-model="localToptTab.settlementCycle"
+                    controls-position="right"
+                    :min="0"
+                  />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -83,28 +88,57 @@ const localToptTab = ref<any>(props.leftTab)
             </template>
             <el-row :gutter="24">
               <el-col :span="3">
-                <el-form-item label="客户状态" prop="top">
-                  <el-switch v-model="localToptTab.customerStatus" :active-value="1" :inactive-value="2" inline-prompt active-text="开启" inactive-text="关闭" />
+                <el-form-item label="客户状态">
+                  <el-switch
+                    v-model="localToptTab.customerStatus"
+                    :active-value="2"
+                    :inactive-value="1"
+                    inline-prompt
+                    active-text="开启"
+                    inactive-text="关闭"
+                  />
                 </el-form-item>
               </el-col>
               <el-col :span="3">
-                <el-form-item label="前置问卷" prop="top">
-                  <el-switch v-model="localToptTab.antecedentQuestionnaire" :active-value="1" :inactive-value="2" inline-prompt active-text="开启" inactive-text="关闭" />
+                <el-form-item label="前置问卷">
+                  <el-switch
+                    v-model="localToptTab.antecedentQuestionnaire"
+                    :active-value="2"
+                    :inactive-value="1"
+                    inline-prompt
+                    active-text="开启"
+                    inactive-text="关闭"
+                  />
                 </el-form-item>
               </el-col>
               <el-col :span="18">
-                <el-form-item label="风险控制" prop="top">
-                  <el-switch v-model="localToptTab.riskControl" :active-value="1" :inactive-value="2" inline-prompt active-text="开启" inactive-text="关闭" />
+                <el-form-item label="风险控制">
+                  <el-switch
+                    v-model="localToptTab.riskControl"
+                    :active-value="2"
+                    :inactive-value="1"
+                    inline-prompt
+                    active-text="开启"
+                    inactive-text="关闭"
+                  />
                 </el-form-item>
               </el-col>
               <el-col v-if="isTrue" :span="12">
-                <el-form-item label="营业限额/月" prop="top">
-                  <el-input v-model.number="localToptTab.turnover" clearable />
+                <el-form-item label="营业限额/月">
+                  <el-input-number
+                    v-model="localToptTab.turnover"
+                    controls-position="right"
+                    :min="0"
+                  />
                 </el-form-item>
               </el-col>
               <el-col v-if="isTrue" :span="12">
-                <el-form-item label="审核率Min值" prop="top">
-                  <el-input v-model.number="localToptTab.rateAudit" clearable />
+                <el-form-item label="审核率Min值">
+                  <el-input-number
+                    v-model="localToptTab.rateAudit"
+                    controls-position="right"
+                    :min="0"
+                  />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -124,6 +158,9 @@ const localToptTab = ref<any>(props.leftTab)
   .el-row {
     width: 94% !important;
     margin: auto !important;
+  }
+  .el-input-number {
+    width: 100%;
   }
 }
 </style>

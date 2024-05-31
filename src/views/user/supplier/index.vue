@@ -10,9 +10,7 @@ defineOptions({
 });
 
 const { pagination, onSizeChange, onCurrentChange } = usePagination(); // 分页
-
 const listLoading = ref(false);
-
 const list = ref<Array<Object>>([]); // 列表
 const selectRows = ref<any>(); // 表格-选中行
 const editRef = ref(); // 添加|编辑 组件ref

@@ -2,7 +2,7 @@ import api from "../index";
 
 export default {
   // 获取列表
-  list: (data: any) => api.post("tenantCustomer/getTenantCustomerList", data),
+  list: (data: any) => api.post("tenantSupplier/getTenantSupplierList", data),
   // 查询单个
   detail: (data: any) => api.post("tenantCustomer/getTenantCustomerInfo", data),
   // 新增

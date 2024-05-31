@@ -714,7 +714,9 @@ const resetCheck = () => {
   z-index: 0;
   width: 100%;
   height: 100%;
-  background: url("../assets/images/background.jpg");
+  background: url("../assets/images/background.jpg") center center fixed
+    no-repeat;
+  background-size: cover;
   // background: radial-gradient(
   //   circle at center,
   //   var(--g-container-bg),
