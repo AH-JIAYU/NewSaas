@@ -20,15 +20,7 @@ let leftTabsData = reactive<any>([]); // 明确指定类型为 LeftTab[]
 async function showEdit(row: any) {
   if (!row) {
     title.value = "添加";
-    leftTabsData = reactive([
-      {
-        name: "主项目",
-        // currency: surveyconfig.currency,
-        platform: {},
-        screen: {},
-        security: {},
-      },
-    ]);
+    leftTabsData = reactive([{ supplierAccord: "名称" }]);
   } else {
     title.value = "编辑";
     initializeLeftTabsData(row);
@@ -69,6 +61,8 @@ async function save() {
     // 实现全部校验  validateTopTabs为数组，每个元素为子组件的ref
     const ispass = (await Promise.all(arr)).every((item: any) => item);
     if (ispass) {
+      console.log('leftTabsData',leftTabsData);
+
       if (title.value === "添加") {
         // const { message }: any = await addSurvey(leftTabsData)
         // $baseMessage(message, 'success', 'hey')

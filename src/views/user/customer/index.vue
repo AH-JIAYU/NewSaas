@@ -8,7 +8,8 @@ defineOptions({
   name: "UserCustomerIndex",
 });
 
-const { pagination, onSizeChange, onCurrentChange } = usePagination(); // 分页
+const { pagination, getParams, onSizeChange, onCurrentChange } =
+  usePagination(); // 分页
 
 const listLoading = ref(false); // 加载
 const list = ref<Array<Object>>([]); // 表格数据
@@ -73,8 +74,6 @@ function handleDelete(row: any) {
 }
 
 const queryForm = reactive<any>({
-  page: 1,
-  limit: 10,
   customerShortName: "",
   customerStatus: null,
 });
@@ -91,20 +90,22 @@ function currentChange(page = 1) {
 // 重置数据
 function onReset() {
   Object.assign(queryForm, {
-    page: 1,
-    limit: 10,
     customerShortName: "",
     customerStatus: null,
   });
   queryData();
 }
 function queryData() {
-  queryForm.page = 1;
+  pagination.value.page = 1;
   fetchData();
 }
 async function fetchData() {
   listLoading.value = true;
-  const { data } = await api.list(queryForm);
+  const params = {
+    ...getParams(),
+    ...queryForm,
+  };
+  const { data } = await api.list(params);
   list.value = data.getTenantCustomerInfoList;
   pagination.value.total = Number(data.total);
   listLoading.value = false;

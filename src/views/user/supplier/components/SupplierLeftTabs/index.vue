@@ -23,11 +23,23 @@ const tabIndex = ref(0);
 const activeLeftTab = ref(0);
 
 const initialTopTabsData = {
-  name: "新建项目",
-  // currency: surveyconfig.currency,
-  platform: {},
-  screen: {},
-  security: {},
+  supplierAccord: "名称",
+  // subordinateCountryId: "", // 所属国家id
+  // supplierLevelId: "", // 供应商等级
+  // supplierName: "",   // 供应商姓名
+  // supplierPhone: "", // 手机号
+  // emailAddress: "", // 邮箱
+  // surveySystem: 0, // 调查系统:1:关闭 2:开启
+  // b2bStatus: 0, // B2B:1:关闭 2:开启
+  // b2cStatus: 0, // 	B2C:1:关闭 2:开启
+  // supplierStatus: 0, // 	供应商状态:1:关闭 2:开启 3:待审核
+  // relevanceCountryId: "", // 关联国家id
+  // relevanceCustomerId: 0, // 关联客户id
+  // payMethod: 0, // 付款方式
+  // accountName: "", // 账户名称
+  // collectionAccount: "", // 	收款账号
+  // settlementCycle: 0, // 结算周期
+  // bankName: "", // 付款方式为银行支付的时候需要填银行名称
 };
 
 // 同步主项目
@@ -82,7 +94,7 @@ function setclient(data: number) {
           v-for="(leftTab, index) in localLeftTab"
           :key="index"
           :closable="localLeftTab.length !== 1"
-          :label="leftTab.name"
+          :label="leftTab.supplierAccord"
           :name="index"
         >
           <div
