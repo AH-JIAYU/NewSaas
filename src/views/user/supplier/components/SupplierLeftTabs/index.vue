@@ -45,6 +45,8 @@ const initialTopTabsData = {
 // 同步主项目
 function syncProject() {
   const syncdata = cloneDeep(localLeftTab.value[0]);
+  console.log('syncdata',syncdata);
+
   localLeftTab.value[activeLeftTab.value] = syncdata;
 }
 

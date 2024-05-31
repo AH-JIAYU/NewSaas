@@ -3,7 +3,7 @@ import { ElForm } from "element-plus";
 
 import { defineProps, ref } from "vue";
 // 如果希望默认展示第一个 Tab
-const props = defineProps({
+const props: any = defineProps({
   leftTab: Object,
   tabIndex: Number,
 });
@@ -20,8 +20,6 @@ defineExpose({ showEdit });
 // 使用 InstanceType 来获取 ElForm 实例的类型
 const formRef = ref(null);
 const form = ref<any>({});
-// 注入主组件中的提供者
-const localToptTab = ref<any>(props.leftTab);
 </script>
 
 <template>
@@ -38,37 +36,37 @@ const localToptTab = ref<any>(props.leftTab);
             <el-row :gutter="10">
               <el-col :span="8">
                 <el-form-item label="供应商名称" prop="supplierAccord">
-                  <el-input v-model="localToptTab.supplierAccord" clearable />
+                  <el-input v-model="props.leftTab.supplierAccord" clearable />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="所属国家" prop="">
                   <el-input
                     clearable
-                    v-model="localToptTab.subordinateCountryId"
+                    v-model="props.leftTab.subordinateCountryId"
                   />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="供应商等级" prop="">
-                  <el-input v-model="localToptTab.supplierLevelId"> </el-input>
+                  <el-input v-model="props.leftTab.supplierLevelId"> </el-input>
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="10">
               <el-col :span="8">
                 <el-form-item label="供应商姓名" prop="">
-                  <el-input clearable v-model="localToptTab.supplierName" />
+                  <el-input clearable v-model="props.leftTab.supplierName" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="手机号码" prop="name">
-                  <el-input clearable v-model="localToptTab.supplierPhone" />
+                  <el-input clearable v-model="props.leftTab.supplierPhone" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="电子邮箱" prop="">
-                  <el-input clearable v-model="localToptTab.emailAddress" />
+                  <el-input clearable v-model="props.leftTab.emailAddress" />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -82,7 +80,7 @@ const localToptTab = ref<any>(props.leftTab);
             <el-row :gutter="10">
               <el-form-item label="调查系统">
                 <ElSwitch
-                  v-model="localToptTab.surveySystem"
+                  v-model="props.leftTab.surveySystem"
                   inline-prompt
                   :inactive-value="1"
                   :active-value="2"
@@ -92,7 +90,7 @@ const localToptTab = ref<any>(props.leftTab);
               </el-form-item>
               <el-form-item label="B2B">
                 <ElSwitch
-                  v-model="localToptTab.b2bStatus"
+                  v-model="props.leftTab.b2bStatus"
                   inline-prompt
                   :inactive-value="1"
                   :active-value="2"
@@ -102,7 +100,7 @@ const localToptTab = ref<any>(props.leftTab);
               </el-form-item>
               <el-form-item label="B2C">
                 <ElSwitch
-                  v-model="localToptTab.b2cStatus"
+                  v-model="props.leftTab.b2cStatus"
                   inline-prompt
                   :inactive-value="1"
                   :active-value="2"
@@ -112,7 +110,7 @@ const localToptTab = ref<any>(props.leftTab);
               </el-form-item>
               <el-form-item label="供应商状态">
                 <ElSwitch
-                  v-model="localToptTab.supplierStatus"
+                  v-model="props.leftTab.supplierStatus"
                   inline-prompt
                   :inactive-value="1"
                   :active-value="2"
@@ -124,12 +122,12 @@ const localToptTab = ref<any>(props.leftTab);
             <el-row :gutter="20">
               <el-col :span="8">
                 <el-form-item label="关联国家">
-                  <el-input v-model="localToptTab.relevanceCountryId" />
+                  <el-input v-model="props.leftTab.relevanceCountryId" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="关联客户">
-                  <el-select v-model="localToptTab.relevanceCustomerId" />
+                  <el-select v-model="props.leftTab.relevanceCustomerId" />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -150,23 +148,23 @@ const localToptTab = ref<any>(props.leftTab);
               </el-col>
               <el-col :span="8">
                 <el-form-item label="账户名称">
-                  <el-input v-model="localToptTab.accountName" />
+                  <el-input v-model="props.leftTab.accountName" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="收款账号">
-                  <el-input v-model="localToptTab.collectionAccount" />
+                  <el-input v-model="props.leftTab.collectionAccount" />
                 </el-form-item>
               </el-col>
               <!-- 当付款方式为银行卡支付时显示 银行名称 -->
               <el-col :span="8" v-if="form.payment === 'bankCard'">
                 <el-form-item label="银行名称">
-                  <el-input v-model="localToptTab.bankName" />
+                  <el-input v-model="props.leftTab.bankName" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="结算周期">
-                  <el-input v-model="localToptTab.settlementCycle" />
+                  <el-input v-model="props.leftTab.settlementCycle" />
                 </el-form-item>
               </el-col>
             </el-row>

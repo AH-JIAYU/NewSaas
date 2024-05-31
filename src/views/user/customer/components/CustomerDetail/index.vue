@@ -107,12 +107,12 @@ defineExpose({
           </el-col>
           <el-col :span="8">
             <el-form-item label="创建人:">
-              <!-- <el-text class="mx-1"> {{ detailData.chargeName }} </el-text> -->
+              <el-text class="mx-1"> {{ detailData.createName }} </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="创建时间:">
-              <!-- <el-text class="mx-1"> {{detailData}} </el-text> -->
+              <el-text class="mx-1"> {{detailData.createTime}} </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
