@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
-import { ElMessageBox } from "element-plus";
+import { ElMessage, ElMessageBox } from "element-plus";
 import customerEdit from "./components/SupplierEdit/index.vue";
 import customerDetail from "./components/SupplierDetail/index.vue";
 import plusMinusPayments from "./components/SupplierPlusMinusPayments/index.vue";
@@ -26,12 +26,46 @@ const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const columns = ref<Array<Object>>([
   // 表格控件-展示列
   {
-    label: "等级名称",
-    prop: "a",
+    label: "供应商id",
+    checked: true,
     sortable: true,
-    disableCheck: false, // 不可更改
-    checked: true, // 默认展示
+    prop: "tenantSupplierId",
   },
+  {
+    label: "供应商名称+所属国",
+    checked: true,
+    sortable: true,
+    prop: "supplierAccord",
+  },
+  { label: "余额-美元", checked: true, sortable: true, prop: "balanceUs" },
+  {
+    label: "余额-人民币",
+    checked: true,
+    sortable: true,
+    prop: "balanceHumanLife",
+  },
+  {
+    label: "待审金额",
+    checked: true,
+    sortable: true,
+    prop: "amountPendingTrial",
+  },
+  {
+    label: "供应商等级id",
+    checked: true,
+    sortable: true,
+    prop: "supplierLevelId",
+  },
+  { label: "B2B|B2C", checked: true, sortable: true, prop: "B2B|B2C" },
+  { label: "结算周期", checked: true, sortable: true, prop: "settlementCycle" },
+  {
+    label: "供应商状态",
+    checked: true,
+    sortable: true,
+    prop: "supplierStatus",
+  },
+  { label: "创建时间", checked: true, sortable: true, prop: "createTime" },
+  { label: "备注", checked: true, sortable: true, prop: "remark" },
 ]);
 
 const queryForm = reactive<any>({
@@ -57,31 +91,29 @@ function handleEdit(row: any) {
 function handleCheck(row: any) {
   checkRef.value.showEdit(row);
 }
-// 更改状态
-function handleChange(fold: any, row: any) {
-  let msg = "";
-  switch (fold) {
-    case 0:
-      msg = "该注册用户成为";
-      break;
-    case 1:
-      msg = "启用该";
-      break;
-    case 2:
-      msg = "禁用该";
-      break;
-  }
-  ElMessageBox.confirm(`您确${msg}供应商吗?`, "确认信息")
-    .then(() => {
-      // apiManager.delete(row.id).then(() => {
-      //   getDataList()
-      //   ElMessage.success({
-      //     message: '模拟删除成功',
-      //     center: true,
-      //   })
-      // })
-    })
-    .catch(() => {});
+async function handleEditRemark(row: any) {
+  const { data } = await api.detail({ tenantSupplierId: row.tenantSupplierId });
+  data.remark = row.remark;
+  const { status } = await api.edit(data);
+  status === 1 &&
+    ElMessage.success({
+      message: "更新备注",
+      center: true,
+    });
+  queryData();
+}
+// 切换状态
+async function changeState(state: any, id: string) {
+  const params = {
+    status: state,
+    tenantSupplierId: id,
+  };
+  const { status } = await api.editState(params);
+  status === 1 &&
+    ElMessage.success({
+      message: "修改成功",
+    });
+  queryData();
 }
 
 // 重置请求
@@ -91,7 +123,15 @@ function queryData() {
 }
 // 重置筛选数据
 function onReset() {
-  Object.assign(queryForm, {});
+  Object.assign(queryForm, {
+    tenantSupplierId: "", //供应商id
+    supplierPhone: "", // 	手机号码-模糊查询
+    supplierAccord: "", // 供应商名称-模糊查询
+    emailAddress: "", // 	电子邮箱
+    accountName: "", // 	账户名称
+    supplierStatus: "", // 	供应商状态:1:关闭 2:开启 3:待审核
+    time: [], // 时间日期选择器
+  });
   fetchData();
 }
 function handlePlusMinusPayments(row: any) {
@@ -112,98 +152,14 @@ async function fetchData() {
   const params = {
     ...getParams(),
     ...queryForm,
-    beginTime: queryForm.time[0] || "",
-    endTime: queryForm.time[1] || "",
   };
+  if (queryForm.time) {
+    params.beginTime = queryForm.time[0] || "";
+    params.endTime = queryForm.time[1] || "";
+  }
   const { data } = await api.list(params);
-  list.value = data.getTenantCustomerInfoList;
+  list.value = data.getTenantSupplierInfoList;
   pagination.value.total = data.total;
-  // list.value = [
-  //   {
-  //     a: 1,
-  //     b: 2,
-  //     c: "张3(中国)",
-  //     d: 4,
-  //     e: 5,
-  //     f: 6,
-  //     g: 7,
-  //     h: 8,
-  //     r: 9,
-  //     i: 10,
-  //     id: 1,
-  //     name: "name",
-  //   },
-  //   {
-  //     a: 1,
-  //     b: 2,
-  //     c: "张3(中国)",
-  //     d: 4,
-  //     e: 5,
-  //     f: 6,
-  //     g: 7,
-  //     h: 8,
-  //     r: 9,
-  //     i: 10,
-  //     id: 1,
-  //     name: "name",
-  //   },
-  //   {
-  //     a: 1,
-  //     b: 2,
-  //     c: "张3(中国)",
-  //     d: 4,
-  //     e: 5,
-  //     f: 6,
-  //     g: 7,
-  //     h: 8,
-  //     r: 9,
-  //     i: 10,
-  //     id: 1,
-  //     name: "name",
-  //   },
-  //   {
-  //     a: 1,
-  //     b: 2,
-  //     c: "张3(中国)",
-  //     d: 4,
-  //     e: 5,
-  //     f: 6,
-  //     g: 7,
-  //     h: 8,
-  //     r: 9,
-  //     i: 10,
-  //     id: 1,
-  //     name: "name",
-  //   },
-  //   {
-  //     a: 1,
-  //     b: 2,
-  //     c: "张3(中国)",
-  //     d: 4,
-  //     e: 5,
-  //     f: 6,
-  //     g: 7,
-  //     h: 8,
-  //     r: 9,
-  //     i: 10,
-  //     id: 1,
-  //     name: "name",
-  //   },
-  //   {
-  //     a: 1,
-  //     b: 2,
-  //     c: "张3(中国)",
-  //     d: 4,
-  //     e: 5,
-  //     f: 6,
-  //     g: 7,
-  //     h: 8,
-  //     r: 9,
-  //     i: 10,
-  //     id: 1,
-  //     name: "name",
-  //   },
-  // ];
   listLoading.value = false;
 }
 // 表格-单选框
@@ -217,7 +173,7 @@ onMounted(() => {
       checkList.value.push(item.prop);
     }
   });
-  fetchData();
+  queryData();
 });
 </script>
 
@@ -247,7 +203,7 @@ onMounted(() => {
                 v-model.trim="queryForm.supplierAccord"
                 clearable
                 :inline="false"
-                placeholder="供应商简称"
+                placeholder="供应商名称"
               />
             </el-form-item>
             <el-form-item label="">
@@ -280,8 +236,9 @@ onMounted(() => {
                 clearable
                 placeholder="供应商状态"
               >
-                <el-option label="默认" value="true" />
-                <el-option label="关闭" value="false" />
+                <el-option label="开启" :value="2" />
+                <el-option label="关闭" :value="1" />
+                <el-option label="待审批" :value="3" />
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
@@ -366,48 +323,64 @@ onMounted(() => {
           label="供应商ID"
         />
         <el-table-column
+          v-if="checkList.includes('supplierAccord')"
           align="center"
           prop="supplierAccord"
           show-overflow-tooltip
           label="供应商名称(所属国家)"
         />
         <el-table-column
+          v-if="checkList.includes('balanceUs')"
           align="center"
           prop="balanceUs"
           show-overflow-tooltip
           label="余额($)"
         />
         <el-table-column
+          v-if="checkList.includes('balanceHumanLife')"
           align="center"
           prop="balanceHumanLife"
           show-overflow-tooltip
           label="余额(￥)"
         />
         <el-table-column
+          v-if="checkList.includes('amountPendingTrial')"
           align="center"
           prop="amountPendingTrial"
           show-overflow-tooltip
           label="待审金额"
         />
         <el-table-column
+          v-if="checkList.includes('supplierLevelId')"
           align="center"
-          prop="f"
+          prop="supplierLevelId"
           show-overflow-tooltip
           label="供应商等级"
         />
-        <el-table-column align="center" show-overflow-tooltip label="B2B|B2C">
+        <el-table-column
+          v-if="checkList.includes('B2B|B2C')"
+          align="center"
+          show-overflow-tooltip
+          label="B2B|B2C"
+        >
           <template #default="{ row }">
             {{ row.b2bStatus === 1 ? "×" : "√" }} |
             {{ row.b2cStatus === 1 ? "×" : "√" }}
           </template>
         </el-table-column>
         <el-table-column
+          v-if="checkList.includes('settlementCycle')"
           align="center"
           prop="settlementCycle"
           show-overflow-tooltip
           label="结算周期"
         />
-        <ElTableColumn align="center" show-overflow-tooltip label="供应商状态">
+        <ElTableColumn
+          v-if="checkList.includes('supplierStatus')"
+          align="center"
+          show-overflow-tooltip
+          label="供应商状态"
+        >
           <template #default="{ row }">
             <ElSwitch
               v-if="row.supplierStatus === 3"
@@ -417,6 +390,7 @@ onMounted(() => {
               :active-value="3"
               inactive-text="启用"
               active-text="待审核"
+              @change="changeState($event, row.tenantSupplierId)"
             />
             <ElSwitch
               v-else
@@ -426,21 +400,28 @@ onMounted(() => {
               :active-value="2"
               inactive-text="禁用"
               active-text="启用"
+              @change="changeState($event, row.tenantSupplierId)"
             />
           </template>
         </ElTableColumn>
         <el-table-column
+          v-if="checkList.includes('createTime')"
           align="center"
           prop="createTime"
           show-overflow-tooltip
           label="创建日期"
         />
         <el-table-column
+          v-if="checkList.includes('remark')"
           align="center"
           prop="remark"
           show-overflow-tooltip
           label="备注"
-        />
+        >
+          <template #default="{ row }">
+            <el-input v-model="row.remark" @blur="handleEditRemark(row)" />
+          </template>
+        </el-table-column>
         <el-table-column
           align="center"
           prop="i"

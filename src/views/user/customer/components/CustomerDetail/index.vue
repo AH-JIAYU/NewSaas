@@ -9,7 +9,6 @@ const drawerisible = ref<boolean>(false);
 const checkRef = ref<any>();
 const detailData = ref<any>(); // 详情数据
 const detailStatus = ref("开启");
-const title = ref<string>("详情");
 async function showEdit(row: any) {
   const params = {
     tenantCustomerId: row.tenantCustomerId,
@@ -50,7 +49,7 @@ defineExpose({
     destroy-on-close
     draggable
     size="60%"
-    :title="title"
+    title="详情"
     @close="close"
   >
     <el-form label-width="100px" label-position="right">
@@ -61,7 +60,7 @@ defineExpose({
 
             <div class="status">
               <div class="i-ph:seal-light w-1em h-1em"></div>
-              <div>{{ detailStatus }}</div>
+              <div></div>
             </div>
           </div>
         </template>
@@ -112,7 +111,7 @@ defineExpose({
           </el-col>
           <el-col :span="8">
             <el-form-item label="创建时间:">
-              <el-text class="mx-1"> {{detailData.createTime}} </el-text>
+              <el-text class="mx-1"> {{ detailData.createTime }} </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -195,7 +194,6 @@ defineExpose({
               >
                 详情
               </el-button>
-              <span v-else> -</span>
             </template>
           </el-table-column>
         </el-table>

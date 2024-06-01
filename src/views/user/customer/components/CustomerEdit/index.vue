@@ -85,7 +85,7 @@ function hasDuplicateCustomer(customers: any) {
 }
 // 暂存
 function staging() {
-  StagedData.userCustomer = leftTabsData;
+  StagedData.userCustomer = cloneDeep(leftTabsData);
   leftTabsData = reactive<any>([]);
   drawerisible.value = false;
   validateTopTabs.value = [];
@@ -165,7 +165,9 @@ defineExpose({
       />
       <template #footer>
         <el-button @click="close"> 取消 </el-button>
-        <el-button type="warning" @click="staging"> 暂存 </el-button>
+        <el-button v-if="title === '添加'" type="warning" @click="staging">
+          暂存
+        </el-button>
         <el-button type="primary" @click="save"> 确定 </el-button>
       </template>
     </el-drawer>

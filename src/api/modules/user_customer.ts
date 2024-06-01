@@ -16,4 +16,6 @@ export default {
   delete: (data: any) => api.post("tenantCustomer/deleteTenantCustomer", data),
   // 编辑类型日志
   getRecordList: (data: any) => api.post("tenantCustomer/getTenantCustomerOperationRecordList", data),
+  // 获取客户列表-供应商页面用到
+  getCustomerList: (data: any) => api.post("tenantCustomer/getTenantCustomerAccordList", data),
 };

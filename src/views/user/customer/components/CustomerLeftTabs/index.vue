@@ -38,12 +38,6 @@ const initialTopTabsData = {
   rateAudit: null, //审核Min值
 };
 
-// // 同步主项目
-// function syncProject() {
-//   const syncdata = cloneDeep(localLeftTab.value[0]);
-//   localLeftTab.value[activeLeftTab.value] = syncdata;
-// }
-
 function addLeftTab() {
   activeLeftTab.value = ++tabIndex.value;
   localLeftTab.value.push({
@@ -89,25 +83,6 @@ function setclient(data: number) {
           :label="leftTab.customerAccord"
           :name="index"
         >
-          <!-- 在每个左侧 Tab 中使用 TopTabs 组件 -->
-          <!-- <el-button
-        style="margin-bottom: 5px"
-        v-if="activeLeftTab > 0"
-        size="small"
-        type="primary"
-        round
-        plain
-        @click="syncProject"
-      >
-        同步主项目数据
-      </el-button>
-      <HTooltip
-        style="z-index: 9; color: #48a2ff; margin-left: 5px"
-        text="注意噢！"
-        v-if="activeLeftTab > 0"
-      >
-        <div class="i-bi:exclamation-circle h-1em w-1em" />
-      </HTooltip> -->
           <TopTabs
             :left-tab="leftTab"
             :tab-index="index"

@@ -20,17 +20,32 @@ const border = ref(true); // 表格控件-边框
 const stripe = ref(false); // 表格控件-条纹
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const lineHeight = ref<any>("default"); // 表格控件-大小
-const checkList = ref([]); // 表格控件-展示列
+const checkList = ref<any>([]); // 表格控件-展示列
 const columns = ref([
-  // 表格控件-展示列配置
   {
-    label: "等级名称",
-    prop: "name",
-    sortable: true,
-    // 不可改变的
-    disableCheck: true,
+    label: "客户编码",
     checked: true,
+    sortable: true,
+    prop: "tenantCustomerId",
   },
+  { label: "客户名称", checked: true, sortable: true, prop: "customerAccord" },
+  {
+    label: "客户简称",
+    checked: true,
+    sortable: true,
+    prop: "customerShortName",
+  },
+  { label: "负责人", checked: true, sortable: true, prop: "chargeName" },
+  { label: "客户状态", checked: true, sortable: true, prop: "customerStatus" },
+  {
+    label: "前置问卷",
+    checked: true,
+    sortable: true,
+    prop: "antecedentQuestionnaire",
+  },
+  { label: "风险控制", checked: true, sortable: true, prop: "riskControl" },
+  { label: "营业限额/月", checked: true, sortable: true, prop: "turnover" },
+  { label: "审核率Min值", checked: true, sortable: true, prop: "rateAudit" },
 ]);
 // 添加
 function handleAdd() {
@@ -52,6 +67,7 @@ async function changeState(state: any, type: number, id: string) {
     ElMessage.success({
       message: "修改成功",
     });
+  queryData();
 }
 // 查看
 function handleCheck(row: Object) {
@@ -114,6 +130,11 @@ function setSelectRows(val: any) {
   selectRows.value = val;
 }
 onMounted(() => {
+  columns.value.forEach((item: any) => {
+    if (item.checked) {
+      checkList.value.push(item.prop);
+    }
+  });
   queryData();
 });
 </script>
@@ -131,9 +152,6 @@ onMounted(() => {
             inline
             class="search-form"
           >
-            <!-- <el-form-item>
-              <el-input v-model.trim="queryForm.select.id" clearable :inline="false" placeholder="客户简称" />
-            </el-form-item> -->
             <el-form-item v-show="!fold">
               <el-input
                 v-model="queryForm.customerShortName"
@@ -213,41 +231,54 @@ onMounted(() => {
       >
         <el-table-column
           align="center"
-          prop="a"
           show-overflow-tooltip
           type="selection"
         />
         <el-table-column
+          v-if="checkList.includes('tenantCustomerId')"
+          align="center"
+          prop="tenantCustomerId"
+          show-overflow-tooltip
+          label="客户编码"
+        />
+        <el-table-column
+          v-if="checkList.includes('customerAccord')"
           align="center"
           prop="customerAccord"
           show-overflow-tooltip
           label="客户名称"
         />
+
         <el-table-column
+          v-if="checkList.includes('customerShortName')"
           align="center"
           prop="customerShortName"
           show-overflow-tooltip
           label="客户简称"
         />
         <el-table-column
+          v-if="checkList.includes('turnover')"
           align="center"
           prop="turnover"
           show-overflow-tooltip
           label="客户营业限额($/月)"
         />
         <el-table-column
+          v-if="checkList.includes('rateAudit')"
           align="center"
           prop="rateAudit"
           show-overflow-tooltip
           label="审核率Min值"
         />
         <el-table-column
+          v-if="checkList.includes('chargeName')"
           align="center"
           prop="chargeName"
           show-overflow-tooltip
           label="负责人"
         />
         <ElTableColumn
+          v-if="checkList.includes('customerStatus')"
           align="center"
           show-overflow-tooltip
           prop="customerStatus"
@@ -266,6 +297,7 @@ onMounted(() => {
           </template>
         </ElTableColumn>
         <ElTableColumn
+          v-if="checkList.includes('antecedentQuestionnaire')"
           align="center"
           show-overflow-tooltip
           prop="antecedentQuestionnaire"
@@ -284,6 +316,7 @@ onMounted(() => {
           </template>
         </ElTableColumn>
         <ElTableColumn
+          v-if="checkList.includes('riskControl')"
           align="center"
           show-overflow-tooltip
           prop="riskControl"

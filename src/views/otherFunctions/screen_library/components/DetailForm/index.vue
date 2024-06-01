@@ -4,7 +4,6 @@ import { loadingHide, loadingShow } from "@/components/SpinkitLoading/index"; //
 import { ElMessage } from "element-plus";
 import api from "@/api/modules/otherFunctions_screenLibrary";
 import useUserStore from "@/store/modules/user";
-
 import "survey-core/defaultV2.min.css";
 import "survey-creator-core/survey-creator-core.min.css";
 
@@ -26,6 +25,9 @@ surveyLocalization.supportedLocales = ["en", "fr", "zh-cn"]; //语言可以用�
 setLicenseKey(
   "ZjU4MjI0NjMtN2YzYi00ZDMyLWEyYmEtOTliMmVhZmEyODc5OzE9MjAyNS0wMi0yNA=="
 );
+// 添加属性id
+Serializer.addProperty("question", { name: "screen_id" });
+Serializer.addProperty("itemvalue", { name: "screen_id" });
 
 const props = defineProps(["id", "details"]);
 const emits = defineEmits(["onSubmit"]);
@@ -66,6 +68,19 @@ creator.onUploadFile.add((_, options) => {
     .catch((error) => {
       options.callback(error, "error");
     });
+});
+// 新增问题事件 添加id
+creator.onQuestionAdded.add(function (sender, options) {
+  var q = options.question;
+  const random = Math.random();
+  q.screen_id = String(random);
+  q.activeChoices=[]
+});
+// 新增答案事件 添加id
+creator.onItemValueAdded.add(function (_, options) {
+  var q = options.newItem;
+  const random = Math.random();
+  q.screen_id = String(random);
 });
 
 const loading = ref(false);
