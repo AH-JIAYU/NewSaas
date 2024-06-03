@@ -74,7 +74,7 @@ creator.onQuestionAdded.add(function (sender, options) {
   var q = options.question;
   const random = Math.random();
   q.screen_id = String(random);
-  q.activeChoices=[]
+  q.choices=[]
 });
 // 新增答案事件 添加id
 creator.onItemValueAdded.add(function (_, options) {

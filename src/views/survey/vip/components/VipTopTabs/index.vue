@@ -26,7 +26,7 @@ const localToptTab = ref<any>(props.leftTab)
 <template>
   <div>
     <el-tabs v-model="activeName">
-      <el-tab-pane label="基础设置" name="basicSettings">
+      <el-tab-pane label="新增会员" name="basicSettings">
         <ElForm ref="formRef" label-width="100px">
           <el-card class="box-card">
             <template #header>
@@ -34,53 +34,35 @@ const localToptTab = ref<any>(props.leftTab)
                 <span>基本信息</span>
               </div>
             </template>
-            <el-row :gutter="10">
+            <el-row :gutter="24">
               <el-col :span="8">
-                <el-form-item
-                  label="会员名称"
-                  prop="name"
-                  style="float: left; width: 18.5rem"
-                >
+                <el-form-item label="会员名称" prop="name">
                   <el-input v-model="localToptTab.name" clearable />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item
-                  label="所属国家"
-                  prop="client_pid"
-                  style="float: left; width: 18.5rem"
-                >
-                  <el-input clearable />
-                </el-form-item>
-              </el-col>
-              <el-col :span="8" />
-            </el-row>
-            <el-row :gutter="10">
-              <el-col :span="8">
-                <el-form-item
-                  label="会员姓名"
-                  prop="client_pid"
-                  style="float: left; width: 18.5rem"
-                >
+                <el-form-item label="所属国家" prop="client_pid">
                   <el-input clearable />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item
-                  label="手机号码"
-                  prop="name"
-                  style="float: left; width: 18.5rem"
-                >
+                <el-form-item label="会员姓名" prop="client_pid">
                   <el-input clearable />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item
-                  label="电子邮箱"
-                  prop="client_pid"
-                  style="float: left; width: 18.5rem"
-                >
+                <el-form-item label="手机号码" prop="name">
                   <el-input clearable />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="电子邮箱" prop="client_pid">
+                  <el-input clearable />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="初始密码" prop="client_pid">
+                  <el-input clearable value="123456" disabled />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -92,30 +74,23 @@ const localToptTab = ref<any>(props.leftTab)
               </div>
             </template>
             <el-row :gutter="20">
-              <el-col :span="8">
-                <el-form-item
-                  style="float: left; width: 18.5rem"
-                  label="B2B"
-                  prop="top"
-                >
+              <el-col :span="4">
+                <el-form-item label="B2B" prop="top">
                   <el-switch v-model="isTrue" />
                 </el-form-item>
               </el-col>
-              <el-col :span="8">
-                <el-form-item
-                  style="float: left; width: 18.5rem"
-                  label="B2C"
-                  prop="top"
-                >
+              <el-col :span="4">
+                <el-form-item label="B2C" prop="top">
                   <el-switch v-model="isTrue" />
                 </el-form-item>
               </el-col>
-              <el-col :span="8">
-                <el-form-item
-                  style="float: left; width: 18.5rem"
-                  label="会员状态"
-                  prop="top"
-                >
+              <el-col :span="4">
+                <el-form-item label="会员状态" prop="top">
+                  <el-switch v-model="isTrue" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="4">
+                <el-form-item label="免审" prop="top">
                   <el-switch v-model="isTrue" />
                 </el-form-item>
               </el-col>
@@ -123,39 +98,12 @@ const localToptTab = ref<any>(props.leftTab)
             <el-divider content-position="center" />
             <el-row :gutter="20">
               <el-col :span="8">
-                <el-form-item
-                  style="float: left; width: 18.5rem"
-                  label="角色"
-                  prop="top"
-                >
+                <el-form-item label="会员等级" prop="top">
                   <el-select />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item
-                  style="float: left; width: 18.5rem"
-                  label="提成比例(%)"
-                  prop="top"
-                >
-                  <el-select />
-                  <template #append>
-                    %
-                  </template>
-                </el-form-item>
-              </el-col>
-              <el-col :span="8">
-                <el-form-item label="免审" prop="top">
-                  <el-switch v-model="isTrue" />
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row :gutter="20">
-              <el-col :span="8">
-                <el-form-item
-                  style="float: left; width: 18.5rem"
-                  label="会员组"
-                  prop="top"
-                >
+                <el-form-item label="会员组" prop="top">
                   <el-select />
                 </el-form-item>
               </el-col>
@@ -167,6 +115,4 @@ const localToptTab = ref<any>(props.leftTab)
   </div>
 </template>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>

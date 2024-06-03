@@ -36,6 +36,7 @@ const data = ref({
   // 新增
   editProps: {
     id: "",
+    countryId: "",
     visible: false,
     row: "",
   },
@@ -66,7 +67,7 @@ onBeforeUnmount(() => {
     eventBus.off("get-data-list");
   }
 });
-
+// 获取列表
 function getDataList() {
   data.value.loading = true;
   const params = {
@@ -81,32 +82,29 @@ function getDataList() {
     pagination.value.total = res.data.getCountryListInfoList.length;
   });
 }
-// 分页 后端(刘)这块不好做分页，所有返回全部数据，前端做分页
+// 分页 后端(刘):这块不好做分页，所有返回全部数据，前端做分页
 const DataList = computed(() => {
   return data.value.dataList.slice(
     (pagination.value.page - 1) * pagination.value.size,
     pagination.value.page * pagination.value.size
   );
 });
-
 // 每页数量切换
 function sizeChange(size: number) {
   onSizeChange(size);
 }
-
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
   onCurrentChange(page);
 }
-
 // 字段排序
 function sortChange({ prop, order }: { prop: string; order: string }) {
   onSortChange(prop, order);
 }
-
 // 添加国家标题
-function onCreate() {
+function onCreate(row?: any) {
   data.value.editProps.id = "";
+  data.value.editProps.countryId = row ? row.countryId : "";
   data.value.editProps.row = "";
   data.value.editProps.visible = true;
 }
@@ -244,27 +242,6 @@ function onDelProject(row: any) {
           </template>
           新增前置问卷库
         </ElButton>
-        <ElButton
-          v-if="data.batch.enable"
-          size="default"
-          :disabled="!data.batch.selectionDataList.length"
-        >
-          单个批量操作按钮
-        </ElButton>
-        <ElButtonGroup v-if="data.batch.enable">
-          <ElButton
-            size="default"
-            :disabled="!data.batch.selectionDataList.length"
-          >
-            批量操作按钮组1
-          </ElButton>
-          <ElButton
-            size="default"
-            :disabled="!data.batch.selectionDataList.length"
-          >
-            批量操作按钮组2
-          </ElButton>
-        </ElButtonGroup>
       </ElSpace>
       <ElTable
         v-loading="data.loading"
@@ -337,7 +314,6 @@ function onDelProject(row: any) {
             </div>
           </template>
         </el-table-column>
-        <!-- <ElTableColumn prop="categoryName" label="标题" /> -->
         <ElTableColumn prop="countryId" label="国家" />
         <ElTableColumn prop="isDefault" label="默认">
           <template #default="scope">
@@ -349,19 +325,16 @@ function onDelProject(row: any) {
             />
           </template>
         </ElTableColumn>
-        <!-- <ElTableColumn prop="status" label="状态">
-          <template #default="scope">
-            <ElSwitch
-              v-if="scope.row.status"
-              @change="changeIsDefault(scope.row)"
-              v-model="scope.row.status"
-              :active-value="1"
-              :inactive-value="2"
-            />
-          </template>
-        </ElTableColumn> -->
         <ElTableColumn label="操作" width="250" align="center" fixed="right">
           <template #default="scope">
+            <ElButton
+              type="primary"
+              size="small"
+              plain
+              @click="onCreate(scope.row)"
+            >
+              新增问卷
+            </ElButton>
             <ElButton
               type="danger"
               size="small"
@@ -387,7 +360,9 @@ function onDelProject(row: any) {
       />
     </PageMain>
     <Edit
+      v-if="data.editProps.visible"
       :id="data.editProps.id"
+      :countryId="data.editProps.countryId"
       v-model="data.editProps.visible"
       :row="data.editProps.row"
       @success="getDataList"
@@ -404,16 +379,6 @@ function onDelProject(row: any) {
 </template>
 
 <style lang="scss" scoped>
-:deep {
-  // .hide-table-header {
-  //   .el-table__header-wrapper {
-  //     display: none !important;
-  //   }
-  // }
-  // .el-table__cell.el-table__expanded-cell {
-  //     padding: 0;
-  //   }
-}
 .absolute-container {
   position: absolute;
   width: 100%;
