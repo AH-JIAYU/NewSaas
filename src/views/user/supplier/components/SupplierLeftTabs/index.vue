@@ -2,11 +2,13 @@
 import { cloneDeep } from "lodash-es";
 import { defineProps, provide, ref } from "vue";
 import TopTabs from "../SupplierTopTabs/index.vue";
-// import { useAclStore } from '/@/store/modules/acl'
+import UseUserSupplier from "@/store/modules/userSupplier";
+const userSupplier = UseUserSupplier();
 
 const props = defineProps({
   leftTabsData: Array,
   validateTopTabs: Array,
+  title: String,
 });
 const client = ref();
 const localLeftTab = ref<any>(props.leftTabsData);
@@ -22,14 +24,6 @@ localLeftTab.value.forEach((tab: any, index: any) => {
 const tabIndex = ref(0);
 const activeLeftTab = ref(0);
 
-const initialTopTabsData = {
-  name: "新建项目",
-  // currency: surveyconfig.currency,
-  platform: {},
-  screen: {},
-  security: {},
-};
-
 // 同步主项目
 function syncProject() {
   const syncdata = cloneDeep(localLeftTab.value[0]);
@@ -40,7 +34,7 @@ function addLeftTab() {
   const syncdata = cloneDeep(localLeftTab.value[0]);
   activeLeftTab.value = ++tabIndex.value;
   localLeftTab.value.push({
-    ...initialTopTabsData,
+    ...userSupplier.initialTopTabsData,
     client: client.value,
     await: syncdata.await,
     multi: syncdata.multi,
@@ -68,7 +62,7 @@ function setclient(data: number) {
     <template v-if="!localLeftTab[0].id">
       <el-button
         class="button"
-        :disabled="localLeftTab.length > 9"
+        :disabled="localLeftTab.length > 9 || props.title !== '添加'"
         @click="addLeftTab()"
       >
         添加子项目
@@ -82,7 +76,7 @@ function setclient(data: number) {
           v-for="(leftTab, index) in localLeftTab"
           :key="index"
           :closable="localLeftTab.length !== 1"
-          :label="leftTab.name"
+          :label="leftTab.supplierAccord"
           :name="index"
         >
           <div

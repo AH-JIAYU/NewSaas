@@ -1,11 +1,7 @@
 import api from '../index'
 
 export default {
-  list: (data: {
-    title?: string
-    from: number
-    limit: number
-  }) => api.get('survey/data/list', {
+  list: (data: any) => api.get('survey/data/list', {
     params: data,
     baseURL: '/mock/',
   }),

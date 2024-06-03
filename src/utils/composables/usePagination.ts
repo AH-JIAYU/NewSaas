@@ -16,7 +16,7 @@ export default function usePagination() {
       // size: pagination.value.size,
       // pageNum: pagination.value.page,
       // pageSize: pagination.value.size,
-      from: (pagination.value.page - 1) * pagination.value.size,
+      // from: (pagination.value.page - 1) * pagination.value.size,
 
       ...(pagination.value.sort &&
         pagination.value.order && {

@@ -343,7 +343,12 @@ function onDel(row: any) {
               >
                 重置密码
               </el-button>
-              <el-button type="danger" plain size="small" @click="onDel(scope.row)">
+              <el-button
+                type="danger"
+                plain
+                size="small"
+                @click="onDel(scope.row)"
+              >
                 删除
               </el-button>
             </ElSpace>
@@ -422,5 +427,4 @@ function onDel(row: any) {
     margin-inline: -20px;
   }
 }
-
 </style>

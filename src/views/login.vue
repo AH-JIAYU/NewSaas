@@ -266,6 +266,7 @@ const mobileVerificationCode = async () => {
   }
   countdown();
 };
+// 倒计时
 const countdown = () => {
   isGetPhone.value = true;
   let n = 60;
@@ -644,6 +645,7 @@ const resetCheck = () => {
 </template>
 
 <style lang="scss" scoped>
+
 .fx-c {
   display: flex;
   justify-content: center;
@@ -705,7 +707,8 @@ const resetCheck = () => {
   right: 20px;
   z-index: 1;
   font-size: 18px;
-  color: var(--el-text-color-primary);
+  // color: var(--el-text-color-primary);
+  color: #fff;
   cursor: pointer;
 }
 
@@ -714,7 +717,9 @@ const resetCheck = () => {
   z-index: 0;
   width: 100%;
   height: 100%;
-  background: url("../assets/images/background.jpg");
+  background: url("../assets/images/background.jpg") center center fixed
+    no-repeat;
+  background-size: cover;
   // background: radial-gradient(
   //   circle at center,
   //   var(--g-container-bg),
@@ -766,11 +771,10 @@ const resetCheck = () => {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    // width: 40%;
+    width: 40%;
     width: 500px;
     min-height: 500px;
     padding: 50px;
-    overflow: hidden;
 
     .title-container {
       position: relative;

@@ -3,7 +3,7 @@ import type { DetailFormProps } from "../../types";
 import { ElMessage } from "element-plus";
 import api from "@/api/modules/otherFunctions_screenLibrary";
 
-const props = defineProps(["id", "row"]);
+const props = defineProps(["id", "countryId", "row"]);
 
 const emits = defineEmits<{
   success: [];
@@ -12,26 +12,19 @@ const emits = defineEmits<{
 const visible = defineModel<boolean>({
   default: false,
 });
-
+const title = ref<string>("新增");
 const formRef = ref<any>();
 const form = ref<any>({
+  countryId: props.countryId,
   status: 2,
   isDefault: 2,
 });
+// 表单校验
 const formRules = ref<any>({
   categoryName: [{ required: true, message: "请输入名称", trigger: "blur" }],
   countryId: [{ required: true, message: "请选择国家", trigger: "blur" }],
 });
-
-const title = computed(() => {
-  form.value = {}; // 默认form为空
-  if (props.id) {
-    // 有id form为row
-    form.value = JSON.parse(props.row);
-  }
-  return props.id === "" ? "新增" : "编辑";
-});
-
+// 确定
 async function onSubmit() {
   if (!props.id) {
     // 新增
@@ -53,11 +46,18 @@ async function onSubmit() {
   onCancel();
   emits("success");
 }
-
+// 关闭
 function onCancel() {
   visible.value = false;
   form.value = {};
 }
+onMounted(() => {
+  title.value = "新增";
+  if (props.id) {
+    title.value = "编辑";
+    form.value = JSON.parse(props.row);
+  }
+});
 </script>
 
 <template>
@@ -69,6 +69,7 @@ function onCancel() {
       :close-on-click-modal="false"
       append-to-body
       destroy-on-close
+      @close="onCancel"
     >
       <ElForm
         ref="formRef"
@@ -81,7 +82,6 @@ function onCancel() {
           <ElInput v-model="form.categoryName" placeholder="请输入名称" />
         </ElFormItem>
         <ElFormItem label="国家" prop="countryId">
-          <!-- <ElSelect v-model="form.countryId" placeholder="请输入国家" /> -->
           <ElInput v-model="form.countryId" placeholder="请输入国家" />
         </ElFormItem>
         <ElFormItem label="状态">

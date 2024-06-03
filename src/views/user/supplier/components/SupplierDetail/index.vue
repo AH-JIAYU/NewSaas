@@ -1,11 +1,25 @@
 <script setup lang="ts">
+import { ElMessage } from "element-plus";
 import SupplierDetailDetail from "../SupplierDetailDetail/index.vue";
+import api from "@/api/modules/user_supplier";
 
 const emit = defineEmits(["fetch-data"]);
 const drawerisible = ref(false);
 const checkRef = ref<any>();
-const title = ref("详情");
-async function showEdit(row: any) {
+const detailData = ref<any>(); // 详情数据
+const detailStatus = ref("开启");
+async function showEdit(row: any) { 
+  const params = {
+    tenantSupplierId: row.tenantSupplierId,
+  };
+  const { status, data } = await api.detail(params);
+  detailStatus.value = data.supplierStatus === 1 ? "关闭" : "开启";
+  detailData.value = data;
+  status === 1 &&
+    ElMessage.success({
+      message: "查询成功",
+      center: true,
+    });
   drawerisible.value = true;
 }
 function handleCheck(row: any) {
@@ -15,10 +29,10 @@ function close() {
   emit("fetch-data");
   drawerisible.value = false;
 }
-const list = [
-  { a: 1, b: 2, c: 3, id: 1 },
-  { a: 1, b: 2, c: 3, id: 1 },
-];
+const operationType = (type: number) => {
+  const typeArray = ["新增", "编辑", "启用", "禁用", "审批", "加减款"];
+  return typeArray[type - 1];
+};
 defineExpose({
   showEdit,
 });
@@ -32,7 +46,7 @@ defineExpose({
     destroy-on-close
     draggable
     size="70%"
-    :title="title"
+    title="详情"
     @close="close"
   >
     <!-- <el-card> -->
@@ -43,7 +57,7 @@ defineExpose({
             <span>基本信息</span>
             <div class="status">
               <div class="i-ph:seal-light w-1em h-1em"></div>
-              <div>开启</div>
+              <div>{{ detailStatus }}</div>
             </div>
           </div>
         </template>
@@ -51,37 +65,37 @@ defineExpose({
         <el-row :gutter="24">
           <el-col :span="8">
             <el-form-item label="供应商ID">
-              <el-input disabled placeholder="" />
+              {{ detailData.tenantSupplierId }}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="供应商名称">
-              <el-input disabled placeholder="" />
+              {{ detailData.supplierAccord }}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="所属国家">
-              <el-input disabled placeholder="" />
+              {{ detailData.subordinateCountryName }}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="供应商等级">
-              <el-input disabled placeholder="" />
+              {{ detailData.supplierLevelId }}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="供应商姓名">
-              <el-input disabled placeholder="" />
+              {{ detailData.supplierName }}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="手机号码">
-              <el-input disabled placeholder="" />
+              {{ detailData.supplierPhone }}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="电子邮箱">
-              <el-input disabled placeholder="" />
+              {{ detailData.emailAddress }}
             </el-form-item>
           </el-col>
         </el-row>
@@ -95,27 +109,27 @@ defineExpose({
         <el-row :gutter="24">
           <el-col :span="8">
             <el-form-item label="调查系统">
-              <el-input disabled placeholder="" />
+              {{ detailData.surveySystem === 1 ? "关闭" : "开启" }}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="B2B">
-              <el-input disabled placeholder="" />
+              {{ detailData.surveySystem === 1 ? "关闭" : "开启" }}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="B2C">
-              <el-input disabled placeholder="" />
+              {{ detailData.b2cStatus === 1 ? "关闭" : "开启" }}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="关联国家">
-              <el-input disabled placeholder="" />
+              {{ detailData.relevanceCountryName }}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="关联渠道">
-              <el-input disabled placeholder="" />
+              {{ detailData.relevanceCustomerName }}
             </el-form-item>
           </el-col>
         </el-row>
@@ -129,22 +143,27 @@ defineExpose({
         <el-row :gutter="24">
           <el-col :span="12">
             <el-form-item label="付款方式">
-              <el-input disabled placeholder="" />
+              {{ detailData.payMethod }}
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="账户名称">
-              <el-input disabled placeholder="" />
+              {{ detailData.accountName }}
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="收款账号">
-              <el-input disabled placeholder="" />
+              {{ detailData.collectionAccount }}
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" v-if="detailData.payMethod === 1">
+            <el-form-item label="银行名称">
+              {{ detailData.bankName }}
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="结算周期">
-              <el-input disabled placeholder="" />
+              {{ detailData.settlementCycle }}
             </el-form-item>
           </el-col>
         </el-row>
@@ -155,16 +174,30 @@ defineExpose({
             <span>操作日志</span>
           </div>
         </template>
-        <el-table :data="list" stripe border>
+        <el-table
+          :data="detailData.getTenantCustomerOperationInfosList"
+          stripe
+          border
+        >
           <el-table-column type="index" label="序号" width="50" />
-          <el-table-column prop="a" label="操作时间" />
-          <el-table-column prop="b" label="操作人" />
-          <el-table-column prop="c" label="操作事项" />
+          <el-table-column prop="createTime" label="操作时间" />
+          <el-table-column prop="createName" label="操作人" />
+          <el-table-column label="操作事项">
+            <template #default="{ row }">
+              {{ operationType(row.operationType) }}
+            </template>
+          </el-table-column>
           <el-table-column label="详情">
             <template #default="{ row }">
-              <el-button type="primary" link @click="handleCheck(row)">
+              <el-button
+                type="primary"
+                link
+                v-if="row.operationType === 2"
+                @click="handleCheck(row)"
+              >
                 详情
               </el-button>
+              <span v-else> -</span>
             </template>
           </el-table-column>
         </el-table>

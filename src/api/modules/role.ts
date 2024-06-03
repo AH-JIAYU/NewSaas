@@ -1,11 +1,7 @@
 import api from '../index'
 
 export default {
-  list: (data: {
-    name?: string
-    from: number
-    limit: number
-  }) => api.get('role/list', {
+  list: (data: any) => api.get('role/list', {
     params: data,
     baseURL: '/mock/',
   }),

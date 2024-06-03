@@ -47,7 +47,7 @@ const formRules = ref<FormRules>({
 
 onMounted(() => {
   if (props.id !== '') {
-    apiDictionary.itemDetail(props.id).then((res) => {
+    apiDictionary.itemDetail(props.id).then((res:any) => {
       // form.value.dictionaryId = res.data.dictionaryId
       form.value.id = res.data.id
       form.value.name = res.data.name

@@ -1,18 +1,21 @@
-import api from '../index'
+import api from "../index";
 
 export default {
   // 获取列表
-  list: (data: any) => api.post('tenantCustomer/getTenantCustomerList', data),
-// 新增
-  create: (data: any) => api.post('tenantCustomer/addTenantCustomer', data),
-// 修改
-  edit: (data: any) => api.post('role/edit', data, {
-    baseURL: '/mock/',
-  }),
-// 删除
-  delete: (id: number | string) => api.post('role/delete', {
-    id,
-  }, {
-    baseURL: '/mock/',
-  }),
-}
+  list: (data: any) => api.post("tenantCustomer/getTenantCustomerList", data),
+  // 查询单个
+  detail: (data: any) => api.post("tenantCustomer/getTenantCustomerInfo", data),
+  // 新增
+  create: (data: any) => api.post("tenantCustomer/addTenantCustomer", data),
+  // 修改 单个
+  edit: (data: any) => api.post("tenantCustomer/updateTenantCustomer", data),
+  // 修改 单个 状态
+  editState: (data: any) =>
+    api.post("tenantCustomer/updateTenantCustomerStatus", data),
+  // 删除
+  delete: (data: any) => api.post("tenantCustomer/deleteTenantCustomer", data),
+  // 编辑类型日志
+  getRecordList: (data: any) => api.post("tenantCustomer/getTenantCustomerOperationRecordList", data),
+  // 获取客户列表-供应商页面用到
+  getCustomerList: (data: any) => api.post("tenantCustomer/getTenantCustomerAccordList", data),
+};
