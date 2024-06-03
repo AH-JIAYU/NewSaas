@@ -244,27 +244,6 @@ function onDelProject(row: any) {
           </template>
           新增前置问卷库
         </ElButton>
-        <ElButton
-          v-if="data.batch.enable"
-          size="default"
-          :disabled="!data.batch.selectionDataList.length"
-        >
-          单个批量操作按钮
-        </ElButton>
-        <ElButtonGroup v-if="data.batch.enable">
-          <ElButton
-            size="default"
-            :disabled="!data.batch.selectionDataList.length"
-          >
-            批量操作按钮组1
-          </ElButton>
-          <ElButton
-            size="default"
-            :disabled="!data.batch.selectionDataList.length"
-          >
-            批量操作按钮组2
-          </ElButton>
-        </ElButtonGroup>
       </ElSpace>
       <ElTable
         v-loading="data.loading"

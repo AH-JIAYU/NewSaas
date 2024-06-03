@@ -186,14 +186,7 @@ function handleMoreOperating(command: string, row: any) {
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-select placeholder="分配目标">
-                <el-option :key="11" :label="11" :value="111">
-                  11111
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-select placeholder="项目状态">
+              <el-select placeholder="结算状态">
                 <el-option :key="11" :label="11" :value="111">
                   11111
                 </el-option>
@@ -277,9 +270,10 @@ function handleMoreOperating(command: string, row: any) {
         <el-table-column show-overflow-tooltip prop="e" align="center" label="所属国家" />
         <el-table-column show-overflow-tooltip prop="f" align="center" label="系统完成数" />
         <el-table-column show-overflow-tooltip prop="g" align="center" label="结算完成数" />
+        <el-table-column show-overflow-tooltip prop="h" align="center" label="结算PO号" />
         <el-table-column show-overflow-tooltip prop="h" align="center" label="结算状态" />
+        <el-table-column show-overflow-tooltip prop="h" align="center" label="节点时间" />
         <el-table-column show-overflow-tooltip prop="j" align="center" label="创建人" />
-        <el-table-column show-overflow-tooltip prop="k" align="center" label="创建时间" />
         <el-table-column align="center" label="操作" width="190">
           <template #default="{ row }">
             <ElSpace>
@@ -302,10 +296,10 @@ function handleMoreOperating(command: string, row: any) {
                       重审
                     </ElDropdownItem>
                     <ElDropdownItem command="edit">
-                      编辑
+                      结算编辑
                     </ElDropdownItem>
                     <ElDropdownItem command="refundDetails">
-                      详情
+                      退款详情
                     </ElDropdownItem>
                   </ElDropdownMenu>
                 </template>

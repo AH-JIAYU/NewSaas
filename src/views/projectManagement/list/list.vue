@@ -126,7 +126,7 @@ onMounted(() => {
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-select placeholder="分配目标">
+              <el-select placeholder="分配类型">
                 <el-option :key="11" :label="11" :value="111">
                   11111
                 </el-option>
@@ -252,6 +252,12 @@ onMounted(() => {
         </el-table-column>
         <el-table-column
           show-overflow-tooltip
+          prop="allocationType"
+          align="center"
+          label="分配类型"
+        />
+        <el-table-column
+          show-overflow-tooltip
           align="center"
           label="原价"
         >
@@ -264,7 +270,7 @@ onMounted(() => {
           show-overflow-tooltip
           prop="f"
           align="center"
-          label="会员价"
+          label="供应商价"
         />
         <el-table-column
           show-overflow-tooltip
@@ -277,12 +283,6 @@ onMounted(() => {
           prop="countryId"
           align="center"
           label="国家地区"
-        />
-        <el-table-column
-          show-overflow-tooltip
-          prop="allocationType"
-          align="center"
-          label="分配类型"
         />
         <el-table-column
           show-overflow-tooltip

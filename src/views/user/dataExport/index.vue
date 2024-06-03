@@ -26,12 +26,12 @@ function exportID() {
           </template>
           <el-row :gutter="24">
             <el-col :span="6">
-              <el-form-item>
+              <el-form-item label="项目ID/名称">
                 <el-input v-model="form.a" placeholder="请输入" />
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item>
+              <el-form-item label="项目状态">
                 <el-select
                   v-model="form.b"
                   placeholder="请选择"
@@ -53,7 +53,7 @@ function exportID() {
           </template>
           <el-row :gutter="24">
             <el-col :span="12">
-              <el-form-item>
+              <el-form-item label="项目ID/名称">
                 <el-input
                   v-model="form.c"
                   type="textarea"

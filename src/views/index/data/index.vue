@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import check from "./components/check/index.vue";
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination(); // 分页
-const CheckRef = ref();
 // 右侧工具栏配置变量
 const border = ref(true);
 
@@ -24,7 +22,6 @@ const columns = ref([
 const data = reactive<any>({
   activeName: "report", // tabs选中值
   list: [], // 表格
-  CheckRef: null, // 查看组件ref
   queryForm: {
     pageNo: 1,
     pageSize: 10,
@@ -130,14 +127,6 @@ async function getDataList() {
     },
   ];
 }
-// 查看
-function handleCheck(row: any) {
-  if (row.name) {
-    CheckRef.value.showEdit(row);
-  } else {
-    CheckRef.value.showEdit();
-  }
-}
 onMounted(() => {
   getDataList();
 });
@@ -152,7 +141,7 @@ onMounted(() => {
   >
     <PageMain>
       <el-tabs v-model="data.activeName" type="border-card" class="demo-tabs">
-        <el-tab-pane label="渠道报告" name="report">
+        <el-tab-pane label="客户报告" name="report">
           <el-row class="fx-b">
             <SearchTab />
             <FormRightPanel>
@@ -203,7 +192,7 @@ onMounted(() => {
               show-overflow-tooltip
               align="center"
               prop="num1"
-              label="渠道项目数量"
+              label="项目数量"
             />
             <el-table-column
               show-overflow-tooltip
@@ -229,25 +218,9 @@ onMounted(() => {
               prop="money2"
               label="项目营业额"
             />
-            <el-table-column
-              show-overflow-tooltip
-              align="center"
-              label="国家分布详情"
-            >
-              <template #default="{ row }" align="center">
-                <el-button
-                  plain
-                  type="primary"
-                  size="small"
-                  @click="handleCheck(row)"
-                >
-                  详情
-                </el-button>
-              </template>
-            </el-table-column>
           </el-table>
         </el-tab-pane>
-        <el-tab-pane label="渠道审核" name="auditing">
+        <el-tab-pane label="客户审核" name="auditing">
           <el-row class="fx-b">
             <SearchTab />
             <FormRightPanel>
@@ -278,45 +251,45 @@ onMounted(() => {
               show-overflow-tooltip
               align="center"
               prop="name"
-              label="渠道"
+              label="客户名称"
               width="180"
             />
             <el-table-column
               show-overflow-tooltip
               align="center"
               prop="cname"
-              label="月份"
+              label="客户简称"
               width="180"
             />
             <el-table-column
               show-overflow-tooltip
               align="center"
               prop="fz"
-              label="完成单数"
+              label="负责人"
             />
             <el-table-column
               show-overflow-tooltip
               align="center"
               prop="num1"
-              label="审核单数"
+              label="完成单数"
             />
             <el-table-column
               show-overflow-tooltip
               align="center"
               prop="num2"
-              label="拒绝单数"
+              label="审核单数"
             />
             <el-table-column
               show-overflow-tooltip
               align="center"
               prop="num3"
-              label="通过率"
+              label="审核成功"
             />
             <el-table-column
               show-overflow-tooltip
               align="center"
               prop="money1"
-              label="组"
+              label="审核率"
             />
           </el-table>
         </el-tab-pane>
@@ -333,7 +306,6 @@ onMounted(() => {
         @size-change="sizeChange"
         @current-change="currentChange"
       />
-      <check ref="CheckRef" />
     </PageMain>
   </div>
 </template>

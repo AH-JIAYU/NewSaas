@@ -437,7 +437,7 @@
             <ColorfulCard2
               color-from="#fbaaa2"
               color-to="#fc5286"
-              header="发布项目数"
+              header="待确认项目数"
               :num="12323"
               icon="ant-design:file-outlined"
             />
@@ -446,7 +446,7 @@
             <ColorfulCard2
               color-from="#ff763b"
               color-to="#ffc480"
-              header="发布项目数"
+              header="已确认项目数"
               :num="123"
               icon="ant-design:file-outlined"
             />
@@ -455,7 +455,7 @@
             <ColorfulCard2
               color-from="#6a8eff"
               color-to="#0e4cfd"
-              header="业务应用页面"
+              header="已完结项目数"
               :num="123"
               icon="ant-design:file-outlined"
             />
@@ -464,7 +464,7 @@
             <ColorfulCard2
               color-from="#ffd300"
               color-to="#ff9b0d"
-              header="业务应用页面"
+              header="项目营业额"
               :num="123"
               icon="ant-design:file-outlined"
             />
@@ -473,7 +473,7 @@
             <ColorfulCard2
               color-from="#f49494"
               color-to="#fcd98b"
-              header="业务应用页面"
+              header="项目盈利额"
               :num="123"
               icon="ant-design:file-outlined"
             />
@@ -482,7 +482,7 @@
             <ColorfulCard2
               color-from="#c2005c"
               color-to="#ff980f"
-              header="业务应用页面"
+              header="项目退款额"
               :num="123"
               icon="ant-design:file-outlined"
             />
@@ -523,7 +523,7 @@
             <el-card>
               <template #header>
                 <p class="title fx-b">
-                  营业额趋势
+                  完成数排名
                   <SearchTab />
                 </p>
               </template>
@@ -533,7 +533,7 @@
                 <el-table-column prop="money" label="完成金额" />
                 <el-table-column prop="num" label="完成数量" />
                 <el-table-column prop="B2B/B2C" label="B2B/B2C" />
-                <el-table-column prop="currency" label="货币类型" />
+                <el-table-column prop="currency" label="所属国家" />
               </el-table>
             </el-card>
           </el-col>
@@ -541,7 +541,7 @@
             <el-card>
               <template #header>
                 <p class="title fx-b">
-                  客户总览
+                  供应商营业额排行
                   <SearchTab />
                 </p>
               </template>
@@ -549,10 +549,9 @@
               <el-table :data="tableData" style="width: 100%">
                 <el-table-column type="index" />
                 <el-table-column prop="name" label="供应商" />
-                <el-table-column prop="money" label="完成金额" />
-                <el-table-column prop="num" label="完成数量" />
-                <el-table-column prop="B2B/B2C" label="B2B/B2C" />
-                <el-table-column prop="currency" label="货币类型" />
+                <el-table-column prop="money" label="日" />
+                <el-table-column prop="num" label="月" />
+                <el-table-column prop="B2B/B2C" label="年" />
               </el-table>
             </el-card>
           </el-col>

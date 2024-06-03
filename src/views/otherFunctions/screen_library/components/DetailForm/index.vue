@@ -67,6 +67,16 @@ creator.onUploadFile.add((_, options) => {
       options.callback(error, "error");
     });
 });
+creator.onQuestionAdded.add(function (_, options) {
+  console.log('options', options)
+});
+creator.onItemValueAdded.add(function (_, options) {
+  console.log("新增答案问题", _, options);
+});
+creator.onSurveyPropertyValueChanged.add(function (_, options: any) {
+  console.log("修改问题答案值", options);
+
+});
 
 const loading = ref(false);
 const form = ref({
@@ -166,10 +176,7 @@ function convertData(originalData: any, locale: any) {
 </script>
 
 <template>
-  <div
-    v-loading="loading"
-    style="width: 100%; height: 93%; margin-bottom: 80px"
-  >
+  <div v-loading="loading" style="width: 100%; height: 93%; margin-bottom: 80px">
     <div style="width: 100%; height: 100%">
       <survey-creator-component :model="creator" />
     </div>
@@ -177,5 +184,4 @@ function convertData(originalData: any, locale: any) {
 </template>
 
 <style lang="scss" scoped>
-// scss
-</style>
+// scss</style>
