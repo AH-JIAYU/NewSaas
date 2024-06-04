@@ -264,7 +264,7 @@ function onDelProject(row: any) {
                 class="hide-table-header"
               >
                 <!-- <el-table-column width="55" /> -->
-                <el-table-column prop="categoryName" label="标题" />
+                <el-table-column prop="categoryName" label="问卷名称" />
                 <!-- <ElTableColumn label="默认"> </ElTableColumn> -->
                 <ElTableColumn prop="status" label="状态">
                   <template #default="scope">

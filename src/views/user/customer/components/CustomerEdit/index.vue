@@ -3,15 +3,16 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import { provide, reactive, ref } from "vue";
 import LeftTabs from "../CustomerLeftTabs/index.vue";
 import api from "@/api/modules/user_customer";
-import useStagedData from "@/store/modules/stagedData";
 import { cloneDeep } from "lodash-es";
-const StagedData = useStagedData(); // 暂存
-
+import apiLoading from "@/utils/apiLoading";
+import useStagedDataStore from "@/store/modules/stagedData";
+const stagedDataStore = useStagedDataStore(); // 暂存
 const emit = defineEmits(["fetch-data"]);
 const drawerisible = ref<boolean>(false);
 const title = ref<string>("");
-// const { surveyconfig } = useAclStore()
+// 子组件ref集合
 const validateTopTabs = ref<any>([]);
+// 提供的方法
 function pushData(data: any) {
   validateTopTabs.value.push(data);
 }
@@ -19,6 +20,7 @@ function pushData(data: any) {
 provide("validateTopTabs", pushData);
 
 let leftTabsData = reactive<any>([]); // 明确指定类型为 LeftTab[]
+// 初始数据
 const initLeftData = [
   {
     customerAccord: "客户名称", //客户名称
@@ -34,43 +36,31 @@ const initLeftData = [
     riskControl: null, //风险控制
     turnover: null, //营业限额
     rateAudit: null, //审核Min值
-    // currency: surveyconfig.currency,
-    // platform: {},
-    // screen: {},
-    // security: {},
   },
 ];
+// 显隐
 async function showEdit(row: any) {
   if (!row) {
     title.value = "添加";
-    leftTabsData = StagedData.userCustomer || cloneDeep(initLeftData);
+    leftTabsData = stagedDataStore.userCustomer || cloneDeep(initLeftData);
   } else {
     title.value = "编辑";
-    // initializeLeftTabsData(row);
-    const { data } = await api.detail({
-      tenantCustomerId: row.tenantCustomerId,
-    });
+    const { data } = await apiLoading(
+      api.detail({
+        tenantCustomerId: row.tenantCustomerId,
+      })
+    );
     initializeLeftTabsData(data);
   }
   drawerisible.value = true;
 }
-
+// 清空现有数据
 function initializeLeftTabsData(data: any) {
-  // 清空现有数据
   leftTabsData.length = 0;
   // 添加主数据作为第一个 Tab
   leftTabsData.push({
     ...data,
   });
-
-  // 如果存在 children，为每个 child 创建一个 Tab
-  if (data.children && data.children.length) {
-    data.children.forEach((child: any) => {
-      leftTabsData.push({
-        ...child,
-      });
-    });
-  }
 }
 // 判断客户名称是否重复
 function hasDuplicateCustomer(customers: any) {
@@ -85,20 +75,21 @@ function hasDuplicateCustomer(customers: any) {
 }
 // 暂存
 function staging() {
-  StagedData.userCustomer = cloneDeep(leftTabsData);
+  stagedDataStore.userCustomer = cloneDeep(leftTabsData);
   leftTabsData = reactive<any>([]);
   drawerisible.value = false;
   validateTopTabs.value = [];
 }
+// 关闭
 function close() {
   leftTabsData = reactive<any>([]);
   drawerisible.value = false;
   validateTopTabs.value = [];
   if (title.value === "添加") {
-    StagedData.userCustomer = null;
+    stagedDataStore.userCustomer = null;
   }
 }
-
+// 确定
 async function save() {
   const arr: any = [];
   validateTopTabs.value.forEach((element: any) => {

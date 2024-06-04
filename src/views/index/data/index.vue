@@ -352,8 +352,6 @@ onMounted(() => {
   justify-content: space-between;
 }
 
-
-
 .absolute-container {
   position: absolute;
   display: flex;

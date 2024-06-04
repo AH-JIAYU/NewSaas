@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { FormInstance, FormRules } from "element-plus";
-import { loadingHide, loadingShow } from "@/components/SpinkitLoading/index"; //加载
 import { ElMessage } from "element-plus";
 import api from "@/api/modules/otherFunctions_screenLibrary";
 import useUserStore from "@/store/modules/user";
 import "survey-core/defaultV2.min.css";
 import "survey-creator-core/survey-creator-core.min.css";
+import apiLoading from "@/utils/apiLoading";
 
 import {
   setLicenseKey,
@@ -26,8 +26,8 @@ setLicenseKey(
   "ZjU4MjI0NjMtN2YzYi00ZDMyLWEyYmEtOTliMmVhZmEyODc5OzE9MjAyNS0wMi0yNA=="
 );
 // 添加属性id
-Serializer.addProperty("question", { name: "screen_id" });
-Serializer.addProperty("itemvalue", { name: "screen_id" });
+Serializer.addProperty("question", { name: "survey_id" });
+Serializer.addProperty("itemvalue", { name: "survey_id" });
 
 const props = defineProps(["id", "details"]);
 const emits = defineEmits(["onSubmit"]);
@@ -73,14 +73,14 @@ creator.onUploadFile.add((_, options) => {
 creator.onQuestionAdded.add(function (sender, options) {
   var q = options.question;
   const random = Math.random();
-  q.screen_id = String(random);
-  q.choices=[]
+  q.survey_id = String(random);
+  q.choices = [];
 });
 // 新增答案事件 添加id
 creator.onItemValueAdded.add(function (_, options) {
   var q = options.newItem;
   const random = Math.random();
-  q.screen_id = String(random);
+  q.survey_id = String(random);
 });
 
 const loading = ref(false);
@@ -96,15 +96,8 @@ creator.saveSurveyFunc = (saveNo: number, callback: any) => {
 };
 
 onMounted(async () => {
-  loadingShow({
-    type: "circle-fade",
-    size: 50,
-    color: "#fff",
-    text: "数据加载中……",
-  });
-  const { data } = await api.getSurvey(props.id);
+  const { data } = await apiLoading(api.getSurvey(props.id));
   creator.text = data.projectJson || "";
-  loadingHide();
 });
 
 defineExpose({

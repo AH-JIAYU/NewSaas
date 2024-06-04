@@ -9,7 +9,7 @@ function handleCheck(row) {
   checkRef.value.showEdit(row);
 }
 function close() {
-  emit("fetch-data");
+  emit("fetch-data"); 
   drawerisible.value = false;
 }
 const save = () => {

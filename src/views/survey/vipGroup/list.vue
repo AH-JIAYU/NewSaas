@@ -2,13 +2,14 @@
 import { onMounted, reactive, ref } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import vipGroupEdit from "./components/vipGroupEdit/index.vue";
-import vipGroupDetail from "./components/vipGroupDetail/index.vue";
+import api from "@/api/modules/survey_vipGroup";
 
 defineOptions({
   name: "SurveyVipGroupList",
 });
 
-const { pagination, onSizeChange, onCurrentChange } = usePagination(); // 分页
+const { pagination, getParams, onSizeChange, onCurrentChange } =
+  usePagination(); // 分页
 
 const listLoading = ref(false);
 
@@ -32,11 +33,13 @@ const columns = ref<Array<Object>>([
   },
 ]);
 
+// 请求接口携带参数
 const queryForm = reactive<any>({
-  // 请求接口携带参数
-  pageNo: 1,
-  pageSize: 10,
-  select: {},
+  memberGroupId: "", //	会员组id
+  memberGroupName: "", //	会员组名称
+  groupLeaderMemberName: "", //组长id,名称
+  groupStatus: "", //	组状态:1:关闭 2:开启
+  time: [], // 时间日期选择器
 });
 
 // 添加
@@ -76,7 +79,7 @@ function handleChange(fold: any) {
         //   })
         // })
       })
-      .catch(() => { });
+      .catch(() => {});
   } else {
     ElMessage.error("您未选中任何行");
   }
@@ -84,7 +87,7 @@ function handleChange(fold: any) {
 
 // 重置请求
 function queryData() {
-  queryForm.pageNo = 1;
+  pagination.value.page = 1;
   fetchData();
 }
 // 每页数量切换
@@ -99,103 +102,27 @@ function currentChange(page = 1) {
 // 请求
 async function fetchData() {
   listLoading.value = true;
-  // const { data } = await getList(queryForm)
-  // list.value = data[0]
-  // total.value = data[0].length
-  list.value = [
-    {
-      a: 1,
-      b: 2,
-      c: 3,
-      d: 4,
-      e: 5,
-      f: 6,
-      g: 7,
-      h: 8,
-      r: 9,
-      i: 10,
-      id: 1,
-      name: "name",
-    },
-    {
-      a: 1,
-      b: 2,
-      c: 3,
-      d: 4,
-      e: 5,
-      f: 6,
-      g: 7,
-      h: 8,
-      r: 9,
-      i: 10,
-      id: 1,
-      name: "name",
-    },
-    {
-      a: 1,
-      b: 2,
-      c: 3,
-      d: 4,
-      e: 5,
-      f: 6,
-      g: 7,
-      h: 8,
-      r: 9,
-      i: 10,
-      id: 1,
-      name: "name",
-    },
-    {
-      a: 1,
-      b: 2,
-      c: 3,
-      d: 4,
-      e: 5,
-      f: 6,
-      g: 7,
-      h: 8,
-      r: 9,
-      i: 10,
-      id: 1,
-      name: "name",
-    },
-    {
-      a: 1,
-      b: 2,
-      c: 3,
-      d: 4,
-      e: 5,
-      f: 6,
-      g: 7,
-      h: 8,
-      r: 9,
-      i: 10,
-      id: 1,
-      name: "name",
-    },
-    {
-      a: 1,
-      b: 2,
-      c: 3,
-      d: 4,
-      e: 5,
-      f: 6,
-      g: 7,
-      h: 8,
-      r: 9,
-      i: 10,
-      id: 1,
-      name: "name",
-    },
-  ];
+  const params: any = {
+    ...getParams(),
+    ...queryForm,
+  };
+  if (queryForm.time) {
+    params.beginTime = queryForm.time[0] || "";
+    params.endTime = queryForm.time[1] || "";
+  }
+  const { data } = await api.list(params);
+  list.value = data.getMemberGroupInfoList;
+  pagination.value.total = data.total;
   listLoading.value = false;
 }
 // 重置筛选数据
 function onReset() {
   Object.assign(queryForm, {
-    pageNo: 1,
-    pageSize: 10,
-    select: {},
+    memberGroupId: "",
+    memberGroupName: "",
+    groupLeaderMemberName: "",
+    groupStatus: "",
+    time: [],
   });
   fetchData();
 }
@@ -218,32 +145,59 @@ onMounted(() => {
     <PageMain>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
-          <ElForm :model="queryForm.select" size="default" label-width="100px" inline-message inline
-            class="search-form">
+          <ElForm
+            :model="queryForm"
+            size="default"
+            label-width="100px"
+            inline-message
+            inline
+            class="search-form"
+          >
             <el-form-item label="">
-              <el-input v-model.trim="queryForm.select.id" clearable :inline="false" placeholder="会员组ID" />
+              <el-input
+                v-model.trim="queryForm.memberGroupId"
+                clearable
+                :inline="false"
+                placeholder="会员组ID"
+              />
             </el-form-item>
             <el-form-item label="">
-              <el-input v-model.trim="queryForm.select.id" clearable :inline="false" placeholder="会员组名称" />
+              <el-input
+                v-model.trim="queryForm.memberGroupName"
+                clearable
+                :inline="false"
+                placeholder="会员组名称"
+              />
             </el-form-item>
             <el-form-item label="">
-              <el-input v-model.trim="queryForm.select.id" clearable :inline="false" placeholder="组长ID、组长名称" />
+              <el-input
+                v-model.trim="queryForm.groupLeaderMemberName"
+                clearable
+                :inline="false"
+                placeholder="组长ID、组长名称"
+              />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-select v-model="queryForm.select.default" clearable placeholder="会员组状态">
-                <el-option label="默认" value="true" />
-                <el-option label="关闭" value="false" />
-              </el-select>
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-select v-model="queryForm.select.default" clearable placeholder="接单授权">
-                <el-option label="默认" value="true" />
-                <el-option label="关闭" value="false" />
+              <el-select
+                v-model="queryForm.groupStatus"
+                clearable
+                placeholder="会员组状态"
+              >
+                <el-option label="关闭" :value="1" />
+                <el-option label="开启" :value="2" />
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold">
-              <el-date-picker v-model="queryForm.select.time" type="daterange" unlink-panels range-separator="-"
-                start-placeholder="创建开始日期" end-placeholder="创建结束日期" size="default" clear-icon="true" />
+              <el-date-picker
+                v-model="queryForm.time"
+                type="datetimerange"
+                unlink-panels
+                range-separator="-"
+                start-placeholder="创建开始日期"
+                end-placeholder="创建结束日期"
+                value-format="YYYY-MM-DD hh:mm:ss"
+                size="default"
+              />
             </el-form-item>
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">
@@ -260,7 +214,9 @@ onMounted(() => {
               </ElButton>
               <ElButton link @click="toggle">
                 <template #icon>
-                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
+                  <SvgIcon
+                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
+                  />
                 </template>
                 {{ fold ? "展开" : "收起" }}
               </ElButton>
@@ -277,31 +233,91 @@ onMounted(() => {
         </FormLeftPanel>
         <FormRightPanel>
           <el-button size="default"> 导出 </el-button>
-          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
-            v-model:columns="columns" v-model:line-height="lineHeight" v-model:stripe="stripe" style="margin-left: 12px"
-            @query-data="queryData" />
+          <TabelControl
+            v-model:border="border"
+            v-model:tableAutoHeight="tableAutoHeight"
+            v-model:checkList="checkList"
+            v-model:columns="columns"
+            v-model:line-height="lineHeight"
+            v-model:stripe="stripe"
+            style="margin-left: 12px"
+            @query-data="queryData"
+          />
         </FormRightPanel>
       </el-row>
-      <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
-        @selection-change="setSelectRows">
-        <el-table-column v-if="checkList.includes('a')" align="center" prop="id" show-overflow-tooltip label="会员组ID" />
-        <el-table-column align="center" prop="b" show-overflow-tooltip label="会员组名称" />
-        <el-table-column align="center" prop="c" show-overflow-tooltip label="组长名称(ID)" />
-        <el-table-column align="center" prop="e" show-overflow-tooltip label="成员" />
-        <el-table-column align="center" prop="d" show-overflow-tooltip label="项目数">
+      <el-table
+        v-loading="listLoading"
+        :border="border"
+        :data="list"
+        :size="lineHeight"
+        :stripe="stripe"
+        @selection-change="setSelectRows"
+      >
+        <el-table-column
+          v-if="checkList.includes('a')"
+          align="center"
+          prop="id"
+          show-overflow-tooltip
+          label="会员组ID"
+        />
+        <el-table-column
+          align="center"
+          prop="b"
+          show-overflow-tooltip
+          label="会员组名称"
+        />
+        <el-table-column
+          align="center"
+          prop="c"
+          show-overflow-tooltip
+          label="组长名称(ID)"
+        />
+        <el-table-column
+          align="center"
+          prop="e"
+          show-overflow-tooltip
+          label="成员"
+        />
+        <el-table-column
+          align="center"
+          prop="d"
+          show-overflow-tooltip
+          label="项目数"
+        >
           <template #default="{ row }">
             <el-link type="primary" @click="handleCheck(row)">{{
-    row.d
-  }}</el-link>
+              row.d
+            }}</el-link>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="r" show-overflow-tooltip label="创建日期" />
-        <el-table-column align="center" prop="a" show-overflow-tooltip label="组状态">
+        <el-table-column
+          align="center"
+          prop="r"
+          show-overflow-tooltip
+          label="创建日期"
+        />
+        <el-table-column
+          align="center"
+          prop="a"
+          show-overflow-tooltip
+          label="组状态"
+        >
           <ElSwitch inline-prompt active-text="启用" inactive-text="禁用" />
         </el-table-column>
-        <el-table-column align="center" prop="i" label="操作" show-overflow-tooltip width="180">
+        <el-table-column
+          align="center"
+          prop="i"
+          label="操作"
+          show-overflow-tooltip
+          width="180"
+        >
           <template #default="{ row }">
-            <el-button size="small" plain type="primary" @click="handleEdit(row)">
+            <el-button
+              size="small"
+              plain
+              type="primary"
+              @click="handleEdit(row)"
+            >
               编辑
             </el-button>
           </template>
@@ -310,12 +326,20 @@ onMounted(() => {
           <el-empty class="vab-data-empty" description="暂无数据" />
         </template>
       </el-table>
-      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
-        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-        background @size-change="sizeChange" @current-change="currentChange" />
+      <ElPagination
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
+        :page-sizes="pagination.sizes"
+        :layout="pagination.layout"
+        :hide-on-single-page="false"
+        class="pagination"
+        background
+        @size-change="sizeChange"
+        @current-change="currentChange"
+      />
     </PageMain>
     <vipGroupEdit ref="editRef" @fetch-data="fetchData" />
-    <vipGroupDetail ref="checkRef" @fetch-data="fetchData" />
   </div>
 </template>
 

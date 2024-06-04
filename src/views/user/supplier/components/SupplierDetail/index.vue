@@ -2,17 +2,18 @@
 import { ElMessage } from "element-plus";
 import SupplierDetailDetail from "../SupplierDetailDetail/index.vue";
 import api from "@/api/modules/user_supplier";
+import apiLoading from "@/utils/apiLoading";
 
 const emit = defineEmits(["fetch-data"]);
 const drawerisible = ref(false);
 const checkRef = ref<any>();
 const detailData = ref<any>(); // 详情数据
 const detailStatus = ref("开启");
-async function showEdit(row: any) { 
+async function showEdit(row: any) {
   const params = {
     tenantSupplierId: row.tenantSupplierId,
   };
-  const { status, data } = await api.detail(params);
+  const { status, data } = await apiLoading(api.detail(params));
   detailStatus.value = data.supplierStatus === 1 ? "关闭" : "开启";
   detailData.value = data;
   status === 1 &&

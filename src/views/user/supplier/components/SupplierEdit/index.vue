@@ -3,11 +3,12 @@ import { provide, reactive, ref } from "vue";
 import LeftTabs from "../SupplierLeftTabs/index.vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { cloneDeep } from "lodash-es";
+import apiLoading from "@/utils/apiLoading";
 import api from "@/api/modules/user_supplier";
-import useStagedData from "@/store/modules/stagedData";
-const StagedData = useStagedData(); // 暂存
-import UseUserSupplier from "@/store/modules/userSupplier";
-const userSupplier = UseUserSupplier();
+import useStagedDataStore from "@/store/modules/stagedData";
+const stagedDataStore = useStagedDataStore(); // 暂存
+import useUserSupplierStore from "@/store/modules/userSupplier";
+const supplierStore = useUserSupplierStore(); // 供应商store
 
 const emit = defineEmits(["fetch-data"]);
 const drawerisible = ref<boolean>(false);
@@ -25,14 +26,16 @@ let leftTabsData = reactive<any>([]); // 明确指定类型为 LeftTab[]
 async function showEdit(row: any) {
   if (!row) {
     title.value = "添加";
-    leftTabsData = StagedData.usersupplier || [
-      cloneDeep(userSupplier.initialTopTabsData),
+    leftTabsData = stagedDataStore.usersupplier || [
+      cloneDeep(supplierStore.initialTopTabsData),
     ];
   } else {
     title.value = "编辑";
-    const { data } = await api.detail({
-      tenantSupplierId: row.tenantSupplierId,
-    });
+    const { data } = await apiLoading(
+      api.detail({
+        tenantSupplierId: row.tenantSupplierId,
+      })
+    );
 
     initializeLeftTabsData(data);
   }
@@ -59,7 +62,7 @@ function hasDuplicateCustomer(customers: any) {
 }
 // 暂存
 function staging() {
-  StagedData.usersupplier = cloneDeep(leftTabsData);
+  stagedDataStore.usersupplier = cloneDeep(leftTabsData);
   leftTabsData = reactive<any>([]);
   drawerisible.value = false;
   validateTopTabs.value = [];
@@ -69,7 +72,7 @@ function close() {
   drawerisible.value = false;
   validateTopTabs.value = [];
   if (title.value === "添加") {
-    StagedData.usersupplier = null;
+    stagedDataStore.usersupplier = null;
   }
 }
 async function save() {
@@ -117,8 +120,8 @@ async function save() {
   }
 }
 onMounted(async () => {
-  userSupplier.customer = [];
-  await userSupplier.getCustomerList();
+  supplierStore.customer = [];
+  await supplierStore.getCustomerList();
 });
 defineExpose({
   showEdit,

@@ -6,9 +6,15 @@ const useStagedDataStore = defineStore(
     const userCustomer = ref<any>(); // 客户列表
     const usersupplier = ref<any>(); // 供应商列表
 
+    // 调查系统
+    const surveyVip = ref<any>(); // 会员
+    const surveyVipGroup = ref<any>(); // 会员组
+
     return {
       userCustomer,
-      usersupplier
+      usersupplier,
+      surveyVip,
+      surveyVipGroup,
     };
   }
 );

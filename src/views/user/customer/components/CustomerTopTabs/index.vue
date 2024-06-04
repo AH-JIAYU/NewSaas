@@ -7,6 +7,17 @@ const props = defineProps({
   leftTab: Object,
   tabIndex: Number,
 });
+const rules = reactive<any>({
+  customerAccord: [
+    { required: true, message: "请输入客户名称", trigger: "blur" },
+    { min: 2, max: 50, message: "内容在2-50个字之间", trigger: "blur" },
+  ],
+  customerShortName: [
+    { required: true, message: "请输入客户简称", trigger: "blur" },
+    { min: 2, max: 50, message: "内容在2-50个字之间", trigger: "blur" },
+  ],
+});
+
 const emit = defineEmits(["setClient"]);
 const activeName = ref("basicSettings");
 const form = ref({});
@@ -23,7 +34,12 @@ const localToptTab = ref<any>(props.leftTab);
   <div>
     <el-tabs v-model="activeName">
       <el-tab-pane label="基础设置" name="basicSettings">
-        <ElForm ref="formRef" label-width="100px">
+        <ElForm
+          ref="formRef"
+          :rules="rules"
+          :model="localToptTab"
+          label-width="100px"
+        >
           <el-card class="box-card">
             <template #header>
               <div class="card-header">
