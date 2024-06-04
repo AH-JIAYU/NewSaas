@@ -416,82 +416,82 @@ onMounted(() => {
 });
 </script>
 
-<template>
-  <div>
-    <PageMain>
-      <el-row>
-        <SearchTab />
-      </el-row>
-      <ElRow :gutter="20">
-        <ElCol>
-          <ColorfulCard2
-            header="发布项目数"
-            :num="123"
-            icon="ant-design:file-outlined"
-          />
-        </ElCol>
-        <ElCol>
-          <ColorfulCard2
-            color-from="#fbaaa2"
-            color-to="#fc5286"
-            header="发布项目数"
-            :num="12323"
-            icon="ant-design:file-outlined"
-          />
-        </ElCol>
-        <ElCol>
-          <ColorfulCard2
-            color-from="#ff763b"
-            color-to="#ffc480"
-            header="发布项目数"
-            :num="123"
-            icon="ant-design:file-outlined"
-          />
-        </ElCol>
-        <ElCol>
-          <ColorfulCard2
-            color-from="#6a8eff"
-            color-to="#0e4cfd"
-            header="业务应用页面"
-            :num="123"
-            icon="ant-design:file-outlined"
-          />
-        </ElCol>
-        <ElCol>
-          <ColorfulCard2
-            color-from="#ffd300"
-            color-to="#ff9b0d"
-            header="业务应用页面"
-            :num="123"
-            icon="ant-design:file-outlined"
-          />
-        </ElCol>
-        <ElCol>
-          <ColorfulCard2
-            color-from="#f49494"
-            color-to="#fcd98b"
-            header="业务应用页面"
-            :num="123"
-            icon="ant-design:file-outlined"
-          />
-        </ElCol>
-        <ElCol>
-          <ColorfulCard2
-            color-from="#c2005c"
-            color-to="#ff980f"
-            header="业务应用页面"
-            :num="123"
-            icon="ant-design:file-outlined"
-          />
-        </ElCol>
-      </ElRow>
-      <!-- 营业额趋势 & 客户总览 -->
-      <el-row :gutter="20">
-        <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
-          <el-card>
-            <template #header>
-              <p class="title">营业额趋势</p>
-            </template>
+  <template>
+    <div>
+      <PageMain>
+        <el-row>
+          <SearchTab />
+        </el-row>
+        <ElRow :gutter="20">
+          <ElCol>
+            <ColorfulCard2
+              header="发布项目数"
+              :num="123"
+              icon="ant-design:file-outlined"
+            />
+          </ElCol>
+          <ElCol>
+            <ColorfulCard2
+              color-from="#fbaaa2"
+              color-to="#fc5286"
+              header="待确认项目数"
+              :num="12323"
+              icon="ant-design:file-outlined"
+            />
+          </ElCol>
+          <ElCol>
+            <ColorfulCard2
+              color-from="#ff763b"
+              color-to="#ffc480"
+              header="已确认项目数"
+              :num="123"
+              icon="ant-design:file-outlined"
+            />
+          </ElCol>
+          <ElCol>
+            <ColorfulCard2
+              color-from="#6a8eff"
+              color-to="#0e4cfd"
+              header="已完结项目数"
+              :num="123"
+              icon="ant-design:file-outlined"
+            />
+          </ElCol>
+          <ElCol>
+            <ColorfulCard2
+              color-from="#ffd300"
+              color-to="#ff9b0d"
+              header="项目营业额"
+              :num="123"
+              icon="ant-design:file-outlined"
+            />
+          </ElCol>
+          <ElCol>
+            <ColorfulCard2
+              color-from="#f49494"
+              color-to="#fcd98b"
+              header="项目盈利额"
+              :num="123"
+              icon="ant-design:file-outlined"
+            />
+          </ElCol>
+          <ElCol>
+            <ColorfulCard2
+              color-from="#c2005c"
+              color-to="#ff980f"
+              header="项目退款额"
+              :num="123"
+              icon="ant-design:file-outlined"
+            />
+          </ElCol>
+        </ElRow>
+        <!-- 营业额趋势 & 客户总览 -->
+        <el-row :gutter="20">
+          <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
+            <el-card>
+              <template #header>
+                <p class="title">营业额趋势</p>
+              </template>
 
             <div
               id="echarts1"
@@ -506,57 +506,56 @@ onMounted(() => {
               <p class="title">客户总览</p>
             </template>
 
-            <div
-              id="echarts2"
-              ref="chart2Ref"
-              style="width: 100%; height: 500px"
-            />
-          </el-card>
-        </el-col>
-      </el-row>
-      <!-- 今日完成排名 & 供应商佣金排行 -->
-      <el-row :gutter="20">
-        <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
-          <el-card>
-            <template #header>
-              <p class="title fx-b">
-                营业额趋势
-                <SearchTab />
-              </p>
-            </template>
-            <el-table :data="tableData" style="width: 100%">
-              <el-table-column type="index" />
-              <el-table-column prop="name" label="供应商" />
-              <el-table-column prop="money" label="完成金额" />
-              <el-table-column prop="num" label="完成数量" />
-              <el-table-column prop="B2B/B2C" label="B2B/B2C" />
-              <el-table-column prop="currency" label="货币类型" />
-            </el-table>
-          </el-card>
-        </el-col>
-        <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
-          <el-card>
-            <template #header>
-              <p class="title fx-b">
-                客户总览
-                <SearchTab />
-              </p>
-            </template>
+              <div
+                id="echarts2"
+                ref="chart2Ref"
+                style="width: 100%; height: 500px"
+              />
+            </el-card>
+          </el-col>
+        </el-row>
+        <!-- 今日完成排名 & 供应商佣金排行 -->
+        <el-row :gutter="20">
+          <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
+            <el-card>
+              <template #header>
+                <p class="title fx-b">
+                  完成数排名
+                  <SearchTab />
+                </p>
+              </template>
+              <el-table :data="tableData" style="width: 100%">
+                <el-table-column type="index" />
+                <el-table-column prop="name" label="供应商" />
+                <el-table-column prop="money" label="完成金额" />
+                <el-table-column prop="num" label="完成数量" />
+                <el-table-column prop="B2B/B2C" label="B2B/B2C" />
+                <el-table-column prop="currency" label="所属国家" />
+              </el-table>
+            </el-card>
+          </el-col>
+          <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
+            <el-card>
+              <template #header>
+                <p class="title fx-b">
+                  供应商营业额排行
+                  <SearchTab />
+                </p>
+              </template>
 
-            <el-table :data="tableData" style="width: 100%">
-              <el-table-column type="index" />
-              <el-table-column prop="name" label="供应商" />
-              <el-table-column prop="money" label="完成金额" />
-              <el-table-column prop="num" label="完成数量" />
-              <el-table-column prop="B2B/B2C" label="B2B/B2C" />
-              <el-table-column prop="currency" label="货币类型" />
-            </el-table>
-          </el-card>
-        </el-col>
-      </el-row>
-    </PageMain>
-  </div>
-</template>
+              <el-table :data="tableData" style="width: 100%">
+                <el-table-column type="index" />
+                <el-table-column prop="name" label="供应商" />
+                <el-table-column prop="money" label="日" />
+                <el-table-column prop="num" label="月" />
+                <el-table-column prop="B2B/B2C" label="年" />
+              </el-table>
+            </el-card>
+          </el-col>
+        </el-row>
+      </PageMain>
+    </div>
+  </template>
 
 <style lang="scss" scoped>
 :deep {

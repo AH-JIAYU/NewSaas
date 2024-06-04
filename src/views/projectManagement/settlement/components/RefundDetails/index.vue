@@ -29,11 +29,11 @@ defineExpose({ showEdit })
     <el-dialog
       v-model="dialogTableVisible"
       title="项目退款详情"
-      width="700"
+      width="800"
       :before-close="closeHandler"
     >
       <el-divider content-position="left" />
-      <el-form ref="form" label-width="80px" :inline="false">
+      <el-form ref="form" label-width="150px" :inline="false">
         <el-row :gutter="20">
           <el-col :span="8">
             <el-form-item label="项目编码">
@@ -54,14 +54,14 @@ defineExpose({ showEdit })
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="创建人">
+            <el-form-item label="参与/完成/配额/限量">
               <el-input placeholder="" clearable @change="" />
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
 
-      <el-table v-loading="false" row-key="id">
+      <el-table  v-loading="false" row-key="id">
         <el-table-column align="center" label="子会员ID" />
         <el-table-column align="center" label="姓名" />
         <el-table-column align="center" label="组长ID" />
@@ -69,6 +69,15 @@ defineExpose({ showEdit })
         <el-table-column align="center" sortable label="退款数" />
         <el-table-column align="center" sortable label="退款率" />
         <el-table-column align="center" label="供应商ID" />
+      </el-table>
+      <el-table  v-loading="false" row-key="id">
+        <el-table-column align="center" label="会员ID" />
+        <el-table-column align="center" label="姓名" />
+        <el-table-column align="center" label="组长ID" />
+        <el-table-column align="center" label="组长姓名" />
+        <el-table-column align="center" sortable label="退款数" />
+        <el-table-column align="center" sortable label="退款率" />
+        <el-table-column align="center" label="会员组ID" />
       </el-table>
       <template #footer>
         <div style="flex: auto">

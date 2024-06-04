@@ -135,7 +135,7 @@ defineExpose({ showEdit })
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="最小小时" prop="name" style="float: left; width: 18rem;">
+              <el-form-item label="最小时长" prop="name" style="float: left; width: 18rem;">
                 <el-text class="mx-1">
                   xxxxxx
                 </el-text>

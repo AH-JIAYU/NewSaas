@@ -5,7 +5,7 @@ defineOptions({
   name: 'ProjectReview',
 })
 
-const radio1 = ref('')
+const radio1 = ref(1)
 
 // 弹框开关变量
 const dialogTableVisible = ref(false)
@@ -32,10 +32,10 @@ defineExpose({ showEdit })
     <el-dialog
       v-model="dialogTableVisible"
       title="项目审核"
-      width="700"
+      width="800"
       :before-close="closeHandler"
     >
-      <el-form ref="form" label-width="80px" :inline="false">
+      <el-form ref="form" label-width="150px" :inline="false">
         <el-row :gutter="20">
           <el-col :span="8">
             <el-form-item label="项目编码">
@@ -56,7 +56,7 @@ defineExpose({ showEdit })
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="创建人">
+            <el-form-item label="参与/完成/配额/限量">
               <el-input
                 placeholder=""
                 clearable
@@ -76,29 +76,15 @@ defineExpose({ showEdit })
             <el-radio :value="3" size="large">
               全部通过
             </el-radio>
-            <el-radio :value="3" size="large">
+            <el-radio :value="4" size="large">
               全部失败
             </el-radio>
-            <el-radio :value="3" size="large">
+            <el-radio :value="5" size="large">
               数据冻结
             </el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="备注">
-          <el-input
-            placeholder=""
-            clearable
-            @change=""
-          />
-        </el-form-item>
-        <el-form-item label="结算PO号">
-          <el-input
-            placeholder=""
-            clearable
-            @change=""
-          />
-        </el-form-item>
-        <el-form-item label="通过ID">
+        <el-form-item v-if="radio1 === 1" label="通过ID">
           <el-input
             placeholder=""
             clearable
@@ -107,12 +93,41 @@ defineExpose({ showEdit })
             @change=""
           />
         </el-form-item>
-        <el-form-item label="修改价格">
-          <el-input-number
-            class="mx-4"
-            :min="1"
-            :max="100"
-            controls-position="right"
+        <el-form-item v-if="radio1 === 2" label="失败ID">
+          <el-input
+            placeholder=""
+            clearable
+            :rows="5"
+            type="textarea"
+            @change=""
+          />
+        </el-form-item>
+        <el-form-item v-if="radio1 === 4"  label="第一责任人">
+          <el-input
+            placeholder=""
+            clearable
+            @change=""
+          />
+        </el-form-item>
+        <el-form-item v-if="radio1 === 4"  label="第二责任人">
+          <el-input
+            placeholder=""
+            clearable
+            @change=""
+          />
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input
+            placeholder=""
+            clearable
+            @change=""
+          />
+        </el-form-item>
+        <el-form-item v-if="radio1 === 2 || radio1 === 1 || radio1 === 3" label="结算PO号">
+          <el-input
+            placeholder=""
+            clearable
+            @change=""
           />
         </el-form-item>
       </el-form>

@@ -102,6 +102,13 @@ onMounted(() => {
                 placeholder="子会员ID"
               />
             </el-form-item>
+            <el-form-item v-show="!fold" label="">
+              <el-select
+                v-model="queryForm.select.default"
+                clearable
+                placeholder="组"
+              />
+            </el-form-item>
             <el-form-item label="">
               <el-input
                 v-model.trim="queryForm.select.name"
@@ -134,6 +141,13 @@ onMounted(() => {
               />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
+              <el-select
+                v-model="queryForm.select.default"
+                clearable
+                placeholder="分配类型"
+              />
+            </el-form-item>
+            <el-form-item v-show="!fold" label="">
               <el-input
                 v-model.trim="queryForm.select.name"
                 clearable
@@ -148,14 +162,6 @@ onMounted(() => {
                 placeholder="所属国家"
               />
             </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-select
-                v-model="queryForm.select.default"
-                clearable
-                placeholder="组"
-              />
-            </el-form-item>
-
             <el-form-item v-show="!fold" label="">
               <el-date-picker
                 v-model="queryForm.select.time"
@@ -174,13 +180,6 @@ onMounted(() => {
                 v-model="queryForm.select.default"
                 clearable
                 placeholder="调查状态"
-              />
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-select
-                v-model="queryForm.select.default"
-                clearable
-                placeholder="分配类型"
               />
             </el-form-item>
             <ElFormItem>
@@ -282,7 +281,7 @@ onMounted(() => {
           align="center"
           prop="h"
           show-overflow-tooltip
-          label="会员价/原价"
+          label="子会员价/供应商价/原价"
         />
         <el-table-column
           align="center"

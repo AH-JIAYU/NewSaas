@@ -42,8 +42,8 @@ defineExpose({ showEdit })
         v-loading="false"
         row-key="id"
       >
-        <el-table-column align="center" label="客户简称" />
-        <el-table-column align="center" label="项目编码" />
+        <el-table-column width="80" type="index" align="center" label="序号" />
+        <el-table-column align="center" label="项目ID" />
         <el-table-column align="center" label="项目名称" />
       </el-table>
       <template #footer>

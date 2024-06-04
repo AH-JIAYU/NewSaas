@@ -102,7 +102,7 @@ onMounted(() => {
                 v-model.trim="queryForm.select.id"
                 clearable
                 :inline="false"
-                placeholder="组会员ID、子会员名称"
+                placeholder="子会员ID、子会员名称"
               />
             </el-form-item>
             <el-form-item label="">
@@ -253,17 +253,11 @@ onMounted(() => {
         />
         <el-table-column
           align="center"
-          prop="g"
-          show-overflow-tooltip
-          label="信用等级"
-        />
-        <el-table-column
-          align="center"
           prop="h"
           show-overflow-tooltip
           label="所属组"
         />
-        <ElTableColumn align="center" show-overflow-tooltip prop="" label="会员状态">
+        <ElTableColumn align="center" show-overflow-tooltip prop="" label="子会员状态">
           <ElSwitch inline-prompt active-text="启用" inactive-text="禁用" />
         </ElTableColumn>
         <el-table-column

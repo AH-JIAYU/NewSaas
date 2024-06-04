@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import { ElMessage, ElMessageBox } from 'element-plus'
 import { reactive, ref } from 'vue'
 import { Plus } from '@element-plus/icons-vue'
-import edit from './components/Edit/index.vue'
+import Edit from './components/Edit/index.vue'
 
 defineOptions({
-  name: 'ProjectManagementSchedulingIndex',
+  name: 'FinanceInvoiceIndex',
 })
 
 const { pagination, onSizeChange, onCurrentChange } = usePagination() // 分页
@@ -13,19 +12,19 @@ const { pagination, onSizeChange, onCurrentChange } = usePagination() // 分页
 const tableSortRef = ref('')
 // loading加载
 const listLoading = ref<boolean>(true)
-const border = ref(true)
 // 获取组件变量
 const editRef = ref()
 // 右侧工具栏配置变量
 const tableAutoHeight = ref(false) // 表格控件-高度自适应
 const checkList = ref([])
+const border = ref(true)
 const isFullscreen = ref(false)
 const lineHeight = ref<any>('default')
 const stripe = ref(false)
 const selectRows = ref<any>([])
 const columns = ref([
   {
-    label: '项目ID',
+    label: '选择渠道',
     prop: 'ID',
     sortable: true,
     // 不可改变的
@@ -44,42 +43,17 @@ const queryForm = reactive<any>({
   select: {},
 })
 const list = ref<any>([])
-// 新增数据
+// 新增
 function addData() {
-  if (!selectRows.value.length) { editRef.value.showEdit() }
+  editRef.value.showEdit()
 }
-// 编辑数据
-function editData(row: any) {
-  if (!selectRows.value.length) { editRef.value.showEdit(row) }
-}
-// 删除数据
-function onDel(row:any) {
-  ElMessageBox.confirm(`确认删除「${row}」吗？`, '确认信息').then(() => {
-    // api.delete().then((res: any) => {
-    //   getDataList()
-    //   ElMessage[res.status === 1 ? 'success' : 'error']({
-    //     message: res.status === 1 ? '删除成功' : '请求失败',
-    //     center: true,
-    //   })
-    // })
-  }).catch(() => { })
-}
-
-// 工具配置项
+// 右侧工具方法
 function clickFullScreen() {
   isFullscreen.value = !isFullscreen.value
 }
 // 获取列表选中数据
 function setSelectRows(value: any) {
   selectRows.value = value
-}
-// 每页数量切换
-function sizeChange(size: number) {
-  onSizeChange(size).then(() => fetchData())
-}
-// 当前页码切换（翻页）
-function currentChange(page = 1) {
-  onCurrentChange(page).then(() => fetchData())
 }
 // 重置数据
 function onReset() {
@@ -92,6 +66,14 @@ function onReset() {
     },
     select: {},
   })
+}
+// 每页数量切换
+function sizeChange(size: number) {
+  onSizeChange(size).then(() => fetchData())
+}
+// 当前页码切换（翻页）
+function currentChange(page = 1) {
+  onCurrentChange(page).then(() => fetchData())
 }
 async function fetchData() {
   listLoading.value = true
@@ -115,28 +97,45 @@ onMounted(() => {
 </script>
 
 <template>
-  <div :class="{
+  <div
+    :class="{
 
-    'absolute-container': tableAutoHeight,
-  }">
+      'absolute-container': tableAutoHeight,
+    }"
+  >
     <PageMain>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
-          <el-form :model="queryForm.select" size="default" label-width="100px" inline-message inline
-            class="search-form">
-            <el-form-item label="">
-              <el-input clearable placeholder="项目ID" />
+          <el-form
+            :model="queryForm.select" size="default" label-width="100px" inline-message inline
+            class="search-form"
+          >
+          <el-form-item label="">
+              <el-input
+                v-model.trim="queryForm.select.id"
+                clearable
+                :inline="false"
+                placeholder="项目ID"
+              />
             </el-form-item>
             <el-form-item label="">
-              <el-input clearable placeholder="项目名称" />
+              <el-input
+                v-model.trim="queryForm.select.id"
+                clearable
+                :inline="false"
+                placeholder="项目名称"
+              />
             </el-form-item>
             <el-form-item label="">
-              <el-select clearable placeholder="全部类型">
-                <el-option :key="11" :label="11" :value="111">
-                  11111
-                </el-option>
-              </el-select>
+              <el-select value-key="" placeholder="类型" clearable filterable @change="" />
             </el-form-item>
+            <el-form-item v-show="!fold">
+              <el-date-picker
+                type="daterange" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期"
+                clearable size=""
+              />
+            </el-form-item>
+
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">
                 <template #icon>
@@ -150,7 +149,7 @@ onMounted(() => {
                 </template>
                 重置
               </ElButton>
-              <ElButton disabled link @click="toggle">
+              <ElButton link @click="toggle">
                 <template #icon>
                   <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
                 </template>
@@ -163,8 +162,8 @@ onMounted(() => {
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>
-          <el-button type="primary" :icon="Plus" size="default" @click="addData">
-            添加
+          <el-button style="margin-right: 10px" :icon="Plus" type="primary" size="default" @click="addData">
+            新增
           </el-button>
         </FormLeftPanel>
 
@@ -172,57 +171,39 @@ onMounted(() => {
           <el-button size="default" @click="">
             导出
           </el-button>
-          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
+          <TabelControl
+            v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
             v-model:columns="columns" v-model:is-fullscreen="isFullscreen" v-model:line-height="lineHeight"
             v-model:stripe="stripe" style="margin-left: 12px" @click-full-screen="clickFullScreen"
-            @query-data="currentChange" />
+            @query-data="currentChange"
+          />
         </FormRightPanel>
       </el-row>
-      <el-table ref="tableSortRef" v-loading="false" style="margin-top: 10px" row-key="id" :data="list" :border="border"
-        :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows">
+      <el-table
+        ref="tableSortRef" v-loading="false" style="margin-top: 10px" row-key="id" :data="list" :border="border"
+        :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows"
+      >
         <el-table-column type="selection" />
         <el-table-column type="index" align="center" label="序号" width="55" />
-        <el-table-column show-overflow-tooltip prop="e" align="center" label="类型" />
-        <el-table-column show-overflow-tooltip prop="d" align="center" label="项目ID" />
-        <el-table-column show-overflow-tooltip prop="e" align="center" label="项目名称" />
-        <el-table-column show-overflow-tooltip prop="c" align="center" label="原价(美元)/国家" />
-        <el-table-column show-overflow-tooltip prop="a" align="center" label="指定价格" />
-        <el-table-column show-overflow-tooltip prop="a" align="center" label="指定供应商" />
-        <el-table-column show-overflow-tooltip prop="a" align="center" label="指定会员组" />
-        <el-table-column show-overflow-tooltip prop="h" align="center" label="创建时间" />
-        <el-table-column align="center" label="操作" width="170">
-          <template #default="{ row }">
-            <el-button type="primary" plain size="small" @click="editData(row)">
-              编辑
-            </el-button>
-            <el-button type="danger" plain size="small" @click="onDel(row)">
-              删除
-            </el-button>
-          </template>
-        </el-table-column>
+        <el-table-column prop="a" show-overflow-tooltip align="center" label="项目ID" />
+        <el-table-column prop="b" show-overflow-tooltip align="center" label="项目名称" />
+        <el-table-column prop="c" show-overflow-tooltip align="center" label="类型" />
+        <el-table-column prop="e" show-overflow-tooltip align="center" label="变更时间" />
         <template #empty>
           <el-empty description="暂无数据" />
         </template>
       </el-table>
-      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+      <ElPagination
+        :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
         :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-        background @size-change="sizeChange" @current-change="currentChange" />
-      <edit ref="editRef" />
+        background @size-change="sizeChange" @current-change="currentChange"
+      />
+      <Edit ref="editRef" />
     </PageMain>
   </div>
 </template>
 
 <style scoped lang="scss">
-.el-select {
-  width: 12rem;
-}
-
-:deep {
-  table {
-    width: 100% !important;
-  }
-}
-
 .el-pagination {
   margin-top: 15px;
 }
@@ -270,4 +251,6 @@ onMounted(() => {
     }
   }
 }
+
+
 </style>

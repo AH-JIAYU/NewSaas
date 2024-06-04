@@ -88,17 +88,6 @@ const routes = [
             },
           },
           {
-            path: "supplementaryPaymentRefund",
-            name: "supplementaryPaymentRefund",
-            component: () =>
-              import(
-                "@/views/projectManagement/supplementaryPaymentRefund/list.vue"
-              ),
-            meta: {
-              title: "项目补退款",
-            },
-          },
-          {
             path: "scheduling",
             name: "scheduling",
             component: () =>
@@ -205,22 +194,6 @@ const routes = [
             component: () => import("@/views/record/callback/index.vue"),
             meta: {
               title: "回调记录",
-            },
-          },
-          {
-            path: "allocation",
-            name: "allocation",
-            component: () => import("@/views/record/allocation/index.vue"),
-            meta: {
-              title: "分配记录",
-            },
-          },
-          {
-            path: "flowOrder",
-            name: "flowOrder",
-            component: () => import("@/views/record/flowOrder/index.vue"),
-            meta: {
-              title: "流单记录",
             },
           },
           {

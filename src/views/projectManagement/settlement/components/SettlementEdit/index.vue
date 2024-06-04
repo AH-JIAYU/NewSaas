@@ -42,12 +42,16 @@ defineExpose({ showEdit })
         <el-form-item label="项目名称">
           <el-input
             placeholder=""
-
             clearable
             @change=""
           />
         </el-form-item>
-        <el-form-item label="价格$">
+        <el-form-item label="所属客户">
+          <el-select>
+            <el-option v-for="item in 4 " :key="item" :lable="item" :value="item" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="原价(美元)">
           <el-input
             placeholder=""
 
@@ -55,7 +59,7 @@ defineExpose({ showEdit })
             @change=""
           />
         </el-form-item>
-        <el-form-item label="tc完成数">
+        <el-form-item label="TC完成数">
           <el-input
             placeholder=""
 
@@ -87,11 +91,6 @@ defineExpose({ showEdit })
           />
         </el-form-item>
         <el-form-item label="状态">
-          <el-select>
-            <el-option v-for="item in 4 " :key="item" :lable="item" :value="item" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="客户简称">
           <el-select>
             <el-option v-for="item in 4 " :key="item" :lable="item" :value="item" />
           </el-select>

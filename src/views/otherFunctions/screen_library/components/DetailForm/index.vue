@@ -174,10 +174,7 @@ function convertData(originalData: any, locale: any) {
 </script>
 
 <template>
-  <div
-    v-loading="loading"
-    style="width: 100%; height: 93%; margin-bottom: 80px"
-  >
+  <div v-loading="loading" style="width: 100%; height: 93%; margin-bottom: 80px">
     <div style="width: 100%; height: 100%">
       <survey-creator-component :model="creator" />
     </div>
@@ -185,5 +182,4 @@ function convertData(originalData: any, locale: any) {
 </template>
 
 <style lang="scss" scoped>
-// scss
-</style>
+// scss</style>

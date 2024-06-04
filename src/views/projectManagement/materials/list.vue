@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { reactive, ref } from "vue";
 import deletes from "./components/Delete/index.vue";
-import edit from "./components/Edit/index.vue";
 import detail from "./components/Details/index.vue";
 
 defineOptions({
@@ -18,6 +17,7 @@ const border = ref(true);
 const deleteRef = ref();
 const editRef = ref();
 const detailsRef = ref();
+const activeName = ref('report')
 // 右侧工具栏配置变量
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const checkList = ref([]);
@@ -46,12 +46,6 @@ const queryForm = reactive<any>({
   select: {},
 });
 const list = ref<any>([]);
-// 编辑数据
-function editData(row: any) {
-  if (!selectRows.value.length) {
-    editRef.value.showEdit(row);
-  }
-}
 // 详情
 function projectDetails(row: any) {
   if (!selectRows.value.length) {
@@ -111,194 +105,193 @@ onMounted(() => {
 </script>
 
 <template>
-  <div
-    :class="{
-      'absolute-container': tableAutoHeight,
-    }"
-  >
+  <div :class="{
+    'absolute-container': tableAutoHeight,
+  }">
     <PageMain>
-      <SearchBar :show-toggle="false">
-        <template #default="{ fold, toggle }">
-          <el-form
-            :model="queryForm.select"
-            size="default"
-            label-width="100px"
-            inline-message
-            inline
-            class="search-form"
-          >
-            <el-form-item label="">
-              <el-input clearable placeholder="供应商ID" />
-            </el-form-item>
-            <el-form-item label="">
-              <el-input clearable placeholder="子会员ID" />
-            </el-form-item>
-            <el-form-item label="">
-              <el-input clearable placeholder="项目ID" />
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-input clearable placeholder="项目名称" />
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-select placeholder="客户简称">
-                <el-option :key="11" :label="11" :value="111">
-                  11111
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <ElFormItem>
-              <ElButton type="primary" @click="currentChange()">
-                <template #icon>
-                  <SvgIcon name="i-ep:search" />
-                </template>
-                筛选
-              </ElButton>
-              <ElButton @click="onReset">
-                <template #icon>
-                  <div class="i-grommet-icons:power-reset h-1em w-1em" />
-                </template>
-                重置
-              </ElButton>
-              <ElButton link @click="toggle">
-                <template #icon>
-                  <SvgIcon
-                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
-                  />
-                </template>
-                {{ fold ? "展开" : "收起" }}
-              </ElButton>
-            </ElFormItem>
-          </el-form>
-        </template>
-      </SearchBar>
-      <ElDivider border-style="dashed" />
-      <el-row :gutter="24">
-        <FormLeftPanel />
-        <FormRightPanel>
-          <el-button size="default" @click=""> 导出 </el-button>
-          <TabelControl
-            v-model:border="border"
-            v-model:tableAutoHeight="tableAutoHeight"
-            v-model:checkList="checkList"
-            v-model:columns="columns"
-            v-model:is-fullscreen="isFullscreen"
-            v-model:line-height="lineHeight"
-            v-model:stripe="stripe"
-            style="margin-left: 12px"
-            @click-full-screen="clickFullScreen"
-            @query-data="currentChange"
-          />
-        </FormRightPanel>
-      </el-row>
-      <el-table
-        ref="tableSortRef"
-        v-loading="false"
-        style="margin-top: 10px"
-        row-key="id"
-        :data="list"
-        :border="border"
-        :size="lineHeight"
-        :stripe="stripe"
-        @selection-change="setSelectRows"
-      >
-        <el-table-column type="selection" />
-        <el-table-column type="index" align="center" label="序号" width="55" />
-        <el-table-column
-          show-overflow-tooltip
-          prop="a"
-          align="center"
-          label="供应商ID"
-        />
-        <el-table-column
-          show-overflow-tooltip
-          prop="b"
-          align="center"
-          label="子会员ID"
-        />
-        <el-table-column
-          show-overflow-tooltip
-          prop="c"
-          align="center"
-          label="子会员名称"
-        />
-        <el-table-column
-          show-overflow-tooltip
-          prop="d"
-          align="center"
-          label="项目ID"
-        />
-        <el-table-column
-          show-overflow-tooltip
-          prop="e"
-          align="center"
-          label="项目名称"
-        />
-        <el-table-column
-          show-overflow-tooltip
-          prop="f"
-          align="center"
-          label="客户简称/标识"
-        />
-        <el-table-column
-          show-overflow-tooltip
-          prop="g"
-          align="center"
-          label="说明"
-        />
-        <el-table-column
-          show-overflow-tooltip
-          prop="h"
-          align="center"
-          label="创建时间"
-        />
-        <el-table-column align="center" label="操作" width="240">
-          <template #default="{ row }">
-            <ElSpace>
-              <el-button
-                type="primary"
-                plain
-                size="small"
-                @click="editData(row)"
-              >
-                编辑
-              </el-button>
-              <el-button
-                type="primary"
-                plain
-                size="small"
-                @click="projectDetails(row)"
-              >
-                详情
-              </el-button>
-              <el-button
-                type="danger"
-                plain
-                size="small"
-                @click="deleteData(row)"
-              >
-                删除
-              </el-button>
-            </ElSpace>
-          </template>
-        </el-table-column>
-        <template #empty>
-          <el-empty description="暂无数据" />
-        </template>
-      </el-table>
-      <ElPagination
-        :current-page="pagination.page"
-        :total="pagination.total"
-        :page-size="pagination.size"
-        :page-sizes="pagination.sizes"
-        :layout="pagination.layout"
-        :hide-on-single-page="false"
-        class="pagination"
-        background
-        @size-change="sizeChange"
-        @current-change="currentChange"
-      />
+      <el-tabs v-model="activeName" type="border-card" class="demo-tabs">
+        <el-tab-pane label="子会员素材" name="report">
+          <SearchBar :show-toggle="false">
+            <template #default="{ fold, toggle }">
+              <el-form :model="queryForm.select" size="default" label-width="100px" inline-message inline
+                class="search-form">
+                <el-form-item label="">
+                  <el-input clearable placeholder="供应商ID" />
+                </el-form-item>
+                <el-form-item label="">
+                  <el-input clearable placeholder="子会员ID" />
+                </el-form-item>
+                <el-form-item label="">
+                  <el-input clearable placeholder="项目ID" />
+                </el-form-item>
+                <el-form-item v-show="!fold" label="">
+                  <el-input clearable placeholder="项目名称" />
+                </el-form-item>
+                <el-form-item v-show="!fold" label="">
+                  <el-select placeholder="客户简称">
+                    <el-option :key="11" :label="11" :value="111">
+                      11111
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+                <ElFormItem>
+                  <ElButton type="primary" @click="currentChange()">
+                    <template #icon>
+                      <SvgIcon name="i-ep:search" />
+                    </template>
+                    筛选
+                  </ElButton>
+                  <ElButton @click="onReset">
+                    <template #icon>
+                      <div class="i-grommet-icons:power-reset h-1em w-1em" />
+                    </template>
+                    重置
+                  </ElButton>
+                  <ElButton link @click="toggle">
+                    <template #icon>
+                      <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
+                    </template>
+                    {{ fold ? "展开" : "收起" }}
+                  </ElButton>
+                </ElFormItem>
+              </el-form>
+            </template>
+          </SearchBar>
+          <ElDivider border-style="dashed" />
+          <el-row :gutter="24">
+            <FormLeftPanel />
+            <FormRightPanel>
+              <el-button size="default" @click=""> 导出 </el-button>
+              <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight"
+                v-model:checkList="checkList" v-model:columns="columns" v-model:is-fullscreen="isFullscreen"
+                v-model:line-height="lineHeight" v-model:stripe="stripe" style="margin-left: 12px"
+                @click-full-screen="clickFullScreen" @query-data="currentChange" />
+            </FormRightPanel>
+          </el-row>
+          <el-table ref="tableSortRef" v-loading="false" style="margin-top: 10px" row-key="id" :data="list"
+            :border="border" :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows">
+            <el-table-column type="selection" />
+            <el-table-column type="index" align="center" label="序号" width="55" />
+            <el-table-column show-overflow-tooltip prop="b" align="center" label="子会员ID" />
+            <el-table-column show-overflow-tooltip prop="c" align="center" label="子会员名称" />
+            <el-table-column show-overflow-tooltip prop="a" align="center" label="供应商ID" />
+            <el-table-column show-overflow-tooltip prop="d" align="center" label="项目ID" />
+            <el-table-column show-overflow-tooltip prop="e" align="center" label="项目名称" />
+            <el-table-column show-overflow-tooltip prop="f" align="center" label="客户简称/标识" />
+            <el-table-column show-overflow-tooltip prop="g" align="center" label="说明" />
+            <el-table-column show-overflow-tooltip prop="h" align="center" label="创建时间" />
+            <el-table-column align="center" label="操作" width="240">
+              <template #default="{ row }">
+                <ElSpace>
+                  <el-button type="primary" plain size="small" @click="projectDetails(row)">
+                    详情
+                  </el-button>
+                  <el-button type="danger" plain size="small" @click="deleteData(row)">
+                    删除
+                  </el-button>
+                </ElSpace>
+              </template>
+            </el-table-column>
+            <template #empty>
+              <el-empty description="暂无数据" />
+            </template>
+          </el-table>
+          <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+            :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+            background @size-change="sizeChange" @current-change="currentChange" />
+        </el-tab-pane>
+        <el-tab-pane label="会员素材" name="auditing">
+          <SearchBar :show-toggle="false">
+            <template #default="{ fold, toggle }">
+              <el-form :model="queryForm.select" size="default" label-width="100px" inline-message inline
+                class="search-form">
+                <el-form-item label="">
+                  <el-input clearable placeholder="会员组" />
+                </el-form-item>
+                <el-form-item label="">
+                  <el-input clearable placeholder="会员ID" />
+                </el-form-item>
+                <el-form-item label="">
+                  <el-input clearable placeholder="项目ID" />
+                </el-form-item>
+                <el-form-item v-show="!fold" label="">
+                  <el-input clearable placeholder="项目名称" />
+                </el-form-item>
+                <el-form-item v-show="!fold" label="">
+                  <el-select placeholder="客户简称">
+                    <el-option :key="11" :label="11" :value="111">
+                      11111
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+                <ElFormItem>
+                  <ElButton type="primary" @click="currentChange()">
+                    <template #icon>
+                      <SvgIcon name="i-ep:search" />
+                    </template>
+                    筛选
+                  </ElButton>
+                  <ElButton @click="onReset">
+                    <template #icon>
+                      <div class="i-grommet-icons:power-reset h-1em w-1em" />
+                    </template>
+                    重置
+                  </ElButton>
+                  <ElButton link @click="toggle">
+                    <template #icon>
+                      <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
+                    </template>
+                    {{ fold ? "展开" : "收起" }}
+                  </ElButton>
+                </ElFormItem>
+              </el-form>
+            </template>
+          </SearchBar>
+          <ElDivider border-style="dashed" />
+          <el-row :gutter="24">
+            <FormLeftPanel />
+            <FormRightPanel>
+              <el-button size="default" @click=""> 导出 </el-button>
+              <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight"
+                v-model:checkList="checkList" v-model:columns="columns" v-model:is-fullscreen="isFullscreen"
+                v-model:line-height="lineHeight" v-model:stripe="stripe" style="margin-left: 12px"
+                @click-full-screen="clickFullScreen" @query-data="currentChange" />
+            </FormRightPanel>
+          </el-row>
+          <el-table ref="tableSortRef" v-loading="false" style="margin-top: 10px" row-key="id" :data="list"
+            :border="border" :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows">
+            <el-table-column type="selection" />
+            <el-table-column type="index" align="center" label="序号" width="55" />
+            <el-table-column show-overflow-tooltip prop="b" align="center" label="会员ID" />
+            <el-table-column show-overflow-tooltip prop="c" align="center" label="会员名称" />
+            <el-table-column show-overflow-tooltip prop="a" align="center" label="会员组ID" />
+            <el-table-column show-overflow-tooltip prop="d" align="center" label="项目ID" />
+            <el-table-column show-overflow-tooltip prop="e" align="center" label="项目名称" />
+            <el-table-column show-overflow-tooltip prop="f" align="center" label="客户简称/标识" />
+            <el-table-column show-overflow-tooltip prop="g" align="center" label="说明" />
+            <el-table-column show-overflow-tooltip prop="h" align="center" label="创建时间" />
+            <el-table-column align="center" label="操作" width="240">
+              <template #default="{ row }">
+                <ElSpace>
+                  <el-button type="primary" plain size="small" @click="projectDetails(row)">
+                    详情
+                  </el-button>
+                  <el-button type="danger" plain size="small" @click="deleteData(row)">
+                    删除
+                  </el-button>
+                </ElSpace>
+              </template>
+            </el-table-column>
+            <template #empty>
+              <el-empty description="暂无数据" />
+            </template>
+          </el-table>
+          <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+            :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+            background @size-change="sizeChange" @current-change="currentChange" />
+        </el-tab-pane>
+      </el-tabs>
       <deletes ref="deleteRef" />
-      <edit ref="editRef" />
       <detail ref="detailsRef" />
     </PageMain>
   </div>
@@ -329,6 +322,7 @@ onMounted(() => {
     }
   }
 }
+
 // 筛选
 .page-main {
   .search-form {
@@ -349,5 +343,4 @@ onMounted(() => {
     }
   }
 }
-
 </style>
