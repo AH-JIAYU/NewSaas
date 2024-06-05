@@ -1,4 +1,5 @@
 import axios from "axios";
+import { loadingHide } from "@/components/SpinkitLoading/index"; //加载
 
 // import qs from 'qs'
 import Message from "vue-m-message";
@@ -52,6 +53,7 @@ api.interceptors.response.use(
         zIndex: 2000,
       });
       useUserStore().logout();
+      loadingHide(); // 清除加载
     }
     return Promise.resolve(response.data);
   },

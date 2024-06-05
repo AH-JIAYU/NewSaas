@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import api from "@/api/modules/survey_vipGroup";
-import useStagedDataStore from "@/store/modules/stagedData"; // 暂存
+import { ElMessage } from "element-plus";
 import apiLoading from "@/utils/apiLoading";
-
-const stagedDataStore = useStagedDataStore(); // 暂存
-const emit = defineEmits(["fetch-data"]);
+import useSurveyVipStore from "@/store/modules/survey_vip"; // 会员
+const surveyVipStore = useSurveyVipStore(); // 会员
+const emits = defineEmits(["fetch-data"]);
 const drawerisible = ref(false);
 const NickNameList = ref<any>([]); // 会员集合
 const title = ref("新增会员组");
 const form = ref<any>({
   memberGroupName: "", //	会员组名称
   groupStatus: 1, //组状态:1:关闭 2:开启
-  groupMemberId: [], //	组成员id
+  groupMemberIdList: [], //	组成员id
   groupLeaderMemberId: "", //组长id(会员id)
 }); //表单
 const formRef = ref<any>({}); //表单Ref
@@ -20,7 +20,7 @@ const rules = reactive<any>({
     { required: true, message: "请输入会员组名称", trigger: "blur" },
   ],
   groupStatus: [{ required: true, message: "请选择组状态", trigger: "change" }],
-  groupMemberId: [
+  groupMemberIdList: [
     {
       type: "array",
       required: true,
@@ -35,22 +35,63 @@ async function showEdit(row: any) {
     title.value = "新增会员组";
   } else {
     title.value = "编辑会员组";
-    const { data } = await apiLoading(
-      api.getNickNameList({ memberNickname: "" })
-    );
-    NickNameList.value = data.getMemberLikeNickNameInfoList;
   }
-
+  // 获取会员 - 组成员
+  NickNameList.value = await apiLoading(surveyVipStore.getNickNameList());
   drawerisible.value = true;
 }
+// 删除标签
+const handleClose = (tag: any) => {
+  const index = form.value.groupMemberIdList.findIndex(
+    (item: any) => item === tag.memberId
+  );
+  form.value.groupMemberIdList.splice(index, 1);
+};
+// tag列表 和 组长 的循环数据
+const tagList = computed(() => {
+  // 是否存在
+  const ispresence = form.value.groupMemberIdList.includes(
+    form.value.groupLeaderMemberId
+  );
+  // 当改变组成员时候，组长也要变
+  form.value.groupLeaderMemberId = ispresence
+    ? form.value.groupLeaderMemberId
+    : "";
+  return NickNameList.value.filter((item: any) =>
+    form.value.groupMemberIdList.includes(item.memberId)
+  );
+});
 // 关闭
 function close() {
-  emit("fetch-data");
   drawerisible.value = false;
+  formRef.value.resetFields(); // 重置校验
 }
 // 确定
 const save = () => {
   console.log("save");
+  formRef.value &&
+    formRef.value.validate(async (valid: any) => {
+      if (valid) {
+        console.log("form.value", form.value);
+        if (!form.value.id) {
+          const { status } = await api.create(form.value);
+          status === 1 &&
+            ElMessage.success({
+              message: "新增成功",
+              center: true,
+            });
+        } else {
+          // const { status } = await api.edit(form.value);
+          // status === 1 &&
+          //   ElMessage.success({
+          //     message: "编辑成功",
+          //     center: true,
+          //   });
+        }
+        await emits("fetch-data");
+        close();
+      }
+    });
 };
 const list = [
   { a: 1, b: 2, c: 3, id: 1 },
@@ -77,8 +118,8 @@ defineExpose({
         <el-col :span="8">
           <el-form-item label="组状态" prop="groupStatus">
             <el-switch
-              :active-value="1"
-              :inactive-value="2"
+              :active-value="2"
+              :inactive-value="1"
               active-text="开启"
               inactive-text="关闭"
               inline-prompt
@@ -90,10 +131,12 @@ defineExpose({
       </el-row>
       <el-row :gutter="10">
         <el-col :span="24">
-          <el-form-item label="组成员" prop="groupMemberId">
+          <el-form-item label="组成员" prop="groupMemberIdList">
             <el-select
               multiple
-              v-model="form.groupMemberId"
+              collapse-tags
+              collapse-tags-tooltip
+              v-model="form.groupMemberIdList"
               placeholder="模糊搜索"
               clearable
             >
@@ -109,14 +152,33 @@ defineExpose({
       <el-row :gutter="10">
         <el-col :span="24">
           <el-form-item>
-            <div class="radius p-2">用户1</div>
+            <div class="radius p-2 flex gap-2">
+              <el-tag
+                v-for="tag in tagList"
+                :key="tag"
+                closable
+                :disable-transitions="false"
+                @close="handleClose(tag)"
+              >
+                {{ tag.memberNickname }}
+              </el-tag>
+            </div>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="10">
         <el-col :span="24">
           <el-form-item label="组长" prop="top">
-            <el-select v-model="form.groupLeaderMemberId" placeholder="模糊搜索" />
+            <el-select
+              v-model="form.groupLeaderMemberId"
+              placeholder="模糊搜索"
+            >
+              <el-option
+                v-for="item in tagList"
+                :value="item.memberId"
+                :label="item.memberNickname"
+              />
+            </el-select>
           </el-form-item>
         </el-col>
       </el-row>
@@ -125,7 +187,6 @@ defineExpose({
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="close"> 取消 </el-button>
-        <el-button> 暂存 </el-button>
         <el-button type="primary" @click="save"> 确定 </el-button>
       </div>
     </template>

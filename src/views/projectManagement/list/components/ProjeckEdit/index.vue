@@ -12,14 +12,13 @@ const emit = defineEmits(["fetch-data"]);
 const dialogTableVisible = ref<boolean>(false);
 const title = ref<string>("");
 const validateTopTabs = ref<any>([]); // 校验的promise数组
+// 传递给孙组件,用于获取所有孙组件的Ref
 function pushData(data: any) {
-  // 传递给孙组件,用于获取所有孙组件的Ref
   validateTopTabs.value.push(data);
 }
 // 提供一个方法，孙组件可以使用这个方法来触发验证
 provide("validateTopTabs", pushData);
 const validateAll = ref<any>([]); // 校验结果，用于在leftTabs中的tabs中给予提示
-
 let leftTabsData = reactive<any>([]); // 明确指定类型为 LeftTab[]
 const LeftTabsRef = ref<any>(); // Ref
 

@@ -106,7 +106,7 @@ async function fetchData() {
     ...getParams(),
     ...queryForm,
   };
-  if (queryForm.time) {
+  if (queryForm.time && !!queryForm.time.length) {
     params.beginTime = queryForm.time[0] || "";
     params.endTime = queryForm.time[1] || "";
   }
@@ -126,9 +126,20 @@ function onReset() {
   });
   fetchData();
 }
-// 表格-单选框
-function setSelectRows(val: any) {
-  selectRows.value = val;
+// 切换状态
+async function changeState(state: any, id: string) {
+  const params: any = {
+    memberGroupId: id,
+    groupStatus: state,
+  };
+  const { status } = await api.changestatus(params);
+  status === 1 &&
+    ElMessage.success({
+      message: "修改成功",
+    });
+  // // 数据改变 在会员组中需要重新请求
+  // surveyVipStore.NickNameList = null;
+  queryData();
 }
 onMounted(() => {
   columns.value.forEach((item: any) => {
@@ -136,7 +147,7 @@ onMounted(() => {
       checkList.value.push(item.prop);
     }
   });
-  fetchData();
+  queryData();
 });
 </script>
 
@@ -251,58 +262,71 @@ onMounted(() => {
         :data="list"
         :size="lineHeight"
         :stripe="stripe"
-        @selection-change="setSelectRows"
       >
         <el-table-column
           v-if="checkList.includes('a')"
           align="center"
-          prop="id"
+          prop="memberGroupId"
           show-overflow-tooltip
           label="会员组ID"
         />
         <el-table-column
           align="center"
-          prop="b"
+          prop="memberGroupName"
           show-overflow-tooltip
           label="会员组名称"
         />
         <el-table-column
           align="center"
-          prop="c"
+          prop="groupLeaderMemberName"
           show-overflow-tooltip
           label="组长名称(ID)"
-        />
+        >
+          <template #default="{ row }">
+            {{ row.groupLeaderMemberName ? row.groupLeaderMemberName : "-" }}
+          </template>
+        </el-table-column>
         <el-table-column
           align="center"
-          prop="e"
+          prop="memberNumber"
           show-overflow-tooltip
           label="成员"
         />
         <el-table-column
           align="center"
-          prop="d"
+          prop="projectNumber"
           show-overflow-tooltip
           label="项目数"
         >
           <template #default="{ row }">
             <el-link type="primary" @click="handleCheck(row)">{{
-              row.d
+              row.projectNumber
             }}</el-link>
           </template>
         </el-table-column>
         <el-table-column
           align="center"
-          prop="r"
+          prop="createTime"
           show-overflow-tooltip
           label="创建日期"
         />
         <el-table-column
           align="center"
-          prop="a"
+          prop="groupStatus"
           show-overflow-tooltip
           label="组状态"
         >
-          <ElSwitch inline-prompt active-text="启用" inactive-text="禁用" />
+          <template #default="{ row }">
+            <ElSwitch
+              v-model="row.groupStatus"
+              inline-prompt
+              :inactive-value="1"
+              :active-value="2"
+              inactive-text="禁用"
+              active-text="启用"
+              @change="changeState($event, row.memberGroupId)"
+            />
+          </template>
         </el-table-column>
         <el-table-column
           align="center"
@@ -339,7 +363,7 @@ onMounted(() => {
         @current-change="currentChange"
       />
     </PageMain>
-    <vipGroupEdit ref="editRef" @fetch-data="fetchData" />
+    <vipGroupEdit ref="editRef" @fetch-data="queryData" />
   </div>
 </template>
 

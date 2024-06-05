@@ -4,10 +4,13 @@ import { defineProps, provide, ref } from "vue";
 import TopTabs from "../VipTopTabs/index.vue";
 // import { useAclStore } from '/@/store/modules/acl'
 
-const props = defineProps({
+const props: any = defineProps({
   leftTabsData: Array,
   validateTopTabs: Array,
+  validateAll: Array,
+  title: String,
 });
+const emits: any = defineEmits(["validate"]);
 const client = ref();
 const localLeftTab = ref<any>(props.leftTabsData);
 const validateTopTabs = ref<any>(props.validateTopTabs);
@@ -23,27 +26,13 @@ const tabIndex = ref(0);
 const activeLeftTab = ref(0);
 
 const initialTopTabsData = {
-  name: "新建项目",
-  // currency: surveyconfig.currency,
-  platform: {},
-  screen: {},
-  security: {},
+  // memberNickname: "会员名称",
 };
 
-// 同步主项目
-function syncProject() {
-  const syncdata = cloneDeep(localLeftTab.value[0]);
-  localLeftTab.value[activeLeftTab.value] = syncdata;
-}
-
 function addLeftTab() {
-  const syncdata = cloneDeep(localLeftTab.value[0]);
   activeLeftTab.value = ++tabIndex.value;
   localLeftTab.value.push({
     ...initialTopTabsData,
-    client: client.value,
-    await: syncdata.await,
-    multi: syncdata.multi,
   });
 }
 
@@ -61,62 +50,72 @@ function setclient(data: number) {
   });
   client.value = data;
 }
+/**
+ * 监听activeLeftTab.value左侧焦点的tabs
+ *  props.validateAll 是点击确认后所有组件的校验结果
+ * validateIndex 是props.validateAll中值为rejected(校验未通过)的值的索引
+ * 当activeLeftTab改变，并且改变前的值 在validateIndex中存在，
+ * 声明他刚改完表单 重更进行校验，取消符合校验规则的lefTabs的红色阴影
+ */
+watch(
+  () => activeLeftTab.value,
+  (newVal, oldVal) => {
+    const validateIndex = props.validateAll.reduce(
+      (acc: any, value: any, index: any) => {
+        if (value === "rejected") {
+          acc.push(index);
+        }
+        return acc;
+      },
+      []
+    );
+    if (validateIndex.includes(oldVal)) {
+      emits("validate");
+    }
+  }
+);
+defineExpose({ activeLeftTab });
 </script>
 
 <template>
   <div>
-    <template v-if="!localLeftTab[0].id">
-      <el-button
-        class="button"
-        :disabled="localLeftTab.length > 9"
-        @click="addLeftTab()"
+    <el-button
+      class="button"
+      :disabled="localLeftTab.length > 29 || props.title !== '添加'"
+      @click="addLeftTab()"
+    >
+      添加会员
+    </el-button>
+    <el-tabs
+      v-model="activeLeftTab"
+      tab-position="left"
+      @tab-remove="tabremove"
+    >
+      <el-tab-pane
+        v-for="(leftTab, index) in localLeftTab"
+        :key="index"
+        :closable="localLeftTab.length !== 1"
+        :name="index"
       >
-        添加子项目
-      </el-button>
-      <el-tabs
-        v-model="activeLeftTab"
-        tab-position="left"
-        @tab-remove="tabremove"
-      >
-        <el-tab-pane
-          v-for="(leftTab, index) in localLeftTab"
-          :key="index"
-          :closable="localLeftTab.length !== 1"
-          :label="leftTab.name"
-          :name="index"
-        >
-          <!-- 在每个左侧 Tab 中使用 TopTabs 组件 -->
-          <!-- <el-button
-        style="margin-bottom: 5px"
-        v-if="activeLeftTab > 0"
-        size="small"
-        type="primary"
-        round
-        plain
-        @click="syncProject"
-      >
-        同步主项目数据
-      </el-button>
-      <HTooltip
-        style="z-index: 9; color: #48a2ff; margin-left: 5px"
-        text="注意噢！"
-        v-if="activeLeftTab > 0"
-      >
-        <div class="i-bi:exclamation-circle h-1em w-1em" />
-      </HTooltip> -->
-          <TopTabs
-            :left-tab="leftTab"
-            :tab-index="index"
-            @set-client="setclient"
-          />
-        </el-tab-pane>
-      </el-tabs>
-    </template>
-    <template v-else>
-      <TopTabs
-        :left-tab="localLeftTab[0]"
-        @set-client="setclient"
-      />
-    </template>
+        <template #label>
+          <div
+            :class="
+              props.validateAll[index] &&
+              props.validateAll[index] === 'rejected'
+                ? 'validateRejected'
+                : ''
+            "
+          >
+            {{ leftTab.memberNickname || "会员名称" }}
+          </div>
+        </template>
+
+        <TopTabs
+          :left-tab="leftTab"
+          :tab-index="index"
+          @set-client="setclient"
+        />
+      </el-tab-pane>
+    </el-tabs>
   </div>
 </template>

@@ -1,117 +1,162 @@
 <script lang="ts" setup>
-import { provide, reactive, ref } from 'vue'
-// import { addSurvey, doEdit } from '~/src/api/surveyManagement'
-// import { useAclStore } from '~/src/store/modules/acl'
-import LeftTabs from '../VipLeftTabs/index.vue'
+import { provide, reactive, ref } from "vue";
+import { cloneDeep } from "lodash-es";
+import apiLoading from "@/utils/apiLoading";
+import { ElMessage } from "element-plus";
+import LeftTabs from "../VipLeftTabs/index.vue";
+import api from "@/api/modules/survey_vip";
+import useStagedDataStore from "@/store/modules/stagedData"; // 暂存
+import useSurveyVipStore from "@/store/modules/survey_vip"; // 会员
+const stagedDataStore = useStagedDataStore(); // 暂存
+const surveyVipStore = useSurveyVipStore(); // 会员
 
-const emit = defineEmits(['fetch-data'])
-const drawerisible = ref<boolean>(false)
-const title = ref<string>('')
-// const { surveyconfig } = useAclStore()
-const validateTopTabs = ref<any>([])
+const emit = defineEmits(["fetch-data"]);
+const drawerisible = ref<boolean>(false);
+const title = ref<string>("");
+const LeftTabsRef = ref<any>(); // Ref
+// 校验结果，用于在leftTabs中的tabs中给予提示
+const validateAll = ref<any>([]);
+// 校验的promise数组
+const validateTopTabs = ref<any>([]);
+// 提供的方法
 function pushData(data: any) {
-  validateTopTabs.value.push(data)
+  validateTopTabs.value.push(data);
 }
 // 提供一个方法，孙组件可以使用这个方法来触发验证
-provide('validateTopTabs', pushData)
-
-let leftTabsData = reactive<any>([]) // 明确指定类型为 LeftTab[]
-
+provide("validateTopTabs", pushData);
+let leftTabsData = reactive<any>([]); // 明确指定类型为 LeftTab[]
+// 显隐
 async function showEdit(row: any) {
   if (!row) {
-    title.value = '添加'
-    leftTabsData = reactive([
-      {
-        name: '主项目',
-        // currency: surveyconfig.currency,
-        platform: {},
-        screen: {},
-        security: {},
-      },
-    ])
+    title.value = "添加";
+    leftTabsData = stagedDataStore.surveyVip || reactive([{}]);
+  } else {
+    title.value = "编辑";
+    const { data } = await apiLoading(api.detail({ memberId: row.memberId }));
+    initializeLeftTabsData(data);
   }
-  else {
-    title.value = '编辑'
-    initializeLeftTabsData(row)
-  }
-  drawerisible.value = true
+  validateAll.value = [];
+  drawerisible.value = true;
 }
-
+// 清空现有数据
 function initializeLeftTabsData(data: any) {
-  // 清空现有数据
-  leftTabsData.length = 0
+  leftTabsData = reactive<any>([]);
   // 添加主数据作为第一个 Tab
   leftTabsData.push({
     ...data,
-  })
-
-  // 如果存在 children，为每个 child 创建一个 Tab
-  if (data.children && data.children.length) {
-    data.children.forEach((child: any) => {
-      leftTabsData.push({
-        ...child,
-      })
-    })
-  }
+  });
 }
+// 暂存
+function staging() {
+  stagedDataStore.surveyVip = cloneDeep(leftTabsData);
+  leftTabsData = reactive<any>([]);
+  drawerisible.value = false;
+  validateTopTabs.value = [];
+}
+// 关闭
 function close() {
-  leftTabsData = reactive<any>([])
-  emit('fetch-data')
-  drawerisible.value = false
-  validateTopTabs.value = []
-}
-
-async function save() {
-  const arr: any = []
-  validateTopTabs.value.forEach((element: any) => {
-    arr.push(element.validate())
-  })
-  try {
-    // 实现全部校验  validateTopTabs为数组，每个元素为子组件的ref
-    const ispass = (await Promise.all(arr)).every((item: any) => item)
-    if (ispass) {
-      if (title.value === '添加') {
-        // const { message }: any = await addSurvey(leftTabsData)
-        // $baseMessage(message, 'success', 'hey')
-      }
-      else {
-        // 更新接口
-        // const { message }: any = await doEdit(leftTabsData)
-        // $baseMessage(message, 'success', 'hey')
-      }
-      emit('fetch-data')
-      close()
-    }
+  leftTabsData = reactive<any>([]);
+  drawerisible.value = false;
+  validateTopTabs.value = [];
+  if (title.value === "添加") {
+    stagedDataStore.surveyVip = null;
   }
-  catch (error) {
-    // $baseMessage('请完善信息', 'error', 'hey')
-    console.error('Form validation failed:', error)
+}
+// 校验所有组件
+async function validate() {
+  const arr: any = [];
+  validateTopTabs.value.forEach((element: any) => {
+    arr.push(element.validate());
+  });
+  const validateResult = await Promise.allSettled(arr);
+  validateAll.value = validateResult.map((item) => item.status);
+}
+// 判断供应商名称是否重复
+function hasDuplicateCustomer(customers: any) {
+  const seen = new Set();
+  for (const customer of customers) {
+    if (seen.has(customer.memberNickname)) {
+      return true; // 如果已经存在，则表示有重复
+    }
+    seen.add(customer.memberNickname);
+  }
+  return false; // 如果没有重复，则返回false
+}
+// 确定
+async function save() {
+  await validate();
+  // 表单校验
+  if (validateAll.value.every((item: any) => item === "fulfilled")) {
+    // 判重
+    if (!hasDuplicateCustomer(leftTabsData)) {
+      if (title.value === "添加") {
+        const { status } = await api.create({
+          addMemberInfoList: leftTabsData,
+        });
+        status === 1 &&
+          ElMessage.success({
+            message: "新增成功",
+            center: true,
+          });
+      } else {
+        const { status } = await api.edit(leftTabsData[0]);
+        status === 1 &&
+          ElMessage.success({
+            message: "修改成功",
+            center: true,
+          });
+      }
+      // 数据改变 在会员组中需要重新请求
+      surveyVipStore.NickNameList = null;
+      close();
+      emit("fetch-data");
+    } else {
+      ElMessage.warning({
+        message: "会员名称重复",
+        center: true,
+      });
+    }
+  } else {
+    // 跳转到第一个未通过校验的组件
+    LeftTabsRef.value.activeLeftTab = validateAll.value.indexOf("rejected");
+    ElMessage.warning({
+      message: "请完善表单",
+      center: true,
+    });
   }
 }
 
 // ... 这里可能还有其他逻辑 ...
 defineExpose({
   showEdit,
-})
+});
 </script>
 
 <template>
   <div>
     <el-drawer
-      v-model="drawerisible" :class="title === '添加' ? 'hide-drawer-header' : 'edit-drawer'" append-to-body :close-on-click-modal="false" destroy-on-close draggable size="60%"
-      @close="close"
+      v-model="drawerisible"
+      class="hide-drawer-header"
+      append-to-body
+      :close-on-click-modal="false"
+      destroy-on-close
+      draggable
+      size="60%"
     >
-      <LeftTabs :left-tabs-data="leftTabsData" :validate-top-tabs="validateTopTabs" />
+      <LeftTabs
+        @validate="validate"
+        ref="LeftTabsRef"
+        :title="title"
+        :left-tabs-data="leftTabsData"
+        :validate-top-tabs="validateTopTabs"
+        :validate-all="validateAll"
+      />
       <template #footer>
-        <el-button @click="close">
-          取消
-        </el-button>
-        <el-button type="warning" @click="">
+        <el-button @click="close"> 取消 </el-button>
+        <el-button v-if="title === '添加'" type="warning" @click="staging">
           暂存
         </el-button>
-        <el-button type="primary" @click="save">
-          确定
-        </el-button>
+        <el-button type="primary" @click="save"> 确定 </el-button>
       </template>
     </el-drawer>
   </div>

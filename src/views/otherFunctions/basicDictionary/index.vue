@@ -8,6 +8,7 @@ defineOptions({
 });
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
+pagination.value.size = 20;
 interface Dict {
   id: string | number;
   label: string;
@@ -31,8 +32,6 @@ const dictionary = ref({
   row: "",
   loading: false,
 });
-// pagination.value.size = 20;
-// pagination.value.sizes = [20, 50, 100];
 const dictionaryItemRef = ref();
 // 字典下的数据
 const dictionaryItem = ref<any>({
@@ -79,8 +78,7 @@ function dictionaryFilter(value: string, data: Dict) {
   }
   return data.label.includes(value);
 }
-
-// 字典项详情
+// 获取答案
 function dictionaryClick(data: Dict) {
   pagination.value.page = 1;
   dictionaryItem.value.search.id = data.id;
@@ -95,25 +93,26 @@ watch(
 // 获取字典项
 async function getDictionaryItemList() {
   dictionaryItem.value.loading = true;
-  const res = await api.itemlist(dictionaryItem.value.search.id);
+  const params: any = {
+    ...getParams(),
+    id: dictionaryItem.value.search.id,
+  };
+  const res = await api.itemlist(params);
   dictionaryItem.value.loading = false;
-  dictionaryItem.value.dataList = res.data;
+  dictionaryItem.value.dataList = res.data.records;
   dictionaryItem.value.dataList.forEach((item: any) => {
     item.enableLoading = false;
   });
-  pagination.value.total = res.data.length;
+  pagination.value.total = Number(res.data.total);
 }
-// 暂无分页 后期加（赵）
-// // 每页数量切换
-// function sizeChange(size: number) {
-//   onSizeChange(size).then(() => getDictionaryItemList());
-// }
-
-// // 当前页码切换（翻页）
-// function currentChange(page = 1) {
-//   onCurrentChange(page).then(() => getDictionaryItemList());
-// }
-
+// 每页数量切换
+function sizeChange(size: number) {
+  onSizeChange(size).then(() => getDictionaryItemList());
+}
+// 当前页码切换（翻页）
+function currentChange(page = 1) {
+  onCurrentChange(page).then(() => getDictionaryItemList());
+}
 // 字段排序
 function sortChange({ prop, order }: { prop: string; order: string }) {
   onSortChange(prop, order).then(() => getDictionaryItemList());
@@ -199,7 +198,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
               </template>
             </ElTableColumn>
           </ElTable>
-          <!--   <ElPagination
+          <ElPagination
             :current-page="pagination.page"
             :total="pagination.total"
             :page-size="pagination.size"
@@ -210,7 +209,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
             background
             @size-change="sizeChange"
             @current-change="currentChange"
-          /> -->
+          />
         </div>
         <div v-show="!dictionaryItem.search.id" class="dictionary-container">
           <div class="empty">请在左侧新增或选择一个字典</div>

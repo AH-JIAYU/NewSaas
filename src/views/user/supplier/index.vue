@@ -108,7 +108,7 @@ async function changeState(state: any, id: string) {
     status: state,
     tenantSupplierId: id,
   };
-  const { status } = await api.editState(params);
+  const { status } = await api.changestatus(params);
   status === 1 &&
     ElMessage.success({
       message: "修改成功",
@@ -153,7 +153,7 @@ async function fetchData() {
     ...getParams(),
     ...queryForm,
   };
-  if (queryForm.time) {
+  if (queryForm.time && !!queryForm.time.length) {
     params.beginTime = queryForm.time[0] || "";
     params.endTime = queryForm.time[1] || "";
   }
@@ -364,8 +364,8 @@ onMounted(() => {
           label="B2B|B2C"
         >
           <template #default="{ row }">
-            {{ row.b2bStatus === 1 ? "×" : "√" }} |
-            {{ row.b2cStatus === 1 ? "×" : "√" }}
+            {{ row.b2bStatus && row.b2bStatus === 2 ? "√" : "×" }} |
+            {{ row.b2cStatus && row.b2cStatus === 2 ? "√" : "×" }}
           </template>
         </el-table-column>
         <el-table-column

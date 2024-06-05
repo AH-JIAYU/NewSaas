@@ -420,7 +420,7 @@ const resetCheck = () => {
           <ElFormItem prop="agreeToTheAgreement">
             <div class="flex-bar" style="margin: 0; width: 100%">
               <!-- {{loginForm.agreeToTheAgreement}} -->
-              <ElCheckbox v-model="loginForm.agreeToTheAgreement"
+              <ElCheckbox v-model="loginForm.agreeToTheAgreement" tabindex="3"
                 >我已阅读并同意《xxxx协议》
               </ElCheckbox>
               <ElLink
@@ -435,14 +435,14 @@ const resetCheck = () => {
           </ElFormItem>
         </div>
         <div class="flex-bar">
-          <ElCheckbox v-model="loginForm.remember"> 保持登录 </ElCheckbox>
+          <ElCheckbox v-model="loginForm.remember" tabindex="4"> 保持登录 </ElCheckbox>
         </div>
         <ElButton
           :loading="loading"
           type="primary"
           size="large"
           style="width: 100%"
-          @click.prevent="handleLogin"
+          @click.prevent="handleLogin" tabindex="5"
         >
           {{ t("app.login") }}
         </ElButton>
@@ -519,7 +519,7 @@ const resetCheck = () => {
             <ElInput
               v-model="registerForm.code"
               placeholder="验证码"
-              tabindex="2"
+              tabindex="4"
             >
               <template #prefix>
                 <SvgIcon name="i-ic:baseline-verified-user" />
@@ -539,7 +539,7 @@ const resetCheck = () => {
               v-model="registerForm.password"
               type="password"
               placeholder="密码"
-              tabindex="3"
+              tabindex="5"
               show-password
             >
               <template #prefix>
@@ -549,7 +549,7 @@ const resetCheck = () => {
           </ElFormItem>
           <ElFormItem prop="agreeToTheAgreement">
             <div class="flex-bar" style="margin: 0">
-              <ElCheckbox v-model="registerForm.agreeToTheAgreement">
+              <ElCheckbox v-model="registerForm.agreeToTheAgreement" tabindex="6">
                 我已阅读并同意《xxxx协议》
               </ElCheckbox>
             </div>
@@ -557,6 +557,7 @@ const resetCheck = () => {
         </div>
 
         <ElButton
+        tabindex="7"
           :loading="loading"
           type="primary"
           size="large"

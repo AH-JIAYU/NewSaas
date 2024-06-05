@@ -13,3 +13,4 @@ export default async function apiLoading(apiFunction: any) {
   loadingHide();
   return res;
 }
+

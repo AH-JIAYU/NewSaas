@@ -2,7 +2,7 @@
 import { cloneDeep } from "lodash-es";
 import { defineProps, provide, ref } from "vue";
 import TopTabs from "../SupplierTopTabs/index.vue";
-import UseUserSupplier from "@/store/modules/userSupplier";
+import UseUserSupplier from "@/store/modules/user_supplier";
 const userSupplier = UseUserSupplier();
 
 const props = defineProps({
@@ -125,3 +125,4 @@ function setclient(data: number) {
     </template>
   </div>
 </template>
+@/store/modules/user_supplier

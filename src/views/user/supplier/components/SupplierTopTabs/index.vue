@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ElForm } from "element-plus";
 import { defineProps, ref } from "vue";
-import UseUserSupplier from "@/store/modules/userSupplier";
+import UseUserSupplier from "@/store/modules/user_supplier";
 const userSupplier = UseUserSupplier();
 // 如果希望默认展示第一个 Tab
 const props: any = defineProps({
@@ -191,3 +191,4 @@ defineExpose({ showEdit });
 </template>
 
 <style scoped lang="scss"></style>
+@/store/modules/user_supplier

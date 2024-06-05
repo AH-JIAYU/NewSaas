@@ -7,7 +7,7 @@ import apiLoading from "@/utils/apiLoading";
 import api from "@/api/modules/user_supplier";
 import useStagedDataStore from "@/store/modules/stagedData";
 const stagedDataStore = useStagedDataStore(); // 暂存
-import useUserSupplierStore from "@/store/modules/userSupplier";
+import useUserSupplierStore from "@/store/modules/user_supplier";
 const supplierStore = useUserSupplierStore(); // 供应商store
 
 const emit = defineEmits(["fetch-data"]);
@@ -155,3 +155,4 @@ defineExpose({
     </el-drawer>
   </div>
 </template>
+@/store/modules/user_supplier

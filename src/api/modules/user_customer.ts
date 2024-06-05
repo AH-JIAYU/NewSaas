@@ -10,7 +10,7 @@ export default {
   // 修改 单个
   edit: (data: any) => api.post("tenantCustomer/updateTenantCustomer", data),
   // 修改 单个 状态
-  editState: (data: any) =>
+  changestatus: (data: any) =>
     api.post("tenantCustomer/updateTenantCustomerStatus", data),
   // 删除
   delete: (data: any) => api.post("tenantCustomer/deleteTenantCustomer", data),

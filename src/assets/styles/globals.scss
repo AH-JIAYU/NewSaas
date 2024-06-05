@@ -329,7 +329,9 @@ textarea {
   }
 
   div:has(>.validateRejected) {
-    box-shadow: 0 0 1px 1px red; // 校验未通过左侧边红
+    // box-shadow: 0 0 1px 1px red; // 校验未通过左侧边红
+    color: var(--el-color-white);
+    background-color: var(--el-color-danger) !important;
   }
 
   .el-tabs__content {

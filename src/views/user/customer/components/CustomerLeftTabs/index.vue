@@ -66,7 +66,7 @@ function setclient(data: number) {
     <template v-if="!localLeftTab[0].id">
       <el-button
         class="button"
-        :disabled="localLeftTab.length > 9 || props.title !== '添加'"
+        :disabled="localLeftTab.length > 29 || props.title !== '添加'"
         @click="addLeftTab()"
       >
         新增客户

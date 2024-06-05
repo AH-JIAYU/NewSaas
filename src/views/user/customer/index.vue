@@ -62,7 +62,7 @@ async function changeState(state: any, type: number, id: string) {
     operationalType: type,
     tenantCustomerId: id,
   };
-  const { status } = await api.editState(params);
+  const { status } = await api.changestatus(params);
   status === 1 &&
     ElMessage.success({
       message: "修改成功",

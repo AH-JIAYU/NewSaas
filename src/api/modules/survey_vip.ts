@@ -9,6 +9,9 @@ export default {
   create: (data: any) => api.post("member/addMember", data),
   // 修改  单个
   edit: (data: any) => api.post("member/updateMember", data),
-  // 修改状态 单个
+  // 修改状态  单个
   changestatus: (data: any) => api.post("member/updateMemberStatus", data),
+  // 新增-修改会员组-查询组成员调用此接口
+  getNickNameList: (data: any) =>
+    api.post("member/getMemberLikeNickNameList", data),
 };

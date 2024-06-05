@@ -2,40 +2,66 @@
 import { onMounted, reactive, ref } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import VipEdit from "./components/VipEdit/index.vue";
+import api from "@/api/modules/survey_vip";
+import useSurveyVipLevelStore from "@/store/modules/survey_vipLevel"; //会员等级
+import useSurveyVipGroupStore from "@/store/modules/survey_vipGroup"; //会员组
+import useSurveyVipStore from "@/store/modules/survey_vip"; // 会员
+const surveyVipLevelStore = useSurveyVipLevelStore(); //会员等级
+const surveyVipGroupStore = useSurveyVipGroupStore(); //会员组
+const surveyVipStore = useSurveyVipStore(); // 会员
 
 defineOptions({
   name: "SurveyVipList",
 });
 
-const { pagination, onSizeChange, onCurrentChange } = usePagination(); // 分页
+const { pagination, getParams, onSizeChange, onCurrentChange } =
+  usePagination(); // 分页
 
 const listLoading = ref(false);
-
-const list = ref<Array<Object>>([]); // 列表
+const data = reactive<any>({
+  list: [], // 列表
+  vipLevelList: [], //会员等级
+  vipGroupList: [], // 会员组
+});
 const selectRows = ref<any>(); // 表格-选中行
 const editRef = ref(); // 添加|编辑 组件ref
-const checkRef = ref(); // 查看 组件ref
 const border = ref<any>(true); // 表格控件-是否展示边框
 const stripe = ref<any>(false); // 表格控件-是否展示斑马条
 const lineHeight = ref<any>("default"); // 表格控件-控制表格大小
 const checkList = ref<Array<Object>>([]); // 表格-展示的列
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
+// 表格控件-展示列
 const columns = ref<Array<Object>>([
-  // 表格控件-展示列
+  { prop: "memberId", label: "会员id", checked: true, sprtable: true },
   {
-    label: "等级名称",
-    prop: "a",
-    sortable: true,
-    disableCheck: false, // 不可更改
-    checked: true, // 默认展示
+    prop: "memberNickname",
+    label: "会员名称",
+    checked: true,
+    sprtable: true,
   },
+  { prop: "memberName", label: "会员姓名", checked: true, sprtable: true },
+  {
+    prop: "memberLevelName",
+    label: "会员等级",
+    checked: true,
+    sprtable: true,
+  },
+  { prop: "memberGroupName", label: "会员组", checked: true, sprtable: true },
+  { prop: "B2B|B2C", label: "B2B|B2C", checked: true, sprtable: true },
+  { prop: "memberStatus", label: "会员状态", checked: true, sprtable: true },
+  { prop: "createName", label: "创建人", checked: true, sprtable: true },
+  { prop: "createTime", label: "创建日期", checked: true, sprtable: true },
 ]);
 
+// 请求接口携带参数
 const queryForm = reactive<any>({
-  // 请求接口携带参数
-  pageNo: 1,
-  pageSize: 10,
-  select: {},
+  memberName: "",
+  memberLevelId: "",
+  memberStatus: "",
+  memberGroupId: "",
+  beginTime: "",
+  endTime: "",
+  time: [],
 });
 
 // 添加
@@ -46,40 +72,24 @@ function handleAdd() {
 function handleEdit(row: any) {
   editRef.value.showEdit(row);
 }
-// 更改状态
-function handleChange(fold: any) {
-  if (selectRows.value.length > 0) {
-    let msg = "";
-    switch (fold) {
-      case 0:
-        msg = "该注册用户成为";
-        break;
-      case 1:
-        msg = "启用该";
-        break;
-      case 2:
-        msg = "禁用该";
-        break;
-    }
-    ElMessageBox.confirm(`您确${msg}供应商吗?`, "确认信息")
-      .then(() => {
-        // apiManager.delete(row.id).then(() => {
-        //   getDataList()
-        //   ElMessage.success({
-        //     message: '模拟删除成功',
-        //     center: true,
-        //   })
-        // })
-      })
-      .catch(() => {});
-  } else {
-    ElMessage.error("您未选中任何行");
-  }
+// 切换状态
+async function changeState(state: any, id: string) {
+  const params = {
+    memberId: id,
+    memberStatus: state,
+  };
+  const { status } = await api.changestatus(params);
+  status === 1 &&
+    ElMessage.success({
+      message: "修改成功",
+    });
+  // 数据改变 在会员组中需要重新请求
+  surveyVipStore.NickNameList = null;
+  queryData();
 }
-
 // 重置请求
 function queryData() {
-  queryForm.pageNo = 1;
+  pagination.value.page = 1;
   fetchData();
 }
 // 每页数量切换
@@ -94,114 +104,46 @@ function currentChange(page = 1) {
 // 请求
 async function fetchData() {
   listLoading.value = true;
-  list.value = [
-    {
-      a: 1,
-      b: 2,
-      c: 3,
-      d: 4,
-      e: 5,
-      f: 6,
-      g: 7,
-      h: 8,
-      r: 9,
-      i: 10,
-      id: 1,
-      name: "name",
-    },
-    {
-      a: 1,
-      b: 2,
-      c: 3,
-      d: 4,
-      e: 5,
-      f: 6,
-      g: 7,
-      h: 8,
-      r: 9,
-      i: 10,
-      id: 1,
-      name: "name",
-    },
-    {
-      a: 1,
-      b: 2,
-      c: 3,
-      d: 4,
-      e: 5,
-      f: 6,
-      g: 7,
-      h: 8,
-      r: 9,
-      i: 10,
-      id: 1,
-      name: "name",
-    },
-    {
-      a: 1,
-      b: 2,
-      c: 3,
-      d: 4,
-      e: 5,
-      f: 6,
-      g: 7,
-      h: 8,
-      r: 9,
-      i: 10,
-      id: 1,
-      name: "name",
-    },
-    {
-      a: 1,
-      b: 2,
-      c: 3,
-      d: 4,
-      e: 5,
-      f: 6,
-      g: 7,
-      h: 8,
-      r: 9,
-      i: 10,
-      id: 1,
-      name: "name",
-    },
-    {
-      a: 1,
-      b: 2,
-      c: 3,
-      d: 4,
-      e: 5,
-      f: 6,
-      g: 7,
-      h: 8,
-      r: 9,
-      i: 10,
-      id: 1,
-      name: "name",
-    },
-  ];
+  const params = {
+    ...getParams(),
+    ...queryForm,
+  };
+  if (queryForm.time && !!queryForm.time.length) {
+    params.beginTime = queryForm.time[0] || "";
+    params.endTime = queryForm.time[1] || "";
+  }
+  const res = await api.list(params);
+  data.list = res.data.getMemberInfoList;
+  pagination.value.total = res.data.total;
   listLoading.value = false;
 }
 // 重置筛选数据
 function onReset() {
+  // queryForm=
   Object.assign(queryForm, {
-    pageNo: 1,
-    pageSize: 10,
-    select: {},
+    memberName: "",
+    memberLevelId: "",
+    memberStatus: "",
+    memberGroupId: "",
+    beginTime: "",
+    endTime: "",
+    time: [],
   });
-  fetchData();
+  queryData();
 }
 // 表格-单选框
 function setSelectRows(val: any) {
   selectRows.value = val;
 }
-onMounted(() => {
+onMounted(async () => {
   columns.value.forEach((item: any) => {
     if (item.checked) {
       checkList.value.push(item.prop);
     }
   });
   fetchData();
+  data.vipLevelList = await surveyVipLevelStore.getLevelNameList();
+  data.vipGroupList = await surveyVipGroupStore.getGroupNameList();
 });
 </script>
 
@@ -211,7 +153,7 @@ onMounted(() => {
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
           <ElForm
-            :model="queryForm.select"
+            :model="queryForm"
             size="default"
             label-width="100px"
             inline-message
@@ -219,8 +161,13 @@ onMounted(() => {
             class="search-form"
           >
             <el-form-item label="">
+              <!--
+                (刘)
+                会员列表目前这个只会模糊匹配姓名
+                那个我等下有时间在搞
+              -->
               <el-input
-                v-model.trim="queryForm.select.id"
+                v-model.trim="queryForm.memberName"
                 clearable
                 :inline="false"
                 placeholder="会员ID、会员名称、姓名"
@@ -228,44 +175,52 @@ onMounted(() => {
             </el-form-item>
             <el-form-item label="">
               <el-select
-                v-model="queryForm.select.default"
+                v-model="queryForm.memberLevelId"
                 clearable
-                placeholder="会员角色"
+                placeholder="会员等级"
               >
-                <el-option label="默认" value="true" />
-                <el-option label="关闭" value="false" />
+                <el-option
+                  v-for="item in data.vipLevelList"
+                  :key="item.memberLevelId"
+                  :label="item.levelNameOrAdditionRatio"
+                  :value="item.memberLevelId"
+                />
               </el-select>
             </el-form-item>
             <el-form-item label="">
               <el-select
-                v-model="queryForm.select.default"
+                v-model="queryForm.memberStatus"
                 clearable
                 placeholder="会员状态"
               >
-                <el-option label="默认" value="true" />
-                <el-option label="关闭" value="false" />
+                <el-option label="关闭" :value="1" />
+                <el-option label="开启" :value="2" />
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
               <el-select
-                v-model="queryForm.select.default"
+                v-model="queryForm.memberGroupId"
                 clearable
                 placeholder="所属会员组"
               >
-                <el-option label="默认" value="true" />
-                <el-option label="关闭" value="false" />
+                <el-option
+                  v-for="item in data.vipGroupList"
+                  :key="item.memberGroupId"
+                  :label="item.memberGroupName"
+                  :value="item.memberGroupId"
+                />
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold">
               <el-date-picker
-                v-model="queryForm.select.time"
-                type="daterange"
+                v-model="queryForm.time"
+                type="datetimerange"
                 unlink-panels
                 range-separator="-"
                 start-placeholder="创建开始日期"
                 end-placeholder="创建结束日期"
+                value-format="YYYY-MM-DD hh:mm:ss"
                 size="default"
-                clear-icon="true"
               />
             </el-form-item>
             <ElFormItem>
@@ -317,71 +272,103 @@ onMounted(() => {
       <el-table
         v-loading="listLoading"
         :border="border"
-        :data="list"
+        :data="data.list"
         :size="lineHeight"
         :stripe="stripe"
         @selection-change="setSelectRows"
       >
         <el-table-column
-          v-if="checkList.includes('a')"
+          v-if="checkList.includes('memberId')"
           align="center"
-          prop="id"
+          prop="memberId"
           show-overflow-tooltip
           label="会员ID"
         />
         <el-table-column
+          v-if="checkList.includes('memberNickname')"
           align="center"
-          prop="b"
+          prop="memberNickname"
           show-overflow-tooltip
           label="会员名称"
         />
         <el-table-column
+          v-if="checkList.includes('memberName')"
           align="center"
-          prop="c"
+          prop="memberName"
           show-overflow-tooltip
-          label="姓名"
+          label="会员姓名"
         />
         <el-table-column
+          v-if="checkList.includes('memberLevelName')"
           align="center"
-          prop="d"
+          prop="memberLevelName"
           show-overflow-tooltip
           label="会员等级"
         />
         <el-table-column
+          v-if="checkList.includes('memberGroupName')"
           align="center"
-          prop="e"
+          prop="memberGroupName"
           show-overflow-tooltip
           label="会员组"
         />
+
         <el-table-column
+          v-if="checkList.includes('B2B|B2C')"
           align="center"
-          prop="g"
           show-overflow-tooltip
           label="B2B|B2C"
-        />
-        <el-table-column
-          align="center"
-          prop="a"
-          show-overflow-tooltip
-          label="会员状态"
         >
-          <ElSwitch inline-prompt active-text="启用" inactive-text="禁用" />
+          <template #default="{ row }">
+            {{ row.b2bStatus && row.b2bStatus === 2 ? "√" : "×" }} |
+            {{ row.b2cStatus && row.b2cStatus === 2 ? "√" : "×" }}
+          </template>
         </el-table-column>
         <el-table-column
           align="center"
-          prop="h"
+          v-if="checkList.includes('memberStatus')"
+          show-overflow-tooltip
+          label="会员状态"
+        >
+          <template #default="{ row }">
+            <ElSwitch
+              v-if="row.memberStatus === 3"
+              v-model="row.memberStatus"
+              inline-prompt
+              :inactive-value="2"
+              :active-value="3"
+              inactive-text="启用"
+              active-text="待审核"
+              @change="changeState($event, row.memberId)"
+            />
+            <ElSwitch
+              v-else
+              v-model="row.memberStatus"
+              inline-prompt
+              :inactive-value="1"
+              :active-value="2"
+              inactive-text="禁用"
+              active-text="启用"
+              @change="changeState($event, row.memberId)"
+            />
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="checkList.includes('createName')"
+          align="center"
+          prop="createName"
           show-overflow-tooltip
           label="创建人"
         />
         <el-table-column
+          v-if="checkList.includes('createTime')"
           align="center"
-          prop="r"
+          prop="createTime"
           show-overflow-tooltip
           label="创建日期"
         />
         <el-table-column
           align="center"
-          prop="i"
           label="操作"
           show-overflow-tooltip
           width="180"
@@ -415,7 +402,7 @@ onMounted(() => {
         @current-change="currentChange"
       />
     </PageMain>
-    <VipEdit ref="editRef" @fetch-data="fetchData" />
+    <VipEdit ref="editRef" @fetch-data="queryData" />
   </div>
 </template>
 
