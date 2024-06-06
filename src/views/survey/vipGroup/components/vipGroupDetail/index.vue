@@ -12,7 +12,7 @@ const list = ref([]); // 列表
 const queryForm = reactive<any>({
   memberGroupId: "", //	会员组id
 });
-async function showEdit(row) {
+async function showEdit(row: any) {
   queryForm.memberGroupId = row.memberGroupId;
   await fetchData();
   drawerisible.value = true;
