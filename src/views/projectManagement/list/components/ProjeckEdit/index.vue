@@ -27,7 +27,7 @@ async function showEdit(row: any) {
     title.value = "添加";
     leftTabsData = reactive([
       {
-        name: "项目名称",
+        customerAccord: "",
         addProjectQuotaInfoList: [], //配置信息
       },
     ]);

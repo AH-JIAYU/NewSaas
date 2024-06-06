@@ -5,7 +5,7 @@ import api from "@/api/modules/otherFunctions_screenLibrary";
 import useUserStore from "@/store/modules/user";
 import "survey-core/defaultV2.min.css";
 import "survey-creator-core/survey-creator-core.min.css";
-import apiLoading from "@/utils/apiLoading";
+import { obtainLoading } from "@/utils/apiLoading";
 
 import {
   setLicenseKey,
@@ -96,7 +96,7 @@ creator.saveSurveyFunc = (saveNo: number, callback: any) => {
 };
 
 onMounted(async () => {
-  const { data } = await apiLoading(api.getSurvey(props.id));
+  const { data } = await obtainLoading(api.getSurvey(props.id));
   creator.text = data.projectJson || "";
 });
 

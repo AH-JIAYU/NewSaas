@@ -2,7 +2,8 @@
 import { cloneDeep } from "lodash-es";
 import { defineProps, provide, ref } from "vue";
 import TopTabs from "../VipTopTabs/index.vue";
-// import { useAclStore } from '/@/store/modules/acl'
+import useSurveyVipStore from "@/store/modules/survey_vip"; // 会员
+const surveyVipStore = useSurveyVipStore(); // 会员
 
 const props: any = defineProps({
   leftTabsData: Array,
@@ -21,21 +22,16 @@ localLeftTab.value.forEach((tab: any, index: any) => {
   provide(`formRef${index}`, formRef);
 });
 
-// const { surveyconfig } = useAclStore()
 const tabIndex = ref(0);
 const activeLeftTab = ref(0);
-
-const initialTopTabsData = {
-  // memberNickname: "会员名称",
-};
-
+// 新增
 function addLeftTab() {
   activeLeftTab.value = ++tabIndex.value;
   localLeftTab.value.push({
-    ...initialTopTabsData,
+    ...surveyVipStore.initialTopTabsData,
   });
 }
-
+// 删除
 function tabremove(tabIndexs: any) {
   localLeftTab.value.splice(tabIndexs, 1);
   validateTopTabs.value.splice(tabIndexs, 1);
@@ -44,18 +40,12 @@ function tabremove(tabIndexs: any) {
     tabIndex.value = Math.max(0, localLeftTab.value.length - 1);
   }
 }
-function setclient(data: number) {
-  localLeftTab.value.forEach((item: any) => {
-    item.client = data;
-  });
-  client.value = data;
-}
 /**
  * 监听activeLeftTab.value左侧焦点的tabs
  *  props.validateAll 是点击确认后所有组件的校验结果
  * validateIndex 是props.validateAll中值为rejected(校验未通过)的值的索引
- * 当activeLeftTab改变，并且改变前的值 在validateIndex中存在，
- * 声明他刚改完表单 重更进行校验，取消符合校验规则的lefTabs的红色阴影
+ * 当activeLeftTab改变(切换tabs)，并且改变前的值 在validateIndex中存在，
+ * 说明他刚改完表单 重新进行校验，取消符合校验规则的lefTabs的红色阴影
  */
 watch(
   () => activeLeftTab.value,
@@ -110,11 +100,7 @@ defineExpose({ activeLeftTab });
           </div>
         </template>
 
-        <TopTabs
-          :left-tab="leftTab"
-          :tab-index="index"
-          @set-client="setclient"
-        />
+        <TopTabs :left-tab="leftTab" :tab-index="index" />
       </el-tab-pane>
     </el-tabs>
   </div>

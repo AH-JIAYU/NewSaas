@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { provide, reactive, ref } from "vue";
 import { cloneDeep } from "lodash-es";
-import apiLoading from "@/utils/apiLoading";
+import { obtainLoading, submitLoading } from "@/utils/apiLoading";
 import { ElMessage } from "element-plus";
 import LeftTabs from "../VipLeftTabs/index.vue";
 import api from "@/api/modules/survey_vip";
@@ -29,10 +29,14 @@ let leftTabsData = reactive<any>([]); // 明确指定类型为 LeftTab[]
 async function showEdit(row: any) {
   if (!row) {
     title.value = "添加";
-    leftTabsData = stagedDataStore.surveyVip || reactive([{}]);
+    leftTabsData =
+      stagedDataStore.surveyVip ||
+      reactive([{ ...surveyVipStore.initialTopTabsData }]);
   } else {
     title.value = "编辑";
-    const { data } = await apiLoading(api.detail({ memberId: row.memberId }));
+    const { data } = await obtainLoading(
+      api.detail({ memberId: row.memberId })
+    );
     initializeLeftTabsData(data);
   }
   validateAll.value = [];
@@ -90,16 +94,18 @@ async function save() {
     // 判重
     if (!hasDuplicateCustomer(leftTabsData)) {
       if (title.value === "添加") {
-        const { status } = await api.create({
-          addMemberInfoList: leftTabsData,
-        });
+        const { status } = await submitLoading(
+          api.create({
+            addMemberInfoList: leftTabsData,
+          })
+        );
         status === 1 &&
           ElMessage.success({
             message: "新增成功",
             center: true,
           });
       } else {
-        const { status } = await api.edit(leftTabsData[0]);
+        const { status } = await submitLoading(api.edit(leftTabsData[0]));
         status === 1 &&
           ElMessage.success({
             message: "修改成功",
@@ -125,8 +131,6 @@ async function save() {
     });
   }
 }
-
-// ... 这里可能还有其他逻辑 ...
 defineExpose({
   showEdit,
 });

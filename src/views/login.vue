@@ -14,7 +14,10 @@ import Copyright from "@/layouts/components/Copyright/index.vue";
 import useSettingsStore from "@/store/modules/settings";
 import useUserStore from "@/store/modules/user";
 import storage from "@/utils/storage";
+import { submitLoading, obtainLoading } from "@/utils/apiLoading";
 import api from "@/api/modules/register";
+import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典-国家
+const basicDictionaryStore = useBasicDictionaryStore(); //基础字典-国家
 
 defineOptions({
   name: "Login",
@@ -40,7 +43,7 @@ const redirect = ref(
   route.query.redirect?.toString() ?? settingsStore.settings.home.fullPath
 );
 
-// 登录
+//#region 登录
 const loginFormRef = ref<any>();
 const loginType = ref("code"); // 登录方式
 const loginCode = ref<any>("获取验证码");
@@ -100,7 +103,6 @@ const chengAccount = () => {
       { validator: validateEmail, trigger: "blur" },
     ];
   }
-  console.log("loginRules", loginRules.value);
 };
 // 获取验证码
 async function loginCaptcha() {
@@ -182,12 +184,14 @@ function handleLogin() {
       }
     });
 }
+//#endregion
 
-// 注册
+// #region 注册
 const getPhoneInterval = ref<any>(null); // 倒计时
 const phoneCode = ref<any>("获取验证码");
 const isGetPhone = ref<boolean>(false); // 禁用获取验证码按钮
 const registerFormRef = ref<any>();
+const countryList = ref<any>([]); // 国家list
 const registerForm = ref<any>({
   account: "", // 账号
   password: "", // 密码
@@ -218,16 +222,6 @@ const validateEmailRegistered = (rule: any, value: any, callback: any) => {
     callback();
   }
 };
-const typeSelect = [
-  {
-    value: "phone",
-    label: "中国",
-  },
-  {
-    value: "email",
-    label: "美国",
-  },
-];
 const registerRules = ref<FormRules>({
   account: [{ required: true, trigger: "blur", message: "请输入用户名" }],
   email: [
@@ -259,10 +253,18 @@ const mobileVerificationCode = async () => {
     phone: registerForm.value.phoneNumber,
   };
   if (registerForm.value.type === "phone") {
-    const data = await api.sendCode(params);
+    const { status } = await obtainLoading(api.sendCode(params));
+    status === 1 &&
+      ElMessage.success({
+        message: "已发送",
+      });
   } else {
     params.type = "register_email";
-    const data = await api.sendCode(params);
+    const { status } = await obtainLoading(api.sendCode(params));
+    status === 1 &&
+      ElMessage.success({
+        message: "已发送",
+      });
   }
   countdown();
 };
@@ -287,7 +289,9 @@ async function handleRegister() {
     registerFormRef.value.validate(async (valid: any) => {
       if (valid) {
         // 这里编写业务代码
-        const { status } = await api.register(registerForm.value);
+        const { status } = await submitLoading(
+          api.register(registerForm.value)
+        );
         status === 1 &&
           ElMessage.success({
             message: "注册成功",
@@ -295,8 +299,9 @@ async function handleRegister() {
       }
     });
 }
+// #endregion
 
-// 重置密码
+// #region 重置密码
 const resetFormRef = ref<any>();
 const resetForm = ref({
   account: storage.local.get("login_account"),
@@ -330,8 +335,19 @@ onUnmounted(() => {
 });
 // 重置校验
 const resetCheck = () => {
+  loginRules.value.account = [{ validator: validatePhone, trigger: "blur" }];
   loginFormRef.value.resetFields();
 };
+// #endregion
+
+watch(
+  () => formType.value,
+  async (newValue: any) => {
+    // 注册 获取国家
+    newValue === "register" &&
+      (countryList.value = await basicDictionaryStore.getCountry());
+  }
+);
 </script>
 
 <template>
@@ -355,6 +371,7 @@ const resetCheck = () => {
         :model="loginForm"
         :rules="loginRules"
         class="login-form"
+        :validate-on-rule-change="false"
       >
         <div class="title-container">
           <div class="fx-c">
@@ -375,6 +392,7 @@ const resetCheck = () => {
               :placeholder="t('app.account')"
               type="text"
               tabindex="1"
+              @blur="chengAccount"
             >
               <template #prefix>
                 <SvgIcon name="i-ri:user-3-fill" />
@@ -435,14 +453,17 @@ const resetCheck = () => {
           </ElFormItem>
         </div>
         <div class="flex-bar">
-          <ElCheckbox v-model="loginForm.remember" tabindex="4"> 保持登录 </ElCheckbox>
+          <ElCheckbox v-model="loginForm.remember" tabindex="4">
+            保持登录
+          </ElCheckbox>
         </div>
         <ElButton
           :loading="loading"
           type="primary"
           size="large"
           style="width: 100%"
-          @click.prevent="handleLogin" tabindex="5"
+          @click.prevent="handleLogin"
+          tabindex="5"
         >
           {{ t("app.login") }}
         </ElButton>
@@ -480,20 +501,22 @@ const resetCheck = () => {
           <ElFormItem prop="type">
             <ElSelect
               v-model="registerForm.type"
-              placeholder="注册方式"
+              placeholder="国家"
+              clearable
+              filterable
               tabindex="2"
             >
               <template #prefix>
                 <SvgIcon name="i-mdi:format-list-bulleted-type" />
               </template>
               <ElOption
-                v-for="item in typeSelect"
-                :label="item.label"
-                :value="item.value"
+                v-for="item in countryList"
+                :label="item.chineseName"
+                :value="item.id"
               ></ElOption>
             </ElSelect>
           </ElFormItem>
-          <ElFormItem prop="phoneNumber" v-if="registerForm.type === 'phone'">
+          <ElFormItem prop="phoneNumber" v-if="registerForm.type === '343'">
             <ElInput
               v-model="registerForm.phoneNumber"
               placeholder="手机号"
@@ -504,7 +527,7 @@ const resetCheck = () => {
               </template>
             </ElInput>
           </ElFormItem>
-          <ElFormItem prop="email" v-if="registerForm.type === 'email'">
+          <ElFormItem prop="email" v-else>
             <ElInput
               v-model="registerForm.email"
               placeholder="邮箱"
@@ -549,7 +572,10 @@ const resetCheck = () => {
           </ElFormItem>
           <ElFormItem prop="agreeToTheAgreement">
             <div class="flex-bar" style="margin: 0">
-              <ElCheckbox v-model="registerForm.agreeToTheAgreement" tabindex="6">
+              <ElCheckbox
+                v-model="registerForm.agreeToTheAgreement"
+                tabindex="6"
+              >
                 我已阅读并同意《xxxx协议》
               </ElCheckbox>
             </div>
@@ -557,7 +583,7 @@ const resetCheck = () => {
         </div>
 
         <ElButton
-        tabindex="7"
+          tabindex="7"
           :loading="loading"
           type="primary"
           size="large"
@@ -646,13 +672,13 @@ const resetCheck = () => {
 </template>
 
 <style lang="scss" scoped>
-
 .fx-c {
   display: flex;
   justify-content: center;
   align-items: center;
   margin-bottom: 50px;
 }
+
 [data-mode="mobile"] {
   #login-box {
     position: relative;

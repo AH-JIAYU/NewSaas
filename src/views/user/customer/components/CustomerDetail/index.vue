@@ -3,7 +3,7 @@ import { ref } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import customerDetailDetail from "../CustomerDetailDetail/index.vue";
 import api from "@/api/modules/user_customer";
-import apiLoading from "@/utils/apiLoading";
+import { obtainLoading } from "@/utils/apiLoading";
 
 const emit = defineEmits(["fetch-data"]);
 const drawerisible = ref<boolean>(false);
@@ -14,7 +14,7 @@ async function showEdit(row: any) {
   const params = {
     tenantCustomerId: row.tenantCustomerId,
   };
-  const { status, data } = await apiLoading(api.detail(params));
+  const { status, data } = await obtainLoading(api.detail(params));
   detailStatus.value = data.customerStatus === 1 ? "关闭" : "开启";
   detailData.value = data;
   status === 1 &&

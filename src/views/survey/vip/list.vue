@@ -2,6 +2,7 @@
 import { onMounted, reactive, ref } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import VipEdit from "./components/VipEdit/index.vue";
+import { submitLoading } from "@/utils/apiLoading";
 import api from "@/api/modules/survey_vip";
 import useSurveyVipLevelStore from "@/store/modules/survey_vipLevel"; //会员等级
 import useSurveyVipGroupStore from "@/store/modules/survey_vipGroup"; //会员组
@@ -78,7 +79,7 @@ async function changeState(state: any, id: string) {
     memberId: id,
     memberStatus: state,
   };
-  const { status } = await api.changestatus(params);
+  const { status } = await submitLoading(api.changestatus(params));
   status === 1 &&
     ElMessage.success({
       message: "修改成功",
@@ -119,7 +120,6 @@ async function fetchData() {
 }
 // 重置筛选数据
 function onReset() {
-  // queryForm=
   Object.assign(queryForm, {
     memberName: "",
     memberLevelId: "",

@@ -7,6 +7,7 @@ const props = defineProps({
   leftTab: Object,
   tabIndex: Number,
 });
+const validate = inject<any>("validateTopTabs"); //注入Ref
 const rules = reactive<any>({
   customerAccord: [
     { required: true, message: "请输入客户名称", trigger: "blur" },
@@ -18,7 +19,6 @@ const rules = reactive<any>({
   ],
 });
 
-const emit = defineEmits(["setClient"]);
 const activeName = ref("basicSettings");
 const form = ref({});
 const isTrue = ref(true);
@@ -28,6 +28,10 @@ defineExpose({ showEdit });
 const formRef = ref(null);
 // 注入主组件中的提供者
 const localToptTab = ref<any>(props.leftTab);
+nextTick(() => {
+  // 表单验证方法
+  validate(formRef.value);
+});
 </script>
 
 <template>

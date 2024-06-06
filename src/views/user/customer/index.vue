@@ -3,7 +3,10 @@ import { onMounted } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import customerEdit from "./components/CustomerEdit/index.vue";
 import customerDetail from "./components/CustomerDetail/index.vue";
+import { submitLoading } from "@/utils/apiLoading";
+import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
 import api from "@/api/modules/user_customer";
+const customerStore = useUserCustomerStore(); // 客户
 defineOptions({
   name: "UserCustomerIndex",
 });
@@ -62,11 +65,13 @@ async function changeState(state: any, type: number, id: string) {
     operationalType: type,
     tenantCustomerId: id,
   };
-  const { status } = await api.changestatus(params);
+  const { status } = await submitLoading(api.changestatus(params));
   status === 1 &&
     ElMessage.success({
       message: "修改成功",
     });
+  // 数据改变重新请求
+  customerStore.customer = null;
   queryData();
 }
 // 查看
@@ -77,9 +82,11 @@ function handleCheck(row: Object) {
 function handleDelete(row: any) {
   ElMessageBox.confirm(`您确定要删除当前项吗?`, "确认信息")
     .then(async () => {
-      const { status } = await api.delete({
-        tenantCustomerId: row.tenantCustomerId,
-      });
+      const { status } = await submitLoading(
+        api.delete({
+          tenantCustomerId: row.tenantCustomerId,
+        })
+      );
       status === 1 &&
         ElMessage.success({
           message: "删除成功",

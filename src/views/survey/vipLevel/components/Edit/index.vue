@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { ElMessage } from "element-plus";
-import api from "@/api/modules/survey_vipLevel";
 import { cloneDeep } from "lodash-es";
+import { submitLoading } from "@/utils/apiLoading";
+import api from "@/api/modules/survey_vipLevel";
+import useSurveyVipLevelStore from "@/store/modules/survey_vipLevel"; //会员等级
 
+const surveyVipLevelStore = useSurveyVipLevelStore(); //会员等级
 const emits = defineEmits(["queryData"]);
 const dialogTableVisible = ref(false);
 const title = ref("");
@@ -12,8 +15,8 @@ const rules = reactive({
   levelName: [{ required: true, message: "请输入名称", trigger: "blur" }],
   additionRatio: [{ required: true, message: "请输入比例", trigger: "blur" }],
 });
+// 显示弹框
 async function showEdit(row: any) {
-  // 显示弹框
   if (!row) {
     title.value = "添加";
     form.value = {};
@@ -33,20 +36,22 @@ function onSubmit() {
   formRef.value.validate(async (valid: any) => {
     if (valid) {
       if (!form.value.memberLevelId) {
-        const { status } = await api.create(form.value);
+        const { status } = await submitLoading(api.create(form.value));
         status === 1 &&
           ElMessage.success({
             message: "新增成功",
             center: true,
           });
       } else {
-        const { status } = await api.edit(form.value);
+        const { status } = await submitLoading(api.edit(form.value));
         status === 1 &&
           ElMessage.success({
             message: "编辑成功",
             center: true,
           });
       }
+      // 数据改变 在会员中需要重新请求
+      surveyVipLevelStore.LevelNameList = null;
       emits("queryData");
       close();
     }

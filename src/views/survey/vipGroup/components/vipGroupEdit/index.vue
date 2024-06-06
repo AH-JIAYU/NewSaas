@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import api from "@/api/modules/survey_vipGroup";
 import { ElMessage } from "element-plus";
-import apiLoading from "@/utils/apiLoading";
+import { obtainLoading, submitLoading } from "@/utils/apiLoading";
+import useSurveyVipGroupStore from "@/store/modules/survey_vipGroup"; //会员组
 import useSurveyVipStore from "@/store/modules/survey_vip"; // 会员
+const surveyVipGroupStore = useSurveyVipGroupStore(); //会员组
 const surveyVipStore = useSurveyVipStore(); // 会员
 const emits = defineEmits(["fetch-data"]);
 const drawerisible = ref(false);
@@ -10,7 +12,7 @@ const NickNameList = ref<any>([]); // 会员集合
 const title = ref("新增会员组");
 const form = ref<any>({
   memberGroupName: "", //	会员组名称
-  groupStatus: 1, //组状态:1:关闭 2:开启
+  groupStatus: 2, //组状态:1:关闭 2:开启
   groupMemberIdList: [], //	组成员id
   groupLeaderMemberId: "", //组长id(会员id)
 }); //表单
@@ -35,9 +37,13 @@ async function showEdit(row: any) {
     title.value = "新增会员组";
   } else {
     title.value = "编辑会员组";
+    const { data } = await obtainLoading(
+      api.detail({ memberGroupId: row.memberGroupId })
+    );
+    form.value = data;
   }
   // 获取会员 - 组成员
-  NickNameList.value = await apiLoading(surveyVipStore.getNickNameList());
+  NickNameList.value = await obtainLoading(surveyVipStore.getNickNameList());
   drawerisible.value = true;
 }
 // 删除标签
@@ -68,42 +74,46 @@ function close() {
 }
 // 确定
 const save = () => {
-  console.log("save");
   formRef.value &&
     formRef.value.validate(async (valid: any) => {
       if (valid) {
-        console.log("form.value", form.value);
-        if (!form.value.id) {
-          const { status } = await api.create(form.value);
+        if (!form.value.memberGroupId) {
+          const { status } = await submitLoading(api.create(form.value));
           status === 1 &&
             ElMessage.success({
               message: "新增成功",
               center: true,
             });
         } else {
-          // const { status } = await api.edit(form.value);
-          // status === 1 &&
-          //   ElMessage.success({
-          //     message: "编辑成功",
-          //     center: true,
-          //   });
+          const { status } = await submitLoading(api.edit(form.value));
+          status === 1 &&
+            ElMessage.success({
+              message: "编辑成功",
+              center: true,
+            });
         }
-        await emits("fetch-data");
+        // 数据改变 在会员中需要重新请求
+        surveyVipGroupStore.GroupNameList = null;
+        // 会员组数据改变,重新查询组成员
+        surveyVipStore.NickNameList = null;
         close();
+        emits("fetch-data");
       }
     });
 };
-const list = [
-  { a: 1, b: 2, c: 3, id: 1 },
-  { a: 1, b: 2, c: 3, id: 1 },
-];
 defineExpose({
   showEdit,
 });
 </script>
 
 <template lang="">
-  <el-drawer v-model="drawerisible" size="50%" :title="title" @close="close">
+  <el-drawer
+    v-model="drawerisible"
+    :close-on-click-modal="false"
+    size="50%"
+    :title="title"
+    @close="close"
+  >
     <ElForm ref="formRef" :rules="rules" :model="form" label-width="100px">
       <el-row :gutter="10">
         <el-col :span="8">
@@ -144,7 +154,20 @@ defineExpose({
                 v-for="item in NickNameList"
                 :value="item.memberId"
                 :label="item.memberNickname"
-              />
+                :disabled="item.memberType === 1"
+              >
+                <span style="float: left">{{ item.memberNickname }}</span>
+                <span
+                  v-if="item.memberType === 1"
+                  style="
+                    float: right;
+                    color: var(--el-text-color-secondary);
+                    font-size: 13px;
+                  "
+                >
+                  已在其他组中
+                </span>
+              </el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -168,7 +191,7 @@ defineExpose({
       </el-row>
       <el-row :gutter="10">
         <el-col :span="24">
-          <el-form-item label="组长" prop="top">
+          <el-form-item label="组长">
             <el-select
               v-model="form.groupLeaderMemberId"
               placeholder="模糊搜索"

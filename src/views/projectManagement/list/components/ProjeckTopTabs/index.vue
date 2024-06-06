@@ -5,12 +5,15 @@ import gfm from "@bytemd/plugin-gfm";
 import zhHans from "bytemd/locales/zh_Hans.json";
 import gfmLocale from "@bytemd/plugin-gfm/lib/locales/zh_Hans.json";
 import "bytemd/dist/index.css";
-import { Plus } from "@element-plus/icons-vue";
-import type { UploadProps, UploadUserFile } from "element-plus";
-import { ElMessage, ElMessageBox } from "element-plus";
+import type { UploadProps } from "element-plus";
+import { ElMessage } from "element-plus";
 import { UploadFilled } from "@element-plus/icons-vue";
+import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典-国家
+import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
 import fileApi from "@/api/modules/file";
 
+const basicDictionaryStore = useBasicDictionaryStore(); //基础字典-国家
+const customerStore = useUserCustomerStore(); // 客户
 defineOptions({
   name: "SurveyTopTabs",
 });
@@ -19,10 +22,18 @@ const props: any = defineProps({
   leftTab: Object,
   tabIndex: Number,
 });
+
+const activeName = ref("basicSettings"); // tabs
 const formRef = ref<any>(); // Ref 在edit中进行校验
-const fold = ref(false);
+const fold = ref(false); // 折叠 描述配额
+const data = reactive<any>({
+  countryList: [], // 国家
+  customerList: [], // 客户
+});
+
+// 校验
 const rules = ref<any>({
-  name: [{ required: true, message: "请输入项目名称" }],
+  customerAccord: [{ required: true, message: "请输入项目名称" }],
   projectIdentification: [{ required: true, message: "请输入项目标识" }],
   countryId: [{ required: true, message: "请选择所属国家" }],
   clientId: [{ required: true, message: "请选择所属客户" }],
@@ -30,6 +41,7 @@ const rules = ref<any>({
   doMoneyPrice: [{ required: true, message: "请输入原价(美元)" }],
   num: [{ required: true, message: "请输入配额" }],
 });
+// 配置信息 死数据 可删除
 const options = ref([
   {
     value: "终端",
@@ -44,23 +56,25 @@ const options = ref([
     label: "年龄",
   },
 ]);
+// 配置信息 年龄绑定值 可删除
+const value = ref([4, 8]);
+// 富文本配置
 const plugins = [
   gfm({
     locale: gfmLocale,
   }),
 ];
-const value = ref([4, 8]);
-const activeName = ref("basicSettings");
+// 富文本设置值
 function handleChange(v: string) {
   props.leftTab.richText = v;
 }
 function open(url: string) {
   window.open(url, "_blank");
 }
+// 折叠 描述配额
 function isHieght() {
   fold.value = !fold.value;
 }
-
 // 上传
 const dialogImageUrl = ref("");
 const dialogVisible = ref(false);
@@ -92,7 +106,10 @@ const handlePictureCardPreview: UploadProps["onPreview"] = (uploadFile) => {
   dialogImageUrl.value = uploadFile.url!;
   dialogVisible.value = true;
 };
-
+onMounted(async () => {
+  data.customerList = await customerStore.getCustomerList();
+  data.countryList = await basicDictionaryStore.getCountry();
+});
 nextTick(() => {
   // 表单验证方法
   validate(formRef.value);
@@ -116,8 +133,8 @@ nextTick(() => {
           </template>
           <el-row :gutter="20">
             <el-col :span="6">
-              <el-form-item label="项目名称" prop="name">
-                <el-input v-model="props.leftTab.name" clearable />
+              <el-form-item label="项目名称" prop="customerAccord">
+                <el-input v-model="props.leftTab.customerAccord" clearable />
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -131,14 +148,21 @@ nextTick(() => {
             <el-col :span="6">
               <!-- 单个 -->
               <el-form-item label="所属客户" prop="clientId">
-                <!-- <el-select
+                <el-select
                   placeholder="Select"
                   v-model="props.leftTab.clientId"
-                /> -->
-                <el-input
+                >
+                  <el-option
+                    v-for="item in data.customerList"
+                    :key="item.tenantCustomerId"
+                    :value="item.tenantCustomerId"
+                    :label="item.customerAccord"
+                  ></el-option>
+                </el-select>
+                <!-- <el-input
                   placeholder="Select"
                   v-model.number="props.leftTab.clientId"
-                />
+                /> -->
               </el-form-item>
             </el-col>
             <el-col :span="6">

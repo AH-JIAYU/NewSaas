@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
+import { obtainLoading, submitLoading } from "@/utils/apiLoading";
 import vipGroupEdit from "./components/vipGroupEdit/index.vue";
+import vipGroupDetail from "./components/vipGroupDetail/index.vue";
 import api from "@/api/modules/survey_vipGroup";
+import useSurveyVipGroupStore from "@/store/modules/survey_vipGroup"; //会员组
+const surveyVipGroupStore = useSurveyVipGroupStore(); //会员组
 
 defineOptions({
   name: "SurveyVipGroupList",
@@ -50,41 +54,10 @@ function handleAdd() {
 function handleEdit(row: any) {
   editRef.value.showEdit(row);
 }
-// 查看
+// 查看项目数
 function handleCheck(row: any) {
   checkRef.value.showEdit(row);
 }
-// 更改状态
-function handleChange(fold: any) {
-  if (selectRows.value.length > 0) {
-    let msg = "";
-    switch (fold) {
-      case 0:
-        msg = "该注册用户成为";
-        break;
-      case 1:
-        msg = "启用该";
-        break;
-      case 2:
-        msg = "禁用该";
-        break;
-    }
-    ElMessageBox.confirm(`您确${msg}供应商吗?`, "确认信息")
-      .then(() => {
-        // apiManager.delete(row.id).then(() => {
-        //   getDataList()
-        //   ElMessage.success({
-        //     message: '模拟删除成功',
-        //     center: true,
-        //   })
-        // })
-      })
-      .catch(() => {});
-  } else {
-    ElMessage.error("您未选中任何行");
-  }
-}
-
 // 重置请求
 function queryData() {
   pagination.value.page = 1;
@@ -94,7 +67,6 @@ function queryData() {
 function sizeChange(size: number) {
   onSizeChange(size).then(() => fetchData());
 }
-
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
   onCurrentChange(page).then(() => fetchData());
@@ -132,13 +104,13 @@ async function changeState(state: any, id: string) {
     memberGroupId: id,
     groupStatus: state,
   };
-  const { status } = await api.changestatus(params);
+  const { status } = await submitLoading(api.changestatus(params));
   status === 1 &&
     ElMessage.success({
       message: "修改成功",
     });
-  // // 数据改变 在会员组中需要重新请求
-  // surveyVipStore.NickNameList = null;
+  // 数据改变 在会员中需要重新请求
+  surveyVipGroupStore.GroupNameList = null;
   queryData();
 }
 onMounted(() => {
@@ -364,6 +336,7 @@ onMounted(() => {
       />
     </PageMain>
     <vipGroupEdit ref="editRef" @fetch-data="queryData" />
+    <vipGroupDetail ref="checkRef" @fetch-data="queryData" />
   </div>
 </template>
 

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
+import { obtainLoading } from "@/utils/apiLoading";
 import api from "@/api/modules/user_customer";
 const editRecordList = ref(); // 操作日志下编辑的列表
 const dialogTableVisible = ref<boolean>(false);
@@ -10,12 +11,7 @@ async function showEdit(rowObj: any) {
   const params = {
     tenantCustomerOperationId: rowObj.tenantCustomerOperationId,
   };
-  const { status, data } = await api.getRecordList(params);
-  status === 1 &&
-    ElMessage.success({
-      message: "获取成功",
-      center: true,
-    });
+  const { data } = await obtainLoading(api.getRecordList(params));
   // 获取修改的列表
   editRecordList.value = data.getTenantCustomerOperationRecordInfoList;
   dialogTableVisible.value = true;

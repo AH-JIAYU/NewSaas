@@ -72,7 +72,7 @@ function setclient(data: number) {
  *  props.validateAll 是点击确认后所有组件的校验结果
  * validateIndex 是props.validateAll中值为rejected(校验未通过)的值的索引
  * 当activeLeftTab改变，并且改变前的值 在validateIndex中存在，
- * 声明他刚改完表单 重更进行校验，取消符合校验规则的lefTabs的红色阴影
+ * 说明他刚改完表单 重新进行校验，取消符合校验规则的lefTabs的红色阴影
  */
 watch(
   () => activeLeftTab.value,
@@ -124,7 +124,7 @@ defineExpose({ activeLeftTab });
                 : ''
             "
           >
-            {{ leftTab.name }}
+            {{ leftTab.customerAccord || "项目名称" }}
           </div>
         </template>
         <div

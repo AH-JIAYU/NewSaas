@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { nextTick, onMounted } from "vue";
 import { ElMessageBox, ElMessage } from "element-plus";
+import { submitLoading } from "@/utils/apiLoading";
 import Sortable from "sortablejs"; // 拖拽排序插件
 import edit from "./components/Edit/index.vue";
+import useSurveyVipLevelStore from "@/store/modules/survey_vipLevel"; //会员等级
 import api from "@/api/modules/survey_vipLevel";
 
+const surveyVipLevelStore = useSurveyVipLevelStore(); //会员等级
 const { pagination, getParams, onSizeChange, onCurrentChange } =
   usePagination(); // 分页
 
@@ -51,14 +54,18 @@ function handleEdit(row: any) {
 function handleDelete(row: any) {
   ElMessageBox.confirm(`您确定要删除当前项吗?`, "确认信息")
     .then(async () => {
-      const { status } = await api.delete({
-        memberLevelId: row.memberLevelId,
-      });
+      const { status } = await submitLoading(
+        api.delete({
+          memberLevelId: row.memberLevelId,
+        })
+      );
       status === 1 &&
         ElMessage.success({
           message: "删除成功",
           center: true,
         });
+      // 数据改变 在会员中需要重新请求
+      surveyVipLevelStore.LevelNameList = null;
       queryData();
     })
     .catch(() => {});
@@ -168,14 +175,14 @@ onMounted(() => {
           label="等级名称"
         />
         <el-table-column
-        v-if="checkList.includes('additionRatio')"
+          v-if="checkList.includes('additionRatio')"
           align="center"
           prop="additionRatio"
           show-overflow-tooltip
           label="加成比例(百分比)"
         />
         <el-table-column
-        v-if="checkList.includes('memberQuantity')"
+          v-if="checkList.includes('memberQuantity')"
           align="center"
           prop="memberQuantity"
           show-overflow-tooltip

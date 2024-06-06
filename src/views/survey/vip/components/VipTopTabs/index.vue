@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ElForm } from "element-plus";
-import apiLoading from "@/utils/apiLoading";
+import { obtainLoading } from "@/utils/apiLoading";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典-国家
 import useSurveyVipLevelStore from "@/store/modules/survey_vipLevel"; //会员等级
 import useSurveyVipGroupStore from "@/store/modules/survey_vipGroup"; //会员组
@@ -13,14 +13,13 @@ const props = defineProps({
   leftTab: Object,
   tabIndex: Number,
 });
-
-const emit = defineEmits(["setClient"]);
 const activeName = ref("basicSettings"); // tabs
 const data = reactive<any>({
   vipLevelList: [], // 会员等级
   vipGroupList: [], // 会员组
   countryList: [], // 国家
 });
+// 校验
 const rules = reactive<any>({
   memberNickname: [
     { required: true, message: "请输入会员昵称", trigger: "blur" },
@@ -35,7 +34,7 @@ const rules = reactive<any>({
 });
 
 onMounted(async () => {
-  await apiLoading(getList());
+  await obtainLoading(getList());
 });
 // 获取会员等级 会员组 国家
 const getList = async () => {

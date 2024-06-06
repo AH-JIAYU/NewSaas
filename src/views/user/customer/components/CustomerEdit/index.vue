@@ -4,12 +4,18 @@ import { provide, reactive, ref } from "vue";
 import LeftTabs from "../CustomerLeftTabs/index.vue";
 import api from "@/api/modules/user_customer";
 import { cloneDeep } from "lodash-es";
-import apiLoading from "@/utils/apiLoading";
-import useStagedDataStore from "@/store/modules/stagedData";
+import { obtainLoading, submitLoading } from "@/utils/apiLoading";
+import useStagedDataStore from "@/store/modules/stagedData"; // 暂存
+import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
+
 const stagedDataStore = useStagedDataStore(); // 暂存
+const customerStore = useUserCustomerStore(); // 客户
 const emit = defineEmits(["fetch-data"]);
 const drawerisible = ref<boolean>(false);
 const title = ref<string>("");
+const LeftTabsRef = ref<any>(); // Ref
+// 校验结果，用于在leftTabs中的tabs中给予提示
+const validateAll = ref<any>([]);
 // 子组件ref集合
 const validateTopTabs = ref<any>([]);
 // 提供的方法
@@ -20,38 +26,24 @@ function pushData(data: any) {
 provide("validateTopTabs", pushData);
 
 let leftTabsData = reactive<any>([]); // 明确指定类型为 LeftTab[]
-// 初始数据
-const initLeftData = [
-  {
-    customerAccord: "客户名称", //客户名称
-    customerShortName: "", //客户简称
-    companyName: "", //公司名称
-    customerName: "", //客户姓名
-    customerPhone: "", //手机号码
-    emailAddress: "", //电子邮箱
-    chargeName: "", //负责人
-    settlementCycle: null, //结算周期
-    customerStatus: null, //客户状态
-    antecedentQuestionnaire: null, //前置问卷
-    riskControl: null, //风险控制
-    turnover: null, //营业限额
-    rateAudit: null, //审核Min值
-  },
-];
+
 // 显隐
 async function showEdit(row: any) {
   if (!row) {
     title.value = "添加";
-    leftTabsData = stagedDataStore.userCustomer || cloneDeep(initLeftData);
+    leftTabsData = stagedDataStore.userCustomer || [
+      { ...customerStore.initialTopTabsData },
+    ];
   } else {
     title.value = "编辑";
-    const { data } = await apiLoading(
+    const { data } = await obtainLoading(
       api.detail({
         tenantCustomerId: row.tenantCustomerId,
       })
     );
     initializeLeftTabsData(data);
   }
+  validateAll.value = [];
   drawerisible.value = true;
 }
 // 清空现有数据
@@ -89,48 +81,58 @@ function close() {
     stagedDataStore.userCustomer = null;
   }
 }
-// 确定
-async function save() {
+// 校验所有组件
+async function validate() {
   const arr: any = [];
   validateTopTabs.value.forEach((element: any) => {
     arr.push(element.validate());
   });
-  try {
-    // 实现全部校验  validateTopTabs为数组，每个元素为子组件的ref
-    const ispass = (await Promise.all(arr)).every((item: any) => item);
-    if (ispass) {
-      // 客户名称是否重复
-      if (!hasDuplicateCustomer(leftTabsData)) {
-        if (title.value === "添加") {
-          const dataList = {
-            tenantCustomerInfoList: leftTabsData,
-          };
-          const { status } = await api.create(dataList);
-          status === 1 &&
-            ElMessage.success({
-              message: "新增成功",
-              center: true,
-            });
-        } else {
-          // // 更新接口
-          const { status } = await api.edit(leftTabsData[0]);
-          status === 1 &&
-            ElMessage.success({
-              message: "修改成功",
-              center: true,
-            });
-        }
-        emit("fetch-data");
-        close();
+  const validateResult = await Promise.allSettled(arr);
+  validateAll.value = validateResult.map((item) => item.status);
+}
+// 确定
+async function save() {
+  // 校验
+  await validate();
+  if (validateAll.value.every((item: any) => item === "fulfilled")) {
+    // 客户名称是否重复
+    if (!hasDuplicateCustomer(leftTabsData)) {
+      if (title.value === "添加") {
+        const dataList = {
+          tenantCustomerInfoList: leftTabsData,
+        };
+        const { status } = await submitLoading(api.create(dataList));
+        status === 1 &&
+          ElMessage.success({
+            message: "新增成功",
+            center: true,
+          });
       } else {
-        ElMessage.warning({
-          message: "客户名称重复",
-          center: true,
-        });
+        // // 更新接口
+        const { status } = await submitLoading(api.edit(leftTabsData[0]));
+        status === 1 &&
+          ElMessage.success({
+            message: "修改成功",
+            center: true,
+          });
       }
+      emit("fetch-data");
+      // 数据改变重新请求
+      customerStore.customer = null;
+      close();
+    } else {
+      ElMessage.warning({
+        message: "客户名称重复",
+        center: true,
+      });
     }
-  } catch (error) {
-    console.error("Form validation failed:", error);
+  } else {
+    // 跳转到第一个未通过校验的组件
+    LeftTabsRef.value.activeLeftTab = validateAll.value.indexOf("rejected");
+    ElMessage.warning({
+      message: "请完善表单",
+      center: true,
+    });
   }
 }
 defineExpose({
@@ -150,9 +152,12 @@ defineExpose({
       size="70%"
     >
       <LeftTabs
+        @validate="validate"
+        ref="LeftTabsRef"
         :title="title"
         :left-tabs-data="leftTabsData"
         :validate-top-tabs="validateTopTabs"
+        :validate-all="validateAll"
       />
       <template #footer>
         <el-button @click="close"> 取消 </el-button>

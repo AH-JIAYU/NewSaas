@@ -4,6 +4,7 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import customerEdit from "./components/SupplierEdit/index.vue";
 import customerDetail from "./components/SupplierDetail/index.vue";
 import plusMinusPayments from "./components/SupplierPlusMinusPayments/index.vue";
+import { submitLoading } from "@/utils/apiLoading";
 import api from "@/api/modules/user_supplier";
 
 defineOptions({
@@ -91,15 +92,21 @@ function handleEdit(row: any) {
 function handleCheck(row: any) {
   checkRef.value.showEdit(row);
 }
+// 备注
 async function handleEditRemark(row: any) {
-  const { data } = await api.detail({ tenantSupplierId: row.tenantSupplierId });
-  data.remark = row.remark;
-  const { status } = await api.edit(data);
-  status === 1 &&
-    ElMessage.success({
-      message: "更新备注",
-      center: true,
+  const fun = async () => {
+    const { data } = await api.detail({
+      tenantSupplierId: row.tenantSupplierId,
     });
+    data.remark = row.remark;
+    const { status } = await api.edit(data);
+    status === 1 &&
+      ElMessage.success({
+        message: "更新备注",
+        center: true,
+      });
+  };
+  await submitLoading(fun());
   queryData();
 }
 // 切换状态
@@ -108,7 +115,7 @@ async function changeState(state: any, id: string) {
     status: state,
     tenantSupplierId: id,
   };
-  const { status } = await api.changestatus(params);
+  const { status } = await submitLoading(api.changestatus(params));
   status === 1 &&
     ElMessage.success({
       message: "修改成功",
