@@ -2,12 +2,14 @@
 import { provide, reactive, ref } from "vue";
 import LeftTabs from "../ProjeckLeftTabs/index.vue";
 import { ElMessage, ElMessageBox } from "element-plus";
+import { cloneDeep } from "lodash-es";
+import useProjectManagementListStore from "@/store/modules/projectManagement_list"; // 项目
 import api from "@/api/modules/projectManagement";
 
 defineOptions({
   name: "ProjeckEdit",
 });
-
+const projectManagementListStore = useProjectManagementListStore(); //项目
 const emit = defineEmits(["fetch-data"]);
 const dialogTableVisible = ref<boolean>(false);
 const title = ref<string>("");
@@ -21,39 +23,36 @@ provide("validateTopTabs", pushData);
 const validateAll = ref<any>([]); // 校验结果，用于在leftTabs中的tabs中给予提示
 let leftTabsData = reactive<any>([]); // 明确指定类型为 LeftTab[]
 const LeftTabsRef = ref<any>(); // Ref
-
+// 显隐
 async function showEdit(row: any) {
   if (!row) {
     title.value = "添加";
-    leftTabsData = reactive([
-      {
-        customerAccord: "",
-        addProjectQuotaInfoList: [], //配置信息
-      },
-    ]);
+    const initialTopTabsData = cloneDeep(
+      projectManagementListStore.initialTopTabsData
+    );
+    leftTabsData = reactive([initialTopTabsData]);
   } else {
     title.value = "编辑";
     initializeLeftTabsData(row);
   }
   dialogTableVisible.value = true;
 }
-
+// 清空现有数据
 function initializeLeftTabsData(data: any) {
-  // 清空现有数据
   leftTabsData.length = 0;
   // 添加主数据作为第一个 Tab
   leftTabsData.push({
     ...data,
   });
 
-  // 如果存在 children，为每个 child 创建一个 Tab
-  if (data.children && data.children.length) {
-    data.children.forEach((child: any) => {
-      leftTabsData.push({
-        ...child,
-      });
-    });
-  }
+  // // 如果存在 children，为每个 child 创建一个 Tab
+  // if (data.addProjectInfoList && data.addProjectInfoList.length) {
+  //   data.addProjectInfoList.forEach((child: any) => {
+  //     leftTabsData.push({
+  //       ...child,
+  //     });
+  //   });
+  // }
 }
 // 校验所有组件
 async function validate() {
@@ -74,12 +73,12 @@ async function onSubmit() {
     const masterData = leftTabsData[0];
     masterData.addProjectInfoList = leftTabsData.slice(1);
     console.log("masterData", masterData);
-    const { status } = await api.create(masterData);
-    status === 1 &&
-      ElMessage.success({
-        message: "新增成功",
-        center: true,
-      });
+    // const { status } = await api.create(masterData);
+    // status === 1 &&
+    //   ElMessage.success({
+    //     message: "新增成功",
+    //     center: true,
+    //   });
   } else {
     // 跳转到第一个未通过校验的组件
     LeftTabsRef.value.activeLeftTab = validateAll.value.indexOf("rejected");

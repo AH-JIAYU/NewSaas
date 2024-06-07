@@ -5,7 +5,7 @@ import api from "@/api/modules/otherFunctions_screenLibrary";
 import useUserStore from "@/store/modules/user";
 import "survey-core/defaultV2.min.css";
 import "survey-creator-core/survey-creator-core.min.css";
-import { obtainLoading } from "@/utils/apiLoading";
+import { obtainLoading, submitLoading } from "@/utils/apiLoading";
 
 import {
   setLicenseKey,
@@ -109,13 +109,14 @@ defineExpose({
         creator.JSON.pages,
         locale
       );
-      api.setSurvey(form.value).then(() => {
+      const { status } = await submitLoading(api.setSurvey(form.value));
+      status === 1 &&
         ElMessage.success({
           message: "设置成功",
           center: true,
         });
-        resolve();
-      });
+
+      resolve();
     });
   },
 });
@@ -133,7 +134,9 @@ function convertData(originalData: any, locale: any) {
       let question = element.name;
       if (element.title) {
         question =
-          element?.title.default || element?.title[locale] || element.name;
+          typeof element.title === "string"
+            ? element.title
+            : element?.title.default || element?.title[locale] || element.name;
       }
       // 新增一个问题，默认标题为name 改变标题后 字段在title里
 
@@ -174,7 +177,10 @@ function convertData(originalData: any, locale: any) {
 </script>
 
 <template>
-  <div v-loading="loading" style="width: 100%; height: 93%; margin-bottom: 80px">
+  <div
+    v-loading="loading"
+    style="width: 100%; height: 93%; margin-bottom: 80px"
+  >
     <div style="width: 100%; height: 100%">
       <survey-creator-component :model="creator" />
     </div>
@@ -182,4 +188,5 @@ function convertData(originalData: any, locale: any) {
 </template>
 
 <style lang="scss" scoped>
-// scss</style>
+// scss
+</style>

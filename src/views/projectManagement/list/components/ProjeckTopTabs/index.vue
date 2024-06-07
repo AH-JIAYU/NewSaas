@@ -7,13 +7,18 @@ import gfmLocale from "@bytemd/plugin-gfm/lib/locales/zh_Hans.json";
 import "bytemd/dist/index.css";
 import type { UploadProps } from "element-plus";
 import { ElMessage } from "element-plus";
+import { cloneDeep } from "lodash-es";
+import { obtainLoading } from "@/utils/apiLoading";
 import { UploadFilled } from "@element-plus/icons-vue";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典-国家
 import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
+import useProjectManagementListStore from "@/store/modules/projectManagement_list"; // 项目
 import fileApi from "@/api/modules/file";
+import api from "@/api/modules/projectManagement";
 
 const basicDictionaryStore = useBasicDictionaryStore(); //基础字典-国家
 const customerStore = useUserCustomerStore(); // 客户
+const projectManagementListStore = useProjectManagementListStore(); //项目
 defineOptions({
   name: "SurveyTopTabs",
 });
@@ -22,24 +27,51 @@ const props: any = defineProps({
   leftTab: Object,
   tabIndex: Number,
 });
-
 const activeName = ref("basicSettings"); // tabs
 const formRef = ref<any>(); // Ref 在edit中进行校验
 const fold = ref(false); // 折叠 描述配额
 const data = reactive<any>({
+  // 问题初始数据
+  initialProblem: {
+    countryId: null, //问卷对应国家id
+    projectProblemCategoryId: null, //问题类别id
+    projectQuotaQuestionType: null, //问题类型:1:总控问题 2:租户自己问题
+    projectProblemId: null, //	前置问卷问题id
+    keyValue: "", //	前置问卷问题
+    answerValue: [], //前置问卷答案,
+    projectAnswerId: [], //	前置问卷答案id,
+  },
   countryList: [], // 国家
   customerList: [], // 客户
+  configurationCountryList: [], // 配置信息-国家
+  projectCategoryList: null, //题库目录
+  ProjectProblemInfoList: [], // 问题列表 - 显示
 });
 
 // 校验
 const rules = ref<any>({
-  customerAccord: [{ required: true, message: "请输入项目名称" }],
-  projectIdentification: [{ required: true, message: "请输入项目标识" }],
-  countryId: [{ required: true, message: "请选择所属国家" }],
-  clientId: [{ required: true, message: "请选择所属客户" }],
-  uidUrl: [{ required: true, message: "请输入UidUrl" }],
-  doMoneyPrice: [{ required: true, message: "请输入原价(美元)" }],
-  num: [{ required: true, message: "请输入配额" }],
+  name: [
+    { required: true, message: "请输入项目名称", trigger: "blur" },
+    { min: 2, max: 50, message: "内容在2-50个字之间", trigger: "blur" },
+  ],
+  projectIdentification: [
+    { required: true, message: "请输入项目标识", trigger: "blur" },
+    { min: 2, max: 50, message: "内容在2-50个字之间", trigger: "blur" },
+  ],
+  countryId: [{ required: true, message: "请选择所属国家", trigger: "change" }],
+  clientId: [{ required: true, message: "请选择所属客户", trigger: "change" }],
+  uidUrl: [{ required: true, message: "请输入UidUrl", trigger: "blur" }],
+  doMoneyPrice: [
+    { required: true, message: "请输入原价(美元)", trigger: "blur" },
+  ],
+  num: [{ required: true, message: "请输入配额", trigger: "blur" }],
+  ir: [{ required: true, message: "请输入配额", trigger: "blur" }],
+  // 配置信息国家
+  addProjectQuotaInfoList: [
+    {
+      countryId: [{ required: true, message: "请选择国家", trigger: "change" }],
+    },
+  ],
 });
 // 配置信息 死数据 可删除
 const options = ref([
@@ -106,9 +138,107 @@ const handlePictureCardPreview: UploadProps["onPreview"] = (uploadFile) => {
   dialogImageUrl.value = uploadFile.url!;
   dialogVisible.value = true;
 };
-onMounted(async () => {
+
+// 所属国家改变重新获取 配置信息中的国家
+const changeCountryId = () => {
+  data.configurationCountryList = null;
+};
+// 配置国家改变 重新获取题库目录
+const changeConfigurationCountryId = () => {
+  data.projectCategoryList = null;
+};
+
+/**
+ * tabs切换 获取配置信息中的国家
+ * 基础设置 basicSettings
+ * 配置信息 configurationInformation
+ * 安全信息 securityInformation
+ */
+const changeTab = async (val: any) => {
+  if (val === "configurationInformation" && !data.configurationCountryList) {
+    const res = await obtainLoading(
+      api.getProjectCountryList({
+        countryIdList: props.leftTab.countryId,
+      })
+    );
+    // 配置-国家
+    data.configurationCountryList = res.data.getProjectCountryListInfoList;
+    // 初始化 数据 问题
+    data.initialProblem = cloneDeep(projectManagementListStore.initialProblem);
+    // 问题类型:1:总控问题 2:租户自己问题
+    data.initialProblem.projectQuotaQuestionType =
+      res.data.projectQuotaQuestionType;
+  }
+};
+const projectProblemRef = ref<any>(); //问卷ref
+// 获取题库目录
+const getProjectCategoryList = async () => {
+  if (data.initialProblem.countryId) {
+    // 如果配置中的国家不存在就请求，反正不请
+    if (!data.projectCategoryList) {
+      const params = {
+        countryId: data.initialProblem.countryId,
+        projectQuotaQuestionType: data.initialProblem.projectQuotaQuestionType, //问题类型:1:总控问题 2:租户自己问题
+      };
+      const res = await obtainLoading(api.getProjectCategoryList(params));
+      data.projectCategoryList = res.data.getProjectCategoryInfoList;
+    }
+  } else {
+    ElMessage.warning({
+      message: "请先选择国家",
+      center: true,
+    });
+  }
+};
+// 根据题库目录问卷名称id查询具体的问题和答案列表
+const getProjectProblemList = async (id: string | number) => {
+  console.log("data.initialProblem", data.initialProblem);
+  if (id) {
+    const { projectProblemCategoryName, ...params } =
+      data.projectCategoryList.find(
+        (item: any) => item.projectProblemCategoryId === id
+      );
+    const res = await obtainLoading(api.getProjectProblemList(params));
+    //问题列表 - 显示的数据
+    data.ProjectProblemInfoList = res.data.getProjectProblemInfoList;
+    // 问题列表 - 提交的数据
+    for (let i = 0; i < data.ProjectProblemInfoList.length; i++) {
+      const item = cloneDeep(data.initialProblem);
+      item.projectProblemId = data.ProjectProblemInfoList[i].id; // 设置问题
+      item.keyValue = data.ProjectProblemInfoList[i].question; // 设置问题id
+      props.leftTab.addProjectQuotaInfoList.push(item);
+    }
+  }
+};
+// 设置 问题的答案和答案id  type: 1 输入框 2单选 3复选 4下拉
+const setAnswerValue = (val: any, type: number, index: number) => {
+  console.log("设置答案", val.target.value, type, index);
+  console.log("提交的数据", props.leftTab.addProjectQuotaInfoList[index]);
+  console.log("回显的数据", data.ProjectProblemInfoList[index]);
+  if (type == 2) {
+    props.leftTab.addProjectQuotaInfoList[index].projectAnswerId = [
+      val.target.value,
+    ];
+  }
+};
+// const radiogroupModel = computed((index: number) => {
+//   console.log("index", index, props.leftTab.addProjectQuotaInfoList[index]);
+//   if (index && props.leftTab.addProjectQuotaInfoList[index]) {
+//     return props.leftTab.addProjectQuotaInfoList[
+//       index
+//     ].projectAnswerId.toString();
+//   } else {
+//     return "";
+//   }
+// });
+
+// 获取 客户 国家
+const getList = async () => {
   data.customerList = await customerStore.getCustomerList();
   data.countryList = await basicDictionaryStore.getCountry();
+};
+onMounted(async () => {
+  await obtainLoading(getList());
 });
 nextTick(() => {
   // 表单验证方法
@@ -117,14 +247,14 @@ nextTick(() => {
 </script>
 
 <template>
-  <el-tabs v-model="activeName">
-    <el-tab-pane label="基础设置" name="basicSettings">
-      <ElForm
-        label-width="100px"
-        :rules="rules"
-        ref="formRef"
-        :model="props.leftTab"
-      >
+  <ElForm
+    label-width="100px"
+    :rules="rules"
+    ref="formRef"
+    :model="props.leftTab"
+  >
+    <el-tabs v-model="activeName" @tab-change="changeTab">
+      <el-tab-pane label="基础设置" name="basicSettings">
         <el-card body-style="">
           <template #header>
             <div class="card-header">
@@ -133,8 +263,8 @@ nextTick(() => {
           </template>
           <el-row :gutter="20">
             <el-col :span="6">
-              <el-form-item label="项目名称" prop="customerAccord">
-                <el-input v-model="props.leftTab.customerAccord" clearable />
+              <el-form-item label="项目名称" prop="name">
+                <el-input v-model="props.leftTab.name" clearable />
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -159,25 +289,25 @@ nextTick(() => {
                     :label="item.customerAccord"
                   ></el-option>
                 </el-select>
-                <!-- <el-input
-                  placeholder="Select"
-                  v-model.number="props.leftTab.clientId"
-                /> -->
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <!-- 可以选多个， 字符串格式 以,分割 -->
               <el-form-item label="所属国家" prop="countryId">
-                <!-- <el-cascader
+                <ElSelect
+                  v-model="props.leftTab.countryId"
+                  placeholder="国家"
                   clearable
                   filterable
-                  v-model="props.leftTab.countryId"
-                /> -->
-                <el-input
-                  clearable
-                  filterable
-                  v-model="props.leftTab.countryId"
-                />
+                  multiple
+                  collapse-tags
+                  @change="changeCountryId"
+                >
+                  <ElOption
+                    v-for="item in data.countryList"
+                    :label="item.chineseName"
+                    :value="item.id"
+                  ></ElOption>
+                </ElSelect>
               </el-form-item>
             </el-col>
           </el-row>
@@ -187,6 +317,8 @@ nextTick(() => {
                 <el-input-number
                   v-model="props.leftTab.doMoneyPrice"
                   :min="1"
+                  :precision="1"
+                  :step="0.1"
                   controls-position="right"
                   size="large"
                 />
@@ -199,13 +331,25 @@ nextTick(() => {
                   :step="1"
                   step-strictly
                   :min="1"
+                  :max="100"
                   controls-position="right"
                   size="large"
                 />
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="最小分长">
+              <el-form-item>
+                <template #label>
+                  <div class="fx-c">
+                    <el-tooltip
+                      content="这份问卷必须要做到多少分钟"
+                      placement="top"
+                    >
+                      <SvgIcon name="i-ri:question-line" class="ms-4" />
+                    </el-tooltip>
+                    <span>最小分长</span>
+                  </div>
+                </template>
                 <el-input-number
                   v-model="props.leftTab.minimumDuration"
                   :min="1"
@@ -221,6 +365,9 @@ nextTick(() => {
                 <el-input-number
                   v-model="props.leftTab.ir"
                   :min="1"
+                  :precision="1"
+                  :step="0.1"
+                  :max="100"
                   controls-position="right"
                   size="large"
                 />
@@ -229,7 +376,7 @@ nextTick(() => {
           </el-row>
           <el-row :gutter="20">
             <el-col :span="12">
-              <el-form-item label="UidUrl" prop="uidUrl">
+              <el-form-item label="URL" prop="uidUrl">
                 <el-input clearable v-model="props.leftTab.uidUrl" />
               </el-form-item>
             </el-col>
@@ -247,7 +394,7 @@ nextTick(() => {
             </el-col>
             <el-col v-if="props.leftTab.mutualExclusion === 1" :span="12">
               <el-form-item label="互斥ID">
-                <el-input clearable />
+                <el-input clearable v-model="props.leftTab.mutualExclusionId" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -266,24 +413,6 @@ nextTick(() => {
           </template>
           <div v-if="fold">
             <el-form-item label="上传图片">
-              <!-- <el-upload
-                class="upload-demo"
-                drag
-                action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
-                multiple
-              >
-                <el-icon class="el-icon--upload">
-                  <UploadFilled />
-                </el-icon>
-                <div class="el-upload__text">
-                  在这里放下文件或点击 <em>上传</em>
-                </div>
-                <template #tip>
-                  <div class="el-upload__tip">
-                    jpg/png files with a size less than 500kb
-                  </div>
-                </template>
-              </el-upload> -->
               <el-upload
                 action="http://saas-api.surveysaas.com/project/uploadQiniu"
                 list-type="picture-card"
@@ -355,7 +484,7 @@ nextTick(() => {
               </el-form-item>
             </el-col>
             <el-col :span="3">
-              <el-form-item label="资料">
+              <el-form-item label="前置问卷">
                 <el-switch
                   :active-value="1"
                   :inactive-value="2"
@@ -366,13 +495,13 @@ nextTick(() => {
             <el-col :span="3">
               <el-form-item label="B2B">
                 <el-switch
-                  :active-value="1"
-                  :inactive-value="2"
+                  :active-value="2"
+                  :inactive-value="1"
                   v-model="props.leftTab.isB2b"
                 />
               </el-form-item>
             </el-col>
-            <el-col :span="6" v-if="props.leftTab.isB2b === 1">
+            <el-col :span="6" v-if="props.leftTab.isB2b === 2">
               <el-form-item label="项目类型">
                 <el-select v-model="props.leftTab.projectType"></el-select>
               </el-form-item>
@@ -380,23 +509,23 @@ nextTick(() => {
             <el-col :span="3">
               <el-form-item label="定时发布">
                 <el-switch
-                  :active-value="1"
-                  :inactive-value="2"
+                  :active-value="2"
+                  :inactive-value="1"
                   v-model="props.leftTab.isTimeReleases"
                 />
               </el-form-item>
             </el-col>
             <!-- 定时发布开显示时间，关隐藏 -->
-            <el-col :span="6" v-if="props.leftTab.isTimeReleases === 1">
+            <el-col :span="6" v-if="props.leftTab.isTimeReleases === 2">
               <el-form-item label="发布时间">
                 <el-date-picker
                   type="datetime"
+                  value-format="YYYY-MM-DD hh:mm:ss"
                   v-model="props.leftTab.releaseTime"
                   placeholder="请选择时间"
                 />
               </el-form-item>
             </el-col>
-            <br />
           </el-row>
           <el-row :gutter="20">
             <el-col :span="15">
@@ -413,160 +542,185 @@ nextTick(() => {
             </el-col>
           </el-row>
         </el-card>
-      </ElForm>
-    </el-tab-pane>
-    <el-tab-pane label="配置信息" v-if="props.leftTab.isProfile === 1">
-      <el-card>
-        <template #header>
-          <div class="card-header">配置信息</div>
-        </template>
-        <el-row :gutter="20">
-          <!-- 等字典接口 -->
-          <el-col :span="6">
-            <el-form-item label="选择国家">
-              <el-select
-                v-model="props.leftTab.addProjectQuotaInfoList.country"
-                multiple
-                collapse-tags
-                collapse-tags-tooltip
-                placeholder="Select"
-              >
-                <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="问卷名称">
-              <el-select
-                v-model="props.leftTab.addProjectQuotaInfoList.projectProblemId"
-                multiple
-                collapse-tags
-                collapse-tags-tooltip
-                placeholder="Select"
-              >
-                <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row class="allocation" :gutter="20">
-          <el-col :span="20"> 问题：性别 </el-col>
-          <el-col :span="20">
-            <el-form-item>
-              <el-radio-group>
-                <el-radio value="1" size="large"> 男 </el-radio>
-                <el-radio value="2" size="large"> 女 </el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row class="allocation" :gutter="20">
-          <el-col :span="20"> 问题：支持终端 </el-col>
-          <el-col :span="20">
-            <el-form-item>
-              <el-checkbox-group>
-                <el-checkbox label="PC" value="Value A" />
-                <el-checkbox label="平板" value="Value B" />
-                <el-checkbox label="Mobile" value="Value C" />
-              </el-checkbox-group>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row class="allocation" :gutter="20">
-          <el-col :span="20"> 问题：年龄 </el-col>
-          <el-col :span="20">
-            <el-form-item>
-              <el-form-item style="width: 30rem" label="年龄">
-                <el-slider v-model="value" range show-stops :max="100" />
+      </el-tab-pane>
+      <el-tab-pane
+        label="配置信息"
+        name="configurationInformation"
+        v-if="props.leftTab.isProfile === 1"
+      >
+        <el-card>
+          <template #header>
+            <div class="card-header">配置信息</div>
+          </template>
+          <el-row :gutter="20">
+            <el-col :span="6">
+              <el-form-item label="选择国家">
+                <el-select
+                  v-model="data.initialProblem.countryId"
+                  filterable
+                  clearable
+                  placeholder="Select"
+                  @change="changeConfigurationCountryId"
+                >
+                  <ElOption
+                    v-for="item in data.configurationCountryList"
+                    :label="item.countryName"
+                    :value="item.countryId"
+                  ></ElOption>
+                </el-select>
               </el-form-item>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <!-- <el-row>
-          <el-col :span="24">
-            <el-form-item style="width: 30rem" label="年龄">
-              <el-slider v-model="value" range show-stops :max="100" />
-            </el-form-item>
-          </el-col>
-        </el-row> -->
-      </el-card>
-    </el-tab-pane>
-    <el-tab-pane label="安全信息">
-      <el-card>
-        <template #header>
-          <div class="card-header">安全信息</div>
-        </template>
-        <el-row :gutter="20">
-          <el-col :span="6">
-            <el-form-item label="小时准入量">
-              <el-input-number
-                v-model="props.leftTab.preNum"
-                :min="1"
-                :step="1"
-                step-strictly
-                controls-position="right"
-                size="large"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="小时完成量">
-              <el-input-number
-                v-model="props.leftTab.limitedQuantity"
-                :min="1"
-                :step="1"
-                step-strictly
-                controls-position="right"
-                size="large"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="4">
-            <el-form-item label="时差检测">
-              <el-switch
-                v-model="props.leftTab.timeDifferenceDetection"
-                :active-value="1"
-                :inactive-value="2"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="4">
-            <el-form-item label="重复IP检测">
-              <el-switch
-                v-model="props.leftTab.ipDifferenceDetection"
-                :active-value="1"
-                :inactive-value="2"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="4">
-            <el-form-item label="IP一致性检测">
-              <el-switch
-                v-model="props.leftTab.ipConsistency"
-                :active-value="1"
-                :inactive-value="2"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-card>
-    </el-tab-pane>
-  </el-tabs>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="问卷名称">
+                <el-select
+                  ref="projectProblemRef"
+                  v-model="data.initialProblem.projectProblemId"
+                  clearable
+                  placeholder="Select"
+                  @focus="getProjectCategoryList"
+                  @change="getProjectProblemList"
+                >
+                  <el-option
+                    v-for="item in data.projectCategoryList"
+                    :key="item.projectProblemCategoryId"
+                    :label="item.projectProblemCategoryName"
+                    :value="item.projectProblemCategoryId"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <!-- 1 输入框 2单选 3复选 4下拉  -->
+          <!-- {{ data.ProjectProblemInfoList }}
+          <template v-if="data.ProjectProblemInfoList.length">
+            <el-row
+              class="allocation"
+              :gutter="20"
+              v-for="(item, index) in data.ProjectProblemInfoList"
+            >
+              <el-col :span="20"> 问题：{{ item.question }} </el-col>
+              <el-col :span="20">
+                <el-form-item>
+
+                  <el-input
+                    v-if="item.questionType === 1"
+                    disabled
+                    placeholder="输入框无法设置"
+                  ></el-input>
+                  <el-radio-group
+                    v-else-if="item.questionType === 2"
+                    :value="radiogroupModel(index)"
+                    @input="setAnswerValue($event, 2, index)"
+                  >
+                    <el-radio
+                      :value="ite.id"
+                      size="large"
+                      v-for="ite in item.getProjectAnswerInfoList"
+                    >
+                      {{ ite.anotherName }}
+                    </el-radio>
+                  </el-radio-group>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </template> -->
+
+          <!-- <el-row class="allocation" :gutter="20">
+            <el-col :span="20"> 问题：支持终端 </el-col>
+            <el-col :span="20">
+              <el-form-item>
+                <el-checkbox-group>
+                  <el-checkbox label="PC" value="Value A" />
+                  <el-checkbox label="平板" value="Value B" />
+                  <el-checkbox label="Mobile" value="Value C" />
+                </el-checkbox-group>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row class="allocation" :gutter="20">
+            <el-col :span="20"> 问题：年龄 </el-col>
+            <el-col :span="20">
+              <el-form-item>
+                <el-form-item style="width: 30rem" label="年龄">
+                  <el-slider v-model="value" range show-stops :max="100" />
+                </el-form-item>
+              </el-form-item>
+            </el-col>
+          </el-row> -->
+        </el-card>
+      </el-tab-pane>
+      <el-tab-pane label="安全信息" name="securityInformation">
+        <el-card>
+          <template #header>
+            <div class="card-header">安全信息</div>
+          </template>
+          <el-row :gutter="20">
+            <el-col :span="6">
+              <el-form-item label="小时准入量">
+                <el-input-number
+                  v-model="props.leftTab.preNum"
+                  :min="1"
+                  :step="1"
+                  step-strictly
+                  controls-position="right"
+                  size="large"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="小时完成量">
+                <el-input-number
+                  v-model="props.leftTab.limitedQuantity"
+                  :min="1"
+                  :step="1"
+                  step-strictly
+                  controls-position="right"
+                  size="large"
+                />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :span="4">
+              <el-form-item label="时差检测">
+                <el-switch
+                  v-model="props.leftTab.timeDifferenceDetection"
+                  :active-value="1"
+                  :inactive-value="2"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="4">
+              <el-form-item label="重复IP检测">
+                <el-switch
+                  v-model="props.leftTab.ipDifferenceDetection"
+                  :active-value="1"
+                  :inactive-value="2"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="4">
+              <el-form-item label="IP一致性检测">
+                <el-switch
+                  v-model="props.leftTab.ipConsistency"
+                  :active-value="1"
+                  :inactive-value="2"
+                />
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-card>
+      </el-tab-pane>
+    </el-tabs>
+  </ElForm>
 </template>
 
 <style lang="scss" scoped>
+.fx-c {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 :deep(.bytemd-fullscreen) {
   z-index: 2000;
 }

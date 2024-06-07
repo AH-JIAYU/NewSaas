@@ -233,6 +233,7 @@ const registerRules = ref<FormRules>({
     { validator: validatePhoneRegistered, trigger: "blur" },
   ],
   code: [{ required: true, trigger: "blur", message: "请输入验证码" }],
+  country: [{ required: true, trigger: "change", message: "请选择国家" }],
   password: [
     { required: true, trigger: "blur", message: "请输入密码" },
     { min: 6, max: 18, trigger: "blur", message: "密码长度为6到18位" },
@@ -252,7 +253,7 @@ const mobileVerificationCode = async () => {
     email: registerForm.value.email,
     phone: registerForm.value.phoneNumber,
   };
-  if (registerForm.value.type === "phone") {
+  if (registerForm.value.country === "343") {
     const { status } = await obtainLoading(api.sendCode(params));
     status === 1 &&
       ElMessage.success({
@@ -284,11 +285,13 @@ const countdown = () => {
     }
   }, 1000);
 };
+// 注册
 async function handleRegister() {
   registerFormRef.value &&
     registerFormRef.value.validate(async (valid: any) => {
       if (valid) {
-        // 这里编写业务代码
+        registerForm.value.type =
+          registerForm.value.country === "343" ? "phone" : "email";
         const { status } = await submitLoading(
           api.register(registerForm.value)
         );
@@ -498,9 +501,9 @@ watch(
               </template>
             </ElInput>
           </ElFormItem>
-          <ElFormItem prop="type">
+          <ElFormItem prop="country">
             <ElSelect
-              v-model="registerForm.type"
+              v-model="registerForm.country"
               placeholder="国家"
               clearable
               filterable
@@ -516,7 +519,7 @@ watch(
               ></ElOption>
             </ElSelect>
           </ElFormItem>
-          <ElFormItem prop="phoneNumber" v-if="registerForm.type === '343'">
+          <ElFormItem prop="phoneNumber" v-if="registerForm.country === '343'">
             <ElInput
               v-model="registerForm.phoneNumber"
               placeholder="手机号"

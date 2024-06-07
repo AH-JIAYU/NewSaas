@@ -47,8 +47,9 @@ api.interceptors.response.use(
       return Promise.resolve(response.data);
     } else if (response.data.status === -1) {
       Message.error(response.data.error, {
-        zIndex: 2000,
+        zIndex: 4000,
       });
+      loadingHide(); // 清除加载
       return Promise.reject(response.data);
     } else if (response.data.status === 0) {
       Message.warning(response.data.error, {

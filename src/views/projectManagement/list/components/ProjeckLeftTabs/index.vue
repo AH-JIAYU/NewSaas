@@ -3,7 +3,9 @@ import { cloneDeep } from "lodash-es";
 import { defineProps, provide, ref } from "vue";
 import TopTabs from "../ProjeckTopTabs/index.vue";
 import SyncSettings from "../SyncSettings/index.vue";
+import useProjectManagementListStore from "@/store/modules/projectManagement_list"; // 项目
 
+const projectManagementListStore = useProjectManagementListStore(); //项目
 const props: any = defineProps({
   leftTabsData: Array,
   validateTopTabs: Array,
@@ -23,14 +25,6 @@ localLeftTab.value.forEach((tab: any, index: any) => {
 
 const tabIndex = ref(0);
 const activeLeftTab = ref(0);
-
-const initialTopTabsData = {
-  name: "项目名称",
-  addProjectQuotaInfoList: [], //配置信息
-  // platform: {},
-  // screen: {},
-  // security: {},
-};
 // 同步配置项
 function setHandler() {
   settingsRef.value.showEdit();
@@ -43,14 +37,11 @@ function syncProject() {
 }
 
 function addLeftTab() {
-  const syncdata = cloneDeep(localLeftTab.value[0]);
   activeLeftTab.value = ++tabIndex.value;
-  localLeftTab.value.push({
-    ...initialTopTabsData,
-    client: client.value,
-    await: syncdata.await,
-    multi: syncdata.multi,
-  });
+  const initialTopTabsData = cloneDeep(
+    projectManagementListStore.initialTopTabsData
+  );
+  localLeftTab.value.push(initialTopTabsData);
 }
 
 function tabremove(tabIndexs: any) {
@@ -124,7 +115,7 @@ defineExpose({ activeLeftTab });
                 : ''
             "
           >
-            {{ leftTab.customerAccord || "项目名称" }}
+            {{ leftTab.name || "项目名称" }}
           </div>
         </template>
         <div

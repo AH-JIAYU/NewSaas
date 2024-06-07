@@ -2,21 +2,24 @@
 import { ElMessage, ElMessageBox } from "element-plus";
 import FormMode from "./components/FormMode/index.vue";
 import eventBus from "@/utils/eventBus";
+import { submitLoading } from "@/utils/apiLoading";
 import api from "@/api/modules/otherFunctions_screenLibrary";
 import useSettingsStore from "@/store/modules/settings";
 import Edit from "./components/Edit/index.vue";
+import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典-国家
 
 defineOptions({
   name: "OtherFunctionsScreenLibraryList",
 });
 
+const basicDictionaryStore = useBasicDictionaryStore(); //基础字典-国家
 const router = useRouter();
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
 const tabbar = useTabbar();
 const settingsStore = useSettingsStore();
 
-const data = ref({
+const data = ref<any>({
   loading: false,
   // 表格是否自适应高度
   tableAutoHeight: false,
@@ -51,10 +54,13 @@ const data = ref({
   },
   // 列表数据
   dataList: [],
+  // 国家列表
+  countryList: [],
 });
 
-onMounted(() => {
+onMounted(async () => {
   getDataList();
+  data.value.countryList = await basicDictionaryStore.getCountry();
   if (data.value.formMode === "router") {
     eventBus.on("get-data-list", () => {
       getDataList();
@@ -76,6 +82,7 @@ function getDataList() {
       countryId: data.value.search.countryId,
     }),
   };
+  console.log("params", params);
   api.list(params).then((res: any) => {
     data.value.loading = false;
     data.value.dataList = res.data.getCountryListInfoList;
@@ -91,15 +98,15 @@ const DataList = computed(() => {
 });
 // 每页数量切换
 function sizeChange(size: number) {
-  onSizeChange(size);
+  onSizeChange(size).then(() => getDataList());
 }
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
-  onCurrentChange(page);
+  onCurrentChange(page).then(() => getDataList());
 }
 // 字段排序
 function sortChange({ prop, order }: { prop: string; order: string }) {
-  onSortChange(prop, order);
+  onSortChange(prop, order).then(() => getDataList());
 }
 // 添加国家标题
 function onCreate(row?: any) {
@@ -116,7 +123,7 @@ function onEdit(row: any) {
 }
 // 修改默认
 async function changeIsDefault(item: any) {
-  const { status } = await api.update(item);
+  const { status } = await submitLoading(api.update(item));
   status === 1 &&
     ElMessage.success({
       message: "修改「默认国家」成功",
@@ -126,7 +133,7 @@ async function changeIsDefault(item: any) {
 }
 // 修改状态
 async function changeStatus(item: any) {
-  const { status } = await api.edit(item);
+  const { status } = await submitLoading(api.edit(item));
   status === 1 &&
     ElMessage.success({
       message: "修改「状态」成功",
@@ -164,30 +171,32 @@ function EditSurvey(row: any) {
 // 删除国家
 function onDelCountry(row: any) {
   ElMessageBox.confirm(`确认删除「${row.countryId}」吗？`, "确认信息")
-    .then(() => {
-      api.delete({ countryId: row.countryId }).then(() => {
-        getDataList();
+    .then(async () => {
+      const { status } = await submitLoading(
+        api.delete({ countryId: row.countryId })
+      );
+      status === 1 &&
         ElMessage.success({
           message: "删除成功",
           center: true,
         });
-      });
+      getDataList();
     })
     .catch(() => {});
 }
 // 删除标题
 function onDelProject(row: any) {
   ElMessageBox.confirm(`确认删除「${row.categoryName}」吗？`, "确认信息")
-    .then(() => {
-      api
-        .delete({ projectProblemCategoryId: row.projectProblemCategoryId })
-        .then(() => {
-          getDataList();
-          ElMessage.success({
-            message: "删除成功",
-            center: true,
-          });
+    .then(async () => {
+      const { status } = await submitLoading(
+        api.delete({ projectProblemCategoryId: row.projectProblemCategoryId })
+      );
+      status === 1 &&
+        ElMessage.success({
+          message: "删除成功",
+          center: true,
         });
+      getDataList();
     })
     .catch(() => {});
 }
@@ -207,13 +216,19 @@ function onDelProject(row: any) {
             class="search-form"
           >
             <ElFormItem label="国家">
-              <ElInput
-                v-model="data.search.countryId"
-                placeholder="请输入国家，支持模糊查询"
-                clearable
+              <el-select
                 @keydown.enter="currentChange()"
                 @clear="currentChange()"
-              />
+                filterable
+                v-model="data.search.countryId"
+                placeholder="Select"
+              >
+                <ElOption
+                  v-for="item in data.countryList"
+                  :label="item.chineseName"
+                  :value="item.id"
+                ></ElOption>
+              </el-select>
             </ElFormItem>
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">
@@ -263,9 +278,7 @@ function onDelProject(row: any) {
                 highlight-current-row
                 class="hide-table-header"
               >
-                <!-- <el-table-column width="55" /> -->
                 <el-table-column prop="categoryName" label="问卷名称" />
-                <!-- <ElTableColumn label="默认"> </ElTableColumn> -->
                 <ElTableColumn prop="status" label="状态">
                   <template #default="scope">
                     <ElSwitch
@@ -314,7 +327,7 @@ function onDelProject(row: any) {
             </div>
           </template>
         </el-table-column>
-        <ElTableColumn prop="countryId" label="国家" />
+        <ElTableColumn prop="countryName" label="国家" />
         <ElTableColumn prop="isDefault" label="默认">
           <template #default="scope">
             <ElSwitch
