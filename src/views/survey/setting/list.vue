@@ -15,7 +15,13 @@ const data = ref<any>({
   formData: {},
   activeTopTab: '基本设置',
 })
-
+const form = ref({
+  register: true,
+  registerExamine: false,
+  keyWords: '',
+  webName: '',
+  supplierURL: '',
+})
 onMounted(() => {
 
 })
@@ -28,72 +34,40 @@ function save() {
   <div :class="{ 'absolute-container': data.tableAutoHeight }">
     <PageMain>
       <el-tabs v-model="data.activeTopTab">
-        <el-form ref="formRef" label-position="right" label-width="120px" :model="data.formData" style="width: 500px;  ">
+        <el-form ref="formRef" label-position="right" label-width="130px" :model="data.formData" style="width: 500px;  ">
           <el-tab-pane label="基本设置" name="基本设置">
-            <el-form-item label="网站名称" prop="username">
-              <el-input v-model="data.formData.username" placeholder="" />
+            <el-form-item label="网站名称">
+              <el-input v-model="form.webName" style="width: 18rem;" />
             </el-form-item>
-            <el-form-item label="Keywords" prop="email">
-              <el-input v-model="data.formData.email" placeholder="" />
+            <el-form-item label="keyWords">
+              <el-input v-model="form.keyWords" style="width: 18rem;" />
             </el-form-item>
-            <el-form-item label="网站描述" prop="phone">
-              <el-input v-model="data.formData.phone" placeholder="" />
+            <el-form-item label="会员网址">
+              <el-input v-model="form.supplierURL" style="width: 18rem;" />
             </el-form-item>
-            <el-form-item label="顶级域名" prop="bankName">
-              <el-input v-model="data.formData.bankName" placeholder="" />
+            <el-form-item>
+              <el-button type="primary" @click="save">
+                确认
+              </el-button>
             </el-form-item>
-            <el-form-item label="二级域名" prop="bankName">
-              <el-input v-model="data.formData.bankName" placeholder="" />
-            </el-form-item>
-            <el-form-item label="网站备案" prop="openingBank">
-              <el-input v-model="data.formData.openingBank" placeholder="" />
-            </el-form-item>
-            <el-form-item label="LOGO" prop="account">
-              <!-- <el-input v-model="data.formData.account" placeholder="" /> -->
-              <el-upload
-                v-model:file-list="data.formData.fileList" class="upload-demo"
-                action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15" multiple :limit="3"
-              >
-                <el-button type="primary">
-                  上传
-                </el-button>
-                <template #tip>
-                  <div class="el-upload__tip">
-                    jpg/png files with a size less than 500KB.
-                  </div>
-                </template>
-              </el-upload>
-            </el-form-item>
-            <el-button style="width: 100%" type="primary" @click="save">
-              提交
-            </el-button>
           </el-tab-pane>
           <el-tab-pane label="高级设置" name="高级设置">
-            <el-form-item label="注册开关" prop="originalPassword">
-              <el-switch
-                v-model="data.formData.value2" class="ml-2"
-                style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
-              />
-            </el-form-item>
-            <el-form-item label="注册审核" prop="newPassword">
-              <el-switch
-                v-model="data.formData.value2" class="ml-2"
-                style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
-              />
-            </el-form-item>
-            <el-form-item label="会员推荐" prop="confirmPassword">
-              <el-switch
-                v-model="data.formData.value2" class="ml-2"
-                style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
-              />
-            </el-form-item>
-            <el-form-item label="价格比例设置(高)" prop="confirmPassword">
+            <el-row :gutter="20">
+              <el-col :span="7">
+                <el-form-item label="注册开关">
+                  <el-switch v-model="form.register" :active-value="1" :inactive-value="2" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="注册审核">
+                  <el-switch v-model="form.registerExamine" :active-value="1" :inactive-value="2" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-form-item label="默认会员价格比例" prop="confirmPassword">
               <el-input v-model="data.formData.confirmPassword" placeholder="" />
             </el-form-item>
-            <el-form-item label="价格比例设置(低)" prop="confirmPassword">
-              <el-input v-model="data.formData.confirmPassword" placeholder="" />
-            </el-form-item>
-            <el-form-item label="推荐提成" prop="confirmPassword">
+            <el-form-item label="抵扣税点" prop="confirmPassword">
               <el-input v-model="data.formData.confirmPassword" placeholder="" />
             </el-form-item>
             <el-form-item label="提现方式" prop="confirmPassword">
@@ -106,45 +80,30 @@ function save() {
                 </el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item label="提款方式" prop="confirmPassword">
-              <el-radio-group v-model="data.formData.radio2" class="ml-4">
-                <el-radio value="1" size="large">
-                  审核
-                </el-radio>
-                <el-radio value="2" size="large">
-                  免审
-                </el-radio>
-              </el-radio-group>
+            <el-form-item>
+              <el-button type="primary" @click="save">
+                确认
+              </el-button>
             </el-form-item>
-            <el-form-item label="抵扣税点" prop="confirmPassword">
-              <el-input v-model="data.formData.confirmPassword" placeholder="" />
-            </el-form-item>
-            <el-form-item label="调查限价" prop="confirmPassword">
-              <el-input v-model="data.formData.confirmPassword" placeholder="" />
-            </el-form-item>
-            <el-form-item label="负责人UID" prop="confirmPassword">
-              <el-input v-model="data.formData.confirmPassword" placeholder="" />
-            </el-form-item>
-            <el-button style="width: 100%" type="primary" @click="save">
-              提交
-            </el-button>
           </el-tab-pane>
           <el-tab-pane label="联系我们" name="联系我们">
-            <el-form-item label="Email" prop="originalPassword">
-              <el-input v-model="data.formData.originalPassword" placeholder="" />
+            <el-form-item label="电子邮箱" prop="originalPassword">
+              <el-input v-model="form.keyWords" placeholder="" />
             </el-form-item>
-            <el-form-item label="Phone" prop="newPassword">
-              <el-input v-model="data.formData.newPassword" placeholder="" />
+            <el-form-item label="手机号码" prop="newPassword">
+              <el-input v-model="form.keyWords" placeholder="" />
             </el-form-item>
-            <el-form-item label="QQ" prop="confirmPassword">
-              <el-input v-model="data.formData.confirmPassword" placeholder="" />
+            <el-form-item label="QQ号码" prop="confirmPassword">
+              <el-input v-model="form.keyWords" placeholder="" />
             </el-form-item>
             <el-form-item label="公司地址" prop="confirmPassword">
-              <el-input v-model="data.formData.confirmPassword" placeholder="" />
+              <el-input v-model="form.keyWords" placeholder="" />
             </el-form-item>
-            <el-button style="width: 100%" type="primary" @click="save">
-              提交
-            </el-button>
+            <el-form-item>
+              <el-button type="primary" @click="save">
+                确认
+              </el-button>
+            </el-form-item>
           </el-tab-pane>
         </el-form>
       </el-tabs>
