@@ -10,18 +10,14 @@ const props: any = defineProps({
   leftTabsData: Array,
   validateTopTabs: Array,
   validateAll: Array,
+  title: String,
 });
 const emits: any = defineEmits(["validate"]);
 const client = ref();
 const settingsRef = ref();
 const localLeftTab = ref<any>(props.leftTabsData);
 const validateTopTabs = ref<any>(props.validateTopTabs);
-
-// 为每个 tab 创建并提供一个唯一的 ref
-localLeftTab.value.forEach((tab: any, index: any) => {
-  const formRef = ref(null);
-  provide(`formRef${index}`, formRef);
-});
+const topTabsRef = ref<any>(); // top Ref
 
 const tabIndex = ref(0);
 const activeLeftTab = ref(0);
@@ -32,10 +28,22 @@ function setHandler() {
 // 同步主项目
 function syncProject() {
   const syncdata = cloneDeep(localLeftTab.value[0]);
-  // localLeftTab.value[activeLeftTab.value] = syncdata;
+  // topTabsRef.value[0].setData(); // 将0的数据存入store
   localLeftTab.value.splice(activeLeftTab.value, 1, syncdata);
+  // topTabsRef.value[activeLeftTab.value].getData(); // 将对应下标的data赋值为store里的数据
 }
+// 暂存 存储 配置信息数据
+// function staging() {
+//     topTabsRef.value[0].setData(); // 将0的数据存入store
+// }
+// 暂存回显 将所有组件的配置信息设置为store里的数据
+// function showEdit() {
+//   topTabsRef.value.forEach((item: any) => {
+//     item.getData();
+//   });
+// }
 
+// 新增
 function addLeftTab() {
   activeLeftTab.value = ++tabIndex.value;
   const initialTopTabsData = cloneDeep(
@@ -43,7 +51,7 @@ function addLeftTab() {
   );
   localLeftTab.value.push(initialTopTabsData);
 }
-
+// 删除
 function tabremove(tabIndexs: any) {
   localLeftTab.value.splice(tabIndexs, 1);
   validateTopTabs.value.splice(tabIndexs, 1);
@@ -52,12 +60,7 @@ function tabremove(tabIndexs: any) {
     tabIndex.value = Math.max(0, localLeftTab.value.length - 1);
   }
 }
-function setclient(data: number) {
-  localLeftTab.value.forEach((item: any) => {
-    item.client = data;
-  });
-  client.value = data;
-}
+
 /**
  * 监听activeLeftTab.value左侧焦点的tabs
  *  props.validateAll 是点击确认后所有组件的校验结果
@@ -82,6 +85,14 @@ watch(
     }
   }
 );
+nextTick(() => {
+  // 为每个 tab 创建并提供一个唯一的 ref
+  localLeftTab.value.forEach((tab: any, index: any) => {
+    const formRef = ref(null);
+    provide(`formRef${index}`, formRef);
+  });
+});
+// , staging, showEdit
 defineExpose({ activeLeftTab });
 </script>
 
@@ -156,9 +167,10 @@ defineExpose({ activeLeftTab });
       /> -->
         <!-- 在每个左侧 Tab 中使用 TopTabs 组件 -->
         <TopTabs
+          ref="topTabsRef"
           :left-tab="leftTab"
+          :title="props.title"
           :tab-index="index"
-          @set-client="setclient"
         />
       </el-tab-pane>
       <SyncSettings ref="settingsRef" />

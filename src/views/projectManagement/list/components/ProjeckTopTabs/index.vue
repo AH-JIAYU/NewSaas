@@ -10,15 +10,17 @@ import { ElMessage } from "element-plus";
 import { cloneDeep } from "lodash-es";
 import { obtainLoading } from "@/utils/apiLoading";
 import { UploadFilled } from "@element-plus/icons-vue";
+import fileApi from "@/api/modules/file";
+import api from "@/api/modules/projectManagement";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典-国家
 import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
 import useProjectManagementListStore from "@/store/modules/projectManagement_list"; // 项目
-import fileApi from "@/api/modules/file";
-import api from "@/api/modules/projectManagement";
+import useStagedDataStore from "@/store/modules/stagedData"; // 暂存
 
 const basicDictionaryStore = useBasicDictionaryStore(); //基础字典-国家
 const customerStore = useUserCustomerStore(); // 客户
 const projectManagementListStore = useProjectManagementListStore(); //项目
+const stagedDataStore = useStagedDataStore(); // 暂存
 defineOptions({
   name: "SurveyTopTabs",
 });
@@ -30,24 +32,13 @@ const props: any = defineProps({
 const activeName = ref("basicSettings"); // tabs
 const formRef = ref<any>(); // Ref 在edit中进行校验
 const fold = ref(false); // 折叠 描述配额
-const data = reactive<any>({
-  // 问题初始数据
-  initialProblem: {
-    countryId: null, //问卷对应国家id
-    projectProblemCategoryId: null, //问题类别id
-    projectQuotaQuestionType: null, //问题类型:1:总控问题 2:租户自己问题
-    projectProblemId: null, //	前置问卷问题id
-    keyValue: "", //	前置问卷问题
-    answerValue: [], //前置问卷答案,
-    projectAnswerId: [], //	前置问卷答案id,
+let data = ref<any>({
+  //基础设置
+  basicSettings: {
+    countryList: [], // 国家
+    customerList: [], // 客户
   },
-  countryList: [], // 国家
-  customerList: [], // 客户
-  configurationCountryList: [], // 配置信息-国家
-  projectCategoryList: null, //题库目录
-  ProjectProblemInfoList: [], // 问题列表 - 显示
 });
-
 // 校验
 const rules = ref<any>({
   name: [
@@ -58,7 +49,14 @@ const rules = ref<any>({
     { required: true, message: "请输入项目标识", trigger: "blur" },
     { min: 2, max: 50, message: "内容在2-50个字之间", trigger: "blur" },
   ],
-  countryId: [{ required: true, message: "请选择所属国家", trigger: "change" }],
+  countryIdList: [
+    {
+      required: true,
+      message: "请选择所属国家",
+      type: "aray",
+      trigger: "change",
+    },
+  ],
   clientId: [{ required: true, message: "请选择所属客户", trigger: "change" }],
   uidUrl: [{ required: true, message: "请输入UidUrl", trigger: "blur" }],
   doMoneyPrice: [
@@ -66,30 +64,7 @@ const rules = ref<any>({
   ],
   num: [{ required: true, message: "请输入配额", trigger: "blur" }],
   ir: [{ required: true, message: "请输入配额", trigger: "blur" }],
-  // 配置信息国家
-  addProjectQuotaInfoList: [
-    {
-      countryId: [{ required: true, message: "请选择国家", trigger: "change" }],
-    },
-  ],
 });
-// 配置信息 死数据 可删除
-const options = ref([
-  {
-    value: "终端",
-    label: "终端",
-  },
-  {
-    value: "性别",
-    label: "性别",
-  },
-  {
-    value: "年龄",
-    label: "年龄",
-  },
-]);
-// 配置信息 年龄绑定值 可删除
-const value = ref([4, 8]);
 // 富文本配置
 const plugins = [
   gfm({
@@ -141,47 +116,60 @@ const handlePictureCardPreview: UploadProps["onPreview"] = (uploadFile) => {
 
 // 所属国家改变重新获取 配置信息中的国家
 const changeCountryId = () => {
-  data.configurationCountryList = null;
+  props.leftTab.data.configurationInformation.configurationCountryList = null;
 };
 // 配置国家改变 重新获取题库目录
 const changeConfigurationCountryId = () => {
-  data.projectCategoryList = null;
+  props.leftTab.data.configurationInformation.projectCategoryList = null; // 题库目录
+  clearData();
+};
+// 清除数据
+const clearData = () => {
+  props.leftTab.data.configurationInformation.initialProblem.projectProblemId =
+    null; // 题库绑定值
+  props.leftTab.data.configurationInformation.ProjectProblemInfoList = null; // 题库下对应的答案
+  props.leftTab.addProjectQuotaInfoList = []; // 提交的答案集合
 };
 
-/**
- * tabs切换 获取配置信息中的国家
- * 基础设置 basicSettings
- * 配置信息 configurationInformation
- * 安全信息 securityInformation
- */
+// 获取国家集合
 const changeTab = async (val: any) => {
-  if (val === "configurationInformation" && !data.configurationCountryList) {
+  if (
+    val === "configurationInformation" &&
+    !props.leftTab.data.configurationInformation.configurationCountryList
+  ) {
+    clearData();
     const res = await obtainLoading(
       api.getProjectCountryList({
-        countryIdList: props.leftTab.countryId,
+        countryIdList: props.leftTab.countryIdList,
       })
     );
     // 配置-国家
-    data.configurationCountryList = res.data.getProjectCountryListInfoList;
+    props.leftTab.data.configurationInformation.configurationCountryList =
+      res.data.getProjectCountryListInfoList;
     // 初始化 数据 问题
-    data.initialProblem = cloneDeep(projectManagementListStore.initialProblem);
+    props.leftTab.data.configurationInformation.initialProblem = cloneDeep(
+      projectManagementListStore.initialProblem
+    );
     // 问题类型:1:总控问题 2:租户自己问题
-    data.initialProblem.projectQuotaQuestionType =
+    props.leftTab.data.configurationInformation.initialProblem.projectQuotaQuestionType =
       res.data.projectQuotaQuestionType;
   }
 };
-const projectProblemRef = ref<any>(); //问卷ref
 // 获取题库目录
 const getProjectCategoryList = async () => {
-  if (data.initialProblem.countryId) {
+  if (props.leftTab.data.configurationInformation.initialProblem.countryId) {
     // 如果配置中的国家不存在就请求，反正不请
-    if (!data.projectCategoryList) {
+    if (!props.leftTab.data.configurationInformation.projectCategoryList) {
       const params = {
-        countryId: data.initialProblem.countryId,
-        projectQuotaQuestionType: data.initialProblem.projectQuotaQuestionType, //问题类型:1:总控问题 2:租户自己问题
+        countryId:
+          props.leftTab.data.configurationInformation.initialProblem.countryId,
+        projectQuotaQuestionType:
+          props.leftTab.data.configurationInformation.initialProblem
+            .projectQuotaQuestionType, //问题类型:1:总控问题 2:租户自己问题
       };
       const res = await obtainLoading(api.getProjectCategoryList(params));
-      data.projectCategoryList = res.data.getProjectCategoryInfoList;
+      props.leftTab.data.configurationInformation.projectCategoryList =
+        res.data.getProjectCategoryInfoList;
     }
   } else {
     ElMessage.warning({
@@ -190,55 +178,70 @@ const getProjectCategoryList = async () => {
     });
   }
 };
-// 根据题库目录问卷名称id查询具体的问题和答案列表
+// 根据目录id查询问题和答案表
 const getProjectProblemList = async (id: string | number) => {
-  console.log("data.initialProblem", data.initialProblem);
   if (id) {
     const { projectProblemCategoryName, ...params } =
-      data.projectCategoryList.find(
+      props.leftTab.data.configurationInformation.projectCategoryList.find(
         (item: any) => item.projectProblemCategoryId === id
       );
     const res = await obtainLoading(api.getProjectProblemList(params));
     //问题列表 - 显示的数据
-    data.ProjectProblemInfoList = res.data.getProjectProblemInfoList;
+    props.leftTab.data.configurationInformation.ProjectProblemInfoList =
+      res.data.getProjectProblemInfoList;
     // 问题列表 - 提交的数据
-    for (let i = 0; i < data.ProjectProblemInfoList.length; i++) {
-      const item = cloneDeep(data.initialProblem);
-      item.projectProblemId = data.ProjectProblemInfoList[i].id; // 设置问题
-      item.keyValue = data.ProjectProblemInfoList[i].question; // 设置问题id
+    for (
+      let i = 0;
+      i <
+      props.leftTab.data.configurationInformation.ProjectProblemInfoList.length;
+      i++
+    ) {
+      const item = cloneDeep(
+        props.leftTab.data.configurationInformation.initialProblem
+      );
+      item.projectProblemId =
+        props.leftTab.data.configurationInformation.ProjectProblemInfoList[
+          i
+        ].id; // 问题
+      item.keyValue =
+        props.leftTab.data.configurationInformation.ProjectProblemInfoList[
+          i
+        ].question; // 问题id
+      item.projectProblemCategoryId = id; // 目录id
       props.leftTab.addProjectQuotaInfoList.push(item);
     }
   }
 };
 // 设置 问题的答案和答案id  type: 1 输入框 2单选 3复选 4下拉
-const setAnswerValue = (val: any, type: number, index: number) => {
-  console.log("设置答案", val.target.value, type, index);
-  console.log("提交的数据", props.leftTab.addProjectQuotaInfoList[index]);
-  console.log("回显的数据", data.ProjectProblemInfoList[index]);
+const setAnswerValue = (type: number, index: number) => {
+  // 选择的id "" | []
+  let id: any =
+    props.leftTab.addProjectQuotaInfoList[index].projectAnswerIdList;
+  // 答案列表 []
+  const answerList: any =
+    props.leftTab.data.configurationInformation.ProjectProblemInfoList[index]
+      .getProjectAnswerInfoList;
   if (type == 2) {
-    props.leftTab.addProjectQuotaInfoList[index].projectAnswerId = [
-      val.target.value,
-    ];
+    // 单选 id 为 ""
+    id = [id];
+  }
+  const filteredData = answerList.filter((item: any) => id.includes(item.id));
+  props.leftTab.addProjectQuotaInfoList[index].answerValueList =
+    filteredData.map((item: any) => item.anotherName);
+  if (type == 2) {
+    props.leftTab.addProjectQuotaInfoList[index].answerValueList =
+      props.leftTab.addProjectQuotaInfoList[index].answerValueList[0];
   }
 };
-// const radiogroupModel = computed((index: number) => {
-//   console.log("index", index, props.leftTab.addProjectQuotaInfoList[index]);
-//   if (index && props.leftTab.addProjectQuotaInfoList[index]) {
-//     return props.leftTab.addProjectQuotaInfoList[
-//       index
-//     ].projectAnswerId.toString();
-//   } else {
-//     return "";
-//   }
-// });
 
 // 获取 客户 国家
 const getList = async () => {
-  data.customerList = await customerStore.getCustomerList();
-  data.countryList = await basicDictionaryStore.getCountry();
+  data.value.basicSettings.customerList = await customerStore.getCustomerList();
+  data.value.basicSettings.countryList =
+    await basicDictionaryStore.getCountry();
 };
 onMounted(async () => {
-  await obtainLoading(getList());
+  await getList();
 });
 nextTick(() => {
   // 表单验证方法
@@ -283,7 +286,7 @@ nextTick(() => {
                   v-model="props.leftTab.clientId"
                 >
                   <el-option
-                    v-for="item in data.customerList"
+                    v-for="item in data.basicSettings.customerList"
                     :key="item.tenantCustomerId"
                     :value="item.tenantCustomerId"
                     :label="item.customerAccord"
@@ -292,9 +295,9 @@ nextTick(() => {
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="所属国家" prop="countryId">
+              <el-form-item label="所属国家" prop="countryIdList">
                 <ElSelect
-                  v-model="props.leftTab.countryId"
+                  v-model="props.leftTab.countryIdList"
                   placeholder="国家"
                   clearable
                   filterable
@@ -303,7 +306,7 @@ nextTick(() => {
                   @change="changeCountryId"
                 >
                   <ElOption
-                    v-for="item in data.countryList"
+                    v-for="item in data.basicSettings.countryList"
                     :label="item.chineseName"
                     :value="item.id"
                   ></ElOption>
@@ -556,14 +559,18 @@ nextTick(() => {
             <el-col :span="6">
               <el-form-item label="选择国家">
                 <el-select
-                  v-model="data.initialProblem.countryId"
+                  v-model="
+                    props.leftTab.data.configurationInformation.initialProblem
+                      .countryId
+                  "
                   filterable
                   clearable
                   placeholder="Select"
                   @change="changeConfigurationCountryId"
                 >
                   <ElOption
-                    v-for="item in data.configurationCountryList"
+                    v-for="item in props.leftTab.data.configurationInformation
+                      .configurationCountryList"
                     :label="item.countryName"
                     :value="item.countryId"
                   ></ElOption>
@@ -573,15 +580,18 @@ nextTick(() => {
             <el-col :span="6">
               <el-form-item label="问卷名称">
                 <el-select
-                  ref="projectProblemRef"
-                  v-model="data.initialProblem.projectProblemId"
+                  v-model="
+                    props.leftTab.data.configurationInformation.initialProblem
+                      .projectProblemId
+                  "
                   clearable
                   placeholder="Select"
                   @focus="getProjectCategoryList"
                   @change="getProjectProblemList"
                 >
                   <el-option
-                    v-for="item in data.projectCategoryList"
+                    v-for="item in props.leftTab.data.configurationInformation
+                      .projectCategoryList"
                     :key="item.projectProblemCategoryId"
                     :label="item.projectProblemCategoryName"
                     :value="item.projectProblemCategoryId"
@@ -591,26 +601,38 @@ nextTick(() => {
             </el-col>
           </el-row>
           <!-- 1 输入框 2单选 3复选 4下拉  -->
-          <!-- {{ data.ProjectProblemInfoList }}
-          <template v-if="data.ProjectProblemInfoList.length">
+
+          <template
+            v-if="
+              props.leftTab.data.configurationInformation
+                .ProjectProblemInfoList &&
+              props.leftTab.data.configurationInformation.ProjectProblemInfoList
+                .length
+            "
+          >
             <el-row
               class="allocation"
               :gutter="20"
-              v-for="(item, index) in data.ProjectProblemInfoList"
+              v-for="(item, index) in props.leftTab.data
+                .configurationInformation.ProjectProblemInfoList"
             >
               <el-col :span="20"> 问题：{{ item.question }} </el-col>
               <el-col :span="20">
                 <el-form-item>
-
+                  <!-- 1输入框 -->
                   <el-input
                     v-if="item.questionType === 1"
                     disabled
                     placeholder="输入框无法设置"
                   ></el-input>
+                  <!-- 2单选 值为‘’-->
                   <el-radio-group
                     v-else-if="item.questionType === 2"
-                    :value="radiogroupModel(index)"
-                    @input="setAnswerValue($event, 2, index)"
+                    v-model="
+                      props.leftTab.addProjectQuotaInfoList[index]
+                        .projectAnswerIdList
+                    "
+                    @change="setAnswerValue(2, index)"
                   >
                     <el-radio
                       :value="ite.id"
@@ -620,33 +642,43 @@ nextTick(() => {
                       {{ ite.anotherName }}
                     </el-radio>
                   </el-radio-group>
+                  <!-- 3多选 值为[]-->
+                  <el-checkbox-group
+                    v-else-if="item.questionType === 3"
+                    v-model="
+                      props.leftTab.addProjectQuotaInfoList[index]
+                        .projectAnswerIdList
+                    "
+                    @change="setAnswerValue(3, index)"
+                  >
+                    <el-checkbox
+                      :label="ite.anotherName"
+                      :value="ite.id"
+                      v-for="ite in item.getProjectAnswerInfoList"
+                    />
+                  </el-checkbox-group>
+                  <!-- 4下拉 值为[] -->
+                  <el-select
+                    v-else-if="item.questionType === 4"
+                    v-model="
+                      props.leftTab.addProjectQuotaInfoList[index]
+                        .projectAnswerIdList
+                    "
+                    @change="setAnswerValue(4, index)"
+                    multiple
+                    placeholder="Select"
+                    style="width: 240px"
+                  >
+                    <el-option
+                      :label="ite.anotherName"
+                      :value="ite.id"
+                      v-for="ite in item.getProjectAnswerInfoList"
+                    />
+                  </el-select>
                 </el-form-item>
               </el-col>
             </el-row>
-          </template> -->
-
-          <!-- <el-row class="allocation" :gutter="20">
-            <el-col :span="20"> 问题：支持终端 </el-col>
-            <el-col :span="20">
-              <el-form-item>
-                <el-checkbox-group>
-                  <el-checkbox label="PC" value="Value A" />
-                  <el-checkbox label="平板" value="Value B" />
-                  <el-checkbox label="Mobile" value="Value C" />
-                </el-checkbox-group>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row class="allocation" :gutter="20">
-            <el-col :span="20"> 问题：年龄 </el-col>
-            <el-col :span="20">
-              <el-form-item>
-                <el-form-item style="width: 30rem" label="年龄">
-                  <el-slider v-model="value" range show-stops :max="100" />
-                </el-form-item>
-              </el-form-item>
-            </el-col>
-          </el-row> -->
+          </template>
         </el-card>
       </el-tab-pane>
       <el-tab-pane label="安全信息" name="securityInformation">

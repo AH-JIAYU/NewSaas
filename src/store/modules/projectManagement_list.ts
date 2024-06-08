@@ -7,7 +7,7 @@ const useProjectManagementListStore = defineStore(
       name: "", //项目名称
       projectIdentification: "", // 项目标识
       clientId: null, //	所属客户编号id(客户表主键)
-      countryId: [], //所属国家编号id(国家表主键)
+      countryIdList: [], //所属国家编号id(国家表主键)
       doMoneyPrice: null, //原价-美元
       num: null, //配额
       minimumDuration: null, //最小时长/分-这么问卷需要做多长时间,没有到设定的分钟,甄别
@@ -33,6 +33,26 @@ const useProjectManagementListStore = defineStore(
       ipConsistency: 2, //	IP一致性(完成IP和进入IP)检测1-开启 2-不开启
       limitedQuantity: null, //	小时完成量
       preNum: null, //	小时准入量
+      // 配置信息中展示需要的数据，提交时删除
+      data: {
+        //配置信息
+        configurationInformation: {
+          // 问题初始数据
+          initialProblem: {
+            countryId: null, //问卷对应国家id
+            projectProblemCategoryId: null, //问题类别id
+            projectQuotaQuestionType: null, //问题类型:1:总控问题 2:租户自己问题
+            projectProblemId: null, //	前置问卷问题id
+            keyValue: "", //	前置问卷问题
+            answerValueList: [], //前置问卷答案,
+            projectAnswerIdList: [], //	前置问卷答案id,
+          },
+
+          configurationCountryList: [], // 配置信息-国家
+          projectCategoryList: null, //题库目录
+          ProjectProblemInfoList: [], // 问题列表 - 显示
+        },
+      },
     };
     // 问题 答案 初始数据
     const initialProblem = {
@@ -41,8 +61,8 @@ const useProjectManagementListStore = defineStore(
       projectQuotaQuestionType: null, //问题类型:1:总控问题 2:租户自己问题
       projectProblemId: null, //	前置问卷问题id
       keyValue: "", //	前置问卷问题
-      answerValue: [], //前置问卷答案,
-      projectAnswerId: [], //	前置问卷答案id,
+      answerValueList: [], //前置问卷答案,
+      projectAnswerIdList: [], //	前置问卷答案id,
     };
     return {
       initialTopTabsData,

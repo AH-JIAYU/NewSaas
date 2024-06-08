@@ -213,10 +213,11 @@ onMounted(() => {
       </el-row>
       <el-table
         ref="tableSortRef"
-        v-loading="false"
+        v-loading="listLoading"
         style="margin-top: 10px"
-        row-key="id"
+        row-key="projectId"
         :data="list"
+        :tree-props="{ children: 'getChildrenProjectListInfoList' }"
         :border="border"
         :size="lineHeight"
         :stripe="stripe"
@@ -256,14 +257,9 @@ onMounted(() => {
           align="center"
           label="分配类型"
         />
-        <el-table-column
-          show-overflow-tooltip
-          align="center"
-          label="原价"
-        >
+        <el-table-column show-overflow-tooltip align="center" label="原价">
           <template #default="{ row }">
-           $ {{ row.doMoneyPrice }}
-           ￥{{ row.memberPrice }}
+            $ {{ row.doMoneyPrice }} ￥{{ row.memberPrice }}
           </template>
         </el-table-column>
         <el-table-column
