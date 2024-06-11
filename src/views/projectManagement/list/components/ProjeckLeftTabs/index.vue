@@ -27,10 +27,10 @@ function setHandler() {
 }
 // 同步主项目
 function syncProject() {
-  const syncdata = cloneDeep(localLeftTab.value[0]);
-  // topTabsRef.value[0].setData(); // 将0的数据存入store
+  const { projectId, ...syncdata } = cloneDeep(localLeftTab.value[0]);
+  console.log("projectId, ...syncdata", projectId, syncdata);
+  topTabsRef.value[activeLeftTab.value].getUpLoad(syncdata.descriptionUrl); // 将0的数据存入store
   localLeftTab.value.splice(activeLeftTab.value, 1, syncdata);
-  // topTabsRef.value[activeLeftTab.value].getData(); // 将对应下标的data赋值为store里的数据
 }
 // 暂存 存储 配置信息数据
 // function staging() {
@@ -46,7 +46,7 @@ function syncProject() {
 // 新增
 function addLeftTab() {
   activeLeftTab.value = ++tabIndex.value;
-  const initialTopTabsData = cloneDeep(
+  const { projectId, ...initialTopTabsData } = cloneDeep(
     projectManagementListStore.initialTopTabsData
   );
   localLeftTab.value.push(initialTopTabsData);
@@ -68,29 +68,32 @@ function tabremove(tabIndexs: any) {
  * 当activeLeftTab改变，并且改变前的值 在validateIndex中存在，
  * 说明他刚改完表单 重新进行校验，取消符合校验规则的lefTabs的红色阴影
  */
-watch(
-  () => activeLeftTab.value,
-  (newVal, oldVal) => {
-    const validateIndex = props.validateAll.reduce(
-      (acc: any, value: any, index: any) => {
-        if (value === "rejected") {
-          acc.push(index);
-        }
-        return acc;
-      },
-      []
-    );
-    if (validateIndex.includes(oldVal)) {
-      emits("validate");
-    }
-  }
-);
+// watch(
+//   () => activeLeftTab.value,
+//   (newVal, oldVal) => {
+//     const validateIndex = props.validateAll.reduce(
+//       (acc: any, value: any, index: any) => {
+//         if (value === "rejected") {
+//           acc.push(index);
+//         }
+//         return acc;
+//       },
+//       []
+//     );
+//     if (validateIndex.includes(oldVal)) {
+//       emits("validate");
+//     }
+//   }
+// );
 nextTick(() => {
   // 为每个 tab 创建并提供一个唯一的 ref
   localLeftTab.value.forEach((tab: any, index: any) => {
     const formRef = ref(null);
     provide(`formRef${index}`, formRef);
   });
+});
+onMounted(() => {
+  console.log("leftTabs", localLeftTab.value);
 });
 // , staging, showEdit
 defineExpose({ activeLeftTab });
@@ -109,6 +112,7 @@ defineExpose({ activeLeftTab });
       v-model="activeLeftTab"
       tab-position="left"
       @tab-remove="tabremove"
+      v-if="localLeftTab.length"
     >
       <el-tab-pane
         v-for="(leftTab, index) in localLeftTab"

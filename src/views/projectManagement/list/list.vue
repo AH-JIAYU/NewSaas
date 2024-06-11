@@ -354,7 +354,7 @@ onMounted(() => {
       />
     </PageMain>
     <allocationEdit ref="addAllocationEditRef" />
-    <ProjeckEdit ref="addProjeckRef" />
+    <ProjeckEdit ref="addProjeckRef" @fetchData="fetchData" />
     <ProjectDetail ref="projectDetailsRef" />
   </div>
 </template>

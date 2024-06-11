@@ -75,16 +75,15 @@ const plugins = [
 function handleChange(v: string) {
   props.leftTab.richText = v;
 }
-function open(url: string) {
-  window.open(url, "_blank");
-}
 // 折叠 描述配额
 function isHieght() {
   fold.value = !fold.value;
 }
-// 上传
+
+// #regin 上传文件
 const dialogImageUrl = ref("");
 const dialogVisible = ref(false);
+const fileList = ref<any>([]); // 上传
 
 // 删除
 const handleRemove: any = async (uploadFile: any, uploadFiles: any) => {
@@ -113,6 +112,19 @@ const handlePictureCardPreview: UploadProps["onPreview"] = (uploadFile) => {
   dialogImageUrl.value = uploadFile.url!;
   dialogVisible.value = true;
 };
+const getUpLoad = async (file: any) => {
+  if (file) {
+    console.log("file", file);
+    const res: any = await fileApi.detail({
+      fileName: file,
+    });
+    fileList.value.push({
+      name: file,
+      url: res.data.fileUrl,
+    });
+  }
+};
+// #endregion
 
 // 所属国家改变重新获取 配置信息中的国家
 const changeCountryId = () => {
@@ -124,20 +136,23 @@ const changeConfigurationCountryId = () => {
   clearData();
 };
 // 清除数据
-const clearData = () => {
+const clearData = (judge?: boolean) => {
   props.leftTab.data.configurationInformation.initialProblem.projectProblemId =
     null; // 题库绑定值
   props.leftTab.data.configurationInformation.ProjectProblemInfoList = null; // 题库下对应的答案
-  props.leftTab.addProjectQuotaInfoList = []; // 提交的答案集合
+  // 编辑回显时 不清除
+  if (!judge) {
+    props.leftTab.projectQuotaInfoList = []; // 提交的答案集合
+  }
 };
 
 // 获取国家集合
-const changeTab = async (val: any) => {
+const changeTab = async (val: any, judge?: boolean) => {
   if (
     val === "configurationInformation" &&
     !props.leftTab.data.configurationInformation.configurationCountryList
   ) {
-    clearData();
+    clearData(judge || false);
     const res = await obtainLoading(
       api.getProjectCountryList({
         countryIdList: props.leftTab.countryIdList,
@@ -146,10 +161,13 @@ const changeTab = async (val: any) => {
     // 配置-国家
     props.leftTab.data.configurationInformation.configurationCountryList =
       res.data.getProjectCountryListInfoList;
-    // 初始化 数据 问题
-    props.leftTab.data.configurationInformation.initialProblem = cloneDeep(
-      projectManagementListStore.initialProblem
-    );
+    // 编辑时 已经有初始数据
+    if (!props.leftTab.data.configurationInformation.initialProblem) {
+      // 初始化 数据 问题
+      props.leftTab.data.configurationInformation.initialProblem = cloneDeep(
+        projectManagementListStore.initialProblem
+      );
+    }
     // 问题类型:1:总控问题 2:租户自己问题
     props.leftTab.data.configurationInformation.initialProblem.projectQuotaQuestionType =
       res.data.projectQuotaQuestionType;
@@ -179,7 +197,8 @@ const getProjectCategoryList = async () => {
   }
 };
 // 根据目录id查询问题和答案表
-const getProjectProblemList = async (id: string | number) => {
+const getProjectProblemList = async (id: string | number, judge: boolean) => {
+  console.log("props.leftTab", id, judge, props.leftTab);
   if (id) {
     const { projectProblemCategoryName, ...params } =
       props.leftTab.data.configurationInformation.projectCategoryList.find(
@@ -189,34 +208,45 @@ const getProjectProblemList = async (id: string | number) => {
     //问题列表 - 显示的数据
     props.leftTab.data.configurationInformation.ProjectProblemInfoList =
       res.data.getProjectProblemInfoList;
-    // 问题列表 - 提交的数据
-    for (
-      let i = 0;
-      i <
-      props.leftTab.data.configurationInformation.ProjectProblemInfoList.length;
-      i++
-    ) {
-      const item = cloneDeep(
-        props.leftTab.data.configurationInformation.initialProblem
-      );
-      item.projectProblemId =
-        props.leftTab.data.configurationInformation.ProjectProblemInfoList[
-          i
-        ].id; // 问题
-      item.keyValue =
-        props.leftTab.data.configurationInformation.ProjectProblemInfoList[
-          i
-        ].question; // 问题id
-      item.projectProblemCategoryId = id; // 目录id
-      props.leftTab.addProjectQuotaInfoList.push(item);
+    // 判断 编辑回显时 无需重置数据
+    if (!judge) {
+      // 问题列表 - 提交的数据
+      for (
+        let i = 0;
+        i <
+        props.leftTab.data.configurationInformation.ProjectProblemInfoList
+          .length;
+        i++
+      ) {
+        const item = cloneDeep(
+          props.leftTab.data.configurationInformation.initialProblem
+        );
+        // 问题id
+        item.projectProblemId =
+          props.leftTab.data.configurationInformation.ProjectProblemInfoList[
+            i
+          ].id;
+        // 问题
+        item.keyValue =
+          props.leftTab.data.configurationInformation.ProjectProblemInfoList[
+            i
+          ].question;
+        // 问题类型
+        item.questionType =
+          props.leftTab.data.configurationInformation.ProjectProblemInfoList[
+            i
+          ].questionType;
+        // 目录id
+        item.projectProblemCategoryId = id;
+        props.leftTab.projectQuotaInfoList.push(item);
+      }
     }
   }
 };
 // 设置 问题的答案和答案id  type: 1 输入框 2单选 3复选 4下拉
 const setAnswerValue = (type: number, index: number) => {
   // 选择的id "" | []
-  let id: any =
-    props.leftTab.addProjectQuotaInfoList[index].projectAnswerIdList;
+  let id: any = props.leftTab.projectQuotaInfoList[index].projectAnswerIdList;
   // 答案列表 []
   const answerList: any =
     props.leftTab.data.configurationInformation.ProjectProblemInfoList[index]
@@ -226,23 +256,50 @@ const setAnswerValue = (type: number, index: number) => {
     id = [id];
   }
   const filteredData = answerList.filter((item: any) => id.includes(item.id));
-  props.leftTab.addProjectQuotaInfoList[index].answerValueList =
-    filteredData.map((item: any) => item.anotherName);
+  props.leftTab.projectQuotaInfoList[index].answerValueList = filteredData.map(
+    (item: any) => item.anotherName
+  );
   if (type == 2) {
-    props.leftTab.addProjectQuotaInfoList[index].answerValueList =
-      props.leftTab.addProjectQuotaInfoList[index].answerValueList[0];
+    props.leftTab.projectQuotaInfoList[index].answerValueList =
+      props.leftTab.projectQuotaInfoList[index].answerValueList[0];
   }
 };
 
 // 获取 客户 国家
 const getList = async () => {
-  data.value.basicSettings.customerList = await customerStore.getCustomerList();
+  data.value.basicSettings.customerList = await obtainLoading(
+    customerStore.getCustomerList()
+  );
   data.value.basicSettings.countryList =
     await basicDictionaryStore.getCountry();
 };
+// 编辑时 回显配置信息
+const showProjectQuotaInfoList = async () => {
+  if (props.leftTab.projectQuotaInfoList.length) {
+    props.leftTab.data.configurationInformation.initialProblem.countryId =
+      props.leftTab.projectQuotaInfoList[0].countryId; // 国家id
+    props.leftTab.data.configurationInformation.initialProblem.projectProblemCategoryId =
+      props.leftTab.projectQuotaInfoList[0].projectProblemCategoryId; // 问卷id
+    // props.leftTab.projectQuotaInfoList =
+    //   props.leftTab.data.configurationInformation.projectQuotaInfoList; // 问题，答案
+    await changeTab("configurationInformation", true);
+    await getProjectCategoryList();
+    await getProjectProblemList(
+      props.leftTab.data.configurationInformation.initialProblem
+        .projectProblemCategoryId,
+      true
+    );
+  }
+};
+
 onMounted(async () => {
+  fileList.value = [];
+  // 获取客户 国家
   await getList();
+  await showProjectQuotaInfoList();
+  await getUpLoad(props.leftTab.descriptionUrl);
 });
+defineExpose({ getUpLoad });
 nextTick(() => {
   // 表单验证方法
   validate(formRef.value);
@@ -417,6 +474,7 @@ nextTick(() => {
           <div v-if="fold">
             <el-form-item label="上传图片">
               <el-upload
+                v-model:file-list="fileList"
                 action="http://saas-api.surveysaas.com/project/uploadQiniu"
                 list-type="picture-card"
                 :limit="1"
@@ -551,7 +609,7 @@ nextTick(() => {
         name="configurationInformation"
         v-if="props.leftTab.isProfile === 1"
       >
-        <el-card>
+        <el-card v-if="props.leftTab.data">
           <template #header>
             <div class="card-header">配置信息</div>
           </template>
@@ -582,7 +640,7 @@ nextTick(() => {
                 <el-select
                   v-model="
                     props.leftTab.data.configurationInformation.initialProblem
-                      .projectProblemId
+                      .projectProblemCategoryId
                   "
                   clearable
                   placeholder="Select"
@@ -601,7 +659,6 @@ nextTick(() => {
             </el-col>
           </el-row>
           <!-- 1 输入框 2单选 3复选 4下拉  -->
-
           <template
             v-if="
               props.leftTab.data.configurationInformation
@@ -629,7 +686,7 @@ nextTick(() => {
                   <el-radio-group
                     v-else-if="item.questionType === 2"
                     v-model="
-                      props.leftTab.addProjectQuotaInfoList[index]
+                      props.leftTab.projectQuotaInfoList[index]
                         .projectAnswerIdList
                     "
                     @change="setAnswerValue(2, index)"
@@ -646,7 +703,7 @@ nextTick(() => {
                   <el-checkbox-group
                     v-else-if="item.questionType === 3"
                     v-model="
-                      props.leftTab.addProjectQuotaInfoList[index]
+                      props.leftTab.projectQuotaInfoList[index]
                         .projectAnswerIdList
                     "
                     @change="setAnswerValue(3, index)"
@@ -661,7 +718,7 @@ nextTick(() => {
                   <el-select
                     v-else-if="item.questionType === 4"
                     v-model="
-                      props.leftTab.addProjectQuotaInfoList[index]
+                      props.leftTab.projectQuotaInfoList[index]
                         .projectAnswerIdList
                     "
                     @change="setAnswerValue(4, index)"

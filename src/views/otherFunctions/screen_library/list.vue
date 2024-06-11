@@ -81,8 +81,7 @@ function getDataList() {
     ...(data.value.search.countryId && {
       countryId: data.value.search.countryId,
     }),
-  };
-  console.log("params", params);
+  }; 
   api.list(params).then((res: any) => {
     data.value.loading = false;
     data.value.dataList = res.data.getCountryListInfoList;

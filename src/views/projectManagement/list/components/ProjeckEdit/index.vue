@@ -6,6 +6,8 @@ import { cloneDeep } from "lodash-es";
 import { obtainLoading } from "@/utils/apiLoading";
 import useProjectManagementListStore from "@/store/modules/projectManagement_list"; // 项目
 import useStagedDataStore from "@/store/modules/stagedData"; // 暂存
+import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典-国家
+import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
 import api from "@/api/modules/projectManagement";
 
 defineOptions({
@@ -13,6 +15,8 @@ defineOptions({
 });
 const projectManagementListStore = useProjectManagementListStore(); //项目
 const stagedDataStore = useStagedDataStore(); // 暂存
+const basicDictionaryStore = useBasicDictionaryStore(); //基础字典-国家
+const customerStore = useUserCustomerStore(); // 客户
 const emit = defineEmits(["fetch-data"]);
 const dialogTableVisible = ref<boolean>(false);
 const title = ref<string>("");
@@ -40,25 +44,74 @@ async function showEdit(row: any) {
     // 编辑返回的字段也一样，周二让刘改字段 	项目配额字段updateProjectQuotaInfoList getProjectQuotaInfoList
     const res = await obtainLoading(api.detail({ projectId: row.projectId }));
     console.log("res.data", res.data);
-    initializeLeftTabsData(row);
+    initializeLeftTabsData(res.data);
   }
   dialogTableVisible.value = true;
 }
-// 清空现有数据
+// 编辑时 处理数据
 function initializeLeftTabsData(data: any) {
-  leftTabsData.length = 0;
-  // 添加主数据作为第一个 Tab
-  const { getProjectInfoList, ...newData } = cloneDeep(data);
-  leftTabsData.push(newData);
+  // 编辑的时候回显默认值，不然会报错
+  data.data = {
+    configurationInformation: {
+      // 问题初始数据
+      initialProblem: {
+        countryId: null, //问卷对应国家id
+        projectProblemCategoryId: null, //问题类别id
+        projectQuotaQuestionType: null, //问题类型:1:总控问题 2:租户自己问题
+        projectProblemId: null, //	前置问卷问题id
+        keyValue: "", //	前置问卷问题
+        questionType: null, // 问题类型    type: 1 输入框 2单选 3复选 4下拉
+        answerValueList: [], //前置问卷答案,
+        projectAnswerIdList: [], //	前置问卷答案id,
+      },
 
+      configurationCountryList: null, // 配置信息-国家
+      projectCategoryList: null, //题库目录
+      ProjectProblemInfoList: [], // 问题列表 - 显示
+    },
+  };
+  leftTabsData = [];
+  // 添加主数据作为第一个 Tab
+  const { projectInfoList, ...newData } = cloneDeep(data);
+  leftTabsData.push(newData);
   // // // 如果存在 children，为每个 child 创建一个 Tab
-  if (getProjectInfoList && getProjectInfoList.length) {
-    getProjectInfoList.forEach((child: any) => {
+  if (projectInfoList && projectInfoList.length) {
+    projectInfoList.forEach((child: any) => {
+      // 编辑的时候回显默认值，不然会报错
+      child.data = {
+        configurationInformation: {
+          // 问题初始数据
+          initialProblem: {
+            countryId: null, //问卷对应国家id
+            projectProblemCategoryId: null, //问题类别id
+            projectQuotaQuestionType: null, //问题类型:1:总控问题 2:租户自己问题
+            projectProblemId: null, //	前置问卷问题id
+            keyValue: "", //	前置问卷问题
+            questionType: null, // 问题类型    type: 1 输入框 2单选 3复选 4下拉
+            answerValueList: [], //前置问卷答案,
+            projectAnswerIdList: [], //	前置问卷答案id,
+          },
+
+          configurationCountryList: null, // 配置信息-国家
+          projectCategoryList: null, //题库目录
+          ProjectProblemInfoList: [], // 问题列表 - 显示
+        },
+      };
       leftTabsData.push({
         ...child,
       });
     });
   }
+  leftTabsData.forEach((item: any) => {
+    item.projectQuotaInfoList.forEach((ite: any) => {
+      // 1 输入框 2单选 3复选 4下拉
+      // 单选时 将数组转换成字符串
+      ite.projectAnswerIdList =
+        ite.questionType === 2
+          ? ite.projectAnswerIdList[0]
+          : ite.projectAnswerIdList;
+    });
+  });
 }
 
 // 暂存
@@ -90,17 +143,17 @@ function hasDuplicateCustomer(projectList: any) {
   }
   return false; // 如果没有重复，则返回false
 }
-// 处理数据
+// 提交 处理数据
 const processingData = () => {
   const newLeftTabsData = cloneDeep(leftTabsData);
   let masterData = newLeftTabsData[0];
-  masterData.addProjectInfoList = newLeftTabsData.slice(1);
+  masterData.projectInfoList = newLeftTabsData.slice(1);
   //data为配置信息中所需的数据
   if (masterData.data) {
     delete masterData.data;
   }
   // 将单选的答案和id从''转换成[]
-  masterData.addProjectQuotaInfoList = masterData.addProjectQuotaInfoList.map(
+  masterData.projectQuotaInfoList = masterData.projectQuotaInfoList.map(
     (item: any) => {
       if (!Array.isArray(item.answerValueList)) {
         item.answerValueList = [item.answerValueList];
@@ -112,12 +165,12 @@ const processingData = () => {
     }
   );
   // 将子项的单选的答案和id从''转换成[]
-  masterData.addProjectInfoList.forEach((element: any) => {
+  masterData.projectInfoList.forEach((element: any) => {
     //data为配置信息中所需的数据
     if (element.data) {
       delete element.data;
     }
-    element.addProjectQuotaInfoList = element.addProjectQuotaInfoList.map(
+    element.projectQuotaInfoList = element.projectQuotaInfoList.map(
       (item: any) => {
         if (!Array.isArray(item.answerValueList)) {
           item.answerValueList = [item.answerValueList];
@@ -139,13 +192,23 @@ async function onSubmit() {
   if (validateAll.value.every((item: any) => item === "fulfilled")) {
     if (!hasDuplicateCustomer(leftTabsData)) {
       const params = processingData();
-      console.log("params", params);
-      const { status } = await api.create(params);
-      status === 1 &&
-        ElMessage.success({
-          message: "新增成功",
-          center: true,
-        });
+      if (title.value === "添加") {
+        const { status } = await api.create(params);
+        status === 1 &&
+          ElMessage.success({
+            message: "新增成功",
+            center: true,
+          });
+      } else {
+        const { status } = await api.edit(params);
+        status === 1 &&
+          ElMessage.success({
+            message: "编辑成功",
+            center: true,
+          });
+      }
+      closeHandler();
+      emit("fetch-data");
     } else {
       ElMessage.warning({
         message: "项目名称重复",
@@ -164,13 +227,23 @@ async function onSubmit() {
 // 弹框关闭事件
 function closeHandler() {
   leftTabsData = reactive<any>([]);
-  emit("fetch-data");
+  validateAll.value = [];
   dialogTableVisible.value = false;
   validateTopTabs.value = [];
   if (title.value === "添加") {
     stagedDataStore.projectManagementList = null;
   }
 }
+
+// // 获取 客户 国家
+const getList = async () => {
+  await customerStore.getCustomerList();
+  await basicDictionaryStore.getCountry();
+};
+
+onMounted(async () => {
+  await getList();
+});
 
 // 暴露方法
 defineExpose({
@@ -190,6 +263,7 @@ defineExpose({
       size="70%"
     >
       <LeftTabs
+        v-if="leftTabsData.length"
         @validate="validate"
         ref="LeftTabsRef"
         :left-tabs-data="leftTabsData"

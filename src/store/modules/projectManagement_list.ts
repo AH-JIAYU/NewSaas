@@ -3,7 +3,7 @@ const useProjectManagementListStore = defineStore(
   "projectManagementList",
   () => {
     // 初始数据
-    const initialTopTabsData = {
+    const initialTopTabsData: any = {
       name: "", //项目名称
       projectIdentification: "", // 项目标识
       clientId: null, //	所属客户编号id(客户表主键)
@@ -27,7 +27,7 @@ const useProjectManagementListStore = defineStore(
       descriptionUrl: "", //	描述配额url
       richText: "", //富文本编辑器内容
       //配置信息
-      addProjectQuotaInfoList: [],
+      projectQuotaInfoList: [],
       timeDifferenceDetection: 2, //时差检测1-开启 2-不开启
       ipDifferenceDetection: 2, //重复IP检测1-开启 2-不开启
       ipConsistency: 2, //	IP一致性(完成IP和进入IP)检测1-开启 2-不开启
@@ -44,11 +44,12 @@ const useProjectManagementListStore = defineStore(
             projectQuotaQuestionType: null, //问题类型:1:总控问题 2:租户自己问题
             projectProblemId: null, //	前置问卷问题id
             keyValue: "", //	前置问卷问题
+            questionType: null, // 问题类型    type: 1 输入框 2单选 3复选 4下拉
             answerValueList: [], //前置问卷答案,
             projectAnswerIdList: [], //	前置问卷答案id,
           },
 
-          configurationCountryList: [], // 配置信息-国家
+          configurationCountryList: null, // 配置信息-国家
           projectCategoryList: null, //题库目录
           ProjectProblemInfoList: [], // 问题列表 - 显示
         },
@@ -61,6 +62,7 @@ const useProjectManagementListStore = defineStore(
       projectQuotaQuestionType: null, //问题类型:1:总控问题 2:租户自己问题
       projectProblemId: null, //	前置问卷问题id
       keyValue: "", //	前置问卷问题
+      questionType: null, // 问题类型    type: 1 输入框 2单选 3复选 4下拉
       answerValueList: [], //前置问卷答案,
       projectAnswerIdList: [], //	前置问卷答案id,
     };
