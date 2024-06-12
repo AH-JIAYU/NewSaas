@@ -6,9 +6,9 @@ import { cloneDeep } from "lodash-es";
 import { obtainLoading, submitLoading } from "@/utils/apiLoading";
 import api from "@/api/modules/user_supplier";
 import useStagedDataStore from "@/store/modules/stagedData"; // 暂存
-const stagedDataStore = useStagedDataStore(); // 暂存
 import useUserSupplierStore from "@/store/modules/user_supplier"; // 供应商
 import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
+const stagedDataStore = useStagedDataStore(); // 暂存
 const supplierStore = useUserSupplierStore(); // 供应商
 const customerStore = useUserCustomerStore(); // 客户
 

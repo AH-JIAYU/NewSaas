@@ -1,4 +1,4 @@
-import customerApi from "@/api/modules/user_customer";
+import api from "@/api/modules/user_supplier";
 const useUserSupplierStore = defineStore(
   // 唯一ID
   "userSupplier",
@@ -38,9 +38,22 @@ const useUserSupplierStore = defineStore(
       // settlementCycle: 0, // 结算周期
       // bankName: "", // 付款方式为银行支付的时候需要填银行名称
     };
+    // 项目分配查询状态开启的供应商列表
+    const TenantSupplierList = ref<any>(null);
+    const getTenantSupplierList = async () => {
+      if (!TenantSupplierList.value) {
+        const { data } = await api.getTenantSupplierProjectList({
+          projectId: "",
+        });
+        TenantSupplierList.value = data.getTenantSupplierProjectInfoList;
+      }
+      return TenantSupplierList.value;
+    };
     return {
       payMethod,
       initialTopTabsData,
+      TenantSupplierList,
+      getTenantSupplierList,
     };
   }
 );

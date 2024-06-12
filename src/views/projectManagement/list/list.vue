@@ -3,9 +3,15 @@ import allocationEdit from "./components/AllocationEdit/index.vue";
 import ProjeckEdit from "./components/ProjeckEdit/index.vue";
 import ProjectDetail from "./components/ProjectDetails/index.vue";
 import api from "@/api/modules/projectManagement";
+import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典-国家
+import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
+const customerStore = useUserCustomerStore(); // 客户
+const basicDictionaryStore = useBasicDictionaryStore(); //基础字典-国家
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
 
+pagination.value.size = 5;
+pagination.value.sizes = [5, 10, 20, 50];
 defineOptions({
   name: "ProjectManagementListIndex",
 });
@@ -24,18 +30,30 @@ const isFullscreen = ref(false); // 表格控件-控制全屏
 const lineHeight = ref<any>("default");
 const stripe = ref(false);
 const columns = ref([
-  {
-    label: "项目ID",
-    prop: "ID",
-    sortable: true,
-    // 不可改变的
-    disableCheck: true,
-    checked: true,
-  },
+  // {
+  //   label: "项目ID",
+  //   prop: "ID",
+  //   sortable: true,
+  //   // 不可改变的
+  //   disableCheck: true,
+  //   checked: true,
+  // },
 ]);
-const search = reactive<any>({}); // 搜索
+const search = ref<any>({
+  time: [], // 时间
+  beginTime: "", // 开始时间 格式:2024-03-01 00:00:00
+  endTime: "", // 	结束时间 格式:2024-03-30 23:59:59
+  projectId: "", // 	项目Id
+  name: "", // 	项目名称模糊匹配
+  projectIdentification: "", // 	项目标识模糊查询
+  clientId: "", // 	所属客户编号Id
+  // countryId: [], // 所属国家编号Id
+  createName: "", // 	创建人-模糊查询
+  allocation: "", // 	分配状态:1已经分配 2:未分配
+  allocationStatus: "", // 	分配类型: 1:自动分配 2:供应商 3:会员组
+  status: "", // 	项目状态:1在线 2:离线
+}); // 搜索
 const list = ref<any>([]);
-
 // 分配
 function distribution(row: any) {
   addAllocationEditRef.value.showEdit(row);
@@ -66,7 +84,20 @@ function currentChange(page = 1) {
 }
 // 重置数据
 function onReset() {
-  search.value = {};
+  search.value = {
+    time: [], // 时间
+    beginTime: "", // 开始时间 格式:2024-03-01 00:00:00
+    endTime: "", // 	结束时间 格式:2024-03-30 23:59:59
+    projectId: "", // 	项目Id
+    name: "", // 	项目名称模糊匹配
+    projectIdentification: "", // 	项目标识模糊查询
+    clientId: "", // 	所属客户编号Id
+    // countryId: [], // 所属国家编号Id
+    createName: "", // 	创建人-模糊查询
+    allocation: "", // 	分配状态:1已经分配 2:未分配
+    allocationStatus: "", // 	分配类型: 1:自动分配 2:供应商 3:会员组
+    status: "", // 	项目状态:1在线 2:离线
+  };
   fetchData();
 }
 async function fetchData() {
@@ -75,12 +106,28 @@ async function fetchData() {
     ...getParams(),
     ...search.value,
   };
+  if (search.value.time && !!search.value.time.length) {
+    params.beginTime = search.value.time[0] || "";
+    params.endTime = search.value.time[1] || "";
+  }
   const { data } = await api.list(params);
   list.value = data.getChildrenProjectInfoList;
   pagination.value.total = data.total;
   listLoading.value = false;
 }
-onMounted(() => {
+const countryList: any = ref([]); //所有国家一维
+const customerList: any = ref([]); //客户列表
+// 具体的位置信息
+const comCountryId = computed(() => (countryIdList: any) => {
+  const list = countryList.value
+    .filter((item: any) => countryIdList.includes(item.id))
+    .map((item: any) => item.chineseName);
+  return list;
+});
+
+onMounted(async () => {
+  countryList.value = await basicDictionaryStore.getCountry();
+  customerList.value = await customerStore.getCustomerList();
   fetchData();
 });
 </script>
@@ -103,51 +150,74 @@ onMounted(() => {
             class="search-form"
           >
             <el-form-item label="">
-              <el-input v-model="search.a" clearable placeholder="项目ID" />
+              <el-input
+                v-model="search.projectId"
+                clearable
+                placeholder="项目ID"
+              />
             </el-form-item>
             <el-form-item label="">
-              <el-input v-model="search.b" clearable placeholder="项目名称" />
+              <el-input
+                v-model="search.name"
+                clearable
+                placeholder="项目名称"
+              />
             </el-form-item>
             <el-form-item label="">
-              <el-input clearable placeholder="项目标识" />
+              <el-input
+                clearable
+                v-model="search.projectIdentification"
+                placeholder="项目标识"
+              />
             </el-form-item>
+            <!-- <el-form-item v-show="!fold" label="">
+              <el-select
+                v-model="search.countryId"
+                placeholder="国家地区"
+                clearable
+                filterable
+                multiple
+                collapse-tags
+              >
+                <ElOption
+                  v-for="item in countryList"
+                  :label="item.chineseName"
+                  :value="item.id"
+                ></ElOption>
+              </el-select>
+            </el-form-item> -->
             <el-form-item v-show="!fold" label="">
-              <el-select placeholder="国家地区">
-                <el-option :key="11" :label="11" :value="111">
-                  11111
-                </el-option>
+              <el-select v-model="search.clientId" placeholder="客户简称">
+                <el-option
+                  v-for="item in customerList"
+                  :key="item.tenantCustomerId"
+                  :value="item.tenantCustomerId"
+                  :label="item.customerAccord"
+                ></el-option>
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-select placeholder="客户简称">
-                <el-option :key="11" :label="11" :value="111">
-                  11111
-                </el-option>
+              <el-select
+                v-model="search.allocationStatus"
+                placeholder="分配类型"
+              >
+                <el-option label="自动分配" :value="1"> </el-option>
+                <el-option label="供应商" :value="2"> </el-option>
+                <el-option label="会员组" :value="3"> </el-option>
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-select placeholder="分配类型">
-                <el-option :key="11" :label="11" :value="111">
-                  11111
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-select placeholder="项目状态">
-                <el-option :key="11" :label="11" :value="111">
-                  11111
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-select placeholder="B2B/B2C">
-                <el-option :key="11" :label="11" :value="111">
-                  11111
-                </el-option>
+              <el-select v-model="search.status" placeholder="项目状态">
+                <el-option label="已分配" :value="1" />
+                <el-option label="未分配" :value="2" />
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold">
-              <el-input clearable placeholder="创建人" />
+              <el-input
+                v-model="search.createName"
+                clearable
+                placeholder="创建人"
+              />
             </el-form-item>
             <el-form-item v-show="!fold">
               <el-date-picker
@@ -276,10 +346,37 @@ onMounted(() => {
         />
         <el-table-column
           show-overflow-tooltip
-          prop="countryId"
+          prop="countryIdList"
           align="center"
           label="国家地区"
-        />
+          width="200"
+        >
+          <template #default="{ row }">
+            <template v-if="row.countryIdList">
+              <template v-if="comCountryId(row.countryIdList).length > 4">
+                <el-tooltip
+                  class="box-item"
+                  effect="dark"
+                  :content="comCountryId(row.countryIdList).join(',')"
+                  placement="top"
+                >
+                  <el-link type="primary">{{
+                    comCountryId(row.countryIdList).length
+                  }}</el-link>
+                </el-tooltip>
+              </template>
+              <template v-else>
+                <el-tag
+                  v-for="item in comCountryId(row.countryIdList)"
+                  :key="item"
+                  type="primary"
+                >
+                  {{ item }}
+                </el-tag>
+              </template>
+            </template>
+          </template>
+        </el-table-column>
         <el-table-column
           show-overflow-tooltip
           prop="allocationStatus"
@@ -315,7 +412,22 @@ onMounted(() => {
         />
         <el-table-column align="center" label="操作" width="250">
           <template #default="{ row }">
-            <el-button plain type="primary" size="small" @click="distribution">
+            <el-button
+              v-if="row.allocationStatus === 1"
+              plain
+              type="primary"
+              size="small"
+              @click="distribution(row)"
+            >
+              分配
+            </el-button>
+            <el-button
+              v-else
+              plain
+              type="primary"
+              size="small"
+              @click="distribution(row)"
+            >
               重新分配
             </el-button>
             <el-button

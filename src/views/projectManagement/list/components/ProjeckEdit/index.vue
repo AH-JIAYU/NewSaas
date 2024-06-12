@@ -193,27 +193,22 @@ async function onSubmit() {
     if (!hasDuplicateCustomer(leftTabsData)) {
       const params = processingData();
       if (title.value === "添加") {
-        const { status } = await api.create(params);
+        const { status } = await submitLoading(api.create(params));
         status === 1 &&
           ElMessage.success({
             message: "新增成功",
             center: true,
           });
       } else {
-        const { status } = await api.edit(params);
+        const { status } = await api.create(params);
         status === 1 &&
           ElMessage.success({
             message: "编辑成功",
             center: true,
           });
       }
-      closeHandler();
-      emit("fetch-data");
     } else {
-      ElMessage.warning({
-        message: "项目名称重复",
-        center: true,
-      });
+      ElMessage({ message: "项目名称重复", center: true });
     }
   } else {
     // 跳转到第一个未通过校验的组件

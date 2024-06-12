@@ -27,9 +27,14 @@ function setHandler() {
 }
 // 同步主项目
 function syncProject() {
-  const { projectId, ...syncdata } = cloneDeep(localLeftTab.value[0]);
-  console.log("projectId, ...syncdata", projectId, syncdata);
-  topTabsRef.value[activeLeftTab.value].getUpLoad(syncdata.descriptionUrl); // 将0的数据存入store
+  const { projectId, parentId, ...syncdata } = cloneDeep(localLeftTab.value[0]);
+  // projectId存在  保留projectId 和parentId
+  if (localLeftTab.value[activeLeftTab.value].projectId) {
+    syncdata.projectId = localLeftTab.value[activeLeftTab.value].projectId;
+    syncdata.parentId = localLeftTab.value[activeLeftTab.value].parentId;
+  }
+  // 同步 上传文件
+  topTabsRef.value[activeLeftTab.value].getUpLoad(syncdata.descriptionUrl);
   localLeftTab.value.splice(activeLeftTab.value, 1, syncdata);
 }
 // 暂存 存储 配置信息数据
@@ -68,23 +73,23 @@ function tabremove(tabIndexs: any) {
  * 当activeLeftTab改变，并且改变前的值 在validateIndex中存在，
  * 说明他刚改完表单 重新进行校验，取消符合校验规则的lefTabs的红色阴影
  */
-// watch(
-//   () => activeLeftTab.value,
-//   (newVal, oldVal) => {
-//     const validateIndex = props.validateAll.reduce(
-//       (acc: any, value: any, index: any) => {
-//         if (value === "rejected") {
-//           acc.push(index);
-//         }
-//         return acc;
-//       },
-//       []
-//     );
-//     if (validateIndex.includes(oldVal)) {
-//       emits("validate");
-//     }
-//   }
-// );
+watch(
+  () => activeLeftTab.value,
+  (newVal, oldVal) => {
+    const validateIndex = props.validateAll.reduce(
+      (acc: any, value: any, index: any) => {
+        if (value === "rejected") {
+          acc.push(index);
+        }
+        return acc;
+      },
+      []
+    );
+    if (validateIndex.includes(oldVal)) {
+      emits("validate");
+    }
+  }
+);
 nextTick(() => {
   // 为每个 tab 创建并提供一个唯一的 ref
   localLeftTab.value.forEach((tab: any, index: any) => {
