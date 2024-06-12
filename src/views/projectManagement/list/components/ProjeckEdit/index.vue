@@ -3,7 +3,7 @@ import { provide, reactive, ref } from "vue";
 import LeftTabs from "../ProjeckLeftTabs/index.vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { cloneDeep } from "lodash-es";
-import { obtainLoading } from "@/utils/apiLoading";
+import { obtainLoading,submitLoading } from "@/utils/apiLoading";
 import useProjectManagementListStore from "@/store/modules/projectManagement_list"; // 项目
 import useStagedDataStore from "@/store/modules/stagedData"; // 暂存
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典-国家
@@ -17,7 +17,7 @@ const projectManagementListStore = useProjectManagementListStore(); //项目
 const stagedDataStore = useStagedDataStore(); // 暂存
 const basicDictionaryStore = useBasicDictionaryStore(); //基础字典-国家
 const customerStore = useUserCustomerStore(); // 客户
-const emit = defineEmits(["fetch-data"]);
+const emits = defineEmits(["fetch-data"]);
 const dialogTableVisible = ref<boolean>(false);
 const title = ref<string>("");
 const validateTopTabs = ref<any>([]); // 校验的promise数组
@@ -43,7 +43,6 @@ async function showEdit(row: any) {
     title.value = "编辑";
     // 编辑返回的字段也一样，周二让刘改字段 	项目配额字段updateProjectQuotaInfoList getProjectQuotaInfoList
     const res = await obtainLoading(api.detail({ projectId: row.projectId }));
-    console.log("res.data", res.data);
     initializeLeftTabsData(res.data);
   }
   dialogTableVisible.value = true;
@@ -113,7 +112,6 @@ function initializeLeftTabsData(data: any) {
     });
   });
 }
-
 // 暂存
 function staging() {
   stagedDataStore.projectManagementList = cloneDeep(leftTabsData);
@@ -181,8 +179,7 @@ const processingData = () => {
         return item;
       }
     );
-  });
-  console.log("masterData", masterData);
+  }); 
   return masterData;
 };
 // 提交数据
@@ -200,13 +197,15 @@ async function onSubmit() {
             center: true,
           });
       } else {
-        const { status } = await api.create(params);
+        const { status } = await submitLoading(api.edit(params));
         status === 1 &&
           ElMessage.success({
             message: "编辑成功",
             center: true,
           });
       }
+      emits('fetch-data')
+      closeHandler()
     } else {
       ElMessage({ message: "项目名称重复", center: true });
     }

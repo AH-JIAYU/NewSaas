@@ -465,7 +465,7 @@ onMounted(async () => {
         @current-change="currentChange"
       />
     </PageMain>
-    <allocationEdit ref="addAllocationEditRef" />
+    <allocationEdit ref="addAllocationEditRef"  @fetchData="fetchData"  />
     <ProjeckEdit ref="addProjeckRef" @fetchData="fetchData" />
     <ProjectDetail ref="projectDetailsRef" />
   </div>

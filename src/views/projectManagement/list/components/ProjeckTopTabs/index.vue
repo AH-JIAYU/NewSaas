@@ -114,7 +114,6 @@ const handlePictureCardPreview: UploadProps["onPreview"] = (uploadFile) => {
 };
 const getUpLoad = async (file: any) => {
   if (file) {
-    console.log("file", file);
     const res: any = await fileApi.detail({
       fileName: file,
     });
@@ -198,7 +197,6 @@ const getProjectCategoryList = async () => {
 };
 // 根据目录id查询问题和答案表
 const getProjectProblemList = async (id: string | number, judge: boolean) => {
-  console.log("props.leftTab", id, judge, props.leftTab);
   if (id) {
     const { projectProblemCategoryName, ...params } =
       props.leftTab.data.configurationInformation.projectCategoryList.find(

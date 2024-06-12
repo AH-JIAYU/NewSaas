@@ -40,10 +40,10 @@ const useUserSupplierStore = defineStore(
     };
     // 项目分配查询状态开启的供应商列表
     const TenantSupplierList = ref<any>(null);
-    const getTenantSupplierList = async () => {
+    const getTenantSupplierList = async (projectId: any) => {
       if (!TenantSupplierList.value) {
         const { data } = await api.getTenantSupplierProjectList({
-          projectId: "",
+          projectId: projectId,
         });
         TenantSupplierList.value = data.getTenantSupplierProjectInfoList;
       }

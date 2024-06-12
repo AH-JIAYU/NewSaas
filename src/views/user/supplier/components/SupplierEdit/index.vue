@@ -44,6 +44,7 @@ async function showEdit(row: any) {
   }
   validateAll.value = [];
   drawerisible.value = true;
+  supplierStore.TenantSupplierList=null
 }
 // 清空现有数据
 function initializeLeftTabsData(data: any) {

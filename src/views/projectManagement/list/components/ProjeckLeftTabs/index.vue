@@ -97,9 +97,7 @@ nextTick(() => {
     provide(`formRef${index}`, formRef);
   });
 });
-onMounted(() => {
-  console.log("leftTabs", localLeftTab.value);
-});
+ 
 // , staging, showEdit
 defineExpose({ activeLeftTab });
 </script>

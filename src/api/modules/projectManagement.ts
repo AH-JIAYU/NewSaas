@@ -9,6 +9,8 @@ export default {
   create: (data: any) => api.post("project/addProject", data),
   // 编辑
   edit: (data: any) => api.post("project/updateProject", data),
+  // 项目分配-重新分配
+  allocation: (data: any) => api.post("project/addProjectAllocation", data),
   // 项目选中的国家id集合查询国家列表 "countryIdList": []
   getProjectCountryList: (data: any) =>
     api.post("project/getProjectCountryList", data),

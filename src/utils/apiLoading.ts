@@ -21,15 +21,20 @@ export async function obtainLoading(apiFunction: any) {
 }
 // 提交数据loading
 export async function submitLoading(apiFunction: any) {
+  const mountNode = document.createElement("div");
+  mountNode.setAttribute("uid", String(Math.floor(Math.random() * 5)));
   // 显示加载动画
-  loadingShow({
-    type: "circle-fade",
-    size: 50,
-    color: "#fff",
-    text: "提交数据中……",
-  });
+  loadingShow(
+    {
+      type: "circle-fade",
+      size: 50,
+      color: "#fff",
+      text: "提交数据中……",
+    },
+    mountNode
+  );
   const res = await apiFunction;
   // 隐藏加载动画
-  loadingHide();
+  loadingHide(mountNode);
   return res;
 }
