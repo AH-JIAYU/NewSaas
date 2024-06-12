@@ -35,9 +35,9 @@ function closeHandler() {
   dialogTableVisible.value = false;
 }
 onMounted(async () => {
-  data.value.tenantSupplierList = await submitLoading(
-    supplierStore.getTenantSupplierList()
-  );
+  // data.value.tenantSupplierList = await submitLoading(
+  //   supplierStore.getTenantSupplierList()
+  // );
 });
 // 暴露方法
 defineExpose({ showEdit });
