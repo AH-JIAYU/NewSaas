@@ -6,7 +6,7 @@ import { cloneDeep } from "lodash-es";
 import { obtainLoading,submitLoading } from "@/utils/apiLoading";
 import useProjectManagementListStore from "@/store/modules/projectManagement_list"; // 项目
 import useStagedDataStore from "@/store/modules/stagedData"; // 暂存
-import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典-国家
+import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
 import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
 import api from "@/api/modules/projectManagement";
 
@@ -15,7 +15,7 @@ defineOptions({
 });
 const projectManagementListStore = useProjectManagementListStore(); //项目
 const stagedDataStore = useStagedDataStore(); // 暂存
-const basicDictionaryStore = useBasicDictionaryStore(); //基础字典-国家
+const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
 const customerStore = useUserCustomerStore(); // 客户
 const emits = defineEmits(["fetch-data"]);
 const dialogTableVisible = ref<boolean>(false);
@@ -179,7 +179,7 @@ const processingData = () => {
         return item;
       }
     );
-  }); 
+  });
   return masterData;
 };
 // 提交数据

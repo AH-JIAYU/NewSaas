@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { ElForm } from "element-plus";
 import { obtainLoading } from "@/utils/apiLoading";
-import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典-国家
+import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
 import useSurveyVipLevelStore from "@/store/modules/survey_vipLevel"; //会员等级
 import useSurveyVipGroupStore from "@/store/modules/survey_vipGroup"; //会员组
-const basicDictionaryStore = useBasicDictionaryStore(); //基础字典-国家
+const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
 const surveyVipLevelStore = useSurveyVipLevelStore(); //会员等级
 const surveyVipGroupStore = useSurveyVipGroupStore(); //会员组
 const validate = inject<any>("validateTopTabs"); //注入Ref

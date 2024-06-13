@@ -2,11 +2,13 @@
 import allocationEdit from "./components/AllocationEdit/index.vue";
 import ProjeckEdit from "./components/ProjeckEdit/index.vue";
 import ProjectDetail from "./components/ProjectDetails/index.vue";
+import { ElMessage, ElMessageBox } from "element-plus";
 import api from "@/api/modules/projectManagement";
-import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典-国家
+import { obtainLoading, submitLoading } from "@/utils/apiLoading";
+import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
 import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
 const customerStore = useUserCustomerStore(); // 客户
-const basicDictionaryStore = useBasicDictionaryStore(); //基础字典-国家
+const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
 
@@ -24,20 +26,40 @@ const addProjeckRef = ref();
 const projectDetailsRef = ref();
 // 右侧工具栏配置变量
 const border = ref(true);
-const checkList = ref([]);
+const checkList = ref<any>([]);
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const isFullscreen = ref(false); // 表格控件-控制全屏
 const lineHeight = ref<any>("default");
 const stripe = ref(false);
 const columns = ref([
-  // {
-  //   label: "项目ID",
-  //   prop: "ID",
-  //   sortable: true,
-  //   // 不可改变的
-  //   disableCheck: true,
-  //   checked: true,
-  // },
+  { prop: "projectId", label: "项目id", checked: true, sotrtable: true },
+  { prop: "name", label: "项目名称", checked: true, sotrtable: true },
+  {
+    prop: "clientName",
+    label: "客户名称/标识",
+    checked: true,
+    sotrtable: true,
+  },
+  {
+    prop: "PCNL",
+    label: "参与/完成/配额/限量",
+    checked: true,
+    sotrtable: true,
+  },
+  { prop: "allocationType", label: "分配类型", checked: true, sotrtable: true },
+  { prop: "doMoneyPrice", label: "原价", checked: true, sotrtable: true },
+  { prop: "ir", label: "IR/NIR", checked: true, sotrtable: true },
+  { prop: "countryIdList", label: "国家地区", checked: true, sotrtable: true },
+  {
+    prop: "allocationStatus",
+    label: "分配状态",
+    checked: true,
+    sotrtable: true,
+  },
+  { prop: "isOnline", label: "项目状态", checked: true, sotrtable: true },
+  { prop: "remark", label: "备注", checked: true, sotrtable: true },
+  { prop: "createName", label: "创建人", checked: true, sotrtable: true },
+  { prop: "createTime", label: "创建时间", checked: true, sotrtable: true },
 ]);
 const search = ref<any>({
   time: [], // 时间
@@ -64,7 +86,33 @@ function addProject() {
 }
 // 编辑项目
 function projectEdit(row: any) {
-  addProjeckRef.value.showEdit(row);
+  if (row.allocationStatus === 1) {
+    addProjeckRef.value.showEdit(row);
+  } else {
+    ElMessage.warning({
+      message: "已分配项目不能修改",
+      center: true,
+    });
+  }
+}
+// 修改状态
+async function changeStatus(row: any, val: any) {
+  if (row.allocationStatus === 1) {
+    const res = await obtainLoading(api.detail({ projectId: row.projectId }));
+    res.data.isOnline = val;
+    const { status } = await submitLoading(api.edit(res.data));
+    status === 1 &&
+      ElMessage.success({
+        message: "修改「状态」成功",
+        center: true,
+      });
+    fetchData();
+  } else {
+    ElMessage.warning({
+      message: "已分配项目不能修改状态",
+      center: true,
+    });
+  }
 }
 // 项目详情
 function projectDetails(row: any) {
@@ -100,6 +148,7 @@ function onReset() {
   };
   fetchData();
 }
+// 获取集合
 async function fetchData() {
   listLoading.value = true;
   const params = {
@@ -128,6 +177,11 @@ const comCountryId = computed(() => (countryIdList: any) => {
 onMounted(async () => {
   countryList.value = await basicDictionaryStore.getCountry();
   customerList.value = await customerStore.getCustomerList();
+  columns.value.forEach((item: any) => {
+    if (item.checked) {
+      checkList.value.push(item.prop);
+    }
+  });
   fetchData();
 });
 </script>
@@ -294,24 +348,28 @@ onMounted(async () => {
       >
         <el-table-column type="selection" />
         <el-table-column
+          v-if="checkList.includes('projectId')"
           show-overflow-tooltip
           prop="projectId"
           align="center"
           label="项目ID"
         />
         <el-table-column
+          v-if="checkList.includes('name')"
           show-overflow-tooltip
           prop="name"
           align="center"
           label="项目名称"
         />
         <el-table-column
+          v-if="checkList.includes('clientName')"
           show-overflow-tooltip
           prop="clientName"
           align="center"
           label="客户简称/标识"
         />
         <el-table-column
+          v-if="checkList.includes('PCNL')"
           show-overflow-tooltip
           align="center"
           label="参与/完成/配额/限量"
@@ -322,29 +380,38 @@ onMounted(async () => {
           </template>
         </el-table-column>
         <el-table-column
+          v-if="checkList.includes('allocationType')"
           show-overflow-tooltip
           prop="allocationType"
           align="center"
           label="分配类型"
         />
-        <el-table-column show-overflow-tooltip align="center" label="原价">
+        <el-table-column
+          v-if="checkList.includes('doMoneyPrice')"
+          show-overflow-tooltip
+          align="center"
+          label="原价"
+        >
           <template #default="{ row }">
             $ {{ row.doMoneyPrice }} ￥{{ row.memberPrice }}
           </template>
         </el-table-column>
         <el-table-column
+          v-if="checkList.includes('name')"
           show-overflow-tooltip
-          prop="f"
+          prop=""
           align="center"
           label="供应商价"
         />
         <el-table-column
+          v-if="checkList.includes('ir')"
           show-overflow-tooltip
           prop="ir"
           align="center"
           label="IR/NIR"
         />
         <el-table-column
+          v-if="checkList.includes('countryIdList')"
           show-overflow-tooltip
           prop="countryIdList"
           align="center"
@@ -378,33 +445,53 @@ onMounted(async () => {
           </template>
         </el-table-column>
         <el-table-column
+          v-if="checkList.includes('allocationStatus')"
           show-overflow-tooltip
           prop="allocationStatus"
           align="center"
           label="分配状态"
-        />
+        >
+          <template #default="{ row }">
+            {{ row.allocationStatus === 1 ? "未分配" : "已分配" }}
+          </template>
+        </el-table-column>
         <el-table-column
+          v-if="checkList.includes('isOnline')"
           show-overflow-tooltip
           prop="isOnline"
           align="center"
           label="项目状态"
         >
-          <ElSwitch inline-prompt active-text="启用" inactive-text="禁用" />
+          <template #default="{ row }">
+            <ElSwitch
+              :disabled="row.allocationStatus === 2"
+              @change="changeStatus(row, $event)"
+              inline-prompt
+              v-model="row.isOnline"
+              active-text="在线"
+              inactive-text="离线"
+              :active-value="1"
+              :inactive-value="2"
+            />
+          </template>
         </el-table-column>
 
         <el-table-column
+          v-if="checkList.includes('remark')"
           show-overflow-tooltip
           prop="remark"
           align="center"
           label="备注"
         />
         <el-table-column
+          v-if="checkList.includes('createName')"
           show-overflow-tooltip
           prop="createName"
           align="center"
           label="创建人"
         />
         <el-table-column
+          v-if="checkList.includes('createTime')"
           show-overflow-tooltip
           prop="createTime"
           align="center"
@@ -434,6 +521,7 @@ onMounted(async () => {
               type="primary"
               plain
               size="small"
+              :disabled="row.allocationStatus === 2"
               @click="projectEdit(row)"
             >
               编辑
@@ -465,7 +553,7 @@ onMounted(async () => {
         @current-change="currentChange"
       />
     </PageMain>
-    <allocationEdit ref="addAllocationEditRef"  @fetchData="fetchData"  />
+    <allocationEdit ref="addAllocationEditRef" @fetchData="fetchData" />
     <ProjeckEdit ref="addProjeckRef" @fetchData="fetchData" />
     <ProjectDetail ref="projectDetailsRef" />
   </div>

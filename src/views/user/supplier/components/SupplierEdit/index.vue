@@ -100,8 +100,7 @@ async function save() {
       if (title.value === "添加") {
         const dataList = {
           addTenantSupplierInfoList: leftTabsData,
-        };
-        console.log("dataList", dataList);
+        }; 
         const { status } = await submitLoading(api.create(dataList));
         status === 1 &&
           ElMessage.success({

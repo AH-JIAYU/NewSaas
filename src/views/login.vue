@@ -7,17 +7,20 @@ meta:
 </route>
 
 <script setup lang="ts">
+// @ts-nocheck
 import type { FormInstance, FormRules } from "element-plus";
 import { ElMessage } from "element-plus";
+import { ElNotification } from "element-plus";
 import { useI18n } from "vue-i18n";
 import Copyright from "@/layouts/components/Copyright/index.vue";
 import useSettingsStore from "@/store/modules/settings";
 import useUserStore from "@/store/modules/user";
 import storage from "@/utils/storage";
+import { throttle } from "lodash-es";
 import { submitLoading, obtainLoading } from "@/utils/apiLoading";
 import api from "@/api/modules/register";
-import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典-国家
-const basicDictionaryStore = useBasicDictionaryStore(); //基础字典-国家
+import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
+const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
 
 defineOptions({
   name: "Login",
@@ -148,7 +151,8 @@ const loginCountdown = () => {
     }
   }, 1000);
 };
-function handleLogin() {
+// 登录
+const handleLogin = throttle(() => {
   loginFormRef.value &&
     loginFormRef.value.validate((valid: any) => {
       if (valid) {
@@ -183,7 +187,7 @@ function handleLogin() {
           });
       }
     });
-}
+}, 3000);
 //#endregion
 
 // #region 注册
@@ -286,7 +290,7 @@ const countdown = () => {
   }, 1000);
 };
 // 注册
-async function handleRegister() {
+const handleRegister = throttle(async () => {
   registerFormRef.value &&
     registerFormRef.value.validate(async (valid: any) => {
       if (valid) {
@@ -296,12 +300,24 @@ async function handleRegister() {
           api.register(registerForm.value)
         );
         status === 1 &&
-          ElMessage.success({
-            message: "注册成功",
+          // 跳转登录 快捷方式
+          ElNotification({
+            type: "success",
+            dangerouslyUseHTMLString: true,
+            duration: 5000,
+            message: `<span>注册成功,跳转至<span id="ElNotification-goLogin" style="color:var(--el-color-primary);cursor:pointer;">登录</span></span>`,
+            //@ts-ignore
+            // eslint-disable-next-line
+            onClick(e: any) {
+              if (e.target.id && e.target.id === "ElNotification-goLogin") {
+                formType.value = "login";
+              }
+            },
           });
       }
     });
-}
+}, 3000);
+
 // #endregion
 
 // #region 重置密码
@@ -346,6 +362,30 @@ const resetCheck = () => {
 watch(
   () => formType.value,
   async (newValue: any) => {
+    // login 登录， register 注册， reset 重置密码
+    switch (newValue) {
+      case "login":
+        resetCheck();
+        loginForm.value = {
+          account: storage.local.get("login_account") || "",
+          remember: storage.local.has("login_account"),
+        };
+        break;
+      case "register":
+        registerFormRef.value.resetFields();
+        registerForm.value = {
+          account: "", // 账号
+          password: "", // 密码
+          email: "", //邮箱
+          phoneNumber: "", //手机号码
+          code: "", // 验证码
+          country: "", //国家
+          type: "phone", // 注册方式 phone/email
+        };
+        break;
+      case "reset":
+        break;
+    }
     // 注册 获取国家
     newValue === "register" &&
       (countryList.value = await basicDictionaryStore.getCountry());

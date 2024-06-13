@@ -11,8 +11,7 @@ const form = ref<any>({});
 
 let leftTabsData = reactive<any>([]); // 明确指定类型为 LeftTab[]
 
-async function showEdit(row: any) {
-  console.log(1);
+async function showEdit(row: any) { 
   loadingDisible.value = true;
   if (!row) {
     title.value = "添加";

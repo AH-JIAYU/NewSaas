@@ -68,7 +68,7 @@ function closeHandler() {
 function onSubmit() {
   formRef.value.validate(async (valid: any) => {
     if (valid) {
-      const { status } = await api.allocation(data.value.form);
+      const { status } = await submitLoading(api.allocation(data.value.form));
       status === 1 &&
         ElMessage.success({
           message: "分配成功",

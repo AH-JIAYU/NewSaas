@@ -3,10 +3,10 @@ import { ElForm } from "element-plus";
 import { defineProps, ref } from "vue";
 import UseUserSupplier from "@/store/modules/user_supplier"; // 供应商
 import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
-import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典-国家
+import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
 const userSupplier = UseUserSupplier(); // 供应商
 const customerStore = useUserCustomerStore(); // 客户
-const basicDictionaryStore = useBasicDictionaryStore(); //基础字典-国家
+const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
 const validate = inject<any>("validateTopTabs"); //注入Ref
 // 如果希望默认展示第一个 Tab
 const props: any = defineProps({

@@ -5,7 +5,6 @@ import { Editor, Viewer } from "@bytemd/vue-next";
 // 富文本编辑器配置
 import gfm from "@bytemd/plugin-gfm";
 import zhHans from "bytemd/locales/zh_Hans.json";
-
 import fileApi from "@/api/modules/file";
 import gfmLocale from "@bytemd/plugin-gfm/lib/locales/zh_Hans.json";
 import "bytemd/dist/index.css";
@@ -13,18 +12,22 @@ import { obtainLoading } from "@/utils/apiLoading";
 import api from "@/api/modules/projectManagement";
 import logDetails from "../LogDetails/index.vue";
 import { ElMessage } from "element-plus";
+import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
 
 defineOptions({
   name: "ProjectDetails",
 });
-
+const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
 const content = ref("# Fantastic-admin");
 const logDetailsRef = ref();
 const active = ref(1);
 const data = ref<any>({
   form: {}, // 表格
   imgUrl: "", // 图片预览
+  isOnline: "", //	项目状态:1:在线 2:不在线
+  allocationStatus: "", //分配状态:1:未分配 2:已分配
   srcList: [], // 图片预览
+  countryList: [], // 国家
 });
 const plugins = [
   gfm({
@@ -47,6 +50,8 @@ function details(row: any) {
 const dialogTableVisible = ref(false);
 // 显隐
 async function showEdit(row: any) {
+  data.value.isOnline = row.isOnline;
+  data.value.allocationStatus = row.allocationStatus;
   const res = await obtainLoading(api.detail({ projectId: row.projectId }));
   data.value.form = res.data;
   const imgres: any = await fileApi.detail({
@@ -56,7 +61,13 @@ async function showEdit(row: any) {
   data.value.srcList = [imgres.data.fileUrl];
   dialogTableVisible.value = true;
 }
-
+// 回显国家
+const comCountryId = computed(() => (countryIdList: any) => {
+  const list = data.value.countryList
+    .filter((item: any) => countryIdList.includes(item.id))
+    .map((item: any) => item.chineseName);
+  return list;
+});
 // 复制
 async function copyTextToClipboard(text: any) {
   try {
@@ -91,6 +102,9 @@ async function download() {
 function closeHandler() {
   dialogTableVisible.value = false;
 }
+onMounted(async () => {
+  data.value.countryList = await basicDictionaryStore.getCountry();
+});
 // 暴露方法
 defineExpose({ showEdit });
 </script>
@@ -154,12 +168,12 @@ defineExpose({ showEdit });
                     color: var(--el-color-white);
                     padding: 0 0.5rem;
                   "
-                  >未分配</span
+                  >{{ data.allocationStatus === 1 ? "未分配" : "已分配" }}</span
                 >
               </div>
               <div class="status">
                 <div class="i-ph:seal-light w-1em h-1em"></div>
-                <div>离线</div>
+                <div>{{ data.isOnline === 1 ? "在线" : "离线" }}</div>
               </div>
             </div>
           </template>
@@ -191,7 +205,28 @@ defineExpose({ showEdit });
             <el-col :span="8">
               <el-form-item label="所属国家">
                 <el-text class="mx-1">
-                  {{ data.form.countryIdList.length }}
+                  <template
+                    v-if="comCountryId(data.form.countryIdList).length > 4"
+                  >
+                    <el-tooltip
+                      class="box-item"
+                      effect="dark"
+                      :content="comCountryId(data.form.countryIdList).join(',')"
+                      placement="top"
+                    >
+                      <el-link type="primary">{{
+                        comCountryId(data.form.countryIdList).length
+                      }}</el-link>
+                    </el-tooltip>
+                  </template>
+                  <template v-else>
+                    <span
+                      v-for="item in comCountryId(data.form.countryIdList)"
+                      :key="item"
+                    >
+                      {{ item }}&ensp;
+                    </span>
+                  </template>
                 </el-text>
               </el-form-item>
             </el-col>
@@ -370,9 +405,9 @@ defineExpose({ showEdit });
 
           <el-row :gutter="20">
             <el-col :span="24">
-              <el-form-item>
+              <div class="radius p-2 flex gap-2">
                 <Viewer :value="data.form.richText" />
-              </el-form-item>
+              </div>
             </el-col>
           </el-row>
         </el-card>
@@ -411,6 +446,13 @@ defineExpose({ showEdit });
 </template>
 
 <style scoped lang="scss">
+.radius {
+  min-height: 10rem;
+  width: 100%;
+  border: 1px solid var(--el-border-color);
+  border-radius: 0;
+  margin-top: 20px;
+}
 .demo-image__error .image-slot {
   font-size: 30px;
 }

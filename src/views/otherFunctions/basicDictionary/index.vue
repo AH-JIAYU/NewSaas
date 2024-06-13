@@ -56,10 +56,10 @@ const dictionaryItem = ref<any>({
 async function getDictionaryList() {
   dictionary.value.loading = true;
   dictionaryItem.value.search.id = "";
-  const params = {
-    ...dictionary.value.search,
-  };
-  const res = await api.list(params);
+  // const params = {
+  //   ...dictionary.value.search,
+  // };
+  const res = await api.list();
   dictionary.value.tree = res.data;
   dictionary.value.loading = false;
 }

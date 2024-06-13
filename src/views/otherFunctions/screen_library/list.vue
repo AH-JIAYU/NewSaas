@@ -6,13 +6,13 @@ import { submitLoading } from "@/utils/apiLoading";
 import api from "@/api/modules/otherFunctions_screenLibrary";
 import useSettingsStore from "@/store/modules/settings";
 import Edit from "./components/Edit/index.vue";
-import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典-国家
+import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
 
 defineOptions({
   name: "OtherFunctionsScreenLibraryList",
 });
 
-const basicDictionaryStore = useBasicDictionaryStore(); //基础字典-国家
+const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
 const router = useRouter();
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
@@ -81,7 +81,7 @@ function getDataList() {
     ...(data.value.search.countryId && {
       countryId: data.value.search.countryId,
     }),
-  }; 
+  };
   api.list(params).then((res: any) => {
     data.value.loading = false;
     data.value.dataList = res.data.getCountryListInfoList;

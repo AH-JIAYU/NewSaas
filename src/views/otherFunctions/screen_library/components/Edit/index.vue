@@ -3,9 +3,9 @@ import type { DetailFormProps } from "../../types";
 import { ElMessage } from "element-plus";
 import { submitLoading } from "@/utils/apiLoading";
 import api from "@/api/modules/otherFunctions_screenLibrary";
-import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典-国家
+import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
 
-const basicDictionaryStore = useBasicDictionaryStore(); //基础字典-国家
+const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
 const props = defineProps(["id", "countryId", "row"]);
 const countryList = ref<any>([]); //国家
 const emits = defineEmits<{
