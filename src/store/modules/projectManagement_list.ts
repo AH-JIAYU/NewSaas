@@ -66,9 +66,16 @@ const useProjectManagementListStore = defineStore(
       answerValueList: [], //前置问卷答案,
       projectAnswerIdList: [], //	前置问卷答案id,
     };
+    // 分配类型
+    const allocationTypeList: any = {
+      1: "自动分配",
+      2: "供应商",
+      3: "会员组",
+    };
     return {
       initialTopTabsData,
       initialProblem,
+      allocationTypeList,
     };
   }
 );

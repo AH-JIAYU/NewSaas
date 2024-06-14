@@ -3,8 +3,17 @@ const useBasicDictionaryStore = defineStore(
   // 唯一ID
   "basicDictionary",
   () => {
+    const dict = ref() // 字典目录
     const country = ref([]); // 国家
     const B2BType = ref([]); // 项目类型
+    // 获取字典目录
+    const getDict = async () => {
+      if (!dict.value) {
+        const res = await api.list();
+        dict.value = res.data
+      }
+      return dict.value
+    }
     // 获取国家
     const getCountry = async () => {
       if (!country.value.length) {
@@ -18,11 +27,11 @@ const useBasicDictionaryStore = defineStore(
       }
       return country.value;
     };
+
     // 获取项目类别 1级
     const getB2BType = async () => {
       if (!B2BType.value.length) {
-        const res = await api.list();
-        const data = findDataById(res.data, "34");
+        const data = findDataById(await getDict(), "34");
         data.children.forEach((item: any) => {
           item.leaf = false; // 有子节点 可以展开
         });
@@ -97,8 +106,10 @@ const useBasicDictionaryStore = defineStore(
       return array;
     }
     return {
+      dict,
       country,
       B2BType,
+      getDict,
       getCountry,
       getB2BType,
       getB2BTypeItemChildren,

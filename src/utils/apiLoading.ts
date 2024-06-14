@@ -38,3 +38,4 @@ export async function submitLoading(apiFunction: any) {
   loadingHide(mountNode);
   return res;
 }
+

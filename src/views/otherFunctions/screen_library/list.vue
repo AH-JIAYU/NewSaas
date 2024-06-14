@@ -7,12 +7,13 @@ import api from "@/api/modules/otherFunctions_screenLibrary";
 import useSettingsStore from "@/store/modules/settings";
 import Edit from "./components/Edit/index.vue";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
+import useOtherFunctionsScreenLibraryStore from "@/store/modules/otherFunctions_screenLibrary"; //  问卷
 
 defineOptions({
   name: "OtherFunctionsScreenLibraryList",
 });
-
 const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
+const otherFunctionsScreenLibraryStore = useOtherFunctionsScreenLibraryStore(); // 问卷
 const router = useRouter();
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
@@ -142,6 +143,7 @@ async function changeStatus(item: any) {
 }
 // 设计模板
 function EditSurvey(row: any) {
+  otherFunctionsScreenLibraryStore.countryId = row.countryId;
   if (data.value.formMode === "router") {
     if (
       settingsStore.settings.tabbar.enable &&

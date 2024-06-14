@@ -7,8 +7,11 @@ import api from "@/api/modules/projectManagement";
 import { obtainLoading, submitLoading } from "@/utils/apiLoading";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
 import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
-const customerStore = useUserCustomerStore(); // 客户
+import useProjectManagementListStore from "@/store/modules/projectManagement_list"; // 项目
+
 const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
+const customerStore = useUserCustomerStore(); // 客户
+const projectManagementListStore = useProjectManagementListStore(); //项目
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
 
@@ -78,7 +81,11 @@ const search = ref<any>({
 const list = ref<any>([]);
 // 分配
 function distribution(row: any) {
-  addAllocationEditRef.value.showEdit(row);
+  addAllocationEditRef.value.showEdit(row, "distribution");
+}
+// 重新分配
+function reassign(row: any) {
+  addAllocationEditRef.value.showEdit(row, "reassign");
 }
 // 新增项目
 function addProject() {
@@ -98,9 +105,11 @@ function projectEdit(row: any) {
 // 修改状态
 async function changeStatus(row: any, val: any) {
   if (row.allocationStatus === 1) {
-    const res = await obtainLoading(api.detail({ projectId: row.projectId }));
-    res.data.isOnline = val;
-    const { status } = await submitLoading(api.edit(res.data));
+    const params = {
+      projectId: row.projectId,
+      isOnline: val,
+    };
+    const { status } = await submitLoading(api.changestatus(params));
     status === 1 &&
       ElMessage.success({
         message: "修改「状态」成功",
@@ -385,7 +394,13 @@ onMounted(async () => {
           prop="allocationType"
           align="center"
           label="分配类型"
-        />
+        >
+          <template #default="{ row }">
+            {{
+              projectManagementListStore.allocationTypeList[row.allocationType]
+            }}
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="checkList.includes('doMoneyPrice')"
           show-overflow-tooltip
@@ -513,7 +528,7 @@ onMounted(async () => {
               plain
               type="primary"
               size="small"
-              @click="distribution(row)"
+              @click="reassign(row)"
             >
               重新分配
             </el-button>

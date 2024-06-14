@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ElMessage } from "element-plus";
-import { submitLoading } from "@/utils/apiLoading";
+import { submitLoading, obtainLoading } from "@/utils/apiLoading";
 import api from "@/api/modules/projectManagement";
 import useUserSupplierStore from "@/store/modules/user_supplier"; // 供应商
 import useSurveyVipGroupStore from "@/store/modules/survey_vipGroup"; //会员组
@@ -35,21 +35,33 @@ const rules = ref<any>({
   ],
 });
 // 显隐
-async function showEdit(row: any) {
+async function showEdit(row: any, type: string) {
   data.value.list = [{ ...row }]; // 表格
-  data.value.form.projectId = row.projectId; // 项目id
+  // 重新分配
+  if (type === "reassign") {
+    const res = await obtainLoading(
+      api.getProjectAllocation({ projectId: row.projectId })
+    );
+    const { groupSupplierIdSet, ...form } = res.data;
+    data.value.form = form;
+    data.value.form.groupSupplierIdList = groupSupplierIdSet;
+  } else {
+    // 分配
+    data.value.form.projectId = row.projectId; // 项目id
+  }
   // 供应商列表
-  data.value.tenantSupplierList = await submitLoading(
+  data.value.tenantSupplierList = await obtainLoading(
     supplierStore.getTenantSupplierList(row.projectId)
   );
   // 会员组列表
-  data.value.vipGroupList = await submitLoading(
+  data.value.vipGroupList = await obtainLoading(
     surveyVipGroupStore.getGroupNameList()
   );
   dialogTableVisible.value = true;
 }
 // 切换分配
 function changeRadio() {
+  console.log(111);
   data.value.form.groupSupplierIdList = [];
 }
 // 弹框关闭事件

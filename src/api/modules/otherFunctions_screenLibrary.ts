@@ -1,35 +1,6 @@
 import api from "../index";
 
 export default {
-  // list: (data: {
-  //   title?: string
-  //   from: number
-  //   limit: number
-  // }) => api.get('otherFunctions/screen_library/list', {
-  //   params: data,
-  //   baseURL: '/mock/',
-  // }),
-
-  // detail: (id: number | string) => api.get('otherFunctions/screen_library/detail', {
-  //   params: {
-  //     id,
-  //   },
-  //   baseURL: '/mock/',
-  // }),
-
-  // create: (data: any) => api.post('otherFunctions/screen_library/create', data, {
-  //   baseURL: '/mock/',
-  // }),
-
-  // edit: (data: any) => api.post('otherFunctions/screen_library/edit', data, {
-  //   baseURL: '/mock/',
-  // }),
-
-  // delete: (id: number | string) => api.post('otherFunctions/screen_library/delete', {
-  //   id,
-  // }, {
-  //   baseURL: '/mock/',
-  // }),
   list: (data?: any) =>
     api.post("projectProblem/getProjectProblemCategory", data),
 
@@ -38,12 +9,14 @@ export default {
 
   edit: (data: any) =>
     api.post("projectProblem/updateProjectProblemCategory", data),
-    // 修改默认国家
-  update: (data: any) =>
-    api.post("projectProblem/updateCountryDefault", data),
-
+  // 修改默认国家
+  update: (data: any) => api.post("projectProblem/updateCountryDefault", data),
+  // 删除租户问卷名称或者国家
   delete: (data: any) =>
     api.post("projectProblem/deleteProjectProblemCategory", data),
+  // 删除问题或者答案 批量
+  deleteProjectProblem: (data: any) =>
+    api.post("projectProblem/deleteProjectProblem", data),
   // 设计问卷
   setSurvey: (data: any) => api.post("projectProblem/addProjectProblem", data),
   // 获取问卷
@@ -51,15 +24,6 @@ export default {
     api.post("projectProblem/getProjectProblem", {
       projectProblemCategoryId,
     }),
-
-  // detail: (id: number | string) =>
-  //   api.post(
-  //     "otherFunctions/screen_library/delete",
-  //     {
-  //       id,
-  //     },
-  //     {
-  //       baseURL: "/mock/",
-  //     }
-  //   ),
+  // 获取问卷
+  getId: (data: any) => api.post("/projectProblem/getSnowFlake", data),
 };
