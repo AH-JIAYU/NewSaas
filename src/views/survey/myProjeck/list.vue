@@ -19,7 +19,7 @@ const addQuotaEdit = ref<any>();
 const border = ref(true);
 const checkList = ref([]);
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
-const isFullscreen = ref(false); // 表格控件-控制全屏
+ // 表格控件-控制全屏
 const lineHeight = ref<any>("default");
 const stripe = ref(false);
 const columns = ref([
@@ -54,9 +54,7 @@ function quota(row: any) {
   addQuotaEdit.value.showEdit(row);
 }
 // 表格控件-控制全屏
-function clickFullScreen() {
-  isFullscreen.value = !isFullscreen.value;
-}
+
 // 每页数量切换
 function sizeChange(size: number) {
   onSizeChange(size).then(() => fetchData());
@@ -206,11 +204,11 @@ onMounted(() => {
             v-model:tableAutoHeight="tableAutoHeight"
             v-model:checkList="checkList"
             v-model:columns="columns"
-            v-model:is-fullscreen="isFullscreen"
+
             v-model:line-height="lineHeight"
             v-model:stripe="stripe"
             style="margin-left: 12px"
-            @click-full-screen="clickFullScreen"
+
             @query-data="currentChange"
           />
         </FormRightPanel>

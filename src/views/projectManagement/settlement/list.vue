@@ -251,8 +251,8 @@ function handleMoreOperating(command: string, row: any) {
           </el-button>
           <TabelControl
             v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
-            v-model:columns="columns" v-model:is-fullscreen="isFullscreen" v-model:line-height="lineHeight"
-            v-model:stripe="stripe" style="margin-left: .75rem" @click-full-screen="clickFullScreen"
+            v-model:columns="columns"  v-model:line-height="lineHeight"
+            v-model:stripe="stripe" style="margin-left: .75rem"
             @query-data="currentChange"
           />
         </FormRightPanel>

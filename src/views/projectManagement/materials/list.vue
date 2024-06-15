@@ -21,7 +21,7 @@ const activeName = ref('report')
 // 右侧工具栏配置变量
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const checkList = ref([]);
-const isFullscreen = ref(false);
+
 const lineHeight = ref<any>("default");
 const stripe = ref(false);
 const selectRows = ref<any>([]);
@@ -58,10 +58,8 @@ function deleteData(row: any) {
   //   return ElMessage({ message: "请选择至少一条数据", type: "warning" });
   deleteRef.value.showEdit(row);
 }
-// 工具配置项
-function clickFullScreen() {
-  isFullscreen.value = !isFullscreen.value;
-}
+
+
 // 获取列表选中数据
 function setSelectRows(value: any) {
   selectRows.value = value;
@@ -163,9 +161,9 @@ onMounted(() => {
             <FormRightPanel>
               <el-button size="default" @click=""> 导出 </el-button>
               <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight"
-                v-model:checkList="checkList" v-model:columns="columns" v-model:is-fullscreen="isFullscreen"
+                v-model:checkList="checkList" v-model:columns="columns"
                 v-model:line-height="lineHeight" v-model:stripe="stripe" style="margin-left: 12px"
-                @click-full-screen="clickFullScreen" @query-data="currentChange" />
+                 @query-data="currentChange" />
             </FormRightPanel>
           </el-row>
           <el-table ref="tableSortRef" v-loading="false" style="margin-top: 10px" row-key="id" :data="list"
@@ -253,9 +251,9 @@ onMounted(() => {
             <FormRightPanel>
               <el-button size="default" @click=""> 导出 </el-button>
               <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight"
-                v-model:checkList="checkList" v-model:columns="columns" v-model:is-fullscreen="isFullscreen"
+                v-model:checkList="checkList" v-model:columns="columns"
                 v-model:line-height="lineHeight" v-model:stripe="stripe" style="margin-left: 12px"
-                @click-full-screen="clickFullScreen" @query-data="currentChange" />
+                 @query-data="currentChange" />
             </FormRightPanel>
           </el-row>
           <el-table ref="tableSortRef" v-loading="false" style="margin-top: 10px" row-key="id" :data="list"

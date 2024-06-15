@@ -32,14 +32,14 @@ export async function customComponents() {
     await questionFun('age', '出生日期', 'text', 'placeholder', '14', '', 1, 'date'),
     await questionFun('gender', '性别', 'radiogroup', 'placeholder', '15', '20'),
     await questionFun('AHI', '家庭收入', 'radiogroup', 'placeholder', '4', '25', 2),
-    // await questionFun('education', '教育程度', 'radiogroup', 'placeholder', '2', '23'),
-    // await questionFun('marriage', '婚姻状况', 'radiogroup', 'placeholder', '3', '24'),
-    // await questionFun('industry', '行业', 'radiogroup', 'placeholder', '5', '26', 2),
-    // await questionFun('department', '部门', 'radiogroup', 'placeholder', '6', '27'),
-    // await questionFun('title', '职位', 'radiogroup', 'placeholder', '8', '28'),
-    // await questionFun('race', '种族', 'radiogroup', 'placeholder', '28', '21'),
-    // await questionFun('size', '公司人数', 'radiogroup', 'placeholder', '9', '29', 2),
-    // await questionFun('revenue', '公司年收入', 'radiogroup', 'placeholder', '10', '30'),
+    await questionFun('education', '教育程度', 'radiogroup', 'placeholder', '2', '23'),
+    await questionFun('marriage', '婚姻状况', 'radiogroup', 'placeholder', '3', '24'),
+    await questionFun('industry', '行业', 'radiogroup', 'placeholder', '5', '26', 2),
+    await questionFun('department', '部门', 'radiogroup', 'placeholder', '6', '27'),
+    await questionFun('title', '职位', 'radiogroup', 'placeholder', '8', '28'),
+    await questionFun('race', '种族', 'radiogroup', 'placeholder', '', '21'),
+    await questionFun('size', '公司人数', 'radiogroup', 'placeholder', '9', '29', 2),
+    await questionFun('revenue', '公司年收入', 'radiogroup', 'placeholder', '10', '30'),
   ]
 }
 export const toolType = 'c类'
@@ -79,13 +79,14 @@ async function questionFun(
       limit: -1,
       id: enID,
     }
+  // 
+  if (!countryType.id) return null
   // 答案  根据当前row的国家id请求字典数据
   const { data } = await apiDictionary.itemlist(countryType)
   // 答案
   const answer: any = data?.records
   // 请求的问题
   const res = await basicDictionaryStore.getDict()
-  console.log('res请求的问题', res)
   // 问题 对应国家下的问题
   const problem: any = res[0].children[otherFunctionsScreenLibraryStore.countryId === '343' ? 0 : 1].children
   // 定义需要的数据格式
@@ -121,8 +122,8 @@ async function questionFun(
           it.text.default = otherFunctionsScreenLibraryStore.countryId === '343' ? item.chineseName : item.englishName
           it.text['zh-cn'] = item.chineseName
           it.text.en = item.englishName
-          it.text.surveyId = item.otherId
-          it.text.surveyType = 2
+          it.surveyId = item.otherId
+          it.surveyType = 2
         }
       })
     })
@@ -149,7 +150,7 @@ const typeMap: any = {
   checkbox: 3, // 复选
   dropdown: 4, // 下拉
 };
-// 提交时 转换数据
+// 提交时 获取问题答案list
 export function convertData(originalData: any, locale: any) {
   const transformedData = originalData.flatMap((item: any) => {
     // 问题
@@ -202,6 +203,21 @@ export function convertData(originalData: any, locale: any) {
   });
   return transformedData;
 }
+
+// 提交时 获取type对应的json
+export function proces(toolbox: any, toolboxJSON: any) {
+  toolbox.pages.forEach((item: any) => {
+    item.elements.forEach((value: any) => {
+      const data = toolboxJSON.customQuestionValues.find((ite: any) => ite.name === value.type)
+      if (data) {
+        value.tool = value.type
+        delete value.type
+        value = Object.assign(value, data.json.questionJSON)
+      }
+    })
+  })
+}
+
 // 编辑时 将所有type设置为2
 export function setSurveyType(StringData: any) {
   if (!StringData) return "";

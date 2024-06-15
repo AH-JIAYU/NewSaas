@@ -31,7 +31,7 @@ const projectDetailsRef = ref();
 const border = ref(true);
 const checkList = ref<any>([]);
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
-const isFullscreen = ref(false); // 表格控件-控制全屏
+// 表格控件-控制全屏
 const lineHeight = ref<any>("default");
 const stripe = ref(false);
 const columns = ref([
@@ -72,7 +72,7 @@ const search = ref<any>({
   name: "", // 	项目名称模糊匹配
   projectIdentification: "", // 	项目标识模糊查询
   clientId: "", // 	所属客户编号Id
-  // countryId: [], // 所属国家编号Id
+  countryId: [], // 所属国家编号Id
   createName: "", // 	创建人-模糊查询
   allocation: "", // 	分配状态:1已经分配 2:未分配
   allocationStatus: "", // 	分配类型: 1:自动分配 2:供应商 3:会员组
@@ -128,9 +128,7 @@ function projectDetails(row: any) {
   projectDetailsRef.value.showEdit(row);
 }
 // 表格控件-控制全屏
-function clickFullScreen() {
-  isFullscreen.value = !isFullscreen.value;
-}
+
 // 每页数量切换
 function sizeChange(size: number) {
   onSizeChange(size).then(() => fetchData());
@@ -149,7 +147,7 @@ function onReset() {
     name: "", // 	项目名称模糊匹配
     projectIdentification: "", // 	项目标识模糊查询
     clientId: "", // 	所属客户编号Id
-    // countryId: [], // 所属国家编号Id
+    countryId: [], // 所属国家编号Id
     createName: "", // 	创建人-模糊查询
     allocation: "", // 	分配状态:1已经分配 2:未分配
     allocationStatus: "", // 	分配类型: 1:自动分配 2:供应商 3:会员组
@@ -233,7 +231,7 @@ onMounted(async () => {
                 placeholder="项目标识"
               />
             </el-form-item>
-            <!-- <el-form-item v-show="!fold" label="">
+            <el-form-item v-show="!fold" label="">
               <el-select
                 v-model="search.countryId"
                 placeholder="国家地区"
@@ -248,7 +246,7 @@ onMounted(async () => {
                   :value="item.id"
                 ></ElOption>
               </el-select>
-            </el-form-item> -->
+            </el-form-item>
             <el-form-item v-show="!fold" label="">
               <el-select v-model="search.clientId" placeholder="客户简称">
                 <el-option
@@ -335,11 +333,9 @@ onMounted(async () => {
             v-model:tableAutoHeight="tableAutoHeight"
             v-model:checkList="checkList"
             v-model:columns="columns"
-            v-model:is-fullscreen="isFullscreen"
             v-model:line-height="lineHeight"
             v-model:stripe="stripe"
             style="margin-left: 12px"
-            @click-full-screen="clickFullScreen"
             @query-data="currentChange"
           />
         </FormRightPanel>
