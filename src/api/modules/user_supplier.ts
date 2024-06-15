@@ -12,4 +12,7 @@ export default {
   // 修改 单个 状态
   changestatus: (data: any) =>
     api.post("tenantSupplier/updateTenantSupplierStatus", data),
+  // 项目分配查询状态开启的供应商列表
+  getTenantSupplierProjectList: (data: any) =>
+    api.post("tenantSupplier/getTenantSupplierProjectList", data),
 };

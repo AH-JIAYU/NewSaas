@@ -3,56 +3,60 @@ import { cloneDeep } from "lodash-es";
 import { defineProps, provide, ref } from "vue";
 import TopTabs from "../ProjeckTopTabs/index.vue";
 import SyncSettings from "../SyncSettings/index.vue";
+import useProjectManagementListStore from "@/store/modules/projectManagement_list"; // 项目
 
+const projectManagementListStore = useProjectManagementListStore(); //项目
 const props: any = defineProps({
   leftTabsData: Array,
   validateTopTabs: Array,
   validateAll: Array,
+  title: String,
 });
 const emits: any = defineEmits(["validate"]);
 const client = ref();
 const settingsRef = ref();
 const localLeftTab = ref<any>(props.leftTabsData);
 const validateTopTabs = ref<any>(props.validateTopTabs);
-
-// 为每个 tab 创建并提供一个唯一的 ref
-localLeftTab.value.forEach((tab: any, index: any) => {
-  const formRef = ref(null);
-  provide(`formRef${index}`, formRef);
-});
+const topTabsRef = ref<any>(); // top Ref
 
 const tabIndex = ref(0);
 const activeLeftTab = ref(0);
-
-const initialTopTabsData = {
-  name: "项目名称",
-  addProjectQuotaInfoList: [], //配置信息
-  // platform: {},
-  // screen: {},
-  // security: {},
-};
 // 同步配置项
 function setHandler() {
   settingsRef.value.showEdit();
 }
 // 同步主项目
 function syncProject() {
-  const syncdata = cloneDeep(localLeftTab.value[0]);
-  // localLeftTab.value[activeLeftTab.value] = syncdata;
+  const { projectId, parentId, ...syncdata } = cloneDeep(localLeftTab.value[0]);
+  // projectId存在  保留projectId 和parentId
+  if (localLeftTab.value[activeLeftTab.value].projectId) {
+    syncdata.projectId = localLeftTab.value[activeLeftTab.value].projectId;
+    syncdata.parentId = localLeftTab.value[activeLeftTab.value].parentId;
+  }
+  // 同步 上传文件
+  topTabsRef.value[activeLeftTab.value].getUpLoad(syncdata.descriptionUrl);
   localLeftTab.value.splice(activeLeftTab.value, 1, syncdata);
 }
+// 暂存 存储 配置信息数据
+// function staging() {
+//     topTabsRef.value[0].setData(); // 将0的数据存入store
+// }
+// 暂存回显 将所有组件的配置信息设置为store里的数据
+// function showEdit() {
+//   topTabsRef.value.forEach((item: any) => {
+//     item.getData();
+//   });
+// }
 
+// 新增
 function addLeftTab() {
-  const syncdata = cloneDeep(localLeftTab.value[0]);
   activeLeftTab.value = ++tabIndex.value;
-  localLeftTab.value.push({
-    ...initialTopTabsData,
-    client: client.value,
-    await: syncdata.await,
-    multi: syncdata.multi,
-  });
+  const { projectId, ...initialTopTabsData } = cloneDeep(
+    projectManagementListStore.initialTopTabsData
+  );
+  localLeftTab.value.push(initialTopTabsData);
 }
-
+// 删除
 function tabremove(tabIndexs: any) {
   localLeftTab.value.splice(tabIndexs, 1);
   validateTopTabs.value.splice(tabIndexs, 1);
@@ -61,12 +65,7 @@ function tabremove(tabIndexs: any) {
     tabIndex.value = Math.max(0, localLeftTab.value.length - 1);
   }
 }
-function setclient(data: number) {
-  localLeftTab.value.forEach((item: any) => {
-    item.client = data;
-  });
-  client.value = data;
-}
+
 /**
  * 监听activeLeftTab.value左侧焦点的tabs
  *  props.validateAll 是点击确认后所有组件的校验结果
@@ -91,6 +90,15 @@ watch(
     }
   }
 );
+nextTick(() => {
+  // 为每个 tab 创建并提供一个唯一的 ref
+  localLeftTab.value.forEach((tab: any, index: any) => {
+    const formRef = ref(null);
+    provide(`formRef${index}`, formRef);
+  });
+});
+ 
+// , staging, showEdit
 defineExpose({ activeLeftTab });
 </script>
 
@@ -107,6 +115,7 @@ defineExpose({ activeLeftTab });
       v-model="activeLeftTab"
       tab-position="left"
       @tab-remove="tabremove"
+      v-if="localLeftTab.length"
     >
       <el-tab-pane
         v-for="(leftTab, index) in localLeftTab"
@@ -124,7 +133,7 @@ defineExpose({ activeLeftTab });
                 : ''
             "
           >
-            {{ leftTab.customerAccord || "项目名称" }}
+            {{ leftTab.name || "项目名称" }}
           </div>
         </template>
         <div
@@ -165,9 +174,10 @@ defineExpose({ activeLeftTab });
       /> -->
         <!-- 在每个左侧 Tab 中使用 TopTabs 组件 -->
         <TopTabs
+          ref="topTabsRef"
           :left-tab="leftTab"
+          :title="props.title"
           :tab-index="index"
-          @set-client="setclient"
         />
       </el-tab-pane>
       <SyncSettings ref="settingsRef" />

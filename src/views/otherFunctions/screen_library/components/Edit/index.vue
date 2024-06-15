@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import type { DetailFormProps } from "../../types";
 import { ElMessage } from "element-plus";
+import { submitLoading } from "@/utils/apiLoading";
 import api from "@/api/modules/otherFunctions_screenLibrary";
+import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
 
+const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
 const props = defineProps(["id", "countryId", "row"]);
-
+const countryList = ref<any>([]); //国家
 const emits = defineEmits<{
   success: [];
 }>();
@@ -28,7 +31,7 @@ const formRules = ref<any>({
 async function onSubmit() {
   if (!props.id) {
     // 新增
-    const { data, status } = await api.create(form.value);
+    const { data, status } = await submitLoading(api.create(form.value));
     status === 1 &&
       ElMessage.success({
         message: "新增成功",
@@ -36,7 +39,7 @@ async function onSubmit() {
       });
   } else {
     // 编辑
-    const { data, status } = await api.edit(form.value);
+    const { data, status } = await submitLoading(api.edit(form.value));
     status === 1 &&
       ElMessage.success({
         message: "编辑成功",
@@ -51,7 +54,8 @@ function onCancel() {
   visible.value = false;
   form.value = {};
 }
-onMounted(() => {
+onMounted(async () => {
+  countryList.value = await basicDictionaryStore.getCountry();
   title.value = "新增";
   if (props.id) {
     title.value = "编辑";
@@ -82,7 +86,13 @@ onMounted(() => {
           <ElInput v-model="form.categoryName" placeholder="请输入名称" />
         </ElFormItem>
         <ElFormItem label="国家" prop="countryId">
-          <ElInput v-model="form.countryId" placeholder="请输入国家" />
+          <el-select filterable v-model="form.countryId" placeholder="Select">
+            <ElOption
+              v-for="item in countryList"
+              :label="item.chineseName"
+              :value="item.id"
+            ></ElOption>
+          </el-select>
         </ElFormItem>
         <ElFormItem label="状态">
           <ElSwitch

@@ -6,6 +6,8 @@ import customerDetail from "./components/SupplierDetail/index.vue";
 import plusMinusPayments from "./components/SupplierPlusMinusPayments/index.vue";
 import { submitLoading } from "@/utils/apiLoading";
 import api from "@/api/modules/user_supplier";
+import useUserSupplierStore from "@/store/modules/user_supplier"; // 供应商
+const supplierStore = useUserSupplierStore(); // 供应商
 
 defineOptions({
   name: "UserSupplierIndex",
@@ -121,6 +123,7 @@ async function changeState(state: any, id: string) {
       message: "修改成功",
     });
   queryData();
+  supplierStore.TenantSupplierList=null
 }
 
 // 重置请求

@@ -6,9 +6,9 @@ import { cloneDeep } from "lodash-es";
 import { obtainLoading, submitLoading } from "@/utils/apiLoading";
 import api from "@/api/modules/user_supplier";
 import useStagedDataStore from "@/store/modules/stagedData"; // 暂存
-const stagedDataStore = useStagedDataStore(); // 暂存
 import useUserSupplierStore from "@/store/modules/user_supplier"; // 供应商
 import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
+const stagedDataStore = useStagedDataStore(); // 暂存
 const supplierStore = useUserSupplierStore(); // 供应商
 const customerStore = useUserCustomerStore(); // 客户
 
@@ -44,6 +44,7 @@ async function showEdit(row: any) {
   }
   validateAll.value = [];
   drawerisible.value = true;
+  supplierStore.TenantSupplierList=null
 }
 // 清空现有数据
 function initializeLeftTabsData(data: any) {
@@ -99,8 +100,7 @@ async function save() {
       if (title.value === "添加") {
         const dataList = {
           addTenantSupplierInfoList: leftTabsData,
-        };
-        console.log("dataList", dataList);
+        }; 
         const { status } = await submitLoading(api.create(dataList));
         status === 1 &&
           ElMessage.success({
