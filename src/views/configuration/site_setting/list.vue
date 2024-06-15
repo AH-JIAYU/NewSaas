@@ -14,10 +14,15 @@ const formRef = ref<FormInstance>()
 // 定义表单
 const form = ref({
   id: '',
+  // 注册开关
   registerOffOrOn: true,
+  // 注册审核
   registerExamineOffOrOn: false,
+  // keyWords
   keyWords: '',
+  // 网站名称
   webName: '',
+  // 供应商网址
   supplierURL: '',
 })
 // 校验
@@ -35,11 +40,25 @@ onMounted(() => {
 // 获取数据
 async function getDataList() {
   loading.value = true
-  const {data} = await api.list()
+  const { data } = await api.list()
+  // const url = data.supplierURL
+  // const extracted = url.match(/jiayu\.com/)[0];
   form.value = data
+  // form.value.supplierURL = extracted
   loading.value = false
-  console.log(' form.value', form.value);
-
+}
+// 复制地址
+const copyUrl = async () => {
+  const str = `https://${form.value.supplierURL}ah-jiayu.github.io/NewControl/`
+  try {
+    await navigator.clipboard.writeText(str);
+    ElMessage.success({
+      message: '复制成功',
+      center: true,
+    })
+  } catch (error) {
+    console.error(error);
+  }
 }
 // 提交数据
 function onSubmit() {
@@ -64,8 +83,9 @@ function onSubmit() {
     // 修改
     formRef.value && formRef.value.validate((valid) => {
       if (valid) {
-        const {id,keyWords,registerExamineOffOrOn,registerOffOrOn,supplierURL,webName} = form.value
-        const params = {id,keyWords,registerExamineOffOrOn,registerOffOrOn,supplierURL,webName}
+        let { id, keyWords, registerExamineOffOrOn, registerOffOrOn, supplierURL, webName } = form.value
+        // supplierURL = `https://${supplierURL}ah-jiayu.github.io/NewControl/`
+        const params = { id, keyWords, registerExamineOffOrOn, registerOffOrOn, supplierURL, webName }
         loading.value = true
         api.edit(params).then(() => {
           loading.value = false
@@ -89,12 +109,14 @@ function onSubmit() {
         <el-row :gutter="20">
           <el-col :span="3">
             <el-form-item label="注册开关">
-              <el-switch v-model="form.registerOffOrOn" :active-value="true" :inactive-value="false" />
+              <el-switch v-model="form.registerOffOrOn" active-text="开启" inline-prompt inactive-text="关闭"
+                :active-value="true" :inactive-value="false" />
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="注册审核">
-              <el-switch v-model="form.registerExamineOffOrOn" :active-value="true" :inactive-value="false" />
+              <el-switch v-model="form.registerExamineOffOrOn" active-text="开启" inline-prompt inactive-text="关闭"
+                :active-value="true" :inactive-value="false" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -105,7 +127,9 @@ function onSubmit() {
           <el-input v-model="form.keyWords" style="width: 18rem;" />
         </el-form-item>
         <el-form-item label="供应商网址" prop="supplierURL">
-          <el-input v-model="form.supplierURL" style="width: 18rem;" />
+          <el-input v-model="form.supplierURL" style="width: 8rem;" />
+          <el-text class="mx-1">ah-jiayu.github.io/NewControl/</el-text>
+          <el-button type="primary" link @click="copyUrl">复制</el-button>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">
