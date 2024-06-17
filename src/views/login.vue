@@ -480,7 +480,6 @@ watch(
           </ElFormItem>
           <ElFormItem prop="agreeToTheAgreement">
             <div class="flex-bar" style="margin: 0; width: 100%">
-              <!-- {{loginForm.agreeToTheAgreement}} -->
               <ElCheckbox v-model="loginForm.agreeToTheAgreement" tabindex="3"
                 >我已阅读并同意《xxxx协议》
               </ElCheckbox>
