@@ -38,16 +38,33 @@ const data = reactive<any>({
 });
 
 // 显隐
-async function showEdit(row: any) {
+async function showEdit(row: any, view?: any) {
   const res = await obtainLoading(api.getProjectList({}));
   data.projectList = res.data.getNotDispatchProjectInfoList;
-  console.log("row", row);
-  if (row) {
-    data.title = "编辑";
-    data.form = cloneDeep(row);
-    await changeProject(row.projectId);
+  if (!view) {
+    if (row) {
+      data.title = "编辑";
+      data.form = cloneDeep(row);
+      await changeProject(row.projectId);
+    } else {
+      data.title = "添加";
+    }
   } else {
-    data.title = "添加";
+    const findData = data.projectList.find(
+      (item: any) => item.projectId == row.projectId
+    );
+    // 存在 已调度
+    if (!findData) {
+      ElMessage.warning({
+        message: "改项目已经调度",
+        center: true,
+      });
+    } else {
+      // 不存在 为调度
+      // 项目列表里调用的添加项目调度
+      data.form.projectId = row.projectId;
+      await changeProject(row.projectId);
+    }
   }
 
   dialogTableVisible.value = true;

@@ -1,13 +1,13 @@
 <!-- eslint-disable vue/valid-define-props -->
 <!-- eslint-disable ts/no-use-before-define -->
 <script setup>
-import { defineProps, toRefs } from 'vue'
-import draggable from 'vuedraggable'
-import useSettingsStore from '@/store/modules/settings'
+import { defineProps, toRefs } from "vue";
+import draggable from "vuedraggable";
+import useSettingsStore from "@/store/modules/settings";
 
 defineOptions({
-  name: 'TableControl',
-})
+  name: "TableControl",
+});
 //全屏
 const props = defineProps({
   border: Boolean,
@@ -16,46 +16,46 @@ const props = defineProps({
   lineHeight: String,
   stripe: Boolean,
   checkList: Array,
-})
+});
 const emit = defineEmits([
-  'queryData',
-  'update:stripe',
-  'update:border',
-  'update:tableAutoHeight',
-  'update:lineHeight',
-  'update:checkList',
-])
-const ishow = ref(false)
-const settingsStore = useSettingsStore()
-const { border, columns, tableAutoHeight, lineHeight, stripe, checkList }
-  = toRefs(props)
-const queryData = () => emit('queryData')
+  "queryData",
+  "update:stripe",
+  "update:border",
+  "update:tableAutoHeight",
+  "update:lineHeight",
+  "update:checkList",
+]);
+const ishow = ref(false);
+const settingsStore = useSettingsStore();
+const { border, columns, tableAutoHeight, lineHeight, stripe, checkList } =
+  toRefs(props);
+const queryData = () => emit("queryData");
 function changeStripe() {
   // 条纹
-  emit('update:stripe', !stripe.value)
+  emit("update:stripe", !stripe.value);
 }
 function changeBorder() {
   // 边框
-  emit('update:border', !border.value)
+  emit("update:border", !border.value);
 }
 function changeTableAutoHeight() {
   // 高度自适应
-  emit('update:tableAutoHeight', !tableAutoHeight.value)
+  emit("update:tableAutoHeight", !tableAutoHeight.value);
 }
 function changeRadio(a) {
   // 表格大小
-  emit('update:lineHeight', a)
+  emit("update:lineHeight", a);
 }
 function changeCheckbox(a) {
   // 展示列
-  emit('update:checkList', a)
+  emit("update:checkList", a);
 }
 const dragOptions = computed(() => {
   return {
     animation: 600,
-    group: 'description',
-  }
-})
+    group: "description",
+  };
+});
 </script>
 
 <template>
@@ -77,17 +77,15 @@ const dragOptions = computed(() => {
         <el-button @click="settingsStore.setMainPageMaximize()">
           <div class="i-material-symbols:fullscreen h-1.5em w-1.5em" />
         </el-button>
-        <el-popover trigger="hover" :width="162">
-          <el-radio-group v-model="lineHeight" @change="changeRadio">
-            <el-radio-button value="large">
-              大
-            </el-radio-button>
-            <el-radio-button value="default">
-              中
-            </el-radio-button>
-            <el-radio-button value="small">
-              小
-            </el-radio-button>
+        <el-popover trigger="hover" width="10.5rem" >
+          <el-radio-group
+            v-model="lineHeight"
+            @change="changeRadio"
+            class="fx-c"
+          >
+            <el-radio-button value="large"> 大 </el-radio-button>
+            <el-radio-button value="default"> 中 </el-radio-button>
+            <el-radio-button value="small"> 小 </el-radio-button>
           </el-radio-group>
           <template #reference>
             <el-button>
@@ -97,16 +95,23 @@ const dragOptions = computed(() => {
         </el-popover>
         <el-popover popper-class="custom-table-checkbox" trigger="hover">
           <template #reference>
-            <el-button style="margin-right: 12px;">
+            <el-button style="margin-right: 12px">
               <div class="i-tabler:settings-2 h-1.5em w-1.5em" />
             </el-button>
           </template>
           <el-checkbox-group v-model="checkList" @change="changeCheckbox">
             <!-- draggable：vuedraggable库中的组件  -->
-            <draggable item-key="{ element }" :list="JSON.parse(JSON.stringify(columns))" v-bind="dragOptions">
+            <draggable
+              item-key="{ element }"
+              :list="JSON.parse(JSON.stringify(columns))"
+              v-bind="dragOptions"
+            >
               <template #item="{ element }">
                 <div>
-                  <el-checkbox :disabled="element.disableCheck" :value="element.prop">
+                  <el-checkbox
+                    :disabled="element.disableCheck"
+                    :value="element.prop"
+                  >
                     {{ element.label }}
                   </el-checkbox>
                 </div>
@@ -125,6 +130,11 @@ const dragOptions = computed(() => {
 <style lang="scss" scoped>
 .custom-table-right-tools {
   display: flex;
+  align-items: center;
+}
+.fx-c {
+  display: flex;
+  justify-content: center;
   align-items: center;
 }
 </style>

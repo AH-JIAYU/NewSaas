@@ -1,94 +1,136 @@
 <script setup lang="ts">
 import checkEdit from "./components/checkEdit/index.vue";
-import quotaEdit from "./components/quotaEdit/index.vue";
+import checkMembershipPrice from "./components/checkMembershipPrice/index.vue";
+import api from "@/api/modules/survey_myProjeck";
+import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
+import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
 
 defineOptions({
   name: "SurveyMyProjeckList",
 });
-
-const { pagination, onSizeChange, onCurrentChange } = usePagination(); // 分页
-// 分页
-const value1 = ref("");
+const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
+const customerStore = useUserCustomerStore(); // 客户
+const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
+  usePagination();
+const countryList: any = ref([]); //所有国家一维
+const customerList: any = ref([]); //客户列表
 const tableSortRef = ref("");
 // loading加载
 const listLoading = ref<boolean>(true);
 // 获取组件变量
-const addCheckEditEdit = ref<any>();
-const addQuotaEdit = ref<any>();
+const CheckEditRef = ref<any>();
+const checkMembershipPriceRef = ref<any>();
 // 右侧工具栏配置变量
 const border = ref(true);
-const checkList = ref([]);
+const checkList = ref<any>([]);
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
- // 表格控件-控制全屏
+// 表格控件-控制全屏
 const lineHeight = ref<any>("default");
 const stripe = ref(false);
-const columns = ref([
+const columns = ref<any>([
+  { prop: "projectId", label: "项目Id", sortabel: true, checked: true },
+  { prop: "projectName", label: "项目名称", sortabel: true, checked: true },
   {
-    label: "项目ID",
-    prop: "ID",
-    sortable: true,
-    // 不可改变的
-    disableCheck: true,
+    prop: "projectIdentificationOrClientName",
+    label: "项目标识",
+    sortabel: true,
     checked: true,
   },
+  {
+    prop: "participation",
+    label: "参与/完成/配额/限量",
+    sortabel: true,
+    checked: true,
+  },
+  { prop: "doMoneyPrice", label: "原价", sortabel: true, checked: true },
+  { prop: "memberPrice", label: "会员价", sortabel: true, checked: true },
+  { prop: "ir", label: "IR/NIR", sortabel: true, checked: true },
+  { prop: "countryNameList", label: "国家地区", sortabel: true, checked: true },
+  { prop: "memberGroupName", label: "分配目标", sortabel: true, checked: true },
+  { prop: "createTime", label: "创建时间", sortabel: true, checked: true },
 ]);
 // 查询参数
 const queryForm = reactive<any>({
-  pageNo: 1,
-  pageSize: 10,
-  title: "",
-  order: {
-    id: "ASC",
-  },
-  select: {},
+  projectId: "", //项目id-模糊查询
+  projectName: "", //项目名称-模糊查询
+  projectIdentification: "", //	项目标识模糊查询
+  clientId: "", //	所属客户编号Id
+  countryId: [], //所属国家编号Id
+  b2bOrB2cStatus: "", //1:b2b的项目 2:b2c的项目,不传查询所有
+  time: [], // 时间
+  beginTime: "", //开始时间
+  endTime: "", //	结束时间
 });
 const list = ref<any>([]);
-// 测查
+// 详情
 function check(row: any) {
-  addCheckEditEdit.value.showEdit(row);
+  console.log("详情");
+  // CheckEditRef.value.showEdit(row);
 }
-// 附件
-function attachment() {}
+// 会员价
+function membershipPrice(row: any) {
+  checkMembershipPriceRef.value.showEdit(row);
+}
 // 配额
-function quota(row: any) {
-  addQuotaEdit.value.showEdit(row);
+function tested(row: any) {
+  console.log("测查");
 }
-// 表格控件-控制全屏
 
 // 每页数量切换
 function sizeChange(size: number) {
-  onSizeChange(size).then(() => fetchData());
+  console.log(1);
+  onSizeChange(size);
 }
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
-  onCurrentChange(page).then(() => fetchData());
+  onCurrentChange(page);
 }
 // 重置数据
 function onReset() {
   Object.assign(queryForm, {
-    pageNo: 1,
-    pageSize: 10,
-    title: "",
-    order: {
-      id: "ASC",
-    },
-    select: {},
+    projectId: "", //项目id-模糊查询
+    projectName: "", //项目名称-模糊查询
+    projectIdentification: "", //	项目标识模糊查询
+    clientId: "", //	所属客户编号Id
+    countryId: [], //所属国家编号Id
+    b2bOrB2cStatus: 0, //1:b2b的项目 2:b2c的项目,不传查询所有
+    time: [], // 时间
+    beginTime: "", //开始时间
+    endTime: "", //	结束时间
   });
+  fetchData();
 }
+// 分页 后端(刘):这块不好做分页，所有返回全部数据，前端做分页
+const DataList = computed(() => {
+  return list.value.slice(
+    (pagination.value.page - 1) * pagination.value.size,
+    pagination.value.page * pagination.value.size
+  );
+});
+// 获取列表
 async function fetchData() {
   listLoading.value = true;
-  list.value = [
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-  ];
-  pagination.value.total = 3;
+  const params = {
+    ...queryForm,
+  };
+  if (queryForm.time && !!queryForm.time.length) {
+    params.beginTime = queryForm.time[0] || "";
+    params.endTime = queryForm.time[1] || "";
+  }
+  const res = await api.list(params);
+  list.value = res.data.getMemberProjectListInfoList;
+  pagination.value.total = res.data.getMemberProjectListInfoList.length;
   listLoading.value = false;
 }
-onMounted(() => {
+
+onMounted(async () => {
+  columns.value.forEach((item: any) => {
+    if (item.checked) {
+      checkList.value.push(item.prop);
+    }
+  });
+  countryList.value = await basicDictionaryStore.getCountry();
+  customerList.value = await customerStore.getCustomerList();
   fetchData();
 });
 </script>
@@ -111,59 +153,70 @@ onMounted(() => {
             class="search-form"
           >
             <el-form-item label="">
-              <el-input clearable placeholder="项目ID" />
+              <el-input
+                v-model="queryForm.projectId"
+                clearable
+                placeholder="项目ID"
+              />
             </el-form-item>
             <el-form-item label="">
-              <el-input clearable placeholder="项目名称" />
+              <el-input
+                clearable
+                v-model="queryForm.projectName"
+                placeholder="项目名称"
+              />
             </el-form-item>
             <el-form-item label="">
-              <el-input clearable placeholder="项目标识" />
+              <el-input
+                v-model="queryForm.projectIdentification"
+                clearable
+                placeholder="项目标识"
+              />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-select placeholder="国家地区">
-                <el-option :key="11" :label="11" :value="111">
-                  11111
-                </el-option>
+              <el-select
+                placeholder="国家地区"
+                v-model="queryForm.countryId"
+                clearable
+                filterable
+                multiple
+                collapse-tags
+              >
+                <ElOption
+                  v-for="item in countryList"
+                  :label="item.chineseName"
+                  :value="item.id"
+                ></ElOption>
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-select placeholder="客户简称">
-                <el-option :key="11" :label="11" :value="111">
-                  11111
-                </el-option>
+              <el-select placeholder="客户简称" v-model="queryForm.clientId">
+                <el-option
+                  v-for="item in customerList"
+                  :key="item.tenantCustomerId"
+                  :value="item.tenantCustomerId"
+                  :label="item.customerAccord"
+                ></el-option>
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-select placeholder="分配目标">
-                <el-option :key="11" :label="11" :value="111">
-                  11111
-                </el-option>
+              <el-select
+                placeholder="B2B/B2C"
+                v-model="queryForm.b2bOrB2cStatus"
+              >
+                <el-option label="全部" value=""> </el-option>
+                <el-option label="B2B" value="1"> </el-option>
+                <el-option label="B2C" value="2"> </el-option>
               </el-select>
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-select placeholder="项目状态">
-                <el-option :key="11" :label="11" :value="111">
-                  11111
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-select placeholder="B2B/B2C">
-                <el-option :key="11" :label="11" :value="111">
-                  11111
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item v-show="!fold">
-              <el-input clearable placeholder="创建人" />
             </el-form-item>
             <el-form-item v-show="!fold">
               <el-date-picker
+                v-model="queryForm.time"
                 type="daterange"
                 unlink-panels
                 range-separator="-"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
+                start-placeholder="创建开始日期"
+                end-placeholder="创建结束日期"
                 size="default"
                 style="width: 192px"
                 clear-icon="true"
@@ -204,92 +257,156 @@ onMounted(() => {
             v-model:tableAutoHeight="tableAutoHeight"
             v-model:checkList="checkList"
             v-model:columns="columns"
-
             v-model:line-height="lineHeight"
             v-model:stripe="stripe"
             style="margin-left: 12px"
-
             @query-data="currentChange"
           />
         </FormRightPanel>
       </el-row>
       <el-table
         ref="tableSortRef"
-        v-loading="false"
+        v-loading="listLoading"
         style="margin-top: 10px"
         row-key="id"
-        :data="list"
+        :data="DataList"
         :border="border"
         :size="lineHeight"
         :stripe="stripe"
       >
         <el-table-column type="selection" />
-        <el-table-column type="index" align="center" label="序号" width="55" />
         <el-table-column
+          v-if="checkList.includes('projectId')"
           show-overflow-tooltip
-          prop="a"
+          prop="projectId"
           align="center"
           label="项目ID"
         />
         <el-table-column
+          v-if="checkList.includes('projectName')"
           show-overflow-tooltip
-          prop="b"
+          prop="projectName"
           align="center"
           label="项目名称"
         />
         <el-table-column
+          v-if="checkList.includes('projectIdentificationOrClientName')"
           show-overflow-tooltip
-          prop="c"
+          prop="projectIdentificationOrClientName"
           align="center"
           label="客户简称/标识"
         />
+
         <el-table-column
+          v-if="checkList.includes('participation')"
           show-overflow-tooltip
-          prop="d"
-          align="center"
-          label="分配目标"
-        />
-        <el-table-column
-          show-overflow-tooltip
-          prop="e"
           align="center"
           label="参与/完成/配额/限量"
-        />
+        >
+          <template #default="{ row }">
+            {{ row.participation }}/ {{ row.complete }}/ {{ row.num }}/
+            {{ row.limitedQuantity }}
+          </template>
+        </el-table-column>
         <el-table-column
+          v-if="checkList.includes('doMoneyPrice')"
           show-overflow-tooltip
-          prop="f"
           align="center"
-          label="原价USA/RMB"
-        />
+          label="原价"
+        >
+          <template #default="{ row }">
+            $ {{ row.doMoneyPrice }} ￥{{ row.memberPrice }}
+          </template>
+        </el-table-column>
         <el-table-column
+          v-if="checkList.includes('memberPrice')"
           show-overflow-tooltip
-          prop="g"
+          align="center"
+          label="会员价"
+        >
+          <template #default="{ row }">
+            <el-link
+              size="small"
+              plain
+              type="primary"
+              @click="membershipPrice(row)"
+            >
+              会员价
+            </el-link>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="checkList.includes('ir')"
+          show-overflow-tooltip
           align="center"
           label="IR/NIR"
-        />
+        >
+          <template #default="{ row }"> {{ row.ir }}/ {{ row.nir }} </template>
+        </el-table-column>
         <el-table-column
+          v-if="checkList.includes('countryNameList')"
           show-overflow-tooltip
-          prop="h"
           align="center"
           label="国家地区"
-        />
+        >
+          <template #default="{ row }">
+            <template v-if="row.countryNameList.length > 4">
+              <el-tooltip
+                class="box-item"
+                effect="dark"
+                :content="row.countryNameList.join(',')"
+                placement="top"
+              >
+                <el-link type="primary">{{
+                  row.countryNameList.length
+                }}</el-link>
+              </el-tooltip>
+            </template>
+            <template v-else>
+              <el-tag
+                v-for="item in row.countryNameList"
+                :key="item"
+                type="primary"
+              >
+                {{ item }}
+              </el-tag>
+            </template>
+          </template>
+        </el-table-column>
         <el-table-column
+          v-if="checkList.includes('memberGroupName')"
           show-overflow-tooltip
-          prop="k"
+          align="center"
+          label="分配目标"
+        >
+          <template #default="{ row }">
+            <el-tooltip class="box-item" effect="dark" placement="top">
+              <template #content>
+                <div v-for="item in row.getMemberGroupNameInfoList">
+                  {{ item.memberGroupName }}-{{ item.memberGroupId }}
+                </div>
+              </template>
+              <el-link type="primary">{{
+                row.getMemberGroupNameInfoList.length
+              }}</el-link>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="checkList.includes('createTime')"
+          show-overflow-tooltip
+          prop="createTime"
           align="center"
           label="创建时间"
         />
         <el-table-column align="center" label="操作" width="200">
           <template #default="{ row }">
             <ElSpace>
-              <el-button size="small" plain type="primary" @click="quota(row)">
-                配额
-              </el-button>
-              <el-button type="primary" plain size="small" @click="check(row)">
+              <el-button type="primary" plain size="small" @click="tested(row)">
                 测查
               </el-button>
-              <el-button type="primary" plain size="small" @click="attachment()">
-                附件
+              <el-button size="small" plain type="primary" @click="check(row)">
+                详情
               </el-button>
             </ElSpace>
           </template>
@@ -311,8 +428,8 @@ onMounted(() => {
         @current-change="currentChange"
       />
     </PageMain>
-    <checkEdit ref="addCheckEditEdit" />
-    <quotaEdit ref="addQuotaEdit" />
+    <checkEdit ref="CheckEditRef" />
+    <checkMembershipPrice ref="checkMembershipPriceRef" />
   </div>
 </template>
 
@@ -360,5 +477,4 @@ onMounted(() => {
     }
   }
 }
-
 </style>

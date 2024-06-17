@@ -2,6 +2,7 @@
 import allocationEdit from "./components/AllocationEdit/index.vue";
 import ProjeckEdit from "./components/ProjeckEdit/index.vue";
 import ProjectDetail from "./components/ProjectDetails/index.vue";
+import scheduling from "@/views/projectManagement/scheduling/components/Edit/index.vue";//项目调度
 import { ElMessage, ElMessageBox } from "element-plus";
 import api from "@/api/modules/projectManagement";
 import { obtainLoading, submitLoading } from "@/utils/apiLoading";
@@ -20,13 +21,14 @@ pagination.value.sizes = [5, 10, 20, 50];
 defineOptions({
   name: "ProjectManagementListIndex",
 });
-const tableSortRef = ref("");
+const tableSortRef = ref<any>();
 // loading加载
 const listLoading = ref<boolean>(true);
 // 获取组件变量
 const addAllocationEditRef = ref();
 const addProjeckRef = ref();
 const projectDetailsRef = ref();
+const schedulingRef = ref();
 // 右侧工具栏配置变量
 const border = ref(true);
 const checkList = ref<any>([]);
@@ -127,7 +129,18 @@ async function changeStatus(row: any, val: any) {
 function projectDetails(row: any) {
   projectDetailsRef.value.showEdit(row);
 }
-// 表格控件-控制全屏
+// 项目调度 快捷操作
+function dispatch() {
+  const selectList = tableSortRef.value.getSelectionRows();
+  if (selectList.length !== 1) {
+    ElMessage.warning({
+      message: "请选择一个项目",
+      center: true,
+    });
+  } else {
+    schedulingRef.value.showEdit(selectList[0], "projectList");
+  }
+}
 
 // 每页数量切换
 function sizeChange(size: number) {
@@ -323,6 +336,9 @@ onMounted(async () => {
         <FormLeftPanel>
           <el-button type="primary" size="default" @click="addProject">
             添加项目
+          </el-button>
+          <el-button type="primary" size="default" @click="dispatch">
+            调度
           </el-button>
         </FormLeftPanel>
 
@@ -567,6 +583,8 @@ onMounted(async () => {
     <allocationEdit ref="addAllocationEditRef" @fetchData="fetchData" />
     <ProjeckEdit ref="addProjeckRef" @fetchData="fetchData" />
     <ProjectDetail ref="projectDetailsRef" />
+    <!-- 项目调度 -->
+    <scheduling ref="schedulingRef" />
   </div>
 </template>
 
