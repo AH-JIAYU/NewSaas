@@ -484,7 +484,6 @@ watch(
               </template>
             </ElInput>
           </ElFormItem>
-          {{ loginForm.agreeToTheAgreement }}
           <ElFormItem prop="agreeToTheAgreement">
             <div class="flex-bar" style="margin: 0; width: 100%">
               <ElCheckbox
