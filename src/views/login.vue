@@ -1,6 +1,4 @@
 <route lang="yaml">
-
-
 meta:
   whiteList: true
   title: 登录
@@ -56,6 +54,7 @@ const loginGetCaptcha = ref(false); // 验证码按钮是否禁用
 const loginForm = ref<any>({
   account: storage.local.get("login_account") || "",
   remember: storage.local.has("login_account"),
+  agreeToTheAgreement: false,
 });
 // 自定义校验手机号
 const validatePhone = (rule: any, value: any, callback: any) => {
@@ -87,6 +86,7 @@ const loginRules = ref<any>({
   ],
   agreeToTheAgreement: [
     {
+      required: true,
       validator: (rule: any, value: any) => value === true,
       message: "请阅读并勾选协议",
       trigger: "change",
@@ -95,14 +95,14 @@ const loginRules = ref<any>({
 });
 // 动态表单校验
 const chengAccount = () => {
-  // 邮箱
+  // 手机号
   if (!loginForm.value.account.includes("@")) {
     loginRules.value.account = [
       { required: true, trigger: "blur", message: "请输入手机号/邮箱" },
       { validator: validatePhone, trigger: "blur" },
     ];
   } else {
-    //手机号
+    //邮箱
     loginRules.value.account = [
       { required: true, trigger: "blur", message: "请输入手机号/邮箱" },
       { validator: validateEmail, trigger: "blur" },
@@ -206,6 +206,7 @@ const registerForm = ref<any>({
   code: "", // 验证码
   country: "", //国家
   type: "phone", // 注册方式 phone/email
+  agreeToTheAgreement: false,
 });
 // 自定义校验手机号
 const validatePhoneRegistered = (rule: any, value: any, callback: any) => {
@@ -246,6 +247,7 @@ const registerRules = ref<FormRules>({
   ],
   agreeToTheAgreement: [
     {
+      required: true,
       validator: (rule, value) => value === true,
       message: "请阅读并勾选协议",
       trigger: "change",
@@ -356,7 +358,9 @@ onUnmounted(() => {
 });
 // 重置校验
 const resetCheck = () => {
-  loginRules.value.account = [{ validator: validatePhone, trigger: "blur" }];
+  loginRules.value.account = [
+    { required: true, trigger: "blur", message: "请输入手机号/邮箱" },
+  ];
   loginFormRef.value.resetFields();
 };
 // #endregion
@@ -480,9 +484,14 @@ watch(
               </template>
             </ElInput>
           </ElFormItem>
+          {{ loginForm.agreeToTheAgreement }}
           <ElFormItem prop="agreeToTheAgreement">
             <div class="flex-bar" style="margin: 0; width: 100%">
-              <ElCheckbox v-model="loginForm.agreeToTheAgreement" tabindex="3"
+              <ElCheckbox
+                v-model="loginForm.agreeToTheAgreement"
+                tabindex="3"
+                :true-value="true"
+                :false-value="false"
                 >我已阅读并同意《xxxx协议》
               </ElCheckbox>
               <ElLink
