@@ -79,7 +79,7 @@ async function questionFun(
       limit: -1,
       id: enID,
     }
-  // 
+  //
   if (!countryType.id) return null
   // 答案  根据当前row的国家id请求字典数据
   const { data } = await apiDictionary.itemlist(countryType)
@@ -106,7 +106,7 @@ async function questionFun(
   question.title['zh-cn'] = row.chineseName
   question.title.en = row.englishName
   question.surveyId = row.otherId
-  question.surveyType = 2
+  question.surveyType = 1
   // 左侧块(问题模板)的标题
   title = otherFunctionsScreenLibraryStore.countryId === '343' ? title : row.englishName
   if (answer.length > 0) {
@@ -123,7 +123,7 @@ async function questionFun(
           it.text['zh-cn'] = item.chineseName
           it.text.en = item.englishName
           it.surveyId = item.otherId
-          it.surveyType = 2
+          it.surveyType = 1
         }
       })
     })

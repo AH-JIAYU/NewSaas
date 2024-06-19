@@ -235,8 +235,6 @@ textarea {
   min-width: 192px !important;
 }
 
-w
-
 .el-row {
   margin: 20px 0;
 }
@@ -393,6 +391,7 @@ w
   }
 }
 
+
 // // 项目列表编辑
 // .edit-drawer {
 //   .el-drawer__header {
@@ -443,9 +442,4 @@ w
 //   }
 // }
 
-// 表格表头颜色
-.el-table__header {
-  th {
-    background: var(--el-fill-color-lighter) !important;
-  }
-}
+
