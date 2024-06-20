@@ -224,15 +224,18 @@ export function setSurveyType(StringData: any) {
   const objData = JSON.parse(StringData);
   const newPages = objData.pages.map((page: any) => {
     const updatedElements = page.elements.map((element: any) => {
-      const updatedChoices = element.choices.map((choice: any) => ({
-        ...choice,
-        surveyType: 2,
-      }));
+      let updatedChoices
+      if (element.choices) {
+        updatedChoices = element.choices.map((choice: any) => ({
+          ...choice,
+          surveyType: 2,
+        }));
 
+      }
       return {
         ...element,
         surveyType: 2,
-        choices: updatedChoices,
+        choices: updatedChoices || null,
       };
     });
 
