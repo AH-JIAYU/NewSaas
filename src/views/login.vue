@@ -209,13 +209,13 @@ const registerForm = ref<any>({
   type: "phone",
   agreeToTheAgreement: false,
   // 账户类型
-  companyType: 'personal',
+  companyType: "personal",
   // 公司名称
-  companyName: '',
+  companyName: "",
   // 法人姓名
-  legalPersonName: '',
+  legalPersonName: "",
   // 税号
-  taxID: '',
+  taxID: "",
 });
 // 自定义校验手机号
 const validatePhoneRegistered = (rule: any, value: any, callback: any) => {
@@ -299,11 +299,12 @@ const handleRegister = throttle(async () => {
   registerFormRef.value &&
     registerFormRef.value.validate(async (valid: any) => {
       if (valid) {
-        registerForm.value.type = registerForm.value.country === "CN" ? "phone" : "email";
-        registerForm.value.companyName = ''
-        registerForm.value.legalPersonName = ''
-        registerForm.value.taxID = ''
-        delete registerForm.value.agreeToTheAgreement
+        registerForm.value.type =
+          registerForm.value.country === "CN" ? "phone" : "email";
+        registerForm.value.companyName = "";
+        registerForm.value.legalPersonName = "";
+        registerForm.value.taxID = "";
+        delete registerForm.value.agreeToTheAgreement;
         const { status } = await submitLoading(
           api.register(registerForm.value)
         );
@@ -413,16 +414,24 @@ watch(
       <div class="login-banner">
         <!-- <img :src="logo" class="logo" />
         <img :src="banner" class="banner" /> -->
-        <h1 style="font-size: 50px; font-weight: normal">欢迎 </h1>
-        <h3 h1 style="font-size: 30px; font-weight: normal">
-          来到租户系统 !
-        </h3>
+        <h1 style="font-size: 50px; font-weight: normal">欢迎</h1>
+        <h3 h1 style="font-size: 30px; font-weight: normal">来到租户系统 !</h3>
       </div>
-      <ElForm v-show="formType === 'login'" ref="loginFormRef" :model="loginForm" :rules="loginRules" class="login-form"
-        :validate-on-rule-change="false">
+      <el-form
+        v-show="formType === 'login'"
+        ref="loginFormRef"
+        :model="loginForm"
+        :rules="loginRules"
+        class="login-form"
+        :validate-on-rule-change="false"
+      >
         <div class="title-container">
           <div class="fx-c">
-            <el-radio-group v-model="loginType" size="large" @change="resetCheck">
+            <el-radio-group
+              v-model="loginType"
+              size="large"
+              @change="resetCheck"
+            >
               <el-radio-button label="验证码登录" value="code" />
               <el-radio-button label="密码登录" value="password" />
             </el-radio-group>
@@ -430,128 +439,210 @@ watch(
         </div>
         <div>
           <ElFormItem prop="account">
-            <ElInput v-model="loginForm.account" :placeholder="t('app.account')" type="text" tabindex="1"
-              @blur="chengAccount">
+            <ElInput
+              v-model="loginForm.account"
+              :placeholder="t('app.account')"
+              type="text"
+              tabindex="1"
+              @blur="chengAccount"
+            >
               <template #prefix>
                 <SvgIcon name="i-ri:user-3-fill" />
               </template>
               <template #append v-if="loginType === 'code'">
-                <el-button type="primary" :disabled="loginGetCaptcha" @click="loginCaptcha">{{ loginCode }}</el-button>
+                <el-button
+                  type="primary"
+                  :disabled="loginGetCaptcha"
+                  @click="loginCaptcha"
+                  >{{ loginCode }}</el-button
+                >
               </template>
             </ElInput>
           </ElFormItem>
           <ElFormItem prop="password" v-if="loginType === 'password'">
-            <ElInput v-model="loginForm.password" type="password" :placeholder="t('app.password')" tabindex="2"
-              autocomplete="new-password" show-password @keyup.enter="handleLogin">
+            <ElInput
+              v-model="loginForm.password"
+              type="password"
+              :placeholder="t('app.password')"
+              tabindex="2"
+              autocomplete="new-password"
+              show-password
+              @keyup.enter="handleLogin"
+            >
               <template #prefix>
                 <SvgIcon name="i-ri:lock-2-fill" />
               </template>
             </ElInput>
           </ElFormItem>
           <ElFormItem prop="code" v-if="loginType === 'code'">
-            <ElInput v-model="loginForm.code" type="text" :placeholder="t('app.captcha')" tabindex="2"
-              @keyup.enter="handleLogin">
+            <ElInput
+              v-model="loginForm.code"
+              type="text"
+              :placeholder="t('app.captcha')"
+              tabindex="2"
+              @keyup.enter="handleLogin"
+            >
               <template #prefix>
                 <SvgIcon name="i-ep:message" />
               </template>
             </ElInput>
           </ElFormItem>
         </div>
+
         <div class="flex-bar">
           <ElCheckbox v-model="loginForm.remember" tabindex="4">
             保持登录
           </ElCheckbox>
           <ElLink
-                v-if="loginType === 'password'"
-                type="primary"
-                :underline="false"
-                @click="formType = 'reset'"
-              >
-                忘记密码了?
-              </ElLink>
-            </div>
-          </ElFormItem>
+            v-if="loginType === 'password'"
+            type="primary"
+            :underline="false"
+            @click="formType = 'reset'"
+          >
+            忘记密码了?
+          </ElLink>
         </div>
-        <div class="flex-bar">
-          <ElCheckbox v-model="loginForm.remember" tabindex="4">
-            保持登录
-          </ElCheckbox>
-        </div>
-        <ElButton :loading="loading" type="primary" size="large" style="width: 100%" @click.prevent="handleLogin"
-          tabindex="5">
+        <ElButton
+          :loading="loading"
+          type="primary"
+          size="large"
+          style="width: 100%"
+          @click.prevent="handleLogin"
+          tabindex="5"
+        >
           {{ t("app.login") }}
         </ElButton>
         <div class="sub-link">
           <span class="text">还不是会员?</span>
-          <ElLink type="primary" :underline="false" @click="formType = 'register'">
+          <ElLink
+            type="primary"
+            :underline="false"
+            @click="formType = 'register'"
+          >
             立即注册
           </ElLink>
         </div>
-      </ElForm>
-      <ElForm v-show="formType === 'register'" ref="registerFormRef" :model="registerForm" :rules="registerRules"
-        class="login-form" auto-complete="on">
+      </el-form>
+      <ElForm
+        v-show="formType === 'register'"
+        ref="registerFormRef"
+        :model="registerForm"
+        :rules="registerRules"
+        class="login-form"
+        auto-complete="on"
+      >
         <div>
           <ElFormItem label="账号类型" prop="">
             <el-radio-group v-model="registerForm.companyType" class="ml-4">
-              <el-radio value="personal">
-                个人
-              </el-radio>
-              <el-radio value="company">
-                公司
-              </el-radio>
+              <el-radio value="personal"> 个人 </el-radio>
+              <el-radio value="company"> 公司 </el-radio>
             </el-radio-group>
           </ElFormItem>
-          <ElFormItem v-if="registerForm.companyType === 'company'" prop="companyName">
-            <ElInput v-model="registerForm.companyName" placeholder="请输入公司名称" />
+          <ElFormItem
+            v-if="registerForm.companyType === 'company'"
+            prop="companyName"
+          >
+            <ElInput
+              v-model="registerForm.companyName"
+              placeholder="请输入公司名称"
+            />
           </ElFormItem>
-          <ElFormItem v-if="registerForm.companyType === 'company'" prop="taxID">
-            <ElInput v-model="registerForm.taxID" placeholder="请输入公司税号" />
+          <ElFormItem
+            v-if="registerForm.companyType === 'company'"
+            prop="taxID"
+          >
+            <ElInput
+              v-model="registerForm.taxID"
+              placeholder="请输入公司税号"
+            />
           </ElFormItem>
-          <ElFormItem v-if="registerForm.companyType === 'company'" prop="legalPersonName">
-            <ElInput v-model="registerForm.legalPersonName" placeholder="请输入法人姓名" />
+          <ElFormItem
+            v-if="registerForm.companyType === 'company'"
+            prop="legalPersonName"
+          >
+            <ElInput
+              v-model="registerForm.legalPersonName"
+              placeholder="请输入法人姓名"
+            />
           </ElFormItem>
           <ElFormItem prop="name">
-            <ElInput v-model="registerForm.name" placeholder="用户名" tabindex="1">
+            <ElInput
+              v-model="registerForm.name"
+              placeholder="用户名"
+              tabindex="1"
+            >
               <template #prefix>
                 <SvgIcon name="i-ri:user-3-fill" />
               </template>
             </ElInput>
           </ElFormItem>
           <ElFormItem prop="country">
-            <ElSelect v-model="registerForm.country" placeholder="国家" clearable filterable tabindex="2">
+            <ElSelect
+              v-model="registerForm.country"
+              placeholder="国家"
+              clearable
+              filterable
+              tabindex="2"
+            >
               <template #prefix>
                 <SvgIcon name="i-mdi:format-list-bulleted-type" />
               </template>
-              <ElOption v-for="item in countryList" :label="item.chineseName" :value="item.code"></ElOption>
+              <ElOption
+                v-for="item in countryList"
+                :label="item.chineseName"
+                :value="item.code"
+              ></ElOption>
             </ElSelect>
           </ElFormItem>
           <ElFormItem prop="phoneNumber" v-if="registerForm.country === 'CN'">
-            <ElInput v-model="registerForm.phoneNumber" placeholder="手机号" tabindex="3">
+            <ElInput
+              v-model="registerForm.phoneNumber"
+              placeholder="手机号"
+              tabindex="3"
+            >
               <template #prefix>
                 <SvgIcon name="i-ant-design:phone-outlined" />
               </template>
             </ElInput>
           </ElFormItem>
           <ElFormItem prop="email" v-else>
-            <ElInput v-model="registerForm.email" placeholder="邮箱" tabindex="3">
+            <ElInput
+              v-model="registerForm.email"
+              placeholder="邮箱"
+              tabindex="3"
+            >
               <template #prefix>
                 <SvgIcon name="i-mdi:email" />
               </template>
             </ElInput>
           </ElFormItem>
           <ElFormItem prop="code">
-            <ElInput v-model="registerForm.code" placeholder="验证码" tabindex="4">
+            <ElInput
+              v-model="registerForm.code"
+              placeholder="验证码"
+              tabindex="4"
+            >
               <template #prefix>
                 <SvgIcon name="i-ic:baseline-verified-user" />
               </template>
               <template #append>
-                <ElButton :disabled="isGetPhone" @click="mobileVerificationCode">
-                  {{ phoneCode }}</ElButton>
+                <ElButton
+                  :disabled="isGetPhone"
+                  @click="mobileVerificationCode"
+                >
+                  {{ phoneCode }}</ElButton
+                >
               </template>
             </ElInput>
           </ElFormItem>
           <ElFormItem prop="password">
-            <ElInput v-model="registerForm.password" type="password" placeholder="密码" tabindex="5" show-password>
+            <ElInput
+              v-model="registerForm.password"
+              type="password"
+              placeholder="密码"
+              tabindex="5"
+              show-password
+            >
               <template #prefix>
                 <SvgIcon name="i-ri:lock-2-fill" />
               </template>
@@ -559,8 +650,14 @@ watch(
           </ElFormItem>
         </div>
 
-        <ElButton tabindex="7" :loading="loading" type="primary" size="large" style="width: 100%; margin-top: 20px"
-          @click.prevent="handleRegister">
+        <ElButton
+          tabindex="7"
+          :loading="loading"
+          type="primary"
+          size="large"
+          style="width: 100%; margin-top: 20px"
+          @click.prevent="handleRegister"
+        >
           注册
         </ElButton>
         <div class="sub-link">
@@ -570,21 +667,36 @@ watch(
           </ElLink>
         </div>
       </ElForm>
-      <ElForm v-show="formType === 'reset'" ref="resetFormRef" :model="resetForm" :rules="resetRules"
-        class="login-form">
+      <ElForm
+        v-show="formType === 'reset'"
+        ref="resetFormRef"
+        :model="resetForm"
+        :rules="resetRules"
+        class="login-form"
+      >
         <div class="title-container">
           <h3 class="title">忘记密码了? 🔒</h3>
         </div>
         <div>
           <ElFormItem prop="account">
-            <ElInput v-model="resetForm.account" :placeholder="t('app.account')" type="text" tabindex="1">
+            <ElInput
+              v-model="resetForm.account"
+              :placeholder="t('app.account')"
+              type="text"
+              tabindex="1"
+            >
               <template #prefix>
                 <SvgIcon name="i-ri:user-3-fill" />
               </template>
             </ElInput>
           </ElFormItem>
           <ElFormItem prop="code">
-            <ElInput v-model="resetForm.code" :placeholder="t('app.code')" type="text" tabindex="2">
+            <ElInput
+              v-model="resetForm.code"
+              :placeholder="t('app.code')"
+              type="text"
+              tabindex="2"
+            >
               <template #prefix>
                 <SvgIcon name="i-ic:baseline-verified-user" />
               </template>
@@ -594,16 +706,26 @@ watch(
             </ElInput>
           </ElFormItem>
           <ElFormItem prop="newPassword">
-            <ElInput v-model="resetForm.newPassword" type="password" :placeholder="t('app.newPassword')" tabindex="3"
-              show-password>
+            <ElInput
+              v-model="resetForm.newPassword"
+              type="password"
+              :placeholder="t('app.newPassword')"
+              tabindex="3"
+              show-password
+            >
               <template #prefix>
                 <SvgIcon name="i-ri:lock-2-fill" />
               </template>
             </ElInput>
           </ElFormItem>
         </div>
-        <ElButton :loading="loading" type="primary" size="large" style="width: 100%; margin-top: 20px"
-          @click.prevent="handleReset">
+        <ElButton
+          :loading="loading"
+          type="primary"
+          size="large"
+          style="width: 100%; margin-top: 20px"
+          @click.prevent="handleReset"
+        >
           {{ t("app.check") }}
         </ElButton>
         <div class="sub-link">
@@ -690,7 +812,8 @@ watch(
   z-index: 0;
   width: 100%;
   height: 100%;
-  background: url("../assets/images/background.jpg") center center fixed no-repeat;
+  background: url("../assets/images/background.jpg") center center fixed
+    no-repeat;
   background-size: cover;
   // background: radial-gradient(
   //   circle at center,
