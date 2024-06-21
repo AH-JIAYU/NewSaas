@@ -7,7 +7,6 @@ meta:
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { ref } from 'vue'
 import FormMode from './components/FormMode/index.vue'
-import Edit from './components/Edit/index.vue'
 import eventBus from '@/utils/eventBus'
 import apiUser from '@/api/modules/configuration_manager'
 import useBasicDictionaryStore from '@/store/modules/otherFunctions_basicDictionary'
@@ -297,8 +296,6 @@ function onDel(row: any) {
     </PageMain>
     <FormMode v-if="data.formMode === 'dialog' || data.formMode === 'drawer'" :id="data.formModeProps.id"
       v-model="data.formModeProps.visible" :row="data.formModeProps.row" :mode="data.formMode" @success="getDataList" />
-    <Edit v-if="data.editProps.visible" :id="data.editProps.id" v-model="data.editProps.visible" :row="data.editProps"
-      @success="getDataList" />
   </div>
 </template>
 
