@@ -4,20 +4,28 @@ meta:
 </route>
 
 <script setup lang="ts">
-import { ElMessage, ElMessageBox } from "element-plus";
-import { ref } from "vue";
-import FormMode from "./components/FormMode/index.vue";
-import eventBus from "@/utils/eventBus";
-import apiManager from "@/api/modules/manager";
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { ref } from 'vue'
+import FormMode from './components/FormMode/index.vue'
+import eventBus from '@/utils/eventBus'
+import apiUser from '@/api/modules/configuration_manager'
+import useBasicDictionaryStore from '@/store/modules/otherFunctions_basicDictionary'
+import useTenantRoleStore from '@/store/modules/tenant_role'
 
 defineOptions({
-  name: "PagesExampleManagerList",
-});
-
-const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
-  usePagination();
-const tabbar = useTabbar();
-
+  name: 'SettingUserList',
+})
+// 国家
+const useStoreCountry = useBasicDictionaryStore()
+const filterCountry = ref([])
+// 角色码
+const roleStore = useTenantRoleStore()
+// 角色
+const munulevs = ref()
+// 分页
+const { pagination, onSizeChange, onCurrentChange, onSortChange } = usePagination()
+const tabbar = useTabbar()
+// 定义表单
 const data = ref({
   loading: false,
   // 表格是否自适应高度
@@ -28,17 +36,21 @@ const data = ref({
    * dialog 对话框
    * drawer 抽屉
    */
-  formMode: "drawer" as "router" | "dialog" | "drawer",
+  formMode: 'drawer' as 'router' | 'dialog' | 'drawer',
   // 详情
   formModeProps: {
     visible: false,
-    id: "",
+    id: '',
+    row: '',
+  },
+  editProps: {
+    visible: false,
+    id: '',
   },
   // 搜索
   search: {
-    account: "",
-    name: "",
-    mobile: "",
+    name: '',
+    role: '',
   },
   // 批量操作
   batch: {
@@ -47,151 +59,134 @@ const data = ref({
   },
   // 列表数据
   dataList: [],
-});
+})
+onMounted(async () => {
+  getDataList()
+  filterCountry.value = await useStoreCountry.getCountry()
+  munulevs.value = await roleStore.getRole
+  data.value.dataList.map((item:any) => {
+    filterCountry.value.find((ite: any) => {
+      if(item.country === ite.code) {
+        item.countryName = ite.chineseName
+      }
+    })
+  });
 
-onMounted(() => {
-  getDataList();
-  if (data.value.formMode === "router") {
-    eventBus.on("get-data-list", () => {
-      getDataList();
-    });
+  if (data.value.formMode === 'router') {
+    eventBus.on('get-data-list', () => {
+      getDataList()
+    })
   }
-});
+})
 
 onBeforeUnmount(() => {
-  if (data.value.formMode === "router") {
-    eventBus.off("get-data-list");
+  if (data.value.formMode === 'router') {
+    eventBus.off('get-data-list')
   }
-});
+})
 
+// 获取数据
 function getDataList() {
-  data.value.loading = true;
-  const params = {
-    ...getParams(),
-    ...(data.value.search.account && { account: data.value.search.account }),
-    ...(data.value.search.name && { name: data.value.search.name }),
-    ...(data.value.search.mobile && { mobile: data.value.search.mobile }),
-  };
-  apiManager.list(params).then((res: any) => {
-    data.value.loading = false;
-    data.value.dataList = res.data.list;
+  data.value.loading = true
+  apiUser.list(data.value.search).then((res: any) => {
+    data.value.loading = false
+    data.value.dataList = res.data
+    pagination.value.total = res.data?.length
     data.value.dataList.forEach((item: any) => {
-      item.statusLoading = false;
-    });
-    pagination.value.total = res.data.total;
-  });
+      item.statusLoading = false
+    })
+  })
 }
+
 // 重置筛选数据
 function onReset() {
   Object.assign(data.value.search, {
-    account: "",
-    name: "",
-    mobile: "",
-    sex: "",
-  });
-  getDataList();
+    name: '',
+    role: '',
+  })
+  getDataList()
 }
-
 // 每页数量切换
 function sizeChange(size: number) {
-  onSizeChange(size).then(() => getDataList());
+  onSizeChange(size).then(() => getDataList())
 }
-
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
-  onCurrentChange(page).then(() => getDataList());
+  onCurrentChange(page).then(() => getDataList())
 }
-
 // 字段排序
-function sortChange({ prop, order }: { prop: string; order: string }) {
-  onSortChange(prop, order).then(() => getDataList());
+function sortChange({ prop, order }: { prop: string, order: string }) {
+  onSortChange(prop, order).then(() => getDataList())
 }
-
+// 新增
 function onCreate() {
-  if (data.value.formMode === "router") {
+  if (data.value.formMode === 'router') {
     tabbar.open({
-      name: "pagesExampleGeneralManagerCreate",
-    });
-  } else {
-    data.value.formModeProps.id = "";
-    data.value.formModeProps.visible = true;
+      name: 'pagesExampleGeneralManagerCreate',
+    })
+  }
+  else {
+    data.value.formModeProps.id = ''
+    data.value.formModeProps.row = ''
+    data.value.formModeProps.visible = true
   }
 }
-
+// 修改
 function onEdit(row: any) {
-  if (data.value.formMode === "router") {
+  if (data.value.formMode === 'router') {
     tabbar.open({
-      name: "pagesExampleGeneralManagerEdit",
+      name: 'pagesExampleGeneralManagerEdit',
       params: {
         id: row.id,
       },
-    });
-  } else {
-    data.value.formModeProps.id = row.id;
-    data.value.formModeProps.visible = true;
+    })
+  }
+  else {
+    data.value.formModeProps.id = row.id
+    data.value.formModeProps.row = JSON.stringify(row)
+    data.value.formModeProps.visible = true
   }
 }
-
+// 开关事件
 function onChangeStatus(row: any) {
   return new Promise<boolean>((resolve) => {
-    ElMessageBox.confirm(
-      `确认${!row.status ? "启用" : "禁用"}「${row.account}」吗？`,
-      "确认信息"
-    )
-      .then(() => {
-        row.statusLoading = true;
-        apiManager
-          .changeStatus({
-            id: row.id,
-            status: !row.status,
-          })
-          .then(() => {
-            row.statusLoading = false;
-            ElMessage.success({
-              message: `模拟${!row.status ? "启用" : "禁用"}成功`,
-              center: true,
-            });
-            return resolve(true);
-          })
-          .catch(() => {
-            row.statusLoading = false;
-            return resolve(false);
-          });
+    ElMessageBox.confirm(`确认${!row.active ? '启用' : '禁用'}「${row.name}」吗？`, '确认信息').then(() => {
+      data.value.loading = true
+      apiUser.edit({
+        id: row.id,
+        account: null,
+        name: null,
+        sex: null,
+        phoneNumber: null,
+        active: !row.active,
+      }).then(() => {
+        ElMessage.success({
+          message: `${!row.active ? '启用' : '禁用'}成功`,
+          center: true,
+        })
+        getDataList()
+        data.value.loading = false
+        return resolve(true)
+      }).catch(() => {
+        data.value.loading = false
+        return resolve(false)
       })
-      .catch(() => {
-        return resolve(false);
-      });
-  });
-}
-
-function onResetPassword(row: any) {
-  ElMessageBox.confirm(
-    `确认将「${row.account}」的密码重置为 “123456” 吗？`,
-    "确认信息"
-  )
-    .then(() => {
-      apiManager.passwordReset(row.id).then(() => {
-        ElMessage.success({
-          message: "模拟重置成功",
-          center: true,
-        });
-      });
+    }).catch(() => {
+      return resolve(false)
     })
-    .catch(() => {});
+  })
 }
-
+// 删除
 function onDel(row: any) {
-  ElMessageBox.confirm(`确认删除「${row.account}」用户吗？`, "确认信息")
-    .then(() => {
-      apiManager.delete(row.id).then(() => {
-        getDataList();
-        ElMessage.success({
-          message: "模拟删除成功",
-          center: true,
-        });
-      });
+  ElMessageBox.confirm(`确认删除「${row.name}」用户吗？`, '确认信息').then(() => {
+    apiUser.delete({ id: row.id }).then(() => {
+      getDataList()
+      ElMessage.success({
+        message: '删除成功',
+        center: true,
+      })
     })
-    .catch(() => {});
+  }).catch(() => { })
 }
 </script>
 
@@ -200,40 +195,15 @@ function onDel(row: any) {
     <PageMain>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
-          <ElForm
-            :model="data.search"
-            size="default"
-            label-width="100px"
-            inline-message
-            inline
-            class="search-form"
-          >
-            <ElFormItem>
-              <ElInput
-                v-model="data.search.account"
-                placeholder="请输入帐号，支持模糊查询"
-                clearable
-                @keydown.enter="currentChange()"
-                @clear="currentChange()"
-              />
+          <ElForm :model="data.search" size="default" label-width="100px" inline-message inline class="search-form">
+            <ElFormItem v-show="!fold">
+              <ElInput v-model="data.search.name" placeholder="请输入姓名" clearable @keydown.enter="currentChange()"
+                @clear="currentChange()" />
             </ElFormItem>
-            <ElFormItem>
-              <ElInput
-                v-model="data.search.name"
-                placeholder="请输入姓名，支持模糊查询"
-                clearable
-                @keydown.enter="currentChange()"
-                @clear="currentChange()"
-              />
-            </ElFormItem>
-            <ElFormItem>
-              <ElInput
-                v-model="data.search.mobile"
-                placeholder="请输入手机号"
-                clearable
-                @keydown.enter="currentChange()"
-                @clear="currentChange()"
-              />
+            <ElFormItem prop="role">
+              <el-select v-model="data.search.role" placeholder="请选择角色">
+                <el-option v-for="item in munulevs" :key="item.id" :label="item.roleName" :value="item.roleName" />
+              </el-select>
             </ElFormItem>
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">
@@ -248,13 +218,11 @@ function onDel(row: any) {
                 </template>
                 重置
               </ElButton>
-              <ElButton disabled link @click="toggle">
+              <ElButton link @click="toggle">
                 <template #icon>
-                  <SvgIcon
-                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
-                  />
+                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
                 </template>
-                {{ fold ? "展开" : "收起" }}
+                {{ fold ? '展开' : '收起' }}
               </ElButton>
             </ElFormItem>
           </ElForm>
@@ -268,113 +236,66 @@ function onDel(row: any) {
           </template>
           新增用户
         </ElButton>
-        <ElButton
-          v-if="data.batch.enable"
-          size="default"
-          :disabled="!data.batch.selectionDataList.length"
-        >
-          批量操作
-        </ElButton>
       </ElSpace>
-      <ElTable
-        v-loading="data.loading"
-        class="my-4"
-        :data="data.dataList"
-        stripe
-        highlight-current-row
-        border
-        height="100%"
-        @sort-change="sortChange"
-        @selection-change="data.batch.selectionDataList = $event"
-      >
-        <ElTableColumn
-          v-if="data.batch.enable"
-          type="selection"
-          align="center"
-          fixed
-        />
-        <ElTableColumn prop="account" sortable label="帐号" />
-        <ElTableColumn prop="name" label="姓名" width="100" align="center" />
-        <ElTableColumn prop="sex" label="性别" width="100" align="center">
-          <template #default="scope">
-            <ElTag v-if="scope.row.sex === 1" type="success" size="small">
-              男
-            </ElTag>
-            <ElTag v-else-if="scope.row.sex === 0" type="warning" size="small">
-              女
-            </ElTag>
-            <ElTag v-else type="info" size="small"> 保密 </ElTag>
+      <ElTable v-loading="data.loading" class="my-4" :data="data.dataList" stripe highlight-current-row border
+        height="100%" @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
+        <ElTableColumn v-if="data.batch.enable" type="selection" align="center" fixed />
+        <ElTableColumn prop="account" sortable label="帐号">
+          <template #default="{ row }">
+            <el-text v-if="row.country === 'CN'" class="mx-1">
+              {{ row.phone }}
+            </el-text>
+            <el-text v-else class="mx-1">
+              {{ row.email }}
+            </el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn
-          prop="mobile"
-          label="手机号"
-          width="150"
-          align="center"
-        />
+        <ElTableColumn prop="name" label="姓名" width="100" align="center">
+          <template #default="{ row }">
+            <el-text class="mx-1">
+              {{ row.name ? row.name : '暂无数据' }}
+            </el-text>
+          </template>
+        </ElTableColumn>
+        <ElTableColumn prop="role" align="center" width="150" label="角色">
+          <template #default="{ row }">
+            <el-text class="mx-1">
+              {{ row.role ? row.role : '暂无数据' }}
+            </el-text>
+          </template>
+        </ElTableColumn>
+        <ElTableColumn prop="mobile" label="国家" width="150" align="center">
+          <template #default="{ row }">
+            <el-text class="mx-1">
+              {{ row.countryName ? row.countryName : '暂无数据' }}
+            </el-text>
+          </template>
+        </ElTableColumn>
         <ElTableColumn label="状态" width="100" align="center">
           <template #default="scope">
-            <ElSwitch
-              v-model="scope.row.status"
-              :loading="scope.row.statusLoading"
-              inline-prompt
-              active-text="启用"
-              inactive-text="禁用"
-              :before-change="() => onChangeStatus(scope.row)"
-            />
+            <ElSwitch v-model="scope.row.active" inline-prompt active-text="启用" inactive-text="禁用"
+              :before-change="() => onChangeStatus(scope.row)" />
           </template>
         </ElTableColumn>
-        <ElTableColumn label="操作" width="250" align="center" fixed="right">
+        <ElTableColumn label="操作" width="200" align="center" fixed="right">
           <template #default="scope">
             <ElSpace>
-              <ElButton
-                type="primary"
-                size="small"
-                plain
-                @click="onEdit(scope.row)"
-              >
+              <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">
                 编辑
               </ElButton>
-              <el-button
-                type="primary"
-                plain
-                size="small"
-                @click="onResetPassword(scope.row)"
-              >
-                重置密码
-              </el-button>
-              <el-button
-                type="danger"
-                plain
-                size="small"
-                @click="onDel(scope.row)"
-              >
+              <ElButton type="danger" size="small" plain @click="onDel(scope.row)">
                 删除
-              </el-button>
+              </ElButton>
             </ElSpace>
           </template>
         </ElTableColumn>
       </ElTable>
-      <ElPagination
-        :current-page="pagination.page"
-        :total="pagination.total"
-        :page-size="pagination.size"
-        :page-sizes="pagination.sizes"
-        :layout="pagination.layout"
-        :hide-on-single-page="false"
-        class="pagination"
-        background
-        @current-change="currentChange"
-        @size-change="sizeChange"
-      />
+      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+        background @current-change="currentChange" @size-change="sizeChange" />
     </PageMain>
-    <FormMode
-      v-if="data.formMode === 'dialog' || data.formMode === 'drawer'"
-      :id="data.formModeProps.id"
-      v-model="data.formModeProps.visible"
-      :mode="data.formMode"
-      @success="getDataList"
-    />
+    <FormMode v-if="data.formMode === 'dialog' || data.formMode === 'drawer'" :id="data.formModeProps.id"
+      v-model="data.formModeProps.visible" :row="data.formModeProps.row" :mode="data.formMode" @success="getDataList" />
   </div>
 </template>
 

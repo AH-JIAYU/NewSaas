@@ -1,32 +1,25 @@
-<route lang="yaml">
-meta:
-  enabled: false
-</route>
-
 <script setup lang="ts">
 import DetailForm from './components/DetailForm/index.vue'
 import eventBus from '@/utils/eventBus'
 import useSettingsStore from '@/store/modules/settings'
 
 defineOptions({
-  name: 'PagesExampleRoleDetail',
+  name: 'SettingRoleDetail',
 })
-
+// 路由
 const route = useRoute()
 const router = useRouter()
 const tabbar = useTabbar()
-
 const settingsStore = useSettingsStore()
-
 const formRef = ref()
-
+// 提交
 function onSubmit() {
   formRef.value.submit().then(() => {
     eventBus.emit('get-data-list')
     goBack()
   })
 }
-
+// 取消
 function onCancel() {
   goBack()
 }
@@ -34,17 +27,17 @@ function onCancel() {
 // 返回列表页
 function goBack() {
   if (settingsStore.settings.tabbar.enable && settingsStore.settings.tabbar.mergeTabsBy !== 'activeMenu') {
-    tabbar.close({ name: 'pagesExampleGeneralRoleList' })
+    tabbar.close({ name: 'multilevel_menu_exampleRole' })
   }
   else {
-    router.push({ name: 'pagesExampleGeneralRoleList' })
+    router.push({ name: 'multilevel_menu_exampleRole' })
   }
 }
 </script>
 
 <template>
   <div>
-    <PageHeader :title="route.name === 'pagesExampleGeneralRoleCreate' ? '新增角色' : '编辑角色'">
+    <PageHeader :title="route.name === 'routerName' ? '新增角色管理' : '编辑角色管理'">
       <ElButton size="default" round @click="goBack">
         <template #icon>
           <SvgIcon name="i-ep:arrow-left" />
@@ -69,3 +62,7 @@ function goBack() {
     </FixedActionBar>
   </div>
 </template>
+
+<style lang="scss" scoped>
+// scss
+</style>
