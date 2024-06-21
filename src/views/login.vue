@@ -471,7 +471,7 @@ watch(
               </template>
             </ElInput>
           </ElFormItem>
-          <ElFormItem prop="agreeToTheAgreement">
+          <!-- <ElFormItem prop="agreeToTheAgreement">
             <div class="flex-bar" style="margin: 0; width: 100%">
               <ElCheckbox v-model="loginForm.agreeToTheAgreement" tabindex="3" :true-value="true" :false-value="false">
                 我已阅读并同意《xxxx协议》
@@ -480,7 +480,7 @@ watch(
                 忘记密码了?
               </ElLink>
             </div>
-          </ElFormItem>
+          </ElFormItem> -->
         </div>
         <div class="flex-bar">
           <ElCheckbox v-model="loginForm.remember" tabindex="4">
@@ -567,13 +567,13 @@ watch(
               </template>
             </ElInput>
           </ElFormItem>
-          <ElFormItem prop="agreeToTheAgreement">
+          <!-- <ElFormItem prop="agreeToTheAgreement">
             <div class="flex-bar" style="margin: 0">
               <ElCheckbox v-model="registerForm.agreeToTheAgreement" tabindex="6">
                 我已阅读并同意《xxxx协议》
               </ElCheckbox>
             </div>
-          </ElFormItem>
+          </ElFormItem> -->
         </div>
 
         <ElButton tabindex="7" :loading="loading" type="primary" size="large" style="width: 100%; margin-top: 20px"
