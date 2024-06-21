@@ -396,8 +396,8 @@ onMounted(async () => {
           label="参与/完成/配额/限量"
         >
           <template #default="{ row }">
-            {{ row.participation }}/ {{ row.complete }}/ {{ row.num }}/
-            {{ row.limitedQuantity }}
+            {{ row.participation ||0}}/ {{ row.complete ||0}}/ {{ row.num ||0}}/
+            {{ row.limitedQuantity ||0}}
           </template>
         </el-table-column>
         <el-table-column

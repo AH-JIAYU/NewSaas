@@ -3,7 +3,7 @@ import { provide, reactive, ref } from "vue";
 import LeftTabs from "../ProjeckLeftTabs/index.vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { cloneDeep } from "lodash-es";
-import { obtainLoading,submitLoading } from "@/utils/apiLoading";
+import { obtainLoading, submitLoading } from "@/utils/apiLoading";
 import useProjectManagementListStore from "@/store/modules/projectManagement_list"; // 项目
 import useStagedDataStore from "@/store/modules/stagedData"; // 暂存
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
@@ -204,8 +204,8 @@ async function onSubmit() {
             center: true,
           });
       }
-      emits('fetch-data')
-      closeHandler()
+      emits("fetch-data");
+      closeHandler();
     } else {
       ElMessage({ message: "项目名称重复", center: true });
     }

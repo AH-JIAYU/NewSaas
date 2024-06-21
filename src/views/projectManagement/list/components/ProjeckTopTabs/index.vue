@@ -27,6 +27,7 @@ const props: any = defineProps({
   leftTab: Object,
   tabIndex: Number,
 });
+
 const activeName = ref("basicSettings"); // tabs
 const formRef = ref<any>(); // Ref 在edit中进行校验
 const fold = ref(false); // 折叠 描述配额
@@ -184,9 +185,10 @@ const changeTab = async (val: any, judge?: boolean) => {
           props.leftTab.data.configurationInformation.initialProblem =
             cloneDeep(projectManagementListStore.initialProblem);
         }
+
         // 问题类型:1:总控问题 2:租户自己问题
         props.leftTab.data.configurationInformation.initialProblem.projectQuotaQuestionType =
-          res.data.projectQuotaQuestionType;
+          cloneDeep(res.data.projectQuotaQuestionType);
       } else {
         activeName.value = "basicSettings";
         ElMessage.warning({
@@ -199,8 +201,9 @@ const changeTab = async (val: any, judge?: boolean) => {
 };
 // 获取题库目录
 const getProjectCategoryList = async () => {
+  // 如果配置中的国家不存在就请求，反正不请
   if (props.leftTab.data.configurationInformation.initialProblem.countryId) {
-    // 如果配置中的国家不存在就请求，反正不请
+    // 就问卷就用 ,没有再请求
     if (!props.leftTab.data.configurationInformation.projectCategoryList) {
       const params = {
         countryId:
@@ -209,6 +212,7 @@ const getProjectCategoryList = async () => {
           props.leftTab.data.configurationInformation.initialProblem
             .projectQuotaQuestionType, //问题类型:1:总控问题 2:租户自己问题
       };
+
       const res = await obtainLoading(api.getProjectCategoryList(params));
       props.leftTab.data.configurationInformation.projectCategoryList =
         res.data.getProjectCategoryInfoList;
@@ -301,10 +305,10 @@ const showProjectQuotaInfoList = async () => {
   if (props.leftTab.projectQuotaInfoList.length) {
     props.leftTab.data.configurationInformation.initialProblem.countryId =
       props.leftTab.projectQuotaInfoList[0].countryId; // 国家id
+    props.leftTab.data.configurationInformation.initialProblem.projectQuotaQuestionType =
+      props.leftTab.projectQuotaInfoList[0].projectQuotaQuestionType; // 问卷类型
     props.leftTab.data.configurationInformation.initialProblem.projectProblemCategoryId =
       props.leftTab.projectQuotaInfoList[0].projectProblemCategoryId; // 问卷id
-    // props.leftTab.projectQuotaInfoList =
-    //   props.leftTab.data.configurationInformation.projectQuotaInfoList; // 问题，答案
     await changeTab("configurationInformation", true);
     await getProjectCategoryList();
     await getProjectProblemList(

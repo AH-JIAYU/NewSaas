@@ -51,10 +51,12 @@ const creatorOptions: ICreatorOptions = {
 };
 let creator: any;
 onMounted(async () => {
+  // 清空问题
+  ComponentCollection.Instance.clear();
   // #region 模板
   const res = await obtainLoading(customComponents());
   res.forEach((component: any) => {
-    // 使用Serializer.findClass来检查组件是否已注册
+    // 使用 Serializer.findClass来检查组件是否已注册
     try {
       if (component === undefined) {
         return console.error("");
