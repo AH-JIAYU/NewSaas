@@ -4,22 +4,15 @@ export default {
   // 登录
   loginBypassword: (data: { account: string; password: string }) =>
     api.post("user/loginByAccount", data),
-  // // 登录
-  // login: (data: { account: string; password: string }) =>
-  //   api.post("user/login", data, {
-  //     baseURL: "/mock/",
-  //   }),
+
   // 手机号登录
   loginByPhone: (data: { phone: string; code: string }) =>
     api.post("user/loginByPhone", data),
+
   // 邮箱登录
   LoginByEmail: (data: { email: string; code: string }) =>
     api.post("user/userLoginByEmail", data),
-  // 获取权限
-  // permission: () =>
-  //   api.get("user/permission", {
-  //     baseURL: "/mock/",
-  //   }),
+
   // 获取权限
   permission: () => api.post("tenant-button/getButtonList"),
 

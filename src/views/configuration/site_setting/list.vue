@@ -81,18 +81,21 @@ function onSubmit() {
     // 修改
     formRef.value && formRef.value.validate((valid) => {
       if (valid) {
-        let { id, keyWords, registerExamineOffOrOn, registerOffOrOn, supplierURL, webName } = form.value
-        // supplierURL = `https://${supplierURL}ah-jiayu.github.io/NewControl/`
-        const params = { id, keyWords, registerExamineOffOrOn, registerOffOrOn, supplierURL, webName }
-        loading.value = true
-        api.edit(params).then(() => {
-          loading.value = false
-          getDataList()
-          ElMessage.success({
-            message: '修改成功',
-            center: true,
+        try {
+          let { id, keyWords, registerExamineOffOrOn, registerOffOrOn, supplierURL, webName } = form.value
+          // supplierURL = `https://${supplierURL}ah-jiayu.github.io/NewControl/`
+          const params = { id, keyWords, registerExamineOffOrOn, registerOffOrOn, supplierURL, webName }
+          loading.value = true
+          api.edit(params).then(() => {
+            loading.value = false
+            getDataList()
+            ElMessage.success({
+              message: '修改成功',
+              center: true,
+            })
           })
-        })
+        } catch (error) {
+        }
       }
     })
   }
@@ -103,13 +106,7 @@ function onSubmit() {
   <div v-loading="loading">
     <PageHeader title="站点设置管理" />
     <PageMain>
-      <el-form
-        ref="formRef"
-        :model="form"
-        :rules="formRules"
-        label-width="100px"
-        :inline="false"
-      >
+      <el-form ref="formRef" :model="form" :rules="formRules" label-width="100px" :inline="false">
         <el-row :gutter="20">
           <el-col :span="3">
             <el-form-item label="注册开关">

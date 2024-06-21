@@ -1,24 +1,20 @@
-<route lang="yaml">
-meta:
-  enabled: false
-</route>
-
 <script setup lang="ts">
 import { ElMessage, ElMessageBox } from 'element-plus'
 import FormMode from './components/FormMode/index.vue'
 import eventBus from '@/utils/eventBus'
-import apiRole from '@/api/modules/role'
+import api from '@/api/modules/configuration_role'
 import useSettingsStore from '@/store/modules/settings'
 
 defineOptions({
-  name: 'PagesExampleRoleList',
+  name: 'SettingRoleList',
 })
-
+// 路由
 const router = useRouter()
-const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } = usePagination()
+// 分页
+const { pagination, onSortChange } = usePagination()
 const tabbar = useTabbar()
 const settingsStore = useSettingsStore()
-
+// 定义表单
 const data = ref({
   loading: false,
   // 表格是否自适应高度
@@ -34,10 +30,11 @@ const data = ref({
   formModeProps: {
     visible: false,
     id: '',
+    row: {},
   },
   // 搜索
   search: {
-    name: '',
+    title: '',
   },
   // 批量操作
   batch: {
@@ -62,45 +59,30 @@ onBeforeUnmount(() => {
     eventBus.off('get-data-list')
   }
 })
-
+// 获取数据
 function getDataList() {
   data.value.loading = true
-  const params = {
-    ...getParams(),
-    ...(data.value.search.name && { name: data.value.search.name }),
-  }
-  apiRole.list(params).then((res: any) => {
+  api.list().then((res: any) => {
     data.value.loading = false
-    data.value.dataList = res.data.list || []
-    pagination.value.total = res.data.total
+    data.value.dataList = res.data
+    pagination.value.total = res.data.length
   })
 }
-
-// 每页数量切换
-function sizeChange(size: number) {
-  onSizeChange(size).then(() => getDataList())
-}
-
-// 当前页码切换（翻页）
-function currentChange(page = 1) {
-  onCurrentChange(page).then(() => getDataList())
-}
-
 // 字段排序
 function sortChange({ prop, order }: { prop: string, order: string }) {
   onSortChange(prop, order).then(() => getDataList())
 }
-
+// 新增
 function onCreate() {
   if (data.value.formMode === 'router') {
     if (settingsStore.settings.tabbar.enable && settingsStore.settings.tabbar.mergeTabsBy !== 'activeMenu') {
       tabbar.open({
-        name: 'pagesExampleGeneralRoleCreate',
+        name: 'multilevel_menu_exampleRoleCreate',
       })
     }
     else {
       router.push({
-        name: 'pagesExampleGeneralRoleCreate',
+        name: 'multilevel_menu_exampleRoleCreate',
       })
     }
   }
@@ -109,20 +91,12 @@ function onCreate() {
     data.value.formModeProps.visible = true
   }
 }
-
-// 重置筛选数据
-function onReset() {
-  Object.assign(data.value.search, {
-    name: '',
-  })
-  getDataList()
-}
-
+// 修改
 function onEdit(row: any) {
   if (data.value.formMode === 'router') {
     if (settingsStore.settings.tabbar.enable && settingsStore.settings.tabbar.mergeTabsBy !== 'activeMenu') {
       tabbar.open({
-        name: 'pagesExampleGeneralRoleEdit',
+        name: 'multilevel_menu_exampleRoleEdit',
         params: {
           id: row.id,
         },
@@ -130,7 +104,7 @@ function onEdit(row: any) {
     }
     else {
       router.push({
-        name: 'pagesExampleGeneralRoleEdit',
+        name: 'multilevel_menu_exampleRoleEdit',
         params: {
           id: row.id,
         },
@@ -139,78 +113,42 @@ function onEdit(row: any) {
   }
   else {
     data.value.formModeProps.id = row.id
+    data.value.formModeProps.row = JSON.stringify(row)
     data.value.formModeProps.visible = true
   }
 }
-
+// 删除
 function onDel(row: any) {
-  ElMessageBox.confirm(`确认删除「${row.name}」吗？`, '确认信息').then(() => {
-    apiRole.delete(row.id).then(() => {
+  ElMessageBox.confirm(`确认删除「${row.roleName}」吗？`, '确认信息').then(() => {
+    api.delete({id:row.id}).then(() => {
       getDataList()
       ElMessage.success({
-        message: '模拟删除成功',
+        message: '删除成功',
         center: true,
       })
     })
-  }).catch(() => {})
+  }).catch(() => { })
 }
 </script>
 
 <template>
   <div :class="{ 'absolute-container': data.tableAutoHeight }">
     <PageMain>
-      <SearchBar :show-toggle="false">
-        <template #default="{ fold, toggle }">
-          <ElForm :model="data.search" size="default" label-width="100px" inline-message inline class="search-form">
-            <ElFormItem>
-              <ElInput v-model="data.search.name" placeholder="请输入角色名称，支持模糊查询" clearable @keydown.enter="currentChange()" @clear="currentChange()" />
-            </ElFormItem>
-            <ElFormItem>
-              <ElButton type="primary" @click="currentChange()">
-                <template #icon>
-                  <SvgIcon name="i-ep:search" />
-                </template>
-                筛选
-              </ElButton>
-              <ElButton @click="onReset">
-                <template #icon>
-                  <div class="i-grommet-icons:power-reset h-1em w-1em" />
-                </template>
-                重置
-              </ElButton>
-              <ElButton link disabled @click="toggle">
-                <template #icon>
-                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top' " />
-                </template>
-                {{ fold ? '展开' : '收起' }}
-              </ElButton>
-            </ElFormItem>
-          </ElForm>
-        </template>
-      </SearchBar>
-      <ElDivider border-style="dashed" />
       <ElSpace wrap>
         <ElButton type="primary" size="default" @click="onCreate">
           <template #icon>
             <SvgIcon name="i-ep:plus" />
           </template>
-          新增角色
+          新增角色管理
         </ElButton>
-        <ElButton v-if="data.batch.enable" size="default" :disabled="!data.batch.selectionDataList.length">
-          单个批量操作按钮
-        </ElButton>
-        <ElButtonGroup v-if="data.batch.enable">
-          <ElButton size="default" :disabled="!data.batch.selectionDataList.length">
-            批量操作按钮组1
-          </ElButton>
-          <ElButton size="default" :disabled="!data.batch.selectionDataList.length">
-            批量操作按钮组2
-          </ElButton>
-        </ElButtonGroup>
       </ElSpace>
-      <ElTable v-loading="data.loading" class="my-4" :data="data.dataList" stripe highlight-current-row border height="100%" @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
+      <ElTable
+        v-loading="data.loading" class="my-4" :data="data.dataList" stripe highlight-current-row border
+        height="100%" @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event"
+      >
         <ElTableColumn v-if="data.batch.enable" type="selection" align="center" fixed />
-        <ElTableColumn prop="name" label="名称" />
+        <ElTableColumn prop="id" width="200" align="center" label="id" />
+        <ElTableColumn prop="roleName" align="center" label="角色码" />
         <ElTableColumn label="操作" width="250" align="center" fixed="right">
           <template #default="scope">
             <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">
@@ -222,9 +160,11 @@ function onDel(row: any) {
           </template>
         </ElTableColumn>
       </ElTable>
-      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size" :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination" background @size-change="sizeChange" @current-change="currentChange" />
     </PageMain>
-    <FormMode v-if="data.formMode === 'dialog' || data.formMode === 'drawer'" :id="data.formModeProps.id" v-model="data.formModeProps.visible" :mode="data.formMode" @success="getDataList" />
+    <FormMode
+      v-if="data.formMode === 'dialog' || data.formMode === 'drawer'" :id="data.formModeProps.id" v-model="data.formModeProps.visible"
+      :row="data.formModeProps.row" :mode="data.formMode" @success="getDataList"
+    />
   </div>
 </template>
 
@@ -277,5 +217,4 @@ function onDel(row: any) {
     margin-inline: -20px;
   }
 }
-
 </style>
