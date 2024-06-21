@@ -367,12 +367,17 @@ textarea {
     background-color: #fafcfe;
     width: 125px;
     justify-content: center;
+
+    >div {
+      text-align: center;
+      width: 80px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   }
 
-  .el-tabs__active-bar.is-left {
-    // 高亮
-    // display: none;
-  }
+
 
   .el-tabs__nav-wrap.is-left::after {
     width: 0 !important;
@@ -441,5 +446,3 @@ textarea {
 //     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.12) !important;
 //   }
 // }
-
-

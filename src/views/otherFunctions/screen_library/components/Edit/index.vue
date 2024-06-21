@@ -4,8 +4,10 @@ import { ElMessage } from "element-plus";
 import { submitLoading } from "@/utils/apiLoading";
 import api from "@/api/modules/otherFunctions_screenLibrary";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
+import useStagedDataStore from "@/store/modules/stagedData"; // 暂存
 
 const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
+const stagedDataStore = useStagedDataStore(); // 暂存
 const props = defineProps(["id", "countryId", "row"]);
 const countryList = ref<any>([]); //国家
 const emits = defineEmits<{
@@ -48,6 +50,7 @@ async function onSubmit() {
   }
   onCancel();
   emits("success");
+  stagedDataStore.projectManagementList = null;
 }
 // 关闭
 function onCancel() {

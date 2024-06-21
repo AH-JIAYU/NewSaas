@@ -8,12 +8,14 @@ import useSettingsStore from "@/store/modules/settings";
 import Edit from "./components/Edit/index.vue";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
 import useOtherFunctionsScreenLibraryStore from "@/store/modules/otherFunctions_screenLibrary"; //  问卷
+import useStagedDataStore from "@/store/modules/stagedData"; // 暂存
 
 defineOptions({
   name: "OtherFunctionsScreenLibraryList",
 });
 const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
 const otherFunctionsScreenLibraryStore = useOtherFunctionsScreenLibraryStore(); // 问卷
+const stagedDataStore = useStagedDataStore(); // 暂存
 const router = useRouter();
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
@@ -36,6 +38,7 @@ const data = ref<any>({
     visible: false,
     id: "",
     details: "",
+    title: "",
   },
   // 新增
   editProps: {
@@ -57,7 +60,12 @@ const data = ref<any>({
   dataList: [],
   // 国家列表
   countryList: [],
+
+  rules: {
+    categoryName: [{ required: true, message: "请输入标题", trigger: "blur" }],
+  },
 });
+const formRef = ref<any>();
 
 onMounted(async () => {
   getDataList();
@@ -108,18 +116,51 @@ function currentChange(page = 1) {
 function sortChange({ prop, order }: { prop: string; order: string }) {
   onSortChange(prop, order).then(() => getDataList());
 }
-// 添加国家标题
+// 添加国家
 function onCreate(row?: any) {
   data.value.editProps.id = "";
   data.value.editProps.countryId = row ? row.countryId : "";
   data.value.editProps.row = "";
   data.value.editProps.visible = true;
 }
-// 编辑国家标题
-function onEdit(row: any) {
-  data.value.editProps.id = row.projectProblemCategoryId;
-  data.value.editProps.row = JSON.stringify(row);
-  data.value.editProps.visible = true;
+// 新增问卷/标题
+function onCreateTiele(row: any) {
+  row.getProjectProblemCategoryInfoList.push({
+    categoryName: "",
+    countryId: row.countryId,
+    status: 1,
+    isDefault: row.isDefault,
+    type: "add",
+  });
+}
+// 新增
+function handleAdd(row: any, countryIndex: any, index: any) {
+  formRef.value.validateField(
+    `[${countryIndex}].getProjectProblemCategoryInfoList[${index}].categoryName`,
+    async (valid: any) => {
+      if (valid) {
+        // 新增
+        const { data, status } = await submitLoading(api.create(row));
+        status === 1 &&
+          ElMessage.success({
+            message: "新增成功",
+            center: true,
+          });
+        await getDataList();
+      }
+    }
+  );
+  //
+}
+// 关闭新增那一行
+function cancel(row: any, index: number) {
+  const fIndex = data.value.dataList.findIndex(
+    (item: any) => item.countryId === row.countryId
+  );
+  data.value.dataList[fIndex].getProjectProblemCategoryInfoList.splice(
+    index,
+    1
+  );
 }
 // 修改默认
 async function changeIsDefault(item: any) {
@@ -130,6 +171,7 @@ async function changeIsDefault(item: any) {
       center: true,
     });
   getDataList();
+  stagedDataStore.projectManagementList = null;
 }
 // 修改状态
 async function changeStatus(item: any) {
@@ -140,6 +182,7 @@ async function changeStatus(item: any) {
       center: true,
     });
   getDataList();
+  stagedDataStore.projectManagementList = null;
 }
 // 设计模板
 function EditSurvey(row: any) {
@@ -165,7 +208,8 @@ function EditSurvey(row: any) {
     }
   } else {
     data.value.formModeProps.id = row.projectProblemCategoryId;
-    data.value.formModeProps.details = row.details;
+    data.value.formModeProps.details = JSON.stringify(row);
+    data.value.formModeProps.title = row.categoryName;
     data.value.formModeProps.visible = true;
   }
 }
@@ -184,6 +228,7 @@ function onDelCountry(row: any) {
       getDataList();
     })
     .catch(() => {});
+  stagedDataStore.projectManagementList = null;
 }
 // 删除标题
 function onDelProject(row: any) {
@@ -200,6 +245,7 @@ function onDelProject(row: any) {
       getDataList();
     })
     .catch(() => {});
+  stagedDataStore.projectManagementList = null;
 }
 </script>
 
@@ -259,107 +305,157 @@ function onDelProject(row: any) {
           新增前置问卷库
         </ElButton>
       </ElSpace>
-      <ElTable
-        v-loading="data.loading"
-        class="my-4"
-        border
-        stripe
-        :data="DataList"
-        highlight-current-row
-        height="100%"
-        @sort-change="sortChange"
-        @selection-change="data.batch.selectionDataList = $event"
-      >
-        <el-table-column type="expand" width="55">
-          <template #default="{ row }">
-            <div m="4">
-              <div m="4"><h2>该国家下所有问卷</h2></div>
+      <el-form ref="formRef" :rules="data.rules" :model="DataList">
+        <ElTable
+          v-loading="data.loading"
+          class="my-4"
+          border
+          :data="DataList"
+          highlight-current-row
+          height="100%"
+          @sort-change="sortChange"
+          @selection-change="data.batch.selectionDataList = $event"
+          :default-expand-all="true"
+        >
+          <el-table-column type="expand" width="55">
+            <template #default="scopeCountry">
               <el-table
-                :data="row.getProjectProblemCategoryInfoList"
+                :data="scopeCountry.row.getProjectProblemCategoryInfoList"
                 highlight-current-row
                 class="hide-table-header"
+                border
+                height="100%"
+                @sort-change="sortChange"
+                @selection-change="data.batch.selectionDataList = $event"
               >
-                <el-table-column prop="categoryName" label="问卷名称" />
+                <el-table-column width="55" />
+                <el-table-column
+                  width="500"
+                  prop="categoryName"
+                  label="问卷名称"
+                  align="center"
+                >
+                  <template #default="scope">
+                    <template v-if="scope.row.type === 'add'">
+                      <el-form-item
+                        :prop="`[${scopeCountry.$index}].getProjectProblemCategoryInfoList[${scope.$index}].categoryName`"
+                        :rules="data.rules.categoryName"
+                      >
+                        <el-input v-model="scope.row.categoryName"></el-input>
+                      </el-form-item>
+                    </template>
+                    <template v-else>
+                      {{ scope.row.categoryName }}
+                    </template>
+                  </template>
+                </el-table-column>
                 <ElTableColumn prop="status" label="状态">
                   <template #default="scope">
-                    <ElSwitch
-                      @change="changeStatus(scope.row)"
-                      v-model="scope.row.status"
-                      :active-value="1"
-                      :inactive-value="2"
-                    />
+                    <template v-if="scope.row.type === 'add'">
+                      <ElSwitch
+                        v-model="scope.row.status"
+                        :active-value="1"
+                        :inactive-value="2"
+                      />
+                    </template>
+                    <template v-else>
+                      <ElSwitch
+                        @change="changeStatus(scope.row)"
+                        v-model="scope.row.status"
+                        :active-value="1"
+                        :inactive-value="2"
+                      />
+                    </template>
                   </template>
                 </ElTableColumn>
-                <el-table-column prop="createTime" label="创建时间" />
                 <ElTableColumn
                   width="250"
                   align="center"
-                  label="操作"
                   fixed="right"
+                  label="操作"
                 >
                   <template #default="scope">
-                    <ElButton
-                      type="primary"
-                      size="small"
-                      plain
-                      @click="onEdit(scope.row)"
-                    >
-                      编辑
-                    </ElButton>
-                    <ElButton
-                      type="primary"
-                      size="small"
-                      plain
-                      @click="EditSurvey(scope.row)"
-                    >
-                      设计问卷
-                    </ElButton>
-                    <ElButton
-                      type="danger"
-                      size="small"
-                      plain
-                      @click="onDelProject(scope.row)"
-                    >
-                      删除
-                    </ElButton>
+                    <template v-if="scope.row.type === 'add'">
+                      <ElButton
+                        type="primary"
+                        size="small"
+                        plain
+                        @click="
+                          handleAdd(
+                            scope.row,
+                            scopeCountry.$index,
+                            scope.$index
+                          )
+                        "
+                      >
+                        提交
+                      </ElButton>
+                      <ElButton
+                        type="danger"
+                        size="small"
+                        plain
+                        @click="cancel(scope.row, scope.$index)"
+                      >
+                        取消
+                      </ElButton>
+                    </template>
+                    <template v-else>
+                      <ElButton
+                        type="success"
+                        size="small"
+                        plain
+                        @click="EditSurvey(scope.row)"
+                      >
+                        设计问卷
+                      </ElButton>
+                      <ElButton
+                        type="danger"
+                        size="small"
+                        plain
+                        @click="onDelProject(scope.row)"
+                      >
+                        删除
+                      </ElButton>
+                    </template>
                   </template>
                 </ElTableColumn>
               </el-table>
-            </div>
-          </template>
-        </el-table-column>
-        <ElTableColumn prop="countryName" label="国家" />
-        <ElTableColumn prop="isDefault" label="默认">
-          <template #default="scope">
-            <ElSwitch
-              @change="changeIsDefault(scope.row)"
-              v-model="scope.row.isDefault"
-              :active-value="1"
-              :inactive-value="2"
-            />
-          </template>
-        </ElTableColumn>
-        <ElTableColumn label="操作" width="250" align="center" fixed="right">
-          <template #default="scope">
-            <ElButton
-              type="primary"
-              size="small"
-              plain
-              @click="onCreate(scope.row)"
-            >
-              新增问卷
-            </ElButton>
-            <ElButton
-              type="danger"
-              size="small"
-              plain
-              @click="onDelCountry(scope.row)"
-            >
-              删除
-            </ElButton>
-          </template>
-        </ElTableColumn>
-      </ElTable>
+            </template>
+          </el-table-column>
+          <ElTableColumn prop="countryName" label="国家/标题" width="500" />
+          <ElTableColumn prop="isDefault" label="默认/状态">
+            <template #default="scope">
+              <ElSwitch
+                @change="changeIsDefault(scope.row)"
+                v-model="scope.row.isDefault"
+                :active-value="1"
+                :inactive-value="2"
+              />
+            </template>
+          </ElTableColumn>
+          <ElTableColumn label="操作" width="250" align="center" fixed="right">
+            <template #default="scope">
+              <ElButton
+                type="primary"
+                size="small"
+                plain
+                @click="onCreateTiele(scope.row)"
+              >
+                新增问卷
+              </ElButton>
+              <ElButton
+                type="danger"
+                size="small"
+                plain
+                @click="onDelCountry(scope.row)"
+              >
+                删除
+              </ElButton>
+            </template>
+          </ElTableColumn>
+        </ElTable>
+      </el-form>
+
       <ElPagination
         :current-page="pagination.page"
         :total="pagination.total"
@@ -387,12 +483,33 @@ function onDelProject(row: any) {
       v-model="data.formModeProps.visible"
       :mode="data.formMode"
       :details="data.formModeProps.details"
+      :title="data.formModeProps.title"
       @success="getDataList"
     />
   </div>
 </template>
 
 <style lang="scss" scoped>
+:deep {
+  .hide-table-header thead {
+    display: none !important;
+  }
+  td:has(> .hide-table-header) {
+    padding: 0 !important;
+    border: none;
+    tbody > tr:nth-last-of-type(1) {
+      td {
+        border-bottom: none !important;
+      }
+    }
+    .el-table--border .el-table__inner-wrapper:after {
+      height: 0;
+    }
+    .el-table--border:after {
+      width: 0;
+    }
+  }
+}
 .absolute-container {
   position: absolute;
   width: 100%;

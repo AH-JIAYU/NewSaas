@@ -35,7 +35,7 @@ Serializer.addProperty("question", { name: "surveyType" });
 Serializer.addProperty("itemvalue", { name: "surveyId" });
 Serializer.addProperty("itemvalue", { name: "surveyType" });
 
-const props = defineProps(["id", "details"]);
+const props = defineProps(["id", "details", "title"]);
 const emits = defineEmits(["onSubmit"]);
 const loading = ref(true);
 const form = ref({
@@ -174,9 +174,18 @@ onMounted(async () => {
   // #region  获取问卷
   delList.value = [];
   const { data } = await obtainLoading(api.getSurvey(props.id));
-  creator.text = setSurveyType(data.projectJson) || "";
+  let creatorText;
+  if (!data.projectJson) {
+    creatorText = {
+      title: props.title,
+    };
+    creator.text = JSON.stringify(creatorText);
+  } else {
+    creatorText = JSON.parse(data.projectJson);
+    creatorText.title = props.title;
+    creator.text = setSurveyType(JSON.stringify(creatorText));
+  }
   // #endregion
-
   loading.value = false;
 });
 
@@ -185,6 +194,7 @@ defineExpose({
     return new Promise<void>(async (resolve) => {
       const toolboxJSON = ComponentCollection.Instance;
       const toolbox = creator.JSON;
+
       // 获取自定义问题的具体内容
       proces(toolbox, toolboxJSON);
       // 赋值JSON
@@ -195,6 +205,11 @@ defineExpose({
         toolbox.pages,
         locale
       );
+      if (toolbox.title !== props.title) {
+        const data = JSON.parse(props.details);
+        data.categoryName = toolbox.title;
+        submitLoading(api.edit(data));
+      }
       // 删除问题和答案
       if (delList.value.length) {
         await submitLoading(

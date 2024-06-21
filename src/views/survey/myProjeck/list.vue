@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import checkEdit from "./components/checkEdit/index.vue";
 import checkMembershipPrice from "./components/checkMembershipPrice/index.vue";
+import allocationEdit from "./components/AllocationEdit/index.vue";
 import api from "@/api/modules/survey_myProjeck";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
 import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
@@ -62,6 +63,7 @@ const queryForm = reactive<any>({
   endTime: "", //	结束时间
 });
 const list = ref<any>([]);
+const addAllocationEditRef = ref();
 // 详情
 function check(row: any) {
   console.log("详情");
@@ -75,10 +77,14 @@ function membershipPrice(row: any) {
 function tested(row: any) {
   console.log("测查");
 }
+// 分配
+function distribution(row: any) {
+  console.log("分配");
+  addAllocationEditRef.value.showEdit(row);
+}
 
 // 每页数量切换
 function sizeChange(size: number) {
-  console.log(1);
   onSizeChange(size);
 }
 // 当前页码切换（翻页）
@@ -402,6 +408,15 @@ onMounted(async () => {
         <el-table-column align="center" label="操作" width="200">
           <template #default="{ row }">
             <ElSpace>
+              <el-button
+                type="primary"
+                v-if="!row.getMemberGroupNameInfoList.length"
+                plain
+                size="small"
+                @click="distribution(row)"
+              >
+                分配
+              </el-button>
               <el-button type="primary" plain size="small" @click="tested(row)">
                 测查
               </el-button>
@@ -430,6 +445,7 @@ onMounted(async () => {
     </PageMain>
     <checkEdit ref="CheckEditRef" />
     <checkMembershipPrice ref="checkMembershipPriceRef" />
+    <allocationEdit ref="addAllocationEditRef" @fetchData="fetchData" />
   </div>
 </template>
 

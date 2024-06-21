@@ -2,9 +2,7 @@
 import { ElMessage } from "element-plus";
 import { submitLoading, obtainLoading } from "@/utils/apiLoading";
 import api from "@/api/modules/projectManagement";
-import useUserSupplierStore from "@/store/modules/user_supplier"; // 供应商
 import useSurveyVipGroupStore from "@/store/modules/survey_vipGroup"; //会员组
-const supplierStore = useUserSupplierStore(); // 供应商
 const surveyVipGroupStore = useSurveyVipGroupStore(); //会员组
 
 defineOptions({
@@ -16,11 +14,9 @@ const dialogTableVisible = ref(false);
 const formRef = ref<any>(); // ref
 const data = ref<any>({
   list: [], // 表格
-  tenantSupplierList: [], // 供应商
   vipGroupList: [], // 供应商
   form: {
     projectId: "", // 项目id
-    allocationType: 1, //	分配类型:1:自动分配 2:供应商 3:会员组
     groupSupplierIdList: [], //	分配类型为:供应商传供应商id,分配类型为会员组传会员组Id,支持多选
   },
 });
@@ -35,33 +31,18 @@ const rules = ref<any>({
   ],
 });
 // 显隐
-async function showEdit(row: any, type: string) {
+async function showEdit(row: any) {
+  console.log("row", row);
   data.value.list = [{ ...row }]; // 表格
-  // 重新分配
-  if (type === "reassign") {
-    const res = await obtainLoading(
-      api.getProjectAllocation({ projectId: row.projectId })
-    );
-    const { groupSupplierIdSet, ...form } = res.data;
-    data.value.form = form;
-    data.value.form.groupSupplierIdList = groupSupplierIdSet;
-  } else {
-    // 分配
-    data.value.form.projectId = row.projectId; // 项目id
-  }
-  // 供应商列表
-  data.value.tenantSupplierList = await obtainLoading(
-    supplierStore.getTenantSupplierList(row.projectId)
-  );
+
+  // 分配
+  data.value.form.projectId = row.projectId; // 项目id
+
   // 会员组列表
   data.value.vipGroupList = await obtainLoading(
     surveyVipGroupStore.getGroupNameList()
   );
   dialogTableVisible.value = true;
-}
-// 切换分配
-function changeRadio() {
-  data.value.form.groupSupplierIdList = [];
 }
 // 弹框关闭事件
 function closeHandler() {
@@ -70,7 +51,6 @@ function closeHandler() {
   // // 重置表单
   Object.assign(data.value.form, {
     projectId: "",
-    allocationType: 1,
     groupSupplierIdList: [],
   });
   dialogTableVisible.value = false;
@@ -131,42 +111,7 @@ defineExpose({ showEdit });
         :model="data.form"
         :inline="false"
       >
-        <el-form-item label="分配目标">
-          <el-radio-group
-            v-model="data.form.allocationType"
-            class="ml-4"
-            @change="changeRadio"
-          >
-            <el-radio :value="1" size="large"> 自动分配 </el-radio>
-            <el-radio :value="2" size="large"> 供应商 </el-radio>
-            <el-radio :value="3" size="large"> 会员组 </el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item
-          v-if="data.form.allocationType === 2"
-          label="供应商"
-          prop="groupSupplierIdList"
-        >
-          <el-select
-            v-model="data.form.groupSupplierIdList"
-            placeholder="请选择供应商"
-            clearable
-            filterable
-            multiple
-            collapse-tags
-          >
-            <el-option
-              v-for="item in data.tenantSupplierList"
-              :label="item.supplierAccord"
-              :value="item.tenantSupplierId"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item
-          v-if="data.form.allocationType === 3"
-          label="会员组"
-          prop="groupSupplierIdList"
-        >
+        <el-form-item label="会员组" prop="groupSupplierIdList">
           <el-select
             v-model="data.form.groupSupplierIdList"
             placeholder="请选择会员组"

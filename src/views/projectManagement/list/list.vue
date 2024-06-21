@@ -388,12 +388,14 @@ onMounted(async () => {
           prop="clientName"
           align="center"
           label="客户简称/标识"
+          width="100"
         />
         <el-table-column
           v-if="checkList.includes('PCNL')"
           show-overflow-tooltip
           align="center"
           label="参与/完成/配额/限量"
+          width="100"
         >
           <template #default="{ row }">
             {{ row.participation ||0}}/ {{ row.complete ||0}}/ {{ row.num ||0}}/

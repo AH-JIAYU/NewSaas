@@ -30,7 +30,7 @@ const props: any = defineProps({
 
 const activeName = ref("basicSettings"); // tabs
 const formRef = ref<any>(); // Ref 在edit中进行校验
-const fold = ref(false); // 折叠 描述配额
+const fold = ref(!props.tabIndex ? true : false); // 折叠 描述配额
 let data = ref<any>({
   //基础设置
   basicSettings: {
@@ -56,14 +56,14 @@ let data = ref<any>({
 });
 
 // 校验
-const rules = ref<any>({
+const rules = reactive<any>({
   name: [
     { required: true, message: "请输入项目名称", trigger: "blur" },
     { min: 2, max: 50, message: "内容在2-50个字之间", trigger: "blur" },
   ],
   projectIdentification: [
-    { required: true, message: "请输入项目标识", trigger: "blur" },
-    { min: 2, max: 50, message: "内容在2-50个字之间", trigger: "blur" },
+    { max: 100, required: true, message: "请输入项目标识", trigger: "blur" },
+    { min: 2, max: 100, message: "内容在2-100个字之间", trigger: "blur" },
   ],
   countryIdList: [
     {
@@ -79,7 +79,18 @@ const rules = ref<any>({
   ],
   num: [{ required: true, message: "请输入配额", trigger: "blur" }],
   ir: [{ required: true, message: "请输入配额", trigger: "blur" }],
+  "data.configurationInformation.initialProblem.countryId": [
+    { required: true, message: "请选择国家", trigger: "change" },
+  ],
 });
+// 输入框限制 只能输入数字
+const handleInput = (value: any) => {
+  // 允许数字键、删除键、退格键、方向键等
+  if (value.key === ".") {
+    value.preventDefault(); // 阻止非数字键输入
+  }
+};
+
 // 富文本配置
 const plugins = [
   gfm({
@@ -191,9 +202,11 @@ const changeTab = async (val: any, judge?: boolean) => {
           cloneDeep(res.data.projectQuotaQuestionType);
       } else {
         activeName.value = "basicSettings";
-        ElMessage.warning({
-          message: "请先选择所属国家",
-          center: true,
+        nextTick(() => {
+          setTimeout(() => {
+            formRef.value.scrollToField("countryIdList");
+          }); // 延迟一段时间，确保元素已经渲染到DOM中
+          ElMessage.warning({ message: "请先选择所属国家", center: true });
         });
       }
     });
@@ -201,28 +214,34 @@ const changeTab = async (val: any, judge?: boolean) => {
 };
 // 获取题库目录
 const getProjectCategoryList = async () => {
-  // 如果配置中的国家不存在就请求，反正不请
-  if (props.leftTab.data.configurationInformation.initialProblem.countryId) {
-    // 就问卷就用 ,没有再请求
-    if (!props.leftTab.data.configurationInformation.projectCategoryList) {
-      const params = {
-        countryId:
-          props.leftTab.data.configurationInformation.initialProblem.countryId,
-        projectQuotaQuestionType:
-          props.leftTab.data.configurationInformation.initialProblem
-            .projectQuotaQuestionType, //问题类型:1:总控问题 2:租户自己问题
-      };
+  formRef.value.validateField(
+    ["data.configurationInformation.initialProblem.countryId"],
+    async (valid: any) => {
+      // 如果配置中的国家不存在就请求，反正不请
+      if (valid) {
+        // 就问卷就用 ,没有再请求
+        if (!props.leftTab.data.configurationInformation.projectCategoryList) {
+          const params = {
+            countryId:
+              props.leftTab.data.configurationInformation.initialProblem
+                .countryId,
+            projectQuotaQuestionType:
+              props.leftTab.data.configurationInformation.initialProblem
+                .projectQuotaQuestionType, //问题类型:1:总控问题 2:租户自己问题
+          };
 
-      const res = await obtainLoading(api.getProjectCategoryList(params));
-      props.leftTab.data.configurationInformation.projectCategoryList =
-        res.data.getProjectCategoryInfoList;
+          const res = await obtainLoading(api.getProjectCategoryList(params));
+          props.leftTab.data.configurationInformation.projectCategoryList =
+            res.data.getProjectCategoryInfoList;
+        }
+      } else {
+        ElMessage.warning({
+          message: "请先选择国家",
+          center: true,
+        });
+      }
     }
-  } else {
-    ElMessage.warning({
-      message: "请先选择国家",
-      center: true,
-    });
-  }
+  );
 };
 // 根据目录id查询问题和答案表
 const getProjectProblemList = async (id: string | number, judge: boolean) => {
@@ -384,7 +403,11 @@ nextTick(() => {
           <el-row :gutter="20">
             <el-col :span="6">
               <el-form-item label="项目名称" prop="name">
-                <el-input v-model="props.leftTab.name" clearable />
+                <el-input
+                  v-model="props.leftTab.name"
+                  clearable
+                  :maxlength="50"
+                />
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -392,6 +415,7 @@ nextTick(() => {
                 <el-input
                   clearable
                   v-model="props.leftTab.projectIdentification"
+                  :maxlength="100"
                 />
               </el-form-item>
             </el-col>
@@ -457,6 +481,7 @@ nextTick(() => {
                   :max="100"
                   controls-position="right"
                   size="large"
+                  @keydown="handleInput"
                 />
               </el-form-item>
             </el-col>
@@ -481,6 +506,7 @@ nextTick(() => {
                   step-strictly
                   controls-position="right"
                   size="large"
+                  @keydown="handleInput"
                 />
               </el-form-item>
             </el-col>
@@ -691,7 +717,10 @@ nextTick(() => {
           </template>
           <el-row :gutter="20">
             <el-col :span="6">
-              <el-form-item label="选择国家">
+              <el-form-item
+                label="选择国家"
+                prop="data.configurationInformation.initialProblem.countryId"
+              >
                 <el-select
                   v-model="
                     props.leftTab.data.configurationInformation.initialProblem
@@ -830,6 +859,7 @@ nextTick(() => {
                   step-strictly
                   controls-position="right"
                   size="large"
+                  @keydown="handleInput"
                 />
               </el-form-item>
             </el-col>
@@ -843,6 +873,7 @@ nextTick(() => {
                   step-strictly
                   controls-position="right"
                   size="large"
+                  @keydown="handleInput"
                 />
               </el-form-item>
             </el-col>
