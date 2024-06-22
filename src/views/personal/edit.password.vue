@@ -53,7 +53,7 @@ function onSubmit() {
           type: 'success',
           message: '模拟修改成功，请重新登录',
         })
-        userStore.logout()
+        userStore.logout(null)
       })
     }
   })

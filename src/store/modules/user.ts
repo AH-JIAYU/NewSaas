@@ -9,7 +9,7 @@ import type { Settings } from "#/global";
 import apiUser from "@/api/modules/user";
 import storage from "@/utils/storage";
 import settingsDefault from "@/settings";
-
+import api from '@/api/modules/configuration_manager'
 
 const useUserStore = defineStore(
   // 唯一ID
@@ -64,25 +64,51 @@ const useUserStore = defineStore(
       avatar.value = res.data.avatar;
     }
     // 登出
-    async function logout(redirect = router.currentRoute.value.fullPath) {
-      storage.local.remove("account");
-      storage.local.remove("token");
-      storage.local.remove("avatar");
-      account.value = "";
-      token.value = "";
-      avatar.value = "";
-      permissions.value = [];
-      tabbarStore.clean();
-      routeStore.removeRoutes();
-      menuStore.setActived(0);
-      router.push({
-        name: "login",
-        query: {
-          ...(router.currentRoute.value.path !==
-            settingsStore.settings.home.fullPath &&
-            router.currentRoute.value.name !== "login" && { redirect }),
-        },
-      });
+    async function logout(val:any,redirect = router.currentRoute.value.fullPath) {
+      if(val === 0) {
+        storage.local.remove("account");
+        storage.local.remove("token");
+        storage.local.remove("avatar");
+        storage.local.remove("login_account");
+        storage.local.remove("tabbarPinData");
+        account.value = "";
+        token.value = "";
+        avatar.value = "";
+        permissions.value = [];
+        tabbarStore.clean();
+        routeStore.removeRoutes();
+        menuStore.setActived(0);
+        router.push({
+          name: "login",
+          query: {
+            ...(router.currentRoute.value.path !==
+              settingsStore.settings.home.fullPath &&
+              router.currentRoute.value.name !== "login" && { redirect }),
+          },
+        });
+      }else {
+        await api.logout()
+        storage.local.remove("account");
+        storage.local.remove("token");
+        storage.local.remove("avatar");
+        storage.local.remove("login_account");
+        storage.local.remove("tabbarPinData");
+        account.value = "";
+        token.value = "";
+        avatar.value = "";
+        permissions.value = [];
+        tabbarStore.clean();
+        routeStore.removeRoutes();
+        menuStore.setActived(0);
+        router.push({
+          name: "login",
+          query: {
+            ...(router.currentRoute.value.path !==
+              settingsStore.settings.home.fullPath &&
+              router.currentRoute.value.name !== "login" && { redirect }),
+          },
+        });
+      }
     }
     // 获取权限
     async function getPermissions() {

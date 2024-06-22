@@ -9,4 +9,6 @@ export default {
   edit: (data: any) => api.post('staff/updateStaff', data),
   // 删除
   delete: (data:any) => api.post('staff/deleteStaff', data),
+  // 员工退出登录
+  logout: () => api.post('staff/logout'),
 }
