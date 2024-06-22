@@ -51,7 +51,8 @@ const creatorOptions: ICreatorOptions = {
 };
 let creator: any;
 onMounted(async () => {
-  // 清空问题
+  console.log('creatorOptions',creatorOptions)
+  // 清空自定义问题
   ComponentCollection.Instance.clear();
   // #region 模板
   const res = await obtainLoading(customComponents());

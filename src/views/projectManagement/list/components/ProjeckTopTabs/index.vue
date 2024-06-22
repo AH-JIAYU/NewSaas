@@ -55,6 +55,16 @@ let data = ref<any>({
   },
 });
 
+// 自定义校验邮箱
+const validateUrlRegistered = (rule: any, value: any, callback: any) => {
+  const regExpUrl: any =
+    /^(((ht|f)tps?):\/\/)?([^!@#$%^&*?.\s-]([^!@#$%^&*?.\s]{0,63}[^!@#$%^&*?.\s])?\.)+[a-z]{2,6}\/?/;
+  if (!regExpUrl.test(props.leftTab.uidUrl)) {
+    callback(new Error("请输入合法网址"));
+  } else {
+    callback();
+  }
+};
 // 校验
 const rules = reactive<any>({
   name: [
@@ -73,7 +83,10 @@ const rules = reactive<any>({
     },
   ],
   clientId: [{ required: true, message: "请选择所属客户", trigger: "change" }],
-  uidUrl: [{ required: true, message: "请输入UidUrl", trigger: "blur" }],
+  uidUrl: [
+    { required: true, message: "请输入UidUrl", trigger: "blur" },
+    { validator: validateUrlRegistered, trigger: "blur" },
+  ],
   doMoneyPrice: [
     { required: true, message: "请输入原价(美元)", trigger: "blur" },
   ],
@@ -794,7 +807,7 @@ nextTick(() => {
                     placeholder="输入框无法设置"
                   ></el-input>
                   <!-- 2单选 值为‘’-->
-                  <el-radio-group
+                  <!-- <el-radio-group
                     v-else-if="item.questionType === 2"
                     :modelValue="customModel(item.id, index).get()"
                     @update:modelValue="customModel(item.id, index).set($event)"
@@ -807,10 +820,10 @@ nextTick(() => {
                     >
                       {{ ite.anotherName }}
                     </el-radio>
-                  </el-radio-group>
+                  </el-radio-group> -->
                   <!-- 3多选 值为[]-->
                   <el-checkbox-group
-                    v-else-if="item.questionType === 3"
+                    v-else
                     :modelValue="customModel(item.id, index).get()"
                     @update:modelValue="customModel(item.id, index).set($event)"
                     @change="setAnswerValue(3, index)"
@@ -822,7 +835,7 @@ nextTick(() => {
                     />
                   </el-checkbox-group>
                   <!-- 4下拉 值为[] -->
-                  <el-select
+                  <!-- <el-select
                     v-else-if="item.questionType === 4"
                     :modelValue="customModel(item.id, index).get()"
                     @update:modelValue="customModel(item.id, index).set($event)"
@@ -836,7 +849,7 @@ nextTick(() => {
                       :value="ite.id"
                       v-for="ite in item.getProjectAnswerInfoList"
                     />
-                  </el-select>
+                  </el-select> -->
                 </el-form-item>
               </el-col>
             </el-row>
