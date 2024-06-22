@@ -97,7 +97,7 @@ nextTick(() => {
     provide(`formRef${index}`, formRef);
   });
 });
- 
+
 // , staging, showEdit
 defineExpose({ activeLeftTab });
 </script>

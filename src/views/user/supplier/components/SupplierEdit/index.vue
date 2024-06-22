@@ -40,11 +40,12 @@ async function showEdit(row: any) {
         tenantSupplierId: row.tenantSupplierId,
       })
     );
+    data.countryType = data.subordinateCountryId === '343' ? 1 : 2;
     initializeLeftTabsData(data);
   }
   validateAll.value = [];
   drawerisible.value = true;
-  supplierStore.TenantSupplierList=null
+  supplierStore.TenantSupplierList = null;
 }
 // 清空现有数据
 function initializeLeftTabsData(data: any) {
@@ -100,7 +101,7 @@ async function save() {
       if (title.value === "添加") {
         const dataList = {
           addTenantSupplierInfoList: leftTabsData,
-        }; 
+        };
         const { status } = await submitLoading(api.create(dataList));
         status === 1 &&
           ElMessage.success({

@@ -105,10 +105,10 @@ function initializeLeftTabsData(data: any) {
     item.projectQuotaInfoList.forEach((ite: any) => {
       // 1 输入框 2单选 3复选 4下拉
       // 单选时 将数组转换成字符串
-      ite.projectAnswerIdList =
-        ite.questionType === 2
-          ? ite.projectAnswerIdList[0]
-          : ite.projectAnswerIdList;
+      // ite.projectAnswerIdList =
+      //   ite.questionType === 2
+      //     ? ite.projectAnswerIdList[0]
+      //     : ite.projectAnswerIdList;
     });
   });
 }
@@ -154,10 +154,10 @@ const processingData = () => {
   masterData.projectQuotaInfoList = masterData.projectQuotaInfoList.map(
     (item: any) => {
       if (!Array.isArray(item.answerValueList)) {
-        item.answerValueList = [item.answerValueList];
+        item.answerValueList = [];
       }
       if (!Array.isArray(item.projectAnswerIdList)) {
-        item.projectAnswerIdList = [item.projectAnswerIdList];
+        item.projectAnswerIdList = [];
       }
       return item;
     }
@@ -171,10 +171,10 @@ const processingData = () => {
     element.projectQuotaInfoList = element.projectQuotaInfoList.map(
       (item: any) => {
         if (!Array.isArray(item.answerValueList)) {
-          item.answerValueList = [item.answerValueList];
+          item.answerValueList = [];
         }
         if (!Array.isArray(item.projectAnswerIdList)) {
-          item.projectAnswerIdList = [item.projectAnswerIdList];
+          item.projectAnswerIdList = [];
         }
         return item;
       }
