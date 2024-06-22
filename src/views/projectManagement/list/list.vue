@@ -2,7 +2,7 @@
 import allocationEdit from "./components/AllocationEdit/index.vue";
 import ProjeckEdit from "./components/ProjeckEdit/index.vue";
 import ProjectDetail from "./components/ProjectDetails/index.vue";
-import scheduling from "@/views/projectManagement/scheduling/components/Edit/index.vue";//项目调度
+import scheduling from "@/views/projectManagement/scheduling/components/Edit/index.vue"; //项目调度
 import { ElMessage, ElMessageBox } from "element-plus";
 import api from "@/api/modules/projectManagement";
 import { obtainLoading, submitLoading } from "@/utils/apiLoading";
@@ -16,8 +16,6 @@ const projectManagementListStore = useProjectManagementListStore(); //项目
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
 
-pagination.value.size = 5;
-pagination.value.sizes = [5, 10, 20, 50];
 defineOptions({
   name: "ProjectManagementListIndex",
 });
@@ -398,8 +396,9 @@ onMounted(async () => {
           width="100"
         >
           <template #default="{ row }">
-            {{ row.participation ||0}}/ {{ row.complete ||0}}/ {{ row.num ||0}}/
-            {{ row.limitedQuantity ||0}}
+            {{ row.participation || 0 }}/ {{ row.complete || 0 }}/
+            {{ row.num || 0 }}/
+            {{ row.limitedQuantity || 0 }}
           </template>
         </el-table-column>
         <el-table-column

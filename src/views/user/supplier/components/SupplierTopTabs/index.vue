@@ -31,6 +31,50 @@ const rules = reactive<any>({
     { required: true, message: "请选择供应商等级", trigger: "change" },
   ],
 });
+// 自定义校验手机号
+const validatePhone = (rule: any, value: any, callback: any) => {
+  const regExpPhone: any =
+    /^(?:(?:\+|00)86)?1(?:(?:3[\d])|(?:4[5-79])|(?:5[0-35-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\d])|(?:9[189]))\d{8}$/;
+  if (!regExpPhone.test(props.leftTab.supplierPhone)) {
+    //
+    callback(new Error("请输入合法手机号"));
+  } else {
+    callback();
+  }
+};
+// 自定义校验邮箱
+const validateEmail = (rule: any, value: any, callback: any) => {
+  const regExpEmail: any =
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  if (!regExpEmail.test(props.leftTab.emailAddress)) {
+    callback(new Error("请输入合法邮箱"));
+  } else {
+    callback();
+  }
+};
+// 动态添加校验
+const changeCountryId = (val: any) => {
+  if (val) {
+    props.leftTab.countryType = val === "343" ? 1 : 2;
+    if (val === "343") {
+      if (rules.emailAddress) {
+        delete rules.emailAddress;
+      }
+      rules.supplierPhone = [
+        { required: true, message: "请输入手机号码", trigger: "blur" },
+        { validator: validatePhone, trigger: "blur" },
+      ];
+    } else {
+      if (rules.supplierPhone) {
+        delete rules.supplierPhone;
+      }
+      rules.emailAddress = [
+        { required: true, message: "请输入邮箱", trigger: "blur" },
+        { validator: validateEmail, trigger: "blur" },
+      ];
+    }
+  }
+};
 // 需要用到的数据
 const data = reactive<any>({
   relatedCustomers: [], // 关联客户
@@ -43,6 +87,7 @@ const activeName = ref("basicSettings");
 onMounted(async () => {
   data.relatedCustomers = await customerStore.getCustomerList();
   data.countryList = await basicDictionaryStore.getCountry();
+  changeCountryId(props.leftTab.subordinateCountryId);
 });
 nextTick(() => {
   // 表单验证方法
@@ -58,6 +103,7 @@ nextTick(() => {
           :rules="rules"
           :model="props.leftTab"
           label-width="100px"
+          :validate-on-rule-change="false"
         >
           <el-card class="box-card">
             <template #header>
@@ -77,6 +123,7 @@ nextTick(() => {
                     clearable
                     filterable
                     v-model="props.leftTab.subordinateCountryId"
+                    @change="changeCountryId"
                   >
                     <el-option
                       v-for="item in data.countryList"
@@ -100,12 +147,12 @@ nextTick(() => {
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="手机号码">
+                <el-form-item label="手机号码" prop="supplierPhone">
                   <el-input clearable v-model="props.leftTab.supplierPhone" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="电子邮箱">
+                <el-form-item label="电子邮箱" prop="emailAddress">
                   <el-input clearable v-model="props.leftTab.emailAddress" />
                 </el-form-item>
               </el-col>

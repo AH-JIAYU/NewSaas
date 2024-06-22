@@ -47,6 +47,7 @@ const columns = ref<any>([
   { prop: "memberPrice", label: "会员价", sortabel: true, checked: true },
   { prop: "ir", label: "IR/NIR", sortabel: true, checked: true },
   { prop: "countryNameList", label: "国家地区", sortabel: true, checked: true },
+  { prop: "memberStatus", label: "分配状态", sortabel: true, checked: true },
   { prop: "memberGroupName", label: "分配目标", sortabel: true, checked: true },
   { prop: "createTime", label: "创建时间", sortabel: true, checked: true },
 ]);
@@ -229,7 +230,7 @@ onMounted(async () => {
               />
             </el-form-item>
             <ElFormItem>
-              <ElButton type="primary" @click="currentChange()">
+              <ElButton type="primary" @click="fetchData()">
                 <template #icon>
                   <SvgIcon name="i-ep:search" />
                 </template>
@@ -332,13 +333,15 @@ onMounted(async () => {
         >
           <template #default="{ row }">
             <el-link
+              v-if="row.getMemberGroupNameInfoList.length"
               size="small"
               plain
               type="primary"
               @click="membershipPrice(row)"
             >
-              会员价
+              查看
             </el-link>
+            <el-text v-else> - </el-text>
           </template>
         </el-table-column>
         <el-table-column
@@ -380,13 +383,34 @@ onMounted(async () => {
           </template>
         </el-table-column>
         <el-table-column
+          v-if="checkList.includes('memberStatus')"
+          show-overflow-tooltip
+          align="center"
+          label="分配状态"
+        >
+          <template #default="{ row }">
+            <el-text
+              type="primary"
+              v-if="row.getMemberGroupNameInfoList.length"
+            >
+              已分配
+            </el-text>
+            <el-text v-else> 未分配 </el-text>
+          </template>
+        </el-table-column>
+        <el-table-column
           v-if="checkList.includes('memberGroupName')"
           show-overflow-tooltip
           align="center"
           label="分配目标"
         >
           <template #default="{ row }">
-            <el-tooltip class="box-item" effect="dark" placement="top">
+            <el-tooltip
+              class="box-item"
+              effect="dark"
+              placement="top"
+              v-if="row.getMemberGroupNameInfoList.length"
+            >
               <template #content>
                 <div v-for="item in row.getMemberGroupNameInfoList">
                   {{ item.memberGroupName }}-{{ item.memberGroupId }}
@@ -396,6 +420,8 @@ onMounted(async () => {
                 row.getMemberGroupNameInfoList.length
               }}</el-link>
             </el-tooltip>
+
+            <el-link v-else>-</el-link>
           </template>
         </el-table-column>
         <el-table-column

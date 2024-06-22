@@ -22,6 +22,7 @@ const useUserSupplierStore = defineStore(
     const initialTopTabsData = {
       supplierAccord: "",
       // subordinateCountryId: "", // 所属国家id
+      countryType: '',
       // supplierLevelId: "", // 供应商等级
       // supplierName: "",   // 供应商姓名
       // supplierPhone: "", // 手机号

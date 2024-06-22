@@ -165,6 +165,11 @@ const getUpLoad = async (file: any) => {
 };
 // #endregion
 
+// 切换问卷如果关 清空问卷list
+const changeProfile = (val: any) => {
+  if (val === 2) props.leftTab.projectQuotaInfoList = [];
+};
+
 // 所属国家改变重新获取 配置信息中的国家
 const changeCountryId = () => {
   props.leftTab.data.configurationInformation.configurationCountryList = null;
@@ -658,6 +663,7 @@ nextTick(() => {
                   :active-value="1"
                   :inactive-value="2"
                   v-model="props.leftTab.isProfile"
+                  @change="changeProfile"
                 />
               </el-form-item>
             </el-col>
