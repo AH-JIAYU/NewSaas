@@ -20,7 +20,7 @@ const useProjectManagementListStore = defineStore(
       isOnline: 1, //	是否在线:1:在线 2:不在线
       isProfile: 2, //	是否资料:1:资料 2:不资料
       isB2b: 1, //是否b2b:1:不是 2:是
-      projectType: "", //当b2b为是的时候需要项目类型
+      projectType: [], //当b2b为是的时候需要项目类型
       projectRemark: "", //	项目备注-仅针对租户pm查看
       isTimeReleases: 1, //	是否定时发布:1:不是 2:是
       releaseTime: "", //	如果选择定时发布,需要传入发布时间

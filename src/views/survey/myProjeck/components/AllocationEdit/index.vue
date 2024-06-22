@@ -17,6 +17,7 @@ const data = ref<any>({
   vipGroupList: [], // 供应商
   form: {
     projectId: "", // 项目id
+    allocationType: 3, // 会员组固定
     groupSupplierIdList: [], //	分配类型为:供应商传供应商id,分配类型为会员组传会员组Id,支持多选
   },
 });
@@ -32,7 +33,6 @@ const rules = ref<any>({
 });
 // 显隐
 async function showEdit(row: any) {
-  console.log("row", row);
   data.value.list = [{ ...row }]; // 表格
 
   // 分配
@@ -88,12 +88,6 @@ defineExpose({ showEdit });
         <el-table-column
           align="center"
           show-overflow-tooltip
-          label="客户简称"
-          prop="clientName"
-        />
-        <el-table-column
-          align="center"
-          show-overflow-tooltip
           label="项目编码"
           prop="projectId"
         />
@@ -101,8 +95,19 @@ defineExpose({ showEdit });
           align="center"
           show-overflow-tooltip
           label="项目名称"
-          prop="name"
+          prop="projectName"
         />
+        <el-table-column
+          align="center"
+          show-overflow-tooltip
+          label="配额/限量"
+          prop="name"
+        >
+          <template #default="{ row }">
+            {{ row.limitedQuantity || 0 }}/
+            {{ row.num || 0 }}
+          </template>
+        </el-table-column>
       </el-table>
       <el-form
         ref="formRef"

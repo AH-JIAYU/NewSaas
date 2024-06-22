@@ -42,7 +42,7 @@ const useBasicDictionaryStore = defineStore(
     // 获取项目类别下的children
     const getB2BTypeItemChildren = async (id: any) => {
       const data = findDataById(B2BType.value, id);
-      if ("children" in data && !data.children && !data.leaf) {
+      if (data && "children" in data && !data.children && !data.leaf) {
         const params: any = {
           page: 1,
           limit: -1,

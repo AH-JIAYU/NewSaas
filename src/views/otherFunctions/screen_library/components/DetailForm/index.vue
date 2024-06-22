@@ -35,6 +35,7 @@ Serializer.addProperty("question", { name: "surveyType" });
 Serializer.addProperty("itemvalue", { name: "surveyId" });
 Serializer.addProperty("itemvalue", { name: "surveyType" });
 
+
 const props = defineProps(["id", "details", "title"]);
 const emits = defineEmits(["onSubmit"]);
 const loading = ref(true);
@@ -51,7 +52,8 @@ const creatorOptions: ICreatorOptions = {
 };
 let creator: any;
 onMounted(async () => {
-  console.log('creatorOptions',creatorOptions)
+  // console.log("creatorOptions", creatorOptions);
+  // console.log("Serializer", Serializer);
   // 清空自定义问题
   ComponentCollection.Instance.clear();
   // #region 模板

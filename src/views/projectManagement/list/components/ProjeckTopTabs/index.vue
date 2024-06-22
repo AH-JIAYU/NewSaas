@@ -46,9 +46,8 @@ let data = ref<any>({
       label: "chineseName",
       lazy: true, // 动态加载
       async lazyLoad(node: any, resolve: any) {
-        const nodes = await basicDictionaryStore.getB2BTypeItemChildren(
-          node.value
-        );
+        const nodes =
+          (await basicDictionaryStore.getB2BTypeItemChildren(node.value)) || [];
         resolve(nodes);
       },
     },
