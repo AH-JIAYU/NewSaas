@@ -243,6 +243,7 @@ const getProjectCategoryList = async () => {
           };
 
           const res = await obtainLoading(api.getProjectCategoryList(params));
+
           props.leftTab.data.configurationInformation.projectCategoryList =
             res.data.getProjectCategoryInfoList;
         }
@@ -258,47 +259,49 @@ const getProjectCategoryList = async () => {
 // 根据目录id查询问题和答案表
 const getProjectProblemList = async (id: string | number, judge: boolean) => {
   if (id) {
-    const { projectProblemCategoryName, ...params } =
-      props.leftTab.data.configurationInformation.projectCategoryList.find(
-        (item: any) => item.projectProblemCategoryId === id
-      );
-    const res = await obtainLoading(api.getProjectProblemList(params));
-    //问题列表 - 显示的数据
-    props.leftTab.data.configurationInformation.ProjectProblemInfoList =
-      res.data.getProjectProblemInfoList;
-    // 判断 编辑回显时 无需重置数据
-    if (!judge) {
-      // 问题列表 - 提交的数据
-      for (
-        let i = 0;
-        i <
-        props.leftTab.data.configurationInformation.ProjectProblemInfoList
-          .length;
-        i++
-      ) {
-        const item = cloneDeep(
-          props.leftTab.data.configurationInformation.initialProblem
+    setTimeout(async () => {
+      const { projectProblemCategoryName, ...params } =
+        props.leftTab.data.configurationInformation.projectCategoryList.find(
+          (item: any) => item.projectProblemCategoryId === id
         );
-        // 问题id
-        item.projectProblemId =
-          props.leftTab.data.configurationInformation.ProjectProblemInfoList[
-            i
-          ].id;
-        // 问题
-        item.keyValue =
-          props.leftTab.data.configurationInformation.ProjectProblemInfoList[
-            i
-          ].question;
-        // 问题类型
-        item.questionType =
-          props.leftTab.data.configurationInformation.ProjectProblemInfoList[
-            i
-          ].questionType;
-        // 目录id
-        item.projectProblemCategoryId = id;
-        props.leftTab.projectQuotaInfoList.push(item);
+      const res = await obtainLoading(api.getProjectProblemList(params));
+      //问题列表 - 显示的数据
+      props.leftTab.data.configurationInformation.ProjectProblemInfoList =
+        res.data.getProjectProblemInfoList;
+      // 判断 编辑回显时 无需重置数据
+      if (!judge) {
+        // 问题列表 - 提交的数据
+        for (
+          let i = 0;
+          i <
+          props.leftTab.data.configurationInformation.ProjectProblemInfoList
+            .length;
+          i++
+        ) {
+          const item = cloneDeep(
+            props.leftTab.data.configurationInformation.initialProblem
+          );
+          // 问题id
+          item.projectProblemId =
+            props.leftTab.data.configurationInformation.ProjectProblemInfoList[
+              i
+            ].id;
+          // 问题
+          item.keyValue =
+            props.leftTab.data.configurationInformation.ProjectProblemInfoList[
+              i
+            ].question;
+          // 问题类型
+          item.questionType =
+            props.leftTab.data.configurationInformation.ProjectProblemInfoList[
+              i
+            ].questionType;
+          // 目录id
+          item.projectProblemCategoryId = id;
+          props.leftTab.projectQuotaInfoList.push(item);
+        }
       }
-    }
+    });
   }
 };
 // 设置 问题的答案和答案id  type: 1 输入框 2单选 3复选 4下拉
@@ -309,18 +312,18 @@ const setAnswerValue = (type: number, index: number) => {
   const answerList: any =
     props.leftTab.data.configurationInformation.ProjectProblemInfoList[index]
       .getProjectAnswerInfoList;
-  if (type == 2) {
-    // 单选 id 为 ""
-    id = [id];
-  }
+  // if (type == 2) {
+  //   // 单选 id 为 ""
+  //   id = [id];
+  // }
   const filteredData = answerList.filter((item: any) => id.includes(item.id));
   props.leftTab.projectQuotaInfoList[index].answerValueList = filteredData.map(
     (item: any) => item.anotherName
   );
-  if (type == 2) {
-    props.leftTab.projectQuotaInfoList[index].answerValueList =
-      props.leftTab.projectQuotaInfoList[index].answerValueList[0];
-  }
+  // if (type == 2) {
+  //   props.leftTab.projectQuotaInfoList[index].answerValueList =
+  //     props.leftTab.projectQuotaInfoList[index].answerValueList[0];
+  // }
 };
 
 // 获取 客户 国家 项目类型
@@ -342,11 +345,13 @@ const showProjectQuotaInfoList = async () => {
       props.leftTab.projectQuotaInfoList[0].projectProblemCategoryId; // 问卷id
     await changeTab("configurationInformation", true);
     await getProjectCategoryList();
-    await getProjectProblemList(
-      props.leftTab.data.configurationInformation.initialProblem
-        .projectProblemCategoryId,
-      true
-    );
+    setTimeout(async () => {
+      await getProjectProblemList(
+        props.leftTab.data.configurationInformation.initialProblem
+          .projectProblemCategoryId,
+        true
+      );
+    }, 100);
   }
 };
 /**
