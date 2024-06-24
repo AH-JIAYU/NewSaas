@@ -1,146 +1,235 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
-import { Plus } from '@element-plus/icons-vue'
-import Edit from './components/Edit/index.vue'
-import Delete from './components/Delete/index.vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+import FormMode from './components/FormMode/index.vue'
+import eventBus from '@/utils/eventBus'
+import api from '@/api/modules/announcement'
+import useSettingsStore from '@/store/modules/settings'
 
 defineOptions({
-  name: 'OtherFunctionsAnnouncementIndex',
+  name: 'MyBillList',
 })
-
-const { pagination, onSizeChange, onCurrentChange } = usePagination() // 分页
+// 国际化
+const router = useRouter()
 // 分页
-const tableSortRef = ref('')
-// loading加载
-const listLoading = ref<boolean>(true)
-// 获取组件变量
-const deleteRef = ref()
-const editRef = ref()
-// 右侧工具栏配置变量
-const tableAutoHeight = ref(false) // 表格控件-高度自适应
-const checkList = ref([])
-const border = ref(true)
-const isFullscreen = ref(false)
-const lineHeight = ref<any>('default')
-const stripe = ref(false)
-const selectRows = ref<any>([])
+const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } = usePagination()
+const tabbar = useTabbar()
+const settingsStore = useSettingsStore()
+// 表格控件-展示列
 const columns = ref([
   {
-    label: '选择渠道',
-    prop: 'ID',
+    label: '等级名称',
+    prop: 'a',
     sortable: true,
-    // 不可改变的
-    disableCheck: true,
+    // 不可更改
+    disableCheck: false,
+    // 默认展示
     checked: true,
   },
 ])
-// 查询参数
-const queryForm = reactive<any>({
-  pageNo: 1,
-  pageSize: 10,
-  title: '',
-  order: {
-    id: 'ASC',
+// 筛选类型
+const typeI = ref()
+// 定义数据
+const data = ref<any>({
+  loading: false,
+  // 表格是否自适应高度
+  tableAutoHeight: false,
+  // 表格控件-是否展示边框
+  border: true,
+  // 表格控件-是否展示斑马条
+  stripe: false,
+  // 表格控件-控制表格大小
+  lineHeight: 'default',
+  checkList: [],
+  /**
+   * 详情展示模式
+   * router 路由跳转
+   * dialog 对话框
+   * drawer 抽屉
+   */
+  formMode: 'drawer' as 'router' | 'dialog' | 'drawer',
+  // 详情
+  formModeProps: {
+    visible: false,
+    id: '',
+    row: '',
   },
-  select: {},
-})
-const list = ref<any>([])
-// 新增
-function addData() {
-  editRef.value.showEdit()
-}
-// 编辑数据
-function editData(row: any) {
-  if (!selectRows.value.length) { editRef.value.showEdit(row) }
-}
-// 删除数据
-function deleteData(row: any) {
-  deleteRef.value.showEdit(row)
-}
-// 右侧工具方法
-function clickFullScreen() {
-  isFullscreen.value = !isFullscreen.value
-}
-// 获取列表选中数据
-function setSelectRows(value: any) {
-  selectRows.value = value
-}
-// 重置数据
-function onReset() {
-  Object.assign(queryForm, {
-    pageNo: 1,
-    pageSize: 10,
+  // 搜索
+  search: {
     title: '',
-    order: {
-      id: 'ASC',
-    },
-    select: {},
+    type: null,
+  },
+  // 批量操作
+  batch: {
+    enable: false,
+    selectionDataList: [],
+  },
+  // 列表数据
+  dataList: [],
+})
+// 类型
+const type = [
+  { label: '公告', value: 1 },
+  { label: '常见问题', value: 2 },
+  { label: '帮助', value: 3 },
+]
+// 获取数据
+function getDataList() {
+  data.value.loading = true
+  const params = {
+    ...getParams(),
+    ...data.value.search,
+  }
+  api.list(params).then((res: any) => {
+    data.value.loading = false
+    data.value.dataList = res.data
+    pagination.value.total = res.data.length
   })
 }
+
+// 重置筛选数据
+function onReset() {
+  Object.assign(data.value.search, {
+    title: '',
+    type: null,
+  })
+  getDataList()
+}
+
 // 每页数量切换
 function sizeChange(size: number) {
-  onSizeChange(size).then(() => fetchData())
+  onSizeChange(size).then(() => getDataList())
 }
+
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
-  onCurrentChange(page).then(() => fetchData())
+  onCurrentChange(page).then(() => getDataList())
 }
-async function fetchData() {
-  listLoading.value = true
-  // const { data } = await getList(queryForm)
-  // list.value = data[0]
-  // total.value = data[0].length
-  list.value = [
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-  ]
-  pagination.value.total = 3
-  listLoading.value = false
+
+// 字段排序
+function sortChange({ prop, order }: { prop: string, order: string }) {
+  onSortChange(prop, order).then(() => getDataList())
 }
+// 新增
+function onCreate() {
+  if (data.value.formMode === 'router') {
+    tabbar.open({
+      name: 'pagesExampleGeneralManagerCreate',
+    })
+  }
+  else {
+    data.value.formModeProps.id = ''
+    data.value.formModeProps.row = ''
+    data.value.formModeProps.visible = true
+  }
+}
+// 修改
+function onEdit(row: any) {
+  if (data.value.formMode === 'router') {
+    if (settingsStore.settings.tabbar.enable && settingsStore.settings.tabbar.mergeTabsBy !== 'activeMenu') {
+      tabbar.open({
+        name: 'surveyEdit',
+        params: {
+          id: row.id,
+        },
+      })
+    }
+    else {
+      router.push({
+        name: 'surveyEdit',
+        params: {
+          id: row.id,
+        },
+      })
+    }
+  }
+  else {
+    data.value.formModeProps.id = row.id
+    data.value.formModeProps.row = row
+    data.value.formModeProps.visible = true
+  }
+}
+// 开关事件
+function onChangeStatus(row: any) {
+  return new Promise<boolean>((resolve) => {
+    ElMessageBox.confirm(`确认${row.top ? '开启置顶' : '关闭置顶'}「${row.title}」吗？`, '确认信息').then(() => {
+      data.value.loading = true
+      api.edit({
+        id: row.id,
+        top: row.top,
+      }).then(() => {
+        ElMessage.success({
+          message: `${row.top ? '开启置顶' : '关闭置顶'}成功`,
+          center: true,
+        })
+        getDataList()
+        data.value.loading = false
+        return resolve(true)
+      }).catch(() => {
+        getDataList()
+        data.value.loading = false
+        return resolve(false)
+      })
+    }).catch(() => {
+      getDataList()
+      return resolve(false)
+    })
+  })
+}
+// 删除
+function onDel(row: any) {
+  ElMessageBox.confirm(`确认删除「${row.title}」吗？`, '确认信息').then(() => {
+    data.value.loading = true
+    api.delete({ id: row.id }).then(() => {
+      data.value.loading = false
+      getDataList()
+      ElMessage.success({
+        message: '删除成功',
+        center: true,
+      })
+    })
+  }).catch(() => { })
+}
+
 onMounted(() => {
-  fetchData()
+  getDataList()
+  if (data.value.formMode === 'router') {
+    eventBus.on('get-data-list', () => {
+      getDataList()
+    })
+  }
+})
+
+onBeforeUnmount(() => {
+  if (data.value.formMode === 'router') {
+    eventBus.off('get-data-list')
+  }
 })
 </script>
 
 <template>
-  <div
-    :class="{
-      'absolute-container': tableAutoHeight,
-    }"
-  >
+  <div :class="{ 'absolute-container': data.tableAutoHeight }">
     <PageMain>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
-          <el-form
-            :model="queryForm.select"
-            size="default"
-            label-width="100px"
-            inline-message
-            inline
-            class="search-form"
-          >
+          <ElForm :model="data.search" size="default" label-width="100px" inline-message inline class="search-form">
+            <ElFormItem label="">
+              <ElInput v-model="data.search.title" placeholder="请输入标题" clearable @keydown.enter="currentChange()"
+                @clear="currentChange()" />
+            </ElFormItem>
             <el-form-item label="">
-              <el-input placeholder="请输入标题" />
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-select
-                value-key=""
-                placeholder="所有"
-                clearable
-                filterable
-                @change=""
-              />
+              <el-select v-model="data.search.type" value-key="" placeholder="请选择类型" clearable filterable>
+                <el-option v-for="item in type" :key="item.value" :label="item.label" :value="item.value" />
+              </el-select>
             </el-form-item>
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">
                 <template #icon>
                   <SvgIcon name="i-ep:search" />
                 </template>
-                筛选
+                {{ "筛选" }}
               </ElButton>
               <ElButton @click="onReset">
                 <template #icon>
@@ -150,107 +239,72 @@ onMounted(() => {
               </ElButton>
               <ElButton disabled link @click="toggle">
                 <template #icon>
-                  <SvgIcon
-                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
-                  />
+                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
                 </template>
                 {{ fold ? "展开" : "收起" }}
               </ElButton>
             </ElFormItem>
-          </el-form>
+          </ElForm>
         </template>
       </SearchBar>
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>
-          <el-button
-            style="margin-right: 10px"
-            :icon="Plus"
-            type="primary"
-            size="default"
-            @click="addData"
-          >
-            添加
-          </el-button>
+          <ElButton type="primary" size="default" @click="onCreate">
+            <template #icon>
+              <SvgIcon name="i-ep:plus" />
+            </template>
+            新增
+          </ElButton>
         </FormLeftPanel>
-
         <FormRightPanel>
-          <el-button size="default" @click="">
+          <el-button size="default">
             导出
           </el-button>
-          <TabelControl
-            v-model:border="border"
-            v-model:tableAutoHeight="tableAutoHeight"
-            v-model:checkList="checkList"
-            v-model:columns="columns"
-
-            v-model:line-height="lineHeight"
-            v-model:stripe="stripe"
-            style="margin-left: 12px"
-
-            @query-data="currentChange"
-          />
+          <TabelControl v-model:border="data.border" v-model:tableAutoHeight="data.tableAutoHeight"
+            v-model:checkList="data.checkList" v-model:columns="columns" v-model:line-height="data.lineHeight"
+            v-model:stripe="data.stripe" style="margin-left: 12px;" @query-data="currentChange" />
         </FormRightPanel>
       </el-row>
-      <el-table
-        ref="tableSortRef"
-        v-loading="false"
-        style="margin-top: 10px"
-        row-key="id"
-        :data="list"
-        :border="border"
-        :size="lineHeight"
-        :stripe="stripe"
-        @selection-change="setSelectRows"
-      >
-        <el-table-column type="selection" />
-        <el-table-column type="index" align="center" label="序号" width="55" />
-        <el-table-column show-overflow-tooltip prop="a" align="center" label="ID" />
-        <el-table-column show-overflow-tooltip prop="b" align="center" label="类型" />
-        <el-table-column show-overflow-tooltip prop="c" align="center" label="标题" />
-        <el-table-column show-overflow-tooltip prop="d" align="center" label="添加日期" />
-        <el-table-column align="center" label="操作" width="170">
+      <ElTable v-model:stripe="data.stripe" v-model:border="data.border" v-loading="data.loading"
+        :size="data.lineHeight" class="my-4" :data="data.dataList" highlight-current-row height="100%"
+        @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
+        <el-table-column align="center" show-overflow-tooltip type="index" label="序号" width="80" />
+        <ElTableColumn align="center" show-overflow-tooltip prop="title" label="标题" />
+        <ElTableColumn align="center" show-overflow-tooltip prop="type" label="类型">
           <template #default="{ row }">
-            <el-button size="small" plain type="primary" @click="editData(row)">
-              编辑
-            </el-button>
-            <el-button
-              size="small"
-              plain
-              type="danger"
-              @click="deleteData(row)"
-            >
-              删除
-            </el-button>
+            {{ type[row.type - 1].label }}
           </template>
-        </el-table-column>
-        <template #empty>
-          <el-empty description="暂无数据" />
-        </template>
-      </el-table>
-      <ElPagination
-        :current-page="pagination.page"
-        :total="pagination.total"
-        :page-size="pagination.size"
-        :page-sizes="pagination.sizes"
-        :layout="pagination.layout"
-        :hide-on-single-page="false"
-        class="pagination"
-        background
-        @size-change="sizeChange"
-        @current-change="currentChange"
-      />
-      <Edit ref="editRef" />
-      <Delete ref="deleteRef" />
+        </ElTableColumn>
+        <ElTableColumn align="center" show-overflow-tooltip prop="top" label="置顶">
+          <template #default="{ row }">
+            <el-switch v-model="row.top" :active-value="true" :inactive-value="false" inline-prompt active-text="开启"
+              inactive-text="关闭" @change="onChangeStatus(row)">
+            </el-switch>
+          </template>
+        </ElTableColumn>
+        <ElTableColumn align="center" show-overflow-tooltip prop="createTime" label="创建日期" />
+        <ElTableColumn label="操作" width="150" align="center" fixed="right">
+          <template #default="scope">
+            <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">
+              编辑
+            </ElButton>
+            <ElButton type="danger" size="small" plain @click="onDel(scope.row)">
+              删除
+            </ElButton>
+          </template>
+        </ElTableColumn>
+      </ElTable>
+      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+        background @size-change="sizeChange" @current-change="currentChange" />
     </PageMain>
+    <FormMode v-if="data.formMode === 'dialog' || data.formMode === 'drawer'" :id="data.formModeProps.id"
+      v-model="data.formModeProps.visible" :row="data.formModeProps.row" :mode="data.formMode" @success="getDataList" />
   </div>
 </template>
 
-<style scoped lang="scss">
-.el-pagination {
-  margin-top: 15px;
-}
-
+<style lang="scss" scoped>
 .absolute-container {
   position: absolute;
   display: flex;
@@ -293,6 +347,18 @@ onMounted(() => {
       }
     }
   }
+
+  .el-divider {
+    width: calc(100% + 40px);
+    margin-inline: -20px;
+  }
 }
 
+:deep {
+  .el-table__header {
+    th {
+      background: var(--el-fill-color-lighter) !important;
+    }
+  }
+}
 </style>

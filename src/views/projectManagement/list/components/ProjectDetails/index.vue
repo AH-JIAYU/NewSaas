@@ -90,11 +90,11 @@ async function download() {
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.download = data.value.form.descriptionUrl; // 根据需要设置文件名
+  // 根据需要设置文件名
   document.body.appendChild(link);
+  link.download = data.value.form.descriptionUrl;
   link.click();
   document.body.removeChild(link);
-
   // 清理URL对象
   URL.revokeObjectURL(url);
 }
@@ -111,65 +111,37 @@ defineExpose({ showEdit });
 
 <template>
   <div>
-    <el-drawer
-      v-model="dialogTableVisible"
-      append-to-body
-      :close-on-click-modal="false"
-      destroy-on-close
-      draggable
-      size="55%"
-      title="项目详情"
-    >
+    <el-drawer v-model="dialogTableVisible" append-to-body :close-on-click-modal="false" destroy-on-close draggable
+      size="55%" title="项目详情">
       <template #header>
         <el-row :gutter="20">
           <el-col :span="2" />
           <el-col :span="20">
-            <el-steps
-              style="max-width: 100%"
-              finish-status="success"
-              align-center
-              :active="active"
-            >
-              <el-step
-                title="已开始"
-                description="2021-09-09 11:11:11"
-                :icon="Select"
-              />
-              <el-step
-                title="已确认"
-                description="2021-09-09 11:11:11"
-                :icon="active >= 2 ? CircleCheck : Position"
-              />
-              <el-step
-                title="已开票"
-                description="2021-09-09 11:11:11"
-                :icon="active >= 3 ? CircleCheck : Position"
-              />
-              <el-step
-                title="已完结"
-                description="2021-09-09 11:11:11"
-                :icon="active >= 4 ? CircleCheck : Position"
-              />
+            <el-steps style="max-width: 100%" finish-status="success" align-center :active="active">
+              <el-step title="已开始" description="2021-09-09 11:11:11" :icon="Select" />
+              <el-step title="已确认" description="2021-09-09 11:11:11" :icon="active >= 2 ? CircleCheck : Position" />
+              <el-step title="已开票" description="2021-09-09 11:11:11" :icon="active >= 3 ? CircleCheck : Position" />
+              <el-step title="已完结" description="2021-09-09 11:11:11" :icon="active >= 4 ? CircleCheck : Position" />
             </el-steps>
           </el-col>
           <el-col :span="2" />
         </el-row>
       </template>
-      <ElForm label-width="100px">
+      <ElForm label-width="6.25rem">
         <el-card class="box-card">
           <template #header>
             <div class="card-header">
               <div>
                 基本信息
-                <span
-                  class="m-4"
-                  style="
+                <span class="m-4" style="
+                  width: 60px !important;
+                  height: 20px !important;
                     background: var(--el-color-primary);
                     color: var(--el-color-white);
-                    padding: 0 0.5rem;
-                  "
-                  >{{ data.allocationStatus === 1 ? "未分配" : "已分配" }}</span
-                >
+                    padding: 0 8px;
+                    font-size: .875rem;
+                    border-radius: 3.125rem;
+                  ">{{ data.allocationStatus === 1 ? "未分配" : "已分配" }}</span>
               </div>
               <div class="status">
                 <div class="i-ph:seal-light w-1em h-1em"></div>
@@ -179,51 +151,40 @@ defineExpose({ showEdit });
           </template>
           <el-row :gutter="10">
             <el-col :span="8">
-              <el-form-item label="项目ID">
-                <el-text class="mx-1"> {{ data.form.projectId }} </el-text>
+              <el-form-item label="项目ID :">
+                <el-text class="mx-1"> {{ data.form.projectId ? data.form.projectId : '-' }} </el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="项目名称">
-                <el-text class="mx-1"> {{ data.form.name }} </el-text>
+              <el-form-item label="项目名称 :">
+                <el-text class="mx-1"> {{ data.form.name ? data.form.name : '-' }} </el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="项目标识" prop="client_pid">
+              <el-form-item label="项目标识 :" prop="client_pid">
                 <el-text class="mx-1">
-                  {{ data.form.projectIdentification }}
+                  {{ data.form.projectIdentification ? data.form.projectIdentification : '-' }}
                 </el-text>
               </el-form-item>
             </el-col>
-            <!-- </el-row>
-          <el-row :gutter="10"> -->
             <el-col :span="8">
-              <el-form-item label="所属客户">
-                <el-text class="mx-1"> {{ data.form.clientId }} </el-text>
+              <el-form-item label="所属客户 :">
+                <el-text class="mx-1"> {{ data.form.clientId ? data.form.clientId : '-' }} </el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="所属国家">
+              <el-form-item label="所属国家 :">
                 <el-text class="mx-1">
-                  <template
-                    v-if="comCountryId(data.form.countryIdList).length > 4"
-                  >
-                    <el-tooltip
-                      class="box-item"
-                      effect="dark"
-                      :content="comCountryId(data.form.countryIdList).join(',')"
-                      placement="top"
-                    >
+                  <template v-if="comCountryId(data.form.countryIdList).length > 4">
+                    <el-tooltip class="box-item" effect="dark"
+                      :content="comCountryId(data.form.countryIdList).join(',')" placement="top">
                       <el-link type="primary">{{
-                        comCountryId(data.form.countryIdList).length
-                      }}</el-link>
+      comCountryId(data.form.countryIdList).length
+    }}</el-link>
                     </el-tooltip>
                   </template>
                   <template v-else>
-                    <span
-                      v-for="item in comCountryId(data.form.countryIdList)"
-                      :key="item"
-                    >
+                    <span v-for="item in comCountryId(data.form.countryIdList)" :key="item">
                       {{ item }}&ensp;
                     </span>
                   </template>
@@ -231,35 +192,31 @@ defineExpose({ showEdit });
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="原价">
-                <el-text class="mx-1"> {{ data.form.doMoneyPrice }} </el-text>
+              <el-form-item label="原价 :">
+                <el-text class="mx-1"> {{ data.form.doMoneyPrice ? data.form.doMoneyPrice : '-' }} </el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="配额">
-                <el-text class="mx-1"> {{ data.form.num }} </el-text>
+              <el-form-item label="配额 :">
+                <el-text class="mx-1"> {{ data.form.num ? data.form.num : '-' }} </el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="最小时长">
+              <el-form-item label="最小时长 :">
                 <el-text class="mx-1">
-                  {{ data.form.minimumDuration }}
+                  {{ data.form.minimumDuration ? data.form.minimumDuration : '-' }}
                 </el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="IR">
-                <el-text class="mx-1"> {{ data.form.ir }} </el-text>
+              <el-form-item label="IR :">
+                <el-text class="mx-1"> {{ data.form.ir ? data.form.ir : '-' }} </el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="URL">
-                <el-text class="mx-1"> {{ data.form.uidUrl }} </el-text>
-                <el-button
-                  type="primary"
-                  style="margin-left: auto"
-                  @click="copyTextToClipboard(data.form.uidUrl)"
-                >
+              <el-form-item label="URL :">
+                <el-text class="mx-1"> {{ data.form.uidUrl ? data.form.uidUrl : '-' }} </el-text>
+                <el-button type="primary" style="margin-left: auto" @click="copyTextToClipboard(data.form.uidUrl)" link>
                   复制
                 </el-button>
               </el-form-item>
@@ -274,43 +231,43 @@ defineExpose({ showEdit });
           </template>
           <el-row :gutter="10">
             <el-col :span="8">
-              <el-form-item label="置顶">
+              <el-form-item label="置顶 :">
                 <el-text class="mx-1">
                   {{ data.form.isPinned === 1 ? "开" : "关" }}
                 </el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="在线">
+              <el-form-item label="在线 :">
                 <el-text class="mx-1">
                   {{ data.form.isOnline === 1 ? "开" : "关" }}
                 </el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="资料">
+              <el-form-item label="资料 :">
                 <el-text class="mx-1">
                   {{ data.form.isProfile === 2 ? "开" : "关" }}
                 </el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="B2B">
+              <el-form-item label="B2B :">
                 <el-text class="mx-1">
                   {{ data.form.isPinned === 1 ? "开" : "关" }}
                 </el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="定时发布">
+              <el-form-item label="定时发布 :">
                 <el-text class="mx-1">
                   {{ data.form.isTimeReleases === 2 ? "开" : "关" }}
                 </el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="备注">
-                <el-text class="mx-1"> {{ data.form.remark }} </el-text>
+              <el-form-item label="备注 :">
+                <el-text class="mx-1"> {{ data.formNaNpxark ? data.formNaNpxark : '-' }} </el-text>
               </el-form-item>
             </el-col>
           </el-row>
@@ -321,15 +278,11 @@ defineExpose({ showEdit });
               <span>配置信息</span>
             </div>
           </template>
-          <el-row :gutter="10">
+          <el-row :class="{ 'isNone': !data.form.projectQuotaInfoList.length }" :gutter="10">
             <el-col :span="8" v-for="item in data.form.projectQuotaInfoList">
               <el-form-item :label="item.keyValue">
-                <el-text
-                  class="mx-1"
-                  v-if="
-                    item.answerValueList && item.answerValueList[0] !== 'null'
-                  "
-                >
+                <el-text class="mx-1" v-if="item.answerValueList && item.answerValueList[0] !== 'null'
+      ">
                   {{ item.answerValueList.join(", ") }}
                 </el-text>
                 <el-text class="mx-1" v-else> - </el-text>
@@ -345,33 +298,33 @@ defineExpose({ showEdit });
           </template>
           <el-row :gutter="20">
             <el-col :span="8">
-              <el-form-item label="小时准入量">
-                <el-text class="mx-1"> {{ data.form.preNum }} </el-text>
+              <el-form-item label="小时准入量 :">
+                <el-text class="mx-1"> {{ data.form.preNum ? data.form.preNum : '-' }} </el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="小时完成量">
+              <el-form-item label="小时完成量 :">
                 <el-text class="mx-1">
-                  {{ data.form.limitedQuantity }}
+                  {{ data.form.limitedQuantity ? data.form.limitedQuantity : '-' }}
                 </el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="时差检测">
+              <el-form-item label="时差检测 :">
                 <el-text class="mx-1">
                   {{ data.form.timeDifferenceDetection === 1 ? "开" : "关" }}
                 </el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="重复IP检测">
+              <el-form-item label="重复IP检测 :">
                 <el-text class="mx-1">
                   {{ data.form.ipDifferenceDetection === 1 ? "开" : "关" }}
                 </el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="IP一致性检测">
+              <el-form-item label="IP一致性检测:">
                 <el-text class="mx-1">
                   {{ data.form.ipConsistency === 1 ? "开" : "关" }}
                 </el-text>
@@ -387,23 +340,14 @@ defineExpose({ showEdit });
           </template>
           <template v-if="data.form.descriptionUrl">
             <div class="demo-image__preview">
-              <el-image
-                style="width: 100px; height: 100px"
-                :src="data.imgUrl"
-                :preview-src-list="data.srcList"
-                :zoom-rate="1.2"
-                :max-scale="7"
-                :min-scale="0.2"
-                :initial-index="0"
-                fit="cover"
-              />
+              <el-image style="width: 6.25rem; height: 6.25rem" :src="data.imgUrl" :preview-src-list="data.srcList"
+                :zoom-rate="1.2" :max-scale="7" :min-scale="0.2" :initial-index="0" fit="cover" />
             </div>
             <el-button style="padding: 0" type="primary" text @click="download">
               {{ data.form.descriptionUrl }} 下载
             </el-button>
           </template>
-
-          <el-row :gutter="20">
+          <el-row :class="{ 'isNone': !data.form.descriptionUrl }" :gutter="20">
             <el-col :span="24">
               <div class="radius p-2 flex gap-2">
                 <Viewer :value="data.form.richText" />
@@ -419,12 +363,7 @@ defineExpose({ showEdit });
             </div>
           </template>
           <el-table :data="list" border style="width: 100%">
-            <el-table-column
-              align="center"
-              type="index"
-              width="80"
-              label="序号"
-            />
+            <el-table-column align="center" type="index" width="80" label="序号" />
             <el-table-column align="center" prop="a" label="操作时间" />
             <el-table-column align="center" prop="b" label="操作人" />
             <el-table-column align="center" prop="c" label="操作事项" />
@@ -447,39 +386,45 @@ defineExpose({ showEdit });
 
 <style scoped lang="scss">
 .radius {
-  min-height: 10rem;
+  min-height: 160px;
   width: 100%;
-  border: 1px solid var(--el-border-color);
+  border: .0625rem solid var(--el-border-color);
   border-radius: 0;
-  margin-top: 20px;
+  margin-top: 1.25rem;
 }
+
 .demo-image__error .image-slot {
-  font-size: 30px;
+  font-size: 1.875rem;
 }
+
 .demo-image__error .image-slot .el-icon {
-  font-size: 30px;
+  font-size: 1.875rem;
 }
+
 .demo-image__error .el-image {
   width: 100%;
-  height: 200px;
+  height: 12.5rem;
 }
+
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: end;
+
   .status {
     position: relative;
-    width: 8rem;
+    width: 128px;
 
-    > div {
+    >div {
       position: absolute;
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%);
-      font-size: 1.3rem;
+      font-size: 20.8px;
     }
-    > div:nth-child(1) {
-      font-size: 8rem;
+
+    >div:nth-child(1) {
+      font-size: 128px;
     }
   }
 }
@@ -506,7 +451,7 @@ defineExpose({ showEdit });
 }
 
 :deep(.el-card) {
-  margin: 10px 0;
+  margin: .625rem 0;
 }
 
 :deep(.editor) {
@@ -522,9 +467,9 @@ table {
 
 th,
 td {
-  padding: 10px;
+  padding: .625rem;
   /* 单元格内边距 */
-  border: 1px solid #ccc;
+  border: .0625rem solid #ccc;
   /* 边框 */
   text-align: center;
 }
@@ -536,5 +481,9 @@ th {
 
 tr {
   width: 30%;
+}
+
+.isNone {
+  display: none;
 }
 </style>
