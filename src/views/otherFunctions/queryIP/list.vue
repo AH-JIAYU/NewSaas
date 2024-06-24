@@ -18,7 +18,7 @@ async function ParsingEncryption() {
   loading.value = false
   const bbb: any = []
   res.data.forEach((item: any) => {
-    bbb.push(`${item.continent.names.zhCN}-${item.country.names.zhCN}-${item.city.names.zhCN},IP注册地:${item.registeredCountry.names.zhCN}`)
+    bbb.push(`${item.continent.names.zhCN}-${item.country.names.zhCN}-${item.city.names.zhCN}, IP注册地:${item.registeredCountry.names.zhCN}-${item?.subdivisions[0].names.zhCN}`)
   })
   showIp.value = bbb.join('\n');
 }

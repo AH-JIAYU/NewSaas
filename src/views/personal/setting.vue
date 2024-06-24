@@ -62,9 +62,9 @@
 
   <template>
     <div>
-      <el-dialog v-model="dialogTableVisible" title="修改用户信息" direction="rtl" :before-close="closeHandler"
-        style="height: 600px;" size="30%">
-        <ElTabs tab-position="left" style="height: 31.25rem;">
+      <el-drawer v-model="dialogTableVisible" title="修改用户信息" direction="rtl" :before-close="closeHandler"
+        style="height: 100%;" size="40%">
+        <ElTabs tab-position="left" >
         <ElTabPane label="个人信息" class="basic">
           <h2>个人信息</h2>
           <ElForm :model="form" label-width="120px" label-suffix="：">
@@ -72,11 +72,26 @@
             <ImageUpload v-model:url="form.headimg" action="http://scrm.1daas.com/api/upload/upload" name="image"
               :data="{ token: 'TKD628431923530324' }" notip class="headimg-upload" @on-success="handleSuccess" />
           </ElFormItem>
+          <ElFormItem label="账户类型">
+            <el-text class="mx-1">个人</el-text>
+          </ElFormItem>
           <ElFormItem label="用户名">
             <ElInput v-model="form.name" placeholder="请输入你的用户名" />
           </ElFormItem>
           <ElFormItem label="国家">
             <el-select v-model="form.country" placeholder="请选择国家" />
+          </ElFormItem>
+          <ElFormItem label="货币类型">
+            <el-select v-model="form.country" placeholder="请选择货币类型" />
+          </ElFormItem>
+          <ElFormItem label="公司名称">
+            <ElInput v-model="form.qq" placeholder="请输入你的公司名称" />
+          </ElFormItem>
+          <ElFormItem label="公司税号">
+            <ElInput v-model="form.qq" placeholder="请输入你的公司税号" />
+          </ElFormItem>
+          <ElFormItem label="法人姓名">
+            <ElInput v-model="form.qq" placeholder="请输入你的法人姓名" />
           </ElFormItem>
           <ElFormItem label="手机号码">
             <ElInput v-model="form.qq" placeholder="请输入你的手机号码" />
@@ -117,7 +132,7 @@
         </ElForm>
         </ElTabPane>
       </ElTabs>
-      </el-dialog>
+      </el-drawer>
     </div>
   </template>
 
