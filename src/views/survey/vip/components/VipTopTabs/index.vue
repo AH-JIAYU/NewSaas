@@ -33,8 +33,53 @@ const rules = reactive<any>({
   ],
 });
 
+// 自定义校验手机号
+const validatePhone = (rule: any, value: any, callback: any) => {
+  const regExpPhone: any =
+    /^(?:(?:\+|00)86)?1(?:(?:3[\d])|(?:4[5-79])|(?:5[0-35-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\d])|(?:9[189]))\d{8}$/;
+  if (!regExpPhone.test(localToptTab.value.memberPhone)) {
+    callback(new Error("请输入合法手机号"));
+  } else {
+    callback();
+  }
+};
+// 自定义校验邮箱
+const validateEmail = (rule: any, value: any, callback: any) => {
+  const regExpEmail: any =
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  if (!regExpEmail.test(localToptTab.value.emailAddress)) {
+    callback(new Error("请输入合法邮箱"));
+  } else {
+    callback();
+  }
+};
+// 动态添加校验
+const changeCountryId = (val: any) => {
+  if (val) {
+    localToptTab.value.countryType = val === "343" ? 1 : 2;
+    if (val === "343") {
+      if (rules.emailAddress) {
+        delete rules.emailAddress;
+      }
+      rules.memberPhone = [
+        { required: true, message: "请输入手机号码", trigger: "blur" },
+        { validator: validatePhone, trigger: "blur" },
+      ];
+    } else {
+      if (rules.memberPhone) {
+        delete rules.memberPhone;
+      }
+      rules.emailAddress = [
+        { required: true, message: "请输入邮箱", trigger: "blur" },
+        { validator: validateEmail, trigger: "blur" },
+      ];
+    }
+  }
+};
+
 onMounted(async () => {
   await obtainLoading(getList());
+  changeCountryId(localToptTab.value.subordinateCountryId);
 });
 // 获取会员等级 会员组 国家
 const getList = async () => {
@@ -61,6 +106,7 @@ nextTick(() => {
           :model="localToptTab"
           :rules="rules"
           label-width="100px"
+          :validate-on-rule-change="false"
         >
           <el-card class="box-card">
             <template #header>
@@ -80,6 +126,7 @@ nextTick(() => {
                     clearable
                     filterable
                     v-model="localToptTab.subordinateCountryId"
+                    @change="changeCountryId"
                   >
                     <el-option
                       v-for="item in data.countryList"
@@ -96,12 +143,12 @@ nextTick(() => {
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="手机号码">
+                <el-form-item label="手机号码" prop="memberPhone">
                   <el-input clearable v-model="localToptTab.memberPhone" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="电子邮箱">
+                <el-form-item label="电子邮箱" prop="emailAddress">
                   <el-input clearable v-model="localToptTab.emailAddress" />
                 </el-form-item>
               </el-col>

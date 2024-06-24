@@ -36,7 +36,6 @@ const validatePhone = (rule: any, value: any, callback: any) => {
   const regExpPhone: any =
     /^(?:(?:\+|00)86)?1(?:(?:3[\d])|(?:4[5-79])|(?:5[0-35-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\d])|(?:9[189]))\d{8}$/;
   if (!regExpPhone.test(props.leftTab.supplierPhone)) {
-    //
     callback(new Error("请输入合法手机号"));
   } else {
     callback();
@@ -213,8 +212,11 @@ nextTick(() => {
               <el-col :span="8">
                 <el-form-item label="关联国家">
                   <el-select
+                    v-model="props.leftTab.relevanceCountryIdList"
                     clearable
-                    v-model="props.leftTab.relevanceCountryId"
+                    filterable
+                    multiple
+                    collapse-tags
                   >
                     <el-option
                       v-for="item in data.countryList"

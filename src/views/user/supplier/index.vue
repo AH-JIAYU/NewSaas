@@ -96,10 +96,11 @@ function handleCheck(row: any) {
 }
 // 备注
 async function handleEditRemark(row: any) {
-  const fun = async () => {
-    const { data } = await api.detail({
-      tenantSupplierId: row.tenantSupplierId,
-    });
+  const { data } = await api.detail({
+    tenantSupplierId: row.tenantSupplierId,
+  });
+  if (data.remark !== row.remark) {
+    data.countryType = data.subordinateCountryId === "343" ? 1 : 2;
     data.remark = row.remark;
     const { status } = await api.edit(data);
     status === 1 &&
@@ -107,9 +108,8 @@ async function handleEditRemark(row: any) {
         message: "更新备注",
         center: true,
       });
-  };
-  await submitLoading(fun());
-  queryData();
+    queryData();
+  }
 }
 // 切换状态
 async function changeState(state: any, id: string) {
@@ -123,7 +123,7 @@ async function changeState(state: any, id: string) {
       message: "修改成功",
     });
   queryData();
-  supplierStore.TenantSupplierList=null
+  supplierStore.TenantSupplierList = null;
 }
 
 // 重置请求
