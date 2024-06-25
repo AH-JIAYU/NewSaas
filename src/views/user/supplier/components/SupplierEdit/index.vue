@@ -101,9 +101,6 @@ async function save() {
         const dataList = {
           addTenantSupplierInfoList: leftTabsData,
         };
-        console.log('dataList',dataList);
-
-        // return
         const { status } = await submitLoading(api.create(dataList));
         status === 1 &&
           ElMessage.success({
@@ -112,6 +109,7 @@ async function save() {
           });
       } else {
         // // 更新接口
+        delete leftTabsData[0].getTenantCustomerOperationInfosList
         const { status } = await submitLoading(api.edit(leftTabsData[0]));
         status === 1 &&
           ElMessage.success({
