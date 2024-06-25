@@ -24,7 +24,6 @@ function pushData(data: any) {
 }
 // 提供一个方法，孙组件可以使用这个方法来触发验证
 provide("validateTopTabs", pushData);
-
 let leftTabsData = reactive<any>([]); // 明确指定类型为 LeftTab[]
 // 显隐
 async function showEdit(row: any) {
@@ -102,6 +101,9 @@ async function save() {
         const dataList = {
           addTenantSupplierInfoList: leftTabsData,
         };
+        console.log('dataList',dataList);
+
+        // return
         const { status } = await submitLoading(api.create(dataList));
         status === 1 &&
           ElMessage.success({

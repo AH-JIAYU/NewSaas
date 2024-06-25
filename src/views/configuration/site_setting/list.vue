@@ -12,7 +12,7 @@ const loading = ref(false);
 // form ref
 const formRef = ref<FormInstance>();
 // 定义表单
-const form = ref({
+const form = ref<any>({
   id: '',
   // 注册开关
   registerOffOrOn: true,
@@ -41,7 +41,7 @@ async function getDataList() {
   const { data } = await api.list()
   // const url = data.supplierURL
   // const extracted = url.match(/jiayu\.com/)[0];
-  form.value = data
+  form.value = data || form.value
   // form.value.supplierURL = extracted
   loading.value = false
 }
@@ -67,6 +67,7 @@ function onSubmit() {
       formRef.value.validate((valid) => {
         if (valid) {
           loading.value = true;
+          delete form.value.id
           api.create(form.value).then(() => {
             loading.value = false;
             getDataList();
