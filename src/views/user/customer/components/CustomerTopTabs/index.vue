@@ -21,7 +21,6 @@ const rules = reactive<any>({
 
 const activeName = ref("basicSettings");
 const form = ref({});
-const isTrue = ref(true);
 function showEdit() {}
 defineExpose({ showEdit });
 // 使用 InstanceType 来获取 ElForm 实例的类型
@@ -91,11 +90,15 @@ nextTick(() => {
               </el-col>
               <el-col :span="12">
                 <el-form-item label="结算周期" prop="settlementCycle">
-                  <el-input-number
+                  <el-select v-model="localToptTab.settlementCycle">
+                    <el-option label="30" :value="30"></el-option>
+                    <el-option label="60" :value="60"></el-option>
+                  </el-select>
+                  <!-- <el-input-number
                     v-model="localToptTab.settlementCycle"
                     controls-position="right"
                     :min="0"
-                  />
+                  /> -->
                 </el-form-item>
               </el-col>
             </el-row>
@@ -143,7 +146,7 @@ nextTick(() => {
                   />
                 </el-form-item>
               </el-col>
-              <el-col v-if="isTrue" :span="12">
+              <el-col v-if="localToptTab.riskControl === 2" :span="12">
                 <el-form-item label="营业限额/月">
                   <el-input-number
                     v-model="localToptTab.turnover"
@@ -152,7 +155,7 @@ nextTick(() => {
                   />
                 </el-form-item>
               </el-col>
-              <el-col v-if="isTrue" :span="12">
+              <el-col v-if="localToptTab.riskControl === 2" :span="12">
                 <el-form-item label="审核率Min值">
                   <el-input-number
                     v-model="localToptTab.rateAudit"

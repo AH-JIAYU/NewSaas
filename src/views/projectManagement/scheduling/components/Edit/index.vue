@@ -40,6 +40,7 @@ const data = reactive<any>({
 // 显隐
 async function showEdit(row: any, view?: any) {
   const res = await obtainLoading(api.getProjectList({}));
+  // 获取未调度的项目列表
   data.projectList = res.data.getNotDispatchProjectInfoList;
   if (!view) {
     if (row) {
@@ -62,6 +63,7 @@ async function showEdit(row: any, view?: any) {
     } else {
       // 不存在 为调度
       // 项目列表里调用的添加项目调度
+      data.title = "添加";
       data.form.projectId = row.projectId;
       await changeProject(row.projectId);
     }
@@ -113,6 +115,7 @@ function closeHandler() {
 function onSubmit() {
   formRef.value &&
     formRef.value.validate(async (valid: any) => {
+      console.log("data.title", data.title);
       if (valid) {
         if (data.title === "添加") {
           const { status } = await submitLoading(api.create(data.form));

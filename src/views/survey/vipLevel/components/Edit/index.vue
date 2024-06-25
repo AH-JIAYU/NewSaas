@@ -77,7 +77,7 @@ defineExpose({ showEdit });
           v-model.number="form.additionRatio"
           :min="1"
           :max="100"
-          oninput="if(value>100)value=100;if(value.length>4)value=value.slice(0,4);if(value<0)value=0"
+          oninput="if(value>100)value=100;if(value.length>4)value=value.slice(0,4);if(value<0)value=0;"
           type="number"
         >
           <template #append> % </template>

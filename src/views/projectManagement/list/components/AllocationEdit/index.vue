@@ -17,7 +17,7 @@ const formRef = ref<any>(); // ref
 const data = ref<any>({
   list: [], // 表格
   tenantSupplierList: [], // 供应商
-  vipGroupList: [], // 供应商
+  vipGroupList: [], // 会员组
   form: {
     projectId: "", // 项目id
     allocationType: 1, //	分配类型:1:自动分配 2:供应商 3:会员组

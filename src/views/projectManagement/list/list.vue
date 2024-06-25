@@ -136,6 +136,7 @@ function dispatch() {
       center: true,
     });
   } else {
+    console.log('selectList[0]',selectList[0])
     schedulingRef.value.showEdit(selectList[0], "projectList");
   }
 }
@@ -549,7 +550,7 @@ onMounted(async () => {
               type="primary"
               plain
               size="small"
-              :disabled="row.allocationStatus === 2"
+              
               @click="projectEdit(row)"
             >
               编辑
