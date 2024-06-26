@@ -9,6 +9,8 @@ defineOptions({
 const activeTopTab = ref<any>('基本设置')
 // 加载
 const loading = ref(false);
+// 会员基准地址
+const webSiteUrl = import.meta.env.VITE_APP_WEBSITE
 // form ref
 const formRef = ref<FormInstance>();
 // 定义表单
@@ -52,7 +54,7 @@ async function getDataList() {
 }
 // 复制地址
 const copyUrl = async () => {
-  const str = `https://${form.value.supplierURL}ah-jiayu.github.io/NewControl/`
+  const str = `https://${form.value.supplierURL}.${webSiteUrl}`
   try {
     await navigator.clipboard.writeText(str);
     ElMessage.success({
@@ -88,7 +90,6 @@ function onSubmit() {
     formRef.value && formRef.value.validate((valid) => {
       if (valid) {
         let { id, keyWords, registerExamineOffOrOn, registerOffOrOn, memberURL, webName,priceProportion,withdrawalMethod,taxPointsProportion } = form.value
-        // supplierURL = `https://${supplierURL}ah-jiayu.github.io/NewControl/`
         const params = { id, keyWords, registerExamineOffOrOn, registerOffOrOn, memberURL, webName,priceProportion,withdrawalMethod,taxPointsProportion }
         loading.value = true
         api.edit(params).then(() => {
@@ -134,7 +135,7 @@ function onSubmit() {
             </el-form-item>
             <el-form-item style="width: 33rem;" label="会员网址" prop="memberURL">
               <el-input v-model="form.memberURL" style="width: 8rem;" />
-              <el-text class="mx-1">ah-jiayu.github.io/NewControl/</el-text>
+              <el-text class="mx-1">{{ webSiteUrl }}</el-text>
               <el-button type="primary" link @click="copyUrl">复制</el-button>
             </el-form-item>
           </el-tab-pane>

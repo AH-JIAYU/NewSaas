@@ -7,8 +7,11 @@ import api from "@/api/modules/configuration_site_setting";
 defineOptions({
   name: "SettingSiteSettingList",
 });
+
 // 加载
 const loading = ref(false);
+// 供应商基准地址
+const supplierUrl = import.meta.env.VITE_APP_SUPPLIER
 // form ref
 const formRef = ref<FormInstance>();
 // 定义表单
@@ -47,7 +50,7 @@ async function getDataList() {
 }
 // 复制地址
 const copyUrl = async () => {
-  const str = `https://${form.value.supplierURL}ah-jiayu.github.io/NewControl/`
+  const str = `http://${form.value.supplierURL}.${supplierUrl}`
   try {
     await navigator.clipboard.writeText(str);
     ElMessage.success({
@@ -84,7 +87,6 @@ function onSubmit() {
       if (valid) {
         try {
           let { id, keyWords, registerExamineOffOrOn, registerOffOrOn, supplierURL, webName } = form.value
-          // supplierURL = `https://${supplierURL}ah-jiayu.github.io/NewControl/`
           const params = { id, keyWords, registerExamineOffOrOn, registerOffOrOn, supplierURL, webName }
           loading.value = true
           api.edit(params).then(() => {
@@ -130,7 +132,7 @@ function onSubmit() {
         </el-form-item>
         <el-form-item label="供应商网址" prop="supplierURL">
           <el-input v-model="form.supplierURL" style="width: 8rem;" />
-          <el-text class="mx-1">ah-jiayu.github.io/NewControl/</el-text>
+          <el-text class="mx-1">.{{ supplierUrl }}</el-text>
           <el-button type="primary" link @click="copyUrl">复制</el-button>
         </el-form-item>
         <el-form-item>

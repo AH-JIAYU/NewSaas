@@ -1,78 +1,155 @@
 <script setup lang="ts">
+import { ElMessage } from 'element-plus'
+import type { FormInstance, FormRules } from 'element-plus'
 import { ref } from 'vue'
+import api from '@/api/modules/finance_invoice'
 
 defineOptions({
   name: 'Edit',
 })
-
+// 更新数据
+const emits = defineEmits(['success'])
+// title
+const title = ref('')
+// 获取当前时间
+const defaultTime = ref()
+// loading
+const loading = ref(false)
+// 客户列表
+const customerList = ref<any>([])
+// formRef
+const formRef = ref()
 // 弹框开关变量
 const dialogTableVisible = ref(false)
+// 发票状态
+const invoiceStatusList = [
+  { lable: '未收款', value: 1 },
+  { lable: '部分收款', value: 2 },
+  { lable: '已完结', value: 3 },
+  { lable: '坏账', value: 4 },
+]
+// 定义表单
+const form = ref<any>({
+  // 客户id
+  tenantCustomerId: '',
+  // 发票编号
+  invoiceCode: '',
+  // 发票金额
+  invoiceAmount: null,
+  // 税
+  invoiceTax: null,
+  // 实际收款
+  actualReceipts: null,
+  // 发票状态 （未收款、部分收款、已完结、坏账）
+  invoiceStatus: null,
+  // 开票日期
+  invoiceDate: '',
+  // 收款日期
+  paymentDate: '',
+  // 备注
+  remark: '',
+})
+// 个人信息校验
+const formRules = ref<FormRules>({
+  invoiceCode: [{ required: true, trigger: "blur", message: "请输入姓名" }],
+})
 // 提交数据
 function onSubmit() {
-
+  formRef.value && formRef.value.validate(async (valid: any) => {
+    if (valid) {
+      loading.value = true
+      form.value.id ? api.edit(form.value) : api.create(form.value)
+      // 更新数据
+      emits('success')
+      loading.value = false
+      ElMessage.success({
+        message: form.value.id ? '修改成功' : '新增成功',
+        center: true,
+      })
+      closeHandler()
+    }
+  })
 }
 // 获取数据
-async function showEdit(row: any) {
+async function showEdit(row: any, val: any) {
+  if (row?.id) {
+    form.value = row
+  }
+  title.value = row?.id ? '编辑' : '新增'
+  customerList.value = val
   dialogTableVisible.value = true
 }
 // 弹框关闭事件
 function closeHandler() {
   // 移除校验
-  // formRef.value.resetFields()
-
-  // delete formData.id
+  formRef.value.resetFields()
   // // 重置表单
-  // Object.assign(formData, defaultState)
+  Object.assign(form.value, {
+    // 客户id
+    tenantCustomerId: '',
+    // 发票编号
+    invoiceCode: '',
+    // 发票金额
+    invoiceAmount: null,
+    // 税
+    invoiceTax: null,
+    // 实际收款
+    actualReceipts: null,
+    // 发票状态 （未收款、部分收款、已完结、坏账）
+    invoiceStatus: null,
+    // 开票日期
+    invoiceDate: '',
+    // 收款日期
+    paymentDate: '',
+    // 备注
+    remark: '',
+  })
   dialogTableVisible.value = false
 }
+onMounted(async () => {
+  defaultTime.value = new Date()
+})
 // 暴露方法
 defineExpose({ showEdit })
 </script>
 
 <template>
-  <div>
-    <el-dialog
-      v-model="dialogTableVisible"
-      title="编辑"
-      width="700"
-      :before-close="closeHandler"
-    >
-      <el-form label-width="80px" :inline="false">
-        <el-form-item>
-          <el-tag type="success">
-            cube
-          </el-tag>
-        </el-form-item>
-        <el-form-item label="渠道">
-          <el-select>
-            <el-option v-for="item in 4 " :key="item" :lable="item" :value="item" />
+  <div v-loading="loading">
+    <el-dialog v-model="dialogTableVisible" :title="title" width="700" :before-close="closeHandler">
+      <el-form ref="formRef" label-width="80px" :model="form" :rules="formRules" :inline="false">
+        <el-form-item label="客户简称">
+          <el-select v-model="form.tenantCustomerId" placeholder="请选择客户" clearable filterable>
+            <el-option v-for="item in customerList" :key="item.tenantCustomerId" :value="item.tenantCustomerId"
+              :label="item.customerAccord" />
           </el-select>
         </el-form-item>
-        <el-form-item label="发票编号">
-          <el-input placeholder="" clearable @change="" />
+        <el-form-item prop="invoiceCode" label="发票编号">
+          <el-input v-model="form.invoiceCode" placeholder="请输入发票编号" clearable />
         </el-form-item>
         <el-form-item label="发票金额">
-          <el-input placeholder="" clearable @change="" />
+          <el-input v-model.number="form.invoiceAmount" placeholder="请输入发票金额" clearable />
         </el-form-item>
         <el-form-item label="手续费(税)">
-          <el-input placeholder="" clearable @change="" />
+          <el-input v-model.number="form.invoiceTax" placeholder="请输入手续费" clearable />
         </el-form-item>
         <el-form-item label="实际收款">
-          <el-input placeholder="" clearable @change="" />
+          <el-input v-model.number="form.actualReceipts" placeholder="请输入实际收款" clearable />
         </el-form-item>
         <el-form-item label="发票状态">
-          <el-select>
-            <el-option v-for="item in 4 " :key="item" :lable="item" :value="item" />
+          <el-select v-model="form.invoiceStatus" placeholder="请选择发票状态" clearable filterable>
+            <ElOption v-for="item in invoiceStatusList" :label="item.lable" :value="item.value"></ElOption>
           </el-select>
         </el-form-item>
-        <el-form-item label="开票日期">
-          <el-input placeholder="" clearable @change="" />
+        <el-form-item style="width: 100%;" label="开票日期">
+          <el-date-picker v-model="form.invoiceDate" :default-time="defaultTime" type="datetime" placeholder="请选择开票日期"
+            value-format="YYYY-MM-DD hh:mm:ss" />
         </el-form-item>
         <el-form-item label="收款日期">
-          <el-input placeholder="" clearable @change="" />
+          <el-date-picker v-model="form.paymentDate" :default-time="defaultTime" type="datetime" placeholder="请选择收款日期"
+            value-format="YYYY-MM-DD hh:mm:ss" />
         </el-form-item>
         <el-form-item label="备注">
-          <el-input placeholder="备注说明" clearable :rows="5" type="textarea" />
+          <el-input v-model="form.remark" placeholder="备注说明" clearable :rows="5" type="textarea" />
         </el-form-item>
       </el-form>
       <template #footer>
