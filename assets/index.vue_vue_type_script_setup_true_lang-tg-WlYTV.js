@@ -1,9 +1,0 @@
-
-/**
- * 由 Fantastic-admin 提供技术支持
- * Powered by Fantastic-admin
- * Gitee  https://fantastic-admin.gitee.io
- * Github https://fantastic-admin.github.io
- */
-
-import{d as V,r as y,a as o,o as C,b as g,f as e,w as l,l as k,g as f}from"./index-BXtd_hK_.js";const D={style:{flex:"auto"}},N=V({name:"AddSettlement",__name:"index",setup(I,{expose:c}){const n=y(!1);function i(){}async function b(r){n.value=!0}function m(){n.value=!1}return c({showEdit:b}),(r,_)=>{const a=o("el-input"),t=o("el-form-item"),u=o("el-tab-pane"),p=o("el-select"),v=o("el-tabs"),x=o("el-form"),d=o("el-button"),w=o("el-dialog");return C(),g("div",null,[e(w,{modelValue:n.value,"onUpdate:modelValue":_[1]||(_[1]=s=>n.value=s),title:"添加项目详情",width:"700","before-close":m},{footer:l(()=>[k("div",D,[e(d,{type:"primary",onClick:i},{default:l(()=>[f(" 确定 ")]),_:1}),e(d,{onClick:_[0]||(_[0]=s=>n.value=!1)},{default:l(()=>[f(" 取消 ")]),_:1})])]),default:l(()=>[e(x,{"label-width":"100px",inline:!1},{default:l(()=>[e(v,null,{default:l(()=>[e(u,{label:"遗漏项目添加"},{default:l(()=>[e(t,{label:"项目ID"},{default:l(()=>[e(a)]),_:1})]),_:1}),e(u,{label:"回访项目添加"},{default:l(()=>[e(t,{label:"回访项目ID"},{default:l(()=>[e(a)]),_:1}),e(t,{label:"项目名称"},{default:l(()=>[e(a)]),_:1}),e(t,{label:"项目标识"},{default:l(()=>[e(a)]),_:1}),e(t,{label:"价格$"},{default:l(()=>[e(a)]),_:1}),e(t,{label:"已加入回访ID"},{default:l(()=>[e(a)]),_:1}),e(t,{label:"GUID"},{default:l(()=>[e(a,{type:"textarea",rows:5})]),_:1})]),_:1}),e(u,{label:"已完结项目补加"},{default:l(()=>[e(t,{label:"项目名称"},{default:l(()=>[e(a)]),_:1}),e(t,{label:"价格$"},{default:l(()=>[e(a)]),_:1}),e(t,{label:"数量"},{default:l(()=>[e(a)]),_:1}),e(t,{label:"PO号"},{default:l(()=>[e(a)]),_:1}),e(t,{label:"备注"},{default:l(()=>[e(a)]),_:1}),e(t,{label:"渠道"},{default:l(()=>[e(p)]),_:1})]),_:1})]),_:1})]),_:1})]),_:1},8,["modelValue"])])}}});export{N as _};
