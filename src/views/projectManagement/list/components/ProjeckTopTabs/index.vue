@@ -758,7 +758,7 @@ nextTick(() => {
               <el-form-item label="发布时间">
                 <el-date-picker
                   type="datetime"
-                  value-format="YYYY-MM-DD hh:mm:ss"
+                  value-format="YYYY-MM-DD HH:mm:ss"
                   v-model="props.leftTab.releaseTime"
                   placeholder="请选择时间"
                 />

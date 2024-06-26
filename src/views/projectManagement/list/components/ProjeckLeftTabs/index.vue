@@ -89,12 +89,13 @@ watch(
     }
   }
 );
-nextTick(() => {
-  // 为每个 tab 创建并提供一个唯一的 ref
-  localLeftTab.value.forEach((tab: any, index: any) => {
-    const formRef = ref(null);
-    provide(`formRef${index}`, formRef);
-  });
+// onMounted(() => {
+
+// });
+// 为每个 tab 创建并提供一个唯一的 ref
+localLeftTab.value.forEach((tab: any, index: any) => {
+  const formRef = ref(null);
+  provide(`formRef${index}`, formRef);
 });
 
 // , staging, showEdit
@@ -172,11 +173,7 @@ defineExpose({ activeLeftTab });
         @click="setHandler"
       /> -->
         <!-- 在每个左侧 Tab 中使用 TopTabs 组件 -->
-        <TopTabs
-          ref="topTabsRef"
-          :left-tab="leftTab"
-          :tab-index="index"
-        />
+        <TopTabs ref="topTabsRef" :left-tab="leftTab" :tab-index="index" />
       </el-tab-pane>
       <SyncSettings ref="settingsRef" />
     </el-tabs>
