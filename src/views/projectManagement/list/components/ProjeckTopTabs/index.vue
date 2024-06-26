@@ -88,9 +88,7 @@ const rules = reactive<any>({
     { required: true, message: "请输入UidUrl", trigger: "blur" },
     { validator: validateUrlRegistered, trigger: "blur" },
   ],
-  doMoneyPrice: [
-    { required: true, message: "请输入原价(美元)", trigger: "blur" },
-  ],
+  doMoneyPrice: [{ required: true, message: "请输入原价", trigger: "blur" }],
   num: [{ required: true, message: "请输入配额", trigger: "blur" }],
   minimumDuration: [
     { required: true, message: "请输入最小分长", trigger: "blur" },
@@ -106,6 +104,13 @@ const handleInput = (value: any) => {
   if (value.key === ".") {
     value.preventDefault(); // 阻止非数字键输入
   }
+};
+// 同步客户的前置问卷开关
+const changeClient = (val: any) => {
+  const findData = data.value.basicSettings.customerList.find(
+    (item: any) => item.tenantCustomerId === val
+  );
+  props.leftTab.isProfile = Number(findData.antecedentQuestionnaire);
 };
 // 所属国家全选
 const selectAll = () => {
@@ -469,6 +474,7 @@ nextTick(() => {
                   placeholder="Select"
                   v-model="props.leftTab.clientId"
                   clearable
+                  @change="changeClient"
                 >
                   <el-option
                     v-for="item in data.basicSettings.customerList"
@@ -514,7 +520,7 @@ nextTick(() => {
           </el-row>
           <el-row :gutter="20">
             <el-col :span="6">
-              <el-form-item label="原价(美元)" prop="doMoneyPrice">
+              <el-form-item label="原价" prop="doMoneyPrice">
                 <el-input-number
                   style="height: 2rem"
                   v-model="props.leftTab.doMoneyPrice"
@@ -575,7 +581,6 @@ nextTick(() => {
                   :max="100"
                   step="0.01"
                   oninput="if(value>100)value=100;if(value.length>4)value=value.slice(0,4);if(value<0)value=0;value=Number(value).toFixed(1)"
-                  type="number"
                 >
                   <template #append> % </template>
                 </el-input>
@@ -584,11 +589,23 @@ nextTick(() => {
           </el-row>
           <el-row :gutter="20">
             <el-col :span="12">
-              <el-form-item label="URL" prop="uidUrl">
+              <el-form-item prop="uidUrl">
+                <template #label>
+                  <div>
+                    URL
+                    <el-tooltip
+                      class="tooltips"
+                      content="提示文字……"
+                      placement="top"
+                    >
+                      <SvgIcon name="i-ri:question-line" />
+                    </el-tooltip>
+                  </div>
+                </template>
                 <el-input clearable v-model="props.leftTab.uidUrl" />
               </el-form-item>
             </el-col>
-            <el-col style="margin-left: 26.75rem" :span="3">
+            <el-col :span="3">
               <el-form-item label="填写互斥ID">
                 <el-checkbox
                   v-model="props.leftTab.mutualExclusion"
