@@ -93,14 +93,14 @@ function addProject() {
 }
 // 编辑项目
 function projectEdit(row: any) {
-  if (row.allocationStatus === 1) {
+  // if (row.allocationStatus === 1) {
     addProjeckRef.value.showEdit(row);
-  } else {
-    ElMessage.warning({
-      message: "已分配项目不能修改",
-      center: true,
-    });
-  }
+  // } else {
+  //   ElMessage.warning({
+  //     message: "已分配项目不能修改",
+  //     center: true,
+  //   });
+  // }
 }
 // 修改状态
 async function changeStatus(row: any, val: any) {
@@ -550,7 +550,7 @@ onMounted(async () => {
               type="primary"
               plain
               size="small"
-              
+
               @click="projectEdit(row)"
             >
               编辑
