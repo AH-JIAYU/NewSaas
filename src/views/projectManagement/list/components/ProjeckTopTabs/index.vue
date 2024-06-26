@@ -32,6 +32,7 @@ const activeName = ref("basicSettings"); // tabs
 const formRef = ref<any>(); // Ref 在edit中进行校验
 const fold = ref(!props.tabIndex ? true : false); // 折叠 描述配额
 let data = ref<any>({
+  checked: false, //所属国家的全选按钮
   //基础设置
   basicSettings: {
     countryList: [], // 国家
@@ -87,10 +88,11 @@ const rules = reactive<any>({
     { required: true, message: "请输入UidUrl", trigger: "blur" },
     { validator: validateUrlRegistered, trigger: "blur" },
   ],
-  doMoneyPrice: [
-    { required: true, message: "请输入原价(美元)", trigger: "blur" },
-  ],
+  doMoneyPrice: [{ required: true, message: "请输入原价", trigger: "blur" }],
   num: [{ required: true, message: "请输入配额", trigger: "blur" }],
+  minimumDuration: [
+    { required: true, message: "请输入最小分长", trigger: "blur" },
+  ],
   ir: [{ required: true, message: "请输入配额", trigger: "blur" }],
   "data.configurationInformation.initialProblem.countryId": [
     { required: true, message: "请选择国家", trigger: "change" },
@@ -101,6 +103,24 @@ const handleInput = (value: any) => {
   // 允许数字键、删除键、退格键、方向键等
   if (value.key === ".") {
     value.preventDefault(); // 阻止非数字键输入
+  }
+};
+// 同步客户的前置问卷开关
+const changeClient = (val: any) => {
+  const findData = data.value.basicSettings.customerList.find(
+    (item: any) => item.tenantCustomerId === val
+  );
+  props.leftTab.isProfile = Number(findData.antecedentQuestionnaire);
+};
+// 所属国家全选
+const selectAll = () => {
+  props.leftTab.countryIdList = [];
+  if (data.value.checked) {
+    data.value.basicSettings.countryList.map((item: any) => {
+      props.leftTab.countryIdList.push(item.id);
+    });
+  } else {
+    props.leftTab.countryIdListy = [];
   }
 };
 
@@ -165,6 +185,11 @@ const getUpLoad = async (file: any) => {
   }
 };
 // #endregion
+
+// 定时发布
+const changeTimeReleases = (val: any) => {
+  props.leftTab.isOnline = val === 2 ? 2 : 1;
+};
 
 // 切换问卷如果关 清空问卷list
 const changeProfile = (val: any) => {
@@ -410,7 +435,7 @@ nextTick(() => {
 
 <template>
   <ElForm
-    label-width="100px"
+    label-width="120px"
     :rules="rules"
     ref="formRef"
     :model="props.leftTab"
@@ -449,6 +474,7 @@ nextTick(() => {
                   placeholder="Select"
                   v-model="props.leftTab.clientId"
                   clearable
+                  @change="changeClient"
                 >
                   <el-option
                     v-for="item in data.basicSettings.customerList"
@@ -470,6 +496,18 @@ nextTick(() => {
                   collapse-tags
                   @change="changeCountryId"
                 >
+                  <el-checkbox
+                    v-model="data.checked"
+                    @change="selectAll"
+                    style="
+                      display: flex;
+                      justify-content: right;
+                      align-items: center;
+                      width: 100%;
+                      padding-right: 10px;
+                    "
+                    >全选</el-checkbox
+                  >
                   <ElOption
                     v-for="item in data.basicSettings.countryList"
                     :label="item.chineseName"
@@ -482,7 +520,7 @@ nextTick(() => {
           </el-row>
           <el-row :gutter="20">
             <el-col :span="6">
-              <el-form-item label="原价(美元)" prop="doMoneyPrice">
+              <el-form-item label="原价" prop="doMoneyPrice">
                 <el-input-number
                   style="height: 2rem"
                   v-model="props.leftTab.doMoneyPrice"
@@ -510,14 +548,21 @@ nextTick(() => {
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item style="width: 200px">
+              <el-form-item prop="minimumDuration">
                 <template #label>
-                  <div class="fx-c">
-                    <span>最小分长</span>
+                  <div>
+                    最小分长
+                    <el-tooltip
+                      class="tooltips"
+                      content="这份问卷需要做到多少分钟"
+                      placement="top"
+                    >
+                      <SvgIcon name="i-ri:question-line" />
+                    </el-tooltip>
                   </div>
                 </template>
                 <el-input-number
-                  style="height: 2rem"
+                  style="height: 2rem; width: 100%"
                   v-model="props.leftTab.minimumDuration"
                   :min="1"
                   :step="1"
@@ -527,46 +572,40 @@ nextTick(() => {
                   @keydown="handleInput"
                 />
               </el-form-item>
-              <el-tooltip
-                class="tooltips"
-                content="这份问卷必须要做到多少分钟"
-                placement="top"
-              >
-                <SvgIcon name="i-ri:question-line" class="ms-4" />
-              </el-tooltip>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="IR">
+              <el-form-item label="IR" prop="ir">
                 <el-input
                   v-model.number="props.leftTab.ir"
                   :min="1"
                   :max="100"
                   step="0.01"
                   oninput="if(value>100)value=100;if(value.length>4)value=value.slice(0,4);if(value<0)value=0;value=Number(value).toFixed(1)"
-                  type="number"
                 >
                   <template #append> % </template>
                 </el-input>
-                <!-- <el-input-number
-                  style="height: 2rem"
-                  v-model="props.leftTab.ir"
-                  :min="1"
-                  :precision="1"
-                  :step="0.1"
-                  :max="100"
-                  controls-position="right"
-                  size="large"
-                /> -->
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="20">
             <el-col :span="12">
-              <el-form-item label="URL" prop="uidUrl">
+              <el-form-item prop="uidUrl">
+                <template #label>
+                  <div>
+                    URL
+                    <el-tooltip
+                      class="tooltips"
+                      content="提示文字……"
+                      placement="top"
+                    >
+                      <SvgIcon name="i-ri:question-line" />
+                    </el-tooltip>
+                  </div>
+                </template>
                 <el-input clearable v-model="props.leftTab.uidUrl" />
               </el-form-item>
             </el-col>
-            <el-col style="margin-left: 26.75rem" :span="3">
+            <el-col :span="3">
               <el-form-item label="填写互斥ID">
                 <el-checkbox
                   v-model="props.leftTab.mutualExclusion"
@@ -665,6 +704,7 @@ nextTick(() => {
                 <el-switch
                   :active-value="1"
                   :inactive-value="2"
+                  :disabled="props.leftTab.isTimeReleases === 2"
                   v-model="props.leftTab.isOnline"
                 />
               </el-form-item>
@@ -694,6 +734,7 @@ nextTick(() => {
                   :active-value="2"
                   :inactive-value="1"
                   v-model="props.leftTab.isTimeReleases"
+                  @change="changeTimeReleases"
                 />
               </el-form-item>
             </el-col>
@@ -717,7 +758,7 @@ nextTick(() => {
               <el-form-item label="发布时间">
                 <el-date-picker
                   type="datetime"
-                  value-format="YYYY-MM-DD hh:mm:ss"
+                  value-format="YYYY-MM-DD HH:mm:ss"
                   v-model="props.leftTab.releaseTime"
                   placeholder="请选择时间"
                 />
@@ -923,7 +964,7 @@ nextTick(() => {
               </el-form-item>
             </el-col>
             <el-col :span="4">
-              <el-form-item label="重复IP检测">
+              <el-form-item label="重复ID检测">
                 <el-switch
                   v-model="props.leftTab.ipDifferenceDetection"
                   :active-value="1"
@@ -950,7 +991,7 @@ nextTick(() => {
 <style lang="scss" scoped>
 .fx-c {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
 }
 
@@ -990,9 +1031,9 @@ nextTick(() => {
 
 :deep {
   .el-input-number,
+  .el-input,
   .el-select,
   .el-select__wrapper,
-  .el-input__wrapper,
   .el-cascader,
   .el-form-item__content {
     width: 100% !important;
@@ -1047,8 +1088,8 @@ tr:hover {
   /* 鼠标悬停效果 */
 }
 .el-tooltip__trigger {
-  margin-left: 17.1875rem;
-  margin-top: -5.9375rem;
-  z-index: 999;
+  // margin-left: 20rem;
+  // margin-top: -5.9375rem;
+  // z-index: 999;
 }
 </style>
