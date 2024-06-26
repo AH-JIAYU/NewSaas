@@ -94,7 +94,7 @@ function addProject() {
 // 编辑项目
 function projectEdit(row: any) {
   // if (row.allocationStatus === 1) {
-    addProjeckRef.value.showEdit(row);
+  addProjeckRef.value.showEdit(row);
   // } else {
   //   ElMessage.warning({
   //     message: "已分配项目不能修改",
@@ -104,24 +104,32 @@ function projectEdit(row: any) {
 }
 // 修改状态
 async function changeStatus(row: any, val: any) {
-  if (row.allocationStatus === 1) {
-    const params = {
-      projectId: row.projectId,
-      isOnline: val,
-    };
+  // if (row.allocationStatus === 1) {
+  const params = {
+    projectId: row.projectId,
+    isOnline: val,
+  };
+  const res = await obtainLoading(api.detail({ projectId: row.projectId }));
+  if (res.data.isTimeReleases !== 2) {
     const { status } = await submitLoading(api.changestatus(params));
     status === 1 &&
       ElMessage.success({
         message: "修改「状态」成功",
         center: true,
       });
-    fetchData();
   } else {
     ElMessage.warning({
-      message: "已分配项目不能修改状态",
+      message: "项目开启定时发布,无法修改状态",
       center: true,
     });
   }
+  fetchData();
+  // } else {
+  //   ElMessage.warning({
+  //     message: "已分配项目不能修改状态",
+  //     center: true,
+  //   });
+  // }
 }
 // 项目详情
 function projectDetails(row: any) {
@@ -136,7 +144,7 @@ function dispatch() {
       center: true,
     });
   } else {
-    console.log('selectList[0]',selectList[0])
+    console.log("selectList[0]", selectList[0]);
     schedulingRef.value.showEdit(selectList[0], "projectList");
   }
 }
@@ -202,6 +210,15 @@ onMounted(async () => {
     }
   });
   fetchData();
+  // ip查询
+  fetch("https://api.ipify.org?format=json")
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Your IP address is:", data.ip);
+    })
+    .catch((error) => {
+      console.error("Error fetching IP address:", error);
+    });
 });
 </script>
 
@@ -493,7 +510,6 @@ onMounted(async () => {
         >
           <template #default="{ row }">
             <ElSwitch
-              :disabled="row.allocationStatus === 2"
               @change="changeStatus(row, $event)"
               inline-prompt
               v-model="row.isOnline"
@@ -550,7 +566,6 @@ onMounted(async () => {
               type="primary"
               plain
               size="small"
-
               @click="projectEdit(row)"
             >
               编辑

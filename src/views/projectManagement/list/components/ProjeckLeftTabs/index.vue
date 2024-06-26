@@ -10,7 +10,6 @@ const props: any = defineProps({
   leftTabsData: Array,
   validateTopTabs: Array,
   validateAll: Array,
-  title: String,
 });
 const emits: any = defineEmits(["validate"]);
 const client = ref();
@@ -176,7 +175,6 @@ defineExpose({ activeLeftTab });
         <TopTabs
           ref="topTabsRef"
           :left-tab="leftTab"
-          :title="props.title"
           :tab-index="index"
         />
       </el-tab-pane>

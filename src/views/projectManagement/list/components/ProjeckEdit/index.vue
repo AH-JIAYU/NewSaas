@@ -46,6 +46,8 @@ async function showEdit(row: any) {
     initializeLeftTabsData(res.data);
   }
   dialogTableVisible.value = true;
+  validateAll.value = [];
+  validateTopTabs.value = [];
 }
 // 编辑时 处理数据
 function initializeLeftTabsData(data: any) {
@@ -222,8 +224,9 @@ async function onSubmit() {
 function closeHandler() {
   leftTabsData = reactive<any>([]);
   validateAll.value = [];
-  dialogTableVisible.value = false;
   validateTopTabs.value = [];
+  dialogTableVisible.value = false;
+
   if (title.value === "添加") {
     stagedDataStore.projectManagementList = null;
   }
@@ -263,7 +266,6 @@ defineExpose({
         :left-tabs-data="leftTabsData"
         :validate-top-tabs="validateTopTabs"
         :validate-all="validateAll"
-        :title="title"
       />
       <template #footer>
         <el-button @click="closeHandler"> 取消 </el-button>
