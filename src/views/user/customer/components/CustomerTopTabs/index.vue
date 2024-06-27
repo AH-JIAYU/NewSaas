@@ -222,7 +222,7 @@ nextTick(() => {
                 "
               >
                 <el-form-item label="加密方式">
-                  <el-select v-model="localToptTab.encryptionMethod">
+                  <el-select v-model="localToptTab.addTenantCustomerConfigInfoList[0].encryptionId">
                     <el-option label="30" :value="30"></el-option>
                     <el-option label="60" :value="60"></el-option>
                   </el-select>
@@ -236,7 +236,7 @@ nextTick(() => {
                 "
               >
                 <el-form-item label="密钥">
-                  <el-input v-model="localToptTab.secretKey" />
+                  <el-input v-model="localToptTab.addTenantCustomerConfigInfoList[0].secretKey" />
                 </el-form-item>
               </el-col>
               <el-col :span="24">
@@ -304,7 +304,7 @@ nextTick(() => {
                 "
               >
                 <el-form-item label="加密方式">
-                  <el-select v-model="localToptTab.encryptionMethod">
+                  <el-select v-model="localToptTab.addTenantCustomerConfigInfoList[1].encryptionId">
                     <el-option label="30" :value="30"></el-option>
                     <el-option label="60" :value="60"></el-option>
                   </el-select>
@@ -318,7 +318,7 @@ nextTick(() => {
                 "
               >
                 <el-form-item label="密钥">
-                  <el-input v-model="localToptTab.secretKey" />
+                  <el-input v-model="localToptTab.addTenantCustomerConfigInfoList[1].secretKey" />
                 </el-form-item>
               </el-col>
               <el-col :span="24">

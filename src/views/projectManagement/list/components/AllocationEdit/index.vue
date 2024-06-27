@@ -137,7 +137,6 @@ defineExpose({ showEdit });
             class="ml-4"
             @change="changeRadio"
           >
-            <el-radio :value="1" size="large"> 自动分配 </el-radio>
             <el-radio :value="2" size="large"> 供应商 </el-radio>
             <el-radio :value="3" size="large"> 会员组 </el-radio>
           </el-radio-group>
