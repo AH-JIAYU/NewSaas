@@ -506,7 +506,7 @@ nextTick(() => {
                       width: 100%;
                       padding-right: 10px;
                     "
-                    >全选</el-checkbox
+                    >全球</el-checkbox
                   >
                   <ElOption
                     v-for="item in data.basicSettings.countryList"

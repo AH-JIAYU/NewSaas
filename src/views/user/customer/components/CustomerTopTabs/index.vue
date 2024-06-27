@@ -20,9 +20,33 @@ const rules = reactive<any>({
 });
 
 const activeName = ref("basicSettings");
-const form = ref({});
-function showEdit() {}
-defineExpose({ showEdit });
+const isEncryption = ref(false);
+const changeConfigInfoList = (val: any) => {
+  if (val) {
+    localToptTab.value.addTenantCustomerConfigInfoList.push({
+      callbackWay: 2, //	回调方式:1:服务端回调 2:重定向回调
+      isEncryption: 2, //	是否加密:1:加密 2:不加密
+      encryptionId: "", //总控配置加密方式主键(外键)-是否加密为是有值
+      secretKey: "", //
+    });
+  } else {
+    const findDataIndex =
+      localToptTab.value.addTenantCustomerConfigInfoList.findIndex(
+        (item: any) => item.callbackWay === 2
+      );
+    if (findDataIndex !== -1) {
+      localToptTab.value.addTenantCustomerConfigInfoList.splice(
+        findDataIndex,
+        1
+      );
+    }
+  }
+};
+
+onBeforeMount(() => {
+  isEncryption.value =
+    localToptTab.value.addTenantCustomerConfigInfoList.length === 2;
+});
 // 使用 InstanceType 来获取 ElForm 实例的类型
 const formRef = ref(null);
 // 注入主组件中的提供者
@@ -35,14 +59,14 @@ nextTick(() => {
 
 <template>
   <div>
-    <el-tabs v-model="activeName">
-      <el-tab-pane label="基础设置" name="basicSettings">
-        <ElForm
-          ref="formRef"
-          :rules="rules"
-          :model="localToptTab"
-          label-width="100px"
-        >
+    <ElForm
+      ref="formRef"
+      :rules="rules"
+      :model="localToptTab"
+      label-width="100px"
+    >
+      <el-tabs v-model="activeName">
+        <el-tab-pane label="基础设置" name="basicSettings">
           <el-card class="box-card">
             <template #header>
               <div class="card-header">
@@ -166,9 +190,166 @@ nextTick(() => {
               </el-col>
             </el-row>
           </el-card>
-        </ElForm>
-      </el-tab-pane>
-    </el-tabs>
+        </el-tab-pane>
+        <el-tab-pane label="端口设置" name="portSettings">
+          <el-card class="box-card">
+            <template #header>
+              <div class="card-header">
+                <span>服务端回调配置</span>
+              </div>
+            </template>
+            <el-row :gutter="24">
+              <el-col :span="24">
+                <el-form-item label="加密">
+                  <el-switch
+                    v-model="
+                      localToptTab.addTenantCustomerConfigInfoList[0]
+                        .isEncryption
+                    "
+                    :active-value="1"
+                    :inactive-value="2"
+                    inline-prompt
+                    active-text="加密"
+                    inactive-text="不加密"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col
+                :span="24"
+                v-if="
+                  localToptTab.addTenantCustomerConfigInfoList[0]
+                    .isEncryption === 1
+                "
+              >
+                <el-form-item label="加密方式">
+                  <el-select v-model="localToptTab.encryptionMethod">
+                    <el-option label="30" :value="30"></el-option>
+                    <el-option label="60" :value="60"></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col
+                :span="24"
+                v-if="
+                  localToptTab.addTenantCustomerConfigInfoList[0]
+                    .isEncryption === 1
+                "
+              >
+                <el-form-item label="密钥">
+                  <el-input v-model="localToptTab.secretKey" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="成功回调">
+                  http: //api.surveyssaas.com?uid=［uid］
+                  &status=cshash=［hash］
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="配额满回调">
+                  http: //api.surveyssaas.com?uid=［uid］
+                  &status=cshash=［hash］
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="被甄别回调">
+                  http: //api.surveyssaas.com?uid=［uid］
+                  &status=cshash=［hash］
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="安全终止回调">
+                  http: //api.surveyssaas.com?uid=［uid］
+                  &status=cshash=［hash］
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-card>
+          <el-card class="box-card">
+            <template #header>
+              <div class="card-header">
+                <el-checkbox
+                  v-model="isEncryption"
+                  size="large"
+                  @change="changeConfigInfoList"
+                >
+                  <span>重定向配置</span>
+                </el-checkbox>
+              </div>
+            </template>
+            <el-row
+              :gutter="24"
+              v-if="localToptTab.addTenantCustomerConfigInfoList.length === 2"
+            >
+              <el-col :span="24">
+                <el-form-item label="加密">
+                  <el-switch
+                    v-model="
+                      localToptTab.addTenantCustomerConfigInfoList[1]
+                        .isEncryption
+                    "
+                    :active-value="1"
+                    :inactive-value="2"
+                    inline-prompt
+                    active-text="加密"
+                    inactive-text="不加密"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col
+                :span="24"
+                v-if="
+                  localToptTab.addTenantCustomerConfigInfoList[1]
+                    .isEncryption === 1
+                "
+              >
+                <el-form-item label="加密方式">
+                  <el-select v-model="localToptTab.encryptionMethod">
+                    <el-option label="30" :value="30"></el-option>
+                    <el-option label="60" :value="60"></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col
+                :span="24"
+                v-if="
+                  localToptTab.addTenantCustomerConfigInfoList[1]
+                    .isEncryption === 1
+                "
+              >
+                <el-form-item label="密钥">
+                  <el-input v-model="localToptTab.secretKey" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="成功回调">
+                  http: //api.surveyssaas.com?uid=［uid］
+                  &status=cshash=［hash］
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="配额满回调">
+                  http: //api.surveyssaas.com?uid=［uid］
+                  &status=cshash=［hash］
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="被甄别回调">
+                  http: //api.surveyssaas.com?uid=［uid］
+                  &status=cshash=［hash］
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="安全终止回调">
+                  http: //api.surveyssaas.com?uid=［uid］
+                  &status=cshash=［hash］
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-card>
+        </el-tab-pane>
+      </el-tabs>
+    </ElForm>
   </div>
 </template>
 

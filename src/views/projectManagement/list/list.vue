@@ -466,7 +466,10 @@ onMounted(async () => {
         >
           <template #default="{ row }">
             <template v-if="row.countryIdList">
-              <template v-if="comCountryId(row.countryIdList).length > 4">
+              <template v-if="row.countryIdList.length === 185">
+                <el-link type="primary">全球</el-link>
+              </template>
+              <template v-else-if="comCountryId(row.countryIdList).length > 4">
                 <el-tooltip
                   class="box-item"
                   effect="dark"
