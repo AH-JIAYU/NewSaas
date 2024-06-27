@@ -117,7 +117,7 @@ defineExpose({
         formRef.value && formRef.value.validate((valid) => {
           if (valid) {
             delete form.value.id
-            if (form.value === 'phone') {
+            if (form.value.type === 'phone') {
               delete form.value.email
             } else {
               delete form.value.phone
