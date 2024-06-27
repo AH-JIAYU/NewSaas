@@ -29,7 +29,6 @@ const props = withDefaults(
     ext: () => ['jpg', 'png', 'gif', 'bmp'],
   },
 )
-
 const emits = defineEmits<{
   onSuccess: [
     res: any,

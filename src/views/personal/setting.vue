@@ -220,7 +220,6 @@ function closeHandler() {
   Object.assign(accountForm, {})
   dialogTableVisible.value = false
 }
-
 function handleSuccess(res: any) {
   if (res.error === '') {
     userForm.value.headimg = res.data.path
@@ -229,11 +228,11 @@ function handleSuccess(res: any) {
     ElMessage.warning(res.error)
   }
 }
+// 获取数据
 const getDataList = async () => {
   loading.value = true
   const res = await api.list()
   userForm.value = res.data
-  console.log('res',res.data);
   loading.value = false
 }
 onMounted(async () => {
@@ -254,8 +253,8 @@ defineExpose({ showEdit })
           <ElForm ref="userFormRef" :model="userForm" :rules="userFormRules" label-width="120px" el-width="120px"
             label-suffix="：">
             <ElFormItem style="display: flex;justify-content: center;align-items: center;" label="头像">
-              <ImageUpload v-model:url="userForm.avatar" :action="userForm.avatar" name="image"
-                :data="{ token: 'TKD628431923530324' }" notip class="headimg-upload" @on-success="handleSuccess" />
+              <ImageUpload v-model:url="userForm.imgUrl" action="http://saas-api.surveysaas.com/project/uploadQiniu" name="image"
+              notip class="headimg-upload" @on-success="handleSuccess" />
             </ElFormItem>
             <ElFormItem label="账户类型">
               <el-select v-model="userForm.type" value-key="" placeholder="账户类型" clearable filterable>
