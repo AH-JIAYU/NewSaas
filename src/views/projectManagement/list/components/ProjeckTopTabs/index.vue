@@ -85,7 +85,7 @@ const rules = reactive<any>({
   ],
   clientId: [{ required: true, message: "请选择所属客户", trigger: "change" }],
   uidUrl: [
-    { required: true, message: "请输入UidUrl", trigger: "blur" },
+    { required: true, message: "请输入URL", trigger: "blur" },
     { validator: validateUrlRegistered, trigger: "blur" },
   ],
   doMoneyPrice: [{ required: true, message: "请输入原价", trigger: "blur" }],
