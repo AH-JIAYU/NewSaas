@@ -1,133 +1,129 @@
 <script setup lang="ts">
-import { nextTick, onMounted } from 'vue'
-import { ElMessageBox } from 'element-plus'
-import Sortable from 'sortablejs' // 拖拽排序插件
-import edit from './components/Edit/index.vue'
+import { nextTick, onMounted } from "vue";
+import { ElMessageBox, ElMessage } from "element-plus";
+import { submitLoading } from "@/utils/apiLoading";
+import Sortable from "sortablejs"; // 拖拽排序插件
+import edit from "./components/Edit/index.vue";
+import useConfigurationSupplierLevelStore from "@/store/modules/configuration_supplierLevel"; //供应商等级
+import api from "@/api/modules/configuration_supplierLevel";
 
-defineOptions({
-  name: 'ConfigurationSupplierLevelIndex',
-})
+const configurationSupplierLevelStore = useConfigurationSupplierLevelStore(); //供应商等级
+const { pagination, getParams, onSizeChange, onCurrentChange } =
+  usePagination(); // 分页
 
-const { pagination, onSizeChange, onCurrentChange } = usePagination() // 分页
-
-const listLoading = ref(false)
-const EditRef = ref() // 组件ref 添加/编辑
-const list = ref<any>([]) // 列表
-const selectRows = ref('') // 表格-选中行
-const checkList = ref<any>([]) // 表格-展示的列
-const border = ref(true) // 表格控件-是否展示边框
-const stripe = ref(false) // 表格控件-是否展示斑马条
-const lineHeight = ref<any>('default') // 表格控件-控制表格大小
-const tableAutoHeight = ref(false) // 表格控件-高度自适应
+const listLoading = ref(false);
+const EditRef = ref(); // 组件ref 添加/编辑
+const list = ref<any>([]); // 列表
+const checkList = ref<any>([]); // 表格-展示的列
+const border = ref(true); // 表格控件-是否展示边框
+const stripe = ref(false); // 表格控件-是否展示斑马条
+const lineHeight = ref<any>("default"); // 表格控件-控制表格大小
+const tableAutoHeight = ref(false); // 表格控件-高度自适应
+const elTableRef = ref(); // 表格ref
+// 表格控件-展示列
 const columns = ref([
-  // 表格控件-展示列
   {
-    label: '等级名称',
-    prop: 'a',
+    label: "等级名称",
+    prop: "levelName",
     sortable: true,
     disableCheck: false, // 不可更改
     checked: true, // 默认展示
   },
-])
-
+  {
+    label: "加成比例%",
+    prop: "additionRatio",
+    sortable: true,
+    checked: true,
+  },
+  {
+    label: "成员数量",
+    prop: "memberQuantity",
+    sortable: true,
+    checked: true,
+  },
+]);
+// 添加
 function handleAdd() {
-  // 添加
-  EditRef.value.showEdit()
+  EditRef.value.showEdit();
 }
-function handleEdit(id: any) {
-  // 编辑
-  EditRef.value.showEdit(id)
+// 编辑
+function handleEdit(row: any) {
+  EditRef.value.showEdit(row);
 }
+// 删除
 function handleDelete(row: any) {
-  // 删除
-  if (row.id) {
-    ElMessageBox.confirm(`您确定要删除当前项吗?`, '确认信息')
-      .then(() => {
-        // apiManager.delete(row.id).then(() => {
-        //   getDataList()
-        //   ElMessage.success({
-        //     message: '模拟删除成功',
-        //     center: true,
-        //   })
-        // })
-      })
-      .catch(() => {})
-  }
+  ElMessageBox.confirm(`您确定要删除当前项吗?`, "确认信息")
+    .then(async () => {
+      const { status } = await submitLoading(
+        api.delete({
+          tenantSupplierLevelId: row.tenantSupplierLevelId,
+        })
+      );
+      status === 1 &&
+        ElMessage.success({
+          message: "删除成功",
+          center: true,
+        });
+      // 数据改变 在会员中需要重新请求
+      configurationSupplierLevelStore.LevelNameList = null;
+      queryData();
+    })
+    .catch(() => {});
 }
-
-const queryForm = reactive<any>({
-  // 请求接口携带参数
-  pageNo: 1,
-  pageSize: 10,
-  select: {},
-})
-
 // 重置请求
 function queryData() {
-  queryForm.pageNo = 1
-  fetchData()
+  pagination.value.page = 1;
+  fetchData();
 }
-
 // 每页数量切换
 function sizeChange(size: number) {
-  onSizeChange(size).then(() => fetchData())
+  onSizeChange(size).then(() => fetchData());
 }
-
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
-  onCurrentChange(page).then(() => fetchData())
+  onCurrentChange(page).then(() => fetchData());
 }
 // 请求
 async function fetchData() {
-  listLoading.value = true
-  // const { data } = await getList(queryForm)
-  // list.value = data[0]
-  // total.value = data[0].length
-  list.value = [
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 9 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 3 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 4 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 5 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 6 },
-  ]
-  listLoading.value = false
+  listLoading.value = true;
+  const params: any = {
+    ...getParams(),
+  };
+  const { data } = await api.list(params);
+  list.value = data.getTenantSupplierLevelInfoList;
+  pagination.value.total = data.total;
+  listLoading.value = false;
 }
-// 表格-单选框
-function setSelectRows(val: any) {
-  selectRows.value = val
-}
-// 强制更新页面
-const forceUpdate = ref(0)
-// 表格ref
-const elTableRef = ref()
+
 // 拖拽
 function rowDrop() {
   const tbody = elTableRef.value.$el.querySelector(
-    '.el-table__body-wrapper tbody',
-  )
+    ".el-table__body-wrapper tbody"
+  );
   Sortable.create(tbody, {
-    handle: '.sortable',
+    handle: ".sortable",
     animation: 300,
-    ghostClass: 'ghost',
+    ghostClass: "ghost",
     onEnd: ({ newIndex, oldIndex }) => {
       if (newIndex === undefined || oldIndex === undefined) {
-        return
+        return;
       }
-      nextTick(() => rowDrop())
+      nextTick(() => rowDrop());
     },
-  })
+  });
 }
 
 onMounted(() => {
   columns.value.forEach((item: any) => {
-    if (item.checked) { checkList.value.push(item.prop) }
-  })
-  fetchData()
+    if (item.checked) {
+      checkList.value.push(item.prop);
+    }
+  });
+  fetchData();
   nextTick(() => {
-    rowDrop()
-  })
-})
+    rowDrop();
+  });
+});
 </script>
 
 <template>
@@ -140,9 +136,7 @@ onMounted(() => {
           </el-button>
         </FormLeftPanel>
         <FormRightPanel>
-          <el-button size="default">
-            导出
-          </el-button>
+          <el-button size="default"> 导出 </el-button>
           <TabelControl
             v-model:border="border"
             v-model:tableAutoHeight="tableAutoHeight"
@@ -157,7 +151,6 @@ onMounted(() => {
       </el-row>
       <el-table
         ref="elTableRef"
-        :key="forceUpdate"
         v-loading="listLoading"
         row-key="id"
         :border="border"
@@ -165,12 +158,9 @@ onMounted(() => {
         :size="lineHeight"
         :stripe="stripe"
         fit
-        @selection-change="setSelectRows"
       >
         <ElTableColumn width="80" align="center" fixed>
-          <template #header>
-            排序
-          </template>
+          <template #header> 排序 </template>
           <template #default>
             <ElTag type="info" class="sortable">
               <SvgIcon name="i-ep:d-caret" />
@@ -178,21 +168,23 @@ onMounted(() => {
           </template>
         </ElTableColumn>
         <el-table-column
-          v-if="checkList.includes('a')"
+          v-if="checkList.includes('levelName')"
           align="center"
-          prop="id"
+          prop="levelName"
           show-overflow-tooltip
           label="等级名称"
         />
         <el-table-column
+          v-if="checkList.includes('additionRatio')"
           align="center"
-          prop="b"
+          prop="additionRatio"
           show-overflow-tooltip
           label="加成比例(百分比)"
         />
         <el-table-column
+          v-if="checkList.includes('memberQuantity')"
           align="center"
-          prop="c"
+          prop="memberQuantity"
           show-overflow-tooltip
           label="成员数量"
         />
@@ -210,6 +202,7 @@ onMounted(() => {
               size="small"
               plain
               type="danger"
+              v-if="row.isDelete === 1"
               @click="handleDelete(row)"
             >
               删除
@@ -233,7 +226,7 @@ onMounted(() => {
         @current-change="currentChange"
       />
     </PageMain>
-    <edit ref="EditRef" />
+    <edit ref="EditRef" @queryData="queryData" />
   </div>
 </template>
 
@@ -288,5 +281,5 @@ onMounted(() => {
 .el-tag.sortable .icon {
   cursor: ns-resize;
 }
-
 </style>
+@/api/modules/survey_vipLevel

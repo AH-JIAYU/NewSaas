@@ -112,6 +112,7 @@ const changeClient = (val: any) => {
   );
   props.leftTab.isProfile = Number(findData.antecedentQuestionnaire);
 };
+
 // 所属国家全选
 const selectAll = () => {
   props.leftTab.countryIdList = [];
@@ -119,8 +120,6 @@ const selectAll = () => {
     data.value.basicSettings.countryList.map((item: any) => {
       props.leftTab.countryIdList.push(item.id);
     });
-  } else {
-    props.leftTab.countryIdListy = [];
   }
 };
 
@@ -496,18 +495,37 @@ nextTick(() => {
                   collapse-tags
                   @change="changeCountryId"
                 >
-                  <el-checkbox
-                    v-model="data.checked"
-                    @change="selectAll"
-                    style="
-                      display: flex;
-                      justify-content: right;
-                      align-items: center;
-                      width: 100%;
-                      padding-right: 10px;
-                    "
-                    >全球</el-checkbox
-                  >
+                  <template #header>
+                    <el-checkbox
+                      v-model="data.checked"
+                      @change="selectAll"
+                      style="display: flex;
+    height: unset;"
+                      >全球</el-checkbox
+                    >
+                  </template>
+                  <!-- <el-option label="全球" value="" @click.stop>
+                    <span style="float: left">全球</span>
+                    <span
+                      style="
+                        float: right;
+                        color: var(--el-text-color-secondary);
+                        font-size: 13px;
+                      "
+                    >
+                      <el-checkbox
+                        v-model="data.checked"
+                        @change="selectAll"
+                        style="
+                          display: flex;
+                          justify-content: right;
+                          align-items: center;
+                          width: 100%;
+                          padding-right: 10px;
+                        "
+                      ></el-checkbox>
+                    </span>
+                  </el-option> -->
                   <ElOption
                     v-for="item in data.basicSettings.countryList"
                     :label="item.chineseName"

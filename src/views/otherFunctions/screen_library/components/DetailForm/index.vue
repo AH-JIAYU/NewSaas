@@ -35,7 +35,6 @@ Serializer.addProperty("question", { name: "surveyType" });
 Serializer.addProperty("itemvalue", { name: "surveyId" });
 Serializer.addProperty("itemvalue", { name: "surveyType" });
 
-
 const props = defineProps(["id", "details", "title"]);
 const emits = defineEmits(["onSubmit"]);
 const loading = ref(true);
@@ -52,8 +51,6 @@ const creatorOptions: ICreatorOptions = {
 };
 let creator: any;
 onMounted(async () => {
-  // console.log("creatorOptions", creatorOptions);
-  // console.log("Serializer", Serializer);
   // 清空自定义问题
   ComponentCollection.Instance.clear();
   // #region 模板
@@ -121,6 +118,32 @@ onMounted(async () => {
   });
   // 新增问题事件 添加id
   creator.onQuestionAdded.add(async function (sender: any, options: any) {
+    //  #region  判重  模板的问题重复， id也会重复 后端会报错
+    const toolboxJSON = ComponentCollection.Instance;
+    const toolbox = creator.JSON;
+    proces(toolbox, toolboxJSON);
+    let findData: any = [];
+    toolbox.pages.forEach((item: any) => {
+      item.elements.forEach((ite: any) => {
+        if (
+          ite.surveyId ===
+          options.question.customQuestion.json.questionJSON.surveyId
+        ) {
+          findData.push(ite);
+          return;
+        }
+      });
+    });
+    // #endregion
+    if (findData.length > 1) {
+      // 删除当前问题
+      sender.deleteElement(sender.selectedElement);
+      ElMessage.warning({
+        message: "已有该问题,不可重复设置",
+        center: true,
+      });
+      return;
+    }
     // options.question.contentQuestion 问题内容 只有问题是自定义的时候才会有这个属性
     if (!options.question.contentQuestion) {
       var q = options.question;
