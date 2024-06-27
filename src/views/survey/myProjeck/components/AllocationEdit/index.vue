@@ -81,7 +81,7 @@ defineExpose({ showEdit });
     <el-dialog
       v-model="dialogTableVisible"
       title="分配"
-      width="500"
+      width="700"
       :before-close="closeHandler"
     >
       <el-table :data="data.list" v-loading="false" row-key="id">
@@ -115,6 +115,7 @@ defineExpose({ showEdit });
         :rules="rules"
         :model="data.form"
         :inline="false"
+        style="margin-top: 1.25rem;"
       >
         <el-form-item label="会员组" prop="groupSupplierIdList">
           <el-select

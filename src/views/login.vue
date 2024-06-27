@@ -245,12 +245,10 @@ const validateEmailRegistered = (rule: any, value: any, callback: any) => {
 };
 const registerRules = ref<FormRules>({
   account: [{ required: true, trigger: "blur", message: "请输入用户名" }],
-  companyName: [{ required: true, trigger: "blur", message: "请输入公司名称" }],
-  companyType: [{ required: true, trigger: "blur", message: "请选择账户类型" }],
-  taxID: [{ required: true, trigger: "blur", message: "请输入公司税号" }],
-  legalPersonName: [
-    { required: true, trigger: "blur", message: "请输入法人姓名" },
-  ],
+  companyName: [{ required: true, trigger: 'blur', message: '请输入公司名称' }],
+  companyType: [{ required: true, trigger: 'blur', message: '请选择账户类型' }],
+  // taxID: [{ required: true, trigger: 'blur', message: '请输入公司税号' }],
+  legalPersonName: [{ required: true, trigger: 'blur', message: '请输入法人姓名' }],
   email: [
     { required: true, trigger: "blur", message: "请输入邮箱" },
     { validator: validateEmailRegistered, trigger: "blur" },
@@ -311,7 +309,7 @@ const handleRegister = throttle(async () => {
     registerFormRef.value.validate(async (valid: any) => {
       if (valid) {
         registerForm.value.type =
-          registerForm.value.country === "CN" ? "phone" : "email";
+        registerForm.value.country === "CN" ? "phone" : "email";
         registerForm.value.companyName = "";
         registerForm.value.legalPersonName = "";
         registerForm.value.taxID = "";
