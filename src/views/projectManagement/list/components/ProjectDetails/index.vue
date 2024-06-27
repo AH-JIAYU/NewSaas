@@ -176,8 +176,14 @@ defineExpose({ showEdit });
                 >
               </div>
               <div class="status">
-                <div class="i-ph:seal-light w-1em h-1em"></div>
-                <div>{{ data.isOnline === 1 ? "在线" : "离线" }}</div>
+                <!-- <div class="i-ph:seal-light w-1em h-1em"></div> -->
+                <div
+                  :class="
+                    data.isOnline === 1 ? 'isOnlineTrue' : 'isOnlineFalse'
+                  "
+                >
+                  {{ data.isOnline === 1 ? "在线" : "离线" }}
+                </div>
               </div>
             </div>
           </template>
@@ -508,16 +514,57 @@ defineExpose({ showEdit });
     width: 128px;
 
     > div {
+      width: 120px;
+      height: 2.2rem;
+      line-height: 2.2rem;
+      text-align: center;
+      border-radius: 0.3rem;
+      color: #fff;
       position: absolute;
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%);
       font-size: 20.8px;
+      &::before {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 60%;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        aspect-ratio: 1 / 1;
+        content: "";
+      }
+      &::after {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 50%;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        aspect-ratio: 1 / 1;
+        content: "";
+      }
+    }
+    > div.isOnlineTrue {
+      background-color: #70b51a;
+      &::after,
+      &::before {
+        border: 1px #70b51a dashed;
+      }
     }
 
-    > div:nth-child(1) {
-      font-size: 128px;
+    > div.isOnlineFalse {
+      background-color: #d8261a;
+      &::after,
+      &::before {
+        border: 1px #d8261a dashed;
+      }
     }
+
+    // > div:nth-child(1) {
+    //   font-size: 128px;
+    // }
   }
 }
 
