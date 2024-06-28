@@ -72,7 +72,7 @@ defineExpose({ showEdit });
       <el-form-item label="等级名称" prop="levelName">
         <el-input v-model="form.levelName" maxlength="100" />
       </el-form-item>
-      <el-form-item label="加成比例" prop="additionRatio">
+      <el-form-item label="价格比例" prop="additionRatio">
         <el-input
           v-model.number="form.additionRatio"
           :min="1"
