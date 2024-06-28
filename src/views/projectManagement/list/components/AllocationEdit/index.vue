@@ -103,8 +103,8 @@ defineExpose({ showEdit });
   <div>
     <el-dialog
       v-model="dialogTableVisible"
-      :title="data.title"
-      width="500"
+      title="分配"
+      width="700"
       :before-close="closeHandler"
     >
       <el-table :data="data.list" v-loading="false" row-key="id">

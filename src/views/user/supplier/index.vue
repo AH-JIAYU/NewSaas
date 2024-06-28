@@ -4,6 +4,7 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import customerEdit from "./components/SupplierEdit/index.vue";
 import customerDetail from "./components/SupplierDetail/index.vue";
 import plusMinusPayments from "./components/SupplierPlusMinusPayments/index.vue";
+import useConfigurationSupplierLevelStore from "@/store/modules/configuration_supplierLevel";
 import { submitLoading } from "@/utils/apiLoading";
 import api from "@/api/modules/user_supplier";
 import useUserSupplierStore from "@/store/modules/user_supplier"; // 供应商
@@ -12,7 +13,9 @@ const supplierStore = useUserSupplierStore(); // 供应商
 defineOptions({
   name: "UserSupplierIndex",
 });
-
+//供应商等级
+const configurationSupplierLevelStore = useConfigurationSupplierLevelStore();
+const supplierLevelList = ref<any>([])
 const { pagination, getParams, onSizeChange, onCurrentChange } =
   usePagination(); // 分页
 const listLoading = ref(false);
@@ -177,12 +180,13 @@ function setSelectRows(val: any) {
   selectRows.value = val;
 }
 
-onMounted(() => {
+onMounted(async () => {
   columns.value.forEach((item: any) => {
     if (item.checked) {
       checkList.value.push(item.prop);
     }
   });
+  supplierLevelList.value = await configurationSupplierLevelStore.getLevelNameList();
   queryData();
 });
 </script>
@@ -366,7 +370,11 @@ onMounted(() => {
           prop="supplierLevelId"
           show-overflow-tooltip
           label="供应商等级"
-        />
+        >
+        <template #default="{ row }">
+          <el-text v-for="item in supplierLevelList" :key="item.tenantSupplierLevelId" :value="item.tenantSupplierLevelId" class="mx-1">{{ item. tenantSupplierLevelId === row.supplierLevelId ? item.levelNameOrAdditionRatio : '暂无数据'}}</el-text>
+          </template>
+      </el-table-column>
         <el-table-column
           v-if="checkList.includes('B2B|B2C')"
           align="center"

@@ -54,7 +54,7 @@ async function getDataList() {
 }
 // 复制地址
 const copyUrl = async () => {
-  const str = `https://${form.value.supplierURL}.${webSiteUrl}`
+  const str = `http://${form.value.memberURL}.${webSiteUrl}`
   try {
     await navigator.clipboard.writeText(str);
     ElMessage.success({
