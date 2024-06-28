@@ -66,30 +66,12 @@ onMounted(async () => {
   getDataList()
   filterCountry.value = await useStoreCountry.getCountry()
   munulevs.value = await roleStore.getRole
-  // data.value.dataList.map((item:any) => {
-  //   filterCountry.value.find((ite: any) => {
-  //     if(item.country === ite.code) {
-  //       item.countryName = ite.chineseName
-  //     }
-  //   })
-  // });
-  list.value = await getCountryList(filterCountry.value, data.value.dataList)
   if (data.value.formMode === 'router') {
     eventBus.on('get-data-list', () => {
       getDataList()
     })
   }
 })
-function getCountryList(country: any, list: any) {
-  let result: any = {};
-  list.forEach((item: any) => {
-    const matchedData = country.find((ite: any) => ite.code === item.country);
-    if (matchedData) {
-      result = matchedData
-    }
-  });
-  return result;
-}
 onBeforeUnmount(() => {
   if (data.value.formMode === 'router') {
     eventBus.off('get-data-list')
@@ -277,10 +259,11 @@ function onDel(row: any) {
         </ElTableColumn>
         <ElTableColumn prop="mobile" label="国家" width="150" align="center">
           <template #default="{ row }">
-            <el-text class="mx-1">
-              <!-- {{ row.countryName ? row.countryName : '暂无数据' }} -->
-              {{ list?.chineseName ?list?.chineseName : '暂无数据' }}
+            <div v-for="item in filterCountry" :key="item.id" class="mx-1">
+              <el-text v-if="item.code === row.country" class="mx-1">
+                {{item.chineseName}}
             </el-text>
+            </div>
           </template>
         </ElTableColumn>
         <ElTableColumn label="状态" width="100" align="center">

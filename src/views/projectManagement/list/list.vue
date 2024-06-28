@@ -439,7 +439,7 @@ onMounted(async () => {
           label="原价"
         >
           <template #default="{ row }">
-            $ {{ row.doMoneyPrice }} ￥{{ row.memberPrice }}
+            <el-text class="mx-1">{{row.countryIdList.includes('343') ? `￥${row.memberPrice}` : `$${row.doMoneyPrice}`}}</el-text>
           </template>
         </el-table-column>
         <el-table-column
