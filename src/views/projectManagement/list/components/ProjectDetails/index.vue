@@ -23,6 +23,11 @@ const logDetailsRef = ref();
 const active = ref(1);
 const data = ref<any>({
   form: {}, // 表格
+  // 配置信息 国家和问卷
+  // initialProblem: {
+  //   countryId: "", // 国家
+  //   projectQuotaQuestionType: "", // 问题类型
+  // },
   imgUrl: "", // 图片预览
   isOnline: "", //	项目状态:1:在线 2:不在线
   allocationStatus: "", //分配状态:1:未分配 2:已分配
@@ -59,8 +64,43 @@ async function showEdit(row: any) {
   });
   data.value.imgUrl = imgres.data.fileUrl;
   data.value.srcList = [imgres.data.fileUrl];
+  getCountryQuestion();
   dialogTableVisible.value = true;
 }
+// 回显国家和问卷
+const getCountryQuestion = async () => {
+  if (data.value.form.projectQuotaInfoList.length) {
+    // 获取国家
+    const resCountry = await api.getProjectCountryList({
+      countryIdList: data.value.form.countryIdList,
+    });
+    // 获取问卷
+    const params = {
+      countryId: data.value.form.projectQuotaInfoList[0].countryId, // 国家
+      projectQuotaQuestionType:
+        data.value.form.projectQuotaInfoList[0].projectQuotaQuestionType, // 问题类型
+    };
+    const resQuestionnaire = await api.getProjectCategoryList(params);
+    // 查找国家
+    const countryData = findData(
+      resCountry.data.getProjectCountryListInfoList,
+      "countryId",
+      params.countryId
+    );
+    // 查找问卷
+    const questionnaireData = findData(
+      resQuestionnaire.data.getProjectCategoryInfoList,
+      "projectProblemCategoryId",
+      data.value.form.projectQuotaInfoList[0].projectProblemCategoryId
+    );
+    data.value.form.countryName = countryData.countryName;
+    data.value.form.projectProblemCategoryName =
+      questionnaireData.projectProblemCategoryName;
+  }
+};
+const findData = (arr: any, keyName: any, id: any) => {
+  return arr.find((item: any) => item[keyName] === id);
+};
 // 回显国家
 const comCountryId = computed(() => (countryIdList: any) => {
   const list = data.value.countryList
@@ -155,7 +195,7 @@ defineExpose({ showEdit });
           <el-col :span="2" />
         </el-row>
       </template>
-      <ElForm label-width="6.25rem">
+      <ElForm label-width="120px">
         <el-card class="box-card">
           <template #header>
             <div class="card-header">
@@ -353,11 +393,36 @@ defineExpose({ showEdit });
             </div>
           </template>
           <el-row
-            :class="{ isNone: !data.form.projectQuotaInfoList.length }"
             :gutter="10"
+            :class="
+              data.form.projectQuotaInfoList.length ? 'toConfigure' : 'isNone'
+            "
           >
-            <el-col :span="8" v-for="item in data.form.projectQuotaInfoList">
-              <el-form-item :label="item.keyValue">
+            <el-col :span="8">
+              <el-form-item label="国家 :">
+                <el-text class="mx-1">
+                  {{ data.form.countryName ? data.form.countryName : "-" }}
+                </el-text>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="问卷 :">
+                <el-text class="mx-1">
+                  {{
+                    data.form.projectProblemCategoryName
+                      ? data.form.projectProblemCategoryName
+                      : "-"
+                  }}
+                </el-text>
+              </el-form-item>
+            </el-col>
+            <el-col
+              :span="24"
+              :class="{ isNone: !data.form.projectQuotaInfoList.length }"
+              :gutter="10"
+              v-for="item in data.form.projectQuotaInfoList"
+            >
+              <el-form-item :label="item.keyValue + ' :'">
                 <el-text
                   class="mx-1"
                   v-if="
@@ -621,8 +686,31 @@ th {
 tr {
   width: 30%;
 }
-
+.toConfigure {
+  max-height: 31.25rem;
+  overflow-y: auto;
+  .el-form-item {
+    margin: 10px 0;
+  }
+  .el-col:nth-of-type(n + 3) {
+    border-bottom: 1px dashed #d5d5d5;
+  }
+}
 .isNone {
   display: none;
+}
+:deep {
+  .el-form-item__label {
+    align-items: flex-start;
+    box-sizing: border-box;
+    color: var(--el-text-color-regular);
+    display: inline-flex;
+    flex: 0 0 auto;
+    font-size: var(--el-form-label-font-size);
+    height: auto;
+    justify-content: flex-end;
+    line-height: auto;
+    padding: 12px 0;
+  }
 }
 </style>

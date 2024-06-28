@@ -15,6 +15,7 @@ const emits = defineEmits(["fetch-data"]);
 const dialogTableVisible = ref(false);
 const formRef = ref<any>(); // ref
 const data = ref<any>({
+  title: "分配",
   list: [], // 表格
   tenantSupplierList: [], // 供应商
   vipGroupList: [], // 会员组
@@ -39,6 +40,7 @@ async function showEdit(row: any, type: string) {
   data.value.list = [{ ...row }]; // 表格
   // 重新分配
   if (type === "reassign") {
+    data.value.title = "重新分配";
     const res = await obtainLoading(
       api.getProjectAllocation({ projectId: row.projectId })
     );
@@ -46,6 +48,7 @@ async function showEdit(row: any, type: string) {
     data.value.form = form;
     data.value.form.groupSupplierIdList = groupSupplierIdSet;
   } else {
+    data.value.title = "分配";
     // 分配
     data.value.form.projectId = row.projectId; // 项目id
   }
@@ -100,7 +103,7 @@ defineExpose({ showEdit });
   <div>
     <el-dialog
       v-model="dialogTableVisible"
-      title="分配"
+      :title="data.title"
       width="500"
       :before-close="closeHandler"
     >
@@ -139,10 +142,15 @@ defineExpose({ showEdit });
           >
             <el-radio :value="2" size="large"> 供应商 </el-radio>
             <el-radio :value="3" size="large"> 会员组 </el-radio>
+            <el-radio :value="4" size="large" v-if="data.title === '重新分配'">
+              取消分配
+            </el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item
-          v-if="data.form.allocationType === 2"
+          v-if="
+            data.form.allocationType === 2 && data.form.allocationType !== 4
+          "
           label="供应商"
           prop="groupSupplierIdList"
         >
@@ -162,7 +170,9 @@ defineExpose({ showEdit });
           </el-select>
         </el-form-item>
         <el-form-item
-          v-if="data.form.allocationType === 3"
+          v-if="
+            data.form.allocationType === 3 && data.form.allocationType !== 4
+          "
           label="会员组"
           prop="groupSupplierIdList"
         >

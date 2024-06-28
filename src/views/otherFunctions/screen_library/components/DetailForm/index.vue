@@ -118,39 +118,41 @@ onMounted(async () => {
   });
   // 新增问题事件 添加id
   creator.onQuestionAdded.add(async function (sender: any, options: any) {
-    //  #region  判重  模板的问题重复， id也会重复 后端会报错
-    const toolboxJSON = ComponentCollection.Instance;
-    const toolbox = creator.JSON;
-    proces(toolbox, toolboxJSON);
-    let findData: any = [];
-    toolbox.pages.forEach((item: any) => {
-      item.elements.forEach((ite: any) => {
-        if (
-          ite.surveyId ===
-          options.question.customQuestion.json.questionJSON.surveyId
-        ) {
-          findData.push(ite);
-          return;
-        }
-      });
-    });
-    // #endregion
-    if (findData.length > 1) {
-      // 删除当前问题
-      sender.deleteElement(sender.selectedElement);
-      ElMessage.warning({
-        message: "已有该问题,不可重复设置",
-        center: true,
-      });
-      return;
-    }
     // options.question.contentQuestion 问题内容 只有问题是自定义的时候才会有这个属性
     if (!options.question.contentQuestion) {
+      console.log(1111);
       var q = options.question;
       q.choices = [];
       const res = await obtainLoading(api.getId({}));
       q.surveyType = 1; //1:表示前端生成(新增操作) 2:表示后端返回(修改操作)
       q.surveyId = res.data.id;
+    } else {
+      //  #region  判重  模板的问题重复， id也会重复 后端会报错
+      const toolboxJSON = ComponentCollection.Instance;
+      const toolbox = creator.JSON;
+      proces(toolbox, toolboxJSON);
+      let findData: any = [];
+      toolbox.pages.forEach((item: any) => {
+        item.elements.forEach((ite: any) => {
+          if (
+            ite.surveyId ===
+            options.question.customQuestion.json.questionJSON.surveyId
+          ) {
+            findData.push(ite);
+            return;
+          }
+        });
+      });
+      // #endregion
+      if (findData.length > 1) {
+        // 删除当前问题
+        sender.deleteElement(sender.selectedElement);
+        ElMessage.warning({
+          message: "已有该问题,不可重复设置",
+          center: true,
+        });
+        return;
+      }
     }
   });
   // 新增答案事件 添加id

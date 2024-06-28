@@ -289,12 +289,15 @@ const getProjectCategoryList = async () => {
 // 根据目录id查询问题和答案表
 const getProjectProblemList = async (id: string | number, judge: boolean) => {
   if (id) {
+    // 置空数据
     setTimeout(async () => {
+      // props.leftTab.projectQuotaInfoList = [];
+      // props.leftTab.data.configurationInformation.ProjectProblemInfoList = [];
       const { projectProblemCategoryName, ...params } =
         props.leftTab.data.configurationInformation.projectCategoryList.find(
           (item: any) => item.projectProblemCategoryId === id
         );
-      const res = await obtainLoading(api.getProjectProblemList(params));
+      const res = await api.getProjectProblemList(params);
       //问题列表 - 显示的数据
       props.leftTab.data.configurationInformation.ProjectProblemInfoList =
         res.data.getProjectProblemInfoList;
@@ -342,18 +345,10 @@ const setAnswerValue = (type: number, index: number) => {
   const answerList: any =
     props.leftTab.data.configurationInformation.ProjectProblemInfoList[index]
       .getProjectAnswerInfoList;
-  // if (type == 2) {
-  //   // 单选 id 为 ""
-  //   id = [id];
-  // }
   const filteredData = answerList.filter((item: any) => id.includes(item.id));
   props.leftTab.projectQuotaInfoList[index].answerValueList = filteredData.map(
     (item: any) => item.anotherName
   );
-  // if (type == 2) {
-  //   props.leftTab.projectQuotaInfoList[index].answerValueList =
-  //     props.leftTab.projectQuotaInfoList[index].answerValueList[0];
-  // }
 };
 
 // 获取 客户 国家 项目类型
@@ -402,7 +397,7 @@ const customModel = (id: any, index: any) => {
         const data = props.leftTab.projectQuotaInfoList.find(
           (item: any) => item.projectProblemId === id
         );
-        return data.projectAnswerIdList;
+        return data.projectAnswerIdList || [];
       }
     },
     set(newValue: any) {
@@ -499,8 +494,7 @@ nextTick(() => {
                     <el-checkbox
                       v-model="data.checked"
                       @change="selectAll"
-                      style="display: flex;
-    height: unset;"
+                      style="display: flex; height: unset"
                       >全球</el-checkbox
                     >
                   </template>
@@ -613,7 +607,7 @@ nextTick(() => {
                     URL
                     <el-tooltip
                       class="tooltips"
-                      content="提示文字……"
+                      content="例:https://www.xxxx.com/8994343?uid={{$uid}}"
                       placement="top"
                     >
                       <SvgIcon name="i-ri:question-line" />

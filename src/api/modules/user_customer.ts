@@ -1,4 +1,5 @@
 import api from "../index";
+import axios from "axios";
 
 export default {
   // 获取列表
@@ -18,4 +19,8 @@ export default {
   getRecordList: (data: any) => api.post("tenantCustomer/getTenantCustomerOperationRecordList", data),
   // 获取客户列表-供应商页面用到
   getCustomerList: (data: any) => api.post("tenantCustomer/getTenantCustomerAccordList", data),
+  // 获取加密方式
+  getTenantSecretKeyConfigList: () => api.post('secret/get/getTenantSecretKeyConfigList'),
+  //生成密钥
+  generateKey: (data: any) => api.post('secret/get/generateKey', data),
 };

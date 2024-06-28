@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { ElForm } from "element-plus";
 import { defineProps, ref } from "vue";
+import api from "@/api/modules/user_customer";
 
 // 如果希望默认展示第一个 Tab
 const props = defineProps({
@@ -21,6 +22,8 @@ const rules = reactive<any>({
 
 const activeName = ref("basicSettings");
 const isEncryption = ref(false);
+const secretKeyConfigList = ref<any>([]);
+
 const changeConfigInfoList = (val: any) => {
   if (val) {
     localToptTab.value.tenantCustomerConfigInfoList.push({
@@ -35,17 +38,28 @@ const changeConfigInfoList = (val: any) => {
         (item: any) => item.callbackWay === 2
       );
     if (findDataIndex !== -1) {
-      localToptTab.value.tenantCustomerConfigInfoList.splice(
-        findDataIndex,
-        1
-      );
+      localToptTab.value.tenantCustomerConfigInfoList.splice(findDataIndex, 1);
     }
   }
 };
 
-onBeforeMount(() => {
+const changeCustomerConfigInfo = async (val: any, index: number) => {
+  if (val) {
+    const findData = secretKeyConfigList.value.find(
+      (item: any) => item.id === val
+    );
+
+    const res = await api.generateKey({ type: findData.name });
+    localToptTab.value.tenantCustomerConfigInfoList[index].secretKey = res.data;
+  }
+};
+
+onBeforeMount(async () => {
   isEncryption.value =
     localToptTab.value.tenantCustomerConfigInfoList.length === 2;
+
+  const res = await api.getTenantSecretKeyConfigList();
+  secretKeyConfigList.value = res.data;
 });
 // 使用 InstanceType 来获取 ElForm 实例的类型
 const formRef = ref(null);
@@ -203,8 +217,7 @@ nextTick(() => {
                 <el-form-item label="加密">
                   <el-switch
                     v-model="
-                      localToptTab.tenantCustomerConfigInfoList[0]
-                        .isEncryption
+                      localToptTab.tenantCustomerConfigInfoList[0].isEncryption
                     "
                     :active-value="1"
                     :inactive-value="2"
@@ -217,26 +230,39 @@ nextTick(() => {
               <el-col
                 :span="24"
                 v-if="
-                  localToptTab.tenantCustomerConfigInfoList[0]
-                    .isEncryption === 1
+                  localToptTab.tenantCustomerConfigInfoList[0].isEncryption ===
+                  1
                 "
               >
                 <el-form-item label="加密方式">
-                  <el-select v-model="localToptTab.tenantCustomerConfigInfoList[0].encryptionId">
-                    <el-option label="30" :value="30"></el-option>
-                    <el-option label="60" :value="60"></el-option>
+                  <el-select
+                    @change="changeCustomerConfigInfo($event, 0)"
+                    v-model="
+                      localToptTab.tenantCustomerConfigInfoList[0].encryptionId
+                    "
+                  >
+                    <el-option
+                      v-for="item in secretKeyConfigList"
+                      :label="item.name"
+                      :value="item.id"
+                    ></el-option>
                   </el-select>
                 </el-form-item>
               </el-col>
               <el-col
                 :span="24"
                 v-if="
-                  localToptTab.tenantCustomerConfigInfoList[0]
-                    .isEncryption === 1
+                  localToptTab.tenantCustomerConfigInfoList[0].isEncryption ===
+                  1
                 "
               >
                 <el-form-item label="密钥">
-                  <el-input v-model="localToptTab.tenantCustomerConfigInfoList[0].secretKey" />
+                  <el-input
+                    disabled
+                    v-model="
+                      localToptTab.tenantCustomerConfigInfoList[0].secretKey
+                    "
+                  />
                 </el-form-item>
               </el-col>
               <el-col :span="24">
@@ -285,8 +311,7 @@ nextTick(() => {
                 <el-form-item label="加密">
                   <el-switch
                     v-model="
-                      localToptTab.tenantCustomerConfigInfoList[1]
-                        .isEncryption
+                      localToptTab.tenantCustomerConfigInfoList[1].isEncryption
                     "
                     :active-value="1"
                     :inactive-value="2"
@@ -299,26 +324,39 @@ nextTick(() => {
               <el-col
                 :span="24"
                 v-if="
-                  localToptTab.tenantCustomerConfigInfoList[1]
-                    .isEncryption === 1
+                  localToptTab.tenantCustomerConfigInfoList[1].isEncryption ===
+                  1
                 "
               >
                 <el-form-item label="加密方式">
-                  <el-select v-model="localToptTab.tenantCustomerConfigInfoList[1].encryptionId">
-                    <el-option label="30" :value="30"></el-option>
-                    <el-option label="60" :value="60"></el-option>
+                  <el-select
+                    @change="changeCustomerConfigInfo($event, 1)"
+                    v-model="
+                      localToptTab.tenantCustomerConfigInfoList[1].encryptionId
+                    "
+                  >
+                    <el-option
+                      v-for="item in secretKeyConfigList"
+                      :label="item.name"
+                      :value="item.id"
+                    ></el-option>
                   </el-select>
                 </el-form-item>
               </el-col>
               <el-col
                 :span="24"
                 v-if="
-                  localToptTab.tenantCustomerConfigInfoList[1]
-                    .isEncryption === 1
+                  localToptTab.tenantCustomerConfigInfoList[1].isEncryption ===
+                  1
                 "
               >
                 <el-form-item label="密钥">
-                  <el-input v-model="localToptTab.tenantCustomerConfigInfoList[1].secretKey" />
+                  <el-input
+                    disabled
+                    v-model="
+                      localToptTab.tenantCustomerConfigInfoList[1].secretKey
+                    "
+                  />
                 </el-form-item>
               </el-col>
               <el-col :span="24">
