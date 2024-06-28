@@ -120,7 +120,6 @@ onMounted(async () => {
   creator.onQuestionAdded.add(async function (sender: any, options: any) {
     // options.question.contentQuestion 问题内容 只有问题是自定义的时候才会有这个属性
     if (!options.question.contentQuestion) {
-      console.log(1111);
       var q = options.question;
       q.choices = [];
       const res = await obtainLoading(api.getId({}));
