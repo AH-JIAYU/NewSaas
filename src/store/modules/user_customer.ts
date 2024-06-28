@@ -26,7 +26,7 @@ const useUserCustomerStore = defineStore(
       riskControl: 1, //风险控制
       turnover: null, //营业限额
       rateAudit: null, //审核Min值
-      addTenantCustomerConfigInfoList: [
+      tenantCustomerConfigInfoList: [
         {
           callbackWay: 1,//	回调方式:1:服务端回调 2:重定向回调
           isEncryption: 2,//	是否加密:1:加密 2:不加密
