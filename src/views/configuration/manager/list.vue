@@ -60,19 +60,20 @@ const data = ref<any>({
   // 列表数据
   dataList: [],
 })
-let list: any
+// 筛选国家
+const list = ref<any>()
 onMounted(async () => {
   getDataList()
   filterCountry.value = await useStoreCountry.getCountry()
   munulevs.value = await roleStore.getRole
-  data.value.dataList.map((item:any) => {
-    filterCountry.value.find((ite: any) => {
-      if(item.country === ite.code) {
-        item.countryName = ite.chineseName
-      }
-    })
-  });
-  // list = getCountryList(filterCountry.value, data.value.dataList)
+  // data.value.dataList.map((item:any) => {
+  //   filterCountry.value.find((ite: any) => {
+  //     if(item.country === ite.code) {
+  //       item.countryName = ite.chineseName
+  //     }
+  //   })
+  // });
+  list.value = await getCountryList(filterCountry.value, data.value.dataList)
   if (data.value.formMode === 'router') {
     eventBus.on('get-data-list', () => {
       getDataList()
@@ -81,8 +82,8 @@ onMounted(async () => {
 })
 function getCountryList(country: any, list: any) {
   let result: any = {};
-  list.forEach((item2: any) => {
-    const matchedData = country.find((item1: any) => item1.code === item2.country);
+  list.forEach((item: any) => {
+    const matchedData = country.find((ite: any) => ite.code === item.country);
     if (matchedData) {
       result = matchedData
     }
@@ -277,8 +278,8 @@ function onDel(row: any) {
         <ElTableColumn prop="mobile" label="国家" width="150" align="center">
           <template #default="{ row }">
             <el-text class="mx-1">
-              {{ row.countryName ? row.countryName : '暂无数据' }}
-              <!-- {{ list[0]?.chineseName }} -->
+              <!-- {{ row.countryName ? row.countryName : '暂无数据' }} -->
+              {{ list?.chineseName ?list?.chineseName : '暂无数据' }}
             </el-text>
           </template>
         </ElTableColumn>
