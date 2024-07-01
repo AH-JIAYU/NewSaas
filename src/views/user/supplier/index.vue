@@ -372,7 +372,9 @@ onMounted(async () => {
           label="供应商等级"
         >
         <template #default="{ row }">
-          <el-text v-for="item in supplierLevelList" :key="item.tenantSupplierLevelId" :value="item.tenantSupplierLevelId" class="mx-1">{{ item. tenantSupplierLevelId === row.supplierLevelId ? item.levelNameOrAdditionRatio : '暂无数据'}}</el-text>
+          <div v-for="item in supplierLevelList" :key="item.tenantSupplierLevelId" :value="item.levelNameOrAdditionRatio">
+            <el-text v-if="item.tenantSupplierLevelId === row.supplierLevelId" class="mx-1">{{ item.levelNameOrAdditionRatio}}</el-text>
+          </div>
           </template>
       </el-table-column>
         <el-table-column

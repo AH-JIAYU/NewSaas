@@ -14,6 +14,7 @@ import api from '@/api/modules/personal_setting'
 defineOptions({
   name: 'personalSetting',
 })
+const emits = defineEmits(['success'])
 //基础字典
 const basicDictionaryStore = useBasicDictionaryStore();
 // 国家list
@@ -174,7 +175,7 @@ function userSubmit() {
       }
       const res = await api.edit(userForm.value)
       if(res.status === -1) return
-      getDataList()
+      emits('success')
       loading.value = false
       ElMessage.success({
         message: '修改成功',
@@ -195,10 +196,10 @@ const accountSubmit = () => {
       // return
       const res = await api.edit(accountForm.value)
       if(res.status === -1) return
-      getDataList()
+      emits('success')
       loading.value = false
       ElMessage.success({
-        message: '修改成功',
+        message: '修改成功',  
         center: true,
       })
       closeHandler()
@@ -207,7 +208,7 @@ const accountSubmit = () => {
 }
 // 父级传递数据
 async function showEdit(row: any) {
-  // total.value = row.length
+  userForm.value = row
   dialogTableVisible.value = true
 }
 // 弹框关闭事件
@@ -229,14 +230,7 @@ function handleSuccess(res: any) {
   }
 }
 // 获取数据
-const getDataList = async () => {
-  loading.value = true
-  const res = await api.list()
-  userForm.value = res.data
-  loading.value = false
-}
 onMounted(async () => {
-  getDataList()
   countryList.value = await basicDictionaryStore.getCountry()
 })
 // 暴露方法
