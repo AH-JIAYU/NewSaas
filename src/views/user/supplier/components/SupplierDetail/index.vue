@@ -8,13 +8,11 @@ const emit = defineEmits(["fetch-data"]);
 const drawerisible = ref(false);
 const checkRef = ref<any>();
 const detailData = ref<any>(); // 详情数据
-const detailStatus = ref("开启");
 async function showEdit(row: any) {
   const params = {
     tenantSupplierId: row.tenantSupplierId,
   };
   const { status, data } = await obtainLoading(api.detail(params));
-  detailStatus.value = data.supplierStatus === 1 ? "关闭" : "开启";
   detailData.value = data;
   status === 1 &&
     ElMessage.success({
@@ -55,10 +53,17 @@ defineExpose({
       <el-card class="box-card">
         <template #header>
           <div class="card-header">
-            <span>基本信息</span>
-            <div class="status">
-              <div class="i-ph:seal-light w-1em h-1em"></div>
-              <div>{{ detailStatus }}</div>
+            <div class="leftTitle">基本信息</div>
+            <div class="rightStatus">
+              <div
+                :class="
+                  detailData.supplierStatus === 1
+                    ? 'isOnlineFalse'
+                    : 'isOnlineTrue'
+                "
+              >
+                {{ detailData.supplierStatus === 1 ? "关闭" : "开启" }}
+              </div>
             </div>
           </div>
         </template>
@@ -210,6 +215,75 @@ defineExpose({
 </template>
 
 <style scoped lang="scss">
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .leftTitle {
+    .spanStatus {
+      width: 60px !important;
+      height: 20px !important;
+      background: var(--el-color-primary);
+      color: var(--el-color-white);
+      padding: 0 8px;
+      font-size: 0.875rem;
+      border-radius: 3.125rem;
+    }
+  }
+  .rightStatus {
+    position: relative;
+    width: 128px;
+
+    > div {
+      width: 120px;
+      height: 2.2rem;
+      line-height: 2.2rem;
+      text-align: center;
+      border-radius: 0.3rem;
+      color: #fff;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 20.8px;
+      &::before {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 60%;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        aspect-ratio: 1 / 1;
+        content: "";
+      }
+      &::after {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 50%;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        aspect-ratio: 1 / 1;
+        content: "";
+      }
+    }
+    > div.isOnlineTrue {
+      background-color: #70b51a;
+      &::after,
+      &::before {
+        border: 1px #70b51a dashed;
+      }
+    }
+
+    > div.isOnlineFalse {
+      background-color: #d8261a;
+      &::after,
+      &::before {
+        border: 1px #d8261a dashed;
+      }
+    }
+  }
+}
 .status {
   position: relative;
   width: 8rem;

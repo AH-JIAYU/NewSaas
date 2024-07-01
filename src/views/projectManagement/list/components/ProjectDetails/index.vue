@@ -199,23 +199,13 @@ defineExpose({ showEdit });
         <el-card class="box-card">
           <template #header>
             <div class="card-header">
-              <div>
+              <div class="leftTitle">
                 基本信息
-                <span
-                  class="m-4"
-                  style="
-                    width: 60px !important;
-                    height: 20px !important;
-                    background: var(--el-color-primary);
-                    color: var(--el-color-white);
-                    padding: 0 8px;
-                    font-size: 0.875rem;
-                    border-radius: 3.125rem;
-                  "
-                  >{{ data.allocationStatus === 1 ? "未分配" : "已分配" }}</span
-                >
+                <span class="m-4 spanStatus">{{
+                  data.allocationStatus === 1 ? "未分配" : "已分配"
+                }}</span>
               </div>
-              <div class="status">
+              <div class="rightStatus">
                 <!-- <div class="i-ph:seal-light w-1em h-1em"></div> -->
                 <div
                   :class="
@@ -572,9 +562,19 @@ defineExpose({ showEdit });
 .card-header {
   display: flex;
   justify-content: space-between;
-  align-items: end;
-
-  .status {
+  align-items: center;
+  .leftTitle {
+    .spanStatus {
+      width: 60px !important;
+      height: 20px !important;
+      background: var(--el-color-primary);
+      color: var(--el-color-white);
+      padding: 0 8px;
+      font-size: 0.875rem;
+      border-radius: 3.125rem;
+    }
+  }
+  .rightStatus {
     position: relative;
     width: 128px;
 
@@ -632,22 +632,30 @@ defineExpose({ showEdit });
     // }
   }
 }
-
-.el-step__title {
-  text-align: center;
-}
-
-.one {
-  position: relative;
-}
-
-.started {
-  position: absolute;
-  top: 49%;
-  left: 7%;
-  z-index: 9999;
-  content: "已开通";
-  transform: translate(-50%, -50%);
+// 配置信息问题答案
+.toConfigure {
+  max-height: 31.25rem;
+  overflow-y: auto;
+  :deep {
+    .el-form-item {
+      margin: 10px 0;
+    }
+    .el-col:nth-of-type(n + 3) {
+      border-bottom: 1px dashed #d5d5d5;
+    }
+    .el-form-item__label {
+      align-items: flex-start;
+      box-sizing: border-box;
+      color: var(--el-text-color-regular);
+      display: inline-flex;
+      flex: 0 0 auto;
+      font-size: var(--el-form-label-font-size);
+      height: auto;
+      justify-content: flex-end;
+      line-height: auto;
+      padding: 12px 0;
+    }
+  }
 }
 
 :deep(.bytemd-fullscreen) {
@@ -662,55 +670,7 @@ defineExpose({ showEdit });
   width: 100%;
 }
 
-table {
-  width: 100%;
-  /* 表格宽度设置为100% */
-  border-collapse: collapse;
-  /* 合并边框 */
-}
-
-th,
-td {
-  padding: 0.625rem;
-  /* 单元格内边距 */
-  border: 0.0625rem solid #ccc;
-  /* 边框 */
-  text-align: center;
-}
-
-th {
-  width: 15%;
-  font-weight: normal;
-}
-
-tr {
-  width: 30%;
-}
-.toConfigure {
-  max-height: 31.25rem;
-  overflow-y: auto;
-  .el-form-item {
-    margin: 10px 0;
-  }
-  .el-col:nth-of-type(n + 3) {
-    border-bottom: 1px dashed #d5d5d5;
-  }
-}
 .isNone {
   display: none;
-}
-:deep {
-  .el-form-item__label {
-    align-items: flex-start;
-    box-sizing: border-box;
-    color: var(--el-text-color-regular);
-    display: inline-flex;
-    flex: 0 0 auto;
-    font-size: var(--el-form-label-font-size);
-    height: auto;
-    justify-content: flex-end;
-    line-height: auto;
-    padding: 12px 0;
-  }
 }
 </style>
