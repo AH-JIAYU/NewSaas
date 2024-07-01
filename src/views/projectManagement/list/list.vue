@@ -209,16 +209,8 @@ onMounted(async () => {
       checkList.value.push(item.prop);
     }
   });
+
   fetchData();
-  // ip查询
-  fetch("https://api.ipify.org?format=json")
-    .then((response) => response.json())
-    .then((data) => {
-      console.log("Your IP address is:", data.ip);
-    })
-    .catch((error) => {
-      console.error("Error fetching IP address:", error);
-    });
 });
 </script>
 
@@ -439,7 +431,11 @@ onMounted(async () => {
           label="原价"
         >
           <template #default="{ row }">
-            <el-text class="mx-1">{{row.countryIdList.includes('343') ? `￥${row.memberPrice}` : `$${row.doMoneyPrice}`}}</el-text>
+            <el-text class="mx-1">{{
+              row.countryIdList.includes("343")
+                ? `￥${row.memberPrice}`
+                : `$${row.doMoneyPrice}`
+            }}</el-text>
           </template>
         </el-table-column>
         <el-table-column

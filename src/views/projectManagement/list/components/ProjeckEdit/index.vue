@@ -103,16 +103,16 @@ function initializeLeftTabsData(data: any) {
       });
     });
   }
-  leftTabsData.forEach((item: any) => {
-    item.projectQuotaInfoList.forEach((ite: any) => {
-      // 1 输入框 2单选 3复选 4下拉
-      // 单选时 将数组转换成字符串
-      // ite.projectAnswerIdList =
-      //   ite.questionType === 2
-      //     ? ite.projectAnswerIdList[0]
-      //     : ite.projectAnswerIdList;
-    });
-  });
+  // leftTabsData.forEach((item: any) => {
+  //   item.projectQuotaInfoList.forEach((ite: any) => {
+  //     // 1 输入框 2单选 3复选 4下拉
+  //     // 单选时 将数组转换成字符串
+  //     // ite.projectAnswerIdList =
+  //     //   ite.questionType === 2
+  //     //     ? ite.projectAnswerIdList[0]
+  //     //     : ite.projectAnswerIdList;
+  //   });
+  // });
 }
 // 暂存
 function staging() {

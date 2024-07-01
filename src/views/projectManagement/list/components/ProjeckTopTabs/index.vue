@@ -58,13 +58,21 @@ let data = ref<any>({
 
 // 自定义校验邮箱
 const validateUrlRegistered = (rule: any, value: any, callback: any) => {
+  // 网址格式
   const regExpUrl: any =
     /^(((ht|f)tps?):\/\/)?([^!@#$%^&*?.\s-]([^!@#$%^&*?.\s]{0,63}[^!@#$%^&*?.\s])?\.)+[a-z]{2,6}\/?/;
+  // 例子
+  const example: any =
+    /^https?:\/\/[^\s?\/]+(?:\/[^\s?\/]+)*(?:\?uid={{\$uid}})?$/;
   if (!regExpUrl.test(props.leftTab.uidUrl)) {
     callback(new Error("请输入合法网址"));
-  } else {
-    callback();
   }
+  if (!example.test(props.leftTab.uidUrl)) {
+    callback(new Error("格式不正确,请查看例子"));
+  }
+
+    callback();
+
 };
 // 校验
 const rules = reactive<any>({
@@ -291,8 +299,6 @@ const getProjectProblemList = async (id: string | number, judge: boolean) => {
   if (id) {
     // 置空数据
     setTimeout(async () => {
-      // props.leftTab.projectQuotaInfoList = [];
-      // props.leftTab.data.configurationInformation.ProjectProblemInfoList = [];
       const { projectProblemCategoryName, ...params } =
         props.leftTab.data.configurationInformation.projectCategoryList.find(
           (item: any) => item.projectProblemCategoryId === id
@@ -301,8 +307,12 @@ const getProjectProblemList = async (id: string | number, judge: boolean) => {
       //问题列表 - 显示的数据
       props.leftTab.data.configurationInformation.ProjectProblemInfoList =
         res.data.getProjectProblemInfoList;
-      // 判断 编辑回显时 无需重置数据
+      /**
+       * 如果不是编辑的时候正常清空提交和回显的数据
+       * 编辑时不能清除,答案(提交list)是接口返回的
+       */
       if (!judge) {
+        props.leftTab.projectQuotaInfoList = []; //提交
         // 问题列表 - 提交的数据
         for (
           let i = 0;
@@ -397,7 +407,7 @@ const customModel = (id: any, index: any) => {
         const data = props.leftTab.projectQuotaInfoList.find(
           (item: any) => item.projectProblemId === id
         );
-        return data.projectAnswerIdList || [];
+        return data.projectAnswerIdList;
       }
     },
     set(newValue: any) {
@@ -856,7 +866,8 @@ nextTick(() => {
               props.leftTab.data.configurationInformation
                 .ProjectProblemInfoList &&
               props.leftTab.data.configurationInformation.ProjectProblemInfoList
-                .length
+                .length &&
+              props.leftTab.projectQuotaInfoList.length
             "
           >
             <el-row
@@ -1098,10 +1109,5 @@ th {
 tr:hover {
   background-color: #f9f9f9;
   /* 鼠标悬停效果 */
-}
-.el-tooltip__trigger {
-  // margin-left: 20rem;
-  // margin-top: -5.9375rem;
-  // z-index: 999;
 }
 </style>

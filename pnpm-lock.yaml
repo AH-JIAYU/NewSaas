@@ -128,6 +128,9 @@ dependencies:
   vue-i18n:
     specifier: ^9.10.2
     version: 9.10.2(vue@3.4.21)
+  vue-jsonp:
+    specifier: ^2.0.0
+    version: 2.0.0
   vue-m-message:
     specifier: ^4.0.2
     version: 4.0.2
@@ -13505,6 +13508,10 @@ packages:
       '@intlify/shared': 9.10.2
       '@vue/devtools-api': 6.6.1
       vue: 3.4.21(typescript@5.4.3)
+
+  /vue-jsonp@2.0.0:
+    resolution: {integrity: sha512-Mzd9GNeuKP5hHFDWZNMWOsCuMILSkA6jo2l4A02wheFz3qqBzH7aSEFTey1BRCZCLizlaf1EqJ5YUtF392KspA==}
+    dev: false
 
   /vue-m-message@4.0.2:
     resolution: {integrity: sha512-6rTKtIzj2vXyyY6YIcSHDmJNz4R1HuxATgr8gf0c+DjcknwCkmfBggKNDIgshnCyqgL70TWsVrgcqQzl4xsYfQ==}

@@ -9,13 +9,11 @@ const emit = defineEmits(["fetch-data"]);
 const drawerisible = ref<boolean>(false);
 const checkRef = ref<any>();
 const detailData = ref<any>(); // 详情数据
-const detailStatus = ref("开启");
 async function showEdit(row: any) {
   const params = {
     tenantCustomerId: row.tenantCustomerId,
   };
   const { status, data } = await obtainLoading(api.detail(params));
-  detailStatus.value = data.customerStatus === 1 ? "关闭" : "开启";
   detailData.value = data;
   status === 1 &&
     ElMessage.success({
@@ -57,11 +55,17 @@ defineExpose({
       <el-card class="box-card">
         <template #header>
           <div class="card-header">
-            <span>基本信息</span>
-
-            <div class="status">
-              <div class="i-ph:seal-light w-1em h-1em"></div>
-              <div>{{detailStatus}}</div>
+            <div class="leftTitle">基本信息</div>
+            <div class="rightStatus">
+              <div
+                :class="
+                  detailData.customerStatus === 1
+                    ? 'isOnlineFalse'
+                    : 'isOnlineTrue'
+                "
+              >
+                {{ detailData.customerStatus === 1 ? "关闭" : "开启" }}
+              </div>
             </div>
           </div>
         </template>
@@ -206,43 +210,63 @@ defineExpose({
 </template>
 
 <style scoped lang="scss">
-.status {
-  position: relative;
-  width: 8rem;
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
-  > div {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 1.3rem;
-  }
-  > div:nth-child(1) {
-    font-size: 8rem;
-  }
-}
-:deep {
-  .el-divider {
-    margin: 20px 0;
-  }
+  .rightStatus {
+    position: relative;
+    width: 128px;
 
-  .el-card {
-    margin: 10px 0;
-  }
-  .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: end;
-  }
+    > div {
+      width: 120px;
+      height: 2.2rem;
+      line-height: 2.2rem;
+      text-align: center;
+      border-radius: 0.3rem;
+      color: #fff;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 20.8px;
+      &::before {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 60%;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        aspect-ratio: 1 / 1;
+        content: "";
+      }
+      &::after {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 50%;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        aspect-ratio: 1 / 1;
+        content: "";
+      }
+    }
+    > div.isOnlineTrue {
+      background-color: #70b51a;
+      &::after,
+      &::before {
+        border: 1px #70b51a dashed;
+      }
+    }
 
-  .el-drawer__header {
-    border-bottom: 1px solid #aaa !important;
-  }
-
-  .el-row,
-  .el-table {
-    width: 94% !important;
-    margin: auto !important;
+    > div.isOnlineFalse {
+      background-color: #d8261a;
+      &::after,
+      &::before {
+        border: 1px #d8261a dashed;
+      }
+    }
   }
 }
 </style>
