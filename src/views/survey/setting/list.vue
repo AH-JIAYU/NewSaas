@@ -2,6 +2,7 @@
 import { ElMessage, ElMessageBox } from "element-plus";
 import type { FormInstance, FormRules } from "element-plus";
 import api from "@/api/modules/survey_site_setting";
+import ClipboardJS from 'clipboard';
 defineOptions({
   name: 'SurveySettingList',
 })
@@ -46,25 +47,25 @@ onMounted(() => {
 async function getDataList() {
   loading.value = true
   const { data } = await api.list()
-  // const url = data.supplierURL
-  // const extracted = url.match(/jiayu\.com/)[0];
   form.value = data || form.value
-  // form.value.supplierURL = extracted
   loading.value = false
 }
 // 复制地址
-const copyUrl = async () => {
-  const str = `http://${form.value.memberURL}.${webSiteUrl}`
-  try {
-    await navigator.clipboard.writeText(str);
+const clipboard = new ClipboardJS('.btn');
+clipboard.on('success', function(e:any) {
     ElMessage.success({
       message: '复制成功',
       center: true,
     })
-  } catch (error) {
-    console.error(error);
-  }
-}
+    e.clearSelection();
+});
+
+clipboard.on('error', function(e) {
+    ElMessage.error({
+      message: '复制失败',
+      center: true,
+    })
+});
 // 提交数据
 function onSubmit() {
   // 新增
@@ -135,8 +136,8 @@ function onSubmit() {
             </el-form-item>
             <el-form-item style="width: 33rem;" label="会员网址" prop="memberURL">
               <el-input v-model="form.memberURL" style="width: 8rem;" />
-              <el-text class="mx-1">{{ webSiteUrl }}</el-text>
-              <el-button type="primary" link @click="copyUrl">复制</el-button>
+              <el-text class="mx-1">.front-saas-web.surveyssaas.com</el-text>
+              <el-button class="btn" :data-clipboard-text="`${form.memberURL}.front-supplier-web.surveyssaas.com`" type="primary" link>复制</el-button>
             </el-form-item>
           </el-tab-pane>
           <el-tab-pane label="高级设置" name="高级设置">

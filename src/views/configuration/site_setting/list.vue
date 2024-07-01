@@ -3,6 +3,7 @@ import type { FormInstance, FormRules } from "element-plus";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { onMounted, ref } from "vue";
 import api from "@/api/modules/configuration_site_setting";
+import ClipboardJS from 'clipboard';
 
 defineOptions({
   name: "SettingSiteSettingList",
@@ -42,25 +43,25 @@ onMounted(() => {
 async function getDataList() {
   loading.value = true
   const { data } = await api.list()
-  // const url = data.supplierURL
-  // const extracted = url.match(/jiayu\.com/)[0];
   form.value = data || form.value
-  // form.value.supplierURL = extracted
   loading.value = false
 }
 // 复制地址
-const copyUrl = async () => {
-  const str = `http://${form.value.supplierURL}.${supplierUrl}`
-  try {
-    await navigator.clipboard.writeText(str);
+const clipboard = new ClipboardJS('.btn');
+clipboard.on('success', function(e:any) {
     ElMessage.success({
       message: '复制成功',
       center: true,
     })
-  } catch (error) {
-    console.error(error);
-  }
-}
+    e.clearSelection();
+});
+
+clipboard.on('error', function(e) {
+    ElMessage.error({
+      message: '复制失败',
+      center: true,
+    })
+});
 // 提交数据
 function onSubmit() {
   // 新增
@@ -132,8 +133,8 @@ function onSubmit() {
         </el-form-item>
         <el-form-item label="供应商网址" prop="supplierURL">
           <el-input v-model="form.supplierURL" style="width: 8rem;" />
-          <el-text class="mx-1">.{{ supplierUrl }}</el-text>
-          <el-button type="primary" link @click="copyUrl">复制</el-button>
+          <el-text class="mx-1">.front-supplier.surveyssaas.com</el-text>
+          <el-button class="btn" :data-clipboard-text="`${form.supplierURL}.front-supplier-web.surveyssaas.com`" type="primary" link>复制</el-button>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit"> 确认 </el-button>
