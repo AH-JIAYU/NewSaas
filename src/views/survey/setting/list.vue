@@ -51,7 +51,7 @@ async function getDataList() {
   loading.value = false
 }
 // 复制地址
-const clipboard = new ClipboardJS('.btn');
+const clipboard = new ClipboardJS('.copy');
 clipboard.on('success', function(e:any) {
     ElMessage.success({
       message: '复制成功',
@@ -137,7 +137,7 @@ function onSubmit() {
             <el-form-item style="width: 33rem;" label="会员网址" prop="memberURL">
               <el-input v-model="form.memberURL" style="width: 8rem;" />
               <el-text class="mx-1">.front-saas-web.surveyssaas.com</el-text>
-              <el-button class="btn" :data-clipboard-text="`${form.memberURL}.front-supplier-web.surveyssaas.com`" type="primary" link>复制</el-button>
+              <el-button class="copy" :data-clipboard-text="`${form.memberURL}.front-supplier-web.surveyssaas.com`" type="primary" link>复制</el-button>
             </el-form-item>
           </el-tab-pane>
           <el-tab-pane label="高级设置" name="高级设置">
