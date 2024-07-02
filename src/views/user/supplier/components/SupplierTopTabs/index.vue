@@ -279,7 +279,7 @@ nextTick(() => {
                     multiple
                     collapse-tags -->
               <el-col :span="8">
-                <el-form-item label="关联国家">
+                <el-form-item label="地区">
                   <el-select
                     v-model="props.leftTab.relevanceCountryIdList"
                     clearable

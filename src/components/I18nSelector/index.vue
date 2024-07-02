@@ -43,4 +43,5 @@ function setLanguage(name: string) {
   <HDropdownMenu v-if="settingsStore.settings.toolbar.i18n" :items="[langItems]">
     <slot />
   </HDropdownMenu>
+  
 </template>

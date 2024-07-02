@@ -10,9 +10,9 @@ const props: any = defineProps({
   leftTabsData: Array,
   validateTopTabs: Array,
   validateAll: Array,
+  title: String,
 });
 const emits: any = defineEmits(["validate"]);
-const client = ref();
 const settingsRef = ref();
 const localLeftTab = ref<any>(props.leftTabsData);
 const validateTopTabs = ref<any>(props.validateTopTabs);
@@ -106,7 +106,10 @@ defineExpose({ activeLeftTab });
   <div>
     <el-button
       class="button"
-      :disabled="localLeftTab.length > 29"
+      :disabled="
+        localLeftTab.length > 29 ||
+        (props.title === '编辑' && localLeftTab[0].parentId !== '0')
+      "
       @click="addLeftTab()"
     >
       新增
