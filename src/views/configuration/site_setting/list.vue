@@ -136,7 +136,7 @@ function onSubmit() {
         <el-form-item label="供应商网址" prop="supplierURL">
           <el-input v-model="form.supplierURL" style="width: 8rem;" />
           <el-text class="mx-1">.front-supplier.surveyssaas.com</el-text>
-          <el-button class="copy" :data-clipboard-text="`${form.supplierURL}.front-supplier-web.surveyssaas.com`"
+          <el-button class="copy" :data-clipboard-text="`${form.supplierURL}.front-supplier.surveyssaas.com`"
             type="primary" link >复制</el-button>
         </el-form-item>
         <el-form-item>
