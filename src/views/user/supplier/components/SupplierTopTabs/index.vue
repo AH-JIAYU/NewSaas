@@ -347,7 +347,10 @@ nextTick(() => {
               </el-col>
               <el-col :span="8">
                 <el-form-item label="结算周期">
-                  <el-input v-model="props.leftTab.settlementCycle" />
+                  <el-select v-model="props.leftTab.settlementCycle">
+                    <el-option label="30天" :value="30"></el-option>
+                    <el-option label="60天" :value="60"></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
             </el-row>

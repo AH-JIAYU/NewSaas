@@ -19,6 +19,8 @@ const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
 defineOptions({
   name: "ProjectManagementListIndex",
 });
+// 货币类型
+const countryType = ref<any>();
 const tableSortRef = ref<any>();
 // loading加载
 const listLoading = ref<boolean>(true);
@@ -187,6 +189,7 @@ async function fetchData() {
     params.endTime = search.value.time[1] || "";
   }
   const { data } = await api.list(params);
+  countryType.value = data.currencyType;
   list.value = data.getChildrenProjectInfoList;
   pagination.value.total = data.total;
   listLoading.value = false;
@@ -431,20 +434,22 @@ onMounted(async () => {
           label="原价"
         >
           <template #default="{ row }">
-            <el-text class="mx-1">{{
-              row.countryIdList.includes("343")
-                ? `￥${row.memberPrice}`
-                : `$${row.doMoneyPrice}`
-            }}</el-text>
+            <el-text v-if="countryType === 1" class="mx-1"
+              >${{ row.doMoneyPrice }}</el-text
+            >
+            <el-text v-if="countryType === 2" class="mx-1"
+              >￥{{ row.doMoneyPrice }}</el-text
+            >
+            <el-text v-if="countryType === 3" class="mx-1">暂无数据</el-text>
           </template>
         </el-table-column>
-        <el-table-column
+        <!-- <el-table-column
           v-if="checkList.includes('name')"
           show-overflow-tooltip
           prop=""
           align="center"
           label="供应商价"
-        />
+        /> -->
         <el-table-column
           v-if="checkList.includes('ir')"
           show-overflow-tooltip
