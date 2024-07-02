@@ -266,6 +266,7 @@ defineExpose({
         :left-tabs-data="leftTabsData"
         :validate-top-tabs="validateTopTabs"
         :validate-all="validateAll"
+        :title="title"
       />
       <template #footer>
         <el-button @click="closeHandler"> 取消 </el-button>

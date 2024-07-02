@@ -3,14 +3,34 @@ meta:
   title: 导航1
 </route>
 
-<script setup>
+<script setup lang="ts">
 import * as echarts from "echarts";
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
+import api from "@/api/modules/index_index";
 const router = useRouter();
 
-let chart1;
-let chart2;
+const data = reactive<any>({
+  search: {
+    overviewStart: "", //	总揽开始
+    overviewEnd: "", //总揽结束
+    overviewTime: [],
+    overviewType: "day", //	总揽类型 day/month/year/select
+    turnoverType: "day", //营业额趋势 day/month/year
+    completeStart: "", //	完成排名开始时间
+    completeEnd: "", //	完成排名结束时间
+    complete: [],
+    completeType: "day", //	完成排名类型 day/month/year/select
+  },
+  dataCenterOverViewVO: {}, //总揽响应
+  dataCenterTurnoverVO: {}, //	营业额趋势响应
+  dataCenterCustomerVOS: [], //客户总揽
+  dataCenterSupplierCompletedQuantities: [], //	供应商完成数
+  dataCenterSupplierTurnovers: [], //	供应商营业额排名
+});
+
+let chart1: any;
+let chart2: any;
 const chart1Ref = ref();
 const chart2Ref = ref();
 const tableData = [
@@ -270,30 +290,12 @@ function echarts2() {
     },
     tooltip: {
       trigger: "item",
-      formatter(data) {
-        return `程序号：${data.name}</br>项目完成数: ${data.data.datas[2].com}</br>审核率: ${data.data.datas[0].aud}</br>审核成功率: ${data.data.datas[1].audR}`;
+      formatter(data: any) {
+        return `客户：${data.name}</br>项目完成数: ${data.data.datas[2].com}</br>审核率: ${data.data.datas[0].aud}</br>审核成功率: ${data.data.datas[1].audR}`;
       },
     },
 
     legend: [
-      // {
-      //   orient: "vertical",
-      //   x: "55%",
-      //   y: "center",
-      //   bottom: "10",
-      //   itemGap: 20, // 设置图例图形的宽
-      //   data: ["张三", "李四", "王五", "赵六", "老王", "老张", "老李"],
-      //   formatter(name) {
-      //     let target, percentage;
-      //     for (let i = 0; i < data.length; i++) {
-      //       if (data[i].name === name) {
-      //         target = data[i].value;
-      //       }
-      //     }
-      //     const arr = [`${name}`, ` ${target}`];
-      //     return arr.join(" ");
-      //   },
-      // },
       {
         orient: "horizontal",
         x: "55%",
@@ -326,7 +328,7 @@ function echarts2() {
             },
           },
         ],
-        formatter(name) {
+        formatter(name: any) {
           let target, percentage;
           for (let i = 0; i < data.length; i++) {
             if (data[i].name === name) {
@@ -385,7 +387,10 @@ function echarts2() {
           {
             type: "text",
             style: {
-              text: `${data.reduce((total, item) => total + item.value, 0)}`,
+              text: `${data.reduce(
+                (total: any, item: any) => total + item.value,
+                0
+              )}`,
               textAlign: "center",
               textVerticalAlign: "top",
               fontSize: 30,
@@ -395,7 +400,7 @@ function echarts2() {
       },
     ],
   };
-  chart2.on("legendselectchanged", function (params) {
+  chart2.on("legendselectchanged", function (params: any) {
     // 如果点击的图例是 '需要添加超链接的图例名称'
     if (params.name === "查看更多>>") {
       // 执行跳转到链接的操作
@@ -406,7 +411,25 @@ function echarts2() {
   chart2.setOption(option);
 }
 
+async function getList() {
+  const res = await api.list(data.search);
+  const {
+    dataCenterOverViewVO,
+    dataCenterTurnoverVO,
+    dataCenterCustomerVOS,
+    dataCenterSupplierCompletedQuantities,
+    dataCenterSupplierTurnovers,
+  } = res.data;
+  data.dataCenterOverViewVO = dataCenterOverViewVO;
+  data.dataCenterTurnoverVO = dataCenterTurnoverVO;
+  data.dataCenterCustomerVOS = dataCenterCustomerVOS;
+  data.dataCenterSupplierCompletedQuantities =
+    dataCenterSupplierCompletedQuantities;
+  data.dataCenterSupplierTurnovers = dataCenterSupplierTurnovers;
+  console.log("res.data", res.data);
+}
 onMounted(() => {
+  getList();
   echarts1();
   echarts2();
   window.addEventListener("resize", () => {
@@ -416,82 +439,82 @@ onMounted(() => {
 });
 </script>
 
-  <template>
-    <div>
-      <PageMain>
-        <el-row>
-          <SearchTab />
-        </el-row>
-        <ElRow :gutter="20">
-          <ElCol>
-            <ColorfulCard2
-              header="发布项目数"
-              :num="123"
-              icon="ant-design:file-outlined"
-            />
-          </ElCol>
-          <ElCol>
-            <ColorfulCard2
-              color-from="#fbaaa2"
-              color-to="#fc5286"
-              header="待确认项目数"
-              :num="12323"
-              icon="ant-design:file-outlined"
-            />
-          </ElCol>
-          <ElCol>
-            <ColorfulCard2
-              color-from="#ff763b"
-              color-to="#ffc480"
-              header="已确认项目数"
-              :num="123"
-              icon="ant-design:file-outlined"
-            />
-          </ElCol>
-          <ElCol>
-            <ColorfulCard2
-              color-from="#6a8eff"
-              color-to="#0e4cfd"
-              header="已完结项目数"
-              :num="123"
-              icon="ant-design:file-outlined"
-            />
-          </ElCol>
-          <ElCol>
-            <ColorfulCard2
-              color-from="#ffd300"
-              color-to="#ff9b0d"
-              header="项目营业额"
-              :num="123"
-              icon="ant-design:file-outlined"
-            />
-          </ElCol>
-          <ElCol>
-            <ColorfulCard2
-              color-from="#f49494"
-              color-to="#fcd98b"
-              header="项目盈利额"
-              :num="123"
-              icon="ant-design:file-outlined"
-            />
-          </ElCol>
-          <ElCol>
-            <ColorfulCard2
-              color-from="#c2005c"
-              color-to="#ff980f"
-              header="项目退款额"
-              :num="123"
-              icon="ant-design:file-outlined"
-            />
-          </ElCol>
-        </ElRow>
-        <!-- 营业额趋势 & 客户总览 -->
-        <el-row :gutter="20">
-          <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
-            <el-card>
-              <template #header>
-                <p class="title">营业额趋势</p>
-              </template>
+<template>
+  <div>
+    <PageMain>
+      <el-row>
+        <SearchTab />
+      </el-row>
+      <ElRow :gutter="20">
+        <ElCol>
+          <ColorfulCard2
+            header="发布项目数"
+            :num="data.dataCenterOverViewVO.projectTotal"
+            icon="ant-design:file-outlined"
+          />
+        </ElCol>
+        <ElCol>
+          <ColorfulCard2
+            color-from="#fbaaa2"
+            color-to="#fc5286"
+            header="待确认项目数"
+            :num="data.dataCenterOverViewVO.projectSettlementToBeConfirmedTotal"
+            icon="ant-design:file-outlined"
+          />
+        </ElCol>
+        <ElCol>
+          <ColorfulCard2
+            color-from="#ff763b"
+            color-to="#ffc480"
+            header="已确认项目数"
+            :num="data.dataCenterOverViewVO.projectSettlementConfirmedTotal"
+            icon="ant-design:file-outlined"
+          />
+        </ElCol>
+        <ElCol>
+          <ColorfulCard2
+            color-from="#6a8eff"
+            color-to="#0e4cfd"
+            header="已完结项目数"
+            :num="data.dataCenterOverViewVO.projectSettlementCompleteTotal"
+            icon="ant-design:file-outlined"
+          />
+        </ElCol>
+        <ElCol>
+          <ColorfulCard2
+            color-from="#ffd300"
+            color-to="#ff9b0d"
+            header="项目营业额"
+            :num="data.dataCenterOverViewVO.projectTurnover"
+            icon="ant-design:file-outlined"
+          />
+        </ElCol>
+        <ElCol>
+          <ColorfulCard2
+            color-from="#f49494"
+            color-to="#fcd98b"
+            header="项目盈利额"
+            :num="data.dataCenterOverViewVO.projectProfitability"
+            icon="ant-design:file-outlined"
+          />
+        </ElCol>
+        <ElCol>
+          <ColorfulCard2
+            color-from="#c2005c"
+            color-to="#ff980f"
+            header="项目退款额"
+            :num="data.dataCenterOverViewVO.projectRefundAmount"
+            icon="ant-design:file-outlined"
+          />
+        </ElCol>
+      </ElRow>
+      <!-- 营业额趋势 & 客户总览 -->
+      <el-row :gutter="20">
+        <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
+          <el-card>
+            <template #header>
+              <p class="title">营业额趋势</p>
+            </template>
 
             <div
               id="echarts1"
@@ -506,56 +529,56 @@ onMounted(() => {
               <p class="title">客户总览</p>
             </template>
 
-              <div
-                id="echarts2"
-                ref="chart2Ref"
-                style="width: 100%; height: 500px"
-              />
-            </el-card>
-          </el-col>
-        </el-row>
-        <!-- 今日完成排名 & 供应商佣金排行 -->
-        <el-row :gutter="20">
-          <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
-            <el-card>
-              <template #header>
-                <p class="title fx-b">
-                  完成数排名
-                  <SearchTab />
-                </p>
-              </template>
-              <el-table :data="tableData" style="width: 100%">
-                <el-table-column type="index" />
-                <el-table-column prop="name" label="供应商" />
-                <el-table-column prop="money" label="完成金额" />
-                <el-table-column prop="num" label="完成数量" />
-                <el-table-column prop="B2B/B2C" label="B2B/B2C" />
-                <el-table-column prop="currency" label="所属国家" />
-              </el-table>
-            </el-card>
-          </el-col>
-          <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
-            <el-card>
-              <template #header>
-                <p class="title fx-b">
-                  供应商营业额排行
-                  <SearchTab />
-                </p>
-              </template>
+            <div
+              id="echarts2"
+              ref="chart2Ref"
+              style="width: 100%; height: 500px"
+            />
+          </el-card>
+        </el-col>
+      </el-row>
+      <!-- 今日完成排名 & 供应商佣金排行 -->
+      <el-row :gutter="20">
+        <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
+          <el-card>
+            <template #header>
+              <p class="title fx-b">
+                完成数排名
+                <SearchTab />
+              </p>
+            </template>
+            <el-table :data="tableData" style="width: 100%">
+              <el-table-column type="index" />
+              <el-table-column prop="name" label="供应商" />
+              <el-table-column prop="money" label="完成金额" />
+              <el-table-column prop="num" label="完成数量" />
+              <el-table-column prop="B2B/B2C" label="B2B/B2C" />
+              <el-table-column prop="currency" label="所属国家" />
+            </el-table>
+          </el-card>
+        </el-col>
+        <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
+          <el-card>
+            <template #header>
+              <p class="title fx-b">
+                供应商营业额排行
+                <SearchTab />
+              </p>
+            </template>
 
-              <el-table :data="tableData" style="width: 100%">
-                <el-table-column type="index" />
-                <el-table-column prop="name" label="供应商" />
-                <el-table-column prop="money" label="日" />
-                <el-table-column prop="num" label="月" />
-                <el-table-column prop="B2B/B2C" label="年" />
-              </el-table>
-            </el-card>
-          </el-col>
-        </el-row>
-      </PageMain>
-    </div>
-  </template>
+            <el-table :data="data.dataCenterSupplierTurnovers" style="width: 100%">
+              <el-table-column type="index" />
+              <el-table-column prop="supplierName" label="供应商" />
+              <el-table-column sortable  prop="dayTurnover" label="日" />
+              <el-table-column sortable  prop="monthTurnover" label="月" />
+              <el-table-column sortable  prop="yearTurnover" label="年" />
+            </el-table>
+          </el-card>
+        </el-col>
+      </el-row>
+    </PageMain>
+  </div>
+</template>
 
 <style lang="scss" scoped>
 :deep {
