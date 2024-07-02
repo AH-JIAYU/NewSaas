@@ -58,6 +58,7 @@ clipboard.on('success', function(e:any) {
       center: true,
     })
     e.clearSelection();
+    clipboard.destroy()
 });
 
 clipboard.on('error', function(e) {
@@ -66,7 +67,7 @@ clipboard.on('error', function(e) {
       center: true,
     })
 });
-// 提交数据
+// 联系我们
 function onSubmit() {
   // 新增
   if (!form.value.id) {
@@ -75,7 +76,6 @@ function onSubmit() {
       formRef.value.validate((valid) => {
         if (valid) {
           loading.value = true;
-          console.log('form.value',form.value);
           api.create(form.value).then(() => {
             loading.value = false;
             getDataList();
@@ -139,6 +139,11 @@ function onSubmit() {
               <el-text class="mx-1">.front-saas-web.surveyssaas.com</el-text>
               <el-button class="copy" :data-clipboard-text="`${form.memberURL}.front-saas-web.surveyssaas.com`" type="primary" link>复制</el-button>
             </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="onSubmit">
+                确认
+              </el-button>
+            </el-form-item>
           </el-tab-pane>
           <el-tab-pane label="高级设置" name="高级设置">
             <el-form-item label="默认会员价格比例" prop="confirmPassword">
@@ -164,7 +169,7 @@ function onSubmit() {
             </el-form-item>
           </el-tab-pane>
         </el-form>
-        <el-form>
+        <el-form label-width="130px">
           <el-tab-pane label="联系我们" name="联系我们">
             <el-form-item label="电子邮箱" prop="originalPassword">
               <el-input style="width: 18rem;" v-model="form.keyWords" placeholder="" />

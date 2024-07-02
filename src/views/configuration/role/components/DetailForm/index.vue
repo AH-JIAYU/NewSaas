@@ -3,14 +3,14 @@ import type { FormInstance, FormRules } from 'element-plus'
 import { ElMessage } from 'element-plus'
 import api from '@/api/modules/configuration_role'
 import useRouteStore from '@/store/modules/route'
-import userButtonPer from '@/store/modules/buttonPermission'
+import useRoleButtonStore from '@/store/modules/get_role_button'
 
 // 父级传递数据
 const props = defineProps(['id', 'row'])
 // 路由 store
 const routeStore = useRouteStore()
 // 按钮权限store
-const buttonPer = userButtonPer()
+const roleButton = useRoleButtonStore()
 // 加载
 const loading = ref(false)
 const formRef = ref<FormInstance>()
@@ -47,7 +47,7 @@ onMounted(async () => {
   // 从store获取原始路由
   menuData.value = routeStore.routesRaw
   // 调用store的方法获取按钮权限，如果没有就调接口
-  permissionData.value = await buttonPer.getPermissions
+  permissionData.value = await roleButton.getPermissions
   loading.value = false
 })
 
@@ -104,7 +104,7 @@ defineExpose({
   <div v-loading="loading">
     <ElForm ref="formRef" :model="form" :rules="formRules" label-width="120px" label-suffix="：">
       <ElFormItem label="角色码" prop="roleName">
-        <ElInput v-model="form.roleName" placeholder="请输入角色码" />
+        <ElInput v-model="form.roleName" :disabled="!!form.id" placeholder="请输入角色码" />
       </ElFormItem>
       <ElFormItem label="备注" prop="remark">
         <ElInput v-model="form.remark" placeholder="请输入备注" />

@@ -129,8 +129,8 @@ nextTick(() => {
               <el-col :span="12">
                 <el-form-item label="结算周期" prop="settlementCycle">
                   <el-select v-model="localToptTab.settlementCycle">
-                    <el-option label="30" :value="30"></el-option>
-                    <el-option label="60" :value="60"></el-option>
+                    <el-option label="30天" :value="30"></el-option>
+                    <el-option label="60天" :value="60"></el-option>
                   </el-select>
                   <!-- <el-input-number
                     v-model="localToptTab.settlementCycle"
@@ -195,11 +195,14 @@ nextTick(() => {
               </el-col>
               <el-col v-if="localToptTab.riskControl === 2" :span="12">
                 <el-form-item label="审核率Min值">
-                  <el-input-number
+                  <el-input
                     v-model="localToptTab.rateAudit"
                     controls-position="right"
-                    :min="0"
-                  />
+                    :min="1"
+                    type="number"
+                  >
+                  <template #append> % </template>
+                </el-input>
                 </el-form-item>
               </el-col>
             </el-row>

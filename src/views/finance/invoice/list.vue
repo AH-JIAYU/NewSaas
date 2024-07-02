@@ -79,11 +79,11 @@ const queryForm = reactive<any>({
 
 // 新增
 function addData() {
-  editRef.value.showEdit(null, customerList.value)
+  editRef.value.showEdit('', customerList.value)
 }
 // 编辑数据
 function editData(row: any) {
-  editRef.value.showEdit(row, customerList.value)
+  editRef.value.showEdit(JSON.stringify(row), customerList.value)
 }
 // 删除数据
 function onDel(row: any) {

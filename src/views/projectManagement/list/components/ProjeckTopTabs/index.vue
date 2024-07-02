@@ -569,7 +569,7 @@ nextTick(() => {
                 />
               </el-form-item>
             </el-col>
-            <el-col :span="6">
+            <el-col style="position: relative" :span="6">
               <el-form-item prop="minimumDuration">
                 <template #label>
                   <div>
@@ -579,7 +579,7 @@ nextTick(() => {
                       content="这份问卷需要做到多少分钟"
                       placement="top"
                     >
-                      <SvgIcon name="i-ri:question-line" />
+                      <SvgIcon style="position: absolute;left: 323px; top: 9px;" class="SvgIcon1" name="i-ri:question-line" />
                     </el-tooltip>
                   </div>
                 </template>
@@ -610,17 +610,17 @@ nextTick(() => {
             </el-col>
           </el-row>
           <el-row :gutter="20">
-            <el-col :span="12">
+            <el-col style="position: relative" :span="12">
               <el-form-item prop="uidUrl">
                 <template #label>
                   <div>
                     URL
                     <el-tooltip
                       class="tooltips"
-                      content="例:https://www.xxxx.com/8994343?uid={{$uid}}"
+                      content="例： https://www.xxxx.com/8994343?uid={{$uid}}"
                       placement="top"
                     >
-                      <SvgIcon name="i-ri:question-line" />
+                      <SvgIcon style="position: absolute;left: 650px; top: 9px;" class="SvgIcon2" name="i-ri:question-line" />
                     </el-tooltip>
                   </div>
                 </template>
