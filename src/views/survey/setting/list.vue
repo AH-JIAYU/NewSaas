@@ -60,7 +60,7 @@ clipboard.on('success', function(e:any) {
     e.clearSelection();
 });
 
-clipboard.on('error', function(e) {
+clipboard.on('error', function() {
     ElMessage.error({
       message: '复制失败',
       center: true,

@@ -3,7 +3,7 @@ import type { FormInstance, FormRules } from "element-plus";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { onMounted, ref } from "vue";
 import api from "@/api/modules/configuration_site_setting";
-import ClipboardJS from 'clipboard';
+import ClipboardJS from "clipboard";
 import { AnyFn } from "@vueuse/core";
 
 defineOptions({
@@ -13,23 +13,23 @@ defineOptions({
 // 加载
 const loading = ref(false);
 // 供应商基准地址
-const supplierUrl = import.meta.env.VITE_APP_SUPPLIER
+const supplierUrl = import.meta.env.VITE_APP_SUPPLIER;
 // form ref
 const formRef = ref<FormInstance>();
 // 定义表单
 const form = ref<any>({
-  id: '',
+  id: "",
   // 注册开关
   registerOffOrOn: true,
   // 注册审核
   registerExamineOffOrOn: false,
   // keyWords
-  keyWords: '',
+  keyWords: "",
   // 网站名称
-  webName: '',
+  webName: "",
   // 供应商网址
-  supplierURL: '',
-})
+  supplierURL: "",
+});
 // 校验
 const formRules = ref<FormRules>({
   webName: [{ required: true, message: "请输入网站名称", trigger: "blur" }],
@@ -42,27 +42,27 @@ onMounted(() => {
 });
 // 获取数据
 async function getDataList() {
-  loading.value = true
-  const { data } = await api.list()
-  form.value = data || form.value
-  loading.value = false
+  loading.value = true;
+  const { data } = await api.list();
+  form.value = data || form.value;
+  loading.value = false;
 }
 // 复制地址
-const clipboard = new ClipboardJS('.copy');
-clipboard.on('success', function (e: any) {
+const clipboard = new ClipboardJS(".copy");
+clipboard.on("success", function (e: any) {
   ElMessage.success({
-    message: '复制成功',
+    message: "复制成功",
     center: true,
-  })
+  });
   e.clearSelection();
-  clipboard.destroy()
+  clipboard.destroy();
 });
 
-clipboard.on('error', function (e) {
+clipboard.on("error", function () {
   ElMessage.error({
-    message: '复制失败',
+    message: "复制失败",
     center: true,
-  })
+  });
 });
 // 提交数据
 function onSubmit() {
@@ -73,7 +73,7 @@ function onSubmit() {
       formRef.value.validate((valid) => {
         if (valid) {
           loading.value = true;
-          delete form.value.id
+          delete form.value.id;
           api.create(form.value).then(() => {
             loading.value = false;
             getDataList();
@@ -86,24 +86,38 @@ function onSubmit() {
       });
   } else {
     // 修改
-    formRef.value && formRef.value.validate((valid) => {
-      if (valid) {
-        try {
-          let { id, keyWords, registerExamineOffOrOn, registerOffOrOn, supplierURL, webName } = form.value
-          const params = { id, keyWords, registerExamineOffOrOn, registerOffOrOn, supplierURL, webName }
-          loading.value = true
-          api.edit(params).then(() => {
-            loading.value = false
-            getDataList()
-            ElMessage.success({
-              message: '修改成功',
-              center: true,
-            })
-          })
-        } catch (error) {
+    formRef.value &&
+      formRef.value.validate((valid) => {
+        if (valid) {
+          try {
+            let {
+              id,
+              keyWords,
+              registerExamineOffOrOn,
+              registerOffOrOn,
+              supplierURL,
+              webName,
+            } = form.value;
+            const params = {
+              id,
+              keyWords,
+              registerExamineOffOrOn,
+              registerOffOrOn,
+              supplierURL,
+              webName,
+            };
+            loading.value = true;
+            api.edit(params).then(() => {
+              loading.value = false;
+              getDataList();
+              ElMessage.success({
+                message: "修改成功",
+                center: true,
+              });
+            });
+          } catch (error) {}
         }
-      }
-    })
+      });
   }
 }
 </script>
@@ -112,18 +126,36 @@ function onSubmit() {
   <div v-loading="loading">
     <PageHeader title="站点设置管理" />
     <PageMain>
-      <el-form ref="formRef" :model="form" :rules="formRules" label-width="100px" :inline="false">
+      <el-form
+        ref="formRef"
+        :model="form"
+        :rules="formRules"
+        label-width="100px"
+        :inline="false"
+      >
         <el-row :gutter="20">
           <el-col :span="3">
             <el-form-item label="注册开关">
-              <el-switch v-model="form.registerOffOrOn" active-text="开启" inline-prompt inactive-text="关闭"
-                :active-value="true" :inactive-value="false" />
+              <el-switch
+                v-model="form.registerOffOrOn"
+                active-text="开启"
+                inline-prompt
+                inactive-text="关闭"
+                :active-value="true"
+                :inactive-value="false"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="注册审核">
-              <el-switch v-model="form.registerExamineOffOrOn" active-text="开启" inline-prompt inactive-text="关闭"
-                :active-value="true" :inactive-value="false" />
+              <el-switch
+                v-model="form.registerExamineOffOrOn"
+                active-text="开启"
+                inline-prompt
+                inactive-text="关闭"
+                :active-value="true"
+                :inactive-value="false"
+              />
             </el-form-item>
           </el-col>
         </el-row>
@@ -134,10 +166,15 @@ function onSubmit() {
           <el-input v-model="form.keyWords" style="width: 18rem" />
         </el-form-item>
         <el-form-item label="供应商网址" prop="supplierURL">
-          <el-input v-model="form.supplierURL" style="width: 8rem;" />
+          <el-input v-model="form.supplierURL" style="width: 8rem" />
           <el-text class="mx-1">.front-supplier.surveyssaas.com</el-text>
-          <el-button class="copy" :data-clipboard-text="`${form.supplierURL}.front-supplier.surveyssaas.com`"
-            type="primary" link >复制</el-button>
+          <el-button
+            class="copy"
+            :data-clipboard-text="`${form.supplierURL}.front-supplier.surveyssaas.com`"
+            type="primary"
+            link
+            >复制</el-button
+          >
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit"> 确认 </el-button>
