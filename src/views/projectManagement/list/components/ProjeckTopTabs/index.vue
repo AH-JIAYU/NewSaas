@@ -27,7 +27,7 @@ const props: any = defineProps({
   leftTab: Object,
   tabIndex: Number,
 });
-
+const url: string = "例： https://www.xxxx.com/8994343?uid={{ $uid }}";
 const activeName = ref("basicSettings"); // tabs
 const formRef = ref<any>(); // Ref 在edit中进行校验
 const fold = ref(!props.tabIndex ? true : false); // 折叠 描述配额
@@ -71,8 +71,7 @@ const validateUrlRegistered = (rule: any, value: any, callback: any) => {
     callback(new Error("格式不正确,请查看例子"));
   }
 
-    callback();
-
+  callback();
 };
 // 校验
 const rules = reactive<any>({
@@ -579,7 +578,11 @@ nextTick(() => {
                       content="这份问卷需要做到多少分钟"
                       placement="top"
                     >
-                      <SvgIcon style="position: absolute;left: 323px; top: 9px;" class="SvgIcon1" name="i-ri:question-line" />
+                      <SvgIcon
+                        style="position: absolute; left: 323px; top: 9px"
+                        class="SvgIcon1"
+                        name="i-ri:question-line"
+                      />
                     </el-tooltip>
                   </div>
                 </template>
@@ -610,21 +613,22 @@ nextTick(() => {
             </el-col>
           </el-row>
           <el-row :gutter="20">
-            <el-col style="position: relative" :span="12">
+            <el-col :span="12">
               <el-form-item prop="uidUrl">
                 <template #label>
                   <div>
                     URL
-                    <el-tooltip
+                    <!-- <el-tooltip
                       class="tooltips"
                       content="例： https://www.xxxx.com/8994343?uid={{$uid}}"
                       placement="top"
                     >
-                      <SvgIcon style="position: absolute;left: 650px; top: 9px;" class="SvgIcon2" name="i-ri:question-line" />
-                    </el-tooltip>
+                      <SvgIcon class="SvgIcon2" name="i-ri:question-line" />
+                    </el-tooltip> -->
                   </div>
                 </template>
                 <el-input clearable v-model="props.leftTab.uidUrl" />
+                <el-text class="mx-1">{{ url }}</el-text>
               </el-form-item>
             </el-col>
             <el-col :span="3">

@@ -468,7 +468,7 @@ onMounted(async () => {
           <template #default="{ row }">
             <template v-if="row.countryIdList">
               <template v-if="row.countryIdList.length === 185">
-                <el-link type="primary">全球</el-link>
+                <el-link type="primary"><el-tag type="warning">全球</el-tag></el-link>
               </template>
               <template v-else-if="comCountryId(row.countryIdList).length > 4">
                 <el-tooltip
@@ -477,9 +477,9 @@ onMounted(async () => {
                   :content="comCountryId(row.countryIdList).join(',')"
                   placement="top"
                 >
-                  <el-link type="primary">{{
+                  <el-link type="primary"><el-tag type="success">{{
                     comCountryId(row.countryIdList).length
-                  }}</el-link>
+                  }}</el-tag></el-link>
                 </el-tooltip>
               </template>
               <template v-else>

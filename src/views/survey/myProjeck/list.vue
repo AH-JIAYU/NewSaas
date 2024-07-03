@@ -375,9 +375,10 @@ onMounted(async () => {
                 :content="row.countryNameList.join(',')"
                 placement="top"
               >
-                <el-link type="primary">{{
-                  row.countryNameList.length
-                }}</el-link>
+                <el-link type="primary">
+                  <el-tag :type="row.countryNameList.length === 185 ? 'warning' : 'danger'">{{
+                  row.countryNameList.length === 185 ?  '全球' : row.countryNameList.length
+                }}</el-tag></el-link>
               </el-tooltip>
             </template>
             <template v-else>

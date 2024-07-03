@@ -12,8 +12,10 @@ function onSubmit() {
 
 }
 // 获取数据
-async function showEdit(row: any) {
-  title.value = row.id === 1 ? '开票' : '结算'
+async function showEdit(row: any,val:any) {
+  console.log('row',row,'val',val);
+
+  title.value = row === 1 ? '开票' : '结算'
   dialogTableVisible.value = true
 }
 // 弹框关闭事件
