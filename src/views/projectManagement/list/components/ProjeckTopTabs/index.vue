@@ -61,13 +61,10 @@ const validateUrlRegistered = (rule: any, value: any, callback: any) => {
   // 网址格式
   const regExpUrl: any =
     /^(((ht|f)tps?):\/\/)?([^!@#$%^&*?.\s-]([^!@#$%^&*?.\s]{0,63}[^!@#$%^&*?.\s])?\.)+[a-z]{2,6}\/?/;
-  // 例子
-  const example: any =
-    /^https?:\/\/[^\s?\/]+(?:\/[^\s?\/]+)*(?:\?uid={{\$uid}})?$/;
   if (!regExpUrl.test(props.leftTab.uidUrl)) {
     callback(new Error("请输入合法网址"));
   }
-  if (!example.test(props.leftTab.uidUrl)) {
+  if (!props.leftTab.uidUrl.includes("uid={{$uid}}")) {
     callback(new Error("格式不正确,请查看例子"));
   }
 
