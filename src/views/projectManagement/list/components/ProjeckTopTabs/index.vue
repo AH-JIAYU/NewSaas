@@ -27,7 +27,7 @@ const props: any = defineProps({
   leftTab: Object,
   tabIndex: Number,
 });
-const url: string = "例： https://www.xxxx.com/8994343?uid={{ $uid }}";
+const url: string = "例： https://www.xxxx.com/8994343?uid={{$uid}}";
 const activeName = ref("basicSettings"); // tabs
 const formRef = ref<any>(); // Ref 在edit中进行校验
 const fold = ref(!props.tabIndex ? true : false); // 折叠 描述配额
