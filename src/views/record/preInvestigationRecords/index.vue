@@ -84,12 +84,12 @@ function queryData() {
 }
 // 每页数量切换
 function sizeChange(size: number) {
-  onSizeChange(size).then(() => fetchData());
+  onSizeChange(size);
 }
 
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
-  onCurrentChange(page).then(() => fetchData());
+  onCurrentChange(page);
 }
 // 展开
 async function getChildList(row: any) {
@@ -110,6 +110,12 @@ async function getChildList(row: any) {
 function showEdit(row: any) {
   questionnaireDetailsRef.value.showEdit(row);
 }
+const DataList = computed(() => {
+  return list.value.slice(
+    (pagination.value.page - 1) * pagination.value.size,
+    pagination.value.page * pagination.value.size
+  );
+});
 // 请求
 async function fetchData() {
   listLoading.value = true;
@@ -119,7 +125,7 @@ async function fetchData() {
   };
   const { data } = await api.list(params);
   list.value = data.projectSurveyScreenInfoList;
-  pagination.value.total = data.total;
+  pagination.value.total = data.projectSurveyScreenInfoList.length;
   listLoading.value = false;
 }
 // 表格-单选框
@@ -139,6 +145,7 @@ function onReset() {
   });
   fetchData();
 }
+
 onMounted(async () => {
   data.customerList = await customerStore.getCustomerList();
 
@@ -278,7 +285,7 @@ onMounted(async () => {
       <el-table
         v-loading="listLoading"
         :border="border"
-        :data="list"
+        :data="DataList"
         :size="lineHeight"
         :stripe="stripe"
         row-key="id"
