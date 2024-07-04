@@ -122,6 +122,7 @@ function onReset() {
     // 收款日期结束
     paymentDateEnd: '',
   })
+  type.value = null
   fetchData()
 }
 // 类型变化时间跟着变化

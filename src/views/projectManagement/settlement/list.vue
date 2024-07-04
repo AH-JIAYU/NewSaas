@@ -1,153 +1,231 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
-import { ElMessage } from 'element-plus'
-import invoicingEdit from './components/InvoicingEdit/index.vue'
-import moreOperations from './components/MoreOperations/index.vue'
-import projectReview from './components/ProjectReview/index.vue'
-import settlementEdit from './components/SettlementEdit/index.vue'
-import refundDetail from './components/RefundDetails/index.vue'
-import Settlement from './components/AddSettlement/index.vue'
+import { reactive, ref } from "vue";
+import { ElMessage } from "element-plus";
+import invoicingEdit from "./components/InvoicingEdit/index.vue";
+import moreOperations from "./components/MoreOperations/index.vue";
+import projectReview from "./components/ProjectReview/index.vue";
+import settlementEdit from "./components/SettlementEdit/index.vue";
+import refundDetail from "./components/RefundDetails/index.vue";
+import Settlement from "./components/AddSettlement/index.vue";
+import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary";
+import useUserCustomerStore from "@/store/modules/user_customer";
+import useTenantStaffStore from "@/store/modules/configuration_manager";
+import api from "@/api/modules/project_settlement"
 
 defineOptions({
-  name: 'ProjectManagementSettlementIndex',
-})
+  name: "ProjectManagementSettlementIndex",
+});
 
-const { pagination, onSizeChange, onCurrentChange } = usePagination() // 分页
+//国家
+const basicDictionaryStore = useBasicDictionaryStore();
+const countryList = ref<any>();
+// 客户
+const customerStore = useUserCustomerStore();
+const customerList = ref<any>();
+// 创建人
+const tenantStaffStore = useTenantStaffStore();
+const founderList = ref<any>();
 // 分页
-const value1 = ref('')
-const tableSortRef = ref('')
+const { pagination, onSizeChange, onCurrentChange } = usePagination();
+const tableSortRef = ref("");
 // loading加载
-const listLoading = ref<boolean>(true)
+const listLoading = ref<boolean>(true);
 // 获取组件变量
-const invoicingRef = ref()
-const addSettlementRef = ref()
-const settlementRef = ref()
-const auditingRef = ref()
-const editRef = ref()
-const refundRef = ref()
+const invoicingRef = ref();
+const addSettlementRef = ref();
+const settlementRef = ref();
+const auditingRef = ref();
+const editRef = ref();
+const refundRef = ref();
 // 右侧工具栏配置变量
-const tableAutoHeight = ref(false) // 表格控件-高度自适应
-const border = ref(true)
-const checkList = ref([])
-const isFullscreen = ref(false)
-const lineHeight = ref<any>('default')
-const stripe = ref(false)
-const selectRows = ref<any>([])
+// 表格控件-高度自适应
+const tableAutoHeight = ref(false);
+const border = ref(true);
+const checkList = ref([]);
+const isFullscreen = ref(false);
+const lineHeight = ref<any>("default");
+const stripe = ref(false);
+const selectRows = ref<any>([]);
 const columns = ref([
   {
-    label: '项目ID',
-    prop: 'ID',
+    label: "项目ID",
+    prop: "ID",
     sortable: true,
     // 不可改变的
     disableCheck: true,
     checked: true,
   },
-])
+]);
+const settlementStatusList = [
+  { label: "待审核", value: 1 },
+  { label: "已审核", value: 2 },
+  { label: "已开票", value: 3 },
+  { label: "已结算", value: 4 },
+  { label: "已冻结", value: 5 },
+];
+// 时间类型
+const timeArr = ref<any>([]);
 // 查询参数
 const queryForm = reactive<any>({
-  pageNo: 1,
-  pageSize: 10,
-  title: '',
-  order: {
-    id: 'ASC',
-  },
-  select: {},
-})
-const list = ref<any>([])
+  // 页数
+  page: 1,
+  // 每页条数
+  limit: 10,
+  // 项目id
+  projectId: null,
+  // 项目名称
+  projectName: "",
+  // 客户id
+  customerId: null,
+  // 项目标识
+  projectIdentification: "",
+  // 国家id
+  countryId: [],
+  // 创建人id
+  createUserId: null,
+  // 结算状态 1:待审核 2:已审核 3:已开票 4:已结算 5:已冻结
+  settlementStatus: [],
+  // 时间类型 1:待审核 2:已审核 3:已开票 4:巳结算 5:已冻结
+  timeType: '',
+  // 开始时间
+  startTime: "",
+  // 结束时间
+  endTime: "",
+});
+// 表格数据
+const list = ref<any>([]);
 // 获取列表选中数据
 function setSelectRows(value: any) {
-  selectRows.value = value
+  console.log("value", value);
+  selectRows.value = value;
 }
 // 开票
 function invoicing(row: any) {
-  if (!selectRows.value.length) { return ElMessage({ message: '请选择至少一条数据', type: 'warning' }) }
-  if (selectRows.value.length === 1) {
-    invoicingRef.value.showEdit(row)
+  if (!selectRows.value.length) {
+    return ElMessage({ message: "请选择至少一条数据", type: "warning" });
   }
-  else {
-    settlementRef.value.showEdit(row, selectRows.value)
+  if (selectRows.value.length === 1) {
+    invoicingRef.value.showEdit(row, selectRows.value);
+  } else {
+    console.log("selectRows.value", selectRows.value);
+    settlementRef.value.showEdit(row, selectRows.value);
   }
 }
 // 新增结算
 function addSettlement() {
-  addSettlementRef.value.showEdit()
+  addSettlementRef.value.showEdit();
 }
 // 结算
 function settlement(row: any) {
-  if (!selectRows.value.length) { return ElMessage({ message: '请选择至少一条数据', type: 'warning' }) }
-  if (selectRows.value.length === 1) {
-    invoicingRef.value.showEdit(row)
+  if (!selectRows.value.length) {
+    return ElMessage({ message: "请选择至少一条数据", type: "warning" });
   }
-  else if (selectRows.value.length > 1) {
-    settlementRef.value.showEdit(row, selectRows.value)
+  if (selectRows.value.length === 1) {
+    invoicingRef.value.showEdit(row, selectRows.value);
+  } else if (selectRows.value.length > 1) {
+    console.log("selectRows.value", selectRows.value);
+    settlementRef.value.showEdit(row, selectRows.value);
   }
 }
 // 审核
 function auditing(row: any) {
-  auditingRef.value.showEdit()
+  auditingRef.value.showEdit();
 }
 // 编辑
 function edit(row: any) {
-  editRef.value.showEdit()
+  editRef.value.showEdit();
 }
 // 详情
 function refundDetails(row: any) {
-  refundRef.value.showEdit()
+  refundRef.value.showEdit();
 }
 // 右侧工具
 function clickFullScreen() {
-  isFullscreen.value = !isFullscreen.value
+  isFullscreen.value = !isFullscreen.value;
 }
 // 每页数量切换
 function sizeChange(size: number) {
-  onSizeChange(size).then(() => fetchData())
+  onSizeChange(size).then(() => fetchData());
 }
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
-  onCurrentChange(page).then(() => fetchData())
+  onCurrentChange(page).then(() => fetchData());
 }
 // 重置数据
 function onReset() {
   Object.assign(queryForm, {
-    pageNo: 1,
-    pageSize: 10,
-    title: '',
-    order: {
-      id: 'ASC',
-    },
-    select: {},
-  })
+    // 页数
+    page: 1,
+    // 每页条数
+    limit: 10,
+    // 项目id
+    projectId: "",
+    // 项目名称
+    projectName: "",
+    // 客户简称
+    customerName: "",
+    // 项目标识
+    projectIdentification: "",
+    // 国家id
+    countryId: "",
+    // 创建人id
+    createUserId: "",
+    // 结算状态 1:待审枝 2:已审核 3:已开票 4:已结算 5:已冻结
+    settlementStatus: "",
+    // 时间类型 1:待审核 2:已审核 3:已开票 4:巳结算 5:已冻结
+    timeType: "",
+    // 开始时间
+    startTime: "",
+    // 结束时间
+    endTime: "",
+  });
+  timeArr.value = []
 }
+// 处理时间
+const timeChange = () => {
+  queryForm.startTime = timeArr.value[0];
+  queryForm.endTime = timeArr.value[1];
+};
+// 具体的位置信息
+const comCountryId = computed(() => (countryIdList: any) => {
+  const lists = countryList.value
+    .filter((item: any) => countryIdList.includes(item.id))
+    .map((item: any) => item.chineseName);
+  return lists;
+});
 async function fetchData() {
-  listLoading.value = true
-  // const { data } = await getList(queryForm)
-  // list.value = data[0]
-  // total.value = data[0].length
-  list.value = [
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-  ]
-  pagination.value.total = 3
-  listLoading.value = false
+  listLoading.value = true;
+  countryList.value = await basicDictionaryStore.getCountry();
+  customerList.value = await customerStore.getCustomerList();
+  founderList.value = await tenantStaffStore.getStaff();
+  // console.log(
+  //   "countryList",
+  //   countryList.value,
+  //   "customerList",
+  //   customerList.value,
+  //   "founderList.value",
+  //   founderList.value
+  // );
+  // console.log("queryForm", queryForm);
+  const {data} = await api.list(queryForm)
+  list.value = data.projectSettlementList
+  pagination.value.total = +data.total;
+  listLoading.value = false;
 }
 onMounted(() => {
-  fetchData()
-})
+  fetchData();
+});
 function handleMoreOperating(command: string, row: any) {
   switch (command) {
-    case 'auditing':
-      auditing(row)
-      break
-    case 'edit':
-      edit(row)
-      break
-    case 'refundDetails':
-      refundDetails(row)
-      break
+    case "auditing":
+      auditing(row);
+      break;
+    case "edit":
+      edit(row);
+      break;
+    case "refundDetails":
+      refundDetails(row);
+      break;
   }
 }
 </script>
@@ -161,52 +239,122 @@ function handleMoreOperating(command: string, row: any) {
     <PageMain>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
-          <el-form :model="queryForm" size="default" label-width="6.25rem" inline-message inline class="search-form">
+          <el-form
+            :model="queryForm"
+            size="default"
+            label-width="6.25rem"
+            inline-message
+            inline
+            class="search-form"
+          >
             <el-form-item label="">
-              <el-input clearable placeholder="项目ID" />
+              <el-input
+                v-model="queryForm.projectId"
+                clearable
+                placeholder="项目ID"
+              />
             </el-form-item>
             <el-form-item label="">
-              <el-input clearable placeholder="项目名称" />
+              <el-input
+                v-model="queryForm.projectName"
+                clearable
+                placeholder="项目名称"
+              />
             </el-form-item>
             <el-form-item label="">
-              <el-input clearable placeholder="项目标识" />
+              <el-input
+                v-model="queryForm.projectIdentification"
+                clearable
+                placeholder="项目标识"
+              />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-select placeholder="国家地区">
-                <el-option :key="11" :label="11" :value="111">
-                  11111
-                </el-option>
+              <ElSelect
+                v-model="queryForm.countryId"
+                placeholder="国家"
+                clearable
+                filterable
+                multiple
+                collapse-tags
+              >
+                <ElOption
+                  v-for="item in countryList"
+                  :label="item.chineseName"
+                  :value="item.id"
+                >
+                </ElOption>
+              </ElSelect>
+            </el-form-item>
+            <el-form-item v-show="!fold" label="">
+              <el-select
+                placeholder="客户简称"
+                v-model="queryForm.customerName"
+                clearable
+              >
+                <el-option
+                  v-for="item in customerList"
+                  :key="item.tenantCustomerId"
+                  :value="item.tenantCustomerId"
+                  :label="item.customerAccord"
+                ></el-option>
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-select placeholder="客户简称">
-                <el-option :key="11" :label="11" :value="111">
-                  11111
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-select placeholder="结算状态">
-                <el-option :key="11" :label="11" :value="111">
-                  11111
-                </el-option>
+              <el-select
+                placeholder="结算状态"
+                v-model="queryForm.settlementStatus"
+                clearable
+                filterable
+                multiple
+                collapse-tags
+              >
+                <el-option
+                  v-for="item in settlementStatusList"
+                  :key="item.value"
+                  :value="item.value"
+                  :label="item.label"
+                ></el-option>
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold">
-              <el-input clearable placeholder="创建人" />
+              <el-select
+                placeholder="创建人"
+                v-model="queryForm.createUserId"
+                clearable
+              >
+                <el-option
+                  v-for="item in founderList"
+                  :key="item.id"
+                  :value="item.id"
+                  :label="item.name"
+                ></el-option>
+              </el-select>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-select placeholder="时间类型">
-                <el-option :key="11" :label="11" :value="111">
-                  11111
-                </el-option>
+              <el-select
+                placeholder="时间类型"
+                v-model="queryForm.timeType"
+                clearable
+              >
+                <el-option
+                  v-for="item in settlementStatusList"
+                  :key="item.value"
+                  :value="item.value"
+                  :label="item.label"
+                ></el-option>
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold">
               <el-date-picker
-                v-model="queryForm.select.time" type="daterange" unlink-panels range-separator="-"
-                start-placeholder="创建开始日期" end-placeholder="创建结束日期" size="default" style="width: 12rem;"
-                clear-icon="true"
+                v-model="timeArr"
+                value-format="YYYY-MM-DD hh:mm:ss"
+                type="daterange"
+                range-separator="-"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                clearable
+                size=""
+                @change="timeChange"
               />
             </el-form-item>
             <ElFormItem>
@@ -224,7 +372,9 @@ function handleMoreOperating(command: string, row: any) {
               </ElButton>
               <ElButton link @click="toggle">
                 <template #icon>
-                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
+                  <SvgIcon
+                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
+                  />
                 </template>
                 {{ fold ? "展开" : "收起" }}
               </ElButton>
@@ -246,34 +396,140 @@ function handleMoreOperating(command: string, row: any) {
           </el-button>
         </FormLeftPanel>
         <FormRightPanel>
-          <el-button size="default" @click="">
-            导出
-          </el-button>
+          <el-button size="default" @click=""> 导出 </el-button>
           <TabelControl
-            v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
-            v-model:columns="columns"  v-model:line-height="lineHeight"
-            v-model:stripe="stripe" style="margin-left: .75rem"
+            v-model:border="border"
+            v-model:tableAutoHeight="tableAutoHeight"
+            v-model:checkList="checkList"
+            v-model:columns="columns"
+            v-model:line-height="lineHeight"
+            v-model:stripe="stripe"
+            style="margin-left: 0.75rem"
             @query-data="currentChange"
           />
         </FormRightPanel>
       </el-row>
       <el-table
-        ref="tableSortRef" v-loading="false" style="margin-top: 10px" row-key="id" :data="list"
-        :border="border" :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows"
+        ref="tableSortRef"
+        v-loading="false"
+        style="margin-top: 10px"
+        row-key="id"
+        :data="list"
+        :border="border"
+        :size="lineHeight"
+        :stripe="stripe"
+        @selection-change="setSelectRows"
       >
         <el-table-column type="selection" />
         <el-table-column type="index" align="center" label="序号" width="55" />
-        <el-table-column show-overflow-tooltip prop="a" align="center" label="项目ID" />
-        <el-table-column show-overflow-tooltip prop="b" align="center" label="项目名称" />
-        <el-table-column show-overflow-tooltip prop="c" align="center" label="客户简称/标识" />
-        <el-table-column show-overflow-tooltip prop="d" align="center" label="原价" />
-        <el-table-column show-overflow-tooltip prop="e" align="center" label="所属国家" />
-        <el-table-column show-overflow-tooltip prop="f" align="center" label="系统完成数" />
-        <el-table-column show-overflow-tooltip prop="g" align="center" label="结算完成数" />
-        <el-table-column show-overflow-tooltip prop="h" align="center" label="结算PO号" />
-        <el-table-column show-overflow-tooltip prop="h" align="center" label="结算状态" />
-        <el-table-column show-overflow-tooltip prop="h" align="center" label="节点时间" />
-        <el-table-column show-overflow-tooltip prop="j" align="center" label="创建人" />
+        <el-table-column
+          show-overflow-tooltip
+          prop="projectId"
+          align="center"
+          label="项目ID"
+        />
+        <el-table-column
+          show-overflow-tooltip
+          prop="projectName"
+          align="center"
+          label="项目名称"
+        />
+        <el-table-column
+          show-overflow-tooltip
+          prop="customerName"
+          align="center"
+          label="客户简称/标识"
+        />
+        <el-table-column
+          show-overflow-tooltip
+          prop="d"
+          align="center"
+          label="原价"
+        >
+        <template #default="{row}">
+          {{ row.projectAmount ? row.projectAmount : '-' }}
+        </template>
+      </el-table-column>
+        <el-table-column
+          show-overflow-tooltip
+          prop="e"
+          align="center"
+          label="所属国家"
+        >
+        <template #default="{ row }">
+            <template v-if="row.countryId">
+              <template v-if="row.countryId.length === 185">
+                <el-link type="primary"><el-tag type="warning">全球</el-tag></el-link>
+              </template>
+              <template v-else-if="comCountryId(row.countryId).length > 4">
+                <el-tooltip
+                  class="box-item"
+                  effect="dark"
+                  :content="comCountryId(row.countryId).join(',')"
+                  placement="top"
+                >
+                  <el-link type="primary"><el-tag type="success">{{
+                    comCountryId(row.countryId).length
+                  }}</el-tag></el-link>
+                </el-tooltip>
+              </template>
+              <template v-else>
+                <el-tag
+                  v-for="item in comCountryId(row.countryId)"
+                  :key="item"
+                  type="primary"
+                >
+                  {{ item }}
+                </el-tag>
+              </template>
+            </template>
+          </template>
+      </el-table-column>
+        <el-table-column
+          show-overflow-tooltip
+          prop="systemCount"
+          align="center"
+          label="系统完成数"
+        />
+        <el-table-column
+          show-overflow-tooltip
+          prop="settlementCount"
+          align="center"
+          label="结算完成数"
+        />
+        <el-table-column
+          show-overflow-tooltip
+          prop="settlementPo"
+          align="center"
+          label="结算PO号"
+        >
+        <template #default="{row}">
+          {{ row.settlementPo ? row.settlementPo : '-' }}
+        </template>
+      </el-table-column>
+        <el-table-column
+          show-overflow-tooltip
+          prop="h"
+          align="center"
+          label="结算状态"
+        />
+        <el-table-column
+          show-overflow-tooltip
+          prop="nodeTime"
+          align="center"
+          label="节点时间"
+        >
+        <template #default="{row}">
+          <el-text v-if="row.nodeTime === '[]'" class="mx-1">'-'</el-text>
+          <el-text v-else class="mx-1">{{ row.nodeTime[0] }}-{{ row.nodeTime[1] }}</el-text>
+        </template>
+      </el-table-column>
+        <el-table-column
+          show-overflow-tooltip
+          prop="j"
+          align="center"
+          label="创建人"
+        />
         <el-table-column align="center" label="操作" width="190">
           <template #default="{ row }">
             <ElSpace>
@@ -292,12 +548,8 @@ function handleMoreOperating(command: string, row: any) {
                 </ElButton>
                 <template #dropdown>
                   <ElDropdownMenu>
-                    <ElDropdownItem command="auditing">
-                      重审
-                    </ElDropdownItem>
-                    <ElDropdownItem command="edit">
-                      结算编辑
-                    </ElDropdownItem>
+                    <ElDropdownItem command="auditing"> 重审 </ElDropdownItem>
+                    <ElDropdownItem command="edit"> 结算编辑 </ElDropdownItem>
                     <ElDropdownItem command="refundDetails">
                       退款详情
                     </ElDropdownItem>
@@ -312,9 +564,16 @@ function handleMoreOperating(command: string, row: any) {
         </template>
       </el-table>
       <ElPagination
-        :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
-        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-        background @size-change="sizeChange" @current-change="currentChange"
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
+        :page-sizes="pagination.sizes"
+        :layout="pagination.layout"
+        :hide-on-single-page="false"
+        class="pagination"
+        background
+        @size-change="sizeChange"
+        @current-change="currentChange"
       />
       <invoicingEdit ref="invoicingRef" />
       <moreOperations ref="settlementRef" />
@@ -371,5 +630,4 @@ function handleMoreOperating(command: string, row: any) {
     }
   }
 }
-
 </style>

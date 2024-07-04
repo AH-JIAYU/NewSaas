@@ -10,7 +10,8 @@ const dialogTableVisible = ref(false)
 // 提交数据
 function onSubmit() {}
 // 获取数据
-async function showEdit(row: any) {
+async function showEdit(row: any, val:any) {
+  console.log('row',row,'val',val);
   dialogTableVisible.value = true
 }
 // 弹框关闭事件

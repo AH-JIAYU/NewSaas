@@ -22,14 +22,14 @@ const rules = reactive<any>({
     { required: true, message: "请输入会员组名称", trigger: "blur" },
   ],
   groupStatus: [{ required: true, message: "请选择组状态", trigger: "change" }],
-  groupMemberIdList: [
-    {
-      type: "array",
-      required: true,
-      message: "请选择至少一个组成员",
-      trigger: "change",
-    },
-  ],
+  // groupMemberIdList: [
+  //   {
+  //     type: "array",
+  //     required: true,
+  //     message: "请选择至少一个组成员",
+  //     trigger: "change",
+  //   },
+  // ],
 });
 // 显隐
 async function showEdit(row: any) {
