@@ -64,7 +64,7 @@ const validateUrlRegistered = (rule: any, value: any, callback: any) => {
   if (!regExpUrl.test(props.leftTab.uidUrl)) {
     callback(new Error("请输入合法网址"));
   }
-  if (!props.leftTab.uidUrl.includes("uid={{$uid}}")) {
+  if (!props.leftTab.uidUrl.includes("{{$uid}}")) {
     callback(new Error("格式不正确,请查看例子"));
   }
 
