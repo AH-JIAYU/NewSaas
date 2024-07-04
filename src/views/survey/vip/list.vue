@@ -324,6 +324,7 @@ onMounted(async () => {
             {{ row.b2cStatus && row.b2cStatus === 2 ? "√" : "×" }}
           </template>
         </el-table-column>
+
         <el-table-column
           align="center"
           v-if="checkList.includes('memberStatus')"
@@ -344,6 +345,24 @@ onMounted(async () => {
             <ElSwitch
               v-else
               v-model="row.memberStatus"
+              inline-prompt
+              :inactive-value="1"
+              :active-value="2"
+              inactive-text="禁用"
+              active-text="启用"
+              @change="changeState($event, row.memberId)"
+            />
+          </template>
+        </el-table-column>
+        <el-table-column
+          align="center"
+          v-if="checkList.includes('memberStatus')"
+          show-overflow-tooltip
+          label="随机身份"
+        >
+          <template #default="{ row }">
+            <ElSwitch
+              v-model="row.randomStatus"
               inline-prompt
               :inactive-value="1"
               :active-value="2"

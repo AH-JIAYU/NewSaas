@@ -31,6 +31,7 @@ const columns = ref([
     checked: true,
   },
   { prop: "projectId", label: "项目id", sortable: true, checked: true },
+  { prop: "randomIdentityId", label: "随机身份", sortable: true, checked: true },
   {
     prop: "projectName",
     label: "项目名称/客户简称",
@@ -323,6 +324,13 @@ onMounted(async () => {
           prop="projectId"
           show-overflow-tooltip
           label="项目ID"
+        />
+        <el-table-column
+          v-if="checkList.includes('randomIdentityId')"
+          align="center"
+          prop="randomIdentityId"
+          show-overflow-tooltip
+          label="随机身份"
         />
         <el-table-column
           v-if="checkList.includes('projectName')"

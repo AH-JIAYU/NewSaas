@@ -202,6 +202,15 @@ nextTick(() => {
                   />
                 </el-form-item>
               </el-col>
+              <el-col :span="4">
+                <el-form-item label="随机身份">
+                  <el-switch
+                    :active-value="2"
+                    :inactive-value="1"
+                    v-model="localToptTab.randomStatus"
+                  />
+                </el-form-item>
+              </el-col>
             </el-row>
             <el-divider content-position="center" />
             <el-row :gutter="20">

@@ -33,6 +33,58 @@ const showEdit = async (row: any) => {
   });
 
   data.survey = new Model(JSON.stringify(projectJson));
+  data.survey.onUpdateQuestionCssClasses.add(function (
+    survey: any,
+    options: any
+  ) {
+    // // .jsonObj.choices[0].cssClasses
+    // console.log("survey, options", options.question.choices);
+    // // options.question.choices[1].css = "color: 'red'";
+    // options.question.choices[1].cssClasses.label += " sq-label";
+    // options.question.choices[1].cssClasses.defaultSizeMode += " choicesItemRed";
+    // options.question.choices[1].cssClasses.smallSizeMode += " choicesItemRed";
+    // options.question.choices[1].cssClasses.itemWithTitle += " choicesItemRed";
+    // options.question.choices[1].cssClasses.itemAsIcon += " choicesItemRed";
+    // options.question.choices[1].cssClasses.itemActive += " choicesItemRed";
+    // options.question.choices[1].cssClasses.itemPressed += " choicesItemRed";
+    // options.question.choices[1].cssClasses.itemTitle += " choicesItemRed";
+    // options.question.choices[1].cssClasses.itemTitleWithIcon += " choicesItemRed";
+    // options.question.choices[1].cssClasses.label += " choicesItemRed";
+    /**
+     *
+     * {
+    "root": "sv-action-bar",
+    "defaultSizeMode": "sv-action-bar--default-size-mode",
+    "smallSizeMode": "sv-action-bar--small-size-mode",
+    "item": "sv-action-bar-item choicesItemRed choicesItemRed",
+    "itemWithTitle": "",
+    "itemAsIcon": "sv-action-bar-item--icon",
+    "itemActive": "sv-action-bar-item--active",
+    "itemPressed": "sv-action-bar-item--pressed",
+    "itemIcon": "sv-action-bar-item__icon",
+    "itemTitle": "sv-action-bar-item__title",
+    "itemTitleWithIcon": "sv-action-bar-item__title--with-icon",
+    "label": "undefined choicesItemRed"
+}
+    */
+    // var classes = options.cssClasses;
+
+    // classes.mainRoot += " sv_qstn";
+    // classes.root = "sq-root";
+    // classes.title += " sq-title";
+    // classes.item += " sq-item";
+    // classes.label += " sq-label";
+
+    // if (options.question.isRequired) {
+    //   classes.title += " sq-title-required";
+    //   classes.root += " sq-root-required";
+    // }
+
+    // if (options.question.getType() === "checkbox") {
+    //   classes.root += " sq-root-cb";
+    // }
+  });
+
   data.visible = true;
 };
 
