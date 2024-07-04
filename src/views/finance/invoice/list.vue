@@ -168,7 +168,7 @@ onMounted(() => {
 <template>
   <div :class="{
     'absolute-container': tableAutoHeight,
-  }">
+  }" v-loading="listLoading">
     <PageMain>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
