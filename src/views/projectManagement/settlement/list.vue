@@ -10,7 +10,7 @@ import Settlement from "./components/AddSettlement/index.vue";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary";
 import useUserCustomerStore from "@/store/modules/user_customer";
 import useTenantStaffStore from "@/store/modules/configuration_manager";
-import api from "@/api/modules/project_settlement"
+import api from "@/api/modules/project_settlement";
 
 defineOptions({
   name: "ProjectManagementSettlementIndex",
@@ -25,6 +25,7 @@ const customerList = ref<any>();
 // 创建人
 const tenantStaffStore = useTenantStaffStore();
 const founderList = ref<any>();
+const countryData = ref<any>([]);
 // 分页
 const { pagination, onSizeChange, onCurrentChange } = usePagination();
 const tableSortRef = ref("");
@@ -80,13 +81,13 @@ const queryForm = reactive<any>({
   // 项目标识
   projectIdentification: "",
   // 国家id
-  countryId: [],
+  countryId: '',
   // 创建人id
   createUserId: null,
   // 结算状态 1:待审核 2:已审核 3:已开票 4:已结算 5:已冻结
   settlementStatus: [],
   // 时间类型 1:待审核 2:已审核 3:已开票 4:巳结算 5:已冻结
-  timeType: '',
+  timeType: "",
   // 开始时间
   startTime: "",
   // 结束时间
@@ -159,19 +160,19 @@ function onReset() {
     // 每页条数
     limit: 10,
     // 项目id
-    projectId: "",
+    projectId: null,
     // 项目名称
     projectName: "",
-    // 客户简称
-    customerName: "",
+    // 客户id
+    customerId: null,
     // 项目标识
     projectIdentification: "",
     // 国家id
-    countryId: "",
+    countryId: '',
     // 创建人id
-    createUserId: "",
-    // 结算状态 1:待审枝 2:已审核 3:已开票 4:已结算 5:已冻结
-    settlementStatus: "",
+    createUserId: null,
+    // 结算状态 1:待审核 2:已审核 3:已开票 4:已结算 5:已冻结
+    settlementStatus: [],
     // 时间类型 1:待审核 2:已审核 3:已开票 4:巳结算 5:已冻结
     timeType: "",
     // 开始时间
@@ -179,7 +180,15 @@ function onReset() {
     // 结束时间
     endTime: "",
   });
-  timeArr.value = []
+  timeArr.value = [];
+  countryData.value = [];
+  fetchData();
+}
+
+// 获取选中国家
+const selectChange = (val:any) => {
+  // 将数组转换成字符串
+  queryForm.countryId = val.join(',');
 }
 // 处理时间
 const timeChange = () => {
@@ -195,9 +204,6 @@ const comCountryId = computed(() => (countryIdList: any) => {
 });
 async function fetchData() {
   listLoading.value = true;
-  countryList.value = await basicDictionaryStore.getCountry();
-  customerList.value = await customerStore.getCustomerList();
-  founderList.value = await tenantStaffStore.getStaff();
   // console.log(
   //   "countryList",
   //   countryList.value,
@@ -207,12 +213,15 @@ async function fetchData() {
   //   founderList.value
   // );
   // console.log("queryForm", queryForm);
-  const {data} = await api.list(queryForm)
-  list.value = data.projectSettlementList
+  const { data } = await api.list(queryForm);
+  list.value = data.projectSettlementList;
   pagination.value.total = +data.total;
   listLoading.value = false;
 }
-onMounted(() => {
+onMounted(async () => {
+  countryList.value = await basicDictionaryStore.getCountry();
+  customerList.value = await customerStore.getCustomerList();
+  founderList.value = await tenantStaffStore.getStaff();
   fetchData();
 });
 function handleMoreOperating(command: string, row: any) {
@@ -235,6 +244,7 @@ function handleMoreOperating(command: string, row: any) {
     :class="{
       'absolute-container': tableAutoHeight,
     }"
+    v-loading="listLoading"
   >
     <PageMain>
       <SearchBar :show-toggle="false">
@@ -270,12 +280,13 @@ function handleMoreOperating(command: string, row: any) {
             </el-form-item>
             <el-form-item v-show="!fold" label="">
               <ElSelect
-                v-model="queryForm.countryId"
+                v-model="countryData"
                 placeholder="国家"
                 clearable
                 filterable
                 multiple
                 collapse-tags
+                @change="selectChange"
               >
                 <ElOption
                   v-for="item in countryList"
@@ -288,7 +299,7 @@ function handleMoreOperating(command: string, row: any) {
             <el-form-item v-show="!fold" label="">
               <el-select
                 placeholder="客户简称"
-                v-model="queryForm.customerName"
+                v-model="queryForm.customerId"
                 clearable
               >
                 <el-option
@@ -446,20 +457,22 @@ function handleMoreOperating(command: string, row: any) {
           align="center"
           label="原价"
         >
-        <template #default="{row}">
-          {{ row.projectAmount ? row.projectAmount : '-' }}
-        </template>
-      </el-table-column>
+          <template #default="{ row }">
+            {{ row.projectAmount ? row.projectAmount : "-" }}
+          </template>
+        </el-table-column>
         <el-table-column
           show-overflow-tooltip
           prop="e"
           align="center"
           label="所属国家"
         >
-        <template #default="{ row }">
+          <template #default="{ row }">
             <template v-if="row.countryId">
               <template v-if="row.countryId.length === 185">
-                <el-link type="primary"><el-tag type="warning">全球</el-tag></el-link>
+                <el-link type="primary"
+                  ><el-tag type="warning">全球</el-tag></el-link
+                >
               </template>
               <template v-else-if="comCountryId(row.countryId).length > 4">
                 <el-tooltip
@@ -468,9 +481,11 @@ function handleMoreOperating(command: string, row: any) {
                   :content="comCountryId(row.countryId).join(',')"
                   placement="top"
                 >
-                  <el-link type="primary"><el-tag type="success">{{
-                    comCountryId(row.countryId).length
-                  }}</el-tag></el-link>
+                  <el-link type="primary"
+                    ><el-tag type="success">{{
+                      comCountryId(row.countryId).length
+                    }}</el-tag></el-link
+                  >
                 </el-tooltip>
               </template>
               <template v-else>
@@ -484,7 +499,7 @@ function handleMoreOperating(command: string, row: any) {
               </template>
             </template>
           </template>
-      </el-table-column>
+        </el-table-column>
         <el-table-column
           show-overflow-tooltip
           prop="systemCount"
@@ -503,10 +518,10 @@ function handleMoreOperating(command: string, row: any) {
           align="center"
           label="结算PO号"
         >
-        <template #default="{row}">
-          {{ row.settlementPo ? row.settlementPo : '-' }}
-        </template>
-      </el-table-column>
+          <template #default="{ row }">
+            {{ row.settlementPo ? row.settlementPo : "-" }}
+          </template>
+        </el-table-column>
         <el-table-column
           show-overflow-tooltip
           prop="h"
@@ -519,11 +534,13 @@ function handleMoreOperating(command: string, row: any) {
           align="center"
           label="节点时间"
         >
-        <template #default="{row}">
-          <el-text v-if="row.nodeTime === '[]'" class="mx-1">'-'</el-text>
-          <el-text v-else class="mx-1">{{ row.nodeTime[0] }}-{{ row.nodeTime[1] }}</el-text>
-        </template>
-      </el-table-column>
+          <template #default="{ row }">
+            <el-text v-if="row.nodeTime === '[]'" class="mx-1">'-'</el-text>
+            <el-text v-else class="mx-1"
+              >{{ row.nodeTime[0] }}-{{ row.nodeTime[1] }}</el-text
+            >
+          </template>
+        </el-table-column>
         <el-table-column
           show-overflow-tooltip
           prop="j"

@@ -1,7 +1,7 @@
 import api from '../index'
 
 export default {
-  list: (data:any) => api.post('projectSettlement/getProjectSettlementList',data),
+  list: (data:any) => api.post('projectSettlement/get/getProjectSettlementList',data),
 
   detail: (id: number | string) => api.get('menu/detail', {
     params: {
