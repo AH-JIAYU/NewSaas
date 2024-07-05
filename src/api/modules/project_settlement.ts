@@ -3,12 +3,7 @@ import api from '../index'
 export default {
   list: (data:any) => api.post('projectSettlement/get/getProjectSettlementList',data),
 
-  detail: (id: number | string) => api.get('menu/detail', {
-    params: {
-      id,
-    },
-    baseURL: '/mock/',
-  }),
+  review: (data:any) => api.post('projectSettlement/get/getProjectSettlementByProjectId', data),
 
   create: (data: any) => api.post('menu/create', data, {
     baseURL: '/mock/',

@@ -129,8 +129,11 @@ function settlement(row: any) {
   }
 }
 // 审核
-function auditing(row: any) {
-  auditingRef.value.showEdit();
+async function auditing(row: any) {
+  // console.log('row11',row);
+  // const res = await api.review({ id: row.projectId });
+  // console.log("res", res);
+  auditingRef.value.showEdit(JSON.stringify(row));
 }
 // 编辑
 function edit(row: any) {
@@ -554,7 +557,7 @@ function handleMoreOperating(command: string, row: any) {
                 type="primary"
                 size="small"
                 plain
-                @click="auditing(setSelectRows)"
+                @click="auditing(row)"
               >
                 审核
               </el-button>

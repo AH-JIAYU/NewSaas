@@ -1,27 +1,23 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref } from "vue";
+import api from "@/api/modules/project_settlement";
 
 defineOptions({
-  name: 'ProjectReview',
-})
-const list = ref<any>([])
-const radio1 = ref(1)
-const checked1 = ref(false)
-list.value = [
-  { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-  { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-  { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-  { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-  { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-  { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-]
+  name: "ProjectReview",
+});
+const list = ref<any>([]);
+const dataId = ref<any>();
+const radio1 = ref(1);
+const checked1 = ref(false);
 // 弹框开关变量
-const dialogTableVisible = ref(false)
+const dialogTableVisible = ref(false);
 // 提交数据
-function onSubmit() { }
+function onSubmit() {}
 // 获取数据
 async function showEdit(row: any) {
-  dialogTableVisible.value = true
+  // console.log("row", JSON.parse(row));
+  // dataId.value = row;
+  dialogTableVisible.value = true;
 }
 // 弹框关闭事件
 function closeHandler() {
@@ -30,16 +26,25 @@ function closeHandler() {
   // delete formData.id
   // // 重置表单
   // Object.assign(formData, defaultState)
-  dialogTableVisible.value = false
+  dialogTableVisible.value = false;
 }
-defineExpose({ showEdit })
+onMounted(async () => {
+  // const res = await api.review({ id: dataId.value.projectId });
+  // console.log("res", res);
+});
+defineExpose({ showEdit });
 </script>
 
 <template>
   <div>
-    <el-drawer v-model="dialogTableVisible" title="项目审核" size="50%" :before-close="closeHandler">
+    <el-drawer
+      v-model="dialogTableVisible"
+      title="项目审核"
+      size="50%"
+      :before-close="closeHandler"
+    >
       <el-form ref="form" label-width="150px" :inline="false">
-        <el-row style="margin: 0;" :gutter="20">
+        <el-row style="margin: 0" :gutter="20">
           <div class="border">
             <p class="pp">项目编码</p>
             <p class="neip">111</p>
@@ -54,23 +59,16 @@ defineExpose({ showEdit })
           </div>
         </el-row>
         <div class="shenhe">
-          <el-form-item style="display: flex;align-items: center;" label="审核方式">
+          <el-form-item
+            style="display: flex; align-items: center"
+            label="审核方式"
+          >
             <el-radio-group v-model="radio1">
-              <el-radio :value="1" size="large">
-                按成功ID
-              </el-radio>
-              <el-radio :value="2" size="large">
-                按失败ID
-              </el-radio>
-              <el-radio :value="3" size="large">
-                全部通过
-              </el-radio>
-              <el-radio :value="4" size="large">
-                全部失败
-              </el-radio>
-              <el-radio :value="5" size="large">
-                数据冻结
-              </el-radio>
+              <el-radio :value="1" size="large"> 按成功ID </el-radio>
+              <el-radio :value="2" size="large"> 按失败ID </el-radio>
+              <el-radio :value="3" size="large"> 全部通过 </el-radio>
+              <el-radio :value="4" size="large"> 全部失败 </el-radio>
+              <el-radio :value="5" size="large"> 数据冻结 </el-radio>
             </el-radio-group>
           </el-form-item>
         </div>
@@ -91,46 +89,42 @@ defineExpose({ showEdit })
         </div>
         <div class="shenhe">
           <el-form-item label="备注">
-            <el-input class="custom-input" placeholder="" clearable @change="" />
+            <el-input
+              class="custom-input"
+              placeholder=""
+              clearable
+              @change=""
+            />
           </el-form-item>
         </div>
         <div class="po">
           <el-form-item v-if="checked1" label="结算PO号">
-            <el-input class="custom-input" placeholder="" clearable @change="" />
+            <el-input
+              class="custom-input"
+              placeholder=""
+              clearable
+              @change=""
+            />
           </el-form-item>
         </div>
-        <el-row style="margin: 0;" :gutter="20">
-          <el-col :span="20"><el-button type="primary" link size="default" @click="">反选</el-button>
-          </el-col>
-          <el-col :span="4"> <el-checkbox v-model="checked1" label="填写结算PO号" size="large" /></el-col>
+        <el-row style="margin: 0" :gutter="20">
+          <el-col :span="20"> </el-col>
+          <el-col :span="4">
+            <el-checkbox v-model="checked1" label="填写结算PO号" size="large"
+          /></el-col>
+        </el-row>
+        <el-row style="margin: 0" :gutter="20">
+          <el-input
+            placeholder="请粘贴ID，每行一个,多个请回车换行"
+            type="textarea"
+            rows="15"
+          />
         </el-row>
       </el-form>
-      <el-table ref="tableSortRef" v-loading="false" style="margin-top: 10px" row-key="id" :data="list">
-        <el-table-column v-if="radio1 <= 2" type="selection" />
-        <el-table-column type="index" align="center" label="序号" width="55" />
-        <el-table-column show-overflow-tooltip prop="a" align="center" label="会员ID" />
-        <el-table-column show-overflow-tooltip prop="b" align="center" label="前置问卷">
-          <div style="color: #52d845;" class="i-icon-park-solid:correct w-1em h-1em"></div>
-        </el-table-column>
-        <el-table-column show-overflow-tooltip prop="c" align="center" label="IR" />
-        <el-table-column show-overflow-tooltip prop="d" align="center" label="最小时长" />
-        <el-table-column show-overflow-tooltip prop="e" align="center" label="配额" />
-        <el-table-column show-overflow-tooltip prop="f" align="center" label="IP" />
-        <el-table-column show-overflow-tooltip prop="g" align="center" label="时差">
-          <div style="color: #e20621;" class="i-icon-park-solid:error w-1em h-1em"></div>
-        </el-table-column>
-        <template #empty>
-          <el-empty description="暂无数据" />
-        </template>
-      </el-table>
       <template #footer>
         <div style="flex: auto">
-          <el-button type="primary" @click="onSubmit">
-            确定
-          </el-button>
-          <el-button @click="dialogTableVisible = false">
-            取消
-          </el-button>
+          <el-button type="primary" @click="onSubmit"> 确定 </el-button>
+          <el-button @click="dialogTableVisible = false"> 取消 </el-button>
         </div>
       </template>
     </el-drawer>
@@ -154,7 +148,7 @@ defineExpose({ showEdit })
 }
 
 .el-radio-group {
-  margin-left: .9375rem;
+  margin-left: 0.9375rem;
 }
 
 .border {
@@ -206,7 +200,6 @@ defineExpose({ showEdit })
     border: none !important;
     outline: none !important;
     box-shadow: none !important;
-
   }
   .el-input__wrapper {
     border: none !important;
@@ -218,12 +211,14 @@ defineExpose({ showEdit })
   }
 }
 ::v-deep .el-input__inner {
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-
-  }
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
 ::v-deep .el-input__wrapper {
-    border: none !important;
-  }
+  border: none !important;
+}
+:deep(.el-textarea__inner) {
+  width: 56.5625rem;
+}
 </style>
