@@ -35,7 +35,7 @@ defineExpose({ showEdit });
       title="查看你会员价格"
       direction="rtl"
       :close-on-click-modal="false"
-      size="50%"
+   
     >
       <el-table :data="data.list" border stripe>
         <el-table-column label="会员ID" prop="memberId" />
@@ -45,9 +45,8 @@ defineExpose({ showEdit });
       </el-table>
 
       <template #footer>
-        <div style="flex: auto">
+        <div>
           <el-button @click="close"> 关闭 </el-button>
-          <!-- <el-button type="primary" @click="close"> 确定 </el-button> -->
         </div>
       </template>
     </el-dialog>

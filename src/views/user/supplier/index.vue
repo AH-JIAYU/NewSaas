@@ -43,19 +43,20 @@ const columns = ref<Array<Object>>([
     sortable: true,
     prop: "supplierAccord",
   },
-  { label: "余额-美元", checked: true, sortable: true, prop: "balanceUs" },
-  {
-    label: "余额-人民币",
-    checked: true,
-    sortable: true,
-    prop: "balanceHumanLife",
-  },
+  { label: "余额", checked: true, sortable: true, prop: "balanceUs" },
   {
     label: "待审金额",
     checked: true,
     sortable: true,
     prop: "amountPendingTrial",
   },
+  {
+    label: "余额-人民币",
+    checked: true,
+    sortable: true,
+    prop: "balanceHumanLife",
+  },
+
   {
     label: "供应商等级id",
     checked: true,
@@ -348,14 +349,7 @@ onMounted(async () => {
           align="center"
           prop="balanceUs"
           show-overflow-tooltip
-          label="余额($)"
-        />
-        <el-table-column
-          v-if="checkList.includes('balanceHumanLife')"
-          align="center"
-          prop="balanceHumanLife"
-          show-overflow-tooltip
-          label="余额(￥)"
+          label="余额"
         />
         <el-table-column
           v-if="checkList.includes('amountPendingTrial')"

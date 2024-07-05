@@ -456,6 +456,7 @@ textarea {
   }
 }
 
-.custom-widget-color-red {
+// 前置调查记录正确答案文字红色
+.choicesItemRed .sd-item__control-label {
   color: red !important;
 }

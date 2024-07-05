@@ -40,6 +40,13 @@ const columns = ref<Array<Object>>([
     checked: true,
     sprtable: true,
   },
+  { label: "余额", checked: true, sortable: true, prop: "balanceUs" },
+  {
+    label: "待审金额",
+    checked: true,
+    sortable: true,
+    prop: "amountPendingTrial",
+  },
   { prop: "memberName", label: "会员姓名", checked: true, sprtable: true },
   {
     prop: "memberLevelName",
@@ -297,6 +304,20 @@ onMounted(async () => {
           prop="memberName"
           show-overflow-tooltip
           label="会员姓名"
+        />
+        <el-table-column
+          v-if="checkList.includes('balanceUs')"
+          align="center"
+          prop="balanceUs"
+          show-overflow-tooltip
+          label="余额"
+        />
+        <el-table-column
+          v-if="checkList.includes('amountPendingTrial')"
+          align="center"
+          prop="amountPendingTrial"
+          show-overflow-tooltip
+          label="待审金额"
         />
         <el-table-column
           v-if="checkList.includes('memberLevelName')"
