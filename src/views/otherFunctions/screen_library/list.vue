@@ -125,7 +125,7 @@ function onCreate(row?: any) {
 }
 // 新增问卷/标题
 function onCreateTiele(row: any) {
-  row.getProjectProblemCategoryInfoList.push({
+  row.getProjectProblemCategoryInfoList.unshift({
     categoryName: "",
     countryId: row.countryId,
     status: 1,
