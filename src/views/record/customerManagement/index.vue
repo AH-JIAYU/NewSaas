@@ -35,8 +35,8 @@ const queryForm = reactive<any>({
 
 // 重置请求
 function queryData() {
-  queryForm.pageNo = 1
-  fetchData()
+  pagination.value.page = 1;
+  fetchData();
 }
 // 每页数量切换
 function sizeChange(size: number) {

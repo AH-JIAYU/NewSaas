@@ -43,8 +43,8 @@ function currentChange(page = 1) {
 
 // 重置请求
 function queryData() {
-  queryForm.pageNo = 1
-  fetchData()
+  pagination.value.page = 1;
+  fetchData();
 }
 
 // 请求
