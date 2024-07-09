@@ -1,87 +1,129 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
-
+import { onMounted } from "vue";
+import api from "@/api/modules/user_subVip";
 defineOptions({
-  name: 'UserSubVipIndex',
-})
+  name: "UserSubVipIndex",
+});
 
-const { pagination, onSizeChange, onCurrentChange } = usePagination() // 分页
+const { pagination, onSizeChange, onCurrentChange } = usePagination(); // 分页
 
-const listLoading = ref<boolean>(false)
-const list = ref<Array<Object>>([]) // 列表
-const selectRows = ref<string>() // 表格-选中行
-const checkList = ref<any>([]) // 表格-展示的列
-const border = ref<boolean>(true) // 表格控件-是否展示边框
-const stripe = ref<boolean>(true) // 表格控件-是否展示斑马条
-const lineHeight = ref<any>('default') // 表格控件-控制表格大小
-const tableAutoHeight = ref(false) // 表格控件-高度自适应
+const listLoading = ref<boolean>(false);
+const list = ref<Array<Object>>([]); // 列表
+const selectRows = ref<string>(); // 表格-选中行
+const checkList = ref<any>([]); // 表格-展示的列
+const border = ref<boolean>(true); // 表格控件-是否展示边框
+const stripe = ref<boolean>(true); // 表格控件-是否展示斑马条
+const lineHeight = ref<any>("default"); // 表格控件-控制表格大小
+const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const columns = ref([
   // 表格控件-展示列
   {
-    label: '等级名称',
-    prop: 'a',
+    label: "等级名称",
+    prop: "a",
     sortable: true,
     disableCheck: false, // 不可更改
     checked: true, // 默认展示
   },
-])
-const queryForm = reactive<any>({
-  // 请求接口携带参数
-  pageNo: 1,
-  pageSize: 10,
-  select: {},
-})
+]);
+const queryForm = ref<any>({
+  memberChildId: "", //子会员ID
+  memberNickname: "", //子会员名称
+  memberName: "", //子会员姓名
+  tenantSupplierId: "", //供应商ID
+  b2bStatus: "", //B2B
+  memberChildGroupName: "", //所属组
+  memberChildStatus: "", //子会员状态
+  createUserName: "", //创建人
+  time: [], //创建日期
+});
 // 每页数量切换
 function sizeChange(size: number) {
-  onSizeChange(size).then(() => fetchData())
+  onSizeChange(size);
 }
 
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
-  onCurrentChange(page).then(() => fetchData())
+  // fetchData();
+  onCurrentChange(page);
 }
+// 分页 后端(刘):这块不好做分页，所有返回全部数据，前端做分页
+const DataList = computed(() => {
+  const beginTime: any = queryForm.value.time[0]
+    ? new Date(queryForm.value.time[0]).getTime()
+    : "";
+  const endTime: any = queryForm.value.time[1]
+    ? new Date(queryForm.value.time[1]).getTime()
+    : "";
 
+  const searchList = list.value.filter((item: any) => {
+    const rowTime: any = new Date(item.createTime).getTime();
+    if (
+      (String(item.memberChildId).includes(queryForm.value.memberChildId) ||
+        String(item.memberNickname).includes(queryForm.value.memberChildId)) &&
+      String(item.memberName).includes(queryForm.value.memberName) &&
+      String(item.tenantSupplierId).includes(
+        queryForm.value.tenantSupplierId
+      ) &&
+      (item.b2bStatus === queryForm.value.b2bStatus ||
+        !queryForm.value.b2bStatus) &&
+      String(item.memberChildGroupName).includes(
+        queryForm.value.memberChildGroupName
+      ) &&
+      (item.memberChildStatus === queryForm.value.memberChildStatus ||
+        !queryForm.value.memberChildStatus) &&
+      String(item.createUserName).includes(queryForm.value.createUserName) &&
+      ((beginTime <= rowTime && rowTime <= endTime) ||
+        !beginTime ||
+        !endTime ||
+        !rowTime)
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  });
+  return searchList.slice(
+    (pagination.value.page - 1) * pagination.value.size,
+    pagination.value.page * pagination.value.size
+  );
+});
 // 重置请求
 function queryData() {
-  queryForm.pageNo = 1
-  fetchData()
+  pagination.value.page = 1;
+  Object.assign(queryForm.value, {
+    memberChildId: "", //子会员ID
+    memberNickname: "", //子会员名称
+    memberName: "", //子会员姓名
+    tenantSupplierId: "", //供应商ID
+    b2bStatus: "", //B2B
+    memberChildGroupName: "", //所属组
+    memberChildStatus: "", //子会员状态
+    createUserName: "", //创建人
+    time: [], //创建日期
+  });
+  fetchData();
 }
 
 // 请求
 async function fetchData() {
-  listLoading.value = true
-  // const { data } = await getList(queryForm)
-  // list.value = data[0]
-  // total.value = data[0].length
-  list.value = [
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-  ]
-  listLoading.value = false
-}
-// 重置筛选数据
-function onReset() {
-  Object.assign(queryForm, {
-    pageNo: 1,
-    pageSize: 10,
-    select: {},
-  })
-  fetchData()
+  listLoading.value = true;
+  const res = await api.list({});
+  list.value = res.data.getMemberChildInfoList;
+  pagination.value.total = res.data.getMemberChildInfoList.length;
+  listLoading.value = false;
 }
 // 表格-单选框
 function setSelectRows(val: string | undefined) {
-  selectRows.value = val
+  selectRows.value = val;
 }
 onMounted(() => {
   columns.value.forEach((item: any) => {
-    if (item.checked) { checkList.value.push(item.prop) }
-  })
-  fetchData()
-})
+    if (item.checked) {
+      checkList.value.push(item.prop);
+    }
+  });
+  fetchData();
+});
 </script>
 
 <template>
@@ -90,7 +132,7 @@ onMounted(() => {
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
           <ElForm
-            :model="queryForm.select"
+            :model="queryForm"
             size="default"
             label-width="180px"
             inline-message
@@ -99,7 +141,7 @@ onMounted(() => {
           >
             <el-form-item label="">
               <el-input
-                v-model.trim="queryForm.select.id"
+                v-model.trim="queryForm.memberChildId"
                 clearable
                 :inline="false"
                 placeholder="子会员ID、子会员名称"
@@ -107,50 +149,49 @@ onMounted(() => {
             </el-form-item>
             <el-form-item label="">
               <el-input
-                v-model.trim="queryForm.select.name"
+                v-model.trim="queryForm.memberName"
+                clearable
+                :inline="false"
+                placeholder="子会员姓名"
+              />
+            </el-form-item>
+            <el-form-item label="">
+              <el-input
+                v-model.trim="queryForm.tenantSupplierId"
                 clearable
                 :inline="false"
                 placeholder="供应商ID"
               />
             </el-form-item>
-            <el-form-item label="">
-              <el-select
-                v-model="queryForm.select.default"
-                clearable
-                placeholder="子会员角色"
-              >
-                <el-option label="默认" value="true" />
-                <el-option label="关闭" value="false" />
-              </el-select>
-            </el-form-item>
             <el-form-item v-show="!fold" label="">
               <el-select
-                v-model="queryForm.select.default"
+                v-model="queryForm.memberChildStatus"
                 clearable
                 placeholder="子会员状态"
               >
-                <el-option label="默认" value="true" />
-                <el-option label="关闭" value="false" />
+                <el-option label="开启" :value="2" />
+                <el-option label="关闭" :value="1" />
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
               <el-select
-                v-model="queryForm.select.default"
+                v-model="queryForm.b2bStatus"
                 clearable
-                placeholder="所属组"
+                placeholder="B2B"
               >
-                <el-option label="默认" value="true" />
-                <el-option label="关闭" value="false" />
+                <el-option label="开启" :value="2" />
+                <el-option label="关闭" :value="1" />
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
               <el-date-picker
-                v-model="queryForm.select.time"
-                type="daterange"
+                v-model="queryForm.time"
+                type="datetimerange"
                 unlink-panels
                 range-separator="-"
-                start-placeholder="注册开始日期"
-                end-placeholder="注册结束日期"
+                start-placeholder="创建开始日期"
+                end-placeholder="创建结束日期"
+                value-format="YYYY-MM-DD hh:mm:ss"
                 size="default"
                 style="width: 192px"
                 clear-icon="true"
@@ -163,7 +204,7 @@ onMounted(() => {
                 </template>
                 筛选
               </ElButton>
-              <ElButton @click="onReset">
+              <ElButton @click="queryData">
                 <template #icon>
                   <div class="i-grommet-icons:power-reset h-1em w-1em" />
                 </template>
@@ -185,9 +226,7 @@ onMounted(() => {
       <el-row>
         <FormLeftPanel />
         <FormRightPanel>
-          <el-button size="default">
-            导出
-          </el-button>
+          <el-button size="default"> 导出 </el-button>
           <TabelControl
             v-model:border="border"
             v-model:tableAutoHeight="tableAutoHeight"
@@ -203,7 +242,7 @@ onMounted(() => {
       <el-table
         v-loading="listLoading"
         :border="border"
-        :data="list"
+        :data="DataList"
         :size="lineHeight"
         :stripe="stripe"
         @selection-change="setSelectRows"
@@ -217,58 +256,57 @@ onMounted(() => {
         <el-table-column
           v-if="checkList.includes('a')"
           align="center"
-          prop="id"
+          prop="memberChildId"
           show-overflow-tooltip
-          label="子会员ID"
+          label="子会员ID/子会员名称"
         />
         <el-table-column
           align="center"
-          prop="b"
-          show-overflow-tooltip
-          label="子会员名称"
-        />
-        <el-table-column
-          align="center"
-          prop="c"
+          prop="memberName"
           show-overflow-tooltip
           label="子会员姓名"
         />
         <el-table-column
           align="center"
-          prop="d"
+          prop="tenantSupplierId"
           show-overflow-tooltip
           label="供应商ID"
         />
-        <el-table-column
+        <ElTableColumn
           align="center"
-          prop="e"
           show-overflow-tooltip
-          label="角色"
-        />
-        <el-table-column
-          align="center"
-          prop="f"
-          show-overflow-tooltip
+          prop="b2bStatus"
           label="B2B"
-        />
-        <el-table-column
-          align="center"
-          prop="h"
-          show-overflow-tooltip
-          label="所属组"
-        />
-        <ElTableColumn align="center" show-overflow-tooltip prop="" label="子会员状态">
-          <ElSwitch inline-prompt active-text="启用" inactive-text="禁用" />
+        >
+          <template #default="{ row }">
+            {{ row.b2bStatus === 1 ? "关闭" : "开启" }}
+          </template>
         </ElTableColumn>
         <el-table-column
           align="center"
-          prop="r"
+          prop="memberChildGroupName"
+          show-overflow-tooltip
+          label="所属组"
+        />
+        <ElTableColumn
+          align="center"
+          show-overflow-tooltip
+          prop="memberChildStatus"
+          label="子会员状态"
+        >
+          <template #default="{ row }">
+            {{ row.memberChildStatus === 1 ? "关闭" : "开启" }}
+          </template>
+        </ElTableColumn>
+        <el-table-column
+          align="center"
+          prop="createUserName"
           show-overflow-tooltip
           label="创建人"
         />
         <el-table-column
           align="center"
-          prop="r"
+          prop="createTime"
           show-overflow-tooltip
           label="创建日期"
         />
@@ -317,6 +355,7 @@ onMounted(() => {
     }
   }
 }
+
 // 筛选
 .page-main {
   .search-form {
@@ -337,5 +376,4 @@ onMounted(() => {
     }
   }
 }
-
 </style>
