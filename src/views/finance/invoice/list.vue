@@ -157,7 +157,7 @@ async function fetchData() {
   customerList.value = await customerStore.getCustomerList();
   const { data } = await api.list(queryForm)
   list.value = data.data
-  pagination.value.total = parseInt(data.total);
+  pagination.value.total = parseInt(data.total) || 0
   listLoading.value = false
 }
 onMounted(() => {
@@ -191,7 +191,14 @@ onMounted(() => {
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold">
-              <el-date-picker v-model="timeArr" :disabled="!type" value-format="YYYY-MM-DD hh:mm:ss" type="daterange"
+              <!-- <el-date-picker
+                v-model="value1"
+                type="datetimerange"
+                range-separator="To"
+                start-placeholder="Start date"
+                end-placeholder="End date"
+              /> -->
+              <el-date-picker v-model="timeArr" :disabled="!type" value-format="YYYY-MM-DD hh:mm:ss" type="datetimerange"
                 range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期" clearable size=""
                 @change="timeChange" />
             </el-form-item>
