@@ -40,12 +40,12 @@ const columns = ref<Array<Object>>([
     checked: true,
     sprtable: true,
   },
-  { label: "余额", checked: true, sortable: true, prop: "balanceUs" },
+  { label: "余额", checked: true, sortable: true, prop: "availableBalance" },
   {
     label: "待审金额",
     checked: true,
     sortable: true,
-    prop: "amountPendingTrial",
+    prop: "pendingBalance",
   },
   { prop: "memberName", label: "会员姓名", checked: true, sprtable: true },
   {
@@ -306,16 +306,16 @@ onMounted(async () => {
           label="会员姓名"
         />
         <el-table-column
-          v-if="checkList.includes('balanceUs')"
+          v-if="checkList.includes('availableBalance')"
           align="center"
-          prop="balanceUs"
+          prop="availableBalance"
           show-overflow-tooltip
           label="余额"
         />
         <el-table-column
-          v-if="checkList.includes('amountPendingTrial')"
+          v-if="checkList.includes('pendingBalance')"
           align="center"
-          prop="amountPendingTrial"
+          prop="pendingBalance"
           show-overflow-tooltip
           label="待审金额"
         />

@@ -1,37 +1,58 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
-
+import { onMounted } from "vue";
+import api from "@/api/modules/record_termination";
 defineOptions({
-  name: 'RecordTerminationIndex',
-})
+  name: "RecordTerminationIndex",
+});
 
-const { pagination, onSizeChange, onCurrentChange } = usePagination() // 分页
+const { getParams, pagination, onSizeChange, onCurrentChange } =
+  usePagination(); // 分页
 
-const listLoading = ref(false)
-const list = ref<Array<Object>>([]) // 列表
-const selectRows = ref('') // 表格-选中行
-const checkList = ref<Array<Object>>([]) // 表格-展示的列
+const listLoading = ref(false);
+const list = ref<Array<Object>>([]); // 列表
+const selectRows = ref(""); // 表格-选中行
+const checkList = ref<Array<Object>>([]); // 表格-展示的列
 
-const border = ref(true) // 表格控件-是否展示边框
-const stripe = ref(false) // 表格控件-是否展示斑马条
-const lineHeight = ref<any>('default') // 表格控件-控制表格大小
-const tableAutoHeight = ref(false) // 表格控件-高度自适应
+const border = ref(true); // 表格控件-是否展示边框
+const stripe = ref(false); // 表格控件-是否展示斑马条
+const lineHeight = ref<any>("default"); // 表格控件-控制表格大小
+const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const columns = ref([
   // 表格控件-展示列
+
   {
-    label: '等级名称',
-    prop: 'a',
+    label: "会员id/子会员id",
+    prop: "memberChildId",
     sortable: true,
-    disableCheck: false, // 不可更改
-    checked: true, // 默认展示
+    checked: true,
   },
-])
-const queryForm = reactive<any>({
+  {
+    label: "供应商ID",
+    prop: "tenantSupplierId",
+    sortable: true,
+    checked: true,
+  },
+  { label: "项目ID", prop: "projectId", sortable: true, checked: true },
+  {
+    label: "项目名称/客户简称",
+    prop: "projectName",
+    sortable: true,
+    checked: true,
+  },
+  { label: "IP/所属国", prop: "ipBelong", sortable: true, checked: true },
+  { label: "说明", prop: "notes", sortable: true, checked: true },
+  { label: "终止时间", prop: "terminationTime", sortable: true, checked: true },
+]);
+const queryForm = ref<any>({
   // 请求接口携带参数
-  pageNo: 1,
-  pageSize: 10,
-  select: {},
-})
+  time: [],
+  beginTime: "", //开始时间
+  endTime: "", //结束时间
+  projectId: "", //项目Id
+  tenantSupplierId: "", //	供应商id
+  projectName: "", //	项目名称
+  ipBelong: "", //	ip/所属国
+});
 
 // 重置请求
 function queryData() {
@@ -41,48 +62,54 @@ function queryData() {
 
 // 每页数量切换
 function sizeChange(size: number) {
-  onSizeChange(size).then(() => fetchData())
+  onSizeChange(size).then(() => fetchData());
 }
 
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
-  onCurrentChange(page).then(() => fetchData())
+  onCurrentChange(page).then(() => fetchData());
 }
 // 请求
 async function fetchData() {
-  listLoading.value = true
-  // const { data } = await getList(queryForm)
-  // list.value = data[0]
-  // total.value = data[0].length
-  list.value = [
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-  ]
-  listLoading.value = false
+  listLoading.value = true;
+  const params = {
+    ...getParams(),
+    ...queryForm.value,
+  };
+  if (queryForm.value.time && !!queryForm.value.time.length) {
+    params.beginTime = queryForm.value.time[0] || "";
+    params.endTime = queryForm.value.time[1] || "";
+  }
+  const res = await api.list(params);
+  list.value = res.data.projectTerminationScreenDetailInfoList;
+  pagination.value.total = res.data.total;
+
+  listLoading.value = false;
 }
 // 重置筛选数据
 function onReset() {
-  Object.assign(queryForm, {
-    pageNo: 1,
-    pageSize: 10,
-    select: {},
-  })
-  fetchData()
+  Object.assign(queryForm.value, {
+    beginTime: "", //开始时间
+    endTime: "", //结束时间
+    projectId: "", //项目Id
+    tenantSupplierId: "", //	供应商id
+    projectName: "", //	项目名称
+    ipBelong: "", //	ip/所属国
+  });
+  fetchData();
 }
 // 表格-单选框
 function setSelectRows(val: string) {
-  selectRows.value = val
+  selectRows.value = val;
 }
 onMounted(() => {
   columns.value.forEach((item) => {
-    if (item.checked) { checkList.value.push(item.prop) }
-  })
-  fetchData()
-})
+    if (item.checked) {
+      checkList.value.push(item.prop);
+    }
+  });
+  fetchData();
+});
 </script>
 
 <template>
@@ -91,7 +118,7 @@ onMounted(() => {
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
           <ElForm
-            :model="queryForm.select"
+            :model="queryForm"
             size="default"
             label-width="100px"
             inline-message
@@ -100,15 +127,7 @@ onMounted(() => {
           >
             <el-form-item label="">
               <el-input
-                v-model.trim="queryForm.select.id"
-                clearable
-                :inline="false"
-                placeholder="子会员ID"
-              />
-            </el-form-item>
-            <el-form-item label="">
-              <el-input
-                v-model.trim="queryForm.select.name"
+                v-model.trim="queryForm.tenantSupplierId"
                 clearable
                 :inline="false"
                 placeholder="供应商ID"
@@ -116,7 +135,7 @@ onMounted(() => {
             </el-form-item>
             <el-form-item label="">
               <el-input
-                v-model.trim="queryForm.select.name"
+                v-model.trim="queryForm.projectId"
                 clearable
                 :inline="false"
                 placeholder="项目ID"
@@ -124,45 +143,31 @@ onMounted(() => {
             </el-form-item>
             <el-form-item v-show="!fold" label="">
               <el-input
-                v-model.trim="queryForm.select.name"
+                v-model.trim="queryForm.projectName"
                 clearable
                 :inline="false"
                 placeholder="项目名称"
               />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-select
-                v-model="queryForm.select.default"
-                clearable
-                placeholder="客户简称"
-              />
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
               <el-input
-                v-model.trim="queryForm.select.name"
+                v-model.trim="queryForm.ipBelong"
                 clearable
                 :inline="false"
-                placeholder="IP地址"
+                placeholder="IP/所属国"
               />
             </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-select
-                v-model="queryForm.select.default"
-                clearable
-                placeholder="所属国家"
-              />
-            </el-form-item>
+
             <el-form-item v-show="!fold" label="">
               <el-date-picker
-                v-model="queryForm.select.time"
-                type="daterange"
+                v-model="queryForm.time"
+                type="datetimerange"
                 unlink-panels
                 range-separator="-"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
+                start-placeholder="创建开始日期"
+                end-placeholder="创建结束日期"
+                value-format="YYYY-MM-DD hh:mm:ss"
                 size="default"
-                style="width: 192px"
-                clear-icon="true"
               />
             </el-form-item>
             <ElFormItem>
@@ -194,9 +199,7 @@ onMounted(() => {
       <el-row>
         <FormLeftPanel />
         <FormRightPanel>
-          <el-button size="default">
-            导出
-          </el-button>
+          <el-button size="default"> 导出 </el-button>
           <TabelControl
             v-model:border="border"
             v-model:tableAutoHeight="tableAutoHeight"
@@ -225,45 +228,57 @@ onMounted(() => {
           type="selection"
         />
         <el-table-column
+          v-if="checkList.includes('memberChildId')"
           align="center"
-          prop="b"
+          prop="memberChildId"
           show-overflow-tooltip
-          label="子会员"
-        />
+          label="会员id/子会员id"
+        >
+          <template #default="{ row }">
+            {{ row.peopleType === 1 ? "会员" : "子会员" }}：{{
+              row.memberChildId
+            }}
+          </template>
+        </el-table-column>
         <el-table-column
-          v-if="checkList.includes('a')"
+          v-if="checkList.includes('tenantSupplierId')"
           align="center"
-          prop="id"
+          prop="tenantSupplierId"
           show-overflow-tooltip
           label="供应商ID"
         />
         <el-table-column
+          v-if="checkList.includes('projectId')"
           align="center"
-          prop="c"
+          prop="projectId"
           show-overflow-tooltip
           label="项目ID"
         />
         <el-table-column
+          v-if="checkList.includes('projectName')"
           align="center"
-          prop="d"
+          prop="projectName"
           show-overflow-tooltip
           label="项目名称/客户简称"
         />
         <el-table-column
+          v-if="checkList.includes('ipBelong')"
           align="center"
-          prop="d"
+          prop="ipBelong"
           show-overflow-tooltip
           label="IP/所属国"
         />
         <el-table-column
+          v-if="checkList.includes('notes')"
           align="center"
-          prop="d"
+          prop="notes"
           show-overflow-tooltip
           label="说明"
         />
         <el-table-column
+          v-if="checkList.includes('terminationTime')"
           align="center"
-          prop="h"
+          prop="terminationTime"
           show-overflow-tooltip
           label="终止时间"
         />
@@ -333,5 +348,4 @@ onMounted(() => {
     }
   }
 }
-
 </style>
