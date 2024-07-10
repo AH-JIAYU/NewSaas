@@ -4,37 +4,45 @@ meta:
 </route>
 
 <script setup lang="ts">
-import eventBus from '@/utils/eventBus'
-import api from '@/api/modules/survey_irQuery'
-import useSettingsStore from '@/store/modules/settings'
+import eventBus from "@/utils/eventBus";
+import api from "@/api/modules/survey_irQuery";
+import useSettingsStore from "@/store/modules/settings";
 
 defineOptions({
-  name: 'SurveyIrQueryList',
-})
+  name: "SurveyIrQueryList",
+});
 
-const router = useRouter()
-const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } = usePagination()
-const tabbar = useTabbar()
-const settingsStore = useSettingsStore()
+const router = useRouter();
+const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
+  usePagination();
+const tabbar = useTabbar();
+const settingsStore = useSettingsStore();
 
 // 表格控件-展示列
 const columns = ref([
   // 表格控件-展示列
   {
-    label: '等级名称',
-    prop: 'a',
+    label: "项目ID",
+    prop: "projectOrMemberGroupId",
     sortable: true,
-    disableCheck: false, // 不可更改
-    checked: true, // 默认展示
+    checked: true,
   },
-])
+  {
+    label: "项目名称",
+    prop: "projectOrMemberGroupName",
+    sortable: true,
+    checked: true,
+  },
+  { label: "项目IR", prop: "ir", sortable: true, checked: true },
+  { label: "项目实际IR", prop: "projectIr", sortable: true, checked: true },
+]);
 const data = ref<any>({
   loading: false,
 
   tableAutoHeight: false, // 表格是否自适应高度
   border: true, // 表格控件-是否展示边框
   stripe: false, // 表格控件-是否展示斑马条
-  lineHeight: 'default', // 表格控件-控制表格大小
+  lineHeight: "default", // 表格控件-控制表格大小
   checkList: [],
   /**
    * 详情展示模式
@@ -42,15 +50,17 @@ const data = ref<any>({
    * dialog 对话框
    * drawer 抽屉
    */
-  formMode: 'drawer' as 'router' | 'dialog' | 'drawer',
+  formMode: "drawer" as "router" | "dialog" | "drawer",
   // 详情
   formModeProps: {
     visible: false,
-    id: '',
+    id: "",
   },
   // 搜索
   search: {
-    title: '',
+    type: 1, // tab切换
+    projectOrMemberGroupId: "", //项目Id/会员id/会员组id
+    projectOrMemberGroupName: "", //	项目名称/会员名称/会员组名称
   },
   // 批量操作
   batch: {
@@ -59,78 +69,104 @@ const data = ref<any>({
   },
   // 列表数据
   dataList: [],
-})
+});
 onMounted(() => {
-  getDataList()
-  if (data.value.formMode === 'router') {
-    eventBus.on('get-data-list', () => {
-      getDataList()
-    })
+  getDataList();
+  columns.value.forEach((item: any) => {
+    if (item.checked) {
+      data.value.checkList.push(item.prop);
+    }
+  });
+  if (data.value.formMode === "router") {
+    eventBus.on("get-data-list", () => {
+      getDataList();
+    });
   }
-})
+});
 
 onBeforeUnmount(() => {
-  if (data.value.formMode === 'router') {
-    eventBus.off('get-data-list')
+  if (data.value.formMode === "router") {
+    eventBus.off("get-data-list");
   }
-})
+});
 
+// 切换tab
+function changeTab(val: any) {
+  getDataList();
+}
+// 获取数据
 function getDataList() {
-  data.value.loading = true
+  data.value.loading = true;
   const params = {
     ...getParams(),
-    ...(data.value.search.title && { title: data.value.search.title }),
-  }
+    ...data.value.search,
+  };
   api.list(params).then((res: any) => {
-    data.value.loading = false
-    data.value.dataList = res.data.list
-    pagination.value.total = res.data.total
-  })
+    data.value.loading = false;
+    data.value.dataList = res.data.projectOrMemberGroupIrList;
+    pagination.value.total = res.data.total;
+  });
 }
 // 重置筛选数据
 function onReset() {
   Object.assign(data.value.search, {
-    title: '',
-  })
-  getDataList()
+    title: "",
+  });
+  getDataList();
 }
 // 每页数量切换
 function sizeChange(size: number) {
-  onSizeChange(size).then(() => getDataList())
+  onSizeChange(size).then(() => getDataList());
 }
 
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
-  onCurrentChange(page).then(() => getDataList())
+  onCurrentChange(page).then(() => getDataList());
 }
 
 // 字段排序
-function sortChange({ prop, order }: { prop: string, order: string }) {
-  onSortChange(prop, order).then(() => getDataList())
+function sortChange({ prop, order }: { prop: string; order: string }) {
+  onSortChange(prop, order).then(() => getDataList());
 }
 </script>
 
 <template>
   <div :class="{ 'absolute-container': data.tableAutoHeight }">
     <PageMain>
+      <el-row :gutter="24">
+        <el-col :span="24">
+          <el-tabs v-model="data.search.type" @tab-change="changeTab">
+            <el-tab-pane label="项目IR" :name="1"></el-tab-pane>
+            <el-tab-pane label="会员IR" :name="2"></el-tab-pane>
+            <el-tab-pane label="小组IR" :name="3"></el-tab-pane>
+          </el-tabs>
+        </el-col>
+      </el-row>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
-          <ElForm :model="data.search" size="default" label-width="100px" inline-message inline class="search-form">
+          <ElForm
+            :model="data.search"
+            size="default"
+            label-width="100px"
+            inline-message
+            inline
+            class="search-form"
+          >
             <ElFormItem>
               <ElInput
-                v-model="data.search.title" placeholder="项目ID" clearable @keydown.enter="currentChange()"
+                v-model="data.search.projectOrMemberGroupId"
+                placeholder="项目ID"
+                clearable
+                @keydown.enter="currentChange()"
                 @clear="currentChange()"
               />
             </ElFormItem>
-            <ElFormItem v-show="!fold">
+            <ElFormItem>
               <ElInput
-                v-model="data.search.title" placeholder="项目名称" clearable @keydown.enter="currentChange()"
-                @clear="currentChange()"
-              />
-            </ElFormItem>
-            <ElFormItem v-show="!fold">
-              <ElInput
-                v-model="data.search.title" placeholder="会员ID" clearable @keydown.enter="currentChange()"
+                v-model="data.search.projectOrMemberGroupName"
+                placeholder="项目名称"
+                clearable
+                @keydown.enter="currentChange()"
                 @clear="currentChange()"
               />
             </ElFormItem>
@@ -149,9 +185,11 @@ function sortChange({ prop, order }: { prop: string, order: string }) {
               </ElButton>
               <ElButton disabled link @click="toggle">
                 <template #icon>
-                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
+                  <SvgIcon
+                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
+                  />
                 </template>
-                {{ fold ? '展开' : '收起' }}
+                {{ fold ? "展开" : "收起" }}
               </ElButton>
             </ElFormItem>
           </ElForm>
@@ -161,35 +199,77 @@ function sortChange({ prop, order }: { prop: string, order: string }) {
       <el-row>
         <FormLeftPanel />
         <FormRightPanel>
-          <el-button size="default">
-            导出
-          </el-button>
+          <el-button size="default"> 导出 </el-button>
           <TabelControl
-            v-model:border="data.border" v-model:tableAutoHeight="data.tableAutoHeight"
-            v-model:checkList="data.checkList" v-model:columns="columns" v-model:line-height="data.lineHeight"
-            v-model:stripe="data.stripe" style="margin-left: 12px;" @query-data="getDataList"
+            v-model:border="data.border"
+            v-model:tableAutoHeight="data.tableAutoHeight"
+            v-model:checkList="data.checkList"
+            v-model:columns="columns"
+            v-model:line-height="data.lineHeight"
+            v-model:stripe="data.stripe"
+            style="margin-left: 12px"
+            @query-data="getDataList"
           />
         </FormRightPanel>
       </el-row>
       <ElTable
-        v-loading="data.loading" :border="data.border" :size="data.lineHeight" :stripe="data.stripe" class="my-4"
-        :data="data.dataList" highlight-current-row height="100%" @sort-change="sortChange"
+        v-loading="data.loading"
+        :border="data.border"
+        :size="data.lineHeight"
+        :stripe="data.stripe"
+        class="my-4"
+        :data="data.dataList"
+        highlight-current-row
+        height="100%"
+        @sort-change="sortChange"
         @selection-change="data.batch.selectionDataList = $event"
       >
-        <el-table-column align="center" prop="a" show-overflow-tooltip type="selection" />
-        <ElTableColumn v-if="data.batch.enable" type="selection" show-overflow-tooltip align="center" fixed />
-        <ElTableColumn show-overflow-tooltip align="center" prop="" label="项目ID" />
-        <ElTableColumn show-overflow-tooltip align="center" prop="title" label="项目名称" />
-        <ElTableColumn show-overflow-tooltip align="center" prop="" label="我的完成" />
-        <ElTableColumn show-overflow-tooltip align="center" prop="" label="要求IR" />
-        <ElTableColumn show-overflow-tooltip align="center" prop="" label="站点IR" />
-        <ElTableColumn show-overflow-tooltip align="center" prop="" label="小组IR" />
-        <ElTableColumn show-overflow-tooltip align="center" prop="" label="我的IR" />
+        <el-table-column
+          align="center"
+          show-overflow-tooltip
+          type="selection"
+        />
+        <ElTableColumn
+          v-if="data.checkList.includes('projectOrMemberGroupId')"
+          show-overflow-tooltip
+          align="center"
+          prop="projectOrMemberGroupId"
+          label="项目ID"
+        />
+        <ElTableColumn
+          v-if="data.checkList.includes('projectOrMemberGroupName')"
+          show-overflow-tooltip
+          align="center"
+          prop="projectOrMemberGroupName"
+          label="项目名称"
+        />
+
+        <ElTableColumn
+          v-if="data.checkList.includes('ir')"
+          show-overflow-tooltip
+          align="center"
+          prop="ir"
+          label="项目IR"
+        />
+        <ElTableColumn
+          v-if="data.checkList.includes('projectIr')"
+          show-overflow-tooltip
+          align="center"
+          prop="projectIr"
+          label="项目实际IR"
+        />
       </ElTable>
       <ElPagination
-        :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
-        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-        background @size-change="sizeChange" @current-change="currentChange"
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
+        :page-sizes="pagination.sizes"
+        :layout="pagination.layout"
+        :hide-on-single-page="false"
+        class="pagination"
+        background
+        @size-change="sizeChange"
+        @current-change="currentChange"
       />
     </PageMain>
   </div>
@@ -244,5 +324,4 @@ function sortChange({ prop, order }: { prop: string, order: string }) {
     width: calc(100% + 40px);
   }
 }
-
 </style>
