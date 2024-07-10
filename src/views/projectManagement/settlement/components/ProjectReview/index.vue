@@ -1,23 +1,96 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { ElMessage } from "element-plus";
+import type { FormInstance, FormRules } from "element-plus";
 import api from "@/api/modules/project_settlement";
 
 defineOptions({
   name: "ProjectReview",
 });
-const list = ref<any>([]);
-const dataId = ref<any>();
-const radio1 = ref(1);
+const emits =  defineEmits(['success'])
+// loading
+const loading = ref(false);
+const arr = ref<any>([]);
+const form = ref<any>();
+const formData = ref<any>({
+  // 项目Id
+  projectId: "",
+  projectName: "",
+  // 审核类型 1:按成功id 2:按失败id 3:全部通过 4:全部失败 5:数据冻结
+  settlementType: "",
+  // 备注
+  remark: "",
+  // 	需要修改的数据
+  projectSettlementBuilderList: [],
+  // 结算po号
+  po: "",
+});
+// 校验
+const formRules = ref<FormRules>({
+  settlementType: [
+    { required: true, message: "请选择审核方式", trigger: "change" },
+  ],
+});
+const formRef = ref<FormInstance>();
 const checked1 = ref(false);
 // 弹框开关变量
 const dialogTableVisible = ref(false);
-// 提交数据
-function onSubmit() {}
 // 获取数据
 async function showEdit(row: any) {
-  // console.log("row", JSON.parse(row));
-  // dataId.value = row;
+  if (row) {
+    form.value = JSON.parse(row);
+    formData.value.projectId = form.value.projectId;
+    formData.value.projectName = form.value.projectName;
+  }
   dialogTableVisible.value = true;
+}
+// 提交数据
+async function onSubmit() {
+  formRef.value &&
+    formRef.value.validate(async (valid) => {
+      if (valid) {
+        loading.value = true;
+        delete formData.value.projectName;
+        if (
+          formData.value.settlementType === 1 ||
+          formData.value.settlementType === 2
+        ) {
+          formData.value.projectSettlementBuilderList =
+            arr.value.split("\n") || [];
+        } else {
+          formData.value.projectSettlementBuilderList = [];
+        }
+        if (formData.value.settlementType === 1) {
+          // 按成功ID
+          const res = await api.successById(formData.value);
+        } else if (formData.value.settlementType === 2) {
+          // 按失败ID
+          await api.failById(formData.value);
+        } else if (formData.value.settlementType === 3) {
+          // 全部通过
+          delete formData.value.projectSettlementBuilderList;
+          await api.success(formData.value);
+        } else if (formData.value.settlementType === 4) {
+          // 全部失败
+          await api.fail(formData.value);
+        } else if (formData.value.settlementType === 5) {
+          // 数据冻结
+          await api.freeze(formData.value);
+        }
+        emits('success')
+        loading.value = false;
+        ElMessage.success({
+          message: "操作成功",
+          center: true,
+        });
+        closeHandler();
+      } else {
+        ElMessage({
+          message: "请选择审核方式",
+          type: "warning",
+        });
+      }
+    });
 }
 // 弹框关闭事件
 function closeHandler() {
@@ -25,45 +98,68 @@ function closeHandler() {
   // formRef.value.resetFields()
   // delete formData.id
   // // 重置表单
-  // Object.assign(formData, defaultState)
+  Object.assign(formData.value, {
+    // 项目Id
+    projectId: "",
+    projectName: "",
+    // 审核类型 1:按成功id 2:按失败id 3:全部通过 4:全部失败 5:数据冻结
+    settlementType: "",
+    // 备注
+    remark: "",
+    // 	需要修改的数据
+    projectSettlementBuilderList: [],
+    // 结算po号
+    po: "",
+  });
   dialogTableVisible.value = false;
 }
-onMounted(async () => {
-  // const res = await api.review({ id: dataId.value.projectId });
-  // console.log("res", res);
-});
 defineExpose({ showEdit });
 </script>
 
 <template>
-  <div>
+  <div v-loading="loading">
     <el-drawer
       v-model="dialogTableVisible"
       title="项目审核"
       size="50%"
       :before-close="closeHandler"
     >
-      <el-form ref="form" label-width="150px" :inline="false">
+      <el-form
+        ref="formRef"
+        :model="formData"
+        :rules="formRules"
+        label-width="174px"
+        :inline="false"
+      >
         <el-row style="margin: 0" :gutter="20">
           <div class="border">
-            <p class="pp">项目编码</p>
-            <p class="neip">111</p>
+            <p class="pp">项目ID</p>
+            <p class="neip">
+              <el-input
+                v-model="form.projectId"
+                placeholder="请输入项目ID"
+                clearable
+              ></el-input>
+            </p>
           </div>
           <div class="border">
             <p class="pp">项目名称</p>
-            <p class="neip">222</p>
-          </div>
-          <div class="border">
-            <p class="pp">配额/限量</p>
-            <p class="neip">333</p>
+            <p class="neip">
+              <el-input
+                v-model="form.projectName"
+                placeholder="请输入项目名称"
+                clearable
+              ></el-input>
+            </p>
           </div>
         </el-row>
         <div class="shenhe">
           <el-form-item
+            prop="settlementType"
             style="display: flex; align-items: center"
             label="审核方式"
           >
-            <el-radio-group v-model="radio1">
+            <el-radio-group v-model="formData.settlementType">
               <el-radio :value="1" size="large"> 按成功ID </el-radio>
               <el-radio :value="2" size="large"> 按失败ID </el-radio>
               <el-radio :value="3" size="large"> 全部通过 </el-radio>
@@ -72,34 +168,20 @@ defineExpose({ showEdit });
             </el-radio-group>
           </el-form-item>
         </div>
-        <div v-if="radio1 === 2" class="shenhe">
-          <el-form-item label="失败ID">
-            <el-input placeholder="" clearable @change="" />
-          </el-form-item>
-        </div>
-        <div v-if="radio1 === 4" class="shenhe">
-          <el-form-item label="第一责任人">
-            <el-input placeholder="" clearable @change="" />
-          </el-form-item>
-        </div>
-        <div v-if="radio1 === 4" class="shenhe">
-          <el-form-item label="第二责任人">
-            <el-input placeholder="" clearable @change="" />
-          </el-form-item>
-        </div>
-        <div class="shenhe">
+        <div class="beizhu">
           <el-form-item label="备注">
             <el-input
               class="custom-input"
+              v-model="formData.remark"
               placeholder=""
               clearable
-              @change=""
             />
           </el-form-item>
         </div>
         <div class="po">
           <el-form-item v-if="checked1" label="结算PO号">
             <el-input
+              v-model="formData.po"
               class="custom-input"
               placeholder=""
               clearable
@@ -113,8 +195,13 @@ defineExpose({ showEdit });
             <el-checkbox v-model="checked1" label="填写结算PO号" size="large"
           /></el-col>
         </el-row>
-        <el-row style="margin: 0" :gutter="20">
+        <el-row
+          v-if="formData.settlementType === 1 || formData.settlementType === 2"
+          style="margin: 0"
+          :gutter="20"
+        >
           <el-input
+            v-model="arr"
             placeholder="请粘贴ID，每行一个,多个请回车换行"
             type="textarea"
             rows="15"
@@ -133,9 +220,13 @@ defineExpose({ showEdit });
 
 <style lang="scss" scoped>
 .shenhe {
-  width: 56.625rem;
+  width: 100%;
   border: 1px solid #ebeef5;
-  border-bottom: none;
+}
+.beizhu {
+  width: 100%;
+  border: 1px solid #ebeef5;
+  border-top: none;
 }
 
 .asterisk-left {
@@ -154,7 +245,7 @@ defineExpose({ showEdit });
 .border {
   display: flex;
   align-items: center;
-  width: 18.875rem;
+  width: 50%;
   height: 2.5625rem;
   margin: 0;
   border: 1px solid #ebeef5;
@@ -165,7 +256,7 @@ defineExpose({ showEdit });
   display: flex;
   justify-content: space-around;
   align-items: center;
-  width: 50%;
+  width: 38%;
   height: 100%;
   font-size: 14px;
   color: #606266;
@@ -206,8 +297,9 @@ defineExpose({ showEdit });
     box-shadow: none !important;
   }
   .po {
+    width: 100%;
     border: 1px solid #ebeef5;
-    width: 56.625rem;
+    border-top: none;
   }
 }
 ::v-deep .el-input__inner {
@@ -219,6 +311,6 @@ defineExpose({ showEdit });
   border: none !important;
 }
 :deep(.el-textarea__inner) {
-  width: 56.5625rem;
+  width: 100%;
 }
 </style>

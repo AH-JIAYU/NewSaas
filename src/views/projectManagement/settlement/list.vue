@@ -149,11 +149,17 @@ function clickFullScreen() {
 }
 // 每页数量切换
 function sizeChange(size: number) {
-  onSizeChange(size).then(() => fetchData());
+  onSizeChange(size).then(() => {
+    queryForm.limit = size;
+    fetchData()
+  });
 }
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
-  onCurrentChange(page).then(() => fetchData());
+  onCurrentChange(page).then(() => {
+    queryForm.page = page;
+    fetchData()
+  });
 }
 // 重置数据
 function onReset() {
@@ -554,6 +560,7 @@ function handleMoreOperating(command: string, row: any) {
           <template #default="{ row }">
             <ElSpace>
               <el-button
+              v-if="row.status === 1"
                 type="primary"
                 size="small"
                 plain
@@ -568,7 +575,7 @@ function handleMoreOperating(command: string, row: any) {
                 </ElButton>
                 <template #dropdown>
                   <ElDropdownMenu>
-                    <ElDropdownItem command="auditing"> 重审 </ElDropdownItem>
+                    <ElDropdownItem v-if="row.status === 5" command="auditing"> 重审 </ElDropdownItem>
                     <ElDropdownItem command="edit"> 结算编辑 </ElDropdownItem>
                     <ElDropdownItem command="refundDetails">
                       退款详情
@@ -597,7 +604,7 @@ function handleMoreOperating(command: string, row: any) {
       />
       <invoicingEdit ref="invoicingRef" />
       <moreOperations ref="settlementRef" />
-      <projectReview ref="auditingRef" />
+      <projectReview @success="fetchData" ref="auditingRef" />
       <settlementEdit ref="editRef" />
       <refundDetail ref="refundRef" />
       <Settlement ref="addSettlementRef" />
