@@ -208,44 +208,44 @@ nextTick(() => {
               <el-col :span="24">
                 <el-form-item label="成功回调">
                   <span v-pre>
-                    http:47.96.98.102:9100/callback/serviceCallback?uid={{$uid}}&status=c
+                    http:47.96.98.102:9100/callback/serviceCallback?uid=[uid]&status=c
                   </span>
                   <template v-if="localToptTab.tenantCustomerConfigInfoList[0].encryptionId
       ">
-                    <span v-pre>&hash ={{$hash}}</span>
+                    <span v-pre>&hash =[hash]</span>
                   </template>
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="配额满回调">
                   <span v-pre>
-                    http:47.96.98.102:9100/callback/serviceCallback?uid={{$uid}}&status=q
+                    http:47.96.98.102:9100/callback/serviceCallback?uid=[uid]&status=q
                   </span>
                   <template v-if="localToptTab.tenantCustomerConfigInfoList[0].encryptionId
       ">
-                    <span v-pre>&hash={{$hash}}</span>
+                    <span v-pre>&hash=[hash]</span>
                   </template>
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="被甄别回调">
                   <span v-pre>
-                    http:47.96.98.102:9100/callback/serviceCallback?uid={{$uid}}&status=s
+                    http:47.96.98.102:9100/callback/serviceCallback?uid=[uid]&status=s
                   </span>
                   <template v-if="localToptTab.tenantCustomerConfigInfoList[0].encryptionId
       ">
-                    <span v-pre>&hash={{$hash}}</span>
+                    <span v-pre>&hash=[hash]</span>
                   </template>
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="安全终止回调">
                   <span v-pre>
-                    http:47.96.98.102:9100/callback/serviceCallback?uid={{$uid}}&status=t
+                    http:47.96.98.102:9100/callback/serviceCallback?uid=[uid]&status=t
                   </span>
                   <template v-if="localToptTab.tenantCustomerConfigInfoList[0].encryptionId
       ">
-                    <span v-pre>&hash={{$hash}}</span>
+                    <span v-pre>&hash=[hash]</span>
                   </template>
                 </el-form-item>
               </el-col>
@@ -286,26 +286,26 @@ nextTick(() => {
               </el-col>
               <el-col :span="24">
                 <el-form-item label="成功回调">
-                  http://369.front-saas-web.surveyssaas.com/#/redirect?uid=[uid]&status=c<template v-if="localToptTab.tenantCustomerConfigInfoList[1].encryptionId
-      ">&hash=[hash]</template>
+                 <span v-pre>http://369.front-saas-web.surveyssaas.com/#/redirect?uid=[uid]&status=c</span><template v-if="localToptTab.tenantCustomerConfigInfoList[1].encryptionId
+      "><span v-pre>&hash=[hash]</span></template>
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="配额满回调">
-                  http://369.front-saas-web.surveyssaas.com/#/redirect?uid=[uid]&status=q<template v-if="localToptTab.tenantCustomerConfigInfoList[1].encryptionId
-      ">&hash=[hash]</template>
+                 <span v-pre>http://369.front-saas-web.surveyssaas.com/#/redirect?uid=[uid]&status=q</span><template v-if="localToptTab.tenantCustomerConfigInfoList[1].encryptionId
+      "><span v-pre>&hash=[hash]</span></template>
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="被甄别回调">
-                  http://369.front-saas-web.surveyssaas.com/#/redirect?uid=[uid]&status=s<template v-if="localToptTab.tenantCustomerConfigInfoList[1].encryptionId
-      ">&hash=[hash]</template>
+                 <span v-pre>http://369.front-saas-web.surveyssaas.com/#/redirect?uid=[uid]&status=s</span><template v-if="localToptTab.tenantCustomerConfigInfoList[1].encryptionId
+      "><span v-pre>&hash=[hash]</span></template>
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="安全终止回调">
-                  http://369.front-saas-web.surveyssaas.com/#/redirect?uid=[uid]&status=t<template v-if="localToptTab.tenantCustomerConfigInfoList[1].encryptionId
-      ">&hash=[hash]</template>
+                 <span v-pre>http://369.front-saas-web.surveyssaas.com/#/redirect?uid=[uid]&status=t</span><template v-if="localToptTab.tenantCustomerConfigInfoList[1].encryptionId
+      "><span v-pre>&hash=[hash]</span></template>
                 </el-form-item>
               </el-col>
             </el-row>
