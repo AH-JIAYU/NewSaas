@@ -137,7 +137,9 @@ async function auditing(row: any) {
 }
 // 编辑
 function edit(row: any) {
-  editRef.value.showEdit();
+  // console.log('row',row);
+
+  editRef.value.showEdit(JSON.stringify(row));
 }
 // 详情
 function refundDetails(row: any) {
@@ -511,13 +513,13 @@ function handleMoreOperating(command: string, row: any) {
         </el-table-column>
         <el-table-column
           show-overflow-tooltip
-          prop="systemCount"
+          prop="systemDone"
           align="center"
           label="系统完成数"
         />
         <el-table-column
           show-overflow-tooltip
-          prop="settlementCount"
+          prop="settlementDone"
           align="center"
           label="结算完成数"
         />
@@ -536,7 +538,10 @@ function handleMoreOperating(command: string, row: any) {
           prop="h"
           align="center"
           label="结算状态"
-        />
+        ><template #default="{ row }">
+            {{ settlementStatusList[row.status -1].label }}
+          </template>
+        </el-table-column>
         <el-table-column
           show-overflow-tooltip
           prop="nodeTime"
@@ -552,9 +557,9 @@ function handleMoreOperating(command: string, row: any) {
         </el-table-column>
         <el-table-column
           show-overflow-tooltip
-          prop="j"
+          prop="remark"
           align="center"
-          label="创建人"
+          label="备注"
         />
         <el-table-column align="center" label="操作" width="190">
           <template #default="{ row }">
@@ -605,7 +610,7 @@ function handleMoreOperating(command: string, row: any) {
       <invoicingEdit ref="invoicingRef" />
       <moreOperations ref="settlementRef" />
       <projectReview @success="fetchData" ref="auditingRef" />
-      <settlementEdit ref="editRef" />
+      <settlementEdit @success="fetchData" ref="editRef" />
       <refundDetail ref="refundRef" />
       <Settlement ref="addSettlementRef" />
     </PageMain>
