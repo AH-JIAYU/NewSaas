@@ -191,7 +191,7 @@ nextTick(() => {
       1
       ">
                 <el-form-item label="加密方式">
-                  <el-select @change="changeCustomerConfigInfo($event, 0)" v-model="localToptTab.tenantCustomerConfigInfoList[0].encryptionId
+                  <el-select @change="changeCustomerConfigInfo($event, 0)" clearable v-model="localToptTab.tenantCustomerConfigInfoList[0].encryptionId
       ">
                     <el-option v-for="item in secretKeyConfigList" :label="item.name" :value="item.id"></el-option>
                   </el-select>
@@ -207,26 +207,46 @@ nextTick(() => {
               </el-col>
               <el-col :span="24">
                 <el-form-item label="成功回调">
-                  http://api.surveyssaas.com?uid=[uid]&status=c<template
-                    v-if="localToptTab.tenantCustomerConfigInfoList[0].isEncryption === 1">&hash=[hash]</template>
+                  <span v-pre>
+                    http:47.96.98.102:9100/callback/serviceCallback?uid={{$uid}}&status=c
+                  </span>
+                  <template v-if="localToptTab.tenantCustomerConfigInfoList[0].encryptionId
+      ">
+                    <span v-pre>&hash ={{$hash}}</span>
+                  </template>
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="配额满回调">
-                  http://api.surveyssaas.com?uid=[uid]&status=c<template
-                    v-if="localToptTab.tenantCustomerConfigInfoList[0].isEncryption === 1">&hash=[hash]</template>
+                  <span v-pre>
+                    http:47.96.98.102:9100/callback/serviceCallback?uid={{$uid}}&status=q
+                  </span>
+                  <template v-if="localToptTab.tenantCustomerConfigInfoList[0].encryptionId
+      ">
+                    <span v-pre>&hash={{$hash}}</span>
+                  </template>
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="被甄别回调">
-                  http://api.surveyssaas.com?uid=[uid]&status=c<template
-                    v-if="localToptTab.tenantCustomerConfigInfoList[0].isEncryption === 1">&hash=[hash]</template>
+                  <span v-pre>
+                    http:47.96.98.102:9100/callback/serviceCallback?uid={{$uid}}&status=s
+                  </span>
+                  <template v-if="localToptTab.tenantCustomerConfigInfoList[0].encryptionId
+      ">
+                    <span v-pre>&hash={{$hash}}</span>
+                  </template>
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="安全终止回调">
-                  http://api.surveyssaas.com?uid=[uid]&status=c<template
-                    v-if="localToptTab.tenantCustomerConfigInfoList[0].isEncryption === 1">&hash=[hash]</template>
+                  <span v-pre>
+                    http:47.96.98.102:9100/callback/serviceCallback?uid={{$uid}}&status=t
+                  </span>
+                  <template v-if="localToptTab.tenantCustomerConfigInfoList[0].encryptionId
+      ">
+                    <span v-pre>&hash={{$hash}}</span>
+                  </template>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -250,7 +270,7 @@ nextTick(() => {
       1
       ">
                 <el-form-item label="加密方式">
-                  <el-select @change="changeCustomerConfigInfo($event, 1)" v-model="localToptTab.tenantCustomerConfigInfoList[1].encryptionId
+                  <el-select @change="changeCustomerConfigInfo($event, 1)" clearable v-model="localToptTab.tenantCustomerConfigInfoList[1].encryptionId
       ">
                     <el-option v-for="item in secretKeyConfigList" :label="item.name" :value="item.id"></el-option>
                   </el-select>
@@ -266,22 +286,26 @@ nextTick(() => {
               </el-col>
               <el-col :span="24">
                 <el-form-item label="成功回调">
-                  http://api.surveyssaas.com?uid=[uid]&status=c<template v-if="localToptTab.tenantCustomerConfigInfoList[1].isEncryption === 1">&hash=[hash]</template>
+                  http://369.front-saas-web.surveyssaas.com/#/redirect?uid=[uid]&status=c<template v-if="localToptTab.tenantCustomerConfigInfoList[1].encryptionId
+      ">&hash=[hash]</template>
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="配额满回调">
-                  http://api.surveyssaas.com?uid=[uid]&status=c<template v-if="localToptTab.tenantCustomerConfigInfoList[1].isEncryption === 1">&hash=[hash]</template>
+                  http://369.front-saas-web.surveyssaas.com/#/redirect?uid=[uid]&status=q<template v-if="localToptTab.tenantCustomerConfigInfoList[1].encryptionId
+      ">&hash=[hash]</template>
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="被甄别回调">
-                  http://api.surveyssaas.com?uid=[uid]&status=c<template v-if="localToptTab.tenantCustomerConfigInfoList[1].isEncryption === 1">&hash=[hash]</template>
+                  http://369.front-saas-web.surveyssaas.com/#/redirect?uid=[uid]&status=s<template v-if="localToptTab.tenantCustomerConfigInfoList[1].encryptionId
+      ">&hash=[hash]</template>
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="安全终止回调">
-                  http://api.surveyssaas.com?uid=[uid]&status=c<template v-if="localToptTab.tenantCustomerConfigInfoList[1].isEncryption === 1">&hash=[hash]</template>
+                  http://369.front-saas-web.surveyssaas.com/#/redirect?uid=[uid]&status=t<template v-if="localToptTab.tenantCustomerConfigInfoList[1].encryptionId
+      ">&hash=[hash]</template>
                 </el-form-item>
               </el-col>
             </el-row>

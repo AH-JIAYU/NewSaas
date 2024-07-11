@@ -1,98 +1,97 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { reactive, ref } from "vue";
+import { ElMessage } from "element-plus";
+import api from "@/api/modules/finance_supplierSettlement";
+import UseUserSupplier from "@/store/modules/user_supplier"; // 供应商
+const userSupplier = UseUserSupplier(); // 供应商
 
 defineOptions({
-  name: 'FinanceSupplierSettlementIndex',
-})
-const { pagination, onSizeChange, onCurrentChange } = usePagination() // 分页
+  name: "FinanceSupplierSettlementIndex",
+});
+const { getParams, pagination, onSizeChange, onCurrentChange } =
+  usePagination(); // 分页
 // 分页
-const tableSortRef = ref('')
+const tableSortRef = ref("");
 // loading加载
-const listLoading = ref<boolean>(true)
-const isShow = ref(false)
+const listLoading = ref<boolean>(true);
 // 获取组件变量
-const editRef = ref()
+const editRef = ref();
 // 右侧工具栏配置变量
-const tableAutoHeight = ref(false) // 表格控件-高度自适应
-const checkList = ref([])
-const border = ref(true)
-const isFullscreen = ref(false)
-const lineHeight = ref<any>('default')
-const stripe = ref(false)
-const selectRows = ref<any>([])
+const tableAutoHeight = ref(false); // 表格控件-高度自适应
+const checkList = ref([]);
+const border = ref(true);
+const isFullscreen = ref(false);
+const lineHeight = ref<any>("default");
+const stripe = ref(false);
+const selectRows = ref<any>([]);
+const billStatusList = ["待收票", "待支付", "已支付", "已拒绝"];
+const payMethod = userSupplier.payMethod; // 付款方式
 const columns = ref([
   {
-    label: '项目ID',
-    prop: 'ID',
+    label: "项目ID",
+    prop: "ID",
     sortable: true,
     // 不可改变的
     disableCheck: true,
     checked: true,
   },
-])
+]);
 // 查询参数
-const queryForm = reactive<any>({
-  pageNo: 1,
-  pageSize: 10,
-  title: '',
-  order: {
-    id: 'ASC',
-  },
-  select: {},
-})
-const list = ref<any>([])
-// 编辑数据
-function editData() {
-  // if (!selectRows.value.length) editRef.value.dialogTableVisible = true;
-  isShow.value = true
-}
-// 右侧工具方法
-function clickFullScreen() {
-  isFullscreen.value = !isFullscreen.value
-}
+const queryForm = ref<any>({
+  supplierId: "", //	供应商id
+  billStatus: "", //账单状态: 1:待收票 2:待支付 3:已支付 4:已拒绝
+  time: [],
+  beginTime: "", //开始时间
+  endTime: "", //	结束时间
+});
+const list = ref<any>([]);
+
 // 获取列表选中数据
 function setSelectRows(value: any) {
-  selectRows.value = value
+  selectRows.value = value;
 }
 // 重置数据
 function onReset() {
-  Object.assign(queryForm, {
-    pageNo: 1,
-    pageSize: 10,
-    title: '',
-    order: {
-      id: 'ASC',
-    },
-    select: {},
-  })
+  Object.assign(queryForm.value, {
+    supplierId: 0, //	供应商id
+    billStatus: 0, //账单状态: 1:待收票 2:待支付 3:已支付 4:已拒绝
+    time: [],
+    beginTime: "", //开始时间
+    endTime: "", //	结束时间
+  });
 }
 // 每页数量切换
 function sizeChange(size: number) {
-  onSizeChange(size).then(() => fetchData())
+  onSizeChange(size).then(() => fetchData());
 }
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
-  onCurrentChange(page).then(() => fetchData())
+  onCurrentChange(page).then(() => fetchData());
 }
 async function fetchData() {
-  listLoading.value = true
-  // const { data } = await getList(queryForm)
-  // list.value = data[0]
-  // total.value = data[0].length
-  list.value = [
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-  ]
-  pagination.value.total = 3
-  listLoading.value = false
+  listLoading.value = true;
+  const params = {
+    ...getParams(),
+    ...queryForm.value,
+  };
+  const res = await api.list(params);
+  list.value = res.data.tenantSupplierBillInfoList;
+  pagination.value.total = res.data.total;
+  listLoading.value = false;
+}
+
+// 修改状态
+async function changeStatus(id: any, type: any) {
+  const res = await api.changestatus({ id, type });
+  res.status === 1 &&
+    ElMessage.success({
+      message: "已发送",
+    });
+  fetchData();
 }
 onMounted(() => {
-  fetchData()
-})
+  fetchData();
+});
 </script>
 
 <template>
@@ -105,7 +104,7 @@ onMounted(() => {
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
           <el-form
-            :model="queryForm.select"
+            :model="queryForm"
             size="default"
             label-width="100px"
             inline-message
@@ -114,29 +113,37 @@ onMounted(() => {
           >
             <el-form-item label="">
               <el-input
-                v-model="queryForm.select.a"
+                v-model="queryForm.supplierId"
                 clearable
                 placeholder="供应商ID"
               />
             </el-form-item>
             <el-form-item v-show="!fold">
               <el-date-picker
-                type="daterange"
+                v-model="queryForm.time"
+                type="datetimerange"
+                unlink-panels
                 range-separator="-"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                clearable
-                size=""
+                start-placeholder="创建开始日期"
+                end-placeholder="创建结束日期"
+                value-format="YYYY-MM-DD hh:mm:ss"
+                size="default"
               />
             </el-form-item>
             <el-form-item label="">
               <el-select
-                value-key=""
+                v-model="queryForm.billStatus"
                 placeholder="状态"
                 clearable
                 filterable
-                @change=""
-              />
+              >
+                <el-option
+                  v-for="(item, index) in billStatusList"
+                  :key="item"
+                  :label="item"
+                  :value="index + 1"
+                ></el-option>
+              </el-select>
             </el-form-item>
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">
@@ -168,19 +175,15 @@ onMounted(() => {
         <FormLeftPanel />
 
         <FormRightPanel>
-          <el-button size="default" @click="">
-            导出
-          </el-button>
+          <el-button size="default" @click=""> 导出 </el-button>
           <TabelControl
             v-model:border="border"
             v-model:tableAutoHeight="tableAutoHeight"
             v-model:checkList="checkList"
             v-model:columns="columns"
-
             v-model:line-height="lineHeight"
             v-model:stripe="stripe"
             style="margin-left: 12px"
-
             @query-data="currentChange"
           />
         </FormRightPanel>
@@ -196,43 +199,53 @@ onMounted(() => {
         :stripe="stripe"
         @selection-change="setSelectRows"
       >
-        <el-table-column type="expand" />
-        <el-table-column type="index" align="center" label="序号" width="55" />
+        <el-table-column type="expand">
+          <template #default="props">
+            <el-row :gutter="20" style="margin: 10px 0">
+              <el-col :span="1"> </el-col>
+              <el-col :span="3">
+                付款方式: {{ payMethod[props.row.billStatus - 1].label }}
+              </el-col>
+              <el-col :span="3">账户名称: {{ props.row.accountName }}</el-col>
+              <el-col :span="3"
+                >收款账号: {{ props.row.collectionAccount }}</el-col
+              >
+              <el-col :span="3">银行名称: {{ props.row.bankName }}</el-col>
+              <el-col :span="3"
+                >结算周期: {{ props.row.settlementCycle }}</el-col
+              >
+            </el-row>
+          </template>
+        </el-table-column>
         <el-table-column
-          prop="a"
+          prop="supplierId"
           show-overflow-tooltip
           align="center"
-          label="站长ID"
+          label="供应商ID"
         />
         <el-table-column
-          prop="b"
+          prop="billAmount"
           show-overflow-tooltip
           align="center"
-          label="货币类型"
+          label="账单日期"
         />
         <el-table-column
-          prop="c"
+          prop="billAmount"
           show-overflow-tooltip
           align="center"
-          label="结算金额"
+          label="账单金额"
         />
         <el-table-column
-          prop="d"
+          prop="taxesFees"
           show-overflow-tooltip
           align="center"
           label="税费"
         />
         <el-table-column
-          prop="e"
+          prop="payAmount"
           show-overflow-tooltip
           align="center"
           label="实付金额"
-        />
-        <el-table-column
-          prop="f"
-          show-overflow-tooltip
-          align="center"
-          label="账户金额"
         />
         <ElTableColumn
           align="center"
@@ -240,30 +253,38 @@ onMounted(() => {
           prop=""
           label="状态"
         >
-          <ElSwitch inline-prompt active-text="启用" inactive-text="禁用" />
+          <template #default="{ row }">
+            {{ billStatusList[row.billStatus - 1] }}
+          </template>
         </ElTableColumn>
-        <el-table-column
-          prop="h"
-          show-overflow-tooltip
-          align="center"
-          label="创建时间"
-        />
+
         <el-table-column align="center" label="操作" width="170">
-          <el-button
-            v-if="!isShow"
-            size="small"
-            plain
-            type="primary"
-            @click="editData"
-          >
-            确认收票
-          </el-button>
-          <el-button v-if="isShow" size="small" plain @click="">
-            支付
-          </el-button>
-          <el-button v-if="isShow" size="small" plain type="danger" @click="">
-            拒绝
-          </el-button>
+          <template #default="{ row }">
+            <template v-if="row.billStatus === 1">
+              <el-button
+                size="small"
+                plain
+                type="primary"
+                @click="changeStatus(row.id, 1)"
+              >
+                确认收票
+              </el-button>
+            </template>
+            <template v-else-if="row.billStatus === 2">
+              <el-button size="small" plain @click="changeStatus(row.id, 2)">
+                支付
+              </el-button>
+              <el-button
+                size="small"
+                plain
+                type="danger"
+                @click="changeStatus(row.id, 3)"
+              >
+                拒绝
+              </el-button>
+            </template>
+            <template v-else>- </template>
+          </template>
         </el-table-column>
         <template #empty>
           <el-empty description="暂无数据" />
@@ -333,5 +354,4 @@ onMounted(() => {
     }
   }
 }
-
 </style>
