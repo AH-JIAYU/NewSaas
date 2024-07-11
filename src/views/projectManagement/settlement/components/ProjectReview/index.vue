@@ -7,11 +7,14 @@ import api from "@/api/modules/project_settlement";
 defineOptions({
   name: "ProjectReview",
 });
-const emits =  defineEmits(['success'])
+const emits = defineEmits(["success"]);
 // loading
 const loading = ref(false);
+// 成功id/失败id
 const arr = ref<any>([]);
+// 接收传递数据
 const form = ref<any>();
+// 初始表单数据
 const formData = ref<any>({
   // 项目Id
   projectId: "",
@@ -31,8 +34,10 @@ const formRules = ref<FormRules>({
     { required: true, message: "请选择审核方式", trigger: "change" },
   ],
 });
-const formRef = ref<FormInstance>();
-const checked1 = ref(false);
+// formRef
+const formRef = ref<any>();
+// 判断po变量
+const checked = ref(false);
 // 弹框开关变量
 const dialogTableVisible = ref(false);
 // 获取数据
@@ -47,7 +52,7 @@ async function showEdit(row: any) {
 // 提交数据
 async function onSubmit() {
   formRef.value &&
-    formRef.value.validate(async (valid) => {
+    formRef.value.validate(async (valid: any) => {
       if (valid) {
         loading.value = true;
         delete formData.value.projectName;
@@ -60,30 +65,25 @@ async function onSubmit() {
         } else {
           formData.value.projectSettlementBuilderList = [];
         }
-        if (formData.value.settlementType === 1) {
-          // 按成功ID
-          const res = await api.successById(formData.value);
-        } else if (formData.value.settlementType === 2) {
-          // 按失败ID
-          await api.failById(formData.value);
-        } else if (formData.value.settlementType === 3) {
-          // 全部通过
-          delete formData.value.projectSettlementBuilderList;
-          await api.success(formData.value);
-        } else if (formData.value.settlementType === 4) {
-          // 全部失败
-          await api.fail(formData.value);
-        } else if (formData.value.settlementType === 5) {
-          // 数据冻结
-          await api.freeze(formData.value);
+        const { status } = await api.review(formData.value);
+        if (status === 1) {
+          // 更新列表
+          emits("success");
+          // 关闭加载
+          loading.value = false;
+          // 提示成功
+          ElMessage.success({
+            message: "操作成功",
+            center: true,
+          });
+          // 执行关闭弹框事件
+          closeHandler();
+        }else {
+          ElMessage.error({
+            message: "操作失败，请联系工作人员",
+            center: true,
+          });
         }
-        emits('success')
-        loading.value = false;
-        ElMessage.success({
-          message: "操作成功",
-          center: true,
-        });
-        closeHandler();
       } else {
         ElMessage({
           message: "请选择审核方式",
@@ -95,7 +95,7 @@ async function onSubmit() {
 // 弹框关闭事件
 function closeHandler() {
   // 移除校验
-  // formRef.value.resetFields()
+  formRef.value.resetFields();
   // delete formData.id
   // // 重置表单
   Object.assign(formData.value, {
@@ -111,13 +111,15 @@ function closeHandler() {
     // 结算po号
     po: "",
   });
+  arr.value = [];
   dialogTableVisible.value = false;
 }
+// 暴露
 defineExpose({ showEdit });
 </script>
 
 <template>
-  <div v-loading="loading">
+  <div>
     <el-drawer
       v-model="dialogTableVisible"
       title="项目审核"
@@ -130,6 +132,7 @@ defineExpose({ showEdit });
         :rules="formRules"
         label-width="174px"
         :inline="false"
+        v-loading="loading"
       >
         <el-row style="margin: 0" :gutter="20">
           <div class="border">
@@ -179,7 +182,7 @@ defineExpose({ showEdit });
           </el-form-item>
         </div>
         <div class="po">
-          <el-form-item v-if="checked1" label="结算PO号">
+          <el-form-item v-if="checked" label="结算PO号">
             <el-input
               v-model="formData.po"
               class="custom-input"
@@ -192,7 +195,7 @@ defineExpose({ showEdit });
         <el-row style="margin: 0" :gutter="20">
           <el-col :span="20"> </el-col>
           <el-col :span="4">
-            <el-checkbox v-model="checked1" label="填写结算PO号" size="large"
+            <el-checkbox v-model="checked" label="填写结算PO号" size="large"
           /></el-col>
         </el-row>
         <el-row
