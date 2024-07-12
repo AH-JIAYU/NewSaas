@@ -1,33 +1,12 @@
-import api from '../index'
+import api from "../index";
 
 export default {
-  list: (data: {
-    title?: string
-    from: number
-    limit: number
-  }) => api.get('survey/bill_management/list', {
-    params: data,
-    baseURL: '/mock/',
-  }),
-
-  detail: (id: number | string) => api.get('survey/bill_management/detail', {
-    params: {
-      id,
-    },
-    baseURL: '/mock/',
-  }),
-
-  create: (data: any) => api.post('survey/bill_management/create', data, {
-    baseURL: '/mock/',
-  }),
-
-  edit: (data: any) => api.post('survey/bill_management/edit', data, {
-    baseURL: '/mock/',
-  }),
-
-  delete: (id: number | string) => api.post('survey/bill_management/delete', {
-    id,
-  }, {
-    baseURL: '/mock/',
-  }),
-}
+  list: (data: any) => api.post("bill/getMemberBillList", data),
+  // 会员添加结算
+  create: (data: any) => api.post("bill/addMemberSettlement", data),
+  // 会员添加结算-指定结算获取会员可用余额列表
+  getMemberBillAvailableBalance: (data: any) =>
+    api.post("bill/getMemberBillAvailableBalance", data),
+  // 会员-账单管理修改支付状态
+  changestatus: (data: any) => api.post("bill/updateMemberBill", data),
+};

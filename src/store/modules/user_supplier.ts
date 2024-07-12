@@ -22,7 +22,7 @@ const useUserSupplierStore = defineStore(
     const initialTopTabsData = {
       supplierAccord: "",
       // subordinateCountryId: "", // 所属国家id
-      countryType: '',
+      countryType: "",
       // supplierLevelId: "", // 供应商等级
       // supplierName: "",   // 供应商姓名
       // supplierPhone: "", // 手机号
@@ -30,7 +30,7 @@ const useUserSupplierStore = defineStore(
       surveySystem: 1, // 调查系统:1:关闭 2:开启
       b2bStatus: 1, // B2B:1:关闭 2:开启
       b2cStatus: 2, // 	B2C:1:关闭 2:开启  原型默认开启
-      supplierStatus: 1, // 	供应商状态:1:关闭 2:开启 3:待审核
+      supplierStatus: 2, // 	供应商状态:1:关闭 2:开启 3:待审核
       // relevanceCountryIdList: "", // 关联国家id
       // relevanceCustomerId: 0, // 关联客户id
       // payMethod: 0, // 付款方式
