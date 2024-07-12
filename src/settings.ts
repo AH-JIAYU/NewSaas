@@ -34,7 +34,7 @@ const globalSettings: Settings.all = {
   },
   toolbar: {
     favorites: true,
-    notification: true,
+    notification: false,
     i18n: true,
     fullscreen: true,
     pageReload: true,
