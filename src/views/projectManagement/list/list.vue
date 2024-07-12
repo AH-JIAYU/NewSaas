@@ -97,12 +97,6 @@ function addProject() {
 function projectEdit(row: any) {
   // if (row.allocationStatus === 1) {
   addProjeckRef.value.showEdit(row);
-  // } else {
-  //   ElMessage.warning({
-  //     message: "已分配项目不能修改",
-  //     center: true,
-  //   });
-  // }
 }
 // 修改状态
 async function changeStatus(row: any, val: any) {
@@ -126,12 +120,7 @@ async function changeStatus(row: any, val: any) {
     });
   }
   fetchData();
-  // } else {
-  //   ElMessage.warning({
-  //     message: "已分配项目不能修改状态",
-  //     center: true,
-  //   });
-  // }
+
 }
 // 项目详情
 function projectDetails(row: any) {

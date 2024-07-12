@@ -242,7 +242,7 @@ onMounted(() => {
       <el-table
         v-loading="listLoading"
         :border="border"
-        :data="DataList"
+        :data="DataList"  
         :size="lineHeight"
         :stripe="stripe"
         @selection-change="setSelectRows"

@@ -212,9 +212,6 @@ onMounted(() => {
               </el-button>
             </template>
             <template v-else>- </template>
-            <el-button size="small" plain type="danger" @click="changeStatus(row.id, 3)">
-              测试
-            </el-button>
           </template>
         </el-table-column>
         <template #empty>
