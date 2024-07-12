@@ -400,10 +400,10 @@ onMounted(async () => {
               v-if="row.supplierStatus === 3"
               v-model="row.supplierStatus"
               inline-prompt
-              :inactive-value="2"
-              :active-value="3"
-              inactive-text="启用"
-              active-text="待审核"
+              :inactive-value="3"
+              :active-value="2"
+              inactive-text="待审核"
+              active-text="启用"
               @change="changeState($event, row.tenantSupplierId)"
             />
             <ElSwitch

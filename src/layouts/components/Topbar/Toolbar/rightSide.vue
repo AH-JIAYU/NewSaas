@@ -30,15 +30,15 @@ watch(() => userStore.avatar, () => {
 <template>
   <div class="flex items-center">
     <Tools mode="right-side" />
+    <!--  快捷键  [
+          { label: t('app.hotkeys'), handle: () => eventBus.emit('global-hotkeys-intro-toggle'), hide: settingsStore.mode !== 'pc' },
+        ], -->
     <HDropdownMenu
       :items="[
         [
           { label: generateI18nTitle('route.home', settingsStore.settings.home.title), handle: () => router.push({ path: settingsStore.settings.home.fullPath }), hide: !settingsStore.settings.home.enable },
           { label: t('app.profile'), handle: () => router.push({ name: 'personalSetting' }) },
           { label: t('app.preferences'), handle: () => eventBus.emit('global-preferences-toggle'), hide: !settingsStore.settings.userPreferences.enable },
-        ],
-        [
-          { label: t('app.hotkeys'), handle: () => eventBus.emit('global-hotkeys-intro-toggle'), hide: settingsStore.mode !== 'pc' },
         ],
         [
           { label: t('app.logout'), handle: () => userStore.logout(null) },
