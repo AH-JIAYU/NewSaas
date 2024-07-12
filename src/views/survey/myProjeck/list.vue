@@ -139,7 +139,7 @@ onMounted(async () => {
       checkList.value.push(item.prop);
     }
   });
-  countryList.value = await basicDictionaryStore.getCountry();
+  countryList.value = await basicDictionaryStore.country || await basicDictionaryStore.getCountry();
   customerList.value = await customerStore.getCustomerList();
   fetchData();
 });

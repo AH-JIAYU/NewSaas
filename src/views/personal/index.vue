@@ -28,7 +28,7 @@ function edit() {
 const getDataList = async () => {
   loading.value = true
   const res = await api.list()
-  countryList.value = await basicDictionaryStore.getCountry()
+  countryList.value = await basicDictionaryStore.country || await basicDictionaryStore.getCountry()
   form.value = res.data
   loading.value = false
   countryData.value = countryList.value.find((item: any) => item.code === form.value.country)

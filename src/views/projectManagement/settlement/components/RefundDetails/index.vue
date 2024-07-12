@@ -1,31 +1,39 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref } from "vue";
+import api from "@/api/modules/project_settlement";
 
 defineOptions({
-  name: 'RefundDetails',
-})
+  name: "RefundDetails",
+});
+const form = ref<any>({});
+const list = ref<any>([]);
+const data = ref<any>({});
+const loading = ref(false);
 // 弹框开关变量
-const dialogTableVisible = ref(false)
-// 提交数据
-function onSubmit() {}
+const dialogTableVisible = ref(false);
 // 获取数据
 async function showEdit(row: any) {
-  dialogTableVisible.value = true
+  loading.value = true;
+  form.value = JSON.parse(row);
+  const res = await api.detail({ projectSettlementId: form.value.projectId });
+  data.value = res.data;
+  list.value = res.data.result;
+  loading.value = false;
+  dialogTableVisible.value = true;
 }
 // 弹框关闭事件
 function closeHandler() {
-  // 移除校验
-  // formRef.value.resetFields()
-  // delete formData.id
   // // 重置表单
-  // Object.assign(formData, defaultState)
-  dialogTableVisible.value = false
+  Object.assign(form, {})
+  Object.assign(list, [])
+  Object.assign(data, {})
+  dialogTableVisible.value = false;
 }
-defineExpose({ showEdit })
+defineExpose({ showEdit });
 </script>
 
 <template>
-  <div>
+  <div v-loading="loading">
     <el-dialog
       v-model="dialogTableVisible"
       title="项目退款详情"
@@ -33,49 +41,49 @@ defineExpose({ showEdit })
       :before-close="closeHandler"
     >
       <el-divider content-position="left" />
-      <el-row style="width: 868px; margin-left: 2px; margin-bottom: 20px;" :gutter="20">
-          <div class="border">
-            <p class="pp">项目编码</p>
-            <p class="neip">111</p>
-          </div>
-          <div class="border">
-            <p class="pp">项目名称</p>
-            <p class="neip">222</p>
-          </div>
-          <div class="border">
-            <p class="pp">配额/限量</p>
-            <p class="neip">333</p>
-          </div>
-          <div class="border">
-            <p class="pp">项目退款率</p>
-            <p class="neip">333</p>
-          </div>
-        </el-row>
-
-      <el-table  v-loading="false" row-key="id">
-        <el-table-column type="index" align="center" label="序号" width="55" />
-        <el-table-column align="center" label="子会员ID" />
-        <el-table-column align="center" label="姓名" />
-        <el-table-column align="center" label="组长ID" />
-        <el-table-column align="center" label="供应商ID" />
-      </el-table>
-      <el-table  v-loading="false" row-key="id">
-        <el-table-column type="index" align="center" label="序号" width="55" />
-        <el-table-column align="center" label="会员ID" />
-        <el-table-column align="center" label="姓名" />
-        <el-table-column align="center" label="组长ID" />
-        <el-table-column align="center" label="会员组ID" />
-      </el-table>
-      <template #footer>
-        <div style="flex: auto">
-          <el-button type="primary" @click="onSubmit">
-            确定
-          </el-button>
-          <el-button @click="dialogTableVisible = false">
-            取消
-          </el-button>
+      <el-row
+        style="width: 100%; margin-left: 2px; margin-bottom: 20px"
+        :gutter="20"
+      >
+        <div class="border">
+          <p class="pp">项目ID</p>
+          <p class="neip">{{ form.projectId }}</p>
         </div>
-      </template>
+        <div class="border">
+          <p class="pp">项目名称</p>
+          <p class="neip">
+            <el-text class="mx-1">{{ form.projectName }}</el-text>
+          </p>
+        </div>
+        <div class="border">
+          <p class="pp">项目退款率</p>
+          <p class="neip">{{ data.refundRate }}</p>
+        </div>
+      </el-row>
+      <div style="margin: 10px">| 供应商</div>
+      <el-table v-loading="false" :data="list" row-key="id">
+        <el-table-column type="index" align="center" label="序号" width="55" />
+        <el-table-column align="center" prop="supplierId" label="供应商ID" />
+        <el-table-column align="center" prop="supplierId" label="供应商名称">
+          <template #default="{ row }">
+            {{ row.supplierName ? row.supplierName : "-" }}
+          </template>
+        </el-table-column>
+        <el-table-column align="center" prop="supplierId" label="手机号码/邮箱"
+          ><template #default="{ row }">
+            {{ row.info.split(':')[0] }}/{{ row.info.split(':')[1] !== 'null' ? row.info.split(':')[1] : '-' }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          align="center"
+          prop="refundRate"
+          label="供应商退款率"
+        />
+      </el-table>
+      <div style="margin-top: 20px; margin-bottom: 20px;">
+        | 会员组
+        <el-text class="mx-1">退款率{{ data.memberRefundRate }}%</el-text>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -84,7 +92,7 @@ defineExpose({ showEdit })
 .border {
   display: flex;
   align-items: center;
-  width: 13.5rem;
+  width: 33%;
   height: 2.5625rem;
   margin: 0;
   border: 1px solid #ebeef5;
@@ -93,7 +101,7 @@ defineExpose({ showEdit })
   display: flex;
   justify-content: space-around;
   align-items: center;
-  width: 50%;
+  width: 36%;
   height: 100%;
   font-size: 14px;
   color: #606266;
@@ -103,8 +111,14 @@ defineExpose({ showEdit })
   display: flex;
   justify-content: space-around;
   align-items: center;
-  width: 50%;
+  width: 63%;
   height: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   color: #606266;
+}
+:deep(.el-dialog) {
+  // height: 25rem;
 }
 </style>

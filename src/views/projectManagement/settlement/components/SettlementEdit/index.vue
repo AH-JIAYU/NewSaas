@@ -132,7 +132,7 @@ defineExpose({ showEdit });
 </script>
 
 <template>
-  <div>
+  <div v-loading="loading">
     <el-dialog
       v-model="dialogTableVisible"
       title="项目结算编辑"

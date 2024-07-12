@@ -10,6 +10,9 @@ export default {
   // 项目结算修改
   edit: (data: any) => api.post('projectSettlement/update/updateProjectSettlement', data, ),
 
+  // 项目退款详情
+  detail: (data: any) => api.post('projectSettlement/get/getProjectSettlementRefundList', data, ),
+
   delete: (id: number | string) => api.post('menu/delete', {
     id,
   }, {

@@ -130,20 +130,15 @@ function settlement(row: any) {
 }
 // 审核
 async function auditing(row: any) {
-  // console.log('row11',row);
-  // const res = await api.review({ id: row.projectId });
-  // console.log("res", res);
   auditingRef.value.showEdit(JSON.stringify(row));
 }
 // 编辑
 function edit(row: any) {
-  // console.log('row',row);
-
   editRef.value.showEdit(JSON.stringify(row));
 }
 // 详情
 function refundDetails(row: any) {
-  refundRef.value.showEdit();
+  refundRef.value.showEdit(JSON.stringify(row));
 }
 // 右侧工具
 function clickFullScreen() {
@@ -230,7 +225,7 @@ async function fetchData() {
   listLoading.value = false;
 }
 onMounted(async () => {
-  countryList.value = await basicDictionaryStore.getCountry();
+  countryList.value = await basicDictionaryStore.country || await basicDictionaryStore.getCountry();
   customerList.value = await customerStore.getCustomerList();
   founderList.value = await tenantStaffStore.getStaff();
   fetchData();

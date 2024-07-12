@@ -369,22 +369,6 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
           </ElTable>
         </el-tab-pane>
         <el-tab-pane label="会员财务" name="vipFinancial">
-          <el-row
-            style="
-              width: 100%;
-              height: 50px;
-              display: flex;
-              justify-content: flex-start;
-              align-items: center;
-              background: #fafafa;
-            "
-            :gutter="20"
-          >
-            <el-col :span="4">今日业绩：</el-col>
-            <el-col :span="4">待审金额：</el-col>
-            <el-col :span="4">可用余额：</el-col>
-            <el-col :span="4">IR指标：</el-col>
-          </el-row>
           <SearchBar :show-toggle="false">
             <template #default="{ fold, toggle }">
               <ElForm
