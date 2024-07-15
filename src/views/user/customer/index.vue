@@ -47,7 +47,7 @@ const columns = ref([
     prop: "antecedentQuestionnaire",
   },
   { label: "风险控制", checked: true, sortable: true, prop: "riskControl" },
-  { label: "营业限额/月", checked: true, sortable: true, prop: "turnover" },
+  { label: "客户营业限额/月", checked: true, sortable: true, prop: "turnover" },
   { label: "审核率Min值", checked: true, sortable: true, prop: "rateAudit" },
 ]);
 // 添加
@@ -268,22 +268,34 @@ onMounted(() => {
           align="center"
           prop="turnover"
           show-overflow-tooltip
-          label="客户营业限额($/月)"
-        />
+          label="客户营业限额/月"
+        >
+          <template #default="{ row }">
+            {{ row.turnover ? row.turnover : "-" }}
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="checkList.includes('rateAudit')"
           align="center"
           prop="rateAudit"
           show-overflow-tooltip
           label="审核率Min值"
-        />
+        >
+          <template #default="{ row }">
+            {{ row.rateAudit ? row.rateAudit + "%" : "-" }}
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="checkList.includes('chargeName')"
           align="center"
           prop="chargeName"
           show-overflow-tooltip
           label="负责人"
-        />
+        >
+          <template #default="{ row }">
+            {{ row.chargeName ? row.rateAudit : "-" }}
+          </template>
+        </el-table-column>
         <ElTableColumn
           v-if="checkList.includes('customerStatus')"
           align="center"

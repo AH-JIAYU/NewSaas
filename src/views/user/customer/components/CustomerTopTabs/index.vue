@@ -140,19 +140,19 @@ nextTick(() => {
               </div>
             </template>
             <el-row :gutter="24">
-              <el-col :span="3">
+              <el-col :span="4">
                 <el-form-item label="客户状态">
                   <el-switch v-model="localToptTab.customerStatus" :active-value="2" :inactive-value="1" inline-prompt
                     active-text="开启" inactive-text="关闭" />
                 </el-form-item>
               </el-col>
-              <el-col :span="3">
+              <el-col :span="4">
                 <el-form-item label="前置问卷">
                   <el-switch v-model="localToptTab.antecedentQuestionnaire" :active-value="2" :inactive-value="1"
                     inline-prompt active-text="开启" inactive-text="关闭" />
                 </el-form-item>
               </el-col>
-              <el-col :span="18">
+              <el-col :span="16">
                 <el-form-item label="风险控制">
                   <el-switch v-model="localToptTab.riskControl" :active-value="2" :inactive-value="1" inline-prompt
                     active-text="开启" inactive-text="关闭" />

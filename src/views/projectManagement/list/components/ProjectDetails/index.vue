@@ -11,6 +11,7 @@ import "bytemd/dist/index.css";
 import { obtainLoading } from "@/utils/apiLoading";
 import api from "@/api/modules/projectManagement";
 import logDetails from "../LogDetails/index.vue";
+import DownLoad from "@/utils/download";
 import { ElMessage } from "element-plus";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
 
@@ -125,18 +126,7 @@ async function copyTextToClipboard(text: any) {
 }
 // 下载
 async function download() {
-  const response = await fetch(data.value.imgUrl);
-  const blob = await response.blob();
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  // 根据需要设置文件名
-  document.body.appendChild(link);
-  link.download = data.value.form.descriptionUrl;
-  link.click();
-  document.body.removeChild(link);
-  // 清理URL对象
-  URL.revokeObjectURL(url);
+  await DownLoad(data.value.imgUrl, data.value.form.descriptionUrl);
 }
 // 弹框关闭事件
 function closeHandler() {
