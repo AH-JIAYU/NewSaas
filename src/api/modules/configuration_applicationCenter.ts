@@ -1,11 +1,7 @@
 import api from '../index'
 
 export default {
-  list: (data: {
-    title?: string
-    from: number
-    limit: number
-  }) => api.get('configuration/application_center/list', {
+  list: (data: any) => api.get('configuration/application_center/list', {
     params: data,
     baseURL: '/mock/',
   }),
