@@ -58,7 +58,7 @@ function onCancel() {
   form.value = {};
 }
 onMounted(async () => {
-  countryList.value = await basicDictionaryStore.getCountry();
+  countryList.value = await basicDictionaryStore.country || await basicDictionaryStore.getCountry();
   title.value = "新增";
   if (props.id) {
     title.value = "编辑";

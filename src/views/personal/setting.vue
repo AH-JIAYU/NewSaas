@@ -199,7 +199,7 @@ const accountSubmit = () => {
       emits('success')
       loading.value = false
       ElMessage.success({
-        message: '修改成功',  
+        message: '修改成功',
         center: true,
       })
       closeHandler()
@@ -231,7 +231,7 @@ function handleSuccess(res: any) {
 }
 // 获取数据
 onMounted(async () => {
-  countryList.value = await basicDictionaryStore.getCountry()
+  countryList.value = await basicDictionaryStore.country || await basicDictionaryStore.getCountry()
 })
 // 暴露方法
 defineExpose({ showEdit })

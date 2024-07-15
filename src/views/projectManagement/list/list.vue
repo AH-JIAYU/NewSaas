@@ -194,7 +194,7 @@ const comCountryId = computed(() => (countryIdList: any) => {
 });
 
 onMounted(async () => {
-  countryList.value = await basicDictionaryStore.getCountry();
+  countryList.value = await basicDictionaryStore.country || await basicDictionaryStore.getCountry();
   customerList.value = await customerStore.getCustomerList();
   columns.value.forEach((item: any) => {
     if (item.checked) {
