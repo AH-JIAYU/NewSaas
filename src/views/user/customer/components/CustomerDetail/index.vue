@@ -22,9 +22,7 @@ async function showEdit(row: any) {
     });
   drawerisible.value = true;
 }
-function handleCheck(row: object) {
-  checkRef.value.showEdit(row);
-}
+
 function close() {
   emit("fetch-data");
   drawerisible.value = false;
@@ -64,7 +62,7 @@ defineExpose({
                     : 'isOnlineTrue'
                 "
               >
-                {{ detailData.customerStatus === 1 ? "关闭" : "开启" }}
+                {{ detailData.customerStatus === 1 ? "禁用" : "启用" }}
               </div>
             </div>
           </div>
@@ -79,54 +77,80 @@ defineExpose({
           </el-col>
           <el-col :span="8">
             <el-form-item label="客户名称:">
-              <el-text class="mx-1"> {{ detailData.customerAccord ? detailData.customerAccord : '-' }} </el-text>
+              <el-text class="mx-1">
+                {{
+                  detailData.customerAccord ? detailData.customerAccord : "-"
+                }}
+              </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="客户简称:">
               <el-text class="mx-1">
-                {{ detailData.customerShortName ? detailData.customerShortName : '-' }}
+                {{
+                  detailData.customerShortName ? detailData.customerAccord : "-"
+                }}
               </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="公司名称:">
-              <el-text class="mx-1"> {{ detailData.companyName ? detailData.companyName : '-' }} </el-text>
+              <el-text class="mx-1">
+                {{ detailData.companyName ? detailData.companyName : "-" }}
+              </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="客户姓名:">
-              <el-text class="mx-1"> {{ detailData.customerName ? detailData.customerName : '-' }} </el-text>
+              <el-text class="mx-1">
+                {{ detailData.customerName ? detailData.customerName : "-" }}
+              </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="手机号码:">
-              <el-text class="mx-1"> {{ detailData.customerPhone ? detailData.customerPhone : '-' }} </el-text>
+              <el-text class="mx-1">
+                {{ detailData.customerPhone ? detailData.customerPhone : "-" }}
+              </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="电子邮箱:">
-              <el-text class="mx-1"> {{ detailData.emailAddress ? detailData.emailAddress : '-' }} </el-text>
+              <el-text class="mx-1">
+                {{ detailData.emailAddress ? detailData.emailAddress : "-" }}
+              </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="创建人:">
-              <el-text class="mx-1"> {{ detailData.createName ? detailData.createName : '-' }} </el-text>
+              <el-text class="mx-1">
+                {{ detailData.createName ? detailData.createName : "-" }}
+              </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="创建时间:">
-              <el-text class="mx-1"> {{ detailData.createTime ? detailData.createTime : '-' }} </el-text>
+              <el-text class="mx-1">
+                {{ detailData.createTime ? detailData.createTime : "-" }}
+              </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="负责人:">
-              <el-text class="mx-1"> {{ detailData.chargeName ? detailData.chargeName : '-' }} </el-text>
+              <el-text class="mx-1">
+                {{ detailData.chargeName ? detailData.chargeName : "-" }}
+              </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="结算周期:">
-              <el-text class="mx-1"> {{ detailData.settlementCycle ? detailData.settlementCycle + '天' : '-' }} </el-text>
+              <el-text class="mx-1">
+                {{
+                  detailData.settlementCycle
+                    ? detailData.settlementCycle + "天"
+                    : "-"
+                }}
+              </el-text>
             </el-form-item>
           </el-col>
         </el-row>
@@ -162,12 +186,18 @@ defineExpose({
           </el-col>
           <el-col :span="8">
             <el-form-item label="营业限额/月:">
-              <el-text class="mx-1"> {{ detailData.turnover ? detailData.turnover : '-' }} </el-text>
+              <el-text class="mx-1">
+                {{
+                  detailData.turnover ? detailData.turnover + "元/美元" : "-"
+                }}
+              </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="审核率Min值:">
-              <el-text class="mx-1"> {{ detailData.turnover ? detailData.turnover  : '-'}} </el-text>
+              <el-text class="mx-1">
+                {{ detailData.turnover ? detailData.turnover + "%" : "-" }}
+              </el-text>
             </el-form-item>
           </el-col>
         </el-row>
@@ -180,7 +210,12 @@ defineExpose({
           </div>
         </template>
         <el-table :data="detailData.getTenantCustomerOperationInfoList" border>
-          <el-table-column align="center" type="index" label="序号" width="80" />
+          <el-table-column
+            align="center"
+            type="index"
+            label="序号"
+            width="80"
+          />
           <el-table-column align="center" prop="createTime" label="操作时间" />
           <el-table-column align="center" prop="createName" label="操作人" />
 

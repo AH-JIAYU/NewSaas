@@ -180,7 +180,18 @@ defineExpose({ showEdit });
               :key="item.projectId"
               :label="item.projectName"
               :value="item.projectId"
-            />
+            >
+              <span style="float: left">{{ item.projectName }}</span>
+              <span
+                style="
+                  float: right;
+                  color: var(--el-text-color-secondary);
+                  font-size: 13px;
+                "
+              >
+                {{ item.projectId }}
+              </span>
+            </el-option>
           </el-select>
         </el-form-item>
         <div v-show="data.form.projectId">

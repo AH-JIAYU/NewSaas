@@ -47,7 +47,7 @@ const columns = ref([
     prop: "antecedentQuestionnaire",
   },
   { label: "风险控制", checked: true, sortable: true, prop: "riskControl" },
-  { label: "营业限额/月", checked: true, sortable: true, prop: "turnover" },
+  { label: "客户营业限额/月", checked: true, sortable: true, prop: "turnover" },
   { label: "审核率Min值", checked: true, sortable: true, prop: "rateAudit" },
 ]);
 // 添加
