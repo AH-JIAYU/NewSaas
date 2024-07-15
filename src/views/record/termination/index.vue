@@ -246,7 +246,10 @@ onMounted(() => {
           prop="tenantSupplierId"
           show-overflow-tooltip
           label="供应商ID"
-        />
+        > <template #default="{ row }">
+            {{ row.tenantSupplierId ? row.tenantSupplierId : '-' }}
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="checkList.includes('projectId')"
           align="center"
