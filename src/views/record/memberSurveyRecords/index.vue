@@ -171,7 +171,7 @@ onMounted(async () => {
                 v-model.trim="queryForm.memberGroupId"
                 clearable
                 :inline="false"
-                placeholder="会员ID"
+                placeholder="随机身份"
               />
             </el-form-item>
 
@@ -291,13 +291,25 @@ onMounted(async () => {
           label="会员ID"
         />
         <el-table-column
+          v-if="checkList.includes('randomIdentityId')"
+          align="center"
+          prop="randomIdentityId"
+          show-overflow-tooltip
+          label="随机身份"
+        ><template #default="{ row }">
+            {{ row.randomIdentityId ? row.randomIdentityId : '-' }}
+          </template>
+        </el-table-column>
+        <el-table-column
           v-if="checkList.includes('memberName')"
           align="center"
           prop="memberName"
           show-overflow-tooltip
           label="所属组"
-        />
-
+        ><template #default="{ row }">
+            {{ row.memberName ? row.memberName : '-' }}
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="checkList.includes('projectId')"
           align="center"
@@ -306,19 +318,15 @@ onMounted(async () => {
           label="项目ID"
         />
         <el-table-column
-          v-if="checkList.includes('randomIdentityId')"
-          align="center"
-          prop="randomIdentityId"
-          show-overflow-tooltip
-          label="随机身份"
-        />
-        <el-table-column
           v-if="checkList.includes('projectName')"
           align="center"
           prop="projectName"
           show-overflow-tooltip
           label="项目名称/客户简称"
-        />
+        ><template #default="{ row }">
+            {{ row.projectName ? row.projectName : '-' }}
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="checkList.includes('allocationType')"
           align="center"
@@ -378,7 +386,7 @@ onMounted(async () => {
           label="副状态"
         >
           <template #default="{ row }">
-            {{ data.viceStatusList[row.viceStatus - 1] }}
+            {{ data.viceStatusList[row.viceStatus - 1]  ? data.viceStatusList[row.viceStatus - 1] : '-' }}
           </template>
         </ElTableColumn>
         <template #empty>

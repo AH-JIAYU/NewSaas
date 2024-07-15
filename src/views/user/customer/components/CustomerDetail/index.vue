@@ -73,60 +73,60 @@ defineExpose({
           <el-col :span="8">
             <el-form-item label="客户编码:">
               <el-text class="mx-1">
-                {{ detailData.tenantCustomerId }}
+                {{ detailData.tenantCustomerId ? detailData.tenantCustomerId : '-' }}
               </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="客户名称:">
-              <el-text class="mx-1"> {{ detailData.customerAccord }} </el-text>
+              <el-text class="mx-1"> {{ detailData.customerAccord ? detailData.customerAccord : '-' }} </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="客户简称:">
               <el-text class="mx-1">
-                {{ detailData.customerShortName }}
+                {{ detailData.customerShortName ? detailData.customerShortName : '-' }}
               </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="公司名称:">
-              <el-text class="mx-1"> {{ detailData.companyName }} </el-text>
+              <el-text class="mx-1"> {{ detailData.companyName ? detailData.companyName : '-' }} </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="客户姓名:">
-              <el-text class="mx-1"> {{ detailData.customerName }} </el-text>
+              <el-text class="mx-1"> {{ detailData.customerName ? detailData.customerName : '-' }} </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="手机号码:">
-              <el-text class="mx-1"> {{ detailData.customerPhone }} </el-text>
+              <el-text class="mx-1"> {{ detailData.customerPhone ? detailData.customerPhone : '-' }} </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="电子邮箱:">
-              <el-text class="mx-1"> {{ detailData.emailAddress }} </el-text>
+              <el-text class="mx-1"> {{ detailData.emailAddress ? detailData.emailAddress : '-' }} </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="创建人:">
-              <el-text class="mx-1"> {{ detailData.createName }} </el-text>
+              <el-text class="mx-1"> {{ detailData.createName ? detailData.createName : '-' }} </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="创建时间:">
-              <el-text class="mx-1"> {{ detailData.createTime }} </el-text>
+              <el-text class="mx-1"> {{ detailData.createTime ? detailData.createTime : '-' }} </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="负责人:">
-              <el-text class="mx-1"> {{ detailData.chargeName }} </el-text>
+              <el-text class="mx-1"> {{ detailData.chargeName ? detailData.chargeName : '-' }} </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="结算周期:">
-              <el-text class="mx-1"> {{ detailData.settlementCycle }} </el-text>
+              <el-text class="mx-1"> {{ detailData.settlementCycle ? detailData.settlementCycle + '天' : '-' }} </el-text>
             </el-form-item>
           </el-col>
         </el-row>
@@ -162,12 +162,12 @@ defineExpose({
           </el-col>
           <el-col :span="8">
             <el-form-item label="营业限额/月:">
-              <el-text class="mx-1"> {{ detailData.turnover }} </el-text>
+              <el-text class="mx-1"> {{ detailData.turnover ? detailData.turnover : '-' }} </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="审核率Min值:">
-              <el-text class="mx-1"> {{ detailData.turnover }} </el-text>
+              <el-text class="mx-1"> {{ detailData.turnover ? detailData.turnover  : '-'}} </el-text>
             </el-form-item>
           </el-col>
         </el-row>
@@ -180,16 +180,16 @@ defineExpose({
           </div>
         </template>
         <el-table :data="detailData.getTenantCustomerOperationInfoList" border>
-          <el-table-column type="index" label="序号" width="80" />
-          <el-table-column prop="createTime" label="操作时间" />
-          <el-table-column prop="createName" label="操作人" />
+          <el-table-column align="center" type="index" label="序号" width="80" />
+          <el-table-column align="center" prop="createTime" label="操作时间" />
+          <el-table-column align="center" prop="createName" label="操作人" />
 
-          <el-table-column label="操作事项">
+          <el-table-column align="center" label="操作事项">
             <template #default="{ row }">
               {{ operationType(row.operationType) }}
             </template>
           </el-table-column>
-          <el-table-column label="详情:">
+          <el-table-column align="center" label="详情">
             <template #default="{ row }">
               <el-button
                 type="primary"
@@ -199,6 +199,7 @@ defineExpose({
               >
                 详情
               </el-button>
+              <el-text v-else>-</el-text>
             </template>
           </el-table-column>
         </el-table>

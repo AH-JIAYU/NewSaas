@@ -31,7 +31,12 @@ const columns = ref([
     checked: true,
   },
   { prop: "projectId", label: "项目id", sortable: true, checked: true },
-  { prop: "randomIdentityId", label: "随机身份", sortable: true, checked: true },
+  {
+    prop: "randomIdentityId",
+    label: "随机身份",
+    sortable: true,
+    checked: true,
+  },
   {
     prop: "projectName",
     label: "项目名称/客户简称",
@@ -178,7 +183,7 @@ onMounted(async () => {
                 v-model.trim="queryForm.memberChildGroupId"
                 clearable
                 :inline="false"
-                placeholder="子会员ID"
+                placeholder="随机身份"
               />
             </el-form-item>
             <el-form-item label="">
@@ -305,12 +310,25 @@ onMounted(async () => {
           label="子会员ID"
         />
         <el-table-column
+          v-if="checkList.includes('randomIdentityId')"
+          align="center"
+          prop="randomIdentityId"
+          show-overflow-tooltip
+          label="随机身份"
+          ><template #default="{ row }">
+            {{ row.randomIdentityId ? row.randomIdentityId : "-" }}
+          </template>
+        </el-table-column>
+        <el-table-column
           v-if="checkList.includes('memberChildName')"
           align="center"
           prop="memberChildName"
           show-overflow-tooltip
           label="所属组"
-        />
+          ><template #default="{ row }">
+            {{ row.memberChildName ? row.memberChildName : "-" }}
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="checkList.includes('tenantSupplierId')"
           align="center"
@@ -326,19 +344,15 @@ onMounted(async () => {
           label="项目ID"
         />
         <el-table-column
-          v-if="checkList.includes('randomIdentityId')"
-          align="center"
-          prop="randomIdentityId"
-          show-overflow-tooltip
-          label="随机身份"
-        />
-        <el-table-column
           v-if="checkList.includes('projectName')"
           align="center"
           prop="projectName"
           show-overflow-tooltip
           label="项目名称/客户简称"
-        />
+        ><template #default="{ row }">
+            {{ row.projectName ? row.projectName : '-' }}
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="checkList.includes('allocationType')"
           align="center"
@@ -398,7 +412,7 @@ onMounted(async () => {
           label="副状态"
         >
           <template #default="{ row }">
-            {{ data.viceStatusList[row.viceStatus - 1] }}
+            {{ data.viceStatusList[row.viceStatus - 1] ? data.viceStatusList[row.viceStatus - 1] : '-' }}
           </template>
         </ElTableColumn>
         <template #empty>

@@ -2,70 +2,111 @@
 import { ElMessage, ElMessageBox } from "element-plus";
 import type { FormInstance, FormRules } from "element-plus";
 import api from "@/api/modules/survey_site_setting";
-import ClipboardJS from 'clipboard';
+import ClipboardJS from "clipboard";
+import { onMounted, ref } from "vue";
 defineOptions({
-  name: 'SurveySettingList',
-})
+  name: "SurveySettingList",
+});
 
-const activeTopTab = ref<any>('基本设置')
+const activeTopTab = ref<any>("基本设置");
 // 加载
 const loading = ref(false);
 // 会员基准地址
-const webSiteUrl = import.meta.env.VITE_APP_WEBSITE
+// const webSiteUrl = import.meta.env.VITE_APP_WEBSITE;
 // form ref
 const formRef = ref<FormInstance>();
 // 定义表单
 const form = ref<any>({
   // 网站名称
-  webName: '',
+  webName: "",
   // 关键字
-  keyWords: '',
+  keyWords: "",
   // 会员网址
-  memberURL: '',
+  memberURL: "",
   // 是否开启注册,默认为true
   registerOffOrOn: true,
   // 是否开启注册审核,默认为false
   registerExamineOffOrOn: false,
-  // 会员价格比例 %
+  // 默认会员价格比例 %
   priceProportion: null,
-  // 提现方式
-  withdrawalMethod: 1,
-  // 代扣税点
+  // 代扣会员税点
   taxPointsProportion: null,
-})
+  // 最低结算金额
+  minimumAmount: null,
+  // 调查限价
+  fixedPrice: null,
+  // // 手机号
+  // phone: "",
+  // // 邮箱
+  // email: "",
+});
+// 自定义校验手机号
+const validatePhone = (rule: any, value: any, callback: any) => {
+  const regExpPhone: any =
+    /^(?:(?:\+|00)86)?1(?:(?:3[\d])|(?:4[5-79])|(?:5[0-35-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\d])|(?:9[189]))\d{8}$/;
+  if (!regExpPhone.test(form.value.phone)) {
+    //
+    callback(new Error("请输入合法手机号"));
+  } else {
+    callback();
+  }
+};
+// 自定义校验邮箱
+const validateEmail = (rule: any, value: any, callback: any) => {
+  const regExpEmail: any =
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  if (!regExpEmail.test(form.value.email)) {
+    callback(new Error("请输入合法邮箱"));
+  } else {
+    callback();
+  }
+};
+// 动态表单校验
+const chengAccount = () => {
+  // 手机号
+  form.value.phone = [
+    { required: true, trigger: "blur", message: "请输入手机号/邮箱" },
+    { validator: validatePhone, trigger: "blur" },
+  ];
+  //邮箱
+  form.value.email = [
+    { required: true, trigger: "blur", message: "请输入手机号/邮箱" },
+    { validator: validateEmail, trigger: "blur" },
+  ];
+};
 // 校验
 const formRules = ref<FormRules>({
   webName: [{ required: true, message: "请输入网站名称", trigger: "blur" }],
-  memberURL: [
-    { required: true, message: "请输入供应商网址", trigger: "blur" },
-  ],
+  memberURL: [{ required: true, message: "请输入供应商网址", trigger: "blur" }],
+  phone: [{ required: false, trigger: "blur", message: "请输入手机号" }],
+  email: [{ required: false, trigger: "blur", message: "请输入邮箱" }],
 });
 onMounted(() => {
-  getDataList()
-})
+  getDataList();
+});
 // 获取数据
 async function getDataList() {
-  loading.value = true
-  const { data } = await api.list()
-  form.value = data || form.value
-  loading.value = false
+  loading.value = true;
+  const { data } = await api.list();
+  form.value = data || form.value;
+  loading.value = false;
 }
 // 复制地址
-const clipboard = new ClipboardJS('.copy');
-clipboard.on('success', function(e:any) {
-    ElMessage.success({
-      message: '复制成功',
-      center: true,
-    })
-    e.clearSelection();
-    clipboard.destroy()
+const clipboard = new ClipboardJS(".copy");
+clipboard.on("success", function (e: any) {
+  ElMessage.success({
+    message: "复制成功",
+    center: true,
+  });
+  e.clearSelection();
+  clipboard.destroy();
 });
 
-clipboard.on('error', function() {
-    ElMessage.error({
-      message: '复制失败',
-      center: true,
-    })
+clipboard.on("error", function () {
+  ElMessage.error({
+    message: "复制失败",
+    center: true,
+  });
 });
 // 联系我们
 function onSubmit() {
@@ -88,21 +129,44 @@ function onSubmit() {
       });
   } else {
     // 修改
-    formRef.value && formRef.value.validate((valid) => {
-      if (valid) {
-        let { id, keyWords, registerExamineOffOrOn, registerOffOrOn, memberURL, webName,priceProportion,withdrawalMethod,taxPointsProportion } = form.value
-        const params = { id, keyWords, registerExamineOffOrOn, registerOffOrOn, memberURL, webName,priceProportion,withdrawalMethod,taxPointsProportion }
-        loading.value = true
-        api.edit(params).then(() => {
-          loading.value = false
-          getDataList()
-          ElMessage.success({
-            message: '修改成功',
-            center: true,
-          })
-        })
-      }
-    })
+    formRef.value &&
+      formRef.value.validate((valid) => {
+        if (valid) {
+          let {
+            id,
+            keyWords,
+            registerExamineOffOrOn,
+            registerOffOrOn,
+            memberURL,
+            webName,
+            priceProportion,
+            taxPointsProportion,
+            minimumAmount,
+            fixedPrice,
+          } = form.value;
+          const params = {
+            id,
+            keyWords,
+            registerExamineOffOrOn,
+            registerOffOrOn,
+            memberURL,
+            webName,
+            priceProportion,
+            taxPointsProportion,
+            minimumAmount,
+            fixedPrice,
+          };
+          loading.value = true;
+          api.edit(params).then(() => {
+            loading.value = false;
+            getDataList();
+            ElMessage.success({
+              message: "修改成功",
+              center: true,
+            });
+          });
+        }
+      });
   }
 }
 </script>
@@ -111,82 +175,134 @@ function onSubmit() {
   <div v-loading="loading">
     <PageMain>
       <el-tabs v-model="activeTopTab">
-        <el-form ref="formRef" :model="form" :rules="formRules" label-position="right" label-width="130px"
-          style="width: 500px; ">
+        <el-form
+          ref="formRef"
+          :model="form"
+          :rules="formRules"
+          label-position="right"
+          label-width="140px"
+          style="width: 500px"
+        >
           <el-tab-pane label="基本设置" name="基本设置">
             <el-row :gutter="20">
               <el-col :span="7">
                 <el-form-item label="注册开关">
-                  <el-switch v-model="form.registerOffOrOn" active-text="开启" inline-prompt inactive-text="关闭"
-                :active-value="true" :inactive-value="false" />
+                  <el-switch
+                    v-model="form.registerOffOrOn"
+                    active-text="开启"
+                    inline-prompt
+                    inactive-text="关闭"
+                    :active-value="true"
+                    :inactive-value="false"
+                  />
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="注册审核">
-                  <el-switch v-model="form.registerExamineOffOrOn" active-text="开启" inline-prompt inactive-text="关闭"
-                :active-value="true" :inactive-value="false" />
+                  <el-switch
+                    v-model="form.registerExamineOffOrOn"
+                    active-text="开启"
+                    inline-prompt
+                    inactive-text="关闭"
+                    :active-value="true"
+                    :inactive-value="false"
+                  />
                 </el-form-item>
               </el-col>
             </el-row>
-            <el-form-item  prop="webName" label="网站名称">
-              <el-input v-model="form.webName" style="width: 18rem;" />
+            <el-form-item prop="webName" label="网站名称">
+              <el-input v-model="form.webName" style="width: 18rem" />
             </el-form-item>
             <el-form-item label="keyWords">
-              <el-input v-model="form.keyWords" style="width: 18rem;" />
+              <el-input v-model="form.keyWords" style="width: 18rem" />
             </el-form-item>
-            <el-form-item style="width: 33rem;" label="会员网址" prop="memberURL">
-              <el-input v-model="form.memberURL" style="width: 8rem;" />
+            <el-form-item
+              style="width: 34rem"
+              label="会员网址"
+              prop="memberURL"
+            >
+              <el-input v-model="form.memberURL" style="width: 8rem" />
               <el-text class="mx-1">.front-saas-web.surveyssaas.com</el-text>
-              <el-button class="copy" :data-clipboard-text="`${form.memberURL}.front-saas-web.surveyssaas.com`" type="primary" link>复制</el-button>
+              <el-button
+                class="copy"
+                :data-clipboard-text="`${form.memberURL}.front-saas-web.surveyssaas.com`"
+                type="primary"
+                link
+                >复制</el-button
+              >
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="onSubmit">
-                确认
-              </el-button>
+              <el-button type="primary" @click="onSubmit"> 确认 </el-button>
             </el-form-item>
           </el-tab-pane>
           <el-tab-pane label="高级设置" name="高级设置">
             <el-form-item label="默认会员价格比例" prop="confirmPassword">
-              <el-input v-model.number="form.priceProportion" style="width: 18rem;" placeholder="" />
+              <el-input
+                v-model.number="form.priceProportion"
+                style="width: 18rem"
+                placeholder=""
+                ><template #append>%</template>
+              </el-input>
             </el-form-item>
-            <el-form-item label="抵扣税点" prop="confirmPassword">
-              <el-input v-model.number="form.taxPointsProportion" style="width: 18rem;" placeholder="" />
+            <el-form-item label="最低结算金额" prop="confirmPassword">
+              <el-input
+                v-model.number="form.minimumAmount"
+                style="width: 18rem"
+                placeholder=""
+              />
             </el-form-item>
-            <el-form-item label="提现方式" prop="confirmPassword">
-              <el-radio-group v-model="form.withdrawalMethod" class="ml-4">
-                <el-radio :value="1" size="large">
-                  手动提现
-                </el-radio>
-                <el-radio :value="2" size="large">
-                  生成账单
-                </el-radio>
-              </el-radio-group>
+            <el-form-item label="会员税点" prop="confirmPassword">
+              <el-input
+                v-model.number="form.taxPointsProportion"
+                style="width: 18rem"
+                placeholder=""
+                ><template #append>%</template>
+              </el-input>
+            </el-form-item>
+            <el-form-item label="调查限价" prop="confirmPassword">
+              <el-input
+                v-model.number="form.fixedPrice"
+                style="width: 18rem"
+                placeholder=""
+              />
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="onSubmit">
-                确认
-              </el-button>
+              <el-button type="primary" @click="onSubmit"> 确认 </el-button>
             </el-form-item>
           </el-tab-pane>
         </el-form>
         <el-form label-width="130px">
           <el-tab-pane label="联系我们" name="联系我们">
             <el-form-item label="电子邮箱" prop="originalPassword">
-              <el-input style="width: 18rem;" v-model="form.keyWords" placeholder="" />
+              <el-input
+                style="width: 18rem"
+                v-model="form.keyWords"
+                placeholder=""
+              />
             </el-form-item>
             <el-form-item label="手机号码" prop="newPassword">
-              <el-input style="width: 18rem;" v-model="form.keyWords" placeholder="" />
+              <el-input
+                style="width: 18rem"
+                v-model="form.keyWords"
+                placeholder=""
+              />
             </el-form-item>
             <el-form-item label="QQ号码" prop="confirmPassword">
-              <el-input style="width: 18rem;" v-model="form.keyWords" placeholder="" />
+              <el-input
+                style="width: 18rem"
+                v-model="form.keyWords"
+                placeholder=""
+              />
             </el-form-item>
             <el-form-item label="公司地址" prop="confirmPassword">
-              <el-input style="width: 18rem;" v-model="form.keyWords" placeholder="" />
+              <el-input
+                style="width: 18rem"
+                v-model="form.keyWords"
+                placeholder=""
+              />
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" >
-                确认
-              </el-button>
+              <el-button type="primary"> 确认 </el-button>
             </el-form-item>
           </el-tab-pane>
         </el-form>

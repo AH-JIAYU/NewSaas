@@ -263,7 +263,9 @@ defineExpose({ showEdit });
                       placement="top"
                     >
                       <el-link type="primary">{{
-                        comCountryId(data.form.countryIdList).length
+                        comCountryId(data.form.countryIdList).length === 185
+                          ? "全球"
+                          : comCountryId(data.form.countryIdList).length
                       }}</el-link>
                     </el-tooltip>
                   </template>
@@ -296,7 +298,9 @@ defineExpose({ showEdit });
               <el-form-item label="最小时长 :">
                 <el-text class="mx-1">
                   {{
-                    data.form.minimumDuration ? data.form.minimumDuration : "-"
+                    data.form.minimumDuration
+                      ? data.form.minimumDuration + "min"
+                      : "-"
                   }}
                 </el-text>
               </el-form-item>
@@ -308,7 +312,7 @@ defineExpose({ showEdit });
                 </el-text>
               </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="12">
               <el-form-item label="URL :">
                 <el-text class="mx-1">
                   {{ data.form.uidUrl ? data.form.uidUrl : "-" }}
@@ -356,7 +360,8 @@ defineExpose({ showEdit });
             <el-col :span="8">
               <el-form-item label="B2B :">
                 <el-text class="mx-1">
-                  {{ data.form.isPinned === 1 ? "开" : "关" }}
+                  {{  }}
+                  {{ data.form.isPinned === 1 ? data.form.projectType.join(',') : "关" }}
                 </el-text>
               </el-form-item>
             </el-col>
@@ -412,7 +417,7 @@ defineExpose({ showEdit });
               :gutter="10"
               v-for="item in data.form.projectQuotaInfoList"
             >
-              <el-form-item :label="item.keyValue + ' :'">
+              <el-form-item label-width="200px" :label="item.keyValue + ' :'">
                 <el-text
                   class="mx-1"
                   v-if="
@@ -450,6 +455,14 @@ defineExpose({ showEdit });
               </el-form-item>
             </el-col>
             <el-col :span="8">
+              <el-form-item label="IP一致性检测:">
+                <el-text class="mx-1">
+                  {{ data.form.ipConsistency === 1 ? "开" : "关" }}
+                </el-text>
+              </el-form-item>
+            </el-col>
+            <!-- 暂时隐藏 -->
+            <!-- <el-col :span="8">
               <el-form-item label="时差检测 :">
                 <el-text class="mx-1">
                   {{ data.form.timeDifferenceDetection === 1 ? "开" : "关" }}
@@ -462,17 +475,10 @@ defineExpose({ showEdit });
                   {{ data.form.ipDifferenceDetection === 1 ? "开" : "关" }}
                 </el-text>
               </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="IP一致性检测:">
-                <el-text class="mx-1">
-                  {{ data.form.ipConsistency === 1 ? "开" : "关" }}
-                </el-text>
-              </el-form-item>
-            </el-col>
+            </el-col> -->
           </el-row>
         </el-card>
-        <el-card class="box-card">
+        <el-card v-if="data.form.descriptionUrl" class="box-card">
           <template #header>
             <div class="card-header">
               <span>描述及配额</span>

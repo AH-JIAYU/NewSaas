@@ -83,7 +83,7 @@ defineExpose({ activeLeftTab });
         :disabled="localLeftTab.length > 9 || props.title !== '添加'"
         @click="addLeftTab()"
       >
-        添加子项目
+        添加供应商
       </el-button>
       <el-tabs
         v-model="activeLeftTab"

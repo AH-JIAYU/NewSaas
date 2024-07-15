@@ -176,7 +176,17 @@ onMounted(() => {
               >
                 <el-option label="禁用" :value="1" />
                 <el-option label="启用" :value="2" />
-                <el-option label="风险暂停" :value="3" />
+                <!-- <el-option label="风险暂停" :value="3" /> -->
+              </el-select>
+            </el-form-item>
+            <el-form-item v-show="!fold">
+              <el-select
+                v-model="queryForm.customerStatus"
+                clearable
+                placeholder="前置问卷"
+              >
+                <el-option label="禁用" :value="1" />
+                <el-option label="启用" :value="2" />
               </el-select>
             </el-form-item>
             <ElFormItem>
@@ -269,21 +279,30 @@ onMounted(() => {
           prop="turnover"
           show-overflow-tooltip
           label="客户营业限额($/月)"
-        />
+        ><template #default="{ row }">
+            {{ row.turnover ? row.turnover : '-' }}
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="checkList.includes('rateAudit')"
           align="center"
           prop="rateAudit"
           show-overflow-tooltip
           label="审核率Min值"
-        />
+        ><template #default="{ row }">
+            {{ row.rateAudit ? row.rateAudit : '-' }}
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="checkList.includes('chargeName')"
           align="center"
           prop="chargeName"
           show-overflow-tooltip
           label="负责人"
-        />
+        ><template #default="{ row }">
+            {{ row.chargeName ? row.chargeName : '-' }}
+          </template>
+        </el-table-column>
         <ElTableColumn
           v-if="checkList.includes('customerStatus')"
           align="center"

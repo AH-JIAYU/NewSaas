@@ -169,8 +169,8 @@ onMounted(() => {
                 clearable
                 placeholder="子会员状态"
               >
-                <el-option label="开启" :value="2" />
-                <el-option label="关闭" :value="1" />
+                <el-option label="启用" :value="2" />
+                <el-option label="禁用" :value="1" />
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
@@ -242,30 +242,42 @@ onMounted(() => {
       <el-table
         v-loading="listLoading"
         :border="border"
-        :data="DataList"  
+        :data="DataList"
         :size="lineHeight"
         :stripe="stripe"
         @selection-change="setSelectRows"
       >
         <el-table-column
-          align="center"
-          prop="a"
           show-overflow-tooltip
-          type="selection"
+          width="80"
+          align="center"
+          type="index"
+          label="序号"
         />
         <el-table-column
           v-if="checkList.includes('a')"
           align="center"
           prop="memberChildId"
           show-overflow-tooltip
-          label="子会员ID/子会员名称"
+          label="子会员ID"
+        />
+        <el-table-column
+          v-if="checkList.includes('a')"
+          align="center"
+          prop="memberNickname"
+          show-overflow-tooltip
+          label="子会员名称"
         />
         <el-table-column
           align="center"
           prop="memberName"
           show-overflow-tooltip
           label="子会员姓名"
-        />
+        >
+          <template #default="{ row }">
+            {{ row.memberName ? row.memberName : "-" }}
+          </template>
+        </el-table-column>
         <el-table-column
           align="center"
           prop="tenantSupplierId"
@@ -287,7 +299,10 @@ onMounted(() => {
           prop="memberChildGroupName"
           show-overflow-tooltip
           label="所属组"
-        />
+          ><template #default="{ row }">
+            {{ row.memberChildGroupName ? row.memberChildGroupName : "-" }}
+          </template>
+        </el-table-column>
         <ElTableColumn
           align="center"
           show-overflow-tooltip
@@ -295,7 +310,7 @@ onMounted(() => {
           label="子会员状态"
         >
           <template #default="{ row }">
-            {{ row.memberChildStatus === 1 ? "关闭" : "开启" }}
+            {{ row.memberChildStatus === 1 ? "禁用" : "启用" }}
           </template>
         </ElTableColumn>
         <el-table-column
@@ -303,7 +318,10 @@ onMounted(() => {
           prop="createUserName"
           show-overflow-tooltip
           label="创建人"
-        />
+          ><template #default="{ row }">
+            {{ row.createUserName ? row.createUserName : "-" }}
+          </template>
+        </el-table-column>
         <el-table-column
           align="center"
           prop="createTime"

@@ -343,13 +343,17 @@ onMounted(async () => {
           prop="supplierAccord"
           show-overflow-tooltip
           label="供应商名称(所属国家)"
-        />
+        >
+        <template #default="{row}">
+          {{row.supplierAccord}}
+        </template>
+      </el-table-column>
         <el-table-column
           v-if="checkList.includes('balanceUs')"
           align="center"
           prop="balanceUs"
           show-overflow-tooltip
-          label="余额"
+          label="可用余额"
         />
         <el-table-column
           v-if="checkList.includes('amountPendingTrial')"
@@ -368,6 +372,7 @@ onMounted(async () => {
         <template #default="{ row }">
           <div v-for="item in supplierLevelList" :key="item.tenantSupplierLevelId" :value="item.levelNameOrAdditionRatio">
             <el-text v-if="item.tenantSupplierLevelId === row.supplierLevelId" class="mx-1">{{ item.levelNameOrAdditionRatio}}</el-text>
+            <el-text v-else class="mx-1">-</el-text>
           </div>
           </template>
       </el-table-column>
@@ -378,8 +383,12 @@ onMounted(async () => {
           label="B2B|B2C"
         >
           <template #default="{ row }">
-            {{ row.b2bStatus && row.b2bStatus === 2 ? "√" : "×" }} |
-            {{ row.b2cStatus && row.b2cStatus === 2 ? "√" : "×" }}
+            <el-text v-if="row.b2bStatus && row.b2bStatus === 2" class="mx-1"><div class="i-fluent-emoji-flat:check-mark-button w-1.5em h-1.5em"></div></el-text>
+            <el-text v-else class="mx-1"><div class="i-emojione:cross-mark-button w-1.5em h-1.5em"></div></el-text> |
+            <el-text v-if="row.b2cStatus && row.b2cStatus === 2" class="mx-1"><div class="i-fluent-emoji-flat:check-mark-button w-1.5em h-1.5em"></div></el-text>
+            <el-text v-else class="mx-1"><div class="i-emojione:cross-mark-button w-1.5em h-1.5em"></div></el-text>
+            <!-- {{ row.b2bStatus && row.b2bStatus === 2 ? "√" : "×" }} |
+            {{ row.b2cStatus && row.b2cStatus === 2 ? "√" : "×" }} -->
           </template>
         </el-table-column>
         <el-table-column
@@ -388,7 +397,10 @@ onMounted(async () => {
           prop="settlementCycle"
           show-overflow-tooltip
           label="结算周期"
-        />
+        ><template #default="{row}">
+          {{row.settlementCycle ? row.settlementCycle + '天' : '-'}}
+        </template>
+      </el-table-column>
         <ElTableColumn
           v-if="checkList.includes('supplierStatus')"
           align="center"

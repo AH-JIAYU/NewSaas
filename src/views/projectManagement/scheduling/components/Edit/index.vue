@@ -57,19 +57,21 @@ async function showEdit(row: any, view?: any) {
     // 存在 已调度
     if (!findData) {
       ElMessage.warning({
-        message: "改项目已经调度",
+        message: "该项目已经调度",
         center: true,
       });
+      dialogTableVisible.value = false
     } else {
       // 不存在 为调度
       // 项目列表里调用的添加项目调度
       data.title = "添加";
       data.form.projectId = row.projectId;
       await changeProject(row.projectId);
+      dialogTableVisible.value = true;
     }
   }
 
-  dialogTableVisible.value = true;
+
 }
 // 切换项目
 const changeProject = async (val: any) => {
@@ -170,6 +172,7 @@ defineExpose({ showEdit });
             placeholder=""
             v-model="data.form.projectId"
             clearable
+            filterable
             @change="changeProject"
           >
             <el-option

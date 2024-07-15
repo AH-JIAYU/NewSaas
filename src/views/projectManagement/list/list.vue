@@ -120,7 +120,6 @@ async function changeStatus(row: any, val: any) {
     });
   }
   fetchData();
-
 }
 // 项目详情
 function projectDetails(row: any) {
@@ -194,7 +193,7 @@ const comCountryId = computed(() => (countryIdList: any) => {
 });
 
 onMounted(async () => {
-  countryList.value = await basicDictionaryStore.country || await basicDictionaryStore.getCountry();
+  countryList.value = await basicDictionaryStore.getCountry();
   customerList.value = await customerStore.getCustomerList();
   columns.value.forEach((item: any) => {
     if (item.checked) {
@@ -228,6 +227,7 @@ onMounted(async () => {
                 v-model="search.projectId"
                 clearable
                 placeholder="项目ID"
+                @keydown.enter="currentChange()"
               />
             </el-form-item>
             <el-form-item label="">
@@ -235,6 +235,7 @@ onMounted(async () => {
                 v-model="search.name"
                 clearable
                 placeholder="项目名称"
+                @keydown.enter="currentChange()"
               />
             </el-form-item>
             <el-form-item label="">
@@ -242,6 +243,7 @@ onMounted(async () => {
                 clearable
                 v-model="search.projectIdentification"
                 placeholder="项目标识"
+                @keydown.enter="currentChange()"
               />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
@@ -261,7 +263,12 @@ onMounted(async () => {
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-select v-model="search.clientId" placeholder="客户简称">
+              <el-select
+                v-model="search.clientId"
+                clearable
+                filterable
+                placeholder="客户简称"
+              >
                 <el-option
                   v-for="item in customerList"
                   :key="item.tenantCustomerId"
@@ -273,15 +280,21 @@ onMounted(async () => {
             <el-form-item v-show="!fold" label="">
               <el-select
                 v-model="search.allocationStatus"
+                clearable
+                filterable
                 placeholder="分配类型"
               >
-                <el-option label="自动分配" :value="1"> </el-option>
                 <el-option label="供应商" :value="2"> </el-option>
                 <el-option label="会员组" :value="3"> </el-option>
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-select v-model="search.status" placeholder="项目状态">
+              <el-select
+                v-model="search.status"
+                clearable
+                filterable
+                placeholder="项目状态"
+              >
                 <el-option label="已分配" :value="1" />
                 <el-option label="未分配" :value="2" />
               </el-select>
@@ -291,17 +304,18 @@ onMounted(async () => {
                 v-model="search.createName"
                 clearable
                 placeholder="创建人"
+                @keydown.enter="currentChange()"
               />
             </el-form-item>
             <el-form-item v-show="!fold">
               <el-date-picker
                 v-model="search.time"
-                type="daterange"
-                unlink-panels
+                type="datetimerange"
                 range-separator="-"
                 start-placeholder="创建开始日期"
                 end-placeholder="创建结束日期"
-                size="default"
+                value-format="YYYY-MM-DD HH:mm:ss"
+                size=""
                 style="width: 192px"
                 clear-icon="true"
               />
@@ -334,7 +348,12 @@ onMounted(async () => {
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>
-          <el-button type="primary" size="default" @click="addProject">
+          <el-button
+            v-auth="'/list-insert-btn'"
+            type="primary"
+            size="default"
+            @click="addProject"
+          >
             添加项目
           </el-button>
           <el-button type="primary" size="default" @click="dispatch">
@@ -367,7 +386,7 @@ onMounted(async () => {
         :size="lineHeight"
         :stripe="stripe"
       >
-        <el-table-column type="selection" />
+        <el-table-column align="center" type="selection" />
         <el-table-column
           v-if="checkList.includes('projectId')"
           show-overflow-tooltip
@@ -400,7 +419,7 @@ onMounted(async () => {
           <template #default="{ row }">
             {{ row.participation || 0 }}/ {{ row.complete || 0 }}/
             {{ row.num || 0 }}/
-            {{ row.limitedQuantity || 0 }}
+            {{ row.limitedQuantity || '-' }}
           </template>
         </el-table-column>
         <el-table-column
@@ -412,7 +431,7 @@ onMounted(async () => {
         >
           <template #default="{ row }">
             {{
-              projectManagementListStore.allocationTypeList[row.allocationType]
+              projectManagementListStore.allocationTypeList[row.allocationType] ?projectManagementListStore.allocationTypeList[row.allocationType] : '-'
             }}
           </template>
         </el-table-column>
@@ -457,7 +476,9 @@ onMounted(async () => {
           <template #default="{ row }">
             <template v-if="row.countryIdList">
               <template v-if="row.countryIdList.length === 185">
-                <el-link type="primary"><el-tag type="warning">全球</el-tag></el-link>
+                <el-link type="primary"
+                  ><el-tag type="warning">全球</el-tag></el-link
+                >
               </template>
               <template v-else-if="comCountryId(row.countryIdList).length > 4">
                 <el-tooltip
@@ -466,9 +487,11 @@ onMounted(async () => {
                   :content="comCountryId(row.countryIdList).join(',')"
                   placement="top"
                 >
-                  <el-link type="primary"><el-tag type="success">{{
-                    comCountryId(row.countryIdList).length
-                  }}</el-tag></el-link>
+                  <el-link type="primary"
+                    ><el-tag type="success">{{
+                      comCountryId(row.countryIdList).length
+                    }}</el-tag></el-link
+                  >
                 </el-tooltip>
               </template>
               <template v-else>

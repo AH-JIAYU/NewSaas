@@ -70,38 +70,46 @@ defineExpose({
 
         <el-row :gutter="24">
           <el-col :span="8">
-            <el-form-item label="供应商ID">
-              {{ detailData.tenantSupplierId }}
+            <el-form-item label="供应商ID:">
+              {{
+                detailData.tenantSupplierId ? detailData.tenantSupplierId : "-"
+              }}
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="供应商名称">
-              {{ detailData.supplierAccord }}
+            <el-form-item label="供应商名称:">
+              {{ detailData.supplierAccord ? detailData.supplierAccord : "-" }}
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="所属国家">
-              {{ detailData.subordinateCountryName }}
+            <el-form-item label="所属国家:">
+              {{
+                detailData.subordinateCountryName
+                  ? detailData.subordinateCountryName
+                  : "-"
+              }}
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="供应商等级">
-              {{ detailData.supplierLevelId }}
+            <el-form-item label="供应商等级:">
+              {{
+                detailData.supplierLevelId ? detailData.supplierLevelId : "-"
+              }}
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="供应商姓名">
-              {{ detailData.supplierName }}
+            <el-form-item label="供应商姓名:">
+              {{ detailData.supplierName ? detailData.supplierName : "-" }}
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="手机号码">
-              {{ detailData.supplierPhone }}
+            <el-form-item label="手机号码:">
+              {{ detailData.supplierPhone ? detailData.supplierPhone : "-" }}
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="电子邮箱">
-              {{ detailData.emailAddress }}
+            <el-form-item label="电子邮箱:">
+              {{ detailData.emailAddress ? detailData.emailAddress : "-" }}
             </el-form-item>
           </el-col>
         </el-row>
@@ -114,28 +122,36 @@ defineExpose({
         </template>
         <el-row :gutter="24">
           <el-col :span="8">
-            <el-form-item label="调查系统">
+            <el-form-item label="调查系统:">
               {{ detailData.surveySystem === 1 ? "关闭" : "开启" }}
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="B2B">
+            <el-form-item label="B2B:">
               {{ detailData.surveySystem === 1 ? "关闭" : "开启" }}
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="B2C">
+            <el-form-item label="B2C:">
               {{ detailData.b2cStatus === 1 ? "关闭" : "开启" }}
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="关联国家">
-              {{ detailData.relevanceCountryName }}
+            <el-form-item label="关联国家:">
+              {{
+                detailData.relevanceCountryName
+                  ? detailData.relevanceCountryName
+                  : "-"
+              }}
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="关联渠道">
-              {{ detailData.relevanceCustomerName }}
+            <el-form-item label="关联渠道:">
+              {{
+                detailData.relevanceCustomerName
+                  ? detailData.relevanceCustomerName
+                  : "-"
+              }}
             </el-form-item>
           </el-col>
         </el-row>
@@ -148,28 +164,34 @@ defineExpose({
         </template>
         <el-row :gutter="24">
           <el-col :span="12">
-            <el-form-item label="付款方式">
-              {{ detailData.payMethod }}
+            <el-form-item label="付款方式:">
+              {{ detailData.payMethod ? detailData.payMethod : "-" }}
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="账户名称">
-              {{ detailData.accountName }}
+            <el-form-item label="账户名称:">
+              {{ detailData.accountName ? detailData.accountName : "-" }}
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="收款账号">
-              {{ detailData.collectionAccount }}
+            <el-form-item label="收款账号:">
+              {{
+                detailData.collectionAccount
+                  ? detailData.collectionAccount
+                  : "-"
+              }}
             </el-form-item>
           </el-col>
           <el-col :span="12" v-if="detailData.payMethod === 1">
-            <el-form-item label="银行名称">
-              {{ detailData.bankName }}
+            <el-form-item label="银行名称:">
+              {{ detailData.bankName ? detailData.bankName : "-" }}
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="结算周期">
-              {{ detailData.settlementCycle }}
+            <el-form-item label="结算周期:">
+              {{
+                detailData.settlementCycle ? detailData.settlementCycle : "-"
+              }}
             </el-form-item>
           </el-col>
         </el-row>
@@ -185,15 +207,20 @@ defineExpose({
           stripe
           border
         >
-          <el-table-column type="index" label="序号" width="50" />
-          <el-table-column prop="createTime" label="操作时间" />
-          <el-table-column prop="createName" label="操作人" />
-          <el-table-column label="操作事项">
+          <el-table-column
+            align="center"
+            type="index"
+            label="序号"
+            width="80"
+          />
+          <el-table-column align="center" prop="createTime" label="操作时间" />
+          <el-table-column align="center" prop="createName" label="操作人" />
+          <el-table-column align="center" label="操作事项">
             <template #default="{ row }">
               {{ operationType(row.operationType) }}
             </template>
           </el-table-column>
-          <el-table-column label="详情">
+          <el-table-column align="center" label="详情">
             <template #default="{ row }">
               <el-button
                 type="primary"
@@ -203,7 +230,7 @@ defineExpose({
               >
                 详情
               </el-button>
-              <span v-else> -</span>
+              <el-text v-else>-</el-text>
             </template>
           </el-table-column>
         </el-table>

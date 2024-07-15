@@ -21,7 +21,7 @@ const columns = ref([
   // 表格控件-展示列
 
   {
-    label: "会员id/子会员id",
+    label: "会员ID/子会员ID",
     prop: "memberChildId",
     sortable: true,
     checked: true,
@@ -232,7 +232,7 @@ onMounted(() => {
           align="center"
           prop="memberChildId"
           show-overflow-tooltip
-          label="会员id/子会员id"
+          label="会员ID/子会员ID"
         >
           <template #default="{ row }">
             {{ row.peopleType === 1 ? "会员" : "子会员" }}：{{

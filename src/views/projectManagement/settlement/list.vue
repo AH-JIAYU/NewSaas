@@ -225,7 +225,7 @@ async function fetchData() {
   listLoading.value = false;
 }
 onMounted(async () => {
-  countryList.value = await basicDictionaryStore.country || await basicDictionaryStore.getCountry();
+  countryList.value = await basicDictionaryStore.getCountry();
   customerList.value = await customerStore.getCustomerList();
   founderList.value = await tenantStaffStore.getStaff();
   fetchData();
