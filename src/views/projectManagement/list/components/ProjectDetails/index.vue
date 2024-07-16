@@ -60,6 +60,19 @@ async function showEdit(row: any) {
   data.value.allocationStatus = row.allocationStatus;
   const res = await obtainLoading(api.detail({ projectId: row.projectId }));
   data.value.form = res.data;
+  data.value.form.projectSettlementStatusSet =
+    data.value.form.projectSettlementStatusSet.reduce(
+      (accumulator: any, currentValue: any) => {
+        let existing = accumulator.find(
+          (obj: any) => obj.settlementStatus === currentValue.settlementStatus
+        );
+        if (!existing) {
+          accumulator.push(currentValue);
+        }
+        return accumulator;
+      },
+      []
+    );
   const imgres: any = await fileApi.detail({
     fileName: data.value.form.descriptionUrl,
   });
@@ -68,6 +81,7 @@ async function showEdit(row: any) {
   getCountryQuestion();
   dialogTableVisible.value = true;
 }
+
 // 回显国家和问卷
 const getCountryQuestion = async () => {
   if (data.value.form.projectQuotaInfoList.length) {
@@ -150,25 +164,30 @@ defineExpose({ showEdit });
       size="55%"
       title="项目详情"
     >
-      <template #header>
+      <template
+        v-if="
+          data.form.projectSettlementStatusSet &&
+          data.form.projectSettlementStatusSet.length !== 0
+        "
+        #header
+      >
         <el-row :gutter="20">
-          <el-col :span="2" />
-          <el-col :span="20">
+          <el-col :span="24">
             <el-steps
               style="max-width: 100%"
               finish-status="success"
               align-center
-              :active="active"
+              :active="data.form.projectSettlementStatusSet[0].settlementStatus"
             >
               <el-step
-                title="已开始"
+                title="待审核"
                 description="2021-09-09 11:11:11"
-                :icon="Select"
+                :icon="CircleCheck"
               />
               <el-step
-                title="已确认"
-                description="2021-09-09 11:11:11"
-                :icon="active >= 2 ? CircleCheck : Position"
+                title="已审核"
+                :description="data.form.projectSettlementStatusSet[0].operationTime"
+                :icon="data.form.projectSettlementStatusSet[0].settlementStatus >= 2 ? CircleCheck : Position"
               />
               <el-step
                 title="已开票"
@@ -176,13 +195,38 @@ defineExpose({ showEdit });
                 :icon="active >= 3 ? CircleCheck : Position"
               />
               <el-step
-                title="已完结"
+                title="已结算"
                 description="2021-09-09 11:11:11"
                 :icon="active >= 4 ? CircleCheck : Position"
               />
+              <el-step
+                title="已冻结"
+                description="2021-09-09 11:11:11"
+                :icon="active >= 5 ? CircleCheck : Position"
+              />
             </el-steps>
           </el-col>
-          <el-col :span="2" />
+          <el-row
+            style="width: 100%; margin-top: 0; font-size: 14px"
+            :gutter="20"
+          >
+            <el-col :span="1"></el-col>
+            <el-col  :class="{'colorgreen' : data.form.projectSettlementStatusSet[0].settlementStatus >= 1}" :span="5">
+              <span style="margin-left: 25.5%">{{ data.form.projectSettlementStatusSet[0].operationName }}</span>
+            </el-col>
+            <el-col  :class="{'colorgreen' : data.form.projectSettlementStatusSet[0].settlementStatus >= 2}" :span="5">
+              <span style="margin-left: 19.5%">操作员</span>
+            </el-col>
+            <el-col  :class="{'colorgreen' : data.form.projectSettlementStatusSet[0].settlementStatus >= 3}" :span="5">
+              <span style="margin-left: 12.5%">操作员</span>
+            </el-col>
+            <el-col  :class="{'colorgreen' : data.form.projectSettlementStatusSet[0].settlementStatus >= 4}" :span="4">
+              <span style="margin-left: 8.5%">操作员</span>
+            </el-col>
+            <el-col  :class="{'colorgreen' : data.form.projectSettlementStatusSet[0].settlementStatus >= 5}" :span="4">
+              <span style="margin-left: 28.5%">操作员</span>
+            </el-col>
+          </el-row>
         </el-row>
       </template>
       <ElForm label-width="120px">
@@ -272,8 +316,15 @@ defineExpose({ showEdit });
             </el-col>
             <el-col :span="8">
               <el-form-item label="原价 :">
-                <el-text class="mx-1">
-                  {{ data.form.doMoneyPrice ? data.form.doMoneyPrice : "-" }}
+                <el-text v-if="data.form.currencyType === 1" class="mx-1">
+                  {{
+                    data.form.doMoneyPrice ? data.form.doMoneyPrice + "$" : "-"
+                  }}
+                </el-text>
+                <el-text v-if="data.form.currencyType === 2" class="mx-1">
+                  {{
+                    data.form.doMoneyPrice ? data.form.doMoneyPrice + "￥" : "-"
+                  }}
                 </el-text>
               </el-form-item>
             </el-col>
@@ -296,9 +347,10 @@ defineExpose({ showEdit });
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="IR :">
+              <el-form-item label="IR/NIR :">
                 <el-text class="mx-1">
-                  {{ data.form.ir ? data.form.ir : "-" }}
+                  {{ data.form.ir ? data.form.ir + "%" : data.form.ir }} /
+                  {{ data.form.nir ? data.form.nir + "%" : data.form.nir }}
                 </el-text>
               </el-form-item>
             </el-col>
@@ -350,8 +402,12 @@ defineExpose({ showEdit });
             <el-col :span="8">
               <el-form-item label="B2B :">
                 <el-text class="mx-1">
-                  {{  }}
-                  {{ data.form.isPinned === 1 ? data.form.projectType.join(',') : "关" }}
+                  {{}}
+                  {{
+      data.form.isPinned === 1
+        ? data.form.projectType.join(",")
+        : "关"
+                  }}
                 </el-text>
               </el-form-item>
             </el-col>
@@ -559,6 +615,7 @@ defineExpose({ showEdit });
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   .leftTitle {
     .spanStatus {
       width: 60px !important;
@@ -570,6 +627,7 @@ defineExpose({ showEdit });
       border-radius: 3.125rem;
     }
   }
+
   .rightStatus {
     position: relative;
     width: 128px;
@@ -586,6 +644,7 @@ defineExpose({ showEdit });
       top: 50%;
       transform: translate(-50%, -50%);
       font-size: 20.8px;
+
       &::before {
         position: absolute;
         left: 50%;
@@ -596,6 +655,7 @@ defineExpose({ showEdit });
         aspect-ratio: 1 / 1;
         content: "";
       }
+
       &::after {
         position: absolute;
         left: 50%;
@@ -607,8 +667,10 @@ defineExpose({ showEdit });
         content: "";
       }
     }
+
     > div.isOnlineTrue {
       background-color: #70b51a;
+
       &::after,
       &::before {
         border: 1px #70b51a dashed;
@@ -617,6 +679,7 @@ defineExpose({ showEdit });
 
     > div.isOnlineFalse {
       background-color: #d8261a;
+
       &::after,
       &::before {
         border: 1px #d8261a dashed;
@@ -628,17 +691,21 @@ defineExpose({ showEdit });
     // }
   }
 }
+
 // 配置信息问题答案
 .toConfigure {
   max-height: 31.25rem;
   overflow-y: auto;
+
   :deep {
     .el-form-item {
       margin: 10px 0;
     }
+
     .el-col:nth-of-type(n + 3) {
       border-bottom: 1px dashed #d5d5d5;
     }
+
     .el-form-item__label {
       align-items: flex-start;
       box-sizing: border-box;
@@ -668,5 +735,8 @@ defineExpose({ showEdit });
 
 .isNone {
   display: none;
+}
+.colorgreen {
+  color: #7ecb57;
 }
 </style>

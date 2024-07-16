@@ -43,6 +43,12 @@ const columns = ref<Array<Object>>([
     sortable: true,
     prop: "supplierAccord",
   },
+  {
+    label: "所属国",
+    checked: true,
+    sortable: true,
+    prop: "countryAffiliationName",
+  },
   { label: "余额", checked: true, sortable: true, prop: "balanceUs" },
   {
     label: "待审金额",
@@ -342,12 +348,19 @@ onMounted(async () => {
           align="center"
           prop="supplierAccord"
           show-overflow-tooltip
-          label="供应商名称(所属国家)"
+          label="供应商名称"
         >
         <template #default="{row}">
           {{row.supplierAccord}}
         </template>
       </el-table-column>
+        <el-table-column
+          v-if="checkList.includes('balanceUs')"
+          align="center"
+          prop="countryAffiliationName"
+          show-overflow-tooltip
+          label="国家"
+        />
         <el-table-column
           v-if="checkList.includes('balanceUs')"
           align="center"

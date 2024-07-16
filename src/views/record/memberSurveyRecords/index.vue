@@ -19,6 +19,8 @@ const border = ref(true); // 表格控件-是否展示边框
 const stripe = ref(false); // 表格控件-是否展示斑马条
 const lineHeight = ref<any>("default"); // 表格控件-控制表格大小
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
+// 货币类型
+const currencyType = ref<any>();
 const columns = ref([
   // 表格控件-展示列
 
@@ -26,10 +28,21 @@ const columns = ref([
   { prop: "memberName", label: "所属组", sortable: true, checked: true },
 
   { prop: "projectId", label: "项目id", sortable: true, checked: true },
-  { prop: "randomIdentityId", label: "随机身份", sortable: true, checked: true },
+  {
+    prop: "randomIdentityId",
+    label: "随机身份",
+    sortable: true,
+    checked: true,
+  },
   {
     prop: "projectName",
-    label: "项目名称/客户简称",
+    label: "项目名称",
+    sortable: true,
+    checked: true,
+  },
+  {
+    prop: "customerShortName",
+    label: "客户简称",
     sortable: true,
     checked: true,
   },
@@ -47,6 +60,7 @@ const columns = ref([
 ]);
 const queryForm = reactive<any>({
   memberId: "", // 	会员id
+  randomIdentityId: "", // 	随机身份id
   memberGroupId: "", // 	会员组id
   projectId: "", // 	项目id
   projectName: "", // 	项目名称-模糊查询
@@ -108,6 +122,7 @@ async function fetchData() {
   };
   const { data } = await api.list(params);
   list.value = data.memberSurveyRecordInfoList;
+  currencyType.value = data.currencyType;
   pagination.value.total = data.total;
   listLoading.value = false;
 }
@@ -119,6 +134,7 @@ function setSelectRows(val: string) {
 function onReset() {
   Object.assign(queryForm, {
     memberId: "", // 	会员id
+    randomIdentityId: "", // 	随机身份id
     memberGroupId: "", // 	会员组id
     projectId: "", // 	项目id
     projectName: "", // 	项目名称-模糊查询
@@ -168,7 +184,7 @@ onMounted(async () => {
                 placeholder="会员组"
               /> -->
               <el-input
-                v-model.trim="queryForm.memberGroupId"
+                v-model.trim="queryForm.randomIdentityId"
                 clearable
                 :inline="false"
                 placeholder="随机身份"
@@ -296,8 +312,8 @@ onMounted(async () => {
           prop="randomIdentityId"
           show-overflow-tooltip
           label="随机身份"
-        ><template #default="{ row }">
-            {{ row.randomIdentityId ? row.randomIdentityId : '-' }}
+          ><template #default="{ row }">
+            {{ row.randomIdentityId ? row.randomIdentityId : "-" }}
           </template>
         </el-table-column>
         <el-table-column
@@ -306,8 +322,8 @@ onMounted(async () => {
           prop="memberName"
           show-overflow-tooltip
           label="所属组"
-        ><template #default="{ row }">
-            {{ row.memberName ? row.memberName : '-' }}
+          ><template #default="{ row }">
+            {{ row.memberName ? row.memberName : "-" }}
           </template>
         </el-table-column>
         <el-table-column
@@ -322,9 +338,19 @@ onMounted(async () => {
           align="center"
           prop="projectName"
           show-overflow-tooltip
-          label="项目名称/客户简称"
-        ><template #default="{ row }">
-            {{ row.projectName ? row.projectName : '-' }}
+          label="项目名称"
+          ><template #default="{ row }">
+            {{ row.projectName ? row.projectName : "-" }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="checkList.includes('projectName')"
+          align="center"
+          prop="customerShortName"
+          show-overflow-tooltip
+          label="客户简称"
+          ><template #default="{ row }">
+            {{ row.customerShortName ? row.customerShortName : "-" }}
           </template>
         </el-table-column>
         <el-table-column
@@ -345,8 +371,16 @@ onMounted(async () => {
           label="会员价/供应商价/原价"
         >
           <template #default="{ row }">
-            {{ row.memberChildPrice || 0 }}/ {{ row.supplierPrice || 0 }}/
-            {{ row.doMoneyPrice || 0 }}
+            <el-text v-if="currencyType === 1"
+              >{{ row.memberChildPrice ? row.memberChildPrice + "$" : 0 }}/
+              {{ row.supplierPrice ? row.supplierPrice + "$" : 0 }}/
+              {{ row.doMoneyPrice ? row.doMoneyPrice + "$" : 0 }}</el-text
+            >
+            <el-text v-if="currencyType === 2"
+              >{{ row.memberChildPrice ? row.memberChildPrice + "￥" : 0 }}/
+              {{ row.supplierPrice ? row.supplierPrice + "￥" : 0 }}/
+              {{ row.doMoneyPrice ? row.doMoneyPrice + "￥" : 0 }}</el-text
+            >
           </template>
         </el-table-column>
         <el-table-column
@@ -386,7 +420,11 @@ onMounted(async () => {
           label="副状态"
         >
           <template #default="{ row }">
-            {{ data.viceStatusList[row.viceStatus - 1]  ? data.viceStatusList[row.viceStatus - 1] : '-' }}
+            {{
+              data.viceStatusList[row.viceStatus - 1]
+                ? data.viceStatusList[row.viceStatus - 1]
+                : "-"
+            }}
           </template>
         </ElTableColumn>
         <template #empty>
