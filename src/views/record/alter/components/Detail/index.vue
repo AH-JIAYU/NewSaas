@@ -7,6 +7,16 @@ import type { FormInstance, FormRules } from "element-plus";
 defineOptions({
   name: "ProjectReview",
 });
+// 列表数据
+const list = ref<any>([])
+list.value = [
+    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+  ]
 // 更新数据
 const emits = defineEmits(["success"]);
 // loading
@@ -17,21 +27,17 @@ const arr = ref<any>([]);
 const form = ref<any>();
 // 初始表单数据
 const formData = ref<any>({
+  // 项目Id
+  projectId: "",
+  projectName: "",
   // 审核类型 1:按成功id 2:按失败id 3:全部通过 4:全部失败 5:数据冻结
   settlementType: "",
   // 备注
   remark: "",
   // 	需要修改的数据
   projectSettlementBuilderList: [],
-});
-// 校验
-const formRules = ref<FormRules>({
-  settlementType: [
-    { required: true, message: "请选择审核方式", trigger: "change" },
-  ],
-  projectSettlementBuilderList: [
-    { required: true, message: "请输入至少一个ID", trigger: "blur" },
-  ],
+  // 结算po号
+  po: "",
 });
 // formRef
 const formRef = ref<any>();
@@ -64,8 +70,6 @@ async function onSubmit() {
         } else {
           formData.value.projectSettlementBuilderList = [];
         }
-        console.log('formData.value',formData.value);
-
         // const { status } = await api.review(formData.value);
         // if (status === 1) {
         //   // 更新列表
@@ -87,7 +91,7 @@ async function onSubmit() {
         // }
       } else {
         ElMessage({
-          message: "请检查必填项",
+          message: "请选择审核方式",
           type: "warning",
         });
       }
@@ -97,14 +101,20 @@ async function onSubmit() {
 function closeHandler() {
   // 移除校验
   formRef.value.resetFields();
+  // delete formData.id
   // // 重置表单
   Object.assign(formData.value, {
+    // 项目Id
+    projectId: "",
+    projectName: "",
     // 审核类型 1:按成功id 2:按失败id 3:全部通过 4:全部失败 5:数据冻结
     settlementType: "",
     // 备注
     remark: "",
     // 	需要修改的数据
     projectSettlementBuilderList: [],
+    // 结算po号
+    po: "",
   });
   arr.value = [];
   dialogTableVisible.value = false;
@@ -117,14 +127,13 @@ defineExpose({ showEdit });
   <div>
     <el-drawer
       v-model="dialogTableVisible"
-      title="项目审核"
+      title="详情"
       size="50%"
       :before-close="closeHandler"
     >
       <el-form
         ref="formRef"
         :model="formData"
-        :rules="formRules"
         label-width="174px"
         :inline="false"
         v-loading="loading"
@@ -135,14 +144,14 @@ defineExpose({ showEdit });
             style="display: flex; align-items: center"
             label="变更状态"
           >
-            <el-radio-group v-model="formData.settlementType">
+            <!-- <el-radio-group v-model="formData.settlementType">
               <el-radio :value="1" size="large"> 完成 </el-radio>
               <el-radio :value="2" size="large"> 审核通过 </el-radio>
               <el-radio :value="3" size="large"> 审核失败 </el-radio>
               <el-radio :value="4" size="large"> 数据冻结 </el-radio>
               <el-radio :value="5" size="large"> 被甄别 </el-radio>
               <el-radio :value="6" size="large"> 配额满 </el-radio>
-            </el-radio-group>
+            </el-radio-group> -->
           </el-form-item>
         </div>
         <div class="beizhu">
@@ -155,23 +164,29 @@ defineExpose({ showEdit });
             />
           </el-form-item>
         </div>
-        <div style="margin-top: 10px;">
-          <el-form-item prop="projectSettlementBuilderList" >
+        <div class="po">
+          <el-form-item label="结算PO号">
             <el-input
-              v-model="arr"
-              placeholder="请粘贴ID，每行一个,多个请回车换行"
-              type="textarea"
-              rows="15"
+              v-model="formData.po"
+              class="custom-input"
+              placeholder=""
+              clearable
+              @change=""
             />
           </el-form-item>
         </div>
       </el-form>
-      <template #footer>
-        <div style="flex: auto">
-          <el-button type="primary" @click="onSubmit"> 确定 </el-button>
-          <el-button @click="dialogTableVisible = false"> 取消 </el-button>
-        </div>
-      </template>
+      <el-table style="margin-top: 30px;" :data="list" border>
+          <el-table-column
+            align="center"
+            type="index"
+            label="序号"
+            width="80"
+          />
+          <el-table-column align="center" prop="a" label="ID" />
+          <el-table-column align="center" prop="b" label="初始状态" />
+          <el-table-column align="center" prop="b" label="变更状态" />
+        </el-table>
     </el-drawer>
   </div>
 </template>
