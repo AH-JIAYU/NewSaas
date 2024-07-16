@@ -14,6 +14,7 @@ const form = ref<any>({
   // id: props.id,
   // title: "",
   // radio: 0,
+  minimumAmount: "",
   settlementType: 1, //结算类型: 1:全部结算 2:指定结算
   settlementAmount: "", //	结算类型为全部结算的时候需要填: 结算金额
   addMemberSettlementInfoList: [
@@ -32,13 +33,12 @@ const data = ref<any>({
 const formRules = ref<FormRules>({
   // 校验
 });
-// 切换结算方式
-const changeSettlementType = async (val: any) => {
-  if (val === 2) {
-    const res = await api.getMemberBillAvailableBalance({});
-    data.value.memberSettlementInfoList =
-      res.data.memberBillAvailableBalanceInfoList;
-  }
+// 获取最低结算金额
+const getList = async () => {
+  const res = await api.getMemberBillAvailableBalance({});
+  data.value.memberSettlementInfoList =
+    res.data.memberBillAvailableBalanceInfoList;
+  form.value.minimumAmount = res.data.minimumAmount;
 };
 // 修改换指定会员
 const changeMemberSettlement = (val: any) => {
@@ -50,6 +50,9 @@ const changeMemberSettlement = (val: any) => {
   }
 };
 
+onMounted(async () => {
+  await getList();
+});
 defineExpose({
   submit() {
     return new Promise<void>((resolve) => {
@@ -80,17 +83,14 @@ defineExpose({
       label-suffix="："
     >
       <ElFormItem label="结算方式">
-        <el-radio-group
-          v-model="form.settlementType"
-          @change="changeSettlementType"
-        >
+        <el-radio-group v-model="form.settlementType">
           <el-radio :value="1" size="large"> 全部结算 </el-radio>
           <el-radio :value="2" size="large"> 指定结算 </el-radio>
         </el-radio-group>
       </ElFormItem>
       <template v-if="form.settlementType === 1">
         <ElFormItem label="最低结算额度">
-          <ElInput disabled placeholder="" value="111" />
+          <ElInput disabled placeholder="" :value="form.minimumAmount" />
         </ElFormItem>
         <ElFormItem label="结算金额">
           <ElInput v-model="form.settlementAmount" placeholder="" />
