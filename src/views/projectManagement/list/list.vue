@@ -543,7 +543,10 @@ onMounted(async () => {
           prop="remark"
           align="center"
           label="备注"
-        />
+        ><template #default="{ row }">
+            {{ row.remark ? row.remark : '-' }}
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="checkList.includes('createName')"
           show-overflow-tooltip
