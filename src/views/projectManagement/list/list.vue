@@ -419,7 +419,7 @@ onMounted(async () => {
           <template #default="{ row }">
             {{ row.participation || 0 }}/ {{ row.complete || 0 }}/
             {{ row.num || 0 }}/
-            {{ row.limitedQuantity || '-' }}
+            {{ row.limitedQuantity || "-" }}
           </template>
         </el-table-column>
         <el-table-column
@@ -431,7 +431,11 @@ onMounted(async () => {
         >
           <template #default="{ row }">
             {{
-              projectManagementListStore.allocationTypeList[row.allocationType] ?projectManagementListStore.allocationTypeList[row.allocationType] : '-'
+              projectManagementListStore.allocationTypeList[row.allocationType]
+                ? projectManagementListStore.allocationTypeList[
+                    row.allocationType
+                  ]
+                : "-"
             }}
           </template>
         </el-table-column>
@@ -464,7 +468,11 @@ onMounted(async () => {
           prop="ir"
           align="center"
           label="IR/NIR"
-        />
+        >
+          <template #default="{ row }">
+            {{ row.ir ? row.ir + "%" : row.ir }} / {{ row.nir ? row.nir + "%" : row.nir }}
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="checkList.includes('countryIdList')"
           show-overflow-tooltip
@@ -543,8 +551,8 @@ onMounted(async () => {
           prop="remark"
           align="center"
           label="备注"
-        ><template #default="{ row }">
-            {{ row.remark ? row.remark : '-' }}
+          ><template #default="{ row }">
+            {{ row.remark ? row.remark : "-" }}
           </template>
         </el-table-column>
         <el-table-column
