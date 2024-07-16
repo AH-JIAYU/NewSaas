@@ -304,7 +304,17 @@ const getProjectProblemList = async (id: string | number, judge: boolean) => {
       const res = await api.getProjectProblemList(params);
       //问题列表 - 显示的数据
       props.leftTab.data.configurationInformation.ProjectProblemInfoList =
-        res.data.getProjectProblemInfoList;
+        res.data.getProjectProblemInfoList.map((item: any) => {
+          return {
+            ...item,
+            getProjectAnswerInfoList: item.getProjectAnswerInfoList.sort(
+              (a: any, b: any) =>
+                a.answerValue.replace(/^[a-zA-Z]+/, "") -
+                b.answerValue.replace(/^[a-zA-Z]+/, "")
+            ),
+          };
+        });
+
       /**
        * 如果不是编辑的时候正常清空提交和回显的数据
        * 编辑时不能清除,答案(提交list)是接口返回的
