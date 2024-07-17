@@ -186,8 +186,14 @@ defineExpose({ showEdit });
               />
               <el-step
                 title="已审核"
-                :description="data.form.projectSettlementStatusSet[0].operationTime"
-                :icon="data.form.projectSettlementStatusSet[0].settlementStatus >= 2 ? CircleCheck : Position"
+                :description="
+                  data.form.projectSettlementStatusSet[0].operationTime
+                "
+                :icon="
+                  data.form.projectSettlementStatusSet[0].settlementStatus >= 2
+                    ? CircleCheck
+                    : Position
+                "
               />
               <el-step
                 title="已开票"
@@ -211,19 +217,51 @@ defineExpose({ showEdit });
             :gutter="20"
           >
             <el-col :span="1"></el-col>
-            <el-col  :class="{'colorgreen' : data.form.projectSettlementStatusSet[0].settlementStatus >= 1}" :span="5">
-              <span style="margin-left: 25.5%">{{ data.form.projectSettlementStatusSet[0].operationName }}</span>
+            <el-col
+              :class="{
+                colorgreen:
+                  data.form.projectSettlementStatusSet[0].settlementStatus >= 1,
+              }"
+              :span="5"
+            >
+              <span style="margin-left: 25.5%">{{
+                data.form.projectSettlementStatusSet[0].operationName
+              }}</span>
             </el-col>
-            <el-col  :class="{'colorgreen' : data.form.projectSettlementStatusSet[0].settlementStatus >= 2}" :span="5">
+            <el-col
+              :class="{
+                colorgreen:
+                  data.form.projectSettlementStatusSet[0].settlementStatus >= 2,
+              }"
+              :span="5"
+            >
               <span style="margin-left: 19.5%">操作员</span>
             </el-col>
-            <el-col  :class="{'colorgreen' : data.form.projectSettlementStatusSet[0].settlementStatus >= 3}" :span="5">
+            <el-col
+              :class="{
+                colorgreen:
+                  data.form.projectSettlementStatusSet[0].settlementStatus >= 3,
+              }"
+              :span="5"
+            >
               <span style="margin-left: 12.5%">操作员</span>
             </el-col>
-            <el-col  :class="{'colorgreen' : data.form.projectSettlementStatusSet[0].settlementStatus >= 4}" :span="4">
+            <el-col
+              :class="{
+                colorgreen:
+                  data.form.projectSettlementStatusSet[0].settlementStatus >= 4,
+              }"
+              :span="4"
+            >
               <span style="margin-left: 8.5%">操作员</span>
             </el-col>
-            <el-col  :class="{'colorgreen' : data.form.projectSettlementStatusSet[0].settlementStatus >= 5}" :span="4">
+            <el-col
+              :class="{
+                colorgreen:
+                  data.form.projectSettlementStatusSet[0].settlementStatus >= 5,
+              }"
+              :span="4"
+            >
               <span style="margin-left: 28.5%">操作员</span>
             </el-col>
           </el-row>
@@ -290,18 +328,18 @@ defineExpose({ showEdit });
                   <template
                     v-if="comCountryId(data.form.countryIdList).length > 4"
                   >
-                    <el-tooltip
+                    <!-- <el-tooltip
                       class="box-item"
                       effect="dark"
                       :content="comCountryId(data.form.countryIdList).join(',')"
                       placement="top"
-                    >
-                      <el-link type="primary">{{
-                        comCountryId(data.form.countryIdList).length === 185
-                          ? "全球"
-                          : comCountryId(data.form.countryIdList).length
-                      }}</el-link>
-                    </el-tooltip>
+                    > -->
+                    <el-link type="primary">{{
+                      comCountryId(data.form.countryIdList).length === 185
+                        ? "全球"
+                        : comCountryId(data.form.countryIdList).length
+                    }}</el-link>
+                    <!-- </el-tooltip> -->
                   </template>
                   <template v-else>
                     <span
@@ -429,8 +467,14 @@ defineExpose({ showEdit });
         </el-card>
         <el-card class="box-card">
           <template #header>
-            <div class="card-header">
+            <div class="peizjo-header">
               <span>配置信息</span>
+              <span style="margin-left: 50px;" v-if="data.form.countryName"
+                >{{ data.form.countryName }}</span
+              >
+              <span style="margin-left: 30px;" v-if="data.form.projectProblemCategoryName"
+                >{{ data.form.projectProblemCategoryName }}</span
+              >
             </div>
           </template>
           <el-row
@@ -692,6 +736,11 @@ defineExpose({ showEdit });
   }
 }
 
+.peizjo-header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
 // 配置信息问题答案
 .toConfigure {
   max-height: 31.25rem;
