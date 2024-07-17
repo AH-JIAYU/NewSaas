@@ -25,7 +25,6 @@ const isEncryption = ref(false);
 const secretKeyConfigList = ref<any>([]);
 
 const changeConfigInfoList = (val: any) => {
-  console.log("val", val);
   if (val) {
     localToptTab.value.tenantCustomerConfigInfoList.push({
       callbackWay: 1, //	回调方式:1:服务端回调 2:重定向回调
@@ -215,15 +214,6 @@ nextTick(() => {
               <div class="card-header">
                 <span>重定向配置</span>
               </div>
-              <!-- <div class="card-header">
-                <el-checkbox
-                  v-model="isEncryption"
-                  size="large"
-                  @change="changeConfigInfoList"
-                >
-                  <span>重定向配置</span>
-                </el-checkbox>
-              </div> -->
             </template>
             <el-row :gutter="24">
               <el-col :span="24">
@@ -240,45 +230,54 @@ nextTick(() => {
                   />
                 </el-form-item>
               </el-col>
-              <el-col
-                :span="24"
+              <template
                 v-if="
                   localToptTab.tenantCustomerConfigInfoList[0].isEncryption ===
                   1
                 "
               >
-                <el-form-item label="加密方式">
-                  <el-select
-                    @change="changeCustomerConfigInfo($event, 0)"
-                    clearable
-                    v-model="
-                      localToptTab.tenantCustomerConfigInfoList[0].encryptionId
-                    "
-                  >
-                    <el-option
-                      v-for="item in secretKeyConfigList"
-                      :label="item.name"
-                      :value="item.id"
-                    ></el-option>
-                  </el-select>
-                </el-form-item>
-              </el-col>
-              <el-col
-                :span="24"
-                v-if="
-                  localToptTab.tenantCustomerConfigInfoList[0].isEncryption ===
-                  1
-                "
-              >
-                <el-form-item label="密钥">
-                  <el-input
-                    disabled
-                    v-model="
-                      localToptTab.tenantCustomerConfigInfoList[0].secretKey
-                    "
-                  />
-                </el-form-item>
-              </el-col>
+                <el-col :span="24">
+                  <el-form-item label="加密方式">
+                    <el-select
+                      @change="changeCustomerConfigInfo($event, 0)"
+                      clearable
+                      v-model="
+                        localToptTab.tenantCustomerConfigInfoList[0]
+                          .encryptionId
+                      "
+                    >
+                      <el-option
+                        v-for="item in secretKeyConfigList"
+                        :label="item.name"
+                        :value="item.id"
+                      ></el-option>
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="24">
+                  <el-form-item label="密钥">
+                    <el-input
+                      disabled
+                      v-model="
+                        localToptTab.tenantCustomerConfigInfoList[0].secretKey
+                      "
+                    />
+                  </el-form-item>
+                </el-col>
+              </template>
+              <template v-else>
+                <el-col :span="24">
+                  <el-form-item label="IP白名单">
+                    <el-input
+                      placeholder="输入ip两个ip之间用,分开"
+                      v-model="
+                        localToptTab.tenantCustomerConfigInfoList[0].whitelistIp
+                      "
+                    />
+                  </el-form-item>
+                </el-col>
+              </template>
+
               <el-col :span="24">
                 <el-form-item label="成功回调">
                   <span v-pre>
@@ -367,45 +366,54 @@ nextTick(() => {
                   />
                 </el-form-item>
               </el-col>
-              <el-col
-                :span="24"
+              <template
                 v-if="
                   localToptTab.tenantCustomerConfigInfoList[1].isEncryption ===
                   1
                 "
               >
-                <el-form-item label="加密方式">
-                  <el-select
-                    @change="changeCustomerConfigInfo($event, 1)"
-                    clearable
-                    v-model="
-                      localToptTab.tenantCustomerConfigInfoList[1].encryptionId
-                    "
-                  >
-                    <el-option
-                      v-for="item in secretKeyConfigList"
-                      :label="item.name"
-                      :value="item.id"
-                    ></el-option>
-                  </el-select>
-                </el-form-item>
-              </el-col>
-              <el-col
-                :span="24"
-                v-if="
-                  localToptTab.tenantCustomerConfigInfoList[1].isEncryption ===
-                  1
-                "
-              >
-                <el-form-item label="密钥">
-                  <el-input
-                    disabled
-                    v-model="
-                      localToptTab.tenantCustomerConfigInfoList[1].secretKey
-                    "
-                  />
-                </el-form-item>
-              </el-col>
+                <el-col :span="24">
+                  <el-form-item label="加密方式">
+                    <el-select
+                      @change="changeCustomerConfigInfo($event, 1)"
+                      clearable
+                      v-model="
+                        localToptTab.tenantCustomerConfigInfoList[1]
+                          .encryptionId
+                      "
+                    >
+                      <el-option
+                        v-for="item in secretKeyConfigList"
+                        :label="item.name"
+                        :value="item.id"
+                      ></el-option>
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="24">
+                  <el-form-item label="密钥">
+                    <el-input
+                      disabled
+                      v-model="
+                        localToptTab.tenantCustomerConfigInfoList[1].secretKey
+                      "
+                    />
+                  </el-form-item>
+                </el-col>
+              </template>
+              <template v-else>
+                <el-col :span="24">
+                  <el-form-item label="IP白名单">
+                    <el-input
+                      placeholder="输入ip两个ip之间用,分开"
+                      v-model="
+                        localToptTab.tenantCustomerConfigInfoList[1].whitelistIp
+                      "
+                    />
+                  </el-form-item>
+                </el-col>
+              </template>
+
               <el-col :span="24">
                 <el-form-item label="成功回调">
                   <span v-pre

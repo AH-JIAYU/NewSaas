@@ -188,9 +188,10 @@ function onSubmit() {
           :rules="formRules"
           label-width="140px"
           :inline="false"
+          label-position="left"
         >
           <el-tab-pane label="基本设置" name="基本设置">
-            <el-row :gutter="20">
+            <el-row :gutter="20" style="margin: 0">
               <el-col :span="3">
                 <el-form-item label="注册开关">
                   <el-switch
@@ -215,27 +216,37 @@ function onSubmit() {
                   />
                 </el-form-item>
               </el-col>
+              <el-col :span="24">
+                <el-form-item label="网站名称" prop="webName">
+                  <el-input v-model="form.webName" style="width: 18rem" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="keyWords">
+                  <el-input v-model="form.keyWords" style="width: 18rem" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="站点系统域名" prop="supplierURL">
+                  <el-input v-model="form.supplierURL" style="width: 8rem" />
+                  <el-text class="mx-1"
+                    >.front-supplier.surveyssaas.com</el-text
+                  >
+                  <el-button
+                    class="copy"
+                    :data-clipboard-text="`${form.supplierURL}.front-supplier.surveyssaas.com`"
+                    type="primary"
+                    link
+                    >复制</el-button
+                  >
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item>
+                  <el-button type="primary" @click="onSubmit"> 确认 </el-button>
+                </el-form-item>
+              </el-col>
             </el-row>
-            <el-form-item label="网站名称" prop="webName">
-              <el-input v-model="form.webName" style="width: 18rem" />
-            </el-form-item>
-            <el-form-item label="keyWords">
-              <el-input v-model="form.keyWords" style="width: 18rem" />
-            </el-form-item>
-            <el-form-item label="供应商网址" prop="supplierURL">
-              <el-input v-model="form.supplierURL" style="width: 8rem" />
-              <el-text class="mx-1">.front-supplier.surveyssaas.com</el-text>
-              <el-button
-                class="copy"
-                :data-clipboard-text="`${form.supplierURL}.front-supplier.surveyssaas.com`"
-                type="primary"
-                link
-                >复制</el-button
-              >
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="onSubmit"> 确认 </el-button>
-            </el-form-item>
           </el-tab-pane>
           <el-tab-pane label="高级设置" name="高级设置">
             <el-form-item label="默认供应商价格比例" prop="">
