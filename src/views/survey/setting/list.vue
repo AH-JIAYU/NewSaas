@@ -236,74 +236,100 @@ function onSubmit() {
             </el-form-item>
           </el-tab-pane>
           <el-tab-pane label="高级设置" name="高级设置">
-            <el-form-item label="默认会员价格比例" prop="confirmPassword">
-              <el-input
-                v-model.number="form.priceProportion"
-                style="width: 18rem"
-                placeholder=""
-                ><template #append>%</template>
-              </el-input>
-            </el-form-item>
-            <el-form-item label="最低结算金额" prop="confirmPassword">
-              <el-input
-                v-model.number="form.minimumAmount"
-                style="width: 18rem"
-                placeholder=""
-              />
-            </el-form-item>
-            <el-form-item label="会员税点" prop="confirmPassword">
-              <el-input
-                v-model.number="form.taxPointsProportion"
-                style="width: 18rem"
-                placeholder=""
-                ><template #append>%</template>
-              </el-input>
-            </el-form-item>
-            <el-form-item label="调查限价" prop="confirmPassword">
-              <el-input
-                v-model.number="form.fixedPrice"
-                style="width: 18rem"
-                placeholder=""
-              />
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="onSubmit"> 确认 </el-button>
-            </el-form-item>
+            <el-row :gutter="20">
+              <el-col :span="24">
+                <el-form-item label="默认会员价格比例" prop="confirmPassword">
+                  <el-input
+                    v-model.number="form.priceProportion"
+                    style="width: 18rem"
+                    placeholder=""
+                    ><template #append>%</template>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="最低结算金额" prop="confirmPassword">
+                  <el-input
+                    v-model.number="form.minimumAmount"
+                    style="width: 18rem"
+                    placeholder=""
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="会员税点" prop="confirmPassword">
+                  <el-input
+                    v-model.number="form.taxPointsProportion"
+                    style="width: 18rem"
+                    placeholder=""
+                    ><template #append>%</template>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="调查限价" prop="confirmPassword">
+                  <el-input
+                    v-model.number="form.fixedPrice"
+                    style="width: 18rem"
+                    placeholder=""
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item>
+                  <el-button type="primary"> 确认 </el-button>
+                </el-form-item>
+              </el-col>
+            </el-row>
           </el-tab-pane>
         </el-form>
         <el-form label-width="130px">
           <el-tab-pane label="联系我们" name="联系我们">
-            <el-form-item label="电子邮箱" prop="originalPassword">
-              <el-input
-                style="width: 18rem"
-                v-model="form.keyWords"
-                placeholder=""
-              />
-            </el-form-item>
-            <el-form-item label="手机号码" prop="newPassword">
-              <el-input
-                style="width: 18rem"
-                v-model="form.keyWords"
-                placeholder=""
-              />
-            </el-form-item>
-            <el-form-item label="QQ号码" prop="confirmPassword">
-              <el-input
-                style="width: 18rem"
-                v-model="form.keyWords"
-                placeholder=""
-              />
-            </el-form-item>
-            <el-form-item label="公司地址" prop="confirmPassword">
-              <el-input
-                style="width: 18rem"
-                v-model="form.keyWords"
-                placeholder=""
-              />
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary"> 确认 </el-button>
-            </el-form-item>
+            <el-row :gutter="20">
+              <el-col :span="24">
+                <el-form-item label="电子邮箱" prop="email">
+                  <el-input
+                    style="width: 18rem"
+                    v-model="form.keyWords"
+                    placeholder=""
+                    @blur="chengAccount"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="手机号码" prop="phone">
+                  <el-input
+                    style="width: 18rem"
+                    v-model="form.keyWords"
+                    placeholder=""
+                    @blur="chengAccount"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="QQ号码" prop="">
+                  <el-input
+                    style="width: 18rem"
+                    v-model="form.keyWords"
+                    placeholder=""
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="公司地址" prop="">
+                  <el-input
+                    style="width: 18rem"
+                    v-model="form.keyWords"
+                    placeholder=""
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item>
+                  <el-button type="primary"> 确认 </el-button>
+                </el-form-item>
+              </el-col>
+            </el-row>
           </el-tab-pane>
         </el-form>
       </el-tabs>
