@@ -27,7 +27,7 @@ const props: any = defineProps({
   leftTab: Object,
   tabIndex: Number,
 });
-const url: string = "例： https://www.xxxx.com/8994343?uid={{$uid}}";
+const url: string = "例：https://www.xxxx.com/8994343?uid={{$uid}}";
 const activeName = ref("basicSettings"); // tabs
 const formRef = ref<any>(); // Ref 在edit中进行校验
 const fold = ref(!props.tabIndex ? true : false); // 折叠 描述配额
@@ -304,7 +304,17 @@ const getProjectProblemList = async (id: string | number, judge: boolean) => {
       const res = await api.getProjectProblemList(params);
       //问题列表 - 显示的数据
       props.leftTab.data.configurationInformation.ProjectProblemInfoList =
-        res.data.getProjectProblemInfoList;
+        res.data.getProjectProblemInfoList.map((item: any) => {
+          return {
+            ...item,
+            getProjectAnswerInfoList: item.getProjectAnswerInfoList.sort(
+              (a: any, b: any) =>
+                a.answerValue.replace(/^[a-zA-Z]+/, "") -
+                b.answerValue.replace(/^[a-zA-Z]+/, "")
+            ),
+          };
+        });
+
       /**
        * 如果不是编辑的时候正常清空提交和回显的数据
        * 编辑时不能清除,答案(提交list)是接口返回的
@@ -585,7 +595,7 @@ nextTick(() => {
                     </el-tooltip>
                   </div>
                 </template>
-                <el-input-number
+                <el-input
                   style="height: 2rem; width: 100%"
                   v-model="props.leftTab.minimumDuration"
                   :min="1"
@@ -594,7 +604,8 @@ nextTick(() => {
                   controls-position="right"
                   size="large"
                   @keydown="handleInput"
-                />
+                ><template #append> min </template>
+                </el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -677,7 +688,7 @@ nextTick(() => {
                 </el-icon>
                 <div class="el-upload__text">上传</div>
                 <template #tip>
-                  <div class="el-upload__tip">jpg/png单文件大小小于10 mb</div>
+                  <div class="el-upload__tip">支持上传JPG/JPEG/PNG图片，小于10MB</div>
                 </template>
               </el-upload>
 
@@ -980,7 +991,7 @@ nextTick(() => {
             </el-col>
           </el-row>
           <el-row :gutter="20">
-            <el-col :span="4">
+            <!-- <el-col :span="4">
               <el-form-item label="时差检测">
                 <el-switch
                   v-model="props.leftTab.timeDifferenceDetection"
@@ -997,7 +1008,7 @@ nextTick(() => {
                   :inactive-value="2"
                 />
               </el-form-item>
-            </el-col>
+            </el-col> -->
             <el-col :span="4">
               <el-form-item label="IP一致性检测">
                 <el-switch

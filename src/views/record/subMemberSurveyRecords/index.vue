@@ -39,7 +39,13 @@ const columns = ref([
   },
   {
     prop: "projectName",
-    label: "项目名称/客户简称",
+    label: "项目名称",
+    sortable: true,
+    checked: true,
+  },
+  {
+    prop: "customerShortName",
+    label: "客户简称",
     sortable: true,
     checked: true,
   },
@@ -57,6 +63,7 @@ const columns = ref([
 ]);
 const queryForm = reactive<any>({
   memberChildId: "", // 	子会员id
+  randomIdentityId: "", // 	随机身份id
   memberChildGroupId: "", // 	子会员组id
   tenantSupplierId: "", // 	供应商id
   projectId: "", // 	项目id
@@ -65,6 +72,8 @@ const queryForm = reactive<any>({
   ip: "", // 	ip-模糊查询
   surveyStatus: "", // 调查状态:1 C=完成/待审核 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
 });
+// 货币类型
+const currencyType = ref<any>();
 
 const data = reactive<any>({
   // 分配类型
@@ -118,6 +127,7 @@ async function fetchData() {
     ...queryForm,
   };
   const { data } = await api.list(params);
+  currencyType.value = data.currencyType;
   list.value = data.memberChildSurveyRecordInfoList;
   pagination.value.total = data.total;
   listLoading.value = false;
@@ -130,6 +140,7 @@ function setSelectRows(val: string) {
 function onReset() {
   Object.assign(queryForm, {
     memberChildId: "", // 	子会员id
+    randomIdentityId: "", // 	随机身份id
     memberChildGroupId: "", // 	子会员组id
     tenantSupplierId: "", // 	供应商id
     projectId: "", // 	项目id
@@ -180,7 +191,7 @@ onMounted(async () => {
                 placeholder="子会员组"
               /> -->
               <el-input
-                v-model.trim="queryForm.memberChildGroupId"
+                v-model.trim="queryForm.randomIdentityId"
                 clearable
                 :inline="false"
                 placeholder="随机身份"
@@ -348,9 +359,19 @@ onMounted(async () => {
           align="center"
           prop="projectName"
           show-overflow-tooltip
-          label="项目名称/客户简称"
-        ><template #default="{ row }">
-            {{ row.projectName ? row.projectName : '-' }}
+          label="项目名称"
+          ><template #default="{ row }">
+            {{ row.projectName ? row.projectName : "-" }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="checkList.includes('projectName')"
+          align="center"
+          prop="customerShortName"
+          show-overflow-tooltip
+          label="客户简称"
+          ><template #default="{ row }">
+            {{ row.customerShortName ? row.customerShortName : "-" }}
           </template>
         </el-table-column>
         <el-table-column
@@ -371,8 +392,16 @@ onMounted(async () => {
           label="子会员价/供应商价/原价"
         >
           <template #default="{ row }">
-            {{ row.memberChildPrice || 0 }}/ {{ row.supplierPrice || 0 }}/
-            {{ row.doMoneyPrice || 0 }}
+            <el-text v-if="currencyType === 1"
+              >{{ row.memberChildPrice ? row.memberChildPrice + "$" : 0 }}/
+              {{ row.supplierPrice ? row.supplierPrice + "$" : 0 }}/
+              {{ row.doMoneyPrice ? row.doMoneyPrice + "$" : 0 }}</el-text
+            >
+            <el-text v-if="currencyType === 2"
+              >{{ row.memberChildPrice ? row.memberChildPrice + "￥" : 0 }}/
+              {{ row.supplierPrice ? row.supplierPrice + "￥" : 0 }}/
+              {{ row.doMoneyPrice ? row.doMoneyPrice + "￥" : 0 }}</el-text
+            >
           </template>
         </el-table-column>
         <el-table-column
@@ -412,7 +441,11 @@ onMounted(async () => {
           label="副状态"
         >
           <template #default="{ row }">
-            {{ data.viceStatusList[row.viceStatus - 1] ? data.viceStatusList[row.viceStatus - 1] : '-' }}
+            {{
+              data.viceStatusList[row.viceStatus - 1]
+                ? data.viceStatusList[row.viceStatus - 1]
+                : "-"
+            }}
           </template>
         </ElTableColumn>
         <template #empty>

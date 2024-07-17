@@ -95,10 +95,11 @@ function handleDelete(row: any) {
     })
     .catch(() => {});
 }
-
+// 查询
 const queryForm = reactive<any>({
   customerShortName: "",
   customerStatus: null,
+  antecedentQuestionnaire: null,
 });
 
 // 每页数量切换
@@ -115,6 +116,7 @@ function onReset() {
   Object.assign(queryForm, {
     customerShortName: "",
     customerStatus: null,
+    antecedentQuestionnaire: null,
   });
   queryData();
 }
@@ -181,7 +183,7 @@ onMounted(() => {
             </el-form-item>
             <el-form-item v-show="!fold">
               <el-select
-                v-model="queryForm.customerStatus"
+                v-model="queryForm.antecedentQuestionnaire"
                 clearable
                 placeholder="前置问卷"
               >

@@ -61,7 +61,7 @@ async function getInfo() {
 
 // 查询当前路由有那些权限
 function rowPermission(permissionID: any) {
-  return permissionData?.value.filter((item: any) => permissionID === item.menuId)
+  return permissionData?.value?.filter((item: any) => permissionID === item.menuId)
 }
 // 暴露
 defineExpose({
@@ -120,7 +120,7 @@ defineExpose({
                 {{ data.meta.title }}
               </div>
               <div class="permission">
-                <div v-if="rowPermission(data.id).length" class="permissions">
+                <div v-if="rowPermission(data.id)?.length" class="permissions">
                   <ElCheckboxGroup v-model="form.permission">
                     <ElCheckbox v-for="auth in rowPermission(data.id)" :key="auth.id" :value="auth.id">
                       {{ auth.label }}
