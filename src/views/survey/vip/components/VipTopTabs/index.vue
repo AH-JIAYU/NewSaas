@@ -167,6 +167,15 @@ nextTick(() => {
             </template>
             <el-row :gutter="20">
               <el-col :span="4">
+                <el-form-item label="会员状态">
+                  <el-switch
+                    :active-value="2"
+                    :inactive-value="1"
+                    v-model="localToptTab.memberStatus"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="4">
                 <el-form-item label="B2B">
                   <el-switch
                     :active-value="2"
@@ -184,16 +193,7 @@ nextTick(() => {
                   />
                 </el-form-item>
               </el-col>
-              <el-col :span="4">
-                <el-form-item label="会员状态">
-                  <el-switch
-                    :active-value="2"
-                    :inactive-value="1"
-                    v-model="localToptTab.memberStatus"
-                  />
-                </el-form-item>
-              </el-col>
-              <el-col :span="4">
+              <el-col :span="5">
                 <el-form-item label="免审">
                   <el-switch
                     :active-value="2"

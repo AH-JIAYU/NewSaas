@@ -186,7 +186,6 @@ async function fetchData() {
 function setSelectRows(val: any) {
   selectRows.value = val;
 }
-
 onMounted(async () => {
   columns.value.forEach((item: any) => {
     if (item.checked) {
@@ -384,8 +383,7 @@ onMounted(async () => {
         >
         <template #default="{ row }">
           <div v-for="item in supplierLevelList" :key="item.tenantSupplierLevelId" :value="item.levelNameOrAdditionRatio">
-            <el-text v-if="item.tenantSupplierLevelId === row.supplierLevelId" class="mx-1">{{ item.levelNameOrAdditionRatio}}</el-text>
-            <el-text v-else class="mx-1">-</el-text>
+            <el-text v-if="item.tenantSupplierLevelId === row.supplierLevelId" class="mx-1">{{ item.levelNameOrAdditionRatio }}</el-text>
           </div>
           </template>
       </el-table-column>
@@ -396,12 +394,10 @@ onMounted(async () => {
           label="B2B|B2C"
         >
           <template #default="{ row }">
-            <el-text v-if="row.b2bStatus && row.b2bStatus === 2" class="mx-1"><div class="i-fluent-emoji-flat:check-mark-button w-1.5em h-1.5em"></div></el-text>
-            <el-text v-else class="mx-1"><div class="i-emojione:cross-mark-button w-1.5em h-1.5em"></div></el-text> |
-            <el-text v-if="row.b2cStatus && row.b2cStatus === 2" class="mx-1"><div class="i-fluent-emoji-flat:check-mark-button w-1.5em h-1.5em"></div></el-text>
-            <el-text v-else class="mx-1"><div class="i-emojione:cross-mark-button w-1.5em h-1.5em"></div></el-text>
-            <!-- {{ row.b2bStatus && row.b2bStatus === 2 ? "√" : "×" }} |
-            {{ row.b2cStatus && row.b2cStatus === 2 ? "√" : "×" }} -->
+            <el-text v-if="row.b2bStatus && row.b2bStatus === 2" class="mx-1"><div class="i-fluent:checkmark-12-filled w-1.5em h-1.5em"></div></el-text>
+            <el-text v-else class="mx-1"><div class="i-entypo:cross w-1.5em h-1.5em"></div></el-text> |
+            <el-text v-if="row.b2cStatus && row.b2cStatus === 2" class="mx-1"><div class="i-fluent:checkmark-12-filled w-1.5em h-1.5em"></div></el-text>
+            <el-text v-else class="mx-1"><div class="i-entypo:cross w-1.5em h-1.5em"></div></el-text>
           </template>
         </el-table-column>
         <el-table-column

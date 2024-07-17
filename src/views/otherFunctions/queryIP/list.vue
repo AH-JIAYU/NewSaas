@@ -15,6 +15,8 @@ async function ParsingEncryption() {
   loading.value = true
   const arr = formIp.value.split('\n');
   const res = await api.list({ ip: arr })
+  console.log('res',res);
+
   loading.value = false
   const bbb: any = []
   res.data.forEach((item: any) => {

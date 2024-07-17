@@ -36,7 +36,7 @@ const rules = reactive<any>({
   supplierLevelId: [
     { required: true, message: "请选择供应商等级", trigger: "change" },
   ],
-  supplierType: [
+  type: [
     { required: true, message: "请选择供应商类型", trigger: "change" },
   ],
 });
@@ -138,7 +138,7 @@ nextTick(() => {
             </template>
             <el-row :gutter="10">
               <el-col :span="8">
-                <el-form-item label="供应商类型" prop="supplierType">
+                <el-form-item label="供应商类型" prop="type">
                   <el-select
                     v-model="props.leftTab.type"
                     value-key=""

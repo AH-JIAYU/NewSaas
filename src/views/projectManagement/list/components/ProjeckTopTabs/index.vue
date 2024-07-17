@@ -447,7 +447,7 @@ nextTick(() => {
 
 <template>
   <ElForm
-    label-width="120px"
+    label-width="85px"
     :rules="rules"
     ref="formRef"
     :model="props.leftTab"

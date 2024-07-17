@@ -450,13 +450,19 @@ function handleMoreOperating(command: string, row: any) {
           prop="projectName"
           align="center"
           label="项目名称"
-        />
+        > <template #default="{ row }">
+            {{ row.projectName ? row.projectName : "-" }}
+          </template>
+        </el-table-column>
         <el-table-column
           show-overflow-tooltip
           prop="customerName"
           align="center"
           label="客户简称/标识"
-        />
+        > <template #default="{ row }">
+            {{ row.customerName ? row.customerName : "-" }}
+          </template>
+        </el-table-column>
         <el-table-column
           show-overflow-tooltip
           prop="d"
@@ -555,7 +561,10 @@ function handleMoreOperating(command: string, row: any) {
           prop="remark"
           align="center"
           label="备注"
-        />
+        > <template #default="{ row }">
+            {{ row.remark ? row.remark : "-" }}
+          </template>
+        </el-table-column>
         <el-table-column align="center" label="操作" width="190">
           <template #default="{ row }">
             <ElSpace>
