@@ -1,84 +1,91 @@
-import { setupLayouts } from 'virtual:meta-layouts'
-import generatedRoutes from 'virtual:generated-pages'
-import type { RouteRecordRaw } from 'vue-router'
-import MultilevelMenuExample from './modules/multilevel.menu.example'
-import type { Route } from '#/global'
-import { $t } from '@/locales'
-import useSettingsStore from '@/store/modules/settings'
+import { setupLayouts } from "virtual:meta-layouts";
+import generatedRoutes from "virtual:generated-pages";
+import type { RouteRecordRaw } from "vue-router";
+import MultilevelMenuExample from "./modules/multilevel.menu.example";
+import type { Route } from "#/global";
+import { $t } from "@/locales";
+import useSettingsStore from "@/store/modules/settings";
 
 // 固定路由（默认路由）
 const constantRoutes: RouteRecordRaw[] = [
   {
-    path: '/login',
-    name: 'login',
-    component: () => import('@/views/login.vue'),
+    path: "/login",
+    name: "login",
+    component: () => import("@/views/login.vue"),
     meta: {
       whiteList: true,
-      title: '登录',
-      i18n: $t('route.login'),
+      title: "登录",
+      i18n: $t("route.login"),
     },
+  },
+  // 重定向
+  {
+    path: "/redirect",
+    name: "redirect",
+    component: () => import("@/views/redirect.vue"),
+    meta: { whiteList: true },
   },
   {
-    path: '/:all(.*)*',
-    name: 'notFound',
-    component: () => import('@/views/[...all].vue'),
+    path: "/:all(.*)*",
+    name: "notFound",
+    component: () => import("@/views/[...all].vue"),
     meta: {
-      title: '找不到页面',
+      title: "找不到页面",
     },
   },
-]
+];
 
 // 系统路由
 const systemRoutes: RouteRecordRaw[] = [
   {
-    path: '/',
-    component: () => import('@/layouts/index.vue'),
+    path: "/",
+    component: () => import("@/layouts/index.vue"),
     meta: {
       title: () => useSettingsStore().settings.home.title,
       breadcrumb: false,
     },
     children: [
       {
-        path: '',
-        component: () => import('@/views/index.vue'),
+        path: "",
+        component: () => import("@/views/index.vue"),
         meta: {
           title: () => useSettingsStore().settings.home.title,
-          i18n: $t('route.home'),
-          icon: 'i-ant-design:home-twotone',
+          i18n: $t("route.home"),
+          icon: "i-ant-design:home-twotone",
           breadcrumb: false,
         },
       },
       {
-        path: 'reload',
-        name: 'reload',
-        component: () => import('@/views/reload.vue'),
+        path: "reload",
+        name: "reload",
+        component: () => import("@/views/reload.vue"),
         meta: {
-          title: '重新加载',
+          title: "重新加载",
           breadcrumb: false,
         },
       },
       {
-        path: 'personal/notification',
-        name: 'personalNotification',
-        component: () => import('@/views/personal/notification.vue'),
+        path: "personal/notification",
+        name: "personalNotification",
+        component: () => import("@/views/personal/notification.vue"),
         meta: {
-          title: '通知中心',
-          i18n: $t('route.personal.notification'),
+          title: "通知中心",
+          i18n: $t("route.personal.notification"),
         },
       },
       {
-        path: 'personal/setting',
-        name: 'personalSetting',
-        component: () => import('@/views/personal/index.vue'),
+        path: "personal/setting",
+        name: "personalSetting",
+        component: () => import("@/views/personal/index.vue"),
         meta: {
-          title: '个人设置',
-          i18n: $t('route.personal.setting'),
-          cache: 'personalEditPassword',
+          title: "个人设置",
+          i18n: $t("route.personal.setting"),
+          cache: "personalEditPassword",
         },
       },
     ],
   },
-]
+];
 
 // 动态路由（异步路由、导航栏路由）
 const asyncRoutes: Route.recordMainRaw[] = [
@@ -92,15 +99,21 @@ const asyncRoutes: Route.recordMainRaw[] = [
   //   children: MultilevelMenuExample,
 
   // },
-]
+];
 
 const constantRoutesByFilesystem = generatedRoutes.filter((item) => {
-  return item.meta?.enabled !== false && item.meta?.constant === true
-})
+  return item.meta?.enabled !== false && item.meta?.constant === true;
+});
 
-const asyncRoutesByFilesystem = setupLayouts(generatedRoutes.filter((item) => {
-  return item.meta?.enabled !== false && item.meta?.constant !== true && item.meta?.layout !== false
-}))
+const asyncRoutesByFilesystem = setupLayouts(
+  generatedRoutes.filter((item) => {
+    return (
+      item.meta?.enabled !== false &&
+      item.meta?.constant !== true &&
+      item.meta?.layout !== false
+    );
+  })
+);
 
 export {
   constantRoutes,
@@ -108,4 +121,4 @@ export {
   asyncRoutes,
   constantRoutesByFilesystem,
   asyncRoutesByFilesystem,
-}
+};
