@@ -1,9 +1,0 @@
-
-/**
- * 由 Fantastic-admin 提供技术支持
- * Powered by Fantastic-admin
- * Gitee  https://fantastic-admin.gitee.io
- * Github https://fantastic-admin.github.io
- */
-
-.absolute-container[data-v-8bdab79a]{position:absolute;width:100%;height:100%;display:flex;flex-direction:column}.absolute-container .page-header[data-v-8bdab79a]{margin-bottom:0}.absolute-container .page-main[data-v-8bdab79a]{flex:1;overflow:auto}.absolute-container .page-main[data-v-8bdab79a] .main-container{flex:1;overflow:auto;display:flex;flex-direction:column}.page-main .search-form[data-v-8bdab79a]{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));margin-bottom:-18px}.page-main .search-form[data-v-8bdab79a] .el-form-item{grid-column:auto/span 1}.page-main .search-form[data-v-8bdab79a] .el-form-item:last-child{grid-column-end:-1}.page-main .search-form[data-v-8bdab79a] .el-form-item:last-child .el-form-item__content{justify-content:flex-end}.page-main .el-divider[data-v-8bdab79a]{margin-inline:-20px;width:calc(100% + 40px)}
