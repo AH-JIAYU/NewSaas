@@ -147,7 +147,7 @@ function onDel(row: any) {
         height="100%" @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event"
       >
         <ElTableColumn v-if="data.batch.enable" type="selection" align="center" fixed />
-        <ElTableColumn prop="id" width="200" align="center" label="id" />
+        <ElTableColumn prop="id" width="200" align="center" label="ID" />
         <ElTableColumn prop="roleName" align="center" label="角色码" />
         <ElTableColumn label="操作" width="250" align="center" fixed="right">
           <template #default="scope">

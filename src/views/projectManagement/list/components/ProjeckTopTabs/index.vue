@@ -447,7 +447,7 @@ nextTick(() => {
 
 <template>
   <ElForm
-    label-width="120px"
+    label-width="95px"
     :rules="rules"
     ref="formRef"
     :model="props.leftTab"
@@ -974,6 +974,8 @@ nextTick(() => {
                   @keydown="handleInput"
                 />
               </el-form-item>
+            </el-col>
+            <el-col :span="1">
             </el-col>
             <el-col :span="6">
               <el-form-item label="小时完成量">

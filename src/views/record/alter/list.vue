@@ -3,6 +3,7 @@ import { reactive, ref } from "vue";
 import { Plus } from "@element-plus/icons-vue";
 import Edit from "./components/Edit/index.vue";
 import Detail from "./components/Detail/index.vue";
+import api from "@/api/modules/alter";
 
 defineOptions({
   name: "FinanceInvoiceIndex",
@@ -45,13 +46,14 @@ const columns = ref([
 ]);
 // 查询参数
 const queryForm = reactive<any>({
-  pageNo: 1,
-  pageSize: 10,
-  title: "",
-  order: {
-    id: "ASC",
-  },
-  select: {},
+  // 类型 1成功/待审核 2审核通过 3审核失败 4数据冻结 5被甄别 6配额满
+  type: 1,
+  // 点击id,该字段只在新增时使用
+  projectClickIdList: [],
+  // 操作人id
+  creteUserId: "",
+  // 备注
+  remark: "",
 });
 const list = ref<any>([]);
 // 新增
@@ -74,13 +76,14 @@ function setSelectRows(value: any) {
 // 重置数据
 function onReset() {
   Object.assign(queryForm, {
-    pageNo: 1,
-    pageSize: 10,
-    title: "",
-    order: {
-      id: "ASC",
-    },
-    select: {},
+    // 类型 1成功/待审核 2审核通过 3审核失败 4数据冻结 5被甄别 6配额满
+    type: null,
+    // 点击id,该字段只在新增时使用
+    projectClickIdList: [],
+    // 操作人id
+    creteUserId: "",
+    // 备注
+    remark: "",
   });
 }
 // 每页数量切换
@@ -93,7 +96,9 @@ function currentChange(page = 1) {
 }
 async function fetchData() {
   listLoading.value = true;
-  // const { data } = await getList(queryForm)
+  const { data } = await api.list(queryForm)
+  console.log('data',data);
+
   // list.value = data[0]
   // total.value = data[0].length
   list.value = [
@@ -123,7 +128,7 @@ onMounted(() => {
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
           <el-form
-            :model="queryForm.select"
+            :model="queryForm"
             size="default"
             label-width="100px"
             inline-message
@@ -132,7 +137,7 @@ onMounted(() => {
           >
             <el-form-item label="">
               <el-input
-                v-model.trim="queryForm.select.id"
+                v-model.trim="queryForm"
                 clearable
                 :inline="false"
                 placeholder="点击ID"
@@ -140,7 +145,7 @@ onMounted(() => {
             </el-form-item>
             <el-form-item label="">
               <el-select
-                v-model="queryForm.select.id"
+                v-model="queryForm.type"
                 value-key=""
                 placeholder="变更状态"
                 clearable

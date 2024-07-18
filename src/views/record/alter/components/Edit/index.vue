@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { ElMessage } from "element-plus";
 import type { FormInstance, FormRules } from "element-plus";
-// import api from "@/api/modules/project_settlement";
+import api from "@/api/modules/alter";
 
 defineOptions({
   name: "ProjectReview",
@@ -11,25 +11,25 @@ defineOptions({
 const emits = defineEmits(["success"]);
 // loading
 const loading = ref(false);
-// 成功id/失败id
-const arr = ref<any>([]);
 // 接收传递数据
 const form = ref<any>();
 // 初始表单数据
 const formData = ref<any>({
   // 审核类型 1:按成功id 2:按失败id 3:全部通过 4:全部失败 5:数据冻结
-  settlementType: "",
+  type: "",
   // 备注
   remark: "",
   // 	需要修改的数据
-  projectSettlementBuilderList: [],
+  projectClickIdList: [],
+  // 成功id/失败id
+  arr:[],
 });
 // 校验
 const formRules = ref<FormRules>({
-  settlementType: [
+  type: [
     { required: true, message: "请选择审核方式", trigger: "change" },
   ],
-  projectSettlementBuilderList: [
+  arr: [
     { required: true, message: "请输入至少一个ID", trigger: "blur" },
   ],
 });
@@ -53,20 +53,15 @@ async function onSubmit() {
   formRef.value &&
     formRef.value.validate(async (valid: any) => {
       if (valid) {
-        loading.value = true;
-        delete formData.value.projectName;
-        if (
-          formData.value.settlementType === 1 ||
-          formData.value.settlementType === 2
-        ) {
-          formData.value.projectSettlementBuilderList =
-            arr.value.split("\n") || [];
-        } else {
-          formData.value.projectSettlementBuilderList = [];
-        }
-        console.log('formData.value',formData.value);
+        // loading.value = true;
+        formData.value.projectClickIdList =
+        formData.value.arr.split("\n") || [];
+        delete formData.value.arr;
+        console.log("formData.value", formData.value);
 
-        // const { status } = await api.review(formData.value);
+        const res = await api.edit(formData.value);
+        console.log('res',res);
+
         // if (status === 1) {
         //   // 更新列表
         //   emits("success");
@@ -100,13 +95,13 @@ function closeHandler() {
   // // 重置表单
   Object.assign(formData.value, {
     // 审核类型 1:按成功id 2:按失败id 3:全部通过 4:全部失败 5:数据冻结
-    settlementType: "",
+    type: "",
     // 备注
     remark: "",
     // 	需要修改的数据
-    projectSettlementBuilderList: [],
+    projectClickIdList: [],
   });
-  arr.value = [];
+  formData.value.arr = [];
   dialogTableVisible.value = false;
 }
 // 暴露
@@ -117,7 +112,7 @@ defineExpose({ showEdit });
   <div>
     <el-drawer
       v-model="dialogTableVisible"
-      title="项目审核"
+      title="记录变更"
       size="50%"
       :before-close="closeHandler"
     >
@@ -131,17 +126,17 @@ defineExpose({ showEdit });
       >
         <div class="shenhe">
           <el-form-item
-            prop="settlementType"
+            prop="type"
             style="display: flex; align-items: center"
             label="变更状态"
           >
-            <el-radio-group v-model="formData.settlementType">
+            <el-radio-group v-model="formData.type">
               <el-radio :value="1" size="large"> 完成 </el-radio>
-              <el-radio :value="2" size="large"> 审核通过 </el-radio>
-              <el-radio :value="3" size="large"> 审核失败 </el-radio>
-              <el-radio :value="4" size="large"> 数据冻结 </el-radio>
-              <el-radio :value="5" size="large"> 被甄别 </el-radio>
-              <el-radio :value="6" size="large"> 配额满 </el-radio>
+              <el-radio :value="7" size="large"> 审核通过 </el-radio>
+              <el-radio :value="8" size="large"> 审核失败 </el-radio>
+              <el-radio :value="9" size="large"> 数据冻结 </el-radio>
+              <el-radio :value="2" size="large"> 被甄别 </el-radio>
+              <el-radio :value="3" size="large"> 配额满 </el-radio>
             </el-radio-group>
           </el-form-item>
         </div>
@@ -155,10 +150,10 @@ defineExpose({ showEdit });
             />
           </el-form-item>
         </div>
-        <div style="margin-top: 10px;">
-          <el-form-item prop="projectSettlementBuilderList" >
+        <div style="margin-top: 10px">
+          <el-form-item prop="arr">
             <el-input
-              v-model="arr"
+              v-model="formData.arr"
               placeholder="请粘贴ID，每行一个,多个请回车换行"
               type="textarea"
               rows="15"

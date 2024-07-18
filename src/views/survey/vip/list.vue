@@ -2,6 +2,7 @@
 import { onMounted, reactive, ref } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import VipEdit from "./components/VipEdit/index.vue";
+import vipPlusMinusPayments from "./components/vipPlusMinusPayments/index.vue";
 import { submitLoading } from "@/utils/apiLoading";
 import api from "@/api/modules/survey_vip";
 import useSurveyVipLevelStore from "@/store/modules/survey_vipLevel"; //会员等级
@@ -26,6 +27,7 @@ const data = reactive<any>({
 });
 const selectRows = ref<any>(); // 表格-选中行
 const editRef = ref(); // 添加|编辑 组件ref
+const vipPlusMinusPaymentsRef = ref(); //加减款
 const border = ref<any>(true); // 表格控件-是否展示边框
 const stripe = ref<any>(false); // 表格控件-是否展示斑马条
 const lineHeight = ref<any>("default"); // 表格控件-控制表格大小
@@ -79,6 +81,10 @@ function handleAdd() {
 // 编辑
 function handleEdit(row: any) {
   editRef.value.showEdit(row);
+}
+// 加减款
+const plusMinusPayments = (row:any) => {
+  vipPlusMinusPaymentsRef.value.showEdit(row);
 }
 // 切换状态
 async function changeState(state: any, id: string) {
@@ -310,7 +316,7 @@ onMounted(async () => {
           align="center"
           prop="availableBalance"
           show-overflow-tooltip
-          label="余额"
+          label="可用余额"
         />
         <el-table-column
           v-if="checkList.includes('pendingBalance')"
@@ -341,8 +347,10 @@ onMounted(async () => {
           label="B2B|B2C"
         >
           <template #default="{ row }">
-            {{ row.b2bStatus && row.b2bStatus === 2 ? "√" : "×" }} |
-            {{ row.b2cStatus && row.b2cStatus === 2 ? "√" : "×" }}
+            <el-text v-if="row.b2bStatus && row.b2bStatus === 2" class="mx-1"><div class="i-fluent:checkmark-12-filled w-1.5em h-1.5em"></div></el-text>
+            <el-text v-else class="mx-1"><div class="i-entypo:cross w-1.5em h-1.5em"></div></el-text> |
+            <el-text v-if="row.b2cStatus && row.b2cStatus === 2" class="mx-1"><div class="i-fluent:checkmark-12-filled w-1.5em h-1.5em"></div></el-text>
+            <el-text v-else class="mx-1"><div class="i-entypo:cross w-1.5em h-1.5em"></div></el-text>
           </template>
         </el-table-column>
 
@@ -399,7 +407,10 @@ onMounted(async () => {
           prop="createName"
           show-overflow-tooltip
           label="创建人"
-        />
+        > <template #default="{ row }">
+            {{ row.createName ? row.createName : "-" }}
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="checkList.includes('createTime')"
           align="center"
@@ -422,7 +433,7 @@ onMounted(async () => {
             >
               编辑
             </el-button>
-            <el-button size="small" plain type="primary"> 加减款 </el-button>
+            <el-button size="small" plain type="primary" @click="plusMinusPayments(row)"> 加减款 </el-button>
           </template>
         </el-table-column>
         <template #empty>
@@ -443,6 +454,7 @@ onMounted(async () => {
       />
     </PageMain>
     <VipEdit ref="editRef" @fetch-data="queryData" />
+    <vipPlusMinusPayments ref="vipPlusMinusPaymentsRef" @fetch-data="queryData" />
   </div>
 </template>
 

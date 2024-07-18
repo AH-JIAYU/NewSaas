@@ -11,8 +11,6 @@ defineOptions({
 const emits = defineEmits(["success"]);
 // loading
 const loading = ref(false);
-// 成功id/失败id
-const arr = ref<any>([]);
 // 接收传递数据
 const form = ref<any>();
 // 初始表单数据
@@ -28,12 +26,15 @@ const formData = ref<any>({
   projectSettlementBuilderList: [],
   // 结算po号
   po: "",
+  // 成功id/失败id
+  arr: "",
 });
 // 校验
 const formRules = ref<FormRules>({
   settlementType: [
     { required: true, message: "请选择审核方式", trigger: "change" },
   ],
+  arr: [{ required: true, message: "请输入至少一个ID", trigger: "blur" }],
 });
 // formRef
 const formRef = ref<any>();
@@ -62,7 +63,8 @@ async function onSubmit() {
           formData.value.settlementType === 2
         ) {
           formData.value.projectSettlementBuilderList =
-            arr.value.split("\n") || [];
+            formData.value.arr.split("\n") || [];
+            delete formData.value.arr
         } else {
           formData.value.projectSettlementBuilderList = [];
         }
@@ -79,7 +81,7 @@ async function onSubmit() {
           });
           // 执行关闭弹框事件
           closeHandler();
-        }else {
+        } else {
           ElMessage.error({
             message: "操作失败，请联系工作人员",
             center: true,
@@ -87,7 +89,7 @@ async function onSubmit() {
         }
       } else {
         ElMessage({
-          message: "请选择审核方式",
+          message: "请检查必填项",
           type: "warning",
         });
       }
@@ -111,8 +113,10 @@ function closeHandler() {
     projectSettlementBuilderList: [],
     // 结算po号
     po: "",
+    // 成功id/失败id
+    arr: "",
   });
-  arr.value = [];
+  formData.value.arr = [];
   dialogTableVisible.value = false;
 }
 // 暴露
@@ -201,15 +205,17 @@ defineExpose({ showEdit });
         </el-row>
         <el-row
           v-if="formData.settlementType === 1 || formData.settlementType === 2"
-          style="margin: 0"
+          style="margin: 0; width: 100%"
           :gutter="20"
         >
-          <el-input
-            v-model="arr"
-            placeholder="请粘贴ID，每行一个,多个请回车换行"
-            type="textarea"
-            rows="15"
-          />
+          <el-form-item style="width: 100%" prop="arr">
+            <el-input
+              v-model="formData.arr"
+              placeholder="请粘贴ID，每行一个,多个请回车换行"
+              type="textarea"
+              rows="15"
+            />
+          </el-form-item>
         </el-row>
       </el-form>
       <template #footer>
@@ -287,7 +293,8 @@ defineExpose({ showEdit });
   }
 
   .el-form-item__content {
-    width: 50px;
+    width: 100%;
+    margin: 0 !important;
     border: none !important;
   }
 

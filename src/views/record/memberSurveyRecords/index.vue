@@ -79,7 +79,7 @@ const data = reactive<any>({
     "待审",
     "免审",
     "过IR",
-    "时间果断",
+    "时间过短",
     "超时完成",
     "超量完成",
     "审核成功",
@@ -397,8 +397,8 @@ onMounted(async () => {
           label="调查时间"
         >
           <template #default="{ row }">
-            {{ row.surveyTime || 0 }}/
-            {{ row.projectTime || 0 }}
+            {{ row.surveyTime ? row.surveyTime + 'min' : 0 }}/
+            {{ row.projectTime ? row.projectTime + 'min' : 0 }}
           </template>
         </el-table-column>
         <ElTableColumn

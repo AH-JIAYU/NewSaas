@@ -14,10 +14,15 @@ import logDetails from "../LogDetails/index.vue";
 import DownLoad from "@/utils/download";
 import { ElMessage } from "element-plus";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
+import useUserCustomerStore from "@/store/modules/user_customer";
 
 defineOptions({
   name: "ProjectDetails",
 });
+// 客户
+const customerStore = useUserCustomerStore();
+// 客户列表
+const customerList = ref<any>([]);
 const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
 const content = ref("# Fantastic-admin");
 const logDetailsRef = ref();
@@ -146,8 +151,14 @@ async function download() {
 function closeHandler() {
   dialogTableVisible.value = false;
 }
+// 根据id查找客户
+const getcustsmer = computed(() => {
+  return customerList.value.find((item:any) => item.tenantCustomerId === data.value.form.clientId)
+})
+
 onMounted(async () => {
   data.value.countryList = await basicDictionaryStore.getCountry();
+  customerList.value = await customerStore.getCustomerList();
 });
 // 暴露方法
 defineExpose({ showEdit });
@@ -318,7 +329,7 @@ defineExpose({ showEdit });
             <el-col :span="8">
               <el-form-item label="所属客户 :">
                 <el-text class="mx-1">
-                  {{ data.form.clientId ? data.form.clientId : "-" }}
+                  {{ getcustsmer.customerAccord }}
                 </el-text>
               </el-form-item>
             </el-col>
@@ -470,10 +481,10 @@ defineExpose({ showEdit });
             <div class="peizjo-header">
               <span>配置信息</span>
               <span style="margin-left: 50px;" v-if="data.form.countryName"
-                >{{ data.form.countryName }}</span
+                >国家：{{ data.form.countryName }}</span
               >
               <span style="margin-left: 30px;" v-if="data.form.projectProblemCategoryName"
-                >{{ data.form.projectProblemCategoryName }}</span
+                >问卷：{{ data.form.projectProblemCategoryName }}</span
               >
             </div>
           </template>
@@ -484,14 +495,14 @@ defineExpose({ showEdit });
             "
           >
             <el-col :span="8">
-              <el-form-item label="国家 :">
+              <!-- <el-form-item label="国家 :">
                 <el-text class="mx-1">
                   {{ data.form.countryName ? data.form.countryName : "-" }}
                 </el-text>
-              </el-form-item>
+              </el-form-item> -->
             </el-col>
             <el-col :span="8">
-              <el-form-item label="问卷 :">
+              <!-- <el-form-item label="问卷 :">
                 <el-text class="mx-1">
                   {{
                     data.form.projectProblemCategoryName
@@ -499,7 +510,7 @@ defineExpose({ showEdit });
                       : "-"
                   }}
                 </el-text>
-              </el-form-item>
+              </el-form-item> -->
             </el-col>
             <el-col
               :span="24"

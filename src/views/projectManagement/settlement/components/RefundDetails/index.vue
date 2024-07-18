@@ -24,9 +24,9 @@ async function showEdit(row: any) {
 // 弹框关闭事件
 function closeHandler() {
   // // 重置表单
-  Object.assign(form, {})
-  Object.assign(list, [])
-  Object.assign(data, {})
+  Object.assign(form, {});
+  Object.assign(list, []);
+  Object.assign(data, {});
   dialogTableVisible.value = false;
 }
 defineExpose({ showEdit });
@@ -47,17 +47,17 @@ defineExpose({ showEdit });
       >
         <div class="border">
           <p class="pp">项目ID</p>
-          <p class="neip">{{ form.projectId }}</p>
+          <p class="neip">{{ form.projectId ?form.projectId :'-' }}</p>
         </div>
         <div class="border">
           <p class="pp">项目名称</p>
           <p class="neip">
-            <el-text class="mx-1">{{ form.projectName }}</el-text>
+            <el-text class="mx-1">{{ form.projectName ?form.projectName : '-' }}</el-text>
           </p>
         </div>
         <div class="border">
           <p class="pp">项目退款率</p>
-          <p class="neip">{{ data.refundRate }}</p>
+          <p class="neip">{{ data.refundRate ? data.refundRate : '-' }}</p>
         </div>
       </el-row>
       <div style="margin: 10px">| 供应商</div>
@@ -71,7 +71,9 @@ defineExpose({ showEdit });
         </el-table-column>
         <el-table-column align="center" prop="supplierId" label="手机号码/邮箱"
           ><template #default="{ row }">
-            {{ row.info.split(':')[0] }}/{{ row.info.split(':')[1] !== 'null' ? row.info.split(':')[1] : '-' }}
+            {{ row.info.split(":")[0] }}/{{
+              row.info.split(":")[1] !== "null" ? row.info.split(":")[1] : "-"
+            }}
           </template>
         </el-table-column>
         <el-table-column
@@ -80,9 +82,13 @@ defineExpose({ showEdit });
           label="供应商退款率"
         />
       </el-table>
-      <div style="margin-top: 20px; margin-bottom: 20px;">
+      <div style="margin-top: 20px; margin-bottom: 20px">
         | 会员组
-        <el-text class="mx-1">退款率{{ data.memberRefundRate }}%</el-text>
+        <el-text class="mx-1"
+          >退款率{{
+            data.memberRefundRate ? data.memberRefundRate + "%" : "-"
+          }}</el-text
+        >
       </div>
     </el-dialog>
   </div>
