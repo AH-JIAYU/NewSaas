@@ -36,22 +36,17 @@ onMounted(async () => {
   const response = await fetch("https://api.ipify.org?format=json");
   const res = await response.json();
   const ip = res.ip;
-  console.log("ip", ip);
-  // var item = statements[Math.floor(Math.random() * statements.length)];
-  // console.log(route.query);
-  // const URL: any = route.query.type;
-  const puid: any = route.query.uid;
-  const pid: any = route.query.pid;
+  const status: any = route.query.status;
+  const uid: any = route.query.uid;
   const params = {
-    // uid: route.query.uid,
-    uid: '555210173246472194',
-    status: 'c',
+    uid: uid,
+    status: status,
     ip: ip,
   };
   const resRedirect = await api.redirection(params);
   console.log("resRedirect", resRedirect);
-  const URL=resRedirect.data.status
-  // console.log("参数", URL, puid, pid);
+  const URL = resRedirect.data.status;
+
   if (URL == 1) {
     data.value.svg = "i-ri:thumb-up-fill";
     data.value.svgColor = "#1482f0";
@@ -62,21 +57,26 @@ onMounted(async () => {
     data.value.message = "太棒了！！";
     // // data.value.describe = item;
     data.value.describe = "谁也不能随随便便成功，它来自彻底的自我管理和毅力。";
-    // 判断是否有登录，有登录则更新cookie
-    if (puid) {
-      var arr = puid.split("T");
-      // return request({
-      //   url: "/userdata",
-      //   method: "post",
-      //   data: { uid: arr[0] },
-      // }).then((response) => {
-      //   if (response.code == 1) {
-      //     this.$store.dispatch("user/Getdata", response.user);
-      //   } else {
-      //     this.$message.error("Data error");
-      //   }
-      // });
+    // 新开页面
+    if (resRedirect.data.redirectAddress) {
+      window.open(resRedirect.data.redirectAddress, "_blank");
+      // 没url去前置页面，然后判断是否做过
     }
+    // 判断是否有登录，有登录则更新cookie
+    // if (puid) {
+    //   var arr = puid.split("T");
+    //   // return request({
+    //   //   url: "/userdata",
+    //   //   method: "post",
+    //   //   data: { uid: arr[0] },
+    //   // }).then((response) => {
+    //   //   if (response.code == 1) {
+    //   //     this.$store.dispatch("user/Getdata", response.user);
+    //   //   } else {
+    //   //     this.$message.error("Data error");
+    //   //   }
+    //   // });
+    // }
   } else if (URL == 2) {
     data.value.svg = "i-ri:emotion-unhappy-line";
     data.value.svgColor = "#8a9fcc";
@@ -151,6 +151,13 @@ onMounted(async () => {
       '<span style="color: #e6a239">时间段内配额已满</span>';
     data.value.englishtypename =
       '<span>I\'m sorry</span> <span style="color:#20a0ff" >The quota for the current time period is full</span>';
+    data.value.message = "请销后再试！";
+    data.value.describe = "Please sell it and try again！";
+  } else if (URL == 11) {
+    data.value.svg = "i-mdi:upload-off";
+    data.value.typename = '<span style="color: #e6a239">超时完成</span>';
+    data.value.englishtypename =
+      '<span>I\'m sorry</span> <span style="color:#20a0ff" >Current project timeout completed </span>';
     data.value.message = "请销后再试！";
     data.value.describe = "Please sell it and try again！";
   }

@@ -35,6 +35,8 @@ const form = ref<any>({
   minimumAmount: null,
   // 调查限价
   fixedPrice: null,
+  //	外部站点
+  externalSite: "",
   // // 手机号
   // phone: "",
   // // 邮箱
@@ -143,6 +145,7 @@ function onSubmit() {
             taxPointsProportion,
             minimumAmount,
             fixedPrice,
+            externalSite,
           } = form.value;
           const params = {
             id,
@@ -155,6 +158,7 @@ function onSubmit() {
             taxPointsProportion,
             minimumAmount,
             fixedPrice,
+            externalSite,
           };
           loading.value = true;
           api.edit(params).then(() => {
@@ -230,6 +234,9 @@ function onSubmit() {
                 link
                 >复制</el-button
               >
+            </el-form-item>
+            <el-form-item style="width: 34rem" label="站点系统域名">
+              <el-input v-model="form.externalSite" />
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="onSubmit"> 确认 </el-button>
