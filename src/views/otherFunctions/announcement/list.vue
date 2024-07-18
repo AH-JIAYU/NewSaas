@@ -1,36 +1,37 @@
 <script setup lang="ts">
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { onBeforeUnmount, onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { useI18n } from 'vue-i18n'
-import FormMode from './components/FormMode/index.vue'
-import eventBus from '@/utils/eventBus'
-import api from '@/api/modules/announcement'
-import useSettingsStore from '@/store/modules/settings'
+import { ElMessage, ElMessageBox } from "element-plus";
+import { onBeforeUnmount, onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
+import FormMode from "./components/FormMode/index.vue";
+import eventBus from "@/utils/eventBus";
+import api from "@/api/modules/announcement";
+import useSettingsStore from "@/store/modules/settings";
 
 defineOptions({
-  name: 'MyBillList',
-})
+  name: "MyBillList",
+});
 // 国际化
-const router = useRouter()
+const router = useRouter();
 // 分页
-const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } = usePagination()
-const tabbar = useTabbar()
-const settingsStore = useSettingsStore()
+const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
+  usePagination();
+const tabbar = useTabbar();
+const settingsStore = useSettingsStore();
 // 表格控件-展示列
 const columns = ref([
   {
-    label: '等级名称',
-    prop: 'a',
+    label: "等级名称",
+    prop: "a",
     sortable: true,
     // 不可更改
     disableCheck: false,
     // 默认展示
     checked: true,
   },
-])
+]);
 // 筛选类型
-const typeI = ref()
+const typeI = ref();
 // 定义数据
 const data = ref<any>({
   loading: false,
@@ -41,7 +42,7 @@ const data = ref<any>({
   // 表格控件-是否展示斑马条
   stripe: false,
   // 表格控件-控制表格大小
-  lineHeight: 'default',
+  lineHeight: "default",
   checkList: [],
   /**
    * 详情展示模式
@@ -49,16 +50,16 @@ const data = ref<any>({
    * dialog 对话框
    * drawer 抽屉
    */
-  formMode: 'drawer' as 'router' | 'dialog' | 'drawer',
+  formMode: "drawer" as "router" | "dialog" | "drawer",
   // 详情
   formModeProps: {
     visible: false,
-    id: '',
-    row: '',
+    id: "",
+    row: "",
   },
   // 搜索
   search: {
-    title: '',
+    title: "",
     type: null,
   },
   // 批量操作
@@ -68,145 +69,155 @@ const data = ref<any>({
   },
   // 列表数据
   dataList: [],
-})
+});
 // 类型
 const type = [
-  { label: '公告', value: 1 },
-  { label: '常见问题', value: 2 },
-  { label: '帮助', value: 3 },
-]
+  { label: "公告", value: 1 },
+  { label: "常见问题", value: 2 },
+  { label: "帮助", value: 3 },
+];
 // 获取数据
 function getDataList() {
-  data.value.loading = true
+  data.value.loading = true;
   const params = {
     ...getParams(),
     ...data.value.search,
-  }
+  };
   api.list(params).then((res: any) => {
-    data.value.loading = false
-    data.value.dataList = res.data
-    pagination.value.total = res.data.length
-  })
+    data.value.loading = false;
+    data.value.dataList = res.data;
+    pagination.value.total = res.data.length;
+  });
 }
 
 // 重置筛选数据
 function onReset() {
   Object.assign(data.value.search, {
-    title: '',
+    title: "",
     type: null,
-  })
-  getDataList()
+  });
+  getDataList();
 }
 
 // 每页数量切换
 function sizeChange(size: number) {
-  onSizeChange(size).then(() => getDataList())
+  onSizeChange(size).then(() => getDataList());
 }
 
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
-  onCurrentChange(page).then(() => getDataList())
+  onCurrentChange(page).then(() => getDataList());
 }
 
 // 字段排序
-function sortChange({ prop, order }: { prop: string, order: string }) {
-  onSortChange(prop, order).then(() => getDataList())
+function sortChange({ prop, order }: { prop: string; order: string }) {
+  onSortChange(prop, order).then(() => getDataList());
 }
 // 新增
 function onCreate() {
-  if (data.value.formMode === 'router') {
+  if (data.value.formMode === "router") {
     tabbar.open({
-      name: 'pagesExampleGeneralManagerCreate',
-    })
-  }
-  else {
-    data.value.formModeProps.id = ''
-    data.value.formModeProps.row = ''
-    data.value.formModeProps.visible = true
+      name: "pagesExampleGeneralManagerCreate",
+    });
+  } else {
+    data.value.formModeProps.id = "";
+    data.value.formModeProps.row = "";
+    data.value.formModeProps.visible = true;
   }
 }
 // 修改
 function onEdit(row: any) {
-  if (data.value.formMode === 'router') {
-    if (settingsStore.settings.tabbar.enable && settingsStore.settings.tabbar.mergeTabsBy !== 'activeMenu') {
+  if (data.value.formMode === "router") {
+    if (
+      settingsStore.settings.tabbar.enable &&
+      settingsStore.settings.tabbar.mergeTabsBy !== "activeMenu"
+    ) {
       tabbar.open({
-        name: 'surveyEdit',
+        name: "surveyEdit",
         params: {
           id: row.id,
         },
-      })
-    }
-    else {
+      });
+    } else {
       router.push({
-        name: 'surveyEdit',
+        name: "surveyEdit",
         params: {
           id: row.id,
         },
-      })
+      });
     }
-  }
-  else {
-    data.value.formModeProps.id = row.id
-    data.value.formModeProps.row = row
-    data.value.formModeProps.visible = true
+  } else {
+    data.value.formModeProps.id = row.id;
+    data.value.formModeProps.row = row;
+    data.value.formModeProps.visible = true;
   }
 }
 // 开关事件
 function onChangeStatus(row: any) {
   return new Promise<boolean>((resolve) => {
-    ElMessageBox.confirm(`确认${row.top ? '开启置顶' : '关闭置顶'}「${row.title}」吗？`, '确认信息').then(() => {
-      data.value.loading = true
-      api.edit({
-        id: row.id,
-        top: row.top,
-      }).then(() => {
-        ElMessage.success({
-          message: `${row.top ? '开启置顶' : '关闭置顶'}成功`,
-          center: true,
-        })
-        getDataList()
-        data.value.loading = false
-        return resolve(true)
-      }).catch(() => {
-        getDataList()
-        data.value.loading = false
-        return resolve(false)
+    ElMessageBox.confirm(
+      `确认${row.top ? "开启置顶" : "关闭置顶"}「${row.title}」吗？`,
+      "确认信息"
+    )
+      .then(() => {
+        data.value.loading = true;
+        api
+          .edit({
+            id: row.id,
+            top: row.top,
+          })
+          .then(() => {
+            ElMessage.success({
+              message: `${row.top ? "开启置顶" : "关闭置顶"}成功`,
+              center: true,
+            });
+            getDataList();
+            data.value.loading = false;
+            return resolve(true);
+          })
+          .catch(() => {
+            getDataList();
+            data.value.loading = false;
+            return resolve(false);
+          });
       })
-    }).catch(() => {
-      getDataList()
-      return resolve(false)
-    })
-  })
+      .catch(() => {
+        getDataList();
+        return resolve(false);
+      });
+  });
 }
 // 删除
 function onDel(row: any) {
-  ElMessageBox.confirm(`确认删除「${row.title}」吗？`, '确认信息').then(() => {
-    data.value.loading = true
-    api.delete({ id: row.id }).then(() => {
-      data.value.loading = false
-      getDataList()
-      ElMessage.success({
-        message: '删除成功',
-        center: true,
-      })
+  ElMessageBox.confirm(`确认删除「${row.title}」吗？`, "确认信息")
+    .then(() => {
+      data.value.loading = true;
+      api.delete({ id: row.id }).then(() => {
+        data.value.loading = false;
+        getDataList();
+        ElMessage.success({
+          message: "删除成功",
+          center: true,
+        });
+      });
     })
-  }).catch(() => { })
+    .catch(() => {});
 }
 
 onMounted(() => {
-  getDataList()
-  if (data.value.formMode === 'router') {
-    eventBus.on('get-data-list', () => {
-      getDataList()
-    })
+  getDataList();
+  if (data.value.formMode === "router") {
+    eventBus.on("get-data-list", () => {
+      getDataList();
+    });
   }
-})
+});
 
 onBeforeUnmount(() => {
-  if (data.value.formMode === 'router') {
-    eventBus.off('get-data-list')
+  if (data.value.formMode === "router") {
+    eventBus.off("get-data-list");
   }
-})
+});
 </script>
 
 <template>
@@ -214,14 +225,37 @@ onBeforeUnmount(() => {
     <PageMain>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
-          <ElForm :model="data.search" size="default" label-width="100px" inline-message inline class="search-form">
+          <ElForm
+            :model="data.search"
+            size="default"
+            label-width="100px"
+            inline-message
+            inline
+            class="search-form"
+          >
             <ElFormItem label="">
-              <ElInput v-model="data.search.title" placeholder="请输入标题" clearable @keydown.enter="currentChange()"
-                @clear="currentChange()" />
+              <ElInput
+                v-model="data.search.title"
+                placeholder="请输入标题"
+                clearable
+                @keydown.enter="currentChange()"
+                @clear="currentChange()"
+              />
             </ElFormItem>
             <el-form-item label="">
-              <el-select v-model="data.search.type" value-key="" placeholder="请选择类型" clearable filterable>
-                <el-option v-for="item in type" :key="item.value" :label="item.label" :value="item.value" />
+              <el-select
+                v-model="data.search.type"
+                value-key=""
+                placeholder="请选择类型"
+                clearable
+                filterable
+              >
+                <el-option
+                  v-for="item in type"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
               </el-select>
             </el-form-item>
             <ElFormItem>
@@ -239,7 +273,9 @@ onBeforeUnmount(() => {
               </ElButton>
               <ElButton disabled link @click="toggle">
                 <template #icon>
-                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
+                  <SvgIcon
+                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
+                  />
                 </template>
                 {{ fold ? "展开" : "收起" }}
               </ElButton>
@@ -258,49 +294,124 @@ onBeforeUnmount(() => {
           </ElButton>
         </FormLeftPanel>
         <FormRightPanel>
-          <el-button size="default">
-            导出
-          </el-button>
-          <TabelControl v-model:border="data.border" v-model:tableAutoHeight="data.tableAutoHeight"
-            v-model:checkList="data.checkList" v-model:columns="columns" v-model:line-height="data.lineHeight"
-            v-model:stripe="data.stripe" style="margin-left: 12px;" @query-data="currentChange" />
+          <el-button size="default"> 导出 </el-button>
+          <TabelControl
+            v-model:border="data.border"
+            v-model:tableAutoHeight="data.tableAutoHeight"
+            v-model:checkList="data.checkList"
+            v-model:columns="columns"
+            v-model:line-height="data.lineHeight"
+            v-model:stripe="data.stripe"
+            style="margin-left: 12px"
+            @query-data="currentChange"
+          />
         </FormRightPanel>
       </el-row>
-      <ElTable v-model:stripe="data.stripe" v-model:border="data.border" v-loading="data.loading"
-        :size="data.lineHeight" class="my-4" :data="data.dataList" highlight-current-row height="100%"
-        @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
-        <el-table-column align="center" show-overflow-tooltip type="index" label="序号" width="80" />
-        <ElTableColumn align="center" show-overflow-tooltip prop="title" label="标题" />
-        <ElTableColumn align="center" show-overflow-tooltip prop="type" label="类型">
+      <ElTable
+        v-model:stripe="data.stripe"
+        v-model:border="data.border"
+        v-loading="data.loading"
+        :size="data.lineHeight"
+        class="my-4"
+        :data="data.dataList"
+        highlight-current-row
+        height="100%"
+        @sort-change="sortChange"
+        @selection-change="data.batch.selectionDataList = $event"
+      >
+        <el-table-column
+          align="center"
+          show-overflow-tooltip
+          type="index"
+          label="序号"
+          width="80"
+        />
+        <ElTableColumn
+          align="center"
+          show-overflow-tooltip
+          prop="title"
+          label="标题"
+        />
+        <ElTableColumn
+          align="center"
+          show-overflow-tooltip
+          prop="type"
+          label="类型"
+        >
           <template #default="{ row }">
             {{ type[row.type - 1].label }}
           </template>
         </ElTableColumn>
-        <ElTableColumn align="center" show-overflow-tooltip prop="top" label="置顶">
+        <ElTableColumn
+          align="center"
+          show-overflow-tooltip
+          prop="top"
+          label="置顶"
+        >
           <template #default="{ row }">
-            <el-switch v-model="row.top" :active-value="true" :inactive-value="false" inline-prompt active-text="开启"
-              inactive-text="关闭" @change="onChangeStatus(row)">
+            <el-switch
+              v-model="row.top"
+              :active-value="true"
+              :inactive-value="false"
+              inline-prompt
+              active-text="开启"
+              inactive-text="关闭"
+              @change="onChangeStatus(row)"
+            >
             </el-switch>
           </template>
         </ElTableColumn>
-        <ElTableColumn align="center" show-overflow-tooltip prop="createTime" label="创建日期" />
+        <ElTableColumn
+          align="center"
+          show-overflow-tooltip
+          prop="createTime"
+          label="创建日期"
+        />
         <ElTableColumn label="操作" width="150" align="center" fixed="right">
           <template #default="scope">
-            <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">
+            <ElButton
+              type="primary"
+              size="small"
+              plain
+              @click="onEdit(scope.row)"
+            >
               编辑
             </ElButton>
-            <ElButton type="danger" size="small" plain @click="onDel(scope.row)">
+            <ElButton
+              type="danger"
+              size="small"
+              plain
+              @click="onDel(scope.row)"
+            >
               删除
             </ElButton>
           </template>
         </ElTableColumn>
+        <template #empty>
+          <el-empty description="暂无数据" />
+        </template>
       </ElTable>
-      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
-        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-        background @size-change="sizeChange" @current-change="currentChange" />
+      <ElPagination
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
+        :page-sizes="pagination.sizes"
+        :layout="pagination.layout"
+        :hide-on-single-page="false"
+        class="pagination"
+        background
+        @size-change="sizeChange"
+        @current-change="currentChange"
+      />
     </PageMain>
-    <FormMode v-if="data.formMode === 'dialog' || data.formMode === 'drawer'" :id="data.formModeProps.id"
-      v-model="data.formModeProps.visible" :row="data.formModeProps.row" :mode="data.formMode" @success="getDataList" />
+    <FormMode
+      v-if="data.formMode === 'dialog' || data.formMode === 'drawer'"
+      :id="data.formModeProps.id"
+      v-model="data.formModeProps.visible"
+      :row="data.formModeProps.row"
+      :mode="data.formMode"
+      @success="getDataList"
+    />
   </div>
 </template>
 

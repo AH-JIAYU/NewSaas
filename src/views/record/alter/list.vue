@@ -4,14 +4,17 @@ import { Plus } from "@element-plus/icons-vue";
 import Edit from "./components/Edit/index.vue";
 import Detail from "./components/Detail/index.vue";
 import api from "@/api/modules/alter";
+import apiUser from "@/api/modules/configuration_manager";
 
 defineOptions({
   name: "FinanceInvoiceIndex",
 });
-
-const { pagination, onSizeChange, onCurrentChange } = usePagination(); // 分页
+// 分页
+const { pagination, onSizeChange, onCurrentChange } = usePagination();
 // 分页
 const tableSortRef = ref("");
+// 用户数组
+const userList = ref<any>([]);
 // loading加载
 const listLoading = ref<boolean>(true);
 // 获取组件变量
@@ -27,12 +30,12 @@ const lineHeight = ref<any>("default");
 const stripe = ref(false);
 const selectRows = ref<any>([]);
 const statusType = [
-  { label: "完成", value: 1 },
-  { label: "审核通过", value: 2 },
-  { label: "审核失败", value: 3 },
-  { label: "数据冻结", value: 4 },
-  { label: "被甄别", value: 5 },
-  { label: "配额满", value: 6 },
+  { label: "完成/待审核", value: 1 },
+  { label: "审核通过", value: 7 },
+  { label: "审核失败", value: 8 },
+  { label: "数据冻结", value: 9 },
+  { label: "被甄别", value: 2 },
+  { label: "配额满", value: 3 },
 ];
 const columns = ref([
   {
@@ -46,8 +49,12 @@ const columns = ref([
 ]);
 // 查询参数
 const queryForm = reactive<any>({
+  // 页数
+  page: 1,
+  // 条数
+  limit: 10,
   // 类型 1成功/待审核 2审核通过 3审核失败 4数据冻结 5被甄别 6配额满
-  type: 1,
+  type: null,
   // 点击id,该字段只在新增时使用
   projectClickIdList: [],
   // 操作人id
@@ -59,11 +66,6 @@ const list = ref<any>([]);
 // 新增
 function addData() {
   editRef.value.showEdit();
-}
-// 详情
-function detailData(row: any) {
-  console.log("row:", row);
-  detailRef.value.showEdit();
 }
 // 右侧工具方法
 function clickFullScreen() {
@@ -85,34 +87,35 @@ function onReset() {
     // 备注
     remark: "",
   });
+  fetchData()
 }
 // 每页数量切换
 function sizeChange(size: number) {
-  onSizeChange(size).then(() => fetchData());
+  onSizeChange(size).then(() => {
+    queryForm.limit = size
+    fetchData()
+  });
 }
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
-  onCurrentChange(page).then(() => fetchData());
+  onCurrentChange(page).then(() => {
+    queryForm.page = page
+    fetchData()
+  });
 }
 async function fetchData() {
   listLoading.value = true;
-  const { data } = await api.list(queryForm)
-  console.log('data',data);
-
-  // list.value = data[0]
-  // total.value = data[0].length
-  list.value = [
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-  ];
-  pagination.value.total = 3;
+  const { data } = await api.list(queryForm);
+  list.value = data.tenantUpdateRecordVOBuilders;
+  pagination.value.total = +data.total;
   listLoading.value = false;
 }
-onMounted(() => {
+onMounted(async () => {
+  const { data } = await apiUser.list({
+    name: "",
+    role: "",
+  });
+  userList.value = data;
   fetchData();
 });
 </script>
@@ -137,7 +140,7 @@ onMounted(() => {
           >
             <el-form-item label="">
               <el-input
-                v-model.trim="queryForm"
+                v-model.trim="queryForm.projectClickIdList"
                 clearable
                 :inline="false"
                 placeholder="点击ID"
@@ -227,29 +230,64 @@ onMounted(() => {
         <el-table-column type="selection" />
         <el-table-column type="index" align="center" label="序号" width="55" />
         <el-table-column
-          prop="c"
+          prop="projectClickId"
           show-overflow-tooltip
           align="center"
-          label="变更状态"
+          label="项目点击ID"
         />
         <el-table-column
-          prop="e"
+          prop="afterType"
           show-overflow-tooltip
           align="center"
-          label="变更时间"
+          label="变更前"
+        >
+          <template #default="{ row }">
+            <div v-for="item in statusType" :key="item.value">
+              <el-text v-if="item.value === row.afterType">
+                {{ item.label }}</el-text
+              >
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="beforeType"
+          show-overflow-tooltip
+          align="center"
+          label="变更后"
+          ><template #default="{ row }">
+            <div v-for="item in statusType" :key="item.value">
+              <el-text v-if="item.value === row.beforeType">
+                {{ item.label }}</el-text
+              >
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="createTime"
+          show-overflow-tooltip
+          align="center"
+          label="创建时间"
         />
         <el-table-column
-          prop="e"
+          prop="remark"
+          show-overflow-tooltip
+          align="center"
+          label="备注"
+        />
+        <el-table-column
+          prop="createUserId"
           show-overflow-tooltip
           align="center"
           label="操作人"
-        />
-        <el-table-column
-          prop="e"
-          show-overflow-tooltip
-          align="center"
-          label="操作"
-        >
+          ><template #default="{ row }">
+            <div v-for="item in userList" :key="item.id">
+              <el-text v-if="item.id === row.createUserId">
+                {{ item.name }}</el-text
+              >
+            </div>
+          </template>
+        </el-table-column>
+        <!-- <el-table-column show-overflow-tooltip align="center" label="操作">
           <template #default="{ row }">
             <ElButton
               type="primary"
@@ -260,7 +298,7 @@ onMounted(() => {
               详情
             </ElButton>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <template #empty>
           <el-empty description="暂无数据" />
         </template>

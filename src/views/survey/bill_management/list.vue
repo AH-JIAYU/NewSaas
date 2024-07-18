@@ -375,6 +375,9 @@ async function paymentOperation(id: any, type: any) {
             </template>
           </template>
         </el-table-column>
+        <template #empty>
+          <el-empty description="暂无数据" />
+        </template>
       </ElTable>
       <ElPagination
         :current-page="pagination.page"

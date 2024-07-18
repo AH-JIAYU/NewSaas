@@ -376,6 +376,9 @@ function onDeleteMulti(rows: any[]) {
                 </ElButton>
               </template>
             </ElTableColumn>
+            <template #empty>
+              <el-empty description="暂无数据" />
+            </template>
           </ElTable>
           <ElPagination
             :current-page="pagination.page"

@@ -1,29 +1,36 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 import api from "@/api/modules/record_memberSurveyRecords";
-import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
-
-const customerStore = useUserCustomerStore(); // 客户
+import useUserCustomerStore from "@/store/modules/user_customer";
 
 defineOptions({
   name: "RecordSurveyIndex",
 });
+// 客户
+const customerStore = useUserCustomerStore();
+// 分页
 const { getParams, pagination, onSizeChange, onCurrentChange } =
-  usePagination(); // 分页
-
+  usePagination();
+// listLoading
 const listLoading = ref(false);
-const list = ref<Array<Object>>([]); // 列表
-const selectRows = ref(""); // 表格-选中行
-const checkList = ref<Array<Object>>([]); // 表格-展示的列
-const border = ref(true); // 表格控件-是否展示边框
-const stripe = ref(false); // 表格控件-是否展示斑马条
-const lineHeight = ref<any>("default"); // 表格控件-控制表格大小
-const tableAutoHeight = ref(false); // 表格控件-高度自适应
+// 列表
+const list = ref<Array<Object>>([]);
+// 表格-选中行
+const selectRows = ref("");
+// 表格-展示的列
+const checkList = ref<Array<Object>>([]);
+// 表格控件-是否展示边框
+const border = ref(true);
+// 表格控件-是否展示斑马条
+const stripe = ref(false);
+// 表格控件-控制表格大小
+const lineHeight = ref<any>("default");
+// 表格控件-高度自适应
+const tableAutoHeight = ref(false);
 // 货币类型
 const currencyType = ref<any>();
+// 表格控件-展示列
 const columns = ref([
-  // 表格控件-展示列
-
   { prop: "memberId", label: "会员Id", sortable: true, checked: true },
   { prop: "memberName", label: "所属组", sortable: true, checked: true },
 
@@ -59,14 +66,22 @@ const columns = ref([
   { prop: "viceStatus", label: "副状态", sortable: true, checked: true },
 ]);
 const queryForm = reactive<any>({
-  memberId: "", // 	会员id
-  randomIdentityId: "", // 	随机身份id
-  memberGroupId: "", // 	会员组id
-  projectId: "", // 	项目id
-  projectName: "", // 	项目名称-模糊查询
-  customerId: "", // 	客户Id
-  ip: "", // 	ip-模糊查询
-  surveyStatus: "", // 调查状态:1 C=完成/待审核 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
+  //会员id
+  memberId: "",
+  //随机身份id
+  randomIdentityId: "",
+  //会员组id
+  memberGroupId: "",
+  //项目id
+  projectId: "",
+  //项目名称-模糊查询
+  projectName: "",
+  //客户Id
+  customerId: "",
+  //ip-模糊查询
+  ip: "",
+  //调查状态:1 C=完成/待审核 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
+  surveyStatus: "",
 });
 
 const data = reactive<any>({
@@ -133,20 +148,27 @@ function setSelectRows(val: string) {
 // 重置筛选数据
 function onReset() {
   Object.assign(queryForm, {
-    memberId: "", // 	会员id
-    randomIdentityId: "", // 	随机身份id
-    memberGroupId: "", // 	会员组id
-    projectId: "", // 	项目id
-    projectName: "", // 	项目名称-模糊查询
-    customerId: "", // 	客户Id
-    ip: "", // 	ip-模糊查询
-    surveyStatus: "", // 调查状态:1 C=完成/待审核 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
+    //会员id
+    memberId: "",
+    //随机身份id
+    randomIdentityId: "",
+    //会员组id
+    memberGroupId: "",
+    //项目id
+    projectId: "",
+    //项目名称-模糊查询
+    projectName: "",
+    //客户Id
+    customerId: "",
+    //ip-模糊查询
+    ip: "",
+    //调查状态:1 C=完成/待审核 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
+    surveyStatus: "",
   });
   fetchData();
 }
 onMounted(async () => {
   data.customerList = await customerStore.getCustomerList();
-
   columns.value.forEach((item) => {
     if (item.checked) {
       checkList.value.push(item.prop);
@@ -397,8 +419,8 @@ onMounted(async () => {
           label="调查时间"
         >
           <template #default="{ row }">
-            {{ row.surveyTime ? row.surveyTime + 'min' : 0 }}/
-            {{ row.projectTime ? row.projectTime + 'min' : 0 }}
+            {{ row.surveyTime ? row.surveyTime + "min" : 0 }}/
+            {{ row.projectTime ? row.projectTime + "min" : 0 }}
           </template>
         </el-table-column>
         <ElTableColumn

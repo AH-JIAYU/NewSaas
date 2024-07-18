@@ -389,7 +389,10 @@ onMounted(async () => {
           show-overflow-tooltip
           prop="passRate"
           label="通过率"
-        />
+        > <template #default="{ row }">
+            {{ row.passRate + '%' }}
+          </template>
+        </ElTableColumn>
         <ElTableColumn
           align="center"
           show-overflow-tooltip

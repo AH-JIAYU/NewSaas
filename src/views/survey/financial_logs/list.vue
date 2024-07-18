@@ -604,6 +604,9 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
               prop="updateTime"
               label="时间"
             />
+            <template #empty>
+              <el-empty description="暂无数据" />
+            </template>
           </ElTable>
         </el-tab-pane>
       </el-tabs>

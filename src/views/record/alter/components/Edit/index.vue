@@ -22,30 +22,19 @@ const formData = ref<any>({
   // 	需要修改的数据
   projectClickIdList: [],
   // 成功id/失败id
-  arr:[],
+  arr: [],
 });
 // 校验
 const formRules = ref<FormRules>({
-  type: [
-    { required: true, message: "请选择审核方式", trigger: "change" },
-  ],
-  arr: [
-    { required: true, message: "请输入至少一个ID", trigger: "blur" },
-  ],
+  type: [{ required: true, message: "请选择审核方式", trigger: "change" }],
+  arr: [{ required: true, message: "请输入至少一个ID", trigger: "blur" }],
 });
 // formRef
 const formRef = ref<any>();
-// 判断po变量
-const checked = ref(false);
 // 弹框开关变量
 const dialogTableVisible = ref(false);
 // 获取数据
 async function showEdit(row: any) {
-  if (row) {
-    form.value = JSON.parse(row);
-    formData.value.projectId = form.value.projectId;
-    formData.value.projectName = form.value.projectName;
-  }
   dialogTableVisible.value = true;
 }
 // 提交数据
@@ -53,33 +42,29 @@ async function onSubmit() {
   formRef.value &&
     formRef.value.validate(async (valid: any) => {
       if (valid) {
-        // loading.value = true;
+        loading.value = true;
         formData.value.projectClickIdList =
-        formData.value.arr.split("\n") || [];
+          formData.value.arr.split("\n") || [];
         delete formData.value.arr;
-        console.log("formData.value", formData.value);
-
-        const res = await api.edit(formData.value);
-        console.log('res',res);
-
-        // if (status === 1) {
-        //   // 更新列表
-        //   emits("success");
-        //   // 关闭加载
-        //   loading.value = false;
-        //   // 提示成功
-        //   ElMessage.success({
-        //     message: "操作成功",
-        //     center: true,
-        //   });
-        //   // 执行关闭弹框事件
-        //   closeHandler();
-        // }else {
-        //   ElMessage.error({
-        //     message: "操作失败，请联系工作人员",
-        //     center: true,
-        //   });
-        // }
+        const { status } = await api.edit(formData.value);
+        if (status === 1) {
+          // 更新列表
+          emits("success");
+          // 关闭加载
+          loading.value = false;
+          // 提示成功
+          ElMessage.success({
+            message: "操作成功",
+            center: true,
+          });
+          // 执行关闭弹框事件
+          closeHandler();
+        } else {
+          ElMessage.error({
+            message: "操作失败，请联系工作人员",
+            center: true,
+          });
+        }
       } else {
         ElMessage({
           message: "请检查必填项",
@@ -131,7 +116,7 @@ defineExpose({ showEdit });
             label="变更状态"
           >
             <el-radio-group v-model="formData.type">
-              <el-radio :value="1" size="large"> 完成 </el-radio>
+              <el-radio :value="1" size="large"> 完成/待审核 </el-radio>
               <el-radio :value="7" size="large"> 审核通过 </el-radio>
               <el-radio :value="8" size="large"> 审核失败 </el-radio>
               <el-radio :value="9" size="large"> 数据冻结 </el-radio>

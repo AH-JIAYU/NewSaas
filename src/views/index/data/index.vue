@@ -187,7 +187,7 @@ onMounted(() => {
               show-overflow-tooltip
               align="center"
               prop="num1"
-              label="项目数量"
+              label="关联项目数量"
             />
             <el-table-column
               show-overflow-tooltip
@@ -199,13 +199,13 @@ onMounted(() => {
               show-overflow-tooltip
               align="center"
               prop="num3"
-              label="完成项目数量"
+              label="结算项目数量"
             />
             <el-table-column
               show-overflow-tooltip
               align="center"
               prop="money1"
-              label="完成项目金额"
+              label="结算项目金额"
             />
             <el-table-column
               show-overflow-tooltip
@@ -213,6 +213,9 @@ onMounted(() => {
               prop="money2"
               label="项目营业额"
             />
+            <template #empty>
+              <el-empty description="暂无数据" />
+            </template>
           </el-table>
         </el-tab-pane>
         <el-tab-pane label="客户审核" name="auditing">
@@ -264,26 +267,29 @@ onMounted(() => {
               show-overflow-tooltip
               align="center"
               prop="num1"
-              label="完成单数"
+              label="系统完成数"
             />
             <el-table-column
               show-overflow-tooltip
               align="center"
               prop="num2"
-              label="审核单数"
+              label="结算完成单数"
             />
-            <el-table-column
+            <!-- <el-table-column
               show-overflow-tooltip
               align="center"
               prop="num3"
               label="审核成功"
-            />
+            /> -->
             <el-table-column
               show-overflow-tooltip
               align="center"
               prop="money1"
               label="审核率"
             />
+            <template #empty>
+              <el-empty description="暂无数据" />
+            </template>
           </el-table>
         </el-tab-pane>
       </el-tabs>

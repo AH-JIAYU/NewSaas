@@ -582,7 +582,7 @@ defineExpose({ showEdit });
         <el-card v-if="data.form.descriptionUrl" class="box-card">
           <template #header>
             <div class="card-header">
-              <span>描述及配额</span>
+              <span>描述配额</span>
             </div>
           </template>
           <template v-if="data.form.descriptionUrl">
