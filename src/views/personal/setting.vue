@@ -1,7 +1,7 @@
 <route lang="yaml">
   name: personalSetting
   meta:
-    title: 个人设置
+    title: 个人中心
     cache: personal-edit.password
   </route>
 
