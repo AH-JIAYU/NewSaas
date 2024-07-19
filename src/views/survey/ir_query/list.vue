@@ -133,8 +133,8 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
 <template>
   <div :class="{ 'absolute-container': data.tableAutoHeight }">
     <PageMain>
-      <el-row :gutter="24">
-        <el-col :span="24">
+      <el-row style="margin: 0px 0;" :gutter="24">
+        <el-col style="padding: 0;" :span="24">
           <el-tabs v-model="data.search.type" type="border-card" @tab-change="changeTab">
             <el-tab-pane label="项目IR" :name="1">
               <SearchBar :show-toggle="false">
