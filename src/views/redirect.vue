@@ -2,10 +2,8 @@
   <div class="wscn-box">
     <div class="wscn-http404-container">
       <div class="wscn-http404">
-        <div class="pic-404" style="font-size: 200px">
-          <!-- <svg-icon :icon-class="data.svg" /> -->
-          <!-- <SvgIcon name="i-ri:thumb-up-fill" color="#1482f0" /> -->
-          <SvgIcon :name="data.svg" :color="data.svgColor" />
+        <div class="pic-404">
+          <img :src="getAssetsImages(data.svg)" alt="" />
         </div>
         <div class="bullshit">
           <div class="bullshit__oops" v-html="data.typename" />
@@ -44,52 +42,28 @@ onMounted(async () => {
     ip: ip,
   };
   const resRedirect = await api.redirection(params);
-  console.log("resRedirect", resRedirect);
   const URL = resRedirect.data.status;
-
   if (URL == 1) {
-    data.value.svg = "i-ri:thumb-up-fill";
-    data.value.svgColor = "#1482f0";
-    data.value.svgcss = "";
+    data.value.svg = 1;
     data.value.typename = "<span>恭喜您完成此项调查</span>";
     data.value.englishtypename =
       '<span>Congratulations on</span> <span style="color:#20a0ff" >complete this survey</span>';
     data.value.message = "太棒了！！";
-    // // data.value.describe = item;
     data.value.describe = "谁也不能随随便便成功，它来自彻底的自我管理和毅力。";
     // 新开页面
     if (resRedirect.data.redirectAddress) {
       window.open(resRedirect.data.redirectAddress, "_blank");
-      // 没url去前置页面，然后判断是否做过
     }
-    // 判断是否有登录，有登录则更新cookie
-    // if (puid) {
-    //   var arr = puid.split("T");
-    //   // return request({
-    //   //   url: "/userdata",
-    //   //   method: "post",
-    //   //   data: { uid: arr[0] },
-    //   // }).then((response) => {
-    //   //   if (response.code == 1) {
-    //   //     this.$store.dispatch("user/Getdata", response.user);
-    //   //   } else {
-    //   //     this.$message.error("Data error");
-    //   //   }
-    //   // });
-    // }
   } else if (URL == 2) {
-    data.value.svg = "i-ri:emotion-unhappy-line";
-    data.value.svgColor = "#8a9fcc";
-    data.value.svg = "ri:emotion-unhappy-line";
+    data.value.svg = 2;
+
     data.value.typename = '<span style="color: #e6a239">配额已满</span>';
     data.value.englishtypename =
       '<span>I\'m sorry</span> <span style="color:#20a0ff" >quota is full</span>';
     data.value.message = "请尝试其他调查！";
-    // data.value.describe = item;
     data.value.describe = `学会让自己安静，把思维沉浸下来，慢慢降低对事物的欲望。把自我经常归零，每天都是新的起点，没有年龄的限制，只要你对事物的欲望适当的降低，会赢得更多的求胜机会`;
   } else if (URL == 3) {
-    data.value.svg = "i-ri:user-unfollow-line";
-    data.value.svgColor = "#f85f69";
+    data.value.svg = 3;
     data.value.typename =
       '<span style="color: #e6a239">您已经参与过此项目</span>';
     data.value.englishtypename =
@@ -97,8 +71,7 @@ onMounted(async () => {
     data.value.message = "请尝试其他调查！";
     data.value.describe = "Please try other surveys";
   } else if (URL == 4) {
-    data.value.svg = "i-ep:office-building";
-    data.value.svgColor = "#2cb18d";
+    data.value.svg = 4;
     data.value.typename =
       '<span style="color: #e6a239">当前IP已经参与过此项目</span>';
     data.value.englishtypename =
@@ -106,16 +79,14 @@ onMounted(async () => {
     data.value.message = "请尝试其他调查！";
     data.value.describe = "Please try other surveys";
   } else if (URL == 5) {
-    data.value.svg = "i-ri:shut-down-line";
-    data.value.svgColor = "#64a0cf";
+    data.value.svg = 5;
     data.value.typename = '<span style="color: #e6a239">项目已关闭</span>';
     data.value.englishtypename =
       '<span>I\'m sorry</span> <span style="color:#20a0ff" >The project has been closed</span>';
     data.value.message = "请尝试其他调查！";
     data.value.describe = "Please try other surveys";
   } else if (URL == 6) {
-    data.value.svg = "i-ri:timer-flash-line";
-    data.value.svgColor = "#5e85ff";
+    data.value.svg = 6;
     data.value.typename =
       '<span style="color: #e6a239">答题用时过短，问卷作废!</span>';
     data.value.englishtypename =
@@ -123,14 +94,14 @@ onMounted(async () => {
     data.value.message = "请注意质量！";
     data.value.describe = "Please ensure the quality of the questionnaire";
   } else if (URL == 7) {
-    data.value.svg = "i-mdi:database-alert-outline";
+    data.value.svg = 7;
     data.value.typename = '<span style="color: #e6a239">数据出现异常</span>';
     data.value.englishtypename =
       '<span>I\'m sorry</span> <span style="color:#20a0ff" >Abnormal data</span>';
     data.value.message = "请尝试刷新或联系管理员！";
     data.value.describe = "Please try to refresh or contact the administrator!";
   } else if (URL == 8) {
-    data.value.svg = "i-mdi:text-box-search-outline";
+    data.value.svg = 8;
     data.value.typename =
       '<span style="color: #e6a239">您访问的项目不存在</span>';
     data.value.englishtypename =
@@ -138,7 +109,7 @@ onMounted(async () => {
     data.value.message = "请尝试其他项目！";
     data.value.describe = "Please try other survey!";
   } else if (URL == 9) {
-    data.value.svg = "i-ant-design:column-height-outlined";
+    data.value.svg = 9;
     data.value.typename = '<span style="color: #e6a239">IR过高</span>';
     data.value.englishtypename =
       '<span>I\'m sorry</span> <span style="color:#20a0ff" >IR is too high</span>';
@@ -146,7 +117,7 @@ onMounted(async () => {
     data.value.describe =
       "Please ensure that the completed questionnaire is reasonable";
   } else if (URL == 10) {
-    data.value.svg = "i-mdi:upload-off";
+    data.value.svg = 10;
     data.value.typename =
       '<span style="color: #e6a239">时间段内配额已满</span>';
     data.value.englishtypename =
@@ -154,21 +125,27 @@ onMounted(async () => {
     data.value.message = "请销后再试！";
     data.value.describe = "Please sell it and try again！";
   } else if (URL == 11) {
-    data.value.svg = "i-mdi:upload-off";
+    data.value.svg = 10;
     data.value.typename = '<span style="color: #e6a239">超时完成</span>';
     data.value.englishtypename =
       '<span>I\'m sorry</span> <span style="color:#20a0ff" >Current project timeout completed </span>';
     data.value.message = "请销后再试！";
     data.value.describe = "Please sell it and try again！";
   }
-  // if (pid != undefined && puid != undefined) {
-  //    request({
-  //      url: "/end_page",
-  //      method: "post",
-  //      data: { pid: pid, uid: puid },
-  //    }).then((response) => {});
-  // }
 });
+// 加载静态图片
+const getAssetsImages = (fileName: any, type = "png") => {
+  const path = `/src/assets/images/redirect/${fileName}.${type}`;
+  const modules: Record<string, any> = import.meta.glob(
+    "@/assets/images/redirect/*.{png,svg,jpg,jpeg}",
+    { eager: true }
+  );
+  if (modules[path]) return modules[path].default;
+  else {
+    // 地址错误
+    console.error("Error url is wrong path");
+  }
+};
 </script>
 <style lang="scss" scoped>
 .wscn-box {
@@ -198,8 +175,13 @@ onMounted(async () => {
   .pic-404 {
     position: relative;
     float: left;
-    //  width: 600px;
+    width: 400px;
+    aspect-ratio: 1/1;
     overflow: hidden;
+    img {
+      width: 100%;
+      aspect-ratio: 1/1;
+    }
 
     &__parent {
       width: 100%;
