@@ -197,6 +197,9 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
                 </ElTag>
               </template>
             </ElTableColumn>
+            <template #empty>
+              <el-empty description="暂无数据" />
+            </template>
           </ElTable>
           <ElPagination
             :current-page="pagination.page"

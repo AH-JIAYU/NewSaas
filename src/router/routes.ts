@@ -78,7 +78,7 @@ const systemRoutes: RouteRecordRaw[] = [
         name: "personalSetting",
         component: () => import("@/views/personal/index.vue"),
         meta: {
-          title: "个人设置",
+          title: "个人中心",
           i18n: $t("route.personal.setting"),
           cache: "personalEditPassword",
         },

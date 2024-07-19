@@ -284,6 +284,9 @@ function onDel(row: any) {
             </ElSpace>
           </template>
         </ElTableColumn>
+        <template #empty>
+          <el-empty description="暂无数据" />
+        </template>
       </ElTable>
       <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
         :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"

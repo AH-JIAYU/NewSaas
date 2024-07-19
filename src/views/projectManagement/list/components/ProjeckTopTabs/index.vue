@@ -1015,7 +1015,7 @@ nextTick(() => {
                   :inactive-value="2"
                 />
               </el-form-item>
-            </el-col>
+            </el-col> -->
             <el-col :span="4">
               <el-form-item label="重复IP检测">
                 <el-switch
@@ -1024,7 +1024,7 @@ nextTick(() => {
                   :inactive-value="2"
                 />
               </el-form-item>
-            </el-col> -->
+            </el-col>
             <el-col :span="4">
               <el-form-item label="IP一致性检测">
                 <el-switch

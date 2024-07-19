@@ -258,6 +258,9 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
           prop="projectIr"
           label="项目实际IR"
         />
+        <template #empty>
+          <el-empty description="暂无数据" />
+        </template>
       </ElTable>
       <ElPagination
         :current-page="pagination.page"
