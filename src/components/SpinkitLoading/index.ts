@@ -16,7 +16,7 @@ function loadingShow(options: SpinkitProps, mountNode?: any) {
 }
 
 function loadingHide(mountNode?: any) {
-  instance.unmount();
+  instance?.unmount();
   document.body.removeChild(mountNode);
 }
 

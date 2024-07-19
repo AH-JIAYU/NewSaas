@@ -232,7 +232,7 @@ function onDel(row: any) {
       </ElSpace>
       <ElTable v-loading="data.loading" class="my-4" :data="data.dataList" stripe highlight-current-row border
         height="100%" @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
-        <ElTableColumn v-if="data.batch.enable" type="selection" align="center" fixed />
+        <!-- <ElTableColumn v-if="data.batch.enable" type="selection" align="center" fixed /> -->
         <ElTableColumn prop="account" sortable label="帐号">
           <template #default="{ row }">
             <el-text v-if="row.country === 'CN'" class="mx-1">

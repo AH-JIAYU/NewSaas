@@ -81,7 +81,7 @@ const queryForm = reactive<any>({
   // 项目标识
   projectIdentification: "",
   // 国家id
-  countryId: '',
+  countryId: "",
   // 创建人id
   createUserId: null,
   // 结算状态 1:待审核 2:已审核 3:已开票 4:已结算 5:已冻结
@@ -148,14 +148,14 @@ function clickFullScreen() {
 function sizeChange(size: number) {
   onSizeChange(size).then(() => {
     queryForm.limit = size;
-    fetchData()
+    fetchData();
   });
 }
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
   onCurrentChange(page).then(() => {
     queryForm.page = page;
-    fetchData()
+    fetchData();
   });
 }
 // 重置数据
@@ -174,7 +174,7 @@ function onReset() {
     // 项目标识
     projectIdentification: "",
     // 国家id
-    countryId: '',
+    countryId: "",
     // 创建人id
     createUserId: null,
     // 结算状态 1:待审核 2:已审核 3:已开票 4:已结算 5:已冻结
@@ -192,10 +192,10 @@ function onReset() {
 }
 
 // 获取选中国家
-const selectChange = (val:any) => {
+const selectChange = (val: any) => {
   // 将数组转换成字符串
-  queryForm.countryId = val.join(',');
-}
+  queryForm.countryId = val.join(",");
+};
 // 处理时间
 const timeChange = () => {
   queryForm.startTime = timeArr.value[0];
@@ -210,15 +210,6 @@ const comCountryId = computed(() => (countryIdList: any) => {
 });
 async function fetchData() {
   listLoading.value = true;
-  // console.log(
-  //   "countryList",
-  //   countryList.value,
-  //   "customerList",
-  //   customerList.value,
-  //   "founderList.value",
-  //   founderList.value
-  // );
-  // console.log("queryForm", queryForm);
   const { data } = await api.list(queryForm);
   list.value = data.projectSettlementList;
   pagination.value.total = +data.total;
@@ -437,8 +428,8 @@ function handleMoreOperating(command: string, row: any) {
         :stripe="stripe"
         @selection-change="setSelectRows"
       >
-        <el-table-column type="selection" />
-        <el-table-column type="index" align="center" label="序号" width="55" />
+        <el-table-column align="center" type="selection" />
+        <!-- <el-table-column type="index" align="center" label="序号" width="55" /> -->
         <el-table-column
           show-overflow-tooltip
           prop="projectId"
@@ -450,7 +441,8 @@ function handleMoreOperating(command: string, row: any) {
           prop="projectName"
           align="center"
           label="项目名称"
-        > <template #default="{ row }">
+        >
+          <template #default="{ row }">
             {{ row.projectName ? row.projectName : "-" }}
           </template>
         </el-table-column>
@@ -459,7 +451,8 @@ function handleMoreOperating(command: string, row: any) {
           prop="customerName"
           align="center"
           label="客户简称/标识"
-        > <template #default="{ row }">
+        >
+          <template #default="{ row }">
             {{ row.customerName ? row.customerName : "-" }}
           </template>
         </el-table-column>
@@ -539,8 +532,8 @@ function handleMoreOperating(command: string, row: any) {
           prop="h"
           align="center"
           label="结算状态"
-        ><template #default="{ row }">
-            {{ settlementStatusList[row.status -1].label }}
+          ><template #default="{ row }">
+            {{ settlementStatusList[row.status - 1].label }}
           </template>
         </el-table-column>
         <el-table-column
@@ -561,7 +554,8 @@ function handleMoreOperating(command: string, row: any) {
           prop="remark"
           align="center"
           label="备注"
-        > <template #default="{ row }">
+        >
+          <template #default="{ row }">
             {{ row.remark ? row.remark : "-" }}
           </template>
         </el-table-column>
@@ -569,7 +563,7 @@ function handleMoreOperating(command: string, row: any) {
           <template #default="{ row }">
             <ElSpace>
               <el-button
-              v-if="row.status === 1"
+                v-if="row.status === 1"
                 type="primary"
                 size="small"
                 plain
@@ -584,7 +578,9 @@ function handleMoreOperating(command: string, row: any) {
                 </ElButton>
                 <template #dropdown>
                   <ElDropdownMenu>
-                    <ElDropdownItem v-if="row.status === 5" command="auditing"> 重审 </ElDropdownItem>
+                    <ElDropdownItem v-if="row.status === 5" command="auditing">
+                      重审
+                    </ElDropdownItem>
                     <ElDropdownItem command="edit"> 结算编辑 </ElDropdownItem>
                     <ElDropdownItem command="refundDetails">
                       退款详情

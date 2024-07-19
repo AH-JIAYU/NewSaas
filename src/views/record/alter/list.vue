@@ -87,20 +87,20 @@ function onReset() {
     // 备注
     remark: "",
   });
-  fetchData()
+  fetchData();
 }
 // 每页数量切换
 function sizeChange(size: number) {
   onSizeChange(size).then(() => {
-    queryForm.limit = size
-    fetchData()
+    queryForm.limit = size;
+    fetchData();
   });
 }
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
   onCurrentChange(page).then(() => {
-    queryForm.page = page
-    fetchData()
+    queryForm.page = page;
+    fetchData();
   });
 }
 async function fetchData() {
@@ -227,8 +227,8 @@ onMounted(async () => {
         :stripe="stripe"
         @selection-change="setSelectRows"
       >
-        <el-table-column type="selection" />
-        <el-table-column type="index" align="center" label="序号" width="55" />
+        <el-table-column align="center" type="selection" />
+        <!-- <el-table-column type="index" align="center" label="序号" width="55" /> -->
         <el-table-column
           prop="projectClickId"
           show-overflow-tooltip

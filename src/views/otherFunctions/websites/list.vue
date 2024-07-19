@@ -1,87 +1,89 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
-import Edit from './components/Edit/index.vue'
-import Delete from './components/Delete/index.vue'
+import { reactive, ref } from "vue";
+import Edit from "./components/Edit/index.vue";
+import Delete from "./components/Delete/index.vue";
 
 defineOptions({
-  name: 'OtherFunctionsWebsitesIndex',
-})
+  name: "OtherFunctionsWebsitesIndex",
+});
 
-const { pagination, onSizeChange, onCurrentChange } = usePagination() // 分页
+const { pagination, onSizeChange, onCurrentChange } = usePagination(); // 分页
 // 分页
-const tableSortRef = ref('')
+const tableSortRef = ref("");
 // loading加载
-const listLoading = ref<boolean>(true)
+const listLoading = ref<boolean>(true);
 // 获取组件变量
-const deleteRef = ref()
-const editRef = ref()
+const deleteRef = ref();
+const editRef = ref();
 // 右侧工具栏配置变量
-const tableAutoHeight = ref(false) // 表格控件-高度自适应
-const checkList = ref([])
-const border = ref(true)
-const isFullscreen = ref(false)
-const lineHeight = ref<any>('default')
-const stripe = ref(false)
-const selectRows = ref<any>([])
+const tableAutoHeight = ref(false); // 表格控件-高度自适应
+const checkList = ref([]);
+const border = ref(true);
+const isFullscreen = ref(false);
+const lineHeight = ref<any>("default");
+const stripe = ref(false);
+const selectRows = ref<any>([]);
 const columns = ref([
   {
-    label: '选择渠道',
-    prop: 'ID',
+    label: "选择渠道",
+    prop: "ID",
     sortable: true,
     // 不可改变的
     disableCheck: true,
     checked: true,
   },
-])
+]);
 // 查询参数
 const queryForm = reactive<any>({
   pageNo: 1,
   pageSize: 10,
-  title: '',
+  title: "",
   order: {
-    id: 'ASC',
+    id: "ASC",
   },
   select: {},
-})
-const list = ref<any>([])
+});
+const list = ref<any>([]);
 // 编辑数据
 function editData() {
-  if (!selectRows.value.length) { editRef.value.showEdit() }
+  if (!selectRows.value.length) {
+    editRef.value.showEdit();
+  }
 }
 // 删除数据
 function deleteData() {
-  deleteRef.value.showEdit()
+  deleteRef.value.showEdit();
 }
 // 右侧工具方法
 function clickFullScreen() {
-  isFullscreen.value = !isFullscreen.value
+  isFullscreen.value = !isFullscreen.value;
 }
 // 获取列表选中数据
 function setSelectRows(value: any) {
-  selectRows.value = value
+  selectRows.value = value;
 }
 // 重置数据
 function onReset() {
   Object.assign(queryForm, {
     pageNo: 1,
     pageSize: 10,
-    title: '',
+    title: "",
     order: {
-      id: 'ASC',
+      id: "ASC",
     },
     select: {},
-  })
+  });
 }
 // 每页数量切换
 function sizeChange(size: number) {
-  onSizeChange(size).then(() => fetchData())
+  onSizeChange(size).then(() => fetchData());
 }
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
-  onCurrentChange(page).then(() => fetchData())
+  onCurrentChange(page).then(() => fetchData());
 }
 async function fetchData() {
-  listLoading.value = true
+  listLoading.value = true;
   list.value = [
     { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
     { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
@@ -89,13 +91,13 @@ async function fetchData() {
     { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
     { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
     { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-  ]
-  pagination.value.total = 3
-  listLoading.value = false
+  ];
+  pagination.value.total = 3;
+  listLoading.value = false;
 }
 onMounted(() => {
-  fetchData()
-})
+  fetchData();
+});
 </script>
 
 <template>
@@ -156,19 +158,15 @@ onMounted(() => {
       <el-row :gutter="24">
         <FormLeftPanel />
         <FormRightPanel>
-          <el-button size="default" @click="">
-            导出
-          </el-button>
+          <el-button size="default" @click=""> 导出 </el-button>
           <TabelControl
             v-model:border="border"
             v-model:tableAutoHeight="tableAutoHeight"
             v-model:checkList="checkList"
             v-model:columns="columns"
-
             v-model:line-height="lineHeight"
             v-model:stripe="stripe"
             style="margin-left: 12px"
-
             @query-data="currentChange"
           />
         </FormRightPanel>
@@ -184,12 +182,32 @@ onMounted(() => {
         :stripe="stripe"
         @selection-change="setSelectRows"
       >
-        <el-table-column type="selection" />
-        <el-table-column type="index" align="center" label="序号" width="55" />
-        <el-table-column show-overflow-tooltip prop="a" align="center" label="供应商ID" />
-        <el-table-column show-overflow-tooltip prop="b" align="center" label="开始日期" />
-        <el-table-column show-overflow-tooltip prop="c" align="center" label="结算日期" />
-        <el-table-column show-overflow-tooltip prop="d" align="center" label="状态">
+        <el-table-column align="center" type="selection" />
+        <!-- <el-table-column type="index" align="center" label="序号" width="55" /> -->
+        <el-table-column
+          show-overflow-tooltip
+          prop="a"
+          align="center"
+          label="供应商ID"
+        />
+        <el-table-column
+          show-overflow-tooltip
+          prop="b"
+          align="center"
+          label="开始日期"
+        />
+        <el-table-column
+          show-overflow-tooltip
+          prop="c"
+          align="center"
+          label="结算日期"
+        />
+        <el-table-column
+          show-overflow-tooltip
+          prop="d"
+          align="center"
+          label="状态"
+        >
           <ElSwitch inline-prompt active-text="启用" inactive-text="禁用" />
         </el-table-column>
         <el-table-column align="center" label="操作" width="170">
@@ -266,5 +284,4 @@ onMounted(() => {
     }
   }
 }
-
 </style>

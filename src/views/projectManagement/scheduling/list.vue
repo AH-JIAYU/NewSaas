@@ -204,6 +204,7 @@ onMounted(() => {
         :size="lineHeight"
         :stripe="stripe"
       >
+      <el-table-column align="center" type="selection" />
         <el-table-column
           v-if="checkList.includes('dispatchType')"
           show-overflow-tooltip

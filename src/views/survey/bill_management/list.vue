@@ -274,7 +274,6 @@ async function paymentOperation(id: any, type: any) {
       >
         <el-table-column
           align="center"
-          show-overflow-tooltip
           type="selection"
         />
         <ElTableColumn

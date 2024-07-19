@@ -15,7 +15,7 @@ defineOptions({
 });
 //供应商等级
 const configurationSupplierLevelStore = useConfigurationSupplierLevelStore();
-const supplierLevelList = ref<any>([])
+const supplierLevelList = ref<any>([]);
 const { pagination, getParams, onSizeChange, onCurrentChange } =
   usePagination(); // 分页
 const listLoading = ref(false);
@@ -192,7 +192,8 @@ onMounted(async () => {
       checkList.value.push(item.prop);
     }
   });
-  supplierLevelList.value = await configurationSupplierLevelStore.getLevelNameList();
+  supplierLevelList.value =
+    await configurationSupplierLevelStore.getLevelNameList();
   queryData();
 });
 </script>
@@ -329,12 +330,7 @@ onMounted(async () => {
         :stripe="stripe"
         @selection-change="setSelectRows"
       >
-        <el-table-column
-          align="center"
-          prop="a"
-          show-overflow-tooltip
-          type="selection"
-        />
+        <el-table-column align="center" type="selection" />
         <el-table-column
           v-if="checkList.includes('tenantSupplierId')"
           align="center"
@@ -349,10 +345,10 @@ onMounted(async () => {
           show-overflow-tooltip
           label="供应商名称"
         >
-        <template #default="{row}">
-          {{row.supplierAccord}}
-        </template>
-      </el-table-column>
+          <template #default="{ row }">
+            {{ row.supplierAccord }}
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="checkList.includes('balanceUs')"
           align="center"
@@ -381,12 +377,20 @@ onMounted(async () => {
           show-overflow-tooltip
           label="供应商等级"
         >
-        <template #default="{ row }">
-          <div v-for="item in supplierLevelList" :key="item.tenantSupplierLevelId" :value="item.levelNameOrAdditionRatio">
-            <el-text v-if="item.tenantSupplierLevelId === row.supplierLevelId" class="mx-1">{{ item.levelNameOrAdditionRatio }}</el-text>
-          </div>
+          <template #default="{ row }">
+            <div
+              v-for="item in supplierLevelList"
+              :key="item.tenantSupplierLevelId"
+              :value="item.levelNameOrAdditionRatio"
+            >
+              <el-text
+                v-if="item.tenantSupplierLevelId === row.supplierLevelId"
+                class="mx-1"
+                >{{ item.levelNameOrAdditionRatio }}</el-text
+              >
+            </div>
           </template>
-      </el-table-column>
+        </el-table-column>
         <el-table-column
           v-if="checkList.includes('B2B|B2C')"
           align="center"
@@ -394,10 +398,19 @@ onMounted(async () => {
           label="B2B|B2C"
         >
           <template #default="{ row }">
-            <el-text v-if="row.b2bStatus && row.b2bStatus === 2" class="mx-1"><div class="i-fluent:checkmark-12-filled w-1.5em h-1.5em"></div></el-text>
-            <el-text v-else class="mx-1"><div class="i-entypo:cross w-1.5em h-1.5em"></div></el-text> |
-            <el-text v-if="row.b2cStatus && row.b2cStatus === 2" class="mx-1"><div class="i-fluent:checkmark-12-filled w-1.5em h-1.5em"></div></el-text>
-            <el-text v-else class="mx-1"><div class="i-entypo:cross w-1.5em h-1.5em"></div></el-text>
+            <el-text v-if="row.b2bStatus && row.b2bStatus === 2" class="mx-1"
+              ><div class="i-fluent:checkmark-12-filled w-1.5em h-1.5em"></div
+            ></el-text>
+            <el-text v-else class="mx-1"
+              ><div class="i-entypo:cross w-1.5em h-1.5em"></div
+            ></el-text>
+            |
+            <el-text v-if="row.b2cStatus && row.b2cStatus === 2" class="mx-1"
+              ><div class="i-fluent:checkmark-12-filled w-1.5em h-1.5em"></div
+            ></el-text>
+            <el-text v-else class="mx-1"
+              ><div class="i-entypo:cross w-1.5em h-1.5em"></div
+            ></el-text>
           </template>
         </el-table-column>
         <el-table-column
@@ -406,10 +419,10 @@ onMounted(async () => {
           prop="settlementCycle"
           show-overflow-tooltip
           label="结算周期"
-        ><template #default="{row}">
-          {{row.settlementCycle ? row.settlementCycle + '天' : '-'}}
-        </template>
-      </el-table-column>
+          ><template #default="{ row }">
+            {{ row.settlementCycle ? row.settlementCycle + "天" : "-" }}
+          </template>
+        </el-table-column>
         <ElTableColumn
           v-if="checkList.includes('supplierStatus')"
           align="center"

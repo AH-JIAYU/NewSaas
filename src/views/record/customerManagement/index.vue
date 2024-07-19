@@ -1,37 +1,37 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted } from "vue";
 
 defineOptions({
-  name: 'RecordCustomerManagementIndex',
-})
+  name: "RecordCustomerManagementIndex",
+});
 
-const { pagination, onSizeChange, onCurrentChange } = usePagination() // 分页
+const { pagination, onSizeChange, onCurrentChange } = usePagination(); // 分页
 
-const listLoading = ref(false)
+const listLoading = ref(false);
 
-const list = ref<Array<Object>>([]) // 列表
-const selectRows = ref('') // 表格-选中行
-const checkList = ref<Array<Object>>([]) // 表格-展示的列
-const border = ref(true) // 表格控件-是否展示边框
-const stripe = ref(false) // 表格控件-是否展示斑马条
-const lineHeight = ref<any>('default') // 表格控件-控制表格大小
-const tableAutoHeight = ref(false) // 表格控件-高度自适应
+const list = ref<Array<Object>>([]); // 列表
+const selectRows = ref(""); // 表格-选中行
+const checkList = ref<Array<Object>>([]); // 表格-展示的列
+const border = ref(true); // 表格控件-是否展示边框
+const stripe = ref(false); // 表格控件-是否展示斑马条
+const lineHeight = ref<any>("default"); // 表格控件-控制表格大小
+const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const columns = ref([
   // 表格控件-展示列
   {
-    label: '等级名称',
-    prop: 'a',
+    label: "等级名称",
+    prop: "a",
     sortable: true,
     disableCheck: false, // 不可更改
     checked: true, // 默认展示
   },
-])
+]);
 const queryForm = reactive<any>({
   // 请求接口携带参数
   pageNo: 1,
   pageSize: 10,
   select: {},
-})
+});
 
 // 重置请求
 function queryData() {
@@ -40,16 +40,16 @@ function queryData() {
 }
 // 每页数量切换
 function sizeChange(size: number) {
-  onSizeChange(size).then(() => fetchData())
+  onSizeChange(size).then(() => fetchData());
 }
 
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
-  onCurrentChange(page).then(() => fetchData())
+  onCurrentChange(page).then(() => fetchData());
 }
 // 请求
 async function fetchData() {
-  listLoading.value = true
+  listLoading.value = true;
   // const { data } = await getList(queryForm)
   // list.value = data[0]
   // total.value = data[0].length
@@ -60,8 +60,8 @@ async function fetchData() {
     { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
     { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
     { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-  ]
-  listLoading.value = false
+  ];
+  listLoading.value = false;
 }
 // 重置筛选数据
 function onReset() {
@@ -69,19 +69,21 @@ function onReset() {
     pageNo: 1,
     pageSize: 10,
     select: {},
-  })
-  fetchData()
+  });
+  fetchData();
 }
 // 表格-单选框
 function setSelectRows(val: string) {
-  selectRows.value = val
+  selectRows.value = val;
 }
 onMounted(() => {
   columns.value.forEach((item) => {
-    if (item.checked) { checkList.value.push(item.prop) }
-  })
-  fetchData()
-})
+    if (item.checked) {
+      checkList.value.push(item.prop);
+    }
+  });
+  fetchData();
+});
 </script>
 
 <template>
@@ -148,9 +150,7 @@ onMounted(() => {
       <el-row>
         <FormLeftPanel />
         <FormRightPanel>
-          <el-button size="default">
-            导出
-          </el-button>
+          <el-button size="default"> 导出 </el-button>
           <TabelControl
             v-model:border="border"
             v-model:tableAutoHeight="tableAutoHeight"
@@ -171,12 +171,7 @@ onMounted(() => {
         :stripe="stripe"
         @selection-change="setSelectRows"
       >
-        <el-table-column
-          align="center"
-          prop="a"
-          show-overflow-tooltip
-          type="selection"
-        />
+        <el-table-column align="center" type="selection" />
         <el-table-column
           v-if="checkList.includes('a')"
           align="center"
@@ -208,8 +203,10 @@ onMounted(() => {
           show-overflow-tooltip
           label="操作"
         >
-      <el-button type="primary" link size="default" @click="">跳转</el-button>
-      </el-table-column>
+          <el-button type="primary" link size="default" @click=""
+            >跳转</el-button
+          >
+        </el-table-column>
         <template #empty>
           <el-empty class="vab-data-empty" description="暂无数据" />
         </template>
@@ -275,5 +272,4 @@ onMounted(() => {
     }
   }
 }
-
 </style>

@@ -1,73 +1,73 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue'
+import { onMounted, reactive, ref } from "vue";
 
 defineOptions({
-  name: 'OtherFunctionsNationalTableIndex',
-})
-const { pagination, onSizeChange, onCurrentChange } = usePagination() // 分页
+  name: "OtherFunctionsNationalTableIndex",
+});
+const { pagination, onSizeChange, onCurrentChange } = usePagination(); // 分页
 // 分页
-const tableSortRef = ref('')
+const tableSortRef = ref("");
 // loading加载
-const listLoading = ref<boolean>(true)
+const listLoading = ref<boolean>(true);
 // 右侧工具栏配置变量
-const tableAutoHeight = ref(false) // 表格控件-高度自适应
-const checkList = ref([])
-const border = ref(true)
-const isFullscreen = ref(false)
-const lineHeight = ref<any>('default')
-const stripe = ref(false)
-const selectRows = ref<any>([])
+const tableAutoHeight = ref(false); // 表格控件-高度自适应
+const checkList = ref([]);
+const border = ref(true);
+const isFullscreen = ref(false);
+const lineHeight = ref<any>("default");
+const stripe = ref(false);
+const selectRows = ref<any>([]);
 const columns = ref([
   {
-    label: '选择渠道',
-    prop: 'ID',
+    label: "选择渠道",
+    prop: "ID",
     sortable: true,
     // 不可改变的
     disableCheck: true,
     checked: true,
   },
-])
+]);
 // 查询参数
 const queryForm = reactive<any>({
   pageNo: 1,
   pageSize: 10,
-  title: '',
+  title: "",
   order: {
-    id: 'ASC',
+    id: "ASC",
   },
   select: {},
-})
-const list = ref<any>([])
+});
+const list = ref<any>([]);
 // 右侧工具方法
 function clickFullScreen() {
-  isFullscreen.value = !isFullscreen.value
+  isFullscreen.value = !isFullscreen.value;
 }
 // 获取列表选中数据
 function setSelectRows(value: any) {
-  selectRows.value = value
+  selectRows.value = value;
 }
 // 重置数据
 function onReset() {
   Object.assign(queryForm, {
     pageNo: 1,
     pageSize: 10,
-    title: '',
+    title: "",
     order: {
-      id: 'ASC',
+      id: "ASC",
     },
     select: {},
-  })
+  });
 }
 // 每页数量切换
 function sizeChange(size: number) {
-  onSizeChange(size).then(() => fetchData())
+  onSizeChange(size).then(() => fetchData());
 }
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
-  onCurrentChange(page).then(() => fetchData())
+  onCurrentChange(page).then(() => fetchData());
 }
 async function fetchData() {
-  listLoading.value = true
+  listLoading.value = true;
   // const { data } = await getList(queryForm)
   // list.value = data[0]
   // total.value = data[0].length
@@ -78,19 +78,18 @@ async function fetchData() {
     { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
     { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
     { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-  ]
-  pagination.value.total = 3
-  listLoading.value = false
+  ];
+  pagination.value.total = 3;
+  listLoading.value = false;
 }
 onMounted(() => {
-  fetchData()
-})
+  fetchData();
+});
 </script>
 
 <template>
   <div
     :class="{
-
       'absolute-container': tableAutoHeight,
     }"
   >
@@ -98,7 +97,11 @@ onMounted(() => {
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
           <el-form
-            :model="queryForm.select" size="default" label-width="100px" inline-message inline
+            :model="queryForm.select"
+            size="default"
+            label-width="100px"
+            inline-message
+            inline
             class="search-form"
           >
             <el-form-item label="">
@@ -125,7 +128,9 @@ onMounted(() => {
               </ElButton>
               <ElButton disabled link @click="toggle">
                 <template #icon>
-                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
+                  <SvgIcon
+                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
+                  />
                 </template>
                 {{ fold ? "展开" : "收起" }}
               </ElButton>
@@ -137,34 +142,66 @@ onMounted(() => {
       <el-row :gutter="24">
         <FormLeftPanel />
         <FormRightPanel>
-          <el-button size="default" @click="">
-            导出
-          </el-button>
+          <el-button size="default" @click=""> 导出 </el-button>
 
           <TabelControl
-            v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
-            v-model:columns="columns"  v-model:line-height="lineHeight"
-            v-model:stripe="stripe" style="margin-left: 12px"
+            v-model:border="border"
+            v-model:tableAutoHeight="tableAutoHeight"
+            v-model:checkList="checkList"
+            v-model:columns="columns"
+            v-model:line-height="lineHeight"
+            v-model:stripe="stripe"
+            style="margin-left: 12px"
             @query-data="currentChange"
           />
         </FormRightPanel>
       </el-row>
       <el-table
-        ref="tableSortRef" v-loading="false" style="margin-top: 10px" row-key="id" :data="list" :border="border"
-        :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows"
+        ref="tableSortRef"
+        v-loading="false"
+        style="margin-top: 10px"
+        row-key="id"
+        :data="list"
+        :border="border"
+        :size="lineHeight"
+        :stripe="stripe"
+        @selection-change="setSelectRows"
       >
-        <el-table-column type="index" align="center" label="序号" width="150" />
-        <el-table-column prop="a" show-overflow-tooltip align="center" label="国家编码" />
-        <el-table-column prop="b" show-overflow-tooltip align="center" label="国家(中文)" />
-        <el-table-column prop="c" show-overflow-tooltip align="center" label="国家(英文)" />
+        <el-table-column align="center" type="selection" />
+        <!-- <el-table-column type="index" align="center" label="序号" width="150" /> -->
+        <el-table-column
+          prop="a"
+          show-overflow-tooltip
+          align="center"
+          label="国家编码"
+        />
+        <el-table-column
+          prop="b"
+          show-overflow-tooltip
+          align="center"
+          label="国家(中文)"
+        />
+        <el-table-column
+          prop="c"
+          show-overflow-tooltip
+          align="center"
+          label="国家(英文)"
+        />
         <template #empty>
           <el-empty description="暂无数据" />
         </template>
       </el-table>
       <ElPagination
-        :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
-        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-        background @size-change="sizeChange" @current-change="currentChange"
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
+        :page-sizes="pagination.sizes"
+        :layout="pagination.layout"
+        :hide-on-single-page="false"
+        class="pagination"
+        background
+        @size-change="sizeChange"
+        @current-change="currentChange"
       />
     </PageMain>
   </div>
@@ -228,5 +265,4 @@ onMounted(() => {
     }
   }
 }
-
 </style>

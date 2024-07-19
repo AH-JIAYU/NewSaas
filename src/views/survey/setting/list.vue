@@ -178,7 +178,7 @@ function onSubmit() {
 <template>
   <div v-loading="loading">
     <PageMain>
-      <el-tabs v-model="activeTopTab">
+      <el-tabs v-model="activeTopTab" type="border-card">
         <el-form
           ref="formRef"
           :model="form"

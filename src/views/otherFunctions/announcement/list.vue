@@ -319,13 +319,14 @@ onBeforeUnmount(() => {
         @sort-change="sortChange"
         @selection-change="data.batch.selectionDataList = $event"
       >
-        <el-table-column
+      <el-table-column align="center" type="selection" />
+        <!-- <el-table-column
           align="center"
           show-overflow-tooltip
           type="index"
           label="序号"
           width="80"
-        />
+        /> -->
         <ElTableColumn
           align="center"
           show-overflow-tooltip

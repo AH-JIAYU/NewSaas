@@ -221,12 +221,7 @@ onMounted(() => {
         :stripe="stripe"
         @selection-change="setSelectRows"
       >
-        <el-table-column
-          align="center"
-          prop="a"
-          show-overflow-tooltip
-          type="selection"
-        />
+        <el-table-column align="center" type="selection" />
         <el-table-column
           v-if="checkList.includes('memberChildId')"
           align="center"
@@ -246,8 +241,9 @@ onMounted(() => {
           prop="tenantSupplierId"
           show-overflow-tooltip
           label="供应商ID"
-        > <template #default="{ row }">
-            {{ row.tenantSupplierId ? row.tenantSupplierId : '-' }}
+        >
+          <template #default="{ row }">
+            {{ row.tenantSupplierId ? row.tenantSupplierId : "-" }}
           </template>
         </el-table-column>
         <el-table-column
