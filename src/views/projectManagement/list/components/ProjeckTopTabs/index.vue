@@ -493,7 +493,20 @@ nextTick(() => {
                     :key="item.tenantCustomerId"
                     :value="item.tenantCustomerId"
                     :label="item.customerAccord"
-                  ></el-option>
+                    :disabled="item.isReveal === 1"
+                  >
+                    <span style="float: left">{{ item.customerAccord }}</span>
+                    <span
+                      style="
+                        float: right;
+                        color: var(--el-text-color-secondary);
+                        font-size: 13px;
+                      "
+                      v-show="item.isReveal === 1"
+                    >
+                      {{ item.turnover || item.practiceTurover }}
+                    </span>
+                  </el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -604,7 +617,7 @@ nextTick(() => {
                   controls-position="right"
                   size="large"
                   @keydown="handleInput"
-                ><template #append> min </template>
+                  ><template #append> min </template>
                 </el-input>
               </el-form-item>
             </el-col>
@@ -688,7 +701,9 @@ nextTick(() => {
                 </el-icon>
                 <div class="el-upload__text">上传</div>
                 <template #tip>
-                  <div class="el-upload__tip">支持上传JPG/JPEG/PNG图片，小于10MB</div>
+                  <div class="el-upload__tip">
+                    支持上传JPG/JPEG/PNG图片，小于10MB
+                  </div>
                 </template>
               </el-upload>
 
@@ -975,8 +990,7 @@ nextTick(() => {
                 />
               </el-form-item>
             </el-col>
-            <el-col :span="1">
-            </el-col>
+            <el-col :span="1"> </el-col>
             <el-col :span="6">
               <el-form-item label="小时完成量">
                 <el-input-number
@@ -1003,7 +1017,7 @@ nextTick(() => {
               </el-form-item>
             </el-col>
             <el-col :span="4">
-              <el-form-item label="重复ID检测">
+              <el-form-item label="重复IP检测">
                 <el-switch
                   v-model="props.leftTab.ipDifferenceDetection"
                   :active-value="1"
