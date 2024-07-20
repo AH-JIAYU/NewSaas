@@ -65,14 +65,17 @@ function currentChange(page = 1) {
 function back() {
   radio.value = null;
   data.value.queryForm.type = null;
+  data.value.queryForm.overviewStart = "";
+  data.value.queryForm.overviewEnd = "";
   timeArr.value = [];
 }
 // 去除icon
 const customPrefix = shallowRef({
   render() {
     return h("p", "");
-  },
+  }
 });
+// 选中数据
 const radioChange = (val: any) => {
   data.value.queryForm.type = val;
 };
@@ -88,11 +91,19 @@ async function getDataList() {
     ...getParams(),
     ...data.value.queryForm,
   };
-  api.list(params).then((res: any) => {
-    data.value.loading = false;
-    data.value.list = res.data.data;
-    pagination.value.total = +res.data.total;
-  });
+  if (data.value.activeName === "report") {
+    api.reportList(params).then((res: any) => {
+      data.value.loading = false;
+      data.value.list = res.data.data;
+      pagination.value.total = +res.data.total;
+    });
+  } else {
+    api.auditingList(params).then((res: any) => {
+      data.value.loading = false;
+      data.value.list = res.data.data;
+      pagination.value.total = +res.data.total;
+    });
+  }
 }
 onMounted(() => {
   getDataList();
@@ -106,7 +117,12 @@ onMounted(() => {
     }"
   >
     <PageMain>
-      <el-tabs v-model="data.activeName" type="border-card" class="demo-tabs">
+      <el-tabs
+        v-model="data.activeName"
+        type="border-card"
+        class="demo-tabs"
+        @tab-change="getDataList"
+      >
         <el-tab-pane label="客户报告" name="report">
           <el-row class="fx-b">
             <div style="width: 200px; height: 33px">
@@ -240,7 +256,48 @@ onMounted(() => {
         </el-tab-pane>
         <el-tab-pane label="客户审核" name="auditing">
           <el-row class="fx-b">
-            <SearchTab />
+            <div style="width: 200px; height: 33px">
+              <el-radio-group
+                v-if="radio !== 'Search'"
+                v-model="radio"
+                @change="radioChange"
+              >
+                <el-radio-button label="日" :value="3" />
+                <el-radio-button label="月" :value="2" />
+                <el-radio-button label="年" :value="1" />
+                <el-radio-button label="搜索" value="Search" />
+              </el-radio-group>
+              <div v-else class="fx-b">
+                <el-button
+                  size="default"
+                  class="btn"
+                  style="width: 32px !important"
+                  :icon="Back"
+                  @click="back"
+                />
+                <el-date-picker
+                  v-model="timeArr"
+                  type="datetimerange"
+                  value-format="YYYY-MM-DD hh:mm:ss"
+                  unlink-panels
+                  range-separator="-"
+                  start-placeholder="开始"
+                  end-placeholder="结束"
+                  size="default"
+                  :prefix-icon="customPrefix"
+                  @change="timeChange"
+                />
+                <el-button
+                  type="primary"
+                  class="btn"
+                  style="width: 59px"
+                  size="default"
+                  @click="currentChange()"
+                >
+                  搜索
+                </el-button>
+              </div>
+            </div>
             <FormRightPanel>
               <el-button size="default" @click=""> 导出 </el-button>
               <TabelControl
@@ -267,33 +324,42 @@ onMounted(() => {
             <el-table-column
               show-overflow-tooltip
               align="center"
-              prop="name"
+              prop="customerName"
               label="客户名称"
               width="180"
-            />
+              ><template #default="{ row }">
+                {{ row.customerName ? row.customerName : "-" }}
+              </template>
+            </el-table-column>
             <el-table-column
               show-overflow-tooltip
               align="center"
-              prop="cname"
+              prop="customerShortName"
               label="客户简称"
               width="180"
-            />
+              ><template #default="{ row }">
+                {{ row.customerShortName ? row.customerShortName : "-" }}
+              </template>
+            </el-table-column>
             <el-table-column
               show-overflow-tooltip
               align="center"
-              prop="fz"
+              prop="chargeName"
               label="负责人"
-            />
+              ><template #default="{ row }">
+                {{ row.chargeName ? row.chargeName : "-" }}
+              </template>
+            </el-table-column>
             <el-table-column
               show-overflow-tooltip
               align="center"
-              prop="num1"
+              prop="systemDone"
               label="系统完成数"
             />
             <el-table-column
               show-overflow-tooltip
               align="center"
-              prop="num2"
+              prop="settlementDone"
               label="结算完成单数"
             />
             <!-- <el-table-column
@@ -305,7 +371,7 @@ onMounted(() => {
             <el-table-column
               show-overflow-tooltip
               align="center"
-              prop="money1"
+              prop="settlementRatioPercent"
               label="审核率"
             />
             <template #empty>
