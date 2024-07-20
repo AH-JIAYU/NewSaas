@@ -8,6 +8,7 @@ import useRoleButtonStore from "@/store/modules/get_role_button";
 // 父级传递数据
 const props = defineProps(["id", "row"]);
 const checkStrictly = ref(true)
+const defaultKeys = ref<any>([])
 // 路由 store
 const routeStore = useRouteStore();
 // 按钮权限store
@@ -55,6 +56,9 @@ async function getInfo() {
   loading.value = true;
   // 编辑时获取该id的具体数据
   form.value = JSON.parse(props.row);
+  // console.log('form.value',form.value);
+  // defaultKeys.value.push(form.value.id);
+  // treeRef.value.setCheckedKeys(defaultKeys.value)
   loading.value = false;
 }
 
@@ -132,7 +136,6 @@ defineExpose({
           :default-expanded-keys="[]"
           node-key="id"
           show-checkbox
-          :check-strictly="checkStrictly"
           default-expand-all
           highlight-current
           border
