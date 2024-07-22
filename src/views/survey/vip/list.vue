@@ -84,7 +84,7 @@ function handleEdit(row: any) {
 }
 // 加减款
 const plusMinusPayments = (row:any) => {
-  vipPlusMinusPaymentsRef.value.showEdit(row);
+  vipPlusMinusPaymentsRef.value.showEdit(JSON.stringify(row));
 }
 // 切换状态
 async function changeState(state: any, id: string) {

@@ -14,4 +14,7 @@ export default {
   // 新增-修改会员组-查询组成员调用此接口
   getNickNameList: (data: any) =>
     api.post("member/getMemberLikeNickNameList", data),
+    // 会员加减款
+    getMemberPlusMinusPaymentsList: (data: any) =>
+    api.post("member/additionSubtractionMember", data),
 };

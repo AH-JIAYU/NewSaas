@@ -167,13 +167,15 @@ function onSubmit() {
               address,
             };
             loading.value = true;
-            api.edit(params).then(() => {
+            api.edit(params).then((res: any) => {
               loading.value = false;
-              getDataList();
-              ElMessage.success({
-                message: "修改成功",
-                center: true,
-              });
+              if (res.status === 1) {
+                getDataList();
+                ElMessage.success({
+                  message: "修改成功",
+                  center: true,
+                });
+              }
             });
           } catch (error) {}
         }

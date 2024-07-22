@@ -154,8 +154,9 @@ function onReset() {
   });
   fetchData();
 }
+// 加减款
 function handlePlusMinusPayments(row: any) {
-  plusMinusPaymentsRef.value.showEdit(row);
+  plusMinusPaymentsRef.value.showEdit(JSON.stringify(row));
 }
 // 每页数量切换
 function sizeChange(size: number) {
@@ -483,7 +484,7 @@ onMounted(async () => {
                 size="small"
                 plain
                 type="primary"
-                @click="handlePlusMinusPayments"
+                @click="handlePlusMinusPayments(row)"
               >
                 加减款
               </el-button>
