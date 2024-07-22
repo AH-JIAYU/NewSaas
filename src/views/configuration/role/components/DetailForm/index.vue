@@ -4,11 +4,10 @@ import { ElMessage } from "element-plus";
 import api from "@/api/modules/configuration_role";
 import useRouteStore from "@/store/modules/route";
 import useRoleButtonStore from "@/store/modules/get_role_button";
+import cloneDeep from "lodash-es/cloneDeep";
 
 // 父级传递数据
 const props = defineProps(["id", "row"]);
-const checkStrictly = ref(true)
-const defaultKeys = ref<any>([])
 // 路由 store
 const routeStore = useRouteStore();
 // 按钮权限store
@@ -40,12 +39,19 @@ const formRules = ref<FormRules>({
 });
 
 onMounted(async () => {
+  loading.value = true;
   if (form.value.id !== "") {
     await getInfo();
   }
-  loading.value = true;
+;
   // 从store获取原始路由
   menuData.value = routeStore.routesRaw;
+  // 获取扁平化后的1，2级路由
+  const Level1AndLevel2List = await routeStore.obtainLevel1AndLevel2Routing();
+  // 只保留第三级路由
+  form.value.menuId = form.value.menuId.filter((item: any) => {
+    return !Level1AndLevel2List.some((ite: any) => ite.id === item);
+  });
   // 调用store的方法获取按钮权限，如果没有就调接口
   permissionData.value = await roleButton.getPermissions;
   loading.value = false;
@@ -56,10 +62,7 @@ async function getInfo() {
   loading.value = true;
   // 编辑时获取该id的具体数据
   form.value = JSON.parse(props.row);
-  // console.log('form.value',form.value);
-  // defaultKeys.value.push(form.value.id);
-  // treeRef.value.setCheckedKeys(defaultKeys.value)
-  loading.value = false;
+  // loading.value = false;
 }
 
 // 查询当前路由有那些权限
@@ -72,10 +75,16 @@ function rowPermission(permissionID: any) {
 defineExpose({
   submit() {
     // 同步选中的路由id
-    form.value.menuId = treeRef
-      .value!.getCheckedKeys()
-      .concat(treeRef.value.getHalfCheckedKeys());
+    form.value.menuId = treeRef.value!.getCheckedKeys(false)
     return new Promise<void>((resolve) => {
+      //  获取选中的所有子节点
+      const tree = treeRef.value.getCheckedKeys();
+      // 获取所有半选的主节点
+      const halltree = treeRef.value.getHalfCheckedKeys();
+      // 组合一下
+      const menupath = tree.concat(halltree);
+      form.value.menuId = menupath;
+      // return;
       if (form.value.id === "") {
         formRef.value &&
           formRef.value.validate((valid: any) => {
@@ -129,6 +138,7 @@ defineExpose({
       </ElFormItem>
       <ElFormItem label="权限">
         <el-tree
+          v-if="!loading"
           ref="treeRef"
           :data="menuData"
           style="width: 100%"
@@ -137,7 +147,6 @@ defineExpose({
           node-key="id"
           show-checkbox
           default-expand-all
-          highlight-current
           border
         >
           <template #default="{ data }">

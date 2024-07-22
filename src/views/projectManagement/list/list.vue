@@ -95,12 +95,10 @@ function addProject() {
 }
 // 编辑项目
 function projectEdit(row: any) {
-  // if (row.allocationStatus === 1) {
   addProjeckRef.value.showEdit(row);
 }
 // 修改状态
 async function changeStatus(row: any, val: any) {
-  // if (row.allocationStatus === 1) {
   const params = {
     projectId: row.projectId,
     isOnline: val,
@@ -470,7 +468,8 @@ onMounted(async () => {
           label="IR/NIR"
         >
           <template #default="{ row }">
-            {{ row.ir ? row.ir + "%" : row.ir }} / {{ row.nir ? row.nir + "%" : row.nir }}
+            {{ row.ir ? row.ir + "%" : row.ir }} /
+            {{ row.nir ? row.nir + "%" : row.nir }}
           </template>
         </el-table-column>
         <el-table-column
@@ -628,7 +627,7 @@ onMounted(async () => {
     <ProjeckEdit ref="addProjeckRef" @fetchData="fetchData" />
     <ProjectDetail ref="projectDetailsRef" />
     <!-- 项目调度 -->
-    <scheduling ref="schedulingRef" />
+    <scheduling ref="schedulingRef" @fetchData="fetchData" />
   </div>
 </template>
 

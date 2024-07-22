@@ -50,28 +50,20 @@ async function showEdit(row: any, view?: any) {
     } else {
       data.title = "添加";
     }
+    dialogTableVisible.value = true;
   } else {
-    const findData = data.projectList.find(
-      (item: any) => item.projectId == row.projectId
-    );
-    // 存在 已调度
-    if (!findData) {
+    if (row.isDispatch === 1) {
       ElMessage.warning({
-        message: "该项目已经调度",
+        message: "该项目已经调度，请前往「项目调度」进行编辑",
         center: true,
       });
-      dialogTableVisible.value = false
     } else {
-      // 不存在 为调度
-      // 项目列表里调用的添加项目调度
       data.title = "添加";
       data.form.projectId = row.projectId;
       await changeProject(row.projectId);
       dialogTableVisible.value = true;
     }
   }
-
-
 }
 // 切换项目
 const changeProject = async (val: any) => {
@@ -117,7 +109,6 @@ function closeHandler() {
 function onSubmit() {
   formRef.value &&
     formRef.value.validate(async (valid: any) => {
-      console.log("data.title", data.title);
       if (valid) {
         if (data.title === "添加") {
           const { status } = await submitLoading(api.create(data.form));
@@ -167,7 +158,11 @@ defineExpose({ showEdit });
             <el-radio :value="2" size="large"> 指定价格 </el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="项目ID/名称" prop="projectId">
+        <el-form-item
+          label="项目ID/名称"
+          prop="projectId"
+          v-if="data.title === '添加'"
+        >
           <el-select
             placeholder=""
             v-model="data.form.projectId"
