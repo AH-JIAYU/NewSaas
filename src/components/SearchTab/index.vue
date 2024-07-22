@@ -27,8 +27,7 @@ const changeTime = (val) => {
 </script>
 
 <template>
-  <div style="width: 200px; height: 33px">
-    <!-- {{ props }} -->
+  <div :style="{ width: time ? '200px' : '140px', height: '33px' }">
     <el-radio-group v-show="type !== 'select'" v-model="type" @change="getList">
       <el-radio-button label="日" value="day" />
       <el-radio-button label="月" value="month" />
