@@ -37,10 +37,14 @@ const form = ref<any>({
   fixedPrice: null,
   //	外部站点
   externalSite: "",
-  // // 手机号
-  // phone: "",
-  // // 邮箱
-  // email: "",
+  // 手机号
+  phone: "",
+  // 邮箱
+  email: "",
+  // QQ
+  qqCode: "",
+  // 公司地址
+  address: "",
 });
 // 自定义校验手机号
 const validatePhone = (rule: any, value: any, callback: any) => {
@@ -63,25 +67,18 @@ const validateEmail = (rule: any, value: any, callback: any) => {
     callback();
   }
 };
-// 动态表单校验
-const chengAccount = () => {
-  // 手机号
-  form.value.phone = [
-    { required: true, trigger: "blur", message: "请输入手机号/邮箱" },
-    { validator: validatePhone, trigger: "blur" },
-  ];
-  //邮箱
-  form.value.email = [
-    { required: true, trigger: "blur", message: "请输入手机号/邮箱" },
-    { validator: validateEmail, trigger: "blur" },
-  ];
-};
 // 校验
 const formRules = ref<FormRules>({
   webName: [{ required: true, message: "请输入网站名称", trigger: "blur" }],
-  memberURL: [{ required: true, message: "请输入供应商网址", trigger: "blur" }],
-  phone: [{ required: false, trigger: "blur", message: "请输入手机号" }],
-  email: [{ required: false, trigger: "blur", message: "请输入邮箱" }],
+  memberURL: [{ required: true, message: "请输入会员网址", trigger: "blur" }],
+  phone: [
+    { required: false, trigger: "blur", message: "请输入手机号" },
+    { validator: validatePhone, trigger: "blur" },
+  ],
+  email: [
+    { required: false, trigger: "blur", message: "请输入邮箱" },
+    { validator: validateEmail, trigger: "blur" },
+  ],
 });
 onMounted(() => {
   getDataList();
@@ -146,6 +143,10 @@ function onSubmit() {
             minimumAmount,
             fixedPrice,
             externalSite,
+            phone,
+            email,
+            qqCode,
+            address,
           } = form.value;
           const params = {
             id,
@@ -159,6 +160,10 @@ function onSubmit() {
             minimumAmount,
             fixedPrice,
             externalSite,
+            phone,
+            email,
+            qqCode,
+            address,
           };
           loading.value = true;
           api.edit(params).then(() => {
@@ -289,17 +294,15 @@ function onSubmit() {
               </el-col>
             </el-row>
           </el-tab-pane>
-        </el-form>
-        <el-form label-width="130px">
+
           <el-tab-pane label="联系我们" name="联系我们">
             <el-row :gutter="20">
               <el-col :span="24">
                 <el-form-item label="电子邮箱" prop="email">
                   <el-input
                     style="width: 18rem"
-                    v-model="form.keyWords"
+                    v-model="form.email"
                     placeholder=""
-                    @blur="chengAccount"
                   />
                 </el-form-item>
               </el-col>
@@ -307,9 +310,8 @@ function onSubmit() {
                 <el-form-item label="手机号码" prop="phone">
                   <el-input
                     style="width: 18rem"
-                    v-model="form.keyWords"
+                    v-model="form.phone"
                     placeholder=""
-                    @blur="chengAccount"
                   />
                 </el-form-item>
               </el-col>
@@ -317,7 +319,7 @@ function onSubmit() {
                 <el-form-item label="QQ号码" prop="">
                   <el-input
                     style="width: 18rem"
-                    v-model="form.keyWords"
+                    v-model="form.qqCode"
                     placeholder=""
                   />
                 </el-form-item>
@@ -326,14 +328,14 @@ function onSubmit() {
                 <el-form-item label="公司地址" prop="">
                   <el-input
                     style="width: 18rem"
-                    v-model="form.keyWords"
+                    v-model="form.address"
                     placeholder=""
                   />
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item>
-                  <el-button type="primary"> 确认 </el-button>
+                  <el-button type="primary" @click="onSubmit"> 确认 </el-button>
                 </el-form-item>
               </el-col>
             </el-row>
