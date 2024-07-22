@@ -264,22 +264,18 @@ const useRouteStore = defineStore(
     }
     // 生成路由（后端获取）
     async function generateRoutesAtBack() {
-      await apiApp
-        .routeList()
-        .then((res: any) => {
-          // 设置 routes 数据
-          const dataList = converDeprecatedAttribute(
-            convertSingleRoutes(formatBackRoutes(res.data) as any)
-          );
-          // 将路由数据放入递归函数中排序
-          routesRaw.value = recursiveSort(dataList);
-          isGenerate.value = true;
-          // 初始化常驻标签页
-          if (settingsStore.settings.tabbar.enable) {
-            tabbarStore.initPermanentTab();
-          }
-        })
-        .catch(() => {});
+      const res = await apiApp.routeList()
+      // 设置 routes 数据
+      const dataList = converDeprecatedAttribute(
+        convertSingleRoutes(formatBackRoutes(res.data) as any)
+      );
+      // 将路由数据放入递归函数中排序
+      routesRaw.value = recursiveSort(dataList);
+      isGenerate.value = true;
+      // 初始化常驻标签页
+      if (settingsStore.settings.tabbar.enable) {
+        tabbarStore.initPermanentTab();
+      }
     }
     // 生成路由（文件系统生成）
     function generateRoutesAtFilesystem(asyncRoutes: RouteRecordRaw[]) {
