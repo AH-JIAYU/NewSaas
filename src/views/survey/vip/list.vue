@@ -290,6 +290,7 @@ onMounted(async () => {
         :stripe="stripe"
         @selection-change="setSelectRows"
       >
+      <el-table-column align="center" type="selection" />
         <el-table-column
           v-if="checkList.includes('memberId')"
           align="center"

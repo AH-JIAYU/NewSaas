@@ -208,12 +208,7 @@ onMounted(async () => {
         :stripe="stripe"
         @selection-change="setSelectRows"
       >
-        <el-table-column
-          align="center"
-          show-overflow-tooltip
-          type="selection"
-        />
-
+        <el-table-column align="center" type="selection" />
         <el-table-column
           v-if="checkList.includes('customerShortName')"
           align="center"

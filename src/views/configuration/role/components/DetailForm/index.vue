@@ -43,7 +43,7 @@ onMounted(async () => {
   if (form.value.id !== "") {
     await getInfo();
   }
-
+;
   // 从store获取原始路由
   menuData.value = routeStore.routesRaw;
   // 获取扁平化后的1，2级路由
@@ -75,7 +75,7 @@ function rowPermission(permissionID: any) {
 defineExpose({
   submit() {
     // 同步选中的路由id
-    form.value.menuId = treeRef.value!.getCheckedKeys(false);
+    form.value.menuId = treeRef.value!.getCheckedKeys(false)
     return new Promise<void>((resolve) => {
       //  获取选中的所有子节点
       const tree = treeRef.value.getCheckedKeys();
@@ -149,8 +149,6 @@ defineExpose({
           default-expand-all
           border
         >
-          <!--          check-strictly
-          highlight-current -->
           <template #default="{ data }">
             <div class="custom-tree-node">
               <div class="menu">

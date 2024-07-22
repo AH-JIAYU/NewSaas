@@ -312,8 +312,8 @@ onMounted(() => {
         :stripe="stripe"
         @selection-change="setSelectRows"
       >
-        <el-table-column type="selection" />
-        <el-table-column type="index" align="center" label="序号" width="55" />
+        <el-table-column align="center" type="selection" />
+        <!-- <el-table-column type="index" align="center" label="序号" width="55" /> -->
         <el-table-column
           prop="tenantCustomerShortName"
           show-overflow-tooltip

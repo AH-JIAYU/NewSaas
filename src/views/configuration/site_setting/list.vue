@@ -181,7 +181,7 @@ function onSubmit() {
   <div v-loading="loading">
     <PageHeader title="站点设置管理" />
     <PageMain>
-      <el-tabs v-model="activeTopTab">
+      <el-tabs v-model="activeTopTab" type="border-card">
         <el-form
           ref="formRef"
           :model="form"

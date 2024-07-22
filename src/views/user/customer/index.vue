@@ -248,11 +248,7 @@ onMounted(() => {
         :stripe="stripe"
         @selection-change="setSelectRows"
       >
-        <el-table-column
-          align="center"
-          show-overflow-tooltip
-          type="selection"
-        />
+        <el-table-column align="center" type="selection" />
         <el-table-column
           v-if="checkList.includes('tenantCustomerId')"
           align="center"
@@ -281,8 +277,8 @@ onMounted(() => {
           prop="turnover"
           show-overflow-tooltip
           label="客户营业限额($/月)"
-        ><template #default="{ row }">
-            {{ row.turnover ? row.turnover : '-' }}
+          ><template #default="{ row }">
+            {{ row.turnover ? row.turnover : "-" }}
           </template>
         </el-table-column>
         <el-table-column
@@ -291,8 +287,8 @@ onMounted(() => {
           prop="rateAudit"
           show-overflow-tooltip
           label="审核率Min值"
-        ><template #default="{ row }">
-            {{ row.rateAudit ? row.rateAudit : '-' }}
+          ><template #default="{ row }">
+            {{ row.rateAudit ? row.rateAudit : "-" }}
           </template>
         </el-table-column>
         <el-table-column
@@ -301,8 +297,8 @@ onMounted(() => {
           prop="chargeName"
           show-overflow-tooltip
           label="负责人"
-        ><template #default="{ row }">
-            {{ row.chargeName ? row.chargeName : '-' }}
+          ><template #default="{ row }">
+            {{ row.chargeName ? row.chargeName : "-" }}
           </template>
         </el-table-column>
         <ElTableColumn

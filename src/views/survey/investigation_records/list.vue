@@ -317,8 +317,6 @@ onMounted(async () => {
       >
         <el-table-column
           align="center"
-          prop="a"
-          show-overflow-tooltip
           type="selection"
         />
         <el-table-column

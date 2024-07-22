@@ -307,8 +307,6 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
           >
             <el-table-column
               align="center"
-              prop="a"
-              show-overflow-tooltip
               type="selection"
             />
             <ElTableColumn

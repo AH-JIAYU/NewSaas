@@ -247,13 +247,14 @@ onMounted(() => {
         :stripe="stripe"
         @selection-change="setSelectRows"
       >
-        <el-table-column
+        <el-table-column align="center" type="selection" />
+        <!-- <el-table-column
           show-overflow-tooltip
           width="80"
           align="center"
           type="index"
           label="序号"
-        />
+        /> -->
         <el-table-column
           v-if="checkList.includes('a')"
           align="center"

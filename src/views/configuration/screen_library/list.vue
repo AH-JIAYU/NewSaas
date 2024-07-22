@@ -262,13 +262,13 @@ function onDelProject(row: any) {
             inline
             class="search-form"
           >
-            <ElFormItem label="国家">
+            <ElFormItem label="">
               <el-select
                 @keydown.enter="currentChange()"
                 @clear="currentChange()"
                 filterable
                 v-model="data.search.countryId"
-                placeholder="Select"
+                placeholder="国家"
               >
                 <ElOption
                   v-for="item in data.countryList"
@@ -356,6 +356,9 @@ function onDelProject(row: any) {
                         v-model="scope.row.status"
                         :active-value="1"
                         :inactive-value="2"
+                        inline-prompt
+                        active-text="启用"
+                        inactive-text="禁用"
                       />
                     </template>
                     <template v-else>
@@ -364,6 +367,9 @@ function onDelProject(row: any) {
                         v-model="scope.row.status"
                         :active-value="1"
                         :inactive-value="2"
+                        inline-prompt
+                        active-text="启用"
+                        inactive-text="禁用"
                       />
                     </template>
                   </template>
@@ -430,6 +436,9 @@ function onDelProject(row: any) {
                 v-model="scope.row.isDefault"
                 :active-value="1"
                 :inactive-value="2"
+                inline-prompt
+                active-text="启用"
+                inactive-text="禁用"
               />
             </template>
           </ElTableColumn>
@@ -454,8 +463,8 @@ function onDelProject(row: any) {
             </template>
           </ElTableColumn>
           <template #empty>
-          <el-empty description="暂无数据" />
-        </template>
+            <el-empty description="暂无数据" />
+          </template>
         </ElTable>
       </el-form>
 

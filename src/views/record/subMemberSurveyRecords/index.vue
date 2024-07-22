@@ -307,12 +307,7 @@ onMounted(async () => {
         :stripe="stripe"
         @selection-change="setSelectRows"
       >
-        <el-table-column
-          align="center"
-          prop="a"
-          show-overflow-tooltip
-          type="selection"
-        />
+        <el-table-column align="center" type="selection" />
         <el-table-column
           v-if="checkList.includes('memberChildId')"
           align="center"
@@ -418,8 +413,8 @@ onMounted(async () => {
           label="调查时间"
         >
           <template #default="{ row }">
-            {{ row.surveyTime ? row.surveyTime + 'min' : 0 }}/
-            {{ row.projectTime ? row.projectTime + 'min' : 0 }}
+            {{ row.surveyTime ? row.surveyTime + "min" : 0 }}/
+            {{ row.projectTime ? row.projectTime + "min" : 0 }}
           </template>
         </el-table-column>
         <ElTableColumn
