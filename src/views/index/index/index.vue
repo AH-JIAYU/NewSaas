@@ -8,19 +8,22 @@ import * as echarts from "echarts";
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import api from "@/api/modules/index_index";
+import cloneDeep from "lodash-es/cloneDeep";
 const router = useRouter();
 
-const data = reactive<any>({
+const data = ref<any>({
   search: {
+    overviewType: "day", //	总揽类型 day/month/year/select
     overviewStart: "", //	总揽开始
     overviewEnd: "", //总揽结束
     overviewTime: [],
-    overviewType: "day", //	总揽类型 day/month/year/select
+
     turnoverType: "day", //营业额趋势 day/month/year
+
+    completeType: "day", //	完成排名类型 day/month/year/select
     completeStart: "", //	完成排名开始时间
     completeEnd: "", //	完成排名结束时间
-    complete: [],
-    completeType: "day", //	完成排名类型 day/month/year/select
+    completeTime: [],
   },
   dataCenterOverViewVO: {}, //总揽响应
   dataCenterTurnoverVO: {}, //	营业额趋势响应
@@ -192,92 +195,33 @@ function echarts1() {
   };
   chart1.setOption(option);
 }
+// 处理数据
+function transformData(inputArray: any) {
+  // 新的数组用于存储转换后的对象
+  let transformedArray = inputArray.map((item: any) => {
+    // 提取客户名，并去除可能的 ":null" 后缀
+    let customerName = item.customerName.replace(":null", "");
+
+    // 构造新的对象格式
+    return {
+      value: item.projectTotal,
+      name: customerName,
+      datas: {
+        aud: item.auditSuccessRate.toString(),
+        audR: item.auditRate.toString(),
+        com: item.projectTotal.toString(),
+      },
+    };
+  });
+
+  return transformedArray;
+}
 // 客户总览
 function echarts2() {
-  const data = [
-    {
-      value: 100,
-      name: "张三",
-      title: "1111",
-      datas: [{ aud: "333" }, { audR: "333" }, { com: "123123" }],
-    },
-    {
-      value: 20,
-      name: "李四",
-      title: "1111",
-      datas: [{ aud: "444" }, { audR: "333" }, { com: "123123" }],
-    },
-    {
-      value: 30,
-      name: "王五",
-      title: "1111",
-      datas: [{ aud: "333" }, { audR: "333" }, { com: "123123" }],
-    },
-    {
-      value: 40,
-      name: "赵六",
-      title: "1111",
-      datas: [{ aud: "333" }, { audR: "333" }, { com: "123123" }],
-    },
-    {
-      value: 50,
-      name: "老王",
-      title: "1111",
-      datas: [{ aud: "333" }, { audR: "333" }, { com: "123123" }],
-    },
-    {
-      value: 60,
-      name: "老张",
-      title: "1111",
-      datas: [{ aud: "333" }, { audR: "333" }, { com: "123123" }],
-    },
-    {
-      value: 70,
-      name: "老李",
-      title: "1111",
-      datas: [{ aud: "333" }, { audR: "333" }, { com: "123123" }],
-    },
-    {
-      value: 80,
-      name: "老赵",
-      title: "1111",
-      datas: [{ aud: "333" }, { audR: "333" }, { com: "123123" }],
-    },
-    {
-      value: 200,
-      name: "王总",
-      title: "1111",
-      datas: [{ aud: "333" }, { audR: "333" }, { com: "123123" }],
-    },
-    {
-      value: 100,
-      name: "张总",
-      title: "1111",
-      datas: [{ aud: "333" }, { audR: "333" }, { com: "123123" }],
-    },
-    {
-      value: 110,
-      name: "李总",
-      title: "1111",
-      datas: [{ aud: "333" }, { audR: "333" }, { com: "123123" }],
-    },
-    {
-      value: 130,
-      name: "赵总",
-      title: "1111",
-      datas: [{ aud: "333" }, { audR: "333" }, { com: "123123" }],
-    },
-    {
-      value: 140,
-      name: "老钱",
-      title: "1111",
-      datas: [{ aud: "333" }, { audR: "333" }, { com: "123123" }],
-    },
-    {
-      value: "",
-      name: "查看更多>>",
-    },
-  ];
+  const Data = transformData(cloneDeep(data.value.dataCenterCustomerVOS));
+  const legendData = data.value.dataCenterCustomerVOS.map((item: any) => {
+    return item.customerName;
+  });
   chart2 = echarts.init(chart2Ref.value);
   // 配置数据
   const option = {
@@ -291,10 +235,9 @@ function echarts2() {
     tooltip: {
       trigger: "item",
       formatter(data: any) {
-        return `客户：${data.name}</br>项目完成数: ${data.data.datas[2].com}</br>审核率: ${data.data.datas[0].aud}</br>审核成功率: ${data.data.datas[1].audR}`;
+        return `客户：${data.name}</br>项目完成数: ${data.data.datas.com}</br>审核率: ${data.data.datas.aud}`;
       },
     },
-
     legend: [
       {
         orient: "horizontal",
@@ -305,19 +248,7 @@ function echarts2() {
         center: ["50%", "50%"],
         icon: "stack",
         data: [
-          "张三",
-          "李四",
-          "王五",
-          "赵六",
-          "老王",
-          "老张",
-          "老李",
-          "老赵",
-          "王总",
-          "张总",
-          "李总",
-          "赵总",
-          "老钱",
+          ...legendData,
           {
             name: "查看更多>>",
             icon: "none",
@@ -330,25 +261,32 @@ function echarts2() {
         ],
         formatter(name: any) {
           let target, percentage;
-          for (let i = 0; i < data.length; i++) {
-            if (data[i].name === name) {
-              target = data[i].value;
+          for (let i = 0; i < Data.length; i++) {
+            if (Data[i].name === name) {
+              target = Data[i].value;
             }
           }
-          if (name == "查看更多") {
+          if (name == "查看更多>>") {
             return name;
           }
-          const arr = [`{a|${name}} `, `{b| ${target}}`];
+          const arr = [
+            `{a|${name.length > 5 ? name.substr(0, 5) + "..." : name}} `,
+            `{b| ${target}}`,
+          ];
           return arr.join(" ");
+        },
+        tooltip: {
+          show: true,
+          trigger: "item",
         },
         textStyle: {
           rich: {
             a: {
-              width: 50,
+              width: 70,
               backgroundColor: "transparent",
             },
             b: {
-              width: 60,
+              width: 20,
               backgroundColor: "transparent",
             },
           },
@@ -362,7 +300,13 @@ function echarts2() {
         radius: ["40%", "60%"],
         center: ["25%", "50%"],
         text: "省市公司",
-        data,
+        data: [
+          ...Data,
+          {
+            value: "",
+            name: "查看更多>>",
+          },
+        ],
         label: {
           show: false,
         },
@@ -387,7 +331,7 @@ function echarts2() {
           {
             type: "text",
             style: {
-              text: `${data.reduce(
+              text: `${Data.reduce(
                 (total: any, item: any) => total + item.value,
                 0
               )}`,
@@ -410,9 +354,24 @@ function echarts2() {
   // 传入数据
   chart2.setOption(option);
 }
-
 async function getList() {
-  const res = await api.list(data.search);
+  // 设置总览时间
+  if (
+    data.value.search.overviewTime &&
+    !!data.value.search.overviewTime.length
+  ) {
+    data.value.search.overviewStart = data.value.search.overviewTime[0] || "";
+    data.value.search.overviewEnd = data.value.search.overviewTime[1] || "";
+  }
+  // 设置完成排名时间
+  if (
+    data.value.search.completeTime &&
+    !!data.value.search.completeTime.length
+  ) {
+    data.value.search.completeStart = data.value.search.overviewTime[0] || "";
+    data.value.search.completeEnd = data.value.search.overviewTime[1] || "";
+  }
+  const res = await api.list(data.value.search);
   const {
     dataCenterOverViewVO,
     dataCenterTurnoverVO,
@@ -420,16 +379,15 @@ async function getList() {
     dataCenterSupplierCompletedQuantities,
     dataCenterSupplierTurnovers,
   } = res.data;
-  data.dataCenterOverViewVO = dataCenterOverViewVO;
-  data.dataCenterTurnoverVO = dataCenterTurnoverVO;
-  data.dataCenterCustomerVOS = dataCenterCustomerVOS;
-  data.dataCenterSupplierCompletedQuantities =
+  data.value.dataCenterOverViewVO = dataCenterOverViewVO;
+  data.value.dataCenterTurnoverVO = dataCenterTurnoverVO;
+  data.value.dataCenterCustomerVOS = dataCenterCustomerVOS;
+  data.value.dataCenterSupplierCompletedQuantities =
     dataCenterSupplierCompletedQuantities;
-  data.dataCenterSupplierTurnovers = dataCenterSupplierTurnovers;
-  console.log("res.data", res.data);
+  data.value.dataCenterSupplierTurnovers = dataCenterSupplierTurnovers;
 }
-onMounted(() => {
-  getList();
+onMounted(async () => {
+  await getList();
   echarts1();
   echarts2();
   window.addEventListener("resize", () => {
@@ -443,7 +401,11 @@ onMounted(() => {
   <div>
     <PageMain>
       <el-row>
-        <SearchTab />
+        <SearchTab
+          @getList="getList"
+          v-model:type="data.search.overviewType"
+          v-model:time="data.search.overviewTime"
+        />
       </el-row>
       <ElRow :gutter="20">
         <ElCol>
@@ -513,7 +475,13 @@ onMounted(() => {
         <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
           <el-card>
             <template #header>
-              <p class="title">营业额趋势</p>
+              <p class="title fx-b">
+                营业额趋势
+                <SearchTab
+                  @getList="getList"
+                  v-model:type="data.search.turnoverType"
+                />
+              </p>
             </template>
 
             <div
@@ -544,7 +512,11 @@ onMounted(() => {
             <template #header>
               <p class="title fx-b">
                 完成数排名
-                <SearchTab />
+                <SearchTab
+                  @getList="getList"
+                  v-model:type="data.search.completeType"
+                  v-model:time="data.search.completeTime"
+                />
               </p>
             </template>
             <el-table :data="tableData" style="width: 100%">
@@ -560,18 +532,18 @@ onMounted(() => {
         <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
           <el-card>
             <template #header>
-              <p class="title fx-b">
-                供应商营业额排行
-                <SearchTab />
-              </p>
+              <p class="title fx-b">供应商营业额排行</p>
             </template>
 
-            <el-table :data="data.dataCenterSupplierTurnovers" style="width: 100%">
+            <el-table
+              :data="data.dataCenterSupplierTurnovers"
+              style="width: 100%"
+            >
               <el-table-column type="index" />
               <el-table-column prop="supplierName" label="供应商" />
-              <el-table-column sortable  prop="dayTurnover" label="日" />
-              <el-table-column sortable  prop="monthTurnover" label="月" />
-              <el-table-column sortable  prop="yearTurnover" label="年" />
+              <el-table-column sortable prop="dayTurnover" label="日" />
+              <el-table-column sortable prop="monthTurnover" label="月" />
+              <el-table-column sortable prop="yearTurnover" label="年" />
             </el-table>
           </el-card>
         </el-col>
