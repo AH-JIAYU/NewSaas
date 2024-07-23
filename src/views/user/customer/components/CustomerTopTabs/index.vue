@@ -48,7 +48,6 @@ const changeCustomerConfigInfo = async (val: any, index: number) => {
     const findData = secretKeyConfigList.value.find(
       (item: any) => item.id === val
     );
-
     const res = await api.generateKey({ type: findData.name });
     localToptTab.value.tenantCustomerConfigInfoList[index].secretKey = res.data;
   }
@@ -57,7 +56,6 @@ const changeCustomerConfigInfo = async (val: any, index: number) => {
 onBeforeMount(async () => {
   isEncryption.value =
     localToptTab.value.tenantCustomerConfigInfoList.length === 2;
-
   const res = await api.getTenantSecretKeyConfigList();
   secretKeyConfigList.value = res.data;
 });
