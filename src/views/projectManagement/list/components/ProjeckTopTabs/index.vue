@@ -497,14 +497,17 @@ nextTick(() => {
                   >
                     <span style="float: left">{{ item.customerAccord }}</span>
                     <span
-                      style="
-                        float: right;
-                        color: var(--el-text-color-secondary);
-                        font-size: 13px;
-                      "
+                      style="float: right; color: red; font-size: 13px"
                       v-show="item.isReveal === 1"
                     >
-                      {{ item.turnover || item.practiceTurover }}
+                      <span v-show="item.turnover < item.practiceTurover">
+                        营业额超限
+                      </span>
+                      <span
+                        v-show="item.rateAudit > item.practiceRateAudit"
+                      >
+                        审核率不合格
+                      </span>
                     </span>
                   </el-option>
                 </el-select>
