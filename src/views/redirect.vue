@@ -131,6 +131,34 @@ onMounted(async () => {
       '<span>I\'m sorry</span> <span style="color:#20a0ff" >Current project timeout completed </span>';
     data.value.message = "请销后再试！";
     data.value.describe = "Please sell it and try again！";
+  } else if (URL == 12) {
+    data.value.svg = 7;
+    data.value.typename = '<span style="color: #e6a239">ip不一致</span>';
+    data.value.englishtypename =
+      '<span>I\'m sorry</span> <span style="color:#20a0ff" >IP is inconsistent </span>';
+    data.value.message = "请销后再试！";
+    data.value.describe = "Please sell it and try again！";
+  } else if (URL == 13) {
+    data.value.svg = 7;
+    data.value.typename = '<span style="color: #e6a239">被甄别</span>';
+    data.value.englishtypename =
+      '<span>I\'m sorry</span> <span style="color:#20a0ff" >have been screened </span>';
+    data.value.message = "请销后再试！";
+    data.value.describe = "Please sell it and try again！";
+  } else if (URL == 14) {
+    data.value.svg = 7;
+    data.value.typename = '<span style="color: #e6a239">配额满</span>';
+    data.value.englishtypename =
+      '<span>I\'m sorry</span> <span style="color:#20a0ff" >quota full  </span>';
+    data.value.message = "请销后再试！";
+    data.value.describe = "Please sell it and try again！";
+  } else if (URL == 15) {
+    data.value.svg = 7;
+    data.value.typename = '<span style="color: #e6a239">安全终止</span>';
+    data.value.englishtypename =
+      '<span>I\'m sorry</span> <span style="color:#20a0ff" >safe termination  </span>';
+    data.value.message = "请销后再试！";
+    data.value.describe = "Please sell it and try again！";
   }
 });
 // 加载静态图片
