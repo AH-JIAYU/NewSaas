@@ -27,8 +27,9 @@ defineExpose({ showEdit });
   <div>
     <el-dialog
       v-model="dialogTableVisible"
-      title="添加项目详情"
+      title="遗漏项目添加"
       width="700"
+      style="height: 200px"
       :before-close="closeHandler"
     >
       <el-form label-width="100px" :inline="false">
@@ -45,3 +46,9 @@ defineExpose({ showEdit });
     </el-dialog>
   </div>
 </template>
+
+<style scoped lang="scss">
+:deep(.el-dialog__body) {
+  margin-top: 20px;
+}
+</style>
