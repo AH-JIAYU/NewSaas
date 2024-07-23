@@ -16,7 +16,7 @@ const visible = defineModel<boolean>({
 
 const formRef = ref()
 
-const title = '添加结算'
+const title = '新增结算'
 
 function onSubmit() {
   // submit() 为组件内部方法

@@ -116,7 +116,7 @@ function currentChange(page = 1) {
 function sortChange({ prop, order }: { prop: string; order: string }) {
   onSortChange(prop, order).then(() => getDataList());
 }
-// 添加国家
+// 新增国家
 function onCreate(row?: any) {
   data.value.editProps.id = "";
   data.value.editProps.countryId = row ? row.countryId : "";

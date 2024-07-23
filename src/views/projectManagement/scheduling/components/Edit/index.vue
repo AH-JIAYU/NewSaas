@@ -48,7 +48,7 @@ async function showEdit(row: any, view?: any) {
       data.form = cloneDeep(row);
       await changeProject(row.projectId);
     } else {
-      data.title = "添加";
+      data.title = "新增";
     }
     dialogTableVisible.value = true;
   } else {
@@ -58,7 +58,7 @@ async function showEdit(row: any, view?: any) {
         center: true,
       });
     } else {
-      data.title = "添加";
+      data.title = "新增";
       data.form.projectId = row.projectId;
       await changeProject(row.projectId);
       dialogTableVisible.value = true;
@@ -110,11 +110,11 @@ function onSubmit() {
   formRef.value &&
     formRef.value.validate(async (valid: any) => {
       if (valid) {
-        if (data.title === "添加") {
+        if (data.title === "新增") {
           const { status } = await submitLoading(api.create(data.form));
           status === 1 &&
             ElMessage.success({
-              message: "添加成功",
+              message: "新增成功",
             });
         } else {
           const { status } = await submitLoading(api.edit(data.form));
@@ -161,7 +161,7 @@ defineExpose({ showEdit });
         <el-form-item
           label="项目ID/名称"
           prop="projectId"
-          v-if="data.title === '添加'"
+          v-if="data.title === '新增'"
         >
           <el-select
             placeholder=""

@@ -28,7 +28,7 @@ let leftTabsData = reactive<any>([]); // 明确指定类型为 LeftTab[]
 // 显隐
 async function showEdit(row: any) {
   if (!row) {
-    title.value = "添加";
+    title.value = "新增";
     leftTabsData =
       stagedDataStore.surveyVip ||
       reactive([{ ...surveyVipStore.initialTopTabsData }]);
@@ -45,7 +45,7 @@ async function showEdit(row: any) {
 // 清空现有数据
 function initializeLeftTabsData(data: any) {
   leftTabsData = reactive<any>([]);
-  // 添加主数据作为第一个 Tab
+  // 新增主数据作为第一个 Tab
   leftTabsData.push({
     ...data,
   });
@@ -62,7 +62,7 @@ function close() {
   leftTabsData = reactive<any>([]);
   drawerisible.value = false;
   validateTopTabs.value = [];
-  if (title.value === "添加") {
+  if (title.value === "新增") {
     stagedDataStore.surveyVip = null;
   }
 }
@@ -93,7 +93,7 @@ async function save() {
   if (validateAll.value.every((item: any) => item === "fulfilled")) {
     // 判重
     if (!hasDuplicateCustomer(leftTabsData)) {
-      if (title.value === "添加") {
+      if (title.value === "新增") {
         const { status } = await submitLoading(
           api.create({
             addMemberInfoList: leftTabsData,
@@ -140,7 +140,7 @@ defineExpose({
   <div>
     <el-drawer
       v-model="drawerisible"
-      :class="title === '添加' ? 'hide-drawer-header' : 'edit-drawer'"
+      :class="title === '新增' ? 'hide-drawer-header' : 'edit-drawer'"
       append-to-body
       :close-on-click-modal="false"
       destroy-on-close
@@ -157,7 +157,7 @@ defineExpose({
       />
       <template #footer>
         <el-button @click="close"> 取消 </el-button>
-        <el-button v-if="title === '添加'" type="warning" @click="staging">
+        <el-button v-if="title === '新增'" type="warning" @click="staging">
           暂存
         </el-button>
         <el-button type="primary" @click="save"> 确定 </el-button>

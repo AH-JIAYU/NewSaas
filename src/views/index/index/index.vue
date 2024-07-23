@@ -345,7 +345,7 @@ function echarts2() {
     ],
   };
   chart2.on("legendselectchanged", function (params: any) {
-    // 如果点击的图例是 '需要添加超链接的图例名称'
+    // 如果点击的图例是 '需要新增超链接的图例名称'
     if (params.name === "查看更多>>") {
       // 执行跳转到链接的操作
       router.push("/datacenter");

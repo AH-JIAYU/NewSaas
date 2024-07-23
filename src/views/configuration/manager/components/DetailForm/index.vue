@@ -5,7 +5,8 @@ import apiUser from '@/api/modules/configuration_manager'
 import useBasicDictionaryStore from '@/store/modules/otherFunctions_basicDictionary'
 import useTenantRoleStore from '@/store/modules/tenant_role'
 
-
+// 禁用修改密码
+const disabled = ref(false)
 const useStoreCountry = useBasicDictionaryStore()
 // 角色码
 const roleStore = useTenantRoleStore()
@@ -79,10 +80,10 @@ const chengAccount = () => {
 };
 // 校验
 const formRules = ref<FormRules>({
-  // password: [
-  //   { required: true, trigger: 'blur', message: '请输入密码' },
-  //   { min: 6, max: 18, trigger: 'blur', message: '密码长度为6到18位' },
-  // ],
+  password: [
+    { required: true, trigger: 'blur', message: '请输入密码' },
+    { min: 6, max: 18, trigger: 'blur', message: '密码长度为6到18位' },
+  ],
   name: [
     { required: true, message: '请输入用户名', trigger: 'blur' },
   ],
@@ -100,6 +101,8 @@ onMounted(async () => {
   loading.value = false
   if (props.id) {
     form.value = JSON.parse(props.row)
+    formRules.value.password = []
+    disabled.value = true;
   }
 })
 const handleChange = (val: any) => {
@@ -190,7 +193,7 @@ function onCancel() {
         <ElInput v-model="form.email" placeholder="请输入邮箱" @change="handleChange" @blur="chengAccount" />
       </ElFormItem>
       <ElFormItem label="密码" prop="password">
-        <ElInput v-model="form.password" placeholder="需要修改密码时直接修改即可" />
+        <ElInput :disabled="disabled" model="form.password" placeholder="需要修改密码时请前往当前账号个人中心" />
       </ElFormItem>
       <ElFormItem label="角色" prop="role">
         <el-select v-model="form.role" placeholder="请选择角色">

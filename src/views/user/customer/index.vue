@@ -16,7 +16,7 @@ const { pagination, getParams, onSizeChange, onCurrentChange } =
 
 const listLoading = ref(false); // 加载
 const list = ref<Array<Object>>([]); // 表格数据
-const editRef = ref<any>(); // 组件ref 添加编辑
+const editRef = ref<any>(); // 组件ref 新增编辑
 const checkRef = ref<any>(); // 组件ref 查看
 const selectRows = ref(); // 表格选中行
 const border = ref(true); // 表格控件-边框
@@ -50,7 +50,7 @@ const columns = ref([
   { label: "客户营业限额/月", checked: true, sortable: true, prop: "turnover" },
   { label: "审核率Min值", checked: true, sortable: true, prop: "rateAudit" },
 ]);
-// 添加
+// 新增
 function handleAdd() {
   editRef.value.showEdit();
 }

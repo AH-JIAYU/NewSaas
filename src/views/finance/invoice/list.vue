@@ -283,7 +283,7 @@ onMounted(() => {
             size="default"
             @click="addData"
           >
-            添加发票
+            新增发票
           </el-button>
         </FormLeftPanel>
 

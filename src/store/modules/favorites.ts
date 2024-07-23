@@ -47,11 +47,11 @@ const useFavoritesStore = defineStore(
       return list
     })
 
-    // 判断路由是否可添加进收藏夹
+    // 判断路由是否可新增进收藏夹
     function canAdd(fullPath: Favorites.recordRaw['fullPath']) {
       return flatSidebarMenu.value.includes(fullPath)
     }
-    // 判断路由是否已经添加进收藏夹
+    // 判断路由是否已经新增进收藏夹
     function isAdd(fullPath: Favorites.recordRaw['fullPath']) {
       return list.value.some(item => item.fullPath === fullPath)
     }

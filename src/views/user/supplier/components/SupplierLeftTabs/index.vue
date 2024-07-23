@@ -80,10 +80,10 @@ defineExpose({ activeLeftTab });
     <template v-if="!localLeftTab[0].id">
       <el-button
         class="button"
-        :disabled="localLeftTab.length > 9 || props.title !== '添加'"
+        :disabled="localLeftTab.length > 9 || props.title !== '新增'"
         @click="addLeftTab()"
       >
-        添加供应商
+        新增供应商
       </el-button>
       <el-tabs
         v-model="activeLeftTab"

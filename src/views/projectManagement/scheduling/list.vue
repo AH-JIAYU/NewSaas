@@ -176,7 +176,7 @@ onMounted(() => {
             size="default"
             @click="addData"
           >
-            添加
+            新增
           </el-button>
         </FormLeftPanel>
 

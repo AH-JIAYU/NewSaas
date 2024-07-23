@@ -352,7 +352,7 @@ onMounted(async () => {
             size="default"
             @click="addProject"
           >
-            添加项目
+            新增项目
           </el-button>
           <el-button type="primary" size="default" @click="dispatch">
             调度

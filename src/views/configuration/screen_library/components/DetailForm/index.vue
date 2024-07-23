@@ -29,7 +29,7 @@ surveyLocalization.supportedLocales = ["en", "fr", "zh-cn"]; //语言可以用�
 setLicenseKey(
   "ZjU4MjI0NjMtN2YzYi00ZDMyLWEyYmEtOTliMmVhZmEyODc5OzE9MjAyNS0wMi0yNA=="
 );
-// 添加属性id type 不能直接使用id 会冲突 报错
+// 新增属性id type 不能直接使用id 会冲突 报错
 Serializer.addProperty("question", { name: "surveyId" });
 Serializer.addProperty("question", { name: "surveyType" });
 Serializer.addProperty("itemvalue", { name: "surveyId" });
@@ -116,7 +116,7 @@ onMounted(async () => {
         options.callback(error, "error");
       });
   });
-  // 新增问题事件 添加id
+  // 新增问题事件 新增id
   creator.onQuestionAdded.add(async function (sender: any, options: any) {
     // options.question.contentQuestion 问题内容 只有问题是自定义的时候才会有这个属性
     if (!options.question.contentQuestion) {
@@ -154,7 +154,7 @@ onMounted(async () => {
       }
     }
   });
-  // 新增答案事件 添加id
+  // 新增答案事件 新增id
   creator.onItemValueAdded.add(async function (sender: any, options: any) {
     const res = await obtainLoading(api.getId({}));
     var q = options.newItem;

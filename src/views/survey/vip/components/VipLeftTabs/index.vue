@@ -71,10 +71,10 @@ defineExpose({ activeLeftTab });
   <div>
     <el-button
       class="button"
-      :disabled="localLeftTab.length > 29 || props.title !== '添加'"
+      :disabled="localLeftTab.length > 29 || props.title !== '新增'"
       @click="addLeftTab()"
     >
-      添加会员
+      新增会员
     </el-button>
     <el-tabs
       v-model="activeLeftTab"

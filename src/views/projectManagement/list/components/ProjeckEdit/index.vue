@@ -34,7 +34,7 @@ const LeftTabsRef = ref<any>(); // Ref
 // 显隐
 async function showEdit(row: any) {
   if (!row) {
-    title.value = "添加";
+    title.value = "新增";
     const initialTopTabsData = cloneDeep(
       projectManagementListStore.initialTopTabsData
     );
@@ -73,7 +73,7 @@ function initializeLeftTabsData(data: any) {
     },
   };
   leftTabsData = [];
-  // 添加主数据作为第一个 Tab
+  // 新增主数据作为第一个 Tab
   const { projectInfoList, ...newData } = cloneDeep(data);
   leftTabsData.push(newData);
   // // // 如果存在 children，为每个 child 创建一个 Tab
@@ -192,7 +192,7 @@ async function onSubmit() {
   if (validateAll.value.every((item: any) => item === "fulfilled")) {
     if (!hasDuplicateCustomer(leftTabsData)) {
       const params = processingData();
-      if (title.value === "添加") {
+      if (title.value === "新增") {
         const { status } = await submitLoading(api.create(params));
         status === 1 &&
           ElMessage.success({
@@ -228,7 +228,7 @@ function closeHandler() {
   validateTopTabs.value = [];
   dialogTableVisible.value = false;
 
-  if (title.value === "添加") {
+  if (title.value === "新增") {
     stagedDataStore.projectManagementList = null;
   }
 }

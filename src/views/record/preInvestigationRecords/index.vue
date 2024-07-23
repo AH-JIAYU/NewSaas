@@ -98,7 +98,7 @@ async function getChildList(row: any) {
     // 如果存在，就删除该元素
     data.expandedRows.splice(index, 1);
   } else {
-    // 如果不存在，就添加该元素
+    // 如果不存在，就新增该元素
     data.expandedRows.push(row.id);
   }
   if (!row.children) {
