@@ -15,4 +15,7 @@ export default {
   // 项目分配查询状态开启的供应商列表
   getTenantSupplierProjectList: (data: any) =>
     api.post("tenantSupplier/getTenantSupplierProjectList", data),
+    // 供应商加减款
+  getSupplierPlusMinusPaymentsList: (data: any) =>
+    api.post("tenantSupplier/additionSubtractionSupplier", data),
 };

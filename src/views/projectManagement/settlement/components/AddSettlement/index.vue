@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref } from "vue";
 
 defineOptions({
-  name: 'AddSettlement',
-})
+  name: "AddSettlement",
+});
 // 弹框开关变量
-const dialogTableVisible = ref(false)
+const dialogTableVisible = ref(false);
 // 提交数据
 function onSubmit() {}
 async function showEdit(row: any) {
-  dialogTableVisible.value = true
+  dialogTableVisible.value = true;
 }
 // 弹框关闭事件
 function closeHandler() {
@@ -18,78 +18,37 @@ function closeHandler() {
   // delete formData.id
   // // 重置表单
   // Object.assign(formData, defaultState)
-  dialogTableVisible.value = false
+  dialogTableVisible.value = false;
 }
-defineExpose({ showEdit })
+defineExpose({ showEdit });
 </script>
 
 <template>
   <div>
     <el-dialog
       v-model="dialogTableVisible"
-      title="添加项目详情"
+      title="遗漏项目添加"
       width="700"
+      style="height: 200px"
       :before-close="closeHandler"
     >
       <el-form label-width="100px" :inline="false">
-        <el-tabs>
-          <el-tab-pane label="遗漏项目添加">
-            <el-form-item label="项目ID">
-              <el-input />
-            </el-form-item>
-          </el-tab-pane>
-          <el-tab-pane label="回访项目添加">
-            <el-form-item label="回访项目ID">
-              <el-input />
-            </el-form-item>
-            <el-form-item label="项目名称">
-              <el-input />
-            </el-form-item>
-            <el-form-item label="项目标识">
-              <el-input />
-            </el-form-item>
-            <el-form-item label="价格$">
-              <el-input />
-            </el-form-item>
-            <el-form-item label="已加入回访ID">
-              <el-input />
-            </el-form-item>
-            <el-form-item label="GUID">
-              <el-input type="textarea" :rows="5" />
-            </el-form-item>
-          </el-tab-pane>
-          <el-tab-pane label="已完结项目补加">
-            <el-form-item label="项目名称">
-              <el-input />
-            </el-form-item>
-            <el-form-item label="价格$">
-              <el-input />
-            </el-form-item>
-            <el-form-item label="数量">
-              <el-input />
-            </el-form-item>
-            <el-form-item label="PO号">
-              <el-input />
-            </el-form-item>
-            <el-form-item label="备注">
-              <el-input />
-            </el-form-item>
-            <el-form-item label="渠道">
-              <el-select />
-            </el-form-item>
-          </el-tab-pane>
-        </el-tabs>
+        <el-form-item label="项目ID">
+          <el-input />
+        </el-form-item>
       </el-form>
       <template #footer>
         <div style="flex: auto">
-          <el-button type="primary" @click="onSubmit">
-            确定
-          </el-button>
-          <el-button @click="dialogTableVisible = false">
-            取消
-          </el-button>
+          <el-button type="primary" @click="onSubmit"> 确定 </el-button>
+          <el-button @click="dialogTableVisible = false"> 取消 </el-button>
         </div>
       </template>
     </el-dialog>
   </div>
 </template>
+
+<style scoped lang="scss">
+:deep(.el-dialog__body) {
+  margin-top: 20px;
+}
+</style>

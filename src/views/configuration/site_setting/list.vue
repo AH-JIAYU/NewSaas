@@ -75,12 +75,12 @@ const formRules = ref<FormRules>({
     { required: true, message: "请输入供应商网址", trigger: "blur" },
   ],
   phone: [
-    { required: false, trigger: "blur", message: "请输入手机号" },
-    { validator: validatePhone, trigger: "blur" },
+    { required: false, trigger: "submit", message: "请输入手机号" },
+    { validator: validatePhone, trigger: "submit" },
   ],
   email: [
-    { required: false, trigger: "blur", message: "请输入邮箱" },
-    { validator: validateEmail, trigger: "blur" },
+    { required: false, trigger: "submit", message: "请输入邮箱" },
+    { validator: validateEmail, trigger: "submit" },
   ],
 });
 onMounted(() => {
@@ -167,13 +167,15 @@ function onSubmit() {
               address,
             };
             loading.value = true;
-            api.edit(params).then(() => {
+            api.edit(params).then((res: any) => {
               loading.value = false;
-              getDataList();
-              ElMessage.success({
-                message: "修改成功",
-                center: true,
-              });
+              if (res.status === 1) {
+                getDataList();
+                ElMessage.success({
+                  message: "修改成功",
+                  center: true,
+                });
+              }
             });
           } catch (error) {}
         }
@@ -295,7 +297,7 @@ function onSubmit() {
           <el-tab-pane label="联系我们" name="联系我们">
             <el-row :gutter="20">
               <el-col :span="24">
-                <el-form-item label="电子邮箱" prop="email">
+                <el-form-item label="电子邮箱" prop="">
                   <el-input
                     style="width: 18rem"
                     v-model="form.email"
@@ -304,7 +306,7 @@ function onSubmit() {
                 </el-form-item>
               </el-col>
               <el-col :span="24">
-                <el-form-item label="手机号码" prop="phone">
+                <el-form-item label="手机号码" prop="">
                   <el-input
                     style="width: 18rem"
                     v-model="form.phone"
