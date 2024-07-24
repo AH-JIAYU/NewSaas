@@ -18,11 +18,18 @@ const constantRoutes: RouteRecordRaw[] = [
       i18n: $t("route.login"),
     },
   },
-  // 重定向
+  // 内部重定向
   {
     path: "/redirect",
     name: "redirect",
     component: () => import("@/views/redirect.vue"),
+    meta: { whiteList: true },
+  },
+  // 外部重定向
+  {
+    path: "/externalRedirection",
+    name: "externalRedirection",
+    component: () => import("@/views/externalRedirection.vue"),
     meta: { whiteList: true },
   },
   {
