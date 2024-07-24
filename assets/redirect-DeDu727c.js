@@ -1,9 +1,0 @@
-
-/**
- * 由 Fantastic-admin 提供技术支持
- * Powered by Fantastic-admin
- * Gitee  https://fantastic-admin.gitee.io
- * Github https://fantastic-admin.github.io
- */
-
-import{k as t}from"./index-BItR3vGR.js";const o=""+new URL("1-D783aeLU.png",import.meta.url).href,p=Object.freeze(Object.defineProperty({__proto__:null,default:o},Symbol.toStringTag,{value:"Module"})),_=""+new URL("10-DSochuHC.png",import.meta.url).href,f=Object.freeze(Object.defineProperty({__proto__:null,default:_},Symbol.toStringTag,{value:"Module"})),r=""+new URL("2-DY9WR2yL.png",import.meta.url).href,d=Object.freeze(Object.defineProperty({__proto__:null,default:r},Symbol.toStringTag,{value:"Module"})),l=""+new URL("3-Bj_RnA05.png",import.meta.url).href,s=Object.freeze(Object.defineProperty({__proto__:null,default:l},Symbol.toStringTag,{value:"Module"})),n=""+new URL("4-BVdgDlsH.png",import.meta.url).href,m=Object.freeze(Object.defineProperty({__proto__:null,default:n},Symbol.toStringTag,{value:"Module"})),a=""+new URL("5-Jx6_V_r4.png",import.meta.url).href,j=Object.freeze(Object.defineProperty({__proto__:null,default:a},Symbol.toStringTag,{value:"Module"})),u=""+new URL("6-Db9O7LkY.png",import.meta.url).href,y=Object.freeze(Object.defineProperty({__proto__:null,default:u},Symbol.toStringTag,{value:"Module"})),i=""+new URL("7-C_u4fAXX.png",import.meta.url).href,O=Object.freeze(Object.defineProperty({__proto__:null,default:i},Symbol.toStringTag,{value:"Module"})),c=""+new URL("8-gLG-_WI3.png",import.meta.url).href,S=Object.freeze(Object.defineProperty({__proto__:null,default:c},Symbol.toStringTag,{value:"Module"})),b=""+new URL("9-CrB91bYM.png",import.meta.url).href,v=Object.freeze(Object.defineProperty({__proto__:null,default:b},Symbol.toStringTag,{value:"Module"})),L={redirection:e=>t.get("callback/redirection",{params:e})};export{p as _,L as a,f as b,d as c,s as d,m as e,j as f,y as g,O as h,S as i,v as j};
