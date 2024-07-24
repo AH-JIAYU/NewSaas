@@ -220,9 +220,6 @@ onMounted(() => {
       <el-row>
         <FormLeftPanel>
           <el-button type="primary" size="default" @click="handleAdd">
-            <template #icon>
-              <SvgIcon name="i-ep:plus" />
-            </template>
             新增
           </el-button>
         </FormLeftPanel>

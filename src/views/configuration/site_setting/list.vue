@@ -31,11 +31,11 @@ const form = ref<any>({
   // 供应商网址
   supplierURL: "",
   // 默认会员价格比例
-  defaultPriceRatio: "",
+  defaultPriceRatio: null,
   // 税率
-  taxRate: "",
+  taxRate: null,
   // 最低结算金额
-  minimumAmount: "",
+  minimumAmount: null,
   // 调查限价
   fixedPrice: "",
   // 手机号

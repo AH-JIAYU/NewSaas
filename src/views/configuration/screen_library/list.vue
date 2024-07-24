@@ -299,9 +299,6 @@ function onDelProject(row: any) {
       <ElDivider border-style="dashed" />
       <ElSpace wrap>
         <ElButton type="primary" size="default" @click="onCreate">
-          <template #icon>
-            <SvgIcon name="i-ep:plus" />
-          </template>
           新增前置问卷库
         </ElButton>
       </ElSpace>

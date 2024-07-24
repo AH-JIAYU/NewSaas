@@ -136,9 +136,6 @@ function onDel(row: any) {
     <PageMain>
       <ElSpace wrap>
         <ElButton type="primary" size="default" @click="onCreate">
-          <template #icon>
-            <SvgIcon name="i-ep:plus" />
-          </template>
           新增角色管理
         </ElButton>
       </ElSpace>

@@ -97,7 +97,7 @@ const formRules = ref<FormRules>({
 onMounted(async () => {
   loading.value = true
   country.value = await useStoreCountry.getCountry()
-  munulevs.value = await roleStore.getRole
+  munulevs.value = await roleStore.getRole()
   loading.value = false
   if (props.id) {
     form.value = JSON.parse(props.row)

@@ -287,9 +287,6 @@ onBeforeUnmount(() => {
       <el-row :gutter="24">
         <FormLeftPanel>
           <ElButton type="primary" size="default" @click="onCreate">
-            <template #icon>
-              <SvgIcon name="i-ep:plus" />
-            </template>
             新增
           </ElButton>
         </FormLeftPanel>

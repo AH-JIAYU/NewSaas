@@ -193,7 +193,6 @@ onMounted(async () => {
         <FormLeftPanel>
           <el-button
             style="margin-right: 10px"
-            :icon="Plus"
             type="primary"
             size="default"
             @click="addData"

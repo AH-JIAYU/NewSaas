@@ -224,9 +224,6 @@ function onDel(row: any) {
       <ElDivider border-style="dashed" />
       <ElSpace wrap>
         <ElButton type="primary" size="default" @click="onCreate">
-          <template #icon>
-            <SvgIcon name="i-ep:plus" />
-          </template>
           新增用户
         </ElButton>
       </ElSpace>
