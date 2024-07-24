@@ -17,13 +17,42 @@ const lineHeight = ref<any>("default"); // 表格控件-控制表格大小
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const columns = ref([
   // 表格控件-展示列
+  { label: "子会员ID", prop: "memberChildId", sortable: true, checked: true },
   {
-    label: "等级名称",
-    prop: "a",
+    label: "子会员名称",
+    prop: "memberNickname",
     sortable: true,
-    disableCheck: false, // 不可更改
-    checked: true, // 默认展示
+    checked: true,
   },
+  { label: "子会员姓名", prop: "memberName", sortable: true, checked: true },
+  { label: "待审余额", prop: "pendingBalance", sortable: true, checked: true },
+  {
+    label: "可用余额",
+    prop: "availableBalance",
+    sortable: true,
+    checked: true,
+  },
+  {
+    label: "供应商ID",
+    prop: "tenantSupplierId",
+    sortable: true,
+    checked: true,
+  },
+  { label: "B2B", prop: "b2bStatus", sortable: true, checked: true },
+  {
+    label: "所属组",
+    prop: "memberChildGroupName",
+    sortable: true,
+    checked: true,
+  },
+  {
+    label: "子会员状态",
+    prop: "memberChildStatus",
+    sortable: true,
+    checked: true,
+  },
+  { label: "创建人", prop: "createUserName", sortable: true, checked: true },
+  { label: "创建日期", prop: "createTime", sortable: true, checked: true },
 ]);
 const queryForm = ref<any>({
   memberChildId: "", //子会员ID
@@ -248,28 +277,22 @@ onMounted(() => {
         @selection-change="setSelectRows"
       >
         <el-table-column align="center" type="selection" />
-        <!-- <el-table-column
-          show-overflow-tooltip
-          width="80"
-          align="center"
-          type="index"
-          label="序号"
-        /> -->
         <el-table-column
-          v-if="checkList.includes('a')"
+          v-if="checkList.includes('memberChildId')"
           align="center"
           prop="memberChildId"
           show-overflow-tooltip
           label="子会员ID"
         />
         <el-table-column
-          v-if="checkList.includes('a')"
+          v-if="checkList.includes('memberNickname')"
           align="center"
           prop="memberNickname"
           show-overflow-tooltip
           label="子会员名称"
         />
         <el-table-column
+          v-if="checkList.includes('memberName')"
           align="center"
           prop="memberName"
           show-overflow-tooltip
@@ -280,12 +303,28 @@ onMounted(() => {
           </template>
         </el-table-column>
         <el-table-column
+          v-if="checkList.includes('pendingBalance')"
+          align="center"
+          prop="pendingBalance"
+          show-overflow-tooltip
+          label="	待审余额"
+        />
+        <el-table-column
+          v-if="checkList.includes('availableBalance')"
+          align="center"
+          prop="availableBalance"
+          show-overflow-tooltip
+          label="	可用余额"
+        />
+        <el-table-column
+          v-if="checkList.includes('tenantSupplierId')"
           align="center"
           prop="tenantSupplierId"
           show-overflow-tooltip
           label="供应商ID"
         />
         <ElTableColumn
+          v-if="checkList.includes('b2bStatus')"
           align="center"
           show-overflow-tooltip
           prop="b2bStatus"
@@ -296,6 +335,7 @@ onMounted(() => {
           </template>
         </ElTableColumn>
         <el-table-column
+          v-if="checkList.includes('memberChildGroupName')"
           align="center"
           prop="memberChildGroupName"
           show-overflow-tooltip
@@ -305,6 +345,7 @@ onMounted(() => {
           </template>
         </el-table-column>
         <ElTableColumn
+          v-if="checkList.includes('memberChildStatus')"
           align="center"
           show-overflow-tooltip
           prop="memberChildStatus"
@@ -315,6 +356,7 @@ onMounted(() => {
           </template>
         </ElTableColumn>
         <el-table-column
+          v-if="checkList.includes('createUserName')"
           align="center"
           prop="createUserName"
           show-overflow-tooltip
@@ -324,6 +366,7 @@ onMounted(() => {
           </template>
         </el-table-column>
         <el-table-column
+          v-if="checkList.includes('createTime')"
           align="center"
           prop="createTime"
           show-overflow-tooltip
