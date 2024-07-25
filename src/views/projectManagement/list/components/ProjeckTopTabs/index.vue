@@ -109,6 +109,29 @@ const handleInput = (value: any) => {
     value.preventDefault(); // 阻止非数字键输入
   }
 };
+// 限制定时发布时间
+const disabledDateFn = (time: any) => {
+  // 当前时间戳  -  一天的时间戳 86400000
+  return time.getTime() < Date.now() - 86400000;
+};
+// 定时发布时间切换,时间- 最早为当前时间
+function handleChangeTime() {
+  // @ts-ignore
+  const startAt: any = (new Date(props.leftTab.releaseTime) * 1000) / 1000;
+  if (startAt < Date.now()) {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = padZero(date.getMonth() + 1); // getMonth() 返回的是 0 到 11，所以需要加 1
+    const day = padZero(date.getDate());
+    const hours = padZero(date.getHours());
+    const minutes = padZero(date.getMinutes());
+    const seconds = padZero(date.getSeconds());
+    props.leftTab.releaseTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  }
+  function padZero(num: any) {
+    return (num < 10 ? "0" : "") + num;
+  }
+}
 // 同步客户的前置问卷开关
 const changeClient = (val: any) => {
   const findData = data.value.basicSettings.customerList.find(
@@ -191,6 +214,7 @@ const getUpLoad = async (file: any) => {
 
 // 定时发布
 const changeTimeReleases = (val: any) => {
+  console.log("val", val);
   props.leftTab.isOnline = val === 2 ? 2 : 1;
 };
 
@@ -503,9 +527,7 @@ nextTick(() => {
                       <span v-show="item.turnover < item.practiceTurover">
                         营业额超限
                       </span>
-                      <span
-                        v-show="item.rateAudit > item.practiceRateAudit"
-                      >
+                      <span v-show="item.rateAudit > item.practiceRateAudit">
                         审核率不合格
                       </span>
                     </span>
@@ -815,6 +837,8 @@ nextTick(() => {
                   value-format="YYYY-MM-DD HH:mm:ss"
                   v-model="props.leftTab.releaseTime"
                   placeholder="请选择时间"
+                  :disabledDate="disabledDateFn"
+                  @change="handleChangeTime"
                 />
               </el-form-item>
             </el-col>
