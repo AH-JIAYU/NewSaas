@@ -359,7 +359,7 @@ defineExpose({ showEdit });
               <ElInput
                 disabled
                 v-model="userForm.name"
-                laceholder="请输入你的用户名"
+                placeholder="请输入你的用户名"
               />
             </ElFormItem>
             <ElFormItem label="国家">

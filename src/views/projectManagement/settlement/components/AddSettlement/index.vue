@@ -1,30 +1,60 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { ElMessage } from "element-plus";
+import type { FormInstance, FormRules } from "element-plus";
+import api from "@/api/modules/project_settlement";
 
 defineOptions({
   name: "AddSettlement",
 });
+// 更新
+const emits = defineEmits(["success"]);
+const formRef = ref();
+const loading = ref(false);
 // 弹框开关变量
 const dialogTableVisible = ref(false);
+const form = ref({
+  projectId: null,
+});
+// 个人信息校验
+const formRules = ref<FormRules>({
+  projectId: [{ required: true, trigger: "blur", message: "请输入项目ID" }],
+});
 // 提交数据
-function onSubmit() {}
-async function showEdit(row: any) {
+function onSubmit() {
+  formRef.value &&
+    formRef.value.validate(async (valid: any) => {
+      if (valid) {
+        loading.value = true;
+        await api.omissionProject(form.value);
+        emits("success");
+        loading.value = false;
+        ElMessage.success({
+          message: "操作成功",
+          center: true,
+        });
+        closeHandler();
+      }
+    });
+}
+async function showEdit() {
   dialogTableVisible.value = true;
 }
 // 弹框关闭事件
 function closeHandler() {
   // 移除校验
-  // formRef.value.resetFields()
-  // delete formData.id
+  formRef.value.resetFields();
   // // 重置表单
-  // Object.assign(formData, defaultState)
+  Object.assign(form, {
+    projectId: null,
+  });
   dialogTableVisible.value = false;
 }
 defineExpose({ showEdit });
 </script>
 
 <template>
-  <div>
+  <div v-loading="loading">
     <el-dialog
       v-model="dialogTableVisible"
       title="遗漏项目新增"
@@ -32,9 +62,15 @@ defineExpose({ showEdit });
       style="height: 200px"
       :before-close="closeHandler"
     >
-      <el-form label-width="100px" :inline="false">
-        <el-form-item label="项目ID">
-          <el-input />
+      <el-form
+        ref="formRef"
+        label-width="100px"
+        :model="form"
+        :rules="formRules"
+        :inline="false"
+      >
+        <el-form-item label="项目ID" prop="projectId">
+          <el-input v-model="form.projectId" placeholder="请输入项目ID" />
         </el-form-item>
       </el-form>
       <template #footer>

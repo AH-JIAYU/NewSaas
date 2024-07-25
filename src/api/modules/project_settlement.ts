@@ -13,6 +13,12 @@ export default {
   // 项目退款详情
   detail: (data: any) => api.post('projectSettlement/get/getProjectSettlementRefundList', data, ),
 
+  // 新增遗漏项目
+  omissionProject: (data: any) => api.post('projectSettlement/insert/insertProjectSettlement', data, ),
+
+  // 项目结算-开票或者结算状态修改
+  InvoicingSettlementEdit: (data: any) => api.post('projectSettlement/updateProjectSettlementStatus', data, ),
+
   delete: (id: number | string) => api.post('menu/delete', {
     id,
   }, {

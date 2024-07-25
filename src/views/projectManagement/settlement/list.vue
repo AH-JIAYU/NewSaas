@@ -2,7 +2,6 @@
 import { reactive, ref } from "vue";
 import { ElMessage } from "element-plus";
 import invoicingEdit from "./components/InvoicingEdit/index.vue";
-import moreOperations from "./components/MoreOperations/index.vue";
 import projectReview from "./components/ProjectReview/index.vue";
 import settlementEdit from "./components/SettlementEdit/index.vue";
 import refundDetail from "./components/RefundDetails/index.vue";
@@ -34,7 +33,6 @@ const listLoading = ref<boolean>(true);
 // 获取组件变量
 const invoicingRef = ref();
 const addSettlementRef = ref();
-const settlementRef = ref();
 const auditingRef = ref();
 const editRef = ref();
 const refundRef = ref();
@@ -97,19 +95,14 @@ const queryForm = reactive<any>({
 const list = ref<any>([]);
 // 获取列表选中数据
 function setSelectRows(value: any) {
-  console.log("value", value);
   selectRows.value = value;
 }
 // 开票
 function invoicing(row: any) {
   if (!selectRows.value.length) {
     return ElMessage({ message: "请选择至少一条数据", type: "warning" });
-  }
-  if (selectRows.value.length === 1) {
-    invoicingRef.value.showEdit(row, selectRows.value);
   } else {
-    console.log("selectRows.value", selectRows.value);
-    settlementRef.value.showEdit(row, selectRows.value);
+    invoicingRef.value.showEdit(row, selectRows.value);
   }
 }
 // 新增结算
@@ -120,12 +113,8 @@ function addSettlement() {
 function settlement(row: any) {
   if (!selectRows.value.length) {
     return ElMessage({ message: "请选择至少一条数据", type: "warning" });
-  }
-  if (selectRows.value.length === 1) {
+  } else {
     invoicingRef.value.showEdit(row, selectRows.value);
-  } else if (selectRows.value.length > 1) {
-    console.log("selectRows.value", selectRows.value);
-    settlementRef.value.showEdit(row, selectRows.value);
   }
 }
 // 审核
@@ -607,12 +596,11 @@ function handleMoreOperating(command: string, row: any) {
         @size-change="sizeChange"
         @current-change="currentChange"
       />
-      <invoicingEdit ref="invoicingRef" />
-      <moreOperations ref="settlementRef" />
+      <invoicingEdit @success="fetchData" ref="invoicingRef" />
       <projectReview @success="fetchData" ref="auditingRef" />
       <settlementEdit @success="fetchData" ref="editRef" />
       <refundDetail ref="refundRef" />
-      <Settlement ref="addSettlementRef" />
+      <Settlement @success="fetchData" ref="addSettlementRef" />
     </PageMain>
   </div>
 </template>
