@@ -175,7 +175,6 @@ function userSubmit() {
           delete userForm.value.phone;
           delete userForm.value.email;
         }
-        console.log("userForm.value", userForm.value);
         const res = await api.edit({ type: userForm.value.type });
         if (res.status === -1) {
           return ElMessage.warning({
@@ -254,6 +253,11 @@ async function showEdit(row: any) {
     name: "file",
     url: userForm.value.avatar,
   });
+  if (fileList.value.length > 0) {
+    const upload = document.querySelector(".el-upload");
+    console.log(upload);
+
+  }
   dialogTableVisible.value = true;
 }
 // 弹框关闭事件
@@ -269,9 +273,9 @@ function closeHandler() {
 }
 // 获取数据
 onMounted(async () => {
-  loading.value = true
+  loading.value = true;
   countryList.value = await basicDictionaryStore.getCountry();
-  loading.value = false
+  loading.value = false;
 });
 // 暴露方法
 defineExpose({ showEdit });

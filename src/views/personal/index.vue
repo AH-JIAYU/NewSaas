@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import Payment from './components/Payment/index.vue'
 import setting from './setting.vue'
+import storage from "@/utils/storage";
 import api from '@/api/modules/personal_setting'
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary";
 
@@ -27,7 +28,12 @@ function edit() {
 // 获取数据
 const getDataList = async () => {
   loading.value = true
+  storage.local.remove("avatar")
   const res = await api.list()
+  const aaa = storage.local.set("avatar", res.data.avatar);
+  // console.log('aaa',aaa);
+  const bbb = storage.local.get("avatar")
+  console.log('bbb',bbb);
   countryList.value = await basicDictionaryStore.country || await basicDictionaryStore.getCountry()
   form.value = res.data
   loading.value = false
