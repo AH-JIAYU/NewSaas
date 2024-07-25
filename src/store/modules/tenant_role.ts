@@ -5,13 +5,13 @@ const useTenantRoleStore = defineStore(
   'buttonPermission',
   () => {
     const role = ref([])
-    const getRole = computed(async () => {
+    const getRole = async () => {
       if (role.value.length) {
         return role.value
       }
       const { data } = await api.list()
       return data
-    })
+    }
     return {
       role,
       getRole,

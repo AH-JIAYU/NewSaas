@@ -93,10 +93,10 @@ const useTabbarStore = defineStore(
           }
         }
       })
-      // 常驻的标签页添加到标签栏开头
+      // 常驻的标签页新增到标签栏开头
       tabs.length && list.value.unshift(...tabs)
     }
-    // 添加标签页
+    // 新增标签页
     async function add(route: RouteLocationNormalized) {
       const names: string[] = []
       route.matched.forEach((v, i) => {

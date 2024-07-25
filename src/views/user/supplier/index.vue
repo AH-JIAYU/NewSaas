@@ -21,7 +21,7 @@ const { pagination, getParams, onSizeChange, onCurrentChange } =
 const listLoading = ref(false);
 const list = ref<Array<Object>>([]); // 列表
 const selectRows = ref<any>(); // 表格-选中行
-const editRef = ref(); // 添加|编辑 组件ref
+const editRef = ref(); // 新增|编辑 组件ref
 const checkRef = ref(); // 查看 组件ref
 const plusMinusPaymentsRef = ref(); // 加减款 组件ref
 const border = ref<any>(true); // 表格控件-是否展示边框
@@ -92,7 +92,7 @@ const queryForm = reactive<any>({
   time: [], // 时间日期选择器
 });
 
-// 添加
+// 新增
 function handleAdd() {
   editRef.value.showEdit();
 }

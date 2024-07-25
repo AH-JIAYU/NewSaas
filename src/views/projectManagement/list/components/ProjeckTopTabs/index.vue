@@ -423,10 +423,10 @@ const showProjectQuotaInfoList = async () => {
 };
 /**
  * 举例： 显示的问题list(接口获取的数据/project/getProjectProblemList)[爱好，性别，国家]
- * 添加时  提交的问题list(本地处理的数据projectQuotaInfoList)的每一项的绑定值 projectAnswerIdList都为空 不影响
+ * 新增时  提交的问题list(本地处理的数据projectQuotaInfoList)的每一项的绑定值 projectAnswerIdList都为空 不影响
  * 编辑时  提交的问题list(本地处理的数据projectQuotaInfoList) 返回[ 国家，性别，爱好 ]  如果顺序和接口的顺序一致则不影响 如果不一致无法回显和更新
  * 之前的写法 是v-model直接绑定对应的下标
- * 由于顺序不一样所有编辑时(添加不受影响)会影响数据回显 和更新
+ * 由于顺序不一样所有编辑时(新增不受影响)会影响数据回显 和更新
  * 更换为 调用v-model的底层原理  modelValue  @update:modelValue 并传递 问题id和下标 来判断，
  * 如果 回显list[下标]的问题id 和 提交list[下标]的问题id 一致就试用下标，如果不一致就找到问题id一致的对象 来进行回显和更新
  */
@@ -471,7 +471,7 @@ nextTick(() => {
 
 <template>
   <ElForm
-    label-width="95px"
+    label-width="100px"
     :rules="rules"
     ref="formRef"
     :model="props.leftTab"
@@ -746,7 +746,7 @@ nextTick(() => {
             <el-row :gutter="20">
               <el-col :span="24">
                 <el-form-item label="项目描述">
-                  <!-- key解决富文本编译器   先添加  再编辑  富文本右侧值还在的问题    key值变了会刷新组件 -->
+                  <!-- key解决富文本编译器   先新增  再编辑  富文本右侧值还在的问题    key值变了会刷新组件 -->
                   <Editor
                     class="editor"
                     :value="props.leftTab.richText"
@@ -1044,7 +1044,7 @@ nextTick(() => {
               </el-form-item>
             </el-col> -->
             <el-col :span="4">
-              <el-form-item label="重复IP检测">
+              <el-form-item label="允许重复参与">
                 <el-switch
                   v-model="props.leftTab.ipDifferenceDetection"
                   :active-value="1"
@@ -1152,7 +1152,7 @@ td {
   text-align: center;
   /* 文本左对齐 */
   border: 1px solid #e4e7ed;
-  /* 给每个单元格添加边框 */
+  /* 给每个单元格新增边框 */
 }
 
 th {

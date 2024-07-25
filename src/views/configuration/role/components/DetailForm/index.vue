@@ -43,7 +43,6 @@ onMounted(async () => {
   if (form.value.id !== "") {
     await getInfo();
   }
-;
   // 从store获取原始路由
   menuData.value = routeStore.routesRaw;
   // 获取扁平化后的1，2级路由

@@ -18,7 +18,7 @@ const rules = reactive({
 // 显示弹框
 async function showEdit(row: any) {
   if (!row) {
-    title.value = "添加";
+    title.value = "新增";
     form.value = {};
   } else {
     title.value = "编辑";

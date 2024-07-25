@@ -27,7 +27,7 @@ defineExpose({ showEdit });
   <div>
     <el-dialog
       v-model="dialogTableVisible"
-      title="遗漏项目添加"
+      title="遗漏项目新增"
       width="700"
       style="height: 200px"
       :before-close="closeHandler"

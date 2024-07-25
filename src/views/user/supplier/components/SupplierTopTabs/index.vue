@@ -60,7 +60,7 @@ const validateEmail = (rule: any, value: any, callback: any) => {
     callback();
   }
 };
-// 动态添加校验
+// 动态新增校验
 const changeCountryId = (val: any) => {
   if (val) {
     props.leftTab.countryType = val === "343" ? 1 : 2;

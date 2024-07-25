@@ -278,12 +278,11 @@ onMounted(() => {
         <FormLeftPanel>
           <el-button
             style="margin-right: 10px"
-            :icon="Plus"
             type="primary"
             size="default"
             @click="addData"
           >
-            添加发票
+            新增发票
           </el-button>
         </FormLeftPanel>
 

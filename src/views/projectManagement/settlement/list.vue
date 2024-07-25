@@ -394,7 +394,7 @@ function handleMoreOperating(command: string, row: any) {
       <el-row :gutter="24">
         <FormLeftPanel>
           <el-button type="primary" size="default" @click="addSettlement">
-            添加结算
+            新增结算
           </el-button>
           <el-button type="primary" size="default" @click="invoicing(1)">
             开票

@@ -71,7 +71,7 @@ defineExpose({ activeLeftTab });
     <template v-if="!localLeftTab[0].id">
       <el-button
         class="button"
-        :disabled="localLeftTab.length > 29 || props.title !== '添加'"
+        :disabled="localLeftTab.length > 29 || props.title !== '新增'"
         @click="addLeftTab()"
       >
         新增客户

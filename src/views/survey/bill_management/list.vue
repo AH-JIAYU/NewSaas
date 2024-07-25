@@ -130,7 +130,7 @@ function currentChange(page = 1) {
 function sortChange({ prop, order }: { prop: string; order: string }) {
   onSortChange(prop, order).then(() => getDataList());
 }
-// 添加结算
+// 新增结算
 function onCreate() {
   if (data.value.formMode === "router") {
     if (
@@ -243,7 +243,7 @@ async function paymentOperation(id: any, type: any) {
       <el-row>
         <FormLeftPanel>
           <el-button size="default" type="primary" @click="onCreate">
-            添加结算
+            新增结算
           </el-button>
         </FormLeftPanel>
         <FormRightPanel>

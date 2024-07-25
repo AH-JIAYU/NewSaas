@@ -116,7 +116,7 @@ function currentChange(page = 1) {
 function sortChange({ prop, order }: { prop: string; order: string }) {
   onSortChange(prop, order).then(() => getDataList());
 }
-// 添加国家
+// 新增国家
 function onCreate(row?: any) {
   data.value.editProps.id = "";
   data.value.editProps.countryId = row ? row.countryId : "";
@@ -299,9 +299,6 @@ function onDelProject(row: any) {
       <ElDivider border-style="dashed" />
       <ElSpace wrap>
         <ElButton type="primary" size="default" @click="onCreate">
-          <template #icon>
-            <SvgIcon name="i-ep:plus" />
-          </template>
           新增前置问卷库
         </ElButton>
       </ElSpace>

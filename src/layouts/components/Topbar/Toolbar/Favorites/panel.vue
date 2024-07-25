@@ -41,7 +41,7 @@ watch(() => favoritesContainerRef.value, (val) => {
         我的收藏夹
       </div>
       <template v-if="favoritesStore.canAdd(route.fullPath)">
-        <SvgIcon v-if="!favoritesStore.isAdd(route.fullPath)" class="cursor-pointer text-xl" name="i-mdi:star-plus-outline" title="添加到收藏夹" @click="favoritesStore.add(route)" />
+        <SvgIcon v-if="!favoritesStore.isAdd(route.fullPath)" class="cursor-pointer text-xl" name="i-mdi:star-plus-outline" title="新增到收藏夹" @click="favoritesStore.add(route)" />
         <SvgIcon v-else class="cursor-pointer text-xl" name="i-mdi:star-remove" title="从收藏夹删除" @click="favoritesStore.remove(route.fullPath)" />
       </template>
     </div>
@@ -65,7 +65,7 @@ watch(() => favoritesContainerRef.value, (val) => {
         <p v-show="favoritesStore.canAdd(route.fullPath)" m-0 flex-center text-sm op-75>
           点击右上角
           <SvgIcon name="i-mdi:star-plus-outline" :size="20" mx-1 text-stone-6 dark:text-stone-4 />
-          将当前页面添加到收藏夹
+          将当前页面新增到收藏夹
         </p>
       </div>
     </OverlayScrollbarsComponent>

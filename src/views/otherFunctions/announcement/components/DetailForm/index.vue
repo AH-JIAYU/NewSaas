@@ -109,13 +109,13 @@ defineExpose({
       <el-form-item label="标题" prop="title">
         <el-input v-model="form.title" placeholder="请输入标题" clearable @change="" />
       </el-form-item>
-      <el-form-item label="类型" prop="type"> 
+      <el-form-item label="类型" prop="type">
         <el-select v-model="form.type" value-key="" placeholder="类型" clearable filterable>
           <el-option v-for="item in type" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
       <el-form-item label="内容">
-        <!-- key解决富文本编译器   先添加  再编辑  富文本右侧值还在的问题    key值变了会刷新组件 -->
+        <!-- key解决富文本编译器   先新增  再编辑  富文本右侧值还在的问题    key值变了会刷新组件 -->
         <Editor class="editor" :value="form.text" :plugins="plugins" :locale="zhHans" @change="handleChange" />
       </el-form-item>
       <el-form-item label="">

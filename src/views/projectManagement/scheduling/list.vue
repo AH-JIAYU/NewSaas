@@ -172,11 +172,10 @@ onMounted(() => {
         <FormLeftPanel>
           <el-button
             type="primary"
-            :icon="Plus"
             size="default"
             @click="addData"
           >
-            添加
+            新增
           </el-button>
         </FormLeftPanel>
 

@@ -12,7 +12,7 @@ const { pagination, getParams, onSizeChange, onCurrentChange } =
   usePagination(); // 分页
 
 const listLoading = ref(false);
-const EditRef = ref(); // 组件ref 添加/编辑
+const EditRef = ref(); // 组件ref 新增/编辑
 const list = ref<any>([]); // 列表
 const checkList = ref<any>([]); // 表格-展示的列
 const border = ref(true); // 表格控件-是否展示边框
@@ -42,7 +42,7 @@ const columns = ref([
     checked: true,
   },
 ]);
-// 添加
+// 新增
 function handleAdd() {
   EditRef.value.showEdit();
 }

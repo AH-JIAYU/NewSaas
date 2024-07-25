@@ -26,7 +26,7 @@ const data = reactive<any>({
   vipGroupList: [], // 会员组
 });
 const selectRows = ref<any>(); // 表格-选中行
-const editRef = ref(); // 添加|编辑 组件ref
+const editRef = ref(); // 新增|编辑 组件ref
 const vipPlusMinusPaymentsRef = ref(); //加减款
 const border = ref<any>(true); // 表格控件-是否展示边框
 const stripe = ref<any>(false); // 表格控件-是否展示斑马条
@@ -74,7 +74,7 @@ const queryForm = reactive<any>({
   time: [],
 });
 
-// 添加
+// 新增
 function handleAdd() {
   editRef.value.showEdit();
 }
