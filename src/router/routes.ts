@@ -25,13 +25,7 @@ const constantRoutes: RouteRecordRaw[] = [
     component: () => import("@/views/redirect.vue"),
     meta: { whiteList: true },
   },
-  // 外部重定向
-  {
-    path: "/externalRedirection",
-    name: "externalRedirection",
-    component: () => import("@/views/externalRedirection.vue"),
-    meta: { whiteList: true },
-  },
+
   {
     path: "/:all(.*)*",
     name: "notFound",
@@ -41,6 +35,7 @@ const constantRoutes: RouteRecordRaw[] = [
     },
   },
 ];
+
 
 // 系统路由
 const systemRoutes: RouteRecordRaw[] = [

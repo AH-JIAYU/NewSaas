@@ -103,20 +103,13 @@ async function changeStatus(row: any, val: any) {
     projectId: row.projectId,
     isOnline: val,
   };
-  const res = await obtainLoading(api.detail({ projectId: row.projectId }));
-  if (res.data.isTimeReleases !== 2) {
-    const { status } = await submitLoading(api.changestatus(params));
-    status === 1 &&
-      ElMessage.success({
-        message: "修改「状态」成功",
-        center: true,
-      });
-  } else {
-    ElMessage.warning({
-      message: "项目开启定时发布,无法修改状态",
+  const { status } = await submitLoading(api.changestatus(params));
+  status === 1 &&
+    ElMessage.success({
+      message: "修改「状态」成功",
       center: true,
     });
-  }
+
   fetchData();
 }
 // 项目详情
@@ -293,8 +286,8 @@ onMounted(async () => {
                 filterable
                 placeholder="项目状态"
               >
-                <el-option label="已分配" :value="1" />
-                <el-option label="未分配" :value="2" />
+                <el-option label="在线" :value="1" />
+                <el-option label="离线" :value="2" />
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold">
