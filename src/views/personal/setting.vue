@@ -16,6 +16,8 @@ import useUserStore from "@/store/modules/user";
 defineOptions({
   name: "personalSetting",
 });
+// 隐藏上传
+const upload = ref(false);
 // token
 const userStore = useUserStore();
 // 更新
@@ -203,13 +205,17 @@ const dialogVisible = ref(false);
 const fileList = ref<any>([]);
 // 删除
 const handleRemove: any = async () => {
+  upload.value = false;
   ElMessage.success({
     message: "删除成功",
     center: true,
   });
 };
 // 上传图片成功
-const handleSuccess: any = () => {};
+const handleSuccess: any = () => {
+  // 上传成功后，隐藏上传按钮
+  upload.value = true;
+};
 // 超出限制
 const handleExceed: any = async () => {
   ElMessage.warning({
@@ -253,6 +259,9 @@ async function showEdit(row: any) {
     name: "file",
     url: userForm.value.avatar,
   });
+  if (userForm.value.avatar !== "") {
+    upload.value = true;
+  }
   dialogTableVisible.value = true;
 }
 // 弹框关闭事件
@@ -306,6 +315,7 @@ defineExpose({ showEdit });
               label="头像"
             >
               <el-upload
+                :class="{ hide_box: upload }"
                 v-model:file-list="fileList"
                 :headers="headers"
                 :action="Url"
@@ -509,7 +519,9 @@ defineExpose({ showEdit });
 :deep(.el-upload-list--picture-card .el-upload-list__item) {
   border: none;
 }
-
+.hide_box :deep(.el-upload--picture-card) {
+  display: none;
+}
 .security {
   .setting-list {
     .item {

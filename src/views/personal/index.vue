@@ -3,8 +3,11 @@ import Payment from './components/Payment/index.vue'
 import setting from './setting.vue'
 import storage from "@/utils/storage";
 import api from '@/api/modules/personal_setting'
+import useAvatarStore from '@/store/modules/avatar'
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary";
 
+
+const avatarStore = useAvatarStore()
 //基础字典
 const basicDictionaryStore = useBasicDictionaryStore();
 // 国家list
@@ -30,8 +33,8 @@ const getDataList = async () => {
   loading.value = true
   storage.local.remove("avatar")
   const res = await api.list()
-  const aaa = storage.local.set("avatar", res.data.avatar);
-  const bbb = storage.local.get("avatar")
+  storage.local.set("avatar", res.data.avatar);
+  avatarStore.permissions = res.data.avatar
   countryList.value = await basicDictionaryStore.country || await basicDictionaryStore.getCountry()
   form.value = res.data
   loading.value = false
