@@ -31,9 +31,7 @@ const getDataList = async () => {
   storage.local.remove("avatar")
   const res = await api.list()
   const aaa = storage.local.set("avatar", res.data.avatar);
-  // console.log('aaa',aaa);
   const bbb = storage.local.get("avatar")
-  console.log('bbb',bbb);
   countryList.value = await basicDictionaryStore.country || await basicDictionaryStore.getCountry()
   form.value = res.data
   loading.value = false

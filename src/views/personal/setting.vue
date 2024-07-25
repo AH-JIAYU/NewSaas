@@ -253,11 +253,6 @@ async function showEdit(row: any) {
     name: "file",
     url: userForm.value.avatar,
   });
-  if (fileList.value.length > 0) {
-    const upload = document.querySelector(".el-upload");
-    console.log(upload);
-
-  }
   dialogTableVisible.value = true;
 }
 // 弹框关闭事件
