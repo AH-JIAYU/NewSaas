@@ -21,15 +21,13 @@ const userStore = useUserStore();
 // 更新
 const emits = defineEmits(["success"]);
 // 接口地址
-const Url = 'http://47.96.98.102:9100/user/uploadAvatar'
+const Url = import.meta.env.VITE_APP_API_BASEURL + "/user/uploadAvatar";
 //基础字典
 const basicDictionaryStore = useBasicDictionaryStore();
 // 国家list
 const countryList = ref<any>([]);
 // loading
 const loading = ref(false);
-// 路由
-const router = useRouter();
 // 判断手机号或邮箱是否变动
 const isTrue = ref(false);
 // 弹框开关变量
@@ -177,10 +175,14 @@ function userSubmit() {
           delete userForm.value.phone;
           delete userForm.value.email;
         }
-        console.log('userForm.value',userForm.value);
-        // return
-        const res = await api.edit({type:userForm.value.type});
-        if (res.status === -1) return;
+        console.log("userForm.value", userForm.value);
+        const res = await api.edit({ type: userForm.value.type });
+        if (res.status === -1) {
+          return ElMessage.warning({
+            message: "修改失败",
+            center: true,
+          });
+        }
         emits("success");
         loading.value = false;
         ElMessage.success({
@@ -201,23 +203,16 @@ const dialogVisible = ref(false);
 // 上传
 const fileList = ref<any>([]);
 // 删除
-const handleRemove: any = async (uploadFile: any, uploadFiles: any) => {
-  // const { status } = await fileApi.delete({
-  //   fileName: props.leftTab.descriptionUrl,
-  // });
-  // status === 1 &&
+const handleRemove: any = async () => {
   ElMessage.success({
     message: "删除成功",
     center: true,
   });
 };
 // 上传图片成功
-const handleSuccess: any = (uploadFile: any, uploadFiles: any) => {
-  console.log("uploadFile", uploadFile, "uploadFiles", uploadFiles);
-  // props.leftTab.descriptionUrl = uploadFile.data.qiNiuUrl;
-};
+const handleSuccess: any = () => {};
 // 超出限制
-const handleExceed: any = async (uploadFile: any, uploadFiles: any) => {
+const handleExceed: any = async () => {
   ElMessage.warning({
     message: "只能上传一个,删除原文件后重新上传",
     center: true,
@@ -236,7 +231,12 @@ const accountSubmit = () => {
         loading.value = true;
         delete accountForm.value.confirmPassword;
         const res = await api.edit(accountForm.value);
-        if (res.status === -1) return;
+        if (res.status === -1) {
+          return ElMessage.warning({
+            message: "修改失败",
+            center: true,
+          });
+        }
         emits("success");
         loading.value = false;
         ElMessage.success({
@@ -251,9 +251,9 @@ const accountSubmit = () => {
 async function showEdit(row: any) {
   userForm.value = row;
   fileList.value.push({
-      name: "file",
-      url: userForm.value.avatar,
-    });
+    name: "file",
+    url: userForm.value.avatar,
+  });
   dialogTableVisible.value = true;
 }
 // 弹框关闭事件
@@ -263,15 +263,15 @@ function closeHandler() {
   accountFormRef.value.resetFields();
   // // 重置表单
   Object.assign(userForm, {});
-  fileList.value = []
+  fileList.value = [];
   Object.assign(accountForm, {});
   dialogTableVisible.value = false;
 }
 // 获取数据
 onMounted(async () => {
-  countryList.value =
-    (await basicDictionaryStore.country) ||
-    (await basicDictionaryStore.getCountry());
+  loading.value = true
+  countryList.value = await basicDictionaryStore.getCountry();
+  loading.value = false
 });
 // 暴露方法
 defineExpose({ showEdit });
