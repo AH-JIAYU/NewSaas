@@ -30,12 +30,12 @@ const lineHeight = ref<any>("default");
 const stripe = ref(false);
 const selectRows = ref<any>([]);
 const statusType = [
-  { label: "完成/待审核", value: 1 },
-  { label: "审核通过", value: 7 },
-  { label: "审核失败", value: 8 },
-  { label: "数据冻结", value: 9 },
-  { label: "被甄别", value: 2 },
-  { label: "配额满", value: 3 },
+  { label: "完成/待审核", value: "1,0" },
+  { label: "审核通过", value: "1,7" },
+  { label: "审核失败", value: "1,8" },
+  { label: "数据冻结", value: "1,9" },
+  { label: "被甄别", value: "2,null" },
+  { label: "配额满", value: "3,null" },
 ];
 const columns = ref([
   {
@@ -55,10 +55,14 @@ const queryForm = reactive<any>({
   limit: 10,
   // 类型 1成功/待审核 2审核通过 3审核失败 4数据冻结 5被甄别 6配额满
   type: null,
+  // 主状态
+  surveyType: null,
+  // 副状态
+  viceType: null,
   // 点击id,该字段只在新增时使用
   projectClickIdList: [],
   // 操作人id
-  creteUserId: "",
+  createUserId: "",
   // 备注
   remark: "",
 });
@@ -80,10 +84,14 @@ function onReset() {
   Object.assign(queryForm, {
     // 类型 1成功/待审核 2审核通过 3审核失败 4数据冻结 5被甄别 6配额满
     type: null,
+    // 主状态
+    surveyType: null,
+    // 副状态
+    viceType: null,
     // 点击id,该字段只在新增时使用
     projectClickIdList: [],
     // 操作人id
-    creteUserId: "",
+    createUserId: "",
     // 备注
     remark: "",
   });
@@ -98,6 +106,14 @@ function sizeChange(size: number) {
 }
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
+  const type = queryForm.type?.split(",");
+  queryForm.surveyType = +type[0];
+  if (type[1] === "null") {
+    queryForm.viceType = null;
+  } else {
+    queryForm.viceType = +type[1];
+  }
+  delete queryForm.type;
   onCurrentChange(page).then(() => {
     queryForm.page = page;
     fetchData();
@@ -140,10 +156,10 @@ onMounted(async () => {
           >
             <el-form-item label="">
               <el-input
-                v-model.trim="queryForm.projectClickIdList"
+                v-model.trim="queryForm.createUserId"
                 clearable
                 :inline="false"
-                placeholder="点击ID"
+                placeholder="操作人ID"
               />
             </el-form-item>
             <el-form-item label="">
@@ -241,11 +257,32 @@ onMounted(async () => {
           label="变更前"
         >
           <template #default="{ row }">
-            <div v-for="item in statusType" :key="item.value">
-              <el-text v-if="item.value === row.afterType">
-                {{ item.label }}</el-text
-              >
-            </div>
+            <el-text
+              v-if="row.beforeSurveyType === 1 && row.beforeViceType === 0"
+              class="mx-1"
+              >完成/待审核</el-text
+            >
+            <el-text
+              v-if="row.beforeSurveyType === 1 && row.beforeViceType === 7"
+              class="mx-1"
+              >审核通过</el-text
+            >
+            <el-text
+              v-if="row.beforeSurveyType === 1 && row.beforeViceType === 8"
+              class="mx-1"
+              >审核失败</el-text
+            >
+            <el-text
+              v-if="row.beforeSurveyType === 1 && row.beforeViceType === 9"
+              class="mx-1"
+              >数据冻结</el-text
+            >
+            <el-text v-if="row.beforeSurveyType === 2" class="mx-1"
+              >被甄别</el-text
+            >
+            <el-text v-if="row.beforeSurveyType === 3" class="mx-1"
+              >配额满</el-text
+            >
           </template>
         </el-table-column>
         <el-table-column
@@ -253,12 +290,34 @@ onMounted(async () => {
           show-overflow-tooltip
           align="center"
           label="变更后"
-          ><template #default="{ row }">
-            <div v-for="item in statusType" :key="item.value">
-              <el-text v-if="item.value === row.beforeType">
-                {{ item.label }}</el-text
-              >
-            </div>
+        >
+          <template #default="{ row }">
+            <el-text
+              v-if="row.afterSurveyType === 1 && row.afterViceType === 0"
+              class="mx-1"
+              >完成/待审核</el-text
+            >
+            <el-text
+              v-if="row.afterSurveyType === 1 && row.afterViceType === 7"
+              class="mx-1"
+              >审核通过</el-text
+            >
+            <el-text
+              v-if="row.afterSurveyType === 1 && row.afterViceType === 8"
+              class="mx-1"
+              >审核失败</el-text
+            >
+            <el-text
+              v-if="row.afterSurveyType === 1 && row.afterViceType === 9"
+              class="mx-1"
+              >数据冻结</el-text
+            >
+            <el-text v-if="row.afterSurveyType === 2" class="mx-1"
+              >被甄别</el-text
+            >
+            <el-text v-if="row.afterSurveyType === 3" class="mx-1"
+              >配额满</el-text
+            >
           </template>
         </el-table-column>
         <el-table-column
@@ -272,7 +331,10 @@ onMounted(async () => {
           show-overflow-tooltip
           align="center"
           label="备注"
-        />
+          ><template #default="{ row }">
+            {{ row.remark ? row.remark : "-" }}
+          </template>
+        </el-table-column>
         <el-table-column
           prop="createUserId"
           show-overflow-tooltip

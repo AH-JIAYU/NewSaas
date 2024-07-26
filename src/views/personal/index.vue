@@ -51,17 +51,19 @@ onMounted(() => {
         <div class="avater">
           <el-avatar style="margin-right: 15px;" :size="50" :src="form.avatar" />
           <div class="top">
-            <p class="user">{{ form.name }}<span class="icon">icon基础版本</span></p>
-            <p class="us" v-if="form.country !== 'CN'"><span class="bule">{{ countryData?.chineseName }}</span>{{
+            <!-- <span class="icon">icon基础版本</span> -->
+            <p class="user">{{ form.name }}</p>
+            <p class="versionDtail"><div style="margin-right: 5px;" class="i-ri:vip-fill w-1.5em h-1.5em"></div>试用版</p>
+            <!-- <p class="us" v-if="form.country !== 'CN'"><span class="bule">{{ countryData?.chineseName }}</span>{{
     form.email }}</p>
-            <p class="cn" v-else><span class="bule">中国</span>{{ form.phone }}</p>
+            <p class="cn" v-else><span class="bule">中国</span>{{ form.phone }}</p> -->
           </div>
         </div>
-        <ElButton style="margin-left: 20%;margin-top: -3%;" type="primary" link @click="edit">编辑个人信息>></ElButton>
+        <ElButton style="margin-left: 20%;margin-top: -3%;color: #fff;" type="primary" link @click="edit">编辑个人信息>></ElButton>
       </div>
       <div class="center">
         <div class="version">
-          <h2 style="color: #555555;">ICON 试用版</h2>
+          <h2 style="color: #555555;">试用版</h2>
           <h1>￥ 999 <span class="yare">/ 年</span></h1>
           <el-button class="btn" type="info" size="default" @click="">已开通</el-button>
           <div class="time">
@@ -69,63 +71,63 @@ onMounted(() => {
             <p>2029-09-09 10:10:10</p>
           </div>
           <ul>
-            <li>icon500名会员系统</li>
-            <li>icon500名会员系统</li>
-            <li>icon500名会员系统</li>
-            <li>icon500名会员系统</li>
-            <li>icon500名会员系统</li>
-            <li>icon500名会员系统</li>
+            <li>500名会员系统</li>
+            <li>500名会员系统</li>
+            <li>500名会员系统</li>
+            <li>500名会员系统</li>
+            <li>500名会员系统</li>
+            <li>500名会员系统</li>
           </ul>
         </div>
         <div class="version">
-          <h2>ICON 基础版</h2>
+          <h2>基础版</h2>
           <h1>￥ 999 <span class="yare">/ 年</span></h1>
           <el-button class="btns" size="default" @click="payment">立即开通</el-button>
           <div class="time">
             <p>每日只需：￥9999元</p>
           </div>
           <ul>
-            <li>icon500名会员系统</li>
-            <li>icon500名会员系统</li>
-            <li>icon500名会员系统</li>
-            <li>icon500名会员系统</li>
-            <li>icon500名会员系统</li>
-            <li>icon500名会员系统</li>
+            <li>500名会员系统</li>
+            <li>500名会员系统</li>
+            <li>500名会员系统</li>
+            <li>500名会员系统</li>
+            <li>500名会员系统</li>
+            <li>500名会员系统</li>
           </ul>
           <ElButton style="margin-left: 26%;margin-bottom: .625rem;" type="primary" link>功能特权,了解特权及对比>></ElButton>
         </div>
         <div class="version">
-          <h2 style="color: #f6403f;">ICON 高级版</h2>
+          <h2 style="color: #f6403f;">高级版</h2>
           <h1>￥ 9999 <span class="yare">/ 年</span></h1>
           <el-button class="butn" size="default" @click="payment">立即开通</el-button>
           <div class="time">
             <p>每日只需：￥9999元</p>
           </div>
           <ul>
-            <li>icon500名会员系统</li>
-            <li>icon500名会员系统</li>
-            <li>icon500名会员系统</li>
-            <li>icon500名会员系统</li>
-            <li>icon500名会员系统</li>
-            <li>icon500名会员系统</li>
+            <li>500名会员系统</li>
+            <li>500名会员系统</li>
+            <li>500名会员系统</li>
+            <li>500名会员系统</li>
+            <li>500名会员系统</li>
+            <li>500名会员系统</li>
           </ul>
           <ElButton style="margin-left: 26%;margin-bottom: .625rem;color: #f6403f;" type="primary" link>功能特权,了解特权及对比>>
           </ElButton>
         </div>
         <div class="version">
-          <h2 style="color: #d9a550;">ICON 旗舰版</h2>
+          <h2 style="color: #d9a550;">旗舰版</h2>
           <h1>￥ 99999 <span class="yare">/ 年</span></h1>
           <el-button class="buttn" size="default" @click="payment">立即开通</el-button>
           <div class="time">
             <p>每日只需：￥9999元</p>
           </div>
           <ul>
-            <li>icon500名会员系统</li>
-            <li>icon500名会员系统</li>
-            <li>icon500名会员系统</li>
-            <li>icon500名会员系统</li>
-            <li>icon500名会员系统</li>
-            <li>icon500名会员系统</li>
+            <li>500名会员系统</li>
+            <li>500名会员系统</li>
+            <li>500名会员系统</li>
+            <li>500名会员系统</li>
+            <li>500名会员系统</li>
+            <li>500名会员系统</li>
           </ul>
           <ElButton style="margin-left: 26%;margin-bottom: .625rem;color: #d9a550;" type="primary" link>功能特权,了解特权及对比>>
           </ElButton>
@@ -137,9 +139,9 @@ onMounted(() => {
   </div>
 </template>
 <style scoped lang="scss">
-li {
-  list-style-type: none;
-}
+// li {
+//   list-style-type: none;
+// }
 
 .personal {
   display: flex;
@@ -149,7 +151,8 @@ li {
   width: 100%;
   height: 8rem;
   margin-bottom: 1.875rem;
-  background-color: #f39c1b;
+  border-radius: 5px;
+  background: linear-gradient(to bottom right, #6678fe, #919efe);
 
   .avater {
     display: flex;
@@ -158,10 +161,12 @@ li {
 
     .top {
       margin-top: -6px;
-
+      margin-left: 20px;
       .user {
         font-size: 18px;
-        margin-bottom: 15px;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 10px;
 
         .icon {
           margin-left: 8px;
@@ -190,6 +195,13 @@ li {
   }
 }
 
+.versionDtail {
+  display: flex;
+  align-content: center;
+  font-size: 14px;
+  color: #fff;
+}
+
 .center {
   display: flex;
   justify-content: space-between;
@@ -207,10 +219,14 @@ li {
     height: 100px;
     color: #4c99ff;
     margin-bottom: 20px;
+    border-bottom: 1px solid #eeeeee;
   }
 
   h1 {
-    margin-left: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // margin-left: 45px;
     margin-bottom: 20px;
 
     .yare {
@@ -227,6 +243,7 @@ li {
     font-size: 16px;
     background-color: #555555;
     border: none;
+    border-radius: 50px;
   }
 
   .time {
@@ -243,6 +260,9 @@ li {
     margin-bottom: 22%;
 
     li {
+      display: flex;
+      justify-content: center;
+      align-items: center;
       width: 50%;
       margin-bottom: 20px;
     }
@@ -257,6 +277,7 @@ li {
   font-size: 16px;
   color: #f6403f;
   border: 1px solid #f6403f;
+  border-radius: 50px;
 }
 
 .btns {
@@ -267,6 +288,7 @@ li {
   font-size: 16px;
   color: #4c99ff;
   border: 1px solid #4c99ff;
+  border-radius: 50px;
 }
 
 .buttn {
@@ -277,5 +299,6 @@ li {
   font-size: 16px;
   color: #c18537;
   border: 1px solid #c18537;
+  border-radius: 50px;
 }
 </style>

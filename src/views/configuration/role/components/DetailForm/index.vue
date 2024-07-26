@@ -70,11 +70,31 @@ function rowPermission(permissionID: any) {
     (item: any) => permissionID === item.menuId
   );
 }
+// const handleNodeClick = (nodeData: any) => {
+//   // 判断节点是否被选中
+//   const instance = treeRef.value.getCheckedNodes();
+//   console.log("instance", instance);
+//   const arr = [];
+//   // arr.push(nodeData);
+//   // const isChecked = treeRef.value.getNode(nodeData.id).checked;
+//   // console.log('isChecked',isChecked);
+//   // if (isChecked) {
+//   //   arr.map((ite) => {
+//   //     const bbb = permissionData?.value?.filter(
+//   //       (item: any) => ite.id === item.menuId
+//   //     );
+//   //     if (bbb && bbb.length) {
+//   //       form.value.permission.push(bbb[0].id);
+//   //     }
+//   //   });
+//   // } else {
+//   // }
+// };
 // 暴露
 defineExpose({
   submit() {
     // 同步选中的路由id
-    form.value.menuId = treeRef.value!.getCheckedKeys(false)
+    form.value.menuId = treeRef.value!.getCheckedKeys(false);
     return new Promise<void>((resolve) => {
       //  获取选中的所有子节点
       const tree = treeRef.value.getCheckedKeys();
@@ -144,6 +164,7 @@ defineExpose({
           :default-checked-keys="form.menuId"
           :default-expanded-keys="[]"
           node-key="id"
+          :check-on-click-node="true"
           show-checkbox
           default-expand-all
           border
