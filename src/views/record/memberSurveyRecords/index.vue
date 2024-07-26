@@ -31,8 +31,20 @@ const tableAutoHeight = ref(false);
 const currencyType = ref<any>();
 // 表格控件-展示列
 const columns = ref([
+  { prop: "surveySource", label: "会员类型", sortable: true, checked: true },
+  {
+    prop: "memberChildrenId",
+    label: "子会员Id",
+    sortable: true,
+    checked: true,
+  },
   { prop: "memberId", label: "会员Id", sortable: true, checked: true },
-  { prop: "memberName", label: "所属组", sortable: true, checked: true },
+  {
+    prop: "tenantSupplierId",
+    label: "供应商id",
+    sortable: true,
+    checked: true,
+  },
 
   { prop: "projectId", label: "项目id", sortable: true, checked: true },
   {
@@ -43,20 +55,14 @@ const columns = ref([
   },
   {
     prop: "projectName",
-    label: "项目名称",
-    sortable: true,
-    checked: true,
-  },
-  {
-    prop: "customerShortName",
-    label: "客户简称",
+    label: "项目名称/客户简称",
     sortable: true,
     checked: true,
   },
   { prop: "allocationType", label: "分配类型", sortable: true, checked: true },
   {
     prop: "price",
-    label: "会员价/供应商价/原价",
+    label: "子会员价/供应商价/原价",
     sortable: true,
     checked: true,
   },
@@ -66,22 +72,16 @@ const columns = ref([
   { prop: "viceStatus", label: "副状态", sortable: true, checked: true },
 ]);
 const queryForm = reactive<any>({
-  //会员id
-  memberId: "",
-  //随机身份id
-  randomIdentityId: "",
-  //会员组id
-  memberGroupId: "",
-  //项目id
-  projectId: "",
-  //项目名称-模糊查询
-  projectName: "",
-  //客户Id
-  customerId: "",
-  //ip-模糊查询
-  ip: "",
-  //调查状态:1 C=完成/待审核 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
-  surveyStatus: "",
+  memberChildId: "", //	子会员id
+  memberId: "", //会员id
+  tenantSupplierId: "",//	供应商id
+  surveySource: "", //	调查来源 1:内部 2:外部
+  projectId: "", //项目id
+  projectName: "", //项目名称-模糊查询
+  customerId: "", //客户Id
+  ip: "", //ip-模糊查询
+  surveyStatus: "", //调查状态:1 C=完成/待审核 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
+  randomIdentityId: "", //随机身份id
 });
 
 const data = reactive<any>({
@@ -136,7 +136,7 @@ async function fetchData() {
     ...queryForm,
   };
   const { data } = await api.list(params);
-  list.value = data.memberSurveyRecordInfoList;
+  list.value = data.memberChildSurveyRecordInfoList;
   currencyType.value = data.currencyType;
   pagination.value.total = data.total;
   listLoading.value = false;
@@ -148,22 +148,16 @@ function setSelectRows(val: string) {
 // 重置筛选数据
 function onReset() {
   Object.assign(queryForm, {
-    //会员id
-    memberId: "",
-    //随机身份id
-    randomIdentityId: "",
-    //会员组id
-    memberGroupId: "",
-    //项目id
-    projectId: "",
-    //项目名称-模糊查询
-    projectName: "",
-    //客户Id
-    customerId: "",
-    //ip-模糊查询
-    ip: "",
-    //调查状态:1 C=完成/待审核 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
-    surveyStatus: "",
+    memberChildId: "",
+    memberId: "", //会员id
+    tenantSupplierId: "",
+    surveySource: "", //	调查来源 1:内部 2:外部
+    projectId: "", //项目id
+    projectName: "", //项目名称-模糊查询
+    customerId: "", //客户Id
+    ip: "", //ip-模糊查询
+    surveyStatus: "", //调查状态:1 C=完成/待审核 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
+    randomIdentityId: "", //随机身份id
   });
   fetchData();
 }
@@ -193,18 +187,40 @@ onMounted(async () => {
           >
             <el-form-item label="">
               <el-input
+                v-model.trim="queryForm.projectId"
+                clearable
+                :inline="false"
+                placeholder="项目ID"
+              />
+            </el-form-item>
+
+            <el-form-item label="">
+              <el-input
+                v-model.trim="queryForm.projectName"
+                clearable
+                :inline="false"
+                placeholder="项目名称"
+              />
+            </el-form-item>
+
+            <el-form-item label="">
+              <el-input
                 v-model.trim="queryForm.memberId"
                 clearable
                 :inline="false"
                 placeholder="会员ID"
               />
             </el-form-item>
+
             <el-form-item v-show="!fold" label="">
-              <!-- <el-select
-                v-model="queryForm.memberGroupId"
+              <el-input
+                v-model.trim="queryForm.memberChildId"
                 clearable
-                placeholder="会员组"
-              /> -->
+                :inline="false"
+                placeholder="子会员ID"
+              />
+            </el-form-item>
+            <el-form-item v-show="!fold" label="">
               <el-input
                 v-model.trim="queryForm.randomIdentityId"
                 clearable
@@ -212,36 +228,13 @@ onMounted(async () => {
                 placeholder="随机身份"
               />
             </el-form-item>
-
-            <el-form-item label="">
-              <el-input
-                v-model.trim="queryForm.projectId"
-                clearable
-                :inline="false"
-                placeholder="项目ID"
-              />
-            </el-form-item>
             <el-form-item v-show="!fold" label="">
               <el-input
-                v-model.trim="queryForm.name"
+                v-model.trim="queryForm.tenantSupplierId"
                 clearable
                 :inline="false"
-                placeholder="项目名称"
+                placeholder="供应商id"
               />
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-select
-                v-model="queryForm.projectName"
-                clearable
-                placeholder="客户简称"
-              >
-                <el-option
-                  v-for="item in data.customerList"
-                  :key="item.tenantCustomerId"
-                  :value="item.tenantCustomerId"
-                  :label="item.customerAccord"
-                ></el-option>
-              </el-select>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
               <el-input
@@ -317,12 +310,37 @@ onMounted(async () => {
       >
         <el-table-column align="center" type="selection" />
         <el-table-column
+          v-if="checkList.includes('surveySource')"
+          align="center"
+          prop="memberId"
+          show-overflow-tooltip
+          label="会员类型"
+        >
+          <template #default="{ row }">
+            {{ row.surveySource === 1 ? "内部会员" : "外部会员" }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="checkList.includes('memberChildrenId')"
+          align="center"
+          prop="memberChildrenId"
+          show-overflow-tooltip
+          label="子会员ID"
+          ><template #default="{ row }">
+            {{ row.memberChildrenId ? row.memberChildrenId : "-" }}
+          </template>
+        </el-table-column>
+        <el-table-column
           v-if="checkList.includes('memberId')"
           align="center"
           prop="memberId"
           show-overflow-tooltip
           label="会员ID"
-        />
+          ><template #default="{ row }">
+            {{ row.memberId ? row.memberId : "-" }}
+          </template>
+        </el-table-column>
+
         <el-table-column
           v-if="checkList.includes('randomIdentityId')"
           align="center"
@@ -334,13 +352,13 @@ onMounted(async () => {
           </template>
         </el-table-column>
         <el-table-column
-          v-if="checkList.includes('memberName')"
+          v-if="checkList.includes('tenantSupplierId')"
           align="center"
-          prop="memberName"
+          prop="tenantSupplierId"
           show-overflow-tooltip
-          label="所属组"
+          label="供应商id"
           ><template #default="{ row }">
-            {{ row.memberName ? row.memberName : "-" }}
+            {{ row.tenantSupplierId ? row.tenantSupplierId : "-" }}
           </template>
         </el-table-column>
         <el-table-column
@@ -354,20 +372,11 @@ onMounted(async () => {
           v-if="checkList.includes('projectName')"
           align="center"
           prop="projectName"
-          show-overflow-tooltip
-          label="项目名称"
+          label="项目名称/客户简称"
           ><template #default="{ row }">
-            {{ row.projectName ? row.projectName : "-" }}
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('projectName')"
-          align="center"
-          prop="customerShortName"
-          show-overflow-tooltip
-          label="客户简称"
-          ><template #default="{ row }">
-            {{ row.customerShortName ? row.customerShortName : "-" }}
+            {{ row.projectName ? row.projectName : "-" }}/{{
+              row.customerShortName ? row.customerShortName : "-"
+            }}
           </template>
         </el-table-column>
         <el-table-column
@@ -385,7 +394,7 @@ onMounted(async () => {
           align="center"
           prop="h"
           show-overflow-tooltip
-          label="会员价/供应商价/原价"
+          label="子会员价/供应商价/原价"
         >
           <template #default="{ row }">
             <el-text v-if="currencyType === 1"
