@@ -61,7 +61,7 @@ async function getInfo() {
   loading.value = true;
   // 编辑时获取该id的具体数据
   form.value = JSON.parse(props.row);
-  // loading.value = false;
+  loading.value = false;
 }
 
 // 查询当前路由有那些权限
@@ -70,26 +70,39 @@ function rowPermission(permissionID: any) {
     (item: any) => permissionID === item.menuId
   );
 }
-// const handleNodeClick = (nodeData: any) => {
-//   // 判断节点是否被选中
-//   const instance = treeRef.value.getCheckedNodes();
-//   console.log("instance", instance);
-//   const arr = [];
-//   // arr.push(nodeData);
-//   // const isChecked = treeRef.value.getNode(nodeData.id).checked;
-//   // console.log('isChecked',isChecked);
-//   // if (isChecked) {
-//   //   arr.map((ite) => {
-//   //     const bbb = permissionData?.value?.filter(
-//   //       (item: any) => ite.id === item.menuId
-//   //     );
-//   //     if (bbb && bbb.length) {
-//   //       form.value.permission.push(bbb[0].id);
-//   //     }
-//   //   });
-//   // } else {
-//   // }
-// };
+
+const handleNodeClick = (nodeData: any) => {
+  // 判断节点是否被选中
+  const arr = [];
+  arr.push(nodeData);
+  const isChecked = treeRef.value.getNode(nodeData.id).checked;
+  if (isChecked) {
+    arr.map((ite) => {
+      const permissionList = permissionData?.value?.filter(
+        (item: any) => ite.id === item.menuId
+      );
+      if (permissionList && permissionList.length) {
+        permissionList.forEach((element: any) => {
+          form.value.permission.push(element.id);
+        });
+      }
+    });
+  } else {
+    arr.map((ite) => {
+      const permissionList = permissionData?.value?.filter(
+        (item: any) => ite.id === item.menuId
+      );
+      if (permissionList && permissionList.length) {
+        // 将 permissionList 中存在的 id 进行提取
+        let idsToRemove = permissionList.map((item: any) => item.id);
+        // 使用 filter() 方法过滤掉存在于 idsToRemove 中的 id
+        form.value.permission = form.value.permission.filter(
+          (id: any) => !idsToRemove.some((removeId: any) => removeId === id)
+        );
+      }
+    });
+  }
+};
 // 暴露
 defineExpose({
   submit() {
@@ -164,8 +177,8 @@ defineExpose({
           :default-checked-keys="form.menuId"
           :default-expanded-keys="[]"
           node-key="id"
-          :check-on-click-node="true"
           show-checkbox
+          @check-change="handleNodeClick"
           default-expand-all
           border
         >
