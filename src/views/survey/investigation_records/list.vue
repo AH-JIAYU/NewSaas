@@ -136,7 +136,7 @@ async function fetchData() {
     ...queryForm,
   };
   const { data } = await api.list(params);
-  list.value = data.memberSurveyRecordInfoList;
+  list.value = data.memberChildSurveyRecordInfoList;
   currencyType.value = data.currencyType;
   pagination.value.total = data.total;
   listLoading.value = false;

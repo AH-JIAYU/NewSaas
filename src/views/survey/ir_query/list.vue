@@ -284,7 +284,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
                     <ElFormItem>
                       <ElInput
                         v-model="data.search.projectOrMemberGroupId"
-                        placeholder="项目ID"
+                        placeholder="会员ID"
                         clearable
                         @keydown.enter="currentChange()"
                         @clear="currentChange()"
@@ -293,7 +293,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
                     <ElFormItem>
                       <ElInput
                         v-model="data.search.projectOrMemberGroupName"
-                        placeholder="项目名称"
+                        placeholder="会员姓名"
                         clearable
                         @keydown.enter="currentChange()"
                         @clear="currentChange()"
@@ -363,14 +363,14 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
                   show-overflow-tooltip
                   align="center"
                   prop="projectOrMemberGroupId"
-                  label="项目ID"
+                  label="会员ID"
                 />
                 <ElTableColumn
                   v-if="data.checkList.includes('projectOrMemberGroupName')"
                   show-overflow-tooltip
                   align="center"
                   prop="projectOrMemberGroupName"
-                  label="项目名称"
+                  label="会员姓名"
                 />
 
                 <ElTableColumn
@@ -378,14 +378,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
                   show-overflow-tooltip
                   align="center"
                   prop="ir"
-                  label="项目IR"
-                />
-                <ElTableColumn
-                  v-if="data.checkList.includes('projectIr')"
-                  show-overflow-tooltip
-                  align="center"
-                  prop="projectIr"
-                  label="项目实际IR"
+                  label="IR"
                 />
                 <template #empty>
                   <el-empty description="暂无数据" />
@@ -418,7 +411,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
                     <ElFormItem>
                       <ElInput
                         v-model="data.search.projectOrMemberGroupId"
-                        placeholder="项目ID"
+                        placeholder="会员组ID"
                         clearable
                         @keydown.enter="currentChange()"
                         @clear="currentChange()"
@@ -427,7 +420,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
                     <ElFormItem>
                       <ElInput
                         v-model="data.search.projectOrMemberGroupName"
-                        placeholder="项目名称"
+                        placeholder="会员组名称"
                         clearable
                         @keydown.enter="currentChange()"
                         @clear="currentChange()"
@@ -497,14 +490,14 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
                   show-overflow-tooltip
                   align="center"
                   prop="projectOrMemberGroupId"
-                  label="项目ID"
+                  label="会员组ID"
                 />
                 <ElTableColumn
                   v-if="data.checkList.includes('projectOrMemberGroupName')"
                   show-overflow-tooltip
                   align="center"
                   prop="projectOrMemberGroupName"
-                  label="项目名称"
+                  label="会员组名称"
                 />
 
                 <ElTableColumn
@@ -512,14 +505,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
                   show-overflow-tooltip
                   align="center"
                   prop="ir"
-                  label="项目IR"
-                />
-                <ElTableColumn
-                  v-if="data.checkList.includes('projectIr')"
-                  show-overflow-tooltip
-                  align="center"
-                  prop="projectIr"
-                  label="项目实际IR"
+                  label="会员组IR"
                 />
                 <template #empty>
                   <el-empty description="暂无数据" />
