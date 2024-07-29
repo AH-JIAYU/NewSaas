@@ -49,7 +49,7 @@ const columns = ref<Array<Object>>([
     sortable: true,
     prop: "countryAffiliationName",
   },
-  { label: "余额", checked: true, sortable: true, prop: "balanceUs" },
+  { label: "余额", checked: true, sortable: true, prop: "balanceHumanLife" },
   {
     label: "待审金额",
     checked: true,
@@ -351,16 +351,16 @@ onMounted(async () => {
           </template>
         </el-table-column>
         <el-table-column
-          v-if="checkList.includes('balanceUs')"
+          v-if="checkList.includes('countryAffiliationName')"
           align="center"
           prop="countryAffiliationName"
           show-overflow-tooltip
           label="国家"
         />
         <el-table-column
-          v-if="checkList.includes('balanceUs')"
+          v-if="checkList.includes('balanceHumanLife')"
           align="center"
-          prop="balanceUs"
+          prop="balanceHumanLife"
           show-overflow-tooltip
           label="可用余额"
         />
