@@ -548,7 +548,7 @@ function handleMoreOperating(command: string, row: any) {
             {{ row.remark ? row.remark : "-" }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="操作" width="190">
+        <el-table-column align="center" label="操作" width="250">
           <template #default="{ row }">
             <ElSpace>
               <el-button
@@ -560,23 +560,31 @@ function handleMoreOperating(command: string, row: any) {
               >
                 审核
               </el-button>
-              <ElDropdown @command="handleMoreOperating($event, row)">
-                <ElButton size="small">
-                  更多操作
-                  <SvgIcon name="i-ep:arrow-down" class="el-icon--right" />
-                </ElButton>
-                <template #dropdown>
-                  <ElDropdownMenu>
-                    <ElDropdownItem v-if="row.status === 5" command="auditing">
-                      重审
-                    </ElDropdownItem>
-                    <ElDropdownItem command="edit"> 结算编辑 </ElDropdownItem>
-                    <ElDropdownItem command="refundDetails">
-                      退款详情
-                    </ElDropdownItem>
-                  </ElDropdownMenu>
-                </template>
-              </ElDropdown>
+              <el-button
+                v-if="row.status === 5"
+                type="primary"
+                size="small"
+                plain
+                @click="handleMoreOperating('auditing', row)"
+              >
+                重审
+              </el-button>
+              <el-button
+                type="primary"
+                size="small"
+                plain
+                @click="handleMoreOperating('edit', row)"
+              >
+                结算编辑
+              </el-button>
+              <el-button
+                type="primary"
+                size="small"
+                plain
+                @click="handleMoreOperating('refundDetails', row)"
+              >
+                退款详情
+              </el-button>
             </ElSpace>
           </template>
         </el-table-column>
