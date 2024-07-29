@@ -255,7 +255,7 @@ function echarts2() {
             textStyle: {
               fontSize: 12,
               fontWeight: "bolder",
-              color: "#3a2acd",
+              color: "#409eff",
             },
           },
         ],
@@ -322,7 +322,7 @@ function echarts2() {
           {
             type: "text",
             style: {
-              text: `合计`,
+              text: `合计:`,
               fontSize: 18,
               textAlign: "center",
               textVerticalAlign: "bottom",
