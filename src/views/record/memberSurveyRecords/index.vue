@@ -233,7 +233,7 @@ onMounted(async () => {
                 v-model.trim="queryForm.tenantSupplierId"
                 clearable
                 :inline="false"
-                placeholder="供应商id"
+                placeholder="供应商ID"
               />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
@@ -356,7 +356,7 @@ onMounted(async () => {
           align="center"
           prop="tenantSupplierId"
           show-overflow-tooltip
-          label="供应商id"
+          label="供应商ID"
           ><template #default="{ row }">
             {{ row.tenantSupplierId ? row.tenantSupplierId : "-" }}
           </template>

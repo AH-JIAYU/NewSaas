@@ -39,8 +39,6 @@ const formRules = ref<FormRules>({
 });
 
 async function showEdit(row: any) {
-  console.log('row',JSON.parse(row));
-
   loadingDisible.value = true;
   if (!row) {
     title.value = "新增";
