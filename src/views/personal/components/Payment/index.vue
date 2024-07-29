@@ -1,22 +1,20 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref } from "vue";
 
 defineOptions({
-  name: 'Edit',
-})
+  name: "Edit",
+});
 const form = ref({
-  version:1,
-  radio:7,
-})
+  version: 1,
+  radio: 7,
+});
 // 弹框开关变量
-const dialogTableVisible = ref(false)
+const dialogTableVisible = ref(false);
 // 提交数据
-function onSubmit() {
-
-}
+function onSubmit() {}
 // 获取数据
 async function showEdit(row: any) {
-  dialogTableVisible.value = true
+  dialogTableVisible.value = true;
 }
 // 弹框关闭事件
 function closeHandler() {
@@ -26,18 +24,22 @@ function closeHandler() {
   // delete formData.id
   // // 重置表单
   // Object.assign(formData, defaultState)
-  dialogTableVisible.value = false
+  dialogTableVisible.value = false;
 }
 // 暴露方法
-defineExpose({ showEdit })
+defineExpose({ showEdit });
 </script>
 
 <template>
   <div>
-    <el-dialog v-model="dialogTableVisible" width="50%" :before-close="closeHandler">
+    <el-dialog
+      v-model="dialogTableVisible"
+      width="50%"
+      :before-close="closeHandler"
+    >
       <div class="whole">
         <div class="left">
-          <h2>ICON</h2>
+          <!-- <h2>ICON</h2> -->
           <h1>高级版</h1>
           <p class="vip">会员尊享<span class="quantity">30+</span>项权益</p>
           <ul>
@@ -52,22 +54,24 @@ defineExpose({ showEdit })
           </ul>
         </div>
         <div class="right">
-          <div class="userTop">
+          <!-- <div class="userTop">
             <div class="name">用户名<span class="jichu">ICON基础版</span></div>
             <el-button link type="primary" size="default" @click="">ICON联系客服</el-button>
-          </div>
+          </div> -->
           <div class="select">
-            <p class="p">|方案选择</p>
+            <p class="p">| 方案选择</p>
             <el-radio-group v-model="form.version">
-              <el-radio :value="1" size="large" border>
+              <el-radio class="radio1" :value="1" size="large" border>
                 <p class="radius">基础版</p>
-                <p class="radiusP">500元/月</p>
+                <!-- <p class="radiusP">500元/月</p> -->
               </el-radio>
-              <el-radio :value="2" size="large" border>专业版
-                <p class="radiusP">80%用户选择</p>
+              <el-radio class="radio2" :value="2" size="large" border>
+                <p class="radius">专业版</p>
+                <!-- <p class="radiusP">80%用户选择</p> -->
               </el-radio>
-              <el-radio :value="3" size="large" border>旗舰版
-                <p class="radiusP">低至4.5元/天</p>
+              <el-radio class="radio3" :value="3" size="large" border>
+                <p class="radius">旗舰版</p>
+                <!-- <p class="radiusP">低至4.5元/天</p> -->
               </el-radio>
             </el-radio-group>
           </div>
@@ -80,24 +84,42 @@ defineExpose({ showEdit })
               <el-radio-button border label="180天" :value="180" />
               <el-radio-button border label="365天" :value="365" />
             </el-radio-group> -->
-            <el-radio-group v-model="form.radio">
-              <el-radio :value="7" size="large" border>7天</el-radio>
-              <el-radio :value="30" size="large" border>30天</el-radio>
-              <el-radio :value="90" size="large" border>90天</el-radio>
-              <el-radio :value="180" size="large" border>180天</el-radio>
-              <el-radio :value="365" size="large" border>365天</el-radio>
+            <el-radio-group class="radiobutton" v-model="form.radio">
+              <el-radio-button class="timeRadio" :value="7" size="large" border
+                >月</el-radio-button
+              >
+              <el-radio-button class="timeRadio" :value="30" size="large" border
+                >季度</el-radio-button
+              >
+              <el-radio-button class="timeRadio" :value="90" size="large" border
+                >年</el-radio-button
+              >
+              <el-radio-button
+                class="timeRadio"
+                :value="180"
+                size="large"
+                border
+                >终身</el-radio-button
+              >
+              <!-- <el-radio-button class="timeRadio" :value="365" size="large" border>365天</el-radio-button> -->
             </el-radio-group>
           </div>
           <div class="personal">
             <div class="personalLeft">
-              <p style="margin-bottom: 20px;">|扫码支付</p>
-              <img src="../../../../assets/images/erCode.png" alt="">
+              <p style="margin-bottom: 20px">|扫码支付</p>
+              <img src="../../../../assets/images/erCode.png" alt="" />
             </div>
             <div class="bottom">
               <div class="money">￥ <span class="size">9999</span> 元</div>
               <div class="zhifu">
-                <div style="margin-right: 5px; color: #439deb;" class="i-bi:alipay w-1em h-1em"></div>
-                <div style="margin-right: 5px; color: #57cb00;" class="i-bi:wechat w-1em h-1em"></div>
+                <div
+                  style="margin-right: 5px; color: #439deb"
+                  class="i-bi:alipay w-1em h-1em"
+                ></div>
+                <div
+                  style="margin-right: 5px; color: #57cb00"
+                  class="i-bi:wechat w-1em h-1em"
+                ></div>
                 支持微信/支付宝扫码
               </div>
               <div class="protocol">服务协议 | 购买须知</div>
@@ -118,7 +140,7 @@ li {
   display: flex;
   width: 100%;
   height: 600px;
-  border: 1px solid #9c9c9c;
+  // border: 1px solid #9c9c9c;
   color: #333333;
 
   .left {
@@ -162,7 +184,7 @@ li {
       height: 260px;
       display: flex;
       flex-direction: column;
-      justify-content: space-between
+      justify-content: space-between;
     }
   }
 
@@ -175,13 +197,27 @@ li {
 
     .el-radio-button {
       width: 6.75rem;
-      border-radius: 3px !important;
-      border: 1px solid #5681c8;
+      border-radius: 9px !important;
+      overflow: hidden;
+      // border: 1px solid #5681c8;
     }
 
     .el-radio-button__inner {
       width: 100%;
       height: 100%;
+    }
+    .el-radio__label {
+      width: 100%;
+      height: 100%;
+    }
+    .el-radio__label p {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 16px;
+      font-weight: 700;
     }
 
     .el-radio {
@@ -232,13 +268,14 @@ li {
         .el-radio {
           display: flex;
           justify-content: center;
-          align-items: flex-end;
+          align-items: center;
           text-align: center;
+          font-size: 16px;
           margin: 0;
           padding: 0;
           width: 12.75rem;
-          height: 7.5rem;
-          border-radius: 3px !important;
+          height: 5.5rem;
+          border-radius: 9px !important;
         }
 
         .el-radio__input {
@@ -261,7 +298,6 @@ li {
           background-color: #cbd8ee;
           margin-top: 1.25rem;
         }
-
       }
 
       .p {
@@ -325,10 +361,57 @@ li {
         .zhifu {
           margin-bottom: 10px;
         }
-
-
       }
     }
   }
 }
+// :deep(.el-radio__input.is-checked+.el-radio__label) {
+//   border-color:#fdc988 !important;
+//   color: #000 !important;
+//   z-index: 999;
+// }
+// :deep(.is-checked) {
+//   border-color:#f9cc9d !important;
+// }
+:deep(.el-radio__label) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+.radio1 {
+  color: #fff;
+  background: linear-gradient(to bottom right, #e49c97, #ef4c2e);
+}
+.radio2 {
+  color: #fff;
+  background: linear-gradient(to bottom right, #7a88fe, #6b7dfe);
+}
+.radio3 {
+  color: #fff;
+  background: linear-gradient(to bottom right, #575551, #000000);
+}
+.timeRadio {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #000;
+  border-radius: 10px !important;
+}
+.whole .el-radio-group .el-radio-button {
+  // border: none !important;
+  // border-radius: 10px !important;
+}
+:deep(.el-radio-button) {
+  margin-right: 20px;
+}
+:deep(.el-radio--large) {
+  margin-right: 20px;
+}
+// .radiobutton {
+//   display: flex !important;
+//   justify-content: space-between !important;
+//   align-content: space-between !important;
+// }
 </style>

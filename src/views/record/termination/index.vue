@@ -33,6 +33,7 @@ const columns = ref([
     checked: true,
   },
   { label: "项目ID", prop: "projectId", sortable: true, checked: true },
+  { label: "会员类型", prop: "surveySource", sortable: true, checked: true },
   {
     label: "项目名称/客户简称",
     prop: "projectName",
@@ -43,11 +44,17 @@ const columns = ref([
   { label: "说明", prop: "notes", sortable: true, checked: true },
   { label: "终止时间", prop: "terminationTime", sortable: true, checked: true },
 ]);
+// 会员类型
+const memberType = [
+  { label: "内部", value: 1 },
+  { label: "外部", value: 2 },
+];
 const queryForm = ref<any>({
   // 请求接口携带参数
   time: [],
   beginTime: "", //开始时间
   endTime: "", //结束时间
+  surveySource: "", //会员类型
   projectId: "", //项目Id
   tenantSupplierId: "", //	供应商id
   projectName: "", //	项目名称
@@ -91,6 +98,7 @@ function onReset() {
   Object.assign(queryForm.value, {
     beginTime: "", //开始时间
     endTime: "", //结束时间
+    surveySource: "", //会员类型
     projectId: "", //项目Id
     tenantSupplierId: "", //	供应商id
     projectName: "", //	项目名称
@@ -140,6 +148,23 @@ onMounted(() => {
                 :inline="false"
                 placeholder="项目ID"
               />
+            </el-form-item>
+            <el-form-item label="">
+              <el-select
+                v-model="queryForm.surveySource"
+                value-key=""
+                placeholder="会员类型"
+                clearable
+                filterable
+              >
+                <el-option
+                  v-for="item in memberType"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
               <el-input
@@ -222,6 +247,16 @@ onMounted(() => {
         @selection-change="setSelectRows"
       >
         <el-table-column align="center" type="selection" />
+        <el-table-column
+          v-if="checkList.includes('surveySource')"
+          align="center"
+          prop="surveySource"
+          show-overflow-tooltip
+          label="会员类型"
+          ><template #default="{ row }">
+            {{ memberType[row.surveySource -1].label }}
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="checkList.includes('memberChildId')"
           align="center"

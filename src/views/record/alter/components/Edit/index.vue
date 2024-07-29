@@ -16,6 +16,9 @@ const form = ref<any>();
 // 初始表单数据
 const formData = ref<any>({
   // 审核类型 1:按成功id 2:按失败id 3:全部通过 4:全部失败 5:数据冻结
+  surveyType: null,
+  // 副状态
+  viceType: null,
   type: "",
   // 备注
   remark: "",
@@ -43,9 +46,17 @@ async function onSubmit() {
     formRef.value.validate(async (valid: any) => {
       if (valid) {
         loading.value = true;
+        const type = formData.value.type.split(",");
+        formData.value.surveyType = +type[0];
+        if (type[1] === "null") {
+          formData.value.viceType = null;
+        } else {
+          formData.value.viceType = +type[1];
+        }
         formData.value.projectClickIdList =
           formData.value.arr.split("\n") || [];
         delete formData.value.arr;
+        delete formData.value.type;
         const { status } = await api.edit(formData.value);
         if (status === 1) {
           // 更新列表
@@ -80,7 +91,9 @@ function closeHandler() {
   // // 重置表单
   Object.assign(formData.value, {
     // 审核类型 1:按成功id 2:按失败id 3:全部通过 4:全部失败 5:数据冻结
-    type: "",
+    surveyType: null,
+    // 副状态
+    viceType: null,
     // 备注
     remark: "",
     // 	需要修改的数据
@@ -116,12 +129,12 @@ defineExpose({ showEdit });
             label="变更状态"
           >
             <el-radio-group v-model="formData.type">
-              <el-radio :value="1" size="large"> 完成/待审核 </el-radio>
-              <el-radio :value="7" size="large"> 审核通过 </el-radio>
-              <el-radio :value="8" size="large"> 审核失败 </el-radio>
-              <el-radio :value="9" size="large"> 数据冻结 </el-radio>
-              <el-radio :value="2" size="large"> 被甄别 </el-radio>
-              <el-radio :value="3" size="large"> 配额满 </el-radio>
+              <el-radio value="1,0" size="large"> 完成/待审核 </el-radio>
+              <el-radio value="1,7" size="large"> 审核通过 </el-radio>
+              <el-radio value="1,8" size="large"> 审核失败 </el-radio>
+              <el-radio value="1,9" size="large"> 数据冻结 </el-radio>
+              <el-radio value="2,null" size="large"> 被甄别 </el-radio>
+              <el-radio value="3,null" size="large"> 配额满 </el-radio>
             </el-radio-group>
           </el-form-item>
         </div>

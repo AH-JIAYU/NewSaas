@@ -61,7 +61,7 @@ async function getInfo() {
   loading.value = true;
   // 编辑时获取该id的具体数据
   form.value = JSON.parse(props.row);
-  // loading.value = false;
+  loading.value = false;
 }
 
 // 查询当前路由有那些权限
@@ -70,11 +70,44 @@ function rowPermission(permissionID: any) {
     (item: any) => permissionID === item.menuId
   );
 }
+
+const handleNodeClick = (nodeData: any) => {
+  // 判断节点是否被选中
+  const arr = [];
+  arr.push(nodeData);
+  const isChecked = treeRef.value.getNode(nodeData.id).checked;
+  if (isChecked) {
+    arr.map((ite) => {
+      const permissionList = permissionData?.value?.filter(
+        (item: any) => ite.id === item.menuId
+      );
+      if (permissionList && permissionList.length) {
+        permissionList.forEach((element: any) => {
+          form.value.permission.push(element.id);
+        });
+      }
+    });
+  } else {
+    arr.map((ite) => {
+      const permissionList = permissionData?.value?.filter(
+        (item: any) => ite.id === item.menuId
+      );
+      if (permissionList && permissionList.length) {
+        // 将 permissionList 中存在的 id 进行提取
+        let idsToRemove = permissionList.map((item: any) => item.id);
+        // 使用 filter() 方法过滤掉存在于 idsToRemove 中的 id
+        form.value.permission = form.value.permission.filter(
+          (id: any) => !idsToRemove.some((removeId: any) => removeId === id)
+        );
+      }
+    });
+  }
+};
 // 暴露
 defineExpose({
   submit() {
     // 同步选中的路由id
-    form.value.menuId = treeRef.value!.getCheckedKeys(false)
+    form.value.menuId = treeRef.value!.getCheckedKeys(false);
     return new Promise<void>((resolve) => {
       //  获取选中的所有子节点
       const tree = treeRef.value.getCheckedKeys();
@@ -145,6 +178,7 @@ defineExpose({
           :default-expanded-keys="[]"
           node-key="id"
           show-checkbox
+          @check-change="handleNodeClick"
           default-expand-all
           border
         >
