@@ -76,6 +76,7 @@ function onSubmit() {
           // 执行关闭弹框事件
           closeHandler();
         } else {
+          loading.value = false;
           ElMessage.error({
             message: "操作失败，请联系工作人员",
             center: true,

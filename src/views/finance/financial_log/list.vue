@@ -128,11 +128,7 @@ function onReset() {
   });
   getDataList();
 }
-const tabChange = () => {
-  data.value.search.page = 1;
-  data.value.search.limit = 10;
-  onReset();
-};
+
 // 每页数量切换
 function sizeChange(size: number) {
   onSizeChange(size).then(() => {

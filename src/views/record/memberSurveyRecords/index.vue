@@ -31,6 +31,7 @@ const tableAutoHeight = ref(false);
 const currencyType = ref<any>();
 // 表格控件-展示列
 const columns = ref([
+  { prop: "id", label: "点击ID", sortable: true, checked: true },
   { prop: "surveySource", label: "会员类型", sortable: true, checked: true },
   {
     prop: "memberChildrenId",
@@ -74,7 +75,7 @@ const columns = ref([
 const queryForm = reactive<any>({
   memberChildId: "", //	子会员id
   memberId: "", //会员id
-  tenantSupplierId: "",//	供应商id
+  tenantSupplierId: "", //	供应商id
   surveySource: "", //	调查来源 1:内部 2:外部
   projectId: "", //项目id
   projectName: "", //项目名称-模糊查询
@@ -85,6 +86,8 @@ const queryForm = reactive<any>({
 });
 
 const data = reactive<any>({
+  // 会员类型
+  memberType: ["内部会员", "外部会员"],
   // 分配类型
   allocationTypeList: ["未分配", "供应商", "会员组"],
   // 调查状态
@@ -202,7 +205,19 @@ onMounted(async () => {
                 placeholder="项目名称"
               />
             </el-form-item>
-
+            <el-form-item v-show="!fold" label="">
+              <el-select
+                v-model="queryForm.surveyStatus"
+                clearable
+                placeholder="会员类型"
+              >
+                <el-option
+                  v-for="(item, index) in data.memberType"
+                  :label="item"
+                  :value="index + 1"
+                ></el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item label="">
               <el-input
                 v-model.trim="queryForm.memberId"
@@ -228,6 +243,14 @@ onMounted(async () => {
                 placeholder="随机身份"
               />
             </el-form-item>
+            <el-form-item label="">
+              <el-input
+                v-model.trim="queryForm.memberId"
+                clearable
+                :inline="false"
+                placeholder="点击ID"
+              />
+            </el-form-item>
             <el-form-item v-show="!fold" label="">
               <el-input
                 v-model.trim="queryForm.tenantSupplierId"
@@ -238,18 +261,59 @@ onMounted(async () => {
             </el-form-item>
             <el-form-item v-show="!fold" label="">
               <el-input
+                v-model.trim="queryForm.tenantSupplierId"
+                clearable
+                :inline="false"
+                placeholder="客户简称"
+              />
+            </el-form-item>
+            <el-form-item v-show="!fold" label="">
+              <el-select
+                v-model="queryForm.surveyStatus"
+                clearable
+                placeholder="分配类型"
+              >
+                <el-option
+                  v-for="(item, index) in data.allocationTypeList"
+                  :label="item"
+                  :value="index + 1"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item v-show="!fold" label="">
+              <el-input
                 v-model.trim="queryForm.ip"
                 clearable
                 :inline="false"
                 placeholder="IP地址"
               />
             </el-form-item>
-
+            <el-form-item v-show="!fold" label="">
+              <el-input
+                v-model.trim="queryForm.tenantSupplierId"
+                clearable
+                :inline="false"
+                placeholder="所属国家"
+              />
+            </el-form-item>
             <el-form-item v-show="!fold" label="">
               <el-select
                 v-model="queryForm.surveyStatus"
                 clearable
                 placeholder="调查状态"
+              >
+                <el-option
+                  v-for="(item, index) in data.surveyStatusList"
+                  :label="item"
+                  :value="index + 1"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item v-show="!fold" label="">
+              <el-select
+                v-model="queryForm.surveyStatus"
+                clearable
+                placeholder="副状态"
               >
                 <el-option
                   v-for="(item, index) in data.surveyStatusList"
@@ -309,6 +373,16 @@ onMounted(async () => {
         @selection-change="setSelectRows"
       >
         <el-table-column align="center" type="selection" />
+        <el-table-column
+          v-if="checkList.includes('id')"
+          align="center"
+          prop="id"
+          show-overflow-tooltip
+          label="点击ID"
+          ><template #default="{ row }">
+            {{ row.id ? row.id : "-" }}
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="checkList.includes('surveySource')"
           align="center"

@@ -38,7 +38,6 @@ const getDataList = async () => {
     (await basicDictionaryStore.country) ||
     (await basicDictionaryStore.getCountry());
   form.value = res.data;
-  form.value.name = "张三";
   loading.value = false;
   countryData.value = countryList.value.find(
     (item: any) => item.code === form.value.country

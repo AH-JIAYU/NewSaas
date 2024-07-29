@@ -55,9 +55,9 @@ const userForm = ref<any>({
   // 用户名
   name: "",
   // 手机号码
-  phone: "15288888888",
+  phone: "",
   // 电子邮箱
-  email: "88888@qq.com",
+  email: "",
   // 货币类型
   currencyType: "",
   // 公司名称

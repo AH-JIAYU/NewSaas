@@ -18,6 +18,7 @@ const lineHeight = ref<any>("default"); // 表格控件-控制表格大小
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const columns = ref([
   // 表格控件-展示列
+  { prop: "projectQuestionnaireCIickId", label: "点击ID", sortable: true, checked: true },
   {
     prop: "customerShortName",
     label: "客户简称",
@@ -137,6 +138,14 @@ onMounted(async () => {
               />
             </el-form-item>
             <el-form-item label="">
+              <el-input
+                v-model.trim="queryForm.memberId"
+                clearable
+                :inline="false"
+                placeholder="点击ID"
+              />
+            </el-form-item>
+            <el-form-item label="">
               <el-select
                 v-model="queryForm.surveySource"
                 value-key=""
@@ -233,6 +242,16 @@ onMounted(async () => {
         @selection-change="setSelectRows"
       >
         <el-table-column align="center" type="selection" />
+        <el-table-column
+          v-if="checkList.includes('projectQuestionnaireCIickId')"
+          align="center"
+          prop="projectQuestionnaireCIickId"
+          show-overflow-tooltip
+          label="点击ID"
+          ><template #default="{ row }">
+            {{ row.projectQuestionnaireCIickId ? row.projectQuestionnaireCIickId : "-" }}
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="checkList.includes('customerShortName')"
           align="center"
