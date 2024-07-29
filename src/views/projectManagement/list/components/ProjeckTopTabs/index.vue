@@ -1052,7 +1052,7 @@ nextTick(() => {
                 />
               </el-form-item>
             </el-col>
-            <el-col :span="4">
+            <!-- <el-col :span="4">
               <el-form-item label="IP一致性检测">
                 <el-switch
                   v-model="props.leftTab.ipConsistency"
@@ -1060,7 +1060,7 @@ nextTick(() => {
                   :inactive-value="2"
                 />
               </el-form-item>
-            </el-col>
+            </el-col> -->
           </el-row>
         </el-card>
       </el-tab-pane>

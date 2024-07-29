@@ -1,135 +1,166 @@
 <script setup lang="ts">
-import Payment from './components/Payment/index.vue'
-import setting from './setting.vue'
+import Payment from "./components/Payment/index.vue";
+import setting from "./setting.vue";
 import storage from "@/utils/storage";
-import api from '@/api/modules/personal_setting'
-import useAvatarStore from '@/store/modules/avatar'
+import api from "@/api/modules/personal_setting";
+import useAvatarStore from "@/store/modules/avatar";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary";
 
-
-const avatarStore = useAvatarStore()
+const avatarStore = useAvatarStore();
 //基础字典
 const basicDictionaryStore = useBasicDictionaryStore();
 // 国家list
 const countryList = ref<any>([]);
-const countryData = ref<any>()
+const countryData = ref<any>();
 // editRef
-const editRef = ref()
+const editRef = ref();
 // settingRef
-const settingRef = ref()
+const settingRef = ref();
 // loading
-const loading = ref(false)
+const loading = ref(false);
 // 定义数据
-const form = ref<any>({})
+const form = ref<any>({});
 // 新增
 function payment() {
-  editRef.value.showEdit()
+  editRef.value.showEdit();
 }
 function edit() {
-  settingRef.value.showEdit(form.value)
+  settingRef.value.showEdit(form.value);
 }
 // 获取数据
 const getDataList = async () => {
-  loading.value = true
-  storage.local.remove("avatar")
-  const res = await api.list()
+  loading.value = true;
+  storage.local.remove("avatar");
+  const res = await api.list();
   storage.local.set("avatar", res.data.avatar);
-  avatarStore.permissions = res.data.avatar
-  countryList.value = await basicDictionaryStore.country || await basicDictionaryStore.getCountry()
-  form.value = res.data
-  loading.value = false
-  countryData.value = countryList.value.find((item: any) => item.code === form.value.country)
-}
+  avatarStore.permissions = res.data.avatar;
+  countryList.value =
+    (await basicDictionaryStore.country) ||
+    (await basicDictionaryStore.getCountry());
+  form.value = res.data;
+  form.value.name = "张三";
+  loading.value = false;
+  countryData.value = countryList.value.find(
+    (item: any) => item.code === form.value.country
+  );
+};
 onMounted(() => {
-  getDataList()
-})
+  getDataList();
+});
 </script>
 <template>
   <div v-loading="loading">
-    <PageMain style="background-color: #f3f5f7;">
-      <div class="personal">
+    <PageMain style="background-color: #f3f5f7">
+      <div class="personal b-r-5">
         <div class="avater">
-          <el-avatar style="margin-right: 15px;" :size="50" :src="form.avatar" />
+          <el-avatar style="margin-right: 15px" :size="50" :src="form.avatar" />
           <div class="top">
             <!-- <span class="icon">icon基础版本</span> -->
             <p class="user">{{ form.name }}</p>
-            <p class="versionDtail"><div style="margin-right: 5px;" class="i-ri:vip-fill w-1.5em h-1.5em"></div>试用版</p>
-            <!-- <p class="us" v-if="form.country !== 'CN'"><span class="bule">{{ countryData?.chineseName }}</span>{{
-    form.email }}</p>
-            <p class="cn" v-else><span class="bule">中国</span>{{ form.phone }}</p> -->
+            <div class="versionDtail">
+              <div
+                style="margin-right: 5px"
+                class="i-ri:vip-fill w-1.5em h-1.5em"
+              ></div>
+              试用版
+            </div>
           </div>
         </div>
-        <ElButton style="margin-left: 20%;margin-top: -3%;color: #fff;" type="primary" link @click="edit">编辑个人信息>></ElButton>
+        <ElButton
+          style="color: #fff; text-align: left"
+          type="primary"
+          link
+          @click="edit"
+          >编辑个人中心>
+        </ElButton>
+        <el-text
+          style="align-self: flex-end; flex: 1; text-align: right; color: #fff"
+          class="m-4"
+          >ID:13246578913</el-text
+        >
       </div>
       <div class="center">
-        <div class="version">
-          <h2 style="color: #555555;">试用版</h2>
-          <h1>￥ 999 <span class="yare">/ 年</span></h1>
-          <el-button class="btn" type="info" size="default" @click="">已开通</el-button>
+        <div class="version b-r-5">
+          <h2 style="color: #555555">试用版</h2>
           <div class="time">
             <p>到期时间</p>
             <p>2029-09-09 10:10:10</p>
           </div>
+          <el-button class="btn" type="info" size="default" @click=""
+            >已开通</el-button
+          >
           <ul>
-            <li>500名会员系统</li>
-            <li>500名会员系统</li>
-            <li>500名会员系统</li>
-            <li>500名会员系统</li>
-            <li>500名会员系统</li>
-            <li>500名会员系统</li>
+            <li>供应商团队</li>
+            <li>供应商团队</li>
+            <li>供应商团队</li>
+            <li>供应商团队</li>
+            <li>供应商团队</li>
+            <li>供应商团队</li>
           </ul>
         </div>
-        <div class="version">
+        <div class="version b-r-5">
           <h2>基础版</h2>
           <h1>￥ 999 <span class="yare">/ 年</span></h1>
-          <el-button class="btns" size="default" @click="payment">立即开通</el-button>
-          <div class="time">
-            <p>每日只需：￥9999元</p>
-          </div>
+          <el-button class="btns" size="default" @click="payment"
+            >立即开通</el-button
+          >
+
           <ul>
-            <li>500名会员系统</li>
-            <li>500名会员系统</li>
-            <li>500名会员系统</li>
-            <li>500名会员系统</li>
-            <li>500名会员系统</li>
-            <li>500名会员系统</li>
+            <li>供应商团队</li>
+            <li>供应商团队</li>
+            <li>供应商团队</li>
+            <li>供应商团队</li>
+            <li>供应商团队</li>
+            <li>供应商团队</li>
           </ul>
-          <ElButton style="margin-left: 26%;margin-bottom: .625rem;" type="primary" link>功能特权,了解特权及对比>></ElButton>
+          <ElButton class="m-2" style="width: 100%" type="primary" link
+            >功能特权,了解特权及对比 ></ElButton
+          >
         </div>
-        <div class="version">
-          <h2 style="color: #f6403f;">高级版</h2>
+        <div class="version b-r-5">
+          <h2 style="color: #f6403f">高级版</h2>
           <h1>￥ 9999 <span class="yare">/ 年</span></h1>
-          <el-button class="butn" size="default" @click="payment">立即开通</el-button>
-          <div class="time">
-            <p>每日只需：￥9999元</p>
-          </div>
+          <el-button class="butn" size="default" @click="payment"
+            >立即开通</el-button
+          >
+
           <ul>
-            <li>500名会员系统</li>
-            <li>500名会员系统</li>
-            <li>500名会员系统</li>
-            <li>500名会员系统</li>
-            <li>500名会员系统</li>
-            <li>500名会员系统</li>
+            <li>供应商团队</li>
+            <li>供应商团队</li>
+            <li>供应商团队</li>
+            <li>供应商团队</li>
+            <li>供应商团队</li>
+            <li>供应商团队</li>
           </ul>
-          <ElButton style="margin-left: 26%;margin-bottom: .625rem;color: #f6403f;" type="primary" link>功能特权,了解特权及对比>>
+          <ElButton
+            class="m-4"
+            style="width: 100%; color: #f6403f"
+            type="primary"
+            link
+            >功能特权,了解特权及对比 >
           </ElButton>
         </div>
-        <div class="version">
-          <h2 style="color: #d9a550;">旗舰版</h2>
+        <div class="version b-r-5">
+          <h2 style="color: #d9a550">旗舰版</h2>
           <h1>￥ 99999 <span class="yare">/ 年</span></h1>
-          <el-button class="buttn" size="default" @click="payment">立即开通</el-button>
-          <div class="time">
-            <p>每日只需：￥9999元</p>
-          </div>
+          <el-button class="buttn" size="default" @click="payment"
+            >立即开通</el-button
+          >
+
           <ul>
-            <li>500名会员系统</li>
-            <li>500名会员系统</li>
-            <li>500名会员系统</li>
-            <li>500名会员系统</li>
-            <li>500名会员系统</li>
-            <li>500名会员系统</li>
+            <li>供应商团队</li>
+            <li>供应商团队</li>
+            <li>供应商团队</li>
+            <li>供应商团队</li>
+            <li>供应商团队</li>
+            <li>供应商团队</li>
           </ul>
-          <ElButton style="margin-left: 26%;margin-bottom: .625rem;color: #d9a550;" type="primary" link>功能特权,了解特权及对比>>
+          <ElButton
+            class="m-4"
+            style="width: 100%; color: #d9a550"
+            type="primary"
+            link
+            >功能特权,了解特权及对比 >
           </ElButton>
         </div>
       </div>
@@ -142,26 +173,30 @@ onMounted(() => {
 // li {
 //   list-style-type: none;
 // }
+.b-r-5 {
+  border-radius: 5px;
+}
 
 .personal {
   display: flex;
   justify-content: left;
   align-items: center;
-  flex-wrap: wrap;
+  // flex-wrap: wrap;
   width: 100%;
   height: 8rem;
   margin-bottom: 1.875rem;
-  border-radius: 5px;
+
   background: linear-gradient(to bottom right, #6678fe, #919efe);
 
   .avater {
     display: flex;
-    align-items: self-start;
     margin-left: 30px;
+    width: 50%;
 
     .top {
       margin-top: -6px;
       margin-left: 20px;
+
       .user {
         font-size: 18px;
         font-weight: 700;
@@ -227,6 +262,7 @@ onMounted(() => {
     justify-content: center;
     align-items: center;
     // margin-left: 45px;
+    height: 42px;
     margin-bottom: 20px;
 
     .yare {
@@ -249,22 +285,26 @@ onMounted(() => {
   .time {
     text-align: center;
     font-size: 14px;
-    margin-bottom: 30px;
+    height: 42px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
   }
 
   ul {
     width: 100%;
-    padding: 0 10%;
+    padding: 0 20%;
     display: flex;
     flex-wrap: wrap;
-    margin-bottom: 22%;
+    margin: 12% auto;
+    list-style-type: disc;
 
     li {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 50%;
+      width: calc(50% - 30px);
       margin-bottom: 20px;
+      margin-left: 30px;
     }
   }
 }
