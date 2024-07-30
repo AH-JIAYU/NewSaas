@@ -99,9 +99,13 @@ watch(
     }
   }
 );
-// onMounted(() => {
-
-// });
+onMounted(() => {
+  if (props.title === "编辑") {
+    for (let i = 0; i < topTabsRef.value.length; i++) {
+      topTabsRef.value[i].getUpLoad(localLeftTab.value[i].descriptionUrl);
+    }
+  }
+});
 // 为每个 tab 创建并提供一个唯一的 ref
 localLeftTab.value.forEach((tab: any, index: any) => {
   const formRef = ref(null);
@@ -115,7 +119,7 @@ defineExpose({ activeLeftTab });
 <template>
   <div>
     <el-button
-      class="button"
+      :class="props.title === '新增' ? 'button' : 'button hideButton'"
       :disabled="
         localLeftTab.length > 29 ||
         (props.title === '编辑' && localLeftTab[0].parentId !== '0')
@@ -128,6 +132,7 @@ defineExpose({ activeLeftTab });
       v-model="activeLeftTab"
       tab-position="left"
       @tab-remove="tabremove"
+      :class="props.title === '新增' ? '' : 'editHideCloseButton'"
       v-if="localLeftTab.length"
     >
       <el-tab-pane
@@ -194,11 +199,14 @@ defineExpose({ activeLeftTab });
 </template>
 
 <style lang="scss" scoped>
-// :deep {
-//   .el-drawer,
-//   .el-drawer__body,
-//   .el-tabs.el-tabs--left{
-//     overflow: visible !important;
-//   }
-// }
+// 编辑时隐藏新增按钮
+.hideButton {
+  visibility: hidden;
+}
+// 编辑时隐藏 tab的删除按钮x
+:deep {
+  .editHideCloseButton .is-icon-close {
+    display: none !important;
+  }
+}
 </style>

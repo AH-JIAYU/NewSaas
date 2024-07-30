@@ -75,6 +75,7 @@ function initializeLeftTabsData(data: any) {
   leftTabsData = [];
   // 新增主数据作为第一个 Tab
   const { projectInfoList, ...newData } = cloneDeep(data);
+  newData.descriptionUrl = newData.descriptionUrl.split(",");
   leftTabsData.push(newData);
   // // // 如果存在 children，为每个 child 创建一个 Tab
   if (projectInfoList && projectInfoList.length) {
@@ -99,21 +100,12 @@ function initializeLeftTabsData(data: any) {
           ProjectProblemInfoList: [], // 问题列表 - 显示
         },
       };
+      child.descriptionUrl = child.descriptionUrl.split(",");
       leftTabsData.push({
         ...child,
       });
     });
   }
-  // leftTabsData.forEach((item: any) => {
-  //   item.projectQuotaInfoList.forEach((ite: any) => {
-  //     // 1 输入框 2单选 3复选 4下拉
-  //     // 单选时 将数组转换成字符串
-  //     // ite.projectAnswerIdList =
-  //     //   ite.questionType === 2
-  //     //     ? ite.projectAnswerIdList[0]
-  //     //     : ite.projectAnswerIdList;
-  //   });
-  // });
 }
 // 暂存
 function staging() {
@@ -147,26 +139,9 @@ function hasDuplicateCustomer(projectList: any) {
 // 提交 处理数据
 const processingData = () => {
   const newLeftTabsData = cloneDeep(leftTabsData);
-  let masterData = newLeftTabsData[0];
-  masterData.projectInfoList = newLeftTabsData.slice(1);
-  //data为配置信息中所需的数据
-  if (masterData.data) {
-    delete masterData.data;
-  }
-  // 将单选的答案和id从''转换成[]
-  masterData.projectQuotaInfoList = masterData.projectQuotaInfoList.map(
-    (item: any) => {
-      if (!Array.isArray(item.answerValueList)) {
-        item.answerValueList = [];
-      }
-      if (!Array.isArray(item.projectAnswerIdList)) {
-        item.projectAnswerIdList = [];
-      }
-      return item;
-    }
-  );
-  // 将子项的单选的答案和id从''转换成[]
-  masterData.projectInfoList.forEach((element: any) => {
+  // 将的单选的答案和id从''转换成[]
+  newLeftTabsData.forEach((element: any) => {
+    element.descriptionUrl = element.descriptionUrl.join(",");
     //data为配置信息中所需的数据
     if (element.data) {
       delete element.data;
@@ -183,6 +158,8 @@ const processingData = () => {
       }
     );
   });
+  let masterData = newLeftTabsData[0];
+  masterData.projectInfoList = newLeftTabsData.slice(1);
   return masterData;
 };
 // 提交数据
@@ -253,7 +230,11 @@ defineExpose({
   <div>
     <el-drawer
       v-model="dialogTableVisible"
-      :class="title === '新增' ? 'hide-drawer-header' : 'edit-drawer'"
+      :class="
+        title === '新增' || leftTabsData.length > 1
+          ? 'hide-drawer-header'
+          : 'edit-drawer'
+      "
       append-to-body
       :close-on-click-modal="false"
       destroy-on-close
