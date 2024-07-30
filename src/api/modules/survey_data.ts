@@ -12,7 +12,7 @@ export default {
     },
     baseURL: '/mock/',
   }),
-
+  dataList: (data: any) => api.post('member-dataCenter/getMemberDataCenter', data,),
   create: (data: any) => api.post('survey/data/create', data, {
     baseURL: '/mock/',
   }),

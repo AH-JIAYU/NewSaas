@@ -55,16 +55,8 @@ const queryForm = reactive<any>({
   limit: 10,
   // 类型 1成功/待审核 2审核通过 3审核失败 4数据冻结 5被甄别 6配额满
   type: null,
-  // 主状态
-  surveyType: null,
-  // 副状态
-  viceType: null,
-  // 点击id,该字段只在新增时使用
-  projectClickIdList: [],
   // 操作人id
   createUserId: "",
-  // 备注
-  remark: "",
 });
 const list = ref<any>([]);
 // 新增
@@ -84,16 +76,8 @@ function onReset() {
   Object.assign(queryForm, {
     // 类型 1成功/待审核 2审核通过 3审核失败 4数据冻结 5被甄别 6配额满
     type: null,
-    // 主状态
-    surveyType: null,
-    // 副状态
-    viceType: null,
-    // 点击id,该字段只在新增时使用
-    projectClickIdList: [],
     // 操作人id
     createUserId: "",
-    // 备注
-    remark: "",
   });
   fetchData();
 }
@@ -106,14 +90,6 @@ function sizeChange(size: number) {
 }
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
-  const type = queryForm.type?.split(",");
-  queryForm.surveyType = +type[0];
-  if (type[1] === "null") {
-    queryForm.viceType = null;
-  } else {
-    queryForm.viceType = +type[1];
-  }
-  delete queryForm.type;
   onCurrentChange(page).then(() => {
     queryForm.page = page;
     fetchData();
@@ -159,7 +135,7 @@ onMounted(async () => {
                 v-model.trim="queryForm.createUserId"
                 clearable
                 :inline="false"
-                placeholder="操作人ID"
+                placeholder="点击ID"
               />
             </el-form-item>
             <el-form-item label="">
@@ -248,7 +224,7 @@ onMounted(async () => {
           prop="projectClickId"
           show-overflow-tooltip
           align="center"
-          label="项目点击ID"
+          label="点击ID"
         />
         <el-table-column
           prop="afterType"
