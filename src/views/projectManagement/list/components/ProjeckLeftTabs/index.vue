@@ -26,7 +26,17 @@ function setHandler() {
 }
 // 同步主项目
 function syncProject() {
-  const { projectId, parentId, ...syncdata } = cloneDeep(localLeftTab.value[0]);
+  // 过滤掉不需要同步的数据
+  const {
+    projectId,
+    parentId,
+    name,
+    projectIdentification,
+    clientId,
+    countryIdList,
+    uidUrl,
+    ...syncdata
+  } = cloneDeep(localLeftTab.value[0]);
   // projectId存在  保留projectId 和parentId
   if (localLeftTab.value[activeLeftTab.value].projectId) {
     syncdata.projectId = localLeftTab.value[activeLeftTab.value].projectId;
