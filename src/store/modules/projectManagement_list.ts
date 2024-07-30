@@ -24,7 +24,7 @@ const useProjectManagementListStore = defineStore(
       projectRemark: "", //	项目备注-仅针对租户pm查看
       isTimeReleases: 1, //	是否定时发布:1:不是 2:是
       releaseTime: "", //	如果选择定时发布,需要传入发布时间
-      descriptionUrl: "", //	描述配额url
+      descriptionUrl: [], //	描述配额url
       richText: "", //富文本编辑器内容
       //配置信息
       projectQuotaInfoList: [],

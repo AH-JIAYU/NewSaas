@@ -189,7 +189,12 @@ const handleRemove: any = async (uploadFile: any, uploadFiles: any) => {
 };
 // 上传图片成功
 const handleSuccess: any = (uploadFile: any, uploadFiles: any) => {
-  props.leftTab.descriptionUrl = uploadFile.data.qiNiuUrl;
+  props.leftTab.descriptionUrl.push(uploadFile.data.qiNiuUrl);
+  // if (props.leftTab.descriptionUrl) {
+  //   props.leftTab.descriptionUrl += "," + uploadFile.data.qiNiuUrl;
+  // } else {
+  //   props.leftTab.descriptionUrl = uploadFile.data.qiNiuUrl;
+  // }
 };
 // 超出限制
 const handleExceed: any = async (uploadFile: any, uploadFiles: any) => {
@@ -200,25 +205,26 @@ const handleExceed: any = async (uploadFile: any, uploadFiles: any) => {
 };
 // 查看
 const handlePictureCardPreview: UploadProps["onPreview"] = (uploadFile) => {
-  console.log("uploadFile", uploadFile);
   dialogImageUrl.value = uploadFile.url!;
   dialogVisible.value = true;
 };
+// 回显图片
 const getUpLoad = async (file: any) => {
-  if (file) {
-    const res: any = await obtainLoading(
-      fileApi.detail({
-        fileName: file,
-      })
-    );
-    fileList.value.push({
-      name: file,
-      url: res.data.fileUrl,
+  if (file.length) {
+    file.forEach(async (item: any) => {
+      const res: any = await obtainLoading(
+        fileApi.detail({
+          fileName: item,
+        })
+      );
+      fileList.value.push({
+        name: item,
+        url: res.data.fileUrl,
+      });
     });
   }
 };
 // #endregion
-
 // 定时发布
 const changeTimeReleases = (val: any) => {
   props.leftTab.isOnline = val === 2 ? 2 : 1;
@@ -468,7 +474,7 @@ onMounted(async () => {
   // 获取客户 国家 项目类型
   await obtainLoading(getList());
   await showProjectQuotaInfoList();
-  await getUpLoad(props.leftTab.descriptionUrl);
+  // await getUpLoad(props.leftTab.descriptionUrl);
 });
 defineExpose({ getUpLoad });
 nextTick(() => {
