@@ -114,7 +114,6 @@ async function save() {
           leftTabsData[0].turnover = null;
           leftTabsData[0].rateAudit = null;
         }
-        console.log('leftTabsData[0]',leftTabsData[0]);
         const { status } = await submitLoading(api.edit(leftTabsData[0]));
         status === 1 &&
           ElMessage.success({
