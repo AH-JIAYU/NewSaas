@@ -155,7 +155,6 @@ function closeHandler() {
 const getcustsmer = computed(() => {
   return customerList.value.find((item:any) => item.tenantCustomerId === data.value.form.clientId)
 })
-
 onMounted(async () => {
   data.value.countryList = await basicDictionaryStore.getCountry();
   customerList.value = await customerStore.getCustomerList();
@@ -556,12 +555,19 @@ defineExpose({ showEdit });
               </el-form-item>
             </el-col>
             <el-col :span="8">
+              <el-form-item label="重复参与:">
+                <el-text class="mx-1">
+                  {{ data.form.ipDifferenceDetection === 1 ? "开" : "关" }}
+                </el-text>
+              </el-form-item>
+            </el-col>
+            <!-- <el-col :span="8">
               <el-form-item label="IP一致性检测:">
                 <el-text class="mx-1">
                   {{ data.form.ipConsistency === 1 ? "开" : "关" }}
                 </el-text>
               </el-form-item>
-            </el-col>
+            </el-col> -->
             <!-- 暂时隐藏 -->
             <!-- <el-col :span="8">
               <el-form-item label="时差检测 :">

@@ -33,7 +33,7 @@ const payments = [
 // 类型
 const paymentsType = [
   { label: "待审余额", value: 1 },
-  { label: "免审余额", value: 2 },
+  { label: "可用余额", value: 2 },
 ];
 const data = ref<any>({
   loading: false,
@@ -62,15 +62,15 @@ const data = ref<any>({
     // 每页数量
     limit: 10,
     // 会员id
-    memberId: "",
+    supplierId: null,
     // 会员名称
-    memberName: "",
+    // memberName: "",
     // 项目id
-    projectId: "",
+    projectId: null,
     // 加减款类型 1加款 2减款
-    operationType: "",
+    operationType: null,
     // 金额类型 1待审余额 2免审余额
-    type: "",
+    type: null,
   },
   // 批量操作
   batch: {
@@ -104,7 +104,7 @@ function getDataList() {
   };
   api.list(params).then((res: any) => {
     data.value.loading = false;
-    data.value.dataList = res.data.items;
+    data.value.dataList = res.data.tenantFinancialRecordInfoList;
     pagination.value.total = +res.data.total;
   });
 }
@@ -116,15 +116,15 @@ function onReset() {
     // 每页数量
     limit: 10,
     // 会员id
-    memberId: "",
+    supplierId: null,
     // 会员名称
-    memberName: "",
+    // memberName: null,
     // 项目id
-    projectId: "",
+    projectId: null,
     // 加减款类型 1加款 2减款
-    operationType: "",
-    // 金额类型 1待审余额 2免审余额
-    type: "",
+    operationType: null,
+    // 金额类型 1待审余额 2可用余额
+    type: null,
   });
   getDataList();
 }
@@ -154,7 +154,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
 <template>
   <div :class="{ 'absolute-container': data.tableAutoHeight }">
     <PageMain>
-      <el-row
+      <!-- <el-row
         style="
           width: 98%;
           height: 50px;
@@ -170,7 +170,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
         <el-col :span="4">待审金额：</el-col>
         <el-col :span="4">可用余额：</el-col>
         <el-col :span="4">IR指标：</el-col>
-      </el-row>
+      </el-row> -->
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
           <ElForm
@@ -183,14 +183,14 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
           >
             <ElFormItem>
               <ElInput
-                v-model="data.search.memberId"
+                v-model="data.search.supplierId"
                 placeholder="供应商ID"
                 clearable
                 @keydown.enter="currentChange()"
                 @clear="currentChange()"
               />
             </ElFormItem>
-            <ElFormItem>
+            <!-- <ElFormItem>
               <ElInput
                 v-model="data.search.memberName"
                 placeholder="供应商名称"
@@ -198,7 +198,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
                 @keydown.enter="currentChange()"
                 @clear="currentChange()"
               />
-            </ElFormItem>
+            </ElFormItem> -->
             <ElFormItem>
               <ElInput
                 v-model="data.search.projectId"
@@ -309,47 +309,87 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
           align="center"
           prop=""
           label="供应商ID/内部调查站"
-        />
+        >
+          <template #default="{ row }">
+            <el-text v-if="row.typeId == 1">内部调查站</el-text>
+            <el-text v-else>{{ row.typeId }}</el-text>
+          </template>
+        </ElTableColumn>
         <ElTableColumn
           show-overflow-tooltip
           align="center"
-          prop="title"
+          prop="projectId"
           label="项目ID"
-        />
+        >
+          <template #default="{ row }">
+            <el-text >{{ row.projectId ? row.projectId : '-'}}</el-text>
+          </template>
+        </ElTableColumn>
         <ElTableColumn
           show-overflow-tooltip
           align="center"
           prop=""
           label="类型"
-        />
+        >
+          <template #default="{ row }">
+            <el-text v-if="row.type == 1">待审金额</el-text>
+            <el-text v-if="row.type == 2">可用金额</el-text>
+          </template>
+        </ElTableColumn>
         <ElTableColumn
           show-overflow-tooltip
           align="center"
-          prop=""
+          prop="remark"
           label="说明"
-        />
+          ><template #default="{ row }">
+            <el-text
+              v-if="row.remark.includes('-')"
+              type="danger"
+              class="mx-1"
+              >{{ row.remark }}</el-text
+            >
+            <el-text
+              v-if="row.remark.includes('+')"
+              type="success"
+              class="mx-1"
+              >{{ row.remark }}</el-text
+            >
+            <el-text v-else class="mx-1">{{ row.remark }}</el-text>
+          </template>
+        </ElTableColumn>
         <ElTableColumn
           show-overflow-tooltip
           align="center"
-          prop=""
+          prop="afterBalance"
           label="变动前"
         />
         <ElTableColumn
           show-overflow-tooltip
           align="center"
-          prop=""
+          prop="addAndSubtraction"
           label="加减款"
-        />
+          ><template #default="{ row }">
+            <el-text
+              v-if="row.addAndSubtraction.includes('-')"
+              type="danger"
+              class="mx-1"
+              >{{ row.addAndSubtraction }}</el-text
+            >
+            <el-text v-else type="success" class="mx-1">{{
+              row.addAndSubtraction
+            }}</el-text>
+          </template>
+        </ElTableColumn>
         <ElTableColumn
           show-overflow-tooltip
           align="center"
-          prop=""
+          prop="beforeBalance"
           label="变动后"
         />
         <ElTableColumn
           show-overflow-tooltip
           align="center"
-          prop=""
+          prop="createTime"
           label="时间"
         />
         <template #empty>

@@ -580,4 +580,8 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
     width: calc(100% + 40px);
   }
 }
+
+:deep(.el-tabs__nav-scroll) {
+  background-color: #fafafa;
+}
 </style>

@@ -2,7 +2,7 @@
 import allocationEdit from "./components/AllocationEdit/index.vue";
 import ProjeckEdit from "./components/ProjeckEdit/index.vue";
 import ProjectDetail from "./components/ProjectDetails/index.vue";
-import scheduling from "@/views/projectManagement/scheduling/components/Edit/index.vue"; //项目调度
+import scheduling from "./components/Edit/index.vue"; //项目调度
 import { ElMessage, ElMessageBox } from "element-plus";
 import api from "@/api/modules/projectManagement";
 import { obtainLoading, submitLoading } from "@/utils/apiLoading";

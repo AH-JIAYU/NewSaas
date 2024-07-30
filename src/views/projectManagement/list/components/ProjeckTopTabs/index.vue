@@ -618,7 +618,7 @@ nextTick(() => {
                       placement="top"
                     >
                       <SvgIcon
-                        style="position: absolute; left: 323px; top: 9px"
+                        style="position: absolute; left: 20.1875rem; top: .5625rem"
                         class="SvgIcon1"
                         name="i-ri:question-line"
                       />
@@ -707,6 +707,7 @@ nextTick(() => {
                 v-model:file-list="fileList"
                 action="http://47.96.98.102:9100/project/uploadQiniu"
                 list-type="picture-card"
+                :drag="true"
                 :limit="10"
                 :on-preview="handlePictureCardPreview"
                 :on-remove="handleRemove"
@@ -996,7 +997,7 @@ nextTick(() => {
           </template>
           <el-row :gutter="20">
             <el-col :span="6">
-              <el-form-item label="小时准入量">
+              <el-form-item label="小时准入量" class="red">
                 <el-input-number
                   style="height: 2rem"
                   v-model="props.leftTab.preNum"
@@ -1011,7 +1012,7 @@ nextTick(() => {
             </el-col>
             <el-col :span="1"> </el-col>
             <el-col :span="6">
-              <el-form-item label="小时完成量">
+              <el-form-item class="blue" label="小时完成量">
                 <el-input-number
                   style="height: 2rem"
                   v-model="props.leftTab.limitedQuantity"
@@ -1024,17 +1025,7 @@ nextTick(() => {
                 />
               </el-form-item>
             </el-col>
-          </el-row>
-          <el-row :gutter="20">
-            <!-- <el-col :span="4">
-              <el-form-item label="时差检测">
-                <el-switch
-                  v-model="props.leftTab.timeDifferenceDetection"
-                  :active-value="1"
-                  :inactive-value="2"
-                />
-              </el-form-item>
-            </el-col> -->
+            <el-col :span="1"> </el-col>
             <el-col :span="4">
               <el-form-item label="允许重复参与">
                 <el-switch
@@ -1044,7 +1035,18 @@ nextTick(() => {
                 />
               </el-form-item>
             </el-col>
-            <!-- <el-col :span="4">
+          </el-row>
+          <!-- <el-row :gutter="20">
+            <el-col :span="4">
+              <el-form-item label="时差检测">
+                <el-switch
+                  v-model="props.leftTab.timeDifferenceDetection"
+                  :active-value="1"
+                  :inactive-value="2"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="4">
               <el-form-item label="IP一致性检测">
                 <el-switch
                   v-model="props.leftTab.ipConsistency"
@@ -1052,9 +1054,13 @@ nextTick(() => {
                   :inactive-value="2"
                 />
               </el-form-item>
-            </el-col> -->
-          </el-row>
+            </el-col>
+          </el-row> -->
         </el-card>
+        <div class="hui">举例</div>
+        <div class="hui">小时准入量【5】：10:00~11:00时间区间只能5人参与该项目</div>
+        <div class="hui">小时完成量【5】：10:00~11:00时间区间只能5人完成该项目</div>
+        <div class="hui">允许重复参与：开启后，小明同学做调查可以对该项目一直重复做，直到项目配额满</div>
       </el-tab-pane>
     </el-tabs>
   </ElForm>
@@ -1158,5 +1164,15 @@ th {
 tr:hover {
   background-color: #f9f9f9;
   /* 鼠标悬停效果 */
+}
+:deep(.red .el-form-item__label) {
+  color: #f56c6c;
+}
+:deep(.blue .el-form-item__label) {
+  color:#5d97ff;
+}
+.hui {
+  font-size: 14px;
+  color: #818181;
 }
 </style>

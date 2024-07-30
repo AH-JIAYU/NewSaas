@@ -170,11 +170,7 @@ onMounted(() => {
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>
-          <el-button
-            type="primary"
-            size="default"
-            @click="addData"
-          >
+          <el-button type="primary" size="default" @click="addData">
             新增
           </el-button>
         </FormLeftPanel>
@@ -203,7 +199,7 @@ onMounted(() => {
         :size="lineHeight"
         :stripe="stripe"
       >
-      <el-table-column align="center" type="selection" />
+        <el-table-column align="center" type="selection" />
         <el-table-column
           v-if="checkList.includes('dispatchType')"
           show-overflow-tooltip
@@ -242,7 +238,11 @@ onMounted(() => {
           prop="doMoneyPrice"
           align="center"
           label="指定价格"
-        />
+        >
+          <template #default="{ row }">
+            {{ row.doMoneyPrice ? row.doMoneyPrice : '-' }}
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="checkList.includes('Supplier')"
           show-overflow-tooltip

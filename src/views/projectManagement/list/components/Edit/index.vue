@@ -190,6 +190,7 @@ defineExpose({ showEdit });
             placeholder=""
             v-model="data.form.projectId"
             clearable
+            disabled
             filterable
             @change="changeProject"
           >
