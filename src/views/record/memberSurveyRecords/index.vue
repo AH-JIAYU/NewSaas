@@ -205,19 +205,6 @@ onMounted(async () => {
                 placeholder="项目名称"
               />
             </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-select
-                v-model="queryForm.surveyStatus"
-                clearable
-                placeholder="会员类型"
-              >
-                <el-option
-                  v-for="(item, index) in data.memberType"
-                  :label="item"
-                  :value="index + 1"
-                ></el-option>
-              </el-select>
-            </el-form-item>
             <el-form-item label="">
               <el-input
                 v-model.trim="queryForm.memberId"
@@ -243,14 +230,6 @@ onMounted(async () => {
                 placeholder="随机身份"
               />
             </el-form-item>
-            <el-form-item label="">
-              <el-input
-                v-model.trim="queryForm.memberId"
-                clearable
-                :inline="false"
-                placeholder="点击ID"
-              />
-            </el-form-item>
             <el-form-item v-show="!fold" label="">
               <el-input
                 v-model.trim="queryForm.tenantSupplierId"
@@ -261,27 +240,6 @@ onMounted(async () => {
             </el-form-item>
             <el-form-item v-show="!fold" label="">
               <el-input
-                v-model.trim="queryForm.tenantSupplierId"
-                clearable
-                :inline="false"
-                placeholder="客户简称"
-              />
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-select
-                v-model="queryForm.surveyStatus"
-                clearable
-                placeholder="分配类型"
-              >
-                <el-option
-                  v-for="(item, index) in data.allocationTypeList"
-                  :label="item"
-                  :value="index + 1"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-input
                 v-model.trim="queryForm.ip"
                 clearable
                 :inline="false"
@@ -289,31 +247,10 @@ onMounted(async () => {
               />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-input
-                v-model.trim="queryForm.tenantSupplierId"
-                clearable
-                :inline="false"
-                placeholder="所属国家"
-              />
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
               <el-select
                 v-model="queryForm.surveyStatus"
                 clearable
                 placeholder="调查状态"
-              >
-                <el-option
-                  v-for="(item, index) in data.surveyStatusList"
-                  :label="item"
-                  :value="index + 1"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-select
-                v-model="queryForm.surveyStatus"
-                clearable
-                placeholder="副状态"
               >
                 <el-option
                   v-for="(item, index) in data.surveyStatusList"
