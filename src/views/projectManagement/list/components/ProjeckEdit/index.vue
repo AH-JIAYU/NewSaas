@@ -253,7 +253,7 @@ defineExpose({
   <div>
     <el-drawer
       v-model="dialogTableVisible"
-      class="hide-drawer-header"
+      :class="title === '新增' ? 'hide-drawer-header' : 'edit-drawer'"
       append-to-body
       :close-on-click-modal="false"
       destroy-on-close

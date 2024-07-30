@@ -24,6 +24,11 @@ const data = ref<any>({
     allocationType: 1, //	分配类型:1:自动分配 2:供应商 3:会员组
     groupSupplierIdList: [], //	分配类型为:供应商传供应商id,分配类型为会员组传会员组Id,支持多选
   },
+  // 全选
+  selectAll: {
+    supplier: false, // 供应商
+    member: false, // 会员
+  },
 });
 const rules = ref<any>({
   groupSupplierIdList: [
@@ -65,6 +70,24 @@ async function showEdit(row: any, type: string) {
 // 切换分配
 function changeRadio() {
   data.value.form.groupSupplierIdList = [];
+}
+// 供应商全选
+function selectAllSupplier() {
+  data.value.form.groupSupplierIdList = [];
+  if (data.value.selectAll.supplier) {
+    data.value.tenantSupplierList.map((item: any) => {
+      data.value.form.groupSupplierIdList.push(item.tenantSupplierId);
+    });
+  }
+}
+// 会员全选
+function selectAllMember() {
+  data.value.form.groupSupplierIdList = [];
+  if (data.value.selectAll.member) {
+    data.value.vipGroupList.map((item: any) => {
+      data.value.form.groupSupplierIdList.push(item.memberGroupId);
+    });
+  }
 }
 // 弹框关闭事件
 function closeHandler() {
@@ -111,8 +134,8 @@ defineExpose({ showEdit });
         <el-table-column
           align="center"
           show-overflow-tooltip
-          label="客户简称"
-          prop="clientName"
+          label="项目名称"
+          prop="name"
         />
         <el-table-column
           align="center"
@@ -123,8 +146,8 @@ defineExpose({ showEdit });
         <el-table-column
           align="center"
           show-overflow-tooltip
-          label="项目名称"
-          prop="name"
+          label="客户简称"
+          prop="clientName"
         />
       </el-table>
       <el-form
@@ -162,6 +185,14 @@ defineExpose({ showEdit });
             multiple
             collapse-tags
           >
+            <template #header>
+              <el-checkbox
+                v-model="data.selectAll.supplier"
+                @change="selectAllSupplier"
+                style="display: flex; height: unset"
+                >全选</el-checkbox
+              >
+            </template>
             <el-option
               v-for="item in data.tenantSupplierList"
               :label="item.supplierAccord"
@@ -184,6 +215,14 @@ defineExpose({ showEdit });
             multiple
             collapse-tags
           >
+            <template #header>
+              <el-checkbox
+                v-model="data.selectAll.member"
+                @change="selectAllMember"
+                style="display: flex; height: unset"
+                >全选</el-checkbox
+              >
+            </template>
             <el-option
               v-for="item in data.vipGroupList"
               :label="item.memberGroupName"

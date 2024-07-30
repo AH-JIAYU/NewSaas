@@ -125,7 +125,6 @@ function dispatch() {
       center: true,
     });
   } else {
-    console.log("selectList[0]", selectList[0]);
     schedulingRef.value.showEdit(selectList[0], "projectList");
   }
 }
@@ -391,8 +390,10 @@ onMounted(async () => {
           prop="name"
           align="center"
           label="项目名称"
-        ><template #default="{ row }">
-          <el-text class="mx-1" :type="row.isB2b === 2 ? 'danger' : ''">{{row.name}}</el-text>
+          ><template #default="{ row }">
+            <el-text class="mx-1" :type="row.isB2b === 2 ? 'danger' : ''">{{
+              row.name
+            }}</el-text>
           </template>
         </el-table-column>
         <el-table-column

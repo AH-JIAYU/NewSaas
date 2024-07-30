@@ -67,7 +67,13 @@ const validateUrlRegistered = (rule: any, value: any, callback: any) => {
   if (!props.leftTab.uidUrl.includes("{{$uid}}")) {
     callback(new Error("格式不正确,请查看例子"));
   }
-
+  callback();
+};
+// 自定义校验发布时间
+const validateReleaseTime = (rule: any, value: any, callback: any) => {
+  if (new Date(props.leftTab.releaseTime).getTime() < Date.now()) {
+    callback(new Error("发布时间早于当前时间"));
+  }
   callback();
 };
 // 校验
@@ -92,6 +98,7 @@ const rules = reactive<any>({
     { required: true, message: "请输入URL", trigger: "blur" },
     { validator: validateUrlRegistered, trigger: "blur" },
   ],
+  releaseTime: [{ validator: validateReleaseTime, trigger: "blur" }],
   doMoneyPrice: [{ required: true, message: "请输入原价", trigger: "blur" }],
   num: [{ required: true, message: "请输入配额", trigger: "blur" }],
   minimumDuration: [
@@ -214,7 +221,6 @@ const getUpLoad = async (file: any) => {
 
 // 定时发布
 const changeTimeReleases = (val: any) => {
-  console.log("val", val);
   props.leftTab.isOnline = val === 2 ? 2 : 1;
 };
 
@@ -305,7 +311,9 @@ const getProjectCategoryList = async () => {
           const res = await obtainLoading(api.getProjectCategoryList(params));
 
           props.leftTab.data.configurationInformation.projectCategoryList =
-            res.data.getProjectCategoryInfoList;
+            res.data.getProjectCategoryInfoList.filter(
+              (item: any) => item.status === 1
+            );
         }
       } else {
         ElMessage.warning({
@@ -554,28 +562,6 @@ nextTick(() => {
                       >全球</el-checkbox
                     >
                   </template>
-                  <!-- <el-option label="全球" value="" @click.stop>
-                    <span style="float: left">全球</span>
-                    <span
-                      style="
-                        float: right;
-                        color: var(--el-text-color-secondary);
-                        font-size: 13px;
-                      "
-                    >
-                      <el-checkbox
-                        v-model="data.checked"
-                        @change="selectAll"
-                        style="
-                          display: flex;
-                          justify-content: right;
-                          align-items: center;
-                          width: 100%;
-                          padding-right: 10px;
-                        "
-                      ></el-checkbox>
-                    </span>
-                  </el-option> -->
                   <ElOption
                     v-for="item in data.basicSettings.countryList"
                     :label="item.chineseName"
@@ -832,7 +818,7 @@ nextTick(() => {
             </el-col>
             <!-- 定时发布开显示时间，关隐藏 -->
             <el-col :span="6" v-if="props.leftTab.isTimeReleases === 2">
-              <el-form-item label="发布时间">
+              <el-form-item label="发布时间" prop="releaseTime">
                 <el-date-picker
                   type="datetime"
                   value-format="YYYY-MM-DD HH:mm:ss"
