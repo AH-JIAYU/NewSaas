@@ -1,86 +1,17 @@
-<route lang="yaml">
-meta:
-  title: 列表页
-</route>
-
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import eventBus from '@/utils/eventBus'
-import api from '@/api/modules/survey_data'
-import useSettingsStore from '@/store/modules/settings'
+import { ElMessage, ElMessageBox } from "element-plus";
+import { onBeforeUnmount, onMounted, ref } from "vue";
+import eventBus from "@/utils/eventBus";
+import api from "@/api/modules/survey_data";
 // import useTabbar from '@/utils/composables/useTabbar'
 
 defineOptions({
-  name: 'SurveyDataList',
-})
+  name: "SurveyDataCenter",
+});
 
-const router = useRouter()
-const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange }
-  = usePagination()
-const tabbar = useTabbar()
-const settingsStore = useSettingsStore()
+const { pagination, getParams } = usePagination();
 
-const tableData = [
-  {
-    'name': '供应商',
-    'money': 232,
-    'num': 124,
-    'B2B/B2C': '50%/50%',
-    'currency': 'RNB',
-  },
-  {
-    'name': '供应商',
-    'money': 232,
-    'num': 124,
-    'B2B/B2C': '50%/50%',
-    'currency': 'RNB',
-  },
-  {
-    'name': '供应商',
-    'money': 232,
-    'num': 124,
-    'B2B/B2C': '50%/50%',
-    'currency': 'RNB',
-  },
-  {
-    'name': '供应商',
-    'money': 232,
-    'num': 124,
-    'B2B/B2C': '50%/50%',
-    'currency': 'RNB',
-  },
-  {
-    'name': '供应商',
-    'money': 232,
-    'num': 124,
-    'B2B/B2C': '50%/50%',
-    'currency': 'RNB',
-  },
-  {
-    'name': '供应商',
-    'money': 232,
-    'num': 124,
-    'B2B/B2C': '50%/50%',
-    'currency': 'RNB',
-  },
-  {
-    'name': '供应商',
-    'money': 232,
-    'num': 124,
-    'B2B/B2C': '50%/50%',
-    'currency': 'RNB',
-  },
-  {
-    'name': '供应商',
-    'money': 232,
-    'num': 124,
-    'B2B/B2C': '50%/50%',
-    'currency': 'RNB',
-  },
-]
-
-const data = ref({
+const data = ref<any>({
   loading: false,
   // 表格是否自适应高度
   tableAutoHeight: false,
@@ -90,90 +21,132 @@ const data = ref({
    * dialog 对话框
    * drawer 抽屉
    */
-  formMode: 'router' as 'router' | 'dialog' | 'drawer',
+  formMode: "router" as "router" | "dialog" | "drawer",
   // 详情
   formModeProps: {
     visible: false,
-    id: '',
+    id: "",
   },
   // 搜索
   search: {
-    title: '',
+    type: "day",
   },
   // 批量操作
   batch: {
     enable: false,
     selectionDataList: [],
   },
-  // 列表数据
-  dataList: [],
-})
-
+  // 完成数排名
+  memberDataCenterCompletedVOList: [],
+  // 退款额排名
+  memberDataCenterRefundVOList: [],
+  // 业绩排名
+  memberDataCenterPriceVOList: [],
+  // 数据总揽
+  dataScreening: {
+    // 当天记录的总参与次数
+    participationVolume: "",
+    // 当天完成的调查数量
+    completedQuantity: "",
+    // 当天从完成的调查中产生的总营业额
+    turnover: "",
+    // 与调查点击相关的项目结算完成与系统完成的比例，表示已完成工作的百分比
+    settlementRatio: "",
+    // 	与调查活动相关的待审核和结算的总余额
+    pendingBalance: "",
+    // 可用于进一步交易或结算的总可用余额
+    availableBalance: "",
+  },
+});
+// 切换
+const timeChange = () => {
+  getDataList();
+};
 onMounted(() => {
-  getDataList()
-  if (data.value.formMode === 'router') {
-    eventBus.on('get-data-list', () => {
-      getDataList()
-    })
+  getDataList();
+  if (data.value.formMode === "router") {
+    eventBus.on("get-data-list", () => {
+      getDataList();
+    });
   }
-})
+});
 
 onBeforeUnmount(() => {
-  if (data.value.formMode === 'router') {
-    eventBus.off('get-data-list')
+  if (data.value.formMode === "router") {
+    eventBus.off("get-data-list");
   }
-})
+});
 
 function getDataList() {
-  data.value.loading = true
-  const params = {
-    ...getParams(),
-    ...(data.value.search.title && { title: data.value.search.title }),
-  }
-  api.list(params).then((res: any) => {
-    data.value.loading = false
-    data.value.dataList = res.data.list
-    pagination.value.total = res.data.total
-  })
+  data.value.loading = true;
+  const params: any = {
+    clickTime: data.value.search.type,
+  };
+  api.dataList(params).then((res: any) => {
+    data.value.loading = false;
+    data.value.memberDataCenterCompletedVOList =
+      res.data.memberDataCenterCompletedVOList;
+    data.value.memberDataCenterRefundVOList =
+      res.data.memberDataCenterRefundVOList;
+    data.value.memberDataCenterPriceVOList =
+      res.data.memberDataCenterPriceVOList;
+    data.value.dataScreening = res.data.memberDataCenterOverallOverviewVOList;
+    pagination.value.total = res.data.total;
+  });
 }
 </script>
 
 <template>
-  <div :class="{ 'absolute-container': data.tableAutoHeight }">
+  <div
+    v-loading="data.loading"
+    :class="{ 'absolute-container': data.tableAutoHeight }"
+  >
     <PageMain>
       <el-row>
-        <SearchTab />
+        <el-radio-group v-model="data.search.type" @change="timeChange">
+          <el-radio-button label="日" value="day" />
+          <el-radio-button label="月" value="month" />
+          <el-radio-button label="年" value="year" />
+        </el-radio-group>
       </el-row>
       <ElRow :gutter="24">
         <ElCol :xs="6" :sm="6" :md="6" :lg="6" :xl="6">
           <el-card>
             <div class="fx-b">
-              <PageHeader title="978" content="今日点击" />
-              <PageHeader title="978" content="昨日点击" />
+              <PageHeader
+                :title="data.dataScreening?.participationVolume"
+                content="参与量"
+              />
             </div>
           </el-card>
         </ElCol>
         <ElCol :xs="6" :sm="6" :md="6" :lg="6" :xl="6">
           <el-card>
             <div class="fx-b">
-              <PageHeader title="978" content="今日点击" />
-              <PageHeader title="978" content="昨日点击" />
+              <PageHeader
+                :title="data.dataScreening?.completedQuantity"
+                content="完成量"
+              />
             </div>
           </el-card>
         </ElCol>
         <ElCol :xs="6" :sm="6" :md="6" :lg="6" :xl="6">
           <el-card>
             <div class="fx-b">
-              <PageHeader title="978" content="今日点击" />
-              <PageHeader title="978" content="昨日点击" />
+              <PageHeader
+                :title="data.dataScreening?.turnover"
+                content="营业额"
+              />
             </div>
           </el-card>
         </ElCol>
         <ElCol :xs="6" :sm="6" :md="6" :lg="6" :xl="6">
           <el-card>
             <div class="fx-b">
-              <PageHeader title="978" content="今日点击" />
-              <PageHeader title="978" content="昨日点击" />
+              <PageHeader
+                :title="data.dataScreening?.settlementRatio"
+                content="审核率"
+              />
             </div>
           </el-card>
         </ElCol>
@@ -181,64 +154,123 @@ function getDataList() {
       <ElRow :gutter="24">
         <ElCol :xs="6" :sm="6" :md="6" :lg="6" :xl="6">
           <el-card>
-            <PageHeader title="11978.2" content="待审金额" />
+            <div class="fx-b">
+              <PageHeader
+                :title="data.dataScreening?.pendingBalance ? data.dataScreening?.pendingBalance : '-'"
+                content="待审金额"
+              />
+            </div>
           </el-card>
         </ElCol>
         <ElCol :xs="6" :sm="6" :md="6" :lg="6" :xl="6">
           <el-card>
-            <PageHeader title="11978.2" content="可用金额" />
+            <div class="fx-b">
+              <PageHeader
+                :title="data.dataScreening?.availableBalance ?data.dataScreening?.availableBalance : '-'"
+                content="可用金额"
+              />
+            </div>
           </el-card>
         </ElCol>
-        <ElCol :xs="6" :sm="6" :md="6" :lg="6" :xl="6">
+        <!-- <ElCol :xs="6" :sm="6" :md="6" :lg="6" :xl="6">
           <el-card>
             <PageHeader title="10.7%" content="作废率" />
           </el-card>
-        </ElCol>
+        </ElCol> -->
       </ElRow>
       <!-- 今日完成排名 & 供应商佣金排行 -->
       <el-row :gutter="24">
         <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
           <el-card>
-            <template #header>
-              业绩排行榜
-            </template>
-            <el-table :data="tableData" style="width: 100%">
+            <template #header> 完成排行榜 </template>
+            <el-table
+              :data="data.memberDataCenterCompletedVOList"
+              style="width: 100%"
+            >
               <el-table-column type="index" />
-              <el-table-column prop="name" label="供应商" />
-              <el-table-column prop="money" label="完成金额" />
-              <el-table-column prop="num" label="完成数量" />
-              <el-table-column prop="B2B/B2C" label="B2B/B2C" />
-              <el-table-column prop="currency" label="货币类型" />
+              <el-table-column
+                show-overflow-tooltip
+                align="center"
+                prop="memberId"
+                label="会员ID"
+              />
+              <el-table-column
+                show-overflow-tooltip
+                align="center"
+                prop="memberName"
+                label="会员名称"
+              />
+              <el-table-column
+                show-overflow-tooltip
+                align="center"
+                prop="completedQuantity"
+                label="完成数量"
+              />
             </el-table>
           </el-card>
         </el-col>
         <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
           <el-card>
-            <template #header>
-              完成排行榜
-            </template>
-            <el-table :data="tableData" style="width: 100%">
+            <template #header> 退款排行榜 </template>
+            <el-table
+              :data="data.memberDataCenterRefundVOList"
+              style="width: 100%"
+            >
               <el-table-column type="index" />
-              <el-table-column prop="name" label="供应商" />
-              <el-table-column prop="money" label="完成金额" />
-              <el-table-column prop="num" label="完成数量" />
-              <el-table-column prop="B2B/B2C" label="B2B/B2C" />
-              <el-table-column prop="currency" label="货币类型" />
+              <el-table-column
+                show-overflow-tooltip
+                align="center"
+                prop="memberId"
+                label="会员ID"
+              />
+              <el-table-column
+                show-overflow-tooltip
+                align="center"
+                prop="memberName"
+                label="会员名称"
+              />
+              <el-table-column
+                show-overflow-tooltip
+                align="center"
+                prop="completedQuantity"
+                label="退款数"
+              />
+              <el-table-column
+                show-overflow-tooltip
+                width="110"
+                align="center"
+                prop="refund"
+                label="退款金额"
+              />
             </el-table>
           </el-card>
         </el-col>
         <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
           <el-card>
-            <template #header>
-              退款排行榜
-            </template>
-            <el-table :data="tableData" style="width: 100%">
+            <template #header> 业绩排行榜 </template>
+            <el-table
+              :data="data.memberDataCenterPriceVOList"
+              style="width: 100%"
+            >
               <el-table-column type="index" />
-              <el-table-column prop="name" label="供应商" />
-              <el-table-column prop="money" label="完成金额" />
-              <el-table-column prop="num" label="完成数量" />
-              <el-table-column prop="B2B/B2C" label="B2B/B2C" />
-              <el-table-column prop="currency" label="货币类型" />
+              <el-table-column
+                show-overflow-tooltip
+                align="center"
+                prop="memberId"
+                label="会员ID"
+              />
+              <el-table-column
+                show-overflow-tooltip
+                align="center"
+                prop="memberName"
+                label="会员名称"
+              />
+              <el-table-column
+                show-overflow-tooltip
+                align="center"
+                prop="price"
+                label="今日收入"
+              />
             </el-table>
           </el-card>
         </el-col>
@@ -256,9 +288,9 @@ function getDataList() {
     // margin: 20px 0;
 
     .el-col {
-      // margin: 20px 0;
-      // flex: 1;
-      // text-align: center;
+      flex: 1;
+      margin: 20px 0;
+      text-align: center;
 
       .title {
         text-align: left;
@@ -303,11 +335,11 @@ function getDataList() {
 
   .page-header {
     flex: 1;
+
     :deep {
       .text-2xl {
-        //pageheader 的title
-        font-weight: bold !important;
         font-size: 30px !important;
+        font-weight: bold !important;
       }
     }
   }
