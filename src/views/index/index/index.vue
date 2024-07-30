@@ -9,15 +9,17 @@ import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import api from "@/api/modules/index_index";
 import cloneDeep from "lodash-es/cloneDeep";
-const router = useRouter();
+import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
 
+const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
+const router = useRouter();
 const data = ref<any>({
   search: {
     overviewType: "day", //	总揽类型 day/month/year/select
     overviewStart: "", //	总揽开始
     overviewEnd: "", //总揽结束
     overviewTime: [],
-
+    type:'day',
     turnoverType: "day", //营业额趋势 day/month/year
 
     completeType: "day", //	完成排名类型 day/month/year/select
@@ -30,6 +32,8 @@ const data = ref<any>({
   dataCenterCustomerVOS: [], //客户总揽
   dataCenterSupplierCompletedQuantities: [], //	供应商完成数
   dataCenterSupplierTurnovers: [], //	供应商营业额排名
+  // 国家
+  countryList: [],
 });
 
 let chart1: any;
@@ -356,22 +360,22 @@ function echarts2() {
 }
 async function getList() {
   // 设置总览时间
-  if (
-    data.value.search.overviewTime &&
-    !!data.value.search.overviewTime.length
-  ) {
-    data.value.search.overviewStart = data.value.search.overviewTime[0] || "";
-    data.value.search.overviewEnd = data.value.search.overviewTime[1] || "";
-  }
-  // 设置完成排名时间
-  if (
-    data.value.search.completeTime &&
-    !!data.value.search.completeTime.length
-  ) {
-    data.value.search.completeStart = data.value.search.overviewTime[0] || "";
-    data.value.search.completeEnd = data.value.search.overviewTime[1] || "";
-  }
-  const res = await api.list(data.value.search);
+  // if (
+  //   data.value.search.overviewTime &&
+  //   !!data.value.search.overviewTime.length
+  // ) {
+  //   data.value.search.overviewStart = data.value.search.overviewTime[0] || "";
+  //   data.value.search.overviewEnd = data.value.search.overviewTime[1] || "";
+  // }
+  // // 设置完成排名时间
+  // if (
+  //   data.value.search.completeTime &&
+  //   !!data.value.search.completeTime.length
+  // ) {
+  //   data.value.search.completeStart = data.value.search.overviewTime[0] || "";
+  //   data.value.search.completeEnd = data.value.search.overviewTime[1] || "";
+  // }
+  const res = await api.list({type:data.value.search.type});
   const {
     dataCenterOverViewVO,
     dataCenterTurnoverVO,
@@ -380,14 +384,18 @@ async function getList() {
     dataCenterSupplierTurnovers,
   } = res.data;
   data.value.dataCenterOverViewVO = dataCenterOverViewVO;
-  data.value.dataCenterTurnoverVO = dataCenterTurnoverVO;
+  data.value.dataCenterTurnoverVO = dataCenterTurnoverVO
   data.value.dataCenterCustomerVOS = dataCenterCustomerVOS;
   data.value.dataCenterSupplierCompletedQuantities =
     dataCenterSupplierCompletedQuantities;
   data.value.dataCenterSupplierTurnovers = dataCenterSupplierTurnovers;
 }
+const timeChange = () => {
+  getList();
+};
 onMounted(async () => {
   await getList();
+  data.value.countryList = await basicDictionaryStore.getCountry();
   echarts1();
   echarts2();
   window.addEventListener("resize", () => {
@@ -401,17 +409,17 @@ onMounted(async () => {
   <div>
     <PageMain>
       <el-row>
-        <SearchTab
-          @getList="getList"
-          v-model:type="data.search.overviewType"
-          v-model:time="data.search.overviewTime"
-        />
+        <el-radio-group v-model="data.search.type" @change="timeChange">
+          <el-radio-button label="日" value="day" />
+          <el-radio-button label="月" value="month" />
+          <el-radio-button label="年" value="year" />
+        </el-radio-group>
       </el-row>
       <ElRow :gutter="20">
         <ElCol>
           <ColorfulCard2
             header="发布项目数"
-            :num="data.dataCenterOverViewVO.projectTotal"
+            :num="data.dataCenterOverViewVO?.projectTotal"
             icon="ant-design:file-outlined"
           />
         </ElCol>
@@ -420,7 +428,9 @@ onMounted(async () => {
             color-from="#fbaaa2"
             color-to="#fc5286"
             header="待确认项目数"
-            :num="data.dataCenterOverViewVO.projectSettlementToBeConfirmedTotal"
+            :num="
+              data.dataCenterOverViewVO?.projectSettlementToBeConfirmedTotal
+            "
             icon="ant-design:file-outlined"
           />
         </ElCol>
@@ -429,7 +439,7 @@ onMounted(async () => {
             color-from="#ff763b"
             color-to="#ffc480"
             header="已确认项目数"
-            :num="data.dataCenterOverViewVO.projectSettlementConfirmedTotal"
+            :num="data.dataCenterOverViewVO?.projectSettlementConfirmedTotal"
             icon="ant-design:file-outlined"
           />
         </ElCol>
@@ -438,7 +448,7 @@ onMounted(async () => {
             color-from="#6a8eff"
             color-to="#0e4cfd"
             header="已完结项目数"
-            :num="data.dataCenterOverViewVO.projectSettlementCompleteTotal"
+            :num="data.dataCenterOverViewVO?.projectSettlementCompleteTotal"
             icon="ant-design:file-outlined"
           />
         </ElCol>
@@ -447,7 +457,7 @@ onMounted(async () => {
             color-from="#ffd300"
             color-to="#ff9b0d"
             header="项目营业额"
-            :num="data.dataCenterOverViewVO.projectTurnover"
+            :num="data.dataCenterOverViewVO?.projectTurnover"
             icon="ant-design:file-outlined"
           />
         </ElCol>
@@ -456,7 +466,7 @@ onMounted(async () => {
             color-from="#f49494"
             color-to="#fcd98b"
             header="项目盈利额"
-            :num="data.dataCenterOverViewVO.projectProfitability"
+            :num="data.dataCenterOverViewVO?.projectProfitability"
             icon="ant-design:file-outlined"
           />
         </ElCol>
@@ -465,7 +475,7 @@ onMounted(async () => {
             color-from="#c2005c"
             color-to="#ff980f"
             header="项目退款额"
-            :num="data.dataCenterOverViewVO.projectRefundAmount"
+            :num="data.dataCenterOverViewVO?.projectRefundAmount"
             icon="ant-design:file-outlined"
           />
         </ElCol>
@@ -477,10 +487,6 @@ onMounted(async () => {
             <template #header>
               <p class="title fx-b">
                 营业额趋势
-                <SearchTab
-                  @getList="getList"
-                  v-model:type="data.search.turnoverType"
-                />
               </p>
             </template>
 
@@ -512,20 +518,50 @@ onMounted(async () => {
             <template #header>
               <p class="title fx-b">
                 完成数排名
-                <SearchTab
-                  @getList="getList"
-                  v-model:type="data.search.completeType"
-                  v-model:time="data.search.completeTime"
-                />
               </p>
             </template>
-            <el-table :data="tableData" style="width: 100%">
+            <el-table
+              :data="data.dataCenterSupplierCompletedQuantities"
+              style="width: 100%"
+            >
               <el-table-column type="index" />
-              <el-table-column prop="name" label="供应商" />
-              <el-table-column prop="money" label="完成金额" />
-              <el-table-column prop="num" label="完成数量" />
-              <el-table-column prop="B2B/B2C" label="B2B/B2C" />
-              <el-table-column prop="currency" label="所属国家" />
+              <el-table-column
+                align="center"
+                prop="supplierName"
+                label="供应商名称"
+              />
+              <el-table-column
+                align="center"
+                prop="completedAmount"
+                label="完成金额"
+                ><template #default="{ row }">
+                  {{ row.completedAmount ? row.completedAmount : "-" }}
+                </template>
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="completedQuantity"
+                label="完成数量"
+              />
+              <el-table-column
+                align="center"
+                prop="b2BProportion"
+                label="B2B"
+              />
+              <el-table-column
+                align="center"
+                prop="b2CProportion"
+                label="B2C"
+              />
+              <el-table-column align="center" label="所属国家">
+                <template #default="{ row }">
+                  <div v-for="item in data.countryList">
+                    <el-text v-if="item.id === row.country">{{
+                      item.chineseName
+                    }}</el-text>
+                  </div>
+                </template>
+              </el-table-column>
             </el-table>
           </el-card>
         </el-col>
@@ -540,10 +576,17 @@ onMounted(async () => {
               style="width: 100%"
             >
               <el-table-column type="index" />
-              <el-table-column prop="supplierName" label="供应商" />
-              <el-table-column sortable prop="dayTurnover" label="日" />
-              <el-table-column sortable prop="monthTurnover" label="月" />
-              <el-table-column sortable prop="yearTurnover" label="年" />
+              <el-table-column align="center" prop="supplierName" label="供应商"
+                ><template #default="{ row }">
+                  {{ row.supplierName ? row.supplierName : "-" }}
+                </template>
+              </el-table-column>
+              <el-table-column
+                align="center"
+                sortable
+                prop="turnover"
+                label="营业额"
+              />
             </el-table>
           </el-card>
         </el-col>

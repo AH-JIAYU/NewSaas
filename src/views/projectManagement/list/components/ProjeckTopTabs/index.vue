@@ -714,7 +714,7 @@ nextTick(() => {
                 :on-success="handleSuccess"
                 :on-exceed="handleExceed"
               >
-                <el-icon class="el-icon--upload">
+                <el-icon style="margin-bottom: none;" class="el-icon--upload">
                   <UploadFilled />
                 </el-icon>
                 <div class="el-upload__text">上传</div>
@@ -1174,5 +1174,16 @@ tr:hover {
 .hui {
   font-size: 14px;
   color: #818181;
+}
+.el-upload-dragger .el-icon--upload {
+  margin-bottom: none !important;
+}
+.el-upload-dragger {
+  width: 100%;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 </style>

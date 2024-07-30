@@ -78,11 +78,17 @@ async function showEdit(row: any) {
       },
       []
     );
-  const imgres: any = await fileApi.detail({
-    fileName: data.value.form.descriptionUrl,
-  });
-  data.value.imgUrl = imgres.data.fileUrl;
-  data.value.srcList = [imgres.data.fileUrl];
+  const imgList = data.value.form.descriptionUrl.split(",");
+  if (imgList.length) {
+    imgList.forEach(async (item:any) => {
+      const imgres: any = await fileApi.detail({
+        fileName: item,
+      });
+      data.value.imgUrl = imgres.data.fileUrl;
+      data.value.srcList.push(imgres.data.fileUrl)
+    });
+
+  }
   getCountryQuestion();
   dialogTableVisible.value = true;
 }
@@ -149,12 +155,15 @@ async function download() {
 }
 // 弹框关闭事件
 function closeHandler() {
+  data.value.srcList = []
   dialogTableVisible.value = false;
 }
 // 根据id查找客户
 const getcustsmer = computed(() => {
-  return customerList.value.find((item:any) => item.tenantCustomerId === data.value.form.clientId)
-})
+  return customerList.value.find(
+    (item: any) => item.tenantCustomerId === data.value.form.clientId
+  );
+});
 onMounted(async () => {
   data.value.countryList = await basicDictionaryStore.getCountry();
   customerList.value = await customerStore.getCustomerList();
@@ -171,6 +180,7 @@ defineExpose({ showEdit });
       :close-on-click-modal="false"
       destroy-on-close
       draggable
+      @close="closeHandler"
       size="55%"
       title="项目详情"
     >
@@ -479,10 +489,12 @@ defineExpose({ showEdit });
           <template #header>
             <div class="peizjo-header">
               <span>配置信息</span>
-              <span style="margin-left: 50px;" v-if="data.form.countryName"
+              <span style="margin-left: 50px" v-if="data.form.countryName"
                 >国家：{{ data.form.countryName }}</span
               >
-              <span style="margin-left: 30px;" v-if="data.form.projectProblemCategoryName"
+              <span
+                style="margin-left: 30px"
+                v-if="data.form.projectProblemCategoryName"
                 >问卷：{{ data.form.projectProblemCategoryName }}</span
               >
             </div>
@@ -592,11 +604,11 @@ defineExpose({ showEdit });
             </div>
           </template>
           <template v-if="data.form.descriptionUrl">
-            <div class="demo-image__preview">
+            <div v-for="item in data.srcList" :key="item" class="demo-image__preview">
               <el-image
                 style="width: 6.25rem; height: 6.25rem"
                 :src="data.imgUrl"
-                :preview-src-list="data.srcList"
+                :preview-src-list="item"
                 :zoom-rate="1.2"
                 :max-scale="7"
                 :min-scale="0.2"
@@ -752,7 +764,10 @@ defineExpose({ showEdit });
     // }
   }
 }
-
+.demo-image__preview {
+  margin-right: 10px;
+  display: inline-block;
+}
 .peizjo-header {
   display: flex;
   justify-content: flex-start;
