@@ -397,4 +397,7 @@ function onSubmit() {
     width: calc(100% + 40px);
   }
 }
+:deep(.el-tabs__nav-scroll) {
+  background-color: #fafafa;
+}
 </style>

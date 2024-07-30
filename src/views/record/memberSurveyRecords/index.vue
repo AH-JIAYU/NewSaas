@@ -383,6 +383,7 @@ onMounted(async () => {
           v-if="checkList.includes('projectName')"
           align="center"
           prop="projectName"
+          show-overflow-tooltip
           label="项目名称/客户简称"
           ><template #default="{ row }">
             {{ row.projectName ? row.projectName : "-" }}/{{

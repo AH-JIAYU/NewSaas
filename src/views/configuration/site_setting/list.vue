@@ -394,4 +394,7 @@ function onSubmit() {
     margin-inline: -20px;
   }
 }
+:deep(.el-tabs__nav-scroll) {
+  background-color: #fafafa;
+}
 </style>

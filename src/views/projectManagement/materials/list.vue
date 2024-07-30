@@ -545,4 +545,7 @@ onMounted(() => {
     }
   }
 }
+:deep(.el-tabs__nav-scroll) {
+  background-color: #fafafa;
+}
 </style>

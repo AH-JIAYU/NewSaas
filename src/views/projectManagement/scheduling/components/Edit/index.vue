@@ -144,6 +144,7 @@ defineExpose({ showEdit });
       <el-form
         ref="formRef"
         label-width="130px"
+        style="position: relative"
         :model="data.form"
         :rules="rules"
         :inline="false"
@@ -158,6 +159,28 @@ defineExpose({ showEdit });
             <el-radio :value="2" size="large"> 指定价格 </el-radio>
           </el-radio-group>
         </el-form-item>
+        <el-tooltip
+          class="tooltips"
+          content="选中某供应商后，该供应商无法参与该项目的调查"
+          placement="top"
+        >
+          <SvgIcon
+            style="position: absolute; left: 14.375rem; top: .8125rem"
+            class="SvgIcon1"
+            name="i-ri:question-line"
+          />
+        </el-tooltip>
+        <el-tooltip
+          class="tooltips"
+          content="举例: 供应商：河南供应商； 指定价格：100； 说明：指定河南供应商，该供应商下会员参与该项目都为100；"
+          placement="top"
+        >
+          <SvgIcon
+            style="position: absolute; left: 21.375rem; top: .8125rem"
+            class="SvgIcon1"
+            name="i-ri:question-line"
+          />
+        </el-tooltip>
         <el-form-item
           label="项目ID/名称"
           prop="projectId"
@@ -167,6 +190,7 @@ defineExpose({ showEdit });
             placeholder=""
             v-model="data.form.projectId"
             clearable
+            disabled
             filterable
             @change="changeProject"
           >
