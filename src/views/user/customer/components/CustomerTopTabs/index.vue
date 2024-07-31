@@ -277,9 +277,9 @@ nextTick(() => {
               </template>
 
               <el-col :span="24">
-                <el-form-item label="成功回调">
+                <el-form-item label="成功重定向">
                   <span v-pre>
-                    http:47.96.98.102:9100/callback/serviceCallback?uid=[uid]&status=c
+                    http://front-saas.surveyssaas.com/#/redirect?status=c&uid=[uid]
                   </span>
                   <template
                     v-if="
@@ -291,9 +291,9 @@ nextTick(() => {
                 </el-form-item>
               </el-col>
               <el-col :span="24">
-                <el-form-item label="配额满回调">
+                <el-form-item label="配额满重定向">
                   <span v-pre>
-                    http:47.96.98.102:9100/callback/serviceCallback?uid=[uid]&status=q
+                    http://front-saas.surveyssaas.com/#/redirect?status=q&uid=[uid]
                   </span>
                   <template
                     v-if="
@@ -305,9 +305,9 @@ nextTick(() => {
                 </el-form-item>
               </el-col>
               <el-col :span="24">
-                <el-form-item label="被甄别回调">
+                <el-form-item label="被甄别重定向">
                   <span v-pre>
-                    http:47.96.98.102:9100/callback/serviceCallback?uid=[uid]&status=s
+                    http://front-saas.surveyssaas.com/#/redirect?status=s&uid=[uid]
                   </span>
                   <template
                     v-if="
@@ -319,9 +319,9 @@ nextTick(() => {
                 </el-form-item>
               </el-col>
               <el-col :span="24">
-                <el-form-item label="安全终止回调">
+                <el-form-item label="安全重定向">
                   <span v-pre>
-                    http:47.96.98.102:9100/callback/serviceCallback?uid=[uid]&status=t
+                    http://front-saas.surveyssaas.com/#/redirect?status=t&uid=[uid]
                   </span>
                   <template
                     v-if="
@@ -415,7 +415,7 @@ nextTick(() => {
               <el-col :span="24">
                 <el-form-item label="成功回调">
                   <span v-pre
-                    >http://369.front-saas-web.surveyssaas.com/#/redirect?uid=[uid]&status=c</span
+                    >http://47.96.98.102:9100/callback/serviceCallback?status=c&uid=[uid]</span
                   ><template
                     v-if="
                       localToptTab.tenantCustomerConfigInfoList[1].encryptionId
@@ -427,7 +427,7 @@ nextTick(() => {
               <el-col :span="24">
                 <el-form-item label="配额满回调">
                   <span v-pre
-                    >http://369.front-saas-web.surveyssaas.com/#/redirect?uid=[uid]&status=q</span
+                    >http://47.96.98.102:9100/callback/serviceCallback?status=q&uid=[uid]</span
                   ><template
                     v-if="
                       localToptTab.tenantCustomerConfigInfoList[1].encryptionId
@@ -439,7 +439,7 @@ nextTick(() => {
               <el-col :span="24">
                 <el-form-item label="被甄别回调">
                   <span v-pre
-                    >http://369.front-saas-web.surveyssaas.com/#/redirect?uid=[uid]&status=s</span
+                    >http://47.96.98.102:9100/callback/serviceCallback?status=s&uid=[uid]</span
                   ><template
                     v-if="
                       localToptTab.tenantCustomerConfigInfoList[1].encryptionId
@@ -451,7 +451,7 @@ nextTick(() => {
               <el-col :span="24">
                 <el-form-item label="安全终止回调">
                   <span v-pre
-                    >http://369.front-saas-web.surveyssaas.com/#/redirect?uid=[uid]&status=t</span
+                    >http://47.96.98.102:9100/callback/serviceCallback?status=t&uid=[uid]</span
                   ><template
                     v-if="
                       localToptTab.tenantCustomerConfigInfoList[1].encryptionId
