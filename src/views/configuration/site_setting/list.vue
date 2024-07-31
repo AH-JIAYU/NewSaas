@@ -3,7 +3,7 @@ import type { FormInstance, FormRules } from "element-plus";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { onMounted, ref } from "vue";
 import api from "@/api/modules/configuration_site_setting";
-import ClipboardJS from "clipboard";
+import { dataBox } from "js-tool-big-box";
 import { AnyFn } from "@vueuse/core";
 
 defineOptions({
@@ -94,22 +94,24 @@ async function getDataList() {
   loading.value = false;
 }
 // 复制地址
-const clipboard = new ClipboardJS(".copy");
-clipboard.on("success", function (e: any) {
-  ElMessage.success({
-    message: "复制成功",
-    center: true,
-  });
-  e.clearSelection();
-  clipboard.destroy();
-});
-
-clipboard.on("error", function () {
-  ElMessage.error({
-    message: "复制失败",
-    center: true,
-  });
-});
+const copyText = () => {
+  const text = `${form.value.supplierURL}.front-supplier.surveyssaas.com`;
+  dataBox.copyText(
+    text,
+    () => {
+      ElMessage({
+        type: "success",
+        message: "复制成功",
+      });
+    },
+    () => {
+      ElMessage({
+        type: "error",
+        message: "复制异常，请尝试其他方式复制内容",
+      });
+    }
+  );
+};
 // 提交数据
 function onSubmit() {
   // 新增
@@ -245,13 +247,8 @@ function onSubmit() {
                   <el-text class="mx-1"
                     >.front-supplier.surveyssaas.com</el-text
                   >
-                  <el-button
-                    class="copy"
-                    :data-clipboard-text="`${form.supplierURL}.front-supplier.surveyssaas.com`"
-                    type="primary"
-                    link
-                    >复制</el-button
-                  >
+                  <el-button class="copy" type="primary" link @click="copyText"
+                    >复制</el-button>
                 </el-form-item>
               </el-col>
               <el-col :span="24">
