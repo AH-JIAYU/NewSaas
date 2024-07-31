@@ -75,7 +75,12 @@ function initializeLeftTabsData(data: any) {
   leftTabsData = [];
   // 新增主数据作为第一个 Tab
   const { projectInfoList, ...newData } = cloneDeep(data);
-  newData.descriptionUrl = newData.descriptionUrl.split(",");
+  if (newData.descriptionUrl) {
+    newData.descriptionUrl = newData.descriptionUrl.split(",");
+  } else {
+    newData.descriptionUrl = [];
+  }
+
   leftTabsData.push(newData);
   // // // 如果存在 children，为每个 child 创建一个 Tab
   if (projectInfoList && projectInfoList.length) {

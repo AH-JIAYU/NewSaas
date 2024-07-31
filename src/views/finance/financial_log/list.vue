@@ -322,7 +322,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
           label="项目ID"
         >
           <template #default="{ row }">
-            <el-text >{{ row.projectId ? row.projectId : '-'}}</el-text>
+            <el-text>{{ row.projectId ? row.projectId : "-" }}</el-text>
           </template>
         </ElTableColumn>
         <ElTableColumn
@@ -360,7 +360,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
         <ElTableColumn
           show-overflow-tooltip
           align="center"
-          prop="afterBalance"
+          prop="beforeBalance"
           label="变动前"
         />
         <ElTableColumn
@@ -383,7 +383,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
         <ElTableColumn
           show-overflow-tooltip
           align="center"
-          prop="beforeBalance"
+          prop="afterBalance"
           label="变动后"
         />
         <ElTableColumn

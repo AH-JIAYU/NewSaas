@@ -34,7 +34,7 @@ const data = ref<any>({
   //   countryId: "", // 国家
   //   projectQuotaQuestionType: "", // 问题类型
   // },
-  imgUrl: "", // 图片预览
+  imgUrl: [], // 图片预览
   isOnline: "", //	项目状态:1:在线 2:不在线
   allocationStatus: "", //分配状态:1:未分配 2:已分配
   srcList: [], // 图片预览
@@ -85,7 +85,7 @@ async function showEdit(row: any) {
       const imgres: any = await fileApi.detail({
         fileName: item,
       });
-      data.value.imgUrl = imgres.data.fileUrl;
+      data.value.imgUrl.push(imgres.data.fileUrl);
       data.value.srcList.push(imgres.data.fileUrl);
     });
   }
@@ -150,8 +150,8 @@ async function copyTextToClipboard(text: any) {
   }
 }
 // 下载
-async function download() {
-  await DownLoad(data.value.imgUrl, data.value.form.descriptionUrl);
+async function download(item: any, index: any) {
+  await DownLoad(data.value.imgUrl[index], item);
 }
 // 弹框关闭事件
 function closeHandler() {
@@ -620,12 +620,12 @@ defineExpose({ showEdit });
                 fit="cover"
               />
             </div>
-            <p v-for="item in imgList" :key="item">
+            <p v-for="(item, index) in imgList" :key="item">
               <el-button
                 style="padding: 0"
                 type="primary"
                 text
-                @click="download"
+                @click="download(item, index)"
               >
                 {{ item }} 下载
               </el-button>
