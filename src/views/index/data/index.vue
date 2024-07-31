@@ -192,7 +192,7 @@ onMounted(() => {
               width="180"
             >
               <template #default="{ row }">
-                {{ row.customerName ? row.customerName : "-" }}
+                {{ row.customerAccord ? row.customerAccord : "-" }}
               </template>
             </el-table-column>
             <el-table-column
@@ -323,7 +323,7 @@ onMounted(() => {
               label="客户名称"
               width="180"
               ><template #default="{ row }">
-                {{ row.customerName ? row.customerName : "-" }}
+                {{ row.customerAccord ? row.customerAccord : "-" }}
               </template>
             </el-table-column>
             <el-table-column

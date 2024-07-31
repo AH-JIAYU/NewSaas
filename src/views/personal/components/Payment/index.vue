@@ -105,7 +105,7 @@ defineExpose({ showEdit });
               />
               <div class="paymentMethod">
                 <div>
-                  <div>￥ <span class="money">9999</span> /月</div>
+                  <div> <span class="money">9999</span> /月</div>
 
                   <el-select
                     v-model="form.paymentMethod"

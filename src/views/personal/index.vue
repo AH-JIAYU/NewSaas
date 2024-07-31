@@ -99,7 +99,7 @@ onMounted(() => {
         </div>
         <div class="version b-r-5">
           <h2>基础版</h2>
-          <h1>￥ 999 <span class="yare">/ 年</span></h1>
+          <h1> 999 <span class="yare">/ 年</span></h1>
           <el-button class="btns" size="default" @click="payment"
             >立即开通</el-button
           >
@@ -118,7 +118,7 @@ onMounted(() => {
         </div>
         <div class="version b-r-5">
           <h2 style="color: #f6403f">高级版</h2>
-          <h1>￥ 9999 <span class="yare">/ 年</span></h1>
+          <h1> 9999 <span class="yare">/ 年</span></h1>
           <el-button class="butn" size="default" @click="payment"
             >立即开通</el-button
           >
@@ -141,7 +141,7 @@ onMounted(() => {
         </div>
         <div class="version b-r-5">
           <h2 style="color: #d9a550">旗舰版</h2>
-          <h1>￥ 99999 <span class="yare">/ 年</span></h1>
+          <h1> 99999 <span class="yare">/ 年</span></h1>
           <el-button class="buttn" size="default" @click="payment"
             >立即开通</el-button
           >

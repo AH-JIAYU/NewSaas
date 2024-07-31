@@ -312,7 +312,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
         >
           <template #default="{ row }">
             <el-text v-if="row.typeId == 1">内部调查站</el-text>
-            <el-text v-else>{{ row.typeId }}</el-text>
+            <el-text v-else>{{ row.typeId ? row.typeId : '-' }}</el-text>
           </template>
         </ElTableColumn>
         <ElTableColumn
@@ -343,18 +343,17 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
           label="说明"
           ><template #default="{ row }">
             <el-text
-              v-if="row.remark.includes('-')"
+              v-if="row.remark?.includes('-')"
               type="danger"
               class="mx-1"
               >{{ row.remark }}</el-text
             >
             <el-text
-              v-if="row.remark.includes('+')"
+              v-if="row.remark?.includes('+')"
               type="success"
               class="mx-1"
               >{{ row.remark }}</el-text
             >
-            <el-text v-else class="mx-1">{{ row.remark }}</el-text>
           </template>
         </ElTableColumn>
         <ElTableColumn
@@ -370,13 +369,13 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
           label="加减款"
           ><template #default="{ row }">
             <el-text
-              v-if="row.addAndSubtraction.includes('-')"
+              v-if="row.addAndSubtraction?.includes('-')"
               type="danger"
               class="mx-1"
               >{{ row.addAndSubtraction }}</el-text
             >
             <el-text v-else type="success" class="mx-1">{{
-              row.addAndSubtraction
+              row.addAndSubtraction ? row.addAndSubtraction : '-'
             }}</el-text>
           </template>
         </ElTableColumn>

@@ -26,7 +26,7 @@ const columns = ref<any>([
   { sotrtable: true, checked: true, label: "类型", prop: "dispatchType" },
   { sotrtable: true, checked: true, label: "项目id", prop: "projectId" },
   { sotrtable: true, checked: true, label: "项目名称", prop: "projectName" },
-  { sotrtable: true, checked: true, label: "原价(美元)", prop: "moneyPrice" },
+  { sotrtable: true, checked: true, label: "原价", prop: "moneyPrice" },
   { sotrtable: true, checked: true, label: "指定价格", prop: "doMoneyPrice" },
   { sotrtable: true, checked: true, label: "指定供应商", prop: "Supplier" },
   { sotrtable: true, checked: true, label: "指定会员组", prop: "group" },
@@ -230,7 +230,7 @@ onMounted(() => {
           show-overflow-tooltip
           prop="moneyPrice"
           align="center"
-          label="原价(美元)"
+          label="原价"
         />
         <el-table-column
           v-if="checkList.includes('doMoneyPrice')"
