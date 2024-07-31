@@ -618,7 +618,11 @@ nextTick(() => {
                       placement="top"
                     >
                       <SvgIcon
-                        style="position: absolute; left: 20.1875rem; top: .5625rem"
+                        style="
+                          position: absolute;
+                          left: 20.1875rem;
+                          top: 0.5625rem;
+                        "
                         class="SvgIcon1"
                         name="i-ri:question-line"
                       />
@@ -714,7 +718,7 @@ nextTick(() => {
                 :on-success="handleSuccess"
                 :on-exceed="handleExceed"
               >
-                <el-icon style="margin-bottom: none;" class="el-icon--upload">
+                <el-icon style="margin-bottom: none" class="el-icon--upload">
                   <UploadFilled />
                 </el-icon>
                 <div class="el-upload__text">上传</div>
@@ -997,7 +1001,10 @@ nextTick(() => {
           </template>
           <el-row :gutter="20">
             <el-col :span="6">
-              <el-form-item label="小时准入量" class="red">
+              <el-form-item>
+                <template #label>
+                  <div>小时<span class="red">准入</span>量</div>
+                </template>
                 <el-input-number
                   style="height: 2rem"
                   v-model="props.leftTab.preNum"
@@ -1012,7 +1019,10 @@ nextTick(() => {
             </el-col>
             <el-col :span="1"> </el-col>
             <el-col :span="6">
-              <el-form-item class="blue" label="小时完成量">
+              <el-form-item>
+                <template #label>
+                  <div>小时<span class="blue">完成</span>量</div>
+                </template>
                 <el-input-number
                   style="height: 2rem"
                   v-model="props.leftTab.limitedQuantity"
@@ -1058,9 +1068,15 @@ nextTick(() => {
           </el-row> -->
         </el-card>
         <div class="hui">举例</div>
-        <div class="hui">小时准入量【5】：10:00~11:00时间区间只能5人参与该项目</div>
-        <div class="hui">小时完成量【5】：10:00~11:00时间区间只能5人完成该项目</div>
-        <div class="hui">允许重复参与：开启后，小明同学做调查可以对该项目一直重复做，直到项目配额满</div>
+        <div class="hui">
+          小时准入量【5】：10:00~11:00时间区间只能5人参与该项目
+        </div>
+        <div class="hui">
+          小时完成量【5】：10:00~11:00时间区间只能5人完成该项目
+        </div>
+        <div class="hui">
+          允许重复参与：开启后，小明同学做调查可以对该项目一直重复做，直到项目配额满
+        </div>
       </el-tab-pane>
     </el-tabs>
   </ElForm>
@@ -1131,10 +1147,18 @@ nextTick(() => {
     --el-input-number-controls-height: none;
   }
 
-  // .el-input__wrapper {
-  //   height: 2rem;
-  //   width: 10.75rem;
-  // }
+  .el-upload-dragger .el-icon--upload {
+    margin-bottom: none !important;
+  }
+  .el-upload-dragger {
+    width: 100%;
+    height: 100% !important;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
 }
 
 table {
@@ -1165,25 +1189,14 @@ tr:hover {
   background-color: #f9f9f9;
   /* 鼠标悬停效果 */
 }
-:deep(.red .el-form-item__label) {
-  color: #f56c6c;
+.red {
+  color: #df354b;
 }
-:deep(.blue .el-form-item__label) {
-  color:#5d97ff;
+.blue {
+  color: #5d97ff;
 }
 .hui {
   font-size: 14px;
   color: #818181;
-}
-.el-upload-dragger .el-icon--upload {
-  margin-bottom: none !important;
-}
-.el-upload-dragger {
-  width: 100%;
-  height: 100px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
 }
 </style>

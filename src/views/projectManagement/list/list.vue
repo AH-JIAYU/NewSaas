@@ -310,6 +310,17 @@ onMounted(async () => {
                 clear-icon="true"
               />
             </el-form-item>
+            <el-form-item v-show="!fold">
+              <el-select
+                v-model="search.allocation"
+                placeholder="分配类型"
+                clearable
+                @change="currentChange()"
+              >
+                <el-option label="已分配" :value="1"> </el-option>
+                <el-option label="未分配" :value="2"> </el-option>
+              </el-select>
+            </el-form-item>
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">
                 <template #icon>

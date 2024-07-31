@@ -36,6 +36,7 @@ const form = ref<any>({
 // 校验
 const formRules = ref<FormRules>({
   difference: [{ required: true, message: "请输入金额", trigger: "blur" }],
+  remark: [{ required: true, message: "请输入说明", trigger: "blur" }],
 });
 
 async function showEdit(row: any) {
@@ -152,7 +153,7 @@ defineExpose({
         <el-form-item label="金额" prop="difference">
           <el-input v-model="form.difference"></el-input>
         </el-form-item>
-        <el-form-item label="说明">
+        <el-form-item label="说明" prop="remark">
           <el-input v-model="form.remark"></el-input>
         </el-form-item>
       </el-form>

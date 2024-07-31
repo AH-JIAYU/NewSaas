@@ -17,7 +17,6 @@ import useSettingsStore from "@/store/modules/settings";
 import useUserStore from "@/store/modules/user";
 import storage from "@/utils/storage";
 import { throttle } from "lodash-es";
-import { submitLoading, obtainLoading } from "@/utils/apiLoading";
 import api from "@/api/modules/register";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
 const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
@@ -245,10 +244,14 @@ const validateEmailRegistered = (rule: any, value: any, callback: any) => {
 };
 const registerRules = ref<FormRules>({
   account: [{ required: true, trigger: "blur", message: "请输入用户名" }],
-  companyName: [{ required: true, trigger: 'blur', message: '请输入公司名称' }],
-  companyType: [{ required: true, trigger: 'blur', message: '请选择账户类型' }],
+  companyName: [{ required: true, trigger: "blur", message: "请输入公司名称" }],
+  companyType: [
+    { required: true, trigger: "change", message: "请选择账户类型" },
+  ],
   // taxID: [{ required: true, trigger: 'blur', message: '请输入公司税号' }],
-  legalPersonName: [{ required: true, trigger: 'blur', message: '请输入法人姓名' }],
+  legalPersonName: [
+    { required: true, trigger: "blur", message: "请输入法人姓名" },
+  ],
   email: [
     { required: true, trigger: "blur", message: "请输入邮箱" },
     { validator: validateEmailRegistered, trigger: "blur" },
@@ -259,6 +262,7 @@ const registerRules = ref<FormRules>({
   ],
   code: [{ required: true, trigger: "blur", message: "请输入验证码" }],
   country: [{ required: true, trigger: "change", message: "请选择国家" }],
+  name: [{ required: true, trigger: "blur", message: "请输入用户名" }],
   password: [
     { required: true, trigger: "blur", message: "请输入密码" },
     { min: 6, max: 18, trigger: "blur", message: "密码长度为6到18位" },
@@ -272,14 +276,14 @@ const mobileVerificationCode = async () => {
     phone: registerForm.value.phoneNumber,
   };
   if (registerForm.value.country === "CN") {
-    const { status } = await obtainLoading(api.sendCode(params));
+    const { status } = await api.sendCode(params);
     status === 1 &&
       ElMessage.success({
         message: "已发送",
       });
   } else {
     params.type = "register_email";
-    const { status } = await obtainLoading(api.sendCode(params));
+    const { status } = await api.sendCode(params);
     status === 1 &&
       ElMessage.success({
         message: "已发送",
@@ -309,14 +313,12 @@ const handleRegister = throttle(async () => {
     registerFormRef.value.validate(async (valid: any) => {
       if (valid) {
         registerForm.value.type =
-        registerForm.value.country === "CN" ? "phone" : "email";
+          registerForm.value.country === "CN" ? "phone" : "email";
         registerForm.value.companyName = "";
         registerForm.value.legalPersonName = "";
         registerForm.value.taxID = "";
         delete registerForm.value.agreeToTheAgreement;
-        const { status } = await submitLoading(
-          api.register(registerForm.value)
-        );
+        const { status } = await api.register(registerForm.value);
         status === 1 &&
           // 跳转登录 快捷方式
           ElNotification({
