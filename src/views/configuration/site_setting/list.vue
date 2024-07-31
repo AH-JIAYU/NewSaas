@@ -3,6 +3,7 @@ import type { FormInstance, FormRules } from "element-plus";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { onMounted, ref } from "vue";
 import api from "@/api/modules/configuration_site_setting";
+// @ts-expect-error
 import { dataBox } from "js-tool-big-box";
 import { AnyFn } from "@vueuse/core";
 

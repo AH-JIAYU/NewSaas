@@ -2,6 +2,7 @@
 import { ElMessage, ElMessageBox } from "element-plus";
 import type { FormInstance, FormRules } from "element-plus";
 import api from "@/api/modules/survey_site_setting";
+// @ts-expect-error
 import { dataBox } from "js-tool-big-box";
 import { onMounted, ref } from "vue";
 defineOptions({
