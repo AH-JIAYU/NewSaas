@@ -193,7 +193,7 @@ function onCancel() {
         <ElInput v-model="form.email" placeholder="请输入邮箱" @change="handleChange" @blur="chengAccount" />
       </ElFormItem>
       <ElFormItem label="密码" prop="password">
-        <ElInput :disabled="disabled" model="form.password" placeholder="需要修改密码时请前往当前账号个人中心" />
+        <ElInput :disabled="disabled" v-model="form.password" placeholder="需要修改密码时请前往当前账号个人中心" />
       </ElFormItem>
       <ElFormItem label="角色" prop="role">
         <el-select v-model="form.role" placeholder="请选择角色">

@@ -115,6 +115,9 @@ function onSubmit() {
     formRef.value &&
       formRef.value.validate((valid) => {
         if (valid) {
+          if (form.value.keyWords == "") {
+            form.value.keyWords = "keyWords";
+          }
           loading.value = true;
           api.create(form.value).then(() => {
             loading.value = false;
@@ -165,8 +168,11 @@ function onSubmit() {
             qqCode,
             address,
           };
+          if (form.value.keyWords == "") {
+            params.keyWords = "keyWords";
+          }
           loading.value = true;
-          api.edit(params).then((res:any) => {
+          api.edit(params).then((res: any) => {
             loading.value = false;
             if (res.status === 1) {
               getDataList();

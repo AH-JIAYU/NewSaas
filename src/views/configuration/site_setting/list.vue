@@ -119,6 +119,9 @@ function onSubmit() {
       formRef.value.validate((valid) => {
         if (valid) {
           loading.value = true;
+          if (form.value.keyWords == "") {
+            form.value.keyWords = "keyWords";
+          }
           delete form.value.id;
           api.create(form.value).then(() => {
             loading.value = false;
@@ -166,6 +169,9 @@ function onSubmit() {
               qqCode,
               address,
             };
+            if (form.value.keyWords == "") {
+              params.keyWords = "keyWords";
+            }
             loading.value = true;
             api.edit(params).then((res: any) => {
               loading.value = false;
