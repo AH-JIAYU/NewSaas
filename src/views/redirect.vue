@@ -45,10 +45,17 @@ onMounted(async () => {
   const URL = resRedirect.data.status;
   // 新开 会员或子会员重定向页面
   if (resRedirect.data.redirectAddress) {
-    window.open(
-      `${resRedirect.data.redirectAddress}.front-supplier.surveyssaas.com?uid="${uid}"&type="${URL}"`,
-      "_blank"
-    );
+    if (resRedirect.data.redirectAddress.includes("http")) {
+      window.open(
+        `${resRedirect.data.redirectAddress}.front-supplier.surveyssaas.com?uid=${uid}&type=${URL}`,
+        "_blank"
+      );
+    } else {
+      window.open(
+        `http://${resRedirect.data.redirectAddress}.front-supplier.surveyssaas.com?uid=${uid}&type=${URL}`,
+        "_blank"
+      );
+    }
   }
   if (URL == 1) {
     data.value.svg = 1;
@@ -59,7 +66,6 @@ onMounted(async () => {
     data.value.describe = "谁也不能随随便便成功，它来自彻底的自我管理和毅力。";
   } else if (URL == 2) {
     data.value.svg = 2;
-
     data.value.typename = '<span style="color: #e6a239">配额已满</span>';
     data.value.englishtypename =
       '<span>I\'m sorry</span> <span style="color:#20a0ff" >quota is full</span>';
