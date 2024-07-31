@@ -2,13 +2,13 @@
 import { ElMessage, ElMessageBox } from "element-plus";
 import type { FormInstance, FormRules } from "element-plus";
 import api from "@/api/modules/survey_site_setting";
-// @ts-expect-error
-import { dataBox } from "js-tool-big-box";
+import useClipboard from "vue-clipboard3";
 import { onMounted, ref } from "vue";
 defineOptions({
   name: "SurveySettingList",
 });
 
+const { toClipboard } = useClipboard();
 const activeTopTab = ref<any>("基本设置");
 // 加载
 const loading = ref(false);
@@ -92,23 +92,13 @@ async function getDataList() {
   loading.value = false;
 }
 // 复制地址
-const copyText = () => {
-  const text = `${form.value.memberURL}.front-supplier.surveyssaas.com`;
-  dataBox.copyText(
-    text,
-    () => {
-      ElMessage({
-        type: "success",
-        message: "复制成功",
-      });
-    },
-    () => {
-      ElMessage({
-        type: "error",
-        message: "复制异常，请尝试其他方式复制内容",
-      });
-    }
-  );
+const copyToClipboard = () => {
+  const text = `${form.value.memberURL}.front-saas-web.surveyssaas.com`;
+  toClipboard(text);
+  ElMessage({
+    type: "success",
+    message: "复制成功",
+  });
 };
 // 联系我们
 function onSubmit() {
@@ -243,9 +233,9 @@ function onSubmit() {
             >
             <el-input v-model="form.memberURL" style="width: 8rem" />
                   <el-text class="mx-1"
-                    >.front-supplier.surveyssaas.com</el-text
+                    >.front-saas-web.surveyssaas.com</el-text
                   >
-                  <el-button class="copy" type="primary" link @click="copyText"
+                  <el-button class="copy" type="primary" link @click="copyToClipboard"
                     >复制</el-button>
             </el-form-item>
             <el-form-item style="width: 34rem" label="站点系统域名">

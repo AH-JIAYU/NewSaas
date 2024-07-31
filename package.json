@@ -65,6 +65,7 @@
     "v-wave": "^2.0.0",
     "vconsole": "^3.15.1",
     "vue": "^3.4.21",
+    "vue-clipboard3": "^2.0.0",
     "vue-i18n": "^9.10.2",
     "vue-jsonp": "^2.0.0",
     "vue-m-message": "^4.0.2",

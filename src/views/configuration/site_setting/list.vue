@@ -3,14 +3,14 @@ import type { FormInstance, FormRules } from "element-plus";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { onMounted, ref } from "vue";
 import api from "@/api/modules/configuration_site_setting";
-// @ts-expect-error
-import { dataBox } from "js-tool-big-box";
+import useClipboard from "vue-clipboard3";
 import { AnyFn } from "@vueuse/core";
 
 defineOptions({
   name: "site_setting",
 });
 
+const { toClipboard } = useClipboard();
 const activeTopTab = ref<any>("基本设置");
 // 加载
 const loading = ref(false);
@@ -95,23 +95,13 @@ async function getDataList() {
   loading.value = false;
 }
 // 复制地址
-const copyText = () => {
+const copyToClipboard = () => {
   const text = `${form.value.supplierURL}.front-supplier.surveyssaas.com`;
-  dataBox.copyText(
-    text,
-    () => {
-      ElMessage({
-        type: "success",
-        message: "复制成功",
-      });
-    },
-    () => {
-      ElMessage({
-        type: "error",
-        message: "复制异常，请尝试其他方式复制内容",
-      });
-    }
-  );
+  toClipboard(text);
+  ElMessage({
+    type: "success",
+    message: "复制成功",
+  });
 };
 // 提交数据
 function onSubmit() {
@@ -248,7 +238,7 @@ function onSubmit() {
                   <el-text class="mx-1"
                     >.front-supplier.surveyssaas.com</el-text
                   >
-                  <el-button class="copy" type="primary" link @click="copyText"
+                  <el-button class="copy" type="primary" link @click="copyToClipboard"
                     >复制</el-button>
                 </el-form-item>
               </el-col>
