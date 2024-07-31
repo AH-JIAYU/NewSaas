@@ -144,7 +144,7 @@ const changeClient = (val: any) => {
   const findData = data.value.basicSettings.customerList.find(
     (item: any) => item.tenantCustomerId === val
   );
-  props.leftTab.isProfile = Number(findData.antecedentQuestionnaire);
+  props.leftTab.isProfile = findData.antecedentQuestionnaire === 2 ? 1 : 2;
 };
 
 // 所属国家全选
