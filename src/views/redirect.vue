@@ -45,30 +45,36 @@ onMounted(async () => {
   const URL = resRedirect.data.status;
   // 新开 会员或子会员重定向页面
   if (resRedirect.data.redirectAddress) {
-    window.open(
-      `http://${resRedirect.data.redirectAddress}${
-        resRedirect.data.peopleType === 1//peopleType 1 会员  2子会员
-          ? ".front-saas-web.surveyssaas.com/#/"
-          : ".front-supplier-web.surveyssaas.com/#/"
-      }${ //surveySource 1内部 2外部
-        resRedirect.data.surveySource === 1 ? "redirect" : "externalRedirection"
-      }?uid=${uid}&type=${URL}`,
-      "_blank"
-    );
+    const href = `http://${resRedirect.data.redirectAddress}${
+      resRedirect.data.peopleType === 1 //peopleType 1 会员  2子会员
+        ? ".front-saas-web.surveyssaas.com/#/"
+        : ".front-supplier-web.surveyssaas.com/#/"
+    }${
+      //surveySource 1内部 2外部
+      resRedirect.data.surveySource === 1 ? "redirect" : "externalRedirection"
+    }?uid=${uid}&type=${URL}`;
+    // #region 防止浏览器拦截新开标签页
+    const form = document.createElement("form");
+    form.action = href;
+    form.target = "_blank";
+    form.method = "POST";
+    document.body.appendChild(form);
+    form.submit();
+    //#endregion
   }
   if (URL == 1) {
     data.value.svg = 1;
     data.value.typename = "<span>恭喜您完成此项调查</span>";
     data.value.englishtypename =
       '<span>Congratulations on</span> <span style="color:#20a0ff" >complete this survey</span>';
-    data.value.message = "太棒了！！";
+    data.value.message = "太棒了!!";
     data.value.describe = "谁也不能随随便便成功，它来自彻底的自我管理和毅力。";
   } else if (URL == 2) {
     data.value.svg = 2;
     data.value.typename = '<span style="color: #e6a239">配额已满</span>';
     data.value.englishtypename =
       '<span>I\'m sorry</span> <span style="color:#20a0ff" >quota is full</span>';
-    data.value.message = "请尝试其他调查！";
+    data.value.message = "请尝试其他调查!";
     data.value.describe = `学会让自己安静，把思维沉浸下来，慢慢降低对事物的欲望。把自我经常归零，每天都是新的起点，没有年龄的限制，只要你对事物的欲望适当的降低，会赢得更多的求胜机会`;
   } else if (URL == 3) {
     data.value.svg = 3;
@@ -76,7 +82,7 @@ onMounted(async () => {
       '<span style="color: #e6a239">您已经参与过此项目</span>';
     data.value.englishtypename =
       '<span>I\'m sorry</span> <span style="color:#20a0ff" >You have worked on this project</span>';
-    data.value.message = "请尝试其他调查！";
+    data.value.message = "请尝试其他调查!";
     data.value.describe = "Please try other surveys";
   } else if (URL == 4) {
     data.value.svg = 4;
@@ -84,14 +90,14 @@ onMounted(async () => {
       '<span style="color: #e6a239">当前IP已经参与过此项目</span>';
     data.value.englishtypename =
       '<span>I\'m sorry</span> <span style="color:#20a0ff" >Current IP has participated in this project</span>';
-    data.value.message = "请尝试其他调查！";
+    data.value.message = "请尝试其他调查!";
     data.value.describe = "Please try other surveys";
   } else if (URL == 5) {
     data.value.svg = 5;
     data.value.typename = '<span style="color: #e6a239">项目已关闭</span>';
     data.value.englishtypename =
       '<span>I\'m sorry</span> <span style="color:#20a0ff" >The project has been closed</span>';
-    data.value.message = "请尝试其他调查！";
+    data.value.message = "请尝试其他调查!";
     data.value.describe = "Please try other surveys";
   } else if (URL == 6) {
     data.value.svg = 6;
@@ -99,14 +105,14 @@ onMounted(async () => {
       '<span style="color: #e6a239">答题用时过短，问卷作废!</span>';
     data.value.englishtypename =
       '<span>I\'m sorry</span> <span style="color:#20a0ff" >The LOI are too short</span>';
-    data.value.message = "请注意质量！";
+    data.value.message = "请注意质量!";
     data.value.describe = "Please ensure the quality of the questionnaire";
   } else if (URL == 7) {
     data.value.svg = 7;
     data.value.typename = '<span style="color: #e6a239">数据出现异常</span>';
     data.value.englishtypename =
       '<span>I\'m sorry</span> <span style="color:#20a0ff" >Abnormal data</span>';
-    data.value.message = "请尝试刷新或联系管理员！";
+    data.value.message = "请尝试刷新或联系管理员!";
     data.value.describe = "Please try to refresh or contact the administrator!";
   } else if (URL == 8) {
     data.value.svg = 8;
@@ -114,7 +120,7 @@ onMounted(async () => {
       '<span style="color: #e6a239">您访问的项目不存在</span>';
     data.value.englishtypename =
       '<span>I\'m sorry</span> <span style="color:#20a0ff" >The project you visited does not exist</span>';
-    data.value.message = "请尝试其他项目！";
+    data.value.message = "请尝试其他项目!";
     data.value.describe = "Please try other survey!";
   } else if (URL == 9) {
     data.value.svg = 9;
@@ -130,43 +136,43 @@ onMounted(async () => {
       '<span style="color: #e6a239">时间段内配额已满</span>';
     data.value.englishtypename =
       '<span>I\'m sorry</span> <span style="color:#20a0ff" >The quota for the current time period is full</span>';
-    data.value.message = "请销后再试！";
-    data.value.describe = "Please sell it and try again！";
+    data.value.message = "请销后再试!";
+    data.value.describe = "Please sell it and try again!";
   } else if (URL == 11) {
     data.value.svg = 10;
     data.value.typename = '<span style="color: #e6a239">超时完成</span>';
     data.value.englishtypename =
       '<span>I\'m sorry</span> <span style="color:#20a0ff" >Current project timeout completed </span>';
-    data.value.message = "请销后再试！";
-    data.value.describe = "Please sell it and try again！";
+    data.value.message = "请销后再试!";
+    data.value.describe = "Please sell it and try again!";
   } else if (URL == 12) {
     data.value.svg = 7;
     data.value.typename = '<span style="color: #e6a239">ip不一致</span>';
     data.value.englishtypename =
       '<span>I\'m sorry</span> <span style="color:#20a0ff" >IP is inconsistent </span>';
-    data.value.message = "请销后再试！";
-    data.value.describe = "Please sell it and try again！";
+    data.value.message = "请销后再试!";
+    data.value.describe = "Please sell it and try again!";
   } else if (URL == 13) {
     data.value.svg = 7;
     data.value.typename = '<span style="color: #e6a239">被甄别</span>';
     data.value.englishtypename =
       '<span>I\'m sorry</span> <span style="color:#20a0ff" >have been screened </span>';
-    data.value.message = "请销后再试！";
-    data.value.describe = "Please sell it and try again！";
+    data.value.message = "请销后再试!";
+    data.value.describe = "Please sell it and try again!";
   } else if (URL == 14) {
     data.value.svg = 7;
     data.value.typename = '<span style="color: #e6a239">配额满</span>';
     data.value.englishtypename =
       '<span>I\'m sorry</span> <span style="color:#20a0ff" >quota full  </span>';
-    data.value.message = "请销后再试！";
-    data.value.describe = "Please sell it and try again！";
+    data.value.message = "请销后再试!";
+    data.value.describe = "Please sell it and try again!";
   } else if (URL == 15) {
     data.value.svg = 7;
     data.value.typename = '<span style="color: #e6a239">安全终止</span>';
     data.value.englishtypename =
       '<span>I\'m sorry</span> <span style="color:#20a0ff" >safe termination  </span>';
-    data.value.message = "请销后再试！";
-    data.value.describe = "Please sell it and try again！";
+    data.value.message = "请销后再试!";
+    data.value.describe = "Please sell it and try again!";
   }
 });
 // 加载静态图片
