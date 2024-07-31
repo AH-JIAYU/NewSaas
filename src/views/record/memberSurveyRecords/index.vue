@@ -406,18 +406,20 @@ onMounted(async () => {
           align="center"
           prop="h"
           show-overflow-tooltip
-          label="子会员价/供应商价/原价"
+          label="原价/供应商价/子会员价"
         >
           <template #default="{ row }">
             <el-text v-if="currencyType === 1"
-              >{{ row.memberChildPrice ? row.memberChildPrice + "$" : 0 }}/
+              >{{ row.doMoneyPrice ? row.doMoneyPrice + "$" : 0 }}/
               {{ row.supplierPrice ? row.supplierPrice + "$" : 0 }}/
-              {{ row.doMoneyPrice ? row.doMoneyPrice + "$" : 0 }}</el-text
-            >
+              {{ row.memberChildPrice ? row.memberChildPrice + "$" : 0 }}
+            </el-text>
             <el-text v-if="currencyType === 2"
-              >{{ row.memberChildPrice ? row.memberChildPrice + "￥" : 0 }}/
+              >{{ row.doMoneyPrice ? row.doMoneyPrice + "￥" : 0 }}/
               {{ row.supplierPrice ? row.supplierPrice + "￥" : 0 }}/
-              {{ row.doMoneyPrice ? row.doMoneyPrice + "￥" : 0 }}</el-text
+              {{
+                row.memberChildPrice ? row.memberChildPrice + "￥" : 0
+              }}</el-text
             >
           </template>
         </el-table-column>
