@@ -43,6 +43,13 @@ onMounted(async () => {
   };
   const resRedirect = await api.redirection(params);
   const URL = resRedirect.data.status;
+  // 新开 会员或子会员重定向页面
+  if (resRedirect.data.redirectAddress) {
+    window.open(
+      `${resRedirect.data.redirectAddress}.front-supplier.surveyssaas.com?uid="${uid}"&type="${URL}"`,
+      "_blank"
+    );
+  }
   if (URL == 1) {
     data.value.svg = 1;
     data.value.typename = "<span>恭喜您完成此项调查</span>";
@@ -50,10 +57,6 @@ onMounted(async () => {
       '<span>Congratulations on</span> <span style="color:#20a0ff" >complete this survey</span>';
     data.value.message = "太棒了！！";
     data.value.describe = "谁也不能随随便便成功，它来自彻底的自我管理和毅力。";
-    // 新开页面
-    if (resRedirect.data.redirectAddress) {
-      window.open(resRedirect.data.redirectAddress, "_blank");
-    }
   } else if (URL == 2) {
     data.value.svg = 2;
 
