@@ -47,12 +47,22 @@ onMounted(async () => {
   if (resRedirect.data.redirectAddress) {
     if (resRedirect.data.redirectAddress.includes("http")) {
       window.open(
-        `${resRedirect.data.redirectAddress}.front-supplier.surveyssaas.com?uid=${uid}&type=${URL}`,
+        `${resRedirect.data.redirectAddress}.front-supplier.surveyssaas.com/${
+          resRedirect.data.surveySource === 1
+            ? "rediect"
+            : "externalRedirection"
+        }?uid=${uid}&type=${URL}`,
         "_blank"
       );
     } else {
       window.open(
-        `http://${resRedirect.data.redirectAddress}.front-supplier.surveyssaas.com?uid=${uid}&type=${URL}`,
+        `http://${
+          resRedirect.data.redirectAddress
+        }.front-supplier.surveyssaas.com/${
+          resRedirect.data.surveySource === 1
+            ? "rediect"
+            : "externalRedirection"
+        }?uid=${uid}&type=${URL}`,
         "_blank"
       );
     }
