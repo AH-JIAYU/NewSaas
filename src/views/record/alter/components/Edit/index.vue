@@ -44,43 +44,48 @@ async function showEdit(row: any) {
 async function onSubmit() {
   formRef.value &&
     formRef.value.validate(async (valid: any) => {
-      if (valid) {
-        loading.value = true;
-        const type = formData.value.type.split(",");
-        formData.value.surveyType = +type[0];
-        if (type[1] === "null") {
-          formData.value.viceType = null;
+      try {
+        if (valid) {
+          loading.value = true;
+          const type = formData.value.type.split(",");
+          formData.value.surveyType = +type[0];
+          if (type[1] === "null") {
+            formData.value.viceType = null;
+          } else {
+            formData.value.viceType = +type[1];
+          }
+          formData.value.projectClickIdList =
+            formData.value.arr.split("\n") || [];
+          delete formData.value.arr;
+          delete formData.value.type;
+          const { status } = await api.edit(formData.value);
+          if (status === 1) {
+            // 更新列表
+            emits("success");
+            // 关闭加载
+            loading.value = false;
+            // 提示成功
+            ElMessage.success({
+              message: "操作成功",
+              center: true,
+            });
+            // 执行关闭弹框事件
+            closeHandler();
+          } else {
+            ElMessage.error({
+              message: "操作失败，请联系工作人员",
+              center: true,
+            });
+          }
         } else {
-          formData.value.viceType = +type[1];
-        }
-        formData.value.projectClickIdList =
-          formData.value.arr.split("\n") || [];
-        delete formData.value.arr;
-        delete formData.value.type;
-        const { status } = await api.edit(formData.value);
-        if (status === 1) {
-          // 更新列表
-          emits("success");
-          // 关闭加载
-          loading.value = false;
-          // 提示成功
-          ElMessage.success({
-            message: "操作成功",
-            center: true,
-          });
-          // 执行关闭弹框事件
-          closeHandler();
-        } else {
-          ElMessage.error({
-            message: "操作失败，请联系工作人员",
-            center: true,
+          ElMessage({
+            message: "请检查必填项",
+            type: "warning",
           });
         }
-      } else {
-        ElMessage({
-          message: "请检查必填项",
-          type: "warning",
-        });
+      } catch (error) {
+      } finally {
+        loading.value = false;
       }
     });
 }

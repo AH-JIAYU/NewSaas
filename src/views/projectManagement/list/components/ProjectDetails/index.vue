@@ -40,6 +40,7 @@ const data = ref<any>({
   srcList: [], // 图片预览
   countryList: [], // 国家
 });
+const imgList = ref<any>();
 const plugins = [
   gfm({
     locale: gfmLocale,
@@ -78,16 +79,15 @@ async function showEdit(row: any) {
       },
       []
     );
-  const imgList = data.value.form.descriptionUrl.split(",");
-  if (imgList.length) {
-    imgList.forEach(async (item:any) => {
+  imgList.value = data.value.form.descriptionUrl.split(",");
+  if (imgList.value.length) {
+    imgList.value.forEach(async (item: any) => {
       const imgres: any = await fileApi.detail({
         fileName: item,
       });
       data.value.imgUrl = imgres.data.fileUrl;
-      data.value.srcList.push(imgres.data.fileUrl)
+      data.value.srcList.push(imgres.data.fileUrl);
     });
-
   }
   getCountryQuestion();
   dialogTableVisible.value = true;
@@ -155,7 +155,7 @@ async function download() {
 }
 // 弹框关闭事件
 function closeHandler() {
-  data.value.srcList = []
+  data.value.srcList = [];
   dialogTableVisible.value = false;
 }
 // 根据id查找客户
@@ -604,10 +604,14 @@ defineExpose({ showEdit });
             </div>
           </template>
           <template v-if="data.form.descriptionUrl">
-            <div v-for="item in data.srcList" :key="item" class="demo-image__preview">
+            <div
+              v-for="item in data.srcList"
+              :key="item"
+              class="demo-image__preview"
+            >
               <el-image
                 style="width: 6.25rem; height: 6.25rem"
-                :src="data.imgUrl"
+                :src="item"
                 :preview-src-list="item"
                 :zoom-rate="1.2"
                 :max-scale="7"
@@ -616,9 +620,16 @@ defineExpose({ showEdit });
                 fit="cover"
               />
             </div>
-            <el-button style="padding: 0" type="primary" text @click="download">
-              {{ data.form.descriptionUrl }} 下载
-            </el-button>
+            <p v-for="item in imgList" :key="item">
+              <el-button
+                style="padding: 0"
+                type="primary"
+                text
+                @click="download"
+              >
+                {{ item }} 下载
+              </el-button>
+            </p>
           </template>
           <el-row :class="{ isNone: !data.form.descriptionUrl }" :gutter="20">
             <el-col :span="24">

@@ -21,7 +21,6 @@ const data = ref<any>({
     overviewTime: [],
     type:'day',
     turnoverType: "day", //营业额趋势 day/month/year
-
     completeType: "day", //	完成排名类型 day/month/year/select
     completeStart: "", //	完成排名开始时间
     completeEnd: "", //	完成排名结束时间
@@ -40,64 +39,6 @@ let chart1: any;
 let chart2: any;
 const chart1Ref = ref();
 const chart2Ref = ref();
-const tableData = [
-  {
-    name: "供应商",
-    money: 232,
-    num: 124,
-    "B2B/B2C": "50%/50%",
-    currency: "RNB",
-  },
-  {
-    name: "供应商",
-    money: 232,
-    num: 124,
-    "B2B/B2C": "50%/50%",
-    currency: "RNB",
-  },
-  {
-    name: "供应商",
-    money: 232,
-    num: 124,
-    "B2B/B2C": "50%/50%",
-    currency: "RNB",
-  },
-  {
-    name: "供应商",
-    money: 232,
-    num: 124,
-    "B2B/B2C": "50%/50%",
-    currency: "RNB",
-  },
-  {
-    name: "供应商",
-    money: 232,
-    num: 124,
-    "B2B/B2C": "50%/50%",
-    currency: "RNB",
-  },
-  {
-    name: "供应商",
-    money: 232,
-    num: 124,
-    "B2B/B2C": "50%/50%",
-    currency: "RNB",
-  },
-  {
-    name: "供应商",
-    money: 232,
-    num: 124,
-    "B2B/B2C": "50%/50%",
-    currency: "RNB",
-  },
-  {
-    name: "供应商",
-    money: 232,
-    num: 124,
-    "B2B/B2C": "50%/50%",
-    currency: "RNB",
-  },
-];
 // 营业额趋势
 function echarts1() {
   chart1 = echarts.init(chart1Ref.value);
@@ -141,46 +82,46 @@ function echarts1() {
       },
     ],
     series: [
-      {
-        name: "Email",
-        type: "line",
-        stack: "Total",
-        areaStyle: {},
-        emphasis: {
-          disabled: true,
-        },
-        data: [120, 132, 101, 134, 90, 230, 210],
-      },
-      {
-        name: "Union Ads",
-        type: "line",
-        stack: "Total",
-        areaStyle: {},
-        emphasis: {
-          focus: "series",
-        },
-        data: [220, 182, 191, 234, 290, 330, 310],
-      },
-      {
-        name: "Video Ads",
-        type: "line",
-        stack: "Total",
-        areaStyle: {},
-        emphasis: {
-          focus: "series",
-        },
-        data: [150, 232, 201, 154, 190, 330, 410],
-      },
-      {
-        name: "Direct",
-        type: "line",
-        stack: "Total",
-        areaStyle: {},
-        emphasis: {
-          focus: "series",
-        },
-        data: [320, 332, 301, 334, 390, 330, 320],
-      },
+      // {
+      //   name: "Email",
+      //   type: "line",
+      //   stack: "Total",
+      //   areaStyle: {},
+      //   emphasis: {
+      //     disabled: true,
+      //   },
+      //   data: [120, 132, 101, 134, 90, 230, 210],
+      // },
+      // {
+      //   name: "Union Ads",
+      //   type: "line",
+      //   stack: "Total",
+      //   areaStyle: {},
+      //   emphasis: {
+      //     focus: "series",
+      //   },
+      //   data: [220, 182, 191, 234, 290, 330, 310],
+      // },
+      // {
+      //   name: "Video Ads",
+      //   type: "line",
+      //   stack: "Total",
+      //   areaStyle: {},
+      //   emphasis: {
+      //     focus: "series",
+      //   },
+      //   data: [150, 232, 201, 154, 190, 330, 410],
+      // },
+      // {
+      //   name: "Direct",
+      //   type: "line",
+      //   stack: "Total",
+      //   areaStyle: {},
+      //   emphasis: {
+      //     focus: "series",
+      //   },
+      //   data: [320, 332, 301, 334, 390, 330, 320],
+      // },
       {
         name: "Search Engine",
         type: "line",
@@ -239,7 +180,7 @@ function echarts2() {
     tooltip: {
       trigger: "item",
       formatter(data: any) {
-        return `客户：${data.name}</br>项目完成数: ${data.data.datas.com}</br>审核率: ${data.data.datas.aud}`;
+        return `客户：${data.name}</br>项目完成: ${data.data.datas.com}</br>审核率: ${data.data.datas.aud}`;
       },
     },
     legend: [
@@ -326,7 +267,7 @@ function echarts2() {
           {
             type: "text",
             style: {
-              text: `合计:`,
+              text: `当前租户客户总数:`,
               fontSize: 18,
               textAlign: "center",
               textVerticalAlign: "bottom",
@@ -419,7 +360,7 @@ onMounted(async () => {
         <ElCol>
           <ColorfulCard2
             header="发布项目数"
-            :num="data.dataCenterOverViewVO?.projectTotal"
+            :num="data.dataCenterOverViewVO?.projectTotal ?data.dataCenterOverViewVO?.projectTotal : 0"
             icon="ant-design:file-outlined"
           />
         </ElCol>
@@ -429,7 +370,7 @@ onMounted(async () => {
             color-to="#fc5286"
             header="待确认项目数"
             :num="
-              data.dataCenterOverViewVO?.projectSettlementToBeConfirmedTotal
+              data.dataCenterOverViewVO?.projectSettlementToBeConfirmedTotal ? data.dataCenterOverViewVO?.projectSettlementToBeConfirmedTotal : 0
             "
             icon="ant-design:file-outlined"
           />
@@ -439,7 +380,7 @@ onMounted(async () => {
             color-from="#ff763b"
             color-to="#ffc480"
             header="已确认项目数"
-            :num="data.dataCenterOverViewVO?.projectSettlementConfirmedTotal"
+            :num="data.dataCenterOverViewVO?.projectSettlementConfirmedTotal ? data.dataCenterOverViewVO?.projectSettlementConfirmedTotal : 0"
             icon="ant-design:file-outlined"
           />
         </ElCol>
@@ -448,7 +389,7 @@ onMounted(async () => {
             color-from="#6a8eff"
             color-to="#0e4cfd"
             header="已完结项目数"
-            :num="data.dataCenterOverViewVO?.projectSettlementCompleteTotal"
+            :num="data.dataCenterOverViewVO?.projectSettlementCompleteTotal ? data.dataCenterOverViewVO?.projectSettlementCompleteTotal : 0"
             icon="ant-design:file-outlined"
           />
         </ElCol>
@@ -457,7 +398,7 @@ onMounted(async () => {
             color-from="#ffd300"
             color-to="#ff9b0d"
             header="项目营业额"
-            :num="data.dataCenterOverViewVO?.projectTurnover"
+            :num="data.dataCenterOverViewVO?.projectTurnover ? data.dataCenterOverViewVO?.projectTurnover : 0"
             icon="ant-design:file-outlined"
           />
         </ElCol>
@@ -466,7 +407,7 @@ onMounted(async () => {
             color-from="#f49494"
             color-to="#fcd98b"
             header="项目盈利额"
-            :num="data.dataCenterOverViewVO?.projectProfitability"
+            :num="data.dataCenterOverViewVO?.projectProfitability ? data.dataCenterOverViewVO?.projectProfitability : 0"
             icon="ant-design:file-outlined"
           />
         </ElCol>
@@ -475,7 +416,7 @@ onMounted(async () => {
             color-from="#c2005c"
             color-to="#ff980f"
             header="项目退款额"
-            :num="data.dataCenterOverViewVO?.projectRefundAmount"
+            :num="data.dataCenterOverViewVO?.projectRefundAmount ? data.dataCenterOverViewVO?.projectRefundAmount : 0"
             icon="ant-design:file-outlined"
           />
         </ElCol>
@@ -562,6 +503,9 @@ onMounted(async () => {
                   </div>
                 </template>
               </el-table-column>
+              <template #empty>
+              <el-empty description="暂无数据" />
+            </template>
             </el-table>
           </el-card>
         </el-col>
@@ -587,6 +531,9 @@ onMounted(async () => {
                 prop="turnover"
                 label="营业额"
               />
+              <template #empty>
+              <el-empty description="暂无数据" />
+            </template>
             </el-table>
           </el-card>
         </el-col>
@@ -642,5 +589,8 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+:deep(.el-card__body) {
+  min-height: 25rem;
 }
 </style>
