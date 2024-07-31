@@ -328,4 +328,8 @@ function getDataList() {
     opacity: 0.5;
   }
 }
+
+:deep(.el-card__body) {
+  min-height: 25rem;
+}
 </style>
