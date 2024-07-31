@@ -2,7 +2,8 @@
 import { ElMessage, ElMessageBox } from "element-plus";
 import type { FormInstance, FormRules } from "element-plus";
 import api from "@/api/modules/survey_site_setting";
-import ClipboardJS from "clipboard";
+// @ts-expect-error
+import { dataBox } from "js-tool-big-box";
 import { onMounted, ref } from "vue";
 defineOptions({
   name: "SurveySettingList",
@@ -91,22 +92,24 @@ async function getDataList() {
   loading.value = false;
 }
 // 复制地址
-const clipboard = new ClipboardJS(".copy");
-clipboard.on("success", function (e: any) {
-  ElMessage.success({
-    message: "复制成功",
-    center: true,
-  });
-  e.clearSelection();
-  clipboard.destroy();
-});
-
-clipboard.on("error", function () {
-  ElMessage.error({
-    message: "复制失败",
-    center: true,
-  });
-});
+const copyText = () => {
+  const text = `${form.value.memberURL}.front-supplier.surveyssaas.com`;
+  dataBox.copyText(
+    text,
+    () => {
+      ElMessage({
+        type: "success",
+        message: "复制成功",
+      });
+    },
+    () => {
+      ElMessage({
+        type: "error",
+        message: "复制异常，请尝试其他方式复制内容",
+      });
+    }
+  );
+};
 // 联系我们
 function onSubmit() {
   // 新增
@@ -115,6 +118,9 @@ function onSubmit() {
     formRef.value &&
       formRef.value.validate((valid) => {
         if (valid) {
+          if (form.value.keyWords == "") {
+            form.value.keyWords = "keyWords";
+          }
           loading.value = true;
           api.create(form.value).then(() => {
             loading.value = false;
@@ -165,8 +171,11 @@ function onSubmit() {
             qqCode,
             address,
           };
+          if (form.value.keyWords == "") {
+            params.keyWords = "keyWords";
+          }
           loading.value = true;
-          api.edit(params).then((res:any) => {
+          api.edit(params).then((res: any) => {
             loading.value = false;
             if (res.status === 1) {
               getDataList();
@@ -232,15 +241,12 @@ function onSubmit() {
               label="会员网址"
               prop="memberURL"
             >
-              <el-input v-model="form.memberURL" style="width: 8rem" />
-              <el-text class="mx-1">.front-saas-web.surveyssaas.com</el-text>
-              <el-button
-                class="copy"
-                :data-clipboard-text="`${form.memberURL}.front-saas-web.surveyssaas.com`"
-                type="primary"
-                link
-                >复制</el-button
-              >
+            <el-input v-model="form.memberURL" style="width: 8rem" />
+                  <el-text class="mx-1"
+                    >.front-supplier.surveyssaas.com</el-text
+                  >
+                  <el-button class="copy" type="primary" link @click="copyText"
+                    >复制</el-button>
             </el-form-item>
             <el-form-item style="width: 34rem" label="站点系统域名">
               <el-input v-model="form.externalSite" />

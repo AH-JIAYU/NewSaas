@@ -30,7 +30,19 @@ const formData = ref<any>({
 // 校验
 const formRules = ref<FormRules>({
   type: [{ required: true, message: "请选择审核方式", trigger: "change" }],
-  arr: [{ required: true, message: "请输入至少一个ID", trigger: "blur" }],
+  arr: [
+    { required: true, message: "请输入至少一个ID", trigger: "blur" },
+    {
+      validator: (rule, value, callback) => {
+        if (/^\d+$/.test(value)) {
+          callback();
+        } else {
+          callback(new Error("请输入数字"));
+        }
+      },
+      trigger: "blur",
+    },
+  ],
 });
 // formRef
 const formRef = ref<any>();
@@ -79,7 +91,7 @@ async function onSubmit() {
           }
         } else {
           ElMessage({
-            message: "请检查必填项",
+            message: "请检查必填项,或数据格式不正确",
             type: "warning",
           });
         }

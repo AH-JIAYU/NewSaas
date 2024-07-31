@@ -227,19 +227,15 @@ function echarts2() {
           {
             type: "text",
             style: {
-              text: `当前租户客户总数:`,
+              text: `客户总数:${Data.length}`,
               fontSize: 18,
               textAlign: "center",
-              textVerticalAlign: "bottom",
+              textVerticalAlign: "center",
             },
           },
           {
             type: "text",
             style: {
-              text: `${Data.reduce(
-                (total: any, item: any) => total + item.value,
-                0
-              )}`,
               textAlign: "center",
               textVerticalAlign: "top",
               fontSize: 30,
@@ -480,9 +476,9 @@ onMounted(async () => {
               style="width: 100%"
             >
               <el-table-column type="index" />
-              <el-table-column align="center" prop="supplierName" label="供应商"
+              <el-table-column align="center" prop="name" label="供应商名称"
                 ><template #default="{ row }">
-                  {{ row.supplierName ? row.supplierName : "-" }}
+                  {{ row.name ? row.name : "-" }}
                 </template>
               </el-table-column>
               <el-table-column

@@ -56,6 +56,9 @@ dependencies:
   hotkeys-js:
     specifier: ^3.13.7
     version: 3.13.7
+  js-tool-big-box:
+    specifier: ^1.0.55
+    version: 1.0.55
   lodash-es:
     specifier: ^4.17.21
     version: 4.17.21
@@ -9035,6 +9038,10 @@ packages:
   /js-tokens@8.0.3:
     resolution: {integrity: sha512-UfJMcSJc+SEXEl9lH/VLHSZbThQyLpw1vLO1Lb+j4RWDvG3N2f7yj3PVQA3cmkTBNldJ9eFnM+xEXxHIXrYiJw==}
     dev: true
+
+  /js-tool-big-box@1.0.55:
+    resolution: {integrity: sha512-vPguq8FnqTszS30LIibsvd4JSt+HE7iwxiV3sANfBNS9CHqaB5Ds5jDF0Fe5njv+Ftd6ORWVd9qZ1lLgouvH0w==}
+    dev: false
 
   /js-yaml@3.14.1:
     resolution: {integrity: sha512-okMH7OXXJ7YrN9Ok3/SXrnu4iX9yOk+25nqX4imS2npuvTYDmo/QEZoqwZkYaIDk3jVvBOTOIEgEhaLOynBS9g==}
