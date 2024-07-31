@@ -7,6 +7,8 @@ import api from "@/api/modules/alter";
 defineOptions({
   name: "ProjectReview",
 });
+// 变更数据
+const alterList = ref([])
 // 更新数据
 const emits = defineEmits(["success"]);
 // loading
@@ -26,6 +28,17 @@ const formData = ref<any>({
   projectClickIdList: [],
   // 成功id/失败id
   arr: [],
+});
+// 查询参数
+const queryForm = reactive<any>({
+  // 页数
+  page: 1,
+  // 条数
+  limit: 10,
+  // 类型 1成功/待审核 2审核通过 3审核失败 4数据冻结 5被甄别 6配额满
+  type: null,
+  // 操作人id
+  createUserId: "",
 });
 // 校验
 const formRules = ref<FormRules>({
@@ -119,6 +132,10 @@ function closeHandler() {
   formData.value.arr = [];
   dialogTableVisible.value = false;
 }
+onMounted(async () => {
+  const { data } = await api.list(queryForm);
+  alterList.value = data.tenantUpdateRecordVOBuilders
+});
 // 暴露
 defineExpose({ showEdit });
 </script>
