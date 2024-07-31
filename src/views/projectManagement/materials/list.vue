@@ -130,7 +130,7 @@ onMounted(() => {
         type="border-card"
         @tab-change="fetchData"
       >
-        <el-tab-pane label="子会员素材" :name="1">
+        <el-tab-pane label="会员素材" :name="1">
           <SearchBar :show-toggle="false">
             <template #default="{ fold, toggle }">
               <el-form
@@ -311,7 +311,7 @@ onMounted(() => {
             @current-change="currentChange"
           />
         </el-tab-pane>
-        <el-tab-pane label="会员素材" :name="2">
+        <el-tab-pane label="子会员素材" :name="2">
           <SearchBar :show-toggle="false">
             <template #default="{ fold, toggle }">
               <el-form
