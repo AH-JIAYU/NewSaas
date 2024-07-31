@@ -161,7 +161,7 @@ defineExpose({ showEdit });
         </el-form-item>
         <el-tooltip
           class="tooltips"
-          content="选中某供应商后，该供应商无法参与该项目的调查"
+          content="选中供应商或会员组，该供应商或会员组无法参与该项目"
           placement="top"
         >
           <SvgIcon
@@ -172,7 +172,7 @@ defineExpose({ showEdit });
         </el-tooltip>
         <el-tooltip
           class="tooltips"
-          content="举例: 供应商：河南供应商； 指定价格：100； 说明：指定河南供应商，该供应商下会员参与该项目都为100；"
+          content="举例:(选中供应商为：A供应商；指定价格为：100美元)则，A供应商下参与该项目的会员价格为100美元，无需通过会员等级进行计算"
           placement="top"
         >
           <SvgIcon

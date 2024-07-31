@@ -55,44 +55,48 @@ async function showEdit(row: any) {
 async function onSubmit() {
   formRef.value &&
     formRef.value.validate(async (valid: any) => {
-      if (valid) {
-        loading.value = true;
-        delete formData.value.projectName;
-        if (
-          formData.value.settlementType === 1 ||
-          formData.value.settlementType === 2
-        ) {
-          formData.value.projectSettlementBuilderList =
-            formData.value.arr.split("\n") || [];
-            delete formData.value.arr
+      try {
+        if (valid) {
+          loading.value = true;
+          delete formData.value.projectName;
+          if (
+            formData.value.settlementType === 1 ||
+            formData.value.settlementType === 2
+          ) {
+            formData.value.projectSettlementBuilderList =
+              formData.value.arr.split("\n") || [];
+            delete formData.value.arr;
+          } else {
+            formData.value.projectSettlementBuilderList = [];
+          }
+          const { status } = await api.review(formData.value);
+          if (status === 1) {
+            // 更新列表
+            emits("success");
+            // 关闭加载
+            loading.value = false;
+            // 提示成功
+            ElMessage.success({
+              message: "操作成功",
+              center: true,
+            });
+            // 执行关闭弹框事件
+            closeHandler();
+          } else {
+            ElMessage.error({
+              message: "操作失败，请联系工作人员",
+              center: true,
+            });
+          }
         } else {
-          formData.value.projectSettlementBuilderList = [];
-        }
-        const { status } = await api.review(formData.value);
-        if (status === 1) {
-          // 更新列表
-          emits("success");
-          // 关闭加载
-          loading.value = false;
-          // 提示成功
-          ElMessage.success({
-            message: "操作成功",
-            center: true,
-          });
-          // 执行关闭弹框事件
-          closeHandler();
-        } else {
-          loading.value = false;
-          ElMessage.error({
-            message: "操作失败，请联系工作人员",
-            center: true,
+          ElMessage({
+            message: "请检查必填项",
+            type: "warning",
           });
         }
-      } else {
-        ElMessage({
-          message: "请检查必填项",
-          type: "warning",
-        });
+      } catch (error) {
+      } finally {
+        loading.value = false;
       }
     });
 }
@@ -147,6 +151,7 @@ defineExpose({ showEdit });
               <el-input
                 v-model="form.projectId"
                 placeholder="请输入项目ID"
+                disabled
                 clearable
               ></el-input>
             </p>
@@ -156,6 +161,7 @@ defineExpose({ showEdit });
             <p class="neip">
               <el-input
                 v-model="form.projectName"
+                disabled
                 placeholder="请输入项目名称"
                 clearable
               ></el-input>
@@ -278,7 +284,7 @@ defineExpose({ showEdit });
   display: flex;
   justify-content: space-around;
   align-items: center;
-  width: 50%;
+  width: 62%;
   height: 100%;
   color: #606266;
 }

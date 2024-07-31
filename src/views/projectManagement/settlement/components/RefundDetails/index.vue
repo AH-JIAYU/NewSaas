@@ -47,17 +47,19 @@ defineExpose({ showEdit });
       >
         <div class="border">
           <p class="pp">项目ID</p>
-          <p class="neip">{{ form.projectId ?form.projectId :'-' }}</p>
+          <p class="neip">{{ form.projectId ? form.projectId : "-" }}</p>
         </div>
         <div class="border">
           <p class="pp">项目名称</p>
           <p class="neip">
-            <el-text class="mx-1">{{ form.projectName ?form.projectName : '-' }}</el-text>
+            <el-text class="mx-1">{{
+              form.projectName ? form.projectName : "-"
+            }}</el-text>
           </p>
         </div>
         <div class="border">
           <p class="pp">项目退款率</p>
-          <p class="neip">{{ data.refundRate ? data.refundRate : '-' }}</p>
+          <p class="neip">{{ data.refundRate ? data.refundRate : "-" }}</p>
         </div>
       </el-row>
       <div style="margin: 10px">| 供应商</div>
@@ -81,6 +83,9 @@ defineExpose({ showEdit });
           prop="refundRate"
           label="供应商退款率"
         />
+        <template #empty>
+          <el-empty description="暂无数据" />
+        </template>
       </el-table>
       <div style="margin-top: 20px; margin-bottom: 20px">
         | 会员组
@@ -119,6 +124,7 @@ defineExpose({ showEdit });
   align-items: center;
   width: 63%;
   height: 100%;
+  border-left: 1px solid #ebeef5;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
