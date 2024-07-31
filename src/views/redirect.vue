@@ -45,27 +45,16 @@ onMounted(async () => {
   const URL = resRedirect.data.status;
   // 新开 会员或子会员重定向页面
   if (resRedirect.data.redirectAddress) {
-    if (resRedirect.data.redirectAddress.includes("http")) {
-      window.open(
-        `${resRedirect.data.redirectAddress}.front-supplier.surveyssaas.com/${
-          resRedirect.data.surveySource === 1
-            ? "rediect"
-            : "externalRedirection"
-        }?uid=${uid}&type=${URL}`,
-        "_blank"
-      );
-    } else {
-      window.open(
-        `http://${
-          resRedirect.data.redirectAddress
-        }.front-supplier.surveyssaas.com/${
-          resRedirect.data.surveySource === 1
-            ? "rediect"
-            : "externalRedirection"
-        }?uid=${uid}&type=${URL}`,
-        "_blank"
-      );
-    }
+    window.open(
+      `http://${resRedirect.data.redirectAddress}${
+        resRedirect.data.peopleType === 1//peopleType 1 会员  2子会员
+          ? ".front-saas-web.surveyssaas.com/#/"
+          : ".front-supplier-web.surveyssaas.com/#/"
+      }${ //surveySource 1内部 2外部
+        resRedirect.data.surveySource === 1 ? "redirect" : "externalRedirection"
+      }?uid=${uid}&type=${URL}`,
+      "_blank"
+    );
   }
   if (URL == 1) {
     data.value.svg = 1;
