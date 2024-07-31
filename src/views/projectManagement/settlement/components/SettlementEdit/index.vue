@@ -165,7 +165,7 @@ defineExpose({ showEdit });
             />
           </el-select>
         </el-form-item>
-        <el-form-item prop="doMoneyPrice" label="原价(美元)">
+        <el-form-item prop="doMoneyPrice" label="原价">
           <el-input
             v-model="form.doMoneyPrice"
             placeholder=""

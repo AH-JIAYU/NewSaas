@@ -110,74 +110,60 @@ function getDataList() {
         </el-radio-group>
       </el-row>
       <ElRow :gutter="24">
-        <ElCol :xs="6" :sm="6" :md="6" :lg="6" :xl="6">
-          <el-card>
-            <div class="fx-b">
-              <PageHeader
-                :title="data.dataScreening?.participationVolume"
-                content="参与量"
-              />
-            </div>
-          </el-card>
+        <ElCol>
+          <ColorfulCard2
+            header="参与量"
+            :num="data.dataScreening?.participationVolume || 0"
+            icon="ant-design:file-outlined"
+          />
         </ElCol>
-        <ElCol :xs="6" :sm="6" :md="6" :lg="6" :xl="6">
-          <el-card>
-            <div class="fx-b">
-              <PageHeader
-                :title="data.dataScreening?.completedQuantity"
-                content="完成量"
-              />
-            </div>
-          </el-card>
+        <ElCol>
+          <ColorfulCard2
+            color-from="#fbaaa2"
+            color-to="#fc5286"
+            header="完成量"
+            :num="data.dataScreening?.completedQuantity || 0"
+            icon="ant-design:file-outlined"
+          />
         </ElCol>
-        <ElCol :xs="6" :sm="6" :md="6" :lg="6" :xl="6">
-          <el-card>
-            <div class="fx-b">
-              <PageHeader
-                :title="data.dataScreening?.turnover"
-                content="营业额"
-              />
-            </div>
-          </el-card>
+        <ElCol>
+          <ColorfulCard2
+            color-from="#ff763b"
+            color-to="#ffc480"
+            header="营业额"
+            :num="data.dataScreening?.turnover || 0"
+            icon="ant-design:file-outlined"
+          />
         </ElCol>
-        <ElCol :xs="6" :sm="6" :md="6" :lg="6" :xl="6">
-          <el-card>
-            <div class="fx-b">
-              <PageHeader
-                :title="data.dataScreening?.settlementRatio"
-                content="审核率"
-              />
-            </div>
-          </el-card>
+        <ElCol>
+          <ColorfulCard2
+            color-from="#6a8eff"
+            color-to="#0e4cfd"
+            header="审核率"
+            :num="data.dataScreening?.settlementRatio || 0"
+            icon="ant-design:file-outlined"
+          />
+        </ElCol>
+        <ElCol>
+          <ColorfulCard2
+            color-from="#ffd300"
+            color-to="#ff9b0d"
+            header="待审金额"
+            :num="data.dataScreening?.pendingBalance || 0"
+            icon="ant-design:file-outlined"
+          />
+        </ElCol>
+        <ElCol>
+          <ColorfulCard2
+            color-from="#f49494"
+            color-to="#fcd98b"
+            header="可用金额"
+            :num="data.dataScreening?.availableBalance || 0"
+            icon="ant-design:file-outlined"
+          />
         </ElCol>
       </ElRow>
-      <ElRow :gutter="24">
-        <ElCol :xs="6" :sm="6" :md="6" :lg="6" :xl="6">
-          <el-card>
-            <div class="fx-b">
-              <PageHeader
-                :title="data.dataScreening?.pendingBalance ? data.dataScreening?.pendingBalance : '-'"
-                content="待审金额"
-              />
-            </div>
-          </el-card>
-        </ElCol>
-        <ElCol :xs="6" :sm="6" :md="6" :lg="6" :xl="6">
-          <el-card>
-            <div class="fx-b">
-              <PageHeader
-                :title="data.dataScreening?.availableBalance ?data.dataScreening?.availableBalance : '-'"
-                content="可用金额"
-              />
-            </div>
-          </el-card>
-        </ElCol>
-        <!-- <ElCol :xs="6" :sm="6" :md="6" :lg="6" :xl="6">
-          <el-card>
-            <PageHeader title="10.7%" content="作废率" />
-          </el-card>
-        </ElCol> -->
-      </ElRow>
+
       <!-- 今日完成排名 & 供应商佣金排行 -->
       <el-row :gutter="24">
         <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
@@ -282,14 +268,8 @@ function getDataList() {
 <style lang="scss" scoped>
 :deep {
   .el-row {
-    // display: flex;
-    // justify-content: space-between;
-    // width: 100%;
-    // margin: 20px 0;
-
     .el-col {
       flex: 1;
-      margin: 20px 0;
       text-align: center;
 
       .title {

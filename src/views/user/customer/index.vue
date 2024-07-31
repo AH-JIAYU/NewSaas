@@ -273,7 +273,7 @@ onMounted(() => {
           align="center"
           prop="turnover"
           show-overflow-tooltip
-          label="客户营业限额($/月)"
+          label="客户营业限额/月"
           ><template #default="{ row }">
             {{ row.turnover ? row.turnover : "-" }}
           </template>
