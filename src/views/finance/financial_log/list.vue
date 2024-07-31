@@ -154,23 +154,6 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
 <template>
   <div :class="{ 'absolute-container': data.tableAutoHeight }">
     <PageMain>
-      <!-- <el-row
-        style="
-          width: 98%;
-          height: 50px;
-          margin-left: 0px;
-          display: flex;
-          justify-content: flex-start;
-          align-items: center;
-          background: #fafafa;
-        "
-        :gutter="20"
-      >
-        <el-col :span="4">今日业绩：</el-col>
-        <el-col :span="4">待审金额：</el-col>
-        <el-col :span="4">可用余额：</el-col>
-        <el-col :span="4">IR指标：</el-col>
-      </el-row> -->
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
           <ElForm
@@ -190,15 +173,6 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
                 @clear="currentChange()"
               />
             </ElFormItem>
-            <!-- <ElFormItem>
-              <ElInput
-                v-model="data.search.memberName"
-                placeholder="供应商名称"
-                clearable
-                @keydown.enter="currentChange()"
-                @clear="currentChange()"
-              />
-            </ElFormItem> -->
             <ElFormItem>
               <ElInput
                 v-model="data.search.projectId"
@@ -368,15 +342,12 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
           prop="addAndSubtraction"
           label="加减款"
           ><template #default="{ row }">
-            <el-text
-              v-if="row.addAndSubtraction?.includes('-')"
-              type="danger"
-              class="mx-1"
-              >{{ row.addAndSubtraction }}</el-text
+            <el-text v-if="row.operationType === 2" type="danger" class="mx-1"
+              >-{{ Math.abs(row.addAndSubtraction) }}</el-text
             >
-            <el-text v-else type="success" class="mx-1">{{
-              row.addAndSubtraction ? row.addAndSubtraction : '-'
-            }}</el-text>
+            <el-text v-else type="success" class="mx-1">
+              {{ Math.abs(row.addAndSubtraction) }}</el-text
+            >
           </template>
         </ElTableColumn>
         <ElTableColumn
