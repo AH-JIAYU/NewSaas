@@ -35,16 +35,10 @@ const data = ref<any>({
   activeName: "report",
   list: [], // 表格
   queryForm: {
-    // 分页页码
-    page: 1,
-    // 每页数量
-    limit: 10,
-    // 1年 2月 3日 4自定义搜索范围
-    type: 2,
-    // 开始时间
-    overviewStart: "",
-    // 结束时间
-    overviewEnd: "",
+    type: 2, // 1年 2月 3日 4自定义搜索范围
+    overviewStart: "", // 开始时间
+    overviewEnd: "", // 结束时间
+    overviewTime: [], //时间
   },
 });
 
@@ -73,12 +67,9 @@ function back() {
 const customPrefix = shallowRef({
   render() {
     return h("p", "");
-  }
+  },
 });
-// 选中数据
-const radioChange = (val: any) => {
-  data.value.queryForm.type = val;
-};
+
 // 处理时间
 const timeChange = () => {
   data.value.queryForm.overviewStart = timeArr.value[0];
@@ -91,6 +82,10 @@ async function getDataList() {
     ...getParams(),
     ...data.value.queryForm,
   };
+  if (params.overviewTime.length) {
+    params.overviewStart = params.overviewTime[0];
+    params.overviewEnd = params.overviewTime[1];
+  }
   if (data.value.activeName === "report") {
     api.reportList(params).then((res: any) => {
       data.value.loading = false;
@@ -127,14 +122,14 @@ onMounted(() => {
           <el-row class="fx-b">
             <div style="width: 200px; height: 33px">
               <el-radio-group
-                v-if="radio !== 'Search'"
-                v-model="radio"
-                @change="radioChange"
+                v-if="data.queryForm.type !== 4"
+                v-model="data.queryForm.type"
+                @change="getDataList"
               >
                 <el-radio-button label="日" :value="3" />
                 <el-radio-button label="月" :value="2" />
                 <el-radio-button label="年" :value="1" />
-                <el-radio-button label="搜索" value="Search" />
+                <el-radio-button label="搜索" :value="4" />
               </el-radio-group>
               <div v-else class="fx-b">
                 <el-button
@@ -145,7 +140,7 @@ onMounted(() => {
                   @click="back"
                 />
                 <el-date-picker
-                  v-model="timeArr"
+                  v-model="data.queryForm.overviewTime"
                   type="datetimerange"
                   value-format="YYYY-MM-DD hh:mm:ss"
                   unlink-panels
@@ -258,14 +253,14 @@ onMounted(() => {
           <el-row class="fx-b">
             <div style="width: 200px; height: 33px">
               <el-radio-group
-                v-if="radio !== 'Search'"
-                v-model="radio"
-                @change="radioChange"
+                v-if="data.queryForm.type !== 4"
+                v-model="data.queryForm.type"
+                @change="getDataList"
               >
                 <el-radio-button label="日" :value="3" />
                 <el-radio-button label="月" :value="2" />
                 <el-radio-button label="年" :value="1" />
-                <el-radio-button label="搜索" value="Search" />
+                <el-radio-button label="搜索" :value="4" />
               </el-radio-group>
               <div v-else class="fx-b">
                 <el-button
@@ -276,7 +271,7 @@ onMounted(() => {
                   @click="back"
                 />
                 <el-date-picker
-                  v-model="timeArr"
+                  v-model="data.queryForm.overviewTime"
                   type="datetimerange"
                   value-format="YYYY-MM-DD hh:mm:ss"
                   unlink-panels
@@ -299,7 +294,7 @@ onMounted(() => {
               </div>
             </div>
             <FormRightPanel>
-              <el-button size="default" @click=""> 导出 </el-button>
+              <el-button style="" size="default" @click=""> 导出 </el-button>
               <TabelControl
                 v-model:border="border"
                 v-model:tableAutoHeight="tableAutoHeight"

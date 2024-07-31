@@ -49,16 +49,12 @@ api.interceptors.response.use(
       Message.error(response.data.error, {
         zIndex: 4000,
       });
-      // 清除加载
-      loadingHide();
       return Promise.reject(response.data);
     } else if (response.data.status === 0) {
       Message.warning(response.data.error, {
         zIndex: 2000,
       });
       useUserStore().logout(response.data.status);
-      // 清除加载
-      loadingHide();
       return Promise.reject(response.data);
     }
   },
