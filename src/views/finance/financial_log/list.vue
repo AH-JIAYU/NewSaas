@@ -128,7 +128,49 @@ function onReset() {
   });
   getDataList();
 }
+const statusList = [
+  { label: "加钱成功(待审或者可用)", value: 0 },
+  { label: "过IR", value: 3 },
+  { label: "时间过短", value: 4 },
+  { label: "超时完成", value: 5 },
+  { label: "超量完成", value: 6 },
+  { label: "审核成功", value: 7 },
+  { label: "审核失败", value: 8 },
+  { label: "数据冻结", value: 9 },
+  { label: "时间段过载", value: 10 },
+  { label: "IP不一致", value: 11 },
+  { label: "ID重复参与", value: 12 },
+  { label: "和解", value: 13 },
+];
+const surveyStatus = [
+  { label: "完成/待审核", value: 1 },
+  { label: "被甄别", value: 2 },
+  { label: "配额满", value: 3 },
+  { label: "安全终止", value: 4 },
+  { label: "未完成", value: 5 },
+];
+const parseStatusString = (statusString: any) => {
+  if (!statusString) return;
+  // // 按逗号分隔多组主状态和副状态的组合
+  const statusPairs = statusString.split(",");
+  // 初始化结果数组
+  const results: any = [];
+  statusPairs.forEach((item: any, index: number) => {
+    // 下标或null
+    const ind = item.split(":")[1];
+    if (ind !== "null") {
+      const findData: any = statusList.find(
+        (ite: any) => ite.value === Number(ind)
+      );
+      results[index] = findData.label;
+    } else {
+      results[index] = "被甄别";
+    }
+  });
 
+  // 返回结果数组
+  return results;
+};
 // 每页数量切换
 function sizeChange(size: number) {
   onSizeChange(size).then(() => {
@@ -316,18 +358,11 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
           prop="remark"
           label="说明"
           ><template #default="{ row }">
-            <el-text
-              v-if="row.remark?.includes('-')"
-              type="danger"
-              class="mx-1"
-              >{{ row.remark }}</el-text
-            >
-            <el-text
-              v-if="row.remark?.includes('+')"
-              type="success"
-              class="mx-1"
-              >{{ row.remark }}</el-text
-            >
+            <el-text class="mx-1">{{
+              `记录变更:${parseStatusString(row.remark)[0]}变更为${
+                parseStatusString(row.remark)[1]
+              }`
+            }}</el-text>
           </template>
         </ElTableColumn>
         <ElTableColumn
