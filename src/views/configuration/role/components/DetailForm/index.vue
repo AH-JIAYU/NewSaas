@@ -43,6 +43,8 @@ onMounted(async () => {
   if (form.value.id !== "") {
     await getInfo();
   }
+  // 调用store的方法获取按钮权限，如果没有就调接口
+  permissionData.value = await roleButton.getPermissions();
   // 从store获取原始路由
   menuData.value = routeStore.routesRaw;
   // 获取扁平化后的1，2级路由
@@ -51,8 +53,6 @@ onMounted(async () => {
   form.value.menuId = form.value.menuId.filter((item: any) => {
     return !Level1AndLevel2List.some((ite: any) => ite.id === item);
   });
-  // 调用store的方法获取按钮权限，如果没有就调接口
-  permissionData.value = await roleButton.getPermissions;
   loading.value = false;
 });
 

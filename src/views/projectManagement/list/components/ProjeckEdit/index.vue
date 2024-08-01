@@ -257,7 +257,7 @@ defineExpose({
       />
       <template #footer>
         <el-button @click="closeHandler"> 取消 </el-button>
-        <el-button type="warning" @click="staging"> 暂存 </el-button>
+        <el-button type="warning" v-show="title !== '编辑'" @click="staging"> 暂存 </el-button>
         <el-button type="primary" @click="onSubmit"> 确定 </el-button>
       </template>
     </el-drawer>

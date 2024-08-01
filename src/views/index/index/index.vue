@@ -324,7 +324,7 @@ onMounted(async () => {
           <ColorfulCard2
             color-from="#fbaaa2"
             color-to="#fc5286"
-            header="待确认项目数"
+            header="待审核项目数"
             :num="
               data.dataCenterOverViewVO?.projectSettlementToBeConfirmedTotal ? data.dataCenterOverViewVO?.projectSettlementToBeConfirmedTotal : 0
             "
@@ -335,7 +335,7 @@ onMounted(async () => {
           <ColorfulCard2
             color-from="#ff763b"
             color-to="#ffc480"
-            header="已确认项目数"
+            header="已审核项目数"
             :num="data.dataCenterOverViewVO?.projectSettlementConfirmedTotal ? data.dataCenterOverViewVO?.projectSettlementConfirmedTotal : 0"
             icon="ant-design:file-outlined"
           />

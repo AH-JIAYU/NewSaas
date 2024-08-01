@@ -29,6 +29,16 @@ const formData = ref<any>({
   // 成功id/失败id
   arr: "",
 });
+// 自定义校验
+const validateNumberInput = (rule: any, value: any, callback: any) => {
+  // 使用正则表达式检查输入是否为数字和换行符
+  const regex = /^[\d\n]*$/;
+  if (!regex.test(value)) {
+    callback(new Error("请输入数字，支持换行"));
+  } else {
+    callback();
+  }
+};
 // 校验
 const formRules = ref<FormRules>({
   settlementType: [
@@ -37,13 +47,7 @@ const formRules = ref<FormRules>({
   arr: [
     { required: true, message: "请输入至少一个ID", trigger: "blur" },
     {
-      validator: (rule, value, callback) => {
-        if (/^\d+$/.test(value)) {
-          callback();
-        } else {
-          callback(new Error("请输入数字"));
-        }
-      },
+      validator: validateNumberInput,
       trigger: "blur",
     },
   ],
@@ -252,6 +256,7 @@ defineExpose({ showEdit });
   width: 100%;
   border: 1px solid #ebeef5;
 }
+
 .beizhu {
   width: 100%;
   border: 1px solid #ebeef5;
@@ -322,24 +327,29 @@ defineExpose({ showEdit });
     outline: none !important;
     box-shadow: none !important;
   }
+
   .el-input__wrapper {
     border: none !important;
     box-shadow: none !important;
   }
+
   .po {
     width: 100%;
     border: 1px solid #ebeef5;
     border-top: none;
   }
 }
+
 ::v-deep .el-input__inner {
   border: none !important;
   outline: none !important;
   box-shadow: none !important;
 }
+
 ::v-deep .el-input__wrapper {
   border: none !important;
 }
+
 :deep(.el-textarea__inner) {
   width: 100%;
 }

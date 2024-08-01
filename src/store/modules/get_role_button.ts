@@ -5,13 +5,14 @@ const useRoleButtonStore = defineStore(
   'buttonPermission',
   () => {
     const permissions = ref([])
-    const getPermissions = computed(async () => {
+    const getPermissions = async () => {
       if (permissions.value.length) {
         return permissions.value
       }
       const { data } = await api.list()
+      permissions.value = data
       return data
-    })
+    }
     return {
       permissions,
       getPermissions,

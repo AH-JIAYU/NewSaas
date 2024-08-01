@@ -2,7 +2,7 @@ import api from '@/api/modules/configuration_role'
 
 const useTenantRoleStore = defineStore(
   // 唯一ID
-  'buttonPermission',
+  'tenant_role',
   () => {
     const role = ref([])
     const getRole = async () => {
@@ -10,6 +10,7 @@ const useTenantRoleStore = defineStore(
         return role.value
       }
       const { data } = await api.list()
+      role.value = data
       return data
     }
     return {
