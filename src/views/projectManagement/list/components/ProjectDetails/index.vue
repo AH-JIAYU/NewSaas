@@ -82,11 +82,13 @@ async function showEdit(row: any) {
   imgList.value = data.value.form.descriptionUrl.split(",");
   if (imgList.value.length) {
     imgList.value.forEach(async (item: any) => {
-      const imgres: any = await fileApi.detail({
-        fileName: item,
-      });
-      data.value.imgUrl.push(imgres.data.fileUrl);
-      data.value.srcList.push(imgres.data.fileUrl);
+      if (item) {
+        const imgres: any = await fileApi.detail({
+          fileName: item,
+        });
+        data.value.imgUrl.push(imgres.data.fileUrl);
+        data.value.srcList.push(imgres.data.fileUrl);
+      }
     });
   }
   getCountryQuestion();

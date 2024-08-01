@@ -100,10 +100,9 @@ watch(
   }
 );
 onMounted(() => {
-  if (props.title === "编辑") {
-    for (let i = 0; i < topTabsRef.value.length; i++) {
-      topTabsRef.value[i].getUpLoad(localLeftTab.value[i].descriptionUrl);
-    }
+  // 暂缓或编辑时 回显图片
+  for (let i = 0; i < topTabsRef.value.length; i++) {
+    topTabsRef.value[i].getUpLoad(localLeftTab.value[i].descriptionUrl);
   }
 });
 // 为每个 tab 创建并提供一个唯一的 ref
