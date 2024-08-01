@@ -330,19 +330,28 @@ onMounted(() => {
           show-overflow-tooltip
           align="center"
           label="金额"
-        />
+        >
+          <template #default="{ row }">
+            {{ row.invoiceAmount || 0 }}<CurrencyType /> </template
+        ></el-table-column>
         <el-table-column
           prop="invoiceTax"
           show-overflow-tooltip
           align="center"
           label="手续费(税)"
-        />
+        >
+          <template #default="{ row }">
+            {{ row.invoiceTax || 0 }}<CurrencyType /> </template
+        ></el-table-column>
         <el-table-column
           prop="actualReceipts"
           show-overflow-tooltip
           align="center"
           label="实收款"
-        />
+        >
+          <template #default="{ row }">
+            {{ row.actualReceipts || 0 }}<CurrencyType /> </template
+        ></el-table-column>
         <el-table-column
           prop="invoiceDate"
           show-overflow-tooltip

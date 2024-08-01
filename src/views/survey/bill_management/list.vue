@@ -272,10 +272,7 @@ async function paymentOperation(id: any, type: any) {
         @sort-change="sortChange"
         @selection-change="data.batch.selectionDataList = $event"
       >
-        <el-table-column
-          align="center"
-          type="selection"
-        />
+        <el-table-column align="center" type="selection" />
         <ElTableColumn
           v-if="data.checkList.includes('memberId')"
           show-overflow-tooltip
@@ -302,21 +299,30 @@ async function paymentOperation(id: any, type: any) {
           align="center"
           prop="billAmount"
           label="账单金额"
-        />
+        >
+          <template #default="{ row }">
+            {{ row.billAmount || 0 }}<CurrencyType /> </template
+        ></ElTableColumn>
         <ElTableColumn
           v-if="data.checkList.includes('taxesFees')"
           show-overflow-tooltip
           align="center"
           prop="taxesFees"
           label="税"
-        />
+        >
+          <template #default="{ row }">
+            {{ row.taxesFees || 0 }}<CurrencyType /> </template
+        ></ElTableColumn>
         <ElTableColumn
           v-if="data.checkList.includes('payAmount')"
           show-overflow-tooltip
           align="center"
           prop="payAmount"
           label="实际金额"
-        />
+        >
+          <template #default="{ row }">
+            {{ row.payAmount || 0 }}<CurrencyType /> </template
+        ></ElTableColumn>
         <ElTableColumn
           v-if="data.checkList.includes('payTime')"
           show-overflow-tooltip

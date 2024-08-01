@@ -315,10 +315,7 @@ onMounted(async () => {
         :stripe="stripe"
         @selection-change="setSelectRows"
       >
-        <el-table-column
-          align="center"
-          type="selection"
-        />
+        <el-table-column align="center" type="selection" />
         <el-table-column
           v-if="checkList.includes('memberId')"
           align="center"
@@ -391,16 +388,9 @@ onMounted(async () => {
           label="会员价/供应商价/原价"
         >
           <template #default="{ row }">
-            <el-text v-if="currencyType === 1"
-              >{{ row.memberChildPrice ? row.memberChildPrice + "$" : 0 }}/
-              {{ row.supplierPrice ? row.supplierPrice + "$" : 0 }}/
-              {{ row.doMoneyPrice ? row.doMoneyPrice + "$" : 0 }}</el-text
-            >
-            <el-text v-if="currencyType === 2"
-              >{{ row.memberChildPrice ? row.memberChildPrice + "￥" : 0 }}/
-              {{ row.supplierPrice ? row.supplierPrice + "￥" : 0 }}/
-              {{ row.doMoneyPrice ? row.doMoneyPrice + "￥" : 0 }}</el-text
-            >
+            {{ row.memberChildPrice || 0 }}<CurrencyType />/
+            {{ row.supplierPrice || 0 }}<CurrencyType />/
+            {{ row.doMoneyPrice || 0 }}<CurrencyType />
           </template>
         </el-table-column>
         <el-table-column
