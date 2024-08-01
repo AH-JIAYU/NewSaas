@@ -8,7 +8,7 @@ defineOptions({
   name: "Edit",
 });
 // 更新数据
-const emits = defineEmits(['success']);
+const emits = defineEmits(["success"]);
 // title
 const title = ref("");
 // 获取当前时间
@@ -77,7 +77,7 @@ function onSubmit() {
       formRef.value &&
         formRef.value.validate((valid: any) => {
           if (valid) {
-            const data = toRaw(form.value)
+            const data = toRaw(form.value);
             api.edit(data).then(() => {
               ElMessage.success({
                 message: "编辑成功",
@@ -227,10 +227,10 @@ defineExpose({ showEdit });
       </el-form>
       <template #footer>
         <div style="flex: auto">
-          <el-button type="primary" @click="onSubmit"> 确定 </el-button>
           <el-button type="" @click="dialogTableVisible = false">
             取消
           </el-button>
+          <el-button type="primary" @click="onSubmit"> 确定 </el-button>
         </div>
       </template>
     </el-dialog>

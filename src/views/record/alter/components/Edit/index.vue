@@ -195,8 +195,8 @@ defineExpose({ showEdit });
       </el-form>
       <template #footer>
         <div style="flex: auto">
-          <el-button type="primary" @click="onSubmit"> 确定 </el-button>
           <el-button @click="dialogTableVisible = false"> 取消 </el-button>
+          <el-button type="primary" @click="onSubmit"> 确定 </el-button>
         </div>
       </template>
     </el-drawer>
