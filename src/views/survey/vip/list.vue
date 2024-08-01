@@ -83,9 +83,9 @@ function handleEdit(row: any) {
   editRef.value.showEdit(row);
 }
 // 加减款
-const plusMinusPayments = (row:any) => {
+const plusMinusPayments = (row: any) => {
   vipPlusMinusPaymentsRef.value.showEdit(JSON.stringify(row));
-}
+};
 // 切换状态
 async function changeState(state: any, id: string) {
   const params = {
@@ -290,7 +290,7 @@ onMounted(async () => {
         :stripe="stripe"
         @selection-change="setSelectRows"
       >
-      <el-table-column align="center" type="selection" />
+        <el-table-column align="center" type="selection" />
         <el-table-column
           v-if="checkList.includes('memberId')"
           align="center"
@@ -318,14 +318,20 @@ onMounted(async () => {
           prop="availableBalance"
           show-overflow-tooltip
           label="可用余额"
-        />
+        >
+          <template #default="{ row }">
+            {{ row.availableBalance || 0 }}<CurrencyType /> </template
+        ></el-table-column>
         <el-table-column
           v-if="checkList.includes('pendingBalance')"
           align="center"
           prop="pendingBalance"
           show-overflow-tooltip
           label="待审金额"
-        />
+        >
+          <template #default="{ row }">
+            {{ row.pendingBalance || 0 }}<CurrencyType /> </template
+        ></el-table-column>
         <el-table-column
           v-if="checkList.includes('memberLevelName')"
           align="center"
@@ -348,10 +354,19 @@ onMounted(async () => {
           label="B2B|B2C"
         >
           <template #default="{ row }">
-            <el-text v-if="row.b2bStatus && row.b2bStatus === 2" class="mx-1"><div class="i-fluent:checkmark-12-filled w-1.5em h-1.5em"></div></el-text>
-            <el-text v-else class="mx-1"><div class="i-entypo:cross w-1.5em h-1.5em"></div></el-text> |
-            <el-text v-if="row.b2cStatus && row.b2cStatus === 2" class="mx-1"><div class="i-fluent:checkmark-12-filled w-1.5em h-1.5em"></div></el-text>
-            <el-text v-else class="mx-1"><div class="i-entypo:cross w-1.5em h-1.5em"></div></el-text>
+            <el-text v-if="row.b2bStatus && row.b2bStatus === 2" class="mx-1"
+              ><div class="i-fluent:checkmark-12-filled w-1.5em h-1.5em"></div
+            ></el-text>
+            <el-text v-else class="mx-1"
+              ><div class="i-entypo:cross w-1.5em h-1.5em"></div
+            ></el-text>
+            |
+            <el-text v-if="row.b2cStatus && row.b2cStatus === 2" class="mx-1"
+              ><div class="i-fluent:checkmark-12-filled w-1.5em h-1.5em"></div
+            ></el-text>
+            <el-text v-else class="mx-1"
+              ><div class="i-entypo:cross w-1.5em h-1.5em"></div
+            ></el-text>
           </template>
         </el-table-column>
 
@@ -408,7 +423,8 @@ onMounted(async () => {
           prop="createName"
           show-overflow-tooltip
           label="创建人"
-        > <template #default="{ row }">
+        >
+          <template #default="{ row }">
             {{ row.createName ? row.createName : "-" }}
           </template>
         </el-table-column>
@@ -434,7 +450,14 @@ onMounted(async () => {
             >
               编辑
             </el-button>
-            <el-button size="small" plain type="primary" @click="plusMinusPayments(row)"> 加减款 </el-button>
+            <el-button
+              size="small"
+              plain
+              type="primary"
+              @click="plusMinusPayments(row)"
+            >
+              加减款
+            </el-button>
           </template>
         </el-table-column>
         <template #empty>
@@ -455,7 +478,10 @@ onMounted(async () => {
       />
     </PageMain>
     <VipEdit ref="editRef" @fetch-data="queryData" />
-    <vipPlusMinusPayments ref="vipPlusMinusPaymentsRef" @fetch-data="queryData" />
+    <vipPlusMinusPayments
+      ref="vipPlusMinusPaymentsRef"
+      @fetch-data="queryData"
+    />
   </div>
 </template>
 

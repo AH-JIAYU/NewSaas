@@ -308,14 +308,22 @@ onMounted(() => {
           prop="pendingBalance"
           show-overflow-tooltip
           label="	待审余额"
-        />
+        >
+          <template #default="{ row }">
+            {{ row.pendingBalance || 0 }}<CurrencyType />
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="checkList.includes('availableBalance')"
           align="center"
           prop="availableBalance"
           show-overflow-tooltip
           label="	可用余额"
-        />
+        >
+          <template #default="{ row }">
+            {{ row.availableBalance || 0 }}<CurrencyType />
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="checkList.includes('tenantSupplierId')"
           align="center"

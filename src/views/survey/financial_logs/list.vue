@@ -364,7 +364,10 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
           prop="beforeBalance"
           label="变动前"
           width="120"
-        />
+        >
+          <template #default="{ row }">
+            {{ row.beforeBalance || 0 }}<CurrencyType /> </template
+        ></ElTableColumn>
         <ElTableColumn
           show-overflow-tooltip
           align="center"
@@ -372,13 +375,9 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
           label="加减款"
           width="120"
           ><template #default="{ row }">
-            <!-- <el-text
-              v-if="row.remark[1].includes('-')"
-              type="danger"
-              class="mx-1"
-              >-{{ row.difference }}</el-text
-            > -->
-            <el-text type="success" class="mx-1">+{{ row.difference }}</el-text>
+            <el-text type="success" class="mx-1"
+              >+{{ row.difference }}<CurrencyType
+            /></el-text>
           </template>
         </ElTableColumn>
         <ElTableColumn
@@ -387,7 +386,10 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
           prop="afterBalance"
           label="变动后"
           width="120"
-        />
+        >
+          <template #default="{ row }">
+            {{ row.afterBalance || 0 }}<CurrencyType /> </template
+        ></ElTableColumn>
         <ElTableColumn
           show-overflow-tooltip
           align="center"

@@ -274,8 +274,9 @@ onMounted(() => {
           prop="turnover"
           show-overflow-tooltip
           label="客户营业限额/月"
-          ><template #default="{ row }">
-            {{ row.turnover ? row.turnover : "-" }}
+        >
+          <template #default="{ row }">
+            {{ row.turnover || 0 }}<CurrencyType />
           </template>
         </el-table-column>
         <el-table-column

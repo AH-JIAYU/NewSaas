@@ -3,12 +3,15 @@ import checkEdit from "./components/checkEdit/index.vue";
 import checkMembershipPrice from "./components/checkMembershipPrice/index.vue";
 import allocationEdit from "./components/AllocationEdit/index.vue";
 import api from "@/api/modules/survey_myProjeck";
+import { ElMessage } from "element-plus";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
 import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
+import useClipboard from "vue-clipboard3"; // 复制 js库
 
 defineOptions({
   name: "SurveyMyProjeckList",
 });
+const { toClipboard } = useClipboard();
 const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
 const customerStore = useUserCustomerStore(); // 客户
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
@@ -36,6 +39,12 @@ const columns = ref<any>([
   {
     prop: "projectIdentificationOrClientName",
     label: "项目标识",
+    sortabel: true,
+    checked: true,
+  },
+  {
+    prop: "withoutUrl",
+    label: "URL",
     sortabel: true,
     checked: true,
   },
@@ -132,7 +141,14 @@ async function fetchData() {
   pagination.value.total = res.data.getMemberProjectListInfoList.length;
   listLoading.value = false;
 }
-
+// 复制地址
+const copyUrl = (text: any) => {
+  toClipboard(text);
+  ElMessage({
+    type: "success",
+    message: "复制成功",
+  });
+};
 onMounted(async () => {
   columns.value.forEach((item: any) => {
     if (item.checked) {
@@ -307,6 +323,25 @@ onMounted(async () => {
         />
 
         <el-table-column
+          v-if="checkList.includes('withoutUrl')"
+          prop="withoutUrl"
+          align="center"
+          label="URL"
+        >
+          <template #default="{ row }">
+            <el-tooltip
+              class="box-item"
+              effect="dark"
+              :content="row.withoutUrl"
+              placement="top"
+            >
+              <el-button link type="primary" @click="copyUrl(row.withoutUrl)"
+                >复制</el-button
+              >
+            </el-tooltip>
+          </template>
+        </el-table-column>
+        <el-table-column
           v-if="checkList.includes('participation')"
           show-overflow-tooltip
           align="center"
@@ -324,13 +359,10 @@ onMounted(async () => {
           label="原价"
         >
           <template #default="{ row }">
-            <el-text v-if="countryType === 1" class="mx-1"
-              >${{ row.doMoneyPrice }}</el-text
-            >
-            <el-text v-if="countryType === 2" class="mx-1"
-              >￥{{ row.doMoneyPrice }}</el-text
-            >
             <el-text v-if="countryType === 3" class="mx-1">暂无数据</el-text>
+            <el-text v-else class="mx-1">
+              {{ row.doMoneyPrice || 0 }}<CurrencyType />
+            </el-text>
           </template>
         </el-table-column>
         <el-table-column

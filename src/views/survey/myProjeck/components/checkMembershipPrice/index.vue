@@ -35,13 +35,16 @@ defineExpose({ showEdit });
       title="查看你会员价格"
       direction="rtl"
       :close-on-click-modal="false"
-   
     >
       <el-table :data="data.list" border stripe>
         <el-table-column label="会员ID" prop="memberId" />
         <el-table-column label="会员姓名" prop="memberName" />
         <el-table-column label="会员等级" prop="memberLevelName" />
-        <el-table-column label="会员价格" prop="memberPrice" />
+        <el-table-column label="会员价格" prop="memberPrice">
+          <template #default="{ row }">
+            {{ row.memberPrice || 0 }}<CurrencyType />
+          </template>
+        </el-table-column>
       </el-table>
 
       <template #footer>

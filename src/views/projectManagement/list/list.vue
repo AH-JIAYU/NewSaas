@@ -452,22 +452,9 @@ onMounted(async () => {
           label="原价"
         >
           <template #default="{ row }">
-            <el-text v-if="countryType === 1" class="mx-1"
-              >${{ row.doMoneyPrice }}</el-text
-            >
-            <el-text v-if="countryType === 2" class="mx-1"
-              >￥{{ row.doMoneyPrice }}</el-text
-            >
-            <el-text v-if="countryType === 3" class="mx-1">暂无数据</el-text>
+            {{ row.doMoneyPrice || 0 }}<CurrencyType />
           </template>
         </el-table-column>
-        <!-- <el-table-column
-          v-if="checkList.includes('name')"
-          show-overflow-tooltip
-          prop=""
-          align="center"
-          label="供应商价"
-        /> -->
         <el-table-column
           v-if="checkList.includes('ir')"
           show-overflow-tooltip

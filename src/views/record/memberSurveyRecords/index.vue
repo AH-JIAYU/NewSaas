@@ -409,18 +409,9 @@ onMounted(async () => {
           label="原价/供应商价/子会员价"
         >
           <template #default="{ row }">
-            <el-text v-if="currencyType === 1"
-              >{{ row.doMoneyPrice ? row.doMoneyPrice + "$" : 0 }}/
-              {{ row.supplierPrice ? row.supplierPrice + "$" : 0 }}/
-              {{ row.memberChildPrice ? row.memberChildPrice + "$" : 0 }}
-            </el-text>
-            <el-text v-if="currencyType === 2"
-              >{{ row.doMoneyPrice ? row.doMoneyPrice + "￥" : 0 }}/
-              {{ row.supplierPrice ? row.supplierPrice + "￥" : 0 }}/
-              {{
-                row.memberChildPrice ? row.memberChildPrice + "￥" : 0
-              }}</el-text
-            >
+            {{ row.doMoneyPrice || 0 }}<CurrencyType /> /
+            {{ row.supplierPrice || 0 }}<CurrencyType /> /
+            {{ row.memberChildPrice || 0 }}<CurrencyType />
           </template>
         </el-table-column>
         <el-table-column

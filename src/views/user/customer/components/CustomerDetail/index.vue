@@ -71,7 +71,11 @@ defineExpose({
           <el-col :span="8">
             <el-form-item label="客户编码:">
               <el-text class="mx-1">
-                {{ detailData.tenantCustomerId ? detailData.tenantCustomerId : '-' }}
+                {{
+                  detailData.tenantCustomerId
+                    ? detailData.tenantCustomerId
+                    : "-"
+                }}
               </el-text>
             </el-form-item>
           </el-col>
@@ -187,9 +191,7 @@ defineExpose({
           <el-col :span="8">
             <el-form-item label="营业限额/月:">
               <el-text class="mx-1">
-                {{
-                  detailData.turnover ? detailData.turnover + "￥" : "-"
-                }}
+                {{ detailData.turnover || 0 }}<CurrencyType />
               </el-text>
             </el-form-item>
           </el-col>

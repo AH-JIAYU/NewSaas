@@ -47,7 +47,7 @@ const formRules = ref<FormRules>({
     { required: true, message: "请输入至少一个ID", trigger: "blur" },
     {
       validator: (rule, value, callback) => {
-        if (/^\d+$/.test(value)) {
+        if (/^\d+$/m.test(value)) {
           callback();
         } else {
           callback(new Error("请输入数字"));

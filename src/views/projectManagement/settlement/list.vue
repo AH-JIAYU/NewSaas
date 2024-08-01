@@ -452,7 +452,7 @@ function handleMoreOperating(command: string, row: any) {
           label="原价"
         >
           <template #default="{ row }">
-            {{ row.projectAmount ? row.projectAmount : "-" }}
+            {{ row.projectAmount || 0 }}<CurrencyType />
           </template>
         </el-table-column>
         <el-table-column
@@ -469,9 +469,13 @@ function handleMoreOperating(command: string, row: any) {
                 >
               </template>
               <template v-else-if="comCountryId(row.countryId).length > 4">
-                <el-tag v-if="comCountryId(row.countryId).length === 185" type="success">全球</el-tag>
+                <el-tag
+                  v-if="comCountryId(row.countryId).length === 185"
+                  type="success"
+                  >全球</el-tag
+                >
                 <el-tooltip
-                v-else
+                  v-else
                   class="box-item"
                   effect="dark"
                   :content="comCountryId(row.countryId).join(',')"

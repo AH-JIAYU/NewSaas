@@ -186,10 +186,22 @@ onMounted(() => {
           </template>
         </el-table-column>
         <el-table-column prop="supplierId" show-overflow-tooltip align="center" label="供应商ID" />
-        <el-table-column prop="billAmount" show-overflow-tooltip align="center" label="账单日期" />
-        <el-table-column prop="billAmount" show-overflow-tooltip align="center" label="账单金额" />
-        <el-table-column prop="taxesFees" show-overflow-tooltip align="center" label="税费" />
-        <el-table-column prop="payAmount" show-overflow-tooltip align="center" label="实付金额" />
+        <el-table-column prop="billTime" show-overflow-tooltip align="center" label="账单日期"/>
+        <el-table-column prop="billAmount" show-overflow-tooltip align="center" label="账单金额" >
+          <template #default="{ row }">
+            {{ row.billAmount || 0 }}<CurrencyType />
+          </template>
+        </el-table-column>
+        <el-table-column prop="taxesFees" show-overflow-tooltip align="center" label="税费" >
+          <template #default="{ row }">
+            {{ row.taxesFees || 0 }}<CurrencyType />
+          </template>
+        </el-table-column>
+        <el-table-column prop="payAmount" show-overflow-tooltip align="center" label="实付金额" >
+          <template #default="{ row }">
+            {{ row.payAmount || 0 }}<CurrencyType />
+          </template>
+        </el-table-column>
         <ElTableColumn align="center" show-overflow-tooltip prop="" label="状态">
           <template #default="{ row }">
             {{ billStatusList[row.billStatus - 1] }}

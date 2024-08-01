@@ -16,6 +16,9 @@ export default {
   // 获取权限
   permission: () => api.post("tenant-button/getButtonList"),
 
+  // 货币类型
+  getCurrencyType: () => api.post("project/getCurrencyType",{}),
+
   // 修改密码
   passwordEdit: (data: { password: string; newpassword: string }) =>
     api.post("user/password/edit", data, {

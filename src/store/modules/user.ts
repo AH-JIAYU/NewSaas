@@ -9,7 +9,7 @@ import type { Settings } from "#/global";
 import apiUser from "@/api/modules/user";
 import storage from "@/utils/storage";
 import settingsDefault from "@/settings";
-import api from '@/api/modules/configuration_manager'
+import api from "@/api/modules/configuration_manager";
 
 const useUserStore = defineStore(
   // 唯一ID
@@ -24,6 +24,7 @@ const useUserStore = defineStore(
     const token = ref(storage.local.get("token") ?? "");
     const avatar = ref(storage.local.get("avatar") ?? "");
     const permissions = ref<string[]>([]);
+    const currencyType = ref<number | string>(3); //货币类型 1=USD 2=CNY 3=未知
     const isLogin = computed(() => {
       if (token.value) {
         return true;
@@ -64,8 +65,11 @@ const useUserStore = defineStore(
       avatar.value = res.data.avatar;
     }
     // 登出
-    async function logout(val:any,redirect = router.currentRoute.value.fullPath) {
-      if(val === 0) {
+    async function logout(
+      val: any,
+      redirect = router.currentRoute.value.fullPath
+    ) {
+      if (val === 0) {
         storage.local.remove("account");
         storage.local.remove("token");
         storage.local.remove("avatar");
@@ -86,8 +90,8 @@ const useUserStore = defineStore(
               router.currentRoute.value.name !== "login" && { redirect }),
           },
         });
-      }else {
-        await api.logout()
+      } else {
+        await api.logout();
         storage.local.remove("account");
         storage.local.remove("token");
         storage.local.remove("avatar");
@@ -114,6 +118,11 @@ const useUserStore = defineStore(
     async function getPermissions() {
       const res = await apiUser.permission();
       permissions.value = res.data;
+    }
+    // 获取货币类型
+    async function getCurrencyType() {
+      const res = await apiUser.getCurrencyType();
+      currencyType.value = res.data.currencyType;
     }
 
     // 修改密码
@@ -270,10 +279,12 @@ const useUserStore = defineStore(
       token,
       avatar,
       permissions,
+      currencyType,
       isLogin,
       login,
       logout,
       getPermissions,
+      getCurrencyType,
       editPassword,
       preferences,
       getPreferences,

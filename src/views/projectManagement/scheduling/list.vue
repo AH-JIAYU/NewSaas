@@ -231,7 +231,11 @@ onMounted(() => {
           prop="moneyPrice"
           align="center"
           label="原价"
-        />
+        >
+          <template #default="{ row }">
+            {{ row.moneyPrice || 0 }}<CurrencyType />
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="checkList.includes('doMoneyPrice')"
           show-overflow-tooltip
@@ -240,7 +244,7 @@ onMounted(() => {
           label="指定价格"
         >
           <template #default="{ row }">
-            {{ row.doMoneyPrice ? row.doMoneyPrice : '-' }}
+            {{ row.doMoneyPrice || 0 }}<CurrencyType />
           </template>
         </el-table-column>
         <el-table-column

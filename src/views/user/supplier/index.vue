@@ -363,14 +363,22 @@ onMounted(async () => {
           prop="balanceHumanLife"
           show-overflow-tooltip
           label="可用余额"
-        />
+        >
+          <template #default="{ row }">
+            {{ row.balanceHumanLife || 0 }}<CurrencyType />
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="checkList.includes('amountPendingTrial')"
           align="center"
           prop="amountPendingTrial"
           show-overflow-tooltip
           label="待审金额"
-        />
+        >
+          <template #default="{ row }">
+            {{ row.amountPendingTrial || 0 }}<CurrencyType />
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="checkList.includes('supplierLevelId')"
           align="center"
