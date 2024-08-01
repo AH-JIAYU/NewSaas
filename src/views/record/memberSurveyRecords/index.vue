@@ -2,10 +2,13 @@
 import { onMounted } from "vue";
 import api from "@/api/modules/record_memberSurveyRecords";
 import useUserCustomerStore from "@/store/modules/user_customer";
+import useBasicDictionaryStore from '@/store/modules/otherFunctions_basicDictionary'
 
 defineOptions({
   name: "RecordSurveyIndex",
 });
+// 国家
+const useStoreCountry = useBasicDictionaryStore()
 // 客户
 const customerStore = useUserCustomerStore();
 // 分页
@@ -109,6 +112,8 @@ const data = reactive<any>({
   ],
   //客户列表
   customerList: [],
+  // 国家
+  countryList: [],
   // 会员
   vipList: [],
   // 会员组
@@ -166,6 +171,7 @@ function onReset() {
 }
 onMounted(async () => {
   data.customerList = await customerStore.getCustomerList();
+  data.country = await useStoreCountry.getCountry()
   columns.value.forEach((item) => {
     if (item.checked) {
       checkList.value.push(item.prop);
@@ -210,10 +216,17 @@ onMounted(async () => {
                 v-model.trim="queryForm.memberId"
                 clearable
                 :inline="false"
+                placeholder="会员类型"
+              />
+            </el-form-item>
+            <el-form-item label="">
+              <el-input
+                v-model.trim="queryForm.memberId"
+                clearable
+                :inline="false"
                 placeholder="会员ID"
               />
             </el-form-item>
-
             <el-form-item v-show="!fold" label="">
               <el-input
                 v-model.trim="queryForm.memberChildId"
@@ -239,6 +252,29 @@ onMounted(async () => {
               />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
+              <el-select
+                v-model="queryForm.surveyStatus"
+                clearable
+                filterable
+                placeholder="客户简称"
+              >
+                <el-option
+                  v-for="item in data.customerList"
+                  :label="item.customerAccord"
+                  :value="item.tenantCustomerId"
+                  :key="item.tenantCustomerId"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item v-show="!fold" label="">
+              <el-input
+                v-model.trim="queryForm.ip"
+                clearable
+                :inline="false"
+                placeholder="分配类型"
+              />
+            </el-form-item>
+            <el-form-item v-show="!fold" label="">
               <el-input
                 v-model.trim="queryForm.ip"
                 clearable
@@ -250,7 +286,36 @@ onMounted(async () => {
               <el-select
                 v-model="queryForm.surveyStatus"
                 clearable
+                filterable
+                placeholder="所属国家"
+              >
+                <el-option
+                  v-for="item in data.country"
+                  :label="item.chineseName"
+                  :value="item.id"
+                  :key="item.id"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item v-show="!fold" label="">
+              <el-select
+                v-model="queryForm.surveyStatus"
+                clearable
+                filterable
                 placeholder="调查状态"
+              >
+                <el-option
+                  v-for="(item, index) in data.surveyStatusList"
+                  :label="item"
+                  :value="index + 1"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item v-show="!fold" label="">
+              <el-select
+                v-model="queryForm.surveyStatus"
+                clearable
+                placeholder="副状态"
               >
                 <el-option
                   v-for="(item, index) in data.surveyStatusList"
@@ -437,7 +502,7 @@ onMounted(async () => {
           align="center"
           show-overflow-tooltip
           prop=""
-          label="状态"
+          label="调查状态"
         >
           <template #default="{ row }">
             {{ data.surveyStatusList[row.surveyStatus - 1] }}

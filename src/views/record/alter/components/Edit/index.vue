@@ -8,7 +8,7 @@ defineOptions({
   name: "ProjectReview",
 });
 // 变更数据
-const alterList = ref([])
+const alterList = ref([]);
 // 更新数据
 const emits = defineEmits(["success"]);
 // loading
@@ -40,19 +40,23 @@ const queryForm = reactive<any>({
   // 操作人id
   createUserId: "",
 });
+// 自定义校验
+const validateNumberInput = (rule: any, value: any, callback: any) => {
+  // 使用正则表达式检查输入是否为数字和换行符
+  const regex = /^[\d\n]*$/;
+  if (!regex.test(value)) {
+    callback(new Error("请输入数字，支持换行"));
+  } else {
+    callback();
+  }
+};
 // 校验
 const formRules = ref<FormRules>({
   type: [{ required: true, message: "请选择审核方式", trigger: "change" }],
   arr: [
     { required: true, message: "请输入至少一个ID", trigger: "blur" },
     {
-      validator: (rule, value, callback) => {
-        if (/^\d+$/m.test(value)) {
-          callback();
-        } else {
-          callback(new Error("请输入数字"));
-        }
-      },
+      validator: validateNumberInput,
       trigger: "blur",
     },
   ],
@@ -134,7 +138,7 @@ function closeHandler() {
 }
 onMounted(async () => {
   const { data } = await api.list(queryForm);
-  alterList.value = data.tenantUpdateRecordVOBuilders
+  alterList.value = data.tenantUpdateRecordVOBuilders;
 });
 // 暴露
 defineExpose({ showEdit });

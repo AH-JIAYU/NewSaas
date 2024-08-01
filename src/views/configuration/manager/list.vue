@@ -240,7 +240,7 @@ function onDel(row: any) {
             </el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="name" label="姓名" width="100" align="center">
+        <ElTableColumn prop="name" label="姓名" width="150" align="center">
           <template #default="{ row }">
             <el-text class="mx-1">
               {{ row.name ? row.name : '暂无数据' }}
