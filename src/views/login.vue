@@ -319,26 +319,18 @@ const handleRegister = throttle(async () => {
         registerForm.value.taxID = "";
         delete registerForm.value.agreeToTheAgreement;
         const { status } = await api.register(registerForm.value);
-        status === 1 &&
-          // 跳转登录 快捷方式
-          ElNotification({
-            type: "success",
-            dangerouslyUseHTMLString: true,
-            duration: 5000,
-            message: `<span>注册成功,跳转至<span id="ElNotification-goLogin" style="color:var(--el-color-primary);cursor:pointer;">登录</span></span>`,
-            //@ts-ignore
-            // eslint-disable-next-line
-            onClick(e: any) {
-              if (e.target.id && e.target.id === "ElNotification-goLogin") {
-                formType.value = "login";
-                loginType.value = "password";
-                nextTick(() => {
-                  loginForm.value.account =
-                    registerForm.value.email || registerForm.value.phoneNumber;
-                });
-              }
-            },
+        if (status === 1) {
+          ElMessage.success({
+            message: "注册成功",
           });
+          // 跳转登录 快捷方式
+          formType.value = "login";
+          loginType.value = "password";
+          nextTick(() => {
+            loginForm.value.account =
+              registerForm.value.email || registerForm.value.phoneNumber;
+          });
+        }
       }
     });
 }, 3000);
