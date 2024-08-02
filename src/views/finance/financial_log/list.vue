@@ -150,7 +150,10 @@ const surveyStatus = [
   { label: "未完成", value: 5 },
 ];
 const parseStatusString = (statusString: any) => {
-  if (!statusString) return;
+  if (statusString) {
+    statusString.includes('余额')
+    return statusString
+  }
   // // 按逗号分隔多组主状态和副状态的组合
   const statusPairs = statusString.split(",");
   // 初始化结果数组
@@ -358,11 +361,12 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
           prop="remark"
           label="说明"
           ><template #default="{ row }">
-            <el-text class="mx-1">{{
+            <el-text v-if="!row.remark.includes('余额')" class="mx-1">{{
               `记录变更:${parseStatusString(row.remark)[0]}变更为${
                 parseStatusString(row.remark)[1]
               }`
             }}</el-text>
+            <el-text v-else class="mx-1">{{ row.remark }}</el-text>
           </template>
         </ElTableColumn>
         <ElTableColumn
