@@ -54,7 +54,7 @@ onMounted(async () => {
       resRedirect.data.surveySource === 1 ? "redirect" : "externalRedirection"
     }?uid=${uid}&type=${URL}`;
     // #region 防止浏览器拦截新开标签页
-    let tempwindow: any = window.open("_blank"); //打开一个窗口，然后用
+    let tempwindow: any = window.location.href //打开一个窗口，然后用
     tempwindow.location = href; //使这个窗口跳转到百度，这样就会呈现弹出百度窗口的效果了。
     //#endregion
   }
