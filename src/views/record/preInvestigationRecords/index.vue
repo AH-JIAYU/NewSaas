@@ -64,6 +64,7 @@ const data = reactive<any>({
     "时间段过载",
     "ip不一致",
     "id重复参与",
+    '和解',
   ],
   //客户列表
   customerList: [],

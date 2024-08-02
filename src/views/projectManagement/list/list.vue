@@ -349,8 +349,8 @@ onMounted(async () => {
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>
+          <!-- v-auth="'/list-insert-btn'" -->
           <el-button
-            v-auth="'/list-insert-btn'"
             type="primary"
             size="default"
             @click="addProject"

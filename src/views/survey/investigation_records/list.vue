@@ -103,6 +103,7 @@ const data = reactive<any>({
     "时间段过载",
     "ip不一致",
     "id重复参与",
+    '和解',
   ],
   //客户列表
   customerList: [],
@@ -385,12 +386,11 @@ onMounted(async () => {
           align="center"
           prop="h"
           show-overflow-tooltip
-          label="会员价/供应商价/原价"
+          label="原价/会员价"
         >
           <template #default="{ row }">
-            {{ row.memberChildPrice || 0 }}<CurrencyType />/
-            {{ row.supplierPrice || 0 }}<CurrencyType />/
-            {{ row.doMoneyPrice || 0 }}<CurrencyType />
+            {{ row.doMoneyPrice || 0 }}<CurrencyType /> /
+            {{ row.memberChildPrice || 0 }}<CurrencyType />
           </template>
         </el-table-column>
         <el-table-column
