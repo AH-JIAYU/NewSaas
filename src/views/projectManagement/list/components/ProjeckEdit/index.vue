@@ -147,6 +147,12 @@ const processingData = () => {
   // 将的单选的答案和id从''转换成[]
   newLeftTabsData.forEach((element: any) => {
     element.descriptionUrl = element.descriptionUrl.join(",");
+    if (
+      !element.data.configurationInformation.ProjectProblemInfoList ||
+      !element.data.configurationInformation.ProjectProblemInfoList.length
+    ) {
+      element.isProfile = 2;
+    }
     //data为配置信息中所需的数据
     if (element.data) {
       delete element.data;
@@ -257,7 +263,9 @@ defineExpose({
       />
       <template #footer>
         <el-button @click="closeHandler"> 取消 </el-button>
-        <el-button type="warning" v-show="title !== '编辑'" @click="staging"> 暂存 </el-button>
+        <el-button type="warning" v-show="title !== '编辑'" @click="staging">
+          暂存
+        </el-button>
         <el-button type="primary" @click="onSubmit"> 确定 </el-button>
       </template>
     </el-drawer>
