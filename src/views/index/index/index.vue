@@ -19,7 +19,7 @@ const data = ref<any>({
     overviewStart: "", //	总揽开始
     overviewEnd: "", //总揽结束
     overviewTime: [],
-    type:'day',
+    type: "day",
     turnoverType: "day", //营业额趋势 day/month/year
     completeType: "day", //	完成排名类型 day/month/year/select
     completeStart: "", //	完成排名开始时间
@@ -272,7 +272,7 @@ async function getList() {
   //   data.value.search.completeStart = data.value.search.overviewTime[0] || "";
   //   data.value.search.completeEnd = data.value.search.overviewTime[1] || "";
   // }
-  const res = await api.list({type:data.value.search.type});
+  const res = await api.list({ type: data.value.search.type });
   const {
     dataCenterOverViewVO,
     dataCenterTurnoverVO,
@@ -281,7 +281,7 @@ async function getList() {
     dataCenterSupplierTurnovers,
   } = res.data;
   data.value.dataCenterOverViewVO = dataCenterOverViewVO;
-  data.value.dataCenterTurnoverVO = dataCenterTurnoverVO
+  data.value.dataCenterTurnoverVO = dataCenterTurnoverVO;
   data.value.dataCenterCustomerVOS = dataCenterCustomerVOS;
   data.value.dataCenterSupplierCompletedQuantities =
     dataCenterSupplierCompletedQuantities;
@@ -316,7 +316,11 @@ onMounted(async () => {
         <ElCol>
           <ColorfulCard2
             header="发布项目数"
-            :num="data.dataCenterOverViewVO?.projectTotal ?data.dataCenterOverViewVO?.projectTotal : 0"
+            :num="
+              data.dataCenterOverViewVO?.projectTotal
+                ? data.dataCenterOverViewVO?.projectTotal
+                : 0
+            "
             icon="ant-design:file-outlined"
           />
         </ElCol>
@@ -326,7 +330,9 @@ onMounted(async () => {
             color-to="#fc5286"
             header="待审核项目数"
             :num="
-              data.dataCenterOverViewVO?.projectSettlementToBeConfirmedTotal ? data.dataCenterOverViewVO?.projectSettlementToBeConfirmedTotal : 0
+              data.dataCenterOverViewVO?.projectSettlementToBeConfirmedTotal
+                ? data.dataCenterOverViewVO?.projectSettlementToBeConfirmedTotal
+                : 0
             "
             icon="ant-design:file-outlined"
           />
@@ -336,7 +342,11 @@ onMounted(async () => {
             color-from="#ff763b"
             color-to="#ffc480"
             header="已审核项目数"
-            :num="data.dataCenterOverViewVO?.projectSettlementConfirmedTotal ? data.dataCenterOverViewVO?.projectSettlementConfirmedTotal : 0"
+            :num="
+              data.dataCenterOverViewVO?.projectSettlementConfirmedTotal
+                ? data.dataCenterOverViewVO?.projectSettlementConfirmedTotal
+                : 0
+            "
             icon="ant-design:file-outlined"
           />
         </ElCol>
@@ -345,7 +355,11 @@ onMounted(async () => {
             color-from="#6a8eff"
             color-to="#0e4cfd"
             header="已完结项目数"
-            :num="data.dataCenterOverViewVO?.projectSettlementCompleteTotal ? data.dataCenterOverViewVO?.projectSettlementCompleteTotal : 0"
+            :num="
+              data.dataCenterOverViewVO?.projectSettlementCompleteTotal
+                ? data.dataCenterOverViewVO?.projectSettlementCompleteTotal
+                : 0
+            "
             icon="ant-design:file-outlined"
           />
         </ElCol>
@@ -354,7 +368,11 @@ onMounted(async () => {
             color-from="#ffd300"
             color-to="#ff9b0d"
             header="项目营业额"
-            :num="data.dataCenterOverViewVO?.projectTurnover ? data.dataCenterOverViewVO?.projectTurnover : 0"
+            :num="
+              data.dataCenterOverViewVO?.projectTurnover
+                ? data.dataCenterOverViewVO?.projectTurnover
+                : 0
+            "
             icon="ant-design:file-outlined"
           />
         </ElCol>
@@ -363,7 +381,11 @@ onMounted(async () => {
             color-from="#f49494"
             color-to="#fcd98b"
             header="项目盈利额"
-            :num="data.dataCenterOverViewVO?.projectProfitability ? data.dataCenterOverViewVO?.projectProfitability : 0"
+            :num="
+              data.dataCenterOverViewVO?.projectProfitability
+                ? data.dataCenterOverViewVO?.projectProfitability
+                : 0
+            "
             icon="ant-design:file-outlined"
           />
         </ElCol>
@@ -372,7 +394,11 @@ onMounted(async () => {
             color-from="#c2005c"
             color-to="#ff980f"
             header="项目退款额"
-            :num="data.dataCenterOverViewVO?.projectRefundAmount ? data.dataCenterOverViewVO?.projectRefundAmount : 0"
+            :num="
+              data.dataCenterOverViewVO?.projectRefundAmount
+                ? data.dataCenterOverViewVO?.projectRefundAmount
+                : 0
+            "
             icon="ant-design:file-outlined"
           />
         </ElCol>
@@ -382,9 +408,7 @@ onMounted(async () => {
         <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
           <el-card>
             <template #header>
-              <p class="title fx-b">
-                营业额趋势
-              </p>
+              <p class="title fx-b">营业额趋势</p>
             </template>
 
             <div
@@ -413,9 +437,7 @@ onMounted(async () => {
         <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
           <el-card>
             <template #header>
-              <p class="title fx-b">
-                完成数排名
-              </p>
+              <p class="title fx-b">完成数排名</p>
             </template>
             <el-table
               :data="data.dataCenterSupplierCompletedQuantities"
@@ -426,7 +448,10 @@ onMounted(async () => {
                 align="center"
                 prop="supplierName"
                 label="供应商名称"
-              />
+                ><template #default="{ row }">
+                  {{ row.supplierName ? row.supplierName : "-" }}
+                </template>
+              </el-table-column>
               <el-table-column
                 align="center"
                 prop="completedAmount"
@@ -460,8 +485,8 @@ onMounted(async () => {
                 </template>
               </el-table-column>
               <template #empty>
-              <el-empty description="暂无数据" />
-            </template>
+                <el-empty description="暂无数据" />
+              </template>
             </el-table>
           </el-card>
         </el-col>
@@ -488,8 +513,8 @@ onMounted(async () => {
                 label="营业额"
               />
               <template #empty>
-              <el-empty description="暂无数据" />
-            </template>
+                <el-empty description="暂无数据" />
+              </template>
             </el-table>
           </el-card>
         </el-col>
