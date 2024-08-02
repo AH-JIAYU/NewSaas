@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
-import api from "@/api/modules/record_memberSurveyRecords";
+import api from "@/api/modules/investigation_records";
 import useUserCustomerStore from "@/store/modules/user_customer";
 
 defineOptions({
