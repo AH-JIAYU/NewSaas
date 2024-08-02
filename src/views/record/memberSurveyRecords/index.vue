@@ -2,13 +2,13 @@
 import { onMounted } from "vue";
 import api from "@/api/modules/record_memberSurveyRecords";
 import useUserCustomerStore from "@/store/modules/user_customer";
-import useBasicDictionaryStore from '@/store/modules/otherFunctions_basicDictionary'
+import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary";
 
 defineOptions({
   name: "RecordSurveyIndex",
 });
 // 国家
-const useStoreCountry = useBasicDictionaryStore()
+const useStoreCountry = useBasicDictionaryStore();
 // 客户
 const customerStore = useUserCustomerStore();
 // 分页
@@ -172,7 +172,7 @@ function onReset() {
 }
 onMounted(async () => {
   data.customerList = await customerStore.getCustomerList();
-  data.country = await useStoreCountry.getCountry()
+  data.country = await useStoreCountry.getCountry();
   columns.value.forEach((item) => {
     if (item.checked) {
       checkList.value.push(item.prop);
@@ -213,12 +213,15 @@ onMounted(async () => {
               />
             </el-form-item>
             <el-form-item label="">
-              <el-input
-                v-model.trim="queryForm.memberId"
+              <el-select
+                v-model="queryForm.surveySource"
                 clearable
-                :inline="false"
+                filterable
                 placeholder="会员类型"
-              />
+              >
+                <el-option label="内部会员" :value="1"></el-option>
+                <el-option label="外部会员" :value="2"></el-option>
+              </el-select>
             </el-form-item>
             <el-form-item label="">
               <el-input
@@ -252,7 +255,7 @@ onMounted(async () => {
                 placeholder="供应商ID"
               />
             </el-form-item>
-            <el-form-item v-show="!fold" label="">
+            <!-- <el-form-item v-show="!fold" label="">
               <el-select
                 v-model="queryForm.surveyStatus"
                 clearable
@@ -266,15 +269,15 @@ onMounted(async () => {
                   :key="item.tenantCustomerId"
                 ></el-option>
               </el-select>
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
+            </el-form-item> -->
+            <!-- <el-form-item v-show="!fold" label="">
               <el-input
                 v-model.trim="queryForm.ip"
                 clearable
                 :inline="false"
                 placeholder="分配类型"
               />
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item v-show="!fold" label="">
               <el-input
                 v-model.trim="queryForm.ip"
@@ -283,7 +286,7 @@ onMounted(async () => {
                 placeholder="IP地址"
               />
             </el-form-item>
-            <el-form-item v-show="!fold" label="">
+            <!-- <el-form-item v-show="!fold" label="">
               <el-select
                 v-model="queryForm.surveyStatus"
                 clearable
@@ -297,7 +300,7 @@ onMounted(async () => {
                   :key="item.id"
                 ></el-option>
               </el-select>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item v-show="!fold" label="">
               <el-select
                 v-model="queryForm.surveyStatus"
@@ -314,12 +317,12 @@ onMounted(async () => {
             </el-form-item>
             <el-form-item v-show="!fold" label="">
               <el-select
-                v-model="queryForm.surveyStatus"
+                v-model="queryForm.viceStatus"
                 clearable
                 placeholder="副状态"
               >
                 <el-option
-                  v-for="(item, index) in data.surveyStatusList"
+                  v-for="(item, index) in data.viceStatusList"
                   :label="item"
                   :value="index + 1"
                 ></el-option>

@@ -105,9 +105,9 @@ const rules = reactive<any>({
     { required: true, message: "请输入最小分长", trigger: "blur" },
   ],
   ir: [{ required: true, message: "请输入配额", trigger: "blur" }],
-  "data.configurationInformation.initialProblem.countryId": [
-    { required: true, message: "请选择国家", trigger: "change" },
-  ],
+  // "data.configurationInformation.initialProblem.countryId": [
+  //   { required: true, message: "请选择国家", trigger: "change" },
+  // ],
 });
 // 输入框限制 只能输入数字
 const handleInput = (value: any) => {
@@ -274,6 +274,11 @@ const changeTab = async (val: any, judge?: boolean) => {
         // 配置-国家
         props.leftTab.data.configurationInformation.configurationCountryList =
           res.data.getProjectCountryListInfoList;
+        // 开启默认国际后，只会有一个国家，直接回显
+        if (res.data.getProjectCountryListInfoList.length === 1) {
+          props.leftTab.data.configurationInformation.initialProblem.countryId =
+            res.data.getProjectCountryListInfoList[0].countryId;
+        }
         // 编辑时 已经有初始数据
         if (!props.leftTab.data.configurationInformation.initialProblem) {
           // 初始化 数据 问题
@@ -298,37 +303,31 @@ const changeTab = async (val: any, judge?: boolean) => {
 };
 // 获取题库目录
 const getProjectCategoryList = async () => {
-  formRef.value.validateField(
-    ["data.configurationInformation.initialProblem.countryId"],
-    async (valid: any) => {
-      // 如果配置中的国家不存在就请求，反正不请
-      if (valid) {
-        // 就问卷就用 ,没有再请求
-        if (!props.leftTab.data.configurationInformation.projectCategoryList) {
-          const params = {
-            countryId:
-              props.leftTab.data.configurationInformation.initialProblem
-                .countryId,
-            projectQuotaQuestionType:
-              props.leftTab.data.configurationInformation.initialProblem
-                .projectQuotaQuestionType, //问题类型:1:总控问题 2:租户自己问题
-          };
+  // 如果配置中的国家不存在就请求，反正不请
+  if (props.leftTab.data.configurationInformation.initialProblem.countryId) {
+    // 就问卷就用 ,没有再请求
+    if (!props.leftTab.data.configurationInformation.projectCategoryList) {
+      const params = {
+        countryId:
+          props.leftTab.data.configurationInformation.initialProblem.countryId,
+        projectQuotaQuestionType:
+          props.leftTab.data.configurationInformation.initialProblem
+            .projectQuotaQuestionType, //问题类型:1:总控问题 2:租户自己问题
+      };
 
-          const res = await obtainLoading(api.getProjectCategoryList(params));
+      const res = await obtainLoading(api.getProjectCategoryList(params));
 
-          props.leftTab.data.configurationInformation.projectCategoryList =
-            res.data.getProjectCategoryInfoList.filter(
-              (item: any) => item.status === 1
-            );
-        }
-      } else {
-        ElMessage.warning({
-          message: "请先选择国家",
-          center: true,
-        });
-      }
+      props.leftTab.data.configurationInformation.projectCategoryList =
+        res.data.getProjectCategoryInfoList.filter(
+          (item: any) => item.status === 1
+        );
     }
-  );
+  } else {
+    ElMessage.warning({
+      message: "请先选择配置信息下的国家",
+      center: true,
+    });
+  }
 };
 // 根据目录id查询问题和答案表
 const getProjectProblemList = async (id: string | number, judge: boolean) => {
@@ -867,10 +866,7 @@ nextTick(() => {
           </template>
           <el-row :gutter="20">
             <el-col :span="6">
-              <el-form-item
-                label="选择国家"
-                prop="data.configurationInformation.initialProblem.countryId"
-              >
+              <el-form-item label="选择国家">
                 <el-select
                   v-model="
                     props.leftTab.data.configurationInformation.initialProblem
