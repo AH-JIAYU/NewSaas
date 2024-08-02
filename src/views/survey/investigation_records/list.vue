@@ -137,7 +137,7 @@ async function fetchData() {
     ...queryForm,
   };
   const { data } = await api.list(params);
-  list.value = data.memberChildSurveyRecordInfoList;
+  list.value = data.memberSurveyRecordInfoList;
   currencyType.value = data.currencyType;
   pagination.value.total = data.total;
   listLoading.value = false;
@@ -390,7 +390,7 @@ onMounted(async () => {
         >
           <template #default="{ row }">
             {{ row.doMoneyPrice || 0 }}<CurrencyType /> /
-            {{ row.memberChildPrice || 0 }}<CurrencyType />
+            {{ row.memberPrice || 0 }}<CurrencyType />
           </template>
         </el-table-column>
         <el-table-column
