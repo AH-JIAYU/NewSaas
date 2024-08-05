@@ -69,7 +69,7 @@ const data = ref<any>({
     projectId: null,
     // 加减款类型 1加款 2减款
     operationType: null,
-    // 金额类型 1待审余额 2免审余额
+    // 金额类型 1待审余额 2可用余额
     type: null,
   },
   // 批量操作
@@ -149,31 +149,31 @@ const surveyStatus = [
   { label: "安全终止", value: 4 },
   { label: "未完成", value: 5 },
 ];
-const parseStatusString = (statusString: any) => {
-  if (statusString) {
-    statusString.includes('余额')
-    return statusString
-  }
-  // // 按逗号分隔多组主状态和副状态的组合
-  const statusPairs = statusString.split(",");
-  // 初始化结果数组
-  const results: any = [];
-  statusPairs.forEach((item: any, index: number) => {
-    // 下标或null
-    const ind = item.split(":")[1];
-    if (ind !== "null") {
-      const findData: any = statusList.find(
-        (ite: any) => ite.value === Number(ind)
-      );
-      results[index] = findData.label;
-    } else {
-      results[index] = "被甄别";
-    }
-  });
+// const parseStatusString = (statusString: any) => {
+//   if (statusString) {
+//     statusString.includes('余额')
+//     return statusString
+//   }
+//   // // 按逗号分隔多组主状态和副状态的组合
+//   const statusPairs = statusString.split(",");
+//   // 初始化结果数组
+//   const results: any = [];
+//   statusPairs.forEach((item: any, index: number) => {
+//     // 下标或null
+//     const ind = item.split(":")[1];
+//     if (ind !== "null") {
+//       const findData: any = statusList.find(
+//         (ite: any) => ite.value === Number(ind)
+//       );
+//       results[index] = findData.label;
+//     } else {
+//       results[index] = "被甄别";
+//     }
+//   });
 
-  // 返回结果数组
-  return results;
-};
+//   // 返回结果数组
+//   return results;
+// };
 // 每页数量切换
 function sizeChange(size: number) {
   onSizeChange(size).then(() => {
@@ -361,12 +361,12 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
           prop="remark"
           label="说明"
           ><template #default="{ row }">
-            <el-text v-if="!row.remark.includes('余额')" class="mx-1">{{
+            <!-- <el-text v-if="!row.remark.includes('余额')" class="mx-1">{{
               `记录变更:${parseStatusString(row.remark)[0]}变更为${
                 parseStatusString(row.remark)[1]
               }`
-            }}</el-text>
-            <el-text v-else class="mx-1">{{ row.remark }}</el-text>
+            }}</el-text> -->
+            <el-text class="mx-1">{{ row.remark ? row.remark : "-" }}</el-text>
           </template>
         </ElTableColumn>
         <ElTableColumn

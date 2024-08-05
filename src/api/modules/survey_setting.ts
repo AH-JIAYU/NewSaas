@@ -2,9 +2,9 @@ import api from '../index'
 
 export default {
   // 获取列表
-  list: () => api.post('member-config/get/getMemberConfig'),
+  list: () => api.post('member-config/getMemberConfig'),
   // 新增
-  create: (data: any) => api.post('member-config/insert/insertMemberConfig', data),
+  create: (data: any) => api.post('member-config/insertMemberConfig', data),
   // 修改
-  edit: (data: any) => api.post('member-config/update/updateMemberConfig', data),
+  edit: (data: any) => api.post('member-config/updateMemberConfig', data),
 }

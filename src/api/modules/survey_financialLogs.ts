@@ -2,7 +2,7 @@ import api from '../index'
 
 export default {
   // 获取会员财务日志
-  vipList: (data:any) => api.post('financial-record/get/getRecordList', data),
+  vipList: (data:any) => api.post('financial-record/getRecordList', data),
 
   detail: (id: number | string) => api.get('survey/financial_logs/detail', {
     params: {

@@ -234,6 +234,11 @@ onMounted(async () => {
         >
           <template #default="{ row }">
             <el-text
+              v-if="row.beforeSurveyType === 5 && row.beforeViceType === 0"
+              class="mx-1"
+              >未完成</el-text
+            >
+            <el-text
               v-if="row.beforeSurveyType === 1 && row.beforeViceType === 0"
               class="mx-1"
               >完成/待审核</el-text
