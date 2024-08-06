@@ -6,7 +6,7 @@ import UseUserSupplier from "@/store/modules/user_supplier"; // 供应商
 const userSupplier = UseUserSupplier(); // 供应商
 
 defineOptions({
-  name: "FinanceSupplierSettlementIndex",
+  name: "supplierSettlement",
 });
 const { getParams, pagination, onSizeChange, onCurrentChange } =
   usePagination(); // 分页

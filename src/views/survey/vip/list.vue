@@ -13,7 +13,7 @@ const surveyVipGroupStore = useSurveyVipGroupStore(); //会员组
 const surveyVipStore = useSurveyVipStore(); // 会员
 
 defineOptions({
-  name: "SurveyVipList",
+  name: "vip",
 });
 
 const { pagination, getParams, onSizeChange, onCurrentChange } =

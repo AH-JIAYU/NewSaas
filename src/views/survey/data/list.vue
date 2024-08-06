@@ -6,7 +6,7 @@ import api from "@/api/modules/survey_data";
 // import useTabbar from '@/utils/composables/useTabbar'
 
 defineOptions({
-  name: "SurveyDataCenter",
+  name: "surveydata",
 });
 
 const { pagination, getParams } = usePagination();

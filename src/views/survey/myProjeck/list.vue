@@ -9,7 +9,7 @@ import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
 import useClipboard from "vue-clipboard3"; // 复制 js库
 
 defineOptions({
-  name: "SurveyMyProjeckList",
+  name: "myProjeck",
 });
 const { toClipboard } = useClipboard();
 const basicDictionaryStore = useBasicDictionaryStore(); //基础字典

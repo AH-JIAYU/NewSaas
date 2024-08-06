@@ -17,7 +17,7 @@ const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
 
 defineOptions({
-  name: "ProjectManagementListIndex",
+  name: "list",
 });
 // 货币类型
 const countryType = ref<any>();

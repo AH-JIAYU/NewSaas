@@ -5,7 +5,7 @@ import api from "@/api/modules/survey_site_setting";
 import useClipboard from "vue-clipboard3";
 import { onMounted, ref } from "vue";
 defineOptions({
-  name: "SurveySettingList",
+  name: "setting",
 });
 
 const { toClipboard } = useClipboard();

@@ -9,7 +9,7 @@ import api from "@/api/modules/announcement";
 import useSettingsStore from "@/store/modules/settings";
 
 defineOptions({
-  name: "MyBillList",
+  name: "announcement",
 });
 // 国际化
 const router = useRouter();

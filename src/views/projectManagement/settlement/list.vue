@@ -12,7 +12,7 @@ import useTenantStaffStore from "@/store/modules/configuration_manager";
 import api from "@/api/modules/project_settlement";
 
 defineOptions({
-  name: "ProjectManagementSettlementIndex",
+  name: "settlement",
 });
 
 //国家

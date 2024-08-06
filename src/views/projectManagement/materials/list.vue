@@ -5,7 +5,7 @@ import detail from "./components/Details/index.vue";
 import api from "@/api/modules/projectManagement_materials";
 
 defineOptions({
-  name: "ProjectManagementMaterialsIndex",
+  name: "materials",
 });
 
 const { getParams, pagination, onSizeChange, onCurrentChange } =

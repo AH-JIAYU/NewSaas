@@ -4,7 +4,7 @@ import api from "@/api/modules/survey_financialLogs";
 import useSettingsStore from "@/store/modules/settings";
 
 defineOptions({
-  name: "SurveyFinancialLogsList",
+  name: "financialLogs",
 });
 
 const router = useRouter();

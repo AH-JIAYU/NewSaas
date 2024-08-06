@@ -3,6 +3,10 @@ import api from "@/api/modules/customer_report";
 import { Back } from "@element-plus/icons-vue";
 import { h, ref, shallowRef } from "vue";
 
+defineOptions({
+  name: "dataCenter",
+});
+
 // 分页
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();

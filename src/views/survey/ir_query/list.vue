@@ -9,7 +9,7 @@ import api from "@/api/modules/survey_irQuery";
 import useSettingsStore from "@/store/modules/settings";
 
 defineOptions({
-  name: "SurveyIrQueryList",
+  name: "irQuery",
 });
 
 const router = useRouter();

@@ -6,7 +6,7 @@ import edit from "./components/Edit/index.vue";
 import api from "@/api/modules/projectManagement_scheduling";
 
 defineOptions({
-  name: "ProjectManagementSchedulingIndex",
+  name: "scheduling",
 });
 const { pagination, getParams, onSizeChange, onCurrentChange } =
   usePagination(); // 分页

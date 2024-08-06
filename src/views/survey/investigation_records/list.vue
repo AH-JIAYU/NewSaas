@@ -4,7 +4,7 @@ import api from "@/api/modules/record_memberSurveyRecords";
 import useUserCustomerStore from "@/store/modules/user_customer";
 
 defineOptions({
-  name: "RecordSurveyIndex",
+  name: "investigation_records",
 });
 // 客户
 const customerStore = useUserCustomerStore();

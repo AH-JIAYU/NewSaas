@@ -7,6 +7,10 @@ import edit from "./components/Edit/index.vue";
 import useConfigurationSupplierLevelStore from "@/store/modules/configuration_supplierLevel"; //供应商等级
 import api from "@/api/modules/configuration_supplierLevel";
 
+defineOptions({
+  name: "supplierLevel",
+});
+
 const configurationSupplierLevelStore = useConfigurationSupplierLevelStore(); //供应商等级
 const { pagination, getParams, onSizeChange, onCurrentChange } =
   usePagination(); // 分页

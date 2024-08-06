@@ -4,7 +4,7 @@ import { ref } from "vue";
 import api from "@/api/modules/basicDictionary";
 
 defineOptions({
-  name: "PagesExampleDictionary",
+  name: "basicDictionary",
 });
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();

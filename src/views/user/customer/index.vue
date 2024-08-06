@@ -8,7 +8,7 @@ import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
 import api from "@/api/modules/user_customer";
 const customerStore = useUserCustomerStore(); // 客户
 defineOptions({
-  name: "UserCustomerIndex",
+  name: "customer",
 });
 
 const { pagination, getParams, onSizeChange, onCurrentChange } =

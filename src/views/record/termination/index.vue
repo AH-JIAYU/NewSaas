@@ -2,7 +2,7 @@
 import { onMounted } from "vue";
 import api from "@/api/modules/record_termination";
 defineOptions({
-  name: "RecordTerminationIndex",
+  name: "termination",
 });
 
 const { getParams, pagination, onSizeChange, onCurrentChange } =
