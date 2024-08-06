@@ -1,5 +1,5 @@
 <template>
-  <div class="wscn-box">
+  <div class="wscn-box"  v-loading="data.loading">
     <div class="wscn-http404-container">
       <div class="wscn-http404">
         <div class="pic-404">
@@ -20,6 +20,7 @@
 // import request from "@/utils/request";
 import api from "@/api/modules/redirect";
 const route = useRoute();
+// const loading=
 const data = ref<any>({
   svg: "",
   svgColor: "",
@@ -27,9 +28,11 @@ const data = ref<any>({
   englishtypename: "",
   message: "",
   describe: "",
+  loading: true, //加载
 });
 
 onMounted(async () => {
+  data.value.loading =true;
   // 获取ip
   const response = await fetch("https://api.ipify.org?format=json");
   const res = await response.json();
@@ -54,10 +57,12 @@ onMounted(async () => {
       resRedirect.data.surveySource === 1 ? "redirect" : "externalRedirection"
     }?uid=${uid}&type=${URL}`;
     // #region 防止浏览器拦截新开标签页
-    let tempwindow: any = window.open("_blank"); //打开一个窗口，然后用
-    tempwindow.location = href; //使这个窗口跳转到百度，这样就会呈现弹出百度窗口的效果了。
+    window.location.href = href;
+    // let tempwindow: any = window.location.href //打开一个窗口，然后用
+    // tempwindow = href; //使这个窗口跳转到百度，这样就会呈现弹出百度窗口的效果了。
     //#endregion
   }
+  data.value.loading = false;
   if (URL == 1) {
     data.value.svg = 1;
     data.value.typename = "<span>恭喜您完成此项调查</span>";

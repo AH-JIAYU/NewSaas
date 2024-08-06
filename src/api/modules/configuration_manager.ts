@@ -2,7 +2,7 @@ import api from '../index'
 
 export default {
   // 获取
-  list: (data: any) => api.post('staff/get/getStaffList',data),
+  list: (data: any) => api.post('staff/getStaffList',data),
   // 新增
   create: (data: any) => api.post('staff/insertStaff', data),
   // 修改

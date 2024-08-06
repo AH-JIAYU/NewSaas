@@ -53,6 +53,7 @@ const form = ref<any>({
 // 个人信息校验
 const formRules = ref<FormRules>({
   invoiceCode: [{ required: true, trigger: "blur", message: "请输入姓名" }],
+  tenantCustomerId: [{ required: true, trigger: "change", message: "请选择客户" }],
 });
 // 提交数据
 function onSubmit() {
@@ -140,7 +141,7 @@ defineExpose({ showEdit });
         :rules="formRules"
         :inline="false"
       >
-        <el-form-item label="客户简称">
+        <el-form-item label="客户简称" prop="tenantCustomerId">
           <el-select
             v-model="form.tenantCustomerId"
             placeholder="请选择客户"

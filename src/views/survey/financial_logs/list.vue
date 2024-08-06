@@ -32,7 +32,7 @@ const payments = [
 // 类型
 const paymentsType = [
   { label: "待审余额", value: 1 },
-  { label: "免审余额", value: 2 },
+  { label: "可用余额", value: 2 },
 ];
 const data = ref<any>({
   loading: false,
@@ -68,7 +68,7 @@ const data = ref<any>({
     projectId: "",
     // 加减款类型 1加款 2减款
     operationType: "",
-    // 金额类型 1待审余额 2免审余额
+    // 金额类型 1待审余额 2可用余额
     type: "",
   },
   // 批量操作
@@ -122,7 +122,7 @@ function onReset() {
     projectId: "",
     // 加减款类型 1加款 2减款
     operationType: "",
-    // 金额类型 1待审余额 2免审余额
+    // 金额类型 1待审余额 2可用余额
     type: "",
   });
   getDataList();

@@ -452,7 +452,10 @@ onMounted(async () => {
                 align="center"
                 prop="supplierName"
                 label="供应商名称"
-              />
+                ><template #default="{ row }">
+                  {{ row.supplierName ? row.supplierName : "-" }}
+                </template>
+              </el-table-column>
               <el-table-column
                 align="center"
                 prop="completedAmount"

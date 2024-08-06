@@ -1,5 +1,5 @@
 import api from '../index'
 
 export default {
-  list: () => api.get('role/get/getRoleButton',),
+  list: () => api.get('role/getRoleButton',),
 }

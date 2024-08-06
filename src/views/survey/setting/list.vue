@@ -247,7 +247,7 @@ function onSubmit() {
           </el-tab-pane>
           <el-tab-pane label="高级设置" name="高级设置">
             <el-row :gutter="20">
-              <el-col :span="24">
+              <!-- <el-col :span="24">
                 <el-form-item label="默认会员价格比例" prop="confirmPassword">
                   <el-input
                     v-model.number="form.priceProportion"
@@ -256,7 +256,7 @@ function onSubmit() {
                     ><template #append>%</template>
                   </el-input>
                 </el-form-item>
-              </el-col>
+              </el-col> -->
               <el-col :span="24">
                 <el-form-item label="最低结算金额" prop="confirmPassword">
                   <el-input

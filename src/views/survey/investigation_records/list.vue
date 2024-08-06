@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
-import api from "@/api/modules/record_memberSurveyRecords";
+import api from "@/api/modules/investigation_records";
 import useUserCustomerStore from "@/store/modules/user_customer";
 
 defineOptions({
@@ -103,6 +103,7 @@ const data = reactive<any>({
     "时间段过载",
     "ip不一致",
     "id重复参与",
+    '和解',
   ],
   //客户列表
   customerList: [],
@@ -136,7 +137,7 @@ async function fetchData() {
     ...queryForm,
   };
   const { data } = await api.list(params);
-  list.value = data.memberChildSurveyRecordInfoList;
+  list.value = data.memberSurveyRecordInfoList;
   currencyType.value = data.currencyType;
   pagination.value.total = data.total;
   listLoading.value = false;
@@ -385,12 +386,11 @@ onMounted(async () => {
           align="center"
           prop="h"
           show-overflow-tooltip
-          label="会员价/供应商价/原价"
+          label="原价/会员价"
         >
           <template #default="{ row }">
-            {{ row.memberChildPrice || 0 }}<CurrencyType />/
-            {{ row.supplierPrice || 0 }}<CurrencyType />/
-            {{ row.doMoneyPrice || 0 }}<CurrencyType />
+            {{ row.doMoneyPrice || 0 }}<CurrencyType /> /
+            {{ row.memberPrice || 0 }}<CurrencyType />
           </template>
         </el-table-column>
         <el-table-column
