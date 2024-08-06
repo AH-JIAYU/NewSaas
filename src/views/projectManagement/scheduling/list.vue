@@ -6,7 +6,7 @@ import edit from "./components/Edit/index.vue";
 import api from "@/api/modules/projectManagement_scheduling";
 
 defineOptions({
-  name: "ProjectManagementSchedulingIndex",
+  name: "scheduling",
 });
 // 时间
 const { format } = useTimeago()

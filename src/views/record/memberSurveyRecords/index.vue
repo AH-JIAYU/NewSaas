@@ -5,7 +5,7 @@ import useUserCustomerStore from "@/store/modules/user_customer";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary";
 
 defineOptions({
-  name: "RecordSurveyIndex",
+  name: "memberSurveyRecords",
 });
 // 国家
 const useStoreCountry = useBasicDictionaryStore();

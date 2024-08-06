@@ -9,7 +9,7 @@ import api from "@/api/modules/announcement";
 import useSettingsStore from "@/store/modules/settings";
 
 defineOptions({
-  name: "MyBillList",
+  name: "announcement",
 });
 // 时间
 const { format } = useTimeago();

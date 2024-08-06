@@ -13,7 +13,7 @@ import useBasicDictionaryStore from '@/store/modules/otherFunctions_basicDiction
 import useTenantRoleStore from '@/store/modules/tenant_role'
 
 defineOptions({
-  name: 'SettingUserList',
+  name: 'manager',
 })
 // 国家
 const useStoreCountry = useBasicDictionaryStore()

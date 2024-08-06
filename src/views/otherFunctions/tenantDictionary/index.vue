@@ -12,7 +12,7 @@ import DictionaryItemDia from "./components/dictionaryItemDialog/index.vue";
 import api from "@/api/modules/tenantDictionary";
 
 defineOptions({
-  name: "PagesExampleDictionary",
+  name: "tenantDictionary",
 });
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();

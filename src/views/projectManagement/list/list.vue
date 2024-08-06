@@ -20,6 +20,10 @@ const customerStore = useUserCustomerStore(); // 客户
 const projectManagementListStore = useProjectManagementListStore(); //项目
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
+
+defineOptions({
+  name: "list",
+});
 // 货币类型
 const countryType = ref<any>();
 const tableSortRef = ref<any>();

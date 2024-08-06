@@ -7,6 +7,10 @@ import edit from "./components/Edit/index.vue";
 import useSurveyVipLevelStore from "@/store/modules/survey_vipLevel"; //会员等级
 import api from "@/api/modules/survey_vipLevel";
 
+defineOptions({
+  name: "vipLevel",
+});
+
 const surveyVipLevelStore = useSurveyVipLevelStore(); //会员等级
 const { pagination, getParams, onSizeChange, onCurrentChange } =
   usePagination(); // 分页

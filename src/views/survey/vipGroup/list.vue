@@ -9,7 +9,7 @@ import useSurveyVipGroupStore from "@/store/modules/survey_vipGroup"; //会员�
 const surveyVipGroupStore = useSurveyVipGroupStore(); //会员组
 
 defineOptions({
-  name: "SurveyVipGroupList",
+  name: "vipGroup",
 });
 
 const { pagination, getParams, onSizeChange, onCurrentChange } =

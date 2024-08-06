@@ -11,6 +11,10 @@ import api from "@/api/modules/index_index";
 import cloneDeep from "lodash-es/cloneDeep";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
 
+defineOptions({
+  name: "homePage",
+});
+
 const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
 const router = useRouter();
 const data = ref<any>({

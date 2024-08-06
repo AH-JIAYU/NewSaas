@@ -2,7 +2,7 @@
 import { onMounted } from "vue";
 import api from "@/api/modules/user_subVip";
 defineOptions({
-  name: "UserSubVipIndex",
+  name: "subVip",
 });
 
 const { pagination, onSizeChange, onCurrentChange } = usePagination(); // 分页

@@ -11,7 +11,7 @@ import useUserSupplierStore from "@/store/modules/user_supplier"; // 供应商
 const supplierStore = useUserSupplierStore(); // 供应商
 
 defineOptions({
-  name: "UserSupplierIndex",
+  name: "supplier",
 });
 // 时间
 const { format } = useTimeago();

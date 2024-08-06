@@ -7,7 +7,7 @@ import api from "@/api/modules/alter";
 import apiUser from "@/api/modules/configuration_manager";
 
 defineOptions({
-  name: "FinanceInvoiceIndex",
+  name: "alter",
 });
 // 时间
 const { format } = useTimeago();

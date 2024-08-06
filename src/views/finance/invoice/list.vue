@@ -7,7 +7,7 @@ import useUserCustomerStore from "@/store/modules/user_customer";
 import api from "@/api/modules/finance_invoice";
 
 defineOptions({
-  name: "FinanceInvoiceIndex",
+  name: "invoice",
 });
 
 // 客户

@@ -2,7 +2,7 @@
 import { onMounted } from "vue";
 import api from "@/api/modules/record_callback";
 defineOptions({
-  name: "RecordCallbackIndex",
+  name: "callback",
 });
 
 const { pagination, getParams, onSizeChange, onCurrentChange } =
@@ -145,7 +145,7 @@ onMounted(async () => {
             </el-form-item>
             <el-form-item label="">
               <el-input
-                v-model.trim="queryForm.memberId"
+                v-model.trim="queryForm.projectQuestionnaireClickId"
                 clearable
                 :inline="false"
                 placeholder="点击ID"

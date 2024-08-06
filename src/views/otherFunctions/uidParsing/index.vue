@@ -4,7 +4,7 @@ import { ElMessage } from "element-plus";
 import api from "@/api/modules/uid_parsing";
 
 defineOptions({
-  name: 'UserUidParsingIndex',
+  name: 'uidParsing',
 })
 // loading
 const loading = ref(false);

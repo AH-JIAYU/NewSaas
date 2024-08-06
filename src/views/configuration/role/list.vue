@@ -6,7 +6,7 @@ import api from '@/api/modules/configuration_role'
 import useSettingsStore from '@/store/modules/settings'
 
 defineOptions({
-  name: 'SettingRoleList',
+  name: 'role',
 })
 // 路由
 const router = useRouter()

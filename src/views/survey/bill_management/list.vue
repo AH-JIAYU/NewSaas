@@ -6,7 +6,7 @@ import useSettingsStore from "@/store/modules/settings";
 import { ElMessage, ElMessageBox } from "element-plus";
 
 defineOptions({
-  name: "SurveyBillManagementList",
+  name: "billManagement",
 });
 
 const router = useRouter();

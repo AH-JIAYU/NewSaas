@@ -11,7 +11,7 @@ import useOtherFunctionsScreenLibraryStore from "@/store/modules/otherFunctions_
 import useStagedDataStore from "@/store/modules/stagedData"; // 暂存
 
 defineOptions({
-  name: "OtherFunctionsScreenLibraryList",
+  name: "screen_library",
 });
 const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
 const otherFunctionsScreenLibraryStore = useOtherFunctionsScreenLibraryStore(); // 问卷

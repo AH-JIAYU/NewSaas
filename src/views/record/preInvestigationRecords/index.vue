@@ -7,7 +7,7 @@ import questionnaireDetails from "./components/questionnaireDetails/index.vue";
 const customerStore = useUserCustomerStore(); // 客户
 
 defineOptions({
-  name: "RecordSurveyIndex",
+  name: "preInvestigationRecords",
 });
 const { getParams, pagination, onSizeChange, onCurrentChange } =
   usePagination(); // 分页

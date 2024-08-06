@@ -5,7 +5,7 @@ import useSettingsStore from "@/store/modules/settings";
 import { ref } from "vue";
 
 defineOptions({
-  name: "SurveyFinancialLogsList",
+  name: "financial_log",
 });
 // 时间
 const { format } = useTimeago()

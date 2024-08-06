@@ -3,7 +3,7 @@ import { ElMessage } from "element-plus";
 import api from "@/api/modules/query_ip";
 
 defineOptions({
-  name: "OtherFunctionsQueryIpIndex",
+  name: "queryIP",
 });
 // loading
 const loading = ref(false);
