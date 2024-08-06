@@ -11,7 +11,7 @@ import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
 import useProjectManagementListStore from "@/store/modules/projectManagement_list"; // 项目
 
 defineOptions({
-  name: "ProjectManagementListIndex",
+  name: "list",
 });
 // 时间
 const { format } = useTimeago()
@@ -20,10 +20,6 @@ const customerStore = useUserCustomerStore(); // 客户
 const projectManagementListStore = useProjectManagementListStore(); //项目
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
-
-defineOptions({
-  name: "list",
-});
 // 货币类型
 const countryType = ref<any>();
 const tableSortRef = ref<any>();
