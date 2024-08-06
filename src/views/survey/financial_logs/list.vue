@@ -6,7 +6,8 @@ import useSettingsStore from "@/store/modules/settings";
 defineOptions({
   name: "SurveyFinancialLogsList",
 });
-
+// 时间
+const { format } = useTimeago();
 const router = useRouter();
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
@@ -17,8 +18,64 @@ const settingsStore = useSettingsStore();
 const columns = ref([
   // 表格控件-展示列
   {
-    label: "等级名称",
-    prop: "a",
+    label: "会员ID/姓名",
+    prop: "memberId",
+    sortable: true,
+    disableCheck: false, // 不可更改
+    checked: true, // 默认展示
+  },
+  {
+    label: "随机身份",
+    prop: "randomIdentity",
+    sortable: true,
+    disableCheck: false, // 不可更改
+    checked: true, // 默认展示
+  },
+  {
+    label: "项目ID",
+    prop: "projectId",
+    sortable: true,
+    disableCheck: false, // 不可更改
+    checked: true, // 默认展示
+  },
+  {
+    label: "类型",
+    prop: "type",
+    sortable: true,
+    disableCheck: false, // 不可更改
+    checked: true, // 默认展示
+  },
+  {
+    label: "说明",
+    prop: "remark",
+    sortable: true,
+    disableCheck: false, // 不可更改
+    checked: true, // 默认展示
+  },
+  {
+    label: "变动前",
+    prop: "beforeBalance",
+    sortable: true,
+    disableCheck: false, // 不可更改
+    checked: true, // 默认展示
+  },
+  {
+    label: "加减款",
+    prop: "difference",
+    sortable: true,
+    disableCheck: false, // 不可更改
+    checked: true, // 默认展示
+  },
+  {
+    label: "变动后",
+    prop: "afterBalance",
+    sortable: true,
+    disableCheck: false, // 不可更改
+    checked: true, // 默认展示
+  },
+  {
+    label: "创建时间",
+    prop: "updateTime",
     sortable: true,
     disableCheck: false, // 不可更改
     checked: true, // 默认展示
@@ -87,6 +144,11 @@ onMounted(() => {
       getDataList();
     });
   }
+  columns.value.forEach((item: any) => {
+    if (item.checked) {
+      data.value.checkList.push(item.prop);
+    }
+  });
 });
 
 onBeforeUnmount(() => {
@@ -296,6 +358,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
           fixed
         />
         <ElTableColumn
+        v-if="data.checkList.includes('memberId')"
           show-overflow-tooltip
           align="center"
           prop="memberId"
@@ -306,9 +369,10 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
           </template>
         </ElTableColumn>
         <ElTableColumn
+         v-if="data.checkList.includes('randomIdentity')"
           show-overflow-tooltip
           align="center"
-          prop="title"
+          prop="randomIdentity"
           label="随机身份"
         >
           <template #default="{ row }">
@@ -316,6 +380,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
           </template>
         </ElTableColumn>
         <ElTableColumn
+         v-if="data.checkList.includes('projectId')"
           show-overflow-tooltip
           align="center"
           prop="projectId"
@@ -325,10 +390,11 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
           </template>
         </ElTableColumn>
         <ElTableColumn
+         v-if="data.checkList.includes('type')"
           show-overflow-tooltip
           width="120"
           align="center"
-          prop=""
+          prop="type"
           label="类型"
           ><template #default="{ row }">
             <el-text class="mx-1">{{
@@ -337,6 +403,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
           </template>
         </ElTableColumn>
         <ElTableColumn
+         v-if="data.checkList.includes('remark')"
           show-overflow-tooltip
           align="center"
           prop="remark"
@@ -355,10 +422,11 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
                 row.remark[1]
               }}</el-text></el-text
             > -->
-            {{ row.remark[0] }}
+            {{ row.remark[1] }}
           </template>
         </ElTableColumn>
         <ElTableColumn
+         v-if="data.checkList.includes('beforeBalance')"
           show-overflow-tooltip
           align="center"
           prop="beforeBalance"
@@ -366,21 +434,24 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
           width="120"
         >
           <template #default="{ row }">
-            {{ row.beforeBalance || 0 }}<CurrencyType /> </template
+            <CurrencyType />{{ row.beforeBalance || 0 }} </template
         ></ElTableColumn>
         <ElTableColumn
+         v-if="data.checkList.includes('difference')"
           show-overflow-tooltip
           align="center"
           prop="difference"
           label="加减款"
           width="120"
           ><template #default="{ row }">
-            <el-text type="success" class="mx-1"
-              >+{{ row.difference }}<CurrencyType
-            /></el-text>
+            <el-text v-if="row.operationType === 1" type="success" class="mx-1"
+              ><CurrencyType/>+{{ row.difference }}</el-text>
+            <el-text v-if="row.operationType === 2" type="danger" class="mx-1"
+              ><CurrencyType/>-{{ row.difference }}</el-text>
           </template>
         </ElTableColumn>
         <ElTableColumn
+         v-if="data.checkList.includes('afterBalance')"
           show-overflow-tooltip
           align="center"
           prop="afterBalance"
@@ -388,14 +459,20 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
           width="120"
         >
           <template #default="{ row }">
-            {{ row.afterBalance || 0 }}<CurrencyType /> </template
+            <CurrencyType />{{ row.afterBalance || 0 }} </template
         ></ElTableColumn>
         <ElTableColumn
+         v-if="data.checkList.includes('updateTime')"
           show-overflow-tooltip
           align="center"
           prop="updateTime"
-          label="时间"
-        />
+          label="创建时间"
+        ><template #default="{ row }">
+            <el-tag effect="plain" type="info">{{
+              format(row.updateTime)
+            }}</el-tag>
+          </template>
+        </ElTableColumn>
         <template #empty>
           <el-empty description="暂无数据" />
         </template>

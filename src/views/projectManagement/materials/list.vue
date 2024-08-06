@@ -8,6 +8,8 @@ defineOptions({
   name: "ProjectManagementMaterialsIndex",
 });
 
+// 时间
+const { format } = useTimeago();
 const { getParams, pagination, onSizeChange, onCurrentChange } =
   usePagination(); // 分页
 // 分页
@@ -130,7 +132,7 @@ onMounted(() => {
         type="border-card"
         @tab-change="fetchData"
       >
-      <el-tab-pane label="子会员素材" :name="2">
+        <el-tab-pane label="子会员素材" :name="2">
           <SearchBar :show-toggle="false">
             <template #default="{ fold, toggle }">
               <el-form
@@ -271,8 +273,13 @@ onMounted(() => {
               prop="createTime"
               align="center"
               label="创建时间"
-            />
-            <el-table-column align="center" label="操作" width="240">
+              ><template #default="{ row }">
+                <el-tag effect="plain" type="info">{{
+                  format(row.createTime)
+                }}</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" fixed="right" label="操作" width="240">
               <template #default="{ row }">
                 <ElSpace>
                   <el-button
@@ -452,8 +459,13 @@ onMounted(() => {
               prop="createTime"
               align="center"
               label="创建时间"
-            />
-            <el-table-column align="center" label="操作" width="240">
+              ><template #default="{ row }">
+                <el-tag effect="plain" type="info">{{
+                  format(row.createTime)
+                }}</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" fixed="right" label="操作" width="240">
               <template #default="{ row }">
                 <ElSpace>
                   <el-button

@@ -188,7 +188,7 @@ onMounted(() => {
           show-overflow-tooltip
           label="成员数量"
         />
-        <el-table-column align="center" show-overflow-tooltip label="操作">
+        <el-table-column align="center" fixed="right" show-overflow-tooltip label="操作">
           <template #default="{ row }">
             <el-button
               size="small"

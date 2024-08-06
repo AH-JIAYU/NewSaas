@@ -499,7 +499,6 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
                   prop="projectOrMemberGroupName"
                   label="会员组名称"
                 />
-
                 <ElTableColumn
                   v-if="data.checkList.includes('ir')"
                   show-overflow-tooltip
@@ -583,5 +582,8 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
 
 :deep(.el-tabs__nav-scroll) {
   background-color: #fafafa;
+}
+:deep(.el-table__empty-block) {
+ height: 100% !important;
 }
 </style>

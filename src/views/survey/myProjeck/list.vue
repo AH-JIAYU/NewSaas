@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import checkEdit from "./components/checkEdit/index.vue";
+import Detail from "./components/Detail/index.vue";
 import checkMembershipPrice from "./components/checkMembershipPrice/index.vue";
 import allocationEdit from "./components/AllocationEdit/index.vue";
 import api from "@/api/modules/survey_myProjeck";
@@ -11,6 +12,8 @@ import useClipboard from "vue-clipboard3"; // 复制 js库
 defineOptions({
   name: "SurveyMyProjeckList",
 });
+// 时间
+const { format } = useTimeago();
 const { toClipboard } = useClipboard();
 const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
 const customerStore = useUserCustomerStore(); // 客户
@@ -21,6 +24,7 @@ const customerList: any = ref([]); //客户列表
 // 货币类型
 const countryType = ref<any>();
 const tableSortRef = ref("");
+const detailRef = ref<any>();
 // loading加载
 const listLoading = ref<boolean>(true);
 // 获取组件变量
@@ -34,11 +38,11 @@ const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const lineHeight = ref<any>("default");
 const stripe = ref(false);
 const columns = ref<any>([
-  { prop: "projectId", label: "项目Id", sortabel: true, checked: true },
+  { prop: "projectId", label: "项目ID", sortabel: true, checked: true },
   { prop: "projectName", label: "项目名称", sortabel: true, checked: true },
   {
     prop: "projectIdentificationOrClientName",
-    label: "项目标识",
+    label: "客户简称/标识",
     sortabel: true,
     checked: true,
   },
@@ -76,22 +80,20 @@ const queryForm = reactive<any>({
 });
 const list = ref<any>([]);
 const addAllocationEditRef = ref();
-// 详情
+// 配额
 function check(row: any) {
-  console.log("详情");
-  // CheckEditRef.value.showEdit(row);
+  detailRef.value.showEdit(row);
 }
 // 会员价
 function membershipPrice(row: any) {
   checkMembershipPriceRef.value.showEdit(row);
 }
 // 配额
-function tested(row: any) {
-  console.log("测查");
-}
+// function tested(row: any) {
+//   console.log("测查");
+// }
 // 分配
 function distribution(row: any) {
-  console.log("分配");
   addAllocationEditRef.value.showEdit(row);
 }
 
@@ -303,6 +305,8 @@ onMounted(async () => {
         <el-table-column
           v-if="checkList.includes('projectId')"
           show-overflow-tooltip
+          width="180"
+          fixed="left"
           prop="projectId"
           align="center"
           label="项目ID"
@@ -310,6 +314,7 @@ onMounted(async () => {
         <el-table-column
           v-if="checkList.includes('projectName')"
           show-overflow-tooltip
+          width="180"
           prop="projectName"
           align="center"
           label="项目名称"
@@ -318,6 +323,7 @@ onMounted(async () => {
           v-if="checkList.includes('projectIdentificationOrClientName')"
           show-overflow-tooltip
           prop="projectIdentificationOrClientName"
+          width="180"
           align="center"
           label="客户简称/标识"
         />
@@ -344,6 +350,7 @@ onMounted(async () => {
         <el-table-column
           v-if="checkList.includes('participation')"
           show-overflow-tooltip
+          width="170"
           align="center"
           label="参与/完成/配额/限量"
         >
@@ -361,7 +368,7 @@ onMounted(async () => {
           <template #default="{ row }">
             <el-text v-if="countryType === 3" class="mx-1">暂无数据</el-text>
             <el-text v-else class="mx-1">
-              {{ row.doMoneyPrice || 0 }}<CurrencyType />
+              <CurrencyType />{{ row.doMoneyPrice || 0 }}
             </el-text>
           </template>
         </el-table-column>
@@ -475,8 +482,13 @@ onMounted(async () => {
           prop="createTime"
           align="center"
           label="创建时间"
-        />
-        <el-table-column align="center" label="操作" width="200">
+          ><template #default="{ row }">
+            <el-tag effect="plain" type="info">{{
+              format(row.createTime)
+            }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" fixed="right" label="操作" width="200">
           <template #default="{ row }">
             <ElSpace>
               <el-button
@@ -488,11 +500,11 @@ onMounted(async () => {
               >
                 分配
               </el-button>
-              <el-button type="primary" plain size="small" @click="tested(row)">
+              <!-- <el-button type="primary" plain size="small" @click="tested(row)">
                 测查
-              </el-button>
+              </el-button> -->
               <el-button size="small" plain type="primary" @click="check(row)">
-                详情
+                配额
               </el-button>
             </ElSpace>
           </template>
@@ -515,6 +527,7 @@ onMounted(async () => {
       />
     </PageMain>
     <checkEdit ref="CheckEditRef" />
+    <Detail ref="detailRef" />
     <checkMembershipPrice ref="checkMembershipPriceRef" />
     <allocationEdit ref="addAllocationEditRef" @fetchData="fetchData" />
   </div>

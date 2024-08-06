@@ -6,7 +6,8 @@ defineOptions({
 });
 
 const { pagination, onSizeChange, onCurrentChange } = usePagination(); // 分页
-
+// 时间
+const { format } = useTimeago()
 const listLoading = ref<boolean>(false);
 const list = ref<Array<Object>>([]); // 列表
 const selectRows = ref<string>(); // 表格-选中行
@@ -278,9 +279,18 @@ onMounted(() => {
       >
         <el-table-column align="center" type="selection" />
         <el-table-column
+          v-if="checkList.includes('tenantSupplierId')"
+          align="center"
+          prop="tenantSupplierId"
+          width="180"
+          show-overflow-tooltip
+          label="供应商ID"
+        />
+        <el-table-column
           v-if="checkList.includes('memberChildId')"
           align="center"
           prop="memberChildId"
+          width="180"
           show-overflow-tooltip
           label="子会员ID"
         />
@@ -310,7 +320,7 @@ onMounted(() => {
           label="	待审余额"
         >
           <template #default="{ row }">
-            {{ row.pendingBalance || 0 }}<CurrencyType />
+            <CurrencyType />{{ row.pendingBalance || 0 }}
           </template>
         </el-table-column>
         <el-table-column
@@ -321,16 +331,9 @@ onMounted(() => {
           label="	可用余额"
         >
           <template #default="{ row }">
-            {{ row.availableBalance || 0 }}<CurrencyType />
+            <CurrencyType />{{ row.availableBalance || 0 }}
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('tenantSupplierId')"
-          align="center"
-          prop="tenantSupplierId"
-          show-overflow-tooltip
-          label="供应商ID"
-        />
         <ElTableColumn
           v-if="checkList.includes('b2bStatus')"
           align="center"
@@ -339,7 +342,8 @@ onMounted(() => {
           label="B2B"
         >
           <template #default="{ row }">
-            {{ row.b2bStatus === 1 ? "关闭" : "开启" }}
+            <el-tag v-show="row.b2bStatus === 1" effect="light" type="danger">关闭</el-tag>
+            <el-tag v-show="row.b2bStatus === 2" effect="light" type="success">开启</el-tag>
           </template>
         </ElTableColumn>
         <el-table-column
@@ -360,7 +364,8 @@ onMounted(() => {
           label="子会员状态"
         >
           <template #default="{ row }">
-            {{ row.memberChildStatus === 1 ? "禁用" : "启用" }}
+            <el-tag v-if="row.memberChildStatus !== 1" effect="light" type="success">启用</el-tag>
+            <el-tag v-else effect="light" type="danger">禁用</el-tag>
           </template>
         </ElTableColumn>
         <el-table-column
@@ -379,7 +384,10 @@ onMounted(() => {
           prop="createTime"
           show-overflow-tooltip
           label="创建日期"
-        />
+        ><template #default="{ row }">
+          <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>
+          </template>
+        </el-table-column>
         <template #empty>
           <el-empty class="vab-data-empty" description="暂无数据" />
         </template>

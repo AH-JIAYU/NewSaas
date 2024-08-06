@@ -7,19 +7,68 @@ import { ref } from "vue";
 defineOptions({
   name: "SurveyFinancialLogsList",
 });
-
+// 时间
+const { format } = useTimeago()
 const router = useRouter();
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
 const tabbar = useTabbar();
 const settingsStore = useSettingsStore();
-
 // 表格控件-展示列
-const columns = ref([
+const columns = ref<any>([
   // 表格控件-展示列
   {
-    label: "等级名称",
-    prop: "a",
+    label: "供应商ID/内部调查站",
+    prop: "typeId",
+    sortable: true,
+    disableCheck: false, // 不可更改
+    checked: true, // 默认展示
+  },
+  {
+    label: "项目ID",
+    prop: "projectId",
+    sortable: true,
+    disableCheck: false, // 不可更改
+    checked: true, // 默认展示
+  },
+  {
+    label: "类型",
+    prop: "type",
+    sortable: true,
+    disableCheck: false, // 不可更改
+    checked: true, // 默认展示
+  },
+  {
+    label: "说明",
+    prop: "remark",
+    sortable: true,
+    disableCheck: false, // 不可更改
+    checked: true, // 默认展示
+  },
+  {
+    label: "变动前",
+    prop: "beforeBalance",
+    sortable: true,
+    disableCheck: false, // 不可更改
+    checked: true, // 默认展示
+  },
+  {
+    label: "加减款",
+    prop: "addAndSubtraction",
+    sortable: true,
+    disableCheck: false, // 不可更改
+    checked: true, // 默认展示
+  },
+  {
+    label: "变动后",
+    prop: "afterBalance",
+    sortable: true,
+    disableCheck: false, // 不可更改
+    checked: true, // 默认展示
+  },
+  {
+    label: "时间",
+    prop: "createTime",
     sortable: true,
     disableCheck: false, // 不可更改
     checked: true, // 默认展示
@@ -88,6 +137,11 @@ onMounted(() => {
       getDataList();
     });
   }
+  columns.value.forEach((item: any) => {
+    if (item.checked) {
+      data.value.checkList.push(item.prop);
+    }
+  });
 });
 
 onBeforeUnmount(() => {
@@ -143,7 +197,7 @@ const statusList = [
   { label: "和解", value: 13 },
 ];
 const surveyStatus = [
-  { label: "完成/待审核", value: 1 },
+  { label: "完成", value: 1 },
   { label: "被甄别", value: 2 },
   { label: "配额满", value: 3 },
   { label: "安全终止", value: 4 },
@@ -324,6 +378,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
           fixed
         />
         <ElTableColumn
+        v-if="data.checkList.includes('typeId')"
           show-overflow-tooltip
           align="center"
           prop=""
@@ -335,6 +390,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
           </template>
         </ElTableColumn>
         <ElTableColumn
+        v-if="data.checkList.includes('projectId')"
           show-overflow-tooltip
           align="center"
           prop="projectId"
@@ -345,6 +401,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
           </template>
         </ElTableColumn>
         <ElTableColumn
+        v-if="data.checkList.includes('type')"
           show-overflow-tooltip
           align="center"
           prop=""
@@ -356,6 +413,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
           </template>
         </ElTableColumn>
         <ElTableColumn
+        v-if="data.checkList.includes('remark')"
           show-overflow-tooltip
           align="center"
           prop="remark"
@@ -370,44 +428,54 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
           </template>
         </ElTableColumn>
         <ElTableColumn
+        v-if="data.checkList.includes('beforeBalance')"
           show-overflow-tooltip
           align="center"
           prop="beforeBalance"
+          width="150"
           label="变动前"
         >
           <template #default="{ row }">
-            {{ row.beforeBalance || 0 }}<CurrencyType />
+            <CurrencyType />{{ row.beforeBalance || 0 }}
           </template>
         </ElTableColumn>
         <ElTableColumn
+        v-if="data.checkList.includes('addAndSubtraction')"
           show-overflow-tooltip
           align="center"
           prop="addAndSubtraction"
+          width="150"
           label="加减款"
           ><template #default="{ row }">
             <el-text v-if="row.operationType === 2" type="danger" class="mx-1"
-              >-{{ Math.abs(row.addAndSubtraction) }}<CurrencyType
-            /></el-text>
+              >-<CurrencyType />{{ Math.abs(row.addAndSubtraction) }}</el-text
+            >
             <el-text v-else type="success" class="mx-1">
-              {{ Math.abs(row.addAndSubtraction) }}<CurrencyType
-            /></el-text>
+              <CurrencyType />{{ Math.abs(row.addAndSubtraction) }}</el-text
+            >
           </template>
         </ElTableColumn>
         <ElTableColumn
+        v-if="data.checkList.includes('afterBalance')"
           show-overflow-tooltip
           align="center"
           prop="afterBalance"
+          width="150"
           label="变动后"
         >
           <template #default="{ row }">
-            {{ row.afterBalance || 0 }}<CurrencyType /> </template
+            <CurrencyType />{{ row.afterBalance || 0 }} </template
         ></ElTableColumn>
         <ElTableColumn
+        v-if="data.checkList.includes('createTime')"
           show-overflow-tooltip
           align="center"
           prop="createTime"
           label="时间"
-        />
+        ><template #default="{ row }">
+          <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>
+          </template>
+        </ElTableColumn>
         <template #empty>
           <el-empty class="vab-data-empty" description="暂无数据" />
         </template>

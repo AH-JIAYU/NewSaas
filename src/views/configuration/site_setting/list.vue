@@ -233,13 +233,19 @@ function onSubmit() {
                 </el-form-item>
               </el-col>
               <el-col :span="24">
-                <el-form-item label="站点系统域名" prop="supplierURL">
+                <el-form-item label="个性化域名" prop="supplierURL">
                   <el-input v-model="form.supplierURL" style="width: 8rem" />
                   <el-text class="mx-1"
                     >.front-supplier.surveyssaas.com</el-text
                   >
                   <el-button class="copy" type="primary" link @click="copyToClipboard"
                     >复制</el-button>
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="顶级域名" >
+                  <el-input v-model="form.supplierURL" style="width: 8rem" />
+                  <el-button class="copy" type="primary" link >设置解析</el-button>
                 </el-form-item>
               </el-col>
               <el-col :span="24">

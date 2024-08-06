@@ -7,7 +7,8 @@ defineOptions({
 
 const { getParams, pagination, onSizeChange, onCurrentChange } =
   usePagination(); // 分页
-
+// 时间
+const { format } = useTimeago();
 const listLoading = ref(false);
 const list = ref<Array<Object>>([]); // 列表
 const selectRows = ref(""); // 表格-选中行
@@ -19,7 +20,7 @@ const lineHeight = ref<any>("default"); // 表格控件-控制表格大小
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const columns = ref([
   // 表格控件-展示列
-
+  { label: "会员类型", prop: "surveySource", sortable: true, checked: true },
   {
     label: "会员ID/子会员ID",
     prop: "memberChildId",
@@ -33,9 +34,8 @@ const columns = ref([
     checked: true,
   },
   { label: "项目ID", prop: "projectId", sortable: true, checked: true },
-  { label: "会员类型", prop: "surveySource", sortable: true, checked: true },
   {
-    label: "项目名称/客户简称",
+    label: "项目名称",
     prop: "projectName",
     sortable: true,
     checked: true,
@@ -252,9 +252,10 @@ onMounted(() => {
           align="center"
           prop="surveySource"
           show-overflow-tooltip
+          width="100"
           label="会员类型"
           ><template #default="{ row }">
-            {{ memberType[row.surveySource -1].label }}
+            {{ memberType[row.surveySource - 1].label }}
           </template>
         </el-table-column>
         <el-table-column
@@ -293,7 +294,7 @@ onMounted(() => {
           align="center"
           prop="projectName"
           show-overflow-tooltip
-          label="项目名称/客户简称"
+          label="项目名称"
         />
         <el-table-column
           v-if="checkList.includes('ipBelong')"
@@ -307,6 +308,7 @@ onMounted(() => {
           align="center"
           prop="notes"
           show-overflow-tooltip
+          width="280"
           label="说明"
         />
         <el-table-column
@@ -315,7 +317,12 @@ onMounted(() => {
           prop="terminationTime"
           show-overflow-tooltip
           label="终止时间"
-        />
+          ><template #default="{ row }">
+            <el-tag effect="plain" type="info">{{
+              format(row.terminationTime)
+            }}</el-tag>
+          </template>
+        </el-table-column>
         <template #empty>
           <el-empty class="vab-data-empty" description="暂无数据" />
         </template>

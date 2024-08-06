@@ -230,7 +230,7 @@ function onDel(row: any) {
       <ElTable v-loading="data.loading" class="my-4" :data="data.dataList" stripe highlight-current-row border
         height="100%" @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
         <!-- <ElTableColumn v-if="data.batch.enable" type="selection" align="center" fixed /> -->
-        <ElTableColumn prop="account" sortable label="帐号">
+        <ElTableColumn prop="account"  sortable label="帐号">
           <template #default="{ row }">
             <el-text v-if="row.country === 'CN'" class="mx-1">
               {{ row.phone }}
@@ -257,9 +257,9 @@ function onDel(row: any) {
         <ElTableColumn prop="mobile" label="国家" width="150" align="center">
           <template #default="{ row }">
             <div v-for="item in filterCountry" :key="item.id" class="mx-1">
-              <el-text v-if="item.code === row.country" class="mx-1">
+              <el-tag  type="primary" v-if="item.code === row.country" class="mx-1">
                 {{item.chineseName}}
-            </el-text>
+            </el-tag>
             </div>
           </template>
         </ElTableColumn>

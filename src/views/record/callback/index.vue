@@ -7,7 +7,8 @@ defineOptions({
 
 const { pagination, getParams, onSizeChange, onCurrentChange } =
   usePagination(); // 分页
-
+// 时间
+const { format } = useTimeago()
 const listLoading = ref(false);
 const list = ref<Array<Object>>([]); // 列表
 const selectRows = ref(""); // 表格-选中行
@@ -24,18 +25,18 @@ const columns = ref([
     sortable: true,
     checked: true,
   },
+  { label: "会员类型", prop: "surveySource", sortable: true, checked: true },
   {
     prop: "customerShortName",
     label: "客户简称",
     sortable: true,
     checked: true,
   },
-  { prop: "memberChildId", label: "对象", sortable: true, checked: true },
-  { prop: "projectId", label: "项目id", sortable: true, checked: true },
-  { label: "会员类型", prop: "surveySource", sortable: true, checked: true },
+  { prop: "memberChildId", label: "子会员ID/会员ID", sortable: true, checked: true },
+  { prop: "projectId", label: "项目ID", sortable: true, checked: true },
   { prop: "projectName", label: "项目名称", sortable: true, checked: true },
-  { prop: "callbackUrl", label: "回调url", sortable: true, checked: true },
-  { prop: "subordinateUrl", label: "下级url", sortable: true, checked: true },
+  { prop: "callbackUrl", label: "回调URL", sortable: true, checked: true },
+  { prop: "subordinateUrl", label: "下级URL", sortable: true, checked: true },
   { prop: "callbackTime", label: "回调时间", sortable: true, checked: true },
 ]);
 // 会员类型
@@ -282,7 +283,7 @@ onMounted(async () => {
           v-if="checkList.includes('memberChildId')"
           align="center"
           show-overflow-tooltip
-          label="对象"
+          label="子会员ID/会员ID"
         >
           <template #default="{ row }">
             {{ row.memberChildId }} <br />
@@ -314,14 +315,20 @@ onMounted(async () => {
           align="center"
           prop="subordinateUrl"
           label="下级URL"
-        />
+        ><template #default="{ row }">
+          {{ row.subordinateUrl ? row.subordinateUrl : '-' }}
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="checkList.includes('callbackTime')"
           align="center"
           prop="callbackTime"
           show-overflow-tooltip
           label="回调时间"
-        />
+        ><template #default="{ row }">
+          <el-tag effect="plain" type="info">{{ format(row.callbackTime) }}</el-tag>
+          </template>
+        </el-table-column>
         <template #empty>
           <el-empty class="vab-data-empty" description="暂无数据" />
         </template>

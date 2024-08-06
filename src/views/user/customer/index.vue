@@ -250,6 +250,7 @@ onMounted(() => {
           v-if="checkList.includes('tenantCustomerId')"
           align="center"
           prop="tenantCustomerId"
+          width="180"
           show-overflow-tooltip
           label="客户编码"
         />
@@ -276,7 +277,7 @@ onMounted(() => {
           label="客户营业限额/月"
         >
           <template #default="{ row }">
-            {{ row.turnover || 0 }}<CurrencyType />
+            <CurrencyType />{{ row.turnover || 0 }}
           </template>
         </el-table-column>
         <el-table-column
@@ -358,6 +359,7 @@ onMounted(() => {
         </ElTableColumn>
         <el-table-column
           align="center"
+          fixed="right"
           prop="i"
           label="操作"
           show-overflow-tooltip

@@ -23,10 +23,10 @@ const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const columns = ref([
   // 表格控件-展示列
 
-  { prop: "projectId", label: "项目id", sortable: true, checked: true },
+  { prop: "projectId", label: "项目ID", sortable: true, checked: true },
   {
     prop: "projectName",
-    label: "项目名称/客户简称",
+    label: "项目名称",
     sortable: true,
     checked: true,
   },
@@ -41,7 +41,7 @@ const queryForm = reactive<any>({
   projectName: "", // 	项目名称-模糊查询
   customerId: "", // 	客户Id
   ip: "", // 	ip-模糊查询
-  surveyStatus: "", // 调查状态:1 C=完成/待审核 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
+  surveyStatus: "", // 调查状态:1 C=完成 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
 });
 
 const questionnaireDetailsRef = ref<any>();
@@ -49,7 +49,7 @@ const data = reactive<any>({
   // 分配类型
   allocationTypeList: ["未分配", "供应商", "会员组"],
   // 调查状态
-  surveyStatusList: ["完成/待审核", "被甄别", "配额满", "安全终止", "未完成"],
+  surveyStatusList: ["完成", "被甄别", "配额满", "安全终止", "未完成"],
   // 副状态
   viceStatusList: [
     "待审",
@@ -64,7 +64,7 @@ const data = reactive<any>({
     "时间段过载",
     "ip不一致",
     "id重复参与",
-    '和解',
+    "和解",
   ],
   //客户列表
   customerList: [],
@@ -142,14 +142,13 @@ function onReset() {
     projectName: "", // 	项目名称-模糊查询
     customerId: "", // 	客户Id
     ip: "", // 	ip-模糊查询
-    surveyStatus: "", // 调查状态:1 C=完成/待审核 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
+    surveyStatus: "", // 调查状态:1 C=完成 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
   });
   fetchData();
 }
 
 onMounted(async () => {
   data.customerList = await customerStore.getCustomerList();
-
   columns.value.forEach((item) => {
     if (item.checked) {
       checkList.value.push(item.prop);
@@ -205,7 +204,7 @@ onMounted(async () => {
                 placeholder="项目名称"
               />
             </el-form-item>
-            <el-form-item v-show="!fold" label="">
+            <!-- <el-form-item v-show="!fold" label="">
               <el-select
                 v-model="queryForm.projectName"
                 clearable
@@ -218,7 +217,7 @@ onMounted(async () => {
                   :label="item.customerAccord"
                 ></el-option>
               </el-select>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item v-show="!fold" label="">
               <el-input
                 v-model.trim="queryForm.ip"
@@ -361,7 +360,7 @@ onMounted(async () => {
           align="center"
           prop="projectName"
           show-overflow-tooltip
-          label="项目名称/客户简称"
+          label="项目名称"
         />
         <el-table-column
           v-if="checkList.includes('allocationType')"
@@ -370,7 +369,9 @@ onMounted(async () => {
           label="分配类型"
         >
           <template #default="{ row }">
-            {{ data.allocationTypeList[row.allocationType - 1] }}
+            <el-text v-if="row.allocationType === 3" class="mx-1" type="primary">会员组</el-text>
+            <el-text v-if="row.allocationType === 2" class="mx-1" type="success">供应商</el-text>
+            <el-text v-if="row.allocationType === 1" class="mx-1" type="warning">未分配</el-text>
           </template>
         </el-table-column>
         <el-table-column
@@ -390,14 +391,16 @@ onMounted(async () => {
           show-overflow-tooltip
           prop="passRate"
           label="通过率"
-        > <template #default="{ row }">
-            {{ row.passRate + '%' }}
+        >
+          <template #default="{ row }">
+            {{ row.passRate + "%" }}
           </template>
         </ElTableColumn>
         <ElTableColumn
           align="center"
           show-overflow-tooltip
           prop=""
+          fixed="right"
           label="操作"
           width="200"
         >

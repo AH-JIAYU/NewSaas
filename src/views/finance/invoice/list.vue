@@ -28,7 +28,7 @@ const editRef = ref();
 // 右侧工具栏配置变量
 const tableAutoHeight = ref(false);
 // 表格控件-高度自适应
-const checkList = ref([]);
+const checkList = ref<any>([]);
 const border = ref(true);
 const isFullscreen = ref(false);
 const lineHeight = ref<any>("default");
@@ -48,13 +48,77 @@ const timeType = [
   { lable: "开票日期", value: 1 },
   { lable: "收款日期", value: 2 },
 ];
-const columns = ref([
+const columns = ref<any>([
   {
-    label: "选择渠道",
-    prop: "ID",
+    label: "客户简称",
+    prop: "tenantCustomerShortName",
     sortable: true,
     // 不可改变的
-    disableCheck: true,
+    disableCheck: false,
+    checked: true,
+  },
+  {
+    label: "发票编号",
+    prop: "invoiceCode",
+    sortable: true,
+    // 不可改变的
+    disableCheck: false,
+    checked: true,
+  },
+  {
+    label: "金额",
+    prop: "invoiceAmount",
+    sortable: true,
+    // 不可改变的
+    disableCheck: false,
+    checked: true,
+  },
+  {
+    label: "手续费(税)",
+    prop: "invoiceTax",
+    sortable: true,
+    // 不可改变的
+    disableCheck: false,
+    checked: true,
+  },
+  {
+    label: "实收款",
+    prop: "actualReceipts",
+    sortable: true,
+    // 不可改变的
+    disableCheck: false,
+    checked: true,
+  },
+  {
+    label: "开票日期",
+    prop: "invoiceDate",
+    sortable: true,
+    // 不可改变的
+    disableCheck: false,
+    checked: true,
+  },
+  {
+    label: "收款日期",
+    prop: "paymentDate",
+    sortable: true,
+    // 不可改变的
+    disableCheck: false,
+    checked: true,
+  },
+  {
+    label: "状态",
+    prop: "invoiceStatus",
+    sortable: true,
+    // 不可改变的
+    disableCheck: false,
+    checked: true,
+  },
+  {
+    label: "备注",
+    prop: "remark",
+    sortable: true,
+    // 不可改变的
+    disableCheck: false,
     checked: true,
   },
 ]);
@@ -167,6 +231,11 @@ async function fetchData() {
   listLoading.value = false;
 }
 onMounted(() => {
+  columns.value.forEach((item: any) => {
+    if (item.checked) {
+      checkList.value.push(item.prop);
+    }
+  });
   fetchData();
 });
 </script>
@@ -314,57 +383,65 @@ onMounted(() => {
         <el-table-column align="center" type="selection" />
         <!-- <el-table-column type="index" align="center" label="序号" width="55" /> -->
         <el-table-column
+        v-if="checkList.includes('tenantCustomerShortName')"
           prop="tenantCustomerShortName"
           show-overflow-tooltip
           align="center"
           label="客户简称"
         />
         <el-table-column
+        v-if="checkList.includes('invoiceCode')"
           prop="invoiceCode"
           show-overflow-tooltip
           align="center"
           label="发票编号"
         />
         <el-table-column
+        v-if="checkList.includes('invoiceAmount')"
           prop="invoiceAmount"
           show-overflow-tooltip
           align="center"
           label="金额"
         >
           <template #default="{ row }">
-            {{ row.invoiceAmount || 0 }}<CurrencyType /> </template
+            <CurrencyType />{{ row.invoiceAmount || 0 }} </template
         ></el-table-column>
         <el-table-column
+        v-if="checkList.includes('invoiceTax')"
           prop="invoiceTax"
           show-overflow-tooltip
           align="center"
           label="手续费(税)"
         >
           <template #default="{ row }">
-            {{ row.invoiceTax || 0 }}<CurrencyType /> </template
+            <CurrencyType />{{ row.invoiceTax || 0 }} </template
         ></el-table-column>
         <el-table-column
+        v-if="checkList.includes('actualReceipts')"
           prop="actualReceipts"
           show-overflow-tooltip
           align="center"
           label="实收款"
         >
           <template #default="{ row }">
-            {{ row.actualReceipts || 0 }}<CurrencyType /> </template
+            <CurrencyType />{{ row.actualReceipts || 0 }} </template
         ></el-table-column>
         <el-table-column
+        v-if="checkList.includes('invoiceDate')"
           prop="invoiceDate"
           show-overflow-tooltip
           align="center"
           label="开票日期"
         />
         <el-table-column
+        v-if="checkList.includes('paymentDate')"
           prop="paymentDate"
           show-overflow-tooltip
           align="center"
           label="收款日期"
         />
         <ElTableColumn
+        v-if="checkList.includes('invoiceStatus')"
           align="center"
           show-overflow-tooltip
           prop="invoiceStatus"
@@ -385,8 +462,8 @@ onMounted(() => {
             >
           </template>
         </ElTableColumn>
-        <el-table-column prop="remark" align="center" label="备注" />
-        <el-table-column align="center" label="操作" width="170">
+        <el-table-column v-if="checkList.includes('remark')" prop="remark" align="center" label="备注" />
+        <el-table-column align="center" fixed="right" label="操作" width="170">
           <template #default="{ row }">
             <el-button size="small" plain type="primary" @click="editData(row)">
               编辑

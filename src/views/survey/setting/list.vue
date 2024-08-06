@@ -228,7 +228,7 @@ function onSubmit() {
             </el-form-item>
             <el-form-item
               style="width: 34rem"
-              label="会员网址"
+              label="个性化域名"
               prop="memberURL"
             >
             <el-input v-model="form.memberURL" style="width: 8rem" />

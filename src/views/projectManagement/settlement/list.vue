@@ -15,6 +15,8 @@ defineOptions({
   name: "ProjectManagementSettlementIndex",
 });
 
+// 时间
+const { format } = useTimeago();
 //国家
 const basicDictionaryStore = useBasicDictionaryStore();
 const countryList = ref<any>();
@@ -40,20 +42,33 @@ const refundRef = ref();
 // 表格控件-高度自适应
 const tableAutoHeight = ref(false);
 const border = ref(true);
-const checkList = ref([]);
+const checkList = ref<any>([]);
 const isFullscreen = ref(false);
 const lineHeight = ref<any>("default");
 const stripe = ref(false);
 const selectRows = ref<any>([]);
-const columns = ref([
+const columns = ref<any>([
+  { label: "项目ID", prop: "projectId", sortable: true, checked: true },
+  { label: "项目名称", prop: "projectName", sortable: true, checked: true },
   {
-    label: "项目ID",
-    prop: "ID",
+    label: "客户简称/标识",
+    prop: "customerName",
     sortable: true,
-    // 不可改变的
-    disableCheck: true,
     checked: true,
   },
+  { label: "原价", prop: "projectAmount", sortable: true, checked: true },
+  { label: "所属国家", prop: "countryId", sortable: true, checked: true },
+  { label: "系统完成数", prop: "systemDone", sortable: true, checked: true },
+  {
+    label: "结算完成数",
+    prop: "settlementDone",
+    sortable: true,
+    checked: true,
+  },
+  { label: "结算PO号", prop: "settlementPo", sortable: true, checked: true },
+  { label: "结算状态", prop: "status", sortable: true, checked: true },
+  { label: "节点时间", prop: "nodeTime", sortable: true, checked: true },
+  { label: "备注", prop: "remark", sortable: true, checked: true },
 ]);
 const settlementStatusList = [
   { label: "待审核", value: 1 },
@@ -208,6 +223,11 @@ onMounted(async () => {
   countryList.value = await basicDictionaryStore.getCountry();
   customerList.value = await customerStore.getCustomerList();
   founderList.value = await tenantStaffStore.getStaff();
+  columns.value.forEach((item: any) => {
+    if (item.checked) {
+      checkList.value.push(item.prop);
+    }
+  });
   fetchData();
 });
 function handleMoreOperating(command: string, row: any) {
@@ -420,12 +440,15 @@ function handleMoreOperating(command: string, row: any) {
         <el-table-column align="center" type="selection" />
         <!-- <el-table-column type="index" align="center" label="序号" width="55" /> -->
         <el-table-column
+          v-if="checkList.includes('projectId')"
           show-overflow-tooltip
           prop="projectId"
           align="center"
+          width="180"
           label="项目ID"
         />
         <el-table-column
+          v-if="checkList.includes('projectName')"
           show-overflow-tooltip
           prop="projectName"
           align="center"
@@ -436,6 +459,7 @@ function handleMoreOperating(command: string, row: any) {
           </template>
         </el-table-column>
         <el-table-column
+          v-if="checkList.includes('customerName')"
           show-overflow-tooltip
           prop="customerName"
           align="center"
@@ -446,16 +470,18 @@ function handleMoreOperating(command: string, row: any) {
           </template>
         </el-table-column>
         <el-table-column
+          v-if="checkList.includes('projectAmount')"
           show-overflow-tooltip
           prop="d"
           align="center"
           label="原价"
         >
           <template #default="{ row }">
-            {{ row.projectAmount || 0 }}<CurrencyType />
+            <CurrencyType />{{ row.projectAmount || 0 }}
           </template>
         </el-table-column>
         <el-table-column
+          v-if="checkList.includes('countryId')"
           show-overflow-tooltip
           prop="e"
           align="center"
@@ -471,7 +497,7 @@ function handleMoreOperating(command: string, row: any) {
               <template v-else-if="comCountryId(row.countryId).length > 4">
                 <el-tag
                   v-if="comCountryId(row.countryId).length === 185"
-                  type="success"
+                  type="warning"
                   >全球</el-tag
                 >
                 <el-tooltip
@@ -501,18 +527,21 @@ function handleMoreOperating(command: string, row: any) {
           </template>
         </el-table-column>
         <el-table-column
+          v-if="checkList.includes('systemDone')"
           show-overflow-tooltip
           prop="systemDone"
           align="center"
           label="系统完成数"
         />
         <el-table-column
+          v-if="checkList.includes('settlementDone')"
           show-overflow-tooltip
           prop="settlementDone"
           align="center"
           label="结算完成数"
         />
         <el-table-column
+          v-if="checkList.includes('settlementPo')"
           show-overflow-tooltip
           prop="settlementPo"
           align="center"
@@ -523,15 +552,21 @@ function handleMoreOperating(command: string, row: any) {
           </template>
         </el-table-column>
         <el-table-column
+          v-if="checkList.includes('status')"
           show-overflow-tooltip
           prop="h"
           align="center"
           label="结算状态"
           ><template #default="{ row }">
-            {{ settlementStatusList[row.status - 1].label }}
+            <el-text v-if="row.status === 1" class="mx-1" type="warning">待审核</el-text>
+            <el-text v-if="row.status === 3" class="mx-1" type="success">已开票</el-text>
+            <el-text v-if="row.status === 4" class="mx-1" type="info">已结算</el-text>
+            <el-text v-if="row.status === 2" class="mx-1" type="primary">已审核</el-text>
+            <el-text v-if="row.status === 5" class="mx-1" type="danger">已冻结</el-text>
           </template>
         </el-table-column>
         <el-table-column
+          v-if="checkList.includes('nodeTime')"
           show-overflow-tooltip
           prop="nodeTime"
           align="center"
@@ -545,6 +580,7 @@ function handleMoreOperating(command: string, row: any) {
           </template>
         </el-table-column>
         <el-table-column
+          v-if="checkList.includes('remark')"
           show-overflow-tooltip
           prop="remark"
           align="center"
@@ -554,7 +590,7 @@ function handleMoreOperating(command: string, row: any) {
             {{ row.remark ? row.remark : "-" }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="操作" width="250">
+        <el-table-column align="center" fixed="right" label="操作" width="250">
           <template #default="{ row }">
             <ElSpace>
               <el-button

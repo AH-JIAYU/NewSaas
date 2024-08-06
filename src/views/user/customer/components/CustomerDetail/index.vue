@@ -191,7 +191,7 @@ defineExpose({
           <el-col :span="8">
             <el-form-item label="营业限额/月:">
               <el-text class="mx-1">
-                {{ detailData.turnover || 0 }}<CurrencyType />
+                <CurrencyType />{{ detailData.turnover || 0 }}
               </el-text>
             </el-form-item>
           </el-col>
