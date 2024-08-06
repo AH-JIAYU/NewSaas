@@ -147,7 +147,7 @@ function changeTab() {
     });
     getDataList();
   } else if (data.value.search.type === 3) {
-    // 会员IR
+    // 小组IR
     data.value.checkList = [];
     columns.value = [
       {
