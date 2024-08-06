@@ -91,8 +91,86 @@ onBeforeUnmount(() => {
 });
 
 // 切换tab
-function changeTab(val: any) {
-  getDataList();
+function changeTab() {
+  if (data.value.search.type === 1) {
+    // 项目IR
+    data.value.checkList = [];
+    columns.value = [
+      {
+        label: "项目ID",
+        prop: "projectOrMemberGroupId",
+        sortable: true,
+        checked: true,
+      },
+      {
+        label: "项目名称",
+        prop: "projectOrMemberGroupName",
+        sortable: true,
+        checked: true,
+      },
+      { label: "项目IR", prop: "ir", sortable: true, checked: true },
+      {
+        label: "项目实际IR",
+        prop: "projectIr",
+        sortable: true,
+        checked: true,
+      },
+    ];
+    columns.value.forEach((item: any) => {
+      if (item.checked) {
+        data.value.checkList.push(item.prop);
+      }
+    });
+    getDataList();
+  } else if (data.value.search.type === 2) {
+    // 会员IR
+    data.value.checkList = [];
+    columns.value = [
+      {
+        label: "会员ID",
+        prop: "projectOrMemberGroupId",
+        sortable: true,
+        checked: true,
+      },
+      {
+        label: "会员姓名",
+        prop: "projectOrMemberGroupName",
+        sortable: true,
+        checked: true,
+      },
+      { label: "IR", prop: "ir", sortable: true, checked: true },
+    ];
+    columns.value.forEach((item: any) => {
+      if (item.checked) {
+        data.value.checkList.push(item.prop);
+      }
+    });
+    getDataList();
+  } else if (data.value.search.type === 3) {
+    // 会员IR
+    data.value.checkList = [];
+    columns.value = [
+      {
+        label: "会员组ID",
+        prop: "projectOrMemberGroupId",
+        sortable: true,
+        checked: true,
+      },
+      {
+        label: "会员组名称",
+        prop: "projectOrMemberGroupName",
+        sortable: true,
+        checked: true,
+      },
+      { label: "会员组IR", prop: "ir", sortable: true, checked: true },
+    ];
+    columns.value.forEach((item: any) => {
+      if (item.checked) {
+        data.value.checkList.push(item.prop);
+      }
+    });
+    getDataList();
+  }
 }
 // 获取数据
 function getDataList() {
@@ -133,9 +211,13 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
 <template>
   <div :class="{ 'absolute-container': data.tableAutoHeight }">
     <PageMain>
-      <el-row style="margin: 0px 0;" :gutter="24">
-        <el-col style="padding: 0;" :span="24">
-          <el-tabs v-model="data.search.type" type="border-card" @tab-change="changeTab">
+      <el-row style="margin: 0px 0" :gutter="24">
+        <el-col style="padding: 0" :span="24">
+          <el-tabs
+            v-model="data.search.type"
+            type="border-card"
+            @tab-change="changeTab"
+          >
             <el-tab-pane label="项目IR" :name="1">
               <SearchBar :show-toggle="false">
                 <template #default="{ fold, toggle }">
@@ -584,6 +666,6 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
   background-color: #fafafa;
 }
 :deep(.el-table__empty-block) {
- height: 100% !important;
+  height: 100% !important;
 }
 </style>
