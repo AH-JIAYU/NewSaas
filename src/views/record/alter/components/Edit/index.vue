@@ -192,7 +192,7 @@ defineExpose({ showEdit });
               v-model="formData.arr"
               placeholder="请粘贴ID，每行一个,多个请回车换行"
               type="textarea"
-              rows="15"
+              :rows="15"
             />
           </el-form-item>
         </div>

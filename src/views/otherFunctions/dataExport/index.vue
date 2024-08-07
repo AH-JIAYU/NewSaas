@@ -57,7 +57,7 @@ function exportID() {
                 <el-input
                   v-model="form.c"
                   type="textarea"
-                  rows="5"
+                  :rows="5"
                   placeholder="请输入"
                 />
               </el-form-item>
