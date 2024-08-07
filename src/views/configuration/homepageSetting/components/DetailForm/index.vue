@@ -41,6 +41,7 @@ defineExpose({
                   message: "新增成功",
                   center: true,
                 });
+                resolve();
             });
           } else {
             api.edit(form.value).then((res: any) => {
@@ -49,9 +50,9 @@ defineExpose({
                   message: "编辑成功",
                   center: true,
                 });
+                resolve();
             });
           }
-          resolve();
         }
       });
     });
