@@ -8,6 +8,8 @@ import api from "@/api/modules/projectManagement_scheduling";
 defineOptions({
   name: "scheduling",
 });
+// 时间
+const { format } = useTimeago()
 const { pagination, getParams, onSizeChange, onCurrentChange } =
   usePagination(); // 分页
 const tableSortRef = ref("");
@@ -24,7 +26,7 @@ const lineHeight = ref<any>("default");
 const stripe = ref(false);
 const columns = ref<any>([
   { sotrtable: true, checked: true, label: "类型", prop: "dispatchType" },
-  { sotrtable: true, checked: true, label: "项目id", prop: "projectId" },
+  { sotrtable: true, checked: true, label: "项目ID", prop: "projectId" },
   { sotrtable: true, checked: true, label: "项目名称", prop: "projectName" },
   { sotrtable: true, checked: true, label: "原价", prop: "moneyPrice" },
   { sotrtable: true, checked: true, label: "指定价格", prop: "doMoneyPrice" },
@@ -216,6 +218,7 @@ onMounted(() => {
           show-overflow-tooltip
           prop="projectId"
           align="center"
+          width="180"
           label="项目ID"
         />
         <el-table-column
@@ -233,7 +236,7 @@ onMounted(() => {
           label="原价"
         >
           <template #default="{ row }">
-            {{ row.moneyPrice || 0 }}<CurrencyType />
+            <CurrencyType />{{ row.moneyPrice || 0 }}
           </template>
         </el-table-column>
         <el-table-column
@@ -244,7 +247,7 @@ onMounted(() => {
           label="指定价格"
         >
           <template #default="{ row }">
-            {{ row.doMoneyPrice || 0 }}<CurrencyType />
+            <CurrencyType />{{ row.doMoneyPrice || 0 }}
           </template>
         </el-table-column>
         <el-table-column
@@ -280,8 +283,11 @@ onMounted(() => {
           prop="createTime"
           align="center"
           label="创建时间"
-        />
-        <el-table-column align="center" label="操作" width="170">
+        ><template #default="{ row }">
+          <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" fixed="right" label="操作" width="170">
           <template #default="{ row }">
             <el-button type="primary" plain size="small" @click="editData(row)">
               编辑

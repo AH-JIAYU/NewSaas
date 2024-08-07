@@ -38,11 +38,11 @@ const columns = ref([
   { prop: "surveySource", label: "会员类型", sortable: true, checked: true },
   {
     prop: "memberChildrenId",
-    label: "子会员Id",
+    label: "子会员ID",
     sortable: true,
     checked: true,
   },
-  { prop: "memberId", label: "会员Id", sortable: true, checked: true },
+  { prop: "memberId", label: "会员ID", sortable: true, checked: true },
   {
     prop: "tenantSupplierId",
     label: "供应商id",
@@ -50,7 +50,7 @@ const columns = ref([
     checked: true,
   },
 
-  { prop: "projectId", label: "项目id", sortable: true, checked: true },
+  { prop: "projectId", label: "项目ID", sortable: true, checked: true },
   {
     prop: "randomIdentityId",
     label: "随机身份",
@@ -59,18 +59,30 @@ const columns = ref([
   },
   {
     prop: "projectName",
-    label: "项目名称/客户简称",
+    label: "项目名称",
+    sortable: true,
+    checked: true,
+  },
+  {
+    prop: "customerShortName",
+    label: "客户简称",
     sortable: true,
     checked: true,
   },
   { prop: "allocationType", label: "分配类型", sortable: true, checked: true },
   {
-    prop: "price",
-    label: "子会员价/供应商价/原价",
+    prop: "doMoneyPrice",
+    label: "原价",
     sortable: true,
     checked: true,
   },
-  { prop: "ipBelong", label: "ip/所属国", sortable: true, checked: true },
+  {
+    prop: "supplierPrice",
+    label: "供应商价",
+    sortable: true,
+    checked: true,
+  },
+  { prop: "ipBelong", label: "IP/所属国", sortable: true, checked: true },
   { prop: "surveyTime", label: "调查时间", sortable: true, checked: true },
   { prop: "surveyStatus", label: "调查状态", sortable: true, checked: true },
   { prop: "viceStatus", label: "副状态", sortable: true, checked: true },
@@ -84,7 +96,7 @@ const queryForm = reactive<any>({
   projectName: "", //项目名称-模糊查询
   customerId: "", //客户Id
   ip: "", //ip-模糊查询
-  surveyStatus: "", //调查状态:1 C=完成/待审核 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
+  surveyStatus: "", //调查状态:1 C=完成 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
   randomIdentityId: "", //随机身份id
 });
 
@@ -94,7 +106,7 @@ const data = reactive<any>({
   // 分配类型
   allocationTypeList: ["未分配", "供应商", "会员组"],
   // 调查状态
-  surveyStatusList: ["完成/待审核", "被甄别", "配额满", "安全终止", "未完成"],
+  surveyStatusList: ["完成", "被甄别", "配额满", "安全终止", "未完成"],
   // 副状态
   viceStatusList: [
     "待审",
@@ -109,7 +121,7 @@ const data = reactive<any>({
     "时间段过载",
     "ip不一致",
     "id重复参与",
-    '和解',
+    "和解",
   ],
   //客户列表
   customerList: [],
@@ -165,7 +177,7 @@ function onReset() {
     projectName: "", //项目名称-模糊查询
     customerId: "", //客户Id
     ip: "", //ip-模糊查询
-    surveyStatus: "", //调查状态:1 C=完成/待审核 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
+    surveyStatus: "", //调查状态:1 C=完成 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
     randomIdentityId: "", //随机身份id
   });
   fetchData();
@@ -383,7 +395,9 @@ onMounted(async () => {
           v-if="checkList.includes('id')"
           align="center"
           prop="id"
+          width="180"
           show-overflow-tooltip
+          fixed="left"
           label="点击ID"
           ><template #default="{ row }">
             {{ row.id ? row.id : "-" }}
@@ -393,6 +407,7 @@ onMounted(async () => {
           v-if="checkList.includes('surveySource')"
           align="center"
           prop="memberId"
+          width="180"
           show-overflow-tooltip
           label="会员类型"
         >
@@ -406,6 +421,7 @@ onMounted(async () => {
           prop="memberChildrenId"
           show-overflow-tooltip
           label="子会员ID"
+          width="180"
           ><template #default="{ row }">
             {{ row.memberChildrenId ? row.memberChildrenId : "-" }}
           </template>
@@ -416,6 +432,7 @@ onMounted(async () => {
           prop="memberId"
           show-overflow-tooltip
           label="会员ID"
+          width="180"
           ><template #default="{ row }">
             {{ row.memberId ? row.memberId : "-" }}
           </template>
@@ -426,6 +443,7 @@ onMounted(async () => {
           align="center"
           prop="randomIdentityId"
           show-overflow-tooltip
+          width="180"
           label="随机身份"
           ><template #default="{ row }">
             {{ row.randomIdentityId ? row.randomIdentityId : "-" }}
@@ -436,6 +454,7 @@ onMounted(async () => {
           align="center"
           prop="tenantSupplierId"
           show-overflow-tooltip
+          width="180"
           label="供应商ID"
           ><template #default="{ row }">
             {{ row.tenantSupplierId ? row.tenantSupplierId : "-" }}
@@ -446,6 +465,7 @@ onMounted(async () => {
           align="center"
           prop="projectId"
           show-overflow-tooltip
+          width="180"
           label="项目ID"
         />
         <el-table-column
@@ -453,17 +473,22 @@ onMounted(async () => {
           align="center"
           prop="projectName"
           show-overflow-tooltip
-          label="项目名称/客户简称"
-          ><template #default="{ row }">
-            {{ row.projectName ? row.projectName : "-" }}/{{
-              row.customerShortName ? row.customerShortName : "-"
-            }}
-          </template>
-        </el-table-column>
+          width="180"
+          label="项目名称"
+        />
+        <el-table-column
+          v-if="checkList.includes('customerShortName')"
+          align="center"
+          prop="customerShortName"
+          show-overflow-tooltip
+          width="120"
+          label="客户简称"
+        />
         <el-table-column
           v-if="checkList.includes('allocationType')"
           align="center"
           show-overflow-tooltip
+          width="100"
           label="分配类型"
         >
           <template #default="{ row }">
@@ -471,16 +496,31 @@ onMounted(async () => {
           </template>
         </el-table-column>
         <el-table-column
-          v-if="checkList.includes('price')"
+          v-if="checkList.includes('doMoneyPrice')"
           align="center"
-          prop="h"
+          prop="doMoneyPrice"
           show-overflow-tooltip
-          label="原价/供应商价/子会员价"
+          width="180"
+          fixed="right"
+          label="原价"
         >
           <template #default="{ row }">
-            {{ row.doMoneyPrice || 0 }}<CurrencyType /> /
-            {{ row.supplierPrice || 0 }}<CurrencyType /> /
-            {{ row.memberChildPrice || 0 }}<CurrencyType />
+            <CurrencyType />{{ row.doMoneyPrice || 0 }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="checkList.includes('supplierPrice')"
+          align="center"
+          prop="supplierPrice"
+          show-overflow-tooltip
+          width="180"
+          fixed="right"
+          label="供应商价"
+        >
+          <template #default="{ row }">
+            <CurrencyType />{{
+              row.supplierPrice || 0
+            }}
           </template>
         </el-table-column>
         <el-table-column
@@ -488,12 +528,16 @@ onMounted(async () => {
           align="center"
           prop="ipBelong"
           show-overflow-tooltip
+          fixed="right"
+          width="150"
           label="IP/所属国"
         />
         <el-table-column
           v-if="checkList.includes('surveyTime')"
           align="center"
           show-overflow-tooltip
+          fixed="right"
+          width="120"
           label="调查时间"
         >
           <template #default="{ row }">
@@ -505,17 +549,25 @@ onMounted(async () => {
           v-if="checkList.includes('surveyStatus')"
           align="center"
           show-overflow-tooltip
+          fixed="right"
+          width="100"
           prop=""
           label="调查状态"
         >
           <template #default="{ row }">
-            {{ data.surveyStatusList[row.surveyStatus - 1] }}
+            <el-text v-if="row.surveyStatus === 3" class="mx-1" type="primary">配额满</el-text>
+            <el-text v-if="row.surveyStatus === 1" class="mx-1" type="success">完成</el-text>
+            <el-text v-if="row.surveyStatus === 2" class="mx-1" type="danger">被甄别</el-text>
+            <el-text v-if="row.surveyStatus === 4" class="mx-1" type="warning">安全终止</el-text>
+            <el-text v-if="row.surveyStatus === 5" class="mx-1" type="info">未完成</el-text>
           </template>
         </ElTableColumn>
         <ElTableColumn
           v-if="checkList.includes('viceStatus')"
           align="center"
           show-overflow-tooltip
+          fixed="right"
+          width="100"
           prop=""
           label="副状态"
         >

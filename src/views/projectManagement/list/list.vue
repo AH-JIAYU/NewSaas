@@ -10,15 +10,16 @@ import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDiction
 import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
 import useProjectManagementListStore from "@/store/modules/projectManagement_list"; // 项目
 
+defineOptions({
+  name: "list",
+});
+// 时间
+const { format } = useTimeago()
 const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
 const customerStore = useUserCustomerStore(); // 客户
 const projectManagementListStore = useProjectManagementListStore(); //项目
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
-
-defineOptions({
-  name: "list",
-});
 // 货币类型
 const countryType = ref<any>();
 const tableSortRef = ref<any>();
@@ -37,7 +38,7 @@ const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const lineHeight = ref<any>("default");
 const stripe = ref(false);
 const columns = ref([
-  { prop: "projectId", label: "项目id", checked: true, sotrtable: true },
+  { prop: "projectId", label: "项目ID", checked: true, sotrtable: true },
   { prop: "name", label: "项目名称", checked: true, sotrtable: true },
   {
     prop: "clientName",
@@ -350,11 +351,7 @@ onMounted(async () => {
       <el-row :gutter="24">
         <FormLeftPanel>
           <!-- v-auth="'/list-insert-btn'" -->
-          <el-button
-            type="primary"
-            size="default"
-            @click="addProject"
-          >
+          <el-button type="primary" size="default" @click="addProject">
             新增项目
           </el-button>
           <el-button type="primary" size="default" @click="dispatch">
@@ -392,6 +389,7 @@ onMounted(async () => {
           v-if="checkList.includes('projectId')"
           show-overflow-tooltip
           prop="projectId"
+          width="180"
           align="center"
           label="项目ID"
         />
@@ -409,22 +407,25 @@ onMounted(async () => {
         </el-table-column>
         <el-table-column
           v-if="checkList.includes('clientName')"
-          show-overflow-tooltip
           prop="clientName"
           align="center"
           label="客户简称/标识"
-          width="100"
-        />
+          width="120"
+        ><template #default="{ row }">
+            <p>{{row.clientName.split('/')[0]}}</p>
+            <p>{{row.clientName.split('/')[1]}}</p>
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="checkList.includes('PCNL')"
-          show-overflow-tooltip
           align="center"
           label="参与/完成/配额/限量"
-          width="100"
+          width="160"
         >
           <template #default="{ row }">
-            {{ row.participation || 0 }}/ {{ row.complete || 0 }}/
-            {{ row.num || 0 }}/
+            <el-text class="mx-1">{{ row.participation || 0 }}</el-text>
+            / <el-text class="mx-1" type="success">{{ row.complete || 0 }}</el-text>/
+            <el-text class="mx-1" type="warning">{{ row.num || 0 }}</el-text>/
             {{ row.limitedQuantity || "-" }}
           </template>
         </el-table-column>
@@ -452,7 +453,7 @@ onMounted(async () => {
           label="原价"
         >
           <template #default="{ row }">
-            {{ row.doMoneyPrice || 0 }}<CurrencyType />
+            <CurrencyType />{{ row.doMoneyPrice || 0 }}
           </template>
         </el-table-column>
         <el-table-column
@@ -473,7 +474,7 @@ onMounted(async () => {
           prop="countryIdList"
           align="center"
           label="国家地区"
-          width="200"
+          width="100"
         >
           <template #default="{ row }">
             <template v-if="row.countryIdList">
@@ -544,6 +545,7 @@ onMounted(async () => {
           show-overflow-tooltip
           prop="remark"
           align="center"
+          width="100"
           label="备注"
           ><template #default="{ row }">
             {{ row.remark ? row.remark : "-" }}
@@ -562,8 +564,13 @@ onMounted(async () => {
           prop="createTime"
           align="center"
           label="创建时间"
-        />
-        <el-table-column align="center" label="操作" width="250">
+          ><template #default="{ row }">
+            <el-tag effect="plain" type="info">{{
+              format(row.createTime)
+            }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" fixed="right" label="操作" width="240">
           <template #default="{ row }">
             <el-button
               v-if="row.allocationStatus === 1"

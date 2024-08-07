@@ -18,7 +18,8 @@ defineOptions({
 
 const { pagination, getParams, onSizeChange, onCurrentChange } =
   usePagination(); // 分页
-
+// 时间
+const { format } = useTimeago();
 const listLoading = ref(false);
 const data = reactive<any>({
   list: [], // 列表
@@ -35,14 +36,15 @@ const checkList = ref<Array<Object>>([]); // 表格-展示的列
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 // 表格控件-展示列
 const columns = ref<Array<Object>>([
-  { prop: "memberId", label: "会员id", checked: true, sprtable: true },
+  { prop: "memberId", label: "会员ID", checked: true, sprtable: true },
   {
     prop: "memberNickname",
     label: "会员名称",
     checked: true,
     sprtable: true,
   },
-  { label: "余额", checked: true, sortable: true, prop: "availableBalance" },
+  { label: "会员姓名", checked: true, sortable: true, prop: "memberName" },
+  { label: "可用余额", checked: true, sortable: true, prop: "availableBalance" },
   {
     label: "待审金额",
     checked: true,
@@ -59,6 +61,7 @@ const columns = ref<Array<Object>>([
   { prop: "memberGroupName", label: "会员组", checked: true, sprtable: true },
   { prop: "B2B|B2C", label: "B2B|B2C", checked: true, sprtable: true },
   { prop: "memberStatus", label: "会员状态", checked: true, sprtable: true },
+  { prop: "randomStatus", label: "随机身份", checked: true, sprtable: true },
   { prop: "createName", label: "创建人", checked: true, sprtable: true },
   { prop: "createTime", label: "创建日期", checked: true, sprtable: true },
 ]);
@@ -295,6 +298,7 @@ onMounted(async () => {
           v-if="checkList.includes('memberId')"
           align="center"
           prop="memberId"
+          width="180"
           show-overflow-tooltip
           label="会员ID"
         />
@@ -311,7 +315,9 @@ onMounted(async () => {
           prop="memberName"
           show-overflow-tooltip
           label="会员姓名"
-        />
+        ><template #default="{ row }">
+          {{ row.memberName ? row.memberName : '-' }} </template
+        ></el-table-column>
         <el-table-column
           v-if="checkList.includes('availableBalance')"
           align="center"
@@ -320,7 +326,7 @@ onMounted(async () => {
           label="可用余额"
         >
           <template #default="{ row }">
-            {{ row.availableBalance || 0 }}<CurrencyType /> </template
+            <CurrencyType />{{ row.availableBalance || 0 }} </template
         ></el-table-column>
         <el-table-column
           v-if="checkList.includes('pendingBalance')"
@@ -330,7 +336,7 @@ onMounted(async () => {
           label="待审金额"
         >
           <template #default="{ row }">
-            {{ row.pendingBalance || 0 }}<CurrencyType /> </template
+            <CurrencyType />{{ row.pendingBalance || 0 }} </template
         ></el-table-column>
         <el-table-column
           v-if="checkList.includes('memberLevelName')"
@@ -345,8 +351,9 @@ onMounted(async () => {
           prop="memberGroupName"
           show-overflow-tooltip
           label="会员组"
-        />
-
+        ><template #default="{ row }">
+          {{ row.memberGroupName ? row.memberGroupName : '-' }} </template
+        ></el-table-column>
         <el-table-column
           v-if="checkList.includes('B2B|B2C')"
           align="center"
@@ -355,17 +362,17 @@ onMounted(async () => {
         >
           <template #default="{ row }">
             <el-text v-if="row.b2bStatus && row.b2bStatus === 2" class="mx-1"
-              ><div class="i-fluent:checkmark-12-filled w-1.5em h-1.5em"></div
+              ><div style="color: #15d36a;" class="i-fluent:checkmark-12-filled w-1.5em h-1.5em"></div
             ></el-text>
             <el-text v-else class="mx-1"
-              ><div class="i-entypo:cross w-1.5em h-1.5em"></div
+              ><div style="color:#e74032;" class="i-entypo:cross w-1.5em h-1.5em"></div
             ></el-text>
             |
             <el-text v-if="row.b2cStatus && row.b2cStatus === 2" class="mx-1"
-              ><div class="i-fluent:checkmark-12-filled w-1.5em h-1.5em"></div
+              ><div style="color: #15d36a;" class="i-fluent:checkmark-12-filled w-1.5em h-1.5em"></div
             ></el-text>
             <el-text v-else class="mx-1"
-              ><div class="i-entypo:cross w-1.5em h-1.5em"></div
+              ><div style="color:#e74032;" class="i-entypo:cross w-1.5em h-1.5em"></div
             ></el-text>
           </template>
         </el-table-column>
@@ -401,7 +408,7 @@ onMounted(async () => {
         </el-table-column>
         <el-table-column
           align="center"
-          v-if="checkList.includes('memberStatus')"
+          v-if="checkList.includes('randomStatus')"
           show-overflow-tooltip
           label="随机身份"
         >
@@ -433,11 +440,17 @@ onMounted(async () => {
           align="center"
           prop="createTime"
           show-overflow-tooltip
-          label="创建日期"
-        />
+          label="创建时间"
+        ><template #default="{ row }">
+            <el-tag effect="plain" type="info">{{
+              format(row.createTime)
+            }}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column
           align="center"
           label="操作"
+          fixed="right"
           show-overflow-tooltip
           width="180"
         >

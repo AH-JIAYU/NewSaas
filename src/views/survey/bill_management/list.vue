@@ -301,7 +301,7 @@ async function paymentOperation(id: any, type: any) {
           label="账单金额"
         >
           <template #default="{ row }">
-            {{ row.billAmount || 0 }}<CurrencyType /> </template
+            <CurrencyType />{{ row.billAmount || 0 }} </template
         ></ElTableColumn>
         <ElTableColumn
           v-if="data.checkList.includes('taxesFees')"
@@ -311,7 +311,7 @@ async function paymentOperation(id: any, type: any) {
           label="税"
         >
           <template #default="{ row }">
-            {{ row.taxesFees || 0 }}<CurrencyType /> </template
+            <CurrencyType />{{ row.taxesFees || 0 }} </template
         ></ElTableColumn>
         <ElTableColumn
           v-if="data.checkList.includes('payAmount')"
@@ -321,7 +321,7 @@ async function paymentOperation(id: any, type: any) {
           label="实际金额"
         >
           <template #default="{ row }">
-            {{ row.payAmount || 0 }}<CurrencyType /> </template
+            <CurrencyType />{{ row.payAmount || 0 }} </template
         ></ElTableColumn>
         <ElTableColumn
           v-if="data.checkList.includes('payTime')"
@@ -356,6 +356,7 @@ async function paymentOperation(id: any, type: any) {
           align="center"
           prop="i"
           label="操作"
+          fixed="right"
           show-overflow-tooltip
           width="260"
         >

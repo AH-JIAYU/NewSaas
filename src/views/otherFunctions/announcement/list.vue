@@ -11,6 +11,8 @@ import useSettingsStore from "@/store/modules/settings";
 defineOptions({
   name: "announcement",
 });
+// 时间
+const { format } = useTimeago();
 // 国际化
 const router = useRouter();
 // 分页
@@ -21,8 +23,35 @@ const settingsStore = useSettingsStore();
 // 表格控件-展示列
 const columns = ref([
   {
-    label: "等级名称",
-    prop: "a",
+    label: "标题",
+    prop: "title",
+    sortable: true,
+    // 不可更改
+    disableCheck: false,
+    // 默认展示
+    checked: true,
+  },
+  {
+    label: "类型",
+    prop: "type",
+    sortable: true,
+    // 不可更改
+    disableCheck: false,
+    // 默认展示
+    checked: true,
+  },
+  {
+    label: "置顶",
+    prop: "top",
+    sortable: true,
+    // 不可更改
+    disableCheck: false,
+    // 默认展示
+    checked: true,
+  },
+  {
+    label: "创建时间",
+    prop: "createTime",
     sortable: true,
     // 不可更改
     disableCheck: false,
@@ -211,6 +240,11 @@ onMounted(() => {
       getDataList();
     });
   }
+  columns.value.forEach((item: any) => {
+    if (item.checked) {
+      data.value.checkList.push(item.prop);
+    }
+  });
 });
 
 onBeforeUnmount(() => {
@@ -325,12 +359,14 @@ onBeforeUnmount(() => {
           width="80"
         /> -->
         <ElTableColumn
+        v-if="data.checkList.includes('title')"
           align="center"
           show-overflow-tooltip
           prop="title"
           label="标题"
         />
         <ElTableColumn
+        v-if="data.checkList.includes('type')"
           align="center"
           show-overflow-tooltip
           prop="type"
@@ -341,6 +377,7 @@ onBeforeUnmount(() => {
           </template>
         </ElTableColumn>
         <ElTableColumn
+        v-if="data.checkList.includes('top')"
           align="center"
           show-overflow-tooltip
           prop="top"
@@ -360,12 +397,18 @@ onBeforeUnmount(() => {
           </template>
         </ElTableColumn>
         <ElTableColumn
+        v-if="data.checkList.includes('createTime')"
           align="center"
           show-overflow-tooltip
           prop="createTime"
-          label="创建日期"
-        />
-        <ElTableColumn label="操作" width="150" align="center" fixed="right">
+          label="创建时间"
+        ><template #default="{ row }">
+            <el-tag effect="plain" type="info">{{
+              format(row.createTime)
+            }}</el-tag>
+          </template>
+        </ElTableColumn>
+        <ElTableColumn label="操作" width="300" align="center" fixed="right">
           <template #default="scope">
             <ElButton
               type="primary"

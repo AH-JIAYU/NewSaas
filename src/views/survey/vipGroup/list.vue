@@ -14,9 +14,9 @@ defineOptions({
 
 const { pagination, getParams, onSizeChange, onCurrentChange } =
   usePagination(); // 分页
-
+// 时间
+const { format } = useTimeago();
 const listLoading = ref(false);
-
 const list = ref<Array<Object>>([]); // 列表
 const selectRows = ref<any>(); // 表格-选中行
 const editRef = ref(); // 新增|编辑 组件ref
@@ -29,8 +29,50 @@ const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const columns = ref<Array<Object>>([
   // 表格控件-展示列
   {
-    label: "等级名称",
-    prop: "a",
+    label: "会员组ID",
+    prop: "memberGroupId",
+    sortable: true,
+    disableCheck: false, // 不可更改
+    checked: true, // 默认展示
+  },
+  {
+    label: "会员组名称",
+    prop: "memberGroupName",
+    sortable: true,
+    disableCheck: false, // 不可更改
+    checked: true, // 默认展示
+  },
+  {
+    label: "组长名称(ID)",
+    prop: "groupLeaderMemberName",
+    sortable: true,
+    disableCheck: false, // 不可更改
+    checked: true, // 默认展示
+  },
+  {
+    label: "成员",
+    prop: "memberNumber",
+    sortable: true,
+    disableCheck: false, // 不可更改
+    checked: true, // 默认展示
+  },
+  {
+    label: "项目数",
+    prop: "projectNumber",
+    sortable: true,
+    disableCheck: false, // 不可更改
+    checked: true, // 默认展示
+  },
+  {
+    label: "创建时间",
+    prop: "createTime",
+    sortable: true,
+    disableCheck: false, // 不可更改
+    checked: true, // 默认展示
+  },
+  {
+    label: "组状态",
+    prop: "groupStatus",
     sortable: true,
     disableCheck: false, // 不可更改
     checked: true, // 默认展示
@@ -237,19 +279,21 @@ onMounted(() => {
       >
         <el-table-column align="center" type="selection" />
         <el-table-column
-          v-if="checkList.includes('a')"
+          v-if="checkList.includes('memberGroupId')"
           align="center"
           prop="memberGroupId"
           show-overflow-tooltip
           label="会员组ID"
         />
         <el-table-column
+         v-if="checkList.includes('memberGroupName')"
           align="center"
           prop="memberGroupName"
           show-overflow-tooltip
           label="会员组名称"
         />
         <el-table-column
+         v-if="checkList.includes('groupLeaderMemberName')"
           align="center"
           prop="groupLeaderMemberName"
           show-overflow-tooltip
@@ -260,12 +304,14 @@ onMounted(() => {
           </template>
         </el-table-column>
         <el-table-column
+         v-if="checkList.includes('memberNumber')"
           align="center"
           prop="memberNumber"
           show-overflow-tooltip
           label="成员"
         />
         <el-table-column
+        v-if="checkList.includes('projectNumber')"
           align="center"
           prop="projectNumber"
           show-overflow-tooltip
@@ -278,12 +324,19 @@ onMounted(() => {
           </template>
         </el-table-column>
         <el-table-column
+        v-if="checkList.includes('createTime')"
           align="center"
           prop="createTime"
           show-overflow-tooltip
-          label="创建日期"
-        />
+          label="创建时间"
+        ><template #default="{ row }">
+            <el-tag effect="plain" type="info">{{
+              format(row.createTime)
+            }}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column
+        v-if="checkList.includes('groupStatus')"
           align="center"
           prop="groupStatus"
           show-overflow-tooltip
@@ -305,6 +358,7 @@ onMounted(() => {
           align="center"
           prop="i"
           label="操作"
+          fixed="right"
           show-overflow-tooltip
           width="180"
         >

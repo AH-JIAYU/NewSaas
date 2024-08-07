@@ -167,7 +167,7 @@ defineExpose({ showEdit });
             label="变更状态"
           >
             <el-radio-group v-model="formData.type">
-              <el-radio value="1,0" size="large"> 完成/待审核 </el-radio>
+              <el-radio value="1,0" size="large"> 完成 </el-radio>
               <el-radio value="1,7" size="large"> 审核通过 </el-radio>
               <el-radio value="1,8" size="large"> 审核失败 </el-radio>
               <el-radio value="1,9" size="large"> 数据冻结 </el-radio>

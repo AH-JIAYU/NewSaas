@@ -12,21 +12,46 @@ const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
 // 右侧工具栏配置变量
 const border = ref(true);
-const checkList = ref([]);
+const checkList = ref<any>([]);
 // 表格控件-高度自适应
 const tableAutoHeight = ref(false);
 // 表格控件-控制全屏
 const lineHeight = ref<any>("default");
 const stripe = ref(false);
-const columns = ref([
+const columns = ref<any>([
+  { label: "客户名称", prop: "customerName", sortable: true, checked: true },
   {
-    label: "项目ID",
-    prop: "ID",
+    label: "客户简称",
+    prop: "customerShortName",
     sortable: true,
-    // 不可改变的
-    disableCheck: true,
     checked: true,
   },
+  { label: "负责人", prop: "chargeName", sortable: true, checked: true },
+  {
+    label: "关联项目数量",
+    prop: "relationProjectTotal",
+    sortable: true,
+    checked: true,
+  },
+  {
+    label: "参与项目数量",
+    prop: "participateProjectTotal",
+    sortable: true,
+    checked: true,
+  },
+  {
+    label: "结算项目数量",
+    prop: "settlementProjectTotal",
+    sortable: true,
+    checked: true,
+  },
+  {
+    label: "结算项目金额",
+    prop: "settlementAmount",
+    sortable: true,
+    checked: true,
+  },
+  { label: "项目营业额", prop: "turnover", sortable: true, checked: true },
 ]);
 const radio = ref();
 // 时间
@@ -104,7 +129,104 @@ async function getDataList() {
     });
   }
 }
+const getDataChange = () => {
+  if (data.value.activeName === "report") {
+    checkList.value = []
+    columns.value = [
+      {
+        label: "客户名称",
+        prop: "customerName",
+        sortable: true,
+        checked: true,
+      },
+      {
+        label: "客户简称",
+        prop: "customerShortName",
+        sortable: true,
+        checked: true,
+      },
+      { label: "负责人", prop: "chargeName", sortable: true, checked: true },
+      {
+        label: "关联项目数量",
+        prop: "relationProjectTotal",
+        sortable: true,
+        checked: true,
+      },
+      {
+        label: "参与项目数量",
+        prop: "participateProjectTotal",
+        sortable: true,
+        checked: true,
+      },
+      {
+        label: "结算项目数量",
+        prop: "settlementProjectTotal",
+        sortable: true,
+        checked: true,
+      },
+      {
+        label: "结算项目金额",
+        prop: "settlementAmount",
+        sortable: true,
+        checked: true,
+      },
+      { label: "项目营业额", prop: "turnover", sortable: true, checked: true },
+    ];
+    columns.value.forEach((item: any) => {
+      if (item.checked) {
+        checkList.value.push(item.prop);
+      }
+    });
+    getDataList()
+  } else {
+    checkList.value = []
+    columns.value = [
+      {
+        label: "客户名称",
+        prop: "customerName",
+        sortable: true,
+        checked: true,
+      },
+      {
+        label: "客户简称",
+        prop: "customerShortName",
+        sortable: true,
+        checked: true,
+      },
+      { label: "负责人", prop: "chargeName", sortable: true, checked: true },
+      {
+        label: "系统完成数",
+        prop: "systemDone",
+        sortable: true,
+        checked: true,
+      },
+      {
+        label: "结算完成单数",
+        prop: "settlementDone",
+        sortable: true,
+        checked: true,
+      },
+      {
+        label: "审核率",
+        prop: "settlementRatioPercent",
+        sortable: true,
+        checked: true,
+      },
+    ];
+    columns.value.forEach((item: any) => {
+      if (item.checked) {
+        checkList.value.push(item.prop);
+      }
+    });
+    getDataList()
+  }
+};
 onMounted(() => {
+  columns.value.forEach((item: any) => {
+    if (item.checked) {
+      checkList.value.push(item.prop);
+    }
+  });
   getDataList();
 });
 </script>
@@ -120,7 +242,7 @@ onMounted(() => {
         v-model="data.activeName"
         type="border-card"
         class="demo-tabs"
-        @tab-change="getDataList"
+        @tab-change="getDataChange"
       >
         <el-tab-pane label="客户报告" name="report">
           <el-row class="fx-b">
@@ -189,6 +311,7 @@ onMounted(() => {
           >
             <el-table-column align="center" type="selection" />
             <el-table-column
+              v-if="checkList.includes('customerName')"
               show-overflow-tooltip
               align="center"
               prop="customerName"
@@ -200,6 +323,7 @@ onMounted(() => {
               </template>
             </el-table-column>
             <el-table-column
+              v-if="checkList.includes('customerShortName')"
               show-overflow-tooltip
               align="center"
               prop="customerShortName"
@@ -207,6 +331,7 @@ onMounted(() => {
               width="180"
             />
             <el-table-column
+              v-if="checkList.includes('chargeName')"
               show-overflow-tooltip
               align="center"
               prop="chargeName"
@@ -216,24 +341,28 @@ onMounted(() => {
               </template>
             </el-table-column>
             <el-table-column
+              v-if="checkList.includes('relationProjectTotal')"
               show-overflow-tooltip
               align="center"
               prop="relationProjectTotal"
               label="关联项目数量"
             />
             <el-table-column
+              v-if="checkList.includes('participateProjectTotal')"
               show-overflow-tooltip
               align="center"
               prop="participateProjectTotal"
               label="参与项目数量"
             />
             <el-table-column
+              v-if="checkList.includes('settlementProjectTotal')"
               show-overflow-tooltip
               align="center"
               prop="settlementProjectTotal"
               label="结算项目数量"
             />
             <el-table-column
+              v-if="checkList.includes('settlementAmount')"
               show-overflow-tooltip
               align="center"
               prop="settlementAmount"
@@ -243,6 +372,7 @@ onMounted(() => {
               </template>
             </el-table-column>
             <el-table-column
+              v-if="checkList.includes('turnover')"
               show-overflow-tooltip
               align="center"
               prop="turnover"
@@ -321,6 +451,7 @@ onMounted(() => {
           >
             <el-table-column align="center" type="selection" />
             <el-table-column
+            v-if="checkList.includes('customerName')"
               show-overflow-tooltip
               align="center"
               prop="customerName"
@@ -331,6 +462,7 @@ onMounted(() => {
               </template>
             </el-table-column>
             <el-table-column
+            v-if="checkList.includes('customerShortName')"
               show-overflow-tooltip
               align="center"
               prop="customerShortName"
@@ -341,6 +473,7 @@ onMounted(() => {
               </template>
             </el-table-column>
             <el-table-column
+            v-if="checkList.includes('chargeName')"
               show-overflow-tooltip
               align="center"
               prop="chargeName"
@@ -350,12 +483,14 @@ onMounted(() => {
               </template>
             </el-table-column>
             <el-table-column
+            v-if="checkList.includes('systemDone')"
               show-overflow-tooltip
               align="center"
               prop="systemDone"
               label="系统完成数"
             />
             <el-table-column
+            v-if="checkList.includes('settlementDone')"
               show-overflow-tooltip
               align="center"
               prop="settlementDone"
@@ -368,6 +503,7 @@ onMounted(() => {
               label="审核成功"
             /> -->
             <el-table-column
+            v-if="checkList.includes('settlementRatioPercent')"
               show-overflow-tooltip
               align="center"
               prop="settlementRatioPercent"
