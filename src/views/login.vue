@@ -53,6 +53,8 @@ const loginGetCaptcha = ref(false); // 验证码按钮是否禁用
 const loginForm = ref<any>({
   account: storage.local.get("login_account") || "",
   remember: storage.local.has("login_account"),
+  // 勾选协议
+  agreeToTheAgreement: false,
 });
 // 自定义校验手机号
 const validatePhone = (rule: any, value: any, callback: any) => {
@@ -81,6 +83,14 @@ const loginRules = ref<any>({
   password: [
     { required: true, trigger: "blur", message: "请输入密码" },
     { min: 6, max: 18, trigger: "blur", message: "密码长度为6到18位" },
+  ],
+  agreeToTheAgreement: [
+    {
+      required: true,
+      validator: (rule: any, value: any) => value === true,
+      message: "请阅读并勾选协议",
+      trigger: "change",
+    },
   ],
 });
 // 动态表单校验
@@ -266,6 +276,14 @@ const registerRules = ref<FormRules>({
   password: [
     { required: true, trigger: "blur", message: "请输入密码" },
     { min: 6, max: 18, trigger: "blur", message: "密码长度为6到18位" },
+  ],
+  agreeToTheAgreement: [
+    {
+      required: true,
+      validator: (rule, value) => value === true,
+      message: "请阅读并勾选协议",
+      trigger: "blur",
+    },
   ],
 });
 // 获取验证码
@@ -495,20 +513,26 @@ watch(
               </template>
             </ElInput>
           </ElFormItem>
+          <ElFormItem prop="agreeToTheAgreement">
+            <div class="flex-bar" style="width: 100%; margin: 0">
+              <ElCheckbox v-model="loginForm.agreeToTheAgreement" tabindex="3">
+                我已阅读并同意《xxxx协议》
+              </ElCheckbox>
+              <ElLink
+                v-if="loginType === 'password'"
+                type="primary"
+                :underline="false"
+                @click="formType = 'reset'"
+              >
+                忘记密码了?
+              </ElLink>
+            </div>
+          </ElFormItem>
         </div>
-
         <div class="flex-bar">
           <ElCheckbox v-model="loginForm.remember" tabindex="4">
             保持登录
           </ElCheckbox>
-          <ElLink
-            v-if="loginType === 'password'"
-            type="primary"
-            :underline="false"
-            @click="formType = 'reset'"
-          >
-            忘记密码了?
-          </ElLink>
         </div>
         <ElButton
           :loading="loading"
@@ -672,8 +696,17 @@ watch(
               </template>
             </ElInput>
           </ElFormItem>
+          <ElFormItem prop="agreeToTheAgreement">
+            <div class="flex-bar" style="margin: 0">
+              <ElCheckbox
+                v-model="registerForm.agreeToTheAgreement"
+                tabindex="6"
+              >
+                我已阅读并同意《xxxx协议》
+              </ElCheckbox>
+            </div>
+          </ElFormItem>
         </div>
-
         <ElButton
           tabindex="7"
           :loading="loading"
