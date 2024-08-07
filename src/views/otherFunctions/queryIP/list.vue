@@ -44,7 +44,7 @@ async function ParsingEncryption() {
             v-model="formIp"
             placeholder="请粘贴IP,参考格式： (110.34.56.112)，每行一个,多个请回车换行"
             type="textarea"
-            rows="30"
+            :rows="30"
           />
         </el-col>
         <el-col :xs="2" :sm="2" :md="2" :lg="2" :xl="2">
@@ -58,7 +58,7 @@ async function ParsingEncryption() {
           </div>
         </el-col>
         <el-col :xs="10" :sm="10" :md="10" :lg="10" :xl="10">
-          <el-input v-model="showIp" type="textarea" rows="30" />
+          <el-input v-model="showIp" type="textarea" :rows="30" />
         </el-col>
       </el-row>
     </PageMain>
