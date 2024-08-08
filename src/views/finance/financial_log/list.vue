@@ -451,7 +451,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
               >-<CurrencyType />{{ Math.abs(row.addAndSubtraction) }}</el-text
             >
             <el-text v-else type="success" class="mx-1">
-              <CurrencyType />{{ Math.abs(row.addAndSubtraction) }}</el-text
+              +<CurrencyType />{{ Math.abs(row.addAndSubtraction) }}</el-text
             >
           </template>
         </ElTableColumn>
