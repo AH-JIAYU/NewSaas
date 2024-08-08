@@ -445,9 +445,9 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
           width="120"
           ><template #default="{ row }">
             <el-text v-if="row.operationType === 1" type="success" class="mx-1"
-              ><CurrencyType/>+{{ row.difference }}</el-text>
+              >+<CurrencyType/>{{ row.difference }}</el-text>
             <el-text v-if="row.operationType === 2" type="danger" class="mx-1"
-              ><CurrencyType/>-{{ row.difference }}</el-text>
+              >-<CurrencyType/>{{ row.difference }}</el-text>
           </template>
         </ElTableColumn>
         <ElTableColumn

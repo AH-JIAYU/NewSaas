@@ -40,8 +40,8 @@ const data = ref({
     enable: false,
     selectionDataList: [],
   },
-  // 列表数据
-  dataList: [],
+  dataList: [], //自定义
+  controlDataList: [], // 通用
 });
 
 onMounted(() => {
@@ -67,7 +67,8 @@ function getDataList() {
   };
   api.list(params).then((res: any) => {
     data.value.loading = false;
-    data.value.dataList = res.data.data;
+    data.value.controlDataList = res.data.controlData; //通用
+    data.value.dataList = res.data.data; //自定义
     pagination.value.total = Number(res.data.total);
   });
 }
@@ -99,8 +100,8 @@ function onEdit(row: any) {
   data.value.formModeProps.visible = true;
 }
 // 设计主页
-function homePage(row: any) {
-  homePageRef.value.showEdit(row);
+function homePage(row: any, title: any = "编辑") {
+  homePageRef.value.showEdit(row, title);
 }
 
 function onDel(row: any) {
@@ -122,6 +123,41 @@ function onDel(row: any) {
 <template>
   <div :class="{ 'absolute-container': data.tableAutoHeight }">
     <PageMain>
+      <PageHeader title="通用模板" />
+      <ElTable
+        v-loading="data.loading"
+        class="my-4"
+        :data="data.controlDataList"
+        stripe
+        highlight-current-row
+        border
+        height="100%"
+        @sort-change="sortChange"
+        @selection-change="data.batch.selectionDataList = $event"
+      >
+        <ElTableColumn
+          v-if="data.batch.enable"
+          type="selection"
+          align="center"
+          fixed
+        />
+        <ElTableColumn prop="title" label="标题" />
+        <ElTableColumn label="操作" width="250" align="center" fixed="right">
+          <template #default="scope">
+            <ElButton
+              type="primary"
+              size="small"
+              plain
+              @click="homePage(scope.row, '查看')"
+            >
+              查看
+            </ElButton>
+          </template>
+        </ElTableColumn>
+      </ElTable>
+    </PageMain>
+    <PageMain>
+      <PageHeader title="自定义模板" />
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
           <ElForm
@@ -161,6 +197,7 @@ function onDel(row: any) {
         </template>
       </SearchBar>
       <ElDivider border-style="dashed" />
+
       <ElSpace wrap>
         <ElButton type="primary" size="default" @click="onCreate">
           <template #icon>
@@ -250,6 +287,7 @@ function onDel(row: any) {
         @current-change="currentChange"
       />
     </PageMain>
+
     <FormMode
       v-if="data.formMode === 'dialog' || data.formMode === 'drawer'"
       :id="data.formModeProps.id"
