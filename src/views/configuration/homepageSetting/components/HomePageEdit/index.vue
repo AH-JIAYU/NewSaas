@@ -10,7 +10,9 @@
     <div ref="formRef"></div>
     <template #footer>
       <el-button @click="close">取 消</el-button>
-      <el-button type="primary" @click="save">确 定</el-button>
+      <el-button v-if="state.title === '编辑'" type="primary" @click="save"
+        >确 定</el-button
+      >
     </template>
   </el-drawer>
 </template>
@@ -39,8 +41,8 @@ const state = reactive<any>({
 const editorRef = ref<any>(null);
 const formRef = ref<any>(null);
 
-const showEdit = (row: any) => {
-  state.title = "编辑";
+const showEdit = (row: any, title: any = "编辑") => {
+  state.title = title;
   state.form = row;
   state.dialogFormVisible = true;
 };
@@ -82,18 +84,20 @@ const onDialogOpened = async () => {
 };
 
 const save = async () => {
-  const html = editorRef.value.getHtml();
-  const css = editorRef.value.getCss();
-  const rawData = JSON.stringify(editorRef.value.getProjectData());
-  state.form = { ...state.form, html, css, rawData };
-  const { status } = await api.edit(state.form);
-  status === 1 &&
-    ElMessage.success({
-      message: "编辑成功",
-      center: true,
-    });
-  emits("fetch-data");
-  close();
+  if (state.title === "编辑") {
+    const html = editorRef.value.getHtml();
+    const css = editorRef.value.getCss();
+    const rawData = JSON.stringify(editorRef.value.getProjectData());
+    state.form = { ...state.form, html, css, rawData };
+    const { status } = await api.edit(state.form);
+    status === 1 &&
+      ElMessage.success({
+        message: "编辑成功",
+        center: true,
+      });
+    emits("fetch-data");
+    close();
+  }
 };
 
 const close = () => {
@@ -114,4 +118,3 @@ defineExpose({
   height: 20px;
 }
 </style>
-@/api/modules/configuration_homepageSetting
