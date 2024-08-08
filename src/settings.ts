@@ -18,6 +18,7 @@ const globalSettings: Settings.all = {
   toolbar: {
     favorites: true,
     i18n: true,
+    notification: true,
     fullscreen: true,
     pageReload: true,
     colorScheme: true,

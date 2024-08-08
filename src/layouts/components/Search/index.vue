@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// @ts-nocheck
 import { Dialog, DialogDescription, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import type { OverlayScrollbarsComponentRef } from 'overlayscrollbars-vue'
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-vue'

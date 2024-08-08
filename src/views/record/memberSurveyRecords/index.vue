@@ -500,7 +500,7 @@ onMounted(async () => {
           align="center"
           prop="doMoneyPrice"
           show-overflow-tooltip
-          width="180"
+          width="80"
           fixed="right"
           label="原价"
         >
@@ -513,7 +513,7 @@ onMounted(async () => {
           align="center"
           prop="supplierPrice"
           show-overflow-tooltip
-          width="180"
+          width="90"
           fixed="right"
           label="供应商价"
         >
@@ -528,7 +528,6 @@ onMounted(async () => {
           align="center"
           prop="ipBelong"
           show-overflow-tooltip
-          fixed="right"
           width="150"
           label="IP/所属国"
         />
