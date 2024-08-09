@@ -56,13 +56,13 @@ const dictionary = ref({
   search: {
     chineseName: "",
   },
-  tree: [] as Dict[],
-  currentNode: undefined as Node | undefined,
-  currentData: undefined as Dict | undefined,
+  tree: [],
+  currentNode: undefined,
+  currentData: undefined,
   dialog: {
     visible: false,
-    parentId: "" as Dict["id"],
-    id: "" as Dict["id"],
+    parentId: "",
+    id: "",
   },
   row: "",
   loading: false,
