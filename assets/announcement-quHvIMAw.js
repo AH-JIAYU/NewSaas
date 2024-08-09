@@ -1,0 +1,9 @@
+
+/**
+ * 由 Fantastic-admin 提供技术支持
+ * Powered by Fantastic-admin
+ * Gitee  https://fantastic-admin.gitee.io
+ * Github https://fantastic-admin.github.io
+ */
+
+import{k as e}from"./index-CHTO5iG0.js";const i={list:t=>e.post("notice/getNotice",t),create:t=>e.post("notice/insertNotice",t),edit:t=>e.post("notice/updateNotice",t),delete:t=>e.post("notice/deleteNotice",t)};export{i as a};
