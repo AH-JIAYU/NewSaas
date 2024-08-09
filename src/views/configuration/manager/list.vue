@@ -65,7 +65,7 @@ const list = ref<any>()
 onMounted(async () => {
   getDataList()
   filterCountry.value = await useStoreCountry.getCountry()
-  munulevs.value = await roleStore.getRole
+  munulevs.value = await roleStore.getRole()
   if (data.value.formMode === 'router') {
     eventBus.on('get-data-list', () => {
       getDataList()

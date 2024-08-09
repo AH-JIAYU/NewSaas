@@ -500,7 +500,7 @@ onMounted(async () => {
           align="center"
           prop="doMoneyPrice"
           show-overflow-tooltip
-          width="80"
+          width="90"
           fixed="right"
           label="原价"
         >
