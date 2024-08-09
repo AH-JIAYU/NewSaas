@@ -4,6 +4,7 @@ import useSettingsStore from "./settings";
 import useTabbarStore from "./tabbar";
 import useRouteStore from "./route";
 import useMenuStore from "./menu";
+import useNotificationStore from "./notification"; //消息中心
 import router from "@/router";
 import type { Settings } from "#/global";
 import apiUser from "@/api/modules/user";
@@ -19,10 +20,12 @@ const useUserStore = defineStore(
     const tabbarStore = useTabbarStore();
     const routeStore = useRouteStore();
     const menuStore = useMenuStore();
+    const notificationStore = useNotificationStore(); //消息中心
 
     const account = ref(storage.local.get("account") ?? "");
     const token = ref(storage.local.get("token") ?? "");
     const avatar = ref(storage.local.get("avatar") ?? "");
+    const userId = ref(storage.local.get("userId") ?? "");
     const permissions = ref<string[]>([]);
     const currencyType = ref<number | string>(3); //货币类型 1=USD 2=CNY 3=未知
     const isLogin = computed(() => {
@@ -60,9 +63,12 @@ const useUserStore = defineStore(
       storage.local.set("account", res.data.account);
       storage.local.set("token", res.data.token);
       storage.local.set("avatar", res.data.avatar);
+      storage.local.set("userId", res.data.userId);
       account.value = res.data.account;
       token.value = res.data.token;
       avatar.value = res.data.avatar;
+      userId.value = res.data.userId;
+      notificationStore.openSocket(res.data.userId);
     }
     // 登出
     async function logout(
@@ -73,11 +79,13 @@ const useUserStore = defineStore(
         storage.local.remove("account");
         storage.local.remove("token");
         storage.local.remove("avatar");
+        storage.local.remove("userId");
         storage.local.remove("login_account");
         storage.local.remove("tabbarPinData");
         account.value = "";
         token.value = "";
         avatar.value = "";
+        userId.value = "";
         permissions.value = [];
         tabbarStore.clean();
         routeStore.removeRoutes();
@@ -95,11 +103,13 @@ const useUserStore = defineStore(
         storage.local.remove("account");
         storage.local.remove("token");
         storage.local.remove("avatar");
+        storage.local.remove("userId");
         storage.local.remove("login_account");
         storage.local.remove("tabbarPinData");
         account.value = "";
         token.value = "";
         avatar.value = "";
+        userId.value = "";
         permissions.value = [];
         tabbarStore.clean();
         routeStore.removeRoutes();
@@ -278,6 +288,7 @@ const useUserStore = defineStore(
       account,
       token,
       avatar,
+      userId,
       permissions,
       currencyType,
       isLogin,

@@ -20,6 +20,7 @@ import useMenuStore from "@/store/modules/menu";
 import useTabbarStore from "@/store/modules/tabbar";
 import useIframeStore from "@/store/modules/iframe";
 import useFavoritesStore from "@/store/modules/favorites";
+import useNotificationStore from "@/store/modules/notification"; //消息中心
 
 const { isLoading } = useNProgress();
 
@@ -39,6 +40,7 @@ router.beforeEach(async (to, from, next) => {
   const tabbarStore = useTabbarStore();
   const iframeStore = useIframeStore();
   const favoritesStore = useFavoritesStore();
+  const notificationStore = useNotificationStore(); //消息中心
   settingsStore.settings.app.enableProgress && (isLoading.value = true);
   // 是否已登录
   if (userStore.isLogin) {
@@ -100,6 +102,9 @@ router.beforeEach(async (to, from, next) => {
       // settingsStore.settings.app.enablePermission && await userStore.getPermissions()
       await userStore.getPermissions(); //权限
       await userStore.getCurrencyType(); // 货币类型
+      if (!notificationStore.socket) {
+        notificationStore.openSocket(userStore.userId); //连接websocket
+      }
       // 获取用户偏好设置
       settingsStore.settings.userPreferences.enable &&
         (await userStore.getPreferences());
