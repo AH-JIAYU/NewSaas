@@ -15,7 +15,7 @@ const visible = defineModel<boolean>({
 // formRef
 const formRef = ref()
 // 标题
-const title = computed(() => props.id === '' ? '新增文章公告' : '编辑文章公告')
+const title = computed(() => props.id === '' ? '新增部门' : '编辑部门')
 // 提交
 function onSubmit() {
   formRef.value.submit().then(() => {
@@ -42,7 +42,7 @@ function onCancel() {
         </ElButton>
       </template>
     </ElDialog>
-    <ElDrawer v-else-if="props.mode === 'drawer'" v-model="visible" :title="title" size="60%" :close-on-click-modal="false" destroy-on-close>
+    <ElDrawer v-else-if="props.mode === 'drawer'" v-model="visible" :title="title" size="40%" :close-on-click-modal="false" destroy-on-close>
       <DetailForm ref="formRef" v-bind="props" />
       <template #footer>
         <ElButton size="large" @click="onCancel">

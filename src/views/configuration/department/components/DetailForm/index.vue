@@ -1,122 +1,174 @@
 <script setup lang="ts">
-import type { FormInstance, FormRules } from 'element-plus'
-import { ElMessage } from 'element-plus'
-import { Editor } from '@bytemd/vue-next'
-import gfm from '@bytemd/plugin-gfm'
-import zhHans from 'bytemd/locales/zh_Hans.json'
-import gfmLocale from '@bytemd/plugin-gfm/lib/locales/zh_Hans.json'
-import 'bytemd/dist/index.css'
-import type { DetailFormProps } from '../../types'
-import api from '@/api/modules/announcement'
+import type { FormInstance, FormRules } from "element-plus";
+import { ElMessage } from "element-plus";
+import type { DetailFormProps } from "../../types";
+import api from "@/api/modules/announcement";
 
 // 传递数据
-const props = defineProps(["id", "row"])
+const props = defineProps(["id", "row"]);
 // 类型
-const type = [
-  { label: '公告', value: 1 },
-  { label: '常见问题', value: 2 },
-  { label: '帮助', value: 3 },
-]
+const commissionList = [
+  { label: "完成计提", value: 1 },
+  { label: "审核计提", value: 2 },
+  { label: "收款计提", value: 3 },
+];
 // loading加载
-const loading = ref(false)
+const loading = ref(false);
 // formRef
-const formRef = ref<FormInstance>()
+const formRef = ref<FormInstance>();
 // 定义表单
 const form = ref({
   id: props.id,
   // 标题
-  title: '',
+  title: "",
   // 类型
   type: '',
+  active: false,
   // 内容
-  text: '',
+  text: "",
   // 是否置顶
   top: false,
-})
+});
 // 校验
 const formRules = ref<FormRules>({
-  title: [
-    { required: true, message: '请输入标题', trigger: 'blur' },
-  ],
-  type: [
-    { required: true, message: '请选择类型', trigger: 'change' },
-  ],
-})
-// 富文本
-const plugins = [
-  gfm({
-    locale: gfmLocale,
-  }),
-]
-// 赋值富文本数据
-function handleChange(v: string) {
-  form.value.text = v
-}
+  title: [{ required: true, message: "请输入标题", trigger: "blur" }],
+  type: [{ required: true, message: "请选择类型", trigger: "change" }],
+});
 onMounted(() => {
-  if (form.value.id !== '') {
-    getInfo()
+  if (form.value.id !== "") {
+    getInfo();
   }
-})
+});
 // 修改回显数
 function getInfo() {
-  loading.value = true
-  form.value = props.row
-  loading.value = false
+  loading.value = true;
+  form.value = props.row;
+  loading.value = false;
 }
 // 暴露提交
 defineExpose({
   submit() {
     return new Promise<void>((resolve) => {
-      if (form.value.id === '') {
-        formRef.value && formRef.value.validate((valid) => {
-          if (valid) {
-            delete form.value.id
-            loading.value = true
-            api.create(form.value).then(() => {
-              loading.value = false
-              ElMessage.success({
-                message: '新增成功',
-                center: true,
-              })
-              resolve()
-            })
-          }
-        })
+      if (form.value.id === "") {
+        formRef.value &&
+          formRef.value.validate((valid) => {
+            if (valid) {
+              delete form.value.id;
+              loading.value = true;
+              api.create(form.value).then(() => {
+                loading.value = false;
+                ElMessage.success({
+                  message: "新增成功",
+                  center: true,
+                });
+                resolve();
+              });
+            }
+          });
+      } else {
+        formRef.value &&
+          formRef.value.validate((valid) => {
+            if (valid) {
+              loading.value = true;
+              api.edit(form.value).then(() => {
+                loading.value = false;
+                ElMessage.success({
+                  message: "编辑成功",
+                  center: true,
+                });
+                resolve();
+              });
+            }
+          });
       }
-      else {
-        formRef.value && formRef.value.validate((valid) => {
-          if (valid) {
-            loading.value = true
-            api.edit(form.value).then(() => {
-              loading.value = false
-              ElMessage.success({
-                message: '编辑成功',
-                center: true,
-              })
-              resolve()
-            })
-          }
-        })
-      }
-    })
+    });
   },
-})
+});
 </script>
 
 <template>
   <div v-loading="loading">
-    <ElForm ref="formRef" :model="form" :rules="formRules" label-width="120px" label-suffix="：">
-      <el-form-item label="标题" prop="title">
-        <el-input v-model="form.title" placeholder="请输入标题" clearable @change="" />
+    <ElForm
+      ref="formRef"
+      :model="form"
+      :rules="formRules"
+      label-width="130px"
+      label-suffix="："
+    >
+      <el-form-item label="部门名称" prop="title">
+        <el-input
+          v-model="form.title"
+          placeholder="请输入部门名称"
+          clearable
+          @change=""
+        />
       </el-form-item>
-      <el-form-item label="类型" prop="type">
-        <el-select v-model="form.type" value-key="" placeholder="类型" clearable filterable>
-          <el-option v-for="item in type" :key="item.value" :label="item.label" :value="item.value" />
+      <el-form-item label="部门主管" prop="type">
+        <el-select
+          v-model="form.type"
+          value-key=""
+          placeholder="类型"
+          clearable
+          filterable
+        >
+          <el-option
+            v-for="item in commissionList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
         </el-select>
       </el-form-item>
-      <el-form-item label="内容">
-        <!-- key解决富文本编译器   先新增  再编辑  富文本右侧值还在的问题    key值变了会刷新组件 -->
-        <Editor class="editor" :value="form.text" :plugins="plugins" :locale="zhHans" @change="handleChange" />
+      <el-row :gutter="20">
+        <el-col :span="8">
+          <el-form-item label="部门提成" prop="type">
+            <el-switch
+              v-model="form.active"
+              active-text="启用"
+              inactive-text="禁用"
+              inline-prompt
+              :active-value="true"
+              :inactive-value="false"
+            >
+            </el-switch>
+          </el-form-item>
+        </el-col>
+        <el-col :span="16">
+          <el-form-item label="提成发放设置" prop="type">
+            <el-select
+              v-model="form.type"
+              value-key=""
+              placeholder="请选择发放提成方式"
+              clearable
+              filterable
+            >
+              <el-option
+                v-for="item in commissionList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-form-item label="提成比例" prop="title">
+        <el-input
+          v-model="form.title"
+          placeholder="请输入提成比例"
+          clearable
+          @change=""
+          ><template #append>%</template></el-input
+        >
+      </el-form-item>
+      <el-form-item label="备注">
+        <el-input
+          v-model="form.title"
+          type="textarea"
+          :rows="10"
+          placeholder="请输入备注"
+          clearable
+        />
       </el-form-item>
       <el-form-item label="">
         <el-checkbox v-model="form.top" label="置顶" size="large" />
