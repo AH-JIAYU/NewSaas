@@ -4,12 +4,13 @@ import { onBeforeUnmount, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import FormMode from "./components/FormMode/index.vue";
+import Detail from "./components/Detail/index.vue";
 import eventBus from "@/utils/eventBus";
 import api from "@/api/modules/announcement";
 import useSettingsStore from "@/store/modules/settings";
 
 defineOptions({
-  name: "announcement",
+  name: "department",
 });
 // 时间
 const { format } = useTimeago();
@@ -59,6 +60,7 @@ const columns = ref([
     checked: true,
   },
 ]);
+const detailRef = ref<any>()
 // 筛选类型
 const typeI = ref();
 // 定义数据
@@ -216,21 +218,9 @@ function onChangeStatus(row: any) {
       });
   });
 }
-// 删除
-function onDel(row: any) {
-  ElMessageBox.confirm(`确认删除「${row.title}」吗？`, "确认信息")
-    .then(() => {
-      data.value.loading = true;
-      api.delete({ id: row.id }).then(() => {
-        data.value.loading = false;
-        getDataList();
-        ElMessage.success({
-          message: "删除成功",
-          center: true,
-        });
-      });
-    })
-    .catch(() => {});
+// 详情
+function onDetail(row: any) {
+  detailRef.value.showEdit(row)
 }
 
 onMounted(() => {
@@ -270,7 +260,16 @@ onBeforeUnmount(() => {
             <ElFormItem label="">
               <ElInput
                 v-model="data.search.title"
-                placeholder="请输入标题"
+                placeholder="请输入部门ID"
+                clearable
+                @keydown.enter="currentChange()"
+                @clear="currentChange()"
+              />
+            </ElFormItem>
+            <ElFormItem label="">
+              <ElInput
+                v-model="data.search.title"
+                placeholder="请输入部门名称"
                 clearable
                 @keydown.enter="currentChange()"
                 @clear="currentChange()"
@@ -280,7 +279,7 @@ onBeforeUnmount(() => {
               <el-select
                 v-model="data.search.type"
                 value-key=""
-                placeholder="请选择类型"
+                placeholder="请选择状态"
                 clearable
                 filterable
               >
@@ -363,14 +362,47 @@ onBeforeUnmount(() => {
           align="center"
           show-overflow-tooltip
           prop="title"
-          label="标题"
+          label="部门ID"
         />
         <ElTableColumn
         v-if="data.checkList.includes('type')"
           align="center"
           show-overflow-tooltip
           prop="type"
-          label="类型"
+          label="部门名称"
+        >
+          <template #default="{ row }">
+            {{ type[row.type - 1].label }}
+          </template>
+        </ElTableColumn>
+        <ElTableColumn
+        v-if="data.checkList.includes('type')"
+          align="center"
+          show-overflow-tooltip
+          prop="type"
+          label="部门主管"
+        >
+          <template #default="{ row }">
+            {{ type[row.type - 1].label }}
+          </template>
+        </ElTableColumn>
+        <ElTableColumn
+        v-if="data.checkList.includes('type')"
+          align="center"
+          show-overflow-tooltip
+          prop="type"
+          label="员工数"
+        >
+          <template #default="{ row }">
+            {{ type[row.type - 1].label }}
+          </template>
+        </ElTableColumn>
+        <ElTableColumn
+        v-if="data.checkList.includes('type')"
+          align="center"
+          show-overflow-tooltip
+          prop="type"
+          label="备注"
         >
           <template #default="{ row }">
             {{ type[row.type - 1].label }}
@@ -381,7 +413,7 @@ onBeforeUnmount(() => {
           align="center"
           show-overflow-tooltip
           prop="top"
-          label="置顶"
+          label="状态"
         >
           <template #default="{ row }">
             <el-switch
@@ -396,18 +428,6 @@ onBeforeUnmount(() => {
             </el-switch>
           </template>
         </ElTableColumn>
-        <ElTableColumn
-        v-if="data.checkList.includes('createTime')"
-          align="center"
-          show-overflow-tooltip
-          prop="createTime"
-          label="创建时间"
-        ><template #default="{ row }">
-            <el-tag effect="plain" type="info">{{
-              format(row.createTime)
-            }}</el-tag>
-          </template>
-        </ElTableColumn>
         <ElTableColumn label="操作" width="300" align="center" fixed="right">
           <template #default="scope">
             <ElButton
@@ -419,12 +439,12 @@ onBeforeUnmount(() => {
               编辑
             </ElButton>
             <ElButton
-              type="danger"
+              type="primary"
               size="small"
               plain
-              @click="onDel(scope.row)"
+              @click="onDetail(scope.row)"
             >
-              删除
+              详情
             </ElButton>
           </template>
         </ElTableColumn>
@@ -453,6 +473,7 @@ onBeforeUnmount(() => {
       :mode="data.formMode"
       @success="getDataList"
     />
+    <Detail ref="detailRef" />
   </div>
 </template>
 
