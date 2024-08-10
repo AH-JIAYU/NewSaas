@@ -13,6 +13,7 @@ const activeName = ref('message')
 
 <template>
   <div class="w-xs">
+    
     <HTabList
       v-model="activeName" :options="[
         {
@@ -25,6 +26,7 @@ const activeName = ref('message')
         },
       ]" class="m-3 flex!" @click.stop
     />
+
     <template v-if="activeName === 'message'">
       <OverlayScrollbarsComponent :options="{ scrollbars: { autoHide: 'leave', autoHideDelay: 300 } }" defer class="list max-h-300px">
         <div class="item">
@@ -91,13 +93,27 @@ const activeName = ref('message')
     </template>
     <template v-if="activeName === 'todo'">
       <OverlayScrollbarsComponent :options="{ scrollbars: { autoHide: 'leave', autoHideDelay: 300 } }" defer class="list max-h-300px">
+        <div class="item">
+          <SvgIcon name="i-ri:mail-fill" />
+          <div class="info">
+            <div class="title">
+              你收到了 8 份日报
+            </div>
+            <div class="date">
+              2020-10-10 10:00:00
+            </div>
+          </div>
+        </div>
+      </OverlayScrollbarsComponent>
+
+      <!-- <OverlayScrollbarsComponent :options="{ scrollbars: { autoHide: 'leave', autoHideDelay: 300 } }" defer class="list max-h-300px">
         <div class="flex flex-col items-center py-6 text-stone-5">
           <SvgIcon name="i-tabler:mood-smile" :size="40" />
           <p m-2 text-base>
             没有新待办
           </p>
         </div>
-      </OverlayScrollbarsComponent>
+      </OverlayScrollbarsComponent> -->
       <RouterLink v-slot="{ navigate }" :to="{ name: 'personalNotification' }" custom>
         <div class="cursor-pointer py-4 text-center text-sm text-stone-5" @click="navigate">
           进入待办列表

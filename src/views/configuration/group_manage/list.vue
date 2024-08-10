@@ -270,7 +270,7 @@ onBeforeUnmount(() => {
             <ElFormItem label="">
               <ElInput
                 v-model="data.search.id"
-                placeholder="请输入部门ID"
+                placeholder="请输入组ID"
                 clearable
                 @keydown.enter="currentChange()"
                 @clear="currentChange()"
@@ -279,7 +279,16 @@ onBeforeUnmount(() => {
             <ElFormItem label="">
               <ElInput
                 v-model="data.search.name"
-                placeholder="请输入部门名称"
+                placeholder="请输入组名称"
+                clearable
+                @keydown.enter="currentChange()"
+                @clear="currentChange()"
+              />
+            </ElFormItem>
+            <ElFormItem label="">
+              <ElInput
+                v-model="data.search.name"
+                placeholder="所属部门"
                 clearable
                 @keydown.enter="currentChange()"
                 @clear="currentChange()"
@@ -372,14 +381,14 @@ onBeforeUnmount(() => {
           align="center"
           show-overflow-tooltip
           prop="id"
-          label="部门ID"
+          label="组ID"
         />
         <ElTableColumn
         v-if="data.checkList.includes('name')"
           align="center"
           show-overflow-tooltip
           prop="name"
-          label="部门名称"
+          label="组名称"
         >
           <template #default="{ row }">
             {{ row.name }}
@@ -390,7 +399,7 @@ onBeforeUnmount(() => {
           align="center"
           show-overflow-tooltip
           prop="director"
-          label="部门主管"
+          label="组长"
         >
           <template #default="{ row }">
             <el-text v-for="item in staffList" :key="item.id">
@@ -416,7 +425,7 @@ onBeforeUnmount(() => {
           align="center"
           show-overflow-tooltip
           prop="remark"
-          label="备注"
+          label="所属部门"
         >
           <template #default="{ row }">
             {{ row.remark }}
@@ -430,7 +439,7 @@ onBeforeUnmount(() => {
               plain
               @click="onGroup(scope.row)"
             >
-              新增小组
+              新增组员
             </ElButton>
             <ElButton
               type="primary"

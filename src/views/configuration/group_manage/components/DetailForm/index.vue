@@ -105,7 +105,7 @@ defineExpose({
       label-width="130px"
       label-suffix="："
     >
-      <el-form-item label="部门名称" prop="name">
+      <el-form-item label="组名称" prop="name">
         <el-input
           v-model="form.name"
           placeholder="请输入部门名称"
@@ -113,11 +113,11 @@ defineExpose({
           @change=""
         />
       </el-form-item>
-      <el-form-item label="部门主管" prop="director">
+      <el-form-item label="所属部门" prop="director">
         <el-select
           v-model="form.director"
           value-key=""
-          placeholder="请选择部门主管"
+          placeholder="请选择所属部门"
           clearable
           filterable
         >
@@ -129,26 +129,11 @@ defineExpose({
           />
         </el-select>
       </el-form-item>
-      <el-row style="margin-bottom: 0px;" :gutter="20">
-        <el-col :span="8">
-          <el-form-item label="部门提成" prop="commissionStatus">
-            <el-switch
-              v-model="form.commissionStatus"
-              active-text="启用"
-              inactive-text="禁用"
-              inline-prompt
-              :active-value="1"
-              :inactive-value="2"
-            >
-            </el-switch>
-          </el-form-item>
-        </el-col>
-        <el-col :span="16">
-          <el-form-item label="提成发放规则" prop="commissionType">
+      <el-form-item label="组长" prop="commissionType">
             <el-select
               v-model="form.commissionType"
               value-key=""
-              placeholder="请选择发放提成方式"
+              placeholder="请选择组长"
               clearable
               filterable
             >
@@ -160,26 +145,17 @@ defineExpose({
               />
             </el-select>
           </el-form-item>
-        </el-col>
-      </el-row>
-      <el-form-item label="提成比例" prop="commission">
-        <el-input
-          v-model.number="form.commission"
-          placeholder="请输入提成比例"
-          clearable
-          @change=""
-          ><template #append>%</template></el-input
-        >
-      </el-form-item>
-      <el-form-item label="备注">
-        <el-input
-          v-model="form.remark"
-          type="textarea"
-          :rows="10"
-          placeholder="请输入备注"
-          clearable
-        />
-      </el-form-item>
+          <el-form-item label="组提成" prop="commissionStatus">
+            <el-switch
+              v-model="form.commissionStatus"
+              active-text="启用"
+              inactive-text="禁用"
+              inline-prompt
+              :active-value="1"
+              :inactive-value="2"
+            >
+            </el-switch>
+          </el-form-item>
     </ElForm>
   </div>
 </template>

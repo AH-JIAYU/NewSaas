@@ -342,8 +342,8 @@ onMounted(() => {
           label="B2B"
         >
           <template #default="{ row }">
-            <el-tag v-show="row.b2bStatus === 1" effect="light" type="danger">关闭</el-tag>
-            <el-tag v-show="row.b2bStatus === 2" effect="light" type="success">开启</el-tag>
+            <el-text v-show="row.b2bStatus === 1" effect="light"><div style="color:#e74032;" class="i-entypo:cross w-1.5em h-1.5em"></div></el-text>
+            <el-text v-show="row.b2bStatus === 2" effect="light" ><div style="color: #15d36a;" class="i-fluent:checkmark-12-filled w-1.5em h-1.5em"></div></el-text>
           </template>
         </ElTableColumn>
         <el-table-column
