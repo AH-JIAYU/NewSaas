@@ -37,7 +37,7 @@ const dialogTableVisible = ref(false);
 // 账户类型
 const typeList = [
   { label: "公司", value: "company" },
-  { label: "个人", value: "personal" },
+  // { label: "个人", value: "personal" },
 ];
 // 货币类型
 const currencyType = [
@@ -353,6 +353,7 @@ defineExpose({ showEdit });
                 v-model="userForm.type"
                 value-key=""
                 placeholder="账户类型"
+                disabled
                 clearable
                 filterable
               >
