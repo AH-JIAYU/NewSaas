@@ -202,7 +202,7 @@ const registerFormRef = ref<any>();
 // 账户类型
 const typeList = [
   { label: "公司", value: "company" },
-  { label: "个人", value: "personal" },
+  // { label: "个人", value: "personal" },
 ];
 // 国家list
 const countryList = ref<any>([]);
@@ -223,7 +223,7 @@ const registerForm = ref<any>({
   type: "phone",
   agreeToTheAgreement: false,
   // 账户类型
-  companyType: "personal",
+  companyType: "company",
   // 公司名称
   companyName: "",
   // 法人姓名
@@ -463,7 +463,7 @@ watch(
             </el-radio-group>
           </div>
         </div>
-        <div>
+        <div  style="height: 11.5625rem;">
           <ElFormItem prop="account">
             <ElInput
               v-model="loginForm.account"
@@ -564,7 +564,7 @@ watch(
         auto-complete="on"
       >
         <div>
-          <ElFormItem prop="companyType">
+          <!-- <ElFormItem prop="companyType">
             <el-select
               v-model="registerForm.companyType"
               value-key=""
@@ -585,29 +585,23 @@ watch(
               >
               </el-option>
             </el-select>
-          </ElFormItem>
-          <ElFormItem
-            v-if="registerForm.companyType === 'company'"
-            prop="companyName"
-          >
+          </ElFormItem> -->
+          <!-- v-if="registerForm.companyType === 'company'" -->
+          <ElFormItem prop="companyName">
             <ElInput
               v-model="registerForm.companyName"
               placeholder="请输入公司名称"
             />
           </ElFormItem>
-          <ElFormItem
-            v-if="registerForm.companyType === 'company'"
-            prop="taxID"
-          >
+          <!--  v-if="registerForm.companyType === 'company'" -->
+          <ElFormItem prop="taxID">
             <ElInput
               v-model="registerForm.taxID"
               placeholder="请输入公司税号"
             />
           </ElFormItem>
-          <ElFormItem
-            v-if="registerForm.companyType === 'company'"
-            prop="legalPersonName"
-          >
+          <!--  v-if="registerForm.companyType === 'company'" -->
+          <ElFormItem prop="legalPersonName">
             <ElInput
               v-model="registerForm.legalPersonName"
               placeholder="请输入法人姓名"

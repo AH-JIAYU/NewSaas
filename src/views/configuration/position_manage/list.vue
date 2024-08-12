@@ -111,22 +111,22 @@ function editData(row: any) {
   editRef.value.showEdit(JSON.stringify(row), customerList.value);
 }
 // 删除数据
-function onDel(row: any) {
-  ElMessageBox.confirm(
-    `确认删除「${row.tenantCustomerShortName}」这条数据吗？`,
-    "确认信息"
-  )
-    .then(() => {
-      api.delete({ id: row.id }).then(() => {
-        fetchData();
-        ElMessage.success({
-          message: "删除成功",
-          center: true,
-        });
-      });
-    })
-    .catch(() => {});
-}
+// function onDel(row: any) {
+//   ElMessageBox.confirm(
+//     `确认删除「${row.tenantCustomerShortName}」这条数据吗？`,
+//     "确认信息"
+//   )
+//     .then(() => {
+//       api.delete({ id: row.id }).then(() => {
+//         fetchData();
+//         ElMessage.success({
+//           message: "删除成功",
+//           center: true,
+//         });
+//       });
+//     })
+//     .catch(() => {});
+// }
 
 // 获取列表选中数据
 function setSelectRows(value: any) {
@@ -342,9 +342,9 @@ onMounted(() => {
             <el-button size="small" plain type="primary" @click="editData(row)">
               编辑
             </el-button>
-            <el-button size="small" plain type="danger" @click="onDel(row)">
+            <!-- <el-button size="small" plain type="danger" @click="onDel(row)">
               删除
-            </el-button>
+            </el-button> -->
           </template>
         </el-table-column>
         <template #empty>

@@ -7,17 +7,22 @@ import FormMode from "./components/FormMode/index.vue";
 import GroupForm from "./components/GroupForm/index.vue";
 import Detail from "./components/Detail/index.vue";
 import eventBus from "@/utils/eventBus";
-import api from "@/api/modules/department";
+import api from "@/api/modules/group_manage";
 import useTenantStaffStore from "@/store/modules/configuration_manager";
 import useSettingsStore from "@/store/modules/settings";
+import useDepartmentStore from "@/store/modules/department";
 
 defineOptions({
-  name: "department",
+  name: "group_manage",
 });
+// 部门
+const departmentStore = useDepartmentStore();
+// 部门数据
+const departmentList = ref<any>();
 // 用户
 const tenantStaffStore = useTenantStaffStore();
 // 用户数据
-const staffList = ref<any>([])
+const staffList = ref<any>([]);
 // 时间
 const { format } = useTimeago();
 // 国际化
@@ -39,7 +44,7 @@ const columns = ref([
     checked: true,
   },
   {
-    label: "部门名称",
+    label: "组名称",
     prop: "name",
     sortable: true,
     // 不可更改
@@ -48,7 +53,7 @@ const columns = ref([
     checked: true,
   },
   {
-    label: "部门主管",
+    label: "组长",
     prop: "director",
     sortable: true,
     // 不可更改
@@ -58,7 +63,7 @@ const columns = ref([
   },
   {
     label: "员工数",
-    prop: "memberCount",
+    prop: "count",
     sortable: true,
     // 不可更改
     disableCheck: false,
@@ -66,17 +71,8 @@ const columns = ref([
     checked: true,
   },
   {
-    label: "备注",
-    prop: "remark",
-    sortable: true,
-    // 不可更改
-    disableCheck: false,
-    // 默认展示
-    checked: true,
-  },
-  {
-    label: "创建时间",
-    prop: "createTime",
+    label: "所属部门",
+    prop: "departmentId",
     sortable: true,
     // 不可更改
     disableCheck: false,
@@ -85,9 +81,9 @@ const columns = ref([
   },
 ]);
 // detailRef
-const detailRef = ref<any>()
+const detailRef = ref<any>();
 // groupFormRef
-const groupFormRef = ref<any>()
+const groupFormRef = ref<any>();
 // 定义数据
 const data = ref<any>({
   loading: false,
@@ -119,12 +115,12 @@ const data = ref<any>({
     page: 1,
     // 每页数量
     limit: 10,
-    // 部门id
+    // 组id
     id: null,
-    // 	部门名称
-    name: '',
-    // 是否开启部门提成 ,可用值:1启用,2停用
-    commissionStatus: null,
+    // 	组名称
+    name: "",
+    // 	部门id
+    departmentId: null,
   },
   // 批量操作
   batch: {
@@ -160,12 +156,12 @@ function onReset() {
     page: 1,
     // 每页数量
     limit: 10,
-    // 部门id
+    // 组id
     id: null,
-    // 	部门名称
-    name: '',
-    // 是否开启部门提成 ,可用值:1启用,2停用
-    // commissionStatus: null,
+    // 	组名称
+    name: "",
+    // 	部门id
+    departmentId: null,
   });
   getDataList();
 }
@@ -196,9 +192,9 @@ function onCreate() {
     data.value.formModeProps.visible = true;
   }
 }
-// 新增小组
-function onGroup() {
-  groupFormRef.value.showEdit()
+// 新增组员
+function onGroup(row: any) {
+  groupFormRef.value.showEdit(JSON.stringify(row));
 }
 // 修改
 function onEdit(row: any) {
@@ -229,10 +225,11 @@ function onEdit(row: any) {
 }
 // 详情
 function onDetail(row: any) {
-  detailRef.value.showEdit(row)
+  detailRef.value.showEdit(row);
 }
 
 onMounted(async () => {
+  departmentList.value = await departmentStore.getDepartment();
   staffList.value = await tenantStaffStore.getStaff();
   getDataList();
   if (data.value.formMode === "router") {
@@ -270,7 +267,7 @@ onBeforeUnmount(() => {
             <ElFormItem label="">
               <ElInput
                 v-model="data.search.id"
-                placeholder="请输入部门ID"
+                placeholder="请输入组ID"
                 clearable
                 @keydown.enter="currentChange()"
                 @clear="currentChange()"
@@ -279,11 +276,28 @@ onBeforeUnmount(() => {
             <ElFormItem label="">
               <ElInput
                 v-model="data.search.name"
-                placeholder="请输入部门名称"
+                placeholder="请输入组名称"
                 clearable
                 @keydown.enter="currentChange()"
                 @clear="currentChange()"
               />
+            </ElFormItem>
+            <ElFormItem label="">
+              <el-select
+                v-model="data.search.departmentId"
+                value-key=""
+                placeholder="所属部门"
+                clearable
+                filterable
+              >
+                <el-option
+                  v-for="item in departmentList"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
+                >
+                </el-option>
+              </el-select>
             </ElFormItem>
             <!-- <el-form-item label="">
               <el-select
@@ -359,7 +373,7 @@ onBeforeUnmount(() => {
         @sort-change="sortChange"
         @selection-change="data.batch.selectionDataList = $event"
       >
-      <el-table-column align="center" type="selection" />
+        <el-table-column align="center" type="selection" />
         <!-- <el-table-column
           align="center"
           show-overflow-tooltip
@@ -368,58 +382,62 @@ onBeforeUnmount(() => {
           width="80"
         /> -->
         <ElTableColumn
-        v-if="data.checkList.includes('id')"
+          v-if="data.checkList.includes('id')"
           align="center"
           show-overflow-tooltip
           prop="id"
-          label="部门ID"
+          label="组ID"
         />
         <ElTableColumn
-        v-if="data.checkList.includes('name')"
+          v-if="data.checkList.includes('name')"
           align="center"
           show-overflow-tooltip
           prop="name"
-          label="部门名称"
+          label="组名称"
         >
           <template #default="{ row }">
             {{ row.name }}
           </template>
         </ElTableColumn>
         <ElTableColumn
-        v-if="data.checkList.includes('director')"
+          v-if="data.checkList.includes('director')"
           align="center"
           show-overflow-tooltip
           prop="director"
-          label="部门主管"
+          label="组长"
         >
           <template #default="{ row }">
             <el-text v-for="item in staffList" :key="item.id">
               <el-text v-if="item.id === row.director">
                 {{ item.name }}
-            </el-text>
+              </el-text>
             </el-text>
           </template>
         </ElTableColumn>
         <ElTableColumn
-        v-if="data.checkList.includes('memberCount')"
+          v-if="data.checkList.includes('count')"
           align="center"
           show-overflow-tooltip
-          prop="memberCount"
+          prop="count"
           label="员工数"
         >
           <template #default="{ row }">
-            {{ row.memberCount ? row.memberCount : '-' }}
+            {{ row.count ? row.count : "-" }}
           </template>
         </ElTableColumn>
         <ElTableColumn
-        v-if="data.checkList.includes('remark')"
+          v-if="data.checkList.includes('departmentId')"
           align="center"
           show-overflow-tooltip
-          prop="remark"
-          label="备注"
+          prop="departmentId"
+          label="所属部门"
         >
           <template #default="{ row }">
-            {{ row.remark }}
+            <el-text v-for="item in departmentList" :key="item.id">
+              <el-text v-if="item.id === row.departmentId">
+                {{ item.name }}
+              </el-text>
+            </el-text>
           </template>
         </ElTableColumn>
         <ElTableColumn label="操作" width="300" align="center" fixed="right">
@@ -428,9 +446,9 @@ onBeforeUnmount(() => {
               type="primary"
               size="small"
               plain
-              @click="onGroup()"
+              @click="onGroup(scope.row)"
             >
-              新增小组
+              新增组员
             </ElButton>
             <ElButton
               type="primary"

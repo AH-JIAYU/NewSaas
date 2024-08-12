@@ -331,7 +331,7 @@ nextTick(() => {
                   </el-select>
                 </el-form-item>
               </el-col>
-              <el-col :span="8">
+              <!-- <el-col :span="8">
                 <el-form-item label="关联客户">
                   <el-select v-model="props.leftTab.relevanceCustomerId">
                     <el-option
@@ -342,7 +342,7 @@ nextTick(() => {
                     ></el-option>
                   </el-select>
                 </el-form-item>
-              </el-col>
+              </el-col> -->
             </el-row>
           </el-card>
           <el-card class="box-card">

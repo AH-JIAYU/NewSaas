@@ -397,6 +397,7 @@ onMounted(async () => {
           v-if="checkList.includes('name')"
           show-overflow-tooltip
           prop="name"
+          width="180"
           align="center"
           label="项目名称"
           ><template #default="{ row }">
@@ -434,6 +435,7 @@ onMounted(async () => {
           show-overflow-tooltip
           prop="allocationType"
           align="center"
+          width="100"
           label="分配类型"
         >
           <template #default="{ row }">
@@ -514,6 +516,7 @@ onMounted(async () => {
           show-overflow-tooltip
           prop="allocationStatus"
           align="center"
+          width="100"
           label="分配状态"
         >
           <template #default="{ row }">
@@ -525,6 +528,7 @@ onMounted(async () => {
           show-overflow-tooltip
           prop="isOnline"
           align="center"
+          width="100"
           label="项目状态"
         >
           <template #default="{ row }">
@@ -563,6 +567,7 @@ onMounted(async () => {
           show-overflow-tooltip
           prop="createTime"
           align="center"
+          width="100" 
           label="创建时间"
           ><template #default="{ row }">
             <el-tag effect="plain" type="info">{{

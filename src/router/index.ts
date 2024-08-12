@@ -160,7 +160,7 @@ router.beforeEach(async (to, from, next) => {
   } else {
     if (!to?.meta?.whiteList) {
       next({
-        name: "login",
+        name: "home",
         query: {
           redirect:
             to.fullPath !== settingsStore.settings.home.fullPath
