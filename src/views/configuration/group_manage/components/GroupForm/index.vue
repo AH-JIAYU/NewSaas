@@ -10,6 +10,8 @@ defineOptions({
 });
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
+// tree ref
+const treeRef = ref<any>();
 // 部门
 const departmentStore = useDepartmentStore();
 // 部门数据
@@ -29,12 +31,7 @@ const formRef = ref();
 // 弹框开关变量
 const dialogTableVisible = ref(false);
 // 发票状态
-const invoiceStatusList = [
-  { lable: "未收款", value: 1 },
-  { lable: "部分收款", value: 2 },
-  { lable: "已完结", value: 3 },
-  { lable: "坏账", value: 4 },
-];
+const dataList = ref<any>([]);
 const dictionaryItem = ref<any>({
   loading: false,
   tableAutoHeight: false, // 表格是否自适应高度
@@ -158,44 +155,6 @@ async function handleEditProportion(row: any) {
   //   queryData();
   // }
 }
-// 提交数据
-function onSubmit() {
-  return new Promise<void>((resolve) => {
-    if (!form.value.id) {
-      formRef.value &&
-        formRef.value.validate((valid: any) => {
-          if (valid) {
-            delete form.value.id;
-            api.create(form.value).then(() => {
-              ElMessage.success({
-                message: "新增成功",
-                center: true,
-              });
-              emits("success");
-              dialogTableVisible.value = false;
-              resolve();
-            });
-          }
-        });
-    } else {
-      formRef.value &&
-        formRef.value.validate((valid: any) => {
-          if (valid) {
-            const data = toRaw(form.value);
-            api.edit(data).then(() => {
-              ElMessage.success({
-                message: "编辑成功",
-                center: true,
-              });
-              emits("success");
-              dialogTableVisible.value = false;
-              resolve();
-            });
-          }
-        });
-    }
-  });
-}
 // 获取数据
 async function showEdit(row: any) {
   title.value = row?.id ? "编辑" : "新增";
@@ -260,10 +219,68 @@ onMounted(async () => {
       ],
     },
   ];
-  console.log("departmentList", departmentList.value);
-
   defaultTime.value = new Date();
 });
+const checkeChange = (val: any) => {
+  dataList.value.map((ite: any) => {
+    if (ite.id === val.id) {
+      return console.log(11111);
+    }
+  });
+  if (val.children && val.children.length) {
+    val.children.forEach((item: any) => {
+      dataList.value.push(item);
+    });
+  } else {
+    dataList.value.push(val);
+  }
+};
+// 提交数据
+function onSubmit() {
+  return new Promise<void>((resolve) => {
+    //  获取选中的所有子节点
+    const tree = treeRef.value.getCheckedKeys();
+    // 获取所有半选的主节点
+    const halltree = treeRef.value.getHalfCheckedKeys();
+    // 组合一下
+    const menupath = tree.concat(halltree);
+    console.log('menupath',menupath);
+
+    // if (!form.value.id) {
+    //   formRef.value &&
+    //     formRef.value.validate((valid: any) => {
+    //       if (valid) {
+    //         delete form.value.id;
+    //         api.create(form.value).then(() => {
+    //           ElMessage.success({
+    //             message: "新增成功",
+    //             center: true,
+    //           });
+    //           emits("success");
+    //           dialogTableVisible.value = false;
+    //           resolve();
+    //         });
+    //       }
+    //     });
+    // } else {
+    //   formRef.value &&
+    //     formRef.value.validate((valid: any) => {
+    //       if (valid) {
+    //         const data = toRaw(form.value);
+    //         api.edit(data).then(() => {
+    //           ElMessage.success({
+    //             message: "编辑成功",
+    //             center: true,
+    //           });
+    //           emits("success");
+    //           dialogTableVisible.value = false;
+    //           resolve();
+    //         });
+    //       }
+    //     });
+    // }
+  });
+}
 // 暴露方法
 defineExpose({ showEdit });
 </script>
@@ -277,7 +294,7 @@ defineExpose({ showEdit });
             <span>组长</span>
           </div>
         </template>
-        <el-table :data="invoiceStatusList" border>
+        <el-table :data="dataList" border>
           <el-table-column
             align="center"
             type="index"
@@ -339,6 +356,7 @@ defineExpose({ showEdit });
         </template>
         <el-row :gutter="20">
           <el-col class="leftData" :span="8">
+            {{ dataList }}
             <el-input
               v-model="form.invoiceAmount"
               placeholder="可输入关键字查找"
@@ -347,37 +365,34 @@ defineExpose({ showEdit });
             <el-tree
               style="max-width: 600px; margin-top: 20px; height: 90%"
               :data="departmentList"
+              ref="treeRef"
               show-checkbox
               node-key="id"
               :default-expanded-keys="[2, 3]"
               :default-checked-keys="[5]"
               :props="defaultProps"
+              @check="checkeChange"
             />
           </el-col>
           <el-col :span="16">
-            <el-table :data="invoiceStatusList" border>
-              <el-table-column
-                align="center"
-                type="index"
-                label="序号"
-                width="80"
-              />
+            <el-table :data="dataList" border>
+              <el-table-column align="center" type="selection" />
               <el-table-column
                 align="center"
                 show-overflow-tooltip
-                prop="lable"
+                prop="id"
                 label="员工ID"
               />
               <el-table-column
                 align="center"
                 show-overflow-tooltip
-                prop="lable"
+                prop="name"
                 label="用户名"
               />
               <el-table-column
                 align="center"
                 show-overflow-tooltip
-                prop="lable"
+                prop="name"
                 label="姓名"
               />
               <el-table-column

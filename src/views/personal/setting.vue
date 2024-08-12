@@ -51,7 +51,7 @@ const accountFormRef = ref();
 // 个人信息
 const userForm = ref<any>({
   // 账户类型
-  type: "personal",
+  type: "company",
   // 用户名
   name: "",
   // 手机号码
@@ -156,6 +156,8 @@ function userSubmit() {
       if (valid) {
         loading.value = true;
         // 类型是个人/公司
+        console.log('userForm.value.type',userForm.value.type);
+
         if (userForm.value.type === "personal") {
           delete userForm.value.companyName;
           delete userForm.value.legalPersonName;
@@ -177,7 +179,7 @@ function userSubmit() {
           delete userForm.value.phone;
           delete userForm.value.email;
         }
-        const res = await api.edit({ type: userForm.value.type });
+        const res = await api.edit(userForm.value);
         if (res.status === -1) {
           return ElMessage.warning({
             message: "修改失败",
