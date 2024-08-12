@@ -3,10 +3,21 @@ import { ElMessage } from "element-plus";
 import type { FormInstance, FormRules } from "element-plus";
 import { ref } from "vue";
 import api from "@/api/modules/department";
+import grounpApi from "@/api/modules/group_manage";
+import useTenantStaffStore from "@/store/modules/configuration_manager";
+import useDepartmentStore from "@/store/modules/department";
 
 defineOptions({
   name: "Edit",
 });
+// 部门
+const departmentStore = useDepartmentStore();
+// 部门数据
+const departmentList = ref<any>();
+// 用户
+const tenantStaffStore = useTenantStaffStore();
+// 用户数据
+const staffList = ref<any>([]);
 // 更新数据
 const emits = defineEmits(["success"]);
 // title
@@ -21,39 +32,25 @@ const customerList = ref<any>([]);
 const formRef = ref();
 // 弹框开关变量
 const dialogTableVisible = ref(false);
-// 发票状态
-const invoiceStatusList = [
-  { lable: "未收款", value: 1 },
-  { lable: "部分收款", value: 2 },
-  { lable: "已完结", value: 3 },
-  { lable: "坏账", value: 4 },
-];
 // 定义表单
 const form = ref<any>({
-  id: null,
-  // 客户id
-  tenantCustomerId: "",
-  // 发票编号
-  invoiceCode: "",
-  // 发票金额
-  invoiceAmount: null,
-  // 税
-  invoiceTax: null,
-  // 实际收款
-  actualReceipts: null,
-  // 发票状态 （未收款、部分收款、已完结、坏账）
-  invoiceStatus: null,
-  // 开票日期
-  invoiceDate: "",
-  // 收款日期
-  paymentDate: "",
+  // 小组名称
+  name: "",
+  // 负责人id
+  director: null,
+  // 	部门id
+  departmentId: null,
   // 备注
   remark: "",
+  // 是否开启小组提成 1 启用 2停用
+  commissionStatus: null,
 });
 // 个人信息校验
 const formRules = ref<FormRules>({
   invoiceCode: [{ required: true, trigger: "blur", message: "请输入姓名" }],
-  tenantCustomerId: [{ required: true, trigger: "change", message: "请选择客户" }],
+  tenantCustomerId: [
+    { required: true, trigger: "change", message: "请选择客户" },
+  ],
 });
 // 提交数据
 function onSubmit() {
@@ -63,7 +60,7 @@ function onSubmit() {
         formRef.value.validate((valid: any) => {
           if (valid) {
             delete form.value.id;
-            api.create(form.value).then(() => {
+            grounpApi.create(form.value).then(() => {
               ElMessage.success({
                 message: "新增成功",
                 center: true,
@@ -94,12 +91,15 @@ function onSubmit() {
   });
 }
 // 获取数据
-async function showEdit(row: any) {
-  title.value = row?.id ? "编辑" : "新增";
-  form.value = row
+async function showEdit() {
+  title.value = "新增小组";
+  // const dataForm = JSON.parse(row)
+  // form.value.id = dataForm.id
   dialogTableVisible.value = true;
 }
 onMounted(async () => {
+  staffList.value = await tenantStaffStore.getStaff();
+  departmentList.value = await departmentStore.getDepartment();
   defaultTime.value = new Date();
 });
 // 暴露方法
@@ -116,29 +116,51 @@ defineExpose({ showEdit });
         :rules="formRules"
         :inline="false"
       >
-        <el-form-item prop="invoiceCode" label="组名称">
-          <el-input
-            v-model="form.invoiceCode"
-            placeholder="请输入组名称"
-            clearable
-          />
+        <el-form-item prop="name" label="组名称">
+          <el-input v-model="form.name" placeholder="请输入组名称" clearable />
         </el-form-item>
         <el-form-item label="所属部门">
-          <el-input
-            v-model.number="form.invoiceAmount"
-            placeholder="请输入发票金额"
+          <el-select
+            v-model="form.departmentId"
+            value-key=""
+            placeholder="请选择部门"
             clearable
-          />
+            filterable
+          >
+            <el-option
+              v-for="item in departmentList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            >
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="组长">
-          <el-input
-            v-model.number="form.invoiceTax"
-            placeholder="请输入手续费"
+          <el-select
+            v-model="form.director"
+            value-key=""
+            placeholder="请选择组长"
             clearable
-          />
+            filterable
+          >
+            <el-option
+              v-for="item in staffList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item label="组提成">
-          <el-switch v-model="form.invoiceTax" :active-value="true" :inactive-value="false" >
+          <el-switch
+            v-model="form.commissionStatus"
+            inline-prompt
+            active-text="启用"
+            inactive-text="禁用"
+            :active-value="1"
+            :inactive-value="2"
+          >
           </el-switch>
         </el-form-item>
       </el-form>

@@ -22,8 +22,14 @@ const columns = ref([
   // 表格控件-展示列
   { label: "会员类型", prop: "surveySource", sortable: true, checked: true },
   {
-    label: "会员ID/子会员ID",
+    label: "会员ID",
     prop: "memberChildId",
+    sortable: true,
+    checked: true,
+  },
+  {
+    label: "子会员ID",
+    prop: "supplierMemberChildId",
     sortable: true,
     checked: true,
   },
@@ -261,20 +267,39 @@ onMounted(() => {
         <el-table-column
           v-if="checkList.includes('memberChildId')"
           align="center"
-          prop="memberChildId"
+          prop=""
+          width="180"
           show-overflow-tooltip
-          label="会员ID/子会员ID"
+          label="会员ID"
         >
           <template #default="{ row }">
-            {{ row.peopleType === 1 ? "会员" : "子会员" }}：{{
-              row.memberChildId
-            }}
+            <el-text v-if="row.peopleType === 1">
+              {{ row.memberChildId }}
+            </el-text>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="checkList.includes('supplierMemberChildId')"
+          align="center"
+          prop=""
+          show-overflow-tooltip
+          width="180"
+          label="子会员ID"
+        >
+          <template #default="{ row }">
+            <el-text v-if="row.peopleType !== 1">
+              {{ row.memberChildId }}
+            </el-text>
+            <el-text v-else>
+              -
+            </el-text>
           </template>
         </el-table-column>
         <el-table-column
           v-if="checkList.includes('tenantSupplierId')"
           align="center"
           prop="tenantSupplierId"
+          width="180"
           show-overflow-tooltip
           label="供应商ID"
         >
@@ -287,6 +312,7 @@ onMounted(() => {
           align="center"
           prop="projectId"
           show-overflow-tooltip
+          width="180"
           label="项目ID"
         />
         <el-table-column

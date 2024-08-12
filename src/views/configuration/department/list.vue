@@ -197,8 +197,8 @@ function onCreate() {
   }
 }
 // 新增小组
-function onGroup(row:any) {
-  groupFormRef.value.showEdit(row)
+function onGroup() {
+  groupFormRef.value.showEdit()
 }
 // 修改
 function onEdit(row: any) {
@@ -223,7 +223,7 @@ function onEdit(row: any) {
     }
   } else {
     data.value.formModeProps.id = row.id;
-    data.value.formModeProps.row = row;
+    data.value.formModeProps.row = JSON.stringify(row)
     data.value.formModeProps.visible = true;
   }
 }
@@ -428,7 +428,7 @@ onBeforeUnmount(() => {
               type="primary"
               size="small"
               plain
-              @click="onGroup(scope.row)"
+              @click="onGroup()"
             >
               新增小组
             </ElButton>

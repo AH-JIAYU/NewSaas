@@ -3,7 +3,7 @@
     <div class="nav">
       <nav class="w80auto fx-b">
         <div class="left fx-b">
-          <img src="../../assets/logo.png" alt="">
+          <img src="" alt="">
           <p>租户平台官网</p>
         </div>
         <div class="cen ">
@@ -307,14 +307,14 @@
   </div>
 </template>
 
-<script setup lang="ts">  
+<script setup lang="ts">
   defineOptions({
   name: "home",
 });
 </script>
 <style lang="scss" scoped>
 /* 公共样式 */
-//#region 
+//#region
 * {
   margin: 0;
   padding: 0;
@@ -435,12 +435,12 @@ body {
       width: 70%;
       margin: 0 20px;
 
-      >div {
+      div {
         display: inline-block;
         padding: 20px 14px;
         position: relative;
 
-        >div {
+        div {
           display: none;
           position: absolute;
           top: 100%;
@@ -458,7 +458,7 @@ body {
         .yy {
           width: 300%;
 
-          >div {
+          div {
             display: inline-block;
 
 
@@ -481,12 +481,12 @@ body {
         }
       }
 
-      >div:hover {
+      div:hover {
         background-color: rgb(0, 0, 0);
         color: rgb(35, 75, 255);
       }
 
-      >div:hover div {
+      div:hover div {
         display: inline-block;
       }
 
@@ -566,7 +566,7 @@ body {
 }
 
 .jnsj {
-  >div {
+  div {
     div {
       width: 24%;
       height: 300px;
@@ -589,7 +589,7 @@ body {
 }
 
 .jnkf {
-  >div {
+  div {
     padding: 20px;
   }
 
@@ -607,8 +607,8 @@ body {
 .ws {
   margin-top: 100px;
 
-  >div {
-    >div {
+  div {
+    div {
       width: 30%;
 
       img {
@@ -626,8 +626,8 @@ body {
   background-color: #292f59;
   color: #fff;
 
-  >div {
-    >div {
+  div {
+    div {
       width: 23%;
       border: 1px solid rgba(214, 214, 214, 0.39);
       text-align: center;
@@ -650,18 +650,18 @@ body {
 
     }
 
-    >div:hover {
+    div:hover {
       border: 1px solid rgb(255, 255, 255) !important;
     }
   }
 }
 
 .jncs {
-  >div {
-    >div {
+  div {
+    div {
       width: 30%;
 
-      >div {
+      div {
         img {
           width: 80%;
           display: block;
@@ -697,7 +697,7 @@ body {
 footer {
   background-color: rgb(59, 59, 59);
 
-  >div {
+  div {
     padding: 20px 0;
 
     ul {

@@ -51,8 +51,9 @@ onMounted(async () => {
 // 修改回显数
 function getInfo() {
   loading.value = true;
-  form.value = props.row;
-  console.log('form.value',form.value);
+  console.log('JSON.parse(props.row)',JSON.parse(props.row));
+
+  form.value = JSON.parse(props.row)
   loading.value = false;
 }
 // 暴露提交

@@ -2,13 +2,18 @@
 import { ElMessage } from "element-plus";
 import type { FormInstance, FormRules } from "element-plus";
 import { ref } from "vue";
-import api from "@/api/modules/department";
+import api from "@/api/modules/group_team";
+import useDepartmentStore from "@/store/modules/department";
 
 defineOptions({
   name: "Edit",
 });
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
+// 部门
+const departmentStore = useDepartmentStore();
+// 部门数据
+const departmentList = ref<any>();
 // 更新数据
 const emits = defineEmits(["success"]);
 // title
@@ -69,46 +74,31 @@ const dictionary = ref({
 });
 // 定义表单
 const form = ref<any>({
-  id: null,
-  // 客户id
-  tenantCustomerId: "",
-  // 发票编号
-  invoiceCode: "",
-  // 发票金额
-  invoiceAmount: null,
-  // 税
-  invoiceTax: null,
-  // 实际收款
-  actualReceipts: null,
-  // 发票状态 （未收款、部分收款、已完结、坏账）
-  invoiceStatus: null,
-  // 开票日期
-  invoiceDate: "",
-  // 收款日期
-  paymentDate: "",
-  // 备注
-  remark: "",
+  // 用户id
+  userId: null,
+  // 提成比例
+  commission: "",
 });
-const defaultProps:any = {
-  children: 'children',
-  label: 'label',
-}
-const data:any = [
+const defaultProps: any = {
+  children: "children",
+  label: "name",
+};
+const data: any = [
   {
     id: 1,
-    label: 'Level one 1',
+    label: "Level one 1",
     children: [
       {
         id: 4,
-        label: 'Level two 1-1',
+        label: "Level two 1-1",
         children: [
           {
             id: 9,
-            label: 'Level three 1-1-1',
+            label: "Level three 1-1-1",
           },
           {
             id: 10,
-            label: 'Level three 1-1-2',
+            label: "Level three 1-1-2",
           },
         ],
       },
@@ -116,33 +106,33 @@ const data:any = [
   },
   {
     id: 2,
-    label: 'Level one 2',
+    label: "Level one 2",
     children: [
       {
         id: 5,
-        label: 'Level two 2-1',
+        label: "Level two 2-1",
       },
       {
         id: 6,
-        label: 'Level two 2-2',
+        label: "Level two 2-2",
       },
     ],
   },
   {
     id: 3,
-    label: 'Level one 3',
+    label: "Level one 3",
     children: [
       {
         id: 7,
-        label: 'Level two 3-1',
+        label: "Level two 3-1",
       },
       {
         id: 8,
-        label: 'Level two 3-2',
+        label: "Level two 3-2",
       },
     ],
   },
-]
+];
 // 个人信息校验
 const formRules = ref<FormRules>({
   invoiceCode: [{ required: true, trigger: "blur", message: "请输入姓名" }],
@@ -209,7 +199,17 @@ function onSubmit() {
 // 获取数据
 async function showEdit(row: any) {
   title.value = row?.id ? "编辑" : "新增";
-  form.value = row;
+  const listData = JSON.parse(row);
+  form.value = listData;
+  console.log("form.value", form.value);
+  const params = {
+    page: 1,
+    limit: 10,
+    groupId: form.value.id,
+  };
+  const res = await api.list(params);
+  console.log("res", res);
+
   dialogTableVisible.value = true;
 }
 // 每页数量切换
@@ -227,6 +227,41 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
   onSortChange(prop, order).then(() => showEdit(1));
 }
 onMounted(async () => {
+  // departmentList.value = await departmentStore.getDepartment();
+  departmentList.value = [
+    {
+      id: "574449384760348672",
+      name: "技术部",
+      director: "574448371148066816",
+      memberCount: null,
+      commissionStatus: 1,
+      commission: 100,
+      commissionTyp: 2,
+      remark: "技术部",
+      children: [
+        {
+          id: "574451094157332480",
+          phone: null,
+          email: "131631@qq.com",
+          name: "小小",
+          country: "DE",
+          role: "admin",
+          active: true,
+        },
+        {
+          id: "574449041162964992",
+          phone: null,
+          email: "131616@qq.com",
+          name: "王二",
+          country: "CA",
+          role: "admin",
+          active: true,
+        },
+      ],
+    },
+  ];
+  console.log("departmentList", departmentList.value);
+
   defaultTime.value = new Date();
 });
 // 暴露方法
@@ -310,8 +345,8 @@ defineExpose({ showEdit });
               clearable
             />
             <el-tree
-              style="max-width: 600px;margin-top: 20px;height: 90%;"
-              :data="data"
+              style="max-width: 600px; margin-top: 20px; height: 90%"
+              :data="departmentList"
               show-checkbox
               node-key="id"
               :default-expanded-keys="[2, 3]"
@@ -360,7 +395,7 @@ defineExpose({ showEdit });
               >
                 <template #default="{ row }">
                   <el-input
-                    v-model.number="form.invoiceAmount"
+                    v-model.number="form.commission"
                     placeholder="提成比例"
                     clearable
                     @blur="handleEditProportion(row)"

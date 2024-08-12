@@ -463,7 +463,7 @@ watch(
             </el-radio-group>
           </div>
         </div>
-        <div>
+        <div  style="height: 11.5625rem;">
           <ElFormItem prop="account">
             <ElInput
               v-model="loginForm.account"
