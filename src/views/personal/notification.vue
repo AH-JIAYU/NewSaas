@@ -7,35 +7,53 @@ meta:
 <script setup lang="ts">
 import useNotificationStore from "@/store/modules/notification"; //消息中心
 import { OverlayScrollbarsComponent } from "overlayscrollbars-vue";
-import mail from "./notification-mail.vue";
+import news from "./notification-news.vue";
+import cooperation from "./notification-cooperation.vue";
 
 defineOptions({
   name: "PersonalNotification",
 });
 
 const notificationStore = useNotificationStore(); //消息中心
+const cooperationRef = ref<any>(); //合作邀约 Ref
+const newsRef = ref<any>(); //消息
+const route: any = useRoute();
+const data = ref<any>({
+  tabs: "", //tabs
+  selectId: "", // 选中id
+});
 
-function messagePlus() {
-  notificationStore.$patch((state) => {
-    state.message += 1;
-  });
-}
-function messageMinus() {
-  notificationStore.$patch((state) => {
-    state.message -= state.message > 0 ? 1 : 0;
-  });
+// 消息
+function showEditNews(row: any) {
+  data.value.selectId = row.id;
+  newsRef.value.showEdit(row);
 }
 
-function todoPlus() {
-  notificationStore.$patch((state) => {
-    state.todo += 1;
-  });
+// 待办
+function showEditCooperation(row: any) {
+  cooperationRef.value.showEdit(row);
 }
-function todoMinus() {
-  notificationStore.$patch((state) => {
-    state.todo -= state.todo > 0 ? 1 : 0;
-  });
+// 已读后清除右侧详情
+function delSelectId() {
+  data.value.selectId = "";
 }
+onMounted(() => {
+  data.value.tabs = route.query.type == 2 ? "cooperation" : "news";
+
+  if (route.query.id) {
+    if (Number(route.query.type) === 1) {
+      const findData = notificationStore.messageList.find(
+        (item: any) => item.id === route.query.id
+      );
+      showEditNews(findData);
+    } else if (Number(route.query.type) === 2) {
+      const findData = notificationStore.todoList.find(
+        (item: any) => item.id === route.query.id
+      );
+      showEditCooperation(findData);
+    }
+  }
+});
 </script>
 
 <template>
@@ -44,8 +62,8 @@ function todoMinus() {
     <PageMain>
       <div class="flex-c">
         <div class="left">
-          <el-tabs type="border-card">
-            <el-tab-pane label="消息">
+          <el-tabs type="border-card" v-model="data.tabs">
+            <el-tab-pane label="消息" name="news">
               <OverlayScrollbarsComponent
                 :options="{
                   scrollbars: { autoHide: 'leave', autoHideDelay: 300 },
@@ -53,145 +71,86 @@ function todoMinus() {
                 defer
                 class="list"
               >
-                <div class="item">
-                  <SvgIcon name="i-ri:mail-fill" />
-                  <div class="info">
-                    <div class="title">你收到了 8 份日报</div>
-                    <div class="date">2020-10-10 10:00:00</div>
-                  </div>
-                </div>
-                <div class="item">
-                  <SvgIcon name="i-ri:service-fill" class="service" />
-                  <div class="info">
-                    <div class="title">
-                      你收到了 3 位同事的好友申请，请及时处理
+                <template v-if="notificationStore.messageList.length">
+                  <div
+                    :class="{
+                      item: 'item',
+                      new: item.isReadAlready === 1,
+                      select: item.id === data.selectId,
+                    }"
+                    v-for="item in notificationStore.messageList"
+                    @click="showEditNews(item)"
+                  >
+                    <SvgIcon name="i-ri:mail-fill" />
+                    <div class="info">
+                      <div class="title">
+                        {{
+                          notificationStore.auditTypeList[item.auditType - 1] ||
+                          ""
+                        }}
+                        &emsp;
+                        {{ item.invitationName }}
+                      </div>
+                      <div class="date">
+                        {{ item.createTime }}
+                      </div>
                     </div>
-                    <div class="date">2020-10-10 10:00:00</div>
                   </div>
-                </div>
-                <div class="item">
-                  <SvgIcon name="i-ri:file-edit-fill" class="file-edit" />
-                  <div class="info">
-                    <div class="title">你有 3 份合同待审批</div>
-                    <div class="date">2020-10-10 10:00:00</div>
+                </template>
+                <template v-else>
+                  <div class="flex flex-col items-center py-6 text-stone-5">
+                    <SvgIcon name="i-tabler:mood-smile" :size="40" />
+                    <p m-2 text-base>没有消息</p>
                   </div>
-                </div>
-                <div class="item">
-                  <SvgIcon name="i-ri:mail-fill" />
-                  <div class="info">
-                    <div class="title">你收到了 8 份日报</div>
-                    <div class="date">2020-10-10 10:00:00</div>
-                  </div>
-                </div>
-                <div class="item">
-                  <SvgIcon name="i-ri:service-fill" class="service" />
-                  <div class="info">
-                    <div class="title">
-                      你收到了 3 位同事的好友申请，请及时处理
-                    </div>
-                    <div class="date">2020-10-10 10:00:00</div>
-                  </div>
-                </div>
-                <div class="item">
-                  <SvgIcon name="i-ri:service-fill" class="service" />
-                  <div class="info">
-                    <div class="title">
-                      你收到了 3 位同事的好友申请，请及时处理
-                    </div>
-                    <div class="date">2020-10-10 10:00:00</div>
-                  </div>
-                </div>
-                <div class="item">
-                  <SvgIcon name="i-ri:service-fill" class="service" />
-                  <div class="info">
-                    <div class="title">
-                      你收到了 3 位同事的好友申请，请及时处理
-                    </div>
-                    <div class="date">2020-10-10 10:00:00</div>
-                  </div>
-                </div>
-                <div class="item">
-                  <SvgIcon name="i-ri:service-fill" class="service" />
-                  <div class="info">
-                    <div class="title">
-                      你收到了 3 位同事的好友申请，请及时处理
-                    </div>
-                    <div class="date">2020-10-10 10:00:00</div>
-                  </div>
-                </div>
-                <div class="item">
-                  <SvgIcon name="i-ri:service-fill" class="service" />
-                  <div class="info">
-                    <div class="title">
-                      你收到了 3 位同事的好友申请，请及时处理
-                    </div>
-                    <div class="date">2020-10-10 10:00:00</div>
-                  </div>
-                </div>
-                <div class="item">
-                  <SvgIcon name="i-ri:service-fill" class="service" />
-                  <div class="info">
-                    <div class="title">
-                      你收到了 3 位同事的好友申请，请及时处理
-                    </div>
-                    <div class="date">2020-10-10 10:00:00</div>
-                  </div>
-                </div>
-                <div class="item">
-                  <SvgIcon name="i-ri:service-fill" class="service" />
-                  <div class="info">
-                    <div class="title">
-                      你收到了 3 位同事的好友申请，请及时处理
-                    </div>
-                    <div class="date">2020-10-10 10:00:00</div>
-                  </div>
-                </div>
-                <div class="item">
-                  <SvgIcon name="i-ri:service-fill" class="service" />
-                  <div class="info">
-                    <div class="title">
-                      你收到了 3 位同事的好友申请，请及时处理
-                    </div>
-                    <div class="date">2020-10-10 10:00:00</div>
-                  </div>
-                </div>
-                <div class="item">
-                  <SvgIcon name="i-ri:service-fill" class="service" />
-                  <div class="info">
-                    <div class="title">
-                      你收到了 3 位同事的好友申请，请及时处理
-                    </div>
-                    <div class="date">2020-10-10 10:00:00</div>
-                  </div>
-                </div>
+                </template>
               </OverlayScrollbarsComponent>
             </el-tab-pane>
-            <el-tab-pane label="代办">代办</el-tab-pane>
+            <el-tab-pane label="代办" name="cooperation">
+              <OverlayScrollbarsComponent
+                :options="{
+                  scrollbars: { autoHide: 'leave', autoHideDelay: 300 },
+                }"
+                defer
+                class="list"
+              >
+                <template v-if="notificationStore.todoList.length">
+                  <div
+                    :class="item.isReadAlready === 1 ? 'item new' : 'item'"
+                    v-for="item in notificationStore.todoList"
+                    @click="showEditCooperation(item)"
+                  >
+                    <SvgIcon name="i-ri:file-edit-fill" class="service" />
+                    <div class="info">
+                      <div class="title">
+                        {{
+                          notificationStore.auditTypeList[item.auditType - 1] ||
+                          ""
+                        }}
+                        &emsp;
+                        {{ item.messageContent }}
+                      </div>
+                      <div class="date">
+                        {{ item.createTime }}
+                      </div>
+                    </div>
+                  </div>
+                </template>
+                <template v-else>
+                  <div class="flex flex-col items-center py-6 text-stone-5">
+                    <SvgIcon name="i-tabler:mood-smile" :size="40" />
+                    <p m-2 text-base>没有待办</p>
+                  </div>
+                </template>
+              </OverlayScrollbarsComponent>
+            </el-tab-pane>
           </el-tabs>
         </div>
-        <div class="right">
-          <mail></mail>
-
-          <!-- <HButton @click="messagePlus">
-          <SvgIcon name="i-ep:plus" />
-          1
-        </HButton>
-        <HButton ml-2 @click="messageMinus">
-          <SvgIcon name="i-ep:minus" />
-          1
-        </HButton>
-        <br>
-        <HButton @click="todoPlus">
-          <SvgIcon name="i-ep:plus" />
-          1
-        </HButton>
-        <HButton ml-2 @click="todoMinus">
-          <SvgIcon name="i-ep:minus" />
-          1
-        </HButton> -->
+        <div v-show="data.selectId" class="right">
+          <news ref="newsRef" @delSelectId="delSelectId"></news>
         </div>
       </div>
     </PageMain>
+    <cooperation ref="cooperationRef"></cooperation>
   </div>
 </template>
 
@@ -260,12 +219,16 @@ function todoMinus() {
 
 }
 
-
+:deep {
+  .el-dialog__body {
+    min-height: 25rem !important;
+  }
+}
 .list {
   --at-apply: border-block-width-1 border-block-solid border-block-stone-2 dark:border-block-stone-7;
 
   .item {
-    --at-apply: flex items-start gap-3 px-3 py-4 cursor-pointer border-b-width-1 last:border-b-width-0 border-b-solid border-b-stone-2 dark:border-b-stone-7 hover:bg-stone-1 dark:hover:bg-dark/50;
+    --at-apply: flex m-1 items-start gap-3 px-3 py-4 cursor-pointer border-b-width-1 last:border-b-width-0 border-b-solid border-b-stone-2 dark:border-b-stone-7 hover:bg-stone-1 dark:hover:bg-dark/50;
 
     i {
       --at-apply: w-6 h-6 text-xs rounded-full text-white bg-blue;
@@ -293,5 +256,21 @@ function todoMinus() {
       }
     }
   }
+  .new{
+    position: relative;
+  }
+  .new::after{
+    content:'';
+    position: absolute;
+    width: 0.625rem;
+    height: 0.625rem;
+    border-radius:50%;
+    background-color: red;
+    top:0;
+    right:0;
+  }
+}
+.select{
+  background-color: #f5f5f4;
 }
 </style>

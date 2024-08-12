@@ -1,28 +1,16 @@
-import api from '../index'
+import api from "../index";
 
 export default {
-  list: () => api.post('tenant-menu/getMenuList',),
-
-  // // }),
-
-  // detail: (id: number | string) => api.get('menu/detail', {
-  //   params: {
-  //     id,
-  //   },
-  //   baseURL: '/mock/',
-  // }),
-
-  // create: (data: any) => api.post('menu/create', data, {
-  //   baseURL: '/mock/',
-  // }),
-
-  // edit: (data: any) => api.post('menu/edit', data, {
-  //   baseURL: '/mock/',
-  // }),
-
-  // delete: (id: number | string) => api.post('menu/delete', {
-  //   id,
-  // }, {
-  //   baseURL: '/mock/',
-  // }),
-}
+  //查询代办列表
+  getTenantAuditList: (data: any) =>
+    api.post("auditMessage/getTenantAuditList", data),
+  //查询消息列表
+  getTenantMessageList: (data: any) =>
+    api.post("auditMessage/getTenantMessageList", data),
+  //修改代办状态-已读或者未读
+  updateTenantAudit: (data: any) =>
+    api.post("auditMessage/updateTenantAudit", data),
+  //未读消息改成已读消息
+  updateTenantMessage: (data: any) =>
+    api.post("auditMessage/updateTenantMessage", data),
+};

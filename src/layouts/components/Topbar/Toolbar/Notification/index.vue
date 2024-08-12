@@ -8,8 +8,6 @@ defineOptions({
 
 const notificationStore = useNotificationStore()
 
-notificationStore.init()
-
 const isAnimating = ref(false)
 </script>
 

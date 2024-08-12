@@ -1,5 +1,6 @@
 import useUserStore from "@/store/modules/user";
 import Message from "vue-m-message";
+import api from "@/api/modules/notification";
 
 const useNotificationStore = defineStore(
   // 唯一ID
@@ -7,10 +8,15 @@ const useNotificationStore = defineStore(
   () => {
     // 消息
     const message = ref(0);
+    const messageList = ref<any>([]);
+
     // 待办
     const todo = ref(0);
+    const todoList = ref<any>([]);
     // 总计
     const total = computed(() => message.value + todo.value);
+
+    const auditTypeList = ["合作邀约"];//消息类型
 
     const socket = ref<any>();
     const maxReconnectAttempts = 2; // 重连超出该次数就放弃重连
@@ -30,6 +36,11 @@ const useNotificationStore = defineStore(
       socket.value.onmessage = (msg: any) => {
         const type = msg.data; // 1消息 2待办
         console.log("type", type);
+        if (Number(type) === 1) {
+          getUnreadMessage();
+        } else if (Number(type) === 2) {
+          getUnreadTodo();
+        }
         //发现消息进入,开始处理前端触发逻辑
       };
       //关闭事件
@@ -74,21 +85,34 @@ const useNotificationStore = defineStore(
       getUnreadTodo();
     }
     // 获取未读消息数
-    function getUnreadMessage() {
-      // 为方便演示，这里直接写死的未读数
-      message.value = 2;
+    async function getUnreadMessage() {
+      const res = await api.getTenantMessageList({});
+      messageList.value = res.data.tenantMessageInfoList;
+      // 未读的消息数
+      message.value = messageList.value.filter(
+        (item: any) => item.isReadAlready === 1
+      ).length;
     }
     // 获取未读待办数
-    function getUnreadTodo() {
-      // 为方便演示，这里直接写死的未读数
-      todo.value = 1;
+    async function getUnreadTodo() {
+      const res = await api.getTenantAuditList({});
+      todoList.value = res.data.tenantAuditInfoList;
+      // 未读的待办数
+      todo.value = todoList.value.filter(
+        (item: any) => item.isReadAlready === 1
+      ).length;
     }
 
     return {
       message,
       todo,
+      messageList,
+      todoList,
       total,
       socket,
+      auditTypeList,
+      getUnreadMessage,
+      getUnreadTodo,
       init,
       openSocket,
     };
