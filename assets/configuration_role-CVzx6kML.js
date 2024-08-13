@@ -1,9 +1,0 @@
-
-/**
- * 由 Fantastic-admin 提供技术支持
- * Powered by Fantastic-admin
- * Gitee  https://fantastic-admin.gitee.io
- * Github https://fantastic-admin.github.io
- */
-
-import{s as o}from"./index-WdaD7n5-.js";const l={list:()=>o.post("role/getRoleList"),create:e=>o.post("role/insertRole",e),edit:e=>o.post("role/updateRole",e),delete:e=>o.post("role/deleteRole",e)};export{l as a};
