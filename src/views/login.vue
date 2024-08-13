@@ -327,14 +327,15 @@ const countdown = () => {
 };
 // 注册
 const handleRegister = throttle(async () => {
+  console.log('registerForm.value',registerForm.value)
   registerFormRef.value &&
     registerFormRef.value.validate(async (valid: any) => {
       if (valid) {
         registerForm.value.type =
           registerForm.value.country === "CN" ? "phone" : "email";
-        registerForm.value.companyName = "";
-        registerForm.value.legalPersonName = "";
-        registerForm.value.taxID = "";
+        // registerForm.value.companyName = "";
+        // registerForm.value.legalPersonName = "";
+        // registerForm.value.taxID = "";
         delete registerForm.value.agreeToTheAgreement;
         const { status } = await api.register(registerForm.value);
         if (status === 1) {
