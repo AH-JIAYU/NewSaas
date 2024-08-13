@@ -2,6 +2,7 @@
 import allocationEdit from "./components/AllocationEdit/index.vue";
 import ProjeckEdit from "./components/ProjeckEdit/index.vue";
 import ProjectDetail from "./components/ProjectDetails/index.vue";
+import ViewAllocation from "./components/ViewAllocation/index.vue";
 import scheduling from "./components/Edit/index.vue"; //项目调度
 import { ElMessage, ElMessageBox } from "element-plus";
 import api from "@/api/modules/projectManagement";
@@ -14,7 +15,7 @@ defineOptions({
   name: "list",
 });
 // 时间
-const { format } = useTimeago()
+const { format } = useTimeago();
 const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
 const customerStore = useUserCustomerStore(); // 客户
 const projectManagementListStore = useProjectManagementListStore(); //项目
@@ -29,6 +30,7 @@ const listLoading = ref<boolean>(true);
 const addAllocationEditRef = ref();
 const addProjeckRef = ref();
 const projectDetailsRef = ref();
+const viewAllocationsRef = ref(); //查看分配
 const schedulingRef = ref();
 // 右侧工具栏配置变量
 const border = ref(true);
@@ -38,6 +40,7 @@ const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const lineHeight = ref<any>("default");
 const stripe = ref(false);
 const columns = ref([
+  { prop: "projectType", label: "项目ID", checked: true, sotrtable: true },
   { prop: "projectId", label: "项目ID", checked: true, sotrtable: true },
   { prop: "name", label: "项目名称", checked: true, sotrtable: true },
   {
@@ -128,6 +131,14 @@ function dispatch() {
   } else {
     schedulingRef.value.showEdit(selectList[0], "projectList");
   }
+}
+// 查看分配
+function viewAllocations(row: any, type: number) {
+  const params = {
+    projectId: row.projectId,
+    type,
+  };
+  viewAllocationsRef.value.showEdit(params);
 }
 
 // 每页数量切换
@@ -386,6 +397,27 @@ onMounted(async () => {
       >
         <el-table-column align="center" type="selection" />
         <el-table-column
+          v-if="checkList.includes('projectType')"
+          show-overflow-tooltip
+          width="180"
+          align="center"
+          label="项目类型"
+          ><template #default="{ row }">
+            <el-button type="danger" v-if="row.allocationType === 4"
+              >租户分配</el-button
+            >
+            <el-button type="success" v-else-if="row.allocationType === 1"
+              >自动分配</el-button
+            >
+            <el-button
+              type="success"
+              v-else-if="row.allocationType === 2 || row.allocationType === 3"
+              >内部新增</el-button
+            >
+            <el-button v-else>-</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column
           v-if="checkList.includes('projectId')"
           show-overflow-tooltip
           prop="projectId"
@@ -412,9 +444,9 @@ onMounted(async () => {
           align="center"
           label="客户简称/标识"
           width="120"
-        ><template #default="{ row }">
-            <p>{{row.clientName.split('/')[0]}}</p>
-            <p>{{row.clientName.split('/')[1]}}</p>
+          ><template #default="{ row }">
+            <p>{{ row.clientName.split("/")[0] }}</p>
+            <p>{{ row.clientName.split("/")[1] }}</p>
           </template>
         </el-table-column>
         <el-table-column
@@ -425,29 +457,50 @@ onMounted(async () => {
         >
           <template #default="{ row }">
             <el-text class="mx-1">{{ row.participation || 0 }}</el-text>
-            / <el-text class="mx-1" type="success">{{ row.complete || 0 }}</el-text>/
-            <el-text class="mx-1" type="warning">{{ row.num || 0 }}</el-text>/
+            /
+            <el-text class="mx-1" type="success">{{
+              row.complete || 0
+            }}</el-text
+            >/ <el-text class="mx-1" type="warning">{{ row.num || 0 }}</el-text
+            >/
             {{ row.limitedQuantity || "-" }}
           </template>
         </el-table-column>
         <el-table-column
           v-if="checkList.includes('allocationType')"
-          show-overflow-tooltip
-          prop="allocationType"
           align="center"
-          width="100"
           label="分配类型"
+          width="120"
         >
           <template #default="{ row }">
-            {{
-              projectManagementListStore.allocationTypeList[row.allocationType]
-                ? projectManagementListStore.allocationTypeList[
-                    row.allocationType
-                  ]
-                : "-"
-            }}
+            <el-button
+              @click="viewAllocations(row, 1)"
+              type="danger"
+              v-if="row.allocationType === 1"
+              >自动分配</el-button
+            >
+            <el-button
+              @click="viewAllocations(row, 2)"
+              type="warning"
+              v-else-if="row.allocationType === 2"
+              >供应商</el-button
+            >
+            <el-button
+              @click="viewAllocations(row, 3)"
+              type="info"
+              v-else-if="row.allocationType === 3"
+              >会员组</el-button
+            >
+            <el-button
+              @click="viewAllocations(row, 4)"
+              type="primary"
+              v-else-if="row.allocationType === 4"
+              >租户</el-button
+            >
+            <el-button v-else>-</el-button>
           </template>
         </el-table-column>
+
         <el-table-column
           v-if="checkList.includes('doMoneyPrice')"
           show-overflow-tooltip
@@ -567,7 +620,7 @@ onMounted(async () => {
           show-overflow-tooltip
           prop="createTime"
           align="center"
-          width="100" 
+          width="100"
           label="创建时间"
           ><template #default="{ row }">
             <el-tag effect="plain" type="info">{{
@@ -633,6 +686,7 @@ onMounted(async () => {
     <allocationEdit ref="addAllocationEditRef" @fetchData="fetchData" />
     <ProjeckEdit ref="addProjeckRef" @fetchData="fetchData" />
     <ProjectDetail ref="projectDetailsRef" />
+    <ViewAllocation ref="viewAllocationsRef" />
     <!-- 项目调度 -->
     <scheduling ref="schedulingRef" @fetchData="fetchData" />
   </div>

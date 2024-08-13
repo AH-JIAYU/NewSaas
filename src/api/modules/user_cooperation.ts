@@ -13,4 +13,11 @@ export default {
   // 租户解约-终止合作
   updateRescindTenant: (data: any) => api.post("tenantBind/updateRescindTenant", data),
 
+
+  // 项目列表用
+  // 项目分配-查询合作租户列表
+  getAllocationBindList: (data: any) => api.post("tenantBind/getAllocationBindList", data),
+  // 项目分配-查询合作租户列表
+  getTenantSupplierMemberNameInfo: (data: any) => api.post("tenantBind/getTenantSupplierMemberNameInfo", data),
+
 };

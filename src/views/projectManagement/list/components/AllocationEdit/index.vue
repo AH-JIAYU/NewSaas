@@ -2,6 +2,7 @@
 import { ElMessage } from "element-plus";
 import { submitLoading, obtainLoading } from "@/utils/apiLoading";
 import api from "@/api/modules/projectManagement";
+import cooperationApi from "@/api/modules/user_cooperation"; // 合作租户
 import useUserSupplierStore from "@/store/modules/user_supplier"; // 供应商
 import useSurveyVipGroupStore from "@/store/modules/survey_vipGroup"; //会员组
 const supplierStore = useUserSupplierStore(); // 供应商
@@ -19,6 +20,7 @@ const data = ref<any>({
   list: [], // 表格
   tenantSupplierList: [], // 供应商
   vipGroupList: [], // 会员组
+  tenantList: [], // 合作租户
   form: {
     projectId: "", // 项目id
     allocationType: 1, //	分配类型:1:自动分配 2:供应商 3:会员组
@@ -36,7 +38,7 @@ const rules = ref<any>({
       type: "array",
       required: true,
       trigger: "change",
-      message: "请选择至少一项",
+      message: "请选择分配目标",
     },
   ],
 });
@@ -65,6 +67,11 @@ async function showEdit(row: any, type: string) {
   data.value.vipGroupList = await obtainLoading(
     surveyVipGroupStore.getGroupNameList()
   );
+  // 合作租户列表
+  const res = await obtainLoading(
+    cooperationApi.getAllocationBindList({ projectId: row.projectId })
+  );
+  data.value.tenantList = res.data.allocationBindInfoList;
   dialogTableVisible.value = true;
 }
 // 切换分配
@@ -165,14 +172,15 @@ defineExpose({ showEdit });
           >
             <el-radio :value="2" size="large"> 供应商 </el-radio>
             <el-radio :value="3" size="large"> 会员组 </el-radio>
-            <el-radio :value="4" size="large" v-if="data.title === '重新分配'">
+            <el-radio :value="4" size="large">租户 </el-radio>
+            <el-radio :value="5" size="large" v-if="data.title === '重新分配'">
               取消分配
             </el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item
           v-if="
-            data.form.allocationType === 2 && data.form.allocationType !== 4
+            data.form.allocationType === 2 && data.form.allocationType !== 5
           "
           label="供应商"
           prop="groupSupplierIdList"
@@ -202,7 +210,7 @@ defineExpose({ showEdit });
         </el-form-item>
         <el-form-item
           v-if="
-            data.form.allocationType === 3 && data.form.allocationType !== 4
+            data.form.allocationType === 3 && data.form.allocationType !== 5
           "
           label="会员组"
           prop="groupSupplierIdList"
@@ -230,12 +238,35 @@ defineExpose({ showEdit });
             />
           </el-select>
         </el-form-item>
+        <el-form-item
+          v-if="
+            data.form.allocationType === 4 && data.form.allocationType !== 5
+          "
+          label="租户"
+          prop="groupSupplierIdList"
+        >
+          <el-select
+            v-model="data.form.groupSupplierIdList"
+            placeholder="请选择租户"
+            clearable
+            filterable
+            multiple
+            collapse-tags
+            :multiple-limit="1"
+          >
+            <el-option
+              v-for="item in data.tenantList"
+              :label="item.beInvitationTenantName"
+              :value="item.beInvitationTenantId"
+            />
+          </el-select>
+        </el-form-item>
       </el-form>
 
       <template #footer>
         <div style="flex: auto">
-          <el-button type="primary" @click="onSubmit"> 确定 </el-button>
           <el-button @click="closeHandler"> 取消 </el-button>
+          <el-button type="primary" @click="onSubmit"> 确定 </el-button>
         </div>
       </template>
     </el-dialog>
