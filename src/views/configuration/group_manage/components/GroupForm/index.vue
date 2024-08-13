@@ -4,6 +4,7 @@ import type { FormInstance, FormRules } from "element-plus";
 import { ref } from "vue";
 import api from "@/api/modules/group_team";
 import useDepartmentStore from "@/store/modules/department";
+import useTenantStaffStore from "@/store/modules/configuration_manager";
 
 defineOptions({
   name: "Edit",
@@ -12,10 +13,15 @@ const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
 // tree ref
 const treeRef = ref<any>();
+const tableRef = ref<any>();
 // 部门
 const departmentStore = useDepartmentStore();
 // 部门数据
 const departmentList = ref<any>();
+// 用户
+const tenantStaffStore = useTenantStaffStore();
+// 用户数据
+const staffList = ref<any>([]);
 // 更新数据
 const emits = defineEmits(["success"]);
 // title
@@ -30,8 +36,11 @@ const customerList = ref<any>([]);
 const formRef = ref();
 // 弹框开关变量
 const dialogTableVisible = ref(false);
-// 发票状态
+// 组成员
 const dataList = ref<any>([]);
+// 组长
+const groupLeaderList = ref<any>([]);
+const department = ref<any>();
 const dictionaryItem = ref<any>({
   loading: false,
   tableAutoHeight: false, // 表格是否自适应高度
@@ -71,10 +80,12 @@ const dictionary = ref({
 });
 // 定义表单
 const form = ref<any>({
-  // 用户id
-  userId: null,
+  // 组id
+  groupId: null,
   // 提成比例
-  commission: "",
+  userInfo: [],
+  // 树回显
+  menuId: [],
 });
 const defaultProps: any = {
   children: "children",
@@ -137,38 +148,28 @@ const formRules = ref<FormRules>({
     { required: true, trigger: "change", message: "请选择客户" },
   ],
 });
-// 提成比例
-async function handleEditProportion(row: any) {
-  console.log("row", row);
-  // const { data } = await api.detail({
-  //   tenantSupplierId: row.tenantSupplierId,
-  // });
-  // if (data.remark !== row.remark) {
-  //   data.countryType = data.subordinateCountryId === "343" ? 1 : 2;
-  //   data.remark = row.remark;
-  //   const { status } = await api.edit(data);
-  //   status === 1 &&
-  //     ElMessage.success({
-  //       message: "更新备注",
-  //       center: true,
-  //     });
-  //   queryData();
-  // }
-}
 // 获取数据
 async function showEdit(row: any) {
   title.value = row?.id ? "编辑" : "新增";
   const listData = JSON.parse(row);
-  form.value = listData;
-  console.log("form.value", form.value);
+  form.value.groupId = listData.id;
   const params = {
     page: 1,
     limit: 10,
-    groupId: form.value.id,
+    groupId: listData.id,
   };
   const res = await api.list(params);
   console.log("res", res);
-
+  department.value = res.data.departmentId;
+  console.log("department.value", department.value);
+  res.data.data.forEach((item: any) => {
+    if (item.isLeader) {
+      groupLeaderList.value.push(item);
+    } else {
+      form.value.menuId.push(item.memberId);
+      dataList.value.push(item);
+    }
+  });
   dialogTableVisible.value = true;
 }
 // 每页数量切换
@@ -186,7 +187,8 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
   onSortChange(prop, order).then(() => showEdit(1));
 }
 onMounted(async () => {
-  // departmentList.value = await departmentStore.getDepartment();
+  departmentList.value = await departmentStore.getDepartment();
+  staffList.value = await tenantStaffStore.getStaff();
   departmentList.value = [
     {
       id: "574449384760348672",
@@ -216,24 +218,95 @@ onMounted(async () => {
           role: "admin",
           active: true,
         },
+        {
+          id: "575155400074555392",
+          phone: null,
+          email: "3221313@qq.com",
+          name: "小红",
+          country: "BR",
+          role: "admin",
+          active: true,
+        },
+      ],
+    },
+    {
+      id: "23131",
+      name: "财务部",
+      director: "31313132",
+      memberCount: null,
+      commissionStatus: 1,
+      commission: 100,
+      commissionTyp: 2,
+      remark: "财务部",
+      children: [
+        {
+          id: "5163131",
+          phone: null,
+          email: "131631@qq.com",
+          name: "hello",
+          country: "DE",
+          role: "admin",
+          active: true,
+        },
+        {
+          id: "35131313",
+          phone: null,
+          email: "131616@qq.com",
+          name: "world",
+          country: "CA",
+          role: "admin",
+          active: true,
+        },
+        {
+          id: "575155211095994368",
+          phone: null,
+          email: "3131@qq.com",
+          name: "小鹏",
+          country: "CA",
+          role: "admin",
+          active: true,
+        },
       ],
     },
   ];
   defaultTime.value = new Date();
 });
-const checkeChange = (val: any) => {
-  dataList.value.map((ite: any) => {
-    if (ite.id === val.id) {
-      return console.log(11111);
+// 选择树
+const checkChange = (val: any) => {
+  // 删除重复项
+  dataList.value = dataList.value.filter((item: any) => item.id !== val.id);
+  const isChecked = treeRef.value.getNode(val.id).checked;
+  // 如果项被选中，添加到列表中
+  if (isChecked) {
+    if (val.children && val.children.length) {
+      val.children.forEach((item: any) => {
+        if (!dataList.value.some((data: any) => data.id === item.id)) {
+          dataList.value.push(item);
+        }
+      });
+    } else {
+      if (!dataList.value.some((data: any) => data.id === val.id)) {
+        dataList.value.push(val);
+      }
     }
-  });
-  if (val.children && val.children.length) {
-    val.children.forEach((item: any) => {
-      dataList.value.push(item);
-    });
-  } else {
-    dataList.value.push(val);
   }
+  syncTableSelection(dataList.value);
+};
+
+// 同步表格的勾选状态
+const syncTableSelection = (val: any) => {
+  const table = tableRef.value;
+  if (!table) return; // 确保表格实例存在
+  // table.clearSelection(); // 清除所有选中状态
+  nextTick(() => {
+    val.forEach((selectedItem: any) => {
+      const row = dataList.value.find((row: any) => row.id === selectedItem.id);
+      if (row) {
+        // 使用表格的 `toggleRowSelection` 方法设置选中状态
+        table.toggleRowSelection(row, true);
+      }
+    });
+  });
 };
 // 提交数据
 function onSubmit() {
@@ -244,40 +317,56 @@ function onSubmit() {
     const halltree = treeRef.value.getHalfCheckedKeys();
     // 组合一下
     const menupath = tree.concat(halltree);
-    console.log('menupath',menupath);
-
+    delete form.value.menuId;
+    groupLeaderList.value.forEach((item: any) => {
+      let obj = {
+        userId: item.id,
+        commission: item.commission,
+      };
+      form.value.userInfo.push(obj);
+    });
+    dataList.value.forEach((item: any) => {
+      let obj = {
+        userId: item.id,
+        commission: item.commission,
+      };
+      form.value.userInfo.push(obj);
+    });
+    console.log("form.value", form.value);
+    // return
+    delete form.value.id;
+    api.create(form.value).then(() => {
+      ElMessage.success({
+        message: "新增成功",
+        center: true,
+      });
+      emits("success");
+      dialogTableVisible.value = false;
+      resolve();
+    });
     // if (!form.value.id) {
-    //   formRef.value &&
-    //     formRef.value.validate((valid: any) => {
-    //       if (valid) {
-    //         delete form.value.id;
-    //         api.create(form.value).then(() => {
-    //           ElMessage.success({
-    //             message: "新增成功",
-    //             center: true,
-    //           });
-    //           emits("success");
-    //           dialogTableVisible.value = false;
-    //           resolve();
-    //         });
-    //       }
-    //     });
+    // formRef.value &&
+    //   formRef.value.validate((valid: any) => {
+    //     if (valid) {
+
+    //     }
+    //   });
     // } else {
-    //   formRef.value &&
-    //     formRef.value.validate((valid: any) => {
-    //       if (valid) {
-    //         const data = toRaw(form.value);
-    //         api.edit(data).then(() => {
-    //           ElMessage.success({
-    //             message: "编辑成功",
-    //             center: true,
-    //           });
-    //           emits("success");
-    //           dialogTableVisible.value = false;
-    //           resolve();
+    // formRef.value &&
+    //   formRef.value.validate((valid: any) => {
+    //     if (valid) {
+    //       const data = toRaw(form.value);
+    //       api.edit(data).then(() => {
+    //         ElMessage.success({
+    //           message: "编辑成功",
+    //           center: true,
     //         });
-    //       }
-    //     });
+    //         emits("success");
+    //         dialogTableVisible.value = false;
+    //         resolve();
+    //       });
+    //     }
+    //   });
     // }
   });
 }
@@ -294,7 +383,7 @@ defineExpose({ showEdit });
             <span>组长</span>
           </div>
         </template>
-        <el-table :data="dataList" border>
+        <el-table :data="groupLeaderList" border>
           <el-table-column
             align="center"
             type="index"
@@ -304,7 +393,7 @@ defineExpose({ showEdit });
           <el-table-column
             align="center"
             show-overflow-tooltip
-            prop="lable"
+            prop="memberId"
             label="员工ID"
           />
           <el-table-column
@@ -312,19 +401,54 @@ defineExpose({ showEdit });
             show-overflow-tooltip
             prop="lable"
             label="用户名"
-          />
+            ><template #default="{ row }">
+              <template v-if="row.memberId">
+                <el-text v-for="item in staffList">
+                  <el-text v-if="row.memberId === item.id">
+                    {{ item.name }}
+                  </el-text>
+                </el-text>
+              </template>
+              <template v-else>
+                <el-text>
+                  {{ row.name }}
+                </el-text>
+              </template>
+            </template>
+          </el-table-column>
           <el-table-column
             align="center"
             show-overflow-tooltip
             prop="lable"
             label="姓名"
-          />
+            ><template #default="{ row }">
+              <template v-if="row.memberId">
+                <el-text v-for="item in staffList">
+                  <el-text v-if="row.memberId === item.id">
+                    {{ item.name }}
+                  </el-text>
+                </el-text>
+              </template>
+              <template v-else>
+                <el-text>
+                  {{ row.name }}
+                </el-text>
+              </template>
+            </template>
+          </el-table-column>
           <el-table-column
             align="center"
             show-overflow-tooltip
             prop="lable"
             label="部门"
-          />
+            ><template #default="{ row }">
+              <el-text v-for="item in departmentList">
+                <el-text v-if="department === item.id">
+                  {{ item.name }}
+                </el-text>
+              </el-text>
+            </template>
+          </el-table-column>
           <el-table-column
             align="center"
             width="200"
@@ -334,10 +458,9 @@ defineExpose({ showEdit });
           >
             <template #default="{ row }">
               <el-input
-                v-model.number="form.invoiceAmount"
+                v-model.number="row.commission"
                 placeholder="请输入提成比例"
                 clearable
-                @blur="handleEditProportion(row)"
               >
                 <template #append>%</template></el-input
               >
@@ -368,39 +491,82 @@ defineExpose({ showEdit });
               ref="treeRef"
               show-checkbox
               node-key="id"
-              :default-expanded-keys="[2, 3]"
-              :default-checked-keys="[5]"
+              :default-checked-keys="form.menuId"
+              :default-expanded-keys="[]"
               :props="defaultProps"
-              @check="checkeChange"
+              @check-change="checkChange"
             />
           </el-col>
           <el-col :span="16">
-            <el-table :data="dataList" border>
+            <el-table ref="tableRef" :data="dataList" border>
               <el-table-column align="center" type="selection" />
               <el-table-column
                 align="center"
                 show-overflow-tooltip
-                prop="id"
+                prop="memberId"
                 label="员工ID"
-              />
+                ><template #default="{ row }">
+                  <el-text v-if="row.memberId">
+                    {{ row.memberId }}
+                  </el-text>
+                  <el-text v-else>
+                    {{ row.id }}
+                  </el-text>
+                </template>
+              </el-table-column>
               <el-table-column
                 align="center"
                 show-overflow-tooltip
                 prop="name"
                 label="用户名"
-              />
+                ><template #default="{ row }">
+                  <template v-if="row.memberId">
+                    <el-text v-for="item in staffList">
+                      <el-text v-if="row.memberId === item.id">
+                        {{ item.name }}
+                      </el-text>
+                    </el-text>
+                  </template>
+                  <template v-else>
+                    <el-text>
+                      {{ row.name }}
+                    </el-text>
+                  </template>
+                </template>
+              </el-table-column>
               <el-table-column
                 align="center"
                 show-overflow-tooltip
                 prop="name"
                 label="姓名"
-              />
+                ><template #default="{ row }">
+                  <template v-if="row.memberId">
+                    <el-text v-for="item in staffList">
+                      <el-text v-if="row.memberId === item.id">
+                        {{ item.name }}
+                      </el-text>
+                    </el-text>
+                  </template>
+                  <template v-else>
+                    <el-text>
+                      {{ row.name }}
+                    </el-text>
+                  </template>
+                </template>
+              </el-table-column>
               <el-table-column
                 align="center"
                 show-overflow-tooltip
                 prop="lable"
                 label="部门"
-              />
+                ><template #default="{ row }">
+                  <el-text v-for="item in departmentList">
+                    <el-text v-if="department === item.id">
+                      {{ item.name }}
+                    </el-text>
+                  </el-text>
+                </template>
+              </el-table-column>
               <el-table-column
                 align="center"
                 width="190"
@@ -410,10 +576,9 @@ defineExpose({ showEdit });
               >
                 <template #default="{ row }">
                   <el-input
-                    v-model.number="form.commission"
+                    v-model.number="row.commission"
                     placeholder="提成比例"
                     clearable
-                    @blur="handleEditProportion(row)"
                   >
                     <template #append>%</template></el-input
                   >

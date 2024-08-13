@@ -37,7 +37,7 @@ const form = ref<any>({
 // 校验
 const formRules = ref<FormRules>({
   name: [{ required: true, message: "请输入部门名称", trigger: "blur" }],
-  type: [{ required: true, message: "请选择类型", trigger: "change" }],
+  director: [{ required: true, message: "请选择组长", trigger: "change" }],
 });
 onMounted(async () => {
   loading.value = true;
@@ -112,7 +112,7 @@ defineExpose({
       <el-form-item label="组名称" prop="name">
         <el-input
           v-model="form.name"
-          placeholder="请输入部门名称"
+          placeholder="请输入组名称"
           clearable
           :disabled="!form.id ? false : true"
         />
@@ -134,7 +134,7 @@ defineExpose({
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="组长" prop="commissionType">
+      <el-form-item label="组长" prop="director">
         <el-select
           v-model="form.director"
           value-key=""
