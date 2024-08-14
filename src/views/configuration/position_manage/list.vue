@@ -4,7 +4,7 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import { Plus } from "@element-plus/icons-vue";
 import Edit from "./components/Edit/index.vue";
 import useUserCustomerStore from "@/store/modules/user_customer";
-import api from "@/api/modules/finance_invoice";
+import api from "@/api/modules/position_manage";
 
 defineOptions({
   name: "position_manage",
@@ -36,22 +36,13 @@ const stripe = ref(false);
 const selectRows = ref<any>([]);
 // 发票状态
 const invoiceStatusList = [
-  { lable: "未收款", value: 1 },
-  { lable: "部分收款", value: 2 },
-  { lable: "已完结", value: 3 },
-  { lable: "坏账", value: 4 },
-];
-// 时间类型
-const type = ref<any>(null);
-const timeArr = ref<any>([]);
-const timeType = [
-  { lable: "开票日期", value: 1 },
-  { lable: "收款日期", value: 2 },
+  { lable: "启用", value: 1 },
+  { lable: "禁用", value: 2 },
 ];
 const columns = ref<any>([
   {
     label: "职位ID",
-    prop: "tenantCustomerShortName",
+    prop: "id",
     sortable: true,
     // 不可改变的
     disableCheck: false,
@@ -59,7 +50,7 @@ const columns = ref<any>([
   },
   {
     label: "职位名称",
-    prop: "invoiceCode",
+    prop: "name",
     sortable: true,
     // 不可改变的
     disableCheck: false,
@@ -67,7 +58,7 @@ const columns = ref<any>([
   },
   {
     label: "账户数",
-    prop: "invoiceAmount",
+    prop: "count",
     sortable: true,
     // 不可改变的
     disableCheck: false,
@@ -88,27 +79,20 @@ const queryForm = reactive<any>({
   page: 1,
   // 每页数量
   limit: 10,
-  // 客户id
-  tenantCustomerId: "",
-  // 发票状态
-  invoiceStatus: null,
-  // 开票日期开始
-  invoiceDateStart: "",
-  // 开票日期结束
-  invoiceDateEnd: "",
-  // 收款日期开始
-  paymentDateStart: "",
-  // 收款日期结束
-  paymentDateEnd: "",
+  id: null,
+  // 职位名称
+  name: "",
+  // 是否启用 1启用 2停用
+  active: null,
 });
 
 // 新增
 function addData() {
-  editRef.value.showEdit("", customerList.value);
+  editRef.value.showEdit();
 }
 // 编辑数据
 function editData(row: any) {
-  editRef.value.showEdit(JSON.stringify(row), customerList.value);
+  editRef.value.showEdit(JSON.stringify(row));
 }
 // 删除数据
 // function onDel(row: any) {
@@ -139,41 +123,14 @@ function onReset() {
     page: 1,
     // 每页数量
     limit: 10,
-    // 客户id
-    tenantCustomerId: "",
-    // 发票状态
-    invoiceStatus: null,
-    // 开票日期开始
-    invoiceDateStart: "",
-    // 开票日期结束
-    invoiceDateEnd: "",
-    // 收款日期开始
-    paymentDateStart: "",
-    // 收款日期结束
-    paymentDateEnd: "",
+    id: null,
+    // 职位名称
+    name: "",
+    // 是否启用 1启用 2停用
+    active: null,
   });
-  type.value = null;
   fetchData();
 }
-// 类型变化时间跟着变化
-const selectChange = (val: any) => {
-  type.value = val;
-  timeArr.value = [];
-  queryForm.invoiceDateStart = "";
-  queryForm.invoiceDateEnd = "";
-  queryForm.paymentDateStart = "";
-  queryForm.paymentDateEnd = "";
-};
-// 处理时间
-const timeChange = () => {
-  if (type.value === 1) {
-    queryForm.invoiceDateStart = timeArr.value[0];
-    queryForm.invoiceDateEnd = timeArr.value[1];
-  } else {
-    queryForm.paymentDateStart = timeArr.value[0];
-    queryForm.paymentDateEnd = timeArr.value[1];
-  }
-};
 // 每页数量切换
 function sizeChange(size: number) {
   onSizeChange(size).then(() => fetchData());
@@ -186,6 +143,8 @@ async function fetchData() {
   listLoading.value = true;
   customerList.value = await customerStore.getCustomerList();
   const { data } = await api.list(queryForm);
+  console.log("data", data);
+
   list.value = data.data;
   pagination.value.total = parseInt(data.total) || 0;
   listLoading.value = false;
@@ -219,14 +178,18 @@ onMounted(() => {
             class="search-form"
           >
             <el-form-item label="">
-              <el-input v-model="queryForm.invoiceStatus" placeholder="职位ID"  clearable />
+              <el-input v-model="queryForm.id" placeholder="职位ID" clearable />
             </el-form-item>
             <el-form-item label="">
-              <el-input v-model="queryForm.invoiceStatus" placeholder="职位名称"  clearable />
+              <el-input
+                v-model="queryForm.name"
+                placeholder="职位名称"
+                clearable
+              />
             </el-form-item>
             <el-form-item label="">
               <el-select
-                v-model="queryForm.invoiceStatus"
+                v-model="queryForm.active"
                 placeholder="状态"
                 clearable
                 filterable
@@ -304,39 +267,41 @@ onMounted(() => {
         <el-table-column align="center" type="selection" />
         <!-- <el-table-column type="index" align="center" label="序号" width="55" /> -->
         <el-table-column
-        v-if="checkList.includes('tenantCustomerShortName')"
-          prop="tenantCustomerShortName"
+          v-if="checkList.includes('id')"
+          prop="id"
           show-overflow-tooltip
           align="center"
           label="职位ID"
         />
         <el-table-column
-        v-if="checkList.includes('invoiceCode')"
-          prop="invoiceCode"
+          v-if="checkList.includes('name')"
+          prop="name"
           show-overflow-tooltip
           align="center"
           label="职位名称"
         />
         <el-table-column
-        v-if="checkList.includes('invoiceAmount')"
-          prop="invoiceAmount"
+          v-if="checkList.includes('count')"
+          prop="count"
           show-overflow-tooltip
           align="center"
           label="账户数"
         >
           <template #default="{ row }">
-            <CurrencyType />{{ row.invoiceAmount || 0 }} </template
-        ></el-table-column>
+            {{ row.count ? row.count : "-" }}
+          </template></el-table-column
+        >
         <el-table-column
-        v-if="checkList.includes('remark')"
-          prop="invoiceTax"
+          v-if="checkList.includes('remark')"
+          prop="remark"
           show-overflow-tooltip
           align="center"
           label="备注"
         >
           <template #default="{ row }">
-            <CurrencyType />{{ row.invoiceTax || 0 }} </template
-        ></el-table-column>
+            {{ row.remark ? row.remark : "-" }}
+          </template></el-table-column
+        >
         <el-table-column align="center" fixed="right" label="操作" width="170">
           <template #default="{ row }">
             <el-button size="small" plain type="primary" @click="editData(row)">
