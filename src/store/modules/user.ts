@@ -28,6 +28,7 @@ const useUserStore = defineStore(
     const userId = ref(storage.local.get("userId") ?? "");
     const permissions = ref<string[]>([]);
     const currencyType = ref<number | string>(3); //货币类型 1=USD 2=CNY 3=未知
+    const exchangeRate = ref<number | string>(); //汇率
     const isLogin = computed(() => {
       if (token.value) {
         return true;
@@ -133,6 +134,11 @@ const useUserStore = defineStore(
     async function getCurrencyType() {
       const res = await apiUser.getCurrencyType();
       currencyType.value = res.data.currencyType;
+    }
+    // 获取汇率
+    async function getExchangeRate() {
+      const res = await apiUser.getExchangeRate();
+      exchangeRate.value = res.data.exchangeRate;
     }
 
     // 修改密码
@@ -296,6 +302,7 @@ const useUserStore = defineStore(
       logout,
       getPermissions,
       getCurrencyType,
+      getExchangeRate,
       editPassword,
       preferences,
       getPreferences,

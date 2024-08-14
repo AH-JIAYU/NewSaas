@@ -18,6 +18,8 @@ export default {
 
   // 货币类型
   getCurrencyType: () => api.post("project/getCurrencyType",{}),
+  // 货币类型
+  getExchangeRate: () => api.post("tenantBind/getExchangeRate",{}),
 
   // 修改密码
   passwordEdit: (data: { password: string; newpassword: string }) =>

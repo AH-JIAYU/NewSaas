@@ -102,6 +102,7 @@ router.beforeEach(async (to, from, next) => {
       // settingsStore.settings.app.enablePermission && await userStore.getPermissions()
       await userStore.getPermissions(); //权限
       await userStore.getCurrencyType(); // 货币类型
+      await userStore.getExchangeRate(); // 汇率
       await notificationStore.init(); // 获取消息和待办
       if (!notificationStore.socket) {
         notificationStore.openSocket(userStore.userId); //连接websocket

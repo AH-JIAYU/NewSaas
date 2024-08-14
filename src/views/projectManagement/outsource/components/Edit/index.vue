@@ -11,6 +11,7 @@ const projectManagementOutsourceStore = useProjectManagementOutsourceStore();
 // 弹框开关变量
 const dialogTableVisible = ref(false);
 const data = ref<any>({
+  initialTenantCurrencyType: "", // 初始租户的货币类型
   currentTenantId: "", //当前租户id
   tenantMeasurementInfoList: [], //测查列表
 });
@@ -22,6 +23,9 @@ async function showEdit(row: any) {
     projectId: row.projectId,
   };
   const res = await api.getTenantMeasurementList(params);
+  // 获取初始租户的货币类型
+  data.value.initialTenantCurrencyType =
+    res.data.tenantMeasurementInfoList[0].currencyType;
   // 过滤数据（删除与当前租户id相同的数据之前的所有数据，包括当前的数据）
   const findDataIndex = res.data.tenantMeasurementInfoList.findIndex(
     (item: any) => item.allocationTenantId === res.data.currentTenantId
@@ -83,8 +87,9 @@ defineExpose({ showEdit });
                 <div class="price flex-b">
                   <p>
                     原价：
-                    <!-- <CurrencyType /> -->
-                    {{ item.doMoneyPrice }}
+                    <CurrencyType />
+                    <!-- {{ item.doMoneyPrice }} -->
+                    {{ item.currencyType }}
                   </p>
                   <p>
                     参数：
