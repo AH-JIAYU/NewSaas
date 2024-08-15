@@ -74,15 +74,6 @@ const columns = ref([
     // 默认展示
     checked: true,
   },
-  {
-    label: "创建时间",
-    prop: "createTime",
-    sortable: true,
-    // 不可更改
-    disableCheck: false,
-    // 默认展示
-    checked: true,
-  },
 ]);
 // detailRef
 const detailRef = ref<any>()

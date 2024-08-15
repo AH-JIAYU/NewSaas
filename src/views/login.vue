@@ -327,7 +327,7 @@ const countdown = () => {
 };
 // 注册
 const handleRegister = throttle(async () => {
-  console.log('registerForm.value',registerForm.value)
+  console.log("registerForm.value", registerForm.value);
   registerFormRef.value &&
     registerFormRef.value.validate(async (valid: any) => {
       if (valid) {
@@ -464,7 +464,7 @@ watch(
             </el-radio-group>
           </div>
         </div>
-        <div  style="height: 11.5625rem;">
+        <div style="height: 11.5625rem">
           <ElFormItem prop="account">
             <ElInput
               v-model="loginForm.account"
@@ -517,7 +517,12 @@ watch(
           <ElFormItem prop="agreeToTheAgreement">
             <div class="flex-bar" style="width: 100%; margin: 0">
               <ElCheckbox v-model="loginForm.agreeToTheAgreement" tabindex="3">
-                我已阅读并同意《xxxx协议》
+                我已阅读并同意
+                <el-button type="primary" size="default" link @click="agreement"
+                  >《会员协议》</el-button
+                >和<el-button type="primary" size="default" link @click=""
+                  >《隐私协议》</el-button
+                >
               </ElCheckbox>
               <ElLink
                 v-if="loginType === 'password'"
@@ -1006,5 +1011,12 @@ watch(
   position: absolute;
   right: 20px;
   bottom: 20px;
+}
+:deep(.el-checkbox__label) {
+  display: flex;
+  align-items: center;
+}
+.el-button+.el-button {
+  margin: 0;
 }
 </style>

@@ -9,6 +9,12 @@ export default {
   edit: (data: any) => api.post('staff/updateStaff', data),
   // 删除
   delete: (data:any) => api.post('staff/deleteStaff', data),
+  // 重置员工密码
+  reset: (data:any) => api.post('staff/resetPasswordStaff', data),
+  // 查询未分配部门成员 分配部门
+  undistributedDepartment: () => api.post('staff/getStaffListByNotDepartment'),
+  // 查询部门成员 分配小组
+  undistributedGroup: (data:any) => api.post('staff/getDepartmentStaffList', data),
   // 员工退出登录
   logout: () => api.post('staff/logout'),
 }
