@@ -9,11 +9,28 @@ import type Node from "element-plus/es/components/tree/src/model/node";
 import { ref } from "vue";
 import DictionaryItemDia from "./components/dictionaryItemDialog/index.vue";
 import Detail from "./components/Detail/index.vue";
-import api from "@/api/modules/tenantDictionary";
+import api from "@/api/modules/configuration_manager";
+import useDepartmentStore from "@/store/modules/department";
+import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary";
+import usePositionManageStore from "@/store/modules/position_manage";
+import useGroupManageStore from "@/store/modules/group_manage";
 
 defineOptions({
   name: "user",
 });
+// 小组
+const useGroupManage = useGroupManageStore();
+const groupManageList = ref<any>();
+// 职位
+const usePositionManage = usePositionManageStore();
+const positionManageList = ref<any>();
+// 国家
+const useStoreCountry = useBasicDictionaryStore();
+const filterCountry = ref<any>([]);
+// 部门
+const departmentStore = useDepartmentStore();
+// 部门数据
+const departmentList = ref<any>();
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
 interface Dict {
@@ -40,7 +57,7 @@ const columns = ref<any>([
 ]);
 const dictionaryRef = ref();
 // 详情ref
-const detailRef = ref<any>()
+const detailRef = ref<any>();
 // 字典
 const dictionary = ref({
   search: {
@@ -87,15 +104,21 @@ const dictionaryItem = ref<any>({
 // 获取字典
 async function getDictionaryList() {
   dictionary.value.loading = true;
+  dictionaryItem.value.sea = true;
   dictionaryItem.value.search.catalogueId = "";
   const params = {
     ...dictionary.value.search,
   };
   const res = await api.list(params);
-  dictionary.value.tree = res.data;
+  dictionaryItem.value.dataList = res.data;
+  pagination.value.total = res.data.length;
   dictionary.value.loading = false;
 }
-onMounted(() => {
+onMounted(async () => {
+  filterCountry.value = await useStoreCountry.getCountry();
+  departmentList.value = await departmentStore.getDepartment();
+  positionManageList.value = await usePositionManage.getPositionManage();
+  groupManageList.value = await useGroupManage.getGroupManage();
   getDictionaryList();
 });
 watch(
@@ -144,7 +167,43 @@ function dictionaryDelete(node: Node, data: any) {
     }
   );
 }
-
+// 开关事件
+function onChangeStatus(row: any) {
+  return new Promise<boolean>((resolve) => {
+    ElMessageBox.confirm(
+      `确认${!row.active ? "启用" : "禁用"}「${row.name}」吗？`,
+      "确认信息"
+    )
+      .then(() => {
+        dictionary.value.loading = true;
+        api
+          .edit({
+            id: row.id,
+            account: null,
+            name: null,
+            sex: null,
+            phoneNumber: null,
+            active: !row.active,
+          })
+          .then(() => {
+            ElMessage.success({
+              message: `${!row.active ? "启用" : "禁用"}成功`,
+              center: true,
+            });
+            getDictionaryList();
+            dictionary.value.loading = false;
+            return resolve(true);
+          })
+          .catch(() => {
+            dictionary.value.loading = false;
+            return resolve(false);
+          });
+      })
+      .catch(() => {
+        return resolve(false);
+      });
+  });
+}
 // 字典项详情
 function dictionaryClick(data: Dict) {
   pagination.value.page = 1;
@@ -164,13 +223,13 @@ async function getDictionaryItemList() {
     ...getParams(),
     ...dictionaryItem.value.search,
   };
-  const res = await api.itemlist(params);
-  dictionaryItem.value.loading = false;
-  dictionaryItem.value.dataList = res.data;
-  dictionaryItem.value.dataList.forEach((item: any) => {
-    item.enableLoading = false;
-  });
-  pagination.value.total = res.data.length;
+  // const res = await api.itemlist(params);
+  // dictionaryItem.value.loading = false;
+  // dictionaryItem.value.dataList = res.data;
+  // dictionaryItem.value.dataList.forEach((item: any) => {
+  //   item.enableLoading = false;
+  // });
+  // pagination.value.total = res.data.length;
 }
 
 // 每页数量切换
@@ -223,23 +282,23 @@ function onEdit(row: any) {
 }
 // 详情
 function onDetail(row: any) {
-  detailRef.value.showEdit(row)
+  detailRef.value.showEdit(row);
 }
 // 批量删除
-function onDeleteMulti(rows: any[]) {
-  const ids = rows.map((item) => item.id);
-  ElMessageBox.confirm(`确认删除选中的 ${rows.length} 条数据吗？`, "确认信息")
-    .then(() => {
-      api.itemdelete(ids).then(() => {
-        getDictionaryItemList();
-        ElMessage.success({
-          message: "删除成功",
-          center: true,
-        });
-      });
-    })
-    .catch(() => {});
-}
+// function onDeleteMulti(rows: any[]) {
+//   const ids = rows.map((item) => item.id);
+//   ElMessageBox.confirm(`确认删除选中的 ${rows.length} 条数据吗？`, "确认信息")
+//     .then(() => {
+//       api.itemdelete(ids).then(() => {
+//         getDictionaryItemList();
+//         ElMessage.success({
+//           message: "删除成功",
+//           center: true,
+//         });
+//       });
+//     })
+//     .catch(() => {});
+// }
 </script>
 
 <template>
@@ -293,39 +352,27 @@ function onDeleteMulti(rows: any[]) {
                         <template #icon>
                           <SvgIcon name="i-ep:plus" />
                         </template>
-                      </ElButton>
-                      <ElButton
-                        type="info"
-                        plain
-                        size="default"
-                        @click.stop="dictionaryEdit(node, data)"
-                      >
-                        <template #icon>
+    </ElButton>
+    <ElButton type="info" plain size="default" @click.stop="dictionaryEdit(node, data)">
+      <template #icon>
                           <SvgIcon name="i-ep:edit" />
                         </template>
-                      </ElButton>
-                      <ElButton
-                        type="danger"
-                        plain
-                        size="default"
-                        @click.stop="dictionaryDelete(node, data)"
-                      >
-                        <template #icon>
+    </ElButton>
+    <ElButton type="danger" plain size="default" @click.stop="dictionaryDelete(node, data)">
+      <template #icon>
                           <SvgIcon name="i-ep:delete" />
                         </template>
-                      </ElButton>
-                    </ElButtonGroup>
-                  </div> -->
+    </ElButton>
+    </ElButtonGroup>
+    </div> -->
                 </div>
               </template>
             </ElTree>
           </ElScrollbar>
         </template>
-        <div
-          v-show="dictionaryItem.search.catalogueId"
-          class="dictionary-container"
-        >
-          <ElSpace wrap>
+        <!-- v-show="dictionaryItem.search.catalogueId" -->
+        <div v-loading="dictionary.loading" class="dictionary-container">
+          <ElSpace>
             <ElInput
               v-model="dictionaryItem.search.chineseName"
               placeholder="员工ID"
@@ -396,26 +443,105 @@ function onDeleteMulti(rows: any[]) {
             default-expand-all
           >
             <ElTableColumn type="selection" align="center" fixed />
-            <ElTableColumn align="center" prop="chineseName" label="员工ID" />
-            <ElTableColumn align="center" prop="englishName" label="用户名" />
-            <ElTableColumn align="center" prop="remark" label="姓名" />
-            <ElTableColumn align="center" prop="remark" label="电话号码" />
-            <ElTableColumn align="center" prop="remark" label="邮箱" />
-            <ElTableColumn align="center" prop="remark" label="部门" />
-            align="center"
-            <ElTableColumn align="center" prop="remark" label="职位" />
-            <ElTableColumn align="center" prop="remark" label="小组" />
-            <ElTableColumn align="center" prop="remark" label="状态">
-              <template #default="{ row }">
-                <el-switch
-                  v-model="dictionaryItem.search.chineseName"
-                  :active-value="true"
-                  :inactive-value="false"
-                >
-                </el-switch>
+            <ElTableColumn
+              align="center"
+              width="180"
+              prop="id"
+              label="员工ID"
+            />
+            <ElTableColumn
+              align="center"
+              width="150"
+              prop="userName"
+              label="用户名"
+              ><template #default="{ row }">
+                <el-text>
+                  {{ row.userName ? row.userName : "-" }}
+                </el-text>
               </template>
             </ElTableColumn>
-            <ElTableColumn label="操作" width="150" align="center">
+            <ElTableColumn
+              align="center"
+              width="150"
+              prop="name"
+              label="姓名"
+            />
+            <ElTableColumn
+              prop="country"
+              label="国家"
+              width="150"
+              align="center"
+            >
+              <template #default="{ row }">
+                <div v-for="item in filterCountry" :key="item.id" class="mx-1">
+                  <el-tag
+                    type="primary"
+                    v-if="item.code === row.country"
+                    class="mx-1"
+                  >
+                    {{ item.chineseName }}
+                  </el-tag>
+                </div>
+              </template>
+            </ElTableColumn>
+            <ElTableColumn
+              align="center"
+              width="180"
+              prop="phone"
+              label="电话号码"
+              ><template #default="{ row }">
+                {{ row.phone ? row.phone : "-" }}
+              </template>
+            </ElTableColumn>
+            <ElTableColumn align="center" width="180" prop="email" label="邮箱"
+              ><template #default="{ row }">
+                {{ row.email ? row.email : "-" }}
+              </template>
+            </ElTableColumn>
+            <ElTableColumn align="center" prop="departmentId" label="部门"
+              ><template #default="{ row }">
+                <el-text v-for="item in departmentList">
+                  <el-text v-if="row.departmentId === item.id">
+                    {{ item.name ? item.name : "-" }}
+                  </el-text>
+                </el-text>
+              </template>
+            </ElTableColumn>
+            <ElTableColumn align="center" prop="positionId" label="职位"
+              ><template #default="{ row }">
+                <el-text v-for="item in positionManageList">
+                  <el-text v-if="row.positionId === item.id">
+                    {{ item.name ? item.name : "-" }}
+                  </el-text>
+                </el-text>
+              </template>
+            </ElTableColumn>
+            <ElTableColumn align="center" prop="groupId" label="小组"
+              ><template #default="{ row }">
+                <el-text v-for="item in groupManageList">
+                  <el-text v-if="row.groupId === item.id">
+                    {{ item.name ? item.name : "-" }}
+                  </el-text>
+                </el-text>
+              </template>
+            </ElTableColumn>
+            <ElTableColumn align="center" prop="remark" label="状态">
+              <template #default="scope">
+                <ElSwitch
+                  v-model="scope.row.active"
+                  inline-prompt
+                  active-text="启用"
+                  inactive-text="禁用"
+                  :before-change="() => onChangeStatus(scope.row)"
+                />
+              </template>
+            </ElTableColumn>
+            <ElTableColumn
+              label="操作"
+              fixed="right"
+              width="150"
+              align="center"
+            >
               <template #default="scope">
                 <ElButton
                   type="primary"
@@ -452,12 +578,12 @@ function onDeleteMulti(rows: any[]) {
             @current-change="currentChange"
           />
         </div>
-        <div
+        <!-- <div
           v-show="!dictionaryItem.search.catalogueId"
           class="dictionary-container"
         >
           <div class="empty">请在左侧选择一个部门</div>
-        </div>
+        </div> -->
       </LayoutContainer>
       <DictionaryItemDia
         v-if="dictionaryItem.dialog.visible"
@@ -469,7 +595,7 @@ function onDeleteMulti(rows: any[]) {
         :tree="dictionary.tree"
         :dataList="dictionaryItem.dataList"
         :row="dictionaryItem.row"
-        @success="getDictionaryItemList"
+        @success="getDictionaryList"
       />
       <Detail ref="detailRef" />
     </div>
