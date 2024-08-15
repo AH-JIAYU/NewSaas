@@ -37,6 +37,7 @@ const data = ref<any>({
   imgUrl: [], // 图片预览
   isOnline: "", //	项目状态:1:在线 2:不在线
   allocationStatus: "", //分配状态:1:未分配 2:已分配
+  projectType: 1, //项目类型 1:内部新增 2:租户分配   为租户时需要隐藏客户、前置、操作日志
   srcList: [], // 图片预览
   countryList: [], // 国家
 });
@@ -61,7 +62,8 @@ function details(row: any) {
 // 弹框开关变量
 const dialogTableVisible = ref(false);
 // 显隐
-async function showEdit(row: any) {
+async function showEdit(row: any, projectType: any) {
+  data.value.projectType = projectType; // 项目类型
   data.value.isOnline = row.isOnline;
   data.value.allocationStatus = row.allocationStatus;
   const res = await obtainLoading(api.detail({ projectId: row.projectId }));
@@ -337,10 +339,10 @@ defineExpose({ showEdit });
                 </el-text>
               </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="8" v-if="data.projectType === 1">
               <el-form-item label="所属客户 :">
                 <el-text class="mx-1">
-                  {{ getcustsmer.customerAccord }}
+                  {{ getcustsmer?.customerAccord }}
                 </el-text>
               </el-form-item>
             </el-col>
@@ -374,7 +376,7 @@ defineExpose({ showEdit });
                 </el-text>
               </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="8" v-if="data.projectType === 1">
               <el-form-item label="原价 :">
                 <el-text v-if="data.form.currencyType === 1" class="mx-1">
                   {{
@@ -487,7 +489,7 @@ defineExpose({ showEdit });
             </el-col>
           </el-row>
         </el-card>
-        <el-card class="box-card">
+        <el-card class="box-card" v-if="data.projectType === 1">
           <template #header>
             <div class="peizjo-header">
               <span>配置信息</span>
@@ -642,7 +644,7 @@ defineExpose({ showEdit });
           </el-row>
         </el-card>
 
-        <el-card class="box-card">
+        <el-card class="box-card" v-if="data.projectType === 1">
           <template #header>
             <div class="card-header">
               <span>操作日志</span>
