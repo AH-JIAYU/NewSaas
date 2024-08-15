@@ -98,8 +98,8 @@ async function showEdit() {
   dialogTableVisible.value = true;
 }
 onMounted(async () => {
-  staffList.value = await tenantStaffStore.getStaff();
-  departmentList.value = await departmentStore.getDepartment();
+  staffList.value = await tenantStaffStore.staff
+  departmentList.value = await departmentStore.department
   defaultTime.value = new Date();
 });
 // 暴露方法

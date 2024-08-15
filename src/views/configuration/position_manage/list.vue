@@ -139,12 +139,11 @@ function sizeChange(size: number) {
 function currentChange(page = 1) {
   onCurrentChange(page).then(() => fetchData());
 }
+// 获取数据
 async function fetchData() {
   listLoading.value = true;
   customerList.value = await customerStore.getCustomerList();
   const { data } = await api.list(queryForm);
-  console.log("data", data);
-
   list.value = data.data;
   pagination.value.total = parseInt(data.total) || 0;
   listLoading.value = false;

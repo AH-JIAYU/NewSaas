@@ -2,15 +2,14 @@
 import type { FormInstance, FormRules } from "element-plus";
 import { ElMessage } from "element-plus";
 import api from "@/api/modules/configuration_manager";
+import apiDep from "@/api/modules/department";
 import useDepartmentStore from "@/store/modules/department";
 import useTenantRoleStore from "@/store/modules/tenant_role";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary";
 import usePositionManageStore from "@/store/modules/position_manage";
-import useGroupManageStore from "@/store/modules/group_manage";
 
 // 小组
-const useGroupManage = useGroupManageStore();
-const groupManageList = ref<any>();
+const groupManageList = ref<any>([]);
 // 职位
 const usePositionManage = usePositionManageStore();
 const positionManageList = ref<any>();
@@ -141,6 +140,11 @@ const handleChange = (val: any) => {
     isTrue.value = true;
   }
 };
+// 切换部门
+const departmentChange = async (val: any) => {
+  const { data } = await apiDep.departmentGroup({ id: val });
+  groupManageList.value = data;
+};
 // 提交数据
 function onSubmit() {
   form.value.type = form.value.country === "CN" ? "phone" : "email";
@@ -148,7 +152,6 @@ function onSubmit() {
     formRef.value &&
       formRef.value.validate((valid) => {
         if (valid) {
-          console.log("form.value", form.value);
           delete form.value.id;
           if (form.value.type === "phone") {
             delete form.value.email;
@@ -241,11 +244,11 @@ onMounted(async () => {
   positionManageList.value = await usePositionManage.PositionManage;
   munulevs.value = await roleStore.getRole();
   departmentList.value = await departmentStore.department;
-  groupManageList.value = await useGroupManage.groupManage;
   country.value = await useStoreCountry.getCountry();
   if (props.id !== "" && props.row) {
     formRules.value.password = [];
     form.value = JSON.parse(props.row);
+    departmentChange(form.value.departmentId)
     disabled.value = true;
   }
   flat.value = flattenDeep(props.dataList);
@@ -332,9 +335,10 @@ onMounted(async () => {
               <el-select
                 v-model="form.departmentId"
                 placeholder="请选择部门"
+                :disabled="form.id !== ''"
                 clearable
                 filterable
-                @change=""
+                @change="departmentChange"
               >
                 <el-option
                   v-for="item in departmentList"
@@ -370,7 +374,7 @@ onMounted(async () => {
               <ElInput
                 :disabled="disabled"
                 v-model="form.password"
-                placeholder="需要修改密码时请前往当前账号个人中心"
+                placeholder="如要修改密码请前往个人中心"
               />
             </el-form-item>
           </el-col>
@@ -420,14 +424,19 @@ onMounted(async () => {
         </template>
         <el-row :gutter="24">
           <el-form-item label="分配小组:">
-            <el-radio-group v-model="form.groupId">
+            <el-radio-group
+              v-if="groupManageList.length"
+              v-model="form.groupId"
+              :disabled="form.id !== ''"
+            >
               <el-radio
-              v-for="item in groupManageList"
-              :key="item.id"
-              :value="item.id"
-              :label="item.name"
+                v-for="item in groupManageList"
+                :key="item.id"
+                :value="item.id"
+                :label="item.name"
               ></el-radio>
             </el-radio-group>
+            <el-text v-else>-</el-text>
           </el-form-item>
         </el-row>
       </el-card>

@@ -10,10 +10,13 @@ const useTenantStaffStore = defineStore(
         return staff.value
       }
       const { data } = await api.list({
-        name: '',
-        role: '',
+        id: '',
+        userName: '',
+        active: '',
+        departmentId: '',
       })
-      return data
+      staff.value = data.data
+      return data.data
     }
     return {
       staff,
