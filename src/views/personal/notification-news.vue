@@ -60,7 +60,7 @@ defineExpose({
         @click="read"
         >已读</el-button
       >
-      <el-button plain type="danger" @click="">删除</el-button>
+      <!-- <el-button plain type="danger" @click="">删除</el-button> -->
     </div>
   </div>
 </template>

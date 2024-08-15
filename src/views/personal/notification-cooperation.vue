@@ -67,7 +67,7 @@ defineExpose({
         data.invitationName || "-"
       }}诚挚邀请您与我们一同协作共赢！若有疑问请联系{{ data.phoneOrEmail }}。
     </span>
-    <template #footer>
+    <template #footer v-if="data.auditStatus === 1">
       <div class="dialog-footer">
         <el-button @click="refuse">决绝合作</el-button>
         <el-button type="primary" @click="agree"> 同意合作 </el-button>

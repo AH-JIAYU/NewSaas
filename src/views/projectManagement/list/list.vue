@@ -118,7 +118,7 @@ async function changeStatus(row: any, val: any) {
 }
 // 项目详情
 function projectDetails(row: any) {
-  projectDetailsRef.value.showEdit(row);
+  projectDetailsRef.value.showEdit(row, row.projectType);
 }
 // 项目调度 快捷操作
 function dispatch() {
@@ -403,18 +403,10 @@ onMounted(async () => {
           align="center"
           label="项目类型"
           ><template #default="{ row }">
-            <el-button type="danger" v-if="row.allocationType === 4"
+            <el-button type="danger" v-if="row.projectType === 2"
               >租户分配</el-button
             >
-            <el-button type="success" v-else-if="row.allocationType === 1"
-              >自动分配</el-button
-            >
-            <el-button
-              type="success"
-              v-else-if="row.allocationType === 2 || row.allocationType === 3"
-              >内部新增</el-button
-            >
-            <el-button v-else>-</el-button>
+            <el-button type="success" v-else>内部新增</el-button>
           </template>
         </el-table-column>
         <el-table-column
@@ -487,7 +479,7 @@ onMounted(async () => {
             >
             <el-button
               @click="viewAllocations(row, 3)"
-              type="info"
+              type="success"
               v-else-if="row.allocationType === 3"
               >会员组</el-button
             >
@@ -497,7 +489,7 @@ onMounted(async () => {
               v-else-if="row.allocationType === 4"
               >租户</el-button
             >
-            <el-button v-else>-</el-button>
+            <el-button v-else type="info"> 未分配</el-button>
           </template>
         </el-table-column>
 
@@ -617,7 +609,6 @@ onMounted(async () => {
         />
         <el-table-column
           v-if="checkList.includes('createTime')"
-          show-overflow-tooltip
           prop="createTime"
           align="center"
           width="100"
@@ -653,6 +644,7 @@ onMounted(async () => {
               plain
               size="small"
               @click="projectEdit(row)"
+              :disabled="row.projectType === 2"
             >
               编辑
             </el-button>
