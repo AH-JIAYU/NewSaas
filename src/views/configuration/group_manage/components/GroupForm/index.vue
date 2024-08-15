@@ -3,6 +3,7 @@ import { ElMessage } from "element-plus";
 import type { FormInstance, FormRules } from "element-plus";
 import { ref } from "vue";
 import api from "@/api/modules/group_team";
+import apiDep from "@/api/modules/department";
 import useDepartmentStore from "@/store/modules/department";
 import useTenantStaffStore from "@/store/modules/configuration_manager";
 
@@ -189,86 +190,9 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
 onMounted(async () => {
   departmentList.value = await departmentStore.getDepartment();
   staffList.value = await tenantStaffStore.getStaff();
-  departmentList.value = [
-    {
-      id: "574449384760348672",
-      name: "技术部",
-      director: "574448371148066816",
-      memberCount: null,
-      commissionStatus: 1,
-      commission: 100,
-      commissionTyp: 2,
-      remark: "技术部",
-      children: [
-        {
-          id: "574451094157332480",
-          phone: null,
-          email: "131631@qq.com",
-          name: "小小",
-          country: "DE",
-          role: "admin",
-          active: true,
-        },
-        {
-          id: "574449041162964992",
-          phone: null,
-          email: "131616@qq.com",
-          name: "王二",
-          country: "CA",
-          role: "admin",
-          active: true,
-        },
-        {
-          id: "575155400074555392",
-          phone: null,
-          email: "3221313@qq.com",
-          name: "小红",
-          country: "BR",
-          role: "admin",
-          active: true,
-        },
-      ],
-    },
-    {
-      id: "23131",
-      name: "财务部",
-      director: "31313132",
-      memberCount: null,
-      commissionStatus: 1,
-      commission: 100,
-      commissionTyp: 2,
-      remark: "财务部",
-      children: [
-        {
-          id: "5163131",
-          phone: null,
-          email: "131631@qq.com",
-          name: "hello",
-          country: "DE",
-          role: "admin",
-          active: true,
-        },
-        {
-          id: "35131313",
-          phone: null,
-          email: "131616@qq.com",
-          name: "world",
-          country: "CA",
-          role: "admin",
-          active: true,
-        },
-        {
-          id: "575155211095994368",
-          phone: null,
-          email: "3131@qq.com",
-          name: "小鹏",
-          country: "CA",
-          role: "admin",
-          active: true,
-        },
-      ],
-    },
-  ];
+  // 左侧树状数据
+  const ress = await apiDep.createEvery();
+  departmentList.value = ress.data.result;
   defaultTime.value = new Date();
 });
 // 选择树

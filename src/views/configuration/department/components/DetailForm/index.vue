@@ -2,7 +2,7 @@
 import type { FormInstance, FormRules } from "element-plus";
 import { ElMessage } from "element-plus";
 import type { DetailFormProps } from "../../types";
-import useUndistributedDepartmentStore from "@/store/modules/undistributed_department";
+import useTenantStaffStore from "@/store/modules/configuration_manager";
 import api from "@/api/modules/department";
 import managerApi from "@/api/modules/configuration_manager";
 
@@ -15,7 +15,9 @@ const commissionList = [
   { label: "收款计提", value: 3 },
 ];
 // 用户
-const undistributedDepartment = useUndistributedDepartmentStore();
+const tenantStaffStore = useTenantStaffStore();
+// 用户数据
+const staffList = ref<any>([]);
 // 用户数据
 const undistributedDepartmentList = ref<any>([]);
 // loading加载
@@ -39,7 +41,7 @@ const form = ref<any>({
   commissionType: null,
 });
 const isDelete = ref<any>(false);
-let str = ''
+let str = "";
 // 自定义校验
 const validateNumber = (rule: any, value: any, callback: any) => {
   if (!value) {
@@ -64,8 +66,17 @@ const formRules = ref<FormRules>({
 });
 onMounted(async () => {
   nextTick(async () => {
-    const res = await managerApi.undistributedDepartment();
-    undistributedDepartmentList.value = res.data;
+    // 用户列表
+    const { data } = await managerApi.list({
+      id: "",
+      userName: "",
+      active: "",
+      departmentId: "",
+    });
+    staffList.value = data.data;
+    // 用户列表
+    // const res = await managerApi.undistributedDepartment();
+    // undistributedDepartmentList.value = res.data;
   });
   if (form.value.commissionStatus !== 1) {
     formRules.value.commission = [];
@@ -78,22 +89,22 @@ onMounted(async () => {
 function getInfo() {
   loading.value = true;
   form.value = JSON.parse(props.row);
-  str = form.value.userInfo.id
-  undistributedDepartmentList.value.push(form.value.userInfo);
-  undistributedDepartmentList.value = undistributedDepartmentList.value.reduce(
-    (item: any, val: any) => {
-      if (!item.find((ite: any) => ite.id === val.id)) {
-        item.push(val);
-      }
-      return item;
-    },
-    []
-  );
+  str = form.value.userInfo.id;
+  // undistributedDepartmentList.value.push(form.value.userInfo);
+  // undistributedDepartmentList.value = undistributedDepartmentList.value.reduce(
+  //   (item: any, val: any) => {
+  //     if (!item.find((ite: any) => ite.id === val.id)) {
+  //       item.push(val);
+  //     }
+  //     return item;
+  //   },
+  //   []
+  // );
   loading.value = false;
 }
 const directorChange = (val: any) => {
   if (val === str) {
-    str = val
+    str = val;
     isDelete.value = true;
   } else {
     isDelete.value = false;
@@ -136,7 +147,7 @@ defineExpose({
                   form.value.commission = 0;
                   form.value.commissionType = 0;
                 }
-                if(form.value.director === str) {
+                if (form.value.director === str) {
                   delete form.value.director;
                 }
                 if (isDelete.value) {
@@ -191,11 +202,18 @@ defineExpose({
           @change="directorChange"
         >
           <el-option
+            v-for="item in staffList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+            :disabled="item.distribution !== 2"
+          />
+          <!-- <el-option
             v-for="item in undistributedDepartmentList"
             :key="item.id"
             :label="item.name"
             :value="item.id"
-          />
+          /> -->
         </el-select>
       </el-form-item>
       <el-row style="margin-bottom: 0px" :gutter="20">
