@@ -35,7 +35,18 @@ async function showEdit(row: any) {
   data.value.tenantMeasurementInfoList = res.data.tenantMeasurementInfoList;
   dialogTableVisible.value = true;
 }
-
+// 获取点击id
+async function getClickList(row: any) {
+  const params = {
+    type: row.type,
+    projectId: row.projectId,
+    tenantId: row.tenantId,
+    supplierId: row.type === 2 ? row.memberGroupOrSupperId : "",
+    memberGroupId: row.type === 2 ? row.memberGroupId : "",
+  };
+  const res = await api.getQuestionnaireClickList(params);
+  console.log("res", res.data.questionnaireClickInfoListz);
+}
 // 取消
 function closeHandler() {
   dialogTableVisible.value = false;
@@ -67,7 +78,9 @@ defineExpose({ showEdit });
               :class="{
                 'left-top': true,
                 'flex-b': true,
-                currentTenant: item.allocationTenantId === data.currentTenantId,
+                currentTenant:
+                  item.allocationTenantId === data.currentTenantId &&
+                  item.type === 1,
               }"
             >
               <div class="left-top-left p-4">
@@ -88,8 +101,10 @@ defineExpose({ showEdit });
                   <p>
                     原价：
                     <CurrencyType />
-                    <!-- {{ item.doMoneyPrice }} -->
-                    {{ item.currencyType }}
+                    {{ item.doMoneyPrice }}
+
+                    <!-- {{ item.currencyType }} -->
+                    <!-- {{ item.type }} -->
                   </p>
                   <p>
                     参数：
@@ -112,7 +127,10 @@ defineExpose({ showEdit });
               </div>
               <div
                 class="left-top-right p-4"
-                v-if="item.allocationTenantId !== data.currentTenantId"
+                v-if="
+                  item.allocationTenantId !== data.currentTenantId ||
+                  item.type !== 1
+                "
               >
                 <p class="type">
                   {{ projectManagementOutsourceStore.typeList[item.type - 1] }}
@@ -140,9 +158,24 @@ defineExpose({ showEdit });
           </div>
           <div
             class="right"
-            v-if="item.allocationTenantId !== data.currentTenantId"
+            v-if="
+              item.allocationTenantId !== data.currentTenantId || item.type != 1
+            "
           >
-            》
+            <el-popover
+              placement="right"
+              :width="300"
+              trigger="click"
+              @before-enter="getClickList(item)"
+            >
+              <template #reference>
+                <!-- <el-button style="margin-right: 16px"> </el-button> -->
+                <el-button style="padding: 0.5rem" type="primary" link>
+                  》
+                </el-button>
+              </template>
+              1111
+            </el-popover>
           </div>
         </div>
       </div>
