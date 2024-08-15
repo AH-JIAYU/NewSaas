@@ -404,9 +404,9 @@ onMounted(async () => {
           label="项目类型"
           ><template #default="{ row }">
             <el-button type="danger" v-if="row.projectType === 2"
-              >租户分配</el-button
+              >外包项目</el-button
             >
-            <el-button type="success" v-else>内部新增</el-button>
+            <el-button type="success" v-else>自有项目</el-button>
           </template>
         </el-table-column>
         <el-table-column
