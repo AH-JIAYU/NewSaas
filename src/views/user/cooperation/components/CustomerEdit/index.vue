@@ -76,7 +76,7 @@ defineExpose({
       :close-on-click-modal="false"
       destroy-on-close
       draggable
-      width="50%"
+      width="30%"
       title="邀约公司"
     >
       <ElForm

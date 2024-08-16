@@ -62,24 +62,13 @@ defineExpose({ showEdit });
 
 <template>
   <el-dialog v-model="dialogTableVisible" :title="title" width="600">
-    <el-form
-      ref="formRef"
-      :model="form"
-      :rules="rules"
-      label-width="80px"
-      :inline="false"
-    >
+    <el-form ref="formRef" :model="form" :rules="rules" label-width="80px" :inline="false">
       <el-form-item label="等级名称" prop="levelName">
         <el-input v-model="form.levelName" maxlength="100" />
       </el-form-item>
       <el-form-item label="价格比例" prop="additionRatio">
-        <el-input
-          v-model.number="form.additionRatio"
-          :min="1"
-          :max="100"
-          oninput="if(value>100)value=100;if(value.length>4)value=value.slice(0,4);if(value<0)value=0;"
-          type="number"
-        >
+        <el-input v-model.number="form.additionRatio" :min="1" :max="100"
+          oninput="if(value>100)value=100;if(value.length>4)value=value.slice(0,4);if(value<0)value=0;" type="number">
           <template #append> % </template>
         </el-input>
       </el-form-item>
@@ -92,5 +81,4 @@ defineExpose({ showEdit });
 </template>
 
 <style lang="scss" scoped>
-// 样式
-</style>
+// 样式</style>

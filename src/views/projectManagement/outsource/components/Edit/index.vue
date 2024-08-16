@@ -42,7 +42,7 @@ async function getClickList(row: any) {
     projectId: row.projectId,
     tenantId: row.tenantId,
     supplierId: row.type === 2 ? row.memberGroupOrSupperId : "",
-    memberGroupId: row.type === 2 ? row.memberGroupId : "",
+    memberGroupId: row.type === 3 ? row.memberGroupOrSupperId : "",
   };
   const res = await api.getQuestionnaireClickList(params);
   console.log("res", res.data.questionnaireClickInfoListz);
