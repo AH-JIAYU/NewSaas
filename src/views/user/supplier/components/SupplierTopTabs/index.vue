@@ -1,15 +1,19 @@
 <script lang="ts" setup>
 import { ElForm } from "element-plus";
 import { defineProps, ref } from "vue";
+import edit from "@/views/configuration/supplierLevel/components/Edit/index.vue";
 import UseUserSupplier from "@/store/modules/user_supplier"; // 供应商
 import useConfigurationSupplierLevelStore from "@/store/modules/configuration_supplierLevel"; //供应商等级
 import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
+
+
 const userSupplier = UseUserSupplier(); // 供应商
 const configurationSupplierLevelStore = useConfigurationSupplierLevelStore(); //供应商等级
 const customerStore = useUserCustomerStore(); // 客户
 const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
 const validate = inject<any>("validateTopTabs"); //注入Ref
+  const EditRef = ref(); // 组件ref 新增/编辑
 // 如果希望默认展示第一个 Tab
 const props: any = defineProps({
   leftTab: Object,
@@ -92,6 +96,11 @@ const selectAll = () => {
     });
   }
 };
+// 新增会员等级
+const addSupplierLevel=()=>{
+  EditRef.value.showEdit();
+}
+
 // 反选
 const changeRelevanceCountryIdList = () => {
   data.checked = Boolean(props.leftTab.relevanceCountryIdList.length === 185);
@@ -107,12 +116,16 @@ const data = reactive<any>({
 
 const activeName = ref("basicSettings");
 
-onMounted(async () => {
-  data.relatedCustomers = await customerStore.getCustomerList();
-  data.countryList = await basicDictionaryStore.getCountry();
+const getSupplierLevelList=async()=>{
   data.supplierLevelList =
     await configurationSupplierLevelStore.getLevelNameList();
   changeCountryId(props.leftTab.subordinateCountryId);
+}
+
+onMounted(async () => {
+  data.relatedCustomers = await customerStore.getCustomerList();
+  data.countryList = await basicDictionaryStore.getCountry();
+ await getSupplierLevelList()
 });
 nextTick(() => {
   // 表单验证方法
@@ -123,13 +136,8 @@ nextTick(() => {
   <div>
     <el-tabs v-model="activeName">
       <el-tab-pane label="基础设置" name="basicSettings">
-        <ElForm
-          ref="formRef"
-          :rules="rules"
-          :model="props.leftTab"
-          label-width="100px"
-          :validate-on-rule-change="false"
-        >
+        <ElForm ref="formRef" :rules="rules" :model="props.leftTab" label-width="100px"
+          :validate-on-rule-change="false">
           <el-card class="box-card">
             <template #header>
               <div class="card-header">
@@ -139,19 +147,8 @@ nextTick(() => {
             <el-row :gutter="10">
               <el-col :span="8">
                 <el-form-item label="供应商类型" prop="type">
-                  <el-select
-                    v-model="props.leftTab.type"
-                    value-key=""
-                    placeholder=""
-                    clearable
-                    filterable
-                  >
-                    <el-option
-                      v-for="item in typeList"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value"
-                    >
+                  <el-select v-model="props.leftTab.type" value-key="" placeholder="" clearable filterable>
+                    <el-option v-for="item in typeList" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
                   </el-select>
                 </el-form-item>
@@ -163,18 +160,15 @@ nextTick(() => {
               </el-col>
               <el-col :span="8">
                 <el-form-item label="供应商等级" prop="supplierLevelId">
-                  <!-- <el-input v-model="props.leftTab.supplierLevelId"> </el-input> -->
-                  <el-select
-                    clearable
-                    filterable
-                    v-model="props.leftTab.supplierLevelId"
-                  >
-                    <el-option
-                      v-for="item in data.supplierLevelList"
-                      :key="item.tenantSupplierLevelId"
-                      :value="item.tenantSupplierLevelId"
-                      :label="item.levelNameOrAdditionRatio"
-                    ></el-option>
+                  <el-select clearable filterable v-model="props.leftTab.supplierLevelId">
+                    <template #empty>
+                      暂无数据
+                      <el-button type="primary" link @click="addSupplierLevel">
+                        <SvgIcon name="ant-design:plus-outlined" />
+                      </el-button>
+                    </template>
+                    <el-option v-for="item in data.supplierLevelList" :key="item.tenantSupplierLevelId"
+                      :value="item.tenantSupplierLevelId" :label="item.levelNameOrAdditionRatio"></el-option>
                   </el-select>
                 </el-form-item>
               </el-col>
@@ -182,18 +176,10 @@ nextTick(() => {
             <el-row :gutter="10">
               <el-col :span="8">
                 <el-form-item label="所属国家" prop="subordinateCountryId">
-                  <el-select
-                    clearable
-                    filterable
-                    v-model="props.leftTab.subordinateCountryId"
-                    @change="changeCountryId"
-                  >
-                    <el-option
-                      v-for="item in data.countryList"
-                      :key="item.id"
-                      :value="item.id"
-                      :label="item.chineseName"
-                    ></el-option>
+                  <el-select clearable filterable v-model="props.leftTab.subordinateCountryId"
+                    @change="changeCountryId">
+                    <el-option v-for="item in data.countryList" :key="item.id" :value="item.id"
+                      :label="item.chineseName"></el-option>
                   </el-select>
                 </el-form-item>
               </el-col>
@@ -215,30 +201,19 @@ nextTick(() => {
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item
-                  v-if="props.leftTab.type === 'company'"
-                  label="公司名称"
-                >
+                <el-form-item v-if="props.leftTab.type === 'company'" label="公司名称">
                   <el-input clearable v-model="props.leftTab.companyName" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item
-                  v-if="props.leftTab.type === 'company'"
-                  label="法人姓名"
-                  prop=""
-                >
+                <el-form-item v-if="props.leftTab.type === 'company'" label="法人姓名" prop="">
                   <el-input clearable v-model="props.leftTab.legalPersonName" />
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="10">
               <el-col :span="8">
-                <el-form-item
-                  v-if="props.leftTab.type === 'company'"
-                  label="公司税号"
-                  prop=""
-                >
+                <el-form-item v-if="props.leftTab.type === 'company'" label="公司税号" prop="">
                   <el-input clearable v-model="props.leftTab.taxID" />
                 </el-form-item>
               </el-col>
@@ -253,50 +228,26 @@ nextTick(() => {
             <el-row :gutter="10">
               <el-col :span="3">
                 <el-form-item label="调查系统">
-                  <ElSwitch
-                    v-model="props.leftTab.surveySystem"
-                    inline-prompt
-                    :inactive-value="1"
-                    :active-value="2"
-                    active-text="启用"
-                    inactive-text="禁用"
-                  />
+                  <ElSwitch v-model="props.leftTab.surveySystem" inline-prompt :inactive-value="1" :active-value="2"
+                    active-text="启用" inactive-text="禁用" />
                 </el-form-item>
               </el-col>
               <el-col :span="3">
                 <el-form-item label="B2B">
-                  <ElSwitch
-                    v-model="props.leftTab.b2bStatus"
-                    inline-prompt
-                    :inactive-value="1"
-                    :active-value="2"
-                    active-text="启用"
-                    inactive-text="禁用"
-                  />
+                  <ElSwitch v-model="props.leftTab.b2bStatus" inline-prompt :inactive-value="1" :active-value="2"
+                    active-text="启用" inactive-text="禁用" />
                 </el-form-item>
               </el-col>
               <el-col :span="4">
                 <el-form-item label="B2C">
-                  <ElSwitch
-                    v-model="props.leftTab.b2cStatus"
-                    inline-prompt
-                    :inactive-value="1"
-                    :active-value="2"
-                    active-text="启用"
-                    inactive-text="禁用"
-                  />
+                  <ElSwitch v-model="props.leftTab.b2cStatus" inline-prompt :inactive-value="1" :active-value="2"
+                    active-text="启用" inactive-text="禁用" />
                 </el-form-item>
               </el-col>
               <el-col :span="3">
                 <el-form-item label="供应商状态">
-                  <ElSwitch
-                    v-model="props.leftTab.supplierStatus"
-                    inline-prompt
-                    :inactive-value="1"
-                    :active-value="2"
-                    active-text="启用"
-                    inactive-text="禁用"
-                  />
+                  <ElSwitch v-model="props.leftTab.supplierStatus" inline-prompt :inactive-value="1" :active-value="2"
+                    active-text="启用" inactive-text="禁用" />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -306,28 +257,14 @@ nextTick(() => {
                     collapse-tags -->
               <el-col :span="8">
                 <el-form-item label="地区">
-                  <el-select
-                    @change="changeRelevanceCountryIdList"
-                    v-model="props.leftTab.relevanceCountryIdList"
-                    clearable
-                    filterable
-                    multiple
-                    collapse-tags
-                  >
+                  <el-select @change="changeRelevanceCountryIdList" v-model="props.leftTab.relevanceCountryIdList"
+                    clearable filterable multiple collapse-tags>
                     <template #header>
-                      <el-checkbox
-                        v-model="data.checked"
-                        @change="selectAll"
-                        style="display: flex; height: unset"
-                        >全球</el-checkbox
-                      >
+                      <el-checkbox v-model="data.checked" @change="selectAll"
+                        style="display: flex; height: unset">全球</el-checkbox>
                     </template>
-                    <el-option
-                      v-for="item in data.countryList"
-                      :key="item.id"
-                      :value="item.id"
-                      :label="item.chineseName"
-                    ></el-option>
+                    <el-option v-for="item in data.countryList" :key="item.id" :value="item.id"
+                      :label="item.chineseName"></el-option>
                   </el-select>
                 </el-form-item>
               </el-col>
@@ -355,12 +292,8 @@ nextTick(() => {
               <el-col :span="8">
                 <el-form-item label="付款方式">
                   <el-select v-model="props.leftTab.payMethod">
-                    <el-option
-                      v-for="item in data.payMethod"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value"
-                    ></el-option>
+                    <el-option v-for="item in data.payMethod" :key="item.value" :label="item.label"
+                      :value="item.value"></el-option>
                   </el-select>
                 </el-form-item>
               </el-col>
@@ -393,6 +326,7 @@ nextTick(() => {
         </ElForm>
       </el-tab-pane>
     </el-tabs>
+    <edit ref="EditRef" @queryData="getSupplierLevelList" />
   </div>
 </template>
 

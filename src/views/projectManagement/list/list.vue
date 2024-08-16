@@ -208,127 +208,56 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div
-    :class="{
-      'absolute-container': tableAutoHeight,
-    }"
-  >
+  <div :class="{
+    'absolute-container': tableAutoHeight,
+  }">
     <PageMain class="hide-drawer-header">
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
-          <el-form
-            :model="search"
-            size="default"
-            label-width="100px"
-            inline-message
-            inline
-            class="search-form"
-          >
+          <el-form :model="search" size="default" label-width="100px" inline-message inline class="search-form">
             <el-form-item label="">
-              <el-input
-                v-model="search.projectId"
-                clearable
-                placeholder="项目ID"
-                @keydown.enter="currentChange()"
-              />
+              <el-input v-model="search.projectId" clearable placeholder="项目ID" @keydown.enter="currentChange()" />
             </el-form-item>
             <el-form-item label="">
-              <el-input
-                v-model="search.name"
-                clearable
-                placeholder="项目名称"
-                @keydown.enter="currentChange()"
-              />
+              <el-input v-model="search.name" clearable placeholder="项目名称" @keydown.enter="currentChange()" />
             </el-form-item>
             <el-form-item label="">
-              <el-input
-                clearable
-                v-model="search.projectIdentification"
-                placeholder="项目标识"
-                @keydown.enter="currentChange()"
-              />
+              <el-input clearable v-model="search.projectIdentification" placeholder="项目标识"
+                @keydown.enter="currentChange()" />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-select
-                v-model="search.countryId"
-                placeholder="国家地区"
-                clearable
-                filterable
-                multiple
-                collapse-tags
-              >
-                <ElOption
-                  v-for="item in countryList"
-                  :label="item.chineseName"
-                  :value="item.id"
-                ></ElOption>
+              <el-select v-model="search.countryId" placeholder="国家地区" clearable filterable multiple collapse-tags>
+                <ElOption v-for="item in countryList" :label="item.chineseName" :value="item.id"></ElOption>
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-select
-                v-model="search.clientId"
-                clearable
-                filterable
-                placeholder="客户简称"
-              >
-                <el-option
-                  v-for="item in customerList"
-                  :key="item.tenantCustomerId"
-                  :value="item.tenantCustomerId"
-                  :label="item.customerAccord"
-                ></el-option>
+              <el-select v-model="search.clientId" clearable filterable placeholder="客户简称">
+                <el-option v-for="item in customerList" :key="item.tenantCustomerId" :value="item.tenantCustomerId"
+                  :label="item.customerAccord"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-select
-                v-model="search.allocationStatus"
-                clearable
-                filterable
-                placeholder="分配类型"
-              >
+              <el-select v-model="search.allocationStatus" clearable filterable placeholder="分配类型">
                 <el-option label="供应商" :value="2"> </el-option>
                 <el-option label="会员组" :value="3"> </el-option>
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-select
-                v-model="search.status"
-                clearable
-                filterable
-                placeholder="项目状态"
-              >
+              <el-select v-model="search.status" clearable filterable placeholder="项目状态">
                 <el-option label="在线" :value="1" />
                 <el-option label="离线" :value="2" />
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold">
-              <el-input
-                v-model="search.createName"
-                clearable
-                placeholder="创建人"
-                @keydown.enter="currentChange()"
-              />
+              <el-input v-model="search.createName" clearable placeholder="创建人" @keydown.enter="currentChange()" />
             </el-form-item>
             <el-form-item v-show="!fold">
-              <el-date-picker
-                v-model="search.time"
-                type="datetimerange"
-                range-separator="-"
-                start-placeholder="创建开始日期"
-                end-placeholder="创建结束日期"
-                value-format="YYYY-MM-DD HH:mm:ss"
-                size=""
-                style="width: 192px"
-                clear-icon="true"
-              />
+              <el-date-picker v-model="search.time" type="datetimerange" range-separator="-" start-placeholder="创建开始日期"
+                end-placeholder="创建结束日期" value-format="YYYY-MM-DD HH:mm:ss" size="" style="width: 192px"
+                clear-icon="true" />
             </el-form-item>
             <el-form-item v-show="!fold">
-              <el-select
-                v-model="search.allocation"
-                placeholder="分配类型"
-                clearable
-                @change="currentChange()"
-              >
+              <el-select v-model="search.allocation" placeholder="分配类型" clearable @change="currentChange()">
                 <el-option label="已分配" :value="1"> </el-option>
                 <el-option label="未分配" :value="2"> </el-option>
               </el-select>
@@ -348,9 +277,7 @@ onMounted(async () => {
               </ElButton>
               <ElButton link @click="toggle">
                 <template #icon>
-                  <SvgIcon
-                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
-                  />
+                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
                 </template>
                 {{ fold ? "展开" : "收起" }}
               </ElButton>
@@ -361,7 +288,6 @@ onMounted(async () => {
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>
-          <!-- v-auth="'/list-insert-btn'" -->
           <el-button type="primary" size="default" @click="addProject">
             新增项目
           </el-button>
@@ -372,288 +298,133 @@ onMounted(async () => {
 
         <FormRightPanel>
           <el-button size="default" @click=""> 导出 </el-button>
-          <TabelControl
-            v-model:border="border"
-            v-model:tableAutoHeight="tableAutoHeight"
-            v-model:checkList="checkList"
-            v-model:columns="columns"
-            v-model:line-height="lineHeight"
-            v-model:stripe="stripe"
-            style="margin-left: 12px"
-            @query-data="currentChange"
-          />
+          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
+            v-model:columns="columns" v-model:line-height="lineHeight" v-model:stripe="stripe" style="margin-left: 12px"
+            @query-data="currentChange" />
         </FormRightPanel>
       </el-row>
-      <el-table
-        ref="tableSortRef"
-        v-loading="listLoading"
-        style="margin-top: 10px"
-        row-key="projectId"
-        :data="list"
-        :tree-props="{ children: 'getChildrenProjectListInfoList' }"
-        :border="border"
-        :size="lineHeight"
-        :stripe="stripe"
-      >
+      <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="projectId" :data="list"
+        :tree-props="{ children: 'getChildrenProjectListInfoList' }" :border="border" :size="lineHeight"
+        :stripe="stripe">
         <el-table-column align="center" type="selection" />
-        <el-table-column
-          v-if="checkList.includes('projectType')"
-          show-overflow-tooltip
-          width="180"
-          align="center"
-          label="项目类型"
-          ><template #default="{ row }">
-            <el-button type="danger" v-if="row.projectType === 2"
-              >外包项目</el-button
-            >
-            <el-button type="success" v-else>自有项目</el-button>
+        <el-table-column v-if="checkList.includes('projectType')" width="100" align="center"
+          label="项目类型"><template #default="{ row }">
+            <el-button text type="danger" v-if="row.projectType === 2">外包项目</el-button>
+            <el-button text type="info" v-else>自有项目</el-button>
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('projectId')"
-          show-overflow-tooltip
-          prop="projectId"
-          width="180"
-          align="center"
-          label="项目ID"
-        />
-        <el-table-column
-          v-if="checkList.includes('name')"
-          show-overflow-tooltip
-          prop="name"
-          width="180"
-          align="center"
-          label="项目名称"
-          ><template #default="{ row }">
+        <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip prop="projectId" width="180"
+          align="center" label="项目ID" />
+        <el-table-column v-if="checkList.includes('name')" show-overflow-tooltip prop="name" width="180" align="center"
+          label="项目名称"><template #default="{ row }">
             <el-text class="mx-1" :type="row.isB2b === 2 ? 'danger' : ''">{{
-              row.name
-            }}</el-text>
+    row.name
+  }}</el-text>
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('clientName')"
-          prop="clientName"
-          align="center"
-          label="客户简称/标识"
-          width="120"
-          ><template #default="{ row }">
-            <p>{{ row.clientName.split("/")[0] }}</p>
+        <el-table-column v-if="checkList.includes('clientName')" prop="clientName" align="center" label="客户简称/标识"
+          width="120"><template #default="{ row }">
+            <el-text class="mx-1" >{{ row.clientName.split("/")[0] }}</el-text>
             <p>{{ row.clientName.split("/")[1] }}</p>
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('PCNL')"
-          align="center"
-          label="参与/完成/配额/限量"
-          width="160"
-        >
+        <el-table-column v-if="checkList.includes('PCNL')" align="center" label="参与/完成/配额/限量" width="160">
           <template #default="{ row }">
             <el-text class="mx-1">{{ row.participation || 0 }}</el-text>
             /
             <el-text class="mx-1" type="success">{{
-              row.complete || 0
-            }}</el-text
-            >/ <el-text class="mx-1" type="warning">{{ row.num || 0 }}</el-text
-            >/
+    row.complete || 0
+  }}</el-text>/ <el-text class="mx-1" type="warning">{{ row.num || 0 }}</el-text>/
             {{ row.limitedQuantity || "-" }}
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('allocationType')"
-          align="center"
-          label="分配类型"
-          width="120"
-        >
+        <el-table-column v-if="checkList.includes('allocationType')" align="center" label="分配类型" width="120">
           <template #default="{ row }">
-            <el-button
-              @click="viewAllocations(row, 1)"
-              type="danger"
-              v-if="row.allocationType === 1"
-              >自动分配</el-button
-            >
-            <el-button
-              @click="viewAllocations(row, 2)"
-              type="warning"
-              v-else-if="row.allocationType === 2"
-              >供应商</el-button
-            >
-            <el-button
-              @click="viewAllocations(row, 3)"
-              type="success"
-              v-else-if="row.allocationType === 3"
-              >会员组</el-button
-            >
-            <el-button
-              @click="viewAllocations(row, 4)"
-              type="primary"
-              v-else-if="row.allocationType === 4"
-              >租户</el-button
-            >
-            <el-button v-else type="info"> 未分配</el-button>
+            <el-button text @click="viewAllocations(row, 1)" type="danger" v-if="row.allocationType === 1">自动分配</el-button>
+            <el-button text @click="viewAllocations(row, 2)" type="warning"
+              v-else-if="row.allocationType === 2">供应商</el-button>
+            <el-button text @click="viewAllocations(row, 3)" type="success"
+              v-else-if="row.allocationType === 3">会员组</el-button>
+            <el-button text @click="viewAllocations(row, 4)" type="primary"
+              v-else-if="row.allocationType === 4">租户</el-button>
+            <el-button text v-else type="info"> 未分配</el-button>
           </template>
         </el-table-column>
 
-        <el-table-column
-          v-if="checkList.includes('doMoneyPrice')"
-          show-overflow-tooltip
-          align="center"
-          label="原价"
-        >
+        <el-table-column v-if="checkList.includes('doMoneyPrice')" show-overflow-tooltip align="center" label="原价">
           <template #default="{ row }">
             <CurrencyType />{{ row.doMoneyPrice || 0 }}
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('ir')"
-          show-overflow-tooltip
-          prop="ir"
-          align="center"
-          label="IR/NIR"
-        >
+        <el-table-column v-if="checkList.includes('ir')" show-overflow-tooltip prop="ir" align="center" label="IR/NIR">
           <template #default="{ row }">
             {{ row.ir ? row.ir + "%" : row.ir }} /
             {{ row.nir ? row.nir + "%" : row.nir }}
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('countryIdList')"
-          show-overflow-tooltip
-          prop="countryIdList"
-          align="center"
-          label="国家地区"
-          width="100"
-        >
+        <el-table-column v-if="checkList.includes('countryIdList')" show-overflow-tooltip prop="countryIdList"
+          align="center" label="国家地区" width="100">
           <template #default="{ row }">
             <template v-if="row.countryIdList">
               <template v-if="row.countryIdList.length === 185">
-                <el-link type="primary"
-                  ><el-tag type="warning">全球</el-tag></el-link
-                >
+                <el-link type="primary"><el-tag type="warning">全球</el-tag></el-link>
               </template>
               <template v-else-if="comCountryId(row.countryIdList).length > 4">
-                <el-tooltip
-                  class="box-item"
-                  effect="dark"
-                  :content="comCountryId(row.countryIdList).join(',')"
-                  placement="top"
-                >
-                  <el-link type="primary"
-                    ><el-tag type="success">{{
-                      comCountryId(row.countryIdList).length
-                    }}</el-tag></el-link
-                  >
+                <el-tooltip class="box-item" effect="dark" :content="comCountryId(row.countryIdList).join(',')"
+                  placement="top">
+                  <el-link type="primary"><el-tag type="success">{{
+    comCountryId(row.countryIdList).length
+  }}</el-tag></el-link>
                 </el-tooltip>
               </template>
               <template v-else>
-                <el-tag
-                  v-for="item in comCountryId(row.countryIdList)"
-                  :key="item"
-                  type="primary"
-                >
+                <el-tag v-for="item in comCountryId(row.countryIdList)" :key="item" type="primary">
                   {{ item }}
                 </el-tag>
               </template>
             </template>
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('allocationStatus')"
-          show-overflow-tooltip
-          prop="allocationStatus"
-          align="center"
-          width="100"
-          label="分配状态"
-        >
+        <el-table-column v-if="checkList.includes('allocationStatus')" show-overflow-tooltip prop="allocationStatus"
+          align="center" width="100" label="分配状态">
           <template #default="{ row }">
             {{ row.allocationStatus === 1 ? "未分配" : "已分配" }}
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('isOnline')"
-          show-overflow-tooltip
-          prop="isOnline"
-          align="center"
-          width="100"
-          label="项目状态"
-        >
+        <el-table-column v-if="checkList.includes('isOnline')" show-overflow-tooltip prop="isOnline" align="center"
+          width="100" label="项目状态">
           <template #default="{ row }">
-            <ElSwitch
-              @change="changeStatus(row, $event)"
-              inline-prompt
-              v-model="row.isOnline"
-              active-text="在线"
-              inactive-text="离线"
-              :active-value="1"
-              :inactive-value="2"
-            />
+            <ElSwitch @change="changeStatus(row, $event)" inline-prompt v-model="row.isOnline" active-text="在线"
+              inactive-text="离线" :active-value="1" :inactive-value="2" />
           </template>
         </el-table-column>
 
-        <el-table-column
-          v-if="checkList.includes('remark')"
-          show-overflow-tooltip
-          prop="remark"
-          align="center"
-          width="100"
-          label="备注"
-          ><template #default="{ row }">
+        <el-table-column v-if="checkList.includes('remark')" show-overflow-tooltip prop="remark" align="center"
+          width="100" label="备注"><template #default="{ row }">
             {{ row.remark ? row.remark : "-" }}
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('createName')"
-          show-overflow-tooltip
-          prop="createName"
-          align="center"
-          label="创建人"
-        />
-        <el-table-column
-          v-if="checkList.includes('createTime')"
-          prop="createTime"
-          align="center"
-          width="100"
-          label="创建时间"
-          ><template #default="{ row }">
+        <el-table-column v-if="checkList.includes('createName')" show-overflow-tooltip prop="createName" align="center"
+          label="创建人" />
+        <el-table-column v-if="checkList.includes('createTime')" prop="createTime" align="center" width="100"
+          label="创建时间"><template #default="{ row }">
             <el-tag effect="plain" type="info">{{
-              format(row.createTime)
-            }}</el-tag>
+    format(row.createTime)
+  }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column align="center" fixed="right" label="操作" width="240">
           <template #default="{ row }">
-            <el-button
-              v-if="row.allocationStatus === 1"
-              plain
-              type="primary"
-              size="small"
-              @click="distribution(row)"
-            >
+            <el-button v-if="row.allocationStatus === 1" plain type="primary" size="small" @click="distribution(row)">
               分配
             </el-button>
-            <el-button
-              v-else
-              plain
-              type="primary"
-              size="small"
-              @click="reassign(row)"
-            >
+            <el-button v-else plain type="primary" size="small" @click="reassign(row)">
               重新分配
             </el-button>
-            <el-button
-              type="primary"
-              plain
-              size="small"
-              @click="projectEdit(row)"
-              :disabled="row.projectType === 2"
-            >
+            <el-button type="primary" plain size="small" @click="projectEdit(row)" :disabled="row.projectType === 2">
               编辑
             </el-button>
-            <el-button
-              type="primary"
-              size="small"
-              plain
-              @click="projectDetails(row)"
-            >
+            <el-button type="primary" size="small" plain @click="projectDetails(row)">
               详情
             </el-button>
           </template>
@@ -662,18 +433,9 @@ onMounted(async () => {
           <el-empty description="暂无数据" />
         </template>
       </el-table>
-      <ElPagination
-        :current-page="pagination.page"
-        :total="pagination.total"
-        :page-size="pagination.size"
-        :page-sizes="pagination.sizes"
-        :layout="pagination.layout"
-        :hide-on-single-page="false"
-        class="pagination"
-        background
-        @size-change="sizeChange"
-        @current-change="currentChange"
-      />
+      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+        background @size-change="sizeChange" @current-change="currentChange" />
     </PageMain>
     <allocationEdit ref="addAllocationEditRef" @fetchData="fetchData" />
     <ProjeckEdit ref="addProjeckRef" @fetchData="fetchData" />
