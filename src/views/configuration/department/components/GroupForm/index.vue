@@ -4,7 +4,7 @@ import type { FormInstance, FormRules } from "element-plus";
 import { ref } from "vue";
 import api from "@/api/modules/department";
 import grounpApi from "@/api/modules/group_manage";
-import useTenantStaffStore from "@/store/modules/configuration_manager";
+import managerApi from "@/api/modules/configuration_manager";
 import useDepartmentStore from "@/store/modules/department";
 
 defineOptions({
@@ -14,8 +14,6 @@ defineOptions({
 const departmentStore = useDepartmentStore();
 // 部门数据
 const departmentList = ref<any>();
-// 用户
-const tenantStaffStore = useTenantStaffStore();
 // 用户数据
 const staffList = ref<any>([]);
 // 更新数据
@@ -98,8 +96,17 @@ async function showEdit() {
   dialogTableVisible.value = true;
 }
 onMounted(async () => {
-  staffList.value = await tenantStaffStore.staff
-  departmentList.value = await departmentStore.department
+  nextTick(async () => {
+    // 用户列表
+    const { data } = await managerApi.list({
+      id: "",
+      userName: "",
+      active: "",
+      departmentId: "",
+    });
+    staffList.value = data.data;
+  });
+  departmentList.value = await departmentStore.getDepartment()
   defaultTime.value = new Date();
 });
 // 暴露方法
@@ -144,12 +151,13 @@ defineExpose({ showEdit });
             clearable
             filterable
           >
-            <el-option
-              v-for="item in staffList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            />
+          <el-option
+            v-for="item in staffList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+            :disabled="item.distribution !== 2"
+          />
           </el-select>
         </el-form-item>
         <el-form-item label="组提成">

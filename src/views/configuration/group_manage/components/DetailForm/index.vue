@@ -2,9 +2,9 @@
 import type { FormInstance, FormRules } from "element-plus";
 import { ElMessage } from "element-plus";
 import type { DetailFormProps } from "../../types";
-import useTenantStaffStore from "@/store/modules/configuration_manager";
 import api from "@/api/modules/group_manage";
 import useDepartmentStore from "@/store/modules/department";
+import managerApi from "@/api/modules/configuration_manager";
 
 
 // 部门
@@ -13,8 +13,6 @@ const departmentStore = useDepartmentStore();
 const departmentList = ref<any>();
 // 传递数据
 const props = defineProps(["id", "row"]);
-// 用户
-const tenantStaffStore = useTenantStaffStore();
 // 用户数据
 const staffList = ref<any>([]);
 // loading加载
@@ -43,7 +41,19 @@ const formRules = ref<FormRules>({
 onMounted(async () => {
   loading.value = true;
   departmentList.value = await departmentStore.getDepartment();
-  staffList.value = await tenantStaffStore.getStaff();
+  nextTick(async () => {
+    // 用户列表
+    const { data } = await managerApi.list({
+      id: "",
+      userName: "",
+      active: "",
+      departmentId: "",
+    });
+    staffList.value = data.data;
+    // 用户列表
+    // const res = await managerApi.undistributedDepartment();
+    // undistributedDepartmentList.value = res.data;
+  });
   if (form.value.id !== "") {
     getInfo();
   }
@@ -143,11 +153,12 @@ defineExpose({
           clearable
           filterable
         >
-          <el-option
+        <el-option
             v-for="item in staffList"
             :key="item.id"
             :label="item.name"
             :value="item.id"
+            :disabled="item.distribution !== 2"
           />
         </el-select>
       </el-form-item>

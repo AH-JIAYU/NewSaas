@@ -12,6 +12,7 @@ import type { FormInstance, FormRules } from "element-plus";
 import { ElMessage } from "element-plus";
 import { ElNotification } from "element-plus";
 import { useI18n } from "vue-i18n";
+import agreement from './agreement.vue'
 import Copyright from "@/layouts/components/Copyright/index.vue";
 import useSettingsStore from "@/store/modules/settings";
 import useUserStore from "@/store/modules/user";
@@ -19,12 +20,11 @@ import storage from "@/utils/storage";
 import { throttle } from "lodash-es";
 import api from "@/api/modules/register";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
-const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
 
 defineOptions({
   name: "Login",
 });
-
+const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
 const route = useRoute();
 const router = useRouter();
 
@@ -429,6 +429,11 @@ watch(
       (countryList.value = await basicDictionaryStore.getCountry());
   }
 );
+const agreementRef = ref<any>()
+const agreements = (val:any) => {
+  console.log('val',val);
+  agreementRef.value.showEdit(val)
+}
 </script>
 
 <template>
@@ -518,20 +523,12 @@ watch(
             <div class="flex-bar" style="width: 100%; margin: 0">
               <ElCheckbox v-model="loginForm.agreeToTheAgreement" tabindex="3">
                 我已阅读并同意
-                <el-button type="primary" size="default" link @click="agreement"
+                <el-button type="primary" size="default" link @click="agreements(1)"
                   >《会员协议》</el-button
-                >和<el-button type="primary" size="default" link @click=""
+                >和<el-button type="primary" size="default" link @click="agreements(2)"
                   >《隐私协议》</el-button
                 >
               </ElCheckbox>
-              <ElLink
-                v-if="loginType === 'password'"
-                type="primary"
-                :underline="false"
-                @click="formType = 'reset'"
-              >
-                忘记密码了?
-              </ElLink>
             </div>
           </ElFormItem>
         </div>
@@ -539,6 +536,14 @@ watch(
           <ElCheckbox v-model="loginForm.remember" tabindex="4">
             保持登录
           </ElCheckbox>
+          <ElLink
+                v-if="loginType === 'password'"
+                type="primary"
+                :underline="false"
+                @click="formType = 'reset'"
+              >
+                忘记密码了?
+              </ElLink>
         </div>
         <ElButton
           :loading="loading"
@@ -793,6 +798,7 @@ watch(
       </ElForm>
     </div>
     <Copyright />
+    <agreement ref="agreementRef" />
   </div>
 </template>
 

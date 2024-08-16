@@ -23,7 +23,7 @@ const undistributedDepartmentList = ref<any>([]);
 // loading加载
 const loading = ref(false);
 // formRef
-const formRef = ref<FormInstance>();
+const formRef = ref<any>();
 // 定义表单
 const form = ref<any>({
   id: props.id,
@@ -64,7 +64,8 @@ const formRules = ref<FormRules>({
     },
   ],
 });
-onMounted(async () => {
+onMounted( () => {
+  formRef.value.resetFields();
   nextTick(async () => {
     // 用户列表
     const { data } = await managerApi.list({
@@ -117,7 +118,7 @@ defineExpose({
       try {
         if (form.value.id === "") {
           formRef.value &&
-            formRef.value.validate((valid) => {
+            formRef.value.validate((valid:any) => {
               if (valid) {
                 delete form.value.id;
                 delete form.value.memberCount;
@@ -139,7 +140,7 @@ defineExpose({
             });
         } else {
           formRef.value &&
-            formRef.value.validate((valid) => {
+            formRef.value.validate((valid:any) => {
               if (valid) {
                 loading.value = true;
                 delete form.value.memberCount;
