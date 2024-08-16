@@ -55,6 +55,7 @@ async function showEdit(row: any) {
 }
 // 获取点击id
 const getClickList = async (row: any) => {
+  console.log('row', row)
   if (!row.visible) {
     const params = {
       type: row.type,
@@ -64,7 +65,7 @@ const getClickList = async (row: any) => {
       memberGroupIdList: row.type === 3 ? row.memberGroupOrSupperIdList : [],
     };
     const res = await api.getQuestionnaireClickList(params);
-    data.value.clickIdList = processData(res.data.questionnaireClickInfoList) 
+    data.value.clickIdList = processData(res.data.questionnaireClickInfoList)
     row.visible = true
   }
 }
@@ -163,7 +164,7 @@ defineExpose({ showEdit });
                 </p>
                 <div class="tenant">
                   <template v-if="item.length > 1">
-                    <el-button type="primary" link @click="getClickList(item)">
+                    <el-button type="primary" link>
                       查看更多({{ item.length }})
                     </el-button>
                   </template>
@@ -190,9 +191,9 @@ defineExpose({ showEdit });
           <div class="right" v-if="item.allocationTenantId !== data.currentTenantId || item.type != 1
       ">
             <el-popover v-model:visible="item.visible" placement="right" :width="350" trigger="click"
-              @show="getClickList(item)">
+               >
               <template #reference>
-                <el-button style="padding: 0.5rem" type="primary" link>
+                <el-button style="padding: 0.5rem" type="primary" link  @click="getClickList(item)">
                   》
                 </el-button>
               </template>
@@ -358,7 +359,7 @@ defineExpose({ showEdit });
   align-items: start;
 
   .clickIdItem-left {
-    width:  3.125rem;
+    width: 3.125rem;
   }
 
   .clickIdItem-right {
