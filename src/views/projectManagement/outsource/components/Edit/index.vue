@@ -55,7 +55,6 @@ async function showEdit(row: any) {
 }
 // 获取点击id
 const getClickList = async (row: any) => {
-  console.log('row', row)
   if (!row.visible) {
     const params = {
       type: row.type,
