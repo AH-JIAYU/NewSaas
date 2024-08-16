@@ -229,7 +229,7 @@ function onDetail(row: any) {
 }
 
 onMounted(async () => {
-  departmentList.value = await departmentStore.getDepartment();
+  departmentList.value = await departmentStore?.getDepartment();
   staffList.value = await tenantStaffStore.getStaff();
   getDataList();
   if (data.value.formMode === "router") {
@@ -494,7 +494,7 @@ onBeforeUnmount(() => {
       @success="getDataList"
     />
     <Detail ref="detailRef" />
-    <GroupForm ref="groupFormRef" />
+    <GroupForm @success="getDataList" ref="groupFormRef" />
   </div>
 </template>
 

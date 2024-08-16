@@ -133,11 +133,11 @@ onMounted(async () => {
   // 国家
   filterCountry.value = await useStoreCountry.getCountry();
   // 部门
-  departmentList.value = await departmentStore.getDepartment();
+  departmentList.value = await departmentStore?.getDepartment() || [];
   // 职位
-  positionManageList.value = await usePositionManage.getPositionManage();
+  positionManageList.value = await usePositionManage?.getPositionManage() || [];
   // 小组
-  groupManageList.value = await useGroupManage.getGroupManage();
+  groupManageList.value = await useGroupManage?.getGroupManage() || [];
   // 左侧树状数据
   const ress = await apiDep.createEvery();
   dictionary.value.tree = ress.data.result;
