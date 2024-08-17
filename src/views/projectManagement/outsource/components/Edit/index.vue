@@ -43,7 +43,7 @@ async function showEdit(row: any) {
     type2List[0].length = type2List.length
     type2List[0].memberGroupOrSupperIdList = memberGroupOrSupperIdList
     tenantMeasurementInfoList.push(type2List[0])
-  } else {
+  } else if(type3List.length) {
     const memberGroupOrSupperIdList = type3List.map((item: any) => item.memberGroupOrSupperId);
     type3List[0].length = type3List.length
     type3List[0].memberGroupOrSupperIdList = memberGroupOrSupperIdList
@@ -55,7 +55,6 @@ async function showEdit(row: any) {
 }
 // 获取点击id
 const getClickList = async (row: any) => {
-  console.log('row', row)
   if (!row.visible) {
     const params = {
       type: row.type,
@@ -163,9 +162,9 @@ defineExpose({ showEdit });
                   {{ projectManagementOutsourceStore.typeList[item.type - 1] }}
                 </p>
                 <div class="tenant">
-                  <template v-if="item.length > 1">
+                  <template v-if="item?.length > 1">
                     <el-button type="primary" link>
-                      查看更多({{ item.length }})
+                      查看更多({{ item?.length }})
                     </el-button>
                   </template>
                   <template v-else>
