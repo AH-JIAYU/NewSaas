@@ -703,11 +703,13 @@ const agreements = (val:any) => {
           </ElFormItem>
           <ElFormItem prop="agreeToTheAgreement">
             <div class="flex-bar" style="margin: 0">
-              <ElCheckbox
-                v-model="registerForm.agreeToTheAgreement"
-                tabindex="6"
-              >
-                我已阅读并同意《xxxx协议》
+              <ElCheckbox v-model="loginForm.agreeToTheAgreement" tabindex="3">
+                我已阅读并同意
+                <el-button type="primary" size="default" link @click="agreements(1)"
+                  >《会员协议》</el-button
+                >和<el-button type="primary" size="default" link @click="agreements(2)"
+                  >《隐私协议》</el-button
+                >
               </ElCheckbox>
             </div>
           </ElFormItem>

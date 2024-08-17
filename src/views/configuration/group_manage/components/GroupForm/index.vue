@@ -97,8 +97,8 @@ const formRules = ref<FormRules>({
   commission: [
     {
       validator: (rule, value, callback) => {
-        // const regex = /^[0-9]*[.]?[0-9]+$/;
-        const regex = /^[0-9]*\.?[0-9]*$/;
+        const regex = /^[0-9]*[.]?[0-9]+$/;
+        // const regex = /^[0-9]*\.?[0-9]*$/;
         if (regex.test(value)) {
           callback();
         } else {
@@ -212,63 +212,79 @@ function checkChange(val: any) {
 // 提交数据
 function onSubmit() {
   return new Promise<void>((resolve) => {
-    //  获取选中的所有子节点
-    const tree = treeRef.value.getCheckedKeys();
-    // 获取所有半选的主节点
-    const halltree = treeRef.value.getHalfCheckedKeys();
-    // 组合一下
-    const menupath = tree.concat(halltree);
-    delete form.value.menuId;
-    let number: any = 0
-    groupLeaderList.value.forEach((item: any) => {
-      if (item.commission) {
-        number += item.commission
-      }
-      let obj = {
-        userId: item.id,
-        commission: item.commission,
-      };
-      form.value.userInfo.push(obj);
-    });
-    dataList.value.forEach((item: any) => {
-      if (item.commission) {
-        number += item.commission
-      }
-      let obj
-      if(item.memberId) {
-        obj = {
-        userId: item.memberId,
-        commission: item.commission,
-      };
-      }else {
-        obj = {
-        userId: item.id,
-        commission: item.commission,
-      };
-      }
-      form.value.userInfo.push(obj);
-    });
-    if (number > 100) {
-      ElMessage.warning({
-        message: "提成比例不能超过100",
-        center: true,
+    formRef.value &&
+      formRef.value.validate((valid: any) => {
+        if (valid) {
+          form.value.userInfo = []
+          //  获取选中的所有子节点
+          const tree = treeRef.value.getCheckedKeys();
+          // 获取所有半选的主节点
+          const halltree = treeRef.value.getHalfCheckedKeys();
+          // 组合一下
+          const menupath = tree.concat(halltree);
+          delete form.value.menuId;
+          let number: any = 0
+          groupLeaderList.value.forEach((item: any) => {
+            if (item.commission) {
+              number += item.commission
+            }
+            let obj = {
+              userId: item.id,
+              commission: item.commission,
+            };
+            form.value.userInfo.push(obj);
+          });
+          dataList.value.forEach((item: any) => {
+            if (item.commission) {
+              number += item.commission
+            }
+            let obj
+            if (item.memberId) {
+              obj = {
+                userId: item.memberId,
+                commission: item.commission,
+              };
+            } else {
+              obj = {
+                userId: item.id,
+                commission: item.commission,
+              };
+            }
+            form.value.userInfo.push(obj);
+          });
+          // 使用 Set 来存储已见的 userIdw
+          const seenUserIds = new Set();
+          form.value.userInfo = form.value.userInfo.filter((user: any) => {
+            const { userId } = user;
+            if (seenUserIds.has(userId)) {
+              return false; // 如果 userId 已存在，过滤掉该条记录
+            }
+            seenUserIds.add(userId); // 如果 userId 未存在，添加到 Set 中
+            return true; // 保留该条记录
+          })
+          if (number > 100) {
+            ElMessage.warning({
+              message: "提成比例不能超过100",
+              center: true,
+            });
+            return
+          }
+          console.log('groupLeaderList.value', groupLeaderList.value);
+          console.log('dataList.value', dataList.value);
+          console.log("form.value", form.value);
+          console.log("number", number);
+          return
+          api.edit(form.value).then(() => {
+            ElMessage.success({
+              message: "操作成功",
+              center: true,
+            });
+            emits("success");
+            dialogTableVisible.value = false;
+            resolve();
+          });
+        }
       });
-      return
-    }
-    console.log('groupLeaderList.value', groupLeaderList.value);
-    console.log('dataList.value', dataList.value);
-    console.log("form.value", form.value);
-    console.log("number", number);
-    return
-    api.edit(form.value).then(() => {
-      ElMessage.success({
-        message: "操作成功",
-        center: true,
-      });
-      emits("success");
-      dialogTableVisible.value = false;
-      resolve();
-    });
     // if (!form.value.id) {
     // formRef.value &&
     //   formRef.value.validate((valid: any) => {
@@ -351,7 +367,7 @@ defineExpose({ showEdit });
           </el-table-column>
           <el-table-column align="center" width="200" fixed="right" show-overflow-tooltip label="提成比例">
             <template #default="{ row }">
-              <el-form :model="row" :rules="formRules">
+              <el-form :model="row" ref="formRef" :rules="formRules">
                 <el-form-item prop="commission">
                   <el-input v-model.number="row.commission" placeholder="请输入提成比例" clearable>
                     <template #append>%</template></el-input>
@@ -374,8 +390,8 @@ defineExpose({ showEdit });
           <el-col class="leftData" :span="8">
             <el-input v-model="form.invoiceAmount" placeholder="可输入关键字查找" clearable />
             <el-tree style="max-width: 37.5rem; min-height: 20.125rem; margin-top: 20px;" :data="departmentList"
-              ref="treeRef" show-checkbox node-key="id" :default-checked-keys="form.menuId" :default-expanded-keys="form.menuId"
-              default-expand-all :props="defaultProps" @check="checkChange" />
+              ref="treeRef" show-checkbox node-key="id" :default-checked-keys="form.menuId"
+              :default-expanded-keys="form.menuId" default-expand-all :props="defaultProps" @check="checkChange" />
           </el-col>
           <el-col :span="16">
             <el-table ref="tableRef" :data="dataList" border>
@@ -432,7 +448,7 @@ defineExpose({ showEdit });
               </el-table-column>
               <el-table-column align="center" width="200" fixed="right" show-overflow-tooltip label="提成比例">
                 <template #default="{ row }">
-                  <el-form :model="row" :rules="formRules">
+                  <el-form :model="row" ref="formRef" :rules="formRules">
                     <el-form-item prop="commission">
                       <el-input v-model.number="row.commission" placeholder="请输入提成比例" clearable>
                         <template #append>%</template></el-input>
@@ -464,6 +480,7 @@ defineExpose({ showEdit });
   width: 100%;
   height: 100%;
 }
+
 :deep(.el-form-item) {
   margin-bottom: 0px;
 }
