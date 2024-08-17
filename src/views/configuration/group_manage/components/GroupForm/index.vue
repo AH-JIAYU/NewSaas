@@ -311,13 +311,25 @@ function onSubmit() {
     // }
   });
 }
+const handleClose = () => {
+  Object.assign(form.value,{
+  // 组id
+  groupId: null,
+  // 提成比例
+  userInfo: [],
+  // 树回显
+  menuId: [],
+})
+groupLeaderList.value = []
+dataList.value = []
+}
 // 暴露方法
 defineExpose({ showEdit });
 </script>
 
 <template>
   <div v-loading="loading">
-    <el-drawer v-model="dialogTableVisible" :title="title" size="60%">
+    <el-drawer v-model="dialogTableVisible" :title="title" @close="handleClose" size="60%">
       <el-card class="box-card">
         <template #header>
           <div class="card-header">
