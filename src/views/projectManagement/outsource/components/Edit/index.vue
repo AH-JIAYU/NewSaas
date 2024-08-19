@@ -74,6 +74,12 @@ const getClickList = async (row: any) => {
   };
   const res = await api.getQuestionnaireClickList(params);
   data.value.clickIdList = processData(res.data.questionnaireClickInfoList)
+  // 后期换成后端过滤
+  if(row.type===2){
+    data.value.clickIdList=data.value.clickIdList.filter((item:any)=>item.peopleType===2)
+  }else if(row.type===3){
+    data.value.clickIdList=data.value.clickIdList.filter((item:any)=>item.peopleType===1)
+  }
 }
 
 
