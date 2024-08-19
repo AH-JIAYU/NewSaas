@@ -91,6 +91,7 @@ const form = ref<any>({
 const defaultProps: any = {
   children: "children",
   label: "name",
+  // disabled : "distribution",
 };
 // 个人信息校验
 const formRules = ref<FormRules>({
@@ -216,12 +217,12 @@ function onSubmit() {
       formRef.value.validate((valid: any) => {
         if (valid) {
           form.value.userInfo = []
-          //  获取选中的所有子节点
-          const tree = treeRef.value.getCheckedKeys();
-          // 获取所有半选的主节点
-          const halltree = treeRef.value.getHalfCheckedKeys();
-          // 组合一下
-          const menupath = tree.concat(halltree);
+          // // 获取选中的所有子节点
+          // const tree = treeRef.value.getCheckedKeys();
+          // // 获取所有半选的主节点
+          // const halltree = treeRef.value.getHalfCheckedKeys();
+          // // 组合一下
+          // const menupath = tree.concat(halltree);
           delete form.value.menuId;
           let number: any = 0
           groupLeaderList.value.forEach((item: any) => {
@@ -229,7 +230,7 @@ function onSubmit() {
               number += item.commission
             }
             let obj = {
-              userId: item.id,
+              userId: item.memberId,
               commission: item.commission,
             };
             form.value.userInfo.push(obj);
@@ -252,15 +253,18 @@ function onSubmit() {
             }
             form.value.userInfo.push(obj);
           });
-          // 使用 Set 来存储已见的 userIdw
+          // 使用 Set 来存储已见的 userId
           const seenUserIds = new Set();
           form.value.userInfo = form.value.userInfo.filter((user: any) => {
             const { userId } = user;
             if (seenUserIds.has(userId)) {
-              return false; // 如果 userId 已存在，过滤掉该条记录
+              // 如果 userId 已存在，过滤掉该条记录
+              return false;
             }
-            seenUserIds.add(userId); // 如果 userId 未存在，添加到 Set 中
-            return true; // 保留该条记录
+            // 如果 userId 未存在，添加到 Set 中
+            seenUserIds.add(userId);
+            // 保留该条记录
+            return true;
           })
           if (number > 100) {
             ElMessage.warning({
@@ -273,7 +277,7 @@ function onSubmit() {
           console.log('dataList.value', dataList.value);
           console.log("form.value", form.value);
           console.log("number", number);
-          return
+          // return
           api.edit(form.value).then(() => {
             ElMessage.success({
               message: "操作成功",
@@ -285,43 +289,20 @@ function onSubmit() {
           });
         }
       });
-    // if (!form.value.id) {
-    // formRef.value &&
-    //   formRef.value.validate((valid: any) => {
-    //     if (valid) {
-
-    //     }
-    //   });
-    // } else {
-    // formRef.value &&
-    //   formRef.value.validate((valid: any) => {
-    //     if (valid) {
-    //       const data = toRaw(form.value);
-    //       api.edit(data).then(() => {
-    //         ElMessage.success({
-    //           message: "编辑成功",
-    //           center: true,
-    //         });
-    //         emits("success");
-    //         dialogTableVisible.value = false;
-    //         resolve();
-    //       });
-    //     }
-    //   });
-    // }
   });
 }
+// 重置表单
 const handleClose = () => {
-  Object.assign(form.value,{
-  // 组id
-  groupId: null,
-  // 提成比例
-  userInfo: [],
-  // 树回显
-  menuId: [],
-})
-groupLeaderList.value = []
-dataList.value = []
+  Object.assign(form.value, {
+    // 组id
+    groupId: null,
+    // 提成比例
+    userInfo: [],
+    // 树回显
+    menuId: [],
+  })
+  groupLeaderList.value = []
+  dataList.value = []
 }
 // 暴露方法
 defineExpose({ showEdit });

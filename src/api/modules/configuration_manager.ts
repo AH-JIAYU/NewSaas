@@ -15,6 +15,8 @@ export default {
   undistributedDepartment: () => api.post('staff/getStaffListByNotDepartment'),
   // 查询部门成员 分配小组
   undistributedGroup: (data:any) => api.post('staff/getDepartmentStaffList', data),
+  // 查询所有员工列表
+  getTenantStaffList: () => api.post('staff/getTenantStaffList'),
   // 员工退出登录
   logout: () => api.post('staff/logout'),
 }

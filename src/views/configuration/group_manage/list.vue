@@ -225,7 +225,7 @@ function onEdit(row: any) {
 }
 // 详情
 function onDetail(row: any) {
-  detailRef.value.showEdit(row);
+  detailRef.value.showEdit(JSON.stringify(row));
 }
 
 onMounted(async () => {
