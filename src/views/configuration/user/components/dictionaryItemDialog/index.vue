@@ -6,8 +6,13 @@ import apiDep from "@/api/modules/department";
 import useDepartmentStore from "@/store/modules/department";
 import useTenantRoleStore from "@/store/modules/tenant_role";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary";
+import useTenantStaffStore from "@/store/modules/configuration_manager";
 import usePositionManageStore from "@/store/modules/position_manage";
 
+// 用户
+const tenantStaffStore = useTenantStaffStore();
+// 用户数据
+const staffList = ref<any>([]);
 // 小组
 const groupManageList = ref<any>([]);
 // 职位
@@ -28,6 +33,8 @@ const departmentList = ref<any>();
 const disabled = ref(false);
 // 判断手机号或邮箱是否变动
 const isTrue = ref(false);
+// 组长
+const getGroup = ref<any>()
 // 父级传递的数据
 const props = withDefaults(
   defineProps<{
@@ -144,6 +151,7 @@ const handleChange = (val: any) => {
 const departmentChange = async (val: any) => {
   const { data } = await apiDep.departmentGroup({ id: val });
   groupManageList.value = data;
+  getGroup.value = data[0].director
 };
 // 提交数据
 function onSubmit() {
@@ -242,6 +250,7 @@ const flattenDeep = (arr: any) => {
 };
 onMounted(async () => {
   positionManageList.value = await usePositionManage.PositionManage;
+  staffList.value = await tenantStaffStore.getStaff();
   munulevs.value = await roleStore.getRole();
   departmentList.value = await departmentStore.department;
   country.value = await useStoreCountry.getCountry();
@@ -417,7 +426,11 @@ onMounted(async () => {
           <div class="card-header">
             <div class="leftTitle">
               小组信息<span style="margin-left: 20px; font-size: 14px"
-                >负责人:迪迦</span
+                >负责人:<el-text v-for="item in staffList" :key="item.id">
+              <el-text v-if="item.id === form.director">
+                {{ item.name }}
+              </el-text>
+            </el-text></span
               >
             </div>
           </div>

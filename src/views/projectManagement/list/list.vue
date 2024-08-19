@@ -322,7 +322,7 @@ onMounted(async () => {
   }}</el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('clientName')" prop="clientName" align="center" label="客户简称/标识"
+        <el-table-column v-if="checkList.includes('clientName')" prop="clientName"show-overflow-tooltip align="center" label="客户简称/标识"
           width="120"><template #default="{ row }">
             <el-text class="mx-1" >{{ row.clientName.split("/")[0] }}</el-text>
             <p>{{ row.clientName.split("/")[1] }}</p>

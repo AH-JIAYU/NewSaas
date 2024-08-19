@@ -12,4 +12,6 @@ export default {
   edit: (data: any) => api.post('department/updateDepartment', data,),
 
   delete: (data: any) => api.post('department/deleteDepartment', data),
+  // 查询部门详情
+  detail: (data: any) => api.post('department/getDepartmentQueryDetails', data),
 }
