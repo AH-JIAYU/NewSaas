@@ -156,7 +156,7 @@ function userSubmit() {
       if (valid) {
         loading.value = true;
         // 类型是个人/公司
-        console.log('userForm.value.type',userForm.value.type);
+        console.log('userForm.value.type', userForm.value.type);
 
         if (userForm.value.type === "personal") {
           delete userForm.value.companyName;
@@ -289,45 +289,21 @@ defineExpose({ showEdit });
 
 <template>
   <div v-loading="loading">
-    <el-drawer
-      v-model="dialogTableVisible"
-      title="修改用户信息"
-      direction="rtl"
-      :before-close="closeHandler"
-      style="height: 100%"
-      size="40%"
-    >
+    <el-drawer v-model="dialogTableVisible" title="修改用户信息" direction="rtl" :before-close="closeHandler"
+      style="height: 100%" size="40%">
       <ElTabs tab-position="left">
         <ElTabPane label="个人信息" class="basic">
           <h2>个人信息</h2>
-          <ElForm
-            ref="userFormRef"
-            :model="userForm"
-            :rules="userFormRules"
-            label-width="120px"
-            el-width="120px"
-            label-suffix="："
-          >
-            <ElFormItem
-              style="
+          <ElForm ref="userFormRef" :model="userForm" :rules="userFormRules" label-width="120px" el-width="120px"
+            label-suffix="：">
+            <ElFormItem style="
                 display: flex;
                 justify-content: center;
                 align-items: center;
-              "
-              label="头像"
-            >
-              <el-upload
-                :class="{ hide_box: upload }"
-                v-model:file-list="fileList"
-                :headers="headers"
-                :action="Url"
-                list-type="picture-card"
-                :limit="1"
-                :on-preview="handlePictureCardPreview"
-                :on-remove="handleRemove"
-                :on-success="handleSuccess"
-                :on-exceed="handleExceed"
-              >
+              " label="头像">
+              <el-upload :class="{ hide_box: upload }" v-model:file-list="fileList" :headers="headers" :action="Url"
+                list-type="picture-card" :limit="1" :on-preview="handlePictureCardPreview" :on-remove="handleRemove"
+                :on-success="handleSuccess" :on-exceed="handleExceed">
                 <el-icon class="el-icon--upload">
                   <Plus />
                 </el-icon>
@@ -339,104 +315,50 @@ defineExpose({ showEdit });
                 </template>
               </el-upload>
 
-              <el-dialog
-                v-model="dialogVisible"
-                style="
+              <el-dialog v-model="dialogVisible" style="
                   z-index: 1000;
                   transform: translate(0);
                   position: relative;
-                "
-              >
+                ">
                 <img w-full :src="dialogImageUrl" alt="Preview Image" />
               </el-dialog>
             </ElFormItem>
             <ElFormItem label="账户类型">
-              <el-select
-                v-model="userForm.type"
-                value-key=""
-                placeholder="账户类型"
-                disabled
-                clearable
-                filterable
-              >
-                <el-option
-                  v-for="item in typeList"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                />
+              <el-select v-model="userForm.type" value-key="" placeholder="账户类型" disabled clearable filterable>
+                <el-option v-for="item in typeList" :key="item.value" :label="item.label" :value="item.value" />
               </el-select>
             </ElFormItem>
             <ElFormItem label="用户名">
-              <ElInput
-                disabled
-                v-model="userForm.name"
-                placeholder="请输入你的用户名"
-              />
+              <ElInput disabled v-model="userForm.name" placeholder="请输入你的用户名" />
             </ElFormItem>
             <ElFormItem label="国家">
               <ElSelect v-model="userForm.country" disabled>
-                <ElOption
-                  v-for="item in countryList"
-                  :label="item.chineseName"
-                  :value="item.code"
-                />
+                <ElOption v-for="item in countryList" :label="item.chineseName" :value="item.code" />
               </ElSelect>
             </ElFormItem>
             <ElFormItem prop="" label="货币类型">
-              <el-select
-                v-model="userForm.currencyType"
-                value-key=""
-                placeholder="请选择货币类型"
-                disabled
-                clearable
-                filterable
-              >
-                <el-option
-                  v-for="item in currencyType"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                />
+              <el-select v-model="userForm.currencyType" value-key="" placeholder="请选择货币类型" disabled clearable
+                filterable>
+                <el-option v-for="item in currencyType" :key="item.value" :label="item.label" :value="item.value" />
               </el-select>
             </ElFormItem>
             <ElFormItem v-if="userForm.type === 'company'" label="公司名称">
-              <ElInput
-                v-model="userForm.companyName"
-                placeholder="请输入你的公司名称"
-              />
+              <ElInput v-model="userForm.companyName" placeholder="请输入你的公司名称" />
             </ElFormItem>
             <ElFormItem v-if="userForm.type === 'company'" label="公司税号">
-              <ElInput
-                v-model="userForm.taxId"
-                placeholder="请输入你的公司税号"
-              />
+              <ElInput v-model="userForm.taxId" placeholder="请输入你的公司税号" />
             </ElFormItem>
             <ElFormItem v-if="userForm.type === 'company'" label="法人姓名">
-              <ElInput
-                v-model="userForm.legalPersonName"
-                placeholder="请输入你的法人姓名"
-              />
+              <ElInput v-model="userForm.legalPersonName" placeholder="请输入你的法人姓名" />
             </ElFormItem>
-            <ElFormItem
-              v-if="userForm.country === 'CN'"
-              prop="phone"
-              label="手机号码"
-            >
-              <ElInput
-                v-model="userForm.phone"
-                placeholder="请输入你的手机号码"
-                disabled
-                @change="handleChange"
-              />
+            <ElFormItem v-if="userForm.country === 'CN'" prop="phone" label="手机号码">
+              <ElInput v-model="userForm.phone" placeholder="请输入你的手机号码" disabled @change="handleChange" />
             </ElFormItem>
             <ElFormItem v-else prop="email" label="电子邮箱">
-              <ElInput
-                v-model="userForm.email"
-                placeholder="请输入你的电子邮箱"
-                disabled
-                @change="handleChange"
-              />
+              <ElInput v-model="userForm.email" placeholder="请输入你的电子邮箱" disabled @change="handleChange" />
+            </ElFormItem>
+            <ElFormItem prop="isInvitation" label="合作邀约">
+              <el-switch v-model="userForm.isInvitation" inline-prompt active-text="启用" inactive-text="禁用"  :active-value="2" :inactive-value="1"/>
             </ElFormItem>
             <ElFormItem>
               <ElButton @click="userSubmit" type="primary"> 保存 </ElButton>
@@ -446,30 +368,16 @@ defineExpose({ showEdit });
         </ElTabPane>
         <ElTabPane label="账户管理" class="security">
           <h2 style="margin-bottom: 30px">账户管理</h2>
-          <ElForm
-            ref="accountFormRef"
-            :model="accountForm"
-            :rules="accountFormRules"
-            label-width="120px"
-            label-suffix="："
-          >
+          <ElForm ref="accountFormRef" :model="accountForm" :rules="accountFormRules" label-width="120px"
+            label-suffix="：">
             <ElFormItem prop="oldPassword" label="旧密码">
-              <ElInput
-                v-model="accountForm.oldPassword"
-                placeholder="请输入旧密码"
-              />
+              <ElInput v-model="accountForm.oldPassword" placeholder="请输入旧密码" />
             </ElFormItem>
             <ElFormItem prop="password" label="新密码">
-              <ElInput
-                v-model="accountForm.password"
-                placeholder="请输入新密码"
-              />
+              <ElInput v-model="accountForm.password" placeholder="请输入新密码" />
             </ElFormItem>
             <ElFormItem prop="confirmPassword" label="确认新密码">
-              <ElInput
-                v-model="accountForm.confirmPassword"
-                placeholder="请输入新密码"
-              />
+              <ElInput v-model="accountForm.confirmPassword" placeholder="请输入新密码" />
             </ElFormItem>
             <ElFormItem>
               <ElButton @click="accountSubmit" type="primary"> 保存 </ElButton>
@@ -513,18 +421,23 @@ defineExpose({ showEdit });
 :deep(.el-upload--picture-card) {
   border-radius: 50%;
 }
+
 :deep(.el-upload-list__item-thumbnail) {
   border-radius: 50%;
 }
+
 :deep(.el-upload-list__item-actions) {
   border-radius: 50%;
 }
+
 :deep(.el-upload-list--picture-card .el-upload-list__item) {
   border: none;
 }
+
 .hide_box :deep(.el-upload--picture-card) {
   display: none;
 }
+
 .security {
   .setting-list {
     .item {

@@ -11,8 +11,8 @@ defineOptions({
 const projectManagementOutsourceStore = useProjectManagementOutsourceStore();
 // 弹框开关变量
 const dialogTableVisible = ref(false);
+const popoverRef = ref<any>()//弹出框Ref
 const data = ref<any>({
-
   currentTenantId: "", //当前租户id
   tenantMeasurementInfoList: [], //测查列表
   clickIdList: [],//点击id列表
@@ -43,36 +43,44 @@ async function showEdit(row: any) {
     type2List[0].length = type2List.length
     type2List[0].memberGroupOrSupperIdList = memberGroupOrSupperIdList
     tenantMeasurementInfoList.push(type2List[0])
-  } else if(type3List.length) {
+  } else if (type3List.length) {
     const memberGroupOrSupperIdList = type3List.map((item: any) => item.memberGroupOrSupperId);
     type3List[0].length = type3List.length
     type3List[0].memberGroupOrSupperIdList = memberGroupOrSupperIdList
     tenantMeasurementInfoList.push(type3List[0])
   }
+  tenantMeasurementInfoList.forEach((item: any) => item.visible = false)
   data.value.currentTenantId = res.data.currentTenantId;
   data.value.tenantMeasurementInfoList = tenantMeasurementInfoList;
   dialogTableVisible.value = true;
 }
+// 动画显示之前先将其他显示的关闭
+const getClickListBefore = (index: any) => {
+  data.value.clickIdList = []
+  popoverRef.value.forEach((item: any, ind: any) => {
+    if (ind !== index - 1) {
+      item.hide()
+    }
+  })
+}
 // 获取点击id
 const getClickList = async (row: any) => {
-  if (!row.visible) {
-    const params = {
-      type: row.type,
-      projectId: row.projectId,
-      tenantId: row.allocationTenantId,
-      supplierIdList: row.type === 2 ? row.memberGroupOrSupperIdList : [],
-      memberGroupIdList: row.type === 3 ? row.memberGroupOrSupperIdList : [],
-    };
-    const res = await api.getQuestionnaireClickList(params);
-    data.value.clickIdList = processData(res.data.questionnaireClickInfoList)
-    row.visible = true
-  }
+  const params = {
+    type: row.type,
+    projectId: row.projectId,
+    tenantId: row.allocationTenantId,
+    supplierIdList: row.type === 2 ? row.memberGroupOrSupperIdList : [],
+    memberGroupIdList: row.type === 3 ? row.memberGroupOrSupperIdList : [],
+  };
+  const res = await api.getQuestionnaireClickList(params);
+  data.value.clickIdList = processData(res.data.questionnaireClickInfoList)
 }
+
 
 // 处理数据
 function processData(data: any) {
   return data.reduce((acc: any, item: any) => {
-    const { supplierId, supplierName, projectQuestionnaireClickId, surveyStatus, price } = item;
+    const { supplierId, supplierName, projectQuestionnaireClickId, surveyStatus, price,peopleType } = item;
 
     // 查找是否已经有该供应商的对象
     let supplier = acc.find((s: any) => s.supplierId === supplierId);
@@ -84,8 +92,9 @@ function processData(data: any) {
       // 如果供应商不存在，创建新的供应商对象并添加到结果中
       acc.push({
         supplierId,
+        peopleType,
         supplierName,
-        list: [{ projectQuestionnaireClickId, surveyStatus, price }]
+        list: [{ projectQuestionnaireClickId, surveyStatus, price}]
       });
     }
 
@@ -189,18 +198,18 @@ defineExpose({ showEdit });
           </div>
           <div class="right" v-if="item.allocationTenantId !== data.currentTenantId || item.type != 1
       ">
-            <el-popover v-model:visible="item.visible" placement="right" :width="350" trigger="click"
-               >
+            <el-popover v-model:visible="item.visible" ref="popoverRef" placement="right" :width="350" trigger="click"
+              @before-enter="getClickListBefore(index)" @show="getClickList(item)">
               <template #reference>
-                <el-button style="padding: 0.5rem" type="primary" link  @click="getClickList(item)">
+                <el-button style="padding: 0.5rem" type="primary" link>
+                  <!-- @click="getClickList(item)" -->
                   》
                 </el-button>
               </template>
-
               <div class="clickIdItem   m-2" v-for="ite in data.clickIdList">
                 <div class="clickIdItem-left">
-                  <span :class="'type' + item.type">
-                    {{ projectManagementOutsourceStore.typeList[item.type - 1] }}
+                  <span :class="'peopleType' + ite.peopleType">
+                    {{ projectManagementOutsourceStore.peopleTypeList[ite.peopleType - 1] }}
                   </span>
                 </div>
                 <div class="clickIdItem-right">
@@ -243,6 +252,14 @@ defineExpose({ showEdit });
 }
 
 .type2 {
+  background-color: var(--el-color-success);
+  ;
+}
+.peopleType1 {
+  background-color: var(--el-color-primary);
+}
+
+.peopleType2 {
   background-color: var(--el-color-success);
   ;
 }

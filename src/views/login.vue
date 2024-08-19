@@ -277,6 +277,9 @@ const registerRules = ref<FormRules>({
     { required: true, trigger: "blur", message: "请输入密码" },
     { min: 6, max: 18, trigger: "blur", message: "密码长度为6到18位" },
   ],
+  isInvitation: [
+    { required: true, trigger: "blur", message: "请选择合作邀约" },
+  ],
   agreeToTheAgreement: [
     {
       required: true,
@@ -430,8 +433,8 @@ watch(
   }
 );
 const agreementRef = ref<any>()
-const agreements = (val:any) => {
-  console.log('val',val);
+const agreements = (val: any) => {
+  console.log('val', val);
   agreementRef.value.showEdit(val)
 }
 </script>
@@ -449,21 +452,11 @@ const agreements = (val:any) => {
         <h1 style="font-size: 50px; font-weight: normal">欢迎</h1>
         <h3 h1 style="font-size: 30px; font-weight: normal">来到租户系统 !</h3>
       </div>
-      <el-form
-        v-show="formType === 'login'"
-        ref="loginFormRef"
-        :model="loginForm"
-        :rules="loginRules"
-        class="login-form"
-        :validate-on-rule-change="false"
-      >
+      <el-form v-show="formType === 'login'" ref="loginFormRef" :model="loginForm" :rules="loginRules"
+        class="login-form" :validate-on-rule-change="false">
         <div class="title-container">
           <div class="fx-c">
-            <el-radio-group
-              v-model="loginType"
-              size="large"
-              @change="resetCheck"
-            >
+            <el-radio-group v-model="loginType" size="large" @change="resetCheck">
               <el-radio-button label="验证码登录" value="code" />
               <el-radio-button label="密码登录" value="password" />
             </el-radio-group>
@@ -471,49 +464,27 @@ const agreements = (val:any) => {
         </div>
         <div style="height: 11.5625rem">
           <ElFormItem prop="account">
-            <ElInput
-              v-model="loginForm.account"
-              :placeholder="t('app.account')"
-              type="text"
-              tabindex="1"
-              @blur="chengAccount"
-            >
+            <ElInput v-model="loginForm.account" :placeholder="t('app.account')" type="text" tabindex="1"
+              @blur="chengAccount">
               <template #prefix>
                 <SvgIcon name="i-ri:user-3-fill" />
               </template>
               <template #append v-if="loginType === 'code'">
-                <el-button
-                  type="primary"
-                  :disabled="loginGetCaptcha"
-                  @click="loginCaptcha"
-                  >{{ loginCode }}</el-button
-                >
+                <el-button type="primary" :disabled="loginGetCaptcha" @click="loginCaptcha">{{ loginCode }}</el-button>
               </template>
             </ElInput>
           </ElFormItem>
           <ElFormItem prop="password" v-if="loginType === 'password'">
-            <ElInput
-              v-model="loginForm.password"
-              type="password"
-              :placeholder="t('app.password')"
-              tabindex="2"
-              autocomplete="new-password"
-              show-password
-              @keyup.enter="handleLogin"
-            >
+            <ElInput v-model="loginForm.password" type="password" :placeholder="t('app.password')" tabindex="2"
+              autocomplete="new-password" show-password @keyup.enter="handleLogin">
               <template #prefix>
                 <SvgIcon name="i-ri:lock-2-fill" />
               </template>
             </ElInput>
           </ElFormItem>
           <ElFormItem prop="code" v-if="loginType === 'code'">
-            <ElInput
-              v-model="loginForm.code"
-              type="text"
-              :placeholder="t('app.captcha')"
-              tabindex="2"
-              @keyup.enter="handleLogin"
-            >
+            <ElInput v-model="loginForm.code" type="text" :placeholder="t('app.captcha')" tabindex="2"
+              @keyup.enter="handleLogin">
               <template #prefix>
                 <SvgIcon name="i-ep:message" />
               </template>
@@ -523,11 +494,8 @@ const agreements = (val:any) => {
             <div class="flex-bar" style="width: 100%; margin: 0">
               <ElCheckbox v-model="loginForm.agreeToTheAgreement" tabindex="3">
                 我已阅读并同意
-                <el-button type="primary" size="default" link @click="agreements(1)"
-                  >《会员协议》</el-button
-                >和<el-button type="primary" size="default" link @click="agreements(2)"
-                  >《隐私协议》</el-button
-                >
+                <el-button type="primary" size="default" link @click="agreements(1)">《会员协议》</el-button>和<el-button
+                  type="primary" size="default" link @click="agreements(2)">《隐私协议》</el-button>
               </ElCheckbox>
             </div>
           </ElFormItem>
@@ -536,44 +504,23 @@ const agreements = (val:any) => {
           <ElCheckbox v-model="loginForm.remember" tabindex="4">
             保持登录
           </ElCheckbox>
-          <ElLink
-                v-if="loginType === 'password'"
-                type="primary"
-                :underline="false"
-                @click="formType = 'reset'"
-              >
-                忘记密码了?
-              </ElLink>
+          <ElLink v-if="loginType === 'password'" type="primary" :underline="false" @click="formType = 'reset'">
+            忘记密码了?
+          </ElLink>
         </div>
-        <ElButton
-          :loading="loading"
-          type="primary"
-          size="large"
-          style="width: 100%"
-          @click.prevent="handleLogin"
-          tabindex="5"
-        >
+        <ElButton :loading="loading" type="primary" size="large" style="width: 100%" @click.prevent="handleLogin"
+          tabindex="5">
           {{ t("app.login") }}
         </ElButton>
         <div class="sub-link">
           <span class="text">还不是会员?</span>
-          <ElLink
-            type="primary"
-            :underline="false"
-            @click="formType = 'register'"
-          >
+          <ElLink type="primary" :underline="false" @click="formType = 'register'">
             立即注册
           </ElLink>
         </div>
       </el-form>
-      <ElForm
-        v-show="formType === 'register'"
-        ref="registerFormRef"
-        :model="registerForm"
-        :rules="registerRules"
-        class="login-form"
-        auto-complete="on"
-      >
+      <ElForm v-show="formType === 'register'" ref="registerFormRef" :model="registerForm" :rules="registerRules"
+        class="login-form" auto-complete="on">
         <div>
           <!-- <ElFormItem prop="companyType">
             <el-select
@@ -599,129 +546,85 @@ const agreements = (val:any) => {
           </ElFormItem> -->
           <!-- v-if="registerForm.companyType === 'company'" -->
           <ElFormItem prop="companyName">
-            <ElInput
-              v-model="registerForm.companyName"
-              placeholder="请输入公司名称"
-            />
+            <ElInput v-model="registerForm.companyName" placeholder="请输入公司名称" />
           </ElFormItem>
           <!--  v-if="registerForm.companyType === 'company'" -->
           <ElFormItem prop="taxID">
-            <ElInput
-              v-model="registerForm.taxID"
-              placeholder="请输入公司税号"
-            />
+            <ElInput v-model="registerForm.taxID" placeholder="请输入公司税号" />
           </ElFormItem>
           <!--  v-if="registerForm.companyType === 'company'" -->
           <ElFormItem prop="legalPersonName">
-            <ElInput
-              v-model="registerForm.legalPersonName"
-              placeholder="请输入法人姓名"
-            />
+            <ElInput v-model="registerForm.legalPersonName" placeholder="请输入法人姓名" />
           </ElFormItem>
           <ElFormItem prop="name">
-            <ElInput
-              v-model="registerForm.name"
-              placeholder="用户名"
-              tabindex="1"
-            >
+            <ElInput v-model="registerForm.name" placeholder="用户名" tabindex="1">
               <template #prefix>
                 <SvgIcon name="i-ri:user-3-fill" />
               </template>
             </ElInput>
           </ElFormItem>
           <ElFormItem prop="country">
-            <ElSelect
-              v-model="registerForm.country"
-              placeholder="国家"
-              clearable
-              filterable
-              tabindex="2"
-            >
+            <ElSelect v-model="registerForm.country" placeholder="国家" clearable filterable tabindex="2">
               <template #prefix>
                 <SvgIcon name="i-mdi:format-list-bulleted-type" />
               </template>
-              <ElOption
-                v-for="item in countryList"
-                :label="item.chineseName"
-                :value="item.code"
-              ></ElOption>
+              <ElOption v-for="item in countryList" :label="item.chineseName" :value="item.code"></ElOption>
             </ElSelect>
           </ElFormItem>
           <ElFormItem prop="phoneNumber" v-if="registerForm.country === 'CN'">
-            <ElInput
-              v-model="registerForm.phoneNumber"
-              placeholder="手机号"
-              tabindex="3"
-            >
+            <ElInput v-model="registerForm.phoneNumber" placeholder="手机号" tabindex="3">
               <template #prefix>
                 <SvgIcon name="i-ant-design:phone-outlined" />
               </template>
             </ElInput>
           </ElFormItem>
           <ElFormItem prop="email" v-else>
-            <ElInput
-              v-model="registerForm.email"
-              placeholder="邮箱"
-              tabindex="3"
-            >
+            <ElInput v-model="registerForm.email" placeholder="邮箱" tabindex="3">
               <template #prefix>
                 <SvgIcon name="i-mdi:email" />
               </template>
             </ElInput>
           </ElFormItem>
           <ElFormItem prop="code">
-            <ElInput
-              v-model="registerForm.code"
-              placeholder="验证码"
-              tabindex="4"
-            >
+            <ElInput v-model="registerForm.code" placeholder="验证码" tabindex="4">
               <template #prefix>
                 <SvgIcon name="i-ic:baseline-verified-user" />
               </template>
               <template #append>
-                <ElButton
-                  :disabled="isGetPhone"
-                  @click="mobileVerificationCode"
-                >
-                  {{ phoneCode }}</ElButton
-                >
+                <ElButton :disabled="isGetPhone" @click="mobileVerificationCode">
+                  {{ phoneCode }}</ElButton>
               </template>
             </ElInput>
           </ElFormItem>
           <ElFormItem prop="password">
-            <ElInput
-              v-model="registerForm.password"
-              type="password"
-              placeholder="密码"
-              tabindex="5"
-              show-password
-            >
+            <ElInput v-model="registerForm.password" type="password" placeholder="密码" tabindex="5" show-password>
               <template #prefix>
                 <SvgIcon name="i-ri:lock-2-fill" />
               </template>
             </ElInput>
           </ElFormItem>
+          <ElFormItem prop="isInvitation">
+            <el-select v-model="registerForm.isInvitation" tabindex="6" placeholder="是否开启合作邀约" filterable>
+              <template #prefix>
+                <SvgIcon name="i-ant-design:container-outlined" />
+              </template>
+              <el-option label="开启" :value="2"> </el-option>
+              <el-option label="不开启" :value="1"> </el-option>
+            </el-select>
+
+          </ElFormItem>
           <ElFormItem prop="agreeToTheAgreement">
             <div class="flex-bar" style="margin: 0">
               <ElCheckbox v-model="loginForm.agreeToTheAgreement" tabindex="3">
                 我已阅读并同意
-                <el-button type="primary" size="default" link @click="agreements(1)"
-                  >《会员协议》</el-button
-                >和<el-button type="primary" size="default" link @click="agreements(2)"
-                  >《隐私协议》</el-button
-                >
+                <el-button type="primary" size="default" link @click="agreements(1)">《会员协议》</el-button>和<el-button
+                  type="primary" size="default" link @click="agreements(2)">《隐私协议》</el-button>
               </ElCheckbox>
             </div>
           </ElFormItem>
         </div>
-        <ElButton
-          tabindex="7"
-          :loading="loading"
-          type="primary"
-          size="large"
-          style="width: 100%; margin-top: 20px"
-          @click.prevent="handleRegister"
-        >
+        <ElButton tabindex="7" :loading="loading" type="primary" size="large" style="width: 100%; margin-top: 20px"
+          @click.prevent="handleRegister">
           注册
         </ElButton>
         <div class="sub-link">
@@ -731,36 +634,21 @@ const agreements = (val:any) => {
           </ElLink>
         </div>
       </ElForm>
-      <ElForm
-        v-show="formType === 'reset'"
-        ref="resetFormRef"
-        :model="resetForm"
-        :rules="resetRules"
-        class="login-form"
-      >
+      <ElForm v-show="formType === 'reset'" ref="resetFormRef" :model="resetForm" :rules="resetRules"
+        class="login-form">
         <div class="title-container">
           <h3 class="title">忘记密码了? 🔒</h3>
         </div>
         <div>
           <ElFormItem prop="account">
-            <ElInput
-              v-model="resetForm.account"
-              :placeholder="t('app.account')"
-              type="text"
-              tabindex="1"
-            >
+            <ElInput v-model="resetForm.account" :placeholder="t('app.account')" type="text" tabindex="1">
               <template #prefix>
                 <SvgIcon name="i-ri:user-3-fill" />
               </template>
             </ElInput>
           </ElFormItem>
           <ElFormItem prop="code">
-            <ElInput
-              v-model="resetForm.code"
-              :placeholder="t('app.code')"
-              type="text"
-              tabindex="2"
-            >
+            <ElInput v-model="resetForm.code" :placeholder="t('app.code')" type="text" tabindex="2">
               <template #prefix>
                 <SvgIcon name="i-ic:baseline-verified-user" />
               </template>
@@ -770,26 +658,16 @@ const agreements = (val:any) => {
             </ElInput>
           </ElFormItem>
           <ElFormItem prop="newPassword">
-            <ElInput
-              v-model="resetForm.newPassword"
-              type="password"
-              :placeholder="t('app.newPassword')"
-              tabindex="3"
-              show-password
-            >
+            <ElInput v-model="resetForm.newPassword" type="password" :placeholder="t('app.newPassword')" tabindex="3"
+              show-password>
               <template #prefix>
                 <SvgIcon name="i-ri:lock-2-fill" />
               </template>
             </ElInput>
           </ElFormItem>
         </div>
-        <ElButton
-          :loading="loading"
-          type="primary"
-          size="large"
-          style="width: 100%; margin-top: 20px"
-          @click.prevent="handleReset"
-        >
+        <ElButton :loading="loading" type="primary" size="large" style="width: 100%; margin-top: 20px"
+          @click.prevent="handleReset">
           {{ t("app.check") }}
         </ElButton>
         <div class="sub-link">
@@ -877,8 +755,7 @@ const agreements = (val:any) => {
   z-index: 0;
   width: 100%;
   height: 100%;
-  background: url("../assets/images/background.jpg") center center fixed
-    no-repeat;
+  background: url("../assets/images/background.jpg") center center fixed no-repeat;
   background-size: cover;
   // background: radial-gradient(
   //   circle at center,
@@ -1020,10 +897,12 @@ const agreements = (val:any) => {
   right: 20px;
   bottom: 20px;
 }
+
 :deep(.el-checkbox__label) {
   display: flex;
   align-items: center;
 }
+
 .el-button+.el-button {
   margin: 0;
 }
