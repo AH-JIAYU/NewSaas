@@ -1,26 +1,50 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
-// import api from "@/api/modules/user_customer";
-// import { obtainLoading } from "@/utils/apiLoading";
+import api from "@/api/modules/configuration_manager";
+import useDepartmentStore from "@/store/modules/department";
+import useTenantRoleStore from "@/store/modules/tenant_role";
+import useTenantStaffStore from "@/store/modules/configuration_manager";
+import usePositionManageStore from "@/store/modules/position_manage";
+import useGroupManageStore from "@/store/modules/group_manage";
 
+// 用户
+const tenantStaffStore = useTenantStaffStore();
+// 用户数据
+const staffList = ref<any>([]);
+// 小组
+const useGroupManage = useGroupManageStore();
+// 小组
+const groupManageList = ref<any>([]);
+// 职位
+const usePositionManage = usePositionManageStore();
+const positionManageList = ref<any>();
+// 角色码
+const roleStore = useTenantRoleStore();
+// 角色
+const munulevs = ref();
+// 部门
+const departmentStore = useDepartmentStore();
+// 部门数据
+const departmentList = ref<any>();
+const form = ref<any>({})
 const emit = defineEmits(["fetch-data"]);
 const drawerisible = ref<boolean>(false);
 const checkRef = ref<any>();
-const detailData = ref<any>(); // 详情数据
+ // 详情数据
+const detailData = ref<any>();
 async function showEdit(row: any) {
-  console.log("row", row);
-
+  form.value = row
   const params = {
-    tenantCustomerId: row.tenantCustomerId,
+    id: row.id,
   };
-  // const { status, data } = await obtainLoading(api.detail(params));
-  // detailData.value = data;
-  // status === 1 &&
-  //   ElMessage.success({
-  //     message: "查询成功",
-  //     center: true,
-  //   });
+  const { status, data } = await api.list(params)
+  detailData.value = data.data[0];
+  status === 1 &&
+    ElMessage.success({
+      message: "查询成功",
+      center: true,
+    });
   drawerisible.value = true;
 }
 
@@ -29,10 +53,18 @@ function close() {
   drawerisible.value = false;
 }
 
-const operationType = (type: number) => {
-  const typeArray = ["新增", "编辑", "启用", "禁用"];
-  return typeArray[type - 1];
-};
+onMounted(async () => {
+  // 职位
+  positionManageList.value = await usePositionManage.getPositionManage();
+  // 用户
+  staffList.value = await tenantStaffStore.getStaff();
+  // 角色
+  munulevs.value = await roleStore.getRole();
+  // 部门
+  departmentList.value = await departmentStore.getDepartment();
+  // 小组
+  groupManageList.value = await useGroupManage?.getGroupManage()
+});
 
 defineExpose({
   showEdit,
@@ -67,7 +99,7 @@ defineExpose({
             " :span="1.5">
             <el-avatar
               :size="50"
-              src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
+              :src="detailData.avatar"
             />
           </el-col>
           <el-col
@@ -79,8 +111,8 @@ defineExpose({
             "
             :span="6"
           >
-            <p>用户A</p>
-            <p style="font-size: 14px">账号:<span>迪迦</span></p>
+            <p>{{detailData.userName}}</p>
+            <p style="font-size: 14px">账号:<span>{{detailData.userName}}</span></p>
           </el-col>
         </el-row>
         <el-row :gutter="24">
@@ -88,8 +120,8 @@ defineExpose({
             <el-form-item label="员工ID:">
               <el-text class="mx-1">
                 {{
-                  detailData?.tenantCustomerId
-                    ? detailData.tenantCustomerId
+                  detailData?.id
+                    ? detailData.id
                     : "-"
                 }}
               </el-text>
@@ -99,7 +131,7 @@ defineExpose({
             <el-form-item label="姓名:">
               <el-text class="mx-1">
                 {{
-                  detailData?.customerAccord ? detailData.customerAccord : "-"
+                  detailData?.name ? detailData.name : "-"
                 }}
               </el-text>
             </el-form-item>
@@ -108,8 +140,8 @@ defineExpose({
             <el-form-item label="手机号:">
               <el-text class="mx-1">
                 {{
-                  detailData?.customerShortName
-                    ? detailData.customerAccord
+                  detailData?.phone
+                    ? detailData.phone
                     : "-"
                 }}
               </el-text>
@@ -118,35 +150,39 @@ defineExpose({
           <el-col :span="6">
             <el-form-item label="邮箱:">
               <el-text class="mx-1">
-                {{ detailData?.companyName ? detailData.companyName : "-" }}
+                {{ detailData?.email ? detailData.email : "-" }}
               </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="部门:">
-              <el-text class="mx-1">
-                {{ detailData?.customerName ? detailData.customerName : "-" }}
-              </el-text>
+              <el-text v-for="item in departmentList">
+                  <el-text v-if="detailData.departmentId === item.id">
+                    {{ item.name ? item.name : "-" }}
+                  </el-text>
+                </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="职位:">
-              <el-text class="mx-1">
-                {{ detailData?.customerPhone ? detailData.customerPhone : "-" }}
-              </el-text>
+              <el-text v-for="item in positionManageList">
+                  <el-text v-if="detailData.positionId === item.id">
+                    {{ item.name ? item.name : "-" }}
+                  </el-text>
+                </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="帐号状态:">
               <el-text class="mx-1">
-                {{ detailData?.emailAddress ? detailData.emailAddress : "-" }}
+                {{ detailData?.active ? "启用" : "禁用" }}
               </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="创建时间:">
               <el-text class="mx-1">
-                {{ detailData?.emailAddress ? detailData.emailAddress : "-" }}
+                {{ detailData?.createTime ? detailData.createTime : "-" }}
               </el-text>
             </el-form-item>
           </el-col>
@@ -159,147 +195,49 @@ defineExpose({
           </div>
         </template>
         <el-row :gutter="24">
-          <el-col :span="6">
-            <el-form-item label="员工ID:">
-              <el-text class="mx-1">
-                {{
-                  detailData?.tenantCustomerId
-                    ? detailData.tenantCustomerId
-                    : "-"
-                }}
-              </el-text>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="姓名:">
-              <el-text class="mx-1">
-                {{
-                  detailData?.customerAccord ? detailData.customerAccord : "-"
-                }}
-              </el-text>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="手机号:">
-              <el-text class="mx-1">
-                {{
-                  detailData?.customerShortName
-                    ? detailData.customerAccord
-                    : "-"
-                }}
-              </el-text>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="邮箱:">
-              <el-text class="mx-1">
-                {{ detailData?.companyName ? detailData.companyName : "-" }}
-              </el-text>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="部门:">
-              <el-text class="mx-1">
-                {{ detailData?.customerName ? detailData.customerName : "-" }}
-              </el-text>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="职位:">
-              <el-text class="mx-1">
-                {{ detailData?.customerPhone ? detailData.customerPhone : "-" }}
-              </el-text>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="帐号状态:">
-              <el-text class="mx-1">
-                {{ detailData?.emailAddress ? detailData.emailAddress : "-" }}
-              </el-text>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="创建时间:">
-              <el-text class="mx-1">
-                {{ detailData?.emailAddress ? detailData.emailAddress : "-" }}
-              </el-text>
-            </el-form-item>
-          </el-col>
+          <el-form-item label="分配角色:">
+            <el-radio-group  v-model="form.role">
+              <el-radio
+                v-for="item in munulevs"
+                :key="item.id"
+                :value="item.roleName"
+                :label="item.roleName"
+                disabled
+              ></el-radio>
+            </el-radio-group>
+          </el-form-item>
         </el-row>
       </el-card>
       <el-card class="box-card">
         <template #header>
           <div class="card-header">
-            <div class="leftTitle">小组信息</div>
+            <div class="leftTitle">
+              小组信息<span style="margin-left: 20px; font-size: 14px"
+                >负责人:<el-text v-for="item in staffList" :key="item.id">
+              <el-text v-if="item.id === form.director">
+                {{ item.name }}
+              </el-text>
+            </el-text></span
+              >
+            </div>
           </div>
         </template>
         <el-row :gutter="24">
-          <el-col :span="6">
-            <el-form-item label="员工ID:">
-              <el-text class="mx-1">
-                {{
-                  detailData?.tenantCustomerId
-                    ? detailData.tenantCustomerId
-                    : "-"
-                }}
-              </el-text>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="姓名:">
-              <el-text class="mx-1">
-                {{
-                  detailData?.customerAccord ? detailData.customerAccord : "-"
-                }}
-              </el-text>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="手机号:">
-              <el-text class="mx-1">
-                {{
-                  detailData?.customerShortName
-                    ? detailData.customerAccord
-                    : "-"
-                }}
-              </el-text>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="邮箱:">
-              <el-text class="mx-1">
-                {{ detailData?.companyName ? detailData.companyName : "-" }}
-              </el-text>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="部门:">
-              <el-text class="mx-1">
-                {{ detailData?.customerName ? detailData.customerName : "-" }}
-              </el-text>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="职位:">
-              <el-text class="mx-1">
-                {{ detailData?.customerPhone ? detailData.customerPhone : "-" }}
-              </el-text>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="帐号状态:">
-              <el-text class="mx-1">
-                {{ detailData?.emailAddress ? detailData.emailAddress : "-" }}
-              </el-text>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="创建时间:">
-              <el-text class="mx-1">
-                {{ detailData?.emailAddress ? detailData.emailAddress : "-" }}
-              </el-text>
-            </el-form-item>
-          </el-col>
+          <el-form-item label="分配小组:">
+            <el-radio-group
+              v-if="groupManageList.length"
+              v-model="form.groupId"
+            >
+              <el-radio
+                v-for="item in groupManageList"
+                :key="item.id"
+                :value="item.id"
+                :label="item.name"
+                disabled
+              ></el-radio>
+            </el-radio-group>
+            <el-text v-else>-</el-text>
+          </el-form-item>
         </el-row>
       </el-card>
     </el-form>
