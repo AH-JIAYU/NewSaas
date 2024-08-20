@@ -163,12 +163,18 @@ function onReset() {
 
 // 每页数量切换
 function sizeChange(size: number) {
-  onSizeChange(size).then(() => getDataList());
+  onSizeChange(size).then(() => {
+    data.value.search.limit = size;
+    getDataList()
+  });
 }
 
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
-  onCurrentChange(page).then(() => getDataList());
+  onCurrentChange(page).then(() => {
+    data.value.search.page = page;
+    getDataList()
+  });
 }
 
 // 字段排序
@@ -250,31 +256,14 @@ onBeforeUnmount(() => {
     <PageMain>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
-          <ElForm
-            :model="data.search"
-            size="default"
-            label-width="100px"
-            inline-message
-            inline
-            class="search-form"
-          >
+          <ElForm :model="data.search" size="default" label-width="100px" inline-message inline class="search-form">
             <ElFormItem label="">
-              <ElInput
-                v-model="data.search.id"
-                placeholder="请输入部门ID"
-                clearable
-                @keydown.enter="currentChange()"
-                @clear="currentChange()"
-              />
+              <ElInput v-model="data.search.id" placeholder="请输入部门ID" clearable @keydown.enter="currentChange()"
+                @clear="currentChange()" />
             </ElFormItem>
             <ElFormItem label="">
-              <ElInput
-                v-model="data.search.name"
-                placeholder="请输入部门名称"
-                clearable
-                @keydown.enter="currentChange()"
-                @clear="currentChange()"
-              />
+              <ElInput v-model="data.search.name" placeholder="请输入部门名称" clearable @keydown.enter="currentChange()"
+                @clear="currentChange()" />
             </ElFormItem>
             <!-- <el-form-item label="">
               <el-select
@@ -307,9 +296,7 @@ onBeforeUnmount(() => {
               </ElButton>
               <ElButton disabled link @click="toggle">
                 <template #icon>
-                  <SvgIcon
-                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
-                  />
+                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
                 </template>
                 {{ fold ? "展开" : "收起" }}
               </ElButton>
@@ -326,31 +313,15 @@ onBeforeUnmount(() => {
         </FormLeftPanel>
         <FormRightPanel>
           <el-button size="default"> 导出 </el-button>
-          <TabelControl
-            v-model:border="data.border"
-            v-model:tableAutoHeight="data.tableAutoHeight"
-            v-model:checkList="data.checkList"
-            v-model:columns="columns"
-            v-model:line-height="data.lineHeight"
-            v-model:stripe="data.stripe"
-            style="margin-left: 12px"
-            @query-data="currentChange"
-          />
+          <TabelControl v-model:border="data.border" v-model:tableAutoHeight="data.tableAutoHeight"
+            v-model:checkList="data.checkList" v-model:columns="columns" v-model:line-height="data.lineHeight"
+            v-model:stripe="data.stripe" style="margin-left: 12px" @query-data="currentChange" />
         </FormRightPanel>
       </el-row>
-      <ElTable
-        v-model:stripe="data.stripe"
-        v-model:border="data.border"
-        v-loading="data.loading"
-        :size="data.lineHeight"
-        class="my-4"
-        :data="data.dataList"
-        highlight-current-row
-        height="100%"
-        @sort-change="sortChange"
-        @selection-change="data.batch.selectionDataList = $event"
-      >
-      <el-table-column align="center" type="selection" />
+      <ElTable v-model:stripe="data.stripe" v-model:border="data.border" v-loading="data.loading"
+        :size="data.lineHeight" class="my-4" :data="data.dataList" highlight-current-row height="100%"
+        @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
+        <el-table-column align="center" type="selection" />
         <!-- <el-table-column
           align="center"
           show-overflow-tooltip
@@ -358,85 +329,45 @@ onBeforeUnmount(() => {
           label="序号"
           width="80"
         /> -->
-        <ElTableColumn
-        v-if="data.checkList.includes('id')"
-          align="center"
-          show-overflow-tooltip
-          prop="id"
-          label="部门ID"
-        />
-        <ElTableColumn
-        v-if="data.checkList.includes('name')"
-          align="center"
-          show-overflow-tooltip
-          prop="name"
-          label="部门名称"
-        >
+        <ElTableColumn v-if="data.checkList.includes('id')" align="center" show-overflow-tooltip prop="id"
+          label="部门ID" />
+        <ElTableColumn v-if="data.checkList.includes('name')" align="center" show-overflow-tooltip prop="name"
+          label="部门名称">
           <template #default="{ row }">
             {{ row.name }}
           </template>
         </ElTableColumn>
-        <ElTableColumn
-        v-if="data.checkList.includes('director')"
-          align="center"
-          show-overflow-tooltip
-          prop="director"
-          label="部门主管"
-        >
+        <ElTableColumn v-if="data.checkList.includes('director')" align="center" show-overflow-tooltip prop="director"
+          label="部门主管">
           <template #default="{ row }">
             <el-text v-for="item in staffList" :key="item.id">
               <el-text v-if="item.id === row.director">
                 {{ item.name }}
-            </el-text>
+              </el-text>
             </el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn
-        v-if="data.checkList.includes('memberCount')"
-          align="center"
-          show-overflow-tooltip
-          prop="memberCount"
-          label="员工数"
-        >
+        <ElTableColumn v-if="data.checkList.includes('memberCount')" align="center" show-overflow-tooltip
+          prop="memberCount" label="员工数">
           <template #default="{ row }">
             {{ row.memberCount ? row.memberCount : '-' }}
           </template>
         </ElTableColumn>
-        <ElTableColumn
-        v-if="data.checkList.includes('remark')"
-          align="center"
-          show-overflow-tooltip
-          prop="remark"
-          label="备注"
-        >
+        <ElTableColumn v-if="data.checkList.includes('remark')" align="center" show-overflow-tooltip prop="remark"
+          label="备注">
           <template #default="{ row }">
             {{ row.remark }}
           </template>
         </ElTableColumn>
         <ElTableColumn label="操作" width="300" align="center" fixed="right">
           <template #default="scope">
-            <ElButton
-              type="primary"
-              size="small"
-              plain
-              @click="onGroup()"
-            >
+            <ElButton type="primary" size="small" plain @click="onGroup()">
               新增小组
             </ElButton>
-            <ElButton
-              type="primary"
-              size="small"
-              plain
-              @click="onEdit(scope.row)"
-            >
+            <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">
               编辑
             </ElButton>
-            <ElButton
-              type="primary"
-              size="small"
-              plain
-              @click="onDetail(scope.row)"
-            >
+            <ElButton type="primary" size="small" plain @click="onDetail(scope.row)">
               详情
             </ElButton>
           </template>
@@ -445,27 +376,12 @@ onBeforeUnmount(() => {
           <el-empty description="暂无数据" />
         </template>
       </ElTable>
-      <ElPagination
-        :current-page="pagination.page"
-        :total="pagination.total"
-        :page-size="pagination.size"
-        :page-sizes="pagination.sizes"
-        :layout="pagination.layout"
-        :hide-on-single-page="false"
-        class="pagination"
-        background
-        @size-change="sizeChange"
-        @current-change="currentChange"
-      />
+      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+        background @size-change="sizeChange" @current-change="currentChange" />
     </PageMain>
-    <FormMode
-      v-if="data.formMode === 'dialog' || data.formMode === 'drawer'"
-      :id="data.formModeProps.id"
-      v-model="data.formModeProps.visible"
-      :row="data.formModeProps.row"
-      :mode="data.formMode"
-      @success="getDataList"
-    />
+    <FormMode v-if="data.formMode === 'dialog' || data.formMode === 'drawer'" :id="data.formModeProps.id"
+      v-model="data.formModeProps.visible" :row="data.formModeProps.row" :mode="data.formMode" @success="getDataList" />
     <Detail ref="detailRef" />
     <GroupForm ref="groupFormRef" />
   </div>

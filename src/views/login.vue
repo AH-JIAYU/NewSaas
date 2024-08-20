@@ -94,19 +94,44 @@ const loginRules = ref<any>({
   ],
 });
 // 动态表单校验
+// const chengAccount = () => {
+//   // 手机号
+//   if (!loginForm.value.account.includes("@")) {
+//     loginRules.value.account = [
+//       { required: true, trigger: "blur", message: "请输入手机号/邮箱" },
+//       { validator: validatePhone, trigger: "blur" },
+//     ];
+//   } else {
+//     //邮箱
+//     loginRules.value.account = [
+//       { required: true, trigger: "blur", message: "请输入手机号/邮箱" },
+//       { validator: validateEmail, trigger: "blur" },
+//     ];
+//   }
+// };
 const chengAccount = () => {
-  // 手机号
-  if (!loginForm.value.account.includes("@")) {
+  const account = loginForm.value.account;
+
+  if (account.includes("@")) {
+    // 邮箱
     loginRules.value.account = [
-      { required: true, trigger: "blur", message: "请输入手机号/邮箱" },
-      { validator: validatePhone, trigger: "blur" },
-    ];
-  } else {
-    //邮箱
-    loginRules.value.account = [
-      { required: true, trigger: "blur", message: "请输入手机号/邮箱" },
+      { required: true, trigger: "blur", message: "请输入邮箱" },
       { validator: validateEmail, trigger: "blur" },
     ];
+  } else if (/^\d{11}$/.test(account)) {
+    // 假设手机号是10位数字
+    loginRules.value.account = [
+      { required: true, trigger: "blur", message: "请输入手机号" },
+      { validator: validatePhone, trigger: "blur" },
+    ];
+  } else if (account.trim() !== "") {
+    // 用户名
+    loginRules.value.account = [
+      { required: true, trigger: "blur", message: "请输入用户名" },
+    ];
+  } else {
+    // 不触发校验
+    loginRules.value.account = [];
   }
 };
 // 获取验证码

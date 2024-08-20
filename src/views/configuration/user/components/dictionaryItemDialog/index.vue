@@ -249,10 +249,10 @@ const flattenDeep = (arr: any) => {
   );
 };
 onMounted(async () => {
-  positionManageList.value = await usePositionManage.PositionManage;
+  positionManageList.value = await usePositionManage.getPositionManage();
   staffList.value = await tenantStaffStore.getStaff();
   munulevs.value = await roleStore.getRole();
-  departmentList.value = await departmentStore.department;
+  departmentList.value = await departmentStore.getDepartment();
   country.value = await useStoreCountry.getCountry();
   if (props.id !== "" && props.row) {
     formRules.value.password = [];
@@ -414,7 +414,7 @@ onMounted(async () => {
               <el-radio
                 v-for="item in munulevs"
                 :key="item.id"
-                :value="item.id"
+                :value="item.roleName"
                 :label="item.roleName"
               ></el-radio>
             </el-radio-group>

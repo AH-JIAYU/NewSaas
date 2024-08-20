@@ -133,11 +133,17 @@ function onReset() {
 }
 // 每页数量切换
 function sizeChange(size: number) {
-  onSizeChange(size).then(() => fetchData());
+  onSizeChange(size).then(() => {
+    queryForm.limit = size
+    fetchData()
+  });
 }
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
-  onCurrentChange(page).then(() => fetchData());
+  onCurrentChange(page).then(() => {
+    queryForm.page = page
+    fetchData()
+  });
 }
 // 获取数据
 async function fetchData() {

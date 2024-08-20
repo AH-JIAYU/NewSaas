@@ -98,13 +98,8 @@ async function showEdit() {
 onMounted(async () => {
   nextTick(async () => {
     // 用户列表
-    const { data } = await managerApi.list({
-      id: "",
-      userName: "",
-      active: "",
-      departmentId: "",
-    });
-    staffList.value = data.data;
+    const { data } = await managerApi.getTenantStaffList();
+    staffList.value = data;
   });
   departmentList.value = await departmentStore.getDepartment()
   defaultTime.value = new Date();

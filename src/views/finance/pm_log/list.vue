@@ -1,14 +1,24 @@
 <script setup lang="ts">
 import eventBus from "@/utils/eventBus";
-import api from "@/api/modules/financial_log";
+import api from "@/api/modules/financial_pm_log";
 import useSettingsStore from "@/store/modules/settings";
 import plusMinusPayments from "./components/SupplierPlusMinusPayments/index.vue";
 import Detail from "./components/Detail/index.vue";
+import usePositionManageStore from "@/store/modules/position_manage";
+import useGroupManageStore from "@/store/modules/group_manage";
 import { ref } from "vue";
 
 defineOptions({
-  name: "financial_log",
+  name: "financial_pm_log",
 });
+// 职位
+const usePositionManage = usePositionManageStore();
+// 职位数据
+const positionManageList = ref<any>();
+// 小组
+const useGroupManage = useGroupManageStore();
+// 小组数据
+const groupManageList = ref<any>();
 // 时间
 const { format } = useTimeago();
 const router = useRouter();
@@ -24,72 +34,55 @@ const financeLogRef = ref<any>()
 const columns = ref<any>([
   // 表格控件-展示列
   {
-    label: "供应商ID/内部调查站",
-    prop: "typeId",
+    label: "员工ID",
+    prop: "id",
     sortable: true,
     disableCheck: false, // 不可更改
     checked: true, // 默认展示
   },
   {
-    label: "项目ID",
-    prop: "projectId",
+    label: "用户名",
+    prop: "userName",
     sortable: true,
     disableCheck: false, // 不可更改
     checked: true, // 默认展示
   },
   {
-    label: "类型",
-    prop: "type",
+    label: "姓名",
+    prop: "name",
     sortable: true,
     disableCheck: false, // 不可更改
     checked: true, // 默认展示
   },
   {
-    label: "说明",
-    prop: "remark",
+    label: "所属组",
+    prop: "groupId",
     sortable: true,
     disableCheck: false, // 不可更改
     checked: true, // 默认展示
   },
   {
-    label: "变动前",
-    prop: "beforeBalance",
+    label: "职位",
+    prop: "positionId",
     sortable: true,
     disableCheck: false, // 不可更改
     checked: true, // 默认展示
   },
   {
-    label: "加减款",
-    prop: "addAndSubtraction",
+    label: "待审提成",
+    prop: "pendingBalance",
     sortable: true,
     disableCheck: false, // 不可更改
     checked: true, // 默认展示
   },
   {
-    label: "变动后",
-    prop: "afterBalance",
-    sortable: true,
-    disableCheck: false, // 不可更改
-    checked: true, // 默认展示
-  },
-  {
-    label: "时间",
-    prop: "createTime",
+    label: "可用提成",
+    prop: "availableBalance",
     sortable: true,
     disableCheck: false, // 不可更改
     checked: true, // 默认展示
   },
 ]);
-// 加减款
-const payments = [
-  { label: "加款", value: 1 },
-  { label: "减款", value: 2 },
-];
-// 类型
-const paymentsType = [
-  { label: "待审余额", value: 1 },
-  { label: "可用余额", value: 2 },
-];
 const data = ref<any>({
   loading: false,
   activeName: "myFinancial",
@@ -116,22 +109,11 @@ const data = ref<any>({
     page: 1,
     // 每页数量
     limit: 10,
-    // 点击id-操作类型为加减款没有值
-    clientId: null,
-    // 项目id
-    projectId: null,
-    // 部门id
-    departmentId: null,
-    // 	小组id
-    groupId: null,
-    // 用户id
-    userId: null,
-    // 类型 1 部门 2小组 3成员
-    type: null,
-    // 	操作类型 1加款 2减款
-    operationType: null,
-    // 类型 1待审金额 2可用
-    balanceType: null
+    id: null,
+    // 用户名
+    userName: '',
+    // 姓名
+    name: '',
   },
   // 批量操作
   batch: {
@@ -142,7 +124,11 @@ const data = ref<any>({
   dataList: [],
 });
 
-onMounted(() => {
+onMounted(async () => {
+  // 职位
+  positionManageList.value = await usePositionManage?.getPositionManage() || [];
+  // 小组
+  groupManageList.value = await useGroupManage?.getGroupManage() || [];
   getDataList();
   if (data.value.formMode === "router") {
     eventBus.on("get-data-list", () => {
@@ -161,7 +147,7 @@ onBeforeUnmount(() => {
     eventBus.off("get-data-list");
   }
 });
-
+// 获取数据
 function getDataList() {
   data.value.loading = true;
   const params = {
@@ -170,8 +156,7 @@ function getDataList() {
   };
   api.list(params).then((res: any) => {
     data.value.loading = false;
-    data.value.dataList = res.data.itemList;
-    console.log('res',res);
+    data.value.dataList = res.data.data;
     pagination.value.total = +res.data.total;
   });
 }
@@ -190,71 +175,14 @@ function onReset() {
     page: 1,
     // 每页数量
     limit: 10,
-    // 点击id-操作类型为加减款没有值
-    clientId: null,
-    // 项目id
-    projectId: null,
-    // 部门id
-    departmentId: null,
-    // 	小组id
-    groupId: null,
-    // 用户id
-    userId: null,
-    // 类型 1 部门 2小组 3成员
-    type: null,
-    // 	操作类型 1加款 2减款
-    operationType: null,
-    // 类型 1待审金额 2可用
-    balanceType: null
+    id: null,
+    // 用户名
+    userName: '',
+    // 姓名
+    name: '',
   });
   getDataList();
 }
-const statusList = [
-  { label: "加钱成功(待审或者可用)", value: 0 },
-  { label: "过IR", value: 3 },
-  { label: "时间过短", value: 4 },
-  { label: "超时完成", value: 5 },
-  { label: "超量完成", value: 6 },
-  { label: "审核成功", value: 7 },
-  { label: "审核失败", value: 8 },
-  { label: "数据冻结", value: 9 },
-  { label: "时间段过载", value: 10 },
-  { label: "IP不一致", value: 11 },
-  { label: "ID重复参与", value: 12 },
-  { label: "和解", value: 13 },
-];
-const surveyStatus = [
-  { label: "完成", value: 1 },
-  { label: "被甄别", value: 2 },
-  { label: "配额满", value: 3 },
-  { label: "安全终止", value: 4 },
-  { label: "未完成", value: 5 },
-];
-// const parseStatusString = (statusString: any) => {
-//   if (statusString) {
-//     statusString.includes('余额')
-//     return statusString
-//   }
-//   // // 按逗号分隔多组主状态和副状态的组合
-//   const statusPairs = statusString.split(",");
-//   // 初始化结果数组
-//   const results: any = [];
-//   statusPairs.forEach((item: any, index: number) => {
-//     // 下标或null
-//     const ind = item.split(":")[1];
-//     if (ind !== "null") {
-//       const findData: any = statusList.find(
-//         (ite: any) => ite.value === Number(ind)
-//       );
-//       results[index] = findData.label;
-//     } else {
-//       results[index] = "被甄别";
-//     }
-//   });
-
-//   // 返回结果数组
-//   return results;
-// };
 // 每页数量切换
 function sizeChange(size: number) {
   onSizeChange(size).then(() => {
@@ -284,15 +212,15 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
         <template #default="{ fold, toggle }">
           <ElForm :model="data.search" size="default" label-width="100px" inline-message inline class="search-form">
             <ElFormItem>
-              <ElInput v-model="data.search.supplierId" placeholder="员工ID" clearable @keydown.enter="currentChange()"
+              <ElInput v-model="data.search.id" placeholder="员工ID" clearable @keydown.enter="currentChange()"
                 @clear="currentChange()" />
             </ElFormItem>
             <ElFormItem>
-              <ElInput v-model="data.search.projectId" placeholder="用户名" clearable @keydown.enter="currentChange()"
+              <ElInput v-model="data.search.userName" placeholder="用户名" clearable @keydown.enter="currentChange()"
                 @clear="currentChange()" />
             </ElFormItem>
             <ElFormItem>
-              <ElInput v-model="data.search.projectId" placeholder="姓名" clearable @keydown.enter="currentChange()"
+              <ElInput v-model="data.search.name" placeholder="姓名" clearable @keydown.enter="currentChange()"
                 @clear="currentChange()" />
             </ElFormItem>
             <ElFormItem>
@@ -333,69 +261,61 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
         @selection-change="data.batch.selectionDataList = $event">
         <el-table-column align="center" type="selection" />
         <ElTableColumn v-if="data.batch.enable" type="selection" show-overflow-tooltip align="center" fixed />
-        <ElTableColumn v-if="data.checkList.includes('typeId')" show-overflow-tooltip align="center" prop="" width="180"
-          label="员工ID">
+        <ElTableColumn v-if="data.checkList.includes('id')" show-overflow-tooltip align="center" prop="id" label="员工ID">
           <template #default="{ row }">
-            <el-text v-if="row.typeId == 1">内部调查站</el-text>
-            <el-text v-else>{{ row.typeId ? row.typeId : "-" }}</el-text>
+            <el-text>{{ row.id ? row.id : "-" }}</el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('type')" show-overflow-tooltip align="center" prop="" label="用户名">
+        <ElTableColumn v-if="data.checkList.includes('userName')" show-overflow-tooltip align="center" prop="userName"
+          label="用户名">
           <template #default="{ row }">
-            <el-text v-if="row.type == 1">待审金额</el-text>
-            <el-text v-if="row.type == 2">可用金额</el-text>
+            {{ row.userName ? row.userName : '-' }}
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('remark')" show-overflow-tooltip align="center" prop="remark"
+        <ElTableColumn v-if="data.checkList.includes('name')" show-overflow-tooltip align="center" prop="name"
           label="姓名">
           <template #default="{ row }">
-            <!-- <el-text v-if="!row.remark.includes('余额')" class="mx-1">{{
-              `记录变更:${parseStatusString(row.remark)[0]}变更为${
-                parseStatusString(row.remark)[1]
-              }`
-            }}</el-text> -->
-            <el-text class="mx-1">{{ row.remark ? row.remark : "-" }}</el-text>
+            {{ row.name ? row.name : '-' }}
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('beforeBalance')" show-overflow-tooltip align="center"
-          prop="beforeBalance" width="150" label="所属组">
+        <ElTableColumn v-if="data.checkList.includes('groupId')" show-overflow-tooltip align="center" prop="groupId"
+          width="150" label="所属组">
           <template #default="{ row }">
-            <CurrencyType />{{ row.beforeBalance || 0 }}
+            <el-text v-if="row.groupId">
+              <el-text v-for="item in groupManageList">
+                <el-text v-if="row.groupId === item.id">
+                  {{ item.name ? item.name : "-" }}
+                </el-text>
+              </el-text>
+            </el-text>
+            <el-text v-else>-</el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('addAndSubtraction')" show-overflow-tooltip align="center"
-          prop="addAndSubtraction" width="150" label="职位"><template #default="{ row }">
-            <el-text v-if="row.operationType === 2" type="danger" class="mx-1">-
-              <CurrencyType />{{ Math.abs(row.addAndSubtraction) }}
-            </el-text>
-            <el-text v-else type="success" class="mx-1">
-              +
-              <CurrencyType />{{ Math.abs(row.addAndSubtraction) }}
-            </el-text>
-          </template>
-        </ElTableColumn>
-        <!-- <ElTableColumn v-if="data.checkList.includes('afterBalance')" show-overflow-tooltip align="center"
-          prop="afterBalance" width="150" label="总业绩">
+        <ElTableColumn v-if="data.checkList.includes('positionId')" show-overflow-tooltip align="center"
+          prop="positionId" width="150" label="职位">
           <template #default="{ row }">
-            <CurrencyType />{{ row.afterBalance || 0 }}
-          </template>
-        </ElTableColumn> -->
-        <ElTableColumn v-if="data.checkList.includes('createTime')" show-overflow-tooltip align="center"
-          prop="createTime" label="待审提成"><template #default="{ row }">
-            <el-tag effect="plain" type="info">{{
-    format(row.createTime)
-  }}</el-tag>
+            <el-text v-for="item in positionManageList">
+              <el-text v-if="row.positionId === item.id">
+                {{ item.name ? item.name : "-" }}
+              </el-text>
+            </el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('createTime')" show-overflow-tooltip align="center"
-          prop="createTime" label="可用提成"><template #default="{ row }">
-            <el-tag effect="plain" type="info">{{
-    format(row.createTime)
-  }}</el-tag>
+        <ElTableColumn v-if="data.checkList.includes('pendingBalance')" show-overflow-tooltip align="center"
+          prop="pendingBalance" label="待审提成"><template #default="{ row }">
+            {{
+    row.pendingBalance ? row.pendingBalance : '-'
+  }}
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('createTime')" align="center" width="200" label="操作"><template
-            #default="{ row }">
+        <ElTableColumn v-if="data.checkList.includes('availableBalance')" show-overflow-tooltip align="center"
+          prop="availableBalance" label="可用提成"><template #default="{ row }">
+            {{
+    row.availableBalance ? row.availableBalance : '-'
+  }}
+          </template>
+        </ElTableColumn>
+        <ElTableColumn fixed="right" align="center" width="200" label="操作"><template #default="{ row }">
             <ElButton type="primary" size="small" plain @click="financeLog(row)">
               财务日志
             </ElButton>

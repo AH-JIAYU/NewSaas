@@ -168,12 +168,18 @@ function onReset() {
 
 // 每页数量切换
 function sizeChange(size: number) {
-  onSizeChange(size).then(() => getDataList());
+  onSizeChange(size).then(() =>{
+    data.value.search.limit = size;
+    getDataList()
+  });
 }
 
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
-  onCurrentChange(page).then(() => getDataList());
+  onCurrentChange(page).then(() => {
+    data.value.search.page = page;
+    getDataList()
+  });
 }
 
 // 字段排序
