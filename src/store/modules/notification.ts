@@ -25,7 +25,6 @@ const useNotificationStore = defineStore(
     const userStore = useUserStore();
 
     function openSocket(userId: any) {
-      // console.log("调用websocket");
       const socketUrl = "ws://47.96.98.102:9100/websocket/" + userId;
       if (socket.value != null) {
         socket.value.close();
@@ -35,7 +34,6 @@ const useNotificationStore = defineStore(
       //获得消息事件
       socket.value.onmessage = (msg: any) => {
         const type = msg.data; // 1消息 2待办
-        console.log("type", type);
         if (Number(type) === 1) {
           getUnreadMessage();
         } else if (Number(type) === 2) {
@@ -52,7 +50,6 @@ const useNotificationStore = defineStore(
       };
       //发生了错误事件
       socket.value.onerror = () => {
-        // console.log("websocket发生了错误");
         websocketreconnect();
       };
 
@@ -73,7 +70,6 @@ const useNotificationStore = defineStore(
           socket.value = null;
           reconnectAttempts++;
           userStore.userId && openSocket(userStore.userId);
-          // console.log(`第${reconnectAttempts}次重连`);
         }, reconnectInterval);
       } else {
         console.error("重连失败！请稍后重试");

@@ -2,7 +2,7 @@
 import { provide, reactive, ref } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import type { FormInstance, FormRules } from "element-plus";
-import api from "@/api/modules/user_supplier";
+import api from "@/api/modules/financial_pm_log";
 
 const emit = defineEmits(["fetch-data"]);
 const loadingDisible = ref<boolean>(false);
@@ -12,31 +12,29 @@ const loading = ref(false);
 const formRef = ref<FormInstance>();
 const title = ref<string>("");
 const dataList = ref();
+const isId = ref<any>()
 const operationTypeList = [
   { label: "加款", value: 1 },
   { label: "减款", value: 2 },
 ];
 const typeList = [
-  { label: "待审金额", value: 1 },
-  { label: "可用余额", value: 2 },
+  { label: "待审金额", value: 2 },
+  { label: "可用余额", value: 1 },
 ];
 const form = ref<any>({
-  // 供应商id
-  supplierId: null,
-  // 操作类型 1加款 2减款
+  // id
+  id: null,
+  // 修改类型 1加款 2减款
   operationType: null,
-  // 类型 1待审金额 2可用余额
-  type: null,
+  // 修改金额类型 1可用 2待审
+  balanceType: null,
   // 金额
-  difference: null,
-  // 说明
-  remark: "",
+  balance: null,
 });
 
 // 校验
 const formRules = ref<FormRules>({
-  difference: [{ required: true, message: "请输入金额", trigger: "blur" }],
-  remark: [{ required: true, message: "请输入说明", trigger: "blur" }],
+  balance: [{ required: true, message: "请输入金额", trigger: "blur" }],
 });
 
 async function showEdit(row: any) {
@@ -46,24 +44,23 @@ async function showEdit(row: any) {
   } else {
     title.value = "编辑";
     dataList.value = JSON.parse(row);
-    form.value.supplierId = dataList.value.tenantSupplierId;
+    isId.value = dataList.value.id
+    form.value.id = dataList.value.id
   }
 }
 // 关闭弹框
 function close() {
   // 重置数据
   Object.assign(form.value, {
-    // 供应商id
-    supplierId: null,
-    // 操作类型 1加款 2减款
-    operationType: null,
-    // 类型 1待审金额 2可用余额
-    type: null,
-    // 金额
-    difference: null,
-    // 说明
-    remark: "",
-  });
+  // id
+  id: null,
+  // 修改类型 1加款 2减款
+  operationType: null,
+  // 修改金额类型 1可用 2待审
+  balanceType: null,
+  // 金额
+  balance: null,
+});
   loadingDisible.value = false;
 }
 // 提交
@@ -72,7 +69,7 @@ async function onSubmit() {
     formRef.value.validate(async (valid) => {
       if (valid) {
         loading.value = true;
-        const res = await api.getSupplierPlusMinusPaymentsList(form.value);
+        const res = await api.updateDepartment(form.value);
         if (res.status === 1) {
           loading.value = false;
           emit("fetch-data");
@@ -115,7 +112,7 @@ defineExpose({
         label-width="80px"
         :inline="false"
       >
-        <el-form-item label="供应商ID"> {{ form.supplierId }} </el-form-item>
+        <el-form-item label="ID"> {{ isId }} </el-form-item>
         <el-form-item label="加减款">
           <el-select
             v-model="form.operationType"
@@ -135,7 +132,7 @@ defineExpose({
         </el-form-item>
         <el-form-item label="类型">
           <el-select
-            v-model="form.type"
+            v-model="form.balanceType"
             value-key=""
             placeholder="请选择类型"
             clearable
@@ -150,11 +147,8 @@ defineExpose({
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="金额" prop="difference">
-          <el-input v-model="form.difference"></el-input>
-        </el-form-item>
-        <el-form-item label="说明" prop="remark">
-          <el-input v-model="form.remark"></el-input>
+        <el-form-item label="金额" prop="balance">
+          <el-input v-model.number="form.balance"></el-input>
         </el-form-item>
       </el-form>
 

@@ -1,12 +1,28 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
-// import api from "@/api/modules/user_customer";
+import api from "@/api/modules/financial_pm_log";
 // import { obtainLoading } from "@/utils/apiLoading";
 
+// 时间
+const { format } = useTimeago();
 const emit = defineEmits(["fetch-data"]);
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
+const monthList = [
+  { label: '一月份', value: 1 },
+  { label: '二月份', value: 2 },
+  { label: '三月份', value: 3 },
+  { label: '四月份', value: 4 },
+  { label: '五月份', value: 5 },
+  { label: '六月份', value: 6 },
+  { label: '七月份', value: 7 },
+  { label: '八月份', value: 8 },
+  { label: '九月份', value: 9 },
+  { label: '十月份', value: 10 },
+  { label: '十一月份', value: 11 },
+  { label: '十二月份', value: 12 },
+]
 const data = ref<any>({
   loading: false,
   activeName: "myFinancial",
@@ -16,36 +32,73 @@ const data = ref<any>({
   lineHeight: "default", // 表格控件-控制表格大小
   checkList: [],
   search: {
-    title: "",
+    // 分页页码
+    page: 1,
+    // 每页数量
+    limit: 10,
+    // 月份
+    month: null,
+    id: null,
   },
 });
 const drawerisible = ref<boolean>(false);
 const checkRef = ref<any>();
 const detailData = ref<any>(); // 详情数据
 async function showEdit(row: any) {
-  console.log("row", row);
-  const params = {
-    tenantCustomerId: row.tenantCustomerId,
-  };
-  // const { status, data } = await obtainLoading(api.detail(params));
-  // detailData.value = data;
-  // status === 1 &&
-  //   ElMessage.success({
-  //     message: "查询成功",
-  //     center: true,
-  //   });
+  data.value.search.id = row.id
+  getDataList()
   drawerisible.value = true;
 }
+const getDataList = async () => {
+  data.value.loading = true;
+  const params = {
+    ...data.value.search,
+  };
+  const res = await api.getStaffFinancial(params)
+  detailData.value = res.data.itemList;
+  pagination.value.total = +res.data.total;
+  data.value.loading = false;
+  res.status === 1 &&
+    ElMessage.success({
+      message: "查询成功",
+      center: true,
+    });
+}
+// 每页数量切换
+function sizeChange(size: number) {
+  onSizeChange(size).then(() => {
+    data.value.search.limit = size;
+    getDataList();
+  });
+}
 
+// 当前页码切换（翻页）
+function currentChange(page = 1) {
+  onCurrentChange(page).then(() => {
+    data.value.search.page = page;
+    getDataList();
+  });
+}
 function close() {
   emit("fetch-data");
+  Object.assign(data.value.search, {
+    // 分页页码
+    page: 1,
+    // 每页数量
+    limit: 10,
+    // 月份
+    month: null,
+    id: null,
+  })
   drawerisible.value = false;
 }
 
-const operationType = (type: number) => {
-  const typeArray = ["新增", "编辑", "启用", "禁用"];
-  return typeArray[type - 1];
-};
+onMounted(() => {
+  const now = new Date();
+  // getMonth() 返回的月份是0-11，所以需要加1
+  const currentMonth = now.getMonth() + 1;
+  data.value.search.month = currentMonth
+})
 defineExpose({
   showEdit,
 });
@@ -54,6 +107,7 @@ defineExpose({
 <template lang="">
   <el-drawer
     v-model="drawerisible"
+    v-loading="data.loading"
     append-to-body
     :close-on-click-modal="false"
     destroy-on-close
@@ -72,16 +126,13 @@ defineExpose({
       class="search-form"
     >
       <ElFormItem>
-        <ElInput
-          v-model="data.search.title"
-          placeholder="月份"
-          clearable
-          @keydown.enter="currentChange()"
-          @clear="currentChange()"
-        />
-      </ElFormItem>
-      <ElFormItem>
-        <p>业绩:</p>
+        <el-select v-model="data.search.month" placeholder="" clearable filterable @change="currentChange()">
+        <el-option v-for="item in monthList"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value">
+        </el-option>
+        </el-select>
       </ElFormItem>
     </ElForm>
     <ElTable
@@ -90,9 +141,8 @@ defineExpose({
       :size="data.lineHeight"
       :stripe="data.stripe"
       class="my-4"
-      :data="detailData?.getTenantCustomerOperationInfoList"
+      :data="detailData"
       highlight-current-row
-      height="100%"
       @sort-change="sortChange"
       @selection-change="data.batch.selectionDataList = $event"
     >
@@ -112,102 +162,56 @@ defineExpose({
           <el-text v-if="row.typeId == 1">内部调查站</el-text>
           <el-text v-else>{{ row.typeId ? row.typeId : "-" }}</el-text>
         </template>
-      </ElTableColumn>
-      <ElTableColumn
-        show-overflow-tooltip
-        align="center"
-        prop="projectId"
-        label="项目ID"
-      >
-        <template #default="{ row }">
+</ElTableColumn>
+<ElTableColumn show-overflow-tooltip align="center" prop="projectId" label="项目ID">
+  <template #default="{ row }">
           <el-text>{{ row.projectId ? row.projectId : "-" }}</el-text>
         </template>
-      </ElTableColumn>
-      <ElTableColumn show-overflow-tooltip align="center" prop="" label="类型">
-        <template #default="{ row }">
-          <el-text v-if="row.type == 1">待审金额</el-text>
-          <el-text v-if="row.type == 2">可用金额</el-text>
+</ElTableColumn>
+<ElTableColumn show-overflow-tooltip align="center" prop="" label="类型">
+  <template #default="{ row }">
+          <el-text v-if="row.balanceType == 1">待审金额</el-text>
+          <el-text v-if="row.balanceType == 2">可用金额</el-text>
         </template>
-      </ElTableColumn>
-      <ElTableColumn
-        show-overflow-tooltip
-        align="center"
-        prop="remark"
-        label="说明"
-        ><template #default="{ row }">
-          <!-- <el-text v-if="!row.remark.includes('余额')" class="mx-1">{{
-              `记录变更:${parseStatusString(row.remark)[0]}变更为${
-                parseStatusString(row.remark)[1]
-              }`
-            }}</el-text> -->
+</ElTableColumn>
+<ElTableColumn show-overflow-tooltip align="center" prop="remark" label="说明"><template #default="{ row }">
           <el-text class="mx-1">{{ row.remark ? row.remark : "-" }}</el-text>
         </template>
-      </ElTableColumn>
-      <ElTableColumn
-        show-overflow-tooltip
-        align="center"
-        prop="beforeBalance"
-        width="150"
-        label="变动前"
-      >
-        <template #default="{ row }">
+</ElTableColumn>
+<ElTableColumn show-overflow-tooltip align="center" prop="beforeBalance" width="150" label="变动前">
+  <template #default="{ row }">
           <CurrencyType />{{ row.beforeBalance || 0 }}
         </template>
-      </ElTableColumn>
-      <ElTableColumn
-        show-overflow-tooltip
-        align="center"
-        prop="addAndSubtraction"
-        width="150"
-        label="加减款"
-        ><template #default="{ row }">
+</ElTableColumn>
+<ElTableColumn show-overflow-tooltip align="center" prop="addAndSubtraction" width="150" label="加减款"><template
+    #default="{ row }">
           <el-text v-if="row.operationType === 2" type="danger" class="mx-1"
-            >-<CurrencyType />{{ Math.abs(row.addAndSubtraction) }}</el-text
+            >-<CurrencyType />{{ Math.abs(row.difference) }}</el-text
           >
           <el-text v-else type="success" class="mx-1">
-            +<CurrencyType />{{ Math.abs(row.addAndSubtraction) }}</el-text
+            +<CurrencyType />{{ Math.abs(row.difference) }}</el-text
           >
         </template>
-      </ElTableColumn>
-      <ElTableColumn
-        show-overflow-tooltip
-        align="center"
-        prop="afterBalance"
-        width="150"
-        label="变动后"
-      >
-        <template #default="{ row }">
+</ElTableColumn>
+<ElTableColumn show-overflow-tooltip align="center" prop="afterBalance" width="150" label="变动后">
+  <template #default="{ row }">
           <CurrencyType />{{ row.afterBalance || 0 }}
-        </template></ElTableColumn
-      >
-      <ElTableColumn
-        show-overflow-tooltip
-        align="center"
-        prop="createTime"
-        label="时间"
-        ><template #default="{ row }">
+        </template>
+</ElTableColumn>
+<ElTableColumn show-overflow-tooltip align="center" prop="createTime" label="时间"><template #default="{ row }">
           <el-tag effect="plain" type="info">{{
-            format(row.createTime)
+format(row.createTime)
           }}</el-tag>
         </template>
-      </ElTableColumn>
-      <template #empty>
+</ElTableColumn>
+<template #empty>
         <el-empty class="vab-data-empty" description="暂无数据" />
       </template>
-    </ElTable>
-    <ElPagination
-      :current-page="pagination.page"
-      :total="pagination.total"
-      :page-size="pagination.size"
-      :page-sizes="pagination.sizes"
-      :layout="pagination.layout"
-      :hide-on-single-page="false"
-      class="pagination"
-      background
-      @size-change="sizeChange"
-      @current-change="currentChange"
-    />
-  </el-drawer>
+</ElTable>
+<ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+  :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination" background
+  @size-change="sizeChange" @current-change="currentChange" />
+</el-drawer>
 </template>
 
 <style scoped lang="scss">
@@ -220,7 +224,7 @@ defineExpose({
     position: relative;
     width: 128px;
 
-    > div {
+    >div {
       width: 120px;
       height: 2.2rem;
       line-height: 2.2rem;
@@ -232,6 +236,7 @@ defineExpose({
       top: 50%;
       transform: translate(-50%, -50%);
       font-size: 20.8px;
+
       &::before {
         position: absolute;
         left: 50%;
@@ -242,6 +247,7 @@ defineExpose({
         aspect-ratio: 1 / 1;
         content: "";
       }
+
       &::after {
         position: absolute;
         left: 50%;
@@ -253,16 +259,19 @@ defineExpose({
         content: "";
       }
     }
-    > div.isOnlineTrue {
+
+    >div.isOnlineTrue {
       background-color: #70b51a;
+
       &::after,
       &::before {
         border: 1px #70b51a dashed;
       }
     }
 
-    > div.isOnlineFalse {
+    >div.isOnlineFalse {
       background-color: #d8261a;
+
       &::after,
       &::before {
         border: 1px #d8261a dashed;

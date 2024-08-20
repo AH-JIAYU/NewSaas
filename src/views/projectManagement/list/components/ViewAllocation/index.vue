@@ -18,7 +18,6 @@ const data = ref<any>({
 // 显隐
 async function showEdit(params: any) {
   const res = await cooperationApi.getTenantSupplierMemberNameInfo(params);
-  // console.log("res", res.data);
   data.value.list = [res.data];
   data.value.type = params.type;
   dialogTableVisible.value = true;

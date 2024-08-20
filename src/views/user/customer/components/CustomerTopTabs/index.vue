@@ -2,12 +2,17 @@
 import { ElForm } from "element-plus";
 import { defineProps, ref } from "vue";
 import api from "@/api/modules/user_customer";
+import useTenantStaffStore from "@/store/modules/configuration_manager";
 
 // 如果希望默认展示第一个 Tab
 const props = defineProps({
   leftTab: Object,
   tabIndex: Number,
 });
+// 用户
+const tenantStaffStore = useTenantStaffStore();
+// 用户数据
+const staffList = ref<any>([]);
 const validate = inject<any>("validateTopTabs"); //注入Ref
 const rules = reactive<any>({
   customerAccord: [
@@ -17,6 +22,9 @@ const rules = reactive<any>({
   customerShortName: [
     { required: true, message: "请输入客户简称", trigger: "blur" },
     { min: 2, max: 50, message: "内容在2-50个字之间", trigger: "blur" },
+  ],
+  chargeId: [
+    { required: true, message: "请选择负责人", trigger: "change" },
   ],
 });
 
@@ -54,6 +62,8 @@ const changeCustomerConfigInfo = async (val: any, index: number) => {
 };
 
 onBeforeMount(async () => {
+  staffList.value = await tenantStaffStore.getStaff();
+  staffList.value = staffList.value.filter((item:any) => item.distribution === 1)
   isEncryption.value =
     localToptTab.value.tenantCustomerConfigInfoList.length === 2;
   const res = await api.getTenantSecretKeyConfigList();
@@ -120,8 +130,22 @@ nextTick(() => {
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="负责人" prop="chargeName">
-                  <el-input v-model="localToptTab.chargeName" />
+                <el-form-item label="负责人" prop="chargeId">
+                  <!-- <el-input v-model="localToptTab.chargeName" /> -->
+                  <el-select
+          v-model="localToptTab.chargeId"
+          value-key=""
+          placeholder="请选择负责人"
+          clearable
+          filterable
+        >
+        <el-option
+            v-for="item in staffList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          />
+        </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
@@ -129,6 +153,7 @@ nextTick(() => {
                   <el-select v-model="localToptTab.settlementCycle">
                     <el-option label="30天" :value="30"></el-option>
                     <el-option label="60天" :value="60"></el-option>
+                    <el-option label="90天" :value="90"></el-option>
                   </el-select>
                   <!-- <el-input-number
                     v-model="localToptTab.settlementCycle"

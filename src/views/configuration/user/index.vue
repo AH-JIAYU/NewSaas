@@ -102,6 +102,8 @@ const dictionaryItem = ref<any>({
   checkList: [],
   // 搜索
   search: {
+    page:1,
+    limit:10,
     id: "" as Dict["id"],
     userName: "",
     active: null,
@@ -125,7 +127,7 @@ async function getDictionaryList() {
   };
   const res = await api.list(params);
   dictionaryItem.value.dataList = res.data.data;
-  pagination.value.total = res.data.length;
+  pagination.value.total = +res.data.total;
 }
 onMounted(async () => {
   // loading加载开始
@@ -221,11 +223,11 @@ function onChangeStatus(row: any) {
 // 字典项详情
 function dictionaryClick(data: Dict) {
   pagination.value.page = 1;
-  if(data?.children?.length) {
+  if (data?.children?.length) {
     dictionaryItem.value.search.id = ''
     dictionaryItem.value.search.departmentId = data.id
     getDictionaryList()
-  }else {
+  } else {
     dictionaryItem.value.search.id = data.id
     dictionaryItem.value.search.departmentId = ''
     getDictionaryList()
@@ -234,12 +236,18 @@ function dictionaryClick(data: Dict) {
 
 // 每页数量切换
 function sizeChange(size: number) {
-  onSizeChange(size).then(() => getDictionaryList());
+  onSizeChange(size).then(() => {
+    dictionaryItem.value.search.limit = size
+    getDictionaryList()
+  });
 }
 
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
-  onCurrentChange(page).then(() => getDictionaryList());
+  onCurrentChange(page).then(() => {
+    dictionaryItem.value.search.page = page
+    getDictionaryList()
+  });
 }
 
 // 字段排序
@@ -271,7 +279,7 @@ function onResetPassword(row: any) {
         // getDataList();
       });
     })
-    .catch(() => {});
+    .catch(() => { });
 }
 // 修改
 function onEdit(row: any) {
@@ -300,33 +308,9 @@ function onReset() {
     <div class="page-main">
       <LayoutContainer hide-left-side-toggle>
         <template #leftSide>
-          <!-- <ElButtonGroup class="btns">
-            <ElButton type="primary" class="add" @click="dictionaryAdd()">
-              新增字典
-            </ElButton>
-          </ElButtonGroup> -->
-          <!-- <ElInput
-            v-model="dictionary.search.chineseName"
-            placeholder="请输入关键词筛选"
-            clearable
-            class="search"
-            @keydown.enter="getDictionaryList"
-          >
-            <template #append>
-              <ElButton @click="getDictionaryList">
-                <SvgIcon name="i-ep:search" />
-              </ElButton>
-            </template>
-          </ElInput> -->
           <ElScrollbar class="tree">
-            <ElTree
-              ref="dictionaryRef"
-              v-loading="dictionary.loading"
-              :data="dictionary.tree"
-              :filter-node-method="dictionaryFilter as any"
-              default-expand-all
-              @node-click="dictionaryClick"
-            >
+            <ElTree ref="dictionaryRef" v-loading="dictionary.loading" :data="dictionary.tree"
+              :filter-node-method="dictionaryFilter as any" default-expand-all @node-click="dictionaryClick">
               <template #default="{ node, data }">
                 <div class="custom-tree-node">
                   <div class="label" :title="node.label">
@@ -343,34 +327,13 @@ function onReset() {
         <!-- v-show="dictionaryItem.search.catalogueId" -->
         <div v-loading="dictionary.loading" class="dictionary-container">
           <ElSpace>
-            <ElInput
-              v-model="dictionaryItem.search.id"
-              placeholder="员工ID"
-              clearable
-              style="width: 200px"
-              @keydown.enter="getDictionaryList"
-            />
-            <ElInput
-              v-model="dictionaryItem.search.userName"
-              placeholder="用户名"
-              clearable
-              style="width: 200px"
-              @keydown.enter="getDictionaryList"
-            />
-            <el-select
-              v-model="dictionaryItem.search.active"
-              value-key=""
-              placeholder="状态"
-              clearable
-              filterable
-              @change=""
-            >
-              <el-option
-                v-for="item in activeList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              >
+            <ElInput v-model="dictionaryItem.search.id" placeholder="员工ID" clearable style="width: 200px"
+              @keydown.enter="getDictionaryList" />
+            <ElInput v-model="dictionaryItem.search.userName" placeholder="用户名" clearable style="width: 200px"
+              @keydown.enter="getDictionaryList" />
+            <el-select v-model="dictionaryItem.search.active" value-key="" placeholder="状态" clearable filterable
+              @change="">
+              <el-option v-for="item in activeList" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
             <ElButton type="primary" @click="getDictionaryList">
@@ -392,103 +355,51 @@ function onReset() {
             </el-col>
             <el-col style="display: flex; justify-content: flex-end" :span="14">
               <el-button size="default" @click=""> 导出 </el-button>
-              <TabelControl
-                v-model:border="dictionaryItem.border"
-                v-model:tableAutoHeight="dictionaryItem.tableAutoHeight"
-                v-model:checkList="dictionaryItem.checkList"
-                v-model:columns="columns"
-                v-model:line-height="dictionaryItem.lineHeight"
-                v-model:stripe="dictionaryItem.stripe"
-                style="margin-left: 12px"
-                @query-data="currentChange"
-              />
+              <TabelControl v-model:border="dictionaryItem.border"
+                v-model:tableAutoHeight="dictionaryItem.tableAutoHeight" v-model:checkList="dictionaryItem.checkList"
+                v-model:columns="columns" v-model:line-height="dictionaryItem.lineHeight"
+                v-model:stripe="dictionaryItem.stripe" style="margin-left: 12px" @query-data="getDictionaryList" />
             </el-col>
           </el-row>
-          <ElTable
-            ref="dictionaryItemRef"
-            :data="dictionaryItem.dataList"
-            :border="dictionaryItem.border"
-            :size="dictionaryItem.lineHeight"
-            :stripe="dictionaryItem.stripe"
-            highlight-current-row
-            height="100%"
-            @sort-change="sortChange"
-            @selection-change="dictionaryItem.selectionDataList = $event"
-            row-key="id"
-            default-expand-all
-          >
+          <ElTable ref="dictionaryItemRef" :data="dictionaryItem.dataList" :border="dictionaryItem.border"
+            :size="dictionaryItem.lineHeight" :stripe="dictionaryItem.stripe" highlight-current-row height="100%"
+            @sort-change="sortChange" @selection-change="dictionaryItem.selectionDataList = $event" row-key="id"
+            default-expand-all>
             <ElTableColumn type="selection" align="center" fixed />
-            <ElTableColumn
-              v-if="dictionaryItem.checkList.includes('id')"
-              align="center"
-              width="180"
-              prop="id"
-              label="员工ID"
-            />
-            <ElTableColumn
-              v-if="dictionaryItem.checkList.includes('userName')"
-              align="center"
-              width="150"
-              prop="userName"
-              label="用户名"
-              ><template #default="{ row }">
+            <ElTableColumn v-if="dictionaryItem.checkList.includes('id')" align="center" width="180" prop="id"
+              label="员工ID" />
+            <ElTableColumn v-if="dictionaryItem.checkList.includes('userName')" align="center" width="150"
+              prop="userName" label="用户名"><template #default="{ row }">
                 <el-text>
                   {{ row.userName ? row.userName : "-" }}
                 </el-text>
               </template>
             </ElTableColumn>
-            <ElTableColumn
-              v-if="dictionaryItem.checkList.includes('name')"
-              align="center"
-              width="150"
-              prop="name"
-              label="姓名"
-            />
-            <ElTableColumn
-              v-if="dictionaryItem.checkList.includes('country')"
-              prop="country"
-              label="国家"
-              width="150"
-              align="center"
-            >
+            <ElTableColumn v-if="dictionaryItem.checkList.includes('name')" align="center" width="150" prop="name"
+              label="姓名" />
+            <ElTableColumn v-if="dictionaryItem.checkList.includes('country')" prop="country" label="国家" width="150"
+              align="center">
               <template #default="{ row }">
                 <div v-for="item in filterCountry" :key="item.id" class="mx-1">
-                  <el-tag
-                    type="primary"
-                    v-if="item.code === row.country"
-                    class="mx-1"
-                  >
+                  <el-tag type="primary" v-if="item.code === row.country" class="mx-1">
                     {{ item.chineseName }}
                   </el-tag>
                 </div>
               </template>
             </ElTableColumn>
-            <ElTableColumn
-              v-if="dictionaryItem.checkList.includes('phone')"
-              align="center"
-              width="180"
-              prop="phone"
-              label="电话号码"
-              ><template #default="{ row }">
+            <ElTableColumn v-if="dictionaryItem.checkList.includes('phone')" align="center" width="180" prop="phone"
+              label="电话号码"><template #default="{ row }">
                 {{ row.phone ? row.phone : "-" }}
               </template>
             </ElTableColumn>
-            <ElTableColumn
-              v-if="dictionaryItem.checkList.includes('email')"
-              align="center"
-              width="180"
-              prop="email"
-              label="邮箱"
-              ><template #default="{ row }">
+            <ElTableColumn v-if="dictionaryItem.checkList.includes('email')" align="center" width="180" prop="email"
+              label="邮箱">
+              <template #default="{ row }">
                 {{ row.email ? row.email : "-" }}
               </template>
             </ElTableColumn>
-            <ElTableColumn
-              v-if="dictionaryItem.checkList.includes('departmentId')"
-              align="center"
-              prop="departmentId"
-              label="部门"
-              ><template #default="{ row }">
+            <ElTableColumn v-if="dictionaryItem.checkList.includes('departmentId')" align="center" prop="departmentId"
+              label="部门"><template #default="{ row }">
                 <el-text v-for="item in departmentList">
                   <el-text v-if="row.departmentId === item.id">
                     {{ item.name ? item.name : "-" }}
@@ -496,12 +407,9 @@ function onReset() {
                 </el-text>
               </template>
             </ElTableColumn>
-            <ElTableColumn
-              v-if="dictionaryItem.checkList.includes('positionId')"
-              align="center"
-              prop="positionId"
-              label="职位"
-              ><template #default="{ row }">
+            <ElTableColumn v-if="dictionaryItem.checkList.includes('positionId')" align="center" prop="positionId"
+              label="职位">
+              <template #default="{ row }">
                 <el-text v-for="item in positionManageList">
                   <el-text v-if="row.positionId === item.id">
                     {{ item.name ? item.name : "-" }}
@@ -509,12 +417,8 @@ function onReset() {
                 </el-text>
               </template>
             </ElTableColumn>
-            <ElTableColumn
-              v-if="dictionaryItem.checkList.includes('groupId')"
-              align="center"
-              prop="groupId"
-              label="小组"
-              ><template #default="{ row }">
+            <ElTableColumn v-if="dictionaryItem.checkList.includes('groupId')" align="center" prop="groupId" label="小组">
+              <template #default="{ row }">
                 <el-text v-for="item in groupManageList">
                   <el-text v-if="row.groupId === item.id">
                     {{ item.name ? item.name : "-" }}
@@ -522,51 +426,21 @@ function onReset() {
                 </el-text>
               </template>
             </ElTableColumn>
-            <ElTableColumn
-              v-if="dictionaryItem.checkList.includes('active')"
-              align="center"
-              prop="active"
-              label="状态"
-            >
+            <ElTableColumn v-if="dictionaryItem.checkList.includes('active')" align="center" prop="active" label="状态">
               <template #default="scope">
-                <ElSwitch
-                  v-model="scope.row.active"
-                  inline-prompt
-                  active-text="启用"
-                  inactive-text="禁用"
-                  :before-change="() => onChangeStatus(scope.row)"
-                />
+                <ElSwitch v-model="scope.row.active" inline-prompt active-text="启用" inactive-text="禁用"
+                  :before-change="() => onChangeStatus(scope.row)" />
               </template>
             </ElTableColumn>
-            <ElTableColumn
-              label="操作"
-              fixed="right"
-              width="240"
-              align="center"
-            >
+            <ElTableColumn label="操作" fixed="right" width="240" align="center">
               <template #default="scope">
-                <ElButton
-                  type="primary"
-                  size="small"
-                  plain
-                  @click="onEdit(scope.row)"
-                >
+                <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">
                   编辑
                 </ElButton>
-                <ElButton
-                  type="primary"
-                  size="small"
-                  plain
-                  @click="onDetail(scope.row)"
-                >
+                <ElButton type="primary" size="small" plain @click="onDetail(scope.row)">
                   详情
                 </ElButton>
-                <el-button
-                  type="primary"
-                  plain
-                  size="small"
-                  @click="onResetPassword(scope.row)"
-                >
+                <el-button type="primary" plain size="small" @click="onResetPassword(scope.row)">
                   重置密码
                 </el-button>
               </template>
@@ -575,18 +449,9 @@ function onReset() {
               <el-empty description="暂无数据" />
             </template>
           </ElTable>
-          <ElPagination
-            :current-page="pagination.page"
-            :total="pagination.total"
-            :page-size="pagination.size"
-            :page-sizes="pagination.sizes"
-            :layout="pagination.layout"
-            :hide-on-single-page="false"
-            class="pagination"
-            background
-            @size-change="sizeChange"
-            @current-change="currentChange"
-          />
+          <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+            :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+            background @size-change="sizeChange" @current-change="currentChange" />
         </div>
         <!-- <div
           v-show="!dictionaryItem.search.catalogueId"
@@ -595,18 +460,10 @@ function onReset() {
           <div class="empty">请在左侧选择一个部门</div>
         </div> -->
       </LayoutContainer>
-      <DictionaryItemDia
-        v-if="dictionaryItem.dialog.visible"
-        :id="dictionaryItem.dialog.id"
-        v-model="dictionaryItem.dialog.visible"
-        :catalogue-id="dictionaryItem.search.catalogueId"
-        :parent-id="dictionaryItem.dialog.parentId"
-        :level="dictionaryItem.dialog.level"
-        :tree="dictionary.tree"
-        :dataList="dictionaryItem.dataList"
-        :row="dictionaryItem.row"
-        @success="getDictionaryList"
-      />
+      <DictionaryItemDia v-if="dictionaryItem.dialog.visible" :id="dictionaryItem.dialog.id"
+        v-model="dictionaryItem.dialog.visible" :catalogue-id="dictionaryItem.search.catalogueId"
+        :parent-id="dictionaryItem.dialog.parentId" :level="dictionaryItem.dialog.level" :tree="dictionary.tree"
+        :dataList="dictionaryItem.dataList" :row="dictionaryItem.row" @success="getDictionaryList" />
       <Detail ref="detailRef" />
     </div>
   </div>
@@ -663,7 +520,7 @@ function onReset() {
           height: 60px;
         }
 
-        .is-current > .el-tree-node__content {
+        .is-current>.el-tree-node__content {
           background-color: var(--el-color-primary-light-9);
         }
 

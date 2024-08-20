@@ -68,13 +68,8 @@ onMounted( () => {
   formRef.value.resetFields();
   nextTick(async () => {
     // 用户列表
-    const { data } = await managerApi.list({
-      id: "",
-      userName: "",
-      active: "",
-      departmentId: "",
-    });
-    staffList.value = data.data;
+    const { data } = await managerApi.getTenantStaffList();
+    staffList.value = data;
     // 用户列表
     // const res = await managerApi.undistributedDepartment();
     // undistributedDepartmentList.value = res.data;
@@ -120,7 +115,6 @@ defineExpose({
           formRef.value &&
             formRef.value.validate((valid:any) => {
               if (valid) {
-                delete form.value.id;
                 delete form.value.memberCount;
                 if (form.value.commissionStatus !== 1) {
                   formRules.value.commission = [];

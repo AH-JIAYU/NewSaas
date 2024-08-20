@@ -273,11 +273,6 @@ function onSubmit() {
             });
             return
           }
-          console.log('groupLeaderList.value', groupLeaderList.value);
-          console.log('dataList.value', dataList.value);
-          console.log("form.value", form.value);
-          console.log("number", number);
-          // return
           api.edit(form.value).then(() => {
             ElMessage.success({
               message: "操作成功",

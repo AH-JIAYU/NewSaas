@@ -11,7 +11,6 @@ const notificationStore = useNotificationStore();
 const activeName = ref("message");
 // 消息
 const news = (row: any) => {
-  console.log("row", row);
   router.push({
     path: "/personal/notification",
     query: {
@@ -22,7 +21,6 @@ const news = (row: any) => {
 };
 // 待办
 const cooperation = (row: any) => {
-  console.log("row", row);
   router.push({
     path: "/personal/notification",
     query: {

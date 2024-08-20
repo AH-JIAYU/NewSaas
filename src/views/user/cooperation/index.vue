@@ -83,7 +83,7 @@ function termination(row: any) {
     .catch(() => { });
 }
 //价格比例
-function priceRatio(row: any) { 
+function priceRatio(row: any) {
   proportionRef.value.showEdit(row);
 }
 

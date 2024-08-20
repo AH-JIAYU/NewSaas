@@ -116,7 +116,7 @@ defineExpose({ showEdit });
             clearable
           />
         </el-form-item>
-        <el-form-item label="职位日志">
+        <!-- <el-form-item label="职位日志">
           <el-switch
             v-model="form.active"
             inline-prompt
@@ -126,7 +126,7 @@ defineExpose({ showEdit });
             :inactive-value="2"
           >
           </el-switch>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="备注">
           <el-input
             v-model="form.remark"
