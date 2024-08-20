@@ -58,38 +58,37 @@ function handleAdd() {
 
 //终止合作
 function termination(row: any) {
-  console.log("终止合作", row);
-  ElMessageBox.confirm("是否确认进行解约?", "终止合作", {
+  ElMessageBox.prompt("是否确认进行解约?", "终止合作", {
     confirmButtonText: "确认",
     cancelButtonText: "取消",
+    inputPlaceholder: '说明',
+    inputPattern: /^.{0,500}$/,
+    inputErrorMessage: '不能超过500个字符',
     type: "warning",
   })
-    .then(async () => {
+    .then(async (val: any) => {
       const {
         data: { flag },
       } = await api.updateRescindTenant({
         beInvitationTenantId: row.beInvitationTenantId,
+        remark: val.value
       });
-      console.log("flag", flag);
       flag &&
         ElMessage({
           type: "success",
           message: "已终止合作",
         });
+      fetchData();
     })
-    .catch(() => {});
+    .catch(() => { });
 }
 //价格比例
-function priceRatio(row: any) {
-  console.log("价格比例", row);
+function priceRatio(row: any) { 
   proportionRef.value.showEdit(row);
 }
 
 // 查询
 const queryForm = reactive<any>({
-  // customerShortName: "",
-  // customerStatus: null,
-  // antecedentQuestionnaire: null,
 });
 
 // 每页数量切换
@@ -104,9 +103,6 @@ function currentChange(page = 1) {
 // 重置数据
 function onReset() {
   Object.assign(queryForm, {
-    // customerShortName: "",
-    // customerStatus: null,
-    // antecedentQuestionnaire: null,
   });
   queryData();
 }
@@ -185,27 +181,27 @@ onMounted(() => {
                 <template #icon>
                   <SvgIcon name="i-ep:search" />
                 </template>
-                筛选
-              </ElButton>
-              <ElButton @click="onReset">
-                <template #icon>
+筛选
+</ElButton>
+<ElButton @click="onReset">
+  <template #icon>
                   <div class="i-grommet-icons:power-reset h-1em w-1em" />
                 </template>
-                重置
-              </ElButton>
-              <ElButton disabled link @click="toggle">
-                <template #icon>
+  重置
+</ElButton>
+<ElButton disabled link @click="toggle">
+  <template #icon>
                   <SvgIcon
                     :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
                   />
                 </template>
-                {{ fold ? "展开" : "收起" }}
-              </ElButton>
-            </ElFormItem>
-          </ElForm>
-        </template>
-      </SearchBar>
-      <ElDivider border-style="dashed" /> -->
+  {{ fold ? "展开" : "收起" }}
+</ElButton>
+</ElFormItem>
+</ElForm>
+</template>
+</SearchBar>
+<ElDivider border-style="dashed" /> -->
       <el-row>
         <FormLeftPanel>
           <el-button type="primary" size="default" @click="handleAdd">
@@ -214,111 +210,49 @@ onMounted(() => {
         </FormLeftPanel>
         <FormRightPanel>
           <el-button size="default"> 导出 </el-button>
-          <TabelControl
-            v-model:border="border"
-            v-model:tableAutoHeight="tableAutoHeight"
-            v-model:checkList="checkList"
-            v-model:columns="columns"
-            v-model:line-height="lineHeight"
-            v-model:stripe="stripe"
-            style="margin-left: 12px"
-            @query-data="queryData"
-          />
+          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
+            v-model:columns="columns" v-model:line-height="lineHeight" v-model:stripe="stripe" style="margin-left: 12px"
+            @query-data="queryData" />
         </FormRightPanel>
       </el-row>
-      <el-table
-        v-loading="listLoading"
-        :border="border"
-        :data="list"
-        :size="lineHeight"
-        :stripe="stripe"
-        @selection-change="setSelectRows"
-      >
+      <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
+        @selection-change="setSelectRows">
         <el-table-column align="center" type="selection" />
-        <el-table-column
-          v-if="checkList.includes('beInvitationTenantId')"
-          align="center"
-          prop="beInvitationTenantId"
-          width="180"
-          show-overflow-tooltip
-          label="租户id"
-        />
-        <el-table-column
-          v-if="checkList.includes('beInvitationTenantName')"
-          align="center"
-          prop="beInvitationTenantName"
-          show-overflow-tooltip
-          label="租户名称"
-        />
+        <el-table-column v-if="checkList.includes('beInvitationTenantId')" align="center" prop="beInvitationTenantId"
+          width="180" show-overflow-tooltip label="租户id" />
+        <el-table-column v-if="checkList.includes('beInvitationTenantName')" align="center"
+          prop="beInvitationTenantName" show-overflow-tooltip label="租户名称" />
 
-        <el-table-column
-          v-if="checkList.includes('bindStatus')"
-          align="center"
-          prop="bindStatus"
-          show-overflow-tooltip
-          label="状态"
-        >
+        <el-table-column v-if="checkList.includes('bindStatus')" align="center" prop="bindStatus" show-overflow-tooltip
+          label="状态">
           <template #default="{ row }">
             <span v-if="row.bindStatus === 2"> 合作 </span>
             <span v-if="row.bindStatus === 4"> 解约 </span>
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('priceRatio')"
-          align="center"
-          prop="priceRatio"
-          show-overflow-tooltip
-          label="价格比例"
-        >
+        <el-table-column v-if="checkList.includes('priceRatio')" align="center" prop="priceRatio" show-overflow-tooltip
+          label="价格比例">
           <template #default="{ row }"> {{ row.priceRatio }} % </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('pendBalance')"
-          align="center"
-          prop="pendBalance"
-          show-overflow-tooltip
-          label="待审金额"
-        >
+        <el-table-column v-if="checkList.includes('pendBalance')" align="center" prop="pendBalance"
+          show-overflow-tooltip label="待审金额">
           <template #default="{ row }">
             <CurrencyType />{{ row.pendBalance || 0 }}
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('availableBalance')"
-          align="center"
-          prop="availableBalance"
-          show-overflow-tooltip
-          label="可用金额"
-        >
+        <el-table-column v-if="checkList.includes('availableBalance')" align="center" prop="availableBalance"
+          show-overflow-tooltip label="可用金额">
           <template #default="{ row }">
             <CurrencyType />{{ row.availableBalance || 0 }}
           </template>
         </el-table-column>
-        <el-table-column
-          align="center"
-          fixed="right"
-          prop="i"
-          label="操作"
-          show-overflow-tooltip
-          width="350"
-        >
+        <el-table-column align="center" fixed="right" prop="i" label="操作" show-overflow-tooltip width="350">
           <template #default="{ row }">
             <ElSpace>
-              <el-button
-                v-if="row.bindStatus === 2"
-                type="primary"
-                plain
-                size="small"
-                @click="termination(row)"
-              >
+              <el-button v-if="row.bindStatus === 2" type="primary" plain size="small" @click="termination(row)">
                 终止合作
               </el-button>
-              <el-button
-                size="small"
-                plain
-                type="primary"
-                @click="priceRatio(row)"
-              >
+              <el-button size="small" plain type="primary" @click="priceRatio(row)">
                 价格比例
               </el-button>
 
@@ -333,18 +267,9 @@ onMounted(() => {
           <el-empty class="vab-data-empty" description="暂无数据" />
         </template>
       </el-table>
-      <ElPagination
-        :current-page="pagination.page"
-        :total="pagination.total"
-        :page-size="pagination.size"
-        :page-sizes="pagination.sizes"
-        :layout="pagination.layout"
-        :hide-on-single-page="false"
-        class="pagination"
-        background
-        @size-change="sizeChange"
-        @current-change="currentChange"
-      />
+      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+        background @size-change="sizeChange" @current-change="currentChange" />
       <customerEdit ref="editRef" @fetch-data="queryData" />
       <customerProportion ref="proportionRef" @fetch-data="queryData" />
     </PageMain>
@@ -376,6 +301,7 @@ onMounted(() => {
     }
   }
 }
+
 // 筛选
 .page-main {
   .search-form {

@@ -20,6 +20,7 @@ const customerStore = useUserCustomerStore(); // 客户
 const emits = defineEmits(["fetch-data"]);
 const dialogTableVisible = ref<boolean>(false);
 const title = ref<string>("");
+const loading = ref<boolean>(false)
 const validateTopTabs = ref<any>([]); // 校验的promise数组
 const validateAll = ref<any>([]); // 校验结果，用于在leftTabs中的tabs中给予提示
 // 传递给孙组件,用于获取所有孙组件的Ref
@@ -33,6 +34,7 @@ let leftTabsData = reactive<any>([]); // 明确指定类型为 LeftTab[]
 const LeftTabsRef = ref<any>(); // Ref
 // 显隐
 async function showEdit(row: any) {
+  loading.value = true;
   if (!row) {
     title.value = "新增";
     const initialTopTabsData = cloneDeep(
@@ -49,9 +51,11 @@ async function showEdit(row: any) {
   dialogTableVisible.value = true;
   validateAll.value = [];
   validateTopTabs.value = [];
+  loading.value = false;
 }
 // 编辑时 处理数据
 function initializeLeftTabsData(data: any) {
+
   // 编辑的时候回显默认值，不然会报错
   data.data = {
     configurationInformation: {
@@ -111,6 +115,8 @@ function initializeLeftTabsData(data: any) {
       });
     });
   }
+  // 存储编辑前的数据
+  projectManagementListStore.dataBeforeEditing = cloneDeep(leftTabsData)
 }
 // 暂存
 function staging() {
@@ -142,10 +148,11 @@ function hasDuplicateCustomer(projectList: any) {
   return false; // 如果没有重复，则返回false
 }
 // 提交 处理数据
-const processingData = () => {
+const processingData = async () => {
   const newLeftTabsData = cloneDeep(leftTabsData);
+  await projectManagementListStore.compareProjectData(projectManagementListStore.dataBeforeEditing, newLeftTabsData)
   // 将的单选的答案和id从''转换成[]
-  newLeftTabsData.forEach((element: any) => {
+  await newLeftTabsData.forEach((element: any) => {
     element.descriptionUrl = element.descriptionUrl.join(",");
     if (
       !element.data.configurationInformation.ProjectProblemInfoList ||
@@ -175,28 +182,33 @@ const processingData = () => {
 };
 // 提交数据
 async function onSubmit() {
+  loading.value = true;
   await validate();
   // 校验通过
   if (validateAll.value.every((item: any) => item === "fulfilled")) {
     if (!hasDuplicateCustomer(leftTabsData)) {
-      const params = processingData();
-      if (title.value === "新增") {
-        const { status } = await submitLoading(api.create(params));
-        status === 1 &&
-          ElMessage.success({
-            message: "新增成功",
-            center: true,
-          });
-      } else {
-        const { status } = await submitLoading(api.edit(params));
-        status === 1 &&
-          ElMessage.success({
-            message: "编辑成功",
-            center: true,
-          });
-      }
-      emits("fetch-data");
-      closeHandler();
+      const params = await processingData();
+      setTimeout(async () => {
+        if (title.value === "新增") {
+          const { status } = await api.create(params);
+          status === 1 &&
+            ElMessage.success({
+              message: "新增成功",
+              center: true,
+            });
+        } else {
+          const { status } = await api.edit(params);
+          status === 1 &&
+            ElMessage.success({
+              message: "编辑成功",
+              center: true,
+            });
+        }
+        emits("fetch-data");
+        closeHandler();
+        loading.value = false;
+      }, 1000)
+
     } else {
       ElMessage({ message: "项目名称重复", center: true });
     }
@@ -239,34 +251,19 @@ defineExpose({
 
 <template>
   <div>
-    <el-drawer
-      v-model="dialogTableVisible"
-      :class="
-        title === '新增' || leftTabsData.length > 1
-          ? 'hide-drawer-header'
-          : 'edit-drawer'
-      "
-      append-to-body
-      :close-on-click-modal="false"
-      destroy-on-close
-      draggable
-      size="70%"
-    >
-      <LeftTabs
-        v-if="leftTabsData.length"
-        @validate="validate"
-        ref="LeftTabsRef"
-        :left-tabs-data="leftTabsData"
-        :validate-top-tabs="validateTopTabs"
-        :validate-all="validateAll"
-        :title="title"
-      />
+    <el-drawer v-model="dialogTableVisible" :class="title === '新增' || leftTabsData.length > 1
+      ? 'hide-drawer-header'
+      : 'edit-drawer'
+      " append-to-body :close-on-click-modal="false" destroy-on-close draggable size="70%">
+      <LeftTabs v-loading="loading" v-if="leftTabsData.length" @validate="validate" ref="LeftTabsRef"
+        :left-tabs-data="leftTabsData" :validate-top-tabs="validateTopTabs" :validate-all="validateAll"
+        :title="title" />
       <template #footer>
-        <el-button @click="closeHandler"> 取消 </el-button>
-        <el-button type="warning" v-show="title !== '编辑'" @click="staging">
+        <el-button @click="closeHandler" :disabled="loading"> 取消 </el-button>
+        <el-button type="warning" v-show="title !== '编辑'" @click="staging" :disabled="loading">
           暂存
         </el-button>
-        <el-button type="primary" @click="onSubmit"> 确定 </el-button>
+        <el-button type="primary" @click="onSubmit" :disabled="loading"> 确定 </el-button>
       </template>
     </el-drawer>
   </div>
@@ -274,6 +271,7 @@ defineExpose({
 
 <style lang="scss" scoped>
 :deep {
+
   .el-drawer,
   .el-drawer__body,
   .el-tabs.el-tabs--left {

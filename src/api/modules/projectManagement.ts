@@ -5,6 +5,8 @@ export default {
   list: (data: any) => api.post("project/getProjectList", data),
   // 详情
   detail: (data: any) => api.post("project/getProject", data),
+  // 操作日志详情
+  getProjectOperationRecordList: (data: any) => api.post("project/getProjectOperationRecordList", data),
   // 新增
   create: (data: any) => api.post("project/addProject", data),
   // 编辑
@@ -15,7 +17,7 @@ export default {
   allocation: (data: any) => api.post("project/addProjectAllocation", data),
   // 项目分配回显-当项目状态等于已分配调用此接口,如果是未分配不需要调用此接口
   getProjectAllocation: (data: any) => api.post("project/getProjectAllocation", data),
-  
+
   // 项目选中的国家id集合查询国家列表 "countryIdList": []
   getProjectCountryList: (data: any) =>
     api.post("project/getProjectCountryList", data),

@@ -230,6 +230,9 @@ const registerForm = ref<any>({
   legalPersonName: "",
   // 税号
   taxID: "",
+  // 租户邀约
+  isInvitation: 2,
+
 });
 // 自定义校验手机号
 const validatePhoneRegistered = (rule: any, value: any, callback: any) => {
@@ -330,7 +333,6 @@ const countdown = () => {
 };
 // 注册
 const handleRegister = throttle(async () => {
-  console.log("registerForm.value", registerForm.value);
   registerFormRef.value &&
     registerFormRef.value.validate(async (valid: any) => {
       if (valid) {
@@ -422,6 +424,7 @@ watch(
           code: "", // 验证码
           country: "", //国家
           type: "phone", // 注册方式 phone/email
+          isInvitation: 2, // 租户邀约
         };
         break;
       case "reset":
@@ -434,7 +437,6 @@ watch(
 );
 const agreementRef = ref<any>()
 const agreements = (val: any) => {
-  console.log('val', val);
   agreementRef.value.showEdit(val)
 }
 </script>
@@ -603,7 +605,7 @@ const agreements = (val: any) => {
               </template>
             </ElInput>
           </ElFormItem>
-          <ElFormItem prop="isInvitation">
+          <ElFormItem prop="isInvitation"> 
             <el-select v-model="registerForm.isInvitation" tabindex="6" placeholder="是否开启合作邀约" filterable>
               <template #prefix>
                 <SvgIcon name="i-ant-design:container-outlined" />
@@ -615,7 +617,7 @@ const agreements = (val: any) => {
           </ElFormItem>
           <ElFormItem prop="agreeToTheAgreement">
             <div class="flex-bar" style="margin: 0">
-              <ElCheckbox v-model="loginForm.agreeToTheAgreement" tabindex="3">
+              <ElCheckbox v-model="registerForm.agreeToTheAgreement" tabindex="3">
                 我已阅读并同意
                 <el-button type="primary" size="default" link @click="agreements(1)">《会员协议》</el-button>和<el-button
                   type="primary" size="default" link @click="agreements(2)">《隐私协议》</el-button>

@@ -57,11 +57,22 @@ async function showEdit(row: any) {
 // 动画显示之前先将其他显示的关闭
 const getClickListBefore = (index: any) => {
   data.value.clickIdList = []
-  popoverRef.value.forEach((item: any, ind: any) => {
+    // 分配项目 popoverRef和显示的链路list的length一直
+  if(data.value.tenantMeasurementInfoList.length===popoverRef.value.length){
+    popoverRef.value.forEach((item: any, ind: any) => {
+    if (ind !== index) {
+      item.hide()
+    }
+  })
+  }else{
+      // 接受项目 popoverRef会比显示的链路list少一个，因为当前租户没有popoverRef
+    popoverRef.value.forEach((item: any, ind: any) => {
     if (ind !== index - 1) {
       item.hide()
     }
   })
+  }
+
 }
 // 获取点击id
 const getClickList = async (row: any) => {

@@ -1,7 +1,15 @@
+import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
+import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
+
+
 const useProjectManagementListStore = defineStore(
   // 唯一ID
   "projectManagementList",
   () => {
+    const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
+    const customerStore = useUserCustomerStore(); // 客户
+    // 回显时存储编辑前的数据，用于做数据对比，显示操作日志
+    const dataBeforeEditing = ref<any>([])
     // 初始数据
     const initialTopTabsData: any = {
       name: "", //项目名称
@@ -55,6 +63,95 @@ const useProjectManagementListStore = defineStore(
         },
       },
     };
+    const enumeration: any = {
+      name: {
+        val: "项目名称"
+      },
+      projectIdentification: {
+        val: "项目标识"
+      },
+      clientId: {
+        val: '所属客户'
+      },
+      countryIdList: {
+        val: '所属国家'
+      },
+      doMoneyPrice: {
+        val: '原价'
+      },
+      num: {
+        val: '配额'
+      },
+      minimumDuration: {
+        val: '最小时长'
+      },
+      ir: {
+        val: 'ir'
+      },
+      uidUrl: {
+        val: "url"
+      },
+      mutualExclusion: {
+        val: '填写互斥ID',
+        type: 'switch',
+        1: '开启',
+        2: '关闭'
+      },
+      mutualExclusionId: {
+        val: "互斥id"
+      },
+      remark: {
+        val: "备注"
+      },
+      isPinned: {
+        val: '置顶',
+        type: 'switch',
+        1: '开启',
+        2: '关闭',
+      },
+      isOnline: {
+        type: 'switch',
+        val: '在线',
+        1: '开启',
+        2: '关闭',
+      },
+      isProfile: {
+        val: '前置问卷',
+        type: 'switch',
+        1: '开启',
+        2: '关闭',
+      },
+      isB2b: {
+        val: 'b2b',
+        type: 'switch',
+        2: '开启',
+        1: '关闭',
+      },
+      projectType: {
+        val: '项目类型'
+      },
+      isTimeReleases: {
+        val: '定时发布',
+        type: 'switch',
+        2: '开启',
+        1: '关闭',
+      },
+      releaseTime: {
+        val: "发布时间"
+      },
+      limitedQuantity: {
+        val: '小时完成量'
+      },
+      preNum: {
+        val: '小时准入量'
+      },
+      ipDifferenceDetection: {
+        val: '允许重复参与',
+        type: 'switch',
+        1: '开启',
+        2: '关闭',
+      },
+    };
     // 问题 答案 初始数据
     const initialProblem = {
       countryId: null, //问卷对应国家id
@@ -72,10 +169,80 @@ const useProjectManagementListStore = defineStore(
       2: "供应商",
       3: "会员组",
     };
+
+    // 用于对比编辑前后不同的值
+    const compareProjectData = async (oldData: any, newData: any) => {
+      // 创建一个映射表，用于存储 projectId 对应的对象
+      const oldDataMap = oldData.reduce((map: any, item: any) => {
+        map[item.projectId] = item;
+        return map;
+      }, {});
+      // 遍历 newData 并添加差异信息到每个 newItem
+      await newData.forEach(async (newItem: any) => {
+        const oldItem = oldDataMap[newItem.projectId];
+        if (oldItem) {
+          // 创建一个差异记录数组
+          const differences = [];
+          // 遍历 newItem 的每个字段
+          for (const key in newItem) {
+            if (enumeration.hasOwnProperty(key)) {
+              let newValue = newItem[key];
+              let oldValue = oldItem[key];
+              if (JSON.stringify(newValue) !== JSON.stringify(oldValue)) {
+                // 转换空数组为字符串
+                Array.isArray(newValue) && !newValue.length && (newValue = newValue.toString())
+                Array.isArray(oldValue) && !oldValue.length && (oldValue = oldValue.toString())
+                if (key === 'clientId' || key === 'countryIdList') {
+                  oldValue = await getValue(key, oldValue)
+                  newValue = await getValue(key, newValue)
+                }
+                const fieldLabel = enumeration[key].val || key;
+                if (enumeration[key].type === 'switch') {
+                  differences.push(`${fieldLabel}「${enumeration[key][oldValue]}」更改为「${enumeration[key][newValue]}」`);
+                } else {
+                  differences.push(`${fieldLabel}「${oldValue || 'null'}」更改为「${newValue || 'null'}」`);
+                }
+
+
+              }
+            }
+          }
+          // 将差异信息添加到 newItem 对象中
+          if (differences.length > 0) {
+            newItem.projectLogList = differences;
+          }
+        }
+      });
+
+      return newData;
+    }
+    const getValue = async (key: any, val: any) => {
+      let value: any
+      if (key === 'clientId') {
+        const data: any = await customerStore.getCustomerList();
+        const findData = data.find((item: any) => item.tenantCustomerId === val)
+        value = findData.customerAccord
+      } else if (key === 'countryIdList') {
+        const data = await basicDictionaryStore.getCountry();
+        const idToChineseName = data.reduce((acc: any, item: any) => {
+          acc[item.id] = item.chineseName;
+          return acc;
+        }, {});
+
+        // 获取存在于 idArray 中的 chineseName
+        value = val
+          .map((id: any) => idToChineseName[id])
+          .filter((name: any) => name !== undefined);
+      }
+      return value;
+    }
+
     return {
       initialTopTabsData,
       initialProblem,
       allocationTypeList,
+      dataBeforeEditing,
+      compareProjectData,
     };
   }
 );

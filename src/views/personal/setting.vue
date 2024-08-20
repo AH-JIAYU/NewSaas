@@ -156,8 +156,6 @@ function userSubmit() {
       if (valid) {
         loading.value = true;
         // 类型是个人/公司
-        console.log('userForm.value.type', userForm.value.type);
-
         if (userForm.value.type === "personal") {
           delete userForm.value.companyName;
           delete userForm.value.legalPersonName;
