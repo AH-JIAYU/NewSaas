@@ -58,7 +58,6 @@ function handleAdd() {
 
 //终止合作
 function termination(row: any) {
-  console.log("终止合作", row);
   ElMessageBox.confirm("是否确认进行解约?", "终止合作", {
     confirmButtonText: "确认",
     cancelButtonText: "取消",
@@ -70,7 +69,6 @@ function termination(row: any) {
       } = await api.updateRescindTenant({
         beInvitationTenantId: row.beInvitationTenantId,
       });
-      console.log("flag", flag);
       flag &&
         ElMessage({
           type: "success",
@@ -81,7 +79,6 @@ function termination(row: any) {
 }
 //价格比例
 function priceRatio(row: any) {
-  console.log("价格比例", row);
   proportionRef.value.showEdit(row);
 }
 

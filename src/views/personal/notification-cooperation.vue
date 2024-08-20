@@ -11,7 +11,6 @@ const centerDialogVisible = ref(false);
 const data = ref<any>({});
 
 const showEdit = (row: any) => {
-  console.log("row", row);
   data.value = row;
   centerDialogVisible.value = true;
 };

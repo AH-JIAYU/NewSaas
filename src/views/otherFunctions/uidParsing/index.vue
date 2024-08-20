@@ -24,7 +24,6 @@ async function ParsingEncryption() {
     const arr = formIp.value.split("\n");
     const res = await api.list({ uidList: arr });
     const bbb: any = [];
-    console.log('res',res);
     res.data.analyzeUidInfoList.forEach((item: any) => {
       bbb.push(
         `${'UID:' + item.uid}-${item.peopleType === 1 ? '会员名称:' + item.name : '子会员名称:' + item.name}-${item.peopleType === 1 ? '会员ID:' +item.memberChildId : '子会员ID:' +item.memberChildId}-${item.peopleType === 1 ? '会员' : '子会员'}`

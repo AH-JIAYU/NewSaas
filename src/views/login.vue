@@ -355,7 +355,6 @@ const countdown = () => {
 };
 // 注册
 const handleRegister = throttle(async () => {
-  console.log("registerForm.value", registerForm.value);
   registerFormRef.value &&
     registerFormRef.value.validate(async (valid: any) => {
       if (valid) {
@@ -459,7 +458,6 @@ watch(
 );
 const agreementRef = ref<any>()
 const agreements = (val: any) => {
-  console.log('val', val);
   agreementRef.value.showEdit(val)
 }
 </script>
