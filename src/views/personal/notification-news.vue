@@ -44,22 +44,14 @@ defineExpose({
         </p>
       </div>
       <div class="news-content bg">
-        {{ data.messageContent }}
+        {{ data.messageContent }} <br>
+        说明：{{ data.remark }}
       </div>
     </div>
 
     <div class="footer">
-      <el-button plain type="primary" size="default" @click="close"
-        >关闭</el-button
-      >
-      <el-button
-        v-if="data.isReadAlready === 1"
-        plain
-        type="primary"
-        size="default"
-        @click="read"
-        >已读</el-button
-      >
+      <el-button plain type="primary" size="default" @click="close">关闭</el-button>
+      <el-button v-if="data.isReadAlready === 1" plain type="primary" size="default" @click="read">已读</el-button>
       <!-- <el-button plain type="danger" @click="">删除</el-button> -->
     </div>
   </div>
@@ -74,6 +66,7 @@ defineExpose({
   justify-content: start;
   align-items: start;
   flex-direction: column;
+
   .content {
     width: 100%;
     height: calc(100% - 2.5rem);
@@ -81,31 +74,38 @@ defineExpose({
     flex-direction: column;
     justify-content: start;
     align-items: start;
+
     .news-content {
       overflow-y: auto;
       flex: 1;
     }
-    > div {
+
+    >div {
       width: 100%;
       margin: 0.3125rem 0;
     }
+
     .flex-s {
       display: flex;
       justify-content: start;
       align-items: center;
+
       .title {
         width: 4rem;
       }
+
       .bg {
         flex: 1;
         padding: 0.25rem;
       }
     }
+
     .bg {
       // background-color: var(--g-bg);
       background-color: #f5f6f7;
     }
   }
+
   .footer {
     width: 100%;
     height: 2.5rem;

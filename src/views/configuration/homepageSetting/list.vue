@@ -103,6 +103,11 @@ function onEdit(row: any) {
 function homePage(row: any, title: any = "编辑") {
   homePageRef.value.showEdit(row, title);
 }
+// 设计主页
+function setHomePage(row: any) {
+  console.log('row', row)
+  // homePageRef.value.showEdit(row, title);
+}
 
 function onDel(row: any) {
   ElMessageBox.confirm(`确认删除「${row.title}」吗？`, "确认信息")
@@ -116,7 +121,7 @@ function onDel(row: any) {
         getDataList();
       });
     })
-    .catch(() => {});
+    .catch(() => { });
 }
 </script>
 
@@ -124,32 +129,16 @@ function onDel(row: any) {
   <div :class="{ 'absolute-container': data.tableAutoHeight }">
     <PageMain>
       <PageHeader title="通用模板" />
-      <ElTable
-        v-loading="data.loading"
-        class="my-4"
-        :data="data.controlDataList"
-        stripe
-        highlight-current-row
-        border
-        height="100%"
-        @sort-change="sortChange"
-        @selection-change="data.batch.selectionDataList = $event"
-      >
-        <ElTableColumn
-          v-if="data.batch.enable"
-          type="selection"
-          align="center"
-          fixed
-        />
+      <ElTable v-loading="data.loading" class="my-4" :data="data.controlDataList" stripe highlight-current-row border
+        height="100%" @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
+        <ElTableColumn v-if="data.batch.enable" type="selection" align="center" fixed />
         <ElTableColumn prop="title" label="标题" />
         <ElTableColumn label="操作" width="250" align="center" fixed="right">
           <template #default="scope">
-            <ElButton
-              type="primary"
-              size="small"
-              plain
-              @click="homePage(scope.row, '查看')"
-            >
+            <ElButton type="primary" size="small" plain @click="setHomePage(scope.row)">
+              设置为主页
+            </ElButton>
+            <ElButton type="primary" size="small" plain @click="homePage(scope.row, '查看')">
               查看
             </ElButton>
           </template>
@@ -160,22 +149,10 @@ function onDel(row: any) {
       <PageHeader title="自定义模板" />
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
-          <ElForm
-            :model="data.search"
-            size="default"
-            label-width="100px"
-            inline-message
-            inline
-            class="search-form"
-          >
+          <ElForm :model="data.search" size="default" label-width="100px" inline-message inline class="search-form">
             <ElFormItem label="标题">
-              <ElInput
-                v-model="data.search.title"
-                placeholder="请输入标题，支持模糊查询"
-                clearable
-                @keydown.enter="currentChange()"
-                @clear="currentChange()"
-              />
+              <ElInput v-model="data.search.title" placeholder="请输入标题，支持模糊查询" clearable @keydown.enter="currentChange()"
+                @clear="currentChange()" />
             </ElFormItem>
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">
@@ -186,9 +163,7 @@ function onDel(row: any) {
               </ElButton>
               <ElButton link disabled @click="toggle">
                 <template #icon>
-                  <SvgIcon
-                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
-                  />
+                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
                 </template>
                 {{ fold ? "展开" : "收起" }}
               </ElButton>
@@ -205,97 +180,43 @@ function onDel(row: any) {
           </template>
           新增首页设置
         </ElButton>
-        <ElButton
-          v-if="data.batch.enable"
-          size="default"
-          :disabled="!data.batch.selectionDataList.length"
-        >
+        <ElButton v-if="data.batch.enable" size="default" :disabled="!data.batch.selectionDataList.length">
           单个批量操作按钮
         </ElButton>
         <ElButtonGroup v-if="data.batch.enable">
-          <ElButton
-            size="default"
-            :disabled="!data.batch.selectionDataList.length"
-          >
+          <ElButton size="default" :disabled="!data.batch.selectionDataList.length">
             批量操作按钮组1
           </ElButton>
-          <ElButton
-            size="default"
-            :disabled="!data.batch.selectionDataList.length"
-          >
+          <ElButton size="default" :disabled="!data.batch.selectionDataList.length">
             批量操作按钮组2
           </ElButton>
         </ElButtonGroup>
       </ElSpace>
-      <ElTable
-        v-loading="data.loading"
-        class="my-4"
-        :data="data.dataList"
-        stripe
-        highlight-current-row
-        border
-        height="100%"
-        @sort-change="sortChange"
-        @selection-change="data.batch.selectionDataList = $event"
-      >
-        <ElTableColumn
-          v-if="data.batch.enable"
-          type="selection"
-          align="center"
-          fixed
-        />
+      <ElTable v-loading="data.loading" class="my-4" :data="data.dataList" stripe highlight-current-row border
+        height="100%" @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
+        <ElTableColumn v-if="data.batch.enable" type="selection" align="center" fixed />
         <ElTableColumn prop="title" label="标题" />
         <ElTableColumn label="操作" width="250" align="center" fixed="right">
           <template #default="scope">
-            <ElButton
-              type="primary"
-              size="small"
-              plain
-              @click="onEdit(scope.row)"
-            >
+            <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">
               编辑
             </ElButton>
-            <ElButton
-              type="primary"
-              size="small"
-              plain
-              @click="homePage(scope.row)"
-            >
+            <ElButton type="primary" size="small" plain @click="homePage(scope.row)">
               设计主页
             </ElButton>
-            <ElButton
-              type="danger"
-              size="small"
-              plain
-              @click="onDel(scope.row)"
-            >
+            <ElButton type="danger" size="small" plain @click="onDel(scope.row)">
               删除
             </ElButton>
           </template>
         </ElTableColumn>
       </ElTable>
-      <ElPagination
-        :current-page="pagination.page"
-        :total="pagination.total"
-        :page-size="pagination.size"
-        :page-sizes="pagination.sizes"
-        :layout="pagination.layout"
-        :hide-on-single-page="false"
-        class="pagination"
-        background
-        @size-change="sizeChange"
-        @current-change="currentChange"
-      />
+      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+        background @size-change="sizeChange" @current-change="currentChange" />
     </PageMain>
 
-    <FormMode
-      v-if="data.formMode === 'dialog' || data.formMode === 'drawer'"
-      :id="data.formModeProps.id"
-      :row="data.formModeProps.row"
-      v-model="data.formModeProps.visible"
-      :mode="data.formMode"
-      @success="getDataList"
-    />
+    <FormMode v-if="data.formMode === 'dialog' || data.formMode === 'drawer'" :id="data.formModeProps.id"
+      :row="data.formModeProps.row" v-model="data.formModeProps.visible" :mode="data.formMode" @success="getDataList" />
     <homePageEdit ref="homePageRef" @fetch-data="getDataList"></homePageEdit>
   </div>
 </template>

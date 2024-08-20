@@ -22,11 +22,12 @@ const projectManagementListStore = useProjectManagementListStore(); //项目
 defineOptions({
   name: "SurveyTopTabs",
 });
-const validate = inject<any>("validateTopTabs"); //注入Ref
 const props: any = defineProps({
   leftTab: Object,
   tabIndex: Number,
 });
+const localToptTab = ref<any>(props.leftTab)
+  const validate = inject<any>("validateTopTabs"); //注入Ref
 const url: string = "例：https://www.xxxx.com/8994343?uid={{$uid}}";
 const activeName = ref("basicSettings"); // tabs
 const formRef = ref<any>(); // Ref 在edit中进行校验
@@ -61,17 +62,17 @@ const validateUrlRegistered = (rule: any, value: any, callback: any) => {
   // 网址格式
   const regExpUrl: any =
     /^(((ht|f)tps?):\/\/)?([^!@#$%^&*?.\s-]([^!@#$%^&*?.\s]{0,63}[^!@#$%^&*?.\s])?\.)+[a-z]{2,6}\/?/;
-  if (!regExpUrl.test(props.leftTab.uidUrl)) {
+  if (!regExpUrl.test(localToptTab.value.uidUrl)) {
     callback(new Error("请输入合法网址"));
   }
-  if (!props.leftTab.uidUrl.includes("{{$uid}}")) {
+  if (!localToptTab.value.uidUrl.includes("{{$uid}}")) {
     callback(new Error("格式不正确,请查看例子"));
   }
   callback();
 };
 // 自定义校验发布时间
 const validateReleaseTime = (rule: any, value: any, callback: any) => {
-  if (new Date(props.leftTab.releaseTime).getTime() < Date.now()) {
+  if (new Date(localToptTab.value.releaseTime).getTime() < Date.now()) {
     callback(new Error("发布时间早于当前时间"));
   }
   callback();
@@ -124,7 +125,7 @@ const disabledDateFn = (time: any) => {
 // 定时发布时间切换,时间- 最早为当前时间
 function handleChangeTime() {
   // @ts-ignore
-  const startAt: any = (new Date(props.leftTab.releaseTime) * 1000) / 1000;
+  const startAt: any = (new Date(localToptTab.value.releaseTime) * 1000) / 1000;
   if (startAt < Date.now()) {
     const date = new Date();
     const year = date.getFullYear();
@@ -133,7 +134,7 @@ function handleChangeTime() {
     const hours = padZero(date.getHours());
     const minutes = padZero(date.getMinutes());
     const seconds = padZero(date.getSeconds());
-    props.leftTab.releaseTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    localToptTab.value.releaseTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
   }
   function padZero(num: any) {
     return (num < 10 ? "0" : "") + num;
@@ -144,15 +145,15 @@ const changeClient = (val: any) => {
   const findData = data.value.basicSettings.customerList.find(
     (item: any) => item.tenantCustomerId === val
   );
-  props.leftTab.isProfile = findData.antecedentQuestionnaire === 2 ? 1 : 2;
+  localToptTab.value.isProfile = findData.antecedentQuestionnaire === 2 ? 1 : 2;
 };
 
 // 所属国家全选
 const selectAll = () => {
-  props.leftTab.countryIdList = [];
+  localToptTab.value.countryIdList = [];
   if (data.value.checked) {
     data.value.basicSettings.countryList.map((item: any) => {
-      props.leftTab.countryIdList.push(item.id);
+      localToptTab.value.countryIdList.push(item.id);
     });
   }
 };
@@ -164,7 +165,7 @@ const plugins = [
 ];
 // 富文本设置值
 function handleChange(v: string) {
-  props.leftTab.richText = v;
+  localToptTab.value.richText = v;
 }
 // 折叠 描述配额
 function isHieght() {
@@ -177,9 +178,10 @@ const dialogVisible = ref(false);
 const fileList = ref<any>([]); // 上传
 
 // 删除
-const handleRemove: any = async (uploadFile: any, uploadFiles: any) => {
+const handleRemove: any = async (uploadFile: any, uploadFiles: any) => { 
+  localToptTab.value.descriptionUrl=uploadFiles.map((item:any) => item.name)
   const { status } = await fileApi.delete({
-    fileName: props.leftTab.descriptionUrl,
+    fileName: uploadFile.name,
   });
   status === 1 &&
     ElMessage.success({
@@ -189,11 +191,11 @@ const handleRemove: any = async (uploadFile: any, uploadFiles: any) => {
 };
 // 上传图片成功
 const handleSuccess: any = (uploadFile: any, uploadFiles: any) => {
-  props.leftTab.descriptionUrl.push(uploadFile.data.qiNiuUrl);
-  // if (props.leftTab.descriptionUrl) {
-  //   props.leftTab.descriptionUrl += "," + uploadFile.data.qiNiuUrl;
+  localToptTab.value.descriptionUrl.push(uploadFile.data.qiNiuUrl);
+  // if (localToptTab.value.descriptionUrl) {
+  //   localToptTab.value.descriptionUrl += "," + uploadFile.data.qiNiuUrl;
   // } else {
-  //   props.leftTab.descriptionUrl = uploadFile.data.qiNiuUrl;
+  //   localToptTab.value.descriptionUrl = uploadFile.data.qiNiuUrl;
   // }
 };
 // 超出限制
@@ -212,7 +214,8 @@ const handlePictureCardPreview: UploadProps["onPreview"] = (uploadFile) => {
 const getUpLoad = async (file: any) => {
   if (file.length) {
     file.forEach(async (item: any) => {
-      const res: any = await obtainLoading(
+      if(item){
+        const res: any = await obtainLoading(
         fileApi.detail({
           fileName: item,
         })
@@ -221,39 +224,41 @@ const getUpLoad = async (file: any) => {
         name: item,
         url: res.data.fileUrl,
       });
+      }
+
     });
   }
 };
 // #endregion
 // 定时发布
 const changeTimeReleases = (val: any) => {
-  props.leftTab.isOnline = val === 2 ? 2 : 1;
+  localToptTab.value.isOnline = val === 2 ? 2 : 1;
 };
 
 // 切换问卷如果关 清空问卷list
 const changeProfile = (val: any) => {
-  if (val === 2) props.leftTab.projectQuotaInfoList = [];
+  if (val === 2) localToptTab.value.projectQuotaInfoList = [];
 };
 
 // 所属国家改变重新获取 配置信息中的国家
 const changeCountryId = () => {
-  props.leftTab.data.configurationInformation.configurationCountryList = null;
+  localToptTab.value.data.configurationInformation.configurationCountryList = null;
   // 反选
-  data.value.checked = Boolean(props.leftTab.countryIdList.length === 185);
+  data.value.checked = Boolean(localToptTab.value.countryIdList.length === 185);
 };
 // 配置国家改变 重新获取题库目录
 const changeConfigurationCountryId = () => {
-  props.leftTab.data.configurationInformation.projectCategoryList = null; // 题库目录
+  localToptTab.value.data.configurationInformation.projectCategoryList = null; // 题库目录
   clearData();
 };
 // 清除数据
 const clearData = (judge?: boolean) => {
-  props.leftTab.data.configurationInformation.initialProblem.projectProblemId =
+  localToptTab.value.data.configurationInformation.initialProblem.projectProblemId =
     null; // 题库绑定值
-  props.leftTab.data.configurationInformation.ProjectProblemInfoList = null; // 题库下对应的答案
+  localToptTab.value.data.configurationInformation.ProjectProblemInfoList = null; // 题库下对应的答案
   // 编辑回显时 不清除
   if (!judge) {
-    props.leftTab.projectQuotaInfoList = []; // 提交的答案集合
+    localToptTab.value.projectQuotaInfoList = []; // 提交的答案集合
   }
 };
 
@@ -261,33 +266,33 @@ const clearData = (judge?: boolean) => {
 const changeTab = async (val: any, judge?: boolean) => {
   if (
     val === "configurationInformation" &&
-    !props.leftTab.data.configurationInformation.configurationCountryList
+    !localToptTab.value.data.configurationInformation.configurationCountryList
   ) {
     formRef.value.validateField(["countryIdList"], async (valid: any) => {
       if (valid) {
         clearData(judge || false);
         const res = await obtainLoading(
           api.getProjectCountryList({
-            countryIdList: props.leftTab.countryIdList,
+            countryIdList: localToptTab.value.countryIdList,
           })
         );
         // 配置-国家
-        props.leftTab.data.configurationInformation.configurationCountryList =
+        localToptTab.value.data.configurationInformation.configurationCountryList =
           res.data.getProjectCountryListInfoList;
         // 开启默认国际后，只会有一个国家，直接回显
         if (res.data.getProjectCountryListInfoList.length === 1) {
-          props.leftTab.data.configurationInformation.initialProblem.countryId =
+          localToptTab.value.data.configurationInformation.initialProblem.countryId =
             res.data.getProjectCountryListInfoList[0].countryId;
         }
         // 编辑时 已经有初始数据
-        if (!props.leftTab.data.configurationInformation.initialProblem) {
+        if (!localToptTab.value.data.configurationInformation.initialProblem) {
           // 初始化 数据 问题
-          props.leftTab.data.configurationInformation.initialProblem =
+          localToptTab.value.data.configurationInformation.initialProblem =
             cloneDeep(projectManagementListStore.initialProblem);
         }
 
         // 问题类型:1:总控问题 2:租户自己问题
-        props.leftTab.data.configurationInformation.initialProblem.projectQuotaQuestionType =
+        localToptTab.value.data.configurationInformation.initialProblem.projectQuotaQuestionType =
           cloneDeep(res.data.projectQuotaQuestionType);
       } else {
         activeName.value = "basicSettings";
@@ -304,20 +309,20 @@ const changeTab = async (val: any, judge?: boolean) => {
 // 获取题库目录
 const getProjectCategoryList = async () => {
   // 如果配置中的国家不存在就请求，反正不请
-  if (props.leftTab.data.configurationInformation.initialProblem.countryId) {
+  if (localToptTab.value.data.configurationInformation.initialProblem.countryId) {
     // 就问卷就用 ,没有再请求
-    if (!props.leftTab.data.configurationInformation.projectCategoryList) {
+    if (!localToptTab.value.data.configurationInformation.projectCategoryList) {
       const params = {
         countryId:
-          props.leftTab.data.configurationInformation.initialProblem.countryId,
+          localToptTab.value.data.configurationInformation.initialProblem.countryId,
         projectQuotaQuestionType:
-          props.leftTab.data.configurationInformation.initialProblem
+          localToptTab.value.data.configurationInformation.initialProblem
             .projectQuotaQuestionType, //问题类型:1:总控问题 2:租户自己问题
       };
 
       const res = await obtainLoading(api.getProjectCategoryList(params));
 
-      props.leftTab.data.configurationInformation.projectCategoryList =
+      localToptTab.value.data.configurationInformation.projectCategoryList =
         res.data.getProjectCategoryInfoList.filter(
           (item: any) => item.status === 1
         );
@@ -335,12 +340,12 @@ const getProjectProblemList = async (id: string | number, judge: boolean) => {
     // 置空数据
     setTimeout(async () => {
       const { projectProblemCategoryName, ...params } =
-        props.leftTab.data.configurationInformation.projectCategoryList.find(
+        localToptTab.value.data.configurationInformation.projectCategoryList.find(
           (item: any) => item.projectProblemCategoryId === id
         );
       const res = await api.getProjectProblemList(params);
       //问题列表 - 显示的数据
-      props.leftTab.data.configurationInformation.ProjectProblemInfoList =
+      localToptTab.value.data.configurationInformation.ProjectProblemInfoList =
         res.data.getProjectProblemInfoList.map((item: any) => {
           return {
             ...item,
@@ -357,36 +362,36 @@ const getProjectProblemList = async (id: string | number, judge: boolean) => {
        * 编辑时不能清除,答案(提交list)是接口返回的
        */
       if (!judge) {
-        props.leftTab.projectQuotaInfoList = []; //提交
+        localToptTab.value.projectQuotaInfoList = []; //提交
         // 问题列表 - 提交的数据
         for (
           let i = 0;
           i <
-          props.leftTab.data.configurationInformation.ProjectProblemInfoList
+          localToptTab.value.data.configurationInformation.ProjectProblemInfoList
             .length;
           i++
         ) {
           const item = cloneDeep(
-            props.leftTab.data.configurationInformation.initialProblem
+            localToptTab.value.data.configurationInformation.initialProblem
           );
           // 问题id
           item.projectProblemId =
-            props.leftTab.data.configurationInformation.ProjectProblemInfoList[
+            localToptTab.value.data.configurationInformation.ProjectProblemInfoList[
               i
             ].id;
           // 问题
           item.keyValue =
-            props.leftTab.data.configurationInformation.ProjectProblemInfoList[
+            localToptTab.value.data.configurationInformation.ProjectProblemInfoList[
               i
             ].question;
           // 问题类型
           item.questionType =
-            props.leftTab.data.configurationInformation.ProjectProblemInfoList[
+            localToptTab.value.data.configurationInformation.ProjectProblemInfoList[
               i
             ].questionType;
           // 目录id
           item.projectProblemCategoryId = id;
-          props.leftTab.projectQuotaInfoList.push(item);
+          localToptTab.value.projectQuotaInfoList.push(item);
         }
       }
     });
@@ -395,13 +400,13 @@ const getProjectProblemList = async (id: string | number, judge: boolean) => {
 // 设置 问题的答案和答案id  type: 1 输入框 2单选 3复选 4下拉
 const setAnswerValue = (type: number, index: number) => {
   // 选择的id "" | []
-  let id: any = props.leftTab.projectQuotaInfoList[index].projectAnswerIdList;
+  let id: any = localToptTab.value.projectQuotaInfoList[index].projectAnswerIdList;
   // 答案列表 []
   const answerList: any =
-    props.leftTab.data.configurationInformation.ProjectProblemInfoList[index]
+    localToptTab.value.data.configurationInformation.ProjectProblemInfoList[index]
       .getProjectAnswerInfoList;
   const filteredData = answerList.filter((item: any) => id.includes(item.id));
-  props.leftTab.projectQuotaInfoList[index].answerValueList = filteredData.map(
+  localToptTab.value.projectQuotaInfoList[index].answerValueList = filteredData.map(
     (item: any) => item.anotherName
   );
 };
@@ -416,18 +421,18 @@ const getList = async () => {
 };
 // 编辑时 回显配置信息
 const showProjectQuotaInfoList = async () => {
-  if (props.leftTab.projectQuotaInfoList.length) {
-    props.leftTab.data.configurationInformation.initialProblem.countryId =
-      props.leftTab.projectQuotaInfoList[0].countryId; // 国家id
-    props.leftTab.data.configurationInformation.initialProblem.projectQuotaQuestionType =
-      props.leftTab.projectQuotaInfoList[0].projectQuotaQuestionType; // 问卷类型
-    props.leftTab.data.configurationInformation.initialProblem.projectProblemCategoryId =
-      props.leftTab.projectQuotaInfoList[0].projectProblemCategoryId; // 问卷id
+  if (localToptTab.value.projectQuotaInfoList.length) {
+    localToptTab.value.data.configurationInformation.initialProblem.countryId =
+      localToptTab.value.projectQuotaInfoList[0].countryId; // 国家id
+    localToptTab.value.data.configurationInformation.initialProblem.projectQuotaQuestionType =
+      localToptTab.value.projectQuotaInfoList[0].projectQuotaQuestionType; // 问卷类型
+    localToptTab.value.data.configurationInformation.initialProblem.projectProblemCategoryId =
+      localToptTab.value.projectQuotaInfoList[0].projectProblemCategoryId; // 问卷id
     await changeTab("configurationInformation", true);
     await getProjectCategoryList();
     setTimeout(async () => {
       await getProjectProblemList(
-        props.leftTab.data.configurationInformation.initialProblem
+        localToptTab.value.data.configurationInformation.initialProblem
           .projectProblemCategoryId,
         true
       );
@@ -446,21 +451,21 @@ const showProjectQuotaInfoList = async () => {
 const customModel = (id: any, index: any) => {
   return {
     get() {
-      if (props.leftTab.projectQuotaInfoList[index].id === id) {
-        return props.leftTab.projectQuotaInfoList[index].projectAnswerIdList;
+      if (localToptTab.value.projectQuotaInfoList[index].id === id) {
+        return localToptTab.value.projectQuotaInfoList[index].projectAnswerIdList;
       } else {
-        const data = props.leftTab.projectQuotaInfoList.find(
+        const data = localToptTab.value.projectQuotaInfoList.find(
           (item: any) => item.projectProblemId === id
         );
         return data.projectAnswerIdList;
       }
     },
     set(newValue: any) {
-      if (props.leftTab.projectQuotaInfoList[index].id === id) {
-        props.leftTab.projectQuotaInfoList[index].projectAnswerIdList =
+      if (localToptTab.value.projectQuotaInfoList[index].id === id) {
+        localToptTab.value.projectQuotaInfoList[index].projectAnswerIdList =
           newValue;
       } else {
-        const data = props.leftTab.projectQuotaInfoList.find(
+        const data = localToptTab.value.projectQuotaInfoList.find(
           (item: any) => item.projectProblemId === id
         );
         data.projectAnswerIdList = newValue;
@@ -468,6 +473,16 @@ const customModel = (id: any, index: any) => {
     },
   };
 };
+
+// 如果父组件更新了 leftTab，反映这些更改到本地副本
+watch(
+  () => props.leftTab,
+  (newVal,oleVal) => {
+    localToptTab.value = newVal
+  },
+  { deep: true }
+)
+
 onMounted(async () => {
   fileList.value = [];
   // 获取客户 国家 项目类型
@@ -487,7 +502,7 @@ nextTick(() => {
     label-width="100px"
     :rules="rules"
     ref="formRef"
-    :model="props.leftTab"
+    :model="localToptTab"
   >
     <el-tabs v-model="activeName" @tab-change="changeTab">
       <el-tab-pane label="基础设置" name="basicSettings">
@@ -501,7 +516,7 @@ nextTick(() => {
             <el-col :span="6">
               <el-form-item label="项目名称" prop="name">
                 <el-input
-                  v-model="props.leftTab.name"
+                  v-model="localToptTab.name"
                   clearable
                   :maxlength="50"
                 />
@@ -511,7 +526,7 @@ nextTick(() => {
               <el-form-item label="项目标识" prop="projectIdentification">
                 <el-input
                   clearable
-                  v-model="props.leftTab.projectIdentification"
+                  v-model="localToptTab.projectIdentification"
                   :maxlength="100"
                 />
               </el-form-item>
@@ -521,7 +536,7 @@ nextTick(() => {
               <el-form-item label="所属客户" prop="clientId">
                 <el-select
                   placeholder="Select"
-                  v-model="props.leftTab.clientId"
+                  v-model="localToptTab.clientId"
                   clearable
                   @change="changeClient"
                 >
@@ -551,7 +566,7 @@ nextTick(() => {
             <el-col :span="6">
               <el-form-item label="所属国家" prop="countryIdList">
                 <ElSelect
-                  v-model="props.leftTab.countryIdList"
+                  v-model="localToptTab.countryIdList"
                   placeholder="国家"
                   clearable
                   filterable
@@ -582,7 +597,7 @@ nextTick(() => {
               <el-form-item label="原价" prop="doMoneyPrice">
                 <el-input-number
                   style="height: 2rem"
-                  v-model="props.leftTab.doMoneyPrice"
+                  v-model="localToptTab.doMoneyPrice"
                   :min="1"
                   :precision="1"
                   :step="0.1"
@@ -595,7 +610,7 @@ nextTick(() => {
               <el-form-item label="配额" prop="num">
                 <el-input-number
                   style="height: 2rem"
-                  v-model="props.leftTab.num"
+                  v-model="localToptTab.num"
                   :step="1"
                   step-strictly
                   :min="1"
@@ -630,7 +645,7 @@ nextTick(() => {
                 </template>
                 <el-input
                   style="height: 2rem; width: 100%"
-                  v-model="props.leftTab.minimumDuration"
+                  v-model="localToptTab.minimumDuration"
                   :min="1"
                   :step="1"
                   step-strictly
@@ -644,7 +659,7 @@ nextTick(() => {
             <el-col :span="6">
               <el-form-item label="IR" prop="ir">
                 <el-input
-                  v-model.number="props.leftTab.ir"
+                  v-model.number="localToptTab.ir"
                   :min="1"
                   :max="100"
                   step="0.01"
@@ -670,14 +685,14 @@ nextTick(() => {
                     </el-tooltip> -->
                   </div>
                 </template>
-                <el-input clearable v-model="props.leftTab.uidUrl" />
+                <el-input clearable v-model="localToptTab.uidUrl" />
                 <el-text class="mx-1">{{ url }}</el-text>
               </el-form-item>
             </el-col>
             <el-col :span="3">
               <el-form-item label="填写互斥ID">
                 <el-checkbox
-                  v-model="props.leftTab.mutualExclusion"
+                  v-model="localToptTab.mutualExclusion"
                   style="top: -4px"
                   size="large"
                   :true-value="1"
@@ -685,9 +700,9 @@ nextTick(() => {
                 />
               </el-form-item>
             </el-col>
-            <el-col v-if="props.leftTab.mutualExclusion === 1" :span="12">
+            <el-col v-if="localToptTab.mutualExclusion === 1" :span="12">
               <el-form-item label="互斥ID">
-                <el-input clearable v-model="props.leftTab.mutualExclusionId" />
+                <el-input clearable v-model="localToptTab.mutualExclusionId" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -745,7 +760,7 @@ nextTick(() => {
                   <!-- key解决富文本编译器   先新增  再编辑  富文本右侧值还在的问题    key值变了会刷新组件 -->
                   <Editor
                     class="editor"
-                    :value="props.leftTab.richText"
+                    :value="localToptTab.richText"
                     :plugins="plugins"
                     :locale="zhHans"
                     @change="handleChange"
@@ -767,7 +782,7 @@ nextTick(() => {
                 <el-switch
                   :active-value="1"
                   :inactive-value="2"
-                  v-model="props.leftTab.isPinned"
+                  v-model="localToptTab.isPinned"
                 />
               </el-form-item>
             </el-col>
@@ -776,8 +791,8 @@ nextTick(() => {
                 <el-switch
                   :active-value="1"
                   :inactive-value="2"
-                  :disabled="props.leftTab.isTimeReleases === 2"
-                  v-model="props.leftTab.isOnline"
+                  :disabled="localToptTab.isTimeReleases === 2"
+                  v-model="localToptTab.isOnline"
                 />
               </el-form-item>
             </el-col>
@@ -786,7 +801,7 @@ nextTick(() => {
                 <el-switch
                   :active-value="2"
                   :inactive-value="1"
-                  v-model="props.leftTab.isB2b"
+                  v-model="localToptTab.isB2b"
                 />
               </el-form-item>
             </el-col>
@@ -795,7 +810,7 @@ nextTick(() => {
                 <el-switch
                   :active-value="1"
                   :inactive-value="2"
-                  v-model="props.leftTab.isProfile"
+                  v-model="localToptTab.isProfile"
                   @change="changeProfile"
                 />
               </el-form-item>
@@ -805,18 +820,18 @@ nextTick(() => {
                 <el-switch
                   :active-value="2"
                   :inactive-value="1"
-                  v-model="props.leftTab.isTimeReleases"
+                  v-model="localToptTab.isTimeReleases"
                   @change="changeTimeReleases"
                 />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="20">
-            <el-col :span="6" v-if="props.leftTab.isB2b === 2">
+            <el-col :span="6" v-if="localToptTab.isB2b === 2">
               <el-form-item label="项目类型">
                 <el-cascader
                   :show-all-levels="false"
-                  v-model="props.leftTab.projectType"
+                  v-model="localToptTab.projectType"
                   :props="data.basicSettings.B2BTypeProps"
                   :options="data.basicSettings.B2BTypeList"
                   :collapse-tags="true"
@@ -826,12 +841,12 @@ nextTick(() => {
               </el-form-item>
             </el-col>
             <!-- 定时发布开显示时间，关隐藏 -->
-            <el-col :span="6" v-if="props.leftTab.isTimeReleases === 2">
+            <el-col :span="6" v-if="localToptTab.isTimeReleases === 2">
               <el-form-item label="发布时间" prop="releaseTime">
                 <el-date-picker
                   type="datetime"
                   value-format="YYYY-MM-DD HH:mm:ss"
-                  v-model="props.leftTab.releaseTime"
+                  v-model="localToptTab.releaseTime"
                   placeholder="请选择时间"
                   :disabledDate="disabledDateFn"
                   @change="handleChangeTime"
@@ -848,7 +863,7 @@ nextTick(() => {
                   style="width: 29rem"
                   type="textarea"
                   :rows="5"
-                  v-model="props.leftTab.remark"
+                  v-model="localToptTab.remark"
                 />
               </el-form-item>
             </el-col>
@@ -858,9 +873,9 @@ nextTick(() => {
       <el-tab-pane
         label="配置信息"
         name="configurationInformation"
-        v-if="props.leftTab.isProfile === 1"
+        v-if="localToptTab.isProfile === 1"
       >
-        <el-card v-if="props.leftTab.data">
+        <el-card v-if="localToptTab.data">
           <template #header>
             <div class="card-header">配置信息</div>
           </template>
@@ -869,7 +884,7 @@ nextTick(() => {
               <el-form-item label="选择国家">
                 <el-select
                   v-model="
-                    props.leftTab.data.configurationInformation.initialProblem
+                    localToptTab.data.configurationInformation.initialProblem
                       .countryId
                   "
                   filterable
@@ -878,7 +893,7 @@ nextTick(() => {
                   @change="changeConfigurationCountryId"
                 >
                   <ElOption
-                    v-for="item in props.leftTab.data.configurationInformation
+                    v-for="item in localToptTab.data.configurationInformation
                       .configurationCountryList"
                     :label="item.countryName"
                     :value="item.countryId"
@@ -890,7 +905,7 @@ nextTick(() => {
               <el-form-item label="问卷名称">
                 <el-select
                   v-model="
-                    props.leftTab.data.configurationInformation.initialProblem
+                    localToptTab.data.configurationInformation.initialProblem
                       .projectProblemCategoryId
                   "
                   clearable
@@ -899,7 +914,7 @@ nextTick(() => {
                   @change="getProjectProblemList"
                 >
                   <el-option
-                    v-for="item in props.leftTab.data.configurationInformation
+                    v-for="item in localToptTab.data.configurationInformation
                       .projectCategoryList"
                     :key="item.projectProblemCategoryId"
                     :label="item.projectProblemCategoryName"
@@ -912,24 +927,24 @@ nextTick(() => {
           <!-- 1 输入框 2单选 3复选 4下拉  -->
           <template
             v-if="
-              props.leftTab.data.configurationInformation
+              localToptTab.data.configurationInformation
                 .ProjectProblemInfoList &&
-              props.leftTab.data.configurationInformation.ProjectProblemInfoList
+              localToptTab.data.configurationInformation.ProjectProblemInfoList
                 .length &&
-              props.leftTab.projectQuotaInfoList.length
+              localToptTab.projectQuotaInfoList.length
             "
           >
             <el-row
               class="allocation"
               :gutter="20"
-              v-for="(item, index) in props.leftTab.data
+              v-for="(item, index) in localToptTab.data
                 .configurationInformation.ProjectProblemInfoList"
             >
               <el-col :span="20">
                 问题：{{ item.question }}
                 <!-- 插值查看 验证编辑问题list 顺序不一致 -->
                 <!-- {{
-                  props.leftTab.projectQuotaInfoList[index].projectAnswerIdList
+                  localToptTab.projectQuotaInfoList[index].projectAnswerIdList
                 }} -->
               </el-col>
               <el-col :span="20">
@@ -1003,7 +1018,7 @@ nextTick(() => {
                 </template>
                 <el-input-number
                   style="height: 2rem"
-                  v-model="props.leftTab.preNum"
+                  v-model="localToptTab.preNum"
                   :min="1"
                   :step="1"
                   step-strictly
@@ -1021,7 +1036,7 @@ nextTick(() => {
                 </template>
                 <el-input-number
                   style="height: 2rem"
-                  v-model="props.leftTab.limitedQuantity"
+                  v-model="localToptTab.limitedQuantity"
                   :min="1"
                   :step="1"
                   step-strictly
@@ -1035,7 +1050,7 @@ nextTick(() => {
             <el-col :span="4">
               <el-form-item label="允许重复参与">
                 <el-switch
-                  v-model="props.leftTab.ipDifferenceDetection"
+                  v-model="localToptTab.ipDifferenceDetection"
                   :active-value="1"
                   :inactive-value="2"
                 />
@@ -1046,7 +1061,7 @@ nextTick(() => {
             <el-col :span="4">
               <el-form-item label="时差检测">
                 <el-switch
-                  v-model="props.leftTab.timeDifferenceDetection"
+                  v-model="localToptTab.timeDifferenceDetection"
                   :active-value="1"
                   :inactive-value="2"
                 />
@@ -1055,7 +1070,7 @@ nextTick(() => {
             <el-col :span="4">
               <el-form-item label="IP一致性检测">
                 <el-switch
-                  v-model="props.leftTab.ipConsistency"
+                  v-model="localToptTab.ipConsistency"
                   :active-value="1"
                   :inactive-value="2"
                 />

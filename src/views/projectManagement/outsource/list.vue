@@ -105,7 +105,7 @@ onMounted(() => {
   }">
     <PageMain>
       <el-tabs v-model="queryForm.type" class="demo-tabs" type="border-card" @tab-change="fetchData">
-        <el-tab-pane label="被分配" :name="1">
+        <el-tab-pane label="接受项目" :name="1">
           <SearchBar :show-toggle="false">
             <template #default="{ fold, toggle }">
               <el-form :model="queryForm.select" size="default" label-width="100px" inline-message inline
@@ -209,7 +209,7 @@ onMounted(() => {
             :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
             background @size-change="sizeChange" @current-change="currentChange" />
         </el-tab-pane>
-        <el-tab-pane label="分配出" :name="2">
+        <el-tab-pane label="外包项目" :name="2">
           <SearchBar :show-toggle="false">
             <template #default="{ fold, toggle }">
               <el-form :model="queryForm.select" size="default" label-width="100px" inline-message inline
