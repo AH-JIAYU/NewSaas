@@ -16,7 +16,7 @@ const usePositionManageStore = defineStore(
         name: "",
         active: null
       })
-      PositionManage.value = data.data
+      PositionManage.value = data.data || []
       return data.data
     }
     return {

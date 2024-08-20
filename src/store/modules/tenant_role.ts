@@ -10,7 +10,7 @@ const useTenantRoleStore = defineStore(
         return role.value
       }
       const { data } = await api.list()
-      role.value = data
+      role.value = data || []
       return data
     }
     return {

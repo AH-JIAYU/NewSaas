@@ -16,7 +16,7 @@ const useGroupManageStore = defineStore(
         name: "",
         active: null
       })
-      groupManage.value = data.data
+      groupManage.value = data.data || []
       return data.data
     }
     return {
