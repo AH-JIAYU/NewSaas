@@ -8,7 +8,6 @@ import "bytemd/dist/index.css";
 import type { UploadProps } from "element-plus";
 import { ElMessage } from "element-plus";
 import { cloneDeep } from "lodash-es";
-import { obtainLoading } from "@/utils/apiLoading";
 import { MessageBox, UploadFilled } from "@element-plus/icons-vue";
 import fileApi from "@/api/modules/file";
 import api from "@/api/modules/projectManagement";
@@ -215,11 +214,11 @@ const getUpLoad = async (file: any) => {
   if (file.length) {
     file.forEach(async (item: any) => {
       if (item) {
-        const res: any = await obtainLoading(
+        const res: any = await
           fileApi.detail({
             fileName: item,
           })
-        );
+          ;
         fileList.value.push({
           name: item,
           url: res.data.fileUrl,
@@ -271,11 +270,11 @@ const changeTab = async (val: any, judge?: boolean) => {
     formRef.value.validateField(["countryIdList"], async (valid: any) => {
       if (valid) {
         clearData(judge || false);
-        const res = await obtainLoading(
+        const res = await
           api.getProjectCountryList({
             countryIdList: localToptTab.value.countryIdList,
           })
-        );
+          ;
         // 配置-国家
         localToptTab.value.data.configurationInformation.configurationCountryList =
           res.data.getProjectCountryListInfoList;
@@ -320,7 +319,7 @@ const getProjectCategoryList = async () => {
             .projectQuotaQuestionType, //问题类型:1:总控问题 2:租户自己问题
       };
 
-      const res = await obtainLoading(api.getProjectCategoryList(params));
+      const res = await api.getProjectCategoryList(params);
 
       localToptTab.value.data.configurationInformation.projectCategoryList =
         res.data.getProjectCategoryInfoList.filter(
@@ -486,7 +485,7 @@ watch(
 onMounted(async () => {
   fileList.value = [];
   // 获取客户 国家 项目类型
-  await obtainLoading(getList());
+  await getList();
   await showProjectQuotaInfoList();
   // await getUpLoad(props.leftTab.descriptionUrl);
 });
@@ -740,7 +739,7 @@ nextTick(() => {
             <el-col :span="6">
               <el-form-item label="选择国家">
                 <el-select v-model="localToptTab.data.configurationInformation.initialProblem
-      .countryId
+    .countryId
     " filterable clearable placeholder="Select" @change="changeConfigurationCountryId">
                   <ElOption v-for="item in localToptTab.data.configurationInformation
     .configurationCountryList" :label="item.countryName" :value="item.countryId"></ElOption>
@@ -750,18 +749,18 @@ nextTick(() => {
             <el-col :span="6">
               <el-form-item label="问卷名称">
                 <el-select v-model="localToptTab.data.configurationInformation.initialProblem
-      .projectProblemCategoryId
+    .projectProblemCategoryId
     " clearable placeholder="Select" @focus="getProjectCategoryList" @change="getProjectProblemList">
                   <el-option v-for="item in localToptTab.data.configurationInformation
-    .projectCategoryList" :key="item.projectProblemCategoryId"
-                    :label="item.projectProblemCategoryName" :value="item.projectProblemCategoryId" />
+    .projectCategoryList" :key="item.projectProblemCategoryId" :label="item.projectProblemCategoryName"
+                    :value="item.projectProblemCategoryId" />
                 </el-select>
               </el-form-item>
             </el-col>
           </el-row>
           <!-- 1 输入框 2单选 3复选 4下拉  -->
           <template v-if="localToptTab.data.configurationInformation
-      .ProjectProblemInfoList &&
+    .ProjectProblemInfoList &&
     localToptTab.data.configurationInformation.ProjectProblemInfoList
       .length &&
     localToptTab.projectQuotaInfoList.length

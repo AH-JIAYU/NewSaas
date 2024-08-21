@@ -105,7 +105,7 @@ onMounted(() => {
   }">
     <PageMain>
       <el-tabs v-model="queryForm.type" class="demo-tabs" type="border-card" @tab-change="fetchData">
-        <el-tab-pane label="接受项目" :name="1">
+        <el-tab-pane label="接收项目" :name="1">
           <SearchBar :show-toggle="false">
             <template #default="{ fold, toggle }">
               <el-form :model="queryForm.select" size="default" label-width="100px" inline-message inline
