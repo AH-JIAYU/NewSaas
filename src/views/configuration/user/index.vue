@@ -76,7 +76,7 @@ const dictionaryRef = ref();
 // 详情ref
 const detailRef = ref<any>();
 // 数据
-const dictionary = ref({
+const dictionary = ref<any>({
   search: {
     chineseName: "",
   },
@@ -91,6 +91,7 @@ const dictionary = ref({
   row: "",
   loading: false,
 });
+const dictionaryList = ref<any>()
 const dictionaryItemRef = ref();
 // 字典下的数据
 const dictionaryItem = ref<any>({
@@ -102,8 +103,8 @@ const dictionaryItem = ref<any>({
   checkList: [],
   // 搜索
   search: {
-    page:1,
-    limit:10,
+    page: 1,
+    limit: 10,
     id: "" as Dict["id"],
     userName: "",
     active: null,
@@ -264,19 +265,25 @@ function onCreate(row?: any) {
     dictionaryItem.value.dialog.level = Number(row.level) + 1;
   }
 }
+const selectChange = (val: any) => {
+  dictionaryList.value = val[0]
+  console.log('val', val);
+
+}
 // 重置密码
-function onResetPassword(row: any) {
+function onResetPassword() {
+  const { name, id } = dictionaryList.value
   ElMessageBox.confirm(
-    `确认将「${row.name}」的密码重置为 “123456” 吗？`,
+    `确认将「${name}」的密码重置为 “123456” 吗？`,
     "确认信息"
   )
     .then(() => {
-      api.reset({ id: row.id }).then(() => {
+      api.reset({ id: id }).then(() => {
         ElMessage.success({
           message: "重置成功",
           center: true,
         });
-        // getDataList();
+        getDictionaryList();
       });
     })
     .catch(() => { });
@@ -352,6 +359,9 @@ function onReset() {
               <el-button type="primary" size="default" @click="onCreate">
                 新增
               </el-button>
+              <el-button size="default" @click="onResetPassword">
+                重置密码
+              </el-button>
             </el-col>
             <el-col style="display: flex; justify-content: flex-end" :span="14">
               <el-button size="default" @click=""> 导出 </el-button>
@@ -364,7 +374,7 @@ function onReset() {
           <ElTable ref="dictionaryItemRef" :data="dictionaryItem.dataList" :border="dictionaryItem.border"
             :size="dictionaryItem.lineHeight" :stripe="dictionaryItem.stripe" highlight-current-row height="100%"
             @sort-change="sortChange" @selection-change="dictionaryItem.selectionDataList = $event" row-key="id"
-            default-expand-all>
+            default-expand-all @select="selectChange">
             <ElTableColumn type="selection" align="center" fixed />
             <ElTableColumn v-if="dictionaryItem.checkList.includes('id')" align="center" width="180" prop="id"
               label="员工ID" />
@@ -377,7 +387,7 @@ function onReset() {
             </ElTableColumn>
             <ElTableColumn v-if="dictionaryItem.checkList.includes('name')" align="center" width="150" prop="name"
               label="姓名" />
-            <ElTableColumn v-if="dictionaryItem.checkList.includes('country')" prop="country" label="国家" width="150"
+            <!-- <ElTableColumn v-if="dictionaryItem.checkList.includes('country')" prop="country" label="国家" width="150"
               align="center">
               <template #default="{ row }">
                 <div v-for="item in filterCountry" :key="item.id" class="mx-1">
@@ -386,7 +396,7 @@ function onReset() {
                   </el-tag>
                 </div>
               </template>
-            </ElTableColumn>
+            </ElTableColumn> -->
             <ElTableColumn v-if="dictionaryItem.checkList.includes('phone')" align="center" width="180" prop="phone"
               label="电话号码"><template #default="{ row }">
                 {{ row.phone ? row.phone : "-" }}
@@ -440,9 +450,9 @@ function onReset() {
                 <ElButton type="primary" size="small" plain @click="onDetail(scope.row)">
                   详情
                 </ElButton>
-                <el-button type="primary" plain size="small" @click="onResetPassword(scope.row)">
+                <!-- <el-button type="primary" plain size="small" @click="onResetPassword(scope.row)">
                   重置密码
-                </el-button>
+                </el-button> -->
               </template>
             </ElTableColumn>
             <template #empty>
