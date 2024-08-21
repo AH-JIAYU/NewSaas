@@ -19,18 +19,22 @@ const data = ref<any>({
 });
 
 // 显隐
-async function showEdit(row: any) {
+async function showEdit(row: any, source: number = 0) {
   const params = {
     linkId: row.linkId,
     projectId: row.projectId,
+    source,
   };
   const res = await api.getTenantMeasurementList(params);
 
+  const resList = res.data.tenantMeasurementInfoList
+  if (res.data.tenantMeasurementInfo) {
+    resList.unshift(res.data.tenantMeasurementInfo)
+  }
   // 过滤数据（删除与当前租户id相同的数据之前的所有数据，包括当前的数据）
-  const findDataIndex = res.data.tenantMeasurementInfoList.findIndex(
+  const findDataIndex = resList.findIndex(
     (item: any) => item.allocationTenantId === res.data.currentTenantId
   );
-  const resList = res.data.tenantMeasurementInfoList
   resList.splice(0, findDataIndex);//删除上级
   const type1List = resList.filter((item: any) => item.type === 1)
   const type2List = resList.filter((item: any) => item.type === 2)
@@ -57,20 +61,20 @@ async function showEdit(row: any) {
 // 动画显示之前先将其他显示的关闭
 const getClickListBefore = (index: any) => {
   data.value.clickIdList = []
-    // 分配项目 popoverRef和显示的链路list的length一直
-  if(data.value.tenantMeasurementInfoList.length===popoverRef.value.length){
+  // 分配项目 popoverRef和显示的链路list的length一直
+  if (data.value.tenantMeasurementInfoList.length === popoverRef.value.length) {
     popoverRef.value.forEach((item: any, ind: any) => {
-    if (ind !== index) {
-      item.hide()
-    }
-  })
-  }else{
-      // 接受项目 popoverRef会比显示的链路list少一个，因为当前租户没有popoverRef
+      if (ind !== index) {
+        item.hide()
+      }
+    })
+  } else {
+    // 接受项目 popoverRef会比显示的链路list少一个，因为当前租户没有popoverRef
     popoverRef.value.forEach((item: any, ind: any) => {
-    if (ind !== index - 1) {
-      item.hide()
-    }
-  })
+      if (ind !== index - 1) {
+        item.hide()
+      }
+    })
   }
 
 }
@@ -86,10 +90,10 @@ const getClickList = async (row: any) => {
   const res = await api.getQuestionnaireClickList(params);
   data.value.clickIdList = processData(res.data.questionnaireClickInfoList)
   // 后期换成后端过滤
-  if(row.type===2){
-    data.value.clickIdList=data.value.clickIdList.filter((item:any)=>item.peopleType===2)
-  }else if(row.type===3){
-    data.value.clickIdList=data.value.clickIdList.filter((item:any)=>item.peopleType===1)
+  if (row.type === 2) {
+    data.value.clickIdList = data.value.clickIdList.filter((item: any) => item.peopleType === 2)
+  } else if (row.type === 3) {
+    data.value.clickIdList = data.value.clickIdList.filter((item: any) => item.peopleType === 1)
   }
 }
 
@@ -97,7 +101,7 @@ const getClickList = async (row: any) => {
 // 处理数据
 function processData(data: any) {
   return data.reduce((acc: any, item: any) => {
-    const { supplierId, supplierName, projectQuestionnaireClickId, surveyStatus, price,peopleType } = item;
+    const { supplierId, supplierName, projectQuestionnaireClickId, surveyStatus, price, peopleType } = item;
 
     // 查找是否已经有该供应商的对象
     let supplier = acc.find((s: any) => s.supplierId === supplierId);
@@ -111,7 +115,7 @@ function processData(data: any) {
         supplierId,
         peopleType,
         supplierName,
-        list: [{ projectQuestionnaireClickId, surveyStatus, price}]
+        list: [{ projectQuestionnaireClickId, surveyStatus, price }]
       });
     }
 
@@ -272,6 +276,7 @@ defineExpose({ showEdit });
   background-color: var(--el-color-success);
   ;
 }
+
 .peopleType1 {
   background-color: var(--el-color-primary);
 }

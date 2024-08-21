@@ -307,7 +307,7 @@ onMounted(async () => {
         :tree-props="{ children: 'getChildrenProjectListInfoList' }" :border="border" :size="lineHeight"
         :stripe="stripe">
         <el-table-column align="center" type="selection" />
-        <el-table-column v-if="checkList.includes('projectType')" width="100" align="center"
+        <el-table-column v-if="checkList.includes('projectType')" width="150" align="center"
           label="项目类型"><template #default="{ row }">
             <el-button text type="danger" v-if="row.projectType === 2">外包项目</el-button>
             <el-button text type="info" v-else>自有项目</el-button>
