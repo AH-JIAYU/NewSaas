@@ -35,7 +35,7 @@ const form = ref<any>({
   // 小组名称
   name: "",
   // 负责人id
-  director: null,
+  // director: null,
   // 	部门id
   departmentId: null,
   // 备注
@@ -91,16 +91,16 @@ function onSubmit() {
 // 获取数据
 async function showEdit() {
   title.value = "新增小组";
-  // const dataForm = JSON.parse(row)
-  // form.value.id = dataForm.id
   dialogTableVisible.value = true;
 }
 onMounted(async () => {
   nextTick(async () => {
     // 用户列表
     const { data } = await managerApi.getTenantStaffList();
+    // 用户数据
     staffList.value = data;
   });
+  // 部门数据
   departmentList.value = await departmentStore.getDepartment()
   defaultTime.value = new Date();
 });
@@ -138,7 +138,7 @@ defineExpose({ showEdit });
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="组长">
+        <!-- <el-form-item label="组长">
           <el-select
             v-model="form.director"
             value-key=""
@@ -154,7 +154,7 @@ defineExpose({ showEdit });
             :disabled="item.distribution !== 2"
           />
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="组提成">
           <el-switch
             v-model="form.commissionStatus"

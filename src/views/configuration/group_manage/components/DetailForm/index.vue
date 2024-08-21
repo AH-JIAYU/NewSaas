@@ -24,8 +24,6 @@ const form = ref<any>({
   id: props.id,
   // 小组名称
   name: "",
-  // 负责人id
-  director: null,
   // 	部门id
   departmentId: null,
   // 备注
@@ -40,14 +38,11 @@ const formRules = ref<FormRules>({
 });
 onMounted(async () => {
   loading.value = true;
-  departmentList.value = await departmentStore.getDepartment();
   nextTick(async () => {
+    departmentList.value = await departmentStore.getDepartment();
     // 用户列表
     const { data } = await managerApi.getTenantStaffList();
     staffList.value = data;
-    // 用户列表
-    // const res = await managerApi.undistributedDepartment();
-    // undistributedDepartmentList.value = res.data;
   });
   if (form.value.id !== "") {
     getInfo();
@@ -140,7 +135,7 @@ defineExpose({
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="组长" prop="director">
+      <!-- <el-form-item label="组长" prop="director">
         <el-select
           v-model="form.director"
           value-key=""
@@ -156,7 +151,7 @@ defineExpose({
             :disabled="item.distribution !== 2"
           />
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="组提成" prop="commissionStatus">
         <el-switch
           v-model="form.commissionStatus"

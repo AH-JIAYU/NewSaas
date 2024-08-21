@@ -18,6 +18,7 @@ const useGroupManage = useGroupManageStore();
 const groupManageList = ref<any>([]);
 // 职位
 const usePositionManage = usePositionManageStore();
+// 职位数据
 const positionManageList = ref<any>();
 // 角色码
 const roleStore = useTenantRoleStore();
@@ -30,8 +31,7 @@ const departmentList = ref<any>();
 const form = ref<any>({})
 const emit = defineEmits(["fetch-data"]);
 const drawerisible = ref<boolean>(false);
-const checkRef = ref<any>();
- // 详情数据
+// 详情数据
 const detailData = ref<any>();
 async function showEdit(row: any) {
   form.value = row
@@ -89,127 +89,116 @@ defineExpose({
             <div class="leftTitle">基本信息</div>
           </div>
         </template>
-        <el-row :gutter="20">
-          <el-col :span="1"> </el-col>
-          <el-col style="
+<el-row :gutter="20">
+  <el-col :span="1"> </el-col>
+  <el-col style="
               display: flex;
               flex-direction: column;
               justify-content: center;
               align-items: flex-start;
             " :span="1.5">
-            <el-avatar
-              :size="50"
-              :src="detailData.avatar"
-            />
-          </el-col>
-          <el-col
-            style="
+    <el-avatar :size="50" :src="detailData.avatar" />
+  </el-col>
+  <el-col style="
               display: flex;
               flex-direction: column;
               justify-content: center;
               align-items: flex-start;
-            "
-            :span="6"
-          >
-            <p>{{detailData.userName}}</p>
-            <p style="font-size: 14px">账号:<span>{{detailData.userName}}</span></p>
-          </el-col>
-        </el-row>
-        <el-row :gutter="24">
-          <el-col :span="6">
-            <el-form-item label="员工ID:">
-              <el-text class="mx-1">
-                {{
-                  detailData?.id
-                    ? detailData.id
-                    : "-"
-                }}
-              </el-text>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="姓名:">
-              <el-text class="mx-1">
-                {{
-                  detailData?.name ? detailData.name : "-"
-                }}
-              </el-text>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="手机号:">
-              <el-text class="mx-1">
-                {{
-                  detailData?.phone
-                    ? detailData.phone
-                    : "-"
-                }}
-              </el-text>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="邮箱:">
-              <el-text class="mx-1">
-                {{ detailData?.email ? detailData.email : "-" }}
-              </el-text>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="部门:">
-              <el-text v-for="item in departmentList">
-                  <el-text v-if="detailData.departmentId === item.id">
-                    {{ item.name ? item.name : "-" }}
-                  </el-text>
-                </el-text>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="职位:">
-              <el-text v-for="item in positionManageList">
-                  <el-text v-if="detailData.positionId === item.id">
-                    {{ item.name ? item.name : "-" }}
-                  </el-text>
-                </el-text>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="帐号状态:">
-              <el-text class="mx-1">
-                {{ detailData?.active ? "启用" : "禁用" }}
-              </el-text>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="创建时间:">
-              <el-text class="mx-1">
-                {{ detailData?.createTime ? detailData.createTime : "-" }}
-              </el-text>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-card>
-      <el-card class="box-card">
-        <template #header>
+            " :span="6">
+    <p>{{detailData.userName}}</p>
+    <p style="font-size: 14px">账号:<span>{{detailData.userName}}</span></p>
+  </el-col>
+</el-row>
+<el-row :gutter="24">
+  <el-col :span="6">
+    <el-form-item label="员工ID:">
+      <el-text class="mx-1">
+        {{
+        detailData?.id
+        ? detailData.id
+        : "-"
+        }}
+      </el-text>
+    </el-form-item>
+  </el-col>
+  <el-col :span="6">
+    <el-form-item label="姓名:">
+      <el-text class="mx-1">
+        {{
+        detailData?.name ? detailData.name : "-"
+        }}
+      </el-text>
+    </el-form-item>
+  </el-col>
+  <el-col :span="6">
+    <el-form-item label="手机号:">
+      <el-text class="mx-1">
+        {{
+        detailData?.phone
+        ? detailData.phone
+        : "-"
+        }}
+      </el-text>
+    </el-form-item>
+  </el-col>
+  <el-col :span="6">
+    <el-form-item label="邮箱:">
+      <el-text class="mx-1">
+        {{ detailData?.email ? detailData.email : "-" }}
+      </el-text>
+    </el-form-item>
+  </el-col>
+  <el-col :span="6">
+    <el-form-item label="部门:">
+      <el-text v-for="item in departmentList">
+        <el-text v-if="detailData.departmentId === item.id">
+          {{ item.name ? item.name : "-" }}
+        </el-text>
+      </el-text>
+    </el-form-item>
+  </el-col>
+  <el-col :span="6">
+    <el-form-item label="职位:">
+      <el-text v-for="item in positionManageList">
+        <el-text v-if="detailData.positionId === item.id">
+          {{ item.name ? item.name : "-" }}
+        </el-text>
+      </el-text>
+    </el-form-item>
+  </el-col>
+  <el-col :span="6">
+    <el-form-item label="帐号状态:">
+      <el-text class="mx-1">
+        {{ detailData?.active ? "启用" : "禁用" }}
+      </el-text>
+    </el-form-item>
+  </el-col>
+  <el-col :span="6">
+    <el-form-item label="创建时间:">
+      <el-text class="mx-1">
+        {{ detailData?.createTime ? detailData.createTime : "-" }}
+      </el-text>
+    </el-form-item>
+  </el-col>
+</el-row>
+</el-card>
+<el-card class="box-card">
+  <template #header>
           <div class="card-header">
             <div class="leftTitle">角色信息</div>
           </div>
         </template>
-        <el-row :gutter="24">
-          <el-form-item label="分配角色:">
-            <el-radio-group  v-model="form.role">
-              <el-radio
-                v-for="item in munulevs"
-                :key="item.id"
-                :value="item.roleName"
-                :label="item.roleName"
-                disabled
-              ></el-radio>
-            </el-radio-group>
-          </el-form-item>
-        </el-row>
-      </el-card>
-      <el-card class="box-card">
-        <template #header>
+  <el-row :gutter="24">
+    <el-form-item label="分配角色:">
+      <el-radio-group v-model="form.role">
+        <el-radio v-for="item in munulevs" :key="item.id" :value="item.roleName" :label="item.roleName"
+          disabled></el-radio>
+      </el-radio-group>
+    </el-form-item>
+  </el-row>
+</el-card>
+<el-card class="box-card">
+  <template #header>
           <div class="card-header">
             <div class="leftTitle">
               小组信息<span style="margin-left: 20px; font-size: 14px"
@@ -222,26 +211,18 @@ defineExpose({
             </div>
           </div>
         </template>
-        <el-row :gutter="24">
-          <el-form-item label="分配小组:">
-            <el-radio-group
-              v-if="groupManageList.length"
-              v-model="form.groupId"
-            >
-              <el-radio
-                v-for="item in groupManageList"
-                :key="item.id"
-                :value="item.id"
-                :label="item.name"
-                disabled
-              ></el-radio>
-            </el-radio-group>
-            <el-text v-else>-</el-text>
-          </el-form-item>
-        </el-row>
-      </el-card>
-    </el-form>
-  </el-drawer>
+  <el-row :gutter="24">
+    <el-form-item label="分配小组:">
+      <el-radio-group v-if="groupManageList.length" v-model="form.groupId">
+        <el-radio v-for="item in groupManageList" :key="item.id" :value="item.id" :label="item.name"
+          disabled></el-radio>
+      </el-radio-group>
+      <el-text v-else>-</el-text>
+    </el-form-item>
+  </el-row>
+</el-card>
+</el-form>
+</el-drawer>
 </template>
 
 <style scoped lang="scss">
@@ -254,7 +235,7 @@ defineExpose({
     position: relative;
     width: 128px;
 
-    > div {
+    >div {
       width: 120px;
       height: 2.2rem;
       line-height: 2.2rem;
@@ -266,6 +247,7 @@ defineExpose({
       top: 50%;
       transform: translate(-50%, -50%);
       font-size: 20.8px;
+
       &::before {
         position: absolute;
         left: 50%;
@@ -276,6 +258,7 @@ defineExpose({
         aspect-ratio: 1 / 1;
         content: "";
       }
+
       &::after {
         position: absolute;
         left: 50%;
@@ -287,16 +270,19 @@ defineExpose({
         content: "";
       }
     }
-    > div.isOnlineTrue {
+
+    >div.isOnlineTrue {
       background-color: #70b51a;
+
       &::after,
       &::before {
         border: 1px #70b51a dashed;
       }
     }
 
-    > div.isOnlineFalse {
+    >div.isOnlineFalse {
       background-color: #d8261a;
+
       &::after,
       &::before {
         border: 1px #d8261a dashed;

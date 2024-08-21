@@ -35,7 +35,7 @@ const settingsStore = useSettingsStore();
 // 表格控件-展示列
 const columns = ref([
   {
-    label: "部门ID",
+    label: "组ID",
     prop: "id",
     sortable: true,
     // 不可更改
@@ -52,15 +52,15 @@ const columns = ref([
     // 默认展示
     checked: true,
   },
-  {
-    label: "组长",
-    prop: "director",
-    sortable: true,
-    // 不可更改
-    disableCheck: false,
-    // 默认展示
-    checked: true,
-  },
+  // {
+  //   label: "组长",
+  //   prop: "director",
+  //   sortable: true,
+  //   // 不可更改
+  //   disableCheck: false,
+  //   // 默认展示
+  //   checked: true,
+  // },
   {
     label: "员工数",
     prop: "count",
@@ -130,11 +130,6 @@ const data = ref<any>({
   // 列表数据
   dataList: [],
 });
-// 类型
-// const commissionList = [
-//   { label: "启用", value: 1 },
-//   { label: "禁用", value: 2 },
-// ];
 // 获取数据
 function getDataList() {
   data.value.loading = true;
@@ -305,22 +300,6 @@ onBeforeUnmount(() => {
                 </el-option>
               </el-select>
             </ElFormItem>
-            <!-- <el-form-item label="">
-              <el-select
-                v-model="data.search.commissionStatus"
-                value-key=""
-                placeholder="请选择状态"
-                clearable
-                filterable
-              >
-                <el-option
-                  v-for="item in commissionList"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                />
-              </el-select>
-            </el-form-item> -->
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">
                 <template #icon>
