@@ -50,7 +50,7 @@ const list = ref<any>([]);
 
 // 测查
 function editData(row: any) {
-  editRef.value.showEdit(row);
+  editRef.value.showEdit(row,queryForm.type===2?1:0);
 }
 
 // 每页数量切换
@@ -77,14 +77,14 @@ async function fetchData() {
     ...getParams(),
     ...queryForm,
   };
-  if(queryForm.type===1){
-  const res = await api.list(params);
-  list.value = res.data.projectAllocationInfoList;
-  pagination.value.total = res.data.total;
-  }else{
-  const res = await api.meList(params);
-  list.value = res.data.projectMeAllocationInfoList;
-  pagination.value.total = res.data.total;
+  if (queryForm.type === 1) {
+    const res = await api.list(params);
+    list.value = res.data.projectAllocationInfoList;
+    pagination.value.total = res.data.total;
+  } else {
+    const res = await api.meList(params);
+    list.value = res.data.projectMeAllocationInfoList;
+    pagination.value.total = res.data.total;
   }
 
   listLoading.value = false;
@@ -105,7 +105,7 @@ onMounted(() => {
   }">
     <PageMain>
       <el-tabs v-model="queryForm.type" class="demo-tabs" type="border-card" @tab-change="fetchData">
-        <el-tab-pane label="接受项目" :name="1">
+        <el-tab-pane label="接收项目" :name="1">
           <SearchBar :show-toggle="false">
             <template #default="{ fold, toggle }">
               <el-form :model="queryForm.select" size="default" label-width="100px" inline-message inline
