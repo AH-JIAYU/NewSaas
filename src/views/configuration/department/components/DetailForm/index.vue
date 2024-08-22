@@ -14,12 +14,8 @@ const commissionList = [
   { label: "审核计提", value: 2 },
   { label: "收款计提", value: 3 },
 ];
-// 用户
-const tenantStaffStore = useTenantStaffStore();
 // 用户数据
 const staffList = ref<any>([]);
-// 用户数据
-const undistributedDepartmentList = ref<any>([]);
 // loading加载
 const loading = ref(false);
 // formRef
@@ -30,7 +26,7 @@ const form = ref<any>({
   // 部门名称
   name: "",
   // 负责人id userId
-  director: null,
+  // director: null,
   //备注
   remark: "",
   // 是否开启部门提成 ,可用值:1启用,2停用
@@ -65,14 +61,12 @@ const formRules = ref<FormRules>({
   ],
 });
 onMounted( () => {
+  // 移除校验
   formRef.value.resetFields();
   nextTick(async () => {
     // 用户列表
     const { data } = await managerApi.getTenantStaffList();
     staffList.value = data;
-    // 用户列表
-    // const res = await managerApi.undistributedDepartment();
-    // undistributedDepartmentList.value = res.data;
   });
   if (form.value.commissionStatus !== 1) {
     formRules.value.commission = [];
@@ -85,19 +79,10 @@ onMounted( () => {
 function getInfo() {
   loading.value = true;
   form.value = JSON.parse(props.row);
-  str = form.value.userInfo.id;
-  // undistributedDepartmentList.value.push(form.value.userInfo);
-  // undistributedDepartmentList.value = undistributedDepartmentList.value.reduce(
-  //   (item: any, val: any) => {
-  //     if (!item.find((ite: any) => ite.id === val.id)) {
-  //       item.push(val);
-  //     }
-  //     return item;
-  //   },
-  //   []
-  // );
+  // str = form.value.userInfo.id;
   loading.value = false;
 }
+// 切换部门
 const directorChange = (val: any) => {
   if (val === str) {
     str = val;
@@ -142,12 +127,12 @@ defineExpose({
                   form.value.commission = 0;
                   form.value.commissionType = 0;
                 }
-                if (form.value.director === str) {
-                  delete form.value.director;
-                }
-                if (isDelete.value) {
-                  delete form.value.director;
-                }
+                // if (form.value.director === str) {
+                //   delete form.value.director;
+                // }
+                // if (isDelete.value) {
+                //   delete form.value.director;
+                // }
                 api.edit(form.value).then(() => {
                   loading.value = false;
                   ElMessage.success({
@@ -187,7 +172,7 @@ defineExpose({
           @change=""
         />
       </el-form-item>
-      <el-form-item label="部门主管" prop="director">
+      <!-- <el-form-item label="部门主管" prop="director">
         <el-select
           v-model="form.director"
           value-key=""
@@ -203,14 +188,8 @@ defineExpose({
             :value="item.id"
             :disabled="item.distribution !== 2"
           />
-          <!-- <el-option
-            v-for="item in undistributedDepartmentList"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          /> -->
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-row style="margin-bottom: 0px" :gutter="20">
         <el-col :span="8">
           <el-form-item label="部门提成" prop="commissionStatus">

@@ -78,7 +78,7 @@ const validateEmail = (rule: any, value: any, callback: any) => {
   }
 };
 const loginRules = ref<any>({
-  account: [{ required: true, trigger: "blur", message: "请输入手机号/邮箱" }],
+  account: [{ required: true, trigger: "blur", message: "请输入手机号/邮箱/用户名" }],
   code: [{ required: true, trigger: "blur", message: "请输入验证码" }],
   password: [
     { required: true, trigger: "blur", message: "请输入密码" },
@@ -421,7 +421,7 @@ onUnmounted(() => {
 // 重置校验
 const resetCheck = () => {
   loginRules.value.account = [
-    { required: true, trigger: "blur", message: "请输入手机号/邮箱" },
+    { required: true, trigger: "blur", message: "请输入手机号/邮箱/用户名" },
   ];
   loginFormRef.value.resetFields();
 };
@@ -576,9 +576,9 @@ const agreements = (val: any) => {
             <ElInput v-model="registerForm.companyName" placeholder="请输入公司名称" />
           </ElFormItem>
           <!--  v-if="registerForm.companyType === 'company'" -->
-          <ElFormItem prop="taxID">
+          <!-- <ElFormItem prop="taxID">
             <ElInput v-model="registerForm.taxID" placeholder="请输入公司税号" />
-          </ElFormItem>
+          </ElFormItem> -->
           <!--  v-if="registerForm.companyType === 'company'" -->
           <ElFormItem prop="legalPersonName">
             <ElInput v-model="registerForm.legalPersonName" placeholder="请输入法人姓名" />
@@ -630,13 +630,13 @@ const agreements = (val: any) => {
               </template>
             </ElInput>
           </ElFormItem>
-          <ElFormItem prop="isInvitation"> 
+          <ElFormItem prop="isInvitation">
             <el-select v-model="registerForm.isInvitation" tabindex="6" placeholder="是否开启合作邀约" filterable>
               <template #prefix>
                 <SvgIcon name="i-ant-design:container-outlined" />
               </template>
-              <el-option label="开启" :value="2"> </el-option>
-              <el-option label="不开启" :value="1"> </el-option>
+              <el-option label="合作邀约开启" :value="2"> </el-option>
+              <el-option label="合作邀约关闭" :value="1"> </el-option>
             </el-select>
 
           </ElFormItem>

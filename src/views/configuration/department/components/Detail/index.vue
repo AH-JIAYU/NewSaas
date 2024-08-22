@@ -29,7 +29,9 @@ const commissionList = [
   { label: "审核计提", value: 2 },
   { label: "收款计提", value: 3 },
 ];
+// 更新
 const emit = defineEmits(["fetch-data"]);
+// 开关
 const drawerisible = ref<boolean>(false);
 // 详情数据
 const detailData = ref<any>();
@@ -47,7 +49,6 @@ async function showEdit(row: any) {
     });
   drawerisible.value = true;
 }
-
 // 关闭
 function close() {
   emit("fetch-data");
@@ -150,7 +151,7 @@ defineExpose({
   <el-col :span="6">
     <el-form-item label="提成发放规则:">
       <el-text class="mx-1">
-        {{ commissionList[detailData?.commissionType-1] ? commissionList[detailData?.commissionType-1].label  : "-" }}
+        {{ commissionList[detailData?.commissionType-1] ? commissionList[detailData?.commissionType-1].label : "-" }}
       </el-text>
     </el-form-item>
   </el-col>
@@ -163,51 +164,6 @@ defineExpose({
   </el-col>
 </el-row>
 </el-card>
-
-<!-- <el-card class="box-card">
-        <template #header>
-          <div class="card-header">
-            <span>权限信息</span>
-          </div>
-        </template>
-        <el-row :gutter="24">
-          <el-col :span="8">
-            <el-form-item label="客户状态:">
-              <el-text class="mx-1">
-                {{ detailData.customerStatus === 1 ? "关闭" : "开启" }}
-              </el-text>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="资料:">
-              <el-text class="mx-1">
-                {{ detailData.antecedentQuestionnaire === 1 ? "关闭" : "开启" }}
-              </el-text>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="风险控制:">
-              <el-text class="mx-1">
-                {{ detailData.riskControl === 1 ? "关闭" : "开启" }}
-              </el-text>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="营业限额/月:">
-              <el-text class="mx-1">
-                <CurrencyType />{{ detailData.turnover || 0 }}
-              </el-text>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="审核率Min值:">
-              <el-text class="mx-1">
-                {{ detailData.turnover ? detailData.turnover + "%" : "-" }}
-              </el-text>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-card> -->
 <el-card class="box-card">
   <template #header>
           <div class="card-header">
@@ -243,7 +199,7 @@ defineExpose({
     </el-table-column>
     <el-table-column align="center" show-overflow-tooltip prop="personId" label="职位"><template #default="{ row }">
                 <el-text v-for="item in positionManageList">
-                  <el-text v-if="row.personId === item.id">
+                  <el-text v-if="row.positionId === item.id">
                     {{ item.name ? item.name : "-" }}
                   </el-text>
                 </el-text>

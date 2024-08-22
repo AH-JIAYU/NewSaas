@@ -274,7 +274,7 @@ function onDel(row: any) {
         />
         <ElTableColumn prop="id" align="center" label="角色ID" />
         <ElTableColumn prop="roleName" align="center" label="角色名称" />
-        <ElTableColumn prop="roleName" align="center" label="账户数" />
+        <ElTableColumn prop="count" align="center" label="账户数" />
         <ElTableColumn prop="roleName" align="center" label="备注" />
         <ElTableColumn label="操作" width="250" align="center" fixed="right">
           <template #default="scope">

@@ -6,6 +6,7 @@ import api from "@/api/modules/group_team";
 import apiDep from "@/api/modules/department";
 import useDepartmentStore from "@/store/modules/department";
 import useTenantStaffStore from "@/store/modules/configuration_manager";
+import usePositionManageStore from "@/store/modules/position_manage";
 
 defineOptions({
   name: "Edit",
@@ -14,7 +15,12 @@ const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
 // tree ref
 const treeRef = ref<any>();
+// tableRef
 const tableRef = ref<any>();
+// 职位
+const usePositionManage = usePositionManageStore();
+// 职位数据
+const positionManageList = ref<any>();
 // 部门
 const departmentStore = useDepartmentStore();
 // 部门数据
@@ -41,6 +47,7 @@ const dialogTableVisible = ref(false);
 const dataList = ref<any>([]);
 // 组长
 const groupLeaderList = ref<any>([]);
+// 部门id
 const department = ref<any>();
 const dictionaryItem = ref<any>({
   loading: false,
@@ -64,21 +71,8 @@ const dictionaryItem = ref<any>({
     level: 1,
   },
 });
-const dictionary = ref({
-  search: {
-    chineseName: "",
-  },
-  tree: [],
-  currentNode: undefined,
-  currentData: undefined,
-  dialog: {
-    visible: false,
-    parentId: "",
-    id: "",
-  },
-  row: "",
-  loading: false,
-});
+// 搜索
+const userName = ref<any>(null)
 // 定义表单
 const form = ref<any>({
   // 组id
@@ -99,7 +93,6 @@ const formRules = ref<FormRules>({
     {
       validator: (rule, value, callback) => {
         const regex = /^[0-9]*[.]?[0-9]+$/;
-        // const regex = /^[0-9]*\.?[0-9]*$/;
         if (regex.test(value)) {
           callback();
         } else {
@@ -115,6 +108,8 @@ async function showEdit(row: any) {
   title.value = row?.id ? "编辑" : "新增";
   const listData = JSON.parse(row);
   form.value.groupId = listData.id;
+  // 部门id
+  department.value = listData.departmentId
   const params = {
     page: 1,
     limit: 10,
@@ -122,21 +117,23 @@ async function showEdit(row: any) {
   };
   // 获取组长信息
   const res = await api.list(params);
-  department.value = res.data.departmentId;
+  if (res?.data.data) {
+    res.data.data.forEach((item: any) => {
+      form.value?.menuId?.push(item.id);
+      dataList.value.push(item);
+    });
+  }
   // 左侧树状数据
   const ress = await apiDep.createEvery();
   departmentList.value = ress.data.result;
   // 筛选需要的数据
   departmentList.value = departmentList.value.filter((departments: any) => departments.id === department.value)
-  res.data.data.forEach((item: any) => {
-    if (item.isLeader) {
-      groupLeaderList.value.push(item);
-    } else {
-      form.value?.menuId?.push(item.memberId);
-      dataList.value.push(item);
-    }
-  });
   dialogTableVisible.value = true;
+}
+const blurUserName = () => {
+  if (userName) {
+    dataList.value = departmentList.value[0].children.filter((item: any) => item.userName.includes(userName.value))
+  }
 }
 // 每页数量切换
 function sizeChange(size: number) {
@@ -153,7 +150,11 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
   onSortChange(prop, order).then(() => showEdit(1));
 }
 onMounted(async () => {
+  // 职位
+  positionManageList.value = await usePositionManage?.getPositionManage() || [];
+  // 部门
   departmentList.value = await departmentStore.getDepartment();
+  // 用户
   staffList.value = await tenantStaffStore.getStaff();
   defaultTime.value = new Date();
 });
@@ -306,16 +307,16 @@ defineExpose({ showEdit });
 <template>
   <div v-loading="loading">
     <el-drawer v-model="dialogTableVisible" :title="title" @close="handleClose" size="60%">
-      <el-card class="box-card">
+      <!-- <el-card class="box-card">
         <template #header>
           <div class="card-header">
             <span>组长</span>
           </div>
         </template>
-        <el-table :data="groupLeaderList" border>
-          <el-table-column align="center" type="index" label="序号" width="80" />
-          <el-table-column align="center" show-overflow-tooltip prop="memberId" label="员工ID" />
-          <el-table-column align="center" show-overflow-tooltip prop="lable" label="用户名"><template #default="{ row }">
+<el-table :data="groupLeaderList" border>
+  <el-table-column align="center" type="index" label="序号" width="80" />
+  <el-table-column align="center" show-overflow-tooltip prop="memberId" label="员工ID" />
+  <el-table-column align="center" show-overflow-tooltip prop="lable" label="用户名"><template #default="{ row }">
               <template v-if="row.memberId">
                 <el-text v-for="item in staffList">
                   <el-text v-if="row.memberId === item.id">
@@ -323,14 +324,14 @@ defineExpose({ showEdit });
                   </el-text>
                 </el-text>
               </template>
-              <template v-else>
+    <template v-else>
                 <el-text>
                   {{ row.name }}
                 </el-text>
               </template>
-            </template>
-          </el-table-column>
-          <el-table-column align="center" show-overflow-tooltip prop="lable" label="姓名"><template #default="{ row }">
+    </template>
+  </el-table-column>
+  <el-table-column align="center" show-overflow-tooltip prop="lable" label="姓名"><template #default="{ row }">
               <template v-if="row.memberId">
                 <el-text v-for="item in staffList">
                   <el-text v-if="row.memberId === item.id">
@@ -338,45 +339,45 @@ defineExpose({ showEdit });
                   </el-text>
                 </el-text>
               </template>
-              <template v-else>
+    <template v-else>
                 <el-text>
                   {{ row.name }}
                 </el-text>
               </template>
-            </template>
-          </el-table-column>
-          <el-table-column align="center" show-overflow-tooltip prop="lable" label="部门"><template #default="{ row }">
+    </template>
+  </el-table-column>
+  <el-table-column align="center" show-overflow-tooltip prop="lable" label="部门"><template #default="{ row }">
               <el-text v-for="item in departmentList">
                 <el-text v-if="department === item.id">
                   {{ item.name }}
                 </el-text>
               </el-text>
             </template>
-          </el-table-column>
-          <el-table-column align="center" width="200" fixed="right" show-overflow-tooltip label="提成比例">
-            <template #default="{ row }">
+  </el-table-column>
+  <el-table-column align="center" width="200" fixed="right" show-overflow-tooltip label="提成比例">
+    <template #default="{ row }">
               <el-form :model="row" ref="formRef" :rules="formRules">
                 <el-form-item prop="commission">
                   <el-input v-model.number="row.commission" placeholder="请输入提成比例" clearable>
                     <template #append>%</template></el-input>
-                </el-form-item>
-              </el-form>
-            </template>
-          </el-table-column>
-          <template #empty>
+    </el-form-item>
+    </el-form>
+    </template>
+  </el-table-column>
+  <template #empty>
             <el-empty description="暂无数据" />
           </template>
-        </el-table>
-      </el-card>
+</el-table>
+</el-card> -->
       <el-card class="box-card">
         <template #header>
           <div class="card-header">
-            <span>组员</span>
+            <span>组成员</span>
           </div>
         </template>
         <el-row :gutter="20">
           <el-col class="leftData" :span="8">
-            <el-input v-model="form.invoiceAmount" placeholder="可输入关键字查找" clearable />
+            <el-input v-model="userName" placeholder="可输入用户名查找" clearable @blur="blurUserName" />
             <el-tree style="max-width: 37.5rem; min-height: 20.125rem; margin-top: 20px;" :data="departmentList"
               ref="treeRef" show-checkbox node-key="id" :default-checked-keys="form.menuId"
               :default-expanded-keys="form.menuId" default-expand-all :props="defaultProps" @check="checkChange" />
@@ -386,8 +387,8 @@ defineExpose({ showEdit });
               <!-- <el-table-column align="center" type="selection" /> -->
               <el-table-column align="center" show-overflow-tooltip prop="memberId" label="员工ID"><template
                   #default="{ row }">
-                  <el-text v-if="row.memberId">
-                    {{ row.memberId }}
+                  <el-text v-if="row.id">
+                    {{ row.id }}
                   </el-text>
                   <el-text v-else>
                     {{ row.id }}
@@ -396,9 +397,9 @@ defineExpose({ showEdit });
               </el-table-column>
               <el-table-column align="center" show-overflow-tooltip prop="userName" label="用户名"><template
                   #default="{ row }">
-                  <template v-if="row.memberId">
+                  <template v-if="row.id">
                     <el-text v-for="item in staffList">
-                      <el-text v-if="row.memberId === item.id">
+                      <el-text v-if="row.id === item.id">
                         {{ item.name }}
                       </el-text>
                     </el-text>
@@ -411,9 +412,9 @@ defineExpose({ showEdit });
                 </template>
               </el-table-column>
               <el-table-column align="center" show-overflow-tooltip prop="name" label="姓名"><template #default="{ row }">
-                  <template v-if="row.memberId">
+                  <template v-if="row.id">
                     <el-text v-for="item in staffList">
-                      <el-text v-if="row.memberId === item.id">
+                      <el-text v-if="row.id === item.id">
                         {{ item.name }}
                       </el-text>
                     </el-text>
@@ -423,6 +424,15 @@ defineExpose({ showEdit });
                       {{ row.name }}
                     </el-text>
                   </template>
+                </template>
+              </el-table-column>
+              <el-table-column align="center" show-overflow-tooltip prop="lable" label="职位"><template
+                  #default="{ row }">
+                  <el-text v-for="item in positionManageList">
+                    <el-text v-if="row.positionId === item.id">
+                      {{ item.name }}
+                    </el-text>
+                  </el-text>
                 </template>
               </el-table-column>
               <el-table-column align="center" show-overflow-tooltip prop="lable" label="部门"><template

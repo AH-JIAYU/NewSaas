@@ -1,6 +1,6 @@
 {
   "app": {
-    "account": "手机号/邮箱",
+    "account": "手机号/邮箱/用户名",
     "captcha": "验证码",
     "check": "确认",
     "goLogin": "去登录",

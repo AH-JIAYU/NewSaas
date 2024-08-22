@@ -21,12 +21,15 @@ defineOptions({
 });
 // 小组
 const useGroupManage = useGroupManageStore();
+// 小组数据
 const groupManageList = ref<any>();
 // 职位
 const usePositionManage = usePositionManageStore();
+// 职位数据
 const positionManageList = ref<any>();
 // 国家
 const useStoreCountry = useBasicDictionaryStore();
+// 国家数据
 const filterCountry = ref<any>([]);
 // 部门
 const departmentStore = useDepartmentStore();
@@ -40,6 +43,7 @@ interface Dict {
   code: string;
   children?: Dict[];
 }
+
 const columns = ref<any>([
   {
     label: "员工ID",
@@ -54,14 +58,15 @@ const columns = ref<any>([
     checked: true,
   },
   { label: "姓名", prop: "name", sortable: true, checked: true },
-  { label: "国家", prop: "country", sortable: true, checked: true },
-  { label: "电话号码", prop: "phone", sortable: true, checked: true },
+  // { label: "国家", prop: "country", sortable: true, checked: true },
+  { label: "电话号码", prop: "phoneNumber", sortable: true, checked: true },
   { label: "邮箱", prop: "email", sortable: true, checked: true },
   { label: "部门", prop: "departmentId", sortable: true, checked: true },
   { label: "职位", prop: "positionId", sortable: true, checked: true },
   { label: "小组", prop: "groupId", sortable: true, checked: true },
   { label: "状态", prop: "active", sortable: true, checked: true },
 ]);
+// 状态
 const activeList: any = [
   {
     label: "启用",
@@ -72,6 +77,7 @@ const activeList: any = [
     value: false,
   },
 ];
+// dictionaryRef
 const dictionaryRef = ref();
 // 详情ref
 const detailRef = ref<any>();
@@ -91,15 +97,21 @@ const dictionary = ref<any>({
   row: "",
   loading: false,
 });
+// 重置密码数据
 const dictionaryList = ref<any>()
+// tableRef
 const dictionaryItemRef = ref();
 // 字典下的数据
 const dictionaryItem = ref<any>({
   loading: false,
-  tableAutoHeight: false, // 表格是否自适应高度
-  border: true, // 表格控件-是否展示边框
-  stripe: false, // 表格控件-是否展示斑马条
-  lineHeight: "default", // 表格控件-控制表格大小
+  // 表格是否自适应高度
+  tableAutoHeight: false,
+  // 表格控件-是否展示边框
+  border: true,
+  // 表格控件-是否展示斑马条
+  stripe: false,
+   // 表格控件-控制表格大小
+  lineHeight: "default",
   checkList: [],
   // 搜索
   search: {
@@ -221,7 +233,7 @@ function onChangeStatus(row: any) {
       });
   });
 }
-// 字典项详情
+// 用户详情
 function dictionaryClick(data: Dict) {
   pagination.value.page = 1;
   if (data?.children?.length) {
@@ -265,10 +277,9 @@ function onCreate(row?: any) {
     dictionaryItem.value.dialog.level = Number(row.level) + 1;
   }
 }
+// 选中列表
 const selectChange = (val: any) => {
   dictionaryList.value = val[0]
-  console.log('val', val);
-
 }
 // 重置密码
 function onResetPassword() {
@@ -387,7 +398,7 @@ function onReset() {
             </ElTableColumn>
             <ElTableColumn v-if="dictionaryItem.checkList.includes('name')" align="center" width="150" prop="name"
               label="姓名" />
-            <!-- <ElTableColumn v-if="dictionaryItem.checkList.includes('country')" prop="country" label="国家" width="150"
+            <ElTableColumn v-if="dictionaryItem.checkList.includes('country')" prop="country" label="国家" width="150"
               align="center">
               <template #default="{ row }">
                 <div v-for="item in filterCountry" :key="item.id" class="mx-1">
@@ -396,10 +407,10 @@ function onReset() {
                   </el-tag>
                 </div>
               </template>
-            </ElTableColumn> -->
-            <ElTableColumn v-if="dictionaryItem.checkList.includes('phone')" align="center" width="180" prop="phone"
+            </ElTableColumn>
+            <ElTableColumn v-if="dictionaryItem.checkList.includes('phoneNumber')" align="center" width="180" prop="phone"
               label="电话号码"><template #default="{ row }">
-                {{ row.phone ? row.phone : "-" }}
+                {{ row.phoneNumber ? row.phoneNumber : "-" }}
               </template>
             </ElTableColumn>
             <ElTableColumn v-if="dictionaryItem.checkList.includes('email')" align="center" width="180" prop="email"
@@ -410,30 +421,39 @@ function onReset() {
             </ElTableColumn>
             <ElTableColumn v-if="dictionaryItem.checkList.includes('departmentId')" align="center" prop="departmentId"
               label="部门"><template #default="{ row }">
-                <el-text v-for="item in departmentList">
+                <el-text v-if="row.departmentId">
+                  <el-text v-for="item in departmentList">
                   <el-text v-if="row.departmentId === item.id">
                     {{ item.name ? item.name : "-" }}
                   </el-text>
                 </el-text>
+                </el-text>
+                <el-text v-else>-</el-text>
               </template>
             </ElTableColumn>
             <ElTableColumn v-if="dictionaryItem.checkList.includes('positionId')" align="center" prop="positionId"
               label="职位">
               <template #default="{ row }">
-                <el-text v-for="item in positionManageList">
+                <el-text v-if="row.positionId">
+                  <el-text v-for="item in positionManageList">
                   <el-text v-if="row.positionId === item.id">
                     {{ item.name ? item.name : "-" }}
                   </el-text>
                 </el-text>
+                </el-text>
+                <el-text v-else>-</el-text>
               </template>
             </ElTableColumn>
             <ElTableColumn v-if="dictionaryItem.checkList.includes('groupId')" align="center" prop="groupId" label="小组">
               <template #default="{ row }">
-                <el-text v-for="item in groupManageList">
+                <el-text v-if="row.groupId">
+                  <el-text v-for="item in groupManageList">
                   <el-text v-if="row.groupId === item.id">
                     {{ item.name ? item.name : "-" }}
                   </el-text>
                 </el-text>
+                </el-text>
+                <el-text v-else>-</el-text>
               </template>
             </ElTableColumn>
             <ElTableColumn v-if="dictionaryItem.checkList.includes('active')" align="center" prop="active" label="状态">

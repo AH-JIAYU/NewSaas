@@ -47,15 +47,15 @@ const columns = ref([
     // 默认展示
     checked: true,
   },
-  {
-    label: "部门主管",
-    prop: "director",
-    sortable: true,
-    // 不可更改
-    disableCheck: false,
-    // 默认展示
-    checked: true,
-  },
+  // {
+  //   label: "部门主管",
+  //   prop: "director",
+  //   sortable: true,
+  //   // 不可更改
+  //   disableCheck: false,
+  //   // 默认展示
+  //   checked: true,
+  // },
   {
     label: "员工数",
     prop: "memberCount",
@@ -125,11 +125,6 @@ const data = ref<any>({
   // 列表数据
   dataList: [],
 });
-// 类型
-// const commissionList = [
-//   { label: "启用", value: 1 },
-//   { label: "禁用", value: 2 },
-// ];
 // 获取数据
 function getDataList() {
   data.value.loading = true;
@@ -194,8 +189,8 @@ function onCreate() {
   }
 }
 // 新增小组
-function onGroup() {
-  groupFormRef.value.showEdit()
+function onGroup(row:any) {
+  groupFormRef.value.showEdit(JSON.stringify(row))
 }
 // 修改
 function onEdit(row: any) {
@@ -265,22 +260,6 @@ onBeforeUnmount(() => {
               <ElInput v-model="data.search.name" placeholder="请输入部门名称" clearable @keydown.enter="currentChange()"
                 @clear="currentChange()" />
             </ElFormItem>
-            <!-- <el-form-item label="">
-              <el-select
-                v-model="data.search.commissionStatus"
-                value-key=""
-                placeholder="请选择状态"
-                clearable
-                filterable
-              >
-                <el-option
-                  v-for="item in commissionList"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                />
-              </el-select>
-            </el-form-item> -->
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">
                 <template #icon>
@@ -361,7 +340,7 @@ onBeforeUnmount(() => {
         </ElTableColumn>
         <ElTableColumn label="操作" width="300" align="center" fixed="right">
           <template #default="scope">
-            <ElButton type="primary" size="small" plain @click="onGroup()">
+            <ElButton type="primary" size="small" plain @click="onGroup(scope.row)">
               新增小组
             </ElButton>
             <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">

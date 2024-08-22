@@ -114,6 +114,8 @@ const data = ref<any>({
     userName: '',
     // 姓名
     name: '',
+    // 部门id
+    positionId: null,
   },
   // 批量操作
   batch: {
@@ -180,6 +182,8 @@ function onReset() {
     userName: '',
     // 姓名
     name: '',
+    // 部门id
+    positionId: null,
   });
   getDataList();
 }
@@ -223,6 +227,16 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
               <ElInput v-model="data.search.name" placeholder="姓名" clearable @keydown.enter="currentChange()"
                 @clear="currentChange()" />
             </ElFormItem>
+            <ElFormItem v-show="!fold">
+                <el-select v-model="data.search.positionId" value-key="" placeholder="职位" clearable filterable >
+                <el-option v-for="item in positionManageList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
+                </el-option>
+                </el-select>
+
+            </ElFormItem>
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">
                 <template #icon>
@@ -236,7 +250,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
                 </template>
                 重置
               </ElButton>
-              <ElButton link disabled @click="toggle">
+              <ElButton link @click="toggle">
                 <template #icon>
                   <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
                 </template>
