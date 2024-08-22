@@ -199,7 +199,7 @@ defineExpose({
     </el-table-column>
     <el-table-column align="center" show-overflow-tooltip prop="personId" label="职位"><template #default="{ row }">
                 <el-text v-for="item in positionManageList">
-                  <el-text v-if="row.personId === item.id">
+                  <el-text v-if="row.positionId === item.id">
                     {{ item.name ? item.name : "-" }}
                   </el-text>
                 </el-text>

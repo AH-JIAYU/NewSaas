@@ -189,8 +189,8 @@ function onCreate() {
   }
 }
 // 新增小组
-function onGroup() {
-  groupFormRef.value.showEdit()
+function onGroup(row:any) {
+  groupFormRef.value.showEdit(JSON.stringify(row))
 }
 // 修改
 function onEdit(row: any) {
@@ -340,7 +340,7 @@ onBeforeUnmount(() => {
         </ElTableColumn>
         <ElTableColumn label="操作" width="300" align="center" fixed="right">
           <template #default="scope">
-            <ElButton type="primary" size="small" plain @click="onGroup()">
+            <ElButton type="primary" size="small" plain @click="onGroup(scope.row)">
               新增小组
             </ElButton>
             <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">

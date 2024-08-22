@@ -71,6 +71,8 @@ const dictionaryItem = ref<any>({
     level: 1,
   },
 });
+// 搜索
+const userName = ref<any>(null)
 // 定义表单
 const form = ref<any>({
   // 组id
@@ -106,6 +108,8 @@ async function showEdit(row: any) {
   title.value = row?.id ? "编辑" : "新增";
   const listData = JSON.parse(row);
   form.value.groupId = listData.id;
+  // 部门id
+  department.value = listData.departmentId
   const params = {
     page: 1,
     limit: 10,
@@ -114,12 +118,10 @@ async function showEdit(row: any) {
   // 获取组长信息
   const res = await api.list(params);
   if (res?.data.data) {
-    // 部门id
-    department.value = res?.data.data[0].departmentId;
     res.data.data.forEach((item: any) => {
-    form.value?.menuId?.push(item.id);
-    dataList.value.push(item);
-  });
+      form.value?.menuId?.push(item.id);
+      dataList.value.push(item);
+    });
   }
   // 左侧树状数据
   const ress = await apiDep.createEvery();
@@ -127,6 +129,15 @@ async function showEdit(row: any) {
   // 筛选需要的数据
   departmentList.value = departmentList.value.filter((departments: any) => departments.id === department.value)
   dialogTableVisible.value = true;
+}
+const blurUserName = () => {
+  if (userName) {
+    console.log('userName',userName);
+
+    dataList.value = departmentList.value[0].children.filter((item: any) => item.userName.includes(userName.value))
+    console.log('dataList.value',dataList.value);
+
+  }
 }
 // 每页数量切换
 function sizeChange(size: number) {
@@ -370,7 +381,7 @@ defineExpose({ showEdit });
         </template>
         <el-row :gutter="20">
           <el-col class="leftData" :span="8">
-            <el-input v-model="form.invoiceAmount" placeholder="可输入关键字查找" clearable />
+            <el-input v-model="userName" placeholder="可输入用户名查找" clearable @blur="blurUserName" />
             <el-tree style="max-width: 37.5rem; min-height: 20.125rem; margin-top: 20px;" :data="departmentList"
               ref="treeRef" show-checkbox node-key="id" :default-checked-keys="form.menuId"
               :default-expanded-keys="form.menuId" default-expand-all :props="defaultProps" @check="checkChange" />

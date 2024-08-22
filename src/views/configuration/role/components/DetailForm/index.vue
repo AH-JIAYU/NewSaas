@@ -35,7 +35,7 @@ const form = ref<any>({
 });
 // 校验
 const formRules = ref<FormRules>({
-  roleName: [{ required: true, message: "请输入角色吗", trigger: "blur" }],
+  roleName: [{ required: true, message: "请输入角色名称", trigger: "blur" }],
 });
 
 onMounted(async () => {
@@ -158,11 +158,11 @@ defineExpose({
       label-width="120px"
       label-suffix="："
     >
-      <ElFormItem label="角色码" prop="roleName">
+      <ElFormItem label="角色名称" prop="roleName">
         <ElInput
           v-model="form.roleName"
           :disabled="!!form.id"
-          placeholder="请输入角色码"
+          placeholder="请输入角色名称"
         />
       </ElFormItem>
       <ElFormItem label="备注" prop="remark">

@@ -3,11 +3,11 @@ import type { FormInstance, FormRules } from "element-plus";
 import { ElMessage } from "element-plus";
 import api from "@/api/modules/configuration_manager";
 import apiDep from "@/api/modules/department";
+import apiPos from "@/api/modules/position_manage";
 import useDepartmentStore from "@/store/modules/department";
 import useTenantRoleStore from "@/store/modules/tenant_role";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary";
 import useTenantStaffStore from "@/store/modules/configuration_manager";
-import usePositionManageStore from "@/store/modules/position_manage";
 
 const router = useRouter();
 // 用户
@@ -17,7 +17,6 @@ const staffList = ref<any>([]);
 // 小组
 const groupManageList = ref<any>([]);
 // 职位
-const usePositionManage = usePositionManageStore();
 const positionManageList = ref<any>();
 // 国家
 const useStoreCountry = useBasicDictionaryStore();
@@ -255,7 +254,14 @@ const flattenDeep = (arr: any) => {
   );
 };
 onMounted(async () => {
-  positionManageList.value = await usePositionManage.getPositionManage();
+  const {data} = await apiPos.list({
+    page: 1,
+    limit: 10,
+    id: null,
+    name: "",
+    active: null
+  })
+  positionManageList.value = data.data
   staffList.value = await tenantStaffStore.getStaff();
   munulevs.value = await roleStore.getRole();
   departmentList.value = await departmentStore.getDepartment();
@@ -265,7 +271,7 @@ onMounted(async () => {
     form.value = JSON.parse(props.row);
     isEmail.value = form.value.email
     isPhone.value = form.value.phoneNumber
-    if(form.value.departmentId) {
+    if (form.value.departmentId) {
       departmentChange(form.value.departmentId)
     }
     disabled.value = true;
@@ -275,15 +281,8 @@ onMounted(async () => {
 </script>
 
 <template>
-  <ElDrawer
-    v-model="visible"
-    :title="title"
-    size="60%"
-    :close-on-click-modal="false"
-    append-to-body
-    destroy-on-close
-    @closed="onCancel"
-  >
+  <ElDrawer v-model="visible" :title="title" size="60%" :close-on-click-modal="false" append-to-body destroy-on-close
+    @closed="onCancel">
     <ElForm ref="formRef" :model="form" :rules="formRules" label-width="100px">
       <el-card class="box-card">
         <template #header>
@@ -294,20 +293,12 @@ onMounted(async () => {
         <el-row :gutter="24">
           <el-col :span="8">
             <el-form-item label="用户名" prop="userName">
-              <el-input
-                v-model="form.userName"
-                placeholder="请输入用户名"
-                clearable
-              />
+              <el-input v-model="form.userName" placeholder="请输入用户名" clearable />
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="姓名" prop="name">
-              <el-input
-                v-model="form.name"
-                placeholder="请输入姓名"
-                clearable
-              />
+              <el-input v-model="form.name" placeholder="请输入姓名" clearable />
             </el-form-item>
           </el-col>
           <!-- <el-col :span="8">
@@ -329,58 +320,27 @@ onMounted(async () => {
           </el-col> -->
           <el-col :span="8">
             <el-form-item label="手机号" prop="phoneNumber">
-              <el-input
-                v-model="form.phoneNumber"
-                placeholder="请输入手机号"
-                clearable
-                @blur="chengAccount"
-              />
+              <el-input v-model="form.phoneNumber" placeholder="请输入手机号" clearable @blur="chengAccount" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="邮箱" prop="email">
-              <el-input
-                v-model="form.email"
-                placeholder="请输入邮箱"
-                clearable
-                @blur="chengAccount"
-              />
+              <el-input v-model="form.email" placeholder="请输入邮箱" clearable @blur="chengAccount" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="部门">
-              <el-select
-                v-model="form.departmentId"
-                placeholder="请选择部门"
-                clearable
-                filterable
-                @change="departmentChange"
-              >
-                <el-option
-                  v-for="item in departmentList"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id"
-                >
+              <el-select v-model="form.departmentId" placeholder="请选择部门" clearable filterable
+                @change="departmentChange">
+                <el-option v-for="item in departmentList" :key="item.id" :label="item.name" :value="item.id">
                 </el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="职位" prop="">
-              <el-select
-                v-model="form.positionId"
-                placeholder="请选择职位"
-                clearable
-                filterable
-                @change=""
-              >
-                <el-option
-                  v-for="item in positionManageList"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id"
-                >
+              <el-select v-model="form.positionId" placeholder="请选择职位" clearable filterable @change="">
+                <el-option v-for="item in positionManageList" :key="item.id" :label="item.name" :value="item.id">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -419,12 +379,8 @@ onMounted(async () => {
         <el-row :gutter="24">
           <el-form-item label="分配角色:">
             <el-radio-group v-model="form.role">
-              <el-radio
-                v-for="item in munulevs"
-                :key="item.id"
-                :value="item.roleName"
-                :label="item.roleName"
-              ></el-radio>
+              <el-radio v-for="item in munulevs" :key="item.id" :value="item.roleName"
+                :label="item.roleName"></el-radio>
             </el-radio-group>
           </el-form-item>
         </el-row>
@@ -433,28 +389,19 @@ onMounted(async () => {
         <template #header>
           <div class="card-header">
             <div class="leftTitle">
-              小组信息<span v-if="form.director" style="margin-left: 20px; font-size: 14px"
-                >负责人:<el-text v-for="item in staffList" :key="item.id">
-              <el-text v-if="item.id === form.director">
-                {{ item.name }}
-              </el-text>
-            </el-text></span
-              >
+              小组信息<span v-if="form.director" style="margin-left: 20px; font-size: 14px">负责人:<el-text
+                  v-for="item in staffList" :key="item.id">
+                  <el-text v-if="item.id === form.director">
+                    {{ item.name }}
+                  </el-text>
+                </el-text></span>
             </div>
           </div>
         </template>
         <el-row :gutter="24">
           <el-form-item label="分配小组:">
-            <el-radio-group
-              v-if="groupManageList.length"
-              v-model="form.groupId"
-            >
-              <el-radio
-                v-for="item in groupManageList"
-                :key="item.id"
-                :value="item.id"
-                :label="item.name"
-              ></el-radio>
+            <el-radio-group v-if="groupManageList.length" v-model="form.groupId">
+              <el-radio v-for="item in groupManageList" :key="item.id" :value="item.id" :label="item.name"></el-radio>
             </el-radio-group>
             <el-text v-else>-</el-text>
           </el-form-item>

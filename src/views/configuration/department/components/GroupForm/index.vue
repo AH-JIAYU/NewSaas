@@ -89,7 +89,9 @@ function onSubmit() {
   });
 }
 // 获取数据
-async function showEdit() {
+async function showEdit(row:any) {
+  const obj = JSON.parse(row)
+  form.value.departmentId = obj.id
   title.value = "新增小组";
   dialogTableVisible.value = true;
 }
