@@ -48,7 +48,7 @@ const queryForm = reactive<any>({
 });
 const list = ref<any>([]);
 
-// 测查
+// 详情
 function editData(row: any) {
   editRef.value.showEdit(row,queryForm.type===2?1:0);
 }
@@ -197,7 +197,7 @@ onMounted(() => {
             <el-table-column align="center" fixed="right" label="操作" width="170">
               <template #default="{ row }">
                 <el-button type="primary" plain size="small" @click="editData(row)">
-                  测查
+                  详情
                 </el-button>
               </template>
             </el-table-column>
@@ -301,7 +301,7 @@ onMounted(() => {
             <el-table-column align="center" fixed="right" label="操作" width="170">
               <template #default="{ row }">
                 <el-button type="primary" plain size="small" @click="editData(row)">
-                  测查
+                  详情
                 </el-button>
               </template>
             </el-table-column>

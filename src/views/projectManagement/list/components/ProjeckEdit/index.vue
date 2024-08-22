@@ -3,7 +3,6 @@ import { provide, reactive, ref } from "vue";
 import LeftTabs from "../ProjeckLeftTabs/index.vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { cloneDeep } from "lodash-es";
-import { obtainLoading, submitLoading } from "@/utils/apiLoading";
 import useProjectManagementListStore from "@/store/modules/projectManagement_list"; // 项目
 import useStagedDataStore from "@/store/modules/stagedData"; // 暂存
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
@@ -45,7 +44,7 @@ async function showEdit(row: any) {
   } else {
     title.value = "编辑";
     // 编辑返回的字段也一样，周二让刘改字段 	项目配额字段updateProjectQuotaInfoList getProjectQuotaInfoList
-    const res = await obtainLoading(api.detail({ projectId: row.projectId }));
+    const res = await api.detail({ projectId: row.projectId });
     initializeLeftTabsData(res.data);
   }
   dialogTableVisible.value = true;
@@ -206,7 +205,7 @@ async function onSubmit() {
         }
         emits("fetch-data");
         closeHandler();
-        loading.value = false;
+
       }, 1000)
 
     } else {
@@ -220,6 +219,7 @@ async function onSubmit() {
       center: true,
     });
   }
+  loading.value = false;
 }
 // 弹框关闭事件
 function closeHandler() {

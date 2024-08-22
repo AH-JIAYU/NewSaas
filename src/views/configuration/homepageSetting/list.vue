@@ -105,13 +105,13 @@ function homePage(row: any, title: any = "编辑") {
 }
 // 设计主页
 async function setHomePage(row: any) {
-  const res = await api.setTemplate({ templateId: row.id })
-  if (res.status === 1) {
+  const res = await api.setHomePageTemplate({ templateId: row.id });
+  res.status === 1 &&
     ElMessage.success({
-      message: "操作成功",
+      message: "设置成功",
       center: true,
     });
-  }
+    getDataList()
 }
 
 function onDel(row: any) {
@@ -145,7 +145,7 @@ function onDel(row: any) {
         </ElTableColumn>
         <ElTableColumn label="操作" width="250" align="center" fixed="right">
           <template #default="scope">
-            <ElButton type="primary" size="small" plain @click="setHomePage(scope.row)">
+            <ElButton v-if="!scope.row.isSet" type="primary" size="small" plain @click="setHomePage(scope.row)">
               设置为主页
             </ElButton>
             <ElButton type="primary" size="small" plain @click="homePage(scope.row, '查看')">
@@ -219,7 +219,7 @@ function onDel(row: any) {
             <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">
               编辑
             </ElButton>
-            <ElButton type="primary" size="small" plain @click="homePage(scope.row)">
+            <ElButton type="primary"  size="small" plain @click="homePage(scope.row)">
               设计主页
             </ElButton>
             <ElButton type="danger" size="small" plain @click="onDel(scope.row)">

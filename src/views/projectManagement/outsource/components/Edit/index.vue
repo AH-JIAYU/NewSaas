@@ -13,6 +13,7 @@ const projectManagementOutsourceStore = useProjectManagementOutsourceStore();
 const dialogTableVisible = ref(false);
 const popoverRef = ref<any>()//弹出框Ref
 const data = ref<any>({
+  select: '',
   currentTenantId: "", //当前租户id
   tenantMeasurementInfoList: [], //测查列表
   clickIdList: [],//点击id列表
@@ -79,7 +80,8 @@ const getClickListBefore = (index: any) => {
 
 }
 // 获取点击id
-const getClickList = async (row: any) => {
+const getClickList = async (row: any, index:any) => {
+  data.value.select = Number(index)
   const params = {
     type: row.type,
     projectId: row.projectId,
@@ -137,39 +139,53 @@ defineExpose({ showEdit });
 
 <template>
   <div>
-    <el-drawer v-model="dialogTableVisible" title="项目测查" size="60%" :before-close="closeHandler">
-      <div class="milestone">
-        <div class="item" v-for="(item, index) in data.tenantMeasurementInfoList" :key="item.allocationTenantId">
-          <div class="left">
+    <el-drawer v-model="dialogTableVisible" title="详情" size="60%" :before-close="closeHandler">
+      <div class="details">
+        <div class="details-left">
+
+          <!-- 项目 -->
+          <div class="project box">
+            <div><el-text tag="b">{{ data.tenantMeasurementInfoList[0].projectName }}</el-text></div>
+            <div><el-text type="info">ID：{{ data.tenantMeasurementInfoList[0].projectId }}</el-text></div>
+          </div>
+          <div class="link" v-for="(item, index) in data.tenantMeasurementInfoList" :key="item.allocationTenantId">
+            <!-- 步骤 -->
+            <div class="step">
+              <!-- 点 -->
+              <div class="spot"></div>
+              <!-- 线 -->
+              <div class="line"></div>
+            </div>
             <div :class="{
-      'left-top': true,
-      'flex-b': true,
-      currentTenant:
-        item.allocationTenantId === data.currentTenantId &&
-        item.type === 1,
+      'item box': true,
+      'select': index === data.select
     }">
-              <div class="left-top-left p-4">
-                <div class="project">
-                  <div class="projectName flex-b">
-                    <b>{{ item.projectName }}</b>
-                    <span>
-                      {{
-      projectManagementOutsourceStore.projectStatusList[
-      item.projectStatus - 1
-      ]
-    }}
-                    </span>
-                  </div>
-                  <div class="projectId">{{ item.projectId }}</div>
+              <div class="item-left">
+                <div class="tenant">
+                  <template v-if="item?.length > 1">
+                    <p class="tenantName">
+                      已分配数： <span class="tenantLength">{{ item?.length }}</span> <span :class="'type' + item.type">
+                        {{ projectManagementOutsourceStore.typeList[item.type - 1] }}
+                      </span>
+                    </p>
+                  </template>
+                  <template v-else>
+                    <p>
+                      <span class="tenantName">{{ item.tenantName }}</span>
+                      <span :class="'type' + item.type">
+                        {{ projectManagementOutsourceStore.typeList[item.type - 1] }}
+                      </span>
+                    </p>
+                    <el-text type="info">ID：{{ item.allocationTenantId }}</el-text>
+                  </template>
                 </div>
                 <div class="price flex-b">
                   <p>
-                    原价：
-                    <CurrencyType />
-                    {{ item.doMoneyPrice }}
+                    原价:
+                    <CurrencyType />{{ item.doMoneyPrice }}
                   </p>
                   <p>
-                    参数：
+                    参数:
                     <el-text size="large">{{ item.participationNumber || 0 }}
                     </el-text>
                     <el-text size="large"> / </el-text>
@@ -185,75 +201,38 @@ defineExpose({ showEdit });
                   </p>
                 </div>
               </div>
-              <div class="left-top-right p-4 " v-if="item.allocationTenantId !== data.currentTenantId ||
-      item.type !== 1
-      ">
-                <p :class="'type' + item.type">
-                  {{ projectManagementOutsourceStore.typeList[item.type - 1] }}
-                </p>
-                <div class="tenant">
-                  <template v-if="item?.length > 1">
-                    <el-button type="primary" link>
-                      查看更多({{ item?.length }})
-                    </el-button>
-                  </template>
-                  <template v-else>
-                    <p>{{ item.tenantName }}</p>
-                    <p>{{ item.allocationTenantId }}</p>
-                  </template>
-
-                </div>
+              <div class="viewAll">
+                <el-button type="primary" round @click="getClickList(item, index)">查看全部</el-button>
               </div>
-            </div>
-            <div class="left-bottom" v-if="data.tenantMeasurementInfoList.length !== index + 1">
-              <div class="line"></div>
-              <div class="allocation">
-                {{ item.tenantName }}-分配-{{
-      projectManagementOutsourceStore.typeList[
-      data.tenantMeasurementInfoList[index + 1].type - 1
-      ]
-    }}
-              </div>
-              <div class="arrow"></div>
             </div>
           </div>
-          <div class="right" v-if="item.allocationTenantId !== data.currentTenantId || item.type != 1
-      ">
-            <el-popover v-model:visible="item.visible" ref="popoverRef" placement="right" :width="350" trigger="click"
-              @before-enter="getClickListBefore(index)" @show="getClickList(item)">
-              <template #reference>
-                <el-button style="padding: 0.5rem" type="primary" link>
-                  <!-- @click="getClickList(item)" -->
-                  》
-                </el-button>
-              </template>
-              <div class="clickIdItem   m-2" v-for="ite in data.clickIdList">
-                <div class="clickIdItem-left">
+        </div>
+
+        <div class="details-right">
+          <div class="clickId" v-if="data.clickIdList.length">
+            <div class="clickIdItem" v-for="ite in data.clickIdList">
+              <div class="clickIdItem-title">
+                <div>
+                  <span class="supplierName">{{ ite.supplierName }}</span>
                   <span :class="'peopleType' + ite.peopleType">
                     {{ projectManagementOutsourceStore.peopleTypeList[ite.peopleType - 1] }}
                   </span>
                 </div>
-                <div class="clickIdItem-right">
-                  <div class="title">
-                    {{ ite.supplierName }} &emsp; {{ ite.supplierId }}
-                  </div>
-                  <ul>
-                    <li>点击ID:</li>
-                    <li v-for="it in ite.list">
-                      <span> {{ it.projectQuestionnaireClickId }}</span>
-                      <span> &emsp;{{ projectManagementOutsourceStore.surveyStatusList[it.surveyStatus - 1] }}</span>
-                      <span v-if="it.surveyStatus===1">
-                        &emsp;
-                        <CurrencyType />{{it.price}}
-                      </span>
-
-                    </li>
-                  </ul>
-                </div>
-
-
+                <div><el-text type="info">ID： {{ ite.supplierId }}</el-text></div>
               </div>
-            </el-popover>
+              <div class="clickIdItem-content">
+                <ul>
+                  <li v-for="it in ite.list">
+                    <span> {{ it.projectQuestionnaireClickId }}</span>
+                    <span :class="'surveyStatus' + it.surveyStatus">{{
+      projectManagementOutsourceStore.surveyStatusList[it.surveyStatus - 1] }}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="nodata" v-else>
+            <el-empty description="暂无数据" />
           </div>
         </div>
       </div>
@@ -268,27 +247,227 @@ defineExpose({ showEdit });
   </div>
 </template>
 <style lang="scss" scoped>
+.select {
+  background-color: var(--el-color-primary-light-9) !important;
+  border: 1px solid #93C8FF !important;
+}
+
+
+
+.box {
+  padding: 1rem;
+  background: #FFFFFF;
+  box-shadow: 0px 4px 16px 0px #EDEDED;
+  border-radius: 0.5rem 0.5rem 0.5rem 0.5rem;
+  border: 1px solid rgba(170, 170, 170, 0.5);
+  margin: 1rem 0;
+}
+
+.details {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+
+  >div {
+    width: calc(50% - .5rem)
+  }
+
+  .details-left {
+    .project {
+      width: 12rem;
+      margin-left: 1.4375rem;
+    }
+
+    .link {
+      display: flex;
+      justify-content: start;
+      align-items: start;
+
+      .step {
+        width: 1.4375rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        align-items: center;
+
+        .spot {
+          background: #409EFF;
+          width: .75rem;
+          height: .75rem;
+          border-radius: 50%;
+        }
+
+        .line {
+          background-color: rgba(170, 170, 170, 0.3);
+          width: 1px;
+          height: 8.375rem;
+        }
+      }
+
+      .item.box {
+        flex: 1;
+        margin: 0;
+        margin-bottom: 1rem;
+        height: 8.125rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+
+        .item-left {
+          height: 6.125rem;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          align-items: start;
+
+          .tenant {
+            >p {
+              margin-bottom: .5rem;
+            }
+
+            .tenantName {
+              font-family: PingFang SC, PingFang SC;
+              font-weight: 600;
+              font-size: 1rem;
+              color: #0F0F0F;
+              margin-right: .5rem;
+            }
+
+            .tenantLength {
+              color: #86b1e6;
+              margin-right: .5rem;
+            }
+          }
+
+          .price {
+            >p {
+              margin-right: 1.5rem;
+            }
+          }
+        }
+      }
+    }
+
+    .link:nth-last-child(1) {
+      .line {
+        display: none;
+      }
+    }
+
+  }
+
+  .details-right {
+    background: #FFFFFF;
+    box-shadow: 0px 4px 16px 0px #EDEDED;
+    border-radius: 0.5rem;
+    border: 1px solid rgba(170, 170, 170, 0.5);
+    margin: 1rem 0;
+    max-height: calc(100vh - 10rem);
+    overflow-y: auto;
+
+    .clickIdItem {
+      padding: 1rem;
+      border-bottom: 1px solid rgba(170, 170, 170, 0.5);
+
+      .clickIdItem-title {
+        background-color: var(--el-color-primary-light-9);
+        padding: .5rem 1rem;
+        border-radius: 0.5rem;
+
+        .supplierName {
+          font-family: PingFang SC, PingFang SC;
+          font-weight: 600;
+          font-size: 1rem;
+          color: #0F0F0F;
+          margin-right: .5rem;
+        }
+      }
+
+      .clickIdItem-content {
+        ul {
+          li {
+            margin-top: 1rem;
+            height: 2.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 0.5rem;
+            border: 1px solid rgba(170, 170, 170, 0.3);
+            padding: .5rem 1rem;
+
+            span:nth-of-type(2) {
+              display: inline-block;
+              padding: .25rem .5rem;
+              border-radius: .25rem;
+            }
+          }
+        }
+      }
+    }
+
+    .clickIdItem:nth-last-of-type(1) {
+      border: none;
+    }
+
+    .nodata {
+      min-height: 50vh;
+    }
+  }
+}
+
+//之前的
 .type1 {
   background-color: var(--el-color-primary);
+  color: #fff;
+  padding: 0 .5rem;
+  border-radius: .25rem;
 }
 
 .type2 {
   background-color: var(--el-color-success);
-  ;
-}
-
-.peopleType1 {
-  background-color: var(--el-color-primary);
-}
-
-.peopleType2 {
-  background-color: var(--el-color-success);
-  ;
+  color: #fff;
+  padding: 0 .5rem;
+  border-radius: .25rem;
 }
 
 .type3 {
   background-color: var(--el-color-warning);
+  color: #fff;
+  padding: 0 .5rem;
+  border-radius: .25rem;
+
 }
+
+.peopleType1 {
+  background-color: var(--el-color-primary);
+  color: #fff;
+  padding: 0 .5rem;
+  border-radius: .25rem;
+}
+
+.peopleType2 {
+  background-color: var(--el-color-success);
+  color: #fff;
+  padding: 0 .5rem;
+  border-radius: .25rem;
+  ;
+}
+
+.surveyStatus1 {
+  background-color: var(--el-color-success-light-9);
+  color: var(--el-color-success);
+}
+
+.surveyStatus5 {
+  background-color: var(--el-color-danger-light-9);
+  ;
+  color: var(--el-color-danger);
+
+}
+
+
+
+
 
 .flex-b {
   display: flex;
@@ -301,115 +480,92 @@ defineExpose({ showEdit });
   margin: auto;
 }
 
-.item {
-  height: 15.625rem;
-  display: flex;
-  justify-content: space-around;
-  align-items: start;
+// .item {
+//   height: 15.625rem;
+//   display: flex;
+//   justify-content: space-around;
+//   align-items: start;
 
-  .left {
-    height: 100%;
-    flex: 1;
+//   .left {
+//     height: 100%;
+//     flex: 1;
 
-    >div {
-      height: 50%;
-    }
+//     >div {
+//       height: 50%;
+//     }
 
-    .currentTenant {
-      border: 1px dashed var(--el-color-primary) !important;
-      width: 70%;
-      margin: auto;
-    }
+//     .currentTenant {
+//       border: 1px dashed var(--el-color-primary) !important;
+//       width: 70%;
+//       margin: auto;
+//     }
 
-    .left-top {
-      border: 1px dashed #ccc;
-      border-radius: 1rem;
-      background-color: #fff;
+//     .left-top {
+//       border: 1px dashed #ccc;
+//       border-radius: 1rem;
+//       background-color: #fff;
 
-      .left-top-left {
-        width: 70%;
-      }
+//       .left-top-left {
+//         width: 70%;
+//       }
 
-      .left-top-right {
-        width: 30%;
-        border-left: 1px dashed #ccc;
-      }
+//       .left-top-right {
+//         width: 30%;
+//         border-left: 1px dashed #ccc;
+//       }
 
-      >div {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: start;
+//       >div {
+//         height: 100%;
+//         display: flex;
+//         flex-direction: column;
+//         justify-content: space-between;
+//         align-items: start;
 
-        >div {
-          width: 100%;
-        }
-      }
-    }
+//         >div {
+//           width: 100%;
+//         }
+//       }
+//     }
 
-    .left-bottom {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+//     .left-bottom {
+//       display: flex;
+//       flex-direction: column;
+//       justify-content: center;
+//       align-items: center;
 
-      .line,
-      .arrow {
-        flex: 1;
-        width: 0.0625rem;
-        background-color: var(--el-color-primary);
-        position: relative;
-      }
+//       .line,
+//       .arrow {
+//         flex: 1;
+//         width: 0.0625rem;
+//         background-color: var(--el-color-primary);
+//         position: relative;
+//       }
 
-      .arrow::after {
-        content: "";
-        display: block;
-        position: absolute;
-        right: 50%;
-        /* 箭头位置 */
-        bottom: 0;
-        /* 箭头位置 */
-        transform: translateX(50%);
-        border-top: 0.625rem solid var(--el-color-primary);
-        /* 箭头高低 */
-        border-right: 0.625rem solid transparent;
-        /* 箭头高低 */
-        border-left: 0.625rem solid transparent;
-        /* 箭头长度*/
-      }
-    }
-  }
+//       .arrow::after {
+//         content: "";
+//         display: block;
+//         position: absolute;
+//         right: 50%;
+//         /* 箭头位置 */
+//         bottom: 0;
+//         /* 箭头位置 */
+//         transform: translateX(50%);
+//         border-top: 0.625rem solid var(--el-color-primary);
+//         /* 箭头高低 */
+//         border-right: 0.625rem solid transparent;
+//         /* 箭头高低 */
+//         border-left: 0.625rem solid transparent;
+//         /* 箭头长度*/
+//       }
+//     }
+//   }
 
-  .right {
-    height: 50%;
-    line-height: calc(15.625rem / 2);
-    width: 2rem;
-    text-align: center;
-    color: var(--el-color-primary);
+//   .right {
+//     height: 50%;
+//     line-height: calc(15.625rem / 2);
+//     width: 2rem;
+//     text-align: center;
+//     color: var(--el-color-primary);
 
-  }
-}
-
-.clickIdItem {
-  display: flex;
-  justify-content: space-between;
-  align-items: start;
-
-  .clickIdItem-left {
-    width: 3.125rem;
-  }
-
-  .clickIdItem-right {
-    flex: 1;
-
-
-    ul {
-      li {
-        margin: .3125rem 0;
-      }
-    }
-  }
-
-}
-</style>
+//   }
+// }</style>

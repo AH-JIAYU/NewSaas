@@ -11,6 +11,7 @@ import { Plus } from "@element-plus/icons-vue";
 import type { FormInstance, FormRules, UploadProps } from "element-plus";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary";
 import api from "@/api/modules/personal_setting";
+import Message from 'vue-m-message'
 import useUserStore from "@/store/modules/user";
 
 defineOptions({
@@ -23,7 +24,7 @@ const userStore = useUserStore();
 // 更新
 const emits = defineEmits(["success"]);
 // 接口地址
-const Url = import.meta.env.VITE_APP_API_BASEURL + "/user/uploadAvatar";
+const Url = import.meta.env.VITE_APP_API_BASEURL + "user/uploadAvatar";
 //基础字典
 const basicDictionaryStore = useBasicDictionaryStore();
 // 国家list
@@ -212,9 +213,17 @@ const handleRemove: any = async () => {
   });
 };
 // 上传图片成功
-const handleSuccess: any = () => {
-  // 上传成功后，隐藏上传按钮
-  upload.value = true;
+const handleSuccess: any = (uploadFile: any, uploadFiles: any) => {
+  console.log('上传成功', uploadFile, uploadFiles)
+  if (uploadFile.status === -1) {
+    Message.error(uploadFile.error, {
+      zIndex: 2000,
+    })
+    // 过滤上传失败的图片
+    fileList.value = fileList.value.filter((item: any) => item.name !== uploadFiles.name)
+  } else {
+    upload.value = true;
+  }
 };
 // 超出限制
 const handleExceed: any = async () => {
@@ -356,7 +365,8 @@ defineExpose({ showEdit });
               <ElInput v-model="userForm.email" placeholder="请输入你的电子邮箱" disabled @change="handleChange" />
             </ElFormItem>
             <ElFormItem prop="isInvitation" label="合作邀约">
-              <el-switch v-model="userForm.isInvitation" inline-prompt active-text="启用" inactive-text="禁用"  :active-value="2" :inactive-value="1"/>
+              <el-switch v-model="userForm.isInvitation" inline-prompt active-text="启用" inactive-text="禁用"
+                :active-value="2" :inactive-value="1" />
             </ElFormItem>
             <ElFormItem>
               <ElButton @click="userSubmit" type="primary"> 保存 </ElButton>
