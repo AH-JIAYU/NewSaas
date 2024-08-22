@@ -104,9 +104,14 @@ function homePage(row: any, title: any = "编辑") {
   homePageRef.value.showEdit(row, title);
 }
 // 设计主页
-function setHomePage(row: any) {
-  console.log('row', row)
-  // homePageRef.value.showEdit(row, title);
+async function setHomePage(row: any) {
+  const res = await api.setHomePageTemplate({ templateId: row.id });
+  res.status === 1 &&
+    ElMessage.success({
+      message: "设置成功",
+      center: true,
+    });
+    getDataList()
 }
 
 function onDel(row: any) {
@@ -135,7 +140,7 @@ function onDel(row: any) {
         <ElTableColumn prop="title" label="标题" />
         <ElTableColumn label="操作" width="250" align="center" fixed="right">
           <template #default="scope">
-            <ElButton type="primary" size="small" plain @click="setHomePage(scope.row)">
+            <ElButton v-if="!scope.row.isSet" type="primary" size="small" plain @click="setHomePage(scope.row)">
               设置为主页
             </ElButton>
             <ElButton type="primary" size="small" plain @click="homePage(scope.row, '查看')">
@@ -196,12 +201,15 @@ function onDel(row: any) {
         height="100%" @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
         <ElTableColumn v-if="data.batch.enable" type="selection" align="center" fixed />
         <ElTableColumn prop="title" label="标题" />
-        <ElTableColumn label="操作" width="250" align="center" fixed="right">
+        <ElTableColumn label="操作" width="350" align="center" fixed="right">
           <template #default="scope">
+            <ElButton v-if="!scope.row.isSet" type="primary" size="small" plain @click="setHomePage(scope.row)">
+              设置为主页
+            </ElButton>
             <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">
               编辑
             </ElButton>
-            <ElButton type="primary" size="small" plain @click="homePage(scope.row)">
+            <ElButton type="primary"  size="small" plain @click="homePage(scope.row)">
               设计主页
             </ElButton>
             <ElButton type="danger" size="small" plain @click="onDel(scope.row)">

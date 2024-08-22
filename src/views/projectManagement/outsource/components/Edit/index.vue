@@ -138,8 +138,73 @@ defineExpose({ showEdit });
 <template>
   <div>
     <el-drawer v-model="dialogTableVisible" title="项目测查" size="60%" :before-close="closeHandler">
-      <div class="milestone">
-        <div class="item" v-for="(item, index) in data.tenantMeasurementInfoList" :key="item.allocationTenantId">
+      <div class="details">
+        <div class="details-left">
+          <!-- 项目 -->
+          <div class="project box">
+            <div><el-text tag="b">项目名称</el-text></div>
+            <div><el-text type="info">ID：53431379861</el-text></div>
+          </div>
+          <div class="link" v-for="(item, index) in data.tenantMeasurementInfoList" :key="item.allocationTenantId">
+            <!-- 步骤 -->
+            <div class="step">
+              <!-- 点 -->
+              <div class="spot"></div>
+              <!-- 线 -->
+              <div class="line"></div>
+            </div>
+            <div class="item box">
+              <div class="item-left">
+                <div class="tenant">
+                  <template v-if="item?.length > 1">
+                    <el-button type="primary" link>
+                      已分配数：({{ item?.length }}) <span :class="'type' + item.type">
+                        {{ projectManagementOutsourceStore.typeList[item.type - 1] }}
+                      </span>
+                    </el-button>
+                  </template>
+                  <template v-else>
+                    <p>{{ item.tenantName }}
+                      <span :class="'type' + item.type">
+                        {{ projectManagementOutsourceStore.typeList[item.type - 1] }}
+                      </span>
+                    </p>
+                    <p>{{ item.allocationTenantId }}</p>
+                  </template>
+
+                </div>
+                <div class="price flex-b">
+                  <p>
+                    原价：
+                    <CurrencyType />
+                    {{ item.doMoneyPrice }}
+                  </p>
+                  <p>
+                    参数：
+                    <el-text size="large">{{ item.participationNumber || 0 }}
+                    </el-text>
+                    <el-text size="large"> / </el-text>
+                    <el-text type="success" size="large">
+                      {{ item.doneNumber || 0 }}
+                    </el-text>
+                    <el-text size="large"> / </el-text>
+                    <el-text type="warning" size="large">
+                      {{ item.num || 0 }}</el-text><el-text size="large"> / </el-text>
+                    <el-text size="large">{{
+      item.limitedQuantity || 0
+    }}</el-text>
+                  </p>
+                </div>
+              </div>
+              <div class="viewAll">
+                <el-button type="primary" round @click="getClickList(item)">查看全部</el-button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="details-right"></div>
+        <!-- <div class="item" v-for="(item, index) in data.tenantMeasurementInfoList" :key="item.allocationTenantId">
           <div class="left">
             <div :class="{
       'left-top': true,
@@ -197,65 +262,64 @@ defineExpose({ showEdit });
                       查看更多({{ item?.length }})
                     </el-button>
                   </template>
-                  <template v-else>
+<template v-else>
                     <p>{{ item.tenantName }}</p>
                     <p>{{ item.allocationTenantId }}</p>
                   </template>
 
-                </div>
-              </div>
-            </div>
-            <div class="left-bottom" v-if="data.tenantMeasurementInfoList.length !== index + 1">
-              <div class="line"></div>
-              <div class="allocation">
-                {{ item.tenantName }}-分配-{{
-      projectManagementOutsourceStore.typeList[
-      data.tenantMeasurementInfoList[index + 1].type - 1
-      ]
+</div>
+</div>
+</div>
+<div class="left-bottom" v-if="data.tenantMeasurementInfoList.length !== index + 1">
+  <div class="line"></div>
+  <div class="allocation">
+    {{ item.tenantName }}-分配-{{
+    projectManagementOutsourceStore.typeList[
+    data.tenantMeasurementInfoList[index + 1].type - 1
+    ]
     }}
-              </div>
-              <div class="arrow"></div>
-            </div>
-          </div>
-          <div class="right" v-if="item.allocationTenantId !== data.currentTenantId || item.type != 1
+  </div>
+  <div class="arrow"></div>
+</div>
+</div>
+<div class="right" v-if="item.allocationTenantId !== data.currentTenantId || item.type != 1
       ">
-            <el-popover v-model:visible="item.visible" ref="popoverRef" placement="right" :width="350" trigger="click"
-              @before-enter="getClickListBefore(index)" @show="getClickList(item)">
-              <template #reference>
+  <el-popover v-model:visible="item.visible" ref="popoverRef" placement="right" :width="350" trigger="click"
+    @before-enter="getClickListBefore(index)" @show="getClickList(item)">
+    <template #reference>
                 <el-button style="padding: 0.5rem" type="primary" link>
-                  <!-- @click="getClickList(item)" -->
                   》
                 </el-button>
               </template>
-              <div class="clickIdItem   m-2" v-for="ite in data.clickIdList">
-                <div class="clickIdItem-left">
-                  <span :class="'peopleType' + ite.peopleType">
-                    {{ projectManagementOutsourceStore.peopleTypeList[ite.peopleType - 1] }}
-                  </span>
-                </div>
-                <div class="clickIdItem-right">
-                  <div class="title">
-                    {{ ite.supplierName }} &emsp; {{ ite.supplierId }}
-                  </div>
-                  <ul>
-                    <li>点击ID:</li>
-                    <li v-for="it in ite.list">
-                      <span> {{ it.projectQuestionnaireClickId }}</span>
-                      <span> &emsp;{{ projectManagementOutsourceStore.surveyStatusList[it.surveyStatus - 1] }}</span>
-                      <span v-if="it.surveyStatus===1">
-                        &emsp;
-                        <CurrencyType />{{it.price}}
-                      </span>
-
-                    </li>
-                  </ul>
-                </div>
-
-
-              </div>
-            </el-popover>
-          </div>
+    <div class="clickIdItem   m-2" v-for="ite in data.clickIdList">
+      <div class="clickIdItem-left">
+        <span :class="'peopleType' + ite.peopleType">
+          {{ projectManagementOutsourceStore.peopleTypeList[ite.peopleType - 1] }}
+        </span>
+      </div>
+      <div class="clickIdItem-right">
+        <div class="title">
+          {{ ite.supplierName }} &emsp; {{ ite.supplierId }}
         </div>
+        <ul>
+          <li>点击ID:</li>
+          <li v-for="it in ite.list">
+            <span> {{ it.projectQuestionnaireClickId }}</span>
+            <span> &emsp;{{ projectManagementOutsourceStore.surveyStatusList[it.surveyStatus - 1] }}</span>
+            <span v-if="it.surveyStatus===1">
+              &emsp;
+              <CurrencyType />{{it.price}}
+            </span>
+
+          </li>
+        </ul>
+      </div>
+
+
+    </div>
+  </el-popover>
+</div>
+</div> -->
       </div>
 
       <template #footer>
@@ -268,6 +332,76 @@ defineExpose({ showEdit });
   </div>
 </template>
 <style lang="scss" scoped>
+.box {
+  // display: inline-block;
+  padding: 1rem;
+  background: #FFFFFF;
+  box-shadow: 0px 4px 16px 0px #EDEDED;
+  border-radius: 0.5rem 0.5rem 0.5rem 0.5rem;
+  border: 1px solid rgba(170, 170, 170, 0.5);
+  margin: 1rem 0;
+}
+
+.details {
+  display: flex;
+  justify-content: space-around;
+  align-items: start;
+
+  >div {
+    width: calc(50% - .5rem)
+  }
+
+  .details-left {
+    .project {
+      width: 10rem;
+      margin-left: 1.4375rem;
+    }
+
+    .link {
+      // margin: 1rem 0;
+      display: flex;
+      justify-content: start;
+      align-items: start;
+
+      .step {
+        width: 1.4375rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        align-items: center;
+        .spot{
+          background: #409EFF;
+          width: .75rem;
+        height: .75rem;
+        border-radius: 50%;
+        }
+        .line{
+          background-color: rgba(170,170,170,0.3);
+          width: 1px;
+          height: 8.375rem;
+        }
+      }
+
+      .item.box {
+        flex: 1;
+        margin: 0;
+        margin-bottom: 1rem ;
+        height: 8.125rem;
+        display: flex;
+  justify-content: space-between;
+  align-items: start;
+      }
+    }
+    .link:nth-last-child(1){
+      .line{
+        display: none;
+      }
+    }
+
+  }
+}
+
+//之前的
 .type1 {
   background-color: var(--el-color-primary);
 }
