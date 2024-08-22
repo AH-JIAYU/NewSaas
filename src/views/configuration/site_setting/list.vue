@@ -31,6 +31,8 @@ const form = ref<any>({
   webName: "",
   // 供应商网址
   supplierURL: "",
+  // 设置顶级域名
+  externalSite: "",
   // 默认会员价格比例
   defaultPriceRatio: null,
   // 税率
@@ -139,6 +141,7 @@ function onSubmit() {
               registerOffOrOn,
               supplierURL,
               webName,
+              externalSite,
               defaultPriceRatio,
               taxRate,
               minimumAmount,
@@ -154,6 +157,7 @@ function onSubmit() {
               registerOffOrOn,
               supplierURL,
               webName,
+              externalSite,
               defaultPriceRatio,
               taxRate,
               minimumAmount,
@@ -244,7 +248,7 @@ function onSubmit() {
               </el-col>
               <el-col :span="24">
                 <el-form-item label="顶级域名" >
-                  <el-input v-model="form.supplierURL" style="width: 8rem" />
+                  <el-input v-model="form.externalSite" style="width: 8rem" />
                   <el-button class="copy" type="primary" link >设置解析</el-button>
                 </el-form-item>
               </el-col>

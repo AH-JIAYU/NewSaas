@@ -9,4 +9,6 @@ export default {
   edit: (data: any) => api.post('template/updateHomePageTemplate', data,),
   //删除
   del: (data: any) => api.post('template/deleteHomePageTemplate', data),
+  // 设置首页模版
+  setTemplate: (data: any) => api.post('template/setHomePageTemplate', data),
 }

@@ -43,7 +43,6 @@ interface Dict {
   code: string;
   children?: Dict[];
 }
-
 const columns = ref<any>([
   {
     label: "员工ID",
@@ -77,6 +76,11 @@ const activeList: any = [
     value: false,
   },
 ];
+const defaultProps: any = {
+  children: "children",
+  label: "name",
+  // disabled : "distribution",
+};
 // dictionaryRef
 const dictionaryRef = ref();
 // 详情ref
@@ -110,7 +114,7 @@ const dictionaryItem = ref<any>({
   border: true,
   // 表格控件-是否展示斑马条
   stripe: false,
-   // 表格控件-控制表格大小
+  // 表格控件-控制表格大小
   lineHeight: "default",
   checkList: [],
   // 搜索
@@ -133,6 +137,8 @@ const dictionaryItem = ref<any>({
     level: 1,
   },
 });
+// 获取树
+const treeRef = ref<any>()
 // 获取字典
 async function getDictionaryList() {
   const params = {
@@ -166,6 +172,7 @@ onMounted(async () => {
   // loading加载结束
   dictionary.value.loading = false;
 });
+
 watch(
   () => dictionary.value.search,
   (val) => {
@@ -315,6 +322,7 @@ function onReset() {
   Object.assign(dictionaryItem.value.search, {
     id: "" as Dict["id"],
     userName: "",
+    departmentId: null,
     active: null,
   });
   getDictionaryList();
@@ -324,8 +332,16 @@ function onReset() {
 <template>
   <div class="absolute-container">
     <div class="page-main">
-      <LayoutContainer hide-left-side-toggle>
-        <template #leftSide>
+      <!-- <LayoutContainer hide-left-side-toggle>
+      </LayoutContainer> -->
+      <div class="leftTree">
+        <div v-if="dictionary.tree.length" class="leftData" :span="3">
+          <!-- <el-input v-model="userName" placeholder="可输入用户名查找" clearable @blur="blurUserName" /> -->
+          <el-tree style="max-width: 37.5rem; min-height: 47.25rem; padding: 10px;" :data="dictionary.tree" ref="treeRef"
+            show-checkbox node-key="id" default-expand-all :expand-on-click-node="false" :props="defaultProps"
+            @node-click="dictionaryClick" />
+        </div>
+        <!-- <template #leftSide>
           <ElScrollbar class="tree">
             <ElTree ref="dictionaryRef" v-loading="dictionary.loading" :data="dictionary.tree"
               :filter-node-method="dictionaryFilter as any" default-expand-all @node-click="dictionaryClick">
@@ -339,157 +355,160 @@ function onReset() {
                   </div>
                 </div>
               </template>
-            </ElTree>
-          </ElScrollbar>
-        </template>
+</ElTree>
+</ElScrollbar>
+</template> -->
         <!-- v-show="dictionaryItem.search.catalogueId" -->
-        <div v-loading="dictionary.loading" class="dictionary-container">
-          <ElSpace>
-            <ElInput v-model="dictionaryItem.search.id" placeholder="员工ID" clearable style="width: 200px"
-              @keydown.enter="getDictionaryList" />
-            <ElInput v-model="dictionaryItem.search.userName" placeholder="用户名" clearable style="width: 200px"
-              @keydown.enter="getDictionaryList" />
-            <el-select v-model="dictionaryItem.search.active" value-key="" placeholder="状态" clearable filterable
-              @change="">
-              <el-option v-for="item in activeList" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
-            </el-select>
-            <ElButton type="primary" @click="getDictionaryList">
-              <template #icon>
-                <SvgIcon name="i-ep:search" />
-              </template>
-            </ElButton>
-            <ElButton @click="onReset">
-              <template #icon>
-                <SvgIcon name="i-ep:refresh" />
-              </template>
-            </ElButton>
-          </ElSpace>
-          <el-row style="margin-bottom: 5px" :gutter="24">
-            <el-col :span="10">
-              <el-button type="primary" size="default" @click="onCreate">
-                新增
-              </el-button>
-              <el-button size="default" @click="onResetPassword">
-                重置密码
-              </el-button>
-            </el-col>
-            <el-col style="display: flex; justify-content: flex-end" :span="14">
-              <el-button size="default" @click=""> 导出 </el-button>
-              <TabelControl v-model:border="dictionaryItem.border"
-                v-model:tableAutoHeight="dictionaryItem.tableAutoHeight" v-model:checkList="dictionaryItem.checkList"
-                v-model:columns="columns" v-model:line-height="dictionaryItem.lineHeight"
-                v-model:stripe="dictionaryItem.stripe" style="margin-left: 12px" @query-data="getDictionaryList" />
-            </el-col>
-          </el-row>
-          <ElTable ref="dictionaryItemRef" :data="dictionaryItem.dataList" :border="dictionaryItem.border"
-            :size="dictionaryItem.lineHeight" :stripe="dictionaryItem.stripe" highlight-current-row height="100%"
-            @sort-change="sortChange" @selection-change="dictionaryItem.selectionDataList = $event" row-key="id"
-            default-expand-all @select="selectChange">
-            <ElTableColumn type="selection" align="center" fixed />
-            <ElTableColumn v-if="dictionaryItem.checkList.includes('id')" align="center" width="180" prop="id"
-              label="员工ID" />
-            <ElTableColumn v-if="dictionaryItem.checkList.includes('userName')" align="center" width="150"
-              prop="userName" label="用户名"><template #default="{ row }">
-                <el-text>
-                  {{ row.userName ? row.userName : "-" }}
-                </el-text>
-              </template>
-            </ElTableColumn>
-            <ElTableColumn v-if="dictionaryItem.checkList.includes('name')" align="center" width="150" prop="name"
-              label="姓名" />
-            <ElTableColumn v-if="dictionaryItem.checkList.includes('country')" prop="country" label="国家" width="150"
-              align="center">
-              <template #default="{ row }">
-                <div v-for="item in filterCountry" :key="item.id" class="mx-1">
-                  <el-tag type="primary" v-if="item.code === row.country" class="mx-1">
-                    {{ item.chineseName }}
-                  </el-tag>
-                </div>
-              </template>
-            </ElTableColumn>
-            <ElTableColumn v-if="dictionaryItem.checkList.includes('phoneNumber')" align="center" width="180" prop="phone"
-              label="电话号码"><template #default="{ row }">
-                {{ row.phoneNumber ? row.phoneNumber : "-" }}
-              </template>
-            </ElTableColumn>
-            <ElTableColumn v-if="dictionaryItem.checkList.includes('email')" align="center" width="180" prop="email"
-              label="邮箱">
-              <template #default="{ row }">
-                {{ row.email ? row.email : "-" }}
-              </template>
-            </ElTableColumn>
-            <ElTableColumn v-if="dictionaryItem.checkList.includes('departmentId')" align="center" prop="departmentId"
-              label="部门"><template #default="{ row }">
-                <el-text v-if="row.departmentId">
-                  <el-text v-for="item in departmentList">
-                  <el-text v-if="row.departmentId === item.id">
-                    {{ item.name ? item.name : "-" }}
+        <PageMain>
+          <div v-loading="dictionary.loading" class="dictionary-container">
+            <ElSpace>
+              <ElInput v-model="dictionaryItem.search.id" placeholder="员工ID" clearable style="width: 200px"
+                @keydown.enter="getDictionaryList" />
+              <ElInput v-model="dictionaryItem.search.userName" placeholder="用户名" clearable style="width: 200px"
+                @keydown.enter="getDictionaryList" />
+              <el-select v-model="dictionaryItem.search.active" value-key="" placeholder="状态" clearable filterable
+                @change="">
+                <el-option v-for="item in activeList" :key="item.value" :label="item.label" :value="item.value">
+                </el-option>
+              </el-select>
+              <ElButton type="primary" @click="getDictionaryList">
+                <template #icon>
+                  <SvgIcon name="i-ep:search" />
+                </template>
+              </ElButton>
+              <ElButton @click="onReset">
+                <template #icon>
+                  <SvgIcon name="i-ep:refresh" />
+                </template>
+              </ElButton>
+            </ElSpace>
+            <el-row style="margin-bottom: 5px" :gutter="24">
+              <el-col style="margin-bottom: 25px;" :span="10">
+                <el-button type="primary" size="default" @click="onCreate">
+                  新增
+                </el-button>
+                <el-button size="default" @click="onResetPassword">
+                  重置密码
+                </el-button>
+              </el-col>
+              <el-col style="display: flex; justify-content: flex-end" :span="14">
+                <el-button size="default" @click=""> 导出 </el-button>
+                <TabelControl v-model:border="dictionaryItem.border"
+                  v-model:tableAutoHeight="dictionaryItem.tableAutoHeight" v-model:checkList="dictionaryItem.checkList"
+                  v-model:columns="columns" v-model:line-height="dictionaryItem.lineHeight"
+                  v-model:stripe="dictionaryItem.stripe" style="margin-left: 12px" @query-data="getDictionaryList" />
+              </el-col>
+            </el-row>
+            <ElTable ref="dictionaryItemRef" :data="dictionaryItem.dataList" :border="dictionaryItem.border"
+              :size="dictionaryItem.lineHeight" :stripe="dictionaryItem.stripe" highlight-current-row height="100%"
+              @sort-change="sortChange" @selection-change="dictionaryItem.selectionDataList = $event" row-key="id"
+              default-expand-all @select="selectChange">
+              <ElTableColumn type="selection" align="center" fixed />
+              <ElTableColumn v-if="dictionaryItem.checkList.includes('id')" align="center" width="180" prop="id"
+                label="员工ID" />
+              <ElTableColumn v-if="dictionaryItem.checkList.includes('userName')" align="center" width="130"
+                prop="userName" label="用户名"><template #default="{ row }">
+                  <el-text>
+                    {{ row.userName ? row.userName : "-" }}
                   </el-text>
-                </el-text>
-                </el-text>
-                <el-text v-else>-</el-text>
-              </template>
-            </ElTableColumn>
-            <ElTableColumn v-if="dictionaryItem.checkList.includes('positionId')" align="center" prop="positionId"
-              label="职位">
-              <template #default="{ row }">
-                <el-text v-if="row.positionId">
-                  <el-text v-for="item in positionManageList">
-                  <el-text v-if="row.positionId === item.id">
-                    {{ item.name ? item.name : "-" }}
+                </template>
+              </ElTableColumn>
+              <ElTableColumn v-if="dictionaryItem.checkList.includes('name')" align="center" width="130" prop="name"
+                label="姓名" />
+              <ElTableColumn v-if="dictionaryItem.checkList.includes('country')" prop="country" label="国家" width="150"
+                align="center">
+                <template #default="{ row }">
+                  <div v-for="item in filterCountry" :key="item.id" class="mx-1">
+                    <el-tag type="primary" v-if="item.code === row.country" class="mx-1">
+                      {{ item.chineseName }}
+                    </el-tag>
+                  </div>
+                </template>
+              </ElTableColumn>
+              <ElTableColumn v-if="dictionaryItem.checkList.includes('phoneNumber')" align="center" width="170"
+                prop="phone" label="电话号码"><template #default="{ row }">
+                  {{ row.phoneNumber ? row.phoneNumber : "-" }}
+                </template>
+              </ElTableColumn>
+              <ElTableColumn v-if="dictionaryItem.checkList.includes('email')" align="center" width="180" prop="email"
+                label="邮箱">
+                <template #default="{ row }">
+                  {{ row.email ? row.email : "-" }}
+                </template>
+              </ElTableColumn>
+              <ElTableColumn v-if="dictionaryItem.checkList.includes('departmentId')" align="center" prop="departmentId"
+                label="部门"><template #default="{ row }">
+                  <el-text v-if="row.departmentId">
+                    <el-text v-for="item in departmentList">
+                      <el-text v-if="row.departmentId === item.id">
+                        {{ item.name ? item.name : "-" }}
+                      </el-text>
+                    </el-text>
                   </el-text>
-                </el-text>
-                </el-text>
-                <el-text v-else>-</el-text>
-              </template>
-            </ElTableColumn>
-            <ElTableColumn v-if="dictionaryItem.checkList.includes('groupId')" align="center" prop="groupId" label="小组">
-              <template #default="{ row }">
-                <el-text v-if="row.groupId">
-                  <el-text v-for="item in groupManageList">
-                  <el-text v-if="row.groupId === item.id">
-                    {{ item.name ? item.name : "-" }}
+                  <el-text v-else>-</el-text>
+                </template>
+              </ElTableColumn>
+              <ElTableColumn v-if="dictionaryItem.checkList.includes('positionId')" align="center" prop="positionId"
+                label="职位">
+                <template #default="{ row }">
+                  <el-text v-if="row.positionId">
+                    <el-text v-for="item in positionManageList">
+                      <el-text v-if="row.positionId === item.id">
+                        {{ item.name ? item.name : "-" }}
+                      </el-text>
+                    </el-text>
                   </el-text>
-                </el-text>
-                </el-text>
-                <el-text v-else>-</el-text>
-              </template>
-            </ElTableColumn>
-            <ElTableColumn v-if="dictionaryItem.checkList.includes('active')" align="center" prop="active" label="状态">
-              <template #default="scope">
-                <ElSwitch v-model="scope.row.active" inline-prompt active-text="启用" inactive-text="禁用"
-                  :before-change="() => onChangeStatus(scope.row)" />
-              </template>
-            </ElTableColumn>
-            <ElTableColumn label="操作" fixed="right" width="240" align="center">
-              <template #default="scope">
-                <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">
-                  编辑
-                </ElButton>
-                <ElButton type="primary" size="small" plain @click="onDetail(scope.row)">
-                  详情
-                </ElButton>
-                <!-- <el-button type="primary" plain size="small" @click="onResetPassword(scope.row)">
+                  <el-text v-else>-</el-text>
+                </template>
+              </ElTableColumn>
+              <ElTableColumn v-if="dictionaryItem.checkList.includes('groupId')" align="center" prop="groupId"
+                label="小组">
+                <template #default="{ row }">
+                  <el-text v-if="row.groupId">
+                    <el-text v-for="item in groupManageList">
+                      <el-text v-if="row.groupId === item.id">
+                        {{ item.name ? item.name : "-" }}
+                      </el-text>
+                    </el-text>
+                  </el-text>
+                  <el-text v-else>-</el-text>
+                </template>
+              </ElTableColumn>
+              <ElTableColumn v-if="dictionaryItem.checkList.includes('active')" align="center" prop="active" label="状态">
+                <template #default="scope">
+                  <ElSwitch v-model="scope.row.active" inline-prompt active-text="启用" inactive-text="禁用"
+                    :before-change="() => onChangeStatus(scope.row)" />
+                </template>
+              </ElTableColumn>
+              <ElTableColumn label="操作" fixed="right" width="200" align="center">
+                <template #default="scope">
+                  <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">
+                    编辑
+                  </ElButton>
+                  <ElButton type="primary" size="small" plain @click="onDetail(scope.row)">
+                    详情
+                  </ElButton>
+                  <!-- <el-button type="primary" plain size="small" @click="onResetPassword(scope.row)">
                   重置密码
                 </el-button> -->
+                </template>
+              </ElTableColumn>
+              <template #empty>
+                <el-empty description="暂无数据" />
               </template>
-            </ElTableColumn>
-            <template #empty>
-              <el-empty description="暂无数据" />
-            </template>
-          </ElTable>
-          <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
-            :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-            background @size-change="sizeChange" @current-change="currentChange" />
-        </div>
+            </ElTable>
+            <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+              :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+              background @size-change="sizeChange" @current-change="currentChange" />
+          </div>
+      </PageMain>
         <!-- <div
           v-show="!dictionaryItem.search.catalogueId"
           class="dictionary-container"
         >
           <div class="empty">请在左侧选择一个部门</div>
         </div> -->
-      </LayoutContainer>
+      </div>
       <DictionaryItemDia v-if="dictionaryItem.dialog.visible" :id="dictionaryItem.dialog.id"
         v-model="dictionaryItem.dialog.visible" :catalogue-id="dictionaryItem.search.catalogueId"
         :parent-id="dictionaryItem.dialog.parentId" :level="dictionaryItem.dialog.level" :tree="dictionary.tree"
@@ -620,6 +639,21 @@ function onReset() {
     .el-table {
       margin: 15px 0;
     }
+  }
+}
+
+.leftTree {
+  display: flex;
+
+  .leftData {
+    width: 13%;
+    margin: 16px 0 16px 16px;
+  }
+
+  .rightData {
+    width: 86.2%;
+    padding: 10px;
+    background-color: #fff;
   }
 }
 </style>

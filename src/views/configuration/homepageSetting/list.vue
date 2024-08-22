@@ -104,9 +104,14 @@ function homePage(row: any, title: any = "编辑") {
   homePageRef.value.showEdit(row, title);
 }
 // 设计主页
-function setHomePage(row: any) {
-  console.log('row', row)
-  // homePageRef.value.showEdit(row, title);
+async function setHomePage(row: any) {
+  const res = await api.setTemplate({ templateId: row.id })
+  if (res.status === 1) {
+    ElMessage.success({
+      message: "操作成功",
+      center: true,
+    });
+  }
 }
 
 function onDel(row: any) {
@@ -133,6 +138,11 @@ function onDel(row: any) {
         height="100%" @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
         <ElTableColumn v-if="data.batch.enable" type="selection" align="center" fixed />
         <ElTableColumn prop="title" label="标题" />
+        <ElTableColumn prop="isSet" align="center" width="100" label="是否默认" >
+          <template #default="{row}">
+            {{row.isSet ? '是' : '否'}}
+          </template>
+        </ElTableColumn>
         <ElTableColumn label="操作" width="250" align="center" fixed="right">
           <template #default="scope">
             <ElButton type="primary" size="small" plain @click="setHomePage(scope.row)">
@@ -196,8 +206,16 @@ function onDel(row: any) {
         height="100%" @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
         <ElTableColumn v-if="data.batch.enable" type="selection" align="center" fixed />
         <ElTableColumn prop="title" label="标题" />
-        <ElTableColumn label="操作" width="250" align="center" fixed="right">
+        <ElTableColumn prop="isSet" align="center" width="100" label="是否默认" >
+          <template #default="{row}">
+            {{row.isSet ? '是' : '否'}}
+          </template>
+        </ElTableColumn>
+        <ElTableColumn label="操作" width="350" align="center" fixed="right">
           <template #default="scope">
+            <ElButton type="primary" size="small" plain @click="setHomePage(scope.row)">
+              设置为主页
+            </ElButton>
             <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">
               编辑
             </ElButton>
