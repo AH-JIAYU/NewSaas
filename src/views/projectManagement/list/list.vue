@@ -40,7 +40,7 @@ const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const lineHeight = ref<any>("default");
 const stripe = ref(false);
 const columns = ref([
-  { prop: "projectType", label: "项目ID", checked: true, sotrtable: true },
+  { prop: "projectType", label: "项目类型", checked: true, sotrtable: true },
   { prop: "projectId", label: "项目ID", checked: true, sotrtable: true },
   { prop: "name", label: "项目名称", checked: true, sotrtable: true },
   {
@@ -128,7 +128,14 @@ function dispatch() {
       message: "请选择一个项目",
       center: true,
     });
-  } else {
+  }
+  else if(selectList.length[0].row.isOnline===2){
+    ElMessage.warning({
+      message: "离线不可调度",
+      center: true,
+    });
+  }
+  else {
     schedulingRef.value.showEdit(selectList[0], "projectList");
   }
 }
@@ -260,6 +267,12 @@ onMounted(async () => {
               <el-select v-model="search.allocation" placeholder="分配类型" clearable @change="currentChange()">
                 <el-option label="已分配" :value="1"> </el-option>
                 <el-option label="未分配" :value="2"> </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item v-show="!fold">
+              <el-select v-model="search.projectType" placeholder="项目类型" clearable @change="currentChange()">
+                <el-option label="内部新增" :value="1"> </el-option>
+                <el-option label="租户分配" :value="2"> </el-option>
               </el-select>
             </el-form-item>
             <ElFormItem>
@@ -415,10 +428,10 @@ onMounted(async () => {
         </el-table-column>
         <el-table-column align="center" fixed="right" label="操作" width="240">
           <template #default="{ row }">
-            <el-button v-if="row.allocationStatus === 1" plain type="primary" size="small" @click="distribution(row)">
+            <el-button v-if="row.allocationStatus === 1" plain :disabled="row.isOnline===2" type="primary" size="small" @click="distribution(row)">
               分配
             </el-button>
-            <el-button v-else plain type="primary" size="small" @click="reassign(row)">
+            <el-button v-else plain type="primary" :disabled="row.isOnline===2" size="small" @click="reassign(row)">
               重新分配
             </el-button>
             <el-button type="primary" plain size="small" @click="projectEdit(row)" :disabled="row.projectType === 2">
