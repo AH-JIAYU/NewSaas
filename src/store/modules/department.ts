@@ -10,8 +10,8 @@ const useDepartmentStore = defineStore(
         return department.value
       }
       const { data } = await api.list({})
-      department.value = data.data || []
-      return data.data
+      department.value = data?.data || []
+      return data?.data
     }
     return {
       department,

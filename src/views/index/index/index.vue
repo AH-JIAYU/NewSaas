@@ -938,6 +938,7 @@ onMounted(async () => {
 <style lang="scss" scoped>
 // 去除表格色块 线
 :deep {
+
   .el-table td.el-table__cell,
   .el-table th.el-table__cell.is-leaf {
     border-bottom: none;
@@ -946,9 +947,10 @@ onMounted(async () => {
   .el-table--fit .el-table__inner-wrapper:before {
     width: 0;
   }
+
   .el-table__header th {
     background: var(--g-header-bg) !important;
-}
+  }
 }
 
 .itemBox {
