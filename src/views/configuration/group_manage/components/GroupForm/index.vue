@@ -132,11 +132,7 @@ async function showEdit(row: any) {
 }
 const blurUserName = () => {
   if (userName) {
-    console.log('userName',userName);
-
     dataList.value = departmentList.value[0].children.filter((item: any) => item.userName.includes(userName.value))
-    console.log('dataList.value',dataList.value);
-
   }
 }
 // 每页数量切换
