@@ -97,10 +97,7 @@ function getDataList() {
 </script>
 
 <template>
-  <div
-    v-loading="data.loading"
-    :class="{ 'absolute-container': data.tableAutoHeight }"
-  >
+  <div v-loading="data.loading" :class="{ 'absolute-container': data.tableAutoHeight }">
     <PageMain>
       <el-row>
         <el-radio-group v-model="data.search.type" @change="timeChange">
@@ -109,163 +106,145 @@ function getDataList() {
           <el-radio-button label="年" value="year" />
         </el-radio-group>
       </el-row>
-      <ElRow :gutter="24">
-        <ElCol>
-          <ColorfulCard2
-            header="参与量"
-            :num="data.dataScreening?.participationVolume || 0"
-            icon="ant-design:file-outlined"
-          />
-        </ElCol>
-        <ElCol>
-          <ColorfulCard2
-            color-from="#fbaaa2"
-            color-to="#fc5286"
-            header="完成量"
-            :num="data.dataScreening?.completedQuantity || 0"
-            icon="ant-design:file-outlined"
-          />
-        </ElCol>
-        <ElCol>
-          <ColorfulCard2
-            color-from="#ff763b"
-            color-to="#ffc480"
-            header="营业额"
-            :num="data.dataScreening?.turnover || 0"
-            icon="ant-design:file-outlined"
-          />
-        </ElCol>
-        <ElCol>
-          <ColorfulCard2
-            color-from="#6a8eff"
-            color-to="#0e4cfd"
-            header="审核率"
-            :num="data.dataScreening?.settlementRatio || 0"
-            icon="ant-design:file-outlined"
-          />
-        </ElCol>
-        <ElCol>
-          <ColorfulCard2
-            color-from="#ffd300"
-            color-to="#ff9b0d"
-            header="待审金额"
-            :num="data.dataScreening?.pendingBalance || 0"
-            icon="ant-design:file-outlined"
-          />
-        </ElCol>
-        <ElCol>
-          <ColorfulCard2
-            color-from="#f49494"
-            color-to="#fcd98b"
-            header="可用金额"
-            :num="data.dataScreening?.availableBalance || 0"
-            icon="ant-design:file-outlined"
-          />
-        </ElCol>
-      </ElRow>
-
+      <div class="showDataRow" :gutter="24">
+        <div class="showDataCol">
+          <p class="showDataP">今日参与量</p>
+          <div class="showDataCount">
+            <span class="showDataSpanLeft">{{ data.dataScreening?.participationVolume || 0 }}</span>
+            <span class="showDataSpanRight"><span class="dd"></span><span class="participate">昨日：668</span></span>
+          </div>
+        </div>
+        <div class="showDataCol">
+          <p class="showDataP">今日完成量</p>
+          <div class="showDataCount">
+            <span class="showDataSpanLeft">{{ data.dataScreening?.completedQuantity || 0 }}</span>
+            <span class="showDataSpanRight"><span class="dd"></span><span class="participate">昨日：668</span></span>
+          </div>
+        </div>
+        <div class="showDataCol">
+          <p class="showDataP">今日营业额</p>
+          <div class="showDataCount">
+            <span class="showDataSpanLeft">{{ data.dataScreening?.turnover || 0 }}</span>
+            <span class="showDataSpanRight"><span class="dd"></span><span class="participate">昨日：668</span></span>
+          </div>
+        </div>
+        <div class="showDataCol">
+          <p class="showDataP">待审金额</p>
+          <div class="showDataCount">
+            <span class="showDataSpanLeft">{{ data.dataScreening?.pendingBalance || 0 }}</span>
+            <span class="showDataSpanRight"><span class="dd"></span><span class="participate">昨日：668</span></span>
+          </div>
+        </div>
+        <div class="showDataCol">
+          <p class="showDataP">可用余额</p>
+          <div class="showDataCount">
+            <span class="showDataSpanLeft">{{ data.dataScreening?.availableBalance || 0 }}</span>
+            <span class="showDataSpanRight"><span class="dd"></span><span class="participate">昨日：668</span></span>
+          </div>
+        </div>
+      </div>
       <!-- 今日完成排名 & 供应商佣金排行 -->
-      <el-row :gutter="24">
-        <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
-          <el-card>
-            <template #header> 完成排行榜 </template>
-            <el-table
-              :data="data.memberDataCenterCompletedVOList"
-              style="width: 100%"
-            >
-              <el-table-column type="index" />
-              <el-table-column
-                show-overflow-tooltip
-                align="center"
-                prop="memberId"
-                label="会员ID"
-              />
-              <el-table-column
-                show-overflow-tooltip
-                align="center"
-                prop="memberName"
-                label="会员名称"
-              />
-              <el-table-column
-                show-overflow-tooltip
-                align="center"
-                prop="completedQuantity"
-                label="完成数量"
-              />
-            </el-table>
-          </el-card>
-        </el-col>
-        <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
-          <el-card>
-            <template #header> 退款排行榜 </template>
-            <el-table
-              :data="data.memberDataCenterRefundVOList"
-              style="width: 100%"
-            >
-              <el-table-column type="index" />
-              <el-table-column
-                show-overflow-tooltip
-                align="center"
-                prop="memberId"
-                label="会员ID"
-              />
-              <el-table-column
-                show-overflow-tooltip
-                align="center"
-                prop="memberName"
-                label="会员名称"
-              />
-              <el-table-column
-                show-overflow-tooltip
-                align="center"
-                prop="completedQuantity"
-                label="退款数"
-              />
-              <el-table-column
-                show-overflow-tooltip
-                width="110"
-                align="center"
-                prop="refund"
-                label="退款金额"
-              />
-            </el-table>
-          </el-card>
-        </el-col>
-        <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
-          <el-card>
-            <template #header> 业绩排行榜 </template>
-            <el-table
-              :data="data.memberDataCenterPriceVOList"
-              style="width: 100%"
-            >
-              <el-table-column type="index" />
-              <el-table-column
-                show-overflow-tooltip
-                align="center"
-                prop="memberId"
-                label="会员ID"
-              />
-              <el-table-column
-                show-overflow-tooltip
-                align="center"
-                prop="memberName"
-                label="会员名称"
-              />
-              <el-table-column
-                show-overflow-tooltip
-                align="center"
-                prop="price"
-                label="今日收入"
-              />
-            </el-table>
-          </el-card>
-        </el-col>
-      </el-row>
+      <div class="ranking">
+        <div class="rankingCol">
+          <p class="rankingColP"><span class="rankingColSpan"></span>完成排行榜</p>
+          <el-table :data="data.memberDataCenterCompletedVOList" class="tabless"
+            :style="{ '--el-table-border-color': 'none' }">
+            <el-table-column align="center" type="index" />
+            <el-table-column show-overflow-tooltip align="center" prop="memberId" label="会员ID">
+              <template #default="{ row }">
+                <span style="color: #0F0F0F;">{{ row.memberId }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column show-overflow-tooltip align="center" prop="memberName" label="会员名称">
+              <template #default="{ row }">
+                <span style="color: #FF2D2D;">{{ row.memberName }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column show-overflow-tooltip align="center" prop="completedQuantity" label="完成数量">
+              <template #default="{ row }">
+                <span style="color: #00C738;">{{ row.completedQuantity }}</span>
+              </template>
+            </el-table-column>
+            <template #empty>
+              <el-empty description="暂无数据" />
+            </template>
+          </el-table>
+        </div>
+        <div class="rankingCol">
+          <p class="rankingColP"><span class="rankingColSpan"></span>退款排行榜</p>
+          <el-table :data="data.supplierDataCenterCompletedVOList" :style="{ '--el-table-border-color': 'none' }">
+            <el-table-column align="center" type="index" />
+            <el-table-column show-overflow-tooltip align="center" prop="memberId" label="会员ID">
+              <template #default="{ row }">
+                <span style="color: #0F0F0F;">{{ row.memberId }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column show-overflow-tooltip align="center" prop="memberName" label="会员名称">
+              <template #default="{ row }">
+                <span style="color: #FF2D2D;">{{ row.memberName }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column show-overflow-tooltip align="center" prop="completedQuantity" label="退款数">
+              <template #default="{ row }">
+                <span style="color: #00C738;">{{ row.memberName }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column show-overflow-tooltip align="center" prop="refund" label="退款金额">
+              <template #default="{ row }">
+                <span style="color: #0F0F0F;">{{ row.refund }}</span>
+              </template>
+            </el-table-column>
+            <template #empty>
+              <el-empty description="暂无数据" />
+            </template>
+          </el-table>
+        </div>
+        <div class="rankingCol">
+          <p class="rankingColP"><span class="rankingColSpan"></span>业绩排行榜</p>
+          <el-table :data="data.supplierDataCenterCompletedVOList" :style="{ '--el-table-border-color': 'none' }">
+            <el-table-column align="center" type="index" />
+            <el-table-column show-overflow-tooltip align="center" prop="memberId" label="会员ID">
+              <template #default="{ row }">
+                <span style="color: #0F0F0F;">{{ row.memberId }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column show-overflow-tooltip align="center" prop="memberName" label="会员名称">
+              <template #default="{ row }">
+                <span style="color: #FF2D2D;">{{ row.memberName }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column show-overflow-tooltip align="center" prop="price" label="今日收入">
+              <template #default="{ row }">
+                <span style="color: #00C738;">{{ row.price }}</span>
+              </template>
+            </el-table-column>
+            <template #empty>
+              <el-empty description="暂无数据" />
+            </template>
+          </el-table>
+        </div>
+      </div>
     </PageMain>
   </div>
 </template>
 
 <style lang="scss" scoped>
+:deep {
+// 去除表格色块 线
+  .el-table td.el-table__cell,
+  .el-table th.el-table__cell.is-leaf {
+    border-bottom: none;
+  }
+
+  .el-table--fit .el-table__inner-wrapper:before {
+    width: 0;
+  }
+
+  .el-table__header th {
+    background: var(--g-header-bg) !important;
+  }
+}
+
 :deep {
   .el-row {
     .el-col {
@@ -331,5 +310,214 @@ function getDataList() {
 
 :deep(.el-card__body) {
   min-height: 25rem;
+}
+
+:deep {
+  .el-row {
+    // display: flex;
+    // justify-content: space-between;
+    // width: 100%;
+    // margin: 20px 0;
+
+    .el-col {
+      flex: 1;
+      //  margin: 20px 0;
+      text-align: center;
+
+      .title {
+        text-align: left;
+      }
+    }
+
+    .red {
+      color: red;
+    }
+  }
+
+  // 表格
+  .el-table__body {
+    tr:nth-of-type(1) {
+      td:nth-of-type(1) {
+        color: #FF2D2D !important;
+      }
+    }
+
+    tr:nth-of-type(2) {
+      td:nth-of-type(1) {
+        color: #F9C057 !important;
+      }
+    }
+
+    tr:nth-of-type(3) {
+      td:nth-of-type(1) {
+        color: #409EFF !important;
+      }
+    }
+  }
+}
+
+:deep(.main-container) {
+  background-color: #f2f2f2;
+  padding: 0px !important;
+}
+
+.showDataRow {
+  display: flex;
+  width: 100%;
+  height: 104.006px;
+
+  .showDataCol {
+    width: 20%;
+    height: 104.006px;
+    background: #fff;
+    margin-right: .9996rem;
+    border-radius: .5004rem .5004rem .5004rem .5004rem;
+
+    .showDataP {
+      margin: .9996rem;
+      width: 90%;
+      height: 20.006px;
+      font-family: PingFang SC, PingFang SC;
+      font-weight: 500;
+      font-size: .8748rem;
+      color: #777777;
+      line-height: .9996rem;
+      text-align: left;
+      font-style: normal;
+      text-transform: none;
+    }
+
+    .showDataCount {
+      margin: 0px .9996rem .9996rem .9996rem;
+      width: 90%;
+      height: 36px;
+      border-radius: 0px 0px 0px 0px;
+
+      .showDataSpanLeft {
+        display: inline-block;
+        width: 2.8128rem;
+        height: 36px;
+        font-family: DINPro, DINPro;
+        font-weight: 500;
+        font-size: 1.6248rem;
+        color: #0F0F0F;
+        line-height: 2.0628rem;
+        text-align: left;
+        font-style: normal;
+        text-transform: none;
+      }
+
+      .showDataSpanRight {
+        margin-left: 1.1256rem;
+        display: inline-block;
+        width: 4.3752rem;
+        height: 16.992px;
+        line-height: 1.062rem
+          /* 16.992/16 */
+        ;
+        border-radius: 0px 0px 0px 0px;
+
+        .dd {
+          display: inline-block;
+          width: .3756rem;
+          height: .3756rem;
+          background: #FF8D8D;
+          border-radius: 50%;
+          margin: .312rem .3756rem .0624rem 0px;
+        }
+
+        .participate {
+          display: inline-block;
+          width: 3.6252rem;
+          height: 16.992px;
+          font-family: PingFang SC, PingFang SC;
+          font-weight: 400;
+          font-size: .75rem
+            /* 12/16 */
+          ;
+          color: #777777;
+          line-height: .8748rem;
+          text-align: left;
+          font-style: normal;
+          text-transform: none;
+        }
+      }
+    }
+  }
+
+  .showDataCol:nth-last-of-type(1) {
+    margin-right: 0px;
+  }
+
+}
+
+.ranking {
+  display: flex;
+  margin-top: 1rem;
+  width: 100%;
+  min-height: 690px;
+  border-radius: 0px 0px 0px 0px;
+
+  .rankingCol {
+    margin-right: 1rem;
+    width: 33%;
+    min-height: 690px;
+    padding: 1rem;
+    background: #FFFFFF;
+    border-radius: 8px 8px 8px 8px;
+
+    .rankingColP {
+      display: flex;
+      align-items: center;
+      margin-top: 1rem;
+      margin-left: 1rem;
+      width: 100%;
+      height: 25px;
+      font-family: PingFang SC, PingFang SC;
+      font-weight: 700;
+      font-size: 1.125rem;
+      color: #0F0F0F;
+      line-height: 1.3125rem;
+      text-align: left;
+      font-style: normal;
+      text-transform: none;
+
+      .rankingColSpan {
+        margin-right: .25rem;
+        display: inline-block;
+        border-radius: 50%;
+        width: .625rem;
+        height: .625rem;
+        background: #409EFF;
+      }
+    }
+  }
+
+  .rankingCol:nth-last-of-type(1) {
+    margin-right: 0px;
+  }
+}
+
+:deep(.el-table thead) {
+  color: #0F0F0F;
+}
+
+:deep(:root) {
+  --el-table-border-color: none;
+}
+
+:root {
+  --el-table-border-color: none;
+}
+
+:root {
+  --el-table-border: none;
+}
+
+:deep(.el-table th, .el-table td, .el-table tr) {
+  border-bottom: none !important;
+  /* 去除下划线 */
+  border: none !important;
+  /* 去除表格的边框 */
 }
 </style>

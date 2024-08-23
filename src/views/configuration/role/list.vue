@@ -190,8 +190,8 @@ function onDel(row: any) {
                 placeholder="角色名称"
               />
             </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <!-- <el-select
+            <!-- <el-form-item v-show="!fold" label="">
+              <el-select
                 v-model="data.search.title"
                 value-key=""
                 placeholder="数据权限"
@@ -205,10 +205,10 @@ function onDel(row: any) {
                   :value="item.value"
                 >
                 </el-option>
-              </el-select> -->
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <!-- <el-select
+              </el-select>
+            </el-form-item> -->
+            <!-- <el-form-item v-show="!fold" label="">
+              <el-select
                 v-model="data.search.title"
                 value-key=""
                 placeholder="状态"
@@ -222,8 +222,8 @@ function onDel(row: any) {
                   :value="item.value"
                 >
                 </el-option>
-              </el-select> -->
-            </el-form-item>
+              </el-select>
+            </el-form-item> -->
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">
                 <template #icon>

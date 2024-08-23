@@ -23,7 +23,7 @@ const form = ref<any>({
   // 关键字
   keyWords: "",
   // 会员网址
-  memberURL: "",
+  // memberURL: "",
   // 是否开启注册,默认为true
   registerOffOrOn: true,
   // 是否开启注册审核,默认为false
@@ -127,12 +127,12 @@ function onSubmit() {
     formRef.value &&
       formRef.value.validate((valid) => {
         if (valid) {
+          // memberURL,
           let {
             id,
             keyWords,
             registerExamineOffOrOn,
             registerOffOrOn,
-            memberURL,
             webName,
             priceProportion,
             taxPointsProportion,
@@ -144,12 +144,12 @@ function onSubmit() {
             qqCode,
             address,
           } = form.value;
+          //  memberURL,
           const params = {
             id,
             keyWords,
             registerExamineOffOrOn,
             registerOffOrOn,
-            memberURL,
             webName,
             priceProportion,
             taxPointsProportion,
@@ -226,7 +226,7 @@ function onSubmit() {
             <el-form-item label="keyWords">
               <el-input v-model="form.keyWords" style="width: 18rem" />
             </el-form-item>
-            <el-form-item
+            <!-- <el-form-item
               style="width: 34rem"
               label="个性化域名"
               prop="memberURL"
@@ -240,7 +240,7 @@ function onSubmit() {
             </el-form-item>
             <el-form-item style="width: 34rem" label="站点系统域名">
               <el-input v-model="form.externalSite" />
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item>
               <el-button type="primary" @click="onSubmit"> 确认 </el-button>
             </el-form-item>

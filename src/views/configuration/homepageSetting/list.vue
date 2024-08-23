@@ -138,6 +138,11 @@ function onDel(row: any) {
         height="100%" @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
         <ElTableColumn v-if="data.batch.enable" type="selection" align="center" fixed />
         <ElTableColumn prop="title" label="标题" />
+        <ElTableColumn prop="isSet" align="center" width="100" label="是否默认" >
+          <template #default="{row}">
+            {{row.isSet ? '是' : '否'}}
+          </template>
+        </ElTableColumn>
         <ElTableColumn label="操作" width="250" align="center" fixed="right">
           <template #default="scope">
             <ElButton v-if="!scope.row.isSet" type="primary" size="small" plain @click="setHomePage(scope.row)">
@@ -201,9 +206,14 @@ function onDel(row: any) {
         height="100%" @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
         <ElTableColumn v-if="data.batch.enable" type="selection" align="center" fixed />
         <ElTableColumn prop="title" label="标题" />
+        <ElTableColumn prop="isSet" align="center" width="100" label="是否默认" >
+          <template #default="{row}">
+            {{row.isSet ? '是' : '否'}}
+          </template>
+        </ElTableColumn>
         <ElTableColumn label="操作" width="350" align="center" fixed="right">
           <template #default="scope">
-            <ElButton v-if="!scope.row.isSet" type="primary" size="small" plain @click="setHomePage(scope.row)">
+            <ElButton type="primary" size="small" plain @click="setHomePage(scope.row)">
               设置为主页
             </ElButton>
             <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">
