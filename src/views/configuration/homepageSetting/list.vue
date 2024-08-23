@@ -213,7 +213,7 @@ function onDel(row: any) {
         </ElTableColumn>
         <ElTableColumn label="操作" width="350" align="center" fixed="right">
           <template #default="scope">
-            <ElButton type="primary" size="small" plain @click="setHomePage(scope.row)">
+            <ElButton v-if="!scope.row.isSet" type="primary" size="small" plain @click="setHomePage(scope.row)">
               设置为主页
             </ElButton>
             <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">

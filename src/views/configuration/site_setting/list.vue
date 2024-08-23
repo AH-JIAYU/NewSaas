@@ -17,7 +17,7 @@ const loading = ref(false);
 // 供应商基准地址
 // const supplierUrl = import.meta.env.VITE_APP_SUPPLIER;
 // form ref
-const formRef = ref<FormInstance>();
+const formRef = ref<any>();
 // 定义表单
 const form = ref<any>({
   id: "",
@@ -107,16 +107,21 @@ const copyToClipboard = () => {
 };
 // 提交数据
 function onSubmit() {
+  if(form.value.email === '') {
+    formRules.value.email = []
+    formRef.value.clearValidate('email');
+  }
+  if(form.value.phone === '') {
+    formRules.value.phone = []
+    formRef.value.clearValidate('phone');
+  }
   // 新增
   if (form.value.id === "") {
     // 校验
     formRef.value &&
-      formRef.value.validate((valid) => {
+      formRef.value.validate((valid:any) => {
         if (valid) {
           loading.value = true;
-          if (form.value.keyWords == "") {
-            form.value.keyWords = "keyWords";
-          }
           delete form.value.id;
           api.create(form.value).then(() => {
             loading.value = false;
@@ -131,7 +136,7 @@ function onSubmit() {
   } else {
     // 修改
     formRef.value &&
-      formRef.value.validate((valid) => {
+      formRef.value.validate((valid:any) => {
         if (valid) {
           try {
             let {
@@ -166,9 +171,6 @@ function onSubmit() {
               qqCode,
               address,
             };
-            if (form.value.keyWords == "") {
-              params.keyWords = "keyWords";
-            }
             loading.value = true;
             api.edit(params).then((res: any) => {
               loading.value = false;
@@ -301,7 +303,7 @@ function onSubmit() {
           <el-tab-pane label="联系我们" name="联系我们">
             <el-row :gutter="20">
               <el-col :span="24">
-                <el-form-item label="电子邮箱" prop="">
+                <el-form-item label="电子邮箱" prop="email">
                   <el-input
                     style="width: 18rem"
                     v-model="form.email"
@@ -310,7 +312,7 @@ function onSubmit() {
                 </el-form-item>
               </el-col>
               <el-col :span="24">
-                <el-form-item label="手机号码" prop="">
+                <el-form-item label="手机号码" prop="phone">
                   <el-input
                     style="width: 18rem"
                     v-model="form.phone"

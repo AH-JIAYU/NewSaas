@@ -3,7 +3,6 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import eventBus from "@/utils/eventBus";
 import api from "@/api/modules/survey_data";
-// import useTabbar from '@/utils/composables/useTabbar'
 
 defineOptions({
   name: "surveydata",
@@ -84,12 +83,16 @@ function getDataList() {
   };
   api.dataList(params).then((res: any) => {
     data.value.loading = false;
+    // 完成数排名
     data.value.memberDataCenterCompletedVOList =
       res.data.memberDataCenterCompletedVOList;
+    // 退款额排名
     data.value.memberDataCenterRefundVOList =
       res.data.memberDataCenterRefundVOList;
+    // 业绩排名
     data.value.memberDataCenterPriceVOList =
       res.data.memberDataCenterPriceVOList;
+    // 数据总揽
     data.value.dataScreening = res.data.memberDataCenterOverallOverviewVOList;
     pagination.value.total = res.data.total;
   });
@@ -230,7 +233,8 @@ function getDataList() {
 
 <style lang="scss" scoped>
 :deep {
-// 去除表格色块 线
+
+  // 去除表格色块 线
   .el-table td.el-table__cell,
   .el-table th.el-table__cell.is-leaf {
     border-bottom: none;
@@ -367,7 +371,7 @@ function getDataList() {
   height: 104.006px;
 
   .showDataCol {
-    width: 20%;
+    width: calc(20% - .75rem);
     height: 104.006px;
     background: #fff;
     margin-right: .9996rem;
@@ -460,7 +464,7 @@ function getDataList() {
 
   .rankingCol {
     margin-right: 1rem;
-    width: 33%;
+    width: calc(33.333% - 10px);
     min-height: 690px;
     padding: 1rem;
     background: #FFFFFF;
@@ -469,8 +473,6 @@ function getDataList() {
     .rankingColP {
       display: flex;
       align-items: center;
-      margin-top: 1rem;
-      margin-left: 1rem;
       width: 100%;
       height: 25px;
       font-family: PingFang SC, PingFang SC;
@@ -500,6 +502,10 @@ function getDataList() {
 
 :deep(.el-table thead) {
   color: #0F0F0F;
+}
+
+:deep(.el-table--fit) {
+  margin: 16px;
 }
 
 :deep(:root) {
