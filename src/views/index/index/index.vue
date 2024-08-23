@@ -52,8 +52,17 @@ function echarts1() {
       trigger: 'axis',
       axisPointer: {
         type: 'shadow'
+      },
+      formatter: function (params: any) {
+        // 自定义圆点
+        var dotHtml = "<span style=\"display:inline-block;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:#44ca6a;\"></span>"
+        var dotHtml2 = "<span style=\"display:inline-block;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:#f56a66;\"></span>"
+        return `
+        <div>${params[0].name}<br> ${dotHtml + params[0].seriesName}: ${params[0].value} <br> ${dotHtml2 + params[0].seriesName}: ${params[0].value}</div>
+        `;
       }
     },
+
     grid: {
       left: '3%',
       right: '4%',
@@ -105,39 +114,40 @@ function echarts1() {
     ],
     series: [
       {
-        name: 'Direct',
+        name: '营业额',
         type: 'bar',
         barWidth: '60%',
         data: [10, 52, 200, 334, 390, 330, 10, 52, 200, 334, 390, 330, 10, 52, 200, 334, 390, 330, 10, 52, 200, 334, 390, 330,]
-      }
-    ]
+      },
+    ],
+
   };
   chart1.setOption(option);
 }
-// 处理数据
-function transformData(inputArray: any) {
-  // 新的数组用于存储转换后的对象
-  let transformedArray = inputArray.map((item: any) => {
-    // 提取客户名，并去除可能的 ":null" 后缀
-    let customerName = item.customerName.replace(":null", "");
-
-    // 构造新的对象格式
-    return {
-      value: item.projectTotal,
-      name: customerName,
-      datas: {
-        aud: item.auditSuccessRate.toString(),
-        audR: item.auditRate.toString(),
-        com: item.projectTotal.toString(),
-      },
-    };
-  });
-
-  return transformedArray;
-}
 // 客户总览
 function echarts2() {
-  const Data = transformData(cloneDeep(data.value.dataCenterCustomerVOS));
+  // const Data = transformData(cloneDeep(data.value.dataCenterCustomerVOS));
+  const Data:any = transformData([
+    {
+      customerName: "张三:null",
+      projectTotal: 1,
+      auditRate: 1,
+      auditSuccessRate: 1,
+    },
+    {
+      customerName: "李四:null",
+      projectTotal: 1,
+      auditRate: 1,
+      auditSuccessRate: 1,
+    },
+    {
+      customerName: "王五:null",
+      projectTotal: 1,
+      auditRate: 1,
+      auditSuccessRate: 1,
+    },
+  ])
+
   const legendData = data.value.dataCenterCustomerVOS.map((item: any) => {
     return item.customerName;
   });
@@ -151,74 +161,32 @@ function echarts2() {
       center: ["25%", "50%"],
       subtext: "",
     },
-    tooltip: {
+    tooltip: { //弹框
       trigger: "item",
       formatter(data: any) {
         return `客户：${data.name}</br>项目完成: ${data.data.datas.com}</br>审核率: ${data.data.datas.aud}`;
       },
     },
-    legend: [
-      {
-        orient: "horizontal",
-        x: "55%",
-        y: "center",
-        bottom: "20",
-        itemGap: 20, // 设置图例图形的宽
-        center: ["50%", "50%"],
-        icon: "stack",
-        data: [
-          ...legendData,
-
-        ],
-        formatter(name: any) {
-          let target, percentage;
-          for (let i = 0; i < Data.length; i++) {
-            if (Data[i].name === name) {
-              target = Data[i].value;
-            }
-          }
-
-          const arr = [
-            `{a|${name.length > 5 ? name.substr(0, 5) + "..." : name}} `,
-            `{b| ${target}}`,
-          ];
-          return arr.join(" ");
-        },
-        tooltip: {
-          show: true,
-          trigger: "item",
-        },
-        textStyle: {
-          rich: {
-            a: {
-              width: 70,
-              backgroundColor: "transparent",
-            },
-            b: {
-              width: 20,
-              backgroundColor: "transparent",
-            },
-          },
-        },
-      },
-    ],
+    label: {//饼图文字的显示
+    show: true, //默认  显示文字
+},
     series: [
       {
         name: "访问来源",
         type: "pie",
         radius: ["40%", "60%"],
-        center: ["25%", "50%"],
+        center: 'center',
         text: "省市公司",
         data: Data,
         label: {
-          show: false,
+          show: true,
         },
       },
     ],
     graphic: [
       {
         type: "group",
-        left: "25%",
+        left: 'center',
         top: "center",
         bounding: "raw",
         children: [
@@ -249,6 +217,28 @@ function echarts2() {
   // 传入数据
   chart2.setOption(option);
 }
+// 处理数据
+function transformData(inputArray: any) {
+  // 新的数组用于存储转换后的对象
+  let transformedArray = inputArray.map((item: any) => {
+    // 提取客户名，并去除可能的 ":null" 后缀
+    let customerName = item.customerName.replace(":null", "");
+
+    // 构造新的对象格式
+    return {
+      value: item.projectTotal,
+      name: customerName,
+      datas: {
+        aud: item.auditSuccessRate.toString(),
+        audR: item.auditRate.toString(),
+        com: item.projectTotal.toString(),
+      },
+    };
+  });
+
+  return transformedArray;
+}
+
 async function getList() {
   data.value.dataCenterSupplierTurnovers = [
     {
@@ -341,12 +331,12 @@ const cooperation = (row: any) => {
 onMounted(async () => {
   echarts1();
   echarts2();
-  await getList();
-  data.value.countryList = await basicDictionaryStore.getCountry();
   window.addEventListener("resize", () => {
     chart1.resize();
     chart2.resize();
   });
+  data.value.countryList = await basicDictionaryStore.getCountry();
+  await getList();
 });
 </script>
 
@@ -1025,6 +1015,7 @@ onMounted(async () => {
       justify-content: start;
       flex: 1;
       height: 149px;
+      padding: 1.5rem;
 
       >svg {
         margin-right: .5rem
@@ -1270,6 +1261,12 @@ onMounted(async () => {
   // 单选框背景色
   .el-radio-button__inner {
     background-color: transparent;
+    width: 2.125rem;
+    height: 2rem;
+    line-height: 2rem;
+    font-size: .875rem;
+    padding:0 !important;
+
   }
 
   // 表格
