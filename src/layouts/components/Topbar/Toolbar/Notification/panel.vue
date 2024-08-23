@@ -54,7 +54,6 @@ const cooperation = (row: any) => {
       class="m-3 flex!"
       @click.stop
     />
-
     <template v-if="activeName === 'message'">
       <OverlayScrollbarsComponent
         :options="{ scrollbars: { autoHide: 'leave', autoHideDelay: 300 } }"
@@ -81,10 +80,11 @@ const cooperation = (row: any) => {
           </div>
         </template>
         <template v-else>
-          <div class="flex flex-col items-center py-6 text-stone-5">
+          <el-empty description="暂无数据" />
+          <!-- <div class="flex flex-col items-center py-6 text-stone-5">
             <SvgIcon name="i-tabler:mood-smile" :size="40" />
             <p m-2 text-base>没有新消息</p>
-          </div>
+          </div> -->
         </template>
       </OverlayScrollbarsComponent>
       <RouterLink
@@ -127,8 +127,9 @@ const cooperation = (row: any) => {
         </template>
         <template v-else>
           <div class="flex flex-col items-center py-6 text-stone-5">
-            <SvgIcon name="i-tabler:mood-smile" :size="40" />
-            <p m-2 text-base>没有新待办</p>
+            <el-empty description="暂无数据" />
+            <!-- <SvgIcon name="i-tabler:mood-smile" :size="40" />
+            <p m-2 text-base>没有新待办</p> -->
           </div>
         </template>
       </OverlayScrollbarsComponent>

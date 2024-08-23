@@ -4,6 +4,8 @@ import { ElMessage } from "element-plus";
 import { cloneDeep } from "lodash-es";
 import useProjectManagementOutsourceStore from "@/store/modules/projectManagement_outsource";
 import { throttle } from "lodash-es";
+import { Right } from '@element-plus/icons-vue'
+
 
 defineOptions({
   name: "Edit",
@@ -80,8 +82,9 @@ const getClickListBefore = (index: any) => {
 
 }
 // 获取点击id
-const getClickList = async (row: any, index:any) => {
-  data.value.select = Number(index)
+const getClickList = async (row: any, index: any) => {
+  data.value.select = data.value.select === index ? '' : index
+  data.value.clickIdList = []
   const params = {
     type: row.type,
     projectId: row.projectId,
@@ -159,7 +162,7 @@ defineExpose({ showEdit });
             <div :class="{
       'item box': true,
       'select': index === data.select
-    }">
+    }" @click="getClickList(item, index)">
               <div class="item-left">
                 <div class="tenant">
                   <template v-if="item?.length > 1">
@@ -202,13 +205,14 @@ defineExpose({ showEdit });
                 </div>
               </div>
               <div class="viewAll">
-                <el-button type="primary" round @click="getClickList(item, index)">查看全部</el-button>
+                <el-button type="primary" circle size="small" :icon="Right">
+                </el-button>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="details-right">
+        <div class="details-right" v-if="data.select !== ''">
           <div class="clickId" v-if="data.clickIdList.length">
             <div class="clickIdItem" v-for="ite in data.clickIdList">
               <div class="clickIdItem-title">
@@ -311,7 +315,7 @@ defineExpose({ showEdit });
         height: 8.125rem;
         display: flex;
         justify-content: space-between;
-        align-items: start;
+        align-items: center;
 
         .item-left {
           height: 6.125rem;
@@ -452,16 +456,27 @@ defineExpose({ showEdit });
   border-radius: .25rem;
   ;
 }
-
+// 点击id状态
 .surveyStatus1 {
-  background-color: var(--el-color-success-light-9);
-  color: var(--el-color-success);
+  background-color: #b0ffc6;
+  color: #17c047;
+}
+.surveyStatus2 {
+  background-color: #b7daff;
+  color: #5cacff;
+}
+.surveyStatus3 {
+  background-color: #a4fff4;
+  color: #36bdb4;
+}
+.surveyStatus4 {
+  background-color: #fee4b4;
+  color: #ffb938;
 }
 
 .surveyStatus5 {
-  background-color: var(--el-color-danger-light-9);
-  ;
-  color: var(--el-color-danger);
+  background-color: #ffdede;
+  color: #ff6b6b;
 
 }
 
@@ -479,94 +494,4 @@ defineExpose({ showEdit });
   width: 50%;
   margin: auto;
 }
-
-// .item {
-//   height: 15.625rem;
-//   display: flex;
-//   justify-content: space-around;
-//   align-items: start;
-
-//   .left {
-//     height: 100%;
-//     flex: 1;
-
-//     >div {
-//       height: 50%;
-//     }
-
-//     .currentTenant {
-//       border: 1px dashed var(--el-color-primary) !important;
-//       width: 70%;
-//       margin: auto;
-//     }
-
-//     .left-top {
-//       border: 1px dashed #ccc;
-//       border-radius: 1rem;
-//       background-color: #fff;
-
-//       .left-top-left {
-//         width: 70%;
-//       }
-
-//       .left-top-right {
-//         width: 30%;
-//         border-left: 1px dashed #ccc;
-//       }
-
-//       >div {
-//         height: 100%;
-//         display: flex;
-//         flex-direction: column;
-//         justify-content: space-between;
-//         align-items: start;
-
-//         >div {
-//           width: 100%;
-//         }
-//       }
-//     }
-
-//     .left-bottom {
-//       display: flex;
-//       flex-direction: column;
-//       justify-content: center;
-//       align-items: center;
-
-//       .line,
-//       .arrow {
-//         flex: 1;
-//         width: 0.0625rem;
-//         background-color: var(--el-color-primary);
-//         position: relative;
-//       }
-
-//       .arrow::after {
-//         content: "";
-//         display: block;
-//         position: absolute;
-//         right: 50%;
-//         /* 箭头位置 */
-//         bottom: 0;
-//         /* 箭头位置 */
-//         transform: translateX(50%);
-//         border-top: 0.625rem solid var(--el-color-primary);
-//         /* 箭头高低 */
-//         border-right: 0.625rem solid transparent;
-//         /* 箭头高低 */
-//         border-left: 0.625rem solid transparent;
-//         /* 箭头长度*/
-//       }
-//     }
-//   }
-
-//   .right {
-//     height: 50%;
-//     line-height: calc(15.625rem / 2);
-//     width: 2rem;
-//     text-align: center;
-//     color: var(--el-color-primary);
-
-//   }
-// }
-</style>
+ </style>

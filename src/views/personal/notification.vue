@@ -21,21 +21,33 @@ const route: any = useRoute();
 const data = ref<any>({
   tabs: "", //tabs
   selectId: "", // 选中id
+  ReadAlready: 1, //1未读 2已读
+  type: 1,//1消息 2待办
 });
 
 // 消息
 function showEditNews(row: any) {
   data.value.selectId = row.id;
-  newsRef.value.showEdit(row);
+  data.value.type = 1;
+  nextTick(() => {
+    newsRef.value?.showEdit(row);
+  })
+
 }
 
 // 待办
 function showEditCooperation(row: any) {
-  cooperationRef.value.showEdit(row);
+  data.value.selectId = row.id;
+  data.value.type = 2;
+  nextTick(() => {
+    cooperationRef.value?.showEdit(row);
+  })
+
 }
 // 已读后清除右侧详情
 function delSelectId() {
   data.value.selectId = "";
+  data.value.type = 0;
 }
 onMounted(() => {
   data.value.tabs = route.query.type == 2 ? "cooperation" : "news";
@@ -58,74 +70,67 @@ onMounted(() => {
 
 <template>
   <div class="absolute-container">
-    <PageHeader title="通知中心" align="center" style="margin-bottom: 0px" />
     <PageMain>
       <div class="flex-c">
         <div class="left">
-          <el-tabs type="border-card" v-model="data.tabs">
+          <el-tabs v-model="data.tabs" @change="delSelectId">
             <el-tab-pane label="消息" name="news">
-              <OverlayScrollbarsComponent
-                :options="{
-                  scrollbars: { autoHide: 'leave', autoHideDelay: 300 },
-                }"
-                defer
-                class="list"
-              >
+              <div class="buttons">
+                <button :class="data.ReadAlready === 1 ? 'unread' : ''" @click="data.ReadAlready = 1">未读{{
+            notificationStore.message < 100 ? `(${notificationStore.message})` : '99+' }}</button>
+                    <button :class="data.ReadAlready === 2 ? 'read' : ''" read @click="data.ReadAlready = 2">已读</button>
+              </div>
+
+              <OverlayScrollbarsComponent :options="{
+            scrollbars: { autoHide: 'leave', autoHideDelay: 300 },
+          }" defer class="list">
                 <template v-if="notificationStore.messageList.length">
-                  <div
-                    :class="{
-                      item: 'item',
-                      new: item.isReadAlready === 1,
-                      select: item.id === data.selectId,
-                    }"
-                    v-for="item in notificationStore.messageList"
-                    @click="showEditNews(item)"
-                  >
-                    <SvgIcon name="i-ri:mail-fill" />
+                  <div :class="{
+            item: 'item',
+            select: item.id === data.selectId,
+          }" v-for="item in notificationStore.messageList" @click="showEditNews(item)">
+
                     <div class="info">
-                      <div class="title">
-                        {{
-                          notificationStore.auditTypeList[item.auditType - 1] ||
-                          ""
-                        }}
-                        &emsp;
-                        {{ item.invitationName }}
+                      <div class=" time">
+                        <!-- 未读标识 -->
+                        <span v-if="item.isReadAlready === 1" class="new"></span>
+                        <!-- 合作邀约 -->
+                        <span class="auditType">
+                          {{ notificationStore.auditTypeList[item.auditType - 1] || "" }}
+                        </span>
+                        <span class="time">
+                          {{ item.createTime }}
+                        </span>
                       </div>
-                      <div class="date">
-                        {{ item.createTime }}
+                      <div class="data">
+                        {{ item.messageContent }}
                       </div>
                     </div>
                   </div>
                 </template>
                 <template v-else>
-                  <div class="flex flex-col items-center py-6 text-stone-5">
+                  <el-empty description="暂无数据" />
+                  <!-- <div class="flex flex-col items-center py-6 text-stone-5">
                     <SvgIcon name="i-tabler:mood-smile" :size="40" />
                     <p m-2 text-base>没有消息</p>
-                  </div>
+                  </div> -->
                 </template>
               </OverlayScrollbarsComponent>
             </el-tab-pane>
             <el-tab-pane label="代办" name="cooperation">
-              <OverlayScrollbarsComponent
-                :options="{
-                  scrollbars: { autoHide: 'leave', autoHideDelay: 300 },
-                }"
-                defer
-                class="list"
-              >
+              <OverlayScrollbarsComponent :options="{
+            scrollbars: { autoHide: 'leave', autoHideDelay: 300 },
+          }" defer class="list">
                 <template v-if="notificationStore.todoList.length">
-                  <div
-                    :class="item.isReadAlready === 1 ? 'item new' : 'item'"
-                    v-for="item in notificationStore.todoList"
-                    @click="showEditCooperation(item)"
-                  >
+                  <div :class="item.isReadAlready === 1 ? 'item new' : 'item'"
+                    v-for="item in notificationStore.todoList" @click="showEditCooperation(item)">
                     <SvgIcon name="i-ri:file-edit-fill" class="service" />
                     <div class="info">
                       <div class="title">
                         {{
-                          notificationStore.auditTypeList[item.auditType - 1] ||
-                          ""
-                        }}
+            notificationStore.auditTypeList[item.auditType - 1] ||
+            ""
+          }}
                         &emsp;
                         {{ item.messageContent }}
                       </div>
@@ -136,25 +141,37 @@ onMounted(() => {
                   </div>
                 </template>
                 <template v-else>
-                  <div class="flex flex-col items-center py-6 text-stone-5">
+                  <el-empty description="暂无数据" />
+                  <!-- <div class="flex flex-col items-center py-6 text-stone-5">
                     <SvgIcon name="i-tabler:mood-smile" :size="40" />
                     <p m-2 text-base>没有待办</p>
-                  </div>
+                  </div> -->
                 </template>
               </OverlayScrollbarsComponent>
             </el-tab-pane>
           </el-tabs>
         </div>
-        <div v-show="data.selectId" class="right">
-          <news ref="newsRef" @delSelectId="delSelectId"></news>
+        <div v-show="data.selectId" class="right" v-if="data.selectId">
+          <news v-if="data.type === 1" ref="newsRef" @delSelectId="delSelectId"></news>
+          <cooperation v-if="data.type === 2" ref="cooperationRef"></cooperation>
         </div>
       </div>
     </PageMain>
-    <cooperation ref="cooperationRef"></cooperation>
+
   </div>
 </template>
 
 <style scoped lang="scss">
+:deep {
+  .el-tabs__item.is-top:nth-child(2) {
+    margin-left: 20px
+  }
+}
+
+.select {
+  background: #F3F9FF !important;
+}
+
 .absolute-container {
   position: absolute;
   display: flex;
@@ -170,7 +187,7 @@ onMounted(() => {
     margin: 0;
     background-color: transparent;
     height: calc(100% - 4rem);
-    flex-shrink:0;
+    flex-shrink: 0;
     display: flex;
 
 
@@ -178,42 +195,46 @@ onMounted(() => {
       display: flex;
       flex: 1;
       flex-direction: column;
-      height:100%;
+      height: 100%;
       box-sizing: border-box;
     }
+
     .flex-c {
-        display: flex;
-        justify-content: space-around;
-        align-items: start;
-        height:100%;
+      display: flex;
+      justify-content: space-around;
+      align-items: start;
+      height: 100%;
 
-        .left,
-        .right {
-          flex: 1;
-          background-color: var(--g-container-bg);
-          height: 100% ;
-          overflow: auto;
+      .left,
+      .right {
+        flex: 1;
+        background-color: var(--g-container-bg);
+        height: 100%;
+        overflow: auto;
+        border-radius: .5rem;
 
-          :deep( .el-tabs){
-            height: 100% ;
-          }
-          :deep(.el-tabs__header){
-            height: 2.5rem;
-            overflow: auto;
-          }
-          :deep(.el-tabs__content){
-            height: calc(100% - 2.5rem);
-            overflow: auto;
-          }
+        :deep(.el-tabs) {
+          height: 100%;
         }
 
-        .right {
-          margin-left: 1rem;
-          .mail{
-            height: 100% ;
-          }
+        :deep(.el-tabs__header) {
+          height: 2.5rem;
+        }
+
+        :deep(.el-tabs__content) {
+          height: calc(100% - 3.5rem);
+          overflow: auto;
         }
       }
+
+      .right {
+        margin-left: 1rem;
+
+        .mail {
+          height: 100%;
+        }
+      }
+    }
 
   }
 
@@ -224,53 +245,108 @@ onMounted(() => {
     min-height: 25rem !important;
   }
 }
+
+.buttons {
+  padding: 0 1rem;
+  margin-bottom: 1rem;
+
+  button {
+    border: none;
+    padding: .125rem .375rem;
+    margin-right: .125rem;
+    color: #fff;
+    background-color: #d9d9d9;
+    border-radius: .25rem;
+  }
+
+  .unread {
+    background: #ff8686;
+  }
+
+  .read {
+    background: #00c738;
+  }
+
+}
+
 .list {
-  --at-apply: border-block-width-1 border-block-solid border-block-stone-2 dark:border-block-stone-7;
+  // --at-apply: border-block-width-1 border-block-solid border-block-stone-2 dark:border-block-stone-7;
+  padding: 0 1rem;
 
   .item {
-    --at-apply: flex m-1 items-start gap-3 px-3 py-4 cursor-pointer border-b-width-1 last:border-b-width-0 border-b-solid border-b-stone-2 dark:border-b-stone-7 hover:bg-stone-1 dark:hover:bg-dark/50;
 
-    i {
-      --at-apply: w-6 h-6 text-xs rounded-full text-white bg-blue;
-
-      &.service {
-        --at-apply: bg-green;
-      }
-
-      &.file-edit {
-        --at-apply: bg-orange;
-      }
-
-      &.bug {
-        --at-apply: bg-pink;
-      }
-    }
+    background: #fff;
+    border-radius: .5rem;
+    border: 1px solid rgba(170, 170, 170, 0.5);
+    padding: 1rem;
+    margin-bottom: 1rem;
 
     .info {
-      .title {
-        --at-apply: text-sm line-clamp-2;
+      .auditType {
+        background: #409EFF;
+        border-radius: .25rem;
+        color: #fff;
+        padding: .125rem .5rem;
+        margin: 0 .3125rem;
+      }
+
+      .time {
+        font-family: PingFang SC, PingFang SC;
+        font-weight: 500;
+        font-size: .75rem;
+        color: #333333;
+        margin-bottom: 1rem;
       }
 
       .date {
-        --at-apply: mt-1 text-xs text-stone-5;
+        --at-apply: text-sm line-clamp-2;
+        font-family: PingFang SC, PingFang SC;
+        font-weight: 600;
+        font-size: .875rem;
+        color: #0F0F0F;
       }
     }
   }
-  .new{
-    position: relative;
-  }
-  .new::after{
-    content:'';
-    position: absolute;
+
+
+  // .item {
+  // --at-apply: flex m-1 items-start gap-3 px-3 py-4 cursor-pointer border-b-width-1 last:border-b-width-0 border-b-solid border-b-stone-2 dark:border-b-stone-7 hover:bg-stone-1 dark:hover:bg-dark/50;
+
+  // i {
+  //   --at-apply: w-6 h-6 text-xs rounded-full text-white bg-blue;
+
+  //   &.service {
+  //     --at-apply: bg-green;
+  //   }
+
+  //   &.file-edit {
+  //     --at-apply: bg-orange;
+  //   }
+
+  //   &.bug {
+  //     --at-apply: bg-pink;
+  //   }
+  // }
+
+  // .info {
+  //   .title {
+  //     --at-apply: text-sm line-clamp-2;
+  //   }
+
+  //   .date {
+  //     --at-apply: mt-1 text-xs text-stone-5;
+  //   }
+  // }
+  // }
+
+  .new {
+    display: inline-block;
     width: 0.625rem;
     height: 0.625rem;
-    border-radius:50%;
+    border-radius: 50%;
     background-color: red;
-    top:0;
-    right:0;
   }
-}
-.select{
-  background-color: #f5f5f4;
+
+
 }
 </style>
