@@ -10,6 +10,9 @@ const data = ref<any>({});
 // 显隐
 const showEdit = (row: any) => {
   data.value = row;
+  if (row.isReadAlready !== 2) {
+    read()  
+  }
 };
 // 已读
 const read = async () => {
@@ -28,31 +31,17 @@ defineExpose({
 
 <template>
   <div class="news p-4">
-    <div class="content">
-      <!-- <p>发件人 ：系统</p>
-      <p>主&emsp;题 ：合作邀约</p>
-      <p>恭喜您！与XXXXXXX公司合作成功。</p>
-      <p>2024-10-10 11:11:11</p> -->
-      <!-- <div class="from flex-s">
-        <span class="title">发件人:</span>
-        <p class="bg">系统</p>
-      </div> -->
-      <div class="theme flex-s">
-        <span class="title">主&emsp;题:</span>
-        <p class="bg">
-          {{ notificationStore.auditTypeList[data.auditType - 1] || "" }}
-        </p>
-      </div>
-      <div class="news-content bg">
-        {{ data.messageContent }} <br>
-        说明：{{ data.remark }}
-      </div>
-    </div>
+    <div class="type">
+      <span></span> {{ notificationStore.auditTypeList[data.auditType - 1] || "" }}
 
-    <div class="footer">
-      <el-button plain type="primary" size="default" @click="close">关闭</el-button>
-      <el-button v-if="data.isReadAlready === 1" plain type="primary" size="default" @click="read">已读</el-button>
-      <!-- <el-button plain type="danger" @click="">删除</el-button> -->
+    </div>
+    <div class="news-content">
+      <div class="content">
+        {{ data.messageContent }}
+      </div>
+      <div class="time">
+        {{ data.createTime }}
+      </div>
     </div>
   </div>
 </template>
@@ -67,50 +56,50 @@ defineExpose({
   align-items: start;
   flex-direction: column;
 
-  .content {
+  >div {
     width: 100%;
-    height: calc(100% - 2.5rem);
+    margin-top: 1rem;
+  }
+
+  .type {
+    font-family: PingFang SC, PingFang SC;
+    font-weight: 600;
+    font-size: 1.125rem;
+    color: #0F0F0F;
+    margin-top: 0 !important;
     display: flex;
-    flex-direction: column;
-    justify-content: start;
-    align-items: start;
+    justify-content: star;
+    align-items: center;
 
-    .news-content {
-      overflow-y: auto;
-      flex: 1;
-    }
-
-    >div {
-      width: 100%;
-      margin: 0.3125rem 0;
-    }
-
-    .flex-s {
-      display: flex;
-      justify-content: start;
-      align-items: center;
-
-      .title {
-        width: 4rem;
-      }
-
-      .bg {
-        flex: 1;
-        padding: 0.25rem;
-      }
-    }
-
-    .bg {
-      // background-color: var(--g-bg);
-      background-color: #f5f6f7;
+    span {
+      width: .1875rem;
+      height: 1rem;
+      display: inline-block;
+      background-color: #46a1ff;
+      margin-right: .3125rem;
     }
   }
 
-  .footer {
-    width: 100%;
-    height: 2.5rem;
-    line-height: 2.5rem;
-    text-align: right;
+
+  .news-content {
+    overflow-y: auto;
+    flex: 1;
+    font-family: PingFang SC, PingFang SC;
+    padding: 0 1rem;
+    color: #0F0F0F;
+
+
+    .content {
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: .5rem;
+    }
+
+    .time {
+      font-weight: 400;
+      font-size: .875rem;
+    }
   }
+
 }
 </style>

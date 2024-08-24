@@ -407,7 +407,7 @@ onMounted(async () => {
           v-if="checkList.includes('surveySource')"
           align="center"
           prop="memberId"
-          width="180"
+          width="100"
           show-overflow-tooltip
           label="会员类型"
         >
@@ -481,7 +481,7 @@ onMounted(async () => {
           align="center"
           prop="customerShortName"
           show-overflow-tooltip
-          width="120"
+          width="100"
           label="客户简称"
         />
         <el-table-column

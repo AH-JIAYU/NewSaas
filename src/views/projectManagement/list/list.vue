@@ -129,7 +129,7 @@ function dispatch() {
       center: true,
     });
   }
-  else if(selectList.length[0].row.isOnline===2){
+  else if (selectList.length[0].row.isOnline === 2) {
     ElMessage.warning({
       message: "离线不可调度",
       center: true,
@@ -271,8 +271,8 @@ onMounted(async () => {
             </el-form-item>
             <el-form-item v-show="!fold">
               <el-select v-model="search.projectType" placeholder="项目类型" clearable @change="currentChange()">
-                <el-option label="内部新增" :value="1"> </el-option>
-                <el-option label="租户分配" :value="2"> </el-option>
+                <el-option label="自有项目" :value="1"> </el-option>
+                <el-option label="外包项目" :value="2"> </el-option>
               </el-select>
             </el-form-item>
             <ElFormItem>
@@ -320,8 +320,8 @@ onMounted(async () => {
         :tree-props="{ children: 'getChildrenProjectListInfoList' }" :border="border" :size="lineHeight"
         :stripe="stripe">
         <el-table-column align="center" type="selection" />
-        <el-table-column v-if="checkList.includes('projectType')" width="150" align="center"
-          label="项目类型"><template #default="{ row }">
+        <el-table-column v-if="checkList.includes('projectType')" width="150" align="center" label="项目类型"><template
+            #default="{ row }">
             <el-button text type="danger" v-if="row.projectType === 2">外包项目</el-button>
             <el-button text type="info" v-else>自有项目</el-button>
           </template>
@@ -335,9 +335,9 @@ onMounted(async () => {
   }}</el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('clientName')" prop="clientName"show-overflow-tooltip align="center" label="客户简称/标识"
-          width="120"><template #default="{ row }">
-            <el-text class="mx-1" >{{ row.clientName.split("/")[0] }}</el-text>
+        <el-table-column v-if="checkList.includes('clientName')" prop="clientName" show-overflow-tooltip align="center"
+          label="客户简称/标识" width="120"><template #default="{ row }">
+            <el-text class="mx-1">{{ row.clientName.split("/")[0] }}</el-text>
             <p>{{ row.clientName.split("/")[1] }}</p>
           </template>
         </el-table-column>
@@ -351,9 +351,10 @@ onMounted(async () => {
             {{ row.limitedQuantity || "-" }}
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('allocationType')" align="center" label="分配类型" width="120">
+        <el-table-column v-if="checkList.includes('allocationType')" align="center" label="分配类型"  width="100">
           <template #default="{ row }">
-            <el-button text @click="viewAllocations(row, 1)" type="danger" v-if="row.allocationType === 1">自动分配</el-button>
+            <el-button text @click="viewAllocations(row, 1)" type="danger"
+              v-if="row.allocationType === 1">自动分配</el-button>
             <el-button text @click="viewAllocations(row, 2)" type="warning"
               v-else-if="row.allocationType === 2">供应商</el-button>
             <el-button text @click="viewAllocations(row, 3)" type="success"
@@ -428,10 +429,11 @@ onMounted(async () => {
         </el-table-column>
         <el-table-column align="center" fixed="right" label="操作" width="240">
           <template #default="{ row }">
-            <el-button v-if="row.allocationStatus === 1" plain :disabled="row.isOnline===2" type="primary" size="small" @click="distribution(row)">
+            <el-button v-if="row.allocationStatus === 1" plain :disabled="row.isOnline === 2" type="primary" size="small"
+              @click="distribution(row)">
               分配
             </el-button>
-            <el-button v-else plain type="primary" :disabled="row.isOnline===2" size="small" @click="reassign(row)">
+            <el-button v-else plain type="primary" :disabled="row.isOnline === 2" size="small" @click="reassign(row)">
               重新分配
             </el-button>
             <el-button type="primary" plain size="small" @click="projectEdit(row)" :disabled="row.projectType === 2">

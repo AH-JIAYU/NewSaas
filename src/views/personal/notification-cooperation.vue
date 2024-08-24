@@ -7,22 +7,20 @@ defineOptions({
 });
 
 const notificationStore = useNotificationStore();
-const centerDialogVisible = ref(false);
 const data = ref<any>({});
 
 const showEdit = (row: any) => {
   data.value = row;
-  centerDialogVisible.value = true;
+  read()
 };
-// 关闭
-const close = async (e: any) => {
+// 已读
+const read = async () => {
   const params = {
     id: data.value.id,
     type: 1,
   };
   await api.updateTenantAudit(params); //修改该条数据待办状态
   await notificationStore.getUnreadTodo(); // 重新获取待办列表
-  centerDialogVisible.value = false;
 };
 // 拒绝
 const refuse = async () => {
@@ -32,7 +30,6 @@ const refuse = async () => {
   };
   await api.updateTenantAudit(params); //修改该条数据待办状态
   await notificationStore.getUnreadTodo(); // 重新获取待办列表
-  centerDialogVisible.value = false;
 };
 // 同意
 const agree = async () => {
@@ -42,7 +39,6 @@ const agree = async () => {
   };
   await api.updateTenantAudit(params); //修改该条数据待办状态
   await notificationStore.getUnreadTodo(); // 重新获取待办列表
-  centerDialogVisible.value = false;
 };
 
 defineExpose({
@@ -51,28 +47,89 @@ defineExpose({
 </script>
 
 <template>
-  <el-dialog
-    v-model="centerDialogVisible"
-    title="合作邀约"
-    width="40%"
-    center
-    draggable
-    :before-close="close"
-    :close-on-click-modal="false"
-  >
-    <span>
-      尊贵的{{ data.beInvitedName }} <br />
-      您好，我是{{
-        data.invitationName || "-"
-      }}诚挚邀请您与我们一同协作共赢！若有疑问请联系{{ data.phoneOrEmail }}。
-    </span>
-    <template #footer v-if="data.auditStatus === 1">
-      <div class="dialog-footer">
-        <el-button @click="refuse">决绝合作</el-button>
+  <div class="news p-4">
+
+    <div class="type">
+      <span></span> 合作邀约
+    </div>
+    <div class="news-content">
+      <div class="content">
+        尊贵的{{ data.beInvitedName }}
+      </div>
+      <div class="time">
+        您好，我是{{
+          data.invitationName || "-"
+        }}诚挚邀请您与我们一同协作共赢！若有疑问请联系{{ data.phoneOrEmail }}。
+      </div>
+      <div class="footer" v-if="data.auditStatus === 1">
+        <el-button @click="refuse">拒绝合作</el-button>
         <el-button type="primary" @click="agree"> 同意合作 </el-button>
       </div>
-    </template>
-  </el-dialog>
+    </div>
+  </div>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.news {
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: start;
+  align-items: start;
+  flex-direction: column;
+
+  >div {
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  .type {
+    font-family: PingFang SC, PingFang SC;
+    font-weight: 600;
+    font-size: 1.125rem;
+    color: #0F0F0F;
+    margin-top: 0 !important;
+    display: flex;
+    justify-content: star;
+    align-items: center;
+
+    span {
+      width: .1875rem;
+      height: 1rem;
+      display: inline-block;
+      background-color: #46a1ff;
+      margin-right: .3125rem;
+    }
+  }
+
+
+  .news-content {
+    overflow-y: auto;
+    flex: 1;
+    font-family: PingFang SC, PingFang SC;
+    padding: 0 1rem;
+    color: #0F0F0F;
+
+
+    .content {
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: .5rem;
+    }
+
+    .time {
+      font-weight: 400;
+      font-size: .875rem;
+    }
+
+    .footer {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: end;
+      align-items: center;
+    }
+  }
+
+}
+</style>

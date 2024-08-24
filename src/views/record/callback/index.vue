@@ -268,6 +268,7 @@ onMounted(async () => {
           prop="surveySource"
           show-overflow-tooltip
           label="会员类型"
+          width="100"
           ><template #default="{ row }">
             {{ memberType[row.surveySource - 1].label }}
           </template>

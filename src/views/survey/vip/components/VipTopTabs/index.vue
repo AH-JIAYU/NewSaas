@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ElForm } from "element-plus";
-import { obtainLoading } from "@/utils/apiLoading";
+import edit from "@/views/survey/vipLevel/components/Edit/index.vue"; // 快捷操作：新增会员等级
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
 import useSurveyVipLevelStore from "@/store/modules/survey_vipLevel"; //会员等级
 import useSurveyVipGroupStore from "@/store/modules/survey_vipGroup"; //会员组
@@ -14,6 +14,7 @@ const props = defineProps({
   tabIndex: Number,
 });
 const activeName = ref("basicSettings"); // tabs
+const EditRef = ref(); // 快捷操作：新增会员等级 Ref
 const data = reactive<any>({
   vipLevelList: [], // 会员等级
   vipGroupList: [], // 会员组
@@ -77,13 +78,13 @@ const changeCountryId = (val: any) => {
   }
 };
 
-onMounted(async () => {
-  await obtainLoading(getList());
-  changeCountryId(localToptTab.value.subordinateCountryId);
-});
+// 获取会员等级
+const getLevelNameList = async () => {
+  data.vipLevelList = await surveyVipLevelStore.getLevelNameList();
+}
 // 获取会员等级 会员组 国家
 const getList = async () => {
-  data.vipLevelList = await surveyVipLevelStore.getLevelNameList();
+  await getLevelNameList()
   data.vipGroupList = await surveyVipGroupStore.getGroupNameList();
   data.countryList = await basicDictionaryStore.getCountry();
 };
@@ -95,19 +96,22 @@ nextTick(() => {
   // 表单验证方法
   validate(formRef.value);
 });
+// 快捷操作：新增会员等级
+const AddVipLevel = () => {
+  EditRef.value.showEdit();
+}
+
+onMounted(async () => {
+  await getList();
+  changeCountryId(localToptTab.value.subordinateCountryId);
+});
 </script>
 
 <template>
   <div>
     <el-tabs v-model="activeName">
       <el-tab-pane label="会员信息" name="basicSettings">
-        <ElForm
-          ref="formRef"
-          :model="localToptTab"
-          :rules="rules"
-          label-width="100px"
-          :validate-on-rule-change="false"
-        >
+        <ElForm ref="formRef" :model="localToptTab" :rules="rules" label-width="100px" :validate-on-rule-change="false">
           <el-card class="box-card">
             <template #header>
               <div class="card-header">
@@ -122,18 +126,9 @@ nextTick(() => {
               </el-col>
               <el-col :span="8">
                 <el-form-item label="所属国家" prop="subordinateCountryId">
-                  <el-select
-                    clearable
-                    filterable
-                    v-model="localToptTab.subordinateCountryId"
-                    @change="changeCountryId"
-                  >
-                    <el-option
-                      v-for="item in data.countryList"
-                      :key="item.id"
-                      :value="item.id"
-                      :label="item.chineseName"
-                    ></el-option>
+                  <el-select clearable filterable v-model="localToptTab.subordinateCountryId" @change="changeCountryId">
+                    <el-option v-for="item in data.countryList" :key="item.id" :value="item.id"
+                      :label="item.chineseName"></el-option>
                   </el-select>
                 </el-form-item>
               </el-col>
@@ -168,47 +163,27 @@ nextTick(() => {
             <el-row :gutter="20">
               <el-col :span="4">
                 <el-form-item label="会员状态">
-                  <el-switch
-                    :active-value="2"
-                    :inactive-value="1"
-                    v-model="localToptTab.memberStatus"
-                  />
+                  <el-switch :active-value="2" :inactive-value="1" v-model="localToptTab.memberStatus" />
                 </el-form-item>
               </el-col>
               <el-col :span="4">
                 <el-form-item label="B2B">
-                  <el-switch
-                    :active-value="2"
-                    :inactive-value="1"
-                    v-model="localToptTab.b2bStatus"
-                  />
+                  <el-switch :active-value="2" :inactive-value="1" v-model="localToptTab.b2bStatus" />
                 </el-form-item>
               </el-col>
               <el-col :span="4">
                 <el-form-item label="B2C">
-                  <el-switch
-                    :active-value="2"
-                    :inactive-value="1"
-                    v-model="localToptTab.b2cStatus"
-                  />
+                  <el-switch :active-value="2" :inactive-value="1" v-model="localToptTab.b2cStatus" />
                 </el-form-item>
               </el-col>
               <el-col :span="5">
                 <el-form-item label="免审">
-                  <el-switch
-                    :active-value="2"
-                    :inactive-value="1"
-                    v-model="localToptTab.exemptionTrial"
-                  />
+                  <el-switch :active-value="2" :inactive-value="1" v-model="localToptTab.exemptionTrial" />
                 </el-form-item>
               </el-col>
               <el-col :span="4">
                 <el-form-item label="随机身份">
-                  <el-switch
-                    :active-value="2"
-                    :inactive-value="1"
-                    v-model="localToptTab.randomStatus"
-                  />
+                  <el-switch :active-value="2" :inactive-value="1" v-model="localToptTab.randomStatus" />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -216,33 +191,26 @@ nextTick(() => {
             <el-row :gutter="20">
               <el-col :span="8">
                 <el-form-item label="会员等级" prop="memberLevelId">
-                  <el-select
-                    clearable
-                    filterable
-                    v-model="localToptTab.memberLevelId"
-                  >
-                    <el-option
-                      v-for="item in data.vipLevelList"
-                      :key="item.memberLevelId"
-                      :value="item.memberLevelId"
-                      :label="item.levelNameOrAdditionRatio"
-                    ></el-option>
+                  <el-select clearable filterable v-model="localToptTab.memberLevelId">
+                    <el-option v-for="item in data.vipLevelList" :key="item.memberLevelId" :value="item.memberLevelId"
+                      :label="item.levelNameOrAdditionRatio"></el-option>
+                    <template #empty>
+                      <div style="display: flex;justify-content: space-between;align-items:center;padding:0 1rem;">
+                        暂无数据
+                        <el-button type="primary" link @click="AddVipLevel" size="small">
+                          快捷新增
+                          <SvgIcon name="ant-design:plus-outlined" />
+                        </el-button>
+                      </div>
+                    </template>
                   </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="会员组">
-                  <el-select
-                    clearable
-                    filterable
-                    v-model="localToptTab.memberGroupId"
-                  >
-                    <el-option
-                      v-for="item in data.vipGroupList"
-                      :key="item.memberGroupId"
-                      :label="item.memberGroupName"
-                      :value="item.memberGroupId"
-                    />
+                  <el-select clearable filterable v-model="localToptTab.memberGroupId">
+                    <el-option v-for="item in data.vipGroupList" :key="item.memberGroupId" :label="item.memberGroupName"
+                      :value="item.memberGroupId" />
                   </el-select>
                 </el-form-item>
               </el-col>
@@ -251,8 +219,8 @@ nextTick(() => {
         </ElForm>
       </el-tab-pane>
     </el-tabs>
+    <edit ref="EditRef" @queryData="getLevelNameList" />
   </div>
 </template>
 
 <style scoped lang="scss"></style>
-@/store/modules/otherFunctions_basicDictionary

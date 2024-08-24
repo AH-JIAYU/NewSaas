@@ -14,6 +14,7 @@ import api from "@/api/modules/projectManagement";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
 import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
 import useProjectManagementListStore from "@/store/modules/projectManagement_list"; // 项目
+import customerEdit from "@/views/user/customer/components/CustomerEdit/index.vue"; //快捷操作： 新增客户
 
 const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
 const customerStore = useUserCustomerStore(); // 客户
@@ -30,6 +31,7 @@ const validate = inject<any>("validateTopTabs"); //注入Ref
 const url: string = "例：https://www.xxxx.com/8994343?uid={{$uid}}";
 const activeName = ref("basicSettings"); // tabs
 const formRef = ref<any>(); // Ref 在edit中进行校验
+const editRef=ref<any>(); // 组件Ref 快捷操作： 新增客户
 const fold = ref(!props.tabIndex ? true : false); // 折叠 描述配额
 let data = ref<any>({
   checked: false, //所属国家的全选按钮
@@ -410,9 +412,17 @@ const setAnswerValue = (type: number, index: number) => {
   );
 };
 
+// 获取客户
+const getCustomerList = async () => {
+  data.value.basicSettings.customerList = await customerStore.getCustomerList();
+}
+// 快捷操作：新增客户
+const AddCustomers=()=>{
+  editRef.value.showEdit();
+}
 // 获取 客户 国家 项目类型
 const getList = async () => {
-  data.value.basicSettings.customerList = await customerStore.getCustomerList();
+  await getCustomerList()
   data.value.basicSettings.countryList =
     await basicDictionaryStore.getCountry();
   data.value.basicSettings.B2BTypeList =
@@ -533,6 +543,15 @@ nextTick(() => {
                       </span>
                     </span>
                   </el-option>
+                  <template #empty>
+                    <div style="display: flex;justify-content: space-between;align-items:center;padding:0 1rem;">
+                      暂无数据
+                      <el-button type="primary" link size="small" @click="AddCustomers">
+                        快捷新增
+                        <SvgIcon name="ant-design:plus-outlined" />
+                      </el-button>
+                    </div>
+                  </template>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -886,6 +905,7 @@ nextTick(() => {
         </div>
       </el-tab-pane>
     </el-tabs>
+    <customerEdit ref="editRef" @fetch-data="getCustomerList" />
   </ElForm>
 </template>
 

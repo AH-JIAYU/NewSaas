@@ -37,23 +37,24 @@ const isPhone = ref<any>();
 // 组长
 const getGroup = ref<any>()
 // 父级传递的数据
-const props = withDefaults(
-  defineProps<{
-    catalogueId: string | number;
-    parentId: string | number;
-    id?: string | number;
-    tree: any[];
-    dataList: any[];
-    row: string;
-    level: any;
-  }>(),
-  {
-    catalogueId: "",
-    parentId: "",
-    id: "",
-    level: 1,
-  }
-);
+// const props = withDefaults(
+//   defineProps<{
+//     catalogueId: string | number;
+//     parentId: string | number;
+//     id?: string | number;
+//     tree: any[];
+//     dataList: any[];
+//     row: string;
+//     level: any;
+//   }>(),
+//   {
+//     catalogueId: "",
+//     parentId: "",
+//     id: "",
+//     level: 1,
+//   }
+// );
+const props: any = defineProps(['catalogueId', 'parentId', 'id', 'tree', 'dataList', 'row', 'level'])
 // 更新数据
 const emits = defineEmits(["success"]);
 
@@ -262,7 +263,7 @@ const flattenDeep = (arr: any) => {
   );
 };
 onMounted(async () => {
-  const {data} = await apiPos.list({
+  const { data } = await apiPos.list({
     page: 1,
     limit: 10,
     id: null,

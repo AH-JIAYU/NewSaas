@@ -2,6 +2,7 @@
 import { ElForm } from "element-plus";
 import { defineProps, ref } from "vue";
 import api from "@/api/modules/user_customer";
+import DictionaryItemDia from "@/views/configuration/user/components/dictionaryItemDialog/index.vue";
 import apiUser from '@/api/modules/configuration_manager'
 
 // 如果希望默认展示第一个 Tab
@@ -29,6 +30,7 @@ const rules = reactive<any>({
 const activeName = ref("basicSettings");
 const isEncryption = ref(false);
 const secretKeyConfigList = ref<any>([]);
+const dictionaryItemVisible = ref<any>(false) // 负责人组件显隐
 
 const changeConfigInfoList = (val: any) => {
   if (val) {
@@ -58,10 +60,14 @@ const changeCustomerConfigInfo = async (val: any, index: number) => {
     localToptTab.value.tenantCustomerConfigInfoList[index].secretKey = res.data;
   }
 };
+// 获取负责人/用户
+const getTenantStaffList = async () => {
+  const { data } = await apiUser.getTenantStaffList()
+   staffList.value = data
+}
 
 onBeforeMount(async () => {
-   const {data} = await apiUser.getTenantStaffList()
-   staffList.value = data
+  await getTenantStaffList()
   // staffList.value = staffList.value.filter((item:any) => item.distribution === 1)
   isEncryption.value =
     localToptTab.value.tenantCustomerConfigInfoList.length === 2;
@@ -122,9 +128,17 @@ nextTick(() => {
               </el-col>
               <el-col :span="12">
                 <el-form-item label="负责人" prop="chargeId">
-                  <!-- <el-input v-model="localToptTab.chargeName" /> -->
                   <el-select v-model="localToptTab.chargeId" value-key="" placeholder="请选择负责人" clearable filterable>
                     <el-option v-for="item in staffList" :key="item.id" :label="item.name" :value="item.id" />
+                    <template #empty>
+                      <div style="display: flex;justify-content: space-between;align-items:center;padding:0 1rem;">
+                        暂无数据
+                        <el-button type="primary" link @click="dictionaryItemVisible = true"  size="small">
+                          快捷新增
+                          <SvgIcon name="ant-design:plus-outlined" />
+                        </el-button>
+                      </div>
+                    </template>
                   </el-select>
                 </el-form-item>
               </el-col>
@@ -136,11 +150,6 @@ nextTick(() => {
                     <el-option label="net 90" :value="90"></el-option>
                     <el-option label="net 180" :value="180"></el-option>
                   </el-select>
-                  <!-- <el-input-number
-                    v-model="localToptTab.settlementCycle"
-                    controls-position="right"
-                    :min="0"
-                  /> -->
                 </el-form-item>
               </el-col>
             </el-row>
@@ -205,7 +214,7 @@ nextTick(() => {
                 <el-col :span="24">
                   <el-form-item label="加密方式">
                     <el-select @change="changeCustomerConfigInfo($event, 0)" clearable v-model="localToptTab.tenantCustomerConfigInfoList[0]
-        .encryptionId
+      .encryptionId
       ">
                       <el-option v-for="item in secretKeyConfigList" :label="item.name" :value="item.id"></el-option>
                     </el-select>
@@ -294,7 +303,7 @@ nextTick(() => {
                 <el-col :span="24">
                   <el-form-item label="加密方式">
                     <el-select @change="changeCustomerConfigInfo($event, 1)" clearable v-model="localToptTab.tenantCustomerConfigInfoList[1]
-        .encryptionId
+      .encryptionId
       ">
                       <el-option v-for="item in secretKeyConfigList" :label="item.name" :value="item.id"></el-option>
                     </el-select>
@@ -345,6 +354,7 @@ nextTick(() => {
         </el-tab-pane>
       </el-tabs>
     </ElForm>
+    <DictionaryItemDia v-if="dictionaryItemVisible" v-model="dictionaryItemVisible" @success="getTenantStaffList" />
   </div>
 </template>
 

@@ -268,6 +268,7 @@ onMounted(() => {
           prop="customerShortName"
           show-overflow-tooltip
           label="客户简称"
+          width="100"
         />
         <el-table-column
           v-if="checkList.includes('turnover')"

@@ -144,11 +144,11 @@ const queryForm = reactive<any>({
 
 // 新增
 function addData() {
-  editRef.value.showEdit("", customerList.value);
+  editRef.value.showEdit("");
 }
 // 编辑数据
 function editData(row: any) {
-  editRef.value.showEdit(JSON.stringify(row), customerList.value);
+  editRef.value.showEdit(JSON.stringify(row));
 }
 // 删除数据
 function onDel(row: any) {
@@ -393,6 +393,7 @@ onMounted(() => {
           prop="tenantCustomerShortName"
           show-overflow-tooltip
           align="center"
+          width="100"
           label="客户简称"
         />
         <el-table-column

@@ -368,6 +368,7 @@ onMounted(async () => {
           prop="customerShortName"
           show-overflow-tooltip
           label="客户简称"
+          width="100"
           ><template #default="{ row }">
             {{ row.customerShortName ? row.customerShortName : "-" }}
           </template>
@@ -376,6 +377,7 @@ onMounted(async () => {
           v-if="checkList.includes('allocationType')"
           align="center"
           show-overflow-tooltip
+          width="100"
           label="分配类型"
         >
           <template #default="{ row }">

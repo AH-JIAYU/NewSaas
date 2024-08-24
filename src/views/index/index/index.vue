@@ -126,27 +126,27 @@ function echarts1() {
 }
 // 客户总览
 function echarts2() {
-  // const Data = transformData(cloneDeep(data.value.dataCenterCustomerVOS));
-  const Data:any = transformData([
-    {
-      customerName: "张三:null",
-      projectTotal: 1,
-      auditRate: 1,
-      auditSuccessRate: 1,
-    },
-    {
-      customerName: "李四:null",
-      projectTotal: 1,
-      auditRate: 1,
-      auditSuccessRate: 1,
-    },
-    {
-      customerName: "王五:null",
-      projectTotal: 1,
-      auditRate: 1,
-      auditSuccessRate: 1,
-    },
-  ])
+  const Data = transformData(cloneDeep(data.value.dataCenterCustomerVOS));
+  // const Data: any = transformData([
+  //   {
+  //     customerName: "张三:null",
+  //     projectTotal: 1,
+  //     auditRate: 1,
+  //     auditSuccessRate: 1,
+  //   },
+  //   {
+  //     customerName: "李四:null",
+  //     projectTotal: 1,
+  //     auditRate: 1,
+  //     auditSuccessRate: 1,
+  //   },
+  //   {
+  //     customerName: "王五:null",
+  //     projectTotal: 1,
+  //     auditRate: 1,
+  //     auditSuccessRate: 1,
+  //   },
+  // ])
 
   const legendData = data.value.dataCenterCustomerVOS.map((item: any) => {
     return item.customerName;
@@ -168,8 +168,8 @@ function echarts2() {
       },
     },
     label: {//饼图文字的显示
-    show: true, //默认  显示文字
-},
+      show: true, //默认  显示文字
+    },
     series: [
       {
         name: "访问来源",
@@ -193,7 +193,7 @@ function echarts2() {
           {
             type: "text",
             style: {
-              text: `合计`,
+              text: `合计:`,
               fontSize: 14,
               textAlign: "center",
               textVerticalAlign: "bottom",
@@ -240,66 +240,66 @@ function transformData(inputArray: any) {
 }
 
 async function getList() {
-  data.value.dataCenterSupplierTurnovers = [
-    {
-      name: 111,
-      day: 1,
-      month: 2,
-      year: 3,
-    },
-    {
-      name: 111,
-      day: 1,
-      month: 2,
-      year: 3,
-    },
-    {
-      name: 111,
-      day: 1,
-      month: 2,
-      year: 3,
-    },
-    {
-      name: 111,
-      day: 1,
-      month: 2,
-      year: 3,
-    },
-  ]
-  data.value.dataCenterSupplierCompletedQuantities = [
-    {
-      supplierName: 111,
-      completedAmount: 222,
-      completedQuantity: 222,
-      b2BProportion: 222,
-      b2CProportion: 222,
-      countryList: 222,
-    },
-    {
-      supplierName: 111,
-      completedAmount: 222,
-      completedQuantity: 222,
-      b2BProportion: 222,
-      b2CProportion: 222,
-      countryList: 222,
-    },
-    {
-      supplierName: 111,
-      completedAmount: 222,
-      completedQuantity: 222,
-      b2BProportion: 222,
-      b2CProportion: 222,
-      countryList: 222,
-    },
-    {
-      supplierName: 111,
-      completedAmount: 222,
-      completedQuantity: 222,
-      b2BProportion: 222,
-      b2CProportion: 222,
-      countryList: 222,
-    },
-  ]
+  // data.value.dataCenterSupplierTurnovers = [
+  //   {
+  //     name: 111,
+  //     day: 1,
+  //     month: 2,
+  //     year: 3,
+  //   },
+  //   {
+  //     name: 111,
+  //     day: 1,
+  //     month: 2,
+  //     year: 3,
+  //   },
+  //   {
+  //     name: 111,
+  //     day: 1,
+  //     month: 2,
+  //     year: 3,
+  //   },
+  //   {
+  //     name: 111,
+  //     day: 1,
+  //     month: 2,
+  //     year: 3,
+  //   },
+  // ]
+  // data.value.dataCenterSupplierCompletedQuantities = [
+  //   {
+  //     supplierName: 111,
+  //     completedAmount: 222,
+  //     completedQuantity: 222,
+  //     b2BProportion: 222,
+  //     b2CProportion: 222,
+  //     countryList: 222,
+  //   },
+  //   {
+  //     supplierName: 111,
+  //     completedAmount: 222,
+  //     completedQuantity: 222,
+  //     b2BProportion: 222,
+  //     b2CProportion: 222,
+  //     countryList: 222,
+  //   },
+  //   {
+  //     supplierName: 111,
+  //     completedAmount: 222,
+  //     completedQuantity: 222,
+  //     b2BProportion: 222,
+  //     b2CProportion: 222,
+  //     countryList: 222,
+  //   },
+  //   {
+  //     supplierName: 111,
+  //     completedAmount: 222,
+  //     completedQuantity: 222,
+  //     b2BProportion: 222,
+  //     b2CProportion: 222,
+  //     countryList: 222,
+  //   },
+  // ]
   const res = await api.list({ type: data.value.search.type });
   const {
     dataCenterOverViewVO,
@@ -329,6 +329,7 @@ const cooperation = (row: any) => {
   });
 };
 onMounted(async () => {
+  await getList();
   echarts1();
   echarts2();
   window.addEventListener("resize", () => {
@@ -336,14 +337,14 @@ onMounted(async () => {
     chart2.resize();
   });
   data.value.countryList = await basicDictionaryStore.getCountry();
-  await getList();
+
 });
 </script>
 
 <template>
   <div>
     <PageMain style="background:transparent;">
-      <el-row>
+      <el-row style="margin:0 0 1rem 0;">
         <el-radio-group v-model="data.search.type" @change="timeChange">
           <el-radio-button label="日" value="day" />
           <el-radio-button label="月" value="month" />
@@ -891,10 +892,11 @@ onMounted(async () => {
                 </div>
               </template>
               <template v-else>
-                <div class="flex flex-col items-center py-6 text-stone-5">
+                <el-empty description="暂无数据" />
+                <!-- <div class="flex flex-col items-center py-6 text-stone-5">
                   <SvgIcon name="i-tabler:mood-smile" :size="40" />
                   <p m-2 text-base>没有待办</p>
-                </div>
+                </div> -->
               </template>
             </OverlayScrollbarsComponent>
           </div>
@@ -1014,7 +1016,6 @@ onMounted(async () => {
       align-items: start;
       justify-content: start;
       flex: 1;
-      height: 149px;
       padding: 1.5rem;
 
       >svg {
@@ -1199,10 +1200,6 @@ onMounted(async () => {
             font-style: normal;
             text-transform: none;
           }
-
-          .quantity-icon {
-            // background-color: #fff;
-          }
         }
       }
     }
@@ -1265,8 +1262,12 @@ onMounted(async () => {
     height: 2rem;
     line-height: 2rem;
     font-size: .875rem;
-    padding:0 !important;
+    padding: 0 !important;
 
+  }
+
+  th .cell {
+    color: #202020 !important;
   }
 
   // 表格
@@ -1288,6 +1289,7 @@ onMounted(async () => {
         color: #83ade0 !important;
       }
     }
+
   }
 }
 
