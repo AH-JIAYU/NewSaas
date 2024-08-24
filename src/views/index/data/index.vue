@@ -328,7 +328,7 @@ onMounted(() => {
               align="center"
               prop="customerShortName"
               label="客户简称"
-              width="180"
+              width="100"
             />
             <el-table-column
               v-if="checkList.includes('chargeName')"
@@ -467,7 +467,7 @@ onMounted(() => {
               align="center"
               prop="customerShortName"
               label="客户简称"
-              width="180"
+              width="100"
               ><template #default="{ row }">
                 {{ row.customerShortName ? row.customerShortName : "-" }}
               </template>

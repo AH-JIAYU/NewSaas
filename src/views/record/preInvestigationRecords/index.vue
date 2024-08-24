@@ -366,6 +366,7 @@ onMounted(async () => {
           v-if="checkList.includes('allocationType')"
           align="center"
           show-overflow-tooltip
+          width="100"
           label="分配类型"
         >
           <template #default="{ row }">

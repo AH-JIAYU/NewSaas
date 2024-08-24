@@ -3,10 +3,13 @@ import { ElMessage } from "element-plus";
 import type { FormInstance, FormRules } from "element-plus";
 import { ref } from "vue";
 import api from "@/api/modules/finance_invoice";
+import useUserCustomerStore from "@/store/modules/user_customer";//客户
+import customerEdit from "@/views/user/customer/components/CustomerEdit/index.vue"; //快捷操作： 新增客户
 
 defineOptions({
   name: "Edit",
 });
+const customerStore = useUserCustomerStore();//客户
 // 更新数据
 const emits = defineEmits(["success"]);
 // title
@@ -21,6 +24,8 @@ const customerList = ref<any>([]);
 const formRef = ref();
 // 弹框开关变量
 const dialogTableVisible = ref(false);
+// 组件Ref 快捷操作： 新增客户
+const editRef = ref<any>();
 // 发票状态
 const invoiceStatusList = [
   { lable: "未收款", value: 1 },
@@ -94,7 +99,7 @@ function onSubmit() {
   });
 }
 // 获取数据
-async function showEdit(row: any, val: any) {
+async function showEdit(row?: any) {
   if (row) {
     form.value = JSON.parse(row);
   } else {
@@ -121,11 +126,21 @@ async function showEdit(row: any, val: any) {
     };
   }
   title.value = row?.id ? "编辑" : "新增";
-  customerList.value = val;
+
   dialogTableVisible.value = true;
 }
+// 快捷操作：新增客户
+const AddCustomers = () => {
+  editRef.value.showEdit();
+}
+// 获取客户
+const getCustomerList = async () => {
+  customerList.value = await customerStore.getCustomerList();
+}
+
 onMounted(async () => {
   defaultTime.value = new Date();
+  await getCustomerList()
 });
 // 暴露方法
 defineExpose({ showEdit });
@@ -134,96 +149,49 @@ defineExpose({ showEdit });
 <template>
   <div v-loading="loading">
     <el-dialog v-model="dialogTableVisible" :title="title" width="700">
-      <el-form
-        ref="formRef"
-        label-width="80px"
-        :model="form"
-        :rules="formRules"
-        :inline="false"
-      >
+      <el-form ref="formRef" label-width="80px" :model="form" :rules="formRules" :inline="false">
         <el-form-item label="客户简称" prop="tenantCustomerId">
-          <el-select
-            v-model="form.tenantCustomerId"
-            placeholder="请选择客户"
-            clearable
-            filterable
-          >
-            <el-option
-              v-for="item in customerList"
-              :key="item.tenantCustomerId"
-              :value="item.tenantCustomerId"
-              :label="item.customerAccord"
-            />
+          <el-select v-model="form.tenantCustomerId" placeholder="请选择客户" clearable filterable>
+            <el-option v-for="item in customerList" :key="item.tenantCustomerId" :value="item.tenantCustomerId"
+              :label="item.customerAccord" />
+            <template #empty>
+              <div style="display: flex;justify-content: space-between;align-items:center;padding:0 1rem;">
+                暂无数据
+                <el-button type="primary" link size="small" @click="AddCustomers">
+                  快捷新增
+                  <SvgIcon name="ant-design:plus-outlined" />
+                </el-button>
+              </div>
+            </template>
           </el-select>
         </el-form-item>
         <el-form-item prop="invoiceCode" label="发票编号">
-          <el-input
-            v-model="form.invoiceCode"
-            placeholder="请输入发票编号"
-            clearable
-          />
+          <el-input v-model="form.invoiceCode" placeholder="请输入发票编号" clearable />
         </el-form-item>
         <el-form-item label="发票金额">
-          <el-input
-            v-model.number="form.invoiceAmount"
-            placeholder="请输入发票金额"
-            clearable
-          />
+          <el-input v-model.number="form.invoiceAmount" placeholder="请输入发票金额" clearable />
         </el-form-item>
         <el-form-item label="手续费(税)">
-          <el-input
-            v-model.number="form.invoiceTax"
-            placeholder="请输入手续费"
-            clearable
-          />
+          <el-input v-model.number="form.invoiceTax" placeholder="请输入手续费" clearable />
         </el-form-item>
         <el-form-item label="实际收款">
-          <el-input
-            v-model.number="form.actualReceipts"
-            placeholder="请输入实际收款"
-            clearable
-          />
+          <el-input v-model.number="form.actualReceipts" placeholder="请输入实际收款" clearable />
         </el-form-item>
         <el-form-item label="发票状态">
-          <el-select
-            v-model="form.invoiceStatus"
-            placeholder="请选择发票状态"
-            clearable
-            filterable
-          >
-            <ElOption
-              v-for="item in invoiceStatusList"
-              :label="item.lable"
-              :value="item.value"
-            ></ElOption>
+          <el-select v-model="form.invoiceStatus" placeholder="请选择发票状态" clearable filterable>
+            <ElOption v-for="item in invoiceStatusList" :label="item.lable" :value="item.value"></ElOption>
           </el-select>
         </el-form-item>
         <el-form-item style="width: 100%" label="开票日期">
-          <el-date-picker
-            v-model="form.invoiceDate"
-            :default-time="defaultTime"
-            type="datetime"
-            placeholder="请选择开票日期"
-            value-format="YYYY-MM-DD hh:mm:ss"
-          />
+          <el-date-picker v-model="form.invoiceDate" :default-time="defaultTime" type="datetime" placeholder="请选择开票日期"
+            value-format="YYYY-MM-DD hh:mm:ss" />
         </el-form-item>
         <el-form-item label="收款日期">
-          <el-date-picker
-            v-model="form.paymentDate"
-            :default-time="defaultTime"
-            type="datetime"
-            placeholder="请选择收款日期"
-            value-format="YYYY-MM-DD hh:mm:ss"
-          />
+          <el-date-picker v-model="form.paymentDate" :default-time="defaultTime" type="datetime" placeholder="请选择收款日期"
+            value-format="YYYY-MM-DD hh:mm:ss" />
         </el-form-item>
         <el-form-item label="备注">
-          <el-input
-            v-model="form.remark"
-            placeholder="备注说明"
-            clearable
-            :rows="5"
-            type="textarea"
-          />
+          <el-input v-model="form.remark" placeholder="备注说明" clearable :rows="5" type="textarea" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -235,5 +203,6 @@ defineExpose({ showEdit });
         </div>
       </template>
     </el-dialog>
+    <customerEdit ref="editRef" @fetch-data="getCustomerList" />
   </div>
 </template>

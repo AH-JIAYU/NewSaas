@@ -11,9 +11,10 @@ const data = ref<any>({});
 
 const showEdit = (row: any) => {
   data.value = row;
+  read()
 };
-// 关闭
-const close = async (e: any) => {
+// 已读
+const read = async () => {
   const params = {
     id: data.value.id,
     type: 1,
@@ -47,6 +48,7 @@ defineExpose({
 
 <template>
   <div class="news p-4">
+
     <div class="type">
       <span></span> 合作邀约
     </div>
@@ -120,11 +122,12 @@ defineExpose({
       font-weight: 400;
       font-size: .875rem;
     }
-    .footer{
+
+    .footer {
       margin-top: 1rem;
       display: flex;
-  justify-content: end;
-  align-items: center;
+      justify-content: end;
+      align-items: center;
     }
   }
 

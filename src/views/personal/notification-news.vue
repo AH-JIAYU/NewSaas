@@ -11,7 +11,7 @@ const data = ref<any>({});
 const showEdit = (row: any) => {
   data.value = row;
   if (row.isReadAlready !== 2) {
-    // read()
+    read()  
   }
 };
 // 已读

@@ -110,7 +110,7 @@ async function save() {
       } else {
         // // 更新接口
 
-        if(leftTabsData[0].riskControl === 1) {
+        if (leftTabsData[0].riskControl === 1) {
           leftTabsData[0].turnover = null;
           leftTabsData[0].rateAudit = null;
         }
@@ -121,9 +121,10 @@ async function save() {
             center: true,
           });
       }
-      emit("fetch-data");
       // 数据改变重新请求
       customerStore.customer = null;
+      emit("fetch-data");
+
       close();
     } else {
       ElMessage.warning({
@@ -147,23 +148,10 @@ defineExpose({
 
 <template>
   <div>
-    <el-drawer
-      v-model="drawerisible"
-      :class="title === '新增' ? 'hide-drawer-header' : 'edit-drawer'"
-      append-to-body
-      :close-on-click-modal="false"
-      destroy-on-close
-      draggable
-      size="70%"
-    >
-      <LeftTabs
-        @validate="validate"
-        ref="LeftTabsRef"
-        :title="title"
-        :left-tabs-data="leftTabsData"
-        :validate-top-tabs="validateTopTabs"
-        :validate-all="validateAll"
-      />
+    <el-drawer v-model="drawerisible" :class="title === '新增' ? 'hide-drawer-header' : 'edit-drawer'" append-to-body
+      :close-on-click-modal="false" destroy-on-close draggable size="70%">
+      <LeftTabs @validate="validate" ref="LeftTabsRef" :title="title" :left-tabs-data="leftTabsData"
+        :validate-top-tabs="validateTopTabs" :validate-all="validateAll" />
       <template #footer>
         <el-button @click="close"> 取消 </el-button>
         <el-button v-if="title === '新增'" type="warning" @click="staging">

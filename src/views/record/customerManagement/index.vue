@@ -173,11 +173,12 @@ onMounted(() => {
       >
         <el-table-column align="center" type="selection" />
         <el-table-column
-          v-if="checkList.includes('a')"
+          v-if="checkList.includes('id')"
           align="center"
           prop="id"
           show-overflow-tooltip
           label="客户简称"
+          width="100"
         />
         <el-table-column
           align="center"

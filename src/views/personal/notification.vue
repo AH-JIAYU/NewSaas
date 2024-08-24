@@ -22,13 +22,13 @@ const data = ref<any>({
   tabs: "", //tabs
   selectId: "", // 选中id
   ReadAlready: 1, //1未读 2已读
-  type: 1,//1消息 2待办
+  // type: 1,// 组件显示 1消息 2待办
 });
 
 // 消息
 function showEditNews(row: any) {
   data.value.selectId = row.id;
-  data.value.type = 1;
+  // data.value.type = 1;
   nextTick(() => {
     newsRef.value?.showEdit(row);
   })
@@ -38,17 +38,28 @@ function showEditNews(row: any) {
 // 待办
 function showEditCooperation(row: any) {
   data.value.selectId = row.id;
-  data.value.type = 2;
+  // data.value.type = 2;
   nextTick(() => {
-    cooperationRef.value?.showEdit(row);
+    cooperationRef.value.showEdit(row);
   })
 
 }
 // 已读后清除右侧详情
-function delSelectId() {
+function delSelectId() { 
+  // 清除右侧组件
   data.value.selectId = "";
-  data.value.type = 0;
+  // data.value.type = 0;
+  // 默认显示未读
+  data.value.ReadAlready = 1;
 }
+
+const filterMessageList = computed(() => {
+  return notificationStore.messageList.filter((item: any) => item.isReadAlready === data.value.ReadAlready)
+})
+const filterTodoList = computed(() => {
+  return notificationStore.todoList.filter((item: any) => item.isReadAlready === data.value.ReadAlready)
+})
+
 onMounted(() => {
   data.value.tabs = route.query.type == 2 ? "cooperation" : "news";
 
@@ -73,14 +84,13 @@ onMounted(() => {
     <PageMain>
       <div class="flex-c">
         <div class="left">
-          <el-tabs v-model="data.tabs" @change="delSelectId">
+          <el-tabs v-model="data.tabs" @tab-change="delSelectId">
             <el-tab-pane label="消息" name="news">
               <div class="buttons">
                 <button :class="data.ReadAlready === 1 ? 'unread' : ''" @click="data.ReadAlready = 1">未读{{
             notificationStore.message < 100 ? `(${notificationStore.message})` : '99+' }}</button>
                     <button :class="data.ReadAlready === 2 ? 'read' : ''" read @click="data.ReadAlready = 2">已读</button>
               </div>
-
               <OverlayScrollbarsComponent :options="{
             scrollbars: { autoHide: 'leave', autoHideDelay: 300 },
           }" defer class="list">
@@ -88,8 +98,7 @@ onMounted(() => {
                   <div :class="{
             item: 'item',
             select: item.id === data.selectId,
-          }" v-for="item in notificationStore.messageList" @click="showEditNews(item)">
-
+          }" v-for="item in filterMessageList" @click="showEditNews(item)">
                     <div class="info">
                       <div class=" time">
                         <!-- 未读标识 -->
@@ -110,50 +119,54 @@ onMounted(() => {
                 </template>
                 <template v-else>
                   <el-empty description="暂无数据" />
-                  <!-- <div class="flex flex-col items-center py-6 text-stone-5">
-                    <SvgIcon name="i-tabler:mood-smile" :size="40" />
-                    <p m-2 text-base>没有消息</p>
-                  </div> -->
                 </template>
               </OverlayScrollbarsComponent>
             </el-tab-pane>
             <el-tab-pane label="代办" name="cooperation">
+              <div class="buttons">
+                <button :class="data.ReadAlready === 1 ? 'unread' : ''" @click="data.ReadAlready = 1">未读{{
+            notificationStore.todo < 100 ? `(${notificationStore.todo})` : '99+' }}</button>
+                    <button :class="data.ReadAlready === 2 ? 'read' : ''" read @click="data.ReadAlready = 2">已读</button>
+              </div>
+
               <OverlayScrollbarsComponent :options="{
             scrollbars: { autoHide: 'leave', autoHideDelay: 300 },
           }" defer class="list">
                 <template v-if="notificationStore.todoList.length">
-                  <div :class="item.isReadAlready === 1 ? 'item new' : 'item'"
-                    v-for="item in notificationStore.todoList" @click="showEditCooperation(item)">
-                    <SvgIcon name="i-ri:file-edit-fill" class="service" />
+                  <div :class="{
+            item: 'item',
+            select: item.id === data.selectId,
+          }" v-for="item in filterTodoList" @click="showEditCooperation(item)">
                     <div class="info">
-                      <div class="title">
-                        {{
-            notificationStore.auditTypeList[item.auditType - 1] ||
-            ""
-          }}
-                        &emsp;
-                        {{ item.messageContent }}
+                      <div class=" time">
+                        <!-- 未读标识 -->
+                        <span v-if="item.isReadAlready === 1" class="new"></span>
+                        <!-- 合作邀约 -->
+                        <span class="auditType">
+                          {{ notificationStore.auditTypeList[item.auditType - 1] || "" }}
+                        </span>
+                        <span class="time">
+                          {{ item.createTime }}
+                        </span>
                       </div>
-                      <div class="date">
-                        {{ item.createTime }}
+                      <div class="data">
+                        您好，我是{{
+          item.invitationName || "-"
+        }}诚挚邀请您与我们一同协作共赢！若有疑问请联系{{ item.phoneOrEmail }}。
                       </div>
                     </div>
                   </div>
                 </template>
                 <template v-else>
                   <el-empty description="暂无数据" />
-                  <!-- <div class="flex flex-col items-center py-6 text-stone-5">
-                    <SvgIcon name="i-tabler:mood-smile" :size="40" />
-                    <p m-2 text-base>没有待办</p>
-                  </div> -->
                 </template>
               </OverlayScrollbarsComponent>
             </el-tab-pane>
           </el-tabs>
         </div>
         <div v-show="data.selectId" class="right" v-if="data.selectId">
-          <news v-if="data.type === 1" ref="newsRef" @delSelectId="delSelectId"></news>
-          <cooperation v-if="data.type === 2" ref="cooperationRef"></cooperation>
+          <news v-if="data.tabs === 'news'" ref="newsRef" @delSelectId="delSelectId"></news>
+          <cooperation v-if="data.tabs === 'cooperation'" ref="cooperationRef"></cooperation>
         </div>
       </div>
     </PageMain>

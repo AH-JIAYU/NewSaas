@@ -154,6 +154,7 @@ defineExpose({ showEdit });
           align="center"
           show-overflow-tooltip
           label="客户简称"
+          width="100"
           prop="clientName"
         />
       </el-table>
