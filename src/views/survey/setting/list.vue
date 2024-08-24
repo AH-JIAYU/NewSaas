@@ -193,7 +193,7 @@ function onSubmit() {
           label-width="140px"
           style="width: 500px"
         >
-          <el-tab-pane label="基本设置" name="基本设置">
+          <el-tab-pane label="基础设置" name="基本设置">
             <el-row :gutter="20">
               <el-col :span="7">
                 <el-form-item label="注册开关">
@@ -219,13 +219,41 @@ function onSubmit() {
                   />
                 </el-form-item>
               </el-col>
+              <el-col :span="24">
+                <el-form-item label="最低结算金额" prop="confirmPassword">
+                  <el-input
+                    v-model.number="form.minimumAmount"
+                    style="width: 18rem"
+                    placeholder=""
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="会员税点" prop="confirmPassword">
+                  <el-input
+                    v-model.number="form.taxPointsProportion"
+                    style="width: 18rem"
+                    placeholder=""
+                    ><template #append>%</template>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="调查限价" prop="confirmPassword">
+                  <el-input
+                    v-model.number="form.fixedPrice"
+                    style="width: 18rem"
+                    placeholder=""
+                  />
+                </el-form-item>
+              </el-col>
             </el-row>
-            <el-form-item prop="webName" label="网站名称">
+            <!-- <el-form-item prop="webName" label="网站名称">
               <el-input v-model="form.webName" style="width: 18rem" />
             </el-form-item>
             <el-form-item label="keyWords">
               <el-input v-model="form.keyWords" style="width: 18rem" />
-            </el-form-item>
+            </el-form-item> -->
             <!-- <el-form-item
               style="width: 34rem"
               label="个性化域名"
@@ -245,9 +273,9 @@ function onSubmit() {
               <el-button type="primary" @click="onSubmit"> 确认 </el-button>
             </el-form-item>
           </el-tab-pane>
-          <el-tab-pane label="高级设置" name="高级设置">
+          <!-- <el-tab-pane label="高级设置" name="高级设置">
             <el-row :gutter="20">
-              <!-- <el-col :span="24">
+              <el-col :span="24">
                 <el-form-item label="默认会员价格比例" prop="confirmPassword">
                   <el-input
                     v-model.number="form.priceProportion"
@@ -256,7 +284,7 @@ function onSubmit() {
                     ><template #append>%</template>
                   </el-input>
                 </el-form-item>
-              </el-col> -->
+              </el-col>
               <el-col :span="24">
                 <el-form-item label="最低结算金额" prop="confirmPassword">
                   <el-input
@@ -291,7 +319,7 @@ function onSubmit() {
                 </el-form-item>
               </el-col>
             </el-row>
-          </el-tab-pane>
+          </el-tab-pane> -->
 
           <el-tab-pane label="联系我们" name="联系我们">
             <el-row :gutter="20">

@@ -145,9 +145,10 @@ nextTick(() => {
               <el-col :span="12">
                 <el-form-item label="结算周期" prop="settlementCycle">
                   <el-select v-model="localToptTab.settlementCycle">
-                    <el-option label="30天" :value="30"></el-option>
-                    <el-option label="60天" :value="60"></el-option>
-                    <el-option label="90天" :value="90"></el-option>
+                    <el-option label="net 30" :value="30"></el-option>
+                    <el-option label="net 60" :value="60"></el-option>
+                    <el-option label="net 90" :value="90"></el-option>
+                    <el-option label="net 180" :value="180"></el-option>
                   </el-select>
                 </el-form-item>
               </el-col>

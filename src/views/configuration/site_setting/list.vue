@@ -198,11 +198,11 @@ function onSubmit() {
           ref="formRef"
           :model="form"
           :rules="formRules"
-          label-width="140px"
+          label-width="95px"
           label-position="right"
           :inline="false"
         >
-          <el-tab-pane label="基本设置" name="基本设置">
+          <el-tab-pane label="基础设置" name="基本设置">
             <el-row :gutter="20">
               <el-col :span="3">
                 <el-form-item label="注册开关">
@@ -248,12 +248,12 @@ function onSubmit() {
                     >复制</el-button>
                 </el-form-item>
               </el-col>
-              <el-col :span="24">
+              <!-- <el-col :span="24">
                 <el-form-item label="顶级域名" >
                   <el-input v-model="form.externalSite" style="width: 8rem" />
                   <el-button class="copy" type="primary" link >设置解析</el-button>
                 </el-form-item>
-              </el-col>
+              </el-col> -->
               <el-col :span="24">
                 <el-form-item>
                   <el-button type="primary" @click="onSubmit"> 确认 </el-button>

@@ -326,8 +326,12 @@ onMounted(async () => {
           width="180"
           align="center"
           label="客户简称/标识"
-        />
-
+        >
+        <template #default="{ row }">
+            <el-text class="mx-1" >{{ row.projectIdentification }}</el-text>
+            <p>{{ row.clientName }}</p>
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="checkList.includes('withoutUrl')"
           prop="withoutUrl"
@@ -354,9 +358,13 @@ onMounted(async () => {
           align="center"
           label="参与/完成/配额/限量"
         >
-          <template #default="{ row }">
-            {{ row.participation }}/ {{ row.complete }}/ {{ row.num }}/
-            {{ row.limitedQuantity }}
+        <template #default="{ row }">
+            <el-text class="mx-1">{{ row.participation || 0 }}</el-text>
+            /
+            <el-text class="mx-1" type="success">{{
+    row.complete || 0
+  }}</el-text>/ <el-text class="mx-1" type="warning">{{ row.num || 0 }}</el-text>/
+            {{ row.limitedQuantity || "-" }}
           </template>
         </el-table-column>
         <el-table-column
@@ -397,7 +405,7 @@ onMounted(async () => {
           align="center"
           label="IR/NIR"
         >
-          <template #default="{ row }"> {{ row.ir }}/ {{ row.nir }} </template>
+          <template #default="{ row }"> {{ row.ir ?row.ir : '-' }} / {{ row.nir ?row.nir : '-' }} </template>
         </el-table-column>
         <el-table-column
           v-if="checkList.includes('countryNameList')"

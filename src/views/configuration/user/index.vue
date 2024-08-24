@@ -337,7 +337,7 @@ function onReset() {
       <div class="leftTree">
         <div v-if="dictionary.tree.length" class="leftData" :span="3">
           <!-- <el-input v-model="userName" placeholder="可输入用户名查找" clearable @blur="blurUserName" /> -->
-          <el-tree style="max-width: 37.5rem; min-height: 47.25rem; padding: 10px;" :data="dictionary.tree" ref="treeRef"
+          <el-tree style="max-width: 37.5rem; min-height: 45.4375rem; padding: 10px;" :data="dictionary.tree" ref="treeRef"
             show-checkbox node-key="id" default-expand-all :expand-on-click-node="false" :props="defaultProps"
             @node-click="dictionaryClick" />
         </div>
@@ -655,5 +655,11 @@ function onReset() {
     padding: 10px;
     background-color: #fff;
   }
+}
+:deep(.el-table__empty-block) {
+  height: 100% !important;
+}
+:deep(.page-main) {
+  height: 100% !important;
 }
 </style>
