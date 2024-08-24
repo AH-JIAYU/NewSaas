@@ -22,11 +22,13 @@ async function showEdit(row: any) {
     loading.value = true
     const res = await api.getQuotaProjectInfo({ projectId: row.projectId })
     form.value = res.data
-    const imgres: any = await fileApi.detail({
-      fileName: form.value.descriptionUrl,
-    })
-    imgUrl.value = imgres.data.fileUrl
-    srcList.value = [imgres.data.fileUrl]
+    if (form.value.descriptionUrl !== '') {
+      const imgres: any = await fileApi.detail({
+        fileName: form.value.descriptionUrl,
+      })
+      imgUrl.value = imgres.data.fileUrl
+      srcList.value = [imgres.data.fileUrl]
+    }
     loading.value = false
   }
 }
@@ -46,35 +48,13 @@ defineExpose({
 
 <template>
   <div v-loading="loading">
-    <el-dialog
-      v-model="loadingDisible"
-      append-to-body
-      :close-on-click-modal="false"
-      destroy-on-close
-      :title="title"
-      draggable
-      width="50%"
-      @close="close"
-    >
+    <el-dialog v-model="loadingDisible" append-to-body :close-on-click-modal="false" destroy-on-close :title="title"
+      draggable width="50%" @close="close">
       <div v-if="form.descriptionUrl" class="demo-image__preview">
-        <el-image
-          style="width: 6.25rem; height: 6.25rem;"
-          :src="imgUrl"
-          :preview-src-list="srcList"
-          :zoom-rate="1.2"
-          :max-scale="7"
-          :min-scale="0.2"
-          :initial-index="0"
-          fit="cover"
-        />
+        <el-image style="width: 6.25rem; height: 6.25rem;" :src="imgUrl" :preview-src-list="srcList" :zoom-rate="1.2"
+          :max-scale="7" :min-scale="0.2" :initial-index="0" fit="cover" />
       </div>
-      <el-button
-        v-if="form.descriptionUrl"
-        style="padding: 0;"
-        type="primary"
-        text
-        @click="download"
-      >
+      <el-button v-if="form.descriptionUrl" style="padding: 0;" type="primary" text @click="download">
         {{ form.descriptionUrl }}下载
       </el-button>
       <el-row :gutter="20" :class="{ isNone: !form.descriptionUrl }">

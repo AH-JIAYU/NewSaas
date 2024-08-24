@@ -58,13 +58,13 @@ const columns = ref<any>([
   },
   { label: "原价", prop: "projectAmount", sortable: true, checked: true },
   { label: "所属国家", prop: "countryId", sortable: true, checked: true },
-  { label: "系统完成数", prop: "systemDone", sortable: true, checked: true },
-  {
-    label: "结算完成数",
-    prop: "settlementDone",
-    sortable: true,
-    checked: true,
-  },
+  { label: "系统/审核完成数", prop: "systemDone", sortable: true, checked: true },
+  // {
+  //   label: "结算完成数",
+  //   prop: "settlementDone",
+  //   sortable: true,
+  //   checked: true,
+  // },
   { label: "结算PO号", prop: "settlementPo", sortable: true, checked: true },
   { label: "结算状态", prop: "status", sortable: true, checked: true },
   { label: "节点时间", prop: "nodeTime", sortable: true, checked: true },
@@ -452,6 +452,7 @@ function handleMoreOperating(command: string, row: any) {
           show-overflow-tooltip
           prop="projectName"
           align="center"
+          width="180"
           label="项目名称"
         >
           <template #default="{ row }">
@@ -462,6 +463,7 @@ function handleMoreOperating(command: string, row: any) {
           v-if="checkList.includes('customerName')"
           show-overflow-tooltip
           prop="customerName"
+          width="130"
           align="center"
           label="客户简称/标识"
         >
@@ -531,8 +533,12 @@ function handleMoreOperating(command: string, row: any) {
           show-overflow-tooltip
           prop="systemDone"
           align="center"
-          label="系统完成数"
-        />
+          width="130"
+          label="系统/审核完成数"
+        ><template #default="{ row }">
+          <el-text >{{ row.systemDone ? row.systemDone : 0 }}</el-text> /<el-text class="mx-1" type="success">{{ row.settlementDone ? row.settlementDone : 0 }}</el-text>
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="checkList.includes('settlementDone')"
           show-overflow-tooltip

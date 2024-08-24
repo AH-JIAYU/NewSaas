@@ -476,6 +476,7 @@ onMounted(async () => {
           v-if="checkList.includes('remark')"
           align="center"
           prop="remark"
+          width="180"
           show-overflow-tooltip
           label="备注"
         >

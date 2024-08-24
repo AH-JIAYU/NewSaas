@@ -63,7 +63,7 @@ const visible = defineModel<boolean>({
 // 弹窗标题
 const title = computed(() => (props.id === "" ? "新增用户" : "编辑用户"));
 
-const formRef = ref<FormInstance>();
+const formRef = ref<any>();
 const flat = ref([]); // 扁平化
 // 表单
 const form = ref<any>({
@@ -119,13 +119,13 @@ const chengAccount = () => {
   // 手机号
   if (!form.value.phoneNumber.includes("@")) {
     formRules.value.phoneNumber = [
-      { required: true, trigger: "blur", message: "请输入手机号/邮箱" },
+      { required: true, trigger: "blur", message: "请输入手机号" },
       { validator: validatePhone, trigger: "blur" },
     ];
   } else {
     //邮箱
     formRules.value.email = [
-      { required: true, trigger: "blur", message: "请输入手机号/邮箱" },
+      { required: true, trigger: "blur", message: "请输入邮箱" },
       { validator: validateEmail, trigger: "blur" },
     ];
   }
@@ -162,9 +162,17 @@ const departmentChange = async (val: any) => {
 // 提交数据
 function onSubmit() {
   // form.value.type = form.value.country === "CN" ? "phone" : "email";
+  if(form.value.email === '') {
+    formRules.value.email = []
+    formRef.value.clearValidate('email');
+  }
+  if(form.value.phoneNumber === '') {
+    formRules.value.phoneNumber = []
+    formRef.value.clearValidate('phoneNumber');
+  }
   if (form.value.id === "") {
     formRef.value &&
-      formRef.value.validate((valid) => {
+      formRef.value.validate((valid:any) => {
         if (valid) {
           delete form.value.id;
           // if (form.value.type === "phone") {
@@ -184,7 +192,7 @@ function onSubmit() {
       });
   } else {
     formRef.value &&
-      formRef.value.validate((valid) => {
+      formRef.value.validate((valid:any) => {
         if (valid) {
           const {
             id,
@@ -378,10 +386,11 @@ onMounted(async () => {
         </template>
         <el-row :gutter="24">
           <el-form-item label="分配角色:">
-            <el-radio-group v-model="form.role">
+            <el-radio-group v-if="munulevs?.length" v-model="form.role">
               <el-radio v-for="item in munulevs" :key="item.id" :value="item.roleName"
                 :label="item.roleName"></el-radio>
             </el-radio-group>
+            <el-text v-else>暂无数据</el-text>
           </el-form-item>
         </el-row>
       </el-card>
@@ -403,7 +412,7 @@ onMounted(async () => {
             <el-radio-group v-if="groupManageList.length" v-model="form.groupId">
               <el-radio v-for="item in groupManageList" :key="item.id" :value="item.id" :label="item.name"></el-radio>
             </el-radio-group>
-            <el-text v-else>-</el-text>
+            <el-text v-else>暂无数据</el-text>
           </el-form-item>
         </el-row>
       </el-card>
