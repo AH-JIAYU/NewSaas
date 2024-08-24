@@ -102,7 +102,7 @@ function getDataList() {
 <template>
   <div v-loading="data.loading" :class="{ 'absolute-container': data.tableAutoHeight }">
     <PageMain>
-      <el-row>
+      <el-row style="margin:0 0 1rem 0;">
         <el-radio-group v-model="data.search.type" @change="timeChange">
           <el-radio-button label="日" value="day" />
           <el-radio-button label="月" value="month" />
@@ -155,17 +155,17 @@ function getDataList() {
             <el-table-column align="center" type="index" />
             <el-table-column show-overflow-tooltip align="center" prop="memberId" label="会员ID">
               <template #default="{ row }">
-                <span style="color: #0F0F0F;">{{ row.memberId }}</span>
+                <span style="color: #0F0F0F;">{{ row.memberId ? row.memberId : '-' }}</span>
               </template>
             </el-table-column>
             <el-table-column show-overflow-tooltip align="center" prop="memberName" label="会员名称">
               <template #default="{ row }">
-                <span style="color: #FF2D2D;">{{ row.memberName }}</span>
+                <span style="color: #FF2D2D;">{{ row.memberName ? row.memberName : '-' }}</span>
               </template>
             </el-table-column>
             <el-table-column show-overflow-tooltip align="center" prop="completedQuantity" label="完成数量">
               <template #default="{ row }">
-                <span style="color: #00C738;">{{ row.completedQuantity }}</span>
+                <span style="color: #00C738;">{{ row.completedQuantity ? row.completedQuantity : '-' }}</span>
               </template>
             </el-table-column>
             <template #empty>
@@ -179,22 +179,22 @@ function getDataList() {
             <el-table-column align="center" type="index" />
             <el-table-column show-overflow-tooltip align="center" prop="memberId" label="会员ID">
               <template #default="{ row }">
-                <span style="color: #0F0F0F;">{{ row.memberId }}</span>
+                <span style="color: #0F0F0F;">{{ row.memberId ? row.memberId : '-' }}</span>
               </template>
             </el-table-column>
             <el-table-column show-overflow-tooltip align="center" prop="memberName" label="会员名称">
               <template #default="{ row }">
-                <span style="color: #FF2D2D;">{{ row.memberName }}</span>
+                <span style="color: #FF2D2D;">{{ row.memberName ? row.memberName : '-' }}</span>
               </template>
             </el-table-column>
             <el-table-column show-overflow-tooltip align="center" prop="completedQuantity" label="退款数">
               <template #default="{ row }">
-                <span style="color: #00C738;">{{ row.memberName }}</span>
+                <span style="color: #00C738;">{{ row.completedQuantity ? row.completedQuantity : '-' }}</span>
               </template>
             </el-table-column>
             <el-table-column show-overflow-tooltip align="center" prop="refund" label="退款金额">
               <template #default="{ row }">
-                <span style="color: #0F0F0F;">{{ row.refund }}</span>
+                <span style="color: #0F0F0F;">{{ row.refund ? row.refund : '-' }}</span>
               </template>
             </el-table-column>
             <template #empty>
@@ -208,17 +208,17 @@ function getDataList() {
             <el-table-column align="center" type="index" />
             <el-table-column show-overflow-tooltip align="center" prop="memberId" label="会员ID">
               <template #default="{ row }">
-                <span style="color: #0F0F0F;">{{ row.memberId }}</span>
+                <span style="color: #0F0F0F;">{{ row.memberId ? row.memberId : '-' }}</span>
               </template>
             </el-table-column>
             <el-table-column show-overflow-tooltip align="center" prop="memberName" label="会员名称">
               <template #default="{ row }">
-                <span style="color: #FF2D2D;">{{ row.memberName }}</span>
+                <span style="color: #FF2D2D;">{{ row.memberName ? row.memberName : '-' }}</span>
               </template>
             </el-table-column>
             <el-table-column show-overflow-tooltip align="center" prop="price" label="今日收入">
               <template #default="{ row }">
-                <span style="color: #00C738;">{{ row.price }}</span>
+                <span style="color: #00C738;">{{ row.price ? row.price : '-' }}</span>
               </template>
             </el-table-column>
             <template #empty>
@@ -525,5 +525,22 @@ function getDataList() {
   /* 去除下划线 */
   border: none !important;
   /* 去除表格的边框 */
+}
+
+:deep {
+
+  // 单选框背景色
+  .el-radio-button__inner {
+    background-color: transparent;
+    width: 2.125rem;
+    height: 2rem;
+    line-height: 2rem;
+    font-size: .875rem;
+    padding: 0 !important;
+
+  }
+  .el-table__empty-block {
+    margin-top: 100px;
+  }
 }
 </style>
