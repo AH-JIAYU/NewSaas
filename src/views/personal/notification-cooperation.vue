@@ -20,7 +20,7 @@ const read = async () => {
     type: 1,
   };
   await api.updateTenantAudit(params); //修改该条数据待办状态
-  await notificationStore.getUnreadTodo(); // 重新获取待办列表
+  // await notificationStore.getUnreadTodo(); // 重新获取待办列表
 };
 // 拒绝
 const refuse = async () => {
@@ -29,7 +29,7 @@ const refuse = async () => {
     type: 2,
   };
   await api.updateTenantAudit(params); //修改该条数据待办状态
-  await notificationStore.getUnreadTodo(); // 重新获取待办列表
+  // await notificationStore.getUnreadTodo(); // 重新获取待办列表
 };
 // 同意
 const agree = async () => {
@@ -38,7 +38,7 @@ const agree = async () => {
     type: 3,
   };
   await api.updateTenantAudit(params); //修改该条数据待办状态
-  await notificationStore.getUnreadTodo(); // 重新获取待办列表
+  // await notificationStore.getUnreadTodo(); // 重新获取待办列表
 };
 
 defineExpose({
