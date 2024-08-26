@@ -466,3 +466,30 @@ textarea {
 .choicesItemRed .sd-item__control-label {
   color: red !important;
 }
+
+// tabs边距
+.el-tabs__item.is-top:nth-child(2) {
+  margin-left: 1.75rem
+}
+
+.el-tabs__item {
+  padding: 0 1.75rem;
+}
+
+// loading宽度
+.el-dialog {
+  width: 45rem;
+}
+.el-dialog__title{
+  position: relative;
+}
+.el-dialog__title::after{
+  content:'';
+  position: absolute;
+  top: 50%;
+  left: -0.3125rem;
+  width: .125rem;
+  height: .75rem;
+  transform: translate(-50% , -50%);
+  background-color: #409eff;
+}

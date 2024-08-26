@@ -182,11 +182,7 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
-:deep {
-  .el-tabs__item.is-top:nth-child(2) {
-    margin-left: 20px
-  }
-}
+ 
 
 .select {
   background: #F3F9FF !important;

@@ -216,8 +216,6 @@ onMounted(() => {
     <PageMain>
       <el-tabs
         v-model="queryForm.type"
-        class="demo-tabs"
-        type="border-card"
         @tab-change="getDataChange"
       >
         <el-tab-pane label="会员素材" :name="1">
@@ -654,8 +652,5 @@ onMounted(() => {
       }
     }
   }
-}
-:deep(.el-tabs__nav-scroll) {
-  background-color: #fafafa;
 }
 </style>

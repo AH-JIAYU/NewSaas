@@ -1,5 +1,5 @@
 <template>
-  <div class="wscn-box"  v-loading="data.loading">
+  <div class="wscn-box" v-loading="data.loading">
     <div class="wscn-http404-container">
       <div class="wscn-http404">
         <div class="pic-404">
@@ -32,7 +32,7 @@ const data = ref<any>({
 });
 
 onMounted(async () => {
-  data.value.loading =true;
+  data.value.loading = true;
   // 获取ip
   const response = await fetch("https://api.ipify.org?format=json");
   const res = await response.json();
@@ -48,14 +48,13 @@ onMounted(async () => {
   const URL = resRedirect.data.status;
   // 新开 会员或子会员重定向页面
   if (resRedirect.data.redirectAddress) {
-    const href = `http://${resRedirect.data.redirectAddress}${
-      resRedirect.data.peopleType === 1 //peopleType 1 会员  2子会员
-        ? ".front-saas-web.surveyssaas.com/#/"
+    const href = `http://${resRedirect.data.peopleType === 1 ? '' : resRedirect.data.redirectAddress}${resRedirect.data.peopleType === 1 //peopleType 1 会员  2子会员
+        ? "front-saas-web.surveyssaas.com/#/"
         : ".front-supplier-web.surveyssaas.com/#/"
-    }${
+      }${
       //surveySource 1内部 2外部
       resRedirect.data.surveySource === 1 ? "redirect" : "externalRedirection"
-    }?uid=${uid}&type=${URL}`;
+      }?uid=${uid}&type=${URL}`;
     // #region 防止浏览器拦截新开标签页
     window.location.href = href;
     // let tempwindow: any = window.location.href //打开一个窗口，然后用
@@ -221,6 +220,7 @@ const getAssetsImages = (fileName: any, type = "png") => {
     width: 400px;
     aspect-ratio: 1/1;
     overflow: hidden;
+
     img {
       width: 100%;
       aspect-ratio: 1/1;

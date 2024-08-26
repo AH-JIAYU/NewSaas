@@ -9,6 +9,7 @@ import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import api from "@/api/modules/index_index";
 import cloneDeep from "lodash-es/cloneDeep";
+import risingAndFalling from './components/risingAndFalling.vue' // 较昨日
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
 import useNotificationStore from "@/store/modules/notification"; //消息中心
 defineOptions({
@@ -19,16 +20,7 @@ const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
 const router = useRouter();
 const data = ref<any>({
   search: {
-    overviewType: "day", //	总揽类型 day/month/year/select
-    overviewStart: "", //	总揽开始
-    overviewEnd: "", //总揽结束
-    overviewTime: [],
     type: "day",
-    turnoverType: "day", //营业额趋势 day/month/year
-    completeType: "day", //	完成排名类型 day/month/year/select
-    completeStart: "", //	完成排名开始时间
-    completeEnd: "", //	完成排名结束时间
-    completeTime: [],
   },
   dataCenterOverViewVO: {}, //总揽响应
   dataCenterTurnoverVO: {}, //	营业额趋势响应
@@ -55,8 +47,8 @@ function echarts1() {
       },
       formatter: function (params: any) {
         // 自定义圆点
-        var dotHtml = "<span style=\"display:inline-block;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:#44ca6a;\"></span>"
-        var dotHtml2 = "<span style=\"display:inline-block;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:#f56a66;\"></span>"
+        var dotHtml = "<span style=\"display:inline-block;margin-right:.25rem;border-radius:.625rem;width:.625rem;height:.625rem;background-color:#44ca6a;\"></span>"
+        var dotHtml2 = "<span style=\"display:inline-block;margin-right:.25rem;border-radius:.625rem;width:.625rem;height:.625rem;background-color:#f56a66;\"></span>"
         return `
         <div>${params[0].name}<br> ${dotHtml + params[0].seriesName}: ${params[0].value} <br> ${dotHtml2 + params[0].seriesName}: ${params[0].value}</div>
         `;
@@ -438,27 +430,8 @@ onMounted(async () => {
           : 0 }}
                 </div>
                 <!-- 较昨日 -->
-                <div class="compare">
-                  <div class="compare-hui">较昨日</div>
-                  <div class="quantity-num">156</div>
-                  <div class="quantity-icon"> <!-- 上升图标 -->
-                    <svg width="14" height="15" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <g id="Frame" clip-path="url(#clip0_168_10011)">
-                        <path id="Vector"
-                          d="M0.587678 6.69506L6.43968 0.843061C6.74768 0.535061 7.25168 0.535061 7.56668 0.843061L13.4117 6.69506C13.9157 7.19906 13.5587 8.05306 12.8517 8.05306H1.14768C0.440678 8.05306 0.0836778 7.19206 0.587678 6.69506Z"
-                          fill="#FF7D7D" />
-                        <path id="Vector_2"
-                          d="M5.10393 4.37805H8.89793C9.39493 4.37805 9.79393 4.77705 9.79393 5.27405V13.4431C9.79393 13.9401 9.39493 14.3391 8.89793 14.3391H5.11093C4.61393 14.3391 4.21493 13.9401 4.21493 13.4431V5.27405C4.20793 4.77705 4.60693 4.37805 5.10393 4.37805Z"
-                          fill="#FF7D7D" />
-                      </g>
-                      <defs>
-                        <clipPath id="clip0_168_10011">
-                          <rect width="14" height="14" fill="white" transform="translate(0 0.5)" />
-                        </clipPath>
-                      </defs>
-                    </svg>
-                  </div>
-                </div>
+                <risingAndFalling :Difference="data.dataCenterOverViewVO?.projectTotalDifference"
+                  :type="data.search.type"></risingAndFalling>
               </div>
             </div>
             <div class="itemBox">
@@ -505,28 +478,9 @@ onMounted(async () => {
           : 0 }}</div>
 
                 <!-- 较昨日 -->
-                <div class="compare">
-                  <div class="compare-hui">较昨日</div>
-                  <div class="quantity-num">156</div>
-                  <div class="quantity-icon"> <!-- 上升图标 -->
-                    <svg width="14" height="15" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <g id="Frame" clip-path="url(#clip0_168_10011)">
-                        <path id="Vector"
-                          d="M0.587678 6.69506L6.43968 0.843061C6.74768 0.535061 7.25168 0.535061 7.56668 0.843061L13.4117 6.69506C13.9157 7.19906 13.5587 8.05306 12.8517 8.05306H1.14768C0.440678 8.05306 0.0836778 7.19206 0.587678 6.69506Z"
-                          fill="#FF7D7D" />
-                        <path id="Vector_2"
-                          d="M5.10393 4.37805H8.89793C9.39493 4.37805 9.79393 4.77705 9.79393 5.27405V13.4431C9.79393 13.9401 9.39493 14.3391 8.89793 14.3391H5.11093C4.61393 14.3391 4.21493 13.9401 4.21493 13.4431V5.27405C4.20793 4.77705 4.60693 4.37805 5.10393 4.37805Z"
-                          fill="#FF7D7D" />
-                      </g>
-                      <defs>
-                        <clipPath id="clip0_168_10011">
-                          <rect width="14" height="14" fill="white" transform="translate(0 0.5)" />
-                        </clipPath>
-                      </defs>
-                    </svg>
-                  </div>
-
-                </div>
+                <risingAndFalling :Difference="data.dataCenterOverViewVO?.projectSettlementToBeConfirmedDifference"
+                  :type="data.search.type">
+                </risingAndFalling>
               </div>
 
             </div>
@@ -577,28 +531,8 @@ onMounted(async () => {
           : 0 }}</div>
 
                 <!-- 较昨日 -->
-                <div class="compare">
-                  <div class="compare-hui">较昨日</div>
-                  <div class="quantity-num">156</div>
-                  <div class="quantity-icon"> <!-- 上升图标 -->
-                    <svg width="14" height="15" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <g id="Frame" clip-path="url(#clip0_168_10011)">
-                        <path id="Vector"
-                          d="M0.587678 6.69506L6.43968 0.843061C6.74768 0.535061 7.25168 0.535061 7.56668 0.843061L13.4117 6.69506C13.9157 7.19906 13.5587 8.05306 12.8517 8.05306H1.14768C0.440678 8.05306 0.0836778 7.19206 0.587678 6.69506Z"
-                          fill="#FF7D7D" />
-                        <path id="Vector_2"
-                          d="M5.10393 4.37805H8.89793C9.39493 4.37805 9.79393 4.77705 9.79393 5.27405V13.4431C9.79393 13.9401 9.39493 14.3391 8.89793 14.3391H5.11093C4.61393 14.3391 4.21493 13.9401 4.21493 13.4431V5.27405C4.20793 4.77705 4.60693 4.37805 5.10393 4.37805Z"
-                          fill="#FF7D7D" />
-                      </g>
-                      <defs>
-                        <clipPath id="clip0_168_10011">
-                          <rect width="14" height="14" fill="white" transform="translate(0 0.5)" />
-                        </clipPath>
-                      </defs>
-                    </svg>
-                  </div>
-
-                </div>
+                <risingAndFalling :Difference="data.dataCenterOverViewVO?.projectSettlementConfirmedDifference" :type="data.search.type">
+                  </risingAndFalling>
               </div>
 
             </div>
@@ -647,28 +581,8 @@ onMounted(async () => {
           : 0 }}</div>
 
                 <!-- 较昨日 -->
-                <div class="compare">
-                  <div class="compare-hui">较昨日</div>
-                  <div class="quantity-num">156</div>
-                  <div class="quantity-icon"> <!-- 上升图标 -->
-                    <svg width="14" height="15" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <g id="Frame" clip-path="url(#clip0_168_10011)">
-                        <path id="Vector"
-                          d="M0.587678 6.69506L6.43968 0.843061C6.74768 0.535061 7.25168 0.535061 7.56668 0.843061L13.4117 6.69506C13.9157 7.19906 13.5587 8.05306 12.8517 8.05306H1.14768C0.440678 8.05306 0.0836778 7.19206 0.587678 6.69506Z"
-                          fill="#FF7D7D" />
-                        <path id="Vector_2"
-                          d="M5.10393 4.37805H8.89793C9.39493 4.37805 9.79393 4.77705 9.79393 5.27405V13.4431C9.79393 13.9401 9.39493 14.3391 8.89793 14.3391H5.11093C4.61393 14.3391 4.21493 13.9401 4.21493 13.4431V5.27405C4.20793 4.77705 4.60693 4.37805 5.10393 4.37805Z"
-                          fill="#FF7D7D" />
-                      </g>
-                      <defs>
-                        <clipPath id="clip0_168_10011">
-                          <rect width="14" height="14" fill="white" transform="translate(0 0.5)" />
-                        </clipPath>
-                      </defs>
-                    </svg>
-                  </div>
-
-                </div>
+                <risingAndFalling :Difference="data.dataCenterOverViewVO?.projectSettlementCompleteDifference" :type="data.search.type">
+                  </risingAndFalling>
               </div>
 
             </div>
@@ -682,7 +596,7 @@ onMounted(async () => {
                   营业额趋势
                 </div>
               </div>
-              <div id="echarts1" ref="chart1Ref" style="width: 100%; height: 300px" />
+              <div id="echarts1" ref="chart1Ref" style="width: 100%; height: 18.75rem" />
             </div>
             <div class="customerOverview itemBox">
               <div class="itemBoxTitle">
@@ -696,7 +610,7 @@ onMounted(async () => {
                 </el-button>
 
               </div>
-              <div id="echarts2" ref="chart2Ref" style="width: 100%; height: 300px" />
+              <div id="echarts2" ref="chart2Ref" style="width: 100%; height: 18.75rem" />
             </div>
           </div>
 
@@ -753,7 +667,7 @@ onMounted(async () => {
                     {{ row.name ? row.name : "-" }}
                   </template>
                 </el-table-column>
-                <el-table-column align="center" prop="day" label="日" />
+                <el-table-column align="center" prop="turnover" label="日" />
                 <el-table-column align="center" prop="month" label="月" />
                 <el-table-column align="center" prop="year" label="年" />
                 <template #empty>
@@ -973,12 +887,12 @@ onMounted(async () => {
 }
 
 .itemBoxTitle {
-  height: 25px;
+  height: 1.5625rem;
   font-family: PingFang SC, PingFang SC;
   font-weight: 600;
   font-size: 1.125rem;
   color: #0F0F0F;
-  line-height: 25px;
+  line-height: 1.5625rem;
   text-align: left;
   font-style: normal;
   text-transform: none;
@@ -997,8 +911,8 @@ onMounted(async () => {
   .blue {
     display: inline-block;
     position: relative;
-    width: 20px;
-    height: 25px;
+    width: 1.25rem;
+    height: 1.5625rem;
   }
 
   .blue::after {
@@ -1007,11 +921,11 @@ onMounted(async () => {
     left: 0;
     top: 50%;
     transform: translateY(-50%);
-    width: 10px;
-    height: 10px;
+    width: .625rem;
+    height: .625rem;
     background: #409EFF;
     border-radius: 50%;
-    margin-right: 20px;
+    margin-right: 1.25rem;
   }
 
   .hui {
@@ -1065,19 +979,19 @@ onMounted(async () => {
         flex: 1;
 
         .quantity-title {
-          min-height: 20px;
+          min-height: 1.25rem;
           font-family: PingFang SC, PingFang SC;
           font-weight: 400;
           font-size: .875rem;
           color: #0F0F0F;
-          line-height: 16px;
+          line-height: 1rem;
           text-align: left;
           font-style: normal;
           text-transform: none;
         }
 
         .quantity-num {
-          // width: 233px;
+          // width: 14.5625rem;
           height: 3.125rem;
           line-height: 3.125rem;
           font-family: DINPro, DINPro;
@@ -1091,7 +1005,7 @@ onMounted(async () => {
 
         .compare {
           max-width: 7.375rem;
-          height: 29px;
+          height: 1.8125rem;
           background: #F0F5FA;
           border-radius: 6.25rem 6.25rem 6.25rem 6.25rem;
           display: flex;
@@ -1100,12 +1014,12 @@ onMounted(async () => {
 
           .compare-hui {
             width: 2.625rem;
-            height: 20px;
+            height: 1.25rem;
             font-family: PingFang SC, PingFang SC;
             font-weight: 400;
             font-size: .875rem;
             color: #777777;
-            line-height: 20px;
+            line-height: 1.25rem;
             text-align: left;
             font-style: normal;
             text-transform: none;
@@ -1124,9 +1038,7 @@ onMounted(async () => {
             text-transform: none;
           }
 
-          .quantity-icon {
-            // background-color: #fff;
-          }
+
         }
       }
     }
@@ -1147,6 +1059,7 @@ onMounted(async () => {
   }
 
   .table {
+    height: 20.4375rem;
 
     .completionRanking,
     .supplierRevenueRanking {
@@ -1171,7 +1084,7 @@ onMounted(async () => {
       display: flex;
       align-items: start;
       justify-content: start;
-      height: 92px;
+      height: 5.75rem;
       padding: 1rem 0;
 
       >svg {
@@ -1182,12 +1095,12 @@ onMounted(async () => {
         flex: 1;
 
         .quantity-title {
-          min-height: 20px;
+          min-height: 1.25rem;
           font-family: PingFang SC, PingFang SC;
           font-weight: 400;
           font-size: .875rem;
           color: #0F0F0F;
-          line-height: 16px;
+          line-height: 1rem;
           text-align: left;
           font-style: normal;
           text-transform: none;
@@ -1207,7 +1120,7 @@ onMounted(async () => {
 
         .compare {
           max-width: 7.375rem;
-          height: 29px;
+          height: 1.8125rem;
           background: #F0F5FA;
           border-radius: 6.25rem 6.25rem 6.25rem 6.25rem;
           display: flex;
@@ -1216,12 +1129,12 @@ onMounted(async () => {
 
           .compare-hui {
             width: 2.625rem;
-            height: 20px;
+            height: 1.25rem;
             font-family: PingFang SC, PingFang SC;
             font-weight: 400;
             font-size: .875rem;
             color: #777777;
-            line-height: 20px;
+            line-height: 1.25rem;
             text-align: left;
             font-style: normal;
             text-transform: none;
@@ -1229,15 +1142,16 @@ onMounted(async () => {
 
           .quantity-num {
             width: 1.625rem;
-            height: 21px;
+            height: 1.3125rem;
             font-family: DINPro, DINPro;
             font-weight: 500;
             font-size: 1rem;
             color: #0F0F0F;
-            line-height: 21px;
+            line-height: 1.3125rem;
             text-align: left;
             font-style: normal;
             text-transform: none;
+
           }
         }
       }

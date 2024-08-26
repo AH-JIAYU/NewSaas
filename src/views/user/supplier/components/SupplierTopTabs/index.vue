@@ -162,11 +162,15 @@ nextTick(() => {
                 <el-form-item label="供应商等级" prop="supplierLevelId">
                   <el-select clearable filterable v-model="props.leftTab.supplierLevelId">
                     <template #empty>
-                      暂无数据
-                      <el-button type="primary" link @click="addSupplierLevel">
-                        <SvgIcon name="ant-design:plus-outlined" />
-                      </el-button>
-                    </template>
+              <div style="display: flex;justify-content: space-between;align-items:center;padding:0 1rem;">
+                暂无数据
+                <el-button type="primary" link size="small" @click="addSupplierLevel">
+                  快捷新增
+                  <SvgIcon name="ant-design:plus-outlined" color="#fff"
+                    style="background-color: var(--el-color-primary);border-radius: 50%;padding: 2px;margin:0 2px" />
+                </el-button>
+              </div>
+            </template>
                     <el-option v-for="item in data.supplierLevelList" :key="item.tenantSupplierLevelId"
                       :value="item.tenantSupplierLevelId" :label="item.levelNameOrAdditionRatio"></el-option>
                   </el-select>

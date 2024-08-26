@@ -117,8 +117,9 @@ const validateEmail = (rule: any, value: any, callback: any) => {
 };
 // 动态表单校验
 const chengAccount = () => {
-  // 手机号
-  if (!form.value.phoneNumber.includes("@")) {
+  if(form.value.phoneNumber){
+      // 手机号
+  if (!form.value.phoneNumber?.includes("@")) {
     formRules.value.phoneNumber = [
       { required: true, trigger: "blur", message: "请输入手机号" },
       { validator: validatePhone, trigger: "blur" },
@@ -130,6 +131,9 @@ const chengAccount = () => {
       { validator: validateEmail, trigger: "blur" },
     ];
   }
+  }
+
+
 };
 // 校验
 const formRules = ref<FormRules>({
@@ -161,13 +165,12 @@ const departmentChange = async (val: any) => {
   getGroup.value = data[0].director
 };
 // 提交数据
-function onSubmit() {
-  // form.value.type = form.value.country === "CN" ? "phone" : "email";
-  if(form.value.email === '') {
+function onSubmit() { 
+  if(!form.value.email) {
     formRules.value.email = []
     formRef.value.clearValidate('email');
   }
-  if(form.value.phoneNumber === '') {
+  if(!form.value.phoneNumber) {
     formRules.value.phoneNumber = []
     formRef.value.clearValidate('phoneNumber');
   }
