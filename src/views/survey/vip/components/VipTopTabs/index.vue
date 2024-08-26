@@ -199,7 +199,8 @@ onMounted(async () => {
                         暂无数据
                         <el-button type="primary" link @click="AddVipLevel" size="small">
                           快捷新增
-                          <SvgIcon name="ant-design:plus-outlined" />
+                          <SvgIcon name="ant-design:plus-outlined" color="#fff"
+                    style="background-color: var(--el-color-primary);border-radius: 50%;padding: 2px;margin:0 2px" />
                         </el-button>
                       </div>
                     </template>

@@ -9,6 +9,7 @@ import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import api from "@/api/modules/index_index";
 import cloneDeep from "lodash-es/cloneDeep";
+import risingAndFalling from './components/risingAndFalling.vue' // 较昨日
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
 import useNotificationStore from "@/store/modules/notification"; //消息中心
 defineOptions({
@@ -19,16 +20,7 @@ const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
 const router = useRouter();
 const data = ref<any>({
   search: {
-    overviewType: "day", //	总揽类型 day/month/year/select
-    overviewStart: "", //	总揽开始
-    overviewEnd: "", //总揽结束
-    overviewTime: [],
     type: "day",
-    turnoverType: "day", //营业额趋势 day/month/year
-    completeType: "day", //	完成排名类型 day/month/year/select
-    completeStart: "", //	完成排名开始时间
-    completeEnd: "", //	完成排名结束时间
-    completeTime: [],
   },
   dataCenterOverViewVO: {}, //总揽响应
   dataCenterTurnoverVO: {}, //	营业额趋势响应
@@ -55,8 +47,8 @@ function echarts1() {
       },
       formatter: function (params: any) {
         // 自定义圆点
-        var dotHtml = "<span style=\"display:inline-block;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:#44ca6a;\"></span>"
-        var dotHtml2 = "<span style=\"display:inline-block;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:#f56a66;\"></span>"
+        var dotHtml = "<span style=\"display:inline-block;margin-right:.25rem;border-radius:.625rem;width:.625rem;height:.625rem;background-color:#44ca6a;\"></span>"
+        var dotHtml2 = "<span style=\"display:inline-block;margin-right:.25rem;border-radius:.625rem;width:.625rem;height:.625rem;background-color:#f56a66;\"></span>"
         return `
         <div>${params[0].name}<br> ${dotHtml + params[0].seriesName}: ${params[0].value} <br> ${dotHtml2 + params[0].seriesName}: ${params[0].value}</div>
         `;
@@ -356,41 +348,80 @@ onMounted(async () => {
           <!-- 数量集成 -->
           <div class="row quantityBox">
             <div class="itemBox">
-              <svg width="49" height="48" viewBox="0 0 49 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <g id="Group 548">
-                  <rect id="Rectangle 6017" x="0.25" width="48" height="48" rx="8" fill="#D0F5FE" />
-                  <g id="Group 526">
-                    <rect id="Rectangle 6028" x="14.25" y="7" width="14" height="4" rx="1" fill="#56C5E1" />
-                    <rect id="Rectangle 6024" x="9.25" y="10" width="24" height="30" rx="3"
-                      fill="url(#paint0_linear_168_10051)" />
-                    <rect id="Rectangle 6019" x="12.25" y="13" width="18" height="3" rx="1.5" fill="white" />
-                    <rect id="Rectangle 6025" x="14.25" y="18" width="14" height="3" rx="1.5" fill="white" />
-                    <rect id="Rectangle 6026" x="12.25" y="23" width="18" height="3" rx="1.5" fill="white" />
-                    <g id="Group 550">
-                      <g id="Ellipse 52" filter="url(#filter0_b_168_10051)">
-                        <circle cx="30.25" cy="34" r="8" fill="#B3F0FF" fill-opacity="0.3" />
+              <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g id="Frame 3474317">
+                  <g clip-path="url(#clip0_168_9988)">
+                    <rect width="48" height="48" rx="8" fill="#409EFF" fill-opacity="0.15" />
+                    <g id="Group 521">
+                      <g id="Rectangle 6018" filter="url(#filter0_d_168_9988)">
+                        <rect x="7" y="9" width="24.7273" height="28.8485" rx="4" fill="url(#paint0_linear_168_9988)" />
                       </g>
-                      <path id="Union" fill-rule="evenodd" clip-rule="evenodd"
-                        d="M34.5418 30.2929C34.9323 29.9024 35.5655 29.9024 35.956 30.2929C36.3465 30.6834 36.3465 31.3166 35.956 31.7071L30.4557 37.2075C30.3266 37.3365 30.1711 37.4229 30.0066 37.4667C29.673 37.5558 29.3022 37.4695 29.0405 37.2077L25.5429 33.7101C25.1524 33.3196 25.1524 32.6865 25.5429 32.2959C25.9334 31.9054 26.5666 31.9054 26.9571 32.2959L29.7479 35.0868L34.5418 30.2929Z"
-                        fill="#FCFFFE" />
+                      <rect id="Rectangle 6019" x="9.0625" y="14.1514" width="20.6061" height="3.09091" rx="1.54545"
+                        fill="white" />
+                      <rect id="Rectangle 6020" x="9.0625" y="20.3335" width="14.4242" height="3.09091" rx="1.54545"
+                        fill="white" />
+                      <rect id="Rectangle 6021" x="9.0625" y="26.5151" width="10.303" height="3.09091" rx="1.54545"
+                        fill="white" />
+                      <g id="Group 520" filter="url(#filter1_b_168_9988)">
+                        <g id="Ellipse 52" filter="url(#filter2_b_168_9988)">
+                          <circle cx="31.7259" cy="30.6365" r="9.27273" fill="#D0E7FE" fill-opacity="0.3" />
+                        </g>
+                        <g id="Group">
+                          <g id="Group_2">
+                            <path id="Vector" d="M31.9043 29.3581L29.0664 26.5156" stroke="#FCFFFE" stroke-width="2"
+                              stroke-miterlimit="10" stroke-linecap="round" />
+                            <path id="Vector_2" d="M34.7403 26.5156L31.9023 29.3581" stroke="#FCFFFE" stroke-width="2"
+                              stroke-miterlimit="10" stroke-linecap="round" />
+                          </g>
+                          <path id="Vector_3" d="M28.6367 30.8755H35.1759" stroke="#FCFFFE" stroke-width="2"
+                            stroke-miterlimit="10" stroke-linecap="round" />
+                          <path id="Vector_4" d="M31.9062 29.2388V35.7885" stroke="#FCFFFE" stroke-width="2"
+                            stroke-miterlimit="10" stroke-linecap="round" />
+                          <path id="Vector_5" d="M28.6367 33.332H35.1759" stroke="#FCFFFE" stroke-width="2"
+                            stroke-miterlimit="10" stroke-linecap="round" />
+                        </g>
+                      </g>
                     </g>
                   </g>
                 </g>
                 <defs>
-                  <filter id="filter0_b_168_10051" x="18.25" y="22" width="24" height="24" filterUnits="userSpaceOnUse"
-                    color-interpolation-filters="sRGB">
+                  <filter id="filter0_d_168_9988" x="-3" y="0" width="44.7266" height="48.8486"
+                    filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                    <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                    <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                      result="hardAlpha" />
+                    <feOffset dy="1" />
+                    <feGaussianBlur stdDeviation="5" />
+                    <feComposite in2="hardAlpha" operator="out" />
+                    <feColorMatrix type="matrix" values="0 0 0 0 0.376471 0 0 0 0 0.686275 0 0 0 0 1 0 0 0 1 0" />
+                    <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_168_9988" />
+                    <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_168_9988" result="shape" />
+                  </filter>
+                  <filter id="filter1_b_168_9988" x="18.4531" y="17.3638" width="26.5469" height="26.5454"
+                    filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
                     <feFlood flood-opacity="0" result="BackgroundImageFix" />
                     <feGaussianBlur in="BackgroundImageFix" stdDeviation="2" />
-                    <feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_168_10051" />
-                    <feBlend mode="normal" in="SourceGraphic" in2="effect1_backgroundBlur_168_10051" result="shape" />
+                    <feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_168_9988" />
+                    <feBlend mode="normal" in="SourceGraphic" in2="effect1_backgroundBlur_168_9988" result="shape" />
                   </filter>
-                  <linearGradient id="paint0_linear_168_10051" x1="10.75" y1="10" x2="30.25" y2="40"
+                  <filter id="filter2_b_168_9988" x="18.4531" y="17.3638" width="26.5469" height="26.5454"
+                    filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                    <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                    <feGaussianBlur in="BackgroundImageFix" stdDeviation="2" />
+                    <feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_168_9988" />
+                    <feBlend mode="normal" in="SourceGraphic" in2="effect1_backgroundBlur_168_9988" result="shape" />
+                  </filter>
+                  <linearGradient id="paint0_linear_168_9988" x1="9.06061" y1="10.0303" x2="29.1515" y2="37.8485"
                     gradientUnits="userSpaceOnUse">
-                    <stop stop-color="#5BCAE6" />
-                    <stop offset="0.945" stop-color="#42AECA" />
+                    <stop stop-color="#74B9FF" />
+                    <stop offset="0.95" stop-color="#4FA7FE" />
                   </linearGradient>
+                  <clipPath id="clip0_168_9988">
+                    <rect width="48" height="48" rx="8" fill="white" />
+                  </clipPath>
                 </defs>
               </svg>
+
               <div>
                 <!-- 数量 -->
                 <p class="quantity-title">发布项目数额</p>
@@ -399,27 +430,8 @@ onMounted(async () => {
           : 0 }}
                 </div>
                 <!-- 较昨日 -->
-                <div class="compare">
-                  <div class="compare-hui">较昨日</div>
-                  <div class="quantity-num">156</div>
-                  <div class="quantity-icon"> <!-- 上升图标 -->
-                    <svg width="14" height="15" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <g id="Frame" clip-path="url(#clip0_168_10011)">
-                        <path id="Vector"
-                          d="M0.587678 6.69506L6.43968 0.843061C6.74768 0.535061 7.25168 0.535061 7.56668 0.843061L13.4117 6.69506C13.9157 7.19906 13.5587 8.05306 12.8517 8.05306H1.14768C0.440678 8.05306 0.0836778 7.19206 0.587678 6.69506Z"
-                          fill="#FF7D7D" />
-                        <path id="Vector_2"
-                          d="M5.10393 4.37805H8.89793C9.39493 4.37805 9.79393 4.77705 9.79393 5.27405V13.4431C9.79393 13.9401 9.39493 14.3391 8.89793 14.3391H5.11093C4.61393 14.3391 4.21493 13.9401 4.21493 13.4431V5.27405C4.20793 4.77705 4.60693 4.37805 5.10393 4.37805Z"
-                          fill="#FF7D7D" />
-                      </g>
-                      <defs>
-                        <clipPath id="clip0_168_10011">
-                          <rect width="14" height="14" fill="white" transform="translate(0 0.5)" />
-                        </clipPath>
-                      </defs>
-                    </svg>
-                  </div>
-                </div>
+                <risingAndFalling :Difference="data.dataCenterOverViewVO?.projectTotalDifference"
+                  :type="data.search.type"></risingAndFalling>
               </div>
             </div>
             <div class="itemBox">
@@ -466,28 +478,9 @@ onMounted(async () => {
           : 0 }}</div>
 
                 <!-- 较昨日 -->
-                <div class="compare">
-                  <div class="compare-hui">较昨日</div>
-                  <div class="quantity-num">156</div>
-                  <div class="quantity-icon"> <!-- 上升图标 -->
-                    <svg width="14" height="15" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <g id="Frame" clip-path="url(#clip0_168_10011)">
-                        <path id="Vector"
-                          d="M0.587678 6.69506L6.43968 0.843061C6.74768 0.535061 7.25168 0.535061 7.56668 0.843061L13.4117 6.69506C13.9157 7.19906 13.5587 8.05306 12.8517 8.05306H1.14768C0.440678 8.05306 0.0836778 7.19206 0.587678 6.69506Z"
-                          fill="#FF7D7D" />
-                        <path id="Vector_2"
-                          d="M5.10393 4.37805H8.89793C9.39493 4.37805 9.79393 4.77705 9.79393 5.27405V13.4431C9.79393 13.9401 9.39493 14.3391 8.89793 14.3391H5.11093C4.61393 14.3391 4.21493 13.9401 4.21493 13.4431V5.27405C4.20793 4.77705 4.60693 4.37805 5.10393 4.37805Z"
-                          fill="#FF7D7D" />
-                      </g>
-                      <defs>
-                        <clipPath id="clip0_168_10011">
-                          <rect width="14" height="14" fill="white" transform="translate(0 0.5)" />
-                        </clipPath>
-                      </defs>
-                    </svg>
-                  </div>
-
-                </div>
+                <risingAndFalling :Difference="data.dataCenterOverViewVO?.projectSettlementToBeConfirmedDifference"
+                  :type="data.search.type">
+                </risingAndFalling>
               </div>
 
             </div>
@@ -538,28 +531,8 @@ onMounted(async () => {
           : 0 }}</div>
 
                 <!-- 较昨日 -->
-                <div class="compare">
-                  <div class="compare-hui">较昨日</div>
-                  <div class="quantity-num">156</div>
-                  <div class="quantity-icon"> <!-- 上升图标 -->
-                    <svg width="14" height="15" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <g id="Frame" clip-path="url(#clip0_168_10011)">
-                        <path id="Vector"
-                          d="M0.587678 6.69506L6.43968 0.843061C6.74768 0.535061 7.25168 0.535061 7.56668 0.843061L13.4117 6.69506C13.9157 7.19906 13.5587 8.05306 12.8517 8.05306H1.14768C0.440678 8.05306 0.0836778 7.19206 0.587678 6.69506Z"
-                          fill="#FF7D7D" />
-                        <path id="Vector_2"
-                          d="M5.10393 4.37805H8.89793C9.39493 4.37805 9.79393 4.77705 9.79393 5.27405V13.4431C9.79393 13.9401 9.39493 14.3391 8.89793 14.3391H5.11093C4.61393 14.3391 4.21493 13.9401 4.21493 13.4431V5.27405C4.20793 4.77705 4.60693 4.37805 5.10393 4.37805Z"
-                          fill="#FF7D7D" />
-                      </g>
-                      <defs>
-                        <clipPath id="clip0_168_10011">
-                          <rect width="14" height="14" fill="white" transform="translate(0 0.5)" />
-                        </clipPath>
-                      </defs>
-                    </svg>
-                  </div>
-
-                </div>
+                <risingAndFalling :Difference="data.dataCenterOverViewVO?.projectSettlementConfirmedDifference" :type="data.search.type">
+                  </risingAndFalling>
               </div>
 
             </div>
@@ -608,28 +581,8 @@ onMounted(async () => {
           : 0 }}</div>
 
                 <!-- 较昨日 -->
-                <div class="compare">
-                  <div class="compare-hui">较昨日</div>
-                  <div class="quantity-num">156</div>
-                  <div class="quantity-icon"> <!-- 上升图标 -->
-                    <svg width="14" height="15" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <g id="Frame" clip-path="url(#clip0_168_10011)">
-                        <path id="Vector"
-                          d="M0.587678 6.69506L6.43968 0.843061C6.74768 0.535061 7.25168 0.535061 7.56668 0.843061L13.4117 6.69506C13.9157 7.19906 13.5587 8.05306 12.8517 8.05306H1.14768C0.440678 8.05306 0.0836778 7.19206 0.587678 6.69506Z"
-                          fill="#FF7D7D" />
-                        <path id="Vector_2"
-                          d="M5.10393 4.37805H8.89793C9.39493 4.37805 9.79393 4.77705 9.79393 5.27405V13.4431C9.79393 13.9401 9.39493 14.3391 8.89793 14.3391H5.11093C4.61393 14.3391 4.21493 13.9401 4.21493 13.4431V5.27405C4.20793 4.77705 4.60693 4.37805 5.10393 4.37805Z"
-                          fill="#FF7D7D" />
-                      </g>
-                      <defs>
-                        <clipPath id="clip0_168_10011">
-                          <rect width="14" height="14" fill="white" transform="translate(0 0.5)" />
-                        </clipPath>
-                      </defs>
-                    </svg>
-                  </div>
-
-                </div>
+                <risingAndFalling :Difference="data.dataCenterOverViewVO?.projectSettlementCompleteDifference" :type="data.search.type">
+                  </risingAndFalling>
               </div>
 
             </div>
@@ -643,7 +596,7 @@ onMounted(async () => {
                   营业额趋势
                 </div>
               </div>
-              <div id="echarts1" ref="chart1Ref" style="width: 100%; height: 300px" />
+              <div id="echarts1" ref="chart1Ref" style="width: 100%; height: 18.75rem" />
             </div>
             <div class="customerOverview itemBox">
               <div class="itemBoxTitle">
@@ -657,7 +610,7 @@ onMounted(async () => {
                 </el-button>
 
               </div>
-              <div id="echarts2" ref="chart2Ref" style="width: 100%; height: 300px" />
+              <div id="echarts2" ref="chart2Ref" style="width: 100%; height: 18.75rem" />
             </div>
           </div>
 
@@ -714,7 +667,7 @@ onMounted(async () => {
                     {{ row.name ? row.name : "-" }}
                   </template>
                 </el-table-column>
-                <el-table-column align="center" prop="day" label="日" />
+                <el-table-column align="center" prop="turnover" label="日" />
                 <el-table-column align="center" prop="month" label="月" />
                 <el-table-column align="center" prop="year" label="年" />
                 <template #empty>
@@ -934,12 +887,12 @@ onMounted(async () => {
 }
 
 .itemBoxTitle {
-  height: 25px;
+  height: 1.5625rem;
   font-family: PingFang SC, PingFang SC;
   font-weight: 600;
   font-size: 1.125rem;
   color: #0F0F0F;
-  line-height: 25px;
+  line-height: 1.5625rem;
   text-align: left;
   font-style: normal;
   text-transform: none;
@@ -958,8 +911,8 @@ onMounted(async () => {
   .blue {
     display: inline-block;
     position: relative;
-    width: 20px;
-    height: 25px;
+    width: 1.25rem;
+    height: 1.5625rem;
   }
 
   .blue::after {
@@ -968,11 +921,11 @@ onMounted(async () => {
     left: 0;
     top: 50%;
     transform: translateY(-50%);
-    width: 10px;
-    height: 10px;
+    width: .625rem;
+    height: .625rem;
     background: #409EFF;
     border-radius: 50%;
-    margin-right: 20px;
+    margin-right: 1.25rem;
   }
 
   .hui {
@@ -1026,19 +979,19 @@ onMounted(async () => {
         flex: 1;
 
         .quantity-title {
-          min-height: 20px;
+          min-height: 1.25rem;
           font-family: PingFang SC, PingFang SC;
           font-weight: 400;
           font-size: .875rem;
           color: #0F0F0F;
-          line-height: 16px;
+          line-height: 1rem;
           text-align: left;
           font-style: normal;
           text-transform: none;
         }
 
         .quantity-num {
-          // width: 233px;
+          // width: 14.5625rem;
           height: 3.125rem;
           line-height: 3.125rem;
           font-family: DINPro, DINPro;
@@ -1052,7 +1005,7 @@ onMounted(async () => {
 
         .compare {
           max-width: 7.375rem;
-          height: 29px;
+          height: 1.8125rem;
           background: #F0F5FA;
           border-radius: 6.25rem 6.25rem 6.25rem 6.25rem;
           display: flex;
@@ -1061,12 +1014,12 @@ onMounted(async () => {
 
           .compare-hui {
             width: 2.625rem;
-            height: 20px;
+            height: 1.25rem;
             font-family: PingFang SC, PingFang SC;
             font-weight: 400;
             font-size: .875rem;
             color: #777777;
-            line-height: 20px;
+            line-height: 1.25rem;
             text-align: left;
             font-style: normal;
             text-transform: none;
@@ -1085,9 +1038,7 @@ onMounted(async () => {
             text-transform: none;
           }
 
-          .quantity-icon {
-            // background-color: #fff;
-          }
+
         }
       }
     }
@@ -1108,6 +1059,7 @@ onMounted(async () => {
   }
 
   .table {
+    height: 20.4375rem;
 
     .completionRanking,
     .supplierRevenueRanking {
@@ -1132,7 +1084,7 @@ onMounted(async () => {
       display: flex;
       align-items: start;
       justify-content: start;
-      height: 92px;
+      height: 5.75rem;
       padding: 1rem 0;
 
       >svg {
@@ -1143,12 +1095,12 @@ onMounted(async () => {
         flex: 1;
 
         .quantity-title {
-          min-height: 20px;
+          min-height: 1.25rem;
           font-family: PingFang SC, PingFang SC;
           font-weight: 400;
           font-size: .875rem;
           color: #0F0F0F;
-          line-height: 16px;
+          line-height: 1rem;
           text-align: left;
           font-style: normal;
           text-transform: none;
@@ -1168,7 +1120,7 @@ onMounted(async () => {
 
         .compare {
           max-width: 7.375rem;
-          height: 29px;
+          height: 1.8125rem;
           background: #F0F5FA;
           border-radius: 6.25rem 6.25rem 6.25rem 6.25rem;
           display: flex;
@@ -1177,12 +1129,12 @@ onMounted(async () => {
 
           .compare-hui {
             width: 2.625rem;
-            height: 20px;
+            height: 1.25rem;
             font-family: PingFang SC, PingFang SC;
             font-weight: 400;
             font-size: .875rem;
             color: #777777;
-            line-height: 20px;
+            line-height: 1.25rem;
             text-align: left;
             font-style: normal;
             text-transform: none;
@@ -1190,15 +1142,16 @@ onMounted(async () => {
 
           .quantity-num {
             width: 1.625rem;
-            height: 21px;
+            height: 1.3125rem;
             font-family: DINPro, DINPro;
             font-weight: 500;
             font-size: 1rem;
             color: #0F0F0F;
-            line-height: 21px;
+            line-height: 1.3125rem;
             text-align: left;
             font-style: normal;
             text-transform: none;
+
           }
         }
       }

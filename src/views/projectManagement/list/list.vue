@@ -129,7 +129,7 @@ function dispatch() {
       center: true,
     });
   }
-  else if (selectList.length[0].row.isOnline === 2) {
+  else if (selectList[0].isOnline === 2) {
     ElMessage.warning({
       message: "离线不可调度",
       center: true,

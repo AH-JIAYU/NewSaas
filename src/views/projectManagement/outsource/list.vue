@@ -109,7 +109,7 @@ onMounted(() => {
     'absolute-container': tableAutoHeight,
   }">
     <PageMain>
-      <el-tabs v-model="queryForm.type" class="demo-tabs" type="border-card" @tab-change="fetchData">
+      <el-tabs v-model="queryForm.type"   @tab-change="fetchData">
         <el-tab-pane label="外包项目" :name="2">
           <SearchBar :show-toggle="false">
             <template #default="{ fold, toggle }">

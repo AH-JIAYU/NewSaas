@@ -476,8 +476,8 @@ const agreements = (val: any) => {
       <div class="login-banner">
         <!-- <img :src="logo" class="logo" />
         <img :src="banner" class="banner" /> -->
-        <h1 style="font-size: 50px; font-weight: normal">欢迎</h1>
-        <h3 h1 style="font-size: 30px; font-weight: normal">来到租户系统 !</h3>
+        <!--<h1 style="font-size: 50px; font-weight: normal">欢迎</h1>
+        <h3 h1 style="font-size: 30px; font-weight: normal">来到租户系统 !</h3>-->
       </div>
       <el-form v-show="formType === 'login'" ref="loginFormRef" :model="loginForm" :rules="loginRules"
         class="login-form" :validate-on-rule-change="false">
@@ -782,8 +782,8 @@ const agreements = (val: any) => {
   z-index: 0;
   width: 100%;
   height: 100%;
-  background: url("../assets/images/background.jpg") center center fixed no-repeat;
-  background-size: cover;
+  background: url("../assets/images/background.png") center center fixed no-repeat;
+  background-size:   cover ;
   // background: radial-gradient(
   //   circle at center,
   //   var(--g-container-bg),

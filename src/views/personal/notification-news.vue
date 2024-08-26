@@ -11,18 +11,13 @@ const data = ref<any>({});
 const showEdit = (row: any) => {
   data.value = row;
   if (row.isReadAlready !== 2) {
-    read()  
+    read()
   }
 };
 // 已读
 const read = async () => {
   await api.updateTenantMessage({ id: data.value.id }); // 修改状态
-  await notificationStore.getUnreadMessage(); // 重新获取消息列表
-  close();
-};
-// 关闭
-const close = () => {
-  emit("delSelectId");
+  // await notificationStore.getUnreadMessage(); // 重新获取消息列表
 };
 defineExpose({
   showEdit,

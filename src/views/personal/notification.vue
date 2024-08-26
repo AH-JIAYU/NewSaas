@@ -45,14 +45,21 @@ function showEditCooperation(row: any) {
 
 }
 // 已读后清除右侧详情
-function delSelectId() { 
+async function delSelectId() {
   // 清除右侧组件
   data.value.selectId = "";
   // data.value.type = 0;
   // 默认显示未读
   data.value.ReadAlready = 1;
+  await notificationStore.getUnreadMessage(); // 重新获取消息列表
+  await notificationStore.getUnreadTodo(); // 重新获取待办列表
 }
-
+// 切换已读未读
+const readButNotRead=async(val:any)=>{
+  data.value.ReadAlready=val
+  await notificationStore.getUnreadMessage(); // 重新获取消息列表
+  await notificationStore.getUnreadTodo(); // 重新获取待办列表
+}
 const filterMessageList = computed(() => {
   return notificationStore.messageList.filter((item: any) => item.isReadAlready === data.value.ReadAlready)
 })
@@ -87,9 +94,9 @@ onMounted(() => {
           <el-tabs v-model="data.tabs" @tab-change="delSelectId">
             <el-tab-pane label="消息" name="news">
               <div class="buttons">
-                <button :class="data.ReadAlready === 1 ? 'unread' : ''" @click="data.ReadAlready = 1">未读{{
+                <button :class="data.ReadAlready === 1 ? 'unread' : ''" @click="readButNotRead(1)">未读{{
             notificationStore.message < 100 ? `(${notificationStore.message})` : '99+' }}</button>
-                    <button :class="data.ReadAlready === 2 ? 'read' : ''" read @click="data.ReadAlready = 2">已读</button>
+                    <button :class="data.ReadAlready === 2 ? 'read' : ''" read @click="readButNotRead(2)">已读</button>
               </div>
               <OverlayScrollbarsComponent :options="{
             scrollbars: { autoHide: 'leave', autoHideDelay: 300 },
@@ -124,9 +131,9 @@ onMounted(() => {
             </el-tab-pane>
             <el-tab-pane label="代办" name="cooperation">
               <div class="buttons">
-                <button :class="data.ReadAlready === 1 ? 'unread' : ''" @click="data.ReadAlready = 1">未读{{
+                <button :class="data.ReadAlready === 1 ? 'unread' : ''" @click="readButNotRead(1)">未读{{
             notificationStore.todo < 100 ? `(${notificationStore.todo})` : '99+' }}</button>
-                    <button :class="data.ReadAlready === 2 ? 'read' : ''" read @click="data.ReadAlready = 2">已读</button>
+                    <button :class="data.ReadAlready === 2 ? 'read' : ''" read @click="readButNotRead(2)">已读</button>
               </div>
 
               <OverlayScrollbarsComponent :options="{
@@ -151,8 +158,8 @@ onMounted(() => {
                       </div>
                       <div class="data">
                         您好，我是{{
-          item.invitationName || "-"
-        }}诚挚邀请您与我们一同协作共赢！若有疑问请联系{{ item.phoneOrEmail }}。
+            item.invitationName || "-"
+          }}诚挚邀请您与我们一同协作共赢！若有疑问请联系{{ item.phoneOrEmail }}。
                       </div>
                     </div>
                   </div>
@@ -175,11 +182,7 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
-:deep {
-  .el-tabs__item.is-top:nth-child(2) {
-    margin-left: 20px
-  }
-}
+ 
 
 .select {
   background: #F3F9FF !important;
