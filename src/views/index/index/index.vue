@@ -356,41 +356,80 @@ onMounted(async () => {
           <!-- 数量集成 -->
           <div class="row quantityBox">
             <div class="itemBox">
-              <svg width="49" height="48" viewBox="0 0 49 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <g id="Group 548">
-                  <rect id="Rectangle 6017" x="0.25" width="48" height="48" rx="8" fill="#D0F5FE" />
-                  <g id="Group 526">
-                    <rect id="Rectangle 6028" x="14.25" y="7" width="14" height="4" rx="1" fill="#56C5E1" />
-                    <rect id="Rectangle 6024" x="9.25" y="10" width="24" height="30" rx="3"
-                      fill="url(#paint0_linear_168_10051)" />
-                    <rect id="Rectangle 6019" x="12.25" y="13" width="18" height="3" rx="1.5" fill="white" />
-                    <rect id="Rectangle 6025" x="14.25" y="18" width="14" height="3" rx="1.5" fill="white" />
-                    <rect id="Rectangle 6026" x="12.25" y="23" width="18" height="3" rx="1.5" fill="white" />
-                    <g id="Group 550">
-                      <g id="Ellipse 52" filter="url(#filter0_b_168_10051)">
-                        <circle cx="30.25" cy="34" r="8" fill="#B3F0FF" fill-opacity="0.3" />
+              <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g id="Frame 3474317">
+                  <g clip-path="url(#clip0_168_9988)">
+                    <rect width="48" height="48" rx="8" fill="#409EFF" fill-opacity="0.15" />
+                    <g id="Group 521">
+                      <g id="Rectangle 6018" filter="url(#filter0_d_168_9988)">
+                        <rect x="7" y="9" width="24.7273" height="28.8485" rx="4" fill="url(#paint0_linear_168_9988)" />
                       </g>
-                      <path id="Union" fill-rule="evenodd" clip-rule="evenodd"
-                        d="M34.5418 30.2929C34.9323 29.9024 35.5655 29.9024 35.956 30.2929C36.3465 30.6834 36.3465 31.3166 35.956 31.7071L30.4557 37.2075C30.3266 37.3365 30.1711 37.4229 30.0066 37.4667C29.673 37.5558 29.3022 37.4695 29.0405 37.2077L25.5429 33.7101C25.1524 33.3196 25.1524 32.6865 25.5429 32.2959C25.9334 31.9054 26.5666 31.9054 26.9571 32.2959L29.7479 35.0868L34.5418 30.2929Z"
-                        fill="#FCFFFE" />
+                      <rect id="Rectangle 6019" x="9.0625" y="14.1514" width="20.6061" height="3.09091" rx="1.54545"
+                        fill="white" />
+                      <rect id="Rectangle 6020" x="9.0625" y="20.3335" width="14.4242" height="3.09091" rx="1.54545"
+                        fill="white" />
+                      <rect id="Rectangle 6021" x="9.0625" y="26.5151" width="10.303" height="3.09091" rx="1.54545"
+                        fill="white" />
+                      <g id="Group 520" filter="url(#filter1_b_168_9988)">
+                        <g id="Ellipse 52" filter="url(#filter2_b_168_9988)">
+                          <circle cx="31.7259" cy="30.6365" r="9.27273" fill="#D0E7FE" fill-opacity="0.3" />
+                        </g>
+                        <g id="Group">
+                          <g id="Group_2">
+                            <path id="Vector" d="M31.9043 29.3581L29.0664 26.5156" stroke="#FCFFFE" stroke-width="2"
+                              stroke-miterlimit="10" stroke-linecap="round" />
+                            <path id="Vector_2" d="M34.7403 26.5156L31.9023 29.3581" stroke="#FCFFFE" stroke-width="2"
+                              stroke-miterlimit="10" stroke-linecap="round" />
+                          </g>
+                          <path id="Vector_3" d="M28.6367 30.8755H35.1759" stroke="#FCFFFE" stroke-width="2"
+                            stroke-miterlimit="10" stroke-linecap="round" />
+                          <path id="Vector_4" d="M31.9062 29.2388V35.7885" stroke="#FCFFFE" stroke-width="2"
+                            stroke-miterlimit="10" stroke-linecap="round" />
+                          <path id="Vector_5" d="M28.6367 33.332H35.1759" stroke="#FCFFFE" stroke-width="2"
+                            stroke-miterlimit="10" stroke-linecap="round" />
+                        </g>
+                      </g>
                     </g>
                   </g>
                 </g>
                 <defs>
-                  <filter id="filter0_b_168_10051" x="18.25" y="22" width="24" height="24" filterUnits="userSpaceOnUse"
-                    color-interpolation-filters="sRGB">
+                  <filter id="filter0_d_168_9988" x="-3" y="0" width="44.7266" height="48.8486"
+                    filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                    <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                    <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                      result="hardAlpha" />
+                    <feOffset dy="1" />
+                    <feGaussianBlur stdDeviation="5" />
+                    <feComposite in2="hardAlpha" operator="out" />
+                    <feColorMatrix type="matrix" values="0 0 0 0 0.376471 0 0 0 0 0.686275 0 0 0 0 1 0 0 0 1 0" />
+                    <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_168_9988" />
+                    <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_168_9988" result="shape" />
+                  </filter>
+                  <filter id="filter1_b_168_9988" x="18.4531" y="17.3638" width="26.5469" height="26.5454"
+                    filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
                     <feFlood flood-opacity="0" result="BackgroundImageFix" />
                     <feGaussianBlur in="BackgroundImageFix" stdDeviation="2" />
-                    <feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_168_10051" />
-                    <feBlend mode="normal" in="SourceGraphic" in2="effect1_backgroundBlur_168_10051" result="shape" />
+                    <feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_168_9988" />
+                    <feBlend mode="normal" in="SourceGraphic" in2="effect1_backgroundBlur_168_9988" result="shape" />
                   </filter>
-                  <linearGradient id="paint0_linear_168_10051" x1="10.75" y1="10" x2="30.25" y2="40"
+                  <filter id="filter2_b_168_9988" x="18.4531" y="17.3638" width="26.5469" height="26.5454"
+                    filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                    <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                    <feGaussianBlur in="BackgroundImageFix" stdDeviation="2" />
+                    <feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_168_9988" />
+                    <feBlend mode="normal" in="SourceGraphic" in2="effect1_backgroundBlur_168_9988" result="shape" />
+                  </filter>
+                  <linearGradient id="paint0_linear_168_9988" x1="9.06061" y1="10.0303" x2="29.1515" y2="37.8485"
                     gradientUnits="userSpaceOnUse">
-                    <stop stop-color="#5BCAE6" />
-                    <stop offset="0.945" stop-color="#42AECA" />
+                    <stop stop-color="#74B9FF" />
+                    <stop offset="0.95" stop-color="#4FA7FE" />
                   </linearGradient>
+                  <clipPath id="clip0_168_9988">
+                    <rect width="48" height="48" rx="8" fill="white" />
+                  </clipPath>
                 </defs>
               </svg>
+
               <div>
                 <!-- 数量 -->
                 <p class="quantity-title">发布项目数额</p>
