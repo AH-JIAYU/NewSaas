@@ -40,7 +40,7 @@ const form = ref<any>({
   // 最低结算金额
   minimumAmount: null,
   // 调查限价
-  fixedPrice: "",
+  // fixedPrice: "",
   // 手机号
   phone: "",
   // 邮箱
@@ -91,10 +91,16 @@ onMounted(() => {
 });
 // 获取数据
 async function getDataList() {
-  loading.value = true;
-  const { data } = await api.list();
-  form.value = data || form.value;
-  loading.value = false;
+  try {
+    loading.value = true;
+    const { data } = await api.list();
+    form.value = data || form.value;
+    loading.value = false;
+  } catch (error) {
+
+  } finally {
+    loading.value = false;
+  }
 }
 // 复制地址
 const copyToClipboard = () => {
@@ -107,11 +113,11 @@ const copyToClipboard = () => {
 };
 // 提交数据
 function onSubmit() {
-  if(form.value.email === '') {
+  if (form.value.email === '') {
     formRules.value.email = []
     formRef.value.clearValidate('email');
   }
-  if(form.value.phone === '') {
+  if (form.value.phone === '') {
     formRules.value.phone = []
     formRef.value.clearValidate('phone');
   }
@@ -119,24 +125,30 @@ function onSubmit() {
   if (form.value.id === "") {
     // 校验
     formRef.value &&
-      formRef.value.validate((valid:any) => {
+      formRef.value.validate((valid: any) => {
         if (valid) {
-          loading.value = true;
-          delete form.value.id;
-          api.create(form.value).then(() => {
-            loading.value = false;
-            getDataList();
-            ElMessage.success({
-              message: "新增成功",
-              center: true,
+          try {
+            loading.value = true;
+            delete form.value.id;
+            api.create(form.value).then(() => {
+              loading.value = false;
+              getDataList();
+              ElMessage.success({
+                message: "新增成功",
+                center: true,
+              });
             });
-          });
+          } catch (error) {
+
+          } finally {
+            loading.value = false;
+          }
         }
       });
   } else {
     // 修改
     formRef.value &&
-      formRef.value.validate((valid:any) => {
+      formRef.value.validate((valid: any) => {
         if (valid) {
           try {
             let {
@@ -182,7 +194,10 @@ function onSubmit() {
                 });
               }
             });
-          } catch (error) {}
+          } catch (error) {
+          } finally {
+            loading.value = false;
+          }
         }
       });
   }
@@ -194,38 +209,20 @@ function onSubmit() {
     <PageHeader title="站点设置管理" />
     <PageMain>
       <el-tabs v-model="activeTopTab" type="border-card">
-        <el-form
-          ref="formRef"
-          :model="form"
-          :rules="formRules"
-          label-width="95px"
-          label-position="right"
-          :inline="false"
-        >
+        <el-form ref="formRef" :model="form" :rules="formRules" label-width="100px" label-position="right"
+          :inline="false">
           <el-tab-pane label="基础设置" name="基本设置">
             <el-row :gutter="20">
               <el-col :span="3">
                 <el-form-item label="注册开关">
-                  <el-switch
-                    v-model="form.registerOffOrOn"
-                    active-text="开启"
-                    inline-prompt
-                    inactive-text="关闭"
-                    :active-value="true"
-                    :inactive-value="false"
-                  />
+                  <el-switch v-model="form.registerOffOrOn" active-text="开启" inline-prompt inactive-text="关闭"
+                    :active-value="true" :inactive-value="false" />
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="注册审核">
-                  <el-switch
-                    v-model="form.registerExamineOffOrOn"
-                    active-text="开启"
-                    inline-prompt
-                    inactive-text="关闭"
-                    :active-value="true"
-                    :inactive-value="false"
-                  />
+                  <el-switch v-model="form.registerExamineOffOrOn" active-text="开启" inline-prompt inactive-text="关闭"
+                    :active-value="true" :inactive-value="false" />
                 </el-form-item>
               </el-col>
               <el-col :span="24">
@@ -241,19 +238,16 @@ function onSubmit() {
               <el-col :span="24">
                 <el-form-item label="个性化域名" prop="supplierURL">
                   <el-input v-model="form.supplierURL" style="width: 8rem" />
-                  <el-text class="mx-1"
-                    >.front-supplier.surveyssaas.com</el-text
-                  >
-                  <el-button class="copy" type="primary" link @click="copyToClipboard"
-                    >复制</el-button>
+                  <el-text class="mx-1">.front-supplier.surveyssaas.com</el-text>
+                  <el-button class="copy" type="primary" link @click="copyToClipboard">复制</el-button>
                 </el-form-item>
               </el-col>
-              <!-- <el-col :span="24">
+              <el-col :span="24">
                 <el-form-item label="顶级域名" >
                   <el-input v-model="form.externalSite" style="width: 8rem" />
-                  <el-button class="copy" type="primary" link >设置解析</el-button>
+                  <!-- <el-button class="copy" type="primary" link >设置解析</el-button> -->
                 </el-form-item>
-              </el-col> -->
+              </el-col>
               <el-col :span="24">
                 <el-form-item>
                   <el-button type="primary" @click="onSubmit"> 确认 </el-button>
@@ -271,25 +265,18 @@ function onSubmit() {
                     placeholder=""
                   >
                     <template #append>%</template>
-                  </el-input>
-                </el-form-item>
-              </el-col> -->
+</el-input>
+</el-form-item>
+</el-col> -->
               <el-col :span="24">
                 <el-form-item label="最低结算金额" prop="">
-                  <el-input
-                    v-model.number="form.minimumAmount"
-                    style="width: 18rem"
-                    placeholder=""
-                  />
+                  <el-input v-model.number="form.minimumAmount" style="width: 18rem" placeholder="" />
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="供应商税点" prop="">
-                  <el-input
-                    v-model.number="form.taxRate"
-                    style="width: 18rem"
-                    placeholder=""
-                    ><template #append>%</template>
+                  <el-input v-model.number="form.taxRate" style="width: 18rem" placeholder=""><template
+                      #append>%</template>
                   </el-input>
                 </el-form-item>
               </el-col>
@@ -304,38 +291,22 @@ function onSubmit() {
             <el-row :gutter="20">
               <el-col :span="24">
                 <el-form-item label="电子邮箱" prop="email">
-                  <el-input
-                    style="width: 18rem"
-                    v-model="form.email"
-                    placeholder=""
-                  />
+                  <el-input style="width: 18rem" v-model="form.email" placeholder="" />
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="手机号码" prop="phone">
-                  <el-input
-                    style="width: 18rem"
-                    v-model="form.phone"
-                    placeholder=""
-                  />
+                  <el-input style="width: 18rem" v-model="form.phone" placeholder="" />
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="QQ号码" prop="">
-                  <el-input
-                    style="width: 18rem"
-                    v-model="form.qqCode"
-                    placeholder=""
-                  />
+                  <el-input style="width: 18rem" v-model="form.qqCode" placeholder="" />
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="公司地址" prop="">
-                  <el-input
-                    style="width: 18rem"
-                    v-model="form.address"
-                    placeholder=""
-                  />
+                  <el-input style="width: 18rem" v-model="form.address" placeholder="" />
                 </el-form-item>
               </el-col>
               <el-col :span="24">
@@ -400,6 +371,7 @@ function onSubmit() {
     margin-inline: -20px;
   }
 }
+
 :deep(.el-tabs__nav-scroll) {
   background-color: #fafafa;
 }

@@ -29,19 +29,25 @@ function edit() {
 }
 // 获取数据
 const getDataList = async () => {
-  loading.value = true;
-  storage.local.remove("avatar");
-  const res = await api.list();
-  storage.local.set("avatar", res.data.avatar);
-  avatarStore.permissions = res.data.avatar;
-  countryList.value =
-    (await basicDictionaryStore.country) ||
-    (await basicDictionaryStore.getCountry());
-  form.value = res.data;
-  loading.value = false;
-  countryData.value = countryList.value.find(
-    (item: any) => item.code === form.value.country
-  );
+  try {
+    loading.value = true;
+    storage.local.remove("avatar");
+    const res = await api.list();
+    storage.local.set("avatar", res.data.avatar);
+    avatarStore.permissions = res.data.avatar;
+    countryList.value =
+      (await basicDictionaryStore.country) ||
+      (await basicDictionaryStore.getCountry());
+    form.value = res.data;
+    loading.value = false;
+    countryData.value = countryList.value.find(
+      (item: any) => item.code === form.value.country
+    );
+  } catch (error) {
+
+  } finally {
+    loading.value = false;
+  }
 };
 onMounted(() => {
   getDataList();
@@ -54,29 +60,20 @@ onMounted(() => {
         <div class="avater">
           <el-avatar style="margin-right: 15px" :size="50" :src="form.avatar" />
           <div class="top">
-            <!-- <span class="icon">icon基础版本</span> -->
             <p class="user">{{ form.name }}</p>
             <div class="versionDtail">
-              <div
-                style="margin-right: 5px"
-                class="i-ri:vip-fill w-1.5em h-1.5em"
-              ></div>
+              <div style="margin-right: 5px" class="i-ri:vip-fill w-1.5em h-1.5em"></div>
               试用版
             </div>
           </div>
         </div>
-        <ElButton
-          style="color: #fff; text-align: left"
-          type="primary"
-          link
-          @click="edit"
-          >编辑个人中心>
+        <ElButton style="color: #fff; text-align: left" type="primary" link @click="edit">编辑个人中心>
         </ElButton>
-        <el-text
+        <!-- <el-text
           style="align-self: flex-end; flex: 1; text-align: right; color: #fff"
           class="m-4"
           >ID:13246578913</el-text
-        >
+        > -->
       </div>
       <div class="center">
         <div class="version b-r-5">
@@ -85,9 +82,7 @@ onMounted(() => {
             <p>到期时间</p>
             <p>2029-09-09 10:10:10</p>
           </div>
-          <el-button class="btn" type="info" size="default" @click=""
-            >已开通</el-button
-          >
+          <el-button class="btn" type="info" size="default" @click="">已开通</el-button>
           <ul>
             <li>供应商团队</li>
             <li>供应商团队</li>
@@ -100,9 +95,7 @@ onMounted(() => {
         <div class="version b-r-5">
           <h2>基础版</h2>
           <h1> 999 <span class="yare">/ 年</span></h1>
-          <el-button class="btns" size="default" @click="payment"
-            >立即开通</el-button
-          >
+          <el-button class="btns" size="default" @click="payment">立即开通</el-button>
 
           <ul>
             <li>供应商团队</li>
@@ -112,16 +105,12 @@ onMounted(() => {
             <li>供应商团队</li>
             <li>供应商团队</li>
           </ul>
-          <ElButton class="m-2" style="width: 100%" type="primary" link
-            >功能特权,了解特权及对比 ></ElButton
-          >
+          <ElButton class="m-2" style="width: 100%" type="primary" link>功能特权,了解特权及对比 ></ElButton>
         </div>
         <div class="version b-r-5">
           <h2 style="color: #f6403f">高级版</h2>
           <h1> 9999 <span class="yare">/ 年</span></h1>
-          <el-button class="butn" size="default" @click="payment"
-            >立即开通</el-button
-          >
+          <el-button class="butn" size="default" @click="payment">立即开通</el-button>
 
           <ul>
             <li>供应商团队</li>
@@ -131,20 +120,13 @@ onMounted(() => {
             <li>供应商团队</li>
             <li>供应商团队</li>
           </ul>
-          <ElButton
-            class="m-4"
-            style="width: 100%; color: #f6403f"
-            type="primary"
-            link
-            >功能特权,了解特权及对比 >
+          <ElButton class="m-4" style="width: 100%; color: #f6403f" type="primary" link>功能特权,了解特权及对比 >
           </ElButton>
         </div>
         <div class="version b-r-5">
           <h2 style="color: #d9a550">旗舰版</h2>
           <h1> 99999 <span class="yare">/ 年</span></h1>
-          <el-button class="buttn" size="default" @click="payment"
-            >立即开通</el-button
-          >
+          <el-button class="buttn" size="default" @click="payment">立即开通</el-button>
 
           <ul>
             <li>供应商团队</li>
@@ -154,12 +136,7 @@ onMounted(() => {
             <li>供应商团队</li>
             <li>供应商团队</li>
           </ul>
-          <ElButton
-            class="m-4"
-            style="width: 100%; color: #d9a550"
-            type="primary"
-            link
-            >功能特权,了解特权及对比 >
+          <ElButton class="m-4" style="width: 100%; color: #d9a550" type="primary" link>功能特权,了解特权及对比 >
           </ElButton>
         </div>
       </div>

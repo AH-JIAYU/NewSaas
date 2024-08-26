@@ -22,13 +22,13 @@ async function ParsingEncryption() {
     }
     const arr = formIp.value.split("\n");
     const res = await api.list({ ip: arr });
-    const bbb: any = [];
+    const data: any = [];
     res.data.forEach((item: any) => {
-      bbb.push(
+      data.push(
         `${item.continent.names.zhCN}-${item.country.names.zhCN}-${item.city.names.zhCN}, IP注册地:${item.registeredCountry.names.zhCN}-${item?.subdivisions[0].names.zhCN}`
       );
     });
-    showIp.value = bbb.join("\n");
+    showIp.value = data.join("\n");
   } catch (error) {
     console.log(error);
   }

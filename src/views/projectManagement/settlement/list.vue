@@ -213,11 +213,17 @@ const comCountryId = computed(() => (countryIdList: any) => {
   return lists;
 });
 async function fetchData() {
-  listLoading.value = true;
+  try {
+    listLoading.value = true;
   const { data } = await api.list(queryForm);
   list.value = data.projectSettlementList;
   pagination.value.total = +data.total;
   listLoading.value = false;
+} catch (error) {
+
+}finally {
+  listLoading.value = false;
+}
 }
 onMounted(async () => {
   countryList.value = await basicDictionaryStore.getCountry();
@@ -428,7 +434,7 @@ function handleMoreOperating(command: string, row: any) {
       </el-row>
       <el-table
         ref="tableSortRef"
-        v-loading="false"
+        v-loading="listLoading"
         style="margin-top: 10px"
         row-key="id"
         :data="list"
@@ -581,7 +587,7 @@ function handleMoreOperating(command: string, row: any) {
           <template #default="{ row }">
             <el-text v-if="row.nodeTime === '[]'" class="mx-1">'-'</el-text>
             <el-text v-else class="mx-1"
-              >{{ row.nodeTime[0] }}-{{ row.nodeTime[1] }}</el-text
+              >{{  format(row.nodeTime[0]) }}-{{ row.nodeTime[1] }}</el-text
             >
           </template>
         </el-table-column>

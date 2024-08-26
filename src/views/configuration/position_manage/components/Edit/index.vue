@@ -43,32 +43,48 @@ function onSubmit() {
       formRef.value &&
         formRef.value.validate((valid: any) => {
           if (valid) {
-            delete form.value.id;
-            api.create(form.value).then(() => {
-              ElMessage.success({
-                message: "新增成功",
-                center: true,
+            try {
+              loading.value = true;
+              delete form.value.id;
+              api.create(form.value).then(() => {
+                loading.value = false;
+                ElMessage.success({
+                  message: "新增成功",
+                  center: true,
+                });
+                emits("success");
+                dialogTableVisible.value = false;
+                resolve();
               });
-              emits("success");
-              dialogTableVisible.value = false;
-              resolve();
-            });
+            } catch (error) {
+
+            } finally {
+              loading.value = false;
+            }
           }
         });
     } else {
       formRef.value &&
         formRef.value.validate((valid: any) => {
           if (valid) {
-            const data = toRaw(form.value);
-            api.edit(data).then(() => {
-              ElMessage.success({
-                message: "编辑成功",
-                center: true,
+            try {
+              loading.value = true;
+              const data = toRaw(form.value);
+              api.edit(data).then(() => {
+                loading.value = false;
+                ElMessage.success({
+                  message: "编辑成功",
+                  center: true,
+                });
+                emits("success");
+                dialogTableVisible.value = false;
+                resolve();
               });
-              emits("success");
-              dialogTableVisible.value = false;
-              resolve();
-            });
+            } catch (error) {
+
+            } finally {
+              loading.value = false;
+            }
           }
         });
     }
@@ -76,22 +92,30 @@ function onSubmit() {
 }
 // 获取数据
 async function showEdit(row: any) {
-  if (row) {
-    form.value = JSON.parse(row);
-  } else {
-    form.value = {
-      id: null,
-      // 职位名称
-      name: "",
-      // 是否启用 1启用 2停用
-      active: 1,
-      // 备注
-      remark: '',
-    };
+  try {
+    loading.value = true;
+    if (row) {
+      form.value = JSON.parse(row);
+    } else {
+      form.value = {
+        id: null,
+        // 职位名称
+        name: "",
+        // 是否启用 1启用 2停用
+        active: 1,
+        // 备注
+        remark: '',
+      };
+    }
+    // 标题
+    title.value = row?.id ? "编辑" : "新增";
+    loading.value = false;
+    dialogTableVisible.value = true;
+  } catch (error) {
+
+  } finally {
+    loading.value = false;
   }
-  // 标题
-  title.value = row?.id ? "编辑" : "新增";
-  dialogTableVisible.value = true;
 }
 onMounted(async () => {
   defaultTime.value = new Date();
@@ -103,19 +127,9 @@ defineExpose({ showEdit });
 <template>
   <div v-loading="loading">
     <el-dialog v-model="dialogTableVisible" :title="title" width="700">
-      <el-form
-        ref="formRef"
-        label-width="80px"
-        :model="form"
-        :rules="formRules"
-        :inline="false"
-      >
+      <el-form ref="formRef" label-width="80px" :model="form" :rules="formRules" :inline="false">
         <el-form-item prop="name" label="职位名称">
-          <el-input
-            v-model="form.name"
-            placeholder="请输入职位名称"
-            clearable
-          />
+          <el-input v-model="form.name" placeholder="请输入职位名称" clearable />
         </el-form-item>
         <!-- <el-form-item label="职位日志">
           <el-switch
@@ -129,13 +143,7 @@ defineExpose({ showEdit });
           </el-switch>
         </el-form-item> -->
         <el-form-item label="备注">
-          <el-input
-            v-model="form.remark"
-            placeholder="备注说明"
-            clearable
-            :rows="5"
-            type="textarea"
-          />
+          <el-input v-model="form.remark" placeholder="备注说明" clearable :rows="5" type="textarea" />
         </el-form-item>
       </el-form>
       <template #footer>

@@ -40,12 +40,12 @@ const statusType = [
   { label: "配额满", value: "3,null" },
 ];
 const columns = ref<any>([
-{ prop: "projectClickId", label: "点击ID", sortable: true, checked: true },
-{ prop: "beforeType", label: "变更前", sortable: true, checked: true },
-{ prop: "afterType", label: "变更后", sortable: true, checked: true },
-{ prop: "createTime", label: "创建时间", sortable: true, checked: true },
-{ prop: "remark", label: "备注", sortable: true, checked: true },
-{ prop: "createUserId", label: "操作人", sortable: true, checked: true },
+  { prop: "projectClickId", label: "点击ID", sortable: true, checked: true },
+  { prop: "beforeType", label: "变更前", sortable: true, checked: true },
+  { prop: "afterType", label: "变更后", sortable: true, checked: true },
+  { prop: "createTime", label: "创建时间", sortable: true, checked: true },
+  { prop: "remark", label: "备注", sortable: true, checked: true },
+  { prop: "createUserId", label: "操作人", sortable: true, checked: true },
 ]);
 // 查询参数
 const queryForm = reactive<any>({
@@ -95,12 +95,19 @@ function currentChange(page = 1) {
     fetchData();
   });
 }
+// 获取列表数据
 async function fetchData() {
-  listLoading.value = true;
-  const { data } = await api.list(queryForm);
-  list.value = data.tenantUpdateRecordVOBuilders;
-  pagination.value.total = +data.total;
-  listLoading.value = false;
+  try {
+    listLoading.value = true;
+    const { data } = await api.list(queryForm);
+    list.value = data.tenantUpdateRecordVOBuilders;
+    pagination.value.total = +data.total;
+    listLoading.value = false;
+  } catch (error) {
+
+  } finally {
+    listLoading.value = false;
+  }
 }
 onMounted(async () => {
   const { data } = await apiUser.list({
@@ -108,7 +115,7 @@ onMounted(async () => {
     role: "",
   });
   userList.value = data;
-  columns.value.forEach((item:any) => {
+  columns.value.forEach((item: any) => {
     if (item.checked) {
       checkList.value.push(item.prop);
     }
@@ -118,45 +125,19 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div
-    v-loading="listLoading"
-    :class="{
-      'absolute-container': tableAutoHeight,
-    }"
-  >
+  <div v-loading="listLoading" :class="{
+    'absolute-container': tableAutoHeight,
+  }">
     <PageMain>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
-          <el-form
-            :model="queryForm"
-            size="default"
-            label-width="100px"
-            inline-message
-            inline
-            class="search-form"
-          >
+          <el-form :model="queryForm" size="default" label-width="100px" inline-message inline class="search-form">
             <el-form-item label="">
-              <el-input
-                v-model.trim="queryForm.projectClickIdList"
-                clearable
-                :inline="false"
-                placeholder="点击ID"
-              />
+              <el-input v-model.trim="queryForm.projectClickIdList" clearable :inline="false" placeholder="点击ID" />
             </el-form-item>
             <el-form-item label="">
-              <el-select
-                v-model="queryForm.type"
-                value-key=""
-                placeholder="变更状态"
-                clearable
-                filterable
-              >
-                <el-option
-                  v-for="item in statusType"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                >
+              <el-select v-model="queryForm.type" value-key="" placeholder="变更状态" clearable filterable>
+                <el-option v-for="item in statusType" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -175,9 +156,7 @@ onMounted(async () => {
               </ElButton>
               <ElButton link disabled @click="toggle">
                 <template #icon>
-                  <SvgIcon
-                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
-                  />
+                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
                 </template>
                 {{ fold ? "展开" : "收起" }}
               </ElButton>
@@ -188,167 +167,71 @@ onMounted(async () => {
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>
-          <el-button
-            style="margin-right: 10px"
-            type="primary"
-            size="default"
-            @click="addData"
-          >
+          <el-button style="margin-right: 10px" type="primary" size="default" @click="addData">
             新增
           </el-button>
         </FormLeftPanel>
 
         <FormRightPanel>
           <el-button size="default" @click=""> 导出 </el-button>
-          <TabelControl
-            v-model:border="border"
-            v-model:tableAutoHeight="tableAutoHeight"
-            v-model:checkList="checkList"
-            v-model:columns="columns"
-            v-model:line-height="lineHeight"
-            v-model:stripe="stripe"
-            style="margin-left: 12px"
-            @query-data="currentChange"
-          />
+          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
+            v-model:columns="columns" v-model:line-height="lineHeight" v-model:stripe="stripe" style="margin-left: 12px"
+            @query-data="currentChange" />
         </FormRightPanel>
       </el-row>
-      <el-table
-        ref="tableSortRef"
-        v-loading="false"
-        style="margin-top: 10px"
-        row-key="id"
-        :data="list"
-        :border="border"
-        :size="lineHeight"
-        :stripe="stripe"
-        @selection-change="setSelectRows"
-      >
+      <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="id" :data="list"
+        :border="border" :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows">
         <el-table-column align="center" type="selection" />
         <!-- <el-table-column type="index" align="center" label="序号" width="55" /> -->
-        <el-table-column
-        v-if="checkList.includes('projectClickId')"
-          prop="projectClickId"
-          show-overflow-tooltip
-          align="center"
-          label="点击ID"
-        />
-        <el-table-column
-        v-if="checkList.includes('beforeType')"
-          prop="beforeType"
-          show-overflow-tooltip
-          align="center"
-          label="变更前"
-        >
+        <el-table-column v-if="checkList.includes('projectClickId')" prop="projectClickId" show-overflow-tooltip
+          align="center" label="点击ID" />
+        <el-table-column v-if="checkList.includes('beforeType')" prop="beforeType" show-overflow-tooltip align="center"
+          label="变更前">
           <template #default="{ row }">
-            <el-text
-            type="info"
-              v-if="row.beforeSurveyType === 5 && row.beforeViceType === 0"
-              class="mx-1"
-              >未完成</el-text
-            >
-            <el-text
-            type="success"
-              v-if="row.beforeSurveyType === 1 && row.beforeViceType === 0"
-              class="mx-1"
-              >完成</el-text
-            >
-            <el-text
-            type="success"
-              v-if="row.beforeSurveyType === 1 && row.beforeViceType === 7"
-              class="mx-1"
-              >审核通过</el-text
-            >
-            <el-text
-            type="warning"
-              v-if="row.beforeSurveyType === 1 && row.beforeViceType === 8"
-              class="mx-1"
-              >审核失败</el-text
-            >
-            <el-text
-              v-if="row.beforeSurveyType === 1 && row.beforeViceType === 9"
-              class="mx-1"
-              >数据冻结</el-text
-            >
-            <el-text type="danger" v-if="row.beforeSurveyType === 2" class="mx-1"
-              >被甄别</el-text
-            >
-            <el-text type="primary" v-if="row.beforeSurveyType === 3" class="mx-1"
-              >配额满</el-text
-            >
+            <el-text type="info" v-if="row.beforeSurveyType === 5 && row.beforeViceType === 0"
+              class="mx-1">未完成</el-text>
+            <el-text type="success" v-if="row.beforeSurveyType === 1 && row.beforeViceType === 0"
+              class="mx-1">完成</el-text>
+            <el-text type="success" v-if="row.beforeSurveyType === 1 && row.beforeViceType === 7"
+              class="mx-1">审核通过</el-text>
+            <el-text type="warning" v-if="row.beforeSurveyType === 1 && row.beforeViceType === 8"
+              class="mx-1">审核失败</el-text>
+            <el-text v-if="row.beforeSurveyType === 1 && row.beforeViceType === 9" class="mx-1">数据冻结</el-text>
+            <el-text type="danger" v-if="row.beforeSurveyType === 2" class="mx-1">被甄别</el-text>
+            <el-text type="primary" v-if="row.beforeSurveyType === 3" class="mx-1">配额满</el-text>
           </template>
         </el-table-column>
-        <el-table-column
-        v-if="checkList.includes('afterType')"
-          prop="afterType"
-          show-overflow-tooltip
-          align="center"
-          label="变更后"
-        >
+        <el-table-column v-if="checkList.includes('afterType')" prop="afterType" show-overflow-tooltip align="center"
+          label="变更后">
           <template #default="{ row }">
-            <el-text
-            type="success"
-              v-if="row.afterSurveyType === 1 && row.afterViceType === 0"
-              class="mx-1"
-              >完成</el-text
-            >
-            <el-text
-            type="success"
-              v-if="row.afterSurveyType === 1 && row.afterViceType === 7"
-              class="mx-1"
-              >审核通过</el-text
-            >
-            <el-text
-            type="warning"
-              v-if="row.afterSurveyType === 1 && row.afterViceType === 8"
-              class="mx-1"
-              >审核失败</el-text
-            >
-            <el-text
-              v-if="row.afterSurveyType === 1 && row.afterViceType === 9"
-              class="mx-1"
-              >数据冻结</el-text
-            >
-            <el-text type="danger" v-if="row.afterSurveyType === 2" class="mx-1"
-              >被甄别</el-text
-            >
-            <el-text type="primary" v-if="row.afterSurveyType === 3" class="mx-1"
-              >配额满</el-text
-            >
+            <el-text type="success" v-if="row.afterSurveyType === 1 && row.afterViceType === 0"
+              class="mx-1">完成</el-text>
+            <el-text type="success" v-if="row.afterSurveyType === 1 && row.afterViceType === 7"
+              class="mx-1">审核通过</el-text>
+            <el-text type="warning" v-if="row.afterSurveyType === 1 && row.afterViceType === 8"
+              class="mx-1">审核失败</el-text>
+            <el-text v-if="row.afterSurveyType === 1 && row.afterViceType === 9" class="mx-1">数据冻结</el-text>
+            <el-text type="danger" v-if="row.afterSurveyType === 2" class="mx-1">被甄别</el-text>
+            <el-text type="primary" v-if="row.afterSurveyType === 3" class="mx-1">配额满</el-text>
           </template>
         </el-table-column>
-        <el-table-column
-        v-if="checkList.includes('createTime')"
-          prop="createTime"
-          show-overflow-tooltip
-          align="center"
-          label="创建时间"
-          ><template #default="{ row }">
+        <el-table-column v-if="checkList.includes('createTime')" prop="createTime" show-overflow-tooltip align="center"
+          label="创建时间"><template #default="{ row }">
             <el-tag effect="plain" type="info">{{
-              format(row.createTime)
-            }}</el-tag>
+    format(row.createTime)
+  }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column
-        v-if="checkList.includes('remark')"
-          prop="remark"
-          show-overflow-tooltip
-          align="center"
-          label="备注"
-          ><template #default="{ row }">
+        <el-table-column v-if="checkList.includes('remark')" prop="remark" show-overflow-tooltip align="center"
+          label="备注"><template #default="{ row }">
             {{ row.remark ? row.remark : "-" }}
           </template>
         </el-table-column>
-        <el-table-column
-        v-if="checkList.includes('createUserId')"
-          prop="createUserId"
-          show-overflow-tooltip
-          align="center"
-          label="操作人"
-          ><template #default="{ row }">
+        <el-table-column v-if="checkList.includes('createUserId')" prop="createUserId" show-overflow-tooltip
+          align="center" label="操作人"><template #default="{ row }">
             <div v-for="item in userList" :key="item.id">
               <el-text v-if="item.id === row.createUserId">
-                {{ item.name }}</el-text
-              >
+                {{ item.name }}</el-text>
             </div>
           </template>
         </el-table-column>
@@ -368,18 +251,9 @@ onMounted(async () => {
           <el-empty description="暂无数据" />
         </template>
       </el-table>
-      <ElPagination
-        :current-page="pagination.page"
-        :total="pagination.total"
-        :page-size="pagination.size"
-        :page-sizes="pagination.sizes"
-        :layout="pagination.layout"
-        :hide-on-single-page="false"
-        class="pagination"
-        background
-        @size-change="sizeChange"
-        @current-change="currentChange"
-      />
+      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+        background @size-change="sizeChange" @current-change="currentChange" />
       <Edit @success="fetchData" ref="editRef" />
       <Detail ref="detailRef" />
     </PageMain>

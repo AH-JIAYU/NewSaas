@@ -11,7 +11,7 @@ defineOptions({
 // 路由
 const router = useRouter();
 // 分页
-const { pagination, onSizeChange, onCurrentChange ,onSortChange} = usePagination();
+const { pagination, onSizeChange, onCurrentChange, onSortChange } = usePagination();
 const tabbar = useTabbar();
 const settingsStore = useSettingsStore();
 // 定义表单
@@ -63,12 +63,18 @@ onBeforeUnmount(() => {
 });
 // 获取数据
 function getDataList() {
-  data.value.loading = true;
-  api.list().then((res: any) => {
+  try {
+    data.value.loading = true;
+    api.list().then((res: any) => {
+      data.value.loading = false;
+      data.value.dataList = res.data;
+      pagination.value.total = res.data.length;
+    });
+  } catch (error) {
+
+  } finally {
     data.value.loading = false;
-    data.value.dataList = res.data;
-    pagination.value.total = res.data.length;
-  });
+  }
 }
 // 字段排序
 function sortChange({ prop, order }: { prop: string; order: string }) {
@@ -157,7 +163,7 @@ function onDel(row: any) {
         });
       });
     })
-    .catch(() => {});
+    .catch(() => { });
 }
 </script>
 
@@ -166,29 +172,12 @@ function onDel(row: any) {
     <PageMain>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
-          <el-form
-            :model="data.search"
-            size="default"
-            label-width="100px"
-            inline-message
-            inline
-            class="search-form"
-          >
+          <el-form :model="data.search" size="default" label-width="100px" inline-message inline class="search-form">
             <el-form-item label="">
-              <el-input
-                v-model.trim="data.search.title"
-                clearable
-                :inline="false"
-                placeholder="角色ID"
-              />
+              <el-input v-model.trim="data.search.title" clearable :inline="false" placeholder="角色ID" />
             </el-form-item>
             <el-form-item label="">
-              <el-input
-                v-model.trim="data.search.title"
-                clearable
-                :inline="false"
-                placeholder="角色名称"
-              />
+              <el-input v-model.trim="data.search.title" clearable :inline="false" placeholder="角色名称" />
             </el-form-item>
             <!-- <el-form-item v-show="!fold" label="">
               <el-select
@@ -239,9 +228,7 @@ function onDel(row: any) {
               </ElButton>
               <ElButton link @click="toggle">
                 <template #icon>
-                  <SvgIcon
-                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
-                  />
+                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
                 </template>
                 {{ fold ? "展开" : "收起" }}
               </ElButton>
@@ -255,43 +242,19 @@ function onDel(row: any) {
           新增角色管理
         </ElButton>
       </ElSpace>
-      <ElTable
-        v-loading="data.loading"
-        class="my-4"
-        :data="data.dataList"
-        stripe
-        highlight-current-row
-        border
-        height="100%"
-        @sort-change="sortChange"
-        @selection-change="data.batch.selectionDataList = $event"
-      >
-        <ElTableColumn
-          v-if="data.batch.enable"
-          type="selection"
-          align="center"
-          fixed
-        />
+      <ElTable v-loading="data.loading" class="my-4" :data="data.dataList" stripe highlight-current-row border
+        height="100%" @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
+        <ElTableColumn v-if="data.batch.enable" type="selection" align="center" fixed />
         <ElTableColumn prop="id" align="center" label="角色ID" />
         <ElTableColumn prop="roleName" align="center" label="角色名称" />
         <ElTableColumn prop="count" align="center" label="账户数" />
         <ElTableColumn prop="roleName" align="center" label="备注" />
         <ElTableColumn label="操作" width="250" align="center" fixed="right">
           <template #default="scope">
-            <ElButton
-              type="primary"
-              size="small"
-              plain
-              @click="onEdit(scope.row)"
-            >
+            <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">
               编辑
             </ElButton>
-            <ElButton
-              type="danger"
-              size="small"
-              plain
-              @click="onDel(scope.row)"
-            >
+            <ElButton type="danger" size="small" plain @click="onDel(scope.row)">
               删除
             </ElButton>
           </template>
@@ -300,27 +263,12 @@ function onDel(row: any) {
           <el-empty description="暂无数据" />
         </template>
       </ElTable>
-      <ElPagination
-        :current-page="pagination.page"
-        :total="pagination.total"
-        :page-size="pagination.size"
-        :page-sizes="pagination.sizes"
-        :layout="pagination.layout"
-        :hide-on-single-page="false"
-        class="pagination"
-        background
-        @size-change="sizeChange"
-        @current-change="currentChange"
-      />
+      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+        background @size-change="sizeChange" @current-change="currentChange" />
     </PageMain>
-    <FormMode
-      v-if="data.formMode === 'dialog' || data.formMode === 'drawer'"
-      :id="data.formModeProps.id"
-      v-model="data.formModeProps.visible"
-      :row="data.formModeProps.row"
-      :mode="data.formMode"
-      @success="getDataList"
-    />
+    <FormMode v-if="data.formMode === 'dialog' || data.formMode === 'drawer'" :id="data.formModeProps.id"
+      v-model="data.formModeProps.visible" :row="data.formModeProps.row" :mode="data.formMode" @success="getDataList" />
   </div>
 </template>
 

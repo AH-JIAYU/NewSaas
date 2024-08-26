@@ -6,7 +6,7 @@ const { pagination, getParams, onSizeChange, onCurrentChange } =
   usePagination(); // 分页
 
 const drawerisible = ref(false);
-const checkRef = ref("");
+const listLoading = ref<boolean>(false);
 const list = ref([]); // 列表
 // 请求接口携带参数
 const queryForm = reactive<any>({
@@ -19,13 +19,21 @@ async function showEdit(row: any) {
 }
 // 获取列表
 async function fetchData() {
-  const params: any = {
-    ...getParams(),
-    ...queryForm,
-  };
-  const { data } = await obtainLoading(api.getProjectList(params));
-  list.value = data.getMemberGroupProjectInfoList;
-  pagination.value.total = data.total;
+  try {
+    listLoading.value = true;
+    const params: any = {
+      ...getParams(),
+      ...queryForm,
+    };
+    const { data } = await obtainLoading(api.getProjectList(params));
+    list.value = data.getMemberGroupProjectInfoList;
+    pagination.value.total = data.total;
+    listLoading.value = true;
+  } catch (error) {
+
+  } finally {
+    listLoading.value = true;
+  }
 }
 
 // 每页数量切换
@@ -72,31 +80,22 @@ defineExpose({
           {{ row.participation||0 }}/ {{ row.complete||0 }}/ {{ row.num ||0}}/
           {{ row.limitedQuantity ||0}}
         </template>
-      </el-table-column>
+</el-table-column>
 
-      <template #empty>
+<template #empty>
         <el-empty class="vab-data-empty" description="暂无数据" />
       </template>
-    </el-table>
-    <template #footer>
+</el-table>
+<template #footer>
       <div class="dialog-footer">
         <el-button @click="close"> 取消 </el-button>
         <el-button type="primary" @click="close"> 确定 </el-button>
       </div>
     </template>
-    <ElPagination
-      :current-page="pagination.page"
-      :total="pagination.total"
-      :page-size="pagination.size"
-      :page-sizes="pagination.sizes"
-      :layout="pagination.layout"
-      :hide-on-single-page="false"
-      class="pagination"
-      background
-      @size-change="sizeChange"
-      @current-change="currentChange"
-    />
-  </el-dialog>
+<ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+  :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination" background
+  @size-change="sizeChange" @current-change="currentChange" />
+</el-dialog>
 </template>
 
 <style scoped lang="scss">

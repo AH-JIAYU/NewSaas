@@ -35,10 +35,18 @@ const formRules = ref<FormRules>({
 });
 // 获取最低结算金额
 const getList = async () => {
-  const res = await api.getMemberBillAvailableBalance({});
-  data.value.memberSettlementInfoList =
-    res.data.memberBillAvailableBalanceInfoList;
-  form.value.minimumAmount = res.data.minimumAmount;
+  try {
+    loading.value = true;
+    const res = await api.getMemberBillAvailableBalance({});
+    data.value.memberSettlementInfoList =
+      res.data.memberBillAvailableBalanceInfoList;
+    form.value.minimumAmount = res.data.minimumAmount;
+    loading.value = false;
+  } catch (error) {
+
+  } finally {
+    loading.value = false;
+  }
 };
 // 修改换指定会员
 const changeMemberSettlement = (val: any) => {
@@ -59,13 +67,21 @@ defineExpose({
       formRef.value &&
         formRef.value.validate((valid) => {
           if (valid) {
-            api.create(form.value).then(() => {
-              ElMessage.success({
-                message: "新增成功",
-                center: true,
+            try {
+              loading.value = true;
+              api.create(form.value).then(() => {
+                loading.value = false;
+                ElMessage.success({
+                  message: "新增成功",
+                  center: true,
+                });
+                resolve();
               });
-              resolve();
-            });
+            } catch (error) {
+
+            } finally {
+              loading.value = false;
+            }
           }
         });
     });
@@ -75,13 +91,7 @@ defineExpose({
 
 <template>
   <div v-loading="loading">
-    <ElForm
-      ref="formRef"
-      :model="form"
-      :rules="formRules"
-      label-width="120px"
-      label-suffix="："
-    >
+    <ElForm ref="formRef" :model="form" :rules="formRules" label-width="120px" label-suffix="：">
       <ElFormItem label="结算方式">
         <el-radio-group v-model="form.settlementType">
           <el-radio :value="1" size="large"> 全部结算 </el-radio>
@@ -98,21 +108,10 @@ defineExpose({
       </template>
       <template v-else>
         <ElFormItem label="指定会员">
-          <el-select
-            placeholder="Select"
-            v-model="data.memberSettlementInfoSelect"
-            clearable
-            filterable
-            multiple
-            collapse-tags
-            @change="changeMemberSettlement"
-          >
-            <el-option
-              v-for="item in data.memberSettlementInfoList"
-              :key="item.id"
-              :value="item.id"
-              :label="item.memberName"
-            ></el-option>
+          <el-select placeholder="Select" v-model="data.memberSettlementInfoSelect" clearable filterable multiple
+            collapse-tags @change="changeMemberSettlement">
+            <el-option v-for="item in data.memberSettlementInfoList" :key="item.id" :value="item.id"
+              :label="item.memberName"></el-option>
           </el-select>
         </ElFormItem>
         <ElFormItem label="最低结算额度">
@@ -122,17 +121,13 @@ defineExpose({
           <ElFormItem label="">
             <p>
               {{ item.memberId }} - {{ item.memberName }} - 可用余额：{{
-                item.availableBalance
-              }}
+    item.availableBalance
+  }}
             </p>
           </ElFormItem>
           <ElFormItem label="结算金额">
-            <ElInputNumber
-              controls-position="right"
-              v-model="item.settlementAmount"
-              :max="item.availableBalance"
-              placeholder=""
-            />
+            <ElInputNumber controls-position="right" v-model="item.settlementAmount" :max="item.availableBalance"
+              placeholder="" />
           </ElFormItem>
         </template>
       </template>

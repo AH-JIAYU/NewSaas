@@ -151,16 +151,22 @@ onBeforeUnmount(() => {
 });
 // 获取数据
 function getDataList() {
-  data.value.loading = true;
-  const params = {
-    ...getParams(),
-    ...data.value.search,
-  };
-  api.list(params).then((res: any) => {
+  try {
+    data.value.loading = true;
+    const params = {
+      ...getParams(),
+      ...data.value.search,
+    };
+    api.list(params).then((res: any) => {
+      data.value.loading = false;
+      data.value.dataList = res.data.data;
+      pagination.value.total = +res.data.total;
+    });
+  } catch (error) {
+
+  } finally {
     data.value.loading = false;
-    data.value.dataList = res.data.data;
-    pagination.value.total = +res.data.total;
-  });
+  }
 }
 // 加减款
 function handlePlusMinusPayments(row: any) {
@@ -228,13 +234,10 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
                 @clear="currentChange()" />
             </ElFormItem>
             <ElFormItem v-show="!fold">
-                <el-select v-model="data.search.positionId" value-key="" placeholder="职位" clearable filterable >
-                <el-option v-for="item in positionManageList"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id">
+              <el-select v-model="data.search.positionId" value-key="" placeholder="职位" clearable filterable>
+                <el-option v-for="item in positionManageList" :key="item.id" :label="item.name" :value="item.id">
                 </el-option>
-                </el-select>
+              </el-select>
 
             </ElFormItem>
             <ElFormItem>

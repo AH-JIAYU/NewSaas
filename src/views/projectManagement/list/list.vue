@@ -176,20 +176,26 @@ function onReset() {
 }
 // 获取集合
 async function fetchData() {
-  listLoading.value = true;
-  const params = {
-    ...getParams(),
-    ...search.value,
-  };
-  if (search.value.time && !!search.value.time.length) {
-    params.beginTime = search.value.time[0] || "";
-    params.endTime = search.value.time[1] || "";
+  try {
+    listLoading.value = true;
+    const params = {
+      ...getParams(),
+      ...search.value,
+    };
+    if (search.value.time && !!search.value.time.length) {
+      params.beginTime = search.value.time[0] || "";
+      params.endTime = search.value.time[1] || "";
+    }
+    const { data } = await api.list(params);
+    countryType.value = data.currencyType;
+    list.value = data.getChildrenProjectInfoList;
+    pagination.value.total = data.total;
+    listLoading.value = false;
+  } catch (error) {
+
+  } finally {
+    listLoading.value = false;
   }
-  const { data } = await api.list(params);
-  countryType.value = data.currencyType;
-  list.value = data.getChildrenProjectInfoList;
-  pagination.value.total = data.total;
-  listLoading.value = false;
 }
 const countryList: any = ref([]); //所有国家一维
 const customerList: any = ref([]); //客户列表
@@ -351,7 +357,7 @@ onMounted(async () => {
             {{ row.limitedQuantity || "-" }}
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('allocationType')" align="center" label="分配类型"  width="100">
+        <el-table-column v-if="checkList.includes('allocationType')" align="center" label="分配类型" width="100">
           <template #default="{ row }">
             <el-button text @click="viewAllocations(row, 1)" type="danger"
               v-if="row.allocationType === 1">自动分配</el-button>
@@ -429,8 +435,8 @@ onMounted(async () => {
         </el-table-column>
         <el-table-column align="center" fixed="right" label="操作" width="240">
           <template #default="{ row }">
-            <el-button v-if="row.allocationStatus === 1" plain :disabled="row.isOnline === 2" type="primary" size="small"
-              @click="distribution(row)">
+            <el-button v-if="row.allocationStatus === 1" plain :disabled="row.isOnline === 2" type="primary"
+              size="small" @click="distribution(row)">
               分配
             </el-button>
             <el-button v-else plain type="primary" :disabled="row.isOnline === 2" size="small" @click="reassign(row)">

@@ -35,7 +35,8 @@ async function showEdit(row: any, val: any) {
 }
 // 提交数据
 async function onSubmit() {
-  loading.value = true;
+  try {
+    loading.value = true;
   const res = await api.InvoicingSettlementEdit(form.value);
   if (res.status === -1) {
     return ElMessage.warning({
@@ -50,6 +51,11 @@ async function onSubmit() {
     center: true,
   });
   closeHandler();
+} catch (error) {
+
+}finally {
+  loading.value = false;
+}
 }
 // 弹框关闭事件
 function closeHandler() {

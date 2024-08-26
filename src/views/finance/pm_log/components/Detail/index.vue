@@ -42,7 +42,6 @@ const data = ref<any>({
   },
 });
 const drawerisible = ref<boolean>(false);
-const checkRef = ref<any>();
 const detailData = ref<any>(); // 详情数据
 async function showEdit(row: any) {
   data.value.search.id = row.id
@@ -50,19 +49,25 @@ async function showEdit(row: any) {
   drawerisible.value = true;
 }
 const getDataList = async () => {
-  data.value.loading = true;
-  const params = {
-    ...data.value.search,
-  };
-  const res = await api.getStaffFinancial(params)
-  detailData.value = res.data.itemList;
-  pagination.value.total = +res.data.total;
-  data.value.loading = false;
-  res.status === 1 &&
-    ElMessage.success({
-      message: "查询成功",
-      center: true,
-    });
+  try {
+    data.value.loading = true;
+    const params = {
+      ...data.value.search,
+    };
+    const res = await api.getStaffFinancial(params)
+    detailData.value = res.data.itemList;
+    pagination.value.total = +res.data.total;
+    data.value.loading = false;
+    res.status === 1 &&
+      ElMessage.success({
+        message: "查询成功",
+        center: true,
+      });
+  } catch (error) {
+
+  } finally {
+    data.value.loading = false;
+  }
 }
 // 每页数量切换
 function sizeChange(size: number) {

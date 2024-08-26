@@ -77,25 +77,31 @@ onBeforeUnmount(() => {
 });
 
 function getDataList() {
-  data.value.loading = true;
-  const params: any = {
-    clickTime: data.value.search.type,
-  };
-  api.dataList(params).then((res: any) => {
+  try {
+    data.value.loading = true;
+    const params: any = {
+      clickTime: data.value.search.type,
+    };
+    api.dataList(params).then((res: any) => {
+      data.value.loading = false;
+      // 完成数排名
+      data.value.memberDataCenterCompletedVOList =
+        res.data.memberDataCenterCompletedVOList;
+      // 退款额排名
+      data.value.memberDataCenterRefundVOList =
+        res.data.memberDataCenterRefundVOList;
+      // 业绩排名
+      data.value.memberDataCenterPriceVOList =
+        res.data.memberDataCenterPriceVOList;
+      // 数据总揽
+      data.value.dataScreening = res.data.memberDataCenterOverallOverviewVOList;
+      pagination.value.total = res.data.total;
+    });
+  } catch (error) {
+
+  } finally {
     data.value.loading = false;
-    // 完成数排名
-    data.value.memberDataCenterCompletedVOList =
-      res.data.memberDataCenterCompletedVOList;
-    // 退款额排名
-    data.value.memberDataCenterRefundVOList =
-      res.data.memberDataCenterRefundVOList;
-    // 业绩排名
-    data.value.memberDataCenterPriceVOList =
-      res.data.memberDataCenterPriceVOList;
-    // 数据总揽
-    data.value.dataScreening = res.data.memberDataCenterOverallOverviewVOList;
-    pagination.value.total = res.data.total;
-  });
+  }
 }
 </script>
 
@@ -114,35 +120,35 @@ function getDataList() {
           <p class="showDataP">今日参与量</p>
           <div class="showDataCount">
             <span class="showDataSpanLeft">{{ data.dataScreening?.participationVolume || 0 }}</span>
-            <span class="showDataSpanRight"><span class="dd"></span><span class="participate">昨日：668</span></span>
+            <span class="showDataSpanRight"><span class="dd"></span><span class="participate">{{data.search.type === 'month' ? '上月' : '昨日'}}：{{ data.dataScreening?.participationVolumeDifference || 0 }}</span></span>
           </div>
         </div>
         <div class="showDataCol">
           <p class="showDataP">今日完成量</p>
           <div class="showDataCount">
             <span class="showDataSpanLeft">{{ data.dataScreening?.completedQuantity || 0 }}</span>
-            <span class="showDataSpanRight"><span class="dd"></span><span class="participate">昨日：668</span></span>
+            <span class="showDataSpanRight"><span class="dd"></span><span class="participate">{{data.search.type === 'month' ? '上月' : '昨日'}}：{{ data.dataScreening?.completedQuantityDifference || 0 }}</span></span>
           </div>
         </div>
         <div class="showDataCol">
           <p class="showDataP">今日营业额</p>
           <div class="showDataCount">
             <span class="showDataSpanLeft">{{ data.dataScreening?.turnover || 0 }}</span>
-            <span class="showDataSpanRight"><span class="dd"></span><span class="participate">昨日：668</span></span>
+            <span class="showDataSpanRight"><span class="dd"></span><span class="participate">{{data.search.type === 'month' ? '上月' : '昨日'}}：{{ data.dataScreening?.turnoverDifference || 0 }}</span></span>
           </div>
         </div>
         <div class="showDataCol">
           <p class="showDataP">待审金额</p>
           <div class="showDataCount">
             <span class="showDataSpanLeft">{{ data.dataScreening?.pendingBalance || 0 }}</span>
-            <span class="showDataSpanRight"><span class="dd"></span><span class="participate">昨日：668</span></span>
+            <span class="showDataSpanRight"><span class="dd"></span><span class="participate">{{data.search.type === 'month' ? '上月' : '昨日'}}：{{ data.dataScreening?.pendingBalanceDifference || 0 }}</span></span>
           </div>
         </div>
         <div class="showDataCol">
           <p class="showDataP">可用余额</p>
           <div class="showDataCount">
             <span class="showDataSpanLeft">{{ data.dataScreening?.availableBalance || 0 }}</span>
-            <span class="showDataSpanRight"><span class="dd"></span><span class="participate">昨日：668</span></span>
+            <span class="showDataSpanRight"><span class="dd"></span><span class="participate">{{data.search.type === 'month' ? '上月' : '昨日'}}：{{ data.dataScreening?.availableBalanceDifference || 0 }}</span></span>
           </div>
         </div>
       </div>
@@ -153,7 +159,7 @@ function getDataList() {
           <el-table :data="data.memberDataCenterCompletedVOList" class="tabless"
             :style="{ '--el-table-border-color': 'none' }">
             <el-table-column align="center" type="index" />
-            <el-table-column show-overflow-tooltip align="center" prop="memberId" label="会员ID">
+            <el-table-column show-overflow-tooltip width="180" align="center" prop="memberId" label="会员ID">
               <template #default="{ row }">
                 <span style="color: #0F0F0F;">{{ row.memberId ? row.memberId : '-' }}</span>
               </template>
@@ -175,9 +181,9 @@ function getDataList() {
         </div>
         <div class="rankingCol">
           <p class="rankingColP"><span class="rankingColSpan"></span>退款排行榜</p>
-          <el-table :data="data.supplierDataCenterCompletedVOList" :style="{ '--el-table-border-color': 'none' }">
+          <el-table :data="data.memberDataCenterRefundVOList" :style="{ '--el-table-border-color': 'none' }">
             <el-table-column align="center" type="index" />
-            <el-table-column show-overflow-tooltip align="center" prop="memberId" label="会员ID">
+            <el-table-column show-overflow-tooltip width="180" align="center" prop="memberId" label="会员ID">
               <template #default="{ row }">
                 <span style="color: #0F0F0F;">{{ row.memberId ? row.memberId : '-' }}</span>
               </template>
@@ -194,7 +200,7 @@ function getDataList() {
             </el-table-column>
             <el-table-column show-overflow-tooltip align="center" prop="refund" label="退款金额">
               <template #default="{ row }">
-                <span style="color: #0F0F0F;">{{ row.refund ? row.refund : '-' }}</span>
+                <span style="color: #0F0F0F;">{{ row.refund ? row.refund : 0 }}</span>
               </template>
             </el-table-column>
             <template #empty>
@@ -204,9 +210,9 @@ function getDataList() {
         </div>
         <div class="rankingCol">
           <p class="rankingColP"><span class="rankingColSpan"></span>业绩排行榜</p>
-          <el-table :data="data.supplierDataCenterCompletedVOList" :style="{ '--el-table-border-color': 'none' }">
+          <el-table :data="data.memberDataCenterPriceVOList" :style="{ '--el-table-border-color': 'none' }">
             <el-table-column align="center" type="index" />
-            <el-table-column show-overflow-tooltip align="center" prop="memberId" label="会员ID">
+            <el-table-column show-overflow-tooltip width="180" align="center" prop="memberId" label="会员ID">
               <template #default="{ row }">
                 <span style="color: #0F0F0F;">{{ row.memberId ? row.memberId : '-' }}</span>
               </template>
@@ -218,7 +224,7 @@ function getDataList() {
             </el-table-column>
             <el-table-column show-overflow-tooltip align="center" prop="price" label="今日收入">
               <template #default="{ row }">
-                <span style="color: #00C738;">{{ row.price ? row.price : '-' }}</span>
+                <span style="color: #00C738;">{{ row.price ? row.price : 0 }}</span>
               </template>
             </el-table-column>
             <template #empty>
@@ -399,7 +405,7 @@ function getDataList() {
 
       .showDataSpanLeft {
         display: inline-block;
-        width: 2.8128rem;
+        min-width: 2.8128rem;
         height: 36px;
         font-family: DINPro, DINPro;
         font-weight: 500;
@@ -432,7 +438,7 @@ function getDataList() {
 
         .participate {
           display: inline-block;
-          width: 3.6252rem;
+          min-width: 3.6252rem;
           height: 16.992px;
           font-family: PingFang SC, PingFang SC;
           font-weight: 400;
@@ -539,6 +545,7 @@ function getDataList() {
     padding: 0 !important;
 
   }
+
   .el-table__empty-block {
     margin-top: 100px;
   }

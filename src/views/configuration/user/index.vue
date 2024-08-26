@@ -149,28 +149,34 @@ async function getDictionaryList() {
   pagination.value.total = +res.data.total;
 }
 onMounted(async () => {
-  // loading加载开始
-  dictionary.value.loading = true;
-  // 国家
-  filterCountry.value = await useStoreCountry.getCountry();
-  // 部门
-  departmentList.value = await departmentStore?.getDepartment() || [];
-  // 职位
-  positionManageList.value = await usePositionManage?.getPositionManage() || [];
-  // 小组
-  groupManageList.value = await useGroupManage?.getGroupManage() || [];
-  // 左侧树状数据
-  const ress = await apiDep.createEvery();
-  dictionary.value.tree = ress.data.result;
-  // 获取列表数据
-  getDictionaryList();
-  columns.value.forEach((item: any) => {
-    if (item.checked) {
-      dictionaryItem.value.checkList.push(item.prop);
-    }
-  });
-  // loading加载结束
-  dictionary.value.loading = false;
+  try {
+    // loading加载开始
+    dictionary.value.loading = true;
+    // 国家
+    filterCountry.value = await useStoreCountry.getCountry();
+    // 部门
+    departmentList.value = await departmentStore?.getDepartment() || [];
+    // 职位
+    positionManageList.value = await usePositionManage?.getPositionManage() || [];
+    // 小组
+    groupManageList.value = await useGroupManage?.getGroupManage() || [];
+    // 左侧树状数据
+    const ress = await apiDep.createEvery();
+    dictionary.value.tree = ress.data.result;
+    // 获取列表数据
+    getDictionaryList();
+    columns.value.forEach((item: any) => {
+      if (item.checked) {
+        dictionaryItem.value.checkList.push(item.prop);
+      }
+    });
+    // loading加载结束
+    dictionary.value.loading = false;
+  } catch (error) {
+
+  } finally {
+    dictionary.value.loading = false;
+  }
 });
 
 watch(
@@ -211,29 +217,35 @@ function onChangeStatus(row: any) {
       "确认信息"
     )
       .then(() => {
-        dictionary.value.loading = true;
-        api
-          .edit({
-            id: row.id,
-            account: null,
-            name: null,
-            sex: null,
-            phoneNumber: null,
-            active: !row.active,
-          })
-          .then(() => {
-            ElMessage.success({
-              message: `${!row.active ? "启用" : "禁用"}成功`,
-              center: true,
+        try {
+          dictionary.value.loading = true;
+          api
+            .edit({
+              id: row.id,
+              account: null,
+              name: null,
+              sex: null,
+              phoneNumber: null,
+              active: !row.active,
+            })
+            .then(() => {
+              ElMessage.success({
+                message: `${!row.active ? "启用" : "禁用"}成功`,
+                center: true,
+              });
+              getDictionaryList();
+              dictionary.value.loading = false;
+              return resolve(true);
+            })
+            .catch(() => {
+              dictionary.value.loading = false;
+              return resolve(false);
             });
-            getDictionaryList();
-            dictionary.value.loading = false;
-            return resolve(true);
-          })
-          .catch(() => {
-            dictionary.value.loading = false;
-            return resolve(false);
-          });
+        } catch (error) {
+
+        } finally {
+          dictionary.value.loading = false;
+        }
       })
       .catch(() => {
         return resolve(false);
@@ -337,9 +349,9 @@ function onReset() {
       <div class="leftTree">
         <div v-if="dictionary.tree.length" class="leftData" :span="3">
           <!-- <el-input v-model="userName" placeholder="可输入用户名查找" clearable @blur="blurUserName" /> -->
-          <el-tree style="max-width: 37.5rem; min-height: 45.4375rem; padding: 10px;" :data="dictionary.tree" ref="treeRef"
-            show-checkbox node-key="id" default-expand-all :expand-on-click-node="false" :props="defaultProps"
-            @node-click="dictionaryClick" />
+          <el-tree style="max-width: 37.5rem; min-height: 45.4375rem; padding: 10px;" :data="dictionary.tree"
+            ref="treeRef" show-checkbox node-key="id" default-expand-all :expand-on-click-node="false"
+            :props="defaultProps" @node-click="dictionaryClick" />
         </div>
         <!-- <template #leftSide>
           <ElScrollbar class="tree">
@@ -501,7 +513,7 @@ function onReset() {
               :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
               background @size-change="sizeChange" @current-change="currentChange" />
           </div>
-      </PageMain>
+        </PageMain>
         <!-- <div
           v-show="!dictionaryItem.search.catalogueId"
           class="dictionary-container"
@@ -656,9 +668,11 @@ function onReset() {
     background-color: #fff;
   }
 }
+
 :deep(.el-table__empty-block) {
   height: 100% !important;
 }
+
 :deep(.page-main) {
   height: 100% !important;
 }

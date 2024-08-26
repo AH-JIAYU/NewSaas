@@ -105,30 +105,38 @@ const formRules = ref<FormRules>({
 });
 // 获取数据
 async function showEdit(row: any) {
-  title.value = row?.id ? "编辑" : "新增";
-  const listData = JSON.parse(row);
-  form.value.groupId = listData.id;
-  // 部门id
-  department.value = listData.departmentId
-  const params = {
-    page: 1,
-    limit: 10,
-    groupId: listData.id,
-  };
-  // 获取组长信息
-  const res = await api.list(params);
-  if (res?.data.data) {
-    res.data.data.forEach((item: any) => {
-      form.value?.menuId?.push(item.id);
-      dataList.value.push(item);
-    });
+  try {
+    loading.value = true;
+    title.value = row?.id ? "编辑" : "新增";
+    const listData = JSON.parse(row);
+    form.value.groupId = listData.id;
+    // 部门id
+    department.value = listData.departmentId
+    const params = {
+      page: 1,
+      limit: 10,
+      groupId: listData.id,
+    };
+    // 获取组长信息
+    const res = await api.list(params);
+    if (res?.data.data) {
+      res.data.data.forEach((item: any) => {
+        form.value?.menuId?.push(item.id);
+        dataList.value.push(item);
+      });
+    }
+    // 左侧树状数据
+    const ress = await apiDep.createEvery();
+    departmentList.value = ress.data.result;
+    // 筛选需要的数据
+    departmentList.value = departmentList.value.filter((departments: any) => departments.id === department.value)
+    loading.value = false;
+    dialogTableVisible.value = true;
+  } catch (error) {
+
+  } finally {
+    loading.value = false;
   }
-  // 左侧树状数据
-  const ress = await apiDep.createEvery();
-  departmentList.value = ress.data.result;
-  // 筛选需要的数据
-  departmentList.value = departmentList.value.filter((departments: any) => departments.id === department.value)
-  dialogTableVisible.value = true;
 }
 const blurUserName = () => {
   if (userName) {
@@ -217,72 +225,74 @@ function onSubmit() {
     formRef.value &&
       formRef.value.validate((valid: any) => {
         if (valid) {
-          form.value.userInfo = []
-          // // 获取选中的所有子节点
-          // const tree = treeRef.value.getCheckedKeys();
-          // // 获取所有半选的主节点
-          // const halltree = treeRef.value.getHalfCheckedKeys();
-          // // 组合一下
-          // const menupath = tree.concat(halltree);
-          delete form.value.menuId;
-          let number: any = 0
-          groupLeaderList.value.forEach((item: any) => {
-            if (item.commission) {
-              number += item.commission
-            }
-            let obj = {
-              userId: item.memberId,
-              commission: item.commission,
-            };
-            form.value.userInfo.push(obj);
-          });
-          dataList.value.forEach((item: any) => {
-            if (item.commission) {
-              number += item.commission
-            }
-            let obj
-            if (item.memberId) {
-              obj = {
+          try {
+            loading.value = true;
+            form.value.userInfo = []
+            delete form.value.menuId;
+            let number: any = 0
+            groupLeaderList.value.forEach((item: any) => {
+              if (item.commission) {
+                number += item.commission
+              }
+              let obj = {
                 userId: item.memberId,
                 commission: item.commission,
               };
-            } else {
-              obj = {
-                userId: item.id,
-                commission: item.commission,
-              };
-            }
-            form.value.userInfo.push(obj);
-          });
-          // 使用 Set 来存储已见的 userId
-          const seenUserIds = new Set();
-          form.value.userInfo = form.value.userInfo.filter((user: any) => {
-            const { userId } = user;
-            if (seenUserIds.has(userId)) {
-              // 如果 userId 已存在，过滤掉该条记录
-              return false;
-            }
-            // 如果 userId 未存在，添加到 Set 中
-            seenUserIds.add(userId);
-            // 保留该条记录
-            return true;
-          })
-          if (number > 100) {
-            ElMessage.warning({
-              message: "提成比例不能超过100",
-              center: true,
+              form.value.userInfo.push(obj);
             });
-            return
+            dataList.value.forEach((item: any) => {
+              if (item.commission) {
+                number += item.commission
+              }
+              let obj
+              if (item.memberId) {
+                obj = {
+                  userId: item.memberId,
+                  commission: item.commission,
+                };
+              } else {
+                obj = {
+                  userId: item.id,
+                  commission: item.commission,
+                };
+              }
+              form.value.userInfo.push(obj);
+            });
+            // 使用 Set 来存储已见的 userId
+            const seenUserIds = new Set();
+            form.value.userInfo = form.value.userInfo.filter((user: any) => {
+              const { userId } = user;
+              if (seenUserIds.has(userId)) {
+                // 如果 userId 已存在，过滤掉该条记录
+                return false;
+              }
+              // 如果 userId 未存在，添加到 Set 中
+              seenUserIds.add(userId);
+              // 保留该条记录
+              return true;
+            })
+            if (number > 100) {
+              ElMessage.warning({
+                message: "提成比例不能超过100",
+                center: true,
+              });
+              return
+            }
+            api.edit(form.value).then(() => {
+              loading.value = false;
+              ElMessage.success({
+                message: "操作成功",
+                center: true,
+              });
+              emits("success");
+              dialogTableVisible.value = false;
+              resolve();
+            });
+          } catch (error) {
+
+          } finally {
+            loading.value = false;
           }
-          api.edit(form.value).then(() => {
-            ElMessage.success({
-              message: "操作成功",
-              center: true,
-            });
-            emits("success");
-            dialogTableVisible.value = false;
-            resolve();
-          });
         }
       });
   });

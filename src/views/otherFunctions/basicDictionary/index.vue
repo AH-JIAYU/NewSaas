@@ -54,14 +54,20 @@ const dictionaryItem = ref<any>({
 });
 // 获取字典
 async function getDictionaryList() {
-  dictionary.value.loading = true;
-  dictionaryItem.value.search.id = "";
-  // const params = {
-  //   ...dictionary.value.search,
-  // };
-  const res = await api.list();
-  dictionary.value.tree = res.data;
-  dictionary.value.loading = false;
+  try {
+    dictionary.value.loading = true;
+    dictionaryItem.value.search.id = "";
+    // const params = {
+    //   ...dictionary.value.search,
+    // };
+    const res = await api.list();
+    dictionary.value.tree = res.data;
+    dictionary.value.loading = false;
+  } catch (error) {
+
+  } finally {
+    dictionary.value.loading = false;
+  }
 }
 onMounted(() => {
   getDictionaryList();
@@ -92,18 +98,24 @@ watch(
 );
 // 获取字典项
 async function getDictionaryItemList() {
-  dictionaryItem.value.loading = true;
-  const params: any = {
-    ...getParams(),
-    id: dictionaryItem.value.search.id,
-  };
-  const res = await api.itemlist(params);
-  dictionaryItem.value.loading = false;
-  dictionaryItem.value.dataList = res.data.records;
-  dictionaryItem.value.dataList.forEach((item: any) => {
-    item.enableLoading = false;
-  });
-  pagination.value.total = Number(res.data.total);
+  try {
+    dictionaryItem.value.loading = true;
+    const params: any = {
+      ...getParams(),
+      id: dictionaryItem.value.search.id,
+    };
+    const res = await api.itemlist(params);
+    dictionaryItem.value.loading = false;
+    dictionaryItem.value.dataList = res.data.records;
+    dictionaryItem.value.dataList.forEach((item: any) => {
+      item.enableLoading = false;
+    });
+    pagination.value.total = Number(res.data.total);
+  } catch (error) {
+
+  } finally {
+    dictionaryItem.value.loading = false;
+  }
 }
 // 每页数量切换
 function sizeChange(size: number) {
@@ -136,16 +148,10 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
                 <SvgIcon name="i-ep:search" />
               </ElButton>
             </template>
-          </ElInput> -->
+</ElInput> -->
           <ElScrollbar class="tree">
-            <ElTree
-              ref="dictionaryRef"
-              v-loading="dictionary.loading"
-              :data="dictionary.tree"
-              :filter-node-method="dictionaryFilter as any"
-              default-expand-all
-              @node-click="dictionaryClick"
-            >
+            <ElTree ref="dictionaryRef" v-loading="dictionary.loading" :data="dictionary.tree"
+              :filter-node-method="dictionaryFilter as any" default-expand-all @node-click="dictionaryClick">
               <template #default="{ node, data }">
                 <div class="custom-tree-node">
                   <div class="label" :title="node.label">
@@ -174,19 +180,9 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
               </template>
             </ElButton>
           </ElSpace> -->
-          <ElTable
-            ref="dictionaryItemRef"
-            v-loading="dictionaryItem.loading"
-            :data="dictionaryItem.dataList"
-            stripe
-            highlight-current-row
-            border
-            height="100%"
-            @sort-change="sortChange"
-            @selection-change="dictionaryItem.selectionDataList = $event"
-            row-key="id"
-            default-expand-all
-          >
+          <ElTable ref="dictionaryItemRef" v-loading="dictionaryItem.loading" :data="dictionaryItem.dataList" stripe
+            highlight-current-row border height="100%" @sort-change="sortChange"
+            @selection-change="dictionaryItem.selectionDataList = $event" row-key="id" default-expand-all>
             <ElTableColumn prop="chineseName" label="中文名称" />
             <ElTableColumn prop="englishName" label="英文名称" />
             <ElTableColumn prop="remark" label="备注" />
@@ -201,18 +197,9 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
               <el-empty description="暂无数据" />
             </template>
           </ElTable>
-          <ElPagination
-            :current-page="pagination.page"
-            :total="pagination.total"
-            :page-size="pagination.size"
-            :page-sizes="pagination.sizes"
-            :layout="pagination.layout"
-            :hide-on-single-page="false"
-            class="pagination"
-            background
-            @size-change="sizeChange"
-            @current-change="currentChange"
-          />
+          <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+            :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+            background @size-change="sizeChange" @current-change="currentChange" />
         </div>
         <div v-show="!dictionaryItem.search.id" class="dictionary-container">
           <div class="empty">请在左侧新增或选择一个字典</div>
@@ -273,7 +260,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
           height: 60px;
         }
 
-        .is-current > .el-tree-node__content {
+        .is-current>.el-tree-node__content {
           background-color: var(--el-color-primary-light-9);
         }
 

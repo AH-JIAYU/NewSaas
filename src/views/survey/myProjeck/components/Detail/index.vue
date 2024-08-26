@@ -16,19 +16,25 @@ const loading = ref(false)
 
 // 回显
 async function showEdit(row: any) {
-  loadingDisible.value = true
-  title.value = '项目详情'
-  if (row) {
-    loading.value = true
-    const res = await api.getQuotaProjectInfo({ projectId: row.projectId })
-    form.value = res.data
-    if (form.value.descriptionUrl !== '') {
-      const imgres: any = await fileApi.detail({
-        fileName: form.value.descriptionUrl,
-      })
-      imgUrl.value = imgres.data.fileUrl
-      srcList.value = [imgres.data.fileUrl]
+  try {
+    loadingDisible.value = true
+    title.value = '项目详情'
+    if (row) {
+      loading.value = true
+      const res = await api.getQuotaProjectInfo({ projectId: row.projectId })
+      form.value = res.data
+      if (form.value.descriptionUrl !== '') {
+        const imgres: any = await fileApi.detail({
+          fileName: form.value.descriptionUrl,
+        })
+        imgUrl.value = imgres.data.fileUrl
+        srcList.value = [imgres.data.fileUrl]
+      }
+      loading.value = false
     }
+  } catch (error) {
+
+  } finally {
     loading.value = false
   }
 }

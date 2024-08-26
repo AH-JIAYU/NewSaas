@@ -242,22 +242,28 @@ const accountSubmit = () => {
   accountFormRef.value &&
     accountFormRef.value.validate(async (valid: any) => {
       if (valid) {
-        loading.value = true;
-        delete accountForm.value.confirmPassword;
-        const res = await api.edit(accountForm.value);
-        if (res.status === -1) {
-          return ElMessage.warning({
-            message: "修改失败",
+        try {
+          loading.value = true;
+          delete accountForm.value.confirmPassword;
+          const res = await api.edit(accountForm.value);
+          if (res.status === -1) {
+            return ElMessage.warning({
+              message: "修改失败",
+              center: true,
+            });
+          }
+          emits("success");
+          loading.value = false;
+          ElMessage.success({
+            message: "修改成功",
             center: true,
           });
+          closeHandler();
+        } catch (error) {
+
+        } finally {
+          loading.value = false;
         }
-        emits("success");
-        loading.value = false;
-        ElMessage.success({
-          message: "修改成功",
-          center: true,
-        });
-        closeHandler();
       }
     });
 };
@@ -286,9 +292,15 @@ function closeHandler() {
 }
 // 获取数据
 onMounted(async () => {
-  loading.value = true;
-  countryList.value = await basicDictionaryStore.getCountry();
-  loading.value = false;
+  try {
+    loading.value = true;
+    countryList.value = await basicDictionaryStore.getCountry();
+    loading.value = false;
+  } catch (error) {
+
+  } finally {
+    loading.value = false;
+  }
 });
 // 暴露方法
 defineExpose({ showEdit });
@@ -330,11 +342,11 @@ defineExpose({ showEdit });
                 <img w-full :src="dialogImageUrl" alt="Preview Image" />
               </el-dialog>
             </ElFormItem>
-            <ElFormItem label="账户类型">
+            <!-- <ElFormItem label="账户类型">
               <el-select v-model="userForm.type" value-key="" placeholder="账户类型" disabled clearable filterable>
                 <el-option v-for="item in typeList" :key="item.value" :label="item.label" :value="item.value" />
               </el-select>
-            </ElFormItem>
+            </ElFormItem> -->
             <ElFormItem label="用户名">
               <ElInput disabled v-model="userForm.name" placeholder="请输入你的用户名" />
             </ElFormItem>

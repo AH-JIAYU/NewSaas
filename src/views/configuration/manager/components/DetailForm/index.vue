@@ -95,14 +95,20 @@ const formRules = ref<FormRules>({
   ],
 })
 onMounted(async () => {
-  loading.value = true
-  country.value = await useStoreCountry.getCountry()
-  munulevs.value = await roleStore.getRole()
-  loading.value = false
-  if (props.id) {
-    form.value = JSON.parse(props.row)
-    formRules.value.password = []
-    disabled.value = true;
+  try {
+    loading.value = true
+    country.value = await useStoreCountry.getCountry()
+    munulevs.value = await roleStore.getRole()
+    loading.value = false
+    if (props.id) {
+      form.value = JSON.parse(props.row)
+      formRules.value.password = []
+      disabled.value = true;
+    }
+  } catch (error) {
+
+  } finally {
+    loading.value = false
   }
 })
 const handleChange = (val: any) => {
@@ -119,50 +125,66 @@ defineExpose({
       if (form.value.id === '') {
         formRef.value && formRef.value.validate((valid) => {
           if (valid) {
-            delete form.value.id
-            if (form.value.type === 'phone') {
-              delete form.value.email
-            } else {
-              delete form.value.phone
-            }
-            apiUser.create(form.value).then(() => {
-              ElMessage.success({
-                message: '新增成功',
-                center: true,
+            try {
+              loading.value = true
+              delete form.value.id
+              if (form.value.type === 'phone') {
+                delete form.value.email
+              } else {
+                delete form.value.phone
+              }
+              apiUser.create(form.value).then(() => {
+                loading.value = false
+                ElMessage.success({
+                  message: '新增成功',
+                  center: true,
+                })
+                onCancel()
+                resolve()
               })
-              onCancel()
-              resolve()
-            })
+            } catch (error) {
+
+            } finally {
+              loading.value = false
+            }
           }
         })
       }
       else {
         formRef.value && formRef.value.validate((valid) => {
           if (valid) {
-            const { id, phone, email, password, name, country, active, type, role } = form.value
-            const params = { id, phone, email, password, name, country, active, type, role }
-            if (type === 'phone') {
-              params.email = ''
-              delete params.email
-            } else {
-              params.phone = ''
-              delete params.phone
-            }
-            if (!params.password) {
-              delete params.password
-            }
-            if (!isTrue.value) {
-              delete params.phone
-              delete params.email
-            }
-            apiUser.edit(params).then(() => {
-              ElMessage.success({
-                message: '编辑成功',
-                center: true,
+            try {
+              loading.value = true
+              const { id, phone, email, password, name, country, active, type, role } = form.value
+              const params = { id, phone, email, password, name, country, active, type, role }
+              if (type === 'phone') {
+                params.email = ''
+                delete params.email
+              } else {
+                params.phone = ''
+                delete params.phone
+              }
+              if (!params.password) {
+                delete params.password
+              }
+              if (!isTrue.value) {
+                delete params.phone
+                delete params.email
+              }
+              apiUser.edit(params).then(() => {
+                loading.value = false
+                ElMessage.success({
+                  message: '编辑成功',
+                  center: true,
+                })
+                onCancel()
+                resolve()
               })
-              onCancel()
-              resolve()
-            })
+            } catch (error) {
+
+            } finally {
+              loading.value = false
+            }
           }
         })
       }

@@ -59,9 +59,16 @@ onMounted(() => {
 })
 // 修改回显数
 function getInfo() {
-  loading.value = true
-  form.value = props.row
-  loading.value = false
+  try {
+    loading.value = true
+    form.value = props.row
+    loading.value = false
+  } catch (error) {
+
+  } finally {
+    loading.value = false
+  }
+
 }
 // 暴露提交
 defineExpose({
@@ -70,31 +77,44 @@ defineExpose({
       if (form.value.id === '') {
         formRef.value && formRef.value.validate((valid) => {
           if (valid) {
-            delete form.value.id
-            loading.value = true
-            api.create(form.value).then(() => {
-              loading.value = false
-              ElMessage.success({
-                message: '新增成功',
-                center: true,
+            try {
+              delete form.value.id
+              loading.value = true
+              api.create(form.value).then(() => {
+                loading.value = false
+                ElMessage.success({
+                  message: '新增成功',
+                  center: true,
+                })
+                resolve()
               })
-              resolve()
-            })
+            } catch (error) {
+
+            } finally {
+              loading.value = false
+            }
+
           }
         })
       }
       else {
         formRef.value && formRef.value.validate((valid) => {
           if (valid) {
-            loading.value = true
-            api.edit(form.value).then(() => {
-              loading.value = false
-              ElMessage.success({
-                message: '编辑成功',
-                center: true,
+            try {
+              loading.value = true
+              api.edit(form.value).then(() => {
+                loading.value = false
+                ElMessage.success({
+                  message: '编辑成功',
+                  center: true,
+                })
+                resolve()
               })
-              resolve()
-            })
+            } catch (error) {
+
+            } finally {
+              loading.value = false
+            }
           }
         })
       }

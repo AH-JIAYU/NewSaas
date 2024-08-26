@@ -132,16 +132,22 @@ const data = ref<any>({
 });
 // 获取数据
 function getDataList() {
-  data.value.loading = true;
-  const params = {
-    ...getParams(),
-    ...data.value.search,
-  };
-  api.list(params).then((res: any) => {
+  try {
+    data.value.loading = true;
+    const params = {
+      ...getParams(),
+      ...data.value.search,
+    };
+    api.list(params).then((res: any) => {
+      data.value.loading = false;
+      data.value.dataList = res.data.data;
+      pagination.value.total = +res.data.total;
+    });
+  } catch (error) {
+
+  } finally {
     data.value.loading = false;
-    data.value.dataList = res.data.data;
-    pagination.value.total = +res.data.total;
-  });
+  }
 }
 
 // 重置筛选数据
@@ -163,7 +169,7 @@ function onReset() {
 
 // 每页数量切换
 function sizeChange(size: number) {
-  onSizeChange(size).then(() =>{
+  onSizeChange(size).then(() => {
     data.value.search.limit = size;
     getDataList()
   });
@@ -257,46 +263,18 @@ onBeforeUnmount(() => {
     <PageMain>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
-          <ElForm
-            :model="data.search"
-            size="default"
-            label-width="100px"
-            inline-message
-            inline
-            class="search-form"
-          >
+          <ElForm :model="data.search" size="default" label-width="100px" inline-message inline class="search-form">
             <ElFormItem label="">
-              <ElInput
-                v-model="data.search.id"
-                placeholder="请输入组ID"
-                clearable
-                @keydown.enter="currentChange()"
-                @clear="currentChange()"
-              />
+              <ElInput v-model="data.search.id" placeholder="请输入组ID" clearable @keydown.enter="currentChange()"
+                @clear="currentChange()" />
             </ElFormItem>
             <ElFormItem label="">
-              <ElInput
-                v-model="data.search.name"
-                placeholder="请输入组名称"
-                clearable
-                @keydown.enter="currentChange()"
-                @clear="currentChange()"
-              />
+              <ElInput v-model="data.search.name" placeholder="请输入组名称" clearable @keydown.enter="currentChange()"
+                @clear="currentChange()" />
             </ElFormItem>
             <ElFormItem label="">
-              <el-select
-                v-model="data.search.departmentId"
-                value-key=""
-                placeholder="所属部门"
-                clearable
-                filterable
-              >
-                <el-option
-                  v-for="item in departmentList"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id"
-                >
+              <el-select v-model="data.search.departmentId" value-key="" placeholder="所属部门" clearable filterable>
+                <el-option v-for="item in departmentList" :key="item.id" :label="item.name" :value="item.id">
                 </el-option>
               </el-select>
             </ElFormItem>
@@ -315,9 +293,7 @@ onBeforeUnmount(() => {
               </ElButton>
               <ElButton disabled link @click="toggle">
                 <template #icon>
-                  <SvgIcon
-                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
-                  />
+                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
                 </template>
                 {{ fold ? "展开" : "收起" }}
               </ElButton>
@@ -334,30 +310,14 @@ onBeforeUnmount(() => {
         </FormLeftPanel>
         <FormRightPanel>
           <el-button size="default"> 导出 </el-button>
-          <TabelControl
-            v-model:border="data.border"
-            v-model:tableAutoHeight="data.tableAutoHeight"
-            v-model:checkList="data.checkList"
-            v-model:columns="columns"
-            v-model:line-height="data.lineHeight"
-            v-model:stripe="data.stripe"
-            style="margin-left: 12px"
-            @query-data="currentChange"
-          />
+          <TabelControl v-model:border="data.border" v-model:tableAutoHeight="data.tableAutoHeight"
+            v-model:checkList="data.checkList" v-model:columns="columns" v-model:line-height="data.lineHeight"
+            v-model:stripe="data.stripe" style="margin-left: 12px" @query-data="currentChange" />
         </FormRightPanel>
       </el-row>
-      <ElTable
-        v-model:stripe="data.stripe"
-        v-model:border="data.border"
-        v-loading="data.loading"
-        :size="data.lineHeight"
-        class="my-4"
-        :data="data.dataList"
-        highlight-current-row
-        height="100%"
-        @sort-change="sortChange"
-        @selection-change="data.batch.selectionDataList = $event"
-      >
+      <ElTable v-model:stripe="data.stripe" v-model:border="data.border" v-loading="data.loading"
+        :size="data.lineHeight" class="my-4" :data="data.dataList" highlight-current-row height="100%"
+        @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
         <el-table-column align="center" type="selection" />
         <!-- <el-table-column
           align="center"
@@ -366,31 +326,16 @@ onBeforeUnmount(() => {
           label="序号"
           width="80"
         /> -->
-        <ElTableColumn
-          v-if="data.checkList.includes('id')"
-          align="center"
-          show-overflow-tooltip
-          prop="id"
-          label="组ID"
-        />
-        <ElTableColumn
-          v-if="data.checkList.includes('name')"
-          align="center"
-          show-overflow-tooltip
-          prop="name"
-          label="组名称"
-        >
+        <ElTableColumn v-if="data.checkList.includes('id')" align="center" show-overflow-tooltip prop="id"
+          label="组ID" />
+        <ElTableColumn v-if="data.checkList.includes('name')" align="center" show-overflow-tooltip prop="name"
+          label="组名称">
           <template #default="{ row }">
             {{ row.name }}
           </template>
         </ElTableColumn>
-        <ElTableColumn
-          v-if="data.checkList.includes('director')"
-          align="center"
-          show-overflow-tooltip
-          prop="director"
-          label="组长"
-        >
+        <ElTableColumn v-if="data.checkList.includes('director')" align="center" show-overflow-tooltip prop="director"
+          label="组长">
           <template #default="{ row }">
             <el-text v-for="item in staffList" :key="item.id">
               <el-text v-if="item.id === row.director">
@@ -399,24 +344,14 @@ onBeforeUnmount(() => {
             </el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn
-          v-if="data.checkList.includes('count')"
-          align="center"
-          show-overflow-tooltip
-          prop="count"
-          label="员工数"
-        >
+        <ElTableColumn v-if="data.checkList.includes('count')" align="center" show-overflow-tooltip prop="count"
+          label="员工数">
           <template #default="{ row }">
             {{ row.count ? row.count : "-" }}
           </template>
         </ElTableColumn>
-        <ElTableColumn
-          v-if="data.checkList.includes('departmentId')"
-          align="center"
-          show-overflow-tooltip
-          prop="departmentId"
-          label="所属部门"
-        >
+        <ElTableColumn v-if="data.checkList.includes('departmentId')" align="center" show-overflow-tooltip
+          prop="departmentId" label="所属部门">
           <template #default="{ row }">
             <el-text v-for="item in departmentList" :key="item.id">
               <el-text v-if="item.id === row.departmentId">
@@ -427,28 +362,13 @@ onBeforeUnmount(() => {
         </ElTableColumn>
         <ElTableColumn label="操作" width="300" align="center" fixed="right">
           <template #default="scope">
-            <ElButton
-              type="primary"
-              size="small"
-              plain
-              @click="onGroup(scope.row)"
-            >
+            <ElButton type="primary" size="small" plain @click="onGroup(scope.row)">
               新增组员
             </ElButton>
-            <ElButton
-              type="primary"
-              size="small"
-              plain
-              @click="onEdit(scope.row)"
-            >
+            <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">
               编辑
             </ElButton>
-            <ElButton
-              type="primary"
-              size="small"
-              plain
-              @click="onDetail(scope.row)"
-            >
+            <ElButton type="primary" size="small" plain @click="onDetail(scope.row)">
               详情
             </ElButton>
           </template>
@@ -457,27 +377,12 @@ onBeforeUnmount(() => {
           <el-empty description="暂无数据" />
         </template>
       </ElTable>
-      <ElPagination
-        :current-page="pagination.page"
-        :total="pagination.total"
-        :page-size="pagination.size"
-        :page-sizes="pagination.sizes"
-        :layout="pagination.layout"
-        :hide-on-single-page="false"
-        class="pagination"
-        background
-        @size-change="sizeChange"
-        @current-change="currentChange"
-      />
+      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+        background @size-change="sizeChange" @current-change="currentChange" />
     </PageMain>
-    <FormMode
-      v-if="data.formMode === 'dialog' || data.formMode === 'drawer'"
-      :id="data.formModeProps.id"
-      v-model="data.formModeProps.visible"
-      :row="data.formModeProps.row"
-      :mode="data.formMode"
-      @success="getDataList"
-    />
+    <FormMode v-if="data.formMode === 'dialog' || data.formMode === 'drawer'" :id="data.formModeProps.id"
+      v-model="data.formModeProps.visible" :row="data.formModeProps.row" :mode="data.formMode" @success="getDataList" />
     <Detail ref="detailRef" />
     <GroupForm @success="getDataList" ref="groupFormRef" />
   </div>

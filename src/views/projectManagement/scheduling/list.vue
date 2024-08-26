@@ -14,7 +14,7 @@ const { pagination, getParams, onSizeChange, onCurrentChange } =
   usePagination(); // 分页
 const tableSortRef = ref("");
 // loading加载
-const listLoading = ref<boolean>(true);
+const listLoading = ref<boolean>(false);
 const border = ref(true);
 // 获取组件变量
 const editRef = ref();
@@ -63,7 +63,7 @@ function onDel(row: any) {
           });
         });
     })
-    .catch(() => {});
+    .catch(() => { });
 }
 // 每页数量切换
 function sizeChange(size: number) {
@@ -82,16 +82,23 @@ function onReset() {
   });
   fetchData();
 }
+// 列表数据
 async function fetchData() {
-  listLoading.value = true;
-  const params = {
-    ...getParams(),
-    ...queryForm,
-  };
-  const res = await api.list(params);
-  list.value = res.data.getProjectDispatchInfoList;
-  pagination.value.total = res.data.total;
-  listLoading.value = false;
+  try {
+    listLoading.value = true;
+    const params = {
+      ...getParams(),
+      ...queryForm,
+    };
+    const res = await api.list(params);
+    list.value = res.data.getProjectDispatchInfoList;
+    pagination.value.total = res.data.total;
+    listLoading.value = false;
+  } catch (error) {
+
+  } finally {
+    listLoading.value = false;
+  }
 }
 onMounted(() => {
   columns.value.forEach((item: any) => {
@@ -104,42 +111,22 @@ onMounted(() => {
 </script>
 
 <template>
-  <div
-    :class="{
-      'absolute-container': tableAutoHeight,
-    }"
-  >
+  <div :class="{
+    'absolute-container': tableAutoHeight,
+  }">
     <PageMain>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
-          <el-form
-            :model="queryForm.select"
-            size="default"
-            label-width="100px"
-            inline-message
-            inline
-            class="search-form"
-          >
+          <el-form :model="queryForm.select" size="default" label-width="100px" inline-message inline
+            class="search-form">
             <el-form-item label="">
-              <el-input
-                v-model="queryForm.projectId"
-                clearable
-                placeholder="项目ID"
-              />
+              <el-input v-model="queryForm.projectId" clearable placeholder="项目ID" />
             </el-form-item>
             <el-form-item label="">
-              <el-input
-                v-model="queryForm.projectName"
-                clearable
-                placeholder="项目名称"
-              />
+              <el-input v-model="queryForm.projectName" clearable placeholder="项目名称" />
             </el-form-item>
             <el-form-item label="">
-              <el-select
-                v-model="queryForm.dispatchType"
-                clearable
-                placeholder="全部类型"
-              >
+              <el-select v-model="queryForm.dispatchType" clearable placeholder="全部类型">
                 <el-option label="指定关闭" :value="1" />
                 <el-option label="指定价格" :value="2" />
               </el-select>
@@ -159,9 +146,7 @@ onMounted(() => {
               </ElButton>
               <ElButton disabled link @click="toggle">
                 <template #icon>
-                  <SvgIcon
-                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
-                  />
+                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
                 </template>
                 {{ fold ? "展开" : "收起" }}
               </ElButton>
@@ -179,84 +164,38 @@ onMounted(() => {
 
         <FormRightPanel>
           <el-button size="default" @click=""> 导出 </el-button>
-          <TabelControl
-            v-model:border="border"
-            v-model:tableAutoHeight="tableAutoHeight"
-            v-model:checkList="checkList"
-            v-model:columns="columns"
-            v-model:line-height="lineHeight"
-            v-model:stripe="stripe"
-            style="margin-left: 12px"
-            @query-data="currentChange"
-          />
+          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
+            v-model:columns="columns" v-model:line-height="lineHeight" v-model:stripe="stripe" style="margin-left: 12px"
+            @query-data="currentChange" />
         </FormRightPanel>
       </el-row>
-      <el-table
-        ref="tableSortRef"
-        v-loading="listLoading"
-        style="margin-top: 10px"
-        row-key="id"
-        :data="list"
-        :border="border"
-        :size="lineHeight"
-        :stripe="stripe"
-      >
+      <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="id" :data="list"
+        :border="border" :size="lineHeight" :stripe="stripe">
         <el-table-column align="center" type="selection" />
-        <el-table-column
-          v-if="checkList.includes('dispatchType')"
-          show-overflow-tooltip
-          prop="dispatchType"
-          align="center"
-          label="类型"
-        >
+        <el-table-column v-if="checkList.includes('dispatchType')" show-overflow-tooltip prop="dispatchType"
+          align="center" label="类型">
           <template #default="{ row }">
             {{ row.dispatchType === 1 ? "指定关闭" : "指定价格" }}
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('projectId')"
-          show-overflow-tooltip
-          prop="projectId"
-          align="center"
-          width="180"
-          label="项目ID"
-        />
-        <el-table-column
-          v-if="checkList.includes('projectName')"
-          show-overflow-tooltip
-          prop="projectName"
-          align="center"
-          label="项目名称"
-        />
-        <el-table-column
-          v-if="checkList.includes('moneyPrice')"
-          show-overflow-tooltip
-          prop="moneyPrice"
-          align="center"
-          label="原价"
-        >
+        <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip prop="projectId" align="center"
+          width="180" label="项目ID" />
+        <el-table-column v-if="checkList.includes('projectName')" show-overflow-tooltip prop="projectName"
+          align="center" label="项目名称" />
+        <el-table-column v-if="checkList.includes('moneyPrice')" show-overflow-tooltip prop="moneyPrice" align="center"
+          label="原价">
           <template #default="{ row }">
             <CurrencyType />{{ row.moneyPrice || 0 }}
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('doMoneyPrice')"
-          show-overflow-tooltip
-          prop="doMoneyPrice"
-          align="center"
-          label="指定价格"
-        >
+        <el-table-column v-if="checkList.includes('doMoneyPrice')" show-overflow-tooltip prop="doMoneyPrice"
+          align="center" label="指定价格">
           <template #default="{ row }">
             <CurrencyType />{{ row.doMoneyPrice || 0 }}
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('Supplier')"
-          show-overflow-tooltip
-          prop="groupSupplierId"
-          align="center"
-          label="指定供应商"
-        >
+        <el-table-column v-if="checkList.includes('Supplier')" show-overflow-tooltip prop="groupSupplierId"
+          align="center" label="指定供应商">
           <template #default="{ row }">
             <template v-if="row.dataType == 1">
               <span v-for="item in row.groupSupplierId">{{ item }}</span>
@@ -264,12 +203,7 @@ onMounted(() => {
             <template v-else>-</template>
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('group')"
-          show-overflow-tooltip
-          align="center"
-          label="指定会员组"
-        >
+        <el-table-column v-if="checkList.includes('group')" show-overflow-tooltip align="center" label="指定会员组">
           <template #default="{ row }">
             <template v-if="row.dataType == 2">
               <span v-for="item in row.groupSupplierId">{{ item }}</span>
@@ -277,14 +211,9 @@ onMounted(() => {
             <template v-else>-</template>
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('createTime')"
-          show-overflow-tooltip
-          prop="createTime"
-          align="center"
-          label="创建时间"
-        ><template #default="{ row }">
-          <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>
+        <el-table-column v-if="checkList.includes('createTime')" show-overflow-tooltip prop="createTime" align="center"
+          label="创建时间"><template #default="{ row }">
+            <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column align="center" fixed="right" label="操作" width="170">
@@ -301,18 +230,9 @@ onMounted(() => {
           <el-empty description="暂无数据" />
         </template>
       </el-table>
-      <ElPagination
-        :current-page="pagination.page"
-        :total="pagination.total"
-        :page-size="pagination.size"
-        :page-sizes="pagination.sizes"
-        :layout="pagination.layout"
-        :hide-on-single-page="false"
-        class="pagination"
-        background
-        @size-change="sizeChange"
-        @current-change="currentChange"
-      />
+      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+        background @size-change="sizeChange" @current-change="currentChange" />
       <edit ref="editRef" @fetch-data="fetchData" />
     </PageMain>
   </div>

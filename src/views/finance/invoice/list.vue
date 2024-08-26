@@ -157,15 +157,23 @@ function onDel(row: any) {
     "确认信息"
   )
     .then(() => {
-      api.delete({ id: row.id }).then(() => {
-        fetchData();
-        ElMessage.success({
-          message: "删除成功",
-          center: true,
+      try {
+        listLoading.value = true;
+        api.delete({ id: row.id }).then(() => {
+          listLoading.value = false;
+          fetchData();
+          ElMessage.success({
+            message: "删除成功",
+            center: true,
+          });
         });
-      });
+      } catch (error) {
+
+      } finally {
+        listLoading.value = false;
+      }
     })
-    .catch(() => {});
+    .catch(() => { });
 }
 
 // 获取列表选中数据
@@ -229,12 +237,18 @@ function currentChange(page = 1) {
   });
 }
 async function fetchData() {
-  listLoading.value = true;
-  customerList.value = await customerStore.getCustomerList();
-  const { data } = await api.list(queryForm);
-  list.value = data.data;
-  pagination.value.total = parseInt(data.total) || 0;
-  listLoading.value = false;
+  try {
+    listLoading.value = true;
+    customerList.value = await customerStore.getCustomerList();
+    const { data } = await api.list(queryForm);
+    list.value = data.data;
+    pagination.value.total = parseInt(data.total) || 0;
+    listLoading.value = false;
+  } catch (error) {
+
+  } finally {
+    listLoading.value = false;
+  }
 }
 onMounted(() => {
   columns.value.forEach((item: any) => {
@@ -247,80 +261,34 @@ onMounted(() => {
 </script>
 
 <template>
-  <div
-    :class="{
-      'absolute-container': tableAutoHeight,
-    }"
-    v-loading="listLoading"
-  >
+  <div :class="{
+    'absolute-container': tableAutoHeight,
+  }" v-loading="listLoading">
     <PageMain>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
-          <el-form
-            :model="queryForm.select"
-            size="default"
-            label-width="100px"
-            inline-message
-            inline
-            class="search-form"
-          >
+          <el-form :model="queryForm.select" size="default" label-width="100px" inline-message inline
+            class="search-form">
             <el-form-item label="">
-              <el-select
-                v-model="queryForm.tenantCustomerId"
-                placeholder="客户简称"
-                clearable
-                filterable
-              >
-                <el-option
-                  v-for="item in customerList"
-                  :key="item.tenantCustomerId"
-                  :value="item.tenantCustomerId"
-                  :label="item.customerAccord"
-                />
+              <el-select v-model="queryForm.tenantCustomerId" placeholder="客户简称" clearable filterable>
+                <el-option v-for="item in customerList" :key="item.tenantCustomerId" :value="item.tenantCustomerId"
+                  :label="item.customerAccord" />
               </el-select>
             </el-form-item>
             <el-form-item label="">
-              <el-select
-                v-model="queryForm.invoiceStatus"
-                placeholder="发票状态"
-                clearable
-                filterable
-              >
-                <ElOption
-                  v-for="item in invoiceStatusList"
-                  :label="item.lable"
-                  :value="item.value"
-                ></ElOption>
+              <el-select v-model="queryForm.invoiceStatus" placeholder="发票状态" clearable filterable>
+                <ElOption v-for="item in invoiceStatusList" :label="item.lable" :value="item.value"></ElOption>
               </el-select>
             </el-form-item>
             <el-form-item label="">
-              <el-select
-                v-model="type"
-                placeholder="时间类型"
-                clearable
-                filterable
-                @change="selectChange"
-              >
-                <ElOption
-                  v-for="item in timeType"
-                  :label="item.lable"
-                  :value="item.value"
-                ></ElOption>
+              <el-select v-model="type" placeholder="时间类型" clearable filterable @change="selectChange">
+                <ElOption v-for="item in timeType" :label="item.lable" :value="item.value"></ElOption>
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold">
-              <el-date-picker
-                v-model="timeArr"
-                :disabled="!type"
-                value-format="YYYY-MM-DD hh:mm:ss"
-                type="datetimerange"
-                range-separator="-"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                clearable
-                size=""
-                @change="timeChange"
-              />
+              <el-date-picker v-model="timeArr" :disabled="!type" value-format="YYYY-MM-DD hh:mm:ss"
+                type="datetimerange" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期" clearable
+                size="" @change="timeChange" />
             </el-form-item>
 
             <ElFormItem>
@@ -338,9 +306,7 @@ onMounted(() => {
               </ElButton>
               <ElButton link @click="toggle">
                 <template #icon>
-                  <SvgIcon
-                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
-                  />
+                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
                 </template>
                 {{ fold ? "展开" : "收起" }}
               </ElButton>
@@ -351,122 +317,52 @@ onMounted(() => {
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>
-          <el-button
-            style="margin-right: 10px"
-            type="primary"
-            size="default"
-            @click="addData"
-          >
+          <el-button style="margin-right: 10px" type="primary" size="default" @click="addData">
             新增发票
           </el-button>
         </FormLeftPanel>
 
         <FormRightPanel>
           <el-button size="default" @click=""> 导出 </el-button>
-          <TabelControl
-            v-model:border="border"
-            v-model:tableAutoHeight="tableAutoHeight"
-            v-model:checkList="checkList"
-            v-model:columns="columns"
-            v-model:line-height="lineHeight"
-            v-model:stripe="stripe"
-            style="margin-left: 12px"
-            @query-data="currentChange"
-          />
+          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
+            v-model:columns="columns" v-model:line-height="lineHeight" v-model:stripe="stripe" style="margin-left: 12px"
+            @query-data="currentChange" />
         </FormRightPanel>
       </el-row>
-      <el-table
-        ref="tableSortRef"
-        v-loading="false"
-        style="margin-top: 10px"
-        row-key="id"
-        :data="list"
-        :border="border"
-        :size="lineHeight"
-        :stripe="stripe"
-        @selection-change="setSelectRows"
-      >
+      <el-table ref="tableSortRef" v-loading="false" style="margin-top: 10px" row-key="id" :data="list" :border="border"
+        :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows">
         <el-table-column align="center" type="selection" />
         <!-- <el-table-column type="index" align="center" label="序号" width="55" /> -->
-        <el-table-column
-        v-if="checkList.includes('tenantCustomerShortName')"
-          prop="tenantCustomerShortName"
-          show-overflow-tooltip
-          align="center"
-          width="100"
-          label="客户简称"
-        />
-        <el-table-column
-        v-if="checkList.includes('invoiceCode')"
-          prop="invoiceCode"
-          show-overflow-tooltip
-          align="center"
-          label="发票编号"
-        />
-        <el-table-column
-        v-if="checkList.includes('invoiceAmount')"
-          prop="invoiceAmount"
-          show-overflow-tooltip
-          align="center"
-          label="金额"
-        >
+        <el-table-column v-if="checkList.includes('tenantCustomerShortName')" prop="tenantCustomerShortName"
+          show-overflow-tooltip align="center" width="100" label="客户简称" />
+        <el-table-column v-if="checkList.includes('invoiceCode')" prop="invoiceCode" show-overflow-tooltip
+          align="center" label="发票编号" />
+        <el-table-column v-if="checkList.includes('invoiceAmount')" prop="invoiceAmount" show-overflow-tooltip
+          align="center" label="金额">
           <template #default="{ row }">
-            <CurrencyType />{{ row.invoiceAmount || 0 }} </template
-        ></el-table-column>
-        <el-table-column
-        v-if="checkList.includes('invoiceTax')"
-          prop="invoiceTax"
-          show-overflow-tooltip
-          align="center"
-          label="手续费(税)"
-        >
+            <CurrencyType />{{ row.invoiceAmount || 0 }}
+          </template></el-table-column>
+        <el-table-column v-if="checkList.includes('invoiceTax')" prop="invoiceTax" show-overflow-tooltip align="center"
+          label="手续费(税)">
           <template #default="{ row }">
-            <CurrencyType />{{ row.invoiceTax || 0 }} </template
-        ></el-table-column>
-        <el-table-column
-        v-if="checkList.includes('actualReceipts')"
-          prop="actualReceipts"
-          show-overflow-tooltip
-          align="center"
-          label="实收款"
-        >
+            <CurrencyType />{{ row.invoiceTax || 0 }}
+          </template></el-table-column>
+        <el-table-column v-if="checkList.includes('actualReceipts')" prop="actualReceipts" show-overflow-tooltip
+          align="center" label="实收款">
           <template #default="{ row }">
-            <CurrencyType />{{ row.actualReceipts || 0 }} </template
-        ></el-table-column>
-        <el-table-column
-        v-if="checkList.includes('invoiceDate')"
-          prop="invoiceDate"
-          show-overflow-tooltip
-          align="center"
-          label="开票日期"
-        />
-        <el-table-column
-        v-if="checkList.includes('paymentDate')"
-          prop="paymentDate"
-          show-overflow-tooltip
-          align="center"
-          label="收款日期"
-        />
-        <ElTableColumn
-        v-if="checkList.includes('invoiceStatus')"
-          align="center"
-          show-overflow-tooltip
-          prop="invoiceStatus"
-          label="状态"
-        >
+            <CurrencyType />{{ row.actualReceipts || 0 }}
+          </template></el-table-column>
+        <el-table-column v-if="checkList.includes('invoiceDate')" prop="invoiceDate" show-overflow-tooltip
+          align="center" label="开票日期" />
+        <el-table-column v-if="checkList.includes('paymentDate')" prop="paymentDate" show-overflow-tooltip
+          align="center" label="收款日期" />
+        <ElTableColumn v-if="checkList.includes('invoiceStatus')" align="center" show-overflow-tooltip
+          prop="invoiceStatus" label="状态">
           <template #default="{ row }">
-            <el-text v-if="row.invoiceStatus === 1" class="mx-1" type="info"
-              >未收款</el-text
-            >
-            <el-text v-if="row.invoiceStatus === 2" class="mx-1" type="warning"
-              >部分收款</el-text
-            >
-            <el-text v-if="row.invoiceStatus === 3" class="mx-1" type="success"
-              >已完结</el-text
-            >
-            <el-text v-if="row.invoiceStatus === 4" class="mx-1" type="danger"
-              >坏账</el-text
-            >
+            <el-text v-if="row.invoiceStatus === 1" class="mx-1" type="info">未收款</el-text>
+            <el-text v-if="row.invoiceStatus === 2" class="mx-1" type="warning">部分收款</el-text>
+            <el-text v-if="row.invoiceStatus === 3" class="mx-1" type="success">已完结</el-text>
+            <el-text v-if="row.invoiceStatus === 4" class="mx-1" type="danger">坏账</el-text>
           </template>
         </ElTableColumn>
         <el-table-column v-if="checkList.includes('remark')" prop="remark" align="center" label="备注" />
@@ -484,18 +380,9 @@ onMounted(() => {
           <el-empty description="暂无数据" />
         </template>
       </el-table>
-      <ElPagination
-        :current-page="pagination.page"
-        :total="pagination.total"
-        :page-size="pagination.size"
-        :page-sizes="pagination.sizes"
-        :layout="pagination.layout"
-        :hide-on-single-page="false"
-        class="pagination"
-        background
-        @current-change="currentChange"
-        @size-change="sizeChange"
-      />
+      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+        background @current-change="currentChange" @size-change="sizeChange" />
       <Edit @success="fetchData" ref="editRef" />
     </PageMain>
   </div>

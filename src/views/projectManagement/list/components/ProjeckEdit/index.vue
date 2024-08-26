@@ -33,24 +33,30 @@ let leftTabsData = reactive<any>([]); // 明确指定类型为 LeftTab[]
 const LeftTabsRef = ref<any>(); // Ref
 // 显隐
 async function showEdit(row: any) {
-  loading.value = true;
-  if (!row) {
-    title.value = "新增";
-    const initialTopTabsData = cloneDeep(
-      projectManagementListStore.initialTopTabsData
-    );
-    leftTabsData =
-      stagedDataStore.projectManagementList || reactive([initialTopTabsData]);
-  } else {
-    title.value = "编辑";
-    // 编辑返回的字段也一样，周二让刘改字段 	项目配额字段updateProjectQuotaInfoList getProjectQuotaInfoList
-    const res = await api.detail({ projectId: row.projectId });
-    initializeLeftTabsData(res.data);
+  try {
+    loading.value = true;
+    if (!row) {
+      title.value = "新增";
+      const initialTopTabsData = cloneDeep(
+        projectManagementListStore.initialTopTabsData
+      );
+      leftTabsData =
+        stagedDataStore.projectManagementList || reactive([initialTopTabsData]);
+    } else {
+      title.value = "编辑";
+      // 编辑返回的字段也一样，周二让刘改字段 	项目配额字段updateProjectQuotaInfoList getProjectQuotaInfoList
+      const res = await api.detail({ projectId: row.projectId });
+      initializeLeftTabsData(res.data);
+    }
+    dialogTableVisible.value = true;
+    validateAll.value = [];
+    validateTopTabs.value = [];
+    loading.value = false;
+  } catch (error) {
+
+  } finally {
+    loading.value = false;
   }
-  dialogTableVisible.value = true;
-  validateAll.value = [];
-  validateTopTabs.value = [];
-  loading.value = false;
 }
 // 编辑时 处理数据
 function initializeLeftTabsData(data: any) {

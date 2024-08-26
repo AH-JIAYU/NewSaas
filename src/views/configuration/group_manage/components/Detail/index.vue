@@ -52,30 +52,38 @@ const form = ref<any>({
 });
 // 获取数据
 async function showEdit(row: any) {
-  title.value = '详情'
-  const listData = JSON.parse(row);
-  form.value.groupId = listData.id;
-  // 部门id
-  department.value = listData.departmentId
-  const params = {
-    page: 1,
-    limit: 10,
-    groupId: listData.id,
-  };
-  // 获取组长信息
-  const res = await api.list(params);
-  if (res?.data.data) {
-    res.data.data.forEach((item: any) => {
-    form.value?.menuId?.push(item.id);
-    dataList.value.push(item);
-  });
+  try {
+    loading.value = true;
+    title.value = '详情'
+    const listData = JSON.parse(row);
+    form.value.groupId = listData.id;
+    // 部门id
+    department.value = listData.departmentId
+    const params = {
+      page: 1,
+      limit: 10,
+      groupId: listData.id,
+    };
+    // 获取组长信息
+    const res = await api.list(params);
+    if (res?.data.data) {
+      res.data.data.forEach((item: any) => {
+        form.value?.menuId?.push(item.id);
+        dataList.value.push(item);
+      });
+    }
+    // 左侧树状数据
+    const ress = await apiDep.createEvery();
+    departmentList.value = ress.data.result;
+    // 筛选需要的数据
+    departmentList.value = departmentList.value.filter((departments: any) => departments.id === department.value)
+    loading.value = false;
+    dialogTableVisible.value = true;
+  } catch (error) {
+
+  } finally {
+    loading.value = false;
   }
-  // 左侧树状数据
-  const ress = await apiDep.createEvery();
-  departmentList.value = ress.data.result;
-  // 筛选需要的数据
-  departmentList.value = departmentList.value.filter((departments: any) => departments.id === department.value)
-  dialogTableVisible.value = true;
 }
 // 每页数量切换
 function sizeChange(size: number) {
@@ -92,8 +100,8 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
   onSortChange(prop, order).then(() => showEdit(1));
 }
 onMounted(async () => {
-    // 职位
-    positionManageList.value = await usePositionManage?.getPositionManage() || [];
+  // 职位
+  positionManageList.value = await usePositionManage?.getPositionManage() || [];
   departmentList.value = await departmentStore.getDepartment();
   staffList.value = await tenantStaffStore.getStaff();
   defaultTime.value = new Date();
@@ -126,13 +134,95 @@ defineExpose({ showEdit });
             <span>组长</span>
           </div>
         </template>
-        <el-table :data="groupLeaderList" border>
-          <el-table-column align="center" type="index" label="序号" width="80" />
-          <el-table-column align="center" show-overflow-tooltip prop="memberId" label="员工ID" />
-          <el-table-column align="center" show-overflow-tooltip prop="lable" label="用户名"><template #default="{ row }">
+<el-table :data="groupLeaderList" border>
+  <el-table-column align="center" type="index" label="序号" width="80" />
+  <el-table-column align="center" show-overflow-tooltip prop="memberId" label="员工ID" />
+  <el-table-column align="center" show-overflow-tooltip prop="lable" label="用户名"><template #default="{ row }">
               <template v-if="row.memberId">
                 <el-text v-for="item in staffList">
                   <el-text v-if="row.memberId === item.id">
+                    {{ item.name }}
+                  </el-text>
+                </el-text>
+              </template>
+    <template v-else>
+                <el-text>
+                  {{ row.name }}
+                </el-text>
+              </template>
+    </template>
+  </el-table-column>
+  <el-table-column align="center" show-overflow-tooltip prop="lable" label="姓名"><template #default="{ row }">
+              <template v-if="row.memberId">
+                <el-text v-for="item in staffList">
+                  <el-text v-if="row.memberId === item.id">
+                    {{ item.name }}
+                  </el-text>
+                </el-text>
+              </template>
+    <template v-else>
+                <el-text>
+                  {{ row.name }}
+                </el-text>
+              </template>
+    </template>
+  </el-table-column>
+  <el-table-column align="center" show-overflow-tooltip prop="lable" label="部门"><template #default="{ row }">
+              <el-text v-for="item in departmentList">
+                <el-text v-if="department === item.id">
+                  {{ item.name }}
+                </el-text>
+              </el-text>
+            </template>
+  </el-table-column>
+  <el-table-column align="center" width="200" fixed="right" show-overflow-tooltip label="提成比例">
+    <template #default="{ row }">
+              {{row.commission? row.commission + '%' : '-'}}
+            </template>
+  </el-table-column>
+  <template #empty>
+            <el-empty description="暂无数据" />
+          </template>
+</el-table>
+</el-card> -->
+      <el-card class="box-card">
+        <template #header>
+          <div class="card-header">
+            <span>组成员</span>
+          </div>
+        </template>
+        <el-table ref="tableRef" :data="dataList" border>
+          <el-table-column align="center" type="index" label="序号" width="80" />
+          <el-table-column align="center" show-overflow-tooltip prop="memberId" label="员工ID"><template
+              #default="{ row }">
+              <el-text v-if="row.memberId">
+                {{ row.memberId }}
+              </el-text>
+              <el-text v-else>
+                {{ row.id }}
+              </el-text>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" show-overflow-tooltip prop="userName" label="用户名"><template
+              #default="{ row }">
+              <template v-if="row.id">
+                <el-text v-for="item in staffList">
+                  <el-text v-if="row.id === item.id">
+                    {{ item.name }}
+                  </el-text>
+                </el-text>
+              </template>
+              <template v-else>
+                <el-text>
+                  {{ row.userName ? row.userName : '-' }}
+                </el-text>
+              </template>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" show-overflow-tooltip prop="name" label="姓名"><template #default="{ row }">
+              <template v-if="row.id">
+                <el-text v-for="item in staffList">
+                  <el-text v-if="row.id === item.id">
                     {{ item.name }}
                   </el-text>
                 </el-text>
@@ -144,19 +234,12 @@ defineExpose({ showEdit });
               </template>
             </template>
           </el-table-column>
-          <el-table-column align="center" show-overflow-tooltip prop="lable" label="姓名"><template #default="{ row }">
-              <template v-if="row.memberId">
-                <el-text v-for="item in staffList">
-                  <el-text v-if="row.memberId === item.id">
-                    {{ item.name }}
-                  </el-text>
+          <el-table-column align="center" show-overflow-tooltip prop="lable" label="职位"><template #default="{ row }">
+              <el-text v-for="item in positionManageList">
+                <el-text v-if="row.positionId === item.id">
+                  {{ item.name }}
                 </el-text>
-              </template>
-              <template v-else>
-                <el-text>
-                  {{ row.name }}
-                </el-text>
-              </template>
+              </el-text>
             </template>
           </el-table-column>
           <el-table-column align="center" show-overflow-tooltip prop="lable" label="部门"><template #default="{ row }">
@@ -169,90 +252,13 @@ defineExpose({ showEdit });
           </el-table-column>
           <el-table-column align="center" width="200" fixed="right" show-overflow-tooltip label="提成比例">
             <template #default="{ row }">
-              {{row.commission? row.commission + '%' : '-'}}
+              {{ row.commission ? row.commission + '%' : '-' }}
             </template>
           </el-table-column>
           <template #empty>
             <el-empty description="暂无数据" />
           </template>
         </el-table>
-      </el-card> -->
-      <el-card class="box-card">
-        <template #header>
-          <div class="card-header">
-            <span>组成员</span>
-          </div>
-        </template>
-              <el-table ref="tableRef" :data="dataList" border>
-                <el-table-column align="center" type="index" label="序号" width="80" />
-              <el-table-column align="center" show-overflow-tooltip prop="memberId" label="员工ID"><template
-                  #default="{ row }">
-                  <el-text v-if="row.memberId">
-                    {{ row.memberId }}
-                  </el-text>
-                  <el-text v-else>
-                    {{ row.id }}
-                  </el-text>
-                </template>
-              </el-table-column>
-              <el-table-column align="center" show-overflow-tooltip prop="userName" label="用户名"><template
-                  #default="{ row }">
-                  <template v-if="row.id">
-                    <el-text v-for="item in staffList">
-                      <el-text v-if="row.id === item.id">
-                        {{ item.name }}
-                      </el-text>
-                    </el-text>
-                  </template>
-                  <template v-else>
-                    <el-text>
-                      {{ row.userName ? row.userName : '-' }}
-                    </el-text>
-                  </template>
-                </template>
-              </el-table-column>
-              <el-table-column align="center" show-overflow-tooltip prop="name" label="姓名"><template #default="{ row }">
-                  <template v-if="row.id">
-                    <el-text v-for="item in staffList">
-                      <el-text v-if="row.id === item.id">
-                        {{ item.name }}
-                      </el-text>
-                    </el-text>
-                  </template>
-                  <template v-else>
-                    <el-text>
-                      {{ row.name }}
-                    </el-text>
-                  </template>
-                </template>
-              </el-table-column>
-              <el-table-column align="center" show-overflow-tooltip prop="lable" label="职位"><template
-                  #default="{ row }">
-                  <el-text v-for="item in positionManageList">
-                    <el-text v-if="row.positionId === item.id">
-                      {{ item.name }}
-                    </el-text>
-                  </el-text>
-                </template>
-              </el-table-column>
-              <el-table-column align="center" show-overflow-tooltip prop="lable" label="部门"><template
-                  #default="{ row }">
-                  <el-text v-for="item in departmentList">
-                    <el-text v-if="department === item.id">
-                      {{ item.name }}
-                    </el-text>
-                  </el-text>
-                </template>
-              </el-table-column>
-              <el-table-column align="center" width="200" fixed="right" show-overflow-tooltip label="提成比例">
-                <template #default="{ row }">
-              {{row.commission? row.commission + '%' : '-'}}
-            </template>
-              </el-table-column>
-              <template #empty>
-                <el-empty description="暂无数据" />
-              </template>
-            </el-table>
       </el-card>
       <template #footer>
         <div style="flex: auto">

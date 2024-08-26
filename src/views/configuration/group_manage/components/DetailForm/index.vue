@@ -37,17 +37,23 @@ const formRules = ref<FormRules>({
   director: [{ required: true, message: "请选择组长", trigger: "change" }],
 });
 onMounted(async () => {
-  loading.value = true;
-  nextTick(async () => {
-    departmentList.value = await departmentStore.getDepartment();
-    // 用户列表
-    const { data } = await managerApi.getTenantStaffList();
-    staffList.value = data;
-  });
-  if (form.value.id !== "") {
-    getInfo();
+  try {
+    loading.value = true;
+    nextTick(async () => {
+      departmentList.value = await departmentStore.getDepartment();
+      // 用户列表
+      const { data } = await managerApi.getTenantStaffList();
+      staffList.value = data;
+    });
+    if (form.value.id !== "") {
+      getInfo();
+    }
+    loading.value = false;
+  } catch (error) {
+
+  } finally {
+    loading.value = false;
   }
-  loading.value = false;
 });
 // 修改回显数
 function getInfo() {
@@ -57,13 +63,13 @@ function getInfo() {
 // 暴露提交
 defineExpose({
   submit() {
-    try {
-      return new Promise<void>((resolve) => {
-        delete form.value.count
-        if (form.value.id === "") {
-          formRef.value &&
-            formRef.value.validate((valid: any) => {
-              if (valid) {
+    return new Promise<void>((resolve) => {
+      delete form.value.count
+      if (form.value.id === "") {
+        formRef.value &&
+          formRef.value.validate((valid: any) => {
+            if (valid) {
+              try {
                 delete form.value.id;
                 loading.value = true;
                 api.create(form.value).then(() => {
@@ -74,12 +80,17 @@ defineExpose({
                   });
                   resolve();
                 });
+              } catch (error) {
+              } finally {
+                loading.value = false;
               }
-            });
-        } else {
-          formRef.value &&
-            formRef.value.validate((valid: any) => {
-              if (valid) {
+            }
+          });
+      } else {
+        formRef.value &&
+          formRef.value.validate((valid: any) => {
+            if (valid) {
+              try {
                 loading.value = true;
                 api.edit(form.value).then(() => {
                   loading.value = false;
@@ -89,50 +100,28 @@ defineExpose({
                   });
                   resolve();
                 });
+              } catch (error) {
+              } finally {
+                loading.value = false;
               }
-            });
-        }
-      });
-    } catch (error) {
-    } finally {
-      loading.value = false;
-    }
+            }
+          });
+      }
+    });
   },
 });
 </script>
 
 <template>
   <div v-loading="loading">
-    <ElForm
-      ref="formRef"
-      :model="form"
-      :rules="formRules"
-      label-width="130px"
-      label-suffix="："
-    >
+    <ElForm ref="formRef" :model="form" :rules="formRules" label-width="130px" label-suffix="：">
       <el-form-item label="组名称" prop="name">
-        <el-input
-          v-model="form.name"
-          placeholder="请输入组名称"
-          clearable
-          :disabled="!form.id ? false : true"
-        />
+        <el-input v-model="form.name" placeholder="请输入组名称" clearable :disabled="!form.id ? false : true" />
       </el-form-item>
       <el-form-item label="所属部门" prop="departmentId">
-        <el-select
-          v-model="form.departmentId"
-          value-key=""
-          placeholder="请选择所属部门"
-          clearable
-          :disabled="!form.id ? false : true"
-          filterable
-        >
-          <el-option
-            v-for="item in departmentList"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          />
+        <el-select v-model="form.departmentId" value-key="" placeholder="请选择所属部门" clearable
+          :disabled="!form.id ? false : true" filterable>
+          <el-option v-for="item in departmentList" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
       <!-- <el-form-item label="组长" prop="director">
@@ -153,14 +142,8 @@ defineExpose({
         </el-select>
       </el-form-item> -->
       <el-form-item label="组提成" prop="commissionStatus">
-        <el-switch
-          v-model="form.commissionStatus"
-          active-text="启用"
-          inactive-text="禁用"
-          inline-prompt
-          :active-value="1"
-          :inactive-value="2"
-        >
+        <el-switch v-model="form.commissionStatus" active-text="启用" inactive-text="禁用" inline-prompt :active-value="1"
+          :inactive-value="2">
         </el-switch>
       </el-form-item>
     </ElForm>

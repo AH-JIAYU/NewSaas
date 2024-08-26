@@ -63,14 +63,20 @@ const dictionaryItem = ref<any>({
 });
 // 获取字典
 async function getDictionaryList() {
-  dictionary.value.loading = true;
-  dictionaryItem.value.search.catalogueId = "";
-  const params = {
-    ...dictionary.value.search,
-  };
-  const res = await api.list(params);
-  dictionary.value.tree = res.data;
-  dictionary.value.loading = false;
+  try {
+    dictionary.value.loading = true;
+    dictionaryItem.value.search.catalogueId = "";
+    const params = {
+      ...dictionary.value.search,
+    };
+    const res = await api.list(params);
+    dictionary.value.tree = res.data;
+    dictionary.value.loading = false;
+  } catch (error) {
+
+  } finally {
+    dictionary.value.loading = false;
+  }
 }
 onMounted(() => {
   getDictionaryList();
@@ -136,18 +142,24 @@ watch(
 );
 // 获取字典项
 async function getDictionaryItemList() {
-  dictionaryItem.value.loading = true;
-  const params = {
-    ...getParams(),
-    ...dictionaryItem.value.search,
-  };
-  const res = await api.itemlist(params);
-  dictionaryItem.value.loading = false;
-  dictionaryItem.value.dataList = res.data;
-  dictionaryItem.value.dataList.forEach((item: any) => {
-    item.enableLoading = false;
-  });
-  pagination.value.total = res.data.length;
+  try {
+    dictionaryItem.value.loading = true;
+    const params = {
+      ...getParams(),
+      ...dictionaryItem.value.search,
+    };
+    const res = await api.itemlist(params);
+    dictionaryItem.value.loading = false;
+    dictionaryItem.value.dataList = res.data;
+    dictionaryItem.value.dataList.forEach((item: any) => {
+      item.enableLoading = false;
+    });
+    pagination.value.total = res.data.length;
+  } catch (error) {
+
+  } finally {
+    dictionaryItem.value.loading = false;
+  }
 }
 
 // 每页数量切换
@@ -193,7 +205,7 @@ function onDelete(row: any) {
         });
       });
     })
-    .catch(() => {});
+    .catch(() => { });
 }
 // 批量删除
 function onDeleteMulti(rows: any[]) {
@@ -208,7 +220,7 @@ function onDeleteMulti(rows: any[]) {
         });
       });
     })
-    .catch(() => {});
+    .catch(() => { });
 }
 </script>
 
@@ -222,13 +234,8 @@ function onDeleteMulti(rows: any[]) {
               新增字典
             </ElButton>
           </ElButtonGroup>
-          <ElInput
-            v-model="dictionary.search.chineseName"
-            placeholder="请输入关键词筛选字典"
-            clearable
-            class="search"
-            @keydown.enter="getDictionaryList"
-          >
+          <ElInput v-model="dictionary.search.chineseName" placeholder="请输入关键词筛选字典" clearable class="search"
+            @keydown.enter="getDictionaryList">
             <template #append>
               <ElButton @click="getDictionaryList">
                 <SvgIcon name="i-ep:search" />
@@ -236,14 +243,8 @@ function onDeleteMulti(rows: any[]) {
             </template>
           </ElInput>
           <ElScrollbar class="tree">
-            <ElTree
-              ref="dictionaryRef"
-              v-loading="dictionary.loading"
-              :data="dictionary.tree"
-              :filter-node-method="dictionaryFilter as any"
-              default-expand-all
-              @node-click="dictionaryClick"
-            >
+            <ElTree ref="dictionaryRef" v-loading="dictionary.loading" :data="dictionary.tree"
+              :filter-node-method="dictionaryFilter as any" default-expand-all @node-click="dictionaryClick">
               <template #default="{ node, data }">
                 <div class="custom-tree-node">
                   <div class="label" :title="node.label">
@@ -254,32 +255,17 @@ function onDeleteMulti(rows: any[]) {
                   </div>
                   <div class="actions">
                     <ElButtonGroup>
-                      <ElButton
-                        type="primary"
-                        plain
-                        size="default"
-                        @click.stop="dictionaryAdd(data)"
-                      >
+                      <ElButton type="primary" plain size="default" @click.stop="dictionaryAdd(data)">
                         <template #icon>
                           <SvgIcon name="i-ep:plus" />
                         </template>
                       </ElButton>
-                      <ElButton
-                        type="info"
-                        plain
-                        size="default"
-                        @click.stop="dictionaryEdit(node, data)"
-                      >
+                      <ElButton type="info" plain size="default" @click.stop="dictionaryEdit(node, data)">
                         <template #icon>
                           <SvgIcon name="i-ep:edit" />
                         </template>
                       </ElButton>
-                      <ElButton
-                        type="danger"
-                        plain
-                        size="default"
-                        @click.stop="dictionaryDelete(node, data)"
-                      >
+                      <ElButton type="danger" plain size="default" @click.stop="dictionaryDelete(node, data)">
                         <template #icon>
                           <SvgIcon name="i-ep:delete" />
                         </template>
@@ -291,51 +277,30 @@ function onDeleteMulti(rows: any[]) {
             </ElTree>
           </ElScrollbar>
         </template>
-        <div
-          v-show="dictionaryItem.search.catalogueId"
-          class="dictionary-container"
-        >
+        <div v-show="dictionaryItem.search.catalogueId" class="dictionary-container">
           <ElSpace wrap>
             <ElButton type="primary" @click="onCreate()">
               <template #icon>
                 <SvgIcon name="i-ep:plus" />
               </template>
             </ElButton>
-            <ElButton
-              type="danger"
-              :disabled="!dictionaryItem.selectionDataList.length"
-              @click="onDeleteMulti(dictionaryItem.selectionDataList)"
-            >
+            <ElButton type="danger" :disabled="!dictionaryItem.selectionDataList.length"
+              @click="onDeleteMulti(dictionaryItem.selectionDataList)">
               <template #icon>
                 <SvgIcon name="i-ep:delete" />
               </template>
             </ElButton>
-            <ElInput
-              v-model="dictionaryItem.search.chineseName"
-              placeholder="请输入关键词筛选字典项"
-              clearable
-              style="width: 200px"
-              @keydown.enter="getDictionaryItemList"
-            />
+            <ElInput v-model="dictionaryItem.search.chineseName" placeholder="请输入关键词筛选字典项" clearable
+              style="width: 200px" @keydown.enter="getDictionaryItemList" />
             <ElButton @click="getDictionaryItemList">
               <template #icon>
                 <SvgIcon name="i-ep:search" />
               </template>
             </ElButton>
           </ElSpace>
-          <ElTable
-            ref="dictionaryItemRef"
-            v-loading="dictionaryItem.loading"
-            :data="dictionaryItem.dataList"
-            stripe
-            highlight-current-row
-            border
-            height="100%"
-            @sort-change="sortChange"
-            @selection-change="dictionaryItem.selectionDataList = $event"
-            row-key="id"
-            default-expand-all
-          >
+          <ElTable ref="dictionaryItemRef" v-loading="dictionaryItem.loading" :data="dictionaryItem.dataList" stripe
+            highlight-current-row border height="100%" @sort-change="sortChange"
+            @selection-change="dictionaryItem.selectionDataList = $event" row-key="id" default-expand-all>
             <ElTableColumn type="selection" align="center" fixed />
             <ElTableColumn prop="chineseName" label="中文名称" />
             <ElTableColumn prop="englishName" label="英文名称" />
@@ -350,28 +315,13 @@ function onDeleteMulti(rows: any[]) {
 
             <ElTableColumn label="操作" width="250" align="center">
               <template #default="scope">
-                <ElButton
-                  type="primary"
-                  size="small"
-                  plain
-                  @click="onCreate(scope.row)"
-                >
+                <ElButton type="primary" size="small" plain @click="onCreate(scope.row)">
                   新增子项
                 </ElButton>
-                <ElButton
-                  type="primary"
-                  size="small"
-                  plain
-                  @click="onEdit(scope.row)"
-                >
+                <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">
                   编辑
                 </ElButton>
-                <ElButton
-                  type="danger"
-                  size="small"
-                  plain
-                  @click="onDelete(scope.row)"
-                >
+                <ElButton type="danger" size="small" plain @click="onDelete(scope.row)">
                   删除
                 </ElButton>
               </template>
@@ -380,47 +330,21 @@ function onDeleteMulti(rows: any[]) {
               <el-empty description="暂无数据" />
             </template>
           </ElTable>
-          <ElPagination
-            :current-page="pagination.page"
-            :total="pagination.total"
-            :page-size="pagination.size"
-            :page-sizes="pagination.sizes"
-            :layout="pagination.layout"
-            :hide-on-single-page="false"
-            class="pagination"
-            background
-            @size-change="sizeChange"
-            @current-change="currentChange"
-          />
+          <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+            :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+            background @size-change="sizeChange" @current-change="currentChange" />
         </div>
-        <div
-          v-show="!dictionaryItem.search.catalogueId"
-          class="dictionary-container"
-        >
+        <div v-show="!dictionaryItem.search.catalogueId" class="dictionary-container">
           <div class="empty">请在左侧新增或选择一个字典</div>
         </div>
       </LayoutContainer>
-      <DictionaryDialog
-        v-if="dictionary.dialog.visible"
-        :id="dictionary.dialog.id"
-        v-model="dictionary.dialog.visible"
-        :row="dictionary.row"
-        :parent-id="dictionary.dialog.parentId"
-        :tree="dictionary.tree"
-        @get-list="getDictionaryList"
-      />
-      <DictionaryItemDia
-        v-if="dictionaryItem.dialog.visible"
-        :id="dictionaryItem.dialog.id"
-        v-model="dictionaryItem.dialog.visible"
-        :catalogue-id="dictionaryItem.search.catalogueId"
-        :parent-id="dictionaryItem.dialog.parentId"
-        :level="dictionaryItem.dialog.level"
-        :tree="dictionary.tree"
-        :dataList="dictionaryItem.dataList"
-        :row="dictionaryItem.row"
-        @success="getDictionaryItemList"
-      />
+      <DictionaryDialog v-if="dictionary.dialog.visible" :id="dictionary.dialog.id" v-model="dictionary.dialog.visible"
+        :row="dictionary.row" :parent-id="dictionary.dialog.parentId" :tree="dictionary.tree"
+        @get-list="getDictionaryList" />
+      <DictionaryItemDia v-if="dictionaryItem.dialog.visible" :id="dictionaryItem.dialog.id"
+        v-model="dictionaryItem.dialog.visible" :catalogue-id="dictionaryItem.search.catalogueId"
+        :parent-id="dictionaryItem.dialog.parentId" :level="dictionaryItem.dialog.level" :tree="dictionary.tree"
+        :dataList="dictionaryItem.dataList" :row="dictionaryItem.row" @success="getDictionaryItemList" />
     </div>
   </div>
 </template>
@@ -476,7 +400,7 @@ function onDeleteMulti(rows: any[]) {
           height: 60px;
         }
 
-        .is-current > .el-tree-node__content {
+        .is-current>.el-tree-node__content {
           background-color: var(--el-color-primary-light-9);
         }
 

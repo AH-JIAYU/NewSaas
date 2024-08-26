@@ -174,16 +174,22 @@ function changeTab() {
 }
 // 获取数据
 function getDataList() {
-  data.value.loading = true;
-  const params = {
-    ...getParams(),
-    ...data.value.search,
-  };
-  api.list(params).then((res: any) => {
+  try {
+    data.value.loading = true;
+    const params = {
+      ...getParams(),
+      ...data.value.search,
+    };
+    api.list(params).then((res: any) => {
+      data.value.loading = false;
+      data.value.dataList = res.data.projectOrMemberGroupIrList;
+      pagination.value.total = res.data.total;
+    });
+  } catch (error) {
+
+  } finally {
     data.value.loading = false;
-    data.value.dataList = res.data.projectOrMemberGroupIrList;
-    pagination.value.total = res.data.total;
-  });
+  }
 }
 // 重置筛选数据
 function onReset() {
@@ -213,39 +219,19 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
     <PageMain>
       <el-row style="margin: 0px 0" :gutter="24">
         <el-col style="padding: 0" :span="24">
-          <el-tabs
-            v-model="data.search.type"
-            type="border-card"
-            @tab-change="changeTab"
-          >
+          <el-tabs v-model="data.search.type" type="border-card" @tab-change="changeTab">
             <el-tab-pane label="项目IR" :name="1">
               <SearchBar :show-toggle="false">
                 <template #default="{ fold, toggle }">
-                  <ElForm
-                    :model="data.search"
-                    size="default"
-                    label-width="100px"
-                    inline-message
-                    inline
-                    class="search-form"
-                  >
+                  <ElForm :model="data.search" size="default" label-width="100px" inline-message inline
+                    class="search-form">
                     <ElFormItem>
-                      <ElInput
-                        v-model="data.search.projectOrMemberGroupId"
-                        placeholder="项目ID"
-                        clearable
-                        @keydown.enter="currentChange()"
-                        @clear="currentChange()"
-                      />
+                      <ElInput v-model="data.search.projectOrMemberGroupId" placeholder="项目ID" clearable
+                        @keydown.enter="currentChange()" @clear="currentChange()" />
                     </ElFormItem>
                     <ElFormItem>
-                      <ElInput
-                        v-model="data.search.projectOrMemberGroupName"
-                        placeholder="项目名称"
-                        clearable
-                        @keydown.enter="currentChange()"
-                        @clear="currentChange()"
-                      />
+                      <ElInput v-model="data.search.projectOrMemberGroupName" placeholder="项目名称" clearable
+                        @keydown.enter="currentChange()" @clear="currentChange()" />
                     </ElFormItem>
                     <ElFormItem>
                       <ElButton type="primary" @click="currentChange()">
@@ -256,19 +242,14 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
                       </ElButton>
                       <ElButton @click="onReset">
                         <template #icon>
-                          <div
-                            class="i-grommet-icons:power-reset h-1em w-1em"
-                          />
+                          <div class="i-grommet-icons:power-reset h-1em w-1em" />
                         </template>
                         重置
                       </ElButton>
                       <ElButton disabled link @click="toggle">
                         <template #icon>
-                          <SvgIcon
-                            :name="
-                              fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'
-                            "
-                          />
+                          <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'
+    " />
                         </template>
                         {{ fold ? "展开" : "收起" }}
                       </ElButton>
@@ -281,105 +262,44 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
                 <FormLeftPanel />
                 <FormRightPanel>
                   <el-button size="default"> 导出 </el-button>
-                  <TabelControl
-                    v-model:border="data.border"
-                    v-model:tableAutoHeight="data.tableAutoHeight"
-                    v-model:checkList="data.checkList"
-                    v-model:columns="columns"
-                    v-model:line-height="data.lineHeight"
-                    v-model:stripe="data.stripe"
-                    style="margin-left: 12px"
-                    @query-data="getDataList"
-                  />
+                  <TabelControl v-model:border="data.border" v-model:tableAutoHeight="data.tableAutoHeight"
+                    v-model:checkList="data.checkList" v-model:columns="columns" v-model:line-height="data.lineHeight"
+                    v-model:stripe="data.stripe" style="margin-left: 12px" @query-data="getDataList" />
                 </FormRightPanel>
               </el-row>
-              <ElTable
-                v-loading="data.loading"
-                :border="data.border"
-                :size="data.lineHeight"
-                :stripe="data.stripe"
-                class="my-4"
-                :data="data.dataList"
-                highlight-current-row
-                height="100%"
-                @sort-change="sortChange"
-                @selection-change="data.batch.selectionDataList = $event"
-              >
+              <ElTable v-loading="data.loading" :border="data.border" :size="data.lineHeight" :stripe="data.stripe"
+                class="my-4" :data="data.dataList" highlight-current-row height="100%" @sort-change="sortChange"
+                @selection-change="data.batch.selectionDataList = $event">
                 <el-table-column align="center" type="selection" />
-                <ElTableColumn
-                  v-if="data.checkList.includes('projectOrMemberGroupId')"
-                  show-overflow-tooltip
-                  align="center"
-                  prop="projectOrMemberGroupId"
-                  label="项目ID"
-                />
-                <ElTableColumn
-                  v-if="data.checkList.includes('projectOrMemberGroupName')"
-                  show-overflow-tooltip
-                  align="center"
-                  prop="projectOrMemberGroupName"
-                  label="项目名称"
-                />
+                <ElTableColumn v-if="data.checkList.includes('projectOrMemberGroupId')" show-overflow-tooltip
+                  align="center" prop="projectOrMemberGroupId" label="项目ID" />
+                <ElTableColumn v-if="data.checkList.includes('projectOrMemberGroupName')" show-overflow-tooltip
+                  align="center" prop="projectOrMemberGroupName" label="项目名称" />
 
-                <ElTableColumn
-                  v-if="data.checkList.includes('ir')"
-                  show-overflow-tooltip
-                  align="center"
-                  prop="ir"
-                  label="项目IR"
-                />
-                <ElTableColumn
-                  v-if="data.checkList.includes('projectIr')"
-                  show-overflow-tooltip
-                  align="center"
-                  prop="projectIr"
-                  label="项目实际IR"
-                />
+                <ElTableColumn v-if="data.checkList.includes('ir')" show-overflow-tooltip align="center" prop="ir"
+                  label="项目IR" />
+                <ElTableColumn v-if="data.checkList.includes('projectIr')" show-overflow-tooltip align="center"
+                  prop="projectIr" label="项目实际IR" />
                 <template #empty>
                   <el-empty description="暂无数据" />
                 </template>
               </ElTable>
-              <ElPagination
-                :current-page="pagination.page"
-                :total="pagination.total"
-                :page-size="pagination.size"
-                :page-sizes="pagination.sizes"
-                :layout="pagination.layout"
-                :hide-on-single-page="false"
-                class="pagination"
-                background
-                @size-change="sizeChange"
-                @current-change="currentChange"
-              />
+              <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+                :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false"
+                class="pagination" background @size-change="sizeChange" @current-change="currentChange" />
             </el-tab-pane>
             <el-tab-pane label="会员IR" :name="2">
               <SearchBar :show-toggle="false">
                 <template #default="{ fold, toggle }">
-                  <ElForm
-                    :model="data.search"
-                    size="default"
-                    label-width="100px"
-                    inline-message
-                    inline
-                    class="search-form"
-                  >
+                  <ElForm :model="data.search" size="default" label-width="100px" inline-message inline
+                    class="search-form">
                     <ElFormItem>
-                      <ElInput
-                        v-model="data.search.projectOrMemberGroupId"
-                        placeholder="会员ID"
-                        clearable
-                        @keydown.enter="currentChange()"
-                        @clear="currentChange()"
-                      />
+                      <ElInput v-model="data.search.projectOrMemberGroupId" placeholder="会员ID" clearable
+                        @keydown.enter="currentChange()" @clear="currentChange()" />
                     </ElFormItem>
                     <ElFormItem>
-                      <ElInput
-                        v-model="data.search.projectOrMemberGroupName"
-                        placeholder="会员姓名"
-                        clearable
-                        @keydown.enter="currentChange()"
-                        @clear="currentChange()"
-                      />
+                      <ElInput v-model="data.search.projectOrMemberGroupName" placeholder="会员姓名" clearable
+                        @keydown.enter="currentChange()" @clear="currentChange()" />
                     </ElFormItem>
                     <ElFormItem>
                       <ElButton type="primary" @click="currentChange()">
@@ -390,19 +310,14 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
                       </ElButton>
                       <ElButton @click="onReset">
                         <template #icon>
-                          <div
-                            class="i-grommet-icons:power-reset h-1em w-1em"
-                          />
+                          <div class="i-grommet-icons:power-reset h-1em w-1em" />
                         </template>
                         重置
                       </ElButton>
                       <ElButton disabled link @click="toggle">
                         <template #icon>
-                          <SvgIcon
-                            :name="
-                              fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'
-                            "
-                          />
+                          <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'
+    " />
                         </template>
                         {{ fold ? "展开" : "收起" }}
                       </ElButton>
@@ -415,98 +330,42 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
                 <FormLeftPanel />
                 <FormRightPanel>
                   <el-button size="default"> 导出 </el-button>
-                  <TabelControl
-                    v-model:border="data.border"
-                    v-model:tableAutoHeight="data.tableAutoHeight"
-                    v-model:checkList="data.checkList"
-                    v-model:columns="columns"
-                    v-model:line-height="data.lineHeight"
-                    v-model:stripe="data.stripe"
-                    style="margin-left: 12px"
-                    @query-data="getDataList"
-                  />
+                  <TabelControl v-model:border="data.border" v-model:tableAutoHeight="data.tableAutoHeight"
+                    v-model:checkList="data.checkList" v-model:columns="columns" v-model:line-height="data.lineHeight"
+                    v-model:stripe="data.stripe" style="margin-left: 12px" @query-data="getDataList" />
                 </FormRightPanel>
               </el-row>
-              <ElTable
-                v-loading="data.loading"
-                :border="data.border"
-                :size="data.lineHeight"
-                :stripe="data.stripe"
-                class="my-4"
-                :data="data.dataList"
-                highlight-current-row
-                height="100%"
-                @sort-change="sortChange"
-                @selection-change="data.batch.selectionDataList = $event"
-              >
+              <ElTable v-loading="data.loading" :border="data.border" :size="data.lineHeight" :stripe="data.stripe"
+                class="my-4" :data="data.dataList" highlight-current-row height="100%" @sort-change="sortChange"
+                @selection-change="data.batch.selectionDataList = $event">
                 <el-table-column align="center" type="selection" />
-                <ElTableColumn
-                  v-if="data.checkList.includes('projectOrMemberGroupId')"
-                  show-overflow-tooltip
-                  align="center"
-                  prop="projectOrMemberGroupId"
-                  label="会员ID"
-                />
-                <ElTableColumn
-                  v-if="data.checkList.includes('projectOrMemberGroupName')"
-                  show-overflow-tooltip
-                  align="center"
-                  prop="projectOrMemberGroupName"
-                  label="会员姓名"
-                />
+                <ElTableColumn v-if="data.checkList.includes('projectOrMemberGroupId')" show-overflow-tooltip
+                  align="center" prop="projectOrMemberGroupId" label="会员ID" />
+                <ElTableColumn v-if="data.checkList.includes('projectOrMemberGroupName')" show-overflow-tooltip
+                  align="center" prop="projectOrMemberGroupName" label="会员姓名" />
 
-                <ElTableColumn
-                  v-if="data.checkList.includes('ir')"
-                  show-overflow-tooltip
-                  align="center"
-                  prop="ir"
-                  label="IR"
-                />
+                <ElTableColumn v-if="data.checkList.includes('ir')" show-overflow-tooltip align="center" prop="ir"
+                  label="IR" />
                 <template #empty>
                   <el-empty description="暂无数据" />
                 </template>
               </ElTable>
-              <ElPagination
-                :current-page="pagination.page"
-                :total="pagination.total"
-                :page-size="pagination.size"
-                :page-sizes="pagination.sizes"
-                :layout="pagination.layout"
-                :hide-on-single-page="false"
-                class="pagination"
-                background
-                @size-change="sizeChange"
-                @current-change="currentChange"
-              />
+              <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+                :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false"
+                class="pagination" background @size-change="sizeChange" @current-change="currentChange" />
             </el-tab-pane>
             <el-tab-pane label="小组IR" :name="3">
               <SearchBar :show-toggle="false">
                 <template #default="{ fold, toggle }">
-                  <ElForm
-                    :model="data.search"
-                    size="default"
-                    label-width="100px"
-                    inline-message
-                    inline
-                    class="search-form"
-                  >
+                  <ElForm :model="data.search" size="default" label-width="100px" inline-message inline
+                    class="search-form">
                     <ElFormItem>
-                      <ElInput
-                        v-model="data.search.projectOrMemberGroupId"
-                        placeholder="会员组ID"
-                        clearable
-                        @keydown.enter="currentChange()"
-                        @clear="currentChange()"
-                      />
+                      <ElInput v-model="data.search.projectOrMemberGroupId" placeholder="会员组ID" clearable
+                        @keydown.enter="currentChange()" @clear="currentChange()" />
                     </ElFormItem>
                     <ElFormItem>
-                      <ElInput
-                        v-model="data.search.projectOrMemberGroupName"
-                        placeholder="会员组名称"
-                        clearable
-                        @keydown.enter="currentChange()"
-                        @clear="currentChange()"
-                      />
+                      <ElInput v-model="data.search.projectOrMemberGroupName" placeholder="会员组名称" clearable
+                        @keydown.enter="currentChange()" @clear="currentChange()" />
                     </ElFormItem>
                     <ElFormItem>
                       <ElButton type="primary" @click="currentChange()">
@@ -517,19 +376,14 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
                       </ElButton>
                       <ElButton @click="onReset">
                         <template #icon>
-                          <div
-                            class="i-grommet-icons:power-reset h-1em w-1em"
-                          />
+                          <div class="i-grommet-icons:power-reset h-1em w-1em" />
                         </template>
                         重置
                       </ElButton>
                       <ElButton disabled link @click="toggle">
                         <template #icon>
-                          <SvgIcon
-                            :name="
-                              fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'
-                            "
-                          />
+                          <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'
+    " />
                         </template>
                         {{ fold ? "展开" : "收起" }}
                       </ElButton>
@@ -542,68 +396,28 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
                 <FormLeftPanel />
                 <FormRightPanel>
                   <el-button size="default"> 导出 </el-button>
-                  <TabelControl
-                    v-model:border="data.border"
-                    v-model:tableAutoHeight="data.tableAutoHeight"
-                    v-model:checkList="data.checkList"
-                    v-model:columns="columns"
-                    v-model:line-height="data.lineHeight"
-                    v-model:stripe="data.stripe"
-                    style="margin-left: 12px"
-                    @query-data="getDataList"
-                  />
+                  <TabelControl v-model:border="data.border" v-model:tableAutoHeight="data.tableAutoHeight"
+                    v-model:checkList="data.checkList" v-model:columns="columns" v-model:line-height="data.lineHeight"
+                    v-model:stripe="data.stripe" style="margin-left: 12px" @query-data="getDataList" />
                 </FormRightPanel>
               </el-row>
-              <ElTable
-                v-loading="data.loading"
-                :border="data.border"
-                :size="data.lineHeight"
-                :stripe="data.stripe"
-                class="my-4"
-                :data="data.dataList"
-                highlight-current-row
-                height="100%"
-                @sort-change="sortChange"
-                @selection-change="data.batch.selectionDataList = $event"
-              >
+              <ElTable v-loading="data.loading" :border="data.border" :size="data.lineHeight" :stripe="data.stripe"
+                class="my-4" :data="data.dataList" highlight-current-row height="100%" @sort-change="sortChange"
+                @selection-change="data.batch.selectionDataList = $event">
                 <el-table-column align="center" type="selection" />
-                <ElTableColumn
-                  v-if="data.checkList.includes('projectOrMemberGroupId')"
-                  show-overflow-tooltip
-                  align="center"
-                  prop="projectOrMemberGroupId"
-                  label="会员组ID"
-                />
-                <ElTableColumn
-                  v-if="data.checkList.includes('projectOrMemberGroupName')"
-                  show-overflow-tooltip
-                  align="center"
-                  prop="projectOrMemberGroupName"
-                  label="会员组名称"
-                />
-                <ElTableColumn
-                  v-if="data.checkList.includes('ir')"
-                  show-overflow-tooltip
-                  align="center"
-                  prop="ir"
-                  label="会员组IR"
-                />
+                <ElTableColumn v-if="data.checkList.includes('projectOrMemberGroupId')" show-overflow-tooltip
+                  align="center" prop="projectOrMemberGroupId" label="会员组ID" />
+                <ElTableColumn v-if="data.checkList.includes('projectOrMemberGroupName')" show-overflow-tooltip
+                  align="center" prop="projectOrMemberGroupName" label="会员组名称" />
+                <ElTableColumn v-if="data.checkList.includes('ir')" show-overflow-tooltip align="center" prop="ir"
+                  label="会员组IR" />
                 <template #empty>
                   <el-empty description="暂无数据" />
                 </template>
               </ElTable>
-              <ElPagination
-                :current-page="pagination.page"
-                :total="pagination.total"
-                :page-size="pagination.size"
-                :page-sizes="pagination.sizes"
-                :layout="pagination.layout"
-                :hide-on-single-page="false"
-                class="pagination"
-                background
-                @size-change="sizeChange"
-                @current-change="currentChange"
-              />
+              <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+                :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false"
+                class="pagination" background @size-change="sizeChange" @current-change="currentChange" />
             </el-tab-pane>
           </el-tabs>
         </el-col>
@@ -665,6 +479,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
 :deep(.el-tabs__nav-scroll) {
   background-color: #fafafa;
 }
+
 :deep(.el-table__empty-block) {
   height: 100% !important;
 }

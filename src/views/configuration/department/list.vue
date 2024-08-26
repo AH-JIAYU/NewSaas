@@ -127,16 +127,22 @@ const data = ref<any>({
 });
 // 获取数据
 function getDataList() {
-  data.value.loading = true;
-  const params = {
-    ...getParams(),
-    ...data.value.search,
-  };
-  api.list(params).then((res: any) => {
+  try {
+    data.value.loading = true;
+    const params = {
+      ...getParams(),
+      ...data.value.search,
+    };
+    api.list(params).then((res: any) => {
+      data.value.loading = false;
+      data.value.dataList = res.data.data;
+      pagination.value.total = +res.data.total;
+    });
+  } catch (error) {
+
+  } finally {
     data.value.loading = false;
-    data.value.dataList = res.data.data;
-    pagination.value.total = +res.data.total;
-  });
+  }
 }
 
 // 重置筛选数据
@@ -189,7 +195,7 @@ function onCreate() {
   }
 }
 // 新增小组
-function onGroup(row:any) {
+function onGroup(row: any) {
   groupFormRef.value.showEdit(JSON.stringify(row))
 }
 // 修改

@@ -50,7 +50,7 @@ const list = ref<any>([]);
 
 // 详情
 function editData(row: any) {
-  editRef.value.showEdit(row,queryForm.type===2?1:0);
+  editRef.value.showEdit(row, queryForm.type === 2 ? 1 : 0);
 }
 
 // 每页数量切换
@@ -72,22 +72,27 @@ function onReset() {
   fetchData();
 }
 async function fetchData() {
-  listLoading.value = true;
-  const params = {
-    ...getParams(),
-    ...queryForm,
-  };
-  if (queryForm.type === 1) {
-    const res = await api.list(params);
-    list.value = res.data.projectAllocationInfoList;
-    pagination.value.total = res.data.total;
-  } else {
-    const res = await api.meList(params);
-    list.value = res.data.projectMeAllocationInfoList;
-    pagination.value.total = res.data.total;
-  }
+  try {
+    listLoading.value = true;
+    const params = {
+      ...getParams(),
+      ...queryForm,
+    };
+    if (queryForm.type === 1) {
+      const res = await api.list(params);
+      list.value = res.data.projectAllocationInfoList;
+      pagination.value.total = res.data.total;
+    } else {
+      const res = await api.meList(params);
+      list.value = res.data.projectMeAllocationInfoList;
+      pagination.value.total = res.data.total;
+    }
+    listLoading.value = false;
+  } catch (error) {
 
-  listLoading.value = false;
+  } finally {
+    listLoading.value = false;
+  }
 }
 onMounted(() => {
   columns.value.forEach((item: any) => {

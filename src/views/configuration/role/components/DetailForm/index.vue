@@ -39,21 +39,27 @@ const formRules = ref<FormRules>({
 });
 
 onMounted(async () => {
-  loading.value = true;
-  if (form.value.id !== "") {
-    await getInfo();
+  try {
+    loading.value = true;
+    if (form.value.id !== "") {
+      await getInfo();
+    }
+    // 调用store的方法获取按钮权限，如果没有就调接口
+    permissionData.value = await roleButton.getPermissions();
+    // 从store获取原始路由
+    menuData.value = routeStore.routesRaw;
+    // 获取扁平化后的1，2级路由
+    const Level1AndLevel2List = await routeStore.obtainLevel1AndLevel2Routing();
+    // 只保留第三级路由
+    form.value.menuId = form.value.menuId.filter((item: any) => {
+      return !Level1AndLevel2List.some((ite: any) => ite.id === item);
+    });
+    loading.value = false;
+  } catch (error) {
+
+  } finally {
+    loading.value = false;
   }
-  // 调用store的方法获取按钮权限，如果没有就调接口
-  permissionData.value = await roleButton.getPermissions();
-  // 从store获取原始路由
-  menuData.value = routeStore.routesRaw;
-  // 获取扁平化后的1，2级路由
-  const Level1AndLevel2List = await routeStore.obtainLevel1AndLevel2Routing();
-  // 只保留第三级路由
-  form.value.menuId = form.value.menuId.filter((item: any) => {
-    return !Level1AndLevel2List.some((ite: any) => ite.id === item);
-  });
-  loading.value = false;
 });
 
 // 获取
@@ -151,37 +157,17 @@ defineExpose({
 
 <template>
   <div v-loading="loading">
-    <ElForm
-      ref="formRef"
-      :model="form"
-      :rules="formRules"
-      label-width="120px"
-      label-suffix="："
-    >
+    <ElForm ref="formRef" :model="form" :rules="formRules" label-width="120px" label-suffix="：">
       <ElFormItem label="角色名称" prop="roleName">
-        <ElInput
-          v-model="form.roleName"
-          :disabled="!!form.id"
-          placeholder="请输入角色名称"
-        />
+        <ElInput v-model="form.roleName" :disabled="!!form.id" placeholder="请输入角色名称" />
       </ElFormItem>
       <ElFormItem label="备注" prop="remark">
         <ElInput v-model="form.remark" placeholder="请输入备注" />
       </ElFormItem>
       <ElFormItem label="权限">
-        <el-tree
-          v-if="!loading"
-          ref="treeRef"
-          :data="menuData"
-          style="width: 100%"
-          :default-checked-keys="form.menuId"
-          :default-expanded-keys="[]"
-          node-key="id"
-          show-checkbox
-          @check-change="handleNodeClick"
-          default-expand-all
-          border
-        >
+        <el-tree v-if="!loading" ref="treeRef" :data="menuData" style="width: 100%" :default-checked-keys="form.menuId"
+          :default-expanded-keys="[]" node-key="id" show-checkbox @check-change="handleNodeClick" default-expand-all
+          border>
           <template #default="{ data }">
             <div class="custom-tree-node">
               <div class="menu">
@@ -190,11 +176,7 @@ defineExpose({
               <div class="permission">
                 <div v-if="rowPermission(data.id)?.length" class="permissions">
                   <ElCheckboxGroup v-model="form.permission">
-                    <ElCheckbox
-                      v-for="auth in rowPermission(data.id)"
-                      :key="auth.id"
-                      :value="auth.id"
-                    >
+                    <ElCheckbox v-for="auth in rowPermission(data.id)" :key="auth.id" :value="auth.id">
                       {{ auth.label }}
                     </ElCheckbox>
                   </ElCheckboxGroup>

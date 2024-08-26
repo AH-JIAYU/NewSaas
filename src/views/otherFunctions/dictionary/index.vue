@@ -177,22 +177,28 @@ watch(
 );
 
 function getDictionaryItemList() {
-  dictionaryItem.value.loading = true;
-  const params = {
-    ...getParams(),
-    dictionary_id: dictionaryItem.value.search.dictionaryId,
-    ...(dictionaryItem.value.search.title && {
-      title: dictionaryItem.value.search.title,
-    }),
-  };
-  apiDictionary.itemList(params).then((res: any) => {
-    dictionaryItem.value.loading = false;
-    dictionaryItem.value.dataList = res.data.list;
-    dictionaryItem.value.dataList.forEach((item: any) => {
-      item.enableLoading = false;
+  try {
+    dictionaryItem.value.loading = true;
+    const params = {
+      ...getParams(),
+      dictionary_id: dictionaryItem.value.search.dictionaryId,
+      ...(dictionaryItem.value.search.title && {
+        title: dictionaryItem.value.search.title,
+      }),
+    };
+    apiDictionary.itemList(params).then((res: any) => {
+      dictionaryItem.value.loading = false;
+      dictionaryItem.value.dataList = res.data.list;
+      dictionaryItem.value.dataList.forEach((item: any) => {
+        item.enableLoading = false;
+      });
+      pagination.value.total = res.data.total;
     });
-    pagination.value.total = res.data.total;
-  });
+  } catch (error) {
+
+  } finally {
+    dictionaryItem.value.loading = false;
+  }
 }
 
 function onChangeEnable(row: any) {
@@ -258,12 +264,12 @@ function onDelete(row: any) {
       apiDictionary.itemDelete(row.id).then(() => {
         getDictionaryItemList();
         ElMessage.success({
-          message: "模拟删除成功",
+          message: "删除成功",
           center: true,
         });
       });
     })
-    .catch(() => {});
+    .catch(() => { });
 }
 
 function onDeleteMulti(rows: any[]) {
@@ -272,12 +278,12 @@ function onDeleteMulti(rows: any[]) {
       apiDictionary.itemDelete(rows.map((item) => item.id)).then(() => {
         getDictionaryItemList();
         ElMessage.success({
-          message: "模拟删除成功",
+          message: "删除成功",
           center: true,
         });
       });
     })
-    .catch(() => {});
+    .catch(() => { });
 }
 
 // 使用示例
@@ -286,10 +292,7 @@ const usageExampleVisible = ref(false);
 
 <template>
   <div class="absolute-container">
-    <PageHeader
-      title="字典管理"
-      content="页面数据为 Mock 示例数据，非真实数据。"
-    >
+    <PageHeader title="字典管理" content="页面数据为 Mock 示例数据，非真实数据。">
       <ElButton @click="usageExampleVisible = true"> 使用示例 </ElButton>
     </PageHeader>
     <div class="page-main">
@@ -305,20 +308,10 @@ const usageExampleVisible = ref(false);
               </template>
             </ElButton>
           </ElButtonGroup>
-          <ElInput
-            v-model="dictionary.search"
-            placeholder="请输入关键词筛选字典"
-            clearable
-            class="search"
-          />
+          <ElInput v-model="dictionary.search" placeholder="请输入关键词筛选字典" clearable class="search" />
           <ElScrollbar class="tree">
-            <ElTree
-              ref="dictionaryRef"
-              :data="dictionary.tree"
-              :filter-node-method="dictionaryFilter as any"
-              default-expand-all
-              @node-click="dictionaryClick"
-            >
+            <ElTree ref="dictionaryRef" :data="dictionary.tree" :filter-node-method="dictionaryFilter as any"
+              default-expand-all @node-click="dictionaryClick">
               <template #default="{ node, data }">
                 <div class="custom-tree-node">
                   <div class="label" :title="node.label">
@@ -329,32 +322,17 @@ const usageExampleVisible = ref(false);
                   </div>
                   <div class="actions">
                     <ElButtonGroup>
-                      <ElButton
-                        type="primary"
-                        plain
-                        size="default"
-                        @click.stop="dictionaryAdd(data)"
-                      >
+                      <ElButton type="primary" plain size="default" @click.stop="dictionaryAdd(data)">
                         <template #icon>
                           <SvgIcon name="i-ep:plus" />
                         </template>
                       </ElButton>
-                      <ElButton
-                        type="info"
-                        plain
-                        size="default"
-                        @click.stop="dictionaryEdit(node, data)"
-                      >
+                      <ElButton type="info" plain size="default" @click.stop="dictionaryEdit(node, data)">
                         <template #icon>
                           <SvgIcon name="i-ep:edit" />
                         </template>
                       </ElButton>
-                      <ElButton
-                        type="danger"
-                        plain
-                        size="default"
-                        @click.stop="dictionaryDelete(node, data)"
-                      >
+                      <ElButton type="danger" plain size="default" @click.stop="dictionaryDelete(node, data)">
                         <template #icon>
                           <SvgIcon name="i-ep:delete" />
                         </template>
@@ -366,48 +344,29 @@ const usageExampleVisible = ref(false);
             </ElTree>
           </ElScrollbar>
         </template>
-        <div
-          v-show="dictionaryItem.search.dictionaryId"
-          class="dictionary-container"
-        >
+        <div v-show="dictionaryItem.search.dictionaryId" class="dictionary-container">
           <ElSpace wrap>
             <ElButton type="primary" @click="onCreate">
               <template #icon>
                 <SvgIcon name="i-ep:plus" />
               </template>
             </ElButton>
-            <ElButton
-              type="danger"
-              :disabled="!dictionaryItem.selectionDataList.length"
-              @click="onDeleteMulti(dictionaryItem.selectionDataList)"
-            >
+            <ElButton type="danger" :disabled="!dictionaryItem.selectionDataList.length"
+              @click="onDeleteMulti(dictionaryItem.selectionDataList)">
               <template #icon>
                 <SvgIcon name="i-ep:delete" />
               </template>
             </ElButton>
-            <ElInput
-              v-model="dictionaryItem.search.title"
-              placeholder="请输入关键词筛选字典项"
-              clearable
-              style="width: 200px"
-            />
+            <ElInput v-model="dictionaryItem.search.title" placeholder="请输入关键词筛选字典项" clearable style="width: 200px" />
             <ElButton @click="getDictionaryItemList">
               <template #icon>
                 <SvgIcon name="i-ep:search" />
               </template>
             </ElButton>
           </ElSpace>
-          <ElTable
-            ref="dictionaryItemRef"
-            v-loading="dictionaryItem.loading"
-            :data="dictionaryItem.dataList"
-            stripe
-            highlight-current-row
-            border
-            height="100%"
-            @sort-change="sortChange"
-            @selection-change="dictionaryItem.selectionDataList = $event"
-          >
+          <ElTable ref="dictionaryItemRef" v-loading="dictionaryItem.loading" :data="dictionaryItem.dataList" stripe
+            highlight-current-row border height="100%" @sort-change="sortChange"
+            @selection-change="dictionaryItem.selectionDataList = $event">
             <ElTableColumn type="selection" align="center" fixed />
             <ElTableColumn prop="name" label="名称" />
             <ElTableColumn label="键值" align="center" width="150">
@@ -419,32 +378,16 @@ const usageExampleVisible = ref(false);
             </ElTableColumn>
             <ElTableColumn label="状态" width="100" align="center">
               <template #default="scope">
-                <ElSwitch
-                  v-model="scope.row.enable"
-                  :loading="scope.row.enableLoading"
-                  inline-prompt
-                  active-text="启用"
-                  inactive-text="禁用"
-                  :before-change="() => onChangeEnable(scope.row)"
-                />
+                <ElSwitch v-model="scope.row.enable" :loading="scope.row.enableLoading" inline-prompt active-text="启用"
+                  inactive-text="禁用" :before-change="() => onChangeEnable(scope.row)" />
               </template>
             </ElTableColumn>
             <ElTableColumn label="操作" width="200" align="center">
               <template #default="scope">
-                <ElButton
-                  type="primary"
-                  size="small"
-                  plain
-                  @click="onEdit(scope.row)"
-                >
+                <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">
                   编辑
                 </ElButton>
-                <ElButton
-                  type="danger"
-                  size="small"
-                  plain
-                  @click="onDelete(scope.row)"
-                >
+                <ElButton type="danger" size="small" plain @click="onDelete(scope.row)">
                   删除
                 </ElButton>
               </template>
@@ -453,43 +396,20 @@ const usageExampleVisible = ref(false);
               <el-empty description="暂无数据" />
             </template>
           </ElTable>
-          <ElPagination
-            :current-page="pagination.page"
-            :total="pagination.total"
-            :page-size="pagination.size"
-            :page-sizes="pagination.sizes"
-            :layout="pagination.layout"
-            :hide-on-single-page="false"
-            class="pagination"
-            background
-            @size-change="sizeChange"
-            @current-change="currentChange"
-          />
+          <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+            :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+            background @size-change="sizeChange" @current-change="currentChange" />
         </div>
-        <div
-          v-show="!dictionaryItem.search.dictionaryId"
-          class="dictionary-container"
-        >
+        <div v-show="!dictionaryItem.search.dictionaryId" class="dictionary-container">
           <div class="empty">请在左侧新增或选择一个字典</div>
         </div>
       </LayoutContainer>
-      <DictionaryDialog
-        v-if="dictionary.dialog.visible"
-        :id="dictionary.dialog.id"
-        v-model="dictionary.dialog.visible"
-        :parent-id="dictionary.dialog.parentId"
-        :tree="dictionary.tree"
-        @add-node="dictionaryAddNode"
-        @edit-node="dictionaryEditNode"
-      />
-      <DictionaryItemDialog
-        v-if="dictionaryItem.dialog.visible"
-        :id="dictionaryItem.dialog.id"
-        v-model="dictionaryItem.dialog.visible"
-        :dictionary-id="dictionaryItem.search.dictionaryId"
-        :tree="dictionary.tree"
-        @success="getDictionaryItemList"
-      />
+      <DictionaryDialog v-if="dictionary.dialog.visible" :id="dictionary.dialog.id" v-model="dictionary.dialog.visible"
+        :parent-id="dictionary.dialog.parentId" :tree="dictionary.tree" @add-node="dictionaryAddNode"
+        @edit-node="dictionaryEditNode" />
+      <DictionaryItemDialog v-if="dictionaryItem.dialog.visible" :id="dictionaryItem.dialog.id"
+        v-model="dictionaryItem.dialog.visible" :dictionary-id="dictionaryItem.search.dictionaryId"
+        :tree="dictionary.tree" @success="getDictionaryItemList" />
       <UsageDialog v-if="usageExampleVisible" v-model="usageExampleVisible" />
     </div>
   </div>
@@ -546,7 +466,7 @@ const usageExampleVisible = ref(false);
           height: 60px;
         }
 
-        .is-current > .el-tree-node__content {
+        .is-current>.el-tree-node__content {
           background-color: var(--el-color-primary-light-9);
         }
 

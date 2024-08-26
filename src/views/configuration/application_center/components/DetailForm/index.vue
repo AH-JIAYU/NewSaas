@@ -30,11 +30,17 @@ onMounted(() => {
 })
 
 function getInfo() {
-  loading.value = true
-  api.detail(form.value.id).then((res: any) => {
+  try {
+    loading.value = true
+    api.detail(form.value.id).then((res: any) => {
+      loading.value = false
+      form.value.title = res.data.title
+    })
+  } catch (error) {
+  } finally {
     loading.value = false
-    form.value.title = res.data.title
-  })
+  }
+
 }
 
 defineExpose({
@@ -82,5 +88,4 @@ defineExpose({
 </template>
 
 <style lang="scss" scoped>
-// scss
-</style>
+// scss</style>

@@ -115,19 +115,25 @@ function currentChange(page = 1) {
 }
 // 请求
 async function fetchData() {
-  listLoading.value = true;
-  const params: any = {
-    ...getParams(),
-    ...queryForm,
-  };
-  if (queryForm.time && !!queryForm.time.length) {
-    params.beginTime = queryForm.time[0] || "";
-    params.endTime = queryForm.time[1] || "";
+  try {
+    listLoading.value = true;
+    const params: any = {
+      ...getParams(),
+      ...queryForm,
+    };
+    if (queryForm.time && !!queryForm.time.length) {
+      params.beginTime = queryForm.time[0] || "";
+      params.endTime = queryForm.time[1] || "";
+    }
+    const { data } = await api.list(params);
+    list.value = data.getMemberGroupInfoList;
+    pagination.value.total = data.total;
+    listLoading.value = false;
+  } catch (error) {
+
+  } finally {
+    listLoading.value = false;
   }
-  const { data } = await api.list(params);
-  list.value = data.getMemberGroupInfoList;
-  pagination.value.total = data.total;
-  listLoading.value = false;
 }
 // 重置筛选数据
 function onReset() {
@@ -170,59 +176,26 @@ onMounted(() => {
     <PageMain>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
-          <ElForm
-            :model="queryForm"
-            size="default"
-            label-width="100px"
-            inline-message
-            inline
-            class="search-form"
-          >
+          <ElForm :model="queryForm" size="default" label-width="100px" inline-message inline class="search-form">
             <el-form-item label="">
-              <el-input
-                v-model.trim="queryForm.memberGroupId"
-                clearable
-                :inline="false"
-                placeholder="会员组ID"
-              />
+              <el-input v-model.trim="queryForm.memberGroupId" clearable :inline="false" placeholder="会员组ID" />
             </el-form-item>
             <el-form-item label="">
-              <el-input
-                v-model.trim="queryForm.memberGroupName"
-                clearable
-                :inline="false"
-                placeholder="会员组名称"
-              />
+              <el-input v-model.trim="queryForm.memberGroupName" clearable :inline="false" placeholder="会员组名称" />
             </el-form-item>
             <el-form-item label="">
-              <el-input
-                v-model.trim="queryForm.groupLeaderMemberName"
-                clearable
-                :inline="false"
-                placeholder="组长ID、组长名称"
-              />
+              <el-input v-model.trim="queryForm.groupLeaderMemberName" clearable :inline="false"
+                placeholder="组长ID、组长名称" />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-select
-                v-model="queryForm.groupStatus"
-                clearable
-                placeholder="会员组状态"
-              >
+              <el-select v-model="queryForm.groupStatus" clearable placeholder="会员组状态">
                 <el-option label="关闭" :value="1" />
                 <el-option label="开启" :value="2" />
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold">
-              <el-date-picker
-                v-model="queryForm.time"
-                type="datetimerange"
-                unlink-panels
-                range-separator="-"
-                start-placeholder="创建开始日期"
-                end-placeholder="创建结束日期"
-                value-format="YYYY-MM-DD hh:mm:ss"
-                size="default"
-              />
+              <el-date-picker v-model="queryForm.time" type="datetimerange" unlink-panels range-separator="-"
+                start-placeholder="创建开始日期" end-placeholder="创建结束日期" value-format="YYYY-MM-DD hh:mm:ss" size="default" />
             </el-form-item>
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">
@@ -239,9 +212,7 @@ onMounted(() => {
               </ElButton>
               <ElButton link @click="toggle">
                 <template #icon>
-                  <SvgIcon
-                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
-                  />
+                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
                 </template>
                 {{ fold ? "展开" : "收起" }}
               </ElButton>
@@ -258,117 +229,50 @@ onMounted(() => {
         </FormLeftPanel>
         <FormRightPanel>
           <el-button size="default"> 导出 </el-button>
-          <TabelControl
-            v-model:border="border"
-            v-model:tableAutoHeight="tableAutoHeight"
-            v-model:checkList="checkList"
-            v-model:columns="columns"
-            v-model:line-height="lineHeight"
-            v-model:stripe="stripe"
-            style="margin-left: 12px"
-            @query-data="queryData"
-          />
+          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
+            v-model:columns="columns" v-model:line-height="lineHeight" v-model:stripe="stripe" style="margin-left: 12px"
+            @query-data="queryData" />
         </FormRightPanel>
       </el-row>
-      <el-table
-        v-loading="listLoading"
-        :border="border"
-        :data="list"
-        :size="lineHeight"
-        :stripe="stripe"
-      >
+      <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe">
         <el-table-column align="center" type="selection" />
-        <el-table-column
-          v-if="checkList.includes('memberGroupId')"
-          align="center"
-          prop="memberGroupId"
-          show-overflow-tooltip
-          label="会员组ID"
-        />
-        <el-table-column
-         v-if="checkList.includes('memberGroupName')"
-          align="center"
-          prop="memberGroupName"
-          show-overflow-tooltip
-          label="会员组名称"
-        />
-        <el-table-column
-         v-if="checkList.includes('groupLeaderMemberName')"
-          align="center"
-          prop="groupLeaderMemberName"
-          show-overflow-tooltip
-          label="组长名称(ID)"
-        >
+        <el-table-column v-if="checkList.includes('memberGroupId')" align="center" prop="memberGroupId"
+          show-overflow-tooltip label="会员组ID" />
+        <el-table-column v-if="checkList.includes('memberGroupName')" align="center" prop="memberGroupName"
+          show-overflow-tooltip label="会员组名称" />
+        <el-table-column v-if="checkList.includes('groupLeaderMemberName')" align="center" prop="groupLeaderMemberName"
+          show-overflow-tooltip label="组长名称(ID)">
           <template #default="{ row }">
             {{ row.groupLeaderMemberName ? row.groupLeaderMemberName : "-" }}
           </template>
         </el-table-column>
-        <el-table-column
-         v-if="checkList.includes('memberNumber')"
-          align="center"
-          prop="memberNumber"
-          show-overflow-tooltip
-          label="成员"
-        />
-        <el-table-column
-        v-if="checkList.includes('projectNumber')"
-          align="center"
-          prop="projectNumber"
-          show-overflow-tooltip
-          label="项目数"
-        >
+        <el-table-column v-if="checkList.includes('memberNumber')" align="center" prop="memberNumber"
+          show-overflow-tooltip label="成员" />
+        <el-table-column v-if="checkList.includes('projectNumber')" align="center" prop="projectNumber"
+          show-overflow-tooltip label="项目数">
           <template #default="{ row }">
             <el-link type="primary" @click="handleCheck(row)">{{
-              row.projectNumber
-            }}</el-link>
+    row.projectNumber
+  }}</el-link>
           </template>
         </el-table-column>
-        <el-table-column
-        v-if="checkList.includes('createTime')"
-          align="center"
-          prop="createTime"
-          show-overflow-tooltip
-          label="创建时间"
-        ><template #default="{ row }">
+        <el-table-column v-if="checkList.includes('createTime')" align="center" prop="createTime" show-overflow-tooltip
+          label="创建时间"><template #default="{ row }">
             <el-tag effect="plain" type="info">{{
-              format(row.createTime)
-            }}</el-tag>
+    format(row.createTime)
+  }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column
-        v-if="checkList.includes('groupStatus')"
-          align="center"
-          prop="groupStatus"
-          show-overflow-tooltip
-          label="组状态"
-        >
+        <el-table-column v-if="checkList.includes('groupStatus')" align="center" prop="groupStatus"
+          show-overflow-tooltip label="组状态">
           <template #default="{ row }">
-            <ElSwitch
-              v-model="row.groupStatus"
-              inline-prompt
-              :inactive-value="1"
-              :active-value="2"
-              inactive-text="禁用"
-              active-text="启用"
-              @change="changeState($event, row.memberGroupId)"
-            />
+            <ElSwitch v-model="row.groupStatus" inline-prompt :inactive-value="1" :active-value="2" inactive-text="禁用"
+              active-text="启用" @change="changeState($event, row.memberGroupId)" />
           </template>
         </el-table-column>
-        <el-table-column
-          align="center"
-          prop="i"
-          label="操作"
-          fixed="right"
-          show-overflow-tooltip
-          width="180"
-        >
+        <el-table-column align="center" prop="i" label="操作" fixed="right" show-overflow-tooltip width="180">
           <template #default="{ row }">
-            <el-button
-              size="small"
-              plain
-              type="primary"
-              @click="handleEdit(row)"
-            >
+            <el-button size="small" plain type="primary" @click="handleEdit(row)">
               编辑
             </el-button>
           </template>
@@ -377,18 +281,9 @@ onMounted(() => {
           <el-empty class="vab-data-empty" description="暂无数据" />
         </template>
       </el-table>
-      <ElPagination
-        :current-page="pagination.page"
-        :total="pagination.total"
-        :page-size="pagination.size"
-        :page-sizes="pagination.sizes"
-        :layout="pagination.layout"
-        :hide-on-single-page="false"
-        class="pagination"
-        background
-        @size-change="sizeChange"
-        @current-change="currentChange"
-      />
+      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+        background @size-change="sizeChange" @current-change="currentChange" />
     </PageMain>
     <vipGroupEdit ref="editRef" @fetch-data="queryData" />
     <vipGroupDetail ref="checkRef" @fetch-data="queryData" />

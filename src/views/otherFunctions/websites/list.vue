@@ -83,17 +83,23 @@ function currentChange(page = 1) {
   onCurrentChange(page).then(() => fetchData());
 }
 async function fetchData() {
-  listLoading.value = true;
-  list.value = [
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-  ];
-  pagination.value.total = 3;
-  listLoading.value = false;
+  try {
+    listLoading.value = true;
+    list.value = [
+      { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+      { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+      { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+      { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+      { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+      { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+    ];
+    pagination.value.total = 3;
+    listLoading.value = false;
+  } catch (error) {
+
+  } finally {
+    listLoading.value = false;
+  }
 }
 onMounted(() => {
   fetchData();
@@ -101,33 +107,19 @@ onMounted(() => {
 </script>
 
 <template>
-  <div
-    :class="{
-      'absolute-container': tableAutoHeight,
-    }"
-  >
+  <div :class="{
+    'absolute-container': tableAutoHeight,
+  }">
     <PageMain>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
-          <el-form
-            :model="queryForm.select"
-            size="default"
-            label-width="100px"
-            inline-message
-            inline
-            class="search-form"
-          >
+          <el-form :model="queryForm.select" size="default" label-width="100px" inline-message inline
+            class="search-form">
             <el-form-item label="">
               <el-input placeholder="供应商ID" />
             </el-form-item>
             <el-form-item label="">
-              <el-select
-                value-key=""
-                placeholder="所有"
-                clearable
-                filterable
-                @change=""
-              />
+              <el-select value-key="" placeholder="所有" clearable filterable @change="" />
             </el-form-item>
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">
@@ -144,9 +136,7 @@ onMounted(() => {
               </ElButton>
               <ElButton disabled link @click="toggle">
                 <template #icon>
-                  <SvgIcon
-                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
-                  />
+                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
                 </template>
                 {{ fold ? "展开" : "收起" }}
               </ElButton>
@@ -159,55 +149,19 @@ onMounted(() => {
         <FormLeftPanel />
         <FormRightPanel>
           <el-button size="default" @click=""> 导出 </el-button>
-          <TabelControl
-            v-model:border="border"
-            v-model:tableAutoHeight="tableAutoHeight"
-            v-model:checkList="checkList"
-            v-model:columns="columns"
-            v-model:line-height="lineHeight"
-            v-model:stripe="stripe"
-            style="margin-left: 12px"
-            @query-data="currentChange"
-          />
+          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
+            v-model:columns="columns" v-model:line-height="lineHeight" v-model:stripe="stripe" style="margin-left: 12px"
+            @query-data="currentChange" />
         </FormRightPanel>
       </el-row>
-      <el-table
-        ref="tableSortRef"
-        v-loading="false"
-        style="margin-top: 10px"
-        row-key="id"
-        :data="list"
-        :border="border"
-        :size="lineHeight"
-        :stripe="stripe"
-        @selection-change="setSelectRows"
-      >
+      <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="id" :data="list"
+        :border="border" :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows">
         <el-table-column align="center" type="selection" />
         <!-- <el-table-column type="index" align="center" label="序号" width="55" /> -->
-        <el-table-column
-          show-overflow-tooltip
-          prop="a"
-          align="center"
-          label="供应商ID"
-        />
-        <el-table-column
-          show-overflow-tooltip
-          prop="b"
-          align="center"
-          label="开始日期"
-        />
-        <el-table-column
-          show-overflow-tooltip
-          prop="c"
-          align="center"
-          label="结算日期"
-        />
-        <el-table-column
-          show-overflow-tooltip
-          prop="d"
-          align="center"
-          label="状态"
-        >
+        <el-table-column show-overflow-tooltip prop="a" align="center" label="供应商ID" />
+        <el-table-column show-overflow-tooltip prop="b" align="center" label="开始日期" />
+        <el-table-column show-overflow-tooltip prop="c" align="center" label="结算日期" />
+        <el-table-column show-overflow-tooltip prop="d" align="center" label="状态">
           <ElSwitch inline-prompt active-text="启用" inactive-text="禁用" />
         </el-table-column>
         <el-table-column align="center" label="操作" width="170">
@@ -222,18 +176,9 @@ onMounted(() => {
           <el-empty description="暂无数据" />
         </template>
       </el-table>
-      <ElPagination
-        :current-page="pagination.page"
-        :total="pagination.total"
-        :page-size="pagination.size"
-        :page-sizes="pagination.sizes"
-        :layout="pagination.layout"
-        :hide-on-single-page="false"
-        class="pagination"
-        background
-        @size-change="sizeChange"
-        @current-change="currentChange"
-      />
+      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+        background @size-change="sizeChange" @current-change="currentChange" />
       <Edit ref="editRef" />
       <Delete ref="deleteRef" />
     </PageMain>

@@ -110,16 +110,23 @@ function queryData() {
   pagination.value.page = 1;
   fetchData();
 }
+// 获取列表数据
 async function fetchData() {
-  listLoading.value = true;
-  const params = {
-    ...getParams(),
-    ...queryForm,
-  };
-  const { data } = await api.list(params);
-  list.value = data.tenantBindInfoList;
-  pagination.value.total = Number(data.total);
-  listLoading.value = false;
+  try {
+    listLoading.value = true;
+    const params = {
+      ...getParams(),
+      ...queryForm,
+    };
+    const { data } = await api.list(params);
+    list.value = data.tenantBindInfoList;
+    pagination.value.total = Number(data.total);
+    listLoading.value = false;
+  } catch (error) {
+
+  } finally {
+    listLoading.value = false;
+  }
 }
 function setSelectRows(val: any) {
   selectRows.value = val;

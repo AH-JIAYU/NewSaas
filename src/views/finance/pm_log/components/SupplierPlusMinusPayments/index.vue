@@ -38,29 +38,37 @@ const formRules = ref<FormRules>({
 });
 
 async function showEdit(row: any) {
-  loadingDisible.value = true;
-  if (!row) {
-    title.value = "新增";
-  } else {
-    title.value = "编辑";
-    dataList.value = JSON.parse(row);
-    isId.value = dataList.value.id
-    form.value.id = dataList.value.id
+  try {
+    loadingDisible.value = true;
+    loading.value = true;
+    if (!row) {
+      title.value = "新增";
+    } else {
+      title.value = "编辑";
+      dataList.value = JSON.parse(row);
+      isId.value = dataList.value.id
+      form.value.id = dataList.value.id
+    }
+    loading.value = false;
+  } catch (error) {
+
+  } finally {
+    loading.value = false;
   }
 }
 // 关闭弹框
 function close() {
   // 重置数据
   Object.assign(form.value, {
-  // id
-  id: null,
-  // 修改类型 1加款 2减款
-  operationType: null,
-  // 修改金额类型 1可用 2待审
-  balanceType: null,
-  // 金额
-  balance: null,
-});
+    // id
+    id: null,
+    // 修改类型 1加款 2减款
+    operationType: null,
+    // 修改金额类型 1可用 2待审
+    balanceType: null,
+    // 金额
+    balance: null,
+  });
   loadingDisible.value = false;
 }
 // 提交
@@ -68,21 +76,27 @@ async function onSubmit() {
   formRef.value &&
     formRef.value.validate(async (valid) => {
       if (valid) {
-        loading.value = true;
-        const res = await api.updateDepartment(form.value);
-        if (res.status === 1) {
+        try {
+          loading.value = true;
+          const res = await api.updateDepartment(form.value);
+          if (res.status === 1) {
+            loading.value = false;
+            emit("fetch-data");
+            ElMessage.success({
+              message: "操作成功",
+              center: true,
+            });
+            close();
+          } else {
+            ElMessage.warning({
+              message: "出现错误请联系管理人员",
+              center: true,
+            });
+          }
+        } catch (error) {
+
+        } finally {
           loading.value = false;
-          emit("fetch-data");
-          ElMessage.success({
-            message: "操作成功",
-            center: true,
-          });
-          close();
-        } else {
-          ElMessage.warning({
-            message: "出现错误请联系管理人员",
-            center: true,
-          });
         }
       }
     });
@@ -96,54 +110,19 @@ defineExpose({
 
 <template>
   <div v-loading="loading">
-    <el-dialog
-      v-model="loadingDisible"
-      append-to-body
-      :close-on-click-modal="false"
-      destroy-on-close
-      draggable
-      width="35%"
-      @close="close"
-    >
-      <el-form
-        :model="form"
-        :rules="formRules"
-        ref="formRef"
-        label-width="80px"
-        :inline="false"
-      >
+    <el-dialog v-model="loadingDisible" append-to-body :close-on-click-modal="false" destroy-on-close draggable
+      width="35%" @close="close">
+      <el-form :model="form" :rules="formRules" ref="formRef" label-width="80px" :inline="false">
         <el-form-item label="ID"> {{ isId }} </el-form-item>
         <el-form-item label="加减款">
-          <el-select
-            v-model="form.operationType"
-            value-key=""
-            placeholder="请选择加减款"
-            clearable
-            filterable
-          >
-            <el-option
-              v-for="item in operationTypeList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            >
+          <el-select v-model="form.operationType" value-key="" placeholder="请选择加减款" clearable filterable>
+            <el-option v-for="item in operationTypeList" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="类型">
-          <el-select
-            v-model="form.balanceType"
-            value-key=""
-            placeholder="请选择类型"
-            clearable
-            filterable
-          >
-            <el-option
-              v-for="item in typeList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            >
+          <el-select v-model="form.balanceType" value-key="" placeholder="请选择类型" clearable filterable>
+            <el-option v-for="item in typeList" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>

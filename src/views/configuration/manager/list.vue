@@ -80,15 +80,21 @@ onBeforeUnmount(() => {
 
 // 获取数据
 function getDataList() {
-  data.value.loading = true
-  apiUser.list(data.value.search).then((res: any) => {
-    data.value.loading = false
-    data.value.dataList = res.data
-    pagination.value.total = res.data?.length
-    data.value.dataList.forEach((item: any) => {
-      item.statusLoading = false
+  try {
+    data.value.loading = true
+    apiUser.list(data.value.search).then((res: any) => {
+      data.value.loading = false
+      data.value.dataList = res.data
+      pagination.value.total = res.data?.length
+      data.value.dataList.forEach((item: any) => {
+        item.statusLoading = false
+      })
     })
-  })
+  } catch (error) {
+
+  } finally {
+    data.value.loading = false
+  }
 }
 
 // 重置筛选数据
@@ -144,26 +150,32 @@ function onEdit(row: any) {
 function onChangeStatus(row: any) {
   return new Promise<boolean>((resolve) => {
     ElMessageBox.confirm(`确认${!row.active ? '启用' : '禁用'}「${row.name}」吗？`, '确认信息').then(() => {
-      data.value.loading = true
-      apiUser.edit({
-        id: row.id,
-        account: null,
-        name: null,
-        sex: null,
-        phoneNumber: null,
-        active: !row.active,
-      }).then(() => {
-        ElMessage.success({
-          message: `${!row.active ? '启用' : '禁用'}成功`,
-          center: true,
+      try {
+        data.value.loading = true
+        apiUser.edit({
+          id: row.id,
+          account: null,
+          name: null,
+          sex: null,
+          phoneNumber: null,
+          active: !row.active,
+        }).then(() => {
+          ElMessage.success({
+            message: `${!row.active ? '启用' : '禁用'}成功`,
+            center: true,
+          })
+          getDataList()
+          data.value.loading = false
+          return resolve(true)
+        }).catch(() => {
+          data.value.loading = false
+          return resolve(false)
         })
-        getDataList()
+      } catch (error) {
+
+      } finally {
         data.value.loading = false
-        return resolve(true)
-      }).catch(() => {
-        data.value.loading = false
-        return resolve(false)
-      })
+      }
     }).catch(() => {
       return resolve(false)
     })
@@ -172,13 +184,21 @@ function onChangeStatus(row: any) {
 // 删除
 function onDel(row: any) {
   ElMessageBox.confirm(`确认删除「${row.name}」用户吗？`, '确认信息').then(() => {
-    apiUser.delete({ id: row.id }).then(() => {
-      getDataList()
-      ElMessage.success({
-        message: '删除成功',
-        center: true,
+    try {
+      data.value.loading = false
+      apiUser.delete({ id: row.id }).then(() => {
+        data.value.loading = false
+        getDataList()
+        ElMessage.success({
+          message: '删除成功',
+          center: true,
+        })
       })
-    })
+    } catch (error) {
+
+    } finally {
+      data.value.loading = false
+    }
   }).catch(() => { })
 }
 </script>
@@ -230,7 +250,7 @@ function onDel(row: any) {
       <ElTable v-loading="data.loading" class="my-4" :data="data.dataList" stripe highlight-current-row border
         height="100%" @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
         <!-- <ElTableColumn v-if="data.batch.enable" type="selection" align="center" fixed /> -->
-        <ElTableColumn prop="account"  sortable label="帐号">
+        <ElTableColumn prop="account" sortable label="帐号">
           <template #default="{ row }">
             <el-text v-if="row.country === 'CN'" class="mx-1">
               {{ row.phone }}
@@ -257,9 +277,9 @@ function onDel(row: any) {
         <ElTableColumn prop="mobile" label="国家" width="150" align="center">
           <template #default="{ row }">
             <div v-for="item in filterCountry" :key="item.id" class="mx-1">
-              <el-tag  type="primary" v-if="item.code === row.country" class="mx-1">
-                {{item.chineseName}}
-            </el-tag>
+              <el-tag type="primary" v-if="item.code === row.country" class="mx-1">
+                {{ item.chineseName }}
+              </el-tag>
             </div>
           </template>
         </ElTableColumn>

@@ -151,7 +151,8 @@ function currentChange(page = 1) {
 }
 // 请求
 async function fetchData() {
-  listLoading.value = true;
+  try {
+    listLoading.value = true;
   const params = {
     ...getParams(),
     ...queryForm,
@@ -161,6 +162,11 @@ async function fetchData() {
   currencyType.value = data.currencyType;
   pagination.value.total = data.total;
   listLoading.value = false;
+} catch (error) {
+
+}finally {
+  listLoading.value = false;
+}
 }
 // 表格-单选框
 function setSelectRows(val: string) {

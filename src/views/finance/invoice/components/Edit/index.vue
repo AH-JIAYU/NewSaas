@@ -67,32 +67,48 @@ function onSubmit() {
       formRef.value &&
         formRef.value.validate((valid: any) => {
           if (valid) {
-            delete form.value.id;
-            api.create(form.value).then(() => {
-              ElMessage.success({
-                message: "新增成功",
-                center: true,
+            try {
+              loading.value = true;
+              delete form.value.id;
+              api.create(form.value).then(() => {
+                loading.value = false;
+                ElMessage.success({
+                  message: "新增成功",
+                  center: true,
+                });
+                emits("success");
+                dialogTableVisible.value = false;
+                resolve();
               });
-              emits("success");
-              dialogTableVisible.value = false;
-              resolve();
-            });
+            } catch (error) {
+
+            } finally {
+              loading.value = false;
+            }
           }
         });
     } else {
       formRef.value &&
         formRef.value.validate((valid: any) => {
           if (valid) {
-            const data = toRaw(form.value);
-            api.edit(data).then(() => {
-              ElMessage.success({
-                message: "编辑成功",
-                center: true,
+            try {
+              loading.value = true;
+              const data = toRaw(form.value);
+              api.edit(data).then(() => {
+                loading.value = false;
+                ElMessage.success({
+                  message: "编辑成功",
+                  center: true,
+                });
+                emits("success");
+                dialogTableVisible.value = false;
+                resolve();
               });
-              emits("success");
-              dialogTableVisible.value = false;
-              resolve();
-            });
+            } catch (error) {
+
+            } finally {
+              loading.value = false;
+            }
           }
         });
     }
@@ -100,34 +116,41 @@ function onSubmit() {
 }
 // 获取数据
 async function showEdit(row?: any) {
-  if (row) {
-    form.value = JSON.parse(row);
-  } else {
-    form.value = {
-      id: null,
-      // 客户id
-      tenantCustomerId: "",
-      // 发票编号
-      invoiceCode: "",
-      // 发票金额
-      invoiceAmount: null,
-      // 税
-      invoiceTax: null,
-      // 实际收款
-      actualReceipts: null,
-      // 发票状态 （未收款、部分收款、已完结、坏账）
-      invoiceStatus: null,
-      // 开票日期
-      invoiceDate: "",
-      // 收款日期
-      paymentDate: "",
-      // 备注
-      remark: "",
-    };
-  }
-  title.value = row?.id ? "编辑" : "新增";
+  try {
+    loading.value = true;
+    if (row) {
+      form.value = JSON.parse(row);
+    } else {
+      form.value = {
+        id: null,
+        // 客户id
+        tenantCustomerId: "",
+        // 发票编号
+        invoiceCode: "",
+        // 发票金额
+        invoiceAmount: null,
+        // 税
+        invoiceTax: null,
+        // 实际收款
+        actualReceipts: null,
+        // 发票状态 （未收款、部分收款、已完结、坏账）
+        invoiceStatus: null,
+        // 开票日期
+        invoiceDate: "",
+        // 收款日期
+        paymentDate: "",
+        // 备注
+        remark: "",
+      };
+    }
+    title.value = row?.id ? "编辑" : "新增";
+    loading.value = false;
+    dialogTableVisible.value = true;
+  } catch (error) {
 
-  dialogTableVisible.value = true;
+  } finally {
+    loading.value = false;
+  }
 }
 // 快捷操作：新增客户
 const AddCustomers = () => {

@@ -93,7 +93,7 @@ function handleDelete(row: any) {
         });
       queryData();
     })
-    .catch(() => {});
+    .catch(() => { });
 }
 // 查询
 const queryForm = reactive<any>({
@@ -124,16 +124,23 @@ function queryData() {
   pagination.value.page = 1;
   fetchData();
 }
+// 获取列表数据
 async function fetchData() {
-  listLoading.value = true;
-  const params = {
-    ...getParams(),
-    ...queryForm,
-  };
-  const { data } = await api.list(params);
-  list.value = data.getTenantCustomerInfoList;
-  pagination.value.total = Number(data.total);
-  listLoading.value = false;
+  try {
+    listLoading.value = true;
+    const params = {
+      ...getParams(),
+      ...queryForm,
+    };
+    const { data } = await api.list(params);
+    list.value = data.getTenantCustomerInfoList;
+    pagination.value.total = Number(data.total);
+    listLoading.value = false;
+  } catch (error) {
+
+  } finally {
+    listLoading.value = false;
+  }
 }
 function setSelectRows(val: any) {
   selectRows.value = val;
@@ -153,40 +160,22 @@ onMounted(() => {
     <PageMain>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
-          <ElForm
-            :model="queryForm.select"
-            size="default"
-            label-width="100px"
-            inline-message
-            inline
-            class="search-form"
-          >
+          <ElForm :model="queryForm.select" size="default" label-width="100px" inline-message inline
+            class="search-form">
             <el-form-item v-show="!fold">
-              <el-input
-                v-model="queryForm.customerShortName"
-                clearable
-                placeholder="客户简称"
-              >
+              <el-input v-model="queryForm.customerShortName" clearable placeholder="客户简称">
                 <el-option label="name" value="name" />
               </el-input>
             </el-form-item>
             <el-form-item v-show="!fold">
-              <el-select
-                v-model="queryForm.customerStatus"
-                clearable
-                placeholder="客户状态"
-              >
+              <el-select v-model="queryForm.customerStatus" clearable placeholder="客户状态">
                 <el-option label="禁用" :value="1" />
                 <el-option label="启用" :value="2" />
                 <!-- <el-option label="风险暂停" :value="3" /> -->
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold">
-              <el-select
-                v-model="queryForm.antecedentQuestionnaire"
-                clearable
-                placeholder="前置问卷"
-              >
+              <el-select v-model="queryForm.antecedentQuestionnaire" clearable placeholder="前置问卷">
                 <el-option label="禁用" :value="1" />
                 <el-option label="启用" :value="2" />
               </el-select>
@@ -206,9 +195,7 @@ onMounted(() => {
               </ElButton>
               <ElButton disabled link @click="toggle">
                 <template #icon>
-                  <SvgIcon
-                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
-                  />
+                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
                 </template>
                 {{ fold ? "展开" : "收起" }}
               </ElButton>
@@ -225,171 +212,68 @@ onMounted(() => {
         </FormLeftPanel>
         <FormRightPanel>
           <el-button size="default"> 导出 </el-button>
-          <TabelControl
-            v-model:border="border"
-            v-model:tableAutoHeight="tableAutoHeight"
-            v-model:checkList="checkList"
-            v-model:columns="columns"
-            v-model:line-height="lineHeight"
-            v-model:stripe="stripe"
-            style="margin-left: 12px"
-            @query-data="queryData"
-          />
+          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
+            v-model:columns="columns" v-model:line-height="lineHeight" v-model:stripe="stripe" style="margin-left: 12px"
+            @query-data="queryData" />
         </FormRightPanel>
       </el-row>
-      <el-table
-        v-loading="listLoading"
-        :border="border"
-        :data="list"
-        :size="lineHeight"
-        :stripe="stripe"
-        @selection-change="setSelectRows"
-      >
+      <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
+        @selection-change="setSelectRows">
         <el-table-column align="center" type="selection" />
-        <el-table-column
-          v-if="checkList.includes('tenantCustomerId')"
-          align="center"
-          prop="tenantCustomerId"
-          width="180"
-          show-overflow-tooltip
-          label="客户编码"
-        />
-        <el-table-column
-          v-if="checkList.includes('customerAccord')"
-          align="center"
-          prop="customerAccord"
-          show-overflow-tooltip
-          label="客户名称"
-        />
+        <el-table-column v-if="checkList.includes('tenantCustomerId')" align="center" prop="tenantCustomerId"
+          width="180" show-overflow-tooltip label="客户编码" />
+        <el-table-column v-if="checkList.includes('customerAccord')" align="center" prop="customerAccord"
+          show-overflow-tooltip label="客户名称" />
 
-        <el-table-column
-          v-if="checkList.includes('customerShortName')"
-          align="center"
-          prop="customerShortName"
-          show-overflow-tooltip
-          label="客户简称"
-          width="100"
-        />
-        <el-table-column
-          v-if="checkList.includes('turnover')"
-          align="center"
-          prop="turnover"
-          show-overflow-tooltip
-          label="客户营业限额/月"
-        >
+        <el-table-column v-if="checkList.includes('customerShortName')" align="center" prop="customerShortName"
+          show-overflow-tooltip label="客户简称" width="100" />
+        <el-table-column v-if="checkList.includes('turnover')" align="center" prop="turnover" show-overflow-tooltip
+          label="客户营业限额/月">
           <template #default="{ row }">
             <CurrencyType />{{ row.turnover || 0 }}
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('rateAudit')"
-          align="center"
-          prop="rateAudit"
-          show-overflow-tooltip
-          label="审核率Min值"
-          ><template #default="{ row }">
+        <el-table-column v-if="checkList.includes('rateAudit')" align="center" prop="rateAudit" show-overflow-tooltip
+          label="审核率Min值"><template #default="{ row }">
             {{ row.rateAudit ? row.rateAudit : "-" }}
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('chargeName')"
-          align="center"
-          prop="chargeName"
-          show-overflow-tooltip
-          label="负责人"
-          ><template #default="{ row }">
+        <el-table-column v-if="checkList.includes('chargeName')" align="center" prop="chargeName" show-overflow-tooltip
+          label="负责人"><template #default="{ row }">
             {{ row.chargeName ? row.chargeName : "-" }}
           </template>
         </el-table-column>
-        <ElTableColumn
-          v-if="checkList.includes('customerStatus')"
-          align="center"
-          show-overflow-tooltip
-          prop="customerStatus"
-          label="客户状态"
-        >
+        <ElTableColumn v-if="checkList.includes('customerStatus')" align="center" show-overflow-tooltip
+          prop="customerStatus" label="客户状态">
           <template #default="{ row }">
-            <ElSwitch
-              v-model="row.customerStatus"
-              inline-prompt
-              :inactive-value="1"
-              :active-value="2"
-              active-text="启用"
-              inactive-text="禁用"
-              @change="changeState($event, 1, row.tenantCustomerId)"
-            />
+            <ElSwitch v-model="row.customerStatus" inline-prompt :inactive-value="1" :active-value="2" active-text="启用"
+              inactive-text="禁用" @change="changeState($event, 1, row.tenantCustomerId)" />
           </template>
         </ElTableColumn>
-        <ElTableColumn
-          v-if="checkList.includes('antecedentQuestionnaire')"
-          align="center"
-          show-overflow-tooltip
-          prop="antecedentQuestionnaire"
-          label="前置问卷"
-        >
+        <ElTableColumn v-if="checkList.includes('antecedentQuestionnaire')" align="center" show-overflow-tooltip
+          prop="antecedentQuestionnaire" label="前置问卷">
           <template #default="{ row }">
-            <ElSwitch
-              v-model="row.antecedentQuestionnaire"
-              inline-prompt
-              :inactive-value="1"
-              :active-value="2"
-              active-text="启用"
-              inactive-text="禁用"
-              @change="changeState($event, 2, row.tenantCustomerId)"
-            />
+            <ElSwitch v-model="row.antecedentQuestionnaire" inline-prompt :inactive-value="1" :active-value="2"
+              active-text="启用" inactive-text="禁用" @change="changeState($event, 2, row.tenantCustomerId)" />
           </template>
         </ElTableColumn>
-        <ElTableColumn
-          v-if="checkList.includes('riskControl')"
-          align="center"
-          show-overflow-tooltip
-          prop="riskControl"
-          label="风险控制"
-        >
+        <ElTableColumn v-if="checkList.includes('riskControl')" align="center" show-overflow-tooltip prop="riskControl"
+          label="风险控制">
           <template #default="{ row }">
-            <ElSwitch
-              v-model="row.riskControl"
-              inline-prompt
-              :inactive-value="1"
-              :active-value="2"
-              active-text="启用"
-              inactive-text="禁用"
-              @change="changeState($event, 3, row.tenantCustomerId)"
-            />
+            <ElSwitch v-model="row.riskControl" inline-prompt :inactive-value="1" :active-value="2" active-text="启用"
+              inactive-text="禁用" @change="changeState($event, 3, row.tenantCustomerId)" />
           </template>
         </ElTableColumn>
-        <el-table-column
-          align="center"
-          fixed="right"
-          prop="i"
-          label="操作"
-          show-overflow-tooltip
-          width="200"
-        >
+        <el-table-column align="center" fixed="right" prop="i" label="操作" show-overflow-tooltip width="200">
           <template #default="{ row }">
             <ElSpace>
-              <el-button
-                size="small"
-                plain
-                type="primary"
-                @click="handleEdit(row)"
-              >
+              <el-button size="small" plain type="primary" @click="handleEdit(row)">
                 编辑
               </el-button>
-              <el-button
-                type="primary"
-                plain
-                size="small"
-                @click="handleCheck(row)"
-              >
+              <el-button type="primary" plain size="small" @click="handleCheck(row)">
                 详情
               </el-button>
-              <el-button
-                type="danger"
-                plain
-                size="small"
-                @click="handleDelete(row)"
-              >
+              <el-button type="danger" plain size="small" @click="handleDelete(row)">
                 删除
               </el-button>
             </ElSpace>
@@ -399,18 +283,9 @@ onMounted(() => {
           <el-empty class="vab-data-empty" description="暂无数据" />
         </template>
       </el-table>
-      <ElPagination
-        :current-page="pagination.page"
-        :total="pagination.total"
-        :page-size="pagination.size"
-        :page-sizes="pagination.sizes"
-        :layout="pagination.layout"
-        :hide-on-single-page="false"
-        class="pagination"
-        background
-        @size-change="sizeChange"
-        @current-change="currentChange"
-      />
+      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+        background @size-change="sizeChange" @current-change="currentChange" />
       <customerEdit ref="editRef" @fetch-data="queryData" />
       <customerDetail ref="checkRef" @fetch-data="queryData" />
     </PageMain>

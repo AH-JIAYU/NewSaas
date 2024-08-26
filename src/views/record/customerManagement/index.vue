@@ -49,19 +49,25 @@ function currentChange(page = 1) {
 }
 // 请求
 async function fetchData() {
-  listLoading.value = true;
-  // const { data } = await getList(queryForm)
-  // list.value = data[0]
-  // total.value = data[0].length
-  list.value = [
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-  ];
-  listLoading.value = false;
+  try {
+    listLoading.value = true;
+    // const { data } = await getList(queryForm)
+    // list.value = data[0]
+    // total.value = data[0].length
+    list.value = [
+      { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+      { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+      { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+      { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+      { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+      { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+    ];
+    listLoading.value = false;
+  } catch (error) {
+
+  } finally {
+    listLoading.value = false;
+  }
 }
 // 重置筛选数据
 function onReset() {
@@ -91,35 +97,16 @@ onMounted(() => {
     <PageMain>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
-          <ElForm
-            :model="queryForm.select"
-            size="default"
-            label-width="100px"
-            inline-message
-            inline
-            class="search-form"
-          >
+          <ElForm :model="queryForm.select" size="default" label-width="100px" inline-message inline
+            class="search-form">
             <el-form-item label="">
-              <el-select
-                v-model="queryForm.select.default"
-                clearable
-                placeholder="客户简称"
-              />
+              <el-select v-model="queryForm.select.default" clearable placeholder="客户简称" />
             </el-form-item>
             <el-form-item label="">
-              <el-select
-                v-model="queryForm.select.default"
-                clearable
-                placeholder="操作员"
-              />
+              <el-select v-model="queryForm.select.default" clearable placeholder="操作员" />
             </el-form-item>
             <el-form-item label="">
-              <el-input
-                v-model.trim="queryForm.select.id"
-                clearable
-                :inline="false"
-                placeholder="内容关键字"
-              />
+              <el-input v-model.trim="queryForm.select.id" clearable :inline="false" placeholder="内容关键字" />
             </el-form-item>
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">
@@ -136,9 +123,7 @@ onMounted(() => {
               </ElButton>
               <ElButton disabled link @click="toggle">
                 <template #icon>
-                  <SvgIcon
-                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
-                  />
+                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
                 </template>
                 {{ fold ? "展开" : "收起" }}
               </ElButton>
@@ -151,79 +136,29 @@ onMounted(() => {
         <FormLeftPanel />
         <FormRightPanel>
           <el-button size="default"> 导出 </el-button>
-          <TabelControl
-            v-model:border="border"
-            v-model:tableAutoHeight="tableAutoHeight"
-            v-model:checkList="checkList"
-            v-model:columns="columns"
-            v-model:line-height="lineHeight"
-            v-model:stripe="stripe"
-            style="margin-left: 12px"
-            @query-data="queryData"
-          />
+          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
+            v-model:columns="columns" v-model:line-height="lineHeight" v-model:stripe="stripe" style="margin-left: 12px"
+            @query-data="queryData" />
         </FormRightPanel>
       </el-row>
-      <el-table
-        v-loading="listLoading"
-        :border="border"
-        :data="list"
-        :size="lineHeight"
-        :stripe="stripe"
-        @selection-change="setSelectRows"
-      >
+      <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
+        @selection-change="setSelectRows">
         <el-table-column align="center" type="selection" />
-        <el-table-column
-          v-if="checkList.includes('id')"
-          align="center"
-          prop="id"
-          show-overflow-tooltip
-          label="客户简称"
-          width="100"
-        />
-        <el-table-column
-          align="center"
-          prop="b"
-          show-overflow-tooltip
-          label="变更内容"
-        />
-        <el-table-column
-          align="center"
-          prop="b"
-          show-overflow-tooltip
-          label="变更时间"
-        />
-        <el-table-column
-          align="center"
-          prop="d"
-          show-overflow-tooltip
-          label="操作人"
-        />
-        <el-table-column
-          align="center"
-          prop="d"
-          show-overflow-tooltip
-          label="操作"
-        >
-          <el-button type="primary" link size="default" @click=""
-            >跳转</el-button
-          >
+        <el-table-column v-if="checkList.includes('id')" align="center" prop="id" show-overflow-tooltip label="客户简称"
+          width="100" />
+        <el-table-column align="center" prop="b" show-overflow-tooltip label="变更内容" />
+        <el-table-column align="center" prop="b" show-overflow-tooltip label="变更时间" />
+        <el-table-column align="center" prop="d" show-overflow-tooltip label="操作人" />
+        <el-table-column align="center" prop="d" show-overflow-tooltip label="操作">
+          <el-button type="primary" link size="default" @click="">跳转</el-button>
         </el-table-column>
         <template #empty>
           <el-empty class="vab-data-empty" description="暂无数据" />
         </template>
       </el-table>
-      <ElPagination
-        :current-page="pagination.page"
-        :total="pagination.total"
-        :page-size="pagination.size"
-        :page-sizes="pagination.sizes"
-        :layout="pagination.layout"
-        :hide-on-single-page="false"
-        class="pagination"
-        background
-        @size-change="sizeChange"
-        @current-change="currentChange"
-      />
+      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+        background @size-change="sizeChange" @current-change="currentChange" />
     </PageMain>
   </div>
 </template>
@@ -253,6 +188,7 @@ onMounted(() => {
     }
   }
 }
+
 // 筛选
 .page-main {
   .search-form {

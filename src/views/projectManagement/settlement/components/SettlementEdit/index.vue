@@ -61,26 +61,32 @@ function onSubmit() {
   formRef.value &&
     formRef.value.validate(async (valid: any) => {
       if (valid) {
-        loading.value = true;
-        const { status } = await api.edit(form.value);
-        if (status === 1) {
-          // 更新列表
-          emits("success");
-          // 关闭加载
+        try {
+          loading.value = true;
+          const { status } = await api.edit(form.value);
+          if (status === 1) {
+            // 更新列表
+            emits("success");
+            // 关闭加载
+            loading.value = false;
+            // 提示成功
+            ElMessage.success({
+              message: "操作成功",
+              center: true,
+            });
+            // 执行关闭弹框事件
+            closeHandler();
+          } else {
+            loading.value = false;
+            ElMessage.error({
+              message: "操作失败，请联系工作人员",
+              center: true,
+            });
+          }
+        } catch (error) {
+
+        } finally {
           loading.value = false;
-          // 提示成功
-          ElMessage.success({
-            message: "操作成功",
-            center: true,
-          });
-          // 执行关闭弹框事件
-          closeHandler();
-        } else {
-          loading.value = false;
-          ElMessage.error({
-            message: "操作失败，请联系工作人员",
-            center: true,
-          });
         }
       }
     });
@@ -134,85 +140,36 @@ defineExpose({ showEdit });
 
 <template>
   <div v-loading="loading">
-    <el-dialog
-      v-model="dialogTableVisible"
-      title="项目结算编辑"
-      width="600"
-      :before-close="closeHandler"
-    >
-      <el-form
-        ref="formRef"
-        :model="form"
-        :rules="formRules"
-        label-width="100px"
-        :inline="false"
-      >
+    <el-dialog v-model="dialogTableVisible" title="项目结算编辑" width="600" :before-close="closeHandler">
+      <el-form ref="formRef" :model="form" :rules="formRules" label-width="100px" :inline="false">
         <el-form-item label="项目ID">
           <el-text class="mx-1">{{ form.projectId }}</el-text>
         </el-form-item>
         <el-form-item prop="clientId" label="所属客户">
-          <el-select
-            v-model="form.clientId"
-            placeholder="请选择所属客户"
-            clearable
-            filterable
-          >
-            <el-option
-              v-for="item in customerList"
-              :key="item.tenantCustomerId"
-              :value="item.tenantCustomerId"
-              :label="item.customerAccord"
-            />
+          <el-select v-model="form.clientId" placeholder="请选择所属客户" clearable filterable>
+            <el-option v-for="item in customerList" :key="item.tenantCustomerId" :value="item.tenantCustomerId"
+              :label="item.customerAccord" />
           </el-select>
         </el-form-item>
         <el-form-item prop="doMoneyPrice" label="原价">
-          <el-input
-            v-model="form.doMoneyPrice"
-            placeholder=""
-            clearable
-            @change=""
-          />
+          <el-input v-model="form.doMoneyPrice" placeholder="" clearable @change="" />
         </el-form-item>
         <el-form-item label="系统完成数">
-          <el-input
-            v-model="form.systemDone"
-            placeholder=""
-            clearable
-            @change=""
-          />
+          <el-input v-model="form.systemDone" placeholder="" clearable @change="" />
         </el-form-item>
         <el-form-item label="结算完成数">
-          <el-input
-            v-model="form.settlementDone"
-            placeholder=""
-            clearable
-            @change=""
-          />
+          <el-input v-model="form.settlementDone" placeholder="" clearable @change="" />
         </el-form-item>
         <el-form-item label="结算PO号">
-          <el-input
-            v-model="form.settlementPo"
-            placeholder=""
-            clearable
-            @change=""
-          />
+          <el-input v-model="form.settlementPo" placeholder="" clearable @change="" />
         </el-form-item>
         <el-form-item label="备注">
           <el-input v-model="form.remark" placeholder="" clearable @change="" />
         </el-form-item>
         <el-form-item label="状态">
-          <el-select
-            placeholder="结算状态"
-            v-model="form.status"
-            clearable
-            filterable
-          >
-            <el-option
-              v-for="item in settlementStatusList"
-              :key="item.value"
-              :value="item.value"
-              :label="item.label"
-            ></el-option>
+          <el-select placeholder="结算状态" v-model="form.status" clearable filterable>
+            <el-option v-for="item in settlementStatusList" :key="item.value" :value="item.value"
+              :label="item.label"></el-option>
           </el-select>
         </el-form-item>
       </el-form>

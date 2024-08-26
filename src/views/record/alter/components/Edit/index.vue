@@ -73,8 +73,8 @@ async function showEdit(row: any) {
 async function onSubmit() {
   formRef.value &&
     formRef.value.validate(async (valid: any) => {
-      try {
-        if (valid) {
+      if (valid) {
+        try {
           loading.value = true;
           const type = formData.value.type.split(",");
           formData.value.surveyType = +type[0];
@@ -106,15 +106,15 @@ async function onSubmit() {
               center: true,
             });
           }
-        } else {
-          ElMessage({
-            message: "请检查必填项,或数据格式不正确",
-            type: "warning",
-          });
+        } catch (error) {
+        } finally {
+          loading.value = false;
         }
-      } catch (error) {
-      } finally {
-        loading.value = false;
+      } else {
+        ElMessage({
+          message: "请检查必填项,或数据格式不正确",
+          type: "warning",
+        });
       }
     });
 }
@@ -146,26 +146,11 @@ defineExpose({ showEdit });
 
 <template>
   <div>
-    <el-drawer
-      v-model="dialogTableVisible"
-      title="记录变更"
-      size="50%"
-      :before-close="closeHandler"
-    >
-      <el-form
-        ref="formRef"
-        :model="formData"
-        :rules="formRules"
-        label-width="174px"
-        :inline="false"
-        v-loading="loading"
-      >
+    <el-drawer v-model="dialogTableVisible" title="记录变更" size="50%" :before-close="closeHandler">
+      <el-form ref="formRef" :model="formData" :rules="formRules" label-width="174px" :inline="false"
+        v-loading="loading">
         <div class="shenhe">
-          <el-form-item
-            prop="type"
-            style="display: flex; align-items: center"
-            label="变更状态"
-          >
+          <el-form-item prop="type" style="display: flex; align-items: center" label="变更状态">
             <el-radio-group v-model="formData.type">
               <el-radio value="1,0" size="large"> 完成 </el-radio>
               <el-radio value="1,7" size="large"> 审核通过 </el-radio>
@@ -178,22 +163,12 @@ defineExpose({ showEdit });
         </div>
         <div class="beizhu">
           <el-form-item label="备注">
-            <el-input
-              class="custom-input"
-              v-model="formData.remark"
-              placeholder=""
-              clearable
-            />
+            <el-input class="custom-input" v-model="formData.remark" placeholder="" clearable />
           </el-form-item>
         </div>
         <div style="margin-top: 10px">
           <el-form-item prop="arr">
-            <el-input
-              v-model="formData.arr"
-              placeholder="请粘贴ID，每行一个,多个请回车换行"
-              type="textarea"
-              :rows="15"
-            />
+            <el-input v-model="formData.arr" placeholder="请粘贴ID，每行一个,多个请回车换行" type="textarea" :rows="15" />
           </el-form-item>
         </div>
       </el-form>
@@ -212,6 +187,7 @@ defineExpose({ showEdit });
   width: 100%;
   border: 1px solid #ebeef5;
 }
+
 .beizhu {
   width: 100%;
   border: 1px solid #ebeef5;
@@ -282,24 +258,29 @@ defineExpose({ showEdit });
     outline: none !important;
     box-shadow: none !important;
   }
+
   .el-input__wrapper {
     border: none !important;
     box-shadow: none !important;
   }
+
   .po {
     width: 100%;
     border: 1px solid #ebeef5;
     border-top: none;
   }
 }
+
 ::v-deep .el-input__inner {
   border: none !important;
   outline: none !important;
   box-shadow: none !important;
 }
+
 ::v-deep .el-input__wrapper {
   border: none !important;
 }
+
 :deep(.el-textarea__inner) {
   width: 100%;
 }

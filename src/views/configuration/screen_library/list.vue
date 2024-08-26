@@ -84,18 +84,24 @@ onBeforeUnmount(() => {
 });
 // 获取列表
 function getDataList() {
-  data.value.loading = true;
-  const params = {
-    ...getParams(),
-    ...(data.value.search.countryId && {
-      countryId: data.value.search.countryId,
-    }),
-  };
-  api.list(params).then((res: any) => {
+  try {
+    data.value.loading = true;
+    const params = {
+      ...getParams(),
+      ...(data.value.search.countryId && {
+        countryId: data.value.search.countryId,
+      }),
+    };
+    api.list(params).then((res: any) => {
+      data.value.loading = false;
+      data.value.dataList = res.data.getCountryListInfoList;
+      pagination.value.total = res.data.getCountryListInfoList.length;
+    });
+  } catch (error) {
+
+  } finally {
     data.value.loading = false;
-    data.value.dataList = res.data.getCountryListInfoList;
-    pagination.value.total = res.data.getCountryListInfoList.length;
-  });
+  }
 }
 // 分页 后端(刘):这块不好做分页，所有返回全部数据，前端做分页
 const DataList = computed(() => {
@@ -227,7 +233,7 @@ function onDelCountry(row: any) {
         });
       getDataList();
     })
-    .catch(() => {});
+    .catch(() => { });
   stagedDataStore.projectManagementList = null;
 }
 // 删除标题
@@ -244,7 +250,7 @@ function onDelProject(row: any) {
         });
       getDataList();
     })
-    .catch(() => {});
+    .catch(() => { });
   stagedDataStore.projectManagementList = null;
 }
 </script>
@@ -254,27 +260,11 @@ function onDelProject(row: any) {
     <PageMain>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
-          <ElForm
-            :model="data.search"
-            size="default"
-            label-width="100px"
-            inline-message
-            inline
-            class="search-form"
-          >
+          <ElForm :model="data.search" size="default" label-width="100px" inline-message inline class="search-form">
             <ElFormItem label="">
-              <el-select
-                @keydown.enter="currentChange()"
-                @clear="currentChange()"
-                filterable
-                v-model="data.search.countryId"
-                placeholder="国家"
-              >
-                <ElOption
-                  v-for="item in data.countryList"
-                  :label="item.chineseName"
-                  :value="item.id"
-                ></ElOption>
+              <el-select @keydown.enter="currentChange()" @clear="currentChange()" filterable
+                v-model="data.search.countryId" placeholder="国家">
+                <ElOption v-for="item in data.countryList" :label="item.chineseName" :value="item.id"></ElOption>
               </el-select>
             </ElFormItem>
             <ElFormItem>
@@ -286,9 +276,7 @@ function onDelProject(row: any) {
               </ElButton>
               <ElButton link disabled @click="toggle">
                 <template #icon>
-                  <SvgIcon
-                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
-                  />
+                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
                 </template>
                 {{ fold ? "展开" : "收起" }}
               </ElButton>
@@ -303,41 +291,21 @@ function onDelProject(row: any) {
         </ElButton>
       </ElSpace>
       <el-form ref="formRef" :rules="data.rules" :model="DataList">
-        <ElTable
-          v-loading="data.loading"
-          class="my-4"
-          border
-          :data="DataList"
-          highlight-current-row
-          height="100%"
-          @sort-change="sortChange"
-          @selection-change="data.batch.selectionDataList = $event"
-          :default-expand-all="true"
-        >
+        <ElTable v-loading="data.loading" class="my-4" border :data="DataList" highlight-current-row height="100%"
+          @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event"
+          :default-expand-all="true">
           <el-table-column type="expand" width="55">
             <template #default="scopeCountry">
-              <el-table
-                :data="scopeCountry.row.getProjectProblemCategoryInfoList"
-                highlight-current-row
-                class="hide-table-header"
-                border
-                height="100%"
-                @sort-change="sortChange"
-                @selection-change="data.batch.selectionDataList = $event"
-              >
+              <el-table :data="scopeCountry.row.getProjectProblemCategoryInfoList" highlight-current-row
+                class="hide-table-header" border height="100%" @sort-change="sortChange"
+                @selection-change="data.batch.selectionDataList = $event">
                 <el-table-column width="55" />
-                <el-table-column
-                  width="500"
-                  prop="categoryName"
-                  label="问卷名称"
-                  align="center"
-                >
+                <el-table-column width="500" prop="categoryName" label="问卷名称" align="center">
                   <template #default="scope">
                     <template v-if="scope.row.type === 'add'">
                       <el-form-item
                         :prop="`[${scopeCountry.$index}].getProjectProblemCategoryInfoList[${scope.$index}].categoryName`"
-                        :rules="data.rules.categoryName"
-                      >
+                        :rules="data.rules.categoryName">
                         <el-input v-model="scope.row.categoryName"></el-input>
                       </el-form-item>
                     </template>
@@ -349,74 +317,36 @@ function onDelProject(row: any) {
                 <ElTableColumn prop="status" label="状态">
                   <template #default="scope">
                     <template v-if="scope.row.type === 'add'">
-                      <ElSwitch
-                        v-model="scope.row.status"
-                        :active-value="1"
-                        :inactive-value="2"
-                        inline-prompt
-                        active-text="启用"
-                        inactive-text="禁用"
-                      />
+                      <ElSwitch v-model="scope.row.status" :active-value="1" :inactive-value="2" inline-prompt
+                        active-text="启用" inactive-text="禁用" />
                     </template>
                     <template v-else>
-                      <ElSwitch
-                        @change="changeStatus(scope.row)"
-                        v-model="scope.row.status"
-                        :active-value="1"
-                        :inactive-value="2"
-                        inline-prompt
-                        active-text="启用"
-                        inactive-text="禁用"
-                      />
+                      <ElSwitch @change="changeStatus(scope.row)" v-model="scope.row.status" :active-value="1"
+                        :inactive-value="2" inline-prompt active-text="启用" inactive-text="禁用" />
                     </template>
                   </template>
                 </ElTableColumn>
-                <ElTableColumn
-                  width="250"
-                  align="center"
-                  fixed="right"
-                  label="操作"
-                >
+                <ElTableColumn width="250" align="center" fixed="right" label="操作">
                   <template #default="scope">
                     <template v-if="scope.row.type === 'add'">
-                      <ElButton
-                        type="primary"
-                        size="small"
-                        plain
-                        @click="
-                          handleAdd(
-                            scope.row,
-                            scopeCountry.$index,
-                            scope.$index
-                          )
-                        "
-                      >
+                      <ElButton type="primary" size="small" plain @click="
+    handleAdd(
+      scope.row,
+      scopeCountry.$index,
+      scope.$index
+    )
+    ">
                         提交
                       </ElButton>
-                      <ElButton
-                        type="danger"
-                        size="small"
-                        plain
-                        @click="cancel(scope.row, scope.$index)"
-                      >
+                      <ElButton type="danger" size="small" plain @click="cancel(scope.row, scope.$index)">
                         取消
                       </ElButton>
                     </template>
                     <template v-else>
-                      <ElButton
-                        type="success"
-                        size="small"
-                        plain
-                        @click="EditSurvey(scope.row)"
-                      >
+                      <ElButton type="success" size="small" plain @click="EditSurvey(scope.row)">
                         设计问卷
                       </ElButton>
-                      <ElButton
-                        type="danger"
-                        size="small"
-                        plain
-                        @click="onDelProject(scope.row)"
-                      >
+                      <ElButton type="danger" size="small" plain @click="onDelProject(scope.row)">
                         删除
                       </ElButton>
                     </template>
@@ -428,33 +358,16 @@ function onDelProject(row: any) {
           <ElTableColumn prop="countryName" label="国家/标题" width="500" />
           <ElTableColumn prop="isDefault" label="默认/状态">
             <template #default="scope">
-              <ElSwitch
-                @change="changeIsDefault(scope.row)"
-                v-model="scope.row.isDefault"
-                :active-value="1"
-                :inactive-value="2"
-                inline-prompt
-                active-text="启用"
-                inactive-text="禁用"
-              />
+              <ElSwitch @change="changeIsDefault(scope.row)" v-model="scope.row.isDefault" :active-value="1"
+                :inactive-value="2" inline-prompt active-text="启用" inactive-text="禁用" />
             </template>
           </ElTableColumn>
           <ElTableColumn label="操作" width="250" align="center" fixed="right">
             <template #default="scope">
-              <ElButton
-                type="primary"
-                size="small"
-                plain
-                @click="onCreateTiele(scope.row)"
-              >
+              <ElButton type="primary" size="small" plain @click="onCreateTiele(scope.row)">
                 新增问卷
               </ElButton>
-              <ElButton
-                type="danger"
-                size="small"
-                plain
-                @click="onDelCountry(scope.row)"
-              >
+              <ElButton type="danger" size="small" plain @click="onDelCountry(scope.row)">
                 删除
               </ElButton>
             </template>
@@ -465,36 +378,15 @@ function onDelProject(row: any) {
         </ElTable>
       </el-form>
 
-      <ElPagination
-        :current-page="pagination.page"
-        :total="pagination.total"
-        :page-size="pagination.size"
-        :page-sizes="pagination.sizes"
-        :layout="pagination.layout"
-        :hide-on-single-page="false"
-        class="pagination"
-        background
-        @size-change="sizeChange"
-        @current-change="currentChange"
-      />
+      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+        background @size-change="sizeChange" @current-change="currentChange" />
     </PageMain>
-    <Edit
-      v-if="data.editProps.visible"
-      :id="data.editProps.id"
-      :countryId="data.editProps.countryId"
-      v-model="data.editProps.visible"
-      :row="data.editProps.row"
-      @success="getDataList"
-    ></Edit>
-    <FormMode
-      v-if="data.formMode === 'dialog' || data.formMode === 'drawer'"
-      :id="data.formModeProps.id"
-      v-model="data.formModeProps.visible"
-      :mode="data.formMode"
-      :details="data.formModeProps.details"
-      :title="data.formModeProps.title"
-      @success="getDataList"
-    />
+    <Edit v-if="data.editProps.visible" :id="data.editProps.id" :countryId="data.editProps.countryId"
+      v-model="data.editProps.visible" :row="data.editProps.row" @success="getDataList"></Edit>
+    <FormMode v-if="data.formMode === 'dialog' || data.formMode === 'drawer'" :id="data.formModeProps.id"
+      v-model="data.formModeProps.visible" :mode="data.formMode" :details="data.formModeProps.details"
+      :title="data.formModeProps.title" @success="getDataList" />
   </div>
 </template>
 
@@ -503,22 +395,27 @@ function onDelProject(row: any) {
   .hide-table-header thead {
     display: none !important;
   }
+
   td:has(> .hide-table-header) {
     padding: 0 !important;
     border: none;
-    tbody > tr:nth-last-of-type(1) {
+
+    tbody>tr:nth-last-of-type(1) {
       td {
         border-bottom: none !important;
       }
     }
+
     .el-table--border .el-table__inner-wrapper:after {
       height: 0;
     }
+
     .el-table--border:after {
       width: 0;
     }
   }
 }
+
 .absolute-container {
   position: absolute;
   width: 100%;

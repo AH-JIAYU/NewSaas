@@ -71,21 +71,27 @@ async function onSubmit() {
   formRef.value &&
     formRef.value.validate(async (valid) => {
       if (valid) {
-        loading.value = true;
-        const res = await api.getMemberPlusMinusPaymentsList(form.value);
-        if (res.status === 1) {
+        try {
+          loading.value = true;
+          const res = await api.getMemberPlusMinusPaymentsList(form.value);
+          if (res.status === 1) {
+            loading.value = false;
+            emit("fetch-data");
+            ElMessage.success({
+              message: "操作成功",
+              center: true,
+            });
+            close();
+          } else {
+            ElMessage.warning({
+              message: "出现错误请联系管理人员",
+              center: true,
+            });
+          }
+        } catch (error) {
+
+        } finally {
           loading.value = false;
-          emit("fetch-data");
-          ElMessage.success({
-            message: "操作成功",
-            center: true,
-          });
-          close();
-        } else {
-          ElMessage.warning({
-            message: "出现错误请联系管理人员",
-            center: true,
-          });
         }
       }
     });
@@ -99,54 +105,19 @@ defineExpose({
 
 <template>
   <div v-loading="loading">
-    <el-dialog
-      v-model="loadingDisible"
-      append-to-body
-      :close-on-click-modal="false"
-      destroy-on-close
-      draggable
-      width="35%"
-      @close="close"
-    >
-      <el-form
-        :model="form"
-        :rules="formRules"
-        ref="formRef"
-        label-width="80px"
-        :inline="false"
-      >
+    <el-dialog v-model="loadingDisible" append-to-body :close-on-click-modal="false" destroy-on-close draggable
+      width="35%" @close="close">
+      <el-form :model="form" :rules="formRules" ref="formRef" label-width="80px" :inline="false">
         <el-form-item label="会员ID"> {{ form.memberId }} </el-form-item>
         <el-form-item label="加减款">
-          <el-select
-            v-model="form.operationType"
-            value-key=""
-            placeholder="请选择加减款"
-            clearable
-            filterable
-          >
-            <el-option
-              v-for="item in operationTypeList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            >
+          <el-select v-model="form.operationType" value-key="" placeholder="请选择加减款" clearable filterable>
+            <el-option v-for="item in operationTypeList" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="类型">
-          <el-select
-            v-model="form.type"
-            value-key=""
-            placeholder="请选择类型"
-            clearable
-            filterable
-          >
-            <el-option
-              v-for="item in typeList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            >
+          <el-select v-model="form.type" value-key="" placeholder="请选择类型" clearable filterable>
+            <el-option v-for="item in typeList" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>

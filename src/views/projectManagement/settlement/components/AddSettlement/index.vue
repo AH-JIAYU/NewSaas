@@ -25,15 +25,21 @@ function onSubmit() {
   formRef.value &&
     formRef.value.validate(async (valid: any) => {
       if (valid) {
-        loading.value = true;
-        await api.omissionProject(form.value);
-        emits("success");
-        loading.value = false;
-        ElMessage.success({
-          message: "操作成功",
-          center: true,
-        });
-        closeHandler();
+        try {
+          loading.value = true;
+          await api.omissionProject(form.value);
+          emits("success");
+          loading.value = false;
+          ElMessage.success({
+            message: "操作成功",
+            center: true,
+          });
+          closeHandler();
+        } catch (error) {
+
+        } finally {
+          loading.value = false;
+        }
       }
     });
 }
@@ -55,20 +61,9 @@ defineExpose({ showEdit });
 
 <template>
   <div v-loading="loading">
-    <el-dialog
-      v-model="dialogTableVisible"
-      title="遗漏项目新增"
-      width="700"
-      style="height: 200px"
-      :before-close="closeHandler"
-    >
-      <el-form
-        ref="formRef"
-        label-width="100px"
-        :model="form"
-        :rules="formRules"
-        :inline="false"
-      >
+    <el-dialog v-model="dialogTableVisible" title="遗漏项目新增" width="700" style="height: 200px"
+      :before-close="closeHandler">
+      <el-form ref="formRef" label-width="100px" :model="form" :rules="formRules" :inline="false">
         <el-form-item label="项目ID" prop="projectId">
           <el-input v-model="form.projectId" placeholder="请输入项目ID" />
         </el-form-item>

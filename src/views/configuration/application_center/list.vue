@@ -59,16 +59,22 @@ onBeforeUnmount(() => {
 })
 
 function getDataList() {
-  data.value.loading = true
-  const params = {
-    ...getParams(),
-    ...(data.value.search.title && { title: data.value.search.title }),
-  }
-  api.list(params).then((res: any) => {
+  try {
+    data.value.loading = true
+    const params = {
+      ...getParams(),
+      ...(data.value.search.title && { title: data.value.search.title }),
+    }
+    api.list(params).then((res: any) => {
+      data.value.loading = false
+      data.value.dataList = res.data.list
+      pagination.value.total = res.data.total
+    })
+  } catch (error) {
+
+  } finally {
     data.value.loading = false
-    data.value.dataList = res.data.list
-    pagination.value.total = res.data.total
-  })
+  }
 }
 
 // 每页数量切换
@@ -139,7 +145,7 @@ function onDel(row: any) {
         center: true,
       })
     })
-  }).catch(() => {})
+  }).catch(() => { })
 }
 </script>
 
@@ -151,7 +157,8 @@ function onDel(row: any) {
         <template #default="{ fold, toggle }">
           <ElForm :model="data.search" size="default" label-width="100px" inline-message inline class="search-form">
             <ElFormItem label="标题">
-              <ElInput v-model="data.search.title" placeholder="请输入标题，支持模糊查询" clearable @keydown.enter="currentChange()" @clear="currentChange()" />
+              <ElInput v-model="data.search.title" placeholder="请输入标题，支持模糊查询" clearable @keydown.enter="currentChange()"
+                @clear="currentChange()" />
             </ElFormItem>
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">
@@ -162,7 +169,7 @@ function onDel(row: any) {
               </ElButton>
               <ElButton link disabled @click="toggle">
                 <template #icon>
-                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top' " />
+                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
                 </template>
                 {{ fold ? '展开' : '收起' }}
               </ElButton>
@@ -190,7 +197,8 @@ function onDel(row: any) {
           </ElButton>
         </ElButtonGroup>
       </ElSpace>
-      <ElTable v-loading="data.loading" class="my-4" :data="data.dataList" stripe highlight-current-row border height="100%" @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
+      <ElTable v-loading="data.loading" class="my-4" :data="data.dataList" stripe highlight-current-row border
+        height="100%" @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
         <ElTableColumn v-if="data.batch.enable" type="selection" align="center" fixed />
         <ElTableColumn prop="title" label="标题" />
         <ElTableColumn label="操作" width="250" align="center" fixed="right">
@@ -207,9 +215,12 @@ function onDel(row: any) {
           <el-empty description="暂无数据" />
         </template>
       </ElTable>
-      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size" :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination" background @size-change="sizeChange" @current-change="currentChange" />
+      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+        background @size-change="sizeChange" @current-change="currentChange" />
     </PageMain>
-    <FormMode v-if="data.formMode === 'dialog' || data.formMode === 'drawer'" :id="data.formModeProps.id" v-model="data.formModeProps.visible" :mode="data.formMode" @success="getDataList" />
+    <FormMode v-if="data.formMode === 'dialog' || data.formMode === 'drawer'" :id="data.formModeProps.id"
+      v-model="data.formModeProps.visible" :mode="data.formMode" @success="getDataList" />
   </div>
 </template>
 

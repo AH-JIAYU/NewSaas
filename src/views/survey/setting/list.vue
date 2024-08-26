@@ -86,10 +86,16 @@ onMounted(() => {
 });
 // 获取数据
 async function getDataList() {
-  loading.value = true;
-  const { data } = await api.list();
-  form.value = data || form.value;
-  loading.value = false;
+  try {
+    loading.value = true;
+    const { data } = await api.list();
+    form.value = data || form.value;
+    loading.value = false;
+  } catch (error) {
+
+  } finally {
+    loading.value = false;
+  }
 }
 // 复制地址
 const copyToClipboard = () => {
@@ -108,18 +114,21 @@ function onSubmit() {
     formRef.value &&
       formRef.value.validate((valid) => {
         if (valid) {
-          if (form.value.keyWords == "") {
-            form.value.keyWords = "keyWords";
-          }
-          loading.value = true;
-          api.create(form.value).then(() => {
-            loading.value = false;
-            getDataList();
-            ElMessage.success({
-              message: "新增成功",
-              center: true,
+          try {
+            loading.value = true;
+            api.create(form.value).then(() => {
+              loading.value = false;
+              getDataList();
+              ElMessage.success({
+                message: "新增成功",
+                center: true,
+              });
             });
-          });
+          } catch (error) {
+
+          } finally {
+            loading.value = false;
+          }
         }
       });
   } else {
@@ -127,54 +136,56 @@ function onSubmit() {
     formRef.value &&
       formRef.value.validate((valid) => {
         if (valid) {
-          // memberURL,
-          let {
-            id,
-            keyWords,
-            registerExamineOffOrOn,
-            registerOffOrOn,
-            webName,
-            priceProportion,
-            taxPointsProportion,
-            minimumAmount,
-            fixedPrice,
-            externalSite,
-            phone,
-            email,
-            qqCode,
-            address,
-          } = form.value;
-          //  memberURL,
-          const params = {
-            id,
-            keyWords,
-            registerExamineOffOrOn,
-            registerOffOrOn,
-            webName,
-            priceProportion,
-            taxPointsProportion,
-            minimumAmount,
-            fixedPrice,
-            externalSite,
-            phone,
-            email,
-            qqCode,
-            address,
-          };
-          if (form.value.keyWords == "") {
-            params.keyWords = "keyWords";
-          }
-          loading.value = true;
-          api.edit(params).then((res: any) => {
+          try {
+            let {
+              id,
+              keyWords,
+              registerExamineOffOrOn,
+              registerOffOrOn,
+              webName,
+              priceProportion,
+              taxPointsProportion,
+              minimumAmount,
+              fixedPrice,
+              externalSite,
+              phone,
+              email,
+              qqCode,
+              address,
+            } = form.value;
+            //  memberURL,
+            const params = {
+              id,
+              keyWords,
+              registerExamineOffOrOn,
+              registerOffOrOn,
+              webName,
+              priceProportion,
+              taxPointsProportion,
+              minimumAmount,
+              fixedPrice,
+              externalSite,
+              phone,
+              email,
+              qqCode,
+              address,
+            };
+            loading.value = true;
+            api.edit(params).then((res: any) => {
+              loading.value = false;
+              if (res.status === 1) {
+                getDataList();
+                ElMessage.success({
+                  message: "修改成功",
+                  center: true,
+                });
+              }
+            });
+          } catch (error) {
+
+          } finally {
             loading.value = false;
-            if (res.status === 1) {
-              getDataList();
-              ElMessage.success({
-                message: "修改成功",
-                center: true,
-              });
-            }
-          });
+          }
         }
       });
   }
@@ -185,66 +196,37 @@ function onSubmit() {
   <div v-loading="loading">
     <PageMain>
       <el-tabs v-model="activeTopTab" type="border-card">
-        <el-form
-          ref="formRef"
-          :model="form"
-          :rules="formRules"
-          label-position="right"
-          label-width="140px"
-          style="width: 500px"
-        >
+        <el-form ref="formRef" :model="form" :rules="formRules" label-position="right" label-width="140px"
+          style="width: 500px">
           <el-tab-pane label="基础设置" name="基本设置">
             <el-row :gutter="20">
               <el-col :span="7">
                 <el-form-item label="注册开关">
-                  <el-switch
-                    v-model="form.registerOffOrOn"
-                    active-text="开启"
-                    inline-prompt
-                    inactive-text="关闭"
-                    :active-value="true"
-                    :inactive-value="false"
-                  />
+                  <el-switch v-model="form.registerOffOrOn" active-text="开启" inline-prompt inactive-text="关闭"
+                    :active-value="true" :inactive-value="false" />
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="注册审核">
-                  <el-switch
-                    v-model="form.registerExamineOffOrOn"
-                    active-text="开启"
-                    inline-prompt
-                    inactive-text="关闭"
-                    :active-value="true"
-                    :inactive-value="false"
-                  />
+                  <el-switch v-model="form.registerExamineOffOrOn" active-text="开启" inline-prompt inactive-text="关闭"
+                    :active-value="true" :inactive-value="false" />
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="最低结算金额" prop="confirmPassword">
-                  <el-input
-                    v-model.number="form.minimumAmount"
-                    style="width: 18rem"
-                    placeholder=""
-                  />
+                  <el-input v-model.number="form.minimumAmount" style="width: 18rem" placeholder="" />
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="会员税点" prop="confirmPassword">
-                  <el-input
-                    v-model.number="form.taxPointsProportion"
-                    style="width: 18rem"
-                    placeholder=""
-                    ><template #append>%</template>
+                  <el-input v-model.number="form.taxPointsProportion" style="width: 18rem" placeholder=""><template
+                      #append>%</template>
                   </el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="调查限价" prop="confirmPassword">
-                  <el-input
-                    v-model.number="form.fixedPrice"
-                    style="width: 18rem"
-                    placeholder=""
-                  />
+                  <el-input v-model.number="form.fixedPrice" style="width: 18rem" placeholder="" />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -325,38 +307,22 @@ function onSubmit() {
             <el-row :gutter="20">
               <el-col :span="24">
                 <el-form-item label="电子邮箱" prop="">
-                  <el-input
-                    style="width: 18rem"
-                    v-model="form.email"
-                    placeholder=""
-                  />
+                  <el-input style="width: 18rem" v-model="form.email" placeholder="" />
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="手机号码" prop="">
-                  <el-input
-                    style="width: 18rem"
-                    v-model="form.phone"
-                    placeholder=""
-                  />
+                  <el-input style="width: 18rem" v-model="form.phone" placeholder="" />
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="QQ号码" prop="">
-                  <el-input
-                    style="width: 18rem"
-                    v-model="form.qqCode"
-                    placeholder=""
-                  />
+                  <el-input style="width: 18rem" v-model="form.qqCode" placeholder="" />
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="公司地址" prop="">
-                  <el-input
-                    style="width: 18rem"
-                    v-model="form.address"
-                    placeholder=""
-                  />
+                  <el-input style="width: 18rem" v-model="form.address" placeholder="" />
                 </el-form-item>
               </el-col>
               <el-col :span="24">
@@ -421,6 +387,7 @@ function onSubmit() {
     width: calc(100% + 40px);
   }
 }
+
 :deep(.el-tabs__nav-scroll) {
   background-color: #fafafa;
 }

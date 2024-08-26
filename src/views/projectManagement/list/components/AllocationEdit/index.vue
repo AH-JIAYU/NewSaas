@@ -12,6 +12,8 @@ defineOptions({
   name: "AllocationEdit",
 });
 const emits = defineEmits(["fetch-data"]);
+// loading
+const loading = ref<boolean>(false)
 // 弹框
 const dialogTableVisible = ref(false);
 const formRef = ref<any>(); // ref
@@ -112,65 +114,42 @@ function closeHandler() {
 function onSubmit() {
   formRef.value.validate(async (valid: any) => {
     if (valid) {
-      const { status } = await submitLoading(api.allocation(data.value.form));
-      status === 1 &&
-        ElMessage.success({
-          message: "分配成功",
-          center: true,
-        });
-      closeHandler();
-      emits("fetch-data");
+      try {
+        loading.value = true;
+        const { status } = await submitLoading(api.allocation(data.value.form));
+        loading.value = false;
+        status === 1 &&
+          ElMessage.success({
+            message: "分配成功",
+            center: true,
+          });
+        closeHandler();
+        emits("fetch-data");
+      } catch (error) {
+
+      } finally {
+        loading.value = false;
+      }
     }
   });
 }
 
-onMounted(async () => {});
+onMounted(async () => { });
 // 暴露方法
 defineExpose({ showEdit });
 </script>
 
 <template>
   <div>
-    <el-dialog
-      v-model="dialogTableVisible"
-      title="分配"
-      width="700"
-      :before-close="closeHandler"
-    >
-      <el-table :data="data.list" v-loading="false" row-key="id">
-        <el-table-column
-          align="center"
-          show-overflow-tooltip
-          label="项目名称"
-          prop="name"
-        />
-        <el-table-column
-          align="center"
-          show-overflow-tooltip
-          label="项目编码"
-          prop="projectId"
-        />
-        <el-table-column
-          align="center"
-          show-overflow-tooltip
-          label="客户简称"
-          width="100"
-          prop="clientName"
-        />
+    <el-dialog v-model="dialogTableVisible" title="分配" width="700" :before-close="closeHandler">
+      <el-table :data="data.list" v-loading="loading" row-key="id">
+        <el-table-column align="center" show-overflow-tooltip label="项目名称" prop="name" />
+        <el-table-column align="center" show-overflow-tooltip label="项目编码" prop="projectId" />
+        <el-table-column align="center" show-overflow-tooltip label="客户简称" width="100" prop="clientName" />
       </el-table>
-      <el-form
-        ref="formRef"
-        label-width="80px"
-        :rules="rules"
-        :model="data.form"
-        :inline="false"
-      >
+      <el-form ref="formRef" label-width="80px" :rules="rules" :model="data.form" :inline="false">
         <el-form-item label="分配目标">
-          <el-radio-group
-            v-model="data.form.allocationType"
-            class="ml-4"
-            @change="changeRadio"
-          >
+          <el-radio-group v-model="data.form.allocationType" class="ml-4" @change="changeRadio">
             <el-radio :value="2" size="large"> 供应商 </el-radio>
             <el-radio :value="3" size="large"> 会员组 </el-radio>
             <el-radio :value="4" size="large">租户 </el-radio>
@@ -179,87 +158,35 @@ defineExpose({ showEdit });
             </el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item
-          v-if="
-            data.form.allocationType === 2 && data.form.allocationType !== 5
-          "
-          label="供应商"
-          prop="groupSupplierIdList"
-        >
-          <el-select
-            v-model="data.form.groupSupplierIdList"
-            placeholder="请选择供应商"
-            clearable
-            filterable
-            multiple
-            collapse-tags
-          >
+        <el-form-item v-if="data.form.allocationType === 2 && data.form.allocationType !== 5
+      " label="供应商" prop="groupSupplierIdList">
+          <el-select v-model="data.form.groupSupplierIdList" placeholder="请选择供应商" clearable filterable multiple
+            collapse-tags>
             <template #header>
-              <el-checkbox
-                v-model="data.selectAll.supplier"
-                @change="selectAllSupplier"
-                style="display: flex; height: unset"
-                >全选</el-checkbox
-              >
+              <el-checkbox v-model="data.selectAll.supplier" @change="selectAllSupplier"
+                style="display: flex; height: unset">全选</el-checkbox>
             </template>
-            <el-option
-              v-for="item in data.tenantSupplierList"
-              :label="item.supplierAccord"
-              :value="item.tenantSupplierId"
-            />
+            <el-option v-for="item in data.tenantSupplierList" :label="item.supplierAccord"
+              :value="item.tenantSupplierId" />
           </el-select>
         </el-form-item>
-        <el-form-item
-          v-if="
-            data.form.allocationType === 3 && data.form.allocationType !== 5
-          "
-          label="会员组"
-          prop="groupSupplierIdList"
-        >
-          <el-select
-            v-model="data.form.groupSupplierIdList"
-            placeholder="请选择会员组"
-            clearable
-            filterable
-            multiple
-            collapse-tags
-          >
+        <el-form-item v-if="data.form.allocationType === 3 && data.form.allocationType !== 5
+      " label="会员组" prop="groupSupplierIdList">
+          <el-select v-model="data.form.groupSupplierIdList" placeholder="请选择会员组" clearable filterable multiple
+            collapse-tags>
             <template #header>
-              <el-checkbox
-                v-model="data.selectAll.member"
-                @change="selectAllMember"
-                style="display: flex; height: unset"
-                >全选</el-checkbox
-              >
+              <el-checkbox v-model="data.selectAll.member" @change="selectAllMember"
+                style="display: flex; height: unset">全选</el-checkbox>
             </template>
-            <el-option
-              v-for="item in data.vipGroupList"
-              :label="item.memberGroupName"
-              :value="item.memberGroupId"
-            />
+            <el-option v-for="item in data.vipGroupList" :label="item.memberGroupName" :value="item.memberGroupId" />
           </el-select>
         </el-form-item>
-        <el-form-item
-          v-if="
-            data.form.allocationType === 4 && data.form.allocationType !== 5
-          "
-          label="租户"
-          prop="groupSupplierIdList"
-        >
-          <el-select
-            v-model="data.form.groupSupplierIdList"
-            placeholder="请选择租户"
-            clearable
-            filterable
-            multiple
-            collapse-tags
-            :multiple-limit="1"
-          >
-            <el-option
-              v-for="item in data.tenantList"
-              :label="item.beInvitationTenantName"
-              :value="item.beInvitationTenantId"
-            />
+        <el-form-item v-if="data.form.allocationType === 4 && data.form.allocationType !== 5
+      " label="租户" prop="groupSupplierIdList">
+          <el-select v-model="data.form.groupSupplierIdList" placeholder="请选择租户" clearable filterable multiple
+            collapse-tags :multiple-limit="1">
+            <el-option v-for="item in data.tenantList" :label="item.beInvitationTenantName"
+              :value="item.beInvitationTenantId" />
           </el-select>
         </el-form-item>
       </el-form>

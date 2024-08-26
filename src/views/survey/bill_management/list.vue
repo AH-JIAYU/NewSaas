@@ -86,25 +86,31 @@ onBeforeUnmount(() => {
 });
 
 function getDataList() {
-  data.value.loading = true;
-  const params = {
-    ...getParams(),
-    ...data.value.search,
-  };
-  if (data.value.search.member) {
-    const regExp = /^\d+$/;
-    // 纯数字为id
-    if (regExp.test(params.member)) {
-      params.memberId = params.member;
-    } else {
-      params.memberName = params.member;
+  try {
+    data.value.loading = true;
+    const params = {
+      ...getParams(),
+      ...data.value.search,
+    };
+    if (data.value.search.member) {
+      const regExp = /^\d+$/;
+      // 纯数字为id
+      if (regExp.test(params.member)) {
+        params.memberId = params.member;
+      } else {
+        params.memberName = params.member;
+      }
     }
-  }
-  api.list(params).then((res: any) => {
+    api.list(params).then((res: any) => {
+      data.value.loading = false;
+      data.value.dataList = res.data.memberBillInfoList;
+      pagination.value.total = res.data.total;
+    });
+  } catch (error) {
+
+  } finally {
     data.value.loading = false;
-    data.value.dataList = res.data.memberBillInfoList;
-    pagination.value.total = res.data.total;
-  });
+  }
 }
 // 重置筛选数据
 function onReset() {
@@ -182,36 +188,14 @@ async function paymentOperation(id: any, type: any) {
     <PageMain>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
-          <ElForm
-            :model="data.search"
-            size="default"
-            label-width="100px"
-            inline-message
-            inline
-            class="search-form"
-          >
+          <ElForm :model="data.search" size="default" label-width="100px" inline-message inline class="search-form">
             <ElFormItem>
-              <ElInput
-                v-model="data.search.member"
-                placeholder="会员ID/会员姓名"
-                clearable
-                @clear="currentChange()"
-              />
+              <ElInput v-model="data.search.member" placeholder="会员ID/会员姓名" clearable @clear="currentChange()" />
             </ElFormItem>
             <ElFormItem>
-              <el-select
-                v-model="data.search.billStatus"
-                value-key=""
-                placeholder="账单状态"
-                clearable
-                filterable
-              >
-                <el-option
-                  v-for="(item, index) in data.billStatusList"
-                  :key="item"
-                  :value="index + 1"
-                  :label="item"
-                ></el-option>
+              <el-select v-model="data.search.billStatus" value-key="" placeholder="账单状态" clearable filterable>
+                <el-option v-for="(item, index) in data.billStatusList" :key="item" :value="index + 1"
+                  :label="item"></el-option>
               </el-select>
             </ElFormItem>
             <ElFormItem>
@@ -229,9 +213,7 @@ async function paymentOperation(id: any, type: any) {
               </ElButton>
               <ElButton disabled link @click="toggle">
                 <template #icon>
-                  <SvgIcon
-                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
-                  />
+                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
                 </template>
                 {{ fold ? "展开" : "收起" }}
               </ElButton>
@@ -248,134 +230,63 @@ async function paymentOperation(id: any, type: any) {
         </FormLeftPanel>
         <FormRightPanel>
           <el-button size="default"> 导出 </el-button>
-          <TabelControl
-            v-model:border="data.border"
-            v-model:tableAutoHeight="data.tableAutoHeight"
-            v-model:checkList="data.checkList"
-            v-model:columns="columns"
-            v-model:line-height="data.lineHeight"
-            v-model:stripe="data.stripe"
-            style="margin-left: 12px"
-            @query-data="getDataList"
-          />
+          <TabelControl v-model:border="data.border" v-model:tableAutoHeight="data.tableAutoHeight"
+            v-model:checkList="data.checkList" v-model:columns="columns" v-model:line-height="data.lineHeight"
+            v-model:stripe="data.stripe" style="margin-left: 12px" @query-data="getDataList" />
         </FormRightPanel>
       </el-row>
-      <ElTable
-        v-loading="data.loading"
-        :border="data.border"
-        :size="data.lineHeight"
-        :stripe="data.stripe"
-        class="my-4"
-        :data="data.dataList"
-        highlight-current-row
-        height="100%"
-        @sort-change="sortChange"
-        @selection-change="data.batch.selectionDataList = $event"
-      >
+      <ElTable v-loading="data.loading" :border="data.border" :size="data.lineHeight" :stripe="data.stripe" class="my-4"
+        :data="data.dataList" highlight-current-row height="100%" @sort-change="sortChange"
+        @selection-change="data.batch.selectionDataList = $event">
         <el-table-column align="center" type="selection" />
-        <ElTableColumn
-          v-if="data.checkList.includes('memberId')"
-          show-overflow-tooltip
-          align="center"
-          prop=""
-          label="会员ID/姓名"
-          width="250"
-        >
+        <ElTableColumn v-if="data.checkList.includes('memberId')" show-overflow-tooltip align="center" prop=""
+          label="会员ID/姓名" width="250">
           <template #default="{ row }">
             {{ row.memberId }}/
             {{ row.memberName }}
           </template>
         </ElTableColumn>
-        <ElTableColumn
-          v-if="data.checkList.includes('billTime')"
-          show-overflow-tooltip
-          align="center"
-          prop="billTime"
-          label="账单日期"
-        />
-        <ElTableColumn
-          v-if="data.checkList.includes('billAmount')"
-          show-overflow-tooltip
-          align="center"
-          prop="billAmount"
-          label="账单金额"
-        >
+        <ElTableColumn v-if="data.checkList.includes('billTime')" show-overflow-tooltip align="center" prop="billTime"
+          label="账单日期" />
+        <ElTableColumn v-if="data.checkList.includes('billAmount')" show-overflow-tooltip align="center"
+          prop="billAmount" label="账单金额">
           <template #default="{ row }">
-            <CurrencyType />{{ row.billAmount || 0 }} </template
-        ></ElTableColumn>
-        <ElTableColumn
-          v-if="data.checkList.includes('taxesFees')"
-          show-overflow-tooltip
-          align="center"
-          prop="taxesFees"
-          label="税"
-        >
+            <CurrencyType />{{ row.billAmount || 0 }}
+          </template>
+        </ElTableColumn>
+        <ElTableColumn v-if="data.checkList.includes('taxesFees')" show-overflow-tooltip align="center" prop="taxesFees"
+          label="税">
           <template #default="{ row }">
-            <CurrencyType />{{ row.taxesFees || 0 }} </template
-        ></ElTableColumn>
-        <ElTableColumn
-          v-if="data.checkList.includes('payAmount')"
-          show-overflow-tooltip
-          align="center"
-          prop="payAmount"
-          label="实际金额"
-        >
+            <CurrencyType />{{ row.taxesFees || 0 }}
+          </template>
+        </ElTableColumn>
+        <ElTableColumn v-if="data.checkList.includes('payAmount')" show-overflow-tooltip align="center" prop="payAmount"
+          label="实际金额">
           <template #default="{ row }">
-            <CurrencyType />{{ row.payAmount || 0 }} </template
-        ></ElTableColumn>
-        <ElTableColumn
-          v-if="data.checkList.includes('payTime')"
-          show-overflow-tooltip
-          align="center"
-          prop="payTime"
-          label="支付时间"
-        />
-        <ElTableColumn
-          v-if="data.checkList.includes('notes')"
-          show-overflow-tooltip
-          align="center"
-          prop="notes"
-          label="说明"
-        >
+            <CurrencyType />{{ row.payAmount || 0 }}
+          </template>
+        </ElTableColumn>
+        <ElTableColumn v-if="data.checkList.includes('payTime')" show-overflow-tooltip align="center" prop="payTime"
+          label="支付时间" />
+        <ElTableColumn v-if="data.checkList.includes('notes')" show-overflow-tooltip align="center" prop="notes"
+          label="说明">
           <template #default="{ row }">
             {{ row.notes ? row.notes : "-" }}
           </template>
         </ElTableColumn>
-        <ElTableColumn
-          v-if="data.checkList.includes('billStatus')"
-          align="center"
-          show-overflow-tooltip
-          prop=""
-          label="账单状态"
-        >
+        <ElTableColumn v-if="data.checkList.includes('billStatus')" align="center" show-overflow-tooltip prop=""
+          label="账单状态">
           <template #default="{ row }">
             {{ data.billStatusList[row.billStatus - 1] }}
           </template>
         </ElTableColumn>
-        <el-table-column
-          align="center"
-          prop="i"
-          label="操作"
-          fixed="right"
-          show-overflow-tooltip
-          width="260"
-        >
+        <el-table-column align="center" prop="i" label="操作" fixed="right" show-overflow-tooltip width="260">
           <template #default="{ row }">
             <template v-if="row.billStatus === 1">
-              <el-button
-                size="small"
-                plain
-                type="primary"
-                @click="paymentOperation(row.id, 1)"
-              >
+              <el-button size="small" plain type="primary" @click="paymentOperation(row.id, 1)">
                 支付
               </el-button>
-              <el-button
-                size="small"
-                plain
-                type="danger"
-                @click="paymentOperation(row.id, 2)"
-              >
+              <el-button size="small" plain type="danger" @click="paymentOperation(row.id, 2)">
                 拒绝支付
               </el-button>
             </template>
@@ -385,26 +296,12 @@ async function paymentOperation(id: any, type: any) {
           <el-empty description="暂无数据" />
         </template>
       </ElTable>
-      <ElPagination
-        :current-page="pagination.page"
-        :total="pagination.total"
-        :page-size="pagination.size"
-        :page-sizes="pagination.sizes"
-        :layout="pagination.layout"
-        :hide-on-single-page="false"
-        class="pagination"
-        background
-        @size-change="sizeChange"
-        @current-change="currentChange"
-      />
+      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+        background @size-change="sizeChange" @current-change="currentChange" />
     </PageMain>
-    <FormMode
-      v-if="data.formMode === 'dialog' || data.formMode === 'drawer'"
-      :id="data.formModeProps.id"
-      v-model="data.formModeProps.visible"
-      :mode="data.formMode"
-      @success="getDataList"
-    />
+    <FormMode v-if="data.formMode === 'dialog' || data.formMode === 'drawer'" :id="data.formModeProps.id"
+      v-model="data.formModeProps.visible" :mode="data.formMode" @success="getDataList" />
   </div>
 </template>
 

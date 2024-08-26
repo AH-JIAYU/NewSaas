@@ -57,43 +57,63 @@ function onSubmit() {
       formRef.value &&
         formRef.value.validate((valid: any) => {
           if (valid) {
-            delete form.value.id;
-            grounpApi.create(form.value).then(() => {
-              ElMessage.success({
-                message: "新增成功",
-                center: true,
+            try {
+              delete form.value.id;
+              grounpApi.create(form.value).then(() => {
+                ElMessage.success({
+                  message: "新增成功",
+                  center: true,
+                });
+                emits("success");
+                dialogTableVisible.value = false;
+                resolve();
               });
-              emits("success");
-              dialogTableVisible.value = false;
-              resolve();
-            });
+            } catch (error) {
+
+            } finally {
+              loading.value = false;
+            }
           }
         });
     } else {
       formRef.value &&
         formRef.value.validate((valid: any) => {
           if (valid) {
-            const data = toRaw(form.value);
-            api.edit(data).then(() => {
-              ElMessage.success({
-                message: "编辑成功",
-                center: true,
+            try {
+              const data = toRaw(form.value);
+              api.edit(data).then(() => {
+                ElMessage.success({
+                  message: "编辑成功",
+                  center: true,
+                });
+                emits("success");
+                dialogTableVisible.value = false;
+                resolve();
               });
-              emits("success");
-              dialogTableVisible.value = false;
-              resolve();
-            });
+            } catch (error) {
+
+            } finally {
+              loading.value = false;
+            }
           }
         });
     }
   });
 }
 // 获取数据
-async function showEdit(row:any) {
-  const obj = JSON.parse(row)
-  form.value.departmentId = obj.id
-  title.value = "新增小组";
-  dialogTableVisible.value = true;
+async function showEdit(row: any) {
+  try {
+    loading.value = true;
+    const obj = JSON.parse(row)
+    form.value.departmentId = obj.id
+    title.value = "新增小组";
+    dialogTableVisible.value = true;
+    loading.value = false;
+  } catch (error) {
+
+  } finally {
+    loading.value = false;
+  }
 }
 onMounted(async () => {
   nextTick(async () => {
@@ -113,30 +133,13 @@ defineExpose({ showEdit });
 <template>
   <div v-loading="loading">
     <el-dialog v-model="dialogTableVisible" :title="title" width="700">
-      <el-form
-        ref="formRef"
-        label-width="80px"
-        :model="form"
-        :rules="formRules"
-        :inline="false"
-      >
+      <el-form ref="formRef" label-width="80px" :model="form" :rules="formRules" :inline="false">
         <el-form-item prop="name" label="组名称">
           <el-input v-model="form.name" placeholder="请输入组名称" clearable />
         </el-form-item>
         <el-form-item label="所属部门">
-          <el-select
-            v-model="form.departmentId"
-            value-key=""
-            placeholder="请选择部门"
-            clearable
-            filterable
-          >
-            <el-option
-              v-for="item in departmentList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            >
+          <el-select v-model="form.departmentId" value-key="" placeholder="请选择部门" clearable filterable>
+            <el-option v-for="item in departmentList" :key="item.id" :label="item.name" :value="item.id">
             </el-option>
           </el-select>
         </el-form-item>
@@ -158,14 +161,8 @@ defineExpose({ showEdit });
           </el-select>
         </el-form-item> -->
         <el-form-item label="组提成">
-          <el-switch
-            v-model="form.commissionStatus"
-            inline-prompt
-            active-text="启用"
-            inactive-text="禁用"
-            :active-value="1"
-            :inactive-value="2"
-          >
+          <el-switch v-model="form.commissionStatus" inline-prompt active-text="启用" inactive-text="禁用" :active-value="1"
+            :inactive-value="2">
           </el-switch>
         </el-form-item>
       </el-form>

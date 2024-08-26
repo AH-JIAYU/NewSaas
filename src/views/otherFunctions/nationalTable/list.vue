@@ -158,7 +158,7 @@ onMounted(() => {
       </el-row>
       <el-table
         ref="tableSortRef"
-        v-loading="false"
+        v-loading="listLoading"
         style="margin-top: 10px"
         row-key="id"
         :data="list"

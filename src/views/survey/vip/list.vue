@@ -120,19 +120,25 @@ function currentChange(page = 1) {
 }
 // 请求
 async function fetchData() {
-  listLoading.value = true;
-  const params = {
-    ...getParams(),
-    ...queryForm,
-  };
-  if (queryForm.time && !!queryForm.time.length) {
-    params.beginTime = queryForm.time[0] || "";
-    params.endTime = queryForm.time[1] || "";
+  try {
+    listLoading.value = true;
+    const params = {
+      ...getParams(),
+      ...queryForm,
+    };
+    if (queryForm.time && !!queryForm.time.length) {
+      params.beginTime = queryForm.time[0] || "";
+      params.endTime = queryForm.time[1] || "";
+    }
+    const res = await api.list(params);
+    data.list = res.data.getMemberInfoList;
+    pagination.value.total = res.data.total;
+    listLoading.value = false;
+  } catch (error) {
+
+  } finally {
+    listLoading.value = false;
   }
-  const res = await api.list(params);
-  data.list = res.data.getMemberInfoList;
-  pagination.value.total = res.data.total;
-  listLoading.value = false;
 }
 // 重置筛选数据
 function onReset() {
@@ -168,76 +174,36 @@ onMounted(async () => {
     <PageMain>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
-          <ElForm
-            :model="queryForm"
-            size="default"
-            label-width="100px"
-            inline-message
-            inline
-            class="search-form"
-          >
+          <ElForm :model="queryForm" size="default" label-width="100px" inline-message inline class="search-form">
             <el-form-item label="">
               <!--
                 (刘)
                 会员列表目前这个只会模糊匹配姓名
                 那个我等下有时间在搞
               -->
-              <el-input
-                v-model.trim="queryForm.memberName"
-                clearable
-                :inline="false"
-                placeholder="会员ID、会员名称、姓名"
-              />
+              <el-input v-model.trim="queryForm.memberName" clearable :inline="false" placeholder="会员ID、会员名称、姓名" />
             </el-form-item>
             <el-form-item label="">
-              <el-select
-                v-model="queryForm.memberLevelId"
-                clearable
-                placeholder="会员等级"
-              >
-                <el-option
-                  v-for="item in data.vipLevelList"
-                  :key="item.memberLevelId"
-                  :label="item.levelNameOrAdditionRatio"
-                  :value="item.memberLevelId"
-                />
+              <el-select v-model="queryForm.memberLevelId" clearable placeholder="会员等级">
+                <el-option v-for="item in data.vipLevelList" :key="item.memberLevelId"
+                  :label="item.levelNameOrAdditionRatio" :value="item.memberLevelId" />
               </el-select>
             </el-form-item>
             <el-form-item label="">
-              <el-select
-                v-model="queryForm.memberStatus"
-                clearable
-                placeholder="会员状态"
-              >
+              <el-select v-model="queryForm.memberStatus" clearable placeholder="会员状态">
                 <el-option label="关闭" :value="1" />
                 <el-option label="开启" :value="2" />
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-select
-                v-model="queryForm.memberGroupId"
-                clearable
-                placeholder="所属会员组"
-              >
-                <el-option
-                  v-for="item in data.vipGroupList"
-                  :key="item.memberGroupId"
-                  :label="item.memberGroupName"
-                  :value="item.memberGroupId"
-                />
+              <el-select v-model="queryForm.memberGroupId" clearable placeholder="所属会员组">
+                <el-option v-for="item in data.vipGroupList" :key="item.memberGroupId" :label="item.memberGroupName"
+                  :value="item.memberGroupId" />
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold">
-              <el-date-picker
-                v-model="queryForm.time"
-                type="datetimerange"
-                unlink-panels
-                range-separator="-"
-                start-placeholder="创建开始日期"
-                end-placeholder="创建结束日期"
-                value-format="YYYY-MM-DD hh:mm:ss"
-                size="default"
-              />
+              <el-date-picker v-model="queryForm.time" type="datetimerange" unlink-panels range-separator="-"
+                start-placeholder="创建开始日期" end-placeholder="创建结束日期" value-format="YYYY-MM-DD hh:mm:ss" size="default" />
             </el-form-item>
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">
@@ -254,9 +220,7 @@ onMounted(async () => {
               </ElButton>
               <ElButton link @click="toggle">
                 <template #icon>
-                  <SvgIcon
-                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
-                  />
+                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
                 </template>
                 {{ fold ? "展开" : "收起" }}
               </ElButton>
@@ -273,202 +237,87 @@ onMounted(async () => {
         </FormLeftPanel>
         <FormRightPanel>
           <el-button size="default"> 导出 </el-button>
-          <TabelControl
-            v-model:border="border"
-            v-model:tableAutoHeight="tableAutoHeight"
-            v-model:checkList="checkList"
-            v-model:columns="columns"
-            v-model:line-height="lineHeight"
-            v-model:stripe="stripe"
-            style="margin-left: 12px"
-            @query-data="queryData"
-          />
+          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
+            v-model:columns="columns" v-model:line-height="lineHeight" v-model:stripe="stripe" style="margin-left: 12px"
+            @query-data="queryData" />
         </FormRightPanel>
       </el-row>
-      <el-table
-        v-loading="listLoading"
-        :border="border"
-        :data="data.list"
-        :size="lineHeight"
-        :stripe="stripe"
-        @selection-change="setSelectRows"
-      >
+      <el-table v-loading="listLoading" :border="border" :data="data.list" :size="lineHeight" :stripe="stripe"
+        @selection-change="setSelectRows">
         <el-table-column align="center" type="selection" />
-        <el-table-column
-          v-if="checkList.includes('memberId')"
-          align="center"
-          prop="memberId"
-          width="180"
-          show-overflow-tooltip
-          label="会员ID"
-        />
-        <el-table-column
-          v-if="checkList.includes('memberNickname')"
-          align="center"
-          prop="memberNickname"
-          show-overflow-tooltip
-          label="会员名称"
-        />
-        <el-table-column
-          v-if="checkList.includes('memberName')"
-          align="center"
-          prop="memberName"
-          show-overflow-tooltip
-          label="会员姓名"
-        ><template #default="{ row }">
-          {{ row.memberName ? row.memberName : '-' }} </template
-        ></el-table-column>
-        <el-table-column
-          v-if="checkList.includes('availableBalance')"
-          align="center"
-          prop="availableBalance"
-          show-overflow-tooltip
-          label="可用余额"
-        >
+        <el-table-column v-if="checkList.includes('memberId')" align="center" prop="memberId" width="180"
+          show-overflow-tooltip label="会员ID" />
+        <el-table-column v-if="checkList.includes('memberNickname')" align="center" prop="memberNickname"
+          show-overflow-tooltip label="会员名称" />
+        <el-table-column v-if="checkList.includes('memberName')" align="center" prop="memberName" show-overflow-tooltip
+          label="会员姓名"><template #default="{ row }">
+            {{ row.memberName ? row.memberName : '-' }} </template></el-table-column>
+        <el-table-column v-if="checkList.includes('availableBalance')" align="center" prop="availableBalance"
+          show-overflow-tooltip label="可用余额">
           <template #default="{ row }">
-            <CurrencyType />{{ row.availableBalance || 0 }} </template
-        ></el-table-column>
-        <el-table-column
-          v-if="checkList.includes('pendingBalance')"
-          align="center"
-          prop="pendingBalance"
-          show-overflow-tooltip
-          label="待审金额"
-        >
+            <CurrencyType />{{ row.availableBalance || 0 }}
+          </template></el-table-column>
+        <el-table-column v-if="checkList.includes('pendingBalance')" align="center" prop="pendingBalance"
+          show-overflow-tooltip label="待审金额">
           <template #default="{ row }">
-            <CurrencyType />{{ row.pendingBalance || 0 }} </template
-        ></el-table-column>
-        <el-table-column
-          v-if="checkList.includes('memberLevelName')"
-          align="center"
-          prop="memberLevelName"
-          show-overflow-tooltip
-          label="会员等级"
-        />
-        <el-table-column
-          v-if="checkList.includes('memberGroupName')"
-          align="center"
-          prop="memberGroupName"
-          show-overflow-tooltip
-          label="会员组"
-        ><template #default="{ row }">
-          {{ row.memberGroupName ? row.memberGroupName : '-' }} </template
-        ></el-table-column>
-        <el-table-column
-          v-if="checkList.includes('B2B|B2C')"
-          align="center"
-          show-overflow-tooltip
-          label="B2B|B2C"
-        >
+            <CurrencyType />{{ row.pendingBalance || 0 }}
+          </template></el-table-column>
+        <el-table-column v-if="checkList.includes('memberLevelName')" align="center" prop="memberLevelName"
+          show-overflow-tooltip label="会员等级" />
+        <el-table-column v-if="checkList.includes('memberGroupName')" align="center" prop="memberGroupName"
+          show-overflow-tooltip label="会员组"><template #default="{ row }">
+            {{ row.memberGroupName ? row.memberGroupName : '-' }} </template></el-table-column>
+        <el-table-column v-if="checkList.includes('B2B|B2C')" align="center" show-overflow-tooltip label="B2B|B2C">
           <template #default="{ row }">
-            <el-text v-if="row.b2bStatus && row.b2bStatus === 2" class="mx-1"
-              ><div style="color: #15d36a;" class="i-fluent:checkmark-12-filled w-1.5em h-1.5em"></div
-            ></el-text>
-            <el-text v-else class="mx-1"
-              ><div style="color:#e74032;" class="i-entypo:cross w-1.5em h-1.5em"></div
-            ></el-text>
+            <el-text v-if="row.b2bStatus && row.b2bStatus === 2" class="mx-1">
+              <div style="color: #15d36a;" class="i-fluent:checkmark-12-filled w-1.5em h-1.5em"></div>
+            </el-text>
+            <el-text v-else class="mx-1">
+              <div style="color:#e74032;" class="i-entypo:cross w-1.5em h-1.5em"></div>
+            </el-text>
             |
-            <el-text v-if="row.b2cStatus && row.b2cStatus === 2" class="mx-1"
-              ><div style="color: #15d36a;" class="i-fluent:checkmark-12-filled w-1.5em h-1.5em"></div
-            ></el-text>
-            <el-text v-else class="mx-1"
-              ><div style="color:#e74032;" class="i-entypo:cross w-1.5em h-1.5em"></div
-            ></el-text>
+            <el-text v-if="row.b2cStatus && row.b2cStatus === 2" class="mx-1">
+              <div style="color: #15d36a;" class="i-fluent:checkmark-12-filled w-1.5em h-1.5em"></div>
+            </el-text>
+            <el-text v-else class="mx-1">
+              <div style="color:#e74032;" class="i-entypo:cross w-1.5em h-1.5em"></div>
+            </el-text>
           </template>
         </el-table-column>
 
-        <el-table-column
-          align="center"
-          v-if="checkList.includes('memberStatus')"
-          show-overflow-tooltip
-          label="会员状态"
-        >
+        <el-table-column align="center" v-if="checkList.includes('memberStatus')" show-overflow-tooltip label="会员状态">
           <template #default="{ row }">
-            <ElSwitch
-              v-if="row.memberStatus === 3"
-              v-model="row.memberStatus"
-              inline-prompt
-              :inactive-value="3"
-              :active-value="2"
-              inactive-text="待审核"
-              active-text="启用"
-              @change="changeState($event, row.memberId)"
-            />
-            <ElSwitch
-              v-else
-              v-model="row.memberStatus"
-              inline-prompt
-              :inactive-value="1"
-              :active-value="2"
-              inactive-text="禁用"
-              active-text="启用"
-              @change="changeState($event, row.memberId)"
-            />
+            <ElSwitch v-if="row.memberStatus === 3" v-model="row.memberStatus" inline-prompt :inactive-value="3"
+              :active-value="2" inactive-text="待审核" active-text="启用" @change="changeState($event, row.memberId)" />
+            <ElSwitch v-else v-model="row.memberStatus" inline-prompt :inactive-value="1" :active-value="2"
+              inactive-text="禁用" active-text="启用" @change="changeState($event, row.memberId)" />
           </template>
         </el-table-column>
-        <el-table-column
-          align="center"
-          v-if="checkList.includes('randomStatus')"
-          show-overflow-tooltip
-          label="随机身份"
-        >
+        <el-table-column align="center" v-if="checkList.includes('randomStatus')" show-overflow-tooltip label="随机身份">
           <template #default="{ row }">
-            <ElSwitch
-              v-model="row.randomStatus"
-              inline-prompt
-              :inactive-value="1"
-              :active-value="2"
-              inactive-text="禁用"
-              active-text="启用"
-              @change="changeState($event, row.memberId)"
-            />
+            <ElSwitch v-model="row.randomStatus" inline-prompt :inactive-value="1" :active-value="2" inactive-text="禁用"
+              active-text="启用" @change="changeState($event, row.memberId)" />
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('createName')"
-          align="center"
-          prop="createName"
-          show-overflow-tooltip
-          label="创建人"
-        >
+        <el-table-column v-if="checkList.includes('createName')" align="center" prop="createName" show-overflow-tooltip
+          label="创建人">
           <template #default="{ row }">
             {{ row.createName ? row.createName : "-" }}
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('createTime')"
-          align="center"
-          prop="createTime"
-          show-overflow-tooltip
-          label="创建时间"
-        ><template #default="{ row }">
+        <el-table-column v-if="checkList.includes('createTime')" align="center" prop="createTime" show-overflow-tooltip
+          label="创建时间"><template #default="{ row }">
             <el-tag effect="plain" type="info">{{
-              format(row.createTime)
-            }}</el-tag>
+    format(row.createTime)
+  }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column
-          align="center"
-          label="操作"
-          fixed="right"
-          show-overflow-tooltip
-          width="180"
-        >
+        <el-table-column align="center" label="操作" fixed="right" show-overflow-tooltip width="180">
           <template #default="{ row }">
-            <el-button
-              size="small"
-              plain
-              type="primary"
-              @click="handleEdit(row)"
-            >
+            <el-button size="small" plain type="primary" @click="handleEdit(row)">
               编辑
             </el-button>
-            <el-button
-              size="small"
-              plain
-              type="primary"
-              @click="plusMinusPayments(row)"
-            >
+            <el-button size="small" plain type="primary" @click="plusMinusPayments(row)">
               加减款
             </el-button>
           </template>
@@ -477,24 +326,12 @@ onMounted(async () => {
           <el-empty class="vab-data-empty" description="暂无数据" />
         </template>
       </el-table>
-      <ElPagination
-        :current-page="pagination.page"
-        :total="pagination.total"
-        :page-size="pagination.size"
-        :page-sizes="pagination.sizes"
-        :layout="pagination.layout"
-        :hide-on-single-page="false"
-        class="pagination"
-        background
-        @size-change="sizeChange"
-        @current-change="currentChange"
-      />
+      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+        background @size-change="sizeChange" @current-change="currentChange" />
     </PageMain>
     <VipEdit ref="editRef" @fetch-data="queryData" />
-    <vipPlusMinusPayments
-      ref="vipPlusMinusPaymentsRef"
-      @fetch-data="queryData"
-    />
+    <vipPlusMinusPayments ref="vipPlusMinusPaymentsRef" @fetch-data="queryData" />
   </div>
 </template>
 
@@ -523,6 +360,7 @@ onMounted(async () => {
     }
   }
 }
+
 // 筛选
 .page-main {
   .search-form {

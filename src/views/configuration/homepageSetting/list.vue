@@ -60,17 +60,23 @@ onBeforeUnmount(() => {
 });
 
 function getDataList() {
-  data.value.loading = true;
-  const params = {
-    ...getParams(),
-    ...(data.value.search.title && { title: data.value.search.title }),
-  };
-  api.list(params).then((res: any) => {
+  try {
+    data.value.loading = true;
+    const params = {
+      ...getParams(),
+      ...(data.value.search.title && { title: data.value.search.title }),
+    };
+    api.list(params).then((res: any) => {
+      data.value.loading = false;
+      data.value.controlDataList = res.data.controlData; //通用
+      data.value.dataList = res.data.data; //自定义
+      pagination.value.total = Number(res.data.total);
+    });
+  } catch (error) {
+
+  } finally {
     data.value.loading = false;
-    data.value.controlDataList = res.data.controlData; //通用
-    data.value.dataList = res.data.data; //自定义
-    pagination.value.total = Number(res.data.total);
-  });
+  }
 }
 
 // 每页数量切换
@@ -111,7 +117,7 @@ async function setHomePage(row: any) {
       message: "设置成功",
       center: true,
     });
-    getDataList()
+  getDataList()
 }
 
 function onDel(row: any) {
@@ -138,9 +144,9 @@ function onDel(row: any) {
         height="100%" @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
         <ElTableColumn v-if="data.batch.enable" type="selection" align="center" fixed />
         <ElTableColumn prop="title" label="标题" />
-        <ElTableColumn prop="isSet" align="center" width="100" label="是否默认" >
-          <template #default="{row}">
-            {{row.isSet ? '是' : '否'}}
+        <ElTableColumn prop="isSet" align="center" width="100" label="是否默认">
+          <template #default="{ row }">
+            {{ row.isSet ? '是' : '否' }}
           </template>
         </ElTableColumn>
         <ElTableColumn label="操作" width="250" align="center" fixed="right">
@@ -206,9 +212,9 @@ function onDel(row: any) {
         height="100%" @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
         <ElTableColumn v-if="data.batch.enable" type="selection" align="center" fixed />
         <ElTableColumn prop="title" label="标题" />
-        <ElTableColumn prop="isSet" align="center" width="100" label="是否默认" >
-          <template #default="{row}">
-            {{row.isSet ? '是' : '否'}}
+        <ElTableColumn prop="isSet" align="center" width="100" label="是否默认">
+          <template #default="{ row }">
+            {{ row.isSet ? '是' : '否' }}
           </template>
         </ElTableColumn>
         <ElTableColumn label="操作" width="350" align="center" fixed="right">
@@ -219,7 +225,7 @@ function onDel(row: any) {
             <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">
               编辑
             </ElButton>
-            <ElButton type="primary"  size="small" plain @click="homePage(scope.row)">
+            <ElButton type="primary" size="small" plain @click="homePage(scope.row)">
               设计主页
             </ElButton>
             <ElButton type="danger" size="small" plain @click="onDel(scope.row)">

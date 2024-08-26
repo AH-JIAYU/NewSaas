@@ -84,20 +84,25 @@ function currentChange(page = 1) {
 }
 // 请求
 async function fetchData() {
-  listLoading.value = true;
-  const params = {
-    ...getParams(),
-    ...queryForm.value,
-  };
-  if (queryForm.value.time && !!queryForm.value.time.length) {
-    params.beginTime = queryForm.value.time[0] || "";
-    params.endTime = queryForm.value.time[1] || "";
-  }
-  const res = await api.list(params);
-  list.value = res.data.projectTerminationScreenDetailInfoList;
-  pagination.value.total = res.data.total;
+  try {
+    listLoading.value = true;
+    const params = {
+      ...getParams(),
+      ...queryForm.value,
+    };
+    if (queryForm.value.time && !!queryForm.value.time.length) {
+      params.beginTime = queryForm.value.time[0] || "";
+      params.endTime = queryForm.value.time[1] || "";
+    }
+    const res = await api.list(params);
+    list.value = res.data.projectTerminationScreenDetailInfoList;
+    pagination.value.total = res.data.total;
+    listLoading.value = false;
+  } catch (error) {
 
-  listLoading.value = false;
+  } finally {
+    listLoading.value = false;
+  }
 }
 // 重置筛选数据
 function onReset() {
@@ -131,75 +136,29 @@ onMounted(() => {
     <PageMain>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
-          <ElForm
-            :model="queryForm"
-            size="default"
-            label-width="100px"
-            inline-message
-            inline
-            class="search-form"
-          >
+          <ElForm :model="queryForm" size="default" label-width="100px" inline-message inline class="search-form">
             <el-form-item label="">
-              <el-input
-                v-model.trim="queryForm.tenantSupplierId"
-                clearable
-                :inline="false"
-                placeholder="供应商ID"
-              />
+              <el-input v-model.trim="queryForm.tenantSupplierId" clearable :inline="false" placeholder="供应商ID" />
             </el-form-item>
             <el-form-item label="">
-              <el-input
-                v-model.trim="queryForm.projectId"
-                clearable
-                :inline="false"
-                placeholder="项目ID"
-              />
+              <el-input v-model.trim="queryForm.projectId" clearable :inline="false" placeholder="项目ID" />
             </el-form-item>
             <el-form-item label="">
-              <el-select
-                v-model="queryForm.surveySource"
-                value-key=""
-                placeholder="会员类型"
-                clearable
-                filterable
-              >
-                <el-option
-                  v-for="item in memberType"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                >
+              <el-select v-model="queryForm.surveySource" value-key="" placeholder="会员类型" clearable filterable>
+                <el-option v-for="item in memberType" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-input
-                v-model.trim="queryForm.projectName"
-                clearable
-                :inline="false"
-                placeholder="项目名称"
-              />
+              <el-input v-model.trim="queryForm.projectName" clearable :inline="false" placeholder="项目名称" />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-input
-                v-model.trim="queryForm.ipBelong"
-                clearable
-                :inline="false"
-                placeholder="IP/所属国"
-              />
+              <el-input v-model.trim="queryForm.ipBelong" clearable :inline="false" placeholder="IP/所属国" />
             </el-form-item>
 
             <el-form-item v-show="!fold" label="">
-              <el-date-picker
-                v-model="queryForm.time"
-                type="datetimerange"
-                unlink-panels
-                range-separator="-"
-                start-placeholder="创建开始日期"
-                end-placeholder="创建结束日期"
-                value-format="YYYY-MM-DD hh:mm:ss"
-                size="default"
-              />
+              <el-date-picker v-model="queryForm.time" type="datetimerange" unlink-panels range-separator="-"
+                start-placeholder="创建开始日期" end-placeholder="创建结束日期" value-format="YYYY-MM-DD hh:mm:ss" size="default" />
             </el-form-item>
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">
@@ -216,9 +175,7 @@ onMounted(() => {
               </ElButton>
               <ElButton link @click="toggle">
                 <template #icon>
-                  <SvgIcon
-                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
-                  />
+                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
                 </template>
                 {{ fold ? "展开" : "收起" }}
               </ElButton>
@@ -231,61 +188,30 @@ onMounted(() => {
         <FormLeftPanel />
         <FormRightPanel>
           <el-button size="default"> 导出 </el-button>
-          <TabelControl
-            v-model:border="border"
-            v-model:tableAutoHeight="tableAutoHeight"
-            v-model:checkList="checkList"
-            v-model:columns="columns"
-            v-model:line-height="lineHeight"
-            v-model:stripe="stripe"
-            style="margin-left: 12px"
-            @query-data="queryData"
-          />
+          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
+            v-model:columns="columns" v-model:line-height="lineHeight" v-model:stripe="stripe" style="margin-left: 12px"
+            @query-data="queryData" />
         </FormRightPanel>
       </el-row>
 
-      <el-table
-        v-loading="listLoading"
-        :border="border"
-        :data="list"
-        :size="lineHeight"
-        :stripe="stripe"
-        @selection-change="setSelectRows"
-      >
+      <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
+        @selection-change="setSelectRows">
         <el-table-column align="center" type="selection" />
-        <el-table-column
-          v-if="checkList.includes('surveySource')"
-          align="center"
-          prop="surveySource"
-          show-overflow-tooltip
-          width="100"
-          label="会员类型"
-          ><template #default="{ row }">
+        <el-table-column v-if="checkList.includes('surveySource')" align="center" prop="surveySource"
+          show-overflow-tooltip width="100" label="会员类型"><template #default="{ row }">
             {{ memberType[row.surveySource - 1].label }}
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('memberChildId')"
-          align="center"
-          prop=""
-          width="180"
-          show-overflow-tooltip
-          label="会员ID"
-        >
+        <el-table-column v-if="checkList.includes('memberChildId')" align="center" prop="" width="180"
+          show-overflow-tooltip label="会员ID">
           <template #default="{ row }">
             <el-text v-if="row.peopleType === 1">
               {{ row.memberChildId }}
             </el-text>
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('supplierMemberChildId')"
-          align="center"
-          prop=""
-          show-overflow-tooltip
-          width="180"
-          label="子会员ID"
-        >
+        <el-table-column v-if="checkList.includes('supplierMemberChildId')" align="center" prop="" show-overflow-tooltip
+          width="180" label="子会员ID">
           <template #default="{ row }">
             <el-text v-if="row.peopleType !== 1">
               {{ row.memberChildId }}
@@ -295,58 +221,25 @@ onMounted(() => {
             </el-text>
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('tenantSupplierId')"
-          align="center"
-          prop="tenantSupplierId"
-          width="180"
-          show-overflow-tooltip
-          label="供应商ID"
-        >
+        <el-table-column v-if="checkList.includes('tenantSupplierId')" align="center" prop="tenantSupplierId"
+          width="180" show-overflow-tooltip label="供应商ID">
           <template #default="{ row }">
             {{ row.tenantSupplierId ? row.tenantSupplierId : "-" }}
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('projectId')"
-          align="center"
-          prop="projectId"
-          show-overflow-tooltip
-          width="180"
-          label="项目ID"
-        />
-        <el-table-column
-          v-if="checkList.includes('projectName')"
-          align="center"
-          prop="projectName"
-          show-overflow-tooltip
-          label="项目名称"
-        />
-        <el-table-column
-          v-if="checkList.includes('ipBelong')"
-          align="center"
-          prop="ipBelong"
-          show-overflow-tooltip
-          label="IP/所属国"
-        />
-        <el-table-column
-          v-if="checkList.includes('notes')"
-          align="center"
-          prop="notes"
-          show-overflow-tooltip
-          width="280"
-          label="说明"
-        />
-        <el-table-column
-          v-if="checkList.includes('terminationTime')"
-          align="center"
-          prop="terminationTime"
-          show-overflow-tooltip
-          label="终止时间"
-          ><template #default="{ row }">
+        <el-table-column v-if="checkList.includes('projectId')" align="center" prop="projectId" show-overflow-tooltip
+          width="180" label="项目ID" />
+        <el-table-column v-if="checkList.includes('projectName')" align="center" prop="projectName"
+          show-overflow-tooltip label="项目名称" />
+        <el-table-column v-if="checkList.includes('ipBelong')" align="center" prop="ipBelong" show-overflow-tooltip
+          label="IP/所属国" />
+        <el-table-column v-if="checkList.includes('notes')" align="center" prop="notes" show-overflow-tooltip
+          width="280" label="说明" />
+        <el-table-column v-if="checkList.includes('terminationTime')" align="center" prop="terminationTime"
+          show-overflow-tooltip label="终止时间"><template #default="{ row }">
             <el-tag effect="plain" type="info">{{
-              format(row.terminationTime)
-            }}</el-tag>
+    format(row.terminationTime)
+  }}</el-tag>
           </template>
         </el-table-column>
         <template #empty>
@@ -354,18 +247,9 @@ onMounted(() => {
         </template>
       </el-table>
 
-      <ElPagination
-        :current-page="pagination.page"
-        :total="pagination.total"
-        :page-size="pagination.size"
-        :page-sizes="pagination.sizes"
-        :layout="pagination.layout"
-        :hide-on-single-page="false"
-        class="pagination"
-        background
-        @size-change="sizeChange"
-        @current-change="currentChange"
-      />
+      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+        background @size-change="sizeChange" @current-change="currentChange" />
     </PageMain>
   </div>
 </template>
@@ -395,6 +279,7 @@ onMounted(() => {
     }
   }
 }
+
 // 筛选
 .page-main {
   .search-form {

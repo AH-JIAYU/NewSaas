@@ -158,16 +158,22 @@ onBeforeUnmount(() => {
 });
 
 function getDataList() {
-  data.value.loading = true;
-  const params = {
-    ...getParams(),
-    ...data.value.search,
-  };
-  api.vipList(params).then((res: any) => {
+  try {
+    data.value.loading = true;
+    const params = {
+      ...getParams(),
+      ...data.value.search,
+    };
+    api.vipList(params).then((res: any) => {
+      data.value.loading = false;
+      data.value.dataList = res.data.items;
+      pagination.value.total = +res.data.total;
+    });
+  } catch (error) {
+
+  } finally {
     data.value.loading = false;
-    data.value.dataList = res.data.items;
-    pagination.value.total = +res.data.total;
-  });
+  }
 }
 // 重置筛选数据
 function onReset() {
@@ -221,73 +227,30 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
     <PageMain>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
-          <ElForm
-            :model="data.search"
-            size="default"
-            label-width="100px"
-            inline-message
-            inline
-            class="search-form"
-          >
+          <ElForm :model="data.search" size="default" label-width="100px" inline-message inline class="search-form">
             <ElFormItem>
-              <ElInput
-                v-model="data.search.memberId"
-                placeholder="会员ID"
-                clearable
-                @keydown.enter="currentChange()"
-                @clear="currentChange()"
-              />
+              <ElInput v-model="data.search.memberId" placeholder="会员ID" clearable @keydown.enter="currentChange()"
+                @clear="currentChange()" />
             </ElFormItem>
             <ElFormItem>
-              <ElInput
-                v-model="data.search.memberName"
-                placeholder="会员名称"
-                clearable
-                @keydown.enter="currentChange()"
-                @clear="currentChange()"
-              />
+              <ElInput v-model="data.search.memberName" placeholder="会员名称" clearable @keydown.enter="currentChange()"
+                @clear="currentChange()" />
             </ElFormItem>
             <ElFormItem>
-              <ElInput
-                v-model="data.search.projectId"
-                placeholder="项目ID"
-                clearable
-                @keydown.enter="currentChange()"
-                @clear="currentChange()"
-              />
+              <ElInput v-model="data.search.projectId" placeholder="项目ID" clearable @keydown.enter="currentChange()"
+                @clear="currentChange()" />
             </ElFormItem>
             <ElFormItem v-show="!fold">
-              <el-select
-                v-model="data.search.operationType"
-                value-key=""
-                placeholder="加减款"
-                clearable
-                filterable
-                @change=""
-              >
-                <el-option
-                  v-for="item in payments"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
+              <el-select v-model="data.search.operationType" value-key="" placeholder="加减款" clearable filterable
+                @change="">
+                <el-option v-for="item in payments" :key="item.value" :label="item.label"
+                  :value="item.value"></el-option>
               </el-select>
             </ElFormItem>
             <ElFormItem v-show="!fold">
-              <el-select
-                v-model="data.search.type"
-                value-key=""
-                placeholder="类型"
-                clearable
-                filterable
-                @change=""
-              >
-                <el-option
-                  v-for="item in paymentsType"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
+              <el-select v-model="data.search.type" value-key="" placeholder="类型" clearable filterable @change="">
+                <el-option v-for="item in paymentsType" :key="item.value" :label="item.label"
+                  :value="item.value"></el-option>
               </el-select>
             </ElFormItem>
             <ElFormItem>
@@ -305,9 +268,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
               </ElButton>
               <ElButton link @click="toggle">
                 <template #icon>
-                  <SvgIcon
-                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
-                  />
+                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
                 </template>
                 {{ fold ? "展开" : "收起" }}
               </ElButton>
@@ -320,95 +281,42 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
         <FormLeftPanel />
         <FormRightPanel>
           <el-button size="default"> 导出 </el-button>
-          <TabelControl
-            v-model:border="data.border"
-            v-model:tableAutoHeight="data.tableAutoHeight"
-            v-model:checkList="data.checkList"
-            v-model:columns="columns"
-            v-model:line-height="data.lineHeight"
-            v-model:stripe="data.stripe"
-            style="margin-left: 12px"
-            @query-data="getDataList"
-          />
+          <TabelControl v-model:border="data.border" v-model:tableAutoHeight="data.tableAutoHeight"
+            v-model:checkList="data.checkList" v-model:columns="columns" v-model:line-height="data.lineHeight"
+            v-model:stripe="data.stripe" style="margin-left: 12px" @query-data="getDataList" />
         </FormRightPanel>
       </el-row>
-      <ElTable
-        v-loading="data.loading"
-        :border="data.border"
-        :size="data.lineHeight"
-        :stripe="data.stripe"
-        class="my-4"
-        :data="data.dataList"
-        highlight-current-row
-        height="100%"
-        @sort-change="sortChange"
-        @selection-change="data.batch.selectionDataList = $event"
-      >
-        <el-table-column
-          align="center"
-          prop="a"
-          show-overflow-tooltip
-          type="selection"
-        />
-        <ElTableColumn
-          v-if="data.batch.enable"
-          type="selection"
-          show-overflow-tooltip
-          align="center"
-          fixed
-        />
-        <ElTableColumn
-        v-if="data.checkList.includes('memberId')"
-          show-overflow-tooltip
-          align="center"
-          prop="memberId"
-          label="会员ID/姓名"
-        >
+      <ElTable v-loading="data.loading" :border="data.border" :size="data.lineHeight" :stripe="data.stripe" class="my-4"
+        :data="data.dataList" highlight-current-row height="100%" @sort-change="sortChange"
+        @selection-change="data.batch.selectionDataList = $event">
+        <el-table-column align="center" prop="a" show-overflow-tooltip type="selection" />
+        <ElTableColumn v-if="data.batch.enable" type="selection" show-overflow-tooltip align="center" fixed />
+        <ElTableColumn v-if="data.checkList.includes('memberId')" show-overflow-tooltip align="center" prop="memberId"
+          label="会员ID/姓名">
           <template #default="{ row }">
             {{ `${row.memberId}/${row.memberName}` }}
           </template>
         </ElTableColumn>
-        <ElTableColumn
-         v-if="data.checkList.includes('randomIdentity')"
-          show-overflow-tooltip
-          align="center"
-          prop="randomIdentity"
-          label="随机身份"
-        >
+        <ElTableColumn v-if="data.checkList.includes('randomIdentity')" show-overflow-tooltip align="center"
+          prop="randomIdentity" label="随机身份">
           <template #default="{ row }">
             {{ row.randomIdentity ? row.randomIdentity : "-" }}
           </template>
         </ElTableColumn>
-        <ElTableColumn
-         v-if="data.checkList.includes('projectId')"
-          show-overflow-tooltip
-          align="center"
-          prop="projectId"
-          label="项目ID"
-          ><template #default="{ row }">
+        <ElTableColumn v-if="data.checkList.includes('projectId')" show-overflow-tooltip align="center" prop="projectId"
+          label="项目ID"><template #default="{ row }">
             {{ row.projectId ? row.projectId : "-" }}
           </template>
         </ElTableColumn>
-        <ElTableColumn
-         v-if="data.checkList.includes('type')"
-          show-overflow-tooltip
-          width="120"
-          align="center"
-          prop="type"
-          label="类型"
-          ><template #default="{ row }">
+        <ElTableColumn v-if="data.checkList.includes('type')" show-overflow-tooltip width="120" align="center"
+          prop="type" label="类型"><template #default="{ row }">
             <el-text class="mx-1">{{
-              paymentsType[row.type - 1].label
-            }}</el-text>
+    paymentsType[row.type - 1].label
+  }}</el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn
-         v-if="data.checkList.includes('remark')"
-          show-overflow-tooltip
-          align="center"
-          prop="remark"
-          label="说明"
-        >
+        <ElTableColumn v-if="data.checkList.includes('remark')" show-overflow-tooltip align="center" prop="remark"
+          label="说明">
           <template #default="{ row }">
             <!-- <el-text v-if="row?.remark[1].includes('-')" class="mx-1"
               >{{ row.remark[0] }}
@@ -425,70 +333,42 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
             {{ row.remark[1] }}
           </template>
         </ElTableColumn>
-        <ElTableColumn
-         v-if="data.checkList.includes('beforeBalance')"
-          show-overflow-tooltip
-          align="center"
-          prop="beforeBalance"
-          label="变动前"
-          width="120"
-        >
+        <ElTableColumn v-if="data.checkList.includes('beforeBalance')" show-overflow-tooltip align="center"
+          prop="beforeBalance" label="变动前" width="120">
           <template #default="{ row }">
-            <CurrencyType />{{ row.beforeBalance || 0 }} </template
-        ></ElTableColumn>
-        <ElTableColumn
-         v-if="data.checkList.includes('difference')"
-          show-overflow-tooltip
-          align="center"
-          prop="difference"
-          label="加减款"
-          width="120"
-          ><template #default="{ row }">
-            <el-text v-if="row.operationType === 1" type="success" class="mx-1"
-              >+<CurrencyType/>{{ Math.abs(row.difference)  }}</el-text>
-            <el-text v-if="row.operationType === 2" type="danger" class="mx-1"
-              >-<CurrencyType/>{{ Math.abs(row.difference)   }}</el-text>
+            <CurrencyType />{{ row.beforeBalance || 0 }}
           </template>
         </ElTableColumn>
-        <ElTableColumn
-         v-if="data.checkList.includes('afterBalance')"
-          show-overflow-tooltip
-          align="center"
-          prop="afterBalance"
-          label="变动后"
-          width="120"
-        >
+        <ElTableColumn v-if="data.checkList.includes('difference')" show-overflow-tooltip align="center"
+          prop="difference" label="加减款" width="120"><template #default="{ row }">
+            <el-text v-if="row.operationType === 1" type="success" class="mx-1">+
+              <CurrencyType />{{ Math.abs(row.difference) }}
+            </el-text>
+            <el-text v-if="row.operationType === 2" type="danger" class="mx-1">-
+              <CurrencyType />{{ Math.abs(row.difference) }}
+            </el-text>
+          </template>
+        </ElTableColumn>
+        <ElTableColumn v-if="data.checkList.includes('afterBalance')" show-overflow-tooltip align="center"
+          prop="afterBalance" label="变动后" width="120">
           <template #default="{ row }">
-            <CurrencyType />{{ row.afterBalance || 0 }} </template
-        ></ElTableColumn>
-        <ElTableColumn
-         v-if="data.checkList.includes('updateTime')"
-          show-overflow-tooltip
-          align="center"
-          prop="updateTime"
-          label="创建时间"
-        ><template #default="{ row }">
+            <CurrencyType />{{ row.afterBalance || 0 }}
+          </template>
+        </ElTableColumn>
+        <ElTableColumn v-if="data.checkList.includes('updateTime')" show-overflow-tooltip align="center"
+          prop="updateTime" label="创建时间"><template #default="{ row }">
             <el-tag effect="plain" type="info">{{
-              format(row.updateTime)
-            }}</el-tag>
+    format(row.updateTime)
+  }}</el-tag>
           </template>
         </ElTableColumn>
         <template #empty>
           <el-empty description="暂无数据" />
         </template>
       </ElTable>
-      <ElPagination
-        :current-page="pagination.page"
-        :total="pagination.total"
-        :page-size="pagination.size"
-        :page-sizes="pagination.sizes"
-        :layout="pagination.layout"
-        :hide-on-single-page="false"
-        class="pagination"
-        background
-        @size-change="sizeChange"
-        @current-change="currentChange"
-      />
+      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+        background @size-change="sizeChange" @current-change="currentChange" />
     </PageMain>
   </div>
 </template>

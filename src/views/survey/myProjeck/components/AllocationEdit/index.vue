@@ -34,10 +34,8 @@ const rules = ref<any>({
 // 显隐
 async function showEdit(row: any) {
   data.value.list = [{ ...row }]; // 表格
-
   // 分配
   data.value.form.projectId = row.projectId; // 项目id
-
   // 会员组列表
   data.value.vipGroupList = await obtainLoading(
     surveyVipGroupStore.getGroupNameList()

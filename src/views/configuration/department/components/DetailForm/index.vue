@@ -60,7 +60,7 @@ const formRules = ref<FormRules>({
     },
   ],
 });
-onMounted( () => {
+onMounted(() => {
   // 移除校验
   formRef.value.resetFields();
   nextTick(async () => {
@@ -98,49 +98,62 @@ defineExpose({
       try {
         if (form.value.id === "") {
           formRef.value &&
-            formRef.value.validate((valid:any) => {
+            formRef.value.validate((valid: any) => {
               if (valid) {
-                delete form.value.memberCount;
-                if (form.value.commissionStatus !== 1) {
-                  formRules.value.commission = [];
-                  form.value.commission = 0;
-                  form.value.commissionType = 0;
-                }
-                loading.value = true;
-                api.create(form.value).then(() => {
-                  loading.value = false;
-                  ElMessage.success({
-                    message: "新增成功",
-                    center: true,
+
+                try {
+                  delete form.value.memberCount;
+                  if (form.value.commissionStatus !== 1) {
+                    formRules.value.commission = [];
+                    form.value.commission = 0;
+                    form.value.commissionType = 0;
+                  }
+                  loading.value = true;
+                  api.create(form.value).then(() => {
+                    loading.value = false;
+                    ElMessage.success({
+                      message: "新增成功",
+                      center: true,
+                    });
+                    resolve();
                   });
-                  resolve();
-                });
+                } catch (error) {
+
+                } finally {
+                  loading.value = false;
+                }
               }
             });
         } else {
           formRef.value &&
-            formRef.value.validate((valid:any) => {
+            formRef.value.validate((valid: any) => {
               if (valid) {
-                loading.value = true;
-                delete form.value.memberCount;
-                if (form.value.commissionStatus !== 1) {
-                  form.value.commission = 0;
-                  form.value.commissionType = 0;
-                }
-                // if (form.value.director === str) {
-                //   delete form.value.director;
-                // }
-                // if (isDelete.value) {
-                //   delete form.value.director;
-                // }
-                api.edit(form.value).then(() => {
-                  loading.value = false;
-                  ElMessage.success({
-                    message: "编辑成功",
-                    center: true,
+                try {
+                  loading.value = true;
+                  delete form.value.memberCount;
+                  if (form.value.commissionStatus !== 1) {
+                    form.value.commission = 0;
+                    form.value.commissionType = 0;
+                  }
+                  // if (form.value.director === str) {
+                  //   delete form.value.director;
+                  // }
+                  // if (isDelete.value) {
+                  //   delete form.value.director;
+                  // }
+                  api.edit(form.value).then(() => {
+                    loading.value = false;
+                    ElMessage.success({
+                      message: "编辑成功",
+                      center: true,
+                    });
+                    resolve();
                   });
-                  resolve();
-                });
+                } catch (error) {
+
+                } finally {
+                  loading.value = false;
+                }
               }
             });
         }
@@ -157,20 +170,9 @@ defineExpose({
 
 <template>
   <div v-loading="loading">
-    <ElForm
-      ref="formRef"
-      :model="form"
-      :rules="formRules"
-      label-width="130px"
-      label-suffix="："
-    >
+    <ElForm ref="formRef" :model="form" :rules="formRules" label-width="130px" label-suffix="：">
       <el-form-item label="部门名称" prop="name">
-        <el-input
-          v-model="form.name"
-          placeholder="请输入部门名称"
-          clearable
-          @change=""
-        />
+        <el-input v-model="form.name" placeholder="请输入部门名称" clearable @change="" />
       </el-form-item>
       <!-- <el-form-item label="部门主管" prop="director">
         <el-select
@@ -193,60 +195,25 @@ defineExpose({
       <el-row style="margin-bottom: 0px" :gutter="20">
         <el-col :span="8">
           <el-form-item label="部门提成" prop="commissionStatus">
-            <el-switch
-              v-model="form.commissionStatus"
-              active-text="启用"
-              inactive-text="禁用"
-              inline-prompt
-              :active-value="1"
-              :inactive-value="2"
-            >
+            <el-switch v-model="form.commissionStatus" active-text="启用" inactive-text="禁用" inline-prompt
+              :active-value="1" :inactive-value="2">
             </el-switch>
           </el-form-item>
         </el-col>
         <el-col :span="16">
-          <el-form-item
-            v-show="form.commissionStatus === 1"
-            label="提成发放规则"
-            prop="commissionType"
-          >
-            <el-select
-              v-model="form.commissionType"
-              value-key=""
-              placeholder="请选择发放提成方式"
-              clearable
-              filterable
-            >
-              <el-option
-                v-for="item in commissionList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
+          <el-form-item v-show="form.commissionStatus === 1" label="提成发放规则" prop="commissionType">
+            <el-select v-model="form.commissionType" value-key="" placeholder="请选择发放提成方式" clearable filterable>
+              <el-option v-for="item in commissionList" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </el-form-item>
         </el-col>
       </el-row>
-      <el-form-item
-        v-show="form.commissionStatus === 1"
-        label="提成比例"
-        prop="commission"
-      >
-        <el-input
-          v-model.number="form.commission"
-          placeholder="请输入提成比例"
-          clearable
-          ><template #append>%</template></el-input
-        >
+      <el-form-item v-show="form.commissionStatus === 1" label="提成比例" prop="commission">
+        <el-input v-model.number="form.commission" placeholder="请输入提成比例" clearable><template
+            #append>%</template></el-input>
       </el-form-item>
       <el-form-item label="备注">
-        <el-input
-          v-model="form.remark"
-          type="textarea"
-          :rows="10"
-          placeholder="请输入备注"
-          clearable
-        />
+        <el-input v-model="form.remark" type="textarea" :rows="10" placeholder="请输入备注" clearable />
       </el-form-item>
     </ElForm>
   </div>

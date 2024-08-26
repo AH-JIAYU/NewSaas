@@ -15,7 +15,7 @@ const { getParams, pagination, onSizeChange, onCurrentChange } =
 // 分页
 const tableSortRef = ref("");
 // loading加载
-const listLoading = ref<boolean>(true);
+const listLoading = ref<boolean>(false);
 const border = ref(true);
 // 获取组件变量
 const deleteRef = ref();
@@ -98,15 +98,21 @@ function onReset() {
   fetchData();
 }
 async function fetchData() {
-  listLoading.value = true;
-  const params = {
-    ...getParams(),
-    ...queryForm.value,
-  };
-  const res = await api.list(params);
-  list.value = res.data.projectMaterialInfoList;
-  pagination.value.total = res.data.total;
-  listLoading.value = false;
+  try {
+    listLoading.value = true;
+    const params = {
+      ...getParams(),
+      ...queryForm.value,
+    };
+    const res = await api.list(params);
+    list.value = res.data.projectMaterialInfoList;
+    pagination.value.total = res.data.total;
+    listLoading.value = false;
+  } catch (error) {
+
+  } finally {
+    listLoading.value = false;
+  }
 }
 const getDataChange = () => {
   if (queryForm.value.type === 1) {
@@ -208,49 +214,24 @@ onMounted(() => {
 </script>
 
 <template>
-  <div
-    :class="{
-      'absolute-container': tableAutoHeight,
-    }"
-  >
+  <div :class="{
+    'absolute-container': tableAutoHeight,
+  }">
     <PageMain>
-      <el-tabs
-        v-model="queryForm.type"
-        class="demo-tabs"
-        type="border-card"
-        @tab-change="getDataChange"
-      >
+      <el-tabs v-model="queryForm.type" class="demo-tabs" type="border-card" @tab-change="getDataChange">
         <el-tab-pane label="会员素材" :name="1">
           <SearchBar :show-toggle="false">
             <template #default="{ fold, toggle }">
-              <el-form
-                :model="queryForm.select"
-                size="default"
-                label-width="100px"
-                inline-message
-                inline
-                class="search-form"
-              >
+              <el-form :model="queryForm.select" size="default" label-width="100px" inline-message inline
+                class="search-form">
                 <el-form-item label="">
-                  <el-input
-                    v-model="queryForm.memberChildId"
-                    clearable
-                    placeholder="会员ID"
-                  />
+                  <el-input v-model="queryForm.memberChildId" clearable placeholder="会员ID" />
                 </el-form-item>
                 <el-form-item label="">
-                  <el-input
-                    v-model="queryForm.projectId"
-                    clearable
-                    placeholder="项目ID"
-                  />
+                  <el-input v-model="queryForm.projectId" clearable placeholder="项目ID" />
                 </el-form-item>
                 <el-form-item label="">
-                  <el-input
-                    v-model="queryForm.projectName"
-                    clearable
-                    placeholder="项目名称"
-                  />
+                  <el-input v-model="queryForm.projectName" clearable placeholder="项目名称" />
                 </el-form-item>
                 <ElFormItem>
                   <ElButton type="primary" @click="currentChange()">
@@ -267,9 +248,7 @@ onMounted(() => {
                   </ElButton>
                   <ElButton link @click="toggle" disabled>
                     <template #icon>
-                      <SvgIcon
-                        :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
-                      />
+                      <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
                     </template>
                     {{ fold ? "展开" : "收起" }}
                   </ElButton>
@@ -282,113 +261,42 @@ onMounted(() => {
             <FormLeftPanel />
             <FormRightPanel>
               <el-button size="default" @click=""> 导出 </el-button>
-              <TabelControl
-                v-model:border="border"
-                v-model:tableAutoHeight="tableAutoHeight"
-                v-model:checkList="checkList"
-                v-model:columns="columns"
-                v-model:line-height="lineHeight"
-                v-model:stripe="stripe"
-                style="margin-left: 12px"
-                @query-data="currentChange"
-              />
+              <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight"
+                v-model:checkList="checkList" v-model:columns="columns" v-model:line-height="lineHeight"
+                v-model:stripe="stripe" style="margin-left: 12px" @query-data="currentChange" />
             </FormRightPanel>
           </el-row>
-          <el-table
-            ref="tableSortRef"
-            v-loading="false"
-            style="margin-top: 10px"
-            row-key="id"
-            :data="list"
-            :border="border"
-            :size="lineHeight"
-            :stripe="stripe"
-            @selection-change="setSelectRows"
-          >
+          <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="id" :data="list"
+            :border="border" :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows">
             <el-table-column align="center" type="selection" />
-            <el-table-column
-              v-if="checkList.includes('memberChildId')"
-              show-overflow-tooltip
-              prop="memberChildId"
-              align="center"
-              label="会员ID"
-            />
-            <el-table-column
-              v-if="checkList.includes('memberChildName')"
-              show-overflow-tooltip
-              prop="memberChildName"
-              align="center"
-              label="会员名称"
-            />
-            <el-table-column
-              v-if="checkList.includes('memberChildGroupId')"
-              show-overflow-tooltip
-              prop="memberChildGroupId"
-              align="center"
-              label="会员组ID"
-            />
-            <el-table-column
-              v-if="checkList.includes('projectId')"
-              show-overflow-tooltip
-              prop="projectId"
-              align="center"
-              label="项目ID"
-            />
-            <el-table-column
-              v-if="checkList.includes('projectName')"
-              show-overflow-tooltip
-              prop="projectName"
-              align="center"
-              label="项目名称"
-            />
-            <el-table-column
-              v-if="checkList.includes('customerIdentification')"
-              show-overflow-tooltip
-              prop="customerIdentification"
-              align="center"
-              label="客户简称/标识"
-            />
-            <el-table-column
-              v-if="checkList.includes('instructions')"
-              show-overflow-tooltip
-              prop="instructions"
-              align="center"
-              label="说明"
-            />
-            <el-table-column
-              v-if="checkList.includes('createTime')"
-              show-overflow-tooltip
-              prop="createTime"
-              align="center"
-              label="创建时间"
-              ><template #default="{ row }">
+            <el-table-column v-if="checkList.includes('memberChildId')" show-overflow-tooltip prop="memberChildId"
+              align="center" label="会员ID" />
+            <el-table-column v-if="checkList.includes('memberChildName')" show-overflow-tooltip prop="memberChildName"
+              align="center" label="会员名称" />
+            <el-table-column v-if="checkList.includes('memberChildGroupId')" show-overflow-tooltip
+              prop="memberChildGroupId" align="center" label="会员组ID" />
+            <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip prop="projectId"
+              align="center" label="项目ID" />
+            <el-table-column v-if="checkList.includes('projectName')" show-overflow-tooltip prop="projectName"
+              align="center" label="项目名称" />
+            <el-table-column v-if="checkList.includes('customerIdentification')" show-overflow-tooltip
+              prop="customerIdentification" align="center" label="客户简称/标识" />
+            <el-table-column v-if="checkList.includes('instructions')" show-overflow-tooltip prop="instructions"
+              align="center" label="说明" />
+            <el-table-column v-if="checkList.includes('createTime')" show-overflow-tooltip prop="createTime"
+              align="center" label="创建时间"><template #default="{ row }">
                 <el-tag effect="plain" type="info">{{
-                  format(row.createTime)
-                }}</el-tag>
+    format(row.createTime)
+  }}</el-tag>
               </template>
             </el-table-column>
-            <el-table-column
-              align="center"
-              fixed="right"
-              label="操作"
-              width="240"
-            >
+            <el-table-column align="center" fixed="right" label="操作" width="240">
               <template #default="{ row }">
                 <ElSpace>
-                  <el-button
-                    type="primary"
-                    plain
-                    size="small"
-                    @click="projectDetails(row)"
-                  >
+                  <el-button type="primary" plain size="small" @click="projectDetails(row)">
                     查看
                   </el-button>
-                  <el-button
-                    type="danger"
-                    plain
-                    size="small"
-                    @click="deleteData(row)"
-                  >
+                  <el-button type="danger" plain size="small" @click="deleteData(row)">
                     删除
                   </el-button>
                 </ElSpace>
@@ -398,50 +306,23 @@ onMounted(() => {
               <el-empty description="暂无数据" />
             </template>
           </el-table>
-          <ElPagination
-            :current-page="pagination.page"
-            :total="pagination.total"
-            :page-size="pagination.size"
-            :page-sizes="pagination.sizes"
-            :layout="pagination.layout"
-            :hide-on-single-page="false"
-            class="pagination"
-            background
-            @size-change="sizeChange"
-            @current-change="currentChange"
-          />
+          <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+            :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+            background @size-change="sizeChange" @current-change="currentChange" />
         </el-tab-pane>
         <el-tab-pane label="子会员素材" :name="2">
           <SearchBar :show-toggle="false">
             <template #default="{ fold, toggle }">
-              <el-form
-                :model="queryForm.select"
-                size="default"
-                label-width="100px"
-                inline-message
-                inline
-                class="search-form"
-              >
+              <el-form :model="queryForm.select" size="default" label-width="100px" inline-message inline
+                class="search-form">
                 <el-form-item label="">
-                  <el-input
-                    v-model="queryForm.memberChildId"
-                    clearable
-                    placeholder="会员ID"
-                  />
+                  <el-input v-model="queryForm.memberChildId" clearable placeholder="会员ID" />
                 </el-form-item>
                 <el-form-item label="">
-                  <el-input
-                    v-model="queryForm.projectId"
-                    clearable
-                    placeholder="项目ID"
-                  />
+                  <el-input v-model="queryForm.projectId" clearable placeholder="项目ID" />
                 </el-form-item>
                 <el-form-item label="">
-                  <el-input
-                    v-model="queryForm.projectName"
-                    clearable
-                    placeholder="项目名称"
-                  />
+                  <el-input v-model="queryForm.projectName" clearable placeholder="项目名称" />
                 </el-form-item>
                 <ElFormItem>
                   <ElButton type="primary" @click="currentChange()">
@@ -458,9 +339,7 @@ onMounted(() => {
                   </ElButton>
                   <ElButton link @click="toggle" disabled>
                     <template #icon>
-                      <SvgIcon
-                        :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
-                      />
+                      <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
                     </template>
                     {{ fold ? "展开" : "收起" }}
                   </ElButton>
@@ -473,113 +352,42 @@ onMounted(() => {
             <FormLeftPanel />
             <FormRightPanel>
               <el-button size="default" @click=""> 导出 </el-button>
-              <TabelControl
-                v-model:border="border"
-                v-model:tableAutoHeight="tableAutoHeight"
-                v-model:checkList="checkList"
-                v-model:columns="columns"
-                v-model:line-height="lineHeight"
-                v-model:stripe="stripe"
-                style="margin-left: 12px"
-                @query-data="currentChange"
-              />
+              <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight"
+                v-model:checkList="checkList" v-model:columns="columns" v-model:line-height="lineHeight"
+                v-model:stripe="stripe" style="margin-left: 12px" @query-data="currentChange" />
             </FormRightPanel>
           </el-row>
-          <el-table
-            ref="tableSortRef"
-            v-loading="false"
-            style="margin-top: 10px"
-            row-key="id"
-            :data="list"
-            :border="border"
-            :size="lineHeight"
-            :stripe="stripe"
-            @selection-change="setSelectRows"
-          >
+          <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="id" :data="list"
+            :border="border" :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows">
             <el-table-column type="selection" />
-            <el-table-column
-              v-if="checkList.includes('memberChildId')"
-              show-overflow-tooltip
-              prop="memberChildId"
-              align="center"
-              label="会员ID"
-            />
-            <el-table-column
-              v-if="checkList.includes('memberChildName')"
-              show-overflow-tooltip
-              prop="memberChildName"
-              align="center"
-              label="会员名称"
-            />
-            <el-table-column
-              v-if="checkList.includes('memberChildGroupId')"
-              show-overflow-tooltip
-              prop="memberChildGroupId"
-              align="center"
-              label="会员组ID"
-            />
-            <el-table-column
-              v-if="checkList.includes('projectId')"
-              show-overflow-tooltip
-              prop="projectId"
-              align="center"
-              label="项目ID"
-            />
-            <el-table-column
-              v-if="checkList.includes('projectName')"
-              show-overflow-tooltip
-              prop="projectName"
-              align="center"
-              label="项目名称"
-            />
-            <el-table-column
-              v-if="checkList.includes('customerIdentification')"
-              show-overflow-tooltip
-              prop="customerIdentification"
-              align="center"
-              label="客户简称/标识"
-            />
-            <el-table-column
-              v-if="checkList.includes('instructions')"
-              show-overflow-tooltip
-              prop="instructions"
-              align="center"
-              label="说明"
-            />
-            <el-table-column
-              v-if="checkList.includes('createTime')"
-              show-overflow-tooltip
-              prop="createTime"
-              align="center"
-              label="创建时间"
-              ><template #default="{ row }">
+            <el-table-column v-if="checkList.includes('memberChildId')" show-overflow-tooltip prop="memberChildId"
+              align="center" label="会员ID" />
+            <el-table-column v-if="checkList.includes('memberChildName')" show-overflow-tooltip prop="memberChildName"
+              align="center" label="会员名称" />
+            <el-table-column v-if="checkList.includes('memberChildGroupId')" show-overflow-tooltip
+              prop="memberChildGroupId" align="center" label="会员组ID" />
+            <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip prop="projectId"
+              align="center" label="项目ID" />
+            <el-table-column v-if="checkList.includes('projectName')" show-overflow-tooltip prop="projectName"
+              align="center" label="项目名称" />
+            <el-table-column v-if="checkList.includes('customerIdentification')" show-overflow-tooltip
+              prop="customerIdentification" align="center" label="客户简称/标识" />
+            <el-table-column v-if="checkList.includes('instructions')" show-overflow-tooltip prop="instructions"
+              align="center" label="说明" />
+            <el-table-column v-if="checkList.includes('createTime')" show-overflow-tooltip prop="createTime"
+              align="center" label="创建时间"><template #default="{ row }">
                 <el-tag effect="plain" type="info">{{
-                  format(row.createTime)
-                }}</el-tag>
+    format(row.createTime)
+  }}</el-tag>
               </template>
             </el-table-column>
-            <el-table-column
-              align="center"
-              fixed="right"
-              label="操作"
-              width="240"
-            >
+            <el-table-column align="center" fixed="right" label="操作" width="240">
               <template #default="{ row }">
                 <ElSpace>
-                  <el-button
-                    type="primary"
-                    plain
-                    size="small"
-                    @click="projectDetails(row)"
-                  >
+                  <el-button type="primary" plain size="small" @click="projectDetails(row)">
                     查看
                   </el-button>
-                  <el-button
-                    type="danger"
-                    plain
-                    size="small"
-                    @click="deleteData(row)"
-                  >
+                  <el-button type="danger" plain size="small" @click="deleteData(row)">
                     删除
                   </el-button>
                 </ElSpace>
@@ -589,18 +397,9 @@ onMounted(() => {
               <el-empty description="暂无数据" />
             </template>
           </el-table>
-          <ElPagination
-            :current-page="pagination.page"
-            :total="pagination.total"
-            :page-size="pagination.size"
-            :page-sizes="pagination.sizes"
-            :layout="pagination.layout"
-            :hide-on-single-page="false"
-            class="pagination"
-            background
-            @size-change="sizeChange"
-            @current-change="currentChange"
-          />
+          <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+            :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+            background @size-change="sizeChange" @current-change="currentChange" />
         </el-tab-pane>
       </el-tabs>
       <deletes ref="deleteRef" />
@@ -655,6 +454,7 @@ onMounted(() => {
     }
   }
 }
+
 :deep(.el-tabs__nav-scroll) {
   background-color: #fafafa;
 }

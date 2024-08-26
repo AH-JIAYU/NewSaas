@@ -147,12 +147,18 @@ function currentChange(page = 1) {
 }
 // 获取数据
 async function fetchData() {
-  listLoading.value = true;
-  customerList.value = await customerStore.getCustomerList();
-  const { data } = await api.list(queryForm);
-  list.value = data.data;
-  pagination.value.total = parseInt(data.total) || 0;
-  listLoading.value = false;
+  try {
+    listLoading.value = true;
+    customerList.value = await customerStore.getCustomerList();
+    const { data } = await api.list(queryForm);
+    list.value = data.data;
+    pagination.value.total = parseInt(data.total) || 0;
+    listLoading.value = false;
+  } catch (error) {
+
+  } finally {
+    listLoading.value = false;
+  }
 }
 onMounted(() => {
   columns.value.forEach((item: any) => {
@@ -165,45 +171,23 @@ onMounted(() => {
 </script>
 
 <template>
-  <div
-    :class="{
-      'absolute-container': tableAutoHeight,
-    }"
-    v-loading="listLoading"
-  >
+  <div :class="{
+    'absolute-container': tableAutoHeight,
+  }" v-loading="listLoading">
     <PageMain>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
-          <el-form
-            :model="queryForm.select"
-            size="default"
-            label-width="100px"
-            inline-message
-            inline
-            class="search-form"
-          >
+          <el-form :model="queryForm.select" size="default" label-width="100px" inline-message inline
+            class="search-form">
             <el-form-item label="">
               <el-input v-model="queryForm.id" placeholder="职位ID" clearable />
             </el-form-item>
             <el-form-item label="">
-              <el-input
-                v-model="queryForm.name"
-                placeholder="职位名称"
-                clearable
-              />
+              <el-input v-model="queryForm.name" placeholder="职位名称" clearable />
             </el-form-item>
             <el-form-item label="">
-              <el-select
-                v-model="queryForm.active"
-                placeholder="状态"
-                clearable
-                filterable
-              >
-                <ElOption
-                  v-for="item in invoiceStatusList"
-                  :label="item.lable"
-                  :value="item.value"
-                ></ElOption>
+              <el-select v-model="queryForm.active" placeholder="状态" clearable filterable>
+                <ElOption v-for="item in invoiceStatusList" :label="item.lable" :value="item.value"></ElOption>
               </el-select>
             </el-form-item>
             <ElFormItem>
@@ -221,9 +205,7 @@ onMounted(() => {
               </ElButton>
               <ElButton disabled link @click="toggle">
                 <template #icon>
-                  <SvgIcon
-                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
-                  />
+                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
                 </template>
                 {{ fold ? "展开" : "收起" }}
               </ElButton>
@@ -234,79 +216,35 @@ onMounted(() => {
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>
-          <el-button
-            style="margin-right: 10px"
-            type="primary"
-            size="default"
-            @click="addData"
-          >
+          <el-button style="margin-right: 10px" type="primary" size="default" @click="addData">
             新增职位
           </el-button>
         </FormLeftPanel>
 
         <FormRightPanel>
           <el-button size="default" @click=""> 导出 </el-button>
-          <TabelControl
-            v-model:border="border"
-            v-model:tableAutoHeight="tableAutoHeight"
-            v-model:checkList="checkList"
-            v-model:columns="columns"
-            v-model:line-height="lineHeight"
-            v-model:stripe="stripe"
-            style="margin-left: 12px"
-            @query-data="currentChange"
-          />
+          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
+            v-model:columns="columns" v-model:line-height="lineHeight" v-model:stripe="stripe" style="margin-left: 12px"
+            @query-data="currentChange" />
         </FormRightPanel>
       </el-row>
-      <el-table
-        ref="tableSortRef"
-        v-loading="false"
-        style="margin-top: 10px"
-        row-key="id"
-        :data="list"
-        :border="border"
-        :size="lineHeight"
-        :stripe="stripe"
-        @selection-change="setSelectRows"
-      >
+      <el-table ref="tableSortRef" v-loading="false" style="margin-top: 10px" row-key="id" :data="list" :border="border"
+        :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows">
         <el-table-column align="center" type="selection" />
         <!-- <el-table-column type="index" align="center" label="序号" width="55" /> -->
-        <el-table-column
-          v-if="checkList.includes('id')"
-          prop="id"
-          show-overflow-tooltip
-          align="center"
-          label="职位ID"
-        />
-        <el-table-column
-          v-if="checkList.includes('name')"
-          prop="name"
-          show-overflow-tooltip
-          align="center"
-          label="职位名称"
-        />
-        <el-table-column
-          v-if="checkList.includes('count')"
-          prop="count"
-          show-overflow-tooltip
-          align="center"
-          label="账户数"
-        >
+        <el-table-column v-if="checkList.includes('id')" prop="id" show-overflow-tooltip align="center" label="职位ID" />
+        <el-table-column v-if="checkList.includes('name')" prop="name" show-overflow-tooltip align="center"
+          label="职位名称" />
+        <el-table-column v-if="checkList.includes('count')" prop="count" show-overflow-tooltip align="center"
+          label="账户数">
           <template #default="{ row }">
             {{ row.count ? row.count : "-" }}
-          </template></el-table-column
-        >
-        <el-table-column
-          v-if="checkList.includes('remark')"
-          prop="remark"
-          show-overflow-tooltip
-          align="center"
-          label="备注"
-        >
+          </template></el-table-column>
+        <el-table-column v-if="checkList.includes('remark')" prop="remark" show-overflow-tooltip align="center"
+          label="备注">
           <template #default="{ row }">
             {{ row.remark ? row.remark : "-" }}
-          </template></el-table-column
-        >
+          </template></el-table-column>
         <el-table-column align="center" fixed="right" label="操作" width="170">
           <template #default="{ row }">
             <el-button size="small" plain type="primary" @click="editData(row)">
@@ -321,18 +259,9 @@ onMounted(() => {
           <el-empty description="暂无数据" />
         </template>
       </el-table>
-      <ElPagination
-        :current-page="pagination.page"
-        :total="pagination.total"
-        :page-size="pagination.size"
-        :page-sizes="pagination.sizes"
-        :layout="pagination.layout"
-        :hide-on-single-page="false"
-        class="pagination"
-        background
-        @current-change="currentChange"
-        @size-change="sizeChange"
-      />
+      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+        background @current-change="currentChange" @size-change="sizeChange" />
       <Edit @success="fetchData" ref="editRef" />
     </PageMain>
   </div>

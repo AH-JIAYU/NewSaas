@@ -72,7 +72,7 @@ function handleDelete(row: any) {
       configurationSupplierLevelStore.LevelNameList = null;
       queryData();
     })
-    .catch(() => {});
+    .catch(() => { });
 }
 // 重置请求
 function queryData() {
@@ -89,14 +89,20 @@ function currentChange(page = 1) {
 }
 // 请求
 async function fetchData() {
-  listLoading.value = true;
-  const params: any = {
-    ...getParams(),
-  };
-  const { data } = await api.list(params);
-  list.value = data.getTenantSupplierLevelInfoList;
-  pagination.value.total = data.total;
-  listLoading.value = false;
+  try {
+    listLoading.value = true;
+    const params: any = {
+      ...getParams(),
+    };
+    const { data } = await api.list(params);
+    list.value = data.getTenantSupplierLevelInfoList;
+    pagination.value.total = data.total;
+    listLoading.value = false;
+  } catch (error) {
+
+  } finally {
+    listLoading.value = false;
+  }
 }
 
 // 拖拽
@@ -141,28 +147,13 @@ onMounted(() => {
         </FormLeftPanel>
         <FormRightPanel>
           <el-button size="default"> 导出 </el-button>
-          <TabelControl
-            v-model:border="border"
-            v-model:tableAutoHeight="tableAutoHeight"
-            v-model:checkList="checkList"
-            v-model:columns="columns"
-            v-model:line-height="lineHeight"
-            v-model:stripe="stripe"
-            style="margin-left: 12px"
-            @query-data="queryData"
-          />
+          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
+            v-model:columns="columns" v-model:line-height="lineHeight" v-model:stripe="stripe" style="margin-left: 12px"
+            @query-data="queryData" />
         </FormRightPanel>
       </el-row>
-      <el-table
-        ref="elTableRef"
-        v-loading="listLoading"
-        row-key="id"
-        :border="border"
-        :data="list"
-        :size="lineHeight"
-        :stripe="stripe"
-        fit
-      >
+      <el-table ref="elTableRef" v-loading="listLoading" row-key="id" :border="border" :data="list" :size="lineHeight"
+        :stripe="stripe" fit>
         <ElTableColumn width="80" align="center" fixed>
           <template #header> 排序 </template>
           <template #default>
@@ -171,44 +162,18 @@ onMounted(() => {
             </ElTag>
           </template>
         </ElTableColumn>
-        <el-table-column
-          v-if="checkList.includes('levelName')"
-          align="center"
-          prop="levelName"
-          show-overflow-tooltip
-          label="等级名称"
-        />
-        <el-table-column
-          v-if="checkList.includes('additionRatio')"
-          align="center"
-          prop="additionRatio"
-          show-overflow-tooltip
-          label="加成比例(百分比)"
-        />
-        <el-table-column
-          v-if="checkList.includes('memberQuantity')"
-          align="center"
-          prop="memberQuantity"
-          show-overflow-tooltip
-          label="成员数量"
-        />
+        <el-table-column v-if="checkList.includes('levelName')" align="center" prop="levelName" show-overflow-tooltip
+          label="等级名称" />
+        <el-table-column v-if="checkList.includes('additionRatio')" align="center" prop="additionRatio"
+          show-overflow-tooltip label="加成比例(百分比)" />
+        <el-table-column v-if="checkList.includes('memberQuantity')" align="center" prop="memberQuantity"
+          show-overflow-tooltip label="成员数量" />
         <el-table-column align="center" fixed="right" show-overflow-tooltip label="操作">
           <template #default="{ row }">
-            <el-button
-              size="small"
-              plain
-              type="primary"
-              @click="handleEdit(row)"
-            >
+            <el-button size="small" plain type="primary" @click="handleEdit(row)">
               编辑
             </el-button>
-            <el-button
-              size="small"
-              plain
-              type="danger"
-              v-if="row.isDelete === 1"
-              @click="handleDelete(row)"
-            >
+            <el-button size="small" plain type="danger" v-if="row.isDelete === 1" @click="handleDelete(row)">
               删除
             </el-button>
           </template>
@@ -217,18 +182,9 @@ onMounted(() => {
           <el-empty class="vab-data-empty" description="暂无数据" />
         </template>
       </el-table>
-      <ElPagination
-        :current-page="pagination.page"
-        :total="pagination.total"
-        :page-size="pagination.size"
-        :page-sizes="pagination.sizes"
-        :layout="pagination.layout"
-        :hide-on-single-page="false"
-        class="pagination"
-        background
-        @size-change="sizeChange"
-        @current-change="currentChange"
-      />
+      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+        background @size-change="sizeChange" @current-change="currentChange" />
     </PageMain>
     <edit ref="EditRef" @queryData="queryData" />
   </div>
@@ -280,6 +236,7 @@ onMounted(() => {
     }
   }
 }
+
 // 拖拽
 .el-tag.sortable,
 .el-tag.sortable .icon {
