@@ -347,7 +347,7 @@ onMounted(async () => {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('remark')" align="center" prop="remark" width="180"
-          show-overflow-tooltip label="备注">
+            label="备注">
           <template #default="{ row }">
             <el-input v-model="row.remark" @blur="handleEditRemark(row)" />
           </template>
