@@ -276,8 +276,8 @@ onMounted(() => {
 
   button {
     border: none;
-    padding: .125rem .375rem;
-    margin-right: .125rem;
+    padding: .25rem .375rem;
+    margin-right: .25rem;
     color: #fff;
     background-color: #d9d9d9;
     border-radius: .25rem;
