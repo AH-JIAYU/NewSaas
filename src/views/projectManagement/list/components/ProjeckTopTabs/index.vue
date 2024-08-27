@@ -28,10 +28,10 @@ const props: any = defineProps({
 });
 const localToptTab = ref<any>(props.leftTab)
 const validate = inject<any>("validateTopTabs"); //注入Ref
-const url: string = "例：https://www.xxxx.com/8994343?uid=[$uid]";
+const url: string = "例：https://www.xxxx.com/8994343?uid=[uid]";
 const activeName = ref("basicSettings"); // tabs
 const formRef = ref<any>(); // Ref 在edit中进行校验
-const editRef=ref<any>(); // 组件Ref 快捷操作： 新增客户
+const editRef = ref<any>(); // 组件Ref 快捷操作： 新增客户
 const fold = ref(!props.tabIndex ? true : false); // 折叠 描述配额
 let data = ref<any>({
   checked: false, //所属国家的全选按钮
@@ -66,7 +66,7 @@ const validateUrlRegistered = (rule: any, value: any, callback: any) => {
   if (!regExpUrl.test(localToptTab.value.uidUrl)) {
     callback(new Error("请输入合法网址"));
   }
-  if (!localToptTab.value.uidUrl.includes("[$uid]")) {
+  if (!localToptTab.value.uidUrl.includes("[uid]")) {
     callback(new Error("格式不正确,请查看例子"));
   }
   callback();
@@ -417,7 +417,7 @@ const getCustomerList = async () => {
   data.value.basicSettings.customerList = await customerStore.getCustomerList();
 }
 // 快捷操作：新增客户
-const AddCustomers=()=>{
+const AddCustomers = () => {
   editRef.value.showEdit();
 }
 // 获取 客户 国家 项目类型
@@ -619,7 +619,7 @@ nextTick(() => {
                     URL
                     <!-- <el-tooltip
                       class="tooltips"
-                      content="例： https://www.xxxx.com/8994343?uid=[$uid]"
+                      content="例： https://www.xxxx.com/8994343?uid=[uid]"
                       placement="top"
                     >
                       <SvgIcon class="SvgIcon2" name="i-ri:question-line" />
