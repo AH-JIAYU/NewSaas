@@ -209,68 +209,8 @@ function transformData(inputArray: any) {
 
   return transformedArray;
 }
-
+// 获取数据
 async function getList() {
-  // data.value.dataCenterSupplierTurnovers = [
-  //   {
-  //     name: 111,
-  //     day: 1,
-  //     month: 2,
-  //     year: 3,
-  //   },
-  //   {
-  //     name: 111,
-  //     day: 1,
-  //     month: 2,
-  //     year: 3,
-  //   },
-  //   {
-  //     name: 111,
-  //     day: 1,
-  //     month: 2,
-  //     year: 3,
-  //   },
-  //   {
-  //     name: 111,
-  //     day: 1,
-  //     month: 2,
-  //     year: 3,
-  //   },
-  // ]
-  // data.value.dataCenterSupplierCompletedQuantities = [
-  //   {
-  //     supplierName: 111,
-  //     completedAmount: 222,
-  //     completedQuantity: 222,
-  //     b2BProportion: 222,
-  //     b2CProportion: 222,
-  //     countryList: 222,
-  //   },
-  //   {
-  //     supplierName: 111,
-  //     completedAmount: 222,
-  //     completedQuantity: 222,
-  //     b2BProportion: 222,
-  //     b2CProportion: 222,
-  //     countryList: 222,
-  //   },
-  //   {
-  //     supplierName: 111,
-  //     completedAmount: 222,
-  //     completedQuantity: 222,
-  //     b2BProportion: 222,
-  //     b2CProportion: 222,
-  //     countryList: 222,
-  //   },
-  //   {
-  //     supplierName: 111,
-  //     completedAmount: 222,
-  //     completedQuantity: 222,
-  //     b2BProportion: 222,
-  //     b2CProportion: 222,
-  //     countryList: 222,
-  //   },
-  // ]
   const res = await api.list({ type: data.value.search.type });
   const {
     dataCenterOverViewVO,
@@ -286,10 +226,15 @@ async function getList() {
     dataCenterSupplierCompletedQuantities;
   data.value.dataCenterSupplierTurnovers = dataCenterSupplierTurnovers;
 }
-const timeChange = () => {
+// 切换年月日
+const typeChange = () => {
   getList();
 };
-// 待办
+//过滤未读待办
+const filterTodoList = computed(() => {
+  return notificationStore.todoList.filter((item: any) => item.isReadAlready === 1)
+})
+// 前往待办
 const cooperation = (row: any) => {
   router.push({
     path: "/personal/notification",
@@ -316,7 +261,7 @@ onMounted(async () => {
   <div>
     <PageMain style="background:transparent;">
       <el-row style="margin:0 0 1rem 0;">
-        <el-radio-group v-model="data.search.type" @change="timeChange">
+        <el-radio-group v-model="data.search.type" @change="typeChange">
           <el-radio-button label="日" value="day" />
           <el-radio-button label="月" value="month" />
           <el-radio-button label="年" value="year" />
@@ -806,8 +751,8 @@ onMounted(async () => {
             <OverlayScrollbarsComponent :options="{
           scrollbars: { autoHide: 'leave', autoHideDelay: 300 },
         }" defer class="list">
-              <template v-if="notificationStore.todoList.length">
-                <div class="item el-button" v-for="item in notificationStore.todoList" @click="cooperation(item)">
+              <template v-if="filterTodoList.length">
+                <div class="item el-button" v-for="item in filterTodoList" @click="cooperation(item)">
                   <div class="item-left">
                     <div :class="item.isReadAlready === 1 ? 'new read' : 'read'"></div>
                     <div class="info">
