@@ -42,23 +42,33 @@ function showEditCooperation(row: any) {
   nextTick(() => {
     cooperationRef.value.showEdit(row);
   })
-
+}
+// 切换消息或待办
+const changeTabs = async () => {
+  console.log('data.value.tabs', data.value.tabs)
+  // 清除右侧组件
+  data.value.selectId = "";
+  // 默认显示未读
+  data.value.ReadAlready = 1;
+  if (data.value.tabs === 'news') {
+    await notificationStore.getUnreadMessage(); // 重新获取消息列表
+  } else if (data.value.tabs === 'cooperation') {
+    await notificationStore.getUnreadTodo(); // 重新获取待办列表
+  }
 }
 // 已读后清除右侧详情
 async function delSelectId() {
   // 清除右侧组件
   data.value.selectId = "";
-  // data.value.type = 0;
-  // 默认显示未读
-  data.value.ReadAlready = 1;
-  await notificationStore.getUnreadMessage(); // 重新获取消息列表
-  await notificationStore.getUnreadTodo(); // 重新获取待办列表
 }
 // 切换已读未读
-const readButNotRead=async(val:any)=>{
-  data.value.ReadAlready=val
-  await notificationStore.getUnreadMessage(); // 重新获取消息列表
-  await notificationStore.getUnreadTodo(); // 重新获取待办列表
+const readButNotRead = async (val: any) => {
+  data.value.ReadAlready = val
+  if (data.value.tabs === 'news') {
+    await notificationStore.getUnreadMessage(); // 重新获取消息列表
+  } else if (data.value.tabs === 'cooperation') {
+    await notificationStore.getUnreadTodo(); // 重新获取待办列表
+  }
 }
 const filterMessageList = computed(() => {
   return notificationStore.messageList.filter((item: any) => item.isReadAlready === data.value.ReadAlready)
@@ -91,7 +101,7 @@ onMounted(() => {
     <PageMain>
       <div class="flex-c">
         <div class="left">
-          <el-tabs v-model="data.tabs" @tab-change="delSelectId">
+          <el-tabs v-model="data.tabs" @tab-change="changeTabs">
             <el-tab-pane label="消息" name="news">
               <div class="buttons">
                 <button :class="data.ReadAlready === 1 ? 'unread' : ''" @click="readButNotRead(1)">未读{{
@@ -173,7 +183,7 @@ onMounted(() => {
         </div>
         <div v-show="data.selectId" class="right" v-if="data.selectId">
           <news v-if="data.tabs === 'news'" ref="newsRef" @delSelectId="delSelectId"></news>
-          <cooperation v-if="data.tabs === 'cooperation'" ref="cooperationRef"></cooperation>
+          <cooperation v-if="data.tabs === 'cooperation'" ref="cooperationRef" @delSelectId="delSelectId"></cooperation>
         </div>
       </div>
     </PageMain>
@@ -182,8 +192,6 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
- 
-
 .select {
   background: #F3F9FF !important;
 }
