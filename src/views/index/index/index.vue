@@ -556,7 +556,7 @@ onMounted(async () => {
               </div>
               <el-table v-if="data.dataCenterSupplierCompletedQuantities.length"
                 :data="data.dataCenterSupplierCompletedQuantities" style="width: 100%">
-                <el-table-column type="index" />
+                <el-table-column type="index" label="序号" width="60" />
                 <el-table-column align="center" prop="supplierName" label="供应商名称"><template #default="{ row }">
                     {{ row.supplierName ? row.supplierName : "-" }}
                   </template>
@@ -601,7 +601,7 @@ onMounted(async () => {
                 </div>
               </div>
               <el-table :data="data.dataCenterSupplierTurnovers" style="width: 100%">
-                <el-table-column type="index" />
+                <el-table-column type="index" label="序号"  width="60" />
                 <el-table-column align="center" prop="name" label="供应商名称"><template #default="{ row }">
                     {{ row.name ? row.name : "-" }}
                   </template>
