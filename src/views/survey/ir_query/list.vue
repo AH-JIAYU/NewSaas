@@ -476,7 +476,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
   }
 }
 
-:deep(.el-tabs__nav-scroll) {
+:deep() {
   background-color: #fafafa;
 }
 

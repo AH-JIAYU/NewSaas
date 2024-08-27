@@ -119,27 +119,6 @@ function echarts1() {
 // 客户总览
 function echarts2() {
   const Data = transformData(cloneDeep(data.value.dataCenterCustomerVOS));
-  // const Data: any = transformData([
-  //   {
-  //     customerName: "张三:null",
-  //     projectTotal: 1,
-  //     auditRate: 1,
-  //     auditSuccessRate: 1,
-  //   },
-  //   {
-  //     customerName: "李四:null",
-  //     projectTotal: 1,
-  //     auditRate: 1,
-  //     auditSuccessRate: 1,
-  //   },
-  //   {
-  //     customerName: "王五:null",
-  //     projectTotal: 1,
-  //     auditRate: 1,
-  //     auditSuccessRate: 1,
-  //   },
-  // ])
-
   const legendData = data.value.dataCenterCustomerVOS.map((item: any) => {
     return item.customerName;
   });
@@ -156,7 +135,7 @@ function echarts2() {
     tooltip: { //弹框
       trigger: "item",
       formatter(data: any) {
-        return `客户：${data.name}</br>项目完成: ${data.data.datas.com}</br>审核率: ${data.data.datas.aud}`;
+        return `客户名称：${data.name}</br>项目完成: ${data.data.datas.com}</br>审核率: ${data.data.datas.aud}`;
       },
     },
     label: {//饼图文字的显示
@@ -166,7 +145,7 @@ function echarts2() {
       {
         name: "访问来源",
         type: "pie",
-        radius: ["40%", "60%"],
+        radius: ["30%", "50%"],
         center: 'center',
         text: "省市公司",
         data: Data,
@@ -531,8 +510,9 @@ onMounted(async () => {
           : 0 }}</div>
 
                 <!-- 较昨日 -->
-                <risingAndFalling :Difference="data.dataCenterOverViewVO?.projectSettlementConfirmedDifference" :type="data.search.type">
-                  </risingAndFalling>
+                <risingAndFalling :Difference="data.dataCenterOverViewVO?.projectSettlementConfirmedDifference"
+                  :type="data.search.type">
+                </risingAndFalling>
               </div>
 
             </div>
@@ -581,8 +561,9 @@ onMounted(async () => {
           : 0 }}</div>
 
                 <!-- 较昨日 -->
-                <risingAndFalling :Difference="data.dataCenterOverViewVO?.projectSettlementCompleteDifference" :type="data.search.type">
-                  </risingAndFalling>
+                <risingAndFalling :Difference="data.dataCenterOverViewVO?.projectSettlementCompleteDifference"
+                  :type="data.search.type">
+                </risingAndFalling>
               </div>
 
             </div>
@@ -629,15 +610,16 @@ onMounted(async () => {
                     {{ row.supplierName ? row.supplierName : "-" }}
                   </template>
                 </el-table-column>
-                <el-table-column align="center" prop="completedAmount" label="完成金额"><template #default="{ row }">
-                    <span class="table-red"> {{ row.completedAmount ? row.completedAmount : "-" }}</span>
-                  </template>
-                </el-table-column>
                 <el-table-column align="center" prop="completedQuantity" label="完成数量">
                   <template #default="{ row }">
-                    <span class="table-green"> {{ row.completedQuantity ? row.completedQuantity : "-" }}</span>
+                    <span class="table-green"> {{ row.completedQuantity ? row.completedQuantity : "0" }}</span>
                   </template>
                 </el-table-column>
+                <el-table-column align="center" prop="completedAmount" label="完成金额"><template #default="{ row }">
+                    <span class="table-red"> {{ row.completedAmount ? row.completedAmount : "0" }}</span>
+                  </template>
+                </el-table-column>
+
                 <el-table-column align="center" prop="b2BProportion" label="B2B" />
                 <el-table-column align="center" prop="b2CProportion" label="B2C" />
                 <el-table-column align="center" label="所属国家">
@@ -667,9 +649,9 @@ onMounted(async () => {
                     {{ row.name ? row.name : "-" }}
                   </template>
                 </el-table-column>
-                <el-table-column align="center" prop="turnover" label="日" />
-                <el-table-column align="center" prop="month" label="月" />
-                <el-table-column align="center" prop="year" label="年" />
+                <el-table-column sortable align="center" prop="turnover" label="日" />
+                <el-table-column sortable align="center" prop="month" label="月" />
+                <el-table-column sortable align="center" prop="year" label="年" />
                 <template #empty>
                   <el-empty description="暂无数据" />
                 </template>
@@ -825,13 +807,13 @@ onMounted(async () => {
           scrollbars: { autoHide: 'leave', autoHideDelay: 300 },
         }" defer class="list">
               <template v-if="notificationStore.todoList.length">
-                <div class="item" v-for="item in notificationStore.todoList">
+                <div class="item el-button" v-for="item in notificationStore.todoList" @click="cooperation(item)">
                   <div class="item-left">
                     <div :class="item.isReadAlready === 1 ? 'new read' : 'read'"></div>
                     <div class="info">
                       <div class="title">
                         {{
-          notificationStore.auditTypeList[item.auditType - 1] ||
+                        notificationStore.auditTypeList[item.auditType - 1] ||
                         ""
                         }}
                         &emsp;
@@ -839,7 +821,7 @@ onMounted(async () => {
                       </div>
                     </div>
                   </div>
-                  <el-button type="info" link @click="cooperation(item)">
+                  <el-button type="info" link>
                     <SvgIcon name="i-ant-design:right-outlined" />
                   </el-button>
                 </div>
@@ -1221,6 +1203,10 @@ onMounted(async () => {
 
   th .cell {
     color: #202020 !important;
+  }
+
+  .el-table {
+    height: calc(20.4375rem - 2rem - 1.5625rem - 0.5rem)
   }
 
   // 表格

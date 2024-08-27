@@ -239,9 +239,7 @@ onMounted(() => {
   >
     <PageMain>
       <el-tabs
-        v-model="data.activeName"
-        type="border-card"
-        class="demo-tabs"
+        v-model="data.activeName" 
         @tab-change="getDataChange"
       >
         <el-tab-pane label="客户报告" name="report">

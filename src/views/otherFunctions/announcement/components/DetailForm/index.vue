@@ -125,7 +125,7 @@ defineExpose({
 
 <template>
   <div v-loading="loading">
-    <ElForm ref="formRef" :model="form" :rules="formRules" label-width="120px" label-suffix="：">
+    <ElForm ref="formRef" :model="form" :rules="formRules" label-width="120px" >
       <el-form-item label="标题" prop="title">
         <el-input v-model="form.title" placeholder="请输入标题" clearable @change="" />
       </el-form-item>

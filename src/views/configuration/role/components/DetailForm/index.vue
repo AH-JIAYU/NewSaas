@@ -157,7 +157,7 @@ defineExpose({
 
 <template>
   <div v-loading="loading">
-    <ElForm ref="formRef" :model="form" :rules="formRules" label-width="120px" label-suffix="：">
+    <ElForm ref="formRef" :model="form" :rules="formRules" label-width="120px" >
       <ElFormItem label="角色名称" prop="roleName">
         <ElInput v-model="form.roleName" :disabled="!!form.id" placeholder="请输入角色名称" />
       </ElFormItem>

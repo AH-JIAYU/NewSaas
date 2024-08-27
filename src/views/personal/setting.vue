@@ -314,7 +314,7 @@ defineExpose({ showEdit });
         <ElTabPane label="个人信息" class="basic">
           <h2>个人信息</h2>
           <ElForm ref="userFormRef" :model="userForm" :rules="userFormRules" label-width="120px" el-width="120px"
-            label-suffix="：">
+            >
             <ElFormItem style="
                 display: flex;
                 justify-content: center;
@@ -389,7 +389,7 @@ defineExpose({ showEdit });
         <ElTabPane label="账户管理" class="security">
           <h2 style="margin-bottom: 30px">账户管理</h2>
           <ElForm ref="accountFormRef" :model="accountForm" :rules="accountFormRules" label-width="120px"
-            label-suffix="：">
+            >
             <ElFormItem prop="oldPassword" label="旧密码">
               <ElInput v-model="accountForm.oldPassword" placeholder="请输入旧密码" />
             </ElFormItem>

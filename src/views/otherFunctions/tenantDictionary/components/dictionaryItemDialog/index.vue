@@ -117,13 +117,13 @@ onMounted(() => {
   <ElDialog
     v-model="visible"
     :title="title"
-    width="400px"
+    width="25rem"
     :close-on-click-modal="false"
     append-to-body
     destroy-on-close
     @closed="onCancel"
   >
-    <ElForm ref="formRef" :model="form" :rules="formRules" label-width="100px">
+    <ElForm ref="formRef" :model="form" :rules="formRules" label-width="6.0625rem">
       <ElFormItem label="所属字典">
         <ElCascader
           v-model="form.catalogueId"

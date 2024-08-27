@@ -66,7 +66,7 @@ defineExpose({ showEdit });
       ref="formRef"
       :model="form"
       :rules="rules"
-      label-width="80px"
+      label-width="5.1875rem"
       :inline="false"
     >
       <el-form-item label="等级名称" prop="levelName">

@@ -172,7 +172,7 @@ defineExpose({ showEdit });
 <template>
   <div v-loading="loading">
     <el-dialog v-model="dialogTableVisible" :title="title" width="700">
-      <el-form ref="formRef" label-width="80px" :model="form" :rules="formRules" :inline="false">
+      <el-form ref="formRef" label-width="5.1875rem" :model="form" :rules="formRules" :inline="false">
         <el-form-item label="客户简称" prop="tenantCustomerId">
           <el-select v-model="form.tenantCustomerId" placeholder="请选择客户" clearable filterable>
             <el-option v-for="item in customerList" :key="item.tenantCustomerId" :value="item.tenantCustomerId"
@@ -183,7 +183,7 @@ defineExpose({ showEdit });
                 <el-button type="primary" link size="small" @click="AddCustomers">
                   快捷新增
                   <SvgIcon name="ant-design:plus-outlined" color="#fff"
-                    style="background-color: var(--el-color-primary);border-radius: 50%;padding: 2px;margin:0 2px" />
+                    style="background-color: var(--el-color-primary);border-radius: 50%;padding: .125rem;margin:0 .125rem" />
                 </el-button>
               </div>
             </template>

@@ -105,9 +105,9 @@ defineExpose({
 
 <template>
   <div v-loading="loading">
-    <el-dialog v-model="loadingDisible" append-to-body :close-on-click-modal="false" destroy-on-close draggable
+    <el-dialog v-model="loadingDisible" title="加减款" append-to-body :close-on-click-modal="false" destroy-on-close draggable
       width="35%" @close="close">
-      <el-form :model="form" :rules="formRules" ref="formRef" label-width="80px" :inline="false">
+      <el-form :model="form" :rules="formRules" ref="formRef" label-width="4.5625rem" :inline="false">
         <el-form-item label="供应商ID"> {{ form.supplierId }} </el-form-item>
         <el-form-item label="加减款">
           <el-select v-model="form.operationType" value-key="" placeholder="请选择加减款" clearable filterable>

@@ -5,7 +5,7 @@ import useNotificationStore from "@/store/modules/notification";
 defineOptions({
   name: "PersonalNotificationCooperation",
 });
-
+const emit = defineEmits(["delSelectId"]);
 const notificationStore = useNotificationStore();
 const data = ref<any>({});
 
@@ -20,7 +20,7 @@ const read = async () => {
     type: 1,
   };
   await api.updateTenantAudit(params); //修改该条数据待办状态
-  // await notificationStore.getUnreadTodo(); // 重新获取待办列表
+  await notificationStore.getUnreadTodo(); // 重新获取待办列表
 };
 // 拒绝
 const refuse = async () => {
@@ -28,8 +28,9 @@ const refuse = async () => {
     id: data.value.id,
     type: 2,
   };
+  emit('delSelectId')
   await api.updateTenantAudit(params); //修改该条数据待办状态
-  // await notificationStore.getUnreadTodo(); // 重新获取待办列表
+  await notificationStore.getUnreadTodo(); // 重新获取待办列表
 };
 // 同意
 const agree = async () => {
@@ -37,8 +38,9 @@ const agree = async () => {
     id: data.value.id,
     type: 3,
   };
+  emit('delSelectId')
   await api.updateTenantAudit(params); //修改该条数据待办状态
-  // await notificationStore.getUnreadTodo(); // 重新获取待办列表
+  await notificationStore.getUnreadTodo(); // 重新获取待办列表
 };
 
 defineExpose({

@@ -218,7 +218,7 @@ onMounted(() => {
     'absolute-container': tableAutoHeight,
   }">
     <PageMain>
-      <el-tabs v-model="queryForm.type" class="demo-tabs" type="border-card" @tab-change="getDataChange">
+      <el-tabs v-model="queryForm.type"   @tab-change="getDataChange">
         <el-tab-pane label="会员素材" :name="1">
           <SearchBar :show-toggle="false">
             <template #default="{ fold, toggle }">
@@ -455,7 +455,4 @@ onMounted(() => {
   }
 }
 
-:deep(.el-tabs__nav-scroll) {
-  background-color: #fafafa;
-}
 </style>
