@@ -26,34 +26,6 @@ const visible = defineModel<boolean>({
 // 弹窗标题
 const title = computed(() => (props.id === "" ? "新增字典" : "编辑字典"));
 
-// function formatTree(
-//   tree: any[],
-//   id: string | number,
-//   childrenDisabled = false
-// ) {
-//   const data: any[] = [];
-//   if (tree) {
-//     tree.forEach((item) => {
-//       const temp = { ...item };
-//       if (temp.id === id || childrenDisabled) {
-//         temp.disabled = true;
-//         if (temp.children) {
-//           temp.children = formatTree(temp.children, id, true);
-//         }
-//       } else {
-//         temp.disabled = false;
-//         if (temp.children) {
-//           temp.children = formatTree(temp.children, id, childrenDisabled);
-//         }
-//       }
-//       data.push(temp);
-//     });
-//   }
-
-//   return data;
-// }
-// const myTree = computed(() => formatTree(props.tree, props.id));
-
 const formRef = ref<FormInstance>();
 const flat = ref([]);
 // 表单
@@ -130,13 +102,13 @@ onMounted(() => {
   <ElDialog
     v-model="visible"
     :title="title"
-    width="400px"
+    width="25rem"
     :close-on-click-modal="false"
     append-to-body
     destroy-on-close
     @closed="onCancel"
   >
-    <ElForm ref="formRef" :model="form" :rules="formRules" label-width="80px">
+    <ElForm ref="formRef" :model="form" :rules="formRules" label-width="5.1875rem">
       <ElFormItem label="所属字典" prop="parentId">
         <ElCascader
           v-model="form.tenantCatalogueId"

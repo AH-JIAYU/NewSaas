@@ -199,7 +199,7 @@ function onCancel() {
 
 <template>
   <div v-loading="loading">
-    <ElForm ref="formRef" :model="form" :rules="formRules" label-width="130px" label-suffix="：">
+    <ElForm ref="formRef" :model="form" :rules="formRules" label-width="130px" >
       <ElFormItem label="用户名" prop="name">
         <ElInput v-model="form.name" placeholder="请输入用户名" />
       </ElFormItem>

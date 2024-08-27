@@ -141,7 +141,7 @@ defineExpose({ showEdit });
 <template>
   <div v-loading="loading">
     <el-dialog v-model="dialogTableVisible" title="项目结算编辑" width="600" :before-close="closeHandler">
-      <el-form ref="formRef" :model="form" :rules="formRules" label-width="100px" :inline="false">
+      <el-form ref="formRef" :model="form" :rules="formRules" label-width="86px" :inline="false">
         <el-form-item label="项目ID">
           <el-text class="mx-1">{{ form.projectId }}</el-text>
         </el-form-item>

@@ -469,27 +469,62 @@ textarea {
 
 // tabs边距
 .el-tabs__item.is-top:nth-child(2) {
-  margin-left: 1.75rem
+  margin-left: 1rem
 }
 
 .el-tabs__item {
-  padding: 0 1.75rem;
+  padding: 0 1rem;
 }
 
-// loading宽度
+// 修改 el-dialog 样式
 .el-dialog {
   width: 45rem;
+  padding: 0 !important;
+
+
+  .el-dialog__title {
+    position: relative;
+    margin-left: 6px;
+  }
+
+  >div,
+  >header,
+  >footer {
+    padding: 24px !important;
+  }
+
+  header {
+    padding-bottom: 16px !important;
+  }
+
+  // x
+  .el-dialog__headerbtn {
+    top: 12px;
+    right: 12px;
+  }
+
+  // 蓝色标签
+  .el-dialog__title::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -0.3125rem;
+    width: .125rem;
+    height: .75rem;
+    transform: translate(-50%, -50%);
+    background-color: #409eff;
+  }
+  .el-dialog__footer{
+    border-top: 1px solid rgba(170,170,170,0.3);
+  }
+
+  // label跟输入框之间的边距
+  .el-form-item__label {
+    padding-right: 16px;
+  }
 }
-.el-dialog__title{
-  position: relative;
-}
-.el-dialog__title::after{
-  content:'';
-  position: absolute;
-  top: 50%;
-  left: -0.3125rem;
-  width: .125rem;
-  height: .75rem;
-  transform: translate(-50% , -50%);
-  background-color: #409eff;
+
+
+.el-tabs__nav-wrap:after {
+  height: 1px;
 }

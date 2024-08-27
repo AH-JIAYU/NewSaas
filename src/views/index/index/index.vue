@@ -510,8 +510,9 @@ onMounted(async () => {
           : 0 }}</div>
 
                 <!-- 较昨日 -->
-                <risingAndFalling :Difference="data.dataCenterOverViewVO?.projectSettlementConfirmedDifference" :type="data.search.type">
-                  </risingAndFalling>
+                <risingAndFalling :Difference="data.dataCenterOverViewVO?.projectSettlementConfirmedDifference"
+                  :type="data.search.type">
+                </risingAndFalling>
               </div>
 
             </div>
@@ -560,8 +561,9 @@ onMounted(async () => {
           : 0 }}</div>
 
                 <!-- 较昨日 -->
-                <risingAndFalling :Difference="data.dataCenterOverViewVO?.projectSettlementCompleteDifference" :type="data.search.type">
-                  </risingAndFalling>
+                <risingAndFalling :Difference="data.dataCenterOverViewVO?.projectSettlementCompleteDifference"
+                  :type="data.search.type">
+                </risingAndFalling>
               </div>
 
             </div>
@@ -608,15 +610,16 @@ onMounted(async () => {
                     {{ row.supplierName ? row.supplierName : "-" }}
                   </template>
                 </el-table-column>
-                <el-table-column align="center" prop="completedAmount" label="完成金额"><template #default="{ row }">
-                    <span class="table-red"> {{ row.completedAmount ? row.completedAmount : "0" }}</span>
-                  </template>
-                </el-table-column>
                 <el-table-column align="center" prop="completedQuantity" label="完成数量">
                   <template #default="{ row }">
                     <span class="table-green"> {{ row.completedQuantity ? row.completedQuantity : "0" }}</span>
                   </template>
                 </el-table-column>
+                <el-table-column align="center" prop="completedAmount" label="完成金额"><template #default="{ row }">
+                    <span class="table-red"> {{ row.completedAmount ? row.completedAmount : "0" }}</span>
+                  </template>
+                </el-table-column>
+
                 <el-table-column align="center" prop="b2BProportion" label="B2B" />
                 <el-table-column align="center" prop="b2CProportion" label="B2C" />
                 <el-table-column align="center" label="所属国家">
@@ -646,9 +649,9 @@ onMounted(async () => {
                     {{ row.name ? row.name : "-" }}
                   </template>
                 </el-table-column>
-                <el-table-column align="center" prop="turnover" label="日" />
-                <el-table-column align="center" prop="month" label="月" />
-                <el-table-column align="center" prop="year" label="年" />
+                <el-table-column sortable align="center" prop="turnover" label="日" />
+                <el-table-column sortable align="center" prop="month" label="月" />
+                <el-table-column sortable align="center" prop="year" label="年" />
                 <template #empty>
                   <el-empty description="暂无数据" />
                 </template>
@@ -804,13 +807,13 @@ onMounted(async () => {
           scrollbars: { autoHide: 'leave', autoHideDelay: 300 },
         }" defer class="list">
               <template v-if="notificationStore.todoList.length">
-                <div class="item" v-for="item in notificationStore.todoList" @click="cooperation(item)">
+                <div class="item el-button" v-for="item in notificationStore.todoList" @click="cooperation(item)">
                   <div class="item-left">
                     <div :class="item.isReadAlready === 1 ? 'new read' : 'read'"></div>
                     <div class="info">
                       <div class="title">
                         {{
-          notificationStore.auditTypeList[item.auditType - 1] ||
+                        notificationStore.auditTypeList[item.auditType - 1] ||
                         ""
                         }}
                         &emsp;
@@ -818,7 +821,7 @@ onMounted(async () => {
                       </div>
                     </div>
                   </div>
-                  <el-button type="info" link >
+                  <el-button type="info" link>
                     <SvgIcon name="i-ant-design:right-outlined" />
                   </el-button>
                 </div>
@@ -1201,7 +1204,8 @@ onMounted(async () => {
   th .cell {
     color: #202020 !important;
   }
-  .el-table{
+
+  .el-table {
     height: calc(20.4375rem - 2rem - 1.5625rem - 0.5rem)
   }
 

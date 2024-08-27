@@ -87,7 +87,7 @@ defineExpose({
 
 <template>
   <div v-loading="loading">
-    <ElForm ref="formRef" :model="form" :rules="formRules" label-width="120px" label-suffix="：">
+    <ElForm ref="formRef" :model="form" :rules="formRules" label-width="3.4375rem" >
       <ElFormItem label="标题" prop="title">
         <ElInput v-model="form.title" placeholder="请输入标题" />
       </ElFormItem>
