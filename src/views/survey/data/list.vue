@@ -158,7 +158,7 @@ function getDataList() {
           <p class="rankingColP"><span class="rankingColSpan"></span>完成排行榜</p>
           <el-table :data="data.memberDataCenterCompletedVOList" class="tabless"
             :style="{ '--el-table-border-color': 'none' }">
-            <el-table-column align="center" type="index" />
+            <el-table-column align="center" type="index" width="60"  label="序号"/>
             <el-table-column show-overflow-tooltip width="180" align="center" prop="memberId" label="会员ID">
               <template #default="{ row }">
                 <span style="color: #0F0F0F;">{{ row.memberId ? row.memberId : '-' }}</span>
@@ -182,7 +182,7 @@ function getDataList() {
         <div class="rankingCol">
           <p class="rankingColP"><span class="rankingColSpan"></span>退款排行榜</p>
           <el-table :data="data.memberDataCenterRefundVOList" :style="{ '--el-table-border-color': 'none' }">
-            <el-table-column align="center" type="index" />
+            <el-table-column align="center" type="index" width="60"  label="序号"/>
             <el-table-column show-overflow-tooltip width="180" align="center" prop="memberId" label="会员ID">
               <template #default="{ row }">
                 <span style="color: #0F0F0F;">{{ row.memberId ? row.memberId : '-' }}</span>
@@ -211,7 +211,7 @@ function getDataList() {
         <div class="rankingCol">
           <p class="rankingColP"><span class="rankingColSpan"></span>业绩排行榜</p>
           <el-table :data="data.memberDataCenterPriceVOList" :style="{ '--el-table-border-color': 'none' }">
-            <el-table-column align="center" type="index" />
+            <el-table-column align="center" type="index" width="60"  label="序号"/>
             <el-table-column show-overflow-tooltip width="180" align="center" prop="memberId" label="会员ID">
               <template #default="{ row }">
                 <span style="color: #0F0F0F;">{{ row.memberId ? row.memberId : '-' }}</span>
@@ -548,6 +548,9 @@ function getDataList() {
 
   .el-table__empty-block {
     margin-top: 100px;
+  }
+  .el-table--fit {
+    margin-left: 10px;
   }
 }
 </style>

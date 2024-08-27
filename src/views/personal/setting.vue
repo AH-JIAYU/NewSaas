@@ -361,13 +361,13 @@ defineExpose({ showEdit });
                 <el-option v-for="item in currencyType" :key="item.value" :label="item.label" :value="item.value" />
               </el-select>
             </ElFormItem>
-            <ElFormItem v-if="userForm.type === 'company'" label="公司名称">
+            <ElFormItem label="公司名称">
               <ElInput v-model="userForm.companyName" placeholder="请输入你的公司名称" />
             </ElFormItem>
-            <ElFormItem v-if="userForm.type === 'company'" label="公司税号">
+            <ElFormItem label="公司税号">
               <ElInput v-model="userForm.taxId" placeholder="请输入你的公司税号" />
             </ElFormItem>
-            <ElFormItem v-if="userForm.type === 'company'" label="法人姓名">
+            <ElFormItem label="法人姓名">
               <ElInput v-model="userForm.legalPersonName" placeholder="请输入你的法人姓名" />
             </ElFormItem>
             <ElFormItem v-if="userForm.country === 'CN'" prop="phone" label="手机号码">
