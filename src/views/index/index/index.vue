@@ -135,7 +135,7 @@ function echarts2() {
     tooltip: { //弹框
       trigger: "item",
       formatter(data: any) {
-        return `客户名称：${data.name}</br>项目完成: ${data.data.datas.com}</br>审核率: ${data.data.datas.aud}`;
+        return `客户名称：${data.name}</br>项目结算: ${data.data.datas.com}</br>审核率: ${data.data.datas.aud}`;
       },
     },
     label: {//饼图文字的显示
@@ -200,8 +200,7 @@ function transformData(inputArray: any) {
       value: item.projectTotal,
       name: customerName,
       datas: {
-        aud: item.auditSuccessRate?.toString(),
-        audR: item.auditRate?.toString(),
+        aud: item.auditRate?.toString() + '%',
         com: item.projectTotal?.toString(),
       },
     };
@@ -234,6 +233,12 @@ const typeChange = () => {
 const filterTodoList = computed(() => {
   return notificationStore.todoList.filter((item: any) => item.isReadAlready === 1)
 })
+// 完成数据排行 国家字段
+const filterCountry = (row: any) => {
+  const findData = data.value.countryList.find((item: any) => item.id === row.countryId)
+  return findData?.chineseName
+}
+
 // 前往待办
 const cooperation = (row: any) => {
   router.push({
@@ -522,7 +527,7 @@ onMounted(async () => {
                   营业额趋势
                 </div>
               </div>
-              <div id="echarts1" ref="chart1Ref" style="width: 100%; height: 18.75rem" />
+              <div id="echarts1" ref="chart1Ref" style="width: 100%; height: 15.625rem" />
             </div>
             <div class="customerOverview itemBox">
               <div class="itemBoxTitle">
@@ -536,7 +541,7 @@ onMounted(async () => {
                 </el-button>
 
               </div>
-              <div id="echarts2" ref="chart2Ref" style="width: 100%; height: 18.75rem" />
+              <div id="echarts2" ref="chart2Ref" style="width: 100%; height: 15.625rem" />
             </div>
           </div>
 
@@ -549,7 +554,8 @@ onMounted(async () => {
                   完成数据排名
                 </div>
               </div>
-              <el-table :data="data.dataCenterSupplierCompletedQuantities" style="width: 100%">
+              <el-table v-if="data.dataCenterSupplierCompletedQuantities.length"
+                :data="data.dataCenterSupplierCompletedQuantities" style="width: 100%">
                 <el-table-column type="index" />
                 <el-table-column align="center" prop="supplierName" label="供应商名称"><template #default="{ row }">
                     {{ row.supplierName ? row.supplierName : "-" }}
@@ -561,19 +567,25 @@ onMounted(async () => {
                   </template>
                 </el-table-column>
                 <el-table-column align="center" prop="completedAmount" label="完成金额"><template #default="{ row }">
-                    <span class="table-red"> {{ row.completedAmount ? row.completedAmount : "0" }}</span>
+                    <span class="table-red">
+                      <CurrencyType />{{ row.completedAmount ? row.completedAmount : "0" }}
+                    </span>
                   </template>
                 </el-table-column>
 
-                <el-table-column align="center" prop="b2BProportion" label="B2B" />
-                <el-table-column align="center" prop="b2CProportion" label="B2C" />
+                <el-table-column align="center" prop="b2BProportion" label="B2B">
+                  <template #default="{ row }">
+                    {{ row.b2BProportion * 100 }}%
+                  </template>
+                </el-table-column>
+                <el-table-column align="center" prop="b2CProportion" label="B2C">
+                  <template #default="{ row }">
+                    {{ row.b2CProportion * 100 }}%
+                  </template>
+                </el-table-column>
                 <el-table-column align="center" label="所属国家">
                   <template #default="{ row }">
-                    <div v-for="item in data.countryList">
-                      <el-text v-if="item.id === row.country">{{
-          item.chineseName
-        }}</el-text>
-                    </div>
+                    <span v-if="String(row) !== '{}'">{{ filterCountry(row) }}</span>
                   </template>
                 </el-table-column>
                 <template #empty>
@@ -594,9 +606,21 @@ onMounted(async () => {
                     {{ row.name ? row.name : "-" }}
                   </template>
                 </el-table-column>
-                <el-table-column sortable align="center" prop="turnover" label="日" />
-                <el-table-column sortable align="center" prop="month" label="月" />
-                <el-table-column sortable align="center" prop="year" label="年" />
+                <el-table-column sortable align="center" prop="dayTurnover" label="日">
+                  <template #default="{ row }">
+                    <CurrencyType />{{ row.dayTurnover }}
+                  </template>
+                </el-table-column>
+                <el-table-column sortable align="center" prop="monthTurnover" label="月">
+                  <template #default="{ row }">
+                    <CurrencyType />{{ row.monthTurnover }}
+                  </template>
+                </el-table-column>
+                <el-table-column sortable align="center" prop="yearTurnover" label="年">
+                  <template #default="{ row }">
+                    <CurrencyType />{{ row.yearTurnover }}
+                  </template>
+                </el-table-column>
                 <template #empty>
                   <el-empty description="暂无数据" />
                 </template>
@@ -752,13 +776,13 @@ onMounted(async () => {
           scrollbars: { autoHide: 'leave', autoHideDelay: 300 },
         }" defer class="list">
               <template v-if="filterTodoList.length">
-                <div class="item el-button" v-for="item in filterTodoList" @click="cooperation(item)">
+                <div class="item" v-for="item in filterTodoList" @click="cooperation(item)">
                   <div class="item-left">
                     <div :class="item.isReadAlready === 1 ? 'new read' : 'read'"></div>
                     <div class="info">
                       <div class="title">
                         {{
-                        notificationStore.auditTypeList[item.auditType - 1] ||
+          notificationStore.auditTypeList[item.auditType - 1] ||
                         ""
                         }}
                         &emsp;
@@ -1100,6 +1124,9 @@ onMounted(async () => {
       align-items: center;
       background-color: #FFF8F8;
       margin-bottom: .75rem;
+      font-size: .75rem;
+      font-family: PingFang SC, PingFang SC;
+      padding: .625rem 1rem;
 
       .item-left {
         display: flex;
