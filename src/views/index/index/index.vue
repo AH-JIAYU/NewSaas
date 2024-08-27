@@ -221,9 +221,9 @@ function transformData(inputArray: any) {
       value: item.projectTotal,
       name: customerName,
       datas: {
-        aud: item.auditSuccessRate.toString(),
-        audR: item.auditRate.toString(),
-        com: item.projectTotal.toString(),
+        aud: item.auditSuccessRate?.toString(),
+        audR: item.auditRate?.toString(),
+        com: item.projectTotal?.toString(),
       },
     };
   });

@@ -580,9 +580,9 @@ const agreements = (val: any) => {
             <ElInput v-model="registerForm.taxID" placeholder="请输入公司税号" />
           </ElFormItem> -->
           <!--  v-if="registerForm.companyType === 'company'" -->
-          <ElFormItem prop="legalPersonName">
+          <!-- <ElFormItem prop="legalPersonName">
             <ElInput v-model="registerForm.legalPersonName" placeholder="请输入法人姓名" />
-          </ElFormItem>
+          </ElFormItem> -->
           <ElFormItem prop="name">
             <ElInput v-model="registerForm.name" placeholder="用户名" tabindex="1">
               <template #prefix>

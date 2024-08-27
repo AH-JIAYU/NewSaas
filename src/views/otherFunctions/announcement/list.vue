@@ -198,34 +198,24 @@ function onEdit(row: any) {
 // 开关事件
 function onChangeStatus(row: any) {
   return new Promise<boolean>((resolve) => {
-    ElMessageBox.confirm(
-      `确认${row.top ? "开启置顶" : "关闭置顶"}「${row.title}」吗？`,
-      "确认信息"
-    )
+    data.value.loading = true;
+    api
+      .edit({
+        id: row.id,
+        top: row.top,
+      })
       .then(() => {
-        data.value.loading = true;
-        api
-          .edit({
-            id: row.id,
-            top: row.top,
-          })
-          .then(() => {
-            ElMessage.success({
-              message: `${row.top ? "开启置顶" : "关闭置顶"}成功`,
-              center: true,
-            });
-            getDataList();
-            data.value.loading = false;
-            return resolve(true);
-          })
-          .catch(() => {
-            getDataList();
-            data.value.loading = false;
-            return resolve(false);
-          });
+        ElMessage.success({
+          message: `${row.top ? "开启置顶" : "关闭置顶"}成功`,
+          center: true,
+        });
+        getDataList();
+        data.value.loading = false;
+        return resolve(true);
       })
       .catch(() => {
         getDataList();
+        data.value.loading = false;
         return resolve(false);
       });
   });

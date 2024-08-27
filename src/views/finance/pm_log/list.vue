@@ -403,4 +403,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
     width: calc(100% + 40px);
   }
 }
+:deep(.el-table__empty-block) {
+  height: 100% !important;
+}
 </style>

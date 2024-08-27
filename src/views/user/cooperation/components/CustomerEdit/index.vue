@@ -71,7 +71,7 @@ defineExpose({
   <div>
     <el-dialog v-model="drawerisible" :close-on-click-modal="false" destroy-on-close draggable width="30%" title="邀约公司">
       <ElForm ref="formRef" :rules="data.rules" :model="data.form" label-width="100px">
-        <el-form-item label="客户名称" prop="beInvitationTenantId">
+        <el-form-item label="租户名称" prop="beInvitationTenantId">
           <el-select v-model="data.form.beInvitationTenantId" clearable>
             <el-option v-for="item in data.tenantUserList" :key="item.tenantId" :value="item.tenantId"
               :label="item.name">

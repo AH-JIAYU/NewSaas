@@ -51,7 +51,7 @@ api.interceptors.response.use(
       });
       return Promise.reject(response.data);
     } else if (response.data.status === 0) {
-      Message.warning(response.data.error, {
+      Message.warning(response.data.error === 'token 无效' ? '账号登录过期' : '该账号已在别处登录', {
         zIndex: 2000,
       });
       useUserStore().logout(response.data.status);

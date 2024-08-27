@@ -474,7 +474,9 @@ function handleMoreOperating(command: string, row: any) {
           label="客户简称/标识"
         >
           <template #default="{ row }">
-            {{ row.customerName ? row.customerName : "-" }}
+            <!-- {{ row.customerName ? row.customerName : "-" }} -->
+            <el-text class="mx-1">{{ row.customerName.split("/")[0] !== 'null' ? row.customerName.split("/")[0] : '-' }}</el-text>
+            <p>{{ row.customerName.split("/")[1] !== 'null' ? row.customerName.split("/")[1] : '-' }}</p>
           </template>
         </el-table-column>
         <el-table-column
