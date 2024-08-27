@@ -131,6 +131,24 @@ async function fetchData() {
 function setSelectRows(val: any) {
   selectRows.value = val;
 }
+// 过滤数据，后面刘哥过滤
+const tableList = computed(() => {
+  // 合作状态
+  const cooperationList = list.value.filter((item: any) => item.bindStatus === 2)
+  // 解约状态
+  let terminationOfContractList = list.value.filter((item: any) => item.bindStatus === 4)
+  // 解约去重
+  terminationOfContractList = Array.from(new Map(terminationOfContractList.map((item: any) => [item.beInvitationTenantId, item])).values())
+  // 合作的列表的id集合
+  const cooperationIdList = cooperationList.map((item: any) => item.beInvitationTenantId)
+  terminationOfContractList.forEach((item: any) => {
+    if (!cooperationIdList.includes(item.beInvitationTenantId)) {
+      cooperationList.push(item)
+    }
+  })
+  return cooperationList
+})
+
 onMounted(() => {
   columns.value.forEach((item: any) => {
     if (item.checked) {
@@ -144,71 +162,6 @@ onMounted(() => {
 <template>
   <div :class="{ 'absolute-container': tableAutoHeight }">
     <PageMain>
-      <!-- <SearchBar :show-toggle="false">
-        <template #default="{ fold, toggle }">
-          <ElForm
-            :model="queryForm.select"
-            size="default"
-            label-width="100px"
-            inline-message
-            inline
-            class="search-form"
-          >
-            <el-form-item v-show="!fold">
-              <el-input
-                v-model="queryForm.customerShortName"
-                clearable
-                placeholder="客户简称"
-              >
-                <el-option label="name" value="name" />
-              </el-input>
-            </el-form-item>
-            <el-form-item v-show="!fold">
-              <el-select
-                v-model="queryForm.customerStatus"
-                clearable
-                placeholder="客户状态"
-              >
-                <el-option label="禁用" :value="1" />
-                <el-option label="启用" :value="2" />
-              </el-select>
-            </el-form-item>
-            <el-form-item v-show="!fold">
-              <el-select
-                v-model="queryForm.antecedentQuestionnaire"
-                clearable
-                placeholder="前置问卷"
-              >
-                <el-option label="禁用" :value="1" />
-                <el-option label="启用" :value="2" />
-              </el-select>
-            </el-form-item>
-            <ElFormItem>
-              <ElButton type="primary" @click="currentChange()">
-                <template #icon>
-                  <SvgIcon name="i-ep:search" />
-                </template>
-筛选
-</ElButton>
-<ElButton @click="onReset">
-  <template #icon>
-                  <div class="i-grommet-icons:power-reset h-1em w-1em" />
-                </template>
-  重置
-</ElButton>
-<ElButton disabled link @click="toggle">
-  <template #icon>
-                  <SvgIcon
-                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
-                  />
-                </template>
-  {{ fold ? "展开" : "收起" }}
-</ElButton>
-</ElFormItem>
-</ElForm>
-</template>
-</SearchBar>
-<ElDivider border-style="dashed" /> -->
       <el-row>
         <FormLeftPanel>
           <el-button type="primary" size="default" @click="handleAdd">
@@ -222,7 +175,7 @@ onMounted(() => {
             @query-data="queryData" />
         </FormRightPanel>
       </el-row>
-      <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
+      <el-table v-loading="listLoading" :border="border" :data="tableList" :size="lineHeight" :stripe="stripe"
         @selection-change="setSelectRows">
         <el-table-column align="center" type="selection" />
         <el-table-column v-if="checkList.includes('beInvitationTenantId')" align="center" prop="beInvitationTenantId"
