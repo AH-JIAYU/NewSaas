@@ -60,23 +60,107 @@ onMounted(() => {
         <div class="avater">
           <el-avatar style="margin-right: 15px" :size="60" :src="form.avatar" />
           <div class="top">
-            <p class="user"><span class="name">{{ form.name + '(某某某有限公司)' }}</span></p>
+            <p class="user"><span class="name">{{ form.name }}</span>&nbsp;&nbsp;&nbsp;<span v-if="form.companyName"
+                class="name">{{ `(${form.companyName})` }}</span></p>
             <div class="versionDtail">
               <div class="id">
-                ID:585645986545483776
+                ID:{{ form.tenantId }}
               </div>
               <p class="icon">
                 <span class="svg">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="27" height="18" viewBox="0 0 27 18" fill="none">
-                    <g id="Frame 3474899">
-                      <rect y="0.5" width="27" height="17" rx="4" fill="#409EFF" />
-                      <path id="VIP"
-                        d="M4.06 4.932H5.476L7.912 12.036H7.948L10.372 4.932H11.788L8.716 13.5H7.132L4.06 4.932ZM12.7156 4.932H14.0116V13.5H12.7156V4.932ZM15.715 4.932H19.267C21.307 4.932 22.327 5.796 22.327 7.536C22.327 9.288 21.295 10.164 19.243 10.164H17.023V13.5H15.715V4.932ZM17.023 6.048V9.048H19.159C19.807 9.048 20.275 8.928 20.575 8.688C20.863 8.448 21.019 8.064 21.019 7.536C21.019 7.008 20.863 6.624 20.563 6.408C20.263 6.168 19.795 6.048 19.159 6.048H17.023Z"
-                        fill="white" />
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="13" viewBox="0 0 12 13" fill="none">
+                    <g id="Group 18158">
+                      <path id="Vector"
+                        d="M11.9951 4.72393L10.6039 11.0496C10.459 11.7162 9.8721 12.1872 9.19099 12.1872H2.82189C2.14078 12.1872 1.55386 11.7162 1.40895 11.0496L0.017745 4.72393C-0.134418 4.01384 0.727838 3.54286 1.23505 4.05732L2.74218 5.56445L5.37967 1.16622C5.66226 0.695243 6.34337 0.695243 6.61871 1.16622L9.2562 5.56445L10.7633 4.05732C11.2778 3.54286 12.14 4.02109 11.9806 4.72393H11.9951Z"
+                        fill="url(#paint0_radial_356_20621)" />
+                      <path id="Vector_2"
+                        d="M7.9686 7.33423L6.50361 8.80055C6.11327 9.19126 5.4801 9.19154 5.0894 8.8012L3.62109 7.33423"
+                        stroke="white" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" />
                     </g>
+                    <defs>
+                      <radialGradient id="paint0_radial_356_20621" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"
+                        gradientTransform="translate(0.724584 4.43591) rotate(42.3974) scale(11.2835 11.9044)">
+                        <stop stop-color="#92C7FE" />
+                        <stop offset="0.5" stop-color="#7ABCFF" />
+                        <stop offset="1" stop-color="#3498FF" />
+                      </radialGradient>
+                    </defs>
                   </svg>
                 </span>
-                <span class="versions">试用版</span>
+                <span style="color: #409EFF;" class="versions">试用版</span>
+              </p>
+              <p class="icon" v-show="0">
+                <span class="svg">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="15" viewBox="0 0 14 15" fill="none">
+                    <g id="Group 476">
+                      <g id="Group">
+                        <g id="Group_2">
+                          <path id="Union" fill-rule="evenodd" clip-rule="evenodd"
+                            d="M6.22119 10.8757C6.22119 10.7472 6.16008 10.6139 6.0423 10.5627C4.7471 9.99957 3.67669 8.37056 3.18659 6.89275C3.12196 6.69785 2.85856 6.61724 2.65323 6.61724V6.61724C1.50501 6.61724 0.578125 5.69036 0.578125 4.54214V3.15874C0.578125 2.77831 0.889392 2.46704 1.26983 2.46704C1.64405 2.46704 1.99426 2.57795 2.28771 2.76983C2.34249 2.80565 2.41903 2.75984 2.40827 2.69528V2.69528C2.26993 1.8514 2.92013 1.08362 3.77092 1.08362H10.1899C11.0476 1.08362 11.6978 1.8514 11.5525 2.69528V2.69528C11.5408 2.76571 11.625 2.8156 11.6847 2.77635C11.9825 2.58043 12.3384 2.46704 12.7191 2.46704C13.0996 2.46704 13.4108 2.77831 13.4108 3.15874V4.54214C13.4108 5.69036 12.484 6.61724 11.3357 6.61724V6.61724C11.1217 6.61724 10.8388 6.69991 10.7712 6.90302C10.2593 8.4392 9.12153 10.1303 7.7625 10.6245C7.66191 10.6611 7.60459 10.7686 7.60459 10.8757V10.8757V11.5674C7.60459 11.6182 7.59911 11.6677 7.5887 11.7154C7.58007 11.755 7.60117 11.7963 7.63956 11.8093V11.8093L8.68048 12.1563C8.76213 12.1835 8.84713 12.2017 8.93207 12.2198L8.93208 12.2198L8.93209 12.2198C9.0593 12.247 9.18635 12.2742 9.30173 12.3316C9.36798 12.3646 9.42789 12.4079 9.47949 12.4595C9.60399 12.584 9.68008 12.7569 9.68008 12.9506C9.68008 13.1443 9.60399 13.3172 9.47949 13.4417C9.35498 13.5662 9.18206 13.6423 8.98838 13.6423H4.83818C4.64451 13.6423 4.47158 13.5662 4.34708 13.4417C4.22257 13.3172 4.14648 13.1443 4.14648 12.9506C4.14648 12.7569 4.22257 12.584 4.34708 12.4595C4.39867 12.4079 4.45858 12.3646 4.52484 12.3316C4.64022 12.2742 4.76727 12.247 4.89449 12.2198L4.8945 12.2198L4.89451 12.2198L4.89452 12.2198C4.97945 12.2017 5.06445 12.1835 5.14608 12.1563L6.187 11.8093V11.8093C6.225 11.7965 6.24589 11.7556 6.23728 11.7164C6.22675 11.6684 6.22119 11.6185 6.22119 11.5674V10.8757V10.8757Z"
+                            fill="url(#paint0_radial_356_20626)" />
+                        </g>
+                        <path id="Star 1"
+                          d="M6.55778 3.08817C6.74538 2.7326 7.25462 2.7326 7.44222 3.08817L7.6876 3.55325C7.75995 3.69037 7.89181 3.78618 8.04458 3.81261L8.56272 3.90226C8.95886 3.9708 9.11623 4.45512 8.83603 4.74342L8.46954 5.1205C8.36149 5.23168 8.31112 5.3867 8.33319 5.54016L8.40804 6.06064C8.46527 6.45858 8.05328 6.7579 7.69251 6.58051L7.22062 6.34848C7.0815 6.28007 6.9185 6.28007 6.77938 6.34848L6.30749 6.58051C5.94672 6.7579 5.53473 6.45858 5.59196 6.06064L5.66681 5.54016C5.68888 5.3867 5.63851 5.23168 5.53046 5.1205L5.16397 4.74342C4.88377 4.45512 5.04113 3.9708 5.43728 3.90226L5.95542 3.81261C6.10819 3.78618 6.24005 3.69037 6.3124 3.55325L6.55778 3.08817Z"
+                          fill="white" />
+                      </g>
+                    </g>
+                    <defs>
+                      <radialGradient id="paint0_radial_356_20626" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"
+                        gradientTransform="translate(1.35299 5.08384) rotate(43.3109) scale(12.2463 12.9511)">
+                        <stop stop-color="#FFCB84" />
+                        <stop offset="0.5" stop-color="#FFB652" />
+                        <stop offset="1" stop-color="#FB9201" />
+                      </radialGradient>
+                    </defs>
+                  </svg>
+                </span>
+                <span style="color: #FCB149;" class="versions">基础版</span>
+              </p>
+              <p class="icon" v-show="0">
+                <span class="svg">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="13" viewBox="0 0 14 13" fill="none">
+                    <g id="Group 18173">
+                      <path id="Vector"
+                        d="M11.0785 1.40997C10.7219 0.789005 10.0604 0.406128 9.34427 0.406128H4.65573C3.93961 0.406128 3.27814 0.789006 2.92146 1.40997L0.57182 5.50061C0.217704 6.11711 0.217495 6.87526 0.571272 7.49196L2.92165 11.5891C3.27818 12.2106 3.93995 12.5939 4.65646 12.5939H9.34354C10.06 12.5939 10.7218 12.2106 11.0784 11.5891L13.4287 7.49196C13.7825 6.87526 13.7823 6.11711 13.4282 5.50061L11.0785 1.40997Z"
+                        fill="url(#paint0_radial_356_20639)" />
+                      <path id="Star 2"
+                        d="M6.55778 3.8693C6.74538 3.51372 7.25462 3.51372 7.44222 3.8693L7.95504 4.84127C8.02739 4.9784 8.15925 5.0742 8.31202 5.10063L9.3949 5.288C9.79104 5.35654 9.9484 5.84086 9.66821 6.12916L8.90227 6.91724C8.79422 7.02841 8.74385 7.18343 8.76592 7.33689L8.92235 8.42466C8.97958 8.8226 8.56759 9.12192 8.20682 8.94453L7.22062 8.45961C7.0815 8.3912 6.9185 8.3912 6.77938 8.45961L5.79318 8.94453C5.43241 9.12192 5.02042 8.8226 5.07765 8.42466L5.23408 7.33689C5.25615 7.18343 5.20578 7.02841 5.09773 6.91724L4.33179 6.12916C4.0516 5.84086 4.20896 5.35654 4.6051 5.288L5.68798 5.10063C5.84075 5.0742 5.97261 4.9784 6.04496 4.84127L6.55778 3.8693Z"
+                        fill="white" />
+                    </g>
+                    <defs>
+                      <radialGradient id="paint0_radial_356_20639" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"
+                        gradientTransform="translate(0.845348 4.2882) rotate(39.9829) scale(12.6873 13.2353)">
+                        <stop stop-color="#FF98A0" />
+                        <stop offset="0.5" stop-color="#FF717C" />
+                        <stop offset="1" stop-color="#FB5765" />
+                      </radialGradient>
+                    </defs>
+                  </svg>
+                </span>
+                <span style="color: #FE616E;" class="versions">高级版</span>
+              </p>
+              <p class="icon" v-show="0">
+                <span class="svg">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="13" viewBox="0 0 14 13" fill="none">
+                    <g id="Group 18168">
+                      <path id="Vector"
+                        d="M11.0778 1.014C10.7034 0.644087 10.1984 0.436646 9.67208 0.436646H4.32071C3.79356 0.436646 3.28773 0.644762 2.91322 1.01574L1.28383 2.62973C0.55471 3.35197 0.490571 4.50886 1.13539 5.30726L5.4407 10.6381C6.2409 11.6289 7.75101 11.6293 8.5518 10.639L12.8617 5.30917C13.5078 4.51006 13.4432 3.35129 12.7122 2.62897L11.0778 1.014Z"
+                        fill="url(#paint0_radial_356_20644)" />
+                      <path id="Vector_2"
+                        d="M9.625 3.93665L7.80193 6.36963C7.40216 6.90314 6.60216 6.90349 6.20193 6.37033L4.375 3.93665"
+                        stroke="white" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" />
+                    </g>
+                    <defs>
+                      <radialGradient id="paint0_radial_356_20644" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"
+                        gradientTransform="translate(0.845348 4.29929) rotate(39.8413) scale(12.6612 13.1962)">
+                        <stop stop-color="#D395FC" />
+                        <stop offset="0.5" stop-color="#C46AFF" />
+                        <stop offset="1" stop-color="#AD33FC" />
+                      </radialGradient>
+                    </defs>
+                  </svg>
+                </span>
+                <span style="color: #AD68DA;" class="versions">旗舰版</span>
               </p>
             </div>
           </div>
@@ -89,11 +173,6 @@ onMounted(() => {
               </g>
             </svg></span>
         </ElButton>
-        <!-- <el-text
-          style="align-self: flex-end; flex: 1; text-align: right; color: #fff"
-          class="m-4"
-          >ID:13246578913</el-text
-        > -->
       </div>
       <div class="center">
         <div class="version b-r-5" style="background-color: #F9FCFF;">
@@ -963,8 +1042,11 @@ li {
 
     .svg {
       display: inline-block;
-      width: 1.6875rem;
-      height: 1.0625rem;
+      width: .75rem;
+      height: .710625rem;
+      line-height: .710625rem;
+      /* 11.37/16 */
+      ;
     }
 
     .versions {
@@ -997,7 +1079,7 @@ li {
   .versionTop {
     min-width: 22.8125rem;
     height: 12.25rem;
-    margin: 1rem 1.4375rem 1.5625rem 1rem;
+    margin: 1rem 1.4375rem 0 1rem;
     border-radius: 0px 0px 0px 0px;
     border-bottom: 1px solid rgba(170, 170, 170, 0.3);
 
@@ -1108,6 +1190,7 @@ li {
       width: 22.8125rem;
       height: 3.0625rem;
       background: #409EFF;
+      font-size: 18px;
       border: none;
       border-radius: 8px 8px 8px 8px;
 
@@ -1122,6 +1205,7 @@ li {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: 10px;
     width: 24.25rem;
     height: 13.875rem;
 

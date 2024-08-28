@@ -117,21 +117,21 @@ function getDataList() {
       </el-row>
       <div class="showDataRow" :gutter="24">
         <div class="showDataCol">
-          <p class="showDataP">今日参与量</p>
+          <p class="showDataP">{{data.search.type === 'month' ? '当月参与量' : '今日参与量'}}</p>
           <div class="showDataCount">
             <span class="showDataSpanLeft">{{ data.dataScreening?.participationVolume || 0 }}</span>
             <span class="showDataSpanRight"><span class="dd"></span><span class="participate">{{data.search.type === 'month' ? '上月' : '昨日'}}：{{ data.dataScreening?.participationVolumeDifference || 0 }}</span></span>
           </div>
         </div>
         <div class="showDataCol">
-          <p class="showDataP">今日完成量</p>
+          <p class="showDataP">{{data.search.type === 'month' ? '当月完成量' : '今日完成量'}}</p>
           <div class="showDataCount">
             <span class="showDataSpanLeft">{{ data.dataScreening?.completedQuantity || 0 }}</span>
             <span class="showDataSpanRight"><span class="dd"></span><span class="participate">{{data.search.type === 'month' ? '上月' : '昨日'}}：{{ data.dataScreening?.completedQuantityDifference || 0 }}</span></span>
           </div>
         </div>
         <div class="showDataCol">
-          <p class="showDataP">今日营业额</p>
+          <p class="showDataP">{{data.search.type === 'month' ? '当月营业额' : '今日营业额'}}</p>
           <div class="showDataCount">
             <span class="showDataSpanLeft">{{ data.dataScreening?.turnover || 0 }}</span>
             <span class="showDataSpanRight"><span class="dd"></span><span class="participate">{{data.search.type === 'month' ? '上月' : '昨日'}}：{{ data.dataScreening?.turnoverDifference || 0 }}</span></span>
