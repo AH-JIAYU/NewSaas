@@ -110,10 +110,9 @@ async function fetchData() {
   }
 }
 onMounted(async () => {
-  const { data } = await apiUser.list({
-    name: "",
-    role: "",
-  });
+  const { data } = await apiUser.getTenantStaffList();
+  console.log(data);
+
   userList.value = data;
   columns.value.forEach((item: any) => {
     if (item.checked) {
