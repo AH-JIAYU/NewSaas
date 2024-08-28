@@ -514,8 +514,9 @@ textarea {
     transform: translate(-50%, -50%);
     background-color: #409eff;
   }
-  .el-dialog__footer{
-    border-top: 1px solid rgba(170,170,170,0.3);
+
+  .el-dialog__footer {
+    border-top: 1px solid rgba(170, 170, 170, 0.3);
   }
 
   // label跟输入框之间的边距
@@ -524,7 +525,16 @@ textarea {
   }
 }
 
+.relative{
+  .el-form-item--default{
+    margin-bottom: 1rem;
+  }
+}
 
 .el-tabs__nav-wrap:after {
-  height: 1px;
+  height: .0625rem;
+}
+
+.el-pagination {
+  margin: 1.5rem 0 2.25rem 0;
 }

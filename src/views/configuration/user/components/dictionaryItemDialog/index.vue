@@ -36,24 +36,6 @@ const isEmail = ref<any>();
 const isPhone = ref<any>();
 // 组长
 const getGroup = ref<any>()
-// 父级传递的数据
-// const props = withDefaults(
-//   defineProps<{
-//     catalogueId: string | number;
-//     parentId: string | number;
-//     id?: string | number;
-//     tree: any[];
-//     dataList: any[];
-//     row: string;
-//     level: any;
-//   }>(),
-//   {
-//     catalogueId: "",
-//     parentId: "",
-//     id: "",
-//     level: 1,
-//   }
-// );
 const props: any = defineProps(['catalogueId', 'parentId', 'id', 'tree', 'dataList', 'row', 'level'])
 // 更新数据
 const emits = defineEmits(["success"]);
@@ -98,43 +80,34 @@ const form = ref<any>({
 const validatePhone = (rule: any, value: any, callback: any) => {
   const regExpPhone: any =
     /^(?:(?:\+|00)86)?1(?:(?:3[\d])|(?:4[5-79])|(?:5[0-35-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\d])|(?:9[189]))\d{8}$/;
-  if (!regExpPhone.test(form.value.phoneNumber)) {
-    //
-    callback(new Error("请输入合法手机号"));
+  if (form.value.phoneNumber) {
+    if (!regExpPhone.test(form.value.phoneNumber)) {
+      //
+      callback(new Error("请输入合法手机号"));
+    } else {
+      callback();
+    }
   } else {
     callback();
   }
+
 };
 // 自定义校验邮箱
 const validateEmail = (rule: any, value: any, callback: any) => {
   const regExpEmail: any =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  if (!regExpEmail.test(form.value.email)) {
-    callback(new Error("请输入合法邮箱"));
+  if (form.value.email) {
+    if (!regExpEmail.test(form.value.email)) {
+      callback(new Error("请输入合法邮箱"));
+    } else {
+      callback();
+    }
   } else {
     callback();
   }
-};
-// 动态表单校验
-const chengAccount = () => {
-  if(form.value.phoneNumber){
-      // 手机号
-  if (!form.value.phoneNumber?.includes("@")) {
-    formRules.value.phoneNumber = [
-      { required: true, trigger: "blur", message: "请输入手机号" },
-      { validator: validatePhone, trigger: "blur" },
-    ];
-  } else {
-    //邮箱
-    formRules.value.email = [
-      { required: true, trigger: "blur", message: "请输入邮箱" },
-      { validator: validateEmail, trigger: "blur" },
-    ];
-  }
-  }
-
 
 };
+
 // 校验
 const formRules = ref<FormRules>({
   userName: [{ required: true, message: "请输入用户名" }],
@@ -144,20 +117,10 @@ const formRules = ref<FormRules>({
     { min: 6, max: 18, trigger: "blur", message: "密码长度为6到18位" },
   ],
   name: [{ required: true, message: "请输入用户名", trigger: "blur" }],
-  phoneNumber: [{ required: false, message: "请输入手机号", trigger: "blur" }],
-  email: [{ required: false, message: "请输入邮箱", trigger: "blur" }],
+  phoneNumber: [{ validator: validatePhone, trigger: "blur" },],
+  email: [{ validator: validateEmail, trigger: "blur" },],
 });
 
-// const handleChange = (val: any) => {
-//   if (val !== form.value.phone || val !== form.value.email) {
-//     isTrue.value = true;
-//   }
-// };
-// // 点击到职位管理
-// const routerPosition = () => {
-//   router.push('/configuration/position_manage')
-//   onCancel()
-// }
 // 切换部门
 const departmentChange = async (val: any) => {
   const { data } = await apiDep.departmentGroup({ id: val });
@@ -165,25 +128,20 @@ const departmentChange = async (val: any) => {
   getGroup.value = data[0].director
 };
 // 提交数据
-function onSubmit() { 
-  if(!form.value.email) {
+function onSubmit() {
+  if (!form.value.email) {
     formRules.value.email = []
     formRef.value.clearValidate('email');
   }
-  if(!form.value.phoneNumber) {
+  if (!form.value.phoneNumber) {
     formRules.value.phoneNumber = []
     formRef.value.clearValidate('phoneNumber');
   }
   if (form.value.id === "") {
     formRef.value &&
-      formRef.value.validate((valid:any) => {
+      formRef.value.validate((valid: any) => {
         if (valid) {
           delete form.value.id;
-          // if (form.value.type === "phone") {
-          //   delete form.value.email;
-          // } else {
-          //   delete form.value.phone;
-          // }
           api.create(form.value).then(() => {
             ElMessage.success({
               message: "新增成功",
@@ -196,7 +154,7 @@ function onSubmit() {
       });
   } else {
     formRef.value &&
-      formRef.value.validate((valid:any) => {
+      formRef.value.validate((valid: any) => {
         if (valid) {
           const {
             id,
@@ -236,11 +194,7 @@ function onSubmit() {
           }
           if (!params.password) {
             delete params.password;
-          }
-          // if (!isTrue.value) {
-          //   delete params.phone;
-          //   delete params.email;
-          // }
+          } 
           api.edit(params).then(() => {
             ElMessage.success({
               message: "编辑成功",
@@ -295,7 +249,7 @@ onMounted(async () => {
 <template>
   <ElDrawer v-model="visible" :title="title" size="60%" :close-on-click-modal="false" append-to-body destroy-on-close
     @closed="onCancel">
-    <ElForm ref="formRef" :model="form" :rules="formRules" label-width="100px">
+    <ElForm ref="formRef" :model="form" :rules="formRules" label-width="100px" :validate-on-rule-change="false">
       <el-card class="box-card">
         <template #header>
           <div class="card-header">
@@ -332,12 +286,12 @@ onMounted(async () => {
           </el-col> -->
           <el-col :span="8">
             <el-form-item label="手机号" prop="phoneNumber">
-              <el-input v-model="form.phoneNumber" placeholder="请输入手机号" clearable @blur="chengAccount" />
+              <el-input v-model="form.phoneNumber" placeholder="请输入手机号" clearable />
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="邮箱" prop="email">
-              <el-input v-model="form.email" placeholder="请输入邮箱" clearable @blur="chengAccount" />
+              <el-input v-model="form.email" placeholder="请输入邮箱" clearable />
             </el-form-item>
           </el-col>
           <el-col :span="8">

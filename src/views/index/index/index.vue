@@ -119,9 +119,9 @@ function echarts1() {
 // 客户总览
 function echarts2() {
   const Data = transformData(cloneDeep(data.value.dataCenterCustomerVOS));
-  const legendData = data.value.dataCenterCustomerVOS.map((item: any) => {
-    return item.customerName;
-  });
+  // const totalData = data.value.dataCenterCustomerVOS.map((item: any) => {
+  //   return item.projectTotal;
+  // });
   chart2 = echarts.init(chart2Ref.value);
   // 配置数据
   const option = {
@@ -173,7 +173,7 @@ function echarts2() {
           {
             type: "text",
             style: {
-              text: `${Data.length}`,
+              text: `${data.value.dataCenterCustomerVOS.reduce((sum:any, item:any) => sum + item.projectTotal, 0)}`,
               textAlign: "center",
               textVerticalAlign: "top",
               fontSize: 30,
@@ -554,8 +554,7 @@ onMounted(async () => {
                   完成数据排名
                 </div>
               </div>
-              <el-table v-if="data.dataCenterSupplierCompletedQuantities.length"
-                :data="data.dataCenterSupplierCompletedQuantities" style="width: 100%">
+              <el-table :data="data.dataCenterSupplierCompletedQuantities" style="width: 100%">
                 <el-table-column type="index" label="序号" width="60" />
                 <el-table-column align="center" prop="supplierName" label="供应商名称"><template #default="{ row }">
                     {{ row.supplierName ? row.supplierName : "-" }}
@@ -589,7 +588,7 @@ onMounted(async () => {
                   </template>
                 </el-table-column>
                 <template #empty>
-                  <el-empty description="暂无数据" />
+                  <el-empty  :image-size="100" description="暂无数据" />
                 </template>
               </el-table>
             </div>
@@ -601,24 +600,24 @@ onMounted(async () => {
                 </div>
               </div>
               <el-table :data="data.dataCenterSupplierTurnovers" style="width: 100%">
-                <el-table-column type="index" label="序号"  width="60" />
+                <el-table-column type="index" label="序号" width="60" />
                 <el-table-column align="center" prop="name" label="供应商名称"><template #default="{ row }">
                     {{ row.name ? row.name : "-" }}
                   </template>
                 </el-table-column>
                 <el-table-column sortable align="center" prop="dayTurnover" label="日">
                   <template #default="{ row }">
-                    <CurrencyType />{{ row.dayTurnover }}
+                    <CurrencyType />{{ row.dayTurnover ? row.dayTurnover : 0 }}
                   </template>
                 </el-table-column>
                 <el-table-column sortable align="center" prop="monthTurnover" label="月">
                   <template #default="{ row }">
-                    <CurrencyType />{{ row.monthTurnover }}
+                    <CurrencyType />{{ row.monthTurnover ? row.monthTurnover : 0 }}
                   </template>
                 </el-table-column>
                 <el-table-column sortable align="center" prop="yearTurnover" label="年">
                   <template #default="{ row }">
-                    <CurrencyType />{{ row.yearTurnover }}
+                    <CurrencyType />{{ row.yearTurnover ? row.yearTurnover : 0 }}
                   </template>
                 </el-table-column>
                 <template #empty>
@@ -1215,5 +1214,8 @@ onMounted(async () => {
 
 :deep(.el-card__body) {
   min-height: 25rem;
+}
+:deep(.el-table__empty-text){
+  line-height: 100%;
 }
 </style>

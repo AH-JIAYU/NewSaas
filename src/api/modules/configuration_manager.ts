@@ -3,6 +3,8 @@ import api from '../index'
 export default {
   // 获取
   list: (data: any) => api.post('staff/getStaffList',data),
+  // 获取
+  getTenantStaffListData: (data: any) => api.post('staff/getTenantStaffListData',data),
   // 新增
   create: (data: any) => api.post('staff/insertStaff', data),
   // 修改

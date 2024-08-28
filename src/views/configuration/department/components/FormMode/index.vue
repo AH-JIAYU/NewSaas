@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import type { DetailFormProps } from '../../types'
 import DetailForm from '../DetailForm/index.vue'
+import useDepartmentStore from "@/store/modules/department";// 部门
 
 // 父级传递数据
 const props = defineProps(['id', 'row', 'mode'])
+const departmentStore = useDepartmentStore();// 部门
 // 更新数据
 const emits = defineEmits<{
   success: []
@@ -19,6 +21,7 @@ const title = computed(() => props.id === '' ? '新增部门' : '编辑部门')
 // 提交
 function onSubmit() {
   formRef.value.submit().then(() => {
+    departmentStore.department=null
     emits('success')
     onCancel()
   })
@@ -31,7 +34,8 @@ function onCancel() {
 
 <template>
   <div>
-    <ElDialog v-if="props.mode === 'dialog'" v-model="visible" :title="title" width="600px" :close-on-click-modal="false" append-to-body destroy-on-close>
+    <ElDialog v-if="props.mode === 'dialog'" v-model="visible" :title="title" width="600px"
+      :close-on-click-modal="false" append-to-body destroy-on-close>
       <DetailForm ref="formRef" v-bind="props" />
       <template #footer>
         <ElButton size="large" @click="onCancel">
@@ -42,7 +46,8 @@ function onCancel() {
         </ElButton>
       </template>
     </ElDialog>
-    <ElDrawer v-else-if="props.mode === 'drawer'" v-model="visible" :title="title" size="40%" :close-on-click-modal="false" destroy-on-close>
+    <ElDrawer v-else-if="props.mode === 'drawer'" v-model="visible" :title="title" size="40%"
+      :close-on-click-modal="false" destroy-on-close>
       <DetailForm v-if="visible" ref="formRef" v-bind="props" />
       <template #footer>
         <ElButton size="large" @click="onCancel">
