@@ -81,7 +81,7 @@ const useUserStore = defineStore(
         storage.local.remove("token");
         storage.local.remove("avatar");
         storage.local.remove("userId");
-        storage.local.remove("login_account");
+        // storage.local.remove("login_account");
         storage.local.remove("tabbarPinData");
         account.value = "";
         token.value = "";

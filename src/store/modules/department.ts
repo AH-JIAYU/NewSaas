@@ -4,9 +4,9 @@ const useDepartmentStore = defineStore(
   // 唯一ID
   'department',
   () => {
-    const department = ref([])
+    const department = ref<any>(null)
     const getDepartment = async () => {
-      if (department.value.length) {
+      if (department.value) {
         return department.value
       }
       const { data } = await api.list({})

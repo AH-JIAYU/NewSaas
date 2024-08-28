@@ -10,10 +10,13 @@ import eventBus from "@/utils/eventBus";
 import api from "@/api/modules/department";
 import useTenantStaffStore from "@/store/modules/configuration_manager";
 import useSettingsStore from "@/store/modules/settings";
+import useDepartmentStore from "@/store/modules/department";// 部门
+
 
 defineOptions({
   name: "department",
 });
+const departmentStore = useDepartmentStore();// 部门
 // 用户
 const tenantStaffStore = useTenantStaffStore();
 // 用户数据
@@ -136,6 +139,7 @@ function getDataList() {
     api.list(params).then((res: any) => {
       data.value.loading = false;
       data.value.dataList = res.data.data;
+      departmentStore.department = res.data.data
       pagination.value.total = +res.data.total;
     });
   } catch (error) {

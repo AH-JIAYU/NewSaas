@@ -135,12 +135,6 @@ defineExpose({
                     form.value.commission = 0;
                     form.value.commissionType = 0;
                   }
-                  // if (form.value.director === str) {
-                  //   delete form.value.director;
-                  // }
-                  // if (isDelete.value) {
-                  //   delete form.value.director;
-                  // }
                   api.edit(form.value).then(() => {
                     loading.value = false;
                     ElMessage.success({

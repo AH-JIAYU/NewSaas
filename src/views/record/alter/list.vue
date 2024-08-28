@@ -110,10 +110,7 @@ async function fetchData() {
   }
 }
 onMounted(async () => {
-  const { data } = await apiUser.list({
-    name: "",
-    role: "",
-  });
+  const { data } = await apiUser.getTenantStaffListData({});
   userList.value = data;
   columns.value.forEach((item: any) => {
     if (item.checked) {
@@ -199,6 +196,7 @@ onMounted(async () => {
             <el-text v-if="row.beforeSurveyType === 1 && row.beforeViceType === 9" class="mx-1">数据冻结</el-text>
             <el-text type="danger" v-if="row.beforeSurveyType === 2" class="mx-1">被甄别</el-text>
             <el-text type="primary" v-if="row.beforeSurveyType === 3" class="mx-1">配额满</el-text>
+            <el-text type="success" v-if="row.beforeViceType === 13" class="mx-1">和解</el-text>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('afterType')" prop="afterType" show-overflow-tooltip align="center"
