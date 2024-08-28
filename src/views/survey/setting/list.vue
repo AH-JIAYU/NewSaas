@@ -388,7 +388,7 @@ function onSubmit() {
   }
 }
 
-:deep() {
-  background-color: #fafafa;
-}
+// :deep() {
+//   background-color: #fafafa;
+// }
 </style>
