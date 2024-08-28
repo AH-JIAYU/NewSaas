@@ -476,9 +476,9 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
   }
 }
 
-:deep() {
-  background-color: #fafafa;
-}
+// :deep() {
+//   background-color: #fafafa;
+// }
 
 :deep(.el-table__empty-block) {
   height: 100% !important;
