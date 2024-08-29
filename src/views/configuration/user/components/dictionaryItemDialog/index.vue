@@ -141,7 +141,6 @@ function onSubmit() {
     formRef.value &&
       formRef.value.validate((valid: any) => {
         if (valid) {
-          delete form.value.id;
           api.create(form.value).then(() => {
             ElMessage.success({
               message: "新增成功",

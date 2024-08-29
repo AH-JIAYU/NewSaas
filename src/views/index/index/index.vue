@@ -161,23 +161,23 @@ function echarts2() {
         top: "center",
         bounding: "raw",
         children: [
-          {
-            type: "text",
-            style: {
-              text: `合计:`,
-              fontSize: 14,
-              textAlign: "center",
-              textVerticalAlign: "bottom",
-            },
-          },
+          // {
+          //   type: "text",
+          //   style: {
+          //     text: `合计:`,
+          //     fontSize: 14,
+          //     textAlign: "center",
+          //     textVerticalAlign: "bottom",
+          //   },
+          // },
           {
             type: "text",
             style: {
               text: Data.length,
               textAlign: "center",
-              textVerticalAlign: "top",
+              textVerticalAlign: "middle",
               fontSize: 30,
-              fill: "#e495a4",//合计颜色
+              fill: "#000",//合计颜色
             },
 
           },

@@ -358,9 +358,6 @@ function onDel(row: any) {
     }
   }
 
-  .el-divider {
-    width: calc(100% + 40px);
-    margin-inline: -20px;
-  }
+
 }
 </style>

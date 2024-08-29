@@ -398,10 +398,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
     }
   }
 
-  .el-divider {
-    margin-inline: -20px;
-    width: calc(100% + 40px);
-  }
+
 }
 :deep(.el-table__empty-block) {
   height: 100% !important;
