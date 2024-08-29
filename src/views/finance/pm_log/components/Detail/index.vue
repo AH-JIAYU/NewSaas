@@ -39,6 +39,8 @@ const data = ref<any>({
     // 月份
     month: null,
     id: null,
+    // 类型 1 部门 2小组 3成员
+    type: 3,
   },
 });
 const drawerisible = ref<boolean>(false);

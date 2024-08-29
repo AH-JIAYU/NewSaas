@@ -128,6 +128,12 @@ const data = ref<any>({
   // 列表数据
   dataList: [],
 });
+// 计提规则
+const commissionList = [
+  { label: "完成计提", value: 1 },
+  { label: "审核计提", value: 2 },
+  { label: "收款计提", value: 3 },
+];
 // 获取数据
 function getDataList() {
   try {
@@ -342,10 +348,22 @@ onBeforeUnmount(() => {
             {{ row.memberCount ? row.memberCount : '-' }}
           </template>
         </ElTableColumn>
+        <ElTableColumn v-if="data.checkList.includes('memberCount')" align="center" show-overflow-tooltip
+          prop="memberCount" label="提成比例">
+          <template #default="{ row }">
+            {{ row.commission ? row.commission + '%' : '-' }}
+          </template>
+        </ElTableColumn>
+        <ElTableColumn v-if="data.checkList.includes('memberCount')" align="center" show-overflow-tooltip
+          prop="memberCount" label="计提规则">
+          <template #default="{ row }">
+            {{ row.commissionType ? commissionList[row.commissionType-1].label : '-' }}
+          </template>
+        </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('remark')" align="center" show-overflow-tooltip prop="remark"
           label="备注">
           <template #default="{ row }">
-            {{ row.remark }}
+            {{ row.remark ? row.remark : '-' }}
           </template>
         </ElTableColumn>
         <ElTableColumn label="操作" width="300" align="center" fixed="right">

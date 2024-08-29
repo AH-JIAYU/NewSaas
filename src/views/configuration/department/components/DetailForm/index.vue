@@ -8,7 +8,7 @@ import managerApi from "@/api/modules/configuration_manager";
 
 // 传递数据
 const props = defineProps(["id", "row"]);
-// 类型
+// 计提规则
 const commissionList = [
   { label: "完成计提", value: 1 },
   { label: "审核计提", value: 2 },
@@ -100,14 +100,8 @@ defineExpose({
           formRef.value &&
             formRef.value.validate((valid: any) => {
               if (valid) {
-
                 try {
                   delete form.value.memberCount;
-                  if (form.value.commissionStatus !== 1) {
-                    formRules.value.commission = [];
-                    form.value.commission = 0;
-                    form.value.commissionType = 0;
-                  }
                   loading.value = true;
                   api.create(form.value).then(() => {
                     loading.value = false;
@@ -131,10 +125,6 @@ defineExpose({
                 try {
                   loading.value = true;
                   delete form.value.memberCount;
-                  if (form.value.commissionStatus !== 1) {
-                    form.value.commission = 0;
-                    form.value.commissionType = 0;
-                  }
                   api.edit(form.value).then(() => {
                     loading.value = false;
                     ElMessage.success({
