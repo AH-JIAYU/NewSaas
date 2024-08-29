@@ -573,7 +573,7 @@ const agreements = (val: any) => {
           </ElFormItem> -->
           <!-- v-if="registerForm.companyType === 'company'" -->
           <ElFormItem prop="companyName">
-            <ElInput v-model="registerForm.companyName" placeholder="请输入公司名称" />
+            <ElInput v-model="registerForm.companyName" placeholder="请输入公司名称" tabindex="1" />
           </ElFormItem>
           <!--  v-if="registerForm.companyType === 'company'" -->
           <!-- <ElFormItem prop="taxID">
@@ -584,14 +584,14 @@ const agreements = (val: any) => {
             <ElInput v-model="registerForm.legalPersonName" placeholder="请输入法人姓名" />
           </ElFormItem> -->
           <ElFormItem prop="name">
-            <ElInput v-model="registerForm.name" placeholder="用户名" tabindex="1">
+            <ElInput v-model="registerForm.name" placeholder="用户名" tabindex="2">
               <template #prefix>
                 <SvgIcon name="i-ri:user-3-fill" />
               </template>
             </ElInput>
           </ElFormItem>
           <ElFormItem prop="country">
-            <ElSelect v-model="registerForm.country" placeholder="国家" clearable filterable tabindex="2">
+            <ElSelect v-model="registerForm.country" placeholder="国家" clearable filterable tabindex="3">
               <template #prefix>
                 <SvgIcon name="i-mdi:format-list-bulleted-type" />
               </template>
@@ -599,21 +599,21 @@ const agreements = (val: any) => {
             </ElSelect>
           </ElFormItem>
           <ElFormItem prop="phoneNumber" v-if="registerForm.country === 'CN'">
-            <ElInput v-model="registerForm.phoneNumber" placeholder="手机号" tabindex="3">
+            <ElInput v-model="registerForm.phoneNumber" placeholder="手机号" tabindex="4">
               <template #prefix>
                 <SvgIcon name="i-ant-design:phone-outlined" />
               </template>
             </ElInput>
           </ElFormItem>
           <ElFormItem prop="email" v-else>
-            <ElInput v-model="registerForm.email" placeholder="邮箱" tabindex="3">
+            <ElInput v-model="registerForm.email" placeholder="邮箱" tabindex="4">
               <template #prefix>
                 <SvgIcon name="i-mdi:email" />
               </template>
             </ElInput>
           </ElFormItem>
           <ElFormItem prop="code">
-            <ElInput v-model="registerForm.code" placeholder="验证码" tabindex="4">
+            <ElInput v-model="registerForm.code" placeholder="验证码" tabindex="5">
               <template #prefix>
                 <SvgIcon name="i-ic:baseline-verified-user" />
               </template>
@@ -624,14 +624,14 @@ const agreements = (val: any) => {
             </ElInput>
           </ElFormItem>
           <ElFormItem prop="password">
-            <ElInput v-model="registerForm.password" type="password" placeholder="密码" tabindex="5" show-password>
+            <ElInput v-model="registerForm.password" type="password" placeholder="密码" tabindex="6" show-password>
               <template #prefix>
                 <SvgIcon name="i-ri:lock-2-fill" />
               </template>
             </ElInput>
           </ElFormItem>
           <ElFormItem prop="isInvitation">
-            <el-select v-model="registerForm.isInvitation" tabindex="6" placeholder="是否开启合作邀约" filterable>
+            <el-select v-model="registerForm.isInvitation" tabindex="7" placeholder="是否开启合作邀约" filterable>
               <template #prefix>
                 <SvgIcon name="i-ant-design:container-outlined" />
               </template>
@@ -642,7 +642,7 @@ const agreements = (val: any) => {
           </ElFormItem>
           <ElFormItem prop="agreeToTheAgreement">
             <div class="flex-bar" style="margin: 0">
-              <ElCheckbox v-model="registerForm.agreeToTheAgreement" tabindex="3">
+              <ElCheckbox v-model="registerForm.agreeToTheAgreement" tabindex="8">
                 我已阅读并同意
                 <el-button type="primary" size="default" link @click="agreements(1)">《会员协议》</el-button>和<el-button
                   type="primary" size="default" link @click="agreements(2)">《隐私协议》</el-button>
@@ -650,7 +650,7 @@ const agreements = (val: any) => {
             </div>
           </ElFormItem>
         </div>
-        <ElButton tabindex="7" :loading="loading" type="primary" size="large" style="width: 100%; margin-top: 20px"
+        <ElButton tabindex="9" :loading="loading" type="primary" size="large" style="width: 100%; margin-top: 20px"
           @click.prevent="handleRegister">
           注册
         </ElButton>

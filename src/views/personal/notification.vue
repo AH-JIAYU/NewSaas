@@ -45,7 +45,6 @@ function showEditCooperation(row: any) {
 }
 // 切换消息或待办
 const changeTabs = async () => {
-  console.log('data.value.tabs', data.value.tabs)
   // 清除右侧组件
   data.value.selectId = "";
   // 默认显示未读
