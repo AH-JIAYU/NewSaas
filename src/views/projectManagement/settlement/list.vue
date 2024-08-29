@@ -205,6 +205,25 @@ const timeChange = () => {
   queryForm.startTime = timeArr.value[0];
   queryForm.endTime = timeArr.value[1];
 };
+// 格式化日期范围的方法
+const formatDateRange = (timestamps:any) => {
+  if (!timestamps || timestamps.length === 0) return '';
+  const formatDate = (date:any) => {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1; // 月份从0开始
+    const day = date.getDate();
+    return `${year}-${month}-${day}`;
+  };
+  // 如果只有一个时间
+  if (timestamps.length === 1) {
+    const singleDate = new Date(parseInt(timestamps[0]));
+    return formatDate(singleDate);
+  } else if (timestamps.length === 2) {
+    const [startTimestamp, endTimestamp] = timestamps.map((ts:any) => new Date(parseInt(ts)));
+    return `${formatDate(startTimestamp)} - ${formatDate(endTimestamp)}`;
+  }
+  return '';
+};
 // 具体的位置信息
 const comCountryId = computed(() => (countryIdList: any) => {
   const lists = countryList.value
@@ -587,10 +606,9 @@ function handleMoreOperating(command: string, row: any) {
           label="节点时间"
         >
           <template #default="{ row }">
-            <el-text v-if="row.nodeTime === '[]'" class="mx-1">'-'</el-text>
-            <el-text v-else class="mx-1"
-              >{{  format(row.nodeTime[0]) }}-{{ row.nodeTime[1] }}</el-text
-            >
+            <el-text v-if="row.nodeTime.length"  class="mx-1"
+              >{{  formatDateRange(row.nodeTime) }}</el-text>
+              <el-text v-else class="mx-1">-</el-text>
           </template>
         </el-table-column>
         <el-table-column

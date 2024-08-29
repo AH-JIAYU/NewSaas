@@ -307,6 +307,7 @@ onMounted(async () => {
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>
+          <!-- v-auth="'/list-get-addProject'" -->
           <el-button type="primary" size="default" @click="addProject">
             新增项目
           </el-button>

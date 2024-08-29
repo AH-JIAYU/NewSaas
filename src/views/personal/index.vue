@@ -1073,23 +1073,24 @@ li {
 .version {
   width: calc(25% - 1rem);
   height: 28.625rem;
+  padding: 16px 24px 32px 16px;
   background: #F9FCFF;
   border-radius: 8px 8px 8px 8px;
 
   .versionTop {
-    min-width: 22.8125rem;
+    min-width: 100%;
     height: 12.25rem;
-    margin: 1rem 1.4375rem 0 1rem;
+    // margin: 1rem 1.4375rem 0 1rem;
     border-radius: 0px 0px 0px 0px;
     border-bottom: 1px solid rgba(170, 170, 170, 0.3);
 
     .titleIcon {
       display: flex;
-      min-width: 22.8125rem;
+      min-width: 100%;
       height: 8.25rem;
 
       .versionName {
-        width: 13.6875rem;
+        width: 64%;
         height: 5.6875rem;
         border-radius: 0px 0px 0px 0px;
 
@@ -1172,22 +1173,20 @@ li {
       }
 
       .iconBig {
-        width: 132px;
-        height: 132px;
+        width: 36%;
+        height: 8.25rem;
         background: rgba(217, 217, 217, 0);
         border-radius: 0px 0px 0px 0px;
 
         .svg {
-          width: 8.25rem
-            /* 132/16 */
-          ;
+          width: 100%;
           height: 8.25rem;
         }
       }
     }
 
     .btn {
-      width: 22.8125rem;
+      width: 100%;
       height: 3.0625rem;
       background: #409EFF;
       font-size: 18px;
@@ -1206,7 +1205,7 @@ li {
     justify-content: center;
     align-items: center;
     margin-top: 10px;
-    width: 24.25rem;
+    // width: 24.25rem;
     height: 13.875rem;
 
     ul {
