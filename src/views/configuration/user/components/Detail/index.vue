@@ -97,8 +97,8 @@ defineExpose({
               justify-content: center;
               align-items: flex-start;
             " :span="1.5">
-    <!-- <el-avatar :size="50" :src="detailData.avatar" /> -->
-    <div class="avatar">{{detailData.name}}</div>
+    <el-avatar v-if="detailData.avatar" :size="50" :src="detailData.avatar" />
+    <div v-else class="avatar">{{detailData.name}}</div>
   </el-col>
   <el-col style="
               display: flex;
