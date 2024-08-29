@@ -76,54 +76,36 @@ const useUserStore = defineStore(
       val: any,
       redirect = router.currentRoute.value.fullPath
     ) {
-      if (val === 0) {
-        storage.local.remove("account");
-        storage.local.remove("token");
-        storage.local.remove("avatar");
-        storage.local.remove("userId");
-        // storage.local.remove("login_account");
-        storage.local.remove("tabbarPinData");
-        account.value = "";
-        token.value = "";
-        avatar.value = "";
-        userId.value = "";
-        permissions.value = [];
-        tabbarStore.clean();
-        routeStore.removeRoutes();
-        menuStore.setActived(0);
-        router.push({
-          name: "login",
-          query: {
-            ...(router.currentRoute.value.path !==
-              settingsStore.settings.home.fullPath &&
-              router.currentRoute.value.name !== "login" && { redirect }),
-          },
-        });
-      } else {
+      //断开websocket连接
+      notificationStore.disconnect()
+      //主动退出登录
+      if (val !== 0) {
         await api.logout();
-        storage.local.remove("account");
-        storage.local.remove("token");
-        storage.local.remove("avatar");
-        storage.local.remove("userId");
         storage.local.remove("login_account");
-        storage.local.remove("tabbarPinData");
-        account.value = "";
-        token.value = "";
-        avatar.value = "";
-        userId.value = "";
-        permissions.value = [];
-        tabbarStore.clean();
-        routeStore.removeRoutes();
-        menuStore.setActived(0);
-        router.push({
-          name: "login",
-          query: {
-            ...(router.currentRoute.value.path !==
-              settingsStore.settings.home.fullPath &&
-              router.currentRoute.value.name !== "login" && { redirect }),
-          },
-        });
       }
+      storage.local.remove("account");
+      storage.local.remove("token");
+      storage.local.remove("avatar");
+      storage.local.remove("userId");
+
+      storage.local.remove("tabbarPinData");
+      account.value = "";
+      token.value = "";
+      avatar.value = "";
+      userId.value = "";
+      permissions.value = [];
+      tabbarStore.clean();
+      routeStore.removeRoutes();
+      menuStore.setActived(0);
+      router.push({
+        name: "login",
+        query: {
+          ...(router.currentRoute.value.path !==
+            settingsStore.settings.home.fullPath &&
+            router.currentRoute.value.name !== "login" && { redirect }),
+        },
+      });
+
     }
     // 获取权限
     async function getPermissions() {
@@ -257,7 +239,7 @@ const useUserStore = defineStore(
         if (storage.local.has("userPreferences")) {
           data =
             JSON.parse(storage.local.get("userPreferences") as string)[
-              account.value
+            account.value
             ] || {};
         }
       } else if (

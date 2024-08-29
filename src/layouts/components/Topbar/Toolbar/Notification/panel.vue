@@ -29,6 +29,10 @@ const cooperation = (row: any) => {
     },
   });
 };
+ onMounted(() => {
+  // 查看websocket状态
+  notificationStore.isItConnected()
+ })
 </script>
 
 <template>
