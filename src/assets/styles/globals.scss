@@ -525,8 +525,8 @@ textarea {
   }
 }
 
-.relative{
-  .el-form-item--default{
+.relative {
+  .el-form-item--default {
     margin-bottom: 1rem;
   }
 }
@@ -537,4 +537,31 @@ textarea {
 
 .el-pagination {
   margin: 1.5rem 0 2.25rem 0;
+}
+
+// 连接websocket失败提示框
+.message--connectionError {
+  .el-icon.el-message__icon.el-message-icon--error {
+    display: none;
+  }
+
+  .el-message__content {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    .icon{
+      margin-right: .3125rem;
+    }
+    button {
+      border-color: transparent;
+      color: var(--el-color-primary);
+      background: transparent;
+      padding: 2px;
+      height: auto;
+      font-size: var(--el-font-size-base);
+      border-radius: var(--el-border-radius-base);
+      cursor: pointer;
+    }
+  }
+
 }

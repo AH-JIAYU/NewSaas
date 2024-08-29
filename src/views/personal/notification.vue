@@ -45,7 +45,6 @@ function showEditCooperation(row: any) {
 }
 // 切换消息或待办
 const changeTabs = async () => {
-  console.log('data.value.tabs', data.value.tabs)
   // 清除右侧组件
   data.value.selectId = "";
   // 默认显示未读
@@ -78,19 +77,21 @@ const filterTodoList = computed(() => {
 })
 
 onMounted(() => {
+  // 查看websocket状态
+  notificationStore.isItConnected()
+  // 从铃铛的消息列表点进来会直接展示这条消息
   data.value.tabs = route.query.type == 2 ? "cooperation" : "news";
-
   if (route.query.id) {
     if (Number(route.query.type) === 1) {
       const findData = notificationStore.messageList.find(
         (item: any) => item.id === route.query.id
       );
-      showEditNews(findData);
+      findData && showEditNews(findData);
     } else if (Number(route.query.type) === 2) {
       const findData = notificationStore.todoList.find(
         (item: any) => item.id === route.query.id
       );
-      showEditCooperation(findData);
+      findData && showEditCooperation(findData);
     }
   }
 });

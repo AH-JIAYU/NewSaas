@@ -173,7 +173,7 @@ function echarts2() {
           {
             type: "text",
             style: {
-              text: `${data.value.dataCenterCustomerVOS.reduce((sum:any, item:any) => sum + item.projectTotal, 0)}`,
+              text: Data.length,
               textAlign: "center",
               textVerticalAlign: "top",
               fontSize: 30,
