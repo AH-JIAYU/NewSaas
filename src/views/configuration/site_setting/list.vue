@@ -18,7 +18,7 @@ const userStore = useUserStore();
 // 隐藏上传
 const upload = ref(false);
 // 接口地址
-const Url = import.meta.env.VITE_APP_API_BASEURL + "tenant-logo/upload";
+const Url = import.meta.env.VITE_APP_API_BASEURL + "/tenant-logo/upload";
 const { toClipboard } = useClipboard();
 const activeTopTab = ref<any>("基本设置");
 // 加载
