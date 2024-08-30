@@ -115,12 +115,12 @@ async function getDataList() {
 const getLogo = async () => {
   fileList.value = []
   const res = await apiLogo.getTenantLogo();
-  userStore.logo = res.data.logoUrl
+  userStore.logo = res?.data.logoUrl
   fileList.value.push({
       name: "file",
-      url: res.data.logoUrl,
+      url: res?.data?.logoUrl,
     });
-    if ( res.data.logoUrl !== "") {
+    if ( res?.data?.logoUrl !== "") {
       upload.value = true;
     }
 }

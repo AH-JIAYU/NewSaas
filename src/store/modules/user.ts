@@ -118,7 +118,7 @@ const useUserStore = defineStore(
     // 获取logo
     async function getTenantLogo() {
       const res = await apiLogo.getTenantLogo();
-      logo.value = res.data.logoUrl
+      logo.value = res?.data?.logoUrl
     }
     // 获取货币类型
     async function getCurrencyType() {

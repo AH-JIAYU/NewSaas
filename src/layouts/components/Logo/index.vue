@@ -9,7 +9,12 @@ defineOptions({
 const userStore = useUserStore();
 // 网站LOGO
 const logo = ref<any>()
-logo.value = userStore.logo
+if(userStore.logo) {
+  logo.value = userStore.logo
+}else {
+  logo.value = imgLogo
+}
+
 withDefaults(
   defineProps<{
     showLogo?: boolean
