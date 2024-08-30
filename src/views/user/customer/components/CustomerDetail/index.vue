@@ -23,6 +23,9 @@ function close() {
   emit("fetch-data");
   drawerisible.value = false;
 }
+const handleCheck=(row:any)=>{
+  checkRef.value.showEdit(row)
+}
 
 const operationType = (type: number) => {
   const typeArray = ["新增", "编辑", "启用", "禁用"];

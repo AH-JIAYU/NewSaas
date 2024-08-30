@@ -12,11 +12,6 @@ async function showEdit(rowObj: any) {
     tenantCustomerOperationId: rowObj.tenantCustomerOperationId,
   };
   const { status, data } = await obtainLoading(api.getRecordList(params));
-  status === 1 &&
-    ElMessage.success({
-      message: "获取成功",
-      center: true,
-    });
   // 获取修改的列表
   editRecordList.value = data.getTenantCustomerOperationRecordInfoList;
   dialogTableVisible.value = true;
