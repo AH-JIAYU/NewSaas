@@ -24,7 +24,7 @@ const userStore = useUserStore();
 // 更新
 const emits = defineEmits(["success"]);
 // 接口地址
-const Url = import.meta.env.VITE_APP_API_BASEURL + "user/uploadAvatar";
+const Url = import.meta.env.VITE_APP_API_BASEURL + "/user/uploadAvatar";
 //基础字典
 const basicDictionaryStore = useBasicDictionaryStore();
 // 国家list
