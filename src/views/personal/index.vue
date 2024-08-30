@@ -6,6 +6,9 @@ import api from "@/api/modules/personal_setting";
 import useAvatarStore from "@/store/modules/avatar";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary";
 
+defineOptions({
+  name: "personal_user",
+});
 const avatarStore = useAvatarStore();
 //基础字典
 const basicDictionaryStore = useBasicDictionaryStore();
