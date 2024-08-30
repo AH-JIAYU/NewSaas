@@ -1,0 +1,9 @@
+
+/**
+ * 由 Fantastic-admin 提供技术支持
+ * Powered by Fantastic-admin
+ * Gitee  https://fantastic-admin.gitee.io
+ * Github https://fantastic-admin.github.io
+ */
+
+import _ from"./index-CtUwn_73.js";import{u as w}from"./user_customer-Ap1owZIN.js";import{d as B,r,a4 as D,a3 as L,a as m,o as u,b,F as T,f as p,w as c,g as N,t as R,e as g,s as j,H as E,S as F}from"./index-D5QRSD_b.js";const $=B({__name:"index",props:{leftTabsData:Array,validateTopTabs:Array,validateAll:Array,title:String},emits:["validate"],setup(h,{expose:k,emit:x}){const A=w(),o=h,y=x,e=r(o.leftTabsData),V=r(o.validateTopTabs);e.value.forEach((s,a)=>{const i=r(null);D(`formRef${a}`,i)});const f=r(0),l=r(0);function C(){l.value=++f.value,e.value.push({...A.initialTopTabsData})}function S(s){e.value.splice(s,1),V.value.splice(s,1),l.value>=e.value.length&&(l.value=Math.max(0,e.value.length-1),f.value=Math.max(0,e.value.length-1))}return L(()=>l.value,(s,a)=>{o.validateAll.reduce((d,v,t)=>(v==="rejected"&&d.push(t),d),[]).includes(a)&&y("validate")}),k({activeLeftTab:l}),(s,a)=>{const i=m("el-button"),d=m("el-tab-pane"),v=m("el-tabs");return u(),b("div",null,[e.value[0].id?(u(),g(_,{key:1,"left-tab":e.value[0]},null,8,["left-tab"])):(u(),b(T,{key:0},[p(i,{class:"button",disabled:e.value.length>29||o.title!=="新增",onClick:a[0]||(a[0]=t=>C())},{default:c(()=>[N(" 新增客户 ")]),_:1},8,["disabled"]),p(v,{modelValue:l.value,"onUpdate:modelValue":a[1]||(a[1]=t=>l.value=t),"tab-position":"left",onTabRemove:S},{default:c(()=>[(u(!0),b(T,null,R(e.value,(t,n)=>(u(),g(d,{key:n,closable:e.value.length!==1,label:t.customerAccord,name:n},{label:c(()=>[j("div",{class:F(o.validateAll[n]&&o.validateAll[n]==="rejected"?"validateRejected":"")},E(t.memberNickname||"客户名称"),3)]),default:c(()=>[p(_,{"left-tab":t,"tab-index":n},null,8,["left-tab","tab-index"])]),_:2},1032,["closable","label","name"]))),128))]),_:1},8,["modelValue"])],64))])}}});export{$ as _};
