@@ -331,7 +331,7 @@ onMounted(async () => {
             #default="{ row }">
             <div style="display: flex; justify-content: center; align-items: center;">
               <el-button text type="danger" v-if="row.projectType === 2">外包项目</el-button>
-            <el-button text type="info" v-else>自有项目</el-button>
+              <el-button text type="info" v-else>自有项目</el-button>
             </div>
           </template>
         </el-table-column>
@@ -389,7 +389,8 @@ onMounted(async () => {
           align="center" label="国家地区" width="100">
           <template #default="{ row }">
             <template v-if="row.countryIdList">
-              <template v-if="row.countryIdList.length === 185">
+
+              <template v-if="row.countryIdList.length === basicDictionaryStore.country.length">
                 <el-link type="primary"><el-tag type="warning">全球</el-tag></el-link>
               </template>
               <template v-else-if="comCountryId(row.countryIdList).length > 4">

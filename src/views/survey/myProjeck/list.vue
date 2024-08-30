@@ -157,6 +157,13 @@ const copyUrl = (text: any) => {
     message: "复制成功",
   });
 };
+// 具体的位置信息
+const comCountryId = computed(() => (countryIdList: any) => {
+  const list = countryList.value
+    .filter((item: any) => countryIdList.includes(item.id))
+    .map((item: any) => item.chineseName);
+  return list;
+});
 onMounted(async () => {
   columns.value.forEach((item: any) => {
     if (item.checked) {
@@ -296,20 +303,24 @@ onMounted(async () => {
         </el-table-column>
         <el-table-column v-if="checkList.includes('countryNameList')" show-overflow-tooltip align="center" label="国家地区">
           <template #default="{ row }">
-            <template v-if="row.countryNameList.length > 4">
-              <el-tooltip class="box-item" effect="dark" :content="row.countryNameList.join(',')" placement="top"
-                v-if="row.countryNameList.length !== 185">
-                <el-link type="primary"><el-tag type="danger">{{
-    row.countryNameList.length
-  }}</el-tag></el-link>
-              </el-tooltip>
-              <el-tag v-else type="warning">全球</el-tag>
-            </template>
+            <template v-if="row.countryNameList">
 
-            <template v-else>
-              <el-tag v-for="item in row.countryNameList" :key="item" type="primary">
-                {{ item }}
-              </el-tag>
+              <template v-if="row.countryNameList.length === basicDictionaryStore.country.length">
+                <el-link type="primary"><el-tag type="warning">全球</el-tag></el-link>
+              </template>
+              <template v-else-if="comCountryId(row.countryNameList).length > 4">
+                <el-tooltip class="box-item" effect="dark" :content="comCountryId(row.countryNameList).join(',')"
+                  placement="top">
+                  <el-link type="primary"><el-tag type="success">{{
+    comCountryId(row.countryNameList).length
+  }}</el-tag></el-link>
+                </el-tooltip>
+              </template>
+              <template v-else>
+                <el-tag v-for="item in comCountryId(row.countryNameList)" :key="item" type="primary">
+                  {{ item }}
+                </el-tag>
+              </template>
             </template>
           </template>
         </el-table-column>

@@ -13,7 +13,7 @@ const configurationSupplierLevelStore = useConfigurationSupplierLevelStore(); //
 const customerStore = useUserCustomerStore(); // 客户
 const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
 const validate = inject<any>("validateTopTabs"); //注入Ref
-  const EditRef = ref(); // 组件ref 新增/编辑
+const EditRef = ref(); // 组件ref 新增/编辑
 // 如果希望默认展示第一个 Tab
 const props: any = defineProps({
   leftTab: Object,
@@ -97,13 +97,13 @@ const selectAll = () => {
   }
 };
 // 新增会员等级
-const addSupplierLevel=()=>{
+const addSupplierLevel = () => {
   EditRef.value.showEdit();
 }
 
 // 反选
 const changeRelevanceCountryIdList = () => {
-  data.checked = Boolean(props.leftTab.relevanceCountryIdList.length === 185);
+  data.checked = Boolean(props.leftTab.relevanceCountryIdList.length === basicDictionaryStore.country.length);
 };
 // 需要用到的数据
 const data = reactive<any>({
@@ -116,7 +116,7 @@ const data = reactive<any>({
 
 const activeName = ref("basicSettings");
 
-const getSupplierLevelList=async()=>{
+const getSupplierLevelList = async () => {
   data.supplierLevelList =
     await configurationSupplierLevelStore.getLevelNameList();
   changeCountryId(props.leftTab.subordinateCountryId);
@@ -125,7 +125,7 @@ const getSupplierLevelList=async()=>{
 onMounted(async () => {
   data.relatedCustomers = await customerStore.getCustomerList();
   data.countryList = await basicDictionaryStore.getCountry();
- await getSupplierLevelList()
+  await getSupplierLevelList()
 });
 nextTick(() => {
   // 表单验证方法
@@ -162,15 +162,15 @@ nextTick(() => {
                 <el-form-item label="供应商等级" prop="supplierLevelId">
                   <el-select clearable filterable v-model="props.leftTab.supplierLevelId">
                     <template #empty>
-              <div style="display: flex;justify-content: space-between;align-items:center;padding:0 1rem;">
-                暂无数据
-                <el-button type="primary" link size="small" @click="addSupplierLevel">
-                  快捷新增
-                  <SvgIcon name="ant-design:plus-outlined" color="#fff"
-                    style="background-color: var(--el-color-primary);border-radius: 50%;padding: 2px;margin:0 2px" />
-                </el-button>
-              </div>
-            </template>
+                      <div style="display: flex;justify-content: space-between;align-items:center;padding:0 1rem;">
+                        暂无数据
+                        <el-button type="primary" link size="small" @click="addSupplierLevel">
+                          快捷新增
+                          <SvgIcon name="ant-design:plus-outlined" color="#fff"
+                            style="background-color: var(--el-color-primary);border-radius: 50%;padding: 2px;margin:0 2px" />
+                        </el-button>
+                      </div>
+                    </template>
                     <el-option v-for="item in data.supplierLevelList" :key="item.tenantSupplierLevelId"
                       :value="item.tenantSupplierLevelId" :label="item.levelNameOrAdditionRatio"></el-option>
                   </el-select>

@@ -518,14 +518,14 @@ function handleMoreOperating(command: string, row: any) {
         >
           <template #default="{ row }">
             <template v-if="row.countryId">
-              <template v-if="row.countryId.length === 185">
+              <template v-if="row.countryId.length === basicDictionaryStore.country.length">
                 <el-link type="primary"
                   ><el-tag type="warning">全球</el-tag></el-link
                 >
               </template>
               <template v-else-if="comCountryId(row.countryId).length > 4">
                 <el-tag
-                  v-if="comCountryId(row.countryId).length === 185"
+                  v-if="comCountryId(row.countryId).length === basicDictionaryStore.country.length"
                   type="warning"
                   >全球</el-tag
                 >

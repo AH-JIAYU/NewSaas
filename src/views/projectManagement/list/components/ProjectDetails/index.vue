@@ -299,7 +299,7 @@ defineExpose({ showEdit });
                       placement="top"
                     > -->
                     <el-link type="primary">{{
-      comCountryId(data.form.countryIdList).length === 185
+      comCountryId(data.form.countryIdList).length === basicDictionaryStore.country.length
         ? "全球"
         : comCountryId(data.form.countryIdList).length
     }}</el-link>
@@ -558,12 +558,12 @@ defineExpose({ showEdit });
               </template>
             </el-table-column>
             <el-table-column align="center" label="详情">
-              <template #default="{row}">
-                <el-button text type="primary" size="default" @click="details(row)">
-                详情
-              </el-button>
+              <template #default="{ row }">
+                <el-button type="primary" link @click="details(row)" v-if="row.operationType === 2">
+                  详情
+                </el-button>
+                <el-text v-else>-</el-text>
               </template>
-
             </el-table-column>
           </el-table>
         </el-card>

@@ -40,11 +40,7 @@ async function showEdit(row: any) {
   };
   const { status, data } = await api.list(params)
   detailData.value = data.data[0];
-  status === 1 &&
-    ElMessage.success({
-      message: "查询成功",
-      center: true,
-    });
+
   drawerisible.value = true;
 }
 

@@ -14,11 +14,7 @@ async function showEdit(row: any) {
   };
   const { status, data } = await obtainLoading(api.detail(params));
   detailData.value = data;
-  status === 1 &&
-    ElMessage.success({
-      message: "查询成功",
-      center: true,
-    });
+
   drawerisible.value = true;
 }
 function handleCheck(row: any) {
