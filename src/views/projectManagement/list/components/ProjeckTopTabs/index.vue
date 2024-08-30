@@ -590,7 +590,7 @@ nextTick(() => {
                     <el-tooltip class="tooltips" content="这份问卷需要做到多少分钟" placement="top">
                       <SvgIcon style="
                           position: absolute;
-                          left: 20.1875rem;
+                          left: 96px;
                           top: 0.5625rem;
                         " class="SvgIcon1" name="i-ri:question-line" />
                     </el-tooltip>

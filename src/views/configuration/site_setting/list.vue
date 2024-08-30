@@ -208,7 +208,7 @@ function onSubmit() {
   <div v-loading="loading">
     <PageHeader title="站点设置管理" />
     <PageMain>
-      <el-tabs v-model="activeTopTab" type="border-card">
+      <el-tabs v-model="activeTopTab">
         <el-form ref="formRef" :model="form" :rules="formRules" label-width="100px" label-position="right"
           :inline="false">
           <el-tab-pane label="基础设置" name="基本设置">
@@ -366,10 +366,7 @@ function onSubmit() {
     }
   }
 
-  .el-divider {
-    width: calc(100% + 40px);
-    margin-inline: -20px;
-  }
+
 }
 
 // :deep() {

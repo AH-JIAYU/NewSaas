@@ -127,7 +127,7 @@ defineExpose({ showEdit });
 <template>
   <div v-loading="loading">
     <el-dialog v-model="dialogTableVisible" :title="title" width="700">
-      <el-form ref="formRef" label-width="5.1875rem" :model="form" :rules="formRules" :inline="false">
+      <el-form ref="formRef" label-width="5.3125rem" :model="form" :rules="formRules" :inline="false">
         <el-form-item prop="name" label="职位名称">
           <el-input v-model="form.name" placeholder="请输入职位名称" clearable />
         </el-form-item>

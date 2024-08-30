@@ -349,9 +349,6 @@ async function paymentOperation(id: any, type: any) {
     }
   }
 
-  .el-divider {
-    margin-inline: -20px;
-    width: calc(100% + 40px);
-  }
+
 }
 </style>

@@ -195,7 +195,7 @@ function onSubmit() {
 <template>
   <div v-loading="loading">
     <PageMain>
-      <el-tabs v-model="activeTopTab" type="border-card">
+      <el-tabs v-model="activeTopTab" >
         <el-form ref="formRef" :model="form" :rules="formRules" label-position="right" label-width="140px"
           style="width: 500px">
           <el-tab-pane label="基础设置" name="基本设置">
@@ -382,10 +382,7 @@ function onSubmit() {
     }
   }
 
-  .el-divider {
-    margin-inline: -20px;
-    width: calc(100% + 40px);
-  }
+
 }
 
 // :deep() {

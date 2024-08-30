@@ -6,6 +6,7 @@ import customerDetail from "./components/CustomerDetail/index.vue";
 import { submitLoading } from "@/utils/apiLoading";
 import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
 import api from "@/api/modules/user_customer";
+import apiUser from '@/api/modules/configuration_manager'
 const customerStore = useUserCustomerStore(); // 客户
 defineOptions({
   name: "customer",
@@ -13,7 +14,8 @@ defineOptions({
 
 const { pagination, getParams, onSizeChange, onCurrentChange } =
   usePagination(); // 分页
-
+// 用户数据
+const staffList = ref<any>([]);
 const listLoading = ref(false); // 加载
 const list = ref<Array<Object>>([]); // 表格数据
 const editRef = ref<any>(); // 组件ref 新增编辑
@@ -101,7 +103,11 @@ const queryForm = reactive<any>({
   customerStatus: null,
   antecedentQuestionnaire: null,
 });
-
+// 获取负责人/用户
+const getTenantStaffList = async () => {
+  const { data } = await apiUser.getTenantStaffList()
+   staffList.value = data
+}
 // 每页数量切换
 function sizeChange(size: number) {
   onSizeChange(size).then(() => fetchData());
@@ -145,7 +151,8 @@ async function fetchData() {
 function setSelectRows(val: any) {
   selectRows.value = val;
 }
-onMounted(() => {
+onMounted(async () => {
+  await getTenantStaffList()
   columns.value.forEach((item: any) => {
     if (item.checked) {
       checkList.value.push(item.prop);
@@ -240,7 +247,11 @@ onMounted(() => {
         </el-table-column>
         <el-table-column v-if="checkList.includes('chargeName')" align="center" prop="chargeName" show-overflow-tooltip
           label="负责人"><template #default="{ row }">
-            {{ row.chargeName ? row.chargeName : "-" }}
+            <el-text v-for="item in staffList" :key="item.id">
+              <el-text v-if="item.id === row.chargeId">
+                {{ item.name }}
+              </el-text>
+            </el-text>
           </template>
         </el-table-column>
         <ElTableColumn v-if="checkList.includes('customerStatus')" align="center" show-overflow-tooltip
