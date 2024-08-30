@@ -214,7 +214,6 @@ const handleRemove: any = async () => {
 };
 // 上传图片成功
 const handleSuccess: any = (uploadFile: any, uploadFiles: any) => {
-  console.log('上传成功', uploadFile, uploadFiles)
   if (uploadFile.status === -1) {
     Message.error(uploadFile.error, {
       zIndex: 2000,

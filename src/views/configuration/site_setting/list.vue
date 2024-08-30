@@ -1,15 +1,24 @@
 <script setup lang="ts">
-import type { FormInstance, FormRules } from "element-plus";
+import type { FormInstance, FormRules, UploadProps } from "element-plus";
 import { ElMessage, ElMessageBox } from "element-plus";
+import { Plus } from "@element-plus/icons-vue";
 import { onMounted, ref } from "vue";
 import api from "@/api/modules/configuration_site_setting";
+import apiLogo from "@/api/modules/logo";
+import Message from 'vue-m-message'
 import useClipboard from "vue-clipboard3";
 import { AnyFn } from "@vueuse/core";
+import useUserStore from "@/store/modules/user";
 
 defineOptions({
   name: "site_setting",
 });
-
+// token
+const userStore = useUserStore();
+// 隐藏上传
+const upload = ref(false);
+// 接口地址
+const Url = import.meta.env.VITE_APP_API_BASEURL + "tenant-logo/upload";
 const { toClipboard } = useClipboard();
 const activeTopTab = ref<any>("基本设置");
 // 加载
@@ -87,20 +96,33 @@ const formRules = ref<FormRules>({
   ],
 });
 onMounted(() => {
+  loading.value = true;
+  getLogo()
   getDataList();
+  loading.value = false;
 });
 // 获取数据
 async function getDataList() {
   try {
-    loading.value = true;
     const { data } = await api.list();
     form.value = data || form.value;
-    loading.value = false;
   } catch (error) {
 
   } finally {
     loading.value = false;
   }
+}
+const getLogo = async () => {
+  fileList.value = []
+  const res = await apiLogo.getTenantLogo();
+  userStore.logo = res.data.logoUrl
+  fileList.value.push({
+      name: "file",
+      url: res.data.logoUrl,
+    });
+    if ( res.data.logoUrl !== "") {
+      upload.value = true;
+    }
 }
 // 复制地址
 const copyToClipboard = () => {
@@ -110,6 +132,47 @@ const copyToClipboard = () => {
     type: "success",
     message: "复制成功",
   });
+};
+// #regin 上传文件
+// 请求头
+const token = userStore.token;
+const headers = ref({ Token: token });
+const dialogImageUrl = ref("");
+const dialogVisible = ref(false);
+// 上传
+const fileList = ref<any>([]);
+// 删除
+const handleRemove: any = async () => {
+  upload.value = false;
+  ElMessage.success({
+    message: "删除成功",
+    center: true,
+  });
+};
+// 上传图片成功
+const handleSuccess: any = (uploadFile: any, uploadFiles: any) => {
+  if (uploadFile.status === -1) {
+    Message.error(uploadFile.error, {
+      zIndex: 2000,
+    })
+    // 过滤上传失败的图片
+    fileList.value = fileList.value.filter((item: any) => item.name !== uploadFiles.name)
+  } else {
+    getLogo()
+    upload.value = true;
+  }
+};
+// 超出限制
+const handleExceed: any = async () => {
+  ElMessage.warning({
+    message: "只能上传一个,删除原文件后重新上传",
+    center: true,
+  });
+};
+// 查看
+const handlePictureCardPreview: UploadProps["onPreview"] = (uploadFile) => {
+  dialogImageUrl.value = uploadFile.url!;
+  dialogVisible.value = true;
 };
 // 提交数据
 function onSubmit() {
@@ -213,6 +276,35 @@ function onSubmit() {
           :inline="false">
           <el-tab-pane label="基础设置" name="基本设置">
             <el-row :gutter="20">
+              <el-col :span="24">
+                <ElFormItem style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              " label="网址Logo">
+                  <el-upload :class="{ hide_box: upload }" v-model:file-list="fileList" :headers="headers" :action="Url"
+                    list-type="picture-card" :limit="1" :on-preview="handlePictureCardPreview" :on-remove="handleRemove"
+                    :on-success="handleSuccess" :on-exceed="handleExceed">
+                    <el-icon class="el-icon--upload">
+                      <Plus />
+                    </el-icon>
+                    <!-- <div class="el-upload__text">上传</div> -->
+                    <template #tip>
+                      <div class="el-upload__tip">
+                        支持上传JPG/JPEG/PNG图片，小于10MB
+                      </div>
+                    </template>
+                  </el-upload>
+
+                  <el-dialog v-model="dialogVisible" style="
+                  z-index: 1000;
+                  transform: translate(0);
+                  position: relative;
+                ">
+                    <img w-full :src="dialogImageUrl" alt="Preview Image" />
+                  </el-dialog>
+                </ElFormItem>
+              </el-col>
               <el-col :span="3">
                 <el-form-item label="注册开关">
                   <el-switch v-model="form.registerOffOrOn" active-text="开启" inline-prompt inactive-text="关闭"
@@ -243,7 +335,7 @@ function onSubmit() {
                 </el-form-item>
               </el-col>
               <el-col :span="24">
-                <el-form-item label="顶级域名" >
+                <el-form-item label="顶级域名">
                   <el-input v-model="form.externalSite" style="width: 8rem" />
                   <!-- <el-button class="copy" type="primary" link >设置解析</el-button> -->
                 </el-form-item>
@@ -367,6 +459,14 @@ function onSubmit() {
   }
 
 
+}
+
+:deep(.el-upload-list--picture-card .el-upload-list__item) {
+  border: none;
+}
+
+.hide_box :deep(.el-upload--picture-card) {
+  display: none;
 }
 
 // :deep() {

@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import useSettingsStore from '@/store/modules/settings'
+import useUserStore from "@/store/modules/user";
 import imgLogo from '@/assets/images/logo.png'
 
 defineOptions({
   name: 'Logo',
 })
-
+const userStore = useUserStore();
+// 网站LOGO
+const logo = ref<any>()
+logo.value = userStore.logo
 withDefaults(
   defineProps<{
     showLogo?: boolean
@@ -16,11 +20,17 @@ withDefaults(
     showTitle: true,
   },
 )
-
+watch(
+  () => userStore.logo,
+  (newValue) => {
+    if (newValue) {
+      logo.value = newValue;
+    }
+  },{deep: true}
+);
 const settingsStore = useSettingsStore()
 
 const title = ref(import.meta.env.VITE_APP_TITLE)
-const logo = ref(imgLogo)
 
 const to = computed(() => settingsStore.settings.home.enable ? settingsStore.settings.home.fullPath : '')
 </script>
