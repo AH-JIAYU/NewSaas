@@ -115,14 +115,16 @@ async function getDataList() {
 const getLogo = async () => {
   fileList.value = []
   const res = await apiLogo.getTenantLogo();
-  userStore.logo = res?.data?.logoUrl
-  fileList.value.push({
+  if (res.data) {
+    userStore.logo = res?.data?.logoUrl
+    fileList.value.push({
       name: "file",
       url: res?.data?.logoUrl,
     });
-    if ( res?.data?.logoUrl !== "") {
+    if (res?.data?.logoUrl !== "") {
       upload.value = true;
     }
+  }
 }
 // 复制地址
 const copyToClipboard = () => {
@@ -471,5 +473,4 @@ function onSubmit() {
 
 // :deep() {
 //   background-color: #fafafa;
-// }
-</style>
+// }</style>
