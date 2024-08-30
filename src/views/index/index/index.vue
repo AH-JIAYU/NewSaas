@@ -42,7 +42,7 @@ function echarts1() {
     return data.value.dataCenterTurnoverVO.map((item: any) => {
       const date = new Date(item.timeBucket);
       const hours = date.getHours().toString().padStart(2, '0');
-      const minutes = date.getMinutes().toString().padStart(2, '0'); 
+      const minutes = date.getMinutes().toString().padStart(2, '0');
       return `${hours}:${minutes}`;
     });
 
@@ -55,7 +55,6 @@ function echarts1() {
         type: 'shadow'
       },
       formatter: function (params: any) {
-        console.log('params', params)
         // 自定义圆点
         var dotHtml = "<span style=\"display:inline-block;margin-right:.25rem;border-radius:.625rem;width:.625rem;height:.625rem;background-color:#44ca6a;\"></span>"
         var dotHtml2 = "<span style=\"display:inline-block;margin-right:.25rem;border-radius:.625rem;width:.625rem;height:.625rem;background-color:#f56a66;\"></span>"
