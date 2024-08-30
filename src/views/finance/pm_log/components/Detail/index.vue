@@ -60,11 +60,7 @@ const getDataList = async () => {
     detailData.value = res.data.itemList;
     pagination.value.total = +res.data.total;
     data.value.loading = false;
-    res.status === 1 &&
-      ElMessage.success({
-        message: "查询成功",
-        center: true,
-      });
+
   } catch (error) {
 
   } finally {

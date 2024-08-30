@@ -245,7 +245,7 @@ const changeProfile = (val: any) => {
 const changeCountryId = () => {
   localToptTab.value.data.configurationInformation.configurationCountryList = null;
   // 反选
-  data.value.checked = Boolean(localToptTab.value.countryIdList.length === 185);
+  data.value.checked = Boolean(localToptTab.value.countryIdList.length === basicDictionaryStore.country.length);
 };
 // 配置国家改变 重新获取题库目录
 const changeConfigurationCountryId = () => {
@@ -586,13 +586,8 @@ nextTick(() => {
               <el-form-item prop="minimumDuration">
                 <template #label>
                   <div>
-                    最小分长
-                    <el-tooltip class="tooltips" content="这份问卷需要做到多少分钟" placement="top">
-                      <SvgIcon style="
-                          position: absolute;
-                          left: 96px;
-                          top: 0.5625rem;
-                        " class="SvgIcon1" name="i-ri:question-line" />
+                    最小分长<el-tooltip class="tooltips" content="这份问卷需要做到多少分钟" placement="top">
+                      <SvgIcon   class="SvgIcon1" name="i-ri:question-line" />
                     </el-tooltip>
                   </div>
                 </template>
@@ -616,14 +611,13 @@ nextTick(() => {
               <el-form-item prop="uidUrl">
                 <template #label>
                   <div>
-                    URL
-                    <!-- <el-tooltip
+                    URL<el-tooltip
                       class="tooltips"
-                      content="例： https://www.xxxx.com/8994343?uid=[uid]"
+                      content="仅支持URL后缀为[uid]的链接。"
                       placement="top"
                     >
                       <SvgIcon class="SvgIcon2" name="i-ri:question-line" />
-                    </el-tooltip> -->
+                    </el-tooltip>
                   </div>
                 </template>
                 <el-input clearable v-model="localToptTab.uidUrl" />
@@ -959,7 +953,7 @@ nextTick(() => {
   .el-cascader,
   .el-form-item__content {
     width: 100% !important;
-    min-width: 10.5rem !important;
+   // min-width: 10.5rem !important;
   }
 
   td .el-form-item {

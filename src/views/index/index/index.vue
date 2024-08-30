@@ -38,6 +38,15 @@ const chart2Ref = ref();
 // 营业额趋势
 function echarts1() {
   chart1 = echarts.init(chart1Ref.value);
+  const xData = () => {
+    return data.value.dataCenterTurnoverVO.map((item: any) => {
+      const date = new Date(item.timeBucket);
+      const hours = date.getHours().toString().padStart(2, '0');
+      const minutes = date.getMinutes().toString().padStart(2, '0'); 
+      return `${hours}:${minutes}`;
+    });
+
+  }
   const option = {
     color: '#366df7',
     tooltip: {
@@ -46,12 +55,13 @@ function echarts1() {
         type: 'shadow'
       },
       formatter: function (params: any) {
+        console.log('params', params)
         // 自定义圆点
         var dotHtml = "<span style=\"display:inline-block;margin-right:.25rem;border-radius:.625rem;width:.625rem;height:.625rem;background-color:#44ca6a;\"></span>"
         var dotHtml2 = "<span style=\"display:inline-block;margin-right:.25rem;border-radius:.625rem;width:.625rem;height:.625rem;background-color:#f56a66;\"></span>"
         return `
-        <div>${params[0].name}<br> ${dotHtml + params[0].seriesName}: ${params[0].value} <br> ${dotHtml2 + params[0].seriesName}: ${params[0].value}</div>
-        `;
+        <div>${params[0].name}<br> ${dotHtml} 营业额: ${params[0].data.turnover} <br>${dotHtml2} 盈利额 ${params[0].data.profitAmount} </div>
+          `;
       }
     },
 
@@ -64,32 +74,7 @@ function echarts1() {
     xAxis: [
       {
         type: 'category',
-        data: [
-          '0:00',
-          '2:00',
-          '3:00',
-          '4:00',
-          '5:00',
-          '6:00',
-          '7:00',
-          '8:00',
-          '9:00',
-          '10:00',
-          '11:00',
-          '12:00',
-          '13:00',
-          '14:00',
-          '15:00',
-          '16:00',
-          '17:00',
-          '18:00',
-          '19:00',
-          '20:00',
-          '21:00',
-          '22:00',
-          '23:00',
-          '24:00',
-        ],
+        data: xData(),
         axisLabel: {
           interval: 0,
           rotate: 45, // 文字倾斜
@@ -109,7 +94,7 @@ function echarts1() {
         name: '营业额',
         type: 'bar',
         barWidth: '60%',
-        data: [10, 52, 200, 334, 390, 330, 10, 52, 200, 334, 390, 330, 10, 52, 200, 334, 390, 330, 10, 52, 200, 334, 390, 330,]
+        data: data.value.dataCenterTurnoverVO
       },
     ],
 
@@ -135,7 +120,7 @@ function echarts2() {
     tooltip: { //弹框
       trigger: "item",
       formatter(data: any) {
-        return `客户名称：${data.name}</br>项目结算: ${data.data.datas.com}</br>审核率: ${data.data.datas.aud}`;
+        return `客户名称：${data.name} </br>项目结算: ${data.data.datas.com}</br > 审核率: ${data.data.datas.aud} `;
       },
     },
     label: {//饼图文字的显示
@@ -164,7 +149,7 @@ function echarts2() {
           // {
           //   type: "text",
           //   style: {
-          //     text: `合计:`,
+          //     text: `合计: `,
           //     fontSize: 14,
           //     textAlign: "center",
           //     textVerticalAlign: "bottom",
@@ -588,7 +573,7 @@ onMounted(async () => {
                   </template>
                 </el-table-column>
                 <template #empty>
-                  <el-empty  :image-size="100" description="暂无数据" />
+                  <el-empty :image-size="100" description="暂无数据" />
                 </template>
               </el-table>
             </div>
@@ -1215,7 +1200,8 @@ onMounted(async () => {
 :deep(.el-card__body) {
   min-height: 25rem;
 }
-:deep(.el-table__empty-text){
+
+:deep(.el-table__empty-text) {
   line-height: 100%;
 }
 </style>
