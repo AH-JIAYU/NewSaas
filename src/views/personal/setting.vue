@@ -24,7 +24,7 @@ const userStore = useUserStore();
 // 更新
 const emits = defineEmits(["success"]);
 // 接口地址
-const Url = import.meta.env.VITE_APP_API_BASEURL + "user/uploadAvatar";
+const Url = import.meta.env.VITE_APP_API_BASEURL + "/user/uploadAvatar";
 //基础字典
 const basicDictionaryStore = useBasicDictionaryStore();
 // 国家list
@@ -214,7 +214,6 @@ const handleRemove: any = async () => {
 };
 // 上传图片成功
 const handleSuccess: any = (uploadFile: any, uploadFiles: any) => {
-  console.log('上传成功', uploadFile, uploadFiles)
   if (uploadFile.status === -1) {
     Message.error(uploadFile.error, {
       zIndex: 2000,

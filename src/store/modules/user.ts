@@ -8,6 +8,7 @@ import useNotificationStore from "./notification"; //消息中心
 import router from "@/router";
 import type { Settings } from "#/global";
 import apiUser from "@/api/modules/user";
+import apiLogo from "@/api/modules/logo";
 import storage from "@/utils/storage";
 import settingsDefault from "@/settings";
 import api from "@/api/modules/configuration_manager";
@@ -27,6 +28,7 @@ const useUserStore = defineStore(
     const avatar = ref(storage.local.get("avatar") ?? "");
     const userId = ref(storage.local.get("userId") ?? "");
     const permissions = ref<string[]>([]);
+    const logo = ref<string>();
     const currencyType = ref<number | string>(3); //货币类型 1=USD 2=CNY 3=未知
     const exchangeRate = ref<number | string>(); //汇率
     const isLogin = computed(() => {
@@ -94,6 +96,7 @@ const useUserStore = defineStore(
       avatar.value = "";
       userId.value = "";
       permissions.value = [];
+      logo.value = '';
       tabbarStore.clean();
       routeStore.removeRoutes();
       menuStore.setActived(0);
@@ -111,6 +114,11 @@ const useUserStore = defineStore(
     async function getPermissions() {
       const res = await apiUser.permission();
       permissions.value = res.data;
+    }
+    // 获取logo
+    async function getTenantLogo() {
+      const res = await apiLogo.getTenantLogo();
+      logo.value = res?.data?.logoUrl
     }
     // 获取货币类型
     async function getCurrencyType() {
@@ -278,11 +286,13 @@ const useUserStore = defineStore(
       avatar,
       userId,
       permissions,
+      logo,
       currencyType,
       isLogin,
       login,
       logout,
       getPermissions,
+      getTenantLogo,
       getCurrencyType,
       getExchangeRate,
       editPassword,
