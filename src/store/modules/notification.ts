@@ -66,6 +66,7 @@ const useNotificationStore = defineStore(
 
       // 页面大刷新 主动断开连接
       window.addEventListener("beforeunload", () => {
+        console.log(1)
         if (socket.value) {
           disconnect()
         }
@@ -73,8 +74,11 @@ const useNotificationStore = defineStore(
     }
     //断开websocket连接
     function disconnect() {
-      socket.value.close(); // 关闭websocket
-      socket.value.onclose(); // 关闭websocket
+      if (socket.value) {
+        socket.value.close(); // 关闭websocket
+        socket.value.onclose(); // 关闭websocket
+      }
+
     }
     // 重连
     function websocketreconnect() {
