@@ -808,9 +808,9 @@ onMounted(async () => {
     width: 0;
   }
 
-  .el-table__header th {
-    background: var(--g-header-bg) !important;
-  }
+  // .el-table__header th {
+  //   background: var(--g-header-bg) !important;
+  // }
 }
 
 .itemBox {

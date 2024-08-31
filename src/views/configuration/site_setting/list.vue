@@ -18,7 +18,7 @@ const userStore = useUserStore();
 // 隐藏上传
 const upload = ref(false);
 // 接口地址
-const Url = import.meta.env.VITE_APP_API_BASEURL + "tenant-logo/upload";
+const Url = import.meta.env.VITE_APP_API_BASEURL + "/tenant-logo/upload";
 const { toClipboard } = useClipboard();
 const activeTopTab = ref<any>("基本设置");
 // 加载
@@ -116,7 +116,7 @@ const getLogo = async () => {
   fileList.value = []
   const res = await apiLogo.getTenantLogo();
   if (res.data) {
-    userStore.logo = res?.data?.logoUrl
+    userStore.logo = res.data.logoUrl
     fileList.value.push({
       name: "file",
       url: res?.data?.logoUrl,
@@ -283,7 +283,7 @@ function onSubmit() {
                 display: flex;
                 justify-content: center;
                 align-items: center;
-              " label="网址Logo">
+              " label="网址Logo"> 
                   <el-upload :class="{ hide_box: upload }" v-model:file-list="fileList" :headers="headers" :action="Url"
                     list-type="picture-card" :limit="1" :on-preview="handlePictureCardPreview" :on-remove="handleRemove"
                     :on-success="handleSuccess" :on-exceed="handleExceed">

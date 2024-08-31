@@ -8,6 +8,7 @@ import { getTwoObjectDiff } from '@/utils'
 import eventBus from '@/utils/eventBus'
 import useSettingsStore from '@/store/modules/settings'
 import useMenuStore from '@/store/modules/menu'
+import storage from "@/utils/storage";
 
 defineOptions({
   name: 'AppSetting',
@@ -21,12 +22,14 @@ const menuStore = useMenuStore()
 const isShow = ref(false)
 
 const themeList = computed(() => {
-  return Object.keys(themes).map((key) => {
+  const data = Object.keys(themes).map((key) => {
     return {
       label: key,
       value: (themes as any)[key],
     }
   }).filter(item => item.value['color-scheme'] === settingsStore.currentColorScheme)
+
+  return data
 })
 
 watch(() => settingsStore.settings.menu.menuMode, (value) => {
@@ -65,46 +68,46 @@ onMounted(() => {
 
 const { copy, copied, isSupported } = useClipboard()
 
-watch(copied, (val) => {
-  if (val) {
-    Message.success('复制成功，请粘贴到 src/settings.ts 文件中！', {
-      zIndex: 2000,
-    })
-  }
-})
+// watch(copied, (val) => {
+//   if (val) {
+//     Message.success('复制成功，请粘贴到 src/settings.ts 文件中！', {
+//       zIndex: 2000,
+//     })
+//   }
+// })
 
 function handleCopy() {
-  copy(JSON.stringify(getTwoObjectDiff(settingsDefault, settingsStore.settings), null, 2))
+  // copy(JSON.stringify(getTwoObjectDiff(settingsDefault, settingsStore.settings), null, 2))
+  localStorage.setItem("saas_globalConfiguration", JSON.stringify(getTwoObjectDiff(settingsDefault, settingsStore.settings), null, 2));
+  isShow.value = false
 }
 </script>
 
 <template>
   <HSlideover v-model="isShow" title="应用配置" :side="settingsStore.settings.app.direction === 'ltr' ? 'right' : 'left'">
-    <div class="rounded-2 bg-rose/20 px-4 py-2 text-sm/6 c-rose">
+    <!-- <div class="rounded-2 bg-rose/20 px-4 py-2 text-sm/6 c-rose">
       <p class="my-1">
         应用配置可实时预览效果，但只是临时生效，要想真正应用于项目，可以点击下方的「复制配置」按钮，并将配置粘贴到 src/settings.ts 文件中。
       </p>
       <p class="my-1">
         注意：在生产环境中应关闭该模块。
       </p>
-    </div>
+    </div> -->
     <div>
       <div class="divider">
         颜色主题风格
       </div>
       <div class="flex items-center justify-center pb-4">
-        <HTabList
-          v-model="settingsStore.settings.app.colorScheme"
-          :options="[
-            { icon: 'i-ri:sun-line', label: '明亮', value: 'light' },
-            { icon: 'i-ri:moon-line', label: '暗黑', value: 'dark' },
-            { icon: 'i-ri:computer-line', label: '系统', value: '' },
-          ]"
-          class="w-60"
-        />
+        <HTabList v-model="settingsStore.settings.app.colorScheme" :options="[
+    { icon: 'i-ri:sun-line', label: '明亮', value: 'light' },
+    { icon: 'i-ri:moon-line', label: '暗黑', value: 'dark' },
+    { icon: 'i-ri:computer-line', label: '系统', value: '' },
+  ]" class="w-60" />
       </div>
       <div class="themes">
-        <div v-for="item in themeList" :key="item.label" class="theme" :class="{ active: settingsStore.currentColorScheme === 'dark' ? settingsStore.settings.app.darkTheme === item.label : settingsStore.settings.app.lightTheme === item.label }" @click="settingsStore.currentColorScheme === 'dark' ? settingsStore.settings.app.darkTheme = item.label : settingsStore.settings.app.lightTheme = item.label">
+        <div v-for="item in themeList" :key="item.label" class="theme"
+          :class="{ active: settingsStore.currentColorScheme === 'dark' ? settingsStore.settings.app.darkTheme === item.label : settingsStore.settings.app.lightTheme === item.label }"
+          @click="settingsStore.currentColorScheme === 'dark' ? settingsStore.settings.app.darkTheme = item.label : settingsStore.settings.app.lightTheme = item.label">
           <div class="content" :style="`background-color: rgb(${item.value['--ui-primary']});`" />
         </div>
       </div>
@@ -115,27 +118,32 @@ function handleCopy() {
       </div>
       <div class="menu-mode">
         <HTooltip text="侧边栏模式 (含主导航)" placement="bottom" :delay="500">
-          <div class="mode mode-side" :class="{ active: settingsStore.settings.menu.menuMode === 'side' }" @click="settingsStore.settings.menu.menuMode = 'side'">
+          <div class="mode mode-side" :class="{ active: settingsStore.settings.menu.menuMode === 'side' }"
+            @click="settingsStore.settings.menu.menuMode = 'side'">
             <div class="mode-container" />
           </div>
         </HTooltip>
         <HTooltip text="顶部模式" placement="bottom" :delay="500">
-          <div class="mode mode-head" :class="{ active: settingsStore.settings.menu.menuMode === 'head' }" @click="settingsStore.settings.menu.menuMode = 'head'">
+          <div class="mode mode-head" :class="{ active: settingsStore.settings.menu.menuMode === 'head' }"
+            @click="settingsStore.settings.menu.menuMode = 'head'">
             <div class="mode-container" />
           </div>
         </HTooltip>
         <HTooltip text="侧边栏模式 (不含主导航)" placement="bottom" :delay="500">
-          <div class="mode mode-single" :class="{ active: settingsStore.settings.menu.menuMode === 'single' }" @click="settingsStore.settings.menu.menuMode = 'single'">
+          <div class="mode mode-single" :class="{ active: settingsStore.settings.menu.menuMode === 'single' }"
+            @click="settingsStore.settings.menu.menuMode = 'single'">
             <div class="mode-container" />
           </div>
         </HTooltip>
         <HTooltip text="侧边栏精简模式" placement="bottom" :delay="500">
-          <div class="mode mode-only-side" :class="{ active: settingsStore.settings.menu.menuMode === 'only-side' }" @click="settingsStore.settings.menu.menuMode = 'only-side'">
+          <div class="mode mode-only-side" :class="{ active: settingsStore.settings.menu.menuMode === 'only-side' }"
+            @click="settingsStore.settings.menu.menuMode = 'only-side'">
             <div class="mode-container" />
           </div>
         </HTooltip>
         <HTooltip text="顶部精简模式" placement="bottom" :delay="500">
-          <div class="mode mode-only-head" :class="{ active: settingsStore.settings.menu.menuMode === 'only-head' }" @click="settingsStore.settings.menu.menuMode = 'only-head'">
+          <div class="mode mode-only-head" :class="{ active: settingsStore.settings.menu.menuMode === 'only-head' }"
+            @click="settingsStore.settings.menu.menuMode = 'only-head'">
             <div class="mode-container" />
           </div>
         </HTooltip>
@@ -147,22 +155,28 @@ function handleCopy() {
       </div>
       <div class="app-width-mode">
         <HTooltip text="自适应" placement="bottom" :delay="500">
-          <div class="mode mode-adaption" :class="{ active: settingsStore.settings.layout.widthMode === 'adaption' }" @click="settingsStore.settings.layout.widthMode = 'adaption'">
+          <div class="mode mode-adaption" :class="{ active: settingsStore.settings.layout.widthMode === 'adaption' }"
+            @click="settingsStore.settings.layout.widthMode = 'adaption'">
             <SvgIcon name="i-ep:back" class="left" />
             <SvgIcon name="i-ep:right" class="right" />
           </div>
         </HTooltip>
         <HTooltip text="自适应 (有最小宽度)" placement="bottom" :delay="500">
-          <div class="mode mode-adaption-min-width" :class="{ active: settingsStore.settings.layout.widthMode === 'adaption-min-width' }" @click="settingsStore.settings.layout.widthMode = 'adaption-min-width'">
+          <div class="mode mode-adaption-min-width"
+            :class="{ active: settingsStore.settings.layout.widthMode === 'adaption-min-width' }"
+            @click="settingsStore.settings.layout.widthMode = 'adaption-min-width'">
             <SvgIcon name="i-ep:back" class="left" />
             <SvgIcon name="i-ep:right" class="right" />
           </div>
         </HTooltip>
         <HTooltip text="定宽居中" placement="bottom" :delay="500">
-          <div class="mode mode-center" :class="{ active: settingsStore.settings.layout.widthMode === 'center' }" @click="settingsStore.settings.layout.widthMode = 'center'" />
+          <div class="mode mode-center" :class="{ active: settingsStore.settings.layout.widthMode === 'center' }"
+            @click="settingsStore.settings.layout.widthMode = 'center'" />
         </HTooltip>
         <HTooltip text="定宽居中 (有最大宽度)" placement="bottom" :delay="500">
-          <div class="mode mode-center-max-width" :class="{ active: settingsStore.settings.layout.widthMode === 'center-max-width' }" @click="settingsStore.settings.layout.widthMode = 'center-max-width'">
+          <div class="mode mode-center-max-width"
+            :class="{ active: settingsStore.settings.layout.widthMode === 'center-max-width' }"
+            @click="settingsStore.settings.layout.widthMode = 'center-max-width'">
             <SvgIcon name="i-ep:back" class="left" />
             <SvgIcon name="i-ep:right" class="right" />
           </div>
@@ -178,19 +192,28 @@ function handleCopy() {
       </div>
       <div v-if="settingsStore.settings.mainPage.enableTransition" class="transition-mode">
         <HTooltip text="淡入淡出" placement="bottom" :delay="500">
-          <div class="mode mode-fade" :class="{ active: settingsStore.settings.mainPage.transitionMode === 'fade' }" @click="settingsStore.settings.mainPage.transitionMode = 'fade'" />
+          <div class="mode mode-fade" :class="{ active: settingsStore.settings.mainPage.transitionMode === 'fade' }"
+            @click="settingsStore.settings.mainPage.transitionMode = 'fade'" />
         </HTooltip>
         <HTooltip text="向左滑动" placement="bottom" :delay="500">
-          <div class="mode mode-slide-left" :class="{ active: settingsStore.settings.mainPage.transitionMode === 'slide-left' }" @click="settingsStore.settings.mainPage.transitionMode = 'slide-left'" />
+          <div class="mode mode-slide-left"
+            :class="{ active: settingsStore.settings.mainPage.transitionMode === 'slide-left' }"
+            @click="settingsStore.settings.mainPage.transitionMode = 'slide-left'" />
         </HTooltip>
         <HTooltip text="向右滑动" placement="bottom" :delay="500">
-          <div class="mode mode-slide-right" :class="{ active: settingsStore.settings.mainPage.transitionMode === 'slide-right' }" @click="settingsStore.settings.mainPage.transitionMode = 'slide-right'" />
+          <div class="mode mode-slide-right"
+            :class="{ active: settingsStore.settings.mainPage.transitionMode === 'slide-right' }"
+            @click="settingsStore.settings.mainPage.transitionMode = 'slide-right'" />
         </HTooltip>
         <HTooltip text="向上滑动" placement="bottom" :delay="500">
-          <div class="mode mode-slide-top" :class="{ active: settingsStore.settings.mainPage.transitionMode === 'slide-top' }" @click="settingsStore.settings.mainPage.transitionMode = 'slide-top'" />
+          <div class="mode mode-slide-top"
+            :class="{ active: settingsStore.settings.mainPage.transitionMode === 'slide-top' }"
+            @click="settingsStore.settings.mainPage.transitionMode = 'slide-top'" />
         </HTooltip>
         <HTooltip text="向下滑动" placement="bottom" :delay="500">
-          <div class="mode mode-slide-bottom" :class="{ active: settingsStore.settings.mainPage.transitionMode === 'slide-bottom' }" @click="settingsStore.settings.mainPage.transitionMode = 'slide-bottom'" />
+          <div class="mode mode-slide-bottom"
+            :class="{ active: settingsStore.settings.mainPage.transitionMode === 'slide-bottom' }"
+            @click="settingsStore.settings.mainPage.transitionMode = 'slide-bottom'" />
         </HTooltip>
       </div>
     </div>
@@ -205,7 +228,8 @@ function handleCopy() {
             <SvgIcon name="i-ri:question-line" />
           </HTooltip>
         </div>
-        <HToggle v-model="settingsStore.settings.menu.switchMainMenuAndPageJump" :disabled="['single', 'only-side', 'only-head'].includes(settingsStore.settings.menu.menuMode)" />
+        <HToggle v-model="settingsStore.settings.menu.switchMainMenuAndPageJump"
+          :disabled="['single', 'only-side', 'only-head'].includes(settingsStore.settings.menu.menuMode)" />
       </div>
       <div class="setting-item">
         <div class="label">
@@ -214,7 +238,8 @@ function handleCopy() {
             <SvgIcon name="i-ri:question-line" />
           </HTooltip>
         </div>
-        <HToggle v-model="settingsStore.settings.menu.subMenuOnlyOneHide" :disabled="['single', 'only-side', 'only-head'].includes(settingsStore.settings.menu.menuMode)" />
+        <HToggle v-model="settingsStore.settings.menu.subMenuOnlyOneHide"
+          :disabled="['single', 'only-side', 'only-head'].includes(settingsStore.settings.menu.menuMode)" />
       </div>
       <div class="setting-item">
         <div class="label">
@@ -223,13 +248,15 @@ function handleCopy() {
             <SvgIcon name="i-ri:question-line" />
           </HTooltip>
         </div>
-        <HToggle v-model="settingsStore.settings.menu.subMenuUniqueOpened" :disabled="['only-side', 'only-head'].includes(settingsStore.settings.menu.menuMode)" />
+        <HToggle v-model="settingsStore.settings.menu.subMenuUniqueOpened"
+          :disabled="['only-side', 'only-head'].includes(settingsStore.settings.menu.menuMode)" />
       </div>
       <div class="setting-item">
         <div class="label">
           次导航是否收起
         </div>
-        <HToggle v-model="settingsStore.settings.menu.subMenuCollapse" :disabled="['only-side', 'only-head'].includes(settingsStore.settings.menu.menuMode)" />
+        <HToggle v-model="settingsStore.settings.menu.subMenuCollapse"
+          :disabled="['only-side', 'only-head'].includes(settingsStore.settings.menu.menuMode)" />
       </div>
       <div class="setting-item">
         <div class="label">
@@ -238,13 +265,15 @@ function handleCopy() {
             <SvgIcon name="i-ri:question-line" />
           </HTooltip>
         </div>
-        <HToggle v-model="settingsStore.settings.menu.subMenuAutoCollapse" :disabled="['only-side', 'only-head'].includes(settingsStore.settings.menu.menuMode)" />
+        <HToggle v-model="settingsStore.settings.menu.subMenuAutoCollapse"
+          :disabled="['only-side', 'only-head'].includes(settingsStore.settings.menu.menuMode)" />
       </div>
       <div v-if="settingsStore.mode === 'pc'" class="setting-item">
         <div class="label">
           显示次导航展开/收起按钮
         </div>
-        <HToggle v-model="settingsStore.settings.menu.enableSubMenuCollapseButton" :disabled="['only-side', 'only-head'].includes(settingsStore.settings.menu.menuMode)" />
+        <HToggle v-model="settingsStore.settings.menu.enableSubMenuCollapseButton"
+          :disabled="['only-side', 'only-head'].includes(settingsStore.settings.menu.menuMode)" />
       </div>
       <div class="setting-item">
         <div class="label">
@@ -256,20 +285,19 @@ function handleCopy() {
         <div class="label">
           激活风格
         </div>
-        <HCheckList
-          v-model="settingsStore.settings.menu.menuActiveStyle" :options="[
-            { icon: 'i-jam:stop-sign', value: '' },
-            { icon: ['head', 'only-head'].includes(settingsStore.settings.menu.menuMode) ? 'i-ep:caret-top' : 'i-ep:caret-left', value: 'arrow' },
-            { icon: ['side', 'only-side'].includes(settingsStore.settings.menu.menuMode) ? 'i-tabler:minus-vertical' : 'i-tabler:minus', value: 'line' },
-            { icon: 'i-icon-park-outline:dot', value: 'dot' },
-          ]" :disabled="settingsStore.settings.menu.menuMode === 'single'"
-        />
+        <HCheckList v-model="settingsStore.settings.menu.menuActiveStyle" :options="[
+    { icon: 'i-jam:stop-sign', value: '' },
+    { icon: ['head', 'only-head'].includes(settingsStore.settings.menu.menuMode) ? 'i-ep:caret-top' : 'i-ep:caret-left', value: 'arrow' },
+    { icon: ['side', 'only-side'].includes(settingsStore.settings.menu.menuMode) ? 'i-tabler:minus-vertical' : 'i-tabler:minus', value: 'line' },
+    { icon: 'i-icon-park-outline:dot', value: 'dot' },
+  ]" :disabled="settingsStore.settings.menu.menuMode === 'single'" />
       </div>
       <div class="setting-item">
         <div class="label">
           是否启用快捷键
         </div>
-        <HToggle v-model="settingsStore.settings.menu.enableHotkeys" :disabled="['single', 'only-side', 'only-head'].includes(settingsStore.settings.menu.menuMode)" />
+        <HToggle v-model="settingsStore.settings.menu.enableHotkeys"
+          :disabled="['single', 'only-side', 'only-head'].includes(settingsStore.settings.menu.menuMode)" />
       </div>
     </div>
     <div>
@@ -280,13 +308,11 @@ function handleCopy() {
         <div class="label">
           模式
         </div>
-        <HCheckList
-          v-model="settingsStore.settings.topbar.mode" :options="[
-            { label: '静止', value: 'static' },
-            { label: '固定', value: 'fixed' },
-            { label: '粘性', value: 'sticky' },
-          ]"
-        />
+        <HCheckList v-model="settingsStore.settings.topbar.mode" :options="[
+    { label: '静止', value: 'static' },
+    { label: '固定', value: 'fixed' },
+    { label: '粘性', value: 'sticky' },
+  ]" />
       </div>
       <div class="setting-item">
         <div class="label">
@@ -312,14 +338,12 @@ function handleCopy() {
         <div class="label">
           风格
         </div>
-        <HCheckList
-          v-model="settingsStore.settings.tabbar.style" :options="[
-            { label: '默认', value: '' },
-            { label: '时尚', value: 'fashion' },
-            { label: '卡片', value: 'card' },
-            { label: '方块', value: 'square' },
-          ]" :disabled="!settingsStore.settings.tabbar.enable"
-        />
+        <HCheckList v-model="settingsStore.settings.tabbar.style" :options="[
+    { label: '默认', value: '' },
+    { label: '时尚', value: 'fashion' },
+    { label: '卡片', value: 'card' },
+    { label: '方块', value: 'square' },
+  ]" :disabled="!settingsStore.settings.tabbar.enable" />
       </div>
       <div class="setting-item">
         <div class="label">
@@ -331,14 +355,11 @@ function handleCopy() {
         <div class="label">
           标签页合并规则
         </div>
-        <HSelect
-          v-model="settingsStore.settings.tabbar.mergeTabsBy" :options="[
-            { label: '不合并', value: '' },
-            { label: '根据 activeMenu 合并', value: 'activeMenu' },
-            { label: '根据路由名称合并', value: 'routeName' },
-          ]"
-          :disabled="!settingsStore.settings.tabbar.enable"
-        />
+        <HSelect v-model="settingsStore.settings.tabbar.mergeTabsBy" :options="[
+    { label: '不合并', value: '' },
+    { label: '根据 activeMenu 合并', value: 'activeMenu' },
+    { label: '根据路由名称合并', value: 'routeName' },
+  ]" :disabled="!settingsStore.settings.tabbar.enable" />
       </div>
       <div class="setting-item">
         <div class="label">
@@ -347,13 +368,15 @@ function handleCopy() {
             <SvgIcon name="i-ri:question-line" />
           </HTooltip>
         </div>
-        <HToggle v-model="settingsStore.settings.tabbar.enableMemory" :disabled="!settingsStore.settings.tabbar.enable" />
+        <HToggle v-model="settingsStore.settings.tabbar.enableMemory"
+          :disabled="!settingsStore.settings.tabbar.enable" />
       </div>
       <div class="setting-item">
         <div class="label">
           是否启用快捷键
         </div>
-        <HToggle v-model="settingsStore.settings.tabbar.enableHotkeys" :disabled="!settingsStore.settings.tabbar.enable" />
+        <HToggle v-model="settingsStore.settings.tabbar.enableHotkeys"
+          :disabled="!settingsStore.settings.tabbar.enable" />
       </div>
     </div>
     <div>
@@ -423,16 +446,17 @@ function handleCopy() {
         </div>
         <HToggle v-model="settingsStore.settings.toolbar.colorScheme" />
       </div>
-      <div ref="toolbarLayoutRef" class="mx-4 my-2 flex items-center rounded-2 px-2 py-1 ring-1 ring-stone-2 dark:ring-stone-7">
-        <span
-          v-for="tool in settingsStore.settings.toolbar.layout" :key="tool" class="draggable flex-center p-1" :class="{
-            'flex-1 text-stone-3 dark:text-stone-7 no-drag': tool === '->',
-            'cursor-ew-resize': tool !== '->' && settingsStore.settings.toolbar[tool],
-            'pointer-events-none w-0 op-0 p-0! no-drag': tool !== '->' && !settingsStore.settings.toolbar[tool],
-          }"
-        >
+      <div ref="toolbarLayoutRef"
+        class="mx-4 my-2 flex items-center rounded-2 px-2 py-1 ring-1 ring-stone-2 dark:ring-stone-7">
+        <span v-for="tool in settingsStore.settings.toolbar.layout" :key="tool" class="draggable flex-center p-1"
+          :class="{
+    'flex-1 text-stone-3 dark:text-stone-7 no-drag': tool === '->',
+    'cursor-ew-resize': tool !== '->' && settingsStore.settings.toolbar[tool],
+    'pointer-events-none w-0 op-0 p-0! no-drag': tool !== '->' && !settingsStore.settings.toolbar[tool],
+  }">
           <SvgIcon v-if="tool === 'favorites'" name="i-uiw:star-off" />
-          <SvgIcon v-if="tool === 'breadcrumb'" name="i-ic:twotone-double-arrow" :rotate="settingsStore.settings.app.direction === 'rtl' ? 180 : 0" />
+          <SvgIcon v-if="tool === 'breadcrumb'" name="i-ic:twotone-double-arrow"
+            :rotate="settingsStore.settings.app.direction === 'rtl' ? 180 : 0" />
           <SvgIcon v-if="tool === 'navSearch'" name="i-ri:search-line" />
           <SvgIcon v-if="tool === 'notification'" name="i-ri:notification-3-line" />
           <SvgIcon v-if="tool === 'i18n'" name="i-ri:translate" />
@@ -451,18 +475,17 @@ function handleCopy() {
         <div class="label">
           风格
         </div>
-        <HCheckList
-          v-model="settingsStore.settings.breadcrumb.style" :options="[
-            { label: '默认', value: '' },
-            { label: '现代', value: 'modern' },
-          ]" :disabled="!settingsStore.settings.toolbar.breadcrumb"
-        />
+        <HCheckList v-model="settingsStore.settings.breadcrumb.style" :options="[
+    { label: '默认', value: '' },
+    { label: '现代', value: 'modern' },
+  ]" :disabled="!settingsStore.settings.toolbar.breadcrumb" />
       </div>
       <div class="setting-item">
         <div class="label">
           是否显示主导航
         </div>
-        <HToggle v-model="settingsStore.settings.breadcrumb.enableMainMenu" :disabled="!settingsStore.settings.toolbar.breadcrumb || ['single'].includes(settingsStore.settings.menu.menuMode)" />
+        <HToggle v-model="settingsStore.settings.breadcrumb.enableMainMenu"
+          :disabled="!settingsStore.settings.toolbar.breadcrumb || ['single'].includes(settingsStore.settings.menu.menuMode)" />
       </div>
     </div>
     <div>
@@ -484,7 +507,8 @@ function handleCopy() {
         <div class="label">
           是否启用快捷键
         </div>
-        <HToggle v-model="settingsStore.settings.navSearch.enableHotkeys" :disabled="!settingsStore.settings.toolbar.navSearch" />
+        <HToggle v-model="settingsStore.settings.navSearch.enableHotkeys"
+          :disabled="!settingsStore.settings.toolbar.navSearch" />
       </div>
     </div>
     <div>
@@ -507,13 +531,15 @@ function handleCopy() {
         <div class="label">
           公司
         </div>
-        <HInput v-model="settingsStore.settings.copyright.company" :disabled="!settingsStore.settings.copyright.enable" />
+        <HInput v-model="settingsStore.settings.copyright.company"
+          :disabled="!settingsStore.settings.copyright.enable" />
       </div>
       <div class="setting-item">
         <div class="label">
           网址
         </div>
-        <HInput v-model="settingsStore.settings.copyright.website" :disabled="!settingsStore.settings.copyright.enable" />
+        <HInput v-model="settingsStore.settings.copyright.website"
+          :disabled="!settingsStore.settings.copyright.enable" />
       </div>
       <div class="setting-item">
         <div class="label">
@@ -580,7 +606,7 @@ function handleCopy() {
             <SvgIcon name="i-ri:question-line" />
           </HTooltip>
         </div>
-        <HInput v-model="settingsStore.settings.app.storagePrefix" />
+        <HInput disabled v-model="settingsStore.settings.app.storagePrefix" />
       </div>
       <div class="setting-item">
         <div class="label">
@@ -592,18 +618,16 @@ function handleCopy() {
         <div class="label">
           文本方向
         </div>
-        <HCheckList
-          v-model="settingsStore.settings.app.direction" :options="[
-            { label: 'LTR', value: 'ltr' },
-            { label: 'RTL', value: 'rtl' },
-          ]"
-        />
+        <HCheckList v-model="settingsStore.settings.app.direction" :options="[
+    { label: 'LTR', value: 'ltr' },
+    { label: 'RTL', value: 'rtl' },
+  ]" />
       </div>
     </div>
     <template v-if="isSupported" #footer>
       <HButton block @click="handleCopy">
         <SvgIcon name="i-ep:document-copy" />
-        复制配置
+        应用配置
       </HButton>
     </template>
   </HSlideover>

@@ -1,6 +1,7 @@
 import { hex2rgba } from '@unocss/preset-mini/utils'
 
 export default {
+
   light: {
     // 颜色主题
     'color-scheme': 'light',
@@ -165,6 +166,7 @@ export default {
     '--g-tabbar-tab-hover-color': '#0f0f0f',
     '--g-tabbar-tab-active-color': '#0f0f0f',
   },
+
   winter: {
     // 颜色主题
     'color-scheme': 'light',
@@ -205,6 +207,47 @@ export default {
     '--g-tabbar-tab-hover-bg': '#e5e5e5',
     '--g-tabbar-tab-hover-color': '#0f0f0f',
     '--g-tabbar-tab-active-color': '#0f0f0f',
+  },
+  lightBlue: {
+    // 颜色主题
+    'color-scheme': 'light',
+    // 内置 UI
+    '--ui-primary': hex2rgba('#daecff')!.join(' '),
+    '--ui-text': hex2rgba('#409EFF')!.join(' '),
+    // 主体
+    '--g-bg': '#f2f2f2',
+    '--g-container-bg': '#fff',
+    '--g-border-color': '#f2f2f2',
+    // 头部
+    '--g-header-bg': '#ffffff',
+    '--g-header-color': '#474747',
+    '--g-header-menu-color': '#474747',
+    '--g-header-menu-hover-bg': '#daecff',
+    '--g-header-menu-hover-color': '#474747',
+    '--g-header-menu-active-bg': '#daecff',
+    '--g-header-menu-active-color': '#409EFF',
+    // 主导航
+    '--g-main-sidebar-bg': '#fff',
+    '--g-main-sidebar-menu-color': '#474747',
+    '--g-main-sidebar-menu-hover-bg': '#daecff',
+    '--g-main-sidebar-menu-hover-color': '#474747',
+    '--g-main-sidebar-menu-active-bg': '#daecff',
+    '--g-main-sidebar-menu-active-color': '#409EFF',
+    // 次导航
+    '--g-sub-sidebar-bg': '#fff',
+    '--g-sub-sidebar-logo-bg': '#474747',
+    '--g-sub-sidebar-logo-color': '#fff',
+    '--g-sub-sidebar-menu-color': '#474747',
+    '--g-sub-sidebar-menu-hover-bg': '#daecff',
+    '--g-sub-sidebar-menu-hover-color': '#474747',
+    '--g-sub-sidebar-menu-active-bg': '#daecff',
+    '--g-sub-sidebar-menu-active-color': '#409EFF',
+    // 标签栏
+    '--g-tabbar-dividers-bg': '#a3a3a3',
+    '--g-tabbar-tab-color': '#a3a3a3',
+    '--g-tabbar-tab-hover-bg': '#e5e5e5',
+    '--g-tabbar-tab-hover-color': '#474747',
+    '--g-tabbar-tab-active-color': '#474747',
   },
   cyberpunk: {
     // 颜色主题
