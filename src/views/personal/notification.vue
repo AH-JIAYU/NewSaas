@@ -112,7 +112,7 @@ onMounted(() => {
               <OverlayScrollbarsComponent :options="{
             scrollbars: { autoHide: 'leave', autoHideDelay: 300 },
           }" defer class="list">
-                <template v-if="notificationStore.messageList.length">
+                <template v-if="filterMessageList.length">
                   <div :class="{
             item: 'item',
             select: item.id === data.selectId,
@@ -150,7 +150,7 @@ onMounted(() => {
               <OverlayScrollbarsComponent :options="{
             scrollbars: { autoHide: 'leave', autoHideDelay: 300 },
           }" defer class="list">
-                <template v-if="notificationStore.todoList.length">
+                <template v-if="filterTodoList.length">
                   <div :class="{
             item: 'item',
             select: item.id === data.selectId,
