@@ -319,26 +319,31 @@ const registerRules = ref<FormRules>({
 });
 // 获取验证码
 const mobileVerificationCode = async () => {
-  const params = {
-    type: "register_phone_number", // 默认手机号
-    email: registerForm.value.email,
-    phone: registerForm.value.phoneNumber,
-  };
-  if (registerForm.value.country === "CN") {
-    const { status } = await api.sendCode(params);
-    status === 1 &&
-      ElMessage.success({
-        message: "已发送",
-      });
-  } else {
-    params.type = "register_email";
-    const { status } = await api.sendCode(params);
-    status === 1 &&
-      ElMessage.success({
-        message: "已发送",
-      });
-  }
-  countdown();
+  registerFormRef.value.validateField(registerForm.value.country === "CN" ? "phoneNumber" : "email", async (valid: any) => {
+    if (valid) {
+      const params = {
+        type: "register_phone_number", // 默认手机号
+        email: registerForm.value.email,
+        phone: registerForm.value.phoneNumber,
+      };
+      if (registerForm.value.country === "CN") {
+        const { status } = await api.sendCode(params);
+        status === 1 &&
+          ElMessage.success({
+            message: "已发送",
+          });
+      } else {
+        params.type = "register_email";
+        const { status } = await api.sendCode(params);
+        status === 1 &&
+          ElMessage.success({
+            message: "已发送",
+          });
+      }
+      countdown();
+    }
+  })
+
 };
 // 倒计时
 const countdown = () => {
@@ -783,7 +788,7 @@ const agreements = (val: any) => {
   width: 100%;
   height: 100%;
   background: url("../assets/images/background.png") center center fixed no-repeat;
-  background-size:   cover ;
+  background-size: cover;
   // background: radial-gradient(
   //   circle at center,
   //   var(--g-container-bg),

@@ -93,9 +93,9 @@ function handleMouseenter() {
 }
 function handleMouseleave() {
   timeout?.()
-  ;({ stop: timeout } = useTimeoutFn(() => {
-    settingsStore.setHoverSidebar(false)
-  }, 300))
+    ; ({ stop: timeout } = useTimeoutFn(() => {
+      settingsStore.setHoverSidebar(false)
+    }, 300))
 }
 
 const enableAppSetting = import.meta.env.VITE_APP_SETTING === 'true'
@@ -106,19 +106,26 @@ const enableAppSetting = import.meta.env.VITE_APP_SETTING === 'true'
     <div id="app-main" :class="{ 'main-page-maximize': settingsStore.mainPageMaximizeStatus }">
       <Header />
       <div class="wrapper">
-        <div class="sidebar-container" :class="{ show: settingsStore.mode === 'mobile' && !settingsStore.settings.menu.subMenuCollapse }" @mouseenter="handleMouseenter" @mouseleave="handleMouseleave">
+        <div class="sidebar-container"
+          :class="{ show: settingsStore.mode === 'mobile' && !settingsStore.settings.menu.subMenuCollapse }"
+          @mouseenter="handleMouseenter" @mouseleave="handleMouseleave">
           <MainSidebar />
           <SubSidebar />
         </div>
-        <div class="sidebar-mask" :class="{ show: settingsStore.mode === 'mobile' && !settingsStore.settings.menu.subMenuCollapse }" @click="settingsStore.toggleSidebarCollapse()" />
+        <div class="sidebar-mask"
+          :class="{ show: settingsStore.mode === 'mobile' && !settingsStore.settings.menu.subMenuCollapse }"
+          @click="settingsStore.toggleSidebarCollapse()" />
         <div class="main-container" :style="{ 'padding-bottom': routeInfo.meta.paddingBottom }">
           <Topbar />
           <div class="main">
-            <div v-show="settingsStore.mainPageMaximizeStatus" class="exit-main-page-maximize" @click="settingsStore.setMainPageMaximize()">
+            <div v-show="settingsStore.mainPageMaximizeStatus" class="exit-main-page-maximize"
+              @click="settingsStore.setMainPageMaximize()">
               <SvgIcon name="i-ri:logout-box-line" />
             </div>
             <RouterView v-slot="{ Component, route }">
-              <Transition :name="settingsStore.settings.mainPage.enableTransition ? settingsStore.settings.mainPage.transitionMode : ''" mode="out-in" appear>
+              <Transition
+                :name="settingsStore.settings.mainPage.enableTransition ? settingsStore.settings.mainPage.transitionMode : ''"
+                mode="out-in" appear>
                 <KeepAlive :include="keepAliveStore.list">
                   <component :is="Component" v-show="!(isIframe || isLink)" :key="route.fullPath" />
                 </KeepAlive>
@@ -215,6 +222,7 @@ const enableAppSetting = import.meta.env.VITE_APP_SETTING === 'true'
 
   // 当前标签页全屏
   &.main-page-maximize {
+
     header,
     .sidebar-container {
       display: none;
@@ -285,7 +293,7 @@ const enableAppSetting = import.meta.env.VITE_APP_SETTING === 'true'
     }
   }
 
-  .main-sidebar-container:not(.main-sidebar-leave-active) + .sub-sidebar-container {
+  .main-sidebar-container:not(.main-sidebar-leave-active)+.sub-sidebar-container {
     inset-inline-start: var(--g-main-sidebar-width);
   }
 
@@ -325,21 +333,21 @@ const enableAppSetting = import.meta.env.VITE_APP_SETTING === 'true'
       }
     }
 
-    .topbar-container.has-tabbar + .main {
+    .topbar-container.has-tabbar+.main {
       margin: var(--g-tabbar-height) 0 0;
     }
 
-    .topbar-container.has-toolbar + .main {
+    .topbar-container.has-toolbar+.main {
       margin: var(--g-toolbar-height) 0 0;
     }
 
-    .topbar-container.has-tabbar.has-toolbar + .main {
+    .topbar-container.has-tabbar.has-toolbar+.main {
       margin: calc(var(--g-tabbar-height) + var(--g-toolbar-height)) 0 0;
     }
   }
 }
 
-header:not(.header-leave-active) + .wrapper {
+header:not(.header-leave-active)+.wrapper {
   padding-top: var(--g-header-height);
 
   .sidebar-container {
@@ -358,8 +366,8 @@ header:not(.header-leave-active) + .wrapper {
 }
 
 .app-setting {
-  --at-apply: text-white dark:text-dark bg-ui-primary;
-
+  --at-apply: dark:text-dark bg-ui-primary;
+  color: var(--g-sub-sidebar-menu-active-color);
   position: fixed;
   inset-inline-end: 0;
   top: calc(50% + 250px);

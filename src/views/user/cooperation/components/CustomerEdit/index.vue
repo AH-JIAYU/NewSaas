@@ -34,7 +34,7 @@ const dataList = computed(() => {
   );
   if (findData) {
     data.value.form.tenantName = findData.name;
-    data.value.form.phoneOrEmail = storage.local.get("login_account");
+    data.value.form.phoneOrEmail = storage.local.get("account");
     return [findData];
   }
   return [];

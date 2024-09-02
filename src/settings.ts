@@ -1,8 +1,9 @@
 import { defaultsDeep } from "lodash-es";
 import type { RecursiveRequired, Settings } from "#/global";
 import settingsDefault from "@/settings.default";
-
-const globalSettings: Settings.all = {
+// @ts-ignore
+const globalConfiguration:any=JSON.parse(localStorage.getItem('saas_globalConfiguration'))
+const globalSettings: Settings.all = globalConfiguration||{
   breadcrumb: {
     style: "modern",
   },
@@ -23,6 +24,9 @@ const globalSettings: Settings.all = {
     pageReload: true,
     colorScheme: true,
   },
+  "app": {
+    "lightTheme": "lightBlue"
+  }
 };
 
 export default defaultsDeep(

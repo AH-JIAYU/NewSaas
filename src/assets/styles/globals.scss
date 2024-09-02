@@ -549,9 +549,11 @@ textarea {
     display: flex;
     justify-content: start;
     align-items: center;
-    .icon{
+
+    .icon {
       margin-right: .3125rem;
     }
+
     button {
       border-color: transparent;
       color: var(--el-color-primary);
@@ -564,4 +566,9 @@ textarea {
     }
   }
 
+}
+
+// 滚动条
+.el-scrollbar__bar.is-horizontal {
+  height: .625rem;
 }
