@@ -97,6 +97,7 @@ const formRules = ref<FormRules>({
 onMounted(() => {
   loading.value = true;
   fileList.value = [{ name: 'logo', url: userStore.logo }]
+  getLogo()
   getDataList();
   loading.value = false;
 });
@@ -469,4 +470,6 @@ function onSubmit() {
 
 // :deep() {
 //   background-color: #fafafa;
-// }</style>
+// }
+
+</style>
