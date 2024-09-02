@@ -100,8 +100,7 @@ router.beforeEach(async (to, from, next) => {
     } else {
       // 获取用户权限
       // settingsStore.settings.app.enablePermission && await userStore.getPermissions()
-      await userStore.getPermissions(); //权限
-      await userStore.getTenantLogo(); //logo
+      await userStore.getPermissions(); //权限 
       await userStore.getCurrencyType(); // 货币类型
       await userStore.getExchangeRate(); // 汇率
       await notificationStore.init(); // 获取消息和待办
