@@ -28,7 +28,7 @@ const useUserStore = defineStore(
     const avatar = ref(storage.local.get("avatar") ?? "");
     const userId = ref(storage.local.get("userId") ?? "");
     const permissions = ref<string[]>([]);
-    const logo = ref<string>();
+    const logo = ref<any>(storage.local.get("logo") ?? "");
     const currencyType = ref<number | string>(3); //货币类型 1=USD 2=CNY 3=未知
     const exchangeRate = ref<number | string>(); //汇率
     const isLogin = computed(() => {
@@ -67,6 +67,8 @@ const useUserStore = defineStore(
       storage.local.set("token", res.data.token);
       storage.local.set("avatar", res.data.avatar);
       storage.local.set("userId", res.data.userId);
+      storage.local.set("logo", res.data.logo);
+      logo.value = res.data.logo;
       account.value = res.data.account;
       token.value = res.data.token;
       avatar.value = res.data.avatar;
@@ -85,6 +87,7 @@ const useUserStore = defineStore(
         await api.logout();
         storage.local.remove("login_account");
       }
+      storage.local.remove("logo");
       storage.local.remove("account");
       storage.local.remove("token");
       storage.local.remove("avatar");
@@ -115,11 +118,7 @@ const useUserStore = defineStore(
       const res = await apiUser.permission();
       permissions.value = res.data;
     }
-    // 获取logo
-    async function getTenantLogo() {
-      const res = await apiLogo.getTenantLogo();
-      logo.value = res?.data?.logoUrl
-    }
+
     // 获取货币类型
     async function getCurrencyType() {
       const res = await apiUser.getCurrencyType();
@@ -292,7 +291,6 @@ const useUserStore = defineStore(
       login,
       logout,
       getPermissions,
-      getTenantLogo,
       getCurrencyType,
       getExchangeRate,
       editPassword,

@@ -15,8 +15,7 @@ defineOptions({
 });
 // token
 const userStore = useUserStore();
-// 隐藏上传
-const upload = ref(false);
+
 // 接口地址
 const Url = import.meta.env.VITE_APP_API_BASEURL + "/tenant-logo/upload";
 const { toClipboard } = useClipboard();
@@ -97,7 +96,7 @@ const formRules = ref<FormRules>({
 });
 onMounted(() => {
   loading.value = true;
-  getLogo()
+  fileList.value = [{ name: 'logo', url: userStore.logo }]
   getDataList();
   loading.value = false;
 });
@@ -122,9 +121,7 @@ const getLogo = async () => {
       name: "file",
       url: res?.data?.logoUrl,
     });
-    if (res?.data?.logoUrl !== "") {
-      upload.value = true;
-    }
+
   }
 }
 // 复制地址
@@ -146,7 +143,6 @@ const dialogVisible = ref(false);
 const fileList = ref<any>([]);
 // 删除
 const handleRemove: any = async () => {
-  upload.value = false;
   ElMessage.success({
     message: "删除成功",
     center: true,
@@ -162,7 +158,6 @@ const handleSuccess: any = (uploadFile: any, uploadFiles: any) => {
     fileList.value = fileList.value.filter((item: any) => item.name !== uploadFiles.name)
   } else {
     getLogo()
-    upload.value = true;
   }
 };
 // 超出限制
@@ -285,9 +280,9 @@ function onSubmit() {
                 justify-content: center;
                 align-items: center;
               " label="网址Logo">
-                  <el-upload :class="{ hide_box: upload }" v-model:file-list="fileList" :headers="headers" :action="Url"
-                    list-type="picture-card" :limit="1" :on-preview="handlePictureCardPreview" :on-remove="handleRemove"
-                    :on-success="handleSuccess" :on-exceed="handleExceed">
+                  <el-upload :class="{ hide_box: fileList.length }" v-model:file-list="fileList" :headers="headers"
+                    :action="Url" list-type="picture-card" :limit="1" :on-preview="handlePictureCardPreview"
+                    :on-remove="handleRemove" :on-success="handleSuccess" :on-exceed="handleExceed">
                     <el-icon class="el-icon--upload">
                       <Plus />
                     </el-icon>
