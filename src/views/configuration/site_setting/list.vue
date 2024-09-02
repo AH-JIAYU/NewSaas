@@ -112,6 +112,7 @@ async function getDataList() {
     loading.value = false;
   }
 }
+// 获取logo
 const getLogo = async () => {
   fileList.value = []
   const res = await apiLogo.getTenantLogo();
@@ -283,7 +284,7 @@ function onSubmit() {
                 display: flex;
                 justify-content: center;
                 align-items: center;
-              " label="网址Logo"> 
+              " label="网址Logo">
                   <el-upload :class="{ hide_box: upload }" v-model:file-list="fileList" :headers="headers" :action="Url"
                     list-type="picture-card" :limit="1" :on-preview="handlePictureCardPreview" :on-remove="handleRemove"
                     :on-success="handleSuccess" :on-exceed="handleExceed">
