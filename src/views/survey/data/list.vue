@@ -117,24 +117,30 @@ function getDataList() {
       </el-row>
       <div class="showDataRow" :gutter="24">
         <div class="showDataCol">
-          <p class="showDataP">{{data.search.type === 'month' ? '当月参与量' : '今日参与量'}}</p>
+          <p class="showDataP" v-show="data.search.type === 'day'">今日参与量</p>
+          <p class="showDataP" v-show="data.search.type === 'month'">当月参与量</p>
+          <p class="showDataP" v-show="data.search.type === 'year'">年度参与量</p>
           <div class="showDataCount">
             <span class="showDataSpanLeft">{{ data.dataScreening?.participationVolume || 0 }}</span>
-            <span class="showDataSpanRight"><span class="dd"></span><span class="participate">{{data.search.type === 'month' ? '上月' : '昨日'}}：{{ data.dataScreening?.participationVolumeDifference || 0 }}</span></span>
+            <span class="showDataSpanRight" v-if="data.search.type !== 'year'"><span class="dd"></span><span class="participate">{{data.search.type === 'month' ? '上月' : '昨日'}}：{{ data.dataScreening?.participationVolumeDifference || 0 }}</span></span>
           </div>
         </div>
         <div class="showDataCol">
-          <p class="showDataP">{{data.search.type === 'month' ? '当月完成量' : '今日完成量'}}</p>
+          <p class="showDataP" v-show="data.search.type === 'day'">今日完成量</p>
+          <p class="showDataP" v-show="data.search.type === 'month'">当月完成量</p>
+          <p class="showDataP" v-show="data.search.type === 'year'">年度完成量</p>
           <div class="showDataCount">
             <span class="showDataSpanLeft">{{ data.dataScreening?.completedQuantity || 0 }}</span>
-            <span class="showDataSpanRight"><span class="dd"></span><span class="participate">{{data.search.type === 'month' ? '上月' : '昨日'}}：{{ data.dataScreening?.completedQuantityDifference || 0 }}</span></span>
+            <span class="showDataSpanRight" v-if="data.search.type !== 'year'"><span class="dd"></span><span class="participate">{{data.search.type === 'month' ? '上月' : '昨日'}}：{{ data.dataScreening?.completedQuantityDifference || 0 }}</span></span>
           </div>
         </div>
         <div class="showDataCol">
-          <p class="showDataP">{{data.search.type === 'month' ? '当月营业额' : '今日营业额'}}</p>
+          <p class="showDataP" v-show="data.search.type === 'day'">今日营业额</p>
+          <p class="showDataP" v-show="data.search.type === 'month'">当月营业额</p>
+          <p class="showDataP" v-show="data.search.type === 'year'">年度营业额</p>
           <div class="showDataCount">
             <span class="showDataSpanLeft">{{ data.dataScreening?.turnover || 0 }}</span>
-            <span class="showDataSpanRight"><span class="dd"></span><span class="participate">{{data.search.type === 'month' ? '上月' : '昨日'}}：{{ data.dataScreening?.turnoverDifference || 0 }}</span></span>
+            <span class="showDataSpanRight" v-if="data.search.type !== 'year'"><span class="dd"></span><span class="participate">{{data.search.type === 'month' ? '上月' : '昨日'}}：{{ data.dataScreening?.turnoverDifference || 0 }}</span></span>
           </div>
         </div>
         <div class="showDataCol">
@@ -159,7 +165,7 @@ function getDataList() {
           <el-table :data="data.memberDataCenterCompletedVOList" class="tabless"
             :style="{ '--el-table-border-color': 'none' }">
             <el-table-column align="center" type="index" width="60"  label="序号"/>
-            <el-table-column show-overflow-tooltip width="180" align="center" prop="memberId" label="会员ID">
+            <el-table-column show-overflow-tooltip align="center" prop="memberId" label="会员ID">
               <template #default="{ row }">
                 <span style="color: #0F0F0F;">{{ row.memberId ? row.memberId : '-' }}</span>
               </template>
@@ -183,7 +189,7 @@ function getDataList() {
           <p class="rankingColP"><span class="rankingColSpan"></span>退款排行榜</p>
           <el-table :data="data.memberDataCenterRefundVOList" :style="{ '--el-table-border-color': 'none' }">
             <el-table-column align="center" type="index" width="60"  label="序号"/>
-            <el-table-column show-overflow-tooltip width="180" align="center" prop="memberId" label="会员ID">
+            <el-table-column show-overflow-tooltip align="center" prop="memberId" label="会员ID">
               <template #default="{ row }">
                 <span style="color: #0F0F0F;">{{ row.memberId ? row.memberId : '-' }}</span>
               </template>
@@ -212,7 +218,7 @@ function getDataList() {
           <p class="rankingColP"><span class="rankingColSpan"></span>业绩排行榜</p>
           <el-table :data="data.memberDataCenterPriceVOList" :style="{ '--el-table-border-color': 'none' }">
             <el-table-column align="center" type="index" width="60"  label="序号"/>
-            <el-table-column show-overflow-tooltip width="180" align="center" prop="memberId" label="会员ID">
+            <el-table-column show-overflow-tooltip align="center" prop="memberId" label="会员ID">
               <template #default="{ row }">
                 <span style="color: #0F0F0F;">{{ row.memberId ? row.memberId : '-' }}</span>
               </template>
