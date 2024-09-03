@@ -9,7 +9,7 @@ const useTenantRoleStore = defineStore(
       if (role.value.length) {
         return role.value
       }
-      const { data } = await api.list()
+      const { data } = await api.list({id:null,name:''})
       role.value = data || []
       return data
     }
