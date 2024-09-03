@@ -130,7 +130,7 @@ onMounted(async () => {
         <template #default="{ fold, toggle }">
           <el-form :model="queryForm" size="default" label-width="100px" inline-message inline class="search-form">
             <el-form-item label="">
-              <el-input v-model.trim="queryForm.projectClickIdList" clearable :inline="false" placeholder="点击ID" />
+              <el-input v-model.trim="queryForm.createUserId" clearable :inline="false" placeholder="操作人ID" />
             </el-form-item>
             <el-form-item label="">
               <el-select v-model="queryForm.type" value-key="" placeholder="变更状态" clearable filterable>

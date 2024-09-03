@@ -228,6 +228,15 @@ onMounted(async () => {
                 <el-option label="待审批" :value="3" />
               </el-select>
             </el-form-item>
+            <!-- <el-form-item v-show="!fold" label="">
+              <el-select v-model="queryForm.supplierLevelId" value-key="" placeholder="供应商等级" clearable filterable >
+              <el-option v-for="item in supplierLevelList"
+              :key="item.tenantSupplierLevelId"
+              :label="item.levelNameOrAdditionRatio"
+              :value="item.tenantSupplierLevelId">
+              </el-option>
+              </el-select>
+            </el-form-item> -->
             <el-form-item v-show="!fold" label="">
               <el-date-picker v-model="queryForm.time" type="datetimerange" unlink-panels range-separator="-"
                 start-placeholder="创建开始日期" end-placeholder="创建结束日期" value-format="YYYY-MM-DD hh:mm:ss" size="default"

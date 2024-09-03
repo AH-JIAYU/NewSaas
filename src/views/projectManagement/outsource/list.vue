@@ -220,7 +220,7 @@ onMounted(() => {
               <el-form :model="queryForm.select" size="default" label-width="100px" inline-message inline
                 class="search-form">
                 <el-form-item label="">
-                  <el-input v-model="queryForm.tenantId" clearable placeholder="租户id" />
+                  <el-input v-model="queryForm.tenantId" clearable placeholder="租户ID" />
                 </el-form-item>
                 <el-form-item label="">
                   <el-input v-model="queryForm.tenantName" clearable placeholder="租户名称" />

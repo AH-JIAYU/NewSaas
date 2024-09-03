@@ -114,6 +114,7 @@ function onReset() {
     tenantSupplierId: "", //	供应商id
     projectName: "", //	项目名称
     ipBelong: "", //	ip/所属国
+    time: [],
   });
   fetchData();
 }
