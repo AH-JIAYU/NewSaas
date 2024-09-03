@@ -111,6 +111,7 @@ async function getDataList() {
     loading.value = false;
   }
 }
+// 获取logo
 const getLogo = async () => {
   fileList.value = []
   const res = await apiLogo.getTenantLogo();
@@ -149,7 +150,7 @@ const handleRemove: any = async () => {
   userStore.delLogo()
 };
 // 上传图片成功
-const handleSuccess: any = (uploadFile: any, uploadFiles: any) => { 
+const handleSuccess: any = (uploadFile: any, uploadFiles: any) => {
   if (uploadFile.status === -1) {
     Message.error(uploadFile.error, {
       zIndex: 2000,
@@ -469,4 +470,6 @@ function onSubmit() {
 
 // :deep() {
 //   background-color: #fafafa;
-// }</style>
+// }
+
+</style>
