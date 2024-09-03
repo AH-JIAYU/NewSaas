@@ -184,7 +184,7 @@ function onSubmit() {
     formRef.value.clearValidate('phone');
   }
   // 新增
-  if (form.value.id === "") {
+  if (!form.value.id) {
     // 校验
     formRef.value &&
       formRef.value.validate((valid: any) => {
@@ -192,6 +192,7 @@ function onSubmit() {
           try {
             loading.value = true;
             delete form.value.id;
+            !form.value.keyWords && (form.value.keyWords = 'keyWords')
             api.create(form.value).then(() => {
               loading.value = false;
               getDataList();
@@ -470,6 +471,4 @@ function onSubmit() {
 
 // :deep() {
 //   background-color: #fafafa;
-// }
-
-</style>
+// }</style>
