@@ -349,7 +349,7 @@ function onReset() {
       <div class="leftTree">
         <div v-if="dictionary.tree.length" class="leftData" :span="3">
           <!-- <el-input v-model="userName" placeholder="可输入用户名查找" clearable @blur="blurUserName" /> -->
-          <el-tree style="max-width: 37.5rem; min-height: 45.4375rem; padding: 10px;" :data="dictionary.tree"
+          <el-tree style="max-width: 37.5rem; min-height: 45.4375rem; padding: .625rem;" :data="dictionary.tree"
             ref="treeRef" show-checkbox node-key="id" default-expand-all :expand-on-click-node="false"
             :props="defaultProps" @node-click="dictionaryClick" />
         </div>
@@ -374,11 +374,11 @@ function onReset() {
         <PageMain>
           <div v-loading="dictionary.loading" class="dictionary-container">
             <ElSpace>
-              <ElInput v-model="dictionaryItem.search.id" placeholder="员工ID" clearable style="width: 200px"
+              <ElInput v-model="dictionaryItem.search.id" placeholder="员工ID" clearable style="width: 12.5rem"
                 @keydown.enter="getDictionaryList" />
-              <ElInput v-model="dictionaryItem.search.userName" placeholder="用户名" clearable style="width: 200px"
+              <ElInput v-model="dictionaryItem.search.userName" placeholder="用户名" clearable style="width: 12.5rem"
                 @keydown.enter="getDictionaryList" />
-              <el-select v-model="dictionaryItem.search.active" value-key="" placeholder="状态" clearable filterable
+              <el-select v-model="dictionaryItem.search.active" value-key="" placeholder="状态" style="width: 12.5rem" clearable filterable
                 @change="">
                 <el-option v-for="item in activeList" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
@@ -394,8 +394,8 @@ function onReset() {
                 </template>
               </ElButton>
             </ElSpace>
-            <el-row style="margin-bottom: 5px" :gutter="24">
-              <el-col style="margin-bottom: 25px;" :span="10">
+            <el-row style="margin-bottom: .3125rem" :gutter="24">
+              <el-col style="margin-bottom: 1.5625rem;" :span="10">
                 <el-button type="primary" size="default" @click="onCreate">
                   新增
                 </el-button>
@@ -408,7 +408,7 @@ function onReset() {
                 <TabelControl v-model:border="dictionaryItem.border"
                   v-model:tableAutoHeight="dictionaryItem.tableAutoHeight" v-model:checkList="dictionaryItem.checkList"
                   v-model:columns="columns" v-model:line-height="dictionaryItem.lineHeight"
-                  v-model:stripe="dictionaryItem.stripe" style="margin-left: 12px" @query-data="getDictionaryList" />
+                  v-model:stripe="dictionaryItem.stripe" style="margin-left: .75rem" @query-data="getDictionaryList" />
               </el-col>
             </el-row>
             <ElTable ref="dictionaryItemRef" :data="dictionaryItem.dataList" :border="dictionaryItem.border"
@@ -569,7 +569,7 @@ function onReset() {
     }
 
     .search {
-      margin: 15px 0;
+      margin: .9375rem 0;
     }
 
     .tree {
@@ -578,7 +578,7 @@ function onReset() {
 
       .el-tree {
         .el-tree-node__content {
-          height: 60px;
+          height: 3.75rem;
         }
 
         .is-current>.el-tree-node__content {
@@ -595,14 +595,14 @@ function onReset() {
           height: 100%;
 
           .label {
-            width: calc(100% - 10px);
+            width: calc(100% - .625rem);
             color: var(--el-text-color-primary);
 
             @include text-overflow;
           }
 
           .code {
-            width: calc(100% - 10px);
+            width: calc(100% - .625rem);
             color: var(--el-text-color-placeholder);
 
             @include text-overflow;
@@ -617,12 +617,12 @@ function onReset() {
           .actions {
             position: absolute;
             top: 50%;
-            right: 10px;
+            right: .625rem;
             display: none;
             transform: translateY(-50%);
 
             .el-button {
-              padding: 5px 8px;
+              padding: .3125rem .5rem;
             }
           }
         }
@@ -643,13 +643,13 @@ function onReset() {
     height: 100%;
 
     .empty {
-      font-size: 32px;
+      font-size: 2rem;
       color: var(--el-text-color-placeholder);
       text-align: center;
     }
 
     .el-table {
-      margin: 15px 0;
+      margin: .9375rem 0;
     }
   }
 }
@@ -659,12 +659,12 @@ function onReset() {
 
   .leftData {
     width: 13%;
-    margin: 16px 0 16px 16px;
+    margin: 1rem 0 1rem 1rem;
   }
 
   .rightData {
     width: 86.2%;
-    padding: 10px;
+    padding: .625rem;
     background-color: #fff;
   }
 }

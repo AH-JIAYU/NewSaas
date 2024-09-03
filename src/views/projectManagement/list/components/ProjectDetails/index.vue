@@ -559,7 +559,7 @@ defineExpose({ showEdit });
             </el-table-column>
             <el-table-column align="center" label="详情">
               <template #default="{ row }">
-                <el-button type="primary" link @click="details(row)" v-if="row.operationType === 2">
+                <el-button type="primary" link @click="details(row)" v-if="row.operationType !== 1">
                   详情
                 </el-button>
                 <el-text v-else>-</el-text>

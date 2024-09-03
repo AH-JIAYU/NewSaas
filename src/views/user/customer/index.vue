@@ -275,7 +275,7 @@ onMounted(async () => {
               inactive-text="禁用" @change="changeState($event, 3, row.tenantCustomerId)" />
           </template>
         </ElTableColumn>
-        <el-table-column align="center" fixed="right" prop="i" label="操作" show-overflow-tooltip width="200">
+        <el-table-column align="center" fixed="right" prop="i" label="操作" width="200">
           <template #default="{ row }">
             <ElSpace>
               <el-button size="small" plain type="primary" @click="handleEdit(row)">

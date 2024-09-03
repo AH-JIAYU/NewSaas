@@ -96,7 +96,7 @@ const formRules = ref<FormRules>({
 });
 onMounted(() => {
   loading.value = true;
-  fileList.value = [{ name: 'logo', url: userStore.logo }]
+  userStore.logo && (fileList.value = [{ name: 'logo', url: userStore.logo }])
   getDataList();
   loading.value = false;
 });
@@ -115,11 +115,11 @@ const getLogo = async () => {
   fileList.value = []
   const res = await apiLogo.getTenantLogo();
   if (res.data) {
-    userStore.logo = res.data.logoUrl
-    fileList.value.push({
-      name: "file",
-      url: res?.data?.logoUrl,
-    });
+    userStore.setLogo(res.data.logoUrl),
+      fileList.value.push({
+        name: "file",
+        url: res?.data?.logoUrl,
+      });
 
   }
 }
@@ -146,9 +146,10 @@ const handleRemove: any = async () => {
     message: "删除成功",
     center: true,
   });
+  userStore.delLogo()
 };
 // 上传图片成功
-const handleSuccess: any = (uploadFile: any, uploadFiles: any) => {
+const handleSuccess: any = (uploadFile: any, uploadFiles: any) => { 
   if (uploadFile.status === -1) {
     Message.error(uploadFile.error, {
       zIndex: 2000,

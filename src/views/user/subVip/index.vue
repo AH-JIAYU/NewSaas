@@ -282,7 +282,7 @@ onMounted(() => {
             {{ row.createUserName ? row.createUserName : "-" }}
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('createTime')" align="center" prop="createTime" show-overflow-tooltip
+        <el-table-column v-if="checkList.includes('createTime')" align="center" prop="createTime"
           label="创建日期"><template #default="{ row }">
             <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>
           </template>

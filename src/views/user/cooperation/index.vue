@@ -206,7 +206,7 @@ onMounted(() => {
             <CurrencyType />{{ row.availableBalance || 0 }}
           </template>
         </el-table-column>
-        <el-table-column align="center" fixed="right" prop="i" label="操作" show-overflow-tooltip width="350">
+        <el-table-column align="center" fixed="right" prop="i" label="操作"  width="350">
           <template #default="{ row }">
             <ElSpace>
               <el-button v-if="row.bindStatus === 2" type="primary" plain size="small" @click="termination(row)">
