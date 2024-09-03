@@ -1,9 +1,0 @@
-
-/**
- * 由 Fantastic-admin 提供技术支持
- * Powered by Fantastic-admin
- * Gitee  https://fantastic-admin.gitee.io
- * Github https://fantastic-admin.github.io
- */
-
-import{d as i,y as s,o as r,b as m,s as t,f as e,q as p,aq as n,i as a,R as c}from"./index-CqkCf6k2.js";import{_}from"./leftSide.vue_vue_type_script_setup_true_lang-D2ueNxDO.js";import{_ as d}from"./rightSide.vue_vue_type_script_setup_true_lang-D2New_p6.js";import"./tools.vue_vue_type_script_setup_true_lang-CqHunpcP.js";import"./index-DIWly5FH.js";import"./index-B3x_dN0L.js";import"./item.vue_vue_type_script_setup_true_lang-D8Qw8PO4.js";import"./index.vue_vue_type_script_setup_true_lang-CbjK35A3.js";import"./HDropdown-lX3ItapX.js";import"./HTabList.vue_vue_type_script_setup_true_lang-ovjkf2Qi.js";import"./use-resolve-button-type-BofM5QeS.js";import"./index.vue_vue_type_script_setup_true_lang-BM-CQbts.js";import"./panel-CHvvCt1Z.js";import"./sortable.esm-C0-Qcoum.js";import"./index.vue_vue_type_script_setup_true_lang-Cq8VC-UI.js";import"./index-BWc0uF1c.js";import"./index-CRk224Je.js";import"./index.vue_vue_type_script_setup_true_lang-BKvaROxw.js";import"./index.vue_vue_type_script_setup_true_lang-BIfpVLY6.js";import"./HKbd-2W8Uh-V_.js";import"./index-C2yYYtOa.js";import"./HBadge.vue_vue_type_script_setup_true_lang-96GYtbqn.js";import"./panel-Kjb17wzy.js";import"./index-PvCqH-aW.js";import"./useMainPage-O_Eb2Vdc.js";import"./useTabbar-DYhmo4Lv.js";import"./avatar-jkQKCYX3.js";const f={class:"toolbar-container flex items-center justify-between"},l={class:"left-side h-full flex items-center of-hidden pe-16 ps-2"},u={class:"h-full flex items-center justify-end px-2"},h=i({name:"Toolbar",__name:"index",setup(x){const o=s();return(v,b)=>(r(),m("div",f,[t("div",l,[e(_)]),p(t("div",u,[e(d)],512),[[n,["side","single","only-side"].includes(a(o).settings.menu.menuMode)]])]))}}),P=c(h,[["__scopeId","data-v-00534fcf"]]);export{P as default};
