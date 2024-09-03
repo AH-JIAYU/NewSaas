@@ -57,7 +57,7 @@ const form = ref<any>({
 });
 // 个人信息校验
 const formRules = ref<FormRules>({
-  invoiceCode: [{ required: true, trigger: "blur", message: "请输入姓名" }],
+  invoiceCode: [{ required: true, trigger: "blur", message: "请输入发票编号" }],
   tenantCustomerId: [{ required: true, trigger: "change", message: "请选择客户" }],
 });
 // 提交数据

@@ -134,6 +134,15 @@ function onDel(row: any) {
     })
     .catch(() => { });
 }
+
+// 重置数据
+function onReset() {
+  Object.assign(data.value.search, {
+    // 模板标题
+    title: "",
+  });
+  getDataList();
+}
 </script>
 
 <template>
@@ -176,6 +185,12 @@ function onDel(row: any) {
                   <SvgIcon name="i-ep:search" />
                 </template>
                 筛选
+              </ElButton>
+              <ElButton @click="onReset">
+                <template #icon>
+                  <div class="i-grommet-icons:power-reset h-1em w-1em" />
+                </template>
+                重置
               </ElButton>
               <ElButton link disabled @click="toggle">
                 <template #icon>

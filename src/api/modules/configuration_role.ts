@@ -1,7 +1,7 @@
 import api from '../index'
 
 export default {
-  list: () => api.post('role/getRoleList'),
+  list: (data:any) => api.post('role/getRoleList',data),
 
   create: (data: any) => api.post('role/insertRole', data),
 

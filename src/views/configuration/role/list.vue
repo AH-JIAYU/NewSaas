@@ -34,9 +34,10 @@ const data = ref<any>({
   },
   // 搜索
   search: {
-    limit: "",
-    page: "",
-    title: "",
+    // 角色id
+    id: null,
+    // 角色名称
+    name: "",
   },
   // 批量操作
   batch: {
@@ -65,7 +66,10 @@ onBeforeUnmount(() => {
 function getDataList() {
   try {
     data.value.loading = true;
-    api.list().then((res: any) => {
+    const params = {
+      ...data.value.search
+    }
+    api.list(params).then((res: any) => {
       data.value.loading = false;
       data.value.dataList = res.data;
       pagination.value.total = res.data.length;
@@ -90,17 +94,17 @@ function sizeChange(size: number) {
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
   onCurrentChange(page).then(() => {
-    data.value.search.page = page;
+    // data.value.search.page = page;
     getDataList();
   });
 }
 // 重置数据
 function onReset() {
   Object.assign(data.value.search, {
-    // 类型 1成功/待审核 2审核通过 3审核失败 4数据冻结 5被甄别 6配额满
-    type: null,
-    // 操作人id
-    createUserId: "",
+    // 角色id
+    id: null,
+    // 	角色名称
+    name: "",
   });
   getDataList();
 }
@@ -174,10 +178,10 @@ function onDel(row: any) {
         <template #default="{ fold, toggle }">
           <el-form :model="data.search" size="default" label-width="100px" inline-message inline class="search-form">
             <el-form-item label="">
-              <el-input v-model.trim="data.search.title" clearable :inline="false" placeholder="角色ID" />
+              <el-input v-model.trim="data.search.id" clearable :inline="false" placeholder="角色ID" />
             </el-form-item>
             <el-form-item label="">
-              <el-input v-model.trim="data.search.title" clearable :inline="false" placeholder="角色名称" />
+              <el-input v-model.trim="data.search.name" clearable :inline="false" placeholder="角色名称" />
             </el-form-item>
             <!-- <el-form-item v-show="!fold" label="">
               <el-select
@@ -315,7 +319,8 @@ function onDel(row: any) {
       }
     }
   }
-
-
+}
+:deep(.el-table__empty-block) {
+  height: 100% !important;
 }
 </style>
