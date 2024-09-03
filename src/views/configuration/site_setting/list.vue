@@ -96,8 +96,7 @@ const formRules = ref<FormRules>({
 });
 onMounted(() => {
   loading.value = true;
-  fileList.value = [{ name: 'logo', url: userStore.logo }]
-  // getLogo()
+  userStore.logo && (fileList.value = [{ name: 'logo', url: userStore.logo }])
   getDataList();
   loading.value = false;
 });
@@ -117,11 +116,11 @@ const getLogo = async () => {
   fileList.value = []
   const res = await apiLogo.getTenantLogo();
   if (res.data) {
-    userStore.logo = res.data.logoUrl
-    fileList.value.push({
-      name: "file",
-      url: res?.data?.logoUrl,
-    });
+    userStore.setLogo(res.data.logoUrl),
+      fileList.value.push({
+        name: "file",
+        url: res?.data?.logoUrl,
+      });
 
   }
 }
@@ -148,6 +147,7 @@ const handleRemove: any = async () => {
     message: "删除成功",
     center: true,
   });
+  userStore.delLogo()
 };
 // 上传图片成功
 const handleSuccess: any = (uploadFile: any, uploadFiles: any) => {
@@ -184,7 +184,7 @@ function onSubmit() {
     formRef.value.clearValidate('phone');
   }
   // 新增
-  if (form.value.id === "") {
+  if (!form.value.id) {
     // 校验
     formRef.value &&
       formRef.value.validate((valid: any) => {
@@ -192,6 +192,7 @@ function onSubmit() {
           try {
             loading.value = true;
             delete form.value.id;
+            !form.value.keyWords && (form.value.keyWords = 'keyWords')
             api.create(form.value).then(() => {
               loading.value = false;
               getDataList();
@@ -470,6 +471,4 @@ function onSubmit() {
 
 // :deep() {
 //   background-color: #fafafa;
-// }
-
-</style>
+// }</style>

@@ -361,7 +361,7 @@ onMounted(async () => {
             <el-input v-model="row.remark" @blur="handleEditRemark(row)" />
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="i" label="操作" fixed="right" show-overflow-tooltip width="250">
+        <el-table-column align="center" prop="i" label="操作" fixed="right"  width="250">
           <template #default="{ row }">
             <ElSpace>
               <el-button size="small" plain type="primary" @click="handlePlusMinusPayments(row)">

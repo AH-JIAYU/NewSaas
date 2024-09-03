@@ -119,7 +119,7 @@ defineExpose({
   <el-col :span="6">
     <el-form-item label="员工数:">
       <el-text class="mx-1">
-        {{ detailData?.count ? detailData.count : "-" }}
+        {{ detailData?.result?.length ? detailData.result?.length : "-" }}
       </el-text>
     </el-form-item>
   </el-col>

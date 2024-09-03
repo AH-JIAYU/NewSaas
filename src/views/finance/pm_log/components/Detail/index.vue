@@ -129,7 +129,7 @@ defineExpose({
       class="search-form"
     >
       <ElFormItem>
-        <el-select v-model="data.search.month" placeholder="" clearable filterable @change="currentChange()">
+        <el-select style="width:10.5rem" v-model="data.search.month" placeholder="" clearable filterable @change="currentChange()">
         <el-option v-for="item in monthList"
         :key="item.value"
         :label="item.label"

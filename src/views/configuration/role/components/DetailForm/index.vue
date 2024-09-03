@@ -48,12 +48,6 @@ onMounted(async () => {
     permissionData.value = await roleButton.getPermissions();
     // 从store获取原始路由
     menuData.value = routeStore.routesRaw;
-    // 获取扁平化后的1，2级路由
-    const Level1AndLevel2List = await routeStore.obtainLevel1AndLevel2Routing();
-    // 只保留第三级路由
-    form.value.menuId = form.value.menuId.filter((item: any) => {
-      return !Level1AndLevel2List.some((ite: any) => ite.id === item);
-    });
     loading.value = false;
   } catch (error) {
 
@@ -62,11 +56,19 @@ onMounted(async () => {
   }
 });
 
-// 获取
+// 回显form
 async function getInfo() {
   loading.value = true;
-  // 编辑时获取该id的具体数据
-  form.value = JSON.parse(props.row);
+  // 先回显除menuid的数据，以免直接赋值menuId后再过滤导致页面不更新
+  const { menuId, ...newForm } = JSON.parse(props.row);
+  form.value = newForm
+  // 获取扁平化后的1，2级路由
+  const Level1AndLevel2List = await routeStore.obtainLevel1AndLevel2Routing();
+  // menuId过滤后只保留第三级的路由，以免1，2级勾选，导致全选
+  form.value.menuId = menuId.filter((item: any) => {
+    return !Level1AndLevel2List.some((ite: any) => ite.id === item);
+  });
+
   loading.value = false;
 }
 
@@ -108,12 +110,14 @@ const handleNodeClick = (nodeData: any) => {
       }
     });
   }
+
 };
 // 暴露
 defineExpose({
   submit() {
+    const params = cloneDeep(form.value)
     // 同步选中的路由id
-    form.value.menuId = treeRef.value!.getCheckedKeys(false);
+    params.menuId = treeRef.value!.getCheckedKeys(false);
     return new Promise<void>((resolve) => {
       //  获取选中的所有子节点
       const tree = treeRef.value.getCheckedKeys();
@@ -121,13 +125,13 @@ defineExpose({
       const halltree = treeRef.value.getHalfCheckedKeys();
       // 组合一下
       const menupath = tree.concat(halltree);
-      form.value.menuId = menupath;
+      params.menuId = menupath;
       // return;
-      if (form.value.id === "") {
+      if (params.id === "") {
         formRef.value &&
           formRef.value.validate((valid: any) => {
             if (valid) {
-              api.create(form.value).then(() => {
+              api.create(params).then(() => {
                 ElMessage.success({
                   message: "新增成功",
                   center: true,
@@ -140,7 +144,7 @@ defineExpose({
         formRef.value &&
           formRef.value.validate((valid: any) => {
             if (valid) {
-              api.edit(form.value).then(() => {
+              api.edit(params).then(() => {
                 ElMessage.success({
                   message: "编辑成功",
                   center: true,
@@ -164,14 +168,14 @@ defineExpose({
       <ElFormItem label="备注" prop="remark">
         <ElInput v-model="form.remark" placeholder="请输入备注" />
       </ElFormItem>
-      <ElFormItem label="权限">
-        <el-tree v-if="!loading" ref="treeRef" :data="menuData" style="width: 100%" :default-checked-keys="form.menuId"
-          :default-expanded-keys="[]" node-key="id" show-checkbox @check-change="handleNodeClick" default-expand-all
-          border>
+      <ElFormItem label="权限" v-if="!loading">
+        <el-tree v-if="form.menuId" ref="treeRef" :data="menuData" style="width: 100%"
+          :default-checked-keys="form.menuId" :default-expanded-keys="[]" node-key="id" show-checkbox
+          @check-change="handleNodeClick" default-expand-all border>
           <template #default="{ data }">
             <div class="custom-tree-node">
               <div class="menu">
-                {{ data.meta.title }}
+                {{ data.meta.title }} {{ data.id }}
               </div>
               <div class="permission">
                 <div v-if="rowPermission(data.id)?.length" class="permissions">
@@ -239,6 +243,7 @@ defineExpose({
 
     .permissions {
       padding: 1rem 0;
+
       :deep(.el-checkbox-group) {
         display: flex;
         flex-wrap: wrap;
@@ -252,5 +257,4 @@ defineExpose({
 
   }
 }
-
 </style>

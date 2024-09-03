@@ -113,6 +113,16 @@ const useUserStore = defineStore(
       });
 
     }
+    // 删除本地和store里的logo
+    function delLogo(){
+      logo.value=''
+      storage.local.remove("logo")
+    }
+    // 存 logo
+    function setLogo(val:any){
+      logo.value=val
+      storage.local.set("logo",val)
+    }
     // 获取权限
     async function getPermissions() {
       const res = await apiUser.permission();
@@ -289,6 +299,8 @@ const useUserStore = defineStore(
       currencyType,
       isLogin,
       login,
+      delLogo,
+      setLogo,
       logout,
       getPermissions,
       getCurrencyType,
