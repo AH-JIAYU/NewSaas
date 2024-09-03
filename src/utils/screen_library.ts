@@ -102,7 +102,7 @@ async function questionFun(
   const problemId: any = otherFunctionsScreenLibraryStore.countryId === '343' ? zhID : enID
   //  根据字典的答案查询对应的问题
   const row: any = problem.find((item: any) => item.id === data?.records[0]?.catalogueId || item.id === problemId)
-  question.title.default = otherFunctionsScreenLibraryStore.countryId === '343' ? row.chineseName : row.englishName
+  question.title.default = row.chineseName
   question.title['zh-cn'] = row.chineseName
   question.title.en = row.englishName
   question.surveyId = row.otherId

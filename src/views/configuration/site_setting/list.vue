@@ -97,7 +97,7 @@ const formRules = ref<FormRules>({
 onMounted(() => {
   loading.value = true;
   fileList.value = [{ name: 'logo', url: userStore.logo }]
-  getLogo()
+  // getLogo()
   getDataList();
   loading.value = false;
 });
