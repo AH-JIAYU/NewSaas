@@ -49,8 +49,8 @@ const data = ref<any>({
   },
   // 搜索
   search: {
-    // memberId: "", //会员id-不支持模糊查询
-    // memberName: "", //	支持模糊查询-会员id和名称只能传一个
+    memberId: "", //会员id-不支持模糊查询
+    memberName: "", //	支持模糊查询-会员id和名称只能传一个
     member: "",
     billStatus: "", //账单状态: 1:待支付 2:已支付 3:已拒绝
   },
@@ -115,8 +115,8 @@ function getDataList() {
 // 重置筛选数据
 function onReset() {
   Object.assign(data.value.search, {
-    // memberId: "", //会员id-不支持模糊查询
-    // memberName: "", //	支持模糊查询-会员id和名称只能传一个
+    memberId: "", //会员id-不支持模糊查询
+    memberName: "", //	支持模糊查询-会员id和名称只能传一个
     member: "",
     billStatus: "", //账单状态: 1:待支付 2:已支付 3:已拒绝
   });
@@ -190,7 +190,10 @@ async function paymentOperation(id: any, type: any) {
         <template #default="{ fold, toggle }">
           <ElForm :model="data.search" size="default" label-width="100px" inline-message inline class="search-form">
             <ElFormItem>
-              <ElInput v-model="data.search.member" placeholder="会员ID/会员姓名" clearable @clear="currentChange()" />
+              <ElInput v-model="data.search.memberId" placeholder="会员ID" clearable @clear="currentChange()" />
+            </ElFormItem>
+            <ElFormItem>
+              <ElInput v-model="data.search.memberName" placeholder="会员姓名" clearable @clear="currentChange()" />
             </ElFormItem>
             <ElFormItem>
               <el-select v-model="data.search.billStatus" value-key="" placeholder="账单状态" clearable filterable>

@@ -39,6 +39,7 @@ const logo = new URL("../assets/images/logo.png", import.meta.url).href;
 const title = import.meta.env.VITE_APP_TITLE;
 
 // 表单类型，login 登录，register 注册，reset 重置密码
+const isRegister = ref<any>()
 const formType = ref("login");
 const loading = ref(false);
 const redirect = ref(
@@ -93,6 +94,11 @@ const loginRules = ref<any>({
     },
   ],
 });
+
+onMounted(async () => {
+  const {data} = await api.getTenantConfig()
+  isRegister.value = data.register
+})
 // 动态表单校验
 // const chengAccount = () => {
 //   // 手机号
@@ -111,7 +117,6 @@ const loginRules = ref<any>({
 // };
 const chengAccount = () => {
   const account = loginForm.value.account;
-
   if (account.includes("@")) {
     // 邮箱
     loginRules.value.account = [
@@ -544,7 +549,7 @@ const agreements = (val: any) => {
           tabindex="5">
           {{ t("app.login") }}
         </ElButton>
-        <div class="sub-link">
+        <div class="sub-link" v-show="isRegister">
           <span class="text">还不是会员?</span>
           <ElLink type="primary" :underline="false" @click="formType = 'register'">
             立即注册

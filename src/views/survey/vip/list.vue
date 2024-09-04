@@ -69,7 +69,7 @@ const columns = ref<Array<Object>>([
 // 请求接口携带参数
 const queryForm = reactive<any>({
   memberId: null,
-  memberNickname: "",
+  memberName: "",
   memberLevelId: "",
   memberStatus: "",
   memberGroupId: "",
@@ -145,7 +145,7 @@ async function fetchData() {
 function onReset() {
   Object.assign(queryForm, {
     memberId: null,
-    memberNickname: "",
+    memberName: "",
     memberLevelId: "",
     memberStatus: "",
     memberGroupId: "",
@@ -186,7 +186,7 @@ onMounted(async () => {
                 会员列表目前这个只会模糊匹配姓名
                 那个我等下有时间在搞
               -->
-              <el-input v-model.trim="queryForm.memberNickname" clearable :inline="false" placeholder="会员名称" />
+              <el-input v-model.trim="queryForm.memberName" clearable :inline="false" placeholder="会员名称" />
             </el-form-item>
             <el-form-item label="">
               <el-select v-model="queryForm.memberLevelId" clearable placeholder="会员等级">
