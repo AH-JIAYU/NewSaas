@@ -390,7 +390,7 @@ function handleMoreOperating(command: string, row: any) {
               <el-date-picker
                 v-model="timeArr"
                 value-format="YYYY-MM-DD hh:mm:ss"
-                type="daterange"
+                type="datetimerange"
                 range-separator="-"
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"

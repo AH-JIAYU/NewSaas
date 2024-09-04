@@ -55,8 +55,12 @@ const queryForm = reactive<any>({
   limit: 10,
   // 类型 1成功/待审核 2审核通过 3审核失败 4数据冻结 5被甄别 6配额满
   type: null,
-  // 操作人id
-  createUserId: "",
+  // 操作人名称
+  createUserName: "",
+  // 1 C=完成/待审核 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
+  surveyType: null,
+  // 副状态
+  viceType: null,
 });
 const list = ref<any>([]);
 // 新增
@@ -77,7 +81,11 @@ function onReset() {
     // 类型 1成功/待审核 2审核通过 3审核失败 4数据冻结 5被甄别 6配额满
     type: null,
     // 操作人id
-    createUserId: "",
+    createUserName: "",
+    // 1 C=完成/待审核 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
+    surveyType: null,
+    // 副状态
+    viceType: null,
   });
   fetchData();
 }
@@ -99,6 +107,11 @@ function currentChange(page = 1) {
 async function fetchData() {
   try {
     listLoading.value = true;
+    if(queryForm.type) {
+    const type = queryForm.type.split(',')
+    queryForm.surveyType = type[0]
+    queryForm.viceType = type[1]
+    }
     const { data } = await api.list(queryForm);
     list.value = data.tenantUpdateRecordVOBuilders;
     pagination.value.total = +data.total;
@@ -130,7 +143,7 @@ onMounted(async () => {
         <template #default="{ fold, toggle }">
           <el-form :model="queryForm" size="default" label-width="100px" inline-message inline class="search-form">
             <el-form-item label="">
-              <el-input v-model.trim="queryForm.projectClickIdList" clearable :inline="false" placeholder="点击ID" />
+              <el-input v-model.trim="queryForm.createUserName" clearable :inline="false" placeholder="操作人" />
             </el-form-item>
             <el-form-item label="">
               <el-select v-model="queryForm.type" value-key="" placeholder="变更状态" clearable filterable>

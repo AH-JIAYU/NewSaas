@@ -7,8 +7,6 @@ import api from "@/api/modules/alter";
 defineOptions({
   name: "ProjectReview",
 });
-// 变更数据
-const alterList = ref([]);
 // 更新数据
 const emits = defineEmits(["success"]);
 // loading
@@ -136,10 +134,6 @@ function closeHandler() {
   formData.value.arr = [];
   dialogTableVisible.value = false;
 }
-onMounted(async () => {
-  const { data } = await api.list(queryForm);
-  alterList.value = data.tenantUpdateRecordVOBuilders;
-});
 // 暴露
 defineExpose({ showEdit });
 </script>

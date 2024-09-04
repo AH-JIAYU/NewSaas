@@ -145,7 +145,7 @@ onMounted(async () => {
               <el-input v-model.trim="queryForm.projectName" clearable :inline="false" placeholder="项目名称" />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-input v-model.trim="queryForm.memberChildId" clearable :inline="false" placeholder="子会员id/会员id" />
+              <el-input v-model.trim="queryForm.memberChildId" clearable :inline="false" placeholder="子会员ID/会员ID" />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
               <el-date-picker v-model="queryForm.time" type="daterange" unlink-panels range-separator="-"
