@@ -486,8 +486,8 @@ const agreements = (val: any) => {
       <div class="login-banner">
         <!-- <img :src="logo" class="logo" />
         <img :src="banner" class="banner" /> -->
-        <!--<h1 style="font-size: 50px; font-weight: normal">欢迎</h1>
-        <h3 h1 style="font-size: 30px; font-weight: normal">来到租户系统 !</h3>-->
+        <!--<h1 style="font-size: 3.125rem; font-weight: normal">欢迎</h1>
+        <h3 h1 style="font-size: 1.875rem; font-weight: normal">来到租户系统 !</h3>-->
       </div>
       <el-form v-show="formType === 'login'" ref="loginFormRef" :model="loginForm" :rules="loginRules"
         class="login-form" :validate-on-rule-change="false">
@@ -499,7 +499,7 @@ const agreements = (val: any) => {
             </el-radio-group>
           </div>
         </div>
-        <div style="height: 11.5625rem">
+        <div >
           <ElFormItem prop="account">
             <ElInput v-model="loginForm.account" :placeholder="t('app.account')" type="text" tabindex="1"
               @blur="chengAccount">
@@ -527,7 +527,7 @@ const agreements = (val: any) => {
               </template>
             </ElInput>
           </ElFormItem>
-          <ElFormItem prop="agreeToTheAgreement">
+          <ElFormItem prop="agreeToTheAgreement" style="margin-bottom:.5rem">
             <div class="flex-bar" style="width: 100%; margin: 0">
               <ElCheckbox v-model="loginForm.agreeToTheAgreement" tabindex="3">
                 我已阅读并同意
@@ -536,15 +536,18 @@ const agreements = (val: any) => {
               </ElCheckbox>
             </div>
           </ElFormItem>
+          <ElFormItem>
+            <div class="flex-bar">
+              <ElCheckbox v-model="loginForm.remember" tabindex="4">
+                保持登录
+              </ElCheckbox>
+              <ElLink v-if="loginType === 'password'" type="primary" :underline="false" @click="formType = 'reset'">
+                忘记密码了?
+              </ElLink>
+            </div>
+          </ElFormItem>
         </div>
-        <div class="flex-bar">
-          <ElCheckbox v-model="loginForm.remember" tabindex="4">
-            保持登录
-          </ElCheckbox>
-          <ElLink v-if="loginType === 'password'" type="primary" :underline="false" @click="formType = 'reset'">
-            忘记密码了?
-          </ElLink>
-        </div>
+
         <ElButton :loading="loading" type="primary" size="large" style="width: 100%" @click.prevent="handleLogin"
           tabindex="5">
           {{ t("app.login") }}
@@ -660,7 +663,7 @@ const agreements = (val: any) => {
             </div>
           </ElFormItem>
         </div>
-        <ElButton tabindex="9" :loading="loading" type="primary" size="large" style="width: 100%; margin-top: 20px"
+        <ElButton tabindex="9" :loading="loading" type="primary" size="large" style="width: 100%; margin-top: 1.25rem"
           @click.prevent="handleRegister">
           注册
         </ElButton>
@@ -703,7 +706,7 @@ const agreements = (val: any) => {
             </ElInput>
           </ElFormItem>
         </div>
-        <ElButton :loading="loading" type="primary" size="large" style="width: 100%; margin-top: 20px"
+        <ElButton :loading="loading" type="primary" size="large" style="width: 100%; margin-top: 1.25rem"
           @click.prevent="handleReset">
           {{ t("app.check") }}
         </ElButton>
@@ -724,7 +727,7 @@ const agreements = (val: any) => {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 50px;
+  margin-bottom: 3.125rem;
 }
 
 [data-mode="mobile"] {
@@ -742,7 +745,7 @@ const agreements = (val: any) => {
 
     .login-banner {
       width: 100%;
-      padding: 20px 0;
+      padding: 1.25rem 0;
 
       .banner {
         position: relative;
@@ -750,7 +753,7 @@ const agreements = (val: any) => {
         right: inherit;
         display: inherit;
         width: 100%;
-        max-width: 375px;
+        max-width: 23.4375rem;
         margin: 0 auto;
         transform: translateY(0);
       }
@@ -759,7 +762,7 @@ const agreements = (val: any) => {
     .login-form {
       width: 100%;
       min-height: auto;
-      padding: 30px;
+      padding: 1.875rem;
     }
   }
 
@@ -778,10 +781,10 @@ const agreements = (val: any) => {
 
 :deep(.i18n-selector) {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 1.25rem;
+  right: 1.25rem;
   z-index: 1;
-  font-size: 18px;
+  font-size: 1.125rem;
   // color: var(--el-text-color-primary);
   color: #fff;
   cursor: pointer;
@@ -808,7 +811,7 @@ const agreements = (val: any) => {
   display: flex;
   justify-content: space-between;
   overflow: hidden;
-  border-radius: 10px;
+  border-radius: .625rem;
   transform: translateX(-50%) translateY(-50%);
   width: 100%;
   padding: 0 20%;
@@ -817,7 +820,7 @@ const agreements = (val: any) => {
   .login-banner {
     position: relative;
     // width: 60%;
-    width: 450px;
+    width: 28.125rem;
     overflow: hidden;
     color: #fff;
     // background-color: var(--g-bg);
@@ -830,10 +833,10 @@ const agreements = (val: any) => {
 
     .logo {
       position: absolute;
-      top: 20px;
-      left: 20px;
-      height: 30px;
-      border-radius: 4px;
+      top: 1.25rem;
+      left: 1.25rem;
+      height: 1.875rem;
+      border-radius: .25rem;
       box-shadow: var(--el-box-shadow-light);
     }
   }
@@ -841,20 +844,20 @@ const agreements = (val: any) => {
   .login-form {
     background-color: var(--g-container-bg);
     box-shadow: var(--el-box-shadow);
-    border-radius: 10px;
+    border-radius: .625rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
     width: 40%;
-    width: 500px;
-    min-height: 500px;
-    padding: 50px;
+    width: 31.25rem;
+    min-height: 31.25rem;
+    padding: 3.125rem;
 
     .title-container {
       position: relative;
 
       .title {
-        margin: 0 auto 30px;
+        margin: 0 auto 1.875rem;
         font-size: 1.3em;
         font-weight: bold;
         color: var(--el-text-color-primary);
@@ -863,21 +866,21 @@ const agreements = (val: any) => {
   }
 
   .el-form-item {
-    margin-bottom: 24px;
+    margin-bottom: 1.5rem;
 
     :deep(.el-select__wrapper) {
       width: 100%;
-      height: 48px;
+      height: 3rem;
       line-height: inherit;
     }
 
     :deep(.el-input) {
       width: 100%;
-      height: 48px;
+      height: 3rem;
       line-height: inherit;
 
       input {
-        height: 48px;
+        height: 3rem;
       }
 
       .el-input__prefix,
@@ -887,11 +890,11 @@ const agreements = (val: any) => {
       }
 
       .el-input__prefix {
-        left: 10px;
+        left: .625rem;
       }
 
       .el-input__suffix {
-        right: 10px;
+        right: .625rem;
       }
     }
   }
@@ -901,22 +904,23 @@ const agreements = (val: any) => {
   }
 
   .flex-bar {
+    width: 100% ;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 20px;
+    margin-bottom: 1.25rem;
   }
 
   .sub-link {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 20px;
-    font-size: 14px;
+    margin-top: 1.25rem;
+    font-size: .875rem;
     color: var(--el-text-color-secondary);
 
     .text {
-      margin-inline-end: 10px;
+      margin-inline-end: .625rem;
     }
   }
 }
@@ -925,14 +929,14 @@ const agreements = (val: any) => {
   position: absolute;
   bottom: 0;
   width: 100%;
-  padding: 20px;
+  padding: 1.25rem;
   margin: 0;
 }
 
 .login-switcher {
   position: absolute;
-  right: 20px;
-  bottom: 20px;
+  right: 1.25rem;
+  bottom: 1.25rem;
 }
 
 :deep(.el-checkbox__label) {

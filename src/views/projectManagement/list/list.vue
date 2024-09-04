@@ -325,7 +325,7 @@ onMounted(async () => {
       </el-row>
       <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="projectId" :data="list"
         :tree-props="{ children: 'getChildrenProjectListInfoList' }" :border="border" :size="lineHeight"
-        :stripe="stripe">
+        :stripe="stripe" highlight-current-row height="100%">
         <el-table-column align="center" type="selection" />
         <el-table-column v-if="checkList.includes('projectType')" width="100" align="center" label="项目类型"><template
             #default="{ row }">
