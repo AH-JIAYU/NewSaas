@@ -244,15 +244,16 @@ onMounted(async () => {
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-select v-model="search.clientId" clearable filterable placeholder="客户简称">
+              <el-select v-model="search.clientId" clearable filterable placeholder="客户简称"  @change="currentChange()">
                 <el-option v-for="item in customerList" :key="item.tenantCustomerId" :value="item.tenantCustomerId"
                   :label="item.customerAccord"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-select v-model="search.allocationStatus" clearable filterable placeholder="分配类型">
+              <el-select v-model="search.allocationStatus" clearable filterable placeholder="分配类型"  @change="currentChange()">
                 <el-option label="供应商" :value="2"> </el-option>
                 <el-option label="会员组" :value="3"> </el-option>
+                <el-option label="租户" :value="4"> </el-option>
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
@@ -270,7 +271,7 @@ onMounted(async () => {
                 clear-icon="true" />
             </el-form-item>
             <el-form-item v-show="!fold">
-              <el-select v-model="search.allocation" placeholder="分配类型" clearable @change="currentChange()">
+              <el-select v-model="search.allocation" placeholder="分配状态" clearable @change="currentChange()">
                 <el-option label="已分配" :value="1"> </el-option>
                 <el-option label="未分配" :value="2"> </el-option>
               </el-select>
