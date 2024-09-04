@@ -68,6 +68,7 @@ const columns = ref<Array<Object>>([
 
 // 请求接口携带参数
 const queryForm = reactive<any>({
+  memberId: null,
   memberName: "",
   memberLevelId: "",
   memberStatus: "",
@@ -143,6 +144,7 @@ async function fetchData() {
 // 重置筛选数据
 function onReset() {
   Object.assign(queryForm, {
+    memberId: null,
     memberName: "",
     memberLevelId: "",
     memberStatus: "",
@@ -176,12 +178,15 @@ onMounted(async () => {
         <template #default="{ fold, toggle }">
           <ElForm :model="queryForm" size="default" label-width="100px" inline-message inline class="search-form">
             <el-form-item label="">
+              <el-input v-model.trim="queryForm.memberId" clearable :inline="false" placeholder="会员ID" />
+            </el-form-item>
+            <el-form-item label="">
               <!--
                 (刘)
                 会员列表目前这个只会模糊匹配姓名
                 那个我等下有时间在搞
               -->
-              <el-input v-model.trim="queryForm.memberName" clearable :inline="false" placeholder="会员ID、会员名称、姓名" />
+              <el-input v-model.trim="queryForm.memberName" clearable :inline="false" placeholder="会员名称" />
             </el-form-item>
             <el-form-item label="">
               <el-select v-model="queryForm.memberLevelId" clearable placeholder="会员等级">

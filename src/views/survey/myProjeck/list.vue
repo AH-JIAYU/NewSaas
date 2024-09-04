@@ -113,7 +113,7 @@ function onReset() {
     projectIdentification: "", //	项目标识模糊查询
     clientId: "", //	所属客户编号Id
     countryId: [], //所属国家编号Id
-    b2bOrB2cStatus: 0, //1:b2b的项目 2:b2c的项目,不传查询所有
+    b2bOrB2cStatus: null, //1:b2b的项目 2:b2c的项目,不传查询所有
     time: [], // 时间
     beginTime: "", //开始时间
     endTime: "", //	结束时间
@@ -212,8 +212,8 @@ onMounted(async () => {
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold">
-              <el-date-picker v-model="queryForm.time" type="daterange" unlink-panels range-separator="-"
-                start-placeholder="创建开始日期" end-placeholder="创建结束日期" size="default" style="width: 192px"
+              <el-date-picker v-model="queryForm.time" type="datetimerange" unlink-panels range-separator="-"
+                start-placeholder="创建开始日期" end-placeholder="创建结束日期" size="default" value-format="YYYY-MM-DD HH:mm:ss" style="width: 192px"
                 clear-icon="true" />
             </el-form-item>
             <ElFormItem>

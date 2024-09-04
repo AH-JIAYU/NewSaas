@@ -417,6 +417,9 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
     }
   }
 
+}
 
+:deep(.el-table__empty-block) {
+  height: 100% !important;
 }
 </style>

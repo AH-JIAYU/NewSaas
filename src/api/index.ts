@@ -51,9 +51,19 @@ api.interceptors.response.use(
       });
       return Promise.reject(response.data);
     } else if (response.data.status === 0) {
-      Message.warning(response.data.error === 'token 无效' ? '账号登录过期' : '该账号已在别处登录', {
-        zIndex: 2000,
-      });
+      if (response.data.error === 'token 无效') {
+        Message.warning('账号登录过期', {
+          zIndex: 2000,
+        })
+      } else if (response.data.error === 'token 已被顶下线') {
+        Message.warning('该账号已在别处登录', {
+          zIndex: 2000,
+        })
+      } else {
+        Message.warning(response.data.message, {
+          zIndex: 2000,
+        })
+      }
       useUserStore().logout(response.data.status);
       return Promise.reject(response.data);
     }
