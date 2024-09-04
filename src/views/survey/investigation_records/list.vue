@@ -206,10 +206,10 @@ onMounted(async () => {
               <el-input v-model.trim="queryForm.projectId" clearable :inline="false" placeholder="项目ID" />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-input v-model.trim="queryForm.name" clearable :inline="false" placeholder="项目名称" />
+              <el-input v-model.trim="queryForm.projectName" clearable :inline="false" placeholder="项目名称" />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-select v-model="queryForm.projectName" clearable placeholder="客户简称">
+              <el-select v-model="queryForm.customerId" clearable placeholder="客户简称">
                 <el-option v-for="item in data.customerList" :key="item.tenantCustomerId" :value="item.tenantCustomerId"
                   :label="item.customerAccord"></el-option>
               </el-select>
