@@ -1,0 +1,9 @@
+
+/**
+ * 由 Fantastic-admin 提供技术支持
+ * Powered by Fantastic-admin
+ * Gitee  https://fantastic-admin.gitee.io
+ * Github https://fantastic-admin.github.io
+ */
+
+import d from"./HDropdown-B3pWVGZ6.js";import{_ as h}from"./HTabList.vue_vue_type_script_setup_true_lang-2iCgEsla.js";import{d as _,y as f,o as g,e as w,w as m,f as p,i as c,N as x}from"./index-Di6tHNPq.js";function S(r){function e(){if(!document.startViewTransition||window.matchMedia("(prefers-reduced-motion: reduce)").matches){r();return}return document.startViewTransition(async()=>{await Promise.resolve(r())})}return{startViewTransition:e}}const v=_({name:"ColorScheme",__name:"index",setup(r){const e=f();function u(a){var i;const{startViewTransition:o}=S(()=>{e.currentColorScheme&&e.setColorScheme(e.currentColorScheme==="dark"?"light":"dark")});(i=o())==null||i.ready.then(()=>{const n=a.clientX,t=a.clientY,s=Math.hypot(Math.max(n,innerWidth-n),Math.max(t,innerHeight-t)),l=[`circle(0px at ${n}px ${t}px)`,`circle(${s}px at ${n}px ${t}px)`];document.documentElement.animate({clipPath:e.settings.app.colorScheme!=="dark"?l:l.reverse()},{duration:300,easing:"ease-out",pseudoElement:e.settings.app.colorScheme!=="dark"?"::view-transition-new(root)":"::view-transition-old(root)"})})}return(a,o)=>{const i=x,n=h,t=d;return g(),w(t,{class:"flex-center cursor-pointer px-2 py-1"},{dropdown:m(()=>[p(n,{modelValue:c(e).settings.app.colorScheme,"onUpdate:modelValue":o[0]||(o[0]=s=>c(e).settings.app.colorScheme=s),options:[{icon:"i-ri:sun-line",label:"",value:"light"},{icon:"i-ri:moon-line",label:"",value:"dark"},{icon:"i-ri:computer-line",label:"",value:""}],class:"m-3"},null,8,["modelValue"])]),default:m(()=>[p(i,{name:{light:"i-ri:sun-line",dark:"i-ri:moon-line","":"i-ri:computer-line"}[c(e).settings.app.colorScheme],onClick:u},null,8,["name"])]),_:1})}}});export{v as _};
