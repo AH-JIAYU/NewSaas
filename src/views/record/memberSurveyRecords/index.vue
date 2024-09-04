@@ -153,20 +153,20 @@ function currentChange(page = 1) {
 async function fetchData() {
   try {
     listLoading.value = true;
-  const params = {
-    ...getParams(),
-    ...queryForm,
-  };
-  const { data } = await api.list(params);
-  list.value = data.memberChildSurveyRecordInfoList;
-  currencyType.value = data.currencyType;
-  pagination.value.total = data.total;
-  listLoading.value = false;
-} catch (error) {
+    const params = {
+      ...getParams(),
+      ...queryForm,
+    };
+    const { data } = await api.list(params);
+    list.value = data.memberChildSurveyRecordInfoList;
+    currencyType.value = data.currencyType;
+    pagination.value.total = data.total;
+    listLoading.value = false;
+  } catch (error) {
 
-}finally {
-  listLoading.value = false;
-}
+  } finally {
+    listLoading.value = false;
+  }
 }
 // 表格-单选框
 function setSelectRows(val: string) {
@@ -205,73 +205,31 @@ onMounted(async () => {
     <PageMain>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
-          <ElForm
-            :model="queryForm"
-            size="default"
-            label-width="100px"
-            inline-message
-            inline
-            class="search-form"
-          >
+          <ElForm :model="queryForm" size="default" label-width="100px" inline-message inline class="search-form">
             <el-form-item label="">
-              <el-input
-                v-model.trim="queryForm.projectId"
-                clearable
-                :inline="false"
-                placeholder="项目ID"
-              />
+              <el-input v-model.trim="queryForm.projectId" clearable :inline="false" placeholder="项目ID" @keydown.enter="currentChange()"/>
             </el-form-item>
 
             <el-form-item label="">
-              <el-input
-                v-model.trim="queryForm.projectName"
-                clearable
-                :inline="false"
-                placeholder="项目名称"
-              />
+              <el-input v-model.trim="queryForm.projectName" clearable :inline="false" placeholder="项目名称" @keydown.enter="currentChange()"/>
             </el-form-item>
             <el-form-item label="">
-              <el-select
-                v-model="queryForm.surveySource"
-                clearable
-                filterable
-                placeholder="会员类型"
-              >
+              <el-select v-model="queryForm.surveySource" clearable filterable placeholder="会员类型" @change="currentChange()">
                 <el-option label="内部会员" :value="1"></el-option>
                 <el-option label="外部会员" :value="2"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="">
-              <el-input
-                v-model.trim="queryForm.memberId"
-                clearable
-                :inline="false"
-                placeholder="会员ID"
-              />
+              <el-input v-model.trim="queryForm.memberId" clearable :inline="false" placeholder="会员ID" @keydown.enter="currentChange()"/>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-input
-                v-model.trim="queryForm.memberChildId"
-                clearable
-                :inline="false"
-                placeholder="子会员ID"
-              />
+              <el-input v-model.trim="queryForm.memberChildId" clearable :inline="false" placeholder="子会员ID" @keydown.enter="currentChange()"/>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-input
-                v-model.trim="queryForm.randomIdentityId"
-                clearable
-                :inline="false"
-                placeholder="随机身份"
-              />
+              <el-input v-model.trim="queryForm.randomIdentityId" clearable :inline="false" placeholder="随机身份" @keydown.enter="currentChange()"/>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-input
-                v-model.trim="queryForm.tenantSupplierId"
-                clearable
-                :inline="false"
-                placeholder="供应商ID"
-              />
+              <el-input v-model.trim="queryForm.tenantSupplierId" clearable :inline="false" placeholder="供应商ID" @keydown.enter="currentChange()"/>
             </el-form-item>
             <!-- <el-form-item v-show="!fold" label="">
               <el-select
@@ -297,12 +255,7 @@ onMounted(async () => {
               />
             </el-form-item> -->
             <el-form-item v-show="!fold" label="">
-              <el-input
-                v-model.trim="queryForm.ip"
-                clearable
-                :inline="false"
-                placeholder="IP地址"
-              />
+              <el-input v-model.trim="queryForm.ip" clearable :inline="false" placeholder="IP地址" @keydown.enter="currentChange()"/>
             </el-form-item>
             <!-- <el-form-item v-show="!fold" label="">
               <el-select
@@ -320,30 +273,13 @@ onMounted(async () => {
               </el-select>
             </el-form-item> -->
             <el-form-item v-show="!fold" label="">
-              <el-select
-                v-model="queryForm.surveyStatus"
-                clearable
-                filterable
-                placeholder="调查状态"
-              >
-                <el-option
-                  v-for="(item, index) in data.surveyStatusList"
-                  :label="item"
-                  :value="index + 1"
-                ></el-option>
+              <el-select v-model="queryForm.surveyStatus" clearable filterable placeholder="调查状态" @change="currentChange()">
+                <el-option v-for="(item, index) in data.surveyStatusList" :label="item" :value="index + 1"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-select
-                v-model="queryForm.viceStatus"
-                clearable
-                placeholder="副状态"
-              >
-                <el-option
-                  v-for="(item, index) in data.viceStatusList"
-                  :label="item"
-                  :value="index + 1"
-                ></el-option>
+              <el-select v-model="queryForm.viceStatus" clearable placeholder="副状态" @change="currentChange()">
+                <el-option v-for="(item, index) in data.viceStatusList" :label="item" :value="index + 1"></el-option>
               </el-select>
             </el-form-item>
             <ElFormItem>
@@ -361,9 +297,7 @@ onMounted(async () => {
               </ElButton>
               <ElButton link @click="toggle">
                 <template #icon>
-                  <SvgIcon
-                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
-                  />
+                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
                 </template>
                 {{ fold ? "展开" : "收起" }}
               </ElButton>
@@ -376,189 +310,83 @@ onMounted(async () => {
         <FormLeftPanel />
         <FormRightPanel>
           <el-button size="default"> 导出 </el-button>
-          <TabelControl
-            v-model:border="border"
-            v-model:tableAutoHeight="tableAutoHeight"
-            v-model:checkList="checkList"
-            v-model:columns="columns"
-            v-model:line-height="lineHeight"
-            v-model:stripe="stripe"
-            style="margin-left: 12px"
-            @query-data="queryData"
-          />
+          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
+            v-model:columns="columns" v-model:line-height="lineHeight" v-model:stripe="stripe" style="margin-left: 12px"
+            @query-data="queryData" />
         </FormRightPanel>
       </el-row>
-      <el-table
-        v-loading="listLoading"
-        :border="border"
-        :data="list"
-        :size="lineHeight"
-        :stripe="stripe"
-        @selection-change="setSelectRows"
-      >
+      <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
+        @selection-change="setSelectRows">
         <el-table-column align="center" type="selection" />
-        <el-table-column
-          v-if="checkList.includes('id')"
-          align="center"
-          prop="id"
-          width="180"
-          show-overflow-tooltip
-          fixed="left"
-          label="点击ID"
-          ><template #default="{ row }">
+        <el-table-column v-if="checkList.includes('id')" align="center" prop="id" width="180" show-overflow-tooltip
+          fixed="left" label="点击ID"><template #default="{ row }">
             {{ row.id ? row.id : "-" }}
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('surveySource')"
-          align="center"
-          prop="memberId"
-          width="100"
-          show-overflow-tooltip
-          label="会员类型"
-        >
+        <el-table-column v-if="checkList.includes('surveySource')" align="center" prop="memberId" width="100"
+          show-overflow-tooltip label="会员类型">
           <template #default="{ row }">
             {{ row.surveySource === 1 ? "内部会员" : "外部会员" }}
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('memberChildrenId')"
-          align="center"
-          prop="memberChildrenId"
-          show-overflow-tooltip
-          label="子会员ID"
-          width="180"
-          ><template #default="{ row }">
+        <el-table-column v-if="checkList.includes('memberChildrenId')" align="center" prop="memberChildrenId"
+          show-overflow-tooltip label="子会员ID" width="180"><template #default="{ row }">
             {{ row.memberChildrenId ? row.memberChildrenId : "-" }}
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('memberId')"
-          align="center"
-          prop="memberId"
-          show-overflow-tooltip
-          label="会员ID"
-          width="180"
-          ><template #default="{ row }">
+        <el-table-column v-if="checkList.includes('memberId')" align="center" prop="memberId" show-overflow-tooltip
+          label="会员ID" width="180"><template #default="{ row }">
             {{ row.memberId ? row.memberId : "-" }}
           </template>
         </el-table-column>
 
-        <el-table-column
-          v-if="checkList.includes('randomIdentityId')"
-          align="center"
-          prop="randomIdentityId"
-          show-overflow-tooltip
-          width="180"
-          label="随机身份"
-          ><template #default="{ row }">
+        <el-table-column v-if="checkList.includes('randomIdentityId')" align="center" prop="randomIdentityId"
+          show-overflow-tooltip width="180" label="随机身份"><template #default="{ row }">
             {{ row.randomIdentityId ? row.randomIdentityId : "-" }}
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('tenantSupplierId')"
-          align="center"
-          prop="tenantSupplierId"
-          show-overflow-tooltip
-          width="180"
-          label="供应商ID"
-          ><template #default="{ row }">
+        <el-table-column v-if="checkList.includes('tenantSupplierId')" align="center" prop="tenantSupplierId"
+          show-overflow-tooltip width="180" label="供应商ID"><template #default="{ row }">
             {{ row.tenantSupplierId ? row.tenantSupplierId : "-" }}
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('projectId')"
-          align="center"
-          prop="projectId"
-          show-overflow-tooltip
-          width="180"
-          label="项目ID"
-        />
-        <el-table-column
-          v-if="checkList.includes('projectName')"
-          align="center"
-          prop="projectName"
-          show-overflow-tooltip
-          width="180"
-          label="项目名称"
-        />
-        <el-table-column
-          v-if="checkList.includes('customerShortName')"
-          align="center"
-          prop="customerShortName"
-          show-overflow-tooltip
-          width="100"
-          label="客户简称"
-        />
-        <el-table-column
-          v-if="checkList.includes('allocationType')"
-          align="center"
-          show-overflow-tooltip
-          width="100"
-          label="分配类型"
-        >
+        <el-table-column v-if="checkList.includes('projectId')" align="center" prop="projectId" show-overflow-tooltip
+          width="180" label="项目ID" />
+        <el-table-column v-if="checkList.includes('projectName')" align="center" prop="projectName"
+          show-overflow-tooltip width="180" label="项目名称" />
+        <el-table-column v-if="checkList.includes('customerShortName')" align="center" prop="customerShortName"
+          show-overflow-tooltip width="100" label="客户简称" />
+        <el-table-column v-if="checkList.includes('allocationType')" align="center" show-overflow-tooltip width="100"
+          label="分配类型">
           <template #default="{ row }">
             {{ data.allocationTypeList[row.allocationType - 1] }}
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('doMoneyPrice')"
-          align="center"
-          prop="doMoneyPrice"
-          show-overflow-tooltip
-          width="90"
-          fixed="right"
-          label="原价"
-        >
+        <el-table-column v-if="checkList.includes('doMoneyPrice')" align="center" prop="doMoneyPrice"
+          show-overflow-tooltip width="90" fixed="right" label="原价">
           <template #default="{ row }">
             <CurrencyType />{{ row.doMoneyPrice || 0 }}
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('supplierPrice')"
-          align="center"
-          prop="supplierPrice"
-          show-overflow-tooltip
-          width="90"
-          fixed="right"
-          label="供应商价"
-        >
+        <el-table-column v-if="checkList.includes('supplierPrice')" align="center" prop="supplierPrice"
+          show-overflow-tooltip width="90" fixed="right" label="供应商价">
           <template #default="{ row }">
             <CurrencyType />{{
-              row.supplierPrice || 0
-            }}
+    row.supplierPrice || 0
+  }}
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('ipBelong')"
-          align="center"
-          prop="ipBelong"
-          show-overflow-tooltip
-          width="150"
-          label="IP/所属国"
-        />
-        <el-table-column
-          v-if="checkList.includes('surveyTime')"
-          align="center"
-          show-overflow-tooltip
-          fixed="right"
-          width="120"
-          label="调查时间"
-        >
+        <el-table-column v-if="checkList.includes('ipBelong')" align="center" prop="ipBelong" show-overflow-tooltip
+          width="150" label="IP/所属国" />
+        <el-table-column v-if="checkList.includes('surveyTime')" align="center" show-overflow-tooltip fixed="right"
+          width="120" label="调查时间">
           <template #default="{ row }">
             {{ row.surveyTime ? row.surveyTime + "min" : 0 }}/
             {{ row.projectTime ? row.projectTime + "min" : 0 }}
           </template>
         </el-table-column>
-        <ElTableColumn
-          v-if="checkList.includes('surveyStatus')"
-          align="center"
-          show-overflow-tooltip
-          fixed="right"
-          width="100"
-          prop=""
-          label="调查状态"
-        >
+        <ElTableColumn v-if="checkList.includes('surveyStatus')" align="center" show-overflow-tooltip fixed="right"
+          width="100" prop="" label="调查状态">
           <template #default="{ row }">
             <el-text v-if="row.surveyStatus === 3" class="mx-1" type="primary">配额满</el-text>
             <el-text v-if="row.surveyStatus === 1" class="mx-1" type="success">完成</el-text>
@@ -567,21 +395,14 @@ onMounted(async () => {
             <el-text v-if="row.surveyStatus === 5" class="mx-1" type="info">未完成</el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn
-          v-if="checkList.includes('viceStatus')"
-          align="center"
-          show-overflow-tooltip
-          fixed="right"
-          width="100"
-          prop=""
-          label="副状态"
-        >
+        <ElTableColumn v-if="checkList.includes('viceStatus')" align="center" show-overflow-tooltip fixed="right"
+          width="100" prop="" label="副状态">
           <template #default="{ row }">
             {{
-              data.viceStatusList[row.viceStatus - 1]
-                ? data.viceStatusList[row.viceStatus - 1]
-                : "-"
-            }}
+    data.viceStatusList[row.viceStatus - 1]
+      ? data.viceStatusList[row.viceStatus - 1]
+      : "-"
+  }}
           </template>
         </ElTableColumn>
         <template #empty>
@@ -589,18 +410,9 @@ onMounted(async () => {
         </template>
       </el-table>
 
-      <ElPagination
-        :current-page="pagination.page"
-        :total="pagination.total"
-        :page-size="pagination.size"
-        :page-sizes="pagination.sizes"
-        :layout="pagination.layout"
-        :hide-on-single-page="false"
-        class="pagination"
-        background
-        @size-change="sizeChange"
-        @current-change="currentChange"
-      />
+      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+        background @size-change="sizeChange" @current-change="currentChange" />
     </PageMain>
   </div>
 </template>

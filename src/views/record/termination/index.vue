@@ -139,27 +139,27 @@ onMounted(() => {
         <template #default="{ fold, toggle }">
           <ElForm :model="queryForm" size="default" label-width="100px" inline-message inline class="search-form">
             <el-form-item label="">
-              <el-input v-model.trim="queryForm.tenantSupplierId" clearable :inline="false" placeholder="供应商ID" />
+              <el-input v-model.trim="queryForm.tenantSupplierId" clearable :inline="false" placeholder="供应商ID" @keydown.enter="currentChange()"/>
             </el-form-item>
             <el-form-item label="">
-              <el-input v-model.trim="queryForm.projectId" clearable :inline="false" placeholder="项目ID" />
+              <el-input v-model.trim="queryForm.projectId" clearable :inline="false" placeholder="项目ID" @keydown.enter="currentChange()"/>
             </el-form-item>
             <el-form-item label="">
-              <el-select v-model="queryForm.surveySource" value-key="" placeholder="会员类型" clearable filterable>
+              <el-select v-model="queryForm.surveySource" value-key="" placeholder="会员类型" clearable filterable @change="currentChange()">
                 <el-option v-for="item in memberType" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-input v-model.trim="queryForm.projectName" clearable :inline="false" placeholder="项目名称" />
+              <el-input v-model.trim="queryForm.projectName" clearable :inline="false" placeholder="项目名称" @keydown.enter="currentChange()"/>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-input v-model.trim="queryForm.ipBelong" clearable :inline="false" placeholder="IP/所属国" />
+              <el-input v-model.trim="queryForm.ipBelong" clearable :inline="false" placeholder="IP/所属国" @keydown.enter="currentChange()"/>
             </el-form-item>
 
             <el-form-item v-show="!fold" label="">
               <el-date-picker v-model="queryForm.time" type="datetimerange" unlink-panels range-separator="-"
-                start-placeholder="创建开始日期" end-placeholder="创建结束日期" value-format="YYYY-MM-DD hh:mm:ss" size="default" />
+                start-placeholder="创建开始日期" end-placeholder="创建结束日期" value-format="YYYY-MM-DD hh:mm:ss" size="default" @change="currentChange()"/>
             </el-form-item>
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">

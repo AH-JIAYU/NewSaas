@@ -258,7 +258,7 @@ function onDelProject(row: any) {
 function onReset() {
   Object.assign(data.value.search, {
     // 国家id
-    countryId:'',
+    countryId: '',
   });
   getDataList();
 }
@@ -271,8 +271,8 @@ function onReset() {
         <template #default="{ fold, toggle }">
           <ElForm :model="data.search" size="default" label-width="100px" inline-message inline class="search-form">
             <ElFormItem label="">
-              <el-select @keydown.enter="currentChange()" @clear="currentChange()" filterable
-                v-model="data.search.countryId" placeholder="国家">
+              <el-select @change="currentChange()" clearable filterable v-model="data.search.countryId"
+                placeholder="国家">
                 <ElOption v-for="item in data.countryList" :label="item.chineseName" :value="item.id"></ElOption>
               </el-select>
             </ElFormItem>
@@ -388,7 +388,7 @@ function onReset() {
             </template>
           </ElTableColumn>
           <template #empty>
-            <el-empty description="暂无数据" />
+            <el-empty class="vab-data-empty" description="暂无数据" />
           </template>
         </ElTable>
       </el-form>

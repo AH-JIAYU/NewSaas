@@ -85,12 +85,12 @@ function queryData() {
 }
 // 每页数量切换
 function sizeChange(size: number) {
-  onSizeChange(size);
+  onSizeChange(size).then(() => fetchData());
 }
 
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
-  onCurrentChange(page);
+  onCurrentChange(page).then(() => fetchData());
 }
 // 展开
 async function getChildList(row: any) {
@@ -171,17 +171,20 @@ onMounted(async () => {
         <template #default="{ fold, toggle }">
           <ElForm :model="queryForm" size="default" label-width="100px" inline-message inline class="search-form">
             <el-form-item label="">
-              <el-input v-model.trim="queryForm.memberId" clearable :inline="false" placeholder="会员ID" />
+              <el-input v-model.trim="queryForm.memberId" clearable :inline="false" placeholder="会员ID"
+                @keydown.enter="currentChange()" />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-input v-model.trim="queryForm.memberGroupId" clearable :inline="false" placeholder="会员ID" />
+              <el-input v-model.trim="queryForm.memberGroupId" clearable :inline="false" placeholder="会员ID"
+                @keydown.enter="currentChange()" />
             </el-form-item>
-
             <el-form-item label="">
-              <el-input v-model.trim="queryForm.projectId" clearable :inline="false" placeholder="项目ID" />
+              <el-input v-model.trim="queryForm.projectId" clearable :inline="false" placeholder="项目ID"
+                @keydown.enter="currentChange()" />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-input v-model.trim="queryForm.name" clearable :inline="false" placeholder="项目名称" />
+              <el-input v-model.trim="queryForm.name" clearable :inline="false" placeholder="项目名称"
+                @keydown.enter="currentChange()" />
             </el-form-item>
             <!-- <el-form-item v-show="!fold" label="">
               <el-select
@@ -198,11 +201,12 @@ onMounted(async () => {
               </el-select>
             </el-form-item> -->
             <el-form-item v-show="!fold" label="">
-              <el-input v-model.trim="queryForm.ip" clearable :inline="false" placeholder="IP地址" />
+              <el-input v-model.trim="queryForm.ip" clearable :inline="false" placeholder="IP地址"
+                @keydown.enter="currentChange()" />
             </el-form-item>
 
             <el-form-item v-show="!fold" label="">
-              <el-select v-model="queryForm.surveyStatus" clearable placeholder="调查状态">
+              <el-select v-model="queryForm.surveyStatus" clearable placeholder="调查状态" @change="currentChange()">
                 <el-option v-for="(item, index) in data.surveyStatusList" :label="item" :value="index + 1"></el-option>
               </el-select>
             </el-form-item>

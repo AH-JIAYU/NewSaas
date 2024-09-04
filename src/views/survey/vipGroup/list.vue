@@ -178,24 +178,27 @@ onMounted(() => {
         <template #default="{ fold, toggle }">
           <ElForm :model="queryForm" size="default" label-width="100px" inline-message inline class="search-form">
             <el-form-item label="">
-              <el-input v-model.trim="queryForm.memberGroupId" clearable :inline="false" placeholder="会员组ID" />
+              <el-input v-model.trim="queryForm.memberGroupId" clearable :inline="false" placeholder="会员组ID"
+                @keydown.enter="currentChange()" />
             </el-form-item>
             <el-form-item label="">
-              <el-input v-model.trim="queryForm.memberGroupName" clearable :inline="false" placeholder="会员组名称" />
+              <el-input v-model.trim="queryForm.memberGroupName" clearable :inline="false" placeholder="会员组名称"
+                @keydown.enter="currentChange()" />
             </el-form-item>
             <el-form-item label="">
-              <el-input v-model.trim="queryForm.groupLeaderMemberName" clearable :inline="false"
-                placeholder="组长ID、组长名称" />
+              <el-input v-model.trim="queryForm.groupLeaderMemberName" clearable :inline="false" placeholder="组长ID、组长名称"
+                @keydown.enter="currentChange()" />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-select v-model="queryForm.groupStatus" clearable placeholder="会员组状态">
+              <el-select v-model="queryForm.groupStatus" clearable placeholder="会员组状态" @change="currentChange()">
                 <el-option label="关闭" :value="1" />
                 <el-option label="开启" :value="2" />
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold">
               <el-date-picker v-model="queryForm.time" type="datetimerange" unlink-panels range-separator="-"
-                start-placeholder="创建开始日期" end-placeholder="创建结束日期" value-format="YYYY-MM-DD hh:mm:ss" size="default" />
+                start-placeholder="创建开始日期" end-placeholder="创建结束日期" value-format="YYYY-MM-DD hh:mm:ss" size="default"
+                @change="currentChange()" />
             </el-form-item>
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">

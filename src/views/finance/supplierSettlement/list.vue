@@ -131,14 +131,15 @@ onMounted(() => {
         <template #default="{ fold, toggle }">
           <el-form :model="queryForm" size="default" label-width="100px" inline-message inline class="search-form">
             <el-form-item label="">
-              <el-input v-model="queryForm.supplierId" clearable placeholder="供应商ID" />
+              <el-input v-model="queryForm.supplierId" clearable placeholder="供应商ID" @keydown.enter="currentChange()" />
             </el-form-item>
             <el-form-item v-show="!fold">
               <el-date-picker v-model="queryForm.time" type="datetimerange" unlink-panels range-separator="-"
-                start-placeholder="创建开始日期" end-placeholder="创建结束日期" value-format="YYYY-MM-DD hh:mm:ss" size="default" />
+                start-placeholder="创建开始日期" end-placeholder="创建结束日期" value-format="YYYY-MM-DD hh:mm:ss" size="default"
+                @change="currentChange()" />
             </el-form-item>
             <el-form-item label="">
-              <el-select v-model="queryForm.billStatus" placeholder="状态" clearable filterable>
+              <el-select v-model="queryForm.billStatus" placeholder="状态" clearable filterable @change="currentChange()">
                 <el-option v-for="(item, index) in billStatusList" :key="item" :label="item"
                   :value="index + 1"></el-option>
               </el-select>

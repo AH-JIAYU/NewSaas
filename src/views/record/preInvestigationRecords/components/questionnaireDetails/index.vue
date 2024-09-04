@@ -54,6 +54,7 @@ const showEdit = async (row: any) => {
   });
 
   data.survey = new Model(JSON.stringify(projectJson));
+  data.survey.showNavigationButtons = false;
   // 获取所有正确答案的集合
   const allCorrectAnswersList = getAllCorrectAnswers(res.data.projectSurveyScreenDetailInfoList)
   // 正确答案范围 文字红色

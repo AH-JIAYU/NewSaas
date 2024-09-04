@@ -190,13 +190,13 @@ async function paymentOperation(id: any, type: any) {
         <template #default="{ fold, toggle }">
           <ElForm :model="data.search" size="default" label-width="100px" inline-message inline class="search-form">
             <ElFormItem>
-              <ElInput v-model="data.search.memberId" placeholder="会员ID" clearable @clear="currentChange()" />
+              <ElInput v-model="data.search.memberId" placeholder="会员ID" clearable @keydown.enter="currentChange()" />
             </ElFormItem>
             <ElFormItem>
-              <ElInput v-model="data.search.memberName" placeholder="会员姓名" clearable @clear="currentChange()" />
+              <ElInput v-model="data.search.memberName" placeholder="会员姓名" clearable @keydown.enter="currentChange()" />
             </ElFormItem>
             <ElFormItem>
-              <el-select v-model="data.search.billStatus" value-key="" placeholder="账单状态" clearable filterable>
+              <el-select v-model="data.search.billStatus" value-key="" placeholder="账单状态" clearable filterable @change="currentChange()">
                 <el-option v-for="(item, index) in data.billStatusList" :key="item" :value="index + 1"
                   :label="item"></el-option>
               </el-select>

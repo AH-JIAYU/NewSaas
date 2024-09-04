@@ -116,13 +116,13 @@ onMounted(() => {
               <el-form :model="queryForm.select" size="default" label-width="100px" inline-message inline
                 class="search-form">
                 <el-form-item label="">
-                  <el-input v-model="queryForm.tenantId" clearable placeholder="租户id" />
+                  <el-input v-model="queryForm.tenantId" clearable placeholder="租户id" @keydown.enter="currentChange()"/>
                 </el-form-item>
                 <el-form-item label="">
-                  <el-input v-model="queryForm.tenantName" clearable placeholder="租户名称" />
+                  <el-input v-model="queryForm.tenantName" clearable placeholder="租户名称" @keydown.enter="currentChange()"/>
                 </el-form-item>
                 <el-form-item label="">
-                  <el-select v-model="queryForm.projectStatus" clearable placeholder="项目状态">
+                  <el-select v-model="queryForm.projectStatus" clearable placeholder="项目状态" @change="currentChange()">
                     <el-option v-for="(
                     item, index
                   ) in projectManagementOutsourceStore.projectStatusList" :label="item" :value="index + 1" />

@@ -99,11 +99,11 @@ function distribution(row: any) {
 
 // 每页数量切换
 function sizeChange(size: number) {
-  onSizeChange(size);
+  onSizeChange(size).then(() => fetchData());
 }
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
-  onCurrentChange(page);
+  onCurrentChange(page).then(() => fetchData());
 }
 // 重置数据
 function onReset() {
@@ -186,35 +186,38 @@ onMounted(async () => {
           <el-form :model="queryForm.select" size="default" label-width="100px" inline-message inline
             class="search-form">
             <el-form-item label="">
-              <el-input v-model="queryForm.projectId" clearable placeholder="项目ID" />
+              <el-input v-model="queryForm.projectId" clearable placeholder="项目ID" @keydown.enter="currentChange()" />
             </el-form-item>
             <el-form-item label="">
-              <el-input clearable v-model="queryForm.projectName" placeholder="项目名称" />
+              <el-input clearable v-model="queryForm.projectName" placeholder="项目名称" @keydown.enter="currentChange()" />
             </el-form-item>
             <el-form-item label="">
-              <el-input v-model="queryForm.projectIdentification" clearable placeholder="项目标识" />
+              <el-input v-model="queryForm.projectIdentification" clearable placeholder="项目标识"
+                @keydown.enter="currentChange()" />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-select placeholder="国家地区" v-model="queryForm.countryId" clearable filterable multiple collapse-tags>
+              <el-select placeholder="国家地区" v-model="queryForm.countryId" clearable filterable multiple collapse-tags
+                @change="currentChange()">
                 <ElOption v-for="item in countryList" :label="item.chineseName" :value="item.id"></ElOption>
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-select placeholder="客户简称" v-model="queryForm.clientId">
+              <el-select placeholder="客户简称" clearable filterable v-model="queryForm.clientId" @change="currentChange()">
                 <el-option v-for="item in customerList" :key="item.tenantCustomerId" :value="item.tenantCustomerId"
                   :label="item.customerAccord"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-select placeholder="B2B/B2C" v-model="queryForm.b2bOrB2cStatus">
+              <el-select placeholder="B2B/B2C" clearable filterable v-model="queryForm.b2bOrB2cStatus"
+                @change="currentChange()">
                 <el-option label="B2B" value="1"> </el-option>
                 <el-option label="B2C" value="2"> </el-option>
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold">
               <el-date-picker v-model="queryForm.time" type="datetimerange" unlink-panels range-separator="-"
-                start-placeholder="创建开始日期" end-placeholder="创建结束日期" size="default" value-format="YYYY-MM-DD HH:mm:ss" style="width: 192px"
-                clear-icon="true" />
+                start-placeholder="创建开始日期" end-placeholder="创建结束日期" size="default" value-format="YYYY-MM-DD HH:mm:ss"
+                style="width: 192px" clear-icon="true" @change="currentChange()" />
             </el-form-item>
             <ElFormItem>
               <ElButton type="primary" @click="fetchData()">

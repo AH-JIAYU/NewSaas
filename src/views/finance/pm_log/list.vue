@@ -234,7 +234,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
                 @clear="currentChange()" />
             </ElFormItem>
             <ElFormItem v-show="!fold">
-              <el-select v-model="data.search.positionId" value-key="" placeholder="职位" clearable filterable>
+              <el-select v-model="data.search.positionId" value-key="" placeholder="职位" clearable filterable @change="currentChange()">
                 <el-option v-for="item in positionManageList" :key="item.id" :label="item.name" :value="item.id">
                 </el-option>
               </el-select>
