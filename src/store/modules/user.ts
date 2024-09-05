@@ -111,17 +111,18 @@ const useUserStore = defineStore(
             router.currentRoute.value.name !== "login" && { redirect }),
         },
       });
-
+      // 刷新页面清除store里的数据
+      window.location.reload();
     }
     // 删除本地和store里的logo
-    function delLogo(){
-      logo.value=''
+    function delLogo() {
+      logo.value = ''
       storage.local.remove("logo")
     }
     // 存 logo
-    function setLogo(val:any){
-      logo.value=val
-      storage.local.set("logo",val)
+    function setLogo(val: any) {
+      logo.value = val
+      storage.local.set("logo", val)
     }
     // 获取权限
     async function getPermissions() {
