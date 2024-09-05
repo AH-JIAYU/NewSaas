@@ -194,22 +194,17 @@ onMounted(async () => {
               <el-input v-model.trim="queryForm.memberId" clearable :inline="false" placeholder="会员ID" />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <!-- <el-select
-                v-model="queryForm.memberGroupId"
-                clearable
-                placeholder="会员组"
-              /> -->
-              <el-input v-model.trim="queryForm.randomIdentityId" clearable :inline="false" placeholder="随机身份" />
+              <el-input v-model.trim="queryForm.randomIdentityId" clearable :inline="false" placeholder="随机身份" @keydown.enter="currentChange()" />
             </el-form-item>
 
             <el-form-item label="">
-              <el-input v-model.trim="queryForm.projectId" clearable :inline="false" placeholder="项目ID" />
+              <el-input v-model.trim="queryForm.projectId" clearable :inline="false" placeholder="项目ID" @keydown.enter="currentChange()" />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-input v-model.trim="queryForm.projectName" clearable :inline="false" placeholder="项目名称" />
+              <el-input v-model.trim="queryForm.projectName" clearable :inline="false" placeholder="项目名称" @keydown.enter="currentChange()"/>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-select v-model="queryForm.customerId" clearable placeholder="客户简称">
+              <el-select v-model="queryForm.customerId" clearable filterable placeholder="客户简称" @change="currentChange()">
                 <el-option v-for="item in data.customerList" :key="item.tenantCustomerId" :value="item.tenantCustomerId"
                   :label="item.customerAccord"></el-option>
               </el-select>
@@ -217,9 +212,8 @@ onMounted(async () => {
             <el-form-item v-show="!fold" label="">
               <el-input v-model.trim="queryForm.ip" clearable :inline="false" placeholder="IP地址" />
             </el-form-item>
-
             <el-form-item v-show="!fold" label="">
-              <el-select v-model="queryForm.surveyStatus" clearable placeholder="调查状态">
+              <el-select v-model="queryForm.surveyStatus" clearable filterable placeholder="调查状态" @change="currentChange()">
                 <el-option v-for="(item, index) in data.surveyStatusList" :label="item" :value="index + 1"></el-option>
               </el-select>
             </el-form-item>

@@ -199,16 +199,18 @@ function onReset() {
 const selectChange = (val: any) => {
   // 将数组转换成字符串
   queryForm.countryId = val.join(",");
+  currentChange()
 };
 // 处理时间
 const timeChange = () => {
   queryForm.startTime = timeArr.value[0];
   queryForm.endTime = timeArr.value[1];
+  currentChange()
 };
 // 格式化日期范围的方法
-const formatDateRange = (timestamps:any) => {
+const formatDateRange = (timestamps: any) => {
   if (!timestamps || timestamps.length === 0) return '';
-  const formatDate = (date:any) => {
+  const formatDate = (date: any) => {
     const year = date.getFullYear();
     const month = date.getMonth() + 1; // 月份从0开始
     const day = date.getDate();
@@ -219,7 +221,7 @@ const formatDateRange = (timestamps:any) => {
     const singleDate = new Date(parseInt(timestamps[0]));
     return formatDate(singleDate);
   } else if (timestamps.length === 2) {
-    const [startTimestamp, endTimestamp] = timestamps.map((ts:any) => new Date(parseInt(ts)));
+    const [startTimestamp, endTimestamp] = timestamps.map((ts: any) => new Date(parseInt(ts)));
     return `${formatDate(startTimestamp)} - ${formatDate(endTimestamp)}`;
   }
   return '';
@@ -234,15 +236,15 @@ const comCountryId = computed(() => (countryIdList: any) => {
 async function fetchData() {
   try {
     listLoading.value = true;
-  const { data } = await api.list(queryForm);
-  list.value = data.projectSettlementList;
-  pagination.value.total = +data.total;
-  listLoading.value = false;
-} catch (error) {
+    const { data } = await api.list(queryForm);
+    list.value = data.projectSettlementList;
+    pagination.value.total = +data.total;
+    listLoading.value = false;
+  } catch (error) {
 
-}finally {
-  listLoading.value = false;
-}
+  } finally {
+    listLoading.value = false;
+  }
 }
 onMounted(async () => {
   countryList.value = await basicDictionaryStore.getCountry();
@@ -271,133 +273,53 @@ function handleMoreOperating(command: string, row: any) {
 </script>
 
 <template>
-  <div
-    :class="{
-      'absolute-container': tableAutoHeight,
-    }"
-    v-loading="listLoading"
-  >
+  <div :class="{
+    'absolute-container': tableAutoHeight,
+  }" v-loading="listLoading">
     <PageMain>
       <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
-          <el-form
-            :model="queryForm"
-            size="default"
-            label-width="6.25rem"
-            inline-message
-            inline
-            class="search-form"
-          >
+          <el-form :model="queryForm" size="default" label-width="6.25rem" inline-message inline class="search-form">
             <el-form-item label="">
-              <el-input
-                v-model="queryForm.projectId"
-                clearable
-                placeholder="项目ID"
-              />
+              <el-input v-model="queryForm.projectId" clearable placeholder="项目ID" @keydown.enter="currentChange()" />
             </el-form-item>
             <el-form-item label="">
-              <el-input
-                v-model="queryForm.projectName"
-                clearable
-                placeholder="项目名称"
-              />
+              <el-input v-model="queryForm.projectName" clearable placeholder="项目名称" @keydown.enter="currentChange()" />
             </el-form-item>
             <el-form-item label="">
-              <el-input
-                v-model="queryForm.projectIdentification"
-                clearable
-                placeholder="项目标识"
-              />
+              <el-input v-model="queryForm.projectIdentification" clearable placeholder="项目标识"
+                @keydown.enter="currentChange()" />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <ElSelect
-                v-model="countryData"
-                placeholder="国家"
-                clearable
-                filterable
-                multiple
-                collapse-tags
-                @change="selectChange"
-              >
-                <ElOption
-                  v-for="item in countryList"
-                  :label="item.chineseName"
-                  :value="item.id"
-                >
+              <ElSelect v-model="countryData" placeholder="国家" clearable filterable multiple collapse-tags
+                @change="selectChange">
+                <ElOption v-for="item in countryList" :label="item.chineseName" :value="item.id">
                 </ElOption>
               </ElSelect>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-select
-                placeholder="客户简称"
-                v-model="queryForm.customerId"
-                clearable
-              >
-                <el-option
-                  v-for="item in customerList"
-                  :key="item.tenantCustomerId"
-                  :value="item.tenantCustomerId"
-                  :label="item.customerAccord"
-                ></el-option>
+              <el-select placeholder="客户简称" v-model="queryForm.customerId" clearable @change="currentChange()">
+                <el-option v-for="item in customerList" :key="item.tenantCustomerId" :value="item.tenantCustomerId"
+                  :label="item.customerAccord"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-select
-                placeholder="结算状态"
-                v-model="queryForm.settlementStatus"
-                clearable
-                filterable
-                multiple
-                collapse-tags
-              >
-                <el-option
-                  v-for="item in settlementStatusList"
-                  :key="item.value"
-                  :value="item.value"
-                  :label="item.label"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item v-show="!fold">
-              <el-select
-                placeholder="创建人"
-                v-model="queryForm.createUserId"
-                clearable
-              >
-                <el-option
-                  v-for="item in founderList"
-                  :key="item.id"
-                  :value="item.id"
-                  :label="item.name"
-                ></el-option>
+              <el-select placeholder="结算状态" v-model="queryForm.settlementStatus" clearable filterable multiple
+                collapse-tags @change="currentChange()">
+                <el-option v-for="item in settlementStatusList" :key="item.value" :value="item.value"
+                  :label="item.label"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-select
-                placeholder="时间类型"
-                v-model="queryForm.timeType"
-                clearable
-              >
-                <el-option
-                  v-for="item in settlementStatusList"
-                  :key="item.value"
-                  :value="item.value"
-                  :label="item.label"
-                ></el-option>
+              <el-select placeholder="时间类型" v-model="queryForm.timeType" clearable @change="currentChange()">
+                <el-option v-for="item in settlementStatusList" :key="item.value" :value="item.value"
+                  :label="item.label"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold">
-              <el-date-picker
-                v-model="timeArr"
-                value-format="YYYY-MM-DD hh:mm:ss"
-                type="datetimerange"
-                range-separator="-"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                clearable
-                size=""
-                @change="timeChange"
-              />
+              <el-date-picker v-model="timeArr" value-format="YYYY-MM-DD hh:mm:ss" type="datetimerange"
+                range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期" clearable size=""
+                @change="timeChange" />
             </el-form-item>
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">
@@ -414,9 +336,7 @@ function handleMoreOperating(command: string, row: any) {
               </ElButton>
               <ElButton link @click="toggle">
                 <template #icon>
-                  <SvgIcon
-                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
-                  />
+                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
                 </template>
                 {{ fold ? "展开" : "收起" }}
               </ElButton>
@@ -439,158 +359,79 @@ function handleMoreOperating(command: string, row: any) {
         </FormLeftPanel>
         <FormRightPanel>
           <el-button size="default" @click=""> 导出 </el-button>
-          <TabelControl
-            v-model:border="border"
-            v-model:tableAutoHeight="tableAutoHeight"
-            v-model:checkList="checkList"
-            v-model:columns="columns"
-            v-model:line-height="lineHeight"
-            v-model:stripe="stripe"
-            style="margin-left: 0.75rem"
-            @query-data="currentChange"
-          />
+          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
+            v-model:columns="columns" v-model:line-height="lineHeight" v-model:stripe="stripe"
+            style="margin-left: 0.75rem" @query-data="currentChange" />
         </FormRightPanel>
       </el-row>
-      <el-table
-        ref="tableSortRef"
-        v-loading="listLoading"
-        style="margin-top: 10px"
-        row-key="id"
-        :data="list"
-        :border="border"
-        :size="lineHeight"
-        :stripe="stripe"
-        @selection-change="setSelectRows"
-      >
+      <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="id" :data="list"
+        :border="border" :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows">
         <el-table-column align="center" type="selection" />
         <!-- <el-table-column type="index" align="center" label="序号" width="55" /> -->
-        <el-table-column
-          v-if="checkList.includes('projectId')"
-          show-overflow-tooltip
-          prop="projectId"
-          align="center"
-          width="180"
-          label="项目ID"
-        />
-        <el-table-column
-          v-if="checkList.includes('projectName')"
-          show-overflow-tooltip
-          prop="projectName"
-          align="center"
-          width="180"
-          label="项目名称"
-        >
+        <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip prop="projectId" align="center"
+          width="180" label="项目ID" />
+        <el-table-column v-if="checkList.includes('projectName')" show-overflow-tooltip prop="projectName"
+          align="center" width="180" label="项目名称">
           <template #default="{ row }">
             {{ row.projectName ? row.projectName : "-" }}
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('customerName')"
-          show-overflow-tooltip
-          prop="customerName"
-          width="130"
-          align="center"
-          label="客户简称/标识"
-        >
+        <el-table-column v-if="checkList.includes('customerName')" show-overflow-tooltip prop="customerName" width="130"
+          align="center" label="客户简称/标识">
           <template #default="{ row }">
             <!-- {{ row.customerName ? row.customerName : "-" }} -->
-            <el-text class="mx-1">{{ row.customerName.split("/")[0] !== 'null' ? row.customerName.split("/")[0] : '-' }}</el-text>
+            <el-text class="mx-1">{{ row.customerName.split("/")[0] !== 'null' ? row.customerName.split("/")[0] : '-'
+              }}</el-text>
             <p>{{ row.customerName.split("/")[1] !== 'null' ? row.customerName.split("/")[1] : '-' }}</p>
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('projectAmount')"
-          show-overflow-tooltip
-          prop="d"
-          align="center"
-          label="原价"
-        >
+        <el-table-column v-if="checkList.includes('projectAmount')" show-overflow-tooltip prop="d" align="center"
+          label="原价">
           <template #default="{ row }">
             <CurrencyType />{{ row.projectAmount || 0 }}
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('countryId')"
-          show-overflow-tooltip
-          prop="e"
-          align="center"
-          label="所属国家"
-        >
+        <el-table-column v-if="checkList.includes('countryId')" show-overflow-tooltip prop="e" align="center"
+          label="所属国家">
           <template #default="{ row }">
             <template v-if="row.countryId">
               <template v-if="row.countryId.length === basicDictionaryStore.country.length">
-                <el-link type="primary"
-                  ><el-tag type="warning">全球</el-tag></el-link
-                >
+                <el-link type="primary"><el-tag type="warning">全球</el-tag></el-link>
               </template>
               <template v-else-if="comCountryId(row.countryId).length > 4">
-                <el-tag
-                  v-if="comCountryId(row.countryId).length === basicDictionaryStore.country.length"
-                  type="warning"
-                  >全球</el-tag
-                >
-                <el-tooltip
-                  v-else
-                  class="box-item"
-                  effect="dark"
-                  :content="comCountryId(row.countryId).join(',')"
-                  placement="top"
-                >
-                  <el-link type="primary"
-                    ><el-tag type="success">{{
-                      comCountryId(row.countryId).length
-                    }}</el-tag></el-link
-                  >
+                <el-tag v-if="comCountryId(row.countryId).length === basicDictionaryStore.country.length"
+                  type="warning">全球</el-tag>
+                <el-tooltip v-else class="box-item" effect="dark" :content="comCountryId(row.countryId).join(',')"
+                  placement="top">
+                  <el-link type="primary"><el-tag type="success">{{
+    comCountryId(row.countryId).length
+  }}</el-tag></el-link>
                 </el-tooltip>
               </template>
               <template v-else>
-                <el-tag
-                  v-for="item in comCountryId(row.countryId)"
-                  :key="item"
-                  type="primary"
-                >
+                <el-tag v-for="item in comCountryId(row.countryId)" :key="item" type="primary">
                   {{ item }}
                 </el-tag>
               </template>
             </template>
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('systemDone')"
-          show-overflow-tooltip
-          prop="systemDone"
-          align="center"
-          width="130"
-          label="系统/审核完成数"
-        ><template #default="{ row }">
-          <el-text >{{ row.systemDone ? row.systemDone : 0 }}</el-text> /<el-text class="mx-1" type="success">{{ row.settlementDone ? row.settlementDone : 0 }}</el-text>
+        <el-table-column v-if="checkList.includes('systemDone')" show-overflow-tooltip prop="systemDone" align="center"
+          width="130" label="系统/审核完成数"><template #default="{ row }">
+            <el-text>{{ row.systemDone ? row.systemDone : 0 }}</el-text> /<el-text class="mx-1" type="success">{{
+    row.settlementDone ? row.settlementDone : 0 }}</el-text>
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('settlementDone')"
-          show-overflow-tooltip
-          prop="settlementDone"
-          align="center"
-          label="结算完成数"
-        />
-        <el-table-column
-          v-if="checkList.includes('settlementPo')"
-          show-overflow-tooltip
-          prop="settlementPo"
-          align="center"
-          label="结算PO号"
-        >
+        <el-table-column v-if="checkList.includes('settlementDone')" show-overflow-tooltip prop="settlementDone"
+          align="center" label="结算完成数" />
+        <el-table-column v-if="checkList.includes('settlementPo')" show-overflow-tooltip prop="settlementPo"
+          align="center" label="结算PO号">
           <template #default="{ row }">
             {{ row.settlementPo ? row.settlementPo : "-" }}
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('status')"
-          show-overflow-tooltip
-          prop="h"
-          align="center"
-          label="结算状态"
-          ><template #default="{ row }">
+        <el-table-column v-if="checkList.includes('status')" show-overflow-tooltip prop="h" align="center"
+          label="结算状态"><template #default="{ row }">
             <el-text v-if="row.status === 1" class="mx-1" type="warning">待审核</el-text>
             <el-text v-if="row.status === 3" class="mx-1" type="success">已开票</el-text>
             <el-text v-if="row.status === 4" class="mx-1" type="info">已结算</el-text>
@@ -598,26 +439,15 @@ function handleMoreOperating(command: string, row: any) {
             <el-text v-if="row.status === 5" class="mx-1" type="danger">已冻结</el-text>
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('nodeTime')"
-          show-overflow-tooltip
-          prop="nodeTime"
-          align="center"
-          label="节点时间"
-        >
+        <el-table-column v-if="checkList.includes('nodeTime')" show-overflow-tooltip prop="nodeTime" align="center"
+          label="节点时间">
           <template #default="{ row }">
-            <el-text v-if="row.nodeTime.length"  class="mx-1"
-              >{{  formatDateRange(row.nodeTime) }}</el-text>
-              <el-text v-else class="mx-1">-</el-text>
+            <el-text v-if="row.nodeTime.length" class="mx-1">{{ formatDateRange(row.nodeTime) }}</el-text>
+            <el-text v-else class="mx-1">-</el-text>
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('remark')"
-          show-overflow-tooltip
-          prop="remark"
-          align="center"
-          label="备注"
-        >
+        <el-table-column v-if="checkList.includes('remark')" show-overflow-tooltip prop="remark" align="center"
+          label="备注">
           <template #default="{ row }">
             {{ row.remark ? row.remark : "-" }}
           </template>
@@ -625,38 +455,17 @@ function handleMoreOperating(command: string, row: any) {
         <el-table-column align="center" fixed="right" label="操作" width="250">
           <template #default="{ row }">
             <ElSpace>
-              <el-button
-                v-if="row.status === 1"
-                type="primary"
-                size="small"
-                plain
-                @click="auditing(row)"
-              >
+              <el-button v-if="row.status === 1" type="primary" size="small" plain @click="auditing(row)">
                 审核
               </el-button>
-              <el-button
-                v-if="row.status === 5"
-                type="primary"
-                size="small"
-                plain
-                @click="handleMoreOperating('auditing', row)"
-              >
+              <el-button v-if="row.status === 5" type="primary" size="small" plain
+                @click="handleMoreOperating('auditing', row)">
                 重审
               </el-button>
-              <el-button
-                type="primary"
-                size="small"
-                plain
-                @click="handleMoreOperating('edit', row)"
-              >
+              <el-button type="primary" size="small" plain @click="handleMoreOperating('edit', row)">
                 结算编辑
               </el-button>
-              <el-button
-                type="primary"
-                size="small"
-                plain
-                @click="handleMoreOperating('refundDetails', row)"
-              >
+              <el-button type="primary" size="small" plain @click="handleMoreOperating('refundDetails', row)">
                 退款详情
               </el-button>
             </ElSpace>
@@ -666,18 +475,9 @@ function handleMoreOperating(command: string, row: any) {
           <el-empty description="暂无数据" />
         </template>
       </el-table>
-      <ElPagination
-        :current-page="pagination.page"
-        :total="pagination.total"
-        :page-size="pagination.size"
-        :page-sizes="pagination.sizes"
-        :layout="pagination.layout"
-        :hide-on-single-page="false"
-        class="pagination"
-        background
-        @size-change="sizeChange"
-        @current-change="currentChange"
-      />
+      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+        background @size-change="sizeChange" @current-change="currentChange" />
       <invoicingEdit @success="fetchData" ref="invoicingRef" />
       <projectReview @success="fetchData" ref="auditingRef" />
       <settlementEdit @success="fetchData" ref="editRef" />
@@ -712,6 +512,7 @@ function handleMoreOperating(command: string, row: any) {
     }
   }
 }
+
 // 筛选
 .page-main {
   .search-form {

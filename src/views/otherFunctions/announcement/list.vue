@@ -269,8 +269,8 @@ onBeforeUnmount(() => {
                 @clear="currentChange()" />
             </ElFormItem>
             <el-form-item label="">
-              <el-select v-model="data.search.type" value-key="" placeholder="请选择类型" clearable filterable>
-                <el-option v-for="item in type" :key="item.value" :label="item.label" :value="item.value" />
+              <el-select v-model="data.search.type" value-key="" placeholder="请选择类型" clearable filterable @change="currentChange()">
+                <el-option v-for="item in type" :key="item.value" :label="item.label" :value="item.value"  />
               </el-select>
             </el-form-item>
             <ElFormItem>

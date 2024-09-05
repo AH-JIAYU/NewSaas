@@ -143,10 +143,10 @@ onMounted(async () => {
         <template #default="{ fold, toggle }">
           <el-form :model="queryForm" size="default" label-width="100px" inline-message inline class="search-form">
             <el-form-item label="">
-              <el-input v-model.trim="queryForm.createUserName" clearable :inline="false" placeholder="操作人" />
+              <el-input v-model.trim="queryForm.createUserName" clearable :inline="false" placeholder="操作人" @keydown.enter="currentChange()"/>
             </el-form-item>
             <el-form-item label="">
-              <el-select v-model="queryForm.type" value-key="" placeholder="变更状态" clearable filterable>
+              <el-select v-model="queryForm.type" value-key="" placeholder="变更状态" clearable filterable @change="currentChange()">
                 <el-option v-for="item in statusType" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
               </el-select>

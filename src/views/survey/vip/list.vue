@@ -178,7 +178,7 @@ onMounted(async () => {
         <template #default="{ fold, toggle }">
           <ElForm :model="queryForm" size="default" label-width="100px" inline-message inline class="search-form">
             <el-form-item label="">
-              <el-input v-model.trim="queryForm.memberId" clearable :inline="false" placeholder="会员ID" />
+              <el-input v-model.trim="queryForm.memberId" clearable :inline="false" placeholder="会员ID" @keydown.enter="currentChange()"/>
             </el-form-item>
             <el-form-item label="">
               <!--
@@ -186,29 +186,29 @@ onMounted(async () => {
                 会员列表目前这个只会模糊匹配姓名
                 那个我等下有时间在搞
               -->
-              <el-input v-model.trim="queryForm.memberName" clearable :inline="false" placeholder="会员名称" />
+              <el-input v-model.trim="queryForm.memberName" clearable :inline="false" placeholder="会员名称" @keydown.enter="currentChange()"/>
             </el-form-item>
             <el-form-item label="">
-              <el-select v-model="queryForm.memberLevelId" clearable placeholder="会员等级">
+              <el-select v-model="queryForm.memberLevelId" clearable placeholder="会员等级" @change="currentChange()">
                 <el-option v-for="item in data.vipLevelList" :key="item.memberLevelId"
                   :label="item.levelNameOrAdditionRatio" :value="item.memberLevelId" />
               </el-select>
             </el-form-item>
             <el-form-item label="">
-              <el-select v-model="queryForm.memberStatus" clearable placeholder="会员状态">
+              <el-select v-model="queryForm.memberStatus" clearable placeholder="会员状态" @change="currentChange()">
                 <el-option label="关闭" :value="1" />
                 <el-option label="开启" :value="2" />
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-select v-model="queryForm.memberGroupId" clearable placeholder="所属会员组">
+              <el-select v-model="queryForm.memberGroupId" clearable placeholder="所属会员组" @change="currentChange()">
                 <el-option v-for="item in data.vipGroupList" :key="item.memberGroupId" :label="item.memberGroupName"
                   :value="item.memberGroupId" />
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold">
               <el-date-picker v-model="queryForm.time" type="datetimerange" unlink-panels range-separator="-"
-                start-placeholder="创建开始日期" end-placeholder="创建结束日期" value-format="YYYY-MM-DD hh:mm:ss" size="default" />
+                start-placeholder="创建开始日期" end-placeholder="创建结束日期" value-format="YYYY-MM-DD hh:mm:ss" size="default" @change="currentChange()"/>
             </el-form-item>
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">

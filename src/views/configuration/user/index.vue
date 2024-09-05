@@ -379,7 +379,7 @@ function onReset() {
               <ElInput v-model="dictionaryItem.search.userName" placeholder="用户名" clearable style="width: 12.5rem"
                 @keydown.enter="getDictionaryList" />
               <el-select v-model="dictionaryItem.search.active" value-key="" placeholder="状态" style="width: 12.5rem" clearable filterable
-                @change="">
+                @change="getDictionaryList">
                 <el-option v-for="item in activeList" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
               </el-select>

@@ -242,13 +242,13 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
             </ElFormItem>
             <ElFormItem v-show="!fold">
               <el-select v-model="data.search.operationType" value-key="" placeholder="加减款" clearable filterable
-                @change="">
+                @change="currentChange()">
                 <el-option v-for="item in payments" :key="item.value" :label="item.label"
                   :value="item.value"></el-option>
               </el-select>
             </ElFormItem>
             <ElFormItem v-show="!fold">
-              <el-select v-model="data.search.type" value-key="" placeholder="类型" clearable filterable @change="">
+              <el-select v-model="data.search.type" value-key="" placeholder="类型" clearable filterable @change="currentChange()">
                 <el-option v-for="item in paymentsType" :key="item.value" :label="item.label"
                   :value="item.value"></el-option>
               </el-select>

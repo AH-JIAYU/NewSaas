@@ -122,7 +122,8 @@ function projectDetails(row: any) {
 }
 // 项目调度 快捷操作
 function dispatch() {
-  const selectList = tableSortRef.value.getSelectionRows();
+
+  const selectList = tableSortRef.value.getSelectionRows(); 
   if (selectList.length !== 1) {
     ElMessage.warning({
       message: "请选择一个项目",
@@ -132,6 +133,12 @@ function dispatch() {
   else if (selectList[0].isOnline === 2) {
     ElMessage.warning({
       message: "离线不可调度",
+      center: true,
+    });
+  }
+    else if (selectList[0].projectType === 2) {
+    ElMessage.warning({
+      message: "外包项目不可调度",
       center: true,
     });
   }

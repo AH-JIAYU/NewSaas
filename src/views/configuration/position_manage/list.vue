@@ -180,13 +180,13 @@ onMounted(() => {
           <el-form :model="queryForm.select" size="default" label-width="100px" inline-message inline
             class="search-form">
             <el-form-item label="">
-              <el-input v-model="queryForm.id" placeholder="职位ID" clearable />
+              <el-input v-model="queryForm.id" placeholder="职位ID" clearable @keydown.enter="currentChange()"/>
             </el-form-item>
             <el-form-item label="">
-              <el-input v-model="queryForm.name" placeholder="职位名称" clearable />
+              <el-input v-model="queryForm.name" placeholder="职位名称" clearable @keydown.enter="currentChange()"/>
             </el-form-item>
             <el-form-item label="">
-              <el-select v-model="queryForm.active" placeholder="状态" clearable filterable>
+              <el-select v-model="queryForm.active" placeholder="状态" clearable filterable @change="currentChange()">
                 <ElOption v-for="item in invoiceStatusList" :label="item.lable" :value="item.value"></ElOption>
               </el-select>
             </el-form-item>

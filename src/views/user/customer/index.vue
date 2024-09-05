@@ -170,19 +170,17 @@ onMounted(async () => {
           <ElForm :model="queryForm.select" size="default" label-width="100px" inline-message inline
             class="search-form">
             <el-form-item v-show="!fold">
-              <el-input v-model="queryForm.customerShortName" clearable placeholder="客户简称">
-                <el-option label="name" value="name" />
-              </el-input>
+              <el-input v-model="queryForm.customerShortName" clearable placeholder="客户简称" @keydown.enter="currentChange()"/>
             </el-form-item>
             <el-form-item v-show="!fold">
-              <el-select v-model="queryForm.customerStatus" clearable placeholder="客户状态">
+              <el-select v-model="queryForm.customerStatus" clearable placeholder="客户状态" @change="currentChange()">
                 <el-option label="禁用" :value="1" />
                 <el-option label="启用" :value="2" />
                 <!-- <el-option label="风险暂停" :value="3" /> -->
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold">
-              <el-select v-model="queryForm.antecedentQuestionnaire" clearable placeholder="前置问卷">
+              <el-select v-model="queryForm.antecedentQuestionnaire" clearable placeholder="前置问卷" @change="currentChange()">
                 <el-option label="禁用" :value="1" />
                 <el-option label="启用" :value="2" />
               </el-select>

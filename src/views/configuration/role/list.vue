@@ -178,10 +178,10 @@ function onDel(row: any) {
         <template #default="{ fold, toggle }">
           <el-form :model="data.search" size="default" label-width="100px" inline-message inline class="search-form">
             <el-form-item label="">
-              <el-input v-model.trim="data.search.id" clearable :inline="false" placeholder="角色ID" />
+              <el-input v-model.trim="data.search.id" clearable :inline="false" placeholder="角色ID" @keydown.enter="currentChange()"/>
             </el-form-item>
             <el-form-item label="">
-              <el-input v-model.trim="data.search.name" clearable :inline="false" placeholder="角色名称" />
+              <el-input v-model.trim="data.search.name" clearable :inline="false" placeholder="角色名称" @keydown.enter="currentChange()"/>
             </el-form-item>
             <!-- <el-form-item v-show="!fold" label="">
               <el-select

@@ -120,13 +120,13 @@ onMounted(() => {
           <el-form :model="queryForm.select" size="default" label-width="100px" inline-message inline
             class="search-form">
             <el-form-item label="">
-              <el-input v-model="queryForm.projectId" clearable placeholder="项目ID" />
+              <el-input v-model="queryForm.projectId" clearable placeholder="项目ID" @keydown.enter="currentChange()" />
             </el-form-item>
             <el-form-item label="">
-              <el-input v-model="queryForm.projectName" clearable placeholder="项目名称" />
+              <el-input v-model="queryForm.projectName" clearable placeholder="项目名称" @keydown.enter="currentChange()" />
             </el-form-item>
             <el-form-item label="">
-              <el-select v-model="queryForm.dispatchType" clearable placeholder="全部类型">
+              <el-select v-model="queryForm.dispatchType" clearable placeholder="全部类型" @change="currentChange()">
                 <el-option label="指定关闭" :value="1" />
                 <el-option label="指定价格" :value="2" />
               </el-select>

@@ -211,6 +211,7 @@ const selectChange = (val: any) => {
   queryForm.invoiceDateEnd = "";
   queryForm.paymentDateStart = "";
   queryForm.paymentDateEnd = "";
+  currentChange()
 };
 // 处理时间
 const timeChange = () => {
@@ -221,6 +222,7 @@ const timeChange = () => {
     queryForm.paymentDateStart = timeArr.value[0];
     queryForm.paymentDateEnd = timeArr.value[1];
   }
+  currentChange()
 };
 // 每页数量切换
 function sizeChange(size: number) {
@@ -270,13 +272,15 @@ onMounted(() => {
           <el-form :model="queryForm.select" size="default" label-width="100px" inline-message inline
             class="search-form">
             <el-form-item label="">
-              <el-select v-model="queryForm.tenantCustomerId" placeholder="客户简称" clearable filterable>
+              <el-select v-model="queryForm.tenantCustomerId" placeholder="客户简称" clearable filterable
+                @change="currentChange()">
                 <el-option v-for="item in customerList" :key="item.tenantCustomerId" :value="item.tenantCustomerId"
                   :label="item.customerAccord" />
               </el-select>
             </el-form-item>
             <el-form-item label="">
-              <el-select v-model="queryForm.invoiceStatus" placeholder="发票状态" clearable filterable>
+              <el-select v-model="queryForm.invoiceStatus" placeholder="发票状态" clearable filterable
+                @change="currentChange()">
                 <ElOption v-for="item in invoiceStatusList" :label="item.lable" :value="item.value"></ElOption>
               </el-select>
             </el-form-item>
