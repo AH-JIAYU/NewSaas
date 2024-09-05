@@ -53,7 +53,6 @@ const columns = ref<any>([
   },
   { label: "项目营业额", prop: "turnover", sortable: true, checked: true },
 ]);
-const radio = ref();
 // 时间
 const timeArr = ref<any>([]);
 const typeNumber = ref();
@@ -86,11 +85,11 @@ function currentChange(page = 1) {
   });
 }
 function back() {
-  radio.value = null;
-  data.value.queryForm.type = null;
+  data.value.queryForm.type = 3;
   data.value.queryForm.overviewStart = "";
   data.value.queryForm.overviewEnd = "";
   timeArr.value = [];
+  getDataList();
 }
 // 去除icon
 const customPrefix = shallowRef({

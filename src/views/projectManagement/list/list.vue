@@ -123,7 +123,7 @@ function projectDetails(row: any) {
 // 项目调度 快捷操作
 function dispatch() {
 
-  const selectList = tableSortRef.value.getSelectionRows(); 
+  const selectList = tableSortRef.value.getSelectionRows();
   if (selectList.length !== 1) {
     ElMessage.warning({
       message: "请选择一个项目",
@@ -136,7 +136,7 @@ function dispatch() {
       center: true,
     });
   }
-    else if (selectList[0].projectType === 2) {
+  else if (selectList[0].projectType === 2) {
     ElMessage.warning({
       message: "外包项目不可调度",
       center: true,
@@ -204,6 +204,11 @@ async function fetchData() {
     listLoading.value = false;
   }
 }
+// 表格时候可勾选
+const selectable = (row: any) => {
+   const filterDataId= list.value.filter((item: any) => item.projectType === 2).map((item:any)=>item.projectId)
+  return !filterDataId.includes(row.projectId)
+};
 const countryList: any = ref([]); //所有国家一维
 const customerList: any = ref([]); //客户列表
 // 具体的位置信息
@@ -251,13 +256,14 @@ onMounted(async () => {
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-select v-model="search.clientId" clearable filterable placeholder="客户简称"  @change="currentChange()">
+              <el-select v-model="search.clientId" clearable filterable placeholder="客户简称" @change="currentChange()">
                 <el-option v-for="item in customerList" :key="item.tenantCustomerId" :value="item.tenantCustomerId"
                   :label="item.customerAccord"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-select v-model="search.allocationStatus" clearable filterable placeholder="分配类型"  @change="currentChange()">
+              <el-select v-model="search.allocationStatus" clearable filterable placeholder="分配类型"
+                @change="currentChange()">
                 <el-option label="供应商" :value="2"> </el-option>
                 <el-option label="会员组" :value="3"> </el-option>
                 <el-option label="租户" :value="4"> </el-option>
@@ -334,7 +340,7 @@ onMounted(async () => {
       <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="projectId" :data="list"
         :tree-props="{ children: 'getChildrenProjectListInfoList' }" :border="border" :size="lineHeight"
         :stripe="stripe" highlight-current-row height="100%">
-        <el-table-column align="center" type="selection" />
+        <el-table-column align="center" type="selection" :selectable="selectable" />
         <el-table-column v-if="checkList.includes('projectType')" width="100" align="center" label="项目类型"><template
             #default="{ row }">
             <div style="display: flex; justify-content: center; align-items: center;">
