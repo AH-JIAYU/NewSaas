@@ -4,21 +4,21 @@ import { ElMessage } from "element-plus";
 import { cloneDeep } from "lodash-es";
 import useProjectManagementOutsourceStore from "@/store/modules/projectManagement_outsource";
 import { throttle } from "lodash-es";
-import { Right } from '@element-plus/icons-vue'
-
+import { Right } from "@element-plus/icons-vue";
 
 defineOptions({
   name: "Edit",
 });
+
 const projectManagementOutsourceStore = useProjectManagementOutsourceStore();
 // 弹框开关变量
 const dialogTableVisible = ref(false);
-const popoverRef = ref<any>()//弹出框Ref
+const popoverRef = ref<any>(); //弹出框Ref
 const data = ref<any>({
-  select: '',
+  select: "",
   currentTenantId: "", //当前租户id
   tenantMeasurementInfoList: [], //测查列表
-  clickIdList: [],//点击id列表
+  clickIdList: [], //点击id列表
 });
 
 // 显隐
@@ -30,61 +30,62 @@ async function showEdit(row: any, source: number = 0) {
   };
   const res = await api.getTenantMeasurementList(params);
 
-  const resList = res.data.tenantMeasurementInfoList
+  const resList = res.data.tenantMeasurementInfoList;
   if (res.data.tenantMeasurementInfo) {
-    resList.unshift(res.data.tenantMeasurementInfo)
+    resList.unshift(res.data.tenantMeasurementInfo);
   }
   // 过滤数据（删除与当前租户id相同的数据之前的所有数据，包括当前的数据）
   const findDataIndex = resList.findIndex(
     (item: any) => item.allocationTenantId === res.data.currentTenantId
   );
-  resList.splice(0, findDataIndex);//删除上级
-  const type1List = resList.filter((item: any) => item.type === 1)
-  const type2List = resList.filter((item: any) => item.type === 2)
-  const type3List = resList.filter((item: any) => item.type === 3)
-  const tenantMeasurementInfoList = [
-    ...type1List
-  ]
+  resList.splice(0, findDataIndex); //删除上级
+  const type1List = resList.filter((item: any) => item.type === 1);
+  const type2List = resList.filter((item: any) => item.type === 2);
+  const type3List = resList.filter((item: any) => item.type === 3);
+  const tenantMeasurementInfoList = [...type1List];
   if (type2List.length) {
-    const memberGroupOrSupperIdList = type2List.map((item: any) => item.memberGroupOrSupperId);
-    type2List[0].length = type2List.length
-    type2List[0].memberGroupOrSupperIdList = memberGroupOrSupperIdList
-    tenantMeasurementInfoList.push(type2List[0])
+    const memberGroupOrSupperIdList = type2List.map(
+      (item: any) => item.memberGroupOrSupperId
+    );
+    type2List[0].length = type2List.length;
+    type2List[0].memberGroupOrSupperIdList = memberGroupOrSupperIdList;
+    tenantMeasurementInfoList.push(type2List[0]);
   } else if (type3List.length) {
-    const memberGroupOrSupperIdList = type3List.map((item: any) => item.memberGroupOrSupperId);
-    type3List[0].length = type3List.length
-    type3List[0].memberGroupOrSupperIdList = memberGroupOrSupperIdList
-    tenantMeasurementInfoList.push(type3List[0])
+    const memberGroupOrSupperIdList = type3List.map(
+      (item: any) => item.memberGroupOrSupperId
+    );
+    type3List[0].length = type3List.length;
+    type3List[0].memberGroupOrSupperIdList = memberGroupOrSupperIdList;
+    tenantMeasurementInfoList.push(type3List[0]);
   }
-  tenantMeasurementInfoList.forEach((item: any) => item.visible = false)
+  tenantMeasurementInfoList.forEach((item: any) => (item.visible = false));
   data.value.currentTenantId = res.data.currentTenantId;
   data.value.tenantMeasurementInfoList = tenantMeasurementInfoList;
   dialogTableVisible.value = true;
 }
 // 动画显示之前先将其他显示的关闭
 const getClickListBefore = (index: any) => {
-  data.value.clickIdList = []
+  data.value.clickIdList = [];
   // 分配项目 popoverRef和显示的链路list的length一直
   if (data.value.tenantMeasurementInfoList.length === popoverRef.value.length) {
     popoverRef.value.forEach((item: any, ind: any) => {
       if (ind !== index) {
-        item.hide()
+        item.hide();
       }
-    })
+    });
   } else {
     // 接受项目 popoverRef会比显示的链路list少一个，因为当前租户没有popoverRef
     popoverRef.value.forEach((item: any, ind: any) => {
       if (ind !== index - 1) {
-        item.hide()
+        item.hide();
       }
-    })
+    });
   }
-
-}
+};
 // 获取点击id
 const getClickList = async (row: any, index: any) => {
-  data.value.select = data.value.select === index ? '' : index
-  data.value.clickIdList = []
+  data.value.select = data.value.select === index ? "" : index;
+  data.value.clickIdList = [];
   const params = {
     type: row.type,
     projectId: row.projectId,
@@ -93,20 +94,30 @@ const getClickList = async (row: any, index: any) => {
     memberGroupIdList: row.type === 3 ? row.memberGroupOrSupperIdList : [],
   };
   const res = await api.getQuestionnaireClickList(params);
-  data.value.clickIdList = processData(res.data.questionnaireClickInfoList)
+  data.value.clickIdList = processData(res.data.questionnaireClickInfoList);
   // 后期换成后端过滤
   if (row.type === 2) {
-    data.value.clickIdList = data.value.clickIdList.filter((item: any) => item.peopleType === 2)
+    data.value.clickIdList = data.value.clickIdList.filter(
+      (item: any) => item.peopleType === 2
+    );
   } else if (row.type === 3) {
-    data.value.clickIdList = data.value.clickIdList.filter((item: any) => item.peopleType === 1)
+    data.value.clickIdList = data.value.clickIdList.filter(
+      (item: any) => item.peopleType === 1
+    );
   }
-}
-
+};
 
 // 处理数据
 function processData(data: any) {
   return data.reduce((acc: any, item: any) => {
-    const { supplierId, supplierName, projectQuestionnaireClickId, surveyStatus, price, peopleType } = item;
+    const {
+      supplierId,
+      supplierName,
+      projectQuestionnaireClickId,
+      surveyStatus,
+      price,
+      peopleType,
+    } = item;
 
     // 查找是否已经有该供应商的对象
     let supplier = acc.find((s: any) => s.supplierId === supplierId);
@@ -120,7 +131,7 @@ function processData(data: any) {
         supplierId,
         peopleType,
         supplierName,
-        list: [{ projectQuestionnaireClickId, surveyStatus, price }]
+        list: [{ projectQuestionnaireClickId, surveyStatus, price }],
       });
     }
 
@@ -128,9 +139,15 @@ function processData(data: any) {
   }, []);
 }
 
-// 取消
+// 取消 重置数据
 function closeHandler() {
   dialogTableVisible.value = false;
+  data.value = {
+    select: "",
+    currentTenantId: "", //当前租户id
+    tenantMeasurementInfoList: [], //测查列表
+    clickIdList: [], //点击id列表
+  };
 }
 // 确认
 function onSubmit() {
@@ -142,16 +159,32 @@ defineExpose({ showEdit });
 
 <template>
   <div>
-    <el-drawer v-model="dialogTableVisible" title="详情" size="60%" :before-close="closeHandler">
+    <el-drawer
+      v-model="dialogTableVisible"
+      title="详情"
+      size="60%"
+      :before-close="closeHandler"
+    >
       <div class="details">
         <div class="details-left">
-
           <!-- 项目 -->
           <div class="project box">
-            <div><el-text tag="b">{{ data.tenantMeasurementInfoList[0].projectName }}</el-text></div>
-            <div><el-text type="info">ID：{{ data.tenantMeasurementInfoList[0].projectId }}</el-text></div>
+            <div>
+              <el-text tag="b">{{
+                data.tenantMeasurementInfoList[0]?.projectName
+              }}</el-text>
+            </div>
+            <div>
+              <el-text type="info"
+                >ID：{{ data.tenantMeasurementInfoList[0]?.projectId }}</el-text
+              >
+            </div>
           </div>
-          <div class="link" v-for="(item, index) in data.tenantMeasurementInfoList" :key="item.allocationTenantId">
+          <div
+            class="link"
+            v-for="(item, index) in data.tenantMeasurementInfoList"
+            :key="item.allocationTenantId"
+          >
             <!-- 步骤 -->
             <div class="step">
               <!-- 点 -->
@@ -159,16 +192,25 @@ defineExpose({ showEdit });
               <!-- 线 -->
               <div class="line"></div>
             </div>
-            <div :class="{
-      'item box': true,
-      'select': index === data.select
-    }" @click="getClickList(item, index)">
+            <div
+              :class="{
+                'item box': true,
+                select: index === data.select,
+              }"
+              @click="getClickList(item, index)"
+            >
               <div class="item-left">
                 <div class="tenant">
                   <template v-if="item?.length > 1">
                     <p class="tenantName">
-                      已分配数： <span class="tenantLength">{{ item?.length }}</span> <span :class="'type' + item.type">
-                        {{ projectManagementOutsourceStore.typeList[item.type - 1] }}
+                      已分配数：
+                      <span class="tenantLength">{{ item?.length }}</span>
+                      <span :class="'type' + item.type">
+                        {{
+                          projectManagementOutsourceStore.typeList[
+                            item.type - 1
+                          ]
+                        }}
                       </span>
                     </p>
                   </template>
@@ -176,10 +218,16 @@ defineExpose({ showEdit });
                     <p>
                       <span class="tenantName">{{ item.tenantName }}</span>
                       <span :class="'type' + item.type">
-                        {{ projectManagementOutsourceStore.typeList[item.type - 1] }}
+                        {{
+                          projectManagementOutsourceStore.typeList[
+                            item.type - 1
+                          ]
+                        }}
                       </span>
                     </p>
-                    <el-text type="info">ID：{{ item.allocationTenantId }}</el-text>
+                    <el-text type="info"
+                      >ID：{{ item.allocationTenantId }}</el-text
+                    >
                   </template>
                 </div>
                 <div class="price flex-b">
@@ -189,7 +237,8 @@ defineExpose({ showEdit });
                   </p>
                   <p>
                     参数:
-                    <el-text size="large">{{ item.participationNumber || 0 }}
+                    <el-text size="large"
+                      >{{ item.participationNumber || 0 }}
                     </el-text>
                     <el-text size="large"> / </el-text>
                     <el-text type="success" size="large">
@@ -197,10 +246,11 @@ defineExpose({ showEdit });
                     </el-text>
                     <el-text size="large"> / </el-text>
                     <el-text type="warning" size="large">
-                      {{ item.num || 0 }}</el-text><el-text size="large"> / </el-text>
+                      {{ item.num || 0 }}</el-text
+                    ><el-text size="large"> / </el-text>
                     <el-text size="large">{{
-      item.limitedQuantity || 0
-    }}</el-text>
+                      item.limitedQuantity || 0
+                    }}</el-text>
                   </p>
                 </div>
               </div>
@@ -219,17 +269,26 @@ defineExpose({ showEdit });
                 <div>
                   <span class="supplierName">{{ ite.supplierName }}</span>
                   <span :class="'peopleType' + ite.peopleType">
-                    {{ projectManagementOutsourceStore.peopleTypeList[ite.peopleType - 1] }}
+                    {{
+                      projectManagementOutsourceStore.peopleTypeList[
+                        ite.peopleType - 1
+                      ]
+                    }}
                   </span>
                 </div>
-                <div><el-text type="info">ID： {{ ite.supplierId }}</el-text></div>
+                <div>
+                  <el-text type="info">ID： {{ ite.supplierId }}</el-text>
+                </div>
               </div>
               <div class="clickIdItem-content">
                 <ul>
                   <li v-for="it in ite.list">
                     <span> {{ it.projectQuestionnaireClickId }}</span>
                     <span :class="'surveyStatus' + it.surveyStatus">{{
-      projectManagementOutsourceStore.surveyStatusList[it.surveyStatus - 1] }}</span>
+                      projectManagementOutsourceStore.surveyStatusList[
+                        it.surveyStatus - 1
+                      ]
+                    }}</span>
                   </li>
                 </ul>
               </div>
@@ -253,15 +312,13 @@ defineExpose({ showEdit });
 <style lang="scss" scoped>
 .select {
   background-color: var(--el-color-primary-light-9) !important;
-  border: 1px solid #93C8FF !important;
+  border: 1px solid #93c8ff !important;
 }
-
-
 
 .box {
   padding: 1rem;
-  background: #FFFFFF;
-  box-shadow: 0px 4px 16px 0px #EDEDED;
+  background: #ffffff;
+  box-shadow: 0px 4px 16px 0px #ededed;
   border-radius: 0.5rem 0.5rem 0.5rem 0.5rem;
   border: 1px solid rgba(170, 170, 170, 0.5);
   margin: 1rem 0;
@@ -272,8 +329,8 @@ defineExpose({ showEdit });
   justify-content: space-between;
   align-items: start;
 
-  >div {
-    width: calc(50% - .5rem)
+  > div {
+    width: calc(50% - 0.5rem);
   }
 
   .details-left {
@@ -295,9 +352,9 @@ defineExpose({ showEdit });
         align-items: center;
 
         .spot {
-          background: #409EFF;
-          width: .75rem;
-          height: .75rem;
+          background: #409eff;
+          width: 0.75rem;
+          height: 0.75rem;
           border-radius: 50%;
         }
 
@@ -325,26 +382,26 @@ defineExpose({ showEdit });
           align-items: start;
 
           .tenant {
-            >p {
-              margin-bottom: .5rem;
+            > p {
+              margin-bottom: 0.5rem;
             }
 
             .tenantName {
               font-family: PingFang SC, PingFang SC;
               font-weight: 600;
               font-size: 1rem;
-              color: #0F0F0F;
-              margin-right: .5rem;
+              color: #0f0f0f;
+              margin-right: 0.5rem;
             }
 
             .tenantLength {
               color: #86b1e6;
-              margin-right: .5rem;
+              margin-right: 0.5rem;
             }
           }
 
           .price {
-            >p {
+            > p {
               margin-right: 1.5rem;
             }
           }
@@ -357,12 +414,11 @@ defineExpose({ showEdit });
         display: none;
       }
     }
-
   }
 
   .details-right {
-    background: #FFFFFF;
-    box-shadow: 0px 4px 16px 0px #EDEDED;
+    background: #ffffff;
+    box-shadow: 0px 4px 16px 0px #ededed;
     border-radius: 0.5rem;
     border: 1px solid rgba(170, 170, 170, 0.5);
     margin: 1rem 0;
@@ -375,15 +431,15 @@ defineExpose({ showEdit });
 
       .clickIdItem-title {
         background-color: var(--el-color-primary-light-9);
-        padding: .5rem 1rem;
+        padding: 0.5rem 1rem;
         border-radius: 0.5rem;
 
         .supplierName {
           font-family: PingFang SC, PingFang SC;
           font-weight: 600;
           font-size: 1rem;
-          color: #0F0F0F;
-          margin-right: .5rem;
+          color: #0f0f0f;
+          margin-right: 0.5rem;
         }
       }
 
@@ -397,12 +453,12 @@ defineExpose({ showEdit });
             align-items: center;
             border-radius: 0.5rem;
             border: 1px solid rgba(170, 170, 170, 0.3);
-            padding: .5rem 1rem;
+            padding: 0.5rem 1rem;
 
             span:nth-of-type(2) {
               display: inline-block;
-              padding: .25rem .5rem;
-              border-radius: .25rem;
+              padding: 0.25rem 0.5rem;
+              border-radius: 0.25rem;
             }
           }
         }
@@ -423,38 +479,36 @@ defineExpose({ showEdit });
 .type1 {
   background-color: var(--el-color-primary);
   color: #fff;
-  padding: 0 .5rem;
-  border-radius: .25rem;
+  padding: 0 0.5rem;
+  border-radius: 0.25rem;
 }
 
 .type2 {
   background-color: var(--el-color-success);
   color: #fff;
-  padding: 0 .5rem;
-  border-radius: .25rem;
+  padding: 0 0.5rem;
+  border-radius: 0.25rem;
 }
 
 .type3 {
   background-color: var(--el-color-warning);
   color: #fff;
-  padding: 0 .5rem;
-  border-radius: .25rem;
-
+  padding: 0 0.5rem;
+  border-radius: 0.25rem;
 }
 
 .peopleType1 {
   background-color: var(--el-color-primary);
   color: #fff;
-  padding: 0 .5rem;
-  border-radius: .25rem;
+  padding: 0 0.5rem;
+  border-radius: 0.25rem;
 }
 
 .peopleType2 {
   background-color: var(--el-color-success);
   color: #fff;
-  padding: 0 .5rem;
-  border-radius: .25rem;
-  ;
+  padding: 0 0.5rem;
+  border-radius: 0.25rem;
 }
 // 点击id状态
 .surveyStatus1 {
@@ -477,12 +531,7 @@ defineExpose({ showEdit });
 .surveyStatus5 {
   background-color: #ffdede;
   color: #ff6b6b;
-
 }
-
-
-
-
 
 .flex-b {
   display: flex;
@@ -494,4 +543,4 @@ defineExpose({ showEdit });
   width: 50%;
   margin: auto;
 }
- </style>
+</style>
