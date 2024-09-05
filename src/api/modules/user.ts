@@ -11,7 +11,7 @@ export default {
 
   // 邮箱登录
   LoginByEmail: (data: { email: string; code: string }) =>
-    api.post("user/userLoginByEmail", data),
+    api.post("user/loginByEmail", data),
 
   // 获取权限
   permission: () => api.post("tenant-button/getButtonList"),

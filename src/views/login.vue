@@ -96,7 +96,7 @@ const loginRules = ref<any>({
 });
 
 onMounted(async () => {
-  const {data} = await api.getTenantConfig()
+  const { data } = await api.getTenantConfig()
   isRegister.value = data.register
 })
 // 动态表单校验
@@ -163,9 +163,9 @@ async function loginCaptcha() {
         ElMessage.success({
           message: "已发送",
         });
+      loginCountdown();
     }
   });
-  loginCountdown();
 }
 // 倒计时
 const loginCountdown = () => {
@@ -499,7 +499,7 @@ const agreements = (val: any) => {
             </el-radio-group>
           </div>
         </div>
-        <div >
+        <div>
           <ElFormItem prop="account">
             <ElInput v-model="loginForm.account" :placeholder="t('app.account')" type="text" tabindex="1"
               @blur="chengAccount">
@@ -688,7 +688,7 @@ const agreements = (val: any) => {
             </ElInput>
           </ElFormItem>
           <ElFormItem prop="code">
-            <ElInput v-model="resetForm.code" :placeholder="t('app.code')" type="text" tabindex="2">
+            <ElInput v-model="resetForm.code" :placeholder="t('app.captcha')" type="text" tabindex="2">
               <template #prefix>
                 <SvgIcon name="i-ic:baseline-verified-user" />
               </template>
@@ -904,7 +904,7 @@ const agreements = (val: any) => {
   }
 
   .flex-bar {
-    width: 100% ;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
