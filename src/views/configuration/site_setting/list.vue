@@ -79,11 +79,20 @@ const validateEmail = (rule: any, value: any, callback: any) => {
     callback();
   }
 };
+// 校验前缀地址
+const validateInput = (rule:any, value:any, callback:any) => {
+  if (/^[\p{L}\p{N}]+$/u.test(value)) {
+    callback(); // 验证通过
+  } else {
+    callback(new Error('请输入英文字母，或数字')); // 验证失败
+  }
+};
 // 校验
 const formRules = ref<FormRules>({
   webName: [{ required: true, message: "请输入网站名称", trigger: "blur" }],
   supplierURL: [
     { required: true, message: "请输入供应商网址", trigger: "blur" },
+    { validator: validateInput, trigger: "submit" },
   ],
   phone: [
     { required: false, trigger: "submit", message: "请输入手机号" },

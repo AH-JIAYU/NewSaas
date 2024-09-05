@@ -212,7 +212,7 @@ function onCancel() {
 }
 // 处理数据扁平化
 const flattenDeep = (arr: any) => {
-  return arr.reduce(
+  return arr?.reduce(
     (acc: any, val: any) =>
       Array.isArray(val) ? acc.concat(flattenDeep(val)) : acc.concat(val),
     []
