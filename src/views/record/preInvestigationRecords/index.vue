@@ -35,13 +35,14 @@ const columns = ref([
   { prop: "passRate", label: "通过率", sortable: true, checked: true },
 ]);
 const queryForm = reactive<any>({
-  memberId: "", // 	会员id
-  memberGroupId: "", // 	会员组id
+  // memberId: "", // 	会员id
+  // memberGroupId: "", // 	会员组id
   projectId: "", // 	项目id
   projectName: "", // 	项目名称-模糊查询
-  customerId: "", // 	客户Id
-  ip: "", // 	ip-模糊查询
-  surveyStatus: "", // 调查状态:1 C=完成 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
+  allocationType: "",//分配类型
+  // customerId: "", // 	客户Id
+  // ip: "", // 	ip-模糊查询
+  // surveyStatus: "", // 调查状态:1 C=完成 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
 });
 
 const questionnaireDetailsRef = ref<any>();
@@ -112,7 +113,10 @@ function showEdit(row: any) {
   questionnaireDetailsRef.value.showEdit(row);
 }
 const DataList = computed(() => {
-  return list.value.slice(
+  const filterData = list.value.filter((item: any) => {
+    if (item.projectId.includes(queryForm.projectId) && item.projectName.includes(queryForm.projectName) && (!queryForm.allocationType || item.allocationType === queryForm.allocationType)) return true
+  })
+  return filterData.slice(
     (pagination.value.page - 1) * pagination.value.size,
     pagination.value.page * pagination.value.size
   );
@@ -142,13 +146,14 @@ function setSelectRows(val: string) {
 // 重置筛选数据
 function onReset() {
   Object.assign(queryForm, {
-    memberId: "", // 	会员id
-    memberGroupId: "", // 	会员组id
+    // memberId: "", // 	会员id
+    // memberGroupId: "", // 	会员组id
     projectId: "", // 	项目id
     projectName: "", // 	项目名称-模糊查询
-    customerId: "", // 	客户Id
-    ip: "", // 	ip-模糊查询
-    surveyStatus: "", // 调查状态:1 C=完成 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
+    allocationType: '',//分配类型
+    // customerId: "", // 	客户Id
+    // ip: "", // 	ip-模糊查询
+    // surveyStatus: "", // 调查状态:1 C=完成 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
   });
   fetchData();
 }
@@ -171,43 +176,17 @@ onMounted(async () => {
         <template #default="{ fold, toggle }">
           <ElForm :model="queryForm" size="default" label-width="100px" inline-message inline class="search-form">
             <el-form-item label="">
-              <el-input v-model.trim="queryForm.memberId" clearable :inline="false" placeholder="会员ID"
-                @keydown.enter="currentChange()" />
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-input v-model.trim="queryForm.memberGroupId" clearable :inline="false" placeholder="会员ID"
-                @keydown.enter="currentChange()" />
-            </el-form-item>
-            <el-form-item label="">
               <el-input v-model.trim="queryForm.projectId" clearable :inline="false" placeholder="项目ID"
                 @keydown.enter="currentChange()" />
             </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-input v-model.trim="queryForm.name" clearable :inline="false" placeholder="项目名称"
+            <el-form-item label="">
+              <el-input v-model.trim="queryForm.projectName" clearable :inline="false" placeholder="项目名称"
                 @keydown.enter="currentChange()" />
             </el-form-item>
-            <!-- <el-form-item v-show="!fold" label="">
-              <el-select
-                v-model="queryForm.projectName"
-                clearable
-                placeholder="客户简称"
-              >
-                <el-option
-                  v-for="item in data.customerList"
-                  :key="item.tenantCustomerId"
-                  :value="item.tenantCustomerId"
-                  :label="item.customerAccord"
-                ></el-option>
-              </el-select>
-            </el-form-item> -->
-            <el-form-item v-show="!fold" label="">
-              <el-input v-model.trim="queryForm.ip" clearable :inline="false" placeholder="IP地址"
-                @keydown.enter="currentChange()" />
-            </el-form-item>
-
-            <el-form-item v-show="!fold" label="">
-              <el-select v-model="queryForm.surveyStatus" clearable placeholder="调查状态" @change="currentChange()">
-                <el-option v-for="(item, index) in data.surveyStatusList" :label="item" :value="index + 1"></el-option>
+            <el-form-item label="">
+              <el-select v-model="queryForm.allocationType" clearable placeholder="分配类型" @change="currentChange()">
+                <el-option v-for="(item, index) in data.allocationTypeList" :label="item"
+                  :value="index + 1"></el-option>
               </el-select>
             </el-form-item>
             <ElFormItem>
@@ -223,7 +202,7 @@ onMounted(async () => {
                 </template>
                 重置
               </ElButton>
-              <ElButton link @click="toggle">
+              <ElButton link @click="toggle" disabled>
                 <template #icon>
                   <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
                 </template>

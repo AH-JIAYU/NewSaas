@@ -137,7 +137,7 @@ function onSubmit() {
     formRules.value.phoneNumber = []
     formRef.value.clearValidate('phoneNumber');
   }
-  if (form.value.id === "") {
+  if (!form.value.id) {
     formRef.value &&
       formRef.value.validate((valid: any) => {
         if (valid) {
