@@ -376,7 +376,8 @@ const handleRegister = throttle(async () => {
         // registerForm.value.companyName = "";
         // registerForm.value.legalPersonName = "";
         // registerForm.value.taxID = "";
-        delete registerForm.value.agreeToTheAgreement;
+        // delete registerForm.value.agreeToTheAgreement;
+        console.log('registerForm.value',registerForm.value);
         const { status } = await api.register(registerForm.value);
         if (status === 1) {
           ElMessage.success({
