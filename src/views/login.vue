@@ -16,15 +16,15 @@ import agreement from './agreement.vue'
 import Copyright from "@/layouts/components/Copyright/index.vue";
 import useSettingsStore from "@/store/modules/settings";
 import useUserStore from "@/store/modules/user";
+import { obtainLoading, submitLoading } from '@/utils/apiLoading'
 import storage from "@/utils/storage";
 import { throttle } from "lodash-es";
 import api from "@/api/modules/register";
-import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
+import apiCountry from '@/api/modules/basicDictionary'
 
 defineOptions({
   name: "Login",
 });
-const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
 const route = useRoute();
 const router = useRouter();
 
@@ -158,12 +158,13 @@ async function loginCaptcha() {
           type: "login_phone_number",
         };
       }
-      const { status } = await api.sendCode(params);
-      status === 1 &&
+      const { status } = await obtainLoading(api.sendCode(params))
+      if (status === 1) {
         ElMessage.success({
           message: "已发送",
         });
-      loginCountdown();
+        loginCountdown();
+      }
     }
   });
 }
@@ -332,23 +333,25 @@ const mobileVerificationCode = async () => {
         phone: registerForm.value.phoneNumber,
       };
       if (registerForm.value.country === "CN") {
-        const { status } = await api.sendCode(params);
-        status === 1 &&
+        const { status } = await obtainLoading(api.sendCode(params))
+        if (status === 1) {
           ElMessage.success({
             message: "已发送",
           });
+          countdown();
+        }
       } else {
         params.type = "register_email";
-        const { status } = await api.sendCode(params);
-        status === 1 &&
+        const { status } = await obtainLoading(api.sendCode(params))
+        if (status === 1) {
           ElMessage.success({
             message: "已发送",
           });
+          countdown();
+        }
       }
-      countdown();
     }
   })
-
 };
 // 倒计时
 const countdown = () => {
@@ -377,6 +380,11 @@ const handleRegister = throttle(async () => {
         // registerForm.value.legalPersonName = "";
         // registerForm.value.taxID = "";
         // delete registerForm.value.agreeToTheAgreement;
+        if (registerForm.value.type === "phone") {
+          delete registerForm.value.email
+        } else {
+          delete registerForm.value.phoneNumber
+        }
         const { status } = await api.register(registerForm.value);
         if (status === 1) {
           ElMessage.success({
@@ -385,11 +393,11 @@ const handleRegister = throttle(async () => {
           // 跳转登录 快捷方式
           formType.value = "login";
           loginType.value = "password";
-          nextTick(() => {
-            loginForm.value.account =
-              registerForm.value.email || registerForm.value.phoneNumber;
-          });
         }
+        nextTick(() => {
+          loginForm.value.account =
+            registerForm.value.email || registerForm.value.phoneNumber;
+        });
       }
     });
 }, 3000);
@@ -397,36 +405,94 @@ const handleRegister = throttle(async () => {
 // #endregion
 
 // #region 重置密码
+// 倒计时
+const getResultInterval = ref<any>(null);
 const resetFormRef = ref<any>();
+const resultCode = ref<any>("获取验证码");
+// 禁用获取验证码按钮
+const isReset = ref<boolean>(false);
 const resetForm = ref({
-  account: storage.local.get("login_account"),
+  info: storage.local.get("login_account"),
   code: "",
   newPassword: "",
 });
+// 校验函数
+const validatePassword = (rule, value, callback) => {
+  // 匹配包含空格或汉字的情况
+  if (/[\s\u4e00-\u9fa5]/.test(value)) {
+    callback(new Error('密码中带有空格或汉字')); // 验证失败
+  } else {
+    callback(); // 验证通过
+  }
+};
+// 校验
 const resetRules = ref<FormRules>({
-  account: [{ required: true, trigger: "blur", message: "请输入用户名" }],
+  info: [{ required: true, trigger: "blur", message: "请输入用户名" }],
   code: [{ required: true, trigger: "blur", message: "请输入验证码" }],
   newPassword: [
     { required: true, trigger: "blur", message: "请输入新密码" },
     { min: 6, max: 18, trigger: "blur", message: "密码长度为6到18位" },
+    { validator: validatePassword, trigger: "blur" },
   ],
 });
-function handleReset() {
-  ElMessage({
-    message: "重置密码仅提供界面演示，无实际功能，需开发者自行扩展",
-    type: "info",
+// 重置密码发送验证码
+const resultVerificationCode = () => {
+  resetFormRef.value.validateField(!resetForm.value.info ? 'info' : '', async (valid: any) => {
+    if (valid) {
+      // 这里编写业务代码
+      const { status } = await obtainLoading(api.forgetCode({ info: resetForm.value.info }))
+      if (status === 1) {
+        ElMessage.success({
+          message: "已发送",
+        });
+        resultCountdown()
+      }
+    }
   });
+}
+// 修改密码
+function handleReset() {
   resetFormRef.value &&
-    resetFormRef.value.validate((valid: any) => {
+    resetFormRef.value.validate(async (valid: any) => {
       if (valid) {
         // 这里编写业务代码
+        const { status } = await api.updatePassword(resetForm.value);
+        if (status === 1) {
+          ElMessage.success({
+            message: "修改成功",
+          });
+          // 跳转登录 快捷方式
+          formType.value = "login";
+          nextTick(() => {
+            loginForm.value.account =
+              resetForm.value.info
+          });
+        }
       }
     });
 }
+// 倒计时
+const resultCountdown = () => {
+  isReset.value = true;
+  let n = 60;
+  getResultInterval.value = setInterval(() => {
+    if (n > 0) {
+      n--;
+      resultCode.value = `请在${n}s后重新获取`;
+    } else {
+      clearInterval(getResultInterval.value);
+      resultCode.value = "获取验证码";
+      getResultInterval.value = null;
+      isReset.value = false;
+    }
+  }, 1000);
+};
 // 清除定时器
 onUnmounted(() => {
   clearInterval(getPhoneInterval.value);
   getPhoneInterval.value = null;
+  clearInterval(getResultInterval.value);
+  getResultInterval.value = null;
 });
 // 重置校验
 const resetCheck = () => {
@@ -463,14 +529,27 @@ watch(
         };
         break;
       case "reset":
+        resetFormRef.value.resetFields();
+        resetForm.value = {
+          info: "", // 账号
+          newPassword: "", // 新密码
+          code: "", // 验证码
+        };
         break;
     }
     // 注册 获取国家
-    newValue === "register" &&
-      (countryList.value = await basicDictionaryStore.getCountry());
+    if (newValue === 'register') {
+      const res = await apiCountry.itemlist({
+        page: 1,
+        limit: -1,
+        id: '32', // 国家
+      })
+      countryList.value = res.data.records
+    }
   }
 );
 const agreementRef = ref<any>()
+// 协议弹框
 const agreements = (val: any) => {
   agreementRef.value.showEdit(val)
 }
@@ -680,8 +759,9 @@ const agreements = (val: any) => {
           <h3 class="title">忘记密码了? 🔒</h3>
         </div>
         <div>
-          <ElFormItem prop="account">
-            <ElInput v-model="resetForm.account" :placeholder="t('app.account')" type="text" tabindex="1">
+          <ElFormItem prop="info">
+            <ElInput v-model="resetForm.info" :placeholder="t('app.account')" type="text" tabindex="1"
+              @blur="chengAccount">
               <template #prefix>
                 <SvgIcon name="i-ri:user-3-fill" />
               </template>
@@ -693,7 +773,7 @@ const agreements = (val: any) => {
                 <SvgIcon name="i-ic:baseline-verified-user" />
               </template>
               <template #append>
-                <ElButton>{{ t("app.sendCaptcha") }}</ElButton>
+                <ElButton :disabled="getResultInterval" @click="resultVerificationCode">{{ resultCode }}</ElButton>
               </template>
             </ElInput>
           </ElFormItem>
