@@ -30,6 +30,19 @@ const customerList = ref<any>([]);
 const formRef = ref();
 // 弹框开关变量
 const dialogTableVisible = ref(false);
+// 部门
+const queryForm = ref({
+  // 分页页码
+  page: 1,
+  // 每页数量
+  limit: 10,
+  // 部门id
+  id: null,
+  // 	部门名称
+  name: '',
+  // 是否开启部门提成 ,可用值:1启用,2停用
+  commissionStatus: null,
+})
 // 定义表单
 const form = ref<any>({
   // 小组名称
@@ -123,7 +136,8 @@ onMounted(async () => {
     staffList.value = data;
   });
   // 部门数据
-  departmentList.value = await departmentStore.getDepartment()
+  const { data } = await api.list(queryForm.value)
+  departmentList.value = data.data
   defaultTime.value = new Date();
 });
 // 暴露方法

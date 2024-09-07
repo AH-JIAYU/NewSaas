@@ -168,6 +168,9 @@ function onReset() {
             </ElButton>
           </template>
         </ElTableColumn>
+        <template #empty>
+          <el-empty description="暂无数据" />
+        </template>
       </ElTable>
     </PageMain>
     <PageMain>
@@ -248,6 +251,9 @@ function onReset() {
             </ElButton>
           </template>
         </ElTableColumn>
+        <template #empty>
+          <el-empty description="暂无数据" />
+        </template>
       </ElTable>
       <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
         :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
@@ -303,7 +309,9 @@ function onReset() {
       }
     }
   }
+}
 
-
+:deep(.el-table__empty-block) {
+  height: 100% !important;
 }
 </style>

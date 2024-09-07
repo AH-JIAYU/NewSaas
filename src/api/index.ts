@@ -55,16 +55,17 @@ api.interceptors.response.use(
         Message.warning('账号登录过期', {
           zIndex: 2000,
         })
+        useUserStore().logout(response.data.status);
       } else if (response.data.error === 'token 已被顶下线') {
         Message.warning('该账号已在别处登录', {
           zIndex: 2000,
         })
+        useUserStore().logout(response.data.status);
       } else {
         Message.warning(response.data.message, {
           zIndex: 2000,
         })
       }
-      useUserStore().logout(response.data.status);
       return Promise.reject(response.data);
     }
   },
