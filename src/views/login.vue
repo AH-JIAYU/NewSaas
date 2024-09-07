@@ -600,7 +600,7 @@ const agreements = (val: any) => {
         <div>
           <ElFormItem prop="account">
             <ElInput
-              v-model.trim.trim="loginForm.account"
+              v-model.trim="loginForm.account"
               :placeholder="t('app.account')"
               type="text"
               tabindex="1"
