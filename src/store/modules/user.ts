@@ -73,7 +73,7 @@ const useUserStore = defineStore(
       token.value = res.data.token;
       avatar.value = res.data.avatar;
       userId.value = res.data.userId;
-      notificationStore.openSocket(res.data.userId);
+      notificationStore.websocketreconnect;
     }
     // 登出
     async function logout(

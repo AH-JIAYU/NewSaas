@@ -100,12 +100,12 @@ router.beforeEach(async (to, from, next) => {
     } else {
       // 获取用户权限
       // settingsStore.settings.app.enablePermission && await userStore.getPermissions()
-      await userStore.getPermissions(); //权限 
+      await userStore.getPermissions(); //权限
       await userStore.getCurrencyType(); // 货币类型
       await userStore.getExchangeRate(); // 汇率
       await notificationStore.init(); // 获取消息和待办
       if (!notificationStore.socket) {
-        notificationStore.openSocket(userStore.userId); //连接websocket
+        notificationStore.websocketreconnect(); //连接websocket
       }
       // 获取用户偏好设置
       settingsStore.settings.userPreferences.enable &&

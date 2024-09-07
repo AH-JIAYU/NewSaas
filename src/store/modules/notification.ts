@@ -1,6 +1,7 @@
 import useUserStore from "@/store/modules/user";
 import api from "@/api/modules/notification";
 import { ElMessage } from 'element-plus'
+import { throttle } from "lodash-es";
 
 const useNotificationStore = defineStore(
   // 唯一ID
@@ -21,78 +22,89 @@ const useNotificationStore = defineStore(
     const toBreakOff = ref<any>(false) // webscoket是否连接
     const maxReconnectAttempts = 2; // 重连超出该次数就放弃重连
     let reconnectAttempts = 0; // 重连次数
-    const reconnectInterval = 3000; // 连接间隔
+    const reconnectInterval = 1000; // 连接间隔
 
     // 连接websocket
     function openSocket(userId: any) {
-      const socketUrl = "ws://47.96.98.102:9100/websocket/" + userId;
+      return new Promise<void>((reslove, reject) => {
+        const socketUrl = "ws://47.96.98.102:9100/websocket/" + userId;
 
-      if (socket.value != null) {
-        socket.value.close();
-        socket.value = null;
-      }
-      socket.value = new WebSocket(socketUrl);
+        if (socket.value != null) {
+          socket.value.close();
+          socket.value = null;
+        }
+        socket.value = new WebSocket(socketUrl);
 
-      //连接成功,更新消息
-      socket.value.onopen = () => {
-        toBreakOff.value = true
-        init()
-      };
-      //获得消息事件
-      socket.value.onmessage = (msg: any) => {
-        const type = msg.data; // 1消息 2待办
-        if (Number(type) === 1) {
-          getUnreadMessage();
-        } else if (Number(type) === 2) {
-          getUnreadTodo();
-        }
-        //发现消息进入,开始处理前端触发逻辑
-      };
-      //关闭事件
-      socket.value.onclose = (e: any) => {
-        // 异常关闭重新连接
-        if (e && e.code !== 1000) {
-          websocketreconnect();
-        } else {
-          reconnectAttempts = 0
-        }
-        toBreakOff.value = false
-      };
-      //发生了错误事件
-      socket.value.onerror = (e: any) => {
-        console.error("websocket连接发送错误", e);
-        websocketreconnect();
-      };
+        //连接成功,更新消息
+        socket.value.onopen = () => {
+          reslove()
+          toBreakOff.value = true
+          init()
+        };
+        //获得消息事件
+        socket.value.onmessage = (msg: any) => {
+          const type = msg.data; // 1消息 2待办
+          if (Number(type) === 1) {
+            getUnreadMessage();
+          } else if (Number(type) === 2) {
+            getUnreadTodo();
+          }
+          //发现消息进入,开始处理前端触发逻辑
+        };
+        // 关闭事件
+        socket.value.onclose = (e: any) => {
+          if (e && e.code !== 1000) {
+            console.error(e)
+            reject()//异常关闭-算失败
+          } else {
+            reslove()//正常关闭（webscoket任务完成）-算成功
+          }
+          toBreakOff.value = false;
+        };
 
-      // 页面大刷新 主动断开连接
-      window.addEventListener("beforeunload", () => { 
-        if (socket.value) {
-          disconnect()
-        }
-      });
+        // 发生错误事件
+        socket.value.onerror = async (e: any) => {
+          console.error(e)
+          reject()
+        };
+
+        // 页面大刷新 主动断开连接
+        window.addEventListener("beforeunload", () => {
+          if (socket.value) {
+            disconnect()
+          }
+        });
+      })
     }
     //断开websocket连接
     function disconnect() {
       if (socket.value) {
         socket.value.close(); // 关闭websocket
-        socket.value.onclose(); // 关闭websocket
       }
-
     }
     // 重连
-    function websocketreconnect() {
+    const websocketreconnect = throttle(() => {
       if (reconnectAttempts < maxReconnectAttempts) {
-        setTimeout(function () {
-          socket.value = null;
-          reconnectAttempts++;
-          userStore.userId && openSocket(userStore.userId);
-
-          if (reconnectAttempts === maxReconnectAttempts + 1) connectionError()
-        }, reconnectInterval);
-      } else {
-        console.error("重连失败！请稍后重试");
+        reconnectAttempts++;
+        if (userStore.userId) {
+          openSocket(userStore.userId).then(() => {
+            reconnectAttempts = 0;
+          }).catch(() => {
+            websocketreconnect()
+          });
+        } else {
+          ElMessage({
+            message: '无法建立连接,请尝试退出重新登录',
+            type: 'info',
+            plain: true,
+          })
+        }
       }
-    }
+      else {
+        connectionError()
+        reconnectAttempts = 0;
+      }
+    }, reconnectInterval)
     // 重连不上提示
     function connectionError() {
       ElMessage({
@@ -119,14 +131,14 @@ const useNotificationStore = defineStore(
           ),
           h('span', null, '网络连接失败,请'),
           h('span', null, { innerHTML: `<el-button></el-button>` }),
-          h('button', { onClick: openSocket }, '重连!')
+          h('button', { onClick: websocketreconnect }, '重连!')
         ])
       })
     }
     // 查看websocket状态
-    function isItConnected() {
+    const isItConnected = () => {
       if (!toBreakOff.value) {
-        openSocket(userStore.userId)
+        websocketreconnect()
       }
     }
     // 初始获取数据
@@ -167,6 +179,7 @@ const useNotificationStore = defineStore(
       openSocket,
       disconnect,
       isItConnected,
+      websocketreconnect,
     };
   }
 );
