@@ -98,6 +98,15 @@ const validateEmailRegistered = (rule: any, value: any, callback: any) => {
     callback();
   }
 };
+// 校验密码函数
+const validatePassword = (rule: any, value: any, callback: any) => {
+  // 匹配包含空格或汉字的情况
+  if (/[\s\u4e00-\u9fa5]/.test(value)) {
+    callback(new Error('密码中带有空格或汉字')); // 验证失败
+  } else {
+    callback(); // 验证通过
+  }
+};
 // 个人信息校验
 const userFormRules = ref<FormRules>({
   supplierName: [{ required: true, trigger: "blur", message: "请输入姓名" }],
@@ -115,6 +124,7 @@ const accountFormRules = ref<FormRules>({
   password: [
     { required: true, trigger: "blur", message: "请输入新密码" },
     { min: 6, max: 18, trigger: "blur", message: "密码长度为6到18位" },
+    { validator: validatePassword, trigger: "blur" },
     {
       validator: (rule, value, callback) => {
         if (value === accountForm.value.oldPassword) {
@@ -129,9 +139,11 @@ const accountFormRules = ref<FormRules>({
   oldPassword: [
     { required: true, trigger: "blur", message: "请输入旧密码" },
     { min: 6, max: 18, trigger: "blur", message: "密码长度为6到18位" },
+    { validator: validatePassword, trigger: "blur" },
   ],
   confirmPassword: [
     { required: true, message: "请再次输入新密码", trigger: "blur" },
+    { validator: validatePassword, trigger: "blur" },
     {
       validator: (rule, value, callback) => {
         if (value !== accountForm.value.password) {
@@ -155,43 +167,49 @@ function userSubmit() {
   userFormRef.value &&
     userFormRef.value.validate(async (valid: any) => {
       if (valid) {
-        loading.value = true;
-        // 类型是个人/公司
-        if (userForm.value.type === "personal") {
-          delete userForm.value.companyName;
-          delete userForm.value.legalPersonName;
-          delete userForm.value.taxId;
-          delete userForm.value.country;
-          delete userForm.value.avatar;
-        } else {
-          delete userForm.value.country;
-          delete userForm.value.avatar;
-        }
-        // 国家是否是中国
-        if (userForm.value.country === "CN") {
-          delete userForm.value.email;
-        } else {
-          delete userForm.value.phone;
-        }
-        // 判断手机号/邮箱是否改变未改变删除字段
-        if (!isTrue.value) {
-          delete userForm.value.phone;
-          delete userForm.value.email;
-        }
-        const res = await api.edit(userForm.value);
-        if (res.status === -1) {
-          return ElMessage.warning({
-            message: "修改失败",
+        try {
+          loading.value = true;
+          // 类型是个人/公司
+          if (userForm.value.type === "personal") {
+            delete userForm.value.companyName;
+            delete userForm.value.legalPersonName;
+            delete userForm.value.taxId;
+            delete userForm.value.country;
+            delete userForm.value.avatar;
+          } else {
+            delete userForm.value.country;
+            delete userForm.value.avatar;
+          }
+          // 国家是否是中国
+          if (userForm.value.country === "CN") {
+            delete userForm.value.email;
+          } else {
+            delete userForm.value.phone;
+          }
+          // 判断手机号/邮箱是否改变未改变删除字段
+          if (!isTrue.value) {
+            delete userForm.value.phone;
+            delete userForm.value.email;
+          }
+          const res = await api.edit(userForm.value);
+          if (res.status === -1) {
+            return ElMessage.warning({
+              message: "修改失败",
+              center: true,
+            });
+          }
+          emits("success");
+          loading.value = false;
+          ElMessage.success({
+            message: "修改成功",
             center: true,
           });
+          closeHandler();
+        } catch (error) {
+
+        } finally {
+          loading.value = false;
         }
-        emits("success");
-        loading.value = false;
-        ElMessage.success({
-          message: "修改成功",
-          center: true,
-        });
-        closeHandler();
       }
     });
 }
@@ -312,8 +330,7 @@ defineExpose({ showEdit });
       <ElTabs tab-position="left">
         <ElTabPane label="个人信息" class="basic">
           <h2>个人信息</h2>
-          <ElForm ref="userFormRef" :model="userForm" :rules="userFormRules" label-width="120px" el-width="120px"
-            >
+          <ElForm ref="userFormRef" :model="userForm" :rules="userFormRules" label-width="120px" el-width="120px">
             <ElFormItem style="
                 display: flex;
                 justify-content: center;
@@ -387,8 +404,7 @@ defineExpose({ showEdit });
         </ElTabPane>
         <ElTabPane label="账户管理" class="security">
           <h2 style="margin-bottom: 30px">账户管理</h2>
-          <ElForm ref="accountFormRef" :model="accountForm" :rules="accountFormRules" label-width="120px"
-            >
+          <ElForm ref="accountFormRef" :model="accountForm" :rules="accountFormRules" label-width="120px">
             <ElFormItem prop="oldPassword" label="旧密码">
               <ElInput v-model="accountForm.oldPassword" placeholder="请输入旧密码" />
             </ElFormItem>

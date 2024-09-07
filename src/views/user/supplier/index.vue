@@ -207,19 +207,24 @@ onMounted(async () => {
         <template #default="{ fold, toggle }">
           <ElForm :model="queryForm" size="default" label-width="100px" inline-message inline class="search-form">
             <el-form-item label="">
-              <el-input v-model.trim="queryForm.tenantSupplierId" clearable :inline="false" placeholder="供应商ID" @keydown.enter="currentChange()"/>
+              <el-input v-model.trim="queryForm.tenantSupplierId" clearable :inline="false" placeholder="供应商ID"
+                @keydown.enter="currentChange()" />
             </el-form-item>
             <el-form-item label="">
-              <el-input v-model.trim="queryForm.supplierAccord" clearable :inline="false" placeholder="供应商名称" @keydown.enter="currentChange()"/>
+              <el-input v-model.trim="queryForm.supplierAccord" clearable :inline="false" placeholder="供应商名称"
+                @keydown.enter="currentChange()" />
             </el-form-item>
             <el-form-item label="">
-              <el-input v-model.trim="queryForm.supplierPhone" clearable :inline="false" placeholder="手机号码" @keydown.enter="currentChange()"/>
+              <el-input v-model.trim="queryForm.supplierPhone" clearable :inline="false" placeholder="手机号码"
+                @keydown.enter="currentChange()" />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-input v-model.trim="queryForm.accountName" clearable :inline="false" placeholder="账号名称" @keydown.enter="currentChange()"/>
+              <el-input v-model.trim="queryForm.accountName" clearable :inline="false" placeholder="账号名称"
+                @keydown.enter="currentChange()" />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-input v-model.trim="queryForm.emailAddress" clearable :inline="false" placeholder="邮箱" @keydown.enter="currentChange()"/>
+              <el-input v-model.trim="queryForm.emailAddress" clearable :inline="false" placeholder="邮箱"
+                @keydown.enter="currentChange()" />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
               <el-select v-model="queryForm.supplierStatus" clearable placeholder="供应商状态" @change="currentChange()">
@@ -240,7 +245,7 @@ onMounted(async () => {
             <el-form-item v-show="!fold" label="">
               <el-date-picker v-model="queryForm.time" type="datetimerange" unlink-panels range-separator="-"
                 start-placeholder="创建开始日期" end-placeholder="创建结束日期" value-format="YYYY-MM-DD hh:mm:ss" size="default"
-                style="width: 192px" clear-icon="true" @change="currentChange()"/>
+                style="width: 192px" clear-icon="true" @change="currentChange()" />
             </el-form-item>
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">
@@ -314,6 +319,7 @@ onMounted(async () => {
               :value="item.levelNameOrAdditionRatio">
               <el-text v-if="item.tenantSupplierLevelId === row.supplierLevelId" class="mx-1">{{
     item.levelNameOrAdditionRatio }}</el-text>
+              <el-text v-else class="mx-1">-</el-text>
             </div>
           </template>
         </el-table-column>
@@ -355,13 +361,12 @@ onMounted(async () => {
   }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('remark')" align="center" prop="remark" width="180"
-            label="备注">
+        <el-table-column v-if="checkList.includes('remark')" align="center" prop="remark" width="180" label="备注">
           <template #default="{ row }">
             <el-input v-model="row.remark" @blur="handleEditRemark(row)" />
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="i" label="操作" fixed="right"  width="250">
+        <el-table-column align="center" prop="i" label="操作" fixed="right" width="250">
           <template #default="{ row }">
             <ElSpace>
               <el-button size="small" plain type="primary" @click="handlePlusMinusPayments(row)">

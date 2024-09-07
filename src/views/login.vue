@@ -509,8 +509,9 @@ const resetCheck = () => {
   ];
   loginFormRef.value.resetFields();
 };
-// #endregion
 
+// #endregion
+// 监听切换变化，清除表单数据
 watch(
   () => formType.value,
   async (newValue: any) => {

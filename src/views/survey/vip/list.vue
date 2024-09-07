@@ -268,7 +268,11 @@ onMounted(async () => {
             <CurrencyType />{{ row.pendingBalance || 0 }}
           </template></el-table-column>
         <el-table-column v-if="checkList.includes('memberLevelName')" align="center" prop="memberLevelName"
-          show-overflow-tooltip label="会员等级" />
+          show-overflow-tooltip label="会员等级" >
+          <template #default="{ row }">
+            {{row.memberLevelName ? row.memberLevelName : '-'}}
+          </template>
+        </el-table-column>
         <el-table-column v-if="checkList.includes('memberGroupName')" align="center" prop="memberGroupName"
           show-overflow-tooltip label="会员组"><template #default="{ row }">
             {{ row.memberGroupName ? row.memberGroupName : '-' }} </template></el-table-column>
