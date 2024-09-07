@@ -511,6 +511,10 @@ watch(
     switch (newValue) {
       case "login":
         resetCheck();
+        clearInterval(getPhoneInterval.value);
+      loginCode.value = "获取验证码";
+      getPhoneInterval.value = null;
+      loginGetCaptcha.value = false;
         loginForm.value = {
           account: storage.local.get("login_account") || "",
           remember: storage.local.has("login_account"),
@@ -518,6 +522,10 @@ watch(
         break;
       case "register":
         registerFormRef.value.resetFields();
+        clearInterval(getPhoneInterval.value);
+      phoneCode.value = "获取验证码";
+      getPhoneInterval.value = null;
+      isGetPhone.value = false;
         registerForm.value = {
           name: "", // 账号
           password: "", // 密码
@@ -531,6 +539,10 @@ watch(
         break;
       case "reset":
         resetFormRef.value.resetFields();
+        clearInterval(getResultInterval.value);
+      resultCode.value = "获取验证码";
+      getResultInterval.value = null;
+      isReset.value = false;
         resetForm.value = {
           info: "", // 账号
           newPassword: "", // 新密码
@@ -774,7 +786,7 @@ const agreements = (val: any) => {
                 <SvgIcon name="i-ic:baseline-verified-user" />
               </template>
               <template #append>
-                <ElButton :disabled="getResultInterval" @click="resultVerificationCode">{{ resultCode }}</ElButton>
+                <ElButton :disabled="isReset" @click="resultVerificationCode">{{ resultCode }}</ElButton>
               </template>
             </ElInput>
           </ElFormItem>
