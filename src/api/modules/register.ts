@@ -4,7 +4,7 @@ export default {
   // 发送验证码
   sendCode: (data: any) => api.post("user/sendCode", data),
   // 租户忘记密码发送验证码
-  forgetCode: (data: any) => api.post("user/seedCode", data),
+  forgetCode: (data: any) => api.post("user/updatePasswordSendCode", data),
   // 租户修改密码
   updatePassword: (data: any) => api.post("user/updatePassword", data),
   // 注册接口
