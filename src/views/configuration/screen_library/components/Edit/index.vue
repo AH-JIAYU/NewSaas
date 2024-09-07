@@ -82,7 +82,7 @@ onMounted(async () => {
         ref="formRef"
         :model="form"
         :rules="formRules"
-        label-width="4.3125rem" 
+        label-width="5rem"
       >
         <ElFormItem label="名称" prop="categoryName">
           <ElInput v-model="form.categoryName" placeholder="请输入名称" />

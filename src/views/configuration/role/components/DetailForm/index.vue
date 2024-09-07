@@ -175,7 +175,7 @@ defineExpose({
           <template #default="{ data }">
             <div class="custom-tree-node">
               <div class="menu">
-                {{ data.meta.title }} {{ data.id }}
+                {{ data.meta.title }}
               </div>
               <div class="permission">
                 <div v-if="rowPermission(data.id)?.length" class="permissions">

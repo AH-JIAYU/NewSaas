@@ -62,7 +62,7 @@ defineExpose({ showEdit });
 <template>
   <div v-loading="loading">
     <el-dialog v-model="dialogTableVisible" title="遗漏项目新增" width="700" :before-close="closeHandler">
-      <el-form ref="formRef" label-width="4.375rem" :model="form" :rules="formRules" :inline="false">
+      <el-form ref="formRef" label-width="6.375rem" :model="form" :rules="formRules" :inline="false">
         <el-form-item label="项目ID" prop="projectId">
           <el-input v-model="form.projectId" placeholder="请输入项目ID" />
         </el-form-item>

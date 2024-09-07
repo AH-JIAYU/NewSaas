@@ -123,7 +123,7 @@ onMounted(() => {
     destroy-on-close
     @closed="onCancel"
   >
-    <ElForm ref="formRef" :model="form" :rules="formRules" label-width="6.25rem">
+    <ElForm ref="formRef" :model="form" :rules="formRules" label-width="8.25rem">
       <ElFormItem label="所属字典">
         <ElCascader
           v-model="form.catalogueId"
