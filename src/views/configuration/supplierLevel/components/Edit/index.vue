@@ -62,7 +62,7 @@ defineExpose({ showEdit });
 
 <template>
   <el-dialog v-model="dialogTableVisible" :title="title" width="600">
-  <el-form ref="formRef" :model="form" :rules="rules" label-width="5.3125rem" :inline="false">
+  <el-form ref="formRef" :model="form" :rules="rules" label-width="7rem" :inline="false">
       <el-form-item label="等级名称" prop="levelName">
         <el-input v-model="form.levelName" maxlength="100" />
       </el-form-item>

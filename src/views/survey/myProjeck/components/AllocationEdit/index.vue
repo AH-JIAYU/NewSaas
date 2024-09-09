@@ -109,7 +109,7 @@ defineExpose({ showEdit });
       </el-table>
       <el-form
         ref="formRef"
-        label-width="4.3125rem"
+        label-width="6rem"
         :rules="rules"
         :model="data.form"
         :inline="false"

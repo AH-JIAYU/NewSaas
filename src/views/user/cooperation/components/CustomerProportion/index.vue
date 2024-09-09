@@ -62,7 +62,7 @@ defineExpose({
         ref="formRef"
         :rules="data.rules"
         :model="data.form"
-        label-width="5.1875rem"
+        label-width="7rem"
       >
         <el-form-item label="价格比例" prop="priceRatio">
           <el-input v-model="data.form.priceRatio" clearable

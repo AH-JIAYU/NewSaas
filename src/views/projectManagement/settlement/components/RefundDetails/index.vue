@@ -22,7 +22,6 @@ async function showEdit(row: any) {
     loading.value = false;
     dialogTableVisible.value = true;
   } catch (error) {
-
   } finally {
     loading.value = false;
   }
@@ -40,25 +39,34 @@ defineExpose({ showEdit });
 
 <template>
   <div v-loading="loading">
-    <el-dialog v-model="dialogTableVisible" title="项目退款详情" width="900" :before-close="closeHandler">
+    <el-dialog
+      v-model="dialogTableVisible"
+      title="项目退款详情"
+      width="900"
+      :before-close="closeHandler"
+    >
       <el-divider content-position="left" />
-      <el-row style="width: 100%; margin-left: 2px; margin-bottom: 20px" :gutter="20">
-        <div class="border">
-          <p class="pp">项目ID</p>
-          <p class="neip">{{ form.projectId ? form.projectId : "-" }}</p>
-        </div>
-        <div class="border">
-          <p class="pp">项目名称</p>
-          <p class="neip">
-            <el-text class="mx-1">{{
-    form.projectName ? form.projectName : "-"
-  }}</el-text>
-          </p>
-        </div>
-        <div class="border">
-          <p class="pp">项目退款率</p>
-          <p class="neip">{{ data.refundRate ? data.refundRate : "-" }}</p>
-        </div>
+      <el-row
+        style="width: 100%; margin-left: 2px; margin-bottom: 20px"
+        :gutter="20"
+      >
+        <el-table :data="[form]" v-loading="loading" bordered>
+          <el-table-column label="项目ID" prop="projectId"  fixed="left">
+            <template #default="{ row }">
+              {{ row.projectId ? row.projectId : "-" }}
+            </template>
+          </el-table-column>
+          <el-table-column label="项目名称" prop="projectName">
+            <template #default="{ row }">
+              {{ row.projectName ? row.projectName : "-" }}
+            </template>
+          </el-table-column>
+          <el-table-column label="项目退款率"  width="100">
+            <template #default="{ row }">
+              {{ data.refundRate ? data.refundRate : "-" }}
+            </template>
+          </el-table-column>
+        </el-table>
       </el-row>
       <div style="margin: 10px">| 供应商</div>
       <el-table v-loading="loading" :data="list" row-key="id">
@@ -69,22 +77,29 @@ defineExpose({ showEdit });
             {{ row.supplierName ? row.supplierName : "-" }}
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="supplierId" label="手机号码/邮箱"><template #default="{ row }">
+        <el-table-column align="center" prop="supplierId" label="手机号码/邮箱"
+          ><template #default="{ row }">
             {{ row.info.split(":")[0] }}/{{
-    row.info.split(":")[1] !== "null" ? row.info.split(":")[1] : "-"
-  }}
+              row.info.split(":")[1] !== "null" ? row.info.split(":")[1] : "-"
+            }}
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="refundRate" label="供应商退款率" />
+        <el-table-column
+          align="center"
+          prop="refundRate"
+          label="供应商退款率"
+        />
         <template #empty>
           <el-empty description="暂无数据" />
         </template>
       </el-table>
       <div style="margin-top: 20px; margin-bottom: 20px">
         | 会员组
-        <el-text class="mx-1">退款率{{
-      data.memberRefundRate ? data.memberRefundRate + "%" : "-"
-    }}</el-text>
+        <el-text class="mx-1"
+          >退款率{{
+            data.memberRefundRate ? data.memberRefundRate + "%" : "-"
+          }}</el-text
+        >
       </div>
     </el-dialog>
   </div>

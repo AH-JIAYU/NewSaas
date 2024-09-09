@@ -172,7 +172,7 @@ defineExpose({ showEdit });
 <template>
   <div v-loading="loading">
     <el-dialog v-model="dialogTableVisible" :title="title" width="700">
-      <el-form ref="formRef" label-width="5.3125rem" :model="form" :rules="formRules" :inline="false">
+      <el-form ref="formRef" label-width="7rem" :model="form" :rules="formRules" :inline="false">
         <el-form-item label="客户简称" prop="tenantCustomerId">
           <el-select v-model="form.tenantCustomerId" placeholder="请选择客户" clearable filterable>
             <el-option v-for="item in customerList" :key="item.tenantCustomerId" :value="item.tenantCustomerId"

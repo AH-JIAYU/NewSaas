@@ -91,7 +91,7 @@ defineExpose({
 
 <template>
   <div v-loading="loading">
-    <ElForm ref="formRef" :model="form" :rules="formRules" label-width="6.25rem" >
+    <ElForm ref="formRef" :model="form" :rules="formRules" label-width="9rem" >
       <ElFormItem label="结算方式">
         <el-radio-group v-model="form.settlementType">
           <el-radio :value="1" size="large"> 全部结算 </el-radio>

@@ -155,32 +155,31 @@ defineExpose({ showEdit });
           style="align-items: center"
         >
           <el-radio-group v-model="data.form.dispatchType" class="ml-4">
-            <el-radio :value="1" size="large"> 指定关闭 </el-radio>
-            <el-radio :value="2" size="large"> 指定价格 </el-radio>
+            <el-radio :value="1" size="large">
+              <div>
+                指定关闭
+                <el-tooltip
+                  class="tooltips"
+                  content="选中供应商或会员组，该供应商或会员组无法参与该项目"
+                  placement="top"
+                >
+                  <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
+                </el-tooltip>
+              </div>
+            </el-radio>
+            <el-radio :value="2" size="large">
+              指定价格
+              <el-tooltip
+                class="tooltips"
+                content="举例:(选中供应商为：A供应商；指定价格为：100美元)则，A供应商下参与该项目的会员价格为100美元，无需通过会员等级进行计算"
+                placement="top"
+              >
+                <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
+              </el-tooltip>
+            </el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-tooltip
-          class="tooltips"
-          content="选中供应商或会员组，该供应商或会员组无法参与该项目"
-          placement="top"
-        >
-          <SvgIcon
-            style="position: absolute; left: 14.375rem; top: .8125rem"
-            class="SvgIcon1"
-            name="i-ri:question-line"
-          />
-        </el-tooltip>
-        <el-tooltip
-          class="tooltips"
-          content="举例:(选中供应商为：A供应商；指定价格为：100美元)则，A供应商下参与该项目的会员价格为100美元，无需通过会员等级进行计算"
-          placement="top"
-        >
-          <SvgIcon
-            style="position: absolute; left: 21.375rem; top: .8125rem"
-            class="SvgIcon1"
-            name="i-ri:question-line"
-          />
-        </el-tooltip>
+
         <el-form-item
           label="项目ID/名称"
           prop="projectId"
