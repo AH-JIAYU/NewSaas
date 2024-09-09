@@ -507,25 +507,29 @@ const resetCheck = () => {
 watch(
   () => formType.value,
   async (newValue: any) => {
+    console.log('newValue',newValue);
+
     // login 登录， register 注册， reset 重置密码
     switch (newValue) {
       case "login":
         resetCheck();
         clearInterval(getPhoneInterval.value);
-      loginCode.value = "获取验证码";
-      getPhoneInterval.value = null;
-      loginGetCaptcha.value = false;
+        loginCode.value = "获取验证码";
+        getPhoneInterval.value = null;
+        loginGetCaptcha.value = false;
         loginForm.value = {
           account: storage.local.get("login_account") || "",
           remember: storage.local.has("login_account"),
+          agreeToTheAgreement: false,
         };
         break;
       case "register":
         registerFormRef.value.resetFields();
         clearInterval(getPhoneInterval.value);
-      phoneCode.value = "获取验证码";
-      getPhoneInterval.value = null;
-      isGetPhone.value = false;
+        phoneCode.value = "获取验证码";
+        getPhoneInterval.value = null;
+        isGetPhone.value = false;
+        registerForm.value.agreeToTheAgreement = false;
         registerForm.value = {
           name: "", // 账号
           password: "", // 密码
@@ -535,14 +539,15 @@ watch(
           country: "", //国家
           type: "phone", // 注册方式 phone/email
           isInvitation: 2, // 租户邀约
+          agreeToTheAgreement: false,
         };
         break;
       case "reset":
         resetFormRef.value.resetFields();
         clearInterval(getResultInterval.value);
-      resultCode.value = "获取验证码";
-      getResultInterval.value = null;
-      isReset.value = false;
+        resultCode.value = "获取验证码";
+        getResultInterval.value = null;
+        isReset.value = false;
         resetForm.value = {
           info: "", // 账号
           newPassword: "", // 新密码
