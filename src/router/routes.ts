@@ -34,6 +34,14 @@ const constantRoutes: RouteRecordRaw[] = [
     component: () => import("@/views/redirect.vue"),
     meta: { whiteList: true },
   },
+  // 支付成功
+  {
+    path: "/paymentSuccess",
+    name: "paymentSuccess",
+    component: () => import("@/views/paymentSuccess.vue"),
+    meta: { whiteList: true },
+  },
+ 
 
   {
     path: "/:all(.*)*",
