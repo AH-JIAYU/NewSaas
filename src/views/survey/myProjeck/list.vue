@@ -120,18 +120,19 @@ function onReset() {
   });
   fetchData();
 }
-// 分页 后端(刘):这块不好做分页，所有返回全部数据，前端做分页
-const DataList = computed(() => {
-  return list.value.slice(
-    (pagination.value.page - 1) * pagination.value.size,
-    pagination.value.page * pagination.value.size
-  );
-});
+// // 分页 后端(刘):这块不好做分页，所有返回全部数据，前端做分页
+// const DataList = computed(() => {
+//   return list.value.slice(
+//     (pagination.value.page - 1) * pagination.value.size,
+//     pagination.value.page * pagination.value.size
+//   );
+// });
 // 获取列表
 async function fetchData() {
   try {
     listLoading.value = true;
     const params = {
+      ...getParams(),
       ...queryForm,
     };
     if (queryForm.time && !!queryForm.time.length) {
@@ -141,7 +142,7 @@ async function fetchData() {
     const res = await api.list(params);
     countryType.value = res.data.currencyType;
     list.value = res.data.getMemberProjectListInfoList;
-    pagination.value.total = res.data.getMemberProjectListInfoList.length;
+    pagination.value.total = res.data.total;
     listLoading.value = false;
   } catch (error) {
 
@@ -252,7 +253,7 @@ onMounted(async () => {
             @query-data="currentChange" />
         </FormRightPanel>
       </el-row>
-      <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="id" :data="DataList"
+      <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="id" :data="list"
         :border="border" :size="lineHeight" :stripe="stripe">
         <el-table-column align="center" type="selection" />
         <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip width="180" fixed="left"

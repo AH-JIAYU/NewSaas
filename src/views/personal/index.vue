@@ -583,7 +583,7 @@ onMounted(() => {
             </div>
             <div class="btn">
               <el-button class="btn" style="background-color: #FE616E;" type="info" size="default"
-                @click="">立即开通</el-button>
+              @click="payment">立即开通</el-button>
             </div>
           </div>
           <div class="equity">
@@ -752,7 +752,7 @@ onMounted(() => {
             </div>
             <div class="btn">
               <el-button class="btn" style="background-color: #AD68DA;" type="info" size="default"
-                @click="">立即开通</el-button>
+              @click="payment">立即开通</el-button>
             </div>
           </div>
           <div class="equity">

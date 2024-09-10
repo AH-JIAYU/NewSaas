@@ -11,8 +11,8 @@ const form = ref({
 });
 const data = ref<any>({
   paymentMethodList: [
-    { mode: "微信", icon: "wechat", value: "1" },
-    { mode: "支付宝", icon: "alipay", value: "2" },
+    { mode: "微信", icon: "wechat-2-fill", value: "1" },
+    { mode: "支付宝", icon: "alipay-fill", value: "2" },
   ],
 });
 // 弹框开关变量
@@ -120,9 +120,9 @@ defineExpose({ showEdit });
                       :value="item.value"
                     >
                       <div
-                        style="margin-right: 5px"
-                        :class="'w-1em h-1em i-bi:' + item.icon"
+                        :class="'i-ri:' + item.icon +' w-1rem h-1rem '"
                       ></div>
+                      <!-- {{ 'i-ri:' + item.icon +' w-1rem h-1rem ' }} -->
                       {{ item.mode }}
                     </el-option>
                   </el-select>
