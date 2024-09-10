@@ -217,7 +217,8 @@ textarea {
 
 .el-table__header {
   th {
-    background: var(--el-fill-color-lighter) !important;
+    background: #F8FBFF !important;
+    color: #333333 !important;
   }
 }
 
@@ -580,7 +581,10 @@ textarea {
   white-space: nowrap;
 }
 
-.el-table thead {
-  background-color: #F8FBFF;
-  color: #333333 !important;
+// 表格拷贝icon
+.copySvg {
+  width: 16px;
+  height: 16px;
+  margin-left: 5px;
+  cursor: pointer;
 }

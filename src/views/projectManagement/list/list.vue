@@ -4,6 +4,7 @@ import ProjeckEdit from "./components/ProjeckEdit/index.vue";
 import ProjectDetail from "./components/ProjectDetails/index.vue";
 import ViewAllocation from "./components/ViewAllocation/index.vue";
 import scheduling from "./components/Edit/index.vue"; //项目调度
+import outsource from "@/views/projectManagement/outsource/components/Edit/index.vue";//项目外包
 import { ElMessage, ElMessageBox } from "element-plus";
 import api from "@/api/modules/projectManagement";
 import { obtainLoading, submitLoading } from "@/utils/apiLoading";
@@ -31,7 +32,8 @@ const addAllocationEditRef = ref();
 const addProjeckRef = ref();
 const projectDetailsRef = ref();
 const viewAllocationsRef = ref(); //查看分配
-const schedulingRef = ref();
+const schedulingRef = ref();//调度
+const outsourceRef = ref();//外包
 // 右侧工具栏配置变量
 const border = ref(false);
 const checkList = ref<any>([]);
@@ -86,9 +88,10 @@ const search = ref<any>({
 }); // 搜索
 const list = ref<any>([]);
 
-const current=ref<any>()//表格当前选中
+const current = ref<any>()//表格当前选中
 function handleCurrentChange(val: any) {
-  current.value=val.projectId
+  if(val)current.value = val.projectId
+  else current.value = ''
 }
 
 // 分配
@@ -151,6 +154,14 @@ function dispatch() {
     schedulingRef.value.showEdit(selectList[0], "projectList");
   }
 }
+// 外包查看点击id
+function outsourceDetails(row:any){
+  console.log('row',row)
+  let type
+  if(row.allocationType===4)type=0
+  if(row.projectType===2)type=1 
+  outsourceRef.value.showEdit(row, type);
+}
 // 查看分配
 function viewAllocations(row: any, type: number) {
   const params = {
@@ -168,7 +179,6 @@ function sizeChange(size: number) {
 function currentChange(page = 1) {
   onCurrentChange(page).then(() => fetchData());
 }
-
 
 // 重置数据
 function onReset() {
@@ -327,7 +337,6 @@ onMounted(async () => {
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>
-          <!-- v-auth="'/list-get-addProject'" -->
           <el-button type="primary" size="default" @click="addProject">
             新增项目
           </el-button>
@@ -360,7 +369,7 @@ onMounted(async () => {
             <div>
               <el-button class="p-1" size="small" type="warning" v-if="row.projectType === 2">外包</el-button>
               <el-button class="p-1" size="small" type="primary" v-else>自有</el-button>
-              <el-button class="p-1" size="small" text type="primary">
+              <el-button class="p-1" size="small" text type="primary" v-if="row.projectLinkType === 2" @click="outsourceDetails(row)">
                 <SvgIcon name="i-ri:share-forward-line" color="#409eff" size="20px" />
               </el-button>
 
@@ -494,6 +503,8 @@ onMounted(async () => {
     <ViewAllocation ref="viewAllocationsRef" />
     <!-- 项目调度 -->
     <scheduling ref="schedulingRef" @fetchData="fetchData" />
+    <!-- 项目外包 -->
+    <outsource ref="outsourceRef"></outsource>
   </div>
 </template>
 
@@ -508,11 +519,6 @@ onMounted(async () => {
     background-color: #f2f3f5 !important;
   }
 
-  .el-table__header {
-    th {
-      background: var(--el-fill-color-lighter) !important;
-    }
-  }
 }
 
 .absolute-container {
