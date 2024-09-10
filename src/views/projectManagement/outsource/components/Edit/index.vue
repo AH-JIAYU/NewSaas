@@ -22,8 +22,7 @@ const data = ref<any>({
 });
 
 // 显隐
-async function showEdit(row: any, source: number = 0) {
-  console.log('source',source)
+async function showEdit(row: any, source: number = 0) { 
   const params = {
     linkId: row.linkId,
     projectId: row.projectId,

@@ -156,10 +156,9 @@ function dispatch() {
 }
 // 外包查看点击id
 function outsourceDetails(row:any){
-  console.log('row',row)
   let type
   if(row.allocationType===4)type=0
-  if(row.projectType===2)type=1 
+  if(row.projectType===2)type=1
   outsourceRef.value.showEdit(row, type);
 }
 // 查看分配
