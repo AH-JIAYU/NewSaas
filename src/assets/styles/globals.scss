@@ -572,3 +572,10 @@ textarea {
 .el-scrollbar__bar.is-horizontal {
   height: .625rem;
 }
+
+// 文本一行显示
+.oneLine {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
