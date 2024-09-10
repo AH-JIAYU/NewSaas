@@ -289,7 +289,7 @@ onMounted(async () => {
           <template #default="{ row }">
             <p v-if="checkList.includes('projectName')" class="crudeTop">名称：{{ row.projectName }}</p>
             <div class="hoverSvg">
-              <p v-if="checkList.includes('projectId')" class="fineBom">ID：{{ row.projectId }}</p>
+              <p v-if="checkList.includes('projectId')" class="fineSize">ID：{{ row.projectId }}</p>
               <span>
                 <svg @click="svgClick(row.projectId)" class="svg" xmlns="http://www.w3.org/2000/svg" width="14"
                   height="14" viewBox="0 0 14 14" fill="none">
@@ -320,8 +320,8 @@ onMounted(async () => {
           <template #default="{ row }">
             <p v-if="checkList.includes('projectIdentification')" class="crudeTop">
               名称：{{ row.projectIdentification }}</p>
-            <p v-if="checkList.includes('projectIdClientName')" class="fineBom">标识：{{
-    row.clientName }}</p>
+            <p v-if="checkList.includes('projectIdClientName')" style="text-align: left;font-weight: 700;color: #777;">标：<span class="fineBom">{{
+    row.clientName }}</span></p>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('participation')" show-overflow-tooltip width="180" align="center"
@@ -523,7 +523,17 @@ onMounted(async () => {
 
 .fineBom {
   text-align: left !important;
-  color: #333333;
+  color: #777;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  font-weight: 700;
+  text-overflow: ellipsis;
+}
+
+.fineSize {
+  text-align: left !important;
+  color: #333;
   font-size: 12px;
   white-space: nowrap;
   overflow: hidden;
