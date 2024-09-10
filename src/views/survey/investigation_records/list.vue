@@ -36,18 +36,17 @@ const tableAutoHeight = ref(false);
 const currencyType = ref<any>();
 // 表格控件-展示列
 const columns = ref([
+{ prop: "projectId", label: "项目ID", sortable: true, checked: true },
+  {
+    prop: "projectName",
+    label: "项目名称",
+    sortable: true,
+    checked: true,
+  },
   { prop: "memberId", label: "会员ID", sortable: true, checked: true },
   {
     prop: "randomIdentityId",
     label: "随机身份",
-    sortable: true,
-    checked: true,
-  },
-  { prop: "memberName", label: "所属组", sortable: true, checked: true },
-  { prop: "projectId", label: "项目ID", sortable: true, checked: true },
-  {
-    prop: "projectName",
-    label: "项目名称",
     sortable: true,
     checked: true,
   },
@@ -57,14 +56,21 @@ const columns = ref([
     sortable: true,
     checked: true,
   },
+  { prop: "memberName", label: "所属组", sortable: true, checked: true },
   { prop: "allocationType", label: "分配类型", sortable: true, checked: true },
   {
-    prop: "price",
-    label: "原价/会员价",
+    prop: "doMoneyPrice",
+    label: "原价",
     sortable: true,
     checked: true,
   },
-  { prop: "ipBelong", label: "IP/所属国", sortable: true, checked: true },
+  {
+    prop: "memberPrice",
+    label: "会员价",
+    sortable: true,
+    checked: true,
+  },
+  { prop: "ipBelong", label: "国家/IP", sortable: true, checked: true },
   { prop: "surveyTime", label: "调查时间", sortable: true, checked: true },
   { prop: "surveyStatus", label: "调查状态", sortable: true, checked: true },
   { prop: "viceStatus", label: "副状态", sortable: true, checked: true },
