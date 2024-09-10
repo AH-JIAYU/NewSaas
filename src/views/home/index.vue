@@ -1,3 +1,13 @@
+<script setup lang="ts">
+defineOptions({
+  name: "home",
+});
+const router = useRouter()
+const toLogin = () => {
+  router.push('/login')
+}
+</script>
+
 <template>
   <div class="page flex-col">
     <div class="box_1 flex-col">
@@ -332,7 +342,7 @@
             <span class="text_63">电话号码：888-888-888</span>
           </div>
           <div class="text-wrapper_5 flex-col">
-            <span class="text_64">登录</span>
+            <span class="text_64" @click="toLogin">登录</span>
           </div>
           <div class="text-wrapper_6 flex-col">
             <span class="text_65">免费试用</span>
@@ -365,11 +375,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
-defineOptions({
-  name: "home",
-});
-</script>
+
 <style lang="scss" scoped>
 * {
   padding: 0;
@@ -1794,7 +1800,7 @@ defineOptions({
   width: 100%;
   height: 500px;
   margin: 191px 0 1px 0;
-  background: url('@/assets/images/home/Frame3475518.png') center center  no-repeat ;
+  background: url('@/assets/images/home/Frame3475518.png') center center no-repeat;
   background-size: cover;
 }
 
@@ -2223,8 +2229,8 @@ defineOptions({
   font-weight: 500;
   text-align: left;
   white-space: nowrap;
-  line-height: 16px;
-  margin: 6px 0 0 16px;
+  margin: 6px 16px;
+  cursor: pointer;
 }
 
 .text-wrapper_6 {
@@ -2245,8 +2251,8 @@ defineOptions({
   font-weight: 500;
   text-align: left;
   white-space: nowrap;
-  line-height: 16px;
-  margin: 6px 0 0 16px;
+  margin: 6px 16px;
+  cursor: pointer;
 }
 
 .group_9 {
@@ -2255,8 +2261,8 @@ defineOptions({
   /* margin: 0 ; */
   margin: 0 auto;
   padding: 1px;
-  background: url('@/assets/images/home/banner.png')  top right no-repeat;
-  background-size:130% 100%;
+  background: url('@/assets/images/home/banner.png') top right no-repeat;
+  background-size: 130% 100%;
   // background: url('https://lanhu-oss.lanhuapp.com/FigmaDDSSlicePNG51534c7738d3fbd38b0c5e10f381ca5e.png') calc(50% + 480px) top no-repeat;
   // background-size: auto 120%;
 }
