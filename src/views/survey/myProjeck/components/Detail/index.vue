@@ -6,6 +6,7 @@ import { ref } from 'vue'
 import api from "@/api/modules/survey_myProjeck";
 import fileApi from '@/api/modules/file'
 import DownLoad from '@/utils/download'
+import empty from '@/assets/images/empty.png'
 
 const loadingDisible = ref<boolean>(false)
 const title = ref<string>('')
@@ -71,7 +72,7 @@ defineExpose({
         </el-col>
       </el-row>
       <template v-if="!form.descriptionUrl">
-        <el-empty description="暂无数据" />
+        <el-empty :image="empty" :image-size="300" />
       </template>
     </el-dialog>
   </div>

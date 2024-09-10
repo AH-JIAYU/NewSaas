@@ -8,6 +8,7 @@ import { ElMessage } from "element-plus";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
 import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
 import useClipboard from "vue-clipboard3"; // 复制 js库
+import empty from '@/assets/images/empty.png'
 
 defineOptions({
   name: "myProjeck",
@@ -38,11 +39,30 @@ const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const lineHeight = ref<any>("default");
 const stripe = ref(false);
 const columns = ref<any>([
+  { prop: "project", label: "项目", sortabel: true, checked: true },
   { prop: "projectId", label: "项目ID", sortabel: true, checked: true },
   { prop: "projectName", label: "项目名称", sortabel: true, checked: true },
   {
     prop: "projectIdentificationOrClientName",
-    label: "客户简称/标识",
+    label: "名称/标识",
+    sortabel: true,
+    checked: true,
+  },
+  {
+    prop: "projectIdentification",
+    label: "名称",
+    sortabel: true,
+    checked: true,
+  },
+  {
+    prop: "projectIdClientName",
+    label: "标识",
+    sortabel: true,
+    checked: true,
+  },
+  {
+    prop: "participation",
+    label: "参数",
     sortabel: true,
     checked: true,
   },
@@ -52,19 +72,12 @@ const columns = ref<any>([
     sortabel: true,
     checked: true,
   },
-  {
-    prop: "participation",
-    label: "参与/完成/配额/限量",
-    sortabel: true,
-    checked: true,
-  },
   { prop: "doMoneyPrice", label: "原价", sortabel: true, checked: true },
   { prop: "memberPrice", label: "会员价", sortabel: true, checked: true },
+  { prop: "countryNameList", label: "国家", sortabel: true, checked: true },
   { prop: "ir", label: "IR/NIR", sortabel: true, checked: true },
-  { prop: "countryNameList", label: "国家地区", sortabel: true, checked: true },
-  { prop: "memberStatus", label: "分配状态", sortabel: true, checked: true },
-  { prop: "memberGroupName", label: "分配目标", sortabel: true, checked: true },
-  { prop: "createTime", label: "创建时间", sortabel: true, checked: true },
+  { prop: "memberStatus", label: "分配", sortabel: true, checked: true },
+  { prop: "createTime", label: "创建", sortabel: true, checked: true },
 ]);
 // 查询参数
 const queryForm = reactive<any>({
@@ -157,6 +170,14 @@ const copyUrl = (text: any) => {
     message: "复制成功",
   });
 };
+// 复制ID
+const svgClick = (id: any) => {
+  toClipboard(id);
+  ElMessage({
+    type: "success",
+    message: "复制成功",
+  });
+}
 // 具体的位置信息
 const comCountryId = computed(() => (countryIdList: any) => {
   const list = countryList.value
@@ -255,15 +276,59 @@ onMounted(async () => {
       <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="id" :data="DataList"
         :border="border" :size="lineHeight" :stripe="stripe">
         <el-table-column align="center" type="selection" />
-        <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip width="180" fixed="left"
-          prop="projectId" align="center" label="项目ID" />
-        <el-table-column v-if="checkList.includes('projectName')" show-overflow-tooltip width="180" prop="projectName"
-          align="center" label="项目名称" />
-        <el-table-column v-if="checkList.includes('projectIdentificationOrClientName')" show-overflow-tooltip
-          prop="projectIdentificationOrClientName" width="180" align="center" label="客户简称/标识">
+        <!-- <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip width="180" fixed="left"
+          prop="projectId" align="center" label="项目ID" /> -->
+        <el-table-column v-if="checkList.includes('project')" show-overflow-tooltip align="center"
+          prop="projectIdentificationOrClientName" width="200" label="项目">
           <template #default="{ row }">
-            <el-text class="mx-1">{{ row.projectIdentification }}</el-text>
-            <p>{{ row.clientName }}</p>
+            <p v-if="checkList.includes('projectName')" class="crudeTop">名称：{{ row.projectName }}</p>
+            <div class="hoverSvg">
+              <p v-if="checkList.includes('projectId')" class="fineBom">ID：{{ row.projectId }}</p>
+              <span>
+                <svg
+                @click="svgClick(row.projectId)" class="svg" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                viewBox="0 0 14 14" fill="none">
+                <g id="Frame 3475223">
+                  <g id="Frame" clip-path="url(#clip0_450_48083)">
+                    <path id="Vector"
+                      d="M10.7625 2.1875H0.9625C0.4375 2.1875 0 2.625 0 3.15V12.95C0 13.475 0.4375 13.9125 0.9625 13.9125H10.7625C11.2875 13.9125 11.725 13.475 11.725 12.95V3.15C11.6375 2.625 11.2875 2.1875 10.7625 2.1875ZM8.3125 10.2375H3.4125C3.15 10.2375 2.8875 9.975 2.8875 9.7125C2.8875 9.45 3.0625 9.1 3.4125 9.1H8.3125C8.575 9.1 8.8375 9.3625 8.8375 9.625C8.8375 9.975 8.6625 10.2375 8.3125 10.2375ZM8.3125 6.9125H3.4125C3.15 6.9125 2.8875 6.65 2.8875 6.3875C2.8875 6.125 3.0625 5.775 3.4125 5.775H8.3125C8.575 5.775 8.8375 6.0375 8.8375 6.3C8.8375 6.65 8.6625 6.9125 8.3125 6.9125Z"
+                      fill="#409EFF" />
+                    <path id="Vector_2"
+                      d="M12.95 0H2.8C2.1875 0 1.75 0.4375 1.75 1.05V1.3125H10.85C11.8125 1.3125 12.6 2.1 12.6 3.0625V12.25H12.95C13.5625 12.25 14 11.8125 14 11.2V1.05C14 0.4375 13.5625 0 12.95 0Z"
+                      fill="#409EFF" />
+                  </g>
+                </g>
+                <defs>
+                  <clipPath id="clip0_450_48083">
+                    <rect width="14" height="14" fill="white" />
+                  </clipPath>
+                </defs>
+              </svg>
+              </span>
+            </div>
+          </template>
+        </el-table-column>
+        <!-- <el-table-column v-if="checkList.includes('projectName')" show-overflow-tooltip width="180" prop="projectName"
+          align="center" label="项目名称" /> -->
+        <el-table-column v-if="checkList.includes('projectIdentificationOrClientName')" show-overflow-tooltip
+          prop="projectIdentificationOrClientName" width="180" align="center" label="名称/标识">
+          <template #default="{ row }">
+            <p v-if="checkList.includes('projectIdentification')" class="crudeTop" >
+              名称：{{ row.projectIdentification }}</p>
+            <p v-if="checkList.includes('projectIdClientName')" class="fineBom" >标识：{{
+    row.clientName }}</p>
+          </template>
+        </el-table-column>
+        <el-table-column v-if="checkList.includes('participation')" show-overflow-tooltip width="180" align="center"
+          label="参数">
+          <template #default="{ row }">
+            <p class="parameter"><el-text class="mx-1 text" style="color:#FB6868;" type="danger">参与：{{ row.participation
+    || 0 }}</el-text><el-text class="mx-1 text" style="color:#03C239;" type="success">完成：{{
+    row.complete || 0
+  }}</el-text></p>
+            <p class="parameter"><el-text class="mx-1 text" style="color:#FFAC54;" type="warning">配额：{{ row.num || 0
+                }}</el-text><el-text class="mx-1 text" style="color:#AAAAAA;" type="info">限量：{{ row.limitedQuantity || 0
+                }}</el-text></p>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('withoutUrl')" prop="withoutUrl" align="center" label="URL">
@@ -273,22 +338,13 @@ onMounted(async () => {
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('participation')" show-overflow-tooltip width="170" align="center"
-          label="参与/完成/配额/限量">
-          <template #default="{ row }">
-            <el-text class="mx-1">{{ row.participation || 0 }}</el-text>
-            /
-            <el-text class="mx-1" type="success">{{
-    row.complete || 0
-  }}</el-text>/ <el-text class="mx-1" type="warning">{{ row.num || 0 }}</el-text>/
-            {{ row.limitedQuantity || "-" }}
-          </template>
-        </el-table-column>
         <el-table-column v-if="checkList.includes('doMoneyPrice')" show-overflow-tooltip align="center" label="原价">
           <template #default="{ row }">
             <el-text v-if="countryType === 3" class="mx-1">暂无数据</el-text>
             <el-text v-else class="mx-1">
-              <CurrencyType />{{ row.doMoneyPrice || 0 }}
+              <el-text style="color: #FD8989;">
+                <CurrencyType />
+              </el-text>{{ row.doMoneyPrice || 0 }}
             </el-text>
           </template>
         </el-table-column>
@@ -301,13 +357,9 @@ onMounted(async () => {
             <el-text v-else> - </el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('ir')" show-overflow-tooltip align="center" label="IR/NIR">
-          <template #default="{ row }"> {{ row.ir ? row.ir : '-' }} / {{ row.nir ? row.nir : '-' }} </template>
-        </el-table-column>
-        <el-table-column v-if="checkList.includes('countryNameList')" show-overflow-tooltip align="center" label="国家地区">
+        <el-table-column v-if="checkList.includes('countryNameList')" show-overflow-tooltip align="center" label="国家">
           <template #default="{ row }">
             <template v-if="row.countryNameList">
-
               <template v-if="row.countryNameList.length === basicDictionaryStore.country.length">
                 <el-link type="primary"><el-tag type="warning">全球</el-tag></el-link>
               </template>
@@ -320,22 +372,25 @@ onMounted(async () => {
                 </el-tooltip>
               </template>
               <template v-else>
-                <el-tag v-for="item in comCountryId(row.countryNameList)" :key="item" type="primary">
-                  {{ item }}
+                <el-tag type="primary">
+                  x{{ comCountryId(row.countryNameList).length }}
                 </el-tag>
               </template>
             </template>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('memberStatus')" show-overflow-tooltip align="center" label="分配状态">
+        <el-table-column v-if="checkList.includes('ir')" show-overflow-tooltip align="center" label="IR/NIR">
+          <template #default="{ row }"> {{ row.ir ? row.ir : '-' }} / {{ row.nir ? row.nir : '-' }} </template>
+        </el-table-column>
+        <el-table-column v-if="checkList.includes('memberStatus')" show-overflow-tooltip align="center" label="分配">
           <template #default="{ row }">
-            <el-text type="primary" v-if="row.getMemberGroupNameInfoList.length">
-              已分配
-            </el-text>
-            <el-text v-else> 未分配 </el-text>
+            <el-tag style="background-color: #05C9BE;color: #fff;" v-if="row.getMemberGroupNameInfoList.length">
+              会员组
+            </el-tag>
+            <el-tag effect="plain" type="info" v-else> 未分配 </el-tag>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('memberGroupName')" show-overflow-tooltip align="center" label="分配目标">
+        <!-- <el-table-column v-if="checkList.includes('memberGroupName')" show-overflow-tooltip align="center" label="分配目标">
           <template #default="{ row }">
             <el-tooltip class="box-item" effect="dark" placement="top" v-if="row.getMemberGroupNameInfoList.length">
               <template #content>
@@ -347,12 +402,26 @@ onMounted(async () => {
     row.getMemberGroupNameInfoList.length
   }}</el-link>
             </el-tooltip>
-
             <el-link v-else>-</el-link>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column v-if="checkList.includes('createTime')" show-overflow-tooltip prop="createTime" align="center"
-          label="创建时间"><template #default="{ row }">
+          label="创建">
+          <template #header>
+            <span class="headerIcon">
+              <svg class="timeSvg" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <g id="Time (æ¶é´)">
+                  <path id="Vector"
+                    d="M7.9987 14.6666C11.6806 14.6666 14.6654 11.6818 14.6654 7.99992C14.6654 4.31802 11.6806 1.33325 7.9987 1.33325C4.3168 1.33325 1.33203 4.31802 1.33203 7.99992C1.33203 11.6818 4.3168 14.6666 7.9987 14.6666Z"
+                    fill="#409EFF" />
+                  <path id="Vector_2" d="M8.00431 4L8.00391 8.00293L10.8304 10.8294" stroke="white" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" />
+                </g>
+              </svg>
+              创建
+            </span>
+          </template>
+          <template #default="{ row }">
             <el-tag effect="plain" type="info">{{
     format(row.createTime)
   }}</el-tag>
@@ -368,14 +437,14 @@ onMounted(async () => {
               <!-- <el-button type="primary" plain size="small" @click="tested(row)">
                 测查
               </el-button> -->
-              <el-button size="small" plain type="primary" @click="check(row)">
+              <el-button size="small" plain type="warning" @click="check(row)">
                 配额
               </el-button>
             </ElSpace>
           </template>
         </el-table-column>
         <template #empty>
-          <el-empty description="暂无数据" />
+          <el-empty :image="empty" :image-size="300" />
         </template>
       </el-table>
       <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
@@ -431,6 +500,53 @@ onMounted(async () => {
         }
       }
     }
+  }
+}
+
+.crudeTop {
+  text-align: left !important;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fineBom {
+  text-align: left !important;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.hoverSvg {
+  display: flex;
+  align-items: center;
+}
+.hoverSvg:hover .svg {
+  display: block;
+}
+
+.svg {
+  display: none;
+  width: 14px;
+  height: 14px;
+  margin-left: 5px;
+}
+
+.parameter {
+  text-align: left !important;
+}
+
+.text {
+  display: inline-block;
+  min-width: 4.375rem;
+}
+.headerIcon {
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  .timeSvg {
+    margin-right: 4px;
   }
 }
 </style>

@@ -8,14 +8,17 @@ import api from "@/api/modules/survey_vip";
 import useSurveyVipLevelStore from "@/store/modules/survey_vipLevel"; //会员等级
 import useSurveyVipGroupStore from "@/store/modules/survey_vipGroup"; //会员组
 import useSurveyVipStore from "@/store/modules/survey_vip"; // 会员
-const surveyVipLevelStore = useSurveyVipLevelStore(); //会员等级
-const surveyVipGroupStore = useSurveyVipGroupStore(); //会员组
-const surveyVipStore = useSurveyVipStore(); // 会员
+import empty from '@/assets/images/empty.png'
+import useClipboard from "vue-clipboard3"; // 复制
 
 defineOptions({
   name: "vip",
 });
-
+// 复制
+const { toClipboard } = useClipboard();
+const surveyVipLevelStore = useSurveyVipLevelStore(); //会员等级
+const surveyVipGroupStore = useSurveyVipGroupStore(); //会员组
+const surveyVipStore = useSurveyVipStore(); // 会员
 const { pagination, getParams, onSizeChange, onCurrentChange } =
   usePagination(); // 分页
 // 时间
@@ -141,6 +144,14 @@ async function fetchData() {
     listLoading.value = false;
   }
 }
+// 复制ID
+const svgClick = (id: any) => {
+  toClipboard(id);
+  ElMessage({
+    type: "success",
+    message: "复制成功",
+  });
+}
 // 重置筛选数据
 function onReset() {
   Object.assign(queryForm, {
@@ -178,7 +189,8 @@ onMounted(async () => {
         <template #default="{ fold, toggle }">
           <ElForm :model="queryForm" size="default" label-width="100px" inline-message inline class="search-form">
             <el-form-item label="">
-              <el-input v-model.trim="queryForm.memberId" clearable :inline="false" placeholder="会员ID" @keydown.enter="currentChange()"/>
+              <el-input v-model.trim="queryForm.memberId" clearable :inline="false" placeholder="会员ID"
+                @keydown.enter="currentChange()" />
             </el-form-item>
             <el-form-item label="">
               <!--
@@ -186,7 +198,8 @@ onMounted(async () => {
                 会员列表目前这个只会模糊匹配姓名
                 那个我等下有时间在搞
               -->
-              <el-input v-model.trim="queryForm.memberName" clearable :inline="false" placeholder="会员名称" @keydown.enter="currentChange()"/>
+              <el-input v-model.trim="queryForm.memberName" clearable :inline="false" placeholder="会员名称"
+                @keydown.enter="currentChange()" />
             </el-form-item>
             <el-form-item label="">
               <el-select v-model="queryForm.memberLevelId" clearable placeholder="会员等级" @change="currentChange()">
@@ -208,7 +221,8 @@ onMounted(async () => {
             </el-form-item>
             <el-form-item v-show="!fold">
               <el-date-picker v-model="queryForm.time" type="datetimerange" unlink-panels range-separator="-"
-                start-placeholder="创建开始日期" end-placeholder="创建结束日期" value-format="YYYY-MM-DD hh:mm:ss" size="default" @change="currentChange()"/>
+                start-placeholder="创建开始日期" end-placeholder="创建结束日期" value-format="YYYY-MM-DD hh:mm:ss" size="default"
+                @change="currentChange()" />
             </el-form-item>
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">
@@ -250,27 +264,59 @@ onMounted(async () => {
       <el-table v-loading="listLoading" :border="border" :data="data.list" :size="lineHeight" :stripe="stripe"
         @selection-change="setSelectRows">
         <el-table-column align="center" type="selection" />
+        <el-table-column align="center" v-if="checkList.includes('memberStatus')" show-overflow-tooltip label="会员状态">
+          <template #default="{ row }">
+            <ElSwitch v-if="row.memberStatus === 3" v-model="row.memberStatus" inline-prompt :inactive-value="3"
+              :active-value="2" inactive-text="待审核" active-text="启用" @change="changeState($event, row.memberId)" />
+            <ElSwitch v-else v-model="row.memberStatus" inline-prompt :inactive-value="1" :active-value="2"
+              inactive-text="禁用" active-text="启用" @change="changeState($event, row.memberId)" />
+          </template>
+        </el-table-column>
+        <el-table-column align="center" v-if="checkList.includes('randomStatus')" show-overflow-tooltip label="随机身份">
+          <template #default="{ row }">
+            <ElSwitch v-model="row.randomStatus" inline-prompt :inactive-value="1" :active-value="2" inactive-text="禁用"
+              active-text="启用" @change="changeState($event, row.memberId)" />
+          </template>
+        </el-table-column>
         <el-table-column v-if="checkList.includes('memberId')" align="center" prop="memberId" width="180"
-          show-overflow-tooltip label="会员ID" />
+          show-overflow-tooltip label="会员ID">
+          <template #default="{ row }">
+            <div v-if="row.memberId" class="hoverSvg">
+              <p class="fineBom">ID：{{ row.memberId }}</p>
+              <span>
+                <svg
+                @click="svgClick(row.memberId)" class="svg" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                viewBox="0 0 14 14" fill="none">
+                <g id="Frame 3475223">
+                  <g id="Frame" clip-path="url(#clip0_450_48083)">
+                    <path id="Vector"
+                      d="M10.7625 2.1875H0.9625C0.4375 2.1875 0 2.625 0 3.15V12.95C0 13.475 0.4375 13.9125 0.9625 13.9125H10.7625C11.2875 13.9125 11.725 13.475 11.725 12.95V3.15C11.6375 2.625 11.2875 2.1875 10.7625 2.1875ZM8.3125 10.2375H3.4125C3.15 10.2375 2.8875 9.975 2.8875 9.7125C2.8875 9.45 3.0625 9.1 3.4125 9.1H8.3125C8.575 9.1 8.8375 9.3625 8.8375 9.625C8.8375 9.975 8.6625 10.2375 8.3125 10.2375ZM8.3125 6.9125H3.4125C3.15 6.9125 2.8875 6.65 2.8875 6.3875C2.8875 6.125 3.0625 5.775 3.4125 5.775H8.3125C8.575 5.775 8.8375 6.0375 8.8375 6.3C8.8375 6.65 8.6625 6.9125 8.3125 6.9125Z"
+                      fill="#409EFF" />
+                    <path id="Vector_2"
+                      d="M12.95 0H2.8C2.1875 0 1.75 0.4375 1.75 1.05V1.3125H10.85C11.8125 1.3125 12.6 2.1 12.6 3.0625V12.25H12.95C13.5625 12.25 14 11.8125 14 11.2V1.05C14 0.4375 13.5625 0 12.95 0Z"
+                      fill="#409EFF" />
+                  </g>
+                </g>
+                <defs>
+                  <clipPath id="clip0_450_48083">
+                    <rect width="14" height="14" fill="white" />
+                  </clipPath>
+                </defs>
+              </svg>
+              </span>
+            </div>
+            <el-text v-else>-</el-text>
+          </template>
+          </el-table-column>
         <el-table-column v-if="checkList.includes('memberNickname')" align="center" prop="memberNickname"
           show-overflow-tooltip label="会员名称" />
         <el-table-column v-if="checkList.includes('memberName')" align="center" prop="memberName" show-overflow-tooltip
           label="会员姓名"><template #default="{ row }">
             {{ row.memberName ? row.memberName : '-' }} </template></el-table-column>
-        <el-table-column v-if="checkList.includes('availableBalance')" align="center" prop="availableBalance"
-          show-overflow-tooltip label="可用余额">
-          <template #default="{ row }">
-            <CurrencyType />{{ row.availableBalance || 0 }}
-          </template></el-table-column>
-        <el-table-column v-if="checkList.includes('pendingBalance')" align="center" prop="pendingBalance"
-          show-overflow-tooltip label="待审金额">
-          <template #default="{ row }">
-            <CurrencyType />{{ row.pendingBalance || 0 }}
-          </template></el-table-column>
         <el-table-column v-if="checkList.includes('memberLevelName')" align="center" prop="memberLevelName"
-          show-overflow-tooltip label="会员等级" >
+          show-overflow-tooltip label="会员等级">
           <template #default="{ row }">
-            {{row.memberLevelName ? row.memberLevelName : '-'}}
+            {{ row.memberLevelName ? row.memberLevelName : '-' }}
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('memberGroupName')" align="center" prop="memberGroupName"
@@ -293,21 +339,16 @@ onMounted(async () => {
             </el-text>
           </template>
         </el-table-column>
-
-        <el-table-column align="center" v-if="checkList.includes('memberStatus')" show-overflow-tooltip label="会员状态">
+        <el-table-column v-if="checkList.includes('availableBalance')" align="center" prop="availableBalance"
+          show-overflow-tooltip label="可用余额">
           <template #default="{ row }">
-            <ElSwitch v-if="row.memberStatus === 3" v-model="row.memberStatus" inline-prompt :inactive-value="3"
-              :active-value="2" inactive-text="待审核" active-text="启用" @change="changeState($event, row.memberId)" />
-            <ElSwitch v-else v-model="row.memberStatus" inline-prompt :inactive-value="1" :active-value="2"
-              inactive-text="禁用" active-text="启用" @change="changeState($event, row.memberId)" />
-          </template>
-        </el-table-column>
-        <el-table-column align="center" v-if="checkList.includes('randomStatus')" show-overflow-tooltip label="随机身份">
+            <CurrencyType />{{ row.availableBalance || 0 }}
+          </template></el-table-column>
+        <el-table-column v-if="checkList.includes('pendingBalance')" align="center" prop="pendingBalance"
+          show-overflow-tooltip label="待审金额">
           <template #default="{ row }">
-            <ElSwitch v-model="row.randomStatus" inline-prompt :inactive-value="1" :active-value="2" inactive-text="禁用"
-              active-text="启用" @change="changeState($event, row.memberId)" />
-          </template>
-        </el-table-column>
+            <CurrencyType />{{ row.pendingBalance || 0 }}
+          </template></el-table-column>
         <el-table-column v-if="checkList.includes('createName')" align="center" prop="createName" show-overflow-tooltip
           label="创建人">
           <template #default="{ row }">
@@ -332,7 +373,7 @@ onMounted(async () => {
           </template>
         </el-table-column>
         <template #empty>
-          <el-empty class="vab-data-empty" description="暂无数据" />
+          <el-empty :image="empty" :image-size="300" />
         </template>
       </el-table>
       <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
@@ -389,5 +430,26 @@ onMounted(async () => {
       }
     }
   }
+}
+.fineBom {
+  text-align: left !important;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.hoverSvg {
+  display: flex;
+  align-items: center;
+}
+.hoverSvg:hover .svg {
+  display: block;
+}
+
+.svg {
+  display: none;
+  width: 14px;
+  height: 14px;
+  margin-left: 5px;
 }
 </style>

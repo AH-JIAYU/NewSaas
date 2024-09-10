@@ -515,8 +515,6 @@ const resetCheck = () => {
 watch(
   () => formType.value,
   async (newValue: any) => {
-    console.log('newValue',newValue);
-
     // login 登录， register 注册， reset 重置密码
     switch (newValue) {
       case "login":
