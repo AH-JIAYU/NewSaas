@@ -77,7 +77,7 @@ const columns = ref<any>([
   { prop: "countryNameList", label: "国家", sortabel: true, checked: true },
   { prop: "ir", label: "IR/NIR", sortabel: true, checked: true },
   { prop: "memberStatus", label: "分配", sortabel: true, checked: true },
-  { prop: "createTime", label: "创建", sortabel: true, checked: true },
+  { prop: "createTime", label: "创建时间", sortabel: true, checked: true },
 ]);
 // 查询参数
 const queryForm = reactive<any>({
@@ -407,7 +407,7 @@ onMounted(async () => {
           </template>
         </el-table-column> -->
         <el-table-column v-if="checkList.includes('createTime')" show-overflow-tooltip prop="createTime" align="center"
-          label="创建">
+          label="创建时间">
           <template #header>
             <span class="headerIcon">
               <svg class="timeSvg" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -419,7 +419,7 @@ onMounted(async () => {
                     stroke-linecap="round" stroke-linejoin="round" />
                 </g>
               </svg>
-              创建
+              创建时间
             </span>
           </template>
           <template #default="{ row }">

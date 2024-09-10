@@ -36,13 +36,13 @@ const tableAutoHeight = ref(false);
 const currencyType = ref<any>();
 // 表格控件-展示列
 const columns = ref([
-{ prop: "projectId", label: "项目ID", sortable: true, checked: true },
   {
     prop: "projectName",
     label: "项目名称",
     sortable: true,
     checked: true,
   },
+  { prop: "projectId", label: "项目ID", sortable: true, checked: true },
   { prop: "memberId", label: "会员ID", sortable: true, checked: true },
   {
     prop: "randomIdentityId",
@@ -412,7 +412,7 @@ onMounted(async () => {
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('price')" align="center" prop="h" show-overflow-tooltip
+        <el-table-column v-if="checkList.includes('doMoneyPrice')" align="center" prop="h" show-overflow-tooltip
           label="原价">
           <template #default="{ row }">
             <el-text style="color: #FD8989;">
@@ -420,7 +420,7 @@ onMounted(async () => {
               </el-text>{{ row.doMoneyPrice || 0 }}
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('price')" align="center" prop="h" show-overflow-tooltip
+        <el-table-column v-if="checkList.includes('memberPrice')" align="center" prop="h" show-overflow-tooltip
           label="会员价">
           <template #default="{ row }">
             <el-text style="color: #FD8989;">
