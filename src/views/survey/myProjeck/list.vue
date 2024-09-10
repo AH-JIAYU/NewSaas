@@ -369,12 +369,12 @@ onMounted(async () => {
           <template #default="{ row }">
             <template v-if="row.countryNameList">
               <template v-if="row.countryNameList.length === basicDictionaryStore.country.length">
-                <el-link type="primary"><el-tag type="warning">全球</el-tag></el-link>
+                <el-link type="primary"><el-tag type="primary">全球</el-tag></el-link>
               </template>
               <template v-else-if="comCountryId(row.countryNameList).length > 4">
                 <el-tooltip class="box-item" effect="dark" :content="comCountryId(row.countryNameList).join(',')"
                   placement="top">
-                  <el-link type="primary"><el-tag type="success">{{
+                  <el-link type="primary"><el-tag type="primary">{{
     comCountryId(row.countryNameList).length
   }}</el-tag></el-link>
                 </el-tooltip>
