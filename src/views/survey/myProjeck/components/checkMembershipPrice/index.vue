@@ -42,7 +42,9 @@ defineExpose({ showEdit });
         <el-table-column label="会员等级" prop="memberLevelName" />
         <el-table-column label="会员价格" prop="memberPrice">
           <template #default="{ row }">
-            <CurrencyType />{{ row.memberPrice || 0 }}
+            <el-text style="color: #FD8989;" ><CurrencyType /></el-text><el-text style="color: #333333;font-weight: 700;font-family: PingFang SC, PingFang SC;">
+                {{ row.memberPrice || 0 }}
+              </el-text>
           </template>
         </el-table-column>
       </el-table>

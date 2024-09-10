@@ -2,6 +2,7 @@
 import { ElMessage, ElMessageBox } from "element-plus";
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import eventBus from "@/utils/eventBus";
+import empty from '@/assets/images/empty.png'
 import api from "@/api/modules/survey_data";
 
 defineOptions({
@@ -181,7 +182,7 @@ function getDataList() {
               </template>
             </el-table-column>
             <template #empty>
-              <el-empty description="暂无数据" />
+              <el-empty :image="empty" :image-size="300" />
             </template>
           </el-table>
         </div>
@@ -210,7 +211,7 @@ function getDataList() {
               </template>
             </el-table-column>
             <template #empty>
-              <el-empty description="暂无数据" />
+              <el-empty :image="empty" :image-size="300" />
             </template>
           </el-table>
         </div>
@@ -234,7 +235,7 @@ function getDataList() {
               </template>
             </el-table-column>
             <template #empty>
-              <el-empty description="暂无数据" />
+              <el-empty :image="empty" :image-size="300" />
             </template>
           </el-table>
         </div>
@@ -538,9 +539,7 @@ function getDataList() {
   border: none !important;
   /* 去除表格的边框 */
 }
-
 :deep {
-
   // 单选框背景色
   .el-radio-button__inner {
     background-color: transparent;

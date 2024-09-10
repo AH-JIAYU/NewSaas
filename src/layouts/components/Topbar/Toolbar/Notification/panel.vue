@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { OverlayScrollbarsComponent } from "overlayscrollbars-vue";
 import useNotificationStore from "@/store/modules/notification";
+import empty from '@/assets/images/empty.png'
 
 defineOptions({
   name: "NotificationPanel",
