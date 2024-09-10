@@ -3,7 +3,7 @@ defineOptions({
   name: "home",
 });
 const router = useRouter()
-const toLogin = () => {
+const toLogin = () => { 
   router.push('/login')
 }
 </script>
@@ -2166,7 +2166,7 @@ const toLogin = () => {
 .image_11 {
   width: 52px;
   height: 52px;
-  margin: 14px 0 0 0;
+  margin: 10px 0 0 0;
 }
 
 .text_62 {
@@ -2180,7 +2180,7 @@ const toLogin = () => {
   text-align: left;
   white-space: nowrap;
   line-height: 16px;
-  margin: 29px 0 0 80px;
+  margin: 29px 0 0 60px;
 }
 
 .section_10 {

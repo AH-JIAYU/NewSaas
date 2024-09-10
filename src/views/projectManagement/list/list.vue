@@ -4,6 +4,7 @@ import ProjeckEdit from "./components/ProjeckEdit/index.vue";
 import ProjectDetail from "./components/ProjectDetails/index.vue";
 import ViewAllocation from "./components/ViewAllocation/index.vue";
 import scheduling from "./components/Edit/index.vue"; //项目调度
+import outsource from "@/views/projectManagement/outsource/components/Edit/index.vue";//项目外包
 import { ElMessage, ElMessageBox } from "element-plus";
 import api from "@/api/modules/projectManagement";
 import { obtainLoading, submitLoading } from "@/utils/apiLoading";
@@ -31,9 +32,10 @@ const addAllocationEditRef = ref();
 const addProjeckRef = ref();
 const projectDetailsRef = ref();
 const viewAllocationsRef = ref(); //查看分配
-const schedulingRef = ref();
+const schedulingRef = ref();//调度
+const outsourceRef = ref();//外包
 // 右侧工具栏配置变量
-const border = ref(true);
+const border = ref(false);
 const checkList = ref<any>([]);
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 // 表格控件-控制全屏
@@ -85,6 +87,13 @@ const search = ref<any>({
   status: "", // 	项目状态:1在线 2:离线
 }); // 搜索
 const list = ref<any>([]);
+
+const current = ref<any>()//表格当前选中
+function handleCurrentChange(val: any) {
+  if(val)current.value = val.projectId
+  else current.value = ''
+}
+
 // 分配
 function distribution(row: any) {
   addAllocationEditRef.value.showEdit(row, "distribution");
@@ -122,7 +131,6 @@ function projectDetails(row: any) {
 }
 // 项目调度 快捷操作
 function dispatch() {
-
   const selectList = tableSortRef.value.getSelectionRows();
   if (selectList.length !== 1) {
     ElMessage.warning({
@@ -146,6 +154,13 @@ function dispatch() {
     schedulingRef.value.showEdit(selectList[0], "projectList");
   }
 }
+// 外包查看点击id
+function outsourceDetails(row:any){
+  let type
+  if(row.allocationType===4)type=0
+  if(row.projectType===2)type=1
+  outsourceRef.value.showEdit(row, type);
+}
 // 查看分配
 function viewAllocations(row: any, type: number) {
   const params = {
@@ -163,6 +178,7 @@ function sizeChange(size: number) {
 function currentChange(page = 1) {
   onCurrentChange(page).then(() => fetchData());
 }
+
 // 重置数据
 function onReset() {
   search.value = {
@@ -199,14 +215,13 @@ async function fetchData() {
     pagination.value.total = data.total;
     listLoading.value = false;
   } catch (error) {
-
   } finally {
     listLoading.value = false;
   }
 }
 // 表格时候可勾选
 const selectable = (row: any) => {
-   const filterDataId= list.value.filter((item: any) => item.projectType === 2).map((item:any)=>item.projectId)
+  const filterDataId = list.value.filter((item: any) => item.projectType === 2).map((item: any) => item.projectId)
   return !filterDataId.includes(row.projectId)
 };
 const countryList: any = ref([]); //所有国家一维
@@ -321,7 +336,6 @@ onMounted(async () => {
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>
-          <!-- v-auth="'/list-get-addProject'" -->
           <el-button type="primary" size="default" @click="addProject">
             新增项目
           </el-button>
@@ -339,38 +353,50 @@ onMounted(async () => {
       </el-row>
       <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="projectId" :data="list"
         :tree-props="{ children: 'getChildrenProjectListInfoList' }" :border="border" :size="lineHeight"
-        :stripe="stripe" highlight-current-row height="100%">
+        :stripe="stripe" highlight-current-row height="100%" @current-change="handleCurrentChange">
         <el-table-column align="center" type="selection" :selectable="selectable" />
-        <el-table-column v-if="checkList.includes('projectType')" width="100" align="center" label="项目类型"><template
+        <el-table-column v-if="checkList.includes('isOnline')" show-overflow-tooltip prop="isOnline" align="center"
+          width="100" label="状态">
+          <template #default="{ row }">
+            <ElSwitch @change="changeStatus(row, $event)" inline-prompt v-model="row.isOnline" active-text="在线"
+              inactive-text="离线" :active-value="1" :inactive-value="2" />
+          </template>
+        </el-table-column>
+
+        <el-table-column v-if="checkList.includes('projectType')" width="200" align="left" label="项目"><template
             #default="{ row }">
-            <div style="display: flex; justify-content: center; align-items: center;">
-              <el-button text type="danger" v-if="row.projectType === 2">外包项目</el-button>
-              <el-button text type="info" v-else>自有项目</el-button>
+            <div>
+              <el-button class="p-1" size="small" type="warning" v-if="row.projectType === 2">外包</el-button>
+              <el-button class="p-1" size="small" type="primary" v-else>自有</el-button>
+              <el-button class="p-1" size="small" text type="primary" v-if="row.projectLinkType === 2" @click="outsourceDetails(row)">
+                <SvgIcon name="i-ri:share-forward-line" color="#409eff" size="20px" />
+              </el-button>
+
+            </div>
+            <div class="oneLine">
+              ID:{{ row.projectId }}
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip prop="projectId" width="180"
-          align="center" label="项目ID" />
         <el-table-column v-if="checkList.includes('name')" show-overflow-tooltip prop="name" width="180" align="center"
-          label="项目名称"><template #default="{ row }">
-            <el-text class="mx-1" :type="row.isB2b === 2 ? 'danger' : ''">{{
-    row.name
-  }}</el-text>
+          label="名称/标识"><template #default="{ row }">
+            <div class="oneLine" :type="row.isB2b === 2 ? 'danger' : ''">名:{{ row.name }}</div>
+            <div class="oneLine">标:{{ row.clientName.split("/")[1] }}</div>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('clientName')" prop="clientName" show-overflow-tooltip align="center"
           label="客户简称/标识" width="120"><template #default="{ row }">
-            <el-text class="mx-1">{{ row.clientName.split("/")[0] }}</el-text>
-            <p>{{ row.clientName.split("/")[1] }}</p>
+            <div class="oneLine">{{ row.clientName.split("/")[0] }}</div>
+            <div class="oneLine">{{ row.clientName.split("/")[1] }}</div>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('PCNL')" align="center" label="参与/完成/配额/限量" width="160">
           <template #default="{ row }">
-            <el-text class="mx-1">{{ row.participation || 0 }}</el-text>
+            <el-text class="oneLine">{{ row.participation || 0 }}</el-text>
             /
-            <el-text class="mx-1" type="success">{{
+            <el-text class="oneLine" type="success">{{
     row.complete || 0
-  }}</el-text>/ <el-text class="mx-1" type="warning">{{ row.num || 0 }}</el-text>/
+  }}</el-text>/ <el-text class="oneLine" type="warning">{{ row.num || 0 }}</el-text>/
             {{ row.limitedQuantity || "-" }}
           </template>
         </el-table-column>
@@ -429,13 +455,7 @@ onMounted(async () => {
             {{ row.allocationStatus === 1 ? "未分配" : "已分配" }}
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('isOnline')" show-overflow-tooltip prop="isOnline" align="center"
-          width="100" label="项目状态">
-          <template #default="{ row }">
-            <ElSwitch @change="changeStatus(row, $event)" inline-prompt v-model="row.isOnline" active-text="在线"
-              inactive-text="离线" :active-value="1" :inactive-value="2" />
-          </template>
-        </el-table-column>
+
 
         <el-table-column v-if="checkList.includes('remark')" show-overflow-tooltip prop="remark" align="center"
           width="100" label="备注"><template #default="{ row }">
@@ -482,6 +502,8 @@ onMounted(async () => {
     <ViewAllocation ref="viewAllocationsRef" />
     <!-- 项目调度 -->
     <scheduling ref="schedulingRef" @fetchData="fetchData" />
+    <!-- 项目外包 -->
+    <outsource ref="outsourceRef"></outsource>
   </div>
 </template>
 
@@ -496,11 +518,6 @@ onMounted(async () => {
     background-color: #f2f3f5 !important;
   }
 
-  .el-table__header {
-    th {
-      background: var(--el-fill-color-lighter) !important;
-    }
-  }
 }
 
 .absolute-container {
