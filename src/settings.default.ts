@@ -23,8 +23,8 @@ const globalSettingsDefault: RecursiveRequired<Settings.all> = {
   },
   home: {
     enable: true,
-    title: '主页',
-    fullPath: '/',
+    title: '首页',
+    fullPath: '/index',
   },
   layout: {
     widthMode: 'adaption',
