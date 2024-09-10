@@ -3,7 +3,7 @@ defineOptions({
   name: "home",
 });
 const router = useRouter()
-const toLogin = () => {
+const toLogin = () => { 
   router.push('/login')
 }
 </script>

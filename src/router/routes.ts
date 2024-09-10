@@ -9,7 +9,7 @@ import useSettingsStore from "@/store/modules/settings";
 // 固定路由（默认路由）
 const constantRoutes: RouteRecordRaw[] = [
   {
-    path: "/home",
+    path: "/",
     name: "home",
     component: () => import("@/views/home/index.vue"),
     meta: {
@@ -41,7 +41,7 @@ const constantRoutes: RouteRecordRaw[] = [
     component: () => import("@/views/paymentSuccess.vue"),
     meta: { whiteList: true },
   },
- 
+
 
   {
     path: "/:all(.*)*",
