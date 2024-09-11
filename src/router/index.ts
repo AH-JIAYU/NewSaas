@@ -43,7 +43,7 @@ router.beforeEach(async (to, from, next) => {
   const notificationStore = useNotificationStore(); //消息中心
   settingsStore.settings.app.enableProgress && (isLoading.value = true);
   // 是否已登录
-  if (userStore.isLogin) {
+  if (userStore.isLogin) { 
     // 是否已根据权限动态生成并注册路由
     if (routeStore.isGenerate) {
       // 生成 iframe 列表

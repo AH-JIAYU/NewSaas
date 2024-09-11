@@ -289,7 +289,7 @@ onMounted(async () => {
           <template #default="{ row }">
             <p v-if="checkList.includes('projectName')" class="crudeTop">名称：{{ row.projectName }}</p>
             <div class="hoverSvg">
-              <p v-if="checkList.includes('projectId')" class="fineBom">ID：{{ row.projectId }}</p>
+              <p v-if="checkList.includes('projectId')" class="fineSize">ID：{{ row.projectId }}</p>
               <span>
                 <SvgIcon @click="svgClick(row.projectId)" class="copySvg"  name="ri:file-copy-2-fill" color="#4fa5ff"  />
 
@@ -304,8 +304,8 @@ onMounted(async () => {
           <template #default="{ row }">
             <p v-if="checkList.includes('projectIdentification')" class="crudeTop">
               名称：{{ row.projectIdentification }}</p>
-            <p v-if="checkList.includes('projectIdClientName')" class="fineBom">标识：{{
-    row.clientName }}</p>
+            <p v-if="checkList.includes('projectIdClientName')" style="text-align: left;font-weight: 700;color: #777;">标：<span class="fineBom">{{
+    row.clientName }}</span></p>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('participation')" show-overflow-tooltip width="180" align="center"
@@ -353,12 +353,12 @@ onMounted(async () => {
           <template #default="{ row }">
             <template v-if="row.countryNameList">
               <template v-if="row.countryNameList.length === basicDictionaryStore.country.length">
-                <el-link type="primary"><el-tag type="warning">全球</el-tag></el-link>
+                <el-link type="primary"><el-tag type="primary">全球</el-tag></el-link>
               </template>
               <template v-else-if="comCountryId(row.countryNameList).length > 4">
                 <el-tooltip class="box-item" effect="dark" :content="comCountryId(row.countryNameList).join(',')"
                   placement="top">
-                  <el-link type="primary"><el-tag type="success">{{
+                  <el-link type="primary"><el-tag type="primary">{{
     comCountryId(row.countryNameList).length
   }}</el-tag></el-link>
                 </el-tooltip>
@@ -507,7 +507,17 @@ onMounted(async () => {
 
 .fineBom {
   text-align: left !important;
-  color: #333333;
+  color: #777;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  font-weight: 700;
+  text-overflow: ellipsis;
+}
+
+.fineSize {
+  text-align: left !important;
+  color: #333;
   font-size: 12px;
   white-space: nowrap;
   overflow: hidden;

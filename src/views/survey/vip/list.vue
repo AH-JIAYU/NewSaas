@@ -356,7 +356,23 @@ onMounted(async () => {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('createTime')" align="center" prop="createTime" show-overflow-tooltip
-          label="创建时间"><template #default="{ row }">
+          label="创建时间">
+          <template #header>
+            <span class="headerIcon">
+              <svg class="timeSvg" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"
+                fill="none">
+                <g id="Time (æ¶é´)">
+                  <path id="Vector"
+                    d="M7.9987 14.6666C11.6806 14.6666 14.6654 11.6818 14.6654 7.99992C14.6654 4.31802 11.6806 1.33325 7.9987 1.33325C4.3168 1.33325 1.33203 4.31802 1.33203 7.99992C1.33203 11.6818 4.3168 14.6666 7.9987 14.6666Z"
+                    fill="#409EFF" />
+                  <path id="Vector_2" d="M8.00431 4L8.00391 8.00293L10.8304 10.8294" stroke="white" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" />
+                </g>
+              </svg>
+              创建时间
+            </span>
+          </template>
+          <template #default="{ row }">
             <el-tag effect="plain" type="info">{{
     format(row.createTime)
   }}</el-tag>
@@ -364,11 +380,11 @@ onMounted(async () => {
         </el-table-column>
         <el-table-column align="center" label="操作" fixed="right" show-overflow-tooltip width="180">
           <template #default="{ row }">
-            <el-button size="small" plain type="primary" @click="handleEdit(row)">
-              编辑
-            </el-button>
             <el-button size="small" plain type="primary" @click="plusMinusPayments(row)">
               加减款
+            </el-button>
+            <el-button size="small" plain type="warning" @click="handleEdit(row)">
+              编辑
             </el-button>
           </template>
         </el-table-column>
@@ -442,14 +458,29 @@ onMounted(async () => {
   display: flex;
   align-items: center;
 }
-.hoverSvg:hover .svg {
-  display: block;
-}
+// .hoverSvg:hover .svg {
+//   display: block;
+// }
 
 .svg {
-  display: none;
+  // display: none;
   width: 14px;
   height: 14px;
   margin-left: 5px;
+}
+:deep {
+  tbody {
+    color: #333;
+    font-weight: 700;
+  }
+}
+.headerIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .timeSvg {
+    margin-right: 4px;
+  }
 }
 </style>

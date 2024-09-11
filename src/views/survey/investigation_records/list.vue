@@ -444,7 +444,7 @@ onMounted(async () => {
               &nbsp;&nbsp;
               <p class="fineBom">{{ row.ipBelong.match(/(\d{1,3}\.){3}\d{1,3}|[\u4e00-\u9fa5]+/g)[0] }}</p>
               <span>
-                <svg @click="svgClick(row.memberName.split('/')[1])" class="svg" xmlns="http://www.w3.org/2000/svg"
+                <svg @click="svgClick(row.ipBelong.match(/(\d{1,3}\.){3}\d{1,3}|[\u4e00-\u9fa5]+/g)[0])" class="svg" xmlns="http://www.w3.org/2000/svg"
                   width="14" height="14" viewBox="0 0 14 14" fill="none">
                   <g id="Frame 3475223">
                     <g id="Frame" clip-path="url(#clip0_450_48083)">
