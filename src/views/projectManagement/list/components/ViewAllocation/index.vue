@@ -23,7 +23,7 @@ async function showEdit(params: any) {
   try {
     loading.value = true;
     const res = await cooperationApi.getTenantSupplierMemberNameInfo(params);
-    data.value.list = [res.data];
+    data.value.list = res.data.getTenantSupplierMemberNameList;
     data.value.type = params.type;
     loading.value = false;
     dialogTableVisible.value = true;
@@ -47,12 +47,17 @@ defineExpose({ showEdit });
 <template>
   <div>
     <el-dialog v-model="dialogTableVisible" title="分配" width="700" :before-close="closeHandler">
-      <el-table v-if="data.list.length" :data="data.list" v-loading="loading" row-key="id">
-        <el-table-column align="center" show-overflow-tooltip type="index" />
-        <el-table-column align="center" show-overflow-tooltip :label="data.typeList[data.type - 1] + 'id'" prop="id" />
-        <el-table-column align="center" show-overflow-tooltip :label="data.typeList[data.type - 1] + '名称'"
-          prop="name" />
-      </el-table>
+      <el-button size="small" type="danger" v-if="data.type === 2">供应商 {{ data.list.length > 1 ? data.list.length : ''
+        }}</el-button>
+      <el-button size="small" type="success" v-else-if="data.type === 3">会员组{{ data.list.length > 1 ? data.list.length : ''
+        }}</el-button>
+      <el-button size="small" type="primary" v-else-if="data.type === 4">租户</el-button>
+
+      <div class="idList">
+        <div class="item"  v-for="item in data.list">
+            <b>{{  item.name}}</b> &ensp; <span>ID: {{ item.id }}</span><copy :content="item.id"/>
+        </div>
+      </div>
 
       <template #footer>
         <div style="flex: auto">
@@ -66,6 +71,15 @@ defineExpose({ showEdit });
 <style lang="scss" scoped>
 :deep {
   .el-form-item.asterisk-left {
+    align-items: center;
+  }
+}
+.idList{
+  margin-top: 24px;
+  .item{
+    margin: 16px 0;
+    display: flex;
+    justify-content: start;
     align-items: center;
   }
 }

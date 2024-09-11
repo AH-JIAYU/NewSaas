@@ -114,8 +114,6 @@ function projectEdit(row: any) {
 }
 // 快速编辑
 function quickEdit(row:any,type:any){
-  console.log('row',row)
-  console.log('type',type)
   /**
    * 参数  PCNL
     客户 customer

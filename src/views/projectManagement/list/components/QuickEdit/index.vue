@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { cloneDeep } from "lodash-es";
+import { ElMessage, ElMessageBox } from "element-plus";
 import useProjectManagementListStore from "@/store/modules/projectManagement_list"; // 项目
 import useStagedDataStore from "@/store/modules/stagedData"; // 暂存
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
@@ -14,6 +15,7 @@ const stagedDataStore = useStagedDataStore(); // 暂存
 const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
 const customerStore = useUserCustomerStore(); // 客户
 const emits = defineEmits(["fetch-data"]);
+const formRef = ref<any>()
 const data = ref<any>({
   dialogTableVisible: false,
   title: '',
@@ -21,11 +23,33 @@ const data = ref<any>({
   loading: '',
   formData: {},//表单
   customerList: [],//客户
+  rules: {
+    name: [
+      { required: true, message: "请输入项目名称", trigger: "blur" },
+      { min: 2, max: 50, message: "内容在2-50个字之间", trigger: "blur" },
+    ],
+    projectIdentification: [
+      { max: 100, required: true, message: "请输入项目标识", trigger: "blur" },
+      { min: 2, max: 100, message: "内容在2-100个字之间", trigger: "blur" },
+    ],
+    countryIdList: [
+      {
+        required: true,
+        message: "请选择所属国家",
+        trigger: "change",
+      },
+    ],
+    clientId: [{ required: true, message: "请选择所属客户", trigger: "change" }],
+    doMoneyPrice: [{ required: true, message: "请输入原价", trigger: "blur" }],
+    num: [{ required: true, message: "请输入配额", trigger: "blur" }],
+    minimumDuration: [
+      { required: true, message: "请输入最小分长", trigger: "blur" },
+    ],
+    ir: [{ required: true, message: "请输入配额", trigger: "blur" }],
+  }
 });
-// const dialogTableVisible = ref<boolean>(false);
-// const title = ref<string>('')
-// const type = ref<string>("");
-// const loading = ref<boolean>(false)
+
+
 const TypeList: any = {
   PCNL: '参数',
   customer: '客户',
@@ -48,15 +72,13 @@ async function showEdit(row: any, FormType: any) {
     data.value.dialogTableVisible = true;
     data.value.loading = false;
     // 存储变更前的数据
-    projectManagementListStore.dataBeforeEditing = cloneDeep(data.value.formData)
+    projectManagementListStore.dataBeforeEditing = [cloneDeep(data.value.formData)]
   } catch (error) {
 
   } finally {
     data.value.loading = false;
   }
-  const resa = await customerStore.getCustomerList();
-  console.log('resa', resa)
-  data.value.customerList = resa
+  data.value.customerList = await customerStore.getCustomerList();
 };
 // 输入框限制 只能输入数字
 const handleInput = (value: any) => {
@@ -65,151 +87,29 @@ const handleInput = (value: any) => {
     value.preventDefault(); // 阻止非数字键输入
   }
 };
-// // 编辑时 处理数据
-// function initializeLeftTabsData(data: any) {
-
-//   // 编辑的时候回显默认值，不然会报错
-//   data.data = {
-//     configurationInformation: {
-//       // 问题初始数据
-//       initialProblem: {
-//         countryId: null, //问卷对应国家id
-//         projectProblemCategoryId: null, //问题类别id
-//         projectQuotaQuestionType: null, //问题类型:1:总控问题 2:租户自己问题
-//         projectProblemId: null, //	前置问卷问题id
-//         keyValue: "", //	前置问卷问题
-//         questionType: null, // 问题类型    type: 1 输入框 2单选 3复选 4下拉
-//         answerValueList: [], //前置问卷答案,
-//         projectAnswerIdList: [], //	前置问卷答案id,
-//       },
-
-//       configurationCountryList: null, // 配置信息-国家
-//       projectCategoryList: null, //题库目录
-//       ProjectProblemInfoList: [], // 问题列表 - 显示
-//     },
-//   };
-//   leftTabsData.value = [];
-//   // 新增主数据作为第一个 Tab
-//   const { projectInfoList, ...newData } = cloneDeep(data);
-//   if (newData.descriptionUrl) {
-//     newData.descriptionUrl = newData.descriptionUrl.split(",");
-//   } else {
-//     newData.descriptionUrl = [];
-//   }
-
-//   leftTabsData.value.push(newData);
-//   // // // 如果存在 children，为每个 child 创建一个 Tab
-//   if (projectInfoList && projectInfoList.length) {
-//     projectInfoList.forEach((child: any) => {
-//       // 编辑的时候回显默认值，不然会报错
-//       child.data = {
-//         configurationInformation: {
-//           // 问题初始数据
-//           initialProblem: {
-//             countryId: null, //问卷对应国家id
-//             projectProblemCategoryId: null, //问题类别id
-//             projectQuotaQuestionType: null, //问题类型:1:总控问题 2:租户自己问题
-//             projectProblemId: null, //	前置问卷问题id
-//             keyValue: "", //	前置问卷问题
-//             questionType: null, // 问题类型    type: 1 输入框 2单选 3复选 4下拉
-//             answerValueList: [], //前置问卷答案,
-//             projectAnswerIdList: [], //	前置问卷答案id,
-//           },
-
-//           configurationCountryList: null, // 配置信息-国家
-//           projectCategoryList: null, //题库目录
-//           ProjectProblemInfoList: [], // 问题列表 - 显示
-//         },
-//       };
-//       child.descriptionUrl = child.descriptionUrl.split(",");
-//       leftTabsData.value.push({
-//         ...child,
-//       });
-//     });
-//   }
-//   // 存储编辑前的数据
-//   projectManagementListStore.dataBeforeEditing = cloneDeep(leftTabsData.value)
-// }
-
-// 判重
-// 判断供应商名称是否重复
-function hasDuplicateCustomer(projectList: any) {
-  const seen = new Set();
-  for (const customer of projectList) {
-    if (seen.has(customer.name)) {
-      return true; // 如果已经存在，则表示有重复
-    }
-    seen.add(customer.name);
-  }
-  return false; // 如果没有重复，则返回false
+// 提交 处理数据
+const processingData = async () => {
+  const newLeftTabsData = cloneDeep(data.value.formData);
+  await projectManagementListStore.compareProjectData(projectManagementListStore.dataBeforeEditing, [newLeftTabsData])
+  return newLeftTabsData;
 };
-// // 提交 处理数据
-// const processingData = async () => {
-//   const newLeftTabsData = cloneDeep(data.value.formData);
-//   await projectManagementListStore.compareProjectData(projectManagementListStore.dataBeforeEditing, newLeftTabsData)
-//   // 将的单选的答案和id从''转换成[]
-//   await newLeftTabsData.forEach((element: any) => {
-//     element.descriptionUrl = element.descriptionUrl.join(",");
-//     if (
-//       !element.data.configurationInformation.ProjectProblemInfoList ||
-//       !element.data.configurationInformation.ProjectProblemInfoList.length
-//     ) {
-//       element.isProfile = 2;
-//     }
-//     //data为配置信息中所需的数据
-//     if (element.data) {
-//       delete element.data;
-//     }
-//     element.projectQuotaInfoList = element.projectQuotaInfoList.map(
-//       (item: any) => {
-//         if (!Array.isArray(item.answerValueList)) {
-//           item.answerValueList = [];
-//         }
-//         if (!Array.isArray(item.projectAnswerIdList)) {
-//           item.projectAnswerIdList = [];
-//         }
-//         return item;
-//       }
-//     );
-//   });
-//   let masterData = newLeftTabsData[0];
-//   masterData.projectInfoList = newLeftTabsData.slice(1);
-//   return masterData;
-// };
 // 提交数据
 async function onSubmit() {
-  console.log('提交')
-  // loading.value = true;
-  // // 校验通过
-  // if (validateAll.value.every((item: any) => item === "fulfilled")) {
-  //   if (!hasDuplicateCustomer(leftTabsData.value)) {
-  //     const params = await processingData();
-  //     setTimeout(async () => {
-  //       if (title.value === "新增") {
-  //         const { status } = await api.create(params);
-  //         status === 1 &&
-  //           ElMessage.success({
-  //             message: "新增成功",
-  //             center: true,
-  //           });
-  //       } else {
-  //         const { status } = await api.edit(params);
-  //         status === 1 &&
-  //           ElMessage.success({
-  //             message: "编辑成功",
-  //             center: true,
-  //           });
-  //       }
-  //       emits("fetch-data");
-  //       closeHandler();
-
-  //     }, 1000)
-
-  //   } else {
-  //     ElMessage({ message: "项目名称重复", center: true });
-  //   }
-  // }
-  // loading.value = false;
+  data.value.loading = true;
+  formRef.value.validate(async (valid: any) => {
+    if (valid) {
+      const params = await processingData();
+      const { status } = await api.edit(params);
+      status === 1 &&
+        ElMessage.success({
+          message: "编辑成功",
+          center: true,
+        });
+      emits("fetch-data");
+      closeHandler();
+    }
+    data.value.loading = false;
+  })
 };
 // 弹框关闭事件
 function closeHandler() {
@@ -237,7 +137,7 @@ defineExpose({
 <template>
   <div>
     <el-dialog v-model="data.dialogTableVisible" v-if="data.dialogTableVisible" :title="data.title + '编辑'" draggable>
-      <el-form :model="data.formData" label-width="100" label-position="right">
+      <el-form ref="formRef" :model="data.formData" :rules="data.rules" label-width="100" label-position="right">
         <template v-if="data.type === 'PCNL'">
           <el-form-item label="配额" prop="num">
             <el-input-number style="width: 100%;" v-model="data.formData.num" :step="1" step-strictly :min="1"
@@ -245,30 +145,62 @@ defineExpose({
           </el-form-item>
           <el-form-item>
             <template #label>
-              <div>小时准入量</div>
+              <div>小时<span class="blue">完成</span>量</div>
             </template>
-            <el-input-number style="width: 100%;" v-model="data.formData.preNum" :min="1" :step="1" step-strictly
-              controls-position="right" @keydown="handleInput" />
+            <el-input-number style="width: 100%;" v-model="data.formData.limitedQuantity" :min="1" :step="1"
+              step-strictly controls-position="right"   @keydown="handleInput" />
           </el-form-item>
         </template>
-        <template v-if="data.type === 'customer'">
 
+        <template v-if="data.type === 'customer'">
           <el-form-item label="所属客户" prop="clientId">
-            {{  data}}
-            <el-select placeholder="Select" v-model="data.formData.clientId" clearable >
-                  <el-option v-for=" (item) in data.customerList" :key="item.tenantCustomerId"
-              :value="item.tenantCustomerId" :label="item.customerAccord" :disabled="item.isReveal === 1">
-              <span style="float: left">{{ item.customerAccord }}</span>
-              <span style="float: right; color: red; font-size: 13px" v-show="item.isReveal === 1">
-                <span v-show="item.turnover < item.practiceTurover">
-                  营业额超限
+            <el-select placeholder="Select" v-model="data.formData.clientId" clearable>
+              <el-option v-for=" (item) in data.customerList" :key="item.tenantCustomerId"
+                :value="item.tenantCustomerId" :label="item.customerAccord" :disabled="item.isReveal === 1">
+                <span style="float: left">{{ item.customerAccord }}</span>
+                <span style="float: right; color: red; font-size: 13px" v-show="item.isReveal === 1">
+                  <span v-show="item.turnover < item.practiceTurover">
+                    营业额超限
+                  </span>
+                  <span v-show="item.rateAudit > item.practiceRateAudit">
+                    审核率不合格
+                  </span>
                 </span>
-                <span v-show="item.rateAudit > item.practiceRateAudit">
-                  审核率不合格
-                </span>
-              </span>
               </el-option>
             </el-select>
+          </el-form-item>
+        </template>
+
+        <template v-if="data.type === 'name'">
+          <el-form-item label="项目名称" prop="name">
+            <el-input v-model="data.formData.name" clearable :maxlength="50" />
+          </el-form-item>
+          <el-form-item label="项目标识" prop="projectIdentification">
+            <el-input clearable v-model="data.formData.projectIdentification" :maxlength="100" />
+          </el-form-item>
+        </template>
+
+        <template v-if="data.type === 'doMoneyPrice'">
+          <el-form-item label="原价" prop="doMoneyPrice">
+            <el-input-number style="width: 100%;" v-model="data.formData.doMoneyPrice" :min="1" :precision="1"
+              :step="0.1" controls-position="right" />
+          </el-form-item>
+        </template>
+
+        <template v-if="data.type === 'ir'">
+          <el-form-item label="IR" prop="ir">
+            <el-input v-model.number="data.formData.ir" :min="1" :max="100" step="0.01"
+              oninput="if(value>100)value=100;if(value.length>4)value=value.slice(0,4);if(value<0)value=0;value=Number(value).toFixed(1)">
+              <template #append> % </template>
+            </el-input>
+          </el-form-item>
+
+        </template>
+
+        <template v-if="data.type === 'remark'">
+          <el-form-item label="备注">
+            <el-input maxlength="200" show-word-limit style="width: 100%" type="textarea" :rows="5"
+              v-model="data.formData.remark" />
           </el-form-item>
         </template>
 
