@@ -283,56 +283,22 @@ onMounted(async () => {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('projectId')" align="center" prop="projectId" show-overflow-tooltip
-          width="180" label="项目ID"><template #default="{ row }">
+          width="200" label="项目ID"><template #default="{ row }">
             <div v-if="row.projectId" class="hoverSvg">
               <p class="fineBom">ID：{{ row.projectId }}</p>
-              <span>
-                <svg @click="svgClick(row.projectId)" class="svg" xmlns="http://www.w3.org/2000/svg" width="14"
-                  height="14" viewBox="0 0 14 14" fill="none">
-                  <g id="Frame 3475223">
-                    <g id="Frame" clip-path="url(#clip0_450_48083)">
-                      <path id="Vector"
-                        d="M10.7625 2.1875H0.9625C0.4375 2.1875 0 2.625 0 3.15V12.95C0 13.475 0.4375 13.9125 0.9625 13.9125H10.7625C11.2875 13.9125 11.725 13.475 11.725 12.95V3.15C11.6375 2.625 11.2875 2.1875 10.7625 2.1875ZM8.3125 10.2375H3.4125C3.15 10.2375 2.8875 9.975 2.8875 9.7125C2.8875 9.45 3.0625 9.1 3.4125 9.1H8.3125C8.575 9.1 8.8375 9.3625 8.8375 9.625C8.8375 9.975 8.6625 10.2375 8.3125 10.2375ZM8.3125 6.9125H3.4125C3.15 6.9125 2.8875 6.65 2.8875 6.3875C2.8875 6.125 3.0625 5.775 3.4125 5.775H8.3125C8.575 5.775 8.8375 6.0375 8.8375 6.3C8.8375 6.65 8.6625 6.9125 8.3125 6.9125Z"
-                        fill="#409EFF" />
-                      <path id="Vector_2"
-                        d="M12.95 0H2.8C2.1875 0 1.75 0.4375 1.75 1.05V1.3125H10.85C11.8125 1.3125 12.6 2.1 12.6 3.0625V12.25H12.95C13.5625 12.25 14 11.8125 14 11.2V1.05C14 0.4375 13.5625 0 12.95 0Z"
-                        fill="#409EFF" />
-                    </g>
-                  </g>
-                  <defs>
-                    <clipPath id="clip0_450_48083">
-                      <rect width="14" height="14" fill="white" />
-                    </clipPath>
-                  </defs>
-                </svg>
+              <span class="c-fx">
+                <SvgIcon @click="svgClick(row.projectId)" class="copySvg"  name="ri:file-copy-2-fill" color="#4fa5ff"  />
               </span>
             </div>
             <el-text v-else>-</el-text>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('memberId')" align="center" prop="memberId" show-overflow-tooltip
-          width="180" label="会员ID"><template #default="{ row }">
+          width="200" label="会员ID"><template #default="{ row }">
             <div v-if="row.memberId" class="hoverSvg">
               <p class="fineBom">ID：{{ row.memberId }}</p>
-              <span>
-                <svg @click="svgClick(row.memberId)" class="svg" xmlns="http://www.w3.org/2000/svg" width="14"
-                  height="14" viewBox="0 0 14 14" fill="none">
-                  <g id="Frame 3475223">
-                    <g id="Frame" clip-path="url(#clip0_450_48083)">
-                      <path id="Vector"
-                        d="M10.7625 2.1875H0.9625C0.4375 2.1875 0 2.625 0 3.15V12.95C0 13.475 0.4375 13.9125 0.9625 13.9125H10.7625C11.2875 13.9125 11.725 13.475 11.725 12.95V3.15C11.6375 2.625 11.2875 2.1875 10.7625 2.1875ZM8.3125 10.2375H3.4125C3.15 10.2375 2.8875 9.975 2.8875 9.7125C2.8875 9.45 3.0625 9.1 3.4125 9.1H8.3125C8.575 9.1 8.8375 9.3625 8.8375 9.625C8.8375 9.975 8.6625 10.2375 8.3125 10.2375ZM8.3125 6.9125H3.4125C3.15 6.9125 2.8875 6.65 2.8875 6.3875C2.8875 6.125 3.0625 5.775 3.4125 5.775H8.3125C8.575 5.775 8.8375 6.0375 8.8375 6.3C8.8375 6.65 8.6625 6.9125 8.3125 6.9125Z"
-                        fill="#409EFF" />
-                      <path id="Vector_2"
-                        d="M12.95 0H2.8C2.1875 0 1.75 0.4375 1.75 1.05V1.3125H10.85C11.8125 1.3125 12.6 2.1 12.6 3.0625V12.25H12.95C13.5625 12.25 14 11.8125 14 11.2V1.05C14 0.4375 13.5625 0 12.95 0Z"
-                        fill="#409EFF" />
-                    </g>
-                  </g>
-                  <defs>
-                    <clipPath id="clip0_450_48083">
-                      <rect width="14" height="14" fill="white" />
-                    </clipPath>
-                  </defs>
-                </svg>
+              <span class="c-fx">
+                <SvgIcon @click="svgClick(row.memberId)" class="copySvg"  name="ri:file-copy-2-fill" color="#4fa5ff"  />
               </span>
             </div>
             <el-text v-else>-</el-text>
@@ -342,25 +308,8 @@ onMounted(async () => {
           show-overflow-tooltip label="随机身份"><template #default="{ row }">
             <div v-if="row.randomIdentityId" class="hoverSvg">
               <p class="fineBom">ID：{{ row.randomIdentityId }}</p>
-              <span>
-                <svg @click="svgClick(row.randomIdentityId)" class="svg" xmlns="http://www.w3.org/2000/svg" width="14"
-                  height="14" viewBox="0 0 14 14" fill="none">
-                  <g id="Frame 3475223">
-                    <g id="Frame" clip-path="url(#clip0_450_48083)">
-                      <path id="Vector"
-                        d="M10.7625 2.1875H0.9625C0.4375 2.1875 0 2.625 0 3.15V12.95C0 13.475 0.4375 13.9125 0.9625 13.9125H10.7625C11.2875 13.9125 11.725 13.475 11.725 12.95V3.15C11.6375 2.625 11.2875 2.1875 10.7625 2.1875ZM8.3125 10.2375H3.4125C3.15 10.2375 2.8875 9.975 2.8875 9.7125C2.8875 9.45 3.0625 9.1 3.4125 9.1H8.3125C8.575 9.1 8.8375 9.3625 8.8375 9.625C8.8375 9.975 8.6625 10.2375 8.3125 10.2375ZM8.3125 6.9125H3.4125C3.15 6.9125 2.8875 6.65 2.8875 6.3875C2.8875 6.125 3.0625 5.775 3.4125 5.775H8.3125C8.575 5.775 8.8375 6.0375 8.8375 6.3C8.8375 6.65 8.6625 6.9125 8.3125 6.9125Z"
-                        fill="#409EFF" />
-                      <path id="Vector_2"
-                        d="M12.95 0H2.8C2.1875 0 1.75 0.4375 1.75 1.05V1.3125H10.85C11.8125 1.3125 12.6 2.1 12.6 3.0625V12.25H12.95C13.5625 12.25 14 11.8125 14 11.2V1.05C14 0.4375 13.5625 0 12.95 0Z"
-                        fill="#409EFF" />
-                    </g>
-                  </g>
-                  <defs>
-                    <clipPath id="clip0_450_48083">
-                      <rect width="14" height="14" fill="white" />
-                    </clipPath>
-                  </defs>
-                </svg>
+              <span class="c-fx">
+                <SvgIcon @click="svgClick(row.randomIdentityId)" class="copySvg"  name="ri:file-copy-2-fill" color="#4fa5ff"  />
               </span>
             </div>
             <el-text v-else>-</el-text>
@@ -378,25 +327,8 @@ onMounted(async () => {
               <el-text style="font-weight: 700;color: #333333;">{{ row.memberName.split('/')[0] }}</el-text>
               &nbsp;&nbsp;
               <p class="fineBom">ID：{{ row.memberName.split('/')[1] }}</p>
-              <span>
-                <svg @click="svgClick(row.memberName.split('/')[1])" class="svg" xmlns="http://www.w3.org/2000/svg"
-                  width="14" height="14" viewBox="0 0 14 14" fill="none">
-                  <g id="Frame 3475223">
-                    <g id="Frame" clip-path="url(#clip0_450_48083)">
-                      <path id="Vector"
-                        d="M10.7625 2.1875H0.9625C0.4375 2.1875 0 2.625 0 3.15V12.95C0 13.475 0.4375 13.9125 0.9625 13.9125H10.7625C11.2875 13.9125 11.725 13.475 11.725 12.95V3.15C11.6375 2.625 11.2875 2.1875 10.7625 2.1875ZM8.3125 10.2375H3.4125C3.15 10.2375 2.8875 9.975 2.8875 9.7125C2.8875 9.45 3.0625 9.1 3.4125 9.1H8.3125C8.575 9.1 8.8375 9.3625 8.8375 9.625C8.8375 9.975 8.6625 10.2375 8.3125 10.2375ZM8.3125 6.9125H3.4125C3.15 6.9125 2.8875 6.65 2.8875 6.3875C2.8875 6.125 3.0625 5.775 3.4125 5.775H8.3125C8.575 5.775 8.8375 6.0375 8.8375 6.3C8.8375 6.65 8.6625 6.9125 8.3125 6.9125Z"
-                        fill="#409EFF" />
-                      <path id="Vector_2"
-                        d="M12.95 0H2.8C2.1875 0 1.75 0.4375 1.75 1.05V1.3125H10.85C11.8125 1.3125 12.6 2.1 12.6 3.0625V12.25H12.95C13.5625 12.25 14 11.8125 14 11.2V1.05C14 0.4375 13.5625 0 12.95 0Z"
-                        fill="#409EFF" />
-                    </g>
-                  </g>
-                  <defs>
-                    <clipPath id="clip0_450_48083">
-                      <rect width="14" height="14" fill="white" />
-                    </clipPath>
-                  </defs>
-                </svg>
+              <span class="c-fx">
+                <SvgIcon @click="svgClick(row.memberName.split('/')[1])" class="copySvg"  name="ri:file-copy-2-fill" color="#4fa5ff"  />
               </span>
             </div>
             <el-text v-else>-</el-text>
@@ -414,7 +346,7 @@ onMounted(async () => {
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('doMoneyPrice')" align="center" prop="h" show-overflow-tooltip
+        <el-table-column v-if="checkList.includes('doMoneyPrice')" width="80" align="center" prop="h" show-overflow-tooltip
           label="原价">
           <template #default="{ row }">
             <el-text>
@@ -425,7 +357,7 @@ onMounted(async () => {
             </el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('memberPrice')" align="center" prop="h" show-overflow-tooltip
+        <el-table-column v-if="checkList.includes('memberPrice')" width="80" align="center" prop="h" show-overflow-tooltip
           label="会员价">
           <template #default="{ row }">
             <el-text>
@@ -439,29 +371,12 @@ onMounted(async () => {
         <el-table-column v-if="checkList.includes('ipBelong')" align="center" width="130" prop="ipBelong"
           show-overflow-tooltip label="国家/IP"><template #default="{ row }">
             <div v-if="row.memberName" class="hoverSvg">
-              <el-tag style="font-weight: 700;">{{ row.ipBelong.match(/(\d{1,3}\.){3}\d{1,3}|[\u4e00-\u9fa5]+/g)[1]
+              <el-tag style="font-weight: 700;">{{ row.ipBelong.split("/")[1]
                 }}</el-tag>
               &nbsp;&nbsp;
-              <p class="fineBom">{{ row.ipBelong.match(/(\d{1,3}\.){3}\d{1,3}|[\u4e00-\u9fa5]+/g)[0] }}</p>
-              <span>
-                <svg @click="svgClick(row.ipBelong.match(/(\d{1,3}\.){3}\d{1,3}|[\u4e00-\u9fa5]+/g)[0])" class="svg" xmlns="http://www.w3.org/2000/svg"
-                  width="14" height="14" viewBox="0 0 14 14" fill="none">
-                  <g id="Frame 3475223">
-                    <g id="Frame" clip-path="url(#clip0_450_48083)">
-                      <path id="Vector"
-                        d="M10.7625 2.1875H0.9625C0.4375 2.1875 0 2.625 0 3.15V12.95C0 13.475 0.4375 13.9125 0.9625 13.9125H10.7625C11.2875 13.9125 11.725 13.475 11.725 12.95V3.15C11.6375 2.625 11.2875 2.1875 10.7625 2.1875ZM8.3125 10.2375H3.4125C3.15 10.2375 2.8875 9.975 2.8875 9.7125C2.8875 9.45 3.0625 9.1 3.4125 9.1H8.3125C8.575 9.1 8.8375 9.3625 8.8375 9.625C8.8375 9.975 8.6625 10.2375 8.3125 10.2375ZM8.3125 6.9125H3.4125C3.15 6.9125 2.8875 6.65 2.8875 6.3875C2.8875 6.125 3.0625 5.775 3.4125 5.775H8.3125C8.575 5.775 8.8375 6.0375 8.8375 6.3C8.8375 6.65 8.6625 6.9125 8.3125 6.9125Z"
-                        fill="#409EFF" />
-                      <path id="Vector_2"
-                        d="M12.95 0H2.8C2.1875 0 1.75 0.4375 1.75 1.05V1.3125H10.85C11.8125 1.3125 12.6 2.1 12.6 3.0625V12.25H12.95C13.5625 12.25 14 11.8125 14 11.2V1.05C14 0.4375 13.5625 0 12.95 0Z"
-                        fill="#409EFF" />
-                    </g>
-                  </g>
-                  <defs>
-                    <clipPath id="clip0_450_48083">
-                      <rect width="14" height="14" fill="white" />
-                    </clipPath>
-                  </defs>
-                </svg>
+              <p class="fineBom">{{ row.ipBelong.split("/")[0] }}</p>
+              <span class="c-fx">
+                <SvgIcon @click="svgClick(row.ipBelong.split('/')[0])" class="copySvg"  name="ri:file-copy-2-fill" color="#4fa5ff"  />
               </span>
             </div>
             <el-text v-else>-</el-text>
@@ -633,5 +548,14 @@ onMounted(async () => {
   .timeSvg {
     margin-right: 4px;
   }
+}
+.c-fx {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.copySvg {
+  width: 100%;
+  height: 100%;
 }
 </style>

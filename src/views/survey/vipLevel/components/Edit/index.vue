@@ -22,7 +22,13 @@ async function showEdit(row: any) {
     form.value = {};
   } else {
     title.value = "编辑";
-    form.value = cloneDeep(row);
+    if(row.memberId) {
+      const list = cloneDeep(row);
+      const {additionRatio,memberLevelId,memberLevelName} = list
+      form.value = {additionRatio,memberLevelId,levelName:memberLevelName}
+    }else {
+      form.value = cloneDeep(row);
+    }
   }
   dialogTableVisible.value = true;
 }

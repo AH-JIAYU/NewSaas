@@ -28,11 +28,11 @@ async function fetchData() {
     const { data } = await obtainLoading(api.getProjectList(params));
     list.value = data.getMemberGroupProjectInfoList;
     pagination.value.total = data.total;
-    listLoading.value = true;
+    listLoading.value = false;
   } catch (error) {
 
   } finally {
-    listLoading.value = true;
+    listLoading.value = false;
   }
 }
 
@@ -74,12 +74,17 @@ defineExpose({
         align="center"
         prop="c"
         show-overflow-tooltip
-        label="参与/完成/配额/限量"
+        label="参数"
       >
-        <template #default="{ row }">
-          {{ row.participation||0 }}/ {{ row.complete||0 }}/ {{ row.num ||0}}/
-          {{ row.limitedQuantity ||0}}
-        </template>
+      <template #default="{ row }">
+            <p class="parameter"><el-text class="mx-1 text" style="color:#FB6868;" type="danger">参与：{{ row.participation
+    || 0 }}</el-text><el-text class="mx-1 text" style="color:#03C239;" type="success">完成：{{
+    row.comcompleteplete || 0
+  }}</el-text></p>
+            <p class="parameter"><el-text class="mx-1 text" style="color:#FFAC54;" type="warning">配额：{{ row.num || 0
+                }}</el-text><el-text class="mx-1 text" style="color:#AAAAAA;" type="info">限量：{{ row.limitedQuantity || 0
+                }}</el-text></p>
+          </template>
 </el-table-column>
 
 <template #empty>
@@ -113,5 +118,14 @@ defineExpose({
     width: 94% !important;
     margin: auto !important;
   }
+}
+
+.parameter {
+  text-align: left !important;
+}
+
+.text {
+  display: inline-block;
+  min-width: 4.375rem;
 }
 </style>
