@@ -1,11 +1,16 @@
 <script setup lang="ts">
 import eventBus from "@/utils/eventBus";
 import api from "@/api/modules/survey_financialLogs";
+import { ElMessage } from "element-plus";
 import useSettingsStore from "@/store/modules/settings";
+import empty from '@/assets/images/empty.png'
+import useClipboard from "vue-clipboard3"; // 复制
 
 defineOptions({
   name: "financialLogs",
 });
+// 复制
+const { toClipboard } = useClipboard();
 // 时间
 const { format } = useTimeago();
 const router = useRouter();
@@ -18,15 +23,15 @@ const settingsStore = useSettingsStore();
 const columns = ref([
   // 表格控件-展示列
   {
-    label: "会员ID/姓名",
+    label: "会员ID",
     prop: "memberId",
     sortable: true,
     disableCheck: false, // 不可更改
     checked: true, // 默认展示
   },
   {
-    label: "随机身份",
-    prop: "randomIdentity",
+    label: "会员名称",
+    prop: "memberName",
     sortable: true,
     disableCheck: false, // 不可更改
     checked: true, // 默认展示
@@ -39,15 +44,15 @@ const columns = ref([
     checked: true, // 默认展示
   },
   {
-    label: "类型",
-    prop: "type",
+    label: "随机身份",
+    prop: "randomIdentity",
     sortable: true,
     disableCheck: false, // 不可更改
     checked: true, // 默认展示
   },
   {
-    label: "说明",
-    prop: "remark",
+    label: "类型",
+    prop: "type",
     sortable: true,
     disableCheck: false, // 不可更改
     checked: true, // 默认展示
@@ -76,6 +81,13 @@ const columns = ref([
   {
     label: "创建时间",
     prop: "updateTime",
+    sortable: true,
+    disableCheck: false, // 不可更改
+    checked: true, // 默认展示
+  },
+  {
+    label: "说明",
+    prop: "remark",
     sortable: true,
     disableCheck: false, // 不可更改
     checked: true, // 默认展示
@@ -175,6 +187,14 @@ function getDataList() {
     data.value.loading = false;
   }
 }
+// 复制ID
+const svgClick = (id: any) => {
+  toClipboard(id);
+  ElMessage({
+    type: "success",
+    message: "复制成功",
+  });
+}
 // 重置筛选数据
 function onReset() {
   Object.assign(data.value.search, {
@@ -248,7 +268,8 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
               </el-select>
             </ElFormItem>
             <ElFormItem v-show="!fold">
-              <el-select v-model="data.search.type" value-key="" placeholder="类型" clearable filterable @change="currentChange()">
+              <el-select v-model="data.search.type" value-key="" placeholder="类型" clearable filterable
+                @change="currentChange()">
                 <el-option v-for="item in paymentsType" :key="item.value" :label="item.label"
                   :value="item.value"></el-option>
               </el-select>
@@ -291,79 +312,113 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
         @selection-change="data.batch.selectionDataList = $event">
         <el-table-column align="center" prop="a" show-overflow-tooltip type="selection" />
         <ElTableColumn v-if="data.batch.enable" type="selection" show-overflow-tooltip align="center" fixed />
-        <ElTableColumn v-if="data.checkList.includes('memberId')" show-overflow-tooltip align="center" prop="memberId"
-          label="会员ID/姓名">
+        <ElTableColumn v-if="data.checkList.includes('memberId')" show-overflow-tooltip width="200" align="center"
+          prop="memberId" label="会员ID">
           <template #default="{ row }">
-            {{ `${row.memberId}/${row.memberName}` }}
+            <div v-if="row.memberId" class="hoverSvg">
+              <p class="fineBom">ID：{{ row.memberId }}</p>
+              <span class="c-fx">
+                <SvgIcon @click="svgClick(row.memberId)" class="copySvg"  name="ri:file-copy-2-fill" color="#4fa5ff"  />
+              </span>
+            </div>
+            <el-text v-else>-</el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('randomIdentity')" show-overflow-tooltip align="center"
+        <ElTableColumn v-if="data.checkList.includes('memberName')" show-overflow-tooltip align="center" prop="memberName"
+          label="会员名称">
+          <template #default="{ row }">
+            <p class="weightColor">{{ row.memberName ? row.memberName : "-" }}</p>
+          </template>
+        </ElTableColumn>
+        <ElTableColumn v-if="data.checkList.includes('projectId')" show-overflow-tooltip width="200" align="center"
+          prop="projectId" label="项目ID"><template #default="{ row }">
+            <div v-if="row.projectId" class="hoverSvg">
+              <p class="fineBom">ID：{{ row.projectId }}</p>
+              <span class="c-fx">
+                <SvgIcon @click="svgClick(row.projectId)" class="copySvg"  name="ri:file-copy-2-fill" color="#4fa5ff"  />
+              </span>
+            </div>
+            <el-text v-else>-</el-text>
+          </template>
+        </ElTableColumn>
+        <ElTableColumn v-if="data.checkList.includes('randomIdentity')" show-overflow-tooltip width="200" align="center"
           prop="randomIdentity" label="随机身份">
           <template #default="{ row }">
-            {{ row.randomIdentity ? row.randomIdentity : "-" }}
-          </template>
-        </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('projectId')" show-overflow-tooltip align="center" prop="projectId"
-          label="项目ID"><template #default="{ row }">
-            {{ row.projectId ? row.projectId : "-" }}
+            <div v-if="row.randomIdentity" class="hoverSvg">
+              <p class="fineBom">ID：{{ row.randomIdentity }}</p>
+              <span class="c-fx">
+                <SvgIcon @click="svgClick(row.randomIdentity)" class="copySvg"  name="ri:file-copy-2-fill" color="#4fa5ff"  />
+              </span>
+            </div>
+            <el-text v-else>-</el-text>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('type')" show-overflow-tooltip width="120" align="center"
-          prop="type" label="类型"><template #default="{ row }">
-            <el-text class="mx-1">{{
-    paymentsType[row.type - 1].label
-  }}</el-text>
-          </template>
-        </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('remark')" show-overflow-tooltip align="center" prop="remark"
-          label="说明">
+          prop="type" label="类型">
           <template #default="{ row }">
-            <!-- <el-text v-if="row?.remark[1].includes('-')" class="mx-1"
-              >{{ row.remark[0] }}
-              <el-text type="danger" class="mx-1">{{
-                row.remark[1]
-              }}</el-text></el-text
-            >
-            <el-text v-else class="mx-1"
-              >{{ row.remark[0] }}
-              <el-text type="success" class="mx-1">{{
-                row.remark[1]
-              }}</el-text></el-text
-            > -->
-            {{ row.remark[1] }}
+            <el-tag v-if="row.type === 1" type="warning" effect="dark">待审余额</el-tag>
+            <el-tag v-if="row.type === 2" type="primary" effect="dark">可用余额</el-tag>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('beforeBalance')" show-overflow-tooltip align="center"
           prop="beforeBalance" label="变动前" width="120">
           <template #default="{ row }">
-            <CurrencyType />{{ row.beforeBalance || 0 }}
+            <p style="font-weight: 700;"><CurrencyType />{{ row.beforeBalance || 0 }}</p>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('difference')" show-overflow-tooltip align="center"
           prop="difference" label="加减款" width="120"><template #default="{ row }">
-            <el-text v-if="row.operationType === 1" type="success" class="mx-1">+
-              <CurrencyType />{{ Math.abs(row.difference) }}
-            </el-text>
-            <el-text v-if="row.operationType === 2" type="danger" class="mx-1">-
-              <CurrencyType />{{ Math.abs(row.difference) }}
-            </el-text>
+            <p class="plus" v-if="row.operationType === 1" style="font-weight: 700;">
+                <div class="plusSpan i-typcn:plus w-1em h-1em"></div>
+              <el-text>
+                <CurrencyType />{{ Math.abs(row.difference) }}
+              </el-text>
+            </p>
+            <p class="plus" v-if="row.operationType === 2" style="font-weight: 700;">
+                <div class="minusSign i-iconamoon:sign-minus-bold w-1em h-1em"></div>
+              <el-text>
+                <CurrencyType />{{ Math.abs(row.difference) }}
+              </el-text>
+            </p>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('afterBalance')" show-overflow-tooltip align="center"
           prop="afterBalance" label="变动后" width="120">
           <template #default="{ row }">
-            <CurrencyType />{{ row.afterBalance || 0 }}
+            <p style="font-weight: 700;"> <CurrencyType />{{ row.afterBalance || 0 }}</p>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('updateTime')" show-overflow-tooltip align="center"
-          prop="updateTime" label="创建时间"><template #default="{ row }">
+          prop="updateTime" label="创建时间">
+          <template #header>
+            <span class="headerIcon">
+              <svg class="timeSvg" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"
+                fill="none">
+                <g id="Time (æ¶é´)">
+                  <path id="Vector"
+                    d="M7.9987 14.6666C11.6806 14.6666 14.6654 11.6818 14.6654 7.99992C14.6654 4.31802 11.6806 1.33325 7.9987 1.33325C4.3168 1.33325 1.33203 4.31802 1.33203 7.99992C1.33203 11.6818 4.3168 14.6666 7.9987 14.6666Z"
+                    fill="#409EFF" />
+                  <path id="Vector_2" d="M8.00431 4L8.00391 8.00293L10.8304 10.8294" stroke="white" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" />
+                </g>
+              </svg>
+              创建时间
+            </span>
+          </template>
+          <template #default="{ row }">
             <el-tag effect="plain" type="info">{{
     format(row.updateTime)
   }}</el-tag>
           </template>
         </ElTableColumn>
+        <ElTableColumn v-if="data.checkList.includes('remark')" show-overflow-tooltip align="center" prop="remark"
+          label="说明">
+          <template #default="{ row }">
+            <el-text style="color:#333;font-weight: 700;">{{ row.remark[1] ? row.remark[1] : "-" }}</el-text>
+          </template>
+        </ElTableColumn>
         <template #empty>
-          <el-empty description="暂无数据" />
+          <el-empty :image="empty" :image-size="300" />
         </template>
       </ElTable>
       <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
@@ -421,5 +476,61 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
 
 :deep(.el-table__empty-block) {
   height: 100% !important;
+}
+
+.fineBom {
+  text-align: left !important;
+  font-size: .75rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hoverSvg {
+  display: flex;
+  align-items: center;
+}
+
+.svg {
+  width: .875rem;
+  height: .875rem;
+  margin-left: .3125rem;
+}
+
+.weightColor {
+  font-weight: 700;
+}
+
+:deep {
+  tbody {
+    color: #333;
+  }
+
+  .plusSpan {
+    margin-top: -4px;
+    color: #03c239;
+  }
+  .minusSign {
+    margin-top: -4px;
+    color: #fd8989;
+  }
+}
+.headerIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .timeSvg {
+    margin-right: 4px;
+  }
+}
+.c-fx {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.copySvg {
+  width: 100%;
+  height: 100%;
 }
 </style>

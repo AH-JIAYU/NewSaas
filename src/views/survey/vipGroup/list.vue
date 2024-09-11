@@ -6,7 +6,8 @@ import vipGroupEdit from "./components/vipGroupEdit/index.vue";
 import vipGroupDetail from "./components/vipGroupDetail/index.vue";
 import api from "@/api/modules/survey_vipGroup";
 import useSurveyVipGroupStore from "@/store/modules/survey_vipGroup"; //会员组
-const surveyVipGroupStore = useSurveyVipGroupStore(); //会员组
+import useClipboard from "vue-clipboard3"; // 复制
+import empty from '@/assets/images/empty.png'
 
 defineOptions({
   name: "vipGroup",
@@ -14,6 +15,9 @@ defineOptions({
 
 const { pagination, getParams, onSizeChange, onCurrentChange } =
   usePagination(); // 分页
+// 复制
+const { toClipboard } = useClipboard();
+const surveyVipGroupStore = useSurveyVipGroupStore(); //会员组
 // 时间
 const { format } = useTimeago();
 const listLoading = ref(false);
@@ -28,6 +32,13 @@ const checkList = ref<Array<Object>>([]); // 表格-展示的列
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const columns = ref<Array<Object>>([
   // 表格控件-展示列
+  {
+    label: "组状态",
+    prop: "groupStatus",
+    sortable: true,
+    disableCheck: false, // 不可更改
+    checked: true, // 默认展示
+  },
   {
     label: "会员组ID",
     prop: "memberGroupId",
@@ -70,13 +81,6 @@ const columns = ref<Array<Object>>([
     disableCheck: false, // 不可更改
     checked: true, // 默认展示
   },
-  {
-    label: "组状态",
-    prop: "groupStatus",
-    sortable: true,
-    disableCheck: false, // 不可更改
-    checked: true, // 默认展示
-  },
 ]);
 
 // 请求接口携带参数
@@ -104,6 +108,14 @@ function handleCheck(row: any) {
 function queryData() {
   pagination.value.page = 1;
   fetchData();
+}
+// 复制ID
+const svgClick = (id: any) => {
+  toClipboard(id);
+  ElMessage({
+    type: "success",
+    message: "复制成功",
+  });
 }
 // 每页数量切换
 function sizeChange(size: number) {
@@ -239,38 +251,81 @@ onMounted(() => {
       </el-row>
       <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe">
         <el-table-column align="center" type="selection" />
-        <el-table-column v-if="checkList.includes('memberGroupId')" align="center" prop="memberGroupId"
-          show-overflow-tooltip label="会员组ID" />
-        <el-table-column v-if="checkList.includes('memberGroupName')" align="center" prop="memberGroupName"
-          show-overflow-tooltip label="会员组名称" />
-        <el-table-column v-if="checkList.includes('groupLeaderMemberName')" align="center" prop="groupLeaderMemberName"
-          show-overflow-tooltip label="组长名称(ID)">
-          <template #default="{ row }">
-            {{ row.groupLeaderMemberName ? row.groupLeaderMemberName : "-" }}
-          </template>
-        </el-table-column>
-        <el-table-column v-if="checkList.includes('memberNumber')" align="center" prop="memberNumber"
-          show-overflow-tooltip label="成员" />
-        <el-table-column v-if="checkList.includes('projectNumber')" align="center" prop="projectNumber"
-          show-overflow-tooltip label="项目数">
-          <template #default="{ row }">
-            <el-link type="primary" @click="handleCheck(row)">{{
-    row.projectNumber
-  }}</el-link>
-          </template>
-        </el-table-column>
-        <el-table-column v-if="checkList.includes('createTime')" align="center" prop="createTime" show-overflow-tooltip
-          label="创建时间"><template #default="{ row }">
-            <el-tag effect="plain" type="info">{{
-    format(row.createTime)
-  }}</el-tag>
-          </template>
-        </el-table-column>
         <el-table-column v-if="checkList.includes('groupStatus')" align="center" prop="groupStatus"
           show-overflow-tooltip label="组状态">
           <template #default="{ row }">
             <ElSwitch v-model="row.groupStatus" inline-prompt :inactive-value="1" :active-value="2" inactive-text="禁用"
               active-text="启用" @change="changeState($event, row.memberGroupId)" />
+          </template>
+        </el-table-column>
+        <el-table-column v-if="checkList.includes('memberGroupId')" width="200" align="center" prop="memberGroupId"
+          show-overflow-tooltip label="会员组ID">
+          <template #default="{ row }">
+            <div v-if="row.memberGroupId" class="hoverSvg">
+              <p class="fineBom">ID：{{ row.memberGroupId }}</p>
+              <span class="c-fx">
+                <SvgIcon @click="svgClick(row.memberGroupId)" class="copySvg"  name="ri:file-copy-2-fill" color="#4fa5ff"  />
+              </span>
+            </div>
+            <el-text v-else>-</el-text>
+          </template>
+        </el-table-column>
+        <el-table-column v-if="checkList.includes('memberGroupName')" align="center" prop="memberGroupName"
+          show-overflow-tooltip label="会员组名称">
+          <template #default="{ row }">
+            <p class="weightColor">{{ row.memberGroupName ? row.memberGroupName : "-" }}</p>
+          </template>
+        </el-table-column>
+        <el-table-column v-if="checkList.includes('groupLeaderMemberName')" align="center" prop="groupLeaderMemberName"
+          show-overflow-tooltip label="组长名称(ID)">
+          <template #default="{ row }">
+            <div v-if="row.groupLeaderMemberName" class="hoverSvg">
+              <div class="weightColor">{{ row.groupLeaderMemberName.split('/')[0] }}</div> &nbsp;&nbsp;
+              <p class="fineBom">ID：{{ row.groupLeaderMemberName.split('/')[1] }}</p>
+              <span class="c-fx">
+                <SvgIcon @click="svgClick(row.groupLeaderMemberName.split('/')[1])" class="copySvg"  name="ri:file-copy-2-fill" color="#4fa5ff"  />
+              </span>
+            </div>
+            <el-text v-else>-</el-text>
+          </template>
+        </el-table-column>
+        <el-table-column v-if="checkList.includes('memberNumber')" width="100" align="center" prop="memberNumber"
+          show-overflow-tooltip label="成员">
+          <template #default="{ row }">
+            <el-link type="primary">{{
+    row.memberNumber ? row.memberNumber : 0
+  }}</el-link>
+          </template>
+        </el-table-column>
+        <el-table-column v-if="checkList.includes('projectNumber')" width="100" align="center" prop="projectNumber"
+          show-overflow-tooltip label="项目数">
+          <template #default="{ row }">
+            <el-link type="primary" @click="handleCheck(row)">{{
+    row.projectNumber ? row.projectNumber : 0
+  }}</el-link>
+          </template>
+        </el-table-column>
+        <el-table-column v-if="checkList.includes('createTime')" align="center" prop="createTime" show-overflow-tooltip
+          label="创建时间">
+          <template #header>
+            <span class="headerIcon">
+              <svg class="timeSvg" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"
+                fill="none">
+                <g id="Time (æ¶é´)">
+                  <path id="Vector"
+                    d="M7.9987 14.6666C11.6806 14.6666 14.6654 11.6818 14.6654 7.99992C14.6654 4.31802 11.6806 1.33325 7.9987 1.33325C4.3168 1.33325 1.33203 4.31802 1.33203 7.99992C1.33203 11.6818 4.3168 14.6666 7.9987 14.6666Z"
+                    fill="#409EFF" />
+                  <path id="Vector_2" d="M8.00431 4L8.00391 8.00293L10.8304 10.8294" stroke="white" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" />
+                </g>
+              </svg>
+              创建时间
+            </span>
+          </template>
+          <template #default="{ row }">
+            <el-tag effect="plain" type="info">{{
+    format(row.createTime)
+  }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column align="center" prop="i" label="操作" fixed="right" show-overflow-tooltip width="180">
@@ -281,7 +336,7 @@ onMounted(() => {
           </template>
         </el-table-column>
         <template #empty>
-          <el-empty class="vab-data-empty" description="暂无数据" />
+          <el-empty :image="empty" :image-size="300" />
         </template>
       </el-table>
       <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
@@ -338,5 +393,56 @@ onMounted(() => {
       }
     }
   }
+}
+
+.fineBom {
+  text-align: left !important;
+  font-size: .75rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hoverSvg {
+  display: flex;
+  align-items: center;
+}
+
+.svg {
+  width: .875rem;
+  height: .875rem;
+  margin-left: .3125rem;
+}
+
+.weightColor {
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+:deep {
+  tbody {
+    color: #333;
+  }
+}
+.headerIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .timeSvg {
+    margin-right: 4px;
+  }
+}
+
+.c-fx {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.copySvg {
+  width: 100%;
+  height: 100%;
 }
 </style>

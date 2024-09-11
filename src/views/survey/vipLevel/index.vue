@@ -163,11 +163,25 @@ onMounted(() => {
           </template>
         </ElTableColumn>
         <el-table-column v-if="checkList.includes('levelName')" align="center" prop="levelName" show-overflow-tooltip
-          label="等级名称" />
+          label="等级名称">
+          <template #default="{ row }">
+            <p style="font-weight: 700;">{{ row.levelName }}</p>
+          </template>
+        </el-table-column>
         <el-table-column v-if="checkList.includes('additionRatio')" align="center" prop="additionRatio"
-          show-overflow-tooltip label="加成比例(百分比)" />
+          show-overflow-tooltip label="加成比例(百分比)">
+          <template #default="{ row }">
+            <p style="font-weight: 700;">{{ row.additionRatio }}%</p>
+          </template>
+        </el-table-column>
         <el-table-column v-if="checkList.includes('memberQuantity')" align="center" prop="memberQuantity"
-          show-overflow-tooltip label="成员数量" />
+          show-overflow-tooltip label="成员数量">
+          <template #default="{ row }">
+            <el-link type="primary">{{
+    row.memberQuantity ? row.memberQuantity : 0
+  }}</el-link>
+          </template>
+        </el-table-column>
         <el-table-column align="center" fixed="right" show-overflow-tooltip label="操作">
           <template #default="{ row }">
             <el-button size="small" plain type="primary" @click="handleEdit(row)">
@@ -242,5 +256,10 @@ onMounted(() => {
 .el-tag.sortable .icon {
   cursor: ns-resize;
 }
+
+:deep {
+  tbody {
+    color: #333;
+  }
+}
 </style>
-@/api/modules/survey_vipLevel

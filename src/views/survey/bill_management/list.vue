@@ -4,11 +4,15 @@ import eventBus from "@/utils/eventBus";
 import api from "@/api/modules/survey_billManagement";
 import useSettingsStore from "@/store/modules/settings";
 import { ElMessage, ElMessageBox } from "element-plus";
+import empty from '@/assets/images/empty.png'
+import useClipboard from "vue-clipboard3"; //
 
 defineOptions({
   name: "billManagement",
 });
 
+// 复制
+const { toClipboard } = useClipboard();
 const router = useRouter();
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
@@ -18,14 +22,15 @@ const settingsStore = useSettingsStore();
 // 表格控件-展示列
 const columns = ref([
   // 表格控件-展示列
-  { label: "会员ID/姓名", prop: "memberId", sortable: true, checked: true },
+  { label: "会员ID", prop: "memberId", sortable: true, checked: true },
+  { label: "会员名称", prop: "memberName", sortable: true, checked: true },
   { label: "账单日期", prop: "billTime", sortable: true, checked: true },
   { label: "账单金额", prop: "billAmount", sortable: true, checked: true },
   { label: "税", prop: "taxesFees", sortable: true, checked: true },
   { label: "实际金额", prop: "payAmount", sortable: true, checked: true },
   { label: "支付时间", prop: "payTime", sortable: true, checked: true },
-  { label: "说明", prop: "notes", sortable: true, checked: true },
   { label: "账单状态", prop: "billStatus", sortable: true, checked: true },
+  { label: "说明", prop: "notes", sortable: true, checked: true },
 ]);
 const data = ref<any>({
   loading: false,
@@ -111,6 +116,14 @@ function getDataList() {
   } finally {
     data.value.loading = false;
   }
+}
+// 复制ID
+const svgClick = (id: any) => {
+  toClipboard(id);
+  ElMessage({
+    type: "success",
+    message: "复制成功",
+  });
 }
 // 重置筛选数据
 function onReset() {
@@ -243,10 +256,21 @@ async function paymentOperation(id: any, type: any) {
         @selection-change="data.batch.selectionDataList = $event">
         <el-table-column align="center" type="selection" />
         <ElTableColumn v-if="data.checkList.includes('memberId')" show-overflow-tooltip align="center" prop=""
-          label="会员ID/姓名" width="250">
+          label="会员ID" width="200">
           <template #default="{ row }">
-            {{ row.memberId }}/
-            {{ row.memberName }}
+            <div v-if="row.memberId" class="hoverSvg">
+              <p class="fineBom">ID：{{ row.memberId }}</p>
+              <span class="c-fx">
+                <SvgIcon @click="svgClick(row.memberId)" class="copySvg"  name="ri:file-copy-2-fill" color="#4fa5ff"  />
+              </span>
+            </div>
+            <el-text v-else>-</el-text>
+          </template>
+        </ElTableColumn>
+        <ElTableColumn v-if="data.checkList.includes('memberName')" show-overflow-tooltip align="center" prop=""
+          label="会员名称" width="120">
+          <template #default="{ row }">
+            <p class="weightColor">{{ row.memberName ? row.memberName : "-" }}</p>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('billTime')" show-overflow-tooltip align="center" prop="billTime"
@@ -254,33 +278,45 @@ async function paymentOperation(id: any, type: any) {
         <ElTableColumn v-if="data.checkList.includes('billAmount')" show-overflow-tooltip align="center"
           prop="billAmount" label="账单金额">
           <template #default="{ row }">
-            <CurrencyType />{{ row.billAmount || 0 }}
+            <p style="font-weight: 700;">
+              <CurrencyType />{{ row.billAmount || 0 }}
+            </p>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('taxesFees')" show-overflow-tooltip align="center" prop="taxesFees"
           label="税">
           <template #default="{ row }">
-            <CurrencyType />{{ row.taxesFees || 0 }}
+            <p style="font-weight: 700;">
+              <CurrencyType />{{ row.taxesFees || 0 }}
+            </p>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('payAmount')" show-overflow-tooltip align="center" prop="payAmount"
           label="实际金额">
           <template #default="{ row }">
-            <CurrencyType />{{ row.payAmount || 0 }}
+            <p style="font-weight: 700;">
+              <CurrencyType />{{ row.payAmount || 0 }}
+            </p>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('payTime')" show-overflow-tooltip align="center" prop="payTime"
-          label="支付时间" />
-        <ElTableColumn v-if="data.checkList.includes('notes')" show-overflow-tooltip align="center" prop="notes"
-          label="说明">
+          label="支付时间" >
           <template #default="{ row }">
-            {{ row.notes ? row.notes : "-" }}
+            {{ row.payTime ? row.payTime : '-' }}
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('billStatus')" align="center" show-overflow-tooltip prop=""
           label="账单状态">
           <template #default="{ row }">
-            {{ data.billStatusList[row.billStatus - 1] }}
+            <el-tag v-if="row.billStatus === 1" type="warning" effect="dark">待支付</el-tag>
+            <el-tag v-if="row.billStatus === 2" type="success" effect="dark">已支付</el-tag>
+            <el-tag v-if="row.billStatus === 3" type="danger" effect="dark">已拒绝</el-tag>
+          </template>
+        </ElTableColumn>
+        <ElTableColumn v-if="data.checkList.includes('notes')" show-overflow-tooltip align="center" prop="notes"
+          label="说明">
+          <template #default="{ row }">
+            <el-text style="color:#333;font-weight: 700;"> {{ row.notes ? row.notes : "-" }}</el-text>
           </template>
         </ElTableColumn>
         <el-table-column align="center" prop="i" label="操作" fixed="right" show-overflow-tooltip width="260">
@@ -296,7 +332,7 @@ async function paymentOperation(id: any, type: any) {
           </template>
         </el-table-column>
         <template #empty>
-          <el-empty description="暂无数据" />
+          <el-empty :image="empty" :image-size="300" />
         </template>
       </ElTable>
       <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
@@ -351,7 +387,45 @@ async function paymentOperation(id: any, type: any) {
       }
     }
   }
+}
+:deep(.page-main) {
+  height: 100% !important;
+}
+.fineBom {
+  text-align: left !important;
+  font-size: .75rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.hoverSvg {
+  display: flex;
+  align-items: center;
+}
+.svg {
+  width: .875rem;
+  height: .875rem;
+  margin-left: .3125rem;
+}
+.weightColor {
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+:deep {
+  tbody {
+    color: #333;
+  }
+}
 
-
+.c-fx {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.copySvg {
+  width: 100%;
+  height: 100%;
 }
 </style>

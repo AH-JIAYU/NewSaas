@@ -282,23 +282,18 @@ onMounted(async () => {
       <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="id" :data="list"
         :border="border" :size="lineHeight" :stripe="stripe" @current-change="handleCurrentChange">
         <el-table-column align="center" type="selection" />
-        <!-- <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip width="180" fixed="left"
-          prop="projectId" align="center" label="项目ID" /> -->
         <el-table-column v-if="checkList.includes('project')" show-overflow-tooltip align="center"
           prop="projectIdentificationOrClientName" width="200" label="项目">
           <template #default="{ row }">
             <p v-if="checkList.includes('projectName')" class="crudeTop">名称：{{ row.projectName }}</p>
             <div class="hoverSvg">
               <p v-if="checkList.includes('projectId')" class="fineSize">ID：{{ row.projectId }}</p>
-              <span>
+              <span class="c-fx">
                 <SvgIcon @click="svgClick(row.projectId)" class="copySvg"  name="ri:file-copy-2-fill" color="#4fa5ff"  />
-
               </span>
             </div>
           </template>
         </el-table-column>
-        <!-- <el-table-column v-if="checkList.includes('projectName')" show-overflow-tooltip width="180" prop="projectName"
-          align="center" label="项目名称" /> -->
         <el-table-column v-if="checkList.includes('projectIdentificationOrClientName')" show-overflow-tooltip
           prop="projectIdentificationOrClientName" width="180" align="center" label="名称/标识">
           <template #default="{ row }">
@@ -552,5 +547,14 @@ onMounted(async () => {
   .timeSvg {
     margin-right: 4px;
   }
+}
+.c-fx {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.copySvg {
+  width: 100%;
+  height: 100%;
 }
 </style>
