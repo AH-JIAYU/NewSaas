@@ -42,6 +42,7 @@ const useUserCustomerStore = defineStore(
       ]
     };
     const getCustomerList = async () => {
+      console.log('获取list')
       if (!customer.value) {
         const { data } = await customerApi.getCustomerList({});
         customer.value = data.getTenantCustomerAccordInfoList;
