@@ -303,6 +303,13 @@ onMounted(async () => {
     row.clientName }}</span></p>
           </template>
         </el-table-column>
+        <el-table-column v-if="checkList.includes('withoutUrl')" prop="withoutUrl" align="center" label="URL">
+          <template #default="{ row }">
+            <el-tooltip class="box-item" effect="dark" :content="row.withoutUrl" placement="top">
+              <el-button link type="primary" @click="copyUrl(row.withoutUrl)">复制</el-button>
+            </el-tooltip>
+          </template>
+        </el-table-column>
         <el-table-column v-if="checkList.includes('participation')" show-overflow-tooltip width="180" align="center"
           label="参数">
           <template #default="{ row }">
@@ -313,13 +320,6 @@ onMounted(async () => {
             <p class="parameter"><el-text class="mx-1 text" style="color:#FFAC54;" type="warning">配额：{{ row.num || 0
                 }}</el-text><el-text class="mx-1 text" style="color:#AAAAAA;" type="info">限量：{{ row.limitedQuantity || 0
                 }}</el-text></p>
-          </template>
-        </el-table-column>
-        <el-table-column v-if="checkList.includes('withoutUrl')" prop="withoutUrl" align="center" label="URL">
-          <template #default="{ row }">
-            <el-tooltip class="box-item" effect="dark" :content="row.withoutUrl" placement="top">
-              <el-button link type="primary" @click="copyUrl(row.withoutUrl)">复制</el-button>
-            </el-tooltip>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('doMoneyPrice')" show-overflow-tooltip align="center" label="原价">
@@ -367,7 +367,9 @@ onMounted(async () => {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('ir')" show-overflow-tooltip align="center" label="IR/NIR">
-          <template #default="{ row }"> {{ row.ir ? row.ir : '-' }} / {{ row.nir ? row.nir : '-' }} </template>
+          <template #default="{ row }"><el-text style="color: #333333;font-weight: 700;font-family: DINPro-Medium;">
+            {{ row.ir ? row.ir : '-' }} / {{ row.nir ? row.nir : '-' }}
+              </el-text></template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('memberStatus')" show-overflow-tooltip align="center" label="分配">
           <template #default="{ row }">
