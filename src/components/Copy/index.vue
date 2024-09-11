@@ -43,6 +43,7 @@ const handleCopy = () => {
 
 .container {
   position: relative;
+  width: 21px;
 }
 
 .success-icon {
