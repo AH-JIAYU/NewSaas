@@ -1,0 +1,9 @@
+
+/**
+ * 由 Fantastic-admin 提供技术支持
+ * Powered by Fantastic-admin
+ * Gitee  https://fantastic-admin.gitee.io
+ * Github https://fantastic-admin.github.io
+ */
+
+@charset "UTF-8";.copySvg[data-v-10ca77d2]{width:16px;height:16px;margin-left:5px;cursor:pointer}.container[data-v-10ca77d2]{position:relative;width:21px}.success-icon[data-v-10ca77d2]{position:absolute;top:50%;left:50%;font-size:24px;color:green;opacity:1;animation:floatUp-10ca77d2 2s ease forwards;z-index:9999;cursor:pointer}@keyframes floatUp-10ca77d2{0%{transform:translate(-50%,-100%);opacity:1}to{transform:translate(-50%,calc(-100% - 30px));opacity:0}}
