@@ -214,28 +214,8 @@ onMounted(() => {
               <span class="id">ID: {{ row.getGroupSupplierIdNameInfoList[0].groupSupplierId }}</span>
               <copy class="copy" :content="row.getGroupSupplierIdNameInfoList[0].groupSupplierId" />
             </div>
-            <!-- <span v-for="item in row.groupSupplierId">{{ item }}</span>
-              <span v-for="item in row.groupSupplierId">{{ item }}</span> -->
-
           </template>
         </el-table-column>
-        <!-- <el-table-column v-if="checkList.includes('Supplier')" show-overflow-tooltip prop="groupSupplierId"
-          align="center" label="指定供应商">
-          <template #default="{ row }">
-            <template v-if="row.dataType == 1">
-              <span v-for="item in row.groupSupplierId">{{ item }}</span>
-            </template>
-            <template v-else>-</template>
-          </template>
-        </el-table-column>
-        <el-table-column v-if="checkList.includes('group')" show-overflow-tooltip align="center" label="指定会员组">
-          <template #default="{ row }">
-            <template v-if="row.dataType == 2">
-              <span v-for="item in row.groupSupplierId">{{ item }}</span>
-            </template>
-            <template v-else>-</template>
-          </template>
-        </el-table-column> -->
         <el-table-column v-if="checkList.includes('createTime')" show-overflow-tooltip prop="createTime" align="center"
           label="创建"><template #default="{ row }">
             <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>
