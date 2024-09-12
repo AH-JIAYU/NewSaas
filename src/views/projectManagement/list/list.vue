@@ -472,7 +472,6 @@ onMounted(async () => {
           align="center" label="国家" width="80">
           <template #default="{ row }">
             <template v-if="row.countryIdList">
-
               <template v-if="row.countryIdList.length === basicDictionaryStore.country.length">
                 <el-tag type="primary">全球</el-tag>
               </template>

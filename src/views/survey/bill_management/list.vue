@@ -5,14 +5,11 @@ import api from "@/api/modules/survey_billManagement";
 import useSettingsStore from "@/store/modules/settings";
 import { ElMessage, ElMessageBox } from "element-plus";
 import empty from '@/assets/images/empty.png'
-import useClipboard from "vue-clipboard3"; //
 
 defineOptions({
   name: "billManagement",
 });
 
-// 复制
-const { toClipboard } = useClipboard();
 const router = useRouter();
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
@@ -116,14 +113,6 @@ function getDataList() {
   } finally {
     data.value.loading = false;
   }
-}
-// 复制ID
-const svgClick = (id: any) => {
-  toClipboard(id);
-  ElMessage({
-    type: "success",
-    message: "复制成功",
-  });
 }
 // 重置筛选数据
 function onReset() {
@@ -261,7 +250,7 @@ async function paymentOperation(id: any, type: any) {
             <div v-if="row.memberId" class="hoverSvg">
               <p class="fineBom">ID：{{ row.memberId }}</p>
               <span class="c-fx">
-                <SvgIcon @click="svgClick(row.memberId)" class="copySvg"  name="ri:file-copy-2-fill" color="#4fa5ff"  />
+                <copy class="copy" :content="row.memberId" />
               </span>
             </div>
             <el-text v-else>-</el-text>
@@ -401,6 +390,11 @@ async function paymentOperation(id: any, type: any) {
 .hoverSvg {
   display: flex;
   align-items: center;
+}
+.copy {
+  display: flex;
+  align-items: center;
+  width: 20px;
 }
 .svg {
   width: .875rem;

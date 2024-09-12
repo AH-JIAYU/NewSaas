@@ -4,13 +4,10 @@ import api from "@/api/modules/investigation_records";
 import { ElMessage } from "element-plus";
 import useUserCustomerStore from "@/store/modules/user_customer";
 import empty from '@/assets/images/empty.png'
-import useClipboard from "vue-clipboard3"; //
 
 defineOptions({
   name: "investigation_records",
 });
-// 复制
-const { toClipboard } = useClipboard();
 // 客户
 const customerStore = useUserCustomerStore();
 // 分页
@@ -162,14 +159,6 @@ async function fetchData() {
 function setSelectRows(val: string) {
   selectRows.value = val;
 }
-// 复制ID
-const svgClick = (id: any) => {
-  toClipboard(id);
-  ElMessage({
-    type: "success",
-    message: "复制成功",
-  });
-}
 // 重置筛选数据
 function onReset() {
   Object.assign(queryForm, {
@@ -287,7 +276,7 @@ onMounted(async () => {
             <div v-if="row.projectId" class="hoverSvg">
               <p class="fineBom">ID：{{ row.projectId }}</p>
               <span class="c-fx">
-                <SvgIcon @click="svgClick(row.projectId)" class="copySvg"  name="ri:file-copy-2-fill" color="#4fa5ff"  />
+                <copy class="copy" :content="row.projectId" />
               </span>
             </div>
             <el-text v-else>-</el-text>
@@ -298,7 +287,7 @@ onMounted(async () => {
             <div v-if="row.memberId" class="hoverSvg">
               <p class="fineBom">ID：{{ row.memberId }}</p>
               <span class="c-fx">
-                <SvgIcon @click="svgClick(row.memberId)" class="copySvg"  name="ri:file-copy-2-fill" color="#4fa5ff"  />
+                <copy class="copy" :content="row.memberId" />
               </span>
             </div>
             <el-text v-else>-</el-text>
@@ -309,7 +298,7 @@ onMounted(async () => {
             <div v-if="row.randomIdentityId" class="hoverSvg">
               <p class="fineBom">ID：{{ row.randomIdentityId }}</p>
               <span class="c-fx">
-                <SvgIcon @click="svgClick(row.randomIdentityId)" class="copySvg"  name="ri:file-copy-2-fill" color="#4fa5ff"  />
+                <copy class="copy" :content="row.randomIdentityId" />
               </span>
             </div>
             <el-text v-else>-</el-text>
@@ -322,13 +311,14 @@ onMounted(async () => {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('memberName')" width="150" align="center" prop="memberName"
-          show-overflow-tooltip label="所属组"><template #default="{ row }">
+          show-overflow-tooltip label="所属组">
+          <template #default="{ row }">
             <div v-if="row.memberName" class="hoverSvg">
               <el-text style="font-weight: 700;color: #333333;">{{ row.memberName.split('/')[0] }}</el-text>
               &nbsp;&nbsp;
               <p class="fineBom">ID：{{ row.memberName.split('/')[1] }}</p>
               <span class="c-fx">
-                <SvgIcon @click="svgClick(row.memberName.split('/')[1])" class="copySvg"  name="ri:file-copy-2-fill" color="#4fa5ff"  />
+                <copy class="copy" :content="row.memberName.split('/')[1]" />
               </span>
             </div>
             <el-text v-else>-</el-text>
@@ -369,14 +359,15 @@ onMounted(async () => {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('ipBelong')" align="center" width="130" prop="ipBelong"
-          show-overflow-tooltip label="国家/IP"><template #default="{ row }">
-            <div v-if="row.memberName" class="hoverSvg">
+          show-overflow-tooltip label="国家/IP">
+          <template #default="{ row }">
+            <div v-if="row.ipBelong" class="hoverSvg">
               <el-tag style="font-weight: 700;">{{ row.ipBelong.split("/")[1]
                 }}</el-tag>
               &nbsp;&nbsp;
               <p class="fineBom">{{ row.ipBelong.split("/")[0] }}</p>
               <span class="c-fx">
-                <SvgIcon @click="svgClick(row.ipBelong.split('/')[0])" class="copySvg"  name="ri:file-copy-2-fill" color="#4fa5ff"  />
+                <copy class="copy" :content="row.ipBelong.split('/')[0]" />
               </span>
             </div>
             <el-text v-else>-</el-text>
@@ -516,7 +507,6 @@ onMounted(async () => {
 }
 
 .fineBom {
-  text-align: left !important;
   font-size: 12px;
   color: #333333;
   white-space: nowrap;
@@ -529,9 +519,11 @@ onMounted(async () => {
   align-items: center;
 }
 
-// .hoverSvg:hover .svg {
-//   display: block;
-// }
+.copy {
+  display: flex;
+  align-items: center;
+  width: 20px;
+}
 
 .svg {
   // display: none;

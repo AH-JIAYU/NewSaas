@@ -6,7 +6,6 @@ import vipGroupEdit from "./components/vipGroupEdit/index.vue";
 import vipGroupDetail from "./components/vipGroupDetail/index.vue";
 import api from "@/api/modules/survey_vipGroup";
 import useSurveyVipGroupStore from "@/store/modules/survey_vipGroup"; //会员组
-import useClipboard from "vue-clipboard3"; // 复制
 import empty from '@/assets/images/empty.png'
 
 defineOptions({
@@ -15,8 +14,6 @@ defineOptions({
 
 const { pagination, getParams, onSizeChange, onCurrentChange } =
   usePagination(); // 分页
-// 复制
-const { toClipboard } = useClipboard();
 const surveyVipGroupStore = useSurveyVipGroupStore(); //会员组
 // 时间
 const { format } = useTimeago();
@@ -108,14 +105,6 @@ function handleCheck(row: any) {
 function queryData() {
   pagination.value.page = 1;
   fetchData();
-}
-// 复制ID
-const svgClick = (id: any) => {
-  toClipboard(id);
-  ElMessage({
-    type: "success",
-    message: "复制成功",
-  });
 }
 // 每页数量切换
 function sizeChange(size: number) {
@@ -264,7 +253,7 @@ onMounted(() => {
             <div v-if="row.memberGroupId" class="hoverSvg">
               <p class="fineBom">ID：{{ row.memberGroupId }}</p>
               <span class="c-fx">
-                <SvgIcon @click="svgClick(row.memberGroupId)" class="copySvg"  name="ri:file-copy-2-fill" color="#4fa5ff"  />
+                <copy class="copy" :content="row.memberGroupId" />
               </span>
             </div>
             <el-text v-else>-</el-text>
@@ -283,7 +272,7 @@ onMounted(() => {
               <div class="weightColor">{{ row.groupLeaderMemberName.split('/')[0] }}</div> &nbsp;&nbsp;
               <p class="fineBom">ID：{{ row.groupLeaderMemberName.split('/')[1] }}</p>
               <span class="c-fx">
-                <SvgIcon @click="svgClick(row.groupLeaderMemberName.split('/')[1])" class="copySvg"  name="ri:file-copy-2-fill" color="#4fa5ff"  />
+                <copy class="copy" :content="row.groupLeaderMemberName.split('/')[1]" />
               </span>
             </div>
             <el-text v-else>-</el-text>
@@ -406,6 +395,12 @@ onMounted(() => {
 .hoverSvg {
   display: flex;
   align-items: center;
+}
+
+.copy {
+  display: flex;
+  align-items: center;
+  width: 20px;
 }
 
 .svg {

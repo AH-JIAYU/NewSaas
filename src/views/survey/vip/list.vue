@@ -9,14 +9,11 @@ import useSurveyVipLevelStore from "@/store/modules/survey_vipLevel"; //会员�
 import useSurveyVipGroupStore from "@/store/modules/survey_vipGroup"; //会员组
 import useSurveyVipStore from "@/store/modules/survey_vip"; // 会员
 import empty from '@/assets/images/empty.png'
-import useClipboard from "vue-clipboard3"; // 复制
 import vipLevel from '@/views/survey/vipLevel/components/Edit/index.vue'
 
 defineOptions({
   name: "vip",
 });
-// 复制
-const { toClipboard } = useClipboard();
 const surveyVipLevelStore = useSurveyVipLevelStore(); //会员等级
 const surveyVipGroupStore = useSurveyVipGroupStore(); //会员组
 const surveyVipStore = useSurveyVipStore(); // 会员
@@ -150,14 +147,6 @@ async function fetchData() {
     listLoading.value = false;
   }
 }
-// 复制ID
-const svgClick = (id: any) => {
-  toClipboard(id);
-  ElMessage({
-    type: "success",
-    message: "复制成功",
-  });
-}
 // 重置筛选数据
 function onReset() {
   Object.assign(queryForm, {
@@ -290,7 +279,7 @@ onMounted(async () => {
             <div v-if="row.memberId" class="hoverSvg">
               <p class="fineBom">ID：{{ row.memberId }}</p>
               <span class="c-fx">
-                <SvgIcon @click="svgClick(row.memberId)" class="copySvg"  name="ri:file-copy-2-fill" color="#4fa5ff"  />
+                <copy class="copy" :content="row.memberId" />
               </span>
             </div>
             <el-text v-else>-</el-text>
@@ -563,6 +552,12 @@ onMounted(async () => {
   align-items: center;
 }
 
+.copy {
+  display: flex;
+  align-items: center;
+  width: 20px;
+}
+
 .svgEdit {
   display: none;
   width: .875rem;
@@ -602,11 +597,7 @@ onMounted(async () => {
   justify-content: center;
   align-items: center;
 }
-.c-fx {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+
 :deep {
   .el-tag__content {
     font-weight: normal;
