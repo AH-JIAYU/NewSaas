@@ -3,9 +3,26 @@ defineOptions({
   name: "home",
 });
 const router = useRouter()
-const toLogin = () => { 
+const toLogin = () => {
   router.push('/login')
 }
+
+onMounted(() => {
+  // 元素淡入
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('fadeOut');
+      }
+    });
+    // 进入视口10% 触发
+  }, { threshold: 0.1 });
+  // ref获取到的只有最后一个，直接加属性用原生获取
+  const fadeOutElementList = document.querySelectorAll('img[fadeOut]');
+  fadeOutElementList.forEach((element: any) => {
+    observer.observe(element);
+  });
+})
 </script>
 
 <template>
@@ -105,11 +122,11 @@ const toLogin = () => {
             </div>
           </div>
         </div>
-        <img class="image_3" referrerpolicy="no-referrer"
+        <img class="image_3" fadeOut referrerpolicy="no-referrer"
           src="https://lanhu-oss.lanhuapp.com/FigmaDDSSlicePNG6b4e88cb4f14b1c956e174ea5147577a.png" />
       </div>
       <div class="section_5 flex-row justify-between">
-        <img class="image_4" referrerpolicy="no-referrer"
+        <img class="image_4" fadeOut referrerpolicy="no-referrer"
           src="https://lanhu-oss.lanhuapp.com/FigmaDDSSlicePNG84981b9e28d0608dd3d8e7587577e8ea.png" />
         <div class="box_7 flex-col justify-between">
           <div class="text-group_10 flex-col justify-between">
@@ -139,11 +156,11 @@ const toLogin = () => {
             </div>
           </div>
         </div>
-        <img class="image_5" referrerpolicy="no-referrer"
+        <img class="image_5" fadeOut referrerpolicy="no-referrer"
           src="https://lanhu-oss.lanhuapp.com/FigmaDDSSlicePNG42163b26a41922ba596e09b5c5fac663.png" />
       </div>
       <div class="section_7 flex-row justify-between">
-        <img class="image_6" referrerpolicy="no-referrer"
+        <img class="image_6" fadeOut referrerpolicy="no-referrer"
           src="https://lanhu-oss.lanhuapp.com/FigmaDDSSlicePNG44a41a75b4a950fadacfe10f302bbd9b.png" />
         <div class="group_4 flex-col justify-between">
           <div class="text-group_14 flex-col justify-between">
@@ -173,11 +190,11 @@ const toLogin = () => {
             </div>
           </div>
         </div>
-        <img class="image_7" referrerpolicy="no-referrer"
+        <img class="image_7" fadeOut referrerpolicy="no-referrer"
           src="https://lanhu-oss.lanhuapp.com/FigmaDDSSlicePNGf9e22ace61f1e2d39b3130fd7821dcb0.png" />
       </div>
       <div class="section_9 flex-row justify-between">
-        <img class="image_8" referrerpolicy="no-referrer"
+        <img class="image_8" fadeOut referrerpolicy="no-referrer"
           src="https://lanhu-oss.lanhuapp.com/FigmaDDSSlicePNG602a96bc099e8d740bf72f1a0a655e96.png" />
         <div class="box_11 flex-col justify-between">
           <div class="text-group_18 flex-col justify-between">
@@ -300,7 +317,7 @@ const toLogin = () => {
     </div>
     <div class="box_20 flex-col">
       <div class="group_6 flex-row">
-        <img class="image_9" referrerpolicy="no-referrer"
+        <img class="image_9"  referrerpolicy="no-referrer"
           src="https://lanhu-oss.lanhuapp.com/FigmaDDSSlicePNG960b6eaf3362872e073568b8365c81ce.png" />
         <span class="text_48">嘉禹</span>
         <span class="text_49">热门方案</span>
@@ -2459,5 +2476,22 @@ button:active {
 .align-end {
   display: flex;
   align-items: flex-end;
+}
+
+.fadeOut {
+  animation: identifier;
+  animation-duration: .5s;
+}
+
+@keyframes identifier {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 50px, 0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateZ(0);
+  }
 }
 </style>

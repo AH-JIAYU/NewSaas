@@ -12,7 +12,6 @@ const showing = ref(false);
 // 复制
 const handleCopy = () => {
   copy(props.content)
-
   showing.value = true;
   setTimeout(() => {
     showing.value = false;
@@ -26,8 +25,10 @@ const handleCopy = () => {
 <template>
   <div class="container">
     <SvgIcon @click="handleCopy" class="copySvg" name="i-ri:file-copy-2-fill" color="#4fa5ff" />
-    <SvgIcon v-if="showing" class="success-icon" name="i-ant-design:like-outlined" color="#16c60c" />
-    <!-- <div >✔️</div> -->
+    <div v-if="showing" class="success-icon">
+      <SvgIcon  name="i-ant-design:like-outlined" color="#16c60c" />
+    </div>
+
 
   </div>
 </template>
@@ -35,8 +36,8 @@ const handleCopy = () => {
 <style scoped lang="scss">
 /* 表格拷贝icon */
 .copySvg {
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
   margin-left: 5px;
   cursor: pointer;
 }
@@ -49,23 +50,22 @@ const handleCopy = () => {
 .success-icon {
   position: absolute;
   top: 50%;
-  left: 50%;
+  left: 120%;
+  transform: translate(-50% , -50%);
   font-size: 24px;
   color: green;
   opacity: 1;
-  animation: floatUp 2s ease forwards;
-  z-index: 9999;
+  animation: floatUp 1s ease forwards;
+  z-index: 99999;
   cursor: pointer;
 }
 
 @keyframes floatUp {
   0% {
-    transform: translate(-50%, -100%);
     opacity: 1;
   }
 
   100% {
-    transform: translate(-50%, calc(-100% - 30px));
     opacity: 0;
   }
 }

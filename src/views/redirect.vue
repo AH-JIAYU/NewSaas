@@ -35,7 +35,7 @@ onMounted(async () => {
   try {
     data.value.loading = true;
     // 获取ip
-    const response = await fetch("https://api.ipify.org?format=json");
+    const response = await fetch("https://qifu-api.baidubce.com/ip/local/geo/v1/district");
     const res = await response.json();
     const ip = res.ip;
     const status: any = route.query.status;

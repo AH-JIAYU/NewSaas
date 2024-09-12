@@ -576,6 +576,7 @@ onMounted(async () => {
     margin-left: 5px;
     flex-shrink: 0;
     display: none;
+    cursor: pointer;
   }
   .current{
     display:block !important;
