@@ -60,15 +60,15 @@ const columns = ref<any>([
     sortabel: true,
     checked: true,
   },
-  {
-    prop: "participation",
-    label: "参数",
+    {
+    prop: "withoutUrl",
+    label: "URL",
     sortabel: true,
     checked: true,
   },
   {
-    prop: "withoutUrl",
-    label: "URL",
+    prop: "participation",
+    label: "参数",
     sortabel: true,
     checked: true,
   },
@@ -176,18 +176,10 @@ const current = ref<any>()
 function handleCurrentChange(val: any) {
   current.value = val.projectId
 }
-// 复制ID
-const svgClick = (id: any) => {
-  toClipboard(id);
-  ElMessage({
-    type: "success",
-    message: "复制成功",
-  });
-}
 // 具体的位置信息
 const comCountryId = computed(() => (countryIdList: any) => {
   const list = countryList.value
-    .filter((item: any) => countryIdList.includes(item.id))
+    .filter((item: any) => countryIdList?.includes(item.id))
     .map((item: any) => item.chineseName);
   return list;
 });
@@ -286,11 +278,9 @@ onMounted(async () => {
           prop="projectIdentificationOrClientName" width="200" label="项目">
           <template #default="{ row }">
             <p v-if="checkList.includes('projectName')" class="crudeTop">名称：{{ row.projectName }}</p>
-            <div class="hoverSvg">
-              <p v-if="checkList.includes('projectId')" class="fineSize">ID：{{ row.projectId }}</p>
-              <span class="c-fx">
-                <SvgIcon @click="svgClick(row.projectId)" class="copySvg"  name="ri:file-copy-2-fill" color="#4fa5ff"  />
-              </span>
+            <div v-if="checkList.includes('projectId')" class="hoverSvg">
+              <p class="fineSize">ID：{{ row.projectId }}</p>
+              <copy class="copy" :content="row.projectId" />
             </div>
           </template>
         </el-table-column>
@@ -299,11 +289,18 @@ onMounted(async () => {
           <template #default="{ row }">
             <p v-if="checkList.includes('projectIdentification')" class="crudeTop">
               名称：{{ row.projectIdentification }}</p>
-            <p v-if="checkList.includes('projectIdClientName')" style="text-align: left;font-weight: 700;color: #777;">标：<span class="fineBom">{{
+            <p v-if="checkList.includes('projectIdClientName')" style="font-weight: 700;color: #777;">标：<span class="fineBom">{{
     row.clientName }}</span></p>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('participation')" show-overflow-tooltip width="180" align="center"
+        <el-table-column v-if="checkList.includes('withoutUrl')" prop="withoutUrl" align="center" label="URL">
+          <template #default="{ row }">
+            <el-tooltip class="box-item" effect="dark" :content="row.withoutUrl" placement="top">
+              <el-button link type="primary" @click="copyUrl(row.withoutUrl)">复制</el-button>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+        <el-table-column v-if="checkList.includes('participation')" show-overflow-tooltip width="220" align="center"
           label="参数">
           <template #default="{ row }">
             <p class="parameter"><el-text class="mx-1 text" style="color:#FB6868;" type="danger">参与：{{ row.participation
@@ -313,13 +310,6 @@ onMounted(async () => {
             <p class="parameter"><el-text class="mx-1 text" style="color:#FFAC54;" type="warning">配额：{{ row.num || 0
                 }}</el-text><el-text class="mx-1 text" style="color:#AAAAAA;" type="info">限量：{{ row.limitedQuantity || 0
                 }}</el-text></p>
-          </template>
-        </el-table-column>
-        <el-table-column v-if="checkList.includes('withoutUrl')" prop="withoutUrl" align="center" label="URL">
-          <template #default="{ row }">
-            <el-tooltip class="box-item" effect="dark" :content="row.withoutUrl" placement="top">
-              <el-button link type="primary" @click="copyUrl(row.withoutUrl)">复制</el-button>
-            </el-tooltip>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('doMoneyPrice')" show-overflow-tooltip align="center" label="原价">
@@ -348,26 +338,28 @@ onMounted(async () => {
           <template #default="{ row }">
             <template v-if="row.countryNameList">
               <template v-if="row.countryNameList.length === basicDictionaryStore.country.length">
-                <el-link type="primary"><el-tag type="primary">全球</el-tag></el-link>
+                <el-tag type="primary">全球</el-tag>
               </template>
-              <template v-else-if="comCountryId(row.countryNameList).length > 4">
+              <template v-else-if="comCountryId(row.countryNameList).length > 1">
                 <el-tooltip class="box-item" effect="dark" :content="comCountryId(row.countryNameList).join(',')"
                   placement="top">
-                  <el-link type="primary"><el-tag type="primary">{{
+                  <el-link type="primary"><el-tag type="primary">x{{
     comCountryId(row.countryNameList).length
   }}</el-tag></el-link>
                 </el-tooltip>
               </template>
               <template v-else>
-                <el-tag type="primary">
-                  x{{ comCountryId(row.countryNameList).length }}
+                <el-tag v-for="item in comCountryId(row.countryNameList)" :key="item" type="primary">
+                  {{ item }}
                 </el-tag>
               </template>
             </template>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('ir')" show-overflow-tooltip align="center" label="IR/NIR">
-          <template #default="{ row }"> {{ row.ir ? row.ir : '-' }} / {{ row.nir ? row.nir : '-' }} </template>
+          <template #default="{ row }"><el-text style="color: #333333;font-weight: 700;font-family: DINPro-Medium;">
+            {{ row.ir ? row.ir : '-' }} / {{ row.nir ? row.nir : '-' }}
+              </el-text></template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('memberStatus')" show-overflow-tooltip align="center" label="分配">
           <template #default="{ row }">
@@ -492,7 +484,6 @@ onMounted(async () => {
 }
 
 .crudeTop {
-  text-align: left !important;
   color: #333333;
   font-weight: 700;
   white-space: nowrap;
@@ -501,7 +492,6 @@ onMounted(async () => {
 }
 
 .fineBom {
-  text-align: left !important;
   color: #777;
   font-size: 14px;
   white-space: nowrap;
@@ -511,7 +501,6 @@ onMounted(async () => {
 }
 
 .fineSize {
-  text-align: left !important;
   color: #333;
   font-size: 12px;
   white-space: nowrap;
@@ -524,14 +513,14 @@ onMounted(async () => {
   align-items: center;
 }
 
-// .hoverSvg:hover .svg {
-//   display: block;
-// }
-
-
+.copy {
+  display: flex;
+  align-items: center;
+  width: 20px;
+}
 
 .parameter {
-  text-align: left !important;
+  // text-align: left !important;
 }
 
 .text {

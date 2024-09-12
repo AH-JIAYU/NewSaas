@@ -4,13 +4,10 @@ import api from "@/api/modules/survey_financialLogs";
 import { ElMessage } from "element-plus";
 import useSettingsStore from "@/store/modules/settings";
 import empty from '@/assets/images/empty.png'
-import useClipboard from "vue-clipboard3"; // 复制
 
 defineOptions({
   name: "financialLogs",
 });
-// 复制
-const { toClipboard } = useClipboard();
 // 时间
 const { format } = useTimeago();
 const router = useRouter();
@@ -187,14 +184,6 @@ function getDataList() {
     data.value.loading = false;
   }
 }
-// 复制ID
-const svgClick = (id: any) => {
-  toClipboard(id);
-  ElMessage({
-    type: "success",
-    message: "复制成功",
-  });
-}
 // 重置筛选数据
 function onReset() {
   Object.assign(data.value.search, {
@@ -318,7 +307,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
             <div v-if="row.memberId" class="hoverSvg">
               <p class="fineBom">ID：{{ row.memberId }}</p>
               <span class="c-fx">
-                <SvgIcon @click="svgClick(row.memberId)" class="copySvg"  name="ri:file-copy-2-fill" color="#4fa5ff"  />
+                <copy class="copy" :content="row.memberId" />
               </span>
             </div>
             <el-text v-else>-</el-text>
@@ -335,7 +324,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
             <div v-if="row.projectId" class="hoverSvg">
               <p class="fineBom">ID：{{ row.projectId }}</p>
               <span class="c-fx">
-                <SvgIcon @click="svgClick(row.projectId)" class="copySvg"  name="ri:file-copy-2-fill" color="#4fa5ff"  />
+                <copy class="copy" :content="row.projectId" />
               </span>
             </div>
             <el-text v-else>-</el-text>
@@ -347,7 +336,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
             <div v-if="row.randomIdentity" class="hoverSvg">
               <p class="fineBom">ID：{{ row.randomIdentity }}</p>
               <span class="c-fx">
-                <SvgIcon @click="svgClick(row.randomIdentity)" class="copySvg"  name="ri:file-copy-2-fill" color="#4fa5ff"  />
+                <copy class="copy" :content="row.randomIdentity" />
               </span>
             </div>
             <el-text v-else>-</el-text>
@@ -489,6 +478,12 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
 .hoverSvg {
   display: flex;
   align-items: center;
+}
+
+.copy {
+  display: flex;
+  align-items: center;
+  width: 20px;
 }
 
 .svg {

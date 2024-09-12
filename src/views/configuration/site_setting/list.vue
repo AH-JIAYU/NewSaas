@@ -9,13 +9,15 @@ import Message from 'vue-m-message'
 import useClipboard from "vue-clipboard3";
 import { AnyFn } from "@vueuse/core";
 import useUserStore from "@/store/modules/user";
+import siteDetail from "./components/siteDetail/index.vue"
 
 defineOptions({
   name: "site_setting",
 });
 // token
 const userStore = useUserStore();
-
+// detailRef
+const recordRef = ref()
 // 接口地址
 const Url = import.meta.env.VITE_APP_API_BASEURL + "/tenant-logo/upload";
 const { toClipboard } = useClipboard();
@@ -132,6 +134,10 @@ const getLogo = async () => {
       });
 
   }
+}
+// 解析记录
+const record = () => {
+  recordRef.value.showEdit()
 }
 // 复制地址
 const copyToClipboard = () => {
@@ -346,7 +352,9 @@ function onSubmit() {
               <el-col :span="24">
                 <el-form-item label="顶级域名">
                   <el-input v-model="form.externalSite" style="width: 8rem" />
-                  <!-- <el-button class="copy" type="primary" link >设置解析</el-button> -->
+                  <span class="red"></span><span style="margin-right: 10px;">已生效</span>
+                  <span class="green"></span><span style="margin-right: 10px;">未生效</span>
+                  <el-button class="copy" @click="record" type="primary" link >解析记录</el-button>
                 </el-form-item>
               </el-col>
               <el-col :span="24">
@@ -420,6 +428,7 @@ function onSubmit() {
         </el-form>
       </el-tabs>
     </PageMain>
+    <siteDetail ref="recordRef" @fetch-data="getDataList"/>
   </div>
 </template>
 
@@ -477,7 +486,23 @@ function onSubmit() {
 .hide_box :deep(.el-upload--picture-card) {
   display: none;
 }
-
+.green {
+  margin: 0 10px;
+  display: inline-block;
+  width:10px;
+  height:10px;
+  background-color: #70b61b;
+  border-radius: 50px;
+}
+.red {
+  margin: 0 10px;
+  display: inline-block;
+  width:10px;
+  height:10px;
+  background-color: #d9261b;
+  border-radius: 50px;
+}
 // :deep() {
 //   background-color: #fafafa;
-// }</style>
+// }
+</style>
