@@ -9,7 +9,10 @@ export default {
   // 删除
   delete: (data: any) =>
     api.post("projectMaterial/deleteProjectMaterial", data),
-  // 删除
+  //
   deleteMaterialDetails: (data: any) =>
     api.post("projectMaterial/deleteProjectMaterialDetails", data),
+  // 
+  changeRemark: (data: any) =>
+    api.post("projectMaterial/updateProjectMaterialInstructions", data),
 };

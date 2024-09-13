@@ -46,6 +46,7 @@ async function showEdit(row: any, view?: any) {
     if (row) {
       data.title = "编辑";
       data.form = cloneDeep(row);
+      data.form.groupSupplierId=row.getGroupSupplierIdNameInfoList.map((item:any)=>item.groupSupplierId)
       await changeProject(row.projectId);
     } else {
       data.title = "新增";
@@ -63,7 +64,7 @@ async function showEdit(row: any, view?: any) {
       await changeProject(row.projectId);
       dialogTableVisible.value = true;
     }
-  }
+  } 
 }
 // 切换项目
 const changeProject = async (val: any) => {
@@ -74,7 +75,6 @@ const changeProject = async (val: any) => {
     data.memberGroupNameInfoList =
       res.data.getAllocationMemberGroupNameInfoList;
     data.supplierNameInfoList = res.data.getAllocationSupplierNameInfoList;
-
     if (
       data.supplierNameInfoList.length &&
       !data.memberGroupNameInfoList.length
@@ -172,7 +172,7 @@ defineExpose({ showEdit });
           placement="top"
         >
           <SvgIcon
- 
+
             class="SvgIcon1"
             name="i-ri:question-line"
           />

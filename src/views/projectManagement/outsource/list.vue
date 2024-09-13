@@ -104,33 +104,23 @@ onMounted(() => {
 </script>
 
 <template>
-  <div
-    :class="{
-      'absolute-container': tableAutoHeight,
-    }"
-  >
+  <div :class="{
+    'absolute-container': tableAutoHeight,
+  }">
     <PageMain>
       <el-tabs v-model="queryForm.type" @tab-change="fetchData">
         <el-tab-pane label="外包项目" :name="2">
           <SearchBar :show-toggle="false">
             <template #default="{ fold, toggle }">
-              <el-form
-                :model="queryForm.select"
-                size="default"
-                label-width="100px"
-                inline-message
-                inline
-                class="search-form"
-              >
+              <el-form :model="queryForm.select" size="default" label-width="100px" inline-message inline
+                class="search-form">
                 <el-form-item label="">
-                  <el-input v-model="queryForm.tenantId" clearable placeholder="租户id" @keydown.enter="currentChange()"/>
+                  <el-input v-model="queryForm.tenantId" clearable placeholder="租户id"
+                    @keydown.enter="currentChange()" />
                 </el-form-item>
                 <el-form-item label="">
-                  <el-input
-                    v-model="queryForm.tenantName"
-                    clearable
-                    placeholder="租户名称"
-                  @keydown.enter="currentChange()"/>
+                  <el-input v-model="queryForm.tenantName" clearable placeholder="租户名称"
+                    @keydown.enter="currentChange()" />
                 </el-form-item>
                 <el-form-item label="">
                   <el-select v-model="queryForm.projectStatus" clearable placeholder="项目状态" @change="currentChange()">
@@ -154,9 +144,7 @@ onMounted(() => {
                   </ElButton>
                   <ElButton disabled link @click="toggle">
                     <template #icon>
-                      <SvgIcon
-                        :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
-                      />
+                      <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
                     </template>
                     {{ fold ? "展开" : "收起" }}
                   </ElButton>
@@ -170,111 +158,60 @@ onMounted(() => {
 
             <FormRightPanel>
               <el-button size="default" @click=""> 导出 </el-button>
-              <TabelControl
-                v-model:border="border"
-                v-model:tableAutoHeight="tableAutoHeight"
-                v-model:checkList="checkList"
-                v-model:columns="columns"
-                v-model:line-height="lineHeight"
-                v-model:stripe="stripe"
-                style="margin-left: 12px"
-                @query-data="currentChange"
-              />
+              <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight"
+                v-model:checkList="checkList" v-model:columns="columns" v-model:line-height="lineHeight"
+                v-model:stripe="stripe" style="margin-left: 12px" @query-data="currentChange" />
             </FormRightPanel>
           </el-row>
-          <el-table
-            ref="tableSortRef"
-            v-loading="listLoading"
-            style="margin-top: 10px"
-            row-key="id"
-            :data="list"
-            :border="border"
-            :size="lineHeight"
-            :stripe="stripe"
-          >
+          <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="id" :data="list"
+            :border="border" :size="lineHeight" :stripe="stripe">
             <el-table-column align="center" type="selection" />
-            <el-table-column
-              v-if="checkList.includes('tenantId')"
-              show-overflow-tooltip
-              prop="tenantId"
-              align="center"
-              label="租户ID"
-            />
-            <el-table-column
-              v-if="checkList.includes('tenantName')"
-              show-overflow-tooltip
-              prop="tenantName"
-              align="center"
-              label="租户名称"
-            />
-
-            <el-table-column
-              v-if="checkList.includes('projectId')"
-              show-overflow-tooltip
-              prop="projectId"
-              align="center"
-              width="180"
-              label="项目ID"
-            />
-            <el-table-column
-              v-if="checkList.includes('projectName')"
-              show-overflow-tooltip
-              prop="projectName"
-              align="center"
-              label="项目名称"
-            />
-
-            <el-table-column
-              v-if="checkList.includes('participationNumber')"
-              show-overflow-tooltip
-              prop="participationNumber"
-              align="center"
-              label="参与/完成/配额/限量"
-            >
-              <template #default="{ row }">
-                <el-text size="large"
-                  >{{ row.participationNumber || 0 }}
-                </el-text>
-                <el-text size="large"> / </el-text>
-                <el-text type="success" size="large">
-                  {{ row.doneNumber || 0 }}
-                </el-text>
-                <el-text size="large"> / </el-text>
-                <el-text type="warning" size="large">
-                  {{ row.num || 0 }}</el-text
-                ><el-text size="large"> / </el-text>
-                <el-text size="large">{{ row.limitedQuantity || 0 }}</el-text>
-              </template>
-            </el-table-column>
-            <el-table-column
-              v-if="checkList.includes('projectStatus')"
-              show-overflow-tooltip
-              prop="projectStatus"
-              align="center"
-              label="状态"
-            >
+            <el-table-column v-if="checkList.includes('projectStatus')" show-overflow-tooltip prop="projectStatus"
+              align="center" label="状态">
               <template #default="{ row }">
                 <span>{{
-                  projectManagementOutsourceStore.projectStatusList[
-                    row.projectStatus - 1
-                  ]
-                }}</span>
+    projectManagementOutsourceStore.projectStatusList[
+    row.projectStatus - 1
+    ]
+  }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column v-if="checkList.includes('tenantName')" show-overflow-tooltip prop="tenantName"
+              align="center" label="租户名称" />
+            <el-table-column v-if="checkList.includes('tenantId')" show-overflow-tooltip prop="tenantId" align="center"
+              label="租户ID">
+              <template #default="{ row }">
+                <div class="copyId">
+                  <div class="id oneLine">ID: {{ row.tenantId }}</div>
+                  <copy class="copy" :content="row.tenantId" />
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column v-if="checkList.includes('projectName')" show-overflow-tooltip prop="projectName"
+              align="center" label="项目名称" />
+            <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip prop="projectId"
+              align="center" width="180" label="项目ID">
+              <template #default="{ row }">
+                <div class="copyId">
+                  <div class="id oneLine">ID: {{ row.projectId }}</div>
+                  <copy class="copy" :content="row.projectId" />
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column v-if="checkList.includes('participationNumber')" show-overflow-tooltip
+              prop="participationNumber" align="center" label="参数"  width="300">
+              <template #default="{ row }">
+                <el-text class="oneLine" type="danger">参与: {{ row.participationNumber || 0 }}</el-text> &ensp;
+                <el-text class="oneLine" type="success">完成: {{ row.doneNumber || 0 }}</el-text> &ensp;
+                <el-text class="oneLine" type="warning">配额: {{ row.num || 0 }}</el-text> &ensp;
+                <el-text class="oneLine" type="info">限量: {{ row.limitedQuantity || "-" }}</el-text>
               </template>
             </el-table-column>
 
-            <el-table-column
-              align="center"
-              fixed="right"
-              label="操作"
-              width="170"
-            >
+
+            <el-table-column align="center" fixed="right" label="操作" width="170">
               <template #default="{ row }">
-                <el-button
-                  type="primary"
-                  plain
-                  size="small"
-                  @click="editData(row)"
-                >
+                <el-button type="primary" plain size="small" @click="editData(row)">
                   详情
                 </el-button>
               </template>
@@ -283,57 +220,26 @@ onMounted(() => {
               <el-empty description="暂无数据" />
             </template>
           </el-table>
-          <ElPagination
-            :current-page="pagination.page"
-            :total="pagination.total"
-            :page-size="pagination.size"
-            :page-sizes="pagination.sizes"
-            :layout="pagination.layout"
-            :hide-on-single-page="false"
-            class="pagination"
-            background
-            @size-change="sizeChange"
-            @current-change="currentChange"
-          />
+          <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+            :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+            background @size-change="sizeChange" @current-change="currentChange" />
         </el-tab-pane>
         <el-tab-pane label="接收项目" :name="1">
           <SearchBar :show-toggle="false">
             <template #default="{ fold, toggle }">
-              <el-form
-                :model="queryForm.select"
-                size="default"
-                label-width="100px"
-                inline-message
-                inline
-                class="search-form"
-              >
+              <el-form :model="queryForm.select" size="default" label-width="100px" inline-message inline
+                class="search-form">
                 <el-form-item label="">
-                  <el-input
-                    v-model="queryForm.tenantId"
-                    clearable
-                    placeholder="租户ID"
-                  />
+                  <el-input v-model="queryForm.tenantId" clearable placeholder="租户ID" />
                 </el-form-item>
                 <el-form-item label="">
-                  <el-input
-                    v-model="queryForm.tenantName"
-                    clearable
-                    placeholder="租户名称"
-                  />
+                  <el-input v-model="queryForm.tenantName" clearable placeholder="租户名称" />
                 </el-form-item>
                 <el-form-item label="">
-                  <el-select
-                    v-model="queryForm.projectStatus"
-                    clearable
-                    placeholder="项目状态"
-                  >
-                    <el-option
-                      v-for="(
+                  <el-select v-model="queryForm.projectStatus" clearable placeholder="项目状态">
+                    <el-option v-for="(
                         item, index
-                      ) in projectManagementOutsourceStore.projectStatusList"
-                      :label="item"
-                      :value="index + 1"
-                    />
+                      ) in projectManagementOutsourceStore.projectStatusList" :label="item" :value="index + 1" />
                   </el-select>
                 </el-form-item>
                 <ElFormItem>
@@ -351,9 +257,7 @@ onMounted(() => {
                   </ElButton>
                   <ElButton disabled link @click="toggle">
                     <template #icon>
-                      <SvgIcon
-                        :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
-                      />
+                      <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
                     </template>
                     {{ fold ? "展开" : "收起" }}
                   </ElButton>
@@ -367,111 +271,61 @@ onMounted(() => {
 
             <FormRightPanel>
               <el-button size="default" @click=""> 导出 </el-button>
-              <TabelControl
-                v-model:border="border"
-                v-model:tableAutoHeight="tableAutoHeight"
-                v-model:checkList="checkList"
-                v-model:columns="columns"
-                v-model:line-height="lineHeight"
-                v-model:stripe="stripe"
-                style="margin-left: 12px"
-                @query-data="currentChange"
-              />
+              <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight"
+                v-model:checkList="checkList" v-model:columns="columns" v-model:line-height="lineHeight"
+                v-model:stripe="stripe" style="margin-left: 12px" @query-data="currentChange" />
             </FormRightPanel>
           </el-row>
-          <el-table
-            ref="tableSortRef"
-            v-loading="listLoading"
-            style="margin-top: 10px"
-            row-key="id"
-            :data="list"
-            :border="border"
-            :size="lineHeight"
-            :stripe="stripe"
-          >
+          <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="id" :data="list"
+            :border="border" :size="lineHeight" :stripe="stripe">
             <el-table-column align="center" type="selection" />
-            <el-table-column
-              v-if="checkList.includes('tenantId')"
-              show-overflow-tooltip
-              prop="tenantId"
-              align="center"
-              label="租户ID"
-            />
-            <el-table-column
-              v-if="checkList.includes('tenantName')"
-              show-overflow-tooltip
-              prop="tenantName"
-              align="center"
-              label="租户名称"
-            />
-
-            <el-table-column
-              v-if="checkList.includes('projectId')"
-              show-overflow-tooltip
-              prop="projectId"
-              align="center"
-              width="180"
-              label="项目ID"
-            />
-            <el-table-column
-              v-if="checkList.includes('projectName')"
-              show-overflow-tooltip
-              prop="projectName"
-              align="center"
-              label="项目名称"
-            />
-
-            <el-table-column
-              v-if="checkList.includes('participationNumber')"
-              show-overflow-tooltip
-              prop="participationNumber"
-              align="center"
-              label="参与/完成/配额/限量"
-            >
-              <template #default="{ row }">
-                <el-text size="large"
-                  >{{ row.participationNumber || 0 }}
-                </el-text>
-                <el-text size="large"> / </el-text>
-                <el-text type="success" size="large">
-                  {{ row.doneNumber || 0 }}
-                </el-text>
-                <el-text size="large"> / </el-text>
-                <el-text type="warning" size="large">
-                  {{ row.num || 0 }}</el-text
-                ><el-text size="large"> / </el-text>
-                <el-text size="large">{{ row.limitedQuantity || 0 }}</el-text>
-              </template>
-            </el-table-column>
-            <el-table-column
-              v-if="checkList.includes('projectStatus')"
-              show-overflow-tooltip
-              prop="projectStatus"
-              align="center"
-              label="状态"
-            >
+            <el-table-column v-if="checkList.includes('projectStatus')" show-overflow-tooltip prop="projectStatus"
+              align="center" label="状态">
               <template #default="{ row }">
                 <span>{{
-                  projectManagementOutsourceStore.projectStatusList[
-                    row.projectStatus - 1
-                  ]
-                }}</span>
+    projectManagementOutsourceStore.projectStatusList[
+    row.projectStatus - 1
+    ]
+  }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column v-if="checkList.includes('tenantName')" show-overflow-tooltip prop="tenantName"
+              align="center" label="租户名称" />
+            <el-table-column v-if="checkList.includes('tenantId')" show-overflow-tooltip prop="tenantId" align="center"
+              label="租户ID"><template #default="{ row }">
+                <div class="copyId">
+                  <div class="id oneLine">ID: {{ row.tenantId }}</div>
+                  <copy class="copy" :content="row.tenantId" />
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column v-if="checkList.includes('projectName')" show-overflow-tooltip prop="projectName"
+              align="center" label="项目名称" />
+            <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip prop="projectId"
+              align="center" width="180" label="项目ID">
+              <template #default="{ row }">
+                <div class="copyId">
+                  <div class="id oneLine">ID: {{ row.projectId }}</div>
+                  <copy class="copy" :content="row.projectId" />
+                </div>
               </template>
             </el-table-column>
 
-            <el-table-column
-              align="center"
-              fixed="right"
-              label="操作"
-              width="170"
-            >
+
+            <el-table-column v-if="checkList.includes('participationNumber')" show-overflow-tooltip
+              prop="participationNumber" align="center" label="参数" width="300">
               <template #default="{ row }">
-                <el-button
-                  type="primary"
-                  plain
-                  size="small"
-                  @click="editData(row)"
-                >
+                <el-text class="oneLine" type="danger">参与: {{ row.participationNumber || 0 }}</el-text> &ensp;
+                <el-text class="oneLine" type="success">完成: {{ row.doneNumber || 0 }}</el-text> &ensp;
+                <el-text class="oneLine" type="warning">配额: {{ row.num || 0 }}</el-text> &ensp;
+                <el-text class="oneLine" type="info">限量: {{ row.limitedQuantity || "-" }}</el-text>
+              </template>
+            </el-table-column>
+
+
+            <el-table-column align="center" fixed="right" label="操作" width="170">
+              <template #default="{ row }">
+                <el-button type="primary" plain size="small" @click="editData(row)">
                   详情
                 </el-button>
               </template>
@@ -480,18 +334,9 @@ onMounted(() => {
               <el-empty description="暂无数据" />
             </template>
           </el-table>
-          <ElPagination
-            :current-page="pagination.page"
-            :total="pagination.total"
-            :page-size="pagination.size"
-            :page-sizes="pagination.sizes"
-            :layout="pagination.layout"
-            :hide-on-single-page="false"
-            class="pagination"
-            background
-            @size-change="sizeChange"
-            @current-change="currentChange"
-          />
+          <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+            :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+            background @size-change="sizeChange" @current-change="currentChange" />
         </el-tab-pane>
       </el-tabs>
 
@@ -552,6 +397,44 @@ onMounted(() => {
         }
       }
     }
+  }
+}
+
+// id
+.copyId {
+  @extend .flex-c;
+
+  .copy {
+    width: 20px;
+  }
+
+  .id {
+    flex: 1;
+  }
+}
+
+.flex-c {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  width: 100%;
+
+  >div:nth-of-type(1) {
+    width: calc(100% - 25px);
+    flex-shrink: 0;
+  }
+
+  .edit {
+    width: 20px;
+    height: 20px;
+    margin-left: 5px;
+    flex-shrink: 0;
+    display: none;
+    cursor: pointer;
+  }
+
+  .current {
+    display: block !important;
   }
 }
 </style>
