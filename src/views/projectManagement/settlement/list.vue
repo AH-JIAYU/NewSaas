@@ -41,7 +41,7 @@ const refundRef = ref();
 // 右侧工具栏配置变量
 // 表格控件-高度自适应
 const tableAutoHeight = ref(false);
-const border = ref(true);
+const border = ref(false);
 const checkList = ref<any>([]);
 const isFullscreen = ref(false);
 const lineHeight = ref<any>("default");
@@ -59,12 +59,6 @@ const columns = ref<any>([
   { label: "原价", prop: "projectAmount", sortable: true, checked: true },
   { label: "所属国家", prop: "countryId", sortable: true, checked: true },
   { label: "系统/审核完成数", prop: "systemDone", sortable: true, checked: true },
-  // {
-  //   label: "结算完成数",
-  //   prop: "settlementDone",
-  //   sortable: true,
-  //   checked: true,
-  // },
   { label: "结算PO号", prop: "settlementPo", sortable: true, checked: true },
   { label: "结算状态", prop: "status", sortable: true, checked: true },
   { label: "节点时间", prop: "nodeTime", sortable: true, checked: true },
@@ -112,6 +106,13 @@ const list = ref<any>([]);
 function setSelectRows(value: any) {
   selectRows.value = value;
 }
+
+const current = ref<any>()//表格当前选中
+function handleCurrentChange(val: any) {
+  if (val) current.value = val.projectId
+  else current.value = ''
+}
+
 // 开票
 function invoicing(row: any) {
   if (!selectRows.value.length) {
@@ -138,7 +139,16 @@ async function auditing(row: any) {
 }
 // 编辑
 function edit(row: any) {
-  editRef.value.showEdit(JSON.stringify(row));
+  editRef.value.showEdit(JSON.stringify(row),'');
+}
+// 快速编辑
+function quickEdit(row:any,type:any){
+  /**
+   * 系统/审核  systemDone
+    结算PO号 settlementPo
+    备注 remark
+  */
+  editRef.value.showEdit(JSON.stringify(row),type);
 }
 // 详情
 function refundDetails(row: any) {
@@ -365,45 +375,56 @@ function handleMoreOperating(command: string, row: any) {
         </FormRightPanel>
       </el-row>
       <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="id" :data="list"
-        :border="border" :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows">
+        :border="border" :size="lineHeight" :stripe="stripe" highlight-current-row @selection-change="setSelectRows" @current-change="handleCurrentChange">
         <el-table-column align="center" type="selection" />
-        <!-- <el-table-column type="index" align="center" label="序号" width="55" /> -->
         <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip prop="projectId" align="center"
-          width="180" label="项目ID" />
-        <el-table-column v-if="checkList.includes('projectName')" show-overflow-tooltip prop="projectName"
-          align="center" width="180" label="项目名称">
+          width="150" label="项目">
           <template #default="{ row }">
-            {{ row.projectName ? row.projectName : "-" }}
+            <div class="copyId">
+              <div class="id oneLine">ID: {{ row.projectId }}</div>
+              <copy class="copy" :content="row.projectId" />
+            </div>
+
+          </template>
+
+        </el-table-column>
+        <el-table-column v-if="checkList.includes('projectName')" show-overflow-tooltip prop="projectName" align="left"
+          width="150" label="名称/标识">
+          <template #default="{ row }">
+            <b class="oneLine">名: {{ row.projectName ? row.projectName : "-" }}</b>
+            <div class="oneLine">标: {{ row.customerName.split("/")[1] !== 'null' ? row.customerName.split("/")[1] : '-'
+              }}</div>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('customerName')" show-overflow-tooltip prop="customerName" width="130"
-          align="center" label="客户简称/标识">
+          align="center" label="客户">
           <template #default="{ row }">
-            <!-- {{ row.customerName ? row.customerName : "-" }} -->
-            <el-text class="mx-1">{{ row.customerName.split("/")[0] !== 'null' ? row.customerName.split("/")[0] : '-'
-              }}</el-text>
-            <p>{{ row.customerName.split("/")[1] !== 'null' ? row.customerName.split("/")[1] : '-' }}</p>
+            <div class="oneLine" style="width: calc(100% - 20px);">
+              <b>{{ row.customerName.split("/")[0] }}</b>
+              <div class="oneLine" v-if="row.projectType !== 2">
+                <img :src="row.avatar" alt="" class="avatar">
+                <span>{{ row.chargeName }}</span>
+              </div>
+            </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('projectAmount')" show-overflow-tooltip prop="d" align="center"
-          label="原价">
+        <el-table-column v-if="checkList.includes('projectAmount')" show-overflow-tooltip  align="center"
+          label="原价" width="80">
           <template #default="{ row }">
             <CurrencyType />{{ row.projectAmount || 0 }}
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('countryId')" show-overflow-tooltip prop="e" align="center"
-          label="所属国家">
+        <el-table-column v-if="checkList.includes('countryId')" show-overflow-tooltip   align="center"
+          label="国家" width="80">
           <template #default="{ row }">
             <template v-if="row.countryId">
-              <template v-if="row.countryId.length === basicDictionaryStore.country.length">
-                <el-link type="primary"><el-tag type="warning">全球</el-tag></el-link>
+              <template v-if="row.countryId.length >= basicDictionaryStore.country.length">
+                <el-tag type="primary">全球</el-tag>
               </template>
-              <template v-else-if="comCountryId(row.countryId).length > 4">
-                <el-tag v-if="comCountryId(row.countryId).length === basicDictionaryStore.country.length"
-                  type="warning">全球</el-tag>
-                <el-tooltip v-else class="box-item" effect="dark" :content="comCountryId(row.countryId).join(',')"
+              <template v-else-if="comCountryId(row.countryId).length > 1">
+                <el-tooltip class="box-item" effect="dark" :content="comCountryId(row.countryId).join(',')"
                   placement="top">
-                  <el-link type="primary"><el-tag type="success">{{
+                  <el-link type="primary"><el-tag type="primary">×{{
     comCountryId(row.countryId).length
   }}</el-tag></el-link>
                 </el-tooltip>
@@ -418,8 +439,14 @@ function handleMoreOperating(command: string, row: any) {
         </el-table-column>
         <el-table-column v-if="checkList.includes('systemDone')" show-overflow-tooltip prop="systemDone" align="center"
           width="130" label="系统/审核完成数"><template #default="{ row }">
-            <el-text>{{ row.systemDone ? row.systemDone : 0 }}</el-text> /<el-text class="mx-1" type="success">{{
+            <div class="flex-c">
+              <div class="oneLine" style="width: calc(100% - 20px);">
+                <el-text>{{ row.systemDone ? row.systemDone : 0 }}</el-text> /<el-text class="mx-1" type="success">{{
     row.settlementDone ? row.settlementDone : 0 }}</el-text>
+              </div>
+              <SvgIcon  @click="quickEdit(row,'systemDone')" :class="{edit:'edit',current:row.projectId===current}" name="i-ep:edit" color="#409eff" />
+            </div>
+
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('settlementDone')" show-overflow-tooltip prop="settlementDone"
@@ -427,21 +454,23 @@ function handleMoreOperating(command: string, row: any) {
         <el-table-column v-if="checkList.includes('settlementPo')" show-overflow-tooltip prop="settlementPo"
           align="center" label="结算PO号">
           <template #default="{ row }">
-            {{ row.settlementPo ? row.settlementPo : "-" }}
+            <div class="flex-c">
+              <div class="oneLine" style="width: calc(100% - 40px);">
+                {{ row.settlementPo ? row.settlementPo : "-" }}
+              </div>
+              <copy v-if="row.settlementPo" class="copy" :content="row.settlementPo" />
+              <SvgIcon  @click="quickEdit(row,'settlementPo')" :class="{edit:'edit',current:row.projectId===current}" name="i-ep:edit" color="#409eff" />
+              </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('status')" show-overflow-tooltip prop="h" align="center"
-          label="结算状态"><template #default="{ row }">
-            <el-text v-if="row.status === 1" class="mx-1" type="warning">待审核</el-text>
-            <el-text v-if="row.status === 3" class="mx-1" type="success">已开票</el-text>
-            <el-text v-if="row.status === 4" class="mx-1" type="info">已结算</el-text>
-            <el-text v-if="row.status === 2" class="mx-1" type="primary">已审核</el-text>
-            <el-text v-if="row.status === 5" class="mx-1" type="danger">已冻结</el-text>
-          </template>
-        </el-table-column>
-        <el-table-column v-if="checkList.includes('nodeTime')" show-overflow-tooltip prop="nodeTime" align="center"
-          label="节点时间">
+        <el-table-column v-if="checkList.includes('nodeTime')" show-overflow-tooltip prop="nodeTime" align="left"
+          label="节点">
           <template #default="{ row }">
+            <el-button size="small" class="p-1" v-if="row.status === 1"  type="warning">待审核</el-button>
+            <el-button size="small" class="p-1" v-if="row.status === 3"  type="success">已开票</el-button>
+            <el-button size="small" class="p-1" v-if="row.status === 4"  type="info">已结算</el-button>
+            <el-button size="small" class="p-1" v-if="row.status === 2"  type="primary">已审核</el-button>
+            <el-button size="small" class="p-1" v-if="row.status === 5"  type="danger">已冻结</el-button>
             <el-text v-if="row.nodeTime.length" class="mx-1">{{ formatDateRange(row.nodeTime) }}</el-text>
             <el-text v-else class="mx-1">-</el-text>
           </template>
@@ -449,7 +478,12 @@ function handleMoreOperating(command: string, row: any) {
         <el-table-column v-if="checkList.includes('remark')" show-overflow-tooltip prop="remark" align="center"
           label="备注">
           <template #default="{ row }">
-            {{ row.remark ? row.remark : "-" }}
+            <div class="flex-c">
+              <div class="oneLine" style="width: calc(100% - 20px);">
+                {{ row.remark ? row.remark : "-" }}
+              </div>
+              <SvgIcon  @click="quickEdit(row,'remark')" :class="{edit:'edit',current:row.projectId===current}" name="i-ep:edit" color="#409eff" />
+            </div>
           </template>
         </el-table-column>
         <el-table-column align="center" fixed="right" label="操作" width="250">
@@ -531,6 +565,55 @@ function handleMoreOperating(command: string, row: any) {
         }
       }
     }
+  }
+}
+.el-table__row:hover .edit {
+  display: block;
+}
+// id
+.copyId {
+  @extend .flex-c;
+
+  .copy {
+    width: 20px;
+  }
+
+  .id {
+    flex: 1;
+  }
+}
+
+// 头像
+.avatar {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-right: 5px;
+  vertical-align: bottom;
+}
+
+.flex-c {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  width: 100%;
+
+  >div:nth-of-type(1) {
+    width: calc(100% - 25px);
+    flex-shrink: 0;
+  }
+
+  .edit {
+    width: 20px;
+    height: 20px;
+    margin-left: 5px;
+    flex-shrink: 0;
+    display: none;
+    cursor: pointer;
+  }
+
+  .current {
+    display: block !important;
   }
 }
 </style>

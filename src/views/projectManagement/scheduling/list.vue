@@ -175,19 +175,29 @@ onMounted(() => {
         <el-table-column v-if="checkList.includes('dispatchType')" show-overflow-tooltip prop="dispatchType"
           align="center" label="类型">
           <template #default="{ row }">
-            {{ row.dispatchType === 1 ? "指定关闭" : "指定价格" }}
+            <el-text v-if="row.dispatchType === 1" class="mx-1" type="primary">指定关闭</el-text>
+            <el-text v-else class="mx-1" type="danger">指定价格</el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip prop="projectId" align="center"
-          width="180" label="项目ID" />
         <el-table-column v-if="checkList.includes('projectName')" show-overflow-tooltip prop="projectName"
-          align="center" label="项目名称" />
+          align="center" label="项目" />
+        <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip prop="projectId" align="center"
+          width="180" label="项目ID">
+          <template #default="{ row }">
+            <div class="copyId">
+              <div class="id oneLine">ID: {{ row.projectId }}</div>
+              <copy class="copy" :content="row.projectId" />
+            </div>
+          </template>
+        </el-table-column>
+
         <el-table-column v-if="checkList.includes('moneyPrice')" show-overflow-tooltip prop="moneyPrice" align="center"
           label="原价">
           <template #default="{ row }">
             <CurrencyType />{{ row.moneyPrice || 0 }}
           </template>
         </el-table-column>
+
         <el-table-column v-if="checkList.includes('doMoneyPrice')" show-overflow-tooltip prop="doMoneyPrice"
           align="center" label="指定价格">
           <template #default="{ row }">
@@ -195,24 +205,19 @@ onMounted(() => {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('Supplier')" show-overflow-tooltip prop="groupSupplierId"
-          align="center" label="指定供应商">
+          align="center" label="指定目标" width="350">
           <template #default="{ row }">
-            <template v-if="row.dataType == 1">
-              <span v-for="item in row.groupSupplierId">{{ item }}</span>
-            </template>
-            <template v-else>-</template>
-          </template>
-        </el-table-column>
-        <el-table-column v-if="checkList.includes('group')" show-overflow-tooltip align="center" label="指定会员组">
-          <template #default="{ row }">
-            <template v-if="row.dataType == 2">
-              <span v-for="item in row.groupSupplierId">{{ item }}</span>
-            </template>
-            <template v-else>-</template>
+            <div class="specifyTheTarget">
+              <el-button style="width:46px" v-if="row.dataType == 2" type="primary" size="small" class="p-1">{{ row.getGroupSupplierIdNameInfoList.length>1?'×'+row.getGroupSupplierIdNameInfoList.length:'会员组' }}</el-button>
+              <el-button style="width:46px" v-else-if="row.dataType === 1" type="warning" size="small" class="p-1">{{ row.getGroupSupplierIdNameInfoList.length>1?'×'+row.getGroupSupplierIdNameInfoList.length:'供应商' }}</el-button>
+              <b>{{ row.getGroupSupplierIdNameInfoList[0].groupSupplierName }}</b>&ensp;
+              <span class="id">ID: {{ row.getGroupSupplierIdNameInfoList[0].groupSupplierId }}</span>
+              <copy class="copy" :content="row.getGroupSupplierIdNameInfoList[0].groupSupplierId" />
+            </div>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('createTime')" show-overflow-tooltip prop="createTime" align="center"
-          label="创建时间"><template #default="{ row }">
+          label="创建"><template #default="{ row }">
             <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>
           </template>
         </el-table-column>
@@ -290,6 +295,53 @@ onMounted(() => {
         }
       }
     }
+  }
+}
+
+.flex-c {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  width: 100%;
+
+  >div:nth-of-type(1) {
+    width: calc(100% - 25px);
+    flex-shrink: 0;
+  }
+
+  .edit {
+    width: 20px;
+    height: 20px;
+    margin-left: 5px;
+    flex-shrink: 0;
+    display: none;
+    cursor: pointer;
+  }
+
+  .current {
+    display: block !important;
+  }
+}
+
+// id
+.copyId {
+  @extend .flex-c;
+
+  .copy {
+    width: 20px;
+  }
+
+  .id {
+    flex: 1;
+  }
+}
+.specifyTheTarget{
+  @extend .flex-c;
+  .id,b{
+    margin:0 5px;
+  }
+  .copy{
+    width: 20px !important;
   }
 }
 </style>

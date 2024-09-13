@@ -49,7 +49,6 @@ const data = ref<any>({
   }
 });
 
-
 const TypeList: any = {
   PCNL: '参数',
   customer: '客户',
