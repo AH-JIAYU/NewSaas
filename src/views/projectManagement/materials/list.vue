@@ -2,7 +2,9 @@
 import { reactive, ref } from "vue";
 import deletes from "./components/Delete/index.vue";
 import detail from "./components/Details/index.vue";
+import edit from './components/Edit/index.vue'
 import api from "@/api/modules/projectManagement_materials";
+
 
 defineOptions({
   name: "materials",
@@ -16,10 +18,11 @@ const { getParams, pagination, onSizeChange, onCurrentChange } =
 const tableSortRef = ref("");
 // loading加载
 const listLoading = ref<boolean>(false);
-const border = ref(true);
+const border = ref(false);
 // 获取组件变量
 const deleteRef = ref();
 const detailsRef = ref();
+const editsRef = ref();
 // 右侧工具栏配置变量
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const checkList = ref<any>([]);
@@ -43,12 +46,6 @@ const columns = ref<any>([
   },
   { label: "项目ID", prop: "projectId", sotrtable: true, checked: true },
   { label: "项目名称", prop: "projectName", sotrtable: true, checked: true },
-  {
-    label: "客户简称/标识",
-    prop: "customerIdentification",
-    sotrtable: true,
-    checked: true,
-  },
   { label: "说明", prop: "instructions", sotrtable: true, checked: true },
   { label: "创建时间", prop: "createTime", sotrtable: true, checked: true },
 ]);
@@ -61,16 +58,32 @@ const queryForm = ref<any>({
   projectName: "", //	项目名称
 });
 const list = ref<any>([]);
+
+const tabs1Current = ref<any>()//表格当前选中
+function handleTabs1CurrentChange(val: any) {
+  if (val) tabs1Current.value = val.projectId
+  else tabs1Current.value = ''
+}
+const tabs2Current = ref<any>()//表格当前选中
+function handleTabs2CurrentChange(val: any) {
+  if (val) tabs2Current.value = val.projectId
+  else tabs2Current.value = ''
+}
+
 // 详情
 function projectDetails(row: any) {
   if (!selectRows.value.length) {
     detailsRef.value.showEdit(row);
   }
 }
+// 快捷编辑
+function quickEdit(row: any) { 
+  editsRef.value.showEdit(row)
+}
+
+
 // 删除数据
 function deleteData(row: any) {
-  // if (!selectRows.value.length)
-  //   return ElMessage({ message: "请选择至少一条数据", type: "warning" });
   deleteRef.value.showEdit(row);
 }
 
@@ -143,12 +156,6 @@ const getDataChange = () => {
         sotrtable: true,
         checked: true,
       },
-      {
-        label: "客户简称/标识",
-        prop: "customerIdentification",
-        sotrtable: true,
-        checked: true,
-      },
       { label: "说明", prop: "instructions", sotrtable: true, checked: true },
       { label: "创建时间", prop: "createTime", sotrtable: true, checked: true },
     ];
@@ -186,12 +193,6 @@ const getDataChange = () => {
         sotrtable: true,
         checked: true,
       },
-      {
-        label: "客户简称/标识",
-        prop: "customerIdentification",
-        sotrtable: true,
-        checked: true,
-      },
       { label: "说明", prop: "instructions", sotrtable: true, checked: true },
       { label: "创建时间", prop: "createTime", sotrtable: true, checked: true },
     ];
@@ -218,20 +219,23 @@ onMounted(() => {
     'absolute-container': tableAutoHeight,
   }">
     <PageMain>
-      <el-tabs v-model="queryForm.type"   @tab-change="getDataChange">
+      <el-tabs v-model="queryForm.type" @tab-change="getDataChange">
         <el-tab-pane label="会员素材" :name="1">
           <SearchBar :show-toggle="false">
             <template #default="{ fold, toggle }">
               <el-form :model="queryForm.select" size="default" label-width="100px" inline-message inline
                 class="search-form">
                 <el-form-item label="">
-                  <el-input v-model="queryForm.memberChildId" clearable placeholder="会员ID" @keydown.enter="currentChange()"/>
+                  <el-input v-model="queryForm.memberChildId" clearable placeholder="会员ID"
+                    @keydown.enter="currentChange()" />
                 </el-form-item>
                 <el-form-item label="">
-                  <el-input v-model="queryForm.projectId" clearable placeholder="项目ID" @keydown.enter="currentChange()"/>
+                  <el-input v-model="queryForm.projectId" clearable placeholder="项目ID"
+                    @keydown.enter="currentChange()" />
                 </el-form-item>
                 <el-form-item label="">
-                  <el-input v-model="queryForm.projectName" clearable placeholder="项目名称" @keydown.enter="currentChange()"/>
+                  <el-input v-model="queryForm.projectName" clearable placeholder="项目名称"
+                    @keydown.enter="currentChange()" />
                 </el-form-item>
                 <ElFormItem>
                   <ElButton type="primary" @click="currentChange()">
@@ -267,27 +271,49 @@ onMounted(() => {
             </FormRightPanel>
           </el-row>
           <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="id" :data="list"
-            :border="border" :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows">
+            :border="border" :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows" highlight-current-row
+            @current-change="handleTabs1CurrentChange">
             <el-table-column align="center" type="selection" />
-            <el-table-column v-if="checkList.includes('memberChildId')" show-overflow-tooltip prop="memberChildId"
-              align="center" label="会员ID" />
             <el-table-column v-if="checkList.includes('memberChildName')" show-overflow-tooltip prop="memberChildName"
               align="center" label="会员名称" />
-            <el-table-column v-if="checkList.includes('memberChildGroupId')" show-overflow-tooltip
-              prop="memberChildGroupId" align="center" label="会员组ID" />
-            <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip prop="projectId"
-              align="center" label="项目ID" />
+            <el-table-column v-if="checkList.includes('memberChildId')" show-overflow-tooltip prop="memberChildId"
+              align="center" label="会员ID">
+              <template #default="{ row }">
+                <div class="copyId">
+                  <div class="id oneLine">ID: {{ row.memberChildId }}</div>
+                  <copy class="copy" :content="row.memberChildId" />
+                </div>
+              </template>
+            </el-table-column>
             <el-table-column v-if="checkList.includes('projectName')" show-overflow-tooltip prop="projectName"
               align="center" label="项目名称" />
-            <el-table-column v-if="checkList.includes('customerIdentification')" show-overflow-tooltip
-              prop="customerIdentification" align="center" label="客户简称/标识" />
-            <el-table-column v-if="checkList.includes('instructions')" show-overflow-tooltip prop="instructions"
-              align="center" label="说明" />
+            <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip prop="projectId"
+              align="center" label="项目ID" >
+              <template  #default="{ row }">
+                <div class="copyId">
+                  <div class="id oneLine">ID: {{ row.projectId }}</div>
+                  <copy class="copy" :content="row.projectId" />
+                </div>
+              </template>
+            </el-table-column>
             <el-table-column v-if="checkList.includes('createTime')" show-overflow-tooltip prop="createTime"
-              align="center" label="创建时间"><template #default="{ row }">
+              align="center" label="创建"><template #default="{ row }">
                 <el-tag effect="plain" type="info">{{
     format(row.createTime)
   }}</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column v-if="checkList.includes('instructions')" show-overflow-tooltip prop="instructions"
+              align="center" label="说明">
+              <template #default="{ row }">
+                <div class="flex-c">
+                  <div class="oneLine" style="width: calc(100% - 20px);">
+                    {{ row.instructions ? row.instructions : "-" }}
+                  </div>
+                  <SvgIcon   @click="quickEdit(row)"
+                    :class="{ edit: 'edit', current: row.projectId === tabs1Current }" name="i-ep:edit" color="#409eff" />
+                </div>
+
               </template>
             </el-table-column>
             <el-table-column align="center" fixed="right" label="操作" width="240">
@@ -358,28 +384,52 @@ onMounted(() => {
             </FormRightPanel>
           </el-row>
           <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="id" :data="list"
-            :border="border" :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows">
+            :border="border" :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows" highlight-current-row
+            @current-change="handleTabs2CurrentChange">
             <el-table-column type="selection" />
-            <el-table-column v-if="checkList.includes('memberChildId')" show-overflow-tooltip prop="memberChildId"
-              align="center" label="会员ID" />
             <el-table-column v-if="checkList.includes('memberChildName')" show-overflow-tooltip prop="memberChildName"
-              align="center" label="会员名称" />
-            <el-table-column v-if="checkList.includes('memberChildGroupId')" show-overflow-tooltip
-              prop="memberChildGroupId" align="center" label="会员组ID" />
-            <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip prop="projectId"
-              align="center" label="项目ID" />
-            <el-table-column v-if="checkList.includes('projectName')" show-overflow-tooltip prop="projectName"
+              align="center" label="子会员名称" />
+            <el-table-column v-if="checkList.includes('memberChildId')" show-overflow-tooltip prop="memberChildId"
+              align="center" label="子会员ID" >
+              <template #default="{ row }">
+                <div class="copyId">
+                  <div class="id oneLine">ID: {{ row.memberChildId }}</div>
+                  <copy class="copy" :content="row.memberChildId" />
+                </div>
+              </template>
+            </el-table-column>
+              <el-table-column v-if="checkList.includes('projectName')" show-overflow-tooltip prop="projectName"
               align="center" label="项目名称" />
+            <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip prop="projectId"
+              align="center" label="项目ID" >
+              <template #default="{ row }">
+                <div class="copyId">
+                  <div class="id oneLine">ID: {{ row.projectId }}</div>
+                  <copy class="copy" :content="row.projectId" />
+                </div>
+              </template>
+            </el-table-column>
             <el-table-column v-if="checkList.includes('customerIdentification')" show-overflow-tooltip
               prop="customerIdentification" align="center" label="客户简称/标识" />
-            <el-table-column v-if="checkList.includes('instructions')" show-overflow-tooltip prop="instructions"
-              align="center" label="说明" />
             <el-table-column v-if="checkList.includes('createTime')" show-overflow-tooltip prop="createTime"
-              align="center" label="创建时间"><template #default="{ row }">
+              align="center" label="创建"><template #default="{ row }">
                 <el-tag effect="plain" type="info">{{
     format(row.createTime)
   }}</el-tag>
               </template>
+            </el-table-column>
+            <el-table-column v-if="checkList.includes('instructions')" show-overflow-tooltip prop="instructions"
+              align="center" label="说明" >
+              <template #default="{ row }">
+          <div class="flex-c">
+                  <div class="oneLine" style="width: calc(100% - 20px);">
+                    {{ row.instructions ? row.instructions : "-" }}
+                  </div>
+                  <SvgIcon   @click="quickEdit(row)"
+                    :class="{ edit: 'edit', current: row.projectId === tabs2Current }" name="i-ep:edit" color="#409eff" />
+                </div>
+              </template>
+
             </el-table-column>
             <el-table-column align="center" fixed="right" label="操作" width="240">
               <template #default="{ row }">
@@ -404,6 +454,7 @@ onMounted(() => {
       </el-tabs>
       <deletes ref="deleteRef" />
       <detail ref="detailsRef" @fetchData="fetchData" />
+      <edit ref="editsRef" @fetchData="fetchData" />
     </PageMain>
   </div>
 </template>
@@ -455,4 +506,45 @@ onMounted(() => {
   }
 }
 
+.flex-c {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  width: 100%;
+
+  >div:nth-of-type(1) {
+    width: calc(100% - 25px);
+    flex-shrink: 0;
+  }
+
+  .edit {
+    width: 20px;
+    height: 20px;
+    margin-left: 5px;
+    flex-shrink: 0;
+    display: none;
+    cursor: pointer;
+  }
+
+  .current {
+    display: block !important;
+  }
+}
+
+.el-table__row:hover .edit {
+  display: block;
+}
+
+// id
+.copyId {
+  @extend .flex-c;
+
+  .copy {
+    width: 20px;
+  }
+
+  .id {
+    flex: 1;
+  }
+}
 </style>

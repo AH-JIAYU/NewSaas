@@ -2,6 +2,8 @@
 import { onMounted } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import customerEdit from "./components/CustomerEdit/index.vue";
+import QuickEdit from './components/QuickEdit/index.vue';
+import AssociatedProjects from './components/AssociatedProjects/index.vue';
 import customerDetail from "./components/CustomerDetail/index.vue";
 import { submitLoading } from "@/utils/apiLoading";
 import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
@@ -20,8 +22,11 @@ const listLoading = ref(false); // 加载
 const list = ref<Array<Object>>([]); // 表格数据
 const editRef = ref<any>(); // 组件ref 新增编辑
 const checkRef = ref<any>(); // 组件ref 查看
+const QuickEditRef = ref(); //快速编辑
+const AssociatedProjectsRef = ref(); //查看关联项目数
+const current = ref<any>()//表格当前选中
 const selectRows = ref(); // 表格选中行
-const border = ref(true); // 表格控件-边框
+const border = ref(false); // 表格控件-边框
 const stripe = ref(false); // 表格控件-条纹
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const lineHeight = ref<any>("default"); // 表格控件-大小
@@ -41,6 +46,7 @@ const columns = ref([
     prop: "customerShortName",
   },
   { label: "负责人", checked: true, sortable: true, prop: "chargeName" },
+  { label: "关联项目数", checked: true, sortable: true, prop: "projectNumber" },
   { label: "客户状态", checked: true, sortable: true, prop: "customerStatus" },
   {
     label: "前置问卷",
@@ -80,6 +86,24 @@ async function changeState(state: any, type: number, id: string) {
 function handleCheck(row: Object) {
   checkRef.value.showEdit(row);
 }
+function handleCurrentChange(val: any) {
+  if (val) current.value = val.tenantCustomerId
+  else current.value = ''
+}
+// 快速编辑
+function quickEdit(row: any, type: any) {
+  /**
+   * customerAccord 客户名称
+     customerShortName  客户简称
+     chargeName 负责人
+  */
+  QuickEditRef.value.showEdit(row, type)
+}
+// 查看关联项目数
+function associatedProjects(row: any) {
+  AssociatedProjectsRef.value.showEdit(row)
+}
+
 // 删除
 function handleDelete(row: any) {
   ElMessageBox.confirm(`您确定要删除当前项吗?`, "确认信息")
@@ -106,13 +130,12 @@ const queryForm = reactive<any>({
 // 获取负责人/用户
 const getTenantStaffList = async () => {
   const { data } = await apiUser.getTenantStaffList()
-   staffList.value = data
+  staffList.value = data
 }
 // 每页数量切换
 function sizeChange(size: number) {
   onSizeChange(size).then(() => fetchData());
 }
-
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
   onCurrentChange(page).then(() => fetchData());
@@ -170,7 +193,8 @@ onMounted(async () => {
           <ElForm :model="queryForm.select" size="default" label-width="100px" inline-message inline
             class="search-form">
             <el-form-item v-show="!fold">
-              <el-input v-model="queryForm.customerShortName" clearable placeholder="客户简称" @keydown.enter="currentChange()"/>
+              <el-input v-model="queryForm.customerShortName" clearable placeholder="客户简称"
+                @keydown.enter="currentChange()" />
             </el-form-item>
             <el-form-item v-show="!fold">
               <el-select v-model="queryForm.customerStatus" clearable placeholder="客户状态" @change="currentChange()">
@@ -180,7 +204,8 @@ onMounted(async () => {
               </el-select>
             </el-form-item>
             <el-form-item v-show="!fold">
-              <el-select v-model="queryForm.antecedentQuestionnaire" clearable placeholder="前置问卷" @change="currentChange()">
+              <el-select v-model="queryForm.antecedentQuestionnaire" clearable placeholder="前置问卷"
+                @change="currentChange()">
                 <el-option label="禁用" :value="1" />
                 <el-option label="启用" :value="2" />
               </el-select>
@@ -223,35 +248,8 @@ onMounted(async () => {
         </FormRightPanel>
       </el-row>
       <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
-        @selection-change="setSelectRows">
+        @selection-change="setSelectRows" highlight-current-row @current-change="handleCurrentChange">
         <el-table-column align="center" type="selection" />
-        <el-table-column v-if="checkList.includes('tenantCustomerId')" align="center" prop="tenantCustomerId"
-          width="180" show-overflow-tooltip label="客户编码" />
-        <el-table-column v-if="checkList.includes('customerAccord')" align="center" prop="customerAccord"
-          show-overflow-tooltip label="客户名称" />
-
-        <el-table-column v-if="checkList.includes('customerShortName')" align="center" prop="customerShortName"
-          show-overflow-tooltip label="客户简称" width="100" />
-        <el-table-column v-if="checkList.includes('turnover')" align="center" prop="turnover" show-overflow-tooltip
-          label="客户营业限额/月">
-          <template #default="{ row }">
-            <CurrencyType />{{ row.turnover || 0 }}
-          </template>
-        </el-table-column>
-        <el-table-column v-if="checkList.includes('rateAudit')" align="center" prop="rateAudit" show-overflow-tooltip
-          label="审核率Min值"><template #default="{ row }">
-            {{ row.rateAudit ? row.rateAudit : "-" }}
-          </template>
-        </el-table-column>
-        <el-table-column v-if="checkList.includes('chargeName')" align="center" prop="chargeName" show-overflow-tooltip
-          label="负责人"><template #default="{ row }">
-            <el-text v-for="item in staffList" :key="item.id">
-              <el-text v-if="item.id === row.chargeId">
-                {{ item.name }}
-              </el-text>
-            </el-text>
-          </template>
-        </el-table-column>
         <ElTableColumn v-if="checkList.includes('customerStatus')" align="center" show-overflow-tooltip
           prop="customerStatus" label="客户状态">
           <template #default="{ row }">
@@ -259,6 +257,67 @@ onMounted(async () => {
               inactive-text="禁用" @change="changeState($event, 1, row.tenantCustomerId)" />
           </template>
         </ElTableColumn>
+        <el-table-column v-if="checkList.includes('customerAccord')" align="center" prop="customerAccord"
+          show-overflow-tooltip label="客户名称">
+          <template #default="{ row }">
+            <div class="flex-c">
+              <div class="oneLine" style="width: calc(100% - 20px);"> {{ row.customerAccord }} </div>
+              <SvgIcon @click="quickEdit(row, 'customerAccord')"
+                :class="{ edit: 'edit', current: row.tenantCustomerId === current }" name="i-ep:edit" color="#409eff" />
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column v-if="checkList.includes('tenantCustomerId')" align="center" prop="tenantCustomerId"
+          width="180" show-overflow-tooltip label="客户编码">
+          <template #default="{ row }">
+            <div class="flex-c">
+              <div class="oneLine" style="width: calc(100% - 20px);">
+                {{ row.tenantCustomerId }}
+              </div>
+              <copy />
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column v-if="checkList.includes('customerShortName')" align="center" prop="customerShortName"
+          show-overflow-tooltip label="客户简称" width="100">
+          <template #default="{ row }">
+            <div class="flex-c">
+              <div class="oneLine" style="width: calc(100% - 20px);"> {{ row.customerShortName }} </div>
+              <SvgIcon @click="quickEdit(row, 'customerShortName')"
+                :class="{ edit: 'edit', current: row.tenantCustomerId === current }" name="i-ep:edit" color="#409eff" />
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column v-if="checkList.includes('chargeName')" align="center" prop="chargeName" show-overflow-tooltip
+          label="负责人"><template #default="{ row }">
+            <div class="flex-c">
+              <div class="oneLine" style="width: calc(100% - 20px);">
+                <el-text v-for="item in staffList" :key="item.id">
+                  <el-text v-if="item.id === row.chargeId">
+                    {{ item.name }}
+                  </el-text>
+                </el-text>
+              </div>
+              <SvgIcon @click="quickEdit(row, 'chargeName')"
+                :class="{ edit: 'edit', current: row.tenantCustomerId === current }" name="i-ep:edit" color="#409eff" />
+            </div>
+
+          </template>
+        </el-table-column>
+
+        <el-table-column v-if="checkList.includes('projectNumber')" align="center" prop="turnover" show-overflow-tooltip
+          label="关联项目数">
+          <template #default="{ row }">
+            <span style="width:20px;text-align:right;display: inline-block">
+              {{ row.projectNumber || 0 }}
+            </span>
+            <el-button v-if="row.projectNumber" text type="primary" size="small" class="p-1"
+              @click="associatedProjects(row)">
+              <SvgIcon name="mdi:cursor-default-click" size="16px" color="#409eff" />
+            </el-button>
+
+          </template>
+        </el-table-column>
         <ElTableColumn v-if="checkList.includes('antecedentQuestionnaire')" align="center" show-overflow-tooltip
           prop="antecedentQuestionnaire" label="前置问卷">
           <template #default="{ row }">
@@ -273,13 +332,27 @@ onMounted(async () => {
               inactive-text="禁用" @change="changeState($event, 3, row.tenantCustomerId)" />
           </template>
         </ElTableColumn>
+        <el-table-column v-if="checkList.includes('turnover')" align="center" prop="turnover" show-overflow-tooltip
+          label="客户营业限额/月">
+          <template #default="{ row }">
+            <CurrencyType />{{ row.turnover || 0 }}
+          </template>
+        </el-table-column>
+        <el-table-column v-if="checkList.includes('rateAudit')" align="center" prop="rateAudit" show-overflow-tooltip
+          label="审核率Min值"><template #default="{ row }">
+            {{ row.rateAudit ? row.rateAudit : "-" }}
+          </template>
+        </el-table-column>
+
+
+
         <el-table-column align="center" fixed="right" prop="i" label="操作" width="200">
           <template #default="{ row }">
             <ElSpace>
               <el-button size="small" plain type="primary" @click="handleEdit(row)">
                 编辑
               </el-button>
-              <el-button type="primary" plain size="small" @click="handleCheck(row)">
+              <el-button type="warning" plain size="small" @click="handleCheck(row)">
                 详情
               </el-button>
               <el-button type="danger" plain size="small" @click="handleDelete(row)">
@@ -296,6 +369,8 @@ onMounted(async () => {
         :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
         background @size-change="sizeChange" @current-change="currentChange" />
       <customerEdit ref="editRef" @fetch-data="queryData" />
+      <QuickEdit ref="QuickEditRef" @fetch-data="queryData" />
+      <AssociatedProjects ref="AssociatedProjectsRef" @fetch-data="queryData" />
       <customerDetail ref="checkRef" @fetch-data="queryData" />
     </PageMain>
   </div>
@@ -345,6 +420,35 @@ onMounted(async () => {
         }
       }
     }
+  }
+}
+
+.el-table__row:hover .edit {
+  display: block;
+}
+
+.flex-c {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  width: 100%;
+
+  >div:nth-of-type(1) {
+    width: calc(100% - 25px);
+    flex-shrink: 0;
+  }
+
+  .edit {
+    width: 20px;
+    height: 20px;
+    margin-left: 5px;
+    flex-shrink: 0;
+    display: none;
+    cursor: pointer;
+  }
+
+  .current {
+    display: block !important;
   }
 }
 </style>

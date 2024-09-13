@@ -10,6 +10,8 @@ export default {
   create: (data: any) => api.post("tenantCustomer/addTenantCustomer", data),
   // 修改 单个
   edit: (data: any) => api.post("tenantCustomer/updateTenantCustomer", data),
+  // 查看客户关联项目
+  getCustomerProjectList: (data: any) => api.post("tenantCustomer/getTenantCustomerProjectList", data),
   // 修改 单个 状态
   changestatus: (data: any) =>
     api.post("tenantCustomer/updateTenantCustomerStatus", data),

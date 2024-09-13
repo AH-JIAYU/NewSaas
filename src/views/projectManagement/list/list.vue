@@ -113,7 +113,7 @@ function projectEdit(row: any) {
   addProjeckRef.value.showEdit(row);
 }
 // 快速编辑
-function quickEdit(row:any,type:any){
+function quickEdit(row: any, type: any) {
   /**
    * 参数  PCNL
     客户 customer
@@ -122,7 +122,7 @@ function quickEdit(row:any,type:any){
     IR ir
     备注 remark
   */
-  QuickEditRef.value.showEdit(row,type)
+  QuickEditRef.value.showEdit(row, type)
 }
 // 修改状态
 async function changeStatus(row: any, val: any) {
@@ -367,7 +367,7 @@ onMounted(async () => {
       </el-row>
       <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="projectId" :data="list"
         :tree-props="{ children: 'getChildrenProjectListInfoList' }" :border="border" :size="lineHeight"
-        :stripe="stripe" highlight-current-row height="100%" @current-change="handleCurrentChange">
+        :stripe="stripe" highlight-current-row height="100%">
         <el-table-column align="center" type="selection" :selectable="selectable" />
         <el-table-column v-if="checkList.includes('isOnline')" show-overflow-tooltip prop="isOnline" align="center"
           width="100" label="状态">
@@ -388,7 +388,7 @@ onMounted(async () => {
               </el-button>
             </div>
             <div class="copyId">
-              <div class="id oneLine">ID: {{ row.projectId }}</div>
+              <div class="id oneLine ">ID: {{ row.projectId }}</div>
               <copy class="copy" :content="row.projectId" />
             </div>
           </template>
@@ -397,24 +397,26 @@ onMounted(async () => {
           label="名称/标识"><template #default="{ row }">
             <div class="flex-c">
               <div class="oneLine" style="width: calc(100% - 20px);">
-                <b :type="row.isB2b === 2 ? 'danger' : ''">名: {{ row.name }}</b>
-                <div>标: {{ row.clientName.split("/")[1] }}</div>
+                <b class="" :type="row.isB2b === 2 ? 'danger' : ''">名: {{ row.name }}</b>
+                <div class="">标: {{ row.clientName.split("/")[1] }}</div>
               </div>
-              <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row,'name')" :class="{edit:'edit',current:row.projectId===current}" name="i-ep:edit" color="#409eff" />
+              <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'name')"
+                :class="{ edit: 'edit', current: row.projectId === current }" name="i-ep:edit" color="#409eff" />
             </div>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('clientName')" prop="clientName" show-overflow-tooltip align="left"
           label="客户" width="120"><template #default="{ row }">
             <div class="flex-c">
-              <div class="oneLine" style="width: calc(100% - 20px);">
+              <div class="oneLine " style="width: calc(100% - 20px);">
                 <b>{{ row.clientName.split("/")[0] }}</b>
                 <div class="oneLine" v-if="row.projectType !== 2">
                   <img :src="row.avatar" alt="" class="avatar">
-                  <span>{{ row.chargeName }}</span>
+                  <span class="">{{ row.chargeName }}</span>
                 </div>
               </div>
-              <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row,'customer')" :class="{edit:'edit',current:row.projectId===current}" name="i-ep:edit" color="#409eff" />
+              <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'customer')"
+                :class="{ edit: 'edit', current: row.projectId === current }" name="i-ep:edit" color="#409eff" />
             </div>
           </template>
         </el-table-column>
@@ -427,7 +429,8 @@ onMounted(async () => {
                 <el-text class="oneLine" type="warning">配额: {{ row.num || 0 }}</el-text>
                 <el-text class="oneLine" type="info">限量: {{ row.limitedQuantity || "-" }}</el-text>
               </div>
-              <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row,'PCNL')" :class="{edit:'edit',current:row.projectId===current}" name="i-ep:edit" color="#409eff" />
+              <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'PCNL')"
+                :class="{ edit: 'edit', current: row.projectId === current }" name="i-ep:edit" color="#409eff" />
             </div>
           </template>
         </el-table-column>
@@ -448,10 +451,11 @@ onMounted(async () => {
         <el-table-column v-if="checkList.includes('doMoneyPrice')" show-overflow-tooltip align="center" label="原价">
           <template #default="{ row }">
             <div class="flex-c">
-              <div class="oneLine" style="width: calc(100% - 20px);">
+              <div class="oneLine " style="width: calc(100% - 20px);">
                 <CurrencyType />{{ row.doMoneyPrice || 0 }}
               </div>
-              <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row,'doMoneyPrice')" :class="{edit:'edit',current:row.projectId===current}" name="i-ep:edit" color="#409eff" />
+              <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'doMoneyPrice')"
+                :class="{ edit: 'edit', current: row.projectId === current }" name="i-ep:edit" color="#409eff" />
             </div>
 
           </template>
@@ -460,10 +464,11 @@ onMounted(async () => {
           width="100">
           <template #default="{ row }">
             <div class="flex-c">
-              <div class="oneLine" style="width: calc(100% - 20px);">
+              <div class="oneLine " style="width: calc(100% - 20px);">
                 {{ row.ir ? row.ir : 0 }}%/{{ row.nir ? row.nir : 0 }}%
               </div>
-              <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row,'ir')" :class="{edit:'edit',current:row.projectId===current}" name="i-ep:edit" color="#409eff" />
+              <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'ir')"
+                :class="{ edit: 'edit', current: row.projectId === current }" name="i-ep:edit" color="#409eff" />
             </div>
 
           </template>
@@ -494,17 +499,18 @@ onMounted(async () => {
 
         <el-table-column v-if="checkList.includes('create')" prop="createTime" align="center" width="100"
           label="创建"><template #default="{ row }">
-            <el-text>{{ row.createName }}</el-text>
+            <el-text class="">{{ row.createName }}</el-text>
             <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('remark')" show-overflow-tooltip prop="remark" align="left"
           width="100" label="备注"><template #default="{ row }">
-            <div class="flex-c">
+            <div class="flex-c ">
               <div class="oneLine" style="width: calc(100% - 20px);">
                 {{ row.remark ? row.remark : "-" }}
               </div>
-              <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row,'remark')" :class="{edit:'edit',current:row.projectId===current}" name="i-ep:edit" color="#409eff" />
+              <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'remark')"
+                :class="{ edit: 'edit', current: row.projectId === current }" name="i-ep:edit" color="#409eff" />
             </div>
 
           </template>
@@ -562,7 +568,7 @@ onMounted(async () => {
   display: flex;
   justify-content: start;
   align-items: center;
-  width:100%;
+  width: 100%;
 
   >div:nth-of-type(1) {
     width: calc(100% - 25px);
@@ -577,8 +583,9 @@ onMounted(async () => {
     display: none;
     cursor: pointer;
   }
-  .current{
-    display:block !important;
+
+  .current {
+    display: block !important;
   }
 }
 
@@ -623,6 +630,7 @@ onMounted(async () => {
 
   }
 }
+
 
 
 
