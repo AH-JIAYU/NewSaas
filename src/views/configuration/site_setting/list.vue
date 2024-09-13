@@ -42,7 +42,7 @@ const form = ref<any>({
   // 供应商网址
   supplierURL: "",
   // 设置顶级域名
-  externalSite: "",
+  topLevelDomainName: "",
   // 默认会员价格比例
   defaultPriceRatio: null,
   // 税率
@@ -82,7 +82,7 @@ const validateEmail = (rule: any, value: any, callback: any) => {
   }
 };
 // 校验前缀地址
-const validateInput = (rule:any, value:any, callback:any) => {
+const validateInput = (rule: any, value: any, callback: any) => {
   if (/^[\p{L}\p{N}]+$/u.test(value)) {
     callback(); // 验证通过
   } else {
@@ -141,7 +141,7 @@ const record = () => {
 }
 // 复制地址
 const copyToClipboard = () => {
-  const text = `${form.value.supplierURL}.front-supplier.surveyssaas.com`;
+  const text = form.value.personalizedDomainName;
   toClipboard(text);
   ElMessage({
     type: "success",
@@ -190,79 +190,81 @@ const handlePictureCardPreview: UploadProps["onPreview"] = (uploadFile) => {
 };
 // 提交数据
 function onSubmit() {
-  if (form.value.email === '') {
+  if (form.value.email === ''||form.value.email === null ) {
     formRules.value.email = []
     formRef.value.clearValidate('email');
   }
-  if (form.value.phone === '') {
+  if (form.value.phone === '' || form.value.phone === null) {
     formRules.value.phone = []
     formRef.value.clearValidate('phone');
   }
-  // 新增
-  if (!form.value.id) {
-    // 校验
-    formRef.value &&
-      formRef.value.validate((valid: any) => {
-        if (valid) {
-          try {
-            loading.value = true;
-            delete form.value.id;
-            !form.value.keyWords && (form.value.keyWords = 'keyWords')
-            api.create(form.value).then(() => {
-              loading.value = false;
-              getDataList();
-              ElMessage.success({
-                message: "新增成功",
-                center: true,
-              });
-            });
-          } catch (error) {
+  console.log(1111111);
 
-          } finally {
-            loading.value = false;
-          }
-        }
-      });
-  } else {
+  // 新增
+  // if (!form.value.id) {
+  //   // 校验
+  //   formRef.value &&
+  //     formRef.value.validate((valid: any) => {
+  //       if (valid) {
+  //         try {
+  //           loading.value = true;
+  //           delete form.value.id;
+  //           !form.value.keyWords && (form.value.keyWords = 'keyWords')
+  //           api.create(form.value).then(() => {
+  //             loading.value = false;
+  //             getDataList();
+  //             ElMessage.success({
+  //               message: "新增成功",
+  //               center: true,
+  //             });
+  //           });
+  //         } catch (error) {
+
+  //         } finally {
+  //           loading.value = false;
+  //         }
+  //       }
+  //     });
+  // } else {
     // 修改
     formRef.value &&
       formRef.value.validate((valid: any) => {
         if (valid) {
           try {
-            let {
-              id,
-              keyWords,
-              registerExamineOffOrOn,
-              registerOffOrOn,
-              supplierURL,
-              webName,
-              externalSite,
-              defaultPriceRatio,
-              taxRate,
-              minimumAmount,
-              phone,
-              email,
-              qqCode,
-              address,
-            } = form.value;
-            const params = {
-              id,
-              keyWords,
-              registerExamineOffOrOn,
-              registerOffOrOn,
-              supplierURL,
-              webName,
-              externalSite,
-              defaultPriceRatio,
-              taxRate,
-              minimumAmount,
-              phone,
-              email,
-              qqCode,
-              address,
-            };
+            // let {
+            //   id,
+            //   keyWords,
+            //   registerExamineOffOrOn,
+            //   registerOffOrOn,
+            //   supplierURL,
+            //   webName,
+            //   externalSite,
+            //   defaultPriceRatio,
+            //   taxRate,
+            //   minimumAmount,
+            //   phone,
+            //   email,
+            //   qqCode,
+            //   address,
+            // } = form.value;
+            // const params = {
+            //   id,
+            //   keyWords,
+            //   registerExamineOffOrOn,
+            //   registerOffOrOn,
+            //   supplierURL,
+            //   webName,
+            //   externalSite,
+            //   defaultPriceRatio,
+            //   taxRate,
+            //   minimumAmount,
+            //   phone,
+            //   email,
+            //   qqCode,
+            //   address,
+            // };
             loading.value = true;
-            api.edit(params).then((res: any) => {
+            api.edit(form.value).then((res: any) => {
               loading.value = false;
               if (res.status === 1) {
                 getDataList();
@@ -278,7 +280,7 @@ function onSubmit() {
           }
         }
       });
-  }
+  // }
 }
 </script>
 
@@ -343,18 +345,18 @@ function onSubmit() {
                 </el-form-item>
               </el-col>
               <el-col :span="24">
-                <el-form-item label="个性化域名" prop="supplierURL">
-                  <el-input v-model="form.supplierURL" style="width: 8rem" />
-                  <el-text class="mx-1">.front-supplier.surveyssaas.com</el-text>
+                <el-form-item label="个性化域名" prop="">
+                  <!-- <el-input v-model="form.personalizedDomainName" style="width: 8rem" /> -->
+                  <el-text class="mx-1">{{form.personalizedDomainName}}</el-text>
                   <el-button class="copy" type="primary" link @click="copyToClipboard">复制</el-button>
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="顶级域名">
-                  <el-input v-model="form.externalSite" style="width: 8rem" />
+                  <el-input v-model="form.topLevelDomainName" style="width: 8rem" />
                   <span class="red"></span><span style="margin-right: 10px;">已生效</span>
                   <span class="green"></span><span style="margin-right: 10px;">未生效</span>
-                  <el-button class="copy" @click="record" type="primary" link >解析记录</el-button>
+                  <el-button class="copy" @click="record" type="primary" link>解析记录</el-button>
                 </el-form-item>
               </el-col>
               <el-col :span="24">
@@ -428,7 +430,7 @@ function onSubmit() {
         </el-form>
       </el-tabs>
     </PageMain>
-    <siteDetail ref="recordRef" @fetch-data="getDataList"/>
+    <siteDetail ref="recordRef" @fetch-data="getDataList" />
   </div>
 </template>
 
@@ -486,23 +488,25 @@ function onSubmit() {
 .hide_box :deep(.el-upload--picture-card) {
   display: none;
 }
+
 .green {
   margin: 0 10px;
   display: inline-block;
-  width:10px;
-  height:10px;
+  width: 10px;
+  height: 10px;
   background-color: #70b61b;
   border-radius: 50px;
 }
+
 .red {
   margin: 0 10px;
   display: inline-block;
-  width:10px;
-  height:10px;
+  width: 10px;
+  height: 10px;
   background-color: #d9261b;
   border-radius: 50px;
 }
+
 // :deep() {
 //   background-color: #fafafa;
-// }
-</style>
+// }</style>
