@@ -188,6 +188,11 @@ async function fetchData() {
 function setSelectRows(val: any) {
   selectRows.value = val;
 }
+// 获取供应商等级
+const supperLevel = computed(() => (id: any) => {
+  const findData = supplierLevelList.value.find((item: any) => item.tenantSupplierLevelId === id)
+  return findData?.levelNameOrAdditionRatio
+})
 onMounted(async () => {
   columns.value.forEach((item: any) => {
     if (item.checked) {
@@ -233,15 +238,6 @@ onMounted(async () => {
                 <el-option label="待审批" :value="3" />
               </el-select>
             </el-form-item>
-            <!-- <el-form-item v-show="!fold" label="">
-              <el-select v-model="queryForm.supplierLevelId" value-key="" placeholder="供应商等级" clearable filterable >
-              <el-option v-for="item in supplierLevelList"
-              :key="item.tenantSupplierLevelId"
-              :label="item.levelNameOrAdditionRatio"
-              :value="item.tenantSupplierLevelId">
-              </el-option>
-              </el-select>
-            </el-form-item> -->
             <el-form-item v-show="!fold" label="">
               <el-date-picker v-model="queryForm.time" type="datetimerange" unlink-panels range-separator="-"
                 start-placeholder="创建开始日期" end-placeholder="创建结束日期" value-format="YYYY-MM-DD hh:mm:ss" size="default"
@@ -287,19 +283,36 @@ onMounted(async () => {
       <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
         @selection-change="setSelectRows">
         <el-table-column align="center" type="selection" />
-        <el-table-column v-if="checkList.includes('tenantSupplierId')" align="center" prop="tenantSupplierId"
-          width="180" show-overflow-tooltip label="供应商ID" />
+        <el-table-column v-if="checkList.includes('supplierStatus')" align="center" show-overflow-tooltip label="供应商状态">
+          <template #default="{ row }">
+            <ElSwitch v-if="row.supplierStatus === 3" v-model="row.supplierStatus" inline-prompt :inactive-value="3"
+              :active-value="2" inactive-text="待审核" active-text="启用"
+              @change="changeState($event, row.tenantSupplierId)" />
+            <ElSwitch v-else v-model="row.supplierStatus" inline-prompt :inactive-value="1" :active-value="2"
+              inactive-text="禁用" active-text="启用" @change="changeState($event, row.tenantSupplierId)" />
+          </template>
+        </el-table-column>
         <el-table-column v-if="checkList.includes('supplierAccord')" align="center" prop="supplierAccord"
           show-overflow-tooltip label="供应商名称">
           <template #default="{ row }">
             {{ row.supplierAccord }}
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('countryAffiliationName')" align="center"
-          prop="countryAffiliationName" show-overflow-tooltip label="国家"> <template #default="{ row }">
-            <el-tag type="primary">{{ row.countryAffiliationName }}</el-tag>
+        <el-table-column v-if="checkList.includes('tenantSupplierId')" align="center" prop="tenantSupplierId"
+          width="180" show-overflow-tooltip label="供应商ID" />
+        <el-table-column v-if="checkList.includes('supplierLevelId')" align="center" prop="supplierLevelId"
+          show-overflow-tooltip label="供应商等级">
+          <template #default="{ row }">
+            {{ supperLevel(row.supplierLevelId) }}
+            <!-- <div v-for="item in supplierLevelList" :key="item.tenantSupplierLevelId"
+              :value="item.levelNameOrAdditionRatio">
+              <el-text v-if="item.tenantSupplierLevelId === row.supplierLevelId" class="mx-1">{{
+    item.levelNameOrAdditionRatio }}</el-text>
+              <el-text v-else class="mx-1">-</el-text>
+            </div> -->
           </template>
         </el-table-column>
+
         <el-table-column v-if="checkList.includes('balanceHumanLife')" align="center" prop="balanceHumanLife"
           show-overflow-tooltip label="可用余额">
           <template #default="{ row }">
@@ -312,15 +325,9 @@ onMounted(async () => {
             <CurrencyType />{{ row.amountPendingTrial || 0 }}
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('supplierLevelId')" align="center" prop="supplierLevelId"
-          show-overflow-tooltip label="供应商等级">
-          <template #default="{ row }">
-            <div v-for="item in supplierLevelList" :key="item.tenantSupplierLevelId"
-              :value="item.levelNameOrAdditionRatio">
-              <el-text v-if="item.tenantSupplierLevelId === row.supplierLevelId" class="mx-1">{{
-    item.levelNameOrAdditionRatio }}</el-text>
-              <el-text v-else class="mx-1">-</el-text>
-            </div>
+        <el-table-column v-if="checkList.includes('countryAffiliationName')" align="center"
+          prop="countryAffiliationName" show-overflow-tooltip label="国家"> <template #default="{ row }">
+            <el-tag type="primary">{{ row.countryAffiliationName }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('b2bStatus')" align="center" show-overflow-tooltip label="B2B|B2C">
@@ -345,17 +352,9 @@ onMounted(async () => {
             {{ row.settlementCycle ? row.settlementCycle + "天" : "-" }}
           </template>
         </el-table-column>
-        <ElTableColumn v-if="checkList.includes('supplierStatus')" align="center" show-overflow-tooltip label="供应商状态">
-          <template #default="{ row }">
-            <ElSwitch v-if="row.supplierStatus === 3" v-model="row.supplierStatus" inline-prompt :inactive-value="3"
-              :active-value="2" inactive-text="待审核" active-text="启用"
-              @change="changeState($event, row.tenantSupplierId)" />
-            <ElSwitch v-else v-model="row.supplierStatus" inline-prompt :inactive-value="1" :active-value="2"
-              inactive-text="禁用" active-text="启用" @change="changeState($event, row.tenantSupplierId)" />
-          </template>
-        </ElTableColumn>
+
         <el-table-column v-if="checkList.includes('createTime')" align="center" prop="createTime" show-overflow-tooltip
-          label="创建时间"><template #default="{ row }">
+          label="创建"><template #default="{ row }">
             <el-tag effect="plain" type="info">{{
     format(row.createTime)
   }}</el-tag>
