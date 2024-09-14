@@ -340,8 +340,8 @@ onMounted(async() => {
     <div class="box_20 flex-col">
       <div class="group_6 flex-row">
         <img class="image_9" referrerpolicy="no-referrer"
-          src="https://lanhu-oss.lanhuapp.com/FigmaDDSSlicePNG960b6eaf3362872e073568b8365c81ce.png" />
-        <span class="text_48">嘉禹</span>
+          src="../../assets/images/home/bottomlogo.svg" />
+        <!-- <span class="text_48">嘉禹</span> -->
         <span class="text_49">热门方案</span>
         <span class="text_50">服务</span> <span class="text_51">公司</span>
         <span class="text_52">联系我们</span>
@@ -373,8 +373,7 @@ onMounted(async() => {
       <div class="group_8 ">
         <div class="group_8_1 flex-row">
           <img class="image_11" referrerpolicy="no-referrer"
-            src="https://lanhu-oss.lanhuapp.com/FigmaDDSSlicePNG0c7bddcd979b165007cac1254070ff68.png" />
-          <span class="text_62">嘉禹·调研平台</span>
+            src="../../assets/images/home/toplogo.svg" /> 
           <div class="section_10 flex-row justify-between">
             <img class="thumbnail_14" referrerpolicy="no-referrer"
               src="https://lanhu-oss.lanhuapp.com/FigmaDDSSlicePNG1788f426d5196954b610bcab7a424f19.png" />
@@ -496,7 +495,7 @@ onMounted(async() => {
   color: rgba(51, 51, 51, 1);
   font-size: 18px;
   font-family: PingFang SC-Medium;
-  font-weight: 500;
+  font-weight: 600;
   text-align: left;
   white-space: nowrap;
   line-height: 18px;
@@ -550,7 +549,7 @@ onMounted(async() => {
   color: rgba(51, 51, 51, 1);
   font-size: 18px;
   font-family: PingFang SC-Medium;
-  font-weight: 500;
+  font-weight: 600;
   text-align: left;
   white-space: nowrap;
   line-height: 18px;
@@ -604,7 +603,7 @@ onMounted(async() => {
   color: rgba(51, 51, 51, 1);
   font-size: 18px;
   font-family: PingFang SC-Medium;
-  font-weight: 500;
+  font-weight: 600;
   text-align: left;
   white-space: nowrap;
   line-height: 18px;
@@ -663,7 +662,7 @@ onMounted(async() => {
   color: rgba(51, 51, 51, 1);
   font-size: 18px;
   font-family: PingFang SC-Medium;
-  font-weight: 500;
+  font-weight: 600;
   text-align: left;
   white-space: nowrap;
   line-height: 18px;
@@ -717,7 +716,7 @@ onMounted(async() => {
   color: rgba(51, 51, 51, 1);
   font-size: 18px;
   font-family: PingFang SC-Medium;
-  font-weight: 500;
+  font-weight: 600;
   text-align: left;
   white-space: nowrap;
   line-height: 18px;
@@ -772,7 +771,7 @@ onMounted(async() => {
   color: rgba(51, 51, 51, 1);
   font-size: 18px;
   font-family: PingFang SC-Medium;
-  font-weight: 500;
+  font-weight: 600;
   text-align: left;
   white-space: nowrap;
   line-height: 18px;
@@ -868,18 +867,18 @@ onMounted(async() => {
 }
 
 .box_6 {
-  width: 451px;
+  width: 530px;
   height: 186px;
   // margin-top: 123px;
 }
 
 .text-group_8 {
-  width: 451px;
+  width: 530px;
   height: 110px;
 }
 
 .text_16 {
-  width: 451px;
+  width: 530px;
   height: 50px;
   overflow-wrap: break-word;
   color: rgba(51, 51, 51, 1);
@@ -892,7 +891,7 @@ onMounted(async() => {
 }
 
 .text_17 {
-  width: 451px;
+  width: 530px;
   height: 44px;
   overflow-wrap: break-word;
   color: rgba(119, 119, 119, 1);
@@ -952,17 +951,17 @@ onMounted(async() => {
 }
 
 .box_7 {
-  width: 451px;
+  width: 530px;
   height: 186px; 
 }
 
 .text-group_10 {
-  width: 451px;
+  width: 530px;
   height: 110px;
 }
 
 .text_18 {
-  width: 451px;
+  width: 530px;
   height: 50px;
   overflow-wrap: break-word;
   color: rgba(51, 51, 51, 1);
@@ -975,7 +974,7 @@ onMounted(async() => {
 }
 
 .text_19 {
-  width: 451px;
+  width: 530px;
   height: 44px;
   overflow-wrap: break-word;
   color: rgba(119, 119, 119, 1);
@@ -1027,17 +1026,17 @@ onMounted(async() => {
 }
 
 .box_8 {
-  width: 451px;
+  width: 530px;
   height: 186px; 
 }
 
 .text-group_12 {
-  width: 451px;
+  width: 530px;
   height: 110px;
 }
 
 .text_20 {
-  width: 451px;
+  width: 530px;
   height: 50px;
   overflow-wrap: break-word;
   color: rgba(51, 51, 51, 1);
@@ -1050,7 +1049,7 @@ onMounted(async() => {
 }
 
 .text_21 {
-  width: 451px;
+  width: 530px;
   height: 44px;
   overflow-wrap: break-word;
   color: rgba(119, 119, 119, 1);
@@ -1110,17 +1109,17 @@ onMounted(async() => {
 }
 
 .group_4 {
-  width: 451px;
+  width: 530px;
   height: 186px; 
 }
 
 .text-group_14 {
-  width: 451px;
+  width: 530px;
   height: 110px;
 }
 
 .text_22 {
-  width: 451px;
+  width: 530px;
   height: 50px;
   overflow-wrap: break-word;
   color: rgba(51, 51, 51, 1);
@@ -1133,7 +1132,7 @@ onMounted(async() => {
 }
 
 .text_23 {
-  width: 451px;
+  width: 530px;
   height: 44px;
   overflow-wrap: break-word;
   color: rgba(119, 119, 119, 1);
@@ -1185,17 +1184,17 @@ onMounted(async() => {
 }
 
 .box_10 {
-  width: 451px;
+  width: 530px;
   height: 186px; 
 }
 
 .text-group_16 {
-  width: 451px;
+  width: 530px;
   height: 110px;
 }
 
 .text_24 {
-  width: 451px;
+  width: 530px;
   height: 50px;
   overflow-wrap: break-word;
   color: rgba(51, 51, 51, 1);
@@ -1208,7 +1207,7 @@ onMounted(async() => {
 }
 
 .text_25 {
-  width: 451px;
+  width: 530px;
   height: 44px;
   overflow-wrap: break-word;
   color: rgba(119, 119, 119, 1);
@@ -1268,17 +1267,17 @@ onMounted(async() => {
 }
 
 .box_11 {
-  width: 451px;
+  width: 530px;
   height: 186px; 
 }
 
 .text-group_18 {
-  width: 451px;
+  width: 530px;
   height: 110px;
 }
 
 .text_26 {
-  width: 451px;
+  width: 530px;
   height: 50px;
   overflow-wrap: break-word;
   color: rgba(51, 51, 51, 1);
@@ -1291,7 +1290,7 @@ onMounted(async() => {
 }
 
 .text_27 {
-  width: 451px;
+  width: 530px;
   height: 44px;
   overflow-wrap: break-word;
   color: rgba(119, 119, 119, 1);
@@ -1915,10 +1914,11 @@ onMounted(async() => {
   max-width: 90vw;
   height: 52px;
   margin: 64px auto 0;
+  align-items: center;
 }
 
 .image_9 {
-  width: 52px;
+  // width: 52px;
   height: 52px;
 }
 
@@ -2191,8 +2191,7 @@ onMounted(async() => {
   justify-content: start;
 }
 
-.image_11 {
-  width: 52px;
+.image_11 { 
   height: 52px;
   margin: 10px 0 0 0;
 }
