@@ -99,7 +99,10 @@ const loginRules = ref<any>({
 
 onMounted(async () => {
   const { data } = await api.getTenantConfig();
-  isRegister.value = data.register;
+  isRegister.value = data.register; 
+  if(route.query.isRegister&&route.query.isRegister==='true'){
+    formType.value = 'register'
+  }
 });
 // 动态表单校验
 // const chengAccount = () => {

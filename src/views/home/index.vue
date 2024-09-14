@@ -1,13 +1,24 @@
 <script setup lang="ts">
+import api from "@/api/modules/register";
 defineOptions({
   name: "home",
 });
-const router = useRouter()
+const router = useRouter() 
+const isRegister = ref<any>(); //注册开关
+
 const toLogin = () => {
   router.push('/login')
 }
-
-onMounted(() => {
+// 免费试用
+const freeTrial=()=>{ 
+  router.push({
+    path: "/login",
+    query: {
+      isRegister:isRegister.value,
+    },
+  });
+}
+onMounted(async() => {
   // 元素淡入
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -16,12 +27,16 @@ onMounted(() => {
       }
     });
     // 进入视口10% 触发
-  }, { threshold: 0.1 });
+  }, { threshold: .5 });
   // ref获取到的只有最后一个，直接加属性用原生获取
   const fadeOutElementList = document.querySelectorAll('img[fadeOut]');
   fadeOutElementList.forEach((element: any) => {
     observer.observe(element);
   });
+
+  const { data } = await api.getTenantConfig({});
+  isRegister.value = data.register;
+
 })
 </script>
 
@@ -108,39 +123,24 @@ onMounted(() => {
         <span class="text_14">嘉禹·数字化产品优势</span>
         <span class="text_15">六大核心能力</span>
       </div>
-      <div class="section_4 flex-row justify-between">
-        <div class="box_6 flex-col justify-between">
-          <div class="text-group_8 flex-col justify-between">
-            <span class="text_16">项目数字化能力</span>
-            <span class="text_17">实现项目全程数据化。从项目发布至项目结算，通过智能埋点，进行数据监控，预防计划风险、业务风险、财务风险</span>
-          </div>
-          <div class="block_1 flex-row">
-            <div class="image-text_1 flex-row justify-between">
-              <span class="text-group_9">免费使用</span>
-              <img class="thumbnail_1" referrerpolicy="no-referrer"
-                src="https://lanhu-oss.lanhuapp.com/FigmaDDSSlicePNGc2be064a1afab26a9502ccaf5f9caa3c.png" />
+      <div class=" po-r">
+        <div class="section_4 flex-row justify-between">
+          <img class="image_3 displayNo" fadeOut referrerpolicy="no-referrer" src="../../assets/images/home/1.svg" />
+          <div class="box_6 flex-col justify-between">
+            <div class="text-group_8 flex-col justify-between">
+              <span class="text_16">项目数字化能力</span>
+              <span class="text_17">实现项目全程数据化。从项目发布至项目结算，通过智能埋点，进行数据监控，合理控制项目预算及成本</span>
+            </div>
+            <div class="block_1 flex-row"  @click="freeTrial">
+              <div class="image-text_1 flex-row justify-between">
+                <span class="text-group_9">免费试用</span>
+                <img class="thumbnail_1" referrerpolicy="no-referrer"
+                  src="https://lanhu-oss.lanhuapp.com/FigmaDDSSlicePNGc2be064a1afab26a9502ccaf5f9caa3c.png" />
+              </div>
             </div>
           </div>
         </div>
-        <img class="image_3" fadeOut referrerpolicy="no-referrer"
-          src="https://lanhu-oss.lanhuapp.com/FigmaDDSSlicePNG6b4e88cb4f14b1c956e174ea5147577a.png" />
-      </div>
-      <div class="section_5 flex-row justify-between">
-        <img class="image_4" fadeOut referrerpolicy="no-referrer"
-          src="https://lanhu-oss.lanhuapp.com/FigmaDDSSlicePNG84981b9e28d0608dd3d8e7587577e8ea.png" />
-        <div class="box_7 flex-col justify-between">
-          <div class="text-group_10 flex-col justify-between">
-            <span class="text_18">敏捷应用开发能力</span>
-            <span class="text_19">系统应用中心通过提供额外功能和定制化服务，提升系统的效率，快速响应合作方定制需求，同时降低系统运维成本和复杂性</span>
-          </div>
-          <div class="block_2 flex-row">
-            <div class="image-text_2 flex-row justify-between">
-              <span class="text-group_11">免费使用</span>
-              <img class="thumbnail_2" referrerpolicy="no-referrer"
-                src="https://lanhu-oss.lanhuapp.com/FigmaDDSSlicePNGc2be064a1afab26a9502ccaf5f9caa3c.png" />
-            </div>
-          </div>
-        </div>
+        <img class="bg-r" src="../../assets/images/home/right.png" alt="">
       </div>
       <div class="section_6 flex-row justify-between">
         <div class="box_8 flex-col justify-between">
@@ -148,33 +148,72 @@ onMounted(() => {
             <span class="text_20">多模态合作能力</span>
             <span class="text_21">实现多级合作关系，打通租户与租户的合作壁垒，支持内部会员拓展，建立供应商、服务商亲密的合作关系，更好适应市场变化</span>
           </div>
-          <div class="group_3 flex-row">
+          <div class="group_3 flex-row"  @click="freeTrial">
             <div class="image-text_3 flex-row justify-between">
-              <span class="text-group_13">免费使用</span>
+              <span class="text-group_13">免费试用</span>
               <img class="thumbnail_3" referrerpolicy="no-referrer"
                 src="https://lanhu-oss.lanhuapp.com/FigmaDDSSlicePNGc2be064a1afab26a9502ccaf5f9caa3c.png" />
             </div>
           </div>
         </div>
-        <img class="image_5" fadeOut referrerpolicy="no-referrer"
-          src="https://lanhu-oss.lanhuapp.com/FigmaDDSSlicePNG42163b26a41922ba596e09b5c5fac663.png" />
+        <img class="image_5 displayNo" fadeOut referrerpolicy="no-referrer" src="../../assets/images/home/2.svg" />
       </div>
-      <div class="section_7 flex-row justify-between">
-        <img class="image_6" fadeOut referrerpolicy="no-referrer"
-          src="https://lanhu-oss.lanhuapp.com/FigmaDDSSlicePNG44a41a75b4a950fadacfe10f302bbd9b.png" />
-        <div class="group_4 flex-col justify-between">
-          <div class="text-group_14 flex-col justify-between">
-            <span class="text_22">RBAC3组织能力</span>
-            <span class="text_23">支撑组织、人员、角色管理、支持多维组织、集团化企业分级分权管理</span>
+      <div class="po-r">
+        <div class="section_5 flex-row justify-between">
+          <img class="image_4 displayNo" fadeOut referrerpolicy="no-referrer" src="../../assets/images/home/3.svg" />
+          <div class="box_7 flex-col justify-between">
+            <div class="text-group_10 flex-col justify-between">
+              <span class="text_18">敏捷应用开发能力</span>
+              <span class="text_19">系统应用中心通过提供额外功能和定制化服务，提升系统的效率，快速响应合作方定制需求，同时降低系统运维成本和复杂性</span>
+            </div>
+            <div class="block_2 flex-row"  @click="freeTrial">
+              <div class="image-text_2 flex-row justify-between">
+                <span class="text-group_11">免费试用</span>
+                <img class="thumbnail_2" referrerpolicy="no-referrer"
+                  src="https://lanhu-oss.lanhuapp.com/FigmaDDSSlicePNGc2be064a1afab26a9502ccaf5f9caa3c.png" />
+              </div>
+            </div>
           </div>
-          <div class="box_9 flex-row">
-            <div class="image-text_4 flex-row justify-between">
-              <span class="text-group_15">免费使用</span>
-              <img class="thumbnail_4" referrerpolicy="no-referrer"
+        </div>
+        <img src="../../assets/images/home/left.png" alt="" class="bg-l">
+      </div>
+      <div class="section_9 flex-row justify-between">
+
+        <div class="box_11 flex-col justify-between">
+          <div class="text-group_18 flex-col justify-between">
+            <span class="text_26">信息门户引擎</span>
+            <span class="text_27">可视化配置为组织打造千人千面工作台，支持合作用户自定义搭建客商门户官网</span>
+          </div>
+          <div class="block_3 flex-row"  @click="freeTrial">
+            <div class="image-text_6 flex-row justify-between">
+              <span class="text-group_19">免费试用</span>
+              <img class="thumbnail_6" referrerpolicy="no-referrer"
                 src="https://lanhu-oss.lanhuapp.com/FigmaDDSSlicePNGc2be064a1afab26a9502ccaf5f9caa3c.png" />
             </div>
           </div>
         </div>
+        <img class="image_8 displayNo" fadeOut referrerpolicy="no-referrer" src="../../assets/images/home/4.svg" />
+      </div>
+
+      <div class="po-r">
+        <div class="section_7 flex-row justify-between">
+          <img class="image_6 displayNo" fadeOut referrerpolicy="no-referrer" src="../../assets/images/home/5.svg" />
+          <div class="group_4 flex-col justify-between">
+            <div class="text-group_14 flex-col justify-between">
+              <span class="text_22">RBAC3组织能力</span>
+              <span class="text_23">支撑组织、人员、角色管理、支持多维组织、集团化企业分级分权管理</span>
+            </div>
+            <div class="box_9 flex-row" @click="freeTrial">
+              <div class="image-text_4 flex-row justify-between">
+                <span class="text-group_15">免费试用</span>
+                <img class="thumbnail_4" referrerpolicy="no-referrer"
+                  src="https://lanhu-oss.lanhuapp.com/FigmaDDSSlicePNGc2be064a1afab26a9502ccaf5f9caa3c.png" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <img src="../../assets/images/home/right.png" alt="" class="bg-r">
+
       </div>
       <div class="section_8 flex-row justify-between">
         <div class="box_10 flex-col justify-between">
@@ -182,34 +221,17 @@ onMounted(() => {
             <span class="text_24">客商集合能力</span>
             <span class="text_25">集合客商关键信息，通过数据报表聚合展现，包括客户的基本信息，合作关联信息，方便与客户有效对接</span>
           </div>
-          <div class="group_5 flex-row">
+          <div class="group_5 flex-row" @click="freeTrial">
             <div class="image-text_5 flex-row justify-between">
-              <span class="text-group_17">免费使用</span>
+              <span class="text-group_17" >免费试用</span>
               <img class="thumbnail_5" referrerpolicy="no-referrer"
                 src="https://lanhu-oss.lanhuapp.com/FigmaDDSSlicePNGc2be064a1afab26a9502ccaf5f9caa3c.png" />
             </div>
           </div>
         </div>
-        <img class="image_7" fadeOut referrerpolicy="no-referrer"
-          src="https://lanhu-oss.lanhuapp.com/FigmaDDSSlicePNGf9e22ace61f1e2d39b3130fd7821dcb0.png" />
+        <img class="image_7 displayNo" fadeOut referrerpolicy="no-referrer" src="../../assets/images/home/6.svg" />
       </div>
-      <div class="section_9 flex-row justify-between">
-        <img class="image_8" fadeOut referrerpolicy="no-referrer"
-          src="https://lanhu-oss.lanhuapp.com/FigmaDDSSlicePNG602a96bc099e8d740bf72f1a0a655e96.png" />
-        <div class="box_11 flex-col justify-between">
-          <div class="text-group_18 flex-col justify-between">
-            <span class="text_26">信息门户引擎</span>
-            <span class="text_27">可视化配置为组织打造千人千面工作台，支持合作用户自定义搭建客商门户官网</span>
-          </div>
-          <div class="block_3 flex-row">
-            <div class="image-text_6 flex-row justify-between">
-              <span class="text-group_19">免费使用</span>
-              <img class="thumbnail_6" referrerpolicy="no-referrer"
-                src="https://lanhu-oss.lanhuapp.com/FigmaDDSSlicePNGc2be064a1afab26a9502ccaf5f9caa3c.png" />
-            </div>
-          </div>
-        </div>
-      </div>
+
     </div>
     <div class="box_12 flex-col">
       <div class="text-group_20 flex-col justify-between">
@@ -310,16 +332,16 @@ onMounted(() => {
           <span class="text_45">亚洲首家SaaS化项目执行平台</span>
           <span class="text_46">助力调研服务数字化转型</span>
         </div>
-        <div class="text-wrapper_1 flex-col">
+        <div class="text-wrapper_1 flex-col"  @click="freeTrial">
           <span class="text_47">免费试用</span>
         </div>
       </div>
     </div>
     <div class="box_20 flex-col">
       <div class="group_6 flex-row">
-        <img class="image_9"  referrerpolicy="no-referrer"
-          src="https://lanhu-oss.lanhuapp.com/FigmaDDSSlicePNG960b6eaf3362872e073568b8365c81ce.png" />
-        <span class="text_48">嘉禹</span>
+        <img class="image_9" referrerpolicy="no-referrer"
+          src="../../assets/images/home/bottomlogo.svg" />
+        <!-- <span class="text_48">嘉禹</span> -->
         <span class="text_49">热门方案</span>
         <span class="text_50">服务</span> <span class="text_51">公司</span>
         <span class="text_52">联系我们</span>
@@ -332,9 +354,9 @@ onMounted(() => {
       </div>
       <div class="group_7 flex-row">
         <div class="image-text_7 flex-col justify-between">
-          <img class="image_10" referrerpolicy="no-referrer"
-            src="https://lanhu-oss.lanhuapp.com/FigmaDDSSlicePNG0088d46ee36456d34c87dd122f0bb018.png" />
-          <span class="text-group_29">微信咨询</span>
+          <!-- <img class="image_10" referrerpolicy="no-referrer"
+            src="https://lanhu-oss.lanhuapp.com/FigmaDDSSlicePNG0088d46ee36456d34c87dd122f0bb018.png" /> -->
+          <span class="text-group_29"> </span>
         </div>
         <div class="text-wrapper_3 flex-col justify-between">
           <span class="text_57">隐私条款</span>
@@ -351,8 +373,7 @@ onMounted(() => {
       <div class="group_8 ">
         <div class="group_8_1 flex-row">
           <img class="image_11" referrerpolicy="no-referrer"
-            src="https://lanhu-oss.lanhuapp.com/FigmaDDSSlicePNG0c7bddcd979b165007cac1254070ff68.png" />
-          <span class="text_62">首页</span>
+            src="../../assets/images/home/toplogo.svg" /> 
           <div class="section_10 flex-row justify-between">
             <img class="thumbnail_14" referrerpolicy="no-referrer"
               src="https://lanhu-oss.lanhuapp.com/FigmaDDSSlicePNG1788f426d5196954b610bcab7a424f19.png" />
@@ -362,7 +383,7 @@ onMounted(() => {
             <span class="text_64" @click="toLogin">登录</span>
           </div>
           <div class="text-wrapper_6 flex-col">
-            <span class="text_65">免费试用</span>
+            <span class="text_65" @click="freeTrial">免费试用</span>
           </div>
         </div>
 
@@ -370,14 +391,14 @@ onMounted(() => {
       <div class="group_9 ">
         <div class="group_9_1 flex-row justify-between">
           <div class="box_22 flex-col">
-            <span class="text_66">嘉禹·调研平台</span>
+            <!-- <span class="text_66">嘉禹·调研平台</span> -->
             <div class="text-group_30 flex-col justify-between">
-              <span class="text_67">全球一站式调研服务平台</span>
+              <h1 class="text_67">全球一站式调研服务平台</h1>
               <span class="text_68">百万数据集成样本库.亚洲首家SaaS化项目执行服务平台</span>
             </div>
             <div class="box_23 flex-row justify-between">
               <div class="text-wrapper_7 flex-col">
-                <span class="text_69">免费试用</span>
+                <span class="text_69" @click="freeTrial">免费试用</span>
               </div>
               <div class="text-wrapper_8 flex-col">
                 <span class="text_70">预约演示</span>
@@ -403,7 +424,7 @@ onMounted(() => {
   background-color: rgba(251, 251, 253, 1);
   position: relative;
   width: 100%;
-  height: 6903px;
+  // height: 6903px;
   overflow: hidden;
 }
 
@@ -415,8 +436,7 @@ onMounted(() => {
 
 
 .text_1 {
-  width: 576px;
-  height: 67px;
+  width: 576px; 
   overflow-wrap: break-word;
   color: rgba(51, 51, 51, 1);
   font-size: 48px;
@@ -475,7 +495,7 @@ onMounted(() => {
   color: rgba(51, 51, 51, 1);
   font-size: 18px;
   font-family: PingFang SC-Medium;
-  font-weight: 500;
+  font-weight: 600;
   text-align: left;
   white-space: nowrap;
   line-height: 18px;
@@ -529,7 +549,7 @@ onMounted(() => {
   color: rgba(51, 51, 51, 1);
   font-size: 18px;
   font-family: PingFang SC-Medium;
-  font-weight: 500;
+  font-weight: 600;
   text-align: left;
   white-space: nowrap;
   line-height: 18px;
@@ -583,7 +603,7 @@ onMounted(() => {
   color: rgba(51, 51, 51, 1);
   font-size: 18px;
   font-family: PingFang SC-Medium;
-  font-weight: 500;
+  font-weight: 600;
   text-align: left;
   white-space: nowrap;
   line-height: 18px;
@@ -642,7 +662,7 @@ onMounted(() => {
   color: rgba(51, 51, 51, 1);
   font-size: 18px;
   font-family: PingFang SC-Medium;
-  font-weight: 500;
+  font-weight: 600;
   text-align: left;
   white-space: nowrap;
   line-height: 18px;
@@ -696,7 +716,7 @@ onMounted(() => {
   color: rgba(51, 51, 51, 1);
   font-size: 18px;
   font-family: PingFang SC-Medium;
-  font-weight: 500;
+  font-weight: 600;
   text-align: left;
   white-space: nowrap;
   line-height: 18px;
@@ -741,6 +761,7 @@ onMounted(() => {
   width: 331px;
   height: 85px;
   margin: 24px 80px 0 16px;
+  align-items: center;
 }
 
 .text_12 {
@@ -750,7 +771,7 @@ onMounted(() => {
   color: rgba(51, 51, 51, 1);
   font-size: 18px;
   font-family: PingFang SC-Medium;
-  font-weight: 500;
+  font-weight: 600;
   text-align: left;
   white-space: nowrap;
   line-height: 18px;
@@ -791,16 +812,15 @@ onMounted(() => {
 .image_2 {
   width: 1141px;
   height: 1141px;
-  /* margin: -186px 0 0 835px; */
   position: absolute;
   right: 0;
   top: 0;
 }
 
 .box_5 {
-  background-color: rgba(255, 255, 255, 1);
+  background-color: #fbfbfd;
   width: 100%;
-  height: 3493px;
+  // height: 3493px;
   margin-top: -1px;
   justify-content: flex-center;
 }
@@ -842,23 +862,23 @@ onMounted(() => {
 .section_4 {
   width: 1560px;
   max-width: 90vw;
-  height: 432px;
   margin: 64px auto 0;
+  align-items: center;
 }
 
 .box_6 {
-  width: 451px;
+  width: 530px;
   height: 186px;
-  margin-top: 123px;
+  // margin-top: 123px;
 }
 
 .text-group_8 {
-  width: 451px;
+  width: 530px;
   height: 110px;
 }
 
 .text_16 {
-  width: 451px;
+  width: 530px;
   height: 50px;
   overflow-wrap: break-word;
   color: rgba(51, 51, 51, 1);
@@ -871,7 +891,7 @@ onMounted(() => {
 }
 
 .text_17 {
-  width: 451px;
+  width: 530px;
   height: 44px;
   overflow-wrap: break-word;
   color: rgba(119, 119, 119, 1);
@@ -906,7 +926,7 @@ onMounted(() => {
   font-weight: 500;
   text-align: left;
   white-space: nowrap;
-  line-height: 16px;
+  line-height: 22px;
 }
 
 .thumbnail_1 {
@@ -916,35 +936,32 @@ onMounted(() => {
 }
 
 .image_3 {
-  width: 768px;
-  height: 432px;
+  width: 950px;
 }
 
 .section_5 {
   width: 1560px;
   max-width: 90vw;
-  height: 432px;
   margin: 120px auto 0;
+  align-items: center;
 }
 
 .image_4 {
-  width: 768px;
-  height: 432px;
+  width: 950px;
 }
 
 .box_7 {
-  width: 451px;
-  height: 186px;
-  margin-top: 123px;
+  width: 530px;
+  height: 186px; 
 }
 
 .text-group_10 {
-  width: 451px;
+  width: 530px;
   height: 110px;
 }
 
 .text_18 {
-  width: 451px;
+  width: 530px;
   height: 50px;
   overflow-wrap: break-word;
   color: rgba(51, 51, 51, 1);
@@ -957,7 +974,7 @@ onMounted(() => {
 }
 
 .text_19 {
-  width: 451px;
+  width: 530px;
   height: 44px;
   overflow-wrap: break-word;
   color: rgba(119, 119, 119, 1);
@@ -992,7 +1009,7 @@ onMounted(() => {
   font-weight: 500;
   text-align: left;
   white-space: nowrap;
-  line-height: 16px;
+  line-height: 22px;
 }
 
 .thumbnail_2 {
@@ -1004,23 +1021,22 @@ onMounted(() => {
 .section_6 {
   width: 1560px;
   max-width: 90vw;
-  height: 432px;
   margin: 120px auto 0;
+  align-items: center;
 }
 
 .box_8 {
-  width: 451px;
-  height: 186px;
-  margin-top: 123px;
+  width: 530px;
+  height: 186px; 
 }
 
 .text-group_12 {
-  width: 451px;
+  width: 530px;
   height: 110px;
 }
 
 .text_20 {
-  width: 451px;
+  width: 530px;
   height: 50px;
   overflow-wrap: break-word;
   color: rgba(51, 51, 51, 1);
@@ -1033,7 +1049,7 @@ onMounted(() => {
 }
 
 .text_21 {
-  width: 451px;
+  width: 530px;
   height: 44px;
   overflow-wrap: break-word;
   color: rgba(119, 119, 119, 1);
@@ -1068,7 +1084,7 @@ onMounted(() => {
   font-weight: 500;
   text-align: left;
   white-space: nowrap;
-  line-height: 16px;
+  line-height: 22px;
 }
 
 .thumbnail_3 {
@@ -1078,35 +1094,32 @@ onMounted(() => {
 }
 
 .image_5 {
-  width: 768px;
-  height: 432px;
+  width: 950px; 
 }
 
 .section_7 {
   width: 1560px;
   max-width: 90vw;
-  height: 432px;
   margin: 120px auto 0;
+  align-items: center;
 }
 
 .image_6 {
-  width: 768px;
-  height: 432px;
+  width: 950px;
 }
 
 .group_4 {
-  width: 451px;
-  height: 186px;
-  margin-top: 123px;
+  width: 530px;
+  height: 186px; 
 }
 
 .text-group_14 {
-  width: 451px;
+  width: 530px;
   height: 110px;
 }
 
 .text_22 {
-  width: 451px;
+  width: 530px;
   height: 50px;
   overflow-wrap: break-word;
   color: rgba(51, 51, 51, 1);
@@ -1119,7 +1132,7 @@ onMounted(() => {
 }
 
 .text_23 {
-  width: 451px;
+  width: 530px;
   height: 44px;
   overflow-wrap: break-word;
   color: rgba(119, 119, 119, 1);
@@ -1154,7 +1167,7 @@ onMounted(() => {
   font-weight: 500;
   text-align: left;
   white-space: nowrap;
-  line-height: 16px;
+  line-height: 22px;
 }
 
 .thumbnail_4 {
@@ -1166,23 +1179,22 @@ onMounted(() => {
 .section_8 {
   width: 1560px;
   max-width: 90vw;
-  height: 432px;
   margin: 120px auto 0;
+  align-items: center;
 }
 
 .box_10 {
-  width: 451px;
-  height: 186px;
-  margin-top: 123px;
+  width: 530px;
+  height: 186px; 
 }
 
 .text-group_16 {
-  width: 451px;
+  width: 530px;
   height: 110px;
 }
 
 .text_24 {
-  width: 451px;
+  width: 530px;
   height: 50px;
   overflow-wrap: break-word;
   color: rgba(51, 51, 51, 1);
@@ -1195,7 +1207,7 @@ onMounted(() => {
 }
 
 .text_25 {
-  width: 451px;
+  width: 530px;
   height: 44px;
   overflow-wrap: break-word;
   color: rgba(119, 119, 119, 1);
@@ -1230,7 +1242,7 @@ onMounted(() => {
   font-weight: 500;
   text-align: left;
   white-space: nowrap;
-  line-height: 16px;
+  line-height: 22px;
 }
 
 .thumbnail_5 {
@@ -1240,35 +1252,32 @@ onMounted(() => {
 }
 
 .image_7 {
-  width: 768px;
-  height: 432px;
+  width: 950px; 
 }
 
 .section_9 {
   width: 1560px;
   max-width: 90vw;
-  height: 432px;
   margin: 120px auto 64px;
+  align-items: center;
 }
 
 .image_8 {
-  width: 768px;
-  height: 432px;
+  width: 950px;
 }
 
 .box_11 {
-  width: 451px;
-  height: 186px;
-  margin-top: 123px;
+  width: 530px;
+  height: 186px; 
 }
 
 .text-group_18 {
-  width: 451px;
+  width: 530px;
   height: 110px;
 }
 
 .text_26 {
-  width: 451px;
+  width: 530px;
   height: 50px;
   overflow-wrap: break-word;
   color: rgba(51, 51, 51, 1);
@@ -1281,7 +1290,7 @@ onMounted(() => {
 }
 
 .text_27 {
-  width: 451px;
+  width: 530px;
   height: 44px;
   overflow-wrap: break-word;
   color: rgba(119, 119, 119, 1);
@@ -1316,7 +1325,7 @@ onMounted(() => {
   font-weight: 500;
   text-align: left;
   white-space: nowrap;
-  line-height: 16px;
+  line-height: 22px;
 }
 
 .thumbnail_6 {
@@ -1875,11 +1884,12 @@ onMounted(() => {
   height: 77px;
   width: 428px;
   margin: 32px auto 115px;
+  justify-content: center;
+  align-items: center;
 }
 
 .text_47 {
-  width: 128px;
-  height: 45px;
+  width: 128px; 
   overflow-wrap: break-word;
   color: rgba(255, 255, 255, 1);
   font-size: 32px;
@@ -1888,7 +1898,7 @@ onMounted(() => {
   text-align: left;
   white-space: nowrap;
   line-height: 32px;
-  margin: 16px 0 0 150px;
+  // margin: 16px 0 0 150px;
 }
 
 .box_20 {
@@ -1900,14 +1910,15 @@ onMounted(() => {
 }
 
 .group_6 {
-  width: 1560px;
+  width: 1000px;
   max-width: 90vw;
   height: 52px;
   margin: 64px auto 0;
+  align-items: center;
 }
 
 .image_9 {
-  width: 52px;
+  // width: 52px;
   height: 52px;
 }
 
@@ -1982,7 +1993,7 @@ onMounted(() => {
 }
 
 .text-wrapper_2 {
-  width: 1560px;
+  width: 1000px;
   max-width: 90vw;
   justify-content: start !important;
   height: 20px;
@@ -2046,7 +2057,7 @@ onMounted(() => {
 }
 
 .group_7 {
-  width: 1560px;
+  width: 1000px;
   max-width: 90vw;
   height: 106px;
   margin: 7px auto 180px;
@@ -2180,14 +2191,14 @@ onMounted(() => {
   justify-content: start;
 }
 
-.image_11 {
-  width: 52px;
+.image_11 { 
   height: 52px;
   margin: 10px 0 0 0;
 }
 
 .text_62 {
-  width: 32px;
+  display: inline-block;
+  width: 82px;
   height: 22px;
   overflow-wrap: break-word;
   color: rgba(51, 51, 51, 1);
@@ -2197,7 +2208,7 @@ onMounted(() => {
   text-align: left;
   white-space: nowrap;
   line-height: 16px;
-  margin: 29px 0 0 60px;
+  margin: 29px 0 0 10px;
 }
 
 .section_10 {
@@ -2206,12 +2217,14 @@ onMounted(() => {
   width: 240px;
   height: 38px;
   margin: 21px 0 0 956px;
+  align-items: center;
 }
 
 .thumbnail_14 {
   width: 14px;
   height: 14px;
-  margin: 12px 0 0 16px;
+  margin-left: 16px;
+  margin-right: 8px;
 }
 
 .text_63 {
@@ -2321,8 +2334,7 @@ onMounted(() => {
   overflow-wrap: break-word;
   color: rgba(51, 51, 51, 1);
   font-size: 48px;
-  font-family: PingFang SC-Semibold;
-  font-weight: 600;
+  font-family: PingFang SC-Semibold; 
   text-align: left;
   white-space: nowrap;
   line-height: 48px;
@@ -2353,20 +2365,19 @@ onMounted(() => {
   border-radius: 4px;
   height: 49px;
   width: 138px;
+  align-items: center;
+  justify-content: center
 }
 
 .text_69 {
-  width: 72px;
-  height: 25px;
+  width: 72px; 
   overflow-wrap: break-word;
   color: rgba(255, 255, 255, 1);
   font-size: 18px;
   font-family: PingFang SC-Medium;
   font-weight: 500;
   text-align: left;
-  white-space: nowrap;
-  line-height: 18px;
-  margin: 12px 0 0 33px;
+  white-space: nowrap; 
 }
 
 .text-wrapper_8 {
@@ -2374,20 +2385,19 @@ onMounted(() => {
   height: 49px;
   border: 1px solid rgba(68, 157, 250, 1);
   width: 138px;
+  align-items: center;
+  justify-content: center
 }
 
 .text_70 {
-  width: 72px;
-  height: 25px;
+  width: 72px; 
   overflow-wrap: break-word;
   color: rgba(68, 157, 250, 1);
   font-size: 18px;
   font-family: PingFang SC-Medium;
   font-weight: 500;
   text-align: left;
-  white-space: nowrap;
-  line-height: 18px;
-  margin: 12px 0 0 33px;
+  white-space: nowrap; 
 }
 
 .image_12 {
@@ -2478,9 +2488,12 @@ button:active {
   align-items: flex-end;
 }
 
+.displayNo {
+  opacity: 0;
+}
+
 .fadeOut {
-  animation: identifier;
-  animation-duration: .5s;
+  animation: identifier .5s forwards;
 }
 
 @keyframes identifier {
@@ -2493,5 +2506,27 @@ button:active {
     opacity: 1;
     transform: translateZ(0);
   }
+}
+
+.po-r {
+  position: relative;
+}
+
+.bg-r {
+  width: 170px;
+  height: 500px;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  transform: translate(0, 50%)
+}
+
+.bg-l {
+  width: 170px;
+  height: 500px;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  transform: translate(0, 70%)
 }
 </style>

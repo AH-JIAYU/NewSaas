@@ -367,7 +367,7 @@ onMounted(async () => {
       </el-row>
       <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="projectId" :data="list"
         :tree-props="{ children: 'getChildrenProjectListInfoList' }" :border="border" :size="lineHeight"
-        :stripe="stripe" highlight-current-row height="100%">
+        :stripe="stripe" highlight-current-row height="100%" @current-change="handleCurrentChange">
         <el-table-column align="center" type="selection" :selectable="selectable" />
         <el-table-column v-if="checkList.includes('isOnline')" show-overflow-tooltip prop="isOnline" align="center"
           width="100" label="状态">
@@ -624,10 +624,12 @@ onMounted(async () => {
   flex-wrap: wrap;
 
   .oneLine {
-    // min-width: 35%;
-    width: 45%;
+    width: 40%;
     text-align: left;
-
+    margin:0 12px 8px 0
+  }
+  .oneLine:nth-of-type(n+3){
+    margin:0 12px 0 0
   }
 }
 

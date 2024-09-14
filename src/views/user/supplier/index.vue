@@ -4,6 +4,7 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import customerEdit from "./components/SupplierEdit/index.vue";
 import customerDetail from "./components/SupplierDetail/index.vue";
 import plusMinusPayments from "./components/SupplierPlusMinusPayments/index.vue";
+import QuickEdit from './components/QuickEdit/index.vue'//快速编辑
 import useConfigurationSupplierLevelStore from "@/store/modules/configuration_supplierLevel";
 import { submitLoading } from "@/utils/apiLoading";
 import api from "@/api/modules/user_supplier";
@@ -25,6 +26,7 @@ const list = ref<Array<Object>>([]); // 列表
 const selectRows = ref<any>(); // 表格-选中行
 const editRef = ref(); // 新增|编辑 组件ref
 const checkRef = ref(); // 查看 组件ref
+const QuickEditRef = ref(); //快速编辑
 const plusMinusPaymentsRef = ref(); // 加减款 组件ref
 const border = ref<any>(true); // 表格控件-是否展示边框
 const stripe = ref<any>(false); // 表格控件-是否展示斑马条
@@ -99,23 +101,38 @@ function handleEdit(row: any) {
 function handleCheck(row: any) {
   checkRef.value.showEdit(row);
 }
-// 备注
-async function handleEditRemark(row: any) {
-  const { data } = await api.detail({
-    tenantSupplierId: row.tenantSupplierId,
-  });
-  if (data.remark !== row.remark) {
-    data.countryType = data.subordinateCountryId === "343" ? 1 : 2;
-    data.remark = row.remark;
-    const { status } = await api.edit(data);
-    status === 1 &&
-      ElMessage.success({
-        message: "更新备注",
-        center: true,
-      });
-    queryData();
-  }
+const current = ref<any>()//表格当前选中
+function handleCurrentChange(val: any) {
+  if (val) current.value = val.tenantSupplierId
+  else current.value = ''
 }
+// 快速编辑
+function quickEdit(row: any, type: any) {
+  /**
+    supplierAccord 供应商名称
+    supplierLevelId 供应商等级
+     settlementCycle:'结算周期'
+    remark 备注
+  */
+  QuickEditRef.value.showEdit(row, type)
+}
+// // 备注
+// async function handleEditRemark(row: any) {
+//   const { data } = await api.detail({
+//     tenantSupplierId: row.tenantSupplierId,
+//   });
+//   if (data.remark !== row.remark) {
+//     data.countryType = data.subordinateCountryId === "343" ? 1 : 2;
+//     data.remark = row.remark;
+//     const { status } = await api.edit(data);
+//     status === 1 &&
+//       ElMessage.success({
+//         message: "更新备注",
+//         center: true,
+//       });
+//     queryData();
+//   }
+// }
 // 切换状态
 async function changeState(state: any, id: string) {
   const params = {
@@ -188,6 +205,11 @@ async function fetchData() {
 function setSelectRows(val: any) {
   selectRows.value = val;
 }
+// 获取供应商等级
+const supperLevel = computed(() => (id: any) => {
+  const findData = supplierLevelList.value.find((item: any) => item.tenantSupplierLevelId === id)
+  return findData?.levelNameOrAdditionRatio
+})
 onMounted(async () => {
   columns.value.forEach((item: any) => {
     if (item.checked) {
@@ -233,15 +255,6 @@ onMounted(async () => {
                 <el-option label="待审批" :value="3" />
               </el-select>
             </el-form-item>
-            <!-- <el-form-item v-show="!fold" label="">
-              <el-select v-model="queryForm.supplierLevelId" value-key="" placeholder="供应商等级" clearable filterable >
-              <el-option v-for="item in supplierLevelList"
-              :key="item.tenantSupplierLevelId"
-              :label="item.levelNameOrAdditionRatio"
-              :value="item.tenantSupplierLevelId">
-              </el-option>
-              </el-select>
-            </el-form-item> -->
             <el-form-item v-show="!fold" label="">
               <el-date-picker v-model="queryForm.time" type="datetimerange" unlink-panels range-separator="-"
                 start-placeholder="创建开始日期" end-placeholder="创建结束日期" value-format="YYYY-MM-DD hh:mm:ss" size="default"
@@ -285,21 +298,49 @@ onMounted(async () => {
         </FormRightPanel>
       </el-row>
       <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
-        @selection-change="setSelectRows">
+        @selection-change="setSelectRows" highlight-current-row @current-change="handleCurrentChange">
         <el-table-column align="center" type="selection" />
-        <el-table-column v-if="checkList.includes('tenantSupplierId')" align="center" prop="tenantSupplierId"
-          width="180" show-overflow-tooltip label="供应商ID" />
+        <el-table-column v-if="checkList.includes('supplierStatus')" align="center" show-overflow-tooltip label="供应商状态">
+          <template #default="{ row }">
+            <ElSwitch v-if="row.supplierStatus === 3" v-model="row.supplierStatus" inline-prompt :inactive-value="3"
+              :active-value="2" inactive-text="待审核" active-text="启用"
+              @change="changeState($event, row.tenantSupplierId)" />
+            <ElSwitch v-else v-model="row.supplierStatus" inline-prompt :inactive-value="1" :active-value="2"
+              inactive-text="禁用" active-text="启用" @change="changeState($event, row.tenantSupplierId)" />
+          </template>
+        </el-table-column>
         <el-table-column v-if="checkList.includes('supplierAccord')" align="center" prop="supplierAccord"
           show-overflow-tooltip label="供应商名称">
           <template #default="{ row }">
-            {{ row.supplierAccord }}
+            <div class="flex-c">
+              <div class="oneLine" style="width: calc(100% - 20px);">      {{ row.supplierAccord }}</div>
+              <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'supplierAccord')"
+                :class="{ edit: 'edit', current: row.tenantSupplierId === current }" name="i-ep:edit" color="#409eff" />
+            </div>
+      
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('countryAffiliationName')" align="center"
-          prop="countryAffiliationName" show-overflow-tooltip label="国家"> <template #default="{ row }">
-            <el-tag type="primary">{{ row.countryAffiliationName }}</el-tag>
+        <el-table-column v-if="checkList.includes('tenantSupplierId')" align="center" prop="tenantSupplierId"
+          width="180" show-overflow-tooltip label="供应商ID">
+          <template #default="{row}">
+            <div class="copyId">
+              <div class="id oneLine ">ID: {{ row.tenantSupplierId }}</div>
+              <copy class="copy" :content="row.tenantSupplierId" />
+            </div> 
           </template>
         </el-table-column>
+        <el-table-column v-if="checkList.includes('supplierLevelId')" align="center" prop="supplierLevelId"
+          show-overflow-tooltip label="供应商等级">
+          <template #default="{ row }">
+            <div class="flex-c">
+              <div class="oneLine" style="width: calc(100% - 20px);">       {{ supperLevel(row.supplierLevelId) }}</div>
+              <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'supplierLevelId')"
+                :class="{ edit: 'edit', current: row.tenantSupplierId === current }" name="i-ep:edit" color="#409eff" />
+            </div>
+        
+          </template>
+        </el-table-column>
+
         <el-table-column v-if="checkList.includes('balanceHumanLife')" align="center" prop="balanceHumanLife"
           show-overflow-tooltip label="可用余额">
           <template #default="{ row }">
@@ -312,15 +353,9 @@ onMounted(async () => {
             <CurrencyType />{{ row.amountPendingTrial || 0 }}
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('supplierLevelId')" align="center" prop="supplierLevelId"
-          show-overflow-tooltip label="供应商等级">
-          <template #default="{ row }">
-            <div v-for="item in supplierLevelList" :key="item.tenantSupplierLevelId"
-              :value="item.levelNameOrAdditionRatio">
-              <el-text v-if="item.tenantSupplierLevelId === row.supplierLevelId" class="mx-1">{{
-    item.levelNameOrAdditionRatio }}</el-text>
-              <el-text v-else class="mx-1">-</el-text>
-            </div>
+        <el-table-column v-if="checkList.includes('countryAffiliationName')" align="center"
+          prop="countryAffiliationName" show-overflow-tooltip label="国家"> <template #default="{ row }">
+            <el-tag type="primary">{{ row.countryAffiliationName }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('b2bStatus')" align="center" show-overflow-tooltip label="B2B|B2C">
@@ -342,20 +377,17 @@ onMounted(async () => {
         </el-table-column>
         <el-table-column v-if="checkList.includes('settlementCycle')" align="center" prop="settlementCycle"
           show-overflow-tooltip label="结算周期"><template #default="{ row }">
-            {{ row.settlementCycle ? row.settlementCycle + "天" : "-" }}
+            <div class="flex-c">
+              <div class="oneLine" style="width: calc(100% - 20px);">   {{ row.settlementCycle ? row.settlementCycle + "天" : "-" }}</div>
+              <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'settlementCycle')"
+                :class="{ edit: 'edit', current: row.tenantSupplierId === current }" name="i-ep:edit" color="#409eff" />
+            </div>
+           
           </template>
         </el-table-column>
-        <ElTableColumn v-if="checkList.includes('supplierStatus')" align="center" show-overflow-tooltip label="供应商状态">
-          <template #default="{ row }">
-            <ElSwitch v-if="row.supplierStatus === 3" v-model="row.supplierStatus" inline-prompt :inactive-value="3"
-              :active-value="2" inactive-text="待审核" active-text="启用"
-              @change="changeState($event, row.tenantSupplierId)" />
-            <ElSwitch v-else v-model="row.supplierStatus" inline-prompt :inactive-value="1" :active-value="2"
-              inactive-text="禁用" active-text="启用" @change="changeState($event, row.tenantSupplierId)" />
-          </template>
-        </ElTableColumn>
+
         <el-table-column v-if="checkList.includes('createTime')" align="center" prop="createTime" show-overflow-tooltip
-          label="创建时间"><template #default="{ row }">
+          label="创建"><template #default="{ row }">
             <el-tag effect="plain" type="info">{{
     format(row.createTime)
   }}</el-tag>
@@ -363,7 +395,12 @@ onMounted(async () => {
         </el-table-column>
         <el-table-column v-if="checkList.includes('remark')" align="center" prop="remark" width="180" label="备注">
           <template #default="{ row }">
-            <el-input v-model="row.remark" @blur="handleEditRemark(row)" />
+            <div class="flex-c">
+              <div class="oneLine" style="width: calc(100% - 20px);">     {{row.remark}}</div>
+              <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'remark')"
+                :class="{ edit: 'edit', current: row.tenantSupplierId === current }" name="i-ep:edit" color="#409eff" />
+            </div>
+            
           </template>
         </el-table-column>
         <el-table-column align="center" prop="i" label="操作" fixed="right" width="250">
@@ -391,6 +428,7 @@ onMounted(async () => {
     </PageMain>
     <customerEdit ref="editRef" @fetch-data="fetchData" />
     <customerDetail ref="checkRef" @fetch-data="fetchData" />
+    <QuickEdit ref="QuickEditRef" @fetchData="fetchData" />
     <plusMinusPayments ref="plusMinusPaymentsRef" @fetch-data="fetchData" />
   </div>
 </template>
@@ -441,4 +479,45 @@ onMounted(async () => {
     }
   }
 }
+.flex-c {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  width: 100%;
+
+  >div:nth-of-type(1) {
+    width: calc(100% - 25px);
+    flex-shrink: 0;
+  }
+
+  .edit {
+    width: 20px;
+    height: 20px;
+    margin-left: 5px;
+    flex-shrink: 0;
+    display: none;
+    cursor: pointer;
+  }
+
+  .current {
+    display: block !important;
+  }
+}
+
+.el-table__row:hover .edit {
+  display: block;
+}
+// id
+.copyId {
+  @extend .flex-c;
+
+  .copy {
+    width: 20px;
+  }
+
+  .id {
+    flex: 1;
+  }
+}
+
 </style>
