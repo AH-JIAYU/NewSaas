@@ -201,20 +201,20 @@ function onSubmit() {
     formRef.value.clearValidate('topLevelDomainName');
   }
   formRef.value &&
-    formRef.value.validate((valid: any) => {
+    formRef.value.validate(async (valid: any) => {
       if (valid) {
         try {
           loading.value = true;
-          api.edit(form.value).then((res: any) => {
-            loading.value = false;
-            if (res.status === 1) {
-              getDataList();
-              ElMessage.success({
-                message: "修改成功",
-                center: true,
-              });
-            }
-          });
+          form.value.topLevelDomainName = form.value.topLevelDomainName.replace(/^(https?:\/\/|www\.)/, '');
+          const res = await api.edit(form.value)
+          loading.value = false;
+          if (res.status === 1) {
+            getDataList();
+            ElMessage.success({
+              message: "修改成功",
+              center: true,
+            });
+          }
         } catch (error) {
         } finally {
           loading.value = false;
@@ -450,4 +450,5 @@ function onSubmit() {
 
 // :deep() {
 //   background-color: #fafafa;
-// }</style>
+// }
+</style>
