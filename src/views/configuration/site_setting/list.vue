@@ -24,8 +24,6 @@ const { toClipboard } = useClipboard();
 const activeTopTab = ref<any>("基本设置");
 // 加载
 const loading = ref(false);
-// 供应商基准地址
-// const supplierUrl = import.meta.env.VITE_APP_SUPPLIER;
 // form ref
 const formRef = ref<any>();
 // 定义表单
@@ -39,8 +37,6 @@ const form = ref<any>({
   keyWords: "",
   // 网站名称
   webName: "",
-  // 供应商网址
-  supplierURL: "",
   // 设置顶级域名
   topLevelDomainName: "",
   // 默认会员价格比例
@@ -81,20 +77,22 @@ const validateEmail = (rule: any, value: any, callback: any) => {
     callback();
   }
 };
-// 校验前缀地址
-const validateInput = (rule: any, value: any, callback: any) => {
-  if (/^[\p{L}\p{N}]+$/u.test(value)) {
+// 校验顶级域名
+const validateTopLevelDomainName = (rule: any, value: any, callback: any) => {
+  // 改进后的正则表达式
+  const domainPattern = /^(?!-)[A-Za-z0-9-]{1,63}(?<!-)(?:\.[A-Za-z0-9-]{1,63}(?<!-))*\.[A-Za-z]{2,}$/;
+  if (domainPattern.test(value)) {
     callback(); // 验证通过
   } else {
-    callback(new Error('请输入英文字母，或数字')); // 验证失败
+    callback(new Error('请输入合法的域名')); // 验证失败
   }
 };
 // 校验
 const formRules = ref<FormRules>({
   webName: [{ required: true, message: "请输入网站名称", trigger: "blur" }],
-  supplierURL: [
-    { required: true, message: "请输入供应商网址", trigger: "blur" },
-    { validator: validateInput, trigger: "submit" },
+  topLevelDomainName: [
+    { required: false, message: "请输入顶级域名", trigger: "submit" },
+    { validator: validateTopLevelDomainName, trigger: "submit" },
   ],
   phone: [
     { required: false, trigger: "submit", message: "请输入手机号" },
@@ -190,7 +188,7 @@ const handlePictureCardPreview: UploadProps["onPreview"] = (uploadFile) => {
 };
 // 提交数据
 function onSubmit() {
-  if (form.value.email === ''||form.value.email === null ) {
+  if (form.value.email === '' || form.value.email === null) {
     formRules.value.email = []
     formRef.value.clearValidate('email');
   }
@@ -198,88 +196,31 @@ function onSubmit() {
     formRules.value.phone = []
     formRef.value.clearValidate('phone');
   }
-  console.log(1111111);
-
-  // 新增
-  // if (!form.value.id) {
-  //   // 校验
-  //   formRef.value &&
-  //     formRef.value.validate((valid: any) => {
-  //       if (valid) {
-  //         try {
-  //           loading.value = true;
-  //           delete form.value.id;
-  //           !form.value.keyWords && (form.value.keyWords = 'keyWords')
-  //           api.create(form.value).then(() => {
-  //             loading.value = false;
-  //             getDataList();
-  //             ElMessage.success({
-  //               message: "新增成功",
-  //               center: true,
-  //             });
-  //           });
-  //         } catch (error) {
-
-  //         } finally {
-  //           loading.value = false;
-  //         }
-  //       }
-  //     });
-  // } else {
-    // 修改
-    formRef.value &&
-      formRef.value.validate((valid: any) => {
-        if (valid) {
-          try {
-            // let {
-            //   id,
-            //   keyWords,
-            //   registerExamineOffOrOn,
-            //   registerOffOrOn,
-            //   supplierURL,
-            //   webName,
-            //   externalSite,
-            //   defaultPriceRatio,
-            //   taxRate,
-            //   minimumAmount,
-            //   phone,
-            //   email,
-            //   qqCode,
-            //   address,
-            // } = form.value;
-            // const params = {
-            //   id,
-            //   keyWords,
-            //   registerExamineOffOrOn,
-            //   registerOffOrOn,
-            //   supplierURL,
-            //   webName,
-            //   externalSite,
-            //   defaultPriceRatio,
-            //   taxRate,
-            //   minimumAmount,
-            //   phone,
-            //   email,
-            //   qqCode,
-            //   address,
-            // };
-            loading.value = true;
-            api.edit(form.value).then((res: any) => {
-              loading.value = false;
-              if (res.status === 1) {
-                getDataList();
-                ElMessage.success({
-                  message: "修改成功",
-                  center: true,
-                });
-              }
-            });
-          } catch (error) {
-          } finally {
+  if (form.value.topLevelDomainName === '' || form.value.topLevelDomainName === null) {
+    formRules.value.topLevelDomainName = []
+    formRef.value.clearValidate('topLevelDomainName');
+  }
+  formRef.value &&
+    formRef.value.validate((valid: any) => {
+      if (valid) {
+        try {
+          loading.value = true;
+          api.edit(form.value).then((res: any) => {
             loading.value = false;
-          }
+            if (res.status === 1) {
+              getDataList();
+              ElMessage.success({
+                message: "修改成功",
+                center: true,
+              });
+            }
+          });
+        } catch (error) {
+        } finally {
+          loading.value = false;
         }
-      });
+      }
+    });
   // }
 }
 </script>
@@ -347,12 +288,12 @@ function onSubmit() {
               <el-col :span="24">
                 <el-form-item label="个性化域名" prop="">
                   <!-- <el-input v-model="form.personalizedDomainName" style="width: 8rem" /> -->
-                  <el-text class="mx-1">{{form.personalizedDomainName}}</el-text>
+                  <el-text class="mx-1">{{ form.personalizedDomainName }}</el-text>
                   <el-button class="copy" type="primary" link @click="copyToClipboard">复制</el-button>
                 </el-form-item>
               </el-col>
               <el-col :span="24">
-                <el-form-item label="顶级域名">
+                <el-form-item label="顶级域名" prop="topLevelDomainName">
                   <el-input v-model="form.topLevelDomainName" style="width: 8rem" />
                   <span class="red"></span><span style="margin-right: 10px;">已生效</span>
                   <span class="green"></span><span style="margin-right: 10px;">未生效</span>
