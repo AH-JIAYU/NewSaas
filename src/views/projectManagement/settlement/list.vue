@@ -10,7 +10,7 @@ import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDiction
 import useUserCustomerStore from "@/store/modules/user_customer";
 import useTenantStaffStore from "@/store/modules/configuration_manager";
 import api from "@/api/modules/project_settlement";
-
+import empty from '@/assets/images/empty.png'
 defineOptions({
   name: "settlement",
 });
@@ -381,7 +381,7 @@ function handleMoreOperating(command: string, row: any) {
           width="150" label="项目">
           <template #default="{ row }">
             <div class="copyId">
-              <div class="id oneLine">ID: {{ row.projectId }}</div>
+              <div class="id oneLine tableSmall">ID: {{ row.projectId }}</div>
               <copy class="copy" :content="row.projectId" />
             </div>
 
@@ -391,7 +391,7 @@ function handleMoreOperating(command: string, row: any) {
         <el-table-column v-if="checkList.includes('projectName')" show-overflow-tooltip prop="projectName" align="left"
           width="150" label="名称/标识">
           <template #default="{ row }">
-            <b class="oneLine">名: {{ row.projectName ? row.projectName : "-" }}</b>
+            <b class="oneLine tableBig">名: {{ row.projectName ? row.projectName : "-" }}</b>
             <div class="oneLine">标: {{ row.customerName.split("/")[1] !== 'null' ? row.customerName.split("/")[1] : '-'
               }}</div>
           </template>
@@ -400,7 +400,7 @@ function handleMoreOperating(command: string, row: any) {
           align="center" label="客户">
           <template #default="{ row }">
             <div class="oneLine" style="width: calc(100% - 20px);">
-              <b>{{ row.customerName.split("/")[0] }}</b>
+              <b class="tableBig">{{ row.customerName.split("/")[0] }}</b>
               <div class="oneLine" v-if="row.projectType !== 2">
                 <img :src="row.avatar" alt="" class="avatar">
                 <span>{{ row.chargeName }}</span>
@@ -411,7 +411,10 @@ function handleMoreOperating(command: string, row: any) {
         <el-table-column v-if="checkList.includes('projectAmount')" show-overflow-tooltip  align="center"
           label="原价" width="80">
           <template #default="{ row }">
-            <CurrencyType />{{ row.projectAmount || 0 }}
+            <div class="tableBig">
+              <CurrencyType />{{ row.projectAmount || 0 }}
+            </div>
+
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('countryId')" show-overflow-tooltip   align="center"
@@ -439,7 +442,7 @@ function handleMoreOperating(command: string, row: any) {
         </el-table-column>
         <el-table-column v-if="checkList.includes('systemDone')" show-overflow-tooltip prop="systemDone" align="center"
           width="130" label="系统/审核完成数"><template #default="{ row }">
-            <div class="flex-c">
+            <div class="flex-c tableBig">
               <div class="oneLine" style="width: calc(100% - 20px);">
                 <el-text>{{ row.systemDone ? row.systemDone : 0 }}</el-text> /<el-text class="mx-1" type="success">{{
     row.settlementDone ? row.settlementDone : 0 }}</el-text>
@@ -454,7 +457,7 @@ function handleMoreOperating(command: string, row: any) {
         <el-table-column v-if="checkList.includes('settlementPo')" show-overflow-tooltip prop="settlementPo"
           align="center" label="结算PO号">
           <template #default="{ row }">
-            <div class="flex-c">
+            <div class="flex-c tableBig">
               <div class="oneLine" style="width: calc(100% - 40px);">
                 {{ row.settlementPo ? row.settlementPo : "-" }}
               </div>
@@ -471,14 +474,14 @@ function handleMoreOperating(command: string, row: any) {
             <el-button size="small" class="p-1" v-if="row.status === 4"  type="info">已结算</el-button>
             <el-button size="small" class="p-1" v-if="row.status === 2"  type="primary">已审核</el-button>
             <el-button size="small" class="p-1" v-if="row.status === 5"  type="danger">已冻结</el-button>
-            <el-text v-if="row.nodeTime.length" class="mx-1">{{ formatDateRange(row.nodeTime) }}</el-text>
-            <el-text v-else class="mx-1">-</el-text>
+            <el-text v-if="row.nodeTime.length" class="mx-1 tableBig">{{ formatDateRange(row.nodeTime) }}</el-text>
+            <el-text v-else class="mx-1 tableBig">-</el-text>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('remark')" show-overflow-tooltip prop="remark" align="center"
           label="备注">
           <template #default="{ row }">
-            <div class="flex-c">
+            <div class="flex-c tableBig">
               <div class="oneLine" style="width: calc(100% - 20px);">
                 {{ row.remark ? row.remark : "-" }}
               </div>
@@ -506,7 +509,7 @@ function handleMoreOperating(command: string, row: any) {
           </template>
         </el-table-column>
         <template #empty>
-          <el-empty description="暂无数据" />
+          <el-empty :image="empty" :image-size="300" />
         </template>
       </el-table>
       <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
@@ -573,13 +576,15 @@ function handleMoreOperating(command: string, row: any) {
 // id
 .copyId {
   @extend .flex-c;
+  justify-content: center;
 
   .copy {
     width: 20px;
   }
 
   .id {
-    flex: 1;
+    width:auto !important;
+    max-width:calc(100% - 25px)  !important;
   }
 }
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref } from "vue";
-
+import empty from '@/assets/images/empty.png'
 defineOptions({
   name: "OtherFunctionsNationalTableIndex",
 });
@@ -188,7 +188,7 @@ onMounted(() => {
           label="国家(英文)"
         />
         <template #empty>
-          <el-empty description="暂无数据" />
+          <el-empty :image="empty" :image-size="300" />
         </template>
       </el-table>
       <ElPagination

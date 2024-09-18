@@ -11,6 +11,7 @@ import api from "@/api/modules/group_manage";
 import useTenantStaffStore from "@/store/modules/configuration_manager";
 import useSettingsStore from "@/store/modules/settings";
 import useDepartmentStore from "@/store/modules/department";
+import empty from '@/assets/images/empty.png'
 
 defineOptions({
   name: "group_manage",
@@ -52,15 +53,6 @@ const columns = ref([
     // 默认展示
     checked: true,
   },
-  // {
-  //   label: "组长",
-  //   prop: "director",
-  //   sortable: true,
-  //   // 不可更改
-  //   disableCheck: false,
-  //   // 默认展示
-  //   checked: true,
-  // },
   {
     label: "员工数",
     prop: "count",
@@ -319,42 +311,33 @@ onBeforeUnmount(() => {
         :size="data.lineHeight" class="my-4" :data="data.dataList" highlight-current-row height="100%"
         @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
         <el-table-column align="center" type="selection" />
-        <!-- <el-table-column
-          align="center"
-          show-overflow-tooltip
-          type="index"
-          label="序号"
-          width="80"
-        /> -->
         <ElTableColumn v-if="data.checkList.includes('id')" align="center" show-overflow-tooltip prop="id"
-          label="组ID" />
+          label="组ID" >
+          <template #default="{row}">
+            <div class="copyId tableSmall">
+              <div class="id oneLine  ">ID: {{ row.id }}</div>
+              <copy class="copy" :content="row.id" />
+            </div>
+          </template>
+        </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('name')" align="center" show-overflow-tooltip prop="name"
           label="组名称">
           <template #default="{ row }">
-            {{ row.name }}
+            <div class="tableBig">{{ row.name }}</div>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('director')" align="center" show-overflow-tooltip prop="director"
-          label="组长">
-          <template #default="{ row }">
-            <el-text v-for="item in staffList" :key="item.id">
-              <el-text v-if="item.id === row.director">
-                {{ item.name }}
-              </el-text>
-            </el-text>
-          </template>
-        </ElTableColumn>
+
         <ElTableColumn v-if="data.checkList.includes('count')" align="center" show-overflow-tooltip prop="count"
           label="员工数">
           <template #default="{ row }">
-            {{ row.count ? row.count : "-" }}
+            <div class="tableBig">{{ row.count ? row.count : "-" }}</div>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('departmentId')" align="center" show-overflow-tooltip
           prop="departmentId" label="所属部门">
           <template #default="{ row }">
             <el-text v-for="item in departmentList" :key="item.id">
-              <el-text v-if="item.id === row.departmentId">
+              <el-text  class="tableBig" v-if="item.id === row.departmentId">
                 {{ item.name }}
               </el-text>
             </el-text>
@@ -365,16 +348,16 @@ onBeforeUnmount(() => {
             <ElButton type="primary" size="small" plain @click="onGroup(scope.row)">
               新增组员
             </ElButton>
-            <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">
+            <ElButton type="warning" size="small" plain @click="onEdit(scope.row)">
               编辑
             </ElButton>
-            <ElButton type="primary" size="small" plain @click="onDetail(scope.row)">
+            <ElButton type="danger" size="small" plain @click="onDetail(scope.row)">
               详情
             </ElButton>
           </template>
         </ElTableColumn>
         <template #empty>
-          <el-empty description="暂无数据" />
+          <el-empty :image="empty" :image-size="300" />
         </template>
       </ElTable>
       <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
@@ -440,6 +423,45 @@ onBeforeUnmount(() => {
     th {
       background: var(--el-fill-color-lighter) !important;
     }
+  }
+}
+.flex-s {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  width: 100%;
+
+  >div:nth-of-type(1) {
+    width: calc(100% - 25px);
+    flex-shrink: 0;
+  }
+
+  .edit {
+    width: 20px;
+    height: 20px;
+    margin-left: 5px;
+    flex-shrink: 0;
+    display: none;
+    cursor: pointer;
+  }
+
+  .current {
+    display: block !important;
+  }
+}
+
+// id
+.copyId {
+  @extend .flex-s;
+  justify-content: center;
+
+  .copy {
+    width: 20px;
+  }
+
+  .id {
+    width:auto !important;
+    max-width:calc(100% - 25px)  !important;
   }
 }
 </style>

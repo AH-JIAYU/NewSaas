@@ -9,6 +9,7 @@ import useConfigurationSupplierLevelStore from "@/store/modules/configuration_su
 import { submitLoading } from "@/utils/apiLoading";
 import api from "@/api/modules/user_supplier";
 import useUserSupplierStore from "@/store/modules/user_supplier"; // 供应商
+import empty from '@/assets/images/empty.png'
 const supplierStore = useUserSupplierStore(); // 供应商
 
 defineOptions({
@@ -28,7 +29,7 @@ const editRef = ref(); // 新增|编辑 组件ref
 const checkRef = ref(); // 查看 组件ref
 const QuickEditRef = ref(); //快速编辑
 const plusMinusPaymentsRef = ref(); // 加减款 组件ref
-const border = ref<any>(true); // 表格控件-是否展示边框
+const border = ref<any>(false); // 表格控件-是否展示边框
 const stripe = ref<any>(false); // 表格控件-是否展示斑马条
 const lineHeight = ref<any>("default"); // 表格控件-控制表格大小
 const checkList = ref<Array<Object>>([]); // 表格-展示的列
@@ -312,7 +313,7 @@ onMounted(async () => {
         <el-table-column v-if="checkList.includes('supplierAccord')" align="center" prop="supplierAccord"
           show-overflow-tooltip label="供应商名称">
           <template #default="{ row }">
-            <div class="flex-c">
+            <div class="flex-c tableBig">
               <div class="oneLine" style="width: calc(100% - 20px);"> {{ row.supplierAccord }}</div>
               <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'supplierAccord')"
                 :class="{ edit: 'edit', current: row.tenantSupplierId === current }" name="i-ep:edit" color="#409eff" />
@@ -323,7 +324,7 @@ onMounted(async () => {
         <el-table-column v-if="checkList.includes('tenantSupplierId')" align="center" prop="tenantSupplierId"
           width="180" show-overflow-tooltip label="供应商ID">
           <template #default="{ row }">
-            <div class="copyId">
+            <div class="copyId tableSmall">
               <div class="id oneLine ">ID: {{ row.tenantSupplierId }}</div>
               <copy class="copy" :content="row.tenantSupplierId" />
             </div>
@@ -332,7 +333,7 @@ onMounted(async () => {
         <el-table-column v-if="checkList.includes('supplierLevelId')" align="center" prop="supplierLevelId"
           show-overflow-tooltip label="供应商等级">
           <template #default="{ row }">
-            <div class="flex-c">
+            <div class="flex-c tableBig">
               <div class="oneLine" style="width: calc(100% - 20px);"> {{ supperLevel(row.supplierLevelId) }}</div>
               <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'supplierLevelId')"
                 :class="{ edit: 'edit', current: row.tenantSupplierId === current }" name="i-ep:edit" color="#409eff" />
@@ -344,13 +345,19 @@ onMounted(async () => {
         <el-table-column v-if="checkList.includes('balanceHumanLife')" align="center" prop="balanceHumanLife"
           show-overflow-tooltip label="可用余额">
           <template #default="{ row }">
-            <CurrencyType />{{ row.balanceHumanLife || 0 }}
+            <div class="tableBig">
+<CurrencyType />{{ row.balanceHumanLife || 0 }}
+</div>
+
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('amountPendingTrial')" align="center" prop="amountPendingTrial"
           show-overflow-tooltip label="待审金额">
           <template #default="{ row }">
-            <CurrencyType />{{ row.amountPendingTrial || 0 }}
+            <div class="tableBig">
+ <CurrencyType />{{ row.amountPendingTrial || 0 }}
+</div>
+
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('countryAffiliationName')" align="center"
@@ -447,7 +454,7 @@ onMounted(async () => {
         </el-table-column>
         <el-table-column v-if="checkList.includes('settlementCycle')" align="center" prop="settlementCycle"
           show-overflow-tooltip label="结算周期"><template #default="{ row }">
-            <div class="flex-c">
+            <div class="flex-c tableBig">
               <div class="oneLine" style="width: calc(100% - 20px);"> {{ row.settlementCycle ? row.settlementCycle + "天"
     : "-" }}</div>
               <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'settlementCycle')"
@@ -466,7 +473,7 @@ onMounted(async () => {
         </el-table-column>
         <el-table-column v-if="checkList.includes('remark')" align="center" prop="remark" width="180" label="备注">
           <template #default="{ row }">
-            <div class="flex-c" >
+            <div class="flex-c tableBig" >
               <div class="oneLine" style="width: calc(100% - 20px);"> {{ row.remark }}</div>
               <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'remark')"
                 :class="{ edit: 'edit', current: row.tenantSupplierId === current }" name="i-ep:edit" color="#409eff" />
@@ -490,7 +497,7 @@ onMounted(async () => {
           </template>
         </el-table-column>
         <template #empty>
-          <el-empty class="vab-data-empty" description="暂无数据" />
+            <el-empty :image="empty" :image-size="300" />
         </template>
       </el-table>
       <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
@@ -583,13 +590,15 @@ onMounted(async () => {
 // id
 .copyId {
   @extend .flex-c;
+  justify-content: center;
 
   .copy {
     width: 20px;
   }
 
   .id {
-    flex: 1;
+    width:auto !important;
+    max-width:calc(100% - 25px)  !important;
   }
 }
 </style>

@@ -3,6 +3,7 @@ import { onMounted } from "vue";
 import api from "@/api/modules/record_preInvestigationRecords";
 import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
 import questionnaireDetails from "./components/questionnaireDetails/index.vue";
+import empty from '@/assets/images/empty.png'
 
 const customerStore = useUserCustomerStore(); // 客户
 
@@ -288,7 +289,7 @@ onMounted(async () => {
           </template>
         </ElTableColumn>
         <template #empty>
-          <el-empty class="vab-data-empty" description="暂无数据" />
+            <el-empty :image="empty" :image-size="300" />
         </template>
       </el-table>
 

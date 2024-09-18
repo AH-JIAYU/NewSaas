@@ -2,7 +2,7 @@
 import { reactive, ref } from "vue";
 import Edit from "./components/Edit/index.vue";
 import Delete from "./components/Delete/index.vue";
-
+import empty from '@/assets/images/empty.png'
 defineOptions({
   name: "OtherFunctionsWebsitesIndex",
 });
@@ -173,7 +173,7 @@ onMounted(() => {
           </el-button>
         </el-table-column>
         <template #empty>
-          <el-empty description="暂无数据" />
+          <el-empty :image="empty" :image-size="300" />
         </template>
       </el-table>
       <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"

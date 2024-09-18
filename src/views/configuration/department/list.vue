@@ -6,11 +6,13 @@ import { useI18n } from "vue-i18n";
 import FormMode from "./components/FormMode/index.vue";
 import GroupForm from "./components/GroupForm/index.vue";
 import Detail from "./components/Detail/index.vue";
+import QuickEdit from './components/QuickEdit/index.vue'//快速编辑
 import eventBus from "@/utils/eventBus";
 import api from "@/api/modules/department";
 import useTenantStaffStore from "@/store/modules/configuration_manager";
 import useSettingsStore from "@/store/modules/settings";
 import useDepartmentStore from "@/store/modules/department";// 部门
+import empty from '@/assets/images/empty.png'
 
 
 defineOptions({
@@ -50,15 +52,7 @@ const columns = ref([
     // 默认展示
     checked: true,
   },
-  // {
-  //   label: "部门主管",
-  //   prop: "director",
-  //   sortable: true,
-  //   // 不可更改
-  //   disableCheck: false,
-  //   // 默认展示
-  //   checked: true,
-  // },
+
   {
     label: "员工数",
     prop: "memberCount",
@@ -82,13 +76,15 @@ const columns = ref([
 const detailRef = ref<any>()
 // groupFormRef
 const groupFormRef = ref<any>()
+  const QuickEditRef = ref(); //快速编辑
+const current = ref<any>()//表格当前选中
 // 定义数据
 const data = ref<any>({
   loading: false,
   // 表格是否自适应高度
   tableAutoHeight: false,
   // 表格控件-是否展示边框
-  border: true,
+  border: false,
   // 表格控件-是否展示斑马条
   stripe: false,
   // 表格控件-控制表格大小
@@ -128,12 +124,7 @@ const data = ref<any>({
   // 列表数据
   dataList: [],
 });
-// 计提规则
-const commissionList = [
-  { label: "完成计提", value: 1 },
-  { label: "审核计提", value: 2 },
-  { label: "收款计提", value: 3 },
-];
+
 // 获取数据
 function getDataList() {
   try {
@@ -203,6 +194,18 @@ function onCreate() {
     data.value.formModeProps.row = "";
     data.value.formModeProps.visible = true;
   }
+}
+// 快速编辑
+function quickEdit(row: any, type: any) {
+  /**
+    备注 remark
+  */
+  QuickEditRef.value.showEdit(row, type)
+}
+
+function handleCurrentChange(val: any) {
+  if (val) current.value = val.id
+  else current.value = ''
 }
 // 新增小组
 function onGroup(row: any) {
@@ -315,55 +318,61 @@ onBeforeUnmount(() => {
       </el-row>
       <ElTable v-model:stripe="data.stripe" v-model:border="data.border" v-loading="data.loading"
         :size="data.lineHeight" class="my-4" :data="data.dataList" highlight-current-row height="100%"
-        @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
+        @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event"  @current-change="handleCurrentChange" >
         <el-table-column align="center" type="selection" />
-        <!-- <el-table-column
-          align="center"
-          show-overflow-tooltip
-          type="index"
-          label="序号"
-          width="80"
-        /> -->
-        <ElTableColumn v-if="data.checkList.includes('id')" align="center" show-overflow-tooltip prop="id"
-          label="部门ID" />
+        <ElTableColumn v-if="data.checkList.includes('id')" align="center" show-overflow-tooltip prop="id" label="部门ID">
+          <template #default="{ row }">
+            <div class="copyId tableSmall">
+              <div class="id oneLine ">ID: {{ row.id }}</div>
+              <copy class="copy" :content="row.id" />
+            </div>
+          </template>
+        </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('name')" align="center" show-overflow-tooltip prop="name"
           label="部门名称">
           <template #default="{ row }">
-            {{ row.name }}
-          </template>
-        </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('director')" align="center" show-overflow-tooltip prop="director"
-          label="部门主管">
-          <template #default="{ row }">
-            <el-text v-for="item in staffList" :key="item.id">
-              <el-text v-if="item.id === row.director">
-                {{ item.name }}
-              </el-text>
+            <el-text class="tableBig">
+              {{ row.name ? row.name : "-" }}
             </el-text>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('memberCount')" align="center" show-overflow-tooltip
           prop="memberCount" label="员工数">
           <template #default="{ row }">
-            {{ row.memberCount ? row.memberCount : '-' }}
+            <el-text class="tableBig">
+              {{ row.memberCount ? row.memberCount : "-" }}
+            </el-text>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('memberCount')" align="center" show-overflow-tooltip
           prop="memberCount" label="提成比例">
           <template #default="{ row }">
-            {{ row.commission ? row.commission + '%' : '-' }}
+            <el-text class="tableBig">
+              {{ row.commission ? row.commission + '%' : '-' }}
+            </el-text>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('memberCount')" align="center" show-overflow-tooltip
           prop="memberCount" label="计提规则">
           <template #default="{ row }">
-            {{ row.commissionType ? commissionList[row.commissionType-1].label : '-' }}
+            <div class="tableBig">
+              <el-text type="success" v-if="row.commissionType == 1">完成计提 </el-text>
+              <el-text type="primary" v-if="row.commissionType == 2">审核计提 </el-text>
+              <el-text type="danger" v-if="row.commissionType == 3">收款计提 </el-text>
+            </div>
+
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('remark')" align="center" show-overflow-tooltip prop="remark"
           label="备注">
-          <template #default="{ row }">
-            {{ row.remark ? row.remark : '-' }}
+          <template #default="{row}">
+            <div class="flex-s  ">
+              <div class="oneLine tableBig" style="width: calc(100% - 20px);">
+                {{ row.remark ? row.remark : "-" }}
+              </div>
+              <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'remark')"
+                :class="{ edit: 'edit', current: row.id === current }" name="i-ep:edit" color="#409eff" />
+            </div>
           </template>
         </ElTableColumn>
         <ElTableColumn label="操作" width="300" align="center" fixed="right">
@@ -371,16 +380,16 @@ onBeforeUnmount(() => {
             <ElButton type="primary" size="small" plain @click="onGroup(scope.row)">
               新增小组
             </ElButton>
-            <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">
+            <ElButton type="warning" size="small" plain @click="onEdit(scope.row)">
               编辑
             </ElButton>
-            <ElButton type="primary" size="small" plain @click="onDetail(scope.row)">
+            <ElButton type="danger" size="small" plain @click="onDetail(scope.row)">
               详情
             </ElButton>
           </template>
         </ElTableColumn>
         <template #empty>
-          <el-empty description="暂无数据" />
+          <el-empty :image="empty" :image-size="300" />
         </template>
       </ElTable>
       <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
@@ -391,6 +400,7 @@ onBeforeUnmount(() => {
       v-model="data.formModeProps.visible" :row="data.formModeProps.row" :mode="data.formMode" @success="getDataList" />
     <Detail ref="detailRef" />
     <GroupForm ref="groupFormRef" />
+    <QuickEdit ref="QuickEditRef" @fetchData="getDataList" />
   </div>
 </template>
 
@@ -451,5 +461,47 @@ onBeforeUnmount(() => {
 
 :deep(.el-table__empty-block) {
   height: 100% !important;
+}
+
+.flex-s {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  width: 100%;
+
+  >div:nth-of-type(1) {
+    width: calc(100% - 25px);
+    flex-shrink: 0;
+  }
+
+  .edit {
+    width: 20px;
+    height: 20px;
+    margin-left: 5px;
+    flex-shrink: 0;
+    display: none;
+    cursor: pointer;
+  }
+
+  .current {
+    display: block !important;
+  }
+}
+.el-table__row:hover .edit {
+  display: block;
+}
+// id
+.copyId {
+  @extend .flex-s;
+  justify-content: center;
+
+  .copy {
+    width: 20px;
+  }
+
+  .id {
+    width:auto !important;
+    max-width:calc(100% - 25px)  !important;
+  }
 }
 </style>

@@ -9,6 +9,7 @@ import { submitLoading } from "@/utils/apiLoading";
 import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
 import api from "@/api/modules/user_customer";
 import apiUser from '@/api/modules/configuration_manager'
+import empty from '@/assets/images/empty.png'
 const customerStore = useUserCustomerStore(); // 客户
 defineOptions({
   name: "customer",
@@ -260,7 +261,7 @@ onMounted(async () => {
         <el-table-column v-if="checkList.includes('customerAccord')" align="center" prop="customerAccord"
           show-overflow-tooltip label="客户名称">
           <template #default="{ row }">
-            <div class="flex-c">
+            <div class="flex-c tableBig">
               <div class="oneLine" style="width: calc(100% - 20px);"> {{ row.customerAccord }} </div>
               <SvgIcon @click="quickEdit(row, 'customerAccord')"
                 :class="{ edit: 'edit', current: row.tenantCustomerId === current }" name="i-ep:edit" color="#409eff" />
@@ -270,7 +271,7 @@ onMounted(async () => {
         <el-table-column v-if="checkList.includes('tenantCustomerId')" align="center" prop="tenantCustomerId"
           width="180" show-overflow-tooltip label="客户编码">
           <template #default="{ row }">
-            <div class="flex-c">
+            <div class="flex-c tableSmall">
               <div class="oneLine" style="width: calc(100% - 20px);">
                 {{ row.tenantCustomerId }}
               </div>
@@ -281,7 +282,7 @@ onMounted(async () => {
         <el-table-column v-if="checkList.includes('customerShortName')" align="center" prop="customerShortName"
           show-overflow-tooltip label="客户简称" width="100">
           <template #default="{ row }">
-            <div class="flex-c">
+            <div class="flex-c tableBig">
               <div class="oneLine" style="width: calc(100% - 20px);"> {{ row.customerShortName }} </div>
               <SvgIcon @click="quickEdit(row, 'customerShortName')"
                 :class="{ edit: 'edit', current: row.tenantCustomerId === current }" name="i-ep:edit" color="#409eff" />
@@ -290,7 +291,7 @@ onMounted(async () => {
         </el-table-column>
         <el-table-column v-if="checkList.includes('chargeName')" align="center" prop="chargeName" show-overflow-tooltip
           label="负责人"><template #default="{ row }">
-            <div class="flex-c">
+            <div class="flex-c tableBig">
               <div class="oneLine" style="width: calc(100% - 20px);">
                 <el-text v-for="item in staffList" :key="item.id">
                   <el-text v-if="item.id === row.chargeId">
@@ -308,7 +309,7 @@ onMounted(async () => {
         <el-table-column v-if="checkList.includes('projectNumber')" align="center" prop="turnover" show-overflow-tooltip
           label="关联项目数">
           <template #default="{ row }">
-            <span style="width:20px;text-align:right;display: inline-block">
+            <span style="width:20px;text-align:right;display: inline-block" class="tableBig">
               {{ row.projectNumber || 0 }}
             </span>
             <el-button v-if="row.projectNumber" text type="primary" size="small" class="p-1"
@@ -335,12 +336,16 @@ onMounted(async () => {
         <el-table-column v-if="checkList.includes('turnover')" align="center" prop="turnover" show-overflow-tooltip
           label="客户营业限额/月">
           <template #default="{ row }">
-            <CurrencyType />{{ row.turnover || 0 }}
+            <div class="tableBig">
+              <CurrencyType />{{ row.turnover || 0 }}
+            </div>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('rateAudit')" align="center" prop="rateAudit" show-overflow-tooltip
           label="审核率Min值"><template #default="{ row }">
-            {{ row.rateAudit ? row.rateAudit : "-" }}
+            <div class="tableBig">
+              {{ row.rateAudit ? row.rateAudit : "-" }}
+            </div>
           </template>
         </el-table-column>
 
@@ -362,7 +367,7 @@ onMounted(async () => {
           </template>
         </el-table-column>
         <template #empty>
-          <el-empty class="vab-data-empty" description="暂无数据" />
+          <el-empty :image="empty" :image-size="300" />
         </template>
       </el-table>
       <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"

@@ -3,6 +3,7 @@ import eventBus from "@/utils/eventBus";
 import api from "@/api/modules/financial_log";
 import useSettingsStore from "@/store/modules/settings";
 import { ref } from "vue";
+import empty from '@/assets/images/empty.png'
 
 defineOptions({
   name: "financial_log",
@@ -273,7 +274,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
         </FormRightPanel>
       </el-row>
       <ElTable v-loading="data.loading" :border="data.border" :size="data.lineHeight" :stripe="data.stripe" class="my-4"
-        :data="data.dataList" highlight-current-row height="100%" @sort-change="sortChange"
+        :data="data.dataList" highlight-current-row height="100%" style="min-height: 370px;"sort-change="sortChange"
         @selection-change="data.batch.selectionDataList = $event">
         <el-table-column align="center" type="selection" />
         <ElTableColumn v-if="data.batch.enable" type="selection" show-overflow-tooltip align="center" fixed />
@@ -336,7 +337,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
           </template>
         </ElTableColumn>
         <template #empty>
-          <el-empty class="vab-data-empty" description="暂无数据" />
+            <el-empty :image="empty" :image-size="300" />
         </template>
       </ElTable>
       <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"

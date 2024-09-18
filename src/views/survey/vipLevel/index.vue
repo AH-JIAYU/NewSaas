@@ -6,6 +6,7 @@ import Sortable from "sortablejs"; // 拖拽排序插件
 import edit from "./components/Edit/index.vue";
 import useSurveyVipLevelStore from "@/store/modules/survey_vipLevel"; //会员等级
 import api from "@/api/modules/survey_vipLevel";
+import empty from '@/assets/images/empty.png'
 
 defineOptions({
   name: "vipLevel",
@@ -193,7 +194,7 @@ onMounted(() => {
           </template>
         </el-table-column>
         <template #empty>
-          <el-empty class="vab-data-empty" description="暂无数据" />
+            <el-empty :image="empty" :image-size="300" />
         </template>
       </el-table>
       <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"

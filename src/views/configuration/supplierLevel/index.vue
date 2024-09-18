@@ -6,6 +6,7 @@ import Sortable from "sortablejs"; // 拖拽排序插件
 import edit from "./components/Edit/index.vue";
 import useConfigurationSupplierLevelStore from "@/store/modules/configuration_supplierLevel"; //供应商等级
 import api from "@/api/modules/configuration_supplierLevel";
+import empty from '@/assets/images/empty.png'
 
 defineOptions({
   name: "supplierLevel",
@@ -163,11 +164,23 @@ onMounted(() => {
           </template>
         </ElTableColumn>
         <el-table-column v-if="checkList.includes('levelName')" align="center" prop="levelName" show-overflow-tooltip
-          label="等级名称" />
+          label="等级名称" >
+          <template #default="{row}">
+            <div class="tableBig">{{row.levelName}}</div>
+          </template>
+        </el-table-column>
         <el-table-column v-if="checkList.includes('additionRatio')" align="center" prop="additionRatio"
-          show-overflow-tooltip label="加成比例(百分比)" />
+          show-overflow-tooltip label="加成比例(百分比)"  >
+          <template #default="{row}">
+            <div class="tableBig">{{row.additionRatio}}</div>
+          </template>
+        </el-table-column>
         <el-table-column v-if="checkList.includes('memberQuantity')" align="center" prop="memberQuantity"
-          show-overflow-tooltip label="成员数量" />
+          show-overflow-tooltip label="成员数量"  >
+          <template #default="{row}">
+            <div class="tableBig">{{row.memberQuantity}}</div>
+          </template>
+        </el-table-column>
         <el-table-column align="center" fixed="right" show-overflow-tooltip label="操作">
           <template #default="{ row }">
             <el-button size="small" plain type="primary" @click="handleEdit(row)">
@@ -179,7 +192,8 @@ onMounted(() => {
           </template>
         </el-table-column>
         <template #empty>
-          <el-empty class="vab-data-empty" description="暂无数据" />
+
+          <el-empty :image="empty" :image-size="300" />
         </template>
       </el-table>
       <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"

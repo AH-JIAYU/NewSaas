@@ -2,6 +2,7 @@
 import api from "@/api/modules/customer_report";
 import { Back } from "@element-plus/icons-vue";
 import { h, ref, shallowRef } from "vue";
+import empty from '@/assets/images/empty.png'
 
 defineOptions({
   name: "dataCenter",
@@ -292,7 +293,7 @@ onMounted(() => {
             <el-table-column v-if="checkList.includes('turnover')" show-overflow-tooltip align="center" prop="turnover"
               label="项目营业额" />
             <template #empty>
-              <el-empty description="暂无数据" />
+              <el-empty :image="empty" :image-size="300" />
             </template>
           </el-table>
         </el-tab-pane>
@@ -353,7 +354,7 @@ onMounted(() => {
             <el-table-column v-if="checkList.includes('settlementRatioPercent')" show-overflow-tooltip align="center"
               prop="settlementRatioPercent" label="审核率" />
             <template #empty>
-              <el-empty description="暂无数据" />
+              <el-empty :image="empty" :image-size="300" />
             </template>
           </el-table>
         </el-tab-pane>

@@ -3,7 +3,9 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import FormMode from "./components/FormMode/index.vue";
 import eventBus from "@/utils/eventBus";
 import api from "@/api/modules/configuration_role";
+import QuickEdit from './components/QuickEdit/index.vue'//快速编辑
 import useSettingsStore from "@/store/modules/settings";
+import empty from '@/assets/images/empty.png'
 
 defineOptions({
   name: "role",
@@ -13,6 +15,8 @@ const router = useRouter();
 // 分页
 const { pagination, onSizeChange, onCurrentChange, onSortChange } = usePagination();
 const tabbar = useTabbar();
+const QuickEditRef = ref(); //快速编辑
+const current = ref<any>()//表格当前选中
 const settingsStore = useSettingsStore();
 // 定义表单
 const data = ref<any>({
@@ -48,6 +52,18 @@ const data = ref<any>({
   dataList: [],
 });
 
+
+function handleCurrentChange(val: any) {
+  if (val) current.value = val.id
+  else current.value = ''
+}
+// 快速编辑
+function quickEdit(row: any, type: any) {
+  /**
+    备注 remark
+  */
+  QuickEditRef.value.showEdit(row, type)
+}
 onMounted(() => {
   getDataList();
   if (data.value.formMode === "router") {
@@ -94,7 +110,6 @@ function sizeChange(size: number) {
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
   onCurrentChange(page).then(() => {
-    // data.value.search.page = page;
     getDataList();
   });
 }
@@ -183,40 +198,6 @@ function onDel(row: any) {
             <el-form-item label="">
               <el-input v-model.trim="data.search.name" clearable :inline="false" placeholder="角色名称" @keydown.enter="currentChange()"/>
             </el-form-item>
-            <!-- <el-form-item v-show="!fold" label="">
-              <el-select
-                v-model="data.search.title"
-                value-key=""
-                placeholder="数据权限"
-                clearable
-                filterable
-              >
-                <el-option
-                  v-for="item in statusType"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                >
-                </el-option>
-              </el-select>
-            </el-form-item> -->
-            <!-- <el-form-item v-show="!fold" label="">
-              <el-select
-                v-model="data.search.title"
-                value-key=""
-                placeholder="状态"
-                clearable
-                filterable
-              >
-                <el-option
-                  v-for="item in statusType"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                >
-                </el-option>
-              </el-select>
-            </el-form-item> -->
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">
                 <template #icon>
@@ -246,13 +227,39 @@ function onDel(row: any) {
           新增角色管理
         </ElButton>
       </ElSpace>
-      <ElTable v-loading="data.loading" class="my-4" :data="data.dataList" stripe highlight-current-row border
-        height="100%" @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
+      <ElTable v-loading="data.loading" class="my-4" :data="data.dataList" stripe highlight-current-row
+        height="100%" @sort-change="sortChange" border @selection-change="data.batch.selectionDataList = $event"
+        @current-change="handleCurrentChange" >
         <ElTableColumn v-if="data.batch.enable" type="selection" align="center" fixed />
-        <ElTableColumn prop="id" align="center" label="角色ID" />
-        <ElTableColumn prop="roleName" align="center" label="角色名称" />
-        <ElTableColumn prop="count" align="center" label="账户数" />
-        <ElTableColumn prop="roleName" align="center" label="备注" />
+        <ElTableColumn prop="id" align="center" label="角色ID" >
+          <template #default="{row}">
+            <div class="copyId tableSmall">
+              <div class="id oneLine  ">ID: {{ row.id }}</div>
+              <copy class="copy" :content="row.id" />
+            </div>
+          </template>
+        </ElTableColumn>
+        <ElTableColumn prop="roleName" align="center" label="角色名称" >
+          <template #default="{row}">
+            <div class="tableBig">{{row.roleName}}</div>
+          </template>
+        </ElTableColumn>
+        <ElTableColumn prop="count" align="center" label="账户数" >
+          <template #default="{row}">
+            <div class="tableBig">{{row.count}}</div>
+          </template>
+        </ElTableColumn>
+        <ElTableColumn prop="remark" align="center" label="备注" >
+          <template #default="{row}">
+            <div class="flex-s  ">
+              <div class="oneLine tableBig" style="width: calc(100% - 20px);">
+                {{ row.remark ? row.remark : "-" }}
+              </div>
+              <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'remark')"
+                :class="{ edit: 'edit', current: row.id === current }" name="i-ep:edit" color="#409eff" />
+            </div>
+          </template>
+        </ElTableColumn>
         <ElTableColumn label="操作" width="250" align="center" fixed="right">
           <template #default="scope">
             <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">
@@ -264,7 +271,7 @@ function onDel(row: any) {
           </template>
         </ElTableColumn>
         <template #empty>
-          <el-empty description="暂无数据" />
+          <el-empty :image="empty" :image-size="300" />
         </template>
       </ElTable>
       <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
@@ -273,6 +280,7 @@ function onDel(row: any) {
     </PageMain>
     <FormMode v-if="data.formMode === 'dialog' || data.formMode === 'drawer'" :id="data.formModeProps.id"
       v-model="data.formModeProps.visible" :row="data.formModeProps.row" :mode="data.formMode" @success="getDataList" />
+      <QuickEdit ref="QuickEditRef" @fetchData="getDataList" />
   </div>
 </template>
 
@@ -322,5 +330,47 @@ function onDel(row: any) {
 }
 :deep(.el-table__empty-block) {
   height: 100% !important;
+}
+.flex-s {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  width: 100%;
+
+  >div:nth-of-type(1) {
+    width: calc(100% - 25px);
+    flex-shrink: 0;
+  }
+
+  .edit {
+    width: 20px;
+    height: 20px;
+    margin-left: 5px;
+    flex-shrink: 0;
+    display: none;
+    cursor: pointer;
+  }
+
+  .current {
+    display: block !important;
+  }
+}
+.el-table__row:hover .edit {
+  display: block;
+}
+// id
+.copyId {
+  @extend .flex-s;
+  justify-content: center;
+
+  .copy {
+    width: 20px;
+  }
+
+  .id {
+    // flex: 1;
+    width:auto !important;
+    max-width:calc(100% - 25px)  !important;
+  }
 }
 </style>

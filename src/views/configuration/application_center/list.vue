@@ -4,6 +4,7 @@ import FormMode from './components/FormMode/index.vue'
 import eventBus from '@/utils/eventBus'
 import api from '@/api/modules/configuration_applicationCenter'
 import useSettingsStore from '@/store/modules/settings'
+import empty from '@/assets/images/empty.png'
 
 defineOptions({
   name: 'ConfigurationApplicationCenterList',
@@ -212,7 +213,7 @@ function onDel(row: any) {
           </template>
         </ElTableColumn>
         <template #empty>
-          <el-empty description="暂无数据" />
+          <el-empty :image="empty" :image-size="300" />
         </template>
       </ElTable>
       <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"

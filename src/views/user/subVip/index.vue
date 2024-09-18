@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 import api from "@/api/modules/user_subVip";
+import empty from '@/assets/images/empty.png'
 defineOptions({
   name: "subVip",
 });
@@ -12,7 +13,7 @@ const listLoading = ref<boolean>(false);
 const list = ref<Array<Object>>([]); // 列表
 const selectRows = ref<string>(); // 表格-选中行
 const checkList = ref<any>([]); // 表格-展示的列
-const border = ref<boolean>(true); // 表格控件-是否展示边框
+const border = ref<boolean>(false); // 表格控件-是否展示边框
 const stripe = ref<boolean>(true); // 表格控件-是否展示斑马条
 const lineHeight = ref<any>("default"); // 表格控件-控制表格大小
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
@@ -233,23 +234,25 @@ onMounted(() => {
         <ElTableColumn v-if="checkList.includes('memberChildStatus')" align="center" show-overflow-tooltip
           prop="memberChildStatus" label="状态">
           <template #default="{ row }">
-            <el-text v-if="row.memberChildStatus !== 1" effect="light" type="success">启用</el-text>
-            <el-text v-else effect="light" type="danger">禁用</el-text>
+            <div class="tableBig">
+              <el-text v-if="row.memberChildStatus !== 1" effect="light" type="success">启用</el-text>
+              <el-text v-else effect="light" type="danger">禁用</el-text>
+            </div>
           </template>
         </ElTableColumn>
         <el-table-column v-if="checkList.includes('memberChildId')" align="center" prop="memberChildId" width="180"
-          show-overflow-tooltip label="子会员ID" >
+          show-overflow-tooltip label="子会员ID">
           <template #default="{ row }">
-            <div class="copyId">
+            <div class="copyId tableSmall">
               <div class="id oneLine ">ID: {{ row.memberChildId }}</div>
               <copy class="copy" :content="row.memberChildId" />
             </div>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('tenantSupplierId')" align="center" prop="tenantSupplierId"
-          width="180" show-overflow-tooltip label="供应商ID" >
+          width="180" show-overflow-tooltip label="供应商ID">
           <template #default="{ row }">
-            <div class="copyId">
+            <div class="copyId tableSmall">
               <div class="id oneLine ">ID: {{ row.tenantSupplierId }}</div>
               <copy class="copy" :content="row.tenantSupplierId" />
             </div>
@@ -257,23 +260,36 @@ onMounted(() => {
         </el-table-column>
 
         <el-table-column v-if="checkList.includes('memberNickname')" align="center" prop="memberNickname"
-          show-overflow-tooltip label="子会员名称" />
+          show-overflow-tooltip label="子会员名称">
+          <template #default="{ row }">
+            <div class="tableBig">{{ row.memberNickname }}</div>
+          </template>
+        </el-table-column>
         <el-table-column v-if="checkList.includes('memberName')" align="center" prop="memberName" show-overflow-tooltip
           label="子会员姓名">
           <template #default="{ row }">
-            {{ row.memberName ? row.memberName : "-" }}
+            <div class="tableBig">
+              {{ row.memberName ? row.memberName : "-" }}
+            </div>
+
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('availableBalance')" align="center" prop="availableBalance"
           show-overflow-tooltip label="	可用余额">
           <template #default="{ row }">
-            <CurrencyType />{{ row.availableBalance || 0 }}
+            <div class="tableBig">
+              <CurrencyType />{{ row.availableBalance || 0 }}
+            </div>
+
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('pendingBalance')" align="center" prop="pendingBalance"
           show-overflow-tooltip label="	待审余额">
           <template #default="{ row }">
-            <CurrencyType />{{ row.pendingBalance || 0 }}
+            <div class="tableBig">
+              <CurrencyType />{{ row.pendingBalance || 0 }}
+            </div>
+
           </template>
         </el-table-column>
         <ElTableColumn v-if="checkList.includes('b2bStatus')" align="center" show-overflow-tooltip prop="b2bStatus"
@@ -324,14 +340,24 @@ onMounted(() => {
           </template>
         </ElTableColumn>
         <el-table-column v-if="checkList.includes('memberChildGroupName')" align="center" prop="memberChildGroupName"
-          show-overflow-tooltip label="所属组"><template #default="{ row }">
-            {{ row.memberChildGroupName ? row.memberChildGroupName : "-" }}
+          show-overflow-tooltip label="所属组">
+          <template #default="{ row }">
+            <div class="copyId">
+              <div class="id">
+                <b class="oneLine tableBig">{{ row.memberChildGroupName }}</b>
+                <span class="oneLine tableSmall" v-show="row.memberChildGroupId">ID: {{ row.memberChildGroupId }}</span>
+              </div>
+              <copy class="copy" v-if="row.memberChildGroupId" :content="row.memberChildGroupId" />
+            </div>
+
           </template>
         </el-table-column>
 
         <el-table-column v-if="checkList.includes('createUserName')" align="center" prop="createUserName"
           show-overflow-tooltip label="创建人"><template #default="{ row }">
-            {{ row.createUserName ? row.createUserName : "-" }}
+            <div class="tableBig">
+              {{ row.createUserName ? row.createUserName : "-" }}
+            </div>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('createTime')" align="center" prop="createTime">
@@ -347,7 +373,7 @@ onMounted(() => {
           </template>
         </el-table-column>
         <template #empty>
-          <el-empty class="vab-data-empty" description="暂无数据" />
+          <el-empty :image="empty" :image-size="300" />
         </template>
       </el-table>
       <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
@@ -409,6 +435,7 @@ onMounted(() => {
   justify-content: center;
   align-items: center;
 }
+
 .flex-s {
   display: flex;
   justify-content: start;
@@ -433,16 +460,19 @@ onMounted(() => {
     display: block !important;
   }
 }
+
 // id
 .copyId {
   @extend .flex-s;
+  justify-content: center;
 
   .copy {
     width: 20px;
   }
 
   .id {
-    flex: 1;
+    width: auto !important;
+    max-width: calc(100% - 25px) !important;
   }
 }
 </style>

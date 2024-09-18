@@ -5,7 +5,7 @@ import { cloneDeep } from "lodash-es";
 import useProjectManagementOutsourceStore from "@/store/modules/projectManagement_outsource";
 import { throttle } from "lodash-es";
 import { Right } from "@element-plus/icons-vue";
-
+import empty from '@/assets/images/empty.png'
 defineOptions({
   name: "Edit",
 });
@@ -22,7 +22,7 @@ const data = ref<any>({
 });
 
 // 显隐
-async function showEdit(row: any, source: number = 0) { 
+async function showEdit(row: any, source: number = 0) {
   const params = {
     linkId: row.linkId,
     projectId: row.projectId,
@@ -295,7 +295,7 @@ defineExpose({ showEdit });
             </div>
           </div>
           <div class="nodata" v-else>
-            <el-empty description="暂无数据" />
+            <el-empty :image="empty" :image-size="300" />
           </div>
         </div>
       </div>

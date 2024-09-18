@@ -10,7 +10,7 @@ import { ref } from "vue";
 import DictionaryDialog from "./components/dictionaryDialog/index.vue";
 import DictionaryItemDia from "./components/dictionaryItemDialog/index.vue";
 import api from "@/api/modules/tenantDictionary";
-
+import empty from '@/assets/images/empty.png'
 defineOptions({
   name: "tenantDictionary",
 });
@@ -327,7 +327,7 @@ function onDeleteMulti(rows: any[]) {
               </template>
             </ElTableColumn>
             <template #empty>
-              <el-empty description="暂无数据" />
+              <el-empty :image="empty" :image-size="300" />
             </template>
           </ElTable>
           <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"

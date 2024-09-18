@@ -12,6 +12,7 @@ import { obtainLoading, submitLoading } from "@/utils/apiLoading";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
 import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
 import useProjectManagementListStore from "@/store/modules/projectManagement_list"; // 项目
+import empty from '@/assets/images/empty.png'
 
 defineOptions({
   name: "list",
@@ -376,7 +377,6 @@ onMounted(async () => {
               inactive-text="离线" :active-value="1" :inactive-value="2" />
           </template>
         </el-table-column>
-
         <el-table-column v-if="checkList.includes('projectType')" width="200" align="left" label="项目"><template
             #default="{ row }">
             <div>
@@ -387,7 +387,7 @@ onMounted(async () => {
                 <SvgIcon name="i-ri:share-forward-line" color="#409eff" size="20px" />
               </el-button>
             </div>
-            <div class="copyId">
+            <div class="copyId tableSmall">
               <div class="id oneLine ">ID: {{ row.projectId }}</div>
               <copy class="copy" :content="row.projectId" />
             </div>
@@ -397,8 +397,8 @@ onMounted(async () => {
           label="名称/标识"><template #default="{ row }">
             <div class="flex-c">
               <div class="oneLine" style="width: calc(100% - 20px);">
-                <b class="" :type="row.isB2b === 2 ? 'danger' : ''">名: {{ row.name }}</b>
-                <div class="">标: {{ row.clientName.split("/")[1] }}</div>
+                <b class="oneLine tableBig" :type="row.isB2b === 2 ? 'danger' : ''">名: {{ row.name }}</b>
+                <div class="oneLine">标: {{ row.clientName.split("/")[1] }}</div>
               </div>
               <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'name')"
                 :class="{ edit: 'edit', current: row.projectId === current }" name="i-ep:edit" color="#409eff" />
@@ -409,8 +409,8 @@ onMounted(async () => {
           label="客户" width="120"><template #default="{ row }">
             <div class="flex-c">
               <div class="oneLine " style="width: calc(100% - 20px);">
-                <b>{{ row.clientName.split("/")[0] }}</b>
-                <div class="oneLine" v-if="row.projectType !== 2">
+                <b class="tableBig">{{ row.clientName.split("/")[0] }}</b>
+                <div class="oneLine " v-if="row.projectType !== 2">
                   <img :src="row.avatar" alt="" class="avatar">
                   <span class="">{{ row.chargeName }}</span>
                 </div>
@@ -451,7 +451,7 @@ onMounted(async () => {
         <el-table-column v-if="checkList.includes('doMoneyPrice')" show-overflow-tooltip align="center" label="原价">
           <template #default="{ row }">
             <div class="flex-c">
-              <div class="oneLine " style="width: calc(100% - 20px);">
+              <div class="oneLine tableBig" style="width: calc(100% - 20px);">
                 <CurrencyType />{{ row.doMoneyPrice || 0 }}
               </div>
               <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'doMoneyPrice')"
@@ -464,7 +464,7 @@ onMounted(async () => {
           width="100">
           <template #default="{ row }">
             <div class="flex-c">
-              <div class="oneLine " style="width: calc(100% - 20px);">
+              <div class="oneLine tableBig" style="width: calc(100% - 20px);">
                 {{ row.ir ? row.ir : 0 }}%/{{ row.nir ? row.nir : 0 }}%
               </div>
               <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'ir')"
@@ -499,14 +499,14 @@ onMounted(async () => {
 
         <el-table-column v-if="checkList.includes('create')" prop="createTime" align="center" width="100"
           label="创建"><template #default="{ row }">
-            <el-text class="">{{ row.createName }}</el-text>
+            <el-text class="tableBig">{{ row.createName }}</el-text>
             <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('remark')" show-overflow-tooltip prop="remark" align="left"
           width="100" label="备注"><template #default="{ row }">
             <div class="flex-c ">
-              <div class="oneLine" style="width: calc(100% - 20px);">
+              <div class="oneLine tableBig" style="width: calc(100% - 20px);">
                 {{ row.remark ? row.remark : "-" }}
               </div>
               <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'remark')"
@@ -533,7 +533,7 @@ onMounted(async () => {
           </template>
         </el-table-column>
         <template #empty>
-          <el-empty description="暂无数据" />
+          <el-empty :image="empty" :image-size="300" />
         </template>
       </el-table>
       <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
@@ -602,7 +602,8 @@ onMounted(async () => {
   }
 
   .id {
-    flex: 1;
+    width:auto !important;
+    max-width:calc(100% - 25px)  !important;
   }
 }
 

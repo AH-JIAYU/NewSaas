@@ -4,7 +4,7 @@ import deletes from "./components/Delete/index.vue";
 import detail from "./components/Details/index.vue";
 import edit from './components/Edit/index.vue'
 import api from "@/api/modules/projectManagement_materials";
-
+import empty from '@/assets/images/empty.png'
 
 defineOptions({
   name: "materials",
@@ -77,7 +77,7 @@ function projectDetails(row: any) {
   }
 }
 // 快捷编辑
-function quickEdit(row: any) { 
+function quickEdit(row: any) {
   editsRef.value.showEdit(row)
 }
 
@@ -275,22 +275,30 @@ onMounted(() => {
             @current-change="handleTabs1CurrentChange">
             <el-table-column align="center" type="selection" />
             <el-table-column v-if="checkList.includes('memberChildName')" show-overflow-tooltip prop="memberChildName"
-              align="center" label="会员名称" />
+              align="center" label="会员名称" >
+              <template #default="{row}">
+                <div class="tableBig">{{row.memberChildName}}</div>
+              </template>
+            </el-table-column>
             <el-table-column v-if="checkList.includes('memberChildId')" show-overflow-tooltip prop="memberChildId"
               align="center" label="会员ID">
               <template #default="{ row }">
-                <div class="copyId">
+                <div class="copyId tableSmall">
                   <div class="id oneLine">ID: {{ row.memberChildId }}</div>
                   <copy class="copy" :content="row.memberChildId" />
                 </div>
               </template>
             </el-table-column>
             <el-table-column v-if="checkList.includes('projectName')" show-overflow-tooltip prop="projectName"
-              align="center" label="项目名称" />
+              align="center" label="项目名称" >
+              <template #default="{row}">
+                <div class="tableBig">{{row.projectName}}</div>
+              </template>
+            </el-table-column>
             <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip prop="projectId"
               align="center" label="项目ID" >
               <template  #default="{ row }">
-                <div class="copyId">
+                <div class="copyId tableSmall">
                   <div class="id oneLine">ID: {{ row.projectId }}</div>
                   <copy class="copy" :content="row.projectId" />
                 </div>
@@ -306,7 +314,7 @@ onMounted(() => {
             <el-table-column v-if="checkList.includes('instructions')" show-overflow-tooltip prop="instructions"
               align="center" label="说明">
               <template #default="{ row }">
-                <div class="flex-c">
+                <div class="flex-c tableBig">
                   <div class="oneLine" style="width: calc(100% - 20px);">
                     {{ row.instructions ? row.instructions : "-" }}
                   </div>
@@ -329,7 +337,7 @@ onMounted(() => {
               </template>
             </el-table-column>
             <template #empty>
-              <el-empty description="暂无数据" />
+              <el-empty :image="empty" :image-size="300" />
             </template>
           </el-table>
           <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
@@ -388,22 +396,30 @@ onMounted(() => {
             @current-change="handleTabs2CurrentChange">
             <el-table-column type="selection" />
             <el-table-column v-if="checkList.includes('memberChildName')" show-overflow-tooltip prop="memberChildName"
-              align="center" label="子会员名称" />
+              align="center" label="子会员名称" >
+              <template #default="{row}">
+                <div class="tableBig">{{row.memberChildName}}</div>
+              </template>
+            </el-table-column>
             <el-table-column v-if="checkList.includes('memberChildId')" show-overflow-tooltip prop="memberChildId"
               align="center" label="子会员ID" >
               <template #default="{ row }">
-                <div class="copyId">
+                <div class="copyId tableSmall">
                   <div class="id oneLine">ID: {{ row.memberChildId }}</div>
                   <copy class="copy" :content="row.memberChildId" />
                 </div>
               </template>
             </el-table-column>
               <el-table-column v-if="checkList.includes('projectName')" show-overflow-tooltip prop="projectName"
-              align="center" label="项目名称" />
+              align="center" label="项目名称" >
+              <template #default="{row}">
+                <div class="tableBig">{{row.projectName}}</div>
+              </template>
+            </el-table-column>
             <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip prop="projectId"
               align="center" label="项目ID" >
               <template #default="{ row }">
-                <div class="copyId">
+                <div class="copyId tableSmall">
                   <div class="id oneLine">ID: {{ row.projectId }}</div>
                   <copy class="copy" :content="row.projectId" />
                 </div>
@@ -421,7 +437,7 @@ onMounted(() => {
             <el-table-column v-if="checkList.includes('instructions')" show-overflow-tooltip prop="instructions"
               align="center" label="说明" >
               <template #default="{ row }">
-          <div class="flex-c">
+          <div class="flex-c tableBig">
                   <div class="oneLine" style="width: calc(100% - 20px);">
                     {{ row.instructions ? row.instructions : "-" }}
                   </div>
@@ -444,7 +460,7 @@ onMounted(() => {
               </template>
             </el-table-column>
             <template #empty>
-              <el-empty description="暂无数据" />
+              <el-empty :image="empty" :image-size="300" />
             </template>
           </el-table>
           <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
@@ -538,13 +554,15 @@ onMounted(() => {
 // id
 .copyId {
   @extend .flex-c;
+  justify-content: center;
 
   .copy {
     width: 20px;
   }
 
   .id {
-    flex: 1;
+    width:auto !important;
+    max-width:calc(100% - 25px)  !important;
   }
 }
 </style>

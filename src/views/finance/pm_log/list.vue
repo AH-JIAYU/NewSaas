@@ -7,6 +7,7 @@ import Detail from "./components/Detail/index.vue";
 import usePositionManageStore from "@/store/modules/position_manage";
 import useGroupManageStore from "@/store/modules/group_manage";
 import { ref } from "vue";
+import empty from '@/assets/images/empty.png'
 
 defineOptions({
   name: "financial_pm_log",
@@ -87,7 +88,7 @@ const data = ref<any>({
   loading: false,
   activeName: "myFinancial",
   tableAutoHeight: false, // 表格是否自适应高度
-  border: true, // 表格控件-是否展示边框
+  border: false, // 表格控件-是否展示边框
   stripe: false, // 表格控件-是否展示斑马条
   lineHeight: "default", // 表格控件-控制表格大小
   checkList: [],
@@ -234,7 +235,8 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
                 @clear="currentChange()" />
             </ElFormItem>
             <ElFormItem v-show="!fold">
-              <el-select v-model="data.search.positionId" value-key="" placeholder="职位" clearable filterable @change="currentChange()">
+              <el-select v-model="data.search.positionId" value-key="" placeholder="职位" clearable filterable
+                @change="currentChange()">
                 <el-option v-for="item in positionManageList" :key="item.id" :label="item.name" :value="item.id">
                 </el-option>
               </el-select>
@@ -280,19 +282,26 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
         <ElTableColumn v-if="data.batch.enable" type="selection" show-overflow-tooltip align="center" fixed />
         <ElTableColumn v-if="data.checkList.includes('id')" show-overflow-tooltip align="center" prop="id" label="员工ID">
           <template #default="{ row }">
-            <el-text>{{ row.id ? row.id : "-" }}</el-text>
+            <div class="copyId tableSmall">
+              <div class="id oneLine ">ID: {{ row.id }}</div>
+              <copy class="copy" :content="row.id" />
+            </div>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('userName')" show-overflow-tooltip align="center" prop="userName"
           label="用户名">
           <template #default="{ row }">
-            {{ row.userName ? row.userName : '-' }}
+            <el-text class="tableBig">
+              {{ row.userName ? row.userName : '-' }}
+            </el-text>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('name')" show-overflow-tooltip align="center" prop="name"
           label="姓名">
           <template #default="{ row }">
-            {{ row.name ? row.name : '-' }}
+            <el-text class="tableBig">
+              {{ row.name ? row.name : '-' }}
+            </el-text>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('groupId')" show-overflow-tooltip align="center" prop="groupId"
@@ -301,7 +310,9 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
             <el-text v-if="row.groupId">
               <el-text v-for="item in groupManageList">
                 <el-text v-if="row.groupId === item.id">
-                  {{ item.name ? item.name : "-" }}
+                  <el-text class="tableBig">
+                    {{ item.name ? item.name : "-" }}
+                  </el-text>
                 </el-text>
               </el-text>
             </el-text>
@@ -313,36 +324,42 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
           <template #default="{ row }">
             <el-text v-for="item in positionManageList">
               <el-text v-if="row.positionId === item.id">
-                {{ item.name ? item.name : "-" }}
+                <el-text class="tableBig">
+                  {{ item.name ? item.name : "-" }}
+                </el-text>
               </el-text>
             </el-text>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('pendingBalance')" show-overflow-tooltip align="center"
           prop="pendingBalance" label="待审提成"><template #default="{ row }">
-            {{
+            <el-text class="tableBig">
+              {{
     row.pendingBalance ? row.pendingBalance : '-'
   }}
+            </el-text>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('availableBalance')" show-overflow-tooltip align="center"
           prop="availableBalance" label="可用提成"><template #default="{ row }">
-            {{
+            <el-text class="tableBig">
+              {{
     row.availableBalance ? row.availableBalance : '-'
   }}
+            </el-text>
           </template>
         </ElTableColumn>
         <ElTableColumn fixed="right" align="center" width="200" label="操作"><template #default="{ row }">
             <ElButton type="primary" size="small" plain @click="financeLog(row)">
               财务日志
             </ElButton>
-            <ElButton type="primary" size="small" plain @click="handlePlusMinusPayments(row)">
+            <ElButton type="warning" size="small" plain @click="handlePlusMinusPayments(row)">
               加减款
             </ElButton>
           </template>
         </ElTableColumn>
         <template #empty>
-          <el-empty class="vab-data-empty" description="暂无数据" />
+          <el-empty :image="empty" :image-size="300" />
         </template>
       </ElTable>
       <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
@@ -400,7 +417,48 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
 
 
 }
+
 :deep(.el-table__empty-block) {
   height: 100% !important;
+}
+
+.flex-s {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  width: 100%;
+
+  >div:nth-of-type(1) {
+    width: calc(100% - 25px);
+    flex-shrink: 0;
+  }
+
+  .edit {
+    width: 20px;
+    height: 20px;
+    margin-left: 5px;
+    flex-shrink: 0;
+    display: none;
+    cursor: pointer;
+  }
+
+  .current {
+    display: block !important;
+  }
+}
+
+// id
+.copyId {
+  @extend .flex-s;
+  justify-content: center;
+
+  .copy {
+    width: 20px;
+  }
+
+  .id {
+    width: auto !important;
+    max-width: calc(100% - 25px) !important;
+  }
 }
 </style>

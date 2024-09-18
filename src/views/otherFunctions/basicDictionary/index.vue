@@ -2,6 +2,7 @@
 import type Node from "element-plus/es/components/tree/src/model/node";
 import { ref } from "vue";
 import api from "@/api/modules/basicDictionary";
+import empty from '@/assets/images/empty.png'
 
 defineOptions({
   name: "basicDictionary",
@@ -194,7 +195,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
               </template>
             </ElTableColumn>
             <template #empty>
-              <el-empty description="暂无数据" />
+              <el-empty :image="empty" :image-size="300" />
             </template>
           </ElTable>
           <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"

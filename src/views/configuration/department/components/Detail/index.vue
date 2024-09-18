@@ -6,6 +6,7 @@ import useDepartmentStore from "@/store/modules/department";
 import useTenantStaffStore from "@/store/modules/configuration_manager";
 import usePositionManageStore from "@/store/modules/position_manage";
 import useGroupManageStore from "@/store/modules/group_manage";
+import empty from '@/assets/images/empty.png'
 
 // 部门
 const departmentStore = useDepartmentStore();
@@ -210,7 +211,7 @@ defineExpose({
               </template>
     </el-table-column>
     <template #empty>
-            <el-empty description="暂无数据" />
+            <el-empty :image="empty" :image-size="300" />
           </template>
   </el-table>
 </el-card>
