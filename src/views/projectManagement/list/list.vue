@@ -524,10 +524,10 @@ onMounted(async () => {
             <el-button v-else plain type="primary" :disabled="row.isOnline === 2" size="small" @click="reassign(row)">
               重新分配
             </el-button>
-            <el-button type="primary" plain size="small" @click="projectEdit(row)" :disabled="row.projectType === 2">
+            <el-button type="warning" plain size="small" @click="projectEdit(row)" :disabled="row.projectType === 2">
               编辑
             </el-button>
-            <el-button type="primary" size="small" plain @click="projectDetails(row)">
+            <el-button type="danger" size="small" plain @click="projectDetails(row)">
               详情
             </el-button>
           </template>

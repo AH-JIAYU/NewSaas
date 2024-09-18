@@ -496,10 +496,10 @@ function handleMoreOperating(command: string, row: any) {
                 @click="handleMoreOperating('auditing', row)">
                 重审
               </el-button>
-              <el-button type="primary" size="small" plain @click="handleMoreOperating('edit', row)">
+              <el-button type="warning" size="small" plain @click="handleMoreOperating('edit', row)">
                 结算编辑
               </el-button>
-              <el-button type="primary" size="small" plain @click="handleMoreOperating('refundDetails', row)">
+              <el-button type="danger" size="small" plain @click="handleMoreOperating('refundDetails', row)">
                 退款详情
               </el-button>
             </ElSpace>
