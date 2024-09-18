@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // import api from "@/api/modules/survey_vipGroup";
 import { obtainLoading } from "@/utils/apiLoading";
+import empty from '@/assets/images/empty.png'
 const emit = defineEmits(["fetch-data"]);
 const { pagination, getParams, onSizeChange, onCurrentChange } =
   usePagination(); // 分页
@@ -82,7 +83,7 @@ defineExpose({
         label="时间"
       />
 <template #empty>
-        <el-empty class="vab-data-empty" description="暂无数据" />
+          <el-empty :image="empty" :image-size="300" />
       </template>
 </el-table>
 <template #footer>

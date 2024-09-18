@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
-
+import empty from '@/assets/images/empty.png'
 defineOptions({
   name: "RecordCustomerManagementIndex",
 });
@@ -153,7 +153,7 @@ onMounted(() => {
           <el-button type="primary" link size="default" @click="">跳转</el-button>
         </el-table-column>
         <template #empty>
-          <el-empty class="vab-data-empty" description="暂无数据" />
+            <el-empty :image="empty" :image-size="300" />
         </template>
       </el-table>
       <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"

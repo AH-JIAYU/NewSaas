@@ -9,7 +9,7 @@ import useNotificationStore from "@/store/modules/notification"; //消息中心
 import { OverlayScrollbarsComponent } from "overlayscrollbars-vue";
 import news from "./notification-news.vue";
 import cooperation from "./notification-cooperation.vue";
-
+import empty from '@/assets/images/empty.png'
 defineOptions({
   name: "PersonalNotification",
 });
@@ -136,7 +136,7 @@ onMounted(() => {
                   </div>
                 </template>
                 <template v-else>
-                  <el-empty description="暂无数据" />
+                  <el-empty :image="empty" :image-size="300" />
                 </template>
               </OverlayScrollbarsComponent>
             </el-tab-pane>
@@ -176,7 +176,7 @@ onMounted(() => {
                   </div>
                 </template>
                 <template v-else>
-                  <el-empty description="暂无数据" />
+                  <el-empty :image="empty" :image-size="300" />
                 </template>
               </OverlayScrollbarsComponent>
             </el-tab-pane>

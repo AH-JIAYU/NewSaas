@@ -2,6 +2,7 @@
 import { reactive, ref } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import api from "@/api/modules/finance_supplierSettlement";
+import empty from '@/assets/images/empty.png'
 import UseUserSupplier from "@/store/modules/user_supplier"; // 供应商
 const userSupplier = UseUserSupplier(); // 供应商
 
@@ -246,7 +247,7 @@ onMounted(() => {
           </template>
         </el-table-column>
         <template #empty>
-          <el-empty description="暂无数据" />
+          <el-empty :image="empty" :image-size="300" />
         </template>
       </el-table>
       <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"

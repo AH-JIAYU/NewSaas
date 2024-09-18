@@ -2,7 +2,7 @@
 import { ElMessage, ElMessageBox } from "element-plus";
 import FormMode from "./components/FormMode/index.vue";
 import homePageEdit from "./components/HomePageEdit/index.vue";
-
+import empty from '@/assets/images/empty.png'
 import eventBus from "@/utils/eventBus";
 import api from "@/api/modules/configuration_homepageSetting";
 
@@ -169,7 +169,7 @@ function onReset() {
           </template>
         </ElTableColumn>
         <template #empty>
-          <el-empty description="暂无数据" />
+          <el-empty :image="empty" :image-size="300" />
         </template>
       </ElTable>
     </PageMain>
@@ -252,7 +252,7 @@ function onReset() {
           </template>
         </ElTableColumn>
         <template #empty>
-          <el-empty description="暂无数据" />
+          <el-empty :image="empty" :image-size="300" />
         </template>
       </ElTable>
       <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"

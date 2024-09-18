@@ -5,7 +5,7 @@ import Edit from "./components/Edit/index.vue";
 import Detail from "./components/Detail/index.vue";
 import api from "@/api/modules/alter";
 import apiUser from "@/api/modules/configuration_manager";
-
+import empty from '@/assets/images/empty.png'
 defineOptions({
   name: "alter",
 });
@@ -259,7 +259,7 @@ onMounted(async () => {
           </template>
         </el-table-column> -->
         <template #empty>
-          <el-empty description="暂无数据" />
+          <el-empty :image="empty" :image-size="300" />
         </template>
       </el-table>
       <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"

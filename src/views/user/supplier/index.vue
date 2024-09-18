@@ -9,6 +9,7 @@ import useConfigurationSupplierLevelStore from "@/store/modules/configuration_su
 import { submitLoading } from "@/utils/apiLoading";
 import api from "@/api/modules/user_supplier";
 import useUserSupplierStore from "@/store/modules/user_supplier"; // 供应商
+import empty from '@/assets/images/empty.png'
 const supplierStore = useUserSupplierStore(); // 供应商
 
 defineOptions({
@@ -28,7 +29,7 @@ const editRef = ref(); // 新增|编辑 组件ref
 const checkRef = ref(); // 查看 组件ref
 const QuickEditRef = ref(); //快速编辑
 const plusMinusPaymentsRef = ref(); // 加减款 组件ref
-const border = ref<any>(true); // 表格控件-是否展示边框
+const border = ref<any>(false); // 表格控件-是否展示边框
 const stripe = ref<any>(false); // 表格控件-是否展示斑马条
 const lineHeight = ref<any>("default"); // 表格控件-控制表格大小
 const checkList = ref<Array<Object>>([]); // 表格-展示的列
@@ -312,45 +313,51 @@ onMounted(async () => {
         <el-table-column v-if="checkList.includes('supplierAccord')" align="center" prop="supplierAccord"
           show-overflow-tooltip label="供应商名称">
           <template #default="{ row }">
-            <div class="flex-c">
-              <div class="oneLine" style="width: calc(100% - 20px);">      {{ row.supplierAccord }}</div>
+            <div class="flex-c tableBig">
+              <div class="oneLine" style="width: calc(100% - 20px);"> {{ row.supplierAccord }}</div>
               <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'supplierAccord')"
                 :class="{ edit: 'edit', current: row.tenantSupplierId === current }" name="i-ep:edit" color="#409eff" />
             </div>
-      
+
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('tenantSupplierId')" align="center" prop="tenantSupplierId"
           width="180" show-overflow-tooltip label="供应商ID">
-          <template #default="{row}">
-            <div class="copyId">
+          <template #default="{ row }">
+            <div class="copyId tableSmall">
               <div class="id oneLine ">ID: {{ row.tenantSupplierId }}</div>
               <copy class="copy" :content="row.tenantSupplierId" />
-            </div> 
+            </div>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('supplierLevelId')" align="center" prop="supplierLevelId"
           show-overflow-tooltip label="供应商等级">
           <template #default="{ row }">
-            <div class="flex-c">
-              <div class="oneLine" style="width: calc(100% - 20px);">       {{ supperLevel(row.supplierLevelId) }}</div>
+            <div class="flex-c tableBig">
+              <div class="oneLine" style="width: calc(100% - 20px);"> {{ supperLevel(row.supplierLevelId) }}</div>
               <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'supplierLevelId')"
                 :class="{ edit: 'edit', current: row.tenantSupplierId === current }" name="i-ep:edit" color="#409eff" />
             </div>
-        
+
           </template>
         </el-table-column>
 
         <el-table-column v-if="checkList.includes('balanceHumanLife')" align="center" prop="balanceHumanLife"
           show-overflow-tooltip label="可用余额">
           <template #default="{ row }">
-            <CurrencyType />{{ row.balanceHumanLife || 0 }}
+            <div class="tableBig">
+<CurrencyType />{{ row.balanceHumanLife || 0 }}
+</div>
+
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('amountPendingTrial')" align="center" prop="amountPendingTrial"
           show-overflow-tooltip label="待审金额">
           <template #default="{ row }">
-            <CurrencyType />{{ row.amountPendingTrial || 0 }}
+            <div class="tableBig">
+ <CurrencyType />{{ row.amountPendingTrial || 0 }}
+</div>
+
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('countryAffiliationName')" align="center"
@@ -360,29 +367,100 @@ onMounted(async () => {
         </el-table-column>
         <el-table-column v-if="checkList.includes('b2bStatus')" align="center" show-overflow-tooltip label="B2B|B2C">
           <template #default="{ row }">
-            <el-text v-if="row.b2bStatus && row.b2bStatus === 2" class="mx-1">
-              <div style="color: #15d36a;" class="i-fluent:checkmark-12-filled w-1.5em h-1.5em"></div>
-            </el-text>
-            <el-text v-else class="mx-1">
-              <div style="color:#e74032;" class="i-entypo:cross w-1.5em h-1.5em"></div>
-            </el-text>
-            |
-            <el-text v-if="row.b2cStatus && row.b2cStatus === 2" class="mx-1">
-              <div style="color: #15d36a;" class="i-fluent:checkmark-12-filled w-1.5em h-1.5em"></div>
-            </el-text>
-            <el-text v-else class="mx-1">
-              <div style="color:#e74032;" class="i-entypo:cross w-1.5em h-1.5em"></div>
-            </el-text>
+            <div class="flex-c" style="justify-content: center !important;">
+
+                <svg  v-if="row.b2bStatus && row.b2bStatus === 2" class="mx-1" width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g id="Frame" clip-path="url(#clip0_409_28184)">
+                    <path id="Vector"
+                      d="M13.6223 13.2878H1.375C1.28477 13.2878 1.21094 13.214 1.21094 13.1237V0.876465C1.21094 0.78623 1.28477 0.712402 1.375 0.712402H13.6236C13.7139 0.712402 13.7877 0.78623 13.7877 0.876465V13.1251C13.7863 13.2153 13.7139 13.2878 13.6223 13.2878Z"
+                      fill="#409EFF" />
+                    <path id="Vector_2"
+                      d="M12.3645 14H2.63555C1.4584 14 0.5 13.0416 0.5 11.8645V2.13555C0.5 0.958398 1.4584 0 2.63555 0H12.3645C13.5416 0 14.5 0.958398 14.5 2.13555V11.8645C14.5 13.0416 13.5416 14 12.3645 14ZM2.63555 1.42324C2.24316 1.42324 1.92324 1.74316 1.92324 2.13555V11.8645C1.92324 12.2568 2.24316 12.5768 2.63555 12.5768H12.3645C12.7568 12.5768 13.0768 12.2568 13.0768 11.8645V2.13555C13.0768 1.74316 12.7568 1.42324 12.3645 1.42324H2.63555Z"
+                      fill="#409EFF" />
+                    <path id="Vector_3"
+                      d="M6.24753 11.0141C6.10124 11.0141 5.95359 10.969 5.82781 10.8774L2.39343 8.36725C2.07624 8.13483 2.00652 7.69049 2.23894 7.37194C2.47136 7.05475 2.91706 6.98502 3.23425 7.21744L6.14909 9.34752L11.663 3.22116C11.9255 2.92858 12.3766 2.90533 12.6678 3.16784C12.9591 3.43034 12.9837 3.88151 12.7212 4.17272L6.778 10.7762C6.63718 10.9335 6.44304 11.0141 6.24753 11.0141Z"
+                      fill="white" />
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_409_28184">
+                      <rect width="14" height="14" fill="white" transform="translate(0.5)" />
+                    </clipPath>
+                  </defs>
+                </svg>
+
+                <svg  v-else class="mx-1" width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g id="Frame" clip-path="url(#clip0_409_28364)">
+                    <path id="Vector"
+                      d="M13.6223 13.1901H1.375C1.3387 13.1901 1.30859 13.16 1.30859 13.1237V0.876465C1.30859 0.840165 1.3387 0.810059 1.375 0.810059H13.6236C13.6599 0.810059 13.69 0.840164 13.69 0.876465V13.1242C13.6892 13.1611 13.66 13.1901 13.6223 13.1901Z"
+                      stroke="#409EFF" stroke-width="0.195312" />
+                    <path id="Vector_2"
+                      d="M12.3645 14H2.63555C1.4584 14 0.5 13.0416 0.5 11.8645V2.13555C0.5 0.958398 1.4584 0 2.63555 0H12.3645C13.5416 0 14.5 0.958398 14.5 2.13555V11.8645C14.5 13.0416 13.5416 14 12.3645 14ZM2.63555 1.42324C2.24316 1.42324 1.92324 1.74316 1.92324 2.13555V11.8645C1.92324 12.2568 2.24316 12.5768 2.63555 12.5768H12.3645C12.7568 12.5768 13.0768 12.2568 13.0768 11.8645V2.13555C13.0768 1.74316 12.7568 1.42324 12.3645 1.42324H2.63555Z"
+                      fill="#DCDCDC" />
+                    <g id="Group 18190">
+                      <path id="Vector_3" d="M5 5L10 10" stroke="#DCDCDC" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                      <path id="Vector_4" d="M5 10L10 5" stroke="#DCDCDC" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </g>
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_409_28364">
+                      <rect width="14" height="14" fill="white" transform="translate(0.5)" />
+                    </clipPath>
+                  </defs>
+                </svg>
+              <span>/</span>
+                <svg v-if="row.b2cStatus && row.b2cStatus === 2" class="mx-1" width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g id="Frame" clip-path="url(#clip0_409_28184)">
+                    <path id="Vector"
+                      d="M13.6223 13.2878H1.375C1.28477 13.2878 1.21094 13.214 1.21094 13.1237V0.876465C1.21094 0.78623 1.28477 0.712402 1.375 0.712402H13.6236C13.7139 0.712402 13.7877 0.78623 13.7877 0.876465V13.1251C13.7863 13.2153 13.7139 13.2878 13.6223 13.2878Z"
+                      fill="#409EFF" />
+                    <path id="Vector_2"
+                      d="M12.3645 14H2.63555C1.4584 14 0.5 13.0416 0.5 11.8645V2.13555C0.5 0.958398 1.4584 0 2.63555 0H12.3645C13.5416 0 14.5 0.958398 14.5 2.13555V11.8645C14.5 13.0416 13.5416 14 12.3645 14ZM2.63555 1.42324C2.24316 1.42324 1.92324 1.74316 1.92324 2.13555V11.8645C1.92324 12.2568 2.24316 12.5768 2.63555 12.5768H12.3645C12.7568 12.5768 13.0768 12.2568 13.0768 11.8645V2.13555C13.0768 1.74316 12.7568 1.42324 12.3645 1.42324H2.63555Z"
+                      fill="#409EFF" />
+                    <path id="Vector_3"
+                      d="M6.24753 11.0141C6.10124 11.0141 5.95359 10.969 5.82781 10.8774L2.39343 8.36725C2.07624 8.13483 2.00652 7.69049 2.23894 7.37194C2.47136 7.05475 2.91706 6.98502 3.23425 7.21744L6.14909 9.34752L11.663 3.22116C11.9255 2.92858 12.3766 2.90533 12.6678 3.16784C12.9591 3.43034 12.9837 3.88151 12.7212 4.17272L6.778 10.7762C6.63718 10.9335 6.44304 11.0141 6.24753 11.0141Z"
+                      fill="white" />
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_409_28184">
+                      <rect width="14" height="14" fill="white" transform="translate(0.5)" />
+                    </clipPath>
+                  </defs>
+                </svg>
+                <svg v-else class="mx-1" width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g id="Frame" clip-path="url(#clip0_409_28364)">
+                    <path id="Vector"
+                      d="M13.6223 13.1901H1.375C1.3387 13.1901 1.30859 13.16 1.30859 13.1237V0.876465C1.30859 0.840165 1.3387 0.810059 1.375 0.810059H13.6236C13.6599 0.810059 13.69 0.840164 13.69 0.876465V13.1242C13.6892 13.1611 13.66 13.1901 13.6223 13.1901Z"
+                      stroke="#409EFF" stroke-width="0.195312" />
+                    <path id="Vector_2"
+                      d="M12.3645 14H2.63555C1.4584 14 0.5 13.0416 0.5 11.8645V2.13555C0.5 0.958398 1.4584 0 2.63555 0H12.3645C13.5416 0 14.5 0.958398 14.5 2.13555V11.8645C14.5 13.0416 13.5416 14 12.3645 14ZM2.63555 1.42324C2.24316 1.42324 1.92324 1.74316 1.92324 2.13555V11.8645C1.92324 12.2568 2.24316 12.5768 2.63555 12.5768H12.3645C12.7568 12.5768 13.0768 12.2568 13.0768 11.8645V2.13555C13.0768 1.74316 12.7568 1.42324 12.3645 1.42324H2.63555Z"
+                      fill="#DCDCDC" />
+                    <g id="Group 18190">
+                      <path id="Vector_3" d="M5 5L10 10" stroke="#DCDCDC" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                      <path id="Vector_4" d="M5 10L10 5" stroke="#DCDCDC" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </g>
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_409_28364">
+                      <rect width="14" height="14" fill="white" transform="translate(0.5)" />
+                    </clipPath>
+                  </defs>
+                </svg>
+            </div>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('settlementCycle')" align="center" prop="settlementCycle"
           show-overflow-tooltip label="结算周期"><template #default="{ row }">
-            <div class="flex-c">
-              <div class="oneLine" style="width: calc(100% - 20px);">   {{ row.settlementCycle ? row.settlementCycle + "天" : "-" }}</div>
+            <div class="flex-c tableBig">
+              <div class="oneLine" style="width: calc(100% - 20px);"> {{ row.settlementCycle ? row.settlementCycle + "天"
+    : "-" }}</div>
               <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'settlementCycle')"
                 :class="{ edit: 'edit', current: row.tenantSupplierId === current }" name="i-ep:edit" color="#409eff" />
             </div>
-           
+
           </template>
         </el-table-column>
 
@@ -395,12 +473,12 @@ onMounted(async () => {
         </el-table-column>
         <el-table-column v-if="checkList.includes('remark')" align="center" prop="remark" width="180" label="备注">
           <template #default="{ row }">
-            <div class="flex-c">
-              <div class="oneLine" style="width: calc(100% - 20px);">     {{row.remark}}</div>
+            <div class="flex-c tableBig" >
+              <div class="oneLine" style="width: calc(100% - 20px);"> {{ row.remark }}</div>
               <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'remark')"
                 :class="{ edit: 'edit', current: row.tenantSupplierId === current }" name="i-ep:edit" color="#409eff" />
             </div>
-            
+
           </template>
         </el-table-column>
         <el-table-column align="center" prop="i" label="操作" fixed="right" width="250">
@@ -409,17 +487,17 @@ onMounted(async () => {
               <el-button size="small" plain type="primary" @click="handlePlusMinusPayments(row)">
                 加减款
               </el-button>
-              <el-button size="small" plain type="primary" @click="handleEdit(row)">
+              <el-button size="small" plain type="warning" @click="handleEdit(row)">
                 编辑
               </el-button>
-              <el-button size="small" plain type="primary" @click="handleCheck(row)">
+              <el-button size="small" plain type="danger" @click="handleCheck(row)">
                 详情
               </el-button>
             </ElSpace>
           </template>
         </el-table-column>
         <template #empty>
-          <el-empty class="vab-data-empty" description="暂无数据" />
+            <el-empty :image="empty" :image-size="300" />
         </template>
       </el-table>
       <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
@@ -479,6 +557,7 @@ onMounted(async () => {
     }
   }
 }
+
 .flex-c {
   display: flex;
   justify-content: start;
@@ -507,17 +586,19 @@ onMounted(async () => {
 .el-table__row:hover .edit {
   display: block;
 }
+
 // id
 .copyId {
   @extend .flex-c;
+  justify-content: center;
 
   .copy {
     width: 20px;
   }
 
   .id {
-    flex: 1;
+    width:auto !important;
+    max-width:calc(100% - 25px)  !important;
   }
 }
-
 </style>

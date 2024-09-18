@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 import api from "@/api/modules/user_subVip";
+import empty from '@/assets/images/empty.png'
 defineOptions({
   name: "subVip",
 });
@@ -12,7 +13,7 @@ const listLoading = ref<boolean>(false);
 const list = ref<Array<Object>>([]); // 列表
 const selectRows = ref<string>(); // 表格-选中行
 const checkList = ref<any>([]); // 表格-展示的列
-const border = ref<boolean>(true); // 表格控件-是否展示边框
+const border = ref<boolean>(false); // 表格控件-是否展示边框
 const stripe = ref<boolean>(true); // 表格控件-是否展示斑马条
 const lineHeight = ref<any>("default"); // 表格控件-控制表格大小
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
@@ -230,65 +231,149 @@ onMounted(() => {
       <el-table v-loading="listLoading" :border="border" :data="DataList" :size="lineHeight" :stripe="stripe"
         @selection-change="setSelectRows">
         <el-table-column align="center" type="selection" />
-        <el-table-column v-if="checkList.includes('tenantSupplierId')" align="center" prop="tenantSupplierId"
-          width="180" show-overflow-tooltip label="供应商ID" />
+        <ElTableColumn v-if="checkList.includes('memberChildStatus')" align="center" show-overflow-tooltip
+          prop="memberChildStatus" label="状态">
+          <template #default="{ row }">
+            <div class="tableBig">
+              <el-text v-if="row.memberChildStatus !== 1" effect="light" type="success">启用</el-text>
+              <el-text v-else effect="light" type="danger">禁用</el-text>
+            </div>
+          </template>
+        </ElTableColumn>
         <el-table-column v-if="checkList.includes('memberChildId')" align="center" prop="memberChildId" width="180"
-          show-overflow-tooltip label="子会员ID" />
+          show-overflow-tooltip label="子会员ID">
+          <template #default="{ row }">
+            <div class="copyId tableSmall">
+              <div class="id oneLine ">ID: {{ row.memberChildId }}</div>
+              <copy class="copy" :content="row.memberChildId" />
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column v-if="checkList.includes('tenantSupplierId')" align="center" prop="tenantSupplierId"
+          width="180" show-overflow-tooltip label="供应商ID">
+          <template #default="{ row }">
+            <div class="copyId tableSmall">
+              <div class="id oneLine ">ID: {{ row.tenantSupplierId }}</div>
+              <copy class="copy" :content="row.tenantSupplierId" />
+            </div>
+          </template>
+        </el-table-column>
+
         <el-table-column v-if="checkList.includes('memberNickname')" align="center" prop="memberNickname"
-          show-overflow-tooltip label="子会员名称" />
+          show-overflow-tooltip label="子会员名称">
+          <template #default="{ row }">
+            <div class="tableBig">{{ row.memberNickname }}</div>
+          </template>
+        </el-table-column>
         <el-table-column v-if="checkList.includes('memberName')" align="center" prop="memberName" show-overflow-tooltip
           label="子会员姓名">
           <template #default="{ row }">
-            {{ row.memberName ? row.memberName : "-" }}
-          </template>
-        </el-table-column>
-        <el-table-column v-if="checkList.includes('pendingBalance')" align="center" prop="pendingBalance"
-          show-overflow-tooltip label="	待审余额">
-          <template #default="{ row }">
-            <CurrencyType />{{ row.pendingBalance || 0 }}
+            <div class="tableBig">
+              {{ row.memberName ? row.memberName : "-" }}
+            </div>
+
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('availableBalance')" align="center" prop="availableBalance"
           show-overflow-tooltip label="	可用余额">
           <template #default="{ row }">
-            <CurrencyType />{{ row.availableBalance || 0 }}
+            <div class="tableBig">
+              <CurrencyType />{{ row.availableBalance || 0 }}
+            </div>
+
+          </template>
+        </el-table-column>
+        <el-table-column v-if="checkList.includes('pendingBalance')" align="center" prop="pendingBalance"
+          show-overflow-tooltip label="	待审余额">
+          <template #default="{ row }">
+            <div class="tableBig">
+              <CurrencyType />{{ row.pendingBalance || 0 }}
+            </div>
+
           </template>
         </el-table-column>
         <ElTableColumn v-if="checkList.includes('b2bStatus')" align="center" show-overflow-tooltip prop="b2bStatus"
           label="B2B">
           <template #default="{ row }">
-            <el-text v-show="row.b2bStatus === 1" effect="light">
-              <div style="color:#e74032;" class="i-entypo:cross w-1.5em h-1.5em"></div>
-            </el-text>
-            <el-text v-show="row.b2bStatus === 2" effect="light">
-              <div style="color: #15d36a;" class="i-fluent:checkmark-12-filled w-1.5em h-1.5em"></div>
-            </el-text>
+            <svg v-if="row.b2bStatus && row.b2bStatus === 2" class="mx-1" width="15" height="14" viewBox="0 0 15 14"
+              fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g id="Frame" clip-path="url(#clip0_409_28184)">
+                <path id="Vector"
+                  d="M13.6223 13.2878H1.375C1.28477 13.2878 1.21094 13.214 1.21094 13.1237V0.876465C1.21094 0.78623 1.28477 0.712402 1.375 0.712402H13.6236C13.7139 0.712402 13.7877 0.78623 13.7877 0.876465V13.1251C13.7863 13.2153 13.7139 13.2878 13.6223 13.2878Z"
+                  fill="#409EFF" />
+                <path id="Vector_2"
+                  d="M12.3645 14H2.63555C1.4584 14 0.5 13.0416 0.5 11.8645V2.13555C0.5 0.958398 1.4584 0 2.63555 0H12.3645C13.5416 0 14.5 0.958398 14.5 2.13555V11.8645C14.5 13.0416 13.5416 14 12.3645 14ZM2.63555 1.42324C2.24316 1.42324 1.92324 1.74316 1.92324 2.13555V11.8645C1.92324 12.2568 2.24316 12.5768 2.63555 12.5768H12.3645C12.7568 12.5768 13.0768 12.2568 13.0768 11.8645V2.13555C13.0768 1.74316 12.7568 1.42324 12.3645 1.42324H2.63555Z"
+                  fill="#409EFF" />
+                <path id="Vector_3"
+                  d="M6.24753 11.0141C6.10124 11.0141 5.95359 10.969 5.82781 10.8774L2.39343 8.36725C2.07624 8.13483 2.00652 7.69049 2.23894 7.37194C2.47136 7.05475 2.91706 6.98502 3.23425 7.21744L6.14909 9.34752L11.663 3.22116C11.9255 2.92858 12.3766 2.90533 12.6678 3.16784C12.9591 3.43034 12.9837 3.88151 12.7212 4.17272L6.778 10.7762C6.63718 10.9335 6.44304 11.0141 6.24753 11.0141Z"
+                  fill="white" />
+              </g>
+              <defs>
+                <clipPath id="clip0_409_28184">
+                  <rect width="14" height="14" fill="white" transform="translate(0.5)" />
+                </clipPath>
+              </defs>
+            </svg>
+
+            <svg v-else class="mx-1" width="15" height="14" viewBox="0 0 15 14" fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <g id="Frame" clip-path="url(#clip0_409_28364)">
+                <path id="Vector"
+                  d="M13.6223 13.1901H1.375C1.3387 13.1901 1.30859 13.16 1.30859 13.1237V0.876465C1.30859 0.840165 1.3387 0.810059 1.375 0.810059H13.6236C13.6599 0.810059 13.69 0.840164 13.69 0.876465V13.1242C13.6892 13.1611 13.66 13.1901 13.6223 13.1901Z"
+                  stroke="#409EFF" stroke-width="0.195312" />
+                <path id="Vector_2"
+                  d="M12.3645 14H2.63555C1.4584 14 0.5 13.0416 0.5 11.8645V2.13555C0.5 0.958398 1.4584 0 2.63555 0H12.3645C13.5416 0 14.5 0.958398 14.5 2.13555V11.8645C14.5 13.0416 13.5416 14 12.3645 14ZM2.63555 1.42324C2.24316 1.42324 1.92324 1.74316 1.92324 2.13555V11.8645C1.92324 12.2568 2.24316 12.5768 2.63555 12.5768H12.3645C12.7568 12.5768 13.0768 12.2568 13.0768 11.8645V2.13555C13.0768 1.74316 12.7568 1.42324 12.3645 1.42324H2.63555Z"
+                  fill="#DCDCDC" />
+                <g id="Group 18190">
+                  <path id="Vector_3" d="M5 5L10 10" stroke="#DCDCDC" stroke-width="1.5" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                  <path id="Vector_4" d="M5 10L10 5" stroke="#DCDCDC" stroke-width="1.5" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </g>
+              </g>
+              <defs>
+                <clipPath id="clip0_409_28364">
+                  <rect width="14" height="14" fill="white" transform="translate(0.5)" />
+                </clipPath>
+              </defs>
+            </svg>
           </template>
         </ElTableColumn>
         <el-table-column v-if="checkList.includes('memberChildGroupName')" align="center" prop="memberChildGroupName"
-          show-overflow-tooltip label="所属组"><template #default="{ row }">
-            {{ row.memberChildGroupName ? row.memberChildGroupName : "-" }}
+          show-overflow-tooltip label="所属组">
+          <template #default="{ row }">
+            <div class="copyId">
+              <div class="id">
+                <b class="oneLine tableBig">{{ row.memberChildGroupName }}</b>
+                <span class="oneLine tableSmall" v-show="row.memberChildGroupId">ID: {{ row.memberChildGroupId }}</span>
+              </div>
+              <copy class="copy" v-if="row.memberChildGroupId" :content="row.memberChildGroupId" />
+            </div>
+
           </template>
         </el-table-column>
-        <ElTableColumn v-if="checkList.includes('memberChildStatus')" align="center" show-overflow-tooltip
-          prop="memberChildStatus" label="子会员状态">
-          <template #default="{ row }">
-            <el-tag v-if="row.memberChildStatus !== 1" effect="light" type="success">启用</el-tag>
-            <el-tag v-else effect="light" type="danger">禁用</el-tag>
-          </template>
-        </ElTableColumn>
+
         <el-table-column v-if="checkList.includes('createUserName')" align="center" prop="createUserName"
           show-overflow-tooltip label="创建人"><template #default="{ row }">
-            {{ row.createUserName ? row.createUserName : "-" }}
+            <div class="tableBig">
+              {{ row.createUserName ? row.createUserName : "-" }}
+            </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('createTime')" align="center" prop="createTime"
-          label="创建日期"><template #default="{ row }">
+        <el-table-column v-if="checkList.includes('createTime')" align="center" prop="createTime">
+          <template #header>
+            <div class="flex-c">
+              <SvgIcon name="ant-design:clock-circle-filled" color="#45a0ff" />
+              <span>创建</span>
+            </div>
+
+          </template>
+          <template #default="{ row }">
             <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>
           </template>
         </el-table-column>
         <template #empty>
-          <el-empty class="vab-data-empty" description="暂无数据" />
+          <el-empty :image="empty" :image-size="300" />
         </template>
       </el-table>
       <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
@@ -342,6 +427,52 @@ onMounted(() => {
         }
       }
     }
+  }
+}
+
+.flex-c {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-s {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  width: 100%;
+
+  >div:nth-of-type(1) {
+    width: calc(100% - 25px);
+    flex-shrink: 0;
+  }
+
+  .edit {
+    width: 20px;
+    height: 20px;
+    margin-left: 5px;
+    flex-shrink: 0;
+    display: none;
+    cursor: pointer;
+  }
+
+  .current {
+    display: block !important;
+  }
+}
+
+// id
+.copyId {
+  @extend .flex-s;
+  justify-content: center;
+
+  .copy {
+    width: 20px;
+  }
+
+  .id {
+    width: auto !important;
+    max-width: calc(100% - 25px) !important;
   }
 }
 </style>

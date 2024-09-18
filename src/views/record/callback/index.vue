@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 import api from "@/api/modules/record_callback";
+import empty from '@/assets/images/empty.png'
 defineOptions({
   name: "callback",
 });
@@ -227,7 +228,7 @@ onMounted(async () => {
           </template>
         </el-table-column>
         <template #empty>
-          <el-empty class="vab-data-empty" description="暂无数据" />
+            <el-empty :image="empty" :image-size="300" />
         </template>
       </el-table>
       <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"

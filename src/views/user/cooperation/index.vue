@@ -3,7 +3,7 @@ import { onMounted } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import customerEdit from "./components/CustomerEdit/index.vue";
 import customerProportion from "./components/CustomerProportion/index.vue";
-
+import empty from '@/assets/images/empty.png'
 import api from "@/api/modules/user_cooperation";
 
 defineOptions({
@@ -178,53 +178,73 @@ onMounted(() => {
       <el-table v-loading="listLoading" :border="border" :data="tableList" :size="lineHeight" :stripe="stripe"
         @selection-change="setSelectRows">
         <el-table-column align="center" type="selection" />
-        <el-table-column v-if="checkList.includes('beInvitationTenantId')" align="center" prop="beInvitationTenantId"
-          width="180" show-overflow-tooltip label="租户id" />
-        <el-table-column v-if="checkList.includes('beInvitationTenantName')" align="center"
-          prop="beInvitationTenantName" show-overflow-tooltip label="租户名称" />
-
         <el-table-column v-if="checkList.includes('bindStatus')" align="center" prop="bindStatus" show-overflow-tooltip
-          label="状态">
+          label="状态" width="100">
           <template #default="{ row }">
-            <span v-if="row.bindStatus === 2"> 合作 </span>
-            <span v-if="row.bindStatus === 4"> 解约 </span>
+            <div class="tableBig">
+              <el-text v-if="row.bindStatus === 2" type="success">合作</el-text>
+              <el-text v-if="row.bindStatus === 4" type="danger">解约</el-text>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column v-if="checkList.includes('beInvitationTenantId')" align="center" prop="beInvitationTenantId"
+          width="180" show-overflow-tooltip label="租户id">
+          <template #default="{ row }">
+            <div class="copyId tableSmall">
+              <div class="id oneLine ">ID: {{ row.beInvitationTenantId }}</div>
+              <copy class="copy" :content="row.beInvitationTenantId" />
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column v-if="checkList.includes('beInvitationTenantName')" align="center"
+          prop="beInvitationTenantName" show-overflow-tooltip label="租户名称">
+          <template #default="{ row }">
+            <div class="tableBig">{{ row.beInvitationTenantName }}</div>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('priceRatio')" align="center" prop="priceRatio" show-overflow-tooltip
           label="价格比例">
-          <template #default="{ row }"> {{ row.priceRatio }} % </template>
+          <template #default="{ row }">
+            <div class="tableBig">
+              {{ row.priceRatio }} %
+            </div>
+          </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('pendBalance')" align="center" prop="pendBalance"
           show-overflow-tooltip label="待审金额">
           <template #default="{ row }">
-            <CurrencyType />{{ row.pendBalance || 0 }}
+            <div class="tableBig">
+              <CurrencyType />{{ row.pendBalance || 0 }}
+            </div>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('availableBalance')" align="center" prop="availableBalance"
           show-overflow-tooltip label="可用金额">
           <template #default="{ row }">
-            <CurrencyType />{{ row.availableBalance || 0 }}
+            <div class="tableBig">
+              <CurrencyType />{{ row.availableBalance || 0 }}
+            </div>
           </template>
         </el-table-column>
-        <el-table-column align="center" fixed="right" prop="i" label="操作"  width="350">
+        <el-table-column align="center" fixed="right" prop="i" label="操作" width="350">
           <template #default="{ row }">
             <ElSpace>
-              <el-button v-if="row.bindStatus === 2" type="primary" plain size="small" @click="termination(row)">
+              <el-button v-if="row.bindStatus === 2" type="danger" plain size="small" @click="termination(row)">
                 终止合作
               </el-button>
               <el-button size="small" plain type="primary" @click="priceRatio(row)">
                 价格比例
               </el-button>
 
-              <el-button type="primary" plain size="small">
+              <el-button type="warning" plain size="small">
                 财务日志
               </el-button>
-              <el-button type="primary" plain size="small"> 加减款 </el-button>
+              <el-button type="danger" plain size="small"> 加减款 </el-button>
             </ElSpace>
           </template>
         </el-table-column>
         <template #empty>
-          <el-empty class="vab-data-empty" description="暂无数据" />
+          <el-empty :image="empty" :image-size="300" />
         </template>
       </el-table>
       <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
@@ -280,6 +300,46 @@ onMounted(() => {
         }
       }
     }
+  }
+}
+
+.flex-s {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  width: 100%;
+
+  >div:nth-of-type(1) {
+    width: calc(100% - 25px);
+    flex-shrink: 0;
+  }
+
+  .edit {
+    width: 20px;
+    height: 20px;
+    margin-left: 5px;
+    flex-shrink: 0;
+    display: none;
+    cursor: pointer;
+  }
+
+  .current {
+    display: block !important;
+  }
+}
+
+// id
+.copyId {
+  @extend .flex-s;
+  justify-content: center;
+
+  .copy {
+    width: 20px;
+  }
+
+  .id {
+    width: auto !important;
+    max-width: calc(100% - 25px) !important;
   }
 }
 </style>

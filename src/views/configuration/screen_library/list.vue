@@ -9,6 +9,7 @@ import Edit from "./components/Edit/index.vue";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
 import useOtherFunctionsScreenLibraryStore from "@/store/modules/otherFunctions_screenLibrary"; //  问卷
 import useStagedDataStore from "@/store/modules/stagedData"; // 暂存
+import empty from '@/assets/images/empty.png'
 
 defineOptions({
   name: "screen_library",
@@ -306,30 +307,16 @@ function onReset() {
         </ElButton>
       </ElSpace>
       <el-form ref="formRef" :rules="data.rules" :model="DataList">
-        <ElTable v-loading="data.loading" class="my-4" border :data="DataList" highlight-current-row height="100%"
+        <ElTable v-loading="data.loading" class="my-4"   :data="DataList" highlight-current-row height="100%"
           @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event"
           :default-expand-all="true">
           <el-table-column type="expand" width="55">
             <template #default="scopeCountry">
               <el-table :data="scopeCountry.row.getProjectProblemCategoryInfoList" highlight-current-row
-                class="hide-table-header" border height="100%" @sort-change="sortChange"
+                class="hide-table-header"   height="100%" @sort-change="sortChange"
                 @selection-change="data.batch.selectionDataList = $event">
                 <el-table-column width="55" />
-                <el-table-column width="500" prop="categoryName" label="问卷名称" align="center">
-                  <template #default="scope">
-                    <template v-if="scope.row.type === 'add'">
-                      <el-form-item
-                        :prop="`[${scopeCountry.$index}].getProjectProblemCategoryInfoList[${scope.$index}].categoryName`"
-                        :rules="data.rules.categoryName">
-                        <el-input v-model="scope.row.categoryName"></el-input>
-                      </el-form-item>
-                    </template>
-                    <template v-else>
-                      {{ scope.row.categoryName }}
-                    </template>
-                  </template>
-                </el-table-column>
-                <ElTableColumn prop="status" label="状态">
+                <ElTableColumn prop="status" label="状态" align="center">
                   <template #default="scope">
                     <template v-if="scope.row.type === 'add'">
                       <ElSwitch v-model="scope.row.status" :active-value="1" :inactive-value="2" inline-prompt
@@ -341,6 +328,21 @@ function onReset() {
                     </template>
                   </template>
                 </ElTableColumn>
+                <el-table-column width="500" prop="categoryName" label="问卷名称" align="center">
+                  <template #default="scope">
+                    <template v-if="scope.row.type === 'add'">
+                      <el-form-item
+                        :prop="`[${scopeCountry.$index}].getProjectProblemCategoryInfoList[${scope.$index}].categoryName`"
+                        :rules="data.rules.categoryName">
+                        <el-input v-model="scope.row.categoryName"></el-input>
+                      </el-form-item>
+                    </template>
+                    <template v-else>
+                      <el-text class="tableBig">{{ scope.row.categoryName }}</el-text>
+                    </template>
+                  </template>
+                </el-table-column>
+
                 <ElTableColumn width="250" align="center" fixed="right" label="操作">
                   <template #default="scope">
                     <template v-if="scope.row.type === 'add'">
@@ -358,7 +360,7 @@ function onReset() {
                       </ElButton>
                     </template>
                     <template v-else>
-                      <ElButton type="success" size="small" plain @click="EditSurvey(scope.row)">
+                      <ElButton type="warning" size="small" plain @click="EditSurvey(scope.row)">
                         设计问卷
                       </ElButton>
                       <ElButton type="danger" size="small" plain @click="onDelProject(scope.row)">
@@ -370,13 +372,19 @@ function onReset() {
               </el-table>
             </template>
           </el-table-column>
-          <ElTableColumn prop="countryName" label="国家/标题" width="500" />
-          <ElTableColumn prop="isDefault" label="默认/状态">
+          <ElTableColumn prop="isDefault" label="默认/状态" align="center">
             <template #default="scope">
               <ElSwitch @change="changeIsDefault(scope.row)" v-model="scope.row.isDefault" :active-value="1"
                 :inactive-value="2" inline-prompt active-text="启用" inactive-text="禁用" />
             </template>
           </ElTableColumn>
+          <ElTableColumn prop="countryName" label="国家/标题" width="500" align="center">
+            <template #default="{ row }">
+              <el-tag type="primary">{{ row.countryName }}</el-tag>
+            </template>
+
+          </ElTableColumn>
+
           <ElTableColumn label="操作" width="250" align="center" fixed="right">
             <template #default="scope">
               <ElButton type="primary" size="small" plain @click="onCreateTiele(scope.row)">
@@ -388,7 +396,7 @@ function onReset() {
             </template>
           </ElTableColumn>
           <template #empty>
-            <el-empty class="vab-data-empty" description="暂无数据" />
+            <el-empty :image="empty" :image-size="300" />
           </template>
         </ElTable>
       </el-form>

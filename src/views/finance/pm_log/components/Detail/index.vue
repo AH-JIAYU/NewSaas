@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import api from "@/api/modules/financial_pm_log";
-// import { obtainLoading } from "@/utils/apiLoading";
+import empty from '@/assets/images/empty.png'
 
 // 时间
 const { format } = useTimeago();
@@ -208,7 +208,7 @@ format(row.createTime)
         </template>
 </ElTableColumn>
 <template #empty>
-        <el-empty class="vab-data-empty" description="暂无数据" />
+          <el-empty :image="empty" :image-size="300" />
       </template>
 </ElTable>
 <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"

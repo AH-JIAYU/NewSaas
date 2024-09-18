@@ -10,6 +10,7 @@ import DictionaryDialog from "./components/dictionaryDialog/index.vue";
 import DictionaryItemDialog from "./components/dictionaryItemDialog/index.vue";
 import UsageDialog from "./components/usageDialog/index.vue";
 import apiDictionary from "@/api/modules/dictionary";
+import empty from '@/assets/images/empty.png'
 
 defineOptions({
   name: "PagesExampleDictionary",
@@ -393,7 +394,7 @@ const usageExampleVisible = ref(false);
               </template>
             </ElTableColumn>
             <template #empty>
-              <el-empty description="暂无数据" />
+              <el-empty :image="empty" :image-size="300" />
             </template>
           </ElTable>
           <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"

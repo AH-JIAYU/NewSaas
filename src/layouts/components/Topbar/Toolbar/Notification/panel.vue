@@ -85,7 +85,7 @@ const cooperation = (row: any) => {
           </div>
         </template>
         <template v-else>
-          <el-empty description="暂无数据" />
+          <el-empty :image="empty" :image-size="300" />
           <!-- <div class="flex flex-col items-center py-6 text-stone-5">
             <SvgIcon name="i-tabler:mood-smile" :size="40" />
             <p m-2 text-base>没有新消息</p>
@@ -132,7 +132,7 @@ const cooperation = (row: any) => {
         </template>
         <template v-else>
           <div class="flex flex-col items-center py-6 text-stone-5">
-            <el-empty description="暂无数据" />
+            <el-empty :image="empty" :image-size="300" />
             <!-- <SvgIcon name="i-tabler:mood-smile" :size="40" />
             <p m-2 text-base>没有新待办</p> -->
           </div>

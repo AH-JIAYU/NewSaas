@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import api from "@/api/modules/project_settlement";
-
+import empty from '@/assets/images/empty.png'
 defineOptions({
   name: "RefundDetails",
 });
@@ -90,7 +90,7 @@ defineExpose({ showEdit });
           label="供应商退款率"
         />
         <template #empty>
-          <el-empty description="暂无数据" />
+          <el-empty :image="empty" :image-size="300" />
         </template>
       </el-table>
       <div style="margin-top: 20px; margin-bottom: 20px">

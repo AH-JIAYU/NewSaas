@@ -11,6 +11,7 @@ import eventBus from '@/utils/eventBus'
 import apiUser from '@/api/modules/configuration_manager'
 import useBasicDictionaryStore from '@/store/modules/otherFunctions_basicDictionary'
 import useTenantRoleStore from '@/store/modules/tenant_role'
+import empty from '@/assets/images/empty.png'
 
 defineOptions({
   name: 'manager',
@@ -302,7 +303,7 @@ function onDel(row: any) {
           </template>
         </ElTableColumn>
         <template #empty>
-          <el-empty description="暂无数据" />
+          <el-empty :image="empty" :image-size="300" />
         </template>
       </ElTable>
       <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"

@@ -12,6 +12,7 @@ import cloneDeep from "lodash-es/cloneDeep";
 import risingAndFalling from './components/risingAndFalling.vue' // 较昨日
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
 import useNotificationStore from "@/store/modules/notification"; //消息中心
+import empty from '@/assets/images/empty.png'
 defineOptions({
   name: "homePage",
 });
@@ -605,7 +606,7 @@ onMounted(async () => {
                   </template>
                 </el-table-column>
                 <template #empty>
-                  <el-empty description="暂无数据" />
+                  <el-empty :image="empty" :image-size="300" />
                 </template>
               </el-table>
             </div>
@@ -779,7 +780,7 @@ onMounted(async () => {
                 </div>
               </template>
               <template v-else>
-                <el-empty description="暂无数据" />
+                <el-empty :image="empty" :image-size="300" />
                 <!-- <div class="flex flex-col items-center py-6 text-stone-5">
                   <SvgIcon name="i-tabler:mood-smile" :size="40" />
                   <p m-2 text-base>没有待办</p>

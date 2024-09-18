@@ -144,13 +144,15 @@ defineExpose({
 // id
 .copyId {
   @extend .flex-c;
+  justify-content: center;
 
   .copy {
     width: 20px;
   }
 
   .id {
-    flex: 1;
+    width:auto !important;
+    max-width:calc(100% - 25px)  !important;
   }
 }
 

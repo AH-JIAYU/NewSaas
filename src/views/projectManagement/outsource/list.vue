@@ -5,7 +5,7 @@ import { Plus } from "@element-plus/icons-vue";
 import edit from "./components/Edit/index.vue";
 import api from "@/api/modules/projectManagement_outsource";
 import useProjectManagementOutsourceStore from "@/store/modules/projectManagement_outsource";
-
+import empty from '@/assets/images/empty.png'
 defineOptions({
   name: "outsource",
 });
@@ -169,7 +169,7 @@ onMounted(() => {
             <el-table-column v-if="checkList.includes('projectStatus')" show-overflow-tooltip prop="projectStatus"
               align="center" label="状态">
               <template #default="{ row }">
-                <span>{{
+                <span class="tableBig">{{
     projectManagementOutsourceStore.projectStatusList[
     row.projectStatus - 1
     ]
@@ -177,22 +177,30 @@ onMounted(() => {
               </template>
             </el-table-column>
             <el-table-column v-if="checkList.includes('tenantName')" show-overflow-tooltip prop="tenantName"
-              align="center" label="租户名称" />
+              align="center" label="租户名称" >
+              <template #default="{row}">
+                <div class="tableBig">{{row.tenantName}}</div>
+              </template>
+            </el-table-column>
             <el-table-column v-if="checkList.includes('tenantId')" show-overflow-tooltip prop="tenantId" align="center"
               label="租户ID">
               <template #default="{ row }">
-                <div class="copyId">
+                <div class="copyId tableSmall">
                   <div class="id oneLine">ID: {{ row.tenantId }}</div>
                   <copy class="copy" :content="row.tenantId" />
                 </div>
               </template>
             </el-table-column>
             <el-table-column v-if="checkList.includes('projectName')" show-overflow-tooltip prop="projectName"
-              align="center" label="项目名称" />
+              align="center" label="项目名称" >
+              <template #default="{row}">
+                <div class="tableBig">{{row.projectName}}</div>
+              </template>
+            </el-table-column>
             <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip prop="projectId"
               align="center" width="180" label="项目ID">
               <template #default="{ row }">
-                <div class="copyId">
+                <div class="copyId tableSmall">
                   <div class="id oneLine">ID: {{ row.projectId }}</div>
                   <copy class="copy" :content="row.projectId" />
                 </div>
@@ -217,7 +225,7 @@ onMounted(() => {
               </template>
             </el-table-column>
             <template #empty>
-              <el-empty description="暂无数据" />
+              <el-empty :image="empty" :image-size="300" />
             </template>
           </el-table>
           <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
@@ -282,7 +290,7 @@ onMounted(() => {
             <el-table-column v-if="checkList.includes('projectStatus')" show-overflow-tooltip prop="projectStatus"
               align="center" label="状态">
               <template #default="{ row }">
-                <span>{{
+                <span class="tableBig">{{
     projectManagementOutsourceStore.projectStatusList[
     row.projectStatus - 1
     ]
@@ -290,28 +298,34 @@ onMounted(() => {
               </template>
             </el-table-column>
             <el-table-column v-if="checkList.includes('tenantName')" show-overflow-tooltip prop="tenantName"
-              align="center" label="租户名称" />
+              align="center" label="租户名称" >
+              <template #default="{row}">
+                <div class="tableBig">{{row.tenantName}}</div>
+              </template>
+            </el-table-column>
             <el-table-column v-if="checkList.includes('tenantId')" show-overflow-tooltip prop="tenantId" align="center"
               label="租户ID"><template #default="{ row }">
-                <div class="copyId">
+                <div class="copyId tableSmall">
                   <div class="id oneLine">ID: {{ row.tenantId }}</div>
                   <copy class="copy" :content="row.tenantId" />
                 </div>
               </template>
             </el-table-column>
             <el-table-column v-if="checkList.includes('projectName')" show-overflow-tooltip prop="projectName"
-              align="center" label="项目名称" />
+              align="center" label="项目名称" >
+              <template #default="{row}">
+                <div class="tableBig">{{row.projectName}}</div>
+              </template>
+            </el-table-column>
             <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip prop="projectId"
               align="center" width="180" label="项目ID">
               <template #default="{ row }">
-                <div class="copyId">
+                <div class="copyId tableSmall">
                   <div class="id oneLine">ID: {{ row.projectId }}</div>
                   <copy class="copy" :content="row.projectId" />
                 </div>
               </template>
             </el-table-column>
-
-
             <el-table-column v-if="checkList.includes('participationNumber')" show-overflow-tooltip
               prop="participationNumber" align="center" label="参数" width="300">
               <template #default="{ row }">
@@ -331,7 +345,7 @@ onMounted(() => {
               </template>
             </el-table-column>
             <template #empty>
-              <el-empty description="暂无数据" />
+              <el-empty :image="empty" :image-size="300" />
             </template>
           </el-table>
           <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
@@ -403,13 +417,15 @@ onMounted(() => {
 // id
 .copyId {
   @extend .flex-c;
+  justify-content: center;
 
   .copy {
     width: 20px;
   }
 
   .id {
-    flex: 1;
+    width:auto !important;
+    max-width:calc(100% - 25px)  !important;
   }
 }
 

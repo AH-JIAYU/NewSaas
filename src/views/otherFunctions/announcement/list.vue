@@ -7,6 +7,7 @@ import FormMode from "./components/FormMode/index.vue";
 import eventBus from "@/utils/eventBus";
 import api from "@/api/modules/announcement";
 import useSettingsStore from "@/store/modules/settings";
+import empty from '@/assets/images/empty.png'
 
 defineOptions({
   name: "announcement",
@@ -269,8 +270,9 @@ onBeforeUnmount(() => {
                 @clear="currentChange()" />
             </ElFormItem>
             <el-form-item label="">
-              <el-select v-model="data.search.type" value-key="" placeholder="请选择类型" clearable filterable @change="currentChange()">
-                <el-option v-for="item in type" :key="item.value" :label="item.label" :value="item.value"  />
+              <el-select v-model="data.search.type" value-key="" placeholder="请选择类型" clearable filterable
+                @change="currentChange()">
+                <el-option v-for="item in type" :key="item.value" :label="item.label" :value="item.value" />
               </el-select>
             </el-form-item>
             <ElFormItem>
@@ -314,21 +316,6 @@ onBeforeUnmount(() => {
         :size="data.lineHeight" class="my-4" :data="data.dataList" highlight-current-row height="100%"
         @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
         <el-table-column align="center" type="selection" />
-        <!-- <el-table-column
-          align="center"
-          show-overflow-tooltip
-          type="index"
-          label="序号"
-          width="80"
-        /> -->
-        <ElTableColumn v-if="data.checkList.includes('title')" align="center" show-overflow-tooltip prop="title"
-          label="标题" />
-        <ElTableColumn v-if="data.checkList.includes('type')" align="center" show-overflow-tooltip prop="type"
-          label="类型">
-          <template #default="{ row }">
-            {{ type[row.type - 1].label }}
-          </template>
-        </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('top')" align="center" show-overflow-tooltip prop="top" label="置顶">
           <template #default="{ row }">
             <el-switch v-model="row.top" :active-value="true" :inactive-value="false" inline-prompt active-text="开启"
@@ -336,8 +323,34 @@ onBeforeUnmount(() => {
             </el-switch>
           </template>
         </ElTableColumn>
+        <ElTableColumn v-if="data.checkList.includes('title')" align="center" show-overflow-tooltip prop="title"
+          label="标题">
+          <template #default="{ row }">
+            <el-text class="tableBig">
+              {{ row.title ? row.title : "-" }}
+            </el-text>
+          </template>
+        </ElTableColumn>
+        <ElTableColumn v-if="data.checkList.includes('type')" align="center" show-overflow-tooltip prop="type"
+          label="类型">
+          <template #default="{ row }">
+            <el-text class="tableBig">
+              {{ type[row.type - 1].label }}
+            </el-text>
+
+          </template>
+        </ElTableColumn>
+
         <ElTableColumn v-if="data.checkList.includes('createTime')" align="center" show-overflow-tooltip
-          prop="createTime" label="创建时间"><template #default="{ row }">
+          prop="createTime"  >
+          <template #header>
+            <div class="flex-c">
+              <SvgIcon name="ant-design:clock-circle-filled" color="#45a0ff" />
+              <span>创建时间</span>
+            </div>
+
+          </template>
+          <template #default="{ row }">
             <el-tag effect="plain" type="info">{{
     format(row.createTime)
   }}</el-tag>
@@ -354,7 +367,7 @@ onBeforeUnmount(() => {
           </template>
         </ElTableColumn>
         <template #empty>
-          <el-empty description="暂无数据" />
+          <el-empty :image="empty" :image-size="300" />
         </template>
       </ElTable>
       <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
@@ -419,5 +432,10 @@ onBeforeUnmount(() => {
       background: var(--el-fill-color-lighter) !important;
     }
   }
+}
+.flex-c {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

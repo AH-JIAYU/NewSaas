@@ -7,7 +7,7 @@ meta:
 import eventBus from "@/utils/eventBus";
 import api from "@/api/modules/survey_irQuery";
 import useSettingsStore from "@/store/modules/settings";
-
+import empty from '@/assets/images/empty.png'
 defineOptions({
   name: "irQuery",
 });
@@ -281,7 +281,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
                 <ElTableColumn v-if="data.checkList.includes('projectIr')" show-overflow-tooltip align="center"
                   prop="projectIr" label="项目实际IR" />
                 <template #empty>
-                  <el-empty description="暂无数据" />
+                  <el-empty :image="empty" :image-size="300" />
                 </template>
               </ElTable>
               <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
@@ -347,7 +347,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
                 <ElTableColumn v-if="data.checkList.includes('ir')" show-overflow-tooltip align="center" prop="ir"
                   label="IR" />
                 <template #empty>
-                  <el-empty description="暂无数据" />
+                  <el-empty :image="empty" :image-size="300" />
                 </template>
               </ElTable>
               <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
@@ -412,7 +412,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
                 <ElTableColumn v-if="data.checkList.includes('ir')" show-overflow-tooltip align="center" prop="ir"
                   label="会员组IR" />
                 <template #empty>
-                  <el-empty description="暂无数据" />
+                  <el-empty :image="empty" :image-size="300" />
                 </template>
               </ElTable>
               <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
