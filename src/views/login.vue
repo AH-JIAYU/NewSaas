@@ -18,7 +18,7 @@ import useSettingsStore from "@/store/modules/settings";
 import useUserStore from "@/store/modules/user";
 import { obtainLoading, submitLoading } from "@/utils/apiLoading";
 import storage from "@/utils/storage";
-import { throttle } from "lodash-es";
+import { debounce } from "lodash-es";
 import api from "@/api/modules/register";
 import apiCountry from "@/api/modules/basicDictionary";
 
@@ -99,7 +99,7 @@ const loginRules = ref<any>({
 
 onMounted(async () => {
   const { data } = await api.getTenantConfig();
-  isRegister.value = data.register; 
+  isRegister.value = data.register;
   if(route.query.isRegister&&route.query.isRegister==='true'){
     formType.value = 'register'
   }
@@ -144,6 +144,15 @@ const chengAccount = () => {
     loginRules.value.account = [];
   }
 };
+const loginSendCode=debounce(async(params:any)=>{
+  const {status}= await api.sendCode(params);
+  if (status === 1) {
+        ElMessage.success({
+          message: "已发送",
+        });
+        loginCountdown();
+      }
+},1000)
 // 获取验证码
 async function loginCaptcha() {
   loginFormRef.value.validateField("account", async (valid: any) => {
@@ -163,13 +172,8 @@ async function loginCaptcha() {
           type: "login_phone_number",
         };
       }
-      const { status } = await obtainLoading(api.sendCode(params));
-      if (status === 1) {
-        ElMessage.success({
-          message: "已发送",
-        });
-        loginCountdown();
-      }
+      loginCode.value = '正在发送验证码';
+    await loginSendCode(params)
     }
   });
 }
@@ -190,7 +194,7 @@ const loginCountdown = () => {
   }, 1000);
 };
 // 登录
-const handleLogin = throttle(() => {
+const handleLogin = debounce(() => {
   loginFormRef.value &&
     loginFormRef.value.validate((valid: any) => {
       if (valid) {
@@ -296,7 +300,6 @@ const registerRules = ref<FormRules>({
   companyType: [
     { required: true, trigger: "change", message: "请选择账户类型" },
   ],
-  // taxID: [{ required: true, trigger: 'blur', message: '请输入公司税号' }],
   legalPersonName: [
     { required: true, trigger: "blur", message: "请输入法人姓名" },
   ],
@@ -327,6 +330,16 @@ const registerRules = ref<FormRules>({
     },
   ],
 });
+
+const registerSendCode =debounce(async(params:any)=>{
+  const {status}= await api.sendCode(params);
+  if (status === 1) {
+        ElMessage.success({
+          message: "已发送",
+        });
+        countdown();
+      }
+},1000)
 // 获取验证码
 const mobileVerificationCode = async () => {
   registerFormRef.value.validateField(
@@ -339,22 +352,13 @@ const mobileVerificationCode = async () => {
           phone: registerForm.value.phoneNumber,
         };
         if (registerForm.value.country === "CN") {
-          const { status } = await obtainLoading(api.sendCode(params));
-          if (status === 1) {
-            ElMessage.success({
-              message: "已发送",
-            });
-            countdown();
-          }
+          phoneCode.value = `正在发送验证码`
+         await registerSendCode(params)
+
         } else {
           params.type = "register_email";
-          const { status } = await obtainLoading(api.sendCode(params));
-          if (status === 1) {
-            ElMessage.success({
-              message: "已发送",
-            });
-            countdown();
-          }
+          phoneCode.value = `正在发送验证码`
+          await registerSendCode(params)
         }
       }
     }
@@ -377,7 +381,7 @@ const countdown = () => {
   }, 1000);
 };
 // 注册
-const handleRegister = throttle(async () => {
+const handleRegister = debounce(async () => {
   registerFormRef.value &&
     registerFormRef.value.validate(async (valid: any) => {
       if (valid) {
@@ -857,7 +861,7 @@ const agreements = (val: any) => {
               </template>
             </ElInput>
           </ElFormItem>
-          <ElFormItem prop="isInvitation">
+          <!-- <ElFormItem prop="isInvitation">
             <el-select
               v-model="registerForm.isInvitation"
               tabindex="7"
@@ -870,7 +874,7 @@ const agreements = (val: any) => {
               <el-option label="合作邀约开启" :value="2"> </el-option>
               <el-option label="合作邀约关闭" :value="1"> </el-option>
             </el-select>
-          </ElFormItem>
+          </ElFormItem> -->
           <ElFormItem prop="agreeToTheAgreement">
             <ElCheckbox v-model="registerForm.agreeToTheAgreement" tabindex="8">
               我已阅读并同意

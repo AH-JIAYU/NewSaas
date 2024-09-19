@@ -234,7 +234,9 @@ function onSubmit() {
       if (valid) {
         try {
           loading.value = true;
-          form.value.topLevelDomainName = form.value.topLevelDomainName.replace(/^(https?:\/\/|www\.)/, '');
+          if(form.value.topLevelDomainName){
+            form.value.topLevelDomainName = form.value.topLevelDomainName.replace(/^(https?:\/\/|www\.)/, '');
+          }
           const res = await api.edit(form.value)
           loading.value = false;
           if (res.status === 1) {
@@ -245,6 +247,7 @@ function onSubmit() {
             });
           }
         } catch (error) {
+          console.log('error',error)
         } finally {
           loading.value = false;
         }
