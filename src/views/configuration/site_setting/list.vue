@@ -26,6 +26,10 @@ const activeTopTab = ref<any>("基本设置");
 const loading = ref(false);
 // form ref
 const formRef = ref<any>();
+// 根据url判断是否解析顶级域名
+const isAnalysis = ref<boolean>(false);
+// 解析记录
+const analyzeRecords = ref<any>();
 // 定义表单
 const form = ref<any>({
   id: "",
@@ -114,6 +118,10 @@ async function getDataList() {
   try {
     const { data } = await api.list();
     form.value = data || form.value;
+    if(form.value.topLevelDomainName !== '' && form.value.topLevelDomainName !== null) {
+      const res = await api.getTenantWebConfigQueryAnalysis({url:form.value.topLevelDomainName })
+      isAnalysis.value = res.data.success
+    }
   } catch (error) {
 
   } finally {
@@ -133,9 +141,30 @@ const getLogo = async () => {
 
   }
 }
+// 移开输入框解析域名
+const handleMouseLeave = async (val: any) => {
+  if (form.value.topLevelDomainName !== '' && form.value.topLevelDomainName !== null) {
+    const res = await api.getTenantWebConfigQueryAnalysis({ url: form.value.topLevelDomainName })
+    if(res.data.success === false) {
+      isAnalysis.value = res.data.success
+      analyzeRecords.value = res
+      ElMessage({
+        type: "warning",
+        message: "解析未生效",
+      });
+    }else {
+      isAnalysis.value = res.data.success
+      analyzeRecords.value = res
+      ElMessage({
+        type: "warning",
+        message: "解析已生效",
+      });
+    }
+  }
+}
 // 解析记录
 const record = () => {
-  recordRef.value.showEdit()
+  recordRef.value.showEdit(analyzeRecords.value)
 }
 // 复制地址
 const copyToClipboard = () => {
@@ -294,9 +323,13 @@ function onSubmit() {
               </el-col>
               <el-col :span="24">
                 <el-form-item label="顶级域名" prop="topLevelDomainName">
-                  <el-input v-model="form.topLevelDomainName" style="width: 8rem" />
-                  <span class="red"></span><span style="margin-right: 10px;">已生效</span>
-                  <span class="green"></span><span style="margin-right: 10px;">未生效</span>
+                  <el-input v-model="form.topLevelDomainName" style="width: 8rem" @mouseleave="handleMouseLeave"/>
+                  <div v-if="isAnalysis">
+                    <span class="red"></span><span style="margin-right: 10px;">已生效</span>
+                  </div>
+                  <div v-else>
+                    <span class="green"></span><span style="margin-right: 10px;">未生效</span>
+                  </div>
                   <el-button class="copy" @click="record" type="primary" link>解析记录</el-button>
                 </el-form-item>
               </el-col>

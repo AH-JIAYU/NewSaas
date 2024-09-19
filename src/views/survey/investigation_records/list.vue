@@ -267,12 +267,14 @@ onMounted(async () => {
         @selection-change="setSelectRows">
         <el-table-column align="center" type="selection" />
         <el-table-column v-if="checkList.includes('projectName')" align="center" prop="projectName"
-          show-overflow-tooltip label="项目名称"><template #default="{ row }">
+          show-overflow-tooltip label="项目名称">
+          <template #default="{ row }">
             <el-text style="font-weight: 700;color: #333333;">{{ row.projectName ? row.projectName : "-" }}</el-text>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('projectId')" align="center" prop="projectId" show-overflow-tooltip
-          width="200" label="项目ID"><template #default="{ row }">
+          width="200" label="项目ID">
+          <template #default="{ row }">
             <div v-if="row.projectId" class="hoverSvg">
               <p class="fineBom">ID：{{ row.projectId }}</p>
               <span class="c-fx">
@@ -283,7 +285,8 @@ onMounted(async () => {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('memberId')" align="center" prop="memberId" show-overflow-tooltip
-          width="200" label="会员ID"><template #default="{ row }">
+          width="200" label="会员ID">
+          <template #default="{ row }">
             <div v-if="row.memberId" class="hoverSvg">
               <p class="fineBom">ID：{{ row.memberId }}</p>
               <span class="c-fx">
@@ -294,7 +297,8 @@ onMounted(async () => {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('randomIdentityId')" align="center" prop="randomIdentityId"
-          show-overflow-tooltip label="随机身份"><template #default="{ row }">
+          show-overflow-tooltip label="随机身份">
+          <template #default="{ row }">
             <div v-if="row.randomIdentityId" class="hoverSvg">
               <p class="fineBom">ID：{{ row.randomIdentityId }}</p>
               <span class="c-fx">
@@ -305,7 +309,8 @@ onMounted(async () => {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('customerShortName')" align="center" prop="customerShortName"
-          show-overflow-tooltip label="客户简称" width="100"><template #default="{ row }">
+          show-overflow-tooltip label="客户简称" width="100">
+          <template #default="{ row }">
             <el-text style="font-weight: 700;color: #333333;">{{ row.customerShortName ? row.customerShortName : "-"
               }}</el-text>
           </template>
