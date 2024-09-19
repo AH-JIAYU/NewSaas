@@ -435,7 +435,7 @@ function onSubmit() {
   display: inline-block;
   width: 10px;
   height: 10px;
-  background-color: #70b61b;
+  background-color: #74b821;
   border-radius: 50px;
 }
 
@@ -444,7 +444,7 @@ function onSubmit() {
   display: inline-block;
   width: 10px;
   height: 10px;
-  background-color: #d9261b;
+  background-color: #ff8181;
   border-radius: 50px;
 }
 

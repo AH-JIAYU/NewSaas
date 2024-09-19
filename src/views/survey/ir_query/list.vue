@@ -127,14 +127,14 @@ function changeTab() {
     data.value.checkList = [];
     columns.value = [
       {
-        label: "会员ID",
-        prop: "projectOrMemberGroupId",
+        label: "会员姓名",
+        prop: "projectOrMemberGroupName",
         sortable: true,
         checked: true,
       },
       {
-        label: "会员姓名",
-        prop: "projectOrMemberGroupName",
+        label: "会员ID",
+        prop: "projectOrMemberGroupId",
         sortable: true,
         checked: true,
       },
@@ -151,14 +151,14 @@ function changeTab() {
     data.value.checkList = [];
     columns.value = [
       {
-        label: "会员组ID",
-        prop: "projectOrMemberGroupId",
+        label: "会员组名称",
+        prop: "projectOrMemberGroupName",
         sortable: true,
         checked: true,
       },
       {
-        label: "会员组名称",
-        prop: "projectOrMemberGroupName",
+        label: "会员组ID",
+        prop: "projectOrMemberGroupId",
         sortable: true,
         checked: true,
       },
@@ -219,7 +219,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
     <PageMain>
       <el-row style="margin: 0px 0" :gutter="24">
         <el-col style="padding: 0" :span="24">
-          <el-tabs v-model="data.search.type"  @tab-change="changeTab">
+          <el-tabs v-model="data.search.type" @tab-change="changeTab">
             <el-tab-pane label="项目IR" :name="1">
               <SearchBar :show-toggle="false">
                 <template #default="{ fold, toggle }">
@@ -271,15 +271,36 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
                 class="my-4" :data="data.dataList" highlight-current-row height="100%" @sort-change="sortChange"
                 @selection-change="data.batch.selectionDataList = $event">
                 <el-table-column align="center" type="selection" />
-                <ElTableColumn v-if="data.checkList.includes('projectOrMemberGroupId')" show-overflow-tooltip
-                  align="center" prop="projectOrMemberGroupId" label="项目ID" />
                 <ElTableColumn v-if="data.checkList.includes('projectOrMemberGroupName')" show-overflow-tooltip
-                  align="center" prop="projectOrMemberGroupName" label="项目名称" />
-
+                  align="center" prop="projectOrMemberGroupName" label="项目名称">
+                  <template #default="{ row }">
+                    <p class="weightColor">{{ row.projectOrMemberGroupName ? row.projectOrMemberGroupName : "-" }}</p>
+                  </template>
+                </ElTableColumn>
+                <ElTableColumn v-if="data.checkList.includes('projectOrMemberGroupId')" show-overflow-tooltip
+                  align="center" prop="projectOrMemberGroupId" label="项目ID">
+                  <template #default="{ row }">
+                    <div v-if="row.projectOrMemberGroupId" class="hoverSvg">
+                      <p class="fineBom">ID：{{ row.projectOrMemberGroupId }}</p>
+                      <span class="c-fx">
+                        <copy class="copy" :content="row.projectOrMemberGroupId" />
+                      </span>
+                    </div>
+                    <el-text v-else>-</el-text>
+                  </template>
+                </ElTableColumn>
                 <ElTableColumn v-if="data.checkList.includes('ir')" show-overflow-tooltip align="center" prop="ir"
-                  label="项目IR" />
+                  label="项目IR">
+                  <template #default="{ row }">
+                    <p class="weightColor">{{ row.ir ? row.ir : "-" }}%</p>
+                  </template>
+                </ElTableColumn>
                 <ElTableColumn v-if="data.checkList.includes('projectIr')" show-overflow-tooltip align="center"
-                  prop="projectIr" label="项目实际IR" />
+                  prop="projectIr" label="项目实际IR">
+                  <template #default="{ row }">
+                    <p class="weightColor">{{ row.projectIr ? row.projectIr : "-" }}%</p>
+                  </template>
+                </ElTableColumn>
                 <template #empty>
                   <el-empty :image="empty" :image-size="300" />
                 </template>
@@ -339,13 +360,30 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
                 class="my-4" :data="data.dataList" highlight-current-row height="100%" @sort-change="sortChange"
                 @selection-change="data.batch.selectionDataList = $event">
                 <el-table-column align="center" type="selection" />
-                <ElTableColumn v-if="data.checkList.includes('projectOrMemberGroupId')" show-overflow-tooltip
-                  align="center" prop="projectOrMemberGroupId" label="会员ID" />
                 <ElTableColumn v-if="data.checkList.includes('projectOrMemberGroupName')" show-overflow-tooltip
-                  align="center" prop="projectOrMemberGroupName" label="会员姓名" />
-
+                  align="center" prop="projectOrMemberGroupName" label="会员姓名">
+                  <template #default="{ row }">
+                    <p class="weightColor">{{ row.projectOrMemberGroupName ? row.projectOrMemberGroupName : "-" }}</p>
+                  </template>
+                </ElTableColumn>
+                <ElTableColumn v-if="data.checkList.includes('projectOrMemberGroupId')" show-overflow-tooltip
+                  align="center" prop="projectOrMemberGroupId" label="会员ID">
+                  <template #default="{ row }">
+                    <div v-if="row.projectOrMemberGroupId" class="hoverSvg">
+                      <p class="fineBom">ID：{{ row.projectOrMemberGroupId }}</p>
+                      <span class="c-fx">
+                        <copy class="copy" :content="row.projectOrMemberGroupId" />
+                      </span>
+                    </div>
+                    <el-text v-else>-</el-text>
+                  </template>
+                </ElTableColumn>
                 <ElTableColumn v-if="data.checkList.includes('ir')" show-overflow-tooltip align="center" prop="ir"
-                  label="IR" />
+                  label="会员IR">
+                  <template #default="{ row }">
+                    <p class="weightColor">{{ row.ir ? row.ir : "-" }}%</p>
+                  </template>
+                </ElTableColumn>
                 <template #empty>
                   <el-empty :image="empty" :image-size="300" />
                 </template>
@@ -405,12 +443,30 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
                 class="my-4" :data="data.dataList" highlight-current-row height="100%" @sort-change="sortChange"
                 @selection-change="data.batch.selectionDataList = $event">
                 <el-table-column align="center" type="selection" />
-                <ElTableColumn v-if="data.checkList.includes('projectOrMemberGroupId')" show-overflow-tooltip
-                  align="center" prop="projectOrMemberGroupId" label="会员组ID" />
                 <ElTableColumn v-if="data.checkList.includes('projectOrMemberGroupName')" show-overflow-tooltip
-                  align="center" prop="projectOrMemberGroupName" label="会员组名称" />
+                  align="center" prop="projectOrMemberGroupName" label="会员组名称">
+                  <template #default="{ row }">
+                    <p class="weightColor">{{ row.projectOrMemberGroupName ? row.projectOrMemberGroupName : "-" }}</p>
+                  </template>
+                </ElTableColumn>
+                <ElTableColumn v-if="data.checkList.includes('projectOrMemberGroupId')" show-overflow-tooltip
+                  align="center" prop="projectOrMemberGroupId" label="会员组ID">
+                  <template #default="{ row }">
+                    <div v-if="row.projectOrMemberGroupId" class="hoverSvg">
+                      <p class="fineBom">ID：{{ row.projectOrMemberGroupId }}</p>
+                      <span class="c-fx">
+                        <copy class="copy" :content="row.projectOrMemberGroupId" />
+                      </span>
+                    </div>
+                    <el-text v-else>-</el-text>
+                  </template>
+                </ElTableColumn>
                 <ElTableColumn v-if="data.checkList.includes('ir')" show-overflow-tooltip align="center" prop="ir"
-                  label="会员组IR" />
+                  label="会员组IR">
+                  <template #default="{ row }">
+                    <p class="weightColor">{{ row.ir ? row.ir : "-" }}%</p>
+                  </template>
+                </ElTableColumn>
                 <template #empty>
                   <el-empty :image="empty" :image-size="300" />
                 </template>
@@ -479,5 +535,38 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
 
 :deep(.el-table__empty-block) {
   height: 100% !important;
+}
+
+.weightColor {
+  color: #333;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fineBom {
+  font-size: .75rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hoverSvg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.copy {
+  display: flex;
+  align-items: center;
+  width: 20px;
+}
+
+.c-fx {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
