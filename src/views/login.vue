@@ -21,6 +21,7 @@ import storage from "@/utils/storage";
 import { throttle } from "lodash-es";
 import api from "@/api/modules/register";
 import apiCountry from "@/api/modules/basicDictionary";
+import {  useDebounceFn,} from '@vueuse/core'
 
 defineOptions({
   name: "Login",
@@ -99,7 +100,7 @@ const loginRules = ref<any>({
 
 onMounted(async () => {
   const { data } = await api.getTenantConfig();
-  isRegister.value = data.register; 
+  isRegister.value = data.register;
   if(route.query.isRegister&&route.query.isRegister==='true'){
     formType.value = 'register'
   }
@@ -163,7 +164,7 @@ async function loginCaptcha() {
           type: "login_phone_number",
         };
       }
-      const { status } = await obtainLoading(api.sendCode(params));
+      const { status } = await api.sendCode(params);
       if (status === 1) {
         ElMessage.success({
           message: "已发送",
@@ -173,6 +174,17 @@ async function loginCaptcha() {
     }
   });
 }
+// 防抖动1秒内只执行一次
+const debounce = useDebounceFn((val:any) => {
+  console.log('val',val);
+  if(val === 1)  {
+    console.log(211111);
+
+    loginCaptcha()
+  }else if(val === 2) {
+    mobileVerificationCode()
+  }
+}, 1000)
 // 倒计时
 const loginCountdown = () => {
   loginGetCaptcha.value = true;
@@ -339,7 +351,7 @@ const mobileVerificationCode = async () => {
           phone: registerForm.value.phoneNumber,
         };
         if (registerForm.value.country === "CN") {
-          const { status } = await obtainLoading(api.sendCode(params));
+          const { status } = await api.sendCode(params);
           if (status === 1) {
             ElMessage.success({
               message: "已发送",
@@ -348,7 +360,7 @@ const mobileVerificationCode = async () => {
           }
         } else {
           params.type = "register_email";
-          const { status } = await obtainLoading(api.sendCode(params));
+          const { status } = await api.sendCode(params);
           if (status === 1) {
             ElMessage.success({
               message: "已发送",
@@ -631,7 +643,7 @@ const agreements = (val: any) => {
                 <el-button
                   type="primary"
                   :disabled="loginGetCaptcha"
-                  @click="loginCaptcha"
+                  @click="debounce(1)"
                   >{{ loginCode }}</el-button
                 >
               </template>
@@ -837,7 +849,7 @@ const agreements = (val: any) => {
               <template #append>
                 <ElButton
                   :disabled="isGetPhone"
-                  @click="mobileVerificationCode"
+                  @click="debounce(2)"
                 >
                   {{ phoneCode }}</ElButton
                 >

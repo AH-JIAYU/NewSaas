@@ -310,8 +310,13 @@ function onSubmit() {
                 </el-form-item>
               </el-col>
               <el-col :span="24">
-                <el-form-item label="keyWords">
+                <el-form-item label="网站关键字">
                   <el-input v-model="form.keyWords" style="width: 18rem" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="网站描述">
+                  <el-input v-model="form.description" style="width: 18rem" />
                 </el-form-item>
               </el-col>
               <el-col :span="24">
@@ -323,14 +328,14 @@ function onSubmit() {
               </el-col>
               <el-col :span="24">
                 <el-form-item label="顶级域名" prop="topLevelDomainName">
-                  <el-input v-model="form.topLevelDomainName" style="width: 8rem" @mouseleave="handleMouseLeave"/>
+                  <el-input v-model="form.topLevelDomainName" style="width: 18rem" @mouseleave="handleMouseLeave"/>
                   <div v-if="isAnalysis">
                     <span class="red"></span><span style="margin-right: 10px;">已生效</span>
                   </div>
                   <div v-else>
                     <span class="green"></span><span style="margin-right: 10px;">未生效</span>
                   </div>
-                  <el-button class="copy" @click="record" type="primary" link>解析记录</el-button>
+                  <el-button class="copy" @click="record" type="primary" link>CNAME配置</el-button>
                 </el-form-item>
               </el-col>
               <el-col :span="24">
