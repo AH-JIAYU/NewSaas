@@ -13,6 +13,7 @@ import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDiction
 import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
 import useProjectManagementListStore from "@/store/modules/projectManagement_list"; // 项目
 import empty from '@/assets/images/empty.png'
+import storage from "@/utils/storage";
 
 defineOptions({
   name: "list",
@@ -43,6 +44,8 @@ const checkList = ref<any>([]);
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 // 表格控件-控制全屏
 const lineHeight = ref<any>("default");
+  const formSearchList = ref<any>()//表单排序配置
+const formSearchName=ref<any>('formSearch-list')// 表单排序name
 const stripe = ref(false);
 const columns = ref([
   { prop: "projectType", label: "项目类型", checked: true, sotrtable: true },
@@ -75,6 +78,7 @@ const columns = ref([
   { prop: "create", label: "创建", checked: true, sotrtable: true },
   { prop: "createTime", label: "创建时间", checked: true, sotrtable: true },
 ]);
+
 const search = ref<any>({
   time: [], // 时间
   beginTime: "", // 开始时间 格式:2024-03-01 00:00:00
@@ -220,10 +224,14 @@ async function fetchData() {
       ...getParams(),
       ...search.value,
     };
+    if (!Array.isArray(params.countryId)) {
+      params.countryId = params.countryId?.split(',')
+    }
     if (search.value.time && !!search.value.time.length) {
       params.beginTime = search.value.time[0] || "";
       params.endTime = search.value.time[1] || "";
     }
+
     const { data } = await api.list(params);
     countryType.value = data.currencyType;
     list.value = data.getChildrenProjectInfoList;
@@ -257,9 +265,22 @@ onMounted(async () => {
       checkList.value.push(item.prop);
     }
   });
-
   fetchData();
+  formSearchList.value = [
+    {index:1, show: true, type: 'input', modelName: 'projectId', placeholder: '项目ID' },
+    {index:2, show: true, type: 'input', modelName: 'name', placeholder: '项目名称' },
+    {index:3, show: true, type: 'input', modelName: 'projectIdentification', placeholder: '项目标识' },
+    {index:4, show: true, type: 'select', modelName: 'countryId', placeholder: '国家地区', option: countryList.value, optionLabel: 'chineseName', optionValue: 'id' },
+    {index:5, show: true, type: 'select', modelName: 'clientId', placeholder: '客户简称', option: customerList.value, optionLabel: 'tenantCustomerId', optionValue: 'tenantCustomerId' },
+    {index:6, show: true, type: 'select', modelName: 'allocationStatus', placeholder: '分配类型', option: [{ label: '供应商', value: 2 },{ label: '会员组', value: 3 },{ label: '租户', value: 4 }], optionLabel: 'label', optionValue: 'value' },
+    {index:7, show: true, type: 'select', modelName: 'status', placeholder: '项目状态', option: [{ label: '在线', value: 1 },{ label: '离线', value: 2 }], optionLabel: 'label', optionValue: 'value' },
+    {index:8, show: true, type: 'input', modelName: 'createName', placeholder: '创建人' },
+    {index:9, show: true, type: 'select', modelName: 'allocation', placeholder: '分配状态', option: [{ label: '已分配', value: 1 },{ label: '未分配', value: 2 }], optionLabel: 'label', optionValue: 'value' },
+    {index:10, show: true, type: 'select', modelName: 'projectType', placeholder: '项目类型', option: [{ label: '自有项目', value: 1 },{ label: '外包项目', value: 2 }], optionLabel: 'label', optionValue: 'value' },
+    {index:11, show: true, type: 'datetimerange', modelName: 'time', startplaceholder: "创建开始日期", endplaceholder: "创建结束日期" },
+  ]
 });
+
 </script>
 
 <template>
@@ -267,87 +288,7 @@ onMounted(async () => {
     'absolute-container': tableAutoHeight,
   }">
     <PageMain class="hide-drawer-header">
-      <SearchBar :show-toggle="false">
-        <template #default="{ fold, toggle }">
-          <el-form :model="search" size="default" label-width="100px" inline-message inline class="search-form">
-            <el-form-item label="">
-              <el-input v-model="search.projectId" clearable placeholder="项目ID" @keydown.enter="currentChange()" />
-            </el-form-item>
-            <el-form-item label="">
-              <el-input v-model="search.name" clearable placeholder="项目名称" @keydown.enter="currentChange()" />
-            </el-form-item>
-            <el-form-item label="">
-              <el-input clearable v-model="search.projectIdentification" placeholder="项目标识"
-                @keydown.enter="currentChange()" />
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-select v-model="search.countryId" placeholder="国家地区" clearable filterable multiple collapse-tags>
-                <ElOption v-for="item in countryList" :label="item.chineseName" :value="item.id"></ElOption>
-              </el-select>
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-select v-model="search.clientId" clearable filterable placeholder="客户简称" @change="currentChange()">
-                <el-option v-for="item in customerList" :key="item.tenantCustomerId" :value="item.tenantCustomerId"
-                  :label="item.customerAccord"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-select v-model="search.allocationStatus" clearable filterable placeholder="分配类型"
-                @change="currentChange()">
-                <el-option label="供应商" :value="2"> </el-option>
-                <el-option label="会员组" :value="3"> </el-option>
-                <el-option label="租户" :value="4"> </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-select v-model="search.status" clearable filterable placeholder="项目状态">
-                <el-option label="在线" :value="1" />
-                <el-option label="离线" :value="2" />
-              </el-select>
-            </el-form-item>
-            <el-form-item v-show="!fold">
-              <el-input v-model="search.createName" clearable placeholder="创建人" @keydown.enter="currentChange()" />
-            </el-form-item>
-            <el-form-item v-show="!fold">
-              <el-date-picker v-model="search.time" type="datetimerange" range-separator="-" start-placeholder="创建开始日期"
-                end-placeholder="创建结束日期" value-format="YYYY-MM-DD HH:mm:ss" size="" style="width: 192px"
-                clear-icon="true" />
-            </el-form-item>
-            <el-form-item v-show="!fold">
-              <el-select v-model="search.allocation" placeholder="分配状态" clearable @change="currentChange()">
-                <el-option label="已分配" :value="1"> </el-option>
-                <el-option label="未分配" :value="2"> </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item v-show="!fold">
-              <el-select v-model="search.projectType" placeholder="项目类型" clearable @change="currentChange()">
-                <el-option label="自有项目" :value="1"> </el-option>
-                <el-option label="外包项目" :value="2"> </el-option>
-              </el-select>
-            </el-form-item>
-            <ElFormItem>
-              <ElButton type="primary" @click="currentChange()">
-                <template #icon>
-                  <SvgIcon name="i-ep:search" />
-                </template>
-                筛选
-              </ElButton>
-              <ElButton @click="onReset">
-                <template #icon>
-                  <div class="i-grommet-icons:power-reset h-1em w-1em" />
-                </template>
-                重置
-              </ElButton>
-              <ElButton link @click="toggle">
-                <template #icon>
-                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
-                </template>
-                {{ fold ? "展开" : "收起" }}
-              </ElButton>
-            </ElFormItem>
-          </el-form>
-        </template>
-      </SearchBar>
+      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="search" />
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>
@@ -377,8 +318,8 @@ onMounted(async () => {
               inactive-text="离线" :active-value="1" :inactive-value="2" />
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('projectType')" width="200" align="left" label="项目"><template
-            #default="{ row }">
+        <el-table-column v-if="checkList.includes('projectType')" width="200" align="left" label="项目">
+          <template #default="{ row }">
             <div>
               <el-button class="p-1" size="small" type="warning" v-if="row.projectType === 2">外包</el-button>
               <el-button class="p-1" size="small" type="primary" v-else>自有</el-button>
@@ -602,8 +543,8 @@ onMounted(async () => {
   }
 
   .id {
-    width:auto !important;
-    max-width:calc(100% - 25px)  !important;
+    width: auto !important;
+    max-width: calc(100% - 25px) !important;
   }
 }
 
@@ -627,10 +568,11 @@ onMounted(async () => {
   .oneLine {
     width: 40%;
     text-align: left;
-    margin:0 12px 8px 0
+    margin: 0 12px 8px 0
   }
-  .oneLine:nth-of-type(n+3){
-    margin:0 12px 0 0
+
+  .oneLine:nth-of-type(n+3) {
+    margin: 0 12px 0 0
   }
 }
 

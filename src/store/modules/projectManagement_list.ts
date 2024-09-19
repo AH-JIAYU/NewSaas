@@ -12,6 +12,7 @@ const useProjectManagementListStore = defineStore(
     const dataBeforeEditing = ref<any>([])
     // 初始数据
     const initialTopTabsData: any = {
+      required:false,//只看必填，前端用
       name: "", //项目名称
       projectIdentification: "", // 项目标识
       clientId: null, //	所属客户编号id(客户表主键)

@@ -21,13 +21,19 @@ const dialogTableVisible = ref<boolean>(false);
 const title = ref<string>("");
 const loading = ref<boolean>(false)
 const validateTopTabs = ref<any>([]); // 校验的promise数组
+const projectReleaseTime = ref<any>('')
 const validateAll = ref<any>([]); // 校验结果，用于在leftTabs中的tabs中给予提示
 // 传递给孙组件,用于获取所有孙组件的Ref
 function pushData(data: any) {
   validateTopTabs.value.push(data);
 }
+//当前项目定时发布时间
+function getProjectReleaseTime(data: any) {
+  projectReleaseTime.value = data
+}
 // 提供一个方法，孙组件可以使用这个方法来触发验证
 provide("validateTopTabs", pushData);
+provide("currentProjectTimeline", getProjectReleaseTime);
 
 let leftTabsData = reactive<any>([]); // 明确指定类型为 LeftTab[]
 const LeftTabsRef = ref<any>(); // Ref
@@ -265,11 +271,18 @@ defineExpose({
         :left-tabs-data="leftTabsData" :validate-top-tabs="validateTopTabs" :validate-all="validateAll"
         :title="title" />
       <template #footer>
-        <el-button @click="closeHandler" :disabled="loading"> 取消 </el-button>
-        <el-button type="warning" v-show="title !== '编辑'" @click="staging" :disabled="loading">
-          暂存
-        </el-button>
-        <el-button type="primary" @click="onSubmit" :disabled="loading"> 确定 </el-button>
+        <div class="flex-c">
+
+          <el-button  link v-show="projectReleaseTime">  <SvgIcon name="ant-design:clock-circle-outlined"  /> &ensp; {{projectReleaseTime}} </el-button>
+          <el-button type="primary" @click="onSubmit" :disabled="loading"> 发布项目 </el-button>
+          <el-button type="warning" v-show="title !== '编辑'" @click="staging" :disabled="loading">
+            暂存
+          </el-button>
+          <el-button @click="closeHandler" :disabled="loading"> 取消 </el-button>
+
+
+        </div>
+
       </template>
     </el-drawer>
   </div>
@@ -283,5 +296,11 @@ defineExpose({
   .el-tabs.el-tabs--left {
     overflow: visible !important;
   }
+}
+
+.flex-c {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
