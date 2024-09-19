@@ -45,7 +45,7 @@ const tableAutoHeight = ref(false); // 表格控件-高度自适应
 // 表格控件-控制全屏
 const lineHeight = ref<any>("default");
   const formSearchList = ref<any>()//表单排序配置
-const formSearchName=ref<any>('formSearch-list')// 表单排序name
+const formSearchName=ref<string>('formSearch-list')// 表单排序name
 const stripe = ref(false);
 const columns = ref([
   { prop: "projectType", label: "项目类型", checked: true, sotrtable: true },
