@@ -13,6 +13,7 @@ const props: any = defineProps({
   title: String,
 });
 const emits: any = defineEmits(["validate"]);
+const setAScheduledReleaseTime = inject<any>("currentProjectTimeline"); //注入Ref 设置定时发布时间
 const settingsRef = ref();
 const localLeftTab = ref<any>(props.leftTabsData);
 const validateTopTabs = ref<any>(props.validateTopTabs);
@@ -46,16 +47,6 @@ function syncProject() {
   topTabsRef.value[activeLeftTab.value].getUpLoad(syncdata.descriptionUrl);
   localLeftTab.value.splice(activeLeftTab.value, 1, syncdata);
 }
-// 暂存 存储 配置信息数据
-// function staging() {
-//     topTabsRef.value[0].setData(); // 将0的数据存入store
-// }
-// 暂存回显 将所有组件的配置信息设置为store里的数据
-// function showEdit() {
-//   topTabsRef.value.forEach((item: any) => {
-//     item.getData();
-//   });
-// }
 
 // 新增
 function addLeftTab() {
@@ -97,6 +88,7 @@ watch(
     if (validateIndex.includes(oldVal)) {
       emits("validate");
     }
+      setAScheduledReleaseTime(localLeftTab.value[activeLeftTab.value].releaseTime)
   }
 );
 onMounted(() => {
@@ -117,44 +109,25 @@ defineExpose({ activeLeftTab });
 
 <template>
   <div>
-    <el-button
-      :class="props.title === '新增' ? 'button' : 'button hideButton'"
-      :disabled="
-        localLeftTab.length > 29 ||
-        (props.title === '编辑' && localLeftTab[0].parentId !== '0')
-      "
-      @click="addLeftTab()"
-    >
+    <el-button :class="props.title === '新增' ? 'button' : 'button hideButton'" :disabled="localLeftTab.length > 29 ||
+      (props.title === '编辑' && localLeftTab[0].parentId !== '0')
+      " @click="addLeftTab()">
       新增
     </el-button>
-    <el-tabs
-      v-model="activeLeftTab"
-      tab-position="left"
-      @tab-remove="tabremove"
-      :class="props.title === '新增' ? '' : 'editHideCloseButton'"
-      v-if="localLeftTab.length"
-    >
-      <el-tab-pane
-        v-for="(leftTab, index) in localLeftTab"
-        :key="index"
-        style="position: relative"
-        :closable="localLeftTab.length !== 1"
-        :name="index"
-      >
+    <el-tabs v-model="activeLeftTab" tab-position="left" @tab-remove="tabremove"
+      :class="props.title === '新增' ? '' : 'editHideCloseButton'" v-if="localLeftTab.length">
+      <el-tab-pane v-for="(leftTab, index) in localLeftTab" :key="index" style="position: relative"
+        :closable="localLeftTab.length !== 1" :name="index">
         <template #label>
-          <div
-            :class="
-              props.validateAll[index] &&
-              props.validateAll[index] === 'rejected'
-                ? 'validateRejected'
-                : ''
-            "
-          >
+          <div :class="props.validateAll[index] &&
+        props.validateAll[index] === 'rejected'
+        ? 'validateRejected'
+        : ''
+      ">
             {{ leftTab.name || "项目名称" }}
           </div>
         </template>
-        <div
-          style="
+        <div style="
             float: right;
             position: sticky;
             top: 19px;
@@ -163,9 +136,8 @@ defineExpose({ activeLeftTab });
             display: flex;
             justify-content: start;
             align-items: start;
-          "
-        >
-          <el-button
+          ">
+          <!-- <el-button
             v-if="activeLeftTab > 0"
             size="small"
             type="primary"
@@ -174,7 +146,7 @@ defineExpose({ activeLeftTab });
             @click="syncProject"
           >
             同步数据
-          </el-button>
+          </el-button> -->
           <!-- <HTooltip
               style="z-index: 99999; color: #48a2ff; margin-left: 5px"
               text="注意噢！"
@@ -190,7 +162,7 @@ defineExpose({ activeLeftTab });
         @click="setHandler"
       /> -->
         <!-- 在每个左侧 Tab 中使用 TopTabs 组件 -->
-        <TopTabs ref="topTabsRef" :left-tab="leftTab" :tab-index="index" />
+        <TopTabs ref="topTabsRef" :left-tab="leftTab" :tab-index="index" @syncProject="syncProject" />
       </el-tab-pane>
       <SyncSettings ref="settingsRef" />
     </el-tabs>
@@ -202,6 +174,7 @@ defineExpose({ activeLeftTab });
 .hideButton {
   visibility: hidden;
 }
+
 // 编辑时隐藏 tab的删除按钮x
 :deep {
   .editHideCloseButton .is-icon-close {

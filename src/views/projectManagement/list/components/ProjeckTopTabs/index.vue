@@ -26,8 +26,10 @@ const props: any = defineProps({
   leftTab: Object,
   tabIndex: Number,
 });
+const emits = defineEmits(['sync-project'])
 const localToptTab = ref<any>(props.leftTab)
 const validate = inject<any>("validateTopTabs"); //注入Ref
+const setAScheduledReleaseTime = inject<any>("currentProjectTimeline"); //注入Ref 设置定时发布时间
 const url: string = "例：https://www.xxxx.com/8994343?uid=[uid]";
 const activeName = ref("basicSettings"); // tabs
 const formRef = ref<any>(); // Ref 在edit中进行校验
@@ -140,6 +142,8 @@ function handleChangeTime() {
   function padZero(num: any) {
     return (num < 10 ? "0" : "") + num;
   }
+  // 设置Edit底部的定时发布时间
+  setAScheduledReleaseTime(localToptTab.value.releaseTime)
 }
 // 同步客户的前置问卷开关
 const changeClient = (val: any) => {
@@ -167,6 +171,10 @@ const plugins = [
 // 富文本设置值
 function handleChange(v: string) {
   localToptTab.value.richText = v;
+}
+// 同步
+function syncProject() {
+  emits('sync-project')
 }
 // 折叠 描述配额
 function isHieght() {
@@ -504,6 +512,7 @@ nextTick(() => {
   // 表单验证方法
   validate(formRef.value);
 });
+
 </script>
 
 <template>
@@ -512,8 +521,15 @@ nextTick(() => {
       <el-tab-pane label="基础设置" name="basicSettings">
         <el-card body-style="">
           <template #header>
-            <div class="card-header">
-              <span>基本信息</span>
+            <div style="display: flex; justify-content: space-between" class="card-header">
+              <span>基础设置</span>
+              <div>
+                <el-button v-if="props.tabIndex > 0" size="small" type="primary" round plain @click="syncProject">
+                  同步数据
+                </el-button>
+                <el-switch v-model="localToptTab.required" :active-value="true" :inactive-value="false" class="ml-2" />
+                只看必填
+              </div>
             </div>
           </template>
           <el-row :gutter="20">
@@ -587,7 +603,7 @@ nextTick(() => {
                 <template #label>
                   <div>
                     最小分长<el-tooltip class="tooltips" content="这份问卷需要做到多少分钟" placement="top">
-                      <SvgIcon   class="SvgIcon1" name="i-ri:question-line" />
+                      <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
                     </el-tooltip>
                   </div>
                 </template>
@@ -611,11 +627,7 @@ nextTick(() => {
               <el-form-item prop="uidUrl">
                 <template #label>
                   <div>
-                    URL<el-tooltip
-                      class="tooltips"
-                      content="仅支持URL后缀为[uid]的链接。"
-                      placement="top"
-                    >
+                    URL<el-tooltip class="tooltips" content="仅支持URL后缀为[uid]的链接。" placement="top">
                       <SvgIcon class="SvgIcon2" name="i-ri:question-line" />
                     </el-tooltip>
                   </div>
@@ -624,20 +636,20 @@ nextTick(() => {
                 <el-text class="mx-1">{{ url }}</el-text>
               </el-form-item>
             </el-col>
-            <el-col :span="3">
+            <el-col :span="3" v-if="!localToptTab.required">
               <el-form-item label="填写互斥ID">
                 <el-checkbox v-model="localToptTab.mutualExclusion" style="top: -4px" size="large" :true-value="1"
                   :false-value="2" />
               </el-form-item>
             </el-col>
-            <el-col v-if="localToptTab.mutualExclusion === 1" :span="12">
+            <el-col v-if="localToptTab.mutualExclusion === 1 && !localToptTab.required" :span="12">
               <el-form-item label="互斥ID">
                 <el-input clearable v-model="localToptTab.mutualExclusionId" />
               </el-form-item>
             </el-col>
           </el-row>
         </el-card>
-        <el-card>
+        <el-card v-if="!localToptTab.required">
           <template #header>
             <div style="display: flex; justify-content: space-between" class="card-header">
               <span>描述配额</span>
@@ -681,7 +693,7 @@ nextTick(() => {
             </el-row>
           </div>
         </el-card>
-        <el-card>
+        <el-card v-if="!localToptTab.required">
           <template #header>
             <div class="card-header">
               <span>其他设置</span>
@@ -734,16 +746,16 @@ nextTick(() => {
             </el-col>
           </el-row>
           <el-row>
-            <el-col :span="15">
+            <el-col :span="24">
               <el-form-item label="备注">
-                <el-input maxlength="200" show-word-limit style="width: 29rem" type="textarea" :rows="5"
-                  v-model="localToptTab.remark" />
+                <el-input maxlength="200" show-word-limit type="textarea" :rows="5" v-model="localToptTab.remark" />
               </el-form-item>
             </el-col>
           </el-row>
         </el-card>
       </el-tab-pane>
-      <el-tab-pane label="配置信息" name="configurationInformation" v-if="localToptTab.isProfile === 1">
+      <el-tab-pane label="配置信息" name="configurationInformation"
+        v-if="localToptTab.isProfile === 1 && !localToptTab.required">
         <el-card v-if="localToptTab.data">
           <template #header>
             <div class="card-header">配置信息</div>
@@ -834,7 +846,7 @@ nextTick(() => {
           </template>
         </el-card>
       </el-tab-pane>
-      <el-tab-pane label="安全信息" name="securityInformation">
+      <el-tab-pane label="安全信息" name="securityInformation" v-if="!localToptTab.required">
         <el-card>
           <template #header>
             <div class="card-header">安全信息</div>
@@ -918,6 +930,26 @@ nextTick(() => {
   width: 100%;
 }
 
+// card样式
+:deep(.el-card) {
+  border: none !important;
+  box-shadow: none !important;
+  background-color: transparent !important;
+
+  .el-row:nth-last-of-type(1) {
+    margin-bottom: 0 !important;
+  }
+}
+
+:deep(.el-card__header) {
+  border: none !important;
+}
+
+:deep(.el-card__body) {
+  padding-bottom: 0 !important;
+}
+// card样式
+
 .page-main {
   .search-form {
     display: grid;
@@ -953,7 +985,7 @@ nextTick(() => {
   .el-cascader,
   .el-form-item__content {
     width: 100% !important;
-   // min-width: 10.5rem !important;
+    // min-width: 10.5rem !important;
   }
 
   td .el-form-item {
