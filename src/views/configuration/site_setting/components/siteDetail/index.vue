@@ -41,7 +41,7 @@ defineExpose({
 
 <template>
   <el-dialog v-model="drawerisible" title="解析记录" @close="close">
-    <el-table v-loading="listLoading" border :data="list" stripe>
+    <el-table v-loading="listLoading" border :data="list" stripe max-height="370">
       <el-table-column align="center" prop="type" show-overflow-tooltip label="记录类型" />
       <el-table-column align="center" prop="host" show-overflow-tooltip label="主机记录" />
       <el-table-column align="center" prop="host" show-overflow-tooltip label="记录值" />
