@@ -60,7 +60,7 @@ const columns = ref<any>([
     sortabel: true,
     checked: true,
   },
-    {
+  {
     prop: "withoutUrl",
     label: "URL",
     sortabel: true,
@@ -289,7 +289,8 @@ onMounted(async () => {
           <template #default="{ row }">
             <p v-if="checkList.includes('projectIdentification')" class="crudeTop">
               名称：{{ row.projectIdentification }}</p>
-            <p v-if="checkList.includes('projectIdClientName')" style="font-weight: 700;color: #777;">标：<span class="fineBom">{{
+            <p v-if="checkList.includes('projectIdClientName')"
+              style="text-align: left !important;font-weight: 700;color: #777;">标：<span class="fineBom">{{
     row.clientName }}</span></p>
           </template>
         </el-table-column>
@@ -300,16 +301,19 @@ onMounted(async () => {
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('participation')" show-overflow-tooltip width="220" align="center"
+        <el-table-column v-if="checkList.includes('participation')" show-overflow-tooltip width="180" align="center"
           label="参数">
           <template #default="{ row }">
-            <p class="parameter"><el-text class="mx-1 text" style="color:#FB6868;" type="danger">参与：{{ row.participation
-    || 0 }}</el-text><el-text class="mx-1 text" style="color:#03C239;" type="success">完成：{{
+            <p class="parameter oneLine"><el-text class="mx-1 oneLine" style="color:#FB6868;" type="danger">参与：{{
+    row.participation
+    || 0 }}</el-text><el-text class="mx-1 oneLine" style="color:#03C239;" type="success">完成：{{
     row.complete || 0
-  }}</el-text></p>
-            <p class="parameter"><el-text class="mx-1 text" style="color:#FFAC54;" type="warning">配额：{{ row.num || 0
-                }}</el-text><el-text class="mx-1 text" style="color:#AAAAAA;" type="info">限量：{{ row.limitedQuantity || 0
-                }}</el-text></p>
+  }}</el-text>
+              <el-text class="mx-1 oneLine" style="color:#FFAC54;" type="warning">配额：{{ row.num || 0
+                }}</el-text><el-text class="mx-1 oneLine" style="color:#AAAAAA;" type="info">限量：{{ row.limitedQuantity
+    || 0
+                }}</el-text>
+            </p>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('doMoneyPrice')" show-overflow-tooltip align="center" label="原价">
@@ -358,8 +362,8 @@ onMounted(async () => {
         </el-table-column>
         <el-table-column v-if="checkList.includes('ir')" show-overflow-tooltip align="center" label="IR/NIR">
           <template #default="{ row }"><el-text style="color: #333333;font-weight: 700;font-family: DINPro-Medium;">
-            {{ row.ir ? row.ir : '-' }} / {{ row.nir ? row.nir : '-' }}
-              </el-text></template>
+              {{ row.ir ? row.ir : '-' }} / {{ row.nir ? row.nir : '-' }}
+            </el-text></template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('memberStatus')" show-overflow-tooltip align="center" label="分配">
           <template #default="{ row }">
@@ -484,6 +488,7 @@ onMounted(async () => {
 }
 
 .crudeTop {
+  text-align: left !important;
   color: #333333;
   font-weight: 700;
   white-space: nowrap;
@@ -508,6 +513,12 @@ onMounted(async () => {
   text-overflow: ellipsis;
 }
 
+.hidden {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .hoverSvg {
   display: flex;
   align-items: center;
@@ -519,8 +530,22 @@ onMounted(async () => {
   width: 20px;
 }
 
+// 参数
 .parameter {
-  // text-align: left !important;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-wrap: wrap;
+
+  .oneLine {
+    width: 40%;
+    text-align: left;
+    margin: 0 12px 8px 0
+  }
+
+  .oneLine:nth-of-type(n+3) {
+    margin: 0 12px 0 0
+  }
 }
 
 .text {
@@ -537,11 +562,13 @@ onMounted(async () => {
     margin-right: 4px;
   }
 }
+
 .c-fx {
   display: flex;
   align-items: center;
   justify-content: center;
 }
+
 .copySvg {
   width: 100%;
   height: 100%;

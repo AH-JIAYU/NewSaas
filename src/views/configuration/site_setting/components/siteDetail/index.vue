@@ -1,101 +1,60 @@
 <script setup lang="ts">
-// import api from "@/api/modules/survey_vipGroup";
-import { obtainLoading } from "@/utils/apiLoading";
 import empty from '@/assets/images/empty.png'
-const emit = defineEmits(["fetch-data"]);
-const { pagination, getParams, onSizeChange, onCurrentChange } =
-  usePagination(); // 分页
 
+// 分页
+const { pagination, getParams, onSizeChange, onCurrentChange } = usePagination();
 const drawerisible = ref(false);
+// 判断顶级域名是否解析
+const isAnalysis = ref<boolean>(false);
+// listLoading
 const listLoading = ref<boolean>(false);
-const list = ref([]); // 列表
-// 请求接口携带参数
-const queryForm = reactive<any>({
-  memberGroupId: "", //	会员组id
-});
+// 列表
+const list = ref([]);
 async function showEdit(row: any) {
-  // queryForm.memberGroupId = row.memberGroupId;
-  // await fetchData();
-  drawerisible.value = true;
-}
-// 获取列表
-async function fetchData() {
   try {
     listLoading.value = true;
-    const params: any = {
-      ...getParams(),
-      ...queryForm,
-    };
-    // const { data } = await obtainLoading(api.getProjectList(params));
-    // list.value = data.getMemberGroupProjectInfoList;
-    // pagination.value.total = data.total;
-    listLoading.value = false;
+    if (row) {
+      list.value = row.data.list
+      isAnalysis.value = row.data.success
+      pagination.value.total = row.data.list.length
+      listLoading.value = false;
+    } else {
+      list.value = row || []
+    }
   } catch (error) {
 
   } finally {
     listLoading.value = false;
   }
+  drawerisible.value = true;
 }
-
-// 每页数量切换
-function sizeChange(size: number) {
-  onSizeChange(size).then(() => fetchData());
-}
-
-// 当前页码切换（翻页）
-function currentChange(page = 1) {
-  onCurrentChange(page).then(() => fetchData());
-}
+// 关闭弹框
 function close() {
+  list.value = []
   drawerisible.value = false;
 }
-
+// 暴露
 defineExpose({
   showEdit,
 });
 </script>
 
-<template lang="">
+<template>
   <el-dialog v-model="drawerisible" title="解析记录" @close="close">
     <el-table v-loading="listLoading" border :data="list" stripe>
-      <el-table-column
-        align="center"
-        prop="projectId"
-        show-overflow-tooltip
-        label="备案号"
-      />
-      <el-table-column
-        align="center"
-        prop="projectName"
-        show-overflow-tooltip
-        label="记录值"
-      />
-      <el-table-column
-        align="center"
-        prop="projectName"
-        show-overflow-tooltip
-        label="状态"
-      />
-      <el-table-column
-        align="center"
-        prop="projectName"
-        show-overflow-tooltip
-        label="时间"
-      />
-<template #empty>
-          <el-empty :image="empty" :image-size="300" />
+      <el-table-column align="center" prop="type" show-overflow-tooltip label="记录类型" />
+      <el-table-column align="center" prop="host" show-overflow-tooltip label="主机记录" />
+      <el-table-column align="center" prop="host" show-overflow-tooltip label="记录值" />
+      <el-table-column align="center" prop="projectName" show-overflow-tooltip label="验证状态">
+        <template #default>
+          {{ isAnalysis ? '已生效' : '未生效' }}
+        </template>
+      </el-table-column>
+      <template #empty>
+        <el-empty :image="empty" :image-size="300" />
       </template>
-</el-table>
-<template #footer>
-      <div class="dialog-footer">
-        <el-button @click="close"> 取消 </el-button>
-        <el-button type="primary" @click="close"> 确定 </el-button>
-      </div>
-    </template>
-<ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
-  :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination" background
-  @size-change="sizeChange" @current-change="currentChange" />
-</el-dialog>
+    </el-table>
+  </el-dialog>
 </template>
 
 <style scoped lang="scss">

@@ -282,8 +282,8 @@ onMounted(() => {
           show-overflow-tooltip label="成员">
           <template #default="{ row }">
             <el-link type="primary">{{
-    row.memberNumber ? row.memberNumber : 0
-  }}</el-link>
+          row.memberNumber ? row.memberNumber : 0
+        }}</el-link>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('projectNumber')" width="100" align="center" prop="projectNumber"

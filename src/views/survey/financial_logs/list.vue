@@ -356,7 +356,8 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('difference')" show-overflow-tooltip align="center"
-          prop="difference" label="加减款" width="120"><template #default="{ row }">
+          prop="difference" label="加减款" width="120">
+          <template #default="{ row }">
             <p class="plus" v-if="row.operationType === 1" style="font-weight: 700;">
                 <div class="plusSpan i-typcn:plus w-1em h-1em"></div>
               <el-text>
@@ -500,7 +501,6 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
   tbody {
     color: #333;
   }
-
   .plusSpan {
     margin-top: -4px;
     color: #03c239;
