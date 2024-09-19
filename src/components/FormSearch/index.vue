@@ -6,7 +6,7 @@ defineOptions({
 })
 
 // 表单筛选配置项  表单绑定值
-const props = defineProps<any>(['formSearchList', 'model','formSearchName'])
+const props = defineProps(['formSearchList', 'model','formSearchName'])
 const emits = defineEmits(['current-change', 'on-reset'])
 const sortRef=ref<any>()//排序组件ref
 const formSearchList=ref<any>([])
