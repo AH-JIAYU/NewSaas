@@ -24,7 +24,7 @@ data.value.formSearchSelectList=copyList.filter((item:any)=>item.show)
 data.value.formSearchList=copyList.sort((a:any,b:any)=>a.index-b.index);
 
  nextTick(() => {
-  const grid = document.querySelector(".tagGrid");
+  const grid:any= document.querySelector(".tagGrid");
 //sortable对象
 new Sortable(grid, {
   animation: 150,

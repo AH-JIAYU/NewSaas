@@ -26,6 +26,7 @@ const chagneFormSearchList=(list:any)=>{
 const onSort=()=>{
   // 先看本地有没有，没有走默认值
   sortRef.value.showEdit(
+    // @ts-ignore
     JSON.parse(storage.local.get(props.formSearchName) ) ?? formSearchList.value,
     props.formSearchName
     )
@@ -33,6 +34,7 @@ const onSort=()=>{
 watch(
   () => props.formSearchList,
   (newVal, oleVal) => {
+    // @ts-ignore
     formSearchList.value = JSON.parse(storage.local.get(props.formSearchName) ) ?? newVal
   },
   { deep: true }
