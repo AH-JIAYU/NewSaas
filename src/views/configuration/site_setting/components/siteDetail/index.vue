@@ -20,7 +20,7 @@ const listLoading = ref<boolean>(false);
 const list = ref<any>([]);
 // 上传
 const fileList = ref<any>({
-  domain: 'supplier.tctask.net',
+  domain: '',
   certificate: [],
   private_key: []
 });
@@ -34,6 +34,7 @@ async function showEdit(row: any) {
   try {
     listLoading.value = true;
     if (row) {
+      fileList.value.domain = row.topLevelDomainName
       list.value = [row]
       isAnalysis.value = row.data.success
       pagination.value.total = row.data.list.length
