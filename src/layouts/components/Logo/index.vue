@@ -9,10 +9,18 @@ defineOptions({
 const userStore = useUserStore();
 // 网站LOGO
 const logo = ref<any>()
+// 网站名称
+const title = ref<any>()
 if(userStore.logo) {
   logo.value = userStore.logo
 }else {
   logo.value = imgLogo
+}
+
+if(userStore.webName === 'undefined') {
+  title.value = import.meta.env.VITE_APP_TITLE
+}else {
+  title.value = userStore.webName
 }
 
 withDefaults(
@@ -33,9 +41,15 @@ watch(
     }
   },{deep: true}
 );
+watch(
+  () => userStore.webName,
+  (newValue) => {
+    if (newValue) {
+      title.value = newValue;
+    }
+  },{deep: true}
+);
 const settingsStore = useSettingsStore()
-
-const title = ref(import.meta.env.VITE_APP_TITLE)
 
 const to = computed(() => settingsStore.settings.home.enable ? settingsStore.settings.home.fullPath : '')
 </script>

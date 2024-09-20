@@ -29,6 +29,7 @@ const useUserStore = defineStore(
     const userId = ref(storage.local.get("userId") ?? "");
     const permissions = ref<string[]>([]);
     const logo = ref<any>(storage.local.get("logo") ?? "");
+    const webName = ref<any>(storage.local.get("webName") ?? "");
     const currencyType = ref<number | string>(3); //货币类型 1=USD 2=CNY 3=未知
     const exchangeRate = ref<number | string>(); //汇率
     const isLogin = computed(() => {
@@ -68,6 +69,8 @@ const useUserStore = defineStore(
       storage.local.set("avatar", res.data.avatar);
       storage.local.set("userId", res.data.userId);
       storage.local.set("logo", res.data.logo);
+      storage.local.set("webName", res.data.webName);
+      webName.value = res.data.webName;
       logo.value = res.data.logo;
       account.value = res.data.account;
       token.value = res.data.token;
@@ -88,11 +91,11 @@ const useUserStore = defineStore(
         storage.local.remove("login_account");
       }
       storage.local.remove("logo");
+      storage.local.remove("webName");
       storage.local.remove("account");
       storage.local.remove("token");
       storage.local.remove("avatar");
       storage.local.remove("userId");
-
       storage.local.remove("tabbarPinData");
       account.value = "";
       token.value = "";
@@ -100,6 +103,7 @@ const useUserStore = defineStore(
       userId.value = "";
       permissions.value = [];
       logo.value = '';
+      webName.value = '';
       tabbarStore.clean();
       routeStore.removeRoutes();
       menuStore.setActived(0);
@@ -123,6 +127,16 @@ const useUserStore = defineStore(
     function setLogo(val: any) {
       logo.value = val
       storage.local.set("logo", val)
+    }
+     // 删除本地和store里的logo
+     function delWebName() {
+      webName.value = ''
+      storage.local.remove("webName")
+    }
+    // 存 webName
+    function setWebName(val: any) {
+      webName.value = val
+      storage.local.set("webName", val)
     }
     // 获取权限
     async function getPermissions() {
@@ -297,11 +311,14 @@ const useUserStore = defineStore(
       userId,
       permissions,
       logo,
+      webName,
       currencyType,
       isLogin,
       login,
       delLogo,
+      delWebName,
       setLogo,
+      setWebName,
       logout,
       getPermissions,
       getCurrencyType,

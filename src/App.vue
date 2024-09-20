@@ -8,9 +8,10 @@ import eventBus from './utils/eventBus'
 import Provider from './ui-provider/index.vue'
 import useSettingsStore from '@/store/modules/settings'
 import useMenuStore from '@/store/modules/menu'
+import useUserStore from "@/store/modules/user";
 
 const routeInfo = useRoute()
-
+const userStore = useUserStore();
 const settingsStore = useSettingsStore()
 const menuStore = useMenuStore()
 const { auth } = useAuth()
@@ -51,6 +52,7 @@ watch([
   () => settingsStore.settings.app.enableDynamicTitle,
   () => settingsStore.title,
   () => settingsStore.customTitleList,
+  () => userStore.webName,
 ], () => {
   if (settingsStore.settings.app.enableDynamicTitle && settingsStore.title) {
     const title = settingsStore.customTitleList.find(item => item.fullPath === routeInfo.fullPath)?.title
@@ -61,10 +63,18 @@ watch([
             : generateI18nTitle(routeInfo.meta.i18n, settingsStore.title)
           : generateI18nTitle(routeInfo.meta.i18n, settingsStore.title)
       )
-    document.title = `${title} - ${import.meta.env.VITE_APP_TITLE}`
+    if (userStore.webName) {
+      document.title = userStore.webName
+    } else {
+      document.title = `${title} - ${import.meta.env.VITE_APP_TITLE}`
+    }
   }
   else {
-    document.title = import.meta.env.VITE_APP_TITLE
+    if (userStore.webName) {
+      document.title = userStore.webName
+    } else {
+      document.title = import.meta.env.VITE_APP_TITLE
+    }
   }
 }, {
   immediate: true,
@@ -100,13 +110,10 @@ import.meta.env.VITE_APP_DEBUG_TOOL === 'vconsole' && new VConsole()
 
 <template>
   <Provider>
-    <RouterView
-      v-slot="{ Component, route }"
-      :style="{
-        '--g-main-sidebar-actual-width': mainSidebarActualWidth,
-        '--g-sub-sidebar-actual-width': subSidebarActualWidth,
-      }"
-    >
+    <RouterView v-slot="{ Component, route }" :style="{
+      '--g-main-sidebar-actual-width': mainSidebarActualWidth,
+      '--g-sub-sidebar-actual-width': subSidebarActualWidth,
+    }">
       <component :is="Component" v-if="auth(route.meta.auth ?? '')" />
       <NotAllowed v-else />
     </RouterView>
@@ -115,7 +122,7 @@ import.meta.env.VITE_APP_DEBUG_TOOL === 'vconsole' && new VConsole()
 </template>
 
 <style scoped>
-  .el-select {
-    width: 12rem;
-  }
+.el-select {
+  width: 12rem;
+}
 </style>

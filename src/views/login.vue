@@ -21,7 +21,6 @@ import storage from "@/utils/storage";
 import { debounce } from "lodash-es";
 import api from "@/api/modules/register";
 import apiCountry from "@/api/modules/basicDictionary";
-import {  useDebounceFn,} from '@vueuse/core'
 
 defineOptions({
   name: "Login",
@@ -178,17 +177,6 @@ async function loginCaptcha() {
     }
   });
 }
-// 防抖动1秒内只执行一次
-const debounce = useDebounceFn((val:any) => {
-  console.log('val',val);
-  if(val === 1)  {
-    console.log(211111);
-
-    loginCaptcha()
-  }else if(val === 2) {
-    mobileVerificationCode()
-  }
-}, 1000)
 // 倒计时
 const loginCountdown = () => {
   loginGetCaptcha.value = true;
@@ -647,7 +635,7 @@ const agreements = (val: any) => {
                 <el-button
                   type="primary"
                   :disabled="loginGetCaptcha"
-                  @click="debounce(1)"
+                  @click="loginCaptcha"
                   >{{ loginCode }}</el-button
                 >
               </template>
@@ -853,7 +841,7 @@ const agreements = (val: any) => {
               <template #append>
                 <ElButton
                   :disabled="isGetPhone"
-                  @click="debounce(2)"
+                  @click="mobileVerificationCode"
                 >
                   {{ phoneCode }}</ElButton
                 >
