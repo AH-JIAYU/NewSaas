@@ -69,7 +69,7 @@ const useUserStore = defineStore(
       storage.local.set("avatar", res.data.avatar);
       storage.local.set("userId", res.data.userId);
       storage.local.set("logo", res.data.logo);
-      storage.local.set("webName", res.data.webName);
+      // storage.local.set("webName", res.data.webName);
       webName.value = res.data.webName;
       logo.value = res.data.logo;
       account.value = res.data.account;
