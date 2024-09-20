@@ -17,10 +17,10 @@ if(userStore.logo) {
   logo.value = imgLogo
 }
 
-if(userStore.webName === 'undefined') {
-  title.value = import.meta.env.VITE_APP_TITLE
-}else {
+if(userStore.webName) {
   title.value = userStore.webName
+}else {
+  title.value = import.meta.env.VITE_APP_TITLE
 }
 
 withDefaults(
