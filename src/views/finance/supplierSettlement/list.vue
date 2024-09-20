@@ -26,8 +26,14 @@ const isFullscreen = ref(false);
 const lineHeight = ref<any>("default");
 const stripe = ref(false);
 const selectRows = ref<any>([]);
-const billStatusList = ["待收票", "待支付", "已支付", "已拒绝"];
+const billStatusList = [
+  { label: '待收票', value: 1 },
+  { label: '待支付', value: 2 },
+  { label: '已支付', value: 3 },
+  { label: '已拒绝', value: 4 },];
 const payMethod = userSupplier.payMethod; // 付款方式
+const formSearchList = ref<any>()//表单排序配置
+const formSearchName = ref<string>('formSearch-supplierSettlement')// 表单排序name
 const columns = ref<any>([
   { label: "供应商ID", prop: "supplierId", sortable: true, checked: true },
   { label: "账单日期", prop: "billTime", sortable: true, checked: true },
@@ -120,6 +126,11 @@ onMounted(() => {
     }
   });
   fetchData();
+  formSearchList.value = [
+    { index: 1, show: true, type: 'input', modelName: 'supplierId', placeholder: '供应商ID' },
+    { index: 2, show: true, type: 'datetimerange', modelName: 'time', startplaceholder: "创建开始日期", endplaceholder: "创建结束日期" },
+    { index: 3, show: true, type: 'select', modelName: 'billStatus', placeholder: '状态', option: billStatusList, optionLabel: 'label', optionValue: 'value' }
+  ]
 });
 </script>
 
@@ -128,7 +139,9 @@ onMounted(() => {
     'absolute-container': tableAutoHeight,
   }">
     <PageMain>
-      <SearchBar :show-toggle="false">
+      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange"
+        @onReset="onReset" :model="queryForm" />
+      <!-- <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
           <el-form :model="queryForm" size="default" label-width="100px" inline-message inline class="search-form">
             <el-form-item label="">
@@ -150,24 +163,24 @@ onMounted(() => {
                 <template #icon>
                   <SvgIcon name="i-ep:search" />
                 </template>
-                筛选
-              </ElButton>
-              <ElButton @click="onReset">
-                <template #icon>
+筛选
+</ElButton>
+<ElButton @click="onReset">
+  <template #icon>
                   <div class="i-grommet-icons:power-reset h-1em w-1em" />
                 </template>
-                重置
-              </ElButton>
-              <ElButton disabled link @click="toggle">
-                <template #icon>
+  重置
+</ElButton>
+<ElButton disabled link @click="toggle">
+  <template #icon>
                   <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
                 </template>
-                {{ fold ? "展开" : "收起" }}
-              </ElButton>
-            </ElFormItem>
-          </el-form>
-        </template>
-      </SearchBar>
+  {{ fold ? "展开" : "收起" }}
+</ElButton>
+</ElFormItem>
+</el-form>
+</template>
+</SearchBar> -->
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel />

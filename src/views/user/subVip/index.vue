@@ -17,6 +17,8 @@ const border = ref<boolean>(false); // 表格控件-是否展示边框
 const stripe = ref<boolean>(true); // 表格控件-是否展示斑马条
 const lineHeight = ref<any>("default"); // 表格控件-控制表格大小
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
+const formSearchList = ref<any>()//表单排序配置
+const formSearchName = ref<string>('formSearch-subVip')// 表单排序name
 const columns = ref([
   // 表格控件-展示列
   { label: "子会员ID", prop: "memberChildId", sortable: true, checked: true },
@@ -79,12 +81,19 @@ function currentChange(page = 1) {
 }
 // 分页 后端(刘):这块不好做分页，所有返回全部数据，前端做分页
 const DataList = computed(() => {
-  const beginTime: any = queryForm.value.time[0]
+  let beginTime:any
+  let endTime:any
+  if(queryForm.value.time){
+     beginTime = queryForm.value.time[0]
     ? new Date(queryForm.value.time[0]).getTime()
     : "";
-  const endTime: any = queryForm.value.time[1]
+   endTime = queryForm.value.time[1]
     ? new Date(queryForm.value.time[1]).getTime()
     : "";
+
+  }else{
+    beginTime=endTime=''
+  }
 
   const searchList = list.value.filter((item: any) => {
     const rowTime: any = new Date(item.createTime).getTime();
@@ -160,64 +169,39 @@ onMounted(() => {
     }
   });
   fetchData();
+  formSearchList.value = [
+    { index: 1, show: true, type: 'input', modelName: 'memberChildId', placeholder: '子会员ID、子会员名称' },
+    { index: 2, show: true, type: 'input', modelName: 'memberName', placeholder: '子会员姓名' },
+    { index: 3, show: true, type: 'input', modelName: 'tenantSupplierId', placeholder: '供应商ID' },
+    {
+      index: 4, show: true, type: 'select', modelName: 'memberChildStatus', placeholder: '子会员状态',
+      option: [
+        { label: '启用', value: 2 },
+        { label: '禁用', value: 1 }
+      ],
+      optionLabel: 'label', optionValue: 'value'
+    },
+    {
+      index: 5, show: true, type: 'select', modelName: 'b2bStatus', placeholder: 'B2B',
+      option: [
+        { label: '开启', value: 2 },
+        { label: '关闭', value: 1 }
+      ],
+      optionLabel: 'label', optionValue: 'value'
+    },
+    {
+      index: 6, show: true, type: 'datetimerange', modelName: 'time',
+      startplaceholder: '创建开始日期', endplaceholder: '创建结束日期'
+    },
+  ];
 });
 </script>
 
 <template>
   <div :class="{ 'absolute-container': tableAutoHeight }">
     <PageMain>
-      <SearchBar :show-toggle="false">
-        <template #default="{ fold, toggle }">
-          <ElForm :model="queryForm" size="default" label-width="180px" inline-message inline class="search-form">
-            <el-form-item label="">
-              <el-input v-model.trim="queryForm.memberChildId" clearable :inline="false" placeholder="子会员ID、子会员名称" />
-            </el-form-item>
-            <el-form-item label="">
-              <el-input v-model.trim="queryForm.memberName" clearable :inline="false" placeholder="子会员姓名" />
-            </el-form-item>
-            <el-form-item label="">
-              <el-input v-model.trim="queryForm.tenantSupplierId" clearable :inline="false" placeholder="供应商ID" />
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-select v-model="queryForm.memberChildStatus" clearable placeholder="子会员状态">
-                <el-option label="启用" :value="2" />
-                <el-option label="禁用" :value="1" />
-              </el-select>
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-select v-model="queryForm.b2bStatus" clearable placeholder="B2B">
-                <el-option label="开启" :value="2" />
-                <el-option label="关闭" :value="1" />
-              </el-select>
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-date-picker v-model="queryForm.time" type="datetimerange" unlink-panels range-separator="-"
-                start-placeholder="创建开始日期" end-placeholder="创建结束日期" value-format="YYYY-MM-DD hh:mm:ss" size="default"
-                style="width: 192px" clear-icon="true" />
-            </el-form-item>
-            <ElFormItem>
-              <ElButton type="primary" @click="currentChange()">
-                <template #icon>
-                  <SvgIcon name="i-ep:search" />
-                </template>
-                筛选
-              </ElButton>
-              <ElButton @click="queryData">
-                <template #icon>
-                  <div class="i-grommet-icons:power-reset h-1em w-1em" />
-                </template>
-                重置
-              </ElButton>
-              <ElButton link @click="toggle">
-                <template #icon>
-                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
-                </template>
-                {{ fold ? "展开" : "收起" }}
-              </ElButton>
-            </ElFormItem>
-          </ElForm>
-        </template>
-      </SearchBar>
+      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange"
+        @onReset="queryData" :model="queryForm" />
       <ElDivider border-style="dashed" />
       <el-row>
         <FormLeftPanel />

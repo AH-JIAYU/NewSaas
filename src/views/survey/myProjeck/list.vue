@@ -35,6 +35,8 @@ const checkMembershipPriceRef = ref<any>();
 const border = ref(true);
 const checkList = ref<any>([]);
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
+const formSearchList = ref<any>()//表单排序配置
+const formSearchName=ref<string>('formSearch-myProjeck')// 表单排序name
 // 表格控件-控制全屏
 const lineHeight = ref<any>("default");
 const stripe = ref(false);
@@ -133,13 +135,6 @@ function onReset() {
   });
   fetchData();
 }
-// // 分页 后端(刘):这块不好做分页，所有返回全部数据，前端做分页
-// const DataList = computed(() => {
-//   return list.value.slice(
-//     (pagination.value.page - 1) * pagination.value.size,
-//     pagination.value.page * pagination.value.size
-//   );
-// });
 // 获取列表
 async function fetchData() {
   try {
@@ -151,6 +146,11 @@ async function fetchData() {
     if (queryForm.time && !!queryForm.time.length) {
       params.beginTime = queryForm.time[0] || "";
       params.endTime = queryForm.time[1] || "";
+    }
+    if(!Array.isArray(queryForm.countryId)&&queryForm.countryId){
+      params.countryId = [queryForm.countryId];
+    }else{
+      params.countryId = []
     }
     const res = await api.list(params);
     countryType.value = res.data.currencyType;
@@ -192,6 +192,15 @@ onMounted(async () => {
   countryList.value = await basicDictionaryStore.getCountry();
   customerList.value = await customerStore.getCustomerList();
   fetchData();
+  formSearchList.value = [
+    { index: 1, show: true, type: 'input', modelName: 'projectId', placeholder: '项目ID' },
+    { index: 2, show: true, type: 'input', modelName: 'projectName', placeholder: '项目名称' },
+    { index: 3, show: true, type: 'input', modelName: 'projectIdentification', placeholder: '项目标识' },
+    { index: 4, show: true, type: 'select', modelName: 'countryId', placeholder: '国家地区', option: countryList.value, optionLabel: 'chineseName', optionValue: 'id' },
+    { index: 5, show: true, type: 'select', modelName: 'clientId', placeholder: '客户简称', option: customerList.value, optionLabel: 'tenantCustomerId', optionValue: 'tenantCustomerId' },
+    { index: 6, show: true, type: 'select', modelName: 'b2bOrB2cStatus', placeholder: 'B2B/B2C', option: [{ label: 'B2B', value: 1 }, { label: 'B2C', value: 2 }], optionLabel: 'label', optionValue: 'value' },
+    { index: 7, show: true, type: 'datetimerange', modelName: 'time', startplaceholder: '创建开始日期', endplaceholder: '创建结束日期' },
+];
 });
 </script>
 
@@ -200,67 +209,7 @@ onMounted(async () => {
     'absolute-container': tableAutoHeight,
   }">
     <PageMain>
-      <SearchBar :show-toggle="false">
-        <template #default="{ fold, toggle }">
-          <el-form :model="queryForm.select" size="default" label-width="100px" inline-message inline
-            class="search-form">
-            <el-form-item label="">
-              <el-input v-model="queryForm.projectId" clearable placeholder="项目ID" @keydown.enter="currentChange()" />
-            </el-form-item>
-            <el-form-item label="">
-              <el-input clearable v-model="queryForm.projectName" placeholder="项目名称" @keydown.enter="currentChange()" />
-            </el-form-item>
-            <el-form-item label="">
-              <el-input v-model="queryForm.projectIdentification" clearable placeholder="项目标识"
-                @keydown.enter="currentChange()" />
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-select placeholder="国家地区" v-model="queryForm.countryId" clearable filterable multiple collapse-tags
-                @change="currentChange()">
-                <ElOption v-for="item in countryList" :label="item.chineseName" :value="item.id"></ElOption>
-              </el-select>
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-select placeholder="客户简称" clearable filterable v-model="queryForm.clientId" @change="currentChange()">
-                <el-option v-for="item in customerList" :key="item.tenantCustomerId" :value="item.tenantCustomerId"
-                  :label="item.customerAccord"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-select placeholder="B2B/B2C" clearable filterable v-model="queryForm.b2bOrB2cStatus"
-                @change="currentChange()">
-                <el-option label="B2B" value="1"> </el-option>
-                <el-option label="B2C" value="2"> </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item v-show="!fold">
-              <el-date-picker v-model="queryForm.time" type="datetimerange" unlink-panels range-separator="-"
-                start-placeholder="创建开始日期" end-placeholder="创建结束日期" size="default" value-format="YYYY-MM-DD HH:mm:ss"
-                style="width: 192px" clear-icon="true" @change="currentChange()" />
-            </el-form-item>
-            <ElFormItem>
-              <ElButton type="primary" @click="fetchData()">
-                <template #icon>
-                  <SvgIcon name="i-ep:search" />
-                </template>
-                筛选
-              </ElButton>
-              <ElButton @click="onReset">
-                <template #icon>
-                  <div class="i-grommet-icons:power-reset h-1em w-1em" />
-                </template>
-                重置
-              </ElButton>
-              <ElButton link @click="toggle">
-                <template #icon>
-                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
-                </template>
-                {{ fold ? "展开" : "收起" }}
-              </ElButton>
-            </ElFormItem>
-          </el-form>
-        </template>
-      </SearchBar>
+      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="queryForm" />
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel />

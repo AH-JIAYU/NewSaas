@@ -19,6 +19,8 @@ const border = ref(true); // 表格控件-是否展示边框
 const stripe = ref(false); // 表格控件-是否展示斑马条
 const lineHeight = ref<any>("default"); // 表格控件-控制表格大小
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
+const formSearchList = ref<any>()//表单排序配置
+const formSearchName=ref<string>('formSearch-termination')// 表单排序name
 const columns = ref([
   // 表格控件-展示列
   { label: "会员", prop: "surveySource", sortable: true, checked: true },
@@ -130,67 +132,21 @@ onMounted(() => {
     }
   });
   fetchData();
+  formSearchList.value =  [
+    {index: 1, show: true, type: 'input', modelName: 'tenantSupplierId', placeholder: '供应商ID'},
+    {index: 2, show: true, type: 'input', modelName: 'projectId', placeholder: '项目ID'},
+    {index: 3, show: true, type: 'select', modelName: 'surveySource', placeholder: '会员类型', option: memberType, optionLabel: 'label', optionValue: 'value'},
+    {index: 4, show: true, type: 'input', modelName: 'projectName', placeholder: '项目名称'},
+    {index: 5, show: true, type: 'input', modelName: 'ipBelong', placeholder: 'IP/所属国'},
+    {index: 6, show: true, type: 'datetimerange', modelName: 'time', startplaceholder: "创建开始日期", endplaceholder: "创建结束日期"}
+]
 });
 </script>
 
 <template>
   <div :class="{ 'absolute-container': tableAutoHeight }">
     <PageMain>
-      <SearchBar :show-toggle="false">
-        <template #default="{ fold, toggle }">
-          <ElForm :model="queryForm" size="default" label-width="100px" inline-message inline class="search-form">
-            <el-form-item label="">
-              <el-input v-model.trim="queryForm.tenantSupplierId" clearable :inline="false" placeholder="供应商ID"
-                @keydown.enter="currentChange()" />
-            </el-form-item>
-            <el-form-item label="">
-              <el-input v-model.trim="queryForm.projectId" clearable :inline="false" placeholder="项目ID"
-                @keydown.enter="currentChange()" />
-            </el-form-item>
-            <el-form-item label="">
-              <el-select v-model="queryForm.surveySource" value-key="" placeholder="会员类型" clearable filterable
-                @change="currentChange()">
-                <el-option v-for="item in memberType" :key="item.value" :label="item.label" :value="item.value">
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-input v-model.trim="queryForm.projectName" clearable :inline="false" placeholder="项目名称"
-                @keydown.enter="currentChange()" />
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-input v-model.trim="queryForm.ipBelong" clearable :inline="false" placeholder="IP/所属国"
-                @keydown.enter="currentChange()" />
-            </el-form-item>
-
-            <el-form-item v-show="!fold" label="">
-              <el-date-picker v-model="queryForm.time" type="datetimerange" unlink-panels range-separator="-"
-                start-placeholder="创建开始日期" end-placeholder="创建结束日期" value-format="YYYY-MM-DD hh:mm:ss" size="default"
-                @change="currentChange()" />
-            </el-form-item>
-            <ElFormItem>
-              <ElButton type="primary" @click="currentChange()">
-                <template #icon>
-                  <SvgIcon name="i-ep:search" />
-                </template>
-                筛选
-              </ElButton>
-              <ElButton @click="onReset">
-                <template #icon>
-                  <div class="i-grommet-icons:power-reset h-1em w-1em" />
-                </template>
-                重置
-              </ElButton>
-              <ElButton link @click="toggle">
-                <template #icon>
-                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
-                </template>
-                {{ fold ? "展开" : "收起" }}
-              </ElButton>
-            </ElFormItem>
-          </ElForm>
-        </template>
-      </SearchBar>
+      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="queryForm" />
       <ElDivider border-style="dashed" />
       <el-row>
         <FormLeftPanel />

@@ -26,7 +26,8 @@ const editsRef = ref();
 // 右侧工具栏配置变量
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const checkList = ref<any>([]);
-
+  const formSearchList = ref<any>()//表单排序配置
+const formSearchName=ref<string>('formSearch-materials')// 表单排序name
 const lineHeight = ref<any>("default");
 const stripe = ref(false);
 const selectRows = ref<any>([]);
@@ -211,6 +212,11 @@ onMounted(() => {
     }
   });
   fetchData();
+  formSearchList.value = [
+    { index: 1, show: true, type: 'input', modelName: 'memberChildId', placeholder: '会员ID' },
+    { index: 2, show: true, type: 'input', modelName: 'projectId', placeholder: '项目ID' },
+    { index: 3, show: true, type: 'input', modelName: 'projectName', placeholder: '项目名称' }
+]
 });
 </script>
 
@@ -221,7 +227,9 @@ onMounted(() => {
     <PageMain>
       <el-tabs v-model="queryForm.type" @tab-change="getDataChange">
         <el-tab-pane label="会员素材" :name="1">
-          <SearchBar :show-toggle="false">
+          <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="queryForm" />
+
+          <!-- <SearchBar :show-toggle="false">
             <template #default="{ fold, toggle }">
               <el-form :model="queryForm.select" size="default" label-width="100px" inline-message inline
                 class="search-form">
@@ -259,7 +267,7 @@ onMounted(() => {
                 </ElFormItem>
               </el-form>
             </template>
-          </SearchBar>
+          </SearchBar> -->
           <ElDivider border-style="dashed" />
           <el-row :gutter="24">
             <FormLeftPanel />

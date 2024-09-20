@@ -38,7 +38,7 @@ const data = reactive<any>({
 });
 
 // 显隐
-async function showEdit(row: any, view?: any) {
+async function showEdit(row: any, view?: any) { 
   const res = await obtainLoading(api.getProjectList({}));
   // 获取未调度的项目列表
   data.projectList = res.data.getNotDispatchProjectInfoList;
@@ -58,7 +58,7 @@ async function showEdit(row: any, view?: any) {
         center: true,
       });
     } else {
-      data.title = "新增";
+      data.title = "调度";
       data.form.projectId = row.projectId;
       await changeProject(row.projectId);
       dialogTableVisible.value = true;

@@ -31,6 +31,8 @@ const settingsStore = useSettingsStore();
 const plusMinusPaymentsRef = ref();
 // financeLogRef
 const financeLogRef = ref<any>()
+  const formSearchList = ref<any>()//表单排序配置
+const formSearchName=ref<string>('formSearch-financial_pm_log')// 表单排序name
 // 表格控件-展示列
 const columns = ref<any>([
   // 表格控件-展示列
@@ -126,30 +128,6 @@ const data = ref<any>({
   // 列表数据
   dataList: [],
 });
-
-onMounted(async () => {
-  // 职位
-  positionManageList.value = await usePositionManage?.getPositionManage() || [];
-  // 小组
-  groupManageList.value = await useGroupManage?.getGroupManage() || [];
-  getDataList();
-  if (data.value.formMode === "router") {
-    eventBus.on("get-data-list", () => {
-      getDataList();
-    });
-  }
-  columns.value.forEach((item: any) => {
-    if (item.checked) {
-      data.value.checkList.push(item.prop);
-    }
-  });
-});
-
-onBeforeUnmount(() => {
-  if (data.value.formMode === "router") {
-    eventBus.off("get-data-list");
-  }
-});
 // 获取数据
 function getDataList() {
   try {
@@ -214,57 +192,42 @@ function currentChange(page = 1) {
 function sortChange({ prop, order }: { prop: string; order: string }) {
   onSortChange(prop, order).then(() => getDataList());
 }
+
+onMounted(async () => {
+  // 职位
+  positionManageList.value = await usePositionManage?.getPositionManage() || [];
+  // 小组
+  groupManageList.value = await useGroupManage?.getGroupManage() || [];
+  getDataList();
+  if (data.value.formMode === "router") {
+    eventBus.on("get-data-list", () => {
+      getDataList();
+    });
+  }
+  columns.value.forEach((item: any) => {
+    if (item.checked) {
+      data.value.checkList.push(item.prop);
+    }
+  });
+  formSearchList.value = [
+    { index: 1, show: true, type: 'input', modelName: 'id', placeholder: '员工ID' },
+    { index: 2, show: true, type: 'input', modelName: 'userName', placeholder: '用户名' },
+    { index: 3, show: true, type: 'input', modelName: 'name', placeholder: '姓名' },
+    { index: 4, show: true, type: 'select', modelName: 'positionId', placeholder: '职位', option: positionManageList, optionLabel: 'name', optionValue: 'id' }
+]
+});
+
+onBeforeUnmount(() => {
+  if (data.value.formMode === "router") {
+    eventBus.off("get-data-list");
+  }
+});
 </script>
 
 <template>
   <div :class="{ 'absolute-container': data.tableAutoHeight }">
     <PageMain>
-      <SearchBar :show-toggle="false">
-        <template #default="{ fold, toggle }">
-          <ElForm :model="data.search" size="default" label-width="100px" inline-message inline class="search-form">
-            <ElFormItem>
-              <ElInput v-model="data.search.id" placeholder="员工ID" clearable @keydown.enter="currentChange()"
-                @clear="currentChange()" />
-            </ElFormItem>
-            <ElFormItem>
-              <ElInput v-model="data.search.userName" placeholder="用户名" clearable @keydown.enter="currentChange()"
-                @clear="currentChange()" />
-            </ElFormItem>
-            <ElFormItem>
-              <ElInput v-model="data.search.name" placeholder="姓名" clearable @keydown.enter="currentChange()"
-                @clear="currentChange()" />
-            </ElFormItem>
-            <ElFormItem v-show="!fold">
-              <el-select v-model="data.search.positionId" value-key="" placeholder="职位" clearable filterable
-                @change="currentChange()">
-                <el-option v-for="item in positionManageList" :key="item.id" :label="item.name" :value="item.id">
-                </el-option>
-              </el-select>
-
-            </ElFormItem>
-            <ElFormItem>
-              <ElButton type="primary" @click="currentChange()">
-                <template #icon>
-                  <SvgIcon name="i-ep:search" />
-                </template>
-                筛选
-              </ElButton>
-              <ElButton @click="onReset">
-                <template #icon>
-                  <div class="i-grommet-icons:power-reset h-1em w-1em" />
-                </template>
-                重置
-              </ElButton>
-              <ElButton link @click="toggle">
-                <template #icon>
-                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
-                </template>
-                {{ fold ? "展开" : "收起" }}
-              </ElButton>
-            </ElFormItem>
-          </ElForm>
-        </template>
-      </SearchBar>
+      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="data.search" />
       <ElDivider border-style="dashed" />
       <el-row>
         <FormLeftPanel />
@@ -418,9 +381,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
 
 }
 
-:deep(.el-table__empty-block) {
-  height: 100% !important;
-}
+
 
 .flex-s {
   display: flex;

@@ -32,6 +32,8 @@ const stripe = ref(false); // 表格控件-条纹
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const lineHeight = ref<any>("default"); // 表格控件-大小
 const checkList = ref<any>([]); // 表格控件-展示列
+const formSearchList = ref<any>()//表单排序配置
+const formSearchName = ref<string>('formSearch-customer')// 表单排序name
 const columns = ref([
   {
     label: "客户编码",
@@ -183,57 +185,29 @@ onMounted(async () => {
     }
   });
   queryData();
+  formSearchList.value = [
+    { index: 1, show: true, type: 'input', modelName: 'customerShortName', placeholder: '客户简称' },
+    {
+      index: 2, show: true, type: 'select', modelName: 'customerStatus', placeholder: '客户状态', option: [
+        { label: '禁用', value: 1 },
+        { label: '启用', value: 2 }
+      ], optionLabel: 'label', optionValue: 'value'
+    },
+    {
+      index: 3, show: true, type: 'select', modelName: 'antecedentQuestionnaire', placeholder: '前置问卷', option: [
+        { label: '禁用', value: 1 },
+        { label: '启用', value: 2 }
+      ], optionLabel: 'label', optionValue: 'value'
+    }
+  ]
 });
 </script>
 
 <template>
   <div :class="{ 'absolute-container': tableAutoHeight }">
     <PageMain>
-      <SearchBar :show-toggle="false">
-        <template #default="{ fold, toggle }">
-          <ElForm :model="queryForm.select" size="default" label-width="100px" inline-message inline
-            class="search-form">
-            <el-form-item v-show="!fold">
-              <el-input v-model="queryForm.customerShortName" clearable placeholder="客户简称"
-                @keydown.enter="currentChange()" />
-            </el-form-item>
-            <el-form-item v-show="!fold">
-              <el-select v-model="queryForm.customerStatus" clearable placeholder="客户状态" @change="currentChange()">
-                <el-option label="禁用" :value="1" />
-                <el-option label="启用" :value="2" />
-                <!-- <el-option label="风险暂停" :value="3" /> -->
-              </el-select>
-            </el-form-item>
-            <el-form-item v-show="!fold">
-              <el-select v-model="queryForm.antecedentQuestionnaire" clearable placeholder="前置问卷"
-                @change="currentChange()">
-                <el-option label="禁用" :value="1" />
-                <el-option label="启用" :value="2" />
-              </el-select>
-            </el-form-item>
-            <ElFormItem>
-              <ElButton type="primary" @click="currentChange()">
-                <template #icon>
-                  <SvgIcon name="i-ep:search" />
-                </template>
-                筛选
-              </ElButton>
-              <ElButton @click="onReset">
-                <template #icon>
-                  <div class="i-grommet-icons:power-reset h-1em w-1em" />
-                </template>
-                重置
-              </ElButton>
-              <ElButton disabled link @click="toggle">
-                <template #icon>
-                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
-                </template>
-                {{ fold ? "展开" : "收起" }}
-              </ElButton>
-            </ElFormItem>
-          </ElForm>
-        </template>
-      </SearchBar>
+      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange"
+        @onReset="onReset" :model="queryForm" />
       <ElDivider border-style="dashed" />
       <el-row>
         <FormLeftPanel>

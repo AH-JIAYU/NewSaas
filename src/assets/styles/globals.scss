@@ -607,3 +607,7 @@ textarea {
   font-size: 12px;
   color: #333333;
 }
+// 表格暂无数据高度
+.el-table__empty-block {
+  height: auto !important;
+}
