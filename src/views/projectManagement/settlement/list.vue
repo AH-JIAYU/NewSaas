@@ -64,6 +64,8 @@ const columns = ref<any>([
   { label: "节点时间", prop: "nodeTime", sortable: true, checked: true },
   { label: "备注", prop: "remark", sortable: true, checked: true },
 ]);
+const formSearchList = ref<any>()//表单排序配置
+  const formSearchName=ref<string>('formSearch-settlement')// 表单排序name
 const settlementStatusList = [
   { label: "待审核", value: 1 },
   { label: "已审核", value: 2 },
@@ -71,8 +73,7 @@ const settlementStatusList = [
   { label: "已结算", value: 4 },
   { label: "已冻结", value: 5 },
 ];
-// 时间类型
-const timeArr = ref<any>([]);
+
 // 查询参数
 const queryForm = reactive<any>({
   // 页数
@@ -92,9 +93,10 @@ const queryForm = reactive<any>({
   // 创建人id
   createUserId: null,
   // 结算状态 1:待审核 2:已审核 3:已开票 4:已结算 5:已冻结
-  settlementStatus: [],
+  settlementStatus: "",
   // 时间类型 1:待审核 2:已审核 3:已开票 4:巳结算 5:已冻结
   timeType: "",
+  time:[],
   // 开始时间
   startTime: "",
   // 结束时间
@@ -154,10 +156,6 @@ function quickEdit(row:any,type:any){
 function refundDetails(row: any) {
   refundRef.value.showEdit(JSON.stringify(row));
 }
-// 右侧工具
-function clickFullScreen() {
-  isFullscreen.value = !isFullscreen.value;
-}
 // 每页数量切换
 function sizeChange(size: number) {
   onSizeChange(size).then(() => {
@@ -192,31 +190,19 @@ function onReset() {
     // 创建人id
     createUserId: null,
     // 结算状态 1:待审核 2:已审核 3:已开票 4:已结算 5:已冻结
-    settlementStatus: [],
+    settlementStatus: "",
     // 时间类型 1:待审核 2:已审核 3:已开票 4:巳结算 5:已冻结
     timeType: "",
+    time:[],
     // 开始时间
     startTime: "",
     // 结束时间
     endTime: "",
   });
-  timeArr.value = [];
   countryData.value = [];
   fetchData();
 }
 
-// 获取选中国家
-const selectChange = (val: any) => {
-  // 将数组转换成字符串
-  queryForm.countryId = val.join(",");
-  currentChange()
-};
-// 处理时间
-const timeChange = () => {
-  queryForm.startTime = timeArr.value[0];
-  queryForm.endTime = timeArr.value[1];
-  currentChange()
-};
 // 格式化日期范围的方法
 const formatDateRange = (timestamps: any) => {
   if (!timestamps || timestamps.length === 0) return '';
@@ -246,7 +232,22 @@ const comCountryId = computed(() => (countryIdList: any) => {
 async function fetchData() {
   try {
     listLoading.value = true;
-    const { data } = await api.list(queryForm);
+    const params={...queryForm}
+    //#region 转换查询的数据格式
+    if(Array.isArray(queryForm.countryId)){
+      params.countryId =  params.countryId.join(",");
+    }
+    if (queryForm.time && !!queryForm.time.length) {
+      params.beginTime = params.time[0] || "";
+      params.endTime = params.time[1] || "";
+    }
+    if (queryForm.settlementStatus) {
+      params.settlementStatus = [params.settlementStatus]
+    }else{
+      params.settlementStatus = []
+    }
+    //#endregion
+    const { data } = await api.list(params);
     list.value = data.projectSettlementList;
     pagination.value.total = +data.total;
     listLoading.value = false;
@@ -266,6 +267,16 @@ onMounted(async () => {
     }
   });
   fetchData();
+  formSearchList.value = [
+    { index: 1, show: true, type: 'input', modelName: 'projectId', placeholder: '项目ID' },
+    { index: 2, show: true, type: 'input', modelName: 'projectName', placeholder: '项目名称' },
+    { index: 3, show: true, type: 'input', modelName: 'projectIdentification', placeholder: '项目标识' },
+    { index: 4, show: true, type: 'select', modelName: 'countryData', placeholder: '国家', option: countryList.value, optionLabel: 'chineseName', optionValue: 'id' },
+    { index: 5, show: true, type: 'select', modelName: 'customerId', placeholder: '客户简称', option: customerList.value, optionLabel: 'tenantCustomerId', optionValue: 'tenantCustomerId' },
+    { index: 6, show: true, type: 'select', modelName: 'settlementStatus', placeholder: '结算状态', option: settlementStatusList, optionLabel: 'label', optionValue: 'value' },
+    { index: 7, show: true, type: 'select', modelName: 'timeType', placeholder: '时间类型', option: settlementStatusList, optionLabel: 'label', optionValue: 'value' },
+    { index: 8, show: true, type: 'datetimerange', modelName: 'timeArr', startplaceholder: '开始日期', endplaceholder: '结束日期' }
+]
 });
 function handleMoreOperating(command: string, row: any) {
   switch (command) {
@@ -287,73 +298,7 @@ function handleMoreOperating(command: string, row: any) {
     'absolute-container': tableAutoHeight,
   }" v-loading="listLoading">
     <PageMain>
-      <SearchBar :show-toggle="false">
-        <template #default="{ fold, toggle }">
-          <el-form :model="queryForm" size="default" label-width="6.25rem" inline-message inline class="search-form">
-            <el-form-item label="">
-              <el-input v-model="queryForm.projectId" clearable placeholder="项目ID" @keydown.enter="currentChange()" />
-            </el-form-item>
-            <el-form-item label="">
-              <el-input v-model="queryForm.projectName" clearable placeholder="项目名称" @keydown.enter="currentChange()" />
-            </el-form-item>
-            <el-form-item label="">
-              <el-input v-model="queryForm.projectIdentification" clearable placeholder="项目标识"
-                @keydown.enter="currentChange()" />
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <ElSelect v-model="countryData" placeholder="国家" clearable filterable multiple collapse-tags
-                @change="selectChange">
-                <ElOption v-for="item in countryList" :label="item.chineseName" :value="item.id">
-                </ElOption>
-              </ElSelect>
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-select placeholder="客户简称" v-model="queryForm.customerId" clearable @change="currentChange()">
-                <el-option v-for="item in customerList" :key="item.tenantCustomerId" :value="item.tenantCustomerId"
-                  :label="item.customerAccord"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-select placeholder="结算状态" v-model="queryForm.settlementStatus" clearable filterable multiple
-                collapse-tags @change="currentChange()">
-                <el-option v-for="item in settlementStatusList" :key="item.value" :value="item.value"
-                  :label="item.label"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-select placeholder="时间类型" v-model="queryForm.timeType" clearable @change="currentChange()">
-                <el-option v-for="item in settlementStatusList" :key="item.value" :value="item.value"
-                  :label="item.label"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item v-show="!fold">
-              <el-date-picker v-model="timeArr" value-format="YYYY-MM-DD hh:mm:ss" type="datetimerange"
-                range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期" clearable size=""
-                @change="timeChange" />
-            </el-form-item>
-            <ElFormItem>
-              <ElButton type="primary" @click="currentChange()">
-                <template #icon>
-                  <SvgIcon name="i-ep:search" />
-                </template>
-                筛选
-              </ElButton>
-              <ElButton @click="onReset">
-                <template #icon>
-                  <div class="i-grommet-icons:power-reset h-1em w-1em" />
-                </template>
-                重置
-              </ElButton>
-              <ElButton link @click="toggle">
-                <template #icon>
-                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
-                </template>
-                {{ fold ? "展开" : "收起" }}
-              </ElButton>
-            </ElFormItem>
-          </el-form>
-        </template>
-      </SearchBar>
+      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="queryForm" />
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>

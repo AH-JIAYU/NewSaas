@@ -18,6 +18,8 @@ const tabbar = useTabbar();
 const QuickEditRef = ref(); //快速编辑
 const current = ref<any>()//表格当前选中
 const settingsStore = useSettingsStore();
+const formSearchList = ref<any>()//表单排序配置
+const formSearchName=ref<string>('formSearch-role')// 表单排序name
 // 定义表单
 const data = ref<any>({
   loading: false,
@@ -64,14 +66,7 @@ function quickEdit(row: any, type: any) {
   */
   QuickEditRef.value.showEdit(row, type)
 }
-onMounted(() => {
-  getDataList();
-  if (data.value.formMode === "router") {
-    eventBus.on("get-data-list", () => {
-      getDataList();
-    });
-  }
-});
+
 
 onBeforeUnmount(() => {
   if (data.value.formMode === "router") {
@@ -184,43 +179,26 @@ function onDel(row: any) {
     })
     .catch(() => { });
 }
+
+onMounted(() => {
+  getDataList();
+  if (data.value.formMode === "router") {
+    eventBus.on("get-data-list", () => {
+      getDataList();
+    });
+  }
+  formSearchList.value =[
+    {index: 1, show: true, type: 'input', modelName: 'id', placeholder: '角色ID'},
+    {index: 2, show: true, type: 'input', modelName: 'name', placeholder: '角色名称'}
+]
+});
+
 </script>
 
 <template>
   <div :class="{ 'absolute-container': data.tableAutoHeight }">
     <PageMain>
-      <SearchBar :show-toggle="false">
-        <template #default="{ fold, toggle }">
-          <el-form :model="data.search" size="default" label-width="100px" inline-message inline class="search-form">
-            <el-form-item label="">
-              <el-input v-model.trim="data.search.id" clearable :inline="false" placeholder="角色ID" @keydown.enter="currentChange()"/>
-            </el-form-item>
-            <el-form-item label="">
-              <el-input v-model.trim="data.search.name" clearable :inline="false" placeholder="角色名称" @keydown.enter="currentChange()"/>
-            </el-form-item>
-            <ElFormItem>
-              <ElButton type="primary" @click="currentChange()">
-                <template #icon>
-                  <SvgIcon name="i-ep:search" />
-                </template>
-                筛选
-              </ElButton>
-              <ElButton @click="onReset">
-                <template #icon>
-                  <div class="i-grommet-icons:power-reset h-1em w-1em" />
-                </template>
-                重置
-              </ElButton>
-              <ElButton link @click="toggle">
-                <template #icon>
-                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
-                </template>
-                {{ fold ? "展开" : "收起" }}
-              </ElButton>
-            </ElFormItem>
-          </el-form>
-        </template>
-      </SearchBar>
+      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="data.search" />
       <ElDivider border-style="dashed" />
       <ElSpace wrap>
         <ElButton type="primary" size="default" @click="onCreate">
@@ -328,9 +306,7 @@ function onDel(row: any) {
     }
   }
 }
-:deep(.el-table__empty-block) {
-  height: 100% !important;
-}
+
 .flex-s {
   display: flex;
   justify-content: start;

@@ -32,6 +32,8 @@ const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
 const tabbar = useTabbar();
 const settingsStore = useSettingsStore();
+const formSearchList = ref<any>()//表单排序配置
+const formSearchName=ref<string>('formSearch-department')// 表单排序name
 // 表格控件-展示列
 const columns = ref([
   {
@@ -256,6 +258,10 @@ onMounted(async () => {
       data.value.checkList.push(item.prop);
     }
   });
+  formSearchList.value = [
+    {index: 1, show: true, type: 'input', modelName: 'id', placeholder: '请输入部门ID'},
+    {index: 2, show: true, type: 'input', modelName: 'name', placeholder: '请输入部门名称'}
+]
 });
 
 onBeforeUnmount(() => {
@@ -268,40 +274,7 @@ onBeforeUnmount(() => {
 <template>
   <div :class="{ 'absolute-container': data.tableAutoHeight }">
     <PageMain>
-      <SearchBar :show-toggle="false">
-        <template #default="{ fold, toggle }">
-          <ElForm :model="data.search" size="default" label-width="100px" inline-message inline class="search-form">
-            <ElFormItem label="">
-              <ElInput v-model="data.search.id" placeholder="请输入部门ID" clearable @keydown.enter="currentChange()"
-                @clear="currentChange()" />
-            </ElFormItem>
-            <ElFormItem label="">
-              <ElInput v-model="data.search.name" placeholder="请输入部门名称" clearable @keydown.enter="currentChange()"
-                @clear="currentChange()" />
-            </ElFormItem>
-            <ElFormItem>
-              <ElButton type="primary" @click="currentChange()">
-                <template #icon>
-                  <SvgIcon name="i-ep:search" />
-                </template>
-                {{ "筛选" }}
-              </ElButton>
-              <ElButton @click="onReset">
-                <template #icon>
-                  <div class="i-grommet-icons:power-reset h-1em w-1em" />
-                </template>
-                重置
-              </ElButton>
-              <ElButton disabled link @click="toggle">
-                <template #icon>
-                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
-                </template>
-                {{ fold ? "展开" : "收起" }}
-              </ElButton>
-            </ElFormItem>
-          </ElForm>
-        </template>
-      </SearchBar>
+      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="data.search" />
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>
@@ -459,9 +432,7 @@ onBeforeUnmount(() => {
   }
 }
 
-:deep(.el-table__empty-block) {
-  height: 100% !important;
-}
+
 
 .flex-s {
   display: flex;

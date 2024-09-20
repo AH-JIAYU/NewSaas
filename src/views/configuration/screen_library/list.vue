@@ -22,6 +22,8 @@ const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
 const tabbar = useTabbar();
 const settingsStore = useSettingsStore();
+const formSearchList = ref<any>()//表单排序配置
+const formSearchName = ref<string>('formSearch-screen_library')// 表单排序name
 
 const data = ref<any>({
   loading: false,
@@ -68,21 +70,6 @@ const data = ref<any>({
 });
 const formRef = ref<any>();
 
-onMounted(async () => {
-  getDataList();
-  data.value.countryList = await basicDictionaryStore.getCountry();
-  if (data.value.formMode === "router") {
-    eventBus.on("get-data-list", () => {
-      getDataList();
-    });
-  }
-});
-
-onBeforeUnmount(() => {
-  if (data.value.formMode === "router") {
-    eventBus.off("get-data-list");
-  }
-});
 // 获取列表
 function getDataList() {
   try {
@@ -263,43 +250,32 @@ function onReset() {
   });
   getDataList();
 }
+
+onMounted(async () => {
+  getDataList();
+  data.value.countryList = await basicDictionaryStore.getCountry();
+  if (data.value.formMode === "router") {
+    eventBus.on("get-data-list", () => {
+      getDataList();
+    });
+  }
+  formSearchList.value = [
+    { index: 1, show: true, type: 'select', modelName: 'countryId', placeholder: '国家', option: data.value.countryList, optionLabel: 'chineseName', optionValue: 'id' }
+  ]
+});
+
+onBeforeUnmount(() => {
+  if (data.value.formMode === "router") {
+    eventBus.off("get-data-list");
+  }
+});
 </script>
 
 <template>
   <div :class="{ 'absolute-container': data.tableAutoHeight }">
     <PageMain>
-      <SearchBar :show-toggle="false">
-        <template #default="{ fold, toggle }">
-          <ElForm :model="data.search" size="default" label-width="100px" inline-message inline class="search-form">
-            <ElFormItem label="">
-              <el-select @change="currentChange()" clearable filterable v-model="data.search.countryId"
-                placeholder="国家">
-                <ElOption v-for="item in data.countryList" :label="item.chineseName" :value="item.id"></ElOption>
-              </el-select>
-            </ElFormItem>
-            <ElFormItem>
-              <ElButton type="primary" @click="currentChange()">
-                <template #icon>
-                  <SvgIcon name="i-ep:search" />
-                </template>
-                筛选
-              </ElButton>
-              <ElButton @click="onReset">
-                <template #icon>
-                  <div class="i-grommet-icons:power-reset h-1em w-1em" />
-                </template>
-                重置
-              </ElButton>
-              <ElButton link disabled @click="toggle">
-                <template #icon>
-                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
-                </template>
-                {{ fold ? "展开" : "收起" }}
-              </ElButton>
-            </ElFormItem>
-          </ElForm>
-        </template>
-      </SearchBar>
+      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange"
+        @onReset="onReset" :model="data.search" />
       <ElDivider border-style="dashed" />
       <ElSpace wrap>
         <ElButton type="primary" size="default" @click="onCreate">
@@ -307,13 +283,13 @@ function onReset() {
         </ElButton>
       </ElSpace>
       <el-form ref="formRef" :rules="data.rules" :model="DataList">
-        <ElTable v-loading="data.loading" class="my-4"   :data="DataList" highlight-current-row height="100%"
+        <ElTable v-loading="data.loading" class="my-4" :data="DataList" highlight-current-row height="100%"
           @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event"
           :default-expand-all="true">
           <el-table-column type="expand" width="55">
             <template #default="scopeCountry">
               <el-table :data="scopeCountry.row.getProjectProblemCategoryInfoList" highlight-current-row
-                class="hide-table-header"   height="100%" @sort-change="sortChange"
+                class="hide-table-header" height="100%" @sort-change="sortChange"
                 @selection-change="data.batch.selectionDataList = $event">
                 <el-table-column width="55" />
                 <ElTableColumn prop="status" label="状态" align="center">

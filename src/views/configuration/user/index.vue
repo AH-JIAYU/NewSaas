@@ -651,9 +651,7 @@ function onReset() {
   }
 }
 
-:deep(.el-table__empty-block) {
-  height: 100% !important;
-}
+
 
 :deep(.page-main) {
   height: 100% !important;

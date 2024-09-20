@@ -15,6 +15,8 @@ const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
 const tabbar = useTabbar();
 const settingsStore = useSettingsStore();
+const formSearchList = ref<any>()//表单排序配置
+const formSearchName = ref<string>('formSearch-financial_log')// 表单排序name
 // 表格控件-展示列
 const columns = ref<any>([
   // 表格控件-展示列
@@ -130,27 +132,6 @@ const data = ref<any>({
   // 列表数据
   dataList: [],
 });
-
-onMounted(() => {
-  getDataList();
-  if (data.value.formMode === "router") {
-    eventBus.on("get-data-list", () => {
-      getDataList();
-    });
-  }
-  columns.value.forEach((item: any) => {
-    if (item.checked) {
-      data.value.checkList.push(item.prop);
-    }
-  });
-});
-
-onBeforeUnmount(() => {
-  if (data.value.formMode === "router") {
-    eventBus.off("get-data-list");
-  }
-});
-
 function getDataList() {
   try {
     data.value.loading = true;
@@ -210,12 +191,41 @@ function currentChange(page = 1) {
 function sortChange({ prop, order }: { prop: string; order: string }) {
   onSortChange(prop, order).then(() => getDataList());
 }
+
+onMounted(() => {
+  getDataList();
+  if (data.value.formMode === "router") {
+    eventBus.on("get-data-list", () => {
+      getDataList();
+    });
+  }
+  columns.value.forEach((item: any) => {
+    if (item.checked) {
+      data.value.checkList.push(item.prop);
+    }
+  });
+  formSearchList.value = [
+    { index: 1, show: true, type: 'input', modelName: 'supplierId', placeholder: '供应商ID' },
+    { index: 2, show: true, type: 'input', modelName: 'projectId', placeholder: '项目ID' },
+    { index: 3, show: true, type: 'select', modelName: 'operationType', placeholder: '加减款', option: payments, optionLabel: 'label', optionValue: 'value' },
+    { index: 4, show: true, type: 'select', modelName: 'type', placeholder: '类型', option: paymentsType, optionLabel: 'label', optionValue: 'value' }
+  ]
+});
+
+onBeforeUnmount(() => {
+  if (data.value.formMode === "router") {
+    eventBus.off("get-data-list");
+  }
+});
+
 </script>
 
 <template>
   <div :class="{ 'absolute-container': data.tableAutoHeight }">
     <PageMain>
-      <SearchBar :show-toggle="false">
+      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange"
+        @onReset="onReset" :model="data.search" />
+      <!-- <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
           <ElForm :model="data.search" size="default" label-width="100px" inline-message inline class="search-form">
             <ElFormItem>
@@ -245,24 +255,24 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
                 <template #icon>
                   <SvgIcon name="i-ep:search" />
                 </template>
-                筛选
-              </ElButton>
-              <ElButton @click="onReset">
-                <template #icon>
+筛选
+</ElButton>
+<ElButton @click="onReset">
+  <template #icon>
                   <div class="i-grommet-icons:power-reset h-1em w-1em" />
                 </template>
-                重置
-              </ElButton>
-              <ElButton link @click="toggle">
-                <template #icon>
+  重置
+</ElButton>
+<ElButton link @click="toggle">
+  <template #icon>
                   <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
                 </template>
-                {{ fold ? "展开" : "收起" }}
-              </ElButton>
-            </ElFormItem>
-          </ElForm>
-        </template>
-      </SearchBar>
+  {{ fold ? "展开" : "收起" }}
+</ElButton>
+</ElFormItem>
+</ElForm>
+</template>
+</SearchBar> -->
       <ElDivider border-style="dashed" />
       <el-row>
         <FormLeftPanel />
@@ -274,7 +284,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
         </FormRightPanel>
       </el-row>
       <ElTable v-loading="data.loading" :border="data.border" :size="data.lineHeight" :stripe="data.stripe" class="my-4"
-        :data="data.dataList" highlight-current-row height="100%" style="min-height: 370px;"sort-change="sortChange"
+        :data="data.dataList" highlight-current-row height="100%" style="min-height: 370px;" sort-change="sortChange"
         @selection-change="data.batch.selectionDataList = $event">
         <el-table-column align="center" type="selection" />
         <ElTableColumn v-if="data.batch.enable" type="selection" show-overflow-tooltip align="center" fixed />
@@ -337,7 +347,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
           </template>
         </ElTableColumn>
         <template #empty>
-            <el-empty :image="empty" :image-size="300" />
+          <el-empty :image="empty" :image-size="300" />
         </template>
       </ElTable>
       <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"

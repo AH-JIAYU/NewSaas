@@ -525,18 +525,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
       }
     }
   }
-
-
 }
-
-// :deep() {
-//   background-color: #fafafa;
-// }
-
-:deep(.el-table__empty-block) {
-  height: 100% !important;
-}
-
 .weightColor {
   color: #333;
   font-weight: 700;

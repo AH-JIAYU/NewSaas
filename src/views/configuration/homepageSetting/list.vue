@@ -14,6 +14,8 @@ const router = useRouter();
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
 const homePageRef = ref<any>();
+  const formSearchList = ref<any>()//表单排序配置
+const formSearchName=ref<string>('formSearch-TenantTenantHomepageSettingList')// 表单排序name
 const data = ref({
   loading: false,
   // 表格是否自适应高度
@@ -44,20 +46,6 @@ const data = ref({
   controlDataList: [], // 通用
 });
 
-onMounted(() => {
-  getDataList();
-  if (data.value.formMode === "router") {
-    eventBus.on("get-data-list", () => {
-      getDataList();
-    });
-  }
-});
-
-onBeforeUnmount(() => {
-  if (data.value.formMode === "router") {
-    eventBus.off("get-data-list");
-  }
-});
 
 function getDataList() {
   try {
@@ -143,6 +131,24 @@ function onReset() {
   });
   getDataList();
 }
+
+onMounted(() => {
+  getDataList();
+  if (data.value.formMode === "router") {
+    eventBus.on("get-data-list", () => {
+      getDataList();
+    });
+  }
+  formSearchList.value = [
+    {index: 1, show: true, type: 'input', modelName: 'title', placeholder: '请输入标题，支持模糊查询'}
+]
+});
+
+onBeforeUnmount(() => {
+  if (data.value.formMode === "router") {
+    eventBus.off("get-data-list");
+  }
+});
 </script>
 
 <template>
@@ -175,38 +181,8 @@ function onReset() {
     </PageMain>
     <PageMain>
       <PageHeader title="自定义模板" />
-      <SearchBar :show-toggle="false">
-        <template #default="{ fold, toggle }">
-          <ElForm :model="data.search" size="default" label-width="100px" inline-message inline class="search-form">
-            <ElFormItem label="标题">
-              <ElInput v-model="data.search.title" placeholder="请输入标题，支持模糊查询" clearable @keydown.enter="currentChange()"
-                @clear="currentChange()" />
-            </ElFormItem>
-            <ElFormItem>
-              <ElButton type="primary" @click="currentChange()">
-                <template #icon>
-                  <SvgIcon name="i-ep:search" />
-                </template>
-                筛选
-              </ElButton>
-              <ElButton @click="onReset">
-                <template #icon>
-                  <div class="i-grommet-icons:power-reset h-1em w-1em" />
-                </template>
-                重置
-              </ElButton>
-              <ElButton link disabled @click="toggle">
-                <template #icon>
-                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
-                </template>
-                {{ fold ? "展开" : "收起" }}
-              </ElButton>
-            </ElFormItem>
-          </ElForm>
-        </template>
-      </SearchBar>
+      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="data.search" />
       <ElDivider border-style="dashed" />
-
       <ElSpace wrap>
         <ElButton type="primary" size="default" @click="onCreate">
           <template #icon>
@@ -259,7 +235,6 @@ function onReset() {
         :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
         background @size-change="sizeChange" @current-change="currentChange" />
     </PageMain>
-
     <FormMode v-if="data.formMode === 'dialog' || data.formMode === 'drawer'" :id="data.formModeProps.id"
       :row="data.formModeProps.row" v-model="data.formModeProps.visible" :mode="data.formMode" @success="getDataList" />
     <homePageEdit ref="homePageRef" @fetch-data="getDataList"></homePageEdit>
@@ -311,7 +286,5 @@ function onReset() {
   }
 }
 
-:deep(.el-table__empty-block) {
-  height: 100% !important;
-}
+
 </style>

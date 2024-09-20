@@ -21,6 +21,8 @@ const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
 const tabbar = useTabbar();
 const settingsStore = useSettingsStore();
+const formSearchList = ref<any>()//表单排序配置
+const formSearchName=ref<string>('formSearch-announcement')// 表单排序name
 // 表格控件-展示列
 const columns = ref([
   {
@@ -250,6 +252,10 @@ onMounted(() => {
       data.value.checkList.push(item.prop);
     }
   });
+  formSearchList.value = [
+    { index: 1, show: true, type: 'input', modelName: 'title', placeholder: '请输入标题' },
+    { index: 2, show: true, type: 'select', modelName: 'type', placeholder: '请选择类型', option: type, optionLabel: 'label', optionValue: 'value' }
+]
 });
 
 onBeforeUnmount(() => {
@@ -262,7 +268,8 @@ onBeforeUnmount(() => {
 <template>
   <div :class="{ 'absolute-container': data.tableAutoHeight }">
     <PageMain>
-      <SearchBar :show-toggle="false">
+      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="data.search" />
+      <!-- <SearchBar :show-toggle="false">
         <template #default="{ fold, toggle }">
           <ElForm :model="data.search" size="default" label-width="100px" inline-message inline class="search-form">
             <ElFormItem label="">
@@ -297,7 +304,7 @@ onBeforeUnmount(() => {
             </ElFormItem>
           </ElForm>
         </template>
-      </SearchBar>
+      </SearchBar> -->
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>

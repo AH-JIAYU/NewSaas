@@ -31,6 +31,8 @@ const lineHeight = ref<any>("default");
 const tableAutoHeight = ref(false);
 // 货币类型
 const currencyType = ref<any>();
+const formSearchList = ref<any>()//表单排序配置
+const formSearchName = ref<string>('formSearch-investigation_records')// 表单排序name
 // 表格控件-展示列
 const columns = ref([
   {
@@ -95,7 +97,13 @@ const data = reactive<any>({
   // 分配类型
   allocationTypeList: ["未分配", "供应商", "会员组"],
   // 调查状态
-  surveyStatusList: ["完成", "被甄别", "配额满", "安全终止", "未完成"],
+  surveyStatusList: [
+    { label: '完成', value: 1 },
+    { label: '被甄别', value: 2 },
+    { label: '配额满', value: 3 },
+    { label: '安全终止', value: 4 },
+    { label: '未完成', value: 5 },
+  ],
   // 副状态
   viceStatusList: [
     "待审",
@@ -189,70 +197,22 @@ onMounted(async () => {
     }
   });
   fetchData();
+  formSearchList.value = [
+    { index: 1, show: true, type: 'input', modelName: 'memberId', placeholder: '会员ID' },
+    { index: 2, show: true, type: 'input', modelName: 'randomIdentityId', placeholder: '随机身份', event: 'keydown.enter' },
+    { index: 3, show: true, type: 'input', modelName: 'projectId', placeholder: '项目ID', event: 'keydown.enter' },
+    { index: 4, show: true, type: 'input', modelName: 'projectName', placeholder: '项目名称', event: 'keydown.enter' },
+    { index: 5, show: true, type: 'select', modelName: 'customerId', placeholder: '客户简称', option: data.customerList, optionLabel: 'customerAccord', optionValue: 'tenantCustomerId' },
+    { index: 6, show: true, type: 'input', modelName: 'ip', placeholder: 'IP地址' },
+    { index: 7, show: true, type: 'select', modelName: 'surveyStatus', placeholder: '调查状态', option: data.surveyStatusList, optionLabel: 'label', optionValue: 'value' },
+  ];
 });
 </script>
-
 <template>
   <div :class="{ 'absolute-container': tableAutoHeight }">
     <PageMain>
-      <SearchBar :show-toggle="false">
-        <template #default="{ fold, toggle }">
-          <ElForm :model="queryForm" size="default" label-width="100px" inline-message inline class="search-form">
-            <el-form-item label="">
-              <el-input v-model.trim="queryForm.memberId" clearable :inline="false" placeholder="会员ID" />
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-input v-model.trim="queryForm.randomIdentityId" clearable :inline="false" placeholder="随机身份"
-                @keydown.enter="currentChange()" />
-            </el-form-item>
-
-            <el-form-item label="">
-              <el-input v-model.trim="queryForm.projectId" clearable :inline="false" placeholder="项目ID"
-                @keydown.enter="currentChange()" />
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-input v-model.trim="queryForm.projectName" clearable :inline="false" placeholder="项目名称"
-                @keydown.enter="currentChange()" />
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-select v-model="queryForm.customerId" clearable filterable placeholder="客户简称"
-                @change="currentChange()">
-                <el-option v-for="item in data.customerList" :key="item.tenantCustomerId" :value="item.tenantCustomerId"
-                  :label="item.customerAccord"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-input v-model.trim="queryForm.ip" clearable :inline="false" placeholder="IP地址" />
-            </el-form-item>
-            <el-form-item v-show="!fold" label="">
-              <el-select v-model="queryForm.surveyStatus" clearable filterable placeholder="调查状态"
-                @change="currentChange()">
-                <el-option v-for="(item, index) in data.surveyStatusList" :label="item" :value="index + 1"></el-option>
-              </el-select>
-            </el-form-item>
-            <ElFormItem>
-              <ElButton type="primary" @click="currentChange()">
-                <template #icon>
-                  <SvgIcon name="i-ep:search" />
-                </template>
-                筛选
-              </ElButton>
-              <ElButton @click="onReset">
-                <template #icon>
-                  <div class="i-grommet-icons:power-reset h-1em w-1em" />
-                </template>
-                重置
-              </ElButton>
-              <ElButton link @click="toggle">
-                <template #icon>
-                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
-                </template>
-                {{ fold ? "展开" : "收起" }}
-              </ElButton>
-            </ElFormItem>
-          </ElForm>
-        </template>
-      </SearchBar>
+      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange"
+        @onReset="onReset" :model="queryForm" />
       <ElDivider border-style="dashed" />
       <el-row>
         <FormLeftPanel />
@@ -341,8 +301,8 @@ onMounted(async () => {
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('doMoneyPrice')" width="80" align="center" prop="h" show-overflow-tooltip
-          label="原价">
+        <el-table-column v-if="checkList.includes('doMoneyPrice')" width="80" align="center" prop="h"
+          show-overflow-tooltip label="原价">
           <template #default="{ row }">
             <el-text>
               <CurrencyType />
@@ -352,8 +312,8 @@ onMounted(async () => {
             </el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('memberPrice')" width="80" align="center" prop="h" show-overflow-tooltip
-          label="会员价">
+        <el-table-column v-if="checkList.includes('memberPrice')" width="80" align="center" prop="h"
+          show-overflow-tooltip label="会员价">
           <template #default="{ row }">
             <el-text>
               <CurrencyType />
@@ -546,11 +506,13 @@ onMounted(async () => {
     margin-right: 4px;
   }
 }
+
 .c-fx {
   display: flex;
   align-items: center;
   justify-content: center;
 }
+
 .copySvg {
   width: 100%;
   height: 100%;
