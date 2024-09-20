@@ -121,6 +121,7 @@ async function getDataList() {
     const { data } = await api.list();
     if (data) {
       form.value = data || form.value;
+      analyzeRecords.value = form.value
       userStore.setWebName(data.webName)
     }
     if (form.value.topLevelDomainName !== '' && form.value.topLevelDomainName !== null) {
@@ -154,14 +155,12 @@ const handleMouseLeave = async (val: any) => {
         const res = await api.getTenantWebConfigQueryAnalysis({ url: form.value.topLevelDomainName })
         if (res.data.success === false) {
           isAnalysis.value = res.data.success
-          analyzeRecords.value = res
           ElMessage({
             type: "warning",
             message: "解析未生效",
           });
         } else {
           isAnalysis.value = res.data.success
-          analyzeRecords.value = res
           ElMessage({
             type: "warning",
             message: "解析已生效",

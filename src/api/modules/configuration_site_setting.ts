@@ -7,4 +7,6 @@ export default {
   edit: (data: any) => api.post('tenant-web-config/updateTenantWebConfig', data),
   // 根据url获取解析列表
   getTenantWebConfigQueryAnalysis: (data: any) => api.post('tenant-web-config/getTenantWebConfigQueryAnalysis', data),
+  // 上传证书
+  uploadSSLCert: (data: any) => api.post('tenant-web-config/uploadSSLCert', data),
 }
