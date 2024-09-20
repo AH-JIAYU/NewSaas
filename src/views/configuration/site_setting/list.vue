@@ -39,6 +39,8 @@ const form = ref<any>({
   registerExamineOffOrOn: false,
   // keyWords
   keyWords: "",
+  // 网站描述
+  description: "",
   // 网站名称
   webName: "",
   // 设置顶级域名
@@ -117,9 +119,12 @@ onMounted(() => {
 async function getDataList() {
   try {
     const { data } = await api.list();
-    form.value = data || form.value;
-    if(form.value.topLevelDomainName !== '' && form.value.topLevelDomainName !== null) {
-      const res = await api.getTenantWebConfigQueryAnalysis({url:form.value.topLevelDomainName })
+    if (data) {
+      form.value = data || form.value;
+      userStore.setWebName(data.webName)
+    }
+    if (form.value.topLevelDomainName !== '' && form.value.topLevelDomainName !== null) {
+      const res = await api.getTenantWebConfigQueryAnalysis({ url: form.value.topLevelDomainName })
       isAnalysis.value = res.data.success
     }
   } catch (error) {
@@ -143,24 +148,28 @@ const getLogo = async () => {
 }
 // 移开输入框解析域名
 const handleMouseLeave = async (val: any) => {
-  if (form.value.topLevelDomainName !== '' && form.value.topLevelDomainName !== null) {
-    const res = await api.getTenantWebConfigQueryAnalysis({ url: form.value.topLevelDomainName })
-    if(res.data.success === false) {
-      isAnalysis.value = res.data.success
-      analyzeRecords.value = res
-      ElMessage({
-        type: "warning",
-        message: "解析未生效",
-      });
-    }else {
-      isAnalysis.value = res.data.success
-      analyzeRecords.value = res
-      ElMessage({
-        type: "warning",
-        message: "解析已生效",
-      });
+  formRef.value && formRef.value.validateField(form.value.topLevelDomainName ? 'topLevelDomainName' : '', async (valid: any) => {
+    if (valid) {
+      if (form.value.topLevelDomainName !== '' && form.value.topLevelDomainName !== null) {
+        const res = await api.getTenantWebConfigQueryAnalysis({ url: form.value.topLevelDomainName })
+        if (res.data.success === false) {
+          isAnalysis.value = res.data.success
+          analyzeRecords.value = res
+          ElMessage({
+            type: "warning",
+            message: "解析未生效",
+          });
+        } else {
+          isAnalysis.value = res.data.success
+          analyzeRecords.value = res
+          ElMessage({
+            type: "warning",
+            message: "解析已生效",
+          });
+        }
+      }
     }
-  }
+  })
 }
 // 解析记录
 const record = () => {
@@ -234,8 +243,8 @@ function onSubmit() {
       if (valid) {
         try {
           loading.value = true;
-          if(form.value.topLevelDomainName){
-            form.value.topLevelDomainName = form.value.topLevelDomainName.replace(/^(https?:\/\/|www\.)/, '');
+          if (form.value.topLevelDomainName) {
+            form.value.topLevelDomainName = form.value.topLevelDomainName.replace(/^https?:\/\//, '');
           }
           const res = await api.edit(form.value)
           loading.value = false;
@@ -247,7 +256,7 @@ function onSubmit() {
             });
           }
         } catch (error) {
-          console.log('error',error)
+          console.log('error', error)
         } finally {
           loading.value = false;
         }
@@ -313,8 +322,13 @@ function onSubmit() {
                 </el-form-item>
               </el-col>
               <el-col :span="24">
-                <el-form-item label="keyWords">
+                <el-form-item label="网站关键字">
                   <el-input v-model="form.keyWords" style="width: 18rem" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="网站描述">
+                  <el-input v-model="form.description" style="width: 18rem" />
                 </el-form-item>
               </el-col>
               <el-col :span="24">
@@ -326,14 +340,14 @@ function onSubmit() {
               </el-col>
               <el-col :span="24">
                 <el-form-item label="顶级域名" prop="topLevelDomainName">
-                  <el-input v-model="form.topLevelDomainName" style="width: 8rem" @mouseleave="handleMouseLeave"/>
+                  <el-input v-model="form.topLevelDomainName" style="width: 18rem" @mouseleave="handleMouseLeave" />
                   <div v-if="isAnalysis">
                     <span class="red"></span><span style="margin-right: 10px;">已生效</span>
                   </div>
                   <div v-else>
                     <span class="green"></span><span style="margin-right: 10px;">未生效</span>
                   </div>
-                  <el-button class="copy" @click="record" type="primary" link>解析记录</el-button>
+                  <el-button class="copy" @click="record" type="primary" link>CNAME配置</el-button>
                 </el-form-item>
               </el-col>
               <el-col :span="24">

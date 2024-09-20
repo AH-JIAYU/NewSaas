@@ -622,4 +622,8 @@ onMounted(async () => {
     }
   }
 }
+
+:deep(.el-table__empty-block) {
+  height: 100% !important;
+}
 </style>
