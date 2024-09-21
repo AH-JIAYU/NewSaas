@@ -528,7 +528,6 @@ function handleMoreOperating(command: string, row: any) {
   }
 
   .id {
-    width:auto !important;
     max-width:calc(100% - 25px)  !important;
   }
 }

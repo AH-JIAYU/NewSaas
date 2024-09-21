@@ -338,14 +338,14 @@ onMounted(() => {
 .copyId {
   @extend .flex-s;
   justify-content: center;
+  width: 100%;
+  flex-shrink: 0;
 
   .copy {
     width: 20px;
   }
 
   .id {
-    // flex: 1;
-    width:auto !important;
     max-width:calc(100% - 25px)  !important;
   }
 }

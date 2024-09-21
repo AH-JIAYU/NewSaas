@@ -362,7 +362,6 @@ onMounted(() => {
   }
 
   .id {
-    width:auto !important;
     max-width:calc(100% - 25px)  !important;
   }
 }
