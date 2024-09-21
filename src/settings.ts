@@ -3,34 +3,35 @@ import type { RecursiveRequired, Settings } from "#/global";
 import settingsDefault from "@/settings.default";
 // @ts-ignore
 const globalConfiguration: any = JSON.parse(localStorage.getItem('saas_globalConfiguration'))
-const globalSettings: Settings.all = globalConfiguration || {
+const globalSettings: Settings.all = globalConfiguration ||{
   "breadcrumb": {
-    "style": "modern"
+      "style": "modern"
   },
   "menu": {
-    "isRounded": true,
-    "menuMode": "head",
-    "switchMainMenuAndPageJump": true
+      "isRounded": true,
+      "menuMode": "head",
+      "switchMainMenuAndPageJump": true
   },
   "tabbar": {
-    "style": "fashion"
+      "style": "fashion",
+      "enable": true
   },
   "toolbar": {
-    "favorites": true,
-    "i18n": true,
-    "notification": true,
-    "fullscreen": true,
-    "pageReload": true,
-    "colorScheme": true
+      "favorites": true,
+      "i18n": true,
+      "notification": true,
+      "fullscreen": true,
+      "pageReload": true,
+      "colorScheme": true
   },
   "app": {
-    "lightTheme": "lightBlue"
+      "lightTheme": "lightBlue",
+      "enableDynamicTitle": true
   },
   "topbar": {
-    "mode": "fixed"
+      "mode": "fixed"
   }
 }
-
 export default defaultsDeep(
   globalSettings,
   settingsDefault
