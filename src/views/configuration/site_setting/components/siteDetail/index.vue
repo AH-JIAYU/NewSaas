@@ -144,7 +144,17 @@ defineExpose({
           <el-text>CNAME</el-text>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="personalizedDomainName" show-overflow-tooltip label="指向" />
+      <el-table-column align="center" prop="personalizedDomainName" show-overflow-tooltip label="指向" >
+        <template #default="{ row }">
+            <div v-if="row.personalizedDomainName" class="hoverSvg">
+              <p class="fineBom">{{ row.personalizedDomainName }}</p>
+              <span class="c-fx">
+                <copy class="copy" :content="row.personalizedDomainName" />
+              </span>
+            </div>
+            <el-text v-else>-</el-text>
+          </template>
+        </el-table-column>
       <el-table-column align="center" prop="host" show-overflow-tooltip label="记录值" />
       <el-table-column align="center" prop="type" show-overflow-tooltip label="状态">
         <template #default>
@@ -577,5 +587,24 @@ defineExpose({
   justify-content: center;
   height: 48px;
   border-top: 1px solid rgba(170, 170, 170, 0.3);
+}
+.hoverSvg {
+  display: flex;
+  align-items: center;
+}
+
+.copy {
+  display: flex;
+  align-items: center;
+  width: 20px;
+}
+
+.fineBom {
+  text-align: left !important;
+  font-size: 12px;
+  font-weight: normal;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>
