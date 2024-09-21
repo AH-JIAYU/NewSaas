@@ -573,7 +573,7 @@ onMounted(async () => {
                   </template>
                 </el-table-column>
                 <template #empty>
-                  <el-empty :image-size="100" description="暂无数据" />
+                  <el-empty :image="empty" :image-size="200" />
                 </template>
               </el-table>
             </div>
@@ -606,7 +606,7 @@ onMounted(async () => {
                   </template>
                 </el-table-column>
                 <template #empty>
-                  <el-empty :image="empty" :image-size="300" />
+                  <el-empty :image="empty" :image-size="200" />
                 </template>
               </el-table>
             </div>
@@ -780,7 +780,7 @@ onMounted(async () => {
                 </div>
               </template>
               <template v-else>
-                <el-empty :image="empty" :image-size="300" />
+                <el-empty :image="empty" :image-size="200" />
                 <!-- <div class="flex flex-col items-center py-6 text-stone-5">
                   <SvgIcon name="i-tabler:mood-smile" :size="40" />
                   <p m-2 text-base>没有待办</p>
