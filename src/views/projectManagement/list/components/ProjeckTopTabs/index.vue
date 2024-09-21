@@ -8,7 +8,7 @@ import "bytemd/dist/index.css";
 import type { UploadProps } from "element-plus";
 import { ElMessage } from "element-plus";
 import { cloneDeep } from "lodash-es";
-import { MessageBox, UploadFilled } from "@element-plus/icons-vue";
+import { MessageBox, UploadFilled,QuestionFilled } from "@element-plus/icons-vue";
 import fileApi from "@/api/modules/file";
 import api from "@/api/modules/projectManagement";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
@@ -516,13 +516,13 @@ nextTick(() => {
 </script>
 
 <template>
-  <ElForm label-width="100px" :rules="rules" ref="formRef" :model="localToptTab">
+  <ElForm label-width="100px" :rules="rules" ref="formRef" :model="localToptTab" label-position="top">
     <el-tabs v-model="activeName" @tab-change="changeTab">
       <el-tab-pane label="基础设置" name="basicSettings">
         <el-card body-style="">
           <template #header>
             <div style="display: flex; justify-content: space-between" class="card-header">
-              <span>基础设置</span>
+              <div style="height:32px;line-height: 32px">基础设置</div>
               <div>
                 <el-button v-if="props.tabIndex > 0" size="small" type="primary" round plain @click="syncProject">
                   同步数据
@@ -546,7 +546,7 @@ nextTick(() => {
             <el-col :span="6">
               <!-- 单个 -->
               <el-form-item label="所属客户" prop="clientId">
-                <el-select placeholder="Select" v-model="localToptTab.clientId" clearable @change="changeClient">
+                <el-select class="placeholderColor" placeholder="Select" v-model="localToptTab.clientId" clearable @change="changeClient">
                   <el-option v-for="item in data.basicSettings.customerList" :key="item.tenantCustomerId"
                     :value="item.tenantCustomerId" :label="item.customerAccord" :disabled="item.isReveal === 1">
                     <span style="float: left">{{ item.customerAccord }}</span>
@@ -573,7 +573,7 @@ nextTick(() => {
             </el-col>
             <el-col :span="6">
               <el-form-item label="所属国家" prop="countryIdList">
-                <ElSelect v-model="localToptTab.countryIdList" placeholder="国家" clearable filterable multiple
+                <ElSelect  class="placeholderColor" v-model="localToptTab.countryIdList" placeholder="国家" clearable filterable multiple
                   collapse-tags @change="changeCountryId">
                   <template #header>
                     <el-checkbox v-model="data.checked" @change="selectAll"
@@ -602,7 +602,7 @@ nextTick(() => {
               <el-form-item prop="minimumDuration">
                 <template #label>
                   <div>
-                    最小分长<el-tooltip class="tooltips" content="这份问卷需要做到多少分钟" placement="top">
+                    最小分长<el-tooltip class="tooltips " content="这份问卷需要做到多少分钟" placement="top">
                       <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
                     </el-tooltip>
                   </div>
@@ -636,15 +636,76 @@ nextTick(() => {
                 <el-text class="mx-1">{{ url }}</el-text>
               </el-form-item>
             </el-col>
-            <el-col :span="3" v-if="!localToptTab.required">
+            <!-- <el-col :span="3" v-if="!localToptTab.required">
               <el-form-item label="填写互斥ID">
                 <el-checkbox v-model="localToptTab.mutualExclusion" style="top: -4px" size="large" :true-value="1"
                   :false-value="2" />
               </el-form-item>
-            </el-col>
+            </el-col> -->
             <el-col v-if="localToptTab.mutualExclusion === 1 && !localToptTab.required" :span="12">
               <el-form-item label="互斥ID">
                 <el-input clearable v-model="localToptTab.mutualExclusionId" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-card>
+        <el-card v-if="!localToptTab.required">
+          <template #header>
+            <div class="card-header">
+              <span>其他设置</span>
+            </div>
+          </template>
+          <el-row :gutter="20">
+            <el-col :span="5">
+              <el-form-item label="定时发布" class="flex">
+                <el-switch :active-value="2" :inactive-value="1" v-model="localToptTab.isTimeReleases"
+                  @change="changeTimeReleases" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="5">
+              <el-form-item label="B2B" class="flex">
+                <el-switch :active-value="2" :inactive-value="1" v-model="localToptTab.isB2b" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="5">
+              <el-form-item label="在线" class="flex">
+                <el-switch :active-value="1" :inactive-value="2" :disabled="localToptTab.isTimeReleases === 2"
+                  v-model="localToptTab.isOnline" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="5">
+              <el-form-item label="前置问卷" class="flex">
+                <el-switch :active-value="1" :inactive-value="2" v-model="localToptTab.isProfile"
+                  @change="changeProfile" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="4">
+              <el-form-item label="置顶" class="flex">
+                <el-switch :active-value="1" :inactive-value="2" v-model="localToptTab.isPinned" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+
+            <!-- 定时发布开显示时间，关隐藏 -->
+            <el-col :span="5" v-if="localToptTab.isTimeReleases === 2">
+              <el-form-item label="发布时间" prop="releaseTime">
+                <el-date-picker type="datetime" value-format="YYYY-MM-DD HH:mm:ss" v-model="localToptTab.releaseTime"
+                  placeholder="请选择时间" :disabledDate="disabledDateFn" @change="handleChangeTime" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="5" v-if="localToptTab.isB2b === 2">
+              <el-form-item label="项目类型">
+                <el-cascader :show-all-levels="false" v-model="localToptTab.projectType"
+                  :props="data.basicSettings.B2BTypeProps" :options="data.basicSettings.B2BTypeList"
+                  :collapse-tags="true" filterable clearable />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="24">
+              <el-form-item label="备注">
+                <el-input maxlength="200" show-word-limit type="textarea" :rows="5" v-model="localToptTab.remark" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -669,7 +730,9 @@ nextTick(() => {
                 <div class="el-upload__text">上传</div>
                 <template #tip>
                   <div class="el-upload__tip">
+                    <el-text type="primary" size='small' >
                     支持上传JPG/JPEG/PNG图片，小于10MB
+                  </el-text>
                   </div>
                 </template>
               </el-upload>
@@ -693,66 +756,7 @@ nextTick(() => {
             </el-row>
           </div>
         </el-card>
-        <el-card v-if="!localToptTab.required">
-          <template #header>
-            <div class="card-header">
-              <span>其他设置</span>
-            </div>
-          </template>
-          <el-row :gutter="20">
-            <el-col :span="3">
-              <el-form-item label="置顶">
-                <el-switch :active-value="1" :inactive-value="2" v-model="localToptTab.isPinned" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="3">
-              <el-form-item label="在线">
-                <el-switch :active-value="1" :inactive-value="2" :disabled="localToptTab.isTimeReleases === 2"
-                  v-model="localToptTab.isOnline" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="4">
-              <el-form-item label="B2B">
-                <el-switch :active-value="2" :inactive-value="1" v-model="localToptTab.isB2b" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="4">
-              <el-form-item label="前置问卷">
-                <el-switch :active-value="1" :inactive-value="2" v-model="localToptTab.isProfile"
-                  @change="changeProfile" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="3">
-              <el-form-item label="定时发布">
-                <el-switch :active-value="2" :inactive-value="1" v-model="localToptTab.isTimeReleases"
-                  @change="changeTimeReleases" />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="20">
-            <el-col :span="6" v-if="localToptTab.isB2b === 2">
-              <el-form-item label="项目类型">
-                <el-cascader :show-all-levels="false" v-model="localToptTab.projectType"
-                  :props="data.basicSettings.B2BTypeProps" :options="data.basicSettings.B2BTypeList"
-                  :collapse-tags="true" filterable clearable />
-              </el-form-item>
-            </el-col>
-            <!-- 定时发布开显示时间，关隐藏 -->
-            <el-col :span="6" v-if="localToptTab.isTimeReleases === 2">
-              <el-form-item label="发布时间" prop="releaseTime">
-                <el-date-picker type="datetime" value-format="YYYY-MM-DD HH:mm:ss" v-model="localToptTab.releaseTime"
-                  placeholder="请选择时间" :disabledDate="disabledDateFn" @change="handleChangeTime" />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="24">
-              <el-form-item label="备注">
-                <el-input maxlength="200" show-word-limit type="textarea" :rows="5" v-model="localToptTab.remark" />
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </el-card>
+
       </el-tab-pane>
       <el-tab-pane label="配置信息" name="configurationInformation"
         v-if="localToptTab.isProfile === 1 && !localToptTab.required">
@@ -872,8 +876,8 @@ nextTick(() => {
               </el-form-item>
             </el-col>
             <el-col :span="1"> </el-col>
-            <el-col :span="4">
-              <el-form-item label="允许重复参与">
+            <el-col :span="4" class="flex">
+              <el-form-item label="允许重复参与" class="flex m-0">
                 <el-switch v-model="localToptTab.ipDifferenceDetection" :active-value="1" :inactive-value="2" />
               </el-form-item>
             </el-col>
@@ -1056,5 +1060,20 @@ tr:hover {
 .hui {
   font-size: 14px;
   color: #818181;
+}
+// 让单选 左右布局
+.flex{
+  display: flex !important;
+  align-items: center;
+  :deep(.el-form-item__label){
+    margin-bottom:0;
+  }
+}
+:deep(.el-form-item--label-top .el-form-item__label){
+  display: inline-flex;
+}
+
+.placeholderColor{
+  --el-text-color-placeholder : #5d97ff;
 }
 </style>

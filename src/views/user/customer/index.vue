@@ -232,7 +232,7 @@ onMounted(async () => {
               inactive-text="禁用" @change="changeState($event, 1, row.tenantCustomerId)" />
           </template>
         </ElTableColumn>
-        <el-table-column v-if="checkList.includes('customerAccord')" align="center" prop="customerAccord"
+        <el-table-column v-if="checkList.includes('customerAccord')" align="left" prop="customerAccord"
           show-overflow-tooltip label="客户名称">
           <template #default="{ row }">
             <div class="flex-c tableBig">
@@ -253,7 +253,7 @@ onMounted(async () => {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('customerShortName')" align="center" prop="customerShortName"
+        <el-table-column v-if="checkList.includes('customerShortName')" align="left" prop="customerShortName"
           show-overflow-tooltip label="客户简称" width="100">
           <template #default="{ row }">
             <div class="flex-c tableBig">

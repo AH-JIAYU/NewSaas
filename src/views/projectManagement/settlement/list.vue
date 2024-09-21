@@ -344,7 +344,7 @@ function handleMoreOperating(command: string, row: any) {
         <el-table-column v-if="checkList.includes('customerName')" show-overflow-tooltip prop="customerName" width="130"
           align="center" label="客户">
           <template #default="{ row }">
-            <div class="oneLine" style="width: calc(100% - 20px);">
+            <div class="oneLine"  >
               <b class="tableBig">{{ row.customerName.split("/")[0] }}</b>
               <div class="oneLine" v-if="row.projectType !== 2">
                 <img :src="row.avatar" alt="" class="avatar">

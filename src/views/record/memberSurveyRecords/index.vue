@@ -307,7 +307,7 @@ onMounted(async () => {
         <el-table-column v-if="checkList.includes('customerShortName')" align="center" prop="customerShortName"
           show-overflow-tooltip width="100" label="客户简称" >
           <template #default="{ row }">
-            <div class="copyId tableBig">{{ row.customerShortName }}</div>
+            <div class="tableBig">{{ row.customerShortName }}</div>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('ipBelong')" align="center" prop="ipBelong" show-overflow-tooltip

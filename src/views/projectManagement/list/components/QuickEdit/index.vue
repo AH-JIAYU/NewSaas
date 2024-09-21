@@ -139,15 +139,16 @@ defineExpose({
       <el-form ref="formRef" :model="data.formData" :rules="data.rules" label-width="100" label-position="right">
         <template v-if="data.type === 'PCNL'">
           <el-form-item label="配额" prop="num">
-            <el-input-number style="width: 100%;" v-model="data.formData.num" :step="1" step-strictly :min="1"
-              :max="100" controls-position="right" @keydown="handleInput" />
+            <el-input-number style="width: 100%;" class="text-left" v-model="data.formData.num" :step="1" step-strictly
+              :min="1" :max="100" controls-position="right" @keydown="handleInput" />
           </el-form-item>
-          <el-form-item>
+          <el-form-item class='limitedQuantity'>
             <template #label>
-              <div>小时<span class="blue">完成</span>量</div>
+              <span>限量</span> <br />
+              <span>(小时完成量)</span>
             </template>
-            <el-input-number style="width: 100%;" v-model="data.formData.limitedQuantity" :min="1" :step="1"
-              step-strictly controls-position="right"   @keydown="handleInput" />
+            <el-input-number style="width: 100%;" class="text-left" v-model="data.formData.limitedQuantity" :min="1"
+              :step="1" step-strictly controls-position="right" @keydown="handleInput" />
           </el-form-item>
         </template>
 
@@ -181,8 +182,12 @@ defineExpose({
 
         <template v-if="data.type === 'doMoneyPrice'">
           <el-form-item label="原价" prop="doMoneyPrice">
-            <el-input-number style="width: 100%;" v-model="data.formData.doMoneyPrice" :min="1" :precision="1"
-              :step="0.1" controls-position="right" />
+            <el-input style="width: 100%;" v-model="data.formData.doMoneyPrice" type='number' :min="1" :precision="1"
+              :step="0.1" controls-position="right">
+              <template #suffix>
+                RNB/USA
+              </template>
+            </el-input>
           </el-form-item>
         </template>
 
@@ -219,6 +224,22 @@ defineExpose({
   .el-drawer__body,
   .el-tabs.el-tabs--left {
     overflow: visible !important;
+  }
+}
+
+.limitedQuantity {
+  :deep(.el-form-item__label) {
+    display: block !important;
+    line-height: 20px !important;
+    text-align: right;
+  }
+}
+
+.text-left {
+  text-align: left !important;
+
+  :deep(.el-input__inner) {
+    text-align: left;
   }
 }
 </style>

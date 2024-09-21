@@ -22,7 +22,7 @@ const useProjectManagementListStore = defineStore(
       minimumDuration: null, //最小时长/分-这么问卷需要做多长时间,没有到设定的分钟,甄别
       ir: null, //ir
       uidUrl: "", //url
-      mutualExclusion: 2, //	互斥ID 1:开启 2:关闭
+      mutualExclusion: 1, //	互斥ID 1:开启 2:关闭
       mutualExclusionId: "", //	如果互斥id选择开启,需要传id值
       remark: "", //备注
       isPinned: 2, //	是否置顶:1:置顶 2:不置顶
