@@ -77,19 +77,19 @@ const handleSubmit = async () => {
   if (fileList.value.private_key.length > 0) {
     payload.append('private_key', fileList.value.private_key[0].raw);
   }
-  payload.append('description', fileList.value.domain);
+  payload.append('domain', fileList.value.domain);
   try {
-    const response = await axios.post(Url, payload, {
+    const res:any = await axios.post(Url, payload, {
       headers: {
         'Content-Type': 'multipart/form-data',
         // 在这里添加其他请求头，例如身份验证
         'Token': token
       }
     });
-    if(response.data.status === 1) {
+    if (res.data.status === 1) {
       ElMessage.success('上传成功');
-    }else {
-      ElMessage.error('上传失败');
+    } else {
+      ElMessage.error(res.error);
     }
   } catch (error) {
     ElMessage.error('上传失败');
@@ -97,13 +97,38 @@ const handleSubmit = async () => {
 
 };
 // 验证
-const onSubmit = () => {
-
+const onSubmit = async () => {
+  if (form.value.topLevelDomainName !== '' && form.value.topLevelDomainName !== null) {
+    const res = await api.getTenantWebConfigQueryAnalysis({ url: fileList.value.domain })
+    if (res.data.success === false) {
+      isAnalysis.value = res.data.success
+      ElMessage({
+        type: "warning",
+        message: "解析未生效",
+      });
+    } else {
+      isAnalysis.value = res.data.success
+      ElMessage({
+        type: "success",
+        message: "解析已生效",
+      });
+    }
+  }
 }
 // 关闭弹框
-function close() {
+function handleClose() {
   list.value = []
+  Object.assign(form, {
+    isHttps: false,
+  })
+  Object.assign(fileList, {
+    domain: '',
+    certificate: [],
+    private_key: []
+  })
+  isChecked.value = false
   drawerisible.value = false;
+
 }
 // 暴露
 defineExpose({
@@ -112,7 +137,7 @@ defineExpose({
 </script>
 
 <template>
-  <el-dialog v-model="drawerisible" style="height: 850px;" title="详情" @close="close">
+  <el-dialog v-model="drawerisible" style="min-height: 560px;" title="详情" @close="handleClose">
     <el-table v-loading="listLoading" border :data="list">
       <el-table-column align="center" prop="host" show-overflow-tooltip label="解析类型">
         <template #default>
@@ -123,8 +148,8 @@ defineExpose({
       <el-table-column align="center" prop="host" show-overflow-tooltip label="记录值" />
       <el-table-column align="center" prop="type" show-overflow-tooltip label="状态">
         <template #default>
-          <el-text>未生效</el-text>
-          <!-- <el-text>已生效</el-text> -->
+          <el-text v-if="isAnalysis"  style="color: #03c239;">已生效</el-text>
+          <el-text v-else style="color: #FF8181;">未生效</el-text>
         </template>
       </el-table-column>
       <el-table-column align="center" prop="type" show-overflow-tooltip label="操作">
@@ -202,19 +227,30 @@ defineExpose({
       <el-form-item label="开启HTTPS">
         <el-checkbox v-model="isChecked" size="large" />
       </el-form-item>
+      <div v-show="isChecked" style="display: flex;
+    align-items: center; margin-right: 4px;">
+        <el-tooltip class="tooltips" content="是否强制开启HTTPS" placement="top">
+          <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
+        </el-tooltip>
+      </div>
       <el-form-item v-show="isChecked" label="是否强制开启HTTPS">
-        <el-switch v-model="form.isHttps" active-text="开启" inactive-text="关闭" inline-prompt active-value="true"
-        :inactive-value="false">
-      </el-switch>
+        <el-switch v-model="form.isHttps" inline-prompt active-value="true" :inactive-value="false">
+        </el-switch>
       </el-form-item>
     </div>
     <div v-show="isChecked" class="form">
-      <el-form style="display: flex;" @submit.prevent="handleSubmit">
-        <el-form-item label="证书">
+      <el-form style="display: flex; width: 23rem; height:10.625rem;" @submit.prevent="handleSubmit">
+        <el-form-item label="">
           <el-upload class="upload-demo" drag :file-list="fileList.certificate" :action="Url" :headers="headers"
             :on-change="handleFileChange('certificate')" :on-remove="handleRemove('certificate')" list-type="text"
             :limit="1" :auto-upload="false">
-            <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+            <svg xmlns="http://www.w3.org/2000/svg" width="81" height="80" viewBox="0 0 81 80" fill="none">
+              <g id="Frame">
+                <path id="Vector"
+                  d="M64.7018 37.4596C64.7018 37.4596 64.2118 21.3346 51.0768 18.1296C37.9418 14.9246 31.6118 28.7646 31.4818 29.1596C31.3518 29.5546 30.7068 29.3746 30.7068 29.3746C29.6568 28.3796 25.0268 26.0946 20.1618 29.0246C15.3018 31.9546 17.0618 37.5196 17.0618 37.5196C17.0618 37.5196 9.85676 36.9346 6.16176 48.0596C2.47176 59.1946 15.4168 62.3496 15.4168 62.3496H37.1468V50.5046H32.7968H32.4168H32.1218V50.4846C31.8718 50.4846 31.6718 50.2846 31.6718 50.0296C31.6718 49.8796 31.7518 49.7496 31.8718 49.6646L40.7768 40.2996C40.9018 40.1596 41.0768 40.0646 41.2818 40.0646C41.4918 40.0646 41.6768 40.1696 41.8018 40.3246L50.6418 49.6146C50.6568 49.6246 50.6718 49.6396 50.6868 49.6546L50.7718 49.7446H50.7418C50.7868 49.8246 50.8168 49.8946 50.8168 49.9896C50.8168 50.2696 50.5918 50.4996 50.3068 50.4996C50.2968 50.4996 50.2968 50.4896 50.2868 50.4896V50.5096H45.4968V62.3546H65.2218C65.2218 62.3546 74.6268 59.9996 75.4568 50.2896C76.2968 40.5796 64.7018 37.4596 64.7018 37.4596Z"
+                  fill="#409EFF" />
+              </g>
+            </svg>
             <div class="el-upload__text">
               支持点击或拖拽上传
             </div>
@@ -226,11 +262,17 @@ defineExpose({
           </el-upload>
         </el-form-item>
 
-        <el-form-item label="私钥">
+        <el-form-item label="">
           <el-upload class="upload-demo" drag :action="Url" :headers="headers" :file-list="fileList.private_key"
             :on-change="handleFileChange('private_key')" :on-remove="handleRemove('private_key')" list-type="text"
             :limit="1" :auto-upload="false">
-            <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+            <svg xmlns="http://www.w3.org/2000/svg" width="81" height="80" viewBox="0 0 81 80" fill="none">
+              <g id="Frame">
+                <path id="Vector"
+                  d="M64.7018 37.4596C64.7018 37.4596 64.2118 21.3346 51.0768 18.1296C37.9418 14.9246 31.6118 28.7646 31.4818 29.1596C31.3518 29.5546 30.7068 29.3746 30.7068 29.3746C29.6568 28.3796 25.0268 26.0946 20.1618 29.0246C15.3018 31.9546 17.0618 37.5196 17.0618 37.5196C17.0618 37.5196 9.85676 36.9346 6.16176 48.0596C2.47176 59.1946 15.4168 62.3496 15.4168 62.3496H37.1468V50.5046H32.7968H32.4168H32.1218V50.4846C31.8718 50.4846 31.6718 50.2846 31.6718 50.0296C31.6718 49.8796 31.7518 49.7496 31.8718 49.6646L40.7768 40.2996C40.9018 40.1596 41.0768 40.0646 41.2818 40.0646C41.4918 40.0646 41.6768 40.1696 41.8018 40.3246L50.6418 49.6146C50.6568 49.6246 50.6718 49.6396 50.6868 49.6546L50.7718 49.7446H50.7418C50.7868 49.8246 50.8168 49.8946 50.8168 49.9896C50.8168 50.2696 50.5918 50.4996 50.3068 50.4996C50.2968 50.4996 50.2968 50.4896 50.2868 50.4896V50.5096H45.4968V62.3546H65.2218C65.2218 62.3546 74.6268 59.9996 75.4568 50.2896C76.2968 40.5796 64.7018 37.4596 64.7018 37.4596Z"
+                  fill="#409EFF" />
+              </g>
+            </svg>
             <div class="el-upload__text">
               支持点击或拖拽上传
             </div>
@@ -242,7 +284,12 @@ defineExpose({
           </el-upload>
         </el-form-item>
       </el-form>
-      <el-button style="margin-left: 3rem;" plain type="primary" size="default" @click="handleSubmit">上传</el-button>
+      <div class="btn">
+        <el-button plain type="primary" size="default" @click="handleSubmit">上传</el-button>
+      </div>
+    </div>
+    <div class="footer">
+      <el-button type="primary" size="default" @click="handleClose">关闭</el-button>
     </div>
   </el-dialog>
 </template>
@@ -431,12 +478,20 @@ defineExpose({
     font-style: normal;
     text-transform: none;
   }
+
+  .red {
+    color: #FF8181;
+  }
+
+  .bule {
+    color: #60aeff;
+  }
 }
 
 .form {
   display: flex;
   width: 100%;
-  height: 5.1875rem;
+  height: 14.1875rem;
 
   .formL {
     width: 50%;
@@ -455,14 +510,72 @@ defineExpose({
   .el-dialog .el-dialog__footer {
     text-align: center
   }
+
   .asterisk-left {
     margin: 0px;
   }
+
   .el-checkbox.el-checkbox--large {
     display: flex;
     align-items: center;
     height: 0px !important;
     margin-right: 50px;
   }
+
+  .el-upload-dragger {
+    width: 140px;
+    height: 140px;
+    padding: .5rem .875rem 1rem .875rem !important;
+  }
+
+  .el-upload__text {
+    font-size: 12px !important;
+  }
+
+  .upload-demo {
+    margin-right: 2.375rem;
+  }
+
+  .el-upload__tip {
+    font-size: 14px !important;
+    color: #5babff;
+  }
+
+  .el-dialog>div {
+    height: 40rem !important;
+    z-index: 999;
+  }
+
+  .el-dialog footer {
+    text-align: center;
+  }
+
+  .el-upload__tip {
+    width: 105%;
+  }
+}
+
+:deep(.el-dialog .el-dialog__body) {
+  height: 40rem !important;
+  z-index: 9999;
+}
+
+.SvgIcon1 {
+  margin-top: 2px;
+}
+
+.btn {
+  display: flex;
+  align-items: flex-end;
+  width: 200px;
+  height: 170px;
+}
+
+.footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  height: 48px;
+  border-top: 1px solid rgba(170, 170, 170, 0.3);
 }
 </style>

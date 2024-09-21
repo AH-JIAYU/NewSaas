@@ -16,7 +16,6 @@ import agreement from "./agreement.vue";
 import Copyright from "@/layouts/components/Copyright/index.vue";
 import useSettingsStore from "@/store/modules/settings";
 import useUserStore from "@/store/modules/user";
-import { obtainLoading, submitLoading } from "@/utils/apiLoading";
 import storage from "@/utils/storage";
 import { debounce } from "lodash-es";
 import api from "@/api/modules/register";
@@ -100,7 +99,7 @@ const loginRules = ref<any>({
 onMounted(async () => {
   const { data } = await api.getTenantConfig();
   isRegister.value = data.register;
-  if(route.query.isRegister&&route.query.isRegister==='true'){
+  if (route.query.isRegister && route.query.isRegister === 'true') {
     formType.value = 'register'
   }
 });
@@ -144,15 +143,15 @@ const chengAccount = () => {
     loginRules.value.account = [];
   }
 };
-const loginSendCode=debounce(async(params:any)=>{
-  const {status}= await api.sendCode(params);
+const loginSendCode = debounce(async (params: any) => {
+  const { status } = await api.sendCode(params);
   if (status === 1) {
-        ElMessage.success({
-          message: "已发送",
-        });
-        loginCountdown();
-      }
-},1000)
+    ElMessage.success({
+      message: "已发送",
+    });
+    loginCountdown();
+  }
+}, 1000)
 // 获取验证码
 async function loginCaptcha() {
   loginFormRef.value.validateField("account", async (valid: any) => {
@@ -173,7 +172,7 @@ async function loginCaptcha() {
         };
       }
       loginCode.value = '正在发送验证码';
-    await loginSendCode(params)
+      await loginSendCode(params)
     }
   });
 }
@@ -331,15 +330,15 @@ const registerRules = ref<FormRules>({
   ],
 });
 
-const registerSendCode =debounce(async(params:any)=>{
-  const {status}= await api.sendCode(params);
+const registerSendCode = debounce(async (params: any) => {
+  const { status } = await api.sendCode(params);
   if (status === 1) {
-        ElMessage.success({
-          message: "已发送",
-        });
-        countdown();
-      }
-},1000)
+    ElMessage.success({
+      message: "已发送",
+    });
+    countdown();
+  }
+}, 1000)
 // 获取验证码
 const mobileVerificationCode = async () => {
   registerFormRef.value.validateField(
@@ -353,7 +352,7 @@ const mobileVerificationCode = async () => {
         };
         if (registerForm.value.country === "CN") {
           phoneCode.value = `正在发送验证码`
-         await registerSendCode(params)
+          await registerSendCode(params)
 
         } else {
           params.type = "register_email";
@@ -447,15 +446,14 @@ const resetRules = ref<FormRules>({
   ],
 });
 // 重置密码发送验证码
-const resultVerificationCode = () => {
+const resultVerificationCode = debounce(() => {
   resetFormRef.value.validateField(
     !resetForm.value.info ? "info" : "",
     async (valid: any) => {
       if (valid) {
+        resultCode.value = `正在发送验证码`
         // 这里编写业务代码
-        const { status } = await obtainLoading(
-          api.forgetCode({ info: resetForm.value.info })
-        );
+        const { status } = await api.forgetCode({ info: resetForm.value.info })
         if (status === 1) {
           ElMessage.success({
             message: "已发送",
@@ -465,9 +463,9 @@ const resultVerificationCode = () => {
       }
     }
   );
-};
+}, 1000)
 // 修改密码
-function handleReset() {
+const handleReset = debounce(() => {
   resetFormRef.value &&
     resetFormRef.value.validate(async (valid: any) => {
       if (valid) {
@@ -485,7 +483,7 @@ function handleReset() {
         }
       }
     });
-}
+}, 3000)
 // 倒计时
 const resultCountdown = () => {
   isReset.value = true;
@@ -599,21 +597,11 @@ const agreements = (val: any) => {
         <!--<h1 style="font-size: 3.125rem; font-weight: normal">欢迎</h1>
         <h3 h1 style="font-size: 1.875rem; font-weight: normal">来到租户系统 !</h3>-->
       </div>
-      <el-form
-        v-show="formType === 'login'"
-        ref="loginFormRef"
-        :model="loginForm"
-        :rules="loginRules"
-        class="login-form"
-        :validate-on-rule-change="false"
-      >
+      <el-form v-show="formType === 'login'" ref="loginFormRef" :model="loginForm" :rules="loginRules"
+        class="login-form" :validate-on-rule-change="false">
         <div class="title-container">
           <div class="fx-c">
-            <el-radio-group
-              v-model="loginType"
-              size="large"
-              @change="resetCheck"
-            >
+            <el-radio-group v-model="loginType" size="large" @change="resetCheck">
               <el-radio-button label="验证码登录" value="code" />
               <el-radio-button label="密码登录" value="password" />
             </el-radio-group>
@@ -621,49 +609,27 @@ const agreements = (val: any) => {
         </div>
         <div>
           <ElFormItem prop="account">
-            <ElInput
-              v-model.trim="loginForm.account"
-              :placeholder="t('app.account')"
-              type="text"
-              tabindex="1"
-              @blur="chengAccount"
-            >
+            <ElInput v-model.trim="loginForm.account" :placeholder="t('app.account')" type="text" tabindex="1"
+              @blur="chengAccount">
               <template #prefix>
                 <SvgIcon name="i-ri:user-3-fill" />
               </template>
               <template #append v-if="loginType === 'code'">
-                <el-button
-                  type="primary"
-                  :disabled="loginGetCaptcha"
-                  @click="loginCaptcha"
-                  >{{ loginCode }}</el-button
-                >
+                <el-button type="primary" :disabled="loginGetCaptcha" @click="loginCaptcha">{{ loginCode }}</el-button>
               </template>
             </ElInput>
           </ElFormItem>
           <ElFormItem prop="password" v-if="loginType === 'password'">
-            <ElInput
-              v-model.trim="loginForm.password"
-              type="password"
-              :placeholder="t('app.password')"
-              tabindex="2"
-              autocomplete="new-password"
-              show-password
-              @keyup.enter="handleLogin"
-            >
+            <ElInput v-model.trim="loginForm.password" type="password" :placeholder="t('app.password')" tabindex="2"
+              autocomplete="new-password" show-password @keyup.enter="handleLogin">
               <template #prefix>
                 <SvgIcon name="i-ri:lock-2-fill" />
               </template>
             </ElInput>
           </ElFormItem>
           <ElFormItem prop="code" v-if="loginType === 'code'">
-            <ElInput
-              v-model.trim="loginForm.code"
-              type="text"
-              :placeholder="t('app.captcha')"
-              tabindex="2"
-              @keyup.enter="handleLogin"
-            >
+            <ElInput v-model.trim="loginForm.code" type="text" :placeholder="t('app.captcha')" tabindex="2"
+              @keyup.enter="handleLogin">
               <template #prefix>
                 <SvgIcon name="i-ep:message" />
               </template>
@@ -673,19 +639,8 @@ const agreements = (val: any) => {
             <div class="flex-bar" style="width: 100%; margin: 0">
               <ElCheckbox v-model="loginForm.agreeToTheAgreement" tabindex="3">
                 我已阅读并同意
-                <el-button
-                  type="primary"
-                  size="default"
-                  link
-                  @click="agreements(1)"
-                  >《会员协议》</el-button
-                >和<el-button
-                  type="primary"
-                  size="default"
-                  link
-                  @click="agreements(2)"
-                  >《隐私协议》</el-button
-                >
+                <el-button type="primary" size="default" link @click="agreements(1)">《会员协议》</el-button>和<el-button
+                  type="primary" size="default" link @click="agreements(2)">《隐私协议》</el-button>
               </ElCheckbox>
             </div>
           </ElFormItem>
@@ -694,47 +649,26 @@ const agreements = (val: any) => {
               <ElCheckbox v-model="loginForm.remember" tabindex="4">
                 保持登录
               </ElCheckbox>
-              <ElLink
-                v-if="loginType === 'password'"
-                type="primary"
-                :underline="false"
-                @click="formType = 'reset'"
-              >
+              <ElLink v-if="loginType === 'password'" type="primary" :underline="false" @click="formType = 'reset'">
                 忘记密码了?
               </ElLink>
             </div>
           </ElFormItem>
         </div>
 
-        <ElButton
-          :loading="loading"
-          type="primary"
-          size="large"
-          style="width: 100%"
-          @click.prevent="handleLogin"
-          tabindex="5"
-        >
+        <ElButton :loading="loading" type="primary" size="large" style="width: 100%" @click.prevent="handleLogin"
+          tabindex="5">
           {{ t("app.login") }}
         </ElButton>
         <div class="sub-link" v-show="isRegister">
           <span class="text">还不是会员?</span>
-          <ElLink
-            type="primary"
-            :underline="false"
-            @click="formType = 'register'"
-          >
+          <ElLink type="primary" :underline="false" @click="formType = 'register'">
             立即注册
           </ElLink>
         </div>
       </el-form>
-      <ElForm
-        v-show="formType === 'register'"
-        ref="registerFormRef"
-        :model="registerForm"
-        :rules="registerRules"
-        class="login-form"
-        auto-complete="on"
-      >
+      <ElForm v-show="formType === 'register'" ref="registerFormRef" :model="registerForm" :rules="registerRules"
+        class="login-form" auto-complete="on">
         <div>
           <!-- <ElFormItem prop="companyType">
             <el-select
@@ -760,11 +694,7 @@ const agreements = (val: any) => {
           </ElFormItem> -->
           <!-- v-if="registerForm.companyType === 'company'" -->
           <ElFormItem prop="companyName">
-            <ElInput
-              v-model.trim="registerForm.companyName"
-              placeholder="请输入公司名称"
-              tabindex="1"
-            >
+            <ElInput v-model.trim="registerForm.companyName" placeholder="请输入公司名称" tabindex="1">
               <template #prefix>
                 <SvgIcon name="i-mdi:greenhouse" />
               </template>
@@ -779,83 +709,47 @@ const agreements = (val: any) => {
             <ElInput v-model.trim="registerForm.legalPersonName" placeholder="请输入法人姓名" />
           </ElFormItem> -->
           <ElFormItem prop="name">
-            <ElInput
-              v-model.trim="registerForm.name"
-              placeholder="用户名"
-              tabindex="2"
-            >
+            <ElInput v-model.trim="registerForm.name" placeholder="用户名" tabindex="2">
               <template #prefix>
                 <SvgIcon name="i-ri:user-3-fill" />
               </template>
             </ElInput>
           </ElFormItem>
           <ElFormItem prop="country">
-            <ElSelect
-              v-model="registerForm.country"
-              placeholder="国家"
-              clearable
-              filterable
-              tabindex="3"
-            >
+            <ElSelect v-model="registerForm.country" placeholder="国家" clearable filterable tabindex="3">
               <template #prefix>
                 <SvgIcon name="i-mdi:format-list-bulleted-type" />
               </template>
-              <ElOption
-                v-for="item in countryList"
-                :label="item.chineseName"
-                :value="item.code"
-              ></ElOption>
+              <ElOption v-for="item in countryList" :label="item.chineseName" :value="item.code"></ElOption>
             </ElSelect>
           </ElFormItem>
           <ElFormItem prop="phoneNumber" v-if="registerForm.country === 'CN'">
-            <ElInput
-              v-model.trim="registerForm.phoneNumber"
-              placeholder="手机号"
-              tabindex="4"
-            >
+            <ElInput v-model.trim="registerForm.phoneNumber" placeholder="手机号" tabindex="4">
               <template #prefix>
                 <SvgIcon name="i-ant-design:phone-outlined" />
               </template>
             </ElInput>
           </ElFormItem>
           <ElFormItem prop="email" v-else>
-            <ElInput
-              v-model.trim="registerForm.email"
-              placeholder="邮箱"
-              tabindex="4"
-            >
+            <ElInput v-model.trim="registerForm.email" placeholder="邮箱" tabindex="4">
               <template #prefix>
                 <SvgIcon name="i-mdi:email" />
               </template>
             </ElInput>
           </ElFormItem>
           <ElFormItem prop="code">
-            <ElInput
-              v-model.trim="registerForm.code"
-              placeholder="验证码"
-              tabindex="5"
-            >
+            <ElInput v-model.trim="registerForm.code" placeholder="验证码" tabindex="5">
               <template #prefix>
                 <SvgIcon name="i-ic:baseline-verified-user" />
               </template>
               <template #append>
-                <ElButton
-                  :disabled="isGetPhone"
-                  @click="mobileVerificationCode"
-                >
-                  {{ phoneCode }}</ElButton
-                >
+                <ElButton :disabled="isGetPhone" @click="mobileVerificationCode">
+                  {{ phoneCode }}</ElButton>
               </template>
             </ElInput>
           </ElFormItem>
           <ElFormItem prop="password">
-            <ElInput
-              v-model.trim="registerForm.password"
-              type="password"
-              placeholder="密码"
-              tabindex="6"
-              show-password
-            >
+            <ElInput v-model.trim="registerForm.password" type="password" placeholder="密码" tabindex="6" show-password>
               <template #prefix>
                 <SvgIcon name="i-ri:lock-2-fill" />
               </template>
@@ -878,30 +772,13 @@ const agreements = (val: any) => {
           <ElFormItem prop="agreeToTheAgreement">
             <ElCheckbox v-model="registerForm.agreeToTheAgreement" tabindex="8">
               我已阅读并同意
-              <el-button
-                type="primary"
-                size="default"
-                link
-                @click="agreements(1)"
-                >《会员协议》</el-button
-              >和<el-button
-                type="primary"
-                size="default"
-                link
-                @click="agreements(2)"
-                >《隐私协议》</el-button
-              >
+              <el-button type="primary" size="default" link @click="agreements(1)">《会员协议》</el-button>和<el-button
+                type="primary" size="default" link @click="agreements(2)">《隐私协议》</el-button>
             </ElCheckbox>
           </ElFormItem>
         </div>
-        <ElButton
-          tabindex="9"
-          :loading="loading"
-          type="primary"
-          size="large"
-          style="width: 100%; margin-top: 1.25rem"
-          @click.prevent="handleRegister"
-        >
+        <ElButton tabindex="9" :loading="loading" type="primary" size="large" style="width: 100%; margin-top: 1.25rem"
+          @click.prevent="handleRegister">
           注册
         </ElButton>
         <div class="sub-link">
@@ -911,37 +788,22 @@ const agreements = (val: any) => {
           </ElLink>
         </div>
       </ElForm>
-      <ElForm
-        v-show="formType === 'reset'"
-        ref="resetFormRef"
-        :model="resetForm"
-        :rules="resetRules"
-        class="login-form"
-      >
+      <ElForm v-show="formType === 'reset'" ref="resetFormRef" :model="resetForm" :rules="resetRules"
+        class="login-form">
         <div class="title-container">
           <h3 class="title">忘记密码了? 🔒</h3>
         </div>
         <div>
           <ElFormItem prop="info">
-            <ElInput
-              v-model.trim="resetForm.info"
-              :placeholder="t('app.account')"
-              type="text"
-              tabindex="1"
-              @blur="chengAccount"
-            >
+            <ElInput v-model.trim="resetForm.info" :placeholder="t('app.account')" type="text" tabindex="1"
+              @blur="chengAccount">
               <template #prefix>
                 <SvgIcon name="i-ri:user-3-fill" />
               </template>
             </ElInput>
           </ElFormItem>
           <ElFormItem prop="code">
-            <ElInput
-              v-model.trim="resetForm.code"
-              :placeholder="t('app.captcha')"
-              type="text"
-              tabindex="2"
-            >
+            <ElInput v-model.trim="resetForm.code" :placeholder="t('app.captcha')" type="text" tabindex="2">
               <template #prefix>
                 <SvgIcon name="i-ic:baseline-verified-user" />
               </template>
@@ -951,26 +813,16 @@ const agreements = (val: any) => {
             </ElInput>
           </ElFormItem>
           <ElFormItem prop="newPassword">
-            <ElInput
-              v-model.trim="resetForm.newPassword"
-              type="password"
-              :placeholder="t('app.newPassword')"
-              tabindex="3"
-              show-password
-            >
+            <ElInput v-model.trim="resetForm.newPassword" type="password" :placeholder="t('app.newPassword')"
+              tabindex="3" show-password>
               <template #prefix>
                 <SvgIcon name="i-ri:lock-2-fill" />
               </template>
             </ElInput>
           </ElFormItem>
         </div>
-        <ElButton
-          :loading="loading"
-          type="primary"
-          size="large"
-          style="width: 100%; margin-top: 1.25rem"
-          @click.prevent="handleReset"
-        >
+        <ElButton :loading="loading" type="primary" size="large" style="width: 100%; margin-top: 1.25rem"
+          @click.prevent="handleReset">
           {{ t("app.check") }}
         </ElButton>
         <div class="sub-link">
@@ -1058,8 +910,7 @@ const agreements = (val: any) => {
   z-index: 0;
   width: 100%;
   height: 100%;
-  background: url("../assets/images/background.png") center center fixed
-    no-repeat;
+  background: url("../assets/images/background.png") center center fixed no-repeat;
   background-size: cover;
   // background: radial-gradient(
   //   circle at center,
@@ -1208,7 +1059,7 @@ const agreements = (val: any) => {
   align-items: center;
 }
 
-.el-button + .el-button {
+.el-button+.el-button {
   margin: 0;
 }
 </style>

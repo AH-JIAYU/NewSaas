@@ -136,7 +136,7 @@ const useUserStore = defineStore(
     // 存 webName
     function setWebName(val: any) {
       webName.value = val
-      storage.local.set("webName", val)
+      // storage.local.set("webName", val)
     }
     // 获取权限
     async function getPermissions() {
