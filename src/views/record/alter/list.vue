@@ -166,11 +166,11 @@ onMounted(async () => {
       </el-row>
       <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="id" :data="list"
         :border="border" :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows">
-        <el-table-column align="center" type="selection" />
-        <!-- <el-table-column type="index" align="center" label="序号" width="55" /> -->
+        <el-table-column align="left" type="selection" />
+        <!-- <el-table-column type="index" align="left" label="序号" width="55" /> -->
         <el-table-column v-if="checkList.includes('projectClickId')" prop="projectClickId" show-overflow-tooltip
-          align="center" label="点击ID" />
-        <el-table-column v-if="checkList.includes('beforeType')" prop="beforeType" show-overflow-tooltip align="center"
+          align="left" label="点击ID" />
+        <el-table-column v-if="checkList.includes('beforeType')" prop="beforeType" show-overflow-tooltip align="left"
           label="变更前">
           <template #default="{ row }">
             <el-text type="info" v-if="row.beforeSurveyType === 5 && row.beforeViceType === 0"
@@ -187,7 +187,7 @@ onMounted(async () => {
             <el-text type="success" v-if="row.beforeViceType === 13" class="mx-1">和解</el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('afterType')" prop="afterType" show-overflow-tooltip align="center"
+        <el-table-column v-if="checkList.includes('afterType')" prop="afterType" show-overflow-tooltip align="left"
           label="变更后">
           <template #default="{ row }">
             <el-text type="success" v-if="row.afterSurveyType === 1 && row.afterViceType === 0"
@@ -201,27 +201,27 @@ onMounted(async () => {
             <el-text type="primary" v-if="row.afterSurveyType === 3" class="mx-1">配额满</el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('createTime')" prop="createTime" show-overflow-tooltip align="center"
+        <el-table-column v-if="checkList.includes('createTime')" prop="createTime" show-overflow-tooltip align="left"
           label="创建时间"><template #default="{ row }">
             <el-tag effect="plain" type="info">{{
     format(row.createTime)
   }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('remark')" prop="remark" show-overflow-tooltip align="center"
+        <el-table-column v-if="checkList.includes('remark')" prop="remark" show-overflow-tooltip align="left"
           label="备注"><template #default="{ row }">
             {{ row.remark ? row.remark : "-" }}
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('createUserId')" prop="createUserId" show-overflow-tooltip
-          align="center" label="操作人"><template #default="{ row }">
+          align="left" label="操作人"><template #default="{ row }">
             <div v-for="item in userList" :key="item.id">
               <el-text v-if="item.id === row.createUserId">
                 {{ item.name }}</el-text>
             </div>
           </template>
         </el-table-column>
-        <!-- <el-table-column show-overflow-tooltip align="center" label="操作">
+        <!-- <el-table-column show-overflow-tooltip align="left" label="操作">
           <template #default="{ row }">
             <ElButton
               type="primary"

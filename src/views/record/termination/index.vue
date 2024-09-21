@@ -160,15 +160,15 @@ onMounted(() => {
 
       <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
         @selection-change="setSelectRows">
-        <el-table-column align="center" type="selection" />
+        <el-table-column align="left" type="selection" />
 
-        <el-table-column v-if="checkList.includes('surveySource')" align="center" prop="surveySource"
+        <el-table-column v-if="checkList.includes('surveySource')" align="left" prop="surveySource"
           show-overflow-tooltip width="120" label="会员"><template #default="{ row }">
             <el-button class="p-1" size="small" v-if="row.surveySource === 1" type="primary">内部会员</el-button>
             <el-button class="p-1" size="small" v-if="row.surveySource === 2" type="warning">外部会员</el-button>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('projectName')" align="center" prop="projectName"
+        <el-table-column v-if="checkList.includes('projectName')" align="left" prop="projectName"
           show-overflow-tooltip label="项目名称" >
           <template #default="{row}">
             <div class="tableBig oneLine" >
@@ -176,7 +176,7 @@ onMounted(() => {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('projectId')" align="center" prop="projectId" show-overflow-tooltip
+        <el-table-column v-if="checkList.includes('projectId')" align="left" prop="projectId" show-overflow-tooltip
           width="180" label="项目ID">
           <template #default="{ row }">
             <div class="copyId tableSmall">
@@ -185,7 +185,7 @@ onMounted(() => {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('memberChildId')" align="center" prop="" width="180"
+        <el-table-column v-if="checkList.includes('memberChildId')" align="left" prop="" width="180"
           show-overflow-tooltip label="会员ID">
           <template #default="{ row }">
             <div class="copyId tableSmall">
@@ -194,7 +194,7 @@ onMounted(() => {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('supplierMemberChildId')" align="center" prop="" show-overflow-tooltip
+        <el-table-column v-if="checkList.includes('supplierMemberChildId')" align="left" prop="" show-overflow-tooltip
           width="180" label="子会员ID">
           <template #default="{ row }">
             <div class="copyId tableSmall">
@@ -210,7 +210,7 @@ onMounted(() => {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('tenantSupplierId')" align="center" prop="tenantSupplierId"
+        <el-table-column v-if="checkList.includes('tenantSupplierId')" align="left" prop="tenantSupplierId"
           width="180" show-overflow-tooltip label="供应商ID">
           <template #default="{ row }">
             <div class="copyId tableSmall">
@@ -226,7 +226,7 @@ onMounted(() => {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('ipBelong')" align="center" prop="ipBelong" show-overflow-tooltip
+        <el-table-column v-if="checkList.includes('ipBelong')" align="left" prop="ipBelong" show-overflow-tooltip
           label="IP/所属国" width="220">
           <template #default="{ row }">
             <div class="copyId tableSmall">
@@ -238,7 +238,7 @@ onMounted(() => {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('terminationTime')" align="center" prop="terminationTime"
+        <el-table-column v-if="checkList.includes('terminationTime')" align="left" prop="terminationTime"
           show-overflow-tooltip>
           <template #header>
             <div class="flex-c">
@@ -253,7 +253,7 @@ onMounted(() => {
   }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('notes')" align="center" prop="notes" show-overflow-tooltip
+        <el-table-column v-if="checkList.includes('notes')" align="left" prop="notes" show-overflow-tooltip
           width="280" label="说明" >
           <template #default="{row}">
             <div class="tableBig oneLine" >

@@ -200,15 +200,15 @@ onMounted(() => {
         </FormRightPanel>
       </el-row>
       <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe">
-        <el-table-column align="center" type="selection" />
-        <el-table-column v-if="checkList.includes('groupStatus')" align="center" prop="groupStatus"
+        <el-table-column align="left" type="selection" />
+        <el-table-column v-if="checkList.includes('groupStatus')" align="left" prop="groupStatus"
           show-overflow-tooltip label="组状态">
           <template #default="{ row }">
             <ElSwitch v-model="row.groupStatus" inline-prompt :inactive-value="1" :active-value="2" inactive-text="禁用"
               active-text="启用" @change="changeState($event, row.memberGroupId)" />
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('memberGroupId')" width="200" align="center" prop="memberGroupId"
+        <el-table-column v-if="checkList.includes('memberGroupId')" width="200" align="left" prop="memberGroupId"
           show-overflow-tooltip label="会员组ID">
           <template #default="{ row }">
             <div v-if="row.memberGroupId" class="hoverSvg">
@@ -220,13 +220,13 @@ onMounted(() => {
             <el-text v-else>-</el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('memberGroupName')" align="center" prop="memberGroupName"
+        <el-table-column v-if="checkList.includes('memberGroupName')" align="left" prop="memberGroupName"
           show-overflow-tooltip label="会员组名称">
           <template #default="{ row }">
             <p class="weightColor">{{ row.memberGroupName ? row.memberGroupName : "-" }}</p>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('groupLeaderMemberName')" align="center" prop="groupLeaderMemberName"
+        <el-table-column v-if="checkList.includes('groupLeaderMemberName')" align="left" prop="groupLeaderMemberName"
           show-overflow-tooltip label="组长名称(ID)">
           <template #default="{ row }">
             <div v-if="row.groupLeaderMemberName" class="hoverSvg">
@@ -239,7 +239,7 @@ onMounted(() => {
             <el-text v-else>-</el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('memberNumber')" width="100" align="center" prop="memberNumber"
+        <el-table-column v-if="checkList.includes('memberNumber')" width="100" align="left" prop="memberNumber"
           show-overflow-tooltip label="成员">
           <template #default="{ row }">
             <el-link type="primary">{{
@@ -247,7 +247,7 @@ onMounted(() => {
         }}</el-link>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('projectNumber')" width="100" align="center" prop="projectNumber"
+        <el-table-column v-if="checkList.includes('projectNumber')" width="100" align="left" prop="projectNumber"
           show-overflow-tooltip label="项目数">
           <template #default="{ row }">
             <el-link type="primary" @click="handleCheck(row)">{{
@@ -255,7 +255,7 @@ onMounted(() => {
   }}</el-link>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('createTime')" align="center" prop="createTime" show-overflow-tooltip
+        <el-table-column v-if="checkList.includes('createTime')" align="left" prop="createTime" show-overflow-tooltip
           label="创建时间">
           <template #header>
             <span class="headerIcon">
@@ -278,7 +278,7 @@ onMounted(() => {
   }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="i" label="操作" fixed="right" show-overflow-tooltip width="180">
+        <el-table-column align="left" prop="i" label="操作" fixed="right" show-overflow-tooltip width="180">
           <template #default="{ row }">
             <el-button size="small" plain type="primary" @click="handleEdit(row)">
               编辑

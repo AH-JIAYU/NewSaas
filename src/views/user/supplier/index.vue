@@ -247,8 +247,8 @@ onMounted(async () => {
       </el-row>
       <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
         @selection-change="setSelectRows" highlight-current-row @current-change="handleCurrentChange">
-        <el-table-column align="center" type="selection" />
-        <el-table-column v-if="checkList.includes('supplierStatus')" align="center" show-overflow-tooltip label="供应商状态">
+        <el-table-column align="left" type="selection" />
+        <el-table-column v-if="checkList.includes('supplierStatus')" align="left" show-overflow-tooltip label="供应商状态">
           <template #default="{ row }">
             <ElSwitch v-if="row.supplierStatus === 3" v-model="row.supplierStatus" inline-prompt :inactive-value="3"
               :active-value="2" inactive-text="待审核" active-text="启用"
@@ -257,7 +257,7 @@ onMounted(async () => {
               inactive-text="禁用" active-text="启用" @change="changeState($event, row.tenantSupplierId)" />
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('supplierAccord')" align="center" prop="supplierAccord"
+        <el-table-column v-if="checkList.includes('supplierAccord')" align="left" prop="supplierAccord"
           show-overflow-tooltip label="供应商名称">
           <template #default="{ row }">
             <div class="flex-c tableBig">
@@ -268,7 +268,7 @@ onMounted(async () => {
 
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('tenantSupplierId')" align="center" prop="tenantSupplierId"
+        <el-table-column v-if="checkList.includes('tenantSupplierId')" align="left" prop="tenantSupplierId"
           width="180" show-overflow-tooltip label="供应商ID">
           <template #default="{ row }">
             <div class="copyId tableSmall">
@@ -277,7 +277,7 @@ onMounted(async () => {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('supplierLevelId')" align="center" prop="supplierLevelId"
+        <el-table-column v-if="checkList.includes('supplierLevelId')" align="left" prop="supplierLevelId"
           show-overflow-tooltip label="供应商等级">
           <template #default="{ row }">
             <div class="flex-c tableBig">
@@ -289,7 +289,7 @@ onMounted(async () => {
           </template>
         </el-table-column>
 
-        <el-table-column v-if="checkList.includes('balanceHumanLife')" align="center" prop="balanceHumanLife"
+        <el-table-column v-if="checkList.includes('balanceHumanLife')" align="left" prop="balanceHumanLife"
           show-overflow-tooltip label="可用余额">
           <template #default="{ row }">
             <div class="tableBig">
@@ -298,7 +298,7 @@ onMounted(async () => {
 
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('amountPendingTrial')" align="center" prop="amountPendingTrial"
+        <el-table-column v-if="checkList.includes('amountPendingTrial')" align="left" prop="amountPendingTrial"
           show-overflow-tooltip label="待审金额">
           <template #default="{ row }">
             <div class="tableBig">
@@ -307,12 +307,12 @@ onMounted(async () => {
 
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('countryAffiliationName')" align="center"
+        <el-table-column v-if="checkList.includes('countryAffiliationName')" align="left"
           prop="countryAffiliationName" show-overflow-tooltip label="国家"> <template #default="{ row }">
             <el-tag type="primary">{{ row.countryAffiliationName }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('b2bStatus')" align="center" show-overflow-tooltip label="B2B|B2C">
+        <el-table-column v-if="checkList.includes('b2bStatus')" align="left" show-overflow-tooltip label="B2B|B2C">
           <template #default="{ row }">
             <div class="flex-c" style="justify-content: center !important;">
 
@@ -399,7 +399,7 @@ onMounted(async () => {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('settlementCycle')" align="center" prop="settlementCycle"
+        <el-table-column v-if="checkList.includes('settlementCycle')" align="left" prop="settlementCycle"
           show-overflow-tooltip label="结算周期"><template #default="{ row }">
             <div class="flex-c tableBig">
               <div class="oneLine" style="width: calc(100% - 20px);"> {{ row.settlementCycle ? row.settlementCycle + "天"
@@ -411,14 +411,14 @@ onMounted(async () => {
           </template>
         </el-table-column>
 
-        <el-table-column v-if="checkList.includes('createTime')" align="center" prop="createTime" show-overflow-tooltip
+        <el-table-column v-if="checkList.includes('createTime')" align="left" prop="createTime" show-overflow-tooltip
           label="创建"><template #default="{ row }">
             <el-tag effect="plain" type="info">{{
     format(row.createTime)
   }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('remark')" align="center" prop="remark" width="180" label="备注">
+        <el-table-column v-if="checkList.includes('remark')" align="left" prop="remark" width="180" label="备注">
           <template #default="{ row }">
             <div class="flex-c tableBig" >
               <div class="oneLine" style="width: calc(100% - 20px);"> {{ row.remark }}</div>
@@ -428,7 +428,7 @@ onMounted(async () => {
 
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="i" label="操作" fixed="right" width="250">
+        <el-table-column align="left" prop="i" label="操作" fixed="right" width="250">
           <template #default="{ row }">
             <ElSpace>
               <el-button size="small" plain type="primary" @click="handlePlusMinusPayments(row)">

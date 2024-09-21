@@ -336,32 +336,32 @@ onMounted(() => {
       </el-row>
       <el-table ref="tableSortRef" v-loading="false" style="margin-top: 10px" row-key="id" :data="list" :border="border"
         :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows">
-        <el-table-column align="center" type="selection" />
-        <!-- <el-table-column type="index" align="center" label="序号" width="55" /> -->
+        <el-table-column align="left" type="selection" />
+        <!-- <el-table-column type="index" align="left" label="序号" width="55" /> -->
         <el-table-column v-if="checkList.includes('tenantCustomerShortName')" prop="tenantCustomerShortName"
-          show-overflow-tooltip align="center" width="100" label="客户简称" />
+          show-overflow-tooltip align="left" width="100" label="客户简称" />
         <el-table-column v-if="checkList.includes('invoiceCode')" prop="invoiceCode" show-overflow-tooltip
-          align="center" label="发票编号" />
+          align="left" label="发票编号" />
         <el-table-column v-if="checkList.includes('invoiceAmount')" prop="invoiceAmount" show-overflow-tooltip
-          align="center" label="金额">
+          align="left" label="金额">
           <template #default="{ row }">
             <CurrencyType />{{ row.invoiceAmount || 0 }}
           </template></el-table-column>
-        <el-table-column v-if="checkList.includes('invoiceTax')" prop="invoiceTax" show-overflow-tooltip align="center"
+        <el-table-column v-if="checkList.includes('invoiceTax')" prop="invoiceTax" show-overflow-tooltip align="left"
           label="手续费(税)">
           <template #default="{ row }">
             <CurrencyType />{{ row.invoiceTax || 0 }}
           </template></el-table-column>
         <el-table-column v-if="checkList.includes('actualReceipts')" prop="actualReceipts" show-overflow-tooltip
-          align="center" label="实收款">
+          align="left" label="实收款">
           <template #default="{ row }">
             <CurrencyType />{{ row.actualReceipts || 0 }}
           </template></el-table-column>
         <el-table-column v-if="checkList.includes('invoiceDate')" prop="invoiceDate" show-overflow-tooltip
-          align="center" label="开票日期" />
+          align="left" label="开票日期" />
         <el-table-column v-if="checkList.includes('paymentDate')" prop="paymentDate" show-overflow-tooltip
-          align="center" label="收款日期" />
-        <ElTableColumn v-if="checkList.includes('invoiceStatus')" align="center" show-overflow-tooltip
+          align="left" label="收款日期" />
+        <ElTableColumn v-if="checkList.includes('invoiceStatus')" align="left" show-overflow-tooltip
           prop="invoiceStatus" label="状态">
           <template #default="{ row }">
             <el-text v-if="row.invoiceStatus === 1" class="mx-1" type="info">未收款</el-text>
@@ -370,8 +370,8 @@ onMounted(() => {
             <el-text v-if="row.invoiceStatus === 4" class="mx-1" type="danger">坏账</el-text>
           </template>
         </ElTableColumn>
-        <el-table-column v-if="checkList.includes('remark')" prop="remark" align="center" label="备注" />
-        <el-table-column align="center" fixed="right" label="操作" width="170">
+        <el-table-column v-if="checkList.includes('remark')" prop="remark" align="left" label="备注" />
+        <el-table-column align="left" fixed="right" label="操作" width="170">
           <template #default="{ row }">
             <el-button size="small" plain type="primary" @click="editData(row)">
               编辑

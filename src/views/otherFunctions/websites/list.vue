@@ -156,15 +156,15 @@ onMounted(() => {
       </el-row>
       <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="id" :data="list"
         :border="border" :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows">
-        <el-table-column align="center" type="selection" />
-        <!-- <el-table-column type="index" align="center" label="序号" width="55" /> -->
-        <el-table-column show-overflow-tooltip prop="a" align="center" label="供应商ID" />
-        <el-table-column show-overflow-tooltip prop="b" align="center" label="开始日期" />
-        <el-table-column show-overflow-tooltip prop="c" align="center" label="结算日期" />
-        <el-table-column show-overflow-tooltip prop="d" align="center" label="状态">
+        <el-table-column align="left" type="selection" />
+        <!-- <el-table-column type="index" align="left" label="序号" width="55" /> -->
+        <el-table-column show-overflow-tooltip prop="a" align="left" label="供应商ID" />
+        <el-table-column show-overflow-tooltip prop="b" align="left" label="开始日期" />
+        <el-table-column show-overflow-tooltip prop="c" align="left" label="结算日期" />
+        <el-table-column show-overflow-tooltip prop="d" align="left" label="状态">
           <ElSwitch inline-prompt active-text="启用" inactive-text="禁用" />
         </el-table-column>
-        <el-table-column align="center" label="操作" width="170">
+        <el-table-column align="left" label="操作" width="170">
           <el-button plain size="small" type="primary" @click="editData">
             编辑
           </el-button>

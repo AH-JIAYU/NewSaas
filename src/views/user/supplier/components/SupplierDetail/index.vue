@@ -204,19 +204,19 @@ defineExpose({
           border
         >
           <el-table-column
-            align="center"
+            align="left"
             type="index"
             label="序号"
             width="80"
           />
-          <el-table-column align="center" prop="createTime" label="操作时间" />
-          <el-table-column align="center" prop="createName" label="操作人" />
-          <el-table-column align="center" label="操作事项">
+          <el-table-column align="left" prop="createTime" label="操作时间" />
+          <el-table-column align="left" prop="createName" label="操作人" />
+          <el-table-column align="left" label="操作事项">
             <template #default="{ row }">
               {{ operationType(row.operationType) }}
             </template>
           </el-table-column>
-          <el-table-column align="center" label="详情">
+          <el-table-column align="left" label="详情">
             <template #default="{ row }">
               <el-button
                 type="primary"

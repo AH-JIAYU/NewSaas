@@ -143,9 +143,9 @@ defineExpose({ showEdit });
   <div>
     <el-dialog v-model="dialogTableVisible" title="分配" width="700" :before-close="closeHandler">
       <el-table :data="data.list" v-loading="loading" row-key="id">
-        <el-table-column align="center" show-overflow-tooltip label="项目名称" prop="name" />
-        <el-table-column align="center" show-overflow-tooltip label="项目编码" prop="projectId" />
-        <el-table-column align="center" show-overflow-tooltip label="客户简称" width="100" prop="clientName" />
+        <el-table-column align="left" show-overflow-tooltip label="项目名称" prop="name" />
+        <el-table-column align="left" show-overflow-tooltip label="项目编码" prop="projectId" />
+        <el-table-column align="left" show-overflow-tooltip label="客户简称" width="100" prop="clientName" />
       </el-table>
       <el-form ref="formRef" label-width="80px" :rules="rules" :model="data.form" :inline="false">
         <el-form-item label="分配目标">

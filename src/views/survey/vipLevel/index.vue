@@ -155,7 +155,7 @@ onMounted(() => {
       </el-row>
       <el-table ref="elTableRef" v-loading="listLoading" row-key="id" :border="border" :data="list" :size="lineHeight"
         :stripe="stripe" fit>
-        <ElTableColumn width="80" align="center" fixed>
+        <ElTableColumn width="80" align="left" fixed>
           <template #header> 排序 </template>
           <template #default>
             <ElTag type="info" class="sortable">
@@ -163,19 +163,19 @@ onMounted(() => {
             </ElTag>
           </template>
         </ElTableColumn>
-        <el-table-column v-if="checkList.includes('levelName')" align="center" prop="levelName" show-overflow-tooltip
+        <el-table-column v-if="checkList.includes('levelName')" align="left" prop="levelName" show-overflow-tooltip
           label="等级名称">
           <template #default="{ row }">
             <p style="font-weight: 700;">{{ row.levelName }}</p>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('additionRatio')" align="center" prop="additionRatio"
+        <el-table-column v-if="checkList.includes('additionRatio')" align="left" prop="additionRatio"
           show-overflow-tooltip label="加成比例(百分比)">
           <template #default="{ row }">
             <p style="font-weight: 700;">{{ row.additionRatio }}%</p>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('memberQuantity')" align="center" prop="memberQuantity"
+        <el-table-column v-if="checkList.includes('memberQuantity')" align="left" prop="memberQuantity"
           show-overflow-tooltip label="成员数量">
           <template #default="{ row }">
             <el-link type="primary">{{
@@ -183,7 +183,7 @@ onMounted(() => {
   }}</el-link>
           </template>
         </el-table-column>
-        <el-table-column align="center" fixed="right" show-overflow-tooltip label="操作">
+        <el-table-column align="left" fixed="right" show-overflow-tooltip label="操作">
           <template #default="{ row }">
             <el-button size="small" plain type="primary" @click="handleEdit(row)">
               编辑

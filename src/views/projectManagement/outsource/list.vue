@@ -130,9 +130,9 @@ onMounted(() => {
           </el-row>
           <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="id" :data="list"
             :border="border" :size="lineHeight" :stripe="stripe">
-            <el-table-column align="center" type="selection" />
+            <el-table-column align="left" type="selection" />
             <el-table-column v-if="checkList.includes('projectStatus')" show-overflow-tooltip prop="projectStatus"
-              align="center" label="状态">
+              align="left" label="状态">
               <template #default="{ row }">
                 <span class="tableBig">{{
     projectManagementOutsourceStore.projectStatusList[
@@ -142,12 +142,12 @@ onMounted(() => {
               </template>
             </el-table-column>
             <el-table-column v-if="checkList.includes('tenantName')" show-overflow-tooltip prop="tenantName"
-              align="center" label="租户名称">
+              align="left" label="租户名称">
               <template #default="{ row }">
                 <div class="tableBig">{{ row.tenantName }}</div>
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('tenantId')" show-overflow-tooltip prop="tenantId" align="center"
+            <el-table-column v-if="checkList.includes('tenantId')" show-overflow-tooltip prop="tenantId" align="left"
               label="租户ID">
               <template #default="{ row }">
                 <div class="copyId tableSmall">
@@ -157,13 +157,13 @@ onMounted(() => {
               </template>
             </el-table-column>
             <el-table-column v-if="checkList.includes('projectName')" show-overflow-tooltip prop="projectName"
-              align="center" label="项目名称">
+              align="left" label="项目名称">
               <template #default="{ row }">
                 <div class="tableBig">{{ row.projectName }}</div>
               </template>
             </el-table-column>
             <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip prop="projectId"
-              align="center" width="180" label="项目ID">
+              align="left" width="180" label="项目ID">
               <template #default="{ row }">
                 <div class="copyId tableSmall">
                   <div class="id oneLine">ID: {{ row.projectId }}</div>
@@ -172,7 +172,7 @@ onMounted(() => {
               </template>
             </el-table-column>
             <el-table-column v-if="checkList.includes('participationNumber')" show-overflow-tooltip
-              prop="participationNumber" align="center" label="参数" width="300">
+              prop="participationNumber" align="left" label="参数" width="300">
               <template #default="{ row }">
                 <el-text class="oneLine" type="danger">参与: {{ row.participationNumber || 0 }}</el-text> &ensp;
                 <el-text class="oneLine" type="success">完成: {{ row.doneNumber || 0 }}</el-text> &ensp;
@@ -180,7 +180,7 @@ onMounted(() => {
                 <el-text class="oneLine" type="info">限量: {{ row.limitedQuantity || "-" }}</el-text>
               </template>
             </el-table-column>
-            <el-table-column align="center" fixed="right" label="操作" width="170">
+            <el-table-column align="left" fixed="right" label="操作" width="170">
               <template #default="{ row }">
                 <el-button type="primary" plain size="small" @click="editData(row)">
                   详情
@@ -210,9 +210,9 @@ onMounted(() => {
           </el-row>
           <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="id" :data="list"
             :border="border" :size="lineHeight" :stripe="stripe">
-            <el-table-column align="center" type="selection" />
+            <el-table-column align="left" type="selection" />
             <el-table-column v-if="checkList.includes('projectStatus')" show-overflow-tooltip prop="projectStatus"
-              align="center" label="状态">
+              align="left" label="状态">
               <template #default="{ row }">
                 <span class="tableBig">{{
     projectManagementOutsourceStore.projectStatusList[
@@ -222,12 +222,12 @@ onMounted(() => {
               </template>
             </el-table-column>
             <el-table-column v-if="checkList.includes('tenantName')" show-overflow-tooltip prop="tenantName"
-              align="center" label="租户名称">
+              align="left" label="租户名称">
               <template #default="{ row }">
                 <div class="tableBig">{{ row.tenantName }}</div>
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('tenantId')" show-overflow-tooltip prop="tenantId" align="center"
+            <el-table-column v-if="checkList.includes('tenantId')" show-overflow-tooltip prop="tenantId" align="left"
               label="租户ID"><template #default="{ row }">
                 <div class="copyId tableSmall">
                   <div class="id oneLine">ID: {{ row.tenantId }}</div>
@@ -236,13 +236,13 @@ onMounted(() => {
               </template>
             </el-table-column>
             <el-table-column v-if="checkList.includes('projectName')" show-overflow-tooltip prop="projectName"
-              align="center" label="项目名称">
+              align="left" label="项目名称">
               <template #default="{ row }">
                 <div class="tableBig">{{ row.projectName }}</div>
               </template>
             </el-table-column>
             <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip prop="projectId"
-              align="center" width="180" label="项目ID">
+              align="left" width="180" label="项目ID">
               <template #default="{ row }">
                 <div class="copyId tableSmall">
                   <div class="id oneLine">ID: {{ row.projectId }}</div>
@@ -251,7 +251,7 @@ onMounted(() => {
               </template>
             </el-table-column>
             <el-table-column v-if="checkList.includes('participationNumber')" show-overflow-tooltip
-              prop="participationNumber" align="center" label="参数" width="300">
+              prop="participationNumber" align="left" label="参数" width="300">
               <template #default="{ row }">
                 <el-text class="oneLine" type="danger">参与: {{ row.participationNumber || 0 }}</el-text> &ensp;
                 <el-text class="oneLine" type="success">完成: {{ row.doneNumber || 0 }}</el-text> &ensp;
@@ -261,7 +261,7 @@ onMounted(() => {
             </el-table-column>
 
 
-            <el-table-column align="center" fixed="right" label="操作" width="170">
+            <el-table-column align="left" fixed="right" label="操作" width="170">
               <template #default="{ row }">
                 <el-button type="primary" plain size="small" @click="editData(row)">
                   详情

@@ -56,7 +56,7 @@ defineExpose({
   <div>
     <el-dialog v-model="data.dialogTableVisible" v-if="data.dialogTableVisible" title="查看" draggable>
       <el-table  v-loading="data.loading"   row-key="projectId" :data="data.tableData"  highlight-current-row height="100%">
-        <el-table-column align="center" type="index" />
+        <el-table-column align="left" type="index" />
         <el-table-column  width="200" align="left" label="项目ID"><template
             #default="{ row }">
             <div class="copyId">
@@ -65,12 +65,12 @@ defineExpose({
             </div>
           </template>
         </el-table-column>
-        <el-table-column   show-overflow-tooltip prop="projectName" width="100" align="center"
+        <el-table-column   show-overflow-tooltip prop="projectName" width="100" align="left"
           label="项目名称"></el-table-column>
-        <el-table-column   show-overflow-tooltip prop="projectIdentification" width="100" align="center"
+        <el-table-column   show-overflow-tooltip prop="projectIdentification" width="100" align="left"
           label="项目名称"></el-table-column>
         <el-table-column  show-overflow-tooltip prop="countryIdList"
-          align="center" label="国家" width="80">
+          align="left" label="国家" width="80">
           <template #default="{ row }">
             <template v-if="row.countryIdList">
               <template v-if="row.countryIdList.length === basicDictionaryStore.country.length">
@@ -92,7 +92,7 @@ defineExpose({
             </template>
           </template>
         </el-table-column>
-        <el-table-column   show-overflow-tooltip align="center" label="原价">
+        <el-table-column   show-overflow-tooltip align="left" label="原价">
           <template #default="{ row }">
             <CurrencyType />{{ row.doMoneyPrice || 0 }}
           </template>

@@ -200,7 +200,7 @@ onMounted(async () => {
             <el-table :data="scopeCountry.row.children" highlight-current-row class="hide-table-header" border
               height="100%">
               <el-table-column width="55" />
-              <el-table-column width="300" prop="memberChildName" label="名称+ID" align="center">
+              <el-table-column width="300" prop="memberChildName" label="名称+ID" align="left">
                 <template #default="scope">
                   <el-text>
                     {{ scope.row.memberChildName }}
@@ -210,13 +210,13 @@ onMounted(async () => {
                     }}</el-text>
                 </template>
               </el-table-column>
-              <ElTableColumn prop="status" label="状态" align="center">
+              <ElTableColumn prop="status" label="状态" align="left">
                 <template #default="scope">
                   <el-text v-if="scope.row.status === 1" type="success">前置问卷通过</el-text>
                   <el-text v-else type="danger">前置问卷未通过</el-text>
                 </template>
               </ElTableColumn>
-              <ElTableColumn width="200" align="center" fixed="right" label="操作">
+              <ElTableColumn width="200" align="left" fixed="right" label="操作">
                 <template #default="scope">
                   <ElButton type="primary" size="small" plain @click="showEdit(scope.row)">
                     查看问卷详情
@@ -227,11 +227,11 @@ onMounted(async () => {
           </template>
         </el-table-column>
 
-        <el-table-column width="300" v-if="checkList.includes('projectId')" align="center" prop="projectId"
+        <el-table-column width="300" v-if="checkList.includes('projectId')" align="left" prop="projectId"
           show-overflow-tooltip label="项目ID" />
-        <el-table-column v-if="checkList.includes('projectName')" align="center" prop="projectName"
+        <el-table-column v-if="checkList.includes('projectName')" align="left" prop="projectName"
           show-overflow-tooltip label="项目名称" />
-        <el-table-column v-if="checkList.includes('allocationType')" align="center" show-overflow-tooltip width="100"
+        <el-table-column v-if="checkList.includes('allocationType')" align="left" show-overflow-tooltip width="100"
           label="分配类型">
           <template #default="{ row }">
             <el-text v-if="row.allocationType === 3" class="mx-1" type="primary">会员组</el-text>
@@ -239,19 +239,19 @@ onMounted(async () => {
             <el-text v-if="row.allocationType === 1" class="mx-1" type="warning">未分配</el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('passNumber')" align="center" show-overflow-tooltip label="通过数/提交数">
+        <el-table-column v-if="checkList.includes('passNumber')" align="left" show-overflow-tooltip label="通过数/提交数">
           <template #default="{ row }">
             {{ row.passNumber || 0 }}/
             {{ row.submitNumber || 0 }}
           </template>
         </el-table-column>
-        <ElTableColumn v-if="checkList.includes('passRate')" align="center" show-overflow-tooltip prop="passRate"
+        <ElTableColumn v-if="checkList.includes('passRate')" align="left" show-overflow-tooltip prop="passRate"
           label="通过率">
           <template #default="{ row }">
             {{ row.passRate + "%" }}
           </template>
         </ElTableColumn>
-        <ElTableColumn align="center" show-overflow-tooltip prop="" fixed="right" label="操作" width="200">
+        <ElTableColumn align="left" show-overflow-tooltip prop="" fixed="right" label="操作" width="200">
           <template #default="{ row }">
             <el-button plain type="primary" size="small" @click="getChildList(row)">
               {{ data.expandedRows.includes(row.id) ? "收起" : "展开" }}

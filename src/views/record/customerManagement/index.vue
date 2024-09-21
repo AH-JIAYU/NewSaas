@@ -143,13 +143,13 @@ onMounted(() => {
       </el-row>
       <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
         @selection-change="setSelectRows">
-        <el-table-column align="center" type="selection" />
-        <el-table-column v-if="checkList.includes('id')" align="center" prop="id" show-overflow-tooltip label="客户简称"
+        <el-table-column align="left" type="selection" />
+        <el-table-column v-if="checkList.includes('id')" align="left" prop="id" show-overflow-tooltip label="客户简称"
           width="100" />
-        <el-table-column align="center" prop="b" show-overflow-tooltip label="变更内容" />
-        <el-table-column align="center" prop="b" show-overflow-tooltip label="变更时间" />
-        <el-table-column align="center" prop="d" show-overflow-tooltip label="操作人" />
-        <el-table-column align="center" prop="d" show-overflow-tooltip label="操作">
+        <el-table-column align="left" prop="b" show-overflow-tooltip label="变更内容" />
+        <el-table-column align="left" prop="b" show-overflow-tooltip label="变更时间" />
+        <el-table-column align="left" prop="d" show-overflow-tooltip label="操作人" />
+        <el-table-column align="left" prop="d" show-overflow-tooltip label="操作">
           <el-button type="primary" link size="default" @click="">跳转</el-button>
         </el-table-column>
         <template #empty>

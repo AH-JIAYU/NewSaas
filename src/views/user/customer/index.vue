@@ -224,8 +224,8 @@ onMounted(async () => {
       </el-row>
       <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
         @selection-change="setSelectRows" highlight-current-row @current-change="handleCurrentChange">
-        <el-table-column align="center" type="selection" />
-        <ElTableColumn v-if="checkList.includes('customerStatus')" align="center" show-overflow-tooltip
+        <el-table-column align="left" type="selection" />
+        <ElTableColumn v-if="checkList.includes('customerStatus')" align="left" show-overflow-tooltip
           prop="customerStatus" label="客户状态">
           <template #default="{ row }">
             <ElSwitch v-model="row.customerStatus" inline-prompt :inactive-value="1" :active-value="2" active-text="启用"
@@ -242,7 +242,7 @@ onMounted(async () => {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('tenantCustomerId')" align="center" prop="tenantCustomerId"
+        <el-table-column v-if="checkList.includes('tenantCustomerId')" align="left" prop="tenantCustomerId"
           width="180" show-overflow-tooltip label="客户编码">
           <template #default="{ row }">
             <div class="flex-c tableSmall">
@@ -263,7 +263,7 @@ onMounted(async () => {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('chargeName')" align="center" prop="chargeName" show-overflow-tooltip
+        <el-table-column v-if="checkList.includes('chargeName')" align="left" prop="chargeName" show-overflow-tooltip
           label="负责人"><template #default="{ row }">
             <div class="flex-c tableBig">
               <div class="oneLine" style="width: calc(100% - 20px);">
@@ -280,7 +280,7 @@ onMounted(async () => {
           </template>
         </el-table-column>
 
-        <el-table-column v-if="checkList.includes('projectNumber')" align="center" prop="turnover" show-overflow-tooltip
+        <el-table-column v-if="checkList.includes('projectNumber')" align="left" prop="turnover" show-overflow-tooltip
           label="关联项目数">
           <template #default="{ row }">
             <span style="width:20px;text-align:right;display: inline-block" class="tableBig">
@@ -293,21 +293,21 @@ onMounted(async () => {
 
           </template>
         </el-table-column>
-        <ElTableColumn v-if="checkList.includes('antecedentQuestionnaire')" align="center" show-overflow-tooltip
+        <ElTableColumn v-if="checkList.includes('antecedentQuestionnaire')" align="left" show-overflow-tooltip
           prop="antecedentQuestionnaire" label="前置问卷">
           <template #default="{ row }">
             <ElSwitch v-model="row.antecedentQuestionnaire" inline-prompt :inactive-value="1" :active-value="2"
               active-text="启用" inactive-text="禁用" @change="changeState($event, 2, row.tenantCustomerId)" />
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="checkList.includes('riskControl')" align="center" show-overflow-tooltip prop="riskControl"
+        <ElTableColumn v-if="checkList.includes('riskControl')" align="left" show-overflow-tooltip prop="riskControl"
           label="风险控制">
           <template #default="{ row }">
             <ElSwitch v-model="row.riskControl" inline-prompt :inactive-value="1" :active-value="2" active-text="启用"
               inactive-text="禁用" @change="changeState($event, 3, row.tenantCustomerId)" />
           </template>
         </ElTableColumn>
-        <el-table-column v-if="checkList.includes('turnover')" align="center" prop="turnover" show-overflow-tooltip
+        <el-table-column v-if="checkList.includes('turnover')" align="left" prop="turnover" show-overflow-tooltip
           label="客户营业限额/月">
           <template #default="{ row }">
             <div class="tableBig">
@@ -315,7 +315,7 @@ onMounted(async () => {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('rateAudit')" align="center" prop="rateAudit" show-overflow-tooltip
+        <el-table-column v-if="checkList.includes('rateAudit')" align="left" prop="rateAudit" show-overflow-tooltip
           label="审核率Min值"><template #default="{ row }">
             <div class="tableBig">
               {{ row.rateAudit ? row.rateAudit : "-" }}
@@ -325,7 +325,7 @@ onMounted(async () => {
 
 
 
-        <el-table-column align="center" fixed="right" prop="i" label="操作" width="200">
+        <el-table-column align="left" fixed="right" prop="i" label="操作" width="200">
           <template #default="{ row }">
             <ElSpace>
               <el-button size="small" plain type="primary" @click="handleEdit(row)">

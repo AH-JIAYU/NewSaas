@@ -70,14 +70,14 @@ defineExpose({ showEdit });
       </el-row>
       <div style="margin: 10px">| 供应商</div>
       <el-table v-loading="loading" :data="list" row-key="id">
-        <el-table-column type="index" align="center" label="序号" width="55" />
-        <el-table-column align="center" prop="supplierId" label="供应商ID" />
-        <el-table-column align="center" prop="supplierId" label="供应商名称">
+        <el-table-column type="index" align="left" label="序号" width="55" />
+        <el-table-column align="left" prop="supplierId" label="供应商ID" />
+        <el-table-column align="left" prop="supplierId" label="供应商名称">
           <template #default="{ row }">
             {{ row.supplierName ? row.supplierName : "-" }}
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="supplierId" label="手机号码/邮箱"
+        <el-table-column align="left" prop="supplierId" label="手机号码/邮箱"
           ><template #default="{ row }">
             {{ row.info.split(":")[0] }}/{{
               row.info.split(":")[1] !== "null" ? row.info.split(":")[1] : "-"
@@ -85,7 +85,7 @@ defineExpose({ showEdit });
           </template>
         </el-table-column>
         <el-table-column
-          align="center"
+          align="left"
           prop="refundRate"
           label="供应商退款率"
         />

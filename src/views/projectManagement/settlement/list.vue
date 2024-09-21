@@ -321,8 +321,8 @@ function handleMoreOperating(command: string, row: any) {
       </el-row>
       <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="id" :data="list"
         :border="border" :size="lineHeight" :stripe="stripe" highlight-current-row @selection-change="setSelectRows" @current-change="handleCurrentChange">
-        <el-table-column align="center" type="selection" />
-        <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip prop="projectId" align="center"
+        <el-table-column align="left" type="selection" />
+        <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip prop="projectId" align="left"
           width="150" label="项目">
           <template #default="{ row }">
             <div class="copyId">
@@ -342,7 +342,7 @@ function handleMoreOperating(command: string, row: any) {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('customerName')" show-overflow-tooltip prop="customerName" width="130"
-          align="center" label="客户">
+          align="left" label="客户">
           <template #default="{ row }">
             <div class="oneLine"  >
               <b class="tableBig">{{ row.customerName.split("/")[0] }}</b>
@@ -353,7 +353,7 @@ function handleMoreOperating(command: string, row: any) {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('projectAmount')" show-overflow-tooltip  align="center"
+        <el-table-column v-if="checkList.includes('projectAmount')" show-overflow-tooltip  align="left"
           label="原价" width="80">
           <template #default="{ row }">
             <div class="tableBig">
@@ -362,7 +362,7 @@ function handleMoreOperating(command: string, row: any) {
 
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('countryId')" show-overflow-tooltip   align="center"
+        <el-table-column v-if="checkList.includes('countryId')" show-overflow-tooltip   align="left"
           label="国家" width="80">
           <template #default="{ row }">
             <template v-if="row.countryId">
@@ -385,7 +385,7 @@ function handleMoreOperating(command: string, row: any) {
             </template>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('systemDone')" show-overflow-tooltip prop="systemDone" align="center"
+        <el-table-column v-if="checkList.includes('systemDone')" show-overflow-tooltip prop="systemDone" align="left"
           width="130" label="系统/审核完成数"><template #default="{ row }">
             <div class="flex-c tableBig">
               <div class="oneLine" style="width: calc(100% - 20px);">
@@ -398,9 +398,9 @@ function handleMoreOperating(command: string, row: any) {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('settlementDone')" show-overflow-tooltip prop="settlementDone"
-          align="center" label="结算完成数" />
+          align="left" label="结算完成数" />
         <el-table-column v-if="checkList.includes('settlementPo')" show-overflow-tooltip prop="settlementPo"
-          align="center" label="结算PO号">
+          align="left" label="结算PO号">
           <template #default="{ row }">
             <div class="flex-c tableBig">
               <div class="oneLine" style="width: calc(100% - 40px);">
@@ -423,7 +423,7 @@ function handleMoreOperating(command: string, row: any) {
             <el-text v-else class="mx-1 tableBig">-</el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('remark')" show-overflow-tooltip prop="remark" align="center"
+        <el-table-column v-if="checkList.includes('remark')" show-overflow-tooltip prop="remark" align="left"
           label="备注">
           <template #default="{ row }">
             <div class="flex-c tableBig">
@@ -434,7 +434,7 @@ function handleMoreOperating(command: string, row: any) {
             </div>
           </template>
         </el-table-column>
-        <el-table-column align="center" fixed="right" label="操作" width="250">
+        <el-table-column align="left" fixed="right" label="操作" width="250">
           <template #default="{ row }">
             <ElSpace>
               <el-button v-if="row.status === 1" type="primary" size="small" plain @click="auditing(row)">

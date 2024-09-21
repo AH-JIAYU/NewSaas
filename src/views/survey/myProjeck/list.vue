@@ -222,8 +222,8 @@ onMounted(async () => {
       </el-row>
       <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="id" :data="list"
         :border="border" :size="lineHeight" :stripe="stripe" @current-change="handleCurrentChange">
-        <el-table-column align="center" type="selection" />
-        <el-table-column v-if="checkList.includes('project')" show-overflow-tooltip align="center"
+        <el-table-column align="left" type="selection" />
+        <el-table-column v-if="checkList.includes('project')" show-overflow-tooltip align="left"
           prop="projectIdentificationOrClientName" width="200" label="项目">
           <template #default="{ row }">
             <p v-if="checkList.includes('projectName')" class="crudeTop">名称：{{ row.projectName }}</p>
@@ -234,7 +234,7 @@ onMounted(async () => {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('projectIdentificationOrClientName')" show-overflow-tooltip
-          prop="projectIdentificationOrClientName" width="180" align="center" label="名称/标识">
+          prop="projectIdentificationOrClientName" width="180" align="left" label="名称/标识">
           <template #default="{ row }">
             <p v-if="checkList.includes('projectIdentification')" class="crudeTop">
               名称：{{ row.projectIdentification }}</p>
@@ -243,14 +243,14 @@ onMounted(async () => {
     row.clientName }}</span></p>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('withoutUrl')" prop="withoutUrl" align="center" label="URL">
+        <el-table-column v-if="checkList.includes('withoutUrl')" prop="withoutUrl" align="left" label="URL">
           <template #default="{ row }">
             <el-tooltip class="box-item" effect="dark" :content="row.withoutUrl" placement="top">
               <el-button link type="primary" @click="copyUrl(row.withoutUrl)">复制</el-button>
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('participation')" show-overflow-tooltip width="180" align="center"
+        <el-table-column v-if="checkList.includes('participation')" show-overflow-tooltip width="180" align="left"
           label="参数">
           <template #default="{ row }">
             <p class="parameter oneLine"><el-text class="mx-1 oneLine" style="color:#FB6868;" type="danger">参与：{{
@@ -265,7 +265,7 @@ onMounted(async () => {
             </p>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('doMoneyPrice')" show-overflow-tooltip align="center" label="原价">
+        <el-table-column v-if="checkList.includes('doMoneyPrice')" show-overflow-tooltip align="left" label="原价">
           <template #default="{ row }">
             <el-text v-if="countryType === 3" class="mx-1">暂无数据</el-text>
             <el-text v-else class="mx-1">
@@ -278,7 +278,7 @@ onMounted(async () => {
             </el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('memberPrice')" show-overflow-tooltip align="center" label="会员价">
+        <el-table-column v-if="checkList.includes('memberPrice')" show-overflow-tooltip align="left" label="会员价">
           <template #default="{ row }">
             <el-link v-if="row.getMemberGroupNameInfoList.length" size="small" plain type="primary"
               @click="membershipPrice(row)">
@@ -287,7 +287,7 @@ onMounted(async () => {
             <el-text v-else> - </el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('countryNameList')" show-overflow-tooltip align="center" label="国家">
+        <el-table-column v-if="checkList.includes('countryNameList')" show-overflow-tooltip align="left" label="国家">
           <template #default="{ row }">
             <template v-if="row.countryNameList">
               <template v-if="row.countryNameList.length === basicDictionaryStore.country.length">
@@ -309,12 +309,12 @@ onMounted(async () => {
             </template>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('ir')" show-overflow-tooltip align="center" label="IR/NIR">
+        <el-table-column v-if="checkList.includes('ir')" show-overflow-tooltip align="left" label="IR/NIR">
           <template #default="{ row }"><el-text style="color: #333333;font-weight: 700;font-family: DINPro-Medium;">
               {{ row.ir ? row.ir : '-' }} / {{ row.nir ? row.nir : '-' }}
             </el-text></template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('memberStatus')" show-overflow-tooltip align="center" label="分配">
+        <el-table-column v-if="checkList.includes('memberStatus')" show-overflow-tooltip align="left" label="分配">
           <template #default="{ row }">
             <el-tag style="background-color: #05C9BE;color: #fff;" v-if="row.getMemberGroupNameInfoList.length">
               会员组
@@ -322,7 +322,7 @@ onMounted(async () => {
             <el-tag effect="plain" type="info" v-else> 未分配 </el-tag>
           </template>
         </el-table-column>
-        <!-- <el-table-column v-if="checkList.includes('memberGroupName')" show-overflow-tooltip align="center" label="分配目标">
+        <!-- <el-table-column v-if="checkList.includes('memberGroupName')" show-overflow-tooltip align="left" label="分配目标">
           <template #default="{ row }">
             <el-tooltip class="box-item" effect="dark" placement="top" v-if="row.getMemberGroupNameInfoList.length">
               <template #content>
@@ -337,7 +337,7 @@ onMounted(async () => {
             <el-link v-else>-</el-link>
           </template>
         </el-table-column> -->
-        <el-table-column v-if="checkList.includes('createTime')" show-overflow-tooltip prop="createTime" align="center"
+        <el-table-column v-if="checkList.includes('createTime')" show-overflow-tooltip prop="createTime" align="left"
           label="创建时间">
           <template #header>
             <span class="headerIcon">
@@ -360,7 +360,7 @@ onMounted(async () => {
   }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column align="center" fixed="right" label="操作" width="200">
+        <el-table-column align="left" fixed="right" label="操作" width="200">
           <template #default="{ row }">
             <ElSpace>
               <el-button type="primary" v-if="!row.getMemberGroupNameInfoList.length" plain size="small"

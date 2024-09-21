@@ -187,7 +187,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
             <ElTableColumn prop="chineseName" label="中文名称" />
             <ElTableColumn prop="englishName" label="英文名称" />
             <ElTableColumn prop="remark" label="备注" />
-            <ElTableColumn label="键值" align="center" width="150">
+            <ElTableColumn label="键值" align="left" width="150">
               <template #default="scope">
                 <ElTag type="info">
                   {{ scope.row.code }}

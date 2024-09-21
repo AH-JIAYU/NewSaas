@@ -250,7 +250,7 @@ function onDel(row: any) {
       </ElSpace>
       <ElTable v-loading="data.loading" class="my-4" :data="data.dataList" stripe highlight-current-row border
         height="100%" @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
-        <!-- <ElTableColumn v-if="data.batch.enable" type="selection" align="center" fixed /> -->
+        <!-- <ElTableColumn v-if="data.batch.enable" type="selection" align="left" fixed /> -->
         <ElTableColumn prop="account" sortable label="帐号">
           <template #default="{ row }">
             <el-text v-if="row.country === 'CN'" class="mx-1">
@@ -261,21 +261,21 @@ function onDel(row: any) {
             </el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="name" label="姓名" width="150" align="center">
+        <ElTableColumn prop="name" label="姓名" width="150" align="left">
           <template #default="{ row }">
             <el-text class="mx-1">
               {{ row.name ? row.name : '暂无数据' }}
             </el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="role" align="center" width="150" label="角色">
+        <ElTableColumn prop="role" align="left" width="150" label="角色">
           <template #default="{ row }">
             <el-text class="mx-1">
               {{ row.role ? row.role : '暂无数据' }}
             </el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="mobile" label="国家" width="150" align="center">
+        <ElTableColumn prop="mobile" label="国家" width="150" align="left">
           <template #default="{ row }">
             <div v-for="item in filterCountry" :key="item.id" class="mx-1">
               <el-tag type="primary" v-if="item.code === row.country" class="mx-1">
@@ -284,13 +284,13 @@ function onDel(row: any) {
             </div>
           </template>
         </ElTableColumn>
-        <ElTableColumn label="状态" width="100" align="center">
+        <ElTableColumn label="状态" width="100" align="left">
           <template #default="scope">
             <ElSwitch v-model="scope.row.active" inline-prompt active-text="启用" inactive-text="禁用"
               :before-change="() => onChangeStatus(scope.row)" />
           </template>
         </ElTableColumn>
-        <ElTableColumn label="操作" width="200" align="center" fixed="right">
+        <ElTableColumn label="操作" width="200" align="left" fixed="right">
           <template #default="scope">
             <ElSpace>
               <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">

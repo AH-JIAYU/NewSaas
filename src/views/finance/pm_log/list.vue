@@ -241,9 +241,9 @@ onBeforeUnmount(() => {
       <ElTable v-loading="data.loading" :border="data.border" :size="data.lineHeight" :stripe="data.stripe" class="my-4"
         :data="data.dataList" highlight-current-row height="100%" @sort-change="sortChange"
         @selection-change="data.batch.selectionDataList = $event">
-        <el-table-column align="center" type="selection" />
-        <ElTableColumn v-if="data.batch.enable" type="selection" show-overflow-tooltip align="center" fixed />
-        <ElTableColumn v-if="data.checkList.includes('id')" show-overflow-tooltip align="center" prop="id" label="员工ID">
+        <el-table-column align="left" type="selection" />
+        <ElTableColumn v-if="data.batch.enable" type="selection" show-overflow-tooltip align="left" fixed />
+        <ElTableColumn v-if="data.checkList.includes('id')" show-overflow-tooltip align="left" prop="id" label="员工ID">
           <template #default="{ row }">
             <div class="copyId tableSmall">
               <div class="id oneLine ">ID: {{ row.id }}</div>
@@ -251,7 +251,7 @@ onBeforeUnmount(() => {
             </div>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('userName')" show-overflow-tooltip align="center" prop="userName"
+        <ElTableColumn v-if="data.checkList.includes('userName')" show-overflow-tooltip align="left" prop="userName"
           label="用户名">
           <template #default="{ row }">
             <el-text class="tableBig">
@@ -259,7 +259,7 @@ onBeforeUnmount(() => {
             </el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('name')" show-overflow-tooltip align="center" prop="name"
+        <ElTableColumn v-if="data.checkList.includes('name')" show-overflow-tooltip align="left" prop="name"
           label="姓名">
           <template #default="{ row }">
             <el-text class="tableBig">
@@ -267,7 +267,7 @@ onBeforeUnmount(() => {
             </el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('groupId')" show-overflow-tooltip align="center" prop="groupId"
+        <ElTableColumn v-if="data.checkList.includes('groupId')" show-overflow-tooltip align="left" prop="groupId"
           width="150" label="所属组">
           <template #default="{ row }">
             <el-text v-if="row.groupId">
@@ -282,7 +282,7 @@ onBeforeUnmount(() => {
             <el-text v-else>-</el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('positionId')" show-overflow-tooltip align="center"
+        <ElTableColumn v-if="data.checkList.includes('positionId')" show-overflow-tooltip align="left"
           prop="positionId" width="150" label="职位">
           <template #default="{ row }">
             <el-text v-for="item in positionManageList">
@@ -294,7 +294,7 @@ onBeforeUnmount(() => {
             </el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('pendingBalance')" show-overflow-tooltip align="center"
+        <ElTableColumn v-if="data.checkList.includes('pendingBalance')" show-overflow-tooltip align="left"
           prop="pendingBalance" label="待审提成"><template #default="{ row }">
             <el-text class="tableBig">
               {{
@@ -303,7 +303,7 @@ onBeforeUnmount(() => {
             </el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('availableBalance')" show-overflow-tooltip align="center"
+        <ElTableColumn v-if="data.checkList.includes('availableBalance')" show-overflow-tooltip align="left"
           prop="availableBalance" label="可用提成"><template #default="{ row }">
             <el-text class="tableBig">
               {{
@@ -312,7 +312,7 @@ onBeforeUnmount(() => {
             </el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn fixed="right" align="center" width="200" label="操作"><template #default="{ row }">
+        <ElTableColumn fixed="right" align="left" width="200" label="操作"><template #default="{ row }">
             <ElButton type="primary" size="small" plain @click="financeLog(row)">
               财务日志
             </ElButton>

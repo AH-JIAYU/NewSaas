@@ -214,8 +214,8 @@ onMounted(() => {
       </el-row>
       <el-table v-loading="listLoading" :border="border" :data="DataList" :size="lineHeight" :stripe="stripe"
         @selection-change="setSelectRows">
-        <el-table-column align="center" type="selection" />
-        <ElTableColumn v-if="checkList.includes('memberChildStatus')" align="center" show-overflow-tooltip
+        <el-table-column align="left" type="selection" />
+        <ElTableColumn v-if="checkList.includes('memberChildStatus')" align="left" show-overflow-tooltip
           prop="memberChildStatus" label="状态">
           <template #default="{ row }">
             <div class="tableBig">
@@ -224,7 +224,7 @@ onMounted(() => {
             </div>
           </template>
         </ElTableColumn>
-        <el-table-column v-if="checkList.includes('memberChildId')" align="center" prop="memberChildId" width="180"
+        <el-table-column v-if="checkList.includes('memberChildId')" align="left" prop="memberChildId" width="180"
           show-overflow-tooltip label="子会员ID">
           <template #default="{ row }">
             <div class="copyId tableSmall">
@@ -233,7 +233,7 @@ onMounted(() => {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('tenantSupplierId')" align="center" prop="tenantSupplierId"
+        <el-table-column v-if="checkList.includes('tenantSupplierId')" align="left" prop="tenantSupplierId"
           width="180" show-overflow-tooltip label="供应商ID">
           <template #default="{ row }">
             <div class="copyId tableSmall">
@@ -243,13 +243,13 @@ onMounted(() => {
           </template>
         </el-table-column>
 
-        <el-table-column v-if="checkList.includes('memberNickname')" align="center" prop="memberNickname"
+        <el-table-column v-if="checkList.includes('memberNickname')" align="left" prop="memberNickname"
           show-overflow-tooltip label="子会员名称">
           <template #default="{ row }">
             <div class="tableBig">{{ row.memberNickname }}</div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('memberName')" align="center" prop="memberName" show-overflow-tooltip
+        <el-table-column v-if="checkList.includes('memberName')" align="left" prop="memberName" show-overflow-tooltip
           label="子会员姓名">
           <template #default="{ row }">
             <div class="tableBig">
@@ -258,7 +258,7 @@ onMounted(() => {
 
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('availableBalance')" align="center" prop="availableBalance"
+        <el-table-column v-if="checkList.includes('availableBalance')" align="left" prop="availableBalance"
           show-overflow-tooltip label="	可用余额">
           <template #default="{ row }">
             <div class="tableBig">
@@ -267,7 +267,7 @@ onMounted(() => {
 
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('pendingBalance')" align="center" prop="pendingBalance"
+        <el-table-column v-if="checkList.includes('pendingBalance')" align="left" prop="pendingBalance"
           show-overflow-tooltip label="	待审余额">
           <template #default="{ row }">
             <div class="tableBig">
@@ -276,7 +276,7 @@ onMounted(() => {
 
           </template>
         </el-table-column>
-        <ElTableColumn v-if="checkList.includes('b2bStatus')" align="center" show-overflow-tooltip prop="b2bStatus"
+        <ElTableColumn v-if="checkList.includes('b2bStatus')" align="left" show-overflow-tooltip prop="b2bStatus"
           label="B2B">
           <template #default="{ row }">
             <svg v-if="row.b2bStatus && row.b2bStatus === 2" class="mx-1" width="15" height="14" viewBox="0 0 15 14"
@@ -323,7 +323,7 @@ onMounted(() => {
             </svg>
           </template>
         </ElTableColumn>
-        <el-table-column v-if="checkList.includes('memberChildGroupName')" align="center" prop="memberChildGroupName"
+        <el-table-column v-if="checkList.includes('memberChildGroupName')" align="left" prop="memberChildGroupName"
           show-overflow-tooltip label="所属组">
           <template #default="{ row }">
             <div class="copyId">
@@ -337,14 +337,14 @@ onMounted(() => {
           </template>
         </el-table-column>
 
-        <el-table-column v-if="checkList.includes('createUserName')" align="center" prop="createUserName"
+        <el-table-column v-if="checkList.includes('createUserName')" align="left" prop="createUserName"
           show-overflow-tooltip label="创建人"><template #default="{ row }">
             <div class="tableBig">
               {{ row.createUserName ? row.createUserName : "-" }}
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('createTime')" align="center" prop="createTime">
+        <el-table-column v-if="checkList.includes('createTime')" align="left" prop="createTime">
           <template #header>
             <div class="flex-c">
               <SvgIcon name="ant-design:clock-circle-filled" color="#45a0ff" />

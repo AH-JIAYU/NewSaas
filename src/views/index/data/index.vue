@@ -265,32 +265,32 @@ onMounted(() => {
             </FormRightPanel>
           </el-row>
           <el-table :data="data.list" :border="border" :size="lineHeight" :stripe="stripe" style="width: 100%">
-            <el-table-column align="center" type="selection" />
-            <el-table-column v-if="checkList.includes('customerName')" show-overflow-tooltip align="center"
+            <el-table-column align="left" type="selection" />
+            <el-table-column v-if="checkList.includes('customerName')" show-overflow-tooltip align="left"
               prop="customerName" label="客户名称" width="180">
               <template #default="{ row }">
                 {{ row.customerAccord ? row.customerAccord : "-" }}
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('customerShortName')" show-overflow-tooltip align="center"
+            <el-table-column v-if="checkList.includes('customerShortName')" show-overflow-tooltip align="left"
               prop="customerShortName" label="客户简称" width="100" />
-            <el-table-column v-if="checkList.includes('chargeName')" show-overflow-tooltip align="center"
+            <el-table-column v-if="checkList.includes('chargeName')" show-overflow-tooltip align="left"
               prop="chargeName" label="负责人"><template #default="{ row }">
                 {{ row.chargeName ? row.chargeName : "-" }}
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('relationProjectTotal')" show-overflow-tooltip align="center"
+            <el-table-column v-if="checkList.includes('relationProjectTotal')" show-overflow-tooltip align="left"
               prop="relationProjectTotal" label="关联项目数量" />
-            <el-table-column v-if="checkList.includes('participateProjectTotal')" show-overflow-tooltip align="center"
+            <el-table-column v-if="checkList.includes('participateProjectTotal')" show-overflow-tooltip align="left"
               prop="participateProjectTotal" label="参与项目数量" />
-            <el-table-column v-if="checkList.includes('settlementProjectTotal')" show-overflow-tooltip align="center"
+            <el-table-column v-if="checkList.includes('settlementProjectTotal')" show-overflow-tooltip align="left"
               prop="settlementProjectTotal" label="结算项目数量" />
-            <el-table-column v-if="checkList.includes('settlementAmount')" show-overflow-tooltip align="center"
+            <el-table-column v-if="checkList.includes('settlementAmount')" show-overflow-tooltip align="left"
               prop="settlementAmount" label="结算项目金额"><template #default="{ row }">
                 {{ row.settlementAmount ? row.settlementAmount : "-" }}
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('turnover')" show-overflow-tooltip align="center" prop="turnover"
+            <el-table-column v-if="checkList.includes('turnover')" show-overflow-tooltip align="left" prop="turnover"
               label="项目营业额" />
             <template #empty>
               <el-empty :image="empty" :image-size="300" />
@@ -325,33 +325,33 @@ onMounted(() => {
           </el-row>
           <el-table class="el-table__row--striped" :data="data.list" :border="border" :size="lineHeight"
             :stripe="stripe" style="width: 100%">
-            <el-table-column align="center" type="selection" />
-            <el-table-column v-if="checkList.includes('customerName')" show-overflow-tooltip align="center"
+            <el-table-column align="left" type="selection" />
+            <el-table-column v-if="checkList.includes('customerName')" show-overflow-tooltip align="left"
               prop="customerName" label="客户名称" width="180"><template #default="{ row }">
                 {{ row.customerAccord ? row.customerAccord : "-" }}
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('customerShortName')" show-overflow-tooltip align="center"
+            <el-table-column v-if="checkList.includes('customerShortName')" show-overflow-tooltip align="left"
               prop="customerShortName" label="客户简称" width="100"><template #default="{ row }">
                 {{ row.customerShortName ? row.customerShortName : "-" }}
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('chargeName')" show-overflow-tooltip align="center"
+            <el-table-column v-if="checkList.includes('chargeName')" show-overflow-tooltip align="left"
               prop="chargeName" label="负责人"><template #default="{ row }">
                 {{ row.chargeName ? row.chargeName : "-" }}
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('systemDone')" show-overflow-tooltip align="center"
+            <el-table-column v-if="checkList.includes('systemDone')" show-overflow-tooltip align="left"
               prop="systemDone" label="系统完成数" />
-            <el-table-column v-if="checkList.includes('settlementDone')" show-overflow-tooltip align="center"
+            <el-table-column v-if="checkList.includes('settlementDone')" show-overflow-tooltip align="left"
               prop="settlementDone" label="结算完成单数" />
             <!-- <el-table-column
               show-overflow-tooltip
-              align="center"
+              align="left"
               prop="num3"
               label="审核成功"
             /> -->
-            <el-table-column v-if="checkList.includes('settlementRatioPercent')" show-overflow-tooltip align="center"
+            <el-table-column v-if="checkList.includes('settlementRatioPercent')" show-overflow-tooltip align="left"
               prop="settlementRatioPercent" label="审核率" />
             <template #empty>
               <el-empty :image="empty" :image-size="300" />

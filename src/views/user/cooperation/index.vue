@@ -177,8 +177,8 @@ onMounted(() => {
       </el-row>
       <el-table v-loading="listLoading" :border="border" :data="tableList" :size="lineHeight" :stripe="stripe"
         @selection-change="setSelectRows">
-        <el-table-column align="center" type="selection" />
-        <el-table-column v-if="checkList.includes('bindStatus')" align="center" prop="bindStatus" show-overflow-tooltip
+        <el-table-column align="left" type="selection" />
+        <el-table-column v-if="checkList.includes('bindStatus')" align="left" prop="bindStatus" show-overflow-tooltip
           label="状态" width="100">
           <template #default="{ row }">
             <div class="tableBig">
@@ -187,7 +187,7 @@ onMounted(() => {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('beInvitationTenantId')" align="center" prop="beInvitationTenantId"
+        <el-table-column v-if="checkList.includes('beInvitationTenantId')" align="left" prop="beInvitationTenantId"
           width="180" show-overflow-tooltip label="租户id">
           <template #default="{ row }">
             <div class="copyId tableSmall">
@@ -196,13 +196,13 @@ onMounted(() => {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('beInvitationTenantName')" align="center"
+        <el-table-column v-if="checkList.includes('beInvitationTenantName')" align="left"
           prop="beInvitationTenantName" show-overflow-tooltip label="租户名称">
           <template #default="{ row }">
             <div class="tableBig">{{ row.beInvitationTenantName }}</div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('priceRatio')" align="center" prop="priceRatio" show-overflow-tooltip
+        <el-table-column v-if="checkList.includes('priceRatio')" align="left" prop="priceRatio" show-overflow-tooltip
           label="价格比例">
           <template #default="{ row }">
             <div class="tableBig">
@@ -210,7 +210,7 @@ onMounted(() => {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('pendBalance')" align="center" prop="pendBalance"
+        <el-table-column v-if="checkList.includes('pendBalance')" align="left" prop="pendBalance"
           show-overflow-tooltip label="待审金额">
           <template #default="{ row }">
             <div class="tableBig">
@@ -218,7 +218,7 @@ onMounted(() => {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('availableBalance')" align="center" prop="availableBalance"
+        <el-table-column v-if="checkList.includes('availableBalance')" align="left" prop="availableBalance"
           show-overflow-tooltip label="可用金额">
           <template #default="{ row }">
             <div class="tableBig">
@@ -226,7 +226,7 @@ onMounted(() => {
             </div>
           </template>
         </el-table-column>
-        <el-table-column align="center" fixed="right" prop="i" label="操作" width="350">
+        <el-table-column align="left" fixed="right" prop="i" label="操作" width="350">
           <template #default="{ row }">
             <ElSpace>
               <el-button v-if="row.bindStatus === 2" type="danger" plain size="small" @click="termination(row)">

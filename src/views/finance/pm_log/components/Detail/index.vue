@@ -152,12 +152,12 @@ defineExpose({
       <!-- <ElTableColumn
         type="selection"
         show-overflow-tooltip
-        align="center"
+        align="left"
         fixed
       /> -->
       <ElTableColumn
         show-overflow-tooltip
-        align="center"
+        align="left"
         prop=""
         label="点击ID"
       >
@@ -166,27 +166,27 @@ defineExpose({
           <el-text v-else>{{ row.typeId ? row.typeId : "-" }}</el-text>
         </template>
 </ElTableColumn>
-<ElTableColumn show-overflow-tooltip align="center" prop="projectId" label="项目ID">
+<ElTableColumn show-overflow-tooltip align="left" prop="projectId" label="项目ID">
   <template #default="{ row }">
           <el-text>{{ row.projectId ? row.projectId : "-" }}</el-text>
         </template>
 </ElTableColumn>
-<ElTableColumn show-overflow-tooltip align="center" prop="" label="类型">
+<ElTableColumn show-overflow-tooltip align="left" prop="" label="类型">
   <template #default="{ row }">
           <el-text v-if="row.balanceType == 1">待审金额</el-text>
           <el-text v-if="row.balanceType == 2">可用金额</el-text>
         </template>
 </ElTableColumn>
-<ElTableColumn show-overflow-tooltip align="center" prop="remark" label="说明"><template #default="{ row }">
+<ElTableColumn show-overflow-tooltip align="left" prop="remark" label="说明"><template #default="{ row }">
           <el-text class="mx-1">{{ row.remark ? row.remark : "-" }}</el-text>
         </template>
 </ElTableColumn>
-<ElTableColumn show-overflow-tooltip align="center" prop="beforeBalance" width="150" label="变动前">
+<ElTableColumn show-overflow-tooltip align="left" prop="beforeBalance" width="150" label="变动前">
   <template #default="{ row }">
           <CurrencyType />{{ row.beforeBalance || 0 }}
         </template>
 </ElTableColumn>
-<ElTableColumn show-overflow-tooltip align="center" prop="addAndSubtraction" width="150" label="加减款"><template
+<ElTableColumn show-overflow-tooltip align="left" prop="addAndSubtraction" width="150" label="加减款"><template
     #default="{ row }">
           <el-text v-if="row.operationType === 2" type="danger" class="mx-1"
             >-<CurrencyType />{{ Math.abs(row.difference) }}</el-text
@@ -196,12 +196,12 @@ defineExpose({
           >
         </template>
 </ElTableColumn>
-<ElTableColumn show-overflow-tooltip align="center" prop="afterBalance" width="150" label="变动后">
+<ElTableColumn show-overflow-tooltip align="left" prop="afterBalance" width="150" label="变动后">
   <template #default="{ row }">
           <CurrencyType />{{ row.afterBalance || 0 }}
         </template>
 </ElTableColumn>
-<ElTableColumn show-overflow-tooltip align="center" prop="createTime" label="时间"><template #default="{ row }">
+<ElTableColumn show-overflow-tooltip align="left" prop="createTime" label="时间"><template #default="{ row }">
           <el-tag effect="plain" type="info">{{
 format(row.createTime)
           }}</el-tag>

@@ -301,11 +301,11 @@ function onDeleteMulti(rows: any[]) {
           <ElTable ref="dictionaryItemRef" v-loading="dictionaryItem.loading" :data="dictionaryItem.dataList" stripe
             highlight-current-row border height="100%" @sort-change="sortChange"
             @selection-change="dictionaryItem.selectionDataList = $event" row-key="id" default-expand-all>
-            <ElTableColumn type="selection" align="center" fixed />
+            <ElTableColumn type="selection" align="left" fixed />
             <ElTableColumn prop="chineseName" label="中文名称" />
             <ElTableColumn prop="englishName" label="英文名称" />
             <ElTableColumn prop="remark" label="备注" />
-            <ElTableColumn label="键值" align="center" width="150">
+            <ElTableColumn label="键值" align="left" width="150">
               <template #default="scope">
                 <ElTag type="info">
                   {{ scope.row.code }}
@@ -313,7 +313,7 @@ function onDeleteMulti(rows: any[]) {
               </template>
             </ElTableColumn>
 
-            <ElTableColumn label="操作" width="250" align="center">
+            <ElTableColumn label="操作" width="250" align="left">
               <template #default="scope">
                 <ElButton type="primary" size="small" plain @click="onCreate(scope.row)">
                   新增子项

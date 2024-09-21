@@ -165,18 +165,18 @@ function getDataList() {
           <p class="rankingColP"><span class="rankingColSpan"></span>完成排行榜</p>
           <el-table :data="data.memberDataCenterCompletedVOList" class="tabless"
             :style="{ '--el-table-border-color': 'none' }">
-            <el-table-column align="center" type="index" width="60"  label="序号"/>
-            <el-table-column show-overflow-tooltip align="center" prop="memberId" label="会员ID">
+            <el-table-column align="left" type="index" width="60"  label="序号"/>
+            <el-table-column show-overflow-tooltip align="left" prop="memberId" label="会员ID">
               <template #default="{ row }">
                 <span style="color: #0F0F0F;">{{ row.memberId ? row.memberId : '-' }}</span>
               </template>
             </el-table-column>
-            <el-table-column show-overflow-tooltip align="center" prop="memberName" label="会员名称">
+            <el-table-column show-overflow-tooltip align="left" prop="memberName" label="会员名称">
               <template #default="{ row }">
                 <span style="color: #FF2D2D;">{{ row.memberName ? row.memberName : '-' }}</span>
               </template>
             </el-table-column>
-            <el-table-column show-overflow-tooltip align="center" prop="completedQuantity" label="完成数量">
+            <el-table-column show-overflow-tooltip align="left" prop="completedQuantity" label="完成数量">
               <template #default="{ row }">
                 <span style="color: #00C738;">{{ row.completedQuantity ? row.completedQuantity : '-' }}</span>
               </template>
@@ -189,23 +189,23 @@ function getDataList() {
         <div class="rankingCol">
           <p class="rankingColP"><span class="rankingColSpan"></span>退款排行榜</p>
           <el-table :data="data.memberDataCenterRefundVOList" :style="{ '--el-table-border-color': 'none' }">
-            <el-table-column align="center" type="index" width="60"  label="序号"/>
-            <el-table-column show-overflow-tooltip align="center" prop="memberId" label="会员ID">
+            <el-table-column align="left" type="index" width="60"  label="序号"/>
+            <el-table-column show-overflow-tooltip align="left" prop="memberId" label="会员ID">
               <template #default="{ row }">
                 <span style="color: #0F0F0F;">{{ row.memberId ? row.memberId : '-' }}</span>
               </template>
             </el-table-column>
-            <el-table-column show-overflow-tooltip align="center" prop="memberName" label="会员名称">
+            <el-table-column show-overflow-tooltip align="left" prop="memberName" label="会员名称">
               <template #default="{ row }">
                 <span style="color: #FF2D2D;">{{ row.memberName ? row.memberName : '-' }}</span>
               </template>
             </el-table-column>
-            <el-table-column show-overflow-tooltip align="center" prop="completedQuantity" label="退款数">
+            <el-table-column show-overflow-tooltip align="left" prop="completedQuantity" label="退款数">
               <template #default="{ row }">
                 <span style="color: #00C738;">{{ row.completedQuantity ? row.completedQuantity : '-' }}</span>
               </template>
             </el-table-column>
-            <el-table-column show-overflow-tooltip align="center" prop="refund" label="退款金额">
+            <el-table-column show-overflow-tooltip align="left" prop="refund" label="退款金额">
               <template #default="{ row }">
                 <span style="color: #0F0F0F;">{{ row.refund ? row.refund : 0 }}</span>
               </template>
@@ -218,18 +218,18 @@ function getDataList() {
         <div class="rankingCol">
           <p class="rankingColP"><span class="rankingColSpan"></span>业绩排行榜</p>
           <el-table :data="data.memberDataCenterPriceVOList" :style="{ '--el-table-border-color': 'none' }">
-            <el-table-column align="center" type="index" width="60"  label="序号"/>
-            <el-table-column show-overflow-tooltip align="center" prop="memberId" label="会员ID">
+            <el-table-column align="left" type="index" width="60"  label="序号"/>
+            <el-table-column show-overflow-tooltip align="left" prop="memberId" label="会员ID">
               <template #default="{ row }">
                 <span style="color: #0F0F0F;">{{ row.memberId ? row.memberId : '-' }}</span>
               </template>
             </el-table-column>
-            <el-table-column show-overflow-tooltip align="center" prop="memberName" label="会员名称">
+            <el-table-column show-overflow-tooltip align="left" prop="memberName" label="会员名称">
               <template #default="{ row }">
                 <span style="color: #FF2D2D;">{{ row.memberName ? row.memberName : '-' }}</span>
               </template>
             </el-table-column>
-            <el-table-column show-overflow-tooltip align="center" prop="price" label="今日收入">
+            <el-table-column show-overflow-tooltip align="left" prop="price" label="今日收入">
               <template #default="{ row }">
                 <span style="color: #00C738;">{{ row.price ? row.price : 0 }}</span>
               </template>

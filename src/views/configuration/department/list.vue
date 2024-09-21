@@ -292,8 +292,8 @@ onBeforeUnmount(() => {
       <ElTable v-model:stripe="data.stripe" v-model:border="data.border" v-loading="data.loading"
         :size="data.lineHeight" class="my-4" :data="data.dataList" highlight-current-row height="100%"
         @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event"  @current-change="handleCurrentChange" >
-        <el-table-column align="center" type="selection" />
-        <ElTableColumn v-if="data.checkList.includes('id')" align="center" show-overflow-tooltip prop="id" label="部门ID">
+        <el-table-column align="left" type="selection" />
+        <ElTableColumn v-if="data.checkList.includes('id')" align="left" show-overflow-tooltip prop="id" label="部门ID">
           <template #default="{ row }">
             <div class="copyId tableSmall">
               <div class="id oneLine ">ID: {{ row.id }}</div>
@@ -301,7 +301,7 @@ onBeforeUnmount(() => {
             </div>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('name')" align="center" show-overflow-tooltip prop="name"
+        <ElTableColumn v-if="data.checkList.includes('name')" align="left" show-overflow-tooltip prop="name"
           label="部门名称">
           <template #default="{ row }">
             <el-text class="tableBig">
@@ -309,7 +309,7 @@ onBeforeUnmount(() => {
             </el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('memberCount')" align="center" show-overflow-tooltip
+        <ElTableColumn v-if="data.checkList.includes('memberCount')" align="left" show-overflow-tooltip
           prop="memberCount" label="员工数">
           <template #default="{ row }">
             <el-text class="tableBig">
@@ -317,7 +317,7 @@ onBeforeUnmount(() => {
             </el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('memberCount')" align="center" show-overflow-tooltip
+        <ElTableColumn v-if="data.checkList.includes('memberCount')" align="left" show-overflow-tooltip
           prop="memberCount" label="提成比例">
           <template #default="{ row }">
             <el-text class="tableBig">
@@ -325,7 +325,7 @@ onBeforeUnmount(() => {
             </el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('memberCount')" align="center" show-overflow-tooltip
+        <ElTableColumn v-if="data.checkList.includes('memberCount')" align="left" show-overflow-tooltip
           prop="memberCount" label="计提规则">
           <template #default="{ row }">
             <div class="tableBig">
@@ -336,7 +336,7 @@ onBeforeUnmount(() => {
 
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('remark')" align="center" show-overflow-tooltip prop="remark"
+        <ElTableColumn v-if="data.checkList.includes('remark')" align="left" show-overflow-tooltip prop="remark"
           label="备注">
           <template #default="{row}">
             <div class="flex-s  ">
@@ -348,7 +348,7 @@ onBeforeUnmount(() => {
             </div>
           </template>
         </ElTableColumn>
-        <ElTableColumn label="操作" width="300" align="center" fixed="right">
+        <ElTableColumn label="操作" width="300" align="left" fixed="right">
           <template #default="scope">
             <ElButton type="primary" size="small" plain @click="onGroup(scope.row)">
               新增小组

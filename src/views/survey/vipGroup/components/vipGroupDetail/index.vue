@@ -58,21 +58,21 @@ defineExpose({
 <template lang="">
   <el-dialog v-model="drawerisible" title="承接项目" @close="close">
     <el-table v-loading="listLoading" border :data="list" stripe>
-      <el-table-column type="index" align="center" label="序号" width="55" />
+      <el-table-column type="index" align="left" label="序号" width="55" />
       <el-table-column
-        align="center"
+        align="left"
         prop="projectId"
         show-overflow-tooltip
         label="项目编码"
       />
       <el-table-column
-        align="center"
+        align="left"
         prop="projectName"
         show-overflow-tooltip
         label="项目名称"
       />
       <el-table-column
-        align="center"
+        align="left"
         prop="c"
         show-overflow-tooltip
         label="参数"

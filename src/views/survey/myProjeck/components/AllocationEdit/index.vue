@@ -84,19 +84,19 @@ defineExpose({ showEdit });
     >
       <el-table :data="data.list" v-loading="false" row-key="id">
         <el-table-column
-          align="center"
+          align="left"
           show-overflow-tooltip
           label="项目编码"
           prop="projectId"
         />
         <el-table-column
-          align="center"
+          align="left"
           show-overflow-tooltip
           label="项目名称"
           prop="projectName"
         />
         <el-table-column
-          align="center"
+          align="left"
           show-overflow-tooltip
           label="配额/限量"
           prop="name"

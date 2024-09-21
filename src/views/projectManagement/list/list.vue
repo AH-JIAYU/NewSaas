@@ -310,8 +310,8 @@ onMounted(async () => {
       <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="projectId" :data="list"
         :tree-props="{ children: 'getChildrenProjectListInfoList' }" :border="border" :size="lineHeight"
         :stripe="stripe" highlight-current-row height="100%" @current-change="handleCurrentChange">
-        <el-table-column align="center" type="selection" :selectable="selectable" />
-        <el-table-column v-if="checkList.includes('isOnline')" show-overflow-tooltip prop="isOnline" align="center"
+        <el-table-column align="left" type="selection" :selectable="selectable" />
+        <el-table-column v-if="checkList.includes('isOnline')" show-overflow-tooltip prop="isOnline" align="left"
           width="100" label="状态">
           <template #default="{ row }">
             <ElSwitch @change="changeStatus(row, $event)" inline-prompt v-model="row.isOnline" active-text="在线"
@@ -361,7 +361,7 @@ onMounted(async () => {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('PCNL')" align="center" label="参数" width="180">
+        <el-table-column v-if="checkList.includes('PCNL')" align="left" label="参数" width="180">
           <template #default="{ row }">
             <div class="flex-c">
               <div class="oneLine parameter" style="width: calc(100% - 20px);">
@@ -375,7 +375,7 @@ onMounted(async () => {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('allocationType')" align="center" label="分配" width="90">
+        <el-table-column v-if="checkList.includes('allocationType')" align="left" label="分配" width="90">
           <template #default="{ row }">
             <el-button size="small" @click="viewAllocations(row, 1)" type="danger" v-if="row.allocationType === 1"
               plain>自动分配</el-button>
@@ -389,7 +389,7 @@ onMounted(async () => {
           </template>
         </el-table-column>
 
-        <el-table-column v-if="checkList.includes('doMoneyPrice')" show-overflow-tooltip align="center" label="原价">
+        <el-table-column v-if="checkList.includes('doMoneyPrice')" show-overflow-tooltip align="left" label="原价">
           <template #default="{ row }">
             <div class="flex-c">
               <div class="oneLine tableBig" style="width: calc(100% - 20px);">
@@ -401,7 +401,7 @@ onMounted(async () => {
 
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('ir')" show-overflow-tooltip prop="ir" align="center" label="IR/NIR"
+        <el-table-column v-if="checkList.includes('ir')" show-overflow-tooltip prop="ir" align="left" label="IR/NIR"
           width="100">
           <template #default="{ row }">
             <div class="flex-c">
@@ -415,7 +415,7 @@ onMounted(async () => {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('countryIdList')" show-overflow-tooltip prop="countryIdList"
-          align="center" label="国家" width="80">
+          align="left" label="国家" width="80">
           <template #default="{ row }">
             <template v-if="row.countryIdList">
               <template v-if="row.countryIdList.length === basicDictionaryStore.country.length">
@@ -438,7 +438,7 @@ onMounted(async () => {
           </template>
         </el-table-column>
 
-        <el-table-column v-if="checkList.includes('create')" prop="createTime" align="center" width="100"
+        <el-table-column v-if="checkList.includes('create')" prop="createTime" align="left" width="100"
           label="创建"><template #default="{ row }">
             <el-text class="tableBig">{{ row.createName }}</el-text>
             <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>
@@ -456,7 +456,7 @@ onMounted(async () => {
 
           </template>
         </el-table-column>
-        <el-table-column align="center" fixed="right" label="操作" width="240">
+        <el-table-column align="left" fixed="right" label="操作" width="240">
           <template #default="{ row }">
             <el-button v-if="row.allocationStatus === 1" plain :disabled="row.isOnline === 2" type="primary"
               size="small" @click="distribution(row)">

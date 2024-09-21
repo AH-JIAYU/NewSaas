@@ -208,40 +208,40 @@ onMounted(() => {
             </el-row>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('supplierId')" prop="supplierId" show-overflow-tooltip align="center"
+        <el-table-column v-if="checkList.includes('supplierId')" prop="supplierId" show-overflow-tooltip align="left"
           label="供应商ID" />
-        <el-table-column v-if="checkList.includes('billTime')" prop="billTime" show-overflow-tooltip align="center"
+        <el-table-column v-if="checkList.includes('billTime')" prop="billTime" show-overflow-tooltip align="left"
           label="账单日期"><template #default="{ row }">
             <el-tag effect="plain" type="info">{{
     format(row.billTime)
   }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('billAmount')" prop="billAmount" show-overflow-tooltip align="center"
+        <el-table-column v-if="checkList.includes('billAmount')" prop="billAmount" show-overflow-tooltip align="left"
           label="账单金额">
           <template #default="{ row }">
             <CurrencyType />{{ row.billAmount || 0 }}
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('taxesFees')" prop="taxesFees" show-overflow-tooltip align="center"
+        <el-table-column v-if="checkList.includes('taxesFees')" prop="taxesFees" show-overflow-tooltip align="left"
           label="税费">
           <template #default="{ row }">
             <CurrencyType />{{ row.taxesFees || 0 }}
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('payAmount')" prop="payAmount" show-overflow-tooltip align="center"
+        <el-table-column v-if="checkList.includes('payAmount')" prop="payAmount" show-overflow-tooltip align="left"
           label="实付金额">
           <template #default="{ row }">
             <CurrencyType />{{ row.payAmount || 0 }}
           </template>
         </el-table-column>
-        <ElTableColumn v-if="checkList.includes('billStatus')" align="center" show-overflow-tooltip prop="" label="状态">
+        <ElTableColumn v-if="checkList.includes('billStatus')" align="left" show-overflow-tooltip prop="" label="状态">
           <template #default="{ row }">
             {{ billStatusList[row.billStatus - 1] }}
           </template>
         </ElTableColumn>
 
-        <el-table-column align="center" fixed="right" label="操作" width="170">
+        <el-table-column align="left" fixed="right" label="操作" width="170">
           <template #default="{ row }">
             <template v-if="row.billStatus === 1">
               <el-button size="small" plain type="primary" @click="changeStatus(row.id, 1)">

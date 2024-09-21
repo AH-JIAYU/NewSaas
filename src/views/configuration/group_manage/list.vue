@@ -279,8 +279,8 @@ onBeforeUnmount(() => {
       <ElTable v-model:stripe="data.stripe" v-model:border="data.border" v-loading="data.loading"
         :size="data.lineHeight" class="my-4" :data="data.dataList" highlight-current-row height="100%"
         @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
-        <el-table-column align="center" type="selection" />
-        <ElTableColumn v-if="data.checkList.includes('id')" align="center" show-overflow-tooltip prop="id"
+        <el-table-column align="left" type="selection" />
+        <ElTableColumn v-if="data.checkList.includes('id')" align="left" show-overflow-tooltip prop="id"
           label="组ID" >
           <template #default="{row}">
             <div class="copyId tableSmall">
@@ -289,20 +289,20 @@ onBeforeUnmount(() => {
             </div>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('name')" align="center" show-overflow-tooltip prop="name"
+        <ElTableColumn v-if="data.checkList.includes('name')" align="left" show-overflow-tooltip prop="name"
           label="组名称">
           <template #default="{ row }">
             <div class="tableBig">{{ row.name }}</div>
           </template>
         </ElTableColumn>
 
-        <ElTableColumn v-if="data.checkList.includes('count')" align="center" show-overflow-tooltip prop="count"
+        <ElTableColumn v-if="data.checkList.includes('count')" align="left" show-overflow-tooltip prop="count"
           label="员工数">
           <template #default="{ row }">
             <div class="tableBig">{{ row.count ? row.count : "-" }}</div>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('departmentId')" align="center" show-overflow-tooltip
+        <ElTableColumn v-if="data.checkList.includes('departmentId')" align="left" show-overflow-tooltip
           prop="departmentId" label="所属部门">
           <template #default="{ row }">
             <el-text v-for="item in departmentList" :key="item.id">
@@ -312,7 +312,7 @@ onBeforeUnmount(() => {
             </el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn label="操作" width="300" align="center" fixed="right">
+        <ElTableColumn label="操作" width="300" align="left" fixed="right">
           <template #default="scope">
             <ElButton type="primary" size="small" plain @click="onGroup(scope.row)">
               新增组员
