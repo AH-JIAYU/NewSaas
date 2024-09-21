@@ -63,8 +63,9 @@ watch([
             : generateI18nTitle(routeInfo.meta.i18n, settingsStore.title)
           : generateI18nTitle(routeInfo.meta.i18n, settingsStore.title)
       )
+
     if (userStore.webName) {
-      document.title = userStore.webName
+      document.title = `${title} - ${userStore.webName}`
     } else {
       document.title = `${title} - ${import.meta.env.VITE_APP_TITLE}`
     }
