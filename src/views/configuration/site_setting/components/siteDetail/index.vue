@@ -139,7 +139,7 @@ defineExpose({
 <template>
   <el-dialog v-model="drawerisible" style="min-height: 560px;" title="详情" @close="handleClose">
     <el-table v-loading="listLoading" border :data="list">
-      <el-table-column align="center" prop="host" show-overflow-tooltip label="解析类型">
+      <el-table-column align="left" prop="host" show-overflow-tooltip label="解析类型">
         <template #default>
           <el-text>CNAME</el-text>
         </template>
@@ -162,7 +162,7 @@ defineExpose({
           <el-text v-else style="color: #FF8181;">未生效</el-text>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="type" show-overflow-tooltip label="操作">
+      <el-table-column align="left" prop="type" show-overflow-tooltip label="操作">
         <template #default>
           <el-button type="primary" plain size="small" @click="onSubmit">
             验证

@@ -31,8 +31,8 @@ defineExpose({ showEdit })
         操时间: {{ data.row.operationTime }}
       </el-text>
       <el-table style="margin-top: 10px" border :data="data.gridData">
-        <el-table-column align="center" type="index" label="序号" width="150" />
-        <el-table-column align="center" property="operationContent" label="操作内容" />
+        <el-table-column align="left" type="index" label="序号" width="150" />
+        <el-table-column align="left" property="operationContent" label="操作内容" />
       </el-table>
     </el-dialog>
   </div>

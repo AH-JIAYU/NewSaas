@@ -549,15 +549,15 @@ defineExpose({ showEdit });
             </div>
           </template>
           <el-table :data="data.form.projectOperationInfoList" border style="width: 100%">
-            <el-table-column align="center" type="index" width="80" label="序号" />
-            <el-table-column align="center" prop="operationTime" label="操作时间" />
-            <el-table-column align="center" prop="operationName" label="操作人" />
-            <el-table-column align="center" prop="operationType" label="操作事项">
+            <el-table-column align="left" type="index" width="80" label="序号" />
+            <el-table-column align="left" prop="operationTime" label="操作时间" />
+            <el-table-column align="left" prop="operationName" label="操作人" />
+            <el-table-column align="left" prop="operationType" label="操作事项">
               <template #default="{row}">
                 {{operationTypeList[row.operationType-1]}}
               </template>
             </el-table-column>
-            <el-table-column align="center" label="详情">
+            <el-table-column align="left" label="详情">
               <template #default="{ row }">
                 <el-button type="primary" link @click="details(row)" v-if="row.operationType !== 1">
                   详情

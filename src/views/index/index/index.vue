@@ -541,39 +541,39 @@ onMounted(async () => {
               </div>
               <el-table :data="data.dataCenterSupplierCompletedQuantities" style="width: 100%">
                 <el-table-column type="index" label="序号" width="60" />
-                <el-table-column align="center" prop="supplierName" label="供应商名称"><template #default="{ row }">
+                <el-table-column align="left" prop="supplierName" label="供应商名称"><template #default="{ row }">
                     {{ row.supplierName ? row.supplierName : "-" }}
                   </template>
                 </el-table-column>
-                <el-table-column align="center" prop="completedQuantity" label="完成数量">
+                <el-table-column align="left" prop="completedQuantity" label="完成数量">
                   <template #default="{ row }">
                     <span class="table-green"> {{ row.completedQuantity ? row.completedQuantity : "0" }}</span>
                   </template>
                 </el-table-column>
-                <el-table-column align="center" prop="completedAmount" label="完成金额"><template #default="{ row }">
+                <el-table-column align="left" prop="completedAmount" label="完成金额"><template #default="{ row }">
                     <span class="table-red">
                       <CurrencyType />{{ row.completedAmount ? row.completedAmount : "0" }}
                     </span>
                   </template>
                 </el-table-column>
 
-                <el-table-column align="center" prop="b2BProportion" label="B2B">
+                <el-table-column align="left" prop="b2BProportion" label="B2B">
                   <template #default="{ row }">
                     {{ row.b2BProportion * 100 }}%
                   </template>
                 </el-table-column>
-                <el-table-column align="center" prop="b2CProportion" label="B2C">
+                <el-table-column align="left" prop="b2CProportion" label="B2C">
                   <template #default="{ row }">
                     {{ row.b2CProportion * 100 }}%
                   </template>
                 </el-table-column>
-                <el-table-column align="center" label="所属国家">
+                <el-table-column align="left" label="所属国家">
                   <template #default="{ row }">
                     <span v-if="String(row) !== '{}'">{{ filterCountry(row) }}</span>
                   </template>
                 </el-table-column>
                 <template #empty>
-                  <el-empty :image-size="100" description="暂无数据" />
+                  <el-empty :image="empty" :image-size="200" />
                 </template>
               </el-table>
             </div>
@@ -586,27 +586,27 @@ onMounted(async () => {
               </div>
               <el-table :data="data.dataCenterSupplierTurnovers" style="width: 100%">
                 <el-table-column type="index" label="序号" width="60" />
-                <el-table-column align="center" prop="name" label="供应商名称"><template #default="{ row }">
+                <el-table-column align="left" prop="name" label="供应商名称"><template #default="{ row }">
                     {{ row.name ? row.name : "-" }}
                   </template>
                 </el-table-column>
-                <el-table-column sortable align="center" prop="dayTurnover" label="日">
+                <el-table-column sortable align="left" prop="dayTurnover" label="日">
                   <template #default="{ row }">
                     <CurrencyType />{{ row.dayTurnover ? row.dayTurnover : 0 }}
                   </template>
                 </el-table-column>
-                <el-table-column sortable align="center" prop="monthTurnover" label="月">
+                <el-table-column sortable align="left" prop="monthTurnover" label="月">
                   <template #default="{ row }">
                     <CurrencyType />{{ row.monthTurnover ? row.monthTurnover : 0 }}
                   </template>
                 </el-table-column>
-                <el-table-column sortable align="center" prop="yearTurnover" label="年">
+                <el-table-column sortable align="left" prop="yearTurnover" label="年">
                   <template #default="{ row }">
                     <CurrencyType />{{ row.yearTurnover ? row.yearTurnover : 0 }}
                   </template>
                 </el-table-column>
                 <template #empty>
-                  <el-empty :image="empty" :image-size="300" />
+                  <el-empty :image="empty" :image-size="200" />
                 </template>
               </el-table>
             </div>
@@ -780,7 +780,7 @@ onMounted(async () => {
                 </div>
               </template>
               <template v-else>
-                <el-empty :image="empty" :image-size="300" />
+                <el-empty :image="empty" :image-size="200" />
                 <!-- <div class="flex flex-col items-center py-6 text-stone-5">
                   <SvgIcon name="i-tabler:mood-smile" :size="40" />
                   <p m-2 text-base>没有待办</p>

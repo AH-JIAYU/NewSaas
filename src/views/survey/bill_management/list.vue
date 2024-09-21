@@ -215,8 +215,8 @@ onBeforeUnmount(() => {
       <ElTable v-loading="data.loading" :border="data.border" :size="data.lineHeight" :stripe="data.stripe" class="my-4"
         :data="data.dataList" highlight-current-row height="100%" @sort-change="sortChange"
         @selection-change="data.batch.selectionDataList = $event">
-        <el-table-column align="center" type="selection" />
-        <ElTableColumn v-if="data.checkList.includes('memberId')" show-overflow-tooltip align="center" prop=""
+        <el-table-column align="left" type="selection" />
+        <ElTableColumn v-if="data.checkList.includes('memberId')" show-overflow-tooltip align="left" prop=""
           label="会员ID" width="200">
           <template #default="{ row }">
             <div v-if="row.memberId" class="hoverSvg">
@@ -228,15 +228,15 @@ onBeforeUnmount(() => {
             <el-text v-else>-</el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('memberName')" show-overflow-tooltip align="center" prop=""
+        <ElTableColumn v-if="data.checkList.includes('memberName')" show-overflow-tooltip align="left" prop=""
           label="会员名称" width="120">
           <template #default="{ row }">
             <p class="weightColor">{{ row.memberName ? row.memberName : "-" }}</p>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('billTime')" show-overflow-tooltip align="center" prop="billTime"
+        <ElTableColumn v-if="data.checkList.includes('billTime')" show-overflow-tooltip align="left" prop="billTime"
           label="账单日期" />
-        <ElTableColumn v-if="data.checkList.includes('billAmount')" show-overflow-tooltip align="center"
+        <ElTableColumn v-if="data.checkList.includes('billAmount')" show-overflow-tooltip align="left"
           prop="billAmount" label="账单金额">
           <template #default="{ row }">
             <p style="font-weight: 700;">
@@ -244,7 +244,7 @@ onBeforeUnmount(() => {
             </p>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('taxesFees')" show-overflow-tooltip align="center" prop="taxesFees"
+        <ElTableColumn v-if="data.checkList.includes('taxesFees')" show-overflow-tooltip align="left" prop="taxesFees"
           label="税">
           <template #default="{ row }">
             <p style="font-weight: 700;">
@@ -252,7 +252,7 @@ onBeforeUnmount(() => {
             </p>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('payAmount')" show-overflow-tooltip align="center" prop="payAmount"
+        <ElTableColumn v-if="data.checkList.includes('payAmount')" show-overflow-tooltip align="left" prop="payAmount"
           label="实际金额">
           <template #default="{ row }">
             <p style="font-weight: 700;">
@@ -260,13 +260,13 @@ onBeforeUnmount(() => {
             </p>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('payTime')" show-overflow-tooltip align="center" prop="payTime"
+        <ElTableColumn v-if="data.checkList.includes('payTime')" show-overflow-tooltip align="left" prop="payTime"
           label="支付时间" >
           <template #default="{ row }">
             {{ row.payTime ? row.payTime : '-' }}
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('billStatus')" align="center" show-overflow-tooltip prop=""
+        <ElTableColumn v-if="data.checkList.includes('billStatus')" align="left" show-overflow-tooltip prop=""
           label="账单状态">
           <template #default="{ row }">
             <el-tag v-if="row.billStatus === 1" type="warning" effect="dark">待支付</el-tag>
@@ -274,13 +274,13 @@ onBeforeUnmount(() => {
             <el-tag v-if="row.billStatus === 3" type="danger" effect="dark">已拒绝</el-tag>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('notes')" show-overflow-tooltip align="center" prop="notes"
+        <ElTableColumn v-if="data.checkList.includes('notes')" show-overflow-tooltip align="left" prop="notes"
           label="说明">
           <template #default="{ row }">
             <el-text style="color:#333;font-weight: 700;"> {{ row.notes ? row.notes : "-" }}</el-text>
           </template>
         </ElTableColumn>
-        <el-table-column align="center" prop="i" label="操作" fixed="right" show-overflow-tooltip width="260">
+        <el-table-column align="left" prop="i" label="操作" fixed="right" show-overflow-tooltip width="260">
           <template #default="{ row }">
             <template v-if="row.billStatus === 1">
               <el-button size="small" plain type="primary" @click="paymentOperation(row.id, 1)">

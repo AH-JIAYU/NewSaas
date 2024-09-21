@@ -292,7 +292,7 @@ onBeforeUnmount(() => {
                 class="hide-table-header" height="100%" @sort-change="sortChange"
                 @selection-change="data.batch.selectionDataList = $event">
                 <el-table-column width="55" />
-                <ElTableColumn prop="status" label="状态" align="center">
+                <ElTableColumn prop="status" label="状态" align="left">
                   <template #default="scope">
                     <template v-if="scope.row.type === 'add'">
                       <ElSwitch v-model="scope.row.status" :active-value="1" :inactive-value="2" inline-prompt
@@ -304,7 +304,7 @@ onBeforeUnmount(() => {
                     </template>
                   </template>
                 </ElTableColumn>
-                <el-table-column width="500" prop="categoryName" label="问卷名称" align="center">
+                <el-table-column width="500" prop="categoryName" label="问卷名称" align="left">
                   <template #default="scope">
                     <template v-if="scope.row.type === 'add'">
                       <el-form-item
@@ -319,7 +319,7 @@ onBeforeUnmount(() => {
                   </template>
                 </el-table-column>
 
-                <ElTableColumn width="250" align="center" fixed="right" label="操作">
+                <ElTableColumn width="250" align="left" fixed="right" label="操作">
                   <template #default="scope">
                     <template v-if="scope.row.type === 'add'">
                       <ElButton type="primary" size="small" plain @click="
@@ -348,20 +348,20 @@ onBeforeUnmount(() => {
               </el-table>
             </template>
           </el-table-column>
-          <ElTableColumn prop="isDefault" label="默认/状态" align="center">
+          <ElTableColumn prop="isDefault" label="默认/状态" align="left">
             <template #default="scope">
               <ElSwitch @change="changeIsDefault(scope.row)" v-model="scope.row.isDefault" :active-value="1"
                 :inactive-value="2" inline-prompt active-text="启用" inactive-text="禁用" />
             </template>
           </ElTableColumn>
-          <ElTableColumn prop="countryName" label="国家/标题" width="500" align="center">
+          <ElTableColumn prop="countryName" label="国家/标题" width="500" align="left">
             <template #default="{ row }">
               <el-tag type="primary">{{ row.countryName }}</el-tag>
             </template>
 
           </ElTableColumn>
 
-          <ElTableColumn label="操作" width="250" align="center" fixed="right">
+          <ElTableColumn label="操作" width="250" align="left" fixed="right">
             <template #default="scope">
               <ElButton type="primary" size="small" plain @click="onCreateTiele(scope.row)">
                 新增问卷

@@ -139,9 +139,9 @@ onMounted(() => {
       </el-row>
       <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="id" :data="list"
         :border="border" :size="lineHeight" :stripe="stripe">
-        <el-table-column align="center" type="selection" />
+        <el-table-column align="left" type="selection" />
         <el-table-column v-if="checkList.includes('dispatchType')" show-overflow-tooltip prop="dispatchType"
-          align="center" label="类型">
+          align="left" label="类型">
           <template #default="{ row }">
             <div class="tableBig">
               <el-text v-if="row.dispatchType === 1" class="mx-1 " type="primary">指定关闭</el-text>
@@ -151,14 +151,14 @@ onMounted(() => {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('projectName')" show-overflow-tooltip prop="projectName"
-          align="center" label="项目" >
+          align="left" label="项目" >
           <template #default="{ row }">
             <div class="tableBig">
              {{row.projectName}}
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip prop="projectId" align="center"
+        <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip prop="projectId" align="left"
           width="180" label="项目ID">
           <template #default="{ row }">
             <div class="copyId tableSmall">
@@ -168,7 +168,7 @@ onMounted(() => {
           </template>
         </el-table-column>
 
-        <el-table-column v-if="checkList.includes('moneyPrice')" show-overflow-tooltip prop="moneyPrice" align="center"
+        <el-table-column v-if="checkList.includes('moneyPrice')" show-overflow-tooltip prop="moneyPrice" align="left"
           label="原价">
           <template #default="{ row }">
             <div class="tableBig">
@@ -178,7 +178,7 @@ onMounted(() => {
         </el-table-column>
 
         <el-table-column v-if="checkList.includes('doMoneyPrice')" show-overflow-tooltip prop="doMoneyPrice"
-          align="center" label="指定价格">
+          align="left" label="指定价格">
           <template #default="{ row }">
             <div class="tableBig">
               <CurrencyType />{{ row.doMoneyPrice || 0 }}
@@ -186,7 +186,7 @@ onMounted(() => {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('Supplier')" show-overflow-tooltip prop="groupSupplierId"
-          align="center" label="指定目标" width="350">
+          align="left" label="指定目标" width="350">
           <template #default="{ row }">
             <div class="specifyTheTarget">
               <el-button style="width:46px" v-if="row.dataType == 2" type="primary" size="small" class="p-1">{{
@@ -201,12 +201,12 @@ onMounted(() => {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('createTime')" show-overflow-tooltip prop="createTime" align="center"
+        <el-table-column v-if="checkList.includes('createTime')" show-overflow-tooltip prop="createTime" align="left"
           label="创建"><template #default="{ row }">
             <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column align="center" fixed="right" label="操作" width="170">
+        <el-table-column align="left" fixed="right" label="操作" width="170">
           <template #default="{ row }">
             <el-button type="primary" plain size="small" @click="editData(row)">
               编辑

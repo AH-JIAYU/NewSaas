@@ -168,25 +168,25 @@ defineExpose({
           </div>
         </template>
   <el-table :data="detailData?.result" border>
-    <el-table-column align="center" type="index" label="序号" width="80" />
-    <el-table-column align="center" show-overflow-tooltip prop="id" label="员工ID" />
-    <el-table-column align="center" show-overflow-tooltip prop="userName" label="用户名"><template #default="{ row }">
+    <el-table-column align="left" type="index" label="序号" width="80" />
+    <el-table-column align="left" show-overflow-tooltip prop="id" label="员工ID" />
+    <el-table-column align="left" show-overflow-tooltip prop="userName" label="用户名"><template #default="{ row }">
                 {{ row.userName ? row.userName : "-" }}
               </template>
     </el-table-column>
-    <el-table-column align="center" show-overflow-tooltip prop="name" label="姓名"><template #default="{ row }">
+    <el-table-column align="left" show-overflow-tooltip prop="name" label="姓名"><template #default="{ row }">
                 {{ row.name ? row.name : "-" }}
               </template>
     </el-table-column>
-    <el-table-column align="center" show-overflow-tooltip prop="phoneNumber" label="电话号码"><template #default="{ row }">
+    <el-table-column align="left" show-overflow-tooltip prop="phoneNumber" label="电话号码"><template #default="{ row }">
                 {{ row.phoneNumber ? row.phoneNumber : "-" }}
               </template>
     </el-table-column>
-    <el-table-column align="center" show-overflow-tooltip prop="email" label="电子邮箱"><template #default="{ row }">
+    <el-table-column align="left" show-overflow-tooltip prop="email" label="电子邮箱"><template #default="{ row }">
                 {{ row.email ? row.email : "-" }}
               </template>
     </el-table-column>
-    <el-table-column align="center" show-overflow-tooltip prop="departmentId" label="部门"><template #default="{ row }">
+    <el-table-column align="left" show-overflow-tooltip prop="departmentId" label="部门"><template #default="{ row }">
             <el-text v-for="item in departmentList" :key="item.id">
               <el-text v-if="item.id === row.departmentId">
                 {{ item.name }}
@@ -194,7 +194,7 @@ defineExpose({
             </el-text>
           </template>
     </el-table-column>
-    <el-table-column align="center" show-overflow-tooltip prop="personId" label="职位"><template #default="{ row }">
+    <el-table-column align="left" show-overflow-tooltip prop="personId" label="职位"><template #default="{ row }">
                 <el-text v-for="item in positionManageList">
                   <el-text v-if="row.positionId === item.id">
                     {{ item.name ? item.name : "-" }}
@@ -202,7 +202,7 @@ defineExpose({
                 </el-text>
               </template>
     </el-table-column>
-    <el-table-column align="center" show-overflow-tooltip prop="groupId" label="小组"><template #default="{ row }">
+    <el-table-column align="left" show-overflow-tooltip prop="groupId" label="小组"><template #default="{ row }">
                 <el-text v-for="item in groupManageList">
                   <el-text v-if="row.groupId === item.id">
                     {{ item.name ? item.name : "-" }}

@@ -209,8 +209,8 @@ onMounted(async () => {
       </el-row>
       <el-table v-loading="listLoading" :border="border" :data="data.list" :size="lineHeight" :stripe="stripe"
         @selection-change="setSelectRows">
-        <el-table-column align="center" type="selection" />
-        <el-table-column align="center" v-if="checkList.includes('memberStatus')" show-overflow-tooltip label="会员状态">
+        <el-table-column align="left" type="selection" />
+        <el-table-column align="left" v-if="checkList.includes('memberStatus')" show-overflow-tooltip label="会员状态">
           <template #default="{ row }">
             <ElSwitch v-if="row.memberStatus === 3" v-model="row.memberStatus" inline-prompt :inactive-value="3"
               :active-value="2" inactive-text="待审核" active-text="启用" @change="changeState($event, row.memberId)" />
@@ -218,13 +218,13 @@ onMounted(async () => {
               inactive-text="禁用" active-text="启用" @change="changeState($event, row.memberId)" />
           </template>
         </el-table-column>
-        <el-table-column align="center" v-if="checkList.includes('randomStatus')" show-overflow-tooltip label="随机身份">
+        <el-table-column align="left" v-if="checkList.includes('randomStatus')" show-overflow-tooltip label="随机身份">
           <template #default="{ row }">
             <ElSwitch v-model="row.randomStatus" inline-prompt :inactive-value="1" :active-value="2" inactive-text="禁用"
               active-text="启用" @change="changeState($event, row.memberId)" />
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('memberId')" align="center" prop="memberId" width="200"
+        <el-table-column v-if="checkList.includes('memberId')" align="left" prop="memberId" width="200"
           show-overflow-tooltip label="会员ID">
           <template #default="{ row }">
             <div v-if="row.memberId" class="hoverSvg">
@@ -236,12 +236,12 @@ onMounted(async () => {
             <el-text v-else>-</el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('memberNickname')" align="center" prop="memberNickname"
+        <el-table-column v-if="checkList.includes('memberNickname')" align="left" prop="memberNickname"
           show-overflow-tooltip label="会员名称" />
-        <el-table-column v-if="checkList.includes('memberName')" align="center" prop="memberName" show-overflow-tooltip
+        <el-table-column v-if="checkList.includes('memberName')" align="left" prop="memberName" show-overflow-tooltip
           label="会员姓名"><template #default="{ row }">
             {{ row.memberName ? row.memberName : '-' }} </template></el-table-column>
-        <el-table-column v-if="checkList.includes('memberLevelName')" align="center" prop="memberLevelName"
+        <el-table-column v-if="checkList.includes('memberLevelName')" align="left" prop="memberLevelName"
           show-overflow-tooltip label="会员等级">
           <template #default="{ row }">
             <div v-if="row.memberLevelName" class="editSvg">
@@ -263,10 +263,10 @@ onMounted(async () => {
             <el-text v-else>-</el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('memberGroupName')" align="center" prop="memberGroupName"
+        <el-table-column v-if="checkList.includes('memberGroupName')" align="left" prop="memberGroupName"
           show-overflow-tooltip label="会员组"><template #default="{ row }">
             {{ row.memberGroupName ? row.memberGroupName : '-' }} </template></el-table-column>
-        <el-table-column v-if="checkList.includes('B2B|B2C')" align="center" show-overflow-tooltip label="B2B|B2C">
+        <el-table-column v-if="checkList.includes('B2B|B2C')" align="left" show-overflow-tooltip label="B2B|B2C">
           <template #default="{ row }">
             <div class="isB2b">
               <el-text v-if="row.b2bStatus && row.b2bStatus === 2" class="mx-1 c-fx">
@@ -359,23 +359,23 @@ onMounted(async () => {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('availableBalance')" align="center" prop="availableBalance"
+        <el-table-column v-if="checkList.includes('availableBalance')" align="left" prop="availableBalance"
           show-overflow-tooltip label="可用余额">
           <template #default="{ row }">
             <CurrencyType />{{ row.availableBalance || 0 }}
           </template></el-table-column>
-        <el-table-column v-if="checkList.includes('pendingBalance')" align="center" prop="pendingBalance"
+        <el-table-column v-if="checkList.includes('pendingBalance')" align="left" prop="pendingBalance"
           show-overflow-tooltip label="待审金额">
           <template #default="{ row }">
             <CurrencyType />{{ row.pendingBalance || 0 }}
           </template></el-table-column>
-        <el-table-column v-if="checkList.includes('createName')" align="center" prop="createName" show-overflow-tooltip
+        <el-table-column v-if="checkList.includes('createName')" align="left" prop="createName" show-overflow-tooltip
           label="创建人">
           <template #default="{ row }">
             {{ row.createName ? row.createName : "-" }}
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('createTime')" align="center" prop="createTime" show-overflow-tooltip
+        <el-table-column v-if="checkList.includes('createTime')" align="left" prop="createTime" show-overflow-tooltip
           label="创建时间">
           <template #header>
             <span class="headerIcon">
@@ -398,7 +398,7 @@ onMounted(async () => {
   }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="操作" fixed="right" show-overflow-tooltip width="180">
+        <el-table-column align="left" label="操作" fixed="right" show-overflow-tooltip width="180">
           <template #default="{ row }">
             <el-button size="small" plain type="primary" @click="plusMinusPayments(row)">
               加减款

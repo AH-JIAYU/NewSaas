@@ -286,28 +286,28 @@ onBeforeUnmount(() => {
       <ElTable v-loading="data.loading" :border="data.border" :size="data.lineHeight" :stripe="data.stripe" class="my-4"
         :data="data.dataList" highlight-current-row height="100%" style="min-height: 370px;" sort-change="sortChange"
         @selection-change="data.batch.selectionDataList = $event">
-        <el-table-column align="center" type="selection" />
-        <ElTableColumn v-if="data.batch.enable" type="selection" show-overflow-tooltip align="center" fixed />
-        <ElTableColumn v-if="data.checkList.includes('typeId')" show-overflow-tooltip align="center" prop=""
+        <el-table-column align="left" type="selection" />
+        <ElTableColumn v-if="data.batch.enable" type="selection" show-overflow-tooltip align="left" fixed />
+        <ElTableColumn v-if="data.checkList.includes('typeId')" show-overflow-tooltip align="left" prop=""
           label="供应商ID/内部调查站">
           <template #default="{ row }">
             <el-text v-if="row.typeId == 1">内部调查站</el-text>
             <el-text v-else>{{ row.typeId ? row.typeId : "-" }}</el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('projectId')" show-overflow-tooltip align="center" prop="projectId"
+        <ElTableColumn v-if="data.checkList.includes('projectId')" show-overflow-tooltip align="left" prop="projectId"
           label="项目ID">
           <template #default="{ row }">
             <el-text>{{ row.projectId ? row.projectId : "-" }}</el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('type')" show-overflow-tooltip align="center" prop="" label="类型">
+        <ElTableColumn v-if="data.checkList.includes('type')" show-overflow-tooltip align="left" prop="" label="类型">
           <template #default="{ row }">
             <el-text v-if="row.type == 1">待审金额</el-text>
             <el-text v-if="row.type == 2">可用金额</el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('remark')" show-overflow-tooltip align="center" prop="remark"
+        <ElTableColumn v-if="data.checkList.includes('remark')" show-overflow-tooltip align="left" prop="remark"
           label="说明">
           <template #default="{ row }">
             <!-- <el-text v-if="!row.remark.includes('余额')" class="mx-1">{{
@@ -318,13 +318,13 @@ onBeforeUnmount(() => {
             <el-text class="mx-1">{{ row.remark ? row.remark : "-" }}</el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('beforeBalance')" show-overflow-tooltip align="center"
+        <ElTableColumn v-if="data.checkList.includes('beforeBalance')" show-overflow-tooltip align="left"
           prop="beforeBalance" width="150" label="变动前">
           <template #default="{ row }">
             <CurrencyType />{{ row.beforeBalance || 0 }}
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('addAndSubtraction')" show-overflow-tooltip align="center"
+        <ElTableColumn v-if="data.checkList.includes('addAndSubtraction')" show-overflow-tooltip align="left"
           prop="addAndSubtraction" width="150" label="加减款"><template #default="{ row }">
             <el-text v-if="row.operationType === 2" type="danger" class="mx-1">-
               <CurrencyType />{{ Math.abs(row.addAndSubtraction) }}
@@ -335,13 +335,13 @@ onBeforeUnmount(() => {
             </el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('afterBalance')" show-overflow-tooltip align="center"
+        <ElTableColumn v-if="data.checkList.includes('afterBalance')" show-overflow-tooltip align="left"
           prop="afterBalance" width="150" label="变动后">
           <template #default="{ row }">
             <CurrencyType />{{ row.afterBalance || 0 }}
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('createTime')" show-overflow-tooltip align="center"
+        <ElTableColumn v-if="data.checkList.includes('createTime')" show-overflow-tooltip align="left"
           prop="createTime" label="时间"><template #default="{ row }">
             <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>
           </template>

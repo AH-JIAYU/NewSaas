@@ -147,8 +147,8 @@ onMounted(async () => {
       </el-row>
       <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
         @selection-change="setSelectRows">
-        <el-table-column align="center" type="selection" />
-        <el-table-column v-if="checkList.includes('projectQuestionnaireClickId')" align="center"
+        <el-table-column align="left" type="selection" />
+        <el-table-column v-if="checkList.includes('projectQuestionnaireClickId')" align="left"
           prop="projectQuestionnaireClickId" show-overflow-tooltip label="点击ID"><template #default="{ row }">
             {{
     row.projectQuestionnaireClickId
@@ -157,31 +157,31 @@ onMounted(async () => {
   }}
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('customerShortName')" align="center" prop="surveySource"
+        <el-table-column v-if="checkList.includes('customerShortName')" align="left" prop="surveySource"
           show-overflow-tooltip label="会员类型" width="100"><template #default="{ row }">
             {{ memberType[row.surveySource - 1].label }}
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('customerShortName')" align="center" prop="customerShortName"
+        <el-table-column v-if="checkList.includes('customerShortName')" align="left" prop="customerShortName"
           show-overflow-tooltip label="客户简称" />
-        <el-table-column v-if="checkList.includes('memberChildId')" align="center" show-overflow-tooltip
+        <el-table-column v-if="checkList.includes('memberChildId')" align="left" show-overflow-tooltip
           label="子会员ID/会员ID">
           <template #default="{ row }">
             {{ row.memberChildId }} <br />
             {{ row.randomIdentityId }}
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('projectId')" align="center" prop="projectId" show-overflow-tooltip
+        <el-table-column v-if="checkList.includes('projectId')" align="left" prop="projectId" show-overflow-tooltip
           label="项目ID" />
-        <el-table-column v-if="checkList.includes('projectName')" align="center" prop="projectName"
+        <el-table-column v-if="checkList.includes('projectName')" align="left" prop="projectName"
           show-overflow-tooltip label="项目名称" />
-        <el-table-column v-if="checkList.includes('callbackUrl')" align="center" prop="callbackUrl" label="回调URL" />
-        <el-table-column v-if="checkList.includes('subordinateUrl')" align="center" prop="subordinateUrl"
+        <el-table-column v-if="checkList.includes('callbackUrl')" align="left" prop="callbackUrl" label="回调URL" />
+        <el-table-column v-if="checkList.includes('subordinateUrl')" align="left" prop="subordinateUrl"
           label="下级URL"><template #default="{ row }">
             {{ row.subordinateUrl ? row.subordinateUrl : '-' }}
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('callbackTime')" align="center" prop="callbackTime"
+        <el-table-column v-if="checkList.includes('callbackTime')" align="left" prop="callbackTime"
           show-overflow-tooltip label="回调时间"><template #default="{ row }">
             <el-tag effect="plain" type="info">{{ format(row.callbackTime) }}</el-tag>
           </template>

@@ -27,9 +27,9 @@ defineExpose({ showEdit });
       <el-text class="mx-1"> 操时间: {{ row.createTime }} </el-text>
     </p>
     <el-table style="margin-top: 10px" border :data="editRecordList">
-      <el-table-column align="center" type="index" label="序号" width="150" />
+      <el-table-column align="left" type="index" label="序号" width="150" />
       <el-table-column
-        align="center"
+        align="left"
         prop="operationContent"
         label="操作内容"
       />

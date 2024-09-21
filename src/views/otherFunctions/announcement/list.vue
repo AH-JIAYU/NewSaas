@@ -322,15 +322,15 @@ onBeforeUnmount(() => {
       <ElTable v-model:stripe="data.stripe" v-model:border="data.border" v-loading="data.loading"
         :size="data.lineHeight" class="my-4" :data="data.dataList" highlight-current-row height="100%"
         @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
-        <el-table-column align="center" type="selection" />
-        <ElTableColumn v-if="data.checkList.includes('top')" align="center" show-overflow-tooltip prop="top" label="置顶">
+        <el-table-column align="left" type="selection" />
+        <ElTableColumn v-if="data.checkList.includes('top')" align="left" show-overflow-tooltip prop="top" label="置顶">
           <template #default="{ row }">
             <el-switch v-model="row.top" :active-value="true" :inactive-value="false" inline-prompt active-text="开启"
               inactive-text="关闭" @change="onChangeStatus(row)">
             </el-switch>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('title')" align="center" show-overflow-tooltip prop="title"
+        <ElTableColumn v-if="data.checkList.includes('title')" align="left" show-overflow-tooltip prop="title"
           label="标题">
           <template #default="{ row }">
             <el-text class="tableBig">
@@ -338,7 +338,7 @@ onBeforeUnmount(() => {
             </el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('type')" align="center" show-overflow-tooltip prop="type"
+        <ElTableColumn v-if="data.checkList.includes('type')" align="left" show-overflow-tooltip prop="type"
           label="类型">
           <template #default="{ row }">
             <el-text class="tableBig">
@@ -348,7 +348,7 @@ onBeforeUnmount(() => {
           </template>
         </ElTableColumn>
 
-        <ElTableColumn v-if="data.checkList.includes('createTime')" align="center" show-overflow-tooltip
+        <ElTableColumn v-if="data.checkList.includes('createTime')" align="left" show-overflow-tooltip
           prop="createTime"  >
           <template #header>
             <div class="flex-c">
@@ -363,7 +363,7 @@ onBeforeUnmount(() => {
   }}</el-tag>
           </template>
         </ElTableColumn>
-        <ElTableColumn label="操作" width="300" align="center" fixed="right">
+        <ElTableColumn label="操作" width="300" align="left" fixed="right">
           <template #default="scope">
             <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">
               编辑

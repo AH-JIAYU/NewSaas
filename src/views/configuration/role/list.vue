@@ -208,8 +208,8 @@ onMounted(() => {
       <ElTable v-loading="data.loading" class="my-4" :data="data.dataList" stripe highlight-current-row
         height="100%" @sort-change="sortChange" border @selection-change="data.batch.selectionDataList = $event"
         @current-change="handleCurrentChange" >
-        <ElTableColumn v-if="data.batch.enable" type="selection" align="center" fixed />
-        <ElTableColumn prop="id" align="center" label="角色ID" >
+        <ElTableColumn v-if="data.batch.enable" type="selection" align="left" fixed />
+        <ElTableColumn prop="id" align="left" label="角色ID" >
           <template #default="{row}">
             <div class="copyId tableSmall">
               <div class="id oneLine  ">ID: {{ row.id }}</div>
@@ -217,17 +217,17 @@ onMounted(() => {
             </div>
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="roleName" align="center" label="角色名称" >
+        <ElTableColumn prop="roleName" align="left" label="角色名称" >
           <template #default="{row}">
             <div class="tableBig">{{row.roleName}}</div>
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="count" align="center" label="账户数" >
+        <ElTableColumn prop="count" align="left" label="账户数" >
           <template #default="{row}">
             <div class="tableBig">{{row.count}}</div>
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="remark" align="center" label="备注" >
+        <ElTableColumn prop="remark" align="left" label="备注" >
           <template #default="{row}">
             <div class="flex-s  ">
               <div class="oneLine tableBig" style="width: calc(100% - 20px);">
@@ -238,7 +238,7 @@ onMounted(() => {
             </div>
           </template>
         </ElTableColumn>
-        <ElTableColumn label="操作" width="250" align="center" fixed="right">
+        <ElTableColumn label="操作" width="250" align="left" fixed="right">
           <template #default="scope">
             <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">
               编辑
@@ -338,14 +338,14 @@ onMounted(() => {
 .copyId {
   @extend .flex-s;
   justify-content: center;
+  width: 100%;
+  flex-shrink: 0;
 
   .copy {
     width: 20px;
   }
 
   .id {
-    // flex: 1;
-    width:auto !important;
     max-width:calc(100% - 25px)  !important;
   }
 }

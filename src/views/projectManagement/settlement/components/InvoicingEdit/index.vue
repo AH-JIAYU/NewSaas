@@ -84,9 +84,9 @@ defineExpose({ showEdit });
       <div v-if="dataList.length > 1" style="margin-bottom: 20px;">确认对以下项目进行{{ title }}操作吗?</div>
       <div v-else style="margin-bottom: 20px;">确认对项目ID:{{dataList[0].projectId}}+项目名称:{{dataList[0].projectName}}进行{{ title }}操作吗?</div>
       <el-table v-if="dataList.length > 1" :data="dataList" row-key="id">
-        <el-table-column width="80" type="index" align="center" label="序号" />
-        <el-table-column align="center" prop="projectId" label="项目ID" />
-        <el-table-column align="center" prop="projectName" label="项目名称" />
+        <el-table-column width="80" type="index" align="left" label="序号" />
+        <el-table-column align="left" prop="projectId" label="项目ID" />
+        <el-table-column align="left" prop="projectName" label="项目名称" />
       </el-table>
       <template #footer>
         <div style="flex: auto">

@@ -281,15 +281,15 @@ onMounted(() => {
           <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="id" :data="list"
             :border="border" :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows" highlight-current-row
             @current-change="handleTabs1CurrentChange">
-            <el-table-column align="center" type="selection" />
+            <el-table-column align="left" type="selection" />
             <el-table-column v-if="checkList.includes('memberChildName')" show-overflow-tooltip prop="memberChildName"
-              align="center" label="会员名称" >
+              align="left" label="会员名称" >
               <template #default="{row}">
                 <div class="tableBig">{{row.memberChildName}}</div>
               </template>
             </el-table-column>
             <el-table-column v-if="checkList.includes('memberChildId')" show-overflow-tooltip prop="memberChildId"
-              align="center" label="会员ID">
+              align="left" label="会员ID">
               <template #default="{ row }">
                 <div class="copyId tableSmall">
                   <div class="id oneLine">ID: {{ row.memberChildId }}</div>
@@ -298,13 +298,13 @@ onMounted(() => {
               </template>
             </el-table-column>
             <el-table-column v-if="checkList.includes('projectName')" show-overflow-tooltip prop="projectName"
-              align="center" label="项目名称" >
+              align="left" label="项目名称" >
               <template #default="{row}">
                 <div class="tableBig">{{row.projectName}}</div>
               </template>
             </el-table-column>
             <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip prop="projectId"
-              align="center" label="项目ID" >
+              align="left" label="项目ID" >
               <template  #default="{ row }">
                 <div class="copyId tableSmall">
                   <div class="id oneLine">ID: {{ row.projectId }}</div>
@@ -313,14 +313,14 @@ onMounted(() => {
               </template>
             </el-table-column>
             <el-table-column v-if="checkList.includes('createTime')" show-overflow-tooltip prop="createTime"
-              align="center" label="创建"><template #default="{ row }">
+              align="left" label="创建"><template #default="{ row }">
                 <el-tag effect="plain" type="info">{{
     format(row.createTime)
   }}</el-tag>
               </template>
             </el-table-column>
             <el-table-column v-if="checkList.includes('instructions')" show-overflow-tooltip prop="instructions"
-              align="center" label="说明">
+              align="left" label="说明">
               <template #default="{ row }">
                 <div class="flex-c tableBig">
                   <div class="oneLine" style="width: calc(100% - 20px);">
@@ -332,7 +332,7 @@ onMounted(() => {
 
               </template>
             </el-table-column>
-            <el-table-column align="center" fixed="right" label="操作" width="240">
+            <el-table-column align="left" fixed="right" label="操作" width="240">
               <template #default="{ row }">
                 <ElSpace>
                   <el-button type="primary" plain size="small" @click="projectDetails(row)">
@@ -404,13 +404,13 @@ onMounted(() => {
             @current-change="handleTabs2CurrentChange">
             <el-table-column type="selection" />
             <el-table-column v-if="checkList.includes('memberChildName')" show-overflow-tooltip prop="memberChildName"
-              align="center" label="子会员名称" >
+              align="left" label="子会员名称" >
               <template #default="{row}">
                 <div class="tableBig">{{row.memberChildName}}</div>
               </template>
             </el-table-column>
             <el-table-column v-if="checkList.includes('memberChildId')" show-overflow-tooltip prop="memberChildId"
-              align="center" label="子会员ID" >
+              align="left" label="子会员ID" >
               <template #default="{ row }">
                 <div class="copyId tableSmall">
                   <div class="id oneLine">ID: {{ row.memberChildId }}</div>
@@ -419,13 +419,13 @@ onMounted(() => {
               </template>
             </el-table-column>
               <el-table-column v-if="checkList.includes('projectName')" show-overflow-tooltip prop="projectName"
-              align="center" label="项目名称" >
+              align="left" label="项目名称" >
               <template #default="{row}">
                 <div class="tableBig">{{row.projectName}}</div>
               </template>
             </el-table-column>
             <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip prop="projectId"
-              align="center" label="项目ID" >
+              align="left" label="项目ID" >
               <template #default="{ row }">
                 <div class="copyId tableSmall">
                   <div class="id oneLine">ID: {{ row.projectId }}</div>
@@ -434,16 +434,16 @@ onMounted(() => {
               </template>
             </el-table-column>
             <el-table-column v-if="checkList.includes('customerIdentification')" show-overflow-tooltip
-              prop="customerIdentification" align="center" label="客户简称/标识" />
+              prop="customerIdentification" align="left" label="客户简称/标识" />
             <el-table-column v-if="checkList.includes('createTime')" show-overflow-tooltip prop="createTime"
-              align="center" label="创建"><template #default="{ row }">
+              align="left" label="创建"><template #default="{ row }">
                 <el-tag effect="plain" type="info">{{
     format(row.createTime)
   }}</el-tag>
               </template>
             </el-table-column>
             <el-table-column v-if="checkList.includes('instructions')" show-overflow-tooltip prop="instructions"
-              align="center" label="说明" >
+              align="left" label="说明" >
               <template #default="{ row }">
           <div class="flex-c tableBig">
                   <div class="oneLine" style="width: calc(100% - 20px);">
@@ -455,7 +455,7 @@ onMounted(() => {
               </template>
 
             </el-table-column>
-            <el-table-column align="center" fixed="right" label="操作" width="240">
+            <el-table-column align="left" fixed="right" label="操作" width="240">
               <template #default="{ row }">
                 <ElSpace>
                   <el-button type="primary" plain size="small" @click="projectDetails(row)">
@@ -569,7 +569,6 @@ onMounted(() => {
   }
 
   .id {
-    width:auto !important;
     max-width:calc(100% - 25px)  !important;
   }
 }

@@ -397,14 +397,14 @@ function onReset() {
               :size="dictionaryItem.lineHeight" :stripe="dictionaryItem.stripe" highlight-current-row height="100%"
               @sort-change="sortChange" @selection-change="dictionaryItem.selectionDataList = $event" row-key="id"
               default-expand-all @select="selectChange">
-              <ElTableColumn type="selection" align="center" fixed />
-              <ElTableColumn v-if="dictionaryItem.checkList.includes('active')" align="center" prop="active" label="状态">
+              <ElTableColumn type="selection" align="left" fixed />
+              <ElTableColumn v-if="dictionaryItem.checkList.includes('active')" align="left" prop="active" label="状态">
                 <template #default="scope">
                   <ElSwitch v-model="scope.row.active" inline-prompt active-text="启用" inactive-text="禁用"
                     :before-change="() => onChangeStatus(scope.row)" />
                 </template>
               </ElTableColumn>
-              <ElTableColumn v-if="dictionaryItem.checkList.includes('id')" align="center" width="180" prop="id"
+              <ElTableColumn v-if="dictionaryItem.checkList.includes('id')" align="left" width="180" prop="id"
                 label="员工ID" >
                 <template #default="{row}">
                   <div class="copyId tableSmall">
@@ -413,14 +413,14 @@ function onReset() {
             </div>
                 </template>
               </ElTableColumn>
-              <ElTableColumn v-if="dictionaryItem.checkList.includes('userName')" align="center" width="130"
+              <ElTableColumn v-if="dictionaryItem.checkList.includes('userName')" align="left" width="130"
                 prop="userName" label="用户名"><template #default="{ row }">
                   <el-text class="tableBig">
                     {{ row.userName ? row.userName : "-" }}
                   </el-text>
                 </template>
               </ElTableColumn>
-              <ElTableColumn v-if="dictionaryItem.checkList.includes('name')" align="center" width="130" prop="name"
+              <ElTableColumn v-if="dictionaryItem.checkList.includes('name')" align="left" width="130" prop="name"
                 label="姓名" >
                 <template #default="{ row }">
                   <el-text class="tableBig">
@@ -428,14 +428,14 @@ function onReset() {
                   </el-text>
                 </template>
               </ElTableColumn>
-              <ElTableColumn v-if="dictionaryItem.checkList.includes('phoneNumber')" align="center" width="170"
+              <ElTableColumn v-if="dictionaryItem.checkList.includes('phoneNumber')" align="left" width="170"
                 prop="phone" label="电话号码"><template #default="{ row }">
                   <el-text class="tableBig">
                     {{ row.phoneNumber ? row.phoneNumber : "-" }}
                   </el-text>
                 </template>
               </ElTableColumn>
-              <ElTableColumn v-if="dictionaryItem.checkList.includes('email')" align="center" width="180" prop="email"
+              <ElTableColumn v-if="dictionaryItem.checkList.includes('email')" align="left" width="180" prop="email"
                 label="邮箱">
                 <template #default="{ row }">
                   <el-text class="tableBig">
@@ -443,7 +443,7 @@ function onReset() {
                   </el-text>
                 </template>
               </ElTableColumn>
-              <ElTableColumn v-if="dictionaryItem.checkList.includes('departmentId')" align="center" prop="departmentId"
+              <ElTableColumn v-if="dictionaryItem.checkList.includes('departmentId')" align="left" prop="departmentId"
                 label="部门"><template #default="{ row }">
                   <el-text v-if="row.departmentId" class="tableBig">
                     <el-text v-for="item in departmentList">
@@ -455,7 +455,7 @@ function onReset() {
                   <el-text v-else class="tableBig">-</el-text>
                 </template>
               </ElTableColumn>
-              <ElTableColumn v-if="dictionaryItem.checkList.includes('positionId')" align="center" prop="positionId"
+              <ElTableColumn v-if="dictionaryItem.checkList.includes('positionId')" align="left" prop="positionId"
                 label="职位">
                 <template #default="{ row }">
                   <el-text v-if="row.positionId" class="tableBig">
@@ -468,7 +468,7 @@ function onReset() {
                   <el-text v-else class="tableBig">-</el-text>
                 </template>
               </ElTableColumn>
-              <ElTableColumn v-if="dictionaryItem.checkList.includes('groupId')" align="center" prop="groupId"
+              <ElTableColumn v-if="dictionaryItem.checkList.includes('groupId')" align="left" prop="groupId"
                 label="小组">
                 <template #default="{ row }">
                   <el-text class="tableBig" v-if="row.groupId">
@@ -482,7 +482,7 @@ function onReset() {
                 </template>
               </ElTableColumn>
 
-              <ElTableColumn label="操作" fixed="right" width="200" align="center">
+              <ElTableColumn label="操作" fixed="right" width="200" align="left">
                 <template #default="scope">
                   <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">
                     编辑
@@ -690,7 +690,6 @@ function onReset() {
   }
 
   .id {
-    width:auto !important;
     max-width:calc(100% - 25px)  !important;
   }
 }

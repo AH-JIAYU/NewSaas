@@ -178,14 +178,14 @@ defineExpose({ showEdit });
       </el-form>
       <el-table style="margin-top: 30px;" :data="list" border>
           <el-table-column
-            align="center"
+            align="left"
             type="index"
             label="序号"
             width="80"
           />
-          <el-table-column align="center" prop="a" label="ID" />
-          <el-table-column align="center" prop="b" label="初始状态" />
-          <el-table-column align="center" prop="b" label="变更状态" />
+          <el-table-column align="left" prop="a" label="ID" />
+          <el-table-column align="left" prop="b" label="初始状态" />
+          <el-table-column align="left" prop="b" label="变更状态" />
         </el-table>
     </el-drawer>
   </div>

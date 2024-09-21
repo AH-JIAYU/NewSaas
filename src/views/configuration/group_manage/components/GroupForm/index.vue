@@ -325,9 +325,9 @@ defineExpose({ showEdit });
           </div>
         </template>
 <el-table :data="groupLeaderList" border>
-  <el-table-column align="center" type="index" label="序号" width="80" />
-  <el-table-column align="center" show-overflow-tooltip prop="memberId" label="员工ID" />
-  <el-table-column align="center" show-overflow-tooltip prop="lable" label="用户名"><template #default="{ row }">
+  <el-table-column align="left" type="index" label="序号" width="80" />
+  <el-table-column align="left" show-overflow-tooltip prop="memberId" label="员工ID" />
+  <el-table-column align="left" show-overflow-tooltip prop="lable" label="用户名"><template #default="{ row }">
               <template v-if="row.memberId">
                 <el-text v-for="item in staffList">
                   <el-text v-if="row.memberId === item.id">
@@ -342,7 +342,7 @@ defineExpose({ showEdit });
               </template>
     </template>
   </el-table-column>
-  <el-table-column align="center" show-overflow-tooltip prop="lable" label="姓名"><template #default="{ row }">
+  <el-table-column align="left" show-overflow-tooltip prop="lable" label="姓名"><template #default="{ row }">
               <template v-if="row.memberId">
                 <el-text v-for="item in staffList">
                   <el-text v-if="row.memberId === item.id">
@@ -357,7 +357,7 @@ defineExpose({ showEdit });
               </template>
     </template>
   </el-table-column>
-  <el-table-column align="center" show-overflow-tooltip prop="lable" label="部门"><template #default="{ row }">
+  <el-table-column align="left" show-overflow-tooltip prop="lable" label="部门"><template #default="{ row }">
               <el-text v-for="item in departmentList">
                 <el-text v-if="department === item.id">
                   {{ item.name }}
@@ -365,7 +365,7 @@ defineExpose({ showEdit });
               </el-text>
             </template>
   </el-table-column>
-  <el-table-column align="center" width="200" fixed="right" show-overflow-tooltip label="提成比例">
+  <el-table-column align="left" width="200" fixed="right" show-overflow-tooltip label="提成比例">
     <template #default="{ row }">
               <el-form :model="row" ref="formRef" :rules="formRules">
                 <el-form-item prop="commission">
@@ -395,8 +395,8 @@ defineExpose({ showEdit });
           </el-col>
           <el-col :span="16">
             <el-table ref="tableRef" :data="dataList" border>
-              <!-- <el-table-column align="center" type="selection" /> -->
-              <el-table-column align="center" show-overflow-tooltip prop="memberId" label="员工ID"><template
+              <!-- <el-table-column align="left" type="selection" /> -->
+              <el-table-column align="left" show-overflow-tooltip prop="memberId" label="员工ID"><template
                   #default="{ row }">
                   <el-text v-if="row.id">
                     {{ row.id }}
@@ -406,7 +406,7 @@ defineExpose({ showEdit });
                   </el-text>
                 </template>
               </el-table-column>
-              <el-table-column align="center" show-overflow-tooltip prop="userName" label="用户名"><template
+              <el-table-column align="left" show-overflow-tooltip prop="userName" label="用户名"><template
                   #default="{ row }">
                   <template v-if="row.id">
                     <el-text v-for="item in staffList">
@@ -422,7 +422,7 @@ defineExpose({ showEdit });
                   </template>
                 </template>
               </el-table-column>
-              <el-table-column align="center" show-overflow-tooltip prop="name" label="姓名"><template #default="{ row }">
+              <el-table-column align="left" show-overflow-tooltip prop="name" label="姓名"><template #default="{ row }">
                   <template v-if="row.id">
                     <el-text v-for="item in staffList">
                       <el-text v-if="row.id === item.id">
@@ -437,7 +437,7 @@ defineExpose({ showEdit });
                   </template>
                 </template>
               </el-table-column>
-              <el-table-column align="center" show-overflow-tooltip prop="lable" label="职位"><template
+              <el-table-column align="left" show-overflow-tooltip prop="lable" label="职位"><template
                   #default="{ row }">
                   <el-text v-for="item in positionManageList">
                     <el-text v-if="row.positionId === item.id">
@@ -446,7 +446,7 @@ defineExpose({ showEdit });
                   </el-text>
                 </template>
               </el-table-column>
-              <el-table-column align="center" show-overflow-tooltip prop="lable" label="部门"><template
+              <el-table-column align="left" show-overflow-tooltip prop="lable" label="部门"><template
                   #default="{ row }">
                   <el-text v-for="item in departmentList">
                     <el-text v-if="department === item.id">
@@ -455,7 +455,7 @@ defineExpose({ showEdit });
                   </el-text>
                 </template>
               </el-table-column>
-              <el-table-column align="center" width="200" fixed="right" show-overflow-tooltip label="提成比例">
+              <el-table-column align="left" width="200" fixed="right" show-overflow-tooltip label="提成比例">
                 <template #default="{ row }">
                   <el-form :model="row" ref="formRef" :rules="formRules">
                     <el-form-item prop="commission">

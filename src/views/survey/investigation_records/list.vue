@@ -225,14 +225,14 @@ onMounted(async () => {
       </el-row>
       <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
         @selection-change="setSelectRows">
-        <el-table-column align="center" type="selection" />
-        <el-table-column v-if="checkList.includes('projectName')" align="center" prop="projectName"
+        <el-table-column align="left" type="selection" />
+        <el-table-column v-if="checkList.includes('projectName')" align="left" prop="projectName"
           show-overflow-tooltip label="项目名称">
           <template #default="{ row }">
             <el-text style="font-weight: 700;color: #333333;">{{ row.projectName ? row.projectName : "-" }}</el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('projectId')" align="center" prop="projectId" show-overflow-tooltip
+        <el-table-column v-if="checkList.includes('projectId')" align="left" prop="projectId" show-overflow-tooltip
           width="200" label="项目ID">
           <template #default="{ row }">
             <div v-if="row.projectId" class="hoverSvg">
@@ -244,7 +244,7 @@ onMounted(async () => {
             <el-text v-else>-</el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('memberId')" align="center" prop="memberId" show-overflow-tooltip
+        <el-table-column v-if="checkList.includes('memberId')" align="left" prop="memberId" show-overflow-tooltip
           width="200" label="会员ID">
           <template #default="{ row }">
             <div v-if="row.memberId" class="hoverSvg">
@@ -256,7 +256,7 @@ onMounted(async () => {
             <el-text v-else>-</el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('randomIdentityId')" align="center" prop="randomIdentityId"
+        <el-table-column v-if="checkList.includes('randomIdentityId')" align="left" prop="randomIdentityId"
           show-overflow-tooltip label="随机身份">
           <template #default="{ row }">
             <div v-if="row.randomIdentityId" class="hoverSvg">
@@ -268,14 +268,14 @@ onMounted(async () => {
             <el-text v-else>-</el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('customerShortName')" align="center" prop="customerShortName"
+        <el-table-column v-if="checkList.includes('customerShortName')" align="left" prop="customerShortName"
           show-overflow-tooltip label="客户简称" width="100">
           <template #default="{ row }">
             <el-text style="font-weight: 700;color: #333333;">{{ row.customerShortName ? row.customerShortName : "-"
               }}</el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('memberName')" width="150" align="center" prop="memberName"
+        <el-table-column v-if="checkList.includes('memberName')" width="150" align="left" prop="memberName"
           show-overflow-tooltip label="所属组">
           <template #default="{ row }">
             <div v-if="row.memberName" class="hoverSvg">
@@ -289,7 +289,7 @@ onMounted(async () => {
             <el-text v-else>-</el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('allocationType')" align="center" show-overflow-tooltip width="100"
+        <el-table-column v-if="checkList.includes('allocationType')" align="left" show-overflow-tooltip width="100"
           label="分配类型">
           <template #default="{ row }">
             <el-tag effect="plain" type="info" v-if="row.allocationType === 1"> 未分配 </el-tag>
@@ -301,7 +301,7 @@ onMounted(async () => {
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('doMoneyPrice')" width="80" align="center" prop="h"
+        <el-table-column v-if="checkList.includes('doMoneyPrice')" width="80" align="left" prop="h"
           show-overflow-tooltip label="原价">
           <template #default="{ row }">
             <el-text>
@@ -312,7 +312,7 @@ onMounted(async () => {
             </el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('memberPrice')" width="80" align="center" prop="h"
+        <el-table-column v-if="checkList.includes('memberPrice')" width="80" align="left" prop="h"
           show-overflow-tooltip label="会员价">
           <template #default="{ row }">
             <el-text>
@@ -323,7 +323,7 @@ onMounted(async () => {
             </el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('ipBelong')" align="center" width="130" prop="ipBelong"
+        <el-table-column v-if="checkList.includes('ipBelong')" align="left" width="130" prop="ipBelong"
           show-overflow-tooltip label="国家/IP">
           <template #default="{ row }">
             <div v-if="row.ipBelong" class="hoverSvg">
@@ -338,7 +338,7 @@ onMounted(async () => {
             <el-text v-else>-</el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('surveyTime')" align="center" show-overflow-tooltip label="调查时间">
+        <el-table-column v-if="checkList.includes('surveyTime')" align="left" show-overflow-tooltip label="调查时间">
           <template #header>
             <span class="headerIcon">
               <svg class="timeSvg" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"
@@ -359,7 +359,7 @@ onMounted(async () => {
               {{ row.projectTime ? row.projectTime + "min" : 0 }} </el-tag>
           </template>
         </el-table-column>
-        <ElTableColumn v-if="checkList.includes('surveyStatus')" align="center" show-overflow-tooltip prop=""
+        <ElTableColumn v-if="checkList.includes('surveyStatus')" align="left" show-overflow-tooltip prop=""
           label="调查状态">
           <template #default="{ row }">
             <el-tag effect="dark" style="background-color: #FB6868;border: none;" v-if="row.surveyStatus === 3"
@@ -374,7 +374,7 @@ onMounted(async () => {
               class="mx-1">未完成</el-tag>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="checkList.includes('viceStatus')" align="center" show-overflow-tooltip prop="" label="副状态">
+        <ElTableColumn v-if="checkList.includes('viceStatus')" align="left" show-overflow-tooltip prop="" label="副状态">
           <template #default="{ row }">
             <div v-if="row.viceStatus">
               <el-tag effect="dark" style="background-color: #74868b;border: none;" v-if="row.viceStatus === 1"

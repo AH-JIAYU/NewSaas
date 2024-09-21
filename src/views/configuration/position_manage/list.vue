@@ -198,8 +198,8 @@ onMounted(() => {
       <el-table ref="tableSortRef" v-loading="false" style="margin-top: 10px" row-key="id" :data="list" :border="border"
         :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows"  highlight-current-row
  @current-change="handleCurrentChange">
-        <el-table-column align="center" type="selection" />
-        <el-table-column v-if="checkList.includes('id')" prop="id" show-overflow-tooltip align="center" label="职位ID" >
+        <el-table-column align="left" type="selection" />
+        <el-table-column v-if="checkList.includes('id')" prop="id" show-overflow-tooltip align="left" label="职位ID" >
           <template #default="{row}">
             <div class="copyId tableSmall">
               <div class="id oneLine  ">ID: {{ row.id }}</div>
@@ -207,18 +207,18 @@ onMounted(() => {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('name')" prop="name" show-overflow-tooltip align="center"
+        <el-table-column v-if="checkList.includes('name')" prop="name" show-overflow-tooltip align="left"
           label="职位名称" >
           <template #default="{row}">
             <div class="tableBig">{{row.name}}</div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('count')" prop="count" show-overflow-tooltip align="center"
+        <el-table-column v-if="checkList.includes('count')" prop="count" show-overflow-tooltip align="left"
           label="账户数">
           <template #default="{ row }">
             <div class="tableBig">{{ row.count ? row.count : "-" }}</div>
           </template></el-table-column>
-        <el-table-column v-if="checkList.includes('remark')" prop="remark" show-overflow-tooltip align="center"
+        <el-table-column v-if="checkList.includes('remark')" prop="remark" show-overflow-tooltip align="left"
           label="备注">
           <template #default="{row}">
             <div class="flex-s  ">
@@ -230,7 +230,7 @@ onMounted(() => {
             </div>
           </template>
         </el-table-column>
-        <el-table-column align="center" fixed="right" label="操作" width="170">
+        <el-table-column align="left" fixed="right" label="操作" width="170">
           <template #default="{ row }">
             <el-button size="small" plain type="primary" @click="editData(row)">
               编辑

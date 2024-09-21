@@ -167,24 +167,24 @@ onMounted(() => {
         :stripe="stripe"
         @selection-change="setSelectRows"
       >
-        <el-table-column align="center" type="selection" />
-        <!-- <el-table-column type="index" align="center" label="序号" width="150" /> -->
+        <el-table-column align="left" type="selection" />
+        <!-- <el-table-column type="index" align="left" label="序号" width="150" /> -->
         <el-table-column
           prop="a"
           show-overflow-tooltip
-          align="center"
+          align="left"
           label="国家编码"
         />
         <el-table-column
           prop="b"
           show-overflow-tooltip
-          align="center"
+          align="left"
           label="国家(中文)"
         />
         <el-table-column
           prop="c"
           show-overflow-tooltip
-          align="center"
+          align="left"
           label="国家(英文)"
         />
         <template #empty>

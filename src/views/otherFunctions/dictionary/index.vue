@@ -368,22 +368,22 @@ const usageExampleVisible = ref(false);
           <ElTable ref="dictionaryItemRef" v-loading="dictionaryItem.loading" :data="dictionaryItem.dataList" stripe
             highlight-current-row border height="100%" @sort-change="sortChange"
             @selection-change="dictionaryItem.selectionDataList = $event">
-            <ElTableColumn type="selection" align="center" fixed />
+            <ElTableColumn type="selection" align="left" fixed />
             <ElTableColumn prop="name" label="名称" />
-            <ElTableColumn label="键值" align="center" width="150">
+            <ElTableColumn label="键值" align="left" width="150">
               <template #default="scope">
                 <ElTag type="info">
                   {{ scope.row.value }}
                 </ElTag>
               </template>
             </ElTableColumn>
-            <ElTableColumn label="状态" width="100" align="center">
+            <ElTableColumn label="状态" width="100" align="left">
               <template #default="scope">
                 <ElSwitch v-model="scope.row.enable" :loading="scope.row.enableLoading" inline-prompt active-text="启用"
                   inactive-text="禁用" :before-change="() => onChangeEnable(scope.row)" />
               </template>
             </ElTableColumn>
-            <ElTableColumn label="操作" width="200" align="center">
+            <ElTableColumn label="操作" width="200" align="left">
               <template #default="scope">
                 <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">
                   编辑

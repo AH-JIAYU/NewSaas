@@ -157,14 +157,14 @@ onBeforeUnmount(() => {
       <PageHeader title="通用模板" />
       <ElTable v-loading="data.loading" class="my-4" :data="data.controlDataList" stripe highlight-current-row border
         height="100%" @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
-        <ElTableColumn v-if="data.batch.enable" type="selection" align="center" fixed />
+        <ElTableColumn v-if="data.batch.enable" type="selection" align="left" fixed />
         <ElTableColumn prop="title" label="标题" />
-        <ElTableColumn prop="isSet" align="center" width="100" label="是否默认">
+        <ElTableColumn prop="isSet" align="left" width="100" label="是否默认">
           <template #default="{ row }">
             {{ row.isSet ? '是' : '否' }}
           </template>
         </ElTableColumn>
-        <ElTableColumn label="操作" width="250" align="center" fixed="right">
+        <ElTableColumn label="操作" width="250" align="left" fixed="right">
           <template #default="scope">
             <ElButton v-if="!scope.row.isSet" type="primary" size="small" plain @click="setHomePage(scope.row)">
               设置为主页
@@ -204,14 +204,14 @@ onBeforeUnmount(() => {
       </ElSpace>
       <ElTable v-loading="data.loading" class="my-4" :data="data.dataList" stripe highlight-current-row border
         height="100%" @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
-        <ElTableColumn v-if="data.batch.enable" type="selection" align="center" fixed />
+        <ElTableColumn v-if="data.batch.enable" type="selection" align="left" fixed />
         <ElTableColumn prop="title" label="标题" />
-        <ElTableColumn prop="isSet" align="center" width="100" label="是否默认">
+        <ElTableColumn prop="isSet" align="left" width="100" label="是否默认">
           <template #default="{ row }">
             {{ row.isSet ? '是' : '否' }}
           </template>
         </ElTableColumn>
-        <ElTableColumn label="操作" width="350" align="center" fixed="right">
+        <ElTableColumn label="操作" width="350" align="left" fixed="right">
           <template #default="scope">
             <ElButton v-if="!scope.row.isSet" type="primary" size="small" plain @click="setHomePage(scope.row)">
               设置为主页
