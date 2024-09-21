@@ -162,7 +162,7 @@ const handleMouseLeave = async (val: any) => {
         } else {
           isAnalysis.value = res.data.success
           ElMessage({
-            type: "warning",
+            type: "success",
             message: "解析已生效",
           });
         }
