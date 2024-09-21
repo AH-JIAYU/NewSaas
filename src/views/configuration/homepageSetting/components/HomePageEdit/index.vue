@@ -1,18 +1,10 @@
 <template>
-  <el-drawer
-    v-if="state.dialogFormVisible"
-    v-model="state.dialogFormVisible"
-    :title="state.title"
-    size="80%"
-    @opened="onDialogOpened"
-    @close="close"
-  >
+  <el-drawer v-if="state.dialogFormVisible" v-model="state.dialogFormVisible" :title="state.title" size="80%"
+    @opened="onDialogOpened" @close="close">
     <div ref="formRef"></div>
     <template #footer>
       <el-button @click="close">取 消</el-button>
-      <el-button v-if="state.title === '编辑'" type="primary" @click="save"
-        >确 定</el-button
-      >
+      <el-button v-if="state.title === '编辑'" type="primary" @click="save">确 定</el-button>
     </template>
   </el-drawer>
 </template>
@@ -29,6 +21,7 @@ import "grapesjs/dist/css/grapes.min.css";
 import "grapesjs/dist/grapes.min.js";
 // @ts-ignore
 import zh from "grapesjs/locale/zh";
+import {updataText ,customBlock} from "@/utils/homePage";
 import api from "@/api/modules/configuration_homepageSetting";
 const emits = defineEmits(["fetch-data"]);
 
@@ -80,7 +73,34 @@ const onDialogOpened = async () => {
         },
       ],
     },
+    //   blockManager: {
+    //   appendTo: 'basic',
+    //   blocks: [
+    //     {
+    //       id: 'image',
+    //       label: 'Image',
+    //       media: `<svg style="width:24px;height:24px" viewBox="0 0 24 24">
+    //           <path d="M8.5,13.5L11,16.5L14.5,12L19,18H5M21,19V5C21,3.89 20.1,3 19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19Z" />
+    //       </svg>`,
+    //       // Use `image` component
+    //       content: { type: 'image' },
+    //       // The component `image` is activatable (shows the Asset Manager).
+    //       // We want to activate it once dropped in the canvas.
+    //       activate: true,
+    //       // select: true, // Default with `activate: true`
+    //     }
+    //   ],
+    // }
   });
+  // 通过事件改变框架的文本内容为中文
+  editorRef.value.on('block:custom', (props: any) => {
+    console.log('props',props)
+    updataText(props.blocks)
+  });
+  // 批量添加自定义块
+  customBlock.forEach((item:any)=>{
+      editorRef.value.Blocks.add(item.id,  item);
+  })
 };
 
 const save = async () => {
