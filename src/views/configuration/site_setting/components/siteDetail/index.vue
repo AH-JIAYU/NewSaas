@@ -27,14 +27,19 @@ const fileList = ref<any>({
 // 修改
 async function showEdit(row: any) {
   list.value = []
+  const payload = new FormData();
   try {
     listLoading.value = true;
     if (row) {
-      fileList.value.domain = 'www.surveysaas.com'
-      // fileList.value.domain = row.topLevelDomainName
+      fileList.value.domain = row.topLevelDomainName
       list.value = [row]
-      isAnalysis.value = row.data.success
-      pagination.value.total = row.data.list.length
+      if(fileList.value.domain) {
+        payload.append('domain', fileList.value.domain);
+        const res = await api.uploadSSLCert(payload)
+        if(res.data.status === 1) {
+          isAnalysis.value = false
+        }
+      }
       listLoading.value = false;
     } else {
       list.value = row || []
@@ -86,7 +91,7 @@ const handleSubmit = async () => {
     if (res.data.status === 1) {
       ElMessage.success('上传成功');
     } else {
-      ElMessage.error(res.error);
+      ElMessage.error(res.data.error);
     }
   } catch (error) {
     ElMessage.error('上传失败');
