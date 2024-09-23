@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import sort from './sort.vue'
 import storage from "@/utils/storage";
+import useFormSearchStore from '@/store/modules/formSearch' // 筛选项配置
+import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
 defineOptions({
   name: 'FormSearch',
 })
@@ -8,8 +10,36 @@ defineOptions({
 // 表单筛选配置项  表单绑定值
 const props = defineProps(['formSearchList', 'model', 'formSearchName'])
 const emits = defineEmits(['current-change', 'on-reset'])
+const FormSearchStore = useFormSearchStore(); //筛选项配置
+const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
 const sortRef = ref<any>()//排序组件ref
 const formSearchList = ref<any>([])
+const countryList = ref<any>([])//国家
+
+const searchTypes: any = {
+  "department": 0,
+  "group_manage": 1,
+  "TenantTenantHomepageSettingList": 2,
+  "position_manage": 3,
+  "role": 4,
+  "financial_pm_log": 5,
+  "announcement": 6,
+  "list": 7,
+  "materials": 8,
+  "scheduling": 9,
+  "settlement": 10,
+  "alter": 11,
+  "callback": 12,
+  "memberSurveyRecords": 13,
+  "preInvestigationRecords": 14,
+  "termination": 15,
+  "billManagement": 16,
+  "financialLogs": 17,
+  "myProjeck": 18,
+  "vip": 19,
+  "vipGroup": 20,
+  "supplier": 21,
+};
 
 // 筛选
 const currentChange = () => {
@@ -22,15 +52,42 @@ const onReset = () => {
 const chagneFormSearchList = (list: any) => {
   formSearchList.value = list
 }
+
 // 排序
 const onSort = () => {
   // 先看本地有没有，没有走默认值
   sortRef.value.showEdit(
     // @ts-ignore
-    JSON.parse(storage.local.get(props.formSearchName)) ?? formSearchList.value,
-    props.formSearchName
+    findCurrent() ?? formSearchList.value,
+    getValue()
   )
 }
+// 查询当前页面对应的键值
+const getValue = () => {
+  const type = props.formSearchName.split('formSearch-')[1]   // 键名
+  const typeValue = searchTypes[type]   // 键值
+  return typeValue
+}
+// 查找当前页面的配置是否存在
+const findCurrent = () => {
+  const typeValue = getValue()
+  //根据searchTypes里的键值找到接口里的当前项
+  const findData = FormSearchStore.formSearchConfig.find((item: any) => item.searchType === typeValue)
+  return findData?.getSearchUserInfoList
+}
+
+const setOption = (val: any) => {
+  if (Array.isArray(val)) { // 默认筛选项是 数组
+    return val
+  } else {
+    if (val === 'global') {
+      return countryList.value
+    } else {
+      return JSON.parse(val)
+    }
+  }
+}
+
 // 统计 展示的筛选项个数
 const showLength = computed(() => {
   const filterData = formSearchList.value.filter((item: any) => item.show)
@@ -40,11 +97,14 @@ watch(
   () => props.formSearchList,
   (newVal, oleVal) => {
     // @ts-ignore
-    formSearchList.value = JSON.parse(storage.local.get(props.formSearchName)) ?? newVal
+    formSearchList.value = findCurrent() ?? newVal
   },
   { deep: true }
 )
 
+onMounted(async () => {
+  countryList.value = await basicDictionaryStore.getCountry();
+})
 
 </script>
 <template>
@@ -58,12 +118,13 @@ watch(
                 :placeholder="item.placeholder" @keydown.enter="currentChange()" />
               <el-select v-if="item.type === 'select'" v-model="props.model[item.modelName]" clearable
                 :placeholder="item.placeholder" @change="currentChange()">
-                <ElOption v-for="ite in item.option" :label="ite[item.optionLabel]" :value="ite[item.optionValue]">
+                <ElOption v-for="ite in setOption(item.option)" :label="ite[item.optionLabel]"
+                  :value="ite[item.optionValue]">
                 </ElOption>
               </el-select>
               <el-date-picker v-if="item.type === 'datetimerange'" @change="currentChange()"
                 v-model="props.model[item.modelName]" type="datetimerange" range-separator="-"
-                :start-placeholder="item.startplaceholder" :end-placeholder="item.endplaceholder"
+                :start-placeholder="item.startPlaceHolder" :end-placeholder="item.endPlaceHolder"
                 value-format="YYYY-MM-DD HH:mm:ss" size="" style="width: 192px" clear-icon="true" />
             </el-form-item>
           </template>

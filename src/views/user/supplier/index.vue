@@ -221,7 +221,7 @@ onMounted(async () => {
       optionLabel: 'label', optionValue: 'value'
     },
     { index: 7, show: true, type: 'datetimerange', modelName: 'time',
-      startplaceholder: '创建开始日期', endplaceholder: '创建结束日期'
+      startPlaceHolder: '创建开始日期', endPlaceHolder: '创建结束日期'
     },
 ];
 });
@@ -533,5 +533,5 @@ onMounted(async () => {
 .el-table__row:hover .edit {
   display: block;
 }
- 
+
 </style>

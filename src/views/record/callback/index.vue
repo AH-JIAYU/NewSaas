@@ -126,7 +126,7 @@ onMounted(async () => {
     {index: 4, show: true, type: 'select', modelName: 'surveySource', placeholder: '会员类型', option: memberType, optionLabel: 'label', optionValue: 'value'},
     {index: 5, show: true, type: 'input', modelName: 'projectName', placeholder: '项目名称'},
     {index: 6, show: true, type: 'input', modelName: 'memberChildId', placeholder: '子会员ID/会员ID'},
-    {index: 7, show: true, type: 'datetimerange', modelName: 'time', startplaceholder: "创建开始日期", endplaceholder: "创建结束日期"}
+    {index: 7, show: true, type: 'datetimerange', modelName: 'time', startPlaceHolder: "创建开始日期", endPlaceHolder: "创建结束日期"}
 ]
 });
 </script>

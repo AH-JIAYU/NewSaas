@@ -270,14 +270,14 @@ onMounted(async () => {
     {index:1, show: true, type: 'input', modelName: 'projectId', placeholder: '项目ID' },
     {index:2, show: true, type: 'input', modelName: 'name', placeholder: '项目名称' },
     {index:3, show: true, type: 'input', modelName: 'projectIdentification', placeholder: '项目标识' },
-    {index:4, show: true, type: 'select', modelName: 'countryId', placeholder: '国家地区', option: countryList.value, optionLabel: 'chineseName', optionValue: 'id' },
+    {index:4, show: true, type: 'select', modelName: 'countryId', placeholder: '国家地区', option: 'global', optionLabel: 'chineseName', optionValue: 'id' },
     {index:5, show: true, type: 'select', modelName: 'clientId', placeholder: '客户简称', option: customerList.value, optionLabel: 'tenantCustomerId', optionValue: 'tenantCustomerId' },
     {index:6, show: true, type: 'select', modelName: 'allocationStatus', placeholder: '分配类型', option: [{ label: '供应商', value: 2 },{ label: '会员组', value: 3 },{ label: '租户', value: 4 }], optionLabel: 'label', optionValue: 'value' },
     {index:7, show: true, type: 'select', modelName: 'status', placeholder: '项目状态', option: [{ label: '在线', value: 1 },{ label: '离线', value: 2 }], optionLabel: 'label', optionValue: 'value' },
     {index:8, show: true, type: 'input', modelName: 'createName', placeholder: '创建人' },
     {index:9, show: true, type: 'select', modelName: 'allocation', placeholder: '分配状态', option: [{ label: '已分配', value: 1 },{ label: '未分配', value: 2 }], optionLabel: 'label', optionValue: 'value' },
     {index:10, show: true, type: 'select', modelName: 'projectType', placeholder: '项目类型', option: [{ label: '自有项目', value: 1 },{ label: '外包项目', value: 2 }], optionLabel: 'label', optionValue: 'value' },
-    {index:11, show: true, type: 'datetimerange', modelName: 'time', startplaceholder: "创建开始日期", endplaceholder: "创建结束日期" },
+    {index:11, show: true, type: 'datetimerange', modelName: 'time', startPlaceHolder: "创建开始日期", endPlaceHolder: "创建结束日期" },
   ]
 });
 

@@ -191,7 +191,7 @@ onMounted(() => {
     },
     {
       index: 6, show: true, type: 'datetimerange', modelName: 'time',
-      startplaceholder: '创建开始日期', endplaceholder: '创建结束日期'
+      startPlaceHolder: '创建开始日期', endPlaceHolder: '创建结束日期'
     },
   ];
 });

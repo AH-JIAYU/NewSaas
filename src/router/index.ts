@@ -21,6 +21,7 @@ import useTabbarStore from "@/store/modules/tabbar";
 import useIframeStore from "@/store/modules/iframe";
 import useFavoritesStore from "@/store/modules/favorites";
 import useNotificationStore from "@/store/modules/notification"; //消息中心
+import useFormSearchStore from '@/store/modules/formSearch' // 筛选项配置
 
 const { isLoading } = useNProgress();
 
@@ -41,6 +42,7 @@ router.beforeEach(async (to, from, next) => {
   const iframeStore = useIframeStore();
   const favoritesStore = useFavoritesStore();
   const notificationStore = useNotificationStore(); //消息中心
+  const FormSearchStore = useFormSearchStore(); //筛选项配置
   settingsStore.settings.app.enableProgress && (isLoading.value = true);
   // 是否已登录
   if (userStore.isLogin) {
@@ -103,6 +105,7 @@ router.beforeEach(async (to, from, next) => {
       await userStore.getPermissions(); //权限
       await userStore.getCurrencyType(); // 货币类型
       await userStore.getExchangeRate(); // 汇率
+      await FormSearchStore.getFormSearchConfig()//筛选项配置
       await notificationStore.init(); // 获取消息和待办
       if (!notificationStore.socket) {
         notificationStore.websocketreconnect(); //连接websocket

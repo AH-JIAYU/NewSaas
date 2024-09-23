@@ -107,7 +107,7 @@ const useUserStore = defineStore(
       tabbarStore.clean();
       routeStore.removeRoutes();
       menuStore.setActived(0);
-      router.push({
+     await router.push({
         name: "login",
         query: {
           ...(router.currentRoute.value.path !==
@@ -115,8 +115,11 @@ const useUserStore = defineStore(
             router.currentRoute.value.name !== "login" && { redirect }),
         },
       });
-      // 刷新页面清除store里的数据
-      // window.location.reload();
+
+      nextTick(() => {
+        // 刷新页面清除store里的数据
+        window.location.reload();
+      })
     }
     // 删除本地和store里的logo
     function delLogo() {
@@ -128,8 +131,8 @@ const useUserStore = defineStore(
       logo.value = val
       storage.local.set("logo", val)
     }
-     // 删除本地和store里的网站名称
-     function delWebName() {
+    // 删除本地和store里的网站名称
+    function delWebName() {
       webName.value = ''
       storage.local.remove("webName")
     }

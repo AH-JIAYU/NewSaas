@@ -271,11 +271,11 @@ onMounted(async () => {
     { index: 1, show: true, type: 'input', modelName: 'projectId', placeholder: '项目ID' },
     { index: 2, show: true, type: 'input', modelName: 'projectName', placeholder: '项目名称' },
     { index: 3, show: true, type: 'input', modelName: 'projectIdentification', placeholder: '项目标识' },
-    { index: 4, show: true, type: 'select', modelName: 'countryData', placeholder: '国家', option: countryList.value, optionLabel: 'chineseName', optionValue: 'id' },
+    { index: 4, show: true, type: 'select', modelName: 'countryData', placeholder: '国家', option:'global', optionLabel: 'chineseName', optionValue: 'id' },
     { index: 5, show: true, type: 'select', modelName: 'customerId', placeholder: '客户简称', option: customerList.value, optionLabel: 'tenantCustomerId', optionValue: 'tenantCustomerId' },
     { index: 6, show: true, type: 'select', modelName: 'settlementStatus', placeholder: '结算状态', option: settlementStatusList, optionLabel: 'label', optionValue: 'value' },
     { index: 7, show: true, type: 'select', modelName: 'timeType', placeholder: '时间类型', option: settlementStatusList, optionLabel: 'label', optionValue: 'value' },
-    { index: 8, show: true, type: 'datetimerange', modelName: 'timeArr', startplaceholder: '开始日期', endplaceholder: '结束日期' }
+    { index: 8, show: true, type: 'datetimerange', modelName: 'timeArr', startPlaceHolder: '开始日期', endPlaceHolder: '结束日期' }
 ]
 });
 function handleMoreOperating(command: string, row: any) {

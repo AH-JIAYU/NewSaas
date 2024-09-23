@@ -184,7 +184,7 @@ onMounted(async () => {
   { index: 3, show: true, type: 'select', modelName: 'memberLevelId', placeholder: '会员等级', option: data.vipLevelList, optionLabel: 'levelNameOrAdditionRatio', optionValue: 'memberLevelId' },
   { index: 4, show: true, type: 'select', modelName: 'memberStatus', placeholder: '会员状态', option: [{ label: '关闭', value: 1 }, { label: '开启', value: 2 }], optionLabel: 'label', optionValue: 'value' },
   { index: 5, show: true, type: 'select', modelName: 'memberGroupId', placeholder: '所属会员组', option: data.vipGroupList, optionLabel: 'memberGroupName', optionValue: 'memberGroupId' },
-  { index: 6, show: true, type: 'datetimerange', modelName: 'time', startplaceholder: '创建开始日期', endplaceholder: '创建结束日期' }
+  { index: 6, show: true, type: 'datetimerange', modelName: 'time', startPlaceHolder: '创建开始日期', endPlaceHolder: '创建结束日期' }
 ]
 });
 </script>
