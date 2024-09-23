@@ -487,7 +487,7 @@ onMounted(async () => {
 .copy {
   display: flex;
   align-items: center;
-  width: 20px;
+  width: 25px;
 }
 
 .svg {

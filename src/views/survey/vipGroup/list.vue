@@ -22,7 +22,7 @@ const list = ref<Array<Object>>([]); // 列表
 const selectRows = ref<any>(); // 表格-选中行
 const editRef = ref(); // 新增|编辑 组件ref
 const checkRef = ref(); // 查看 组件ref
-const border = ref<any>(true); // 表格控件-是否展示边框
+const border = ref<any>(false); // 表格控件-是否展示边框
 const stripe = ref<any>(false); // 表格控件-是否展示斑马条
 const lineHeight = ref<any>("default"); // 表格控件-控制表格大小
 const checkList = ref<Array<Object>>([]); // 表格-展示的列
@@ -242,17 +242,17 @@ onMounted(() => {
         <el-table-column v-if="checkList.includes('memberNumber')" width="100" align="left" prop="memberNumber"
           show-overflow-tooltip label="成员">
           <template #default="{ row }">
-            <el-link type="primary">{{
+            <el-text class="buleBorder" type="primary" >{{
           row.memberNumber ? row.memberNumber : 0
-        }}</el-link>
+        }}</el-text>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('projectNumber')" width="100" align="left" prop="projectNumber"
           show-overflow-tooltip label="项目数">
           <template #default="{ row }">
-            <el-link type="primary" @click="handleCheck(row)">{{
-    row.projectNumber ? row.projectNumber : 0
-  }}</el-link>
+            <el-text class="buleBorder" type="primary" @click="handleCheck(row)">{{
+          row.projectNumber ? row.projectNumber : 0
+        }}</el-text>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('createTime')" align="left" prop="createTime" show-overflow-tooltip
@@ -361,7 +361,7 @@ onMounted(() => {
 .copy {
   display: flex;
   align-items: center;
-  width: 20px;
+  width: 25px;
 }
 
 .svg {
@@ -400,5 +400,8 @@ onMounted(() => {
 .copySvg {
   width: 100%;
   height: 100%;
+}
+.buleBorder {
+  border-bottom: 1px solid #409EFF;
 }
 </style>

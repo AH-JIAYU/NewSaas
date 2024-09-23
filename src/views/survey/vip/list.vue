@@ -32,7 +32,7 @@ const vipLevelRef = ref<any>()
 const selectRows = ref<any>(); // 表格-选中行
 const editRef = ref(); // 新增|编辑 组件ref
 const vipPlusMinusPaymentsRef = ref(); //加减款
-const border = ref<any>(true); // 表格控件-是否展示边框
+const border = ref<any>(false); // 表格控件-是否展示边框
 const stripe = ref<any>(false); // 表格控件-是否展示斑马条
 const lineHeight = ref<any>("default"); // 表格控件-控制表格大小
 const checkList = ref<Array<Object>>([]); // 表格-展示的列
@@ -506,7 +506,7 @@ onMounted(async () => {
 .copy {
   display: flex;
   align-items: center;
-  width: 20px;
+  width: 25px;
 }
 
 .svgEdit {

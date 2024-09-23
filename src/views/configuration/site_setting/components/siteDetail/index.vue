@@ -24,34 +24,14 @@ const fileList = ref<any>({
   certificate: [],
   private_key: []
 });
-// 表单
-const form = ref<any>({
-  topLevelDomainName: null,
-})
-// 校验顶级域名
-const validateTopLevelDomainName = (rule: any, value: any, callback: any) => {
-  // 改进后的正则表达式
-  const domainPattern = /^(?!-)[A-Za-z0-9-]{1,63}(?<!-)(?:\.[A-Za-z0-9-]{1,63}(?<!-))*\.[A-Za-z]{2,}$/;
-  if (domainPattern.test(value)) {
-    callback(); // 验证通过
-  } else {
-    callback(new Error('请输入合法的域名')); // 验证失败
-  }
-};
-// 校验
-const formRules = ref<FormRules>({
-  topLevelDomainName: [
-    { required: true, message: "请输入顶级域名", trigger: "submit" },
-    { validator: validateTopLevelDomainName, trigger: "submit" },
-  ],
-});
 // 修改
 async function showEdit(row: any) {
   list.value = []
   try {
     listLoading.value = true;
     if (row) {
-      fileList.value.domain = row.topLevelDomainName
+      fileList.value.domain = 'www.surveysaas.com'
+      // fileList.value.domain = row.topLevelDomainName
       list.value = [row]
       isAnalysis.value = row.data.success
       pagination.value.total = row.data.list.length
@@ -94,7 +74,7 @@ const handleSubmit = async () => {
   if (fileList.value.private_key.length > 0) {
     payload.append('private_key', fileList.value.private_key[0].raw);
   }
-  payload.append('domain', form.value.topLevelDomainName);
+  payload.append('domain', fileList.value.domain);
   try {
     const res: any = await axios.post(Url, payload, {
       headers: {
@@ -115,7 +95,7 @@ const handleSubmit = async () => {
 };
 // 验证
 const onSubmit = async () => {
-  if (form.value.topLevelDomainName !== '' && form.value.topLevelDomainName !== null) {
+  if (fileList.value.domain !== '' && fileList.value.domain !== null) {
     const res = await api.getTenantWebConfigQueryAnalysis({ url: fileList.value.domain })
     if (res.data.success === false) {
       isAnalysis.value = res.data.success
@@ -130,14 +110,16 @@ const onSubmit = async () => {
         message: "解析已生效",
       });
     }
+  }else {
+    ElMessage({
+        type: "warning",
+        message: "请输入顶级域名",
+      });
   }
 }
 // 关闭弹框
 function handleClose() {
   list.value = []
-  Object.assign(form, {
-    topLevelDomainName:null,
-  })
   Object.assign(fileList, {
     domain: '',
     certificate: [],
@@ -154,11 +136,6 @@ defineExpose({
 
 <template>
   <el-dialog v-model="drawerisible" style="min-height: 560px;" title="详情" @close="handleClose">
-    <el-form style="margin-bottom: 1.5rem;" :model="form" ref="form" :rules="formRules" label-width="90px" :inline="false" >
-    <el-form-item label="顶级域名" prop="topLevelDomainName">
-    <el-input style="width: 18rem" v-model="form.topLevelDomainName"></el-input>
-    </el-form-item>
-    </el-form>
     <el-table v-loading="listLoading" border :data="list">
       <el-table-column align="center" prop="host" show-overflow-tooltip label="解析类型">
         <template #default>
@@ -645,7 +622,7 @@ defineExpose({
 .copy {
   display: flex;
   align-items: center;
-  width: 20px;
+  width: 25px;
 }
 
 .fineBom {

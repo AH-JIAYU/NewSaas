@@ -178,9 +178,9 @@ onMounted(() => {
         <el-table-column v-if="checkList.includes('memberQuantity')" align="left" prop="memberQuantity"
           show-overflow-tooltip label="成员数量">
           <template #default="{ row }">
-            <el-link type="primary">{{
+            <el-text class="buleBorder" type="primary" >{{
     row.memberQuantity ? row.memberQuantity : 0
-  }}</el-link>
+  }}</el-text>
           </template>
         </el-table-column>
         <el-table-column align="left" fixed="right" show-overflow-tooltip label="操作">
@@ -262,5 +262,9 @@ onMounted(() => {
   tbody {
     color: #333;
   }
+}
+
+.buleBorder {
+  border-bottom: 1px solid #409EFF;
 }
 </style>

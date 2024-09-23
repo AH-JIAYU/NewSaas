@@ -476,7 +476,7 @@ onMounted(async () => {
 .copy {
   display: flex;
   align-items: center;
-  width: 20px;
+  width: 25px;
 }
 
 // 参数
@@ -518,8 +518,8 @@ onMounted(async () => {
   justify-content: center;
 }
 
-.copySvg {
-  width: 100%;
-  height: 100%;
-}
+// .copySvg {
+//   width: 100%;
+//   height: 100%;
+// }
 </style>
