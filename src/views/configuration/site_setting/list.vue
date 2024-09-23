@@ -147,29 +147,6 @@ const getLogo = async () => {
 
   }
 }
-// 移开输入框解析域名
-// const handleMouseLeave = async (val: any) => {
-//   formRef.value && formRef.value.validateField(form.value.topLevelDomainName ? 'topLevelDomainName' : '', async (valid: any) => {
-//     if (valid) {
-//       if (form.value.topLevelDomainName !== '' && form.value.topLevelDomainName !== null) {
-//         const res = await api.getTenantWebConfigQueryAnalysis({ url: form.value.topLevelDomainName })
-//         if (res.data.success === false) {
-//           isAnalysis.value = res.data.success
-//           ElMessage({
-//             type: "warning",
-//             message: "解析未生效",
-//           });
-//         } else {
-//           isAnalysis.value = res.data.success
-//           ElMessage({
-//             type: "success",
-//             message: "解析已生效",
-//           });
-//         }
-//       }
-//     }
-//   })
-// }
 // 解析记录
 const record = () => {
   recordRef.value.showEdit(analyzeRecords.value)
