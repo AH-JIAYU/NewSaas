@@ -47,6 +47,28 @@ const subSidebarActualWidth = computed(() => {
   return `${actualWidth}px`
 })
 
+// 创建meta标签
+const createMeta = () => {
+  // 获取或创建 meta 标签
+  let metaTag = document.querySelector('meta[name="keywords"]');
+  if (!metaTag) {
+    metaTag = document.createElement('meta');
+    metaTag.setAttribute('name', 'keywords');
+    document.head.appendChild(metaTag);
+  }
+  // 动态设置关键词内容
+  metaTag.setAttribute('content', userStore.keyWords);
+  // 获取或创建 meta 标签
+  let metaTagDescription = document.querySelector('meta[name="description"]');
+  if (!metaTagDescription) {
+    metaTagDescription = document.createElement('meta');
+    metaTagDescription.setAttribute('name', 'description');
+    document.head.appendChild(metaTagDescription);
+  }
+  // 动态设置关键词内容
+  metaTagDescription.setAttribute('content', userStore.description);
+}
+
 // 设置网页 title
 watch([
   () => settingsStore.settings.app.enableDynamicTitle,
@@ -69,6 +91,7 @@ watch([
     } else {
       document.title = `${title} - ${import.meta.env.VITE_APP_TITLE}`
     }
+    createMeta()
   }
   else {
     if (userStore.webName) {
@@ -76,6 +99,7 @@ watch([
     } else {
       document.title = import.meta.env.VITE_APP_TITLE
     }
+    createMeta()
   }
 }, {
   immediate: true,

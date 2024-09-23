@@ -106,7 +106,7 @@ const data = ref<any>({
   loading: false,
   activeName: "myFinancial",
   tableAutoHeight: false, // 表格是否自适应高度
-  border: true, // 表格控件-是否展示边框
+  border: false, // 表格控件-是否展示边框
   stripe: false, // 表格控件-是否展示斑马条
   lineHeight: "default", // 表格控件-控制表格大小
   checkList: [],
@@ -430,7 +430,7 @@ onBeforeUnmount(() => {
 .copy {
   display: flex;
   align-items: center;
-  width: 20px;
+  width: 25px;
 }
 
 .svg {

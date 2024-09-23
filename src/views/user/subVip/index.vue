@@ -326,14 +326,11 @@ onMounted(() => {
         <el-table-column v-if="checkList.includes('memberChildGroupName')" align="left" prop="memberChildGroupName"
           show-overflow-tooltip label="所属组">
           <template #default="{ row }">
-            <div class="copyId">
-              <div class="id">
-                <b class="oneLine tableBig">{{ row.memberChildGroupName }}</b>
-                <span class="oneLine tableSmall" v-show="row.memberChildGroupId">ID: {{ row.memberChildGroupId }}</span>
-              </div>
-              <copy class="copy" v-if="row.memberChildGroupId" :content="row.memberChildGroupId" />
+            <div v-if="row.memberChildGroupId" class="copyId tableSmall">
+              <div class="id oneLine ">ID: {{ row.memberChildGroupId }}</div>
+              <copy class="copy" :content="row.memberChildGroupId" />
             </div>
-
+            <el-text v-else>-</el-text>
           </template>
         </el-table-column>
 
