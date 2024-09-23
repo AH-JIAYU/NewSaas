@@ -10,7 +10,6 @@ import useClipboard from "vue-clipboard3";
 import { AnyFn } from "@vueuse/core";
 import useUserStore from "@/store/modules/user";
 import siteDetail from "./components/siteDetail/index.vue"
-import logo from "@/api/modules/logo";
 
 defineOptions({
   name: "site_setting",
@@ -275,6 +274,35 @@ function onSubmit() {
           :inline="false">
           <el-tab-pane label="基础设置" name="基本设置">
             <el-row :gutter="20">
+              <el-col :span="24">
+                <ElFormItem style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              " label="网址Logo">
+                  <el-upload :class="{ hide_box: fileList.length }" v-model:file-list="fileList" :headers="headers"
+                    :action="Url" list-type="picture-card" :limit="1" :on-preview="handlePictureCardPreview"
+                    :on-remove="handleRemove" :on-success="handleSuccess" :on-exceed="handleExceed">
+                    <el-icon class="el-icon--upload">
+                      <Plus />
+                    </el-icon>
+                    <!-- <div class="el-upload__text">上传</div> -->
+                    <template #tip>
+                      <div class="el-upload__tip">
+                        支持上传JPG/JPEG/PNG图片，小于10MB
+                      </div>
+                    </template>
+                  </el-upload>
+
+                  <el-dialog v-model="dialogVisible" style="
+                  z-index: 1000;
+                  transform: translate(0);
+                  position: relative;
+                ">
+                    <img w-full :src="dialogImageUrl" alt="Preview Image" />
+                  </el-dialog>
+                </ElFormItem>
+              </el-col>
               <el-col :span="3">
                 <el-form-item label="注册开关">
                   <el-switch v-model="form.registerOffOrOn" active-text="开启" inline-prompt inactive-text="关闭"
@@ -321,46 +349,7 @@ function onSubmit() {
                   <el-button class="copy" @click="record" type="primary" link>CNAME配置</el-button>
                 </el-form-item>
               </el-col>
-              <el-col :span="24"><span style="margin-left: 1.5rem; font-size: 14px;color: #606266;">网址Logo</span></el-col>
-              <el-col style=" height: 14rem;" :span="24">
-                <ElFormItem style="
-                display: flex;
-                justify-content: center;
-                align-items: center;
-              " label="">
-                  <el-upload :class="{ hide_box: fileList.length }" v-model:file-list="fileList" drag :headers="headers"
-                    :action="Url" list-type="picture-card" :limit="1" :on-preview="handlePictureCardPreview"
-                    :on-remove="handleRemove" :on-success="handleSuccess" :on-exceed="handleExceed">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80" fill="none">
-                      <g id="Frame">
-                        <path id="Vector"
-                          d="M64.2018 37.4596C64.2018 37.4596 63.7118 21.3346 50.5768 18.1296C37.4418 14.9246 31.1118 28.7646 30.9818 29.1596C30.8518 29.5546 30.2068 29.3746 30.2068 29.3746C29.1568 28.3796 24.5268 26.0946 19.6618 29.0246C14.8018 31.9546 16.5618 37.5196 16.5618 37.5196C16.5618 37.5196 9.35676 36.9346 5.66176 48.0596C1.97176 59.1946 14.9168 62.3496 14.9168 62.3496H36.6468V50.5046H32.2968H31.9168H31.6218V50.4846C31.3718 50.4846 31.1718 50.2846 31.1718 50.0296C31.1718 49.8796 31.2518 49.7496 31.3718 49.6646L40.2768 40.2996C40.4018 40.1596 40.5768 40.0646 40.7818 40.0646C40.9918 40.0646 41.1768 40.1696 41.3018 40.3246L50.1418 49.6146C50.1568 49.6246 50.1718 49.6396 50.1868 49.6546L50.2718 49.7446H50.2418C50.2868 49.8246 50.3168 49.8946 50.3168 49.9896C50.3168 50.2696 50.0918 50.4996 49.8068 50.4996C49.7968 50.4996 49.7968 50.4896 49.7868 50.4896V50.5096H44.9968V62.3546H64.7218C64.7218 62.3546 74.1268 59.9996 74.9568 50.2896C75.7968 40.5796 64.2018 37.4596 64.2018 37.4596Z"
-                          fill="#409EFF" />
-                      </g>
-                    </svg>
-                    <div class="el-upload__text">
-                      支持点击拖拽上传
-                    </div>
-                    <div style="color: #409EFF;" class="el-upload__text">
-                      支持上传JPG/JPEG/PNG图片，小于10MB
-                    </div>
-                    <!-- <div class="el-upload__text">上传</div> -->
-                    <template #tip>
-                      <div class="el-upload__tip">
-
-                      </div>
-                    </template>
-                  </el-upload>
-                  <el-dialog v-model="dialogVisible" style="
-                  z-index: 1000;
-                  transform: translate(0);
-                  position: relative;
-                ">
-                    <img w-full :src="dialogImageUrl" alt="Preview Image" />
-                  </el-dialog>
-                </ElFormItem>
-              </el-col>
-              <el-col style="margin-top: 1.125rem;" :span="24">
+              <el-col :span="24">
                 <el-form-item>
                   <el-button type="primary" @click="onSubmit"> 确认 </el-button>
                 </el-form-item>
@@ -508,15 +497,7 @@ function onSubmit() {
   border-radius: 50px;
 }
 
-:deep {
-  .el-upload-dragger {
-    height: 14rem;
-    width: 54.5rem;
-  }
-  .el-upload--picture-card {
-    border: none;
-    background-color: #fff;
-  }
-}
-
+// :deep() {
+//   background-color: #fafafa;
+// }
 </style>
