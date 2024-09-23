@@ -279,7 +279,7 @@ onMounted(() => {
         <ElTableColumn v-if="checkList.includes('b2bStatus')" align="left" show-overflow-tooltip prop="b2bStatus"
           label="B2B">
           <template #default="{ row }">
-            <svg v-if="row.b2bStatus && row.b2bStatus === 2" class="mx-1" width="15" height="14" viewBox="0 0 15 14"
+            <svg v-if="row.b2bStatus && row.b2bStatus === 2"  width="15" height="14" viewBox="0 0 15 14"
               fill="none" xmlns="http://www.w3.org/2000/svg">
               <g id="Frame" clip-path="url(#clip0_409_28184)">
                 <path id="Vector"
@@ -299,7 +299,7 @@ onMounted(() => {
               </defs>
             </svg>
 
-            <svg v-else class="mx-1" width="15" height="14" viewBox="0 0 15 14" fill="none"
+            <svg v-else  width="15" height="14" viewBox="0 0 15 14" fill="none"
               xmlns="http://www.w3.org/2000/svg">
               <g id="Frame" clip-path="url(#clip0_409_28364)">
                 <path id="Vector"
@@ -445,18 +445,4 @@ onMounted(() => {
   }
 }
 
-// id
-.copyId {
-  @extend .flex-s;
-  justify-content: center;
-
-  .copy {
-    width: 20px;
-  }
-
-  .id {
-    width: auto !important;
-    max-width: calc(100% - 25px) !important;
-  }
-}
 </style>

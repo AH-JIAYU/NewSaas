@@ -16,7 +16,7 @@ const { pagination, getParams, onSizeChange, onCurrentChange } =
 const tableSortRef = ref("");
 // loading加载
 const listLoading = ref<boolean>(true);
-const border = ref(true);
+const border = ref(false);
 // 获取组件变量
 const editRef = ref();
 // 右侧工具栏配置变量
@@ -338,20 +338,6 @@ onMounted(() => {
   }
 }
 
-// id
-.copyId {
-  @extend .flex-c;
-  justify-content: center;
-
-  .copy {
-    width: 20px;
-  }
-
-  .id {
-    width: auto !important;
-    max-width: calc(100% - 25px) !important;
-  }
-}
 
 .flex-c {
   display: flex;

@@ -312,7 +312,7 @@ onMounted(async () => {
         :stripe="stripe" highlight-current-row height="100%" @current-change="handleCurrentChange">
         <el-table-column align="left" type="selection" :selectable="selectable" />
         <el-table-column v-if="checkList.includes('isOnline')" show-overflow-tooltip prop="isOnline" align="left"
-          width="100" label="状态">
+          width="80" label="状态">
           <template #default="{ row }">
             <ElSwitch @change="changeStatus(row, $event)" inline-prompt v-model="row.isOnline" active-text="在线"
               inactive-text="离线" :active-value="1" :inactive-value="2" />
@@ -402,7 +402,7 @@ onMounted(async () => {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('ir')" show-overflow-tooltip prop="ir" align="left" label="IR/NIR"
-          width="100">
+          width="120">
           <template #default="{ row }">
             <div class="flex-c">
               <div class="oneLine tableBig" style="width: calc(100% - 20px);">
@@ -534,19 +534,7 @@ onMounted(async () => {
   display: block;
 }
 
-// id
-.copyId {
-  @extend .flex-c;
 
-  .copy {
-    width: 20px;
-  }
-
-  .id {
-    width: auto !important;
-    max-width: calc(100% - 25px) !important;
-  }
-}
 
 // 头像
 .avatar {

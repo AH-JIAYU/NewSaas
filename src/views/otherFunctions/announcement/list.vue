@@ -70,7 +70,7 @@ const data = ref<any>({
   // 表格是否自适应高度
   tableAutoHeight: false,
   // 表格控件-是否展示边框
-  border: true,
+  border: false,
   // 表格控件-是否展示斑马条
   stripe: false,
   // 表格控件-控制表格大小
@@ -344,14 +344,13 @@ onBeforeUnmount(() => {
             <el-text class="tableBig">
               {{ type[row.type - 1].label }}
             </el-text>
-
           </template>
         </ElTableColumn>
 
         <ElTableColumn v-if="data.checkList.includes('createTime')" align="left" show-overflow-tooltip
           prop="createTime"  >
           <template #header>
-            <div class="flex-c">
+            <div class="flex-s">
               <SvgIcon name="ant-design:clock-circle-filled" color="#45a0ff" />
               <span>创建时间</span>
             </div>
@@ -440,9 +439,9 @@ onBeforeUnmount(() => {
     }
   }
 }
-.flex-c {
+.flex-s {
   display: flex;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
 }
 </style>

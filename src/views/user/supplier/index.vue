@@ -314,9 +314,9 @@ onMounted(async () => {
         </el-table-column>
         <el-table-column v-if="checkList.includes('b2bStatus')" align="left" show-overflow-tooltip label="B2B|B2C">
           <template #default="{ row }">
-            <div class="flex-c" style="justify-content: center !important;">
+            <div class="flex-s" style="justify-content: center !important;">
 
-                <svg  v-if="row.b2bStatus && row.b2bStatus === 2" class="mx-1" width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg  v-if="row.b2bStatus && row.b2bStatus === 2"  width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <g id="Frame" clip-path="url(#clip0_409_28184)">
                     <path id="Vector"
                       d="M13.6223 13.2878H1.375C1.28477 13.2878 1.21094 13.214 1.21094 13.1237V0.876465C1.21094 0.78623 1.28477 0.712402 1.375 0.712402H13.6236C13.7139 0.712402 13.7877 0.78623 13.7877 0.876465V13.1251C13.7863 13.2153 13.7139 13.2878 13.6223 13.2878Z"
@@ -335,7 +335,7 @@ onMounted(async () => {
                   </defs>
                 </svg>
 
-                <svg  v-else class="mx-1" width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg  v-else  width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <g id="Frame" clip-path="url(#clip0_409_28364)">
                     <path id="Vector"
                       d="M13.6223 13.1901H1.375C1.3387 13.1901 1.30859 13.16 1.30859 13.1237V0.876465C1.30859 0.840165 1.3387 0.810059 1.375 0.810059H13.6236C13.6599 0.810059 13.69 0.840164 13.69 0.876465V13.1242C13.6892 13.1611 13.66 13.1901 13.6223 13.1901Z"
@@ -356,8 +356,8 @@ onMounted(async () => {
                     </clipPath>
                   </defs>
                 </svg>
-              <span>/</span>
-                <svg v-if="row.b2cStatus && row.b2cStatus === 2" class="mx-1" width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <span class="mx-1" >/</span>
+                <svg v-if="row.b2cStatus && row.b2cStatus === 2"  width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <g id="Frame" clip-path="url(#clip0_409_28184)">
                     <path id="Vector"
                       d="M13.6223 13.2878H1.375C1.28477 13.2878 1.21094 13.214 1.21094 13.1237V0.876465C1.21094 0.78623 1.28477 0.712402 1.375 0.712402H13.6236C13.7139 0.712402 13.7877 0.78623 13.7877 0.876465V13.1251C13.7863 13.2153 13.7139 13.2878 13.6223 13.2878Z"
@@ -375,7 +375,7 @@ onMounted(async () => {
                     </clipPath>
                   </defs>
                 </svg>
-                <svg v-else class="mx-1" width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg v-else  width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <g id="Frame" clip-path="url(#clip0_409_28364)">
                     <path id="Vector"
                       d="M13.6223 13.1901H1.375C1.3387 13.1901 1.30859 13.16 1.30859 13.1237V0.876465C1.30859 0.840165 1.3387 0.810059 1.375 0.810059H13.6236C13.6599 0.810059 13.69 0.840164 13.69 0.876465V13.1242C13.6892 13.1611 13.66 13.1901 13.6223 13.1901Z"
@@ -533,18 +533,5 @@ onMounted(async () => {
 .el-table__row:hover .edit {
   display: block;
 }
-
-// id
-.copyId {
-  @extend .flex-c;
-  justify-content: center;
-
-  .copy {
-    width: 20px;
-  }
-
-  .id {
-    max-width:calc(100% - 25px)  !important;
-  }
-}
+ 
 </style>

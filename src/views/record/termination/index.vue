@@ -15,7 +15,7 @@ const list = ref<Array<Object>>([]); // 列表
 const selectRows = ref(""); // 表格-选中行
 const checkList = ref<Array<Object>>([]); // 表格-展示的列
 
-const border = ref(true); // 表格控件-是否展示边框
+const border = ref(false); // 表格控件-是否展示边框
 const stripe = ref(false); // 表格控件-是否展示斑马条
 const lineHeight = ref<any>("default"); // 表格控件-控制表格大小
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
@@ -241,7 +241,7 @@ onMounted(() => {
         <el-table-column v-if="checkList.includes('terminationTime')" align="left" prop="terminationTime"
           show-overflow-tooltip>
           <template #header>
-            <div class="flex-c">
+            <div class="flex-s">
               <SvgIcon name="ant-design:clock-circle-filled" color="#45a0ff" />
               <span>终止时间</span>
             </div>
@@ -352,17 +352,5 @@ onMounted(() => {
   align-items: center;
 }
 
-// id
-.copyId {
-  @extend .flex-s;
-  justify-content: center;
 
-  .copy {
-    width: 20px;
-  }
-
-  .id {
-    max-width:calc(100% - 25px)  !important;
-  }
-}
 </style>

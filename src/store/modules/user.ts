@@ -69,7 +69,7 @@ const useUserStore = defineStore(
       storage.local.set("avatar", res.data.avatar);
       storage.local.set("userId", res.data.userId);
       storage.local.set("logo", res.data.logo);
-      // storage.local.set("webName", res.data.webName);
+      storage.local.set("webName", res.data.webName);
       webName.value = res.data.webName;
       logo.value = res.data.logo;
       account.value = res.data.account;
@@ -128,7 +128,7 @@ const useUserStore = defineStore(
       logo.value = val
       storage.local.set("logo", val)
     }
-     // 删除本地和store里的logo
+     // 删除本地和store里的网站名称
      function delWebName() {
       webName.value = ''
       storage.local.remove("webName")
@@ -136,7 +136,7 @@ const useUserStore = defineStore(
     // 存 webName
     function setWebName(val: any) {
       webName.value = val
-      // storage.local.set("webName", val)
+      storage.local.set("webName", val)
     }
     // 获取权限
     async function getPermissions() {

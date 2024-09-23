@@ -155,7 +155,7 @@ onBeforeUnmount(() => {
   <div :class="{ 'absolute-container': data.tableAutoHeight }">
     <PageMain>
       <PageHeader title="通用模板" />
-      <ElTable v-loading="data.loading" class="my-4" :data="data.controlDataList" stripe highlight-current-row border
+      <ElTable v-loading="data.loading" class="my-4" :data="data.controlDataList" stripe highlight-current-row
         height="100%" @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
         <ElTableColumn v-if="data.batch.enable" type="selection" align="left" fixed />
         <ElTableColumn prop="title" label="标题" />
@@ -202,7 +202,7 @@ onBeforeUnmount(() => {
           </ElButton>
         </ElButtonGroup>
       </ElSpace>
-      <ElTable v-loading="data.loading" class="my-4" :data="data.dataList" stripe highlight-current-row border
+      <ElTable v-loading="data.loading" class="my-4" :data="data.dataList" stripe highlight-current-row
         height="100%" @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
         <ElTableColumn v-if="data.batch.enable" type="selection" align="left" fixed />
         <ElTableColumn prop="title" label="标题" />

@@ -408,18 +408,5 @@ onBeforeUnmount(() => {
   }
 }
 
-// id
-.copyId {
-  @extend .flex-s;
-  justify-content: center;
 
-  .copy {
-    width: 20px;
-  }
-
-  .id {
-    width: auto !important;
-    max-width: calc(100% - 25px) !important;
-  }
-}
 </style>

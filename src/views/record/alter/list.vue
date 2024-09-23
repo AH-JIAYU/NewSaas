@@ -26,7 +26,7 @@ const detailRef = ref();
 // 表格控件-高度自适应
 const tableAutoHeight = ref(false);
 const checkList = ref<any>([]);
-const border = ref(true);
+const border = ref(false);
 const isFullscreen = ref(false);
 const lineHeight = ref<any>("default");
 const stripe = ref(false);

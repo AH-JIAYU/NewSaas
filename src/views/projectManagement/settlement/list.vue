@@ -518,19 +518,7 @@ function handleMoreOperating(command: string, row: any) {
 .el-table__row:hover .edit {
   display: block;
 }
-// id
-.copyId {
-  @extend .flex-c;
-  justify-content: center;
 
-  .copy {
-    width: 20px;
-  }
-
-  .id {
-    max-width:calc(100% - 25px)  !important;
-  }
-}
 
 // 头像
 .avatar {

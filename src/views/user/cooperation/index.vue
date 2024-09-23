@@ -18,7 +18,7 @@ const list = ref<Array<Object>>([]); // 表格数据
 const editRef = ref<any>(); // 组件ref 新增编辑
 const proportionRef = ref<any>(); // 组件ref 价格比例
 const selectRows = ref(); // 表格选中行
-const border = ref(true); // 表格控件-边框
+const border = ref(false); // 表格控件-边框
 const stripe = ref(false); // 表格控件-条纹
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const lineHeight = ref<any>("default"); // 表格控件-大小
@@ -328,18 +328,4 @@ onMounted(() => {
   }
 }
 
-// id
-.copyId {
-  @extend .flex-s;
-  justify-content: center;
-
-  .copy {
-    width: 20px;
-  }
-
-  .id {
-    width: auto !important;
-    max-width: calc(100% - 25px) !important;
-  }
-}
 </style>
