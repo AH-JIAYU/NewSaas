@@ -680,17 +680,5 @@ function onReset() {
     display: block !important;
   }
 }
-// id
-.copyId {
-  @extend .flex-s;
-  justify-content: center;
 
-  .copy {
-    width: 20px;
-  }
-
-  .id {
-    max-width:calc(100% - 25px)  !important;
-  }
-}
 </style>

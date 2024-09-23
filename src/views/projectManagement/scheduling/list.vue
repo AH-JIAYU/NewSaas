@@ -15,7 +15,7 @@ const { pagination, getParams, onSizeChange, onCurrentChange } =
 const tableSortRef = ref("");
 // loading加载
 const listLoading = ref<boolean>(false);
-const border = ref(true);
+const border = ref(false);
 // 获取组件变量
 const editRef = ref();
 // 右侧工具栏配置变量
@@ -144,8 +144,8 @@ onMounted(() => {
           align="left" label="类型">
           <template #default="{ row }">
             <div class="tableBig">
-              <el-text v-if="row.dispatchType === 1" class="mx-1 " type="primary">指定关闭</el-text>
-              <el-text v-else class="mx-1" type="danger">指定价格</el-text>
+              <el-text v-if="row.dispatchType === 1"   type="primary">指定关闭</el-text>
+              <el-text v-else   type="danger">指定价格</el-text>
             </div>
 
           </template>
@@ -308,20 +308,7 @@ onMounted(() => {
   }
 }
 
-// id
-.copyId {
-  @extend .flex-c;
-  justify-content: center;
 
-  .copy {
-    width: 20px;
-  }
-
-  .id {
-    width: auto !important;
-    max-width: calc(100% - 25px) !important;
-  }
-}
 
 .specifyTheTarget {
   @extend .flex-c;

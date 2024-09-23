@@ -12,7 +12,7 @@ defineOptions({
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
 // 右侧工具栏配置变量
-const border = ref(true);
+const border = ref(false);
 const checkList = ref<any>([]);
 // 表格控件-高度自适应
 const tableAutoHeight = ref(false);

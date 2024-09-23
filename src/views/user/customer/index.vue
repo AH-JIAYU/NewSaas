@@ -283,7 +283,7 @@ onMounted(async () => {
         <el-table-column v-if="checkList.includes('projectNumber')" align="left" prop="turnover" show-overflow-tooltip
           label="关联项目数">
           <template #default="{ row }">
-            <span style="width:20px;text-align:right;display: inline-block" class="tableBig">
+            <span style="display: inline-block" class="tableBig">
               {{ row.projectNumber || 0 }}
             </span>
             <el-button v-if="row.projectNumber" text type="primary" size="small" class="p-1"

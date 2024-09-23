@@ -84,7 +84,7 @@ const data = ref<any>({
   // 表格是否自适应高度
   tableAutoHeight: false,
   // 表格控件-是否展示边框
-  border: true,
+  border: false,
   // 表格控件-是否展示斑马条
   stripe: false,
   // 表格控件-控制表格大小
@@ -419,19 +419,7 @@ onBeforeUnmount(() => {
   }
 }
 
-// id
-.copyId {
-  @extend .flex-s;
-  justify-content: center;
 
-  .copy {
-    width: 20px;
-  }
-
-  .id {
-    max-width:calc(100% - 25px)  !important;
-  }
-}
 :deep(.el-table__empty-block){
   height:auto !important;
 }

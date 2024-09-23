@@ -17,7 +17,7 @@ const listLoading = ref(false);
 const list = ref<Array<Object>>([]); // 列表
 const selectRows = ref(""); // 表格-选中行
 const checkList = ref<Array<Object>>([]); // 表格-展示的列
-const border = ref(true); // 表格控件-是否展示边框
+const border = ref(false); // 表格控件-是否展示边框
 const stripe = ref(false); // 表格控件-是否展示斑马条
 const lineHeight = ref<any>("default"); // 表格控件-控制表格大小
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
@@ -234,9 +234,9 @@ onMounted(async () => {
         <el-table-column v-if="checkList.includes('allocationType')" align="left" show-overflow-tooltip width="100"
           label="分配类型">
           <template #default="{ row }">
-            <el-text v-if="row.allocationType === 3" class="mx-1" type="primary">会员组</el-text>
-            <el-text v-if="row.allocationType === 2" class="mx-1" type="success">供应商</el-text>
-            <el-text v-if="row.allocationType === 1" class="mx-1" type="warning">未分配</el-text>
+            <el-text v-if="row.allocationType === 3" type="primary">会员组</el-text>
+            <el-text v-if="row.allocationType === 2" type="success">供应商</el-text>
+            <el-text v-if="row.allocationType === 1" type="warning">未分配</el-text>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('passNumber')" align="left" show-overflow-tooltip label="通过数/提交数">

@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from "vue-router";
+import { createRouter, createWebHashHistory,createWebHistory  } from "vue-router";
 import type { RouteRecordRaw } from "vue-router";
 import { useNProgress } from "@vueuse/integrations/useNProgress";
 import "@/assets/styles/nprogress.scss";
@@ -25,7 +25,7 @@ import useNotificationStore from "@/store/modules/notification"; //消息中心
 const { isLoading } = useNProgress();
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory (),
   routes:
     useSettingsStore(pinia).settings.app.routeBaseOn === "filesystem"
       ? constantRoutesByFilesystem
@@ -43,7 +43,7 @@ router.beforeEach(async (to, from, next) => {
   const notificationStore = useNotificationStore(); //消息中心
   settingsStore.settings.app.enableProgress && (isLoading.value = true);
   // 是否已登录
-  if (userStore.isLogin) { 
+  if (userStore.isLogin) {
     // 是否已根据权限动态生成并注册路由
     if (routeStore.isGenerate) {
       // 生成 iframe 列表

@@ -22,7 +22,7 @@ const selectRows = ref("");
 // 表格-展示的列
 const checkList = ref<Array<Object>>([]);
 // 表格控件-是否展示边框
-const border = ref(true);
+const border = ref(false);
 // 表格控件-是否展示斑马条
 const stripe = ref(false);
 // 表格控件-控制表格大小

@@ -138,7 +138,7 @@ const useUserStore = defineStore(
       logo.value = val
       storage.local.set("logo", val)
     }
-     // 删除本地和store里的logo
+     // 删除本地和store里的网站名称
      function delWebName() {
       webName.value = ''
       storage.local.remove("webName")

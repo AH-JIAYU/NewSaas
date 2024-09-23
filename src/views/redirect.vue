@@ -49,8 +49,8 @@ onMounted(async () => {
     const URL = resRedirect.data.status;
     // 新开 会员或子会员重定向页面
     if (resRedirect.data.redirectAddress) {
-      const href = `http://${resRedirect.data.peopleType === 1 ? '' : resRedirect.data.redirectAddress}${resRedirect.data.peopleType === 1 //peopleType 1 会员  2子会员
-        ? "front-saas-web.surveyssaas.com/#/"
+      const href = `https://${resRedirect.data.peopleType === 1 ? '' : resRedirect.data.redirectAddress}${resRedirect.data.peopleType === 1 //peopleType 1 会员  2子会员
+        ? "samples.surveysaas.com/"
         : ".front-supplier-web.surveyssaas.com/#/"
         }${
         //surveySource 1内部 2外部

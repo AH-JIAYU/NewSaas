@@ -306,7 +306,7 @@ onMounted(() => {
   width: 100%;
 
   >div:nth-of-type(1) {
-    width: calc(100% - 25px);
+    max-width: calc(100% - 25px);
     flex-shrink: 0;
   }
 
@@ -326,17 +326,5 @@ onMounted(() => {
 .el-table__row:hover .edit {
   display: block;
 }
-// id
-.copyId {
-  @extend .flex-s;
-  justify-content: center;
-  .copy {
-    width: 20px;
-  }
 
-  .id {
-    // flex: 1;
-    width:auto !important;
-  }
-}
 </style>

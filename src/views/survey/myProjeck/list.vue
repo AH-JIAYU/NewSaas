@@ -32,7 +32,7 @@ const listLoading = ref<boolean>(true);
 const CheckEditRef = ref<any>();
 const checkMembershipPriceRef = ref<any>();
 // 右侧工具栏配置变量
-const border = ref(true);
+const border = ref(false);
 const checkList = ref<any>([]);
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const formSearchList = ref<any>()//表单排序配置
