@@ -228,7 +228,7 @@ const handleLogin = debounce(() => {
           });
       }
     });
-}, 3000);
+}, 500);
 //#endregion
 
 // #region 注册
@@ -410,7 +410,7 @@ const handleRegister = debounce(async () => {
         });
       }
     });
-}, 3000);
+}, 500);
 
 // #endregion
 
@@ -483,7 +483,7 @@ const handleReset = debounce(() => {
         }
       }
     });
-}, 3000)
+}, 500)
 // 倒计时
 const resultCountdown = () => {
   isReset.value = true;

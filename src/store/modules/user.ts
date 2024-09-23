@@ -30,6 +30,8 @@ const useUserStore = defineStore(
     const permissions = ref<string[]>([]);
     const logo = ref<any>(storage.local.get("logo") ?? "");
     const webName = ref<any>(storage.local.get("webName") ?? "");
+    const keyWords = ref<any>(storage.local.get("keyWords") ?? "");
+    const description = ref<any>(storage.local.get("description") ?? "");
     const currencyType = ref<number | string>(3); //货币类型 1=USD 2=CNY 3=未知
     const exchangeRate = ref<number | string>(); //汇率
     const isLogin = computed(() => {
@@ -69,8 +71,12 @@ const useUserStore = defineStore(
       storage.local.set("avatar", res.data.avatar);
       storage.local.set("userId", res.data.userId);
       storage.local.set("logo", res.data.logo);
-      // storage.local.set("webName", res.data.webName);
+      storage.local.set("webName", res.data.webName);
+      storage.local.set("keyWords", res.data.keyWords);
+      storage.local.set("description", res.data.description);
       webName.value = res.data.webName;
+      keyWords.value = res.data.keyWords;
+      description.value = res.data.description;
       logo.value = res.data.logo;
       account.value = res.data.account;
       token.value = res.data.token;
@@ -92,6 +98,8 @@ const useUserStore = defineStore(
       }
       storage.local.remove("logo");
       storage.local.remove("webName");
+      storage.local.remove("description");
+      storage.local.remove("keyWords");
       storage.local.remove("account");
       storage.local.remove("token");
       storage.local.remove("avatar");
@@ -104,6 +112,8 @@ const useUserStore = defineStore(
       permissions.value = [];
       logo.value = '';
       webName.value = '';
+      description.value = '';
+      keyWords.value = '';
       tabbarStore.clean();
       routeStore.removeRoutes();
       menuStore.setActived(0);
@@ -136,7 +146,27 @@ const useUserStore = defineStore(
     // 存 webName
     function setWebName(val: any) {
       webName.value = val
-      // storage.local.set("webName", val)
+      storage.local.set("webName", val)
+    }
+     // 删除本地和store里的keyWords
+     function delkeyWords() {
+      keyWords.value = ''
+      storage.local.remove("keyWords")
+    }
+    // 存 keyWords
+    function setkeyWords(val: any) {
+      keyWords.value = val
+      storage.local.set("keyWords", val)
+    }
+     // 删除本地和store里的description
+     function delDescription() {
+      description.value = ''
+      storage.local.remove("description")
+    }
+    // 存 description
+    function setDescription(val: any) {
+      description.value = val
+      storage.local.set("description", val)
     }
     // 获取权限
     async function getPermissions() {
@@ -312,13 +342,19 @@ const useUserStore = defineStore(
       permissions,
       logo,
       webName,
+      description,
+      keyWords,
       currencyType,
       isLogin,
       login,
       delLogo,
       delWebName,
+      delDescription,
+      delkeyWords,
       setLogo,
       setWebName,
+      setkeyWords,
+      setDescription,
       logout,
       getPermissions,
       getCurrencyType,

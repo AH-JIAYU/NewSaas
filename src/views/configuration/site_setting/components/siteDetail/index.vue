@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import empty from '@/assets/images/empty.png'
-import type { UploadProps, UploadUserFile } from 'element-plus'
+import type { FormInstance, FormRules, UploadProps } from "element-plus";
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { UploadFilled } from '@element-plus/icons-vue'
 import useUserStore from "@/store/modules/user";
@@ -26,8 +26,25 @@ const fileList = ref<any>({
 });
 // 表单
 const form = ref<any>({
-  isHttps: false,
+  topLevelDomainName: null,
 })
+// 校验顶级域名
+const validateTopLevelDomainName = (rule: any, value: any, callback: any) => {
+  // 改进后的正则表达式
+  const domainPattern = /^(?!-)[A-Za-z0-9-]{1,63}(?<!-)(?:\.[A-Za-z0-9-]{1,63}(?<!-))*\.[A-Za-z]{2,}$/;
+  if (domainPattern.test(value)) {
+    callback(); // 验证通过
+  } else {
+    callback(new Error('请输入合法的域名')); // 验证失败
+  }
+};
+// 校验
+const formRules = ref<FormRules>({
+  topLevelDomainName: [
+    { required: true, message: "请输入顶级域名", trigger: "submit" },
+    { validator: validateTopLevelDomainName, trigger: "submit" },
+  ],
+});
 // 修改
 async function showEdit(row: any) {
   list.value = []
@@ -77,9 +94,9 @@ const handleSubmit = async () => {
   if (fileList.value.private_key.length > 0) {
     payload.append('private_key', fileList.value.private_key[0].raw);
   }
-  payload.append('domain', fileList.value.domain);
+  payload.append('domain', form.value.topLevelDomainName);
   try {
-    const res:any = await axios.post(Url, payload, {
+    const res: any = await axios.post(Url, payload, {
       headers: {
         'Content-Type': 'multipart/form-data',
         // 在这里添加其他请求头，例如身份验证
@@ -119,7 +136,7 @@ const onSubmit = async () => {
 function handleClose() {
   list.value = []
   Object.assign(form, {
-    isHttps: false,
+    topLevelDomainName:null,
   })
   Object.assign(fileList, {
     domain: '',
@@ -128,7 +145,6 @@ function handleClose() {
   })
   isChecked.value = false
   drawerisible.value = false;
-
 }
 // 暴露
 defineExpose({
@@ -138,31 +154,35 @@ defineExpose({
 
 <template>
   <el-dialog v-model="drawerisible" style="min-height: 560px;" title="详情" @close="handleClose">
+    <el-form style="margin-bottom: 1.5rem;" :model="form" ref="form" :rules="formRules" label-width="90px" :inline="false" >
+    <el-form-item label="顶级域名" prop="topLevelDomainName">
+    <el-input style="width: 18rem" v-model="form.topLevelDomainName"></el-input>
+    </el-form-item>
+    </el-form>
     <el-table v-loading="listLoading" border :data="list">
-      <el-table-column align="left" prop="host" show-overflow-tooltip label="解析类型">
+      <el-table-column align="center" prop="host" show-overflow-tooltip label="解析类型">
         <template #default>
           <el-text>CNAME</el-text>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="personalizedDomainName" show-overflow-tooltip label="指向" >
+      <el-table-column align="center" prop="personalizedDomainName" show-overflow-tooltip label="指向">
         <template #default="{ row }">
-            <div v-if="row.personalizedDomainName" class="hoverSvg">
-              <p class="fineBom">{{ row.personalizedDomainName }}</p>
-              <span class="c-fx">
-                <copy class="copy" :content="row.personalizedDomainName" />
-              </span>
-            </div>
-            <el-text v-else>-</el-text>
-          </template>
-        </el-table-column>
-      <el-table-column align="center" prop="host" show-overflow-tooltip label="记录值" />
+          <div v-if="row.personalizedDomainName" class="hoverSvg">
+            <p class="fineBom">{{ row.personalizedDomainName }}</p>
+            <span class="c-fx">
+              <copy class="copy" :content="row.personalizedDomainName" />
+            </span>
+          </div>
+          <el-text v-else>-</el-text>
+        </template>
+      </el-table-column>
       <el-table-column align="center" prop="type" show-overflow-tooltip label="状态">
         <template #default>
-          <el-text v-if="isAnalysis"  style="color: #03c239;">已生效</el-text>
+          <el-text v-if="isAnalysis" style="color: #03c239;">已生效</el-text>
           <el-text v-else style="color: #FF8181;">未生效</el-text>
         </template>
       </el-table-column>
-      <el-table-column align="left" prop="type" show-overflow-tooltip label="操作">
+      <el-table-column align="center" prop="type" show-overflow-tooltip label="操作">
         <template #default>
           <el-button type="primary" plain size="small" @click="onSubmit">
             验证
@@ -179,7 +199,7 @@ defineExpose({
           <span></span>
           <h3>核心步骤</h3>
         </div>
-        <div class="stepTopR">
+        <div v-if="false" class="stepTopR">
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
             <g id="Frame" clip-path="url(#clip0_735_20333)">
               <path id="Vector"
@@ -199,6 +219,30 @@ defineExpose({
             </defs>
           </svg>
           <p>CNAME解析成功</p>
+        </div>
+        <div v-else class="stepTopR">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <g id="Frame" clip-path="url(#clip0_734_18750)">
+              <path id="Vector"
+                d="M13.1223 13.2873H0.875C0.784766 13.2873 0.710938 13.2135 0.710938 13.1232V0.875977C0.710938 0.785742 0.784766 0.711914 0.875 0.711914H13.1236C13.2139 0.711914 13.2877 0.785742 13.2877 0.875977V13.1246C13.2863 13.2148 13.2139 13.2873 13.1223 13.2873Z"
+                fill="#FF8181" />
+              <path id="Vector_2"
+                d="M11.8645 14H2.13555C0.958398 14 0 13.0416 0 11.8645V2.13555C0 0.958398 0.958398 0 2.13555 0H11.8645C13.0416 0 14 0.958398 14 2.13555V11.8645C14 13.0416 13.0416 14 11.8645 14ZM2.13555 1.42324C1.74316 1.42324 1.42324 1.74316 1.42324 2.13555V11.8645C1.42324 12.2568 1.74316 12.5768 2.13555 12.5768H11.8645C12.2568 12.5768 12.5768 12.2568 12.5768 11.8645V2.13555C12.5768 1.74316 12.2568 1.42324 11.8645 1.42324H2.13555Z"
+                fill="#FF8181" />
+              <g id="Group 18190">
+                <path id="Vector_3" d="M4.5 5L9.5 10" stroke="white" stroke-width="1.2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+                <path id="Vector_4" d="M4.5 10L9.5 5" stroke="white" stroke-width="1.2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </g>
+            </g>
+            <defs>
+              <clipPath id="clip0_734_18750">
+                <rect width="14" height="14" fill="white" />
+              </clipPath>
+            </defs>
+          </svg>
+          <p style="color: #FF8181;">SSL证书未上传</p>
         </div>
       </div>
       <div class="stepBom">
@@ -238,15 +282,20 @@ defineExpose({
         <el-checkbox v-model="isChecked" size="large" />
       </el-form-item>
       <div v-show="isChecked" style="display: flex;
-    align-items: center; margin-right: 4px;">
-        <el-tooltip class="tooltips" content="是否强制开启HTTPS" placement="top">
+    align-items: center; margin-right: 4px;color: #333;">
+        <!-- <el-tooltip class="tooltips" content="是否强制开启HTTPS" placement="top">
           <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
-        </el-tooltip>
+        </el-tooltip> -->
+        若上传证书网址格式默认绑定HTTPS
       </div>
-      <el-form-item v-show="isChecked" label="是否强制开启HTTPS">
+      <!-- <el-form-item v-show="isChecked" label="是否强制开启HTTPS">
         <el-switch v-model="form.isHttps" inline-prompt active-value="true" :inactive-value="false">
         </el-switch>
-      </el-form-item>
+      </el-form-item> -->
+    </div>
+    <div v-show="isChecked" class="title">
+      <span style="margin-right: 50px;">证书</span>
+      <span>私钥</span>
     </div>
     <div v-show="isChecked" class="form">
       <el-form style="display: flex; width: 23rem; height:10.625rem;" @submit.prevent="handleSubmit">
@@ -271,7 +320,6 @@ defineExpose({
             </template>
           </el-upload>
         </el-form-item>
-
         <el-form-item label="">
           <el-upload class="upload-demo" drag :action="Url" :headers="headers" :file-list="fileList.private_key"
             :on-change="handleFileChange('private_key')" :on-remove="handleRemove('private_key')" list-type="text"
@@ -288,7 +336,7 @@ defineExpose({
             </div>
             <template #tip>
               <div class="el-upload__tip">
-                请上传.KEY格式的文件
+                请上传.PEM格式的文件
               </div>
             </template>
           </el-upload>
@@ -533,8 +581,8 @@ defineExpose({
   }
 
   .el-upload-dragger {
-    width: 140px;
-    height: 140px;
+    width: 140px !important;
+    height: 140px !important;
     padding: .5rem .875rem 1rem .875rem !important;
   }
 
@@ -588,6 +636,7 @@ defineExpose({
   height: 48px;
   border-top: 1px solid rgba(170, 170, 170, 0.3);
 }
+
 .hoverSvg {
   display: flex;
   align-items: center;
@@ -606,5 +655,16 @@ defineExpose({
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.title {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 20.125rem;
+  height: 1.375rem;
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: .5rem;
 }
 </style>
