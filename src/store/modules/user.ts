@@ -116,7 +116,7 @@ const useUserStore = defineStore(
         },
       });
       // 刷新页面清除store里的数据
-      window.location.reload();
+      // window.location.reload();
     }
     // 删除本地和store里的logo
     function delLogo() {
