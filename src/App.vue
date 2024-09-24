@@ -86,7 +86,7 @@ watch([
           : generateI18nTitle(routeInfo.meta.i18n, settingsStore.title)
       )
 
-    if (userStore.webName !== null && userStore.webName !== "" && userStore.webName !== "undefined") {
+    if (!userStore.webName && userStore.webName !== "undefined" &&userStore.webName !== "null") {
       document.title = `${title} - ${userStore.webName}`
     } else {
       document.title = `${title} - ${import.meta.env.VITE_APP_TITLE}`
@@ -94,7 +94,7 @@ watch([
     createMeta()
   }
   else {
-    if (userStore.webName !== null && userStore.webName !== "" && userStore.webName !== "undefined") {
+    if (!userStore.webName && userStore.webName !== "undefined" &&userStore.webName !== "null") {
       document.title = userStore.webName
     } else {
       document.title = import.meta.env.VITE_APP_TITLE

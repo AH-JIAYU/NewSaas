@@ -7,6 +7,7 @@ import useUserStore from "@/store/modules/user";
 import api from "@/api/modules/configuration_site_setting";
 import axios from "axios";
 
+const emits =  defineEmits(['fetch-data'])
 // 分页
 const { pagination, getParams, onSizeChange, onCurrentChange } = usePagination();
 const drawerisible = ref(false);
