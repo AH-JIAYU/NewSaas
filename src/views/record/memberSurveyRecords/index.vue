@@ -244,7 +244,7 @@ onMounted(async () => {
       <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
         @selection-change="setSelectRows">
         <el-table-column align="left" type="selection" />
-        <el-table-column v-if="checkList.includes('id')" align="left" prop="id" width="180" show-overflow-tooltip
+        <el-table-column v-if="checkList.includes('id')" align="left" prop="id" width="120" show-overflow-tooltip
           fixed="left" label="点击ID"><template #default="{ row }">
             <div class="copyId tableSmall">
               <div class="id oneLine ">ID: {{ row.id }}</div>
@@ -252,7 +252,7 @@ onMounted(async () => {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('surveySource')" align="left" prop="memberId" width="180"
+        <el-table-column v-if="checkList.includes('surveySource')" align="left" prop="memberId" width="120"
           show-overflow-tooltip label="会员">
           <template #default="{ row }">
             <el-tag effect="dark" v-if="row.surveySource === 1" type="primary">内部会员</el-tag>
@@ -265,7 +265,7 @@ onMounted(async () => {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('projectId')" align="left" prop="projectId" show-overflow-tooltip
-          width="180" label="项目">
+           label="项目">
           <template #default="{ row }">
             <div class="tableBig oneLine">名称: {{ row.projectName }}</div>
             <div class="copyId tableSmall">
@@ -275,7 +275,7 @@ onMounted(async () => {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('memberChildrenId')" align="left" prop="memberChildrenId"
-          show-overflow-tooltip label="子会员ID" width="180">
+          show-overflow-tooltip label="子会员ID" width="120">
           <template #default="{ row }">
             <div class="copyId tableSmall">
               <span v-if="row.memberChildrenId" class="id oneLine "> ID: {{ row.memberChildrenId }}</span>
@@ -285,7 +285,7 @@ onMounted(async () => {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('tenantSupplierId')" align="left" prop="tenantSupplierId"
-          show-overflow-tooltip width="180" label="供应商ID">
+          show-overflow-tooltip width="120" label="供应商ID">
           <template #default="{ row }">
             <div class="copyId tableSmall">
               <span v-if="row.tenantSupplierId" class="id oneLine "> ID: {{ row.tenantSupplierId }}</span>
@@ -295,7 +295,7 @@ onMounted(async () => {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('randomIdentityId')" align="left" prop="randomIdentityId"
-          show-overflow-tooltip width="180" label="随机身份">
+          show-overflow-tooltip width="120" label="随机身份">
           <template #default="{ row }">
             <div class="copyId tableSmall">
               <span v-if="row.randomIdentityId" class="id oneLine "> ID: {{ row.randomIdentityId }}</span>

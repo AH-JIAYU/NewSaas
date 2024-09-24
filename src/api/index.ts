@@ -60,7 +60,7 @@ api.interceptors.response.use(
         Message.warning('该账号已在别处登录', {
           zIndex: 2000,
         })
-        useUserStore().logout(response.data.status);
+        useUserStore().logout(response.data.status,'login');
       } else {
         Message.warning(response.data.message, {
           zIndex: 2000,
