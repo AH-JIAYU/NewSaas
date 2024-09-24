@@ -500,7 +500,7 @@ onMounted(async () => {
 .headerIcon {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 
   .timeSvg {
     margin-right: 4px;
