@@ -482,7 +482,7 @@ onMounted(async () => {
 // 参数
 .parameter {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-content: center;
   flex-wrap: wrap;
 

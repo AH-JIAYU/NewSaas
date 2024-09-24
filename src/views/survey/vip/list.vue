@@ -545,7 +545,7 @@ onMounted(async () => {
 }
 .isB2b {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
 }
 
