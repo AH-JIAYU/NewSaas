@@ -165,6 +165,7 @@ const onSubmit = async () => {
 }
 // 关闭弹框
 function handleClose() {
+  emits('fetch-data')
   list.value = []
   Object.assign(fileList, {
     domain: '',
@@ -184,8 +185,10 @@ defineExpose({
   <el-dialog v-model="drawerisible" style="min-height: 560px;" title="详情" @close="handleClose">
     <el-form style="margin-bottom: 1.5rem;" :model="fileList" ref="formRef" :rules="formRules" label-width="90px" :inline="false" >
       <el-form-item label="顶级域名" prop="domain">
-      <el-input style="width: 26rem;" v-model="fileList.domain" @mouseleave="handleMouseLeave"/>
+      <el-input style="width: 26rem;" v-model="fileList.domain"/>
+      <el-button style="margin-left: 1.5rem;" plain size="small" type="primary" @click="handleMouseLeave">确认</el-button>
       </el-form-item>
+
     </el-form>
 
     <el-table v-loading="listLoading" border :data="list">
