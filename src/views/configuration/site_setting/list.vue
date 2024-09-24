@@ -316,7 +316,7 @@ function onSubmit() {
               </el-col>
               <el-col :span="24">
                 <el-form-item label="顶级域名" prop="topLevelDomainName">
-                  <el-input v-model="form.topLevelDomainName" style="width: 18rem" />
+                  <el-text style="min-width: 11rem" >{{form.topLevelDomainName}}</el-text>
                   <div v-if="isAnalysis">
                     <span class="red"></span><span style="margin-right: 10px;">已生效</span>
                   </div>

@@ -310,7 +310,7 @@ onBeforeUnmount(() => {
           prop="difference" label="加减款" width="120">
           <template #default="{ row }">
             <p class="plus" v-if="row.operationType === 1" style="font-weight: 700;">
-                <div class="plusSpan i-typcn:plus w-1em h-1em"></div>
+                <div class="plusSpan i-majesticons:plus-line w-1em h-1em"></div>
               <el-text>
                 <CurrencyType />{{ Math.abs(row.difference) }}
               </el-text>

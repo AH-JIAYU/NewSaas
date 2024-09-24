@@ -12,8 +12,12 @@ const { pagination, getParams, onSizeChange, onCurrentChange } = usePagination()
 const drawerisible = ref(false);
 // 是否开启
 const isChecked = ref(false)
+// formRef
+const formRef = ref()
 // 判断顶级域名是否解析
 const isAnalysis = ref<boolean>(false);
+// 是否开启https
+const isHttpsStatus = ref<boolean>(false);
 // listLoading
 const listLoading = ref<boolean>(false);
 // 列表
@@ -24,21 +28,35 @@ const fileList = ref<any>({
   certificate: [],
   private_key: []
 });
+// 校验顶级域名
+const validateTopLevelDomainName = (rule: any, value: any, callback: any) => {
+  // 改进后的正则表达式
+  const domainPattern = /^(?!-)[A-Za-z0-9-]{1,63}(?<!-)(?:\.[A-Za-z0-9-]{1,63}(?<!-))*\.[A-Za-z]{2,}$/;
+  if (domainPattern.test(value)) {
+    callback(); // 验证通过
+  } else {
+    callback(new Error('请输入合法的域名')); // 验证失败
+  }
+};
+// 校验
+const formRules = ref<FormRules>({
+  domain: [
+    { required: true, message: "请输入顶级域名", trigger: "change" },
+    { validator: validateTopLevelDomainName, trigger: "submit" },
+  ],
+});
 // 修改
 async function showEdit(row: any) {
   list.value = []
-  const payload = new FormData();
   try {
     listLoading.value = true;
     if (row) {
       fileList.value.domain = row.topLevelDomainName
       list.value = [row]
-      if(fileList.value.domain) {
-        payload.append('domain', fileList.value.domain);
-        const res = await api.uploadSSLCert(payload)
-        if(res.data.status === 1) {
-          isAnalysis.value = false
-        }
+      if(row.httpsStatus === 1 || row.httpsStatus === null) {
+        isHttpsStatus.value = false
+      }else {
+        isHttpsStatus.value = true
       }
       listLoading.value = false;
     } else {
@@ -50,6 +68,26 @@ async function showEdit(row: any) {
     listLoading.value = false;
   }
   drawerisible.value = true;
+}
+
+// 移开输入框解析域名
+const handleMouseLeave = async (val: any) => {
+  formRef.value && formRef.value.validateField(fileList.value.domain ? 'domain' : '', async (valid: any) => {
+    if (valid) {
+      const payload = new FormData();
+      if (fileList.value.domain !== '' && fileList.value.domain !== null) {
+        payload.append('domain', fileList.value.domain);
+        const res = await api.uploadSSLCert(payload)
+        if (res.status === 1) {
+          ElMessage({
+            type: "success",
+            message: "修改域名成功",
+          });
+
+        }
+      }
+    }
+  })
 }
 // 上传文件
 // token
@@ -63,11 +101,13 @@ const Url = import.meta.env.VITE_APP_API_BASEURL + "/tenant-web-config/uploadSSL
 
 const handleFileChange = (field: any) => (file: any, newFileList: any) => {
   fileList.value[field] = newFileList; // 更新文件列表
+
 };
 const handleRemove = (field: any) => (file: any) => {
   fileList.value[field] = fileList.value[field].filter((f: any) => f.uid !== file.uid);
   ElMessage.success(`${field} 文件删除成功`);
 };
+// 上传文件
 const handleSubmit = async () => {
   // 这里您可以处理提交的逻辑，包含上传的文件
   const payload = new FormData();
@@ -141,6 +181,12 @@ defineExpose({
 
 <template>
   <el-dialog v-model="drawerisible" style="min-height: 560px;" title="详情" @close="handleClose">
+    <el-form style="margin-bottom: 1.5rem;" :model="fileList" ref="formRef" :rules="formRules" label-width="90px" :inline="false" >
+      <el-form-item label="顶级域名" prop="domain">
+      <el-input style="width: 26rem;" v-model="fileList.domain" @mouseleave="handleMouseLeave"/>
+      </el-form-item>
+    </el-form>
+
     <el-table v-loading="listLoading" border :data="list">
       <el-table-column align="center" prop="host" show-overflow-tooltip label="解析类型">
         <template #default>
@@ -181,7 +227,7 @@ defineExpose({
           <span></span>
           <h3>核心步骤</h3>
         </div>
-        <div v-if="false" class="stepTopR">
+        <div v-if="isHttpsStatus" class="stepTopR">
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
             <g id="Frame" clip-path="url(#clip0_735_20333)">
               <path id="Vector"
