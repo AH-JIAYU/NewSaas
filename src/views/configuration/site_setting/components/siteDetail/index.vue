@@ -379,7 +379,7 @@ defineExpose({
       </div>
     </div>
     <div class="footer">
-      <el-button type="primary" size="default" @click="handleClose">关闭</el-button>
+      <el-button type="primary" size="default" @click="drawerisible = false">关闭</el-button>
     </div>
   </el-dialog>
 </template>
