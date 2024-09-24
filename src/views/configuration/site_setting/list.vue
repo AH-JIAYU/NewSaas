@@ -19,7 +19,7 @@ const userStore = useUserStore();
 // detailRef
 const recordRef = ref()
 // 接口地址
-const Url = import.meta.env.VITE_APP_API_BASEURL + "/tenant-logo/upload";
+const Url = import.meta.env.VITE_APP_API_BASEURL + "/api/tenant-logo/upload";
 const { toClipboard } = useClipboard();
 const activeTopTab = ref<any>("基本设置");
 // 加载

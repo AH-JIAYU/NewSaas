@@ -35,6 +35,7 @@ const activeName = ref("basicSettings"); // tabs
 const formRef = ref<any>(); // Ref 在edit中进行校验
 const editRef = ref<any>(); // 组件Ref 快捷操作： 新增客户
 const fold = ref(!props.tabIndex ? true : false); // 折叠 描述配额
+const Url= `${import.meta.env.VITE_APP_API_BASEURL}/api/project/uploadQiniu`
 let data = ref<any>({
   checked: false, //所属国家的全选按钮
   //基础设置
@@ -721,7 +722,7 @@ nextTick(() => {
           </template>
           <div v-if="fold">
             <el-form-item label="上传图片">
-              <el-upload v-model:file-list="fileList" action="http://47.96.98.102:9100/project/uploadQiniu"
+              <el-upload v-model:file-list="fileList" :action="Url"
                 list-type="picture-card" :drag="true" :limit="10" :on-preview="handlePictureCardPreview"
                 :on-remove="handleRemove" :on-success="handleSuccess" :on-exceed="handleExceed">
                 <el-icon style="margin-bottom: none" class="el-icon--upload">

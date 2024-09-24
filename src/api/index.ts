@@ -10,7 +10,8 @@ const api: any = axios.create({
   baseURL:
     import.meta.env.DEV && import.meta.env.VITE_OPEN_PROXY === "true"
       ? "/proxy/"
-      : import.meta.env.VITE_APP_API_BASEURL,
+      : `${import.meta.env.VITE_APP_API_BASEURL}/api`,
+
   timeout: 1000 * 60,
   responseType: "json",
 });
@@ -60,7 +61,7 @@ api.interceptors.response.use(
         Message.warning('该账号已在别处登录', {
           zIndex: 2000,
         })
-        useUserStore().logout(response.data.status,'login');
+        useUserStore().logout(response.data.status, 'login');
       } else {
         Message.warning(response.data.message, {
           zIndex: 2000,

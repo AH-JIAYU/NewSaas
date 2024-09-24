@@ -18,6 +18,8 @@ const data = ref<any>({
 });
 const dialogImageUrl = ref(""); // 图片url
 const dialogVisible = ref(false); // 图片查看
+// 接口地址
+const Url = import.meta.env.VITE_APP_API_BASEURL + "/api/project/uploadQiniu";
 
 // 显隐
 async function showEdit(row: any) {
@@ -131,7 +133,7 @@ defineExpose({ showEdit });
         <el-upload
           v-model:file-list="data.showData.materialUrl"
           class="upload-demo"
-          action="http://47.96.98.102:9100/project/uploadQiniu"
+          :action="Url"
           :on-preview="handlePreview"
           :on-remove="handleRemove"
           :on-success="handleSuccess"

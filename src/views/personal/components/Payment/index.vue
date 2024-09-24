@@ -49,7 +49,7 @@ const payment = async () => {
     totalAmount: 9999,
     subject: versionList[form.value.version - 1]
   }
-  window.open(`http://47.96.98.102:9100/alipay/pay?subject=${params.subject}&traceNo=${params.traceNo}&totalAmount=${params.totalAmount}`,'_blank')
+  window.open(`${import.meta.env.VITE_APP_API_BASEURL}/api/alipay/pay?subject=${params.subject}&traceNo=${params.traceNo}&totalAmount=${params.totalAmount}`,'_blank')
 }
 
 // 暴露方法

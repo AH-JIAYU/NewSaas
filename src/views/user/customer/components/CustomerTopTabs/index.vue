@@ -10,6 +10,7 @@ const props = defineProps({
   leftTab: Object,
   tabIndex: Number,
 });
+const referenceAddress = `${import.meta.env.VITE_APP_API_BASEURL}/api`
 // 用户数据
 const staffList = ref<any>([]);
 const validate = inject<any>("validateTopTabs"); //注入Ref
@@ -63,7 +64,7 @@ const changeCustomerConfigInfo = async (val: any, index: number) => {
 // 获取负责人/用户
 const getTenantStaffList = async () => {
   const { data } = await apiUser.getTenantStaffList()
-   staffList.value = data
+  staffList.value = data
 }
 
 onBeforeMount(async () => {
@@ -133,10 +134,10 @@ nextTick(() => {
                     <template #empty>
                       <div style="display: flex;justify-content: space-between;align-items:center;padding:0 1rem;">
                         暂无数据
-                        <el-button type="primary" link @click="dictionaryItemVisible = true"  size="small">
+                        <el-button type="primary" link @click="dictionaryItemVisible = true" size="small">
                           快捷新增
                           <SvgIcon name="ant-design:plus-outlined" color="#fff"
-                    style="background-color: var(--el-color-primary);border-radius: 50%;padding: 2px;margin:0 2px" />
+                            style="background-color: var(--el-color-primary);border-radius: 50%;padding: 2px;margin:0 2px" />
                         </el-button>
                       </div>
                     </template>
@@ -239,8 +240,9 @@ nextTick(() => {
 
               <el-col :span="24">
                 <el-form-item label="成功重定向">
+                  {{ referenceAddress }}
                   <span v-pre>
-                    http://front-saas.surveyssaas.com/#/redirect?status=c&uid=[uid]
+                    /redirect?status=c&uid=[uid]
                   </span>
                   <template v-if="localToptTab.tenantCustomerConfigInfoList[0].encryptionId
       ">
@@ -250,8 +252,9 @@ nextTick(() => {
               </el-col>
               <el-col :span="24">
                 <el-form-item label="配额满重定向">
+                  {{referenceAddress}}
                   <span v-pre>
-                    http://front-saas.surveyssaas.com/#/redirect?status=q&uid=[uid]
+                    /redirect?status=q&uid=[uid]
                   </span>
                   <template v-if="localToptTab.tenantCustomerConfigInfoList[0].encryptionId
       ">
@@ -261,8 +264,9 @@ nextTick(() => {
               </el-col>
               <el-col :span="24">
                 <el-form-item label="被甄别重定向">
+                  {{referenceAddress}}
                   <span v-pre>
-                    http://front-saas.surveyssaas.com/#/redirect?status=s&uid=[uid]
+                    /redirect?status=s&uid=[uid]
                   </span>
                   <template v-if="localToptTab.tenantCustomerConfigInfoList[0].encryptionId
       ">
@@ -272,8 +276,9 @@ nextTick(() => {
               </el-col>
               <el-col :span="24">
                 <el-form-item label="安全重定向">
+                  {{referenceAddress}}
                   <span v-pre>
-                    http://front-saas.surveyssaas.com/#/redirect?status=t&uid=[uid]
+                    /redirect?status=t&uid=[uid]
                   </span>
                   <template v-if="localToptTab.tenantCustomerConfigInfoList[0].encryptionId
       ">
@@ -328,25 +333,25 @@ nextTick(() => {
 
               <el-col :span="24">
                 <el-form-item label="成功回调">
-                  <span v-pre>http://47.96.98.102:9100/callback/serviceCallback?status=c&uid=[uid]</span><template v-if="localToptTab.tenantCustomerConfigInfoList[1].encryptionId
+                 {{referenceAddress}} <span v-pre>/callback/serviceCallback?status=c&uid=[uid]</span><template v-if="localToptTab.tenantCustomerConfigInfoList[1].encryptionId
       "><span v-pre>&hash=[hash]</span></template>
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="配额满回调">
-                  <span v-pre>http://47.96.98.102:9100/callback/serviceCallback?status=q&uid=[uid]</span><template v-if="localToptTab.tenantCustomerConfigInfoList[1].encryptionId
+                 {{referenceAddress}} <span v-pre>/callback/serviceCallback?status=q&uid=[uid]</span><template v-if="localToptTab.tenantCustomerConfigInfoList[1].encryptionId
       "><span v-pre>&hash=[hash]</span></template>
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="被甄别回调">
-                  <span v-pre>http://47.96.98.102:9100/callback/serviceCallback?status=s&uid=[uid]</span><template v-if="localToptTab.tenantCustomerConfigInfoList[1].encryptionId
+                 {{referenceAddress}} <span v-pre>/callback/serviceCallback?status=s&uid=[uid]</span><template v-if="localToptTab.tenantCustomerConfigInfoList[1].encryptionId
       "><span v-pre>&hash=[hash]</span></template>
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="安全终止回调">
-                  <span v-pre>http://47.96.98.102:9100/callback/serviceCallback?status=t&uid=[uid]</span><template v-if="localToptTab.tenantCustomerConfigInfoList[1].encryptionId
+                 {{referenceAddress}} <span v-pre>/callback/serviceCallback?status=t&uid=[uid]</span><template v-if="localToptTab.tenantCustomerConfigInfoList[1].encryptionId
       "><span v-pre>&hash=[hash]</span></template>
                 </el-form-item>
               </el-col>

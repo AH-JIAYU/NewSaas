@@ -59,7 +59,7 @@ const token = userStore.token;
 const headers = ref({ Token: token });
 
 // 接口地址
-const Url = import.meta.env.VITE_APP_API_BASEURL + "/tenant-web-config/uploadSSLCert";
+const Url = import.meta.env.VITE_APP_API_BASEURL + "/api/tenant-web-config/uploadSSLCert";
 
 const handleFileChange = (field: any) => (file: any, newFileList: any) => {
   fileList.value[field] = newFileList; // 更新文件列表
