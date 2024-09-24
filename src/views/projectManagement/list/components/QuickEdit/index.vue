@@ -148,7 +148,8 @@ defineExpose({
               <span>(小时完成量)</span>
             </template>
             <el-input-number style="width: 100%;" class="text-left" v-model="data.formData.limitedQuantity" :min="1"
-              :step="1" step-strictly controls-position="right" @keydown="handleInput" />
+              :step="1" :max="999" step-strictly controls-position="right" @keydown="handleInput" />
+              <el-text type="info">每小时限量: 999</el-text>
           </el-form-item>
         </template>
 
@@ -185,7 +186,7 @@ defineExpose({
             <el-input style="width: 100%;" v-model="data.formData.doMoneyPrice" type='number' :min="1" :precision="1"
               :step="0.1" controls-position="right">
               <template #suffix>
-                RNB/USA
+                <CurrencyType />
               </template>
             </el-input>
           </el-form-item>

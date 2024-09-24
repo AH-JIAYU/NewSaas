@@ -8,14 +8,14 @@ import { getTwoObjectDiff } from '@/utils'
 import eventBus from '@/utils/eventBus'
 import useSettingsStore from '@/store/modules/settings'
 import useMenuStore from '@/store/modules/menu'
-import storage from "@/utils/storage";
+import storage from "@/utils/storage";import useFormSearchStore from '@/store/modules/formSearch' // 筛选项配置
 
 defineOptions({
   name: 'AppSetting',
 })
 
 const route = useRoute()
-
+const FormSearchStore = useFormSearchStore(); //筛选项配置
 const settingsStore = useSettingsStore()
 const menuStore = useMenuStore()
 
@@ -76,9 +76,9 @@ const { copy, copied, isSupported } = useClipboard()
 //   }
 // })
 
-function handleCopy() {
-  // copy(JSON.stringify(getTwoObjectDiff(settingsDefault, settingsStore.settings), null, 2))
-  localStorage.setItem("saas_globalConfiguration", JSON.stringify(getTwoObjectDiff(settingsDefault, settingsStore.settings), null, 2));
+function handleCopy() {  
+  localStorage.setItem("saas_systemDisposition", JSON.stringify(getTwoObjectDiff(settingsDefault, settingsStore.settings), null, 2));
+  FormSearchStore.updateSystemDisposition({systemDispositionJson:JSON.stringify(getTwoObjectDiff(settingsDefault, settingsStore.settings), null, 2)})
   isShow.value = false
 }
 </script>

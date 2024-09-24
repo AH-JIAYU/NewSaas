@@ -348,7 +348,7 @@ function handleMoreOperating(command: string, row: any) {
               <b class="tableBig">{{ row.customerName.split("/")[0] }}</b>
               <div class="oneLine" v-if="row.projectType !== 2">
                 <img :src="row.avatar" alt="" class="avatar">
-                <span>{{ row.chargeName }}</span>
+                <span>{{ row.userName }}</span>
               </div>
             </div>
           </template>

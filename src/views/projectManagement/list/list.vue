@@ -299,7 +299,6 @@ onMounted(async () => {
             调度
           </el-button>
         </FormLeftPanel>
-
         <FormRightPanel>
           <el-button size="default" @click=""> 导出 </el-button>
           <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
@@ -318,7 +317,7 @@ onMounted(async () => {
               inactive-text="离线" :active-value="1" :inactive-value="2" />
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('projectType')" width="200" align="left" label="项目">
+        <el-table-column v-if="checkList.includes('projectType')" width="150" align="left" label="项目">
           <template #default="{ row }">
             <div>
               <el-button class="p-1" size="small" type="warning" v-if="row.projectType === 2">外包</el-button>
@@ -334,7 +333,7 @@ onMounted(async () => {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('name')" show-overflow-tooltip prop="name" width="180" align="left"
+        <el-table-column v-if="checkList.includes('name')" show-overflow-tooltip prop="name" align="left"
           label="名称/标识"><template #default="{ row }">
             <div class="flex-c">
               <div class="oneLine" style="width: calc(100% - 20px);">
@@ -361,7 +360,7 @@ onMounted(async () => {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('PCNL')" align="left" label="参数" width="180">
+        <el-table-column v-if="checkList.includes('PCNL')" align="left" label="参数"  >
           <template #default="{ row }">
             <div class="flex-c">
               <div class="oneLine parameter" style="width: calc(100% - 20px);">
