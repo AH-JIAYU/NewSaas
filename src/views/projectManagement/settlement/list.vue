@@ -558,4 +558,11 @@ function handleMoreOperating(command: string, row: any) {
     display: block !important;
   }
 }
+
+:deep {
+  .el-table .cell.el-tooltip {
+    display: flex;
+    align-items: center;
+  }
+}
 </style>

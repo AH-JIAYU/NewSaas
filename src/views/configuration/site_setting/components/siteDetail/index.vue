@@ -27,7 +27,8 @@ const list = ref<any>([]);
 const fileList = ref<any>({
   domain: '',
   certificate: [],
-  private_key: []
+  private_key: [],
+  forceHttps: 1,
 });
 // 校验顶级域名
 const validateTopLevelDomainName = (rule: any, value: any, callback: any) => {
@@ -53,6 +54,7 @@ async function showEdit(row: any) {
     listLoading.value = true;
     if (row) {
       fileList.value.domain = row.topLevelDomainName
+      list.value = [row]
       if(row.httpsStatus === 1 || row.httpsStatus === null) {
         isHttpsStatus.value = false
       }else {
@@ -60,7 +62,7 @@ async function showEdit(row: any) {
       }
       listLoading.value = false;
     } else {
-      list.value = row || []
+      list.value = []
     }
   } catch (error) {
 
@@ -70,15 +72,14 @@ async function showEdit(row: any) {
   drawerisible.value = true;
 }
 
-// 移开输入框解析域名
-const handleMouseLeave = async () => {
+// 输入框解析域名
+const handleSubmits = async () => {
   formRef.value && formRef.value.validate( async (valid: any) => {
     if (valid) {
       if (fileList.value.domain) {
         const res = await api.getTenantWebConfigKeepOnRecord({topLevelDomainName:fileList.value.domain})
         if (res.status === 1) {
           list.value = [res.data]
-          emits('fetch-data')
           ElMessage({
             type: "success",
             message: "修改域名成功",
@@ -118,6 +119,10 @@ const handleSubmit = async () => {
   if (fileList.value.private_key.length > 0) {
     payload.append('private_key', fileList.value.private_key[0].raw);
   }
+
+  if (fileList.value.forceHttps === 2) {
+    payload.append('forceHttps', fileList.value.forceHttps);
+  }
   payload.append('domain', fileList.value.domain);
   try {
     const res: any = await axios.post(Url, payload, {
@@ -128,7 +133,6 @@ const handleSubmit = async () => {
       }
     });
     if (res.data.status === 1) {
-      emits('fetch-data')
       ElMessage.success('上传成功');
     } else {
       ElMessage.error(res.data.error);
@@ -140,9 +144,9 @@ const handleSubmit = async () => {
 };
 // 验证
 const onSubmit = async () => {
-  if (fileList.value.domain !== '' && fileList.value.domain !== null) {
+  if (fileList.value.domain) {
     const res = await api.getTenantWebConfigQueryAnalysis({ url: fileList.value.domain })
-    if (res.data.success === false) {
+    if (!res.data.success) {
       isAnalysis.value = res.data.success
       ElMessage({
         type: "warning",
@@ -150,6 +154,7 @@ const onSubmit = async () => {
       });
     } else {
       isAnalysis.value = res.data.success
+      emits('fetch-data')
       ElMessage({
         type: "success",
         message: "解析已生效",
@@ -184,7 +189,7 @@ defineExpose({
     <el-form style="margin-bottom: 1.5rem;" :model="fileList" ref="formRef" :rules="formRules" label-width="90px" :inline="false" >
       <el-form-item label="顶级域名" prop="domain">
       <el-input style="width: 26rem;" v-model="fileList.domain"/>
-      <el-button style="margin-left: 1.5rem;" plain size="small" type="primary" @click="handleMouseLeave">确认</el-button>
+      <el-button style="margin-left: 1.5rem;" plain size="small" type="primary" @click="handleSubmits">确认</el-button>
       </el-form-item>
     </el-form>
 
@@ -312,15 +317,15 @@ defineExpose({
       </el-form-item>
       <div v-show="isChecked" style="display: flex;
     align-items: center; margin-right: 4px;color: #333;">
-        <!-- <el-tooltip class="tooltips" content="是否强制开启HTTPS" placement="top">
+        <el-tooltip class="tooltips" content="是否强制开启HTTPS" placement="top">
           <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
-        </el-tooltip> -->
-        若上传证书网址格式默认绑定HTTPS
+        </el-tooltip>
+        <!-- 若上传证书网址格式默认绑定HTTPS -->
       </div>
-      <!-- <el-form-item v-show="isChecked" label="是否强制开启HTTPS">
-        <el-switch v-model="form.isHttps" inline-prompt active-value="true" :inactive-value="false">
+      <el-form-item v-show="isChecked" label="是否强制开启HTTPS">
+        <el-switch v-model="fileList.forceHttps" inline-prompt :active-value="2" :inactive-value="1">
         </el-switch>
-      </el-form-item> -->
+      </el-form-item>
     </div>
     <div v-show="isChecked" class="title">
       <span style="margin-right: 50px;">证书</span>
@@ -607,6 +612,11 @@ defineExpose({
     align-items: center;
     height: 0px !important;
     margin-right: 3.125rem;
+  }
+
+  .el-upload {
+    width: 8.75rem !important;
+    height: 8.75rem !important;
   }
 
   .el-upload-dragger {
