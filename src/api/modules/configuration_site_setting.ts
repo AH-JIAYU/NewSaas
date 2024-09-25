@@ -9,4 +9,6 @@ export default {
   getTenantWebConfigQueryAnalysis: (data: any) => api.post('tenant-web-config/getTenantWebConfigQueryAnalysis', data),
   // 上传证书
   uploadSSLCert: (data: any) => api.post('tenant-web-config/uploadSSLCert', data),
+  // 判断域名是否备案
+  getTenantWebConfigKeepOnRecord: (data: any) => api.post('tenant-web-config/getTenantWebConfigKeepOnRecord', data),
 }

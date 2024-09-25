@@ -53,7 +53,6 @@ async function showEdit(row: any) {
     listLoading.value = true;
     if (row) {
       fileList.value.domain = row.topLevelDomainName
-      list.value = [row]
       if(row.httpsStatus === 1 || row.httpsStatus === null) {
         isHttpsStatus.value = false
       }else {
@@ -75,11 +74,11 @@ async function showEdit(row: any) {
 const handleMouseLeave = async () => {
   formRef.value && formRef.value.validate( async (valid: any) => {
     if (valid) {
-      const payload = new FormData();
-      if (fileList.value.domain !== '' && fileList.value.domain !== null) {
-        payload.append('domain', fileList.value.domain);
-        const res = await api.uploadSSLCert(payload)
+      if (fileList.value.domain) {
+        const res = await api.getTenantWebConfigKeepOnRecord({topLevelDomainName:fileList.value.domain})
         if (res.status === 1) {
+          list.value = [res.data]
+          emits('fetch-data')
           ElMessage({
             type: "success",
             message: "修改域名成功",
@@ -129,6 +128,7 @@ const handleSubmit = async () => {
       }
     });
     if (res.data.status === 1) {
+      emits('fetch-data')
       ElMessage.success('上传成功');
     } else {
       ElMessage.error(res.data.error);
@@ -164,7 +164,6 @@ const onSubmit = async () => {
 }
 // 关闭弹框
 function handleClose() {
-  emits('fetch-data')
   list.value = []
   Object.assign(fileList, {
     domain: '',
@@ -189,8 +188,8 @@ defineExpose({
       </el-form-item>
     </el-form>
 
-    <el-table v-loading="listLoading" border :data="list">
-      <el-table-column align="center" prop="host" show-overflow-tooltip label="解析类型">
+    <el-table v-loading="listLoading" border v-show="list.length" :data="list">
+      <el-table-column  width="100" align="center" prop="host" show-overflow-tooltip label="解析类型">
         <template #default>
           <el-text>CNAME</el-text>
         </template>
@@ -206,13 +205,13 @@ defineExpose({
           <el-text v-else>-</el-text>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="type" show-overflow-tooltip label="状态">
+      <el-table-column  width="100" align="center" prop="type" show-overflow-tooltip label="状态">
         <template #default>
           <el-text v-if="isAnalysis" style="color: #03c239;">已生效</el-text>
           <el-text v-else style="color: #FF8181;">未生效</el-text>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="type" show-overflow-tooltip label="操作">
+      <el-table-column  width="100" align="center" prop="type" show-overflow-tooltip label="操作">
         <template #default>
           <el-button type="primary" plain size="small" @click="onSubmit">
             验证
@@ -409,52 +408,52 @@ defineExpose({
 }
 
 .step {
-  width: 672px;
-  height: 186px;
+  width: 42rem;
+  height: 11.625rem;
   background: #FFFFFF;
   margin-top: 1.5rem;
-  box-shadow: 0px 1px 8px 0px rgba(198, 198, 198, 0.6);
-  border-radius: 8px 8px 8px 8px;
+  box-shadow: 0px 1px .5rem 0px rgba(198, 198, 198, 0.6);
+  border-radius: .5rem .5rem .5rem .5rem;
   padding: 1rem 1rem 1.5rem 1rem;
 
   .stepTop {
     display: flex;
     justify-content: space-between;
-    width: 640px;
-    height: 38px;
+    width: 40rem;
+    height: 2.375rem;
     border-radius: 0px 0px 0px 0px;
     border-bottom: 1px solid rgba(170, 170, 170, 0.3);
 
     .stepTopLL {
-      width: 131px;
-      height: 22px;
+      width: 8.1875rem;
+      height: 1.375rem;
     }
 
     .stepTopL {
       display: flex;
       flex-wrap: nowrap;
       align-items: center;
-      width: 74px;
-      height: 22px;
+      width: 4.625rem;
+      height: 1.375rem;
 
       h3 {
-        width: 64px;
-        height: 22px;
+        width: 4rem;
+        height: 1.375rem;
         font-weight: 500;
-        font-size: 16px;
+        font-size: 1rem;
         color: #333333;
-        line-height: 19px;
+        line-height: 1.1875rem;
         text-align: left;
         font-style: normal;
         text-transform: none;
       }
 
       .h3 {
-        width: 121px;
-        height: 22px;
+        width: 7.5625rem;
+        height: 1.375rem;
         font-family: PingFang SC, PingFang SC;
         font-weight: 500;
-        font-size: 16px;
+        font-size: 1rem;
         color: #333333;
         line-height: 19px;
         text-align: left;
@@ -465,8 +464,8 @@ defineExpose({
       span {
         display: inline-block;
         margin-right: .25rem;
-        width: 6px;
-        height: 6px;
+        width: .375rem;
+        height: .375rem;
         background: #FF8181;
         border-radius: 50%;
       }
@@ -475,16 +474,16 @@ defineExpose({
     .stepTopR {
       display: flex;
       justify-content: space-between;
-      width: 126px;
-      height: 20px;
+      width: 7.875rem;
+      height: 1.25rem;
 
       p {
-        width: 108px;
-        height: 20px;
+        width: 6.75rem;
+        height: 1.25rem;
         font-weight: 500;
-        font-size: 14px;
+        font-size: .875rem;
         color: #03C239;
-        line-height: 16px;
+        line-height: 1rem;
         text-align: left;
         font-style: normal;
         text-transform: none;
@@ -497,19 +496,19 @@ defineExpose({
   }
 
   .stepBom {
-    width: 640px;
-    height: 92px;
+    width: 40rem;
+    height: 5.75rem;
     margin-top: 1rem;
     border-radius: 0px 0px 0px 0px;
 
     .detail {
-      width: 640px;
+      width: 40rem;
+      height: 1.25rem;
       margin-bottom: 1rem;
-      height: 20px;
       font-weight: 500;
-      font-size: 14px;
+      font-size: .875rem;
       color: #333333;
-      line-height: 16px;
+      line-height: 1rem;
       text-align: left;
       font-style: normal;
       text-transform: none;
@@ -520,12 +519,12 @@ defineExpose({
     }
 
     .details {
-      width: 640px;
-      height: 40px;
+      width: 40rem;
+      height: 2.5rem;
       font-weight: 500;
-      font-size: 14px;
+      font-size: .875rem;
       color: #333333;
-      line-height: 16px;
+      line-height: 1rem;
       text-align: left;
       font-style: normal;
       margin-bottom: 1rem;
@@ -544,24 +543,24 @@ defineExpose({
 }
 
 .beCareful {
-  width: 672px;
-  height: 20px;
+  width: 42rem;
+  height: 1.25rem;
   margin: 1rem 0 1.5rem 0;
 
   .svg {
-    width: 14px;
-    height: 14px;
+    width: .875rem;
+    height: .875rem;
     margin-right: .25rem;
   }
 
   p {
     display: flex;
     align-items: center;
-    height: 20px;
+    height: 1.25rem;
     font-weight: 400;
-    font-size: 14px;
+    font-size: .875rem;
     color: #777777;
-    line-height: 16px;
+    line-height: 1rem;
     text-align: left;
     font-style: normal;
     text-transform: none;
@@ -607,17 +606,17 @@ defineExpose({
     display: flex;
     align-items: center;
     height: 0px !important;
-    margin-right: 50px;
+    margin-right: 3.125rem;
   }
 
   .el-upload-dragger {
-    width: 140px !important;
-    height: 140px !important;
+    width: 8.75rem !important;
+    height: 8.75rem !important;
     padding: .5rem .875rem 1rem .875rem !important;
   }
 
   .el-upload__text {
-    font-size: 12px !important;
+    font-size: .75rem !important;
   }
 
   .upload-demo {
@@ -625,7 +624,7 @@ defineExpose({
   }
 
   .el-upload__tip {
-    font-size: 14px !important;
+    font-size: .875rem !important;
     color: #5babff;
   }
 
@@ -655,32 +654,33 @@ defineExpose({
 .btn {
   display: flex;
   align-items: flex-end;
-  width: 200px;
-  height: 170px;
+  width: 12.5rem;
+  height: 10.625rem;
 }
 
 .footer {
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  height: 48px;
+  height: 3rem;
   border-top: 1px solid rgba(170, 170, 170, 0.3);
 }
 
 .hoverSvg {
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .copy {
   display: flex;
   align-items: center;
-  width: 25px;
+  width: 1.5625rem;
 }
 
 .fineBom {
-  text-align: left !important;
-  font-size: 12px;
+  // text-align: left !important;
+  font-size: .75rem;
   font-weight: normal;
   white-space: nowrap;
   overflow: hidden;
