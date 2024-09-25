@@ -27,7 +27,8 @@ const list = ref<any>([]);
 const fileList = ref<any>({
   domain: '',
   certificate: [],
-  private_key: []
+  private_key: [],
+  forceHttps: 1,
 });
 // 校验顶级域名
 const validateTopLevelDomainName = (rule: any, value: any, callback: any) => {
@@ -118,6 +119,10 @@ const handleSubmit = async () => {
   if (fileList.value.private_key.length > 0) {
     payload.append('private_key', fileList.value.private_key[0].raw);
   }
+
+  if (fileList.value.forceHttps === 2) {
+    payload.append('forceHttps', fileList.value.forceHttps);
+  }
   payload.append('domain', fileList.value.domain);
   try {
     const res: any = await axios.post(Url, payload, {
@@ -139,7 +144,7 @@ const handleSubmit = async () => {
 };
 // 验证
 const onSubmit = async () => {
-  if (fileList.value.domain !== '' && fileList.value.domain !== null) {
+  if (fileList.value.domain) {
     const res = await api.getTenantWebConfigQueryAnalysis({ url: fileList.value.domain })
     if (!res.data.success) {
       isAnalysis.value = res.data.success
@@ -312,15 +317,15 @@ defineExpose({
       </el-form-item>
       <div v-show="isChecked" style="display: flex;
     align-items: center; margin-right: 4px;color: #333;">
-        <!-- <el-tooltip class="tooltips" content="是否强制开启HTTPS" placement="top">
+        <el-tooltip class="tooltips" content="是否强制开启HTTPS" placement="top">
           <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
-        </el-tooltip> -->
-        若上传证书网址格式默认绑定HTTPS
+        </el-tooltip>
+        <!-- 若上传证书网址格式默认绑定HTTPS -->
       </div>
-      <!-- <el-form-item v-show="isChecked" label="是否强制开启HTTPS">
-        <el-switch v-model="form.isHttps" inline-prompt active-value="true" :inactive-value="false">
+      <el-form-item v-show="isChecked" label="是否强制开启HTTPS">
+        <el-switch v-model="fileList.forceHttps" inline-prompt :active-value="2" :inactive-value="1">
         </el-switch>
-      </el-form-item> -->
+      </el-form-item>
     </div>
     <div v-show="isChecked" class="title">
       <span style="margin-right: 50px;">证书</span>

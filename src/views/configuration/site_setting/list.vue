@@ -284,29 +284,43 @@ function onSubmit() {
               </el-col>
               <el-col :span="24">
                 <el-form-item label="网站名称" prop="webName">
-                  <el-input v-model="form.webName" style="width: 24.375rem" />
+                  <el-input v-model="form.webName" style="width: 22.4375rem" />
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="网站关键字">
-                  <el-input v-model="form.keyWords" style="width: 24.375rem" />
+                <div class="domainNames">
+                    <el-tooltip class="tooltips " content="网站关键字" placement="top">
+                      <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
+                    </el-tooltip>
+                  </div>
+                  <el-input v-model="form.keyWords" style="width: 22.4375rem" />
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="网站描述">
-                  <el-input v-model="form.description" style="width: 24.375rem" />
+                <div class="domainName">
+                    <el-tooltip class="tooltips " content="网站描述" placement="top">
+                      <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
+                    </el-tooltip>
+                  </div>
+                  <el-input v-model="form.description" style="width: 22.4375rem" />
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="个性化域名" prop="">
-                  <!-- <el-input v-model="form.personalizedDomainName" style="width: 8rem" /> -->
                   <el-text class="mx-1">{{ form.personalizedDomainName }}</el-text>
                   <el-button class="copy" type="primary" plain size="small" @click="copyToClipboard">复制</el-button>
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="顶级域名" prop="topLevelDomainName">
-                  <el-text>{{ form.topLevelDomainName }}</el-text>
+                  <div class="domainName">
+                    <el-tooltip class="tooltips " content="顶级域名" placement="top">
+                      <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
+                    </el-tooltip>
+                  </div>
+                  <el-text class="mx-1">{{ form.topLevelDomainName }}</el-text>
                   <div v-if="form.topLevelDomainName">
                     <div v-if="isAnalysis">
                       <span class="green"></span><span style="margin-right: 10px;">已生效</span>
@@ -319,7 +333,7 @@ function onSubmit() {
                 </el-form-item>
               </el-col>
               <el-col style="margin-bottom: 1rem;" :span="24"><span
-                  style="margin-left: 1.5625rem; color: #606266; font-size: 14px;">网址Logo</span></el-col>
+                  style="margin-left: 1.625rem; color: #606266; font-size: 14px;">网址Logo</span></el-col>
               <el-col :span="24">
                 <ElFormItem style="
                 display: flex;
@@ -366,7 +380,7 @@ function onSubmit() {
                 <el-form-item label="默认供应商价格比例" prop="">
                   <el-input
                     v-model.number="form.defaultPriceRatio"
-                    style="width: 24.375rem"
+                    style="width: 22.4375rem"
                     placeholder=""
                   >
                     <template #append>%</template>
@@ -375,12 +389,12 @@ function onSubmit() {
 </el-col> -->
               <el-col :span="24">
                 <el-form-item label="最低结算金额" prop="">
-                  <el-input v-model.number="form.minimumAmount" style="width: 24.375rem" placeholder="" />
+                  <el-input v-model.number="form.minimumAmount" style="width: 22.4375rem" placeholder="" />
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="供应商税点" prop="">
-                  <el-input v-model.number="form.taxRate" style="width: 24.375rem" placeholder=""><template
+                  <el-input v-model.number="form.taxRate" style="width: 22.4375rem" placeholder=""><template
                       #append>%</template>
                   </el-input>
                 </el-form-item>
@@ -396,22 +410,22 @@ function onSubmit() {
             <el-row :gutter="20">
               <el-col :span="24">
                 <el-form-item label="电子邮箱" prop="email">
-                  <el-input style="width: 24.375rem" v-model="form.email" placeholder="" />
+                  <el-input style="width: 22.4375rem" v-model="form.email" placeholder="" />
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="手机号码" prop="phone">
-                  <el-input style="width: 24.375rem" v-model="form.phone" placeholder="" />
+                  <el-input style="width: 22.4375rem" v-model="form.phone" placeholder="" />
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="QQ号码" prop="qqCode">
-                  <el-input style="width: 24.375rem" v-model="form.qqCode" placeholder="" />
+                  <el-input style="width: 22.4375rem" v-model="form.qqCode" placeholder="" />
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="公司地址" prop="">
-                  <el-input style="width: 24.375rem" v-model="form.address" placeholder="" />
+                  <el-input style="width: 22.4375rem" v-model="form.address" placeholder="" />
                 </el-form-item>
               </el-col>
               <el-col :span="24">
@@ -503,12 +517,12 @@ function onSubmit() {
 
 :deep {
   .el-upload-dragger {
-    width: 24.375rem;
+    width: 22.4375rem;
     height: 14rem;
   }
 
   .el-upload {
-    width: 24.375rem;
+    width: 22.4375rem;
     height: 14rem;
   }
 
@@ -516,8 +530,24 @@ function onSubmit() {
     border: none;
     background-color: #fff;
   }
-}
 
+  .el-form-item__label {
+    position: relative;
+  }
+}
+.domainName {
+  position: absolute;
+  left: -5.3125rem;
+  top: -1px;
+  color: #606266;
+}
+.domainNames {
+  position: absolute;
+  left: -6.125rem;
+  top: -1px;
+  color: #606266;
+}
 // :deep() {
 //   background-color: #fafafa;
-// }</style>
+// }
+</style>
