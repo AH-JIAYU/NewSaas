@@ -11,13 +11,13 @@ const userStore = useUserStore();
 const logo = ref<any>()
 // 网站名称
 const title = ref<any>()
-if(userStore.logo) {
+if(userStore.logo && userStore.logo !== "undefined" &&userStore.logo !== "null") {
   logo.value = userStore.logo
 }else {
-  logo.value = imgLogo
+  logo.value = ''
 }
 
-if(userStore.webName) {
+if(userStore.webName && userStore.webName !== "undefined" &&userStore.webName !== "null") {
   title.value = userStore.webName
 }else {
   title.value = import.meta.env.VITE_APP_TITLE
@@ -56,7 +56,7 @@ const to = computed(() => settingsStore.settings.home.enable ? settingsStore.set
 
 <template>
   <RouterLink :to="to" class="h-[var(--g-sidebar-logo-height)] w-inherit flex-center gap-2 px-3 text-inherit no-underline" :class="{ 'cursor-pointer': settingsStore.settings.home.enable }" :title="title">
-    <img v-if="showLogo" :src="logo" class="logo h-[30px] w-[30px] object-contain">
+    <img v-if="logo" :src="logo" class="logo h-[30px] w-[30px] object-contain">
     <span v-if="showTitle" class="block truncate font-bold">{{ title }}</span>
   </RouterLink>
 </template>

@@ -75,6 +75,8 @@ watch([
   () => settingsStore.title,
   () => settingsStore.customTitleList,
   () => userStore.webName,
+  () => userStore.description,
+  () => userStore.keyWords,
 ], () => {
   if (settingsStore.settings.app.enableDynamicTitle && settingsStore.title) {
     const title = settingsStore.customTitleList.find(item => item.fullPath === routeInfo.fullPath)?.title
@@ -88,18 +90,18 @@ watch([
 
     if (userStore.webName && userStore.webName !== "undefined" &&userStore.webName !== "null") {
       document.title = `${title} - ${userStore.webName}`
+      createMeta()
     } else {
       document.title = `${title} - ${import.meta.env.VITE_APP_TITLE}`
     }
-    createMeta()
   }
   else {
     if (userStore.webName && userStore.webName !== "undefined" &&userStore.webName !== "null") {
       document.title = userStore.webName
+      createMeta()
     } else {
       document.title = import.meta.env.VITE_APP_TITLE
     }
-    createMeta()
   }
 }, {
   immediate: true,
