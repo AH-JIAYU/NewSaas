@@ -53,6 +53,7 @@ async function showEdit(row: any) {
     listLoading.value = true;
     if (row) {
       fileList.value.domain = row.topLevelDomainName
+      list.value = [row]
       if(row.httpsStatus === 1 || row.httpsStatus === null) {
         isHttpsStatus.value = false
       }else {
@@ -60,7 +61,7 @@ async function showEdit(row: any) {
       }
       listLoading.value = false;
     } else {
-      list.value = row || []
+      list.value = []
     }
   } catch (error) {
 
@@ -70,15 +71,14 @@ async function showEdit(row: any) {
   drawerisible.value = true;
 }
 
-// 移开输入框解析域名
-const handleMouseLeave = async () => {
+// 输入框解析域名
+const handleSubmits = async () => {
   formRef.value && formRef.value.validate( async (valid: any) => {
     if (valid) {
       if (fileList.value.domain) {
         const res = await api.getTenantWebConfigKeepOnRecord({topLevelDomainName:fileList.value.domain})
         if (res.status === 1) {
           list.value = [res.data]
-          emits('fetch-data')
           ElMessage({
             type: "success",
             message: "修改域名成功",
@@ -128,7 +128,6 @@ const handleSubmit = async () => {
       }
     });
     if (res.data.status === 1) {
-      emits('fetch-data')
       ElMessage.success('上传成功');
     } else {
       ElMessage.error(res.data.error);
@@ -142,7 +141,7 @@ const handleSubmit = async () => {
 const onSubmit = async () => {
   if (fileList.value.domain !== '' && fileList.value.domain !== null) {
     const res = await api.getTenantWebConfigQueryAnalysis({ url: fileList.value.domain })
-    if (res.data.success === false) {
+    if (!res.data.success) {
       isAnalysis.value = res.data.success
       ElMessage({
         type: "warning",
@@ -150,6 +149,7 @@ const onSubmit = async () => {
       });
     } else {
       isAnalysis.value = res.data.success
+      emits('fetch-data')
       ElMessage({
         type: "success",
         message: "解析已生效",
@@ -184,7 +184,7 @@ defineExpose({
     <el-form style="margin-bottom: 1.5rem;" :model="fileList" ref="formRef" :rules="formRules" label-width="90px" :inline="false" >
       <el-form-item label="顶级域名" prop="domain">
       <el-input style="width: 26rem;" v-model="fileList.domain"/>
-      <el-button style="margin-left: 1.5rem;" plain size="small" type="primary" @click="handleMouseLeave">确认</el-button>
+      <el-button style="margin-left: 1.5rem;" plain size="small" type="primary" @click="handleSubmits">确认</el-button>
       </el-form-item>
     </el-form>
 
@@ -607,6 +607,11 @@ defineExpose({
     align-items: center;
     height: 0px !important;
     margin-right: 3.125rem;
+  }
+
+  .el-upload {
+    width: 8.75rem !important;
+    height: 8.75rem !important;
   }
 
   .el-upload-dragger {
