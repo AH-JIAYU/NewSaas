@@ -44,8 +44,8 @@ const checkList = ref<any>([]);
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 // 表格控件-控制全屏
 const lineHeight = ref<any>("default");
-  const formSearchList = ref<any>()//表单排序配置
-const formSearchName=ref<string>('formSearch-list')// 表单排序name
+const formSearchList = ref<any>()//表单排序配置
+const formSearchName = ref<string>('formSearch-list')// 表单排序name
 const stripe = ref(false);
 const columns = ref([
   { prop: "projectType", label: "项目类型", checked: true, sotrtable: true },
@@ -267,20 +267,26 @@ onMounted(async () => {
   });
   fetchData();
   formSearchList.value = [
-    {index:1, show: true, type: 'input', modelName: 'projectId', placeholder: '项目ID' },
-    {index:2, show: true, type: 'input', modelName: 'name', placeholder: '项目名称' },
-    {index:3, show: true, type: 'input', modelName: 'projectIdentification', placeholder: '项目标识' },
-    {index:4, show: true, type: 'select', modelName: 'countryId', placeholder: '国家地区', option: 'global', optionLabel: 'chineseName', optionValue: 'id' },
-    {index:5, show: true, type: 'select', modelName: 'clientId', placeholder: '客户简称', option: customerList.value, optionLabel: 'tenantCustomerId', optionValue: 'tenantCustomerId' },
-    {index:6, show: true, type: 'select', modelName: 'allocationStatus', placeholder: '分配类型', option: [{ label: '供应商', value: 2 },{ label: '会员组', value: 3 },{ label: '租户', value: 4 }], optionLabel: 'label', optionValue: 'value' },
-    {index:7, show: true, type: 'select', modelName: 'status', placeholder: '项目状态', option: [{ label: '在线', value: 1 },{ label: '离线', value: 2 }], optionLabel: 'label', optionValue: 'value' },
-    {index:8, show: true, type: 'input', modelName: 'createName', placeholder: '创建人' },
-    {index:9, show: true, type: 'select', modelName: 'allocation', placeholder: '分配状态', option: [{ label: '已分配', value: 1 },{ label: '未分配', value: 2 }], optionLabel: 'label', optionValue: 'value' },
-    {index:10, show: true, type: 'select', modelName: 'projectType', placeholder: '项目类型', option: [{ label: '自有项目', value: 1 },{ label: '外包项目', value: 2 }], optionLabel: 'label', optionValue: 'value' },
-    {index:11, show: true, type: 'datetimerange', modelName: 'time', startPlaceHolder: "创建开始日期", endPlaceHolder: "创建结束日期" },
+    { index: 1, show: true, type: 'input', modelName: 'projectId', placeholder: '项目ID' },
+    { index: 2, show: true, type: 'input', modelName: 'name', placeholder: '项目名称' },
+    { index: 3, show: true, type: 'input', modelName: 'projectIdentification', placeholder: '项目标识' },
+    { index: 4, show: true, type: 'select', modelName: 'countryId', placeholder: '国家地区', option: 'global', optionLabel: 'chineseName', optionValue: 'id' },
+    { index: 5, show: true, type: 'select', modelName: 'clientId', placeholder: '客户简称', option: 'clientId', optionLabel: 'customerAccord', optionValue: 'tenantCustomerId' },
+    { index: 6, show: true, type: 'select', modelName: 'allocationStatus', placeholder: '分配类型', option: 'allocationStatus', optionLabel: 'label', optionValue: 'value' },
+    { index: 7, show: true, type: 'select', modelName: 'status', placeholder: '项目状态', option: 'status', optionLabel: 'label', optionValue: 'value' },
+    { index: 8, show: true, type: 'input', modelName: 'createName', placeholder: '创建人' },
+    { index: 9, show: true, type: 'select', modelName: 'allocation', placeholder: '分配状态', option: 'allocation', optionLabel: 'label', optionValue: 'value' },
+    { index: 10, show: true, type: 'select', modelName: 'projectType', placeholder: '项目类型', option: 'projectType', optionLabel: 'label', optionValue: 'value' },
+    { index: 11, show: true, type: 'datetimerange', modelName: 'time', startPlaceHolder: "创建开始日期", endPlaceHolder: "创建结束日期" },
   ]
 });
-
+const formOption = {
+  clientId: async () => await customerStore.getCustomerList(),
+  allocationStatus:()=> [{ label: '供应商', value: 2 }, { label: '会员组', value: 3 }, { label: '租户', value: 4 }],
+  status:()=> [{ label: '在线', value: 1 }, { label: '离线', value: 2 }],
+  allocation:()=>[{ label: '已分配', value: 1 }, { label: '未分配', value: 2 }],
+  projectType:()=>[{ label: '自有项目', value: 1 }, { label: '外包项目', value: 2 }],
+}
 </script>
 
 <template>
@@ -288,7 +294,8 @@ onMounted(async () => {
     'absolute-container': tableAutoHeight,
   }">
     <PageMain class="hide-drawer-header">
-      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="search" />
+      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange"
+        @onReset="onReset" :model="search" :formOption="formOption" />
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>
@@ -360,7 +367,7 @@ onMounted(async () => {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('PCNL')" align="left" label="参数"  >
+        <el-table-column v-if="checkList.includes('PCNL')" align="left" label="参数">
           <template #default="{ row }">
             <div class="flex-c">
               <div class="oneLine parameter" style="width: calc(100% - 20px);">

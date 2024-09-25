@@ -254,10 +254,12 @@ onMounted(() => {
   });
   formSearchList.value = [
     { index: 1, show: true, type: 'input', modelName: 'title', placeholder: '请输入标题' },
-    { index: 2, show: true, type: 'select', modelName: 'type', placeholder: '请选择类型', option: type, optionLabel: 'label', optionValue: 'value' }
+    { index: 2, show: true, type: 'select', modelName: 'type', placeholder: '请选择类型', option: 'type', optionLabel: 'label', optionValue: 'value' }
 ]
 });
-
+const formOption={
+  type:()=>type
+}
 onBeforeUnmount(() => {
   if (data.value.formMode === "router") {
     eventBus.off("get-data-list");
@@ -268,43 +270,7 @@ onBeforeUnmount(() => {
 <template>
   <div :class="{ 'absolute-container': data.tableAutoHeight }">
     <PageMain>
-      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="data.search" />
-      <!-- <SearchBar :show-toggle="false">
-        <template #default="{ fold, toggle }">
-          <ElForm :model="data.search" size="default" label-width="100px" inline-message inline class="search-form">
-            <ElFormItem label="">
-              <ElInput v-model="data.search.title" placeholder="请输入标题" clearable @keydown.enter="currentChange()"
-                @clear="currentChange()" />
-            </ElFormItem>
-            <el-form-item label="">
-              <el-select v-model="data.search.type" value-key="" placeholder="请选择类型" clearable filterable
-                @change="currentChange()">
-                <el-option v-for="item in type" :key="item.value" :label="item.label" :value="item.value" />
-              </el-select>
-            </el-form-item>
-            <ElFormItem>
-              <ElButton type="primary" @click="currentChange()">
-                <template #icon>
-                  <SvgIcon name="i-ep:search" />
-                </template>
-                {{ "筛选" }}
-              </ElButton>
-              <ElButton @click="onReset">
-                <template #icon>
-                  <div class="i-grommet-icons:power-reset h-1em w-1em" />
-                </template>
-                重置
-              </ElButton>
-              <ElButton disabled link @click="toggle">
-                <template #icon>
-                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
-                </template>
-                {{ fold ? "展开" : "收起" }}
-              </ElButton>
-            </ElFormItem>
-          </ElForm>
-        </template>
-      </SearchBar> -->
+      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="data.search"  :formOption="formOption" />
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>

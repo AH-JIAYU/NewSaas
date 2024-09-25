@@ -207,11 +207,14 @@ onMounted(() => {
   formSearchList.value = [
     { index: 1, show: true, type: 'input', modelName: 'supplierId', placeholder: '供应商ID' },
     { index: 2, show: true, type: 'input', modelName: 'projectId', placeholder: '项目ID' },
-    { index: 3, show: true, type: 'select', modelName: 'operationType', placeholder: '加减款', option: payments, optionLabel: 'label', optionValue: 'value' },
-    { index: 4, show: true, type: 'select', modelName: 'type', placeholder: '类型', option: paymentsType, optionLabel: 'label', optionValue: 'value' }
+    { index: 3, show: true, type: 'select', modelName: 'operationType', placeholder: '加减款', option: 'operationType', optionLabel: 'label', optionValue: 'value' },
+    { index: 4, show: true, type: 'select', modelName: 'type', placeholder: '类型', option: 'type', optionLabel: 'label', optionValue: 'value' }
   ]
 });
-
+const formOption={
+  operationType:()=>payments,
+  type:()=>paymentsType,
+}
 onBeforeUnmount(() => {
   if (data.value.formMode === "router") {
     eventBus.off("get-data-list");
@@ -224,56 +227,8 @@ onBeforeUnmount(() => {
   <div :class="{ 'absolute-container': data.tableAutoHeight }">
     <PageMain>
       <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange"
-        @onReset="onReset" :model="data.search" />
-      <!-- <SearchBar :show-toggle="false">
-        <template #default="{ fold, toggle }">
-          <ElForm :model="data.search" size="default" label-width="100px" inline-message inline class="search-form">
-            <ElFormItem>
-              <ElInput v-model="data.search.supplierId" placeholder="供应商ID" clearable @keydown.enter="currentChange()"
-                @clear="currentChange()" />
-            </ElFormItem>
-            <ElFormItem>
-              <ElInput v-model="data.search.projectId" placeholder="项目ID" clearable @keydown.enter="currentChange()"
-                @clear="currentChange()" />
-            </ElFormItem>
-            <ElFormItem v-show="!fold">
-              <el-select v-model="data.search.operationType" value-key="" placeholder="加减款" clearable filterable
-                @change="currentChange()">
-                <el-option v-for="item in payments" :key="item.value" :label="item.label"
-                  :value="item.value"></el-option>
-              </el-select>
-            </ElFormItem>
-            <ElFormItem v-show="!fold">
-              <el-select v-model="data.search.type" value-key="" placeholder="类型" clearable filterable
-                @change="currentChange()">
-                <el-option v-for="item in paymentsType" :key="item.value" :label="item.label"
-                  :value="item.value"></el-option>
-              </el-select>
-            </ElFormItem>
-            <ElFormItem>
-              <ElButton type="primary" @click="currentChange()">
-                <template #icon>
-                  <SvgIcon name="i-ep:search" />
-                </template>
-筛选
-</ElButton>
-<ElButton @click="onReset">
-  <template #icon>
-                  <div class="i-grommet-icons:power-reset h-1em w-1em" />
-                </template>
-  重置
-</ElButton>
-<ElButton link @click="toggle">
-  <template #icon>
-                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
-                </template>
-  {{ fold ? "展开" : "收起" }}
-</ElButton>
-</ElFormItem>
-</ElForm>
-</template>
-</SearchBar> -->
-      <ElDivider border-style="dashed" />
+        @onReset="onReset" :model="data.search"  :formOption="formOption" />
+     <ElDivider border-style="dashed" />
       <el-row>
         <FormLeftPanel />
         <FormRightPanel>

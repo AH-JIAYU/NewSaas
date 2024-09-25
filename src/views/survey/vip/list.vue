@@ -181,18 +181,23 @@ onMounted(async () => {
   formSearchList.value =[
   { index: 1, show: true, type: 'input', modelName: 'memberId', placeholder: '会员ID' },
   { index: 2, show: true, type: 'input', modelName: 'memberName', placeholder: '会员名称' },
-  { index: 3, show: true, type: 'select', modelName: 'memberLevelId', placeholder: '会员等级', option: data.vipLevelList, optionLabel: 'levelNameOrAdditionRatio', optionValue: 'memberLevelId' },
-  { index: 4, show: true, type: 'select', modelName: 'memberStatus', placeholder: '会员状态', option: [{ label: '关闭', value: 1 }, { label: '开启', value: 2 }], optionLabel: 'label', optionValue: 'value' },
-  { index: 5, show: true, type: 'select', modelName: 'memberGroupId', placeholder: '所属会员组', option: data.vipGroupList, optionLabel: 'memberGroupName', optionValue: 'memberGroupId' },
+  { index: 3, show: true, type: 'select', modelName: 'memberLevelId', placeholder: '会员等级', option: 'memberLevelId', optionLabel: 'levelNameOrAdditionRatio', optionValue: 'memberLevelId' },
+  { index: 4, show: true, type: 'select', modelName: 'memberStatus', placeholder: '会员状态', option: 'memberStatus', optionLabel: 'label', optionValue: 'value' },
+  { index: 5, show: true, type: 'select', modelName: 'memberGroupId', placeholder: '所属会员组', option: 'memberGroupId', optionLabel: 'memberGroupName', optionValue: 'memberGroupId' },
   { index: 6, show: true, type: 'datetimerange', modelName: 'time', startPlaceHolder: '创建开始日期', endPlaceHolder: '创建结束日期' }
 ]
 });
+const formOption={
+  memberLevelId:()=> data.vipLevelList,
+  memberStatus:()=>[{ label: '关闭', value: 1 }, { label: '开启', value: 2 }],
+  memberGroupId:()=>data.vipGroupList,
+}
 </script>
 
 <template>
   <div :class="{ 'absolute-container': tableAutoHeight }">
     <PageMain>
-      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="queryForm" />
+      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="queryForm"  :formOption="formOption"/>
       <ElDivider border-style="dashed" />
       <el-row>
         <FormLeftPanel>
@@ -488,7 +493,7 @@ onMounted(async () => {
 .editSvg {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: start;
 
   span {
     display: flex;

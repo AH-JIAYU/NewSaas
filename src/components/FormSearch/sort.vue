@@ -17,6 +17,7 @@ const data = ref<any>({
 
 // 表单筛选配置项  表单绑定值
 const showEdit = (list: any, name: string) => {
+  console.log('list',list)
   data.value.dialogTableVisible = true
   data.value.formSearchName = name
   const copyList = cloneDeep(list)
@@ -54,8 +55,7 @@ const onSubmit = () => {
   const showFalseList = data.value.formSearchList.filter((item: any) => !item.show)//未选中
   const setLocalFormSearchList = cloneDeep(data.value.formSearchSelectList) //选中
   setLocalFormSearchList.push(...showFalseList)//保存的筛选项
-  // option转字符串
-  setLocalFormSearchList.forEach((item: any) => { item.option && item.option!=='global' && (item.option = JSON.stringify(item.option)) })
+  console.log('setLocalFormSearchList',setLocalFormSearchList)
   const params = {
     searchType: data.value.formSearchName,
     addSearchUserInfoList: setLocalFormSearchList

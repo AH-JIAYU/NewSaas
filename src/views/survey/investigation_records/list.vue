@@ -202,17 +202,21 @@ onMounted(async () => {
     { index: 2, show: true, type: 'input', modelName: 'randomIdentityId', placeholder: '随机身份', event: 'keydown.enter' },
     { index: 3, show: true, type: 'input', modelName: 'projectId', placeholder: '项目ID', event: 'keydown.enter' },
     { index: 4, show: true, type: 'input', modelName: 'projectName', placeholder: '项目名称', event: 'keydown.enter' },
-    { index: 5, show: true, type: 'select', modelName: 'customerId', placeholder: '客户简称', option: data.customerList, optionLabel: 'customerAccord', optionValue: 'tenantCustomerId' },
+    { index: 5, show: true, type: 'select', modelName: 'customerId', placeholder: '客户简称', option: 'customerId', optionLabel: 'customerAccord', optionValue: 'tenantCustomerId' },
     { index: 6, show: true, type: 'input', modelName: 'ip', placeholder: 'IP地址' },
-    { index: 7, show: true, type: 'select', modelName: 'surveyStatus', placeholder: '调查状态', option: data.surveyStatusList, optionLabel: 'label', optionValue: 'value' },
+    { index: 7, show: true, type: 'select', modelName: 'surveyStatus', placeholder: '调查状态', option: 'surveyStatus', optionLabel: 'label', optionValue: 'value' },
   ];
 });
+const formOption={
+  customerId:()=> data.customerList,
+  surveyStatus:()=> data.surveyStatusList,
+}
 </script>
 <template>
   <div :class="{ 'absolute-container': tableAutoHeight }">
     <PageMain>
       <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange"
-        @onReset="onReset" :model="queryForm" />
+        @onReset="onReset" :model="queryForm"  :formOption="formOption"/>
       <ElDivider border-style="dashed" />
       <el-row>
         <FormLeftPanel />

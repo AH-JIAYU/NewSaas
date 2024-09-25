@@ -213,24 +213,22 @@ onMounted(async () => {
     { index: 4, show: true, type: 'input', modelName: 'accountName', placeholder: '账号名称' },
     { index: 5, show: true, type: 'input', modelName: 'emailAddress', placeholder: '邮箱' },
     { index: 6, show: true, type: 'select', modelName: 'supplierStatus', placeholder: '供应商状态',
-      option: [
-          { label: '开启', value: 2 },
-          { label: '关闭', value: 1 },
-          { label: '待审批', value: 3 }
-      ],
-      optionLabel: 'label', optionValue: 'value'
+      option: 'supplierStatus', optionLabel: 'label', optionValue: 'value'
     },
     { index: 7, show: true, type: 'datetimerange', modelName: 'time',
       startPlaceHolder: '创建开始日期', endPlaceHolder: '创建结束日期'
     },
 ];
 });
+const formOption={
+  supplierStatus:()=>[{ label: '开启', value: 2 },{ label: '关闭', value: 1 },{ label: '待审批', value: 3 } ]
+}
 </script>
 
 <template>
   <div :class="{ 'absolute-container': tableAutoHeight }">
     <PageMain>
-      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="queryForm" />
+      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="queryForm"  :formOption="formOption"/>
       <ElDivider border-style="dashed" />
       <el-row>
         <FormLeftPanel>

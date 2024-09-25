@@ -1,6 +1,6 @@
 import axios from "axios";
 import { loadingHide } from "@/components/SpinkitLoading/index"; //加载
-
+import { throttle,debounce } from "lodash-es";
 // import qs from 'qs'
 import Message from "vue-m-message";
 import useSettingsStore from "@/store/modules/settings";
@@ -47,25 +47,17 @@ api.interceptors.response.use(
     if (response.data.status === 1) {
       return Promise.resolve(response.data);
     } else if (response.data.status === -1) {
-      Message.error(response.data.error, {
-        zIndex: 4000,
-      });
+      debounceMsg('error', response.data.error, 4000)
       return Promise.reject(response.data);
     } else if (response.data.status === 0) {
       if (response.data.error === 'token 无效') {
-        Message.warning('账号登录过期', {
-          zIndex: 2000,
-        })
+        debounceMsg('warning', '账号登录过期', 2000)
         useUserStore().logout(response.data.status);
       } else if (response.data.error === 'token 已被顶下线') {
-        Message.warning('该账号已在别处登录', {
-          zIndex: 2000,
-        })
+        debounceMsg('warning', '该账号已在别处登录', 2000)
         useUserStore().logout(response.data.status, 'login');
       } else {
-        Message.warning(response.data.message, {
-          zIndex: 2000,
-        })
+        debounceMsg('warning', response.data.message, 2000)
       }
       return Promise.reject(response.data);
     }
@@ -79,11 +71,25 @@ api.interceptors.response.use(
     } else if (message.includes("Request failed with status code")) {
       message = `接口${message.substr(message.length - 3)}异常`;
     }
-    Message.error(message, {
-      zIndex: 2000,
-    });
+    debounceMsg('error', message, 2000)
     return Promise.reject(error);
   }
 );
+/*** 提示防抖
+ * 场景：list里调用客户的接口，筛选项回调用，表格回调用，编辑弹框会调用，调用的都是pinia里的数据，
+ * 调用的时候如果不存在数据，就会请求3次接口，如果这时候token过期了或者报错，就会在页面弹出3个提示
+*/
+const debounceMsg = debounce((type: any, message: any, zIndex: any) => {
+  if (type === 'error') {
+    Message.error(message, {
+      zIndex: zIndex,
+    });
+  }
+  else if (type === 'warning') {
+    Message.warning(message, {
+      zIndex: zIndex,
+    });
+  }
 
+}, 500)
 export default api;

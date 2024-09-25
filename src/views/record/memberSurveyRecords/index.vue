@@ -204,10 +204,7 @@ onMounted(async () => {
     { index: 1, show: true, type: 'input', modelName: 'projectId', placeholder: '项目ID' },
     { index: 2, show: true, type: 'input', modelName: 'projectName', placeholder: '项目名称' },
     { index: 3, show: true, type: 'select', modelName: 'surveySource', placeholder: '会员类型',
-      option: [
-          { label: '内部会员', value: 1 },
-          { label: '外部会员', value: 2 }
-      ],
+      option: 'surveySource',
       optionLabel: 'label', optionValue: 'value'
     },
     { index: 4, show: true, type: 'input', modelName: 'memberId', placeholder: '会员ID' },
@@ -216,21 +213,26 @@ onMounted(async () => {
     { index: 7, show: true, type: 'input', modelName: 'tenantSupplierId', placeholder: '供应商ID' },
     { index: 8, show: true, type: 'input', modelName: 'ip', placeholder: 'IP地址' },
     { index: 9, show: true, type: 'select', modelName: 'surveyStatus', placeholder: '调查状态',
-      option: data.surveyStatusList.map((item:any, index:any) => ({ label: item, value: index + 1 })),
+      option: 'surveyStatus',
       optionLabel: 'label', optionValue: 'value'
     },
     { index: 10, show: true, type: 'select', modelName: 'viceStatus', placeholder: '副状态',
-      option: data.viceStatusList.map((item:any, index:any) => ({ label: item, value: index + 1 })),
+      option: 'viceStatus' ,
       optionLabel: 'label', optionValue: 'value'
     },
 ];
 });
+const formOption={
+  surveySource:()=>[ { label: '内部会员', value: 1 }, { label: '外部会员', value: 2 } ],
+  surveyStatus:()=> data.surveyStatusList.map((item:any, index:any) => ({ label: item, value: index + 1 })),
+  viceStatus:()=> data.viceStatusList.map((item:any, index:any) => ({ label: item, value: index + 1 })),
+}
 </script>
 
 <template>
   <div :class="{ 'absolute-container': tableAutoHeight }">
     <PageMain>
-      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="queryForm" />
+      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="queryForm"  :formOption="formOption" />
       <ElDivider border-style="dashed" />
       <el-row>
         <FormLeftPanel />

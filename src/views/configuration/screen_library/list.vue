@@ -260,7 +260,7 @@ onMounted(async () => {
     });
   }
   formSearchList.value = [
-    { index: 1, show: true, type: 'select', modelName: 'countryId', placeholder: '国家', option: data.value.countryList, optionLabel: 'chineseName', optionValue: 'id' }
+    { index: 1, show: true, type: 'select', modelName: 'countryId', placeholder: '国家', option: 'global', optionLabel: 'chineseName', optionValue: 'id' }
   ]
 });
 

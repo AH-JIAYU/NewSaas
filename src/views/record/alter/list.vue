@@ -135,12 +135,13 @@ onMounted(async () => {
   fetchData();
   formSearchList.value =  [
     { index: 1, show: true, type: 'input', modelName: 'createUserName', placeholder: '操作人' },
-    { index: 2, show: true, type: 'select', modelName: 'type', placeholder: '变更状态',
-      option: statusType.map((item:any) => ({ label: item.label, value: item.value })),
-      optionLabel: 'label', optionValue: 'value'
+    { index: 2, show: true, type: 'select', modelName: 'type', placeholder: '变更状态',option: 'type',optionLabel: 'label', optionValue: 'value'
     },
 ];
 });
+const formOption={
+  type:()=>statusType.map((item:any) => ({ label: item.label, value: item.value }))
+}
 </script>
 
 <template>
@@ -148,7 +149,7 @@ onMounted(async () => {
     'absolute-container': tableAutoHeight,
   }">
     <PageMain>
-      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="queryForm" />
+      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="queryForm"  :formOption="formOption"/>
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>

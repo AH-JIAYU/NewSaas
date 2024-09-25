@@ -175,16 +175,19 @@ onMounted(() => {
   { index: 1, show: true, type: 'input', modelName: 'memberGroupId', placeholder: '会员组ID' },
   { index: 2, show: true, type: 'input', modelName: 'memberGroupName', placeholder: '会员组名称' },
   { index: 3, show: true, type: 'input', modelName: 'groupLeaderMemberName', placeholder: '组长ID、组长名称' },
-  { index: 4, show: true, type: 'select', modelName: 'groupStatus', placeholder: '会员组状态', option: [{ label: '关闭', value: 1 }, { label: '开启', value: 2 }],optionLabel: 'label', optionValue: 'value' },
+  { index: 4, show: true, type: 'select', modelName: 'groupStatus', placeholder: '会员组状态', option: 'groupStatus',optionLabel: 'label', optionValue: 'value' },
   { index: 5, show: true, type: 'datetimerange', modelName: 'time', startPlaceHolder: '创建开始日期', endPlaceHolder: '创建结束日期' }
 ]
 });
+const formOption={
+  groupStatus:()=> [{ label: '关闭', value: 1 }, { label: '开启', value: 2 }]
+}
 </script>
 
 <template>
   <div :class="{ 'absolute-container': tableAutoHeight }">
     <PageMain>
-      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="queryForm" />
+      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="queryForm"  :formOption="formOption" />
       <ElDivider border-style="dashed" />
       <el-row>
         <FormLeftPanel>

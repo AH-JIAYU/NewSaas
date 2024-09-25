@@ -184,9 +184,12 @@ onMounted(() => {
   formSearchList.value = [
   { index: 1, show: true, type: 'input', modelName: 'memberId', placeholder: '会员ID' },
   { index: 2, show: true, type: 'input', modelName: 'memberName', placeholder: '会员姓名' },
-  { index: 3, show: true, type: 'select', modelName: 'billStatus', placeholder: '账单状态', option: data.value.billStatusList, optionLabel: 'label', optionValue: 'value' }
+  { index: 3, show: true, type: 'select', modelName: 'billStatus', placeholder: '账单状态', option: 'billStatus', optionLabel: 'label', optionValue: 'value' }
 ]
 });
+const formOption={
+  billStatus:()=>data.value.billStatusList
+}
 onBeforeUnmount(() => {
   if (data.value.formMode === "router") {
     eventBus.off("get-data-list");
@@ -197,7 +200,7 @@ onBeforeUnmount(() => {
 <template>
   <div :class="{ 'absolute-container': data.tableAutoHeight }">
     <PageMain>
-      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="data.search" />
+      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="data.search"  :formOption="formOption"/>
       <ElDivider border-style="dashed" />
       <el-row>
         <FormLeftPanel>

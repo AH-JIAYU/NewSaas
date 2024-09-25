@@ -12,6 +12,7 @@ import apiLogo from "@/api/modules/logo";
 import storage from "@/utils/storage";
 import settingsDefault from "@/settings";
 import api from "@/api/modules/configuration_manager";
+import { resetPinia } from '@/store/index'
 
 const useUserStore = defineStore(
   // 唯一ID
@@ -117,7 +118,7 @@ const useUserStore = defineStore(
       tabbarStore.clean();
       routeStore.removeRoutes();
       menuStore.setActived(0);
-     await router.push({
+      await router.push({
         name: "login",
         query: {
           ...(router.currentRoute.value.path !==
@@ -125,10 +126,9 @@ const useUserStore = defineStore(
             router.currentRoute.value.name !== "login" && { redirect }),
         },
       });
-
       nextTick(() => {
-        // 刷新页面清除store里的数据
-        window.location.reload();
+        // 清除pinia里的数据
+        resetPinia()
       })
     }
     // 删除本地和store里的logo
@@ -151,8 +151,8 @@ const useUserStore = defineStore(
       webName.value = val
       storage.local.set("webName", val)
     }
-     // 删除本地和store里的keyWords
-     function delkeyWords() {
+    // 删除本地和store里的keyWords
+    function delkeyWords() {
       keyWords.value = ''
       storage.local.remove("keyWords")
     }
@@ -161,8 +161,8 @@ const useUserStore = defineStore(
       keyWords.value = val
       storage.local.set("keyWords", val)
     }
-     // 删除本地和store里的description
-     function delDescription() {
+    // 删除本地和store里的description
+    function delDescription() {
       description.value = ''
       storage.local.remove("description")
     }

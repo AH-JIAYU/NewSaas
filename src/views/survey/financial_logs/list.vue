@@ -221,11 +221,14 @@ onMounted(() => {
   { index: 1, show: true, type: 'input', modelName: 'memberId', placeholder: '会员ID' },
   { index: 2, show: true, type: 'input', modelName: 'memberName', placeholder: '会员名称' },
   { index: 3, show: true, type: 'input', modelName: 'projectId', placeholder: '项目ID' },
-  { index: 4, show: true, type: 'select', modelName: 'operationType', placeholder: '加减款', option: payments, optionLabel: 'label', optionValue: 'value' },
-  { index: 5, show: true, type: 'select', modelName: 'type', placeholder: '类型', option: paymentsType, optionLabel: 'label', optionValue: 'value' }
+  { index: 4, show: true, type: 'select', modelName: 'operationType', placeholder: '加减款', option: 'operationType', optionLabel: 'label', optionValue: 'value' },
+  { index: 5, show: true, type: 'select', modelName: 'type', placeholder: '类型', option: 'type', optionLabel: 'label', optionValue: 'value' }
 ]
 });
-
+const formOption={
+  operationType:()=> payments,
+  type:()=> paymentsType,
+}
 onBeforeUnmount(() => {
   if (data.value.formMode === "router") {
     eventBus.off("get-data-list");
@@ -236,7 +239,7 @@ onBeforeUnmount(() => {
 <template>
   <div :class="{ 'absolute-container': data.tableAutoHeight }">
     <PageMain>
-      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="data.search" />
+      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="data.search"  :formOption="formOption"/>
       <ElDivider border-style="dashed" />
       <el-row>
         <FormLeftPanel />
