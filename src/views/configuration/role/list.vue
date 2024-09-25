@@ -206,7 +206,7 @@ onMounted(() => {
         </ElButton>
       </ElSpace>
       <ElTable v-loading="data.loading" class="my-4" :data="data.dataList" stripe highlight-current-row
-        height="100%" @sort-change="sortChange" border @selection-change="data.batch.selectionDataList = $event"
+        height="100%" @sort-change="sortChange"    @selection-change="data.batch.selectionDataList = $event"
         @current-change="handleCurrentChange" >
         <ElTableColumn v-if="data.batch.enable" type="selection" align="left" fixed />
         <ElTableColumn prop="id" align="left" label="角色ID" >
@@ -334,5 +334,5 @@ onMounted(() => {
 .el-table__row:hover .edit {
   display: block;
 }
- 
+
 </style>

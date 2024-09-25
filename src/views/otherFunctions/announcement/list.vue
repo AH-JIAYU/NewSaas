@@ -313,15 +313,8 @@ onBeforeUnmount(() => {
           </template>
         </ElTableColumn>
 
-        <ElTableColumn v-if="data.checkList.includes('createTime')" align="left" show-overflow-tooltip
+        <ElTableColumn v-if="data.checkList.includes('createTime')" label="创建时间" align="left" show-overflow-tooltip
           prop="createTime"  >
-          <template #header>
-            <div class="flex-s">
-              <SvgIcon name="ant-design:clock-circle-filled" color="#45a0ff" />
-              <span>创建时间</span>
-            </div>
-
-          </template>
           <template #default="{ row }">
             <el-tag effect="plain" type="info">{{
     format(row.createTime)

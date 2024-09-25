@@ -142,9 +142,9 @@ onMounted(() => {
             </el-tab-pane>
             <el-tab-pane label="代办" name="cooperation">
               <div class="buttons">
-                <button :class="data.ReadAlready === 1 ? 'unread' : ''" @click="readButNotRead(1)">未读{{
+                <button :class="data.ReadAlready === 1 ? 'unread' : ''" @click="readButNotRead(1)">待办{{
             notificationStore.todo < 100 ? `(${notificationStore.todo})` : '99+' }}</button>
-                    <button :class="data.ReadAlready === 2 ? 'read' : ''" read @click="readButNotRead(2)">已读</button>
+                    <button :class="data.ReadAlready === 2 ? 'read' : ''" read @click="readButNotRead(2)">已办</button>
               </div>
 
               <OverlayScrollbarsComponent :options="{

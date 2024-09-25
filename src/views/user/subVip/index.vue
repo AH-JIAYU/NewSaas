@@ -338,14 +338,7 @@ const formOption = {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('createTime')" align="left" prop="createTime">
-          <template #header>
-            <div class="flex-c">
-              <SvgIcon name="ant-design:clock-circle-filled" color="#45a0ff" />
-              <span>创建</span>
-            </div>
-
-          </template>
+        <el-table-column v-if="checkList.includes('createTime')" align="left" label="创建" prop="createTime">
           <template #default="{ row }">
             <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>
           </template>

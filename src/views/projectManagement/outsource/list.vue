@@ -162,7 +162,7 @@ const formOption={
             <el-table-column v-if="checkList.includes('projectName')" show-overflow-tooltip prop="projectName"
               align="left" label="项目名称">
               <template #default="{ row }">
-                <div class="tableBig">{{ row.projectName }}</div>
+                <div class="tableBig oneLine">{{ row.projectName }}</div>
               </template>
             </el-table-column>
             <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip prop="projectId"
@@ -177,10 +177,10 @@ const formOption={
             <el-table-column v-if="checkList.includes('participationNumber')" show-overflow-tooltip
               prop="participationNumber" align="left" label="参数" width="300">
               <template #default="{ row }">
-                <el-text class="oneLine" type="danger">参与: {{ row.participationNumber || 0 }}</el-text> &ensp;
-                <el-text class="oneLine" type="success">完成: {{ row.doneNumber || 0 }}</el-text> &ensp;
-                <el-text class="oneLine" type="warning">配额: {{ row.num || 0 }}</el-text> &ensp;
-                <el-text class="oneLine" type="info">限量: {{ row.limitedQuantity || "-" }}</el-text>
+                <el-text style="color:rgb(251, 104, 104);" class="oneLine" type="danger">参与: {{ row.participationNumber || 0 }}</el-text> &ensp;
+                <el-text style="color:rgb(3, 194, 57);"    class="oneLine" type="success">完成: {{ row.doneNumber || 0 }}</el-text> &ensp;
+                <el-text style="color:rgb(255, 172, 84);"  class="oneLine" type="warning">配额: {{ row.num || 0 }}</el-text> &ensp;
+                <el-text style="color:rgb(170, 170, 170);" class="oneLine" type="info">限量: {{ row.limitedQuantity || "-" }}</el-text>
               </template>
             </el-table-column>
             <el-table-column align="left" fixed="right" label="操作" width="170">
@@ -256,10 +256,10 @@ const formOption={
             <el-table-column v-if="checkList.includes('participationNumber')" show-overflow-tooltip
               prop="participationNumber" align="left" label="参数" width="300">
               <template #default="{ row }">
-                <el-text class="oneLine" type="danger">参与: {{ row.participationNumber || 0 }}</el-text> &ensp;
-                <el-text class="oneLine" type="success">完成: {{ row.doneNumber || 0 }}</el-text> &ensp;
-                <el-text class="oneLine" type="warning">配额: {{ row.num || 0 }}</el-text> &ensp;
-                <el-text class="oneLine" type="info">限量: {{ row.limitedQuantity || "-" }}</el-text>
+                <el-text style="color:rgb(251, 104, 104);" class="oneLine" type="danger">参与: {{ row.participationNumber || 0 }}</el-text> &ensp;
+                <el-text style="color:rgb(3, 194, 57);"    class="oneLine" type="success">完成: {{ row.doneNumber || 0 }}</el-text> &ensp;
+                <el-text style="color:rgb(255, 172, 84);"  class="oneLine" type="warning">配额: {{ row.num || 0 }}</el-text> &ensp;
+                <el-text style="color:rgb(170, 170, 170);" class="oneLine" type="info">限量: {{ row.limitedQuantity || "-" }}</el-text>
               </template>
             </el-table-column>
 

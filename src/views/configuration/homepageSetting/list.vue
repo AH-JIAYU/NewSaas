@@ -14,8 +14,6 @@ const router = useRouter();
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
 const homePageRef = ref<any>();
-  const formSearchList = ref<any>()//表单排序配置
-const formSearchName=ref<string>('formSearch-TenantTenantHomepageSettingList')// 表单排序name
 const data = ref({
   loading: false,
   // 表格是否自适应高度
@@ -139,9 +137,6 @@ onMounted(() => {
       getDataList();
     });
   }
-  formSearchList.value = [
-    {index: 1, show: true, type: 'input', modelName: 'title', placeholder: '请输入标题，支持模糊查询'}
-]
 });
 
 onBeforeUnmount(() => {
@@ -181,8 +176,6 @@ onBeforeUnmount(() => {
     </PageMain>
     <PageMain>
       <PageHeader title="自定义模板" />
-      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="data.search" />
-      <ElDivider border-style="dashed" />
       <ElSpace wrap>
         <ElButton type="primary" size="default" @click="onCreate">
           <template #icon>

@@ -309,11 +309,11 @@ const formOption = {
         <FormRightPanel>
           <el-button size="default" @click=""> 导出 </el-button>
           <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
-            v-model:columns="columns" v-model:line-height="lineHeight" v-model:stripe="stripe" style="margin-left: 12px"
+            v-model:columns="columns" v-model:line-height="lineHeight" v-model:stripe="stripe" style="margin-left: .75rem"
             @query-data="currentChange" />
         </FormRightPanel>
       </el-row>
-      <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="projectId" :data="list"
+      <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: .625rem" row-key="projectId" :data="list"
         :tree-props="{ children: 'getChildrenProjectListInfoList' }" :border="border" :size="lineHeight"
         :stripe="stripe" highlight-current-row height="100%" @current-change="handleCurrentChange">
         <el-table-column align="left" type="selection" :selectable="selectable" />
@@ -331,7 +331,7 @@ const formOption = {
               <el-button class="p-1" size="small" type="primary" v-else>自有</el-button>
               <el-button class="p-1" size="small" text type="primary" v-if="row.projectLinkType === 2"
                 @click="outsourceDetails(row)">
-                <SvgIcon name="i-ri:share-forward-line" color="#409eff" size="20px" />
+                <SvgIcon name="i-ri:share-forward-line" color="#409eff" size="1.25rem" />
               </el-button>
             </div>
             <div class="copyId tableSmall">
@@ -343,9 +343,9 @@ const formOption = {
         <el-table-column v-if="checkList.includes('name')" show-overflow-tooltip prop="name" align="left"
           label="名称/标识"><template #default="{ row }">
             <div class="flex-c">
-              <div class="oneLine" style="width: calc(100% - 20px);">
-                <b class="oneLine tableBig" :type="row.isB2b === 2 ? 'danger' : ''">名: {{ row.name }}</b>
-                <div class="oneLine">标: {{ row.clientName.split("/")[1] }}</div>
+              <div class="oneLine" style="width: calc(100% - 1.25rem);">
+                <b class="oneLine tableBig">名: <span :class="row.isB2b === 2 ? 'red' : ''">{{ row.name }}</span></b>
+                <div class="oneLine">标: <span :class="row.isB2b === 2 ? 'red' : ''">{{ row.clientName.split("/")[1] }}</span> </div>
               </div>
               <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'name')"
                 :class="{ edit: 'edit', current: row.projectId === current }" name="i-ep:edit" color="#409eff" />
@@ -355,7 +355,7 @@ const formOption = {
         <el-table-column v-if="checkList.includes('clientName')" prop="clientName" show-overflow-tooltip align="left"
           label="客户" width="120"><template #default="{ row }">
             <div class="flex-c">
-              <div class="oneLine " style="width: calc(100% - 20px);">
+              <div class="oneLine " style="width: calc(100% - 1.25rem);">
                 <b class="tableBig">{{ row.clientName.split("/")[0] }}</b>
                 <div class="oneLine " v-if="row.projectType !== 2">
                   <img :src="row.avatar" alt="" class="avatar">
@@ -370,35 +370,35 @@ const formOption = {
         <el-table-column v-if="checkList.includes('PCNL')" align="left" label="参数">
           <template #default="{ row }">
             <div class="flex-c">
-              <div class="oneLine parameter" style="width: calc(100% - 20px);">
-                <el-text class="oneLine" type="danger">参与: {{ row.participation || 0 }}</el-text>
-                <el-text class="oneLine" type="success">完成: {{ row.complete || 0 }}</el-text>
-                <el-text class="oneLine" type="warning">配额: {{ row.num || 0 }}</el-text>
-                <el-text class="oneLine" type="info">限量: {{ row.limitedQuantity || "-" }}</el-text>
+              <div class="oneLine parameter" style="width: calc(100% - 1.25rem);">
+                <el-text style="color:rgb(251, 104, 104);" class="oneLine" type="danger">参与: {{ row.participation || 0 }}</el-text>
+                <el-text style="color:rgb(3, 194, 57);" class="oneLine" type="success">完成: {{ row.complete || 0 }}</el-text>
+                <el-text style="color:rgb(255, 172, 84);" class="oneLine" type="warning">配额: {{ row.num || 0 }}</el-text>
+                <el-text style="color:rgb(170, 170, 170);" class="oneLine" type="info">限量: {{ row.limitedQuantity || "-" }}</el-text>
               </div>
               <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'PCNL')"
                 :class="{ edit: 'edit', current: row.projectId === current }" name="i-ep:edit" color="#409eff" />
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('allocationType')" align="left" label="分配" width="90">
+        <el-table-column v-if="checkList.includes('allocationType')"  align="left" label="分配" width="90">
           <template #default="{ row }">
-            <el-button size="small" @click="viewAllocations(row, 1)" type="danger" v-if="row.allocationType === 1"
+            <el-button class="tableBut" size="small" @click="viewAllocations(row, 1)" type="danger" v-if="row.allocationType === 1"
               plain>自动分配</el-button>
-            <el-button size="small" @click="viewAllocations(row, 2)" type="danger"
+            <el-button class="tableBut" size="small" @click="viewAllocations(row, 2)" type="danger"
               v-else-if="row.allocationType === 2">供应商</el-button>
-            <el-button size="small" @click="viewAllocations(row, 3)" type="success"
+            <el-button class="tableBut" size="small" @click="viewAllocations(row, 3)" type="success"
               v-else-if="row.allocationType === 3">会员组</el-button>
-            <el-button size="small" @click="viewAllocations(row, 4)" type="primary"
+            <el-button class="tableBut" size="small" @click="viewAllocations(row, 4)" type="primary"
               v-else-if="row.allocationType === 4">租户</el-button>
-            <el-button size="small" plain v-else type="info"> 未分配</el-button>
+            <el-button class="tableBut" size="small" plain v-else type="info"> 未分配</el-button>
           </template>
         </el-table-column>
 
         <el-table-column v-if="checkList.includes('doMoneyPrice')" show-overflow-tooltip align="left" label="原价">
           <template #default="{ row }">
             <div class="flex-c">
-              <div class="oneLine tableBig" style="width: calc(100% - 20px);">
+              <div class="oneLine tableBig" style="width: calc(100% - 1.25rem);">
                 <CurrencyType />{{ row.doMoneyPrice || 0 }}
               </div>
               <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'doMoneyPrice')"
@@ -411,7 +411,7 @@ const formOption = {
           width="120">
           <template #default="{ row }">
             <div class="flex-c">
-              <div class="oneLine tableBig" style="width: calc(100% - 20px);">
+              <div class="oneLine tableBig" style="width: calc(100% - 1.25rem);">
                 {{ row.ir ? row.ir : 0 }}%/{{ row.nir ? row.nir : 0 }}%
               </div>
               <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'ir')"
@@ -425,18 +425,18 @@ const formOption = {
           <template #default="{ row }">
             <template v-if="row.countryIdList">
               <template v-if="row.countryIdList.length === basicDictionaryStore.country.length">
-                <el-tag type="primary">全球</el-tag>
+                <el-tag size="small" type="primary">全球</el-tag>
               </template>
               <template v-else-if="comCountryId(row.countryIdList).length > 1">
                 <el-tooltip class="box-item" effect="dark" :content="comCountryId(row.countryIdList).join(',')"
                   placement="top">
-                  <el-link type="primary"><el-tag type="primary">×{{
+                  <el-link type="primary"><el-tag  size="small" type="primary">×{{
     comCountryId(row.countryIdList).length
   }}</el-tag></el-link>
                 </el-tooltip>
               </template>
               <template v-else>
-                <el-tag v-for="item in comCountryId(row.countryIdList)" :key="item" type="primary">
+                <el-tag  size="small" v-for="item in comCountryId(row.countryIdList)" :key="item" type="primary">
                   {{ item }}
                 </el-tag>
               </template>
@@ -453,7 +453,7 @@ const formOption = {
         <el-table-column v-if="checkList.includes('remark')" show-overflow-tooltip prop="remark" align="left"
           width="100" label="备注"><template #default="{ row }">
             <div class="flex-c ">
-              <div class="oneLine tableBig" style="width: calc(100% - 20px);">
+              <div class="oneLine tableBig" style="width: calc(100% - 1.25rem);">
                 {{ row.remark ? row.remark : "-" }}
               </div>
               <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'remark')"
@@ -518,14 +518,14 @@ const formOption = {
   width: 100%;
 
   >div:nth-of-type(1) {
-    width: calc(100% - 25px);
+    width: calc(100% - 1.5625rem);
     flex-shrink: 0;
   }
 
   .edit {
-    width: 20px;
-    height: 20px;
-    margin-left: 5px;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-left: .3125rem;
     flex-shrink: 0;
     display: none;
     cursor: pointer;
@@ -544,10 +544,10 @@ const formOption = {
 
 // 头像
 .avatar {
-  width: 20px;
-  height: 20px;
+  width: 1.25rem;
+  height: 1.25rem;
   border-radius: 50%;
-  margin-right: 5px;
+  margin-right: .3125rem;
   vertical-align: bottom;
 }
 
@@ -562,16 +562,18 @@ const formOption = {
   .oneLine {
     width: 40%;
     text-align: left;
-    margin: 0 12px 8px 0
+    margin: 0 .75rem .5rem 0
   }
 
   .oneLine:nth-of-type(n+3) {
-    margin: 0 12px 0 0
+    margin: 0 .75rem 0 0
   }
 }
 
 
-
+.red{
+  color:red;
+}
 
 .absolute-container {
   position: absolute;
@@ -600,8 +602,8 @@ const formOption = {
 .page-main {
   .search-form {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
-    margin-bottom: -18px;
+    grid-template-columns: repeat(auto-fit, minmax(20.625rem, 1fr));
+    margin-bottom: -1.125rem;
 
     :deep(.el-form-item) {
       grid-column: auto / span 1;
@@ -619,5 +621,8 @@ const formOption = {
 
 :deep(.el-table__empty-block) {
   height: 100% !important;
+}
+.tableBut{
+    width:3.75rem;
 }
 </style>

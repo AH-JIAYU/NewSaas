@@ -241,10 +241,10 @@ const formOption={
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('tenantCustomerId')" align="left" prop="tenantCustomerId"
-          width="180" show-overflow-tooltip label="客户编码">
+            show-overflow-tooltip label="客户编码">
           <template #default="{ row }">
-            <div class="flex-c tableSmall">
-              <div class="oneLine" style="width: calc(100% - 20px);">
+            <div class="copyId tableSmall">
+              <div class="oneLine">
                 {{ row.tenantCustomerId }}
               </div>
               <copy />
@@ -428,4 +428,5 @@ const formOption={
     display: block !important;
   }
 }
+
 </style>

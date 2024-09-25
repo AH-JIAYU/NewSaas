@@ -70,22 +70,22 @@ defineExpose({
         <el-table-column   show-overflow-tooltip prop="projectIdentification" width="100" align="left"
           label="项目名称"></el-table-column>
         <el-table-column  show-overflow-tooltip prop="countryIdList"
-          align="left" label="国家" width="80">
+          align="left" label="国家" width="100">
           <template #default="{ row }">
             <template v-if="row.countryIdList">
               <template v-if="row.countryIdList.length === basicDictionaryStore.country.length">
-                <el-tag type="primary">全球</el-tag>
+                <el-tag size="small" type="primary">全球</el-tag>
               </template>
               <template v-else-if="comCountryId(row.countryIdList).length > 1">
                 <el-tooltip class="box-item" effect="dark" :content="comCountryId(row.countryIdList).join(',')"
                   placement="top">
-                  <el-link type="primary"><el-tag type="primary">×{{
+                  <el-link type="primary"><el-tag size="small" type="primary">×{{
     comCountryId(row.countryIdList).length
   }}</el-tag></el-link>
                 </el-tooltip>
               </template>
               <template v-else>
-                <el-tag v-for="item in comCountryId(row.countryIdList)" :key="item" type="primary">
+                <el-tag size="small" v-for="item in comCountryId(row.countryIdList)" :key="item" type="primary">
                   {{ item }}
                 </el-tag>
               </template>

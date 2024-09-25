@@ -242,15 +242,8 @@ const formOption = {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('terminationTime')" align="left" prop="terminationTime"
+        <el-table-column v-if="checkList.includes('terminationTime')" label="终止时间" align="left" prop="terminationTime"
           show-overflow-tooltip>
-          <template #header>
-            <div class="flex-s">
-              <SvgIcon name="ant-design:clock-circle-filled" color="#45a0ff" />
-              <span>终止时间</span>
-            </div>
-
-          </template>
           <template #default="{ row }">
             <el-tag effect="plain" type="info">{{
     format(row.terminationTime)

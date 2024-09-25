@@ -335,7 +335,6 @@ defineExpose({ showEdit });
 
   .details-left {
     .project {
-      width: 12rem;
       margin-left: 1.4375rem;
     }
 
@@ -470,7 +469,10 @@ defineExpose({ showEdit });
     }
 
     .nodata {
-      min-height: 50vh;
+      min-height: 60vh;
+      display: flex;
+      justify-content: center;
+      align-items:center;
     }
   }
 }

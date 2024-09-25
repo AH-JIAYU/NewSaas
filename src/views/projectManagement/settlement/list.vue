@@ -328,7 +328,7 @@ function handleMoreOperating(command: string, row: any) {
         :border="border" :size="lineHeight" :stripe="stripe" highlight-current-row @selection-change="setSelectRows" @current-change="handleCurrentChange">
         <el-table-column align="left" type="selection" />
         <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip prop="projectId" align="left"
-          width="150" label="项目">
+           label="项目">
           <template #default="{ row }">
             <div class="copyId">
               <div class="id oneLine tableSmall">ID: {{ row.projectId }}</div>
@@ -339,14 +339,14 @@ function handleMoreOperating(command: string, row: any) {
 
         </el-table-column>
         <el-table-column v-if="checkList.includes('projectName')" show-overflow-tooltip prop="projectName" align="left"
-          width="150" label="名称/标识">
+           label="名称/标识">
           <template #default="{ row }">
             <b class="oneLine tableBig">名: {{ row.projectName ? row.projectName : "-" }}</b>
             <div class="oneLine">标: {{ row.customerName.split("/")[1] !== 'null' ? row.customerName.split("/")[1] : '-'
               }}</div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('customerName')" show-overflow-tooltip prop="customerName" width="130"
+        <el-table-column v-if="checkList.includes('customerName')" show-overflow-tooltip prop="customerName"
           align="left" label="客户">
           <template #default="{ row }">
             <div class="oneLine"  >
@@ -368,7 +368,7 @@ function handleMoreOperating(command: string, row: any) {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('countryId')" show-overflow-tooltip   align="left"
-          label="国家" width="80">
+          label="国家"  >
           <template #default="{ row }">
             <template v-if="row.countryId">
               <template v-if="row.countryId.length >= basicDictionaryStore.country.length">
@@ -391,7 +391,7 @@ function handleMoreOperating(command: string, row: any) {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('systemDone')" show-overflow-tooltip prop="systemDone" align="left"
-          width="130" label="系统/审核完成数"><template #default="{ row }">
+         label="系统/审核完成数"><template #default="{ row }">
             <div class="flex-c tableBig">
               <div class="oneLine" style="width: calc(100% - 20px);">
                 <el-text>{{ row.systemDone ? row.systemDone : 0 }}</el-text> /<el-text class="mx-1" type="success">{{

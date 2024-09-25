@@ -310,7 +310,7 @@ const formOption={
             <el-tag type="primary">{{ row.countryAffiliationName }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('b2bStatus')" align="left" show-overflow-tooltip label="B2B|B2C">
+        <el-table-column v-if="checkList.includes('b2bStatus')" align="left" show-overflow-tooltip label="B2B/B2C">
           <template #default="{ row }">
             <div class="flex-s" style="justify-content: center !important;">
 

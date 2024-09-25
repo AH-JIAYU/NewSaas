@@ -246,7 +246,7 @@ const formOption={
       <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
         @selection-change="setSelectRows">
         <el-table-column align="left" type="selection" />
-        <el-table-column v-if="checkList.includes('id')" align="left" prop="id" width="120" show-overflow-tooltip
+        <el-table-column v-if="checkList.includes('id')" align="left" prop="id"  show-overflow-tooltip
           fixed="left" label="点击ID"><template #default="{ row }">
             <div class="copyId tableSmall">
               <div class="id oneLine ">ID: {{ row.id }}</div>
@@ -254,7 +254,7 @@ const formOption={
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('surveySource')" align="left" prop="memberId" width="120"
+        <el-table-column v-if="checkList.includes('surveySource')" align="left" prop="memberId"
           show-overflow-tooltip label="会员">
           <template #default="{ row }">
             <el-tag effect="dark" v-if="row.surveySource === 1" type="primary">内部会员</el-tag>
@@ -267,7 +267,7 @@ const formOption={
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('projectId')" align="left" prop="projectId" show-overflow-tooltip
-           label="项目">
+           label="项目"  >
           <template #default="{ row }">
             <div class="tableBig oneLine">名称: {{ row.projectName }}</div>
             <div class="copyId tableSmall">
@@ -277,7 +277,7 @@ const formOption={
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('memberChildrenId')" align="left" prop="memberChildrenId"
-          show-overflow-tooltip label="子会员ID" width="120">
+          show-overflow-tooltip label="子会员ID">
           <template #default="{ row }">
             <div class="copyId tableSmall">
               <span v-if="row.memberChildrenId" class="id oneLine "> ID: {{ row.memberChildrenId }}</span>
@@ -287,7 +287,7 @@ const formOption={
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('tenantSupplierId')" align="left" prop="tenantSupplierId"
-          show-overflow-tooltip width="120" label="供应商ID">
+          show-overflow-tooltip label="供应商ID">
           <template #default="{ row }">
             <div class="copyId tableSmall">
               <span v-if="row.tenantSupplierId" class="id oneLine "> ID: {{ row.tenantSupplierId }}</span>
@@ -297,7 +297,7 @@ const formOption={
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('randomIdentityId')" align="left" prop="randomIdentityId"
-          show-overflow-tooltip width="120" label="随机身份">
+          show-overflow-tooltip label="随机身份">
           <template #default="{ row }">
             <div class="copyId tableSmall">
               <span v-if="row.randomIdentityId" class="id oneLine "> ID: {{ row.randomIdentityId }}</span>
@@ -340,10 +340,15 @@ const formOption={
         <el-table-column v-if="checkList.includes('doMoneyPrice')" align="left" prop="doMoneyPrice"
           show-overflow-tooltip width="120" fixed="right" label="价格">
           <template #default="{ row }">
-            <div class="tableBig">原价:
+            <div class="tableBig">
               <CurrencyType />{{ row.doMoneyPrice || 0 }}
             </div>
-            <div class="tableBig">供应商价格:
+          </template>
+        </el-table-column>
+        <el-table-column v-if="checkList.includes('supplierPrice')" align="left" prop="supplierPrice"
+          show-overflow-tooltip width="120" fixed="right" label="供应商价">
+          <template #default="{ row }">
+            <div class="tableBig" style="color:red">
               <CurrencyType />{{
     row.supplierPrice || 0
   }}
@@ -351,22 +356,7 @@ const formOption={
           </template>
         </el-table-column>
 
-        <el-table-column v-if="checkList.includes('surveyTime')" width="120" align="left" fixed="right" show-overflow-tooltip label="调查时间">
-          <template #header>
-            <span class="flex-c">
-              <svg style="  margin-right: 4px;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"
-                fill="none">
-                <g id="Time (æ¶é´)">
-                  <path id="Vector"
-                    d="M7.9987 14.6666C11.6806 14.6666 14.6654 11.6818 14.6654 7.99992C14.6654 4.31802 11.6806 1.33325 7.9987 1.33325C4.3168 1.33325 1.33203 4.31802 1.33203 7.99992C1.33203 11.6818 4.3168 14.6666 7.9987 14.6666Z"
-                    fill="#409EFF" />
-                  <path id="Vector_2" d="M8.00431 4L8.00391 8.00293L10.8304 10.8294" stroke="white" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round" />
-                </g>
-              </svg>
-              调查时间
-            </span>
-          </template>
+        <el-table-column v-if="checkList.includes('surveyTime')" width="120" align="left"  fixed="right" show-overflow-tooltip label="调查时间">
           <template #default="{ row }">
             <el-tag effect="plain" type="info"> {{ row.surveyTime ? row.surveyTime + "min" : 0 }}/
               {{ row.projectTime ? row.projectTime + "min" : 0 }} </el-tag>
