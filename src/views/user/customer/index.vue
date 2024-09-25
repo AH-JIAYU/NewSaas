@@ -188,26 +188,24 @@ onMounted(async () => {
   formSearchList.value = [
     { index: 1, show: true, type: 'input', modelName: 'customerShortName', placeholder: '客户简称' },
     {
-      index: 2, show: true, type: 'select', modelName: 'customerStatus', placeholder: '客户状态', option: [
-        { label: '禁用', value: 1 },
-        { label: '启用', value: 2 }
-      ], optionLabel: 'label', optionValue: 'value'
+      index: 2, show: true, type: 'select', modelName: 'customerStatus', placeholder: '客户状态', option: 'customerStatus', optionLabel: 'label', optionValue: 'value'
     },
     {
-      index: 3, show: true, type: 'select', modelName: 'antecedentQuestionnaire', placeholder: '前置问卷', option: [
-        { label: '禁用', value: 1 },
-        { label: '启用', value: 2 }
-      ], optionLabel: 'label', optionValue: 'value'
+      index: 3, show: true, type: 'select', modelName: 'antecedentQuestionnaire', placeholder: '前置问卷', option: 'antecedentQuestionnaire', optionLabel: 'label', optionValue: 'value'
     }
   ]
 });
+const formOption={
+  customerStatus:()=>[{ label: '禁用', value: 1 },{ label: '启用', value: 2 }],
+  antecedentQuestionnaire:()=>[{ label: '禁用', value: 1 },{ label: '启用', value: 2 }],
+}
 </script>
 
 <template>
   <div :class="{ 'absolute-container': tableAutoHeight }">
     <PageMain>
       <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange"
-        @onReset="onReset" :model="queryForm" />
+        @onReset="onReset" :model="queryForm"  :formOption="formOption"/>
       <ElDivider border-style="dashed" />
       <el-row>
         <FormLeftPanel>

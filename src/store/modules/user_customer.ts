@@ -1,4 +1,5 @@
 import customerApi from "@/api/modules/user_customer";
+import { debounce } from "lodash-es";
 const useUserCustomerStore = defineStore(
   // 唯一ID
   "userCustomer",
@@ -41,13 +42,13 @@ const useUserCustomerStore = defineStore(
         // }
       ]
     };
-    const getCustomerList = async () => {
+    const getCustomerList =  async () => {
       if (!customer.value) {
         const { data } = await customerApi.getCustomerList({});
         customer.value = data.getTenantCustomerAccordInfoList;
       }
       return customer.value;
-    };
+    }
     return {
       customer,
       initialTopTabsData,

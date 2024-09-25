@@ -246,10 +246,12 @@ onMounted(async () => {
   formSearchList.value =   [
     {index: 1, show: true, type: 'input', modelName: 'id', placeholder: '请输入组ID'},
     {index: 2, show: true, type: 'input', modelName: 'name', placeholder: '请输入组名称'},
-    {index: 3, show: true, type: 'select', modelName: 'departmentId', placeholder: '所属部门', option: departmentList.value, optionLabel: 'name', optionValue: 'id'}
+    {index: 3, show: true, type: 'select', modelName: 'departmentId', placeholder: '所属部门', option: 'departmentId', optionLabel: 'name', optionValue: 'id'}
 ]
 });
-
+const formOption={
+  departmentId:()=>departmentList.value
+}
 onBeforeUnmount(() => {
   if (data.value.formMode === "router") {
     eventBus.off("get-data-list");
@@ -261,7 +263,7 @@ onBeforeUnmount(() => {
   <div :class="{ 'absolute-container': data.tableAutoHeight }">
     <PageMain>
 
- <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="data.search" />
+ <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="data.search"  :formOption="formOption"/>
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>

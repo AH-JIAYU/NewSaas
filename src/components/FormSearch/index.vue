@@ -3,12 +3,13 @@ import sort from './sort.vue'
 import storage from "@/utils/storage";
 import useFormSearchStore from '@/store/modules/formSearch' // 筛选项配置
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
+import { cloneDeep } from 'lodash-es';
 defineOptions({
   name: 'FormSearch',
 })
 
 // 表单筛选配置项  表单绑定值
-const props = defineProps(['formSearchList', 'model', 'formSearchName'])
+const props = defineProps(['formSearchList', 'model', 'formSearchName', 'formOption'])
 const emits = defineEmits(['current-change', 'on-reset'])
 const FormSearchStore = useFormSearchStore(); //筛选项配置
 const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
@@ -76,18 +77,6 @@ const findCurrent = () => {
   return findData?.getSearchUserInfoList
 }
 
-const setOption = (val: any) => {
-  if (Array.isArray(val)) { // 默认筛选项是 数组
-    return val
-  } else {
-    if (val === 'global') {
-      return countryList.value
-    } else {
-      return JSON.parse(val)
-    }
-  }
-}
-
 // 统计 展示的筛选项个数
 const showLength = computed(() => {
   const filterData = formSearchList.value.filter((item: any) => item.show)
@@ -97,7 +86,21 @@ watch(
   () => props.formSearchList,
   (newVal, oleVal) => {
     // @ts-ignore
-    formSearchList.value = findCurrent() ?? newVal
+    const newFormSearchList = cloneDeep(findCurrent() ?? newVal)
+    newFormSearchList.forEach(async (item: any) => {
+      if (item.option) {
+        if (Array.isArray(item.option)) {
+          item.options=item.options
+        } else {
+          if (item.option === 'global') {
+            item.options = await basicDictionaryStore.getCountry();
+          } else { 
+            item.options = await props.formOption[item.option]()
+          }
+        }
+      }
+    })
+    formSearchList.value = newFormSearchList
   },
   { deep: true }
 )
@@ -118,9 +121,11 @@ onMounted(async () => {
                 :placeholder="item.placeholder" @keydown.enter="currentChange()" />
               <el-select v-if="item.type === 'select'" v-model="props.model[item.modelName]" clearable
                 :placeholder="item.placeholder" @change="currentChange()">
-                <ElOption v-for="ite in setOption(item.option)" :label="ite[item.optionLabel]"
-                  :value="ite[item.optionValue]">
-                </ElOption>
+                <!-- 转换成数组后再展示option -->
+                <template v-if="Array.isArray(item.options)">
+                  <ElOption v-for="ite in item.options" :label="ite[item.optionLabel]" :value="ite[item.optionValue]">
+                  </ElOption>
+                </template>
               </el-select>
               <el-date-picker v-if="item.type === 'datetimerange'" @change="currentChange()"
                 v-model="props.model[item.modelName]" type="datetimerange" range-separator="-"

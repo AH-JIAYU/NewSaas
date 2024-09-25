@@ -104,9 +104,12 @@ onMounted(() => {
   formSearchList.value = [
     { index: 1, show: true, type: 'input', modelName: 'tenantId', placeholder: '租户id' },
     { index: 2, show: true, type: 'input', modelName: 'tenantName', placeholder: '租户名称' },
-    { index: 3, show: true, type: 'select', modelName: 'projectStatus', placeholder: '项目状态', option: projectManagementOutsourceStore.projectStatusList.map((item, index) => ({ label: item, value: index + 1 })), optionLabel: 'label', optionValue: 'value' }
+    { index: 3, show: true, type: 'select', modelName: 'projectStatus', placeholder: '项目状态', option: 'projectStatus', optionLabel: 'label', optionValue: 'value' }
   ]
 });
+const formOption={
+  projectStatus:()=>projectManagementOutsourceStore.projectStatusList.map((item, index) => ({ label: item, value: index + 1 }))
+}
 </script>
 
 <template>
@@ -117,7 +120,7 @@ onMounted(() => {
       <el-tabs v-model="queryForm.type" @tab-change="fetchData">
         <el-tab-pane label="外包项目" :name="2">
           <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange"
-            @onReset="onReset" :model="queryForm" />
+            @onReset="onReset" :model="queryForm"  :formOption="formOption" />
           <ElDivider border-style="dashed" />
           <el-row :gutter="24">
             <FormLeftPanel> </FormLeftPanel>

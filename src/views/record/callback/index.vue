@@ -123,18 +123,21 @@ onMounted(async () => {
     {index: 1, show: true, type: 'input', modelName: 'tenantSupplierId', placeholder: '供应商ID'},
     {index: 2, show: true, type: 'input', modelName: 'projectId', placeholder: '项目ID'},
     {index: 3, show: true, type: 'input', modelName: 'projectQuestionnaireClickId', placeholder: '点击ID'},
-    {index: 4, show: true, type: 'select', modelName: 'surveySource', placeholder: '会员类型', option: memberType, optionLabel: 'label', optionValue: 'value'},
+    {index: 4, show: true, type: 'select', modelName: 'surveySource', placeholder: '会员类型', option: 'surveySource', optionLabel: 'label', optionValue: 'value'},
     {index: 5, show: true, type: 'input', modelName: 'projectName', placeholder: '项目名称'},
     {index: 6, show: true, type: 'input', modelName: 'memberChildId', placeholder: '子会员ID/会员ID'},
     {index: 7, show: true, type: 'datetimerange', modelName: 'time', startPlaceHolder: "创建开始日期", endPlaceHolder: "创建结束日期"}
 ]
 });
+const formOption={
+  surveySource:()=> memberType
+}
 </script>
 
 <template>
   <div :class="{ 'absolute-container': tableAutoHeight }">
     <PageMain>
-      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="queryForm" />
+      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="queryForm"  :formOption="formOption" />
       <ElDivider border-style="dashed" />
       <el-row>
         <FormLeftPanel />

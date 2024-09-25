@@ -197,11 +197,15 @@ onMounted(async () => {
     { index: 2, show: true, type: 'input', modelName: 'projectName', placeholder: '项目名称' },
     { index: 3, show: true, type: 'input', modelName: 'projectIdentification', placeholder: '项目标识' },
     { index: 4, show: true, type: 'select', modelName: 'countryId', placeholder: '国家地区', option: 'global', optionLabel: 'chineseName', optionValue: 'id' },
-    { index: 5, show: true, type: 'select', modelName: 'clientId', placeholder: '客户简称', option: customerList.value, optionLabel: 'tenantCustomerId', optionValue: 'tenantCustomerId' },
-    { index: 6, show: true, type: 'select', modelName: 'b2bOrB2cStatus', placeholder: 'B2B/B2C', option: [{ label: 'B2B', value: 1 }, { label: 'B2C', value: 2 }], optionLabel: 'label', optionValue: 'value' },
+    { index: 5, show: true, type: 'select', modelName: 'clientId', placeholder: '客户简称', option: 'clientId', optionLabel: 'customerAccord', optionValue: 'tenantCustomerId' },
+    { index: 6, show: true, type: 'select', modelName: 'b2bOrB2cStatus', placeholder: 'B2B/B2C', option: 'b2bOrB2cStatus', optionLabel: 'label', optionValue: 'value' },
     { index: 7, show: true, type: 'datetimerange', modelName: 'time', startPlaceHolder: '创建开始日期', endPlaceHolder: '创建结束日期' },
 ];
 });
+const formOption={
+  clientId: ()=> customerList.value,
+  b2bOrB2cStatus:()=>[{ label: 'B2B', value: 1 }, { label: 'B2C', value: 2 }],
+}
 </script>
 
 <template>
@@ -209,7 +213,7 @@ onMounted(async () => {
     'absolute-container': tableAutoHeight,
   }">
     <PageMain>
-      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="queryForm" />
+      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="queryForm"  :formOption="formOption"/>
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel />

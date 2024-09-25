@@ -272,12 +272,17 @@ onMounted(async () => {
     { index: 2, show: true, type: 'input', modelName: 'projectName', placeholder: '项目名称' },
     { index: 3, show: true, type: 'input', modelName: 'projectIdentification', placeholder: '项目标识' },
     { index: 4, show: true, type: 'select', modelName: 'countryData', placeholder: '国家', option:'global', optionLabel: 'chineseName', optionValue: 'id' },
-    { index: 5, show: true, type: 'select', modelName: 'customerId', placeholder: '客户简称', option: customerList.value, optionLabel: 'tenantCustomerId', optionValue: 'tenantCustomerId' },
-    { index: 6, show: true, type: 'select', modelName: 'settlementStatus', placeholder: '结算状态', option: settlementStatusList, optionLabel: 'label', optionValue: 'value' },
-    { index: 7, show: true, type: 'select', modelName: 'timeType', placeholder: '时间类型', option: settlementStatusList, optionLabel: 'label', optionValue: 'value' },
+    { index: 5, show: true, type: 'select', modelName: 'customerId', placeholder: '客户简称', option: 'customerId', optionLabel: 'tenantCustomerId', optionValue: 'tenantCustomerId' },
+    { index: 6, show: true, type: 'select', modelName: 'settlementStatus', placeholder: '结算状态', option: 'settlementStatus', optionLabel: 'label', optionValue: 'value' },
+    { index: 7, show: true, type: 'select', modelName: 'timeType', placeholder: '时间类型', option: 'timeType', optionLabel: 'label', optionValue: 'value' },
     { index: 8, show: true, type: 'datetimerange', modelName: 'timeArr', startPlaceHolder: '开始日期', endPlaceHolder: '结束日期' }
 ]
 });
+const formOption={
+  customerId:()=> customerList.value,
+  settlementStatus:()=> settlementStatusList,
+  timeType:()=> settlementStatusList,
+}
 function handleMoreOperating(command: string, row: any) {
   switch (command) {
     case "auditing":
@@ -298,7 +303,7 @@ function handleMoreOperating(command: string, row: any) {
     'absolute-container': tableAutoHeight,
   }" v-loading="listLoading">
     <PageMain>
-      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="queryForm" />
+      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="queryForm"   :formOption="formOption"/>
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>

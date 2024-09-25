@@ -169,9 +169,13 @@ onMounted(() => {
   formSearchList.value = [
     {index: 1, show: true, type: 'input', modelName: 'id', placeholder: '职位ID'},
     {index: 2, show: true, type: 'input', modelName: 'name', placeholder: '职位名称'},
-    {index: 3, show: true, type: 'select', modelName: 'active', placeholder: '状态', option: invoiceStatusList, optionLabel: 'lable', optionValue: 'value'}
+    {index: 3, show: true, type: 'select', modelName: 'active', placeholder: '状态', option: 'active', optionLabel: 'lable', optionValue: 'value'}
 ]
 });
+const formOption={
+  active:()=> invoiceStatusList
+}
+
 </script>
 
 <template>
@@ -179,7 +183,7 @@ onMounted(() => {
     'absolute-container': tableAutoHeight,
   }" v-loading="listLoading">
     <PageMain>
-      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="queryForm" />
+      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="queryForm" :formOption="formOption" />
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>

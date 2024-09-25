@@ -172,17 +172,20 @@ onMounted(async () => {
     { index: 1, show: true, type: 'input', modelName: 'projectId', placeholder: '项目ID' },
     { index: 2, show: true, type: 'input', modelName: 'projectName', placeholder: '项目名称' },
     { index: 3, show: true, type: 'select', modelName: 'allocationType', placeholder: '分配类型',
-      option: data.allocationTypeList.map((item:any, index:any) => ({ label: item, value: index + 1 })),
+      option: 'allocationType',
       optionLabel: 'label', optionValue: 'value'
     },
 ];
 });
+const formOption={
+  allocationType:()=> data.allocationTypeList.map((item:any, index:any) => ({ label: item, value: index + 1 }))
+}
 </script>
 
 <template>
   <div :class="{ 'absolute-container': tableAutoHeight }">
     <PageMain>
-      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="queryForm" />
+      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="queryForm"  :formOption="formOption"/>
       <ElDivider border-style="dashed" />
       <el-row>
         <FormLeftPanel />

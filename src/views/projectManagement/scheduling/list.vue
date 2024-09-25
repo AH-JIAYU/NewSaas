@@ -111,9 +111,13 @@ onMounted(() => {
   formSearchList.value =[
     { index: 1, show: true, type: 'input', modelName: 'projectId', placeholder: '项目ID' },
     { index: 2, show: true, type: 'input', modelName: 'projectName', placeholder: '项目名称' },
-    { index: 3, show: true, type: 'select', modelName: 'dispatchType', placeholder: '全部类型', option: [{ label: '指定关闭', value: 1 }, { label: '指定价格', value: 2 }], optionLabel: 'label', optionValue: 'value' }
+    { index: 3, show: true, type: 'select', modelName: 'dispatchType', placeholder: '全部类型', option: 'dispatchType', optionLabel: 'label', optionValue: 'value' }
 ]
 });
+
+const formOption={
+  dispatchType:()=>[{ label: '指定关闭', value: 1 }, { label: '指定价格', value: 2 }]
+}
 </script>
 
 <template>
@@ -121,7 +125,7 @@ onMounted(() => {
     'absolute-container': tableAutoHeight,
   }">
     <PageMain>
-      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="queryForm" />
+      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="queryForm"  :formOption="formOption"/>
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>

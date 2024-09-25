@@ -20,7 +20,7 @@ const stripe = ref(false); // 表格控件-是否展示斑马条
 const lineHeight = ref<any>("default"); // 表格控件-控制表格大小
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const formSearchList = ref<any>()//表单排序配置
-const formSearchName=ref<string>('formSearch-termination')// 表单排序name
+const formSearchName = ref<string>('formSearch-termination')// 表单排序name
 const columns = ref([
   // 表格控件-展示列
   { label: "会员", prop: "surveySource", sortable: true, checked: true },
@@ -132,21 +132,25 @@ onMounted(() => {
     }
   });
   fetchData();
-  formSearchList.value =  [
-    {index: 1, show: true, type: 'input', modelName: 'tenantSupplierId', placeholder: '供应商ID'},
-    {index: 2, show: true, type: 'input', modelName: 'projectId', placeholder: '项目ID'},
-    {index: 3, show: true, type: 'select', modelName: 'surveySource', placeholder: '会员类型', option: memberType, optionLabel: 'label', optionValue: 'value'},
-    {index: 4, show: true, type: 'input', modelName: 'projectName', placeholder: '项目名称'},
-    {index: 5, show: true, type: 'input', modelName: 'ipBelong', placeholder: 'IP/所属国'},
-    {index: 6, show: true, type: 'datetimerange', modelName: 'time', startPlaceHolder: "创建开始日期", endPlaceHolder: "创建结束日期"}
-]
+  formSearchList.value = [
+    { index: 1, show: true, type: 'input', modelName: 'tenantSupplierId', placeholder: '供应商ID' },
+    { index: 2, show: true, type: 'input', modelName: 'projectId', placeholder: '项目ID' },
+    { index: 3, show: true, type: 'select', modelName: 'surveySource', placeholder: '会员类型', option: 'surveySource', optionLabel: 'label', optionValue: 'value' },
+    { index: 4, show: true, type: 'input', modelName: 'projectName', placeholder: '项目名称' },
+    { index: 5, show: true, type: 'input', modelName: 'ipBelong', placeholder: 'IP/所属国' },
+    { index: 6, show: true, type: 'datetimerange', modelName: 'time', startPlaceHolder: "创建开始日期", endPlaceHolder: "创建结束日期" }
+  ]
 });
+const formOption = {
+  surveySource: () => memberType
+}
 </script>
 
 <template>
   <div :class="{ 'absolute-container': tableAutoHeight }">
     <PageMain>
-      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="queryForm" />
+      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange"
+        @onReset="onReset" :model="queryForm" :formOption="formOption" />
       <ElDivider border-style="dashed" />
       <el-row>
         <FormLeftPanel />
@@ -168,11 +172,11 @@ onMounted(() => {
             <el-button class="p-1" size="small" v-if="row.surveySource === 2" type="warning">外部会员</el-button>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('projectName')" align="left" prop="projectName"
-          show-overflow-tooltip label="项目名称" >
-          <template #default="{row}">
-            <div class="tableBig oneLine" >
-              {{row.projectName}}
+        <el-table-column v-if="checkList.includes('projectName')" align="left" prop="projectName" show-overflow-tooltip
+          label="项目名称">
+          <template #default="{ row }">
+            <div class="tableBig oneLine">
+              {{ row.projectName }}
             </div>
           </template>
         </el-table-column>
@@ -210,12 +214,12 @@ onMounted(() => {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('tenantSupplierId')" align="left" prop="tenantSupplierId"
-          width="180" show-overflow-tooltip label="供应商ID">
+        <el-table-column v-if="checkList.includes('tenantSupplierId')" align="left" prop="tenantSupplierId" width="180"
+          show-overflow-tooltip label="供应商ID">
           <template #default="{ row }">
             <div class="copyId tableSmall">
               <div class="id oneLine ">
-                <el-text v-if="row.tenantSupplierId ">
+                <el-text v-if="row.tenantSupplierId">
                   ID: {{ row.memberChildId }}
                 </el-text>
                 <el-text v-else>
@@ -253,11 +257,11 @@ onMounted(() => {
   }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('notes')" align="left" prop="notes" show-overflow-tooltip
-          width="280" label="说明" >
-          <template #default="{row}">
-            <div class="tableBig oneLine" >
-              {{row.notes}}
+        <el-table-column v-if="checkList.includes('notes')" align="left" prop="notes" show-overflow-tooltip width="280"
+          label="说明">
+          <template #default="{ row }">
+            <div class="tableBig oneLine">
+              {{ row.notes }}
             </div>
           </template>
         </el-table-column>
@@ -351,6 +355,4 @@ onMounted(() => {
   justify-content: center;
   align-items: center;
 }
-
-
 </style>

@@ -129,9 +129,12 @@ onMounted(() => {
   formSearchList.value = [
     { index: 1, show: true, type: 'input', modelName: 'supplierId', placeholder: '供应商ID' },
     { index: 2, show: true, type: 'datetimerange', modelName: 'time', startPlaceHolder: "创建开始日期", endPlaceHolder: "创建结束日期" },
-    { index: 3, show: true, type: 'select', modelName: 'billStatus', placeholder: '状态', option: billStatusList, optionLabel: 'label', optionValue: 'value' }
+    { index: 3, show: true, type: 'select', modelName: 'billStatus', placeholder: '状态', option: 'billStatus', optionLabel: 'label', optionValue: 'value' }
   ]
 });
+const formOption={
+  billStatus:()=>billStatusList
+}
 </script>
 
 <template>
@@ -140,47 +143,7 @@ onMounted(() => {
   }">
     <PageMain>
       <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange"
-        @onReset="onReset" :model="queryForm" />
-      <!-- <SearchBar :show-toggle="false">
-        <template #default="{ fold, toggle }">
-          <el-form :model="queryForm" size="default" label-width="100px" inline-message inline class="search-form">
-            <el-form-item label="">
-              <el-input v-model="queryForm.supplierId" clearable placeholder="供应商ID" @keydown.enter="currentChange()" />
-            </el-form-item>
-            <el-form-item v-show="!fold">
-              <el-date-picker v-model="queryForm.time" type="datetimerange" unlink-panels range-separator="-"
-                start-placeholder="创建开始日期" end-placeholder="创建结束日期" value-format="YYYY-MM-DD hh:mm:ss" size="default"
-                @change="currentChange()" />
-            </el-form-item>
-            <el-form-item label="">
-              <el-select v-model="queryForm.billStatus" placeholder="状态" clearable filterable @change="currentChange()">
-                <el-option v-for="(item, index) in billStatusList" :key="item" :label="item"
-                  :value="index + 1"></el-option>
-              </el-select>
-            </el-form-item>
-            <ElFormItem>
-              <ElButton type="primary" @click="currentChange()">
-                <template #icon>
-                  <SvgIcon name="i-ep:search" />
-                </template>
-筛选
-</ElButton>
-<ElButton @click="onReset">
-  <template #icon>
-                  <div class="i-grommet-icons:power-reset h-1em w-1em" />
-                </template>
-  重置
-</ElButton>
-<ElButton disabled link @click="toggle">
-  <template #icon>
-                  <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
-                </template>
-  {{ fold ? "展开" : "收起" }}
-</ElButton>
-</ElFormItem>
-</el-form>
-</template>
-</SearchBar> -->
+        @onReset="onReset" :model="queryForm"  :formOption="formOption" />
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel />
