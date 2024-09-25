@@ -123,6 +123,8 @@ async function getDataList() {
       form.value = data || form.value;
       analyzeRecords.value = form.value
       userStore.setWebName(data.webName)
+      userStore.setDescription(data.description)
+      userStore.setkeyWords(data.keyWords)
     }
     if (form.value.topLevelDomainName !== '' && form.value.topLevelDomainName !== null) {
       const res = await api.getTenantWebConfigQueryAnalysis({ url: form.value.topLevelDomainName })

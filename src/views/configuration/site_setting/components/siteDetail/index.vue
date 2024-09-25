@@ -42,7 +42,7 @@ const validateTopLevelDomainName = (rule: any, value: any, callback: any) => {
 // 校验
 const formRules = ref<FormRules>({
   domain: [
-    { required: true, message: "请输入顶级域名", trigger: "change" },
+    { required: true, message: "请输入顶级域名", trigger: "blur" },
     { validator: validateTopLevelDomainName, trigger: "submit" },
   ],
 });
@@ -72,8 +72,8 @@ async function showEdit(row: any) {
 }
 
 // 移开输入框解析域名
-const handleMouseLeave = async (val: any) => {
-  formRef.value && formRef.value.validateField(fileList.value.domain ? 'domain' : '', async (valid: any) => {
+const handleMouseLeave = async () => {
+  formRef.value && formRef.value.validate( async (valid: any) => {
     if (valid) {
       const payload = new FormData();
       if (fileList.value.domain !== '' && fileList.value.domain !== null) {
@@ -84,7 +84,6 @@ const handleMouseLeave = async (val: any) => {
             type: "success",
             message: "修改域名成功",
           });
-
         }
       }
     }
@@ -188,7 +187,6 @@ defineExpose({
       <el-input style="width: 26rem;" v-model="fileList.domain"/>
       <el-button style="margin-left: 1.5rem;" plain size="small" type="primary" @click="handleMouseLeave">确认</el-button>
       </el-form-item>
-
     </el-form>
 
     <el-table v-loading="listLoading" border :data="list">
