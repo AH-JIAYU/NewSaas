@@ -1,9 +1,0 @@
-
-/**
- * 由 Fantastic-admin 提供技术支持
- * Powered by Fantastic-admin
- * Gitee  https://fantastic-admin.gitee.io
- * Github https://fantastic-admin.github.io
- */
-
-import{d as b,r as i,b as o,o as g,e as v,g as e,w as l,h as a}from"./index-BRhMh313.js";const V=b({name:"CheckEdit",__name:"index",setup(w,{expose:r}){const n=i(!1);i();async function _(m){n.value=!0}function f(){n.value=!1}return r({showEdit:_}),(m,t)=>{const d=o("el-text"),s=o("el-form-item"),u=o("el-button"),c=o("el-form"),p=o("el-dialog");return g(),v("div",null,[e(p,{modelValue:n.value,"onUpdate:modelValue":t[2]||(t[2]=x=>n.value=x),title:"项目测试",width:"500","before-close":f},{default:l(()=>[e(c,{ref:"form","label-width":"80px",inline:!1},{default:l(()=>[e(s,{label:"PID"},{default:l(()=>[e(d,{class:"mx-1",type:"success"},{default:l(()=>[a(" 3241479 ")]),_:1})]),_:1}),e(s,{label:"项目名称"},{default:l(()=>[e(d,{class:"mx-1",type:"danger"},{default:l(()=>[a(" PO2303171004W101050 NZ ")]),_:1})]),_:1}),e(s,null,{default:l(()=>[e(u,{type:"success",round:"",plain:"",size:"default",onClick:t[0]||(t[0]=()=>{})},{default:l(()=>[a(" 直接进入 ")]),_:1}),e(u,{type:"danger",round:"",plain:"",size:"default",onClick:t[1]||(t[1]=()=>{})},{default:l(()=>[a(" 复制链接 ")]),_:1})]),_:1})]),_:1},512)]),_:1},8,["modelValue"])])}}});export{V as _};
