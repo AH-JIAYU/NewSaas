@@ -4,7 +4,6 @@ import data from './data.json'
 export async function downloadAndInstall(name: string) {
   // 默认是./ 因为路由不带#会带上一级路由
   const data = Object.freeze(await fetch(`/icons/${name}-raw.json`).then(r => r.json()))
-  console.log('data',data)
   addCollection(data)
 }
 

@@ -466,7 +466,6 @@ const formOption = {
         </el-table-column>
         <el-table-column
           v-if="checkList.includes('projectType')"
-          width="150"
           align="left"
           label="项目"
         >
@@ -565,7 +564,7 @@ const formOption = {
           v-if="checkList.includes('PCNL')"
           align="left"
           label="参数"
-          width="150"
+          width="200"
         >
           <template #default="{ row }">
             <div class="flex-c">
@@ -658,6 +657,7 @@ const formOption = {
           v-if="checkList.includes('doMoneyPrice')"
           show-overflow-tooltip
           align="left"
+          width="100"
           label="原价"
         >
           <template #default="{ row }">
@@ -762,7 +762,6 @@ const formOption = {
           show-overflow-tooltip
           prop="remark"
           align="left"
-          width="100"
           label="备注"
           ><template #default="{ row }">
             <div class="flex-c">
