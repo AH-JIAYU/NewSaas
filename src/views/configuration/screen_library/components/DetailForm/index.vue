@@ -156,7 +156,6 @@ onMounted(async () => {
   });
   // 新增答案事件 新增id
   creator.onItemValueAdded.add(async function (sender: any, options: any) {
-    console.log('options',options)
     const res = await obtainLoading(api.getId({}));
     var q = options.newItem;
     q.surveyType = 1; //1:表示前端生成(新增操作) 2:表示后端返回(修改操作)
@@ -225,7 +224,6 @@ defineExpose({
 
       // 获取自定义问题的具体内容
       proces(toolbox, toolboxJSON);
-      console.log('toolbox',toolbox)
       // 赋值JSON
       form.value.projectJson = JSON.stringify(toolbox);
       const locale = creator.JSON.locale || editorLocalization.currentLocale;

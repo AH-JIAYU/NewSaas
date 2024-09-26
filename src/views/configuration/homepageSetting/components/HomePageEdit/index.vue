@@ -94,7 +94,6 @@ const onDialogOpened = async () => {
   });
   // 通过事件改变框架的文本内容为中文
   editorRef.value.on('block:custom', (props: any) => {
-    console.log('props',props)
     updataText(props.blocks)
   });
   // 批量添加自定义块
