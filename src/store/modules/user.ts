@@ -29,10 +29,12 @@ const useUserStore = defineStore(
     const avatar = ref(storage.local.get("avatar") ?? "");
     const userId = ref(storage.local.get("userId") ?? "");
     const permissions = ref<string[]>([]);
-    const logo = ref<any>(storage.local.get("logo") ?? "");
-    const webName = ref<any>(storage.local.get("webName") ?? "");
-    const keyWords = ref<any>(storage.local.get("keyWords") ?? "");
-    const description = ref<any>(storage.local.get("description") ?? "");
+    const logo = ref<any>(storage.local.get("logo") ?? "");//logo
+    const webName = ref<any>(storage.local.get("webName") ?? "");// 网站名称
+    const keyWords = ref<any>(storage.local.get("keyWords") ?? "");//网站关键字
+    const description = ref<any>(storage.local.get("description") ?? "");//网站描述
+    const topLevelDomainName = ref<any>(storage.local.get("topLevelDomainName") ?? "");// 顶级域名
+    const personalizedDomainName = ref<any>(storage.local.get("personalizedDomainName") ?? "");// 个性化域名
     const currencyType = ref<number | string>(3); //货币类型 1=USD 2=CNY 3=未知
     const exchangeRate = ref<number | string>(); //汇率
     const isLogin = computed(() => {
@@ -347,6 +349,8 @@ const useUserStore = defineStore(
       webName,
       description,
       keyWords,
+      topLevelDomainName,
+      personalizedDomainName,
       currencyType,
       isLogin,
       login,
