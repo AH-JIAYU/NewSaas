@@ -331,7 +331,7 @@ const formOption={
           <template #default="{ row }">
             <el-tag effect="dark" style="background-color: #E1E1E1;border: none;" v-if="row.allocationType === 1"
               class="mx-1">未分配</el-tag>
-              <el-tag effect="dark" style="background-color: #FB6868;border: none;" v-if="row.allocationType===2"
+              <el-tag effect="dark" style="background-color: #626aef;border: none;" v-if="row.allocationType===2"
               class="mx-1" type="primary">供应商</el-tag>
             <el-tag effect="dark" style="background-color: #05C9BE;border: none;" v-if="row.allocationType === 3"
               class="mx-1" type="warning">会员组</el-tag>

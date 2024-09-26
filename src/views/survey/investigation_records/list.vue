@@ -297,7 +297,7 @@ const formOption={
           label="分配类型">
           <template #default="{ row }">
             <el-tag effect="plain" type="info" v-if="row.allocationType === 1"> 未分配 </el-tag>
-            <el-tag style="background-color: #FFAC54;color: #fff;" v-if="row.allocationType === 2">
+            <el-tag style="background-color: #626aef;color: #fff;" v-if="row.allocationType === 2">
               供应商
             </el-tag>
             <el-tag style="background-color: #05C9BE;color: #fff;" v-if="row.allocationType === 3">

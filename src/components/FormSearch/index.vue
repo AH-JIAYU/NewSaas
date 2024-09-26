@@ -84,7 +84,7 @@ const showLength = computed(() => {
 })
 watch(
   () => props.formSearchList,
-  (newVal, oleVal) => {
+  (newVal, oleVal) => { 
     // @ts-ignore
     const newFormSearchList = cloneDeep(findCurrent() ?? newVal)
     newFormSearchList.forEach(async (item: any) => {

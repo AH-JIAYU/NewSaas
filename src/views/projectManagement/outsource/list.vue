@@ -118,8 +118,8 @@ const formOption={
   }">
     <PageMain>
       <el-tabs v-model="queryForm.type" @tab-change="fetchData">
-        <el-tab-pane label="外包项目" :name="2">
-          <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange"
+        <el-tab-pane label="外包项目" :name="2" >
+          <FormSearch v-if="queryForm.type===2" :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange"
             @onReset="onReset" :model="queryForm"  :formOption="formOption" />
           <ElDivider border-style="dashed" />
           <el-row :gutter="24">
@@ -198,8 +198,8 @@ const formOption={
             :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
             background @size-change="sizeChange" @current-change="currentChange" />
         </el-tab-pane>
-        <el-tab-pane label="接收项目" :name="1">
-          <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange"
+        <el-tab-pane label="接收项目" :name="1" >
+          <FormSearch v-if="queryForm.type===1" :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange"
             @onReset="onReset" :model="queryForm" />
           <ElDivider border-style="dashed" />
           <el-row :gutter="24">

@@ -324,7 +324,7 @@ const formOption = {
               inactive-text="离线" :active-value="1" :inactive-value="2" />
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('projectType')" width="150" align="left" label="项目">
+        <el-table-column v-if="checkList.includes('projectType')"   align="left" label="项目">
           <template #default="{ row }">
             <div>
               <el-button class="p-1" size="small" type="warning" v-if="row.projectType === 2">外包</el-button>
@@ -385,9 +385,9 @@ const formOption = {
           <template #default="{ row }">
             <el-button class="tableBut" size="small" @click="viewAllocations(row, 1)" type="danger" v-if="row.allocationType === 1"
               plain>自动分配</el-button>
-            <el-button class="tableBut" size="small" @click="viewAllocations(row, 2)" type="danger"
+            <el-button class="tableBut" size="small" color="#626aef" @click="viewAllocations(row, 2)" type="danger"
               v-else-if="row.allocationType === 2">供应商</el-button>
-            <el-button class="tableBut" size="small" @click="viewAllocations(row, 3)" type="success"
+            <el-button class="tableBut" size="small" style="bacgkround-color:#05C9BE;color:#fff" @click="viewAllocations(row, 3)" type="success"
               v-else-if="row.allocationType === 3">会员组</el-button>
             <el-button class="tableBut" size="small" @click="viewAllocations(row, 4)" type="primary"
               v-else-if="row.allocationType === 4">租户</el-button>
@@ -395,7 +395,7 @@ const formOption = {
           </template>
         </el-table-column>
 
-        <el-table-column v-if="checkList.includes('doMoneyPrice')" show-overflow-tooltip align="left" label="原价">
+        <el-table-column v-if="checkList.includes('doMoneyPrice')" width="100" show-overflow-tooltip align="left" label="原价">
           <template #default="{ row }">
             <div class="flex-c">
               <div class="oneLine tableBig" style="width: calc(100% - 1.25rem);">
@@ -451,7 +451,7 @@ const formOption = {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('remark')" show-overflow-tooltip prop="remark" align="left"
-          width="100" label="备注"><template #default="{ row }">
+           label="备注"><template #default="{ row }">
             <div class="flex-c ">
               <div class="oneLine tableBig" style="width: calc(100% - 1.25rem);">
                 {{ row.remark ? row.remark : "-" }}
@@ -572,7 +572,7 @@ const formOption = {
 
 
 .red{
-  color:red;
+  color:rgb(251, 104, 104);
 }
 
 .absolute-container {
