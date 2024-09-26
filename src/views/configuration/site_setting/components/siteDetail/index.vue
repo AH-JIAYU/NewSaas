@@ -19,12 +19,8 @@ const formRef = ref()
 const isAnalysis = ref<boolean>(false);
 // 是否开启https
 const isHttpsStatus = ref<boolean>(false);
-const form = ref<any>({
-  // 强制https 1关闭 2开启
-  forceHttps: null,
-  // 是否上传证书 1未上传 2已上传
-  isUploadSSLCert: null,
-})
+// 是否上传证书 1未上传 2已上传
+const isUploadSSLCert = ref<any>(null);
 // listLoading
 const listLoading = ref<boolean>(false);
 // 列表
@@ -60,11 +56,18 @@ async function showEdit(row: any) {
     listLoading.value = true;
     if (row) {
       fileList.value.domain = row.topLevelDomainName
+      fileList.value.forceHttps = row.forceHttps
       list.value = [row]
+      isAnalysis.value = row.isAnalysis
       if (row.httpsStatus === 1 || row.httpsStatus === null) {
         isHttpsStatus.value = false
       } else {
         isHttpsStatus.value = true
+      }
+      if (row.isUploadSSLCert === 1 || row.isUploadSSLCert === null) {
+        isUploadSSLCert.value = false
+      } else {
+        isUploadSSLCert.value = true
       }
       listLoading.value = false;
     } else {
@@ -337,7 +340,7 @@ defineExpose({
         <!-- 若上传证书网址格式默认绑定HTTPS -->
       </div>
       <el-form-item v-show="isChecked" label="是否强制开启HTTPS">
-        <el-switch v-model="fileList.forceHttps" :disabled="!fileList.certificate.length || !fileList.private_key.length" inline-prompt :active-value="2" :inactive-value="1" >
+        <el-switch v-model="fileList.forceHttps" :disabled="!fileList.certificate.length && !fileList.private_key.length && !isUploadSSLCert" inline-prompt :active-value="2" :inactive-value="1" >
         </el-switch>
       </el-form-item>
     </div>
@@ -348,7 +351,7 @@ defineExpose({
     <div v-show="isChecked" class="form">
       <el-form style="display: flex; width: 23rem; height:10.625rem;" @submit.prevent="handleSubmit">
         <el-form-item label="">
-          <el-upload class="upload-demo" drag :file-list="fileList.certificate" :action="Url" :headers="headers"
+          <el-upload class="upload-demo" drag :file-list="fileList.certificate"  :action="Url" :headers="headers"
             :on-change="handleFileChange('certificate')" :on-remove="handleRemove('certificate')" list-type="text"
             :limit="1" :auto-upload="false">
             <svg xmlns="http://www.w3.org/2000/svg" width="81" height="80" viewBox="0 0 81 80" fill="none">
@@ -362,7 +365,10 @@ defineExpose({
               支持点击或拖拽上传
             </div>
             <template #tip>
-              <div class="el-upload__tip">
+              <div v-if="isUploadSSLCert" class="el-upload__tip">
+                <el-button type="primary" size="default" link @click="">点击查看文件详情</el-button>
+              </div>
+              <div v-else class="el-upload__tip">
                 请上传.PEM格式的文件
               </div>
             </template>
@@ -383,7 +389,10 @@ defineExpose({
               支持点击或拖拽上传
             </div>
             <template #tip>
-              <div class="el-upload__tip">
+              <div v-if="isUploadSSLCert" class="el-upload__tip">
+                <el-button type="primary" size="default" link @click="">点击查看文件详情</el-button>
+              </div>
+              <div v-else class="el-upload__tip">
                 请上传.PEM格式的文件
               </div>
             </template>
@@ -645,10 +654,14 @@ defineExpose({
 
   .upload-demo {
     margin-right: 2.375rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
   }
 
   .el-upload__tip {
     font-size: .875rem !important;
+    text-align: center;
     color: #5babff;
   }
 
