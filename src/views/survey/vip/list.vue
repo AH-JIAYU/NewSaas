@@ -114,6 +114,21 @@ async function changeState(state: any, id: string) {
   surveyVipStore.NickNameList = null;
   queryData();
 }
+// 随机身份
+const changeRandomState = async (state: any, id: string) => {
+  const params = {
+    memberId: id,
+    randomStatus: state,
+  };
+  const { status } = await submitLoading(api.changestatus(params));
+  status === 1 &&
+    ElMessage.success({
+      message: "修改成功",
+    });
+  // 数据改变 在会员组中需要重新请求
+  surveyVipStore.NickNameList = null;
+  queryData();
+}
 // 重置请求
 function queryData() {
   pagination.value.page = 1;
@@ -226,7 +241,7 @@ const formOption={
         <el-table-column align="left" v-if="checkList.includes('randomStatus')" show-overflow-tooltip label="随机身份">
           <template #default="{ row }">
             <ElSwitch v-model="row.randomStatus" inline-prompt :inactive-value="1" :active-value="2" inactive-text="禁用"
-              active-text="启用" @change="changeState($event, row.memberId)" />
+              active-text="启用" @change="changeRandomState($event, row.memberId)" />
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('memberId')" align="left" prop="memberId" width="200"
@@ -271,7 +286,7 @@ const formOption={
         <el-table-column v-if="checkList.includes('memberGroupName')" align="left" prop="memberGroupName"
           show-overflow-tooltip label="会员组"><template #default="{ row }">
             {{ row.memberGroupName ? row.memberGroupName : '-' }} </template></el-table-column>
-        <el-table-column v-if="checkList.includes('B2B|B2C')" align="left" show-overflow-tooltip label="B2B/B2C">
+        <el-table-column v-if="checkList.includes('B2B|B2C')" width="100" align="left" show-overflow-tooltip label="B2B/B2C">
           <template #default="{ row }">
             <div class="isB2b">
               <el-text v-if="row.b2bStatus && row.b2bStatus === 2" class="mx-1 c-fx">

@@ -6,29 +6,34 @@ import { UploadFilled } from '@element-plus/icons-vue'
 import useUserStore from "@/store/modules/user";
 import api from "@/api/modules/configuration_site_setting";
 import axios from "axios";
+import fileDtail from "../fileDtail/index.vue";
 
 const emits = defineEmits(['fetch-data'])
 // 分页
 const { pagination, getParams, onSizeChange, onCurrentChange } = usePagination();
 const drawerisible = ref(false);
-// 是否开启
-const isChecked = ref(false)
 // formRef
 const formRef = ref()
-// 判断顶级域名是否解析
-const isAnalysis = ref<boolean>(false);
-// 是否开启https
-const isHttpsStatus = ref<boolean>(false);
-const form = ref<any>({
-  // 强制https 1关闭 2开启
-  forceHttps: null,
-  // 是否上传证书 1未上传 2已上传
-  isUploadSSLCert: null,
-})
+// fileDtailRef
+const fileDtailRef = ref()
 // listLoading
 const listLoading = ref<boolean>(false);
 // 列表
 const list = ref<any>([]);
+const form = ref<any>({
+  // 证书
+  certificateContent: '',
+  // 密钥
+  privateKeyContent: '',
+  // 是否开启https
+  isChecked: false,
+  // 判断顶级域名是否解析
+  isAnalysis: false,
+  // 是否开启https
+  isHttpsStatus: false,
+  // 是否上传证书 1未上传 2已上传
+  isUploadSSLCert: null,
+})
 // 上传
 const fileList = ref<any>({
   domain: '',
@@ -60,11 +65,21 @@ async function showEdit(row: any) {
     listLoading.value = true;
     if (row) {
       fileList.value.domain = row.topLevelDomainName
+      fileList.value.forceHttps = row.forceHttps
       list.value = [row]
+      form.value.certificateContent = row.certificateContent
+      form.value.privateKeyContent = row.privateKeyContent
+      form.value.isAnalysis = row.isAnalysis
+      fileList.value.forceHttps = row.forceHttps
       if (row.httpsStatus === 1 || row.httpsStatus === null) {
-        isHttpsStatus.value = false
+        form.value.isHttpsStatus = false
       } else {
-        isHttpsStatus.value = true
+        form.value.isHttpsStatus = true
+      }
+      if (row.isUploadSSLCert === 1 || row.isUploadSSLCert === null) {
+        form.value.isUploadSSLCert = false
+      } else {
+        form.value.isUploadSSLCert = true
       }
       listLoading.value = false;
     } else {
@@ -82,22 +97,32 @@ async function showEdit(row: any) {
 const handleSubmits = async () => {
   formRef.value && formRef.value.validate(async (valid: any) => {
     if (valid) {
-      const payload = new FormData();
-      if (fileList.value.domain) {
-        payload.append('domain', fileList.value.domain);
-        payload.append('forceHttps', fileList.value.forceHttps);
-        const res = await api.getTenantWebConfigKeepOnRecord({ topLevelDomainName: fileList.value.domain })
-        const { status } = await api.uploadSSLCert(payload)
-        if (status === 1) {
-          ElMessage({
-            type: "success",
-            message: "修改域名成功",
-          });
+      try {
+        listLoading.value = true;
+        const payload = new FormData();
+        if (fileList.value.domain) {
+          payload.append('domain', fileList.value.domain);
+          payload.append('forceHttps', fileList.value.forceHttps);
+          const res = await api.getTenantWebConfigKeepOnRecord({ topLevelDomainName: fileList.value.domain })
+          const { status } = await api.uploadSSLCert(payload)
+          if (status === 1) {
+            ElMessage({
+              type: "success",
+              message: "修改域名成功",
+            });
+
+          }
+          if (res.status === 1) {
+            list.value = [res.data]
+          }
+          listLoading.value = false;
         }
-        if (res.status === 1) {
-          list.value = [res.data]
-        }
+      } catch (error) {
+
+      } finally {
+        listLoading.value = false;
       }
+
     }
   })
 }
@@ -116,7 +141,7 @@ const handleFileChange = (field: any) => (file: any, newFileList: any) => {
 };
 const handleRemove = (field: any) => (file: any) => {
   fileList.value[field] = fileList.value[field].filter((f: any) => f.uid !== file.uid);
-  if(fileList.value.private_key.length || fileList.value.certificate.length) {
+  if (fileList.value.private_key.length || fileList.value.certificate.length) {
     fileList.value.forceHttps = false
   }
   ElMessage.success(`${field} 文件删除成功`);
@@ -124,60 +149,88 @@ const handleRemove = (field: any) => (file: any) => {
 
 // 上传文件
 const handleSubmit = async () => {
-  // 这里您可以处理提交的逻辑，包含上传的文件
-  const payload = new FormData();
-
-  if (fileList.value.certificate.length > 0) {
-    payload.append('certificate', fileList.value.certificate[0].raw);
-  }
-
-  if (fileList.value.private_key.length > 0) {
-    payload.append('private_key', fileList.value.private_key[0].raw);
-  }
-  payload.append('forceHttps', fileList.value.forceHttps);
-  payload.append('domain', fileList.value.domain);
   try {
-    const res: any = await axios.post(Url, payload, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        // 在这里添加其他请求头，例如身份验证
-        'Token': token
+    listLoading.value = true;
+    // 这里您可以处理提交的逻辑，包含上传的文件
+    const payload = new FormData();
+
+    if (fileList.value.certificate.length > 0) {
+      payload.append('certificate', fileList.value.certificate[0].raw);
+    }
+
+    if (fileList.value.private_key.length > 0) {
+      payload.append('private_key', fileList.value.private_key[0].raw);
+    }
+    payload.append('forceHttps', fileList.value.forceHttps);
+    payload.append('domain', fileList.value.domain);
+    try {
+      const res: any = await axios.post(Url, payload, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          // 在这里添加其他请求头，例如身份验证
+          'Token': token
+        }
+      });
+      if (res.data.status === 1) {
+        ElMessage.success('上传成功');
+        listLoading.value = false;
+        form.value.isHttpsStatus = true
+      } else {
+        ElMessage.error(res.data.error);
       }
-    });
-    if (res.data.status === 1) {
-      ElMessage.success('上传成功');
-      isHttpsStatus.value = true
-    } else {
-      ElMessage.error(res.data.error);
+    } catch (error) {
+      ElMessage.error('上传失败');
     }
   } catch (error) {
-    ElMessage.error('上传失败');
+
+  } finally {
+    listLoading.value = false;
   }
 
 };
 // 验证
 const onSubmit = async () => {
-  if (fileList.value.domain) {
-    const res = await api.getTenantWebConfigQueryAnalysis({ url: fileList.value.domain })
-    if (!res.data.success) {
-      isAnalysis.value = res.data.success
+  try {
+    if (fileList.value.domain) {
+      listLoading.value = true;
+      const res = await api.getTenantWebConfigQueryAnalysis({ url: fileList.value.domain })
+      if (!res.data.success) {
+        form.value.isAnalysis = res.data.success
+        ElMessage({
+          type: "warning",
+          message: "解析未生效",
+        });
+      } else {
+        form.value.isAnalysis = res.data.success
+        listLoading.value = false;
+        emits('fetch-data')
+        ElMessage({
+          type: "success",
+          message: "解析已生效",
+        });
+      }
+    } else {
       ElMessage({
         type: "warning",
-        message: "解析未生效",
-      });
-    } else {
-      isAnalysis.value = res.data.success
-      emits('fetch-data')
-      ElMessage({
-        type: "success",
-        message: "解析已生效",
+        message: "请输入顶级域名",
       });
     }
-  } else {
-    ElMessage({
-      type: "warning",
-      message: "请输入顶级域名",
-    });
+  } catch (error) {
+
+  } finally {
+    listLoading.value = false;
+  }
+
+}
+
+// 文件详情
+const handleFileDtail = (val: any) => {
+  if (form.value.certificateContent) {
+    if (val === 'certificate') {
+      fileDtailRef.value.showEdit(form.value.certificateContent, 'certificate')
+    } else {
+      fileDtailRef.value.showEdit(form.value.privateKeyContent, 'private_key')
+    }
   }
 }
 // 关闭弹框
@@ -186,9 +239,23 @@ function handleClose() {
   Object.assign(fileList, {
     domain: '',
     certificate: [],
-    private_key: []
+    private_key: [],
+    forceHttps: 1,
   })
-  isChecked.value = false
+  Object.assign(form, {
+    // 证书
+    certificateContent: '',
+    // 密钥
+    privateKeyContent: '',
+    // 是否开启https
+    isChecked: false,
+    // 判断顶级域名是否解析
+    isAnalysis: false,
+    // 是否开启https
+    isHttpsStatus: false,
+    // 是否上传证书 1未上传 2已上传
+    isUploadSSLCert: null,
+  })
   drawerisible.value = false;
 }
 // 暴露
@@ -199,14 +266,14 @@ defineExpose({
 
 <template>
   <el-dialog v-model="drawerisible" style="min-height: 560px;" title="详情" @close="handleClose">
-    <el-form style="margin-bottom: 1.5rem;" :model="fileList" ref="formRef" :rules="formRules" label-width="90px"
+    <div v-loading="listLoading">
+      <el-form style="margin-bottom: 1.5rem;" :model="fileList" ref="formRef" :rules="formRules" label-width="90px"
       :inline="false">
       <el-form-item label="顶级域名" prop="domain">
         <el-input style="width: 26rem;" v-model="fileList.domain" />
         <el-button style="margin-left: 1.5rem;" plain size="small" type="primary" @click="handleSubmits">确认</el-button>
       </el-form-item>
     </el-form>
-
     <el-table v-loading="listLoading" border v-show="list.length" :data="list">
       <el-table-column width="100" align="center" prop="host" show-overflow-tooltip label="解析类型">
         <template #default>
@@ -226,7 +293,7 @@ defineExpose({
       </el-table-column>
       <el-table-column width="100" align="center" prop="type" show-overflow-tooltip label="状态">
         <template #default>
-          <el-text v-if="isAnalysis" style="color: #03c239;">已生效</el-text>
+          <el-text v-if="form.isAnalysis" style="color: #03c239;">已生效</el-text>
           <el-text v-else style="color: #FF8181;">未生效</el-text>
         </template>
       </el-table-column>
@@ -247,7 +314,7 @@ defineExpose({
           <span></span>
           <h3>核心步骤</h3>
         </div>
-        <div v-if="isHttpsStatus" class="stepTopR">
+        <div v-if="form.isHttpsStatus" class="stepTopR">
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
             <g id="Frame" clip-path="url(#clip0_735_20333)">
               <path id="Vector"
@@ -327,25 +394,27 @@ defineExpose({
     </div>
     <div style="display: flex; height: 30px; margin-bottom: 24px;">
       <el-form-item label="开启HTTPS">
-        <el-checkbox v-model="isChecked" size="large" />
+        <el-checkbox v-model="form.isChecked" size="large" />
       </el-form-item>
-      <div v-show="isChecked" style="display: flex;
+      <div v-show="form.isChecked" style="display: flex;
     align-items: center; margin-right: 4px;color: #333;">
         <el-tooltip class="tooltips" content="是否强制开启HTTPS" placement="top">
           <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
         </el-tooltip>
         <!-- 若上传证书网址格式默认绑定HTTPS -->
       </div>
-      <el-form-item v-show="isChecked" label="是否强制开启HTTPS">
-        <el-switch v-model="fileList.forceHttps" :disabled="!fileList.certificate.length || !fileList.private_key.length" inline-prompt :active-value="2" :inactive-value="1" >
+      <el-form-item v-show="form.isChecked" label="是否强制开启HTTPS">
+        <el-switch v-model="fileList.forceHttps"
+          :disabled="!fileList.certificate.length && !fileList.private_key.length && !form.isUploadSSLCert"
+          inline-prompt :active-value="2" :inactive-value="1">
         </el-switch>
       </el-form-item>
     </div>
-    <div v-show="isChecked" class="title">
+    <div v-show="form.isChecked" class="title">
       <span style="margin-right: 50px;">证书</span>
       <span>私钥</span>
     </div>
-    <div v-show="isChecked" class="form">
+    <div v-show="form.isChecked" class="form">
       <el-form style="display: flex; width: 23rem; height:10.625rem;" @submit.prevent="handleSubmit">
         <el-form-item label="">
           <el-upload class="upload-demo" drag :file-list="fileList.certificate" :action="Url" :headers="headers"
@@ -362,7 +431,11 @@ defineExpose({
               支持点击或拖拽上传
             </div>
             <template #tip>
-              <div class="el-upload__tip">
+              <div v-if="form.isUploadSSLCert" class="el-upload__tip">
+                <el-button type="primary" size="default" link
+                  @click="handleFileDtail('certificate')">点击查看文件详情</el-button>
+              </div>
+              <div v-else class="el-upload__tip">
                 请上传.PEM格式的文件
               </div>
             </template>
@@ -383,7 +456,11 @@ defineExpose({
               支持点击或拖拽上传
             </div>
             <template #tip>
-              <div class="el-upload__tip">
+              <div v-if="form.isUploadSSLCert" class="el-upload__tip">
+                <el-button type="primary" size="default" link
+                  @click="handleFileDtail('private_key')">点击查看文件详情</el-button>
+              </div>
+              <div v-else class="el-upload__tip">
                 请上传.PEM格式的文件
               </div>
             </template>
@@ -396,6 +473,8 @@ defineExpose({
     </div>
     <div class="footer">
       <el-button type="primary" size="default" @click="drawerisible = false">关闭</el-button>
+    </div>
+    <fileDtail ref="fileDtailRef" />
     </div>
   </el-dialog>
 </template>
@@ -649,6 +728,7 @@ defineExpose({
 
   .el-upload__tip {
     font-size: .875rem !important;
+    text-align: center;
     color: #5babff;
   }
 

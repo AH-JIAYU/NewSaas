@@ -146,6 +146,7 @@ async function getDataList() {
     if (form.value.topLevelDomainName !== '' && form.value.topLevelDomainName !== null) {
       const res = await api.getTenantWebConfigQueryAnalysis({ url: form.value.topLevelDomainName })
       isAnalysis.value = res.data.success
+      form.value.isAnalysis = res.data.success
     }
   } catch (error) {
 

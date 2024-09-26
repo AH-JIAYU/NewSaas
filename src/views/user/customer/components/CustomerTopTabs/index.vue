@@ -77,7 +77,7 @@ onBeforeMount(async () => {
   const res = await api.getTenantSecretKeyConfigList();
   secretKeyConfigList.value = res.data;
  const siteRes= await configurationSiteSettingStore.getSiteConfig()
-  referenceAddress.value=siteRes.topLevelDomainName??siteRes.personalizedDomainName
+  referenceAddress.value=`${siteRes.httpsStatus===1?'http':'https'}://${siteRes.topLevelDomainName??siteRes.personalizedDomainName}`
 });
 // 使用 InstanceType 来获取 ElForm 实例的类型
 const formRef = ref(null);
