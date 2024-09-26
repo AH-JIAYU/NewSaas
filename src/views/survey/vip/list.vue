@@ -271,7 +271,7 @@ const formOption={
         <el-table-column v-if="checkList.includes('memberGroupName')" align="left" prop="memberGroupName"
           show-overflow-tooltip label="会员组"><template #default="{ row }">
             {{ row.memberGroupName ? row.memberGroupName : '-' }} </template></el-table-column>
-        <el-table-column v-if="checkList.includes('B2B|B2C')" align="left" show-overflow-tooltip label="B2B|B2C">
+        <el-table-column v-if="checkList.includes('B2B|B2C')" align="left" show-overflow-tooltip label="B2B/B2C">
           <template #default="{ row }">
             <div class="isB2b">
               <el-text v-if="row.b2bStatus && row.b2bStatus === 2" class="mx-1 c-fx">

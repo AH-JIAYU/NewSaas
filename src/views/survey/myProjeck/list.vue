@@ -247,10 +247,14 @@ const formOption={
     row.clientName }}</span></p>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('withoutUrl')" prop="withoutUrl" align="left" label="URL">
+        <el-table-column v-if="checkList.includes('withoutUrl')" width="150" prop="withoutUrl" align="left" label="URL">
           <template #default="{ row }">
             <el-tooltip class="box-item" effect="dark" :content="row.withoutUrl" placement="top">
-              <el-button link type="primary" @click="copyUrl(row.withoutUrl)">复制</el-button>
+              <!-- <el-button link type="primary" @click="copyUrl(row.withoutUrl)">复制</el-button> -->
+              <div class="hoverSvg">
+              <p class="fineSize">{{ row.withoutUrl }}</p>
+              <copy class="copy" :content="row.withoutUrl" />
+            </div>
             </el-tooltip>
           </template>
         </el-table-column>

@@ -7,7 +7,7 @@ import useUserStore from "@/store/modules/user";
 import api from "@/api/modules/configuration_site_setting";
 import axios from "axios";
 
-const emits =  defineEmits(['fetch-data'])
+const emits = defineEmits(['fetch-data'])
 // 分页
 const { pagination, getParams, onSizeChange, onCurrentChange } = usePagination();
 const drawerisible = ref(false);
@@ -19,6 +19,12 @@ const formRef = ref()
 const isAnalysis = ref<boolean>(false);
 // 是否开启https
 const isHttpsStatus = ref<boolean>(false);
+const form = ref<any>({
+  // 强制https 1关闭 2开启
+  forceHttps: null,
+  // 是否上传证书 1未上传 2已上传
+  isUploadSSLCert: null,
+})
 // listLoading
 const listLoading = ref<boolean>(false);
 // 列表
@@ -55,9 +61,9 @@ async function showEdit(row: any) {
     if (row) {
       fileList.value.domain = row.topLevelDomainName
       list.value = [row]
-      if(row.httpsStatus === 1 || row.httpsStatus === null) {
+      if (row.httpsStatus === 1 || row.httpsStatus === null) {
         isHttpsStatus.value = false
-      }else {
+      } else {
         isHttpsStatus.value = true
       }
       listLoading.value = false;
@@ -74,13 +80,14 @@ async function showEdit(row: any) {
 
 // 输入框解析域名
 const handleSubmits = async () => {
-  formRef.value && formRef.value.validate( async (valid: any) => {
+  formRef.value && formRef.value.validate(async (valid: any) => {
     if (valid) {
       const payload = new FormData();
       if (fileList.value.domain) {
         payload.append('domain', fileList.value.domain);
-        const res = await api.getTenantWebConfigKeepOnRecord({topLevelDomainName:fileList.value.domain})
-        const {status} = await api.uploadSSLCert(payload)
+        payload.append('forceHttps', fileList.value.forceHttps);
+        const res = await api.getTenantWebConfigKeepOnRecord({ topLevelDomainName: fileList.value.domain })
+        const { status } = await api.uploadSSLCert(payload)
         if (status === 1) {
           ElMessage({
             type: "success",
@@ -106,12 +113,15 @@ const Url = import.meta.env.VITE_APP_API_BASEURL + "/api/tenant-web-config/uploa
 
 const handleFileChange = (field: any) => (file: any, newFileList: any) => {
   fileList.value[field] = newFileList; // 更新文件列表
-
 };
 const handleRemove = (field: any) => (file: any) => {
   fileList.value[field] = fileList.value[field].filter((f: any) => f.uid !== file.uid);
+  if(fileList.value.private_key.length || fileList.value.certificate.length) {
+    fileList.value.forceHttps = false
+  }
   ElMessage.success(`${field} 文件删除成功`);
 };
+
 // 上传文件
 const handleSubmit = async () => {
   // 这里您可以处理提交的逻辑，包含上传的文件
@@ -124,10 +134,7 @@ const handleSubmit = async () => {
   if (fileList.value.private_key.length > 0) {
     payload.append('private_key', fileList.value.private_key[0].raw);
   }
-
-  if (fileList.value.forceHttps === 2) {
-    payload.append('forceHttps', fileList.value.forceHttps);
-  }
+  payload.append('forceHttps', fileList.value.forceHttps);
   payload.append('domain', fileList.value.domain);
   try {
     const res: any = await axios.post(Url, payload, {
@@ -166,11 +173,11 @@ const onSubmit = async () => {
         message: "解析已生效",
       });
     }
-  }else {
+  } else {
     ElMessage({
-        type: "warning",
-        message: "请输入顶级域名",
-      });
+      type: "warning",
+      message: "请输入顶级域名",
+    });
   }
 }
 // 关闭弹框
@@ -192,15 +199,16 @@ defineExpose({
 
 <template>
   <el-dialog v-model="drawerisible" style="min-height: 560px;" title="详情" @close="handleClose">
-    <el-form style="margin-bottom: 1.5rem;" :model="fileList" ref="formRef" :rules="formRules" label-width="90px" :inline="false" >
+    <el-form style="margin-bottom: 1.5rem;" :model="fileList" ref="formRef" :rules="formRules" label-width="90px"
+      :inline="false">
       <el-form-item label="顶级域名" prop="domain">
-      <el-input style="width: 26rem;" v-model="fileList.domain"/>
-      <el-button style="margin-left: 1.5rem;" plain size="small" type="primary" @click="handleSubmits">确认</el-button>
+        <el-input style="width: 26rem;" v-model="fileList.domain" />
+        <el-button style="margin-left: 1.5rem;" plain size="small" type="primary" @click="handleSubmits">确认</el-button>
       </el-form-item>
     </el-form>
 
     <el-table v-loading="listLoading" border v-show="list.length" :data="list">
-      <el-table-column  width="100" align="center" prop="host" show-overflow-tooltip label="解析类型">
+      <el-table-column width="100" align="center" prop="host" show-overflow-tooltip label="解析类型">
         <template #default>
           <el-text>CNAME</el-text>
         </template>
@@ -216,13 +224,13 @@ defineExpose({
           <el-text v-else>-</el-text>
         </template>
       </el-table-column>
-      <el-table-column  width="100" align="center" prop="type" show-overflow-tooltip label="状态">
+      <el-table-column width="100" align="center" prop="type" show-overflow-tooltip label="状态">
         <template #default>
           <el-text v-if="isAnalysis" style="color: #03c239;">已生效</el-text>
           <el-text v-else style="color: #FF8181;">未生效</el-text>
         </template>
       </el-table-column>
-      <el-table-column  width="100" align="center" prop="type" show-overflow-tooltip label="操作">
+      <el-table-column width="100" align="center" prop="type" show-overflow-tooltip label="操作">
         <template #default>
           <el-button type="primary" plain size="small" @click="onSubmit">
             验证
@@ -329,7 +337,7 @@ defineExpose({
         <!-- 若上传证书网址格式默认绑定HTTPS -->
       </div>
       <el-form-item v-show="isChecked" label="是否强制开启HTTPS">
-        <el-switch v-model="fileList.forceHttps" inline-prompt :active-value="2" :inactive-value="1">
+        <el-switch v-model="fileList.forceHttps" :disabled="!fileList.certificate.length || !fileList.private_key.length" inline-prompt :active-value="2" :inactive-value="1" >
         </el-switch>
       </el-form-item>
     </div>
