@@ -4,13 +4,15 @@ import { defineProps, ref } from "vue";
 import api from "@/api/modules/user_customer";
 import DictionaryItemDia from "@/views/configuration/user/components/dictionaryItemDialog/index.vue";
 import apiUser from '@/api/modules/configuration_manager'
+import useConfigurationSiteSettingStore from '@/store/modules/configuration_siteSetting'//站点设置
 
+const configurationSiteSettingStore= useConfigurationSiteSettingStore()//站点设置
 // 如果希望默认展示第一个 Tab
 const props = defineProps({
   leftTab: Object,
   tabIndex: Number,
 });
-const referenceAddress = `${import.meta.env.VITE_APP_API_BASEURL}/api`
+const referenceAddress = ref<any>()
 // 用户数据
 const staffList = ref<any>([]);
 const validate = inject<any>("validateTopTabs"); //注入Ref
@@ -74,6 +76,8 @@ onBeforeMount(async () => {
     localToptTab.value.tenantCustomerConfigInfoList.length === 2;
   const res = await api.getTenantSecretKeyConfigList();
   secretKeyConfigList.value = res.data;
+ const siteRes= await configurationSiteSettingStore.getSiteConfig()
+  referenceAddress.value=siteRes.topLevelDomainName??siteRes.personalizedDomainName
 });
 // 使用 InstanceType 来获取 ElForm 实例的类型
 const formRef = ref(null);

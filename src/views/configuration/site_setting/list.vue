@@ -10,10 +10,13 @@ import useClipboard from "vue-clipboard3";
 import { AnyFn } from "@vueuse/core";
 import useUserStore from "@/store/modules/user";
 import siteDetail from "./components/siteDetail/index.vue"
+import useConfigurationSiteSettingStore from '@/store/modules/configuration_siteSetting'//站点设置
 
 defineOptions({
   name: "site_setting",
 });
+
+const configurationSiteSettingStore= useConfigurationSiteSettingStore()//站点设置
 // token
 const userStore = useUserStore();
 // detailRef
@@ -132,6 +135,7 @@ onMounted(() => {
 async function getDataList() {
   try {
     const { data } = await api.list();
+    configurationSiteSettingStore.setSiteConfig(data)
     if (data) {
       form.value = data || form.value;
       analyzeRecords.value = form.value
