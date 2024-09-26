@@ -994,7 +994,7 @@ onMounted(async () => {
   }
 
   .table {
-    height: 20.4375rem;
+    // height: 20.4375rem;
 
     .completionRanking,
     .supplierRevenueRanking {
@@ -1162,7 +1162,8 @@ onMounted(async () => {
   }
 
   .el-table {
-    height: calc(20.4375rem - 2rem - 1.5625rem - 0.5rem)
+    // height: calc(20.4375rem - 2rem - 1.5625rem - 0.5rem)
+    height: 300px
   }
 
   // 表格
