@@ -76,14 +76,19 @@ async function showEdit(row: any) {
 const handleSubmits = async () => {
   formRef.value && formRef.value.validate( async (valid: any) => {
     if (valid) {
+      const payload = new FormData();
       if (fileList.value.domain) {
+        payload.append('domain', fileList.value.domain);
         const res = await api.getTenantWebConfigKeepOnRecord({topLevelDomainName:fileList.value.domain})
-        if (res.status === 1) {
-          list.value = [res.data]
+        const {status} = await api.uploadSSLCert(payload)
+        if (status === 1) {
           ElMessage({
             type: "success",
             message: "修改域名成功",
           });
+        }
+        if (res.status === 1) {
+          list.value = [res.data]
         }
       }
     }
@@ -134,6 +139,7 @@ const handleSubmit = async () => {
     });
     if (res.data.status === 1) {
       ElMessage.success('上传成功');
+      isHttpsStatus.value = true
     } else {
       ElMessage.error(res.data.error);
     }
