@@ -97,22 +97,32 @@ async function showEdit(row: any) {
 const handleSubmits = async () => {
   formRef.value && formRef.value.validate(async (valid: any) => {
     if (valid) {
-      const payload = new FormData();
-      if (fileList.value.domain) {
-        payload.append('domain', fileList.value.domain);
-        payload.append('forceHttps', fileList.value.forceHttps);
-        const res = await api.getTenantWebConfigKeepOnRecord({ topLevelDomainName: fileList.value.domain })
-        const { status } = await api.uploadSSLCert(payload)
-        if (status === 1) {
-          ElMessage({
-            type: "success",
-            message: "修改域名成功",
-          });
+      try {
+        listLoading.value = true;
+        const payload = new FormData();
+        if (fileList.value.domain) {
+          payload.append('domain', fileList.value.domain);
+          payload.append('forceHttps', fileList.value.forceHttps);
+          const res = await api.getTenantWebConfigKeepOnRecord({ topLevelDomainName: fileList.value.domain })
+          const { status } = await api.uploadSSLCert(payload)
+          if (status === 1) {
+            ElMessage({
+              type: "success",
+              message: "修改域名成功",
+            });
+
+          }
+          if (res.status === 1) {
+            list.value = [res.data]
+          }
+          listLoading.value = false;
         }
-        if (res.status === 1) {
-          list.value = [res.data]
-        }
+      } catch (error) {
+
+      } finally {
+        listLoading.value = false;
       }
+
     }
   })
 }
@@ -139,61 +149,78 @@ const handleRemove = (field: any) => (file: any) => {
 
 // 上传文件
 const handleSubmit = async () => {
-  // 这里您可以处理提交的逻辑，包含上传的文件
-  const payload = new FormData();
-
-  if (fileList.value.certificate.length > 0) {
-    payload.append('certificate', fileList.value.certificate[0].raw);
-  }
-
-  if (fileList.value.private_key.length > 0) {
-    payload.append('private_key', fileList.value.private_key[0].raw);
-  }
-  payload.append('forceHttps', fileList.value.forceHttps);
-  payload.append('domain', fileList.value.domain);
   try {
-    const res: any = await axios.post(Url, payload, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        // 在这里添加其他请求头，例如身份验证
-        'Token': token
+    listLoading.value = true;
+    // 这里您可以处理提交的逻辑，包含上传的文件
+    const payload = new FormData();
+
+    if (fileList.value.certificate.length > 0) {
+      payload.append('certificate', fileList.value.certificate[0].raw);
+    }
+
+    if (fileList.value.private_key.length > 0) {
+      payload.append('private_key', fileList.value.private_key[0].raw);
+    }
+    payload.append('forceHttps', fileList.value.forceHttps);
+    payload.append('domain', fileList.value.domain);
+    try {
+      const res: any = await axios.post(Url, payload, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          // 在这里添加其他请求头，例如身份验证
+          'Token': token
+        }
+      });
+      if (res.data.status === 1) {
+        ElMessage.success('上传成功');
+        listLoading.value = false;
+        form.value.isHttpsStatus = true
+      } else {
+        ElMessage.error(res.data.error);
       }
-    });
-    if (res.data.status === 1) {
-      ElMessage.success('上传成功');
-      form.value.isHttpsStatus = true
-    } else {
-      ElMessage.error(res.data.error);
+    } catch (error) {
+      ElMessage.error('上传失败');
     }
   } catch (error) {
-    ElMessage.error('上传失败');
+
+  } finally {
+    listLoading.value = false;
   }
 
 };
 // 验证
 const onSubmit = async () => {
-  if (fileList.value.domain) {
-    const res = await api.getTenantWebConfigQueryAnalysis({ url: fileList.value.domain })
-    if (!res.data.success) {
-      form.value.isAnalysis = res.data.success
+  try {
+    if (fileList.value.domain) {
+      listLoading.value = true;
+      const res = await api.getTenantWebConfigQueryAnalysis({ url: fileList.value.domain })
+      if (!res.data.success) {
+        form.value.isAnalysis = res.data.success
+        ElMessage({
+          type: "warning",
+          message: "解析未生效",
+        });
+      } else {
+        form.value.isAnalysis = res.data.success
+        listLoading.value = false;
+        emits('fetch-data')
+        ElMessage({
+          type: "success",
+          message: "解析已生效",
+        });
+      }
+    } else {
       ElMessage({
         type: "warning",
-        message: "解析未生效",
-      });
-    } else {
-      form.value.isAnalysis = res.data.success
-      emits('fetch-data')
-      ElMessage({
-        type: "success",
-        message: "解析已生效",
+        message: "请输入顶级域名",
       });
     }
-  } else {
-    ElMessage({
-      type: "warning",
-      message: "请输入顶级域名",
-    });
+  } catch (error) {
+
+  } finally {
+    listLoading.value = false;
   }
+
 }
 
 // 文件详情
@@ -239,14 +266,14 @@ defineExpose({
 
 <template>
   <el-dialog v-model="drawerisible" style="min-height: 560px;" title="详情" @close="handleClose">
-    <el-form style="margin-bottom: 1.5rem;" :model="fileList" ref="formRef" :rules="formRules" label-width="90px"
+    <div v-loading="listLoading">
+      <el-form style="margin-bottom: 1.5rem;" :model="fileList" ref="formRef" :rules="formRules" label-width="90px"
       :inline="false">
       <el-form-item label="顶级域名" prop="domain">
         <el-input style="width: 26rem;" v-model="fileList.domain" />
         <el-button style="margin-left: 1.5rem;" plain size="small" type="primary" @click="handleSubmits">确认</el-button>
       </el-form-item>
     </el-form>
-
     <el-table v-loading="listLoading" border v-show="list.length" :data="list">
       <el-table-column width="100" align="center" prop="host" show-overflow-tooltip label="解析类型">
         <template #default>
@@ -448,6 +475,7 @@ defineExpose({
       <el-button type="primary" size="default" @click="drawerisible = false">关闭</el-button>
     </div>
     <fileDtail ref="fileDtailRef" />
+    </div>
   </el-dialog>
 </template>
 
