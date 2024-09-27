@@ -140,14 +140,21 @@ const dictionaryItem = ref<any>({
 });
 // 获取树
 const treeRef = ref<any>()
-// 获取字典
+// 获取用户
 async function getDictionaryList() {
   const params = {
     ...dictionaryItem.value.search,
   };
+  // 左侧树状数据
+  const ress = await apiDep.createEvery();
+  if (ress.data) {
+    dictionary.value.tree = ress.data.result;
+  }
   const res = await api.list(params);
-  dictionaryItem.value.dataList = res.data.data;
-  pagination.value.total = +res.data.total;
+  if (res.data) {
+    dictionaryItem.value.dataList = res.data.data;
+    pagination.value.total = +res.data.total;
+  }
 }
 onMounted(async () => {
   try {
@@ -161,9 +168,6 @@ onMounted(async () => {
     positionManageList.value = await usePositionManage?.getPositionManage() || [];
     // 小组
     groupManageList.value = await useGroupManage?.getGroupManage() || [];
-    // 左侧树状数据
-    const ress = await apiDep.createEvery();
-    dictionary.value.tree = ress.data.result;
     // 获取列表数据
     getDictionaryList();
     columns.value.forEach((item: any) => {
@@ -350,8 +354,8 @@ function onReset() {
       <div class="leftTree">
         <div v-if="dictionary.tree.length" class="leftData" :span="3">
           <el-tree style="max-width: 37.5rem; min-height: 45.4375rem; padding: 10px;" :data="dictionary.tree"
-            ref="treeRef" node-key="id" default-expand-all :expand-on-click-node="false"
-            :props="defaultProps" @node-click="dictionaryClick" />
+            ref="treeRef" node-key="id" default-expand-all :expand-on-click-node="false" :props="defaultProps"
+            @node-click="dictionaryClick" />
         </div>
         <PageMain>
           <div v-loading="dictionary.loading" class="dictionary-container">
@@ -360,8 +364,8 @@ function onReset() {
                 @keydown.enter="getDictionaryList" />
               <ElInput v-model="dictionaryItem.search.userName" placeholder="用户名" clearable style="width: 12.5rem"
                 @keydown.enter="getDictionaryList" />
-              <el-select v-model="dictionaryItem.search.active" value-key="" placeholder="状态" style="width: 12.5rem" clearable filterable
-                @change="getDictionaryList">
+              <el-select v-model="dictionaryItem.search.active" value-key="" placeholder="状态" style="width: 12.5rem"
+                clearable filterable @change="getDictionaryList">
                 <el-option v-for="item in activeList" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
               </el-select>
@@ -381,7 +385,7 @@ function onReset() {
                 <el-button type="primary" size="default" @click="onCreate">
                   新增
                 </el-button>
-                <el-button type="primary"  size="default" @click="onResetPassword">
+                <el-button type="primary" size="default" @click="onResetPassword">
                   重置密码
                 </el-button>
               </el-col>
@@ -405,12 +409,12 @@ function onReset() {
                 </template>
               </ElTableColumn>
               <ElTableColumn v-if="dictionaryItem.checkList.includes('id')" align="left" width="180" prop="id"
-                label="员工ID" >
-                <template #default="{row}">
+                label="员工ID">
+                <template #default="{ row }">
                   <div class="copyId tableSmall">
-              <div class="id oneLine ">ID: {{ row.id }}</div>
-              <copy class="copy" :content="row.id" />
-            </div>
+                    <div class="id oneLine ">ID: {{ row.id }}</div>
+                    <copy class="copy" :content="row.id" />
+                  </div>
                 </template>
               </ElTableColumn>
               <ElTableColumn v-if="dictionaryItem.checkList.includes('userName')" align="left" width="130"
@@ -421,7 +425,7 @@ function onReset() {
                 </template>
               </ElTableColumn>
               <ElTableColumn v-if="dictionaryItem.checkList.includes('name')" align="left" width="130" prop="name"
-                label="姓名" >
+                label="姓名">
                 <template #default="{ row }">
                   <el-text class="tableBig">
                     {{ row.name ? row.name : "-" }}
@@ -444,7 +448,8 @@ function onReset() {
                 </template>
               </ElTableColumn>
               <ElTableColumn v-if="dictionaryItem.checkList.includes('departmentId')" align="left" prop="departmentId"
-                label="部门"><template #default="{ row }">
+                label="部门">
+                <template #default="{ row }">
                   <el-text v-if="row.departmentId" class="tableBig">
                     <el-text v-for="item in departmentList">
                       <el-text v-if="row.departmentId === item.id">
@@ -468,8 +473,7 @@ function onReset() {
                   <el-text v-else class="tableBig">-</el-text>
                 </template>
               </ElTableColumn>
-              <ElTableColumn v-if="dictionaryItem.checkList.includes('groupId')" align="left" prop="groupId"
-                label="小组">
+              <ElTableColumn v-if="dictionaryItem.checkList.includes('groupId')" align="left" prop="groupId" label="小组">
                 <template #default="{ row }">
                   <el-text class="tableBig" v-if="row.groupId">
                     <el-text v-for="item in groupManageList">
@@ -656,6 +660,7 @@ function onReset() {
 :deep(.page-main) {
   height: 100% !important;
 }
+
 .flex-s {
   display: flex;
   justify-content: start;
@@ -680,5 +685,4 @@ function onReset() {
     display: block !important;
   }
 }
-
 </style>
