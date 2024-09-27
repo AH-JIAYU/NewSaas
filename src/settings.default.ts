@@ -24,7 +24,7 @@ const globalSettingsDefault: RecursiveRequired<Settings.all> = {
   home: {
     enable: true,
     title: '首页',
-    fullPath: '/index',
+    fullPath: '/',
   },
   layout: {
     widthMode: 'adaption',

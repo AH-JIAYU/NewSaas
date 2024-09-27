@@ -247,7 +247,6 @@ defineExpose({ showEdit });
     }}</span>
               </div>
               <div class="rightStatus">
-                <!-- <div class="i-ph:seal-light w-1em h-1em"></div> -->
                 <div :class="data.isOnline === 1 ? 'isOnlineTrue' : 'isOnlineFalse'
       ">
                   {{ data.isOnline === 1 ? "在线" : "离线" }}
@@ -258,9 +257,13 @@ defineExpose({ showEdit });
           <el-row :gutter="10">
             <el-col :span="8">
               <el-form-item label="项目ID :">
-                <el-text class="mx-1">
-                  {{ data.form.projectId ? data.form.projectId : "-" }}
-                </el-text>
+                <div class="copyId">
+                  <el-text class="mx-1">
+                    {{ data.form.projectId ? data.form.projectId : "-" }}
+                  </el-text>
+                  <copy class="copy" :content="data.form.projectId" />
+                </div>
+
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -375,40 +378,40 @@ defineExpose({ showEdit });
             <el-col :span="8">
               <el-form-item label="置顶 :">
                 <el-text class="mx-1">
-                  {{ data.form.isPinned === 1 ? "开" : "关" }}
+                  <div v-if="data.form.isPinned === 1" class="close">开</div>
+                  <div v-else class="open">关</div>
                 </el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="在线 :">
                 <el-text class="mx-1">
-                  {{ data.form.isOnline === 1 ? "开" : "关" }}
+                  <div v-if="data.form.isOnline === 1" class="close">开</div>
+                  <div v-else class="open">关</div>
                 </el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="资料 :">
                 <el-text class="mx-1">
-                  {{ data.form.isProfile === 2 ? "开" : "关" }}
+                  <div v-if="data.form.isProfile === 2" class="close">开</div>
+                  <div v-else class="open">关</div>
                 </el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="B2B :">
                 <el-text class="mx-1">
-                  {{}}
-                  {{
-      data.form.isPinned === 1
-        ? data.form.projectType.join(",")
-        : "关"
-    }}
+                  <div v-if="data.form.isPinned === 1" class="close">{{ data.form.projectType.join(",") }}</div>
+                  <div v-else class="open">关</div>
                 </el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="定时发布 :">
                 <el-text class="mx-1">
-                  {{ data.form.isTimeReleases === 2 ? "开" : "关" }}
+                  <div v-if="data.form.isTimeReleases === 2" class="close">开</div>
+                  <div v-else class="open">关</div>
                 </el-text>
               </el-form-item>
             </el-col>
@@ -488,7 +491,8 @@ defineExpose({ showEdit });
             <el-col :span="8">
               <el-form-item label="重复参与:">
                 <el-text class="mx-1">
-                  {{ data.form.ipDifferenceDetection === 1 ? "开" : "关" }}
+                  <div v-if="data.form.ipDifferenceDetection === 1" class="close">开</div>
+                  <div v-else class="open">关</div>
                 </el-text>
               </el-form-item>
             </el-col>
@@ -548,7 +552,7 @@ defineExpose({ showEdit });
               <span>操作日志</span>
             </div>
           </template>
-          <el-table :data="data.form.projectOperationInfoList" border style="width: 100%">
+          <el-table :data="data.form.projectOperationInfoList" style="width: 100%">
             <el-table-column align="left" type="index" width="80" label="序号" />
             <el-table-column align="left" prop="operationTime" label="操作时间" />
             <el-table-column align="left" prop="operationName" label="操作人" />
@@ -569,8 +573,7 @@ defineExpose({ showEdit });
         </el-card>
       </ElForm>
       <template #footer>
-        <el-button @click="closeHandler"> 取消 </el-button>
-        <el-button type="primary" @click="closeHandler"> 确定 </el-button>
+        <el-button type="primary" @click="closeHandler"> 取消 </el-button>
       </template>
     </el-drawer>
     <logDetails ref="logDetailsRef" />
@@ -612,7 +615,7 @@ defineExpose({ showEdit });
       color: var(--el-color-white);
       padding: 0 8px;
       font-size: 0.875rem;
-      border-radius: 3.125rem;
+      border-radius: .125rem;
     }
   }
 
@@ -657,26 +660,13 @@ defineExpose({ showEdit });
     }
 
     >div.isOnlineTrue {
-      background-color: #70b51a;
-
-      &::after,
-      &::before {
-        border: 1px #70b51a dashed;
-      }
+      background-color: #03C239;
     }
 
     >div.isOnlineFalse {
       background-color: #d8261a;
-
-      &::after,
-      &::before {
-        border: 1px #d8261a dashed;
-      }
     }
 
-    // > div:nth-child(1) {
-    //   font-size: 128px;
-    // }
   }
 }
 
@@ -698,7 +688,7 @@ defineExpose({ showEdit });
 
   :deep {
     .el-form-item {
-      margin: 10px 0;
+      margin: 0;
     }
 
     .el-col:nth-of-type(n + 3) {
@@ -726,6 +716,7 @@ defineExpose({ showEdit });
 
 :deep(.el-card) {
   margin: 0.625rem 0;
+  padding-top: 10px;
 }
 
 :deep(.editor) {
@@ -738,5 +729,12 @@ defineExpose({ showEdit });
 
 .colorgreen {
   color: #7ecb57;
+}
+.open {
+  color: #409eff;
+}
+
+.close {
+  color: #e2e2e2;
 }
 </style>

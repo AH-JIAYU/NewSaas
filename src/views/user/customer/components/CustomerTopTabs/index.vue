@@ -12,7 +12,8 @@ const props = defineProps({
   leftTab: Object,
   tabIndex: Number,
 });
-const referenceAddress = ref<any>()
+const redirectUrl = ref<any>()
+const serverSideUrl=ref<any>(`${import.meta.env.VITE_APP_API_BASEURL}/api`)
 // 用户数据
 const staffList = ref<any>([]);
 const validate = inject<any>("validateTopTabs"); //注入Ref
@@ -77,7 +78,7 @@ onBeforeMount(async () => {
   const res = await api.getTenantSecretKeyConfigList();
   secretKeyConfigList.value = res.data;
  const siteRes= await configurationSiteSettingStore.getSiteConfig()
-  referenceAddress.value=`${siteRes.httpsStatus===1?'http':'https'}://${siteRes.topLevelDomainName??siteRes.personalizedDomainName}`
+  redirectUrl.value=`${siteRes.httpsStatus===1?'http':'https'}://${siteRes.topLevelDomainName??siteRes.personalizedDomainName}`
 });
 // 使用 InstanceType 来获取 ElForm 实例的类型
 const formRef = ref(null);
@@ -244,7 +245,7 @@ nextTick(() => {
 
               <el-col :span="24">
                 <el-form-item label="成功重定向">
-                  {{ referenceAddress }}
+                  {{ redirectUrl }}
                   <span v-pre>
                     /redirect?status=c&uid=[uid]
                   </span>
@@ -256,7 +257,7 @@ nextTick(() => {
               </el-col>
               <el-col :span="24">
                 <el-form-item label="配额满重定向">
-                  {{referenceAddress}}
+                  {{redirectUrl}}
                   <span v-pre>
                     /redirect?status=q&uid=[uid]
                   </span>
@@ -268,7 +269,7 @@ nextTick(() => {
               </el-col>
               <el-col :span="24">
                 <el-form-item label="被甄别重定向">
-                  {{referenceAddress}}
+                  {{redirectUrl}}
                   <span v-pre>
                     /redirect?status=s&uid=[uid]
                   </span>
@@ -280,7 +281,7 @@ nextTick(() => {
               </el-col>
               <el-col :span="24">
                 <el-form-item label="安全重定向">
-                  {{referenceAddress}}
+                  {{redirectUrl}}
                   <span v-pre>
                     /redirect?status=t&uid=[uid]
                   </span>
@@ -337,25 +338,25 @@ nextTick(() => {
 
               <el-col :span="24">
                 <el-form-item label="成功回调">
-                 {{referenceAddress}} <span v-pre>/callback/serviceCallback?status=c&uid=[uid]</span><template v-if="localToptTab.tenantCustomerConfigInfoList[1].encryptionId
+                 {{serverSideUrl}} <span v-pre>/callback/serviceCallback?status=c&uid=[uid]</span><template v-if="localToptTab.tenantCustomerConfigInfoList[1].encryptionId
       "><span v-pre>&hash=[hash]</span></template>
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="配额满回调">
-                 {{referenceAddress}} <span v-pre>/callback/serviceCallback?status=q&uid=[uid]</span><template v-if="localToptTab.tenantCustomerConfigInfoList[1].encryptionId
+                 {{serverSideUrl}} <span v-pre>/callback/serviceCallback?status=q&uid=[uid]</span><template v-if="localToptTab.tenantCustomerConfigInfoList[1].encryptionId
       "><span v-pre>&hash=[hash]</span></template>
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="被甄别回调">
-                 {{referenceAddress}} <span v-pre>/callback/serviceCallback?status=s&uid=[uid]</span><template v-if="localToptTab.tenantCustomerConfigInfoList[1].encryptionId
+                 {{serverSideUrl}} <span v-pre>/callback/serviceCallback?status=s&uid=[uid]</span><template v-if="localToptTab.tenantCustomerConfigInfoList[1].encryptionId
       "><span v-pre>&hash=[hash]</span></template>
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="安全终止回调">
-                 {{referenceAddress}} <span v-pre>/callback/serviceCallback?status=t&uid=[uid]</span><template v-if="localToptTab.tenantCustomerConfigInfoList[1].encryptionId
+                 {{serverSideUrl}} <span v-pre>/callback/serviceCallback?status=t&uid=[uid]</span><template v-if="localToptTab.tenantCustomerConfigInfoList[1].encryptionId
       "><span v-pre>&hash=[hash]</span></template>
                 </el-form-item>
               </el-col>

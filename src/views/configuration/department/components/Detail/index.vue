@@ -88,7 +88,7 @@ defineExpose({
           </div>
         </template>
 <el-row :gutter="24">
-  <el-col :span="6">
+  <el-col :span="8">
     <el-form-item label="部门ID:">
       <el-text class="mx-1">
         {{
@@ -99,7 +99,7 @@ defineExpose({
       </el-text>
     </el-form-item>
   </el-col>
-  <el-col :span="6">
+  <el-col :span="8">
     <el-form-item label="部门名称:">
       <el-text class="mx-1">
         {{
@@ -108,7 +108,7 @@ defineExpose({
       </el-text>
     </el-form-item>
   </el-col>
-  <el-col :span="6">
+  <el-col :span="8">
     <el-form-item label="部门主管:">
       <el-text v-for="item in staffList" :key="item.id">
         <el-text v-if="item.id === detailData?.director">
@@ -117,42 +117,43 @@ defineExpose({
       </el-text>
     </el-form-item>
   </el-col>
-  <el-col :span="6">
+  <el-col :span="8">
     <el-form-item label="员工数:">
       <el-text class="mx-1">
         {{ detailData?.result?.length ? detailData.result?.length : "-" }}
       </el-text>
     </el-form-item>
   </el-col>
-  <el-col :span="6">
-    <el-form-item label="状态:">
-      <el-text class="mx-1">
-        {{ detailData?.commissionStatus === 1 ? "启用" : "禁用" }}
-      </el-text>
-    </el-form-item>
-  </el-col>
-  <el-col :span="6">
-    <el-form-item label="创建时间:">
-      <el-text class="mx-1">
-        {{ detailData?.createTime ? detailData.createTime : "-" }}
-      </el-text>
-    </el-form-item>
-  </el-col>
-  <el-col :span="6">
+  <el-col :span="8">
     <el-form-item label="部门提成:">
       <el-text class="mx-1">
         {{ detailData?.commission ? detailData.commission : "-" }}
       </el-text>
     </el-form-item>
   </el-col>
-  <el-col :span="6">
+  <el-col :span="8">
     <el-form-item label="提成发放规则:">
       <el-text class="mx-1">
         {{ commissionList[detailData?.commissionType-1] ? commissionList[detailData?.commissionType-1].label : "-" }}
       </el-text>
     </el-form-item>
   </el-col>
-  <el-col :span="6">
+
+  <el-col :span="8">
+    <el-form-item label="状态:">
+      <el-text class="mx-1">
+        {{ detailData?.commissionStatus === 1 ? "启用" : "禁用" }}
+      </el-text>
+    </el-form-item>
+  </el-col>
+  <el-col :span="8">
+    <el-form-item label="创建时间:">
+      <el-text class="mx-1">
+        {{ detailData?.createTime ? detailData.createTime : "-" }}
+      </el-text>
+    </el-form-item>
+  </el-col>
+  <el-col :span="8">
     <el-form-item label="备注:">
       <el-text class="mx-1">
         {{ detailData?.remark ? detailData.remark : "-" }}
@@ -167,27 +168,34 @@ defineExpose({
             <span>员工</span>
           </div>
         </template>
-  <el-table :data="detailData?.result" border>
+  <el-table :data="detailData?.result">
     <el-table-column align="left" type="index" label="序号" width="80" />
-    <el-table-column align="left" show-overflow-tooltip prop="id" label="员工ID" />
-    <el-table-column align="left" show-overflow-tooltip prop="userName" label="用户名"><template #default="{ row }">
-                {{ row.userName ? row.userName : "-" }}
+    <el-table-column align="left" show-overflow-tooltip prop="id" label="员工ID">
+      <template #default="{ row }">
+        <div class="copyId">
+          <div class="id oneLine"> ID: {{ row.id ? row.id : "-" }}</div>
+                  <copy class="copy" :content="row.id" />
+        </div>
+              </template>
+    </el-table-column>
+    <el-table-column align="left" show-overflow-tooltip prop="userName" label="用户名"><template #default="{ row }" >
+      <div class="tableBig">{{ row.userName ? row.userName : "-" }}</div>
               </template>
     </el-table-column>
     <el-table-column align="left" show-overflow-tooltip prop="name" label="姓名"><template #default="{ row }">
-                {{ row.name ? row.name : "-" }}
+      <div class="tableBig">{{ row.name ? row.name : "-" }} </div>
               </template>
     </el-table-column>
     <el-table-column align="left" show-overflow-tooltip prop="phoneNumber" label="电话号码"><template #default="{ row }">
-                {{ row.phoneNumber ? row.phoneNumber : "-" }}
+      <div class="tableBig">{{ row.phoneNumber ? row.phoneNumber : "-" }} </div>
               </template>
     </el-table-column>
     <el-table-column align="left" show-overflow-tooltip prop="email" label="电子邮箱"><template #default="{ row }">
-                {{ row.email ? row.email : "-" }}
+      <div class="tableBig">{{ row.email ? row.email : "-" }} </div>
               </template>
     </el-table-column>
     <el-table-column align="left" show-overflow-tooltip prop="departmentId" label="部门"><template #default="{ row }">
-            <el-text v-for="item in departmentList" :key="item.id">
+            <el-text v-for="item in departmentList" :key="item.id" class="tableBig">
               <el-text v-if="item.id === row.departmentId">
                 {{ item.name }}
               </el-text>
@@ -195,7 +203,7 @@ defineExpose({
           </template>
     </el-table-column>
     <el-table-column align="left" show-overflow-tooltip prop="personId" label="职位"><template #default="{ row }">
-                <el-text v-for="item in positionManageList">
+                <el-text v-for="item in positionManageList" class="tableBig">
                   <el-text v-if="row.positionId === item.id">
                     {{ item.name ? item.name : "-" }}
                   </el-text>
@@ -203,7 +211,7 @@ defineExpose({
               </template>
     </el-table-column>
     <el-table-column align="left" show-overflow-tooltip prop="groupId" label="小组"><template #default="{ row }">
-                <el-text v-for="item in groupManageList">
+                <el-text v-for="item in groupManageList" class="tableBig">
                   <el-text v-if="row.groupId === item.id">
                     {{ item.name ? item.name : "-" }}
                   </el-text>
@@ -280,6 +288,20 @@ defineExpose({
       &::after,
       &::before {
         border: 1px #d8261a dashed;
+      }
+    }
+  }
+}
+
+:deep(.el-row) {
+  margin: 0 !important;
+}
+
+:deep {
+  .el-table__body {
+    tr {
+      td:nth-of-type(1) {
+        color: #409EFF !important;
       }
     }
   }

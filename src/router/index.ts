@@ -26,14 +26,14 @@ import useFormSearchStore from '@/store/modules/formSearch' // 筛选项配置
 const { isLoading } = useNProgress();
 
 const router = createRouter({
-  history: createWebHistory (),
+  history: createWebHistory(),
   routes:
     useSettingsStore(pinia).settings.app.routeBaseOn === "filesystem"
       ? constantRoutesByFilesystem
       : (constantRoutes as RouteRecordRaw[]),
 });
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async (to, from, next) => { 
   const settingsStore = useSettingsStore();
   const userStore = useUserStore();
   const routeStore = useRouteStore();

@@ -43,11 +43,9 @@ onMounted(async () => {
 <template>
   <div class="page flex-col">
     <div class="box_1 flex-col">
-
       <div class="text_1">
         <div>传统调研服务难题</div>
         <div>嘉禹调研服务平台为您解决</div>
-
       </div>
       <div class="group_1 flex-row justify-between">
         <div class="box_2 flex-row">
