@@ -129,123 +129,70 @@ defineExpose({ showEdit });
 <template>
   <div v-loading="loading">
     <el-drawer v-model="dialogTableVisible" :title="title" @close="handleClose" size="60%">
-      <!-- <el-card class="box-card">
-        <template #header>
-          <div class="card-header">
-            <span>组长</span>
-          </div>
-        </template>
-<el-table :data="groupLeaderList" border>
-  <el-table-column align="left" type="index" label="序号" width="80" />
-  <el-table-column align="left" show-overflow-tooltip prop="memberId" label="员工ID" />
-  <el-table-column align="left" show-overflow-tooltip prop="lable" label="用户名"><template #default="{ row }">
-              <template v-if="row.memberId">
-                <el-text v-for="item in staffList">
-                  <el-text v-if="row.memberId === item.id">
-                    {{ item.name }}
-                  </el-text>
-                </el-text>
-              </template>
-    <template v-else>
-                <el-text>
-                  {{ row.name }}
-                </el-text>
-              </template>
-    </template>
-  </el-table-column>
-  <el-table-column align="left" show-overflow-tooltip prop="lable" label="姓名"><template #default="{ row }">
-              <template v-if="row.memberId">
-                <el-text v-for="item in staffList">
-                  <el-text v-if="row.memberId === item.id">
-                    {{ item.name }}
-                  </el-text>
-                </el-text>
-              </template>
-    <template v-else>
-                <el-text>
-                  {{ row.name }}
-                </el-text>
-              </template>
-    </template>
-  </el-table-column>
-  <el-table-column align="left" show-overflow-tooltip prop="lable" label="部门"><template #default="{ row }">
-              <el-text v-for="item in departmentList">
-                <el-text v-if="department === item.id">
-                  {{ item.name }}
-                </el-text>
-              </el-text>
-            </template>
-  </el-table-column>
-  <el-table-column align="left" width="200" fixed="right" show-overflow-tooltip label="提成比例">
-    <template #default="{ row }">
-              {{row.commission? row.commission + '%' : '-'}}
-            </template>
-  </el-table-column>
-  <template #empty>
-            <el-empty :image="empty" :image-size="300" />
-          </template>
-</el-table>
-</el-card> -->
       <el-card class="box-card">
         <template #header>
           <div class="card-header">
             <span>组成员</span>
           </div>
         </template>
-        <el-table ref="tableRef" :data="dataList" border>
+        <el-table ref="tableRef" :data="dataList">
           <el-table-column align="left" type="index" label="序号" width="80" />
-          <el-table-column align="left" show-overflow-tooltip prop="memberId" label="员工ID"><template
-              #default="{ row }">
-              <el-text v-if="row.memberId">
-                {{ row.memberId }}
-              </el-text>
-              <el-text v-else>
-                {{ row.id }}
-              </el-text>
+          <el-table-column align="left" show-overflow-tooltip prop="memberId" label="员工ID"><template #default="{ row }">
+              <div class="copyId">
+
+                <template v-if="row.memberId">
+                  <div class="id oneLine"> ID: {{ row.memberId }}</div>
+                  <copy class="copy" :content="row.memberId" />
+                </template>
+                <template v-else>
+                  <div class="id oneLine">ID: {{ row.id }}</div>
+                  <copy class="copy" :content="row.id" />
+                </template>
+
+              </div>
             </template>
           </el-table-column>
-          <el-table-column align="left" show-overflow-tooltip prop="userName" label="用户名"><template
-              #default="{ row }">
+          <el-table-column align="left" show-overflow-tooltip prop="userName" label="用户名"><template #default="{ row }">
               <template v-if="row.id">
-                <el-text v-for="item in staffList">
+                <el-text v-for="item in staffList" class="tableBig">
                   <el-text v-if="row.id === item.id">
                     {{ item.name }}
                   </el-text>
                 </el-text>
               </template>
-              <template v-else>
+              <template class="tableBig" v-else>
                 <el-text>
                   {{ row.userName ? row.userName : '-' }}
                 </el-text>
               </template>
             </template>
           </el-table-column>
-          <el-table-column align="left" show-overflow-tooltip prop="name" label="姓名"><template #default="{ row }">
+          <el-table-column align="left" show-overflow-tooltip prop="name"  label="姓名"><template #default="{ row }">
               <template v-if="row.id">
-                <el-text v-for="item in staffList">
+                <el-text class="tableBig" v-for="item in staffList">
                   <el-text v-if="row.id === item.id">
                     {{ item.name }}
                   </el-text>
                 </el-text>
               </template>
-              <template v-else>
+              <template class="tableBig" v-else>
                 <el-text>
                   {{ row.name }}
                 </el-text>
               </template>
             </template>
           </el-table-column>
-          <el-table-column align="left" show-overflow-tooltip prop="lable" label="职位"><template #default="{ row }">
-              <el-text v-for="item in positionManageList">
-                <el-text v-if="row.positionId === item.id">
+          <el-table-column align="left" show-overflow-tooltip prop="lable" label="部门"><template #default="{ row }">
+              <el-text v-for="item in departmentList" class="tableBig">
+                <el-text v-if="department === item.id">
                   {{ item.name }}
                 </el-text>
               </el-text>
             </template>
           </el-table-column>
-          <el-table-column align="left" show-overflow-tooltip prop="lable" label="部门"><template #default="{ row }">
-              <el-text v-for="item in departmentList">
-                <el-text v-if="department === item.id">
+          <el-table-column align="left" show-overflow-tooltip prop="lable" label="职位"><template #default="{ row }">
+              <el-text v-for="item in positionManageList" class="tableBig">
+                <el-text v-if="row.positionId === item.id">
                   {{ item.name }}
                 </el-text>
               </el-text>
@@ -253,7 +200,9 @@ defineExpose({ showEdit });
           </el-table-column>
           <el-table-column align="left" width="200" fixed="right" show-overflow-tooltip label="提成比例">
             <template #default="{ row }">
-              {{ row.commission ? row.commission + '%' : '-' }}
+              <div class="tableBig">
+                {{ row.commission ? row.commission + '%' : '-' }}
+              </div>
             </template>
           </el-table-column>
           <template #empty>
@@ -280,5 +229,15 @@ defineExpose({ showEdit });
 
 :deep(.el-form-item) {
   margin-bottom: 0px;
+}
+
+:deep {
+  .el-table__body {
+    tr {
+      td:nth-of-type(1) {
+        color: #409EFF !important;
+      }
+    }
+  }
 }
 </style>

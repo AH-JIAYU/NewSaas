@@ -38,7 +38,7 @@ onMounted(() => {
   }, 1000)
 })
 
-function goBack() {
+function goBack() { 
   router.push(settingsStore.settings.home.fullPath)
 }
 </script>

@@ -5,16 +5,19 @@ import MultilevelMenuExample from "./modules/multilevel.menu.example";
 import type { Route } from "#/global";
 import { $t } from "@/locales";
 import useSettingsStore from "@/store/modules/settings";
+function Layout() {
+  return import("@/layouts/index.vue");
+}
 
 // 固定路由（默认路由）
 const constantRoutes: RouteRecordRaw[] = [
   {
-    path: "/",
+    path: "/home",
     name: "home",
-    component: () => import("@/views/home/index.vue"),
+    // component: () => import("@/views/home/index.vue"),
+    component: () => Layout,
     meta: {
-      whiteList: true,
-      title: "主页",
+      whiteList: false,
     },
   },
   {

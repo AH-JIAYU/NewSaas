@@ -268,7 +268,11 @@ textarea {
     margin-bottom: 15px !important;
     box-shadow: 0px 1px 5px #899aab50 !important;
     border: 1px solid #fafafa;
-    background-color: #fafcfe;
+    padding: 24px;
+    // background-color: #fafcfe;
+    .el-card__body{
+      padding: 24px 0;
+    }
   }
 }
 
