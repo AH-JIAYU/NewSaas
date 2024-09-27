@@ -640,7 +640,7 @@ const agreements = (val: any) => {
               <ElCheckbox v-model="loginForm.agreeToTheAgreement" tabindex="3">
                 我已阅读并同意
                 <el-button type="primary" size="default" link @click="agreements(1)">《会员协议》</el-button>和<el-button
-                  type="primary" size="default" link @click="agreements(2)">《隐私协议》</el-button>
+                  type="primary" size="default" link @click="agreements(2)">《服务协议》</el-button>
               </ElCheckbox>
             </div>
           </ElFormItem>
@@ -773,7 +773,7 @@ const agreements = (val: any) => {
             <ElCheckbox v-model="registerForm.agreeToTheAgreement" tabindex="8">
               我已阅读并同意
               <el-button type="primary" size="default" link @click="agreements(1)">《会员协议》</el-button>和<el-button
-                type="primary" size="default" link @click="agreements(2)">《隐私协议》</el-button>
+                type="primary" size="default" link @click="agreements(2)">《服务协议》</el-button>
             </ElCheckbox>
           </ElFormItem>
         </div>
