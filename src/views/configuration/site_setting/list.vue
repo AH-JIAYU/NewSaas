@@ -124,6 +124,10 @@ const formRules = ref<FormRules>({
     { required: false, trigger: "blur", message: "请输入QQ号码" },
     { validator: validateQQ, trigger: "blur" },
   ],
+  address: [
+    { required: false, message: '请输入内容', trigger: 'blur' },
+     { max: 50, message: '最多输入 50 字', trigger: 'blur' }
+    ],
 });
 onMounted(() => {
   loading.value = true;
@@ -429,7 +433,7 @@ function onSubmit() {
                 </el-form-item>
               </el-col>
               <el-col :span="24">
-                <el-form-item label="公司地址" prop="">
+                <el-form-item label="公司地址" prop="address">
                   <el-input style="width: 22.4375rem" v-model="form.address" placeholder="" />
                 </el-form-item>
               </el-col>

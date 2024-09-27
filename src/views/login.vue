@@ -341,14 +341,17 @@ const registerSendCode = debounce(async (params: any) => {
 }, 1000)
 // 获取验证码
 const mobileVerificationCode = async () => {
+  // 首先，验证国家选择
+  const countryValid = await registerFormRef.value.validateField('country');
   registerFormRef.value.validateField(
     registerForm.value.country === "CN" ? "phoneNumber" : "email",
     async (valid: any) => {
-      if (valid) {
+      if (valid && countryValid) {
         const params = {
           type: "register_phone_number", // 默认手机号
           email: registerForm.value.email,
           phone: registerForm.value.phoneNumber,
+          countryCode:registerForm.value.country,
         };
         if (registerForm.value.country === "CN") {
           phoneCode.value = `正在发送验证码`
