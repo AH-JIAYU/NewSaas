@@ -449,7 +449,7 @@ const formOption = {
           show-overflow-tooltip
           prop="isOnline"
           align="left"
-          width="100"
+          width="120"
           label="状态"
         >
           <template #default="{ row }">
@@ -464,7 +464,7 @@ const formOption = {
             />
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('projectType')"   align="left" label="项目">
+        <el-table-column v-if="checkList.includes('projectType')"   align="left" label="项目" width="150">
           <template #default="{ row }">
             <div>
               <el-button
@@ -504,6 +504,7 @@ const formOption = {
           prop="name"
           align="left"
           label="名称/标识"
+          width="150"
           ><template #default="{ row }">
             <div class="flex-c">
               <div class="oneLine" style="width: calc(100% - 1.25rem)">
@@ -622,7 +623,7 @@ const formOption = {
           </template>
         </el-table-column>
 
-        <el-table-column v-if="checkList.includes('doMoneyPrice')" show-overflow-tooltip align="left" label="原价">
+        <el-table-column v-if="checkList.includes('doMoneyPrice')" show-overflow-tooltip align="left" label="原价" width="100">
           <template #default="{ row }">
             <div class="flex-c">
               <div class="oneLine tableBig" style="width: calc(100% - 1.25rem)">
@@ -713,15 +714,19 @@ const formOption = {
           align="left"
           width="100"
           label="创建"
+          show-overflow-tooltip
           ><template #default="{ row }">
-            <el-text class="tableBig">{{ row.createName }}</el-text>
+            <div>
+            <div class="tableBig oneLine">{{ row.createName }}</div>
             <el-tag effect="plain" type="info">{{
               format(row.createTime)
             }}</el-tag>
+            </div>
+
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('remark')" show-overflow-tooltip prop="remark" align="left"
-          width="100" label="备注"><template #default="{ row }">
+           label="备注"><template #default="{ row }">
             <div class="flex-c ">
               <div class="oneLine tableBig" style="width: calc(100% - 1.25rem);">
                 {{ row.remark ? row.remark : "-" }}

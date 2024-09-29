@@ -11,15 +11,15 @@ function Layout() {
 
 // 固定路由（默认路由）
 const constantRoutes: RouteRecordRaw[] = [
-  {
-    path: "/home",
-    name: "home",
-    // component: () => import("@/views/home/index.vue"),
-    component: () => Layout,
-    meta: {
-      whiteList: false,
-    },
-  },
+  // {
+  //   path: "/home",
+  //   name: "home",
+  //   // component: () => import("@/views/home/index.vue"),
+  //   component: () => Layout,
+  //   meta: {
+  //     whiteList: false,
+  //   },
+  // },
   {
     path: "/login",
     name: "login",
