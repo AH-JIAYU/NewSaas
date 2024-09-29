@@ -311,7 +311,7 @@ function onSubmit() {
             </el-row>
           </el-tab-pane> -->
 
-          <el-tab-pane label="联系我们" name="联系我们">
+          <!-- <el-tab-pane label="联系我们" name="联系我们">
             <el-row :gutter="20">
               <el-col :span="24">
                 <el-form-item label="电子邮箱" prop="email">
@@ -339,7 +339,7 @@ function onSubmit() {
                 </el-form-item>
               </el-col>
             </el-row>
-          </el-tab-pane>
+          </el-tab-pane> -->
         </el-form>
       </el-tabs>
     </PageMain>

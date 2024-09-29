@@ -7,6 +7,8 @@ const props = defineProps(['id', 'row', 'mode'])
 const emits = defineEmits<{
   success: []
 }>()
+// 阻止多次点击
+const isClicked = ref(false);
 // 弹窗
 const visible = defineModel<boolean>({
   default: false,
@@ -17,8 +19,11 @@ const title = computed(() => props.id === '' ? '新增角色' : '编辑角色')
 // 提交
 function onSubmit() {
   // submit() 为组件内部方法
+  if (isClicked.value) return; // 如果已点击，则退出
+  isClicked.value = true; // 设置为已点击状态
   formRef.value.submit().then(() => {
     emits('success')
+    isClicked.value = false; // 可根据需要重置
     onCancel()
   })
 }
@@ -36,7 +41,7 @@ function onCancel() {
         <ElButton size="large" @click="onCancel">
           取消
         </ElButton>
-        <ElButton type="primary" size="large" @click="onSubmit">
+        <ElButton type="primary" size="large" :disabled="isClicked" @click="onSubmit">
           确定
         </ElButton>
       </template>

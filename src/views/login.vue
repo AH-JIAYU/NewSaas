@@ -270,7 +270,7 @@ const registerForm = ref<any>({
   // 税号
   taxID: "",
   // 租户邀约
-  isInvitation: 2,
+  // isInvitation: 2,
 });
 // 自定义校验手机号
 const validatePhoneRegistered = (rule: any, value: any, callback: any) => {
@@ -515,6 +515,7 @@ const resetCheck = () => {
   loginRules.value.account = [
     { required: true, trigger: "blur", message: "请输入手机号/邮箱/用户名" },
   ];
+  loginForm.value.code = ''
   loginFormRef.value.resetFields();
 };
 
@@ -552,7 +553,7 @@ watch(
           code: "", // 验证码
           country: "", //国家
           type: "phone", // 注册方式 phone/email
-          isInvitation: 2, // 租户邀约
+          // isInvitation: 2, // 租户邀约
           agreeToTheAgreement: false,
         };
         break;

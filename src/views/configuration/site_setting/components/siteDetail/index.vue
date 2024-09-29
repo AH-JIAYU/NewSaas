@@ -57,6 +57,18 @@ const formRules = ref<FormRules>({
     { required: true, message: "请输入顶级域名", trigger: "blur" },
     { validator: validateTopLevelDomainName, trigger: "submit" },
   ],
+  tenantDomain: [
+    { required: false, message: "请输入租户域名", trigger: "blur" },
+    { validator: validateTopLevelDomainName, trigger: "submit" },
+  ],
+  supplierDomain: [
+    { required: false, message: "请输入供应商域名", trigger: "blur" },
+    { validator: validateTopLevelDomainName, trigger: "submit" },
+  ],
+  memberDomain: [
+    { required: false, message: "请输入会员域名", trigger: "blur" },
+    { validator: validateTopLevelDomainName, trigger: "submit" },
+  ],
 });
 // 修改
 async function showEdit(row: any) {
@@ -273,215 +285,261 @@ defineExpose({
 </script>
 
 <template>
-  <el-dialog v-model="drawerisible" style="min-height: 560px;" title="详情" @close="handleClose">
+  <el-dialog v-model="drawerisible" style="min-height: 35rem; width: 56.25rem;" title="域名配置" @close="handleClose">
     <div v-loading="listLoading">
-      <el-form style="margin-bottom: 1.5rem;" :model="fileList" ref="formRef" :rules="formRules" label-width="90px"
-        :inline="false">
-        <el-form-item label="顶级域名" prop="domain">
-          <el-input style="width: 26rem;" v-model="fileList.domain" />
-          <el-button style="margin-left: 1.5rem;" plain size="small" type="primary"
-            @click="handleSubmits">确认</el-button>
-        </el-form-item>
-      </el-form>
-      <el-table v-loading="listLoading" border v-show="list.length" :data="list">
-        <el-table-column width="100" align="center" prop="host" show-overflow-tooltip label="解析类型">
-          <template #default>
-            <el-text>CNAME</el-text>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" prop="personalizedDomainName" show-overflow-tooltip label="指向">
-          <template #default="{ row }">
-            <div v-if="row.personalizedDomainName" class="hoverSvg">
-              <p class="fineBom">{{ row.personalizedDomainName }}</p>
-              <span class="c-fx">
-                <copy class="copy" :content="row.personalizedDomainName" />
-              </span>
-            </div>
-            <el-text v-else>-</el-text>
-          </template>
-        </el-table-column>
-        <el-table-column width="100" align="center" prop="type" show-overflow-tooltip label="状态">
-          <template #default>
-            <el-text v-if="form.isAnalysis" style="color: #03c239;">已生效</el-text>
-            <el-text v-else style="color: #FF8181;">未生效</el-text>
-          </template>
-        </el-table-column>
-        <el-table-column width="100" align="center" prop="type" show-overflow-tooltip label="操作">
-          <template #default>
-            <el-button type="primary" plain size="small" @click="onSubmit">
-              验证
-            </el-button>
-          </template>
-        </el-table-column>
-        <template #empty>
-          <el-empty :image="empty" :image-size="300" />
-        </template>
-      </el-table>
       <div class="step">
         <div class="stepTop">
           <div class="stepTopL">
             <span></span>
             <h3>核心步骤</h3>
           </div>
-          <div v-if="form.isHttpsStatus" class="stepTopR">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <g id="Frame" clip-path="url(#clip0_735_20333)">
-                <path id="Vector"
-                  d="M13.1223 13.2873H0.875C0.784766 13.2873 0.710938 13.2135 0.710938 13.1232V0.875977C0.710938 0.785742 0.784766 0.711914 0.875 0.711914H13.1236C13.2139 0.711914 13.2877 0.785742 13.2877 0.875977V13.1246C13.2863 13.2148 13.2139 13.2873 13.1223 13.2873Z"
-                  fill="#03C239" />
-                <path id="Vector_2"
-                  d="M11.8645 14H2.13555C0.958398 14 0 13.0416 0 11.8645V2.13555C0 0.958398 0.958398 0 2.13555 0H11.8645C13.0416 0 14 0.958398 14 2.13555V11.8645C14 13.0416 13.0416 14 11.8645 14ZM2.13555 1.42324C1.74316 1.42324 1.42324 1.74316 1.42324 2.13555V11.8645C1.42324 12.2568 1.74316 12.5768 2.13555 12.5768H11.8645C12.2568 12.5768 12.5768 12.2568 12.5768 11.8645V2.13555C12.5768 1.74316 12.2568 1.42324 11.8645 1.42324H2.13555Z"
-                  fill="#03C239" />
-                <path id="Vector_3"
-                  d="M5.74753 11.0141C5.60124 11.0141 5.45359 10.969 5.32781 10.8774L1.89343 8.36725C1.57624 8.13483 1.50652 7.69049 1.73894 7.37194C1.97136 7.05475 2.41706 6.98502 2.73425 7.21745L5.64909 9.34752L11.163 3.22116C11.4255 2.92858 11.8766 2.90533 12.1678 3.16784C12.4591 3.43034 12.4837 3.88151 12.2212 4.17272L6.278 10.7762C6.13718 10.9335 5.94304 11.0141 5.74753 11.0141Z"
-                  fill="white" />
-              </g>
-              <defs>
-                <clipPath id="clip0_735_20333">
-                  <rect width="14" height="14" fill="white" />
-                </clipPath>
-              </defs>
-            </svg>
-            <p>CNAME解析成功</p>
-          </div>
-          <div v-else class="stepTopR">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <g id="Frame" clip-path="url(#clip0_734_18750)">
-                <path id="Vector"
-                  d="M13.1223 13.2873H0.875C0.784766 13.2873 0.710938 13.2135 0.710938 13.1232V0.875977C0.710938 0.785742 0.784766 0.711914 0.875 0.711914H13.1236C13.2139 0.711914 13.2877 0.785742 13.2877 0.875977V13.1246C13.2863 13.2148 13.2139 13.2873 13.1223 13.2873Z"
-                  fill="#FF8181" />
-                <path id="Vector_2"
-                  d="M11.8645 14H2.13555C0.958398 14 0 13.0416 0 11.8645V2.13555C0 0.958398 0.958398 0 2.13555 0H11.8645C13.0416 0 14 0.958398 14 2.13555V11.8645C14 13.0416 13.0416 14 11.8645 14ZM2.13555 1.42324C1.74316 1.42324 1.42324 1.74316 1.42324 2.13555V11.8645C1.42324 12.2568 1.74316 12.5768 2.13555 12.5768H11.8645C12.2568 12.5768 12.5768 12.2568 12.5768 11.8645V2.13555C12.5768 1.74316 12.2568 1.42324 11.8645 1.42324H2.13555Z"
-                  fill="#FF8181" />
-                <g id="Group 18190">
-                  <path id="Vector_3" d="M4.5 5L9.5 10" stroke="white" stroke-width="1.2" stroke-linecap="round"
-                    stroke-linejoin="round" />
-                  <path id="Vector_4" d="M4.5 10L9.5 5" stroke="white" stroke-width="1.2" stroke-linecap="round"
-                    stroke-linejoin="round" />
-                </g>
-              </g>
-              <defs>
-                <clipPath id="clip0_734_18750">
-                  <rect width="14" height="14" fill="white" />
-                </clipPath>
-              </defs>
-            </svg>
-            <p style="color: #FF8181;">SSL证书未上传</p>
+          <div style="display: flex;
+          align-items: center; margin-left: .25rem; margin-top: .125rem; color: #333;">
+            <el-tooltip class="tooltips" content="核心步骤" placement="top">
+              <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
+            </el-tooltip>
+            <!-- 若上传证书网址格式默认绑定HTTPS -->
           </div>
         </div>
         <div class="stepBom">
           <p class="detail">1、登录域名注册商的网站，找到管理域名的控制面板或域名管理页面。</p>
           <p class="detail">2、在域名管理页面中，找到DNS设置、域名解析或类似的选项。</p>
           <p class="detail">3、添加相应的DNS记录来完成域名解析。注意<span>仅支持采用CNAME </span>记录来完成解析。</p>
+          <p class="detail bule">4、顶级域名请用一级域名；租户域名、供应商域名、会员域名，为顶级域名下的二级域名，HTTPS需要配置通配符证书</p>
         </div>
       </div>
-      <div class="beCareful">
-        <p>
-          <span class="svg">
-            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="14" viewBox="0 0 15 14" fill="none">
-              <g id="Frame" clip-path="url(#clip0_735_20343)">
-                <path id="Vector"
-                  d="M13.7494 9.58822C13.3912 10.4156 12.9069 11.1344 12.2964 11.7446C11.6861 12.3551 10.9696 12.8396 10.1474 13.1976C9.32505 13.556 8.44467 13.7349 7.50627 13.7349C6.56811 13.7349 5.68523 13.556 4.85766 13.1976C4.0303 12.8396 3.31148 12.3551 2.70123 11.7446C2.09076 11.1344 1.60623 10.4156 1.24828 9.58822C0.889912 8.76065 0.710938 7.87778 0.710938 6.9396C0.710938 6.0012 0.889912 5.12082 1.24828 4.29844C1.60623 3.47626 2.09076 2.75973 2.70123 2.14947C3.31148 1.539 4.0303 1.05467 4.85766 0.696523C5.68523 0.338372 6.56811 0.15918 7.50627 0.15918C8.44467 0.15918 9.32505 0.338371 10.1474 0.696523C10.9696 1.05469 11.6861 1.539 12.2964 2.14947C12.9069 2.75974 13.3912 3.47628 13.7494 4.29844C14.1075 5.12082 14.2867 6.0012 14.2867 6.9396C14.2867 7.87778 14.1075 8.76065 13.7494 9.58822Z"
-                  fill="#FF8181" />
-                <path id="Vector_2"
-                  d="M7.49722 9.69629C6.95489 9.69629 6.51562 10.1356 6.51562 10.6779C6.51562 11.2202 6.95489 11.6595 7.49722 11.6595C8.03955 11.6595 8.47882 11.2202 8.47882 10.6779C8.47882 10.1356 8.03955 9.69629 7.49722 9.69629Z"
-                  fill="white" />
-                <path id="Vector_3"
-                  d="M7.49722 8.74593C7.2263 8.74593 7.00642 8.28775 7.00642 7.72207L6.51562 3.11468C6.51562 2.549 6.95489 2.09082 7.49722 2.09082C8.03955 2.09082 8.47882 2.549 8.47882 3.11468L7.98802 7.72207C7.98802 8.28775 7.76814 8.74593 7.49722 8.74593Z"
-                  fill="white" />
-              </g>
-              <defs>
-                <clipPath id="clip0_735_20343">
-                  <rect width="14" height="14" fill="white" transform="translate(0.5)" />
-                </clipPath>
-              </defs>
-            </svg>
-          </span>
-          核心步骤完成后支持进行验证操作<span class="red">（关键信息如上）</span>解析设置完成后，需要等待一段时间<span class="bule">（3~24小时）</span>
-        </p>
-
+      <div class="step">
+        <el-form style="margin: 0; width: 100%; height: 100%;" :model="fileList" ref="formRef" :rules="formRules"
+          label-width="120px" :inline="false">
+          <el-row style="margin: 0 !important" :gutter="20">
+            <el-col :span="12">
+              <el-form-item label="顶级域名" prop="domain">
+                <el-input style="width: 19.5rem;" v-model="fileList.domain" placeholder="请输入顶级域名" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="10">
+              <el-form-item label="指向域名">
+                <el-input disabled style="width: 16.375rem;" v-model="fileList.domain" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="2">
+              <p class="svgRed">
+                <span class="colorRed">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <g id="Group 18219">
+                      <circle id="Ellipse 84" cx="7" cy="7" r="7" fill="#FFD5D5" />
+                      <circle id="Ellipse 83" cx="7" cy="7" r="3.5" fill="#FF8181" />
+                    </g>
+                  </svg>
+                </span>
+                未生效
+              </p>
+              <p class="svgGreen">
+                <span class="colorGreen">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <g id="Group 18219">
+                      <circle id="Ellipse 84" cx="7" cy="7" r="7" fill="#DDFED5" />
+                      <circle id="Ellipse 83" cx="7" cy="7" r="3.5" fill="#01D83D" />
+                    </g>
+                  </svg>
+                </span>
+                已生效
+              </p>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="租户后台域名" prop="tenantDomain">
+                <el-input style="width: 19.5rem;" v-model="fileList.domain" placeholder="请输入租户域名" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="10">
+              <el-form-item label="指向域名">
+                <el-input disabled style="width: 16.375rem;" v-model="fileList.domain" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="2">
+              <p class="svgRed">
+                <span class="colorRed">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <g id="Group 18219">
+                      <circle id="Ellipse 84" cx="7" cy="7" r="7" fill="#FFD5D5" />
+                      <circle id="Ellipse 83" cx="7" cy="7" r="3.5" fill="#FF8181" />
+                    </g>
+                  </svg>
+                </span>
+                未生效
+              </p>
+              <p class="svgGreen">
+                <span class="colorGreen">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <g id="Group 18219">
+                      <circle id="Ellipse 84" cx="7" cy="7" r="7" fill="#DDFED5" />
+                      <circle id="Ellipse 83" cx="7" cy="7" r="3.5" fill="#01D83D" />
+                    </g>
+                  </svg>
+                </span>
+                已生效
+              </p>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="供应商后台域名" prop="supplierDomain">
+                <el-input style="width: 19.5rem;" v-model="fileList.domain" placeholder="请输入供应商域名" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="10">
+              <el-form-item label="指向域名">
+                <el-input disabled style="width: 16.375rem;" v-model="fileList.domain" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="2">
+              <p class="svgRed">
+                <span class="colorRed">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <g id="Group 18219">
+                      <circle id="Ellipse 84" cx="7" cy="7" r="7" fill="#FFD5D5" />
+                      <circle id="Ellipse 83" cx="7" cy="7" r="3.5" fill="#FF8181" />
+                    </g>
+                  </svg>
+                </span>
+                未生效
+              </p>
+              <p class="svgGreen">
+                <span class="colorGreen">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <g id="Group 18219">
+                      <circle id="Ellipse 84" cx="7" cy="7" r="7" fill="#DDFED5" />
+                      <circle id="Ellipse 83" cx="7" cy="7" r="3.5" fill="#01D83D" />
+                    </g>
+                  </svg>
+                </span>
+                已生效
+              </p>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="会员后台域名" prop="memberDomain">
+                <el-input style="width: 19.5rem;" v-model="fileList.domain" placeholder="请输入会员域名" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="10">
+              <el-form-item label="指向域名">
+                <el-input disabled style="width: 16.375rem;" v-model="fileList.domain" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="2">
+              <p class="svgRed">
+                <span class="colorRed">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <g id="Group 18219">
+                      <circle id="Ellipse 84" cx="7" cy="7" r="7" fill="#FFD5D5" />
+                      <circle id="Ellipse 83" cx="7" cy="7" r="3.5" fill="#FF8181" />
+                    </g>
+                  </svg>
+                </span>
+                未生效
+              </p>
+              <p class="svgGreen">
+                <span class="colorGreen">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <g id="Group 18219">
+                      <circle id="Ellipse 84" cx="7" cy="7" r="7" fill="#DDFED5" />
+                      <circle id="Ellipse 83" cx="7" cy="7" r="3.5" fill="#01D83D" />
+                    </g>
+                  </svg>
+                </span>
+                已生效
+              </p>
+            </el-col>
+          </el-row>
+        </el-form>
       </div>
-      <div style="display: flex; height: 30px; margin-bottom: 24px;">
-        <el-form-item label="开启HTTPS">
+      <div style="display: flex;justify-content: space-between; height: 30px; margin: 24px 0;">
+        <div>
+          <el-button size="default" type="primary" @click="handleSubmits">确认</el-button>
+          <el-button style="margin-left: 1rem;background-color: #aaaaaa;border: none;" size="default" type="primary"
+            @click="handleSubmits">已确认</el-button>
+          <el-button style="margin-left: 1rem;background-color: #ff9d33;border: none;" size="default" type="primary"
+            @click="handleSubmits">验证</el-button>
+        </div>
+        <el-form-item style="width: 8.25rem;" label="开启HTTPS上传">
           <el-checkbox v-model="form.isChecked" size="large" />
         </el-form-item>
-        <div v-show="form.isChecked" style="display: flex;
-    align-items: center; margin-right: 4px;color: #333;">
+      </div>
+      <div v-show="form.isChecked" class="update">
+        <div class="title">
+          <span style="margin-right: 50px;">证书</span>
+          <span>私钥</span>
+        </div>
+        <div class="form">
+          <el-form style="display: flex; width: 23rem; height:10.625rem;" @submit.prevent="handleSubmit">
+            <el-form-item label="">
+              <el-upload class="upload-demo" drag :file-list="fileList.certificate" :action="Url" :headers="headers"
+                :on-change="handleFileChange('certificate')" :on-remove="handleRemove('certificate')" list-type="text"
+                :limit="1" :auto-upload="false">
+                <svg xmlns="http://www.w3.org/2000/svg" width="81" height="80" viewBox="0 0 81 80" fill="none">
+                  <g id="Frame">
+                    <path id="Vector"
+                      d="M64.7018 37.4596C64.7018 37.4596 64.2118 21.3346 51.0768 18.1296C37.9418 14.9246 31.6118 28.7646 31.4818 29.1596C31.3518 29.5546 30.7068 29.3746 30.7068 29.3746C29.6568 28.3796 25.0268 26.0946 20.1618 29.0246C15.3018 31.9546 17.0618 37.5196 17.0618 37.5196C17.0618 37.5196 9.85676 36.9346 6.16176 48.0596C2.47176 59.1946 15.4168 62.3496 15.4168 62.3496H37.1468V50.5046H32.7968H32.4168H32.1218V50.4846C31.8718 50.4846 31.6718 50.2846 31.6718 50.0296C31.6718 49.8796 31.7518 49.7496 31.8718 49.6646L40.7768 40.2996C40.9018 40.1596 41.0768 40.0646 41.2818 40.0646C41.4918 40.0646 41.6768 40.1696 41.8018 40.3246L50.6418 49.6146C50.6568 49.6246 50.6718 49.6396 50.6868 49.6546L50.7718 49.7446H50.7418C50.7868 49.8246 50.8168 49.8946 50.8168 49.9896C50.8168 50.2696 50.5918 50.4996 50.3068 50.4996C50.2968 50.4996 50.2968 50.4896 50.2868 50.4896V50.5096H45.4968V62.3546H65.2218C65.2218 62.3546 74.6268 59.9996 75.4568 50.2896C76.2968 40.5796 64.7018 37.4596 64.7018 37.4596Z"
+                      fill="#409EFF" />
+                  </g>
+                </svg>
+                <div class="el-upload__text">
+                  支持点击或拖拽上传
+                </div>
+                <template #tip>
+                  <div v-if="form.isUploadSSLCert" class="el-upload__tip">
+                    <el-button type="primary" size="default" link
+                      @click="handleFileDtail('certificate')">点击查看文件详情</el-button>
+                  </div>
+                  <div v-else class="el-upload__tip">
+                    请上传.PEM格式的文件
+                  </div>
+                </template>
+              </el-upload>
+            </el-form-item>
+            <el-form-item label="">
+              <el-upload class="upload-demo" drag :action="Url" :headers="headers" :file-list="fileList.private_key"
+                :on-change="handleFileChange('private_key')" :on-remove="handleRemove('private_key')" list-type="text"
+                :limit="1" :auto-upload="false">
+                <svg xmlns="http://www.w3.org/2000/svg" width="81" height="80" viewBox="0 0 81 80" fill="none">
+                  <g id="Frame">
+                    <path id="Vector"
+                      d="M64.7018 37.4596C64.7018 37.4596 64.2118 21.3346 51.0768 18.1296C37.9418 14.9246 31.6118 28.7646 31.4818 29.1596C31.3518 29.5546 30.7068 29.3746 30.7068 29.3746C29.6568 28.3796 25.0268 26.0946 20.1618 29.0246C15.3018 31.9546 17.0618 37.5196 17.0618 37.5196C17.0618 37.5196 9.85676 36.9346 6.16176 48.0596C2.47176 59.1946 15.4168 62.3496 15.4168 62.3496H37.1468V50.5046H32.7968H32.4168H32.1218V50.4846C31.8718 50.4846 31.6718 50.2846 31.6718 50.0296C31.6718 49.8796 31.7518 49.7496 31.8718 49.6646L40.7768 40.2996C40.9018 40.1596 41.0768 40.0646 41.2818 40.0646C41.4918 40.0646 41.6768 40.1696 41.8018 40.3246L50.6418 49.6146C50.6568 49.6246 50.6718 49.6396 50.6868 49.6546L50.7718 49.7446H50.7418C50.7868 49.8246 50.8168 49.8946 50.8168 49.9896C50.8168 50.2696 50.5918 50.4996 50.3068 50.4996C50.2968 50.4996 50.2968 50.4896 50.2868 50.4896V50.5096H45.4968V62.3546H65.2218C65.2218 62.3546 74.6268 59.9996 75.4568 50.2896C76.2968 40.5796 64.7018 37.4596 64.7018 37.4596Z"
+                      fill="#409EFF" />
+                  </g>
+                </svg>
+                <div class="el-upload__text">
+                  支持点击或拖拽上传
+                </div>
+                <template #tip>
+                  <div v-if="form.isUploadSSLCert" class="el-upload__tip">
+                    <el-button type="primary" size="default" link
+                      @click="handleFileDtail('private_key')">点击查看文件详情</el-button>
+                  </div>
+                  <div v-else class="el-upload__tip">
+                    请上传.PEM格式的文件
+                  </div>
+                </template>
+              </el-upload>
+            </el-form-item>
+          </el-form>
+        </div>
+      </div>
+      <div v-show="form.isChecked" style="display: flex; height: 30px; margin-bottom: 1.5rem">
+        <el-button style="margin-right: 1.5rem;" type="primary" size="default" @click="handleSubmit">确认</el-button>
+        <div  style="display: flex;
+          align-items: center; margin-right: 4px;color: #333;">
           <el-tooltip class="tooltips" content="证书上传成功后,支持开启此功能" placement="top">
             <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
           </el-tooltip>
           <!-- 若上传证书网址格式默认绑定HTTPS -->
         </div>
-        <el-form-item v-show="form.isChecked" label="是否强制开启HTTPS">
+        <el-form-item  label="">
           <el-switch v-model="fileList.forceHttps"
             :disabled="!fileList.certificate.length && !fileList.private_key.length && !form.isUploadSSLCert"
-            inline-prompt :active-value="2" :inactive-value="1">
-          </el-switch>
+            inline-prompt :active-value="2" :inactive-value="1" active-text="开启" inactive-text="关闭" />
         </el-form-item>
       </div>
-      <div v-show="form.isChecked" class="title">
-        <span style="margin-right: 50px;">证书</span>
-        <span>私钥</span>
-      </div>
-      <div v-show="form.isChecked" class="form">
-        <el-form style="display: flex; width: 23rem; height:10.625rem;" @submit.prevent="handleSubmit">
-          <el-form-item label="">
-            <el-upload class="upload-demo" drag :file-list="fileList.certificate" :action="Url" :headers="headers"
-              :on-change="handleFileChange('certificate')" :on-remove="handleRemove('certificate')" list-type="text"
-              :limit="1" :auto-upload="false">
-              <svg xmlns="http://www.w3.org/2000/svg" width="81" height="80" viewBox="0 0 81 80" fill="none">
-                <g id="Frame">
-                  <path id="Vector"
-                    d="M64.7018 37.4596C64.7018 37.4596 64.2118 21.3346 51.0768 18.1296C37.9418 14.9246 31.6118 28.7646 31.4818 29.1596C31.3518 29.5546 30.7068 29.3746 30.7068 29.3746C29.6568 28.3796 25.0268 26.0946 20.1618 29.0246C15.3018 31.9546 17.0618 37.5196 17.0618 37.5196C17.0618 37.5196 9.85676 36.9346 6.16176 48.0596C2.47176 59.1946 15.4168 62.3496 15.4168 62.3496H37.1468V50.5046H32.7968H32.4168H32.1218V50.4846C31.8718 50.4846 31.6718 50.2846 31.6718 50.0296C31.6718 49.8796 31.7518 49.7496 31.8718 49.6646L40.7768 40.2996C40.9018 40.1596 41.0768 40.0646 41.2818 40.0646C41.4918 40.0646 41.6768 40.1696 41.8018 40.3246L50.6418 49.6146C50.6568 49.6246 50.6718 49.6396 50.6868 49.6546L50.7718 49.7446H50.7418C50.7868 49.8246 50.8168 49.8946 50.8168 49.9896C50.8168 50.2696 50.5918 50.4996 50.3068 50.4996C50.2968 50.4996 50.2968 50.4896 50.2868 50.4896V50.5096H45.4968V62.3546H65.2218C65.2218 62.3546 74.6268 59.9996 75.4568 50.2896C76.2968 40.5796 64.7018 37.4596 64.7018 37.4596Z"
-                    fill="#409EFF" />
-                </g>
-              </svg>
-              <div class="el-upload__text">
-                支持点击或拖拽上传
-              </div>
-              <template #tip>
-                <div v-if="form.isUploadSSLCert" class="el-upload__tip">
-                  <el-button type="primary" size="default" link
-                    @click="handleFileDtail('certificate')">点击查看文件详情</el-button>
-                </div>
-                <div v-else class="el-upload__tip">
-                  请上传.PEM格式的文件
-                </div>
-              </template>
-            </el-upload>
-          </el-form-item>
-          <el-form-item label="">
-            <el-upload class="upload-demo" drag :action="Url" :headers="headers" :file-list="fileList.private_key"
-              :on-change="handleFileChange('private_key')" :on-remove="handleRemove('private_key')" list-type="text"
-              :limit="1" :auto-upload="false">
-              <svg xmlns="http://www.w3.org/2000/svg" width="81" height="80" viewBox="0 0 81 80" fill="none">
-                <g id="Frame">
-                  <path id="Vector"
-                    d="M64.7018 37.4596C64.7018 37.4596 64.2118 21.3346 51.0768 18.1296C37.9418 14.9246 31.6118 28.7646 31.4818 29.1596C31.3518 29.5546 30.7068 29.3746 30.7068 29.3746C29.6568 28.3796 25.0268 26.0946 20.1618 29.0246C15.3018 31.9546 17.0618 37.5196 17.0618 37.5196C17.0618 37.5196 9.85676 36.9346 6.16176 48.0596C2.47176 59.1946 15.4168 62.3496 15.4168 62.3496H37.1468V50.5046H32.7968H32.4168H32.1218V50.4846C31.8718 50.4846 31.6718 50.2846 31.6718 50.0296C31.6718 49.8796 31.7518 49.7496 31.8718 49.6646L40.7768 40.2996C40.9018 40.1596 41.0768 40.0646 41.2818 40.0646C41.4918 40.0646 41.6768 40.1696 41.8018 40.3246L50.6418 49.6146C50.6568 49.6246 50.6718 49.6396 50.6868 49.6546L50.7718 49.7446H50.7418C50.7868 49.8246 50.8168 49.8946 50.8168 49.9896C50.8168 50.2696 50.5918 50.4996 50.3068 50.4996C50.2968 50.4996 50.2968 50.4896 50.2868 50.4896V50.5096H45.4968V62.3546H65.2218C65.2218 62.3546 74.6268 59.9996 75.4568 50.2896C76.2968 40.5796 64.7018 37.4596 64.7018 37.4596Z"
-                    fill="#409EFF" />
-                </g>
-              </svg>
-              <div class="el-upload__text">
-                支持点击或拖拽上传
-              </div>
-              <template #tip>
-                <div v-if="form.isUploadSSLCert" class="el-upload__tip">
-                  <el-button type="primary" size="default" link
-                    @click="handleFileDtail('private_key')">点击查看文件详情</el-button>
-                </div>
-                <div v-else class="el-upload__tip">
-                  请上传.PEM格式的文件
-                </div>
-              </template>
-            </el-upload>
-          </el-form-item>
-        </el-form>
-        <div class="btn">
-          <el-button plain type="primary" size="default" @click="handleSubmit">上传</el-button>
-        </div>
-      </div>
       <div class="footer">
-        <el-button type="primary" size="default" @click="drawerisible = false">关闭</el-button>
+        <el-button style="width: 7.75rem; height: 2rem; background-color: #fff;color: #58aaff;" type="primary" size="default" @click="drawerisible = false">关闭</el-button>
       </div>
       <fileDtail ref="fileDtailRef" />
     </div>
@@ -500,7 +558,8 @@ defineExpose({
 
   .el-row,
   .el-table {
-    width: 94% !important;
+    width: 100% !important;
+    height: 100% !important;
     margin: auto !important;
   }
 }
@@ -514,19 +573,30 @@ defineExpose({
   min-width: 4.375rem;
 }
 
-.step {
-  width: 42rem;
-  height: 11.625rem;
+.update {
+  width: 53.1875rem;
+  min-height: 14.875rem;
   background: #FFFFFF;
   margin-top: 1.5rem;
+  // box-shadow: 0px 1px .5rem 0px rgba(198, 198, 198, 0.6);
+  border-radius: .5rem .5rem .5rem .5rem;
+  padding: 1rem 1rem 1.5rem 1rem;
+}
+
+.step {
+  width: 53.1875rem;
+  height: 14.4375rem;
+  background: #FFFFFF;
+  margin-bottom: 1.5rem;
   box-shadow: 0px 1px .5rem 0px rgba(198, 198, 198, 0.6);
   border-radius: .5rem .5rem .5rem .5rem;
   padding: 1rem 1rem 1.5rem 1rem;
 
   .stepTop {
     display: flex;
-    justify-content: space-between;
-    width: 40rem;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 51.1875rem;
     height: 2.375rem;
     border-radius: 0px 0px 0px 0px;
     border-bottom: 1px solid rgba(170, 170, 170, 0.3);
@@ -603,13 +673,13 @@ defineExpose({
   }
 
   .stepBom {
-    width: 40rem;
+    width: 51.1875rem;
     height: 5.75rem;
     margin-top: 1rem;
     border-radius: 0px 0px 0px 0px;
 
     .detail {
-      width: 40rem;
+      width: 51.1875rem;
       height: 1.25rem;
       margin-bottom: 1rem;
       font-weight: 500;
@@ -621,8 +691,12 @@ defineExpose({
       text-transform: none;
 
       span {
-        color: #60aeff;
+        color: #ff8181;
       }
+    }
+
+    .bule {
+      color: #5eacff;
     }
 
     .details {
@@ -648,6 +722,7 @@ defineExpose({
     }
   }
 }
+
 
 .beCareful {
   width: 42rem;
@@ -685,7 +760,7 @@ defineExpose({
 .form {
   display: flex;
   width: 100%;
-  height: 14.1875rem;
+  min-height: 13.1875rem;
 
   .formL {
     width: 50%;
@@ -757,6 +832,10 @@ defineExpose({
   .el-upload-list--text {
     width: 8.75rem;
   }
+
+  .el-col {
+    padding: 0 !important;
+  }
 }
 
 :deep(.el-dialog .el-dialog__body) {
@@ -813,5 +892,39 @@ defineExpose({
   font-size: 1rem;
   color: #333;
   margin-bottom: .5rem;
+}
+
+.svgRed {
+  display: flex;
+  align-items: center;
+  width: 3.8125rem;
+  height: 1.25rem;
+  margin-left: .4375rem;
+  margin-top: .375rem;
+  color: #FF8181;
+
+  .colorRed {
+    display: inline-block;
+    width: .875rem;
+    height: .875rem;
+    margin-right: .25rem;
+  }
+}
+
+.svgGreen {
+  display: flex;
+  align-items: center;
+  width: 3.8125rem;
+  height: 1.25rem;
+  margin-left: .4375rem;
+  margin-top: .375rem;
+  color: #01D83D;
+
+  .colorGreen {
+    display: inline-block;
+    width: .875rem;
+    height: .875rem;
+    margin-right: .25rem;
+  }
 }
 </style>

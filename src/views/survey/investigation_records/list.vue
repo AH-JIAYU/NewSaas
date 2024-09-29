@@ -49,12 +49,12 @@ const columns = ref([
     sortable: true,
     checked: true,
   },
-  {
-    prop: "customerShortName",
-    label: "客户简称",
-    sortable: true,
-    checked: true,
-  },
+  // {
+  //   prop: "customerShortName",
+  //   label: "客户简称",
+  //   sortable: true,
+  //   checked: true,
+  // },
   { prop: "memberName", label: "所属组", sortable: true, checked: true },
   { prop: "allocationType", label: "分配类型", sortable: true, checked: true },
   {
@@ -272,13 +272,13 @@ const formOption={
             <el-text v-else>-</el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('customerShortName')" align="left" prop="customerShortName"
+        <!-- <el-table-column v-if="checkList.includes('customerShortName')" align="left" prop="customerShortName"
           show-overflow-tooltip label="客户简称" width="100">
           <template #default="{ row }">
             <el-text style="font-weight: 700;color: #333333;">{{ row.customerShortName ? row.customerShortName : "-"
               }}</el-text>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column v-if="checkList.includes('memberName')" width="150" align="left" prop="memberName"
           show-overflow-tooltip label="所属组">
           <template #default="{ row }">

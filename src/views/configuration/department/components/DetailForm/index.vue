@@ -30,7 +30,7 @@ const form = ref<any>({
   //备注
   remark: "",
   // 是否开启部门提成 ,可用值:1启用,2停用
-  commissionStatus: null,
+  commissionStatus: 2,
   // 提成比例
   commission: null,
   // 提成发放 1 完成计提 2 审核计提 3 收款计提
@@ -44,6 +44,8 @@ const validateNumber = (rule: any, value: any, callback: any) => {
     callback(new Error("请输入数字"));
   } else if (!/^\d+(\.\d+)?$/.test(value)) {
     callback(new Error("请输入有效的数字"));
+  } else if (parseFloat(value) > 100) {
+    callback(new Error("数字不能超过100"));
   } else {
     callback();
   }
@@ -53,7 +55,7 @@ const formRules = ref<FormRules>({
   name: [{ required: true, message: "请输入部门名称", trigger: "blur" }],
   director: [{ required: true, message: "请选择部门主管", trigger: "change" }],
   commission: [
-    { required: false, message: "请输入提成比例", trigger: "blur" },
+    { required: true, message: "请输入提成比例", trigger: "blur" },
     {
       validator: validateNumber,
       trigger: "blur",
@@ -68,9 +70,6 @@ onMounted(() => {
     const { data } = await managerApi.getTenantStaffList();
     staffList.value = data;
   });
-  if (form.value.commissionStatus !== 1) {
-    formRules.value.commission = [];
-  }
   if (form.value.id !== "") {
     getInfo();
   }
@@ -91,11 +90,15 @@ const directorChange = (val: any) => {
     isDelete.value = false;
   }
 };
+
 // 暴露提交
 defineExpose({
   submit() {
     return new Promise<void>((resolve) => {
       try {
+        if (form.value.commissionStatus !== 1) {
+          formRules.value.commission = [];
+        }
         if (form.value.id === "") {
           formRef.value &&
             formRef.value.validate((valid: any) => {
@@ -154,7 +157,7 @@ defineExpose({
 
 <template>
   <div v-loading="loading">
-    <ElForm ref="formRef" :model="form" :rules="formRules" label-width="130px" >
+    <ElForm ref="formRef" :model="form" :rules="formRules" label-width="130px">
       <el-form-item label="部门名称" prop="name">
         <el-input v-model="form.name" placeholder="请输入部门名称" clearable @change="" />
       </el-form-item>
@@ -193,8 +196,7 @@ defineExpose({
         </el-col>
       </el-row>
       <el-form-item v-show="form.commissionStatus === 1" label="提成比例" prop="commission">
-        <el-input v-model.number="form.commission" placeholder="请输入提成比例" clearable><template
-            #append>%</template></el-input>
+        <el-input v-model="form.commission" placeholder="请输入提成比例" clearable><template #append>%</template></el-input>
       </el-form-item>
       <el-form-item label="备注">
         <el-input v-model="form.remark" type="textarea" :rows="10" placeholder="请输入备注" clearable />

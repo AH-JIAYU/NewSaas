@@ -299,7 +299,7 @@ function onSubmit() {
               <el-col :span="24">
                 <el-form-item label="网站关键字">
                 <div class="domainNames">
-                    <el-tooltip class="tooltips " content="网站关键字" placement="top">
+                    <el-tooltip class="tooltips " content="设定网站关键字，在浏览器中输入该关键字即可搜索到该网站" placement="top">
                       <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
                     </el-tooltip>
                   </div>
@@ -309,7 +309,7 @@ function onSubmit() {
               <el-col :span="24">
                 <el-form-item label="网站描述">
                 <div class="domainName">
-                    <el-tooltip class="tooltips " content="网站描述" placement="top">
+                    <el-tooltip class="tooltips " content="描述该网址功能及意义，可对外宣传使用" placement="top">
                       <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
                     </el-tooltip>
                   </div>
@@ -324,11 +324,6 @@ function onSubmit() {
               </el-col>
               <el-col :span="24">
                 <el-form-item label="顶级域名" prop="topLevelDomainName">
-                  <div class="domainName">
-                    <el-tooltip class="tooltips " content="顶级域名" placement="top">
-                      <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
-                    </el-tooltip>
-                  </div>
                   <el-text class="mx-1">{{ form.topLevelDomainName }}</el-text>
                   <div v-if="form.topLevelDomainName">
                     <div v-if="isAnalysis">

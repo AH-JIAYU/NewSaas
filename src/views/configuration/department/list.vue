@@ -320,7 +320,8 @@ onBeforeUnmount(() => {
         <ElTableColumn v-if="data.checkList.includes('memberCount')" align="left" show-overflow-tooltip
           prop="memberCount" label="提成比例">
           <template #default="{ row }">
-            <el-text class="tableBig">
+            <el-text type="success" v-if="row.commissionStatus == 2">-</el-text>
+            <el-text v-else class="tableBig">
               {{ row.commission ? row.commission + '%' : '-' }}
             </el-text>
           </template>
@@ -328,12 +329,12 @@ onBeforeUnmount(() => {
         <ElTableColumn v-if="data.checkList.includes('memberCount')" align="left" show-overflow-tooltip
           prop="memberCount" label="计提规则">
           <template #default="{ row }">
-            <div class="tableBig">
+            <el-text type="success" v-if="row.commissionStatus == 2">-</el-text>
+            <div v-else class="tableBig">
               <el-text type="success" v-if="row.commissionType == 1">完成计提 </el-text>
               <el-text type="primary" v-if="row.commissionType == 2">审核计提 </el-text>
               <el-text type="danger" v-if="row.commissionType == 3">收款计提 </el-text>
             </div>
-
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('remark')" align="left" show-overflow-tooltip prop="remark"
@@ -461,5 +462,5 @@ onBeforeUnmount(() => {
 .el-table__row:hover .edit {
   display: block;
 }
- 
+
 </style>

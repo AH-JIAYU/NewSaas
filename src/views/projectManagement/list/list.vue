@@ -449,7 +449,7 @@ const formOption = {
           show-overflow-tooltip
           prop="isOnline"
           align="left"
-          width="80"
+          width="100"
           label="状态"
         >
           <template #default="{ row }">

@@ -67,6 +67,8 @@ const userForm = ref<any>({
   legalPersonName: "",
   // 税号
   taxId: "",
+  // 合作邀约
+  isInvitation: 1,
 });
 // 账户数据
 const accountForm = ref<any>({
