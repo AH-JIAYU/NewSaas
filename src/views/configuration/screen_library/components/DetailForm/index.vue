@@ -21,6 +21,8 @@ import {
   convertData,
   setSurveyType,
   customComponents,
+  tooltoxcategory,
+  toolType
 } from "@/utils/screen_library";
 
 editorLocalization.currentLocale = "zh-cn";
@@ -86,11 +88,15 @@ onMounted(async () => {
 
   // #region survey.js
   creator = new SurveyCreatorModel(creatorOptions);
+  creator.toolbox.changeCategories(tooltoxcategory)
   //以下代码将调查左侧的工具箱进行类型分类。
   //通过https://surveyjs.io/form-library/documentation/api-reference/question#getType 来查看工具类名称
   creator.toolbox.allowExpandMultipleCategories = true; // 允许用户展开多个类别
   creator.toolbox.showCategoryTitles = true; // 分类显示
   creator.text = "";
+  const cClassData: any = creator.toolbox.categories.find(
+      (item: any) => item.propertyHash.name === toolType,
+    )
   creator.saveSurveyFunc = (saveNo: number, callback: any) => {
     window.localStorage.setItem("survey-json", creator.text);
     callback(saveNo, true);
