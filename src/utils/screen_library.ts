@@ -42,7 +42,7 @@ export async function customComponents() {
     await questionFun('revenue', '公司年收入', 'radiogroup', 'placeholder', '10', '30'),
   ]
 }
-export const toolType = 'c类'
+export const toolType = '系统默认题库'
 export const tooltoxcategory = [
   { name: 'age', category: toolType },
   { name: 'country', category: toolType },
@@ -51,12 +51,12 @@ export const tooltoxcategory = [
   { name: 'education', category: toolType },
   { name: 'marriage', category: toolType },
   { name: 'AHI', category: toolType },
-  { name: 'employment', category: '资料问卷专属类型' },
-  { name: 'industry', category: '资料问卷专属类型' },
-  { name: 'department', category: '资料问卷专属类型' },
-  { name: 'title', category: '资料问卷专属类型' },
-  { name: 'size', category: '资料问卷专属类型' },
-  { name: 'revenue', category: '资料问卷专属类型' },
+  { name: 'employment', category: toolType },
+  { name: 'industry', category: toolType },
+  { name: 'department', category: toolType },
+  { name: 'title', category: toolType },
+  { name: 'size', category: toolType },
+  { name: 'revenue', category: toolType },
 ]
 async function questionFun(
   name: string, // 绑定的字段  唯一值
