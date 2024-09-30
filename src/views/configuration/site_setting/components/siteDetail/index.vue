@@ -37,20 +37,30 @@ const form = ref<any>({
   tenantDomain: '',
   supplierDomain: '',
   memberDomain: '',
+  // 主域名
+  mainDomain: '',
 })
+// 其他域名及状态
+const statusForm = ref<any>({})
 // 上传
 const fileList = ref<any>({
+  // 顶级域名
   domain: '',
+  // 租户域名
   tenantDomain: '',
+  // 供应商域名
   supplierDomain: '',
+  // 会员域名
   memberDomain: '',
+  // 证书
   certificate: [],
+  // 密钥
   private_key: [],
+  // 是否开启https
   forceHttps: 1,
 });
 // 校验顶级域名
 const validateTopLevelDomainName = (rule: any, value: any, callback: any) => {
-  console.log(`Validating: ${value}`); // 打印当前验证的值
   // 改进后的正则表达式
   const domainPattern = /^(?!-)[A-Za-z0-9-]{1,63}(?<!-)(?:\.[A-Za-z0-9-]{1,63}(?<!-))*\.[A-Za-z]{2,}$/;
   if (domainPattern.test(value)) {
@@ -68,17 +78,39 @@ const formRules = ref<FormRules>({
   ],
   tenantDomain: [
     { required: false, message: "请输入租户域名", trigger: "blur" },
-    { validator: validateTopLevelDomainName, trigger: "submit" },
+    { validator: validateTopLevelDomainName, trigger: "blur" },
   ],
   supplierDomain: [
     { required: false, message: "请输入供应商域名", trigger: "blur" },
-    { validator: validateTopLevelDomainName, trigger: "submit" },
+    { validator: validateTopLevelDomainName, trigger: "blur" },
   ],
   memberDomain: [
     { required: false, message: "请输入会员域名", trigger: "blur" },
-    { validator: validateTopLevelDomainName, trigger: "submit" },
+    { validator: validateTopLevelDomainName, trigger: "blur" },
   ],
 });
+const validateSubDomainSuffix = (rule: any, value: any, mainDomain: string, callback: any) => {
+  // 提取主域名的后缀
+  const mainDomainParts = mainDomain.split('.');
+  // 获取最后两个部分作为后缀
+  const mainDomainSuffix = mainDomainParts.slice(-2).join('.');
+  // 提取子域名的后缀
+  const valueParts = value.split('.');
+  const subDomainSuffix = valueParts.slice(-2).join('.');
+  // 校验后缀是否一致
+  if (subDomainSuffix === mainDomainSuffix) {
+    // 验证通过
+    callback();
+  } else {
+    // 验证失败
+    callback(new Error(`域名必须以 ${mainDomainSuffix} 结尾`));
+    return ElMessage({
+      type: "warning",
+      message: `域名必须以 ${mainDomainSuffix} 结尾`,
+    });
+  }
+};
+
 // 修改
 async function showEdit(row: any) {
   list.value = []
@@ -90,9 +122,13 @@ async function showEdit(row: any) {
       list.value = [row]
       form.value.certificateContent = row.certificateContent
       form.value.privateKeyContent = row.privateKeyContent
-      form.value.isAnalysis = row.isAnalysis
       form.value.domain = row.personalizedDomainName
       fileList.value.forceHttps = row.forceHttps
+      // 顶级域名是否生效
+      form.value.isAnalysis = row.isAnalysis
+      if (form.value.isAnalysis) {
+        handleStatus()
+      }
       if (row.httpsStatus === 1 || row.httpsStatus === null) {
         form.value.isHttpsStatus = false
       } else {
@@ -115,20 +151,19 @@ async function showEdit(row: any) {
   drawerisible.value = true;
 }
 
+// 获取其他域名状态
+const handleStatus = async () => {
+  if (form.value.isAnalysis) {
+    const { data } = await api.getBackgroundRecordList({})
+    statusForm.value = data
+    fileList.value.tenantDomain = data.tenantBackgroundDomain
+    fileList.value.supplierDomain = data.supplierBackgroundDomain
+    fileList.value.memberDomain = data.memberBackgroundDomain
+  }
+}
+
 // 输入框解析域名
 const handleSubmits = async () => {
-  if (!fileList.value.domain) {
-    formRules.value.tenantDomain = []
-    formRef.value.clearValidate('tenantDomain');
-  }
-  if (!fileList.value.domain) {
-    formRules.value.supplierDomain = []
-    formRef.value.clearValidate('supplierDomain');
-  }
-  if (!fileList.value.domain) {
-    formRules.value.memberDomain = []
-    formRef.value.clearValidate('memberDomain');
-  }
   formRef.value && formRef.value.validate(async (valid: any) => {
     if (valid) {
       try {
@@ -231,38 +266,147 @@ const handleSubmit = async () => {
 
 };
 // 验证
-const onSubmit = async () => {
-  try {
-    if (fileList.value.domain) {
-      listLoading.value = true;
-      const res = await api.getTenantWebConfigQueryAnalysis({ url: fileList.value.domain })
-      if (!res.data.success) {
-        form.value.isAnalysis = res.data.success
-        ElMessage({
-          type: "warning",
-          message: "解析未生效",
-        });
-      } else {
-        form.value.isAnalysis = res.data.success
-        listLoading.value = false;
-        emits('fetch-data')
-        ElMessage({
-          type: "success",
-          message: "解析已生效",
-        });
-      }
-    } else {
-      ElMessage({
-        type: "warning",
-        message: "请输入顶级域名",
-      });
-    }
-  } catch (error) {
-
-  } finally {
-    listLoading.value = false;
+const onSubmit = async (val: any) => {
+  if (!fileList.value.tenantDomain) {
+    formRules.value.tenantDomain = []
+    formRef.value.clearValidate('tenantDomain');
   }
+  if (!fileList.value.supplierDomain) {
+    formRules.value.supplierDomain = []
+    formRef.value.clearValidate('supplierDomain');
+  }
+  if (!fileList.value.memberDomain) {
+    formRules.value.memberDomain = []
+    formRef.value.clearValidate('memberDomain');
+  }
+  formRef.value && formRef.value.validate(async (valid: any) => {
+    if (valid) {
+      try {
+        listLoading.value = true;
+        if (val === 1) {
+          if (fileList.value.domain) {
+            const payload = new FormData();
+            payload.append('domain', fileList.value.domain);
+            payload.append('forceHttps', fileList.value.forceHttps);
+            // 域名是否生效接口
+            const { data } = await api.getTenantWebConfigQueryAnalysis({ url: fileList.value.domain })
+            // 获取当前域名对应的个性化域名接口
+            const res = await api.getTenantWebConfigKeepOnRecord({ topLevelDomainName: fileList.value.domain })
+            // 上传证书接口
+            const { status } = await api.uploadSSLCert(payload)
+            if (!data.success) {
+              form.value.isAnalysis = data.success
+              ElMessage({
+                type: "warning",
+                message: "解析未生效",
+              });
+            } else {
+              form.value.isAnalysis = data.success
+              listLoading.value = false;
+              emits('fetch-data')
+              ElMessage({
+                type: "success",
+                message: "解析已生效",
+              });
+            }
+            if (status === 1) {
+              ElMessage({
+                type: "success",
+                message: "修改域名成功",
+              });
+            }
+            if (res.status === 1) {
+              list.value = [res.data]
+            }
+            listLoading.value = false;
+          }
+        } else if (val === 2) {
+          if (fileList.value.tenantDomain) {
+            let isTrue
+            validateSubDomainSuffix(null, fileList.value.tenantDomain, fileList.value.domain, (error: any) => {
+              if (error) {
+                return isTrue = false;
+              } else {
+                isTrue = true;
+              }
+            });
+            if (isTrue) {
+              const res = await api.addAnalyzeTenantBackground({ tenantDomain: fileList.value.tenantDomain })
+              if (res.data.flag) {
+                ElMessage({
+                  type: "success",
+                  message: '修改域名成功',
+                });
+                handleStatus()
+              }
+            }
+          } else {
+            return ElMessage({
+              type: "warning",
+              message: '请输入租户域名',
+            });
+          }
+        } else if (val === 3) {
+          if (fileList.value.supplierDomain) {
+            let isTrue
+            validateSubDomainSuffix(null, fileList.value.supplierDomain, fileList.value.domain, (error: any) => {
+              if (error) {
+                return isTrue = false;
+              } else {
+                isTrue = true;
+              }
+            });
+            if (isTrue) {
+              const res = await api.addAnalyzeSupplierBackground({ supplierDomain: fileList.value.supplierDomain })
+              if (res.data.flag) {
+                ElMessage({
+                  type: "success",
+                  message: '修改域名成功',
+                });
+                handleStatus()
+              }
+            }
+          } else {
+            return ElMessage({
+              type: "warning",
+              message: '请输入供应商域名',
+            });
+          }
+        } else if (val === 4) {
+          if (fileList.value.memberDomain) {
+            let isTrue
+            validateSubDomainSuffix(null, fileList.value.memberDomain, fileList.value.domain, (error: any) => {
+              if (error) {
+                return isTrue = false;
+              } else {
+                isTrue = true;
+              }
+            });
+            if (isTrue) {
+              const res = await api.addAnalyzeMemberBackground({ memberDomain: fileList.value.memberDomain })
+              if (res.data.flag) {
+                ElMessage({
+                  type: "success",
+                  message: '修改域名成功',
+                });
+                handleStatus()
+              }
+            }
+          } else {
+            return ElMessage({
+              type: "warning",
+              message: '请输入会员域名',
+            });
+          }
+        }
+      } catch (error) {
 
+      } finally {
+        listLoading.value = false;
+      }
+
+    }
+  })
 }
 
 // 文件详情
@@ -300,11 +444,6 @@ function handleClose() {
   })
   drawerisible.value = false;
 }
-
- onMounted(async () => {
-  const {data} = await api.getBackgroundRecordList({})
-  console.log('data: ',data)
- })
 // 暴露
 defineExpose({
   showEdit,
@@ -340,58 +479,25 @@ defineExpose({
           label-width="120px" :inline="false">
           <el-row style="margin: 0 !important" :gutter="20">
             <div class="f-xc">
-            <el-col :span="10">
-              <el-form-item label="顶级域名" prop="domain">
-                <el-input style="width: 14.5rem;" v-model="fileList.domain" placeholder="请输入顶级域名" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="10">
-              <el-form-item label="指向域名">
-                <el-input disabled style="width: 16.375rem;" v-model="form.domain" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="2">
-              <p v-if="!form.isAnalysis" class="svgRed">
-                <span class="colorRed">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
-                    <g id="Group 18219">
-                      <circle id="Ellipse 84" cx="7" cy="7" r="7" fill="#FFD5D5" />
-                      <circle id="Ellipse 83" cx="7" cy="7" r="3.5" fill="#FF8181" />
-                    </g>
-                  </svg>
-                </span>
-                未生效
-              </p>
-              <p v-else class="svgGreen">
-                <span class="colorGreen">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
-                    <g id="Group 18219">
-                      <circle id="Ellipse 84" cx="7" cy="7" r="7" fill="#DDFED5" />
-                      <circle id="Ellipse 83" cx="7" cy="7" r="3.5" fill="#01D83D" />
-                    </g>
-                  </svg>
-                </span>
-                已生效
-              </p>
-            </el-col>
-            <el-col style="display:flex; align-items: center;" :span="2">
-              <el-button style="margin-left: 1rem;background-color: #ff9d33;border: none;" size="small" type="primary"
-            @click="onSubmit">验证</el-button>
-            </el-col>
-          </div>
-            <div class="f-xc" v-show="form.isAnalysis">
               <el-col :span="10">
-                <el-form-item label="租户后台域名" prop="">
-                  <el-input style="width: 14.5rem;" v-model="fileList.tenantDomain" placeholder="请输入租户域名" />
+                <el-form-item label="顶级域名" prop="domain">
+                  <el-input style="width: 14.5rem;" v-model="fileList.domain" placeholder="请输入顶级域名" />
                 </el-form-item>
               </el-col>
               <el-col :span="10">
                 <el-form-item label="指向域名">
-                  <el-input disabled style="width: 16.375rem;" v-model="form.tenantDomain" />
+                  <!-- <el-input disabled style="width: 16.375rem;" v-model="form.domain" /> -->
+                  <div v-if="form.domain" class="hoverSvg">
+                    <p class="fineBom">{{ form.domain }}</p>
+                    <span class="c-fx">
+                      <copy class="copy" :content="form.domain" />
+                    </span>
+                  </div>
+                  <el-text v-else>-</el-text>
                 </el-form-item>
               </el-col>
               <el-col :span="2">
-                <p class="svgRed">
+                <p v-if="!form.isAnalysis" class="svgRed">
                   <span class="colorRed">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
                       <g id="Group 18219">
@@ -402,7 +508,7 @@ defineExpose({
                   </span>
                   未生效
                 </p>
-                <!-- <p class="svgGreen">
+                <p v-else class="svgGreen">
                   <span class="colorGreen">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
                       <g id="Group 18219">
@@ -412,101 +518,165 @@ defineExpose({
                     </svg>
                   </span>
                   已生效
-                </p> -->
+                </p>
               </el-col>
               <el-col style="display:flex; align-items: center;" :span="2">
-              <el-button style="margin-left: 1rem;background-color: #ff9d33;border: none;" size="small" type="primary"
-            @click="onSubmit">验证</el-button>
-            </el-col>
+                <el-button v-show="!form.isAnalysis" style="margin-left: 1rem;background-color: #ff9d33;border: none;"
+                  size="small" type="primary" @click="onSubmit(1)">验证</el-button>
+              </el-col>
             </div>
             <div class="f-xc" v-show="form.isAnalysis">
-            <el-col :span="10">
-              <el-form-item label="供应商后台域名" prop="">
-                <el-input style="width: 14.5rem;" v-model="fileList.supplierDomain" placeholder="请输入供应商域名" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="10">
-              <el-form-item label="指向域名">
-                <el-input disabled style="width: 16.375rem;" v-model="form.supplierDomain" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="2">
-              <p class="svgRed">
-                <span class="colorRed">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
-                    <g id="Group 18219">
-                      <circle id="Ellipse 84" cx="7" cy="7" r="7" fill="#FFD5D5" />
-                      <circle id="Ellipse 83" cx="7" cy="7" r="3.5" fill="#FF8181" />
-                    </g>
-                  </svg>
-                </span>
-                未生效
-              </p>
-              <!-- <p class="svgGreen">
-                <span class="colorGreen">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
-                    <g id="Group 18219">
-                      <circle id="Ellipse 84" cx="7" cy="7" r="7" fill="#DDFED5" />
-                      <circle id="Ellipse 83" cx="7" cy="7" r="3.5" fill="#01D83D" />
-                    </g>
-                  </svg>
-                </span>
-                已生效
-              </p> -->
-            </el-col>
-            <el-col style="display:flex; align-items: center;" :span="2">
-              <el-button style="margin-left: 1rem;background-color: #ff9d33;border: none;" size="small" type="primary"
-            @click="onSubmit">验证</el-button>
-            </el-col>
-          </div>
-          <div class="f-xc" v-show="form.isAnalysis">
-            <el-col :span="10">
-              <el-form-item label="会员后台域名" prop="">
-                <el-input style="width: 14.5rem;" v-model="fileList.memberDomain" placeholder="请输入会员域名" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="10">
-              <el-form-item label="指向域名">
-                <el-input disabled style="width: 16.375rem;" v-model="form.memberDomain" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="2">
-              <p class="svgRed">
-                <span class="colorRed">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
-                    <g id="Group 18219">
-                      <circle id="Ellipse 84" cx="7" cy="7" r="7" fill="#FFD5D5" />
-                      <circle id="Ellipse 83" cx="7" cy="7" r="3.5" fill="#FF8181" />
-                    </g>
-                  </svg>
-                </span>
-                未生效
-              </p>
-              <!-- <p class="svgGreen">
-                <span class="colorGreen">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
-                    <g id="Group 18219">
-                      <circle id="Ellipse 84" cx="7" cy="7" r="7" fill="#DDFED5" />
-                      <circle id="Ellipse 83" cx="7" cy="7" r="3.5" fill="#01D83D" />
-                    </g>
-                  </svg>
-                </span>
-                已生效
-              </p> -->
-            </el-col>
-            <el-col style="display:flex; align-items: center;" :span="2">
-              <el-button style="margin-left: 1rem;background-color: #ff9d33;border: none;" size="small" type="primary"
-            @click="onSubmit">验证</el-button>
-            </el-col>
-          </div>
+              <el-col :span="10">
+                <el-form-item label="租户后台域名" prop="tenantDomain">
+                  <el-input style="width: 14.5rem;" v-model="fileList.tenantDomain" placeholder="请输入租户域名" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="10">
+                <el-form-item label="指向域名">
+                  <!-- <el-input disabled style="width: 16.375rem;" v-model="form.tenantDomain" /> -->
+                  <div v-if="statusForm.tenantBackground" class="hoverSvg">
+                    <p class="fineBom">{{ statusForm.tenantBackground }}</p>
+                    <span class="c-fx">
+                      <copy class="copy" :content="statusForm.tenantBackground" />
+                    </span>
+                  </div>
+                  <el-text v-else>-</el-text>
+                </el-form-item>
+              </el-col>
+              <el-col :span="2">
+                <p v-if="statusForm.tenantBackgroundStatus === 1" class="svgRed">
+                  <span class="colorRed">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                      <g id="Group 18219">
+                        <circle id="Ellipse 84" cx="7" cy="7" r="7" fill="#FFD5D5" />
+                        <circle id="Ellipse 83" cx="7" cy="7" r="3.5" fill="#FF8181" />
+                      </g>
+                    </svg>
+                  </span>
+                  未生效
+                </p>
+                <p v-else class="svgGreen">
+                  <span class="colorGreen">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                      <g id="Group 18219">
+                        <circle id="Ellipse 84" cx="7" cy="7" r="7" fill="#DDFED5" />
+                        <circle id="Ellipse 83" cx="7" cy="7" r="3.5" fill="#01D83D" />
+                      </g>
+                    </svg>
+                  </span>
+                  已生效
+                </p>
+              </el-col>
+              <el-col style="display:flex; align-items: center;" :span="2">
+                <el-button v-show="statusForm.tenantBackgroundStatus === 1"
+                  style="margin-left: 1rem;background-color: #ff9d33;border: none;" size="small" type="primary"
+                  @click="onSubmit(2)">验证</el-button>
+              </el-col>
+            </div>
+            <div class="f-xc" v-show="form.isAnalysis">
+              <el-col :span="10">
+                <el-form-item label="供应商后台域名" prop="supplierDomain">
+                  <el-input style="width: 14.5rem;" v-model="fileList.supplierDomain" placeholder="请输入供应商域名" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="10">
+                <el-form-item label="指向域名">
+                  <!-- <el-input disabled style="width: 16.375rem;" v-model="form.supplierDomain" /> -->
+                  <div v-if="statusForm.supplierBackground" class="hoverSvg">
+                    <p class="fineBom">{{ statusForm.supplierBackground }}</p>
+                    <span class="c-fx">
+                      <copy class="copy" :content="statusForm.supplierBackground" />
+                    </span>
+                  </div>
+                  <el-text v-else>-</el-text>
+                </el-form-item>
+              </el-col>
+              <el-col :span="2">
+                <p v-if="statusForm.supplierBackgroundStatus === 1" class="svgRed">
+                  <span class="colorRed">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                      <g id="Group 18219">
+                        <circle id="Ellipse 84" cx="7" cy="7" r="7" fill="#FFD5D5" />
+                        <circle id="Ellipse 83" cx="7" cy="7" r="3.5" fill="#FF8181" />
+                      </g>
+                    </svg>
+                  </span>
+                  未生效
+                </p>
+                <p v-else class="svgGreen">
+                  <span class="colorGreen">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                      <g id="Group 18219">
+                        <circle id="Ellipse 84" cx="7" cy="7" r="7" fill="#DDFED5" />
+                        <circle id="Ellipse 83" cx="7" cy="7" r="3.5" fill="#01D83D" />
+                      </g>
+                    </svg>
+                  </span>
+                  已生效
+                </p>
+              </el-col>
+              <el-col style="display:flex; align-items: center;" :span="2">
+                <el-button v-show="statusForm.supplierBackgroundStatus === 1"
+                  style="margin-left: 1rem;background-color: #ff9d33;border: none;" size="small" type="primary"
+                  @click="onSubmit(3)">验证</el-button>
+              </el-col>
+            </div>
+            <div class="f-xc" v-show="form.isAnalysis">
+              <el-col :span="10">
+                <el-form-item label="会员后台域名" prop="memberDomain">
+                  <el-input style="width: 14.5rem;" v-model="fileList.memberDomain" placeholder="请输入会员域名" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="10">
+                <el-form-item label="指向域名">
+                  <!-- <el-input disabled style="width: 16.375rem;" v-model="form.memberDomain" /> -->
+                  <div v-if="statusForm.memberBackground" class="hoverSvg">
+                    <p class="fineBom">{{ statusForm.memberBackground }}</p>
+                    <span class="c-fx">
+                      <copy class="copy" :content="statusForm.memberBackground" />
+                    </span>
+                  </div>
+                  <el-text v-else>-</el-text>
+                </el-form-item>
+              </el-col>
+              <el-col :span="2">
+                <p v-if="statusForm.memberBackgroundStatus === 1" class="svgRed">
+                  <span class="colorRed">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                      <g id="Group 18219">
+                        <circle id="Ellipse 84" cx="7" cy="7" r="7" fill="#FFD5D5" />
+                        <circle id="Ellipse 83" cx="7" cy="7" r="3.5" fill="#FF8181" />
+                      </g>
+                    </svg>
+                  </span>
+                  未生效
+                </p>
+                <p v-else class="svgGreen">
+                  <span class="colorGreen">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                      <g id="Group 18219">
+                        <circle id="Ellipse 84" cx="7" cy="7" r="7" fill="#DDFED5" />
+                        <circle id="Ellipse 83" cx="7" cy="7" r="3.5" fill="#01D83D" />
+                      </g>
+                    </svg>
+                  </span>
+                  已生效
+                </p>
+              </el-col>
+              <el-col style="display:flex; align-items: center;" :span="2">
+                <el-button v-show="statusForm.memberBackgroundStatus === 1"
+                  style="margin-left: 1rem;background-color: #ff9d33;border: none;" size="small" type="primary"
+                  @click="onSubmit(4)">验证</el-button>
+              </el-col>
+            </div>
           </el-row>
         </el-form>
       </div>
-      <div style="display: flex;justify-content: space-between; height: 30px; margin: 24px 0;">
+      <div style="display: flex;justify-content: space-between; height: 30px; margin-bottom: 1.5rem;">
         <div>
-          <el-button size="default" type="primary" @click="handleSubmits">确认</el-button>
+          <!-- <el-button size="default" type="primary" @click="handleSubmits">确认</el-button>
           <el-button style="margin-left: 1rem;background-color: #aaaaaa;border: none;" size="default" type="primary"
-            @click="">已确认</el-button>
+            @click="">已确认</el-button> -->
         </div>
         <el-form-item style="width: 8.25rem;" label="开启HTTPS上传">
           <el-checkbox v-model="form.isChecked" size="large" />
@@ -641,6 +811,7 @@ defineExpose({
   box-shadow: 0px 1px .5rem 0px rgba(198, 198, 198, 0.6);
   border-radius: .5rem .5rem .5rem .5rem;
   padding: 1rem 1rem 1.5rem 1rem;
+
   .stepTop {
     display: flex;
     justify-content: flex-start;
@@ -719,7 +890,7 @@ defineExpose({
         color: #FF8181;
       }
     }
-}
+  }
 
 }
 
@@ -1015,7 +1186,8 @@ defineExpose({
 }
 
 .fineBom {
-  // text-align: left !important;
+  max-width: 12rem;
+  text-align: left !important;
   font-size: .75rem;
   font-weight: normal;
   white-space: nowrap;
