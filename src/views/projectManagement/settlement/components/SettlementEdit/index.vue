@@ -156,13 +156,13 @@ defineExpose({ showEdit });
             <el-text class="mx-1">{{ form.projectId }}</el-text>
           </el-form-item>
           <el-form-item prop="clientId" label="所属客户">
-            <el-select v-model="form.clientId" placeholder="请选择所属客户" clearable filterable>
+            <el-select v-model="form.clientId" placeholder="请选择所属客户" :disabled="!!form.id" clearable filterable>
               <el-option v-for="item in customerList" :key="item.tenantCustomerId" :value="item.tenantCustomerId"
                 :label="item.customerAccord" />
             </el-select>
           </el-form-item>
           <el-form-item prop="doMoneyPrice" label="原价">
-            <el-input v-model="form.doMoneyPrice" placeholder="" clearable @change="" />
+            <el-input v-model="form.doMoneyPrice" :disabled="!!form.id" placeholder="" clearable @change="" />
           </el-form-item>
           <el-form-item label="系统完成数">
             <el-input v-model="form.systemDone" placeholder="" clearable @change="" />

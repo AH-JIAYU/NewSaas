@@ -11,4 +11,6 @@ export default {
   uploadSSLCert: (data: any) => api.post('tenant-web-config/uploadSSLCert', data),
   // 判断域名是否备案
   getTenantWebConfigKeepOnRecord: (data: any) => api.post('tenant-web-config/getTenantWebConfigKeepOnRecord', data),
+  // 获取记录值
+  getBackgroundRecordList: (data: any) => api.post('record/getBackgroundRecordList', data),
 }

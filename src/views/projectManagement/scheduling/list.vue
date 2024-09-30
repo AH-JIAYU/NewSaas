@@ -319,7 +319,7 @@ const formOption={
 
   .id,
   b {
-    margin: 0 5px;
+    margin: 0 4px;
   }
 
   .copy {

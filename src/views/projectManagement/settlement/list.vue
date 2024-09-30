@@ -416,27 +416,27 @@ function handleMoreOperating(command: string, row: any) {
               </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('nodeTime')" show-overflow-tooltip prop="nodeTime" align="left"
+        <el-table-column v-if="checkList.includes('nodeTime')" width="150" show-overflow-tooltip prop="nodeTime" align="left"
           label="节点">
           <template #default="{ row }">
-            <el-text  v-if="row.status === 1" class="mx-1 tableBig">
-              <el-button size="small" class="p-1"  type="warning">待审核</el-button>
+            <el-text v-if="row.status === 1" class="mx-1 tableBig">
+              <el-button style="margin-right: 5px;" size="small" class="p-1"  type="warning">待审核</el-button>
               <el-text>{{row.pendReviewTime}}</el-text>
             </el-text>
             <el-text  v-if="row.status === 3" class="mx-1 tableBig">
-              <el-button size="small" class="p-1"  type="success">已开票</el-button>
+              <el-button style="margin-right: 6px;" size="small" class="p-1"  type="success">已开票</el-button>
               <el-text>{{row.invoicedOutTime}}</el-text>
             </el-text>
             <el-text  v-if="row.status === 4" class="mx-1 tableBig">
-              <el-button size="small" class="p-1"  type="info">已结算</el-button>
-              <el-text>{{row.settledTime}}</el-text>
+              <el-button style="margin-right: 6px;" size="small" class="p-1"  type="info">已结算</el-button>
+              <el-text >{{row.settledTime}}</el-text>
             </el-text>
             <el-text  v-if="row.status === 2" class="mx-1 tableBig">
-              <el-button size="small" class="p-1"  type="primary">已审核</el-button>
+              <el-button style="margin-right: 6px;" size="small" class="p-1"  type="primary">已审核</el-button>
               <el-text>{{row.reviewTime}}</el-text>
             </el-text>
             <el-text  v-if="row.status === 5" class="mx-1 tableBig">
-              <el-button size="small" class="p-1"  type="danger">已冻结</el-button>
+              <el-button style="margin-right: 6px;" size="small" class="p-1"  type="danger">已冻结</el-button>
               <el-text>{{row.frozenTime}}</el-text>
             </el-text>
           </template>
@@ -577,5 +577,9 @@ function handleMoreOperating(command: string, row: any) {
     display: flex;
     align-items: center;
   }
+}
+
+.btn {
+  margin-right: 5px;
 }
 </style>
