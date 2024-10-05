@@ -1,380 +1,352 @@
+<route lang="yaml">
+meta:
+  enabled: false
+</route>
+
 <script setup lang="ts">
 import { ElMessage, ElMessageBox } from "element-plus";
-import { onBeforeUnmount, onMounted, ref } from "vue";
-import { useRouter } from "vue-router";
-import { useI18n } from "vue-i18n";
-import FormMode from "./components/FormMode/index.vue";
-import GroupForm from "./components/GroupForm/index.vue";
-import Detail from "./components/Detail/index.vue";
-import QuickEdit from './components/QuickEdit/index.vue'//快速编辑
-import eventBus from "@/utils/eventBus";
+import type Node from "element-plus/es/components/tree/src/model/node";
+import { ref } from "vue";
+import DictionaryDialog from "./components/dictionaryDialog/index.vue";
+import DictionaryItemDia from "./components/dictionaryItemDialog/index.vue";
 import api from "@/api/modules/department";
-import useTenantStaffStore from "@/store/modules/configuration_manager";
-import useSettingsStore from "@/store/modules/settings";
-import useDepartmentStore from "@/store/modules/department";// 部门
 import empty from '@/assets/images/empty.png'
-
-
 defineOptions({
   name: "department",
 });
-const departmentStore = useDepartmentStore();// 部门
-// 用户
-const tenantStaffStore = useTenantStaffStore();
-// 用户数据
-const staffList = ref<any>([])
-// 时间
-const { format } = useTimeago();
-// 国际化
-const router = useRouter();
-// 分页
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
-const tabbar = useTabbar();
-const settingsStore = useSettingsStore();
-const formSearchList = ref<any>()//表单排序配置
-const formSearchName=ref<string>('formSearch-department')// 表单排序name
-// 表格控件-展示列
-const columns = ref([
-  {
-    label: "部门ID",
-    prop: "id",
-    sortable: true,
-    // 不可更改
-    disableCheck: false,
-    // 默认展示
-    checked: true,
+interface Dict {
+  id: string | number;
+  label: string;
+  code: string;
+  children?: Dict[];
+}
+const dictionaryRef = ref();
+// 部门
+const dictionary = ref({
+  search: {
+    name: "",
   },
-  {
-    label: "部门名称",
-    prop: "name",
-    sortable: true,
-    // 不可更改
-    disableCheck: false,
-    // 默认展示
-    checked: true,
-  },
-
-  {
-    label: "员工数",
-    prop: "memberCount",
-    sortable: true,
-    // 不可更改
-    disableCheck: false,
-    // 默认展示
-    checked: true,
-  },
-  {
-    label: "备注",
-    prop: "remark",
-    sortable: true,
-    // 不可更改
-    disableCheck: false,
-    // 默认展示
-    checked: true,
-  },
-]);
-// detailRef
-const detailRef = ref<any>()
-// groupFormRef
-const groupFormRef = ref<any>()
-  const QuickEditRef = ref(); //快速编辑
-const current = ref<any>()//表格当前选中
-// 定义数据
-const data = ref<any>({
-  loading: false,
-  // 表格是否自适应高度
-  tableAutoHeight: false,
-  // 表格控件-是否展示边框
-  border: false,
-  // 表格控件-是否展示斑马条
-  stripe: false,
-  // 表格控件-控制表格大小
-  lineHeight: "default",
-  checkList: [],
-  /**
-   * 详情展示模式
-   * router 路由跳转
-   * dialog 对话框
-   * drawer 抽屉
-   */
-  formMode: "drawer" as "router" | "dialog" | "drawer",
-  // 详情
-  formModeProps: {
+  tree: [] as Dict[],
+  currentNode: undefined as Node | undefined,
+  currentData: undefined as Dict | undefined,
+  dialog: {
     visible: false,
-    id: "",
-    row: "",
+    parentId: "" as Dict["id"],
+    id: "" as Dict["id"],
   },
+  row: "",
+  loading: false,
+});
+// pagination.value.size = 20;
+// pagination.value.sizes = [20, 50, 100];
+const dictionaryItemRef = ref();
+// 部门下的数据
+const dictionaryItem = ref<any>({
+  loading: false,
   // 搜索
   search: {
-    // 分页页码
-    page: 1,
-    // 每页数量
-    limit: 10,
-    // 部门id
-    id: null,
-    // 	部门名称
-    name: '',
-    // 是否开启部门提成 ,可用值:1启用,2停用
-    commissionStatus: null,
-  },
-  // 批量操作
-  batch: {
-    enable: false,
-    selectionDataList: [],
+    organizationalStructureId: "" as Dict["id"],
   },
   // 列表数据
   dataList: [],
+  selectionDataList: [],
+  row: "",
+  dialog: {
+    visible: false,
+    id: "" as string | number,
+    parentId: "",
+    level: 1,
+  },
 });
-
-// 获取数据
-function getDataList() {
+// 获取字典
+async function getDictionaryList() {
   try {
-    data.value.loading = true;
+    dictionary.value.loading = true;
+    dictionaryItem.value.search.organizationalStructureId = "";
     const params = {
-      ...getParams(),
-      ...data.value.search,
+      ...dictionary.value.search,
     };
-    api.list(params).then((res: any) => {
-      data.value.loading = false;
-      data.value.dataList = res.data.data;
-      departmentStore.department = res.data.data
-      pagination.value.total = +res.data.total;
-    });
+    const res = await api.list(params);
+    dictionary.value.tree = res.data;
+    dictionary.value.loading = false;
   } catch (error) {
 
   } finally {
-    data.value.loading = false;
+    dictionary.value.loading = false;
   }
 }
+onMounted(() => {
+  getDictionaryList();
+});
+watch(
+  () => dictionary.value.search,
+  (val) => {
+    dictionaryRef.value!.filter(val);
+  }
+);
+function dictionaryFilter(value: string, data: Dict) {
+  if (!value) {
+    return true;
+  }
+  return data.label.includes(value);
+}
+// 新增部门
+function dictionaryAdd(data?: Dict) {
+  dictionary.value.currentData = data;
+  dictionary.value.dialog.parentId = data?.id ?? "";
+  dictionary.value.dialog.id = "";
+  dictionary.value.dialog.visible = true;
+}
+// 修改部门
+function dictionaryEdit(node: Node, data: Dict) {
+  dictionary.value.currentNode = node;
+  dictionary.value.currentData = data;
+  dictionary.value.row = JSON.stringify(data);
+  dictionary.value.dialog.parentId = node.parent.data.id ?? "";
+  dictionary.value.dialog.id = data.id;
+  dictionary.value.dialog.visible = true;
+}
+// 删除部门
+function dictionaryDelete(node: Node, data: any) {
+  ElMessageBox.confirm(`确认删除「${data.chineseName}」吗？`, "确认信息").then(
+    () => {
+      api.delete(data.id).then(() => {
+        ElMessage.success({
+          message: "删除成功",
+          center: true,
+        });
+        const parent = node.parent;
+        const children: Dict[] = parent.data.children || parent.data;
+        const index = children.findIndex((d) => d.id === data.id);
+        children.splice(index, 1);
+        dictionary.value.tree = [...dictionary.value.tree];
+      });
+    }
+  );
+}
 
-// 重置筛选数据
-function onReset() {
-  Object.assign(data.value.search, {
-    // 分页页码
-    page: 1,
-    // 每页数量
-    limit: 10,
-    // 部门id
-    id: null,
-    // 	部门名称
-    name: '',
-    // 是否开启部门提成 ,可用值:1启用,2停用
-    // commissionStatus: null,
-  });
-  getDataList();
+// 部门项详情
+function dictionaryClick(data: Dict) {
+  pagination.value.page = 1;
+  dictionaryItem.value.search.organizationalStructureId = data.id;
+}
+// 监听id变化
+watch(
+  () => dictionaryItem.value.search.organizationalStructureId,
+  () => {
+    getDictionaryItemList();
+  }
+);
+// 获取部门项
+async function getDictionaryItemList() {
+  try {
+    dictionaryItem.value.loading = true;
+    const params = {
+      // ...getParams(),
+      ...dictionaryItem.value.search,
+    };
+    const res = await api.itemlist(params);
+    dictionaryItem.value.loading = false;
+    dictionaryItem.value.dataList = res.data;
+    dictionaryItem.value.dataList.forEach((item: any) => {
+      item.enableLoading = false;
+    });
+    pagination.value.total = res.data.length;
+  } catch (error) {
+
+  } finally {
+    dictionaryItem.value.loading = false;
+  }
 }
 
 // 每页数量切换
 function sizeChange(size: number) {
-  onSizeChange(size).then(() => {
-    data.value.search.limit = size;
-    getDataList()
-  });
+  onSizeChange(size).then(() => getDictionaryItemList());
 }
 
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
-  onCurrentChange(page).then(() => {
-    data.value.search.page = page;
-    getDataList()
-  });
+  onCurrentChange(page).then(() => getDictionaryItemList());
 }
 
 // 字段排序
 function sortChange({ prop, order }: { prop: string; order: string }) {
-  onSortChange(prop, order).then(() => getDataList());
+  onSortChange(prop, order).then(() => getDictionaryItemList());
 }
 // 新增
-function onCreate() {
-  if (data.value.formMode === "router") {
-    tabbar.open({
-      name: "pagesExampleGeneralManagerCreate",
-    });
-  } else {
-    data.value.formModeProps.id = "";
-    data.value.formModeProps.row = "";
-    data.value.formModeProps.visible = true;
+function onCreate(row?: any) {
+  dictionaryItem.value.dialog.id = "";
+  dictionaryItem.value.dialog.visible = true;
+  dictionaryItem.value.dialog.level = 1;
+  if (row) {
+    dictionaryItem.value.dialog.parentId = row.id;
+    dictionaryItem.value.dialog.level = Number(row.level) + 1;
   }
-}
-// 快速编辑
-function quickEdit(row: any, type: any) {
-  /**
-    备注 remark
-  */
-  QuickEditRef.value.showEdit(row, type)
-}
-
-function handleCurrentChange(val: any) {
-  if (val) current.value = val.id
-  else current.value = ''
-}
-// 新增小组
-function onGroup(row: any) {
-  groupFormRef.value.showEdit(JSON.stringify(row))
 }
 // 修改
 function onEdit(row: any) {
-  if (data.value.formMode === "router") {
-    if (
-      settingsStore.settings.tabbar.enable &&
-      settingsStore.settings.tabbar.mergeTabsBy !== "activeMenu"
-    ) {
-      tabbar.open({
-        name: "surveyEdit",
-        params: {
-          id: row.id,
-        },
-      });
-    } else {
-      router.push({
-        name: "surveyEdit",
-        params: {
-          id: row.id,
-        },
-      });
-    }
-  } else {
-    data.value.formModeProps.id = row.id;
-    data.value.formModeProps.row = JSON.stringify(row)
-    data.value.formModeProps.visible = true;
-  }
-}
-// 详情
-function onDetail(row: any) {
-  detailRef.value.showEdit(row)
-}
+  console.log('row',row);
 
-onMounted(async () => {
-  staffList.value = await tenantStaffStore.getStaff();
-  getDataList();
-  if (data.value.formMode === "router") {
-    eventBus.on("get-data-list", () => {
-      getDataList();
-    });
-  }
-  columns.value.forEach((item: any) => {
-    if (item.checked) {
-      data.value.checkList.push(item.prop);
-    }
-  });
-  formSearchList.value = [
-    {index: 1, show: true, type: 'input', modelName: 'id', placeholder: '请输入部门ID'},
-    {index: 2, show: true, type: 'input', modelName: 'name', placeholder: '请输入部门名称'}
-]
-});
-
-onBeforeUnmount(() => {
-  if (data.value.formMode === "router") {
-    eventBus.off("get-data-list");
-  }
-});
+  dictionaryItem.value.row = JSON.stringify(row);
+  dictionaryItem.value.dialog.id = row.id;
+  dictionaryItem.value.dialog.parentId = row.parentId;
+  dictionaryItem.value.dialog.visible = true;
+}
+// 删除
+function onDelete(row: any) {
+  ElMessageBox.confirm(`确认删除「${row.name}」吗？`, "确认信息")
+    .then(() => {
+      api.delete([row.id]).then(() => {
+        getDictionaryItemList();
+        ElMessage.success({
+          message: "删除成功",
+          center: true,
+        });
+      });
+    })
+    .catch(() => { });
+}
+// 批量删除
+function onDeleteMulti(rows: any[]) {
+  const ids = rows.map((item) => item.id);
+  ElMessageBox.confirm(`确认删除选中的 ${rows.length} 条数据吗？`, "确认信息")
+    .then(() => {
+      api.delete(ids).then(() => {
+        getDictionaryItemList();
+        ElMessage.success({
+          message: "删除成功",
+          center: true,
+        });
+      });
+    })
+    .catch(() => { });
+}
 </script>
 
 <template>
-  <div :class="{ 'absolute-container': data.tableAutoHeight }">
-    <PageMain>
-      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="data.search" />
-      <ElDivider border-style="dashed" />
-      <el-row :gutter="24">
-        <FormLeftPanel>
-          <ElButton type="primary" size="default" @click="onCreate">
-            新增
-          </ElButton>
-        </FormLeftPanel>
-        <FormRightPanel>
-          <el-button size="default"> 导出 </el-button>
-          <TabelControl v-model:border="data.border" v-model:tableAutoHeight="data.tableAutoHeight"
-            v-model:checkList="data.checkList" v-model:columns="columns" v-model:line-height="data.lineHeight"
-            v-model:stripe="data.stripe" style="margin-left: 12px" @query-data="currentChange" />
-        </FormRightPanel>
-      </el-row>
-      <ElTable v-model:stripe="data.stripe" v-model:border="data.border" v-loading="data.loading"
-        :size="data.lineHeight" class="my-4" :data="data.dataList" highlight-current-row height="100%"
-        @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event"  @current-change="handleCurrentChange" >
-        <el-table-column align="left" type="selection" />
-        <ElTableColumn v-if="data.checkList.includes('id')" align="left" show-overflow-tooltip prop="id" label="部门ID">
-          <template #default="{ row }">
-            <div class="copyId tableSmall">
-              <div class="id oneLine ">ID: {{ row.id }}</div>
-              <copy class="copy" :content="row.id" />
-            </div>
-          </template>
-        </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('name')" align="left" show-overflow-tooltip prop="name"
-          label="部门名称">
-          <template #default="{ row }">
-            <el-text class="tableBig">
-              {{ row.name ? row.name : "-" }}
-            </el-text>
-          </template>
-        </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('memberCount')" align="left" show-overflow-tooltip
-          prop="memberCount" label="员工数">
-          <template #default="{ row }">
-            <el-text class="tableBig">
-              {{ row.memberCount ? row.memberCount : "-" }}
-            </el-text>
-          </template>
-        </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('memberCount')" align="left" show-overflow-tooltip
-          prop="memberCount" label="提成比例">
-          <template #default="{ row }">
-            <el-text type="success" v-if="row.commissionStatus == 2">-</el-text>
-            <el-text v-else class="tableBig">
-              {{ row.commission ? row.commission + '%' : '-' }}
-            </el-text>
-          </template>
-        </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('memberCount')" align="left" show-overflow-tooltip
-          prop="memberCount" label="计提规则">
-          <template #default="{ row }">
-            <el-text type="success" v-if="row.commissionStatus == 2">-</el-text>
-            <div v-else class="tableBig">
-              <el-text type="success" v-if="row.commissionType == 1">完成计提 </el-text>
-              <el-text type="primary" v-if="row.commissionType == 2">审核计提 </el-text>
-              <el-text type="danger" v-if="row.commissionType == 3">收款计提 </el-text>
-            </div>
-          </template>
-        </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('remark')" align="left" show-overflow-tooltip prop="remark"
-          label="备注">
-          <template #default="{row}">
-            <div class="flex-s  ">
-              <div class="oneLine tableBig" style="width: calc(100% - 20px);">
-                {{ row.remark ? row.remark : "-" }}
-              </div>
-              <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'remark')"
-                :class="{ edit: 'edit', current: row.id === current }" name="i-ep:edit" color="#409eff" />
-            </div>
-          </template>
-        </ElTableColumn>
-        <ElTableColumn label="操作" width="300" align="left" fixed="right">
-          <template #default="scope">
-            <ElButton type="primary" size="small" plain @click="onGroup(scope.row)">
-              新增小组
+  <div class="absolute-container">
+    <div class="page-main">
+      <LayoutContainer hide-left-side-toggle>
+        <template #leftSide>
+          <ElButtonGroup class="btns">
+            <ElButton type="primary" class="add" @click="dictionaryAdd()">
+              新增部门
             </ElButton>
-            <ElButton type="warning" size="small" plain @click="onEdit(scope.row)">
-              编辑
-            </ElButton>
-            <ElButton type="danger" size="small" plain @click="onDetail(scope.row)">
-              详情
-            </ElButton>
-          </template>
-        </ElTableColumn>
-        <template #empty>
-          <el-empty :image="empty" :image-size="300" />
+          </ElButtonGroup>
+          <ElInput v-model="dictionary.search.name" placeholder="请输入关键词筛选" clearable class="search"
+            @keydown.enter="getDictionaryList">
+            <template #append>
+              <ElButton @click="getDictionaryList">
+                <SvgIcon name="i-ep:search" />
+              </ElButton>
+            </template>
+          </ElInput>
+          <ElScrollbar class="tree">
+            <ElTree ref="dictionaryRef" v-loading="dictionary.loading" :data="dictionary.tree"
+              :filter-node-method="dictionaryFilter as any" default-expand-all @node-click="dictionaryClick">
+              <template #default="{ node, data }">
+                <div class="custom-tree-node">
+                  <div class="label" :title="node.label">
+                    {{ data.name }}
+                  </div>
+                  <div class="code">
+                    {{ data.name }}
+                  </div>
+                  <div class="actions">
+                    <ElButtonGroup>
+                      <ElButton type="primary" plain size="default" @click.stop="dictionaryAdd(data)">
+                        <template #icon>
+                          <SvgIcon name="i-ep:plus" />
+                        </template>
+                      </ElButton>
+                      <ElButton type="info" plain size="default" @click.stop="dictionaryEdit(node, data)">
+                        <template #icon>
+                          <SvgIcon name="i-ep:edit" />
+                        </template>
+                      </ElButton>
+                      <ElButton type="danger" plain size="default" @click.stop="dictionaryDelete(node, data)">
+                        <template #icon>
+                          <SvgIcon name="i-ep:delete" />
+                        </template>
+                      </ElButton>
+                    </ElButtonGroup>
+                  </div>
+                </div>
+              </template>
+            </ElTree>
+          </ElScrollbar>
         </template>
-      </ElTable>
-      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
-        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-        background @size-change="sizeChange" @current-change="currentChange" />
-    </PageMain>
-    <FormMode v-if="data.formMode === 'dialog' || data.formMode === 'drawer'" :id="data.formModeProps.id"
-      v-model="data.formModeProps.visible" :row="data.formModeProps.row" :mode="data.formMode" @success="getDataList" />
-    <Detail ref="detailRef" />
-    <GroupForm ref="groupFormRef" />
-    <QuickEdit ref="QuickEditRef" @fetchData="getDataList" />
+        <div v-show="dictionaryItem.search.organizationalStructureId" class="dictionary-container">
+          <ElSpace wrap>
+            <ElButton type="primary" @click="onCreate()">
+              <template #icon>
+                <SvgIcon name="i-ep:plus" />
+              </template>
+            </ElButton>
+            <ElButton type="danger" :disabled="!dictionaryItem.selectionDataList.length"
+              @click="onDeleteMulti(dictionaryItem.selectionDataList)">
+              <template #icon>
+                <SvgIcon name="i-ep:delete" />
+              </template>
+            </ElButton>
+            <ElInput v-model="dictionaryItem.search.chineseName" placeholder="请输入关键词筛选" clearable
+              style="width: 200px" @keydown.enter="getDictionaryItemList" />
+            <ElButton @click="getDictionaryItemList">
+              <template #icon>
+                <SvgIcon name="i-ep:search" />
+              </template>
+            </ElButton>
+          </ElSpace>
+          <ElTable ref="dictionaryItemRef" v-loading="dictionaryItem.loading" :data="dictionaryItem.dataList" stripe
+            highlight-current-row border height="100%" @sort-change="sortChange"
+            @selection-change="dictionaryItem.selectionDataList = $event" row-key="id" default-expand-all>
+            <ElTableColumn type="selection" align="left" fixed />
+            <ElTableColumn prop="chineseName" label="中文名称" />
+            <ElTableColumn prop="englishName" label="英文名称" />
+            <ElTableColumn prop="remark" label="备注" />
+            <ElTableColumn label="键值" align="left" width="150">
+              <template #default="scope">
+                <ElTag type="info">
+                  {{ scope.row.code }}
+                </ElTag>
+              </template>
+            </ElTableColumn>
+
+            <ElTableColumn label="操作" width="250" align="left">
+              <template #default="scope">
+                <ElButton type="primary" size="small" plain @click="onCreate(scope.row)">
+                  新增子项
+                </ElButton>
+                <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">
+                  编辑
+                </ElButton>
+                <ElButton type="danger" size="small" plain @click="onDelete(scope.row)">
+                  删除
+                </ElButton>
+              </template>
+            </ElTableColumn>
+            <template #empty>
+              <el-empty :image="empty" :image-size="300" />
+            </template>
+          </ElTable>
+          <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+            :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+            background @size-change="sizeChange" @current-change="currentChange" />
+        </div>
+        <div v-show="!dictionaryItem.search.organizationalStructureId" class="dictionary-container">
+          <div class="empty">请在左侧新增或选择一个部门</div>
+        </div>
+      </LayoutContainer>
+      <DictionaryDialog v-if="dictionary.dialog.visible" :id="dictionary.dialog.id" v-model="dictionary.dialog.visible"
+        :row="dictionary.row" :parent-id="dictionary.dialog.parentId" :tree="dictionary.tree"
+        @get-list="getDictionaryList" />
+      <DictionaryItemDia v-if="dictionaryItem.dialog.visible" :id="dictionaryItem.dialog.id"
+        v-model="dictionaryItem.dialog.visible" :catalogue-id="dictionaryItem.search.organizationalStructureId"
+        :parent-id="dictionaryItem.dialog.parentId" :level="dictionaryItem.dialog.level" :tree="dictionary.tree"
+        :dataList="dictionaryItem.dataList" :row="dictionaryItem.row" @success="getDictionaryItemList" />
+    </div>
   </div>
 </template>
 
@@ -391,76 +363,114 @@ onBeforeUnmount(() => {
   }
 
   .page-main {
+    // 让 page-main 的高度自适应
     flex: 1;
     overflow: auto;
 
-    :deep(.main-container) {
-      display: flex;
-      flex: 1;
-      flex-direction: column;
-      overflow: auto;
+    .flex-container {
+      position: static;
     }
   }
 }
 
-.page-main {
-  .search-form {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
-    margin-bottom: -18px;
+.flex-container {
+  :deep(.left-side) {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 
-    :deep(.el-form-item) {
-      grid-column: auto / span 1;
+    .btns {
+      display: inline-flex;
+      width: 100%;
 
-      &:last-child {
-        grid-column-end: -1;
+      .add {
+        width: 100%;
+      }
+    }
 
-        .el-form-item__content {
-          justify-content: flex-end;
+    .search {
+      margin: 15px 0;
+    }
+
+    .tree {
+      flex: 1;
+      overflow-y: auto;
+
+      .el-tree {
+        .el-tree-node__content {
+          height: 60px;
+        }
+
+        .is-current>.el-tree-node__content {
+          background-color: var(--el-color-primary-light-9);
+        }
+
+        .custom-tree-node {
+          position: relative;
+          display: flex;
+          flex: 1;
+          flex-direction: column;
+          justify-content: center;
+          width: 0;
+          height: 100%;
+
+          .label {
+            width: calc(100% - 10px);
+            color: var(--el-text-color-primary);
+
+            @include text-overflow;
+          }
+
+          .code {
+            width: calc(100% - 10px);
+            color: var(--el-text-color-placeholder);
+
+            @include text-overflow;
+          }
+
+          &:hover {
+            .actions {
+              display: block;
+            }
+          }
+
+          .actions {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            display: none;
+            transform: translateY(-50%);
+
+            .el-button {
+              padding: 5px 8px;
+            }
+          }
         }
       }
     }
   }
 
+  :deep(.main) {
+    display: flex;
+    justify-content: center;
+  }
 
-}
+  .dictionary-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
 
-:deep {
-  .el-table__header {
-    th {
-      background: var(--el-fill-color-lighter) !important;
+    .empty {
+      font-size: 32px;
+      color: var(--el-text-color-placeholder);
+      text-align: center;
+    }
+
+    .el-table {
+      margin: 15px 0;
     }
   }
 }
-
-
-
-.flex-s {
-  display: flex;
-  justify-content: start;
-  align-items: center;
-  width: 100%;
-
-  >div:nth-of-type(1) {
-    width: calc(100% - 25px);
-    flex-shrink: 0;
-  }
-
-  .edit {
-    width: 20px;
-    height: 20px;
-    margin-left: 5px;
-    flex-shrink: 0;
-    display: none;
-    cursor: pointer;
-  }
-
-  .current {
-    display: block !important;
-  }
-}
-.el-table__row:hover .edit {
-  display: block;
-}
-
 </style>

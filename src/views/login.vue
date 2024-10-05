@@ -26,9 +26,9 @@ defineOptions({
 });
 const route = useRoute();
 const router = useRouter();
+const userStore = useUserStore();
 
 const settingsStore = useSettingsStore();
-const userStore = useUserStore();
 
 const { t } = useI18n();
 
@@ -36,6 +36,7 @@ const banner = new URL("../assets/images/login-banner.png", import.meta.url)
   .href;
 const logo = new URL("../assets/images/logo.png", import.meta.url).href;
 const title = import.meta.env.VITE_APP_TITLE;
+const isDomain = ref<any>()
 
 // 表单类型，login 登录，register 注册，reset 重置密码
 const isRegister = ref<any>();
@@ -101,6 +102,13 @@ onMounted(async () => {
   isRegister.value = data.register;
   if (route.query.isRegister && route.query.isRegister === 'true') {
     formType.value = 'register'
+  }
+  const res = await api.getTenantPageTemplate({})
+  isDomain.value = res.data.isDomain
+  if(res.data.isDomain === 1) {
+    userStore.webName = res.data.webName
+    userStore.description = res.data.description
+    userStore.keyWords = res.data.keyWords
   }
 });
 // 动态表单校验
@@ -503,6 +511,7 @@ const resultCountdown = () => {
     }
   }, 1000);
 };
+
 // 清除定时器
 onUnmounted(() => {
   clearInterval(getPhoneInterval.value);
@@ -664,7 +673,7 @@ const agreements = (val: any) => {
           tabindex="5">
           {{ t("app.login") }}
         </ElButton>
-        <div class="sub-link" v-show="isRegister">
+        <div v-if="isDomain !== 1" class="sub-link" v-show="isRegister">
           <span class="text">还不是会员?</span>
           <ElLink type="primary" :underline="false" @click="formType = 'register'">
             立即注册

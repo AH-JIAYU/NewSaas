@@ -11,4 +11,6 @@ export default {
   register: (data: any) => api.post("user/register", data),
   // 获取租户配置
   getTenantConfig: (data: any) => api.post("tenant-config/getTenantConfig", data),
+  // 获取租户的模版信息
+  getTenantPageTemplate: (data: any) => api.post("record/getTenantPageTemplate", data),
 };

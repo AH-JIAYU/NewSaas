@@ -57,7 +57,7 @@ api.interceptors.response.use(
         debounceMsg('warning', '该账号已在别处登录', 2000)
         useUserStore().logout(response.data.status, 'login');
       } else {
-        debounceMsg('warning', response.data.message, 2000)
+        debounceMsg('warning', response.data.error, 2000)
       }
       return Promise.reject(response.data);
     }

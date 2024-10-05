@@ -78,15 +78,15 @@ const formRules = ref<FormRules>({
   ],
   tenantDomain: [
     { required: false, message: "请输入租户域名", trigger: "blur" },
-    { validator: validateTopLevelDomainName, trigger: "blur" },
+    { validator: validateTopLevelDomainName, trigger: "submit" },
   ],
   supplierDomain: [
     { required: false, message: "请输入供应商域名", trigger: "blur" },
-    { validator: validateTopLevelDomainName, trigger: "blur" },
+    { validator: validateTopLevelDomainName, trigger: "submit" },
   ],
   memberDomain: [
     { required: false, message: "请输入会员域名", trigger: "blur" },
-    { validator: validateTopLevelDomainName, trigger: "blur" },
+    { validator: validateTopLevelDomainName, trigger: "submit" },
   ],
 });
 const validateSubDomainSuffix = (rule: any, value: any, mainDomain: string, callback: any) => {
@@ -203,7 +203,7 @@ const token = userStore.token;
 const headers = ref({ Token: token });
 // 接口地址
 const Url = import.meta.env.VITE_APP_API_BASEURL + "/api/tenant-web-config/uploadSSLCert";
-
+// 上传文件是否符合
 const handleFileChange = (field: any) => (file: any, newFileList: any) => {
   const isPEM = file.name.endsWith('.pem');
   if (isPEM) {
@@ -216,6 +216,7 @@ const handleFileChange = (field: any) => (file: any, newFileList: any) => {
     });
   }
 };
+// 删除文件
 const handleRemove = (field: any) => (file: any) => {
   fileList.value[field] = fileList.value[field].filter((f: any) => f.uid !== file.uid);
   if (fileList.value.private_key.length || fileList.value.certificate.length) {
@@ -292,6 +293,7 @@ const onSubmit = async (val: any) => {
             const { data } = await api.getTenantWebConfigQueryAnalysis({ url: fileList.value.domain })
             // 获取当前域名对应的个性化域名接口
             const res = await api.getTenantWebConfigKeepOnRecord({ topLevelDomainName: fileList.value.domain })
+            console.log('res', res);
             // 上传证书接口
             const { status } = await api.uploadSSLCert(payload)
             if (!data.success) {
@@ -318,6 +320,7 @@ const onSubmit = async (val: any) => {
             if (res.status === 1) {
               list.value = [res.data]
             }
+            handleStatus()
             listLoading.value = false;
           }
         } else if (val === 2) {
@@ -458,13 +461,59 @@ defineExpose({
           <div class="stepTopL">
             <span></span>
             <h3>核心步骤</h3>
+            <div style="display: flex;
+              align-items: center; margin-left: .25rem; margin-top: -0.125rem; color: #333;">
+              <el-tooltip class="tooltips" content="核心步骤" placement="top">
+                <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
+              </el-tooltip>
+              <!-- 若上传证书网址格式默认绑定HTTPS -->
+            </div>
           </div>
-          <div style="display: flex;
-          align-items: center; margin-left: .25rem; margin-top: .125rem; color: #333;">
-            <el-tooltip class="tooltips" content="核心步骤" placement="top">
-              <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
-            </el-tooltip>
-            <!-- 若上传证书网址格式默认绑定HTTPS -->
+
+          <div v-if="form.isHttpsStatus" class="stepTopR">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <g id="Frame" clip-path="url(#clip0_735_20333)">
+                <path id="Vector"
+                  d="M13.1223 13.2873H0.875C0.784766 13.2873 0.710938 13.2135 0.710938 13.1232V0.875977C0.710938 0.785742 0.784766 0.711914 0.875 0.711914H13.1236C13.2139 0.711914 13.2877 0.785742 13.2877 0.875977V13.1246C13.2863 13.2148 13.2139 13.2873 13.1223 13.2873Z"
+                  fill="#03C239" />
+                <path id="Vector_2"
+                  d="M11.8645 14H2.13555C0.958398 14 0 13.0416 0 11.8645V2.13555C0 0.958398 0.958398 0 2.13555 0H11.8645C13.0416 0 14 0.958398 14 2.13555V11.8645C14 13.0416 13.0416 14 11.8645 14ZM2.13555 1.42324C1.74316 1.42324 1.42324 1.74316 1.42324 2.13555V11.8645C1.42324 12.2568 1.74316 12.5768 2.13555 12.5768H11.8645C12.2568 12.5768 12.5768 12.2568 12.5768 11.8645V2.13555C12.5768 1.74316 12.2568 1.42324 11.8645 1.42324H2.13555Z"
+                  fill="#03C239" />
+                <path id="Vector_3"
+                  d="M5.74753 11.0141C5.60124 11.0141 5.45359 10.969 5.32781 10.8774L1.89343 8.36725C1.57624 8.13483 1.50652 7.69049 1.73894 7.37194C1.97136 7.05475 2.41706 6.98502 2.73425 7.21745L5.64909 9.34752L11.163 3.22116C11.4255 2.92858 11.8766 2.90533 12.1678 3.16784C12.4591 3.43034 12.4837 3.88151 12.2212 4.17272L6.278 10.7762C6.13718 10.9335 5.94304 11.0141 5.74753 11.0141Z"
+                  fill="white" />
+              </g>
+              <defs>
+                <clipPath id="clip0_735_20333">
+                  <rect width="14" height="14" fill="white" />
+                </clipPath>
+              </defs>
+            </svg>
+            <p>SSL证书已上传</p>
+          </div>
+          <div v-else class="stepTopR">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <g id="Frame" clip-path="url(#clip0_734_18750)">
+                <path id="Vector"
+                  d="M13.1223 13.2873H0.875C0.784766 13.2873 0.710938 13.2135 0.710938 13.1232V0.875977C0.710938 0.785742 0.784766 0.711914 0.875 0.711914H13.1236C13.2139 0.711914 13.2877 0.785742 13.2877 0.875977V13.1246C13.2863 13.2148 13.2139 13.2873 13.1223 13.2873Z"
+                  fill="#FF8181" />
+                <path id="Vector_2"
+                  d="M11.8645 14H2.13555C0.958398 14 0 13.0416 0 11.8645V2.13555C0 0.958398 0.958398 0 2.13555 0H11.8645C13.0416 0 14 0.958398 14 2.13555V11.8645C14 13.0416 13.0416 14 11.8645 14ZM2.13555 1.42324C1.74316 1.42324 1.42324 1.74316 1.42324 2.13555V11.8645C1.42324 12.2568 1.74316 12.5768 2.13555 12.5768H11.8645C12.2568 12.5768 12.5768 12.2568 12.5768 11.8645V2.13555C12.5768 1.74316 12.2568 1.42324 11.8645 1.42324H2.13555Z"
+                  fill="#FF8181" />
+                <g id="Group 18190">
+                  <path id="Vector_3" d="M4.5 5L9.5 10" stroke="white" stroke-width="1.2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                  <path id="Vector_4" d="M4.5 10L9.5 5" stroke="white" stroke-width="1.2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </g>
+              </g>
+              <defs>
+                <clipPath id="clip0_734_18750">
+                  <rect width="14" height="14" fill="white" />
+                </clipPath>
+              </defs>
+            </svg>
+            <p style="color: #FF8181;">SSL证书未上传</p>
           </div>
         </div>
         <div class="stepBom">
@@ -481,7 +530,12 @@ defineExpose({
             <div class="f-xc">
               <el-col :span="10">
                 <el-form-item label="顶级域名" prop="domain">
-                  <el-input style="width: 14.5rem;" v-model="fileList.domain" placeholder="请输入顶级域名" />
+                  <el-input style="width: 14.5rem;" v-model="fileList.domain" :disabled="form.isAnalysis"
+                    placeholder="请输入顶级域名">
+                    <template #append>
+                      <copy class="copy" :content="fileList.domain" />
+                    </template>
+                  </el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="10">
@@ -528,7 +582,12 @@ defineExpose({
             <div class="f-xc" v-show="form.isAnalysis">
               <el-col :span="10">
                 <el-form-item label="租户后台域名" prop="tenantDomain">
-                  <el-input style="width: 14.5rem;" v-model="fileList.tenantDomain" placeholder="请输入租户域名" />
+                  <el-input style="width: 14.5rem;" v-model="fileList.tenantDomain"
+                    :disabled="statusForm.tenantBackgroundStatus !== 1" placeholder="请输入租户域名">
+                    <template #append>
+                      <copy class="copy" :content="fileList.tenantDomain" />
+                    </template>
+                  </el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="10">
@@ -576,7 +635,12 @@ defineExpose({
             <div class="f-xc" v-show="form.isAnalysis">
               <el-col :span="10">
                 <el-form-item label="供应商后台域名" prop="supplierDomain">
-                  <el-input style="width: 14.5rem;" v-model="fileList.supplierDomain" placeholder="请输入供应商域名" />
+                  <el-input style="width: 14.5rem;" v-model="fileList.supplierDomain"
+                    :disabled="statusForm.supplierBackgroundStatus !== 1" placeholder="请输入供应商域名">
+                    <template #append>
+                      <copy class="copy" :content="fileList.supplierDomain" />
+                    </template>
+                  </el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="10">
@@ -624,7 +688,12 @@ defineExpose({
             <div class="f-xc" v-show="form.isAnalysis">
               <el-col :span="10">
                 <el-form-item label="会员后台域名" prop="memberDomain">
-                  <el-input style="width: 14.5rem;" v-model="fileList.memberDomain" placeholder="请输入会员域名" />
+                  <el-input style="width: 14.5rem;" v-model="fileList.memberDomain"
+                    :disabled="statusForm.memberBackgroundStatus !== 1" placeholder="请输入会员域名">
+                    <template #append>
+                      <copy class="copy" :content="fileList.memberDomain" />
+                    </template>
+                  </el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="10">
@@ -672,7 +741,7 @@ defineExpose({
           </el-row>
         </el-form>
       </div>
-      <div style="display: flex;justify-content: space-between; height: 30px; margin-bottom: 1.5rem;">
+      <div v-show="!form.isHttpsStatus" style="display: flex;justify-content: space-between; height: 30px; margin-bottom: 1.5rem;">
         <div>
           <!-- <el-button size="default" type="primary" @click="handleSubmits">确认</el-button>
           <el-button style="margin-left: 1rem;background-color: #aaaaaa;border: none;" size="default" type="primary"
@@ -782,6 +851,10 @@ defineExpose({
     height: 100% !important;
     margin: auto !important;
   }
+
+  .el-input-group__append {
+    width: 1.875rem;
+  }
 }
 
 .parameter {
@@ -810,7 +883,7 @@ defineExpose({
   margin-bottom: 1.5rem;
   box-shadow: 0px 1px .5rem 0px rgba(198, 198, 198, 0.6);
   border-radius: .5rem .5rem .5rem .5rem;
-  padding: 1rem 1rem 1.5rem 1rem;
+  padding: 1rem 1rem 1rem 1rem;
 
   .stepTop {
     display: flex;
@@ -830,7 +903,7 @@ defineExpose({
       display: flex;
       flex-wrap: nowrap;
       align-items: center;
-      width: 4.625rem;
+      width: 6.625rem;
       height: 1.375rem;
 
       h3 {
@@ -905,7 +978,7 @@ defineExpose({
 
   .stepTop {
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: flex-start;
     width: 51.1875rem;
     height: 2.375rem;
@@ -921,7 +994,7 @@ defineExpose({
       display: flex;
       flex-wrap: nowrap;
       align-items: center;
-      width: 4.625rem;
+      width: 6.625rem;
       height: 1.375rem;
 
       h3 {
@@ -1244,5 +1317,9 @@ defineExpose({
   width: 100%;
   display: flex;
   margin-bottom: 15px;
+}
+
+.f-xc:nth-child(4) {
+  margin-bottom: 0;
 }
 </style>
