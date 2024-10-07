@@ -15,23 +15,17 @@ const props = withDefaults(
     id?: string | number;
     tree: any[];
     row: string;
+    name: string;
   }>(),
   {
     parentId: "",
     id: "",
   }
 );
-// 计提时间
 const commissionTypeList = [
   { label: '完成计提', value: 1, },
   { label: '审核计提', value: 2, },
   { label: '结算计提', value: 3, },
-]
-// 计提方式
-const provisionMethod = [
-  { label: '按项目价', value: 1 },
-  { label: '按成本价', value: 2 },
-  { label: '按毛利润', value: 3 },
 ]
 // loading
 const loading = ref<any>(false);
@@ -44,7 +38,7 @@ const visible = defineModel<boolean>({
   default: false,
 });
 // 弹窗标题
-const title = computed(() => (props.id === "" ? "新增部门" : "编辑部门"));
+const title = computed(() => (props.id === "" ? "新增子部门" : "编辑子部门"));
 const filteredUsers = ref<any>([])
 const formRef = ref<FormInstance>();
 const flat = ref([]);
@@ -60,6 +54,8 @@ const form = ref<any>({
   userIdList: [],
   // 组织架构人员
   organizationalStructurePersonList: [],
+  // 上级部门
+  superior: '',
 });
 
 // 校验
@@ -73,9 +69,8 @@ async function onSubmit() {
   formRef.value &&
     formRef.value.validate(async (valid) => {
       if (valid) {
-        // 将数据制空
+        console.log('filteredUsers', filteredUsers.value)
         form.value.organizationalStructurePersonList = []
-        // 筛选出需要的格式
         filteredUsers.value.forEach((item: any) => {
           const obj = {
             userId: item.id,
@@ -85,7 +80,8 @@ async function onSubmit() {
           }
           form.value.organizationalStructurePersonList.push(obj)
         });
-        // 去重
+        console.log('filteredUsers11111111', filteredUsers.value)
+        console.log('form.value.organizationalStructurePersonList', form.value.organizationalStructurePersonList)
         const uniqueList = form.value.organizationalStructurePersonList.reduce((accumulator: any, current: any) => {
           const exists = accumulator.some((item: any) => item.userId === current.userId);
           if (!exists) {
@@ -93,16 +89,15 @@ async function onSubmit() {
           }
           return accumulator;
         }, []);
-        // 赋值
         form.value.organizationalStructurePersonList = uniqueList
         const params = {
           ...form.value
         }
-        // 删除多余的数据
         delete params.userIdList
         if (!form.value.id) {
+          delete params.userIdList
           console.log('params', params);
-          // return
+          return
           const { status } = await api.create(params);
           status === 1 &&
             ElMessage.success({
@@ -121,9 +116,7 @@ async function onSubmit() {
               center: true,
             });
         }
-        // 更新列表
         await emits("getList");
-        // 关闭弹框
         onCancel();
       }
     });
@@ -206,6 +199,8 @@ function onCancel() {
     userIdList: [],
     // 组织架构人员
     organizationalStructurePersonList: [],
+    // 上级部门
+    superior: '',
   })
   visible.value = false;
 }
@@ -215,6 +210,11 @@ const getFilteredUsers = () => {
     form.value?.userIdList.includes(item.id)
   );
 };
+// 上级部门名称
+if (props.parentId) {
+  form.value.superior = props.name
+}
+
 onMounted(async () => {
   try {
     loading.value = true;
@@ -232,7 +232,6 @@ onMounted(async () => {
     staffList.value = await tenantStaffStore.getStaff();
     // 调用方法并打印过滤后的用户
     filteredUsers.value = getFilteredUsers();
-    // 将编辑数据赋值
     if (form.value.id) {
       filteredUsers.value = form.value.organizationalStructurePersonList
     }
@@ -250,23 +249,18 @@ onMounted(async () => {
   <ElDialog v-loading="loading" v-model="visible" :title="title" width="25rem" :close-on-click-modal="false"
     append-to-body destroy-on-close @closed="onCancel">
     <ElForm ref="formRef" :model="form" :rules="formRules" label-width="7rem">
+      <ElFormItem label="上级部门" prop="">
+        <ElInput v-model="form.superior" :disabled="!!props.parentId" placeholder="请输入部门名称" clearable />
+      </ElFormItem>
       <ElFormItem label="部门名称" prop="name">
         <ElInput v-model="form.name" placeholder="请输入部门名称" clearable />
       </ElFormItem>
-      <!-- <ElFormItem label="计提方式" prop="commissionType">
-        <el-select v-model="form.commissionType" value-key="" placeholder="请选择计提方式" clearable filterable>
-          <el-option v-for="item in provisionMethod" :key="item.value" :label="item.label" :value="item.value" />
-        </el-select>
-      </ElFormItem> -->
       <ElFormItem label="部门主管" prop="">
         <el-select v-model="form.userIdList" value-key="" placeholder="请选择部门主管" multiple collapse-tags
           collapse-tags-tooltip clearable filterable @change="handleChange">
           <el-option v-for="item in staffList" :key="item.value" :label="item.userName" :value="item.id">
           </el-option>
         </el-select>
-      </ElFormItem>
-      <ElFormItem label="备注">
-        <ElInput v-model="form.remark" placeholder="请输入备注" clearable />
       </ElFormItem>
       <div v-for="item in filteredUsers" :key="item.id" class="user">
         <div class="mr">
@@ -347,14 +341,11 @@ onMounted(async () => {
     margin-left: 0px;
     /* 在文本和选择框之间添加一些间隔 */
     margin-right: 10px;
-    ;
     /* 重置默认的margin-right */
   }
-
   .el-tag {
     width: 5rem;
   }
-
   .el-tag.el-tag--info {
     background-color: #ecf5ff;
     color: #409eff;

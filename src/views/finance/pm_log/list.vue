@@ -5,7 +5,6 @@ import useSettingsStore from "@/store/modules/settings";
 import plusMinusPayments from "./components/SupplierPlusMinusPayments/index.vue";
 import Detail from "./components/Detail/index.vue";
 import usePositionManageStore from "@/store/modules/position_manage";
-import useGroupManageStore from "@/store/modules/group_manage";
 import { ref } from "vue";
 import empty from '@/assets/images/empty.png'
 
@@ -16,10 +15,6 @@ defineOptions({
 const usePositionManage = usePositionManageStore();
 // 职位数据
 const positionManageList = ref<any>();
-// 小组
-const useGroupManage = useGroupManageStore();
-// 小组数据
-const groupManageList = ref<any>();
 // 时间
 const { format } = useTimeago();
 const router = useRouter();
@@ -196,8 +191,6 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
 onMounted(async () => {
   // 职位
   positionManageList.value = await usePositionManage?.getPositionManage() || [];
-  // 小组
-  groupManageList.value = await useGroupManage?.getGroupManage() || [];
   getDataList();
   if (data.value.formMode === "router") {
     eventBus.on("get-data-list", () => {
@@ -269,7 +262,7 @@ onBeforeUnmount(() => {
             </el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('groupId')" show-overflow-tooltip align="left" prop="groupId"
+        <!-- <ElTableColumn v-if="data.checkList.includes('groupId')" show-overflow-tooltip align="left" prop="groupId"
           width="150" label="所属组">
           <template #default="{ row }">
             <el-text v-if="row.groupId">
@@ -283,7 +276,7 @@ onBeforeUnmount(() => {
             </el-text>
             <el-text v-else>-</el-text>
           </template>
-        </ElTableColumn>
+        </ElTableColumn> -->
         <ElTableColumn v-if="data.checkList.includes('positionId')" show-overflow-tooltip align="left"
           prop="positionId" width="150" label="职位">
           <template #default="{ row }">

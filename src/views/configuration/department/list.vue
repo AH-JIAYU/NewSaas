@@ -8,6 +8,7 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import type Node from "element-plus/es/components/tree/src/model/node";
 import { ref } from "vue";
 import DictionaryDialog from "./components/dictionaryDialog/index.vue";
+import subsidiaryDepartment from "./components/subsidiary_department/index.vue";
 import DictionaryItemDia from "./components/dictionaryItemDialog/index.vue";
 import api from "@/api/modules/department";
 import empty from '@/assets/images/empty.png'
@@ -35,6 +36,23 @@ const dictionary = ref({
     visible: false,
     parentId: "" as Dict["id"],
     id: "" as Dict["id"],
+  },
+  row: "",
+  loading: false,
+});
+// 子部门
+const subsidiaryDictionary = ref({
+  search: {
+    name: "",
+  },
+  tree: [] as Dict[],
+  currentNode: undefined as Node | undefined,
+  currentData: undefined as Dict | undefined,
+  dialog: {
+    visible: false,
+    parentId: "" as Dict["id"],
+    id: "" as Dict["id"],
+    name:'',
   },
   row: "",
   loading: false,
@@ -99,6 +117,14 @@ function dictionaryAdd(data?: Dict) {
   dictionary.value.dialog.id = "";
   dictionary.value.dialog.visible = true;
 }
+// 新增子部门
+function subsidiaryDictionaryAdd(data?: any) {
+  subsidiaryDictionary.value.currentData = data;
+  subsidiaryDictionary.value.dialog.parentId = data?.id ?? "";
+  subsidiaryDictionary.value.dialog.name = data?.name ?? "";
+  subsidiaryDictionary.value.dialog.id = "";
+  subsidiaryDictionary.value.dialog.visible = true;
+}
 // 修改部门
 function dictionaryEdit(node: Node, data: Dict) {
   dictionary.value.currentNode = node;
@@ -110,9 +136,9 @@ function dictionaryEdit(node: Node, data: Dict) {
 }
 // 删除部门
 function dictionaryDelete(node: Node, data: any) {
-  ElMessageBox.confirm(`确认删除「${data.chineseName}」吗？`, "确认信息").then(
+  ElMessageBox.confirm(`确认删除「${data.name}」吗？`, "确认信息").then(
     () => {
-      api.delete(data.id).then(() => {
+      api.delete({id:data.id}).then(() => {
         ElMessage.success({
           message: "删除成功",
           center: true,
@@ -177,6 +203,8 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
 }
 // 新增
 function onCreate(row?: any) {
+  console.log(1111);
+
   dictionaryItem.value.dialog.id = "";
   dictionaryItem.value.dialog.visible = true;
   dictionaryItem.value.dialog.level = 1;
@@ -188,7 +216,6 @@ function onCreate(row?: any) {
 // 修改
 function onEdit(row: any) {
   console.log('row',row);
-
   dictionaryItem.value.row = JSON.stringify(row);
   dictionaryItem.value.dialog.id = row.id;
   dictionaryItem.value.dialog.parentId = row.parentId;
@@ -256,7 +283,7 @@ function onDeleteMulti(rows: any[]) {
                   </div>
                   <div class="actions">
                     <ElButtonGroup>
-                      <ElButton type="primary" plain size="default" @click.stop="dictionaryAdd(data)">
+                      <ElButton type="primary" plain size="default" @click.stop="subsidiaryDictionaryAdd(data)">
                         <template #icon>
                           <SvgIcon name="i-ep:plus" />
                         </template>
@@ -341,6 +368,9 @@ function onDeleteMulti(rows: any[]) {
       </LayoutContainer>
       <DictionaryDialog v-if="dictionary.dialog.visible" :id="dictionary.dialog.id" v-model="dictionary.dialog.visible"
         :row="dictionary.row" :parent-id="dictionary.dialog.parentId" :tree="dictionary.tree"
+        @get-list="getDictionaryList" />
+      <subsidiaryDepartment v-if="subsidiaryDictionary.dialog.visible" :id="subsidiaryDictionary.dialog.id" v-model="subsidiaryDictionary.dialog.visible"
+        :row="subsidiaryDictionary.row" :parent-id="subsidiaryDictionary.dialog.parentId" :name="subsidiaryDictionary.dialog.name" :tree="subsidiaryDictionary.tree"
         @get-list="getDictionaryList" />
       <DictionaryItemDia v-if="dictionaryItem.dialog.visible" :id="dictionaryItem.dialog.id"
         v-model="dictionaryItem.dialog.visible" :catalogue-id="dictionaryItem.search.organizationalStructureId"

@@ -14,16 +14,11 @@ import apiDep from "@/api/modules/department";
 import useDepartmentStore from "@/store/modules/department";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary";
 import usePositionManageStore from "@/store/modules/position_manage";
-import useGroupManageStore from "@/store/modules/group_manage";
 import empty from '@/assets/images/empty.png'
 
 defineOptions({
   name: "user",
 });
-// 小组
-const useGroupManage = useGroupManageStore();
-// 小组数据
-const groupManageList = ref<any>();
 // 职位
 const usePositionManage = usePositionManageStore();
 // 职位数据
@@ -82,12 +77,12 @@ const defaultProps: any = {
   label: "name",
   // disabled : "distribution",
 };
-// dictionaryRef
-const dictionaryRef = ref();
+// userRef
+const userRef = ref();
 // 详情ref
 const detailRef = ref<any>();
 // 数据
-const dictionary = ref<any>({
+const dataForm = ref<any>({
   search: {
     chineseName: "",
   },
@@ -103,11 +98,11 @@ const dictionary = ref<any>({
   loading: false,
 });
 // 重置密码数据
-const dictionaryList = ref<any>()
+const resetList = ref<any>()
 // tableRef
-const dictionaryItemRef = ref();
+const userItemRef = ref();
 // 字典下的数据
-const dictionaryItem = ref<any>({
+const userForm = ref<any>({
   loading: false,
   // 表格是否自适应高度
   tableAutoHeight: false,
@@ -141,79 +136,48 @@ const dictionaryItem = ref<any>({
 // 获取树
 const treeRef = ref<any>()
 // 获取用户
-async function getDictionaryList() {
+async function getUserList() {
   const params = {
-    ...dictionaryItem.value.search,
+    ...userForm.value.search,
   };
-  // 左侧树状数据
-  const ress = await apiDep.createEvery();
-  if (ress.data) {
-    dictionary.value.tree = ress.data.result;
-  }
   const res = await api.list(params);
   if (res.data) {
-    dictionaryItem.value.dataList = res.data.data;
+    userForm.value.dataList = res.data.data;
     pagination.value.total = +res.data.total;
   }
 }
 onMounted(async () => {
   try {
     // loading加载开始
-    dictionary.value.loading = true;
+    dataForm.value.loading = true;
     // 国家
     filterCountry.value = await useStoreCountry.getCountry();
     // 部门
     departmentList.value = await departmentStore?.getDepartment() || [];
     // 职位
     positionManageList.value = await usePositionManage?.getPositionManage() || [];
-    // 小组
-    groupManageList.value = await useGroupManage?.getGroupManage() || [];
     // 获取列表数据
-    getDictionaryList();
+    getUserList();
     columns.value.forEach((item: any) => {
       if (item.checked) {
-        dictionaryItem.value.checkList.push(item.prop);
+        userForm.value.checkList.push(item.prop);
       }
     });
     // loading加载结束
-    dictionary.value.loading = false;
+    dataForm.value.loading = false;
   } catch (error) {
 
   } finally {
-    dictionary.value.loading = false;
+    dataForm.value.loading = false;
   }
 });
 
 watch(
-  () => dictionary.value.search,
+  () => dataForm.value.search,
   (val) => {
-    dictionaryRef.value!.filter(val);
+    userRef.value!.filter(val);
   }
 );
-function dictionaryFilter(value: string, data: Dict) {
-  if (!value) {
-    return true;
-  }
-  return data.label.includes(value);
-}
-// 删除字典
-function dictionaryDelete(node: Node, data: any) {
-  ElMessageBox.confirm(`确认删除「${data.chineseName}」吗？`, "确认信息").then(
-    () => {
-      api.delete(data.id).then(() => {
-        ElMessage.success({
-          message: "删除成功",
-          center: true,
-        });
-        const parent = node.parent;
-        const children: Dict[] = parent.data.children || parent.data;
-        const index = children.findIndex((d) => d.id === data.id);
-        children.splice(index, 1);
-        dictionary.value.tree = [...dictionary.value.tree];
-      });
-    }
-  );
-}
 // 开关事件
 function onChangeStatus(row: any) {
   return new Promise<boolean>((resolve) => {
@@ -223,7 +187,7 @@ function onChangeStatus(row: any) {
     )
       .then(() => {
         try {
-          dictionary.value.loading = true;
+          dataForm.value.loading = true;
           api
             .edit({
               id: row.id,
@@ -238,18 +202,18 @@ function onChangeStatus(row: any) {
                 message: `${!row.active ? "启用" : "禁用"}成功`,
                 center: true,
               });
-              getDictionaryList();
-              dictionary.value.loading = false;
+              getUserList();
+              dataForm.value.loading = false;
               return resolve(true);
             })
             .catch(() => {
-              dictionary.value.loading = false;
+              dataForm.value.loading = false;
               return resolve(false);
             });
         } catch (error) {
 
         } finally {
-          dictionary.value.loading = false;
+          dataForm.value.loading = false;
         }
       })
       .catch(() => {
@@ -261,53 +225,53 @@ function onChangeStatus(row: any) {
 function dictionaryClick(data: Dict) {
   pagination.value.page = 1;
   if (data?.children?.length) {
-    dictionaryItem.value.search.id = ''
-    dictionaryItem.value.search.departmentId = data.id
-    getDictionaryList()
+    userForm.value.search.id = ''
+    userForm.value.search.departmentId = data.id
+    getUserList()
   } else {
-    dictionaryItem.value.search.id = data.id
-    dictionaryItem.value.search.departmentId = ''
-    getDictionaryList()
+    userForm.value.search.id = data.id
+    userForm.value.search.departmentId = ''
+    getUserList()
   }
 }
 
 // 每页数量切换
 function sizeChange(size: number) {
   onSizeChange(size).then(() => {
-    dictionaryItem.value.search.limit = size
-    getDictionaryList()
+    userForm.value.search.limit = size
+    getUserList()
   });
 }
 
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
   onCurrentChange(page).then(() => {
-    dictionaryItem.value.search.page = page
-    getDictionaryList()
+    userForm.value.search.page = page
+    getUserList()
   });
 }
 
 // 字段排序
 function sortChange({ prop, order }: { prop: string; order: string }) {
-  onSortChange(prop, order).then(() => getDictionaryList());
+  onSortChange(prop, order).then(() => getUserList());
 }
 // 新增
 function onCreate(row?: any) {
-  dictionaryItem.value.dialog.id = "";
-  dictionaryItem.value.dialog.visible = true;
-  dictionaryItem.value.dialog.level = 1;
+  userForm.value.dialog.id = "";
+  userForm.value.dialog.visible = true;
+  userForm.value.dialog.level = 1;
   if (row) {
-    dictionaryItem.value.dialog.parentId = row.id;
-    dictionaryItem.value.dialog.level = Number(row.level) + 1;
+    userForm.value.dialog.parentId = row.id;
+    userForm.value.dialog.level = Number(row.level) + 1;
   }
 }
 // 选中列表
 const selectChange = (val: any) => {
-  dictionaryList.value = val[0]
+  resetList.value = val[0]
 }
 // 重置密码
 function onResetPassword() {
-  const { name, id } = dictionaryList.value
+  const { name, id } = resetList.value
   ElMessageBox.confirm(
     `确认将「${name}」的密码重置为 “123456” 吗？`,
     "确认信息"
@@ -318,17 +282,17 @@ function onResetPassword() {
           message: "重置成功",
           center: true,
         });
-        getDictionaryList();
+        getUserList();
       });
     })
     .catch(() => { });
 }
 // 修改
 function onEdit(row: any) {
-  dictionaryItem.value.row = JSON.stringify(row);
-  dictionaryItem.value.dialog.id = row.id;
-  dictionaryItem.value.dialog.parentId = row.parentId;
-  dictionaryItem.value.dialog.visible = true;
+  userForm.value.row = JSON.stringify(row);
+  userForm.value.dialog.id = row.id;
+  userForm.value.dialog.parentId = row.parentId;
+  userForm.value.dialog.visible = true;
 }
 // 详情
 function onDetail(row: any) {
@@ -336,40 +300,38 @@ function onDetail(row: any) {
 }
 // 重置数据
 function onReset() {
-  Object.assign(dictionaryItem.value.search, {
+  Object.assign(userForm.value.search, {
     id: "" as Dict["id"],
     userName: "",
     departmentId: null,
     active: null,
   });
-  getDictionaryList();
+  getUserList();
 }
 </script>
 
 <template>
   <div class="absolute-container">
     <div class="page-main">
-      <!-- <LayoutContainer hide-left-side-toggle>
-      </LayoutContainer> -->
       <div class="leftTree">
-        <div v-if="dictionary.tree.length" class="leftData" :span="3">
-          <el-tree style="max-width: 37.5rem; min-height: 45.4375rem; padding: 10px;" :data="dictionary.tree"
+        <div v-if="dataForm.tree.length" class="leftData" :span="3">
+          <el-tree style="max-width: 37.5rem; min-height: 45.4375rem; padding: 10px;" :data="dataForm.tree"
             ref="treeRef" node-key="id" default-expand-all :expand-on-click-node="false" :props="defaultProps"
             @node-click="dictionaryClick" />
         </div>
         <PageMain>
-          <div v-loading="dictionary.loading" class="dictionary-container">
+          <div v-loading="dataForm.loading" class="dataForm-container">
             <ElSpace>
-              <ElInput v-model="dictionaryItem.search.id" placeholder="员工ID" clearable style="width: 12.5rem"
-                @keydown.enter="getDictionaryList" />
-              <ElInput v-model="dictionaryItem.search.userName" placeholder="用户名" clearable style="width: 12.5rem"
-                @keydown.enter="getDictionaryList" />
-              <el-select v-model="dictionaryItem.search.active" value-key="" placeholder="状态" style="width: 12.5rem"
-                clearable filterable @change="getDictionaryList">
+              <ElInput v-model="userForm.search.id" placeholder="员工ID" clearable style="width: 12.5rem"
+                @keydown.enter="getUserList" />
+              <ElInput v-model="userForm.search.userName" placeholder="用户名" clearable style="width: 12.5rem"
+                @keydown.enter="getUserList" />
+              <el-select v-model="userForm.search.active" value-key="" placeholder="状态" style="width: 12.5rem"
+                clearable filterable @change="getUserList">
                 <el-option v-for="item in activeList" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
               </el-select>
-              <ElButton type="primary" @click="getDictionaryList">
+              <ElButton type="primary" @click="getUserList">
                 <template #icon>
                   <SvgIcon name="i-ep:search" />
                 </template>
@@ -391,24 +353,24 @@ function onReset() {
               </el-col>
               <el-col style="display: flex; justify-content: flex-end" :span="14">
                 <el-button size="default" @click=""> 导出 </el-button>
-                <TabelControl v-model:border="dictionaryItem.border"
-                  v-model:tableAutoHeight="dictionaryItem.tableAutoHeight" v-model:checkList="dictionaryItem.checkList"
-                  v-model:columns="columns" v-model:line-height="dictionaryItem.lineHeight"
-                  v-model:stripe="dictionaryItem.stripe" style="margin-left: .75rem" @query-data="getDictionaryList" />
+                <TabelControl v-model:border="userForm.border"
+                  v-model:tableAutoHeight="userForm.tableAutoHeight" v-model:checkList="userForm.checkList"
+                  v-model:columns="columns" v-model:line-height="userForm.lineHeight"
+                  v-model:stripe="userForm.stripe" style="margin-left: .75rem" @query-data="getUserList" />
               </el-col>
             </el-row>
-            <ElTable ref="dictionaryItemRef" :data="dictionaryItem.dataList" :border="dictionaryItem.border"
-              :size="dictionaryItem.lineHeight" :stripe="dictionaryItem.stripe" highlight-current-row height="100%"
-              @sort-change="sortChange" @selection-change="dictionaryItem.selectionDataList = $event" row-key="id"
+            <ElTable ref="userItemRef" :data="userForm.dataList" :border="userForm.border"
+              :size="userForm.lineHeight" :stripe="userForm.stripe" highlight-current-row height="100%"
+              @sort-change="sortChange" @selection-change="userForm.selectionDataList = $event" row-key="id"
               default-expand-all @select="selectChange">
               <ElTableColumn type="selection" align="left" fixed />
-              <ElTableColumn v-if="dictionaryItem.checkList.includes('active')" align="left" prop="active" label="状态">
+              <ElTableColumn v-if="userForm.checkList.includes('active')" align="left" prop="active" label="状态">
                 <template #default="scope">
                   <ElSwitch v-model="scope.row.active" inline-prompt active-text="启用" inactive-text="禁用"
                     :before-change="() => onChangeStatus(scope.row)" />
                 </template>
               </ElTableColumn>
-              <ElTableColumn v-if="dictionaryItem.checkList.includes('id')" align="left" width="180" prop="id"
+              <ElTableColumn v-if="userForm.checkList.includes('id')" align="left" width="180" prop="id"
                 label="员工ID">
                 <template #default="{ row }">
                   <div class="copyId tableSmall">
@@ -417,14 +379,14 @@ function onReset() {
                   </div>
                 </template>
               </ElTableColumn>
-              <ElTableColumn v-if="dictionaryItem.checkList.includes('userName')" align="left" width="130"
+              <ElTableColumn v-if="userForm.checkList.includes('userName')" align="left" width="130"
                 prop="userName" label="用户名"><template #default="{ row }">
                   <el-text class="tableBig">
                     {{ row.userName ? row.userName : "-" }}
                   </el-text>
                 </template>
               </ElTableColumn>
-              <ElTableColumn v-if="dictionaryItem.checkList.includes('name')" align="left" width="130" prop="name"
+              <ElTableColumn v-if="userForm.checkList.includes('name')" align="left" width="130" prop="name"
                 label="姓名">
                 <template #default="{ row }">
                   <el-text class="tableBig">
@@ -432,14 +394,14 @@ function onReset() {
                   </el-text>
                 </template>
               </ElTableColumn>
-              <ElTableColumn v-if="dictionaryItem.checkList.includes('phoneNumber')" align="left" width="170"
+              <ElTableColumn v-if="userForm.checkList.includes('phoneNumber')" align="left" width="170"
                 prop="phone" label="电话号码"><template #default="{ row }">
                   <el-text class="tableBig">
                     {{ row.phoneNumber ? row.phoneNumber : "-" }}
                   </el-text>
                 </template>
               </ElTableColumn>
-              <ElTableColumn v-if="dictionaryItem.checkList.includes('email')" align="left" width="180" prop="email"
+              <ElTableColumn v-if="userForm.checkList.includes('email')" align="left" width="180" prop="email"
                 label="邮箱">
                 <template #default="{ row }">
                   <el-text class="tableBig">
@@ -447,7 +409,7 @@ function onReset() {
                   </el-text>
                 </template>
               </ElTableColumn>
-              <ElTableColumn v-if="dictionaryItem.checkList.includes('departmentId')" align="left" prop="departmentId"
+              <ElTableColumn v-if="userForm.checkList.includes('departmentId')" align="left" prop="departmentId"
                 label="部门">
                 <template #default="{ row }">
                   <el-text v-if="row.departmentId" class="tableBig">
@@ -460,7 +422,7 @@ function onReset() {
                   <el-text v-else class="tableBig">-</el-text>
                 </template>
               </ElTableColumn>
-              <ElTableColumn v-if="dictionaryItem.checkList.includes('positionId')" align="left" prop="positionId"
+              <ElTableColumn v-if="userForm.checkList.includes('positionId')" align="left" prop="positionId"
                 label="职位">
                 <template #default="{ row }">
                   <el-text v-if="row.positionId" class="tableBig">
@@ -473,19 +435,6 @@ function onReset() {
                   <el-text v-else class="tableBig">-</el-text>
                 </template>
               </ElTableColumn>
-              <ElTableColumn v-if="dictionaryItem.checkList.includes('groupId')" align="left" prop="groupId" label="小组">
-                <template #default="{ row }">
-                  <el-text class="tableBig" v-if="row.groupId">
-                    <el-text v-for="item in groupManageList">
-                      <el-text v-if="row.groupId === item.id">
-                        {{ item.name ? item.name : "-" }}
-                      </el-text>
-                    </el-text>
-                  </el-text>
-                  <el-text class="tableBig" v-else>-</el-text>
-                </template>
-              </ElTableColumn>
-
               <ElTableColumn label="操作" fixed="right" width="200" align="left">
                 <template #default="scope">
                   <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">
@@ -507,10 +456,10 @@ function onReset() {
         </PageMain>
 
       </div>
-      <DictionaryItemDia v-if="dictionaryItem.dialog.visible" :id="dictionaryItem.dialog.id"
-        v-model="dictionaryItem.dialog.visible" :catalogue-id="dictionaryItem.search.catalogueId"
-        :parent-id="dictionaryItem.dialog.parentId" :level="dictionaryItem.dialog.level" :tree="dictionary.tree"
-        :dataList="dictionaryItem.dataList" :row="dictionaryItem.row" @success="getDictionaryList" />
+      <DictionaryItemDia v-if="userForm.dialog.visible" :id="userForm.dialog.id"
+        v-model="userForm.dialog.visible" :catalogue-id="userForm.search.catalogueId"
+        :parent-id="userForm.dialog.parentId" :level="userForm.dialog.level" :tree="dataForm.tree"
+        :dataList="userForm.dataList" :row="userForm.row" @success="getUserList" />
       <Detail ref="detailRef" />
     </div>
   </div>
@@ -621,7 +570,7 @@ function onReset() {
     justify-content: center;
   }
 
-  .dictionary-container {
+  .dataForm-container {
     display: flex;
     flex-direction: column;
     justify-content: center;

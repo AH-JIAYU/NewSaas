@@ -123,9 +123,9 @@ const formRules = ref<FormRules>({
 
 // 切换部门
 const departmentChange = async (val: any) => {
-  const { data } = await apiDep.departmentGroup({ id: val });
-  groupManageList.value = data;
-  getGroup.value = data[0].director
+  // const { data } = await apiDep.departmentGroup({ id: val });
+  // groupManageList.value = data;
+  // getGroup.value = data[0].director
 };
 // 提交数据
 function onSubmit() {
@@ -261,11 +261,11 @@ onMounted(async () => {
               <el-input v-model="form.userName" placeholder="请输入用户名" clearable />
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <!-- <el-col :span="8">
             <el-form-item label="姓名" prop="name">
               <el-input v-model="form.name" placeholder="请输入姓名" clearable />
             </el-form-item>
-          </el-col>
+          </el-col> -->
           <!-- <el-col :span="8">
             <el-form-item label="国家" prop="country">
               <ElSelect
@@ -293,7 +293,7 @@ onMounted(async () => {
               <el-input v-model="form.email" placeholder="请输入邮箱" clearable />
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <!-- <el-col :span="8">
             <el-form-item label="部门">
               <el-select v-model="form.departmentId" placeholder="请选择部门" clearable filterable
                 @change="departmentChange">
@@ -301,7 +301,7 @@ onMounted(async () => {
                 </el-option>
               </el-select>
             </el-form-item>
-          </el-col>
+          </el-col> -->
           <el-col :span="8">
             <el-form-item label="职位" prop="">
               <el-select v-model="form.positionId" placeholder="请选择职位" clearable filterable @change="">
@@ -338,24 +338,8 @@ onMounted(async () => {
       <el-card class="box-card">
         <template #header>
           <div class="card-header">
-            <div class="leftTitle">角色信息</div>
-          </div>
-        </template>
-        <el-row :gutter="24">
-          <el-form-item label="分配角色:">
-            <el-radio-group v-if="munulevs?.length" v-model="form.role">
-              <el-radio v-for="item in munulevs" :key="item.id" :value="item.roleName"
-                :label="item.roleName"></el-radio>
-            </el-radio-group>
-            <el-text v-else>暂无数据</el-text>
-          </el-form-item>
-        </el-row>
-      </el-card>
-      <el-card class="box-card">
-        <template #header>
-          <div class="card-header">
             <div class="leftTitle">
-              小组信息<span v-if="form.director" style="margin-left: 20px; font-size: 14px">负责人:<el-text
+              部门信息<span v-if="form.director" style="margin-left: 20px; font-size: 14px">负责人:<el-text
                   v-for="item in staffList" :key="item.id">
                   <el-text v-if="item.id === form.director">
                     {{ item.name }}
@@ -365,9 +349,25 @@ onMounted(async () => {
           </div>
         </template>
         <el-row :gutter="24">
-          <el-form-item label="分配小组:">
+          <el-form-item label="分配部门:">
             <el-radio-group v-if="groupManageList.length" v-model="form.groupId">
               <el-radio v-for="item in groupManageList" :key="item.id" :value="item.id" :label="item.name"></el-radio>
+            </el-radio-group>
+            <el-text v-else>暂无数据</el-text>
+          </el-form-item>
+        </el-row>
+      </el-card>
+      <el-card class="box-card">
+        <template #header>
+          <div class="card-header">
+            <div class="leftTitle">角色信息</div>
+          </div>
+        </template>
+        <el-row :gutter="24">
+          <el-form-item label="分配角色:">
+            <el-radio-group v-if="munulevs?.length" v-model="form.role">
+              <el-radio v-for="item in munulevs" :key="item.id" :value="item.roleName"
+                :label="item.roleName"></el-radio>
             </el-radio-group>
             <el-text v-else>暂无数据</el-text>
           </el-form-item>

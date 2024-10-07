@@ -6,16 +6,11 @@ import useDepartmentStore from "@/store/modules/department";
 import useTenantRoleStore from "@/store/modules/tenant_role";
 import useTenantStaffStore from "@/store/modules/configuration_manager";
 import usePositionManageStore from "@/store/modules/position_manage";
-import useGroupManageStore from "@/store/modules/group_manage";
 
 // 用户
 const tenantStaffStore = useTenantStaffStore();
 // 用户数据
 const staffList = ref<any>([]);
-// 小组
-const useGroupManage = useGroupManageStore();
-// 小组
-const groupManageList = ref<any>([]);
 // 职位
 const usePositionManage = usePositionManageStore();
 // 职位数据
@@ -58,8 +53,6 @@ onMounted(async () => {
   munulevs.value = await roleStore.getRole();
   // 部门
   departmentList.value = await departmentStore.getDepartment();
-  // 小组
-  groupManageList.value = await useGroupManage?.getGroupManage()
 });
 
 defineExpose({
@@ -208,7 +201,7 @@ defineExpose({
             </div>
           </div>
         </template>
-  <el-row :gutter="24">
+  <!-- <el-row :gutter="24">
     <el-form-item label="分配小组:">
       <el-radio-group v-if="groupManageList.length" v-model="form.groupId">
         <el-radio v-for="item in groupManageList" :key="item.id" :value="item.id" :label="item.name"
@@ -216,7 +209,7 @@ defineExpose({
       </el-radio-group>
       <el-text v-else>-</el-text>
     </el-form-item>
-  </el-row>
+  </el-row> -->
 </el-card>
 </el-form>
 </el-drawer>
