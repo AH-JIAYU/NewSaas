@@ -57,7 +57,7 @@ const fileList = ref<any>({
   // 密钥
   private_key: [],
   // 是否开启https
-  forceHttps: 1,
+  forceHttps: 2,
 });
 // 校验顶级域名
 const validateTopLevelDomainName = (rule: any, value: any, callback: any) => {
@@ -118,12 +118,11 @@ async function showEdit(row: any) {
     listLoading.value = true;
     if (row) {
       fileList.value.domain = row.topLevelDomainName
-      fileList.value.forceHttps = row.forceHttps
       list.value = [row]
       form.value.certificateContent = row.certificateContent
       form.value.privateKeyContent = row.privateKeyContent
       form.value.domain = row.personalizedDomainName
-      fileList.value.forceHttps = row.forceHttps
+      // fileList.value.forceHttps = row.forceHttps
       // 顶级域名是否生效
       form.value.isAnalysis = row.isAnalysis
       if (form.value.isAnalysis) {
@@ -162,39 +161,6 @@ const handleStatus = async () => {
   }
 }
 
-// 输入框解析域名
-const handleSubmits = async () => {
-  formRef.value && formRef.value.validate(async (valid: any) => {
-    if (valid) {
-      try {
-        listLoading.value = true;
-        const payload = new FormData();
-        if (fileList.value.domain) {
-          payload.append('domain', fileList.value.domain);
-          payload.append('forceHttps', fileList.value.forceHttps);
-          const res = await api.getTenantWebConfigKeepOnRecord({ topLevelDomainName: fileList.value.domain })
-          const { status } = await api.uploadSSLCert(payload)
-          if (status === 1) {
-            ElMessage({
-              type: "success",
-              message: "修改域名成功",
-            });
-
-          }
-          if (res.status === 1) {
-            list.value = [res.data]
-          }
-          listLoading.value = false;
-        }
-      } catch (error) {
-
-      } finally {
-        listLoading.value = false;
-      }
-
-    }
-  })
-}
 // 上传文件
 // token
 const userStore = useUserStore();
@@ -293,7 +259,6 @@ const onSubmit = async (val: any) => {
             const { data } = await api.getTenantWebConfigQueryAnalysis({ url: fileList.value.domain })
             // 获取当前域名对应的个性化域名接口
             const res = await api.getTenantWebConfigKeepOnRecord({ topLevelDomainName: fileList.value.domain })
-            console.log('res', res);
             // 上传证书接口
             const { status } = await api.uploadSSLCert(payload)
             if (!data.success) {
@@ -429,7 +394,7 @@ function handleClose() {
     domain: '',
     certificate: [],
     private_key: [],
-    forceHttps: 1,
+    forceHttps: 2,
   })
   Object.assign(form, {
     // 证书

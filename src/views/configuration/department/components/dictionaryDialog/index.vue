@@ -161,7 +161,7 @@ const handleClose = (tag: any) => {
 }
 
 // 切换增加或减少用户
-const handleChange = (val:any) => {
+const handleChange = (val: any) => {
   form.value.userIdList = val
   filteredUsers.value = staffList.value.filter((item: any) =>
     form.value?.userIdList.includes(item.id)
@@ -183,7 +183,7 @@ const handleChange = (val:any) => {
     // 数组去重
     const uniqueData = Array.from(new Map(result.map((item: any) => [item.id, item])).values());
     // 过滤 uniqueData，只保留在 val 中的 id
-    const filteredUniqueData = uniqueData.filter((item:any) => val.includes(item.id));
+    const filteredUniqueData = uniqueData.filter((item: any) => val.includes(item.id));
     // 赋值给循环数据
     filteredUsers.value = filteredUniqueData
     form.value.organizationalStructurePersonList = filteredUsers.value
@@ -273,15 +273,25 @@ onMounted(async () => {
           <el-tag type="primary" closable @close="handleClose(item)">{{ item.userName }}</el-tag>
         </div>
         <div class="mr checkbox-container">
-          <el-checkbox v-model="item.commissionStatus" label="开启提成" size="large" />
+          <el-text style="width:4.375rem;">开启提成</el-text>
+          <!-- <el-checkbox v-model="item.commissionStatus" label="开启提成" size="large" /> -->
+          <el-switch v-model="item.commissionStatus" :active-value="1" :inactive-value="2" inline-prompt
+            active-text="开启" inactive-text="关闭" />
         </div>
-        <div v-show="item.commissionStatus" class="center mr">
-          <el-select v-model="item.commissionType" value-key="" placeholder="请选择计提时间" clearable filterable @change="">
+        <!-- <div v-show="item.commissionStatus ===1" class="center mr">
+          <el-select class="select" v-model="item.commissionType" value-key="" placeholder="请选择计提时间" clearable filterable @change="">
             <el-option v-for="item in commissionTypeList" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
-        </div>
-        <div v-show="item.commissionStatus" class="centers mr">
-          <ElInput v-model="item.commission" placeholder="请输入提成比例" style="max-width: 12rem;" clearable>
+        </div> -->
+        <div v-show="item.commissionStatus === 1" class="centers mr">
+          <ElInput v-model="item.commission" placeholder="请输入提成比例" style="max-width: 25rem;" clearable>
+            <template #append>
+              <el-select class="select" v-model="item.commissionType" value-key="" placeholder="请选择计提时间" clearable
+                filterable @change="">
+                <el-option v-for="item in commissionTypeList" :key="item.value" :label="item.label"
+                  :value="item.value" />
+              </el-select>
+            </template>
           </ElInput>
         </div>
       </div>
@@ -303,7 +313,7 @@ onMounted(async () => {
   align-items: center;
   justify-content: flex-start;
   margin-bottom: 1rem;
-  margin-left: 1.875rem;
+  margin-left: 7.0625rem;
 
   .center {
     display: flex;
@@ -316,7 +326,7 @@ onMounted(async () => {
 
   .centers {
     display: flex;
-    width: 15rem;
+    width: 26rem;
 
     span {
       width: 5.3125rem;
@@ -328,9 +338,13 @@ onMounted(async () => {
     margin-right: 1.5625rem;
   }
 
-  .mr:nth-child(4) {
+  .mr:nth-child(3) {
     margin-right: 0px;
   }
+}
+
+.select {
+  box-shadow: none
 }
 
 :deep {
@@ -349,6 +363,12 @@ onMounted(async () => {
     margin-right: 10px;
     ;
     /* 重置默认的margin-right */
+  }
+
+  .el-input-group__append {
+    width:12rem;
+    padding: 0;
+    background-color: #fff;
   }
 
   .el-tag {

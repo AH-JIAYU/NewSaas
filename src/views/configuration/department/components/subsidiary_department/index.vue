@@ -267,14 +267,16 @@ onMounted(async () => {
           <el-tag type="primary" closable @close="handleClose(item)">{{ item.userName }}</el-tag>
         </div>
         <div class="mr checkbox-container">
-          <el-checkbox v-model="item.commissionStatus" label="开启提成" size="large" />
+          <el-text style="width:4.375rem;">开启提成</el-text>
+          <!-- <el-checkbox v-model="item.commissionStatus" label="开启提成" size="large" /> -->
+          <el-switch v-model="item.commissionStatus" :active-value="1" :inactive-value="2" inline-prompt active-text="开启" inactive-text="关闭"  />
         </div>
-        <div v-show="item.commissionStatus" class="center mr">
+        <div v-show="item.commissionStatus  ===1" class="center mr">
           <el-select v-model="item.commissionType" value-key="" placeholder="请选择计提时间" clearable filterable @change="">
             <el-option v-for="item in commissionTypeList" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </div>
-        <div v-show="item.commissionStatus" class="centers mr">
+        <div v-show="item.commissionStatus  ===1" class="centers mr">
           <ElInput v-model="item.commission" placeholder="请输入提成比例" style="max-width: 12rem;" clearable>
           </ElInput>
         </div>
