@@ -226,7 +226,7 @@ onMounted(() => {
             </div>
           </template>
         </el-table-column>
-        <el-table-column align="left" fixed="right" prop="i" label="操作" width="350">
+        <el-table-column align="left" fixed="right" prop="i" label="操作" width="200">
           <template #default="{ row }">
             <ElSpace>
               <el-button v-if="row.bindStatus === 2" type="danger" plain size="small" @click="termination(row)">
@@ -236,10 +236,10 @@ onMounted(() => {
                 价格比例
               </el-button>
 
-              <el-button type="warning" plain size="small">
+             <!-- <el-button type="warning" plain size="small">
                 财务日志
               </el-button>
-              <el-button type="danger" plain size="small"> 加减款 </el-button>
+              <el-button type="danger" plain size="small"> 加减款 </el-button>-->
             </ElSpace>
           </template>
         </el-table-column>

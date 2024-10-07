@@ -881,7 +881,7 @@ const formOption = {
 
 
 .red{
-  color:red;
+  color:rgb(251, 104, 104);
 }
 
 .absolute-container {

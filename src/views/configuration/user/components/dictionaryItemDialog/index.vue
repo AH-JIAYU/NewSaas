@@ -110,7 +110,7 @@ const validateEmail = (rule: any, value: any, callback: any) => {
 
 // 校验
 const formRules = ref<FormRules>({
-  userName: [{ required: true, message: "请输入用户名" }],
+  userName: [{ required: true, message: "请输入用户名(1-20位字符)" }],
   positionId: [{ required: true, message: "请选择职位", trigger: "change" }],
   password: [
     { required: true, trigger: "blur", message: "请输入密码" },
@@ -258,14 +258,14 @@ onMounted(async () => {
         <el-row :gutter="24">
           <el-col :span="8">
             <el-form-item label="用户名" prop="userName">
-              <el-input v-model="form.userName" placeholder="请输入用户名" clearable />
+              <el-input v-model="form.userName" :maxlength ="20" placeholder="请输入用户名" clearable />
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <!-- <el-col :span="8">
             <el-form-item label="姓名" prop="name">
               <el-input v-model="form.name" placeholder="请输入姓名" clearable />
             </el-form-item>
-          </el-col>
+          </el-col> -->
           <!-- <el-col :span="8">
             <el-form-item label="国家" prop="country">
               <ElSelect
