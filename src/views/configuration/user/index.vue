@@ -394,7 +394,7 @@ function onReset() {
                   </el-text>
                 </template>
               </ElTableColumn> -->
-              <ElTableColumn v-if="dictionaryItem.checkList.includes('phoneNumber')" align="left" width="170"
+              <ElTableColumn v-if="userForm.checkList.includes('phoneNumber')" align="left" width="170"
                 prop="phone" label="电话号码"><template #default="{ row }">
                   <el-text class="tableBig">
                     {{ row.phoneNumber ? row.phoneNumber : "-" }}
