@@ -135,7 +135,7 @@ nextTick(() => {
               <el-col :span="12">
                 <el-form-item label="负责人" prop="chargeId">
                   <el-select v-model="localToptTab.chargeId" value-key="" placeholder="请选择负责人" clearable filterable>
-                    <el-option v-for="item in staffList" :key="item.id" :label="item.name" :value="item.id" />
+                    <el-option v-for="item in staffList" :key="item.id" :label="item.userName" :value="item.id" />
                     <template #empty>
                       <div style="display: flex;justify-content: space-between;align-items:center;padding:0 1rem;">
                         暂无数据
