@@ -633,3 +633,8 @@ textarea {
     max-width:calc(100% - 25px)  !important;
   }
 }
+//表格 悬浮框的宽度 show-overflow-tooltip
+.el-popper{
+  max-width: 800px;
+
+}

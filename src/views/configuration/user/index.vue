@@ -52,7 +52,7 @@ const columns = ref<any>([
     sortable: true,
     checked: true,
   },
-  { label: "姓名", prop: "name", sortable: true, checked: true },
+  // { label: "姓名", prop: "name", sortable: true, checked: true },
   // { label: "国家", prop: "country", sortable: true, checked: true },
   { label: "电话号码", prop: "phoneNumber", sortable: true, checked: true },
   { label: "邮箱", prop: "email", sortable: true, checked: true },
@@ -386,15 +386,15 @@ function onReset() {
                   </el-text>
                 </template>
               </ElTableColumn>
-              <ElTableColumn v-if="userForm.checkList.includes('name')" align="left" width="130" prop="name"
+              <!-- <ElTableColumn v-if="dictionaryItem.checkList.includes('name')" align="left" width="130" prop="name"
                 label="姓名">
                 <template #default="{ row }">
                   <el-text class="tableBig">
                     {{ row.name ? row.name : "-" }}
                   </el-text>
                 </template>
-              </ElTableColumn>
-              <ElTableColumn v-if="userForm.checkList.includes('phoneNumber')" align="left" width="170"
+              </ElTableColumn> -->
+              <ElTableColumn v-if="dictionaryItem.checkList.includes('phoneNumber')" align="left" width="170"
                 prop="phone" label="电话号码"><template #default="{ row }">
                   <el-text class="tableBig">
                     {{ row.phoneNumber ? row.phoneNumber : "-" }}
