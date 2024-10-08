@@ -7,11 +7,17 @@ meta:
 import { ElMessage, ElMessageBox } from "element-plus";
 import type Node from "element-plus/es/components/tree/src/model/node";
 import { ref } from "vue";
+import api from "@/api/modules/department";
+import empty from '@/assets/images/empty.png'
+import apiUser from "@/api/modules/configuration_manager";
+import useDepartmentStore from "@/store/modules/department";
+import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary";
+import usePositionManageStore from "@/store/modules/position_manage";
 import DictionaryDialog from "./components/dictionaryDialog/index.vue";
 import subsidiaryDepartment from "./components/subsidiary_department/index.vue";
 import DictionaryItemDia from "./components/dictionaryItemDialog/index.vue";
-import api from "@/api/modules/department";
-import empty from '@/assets/images/empty.png'
+import userDialog from "./components/userDialog/index.vue";
+import Detail from "@/views/configuration/department/components/Detail/index.vue";
 defineOptions({
   name: "department",
 });
@@ -23,6 +29,118 @@ interface Dict {
   code: string;
   children?: Dict[];
 }
+// 职位
+const usePositionManage = usePositionManageStore();
+// 职位数据
+const positionManageList = ref<any>();
+// 国家
+const useStoreCountry = useBasicDictionaryStore();
+// 国家数据
+const filterCountry = ref<any>([]);
+// 部门
+const departmentStore = useDepartmentStore();
+// 部门数据
+const departmentList = ref<any>();
+interface Dict {
+  id: string | number;
+  label: string;
+  code: string;
+  children?: Dict[];
+}
+const columns = ref<any>([
+  {
+    label: "员工ID",
+    prop: "id",
+    sortable: true,
+    checked: true,
+  },
+  {
+    label: "用户名",
+    prop: "userName",
+    sortable: true,
+    checked: true,
+  },
+  // { label: "姓名", prop: "name", sortable: true, checked: true },
+  // { label: "国家", prop: "country", sortable: true, checked: true },
+  { label: "电话号码", prop: "phoneNumber", sortable: true, checked: true },
+  { label: "邮箱", prop: "email", sortable: true, checked: true },
+  { label: "部门", prop: "departmentId", sortable: true, checked: true },
+  { label: "职位", prop: "positionId", sortable: true, checked: true },
+  { label: "小组", prop: "groupId", sortable: true, checked: true },
+  { label: "状态", prop: "active", sortable: true, checked: true },
+]);
+// 状态
+const activeList: any = [
+  {
+    label: "启用",
+    value: true,
+  },
+  {
+    label: "禁用",
+    value: false,
+  },
+];
+const defaultProps: any = {
+  children: "children",
+  label: "name",
+  // disabled : "distribution",
+};
+// userRef
+const userRef = ref();
+// 详情ref
+const detailRef = ref<any>();
+// 数据
+const dataForm = ref<any>({
+  search: {
+    chineseName: "",
+  },
+  tree: [] as Dict[],
+  currentNode: undefined as Node | undefined,
+  currentData: undefined as Dict | undefined,
+  dialog: {
+    visible: false,
+    parentId: "" as Dict["id"],
+    id: "" as Dict["id"],
+  },
+  row: "",
+  loading: false,
+});
+// 重置密码数据
+const resetList = ref<any>()
+// tableRef
+const userItemRef = ref();
+// 字典下的数据
+const userForm = ref<any>({
+  loading: false,
+  // 表格是否自适应高度
+  tableAutoHeight: false,
+  // 表格控件-是否展示边框
+  border: false,
+  // 表格控件-是否展示斑马条
+  stripe: false,
+  // 表格控件-控制表格大小
+  lineHeight: "default",
+  checkList: [],
+  // 搜索
+  search: {
+    page: 1,
+    limit: 10,
+    id: "" as Dict["id"],
+    userName: "",
+    active: null,
+    departmentId: null,
+  },
+  // 列表数据
+  dataList: [],
+  selectionDataList: [],
+  row: "",
+  dialog: {
+    visible: false,
+    id: "" as string | number,
+    parentId: "",
+    level: 1,
+  },
+});
 const dictionaryRef = ref();
 // 部门
 const dictionary = ref({
@@ -52,7 +170,7 @@ const subsidiaryDictionary = ref({
     visible: false,
     parentId: "" as Dict["id"],
     id: "" as Dict["id"],
-    name:'',
+    name: '',
   },
   row: "",
   loading: false,
@@ -78,7 +196,7 @@ const dictionaryItem = ref<any>({
     level: 1,
   },
 });
-// 获取字典
+// 获取部门
 async function getDictionaryList() {
   try {
     dictionary.value.loading = true;
@@ -138,7 +256,7 @@ function dictionaryEdit(node: Node, data: Dict) {
 function dictionaryDelete(node: Node, data: any) {
   ElMessageBox.confirm(`确认删除「${data.name}」吗？`, "确认信息").then(
     () => {
-      api.delete({id:data.id}).then(() => {
+      api.delete({ id: data.id }).then(() => {
         ElMessage.success({
           message: "删除成功",
           center: true,
@@ -154,8 +272,12 @@ function dictionaryDelete(node: Node, data: any) {
 }
 
 // 部门项详情
-function dictionaryClick(data: Dict) {
+function dictionaryClick(data: any) {
+  console.log('data', data);
   pagination.value.page = 1;
+  if(data.id) {
+    userForm.value.dialog.parentId = data.id
+  }
   dictionaryItem.value.search.organizationalStructureId = data.id;
 }
 // 监听id变化
@@ -187,42 +309,9 @@ async function getDictionaryItemList() {
   }
 }
 
-// 每页数量切换
-function sizeChange(size: number) {
-  onSizeChange(size).then(() => getDictionaryItemList());
-}
-
-// 当前页码切换（翻页）
-function currentChange(page = 1) {
-  onCurrentChange(page).then(() => getDictionaryItemList());
-}
-
-// 字段排序
-function sortChange({ prop, order }: { prop: string; order: string }) {
-  onSortChange(prop, order).then(() => getDictionaryItemList());
-}
-// 新增
-function onCreate(row?: any) {
-  console.log(1111);
-
-  dictionaryItem.value.dialog.id = "";
-  dictionaryItem.value.dialog.visible = true;
-  dictionaryItem.value.dialog.level = 1;
-  if (row) {
-    dictionaryItem.value.dialog.parentId = row.id;
-    dictionaryItem.value.dialog.level = Number(row.level) + 1;
-  }
-}
-// 修改
-function onEdit(row: any) {
-  console.log('row',row);
-  dictionaryItem.value.row = JSON.stringify(row);
-  dictionaryItem.value.dialog.id = row.id;
-  dictionaryItem.value.dialog.parentId = row.parentId;
-  dictionaryItem.value.dialog.visible = true;
-}
 // 删除
 function onDelete(row: any) {
+  console.log('row', row);
   ElMessageBox.confirm(`确认删除「${row.name}」吗？`, "确认信息")
     .then(() => {
       api.delete([row.id]).then(() => {
@@ -249,6 +338,169 @@ function onDeleteMulti(rows: any[]) {
       });
     })
     .catch(() => { });
+}
+// 获取用户
+async function getUserList() {
+  const params = {
+    ...userForm.value.search,
+  };
+  const res = await apiUser.list(params);
+  if (res.data) {
+    userForm.value.dataList = res.data.data;
+    pagination.value.total = +res.data.total;
+  }
+}
+onMounted(async () => {
+  try {
+    // loading加载开始
+    dataForm.value.loading = true;
+    // 国家
+    filterCountry.value = await useStoreCountry.getCountry();
+    // 部门
+    departmentList.value = await departmentStore?.getDepartment() || [];
+    // 职位
+    positionManageList.value = await usePositionManage?.getPositionManage() || [];
+    // 获取列表数据
+    getUserList();
+    columns.value.forEach((item: any) => {
+      if (item.checked) {
+        userForm.value.checkList.push(item.prop);
+      }
+    });
+    // loading加载结束
+    dataForm.value.loading = false;
+  } catch (error) {
+
+  } finally {
+    dataForm.value.loading = false;
+  }
+});
+
+watch(
+  () => dataForm.value.search,
+  (val) => {
+    userRef.value!.filter(val);
+  }
+);
+// 开关事件
+function onChangeStatus(row: any) {
+  return new Promise<boolean>((resolve) => {
+    ElMessageBox.confirm(
+      `确认${!row.active ? "启用" : "禁用"}「${row.name}」吗？`,
+      "确认信息"
+    )
+      .then(() => {
+        try {
+          dataForm.value.loading = true;
+          apiUser
+            .edit({
+              id: row.id,
+              account: null,
+              name: null,
+              sex: null,
+              phoneNumber: null,
+              active: !row.active,
+            })
+            .then(() => {
+              ElMessage.success({
+                message: `${!row.active ? "启用" : "禁用"}成功`,
+                center: true,
+              });
+              getUserList();
+              dataForm.value.loading = false;
+              return resolve(true);
+            })
+            .catch(() => {
+              dataForm.value.loading = false;
+              return resolve(false);
+            });
+        } catch (error) {
+
+        } finally {
+          dataForm.value.loading = false;
+        }
+      })
+      .catch(() => {
+        return resolve(false);
+      });
+  });
+}
+
+// 每页数量切换
+function sizeChange(size: number) {
+  onSizeChange(size).then(() => {
+    userForm.value.search.limit = size
+    getUserList()
+  });
+}
+
+// 当前页码切换（翻页）
+function currentChangeUser(page = 1) {
+  onCurrentChange(page).then(() => {
+    userForm.value.search.page = page
+    getUserList()
+  });
+}
+
+// 字段排序
+function sortChangeUser({ prop, order }: { prop: string; order: string }) {
+  onSortChange(prop, order).then(() => getUserList());
+}
+// 新增
+function create(row?: any) {
+  console.log('row',row);
+  console.log('userForm.value.dialog.parentId',userForm.value.dialog.parentId);
+
+  userForm.value.dialog.id = "";
+  userForm.value.dialog.visible = true;
+  userForm.value.dialog.level = 1;
+  if (row) {
+    userForm.value.dialog.parentId = row.id;
+    userForm.value.dialog.level = Number(row.level) + 1;
+  }
+}
+// 选中列表
+const selectChange = (val: any) => {
+  resetList.value = val[0]
+}
+// 重置密码
+function onResetPassword() {
+  const { name, id } = resetList.value
+  ElMessageBox.confirm(
+    `确认将「${name}」的密码重置为 “123456” 吗？`,
+    "确认信息"
+  )
+    .then(() => {
+      apiUser.reset({ id: id }).then(() => {
+        ElMessage.success({
+          message: "重置成功",
+          center: true,
+        });
+        getUserList();
+      });
+    })
+    .catch(() => { });
+}
+// 修改
+function edit(row: any) {
+  userForm.value.row = JSON.stringify(row);
+  userForm.value.dialog.id = row.id;
+  userForm.value.dialog.parentId = row.parentId;
+  userForm.value.dialog.visible = true;
+}
+// 详情
+function onDetail(row: any) {
+  detailRef.value.showEdit(row);
+}
+// 重置数据
+function onReset() {
+  Object.assign(userForm.value.search, {
+    id: "" as Dict["id"],
+    userName: "",
+    departmentId: null,
+    active: null,
+  });
+  getUserList();
 }
 </script>
 
@@ -279,7 +531,7 @@ function onDeleteMulti(rows: any[]) {
                     {{ data.name }}
                   </div>
                   <div class="code">
-                    {{ data.name }}
+                    {{ data.organizationalStructurePersonList.map((item:any) => item.userName).join('，') }}
                   </div>
                   <div class="actions">
                     <ElButtonGroup>
@@ -307,50 +559,113 @@ function onDeleteMulti(rows: any[]) {
         </template>
         <div v-show="dictionaryItem.search.organizationalStructureId" class="dictionary-container">
           <ElSpace wrap>
-            <ElButton type="primary" @click="onCreate()">
-              <template #icon>
-                <SvgIcon name="i-ep:plus" />
-              </template>
+            <ElButton type="primary" @click="create()">
+              新增员工
             </ElButton>
-            <ElButton type="danger" :disabled="!dictionaryItem.selectionDataList.length"
-              @click="onDeleteMulti(dictionaryItem.selectionDataList)">
-              <template #icon>
-                <SvgIcon name="i-ep:delete" />
-              </template>
+            <ElButton @click="onResetPassword">
+              重置密码
             </ElButton>
-            <ElInput v-model="dictionaryItem.search.chineseName" placeholder="请输入关键词筛选" clearable
-              style="width: 200px" @keydown.enter="getDictionaryItemList" />
-            <ElButton @click="getDictionaryItemList">
+            <ElSelect v-model="userForm.search.active" value-key="" placeholder="用户状态" style="width: 200px"
+              clearable filterable>
+              <el-option v-for="item in activeList" :key="item.label" :label="item.label" :value="item.value" />
+            </ElSelect>
+            <ElInput v-model="userForm.search.id" placeholder="员工ID" clearable style="width: 200px"
+              @keydown.enter="getUserList" />
+            <ElInput v-model="userForm.search.userName" placeholder="用户名" clearable style="width: 200px"
+              @keydown.enter="getUserList" />
+            <ElButton type="primary" @click="getUserList">
               <template #icon>
                 <SvgIcon name="i-ep:search" />
               </template>
             </ElButton>
+            <ElButton @click="onReset">
+              <template #icon>
+                <SvgIcon name="i-ep:refresh" />
+              </template>
+            </ElButton>
           </ElSpace>
-          <ElTable ref="dictionaryItemRef" v-loading="dictionaryItem.loading" :data="dictionaryItem.dataList" stripe
-            highlight-current-row border height="100%" @sort-change="sortChange"
-            @selection-change="dictionaryItem.selectionDataList = $event" row-key="id" default-expand-all>
+          <ElTable ref="userItemRef" :data="userForm.dataList" :border="userForm.border" :size="userForm.lineHeight"
+            :stripe="userForm.stripe" highlight-current-row height="100%" @sort-change="sortChangeUser"
+            @selection-change="userForm.selectionDataList = $event" row-key="id" default-expand-all
+            @select="selectChange">
             <ElTableColumn type="selection" align="left" fixed />
-            <ElTableColumn prop="chineseName" label="中文名称" />
-            <ElTableColumn prop="englishName" label="英文名称" />
-            <ElTableColumn prop="remark" label="备注" />
-            <ElTableColumn label="键值" align="left" width="150">
+            <ElTableColumn v-if="userForm.checkList.includes('active')" align="left" prop="active" label="状态">
               <template #default="scope">
-                <ElTag type="info">
-                  {{ scope.row.code }}
-                </ElTag>
+                <ElSwitch v-model="scope.row.active" inline-prompt active-text="启用" inactive-text="禁用"
+                  :before-change="() => onChangeStatus(scope.row)" />
               </template>
             </ElTableColumn>
-
-            <ElTableColumn label="操作" width="250" align="left">
+            <ElTableColumn v-if="userForm.checkList.includes('id')" align="left" width="180" prop="id" label="员工ID">
+              <template #default="{ row }">
+                <div class="copyId tableSmall">
+                  <div class="id oneLine ">ID: {{ row.id }}</div>
+                  <copy class="copy" :content="row.id" />
+                </div>
+              </template>
+            </ElTableColumn>
+            <ElTableColumn v-if="userForm.checkList.includes('userName')" align="left" width="130" prop="userName"
+              label="用户名">
+              <template #default="{ row }">
+                <el-text class="tableBig">
+                  {{ row.userName ? row.userName : "-" }}
+                </el-text>
+              </template>
+            </ElTableColumn>
+            <!-- <ElTableColumn v-if="dictionaryItem.checkList.includes('name')" align="left" width="130" prop="name"
+                label="姓名">
+                <template #default="{ row }">
+                  <el-text class="tableBig">
+                    {{ row.name ? row.name : "-" }}
+                  </el-text>
+                </template>
+              </ElTableColumn> -->
+            <ElTableColumn v-if="userForm.checkList.includes('phoneNumber')" align="left" width="170" prop="phone"
+              label="电话号码">
+              <template #default="{ row }">
+                <el-text class="tableBig">
+                  {{ row.phoneNumber ? row.phoneNumber : "-" }}
+                </el-text>
+              </template>
+            </ElTableColumn>
+            <ElTableColumn v-if="userForm.checkList.includes('email')" align="left" width="180" prop="email" label="邮箱">
+              <template #default="{ row }">
+                <el-text class="tableBig">
+                  {{ row.email ? row.email : "-" }}
+                </el-text>
+              </template>
+            </ElTableColumn>
+            <ElTableColumn v-if="userForm.checkList.includes('departmentId')" align="left" prop="departmentId"
+              label="部门">
+              <template #default="{ row }">
+                <el-text v-if="row.departmentId" class="tableBig">
+                  <el-text v-for="item in departmentList">
+                    <el-text v-if="row.departmentId === item.id">
+                      {{ item.name ? item.name : "-" }}
+                    </el-text>
+                  </el-text>
+                </el-text>
+                <el-text v-else class="tableBig">-</el-text>
+              </template>
+            </ElTableColumn>
+            <ElTableColumn v-if="userForm.checkList.includes('positionId')" align="left" prop="positionId" label="职位">
+              <template #default="{ row }">
+                <el-text v-if="row.positionId" class="tableBig">
+                  <el-text v-for="item in positionManageList">
+                    <el-text v-if="row.positionId === item.id">
+                      {{ item.name ? item.name : "-" }}
+                    </el-text>
+                  </el-text>
+                </el-text>
+                <el-text v-else class="tableBig">-</el-text>
+              </template>
+            </ElTableColumn>
+            <ElTableColumn label="操作" fixed="right" width="200" align="left">
               <template #default="scope">
-                <ElButton type="primary" size="small" plain @click="onCreate(scope.row)">
-                  新增子项
-                </ElButton>
-                <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">
+                <ElButton type="primary" size="small" plain @click="edit(scope.row)">
                   编辑
                 </ElButton>
-                <ElButton type="danger" size="small" plain @click="onDelete(scope.row)">
-                  删除
+                <ElButton type="warning" size="small" plain @click="onDetail(scope.row)">
+                  详情
                 </ElButton>
               </template>
             </ElTableColumn>
@@ -360,7 +675,7 @@ function onDeleteMulti(rows: any[]) {
           </ElTable>
           <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
             :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-            background @size-change="sizeChange" @current-change="currentChange" />
+            background @size-change="sizeChange" @current-change="currentChangeUser" />
         </div>
         <div v-show="!dictionaryItem.search.organizationalStructureId" class="dictionary-container">
           <div class="empty">请在左侧新增或选择一个部门</div>
@@ -369,13 +684,18 @@ function onDeleteMulti(rows: any[]) {
       <DictionaryDialog v-if="dictionary.dialog.visible" :id="dictionary.dialog.id" v-model="dictionary.dialog.visible"
         :row="dictionary.row" :parent-id="dictionary.dialog.parentId" :tree="dictionary.tree"
         @get-list="getDictionaryList" />
-      <subsidiaryDepartment v-if="subsidiaryDictionary.dialog.visible" :id="subsidiaryDictionary.dialog.id" v-model="subsidiaryDictionary.dialog.visible"
-        :row="subsidiaryDictionary.row" :parent-id="subsidiaryDictionary.dialog.parentId" :name="subsidiaryDictionary.dialog.name" :tree="subsidiaryDictionary.tree"
-        @get-list="getDictionaryList" />
+      <subsidiaryDepartment v-if="subsidiaryDictionary.dialog.visible" :id="subsidiaryDictionary.dialog.id"
+        v-model="subsidiaryDictionary.dialog.visible" :row="subsidiaryDictionary.row"
+        :parent-id="subsidiaryDictionary.dialog.parentId" :name="subsidiaryDictionary.dialog.name"
+        :tree="subsidiaryDictionary.tree" @get-list="getDictionaryList" />
       <DictionaryItemDia v-if="dictionaryItem.dialog.visible" :id="dictionaryItem.dialog.id"
         v-model="dictionaryItem.dialog.visible" :catalogue-id="dictionaryItem.search.organizationalStructureId"
         :parent-id="dictionaryItem.dialog.parentId" :level="dictionaryItem.dialog.level" :tree="dictionary.tree"
         :dataList="dictionaryItem.dataList" :row="dictionaryItem.row" @success="getDictionaryItemList" />
+      <userDialog v-if="userForm.dialog.visible" :id="userForm.dialog.id" v-model="userForm.dialog.visible"
+        :catalogue-id="userForm.search.catalogueId" :parent-id="userForm.dialog.parentId" :level="userForm.dialog.level"
+        :tree="dataForm.tree" :dataList="userForm.dataList" :row="userForm.row" @success="getUserList" />
+      <Detail ref="detailRef" />
     </div>
   </div>
 </template>
@@ -453,8 +773,8 @@ function onDeleteMulti(rows: any[]) {
 
           .code {
             width: calc(100% - 10px);
-            color: var(--el-text-color-placeholder);
-
+            //color: var(--el-text-color-placeholder);
+            color: #ffb05b;
             @include text-overflow;
           }
 
