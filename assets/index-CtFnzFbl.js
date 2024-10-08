@@ -1,0 +1,9 @@
+
+/**
+ * 由 Fantastic-admin 提供技术支持
+ * Powered by Fantastic-admin
+ * Gitee  https://fantastic-admin.gitee.io
+ * Github https://fantastic-admin.github.io
+ */
+
+import{_ as k}from"./index-wvHHnhmk.js";import{c as w}from"./user_cooperation-B7P-shPx.js";import{d as N,r as c,n as B,a as v,o as a,b as m,f,w as l,v as d,g as i,i as t,e as y,A as u,j as C,F as A,t as L,B as M,M as T}from"./index-BL1kLiLm.js";import"./index-CQsjDEZM.js";const z={class:"idList"},E={class:"item"},I={style:{flex:"auto"}},S=N({name:"AllocationEdit",__name:"index",emits:["fetch-data"],setup(D,{expose:b,emit:F}){const p=c(!1),o=c(!1);c();const e=c({list:[],type:"",typeList:["自动分配","供应商","会员组","租户"]});async function h(_){try{p.value=!0;const s=await w.getTenantSupplierMemberNameInfo(_);e.value.list=s.data.getTenantSupplierMemberNameList,e.value.type=_.type,p.value=!1,o.value=!0}catch{}finally{p.value=!1}}function g(){o.value=!1}return B(async()=>{}),b({showEdit:h}),(_,s)=>{const r=v("el-button"),V=k,x=v("el-dialog");return a(),m("div",null,[f(x,{modelValue:t(o),"onUpdate:modelValue":s[0]||(s[0]=n=>M(o)?o.value=n:null),title:"分配",width:"700","before-close":g},{footer:l(()=>[d("div",I,[f(r,{onClick:g},{default:l(()=>[i(" 关闭 ")]),_:1})])]),default:l(()=>[t(e).type===2?(a(),y(r,{key:0,size:"small",type:"danger"},{default:l(()=>[i("供应商 "+u(t(e).list.length>1?t(e).list.length:""),1)]),_:1})):t(e).type===3?(a(),y(r,{key:1,size:"small",type:"success"},{default:l(()=>[i("会员组"+u(t(e).list.length>1?t(e).list.length:""),1)]),_:1})):t(e).type===4?(a(),y(r,{key:2,size:"small",type:"primary"},{default:l(()=>[i("租户")]),_:1})):C("",!0),d("div",z,[(a(!0),m(A,null,L(t(e).list,n=>(a(),m("div",E,[d("b",null,u(n.name),1),i("   "),d("span",null,"ID: "+u(n.id),1),f(V,{content:n.id},null,8,["content"])]))),256))])]),_:1},8,["modelValue"])])}}}),q=T(S,[["__scopeId","data-v-819b9b64"]]);export{q as default};
