@@ -50,7 +50,6 @@ async function showEdit(row: any) {
         stagedDataStore.projectManagementList || reactive([initialTopTabsData]);
     } else {
       title.value = "编辑";
-      // 编辑返回的字段也一样，周二让刘改字段 	项目配额字段updateProjectQuotaInfoList getProjectQuotaInfoList
       const res = await api.detail({ projectId: row.projectId });
       initializeLeftTabsData(res.data);
     }
@@ -165,6 +164,7 @@ const processingData = async () => {
   // 将的单选的答案和id从''转换成[]
   await newLeftTabsData.forEach((element: any) => {
     element.descriptionUrl = element.descriptionUrl.join(",");
+    // 如果没有问卷和问题就直接关闭前置问卷
     if (
       !element.data.configurationInformation.ProjectProblemInfoList ||
       !element.data.configurationInformation.ProjectProblemInfoList.length
@@ -217,7 +217,6 @@ async function onSubmit() {
         }
         emits("fetch-data");
         closeHandler();
-
       }, 1000)
 
     } else {
@@ -273,7 +272,9 @@ defineExpose({
       <template #footer>
         <div class="flex-c">
 
-          <el-button  link v-show="projectReleaseTime">  <SvgIcon name="ant-design:clock-circle-outlined"  /> &ensp; {{projectReleaseTime}} </el-button>
+          <el-button link v-show="projectReleaseTime">
+            <SvgIcon name="ant-design:clock-circle-outlined" /> &ensp; {{ projectReleaseTime }}
+          </el-button>
           <el-button type="primary" @click="onSubmit" :disabled="loading"> 发布项目 </el-button>
           <el-button type="warning" v-show="title !== '编辑'" @click="staging" :disabled="loading">
             暂存
