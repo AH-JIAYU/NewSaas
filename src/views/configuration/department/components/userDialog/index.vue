@@ -37,17 +37,20 @@ const isPhone = ref<any>();
 // 组长
 const getGroup = ref<any>()
 const props: any = defineProps(['catalogueId', 'parentId', 'id', 'tree', 'dataList', 'row', 'level'])
-console.log('props',props);
-
 // 更新数据
 const emits = defineEmits(["success"]);
-
+// tree ref
+const treeRef = ref<any>();
 const visible = defineModel<boolean>({
   default: false,
 });
 // 弹窗标题
 const title = computed(() => (props.id === "" ? "新增用户" : "编辑用户"));
-
+const defaultProps: any = {
+  children: "children",
+  label: "name",
+  // disabled : "distribution",
+};
 const formRef = ref<any>();
 const flat = ref([]); // 扁平化
 // 表单
@@ -74,7 +77,7 @@ const form = ref<any>({
   // 职位id
   positionId: "",
   // 部门id
-  departmentId: "",
+  departmentId: [],
   // 组id
   groupId: "",
 });
@@ -139,10 +142,22 @@ function onSubmit() {
     formRules.value.phoneNumber = []
     formRef.value.clearValidate('phoneNumber');
   }
+  // 同步选中的路由id
+  form.value.departmentId = treeRef.value!.getCheckedKeys(false);
+  //  获取选中的所有子节点
+  const tree = treeRef.value.getCheckedKeys();
+  // 获取所有半选的主节点
+  const halltree = treeRef.value.getHalfCheckedKeys();
+  // 组合一下
+  const departmentId = tree.concat(halltree);
+  form.value.departmentId = departmentId;
   if (!form.value.id) {
     formRef.value &&
       formRef.value.validate((valid: any) => {
         if (valid) {
+          console.log('form.value',form.value);
+
+          return
           api.create(form.value).then(() => {
             ElMessage.success({
               message: "新增成功",
@@ -196,6 +211,7 @@ function onSubmit() {
           if (!params.password) {
             delete params.password;
           }
+          return
           api.edit(params).then(() => {
             ElMessage.success({
               message: "编辑成功",
@@ -220,7 +236,43 @@ const flattenDeep = (arr: any) => {
     []
   );
 };
+// const handleNodeClick = (nodeData: any) => {
+//   console.log('nodeData', nodeData);
+//   // 判断节点是否被选中
+//   const arr = [];
+//   arr.push(nodeData);
+//   const isChecked = treeRef.value.getNode(nodeData.id).checked;
+//   if (isChecked) {
+//     arr.map((ite) => {
+//       const permissionList = permissionData?.value?.filter(
+//         (item: any) => ite.id === item.menuId
+//       );
+//       if (permissionList && permissionList.length) {
+//         permissionList.forEach((element: any) => {
+//           form.value.permission.push(element.id);
+//         });
+//       }
+//     });
+//   } else {
+//     arr.map((ite) => {
+//       const permissionList = permissionData?.value?.filter(
+//         (item: any) => ite.id === item.menuId
+//       );
+//       if (permissionList && permissionList.length) {
+//         // 将 permissionList 中存在的 id 进行提取
+//         let idsToRemove = permissionList.map((item: any) => item.id);
+//         // 使用 filter() 方法过滤掉存在于 idsToRemove 中的 id
+//         form.value.permission = form.value.permission.filter(
+//           (id: any) => !idsToRemove.some((removeId: any) => removeId === id)
+//         );
+//       }
+//     });
+//   }
+// }
 onMounted(async () => {
+  console.log('props1', props);
+  form.value.departmentId = []
+  form.value.departmentId.push(props.parentId)
   const { data } = await apiPos.list({
     page: 1,
     limit: 10,
@@ -231,18 +283,23 @@ onMounted(async () => {
   positionManageList.value = data.data
   staffList.value = await tenantStaffStore.getStaff();
   munulevs.value = await roleStore.getRole();
-  departmentList.value = await departmentStore.getDepartment();
+  const res = await apiDep.list({ name: '' })
+  console.log('res', res);
+  departmentList.value = res.data
   country.value = await useStoreCountry.getCountry();
   if (props.id !== "" && props.row) {
-    console.log('props',props);
-
     formRules.value.password = [];
     form.value = JSON.parse(props.row);
+    // 确保 departmentId 是一个数组，如果是 null 则初始化为空数组
+    if (!form.value.departmentId) {
+      form.value.departmentId = [];
+    }
+    form.value.departmentId.push(props.parentId)
     isEmail.value = form.value.email
     isPhone.value = form.value.phoneNumber
-    if (form.value.departmentId) {
-      departmentChange(form.value.departmentId)
-    }
+    // if (form.value.departmentId) {
+    //   departmentChange(form.value.departmentId)
+    // }
     disabled.value = true;
   }
   flat.value = flattenDeep(props.dataList);
@@ -262,14 +319,14 @@ onMounted(async () => {
         <el-row :gutter="24">
           <el-col :span="8">
             <el-form-item label="用户名" prop="userName">
-              <el-input v-model="form.userName" :maxlength ="20" placeholder="请输入用户名" clearable />
+              <el-input v-model="form.userName" :maxlength="20" placeholder="请输入用户名" clearable />
             </el-form-item>
           </el-col>
-          <!-- <el-col :span="8">
-            <el-form-item label="姓名" prop="name">
+          <el-col :span="8">
+            <el-form-item label="姓名" prop="">
               <el-input v-model="form.name" placeholder="请输入姓名" clearable />
             </el-form-item>
-          </el-col> -->
+          </el-col>
           <!-- <el-col :span="8">
             <el-form-item label="国家" prop="country">
               <ElSelect
@@ -354,10 +411,16 @@ onMounted(async () => {
         </template>
         <el-row :gutter="24">
           <el-form-item label="分配部门:">
-            <el-radio-group v-if="groupManageList.length" v-model="form.groupId">
+            <!-- <el-radio-group v-if="groupManageList.length" v-model="form.groupId">
               <el-radio v-for="item in groupManageList" :key="item.id" :value="item.id" :label="item.name"></el-radio>
-            </el-radio-group>
-            <el-text v-else>暂无数据</el-text>
+            </el-radio-group> -->
+            {{ departmentList }}
+            {{ }}
+            <el-tree style="max-width: 600px" ref="treeRef" :data="departmentList" show-checkbox check-strictly
+              node-key="id" :default-expanded-keys="[]" :default-checked-keys="form.departmentId" default-expand-all
+              :props="defaultProps"  />
+              <!-- @check-change="handleNodeClick" -->
+            <!-- <el-text v-else>暂无数据</el-text> -->
           </el-form-item>
         </el-row>
       </el-card>
