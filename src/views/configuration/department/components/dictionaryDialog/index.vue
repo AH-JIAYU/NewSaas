@@ -145,7 +145,6 @@ async function onSubmit() {
           // 将数据制空
           form.value.organizationalStructurePersonList = []
           // 筛选出需要的格式
-          console.log('filteredUsers.value', filteredUsers.value);
           filteredUsers.value.forEach((item: any) => {
             if (item.userId) {
               const obj = {
@@ -184,7 +183,6 @@ async function onSubmit() {
           // 删除多余的数据
           delete params.userIdList
           if (!form.value.id) {
-            console.log('params', params);
             // return
             const { status } = await api.create(params);
             status === 1 &&
@@ -194,9 +192,6 @@ async function onSubmit() {
               });
             loading.value = false;
           } else {
-            // console.log('form.value', form.value)
-            console.log('params', params)
-            console.log('filteredUsers', filteredUsers.value)
             // return
             const { status } = await api.edit(params);
             status === 1 &&

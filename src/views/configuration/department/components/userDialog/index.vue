@@ -14,8 +14,6 @@ const router = useRouter();
 const tenantStaffStore = useTenantStaffStore();
 // 用户数据
 const staffList = ref<any>([]);
-// 小组
-const groupManageList = ref<any>([]);
 // 职位
 const positionManageList = ref<any>();
 // 国家
@@ -25,8 +23,6 @@ const country = ref();
 const roleStore = useTenantRoleStore();
 // 角色
 const munulevs = ref();
-// 部门
-const departmentStore = useDepartmentStore();
 // 部门数据
 const departmentList = ref<any>();
 // 禁用修改密码
@@ -77,9 +73,7 @@ const form = ref<any>({
   // 职位id
   positionId: "",
   // 部门id
-  departmentId: [],
-  // 组id
-  groupId: "",
+  organizationalStructureId: [],
 });
 // 自定义校验手机号
 const validatePhone = (rule: any, value: any, callback: any) => {
@@ -126,12 +120,6 @@ const formRules = ref<FormRules>({
   email: [{ validator: validateEmail, trigger: "blur" },],
 });
 
-// 切换部门
-const departmentChange = async (val: any) => {
-  // const { data } = await apiDep.departmentGroup({ id: val });
-  // groupManageList.value = data;
-  // getGroup.value = data[0].director
-};
 // 提交数据
 function onSubmit() {
   if (!form.value.email) {
@@ -143,21 +131,18 @@ function onSubmit() {
     formRef.value.clearValidate('phoneNumber');
   }
   // 同步选中的路由id
-  form.value.departmentId = treeRef.value!.getCheckedKeys(false);
+  form.value.organizationalStructureId = treeRef.value!.getCheckedKeys(false);
   //  获取选中的所有子节点
   const tree = treeRef.value.getCheckedKeys();
   // 获取所有半选的主节点
   const halltree = treeRef.value.getHalfCheckedKeys();
   // 组合一下
-  const departmentId = tree.concat(halltree);
-  form.value.departmentId = departmentId;
+  const organizationalStructureId = tree.concat(halltree);
+  form.value.organizationalStructureId = organizationalStructureId;
   if (!form.value.id) {
     formRef.value &&
       formRef.value.validate((valid: any) => {
         if (valid) {
-          console.log('form.value',form.value);
-
-          return
           api.create(form.value).then(() => {
             ElMessage.success({
               message: "新增成功",
@@ -182,9 +167,8 @@ function onSubmit() {
             active,
             type,
             role,
-            groupId,
             positionId,
-            departmentId,
+            organizationalStructureId,
             userName,
           } = form.value;
           const params = {
@@ -197,9 +181,8 @@ function onSubmit() {
             active,
             type,
             role,
-            groupId,
             positionId,
-            departmentId,
+            organizationalStructureId,
             userName,
           };
           if (isPhone.value === params.phoneNumber) {
@@ -211,7 +194,6 @@ function onSubmit() {
           if (!params.password) {
             delete params.password;
           }
-          return
           api.edit(params).then(() => {
             ElMessage.success({
               message: "编辑成功",
@@ -270,9 +252,8 @@ const flattenDeep = (arr: any) => {
 //   }
 // }
 onMounted(async () => {
-  console.log('props1', props);
-  form.value.departmentId = []
-  form.value.departmentId.push(props.parentId)
+  form.value.organizationalStructureId = []
+  form.value.organizationalStructureId.push(props.parentId)
   const { data } = await apiPos.list({
     page: 1,
     limit: 10,
@@ -284,21 +265,20 @@ onMounted(async () => {
   staffList.value = await tenantStaffStore.getStaff();
   munulevs.value = await roleStore.getRole();
   const res = await apiDep.list({ name: '' })
-  console.log('res', res);
   departmentList.value = res.data
   country.value = await useStoreCountry.getCountry();
   if (props.id !== "" && props.row) {
     formRules.value.password = [];
     form.value = JSON.parse(props.row);
-    // 确保 departmentId 是一个数组，如果是 null 则初始化为空数组
-    if (!form.value.departmentId) {
-      form.value.departmentId = [];
+    // 确保 organizationalStructureId 是一个数组，如果是 null 则初始化为空数组
+    if (!form.value.organizationalStructureId) {
+      form.value.organizationalStructureId = [];
     }
-    form.value.departmentId.push(props.parentId)
+    form.value.organizationalStructureId.push(props.parentId)
     isEmail.value = form.value.email
     isPhone.value = form.value.phoneNumber
-    // if (form.value.departmentId) {
-    //   departmentChange(form.value.departmentId)
+    // if (form.value.organizationalStructureId) {
+    //   departmentChange(form.value.organizationalStructureId)
     // }
     disabled.value = true;
   }
@@ -356,7 +336,7 @@ onMounted(async () => {
           </el-col>
           <!-- <el-col :span="8">
             <el-form-item label="部门">
-              <el-select v-model="form.departmentId" placeholder="请选择部门" clearable filterable
+              <el-select v-model="form.organizationalStructureId" placeholder="请选择部门" clearable filterable
                 @change="departmentChange">
                 <el-option v-for="item in departmentList" :key="item.id" :label="item.name" :value="item.id">
                 </el-option>
@@ -414,10 +394,8 @@ onMounted(async () => {
             <!-- <el-radio-group v-if="groupManageList.length" v-model="form.groupId">
               <el-radio v-for="item in groupManageList" :key="item.id" :value="item.id" :label="item.name"></el-radio>
             </el-radio-group> -->
-            {{ departmentList }}
-            {{ }}
             <el-tree style="max-width: 600px" ref="treeRef" :data="departmentList" show-checkbox check-strictly
-              node-key="id" :default-expanded-keys="[]" :default-checked-keys="form.departmentId" default-expand-all
+              node-key="id" :default-expanded-keys="[]" :default-checked-keys="form.organizationalStructureId" default-expand-all
               :props="defaultProps"  />
               <!-- @check-change="handleNodeClick" -->
             <!-- <el-text v-else>暂无数据</el-text> -->
