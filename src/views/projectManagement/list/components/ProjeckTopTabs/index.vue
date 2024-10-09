@@ -160,8 +160,6 @@ const changeClient = (val: any) => {
     (item: any) => item.tenantCustomerId === val,
   );
   localToptTab.value.isProfile = findData.antecedentQuestionnaire === 2 ? 1 : 2;
-  findData.antecedentQuestionnaire21findData.antecedentQuestionnaire21findData
-    .antecedentQuestionnaire21;
 };
 
 // 所属国家全选
