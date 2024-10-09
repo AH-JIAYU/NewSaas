@@ -22,10 +22,17 @@ const props = withDefaults(
     id: "",
   }
 );
+// 计提时间
 const commissionTypeList = [
   { label: '完成计提', value: 1, },
   { label: '审核计提', value: 2, },
   { label: '结算计提', value: 3, },
+]
+// 计提方式
+const provisionMethod = [
+  { label: '按项目价', value: 1 },
+  { label: '按成本价', value: 2 },
+  { label: '按毛利润', value: 3 },
 ]
 // loading
 const loading = ref<any>(false);
@@ -33,15 +40,16 @@ const loading = ref<any>(false);
 const emits = defineEmits<{
   getList: any;
 }>();
-
+// 弹框开关
 const visible = defineModel<boolean>({
   default: false,
 });
 // 弹窗标题
 const title = computed(() => (props.id === "" ? "新增子部门" : "编辑子部门"));
+// 负责人列表
 const filteredUsers = ref<any>([])
+// formRef
 const formRef = ref<FormInstance>();
-const flat = ref([]);
 // 表单
 const form = ref<any>({
   // 父级id
@@ -73,10 +81,11 @@ async function onSubmit() {
         form.value.organizationalStructurePersonList = []
         filteredUsers.value.forEach((item: any) => {
           const obj = {
-            userId: item.id,
+            userId: item.userId,
             commission: item.commission,
-            commissionType: item.commissionType,
+            commissionTime: item.commissionTime,
             commissionStatus: item.commissionStatus,
+            commissionType: item.commissionType,
           }
           form.value.organizationalStructurePersonList.push(obj)
         });
@@ -94,10 +103,11 @@ async function onSubmit() {
           ...form.value
         }
         delete params.userIdList
+        delete params.superior
         if (!form.value.id) {
           delete params.userIdList
           console.log('params', params);
-          return
+          // return
           const { status } = await api.create(params);
           status === 1 &&
             ElMessage.success({
@@ -218,6 +228,7 @@ if (props.parentId) {
 onMounted(async () => {
   try {
     loading.value = true;
+    // 获取回显数据
     if (props.id !== "") {
       const { id, name, remark, organizationalStructurePersonList } = JSON.parse(props.row);
       form.value.id = id;
@@ -246,7 +257,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <ElDialog v-loading="loading" v-model="visible" :title="title" width="25rem" :close-on-click-modal="false"
+  <ElDialog v-loading="loading" v-model="visible" :title="title" style="width: 48rem;" :close-on-click-modal="false"
     append-to-body destroy-on-close @closed="onCancel">
     <ElForm ref="formRef" :model="form" :rules="formRules" label-width="7rem">
       <ElFormItem label="上级部门" prop="">
@@ -262,6 +273,9 @@ onMounted(async () => {
           </el-option>
         </el-select>
       </ElFormItem>
+      <ElFormItem label="备注">
+        <ElInput v-model="form.remark" placeholder="请输入备注" clearable />
+      </ElFormItem>
       <div v-for="item in filteredUsers" :key="item.id" class="user">
         <div class="mr">
           <el-tag type="primary" closable @close="handleClose(item)">{{ item.userName }}</el-tag>
@@ -271,14 +285,19 @@ onMounted(async () => {
           <!-- <el-checkbox v-model="item.commissionStatus" label="开启提成" size="large" /> -->
           <el-switch v-model="item.commissionStatus" :active-value="1" :inactive-value="2" inline-prompt active-text="开启" inactive-text="关闭"  />
         </div>
-        <div v-show="item.commissionStatus  ===1" class="center mr">
-          <el-select v-model="item.commissionType" value-key="" placeholder="请选择计提时间" clearable filterable @change="">
+        <div v-show="item.commissionStatus === 1" class="centers mr">
+          <el-select v-model="item.commissionType" value-key="" placeholder="计提方式" clearable filterable>
+            <el-option v-for="item in provisionMethod" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+        </div>
+        <div v-show="item.commissionStatus === 1" class="center mr">
+          <el-select class="select" v-model="item.commissionTime" value-key="" placeholder="计提时间" clearable
+            filterable>
             <el-option v-for="item in commissionTypeList" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </div>
-        <div v-show="item.commissionStatus  ===1" class="centers mr">
-          <ElInput v-model="item.commission" placeholder="请输入提成比例" style="max-width: 12rem;" clearable>
-          </ElInput>
+        <div v-show="item.commissionStatus === 1" class="center mr">
+          <ElInput v-model="item.commission" placeholder="提成比例" style="max-width: 25rem;" clearable />
         </div>
       </div>
     </ElForm>
@@ -299,11 +318,11 @@ onMounted(async () => {
   align-items: center;
   justify-content: flex-start;
   margin-bottom: 1rem;
-  margin-left: 1.875rem;
+  margin-left: 7.0625rem;
 
   .center {
     display: flex;
-    width: 12rem;
+    width: 13rem;
 
     span {
       width: 5.3125rem;
@@ -312,7 +331,7 @@ onMounted(async () => {
 
   .centers {
     display: flex;
-    width: 15rem;
+    width: 13rem;
 
     span {
       width: 5.3125rem;
@@ -321,10 +340,10 @@ onMounted(async () => {
 
   .mr {
     display: flex;
-    margin-right: 1.5625rem;
+    margin-right: 20px;
   }
 
-  .mr:nth-child(4) {
+  .mr:nth-child(5) {
     margin-right: 0px;
   }
 }
@@ -344,6 +363,12 @@ onMounted(async () => {
     /* 在文本和选择框之间添加一些间隔 */
     margin-right: 10px;
     /* 重置默认的margin-right */
+  }
+
+  .el-input-group__append {
+    width:12rem;
+    padding: 0;
+    background-color: #fff;
   }
   .el-tag {
     width: 5rem;

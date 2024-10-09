@@ -39,15 +39,16 @@ const loading = ref<any>(false);
 const emits = defineEmits<{
   getList: any;
 }>();
-
+// 弹窗开关
 const visible = defineModel<boolean>({
   default: false,
 });
 // 弹窗标题
 const title = computed(() => (props.id === "" ? "新增部门" : "编辑部门"));
+// 部门负责人list
 const filteredUsers = ref<any>([])
+// formRef
 const formRef = ref<FormInstance>();
-const flat = ref([]);
 // 表单
 const form = ref<any>({
   // 父级id
@@ -67,67 +68,6 @@ const formRules = ref<FormRules>({
   name: [{ required: true, message: "请输入部门名称" }],
   commissionType: [{ required: true, message: "请选择计提方式", trigger: "change" }],
 });
-
-// 提交数据
-async function onSubmit() {
-  formRef.value &&
-    formRef.value.validate(async (valid) => {
-      if (valid) {
-        // 将数据制空
-        form.value.organizationalStructurePersonList = []
-        // 筛选出需要的格式
-        filteredUsers.value.forEach((item: any) => {
-          const obj = {
-            userId: item.id,
-            commission: item.commission,
-            commissionType: item.commissionType,
-            commissionStatus: item.commissionStatus,
-          }
-          form.value.organizationalStructurePersonList.push(obj)
-        });
-        // 去重
-        const uniqueList = form.value.organizationalStructurePersonList.reduce((accumulator: any, current: any) => {
-          const exists = accumulator.some((item: any) => item.userId === current.userId);
-          if (!exists) {
-            accumulator.push(current);
-          }
-          return accumulator;
-        }, []);
-        // 赋值
-        form.value.organizationalStructurePersonList = uniqueList
-        const params = {
-          ...form.value
-        }
-        // 删除多余的数据
-        delete params.userIdList
-        if (!form.value.id) {
-          console.log('params', params);
-          // return
-          const { status } = await api.create(params);
-          status === 1 &&
-            ElMessage.success({
-              message: "新增成功",
-              center: true,
-            });
-        } else {
-          // console.log('form.value', form.value)
-          console.log('params', params)
-          console.log('filteredUsers', filteredUsers.value)
-          // return
-          const { status } = await api.edit(params);
-          status === 1 &&
-            ElMessage.success({
-              message: "编辑成功",
-              center: true,
-            });
-        }
-        // 更新列表
-        await emits("getList");
-        // 关闭弹框
-        onCancel();
-      }
-    });
-}
 
 // 移除
 const handleClose = (tag: any) => {
@@ -183,7 +123,9 @@ const handleChange = (val: any) => {
     // 数组去重
     const uniqueData = Array.from(new Map(result.map((item: any) => [item.id, item])).values());
     // 过滤 uniqueData，只保留在 val 中的 id
-    const filteredUniqueData = uniqueData.filter((item: any) => val.includes(item.id));
+    const filteredUniqueData = uniqueData.filter((item: any) =>
+      item.userId ? val.includes(item.userId) : val.includes(item.id)
+    );
     // 赋值给循环数据
     filteredUsers.value = filteredUniqueData
     form.value.organizationalStructurePersonList = filteredUsers.value
@@ -193,8 +135,92 @@ const handleChange = (val: any) => {
     form.value.organizationalStructurePersonList = filteredUsers.value
   }
 }
+// 提交数据
+async function onSubmit() {
+  try {
+    formRef.value &&
+      formRef.value.validate(async (valid) => {
+        if (valid) {
+          loading.value = true;
+          // 将数据制空
+          form.value.organizationalStructurePersonList = []
+          // 筛选出需要的格式
+          console.log('filteredUsers.value', filteredUsers.value);
+          filteredUsers.value.forEach((item: any) => {
+            if (item.userId) {
+              const obj = {
+                id: item.id,
+                userId: item.userId,
+                commission: item.commission,
+                commissionTime: item.commissionTime,
+                commissionStatus: item.commissionStatus,
+                commissionType: item.commissionType,
+              }
+              form.value.organizationalStructurePersonList.push(obj)
+            } else {
+              const obj = {
+                userId: item.id,
+                commission: item.commission,
+                commissionTime: item.commissionTime,
+                commissionStatus: item.commissionStatus,
+                commissionType: item.commissionType,
+              }
+              form.value.organizationalStructurePersonList.push(obj)
+            }
+          });
+          // 去重
+          const uniqueList = form.value.organizationalStructurePersonList.reduce((accumulator: any, current: any) => {
+            const exists = accumulator.some((item: any) => item.userId === current.userId);
+            if (!exists) {
+              accumulator.push(current);
+            }
+            return accumulator;
+          }, []);
+          // 赋值
+          form.value.organizationalStructurePersonList = uniqueList
+          const params = {
+            ...form.value
+          }
+          // 删除多余的数据
+          delete params.userIdList
+          if (!form.value.id) {
+            console.log('params', params);
+            // return
+            const { status } = await api.create(params);
+            status === 1 &&
+              ElMessage.success({
+                message: "新增成功",
+                center: true,
+              });
+            loading.value = false;
+          } else {
+            // console.log('form.value', form.value)
+            console.log('params', params)
+            console.log('filteredUsers', filteredUsers.value)
+            // return
+            const { status } = await api.edit(params);
+            status === 1 &&
+              ElMessage.success({
+                message: "编辑成功",
+                center: true,
+              });
+            loading.value = false;
+          }
+          // 更新列表
+          await emits("getList");
+          // 关闭弹框
+          onCancel();
+        }
+      });
+  } catch (error) {
+
+  } finally {
+    loading.value = false;
+  }
+}
 // 关闭弹框
 function onCancel() {
+  // 将数据制空
   Object.assign(form, {
     // 父级id
     parentId: '',
@@ -218,15 +244,20 @@ const getFilteredUsers = () => {
 onMounted(async () => {
   try {
     loading.value = true;
-    if (props.id !== "") {
+    // 回显表单数据
+    if (props.id) {
       const { id, name, remark, organizationalStructurePersonList } = JSON.parse(props.row);
       form.value.id = id;
       form.value.name = name;
       form.value.remark = remark;
-      form.value.organizationalStructurePersonList = organizationalStructurePersonList;
-      organizationalStructurePersonList.forEach((item: any) => {
-        form.value.userIdList.push(item.userId)
-      })
+      if (organizationalStructurePersonList) {
+        form.value.organizationalStructurePersonList = organizationalStructurePersonList;
+        organizationalStructurePersonList.forEach((item: any) => {
+          form.value.userIdList.push(item.userId);
+        });
+      } else {
+        form.value.organizationalStructurePersonList = [];
+      }
     }
     // 获取用户数据
     staffList.value = await tenantStaffStore.getStaff();
@@ -234,30 +265,23 @@ onMounted(async () => {
     filteredUsers.value = getFilteredUsers();
     // 将编辑数据赋值
     if (form.value.id) {
-      filteredUsers.value = form.value.organizationalStructurePersonList
+      filteredUsers.value = form.value.organizationalStructurePersonList;
     }
-    loading.value = false;
   } catch (error) {
-
+    console.error("Error occurred:", error);
   } finally {
     loading.value = false;
   }
-
 });
 </script>
 
 <template>
-  <ElDialog v-loading="loading" v-model="visible" :title="title" width="25rem" :close-on-click-modal="false"
+  <ElDialog  v-model="visible" :title="title" style="width: 48rem;" :close-on-click-modal="false"
     append-to-body destroy-on-close @closed="onCancel">
-    <ElForm ref="formRef" :model="form" :rules="formRules" label-width="7rem">
+    <ElForm v-loading="loading" ref="formRef" :model="form" :rules="formRules" label-width="7rem">
       <ElFormItem label="部门名称" prop="name">
         <ElInput v-model="form.name" placeholder="请输入部门名称" clearable />
       </ElFormItem>
-      <!-- <ElFormItem label="计提方式" prop="commissionType">
-        <el-select v-model="form.commissionType" value-key="" placeholder="请选择计提方式" clearable filterable>
-          <el-option v-for="item in provisionMethod" :key="item.value" :label="item.label" :value="item.value" />
-        </el-select>
-      </ElFormItem> -->
       <ElFormItem label="部门主管" prop="">
         <el-select v-model="form.userIdList" value-key="" placeholder="请选择部门主管" multiple collapse-tags
           collapse-tags-tooltip clearable filterable @change="handleChange">
@@ -278,21 +302,18 @@ onMounted(async () => {
           <el-switch v-model="item.commissionStatus" :active-value="1" :inactive-value="2" inline-prompt
             active-text="开启" inactive-text="关闭" />
         </div>
-        <!-- <div v-show="item.commissionStatus ===1" class="center mr">
-          <el-select class="select" v-model="item.commissionType" value-key="" placeholder="请选择计提时间" clearable filterable @change="">
+        <div v-show="item.commissionStatus === 1" class="centers mr">
+          <el-select v-model="item.commissionType" value-key="" placeholder="计提方式" clearable filterable>
+            <el-option v-for="item in provisionMethod" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+        </div>
+        <div v-show="item.commissionStatus === 1" class="center mr">
+          <el-select class="select" v-model="item.commissionTime" value-key="" placeholder="计提时间" clearable filterable>
             <el-option v-for="item in commissionTypeList" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
-        </div> -->
-        <div v-show="item.commissionStatus === 1" class="centers mr">
-          <ElInput v-model="item.commission" placeholder="请输入提成比例" style="max-width: 25rem;" clearable>
-            <template #append>
-              <el-select class="select" v-model="item.commissionType" value-key="" placeholder="请选择计提时间" clearable
-                filterable @change="">
-                <el-option v-for="item in commissionTypeList" :key="item.value" :label="item.label"
-                  :value="item.value" />
-              </el-select>
-            </template>
-          </ElInput>
+        </div>
+        <div v-show="item.commissionStatus === 1" class="center mr">
+          <ElInput v-model="item.commission" placeholder="提成比例" style="max-width: 25rem;" clearable />
         </div>
       </div>
     </ElForm>
@@ -317,7 +338,7 @@ onMounted(async () => {
 
   .center {
     display: flex;
-    width: 12rem;
+    width: 13rem;
 
     span {
       width: 5.3125rem;
@@ -326,7 +347,7 @@ onMounted(async () => {
 
   .centers {
     display: flex;
-    width: 26rem;
+    width: 13rem;
 
     span {
       width: 5.3125rem;
@@ -335,10 +356,10 @@ onMounted(async () => {
 
   .mr {
     display: flex;
-    margin-right: 1.5625rem;
+    margin-right: 20px;
   }
 
-  .mr:nth-child(3) {
+  .mr:nth-child(5) {
     margin-right: 0px;
   }
 }
@@ -366,7 +387,7 @@ onMounted(async () => {
   }
 
   .el-input-group__append {
-    width:12rem;
+    width: 12rem;
     padding: 0;
     background-color: #fff;
   }
