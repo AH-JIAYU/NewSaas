@@ -77,7 +77,6 @@ async function onSubmit() {
   formRef.value &&
     formRef.value.validate(async (valid) => {
       if (valid) {
-        console.log('filteredUsers', filteredUsers.value)
         form.value.organizationalStructurePersonList = []
         filteredUsers.value.forEach((item: any) => {
           const obj = {
@@ -89,8 +88,6 @@ async function onSubmit() {
           }
           form.value.organizationalStructurePersonList.push(obj)
         });
-        console.log('filteredUsers11111111', filteredUsers.value)
-        console.log('form.value.organizationalStructurePersonList', form.value.organizationalStructurePersonList)
         const uniqueList = form.value.organizationalStructurePersonList.reduce((accumulator: any, current: any) => {
           const exists = accumulator.some((item: any) => item.userId === current.userId);
           if (!exists) {
@@ -106,7 +103,6 @@ async function onSubmit() {
         delete params.superior
         if (!form.value.id) {
           delete params.userIdList
-          console.log('params', params);
           // return
           const { status } = await api.create(params);
           status === 1 &&
@@ -115,9 +111,6 @@ async function onSubmit() {
               center: true,
             });
         } else {
-          // console.log('form.value', form.value)
-          console.log('params', params)
-          console.log('filteredUsers', filteredUsers.value)
           // return
           const { status } = await api.edit(params);
           status === 1 &&

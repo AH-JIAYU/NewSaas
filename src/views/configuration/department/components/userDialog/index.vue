@@ -219,7 +219,6 @@ const flattenDeep = (arr: any) => {
   );
 };
 // const handleNodeClick = (nodeData: any) => {
-//   console.log('nodeData', nodeData);
 //   // 判断节点是否被选中
 //   const arr = [];
 //   arr.push(nodeData);
