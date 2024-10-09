@@ -1,0 +1,9 @@
+
+/**
+ * 由 Fantastic-admin 提供技术支持
+ * Powered by Fantastic-admin
+ * Gitee  https://fantastic-admin.gitee.io
+ * Github https://fantastic-admin.github.io
+ */
+
+import{_ as k}from"./index.vue_vue_type_script_setup_true_lang-Cj1xyy6d.js";import{u as C}from"./survey_vip-72fvn4t-.js";import{d as N,r as s,a2 as S,X as w,a as c,o as m,b as f,f as p,w as d,g as B,F as D,t as L,e as R,y as j,z as $,N as z}from"./index-CAqsVIP2.js";const M=N({__name:"index",props:{leftTabsData:Array,validateTopTabs:Array,validateAll:Array,title:String},emits:["validate"],setup(_,{expose:T,emit:g}){const h=C(),o=_,V=g;s();const e=s(o.leftTabsData),x=s(o.validateTopTabs);e.value.forEach((n,a)=>{const r=s(null);S(`formRef${a}`,r)});const b=s(0),t=s(0);function y(){t.value=++b.value,e.value.push({...h.initialTopTabsData})}function A(n){e.value.splice(n,1),x.value.splice(n,1),t.value>=e.value.length&&(t.value=Math.max(0,e.value.length-1),b.value=Math.max(0,e.value.length-1))}return w(()=>t.value,(n,a)=>{o.validateAll.reduce((u,v,l)=>(v==="rejected"&&u.push(l),u),[]).includes(a)&&V("validate")}),T({activeLeftTab:t}),(n,a)=>{const r=c("el-button"),u=c("el-tab-pane"),v=c("el-tabs");return m(),f("div",null,[p(r,{class:"button",disabled:e.value.length>29||o.title!=="新增",onClick:a[0]||(a[0]=l=>y())},{default:d(()=>[B(" 新增会员 ")]),_:1},8,["disabled"]),p(v,{modelValue:t.value,"onUpdate:modelValue":a[1]||(a[1]=l=>t.value=l),"tab-position":"left",onTabRemove:A},{default:d(()=>[(m(!0),f(D,null,L(e.value,(l,i)=>(m(),R(u,{key:i,closable:e.value.length!==1,name:i},{label:d(()=>[j("div",{class:z(o.validateAll[i]&&o.validateAll[i]==="rejected"?"validateRejected":"")},$(l.memberNickname||"会员名称"),3)]),default:d(()=>[p(k,{"left-tab":l,"tab-index":i},null,8,["left-tab","tab-index"])]),_:2},1032,["closable","name"]))),128))]),_:1},8,["modelValue"])])}}});export{M as _};
