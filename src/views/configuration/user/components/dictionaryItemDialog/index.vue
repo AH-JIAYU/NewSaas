@@ -56,7 +56,7 @@ const form = ref<any>({
   // 姓名
   name: "",
   // 手机号
-  phoneNumber: "",
+  phone: "",
   // 邮箱
   email: "",
   // 国家
@@ -80,8 +80,8 @@ const form = ref<any>({
 const validatePhone = (rule: any, value: any, callback: any) => {
   const regExpPhone: any =
     /^(?:(?:\+|00)86)?1(?:(?:3[\d])|(?:4[5-79])|(?:5[0-35-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\d])|(?:9[189]))\d{8}$/;
-  if (form.value.phoneNumber) {
-    if (!regExpPhone.test(form.value.phoneNumber)) {
+  if (form.value.phone) {
+    if (!regExpPhone.test(form.value.phone)) {
       //
       callback(new Error("请输入合法手机号"));
     } else {
@@ -117,7 +117,7 @@ const formRules = ref<FormRules>({
     { min: 6, max: 18, trigger: "blur", message: "密码长度为6到18位" },
   ],
   name: [{ required: true, message: "请输入用户名", trigger: "blur" }],
-  phoneNumber: [{ validator: validatePhone, trigger: "blur" },],
+  phone: [{ validator: validatePhone, trigger: "blur" },],
   email: [{ validator: validateEmail, trigger: "blur" },],
 });
 
@@ -133,9 +133,9 @@ function onSubmit() {
     formRules.value.email = []
     formRef.value.clearValidate('email');
   }
-  if (!form.value.phoneNumber) {
-    formRules.value.phoneNumber = []
-    formRef.value.clearValidate('phoneNumber');
+  if (!form.value.phone) {
+    formRules.value.phone = []
+    formRef.value.clearValidate('phone');
   }
   if (!form.value.id) {
     formRef.value &&
@@ -157,7 +157,7 @@ function onSubmit() {
         if (valid) {
           const {
             id,
-            phoneNumber,
+            phone,
             email,
             password,
             name,
@@ -172,7 +172,7 @@ function onSubmit() {
           } = form.value;
           const params = {
             id,
-            phoneNumber,
+            phone,
             email,
             password,
             name,
@@ -185,8 +185,8 @@ function onSubmit() {
             departmentId,
             userName,
           };
-          if (isPhone.value === params.phoneNumber) {
-            delete params.phoneNumber;
+          if (isPhone.value === params.phone) {
+            delete params.phone;
           }
           if (isEmail.value === params.email) {
             delete params.email;
@@ -235,7 +235,7 @@ onMounted(async () => {
     formRules.value.password = [];
     form.value = JSON.parse(props.row);
     isEmail.value = form.value.email
-    isPhone.value = form.value.phoneNumber
+    isPhone.value = form.value.phone
     if (form.value.departmentId) {
       departmentChange(form.value.departmentId)
     }
@@ -284,8 +284,8 @@ onMounted(async () => {
             </el-form-item>
           </el-col> -->
           <el-col :span="8">
-            <el-form-item label="手机号" prop="phoneNumber">
-              <el-input v-model="form.phoneNumber" placeholder="请输入手机号" clearable />
+            <el-form-item label="手机号" prop="phone">
+              <el-input v-model="form.phone" placeholder="请输入手机号" clearable />
             </el-form-item>
           </el-col>
           <el-col :span="8">
