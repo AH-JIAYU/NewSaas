@@ -297,7 +297,7 @@ async function getDictionaryItemList() {
     };
     const res = await api.itemlist(params);
     dictionaryItem.value.loading = false;
-    dictionaryItem.value.dataList = res.data;
+    userForm.value.dataList = res.data;
     dictionaryItem.value.dataList.forEach((item: any) => {
       item.enableLoading = false;
     });
@@ -450,7 +450,6 @@ function sortChangeUser({ prop, order }: { prop: string; order: string }) {
 function create(row?: any) {
   console.log('row',row);
   console.log('userForm.value.dialog.parentId',userForm.value.dialog.parentId);
-
   userForm.value.dialog.id = "";
   userForm.value.dialog.visible = true;
   userForm.value.dialog.level = 1;
@@ -483,9 +482,11 @@ function onResetPassword() {
 }
 // 修改
 function edit(row: any) {
+  console.log('row',row);
+
   userForm.value.row = JSON.stringify(row);
   userForm.value.dialog.id = row.id;
-  userForm.value.dialog.parentId = row.parentId;
+  // userForm.value.dialog.parentId = row.parentId;
   userForm.value.dialog.visible = true;
 }
 // 详情
@@ -531,7 +532,7 @@ function onReset() {
                     {{ data.name }}
                   </div>
                   <div class="code">
-                    {{ data.organizationalStructurePersonList.map((item:any) => item.userName).join('，') }}
+                    {{ data?.organizationalStructurePersonList?.map((item:any) => item.userName).join('，') }}
                   </div>
                   <div class="actions">
                     <ElButtonGroup>
