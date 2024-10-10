@@ -133,6 +133,8 @@ const handleChange = (val: any) => {
     form.value.organizationalStructurePersonList = filteredUsers.value
   }
 }
+const switchChange = (val:any) => {
+}
 // 提交数据
 async function onSubmit() {
   try {
@@ -300,7 +302,7 @@ onMounted(async () => {
           <el-text style="width:4.375rem;">开启提成</el-text>
           <!-- <el-checkbox v-model="item.commissionStatus" label="开启提成" size="large" /> -->
           <el-switch v-model="item.commissionStatus" :active-value="1" :inactive-value="2" inline-prompt
-            active-text="开启" inactive-text="关闭" />
+            active-text="开启" inactive-text="关闭" @change="switchChange" />
         </div>
         <div v-show="item.commissionStatus === 1" class="centers mr">
           <el-select v-model="item.commissionType" value-key="" placeholder="计提方式" clearable filterable>
