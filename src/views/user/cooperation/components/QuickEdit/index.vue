@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { cloneDeep } from "lodash-es";
 import { ElMessage, ElMessageBox } from "element-plus";
-import api from "@/api/modules/user_customer";
+import api from "@/api/modules/user_cooperation";
 import apiUser from "@/api/modules/configuration_manager";
 
 defineOptions({
-  name: "ProjeckEdit",
+  name: "componentsQuickEdit",
 });
 
 const emits = defineEmits(["fetch-data"]);
@@ -18,33 +18,25 @@ const data = ref<any>({
   formData: {}, //表单
   staffList: [], //用户
   rules: {
-    customerAccord: [
-      { required: true, message: "请输入客户名称", trigger: "blur" },
-      { min: 2, max: 50, message: "内容在2-50个字之间", trigger: "blur" },
-    ],
-    customerShortName: [
-      { required: true, message: "请输入客户简称", trigger: "blur" },
-      { min: 2, max: 50, message: "内容在2-50个字之间", trigger: "blur" },
-    ],
     chargeId: [{ required: true, message: "请选择负责人", trigger: "change" }],
   },
 });
 
 const TypeList: any = {
-  customerAccord: "客户名称",
-  customerShortName: "客户简称",
-  chargeName: "负责人",
+  chargeUserId: "负责人",
 };
 
 // 显隐
 async function showEdit(row: any, FormType: any) {
+  getTenantStaffList();
   data.value.title = TypeList[FormType];
   data.value.type = FormType;
   data.value.loading = true;
   data.value.formData = cloneDeep(row);
+  data.value.formData.chargeUserId = row.userId;
+  data.value.formData.chargeUserName = row.userName;
   data.value.dialogTableVisible = true;
   data.value.loading = false;
-  getTenantStaffList();
 }
 // 获取负责人/用户
 const getTenantStaffList = async () => {
@@ -52,12 +44,23 @@ const getTenantStaffList = async () => {
   data.value.staffList = res.data;
 };
 
+const changeChargeUserId = (val: any) => {
+  if (val) {
+    const findData = data.value.staffList.find((item: any) => item.id === val);
+    data.value.formData.chargeUserName = findData.userName;
+  } else {
+    data.value.formData.chargeUserId = "";
+    data.value.formData.chargeUserName = "";
+  }
+};
 // 提交数据
 async function onSubmit() {
   data.value.loading = true;
   formRef.value.validate(async (valid: any) => {
     if (valid) {
-      const { status } = await api.edit(data.value.formData);
+      const { status } = await api.updateInvitationBindUser(
+        data.value.formData,
+      );
       status === 1 &&
         ElMessage.success({
           message: "编辑成功",
@@ -95,31 +98,30 @@ defineExpose({
         label-width="100"
         label-position="right"
       >
-        <template v-if="data.type === 'customerAccord'">
-          <el-form-item label="客户名称" prop="customerAccord">
-            <el-input v-model="data.formData.customerAccord" clearable />
-          </el-form-item>
-        </template>
-        <template v-if="data.type === 'customerShortName'">
-          <el-form-item label="客户简称" prop="customerShortName">
-            <el-input v-model="data.formData.customerShortName" clearable />
-          </el-form-item>
-        </template>
-        <template v-if="data.type === 'chargeName'">
-          <el-form-item label="负责人" prop="chargeId">
+        <template v-if="data.type === 'chargeUserId'">
+          <el-form-item label="负责人" prop="chargeUserId">
             <el-select
-              v-model="data.formData.chargeId"
-              value-key=""
-              placeholder="请选择负责人"
+              v-model="data.formData.chargeUserId"
               clearable
-              filterable
+              @change="changeChargeUserId"
             >
               <el-option
                 v-for="item in data.staffList"
                 :key="item.id"
-                :label="item.name"
                 :value="item.id"
-              />
+                :label="item.userName"
+              >
+                <span style="float: left">{{ item.userName }}</span>
+                <span
+                  style="
+                    float: right;
+                    color: var(--el-text-color-secondary);
+                    font-size: 0.8125rem;
+                  "
+                >
+                  {{ item.id }}
+                </span>
+              </el-option>
             </el-select>
           </el-form-item>
         </template>

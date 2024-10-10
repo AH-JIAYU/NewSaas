@@ -3,8 +3,9 @@ import { onMounted } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import customerEdit from "./components/CustomerEdit/index.vue";
 import customerProportion from "./components/CustomerProportion/index.vue";
-import empty from '@/assets/images/empty.png'
+import empty from "@/assets/images/empty.png";
 import api from "@/api/modules/user_cooperation";
+import QuickEdit from "./components/QuickEdit/index.vue"; //快速编辑
 
 defineOptions({
   name: "cooperation",
@@ -23,6 +24,7 @@ const stripe = ref(false); // 表格控件-条纹
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const lineHeight = ref<any>("default"); // 表格控件-大小
 const checkList = ref<any>([]); // 表格控件-展示列
+const QuickEditRef = ref(); //快速编辑
 const columns = ref([
   {
     label: "租户id",
@@ -35,6 +37,12 @@ const columns = ref([
     checked: true,
     sortable: true,
     prop: "beInvitationTenantName",
+  },
+  {
+    label: "负责人",
+    checked: true,
+    sortable: true,
+    prop: "userName",
   },
   { label: "状态", checked: true, sortable: true, prop: "bindStatus" },
   {
@@ -51,6 +59,13 @@ const columns = ref([
     prop: "availableBalance",
   },
 ]);
+
+const current = ref<any>(); //表格当前选中
+function handleCurrentChange(val: any) {
+  if (val) current.value = val.id;
+  else current.value = "";
+}
+
 // 邀请公司
 function handleAdd() {
   editRef.value.showEdit();
@@ -61,9 +76,9 @@ function termination(row: any) {
   ElMessageBox.prompt("是否确认进行解约?", "终止合作", {
     confirmButtonText: "确认",
     cancelButtonText: "取消",
-    inputPlaceholder: '说明',
+    inputPlaceholder: "说明",
     inputPattern: /^.{0,500}$/,
-    inputErrorMessage: '不能超过500个字符',
+    inputErrorMessage: "不能超过500个字符",
     type: "warning",
   })
     .then(async (val: any) => {
@@ -71,7 +86,7 @@ function termination(row: any) {
         data: { flag },
       } = await api.updateRescindTenant({
         beInvitationTenantId: row.beInvitationTenantId,
-        remark: val.value
+        remark: val.value,
       });
       flag &&
         ElMessage({
@@ -80,7 +95,7 @@ function termination(row: any) {
         });
       fetchData();
     })
-    .catch(() => { });
+    .catch(() => {});
 }
 //价格比例
 function priceRatio(row: any) {
@@ -88,8 +103,7 @@ function priceRatio(row: any) {
 }
 
 // 查询
-const queryForm = reactive<any>({
-});
+const queryForm = reactive<any>({});
 
 // 每页数量切换
 function sizeChange(size: number) {
@@ -102,8 +116,7 @@ function currentChange(page = 1) {
 }
 // 重置数据
 function onReset() {
-  Object.assign(queryForm, {
-  });
+  Object.assign(queryForm, {});
   queryData();
 }
 function queryData() {
@@ -123,7 +136,6 @@ async function fetchData() {
     pagination.value.total = Number(data.total);
     listLoading.value = false;
   } catch (error) {
-
   } finally {
     listLoading.value = false;
   }
@@ -134,21 +146,40 @@ function setSelectRows(val: any) {
 // 过滤数据，后面刘哥过滤
 const tableList = computed(() => {
   // 合作状态
-  const cooperationList = list.value.filter((item: any) => item.bindStatus === 2)
+  const cooperationList = list.value.filter(
+    (item: any) => item.bindStatus === 2,
+  );
   // 解约状态
-  let terminationOfContractList = list.value.filter((item: any) => item.bindStatus === 4)
+  let terminationOfContractList = list.value.filter(
+    (item: any) => item.bindStatus === 4,
+  );
   // 解约去重
-  terminationOfContractList = Array.from(new Map(terminationOfContractList.map((item: any) => [item.beInvitationTenantId, item])).values())
+  terminationOfContractList = Array.from(
+    new Map(
+      terminationOfContractList.map((item: any) => [
+        item.beInvitationTenantId,
+        item,
+      ]),
+    ).values(),
+  );
   // 合作的列表的id集合
-  const cooperationIdList = cooperationList.map((item: any) => item.beInvitationTenantId)
+  const cooperationIdList = cooperationList.map(
+    (item: any) => item.beInvitationTenantId,
+  );
   terminationOfContractList.forEach((item: any) => {
     if (!cooperationIdList.includes(item.beInvitationTenantId)) {
-      cooperationList.push(item)
+      cooperationList.push(item);
     }
-  })
-  return cooperationList
-})
-
+  });
+  return cooperationList;
+});
+// 快速编辑
+function quickEdit(row: any, type: any) {
+  /**
+   * 负责人  chargeUserId
+   */
+  QuickEditRef.value.showEdit(row, type);
+}
 onMounted(() => {
   columns.value.forEach((item: any) => {
     if (item.checked) {
@@ -170,16 +201,37 @@ onMounted(() => {
         </FormLeftPanel>
         <FormRightPanel>
           <el-button size="default"> 导出 </el-button>
-          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
-            v-model:columns="columns" v-model:line-height="lineHeight" v-model:stripe="stripe" style="margin-left: 12px"
-            @query-data="queryData" />
+          <TabelControl
+            v-model:border="border"
+            v-model:tableAutoHeight="tableAutoHeight"
+            v-model:checkList="checkList"
+            v-model:columns="columns"
+            v-model:line-height="lineHeight"
+            v-model:stripe="stripe"
+            style="margin-left: 12px"
+            @query-data="queryData"
+          />
         </FormRightPanel>
       </el-row>
-      <el-table v-loading="listLoading" :border="border" :data="tableList" :size="lineHeight" :stripe="stripe"
-        @selection-change="setSelectRows">
+      <el-table
+        v-loading="listLoading"
+        :border="border"
+        :data="tableList"
+        :size="lineHeight"
+        :stripe="stripe"
+        @selection-change="setSelectRows"
+        highlight-current-row
+        @current-change="handleCurrentChange"
+      >
         <el-table-column align="left" type="selection" />
-        <el-table-column v-if="checkList.includes('bindStatus')" align="left" prop="bindStatus" show-overflow-tooltip
-          label="状态" width="100">
+        <el-table-column
+          v-if="checkList.includes('bindStatus')"
+          align="left"
+          prop="bindStatus"
+          show-overflow-tooltip
+          label="状态"
+          width="100"
+        >
           <template #default="{ row }">
             <div class="tableBig">
               <el-text v-if="row.bindStatus === 2" type="success">合作</el-text>
@@ -187,56 +239,117 @@ onMounted(() => {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('beInvitationTenantId')" align="left" prop="beInvitationTenantId"
-          width="180" show-overflow-tooltip label="租户id">
+        <el-table-column
+          v-if="checkList.includes('beInvitationTenantId')"
+          align="left"
+          prop="beInvitationTenantId"
+          width="180"
+          show-overflow-tooltip
+          label="租户id"
+        >
           <template #default="{ row }">
             <div class="copyId tableSmall">
-              <div class="id oneLine ">ID: {{ row.beInvitationTenantId }}</div>
+              <div class="id oneLine">ID: {{ row.beInvitationTenantId }}</div>
               <copy class="copy" :content="row.beInvitationTenantId" />
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('beInvitationTenantName')" align="left"
-          prop="beInvitationTenantName" show-overflow-tooltip label="租户名称">
+        <el-table-column
+          v-if="checkList.includes('beInvitationTenantName')"
+          align="left"
+          prop="beInvitationTenantName"
+          show-overflow-tooltip
+          label="租户名称"
+        >
           <template #default="{ row }">
             <div class="tableBig">{{ row.beInvitationTenantName }}</div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('priceRatio')" align="left" prop="priceRatio" show-overflow-tooltip
-          label="价格比例">
+        <el-table-column
+          v-if="checkList.includes('userName')"
+          align="left"
+          prop="userName"
+          show-overflow-tooltip
+          label="负责人"
+        >
           <template #default="{ row }">
-            <div class="tableBig">
-              {{ row.priceRatio }} %
+            <div class="flex-s">
+              <div class="tableBig">{{ row.userName }}</div>
+              <SvgIcon
+                v-if="row.projectType !== 2"
+                @click="quickEdit(row, 'chargeUserId')"
+                :class="{ edit: 'edit', current: row.id === current }"
+                name="i-ep:edit"
+                color="#409eff"
+              />
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('pendBalance')" align="left" prop="pendBalance"
-          show-overflow-tooltip label="待审金额">
+        <el-table-column
+          v-if="checkList.includes('priceRatio')"
+          align="left"
+          prop="priceRatio"
+          show-overflow-tooltip
+          label="价格比例"
+        >
+          <template #default="{ row }">
+            <div class="tableBig">{{ row.priceRatio }} %</div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="checkList.includes('pendBalance')"
+          align="left"
+          prop="pendBalance"
+          show-overflow-tooltip
+          label="待审金额"
+        >
           <template #default="{ row }">
             <div class="tableBig">
               <CurrencyType />{{ row.pendBalance || 0 }}
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('availableBalance')" align="left" prop="availableBalance"
-          show-overflow-tooltip label="可用金额">
+        <el-table-column
+          v-if="checkList.includes('availableBalance')"
+          align="left"
+          prop="availableBalance"
+          show-overflow-tooltip
+          label="可用金额"
+        >
           <template #default="{ row }">
             <div class="tableBig">
               <CurrencyType />{{ row.availableBalance || 0 }}
             </div>
           </template>
         </el-table-column>
-        <el-table-column align="left" fixed="right" prop="i" label="操作" width="200">
+        <el-table-column
+          align="left"
+          fixed="right"
+          prop="i"
+          label="操作"
+          width="200"
+        >
           <template #default="{ row }">
             <ElSpace>
-              <el-button v-if="row.bindStatus === 2" type="danger" plain size="small" @click="termination(row)">
+              <el-button
+                v-if="row.bindStatus === 2"
+                type="danger"
+                plain
+                size="small"
+                @click="termination(row)"
+              >
                 终止合作
               </el-button>
-              <el-button size="small" plain type="primary" @click="priceRatio(row)">
+              <el-button
+                size="small"
+                plain
+                type="primary"
+                @click="priceRatio(row)"
+              >
                 价格比例
               </el-button>
 
-             <!-- <el-button type="warning" plain size="small">
+              <!-- <el-button type="warning" plain size="small">
                 财务日志
               </el-button>
               <el-button type="danger" plain size="small"> 加减款 </el-button>-->
@@ -247,12 +360,22 @@ onMounted(() => {
           <el-empty :image="empty" :image-size="300" />
         </template>
       </el-table>
-      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
-        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-        background @size-change="sizeChange" @current-change="currentChange" />
+      <ElPagination
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
+        :page-sizes="pagination.sizes"
+        :layout="pagination.layout"
+        :hide-on-single-page="false"
+        class="pagination"
+        background
+        @size-change="sizeChange"
+        @current-change="currentChange"
+      />
       <customerEdit ref="editRef" @fetch-data="queryData" />
       <customerProportion ref="proportionRef" @fetch-data="queryData" />
     </PageMain>
+    <QuickEdit ref="QuickEditRef" @fetchData="fetchData" />
   </div>
 </template>
 
@@ -309,7 +432,7 @@ onMounted(() => {
   align-items: center;
   width: 100%;
 
-  >div:nth-of-type(1) {
+  > div:nth-of-type(1) {
     width: calc(100% - 25px);
     flex-shrink: 0;
   }
@@ -327,5 +450,7 @@ onMounted(() => {
     display: block !important;
   }
 }
-
+.el-table__row:hover .edit {
+  display: block;
+}
 </style>
