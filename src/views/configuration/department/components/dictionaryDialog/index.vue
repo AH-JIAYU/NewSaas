@@ -2,10 +2,8 @@
 import type { FormInstance, FormRules } from "element-plus";
 import { ElMessage } from "element-plus";
 import api from "@/api/modules/department";
-import useTenantStaffStore from "@/store/modules/configuration_manager";
+import apiUse from '@/api/modules/configuration_manager'
 
-// 用户
-const tenantStaffStore = useTenantStaffStore();
 // 用户数据
 const staffList = ref<any>([]);
 // 父级传递的数据
@@ -183,7 +181,6 @@ async function onSubmit() {
           // 删除多余的数据
           delete params.userIdList
           if (!form.value.id) {
-            // return
             const { status } = await api.create(params);
             status === 1 &&
               ElMessage.success({
@@ -192,7 +189,6 @@ async function onSubmit() {
               });
             loading.value = false;
           } else {
-            // return
             const { status } = await api.edit(params);
             status === 1 &&
               ElMessage.success({
@@ -245,6 +241,11 @@ onMounted(async () => {
       form.value.id = id;
       form.value.name = name;
       form.value.remark = remark;
+      // 获取用户数据
+      const { data } = await apiUse.queryNotEnableStaffList({ organizationalStructureId: form.value.id })
+      if (data) {
+        staffList.value = data
+      }
       if (organizationalStructurePersonList) {
         form.value.organizationalStructurePersonList = organizationalStructurePersonList;
         organizationalStructurePersonList.forEach((item: any) => {
@@ -253,9 +254,13 @@ onMounted(async () => {
       } else {
         form.value.organizationalStructurePersonList = [];
       }
+    } else {
+      // 获取用户数据
+      const { data } = await apiUse.queryAllNotEnableStaffList()
+      if (data) {
+        staffList.value = data
+      }
     }
-    // 获取用户数据
-    staffList.value = await tenantStaffStore.getStaff();
     // 调用方法并打印过滤后的用户
     filteredUsers.value = getFilteredUsers();
     // 将编辑数据赋值
@@ -271,8 +276,8 @@ onMounted(async () => {
 </script>
 
 <template>
-  <ElDialog  v-model="visible" :title="title" style="width: 48rem;" :close-on-click-modal="false"
-    append-to-body destroy-on-close @closed="onCancel">
+  <ElDialog v-model="visible" :title="title" style="width: 48rem;" :close-on-click-modal="false" append-to-body
+    destroy-on-close @closed="onCancel">
     <ElForm v-loading="loading" ref="formRef" :model="form" :rules="formRules" label-width="7rem">
       <ElFormItem label="部门名称" prop="name">
         <ElInput v-model="form.name" placeholder="请输入部门名称" clearable />
@@ -280,7 +285,7 @@ onMounted(async () => {
       <ElFormItem label="部门主管" prop="">
         <el-select v-model="form.userIdList" value-key="" placeholder="请选择部门主管" multiple collapse-tags
           collapse-tags-tooltip clearable filterable @change="handleChange">
-          <el-option v-for="item in staffList" :key="item.value" :label="item.userName" :value="item.id">
+          <el-option v-for="item in staffList" :key="item.value" :label="item.userName" :value="item.id" :disabled="item.enableChargePerson === 1">
           </el-option>
         </el-select>
       </ElFormItem>
@@ -388,7 +393,7 @@ onMounted(async () => {
   }
 
   .el-tag {
-    width: 5rem;
+    min-width: 3rem;
   }
 
   .el-tag.el-tag--info {

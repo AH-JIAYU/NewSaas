@@ -19,6 +19,10 @@ export default {
   undistributedGroup: (data:any) => api.post('staff/getDepartmentStaffList', data),
   // 查询所有员工列表
   getTenantStaffList: () => api.post('staff/getTenantStaffList'),
+  // 查询所有未成为负责人并且没有组织架构的员工列表
+  queryAllNotEnableStaffList: () => api.post('staff/queryAllNotEnableStaffList'),
+  // 查询当前部门未成为负责人的员工列表
+  queryNotEnableStaffList: (data:any) => api.post('staff/queryNotEnableStaffList',data),
   // 详情
   detail: () => api.post('staff/getTenantStaffList'),
   // 员工退出登录

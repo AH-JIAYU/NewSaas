@@ -4,12 +4,10 @@ import { ElMessage } from "element-plus";
 import api from "@/api/modules/configuration_manager";
 import apiDep from "@/api/modules/department";
 import apiPos from "@/api/modules/position_manage";
-import useDepartmentStore from "@/store/modules/department";
 import useTenantRoleStore from "@/store/modules/tenant_role";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary";
 import useTenantStaffStore from "@/store/modules/configuration_manager";
 
-const router = useRouter();
 // 用户
 const tenantStaffStore = useTenantStaffStore();
 // 用户数据
@@ -30,11 +28,9 @@ const disabled = ref(false);
 // 判断手机号或邮箱是否变动
 const isEmail = ref<any>();
 const isPhone = ref<any>();
-// 组长
-const getGroup = ref<any>()
 const props: any = defineProps(['catalogueId', 'parentId', 'id', 'tree', 'dataList', 'row', 'level'])
 // 更新数据
-const emits = defineEmits(["success"]);
+const emits = defineEmits(["success","getList"]);
 // tree ref
 const treeRef = ref<any>();
 const visible = defineModel<boolean>({
@@ -57,7 +53,7 @@ const form = ref<any>({
   // 姓名
   name: "",
   // 手机号
-  phoneNumber: "",
+  phone: "",
   // 邮箱
   email: "",
   // 国家
@@ -73,14 +69,15 @@ const form = ref<any>({
   // 职位id
   positionId: "",
   // 部门id
-  organizationalStructureId: [],
+  organizationalStructureId: '',
 });
+const departmentId = ref<any>([])
 // 自定义校验手机号
 const validatePhone = (rule: any, value: any, callback: any) => {
   const regExpPhone: any =
     /^(?:(?:\+|00)86)?1(?:(?:3[\d])|(?:4[5-79])|(?:5[0-35-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\d])|(?:9[189]))\d{8}$/;
-  if (form.value.phoneNumber) {
-    if (!regExpPhone.test(form.value.phoneNumber)) {
+  if (form.value.phone) {
+    if (!regExpPhone.test(form.value.phone)) {
       //
       callback(new Error("请输入合法手机号"));
     } else {
@@ -116,7 +113,7 @@ const formRules = ref<FormRules>({
     { min: 6, max: 18, trigger: "blur", message: "密码长度为6到18位" },
   ],
   name: [{ required: true, message: "请输入用户名", trigger: "blur" }],
-  phoneNumber: [{ validator: validatePhone, trigger: "blur" },],
+  phone: [{ validator: validatePhone, trigger: "blur" },],
   email: [{ validator: validateEmail, trigger: "blur" },],
 });
 
@@ -126,19 +123,19 @@ function onSubmit() {
     formRules.value.email = []
     formRef.value.clearValidate('email');
   }
-  if (!form.value.phoneNumber) {
-    formRules.value.phoneNumber = []
-    formRef.value.clearValidate('phoneNumber');
+  if (!form.value.phone) {
+    formRules.value.phone = []
+    formRef.value.clearValidate('phone');
   }
   // 同步选中的路由id
-  form.value.organizationalStructureId = treeRef.value!.getCheckedKeys(false);
+  departmentId.value = treeRef.value!.getCheckedKeys(false);
   //  获取选中的所有子节点
   const tree = treeRef.value.getCheckedKeys();
   // 获取所有半选的主节点
   const halltree = treeRef.value.getHalfCheckedKeys();
   // 组合一下
   const organizationalStructureId = tree.concat(halltree);
-  form.value.organizationalStructureId = organizationalStructureId;
+  form.value.organizationalStructureId = organizationalStructureId[0];
   if (!form.value.id) {
     formRef.value &&
       formRef.value.validate((valid: any) => {
@@ -149,6 +146,7 @@ function onSubmit() {
               center: true,
             });
             emits("success");
+            emits("getList");
             onCancel();
           });
         }
@@ -159,7 +157,7 @@ function onSubmit() {
         if (valid) {
           const {
             id,
-            phoneNumber,
+            phone,
             email,
             password,
             name,
@@ -173,7 +171,7 @@ function onSubmit() {
           } = form.value;
           const params = {
             id,
-            phoneNumber,
+            phone,
             email,
             password,
             name,
@@ -185,8 +183,8 @@ function onSubmit() {
             organizationalStructureId,
             userName,
           };
-          if (isPhone.value === params.phoneNumber) {
-            delete params.phoneNumber;
+          if (isPhone.value === params.phone) {
+            delete params.phone;
           }
           if (isEmail.value === params.email) {
             delete params.email;
@@ -218,42 +216,46 @@ const flattenDeep = (arr: any) => {
     []
   );
 };
-// const handleNodeClick = (nodeData: any) => {
-//   console.log('nodeData', nodeData);
-//   // 判断节点是否被选中
-//   const arr = [];
-//   arr.push(nodeData);
-//   const isChecked = treeRef.value.getNode(nodeData.id).checked;
-//   if (isChecked) {
-//     arr.map((ite) => {
-//       const permissionList = permissionData?.value?.filter(
-//         (item: any) => ite.id === item.menuId
-//       );
-//       if (permissionList && permissionList.length) {
-//         permissionList.forEach((element: any) => {
-//           form.value.permission.push(element.id);
-//         });
-//       }
-//     });
-//   } else {
-//     arr.map((ite) => {
-//       const permissionList = permissionData?.value?.filter(
-//         (item: any) => ite.id === item.menuId
-//       );
-//       if (permissionList && permissionList.length) {
-//         // 将 permissionList 中存在的 id 进行提取
-//         let idsToRemove = permissionList.map((item: any) => item.id);
-//         // 使用 filter() 方法过滤掉存在于 idsToRemove 中的 id
-//         form.value.permission = form.value.permission.filter(
-//           (id: any) => !idsToRemove.some((removeId: any) => removeId === id)
-//         );
-//       }
-//     });
-//   }
-// }
+
+  const handleNodeClick = (nodeData:any, checked:any) => {
+  if (checked) {
+    // 如果选中该节点，禁用所有其他节点
+    disableAllNodes(nodeData.id);
+  } else {
+    // 如果取消选中，恢复所有节点为可选
+    enableAllNodes();
+  }
+};
+
+// 禁用所有节点（除了选中的节点）
+const disableAllNodes = (selectedId:any) => {
+  const traverse = (nodes:any) => {
+    nodes.forEach((node:any) => {
+      node.disabled = node.id !== selectedId; // 仅将非选中节点禁用
+      if (node.children) {
+        traverse(node.children); // 递归处理子节点
+      }
+    });
+  };
+  traverse(departmentList.value);
+};
+
+// 恢复所有节点为可选
+const enableAllNodes = () => {
+  const traverse = (nodes:any) => {
+    nodes.forEach((node:any) => {
+      node.disabled = false; // 恢复为可选
+      if (node.children) {
+        traverse(node.children); // 递归处理子节点
+      }
+    });
+  };
+  traverse(departmentList.value);
+};
+
 onMounted(async () => {
-  form.value.organizationalStructureId = []
-  form.value.organizationalStructureId.push(props.parentId)
+  departmentId.value = []
+  departmentId.value.push(props.parentId)
   const { data } = await apiPos.list({
     page: 1,
     limit: 10,
@@ -261,25 +263,32 @@ onMounted(async () => {
     name: "",
     active: null
   })
+  // 职位
   positionManageList.value = data.data
+  // 用户
   staffList.value = await tenantStaffStore.getStaff();
+  // 角色
   munulevs.value = await roleStore.getRole();
   const res = await apiDep.list({ name: '' })
+  // 部门
   departmentList.value = res.data
+  // 国家
   country.value = await useStoreCountry.getCountry();
+  // 默认先择对应的部门,并禁用其他部门
+  if (departmentId.value.length > 0) {
+    disableAllNodes(departmentId.value[0]);
+  }
+  // 编辑
   if (props.id !== "" && props.row) {
     formRules.value.password = [];
     form.value = JSON.parse(props.row);
     // 确保 organizationalStructureId 是一个数组，如果是 null 则初始化为空数组
-    if (!form.value.organizationalStructureId) {
-      form.value.organizationalStructureId = [];
+    if (!departmentId.value) {
+      departmentId.value = [];
     }
-    form.value.organizationalStructureId.push(props.parentId)
+    departmentId.value.push(props.parentId)
     isEmail.value = form.value.email
-    isPhone.value = form.value.phoneNumber
-    // if (form.value.organizationalStructureId) {
-    //   departmentChange(form.value.organizationalStructureId)
-    // }
+    isPhone.value = form.value.phone
     disabled.value = true;
   }
   flat.value = flattenDeep(props.dataList);
@@ -325,8 +334,8 @@ onMounted(async () => {
             </el-form-item>
           </el-col> -->
           <el-col :span="8">
-            <el-form-item label="手机号" prop="phoneNumber">
-              <el-input v-model="form.phoneNumber" placeholder="请输入手机号" clearable />
+            <el-form-item label="手机号" prop="phone">
+              <el-input v-model="form.phone" placeholder="请输入手机号" clearable />
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -391,14 +400,9 @@ onMounted(async () => {
         </template>
         <el-row :gutter="24">
           <el-form-item label="分配部门:">
-            <!-- <el-radio-group v-if="groupManageList.length" v-model="form.groupId">
-              <el-radio v-for="item in groupManageList" :key="item.id" :value="item.id" :label="item.name"></el-radio>
-            </el-radio-group> -->
-            <el-tree style="max-width: 600px" ref="treeRef" :data="departmentList" show-checkbox check-strictly
-              node-key="id" :default-expanded-keys="[]" :default-checked-keys="form.organizationalStructureId" default-expand-all
-              :props="defaultProps"  />
-              <!-- @check-change="handleNodeClick" -->
-            <!-- <el-text v-else>暂无数据</el-text> -->
+            <el-tree  style="max-width: 600px" ref="treeRef" :data="departmentList" show-checkbox check-strictly
+              node-key="id" :default-expanded-keys="[]" :default-checked-keys="departmentId" default-expand-all
+              :props="defaultProps"  @check-change="handleNodeClick"  />
           </el-form-item>
         </el-row>
       </el-card>

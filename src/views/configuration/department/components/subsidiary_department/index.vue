@@ -2,10 +2,8 @@
 import type { FormInstance, FormRules } from "element-plus";
 import { ElMessage } from "element-plus";
 import api from "@/api/modules/department";
-import useTenantStaffStore from "@/store/modules/configuration_manager";
+import apiUse from '@/api/modules/configuration_manager'
 
-// 用户
-const tenantStaffStore = useTenantStaffStore();
 // 用户数据
 const staffList = ref<any>([]);
 // 父级传递的数据
@@ -74,62 +72,80 @@ const formRules = ref<FormRules>({
 
 // 提交数据
 async function onSubmit() {
-  formRef.value &&
-    formRef.value.validate(async (valid) => {
-      if (valid) {
-        console.log('filteredUsers', filteredUsers.value)
-        form.value.organizationalStructurePersonList = []
-        filteredUsers.value.forEach((item: any) => {
-          const obj = {
-            userId: item.userId,
-            commission: item.commission,
-            commissionTime: item.commissionTime,
-            commissionStatus: item.commissionStatus,
-            commissionType: item.commissionType,
+  try {
+    formRef.value &&
+      formRef.value.validate(async (valid) => {
+        if (valid) {
+          loading.value = true;
+          // 将数据制空
+          form.value.organizationalStructurePersonList = []
+          // 筛选出需要的格式
+          filteredUsers.value.forEach((item: any) => {
+            if (item.userId) {
+              const obj = {
+                id: item.id,
+                userId: item.userId,
+                commission: item.commission,
+                commissionTime: item.commissionTime,
+                commissionStatus: item.commissionStatus,
+                commissionType: item.commissionType,
+              }
+              form.value.organizationalStructurePersonList.push(obj)
+            } else {
+              const obj = {
+                userId: item.id,
+                commission: item.commission,
+                commissionTime: item.commissionTime,
+                commissionStatus: item.commissionStatus,
+                commissionType: item.commissionType,
+              }
+              form.value.organizationalStructurePersonList.push(obj)
+            }
+          });
+          // 去重
+          const uniqueList = form.value.organizationalStructurePersonList.reduce((accumulator: any, current: any) => {
+            const exists = accumulator.some((item: any) => item.userId === current.userId);
+            if (!exists) {
+              accumulator.push(current);
+            }
+            return accumulator;
+          }, []);
+          // 赋值
+          form.value.organizationalStructurePersonList = uniqueList
+          const params = {
+            ...form.value
           }
-          form.value.organizationalStructurePersonList.push(obj)
-        });
-        console.log('filteredUsers11111111', filteredUsers.value)
-        console.log('form.value.organizationalStructurePersonList', form.value.organizationalStructurePersonList)
-        const uniqueList = form.value.organizationalStructurePersonList.reduce((accumulator: any, current: any) => {
-          const exists = accumulator.some((item: any) => item.userId === current.userId);
-          if (!exists) {
-            accumulator.push(current);
-          }
-          return accumulator;
-        }, []);
-        form.value.organizationalStructurePersonList = uniqueList
-        const params = {
-          ...form.value
-        }
-        delete params.userIdList
-        delete params.superior
-        if (!form.value.id) {
+          // 删除多余的数据
           delete params.userIdList
-          console.log('params', params);
-          // return
-          const { status } = await api.create(params);
-          status === 1 &&
-            ElMessage.success({
-              message: "新增成功",
-              center: true,
-            });
-        } else {
-          // console.log('form.value', form.value)
-          console.log('params', params)
-          console.log('filteredUsers', filteredUsers.value)
-          // return
-          const { status } = await api.edit(params);
-          status === 1 &&
-            ElMessage.success({
-              message: "编辑成功",
-              center: true,
-            });
+          delete params.superior
+          if (!form.value.id) {
+            const { status } = await api.create(params);
+            status === 1 &&
+              ElMessage.success({
+                message: "新增成功",
+                center: true,
+              });
+            loading.value = false;
+          } else {
+            const { status } = await api.edit(params);
+            status === 1 &&
+              ElMessage.success({
+                message: "编辑成功",
+                center: true,
+              });
+            loading.value = false;
+          }
+          // 更新列表
+          await emits("getList");
+          // 关闭弹框
+          onCancel();
         }
-        await emits("getList");
-        onCancel();
-      }
-    });
+      });
+  } catch (error) {
+
+  } finally {
+    loading.value = false;
+  }
 }
 
 // 移除
@@ -238,9 +254,13 @@ onMounted(async () => {
       organizationalStructurePersonList.forEach((item: any) => {
         form.value.userIdList.push(item.userId)
       })
+    }else {
+      // 获取用户数据
+      const { data } = await apiUse.queryAllNotEnableStaffList()
+      if (data) {
+        staffList.value = data
+      }
     }
-    // 获取用户数据
-    staffList.value = await tenantStaffStore.getStaff();
     // 调用方法并打印过滤后的用户
     filteredUsers.value = getFilteredUsers();
     if (form.value.id) {

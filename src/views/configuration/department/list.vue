@@ -200,7 +200,7 @@ const dictionaryItem = ref<any>({
 async function getDictionaryList() {
   try {
     dictionary.value.loading = true;
-    dictionaryItem.value.search.organizationalStructureId = "";
+    // dictionaryItem.value.search.organizationalStructureId = "";
     const params = {
       ...dictionary.value.search,
     };
@@ -273,7 +273,6 @@ function dictionaryDelete(node: Node, data: any) {
 
 // 部门项详情
 function dictionaryClick(data: any) {
-  console.log('data', data);
   pagination.value.page = 1;
   if(data.id) {
     userForm.value.dialog.parentId = data.id
@@ -311,7 +310,6 @@ async function getDictionaryItemList() {
 
 // 删除
 function onDelete(row: any) {
-  console.log('row', row);
   ElMessageBox.confirm(`确认删除「${row.name}」吗？`, "确认信息")
     .then(() => {
       api.delete([row.id]).then(() => {
@@ -448,8 +446,6 @@ function sortChangeUser({ prop, order }: { prop: string; order: string }) {
 }
 // 新增
 function create(row?: any) {
-  console.log('row',row);
-  console.log('userForm.value.dialog.parentId',userForm.value.dialog.parentId);
   userForm.value.dialog.id = "";
   userForm.value.dialog.visible = true;
   userForm.value.dialog.level = 1;
@@ -482,8 +478,6 @@ function onResetPassword() {
 }
 // 修改
 function edit(row: any) {
-  console.log('row',row);
-
   userForm.value.row = JSON.stringify(row);
   userForm.value.dialog.id = row.id;
   // userForm.value.dialog.parentId = row.parentId;
@@ -695,7 +689,7 @@ function onReset() {
         :dataList="dictionaryItem.dataList" :row="dictionaryItem.row" @success="getDictionaryItemList" />
       <userDialog v-if="userForm.dialog.visible" :id="userForm.dialog.id" v-model="userForm.dialog.visible"
         :catalogue-id="userForm.search.catalogueId" :parent-id="userForm.dialog.parentId" :level="userForm.dialog.level"
-        :tree="dataForm.tree" :dataList="userForm.dataList" :row="userForm.row" @success="getUserList" />
+        :tree="dataForm.tree" :dataList="userForm.dataList" :row="userForm.row" @success="getUserList" @get-list="getDictionaryList" />
       <Detail ref="detailRef" />
     </div>
   </div>
