@@ -197,6 +197,7 @@ function onChangeStatus(row: any) {
               country: row.country,
               role: row.role,
               positionId: row.positionId,
+              organizationalStructureId: row.organizationalStructureId,
               active: !row.active,
             })
             .then(() => {
