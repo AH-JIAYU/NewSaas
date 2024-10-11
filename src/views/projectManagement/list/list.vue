@@ -464,7 +464,12 @@ const formOption = {
             />
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('projectType')"   align="left" label="项目" width="150">
+        <el-table-column
+          v-if="checkList.includes('projectType')"
+          align="left"
+          label="项目"
+          width="150"
+        >
           <template #default="{ row }">
             <div>
               <el-button
@@ -542,7 +547,7 @@ const formOption = {
             <div class="flex-c">
               <div class="oneLine" style="width: calc(100% - 1.25rem)">
                 <b class="tableBig">{{ row.clientName.split("/")[0] }}</b>
-                <div class="oneLine" v-if="row.projectType !== 2">
+                <div class="oneLine">
                   <img :src="row.avatar" alt="" class="avatar" />
                   <span class="">{{ row.chargeName }}</span>
                 </div>
@@ -611,19 +616,52 @@ const formOption = {
           width="90"
         >
           <template #default="{ row }">
-            <el-button class="tableBut" size="small" @click="viewAllocations(row, 1)" type="danger" v-if="row.allocationType === 1"
-              plain>自动分配</el-button>
-            <el-button class="tableBut" size="small" @click="viewAllocations(row, 2)" type="danger"
-              v-else-if="row.allocationType === 2">供应商</el-button>
-            <el-button class="tableBut" size="small" @click="viewAllocations(row, 3)" type="success"
-              v-else-if="row.allocationType === 3">会员组</el-button>
-            <el-button class="tableBut" size="small" @click="viewAllocations(row, 4)" type="primary"
-              v-else-if="row.allocationType === 4">租户</el-button>
-            <el-button class="tableBut" size="small" plain v-else type="info"> 未分配</el-button>
+            <el-button
+              class="tableBut"
+              size="small"
+              @click="viewAllocations(row, 1)"
+              type="danger"
+              v-if="row.allocationType === 1"
+              plain
+              >自动分配</el-button
+            >
+            <el-button
+              class="tableBut"
+              size="small"
+              @click="viewAllocations(row, 2)"
+              type="danger"
+              v-else-if="row.allocationType === 2"
+              >供应商</el-button
+            >
+            <el-button
+              class="tableBut"
+              size="small"
+              @click="viewAllocations(row, 3)"
+              type="success"
+              v-else-if="row.allocationType === 3"
+              >会员组</el-button
+            >
+            <el-button
+              class="tableBut"
+              size="small"
+              @click="viewAllocations(row, 4)"
+              type="primary"
+              v-else-if="row.allocationType === 4"
+              >租户</el-button
+            >
+            <el-button class="tableBut" size="small" plain v-else type="info">
+              未分配</el-button
+            >
           </template>
         </el-table-column>
 
-        <el-table-column v-if="checkList.includes('doMoneyPrice')" show-overflow-tooltip align="left" label="原价" width="100">
+        <el-table-column
+          v-if="checkList.includes('doMoneyPrice')"
+          show-overflow-tooltip
+          align="left"
+          label="原价"
+          width="100"
+        >
           <template #default="{ row }">
             <div class="flex-c">
               <div class="oneLine tableBig" style="width: calc(100% - 1.25rem)">
@@ -717,18 +755,22 @@ const formOption = {
           show-overflow-tooltip
           ><template #default="{ row }">
             <div>
-            <div class="tableBig oneLine">{{ row.createName }}</div>
-            <el-tag effect="plain" type="info">{{
-              format(row.createTime)
-            }}</el-tag>
+              <div class="tableBig oneLine">{{ row.createName }}</div>
+              <el-tag effect="plain" type="info">{{
+                format(row.createTime)
+              }}</el-tag>
             </div>
-
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('remark')" show-overflow-tooltip prop="remark" align="left"
-           label="备注"><template #default="{ row }">
-            <div class="flex-c ">
-              <div class="oneLine tableBig" style="width: calc(100% - 1.25rem);">
+        <el-table-column
+          v-if="checkList.includes('remark')"
+          show-overflow-tooltip
+          prop="remark"
+          align="left"
+          label="备注"
+          ><template #default="{ row }">
+            <div class="flex-c">
+              <div class="oneLine tableBig" style="width: calc(100% - 1.25rem)">
                 {{ row.remark ? row.remark : "-" }}
               </div>
               <SvgIcon
@@ -879,9 +921,8 @@ const formOption = {
   }
 }
 
-
-.red{
-  color:rgb(251, 104, 104);
+.red {
+  color: rgb(251, 104, 104);
 }
 
 .absolute-container {

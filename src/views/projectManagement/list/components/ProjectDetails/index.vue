@@ -50,12 +50,7 @@ const plugins = [
 function handleChange(v: string) {
   content.value = v;
 }
-const operationTypeList: any = [
-  '新增',
-  '编辑',
-  '分配',
-  '调度',
-];
+const operationTypeList: any = ["新增", "编辑", "分配", "调度"];
 // 详情
 function details(row: any) {
   logDetailsRef.value.showEdit(row);
@@ -73,14 +68,14 @@ async function showEdit(row: any, projectType: any) {
     data.value.form.projectSettlementStatusSet.reduce(
       (accumulator: any, currentValue: any) => {
         let existing = accumulator.find(
-          (obj: any) => obj.settlementStatus === currentValue.settlementStatus
+          (obj: any) => obj.settlementStatus === currentValue.settlementStatus,
         );
         if (!existing) {
           accumulator.push(currentValue);
         }
         return accumulator;
       },
-      []
+      [],
     );
   imgList.value = data.value.form.descriptionUrl.split(",");
   if (imgList.value.length) {
@@ -116,13 +111,13 @@ const getCountryQuestion = async () => {
     const countryData = findData(
       resCountry.data.getProjectCountryListInfoList,
       "countryId",
-      params.countryId
+      params.countryId,
     );
     // 查找问卷
     const questionnaireData = findData(
       resQuestionnaire.data.getProjectCategoryInfoList,
       "projectProblemCategoryId",
-      data.value.form.projectQuotaInfoList[0].projectProblemCategoryId
+      data.value.form.projectQuotaInfoList[0].projectProblemCategoryId,
     );
     data.value.form.countryName = countryData.countryName;
     data.value.form.projectProblemCategoryName =
@@ -166,7 +161,7 @@ function closeHandler() {
 // 根据id查找客户
 const getcustsmer = computed(() => {
   return customerList.value.find(
-    (item: any) => item.tenantCustomerId === data.value.form.clientId
+    (item: any) => item.tenantCustomerId === data.value.form.clientId,
   );
 });
 onMounted(async () => {
@@ -179,76 +174,135 @@ defineExpose({ showEdit });
 
 <template>
   <div>
-    <el-drawer v-model="dialogTableVisible" append-to-body :close-on-click-modal="false" destroy-on-close draggable
-      @close="closeHandler" size="55%" title="项目详情">
-      <template v-if="data.form.projectSettlementStatusSet &&
-      data.form.projectSettlementStatusSet.length !== 0
-      " #header>
+    <el-drawer
+      v-model="dialogTableVisible"
+      append-to-body
+      :close-on-click-modal="false"
+      destroy-on-close
+      draggable
+      @close="closeHandler"
+      size="55%"
+      title="项目详情"
+    >
+      <template
+        v-if="
+          data.form.projectSettlementStatusSet &&
+          data.form.projectSettlementStatusSet.length !== 0
+        "
+        #header
+      >
         <el-row :gutter="20">
           <el-col :span="24">
-            <el-steps style="max-width: 100%" finish-status="success" align-center
-              :active="data.form.projectSettlementStatusSet[0].settlementStatus">
-              <el-step title="待审核" description="2021-09-09 11:11:11" :icon="CircleCheck" />
-              <el-step title="已审核" :description="data.form.projectSettlementStatusSet[0].operationTime
-      " :icon="data.form.projectSettlementStatusSet[0].settlementStatus >= 2
-      ? CircleCheck
-      : Position
-      " />
-              <el-step title="已开票" description="2021-09-09 11:11:11" :icon="active >= 3 ? CircleCheck : Position" />
-              <el-step title="已结算" description="2021-09-09 11:11:11" :icon="active >= 4 ? CircleCheck : Position" />
-              <el-step title="已冻结" description="2021-09-09 11:11:11" :icon="active >= 5 ? CircleCheck : Position" />
+            <el-steps
+              style="max-width: 100%"
+              finish-status="success"
+              align-center
+              :active="data.form.projectSettlementStatusSet[0].settlementStatus"
+            >
+              <el-step
+                title="待审核"
+                description="2021-09-09 11:11:11"
+                :icon="CircleCheck"
+              />
+              <el-step
+                title="已审核"
+                :description="
+                  data.form.projectSettlementStatusSet[0].operationTime
+                "
+                :icon="
+                  data.form.projectSettlementStatusSet[0].settlementStatus >= 2
+                    ? CircleCheck
+                    : Position
+                "
+              />
+              <el-step
+                title="已开票"
+                description="2021-09-09 11:11:11"
+                :icon="active >= 3 ? CircleCheck : Position"
+              />
+              <el-step
+                title="已结算"
+                description="2021-09-09 11:11:11"
+                :icon="active >= 4 ? CircleCheck : Position"
+              />
+              <el-step
+                title="已冻结"
+                description="2021-09-09 11:11:11"
+                :icon="active >= 5 ? CircleCheck : Position"
+              />
             </el-steps>
           </el-col>
-          <el-row style="width: 100%; margin-top: 0; font-size: 14px" :gutter="20">
+          <el-row
+            style="width: 100%; margin-top: 0; font-size: 14px"
+            :gutter="20"
+          >
             <el-col :span="1"></el-col>
-            <el-col :class="{
-      colorgreen:
-        data.form.projectSettlementStatusSet[0].settlementStatus >= 1,
-    }" :span="5">
+            <el-col
+              :class="{
+                colorgreen:
+                  data.form.projectSettlementStatusSet[0].settlementStatus >= 1,
+              }"
+              :span="5"
+            >
               <span style="margin-left: 25.5%">{{
-      data.form.projectSettlementStatusSet[0].operationName
-    }}</span>
+                data.form.projectSettlementStatusSet[0].operationName
+              }}</span>
             </el-col>
-            <el-col :class="{
-        colorgreen:
-          data.form.projectSettlementStatusSet[0].settlementStatus >= 2,
-      }" :span="5">
+            <el-col
+              :class="{
+                colorgreen:
+                  data.form.projectSettlementStatusSet[0].settlementStatus >= 2,
+              }"
+              :span="5"
+            >
               <span style="margin-left: 19.5%">操作员</span>
             </el-col>
-            <el-col :class="{
-      colorgreen:
-        data.form.projectSettlementStatusSet[0].settlementStatus >= 3,
-    }" :span="5">
+            <el-col
+              :class="{
+                colorgreen:
+                  data.form.projectSettlementStatusSet[0].settlementStatus >= 3,
+              }"
+              :span="5"
+            >
               <span style="margin-left: 12.5%">操作员</span>
             </el-col>
-            <el-col :class="{
-      colorgreen:
-        data.form.projectSettlementStatusSet[0].settlementStatus >= 4,
-    }" :span="4">
+            <el-col
+              :class="{
+                colorgreen:
+                  data.form.projectSettlementStatusSet[0].settlementStatus >= 4,
+              }"
+              :span="4"
+            >
               <span style="margin-left: 8.5%">操作员</span>
             </el-col>
-            <el-col :class="{
-      colorgreen:
-        data.form.projectSettlementStatusSet[0].settlementStatus >= 5,
-    }" :span="4">
+            <el-col
+              :class="{
+                colorgreen:
+                  data.form.projectSettlementStatusSet[0].settlementStatus >= 5,
+              }"
+              :span="4"
+            >
               <span style="margin-left: 28.5%">操作员</span>
             </el-col>
           </el-row>
         </el-row>
       </template>
-      <ElForm label-width="120px">
+      <ElForm>
         <el-card class="box-card">
           <template #header>
             <div class="card-header">
               <div class="leftTitle">
                 基本信息
                 <span class="m-4 spanStatus">{{
-      data.allocationStatus === 1 ? "未分配" : "已分配"
-    }}</span>
+                  data.allocationStatus === 1 ? "未分配" : "已分配"
+                }}</span>
               </div>
               <div class="rightStatus">
-                <div :class="data.isOnline === 1 ? 'isOnlineTrue' : 'isOnlineFalse'
-      ">
+                <div
+                  :class="
+                    data.isOnline === 1 ? 'isOnlineTrue' : 'isOnlineFalse'
+                  "
+                >
                   {{ data.isOnline === 1 ? "在线" : "离线" }}
                 </div>
               </div>
@@ -263,7 +317,6 @@ defineExpose({ showEdit });
                   </el-text>
                   <copy class="copy" :content="data.form.projectId" />
                 </div>
-
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -277,10 +330,10 @@ defineExpose({ showEdit });
               <el-form-item label="项目标识 :" prop="client_pid">
                 <el-text class="mx-1">
                   {{
-      data.form.projectIdentification
-        ? data.form.projectIdentification
-        : "-"
-    }}
+                    data.form.projectIdentification
+                      ? data.form.projectIdentification
+                      : "-"
+                  }}
                 </el-text>
               </el-form-item>
             </el-col>
@@ -294,7 +347,9 @@ defineExpose({ showEdit });
             <el-col :span="8">
               <el-form-item label="所属国家 :">
                 <el-text class="mx-1">
-                  <template v-if="comCountryId(data.form.countryIdList).length > 4">
+                  <template
+                    v-if="comCountryId(data.form.countryIdList).length > 4"
+                  >
                     <!-- <el-tooltip
                       class="box-item"
                       effect="dark"
@@ -302,14 +357,18 @@ defineExpose({ showEdit });
                       placement="top"
                     > -->
                     <el-link type="primary">{{
-      comCountryId(data.form.countryIdList).length === basicDictionaryStore.country.length
-        ? "全球"
-        : comCountryId(data.form.countryIdList).length
-    }}</el-link>
+                      comCountryId(data.form.countryIdList).length ===
+                      basicDictionaryStore.country.length
+                        ? "全球"
+                        : comCountryId(data.form.countryIdList).length
+                    }}</el-link>
                     <!-- </el-tooltip> -->
                   </template>
                   <template v-else>
-                    <span v-for="item in comCountryId(data.form.countryIdList)" :key="item">
+                    <span
+                      v-for="item in comCountryId(data.form.countryIdList)"
+                      :key="item"
+                    >
                       {{ item }}&ensp;
                     </span>
                   </template>
@@ -320,13 +379,13 @@ defineExpose({ showEdit });
               <el-form-item label="原价 :">
                 <el-text v-if="data.form.currencyType === 1" class="mx-1">
                   {{
-      data.form.doMoneyPrice ? data.form.doMoneyPrice + "$" : "-"
-    }}
+                    data.form.doMoneyPrice ? data.form.doMoneyPrice + "$" : "-"
+                  }}
                 </el-text>
                 <el-text v-if="data.form.currencyType === 2" class="mx-1">
                   {{
-      data.form.doMoneyPrice ? data.form.doMoneyPrice + "￥" : "-"
-    }}
+                    data.form.doMoneyPrice ? data.form.doMoneyPrice + "￥" : "-"
+                  }}
                 </el-text>
               </el-form-item>
             </el-col>
@@ -341,10 +400,10 @@ defineExpose({ showEdit });
               <el-form-item label="最小时长 :">
                 <el-text class="mx-1">
                   {{
-      data.form.minimumDuration
-        ? data.form.minimumDuration + "min"
-        : "-"
-    }}
+                    data.form.minimumDuration
+                      ? data.form.minimumDuration + "min"
+                      : "-"
+                  }}
                 </el-text>
               </el-form-item>
             </el-col>
@@ -361,7 +420,12 @@ defineExpose({ showEdit });
                 <el-text class="mx-1">
                   {{ data.form.uidUrl ? data.form.uidUrl : "-" }}
                 </el-text>
-                <el-button type="primary" style="margin-left: auto" @click="copyTextToClipboard(data.form.uidUrl)" link>
+                <el-button
+                  type="primary"
+                  style="margin-left: auto"
+                  @click="copyTextToClipboard(data.form.uidUrl)"
+                  link
+                >
                   复制
                 </el-button>
               </el-form-item>
@@ -378,40 +442,44 @@ defineExpose({ showEdit });
             <el-col :span="8">
               <el-form-item label="置顶 :">
                 <el-text class="mx-1">
-                  <div v-if="data.form.isPinned === 1" class="close">开</div>
-                  <div v-else class="open">关</div>
+                  <div v-if="data.form.isPinned === 1" class="open">开</div>
+                  <div v-else class="close">关</div>
                 </el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="在线 :">
                 <el-text class="mx-1">
-                  <div v-if="data.form.isOnline === 1" class="close">开</div>
-                  <div v-else class="open">关</div>
+                  <div v-if="data.form.isOnline === 1" class="open">开</div>
+                  <div v-else class="close">关</div>
                 </el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="资料 :">
                 <el-text class="mx-1">
-                  <div v-if="data.form.isProfile === 2" class="close">开</div>
-                  <div v-else class="open">关</div>
+                  <div v-if="data.form.isProfile === 2" class="open">开</div>
+                  <div v-else class="close">关</div>
                 </el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="B2B :">
                 <el-text class="mx-1">
-                  <div v-if="data.form.isPinned === 1" class="close">{{ data.form.projectType.join(",") }}</div>
-                  <div v-else class="open">关</div>
+                  <div v-if="data.form.isPinned === 1" class="open">
+                    {{ data.form.projectType.join(",") }}
+                  </div>
+                  <div v-else class="close">关</div>
                 </el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="定时发布 :">
                 <el-text class="mx-1">
-                  <div v-if="data.form.isTimeReleases === 2" class="close">开</div>
-                  <div v-else class="open">关</div>
+                  <div v-if="data.form.isTimeReleases === 2" class="open">
+                    开
+                  </div>
+                  <div v-else class="close">关</div>
                 </el-text>
               </el-form-item>
             </el-col>
@@ -428,13 +496,22 @@ defineExpose({ showEdit });
           <template #header>
             <div class="peizjo-header">
               <span>配置信息</span>
-              <span style="margin-left: 50px" v-if="data.form.countryName">国家：{{ data.form.countryName }}</span>
-              <span style="margin-left: 30px" v-if="data.form.projectProblemCategoryName">问卷：{{
-      data.form.projectProblemCategoryName }}</span>
+              <span style="margin-left: 50px" v-if="data.form.countryName"
+                >国家：{{ data.form.countryName }}</span
+              >
+              <span
+                style="margin-left: 30px"
+                v-if="data.form.projectProblemCategoryName"
+                >问卷：{{ data.form.projectProblemCategoryName }}</span
+              >
             </div>
           </template>
-          <el-row :gutter="10" :class="data.form.projectQuotaInfoList.length ? 'toConfigure' : 'isNone'
-      ">
+          <el-row
+            :gutter="10"
+            :class="
+              data.form.projectQuotaInfoList.length ? 'toConfigure' : 'isNone'
+            "
+          >
             <el-col :span="8">
               <!-- <el-form-item label="国家 :">
                 <el-text class="mx-1">
@@ -453,11 +530,19 @@ defineExpose({ showEdit });
                 </el-text>
               </el-form-item> -->
             </el-col>
-            <el-col :span="24" :class="{ isNone: !data.form.projectQuotaInfoList.length }" :gutter="10"
-              v-for="item in data.form.projectQuotaInfoList">
+            <el-col
+              :span="24"
+              :class="{ isNone: !data.form.projectQuotaInfoList.length }"
+              :gutter="10"
+              v-for="item in data.form.projectQuotaInfoList"
+            >
               <el-form-item label-width="200px" :label="item.keyValue + ' :'">
-                <el-text class="mx-1" v-if="item.answerValueList && item.answerValueList[0] !== 'null'
-      ">
+                <el-text
+                  class="mx-1"
+                  v-if="
+                    item.answerValueList && item.answerValueList[0] !== 'null'
+                  "
+                >
                   {{ item.answerValueList.join(", ") }}
                 </el-text>
                 <el-text class="mx-1" v-else> - </el-text>
@@ -483,16 +568,21 @@ defineExpose({ showEdit });
               <el-form-item label="小时完成量 :">
                 <el-text class="mx-1">
                   {{
-      data.form.limitedQuantity ? data.form.limitedQuantity : "-"
-    }}
+                    data.form.limitedQuantity ? data.form.limitedQuantity : "-"
+                  }}
                 </el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="重复参与:">
                 <el-text class="mx-1">
-                  <div v-if="data.form.ipDifferenceDetection === 1" class="close">开</div>
-                  <div v-else class="open">关</div>
+                  <div
+                    v-if="data.form.ipDifferenceDetection === 1"
+                    class="open"
+                  >
+                    开
+                  </div>
+                  <div v-else class="close">关</div>
                 </el-text>
               </el-form-item>
             </el-col>
@@ -527,12 +617,29 @@ defineExpose({ showEdit });
             </div>
           </template>
           <template v-if="data.form.descriptionUrl">
-            <div v-for="item in data.srcList" :key="item" class="demo-image__preview">
-              <el-image style="width: 6.25rem; height: 6.25rem" :src="item" :preview-src-list="item" :zoom-rate="1.2"
-                :max-scale="7" :min-scale="0.2" :initial-index="0" fit="cover" />
+            <div
+              v-for="item in data.srcList"
+              :key="item"
+              class="demo-image__preview"
+            >
+              <el-image
+                style="width: 6.25rem; height: 6.25rem"
+                :src="item"
+                :preview-src-list="item"
+                :zoom-rate="1.2"
+                :max-scale="7"
+                :min-scale="0.2"
+                :initial-index="0"
+                fit="cover"
+              />
             </div>
             <p v-for="(item, index) in imgList" :key="item">
-              <el-button style="padding: 0" type="primary" text @click="download(item, index)">
+              <el-button
+                style="padding: 0"
+                type="primary"
+                text
+                @click="download(item, index)"
+              >
                 {{ item }} 下载
               </el-button>
             </p>
@@ -552,18 +659,35 @@ defineExpose({ showEdit });
               <span>操作日志</span>
             </div>
           </template>
-          <el-table :data="data.form.projectOperationInfoList" style="width: 100%">
-            <el-table-column align="left" type="index" width="80" label="序号" />
-            <el-table-column align="left" prop="operationTime" label="操作时间" />
+          <el-table
+            :data="data.form.projectOperationInfoList"
+            style="width: 100%"
+          >
+            <el-table-column
+              align="left"
+              type="index"
+              width="80"
+              label="序号"
+            />
+            <el-table-column
+              align="left"
+              prop="operationTime"
+              label="操作时间"
+            />
             <el-table-column align="left" prop="operationName" label="操作人" />
             <el-table-column align="left" prop="operationType" label="操作事项">
-              <template #default="{row}">
-                {{operationTypeList[row.operationType-1]}}
+              <template #default="{ row }">
+                {{ operationTypeList[row.operationType - 1] }}
               </template>
             </el-table-column>
             <el-table-column align="left" label="详情">
               <template #default="{ row }">
-                <el-button type="primary" link @click="details(row)" v-if="row.operationType !== 1">
+                <el-button
+                  type="primary"
+                  link
+                  @click="details(row)"
+                  v-if="row.operationType !== 1"
+                >
                   详情
                 </el-button>
                 <el-text v-else>-</el-text>
@@ -615,7 +739,7 @@ defineExpose({ showEdit });
       color: var(--el-color-white);
       padding: 0 8px;
       font-size: 0.875rem;
-      border-radius: .125rem;
+      border-radius: 0.125rem;
     }
   }
 
@@ -623,7 +747,7 @@ defineExpose({ showEdit });
     position: relative;
     width: 128px;
 
-    >div {
+    > div {
       width: 120px;
       height: 2.2rem;
       line-height: 2.2rem;
@@ -659,14 +783,13 @@ defineExpose({ showEdit });
       }
     }
 
-    >div.isOnlineTrue {
-      background-color: #03C239;
+    > div.isOnlineTrue {
+      background-color: #03c239;
     }
 
-    >div.isOnlineFalse {
+    > div.isOnlineFalse {
       background-color: #d8261a;
     }
-
   }
 }
 

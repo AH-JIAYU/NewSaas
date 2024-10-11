@@ -10,7 +10,7 @@ import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDiction
 import useUserCustomerStore from "@/store/modules/user_customer";
 import useTenantStaffStore from "@/store/modules/configuration_manager";
 import api from "@/api/modules/project_settlement";
-import empty from '@/assets/images/empty.png'
+import empty from "@/assets/images/empty.png";
 defineOptions({
   name: "settlement",
 });
@@ -58,14 +58,19 @@ const columns = ref<any>([
   },
   { label: "原价", prop: "projectAmount", sortable: true, checked: true },
   { label: "所属国家", prop: "countryId", sortable: true, checked: true },
-  { label: "系统/审核完成数", prop: "systemDone", sortable: true, checked: true },
+  {
+    label: "系统/审核完成数",
+    prop: "systemDone",
+    sortable: true,
+    checked: true,
+  },
   { label: "结算PO号", prop: "settlementPo", sortable: true, checked: true },
   { label: "结算状态", prop: "status", sortable: true, checked: true },
   { label: "节点时间", prop: "nodeTime", sortable: true, checked: true },
   { label: "备注", prop: "remark", sortable: true, checked: true },
 ]);
-const formSearchList = ref<any>()//表单排序配置
-  const formSearchName=ref<string>('formSearch-settlement')// 表单排序name
+const formSearchList = ref<any>(); //表单排序配置
+const formSearchName = ref<string>("formSearch-settlement"); // 表单排序name
 const settlementStatusList = [
   { label: "待审核", value: 1 },
   { label: "已审核", value: 2 },
@@ -96,7 +101,7 @@ const queryForm = reactive<any>({
   settlementStatus: "",
   // 时间类型 1:待审核 2:已审核 3:已开票 4:巳结算 5:已冻结
   timeType: "",
-  time:[],
+  time: [],
   // 开始时间
   startTime: "",
   // 结束时间
@@ -109,10 +114,10 @@ function setSelectRows(value: any) {
   selectRows.value = value;
 }
 
-const current = ref<any>()//表格当前选中
+const current = ref<any>(); //表格当前选中
 function handleCurrentChange(val: any) {
-  if (val) current.value = val.projectId
-  else current.value = ''
+  if (val) current.value = val.projectId;
+  else current.value = "";
 }
 
 // 开票
@@ -141,16 +146,16 @@ async function auditing(row: any) {
 }
 // 编辑
 function edit(row: any) {
-  editRef.value.showEdit(JSON.stringify(row),'');
+  editRef.value.showEdit(JSON.stringify(row), "");
 }
 // 快速编辑
-function quickEdit(row:any,type:any){
+function quickEdit(row: any, type: any) {
   /**
    * 系统/审核  systemDone
     结算PO号 settlementPo
     备注 remark
   */
-  editRef.value.showEdit(JSON.stringify(row),type);
+  editRef.value.showEdit(JSON.stringify(row), type);
 }
 // 详情
 function refundDetails(row: any) {
@@ -193,7 +198,7 @@ function onReset() {
     settlementStatus: "",
     // 时间类型 1:待审核 2:已审核 3:已开票 4:巳结算 5:已冻结
     timeType: "",
-    time:[],
+    time: [],
     // 开始时间
     startTime: "",
     // 结束时间
@@ -205,7 +210,7 @@ function onReset() {
 
 // 格式化日期范围的方法
 const formatDateRange = (timestamps: any) => {
-  if (!timestamps || timestamps.length === 0) return '';
+  if (!timestamps || timestamps.length === 0) return "";
   const formatDate = (date: any) => {
     const year = date.getFullYear();
     const month = date.getMonth() + 1; // 月份从0开始
@@ -217,10 +222,12 @@ const formatDateRange = (timestamps: any) => {
     const singleDate = new Date(parseInt(timestamps[0]));
     return formatDate(singleDate);
   } else if (timestamps.length === 2) {
-    const [startTimestamp, endTimestamp] = timestamps.map((ts: any) => new Date(parseInt(ts)));
+    const [startTimestamp, endTimestamp] = timestamps.map(
+      (ts: any) => new Date(parseInt(ts)),
+    );
     return `${formatDate(startTimestamp)} - ${formatDate(endTimestamp)}`;
   }
-  return '';
+  return "";
 };
 // 具体的位置信息
 const comCountryId = computed(() => (countryIdList: any) => {
@@ -232,19 +239,19 @@ const comCountryId = computed(() => (countryIdList: any) => {
 async function fetchData() {
   try {
     listLoading.value = true;
-    const params={...queryForm}
+    const params = { ...queryForm };
     //#region 转换查询的数据格式
-    if(Array.isArray(queryForm.countryId)){
-      params.countryId =  params.countryId.join(",");
+    if (Array.isArray(queryForm.countryId)) {
+      params.countryId = params.countryId.join(",");
     }
     if (queryForm.time && !!queryForm.time.length) {
       params.beginTime = params.time[0] || "";
       params.endTime = params.time[1] || "";
     }
     if (queryForm.settlementStatus) {
-      params.settlementStatus = [params.settlementStatus]
-    }else{
-      params.settlementStatus = []
+      params.settlementStatus = [params.settlementStatus];
+    } else {
+      params.settlementStatus = [];
     }
     //#endregion
     const { data } = await api.list(params);
@@ -252,7 +259,6 @@ async function fetchData() {
     pagination.value.total = +data.total;
     listLoading.value = false;
   } catch (error) {
-
   } finally {
     listLoading.value = false;
   }
@@ -268,21 +274,82 @@ onMounted(async () => {
   });
   fetchData();
   formSearchList.value = [
-    { index: 1, show: true, type: 'input', modelName: 'projectId', placeholder: '项目ID' },
-    { index: 2, show: true, type: 'input', modelName: 'projectName', placeholder: '项目名称' },
-    { index: 3, show: true, type: 'input', modelName: 'projectIdentification', placeholder: '项目标识' },
-    { index: 4, show: true, type: 'select', modelName: 'countryData', placeholder: '国家', option:'global', optionLabel: 'chineseName', optionValue: 'id' },
-    { index: 5, show: true, type: 'select', modelName: 'customerId', placeholder: '客户简称', option: 'customerId', optionLabel: 'tenantCustomerId', optionValue: 'tenantCustomerId' },
-    { index: 6, show: true, type: 'select', modelName: 'settlementStatus', placeholder: '结算状态', option: 'settlementStatus', optionLabel: 'label', optionValue: 'value' },
-    { index: 7, show: true, type: 'select', modelName: 'timeType', placeholder: '时间类型', option: 'timeType', optionLabel: 'label', optionValue: 'value' },
-    { index: 8, show: true, type: 'datetimerange', modelName: 'timeArr', startPlaceHolder: '开始日期', endPlaceHolder: '结束日期' }
-]
+    {
+      index: 1,
+      show: true,
+      type: "input",
+      modelName: "projectId",
+      placeholder: "项目ID",
+    },
+    {
+      index: 2,
+      show: true,
+      type: "input",
+      modelName: "projectName",
+      placeholder: "项目名称",
+    },
+    {
+      index: 3,
+      show: true,
+      type: "input",
+      modelName: "projectIdentification",
+      placeholder: "项目标识",
+    },
+    {
+      index: 4,
+      show: true,
+      type: "select",
+      modelName: "countryData",
+      placeholder: "国家",
+      option: "global",
+      optionLabel: "chineseName",
+      optionValue: "id",
+    },
+    {
+      index: 5,
+      show: true,
+      type: "select",
+      modelName: "customerId",
+      placeholder: "客户简称",
+      option: "customerId",
+      optionLabel: "tenantCustomerId",
+      optionValue: "tenantCustomerId",
+    },
+    {
+      index: 6,
+      show: true,
+      type: "select",
+      modelName: "settlementStatus",
+      placeholder: "结算状态",
+      option: "settlementStatus",
+      optionLabel: "label",
+      optionValue: "value",
+    },
+    {
+      index: 7,
+      show: true,
+      type: "select",
+      modelName: "timeType",
+      placeholder: "时间类型",
+      option: "timeType",
+      optionLabel: "label",
+      optionValue: "value",
+    },
+    {
+      index: 8,
+      show: true,
+      type: "datetimerange",
+      modelName: "timeArr",
+      startPlaceHolder: "开始日期",
+      endPlaceHolder: "结束日期",
+    },
+  ];
 });
-const formOption={
-  customerId:()=> customerList.value,
-  settlementStatus:()=> settlementStatusList,
-  timeType:()=> settlementStatusList,
-}
+const formOption = {
+  customerId: () => customerList.value,
+  settlementStatus: () => settlementStatusList,
+  timeType: () => settlementStatusList,
+};
 function handleMoreOperating(command: string, row: any) {
   switch (command) {
     case "auditing":
@@ -299,11 +366,21 @@ function handleMoreOperating(command: string, row: any) {
 </script>
 
 <template>
-  <div :class="{
-    'absolute-container': tableAutoHeight,
-  }" v-loading="listLoading">
+  <div
+    :class="{
+      'absolute-container': tableAutoHeight,
+    }"
+    v-loading="listLoading"
+  >
     <PageMain>
-      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="queryForm"   :formOption="formOption"/>
+      <FormSearch
+        :formSearchList="formSearchList"
+        :formSearchName="formSearchName"
+        @currentChange="currentChange"
+        @onReset="onReset"
+        :model="queryForm"
+        :formOption="formOption"
+      />
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>
@@ -319,153 +396,313 @@ function handleMoreOperating(command: string, row: any) {
         </FormLeftPanel>
         <FormRightPanel>
           <el-button size="default" @click=""> 导出 </el-button>
-          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
-            v-model:columns="columns" v-model:line-height="lineHeight" v-model:stripe="stripe"
-            style="margin-left: 0.75rem" @query-data="currentChange" />
+          <TabelControl
+            v-model:border="border"
+            v-model:tableAutoHeight="tableAutoHeight"
+            v-model:checkList="checkList"
+            v-model:columns="columns"
+            v-model:line-height="lineHeight"
+            v-model:stripe="stripe"
+            style="margin-left: 0.75rem"
+            @query-data="currentChange"
+          />
         </FormRightPanel>
       </el-row>
-      <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="id" :data="list"
-        :border="border" :size="lineHeight" :stripe="stripe" highlight-current-row @selection-change="setSelectRows" @current-change="handleCurrentChange">
+      <el-table
+        ref="tableSortRef"
+        v-loading="listLoading"
+        style="margin-top: 10px"
+        row-key="id"
+        :data="list"
+        :border="border"
+        :size="lineHeight"
+        :stripe="stripe"
+        highlight-current-row
+        @selection-change="setSelectRows"
+        @current-change="handleCurrentChange"
+      >
         <el-table-column align="left" type="selection" />
-        <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip prop="projectId" align="left"
-           label="项目">
+        <el-table-column
+          v-if="checkList.includes('projectId')"
+          show-overflow-tooltip
+          prop="projectId"
+          align="left"
+          label="项目"
+        >
           <template #default="{ row }">
             <div class="copyId">
               <div class="id oneLine tableSmall">ID: {{ row.projectId }}</div>
               <copy class="copy" :content="row.projectId" />
             </div>
-
-          </template>
-
-        </el-table-column>
-        <el-table-column v-if="checkList.includes('projectName')" show-overflow-tooltip prop="projectName" align="left"
-           label="名称/标识">
-          <template #default="{ row }">
-            <b class="oneLine tableBig">名: {{ row.projectName ? row.projectName : "-" }}</b>
-            <div class="oneLine">标: {{ row.customerName.split("/")[1] !== 'null' ? row.customerName.split("/")[1] : '-'
-              }}</div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('customerName')" show-overflow-tooltip prop="customerName"
-          align="left" label="客户">
+        <el-table-column
+          v-if="checkList.includes('projectName')"
+          show-overflow-tooltip
+          prop="projectName"
+          align="left"
+          label="名称/标识"
+        >
           <template #default="{ row }">
-            <div class="oneLine"  >
+            <b class="oneLine tableBig"
+              >名: {{ row.projectName ? row.projectName : "-" }}</b
+            >
+            <div class="oneLine">
+              标:
+              {{
+                row.customerName.split("/")[1] !== "null"
+                  ? row.customerName.split("/")[1]
+                  : "-"
+              }}
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="checkList.includes('customerName')"
+          show-overflow-tooltip
+          prop="customerName"
+          align="left"
+          label="客户"
+        >
+          <template #default="{ row }">
+            <div class="oneLine">
               <b class="tableBig">{{ row.customerName.split("/")[0] }}</b>
               <div class="oneLine" v-if="row.projectType !== 2">
-                <img :src="row.avatar" alt="" class="avatar">
+                <img :src="row.avatar" alt="" class="avatar" />
                 <span>{{ row.userName }}</span>
               </div>
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('projectAmount')" show-overflow-tooltip  align="left"
-          label="原价" width="80">
+        <el-table-column
+          v-if="checkList.includes('projectAmount')"
+          show-overflow-tooltip
+          align="left"
+          label="原价"
+          width="80"
+        >
           <template #default="{ row }">
             <div class="tableBig">
               <CurrencyType />{{ row.projectAmount || 0 }}
             </div>
-
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('countryId')" show-overflow-tooltip   align="left"
-          label="国家"  >
+        <el-table-column
+          v-if="checkList.includes('countryId')"
+          show-overflow-tooltip
+          align="left"
+          label="国家"
+        >
           <template #default="{ row }">
             <template v-if="row.countryId">
-              <template v-if="row.countryId.length >= basicDictionaryStore.country.length">
+              <template
+                v-if="
+                  row.countryId.length >= basicDictionaryStore.country.length
+                "
+              >
                 <el-tag type="primary">全球</el-tag>
               </template>
               <template v-else-if="comCountryId(row.countryId).length > 1">
-                <el-tooltip class="box-item" effect="dark" :content="comCountryId(row.countryId).join(',')"
-                  placement="top">
-                  <el-link type="primary"><el-tag type="primary">×{{
-    comCountryId(row.countryId).length
-  }}</el-tag></el-link>
+                <el-tooltip
+                  class="box-item"
+                  effect="dark"
+                  :content="comCountryId(row.countryId).join(',')"
+                  placement="top"
+                >
+                  <el-link type="primary"
+                    ><el-tag type="primary"
+                      >×{{ comCountryId(row.countryId).length }}</el-tag
+                    ></el-link
+                  >
                 </el-tooltip>
               </template>
               <template v-else>
-                <el-tag v-for="item in comCountryId(row.countryId)" :key="item" type="primary">
+                <el-tag
+                  v-for="item in comCountryId(row.countryId)"
+                  :key="item"
+                  type="primary"
+                >
                   {{ item }}
                 </el-tag>
               </template>
             </template>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('systemDone')" show-overflow-tooltip prop="systemDone" align="left"
-         label="系统/审核完成数"><template #default="{ row }">
+        <el-table-column
+          v-if="checkList.includes('systemDone')"
+          show-overflow-tooltip
+          prop="systemDone"
+          align="left"
+          label="系统/审核完成数"
+          ><template #default="{ row }">
             <div class="flex-c tableBig">
-              <div class="oneLine" style="width: calc(100% - 20px);">
-                <el-text>{{ row.systemDone ? row.systemDone : 0 }}</el-text> /<el-text class="mx-1" type="success">{{
-    row.settlementDone ? row.settlementDone : 0 }}</el-text>
+              <div class="oneLine" style="width: calc(100% - 20px)">
+                <el-text>{{ row.systemDone ? row.systemDone : 0 }}</el-text>
+                /<el-text class="mx-1" type="success">{{
+                  row.settlementDone ? row.settlementDone : 0
+                }}</el-text>
               </div>
-              <SvgIcon  @click="quickEdit(row,'systemDone')" :class="{edit:'edit',current:row.projectId===current}" name="i-ep:edit" color="#409eff" />
+              <SvgIcon
+                @click="quickEdit(row, 'systemDone')"
+                :class="{ edit: 'edit', current: row.projectId === current }"
+                name="i-ep:edit"
+                color="#409eff"
+              />
             </div>
-
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('settlementDone')" show-overflow-tooltip prop="settlementDone"
-          align="left" label="结算完成数" />
-        <el-table-column v-if="checkList.includes('settlementPo')" show-overflow-tooltip prop="settlementPo"
-          align="left" label="结算PO号">
+        <el-table-column
+          v-if="checkList.includes('settlementDone')"
+          show-overflow-tooltip
+          prop="settlementDone"
+          align="left"
+          label="结算完成数"
+        />
+        <el-table-column
+          v-if="checkList.includes('settlementPo')"
+          show-overflow-tooltip
+          prop="settlementPo"
+          align="left"
+          label="结算PO号"
+        >
           <template #default="{ row }">
             <div class="flex-c tableBig">
-              <div class="oneLine" style="width: calc(100% - 40px);">
+              <div class="oneLine" style="width: calc(100% - 40px)">
                 {{ row.settlementPo ? row.settlementPo : "-" }}
               </div>
-              <copy v-if="row.settlementPo" class="copy" :content="row.settlementPo" />
-              <SvgIcon  @click="quickEdit(row,'settlementPo')" :class="{edit:'edit',current:row.projectId===current}" name="i-ep:edit" color="#409eff" />
-              </div>
+              <copy
+                v-if="row.settlementPo"
+                class="copy"
+                :content="row.settlementPo"
+              />
+              <SvgIcon
+                @click="quickEdit(row, 'settlementPo')"
+                :class="{ edit: 'edit', current: row.projectId === current }"
+                name="i-ep:edit"
+                color="#409eff"
+              />
+            </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('nodeTime')" width="150" show-overflow-tooltip prop="nodeTime" align="left"
-          label="节点">
+        <el-table-column
+          v-if="checkList.includes('nodeTime')"
+          width="150"
+          show-overflow-tooltip
+          prop="nodeTime"
+          align="left"
+          label="节点"
+        >
           <template #default="{ row }">
-            <el-text v-if="row.status === 1" class="mx-1 tableBig">
-              <el-button style="margin-right: 5px;" size="small" class="p-1"  type="warning">待审核</el-button>
-              <el-text>{{row.pendReviewTime}}</el-text>
-            </el-text>
-            <el-text  v-if="row.status === 3" class="mx-1 tableBig">
-              <el-button style="margin-right: 6px;" size="small" class="p-1"  type="success">已开票</el-button>
-              <el-text>{{row.invoicedOutTime}}</el-text>
-            </el-text>
-            <el-text  v-if="row.status === 4" class="mx-1 tableBig">
-              <el-button style="margin-right: 6px;" size="small" class="p-1"  type="info">已结算</el-button>
-              <el-text >{{row.settledTime}}</el-text>
-            </el-text>
-            <el-text  v-if="row.status === 2" class="mx-1 tableBig">
-              <el-button style="margin-right: 6px;" size="small" class="p-1"  type="primary">已审核</el-button>
-              <el-text>{{row.reviewTime}}</el-text>
-            </el-text>
-            <el-text  v-if="row.status === 5" class="mx-1 tableBig">
-              <el-button style="margin-right: 6px;" size="small" class="p-1"  type="danger">已冻结</el-button>
-              <el-text>{{row.frozenTime}}</el-text>
-            </el-text>
+            <div class="oneLine">
+              <el-text v-if="row.status === 1" class="mx-1 tableBig">
+                <el-button
+                  style="margin-right: 5px"
+                  size="small"
+                  class="p-1"
+                  type="warning"
+                  >待审核</el-button
+                >
+                <el-text>{{ row.pendReviewTime }}</el-text>
+              </el-text>
+              <el-text v-if="row.status === 3" class="mx-1 tableBig">
+                <el-button
+                  style="margin-right: 6px"
+                  size="small"
+                  class="p-1"
+                  type="success"
+                  >已开票</el-button
+                >
+                <el-text>{{ row.invoicedOutTime }}</el-text>
+              </el-text>
+              <el-text v-if="row.status === 4" class="mx-1 tableBig">
+                <el-button
+                  style="margin-right: 6px"
+                  size="small"
+                  class="p-1"
+                  type="info"
+                  >已结算</el-button
+                >
+                <el-text>{{ row.settledTime }}</el-text>
+              </el-text>
+              <el-text v-if="row.status === 2" class="mx-1 tableBig">
+                <el-button
+                  style="margin-right: 6px"
+                  size="small"
+                  class="p-1"
+                  type="primary"
+                  >已审核</el-button
+                >
+                <el-text>{{ row.reviewTime }}</el-text>
+              </el-text>
+              <el-text v-if="row.status === 5" class="mx-1 tableBig">
+                <el-button
+                  style="margin-right: 6px"
+                  size="small"
+                  class="p-1"
+                  type="danger"
+                  >已冻结</el-button
+                >
+                <el-text>{{ row.frozenTime }}</el-text>
+              </el-text>
+            </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('remark')" show-overflow-tooltip prop="remark" align="left"
-          label="备注">
+        <el-table-column
+          v-if="checkList.includes('remark')"
+          show-overflow-tooltip
+          prop="remark"
+          align="left"
+          label="备注"
+        >
           <template #default="{ row }">
             <div class="flex-c tableBig">
-              <div class="oneLine" style="width: calc(100% - 20px);">
+              <div class="oneLine" style="width: calc(100% - 20px)">
                 {{ row.remark ? row.remark : "-" }}
               </div>
-              <SvgIcon  @click="quickEdit(row,'remark')" :class="{edit:'edit',current:row.projectId===current}" name="i-ep:edit" color="#409eff" />
+              <SvgIcon
+                @click="quickEdit(row, 'remark')"
+                :class="{ edit: 'edit', current: row.projectId === current }"
+                name="i-ep:edit"
+                color="#409eff"
+              />
             </div>
           </template>
         </el-table-column>
         <el-table-column align="left" fixed="right" label="操作" width="250">
           <template #default="{ row }">
             <ElSpace>
-              <el-button v-if="row.status === 1" type="primary" size="small" plain @click="auditing(row)">
+              <el-button
+                v-if="row.status === 1"
+                type="primary"
+                size="small"
+                plain
+                @click="auditing(row)"
+              >
                 审核
               </el-button>
-              <el-button v-if="row.status === 5" type="primary" size="small" plain
-                @click="handleMoreOperating('auditing', row)">
+              <el-button
+                v-if="row.status === 5"
+                type="primary"
+                size="small"
+                plain
+                @click="handleMoreOperating('auditing', row)"
+              >
                 重审
               </el-button>
-              <el-button type="warning" size="small" plain @click="handleMoreOperating('edit', row)">
+              <el-button
+                type="warning"
+                size="small"
+                plain
+                @click="handleMoreOperating('edit', row)"
+              >
                 结算编辑
               </el-button>
-              <el-button type="danger" size="small" plain @click="handleMoreOperating('refundDetails', row)">
+              <el-button
+                type="danger"
+                size="small"
+                plain
+                @click="handleMoreOperating('refundDetails', row)"
+              >
                 退款详情
               </el-button>
             </ElSpace>
@@ -475,9 +712,18 @@ function handleMoreOperating(command: string, row: any) {
           <el-empty :image="empty" :image-size="300" />
         </template>
       </el-table>
-      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
-        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-        background @size-change="sizeChange" @current-change="currentChange" />
+      <ElPagination
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
+        :page-sizes="pagination.sizes"
+        :layout="pagination.layout"
+        :hide-on-single-page="false"
+        class="pagination"
+        background
+        @size-change="sizeChange"
+        @current-change="currentChange"
+      />
       <invoicingEdit @success="fetchData" ref="invoicingRef" />
       <projectReview @success="fetchData" ref="auditingRef" />
       <settlementEdit @success="fetchData" ref="editRef" />
@@ -537,7 +783,6 @@ function handleMoreOperating(command: string, row: any) {
   display: block;
 }
 
-
 // 头像
 .avatar {
   width: 20px;
@@ -553,7 +798,7 @@ function handleMoreOperating(command: string, row: any) {
   align-items: center;
   width: 100%;
 
-  >div:nth-of-type(1) {
+  > div:nth-of-type(1) {
     width: calc(100% - 25px);
     flex-shrink: 0;
   }
