@@ -182,23 +182,23 @@ async function onSubmit() {
           }
           // 删除多余的数据
           delete params.userIdList
+          let response;
           if (!form.value.id) {
-            const { status } = await api.create(params);
-            status === 1 &&
-              ElMessage.success({
-                message: "新增成功",
-                center: true,
-              });
-            loading.value = false;
+            response = await api.create(params);
           } else {
-            const { status } = await api.edit(params);
-            status === 1 &&
-              ElMessage.success({
-                message: "编辑成功",
-                center: true,
-              });
-            loading.value = false;
+            response = await api.edit(params);
           }
+
+          const { status } = response;
+          if (status === 1) {
+            ElMessage.success({
+              message: form.value.id ? "编辑成功" : "新增成功",
+              center: true,
+            });
+          } else {
+            ElMessage.error("操作失败，请重试");
+          }
+
           // 更新列表
           await emits("getList");
           // 关闭弹框

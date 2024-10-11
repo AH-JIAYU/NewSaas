@@ -386,6 +386,7 @@ function onChangeStatus(row: any) {
               country: row.country,
               role: row.role,
               positionId: row.positionId,
+              organizationalStructureId: row.organizationalStructureId,
               active: !row.active,
             })
             .then(() => {
@@ -621,14 +622,7 @@ function onReset() {
             <ElTableColumn v-if="userForm.checkList.includes('departmentId')" align="left" prop="departmentId"
               label="部门">
               <template #default="{ row }">
-                <el-text v-if="row.departmentId" class="tableBig">
-                  <el-text v-for="item in departmentList">
-                    <el-text v-if="row.departmentId === item.id">
-                      {{ item.name ? item.name : "-" }}
-                    </el-text>
-                  </el-text>
-                </el-text>
-                <el-text v-else class="tableBig">-</el-text>
+                <el-text class="tableBig">{{ row.organizationalStructureName ? row.organizationalStructureName : "-" }}</el-text>
               </template>
             </ElTableColumn>
             <ElTableColumn v-if="userForm.checkList.includes('positionId')" align="left" prop="positionId" label="职位">

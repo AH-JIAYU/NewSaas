@@ -182,7 +182,7 @@ watch(
 function onChangeStatus(row: any) {
   return new Promise<boolean>((resolve) => {
     ElMessageBox.confirm(
-      `确认${!row.active ? "启用" : "禁用"}「${row.name}」吗？`,
+      `确认${!row.active ? "启用" : "禁用"}「${row.userName}」吗？`,
       "确认信息"
     )
       .then(() => {

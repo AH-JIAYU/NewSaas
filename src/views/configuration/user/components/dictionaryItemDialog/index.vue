@@ -140,9 +140,6 @@ function onSubmit() {
     formRef.value &&
       formRef.value.validate((valid: any) => {
         if (valid) {
-          console.log('form.value',form.value);
-
-          return
           api.create(form.value).then(() => {
             ElMessage.success({
               message: "新增成功",
