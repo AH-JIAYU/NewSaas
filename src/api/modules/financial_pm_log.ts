@@ -1,9 +1,10 @@
 import api from '../index'
 
 export default {
-  list: (data:any) => api.post('account/getStaffAccount', data),
-  // 更新成员账户
-  updateDepartment: (data:any) => api.post('account/updateStaffAccount', data),
-  // 员工财务日志列表
-  getStaffFinancial: (data:any) => api.post('staff-financial-record/getTenantStaffFinancialRecordList', data),
+  // 查询组织架构业绩
+  list: (data:any) => api.post('organizationalStructure/queryOrganizationalStructureRecordQueryAmount', data),
+  // 组织架构账户加减款
+  additionAndSubtraction: (data:any) => api.post('organizationalStructure/additionAndSubtraction', data),
+  // 查询组织架构财务日志
+  getStaffFinancial: (data:any) => api.post('financial-record/queryOrganizationalStructureRecordQueryAmount', data),
 }

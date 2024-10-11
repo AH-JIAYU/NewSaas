@@ -4,18 +4,14 @@ import { ElMessage } from "element-plus";
 import api from "@/api/modules/configuration_manager";
 import apiDep from "@/api/modules/department";
 import apiPos from "@/api/modules/position_manage";
-import useDepartmentStore from "@/store/modules/department";
 import useTenantRoleStore from "@/store/modules/tenant_role";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary";
 import useTenantStaffStore from "@/store/modules/configuration_manager";
 
-const router = useRouter();
 // 用户
 const tenantStaffStore = useTenantStaffStore();
 // 用户数据
 const staffList = ref<any>([]);
-// 小组
-const groupManageList = ref<any>([]);
 // 职位
 const positionManageList = ref<any>();
 // 国家
@@ -25,8 +21,6 @@ const country = ref();
 const roleStore = useTenantRoleStore();
 // 角色
 const munulevs = ref();
-// 部门
-const departmentStore = useDepartmentStore();
 // 部门数据
 const departmentList = ref<any>();
 // 禁用修改密码
@@ -34,18 +28,21 @@ const disabled = ref(false);
 // 判断手机号或邮箱是否变动
 const isEmail = ref<any>();
 const isPhone = ref<any>();
-// 组长
-const getGroup = ref<any>()
 const props: any = defineProps(['catalogueId', 'parentId', 'id', 'tree', 'dataList', 'row', 'level'])
 // 更新数据
-const emits = defineEmits(["success"]);
-
+const emits = defineEmits(["success", "getList"]);
+// tree ref
+const treeRef = ref<any>();
 const visible = defineModel<boolean>({
   default: false,
 });
 // 弹窗标题
 const title = computed(() => (props.id === "" ? "新增用户" : "编辑用户"));
-
+const defaultProps: any = {
+  children: "children",
+  label: "name",
+  // disabled : "distribution",
+};
 const formRef = ref<any>();
 const flat = ref([]); // 扁平化
 // 表单
@@ -72,10 +69,9 @@ const form = ref<any>({
   // 职位id
   positionId: "",
   // 部门id
-  departmentId: "",
-  // 组id
-  groupId: "",
+  organizationalStructureId: '',
 });
+const departmentId = ref<any>([])
 // 自定义校验手机号
 const validatePhone = (rule: any, value: any, callback: any) => {
   const regExpPhone: any =
@@ -121,12 +117,6 @@ const formRules = ref<FormRules>({
   email: [{ validator: validateEmail, trigger: "blur" },],
 });
 
-// 切换部门
-const departmentChange = async (val: any) => {
-  // const { data } = await apiDep.departmentGroup({ id: val });
-  // groupManageList.value = data;
-  // getGroup.value = data[0].director
-};
 // 提交数据
 function onSubmit() {
   if (!form.value.email) {
@@ -137,16 +127,29 @@ function onSubmit() {
     formRules.value.phone = []
     formRef.value.clearValidate('phone');
   }
+  // 同步选中的路由id
+  departmentId.value = treeRef.value!.getCheckedKeys(false);
+  //  获取选中的所有子节点
+  const tree = treeRef.value.getCheckedKeys();
+  // 获取所有半选的主节点
+  const halltree = treeRef.value.getHalfCheckedKeys();
+  // 组合一下
+  const organizationalStructureId = tree.concat(halltree);
+  form.value.organizationalStructureId = organizationalStructureId[0];
   if (!form.value.id) {
     formRef.value &&
       formRef.value.validate((valid: any) => {
         if (valid) {
+          console.log('form.value',form.value);
+
+          return
           api.create(form.value).then(() => {
             ElMessage.success({
               message: "新增成功",
               center: true,
             });
             emits("success");
+            emits("getList");
             onCancel();
           });
         }
@@ -165,9 +168,8 @@ function onSubmit() {
             active,
             type,
             role,
-            groupId,
             positionId,
-            departmentId,
+            organizationalStructureId,
             userName,
           } = form.value;
           const params = {
@@ -180,9 +182,8 @@ function onSubmit() {
             active,
             type,
             role,
-            groupId,
             positionId,
-            departmentId,
+            organizationalStructureId,
             userName,
           };
           if (isPhone.value === params.phone) {
@@ -218,30 +219,71 @@ const flattenDeep = (arr: any) => {
     []
   );
 };
+
+const handleNodeClick = (nodeData: any, checked: any) => {
+  if (checked) {
+    // 如果选中该节点，禁用所有其他节点
+    disableAllNodes(nodeData.id);
+  } else {
+    // 如果取消选中，恢复所有节点为可选
+    enableAllNodes();
+  }
+};
+
+// 禁用所有节点（除了选中的节点）
+const disableAllNodes = (selectedId: any) => {
+  const traverse = (nodes: any) => {
+    nodes.forEach((node: any) => {
+      node.disabled = node.id !== selectedId; // 仅将非选中节点禁用
+      if (node.children) {
+        traverse(node.children); // 递归处理子节点
+      }
+    });
+  };
+  traverse(departmentList.value);
+};
+
+// 恢复所有节点为可选
+const enableAllNodes = () => {
+  const traverse = (nodes: any) => {
+    nodes.forEach((node: any) => {
+      node.disabled = false; // 恢复为可选
+      if (node.children) {
+        traverse(node.children); // 递归处理子节点
+      }
+    });
+  };
+  traverse(departmentList.value);
+};
 onMounted(async () => {
-  const { data } = await apiPos.list({
-    page: 1,
-    limit: 10,
-    id: null,
-    name: "",
-    active: null
-  })
-  positionManageList.value = data.data
+  departmentId.value = [];
+  const { data } = await apiPos.list({ page: 1, limit: 10, id: null, name: "", active: null });
+  positionManageList.value = data.data;
+  // 用户
   staffList.value = await tenantStaffStore.getStaff();
+  // 角色
   munulevs.value = await roleStore.getRole();
-  departmentList.value = await departmentStore.getDepartment();
+  // 部门
+  const res = await apiDep.list({ name: '' });
+  departmentList.value = res.data;
+  // 国家
   country.value = await useStoreCountry.getCountry();
+
+  // 编辑
   if (props.id !== "" && props.row) {
     formRules.value.password = [];
     form.value = JSON.parse(props.row);
-    isEmail.value = form.value.email
-    isPhone.value = form.value.phone
-    if (form.value.departmentId) {
-      departmentChange(form.value.departmentId)
-    }
+    // 确保 organizationalStructureId 是一个数组
+    const orgId = form.value.organizationalStructureId;
+    departmentId.value = Array.isArray(orgId) ? orgId : [orgId];
+    isEmail.value = form.value.email;
+    isPhone.value = form.value.phone;
     disabled.value = true;
   }
-  flat.value = flattenDeep(props.dataList);
+  // 默认选择对应的部门并禁用其他部门
+  if (departmentId.value.length > 0) {
+    disableAllNodes(departmentId.value[0]);
+  }
 });
 </script>
 
@@ -258,14 +300,14 @@ onMounted(async () => {
         <el-row :gutter="24">
           <el-col :span="8">
             <el-form-item label="用户名" prop="userName">
-              <el-input v-model="form.userName" :maxlength ="20" placeholder="请输入用户名" clearable />
+              <el-input v-model="form.userName" :maxlength="20" placeholder="请输入用户名" clearable />
             </el-form-item>
           </el-col>
-          <!-- <el-col :span="8">
-            <el-form-item label="姓名" prop="name">
+          <el-col :span="8">
+            <el-form-item label="姓名" prop="">
               <el-input v-model="form.name" placeholder="请输入姓名" clearable />
             </el-form-item>
-          </el-col> -->
+          </el-col>
           <!-- <el-col :span="8">
             <el-form-item label="国家" prop="country">
               <ElSelect
@@ -295,7 +337,7 @@ onMounted(async () => {
           </el-col>
           <!-- <el-col :span="8">
             <el-form-item label="部门">
-              <el-select v-model="form.departmentId" placeholder="请选择部门" clearable filterable
+              <el-select v-model="form.organizationalStructureId" placeholder="请选择部门" clearable filterable
                 @change="departmentChange">
                 <el-option v-for="item in departmentList" :key="item.id" :label="item.name" :value="item.id">
                 </el-option>
@@ -339,9 +381,9 @@ onMounted(async () => {
         <template #header>
           <div class="card-header">
             <div class="leftTitle">
-              部门信息<span v-if="form.director" style="margin-left: 20px; font-size: 14px">负责人:<el-text
+              部门信息<span v-if="form.enableChargePerson" style="margin-left: 20px; font-size: 14px">负责人:<el-text
                   v-for="item in staffList" :key="item.id">
-                  <el-text v-if="item.id === form.director">
+                  <el-text v-if="item.id === form.id">
                     {{ item.name }}
                   </el-text>
                 </el-text></span>
@@ -350,10 +392,9 @@ onMounted(async () => {
         </template>
         <el-row :gutter="24">
           <el-form-item label="分配部门:">
-            <el-radio-group v-if="groupManageList.length" v-model="form.groupId">
-              <el-radio v-for="item in groupManageList" :key="item.id" :value="item.id" :label="item.name"></el-radio>
-            </el-radio-group>
-            <el-text v-else>暂无数据</el-text>
+            <el-tree style="max-width: 600px" ref="treeRef" :data="departmentList" show-checkbox check-strictly
+              node-key="id" :default-expanded-keys="[]" :default-checked-keys="departmentId" default-expand-all
+              :props="defaultProps" @check-change="handleNodeClick" />
           </el-form-item>
         </el-row>
       </el-card>

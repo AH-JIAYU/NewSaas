@@ -9,7 +9,7 @@ const useDepartmentStore = defineStore(
       if (department.value) {
         return department.value
       }
-      const { data } = await api.list({})
+      const { data } = await api.list({name:''})
       department.value = data?.data || []
       return data?.data
     }

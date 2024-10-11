@@ -191,10 +191,12 @@ function onChangeStatus(row: any) {
           api
             .edit({
               id: row.id,
-              account: null,
-              name: null,
-              sex: null,
-              phoneNumber: null,
+              email: row.email,
+              phoneNumber: row.phoneNumber,
+              userName: row.userName,
+              country: row.country,
+              role: row.role,
+              positionId: row.positionId,
               active: !row.active,
             })
             .then(() => {

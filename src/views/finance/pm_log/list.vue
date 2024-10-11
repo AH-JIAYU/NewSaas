@@ -26,56 +26,42 @@ const settingsStore = useSettingsStore();
 const plusMinusPaymentsRef = ref();
 // financeLogRef
 const financeLogRef = ref<any>()
-  const formSearchList = ref<any>()//表单排序配置
-const formSearchName=ref<string>('formSearch-financial_pm_log')// 表单排序name
+const formSearchList = ref<any>()//表单排序配置
+const formSearchName = ref<string>('formSearch-financial_pm_log')// 表单排序name
 // 表格控件-展示列
 const columns = ref<any>([
   // 表格控件-展示列
   {
-    label: "员工ID",
+    label: "部门ID",
     prop: "id",
     sortable: true,
     disableCheck: false, // 不可更改
     checked: true, // 默认展示
   },
   {
-    label: "用户名",
-    prop: "userName",
+    label: "部门名称",
+    prop: "organizationalStructureName",
     sortable: true,
     disableCheck: false, // 不可更改
     checked: true, // 默认展示
   },
   {
-    label: "姓名",
+    label: "主管",
     prop: "name",
     sortable: true,
     disableCheck: false, // 不可更改
     checked: true, // 默认展示
   },
   {
-    label: "所属组",
-    prop: "groupId",
+    label: "总业绩",
+    prop: "totalPerformance",
     sortable: true,
     disableCheck: false, // 不可更改
     checked: true, // 默认展示
   },
   {
-    label: "职位",
-    prop: "positionId",
-    sortable: true,
-    disableCheck: false, // 不可更改
-    checked: true, // 默认展示
-  },
-  {
-    label: "待审提成",
-    prop: "pendingBalance",
-    sortable: true,
-    disableCheck: false, // 不可更改
-    checked: true, // 默认展示
-  },
-  {
-    label: "可用提成",
-    prop: "availableBalance",
+    label: "提成",
+    prop: "commission",
     sortable: true,
     disableCheck: false, // 不可更改
     checked: true, // 默认展示
@@ -107,13 +93,10 @@ const data = ref<any>({
     page: 1,
     // 每页数量
     limit: 10,
-    id: null,
-    // 用户名
-    userName: '',
-    // 姓名
-    name: '',
     // 部门id
-    positionId: null,
+    organizationalStructureId: null,
+    // 部门名称
+    organizationalStructureName: '',
   },
   // 批量操作
   batch: {
@@ -124,22 +107,18 @@ const data = ref<any>({
   dataList: [],
 });
 // 获取数据
-function getDataList() {
+async function getDataList() {
   try {
-    data.value.loading = true;
     const params = {
       ...getParams(),
       ...data.value.search,
     };
-    api.list(params).then((res: any) => {
-      data.value.loading = false;
-      data.value.dataList = res.data.data;
+    const res = await api.list(params)
+    data.value.dataList = res.data;
       pagination.value.total = +res.data.total;
-    });
   } catch (error) {
 
   } finally {
-    data.value.loading = false;
   }
 }
 // 加减款
@@ -157,13 +136,10 @@ function onReset() {
     page: 1,
     // 每页数量
     limit: 10,
-    id: null,
-    // 用户名
-    userName: '',
-    // 姓名
-    name: '',
     // 部门id
-    positionId: null,
+    organizationalStructureId: null,
+    // 部门名称
+    organizationalStructureName: '',
   });
   getDataList();
 }
@@ -189,28 +165,34 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
 }
 
 onMounted(async () => {
-  // 职位
-  positionManageList.value = await usePositionManage?.getPositionManage() || [];
-  getDataList();
-  if (data.value.formMode === "router") {
-    eventBus.on("get-data-list", () => {
-      getDataList();
-    });
-  }
-  columns.value.forEach((item: any) => {
-    if (item.checked) {
-      data.value.checkList.push(item.prop);
+  try {
+    data.value.loading = true;
+    // 职位
+    positionManageList.value = await usePositionManage?.getPositionManage() || [];
+    await getDataList();
+    data.value.loading = false;
+    if (data.value.formMode === "router") {
+      eventBus.on("get-data-list", () => {
+       getDataList();
+      });
     }
-  });
-  formSearchList.value = [
-    { index: 1, show: true, type: 'input', modelName: 'id', placeholder: '员工ID' },
-    { index: 2, show: true, type: 'input', modelName: 'userName', placeholder: '用户名' },
-    { index: 3, show: true, type: 'input', modelName: 'name', placeholder: '姓名' },
-    { index: 4, show: true, type: 'select', modelName: 'positionId', placeholder: '职位', option: 'positionId', optionLabel: 'name', optionValue: 'id' }
-]
+    columns.value.forEach((item: any) => {
+      if (item.checked) {
+        data.value.checkList.push(item.prop);
+      }
+    });
+    formSearchList.value = [
+      { index: 1, show: true, type: 'input', modelName: 'organizationalStructureId', placeholder: '部门ID' },
+      { index: 2, show: true, type: 'input', modelName: 'organizationalStructureName', placeholder: '部门名称' },
+    ]
+  } catch (error) {
+
+  } finally {
+    data.value.loading = false;
+  }
 });
-const formOption={
-  positionId:()=>positionManageList.value
+const formOption = {
+  positionId: () => positionManageList.value
 }
 onBeforeUnmount(() => {
   if (data.value.formMode === "router") {
@@ -222,7 +204,8 @@ onBeforeUnmount(() => {
 <template>
   <div :class="{ 'absolute-container': data.tableAutoHeight }">
     <PageMain>
-      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="data.search"  :formOption="formOption" />
+      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange"
+        @onReset="onReset" :model="data.search" :formOption="formOption" />
       <ElDivider border-style="dashed" />
       <el-row>
         <FormLeftPanel />
@@ -238,28 +221,28 @@ onBeforeUnmount(() => {
         @selection-change="data.batch.selectionDataList = $event">
         <el-table-column align="left" type="selection" />
         <ElTableColumn v-if="data.batch.enable" type="selection" show-overflow-tooltip align="left" fixed />
-        <ElTableColumn v-if="data.checkList.includes('id')" show-overflow-tooltip align="left" prop="id" label="员工ID">
+        <ElTableColumn v-if="data.checkList.includes('id')" show-overflow-tooltip align="left" prop="id" label="部门ID">
           <template #default="{ row }">
             <div class="copyId tableSmall">
-              <div class="id oneLine ">ID: {{ row.id }}</div>
-              <copy class="copy" :content="row.id" />
+              <div class="id oneLine ">ID: {{ row.organizationalStructureId }}</div>
+              <copy class="copy" :content="row.organizationalStructureId" />
             </div>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('userName')" show-overflow-tooltip align="left" prop="userName"
-          label="用户名">
+        <ElTableColumn v-if="data.checkList.includes('organizationalStructureName')" show-overflow-tooltip align="left"
+          prop="userName" label="部门名称">
           <template #default="{ row }">
             <el-text class="tableBig">
-              {{ row.userName ? row.userName : '-' }}
+              {{ row.organizationalStructureName ? row.organizationalStructureName : '-' }}
             </el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('name')" show-overflow-tooltip align="left" prop="name"
-          label="姓名">
+        <ElTableColumn v-if="data.checkList.includes('name')" show-overflow-tooltip align="left" prop="name" label="主管">
           <template #default="{ row }">
-            <el-text class="tableBig">
-              {{ row.name ? row.name : '-' }}
+            <el-text v-if="row.userList.length" class="tableBig">
+              {{ row.userList?.map((item: any) => item.name).join('，') }}
             </el-text>
+            <el-text v-else class="tableBig">-</el-text>
           </template>
         </ElTableColumn>
         <!-- <ElTableColumn v-if="data.checkList.includes('groupId')" show-overflow-tooltip align="left" prop="groupId"
@@ -277,33 +260,18 @@ onBeforeUnmount(() => {
             <el-text v-else>-</el-text>
           </template>
         </ElTableColumn> -->
-        <ElTableColumn v-if="data.checkList.includes('positionId')" show-overflow-tooltip align="left"
-          prop="positionId" width="150" label="职位">
+        <ElTableColumn v-if="data.checkList.includes('totalPerformance')" show-overflow-tooltip align="left"
+          prop="positionId" label="总业绩">
           <template #default="{ row }">
-            <el-text v-for="item in positionManageList">
-              <el-text v-if="row.positionId === item.id">
-                <el-text class="tableBig">
-                  {{ item.name ? item.name : "-" }}
-                </el-text>
-              </el-text>
+            <el-text class="tableBig">
+              <CurrencyType />{{ row.totalPerformance || 0 }}
             </el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('pendingBalance')" show-overflow-tooltip align="left"
-          prop="pendingBalance" label="待审提成"><template #default="{ row }">
+        <ElTableColumn v-if="data.checkList.includes('commission')" show-overflow-tooltip align="left"
+          prop="pendingBalance" label="提成"><template #default="{ row }">
             <el-text class="tableBig">
-              {{
-    row.pendingBalance ? row.pendingBalance : '-'
-  }}
-            </el-text>
-          </template>
-        </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('availableBalance')" show-overflow-tooltip align="left"
-          prop="availableBalance" label="可用提成"><template #default="{ row }">
-            <el-text class="tableBig">
-              {{
-    row.availableBalance ? row.availableBalance : '-'
-  }}
+              <CurrencyType />{{ row.commission || 0 }}
             </el-text>
           </template>
         </ElTableColumn>
@@ -402,6 +370,4 @@ onBeforeUnmount(() => {
     display: block !important;
   }
 }
-
-
 </style>

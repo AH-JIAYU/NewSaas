@@ -337,17 +337,6 @@ function onDeleteMulti(rows: any[]) {
     })
     .catch(() => { });
 }
-// 获取用户
-async function getUserList() {
-  const params = {
-    ...userForm.value.search,
-  };
-  const res = await apiUser.list(params);
-  if (res.data) {
-    userForm.value.dataList = res.data.data;
-    pagination.value.total = +res.data.total;
-  }
-}
 onMounted(async () => {
   try {
     // loading加载开始
@@ -358,8 +347,6 @@ onMounted(async () => {
     departmentList.value = await departmentStore?.getDepartment() || [];
     // 职位
     positionManageList.value = await usePositionManage?.getPositionManage() || [];
-    // 获取列表数据
-    getUserList();
     columns.value.forEach((item: any) => {
       if (item.checked) {
         userForm.value.checkList.push(item.prop);
@@ -393,10 +380,12 @@ function onChangeStatus(row: any) {
           apiUser
             .edit({
               id: row.id,
-              account: null,
-              name: null,
-              sex: null,
-              phoneNumber: null,
+              email: row.email,
+              phoneNumber: row.phoneNumber,
+              userName: row.userName,
+              country: row.country,
+              role: row.role,
+              positionId: row.positionId,
               active: !row.active,
             })
             .then(() => {
@@ -404,7 +393,7 @@ function onChangeStatus(row: any) {
                 message: `${!row.active ? "启用" : "禁用"}成功`,
                 center: true,
               });
-              getUserList();
+              getDictionaryItemList();
               dataForm.value.loading = false;
               return resolve(true);
             })
@@ -428,7 +417,7 @@ function onChangeStatus(row: any) {
 function sizeChange(size: number) {
   onSizeChange(size).then(() => {
     userForm.value.search.limit = size
-    getUserList()
+    getDictionaryItemList()
   });
 }
 
@@ -436,13 +425,13 @@ function sizeChange(size: number) {
 function currentChangeUser(page = 1) {
   onCurrentChange(page).then(() => {
     userForm.value.search.page = page
-    getUserList()
+    getDictionaryItemList()
   });
 }
 
 // 字段排序
 function sortChangeUser({ prop, order }: { prop: string; order: string }) {
-  onSortChange(prop, order).then(() => getUserList());
+  onSortChange(prop, order).then(() => getDictionaryItemList());
 }
 // 新增
 function create(row?: any) {
@@ -471,7 +460,7 @@ function onResetPassword() {
           message: "重置成功",
           center: true,
         });
-        getUserList();
+        getDictionaryItemList();
       });
     })
     .catch(() => { });
@@ -495,7 +484,7 @@ function onReset() {
     departmentId: null,
     active: null,
   });
-  getUserList();
+  getDictionaryItemList();
 }
 </script>
 
@@ -565,10 +554,10 @@ function onReset() {
               <el-option v-for="item in activeList" :key="item.label" :label="item.label" :value="item.value" />
             </ElSelect>
             <ElInput v-model="userForm.search.id" placeholder="员工ID" clearable style="width: 200px"
-              @keydown.enter="getUserList" />
+              @keydown.enter="getDictionaryItemList" />
             <ElInput v-model="userForm.search.userName" placeholder="用户名" clearable style="width: 200px"
-              @keydown.enter="getUserList" />
-            <ElButton type="primary" @click="getUserList">
+              @keydown.enter="getDictionaryItemList" />
+            <ElButton type="primary" @click="getDictionaryItemList">
               <template #icon>
                 <SvgIcon name="i-ep:search" />
               </template>
@@ -689,7 +678,7 @@ function onReset() {
         :dataList="dictionaryItem.dataList" :row="dictionaryItem.row" @success="getDictionaryItemList" />
       <userDialog v-if="userForm.dialog.visible" :id="userForm.dialog.id" v-model="userForm.dialog.visible"
         :catalogue-id="userForm.search.catalogueId" :parent-id="userForm.dialog.parentId" :level="userForm.dialog.level"
-        :tree="dataForm.tree" :dataList="userForm.dataList" :row="userForm.row" @success="getUserList" @get-list="getDictionaryList" />
+        :tree="dataForm.tree" :dataList="userForm.dataList" :row="userForm.row" @success="getDictionaryItemList" @get-list="getDictionaryList" />
       <Detail ref="detailRef" />
     </div>
   </div>

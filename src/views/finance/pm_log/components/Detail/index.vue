@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import api from "@/api/modules/financial_pm_log";
+import apiUse from '@/api/modules/configuration_manager'
 import empty from '@/assets/images/empty.png'
 
 // 时间
@@ -9,25 +10,14 @@ const { format } = useTimeago();
 const emit = defineEmits(["fetch-data"]);
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
-const monthList = [
-  { label: '一月份', value: 1 },
-  { label: '二月份', value: 2 },
-  { label: '三月份', value: 3 },
-  { label: '四月份', value: 4 },
-  { label: '五月份', value: 5 },
-  { label: '六月份', value: 6 },
-  { label: '七月份', value: 7 },
-  { label: '八月份', value: 8 },
-  { label: '九月份', value: 9 },
-  { label: '十月份', value: 10 },
-  { label: '十一月份', value: 11 },
-  { label: '十二月份', value: 12 },
-]
+// 用户数据
+const staffList = ref<any>([]);
+// 表单数据
 const data = ref<any>({
   loading: false,
   activeName: "myFinancial",
   tableAutoHeight: false, // 表格是否自适应高度
-  border: true, // 表格控件-是否展示边框
+  border: false, // 表格控件-是否展示边框
   stripe: false, // 表格控件-是否展示斑马条
   lineHeight: "default", // 表格控件-控制表格大小
   checkList: [],
@@ -36,20 +26,26 @@ const data = ref<any>({
     page: 1,
     // 每页数量
     limit: 10,
-    // 月份
-    month: null,
-    id: null,
-    // 类型 1 部门 2小组 3成员
-    type: 3,
+    // 用户id
+    userId: null,
+    // 组织架构id
+    organizationalStructureId: null,
   },
 });
 const drawerisible = ref<boolean>(false);
-const detailData = ref<any>(); // 详情数据
+// 详情数据
+const detailData = ref<any>();
+// 编辑
 async function showEdit(row: any) {
-  data.value.search.id = row.id
-  getDataList()
+  if (row.organizationalStructureId) {
+    data.value.search.organizationalStructureId = row.organizationalStructureId
+    await getDataList()
+    const ress = await apiUse.queryNotEnableStaffList({ organizationalStructureId: data.value.search.organizationalStructureId })
+    staffList.value = ress.data
+  }
   drawerisible.value = true;
 }
+// 获取列表数据
 const getDataList = async () => {
   try {
     data.value.loading = true;
@@ -57,10 +53,9 @@ const getDataList = async () => {
       ...data.value.search,
     };
     const res = await api.getStaffFinancial(params)
-    detailData.value = res.data.itemList;
+    detailData.value = res.data.userList;
     pagination.value.total = +res.data.total;
     data.value.loading = false;
-
   } catch (error) {
 
   } finally {
@@ -89,19 +84,14 @@ function close() {
     page: 1,
     // 每页数量
     limit: 10,
-    // 月份
-    month: null,
-    id: null,
+    // 用户id
+    userId: null,
+    // 组织架构id
+    organizationalStructureId: null,
   })
   drawerisible.value = false;
 }
 
-onMounted(() => {
-  const now = new Date();
-  // getMonth() 返回的月份是0-11，所以需要加1
-  const currentMonth = now.getMonth() + 1;
-  data.value.search.month = currentMonth
-})
 defineExpose({
   showEdit,
 });
@@ -115,8 +105,8 @@ defineExpose({
     :close-on-click-modal="false"
     destroy-on-close
     draggable
-    size="60%"
-    title="详情"
+    size="70%"
+    title="财务日志"
     @close="close"
   >
     <ElDivider border-style="dashed" />
@@ -129,11 +119,11 @@ defineExpose({
       class="search-form"
     >
       <ElFormItem>
-        <el-select style="width:10.5rem" v-model="data.search.month" placeholder="" clearable filterable @change="currentChange()">
-        <el-option v-for="item in monthList"
-        :key="item.value"
-        :label="item.label"
-        :value="item.value">
+        <el-select style="width:10.5rem" v-model="data.search.userId" placeholder="请选择员工" clearable filterable @change="currentChange()">
+        <el-option v-for="item in staffList"
+        :key="item.id"
+        :label="item.userName"
+        :value="item.id">
         </el-option>
         </el-select>
       </ElFormItem>
@@ -162,8 +152,8 @@ defineExpose({
         label="点击ID"
       >
         <template #default="{ row }">
-          <el-text v-if="row.typeId == 1">内部调查站</el-text>
-          <el-text v-else>{{ row.typeId ? row.typeId : "-" }}</el-text>
+          <!-- <el-text v-if="row.typeId == 1">内部调查站</el-text> -->
+          <el-text >{{ row.clientId ? row.clientId : "-" }}</el-text>
         </template>
 </ElTableColumn>
 <ElTableColumn show-overflow-tooltip align="left" prop="projectId" label="项目ID">
@@ -171,10 +161,14 @@ defineExpose({
           <el-text>{{ row.projectId ? row.projectId : "-" }}</el-text>
         </template>
 </ElTableColumn>
-<ElTableColumn show-overflow-tooltip align="left" prop="" label="类型">
+<ElTableColumn show-overflow-tooltip align="left" prop="" label="负责人">
   <template #default="{ row }">
-          <el-text v-if="row.balanceType == 1">待审金额</el-text>
-          <el-text v-if="row.balanceType == 2">可用金额</el-text>
+          <el-text>{{row.userName ? row.userName : '-'}}</el-text>
+          <!-- <el-text v-if="row.balanceType == 2">可用金额</el-text> -->
+        </template>
+</ElTableColumn>
+<ElTableColumn show-overflow-tooltip align="left" prop="remark" label="业绩"><template #default="{ row }">
+          <el-text class="mx-1">{{ row.doMoney ? row.doMoney : "-" }}</el-text>
         </template>
 </ElTableColumn>
 <ElTableColumn show-overflow-tooltip align="left" prop="remark" label="说明"><template #default="{ row }">
@@ -186,14 +180,16 @@ defineExpose({
           <CurrencyType />{{ row.beforeBalance || 0 }}
         </template>
 </ElTableColumn>
-<ElTableColumn show-overflow-tooltip align="left" prop="addAndSubtraction" width="150" label="加减款"><template
+<ElTableColumn show-overflow-tooltip align="left" prop="addAndSubtraction" width="150" label="提成"><template
     #default="{ row }">
-          <el-text v-if="row.operationType === 2" type="danger" class="mx-1"
+          <!-- <el-text v-if="row.operationType === 2" type="danger" class="mx-1"
             >-<CurrencyType />{{ Math.abs(row.difference) }}</el-text
           >
           <el-text v-else type="success" class="mx-1">
             +<CurrencyType />{{ Math.abs(row.difference) }}</el-text
-          >
+          > -->
+          <!-- <el-text class="mx-1">{{ row.difference ? row.difference : "-" }}</el-text> -->
+          <CurrencyType />{{ row.difference || 0 }}
         </template>
 </ElTableColumn>
 <ElTableColumn show-overflow-tooltip align="left" prop="afterBalance" width="150" label="变动后">
