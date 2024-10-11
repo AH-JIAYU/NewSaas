@@ -139,7 +139,7 @@ const switchChange = (val:any) => {
 async function onSubmit() {
   try {
     formRef.value &&
-      formRef.value.validate(async (valid) => {
+     await formRef.value.validate(async (valid) => {
         if (valid) {
           loading.value = true;
           // 将数据制空
