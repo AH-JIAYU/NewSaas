@@ -157,7 +157,7 @@ const formOption={
         <el-table-column v-if="checkList.includes('projectName')" show-overflow-tooltip prop="projectName"
           align="left" label="项目" >
           <template #default="{ row }">
-            <div class="tableBig">
+            <div class="tableBig oneLine">
              {{row.projectName}}
             </div>
           </template>
@@ -199,7 +199,7 @@ const formOption={
               <el-button style="width:46px" v-else-if="row.dataType === 1" type="warning" size="small" class="p-1">{{
     row.getGroupSupplierIdNameInfoList.length > 1 ? '×' + row.getGroupSupplierIdNameInfoList.length : '供应商'
   }}</el-button>
-              <b class='tableBig'>{{ row.getGroupSupplierIdNameInfoList[0].groupSupplierName }}</b>&ensp;
+              <b class='tableBig'>{{ row.getGroupSupplierIdNameInfoList[0].groupSupplierName }}</b> 
               <span class="id tableSmall">ID: {{ row.getGroupSupplierIdNameInfoList[0].groupSupplierId }}</span>
               <copy class="copy" :content="row.getGroupSupplierIdNameInfoList[0].groupSupplierId" />
             </div>

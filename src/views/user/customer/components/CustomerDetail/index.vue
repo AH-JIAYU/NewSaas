@@ -48,7 +48,7 @@ defineExpose({
     title="详情"
     @close="close"
   >
-    <el-form label-width="100px" label-position="right">
+    <el-form  label-position="right">
       <el-card class="box-card">
         <template #header>
           <div class="card-header">
