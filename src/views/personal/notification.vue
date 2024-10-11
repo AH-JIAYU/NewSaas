@@ -265,11 +265,11 @@ onMounted(() => {
 
 }
 
-:deep {
-  .el-dialog__body {
-    min-height: 25rem !important;
-  }
-}
+// :deep {
+//   .el-dialog__body {
+//     min-height: 25rem !important;
+//   }
+// }
 
 .buttons {
   padding: 0 1rem;

@@ -12,6 +12,8 @@ export default {
   updateInvitationBind: (data: any) => api.post("tenantBind/updateInvitationBind", data),
   // 租户解约-终止合作
   updateRescindTenant: (data: any) => api.post("tenantBind/updateRescindTenant", data),
+  // 修改租户负责人
+  updateInvitationBindUser: (data: any) => api.post("tenantBind/updateInvitationBindUser", data),
 
 
   // 项目列表用
