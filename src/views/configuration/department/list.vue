@@ -345,8 +345,6 @@ onMounted(async () => {
     filterCountry.value = await useStoreCountry.getCountry();
     // 部门
     departmentList.value = await departmentStore?.getDepartment() || [];
-    console.log('departmentList.value',departmentList.value);
-
     // 职位
     positionManageList.value = await usePositionManage?.getPositionManage() || [];
     columns.value.forEach((item: any) => {
@@ -379,7 +377,6 @@ function onChangeStatus(row: any) {
       .then(() => {
         try {
           dataForm.value.loading = true;
-          console.log('row',row);
           apiUser
             .edit({
               id: row.id,

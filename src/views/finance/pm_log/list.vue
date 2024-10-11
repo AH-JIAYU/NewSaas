@@ -32,50 +32,36 @@ const formSearchName = ref<string>('formSearch-financial_pm_log')// 表单排序
 const columns = ref<any>([
   // 表格控件-展示列
   {
-    label: "员工ID",
+    label: "部门ID",
     prop: "id",
     sortable: true,
     disableCheck: false, // 不可更改
     checked: true, // 默认展示
   },
   {
-    label: "用户名",
-    prop: "userName",
+    label: "部门名称",
+    prop: "organizationalStructureName",
     sortable: true,
     disableCheck: false, // 不可更改
     checked: true, // 默认展示
   },
   {
-    label: "姓名",
+    label: "主管",
     prop: "name",
     sortable: true,
     disableCheck: false, // 不可更改
     checked: true, // 默认展示
   },
   {
-    label: "所属组",
-    prop: "groupId",
+    label: "总业绩",
+    prop: "totalPerformance",
     sortable: true,
     disableCheck: false, // 不可更改
     checked: true, // 默认展示
   },
   {
-    label: "职位",
-    prop: "positionId",
-    sortable: true,
-    disableCheck: false, // 不可更改
-    checked: true, // 默认展示
-  },
-  {
-    label: "待审提成",
-    prop: "pendingBalance",
-    sortable: true,
-    disableCheck: false, // 不可更改
-    checked: true, // 默认展示
-  },
-  {
-    label: "可用提成",
-    prop: "availableBalance",
+    label: "提成",
+    prop: "commission",
     sortable: true,
     disableCheck: false, // 不可更改
     checked: true, // 默认展示
@@ -121,22 +107,18 @@ const data = ref<any>({
   dataList: [],
 });
 // 获取数据
-function getDataList() {
+async function getDataList() {
   try {
-    data.value.loading = true;
     const params = {
       ...getParams(),
       ...data.value.search,
     };
-    api.list(params).then((res: any) => {
-      data.value.loading = false;
-      data.value.dataList = res.data;
+    const res = await api.list(params)
+    data.value.dataList = res.data;
       pagination.value.total = +res.data.total;
-    });
   } catch (error) {
 
   } finally {
-    data.value.loading = false;
   }
 }
 // 加减款
@@ -183,23 +165,31 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
 }
 
 onMounted(async () => {
-  // 职位
-  positionManageList.value = await usePositionManage?.getPositionManage() || [];
-  getDataList();
-  if (data.value.formMode === "router") {
-    eventBus.on("get-data-list", () => {
-      getDataList();
-    });
-  }
-  columns.value.forEach((item: any) => {
-    if (item.checked) {
-      data.value.checkList.push(item.prop);
+  try {
+    data.value.loading = true;
+    // 职位
+    positionManageList.value = await usePositionManage?.getPositionManage() || [];
+    await getDataList();
+    data.value.loading = false;
+    if (data.value.formMode === "router") {
+      eventBus.on("get-data-list", () => {
+       getDataList();
+      });
     }
-  });
-  formSearchList.value = [
-    { index: 1, show: true, type: 'input', modelName: 'organizationalStructureId', placeholder: '部门ID' },
-    { index: 2, show: true, type: 'input', modelName: 'organizationalStructureName', placeholder: '部门名称' },
-  ]
+    columns.value.forEach((item: any) => {
+      if (item.checked) {
+        data.value.checkList.push(item.prop);
+      }
+    });
+    formSearchList.value = [
+      { index: 1, show: true, type: 'input', modelName: 'organizationalStructureId', placeholder: '部门ID' },
+      { index: 2, show: true, type: 'input', modelName: 'organizationalStructureName', placeholder: '部门名称' },
+    ]
+  } catch (error) {
+
+  } finally {
+    data.value.loading = false;
+  }
 });
 const formOption = {
   positionId: () => positionManageList.value
@@ -239,8 +229,8 @@ onBeforeUnmount(() => {
             </div>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('userName')" show-overflow-tooltip align="left" prop="userName"
-          label="部门名称">
+        <ElTableColumn v-if="data.checkList.includes('organizationalStructureName')" show-overflow-tooltip align="left"
+          prop="userName" label="部门名称">
           <template #default="{ row }">
             <el-text class="tableBig">
               {{ row.organizationalStructureName ? row.organizationalStructureName : '-' }}
@@ -250,7 +240,7 @@ onBeforeUnmount(() => {
         <ElTableColumn v-if="data.checkList.includes('name')" show-overflow-tooltip align="left" prop="name" label="主管">
           <template #default="{ row }">
             <el-text v-if="row.userList.length" class="tableBig">
-              {{ row.userList?.map((item:any) => item.name).join('，') }}
+              {{ row.userList?.map((item: any) => item.name).join('，') }}
             </el-text>
             <el-text v-else class="tableBig">-</el-text>
           </template>
@@ -270,20 +260,18 @@ onBeforeUnmount(() => {
             <el-text v-else>-</el-text>
           </template>
         </ElTableColumn> -->
-        <ElTableColumn v-if="data.checkList.includes('positionId')" show-overflow-tooltip align="left" prop="positionId"
-          label="总业绩">
+        <ElTableColumn v-if="data.checkList.includes('totalPerformance')" show-overflow-tooltip align="left"
+          prop="positionId" label="总业绩">
           <template #default="{ row }">
             <el-text class="tableBig">
-              {{ row.totalPerformance ? row.totalPerformance : "-" }}
+              <CurrencyType />{{ row.totalPerformance || 0 }}
             </el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('pendingBalance')" show-overflow-tooltip align="left"
+        <ElTableColumn v-if="data.checkList.includes('commission')" show-overflow-tooltip align="left"
           prop="pendingBalance" label="提成"><template #default="{ row }">
             <el-text class="tableBig">
-              {{
-    row.commission	 ? row.commission	 : '-'
-  }}
+              <CurrencyType />{{ row.commission || 0 }}
             </el-text>
           </template>
         </ElTableColumn>
