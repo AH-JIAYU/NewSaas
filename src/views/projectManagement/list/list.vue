@@ -689,7 +689,7 @@ const formOption = {
           <template #default="{ row }">
             <div class="flex-c">
               <div class="oneLine tableBig" style="width: calc(100% - 1.25rem)">
-                {{ row.ir ? row.ir : 0 }}%/{{ row.nir ? row.nir : 0 }}%
+                {{ row.ir ? row.ir : 0 }}/{{ row.nir ? row.nir : 0 }}
               </div>
               <SvgIcon
                 v-if="row.projectType !== 2"

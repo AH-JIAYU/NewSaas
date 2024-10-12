@@ -133,7 +133,7 @@ nextTick(() => {
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="负责人" prop="chargeId">
+                <el-form-item label="PM" prop="chargeId">
                   <el-select v-model="localToptTab.chargeId" value-key="" placeholder="请选择负责人" clearable filterable>
                     <el-option v-for="item in staffList" :key="item.id" :label="item.userName" :value="item.id" />
                     <template #empty>
