@@ -30,7 +30,7 @@ const isEmail = ref<any>();
 const isPhone = ref<any>();
 const props: any = defineProps(['catalogueId', 'parentId', 'id', 'tree', 'dataList', 'row', 'level'])
 // 更新数据
-const emits = defineEmits(["success","getList"]);
+const emits = defineEmits(["success", "getList"]);
 // tree ref
 const treeRef = ref<any>();
 const visible = defineModel<boolean>({
@@ -217,7 +217,7 @@ const flattenDeep = (arr: any) => {
   );
 };
 
-  const handleNodeClick = (nodeData:any, checked:any) => {
+const handleNodeClick = (nodeData: any, checked: any) => {
   if (checked) {
     // 如果选中该节点，禁用所有其他节点
     disableAllNodes(nodeData.id);
@@ -228,9 +228,9 @@ const flattenDeep = (arr: any) => {
 };
 
 // 禁用所有节点（除了选中的节点）
-const disableAllNodes = (selectedId:any) => {
-  const traverse = (nodes:any) => {
-    nodes.forEach((node:any) => {
+const disableAllNodes = (selectedId: any) => {
+  const traverse = (nodes: any) => {
+    nodes.forEach((node: any) => {
       node.disabled = node.id !== selectedId; // 仅将非选中节点禁用
       if (node.children) {
         traverse(node.children); // 递归处理子节点
@@ -242,8 +242,8 @@ const disableAllNodes = (selectedId:any) => {
 
 // 恢复所有节点为可选
 const enableAllNodes = () => {
-  const traverse = (nodes:any) => {
-    nodes.forEach((node:any) => {
+  const traverse = (nodes: any) => {
+    nodes.forEach((node: any) => {
       node.disabled = false; // 恢复为可选
       if (node.children) {
         traverse(node.children); // 递归处理子节点
@@ -400,9 +400,9 @@ onMounted(async () => {
         </template>
         <el-row :gutter="24">
           <el-form-item label="分配部门:">
-            <el-tree  style="max-width: 600px" ref="treeRef" :data="departmentList" show-checkbox check-strictly
+            <el-tree style="max-width: 600px" ref="treeRef" :data="departmentList" show-checkbox check-strictly
               node-key="id" :default-expanded-keys="[]" :default-checked-keys="departmentId" default-expand-all
-              :props="defaultProps"  @check-change="handleNodeClick"  />
+              :props="defaultProps" @check-change="handleNodeClick" />
           </el-form-item>
         </el-row>
       </el-card>

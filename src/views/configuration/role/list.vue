@@ -19,7 +19,7 @@ const QuickEditRef = ref(); //快速编辑
 const current = ref<any>()//表格当前选中
 const settingsStore = useSettingsStore();
 const formSearchList = ref<any>()//表单排序配置
-const formSearchName=ref<string>('formSearch-role')// 表单排序name
+const formSearchName = ref<string>('formSearch-role')// 表单排序name
 // 定义表单
 const data = ref<any>({
   loading: false,
@@ -74,17 +74,16 @@ onBeforeUnmount(() => {
   }
 });
 // 获取数据
-function getDataList() {
+async function getDataList() {
   try {
     data.value.loading = true;
     const params = {
       ...data.value.search
     }
-    api.list(params).then((res: any) => {
-      data.value.loading = false;
-      data.value.dataList = res.data;
-      pagination.value.total = res.data.length;
-    });
+    const res = await api.list(params)
+    data.value.loading = false;
+    data.value.dataList = res.data;
+    pagination.value.total = res.data.length;
   } catch (error) {
 
   } finally {
@@ -187,10 +186,10 @@ onMounted(() => {
       getDataList();
     });
   }
-  formSearchList.value =[
-    {index: 1, show: true, type: 'input', modelName: 'id', placeholder: '角色ID'},
-    {index: 2, show: true, type: 'input', modelName: 'name', placeholder: '角色名称'}
-]
+  formSearchList.value = [
+    { index: 1, show: true, type: 'input', modelName: 'id', placeholder: '角色ID' },
+    { index: 2, show: true, type: 'input', modelName: 'name', placeholder: '角色名称' }
+  ]
 });
 
 </script>
@@ -198,37 +197,38 @@ onMounted(() => {
 <template>
   <div :class="{ 'absolute-container': data.tableAutoHeight }">
     <PageMain>
-      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="data.search" />
+      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange"
+        @onReset="onReset" :model="data.search" />
       <ElDivider border-style="dashed" />
       <ElSpace wrap>
         <ElButton type="primary" size="default" @click="onCreate">
           新增角色管理
         </ElButton>
       </ElSpace>
-      <ElTable v-loading="data.loading" class="my-4" :data="data.dataList" stripe highlight-current-row
-        height="100%" @sort-change="sortChange"    @selection-change="data.batch.selectionDataList = $event"
-        @current-change="handleCurrentChange" >
+      <ElTable v-loading="data.loading" class="my-4" :data="data.dataList" stripe highlight-current-row height="100%"
+        @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event"
+        @current-change="handleCurrentChange">
         <ElTableColumn v-if="data.batch.enable" type="selection" align="left" fixed />
-        <ElTableColumn prop="id" align="left" label="角色ID" >
-          <template #default="{row}">
+        <ElTableColumn prop="id" align="left" label="角色ID">
+          <template #default="{ row }">
             <div class="copyId tableSmall">
               <div class="id oneLine  ">ID: {{ row.id }}</div>
               <copy class="copy" :content="row.id" />
             </div>
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="roleName" align="left" label="角色名称" >
-          <template #default="{row}">
-            <div class="tableBig">{{row.roleName}}</div>
+        <ElTableColumn prop="roleName" align="left" label="角色名称">
+          <template #default="{ row }">
+            <div class="tableBig">{{ row.roleName }}</div>
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="count" align="left" label="账户数" >
-          <template #default="{row}">
-            <div class="tableBig">{{row.count}}</div>
+        <ElTableColumn prop="count" align="left" label="账户数">
+          <template #default="{ row }">
+            <div class="tableBig">{{ row.count }}</div>
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="remark" align="left" label="备注" >
-          <template #default="{row}">
+        <ElTableColumn prop="remark" align="left" label="备注">
+          <template #default="{ row }">
             <div class="flex-s  ">
               <div class="oneLine tableBig" style="width: calc(100% - 20px);">
                 {{ row.remark ? row.remark : "-" }}
@@ -258,7 +258,7 @@ onMounted(() => {
     </PageMain>
     <FormMode v-if="data.formMode === 'dialog' || data.formMode === 'drawer'" :id="data.formModeProps.id"
       v-model="data.formModeProps.visible" :row="data.formModeProps.row" :mode="data.formMode" @success="getDataList" />
-      <QuickEdit ref="QuickEditRef" @fetchData="getDataList" />
+    <QuickEdit ref="QuickEditRef" @fetchData="getDataList" />
   </div>
 </template>
 
@@ -331,8 +331,8 @@ onMounted(() => {
     display: block !important;
   }
 }
+
 .el-table__row:hover .edit {
   display: block;
 }
-
 </style>

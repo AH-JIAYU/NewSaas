@@ -548,8 +548,9 @@ const formOption = {
               <div class="oneLine" style="width: calc(100% - 1.25rem)">
                 <b class="tableBig">{{ row.clientName.split("/")[0] }}</b>
                 <div class="oneLine">
-                  <img :src="row.avatar" alt="" class="avatar" />
-                  <span class="">{{ row.chargeName }}</span>
+                  <!-- <img :src="row.avatar" alt="" class="avatar" />
+                  <span class="">{{ row.chargeName }}</span> -->
+                  PM：{{row.chargeName}}
                 </div>
               </div>
               <SvgIcon

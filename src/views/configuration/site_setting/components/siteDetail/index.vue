@@ -18,6 +18,8 @@ const formRef = ref()
 const fileDtailRef = ref()
 // listLoading
 const listLoading = ref<boolean>(false);
+// 获取租户id
+const tenantId = ref<any>();
 // 列表
 const list = ref<any>([]);
 const form = ref<any>({
@@ -122,6 +124,10 @@ async function showEdit(row: any) {
       form.value.certificateContent = row.certificateContent
       form.value.privateKeyContent = row.privateKeyContent
       form.value.domain = row.personalizedDomainName
+      const match = row.personalizedDomainName.match(/tenant(\d+)\.surveysaas\.(com|net)/);
+      if (match) {
+        tenantId.value = match[1];
+      }
       // fileList.value.forceHttps = row.forceHttps
       // 顶级域名是否生效
       form.value.isAnalysis = row.isAnalysis
@@ -614,7 +620,7 @@ defineExpose({
                   <div v-if="statusForm.supplierBackground" class="hoverSvg">
                     <p class="fineBom">{{ statusForm.supplierBackground }}</p>
                     <span class="c-fx">
-                      <copy class="copy" :content="statusForm.supplierBackground" />
+                      <copy class="copy" :content="`${statusForm.supplierBackground}/login?tenant_id=${tenantId}`" />
                     </span>
                   </div>
                   <el-text v-else>-</el-text>
@@ -667,7 +673,9 @@ defineExpose({
                   <div v-if="statusForm.memberBackground" class="hoverSvg">
                     <p class="fineBom">{{ statusForm.memberBackground }}</p>
                     <span class="c-fx">
-                      <copy class="copy" :content="statusForm.memberBackground" />
+                      <copy class="copy" :content="`${statusForm.memberBackground}/login?tenant_id=${tenantId}`" />
+                      <!-- `${statusForm.supplierBackground}?tenant_id=${tenantId}` -->
+                      <!-- statusForm.memberBackground -->
                     </span>
                   </div>
                   <el-text v-else>-</el-text>

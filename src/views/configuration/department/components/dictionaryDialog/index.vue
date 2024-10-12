@@ -315,7 +315,9 @@ onMounted(async () => {
           </el-select>
         </div>
         <div v-show="item.commissionStatus === 1" class="center mr">
-          <ElInput v-model="item.commission" placeholder="提成比例" style="max-width: 25rem;" clearable />
+          <ElInput v-model="item.commission" placeholder="提成比例" style="max-width: 25rem;" clearable >
+            <template #append>%</template>
+          </ElInput>
         </div>
       </div>
     </ElForm>
@@ -389,7 +391,7 @@ onMounted(async () => {
   }
 
   .el-input-group__append {
-    width: 12rem;
+    width: 5rem;
     padding: 0;
     background-color: #fff;
   }
