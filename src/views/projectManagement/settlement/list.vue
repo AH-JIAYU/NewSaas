@@ -444,16 +444,18 @@ function handleMoreOperating(command: string, row: any) {
           label="名称/标识"
         >
           <template #default="{ row }">
-            <b class="oneLine tableBig"
-              >名: {{ row.projectName ? row.projectName : "-" }}</b
-            >
-            <div class="oneLine">
-              标:
-              {{
-                row.customerName.split("/")[1] !== "null"
-                  ? row.customerName.split("/")[1]
-                  : "-"
-              }}
+            <div>
+              <b class="oneLine tableBig"
+                >名: {{ row.projectName ? row.projectName : "-" }}</b
+              >
+              <div class="oneLine">
+                标:
+                {{
+                  row.customerName.split("/")[1] !== "null"
+                    ? row.customerName.split("/")[1]
+                    : "-"
+                }}
+              </div>
             </div>
           </template>
         </el-table-column>

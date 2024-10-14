@@ -344,9 +344,34 @@ const formOption = {
           fixed="left"
           label="点击ID"
           ><template #default="{ row }">
+            <el-tag effect="dark" v-if="row.surveySource === 1" type="primary"
+              >内部人员</el-tag
+            >
+            <el-tag effect="dark" v-else type="warning">外部人员</el-tag>
             <div class="copyId tableSmall">
               <div class="id oneLine">ID: {{ row.id }}</div>
               <copy class="copy" :content="row.id" />
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="checkList.includes('randomIdentityId')"
+          align="left"
+          prop="randomIdentityId"
+          show-overflow-tooltip
+          label="随机身份"
+        >
+          <template #default="{ row }">
+            <div class="copyId tableSmall" v-if="row.surveySource === 1">
+              <span v-if="row.randomIdentityId" class="id oneLine">
+                ID: {{ row.randomIdentityId }}</span
+              >
+              <span v-else class="id"></span>
+              <copy
+                class="copy"
+                v-if="row.randomIdentityId"
+                :content="row.randomIdentityId"
+              />
             </div>
           </template>
         </el-table-column>
@@ -358,18 +383,58 @@ const formOption = {
           label="会员"
         >
           <template #default="{ row }">
-            <div v-if="row.memberId">
-              <el-tag effect="dark" v-if="row.surveySource === 1" type="primary"
-                >内部会员</el-tag
-              >
-              <el-tag effect="dark" v-else type="warning">外部会员</el-tag>
-              <div class="copyId tableSmall">
-                <span class="id oneLine"> ID: {{ row.memberId }}</span>
+            <div v-if="row.surveySource === 1">
+              <div v-if="row.memberId">
+                <div class="copyId tableSmall">
+                  <span class="id oneLine"> ID: {{ row.memberId }}</span>
 
-                <copy class="copy" :content="row.memberId" />
+                  <copy class="copy" :content="row.memberId" />
+                </div>
               </div>
+              <span v-else class="id"></span>
             </div>
-            <span v-else class="id">-</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="checkList.includes('memberChildId')"
+          align="left"
+          prop="memberChildId"
+          show-overflow-tooltip
+          label="子会员ID"
+        >
+          <template #default="{ row }">
+            <div v-if="row.surveySource === 1">
+              <div v-if="row.memberChildId">
+                <div class="copyId tableSmall">
+                  <span class="id oneLine"> ID: {{ row.memberChildId }}</span>
+
+                  <copy class="copy" :content="row.memberChildId" />
+                </div>
+              </div>
+              <span v-else class="id"></span>
+            </div>
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          v-if="checkList.includes('tenantSupplierId')"
+          align="left"
+          prop="tenantSupplierId"
+          show-overflow-tooltip
+          label="供应商ID"
+        >
+          <template #default="{ row }">
+            <div class="copyId tableSmall" v-if="row.surveySource === 1">
+              <span v-if="row.tenantSupplierId" class="id oneLine">
+                ID: {{ row.tenantSupplierId }}</span
+              >
+              <span v-else class="id"></span>
+              <copy
+                class="copy"
+                v-if="row.tenantSupplierId"
+                :content="row.tenantSupplierId"
+              />
+            </div>
           </template>
         </el-table-column>
         <el-table-column
@@ -387,70 +452,6 @@ const formOption = {
                 class="copy"
                 v-if="row.projectId"
                 :content="row.projectId"
-              />
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('memberChildId')"
-          align="left"
-          prop="memberChildId"
-          show-overflow-tooltip
-          label="子会员ID"
-        >
-          <template #default="{ row }">
-            <div v-if="row.memberChildId">
-              <el-tag effect="dark" v-if="row.surveySource === 1" type="primary"
-                >内部会员</el-tag
-              >
-              <el-tag effect="dark" v-else type="warning">外部会员</el-tag>
-              <div class="copyId tableSmall">
-                <span class="id oneLine"> ID: {{ row.memberChildId }}</span>
-
-                <copy class="copy" :content="row.memberChildId" />
-              </div>
-            </div>
-            <span v-else class="id">-</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('tenantSupplierId')"
-          align="left"
-          prop="tenantSupplierId"
-          show-overflow-tooltip
-          label="供应商ID"
-        >
-          <template #default="{ row }">
-            <div class="copyId tableSmall">
-              <span v-if="row.tenantSupplierId" class="id oneLine">
-                ID: {{ row.tenantSupplierId }}</span
-              >
-              <span v-else class="id">-</span>
-              <copy
-                class="copy"
-                v-if="row.tenantSupplierId"
-                :content="row.tenantSupplierId"
-              />
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('randomIdentityId')"
-          align="left"
-          prop="randomIdentityId"
-          show-overflow-tooltip
-          label="随机身份"
-        >
-          <template #default="{ row }">
-            <div class="copyId tableSmall">
-              <span v-if="row.randomIdentityId" class="id oneLine">
-                ID: {{ row.randomIdentityId }}</span
-              >
-              <span v-else class="id">-</span>
-              <copy
-                class="copy"
-                v-if="row.randomIdentityId"
-                :content="row.randomIdentityId"
               />
             </div>
           </template>
@@ -722,7 +723,7 @@ const formOption = {
                 >和解</el-tag
               >
             </div>
-            <el-text v-else>-</el-text>
+            <el-text v-else></el-text>
           </template>
         </ElTableColumn>
         <template #empty>
