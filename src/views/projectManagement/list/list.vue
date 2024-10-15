@@ -64,7 +64,7 @@ const columns = ref([
     sotrtable: true,
   },
   { prop: "allocationType", label: "分配类型", checked: true, sotrtable: true },
-  { prop: "doMoneyPrice", label: "原价", checked: true, sotrtable: true },
+  { prop: "doMoneyPrice", label: "项目价", checked: true, sotrtable: true },
   { prop: "ir", label: "IR/NIR", checked: true, sotrtable: true },
   { prop: "countryIdList", label: "区域地区", checked: true, sotrtable: true },
   {
@@ -123,7 +123,7 @@ function quickEdit(row: any, type: any) {
    * 参数  PCNL
     客户 customer
     名称/标识 name
-    原价 doMoneyPrice
+    项目价 doMoneyPrice
     IR ir
     备注 remark
   */
@@ -660,7 +660,7 @@ const formOption = {
           v-if="checkList.includes('doMoneyPrice')"
           show-overflow-tooltip
           align="left"
-          label="原价"
+          label="项目价"
           width="100"
         >
           <template #default="{ row }">

@@ -27,14 +27,14 @@ const rules = reactive<any>({
     { min: 2, max: 50, message: "内容在2-50个字之间", trigger: "blur" },
   ],
   chargeId: [
-    { required: true, message: "请选择负责人", trigger: "change" },
+    { required: true, message: "请选择PM", trigger: "change" },
   ],
 });
 
 const activeName = ref("basicSettings");
 const isEncryption = ref(false);
 const secretKeyConfigList = ref<any>([]);
-const dictionaryItemVisible = ref<any>(false) // 负责人组件显隐
+const dictionaryItemVisible = ref<any>(false) // PM组件显隐
 
 const changeConfigInfoList = (val: any) => {
   if (val) {
@@ -64,7 +64,7 @@ const changeCustomerConfigInfo = async (val: any, index: number) => {
     localToptTab.value.tenantCustomerConfigInfoList[index].secretKey = res.data;
   }
 };
-// 获取负责人/用户
+// 获取PM/用户
 const getTenantStaffList = async () => {
   const { data } = await apiUser.getTenantStaffList()
   staffList.value = data
@@ -134,7 +134,7 @@ nextTick(() => {
               </el-col>
               <el-col :span="12">
                 <el-form-item label="PM" prop="chargeId">
-                  <el-select v-model="localToptTab.chargeId" value-key="" placeholder="请选择负责人" clearable filterable>
+                  <el-select v-model="localToptTab.chargeId" value-key="" placeholder="请选择PM" clearable filterable>
                     <el-option v-for="item in staffList" :key="item.id" :label="item.userName" :value="item.id" />
                     <template #empty>
                       <div style="display: flex;justify-content: space-between;align-items:center;padding:0 1rem;">

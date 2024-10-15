@@ -56,8 +56,8 @@ const columns = ref<any>([
     sortable: true,
     checked: true,
   },
-  { label: "原价", prop: "projectAmount", sortable: true, checked: true },
-  { label: "所属区域", prop: "countryId", sortable: true, checked: true },
+  { label: "项目价", prop: "projectAmount", sortable: true, checked: true },
+  { label: "所属国家", prop: "countryId", sortable: true, checked: true },
   {
     label: "系统/审核完成数",
     prop: "systemDone",
@@ -444,16 +444,18 @@ function handleMoreOperating(command: string, row: any) {
           label="名称/标识"
         >
           <template #default="{ row }">
-            <b class="oneLine tableBig"
-              >名: {{ row.projectName ? row.projectName : "-" }}</b
-            >
-            <div class="oneLine">
-              标:
-              {{
-                row.customerName.split("/")[1] !== "null"
-                  ? row.customerName.split("/")[1]
-                  : "-"
-              }}
+            <div>
+              <b class="oneLine tableBig"
+                >名: {{ row.projectName ? row.projectName : "-" }}</b
+              >
+              <div class="oneLine">
+                标:
+                {{
+                  row.customerName.split("/")[1] !== "null"
+                    ? row.customerName.split("/")[1]
+                    : "-"
+                }}
+              </div>
             </div>
           </template>
         </el-table-column>
@@ -478,7 +480,7 @@ function handleMoreOperating(command: string, row: any) {
           v-if="checkList.includes('projectAmount')"
           show-overflow-tooltip
           align="left"
-          label="原价"
+          label="项目价"
           width="80"
         >
           <template #default="{ row }">

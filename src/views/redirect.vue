@@ -35,15 +35,15 @@ onMounted(async () => {
   try {
     data.value.loading = true;
     // 获取ip
-    const response = await fetch("https://qifu-api.baidubce.com/ip/local/geo/v1/district");
-    const res = await response.json();
-    const ip = res.ip;
+    // const response = await fetch("https://qifu-api.baidubce.com/ip/local/geo/v1/district");
+    // const res = await response.json();
+    // const ip = res.ip;
     const status: any = route.query.status;
     const uid: any = route.query.uid;
     const params = {
       uid: uid,
       status: status,
-      ip: ip,
+      // ip: ip,
     };
     const resRedirect = await api.redirection(params);
     const URL = resRedirect.data.status;

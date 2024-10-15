@@ -20,7 +20,7 @@ const data = ref<any>({
       { required: true, message: "请输入价格比例", trigger: "blur" },
     ],
     chargeUserId: [
-      { required: true, message: "请选择负责人", trigger: "change" },
+      { required: true, message: "请选择PM", trigger: "change" },
     ],
   },
 });
@@ -48,7 +48,7 @@ const dataList = computed(() => {
   }
   return [];
 });
-// 获取负责人/用户
+// 获取PM/用户
 const getTenantStaffList = async () => {
   const res = await apiUser.getTenantStaffList();
   data.value.tenantStaffList = res.data;
@@ -151,7 +151,7 @@ defineExpose({
               ><template #append>%</template></el-input
             >
           </el-form-item>
-          <el-form-item label="负责人" prop="chargeUserId">
+          <el-form-item label="PM" prop="chargeUserId">
             <el-select
               v-model="data.form.chargeUserId"
               clearable

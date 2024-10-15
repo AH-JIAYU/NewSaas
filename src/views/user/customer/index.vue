@@ -48,7 +48,7 @@ const columns = ref([
     sortable: true,
     prop: "customerShortName",
   },
-  { label: "负责人", checked: true, sortable: true, prop: "chargeName" },
+  { label: "PM", checked: true, sortable: true, prop: "chargeName" },
   { label: "关联项目数", checked: true, sortable: true, prop: "projectNumber" },
   { label: "客户状态", checked: true, sortable: true, prop: "customerStatus" },
   {
@@ -98,7 +98,7 @@ function quickEdit(row: any, type: any) {
   /**
    * customerAccord 客户名称
      customerShortName  客户简称
-     chargeName 负责人
+     chargeName PM
   */
   QuickEditRef.value.showEdit(row, type)
 }
@@ -130,7 +130,7 @@ const queryForm = reactive<any>({
   customerStatus: null,
   antecedentQuestionnaire: null,
 });
-// 获取负责人/用户
+// 获取PM/用户
 const getTenantStaffList = async () => {
   const { data } = await apiUser.getTenantStaffList()
   staffList.value = data
@@ -262,7 +262,7 @@ const formOption={
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('chargeName')" align="left" prop="chargeName" show-overflow-tooltip
-          label="负责人"><template #default="{ row }">
+          label="PM"><template #default="{ row }">
             <div class="flex-c tableBig">
               <div class="oneLine" style="width: calc(100% - 20px);">
                 <el-text v-for="item in staffList" :key="item.id">

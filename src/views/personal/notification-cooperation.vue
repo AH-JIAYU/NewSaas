@@ -8,14 +8,14 @@ defineOptions({
 const emit = defineEmits(["delSelectId"]);
 const notificationStore = useNotificationStore();
 const data = ref<any>({});
-const dialogTableVisible = ref<any>(false); // 同意合作-负责人弹框
-const tenantStaffList = ref<any>([]); // 负责人
+const dialogTableVisible = ref<any>(false); // 同意合作-PM弹框
+const tenantStaffList = ref<any>([]); // PM
 
 const FormRef = ref<any>();
 const FormRules = {
   priceRatio: [{ required: true, message: "请输入价格比例", trigger: "blur" }],
   beInvitationChargeUserId: [
-    { required: true, message: "请选择负责人", trigger: "change" },
+    { required: true, message: "请选择PM", trigger: "change" },
   ],
 };
 
@@ -24,7 +24,7 @@ const showEdit = async (row: any) => {
   data.value = row;
   read();
 };
-// 获取负责人/用户
+// 获取PM/用户
 const getTenantStaffList = async () => {
   const res = await apiUser.getTenantStaffList();
   tenantStaffList.value = res.data;
@@ -99,14 +99,14 @@ defineExpose({
         </el-button>
       </div>
     </div>
-    <el-dialog v-model="dialogTableVisible" title="添加负责人">
+    <el-dialog v-model="dialogTableVisible" title="添加PM">
       <ElForm ref="FormRef" :rules="FormRules" :model="data" label-width="7rem">
         <el-form-item label="价格比例" prop="priceRatio">
           <el-input v-model="data.priceRatio" clearable
             ><template #append>%</template></el-input
           >
         </el-form-item>
-        <el-form-item label="负责人" prop="beInvitationChargeUserId">
+        <el-form-item label="PM" prop="beInvitationChargeUserId">
           <el-select
             v-model="data.beInvitationChargeUserId"
             clearable

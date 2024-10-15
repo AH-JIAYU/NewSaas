@@ -111,7 +111,7 @@ const rules = reactive<any>({
     { validator: validateUrlRegistered, trigger: "blur" },
   ],
   releaseTime: [{ validator: validateReleaseTime, trigger: "blur" }],
-  doMoneyPrice: [{ required: true, message: "请输入原价", trigger: "blur" }],
+  doMoneyPrice: [{ required: true, message: "请输入项目价", trigger: "blur" }],
   num: [{ required: true, message: "请输入配额", trigger: "blur" }],
   minimumDuration: [
     { required: true, message: "请输入最小分长", trigger: "blur" },
@@ -674,7 +674,7 @@ nextTick(() => {
           </el-row>
           <el-row :gutter="20">
             <el-col :span="6">
-              <el-form-item label="原价" prop="doMoneyPrice">
+              <el-form-item label="项目价" prop="doMoneyPrice">
                 <el-input-number
                   style="height: 2rem"
                   v-model="localToptTab.doMoneyPrice"
@@ -1083,7 +1083,21 @@ nextTick(() => {
             </el-col>
             <el-col :span="1"> </el-col>
             <el-col :span="4" class="flex">
-              <el-form-item label="允许重复参与" class="flex m-0">
+              <el-form-item label="" class="flex m-0">
+                <template #label>
+                  <div>
+                    允许重复参与<el-tooltip
+                      class="tooltips"
+                      placement="top"
+                    >
+                    <template #content>
+                      <div>开启：ip和随机id都可以重复</div>
+                      <div>关闭：ip和随机id都不可以重复</div>
+                    </template>
+                      <SvgIcon class="SvgIcon2" name="i-ri:question-line" />
+                    </el-tooltip>
+                  </div>
+                </template>
                 <el-switch
                   v-model="localToptTab.ipDifferenceDetection"
                   :active-value="1"
@@ -1114,7 +1128,7 @@ nextTick(() => {
             </el-col>
           </el-row> -->
         </el-card>
-        <div class="hui">举例</div>
+        <!-- <div class="hui">举例</div>
         <div class="hui">
           小时准入量【5】：10:00~11:00时间区间只能5人参与该项目
         </div>
@@ -1123,7 +1137,7 @@ nextTick(() => {
         </div>
         <div class="hui">
           允许重复参与：开启后，小明同学做调查可以对该项目一直重复做
-        </div>
+        </div> -->
       </el-tab-pane>
     </el-tabs>
     <customerEdit ref="editRef" @fetch-data="getCustomerList" />

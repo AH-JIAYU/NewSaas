@@ -192,7 +192,7 @@ defineExpose({
           <div class="card-header">
             <div class="leftTitle">
               小组信息<span style="margin-left: 20px; font-size: 14px"
-                >负责人:<el-text v-for="item in staffList" :key="item.id">
+                >PM:<el-text v-for="item in staffList" :key="item.id">
               <el-text v-if="item.id === form.director">
                 {{ item.name }}
               </el-text>

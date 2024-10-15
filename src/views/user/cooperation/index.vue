@@ -39,7 +39,7 @@ const columns = ref([
     prop: "beInvitationTenantName",
   },
   {
-    label: "负责人",
+    label: "PM",
     checked: true,
     sortable: true,
     prop: "userName",
@@ -176,7 +176,7 @@ const tableList = computed(() => {
 // 快速编辑
 function quickEdit(row: any, type: any) {
   /**
-   * 负责人  chargeUserId
+   * PM  chargeUserId
    */
   QuickEditRef.value.showEdit(row, type);
 }
@@ -270,7 +270,7 @@ onMounted(() => {
           align="left"
           prop="userName"
           show-overflow-tooltip
-          label="负责人"
+          label="PM"
         >
           <template #default="{ row }">
             <div class="flex-s">

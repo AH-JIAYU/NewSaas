@@ -59,7 +59,7 @@ const columns = ref([
   { prop: "allocationType", label: "分配类型", sortable: true, checked: true },
   {
     prop: "doMoneyPrice",
-    label: "原价",
+    label: "项目价",
     sortable: true,
     checked: true,
   },
@@ -306,7 +306,7 @@ const formOption={
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('doMoneyPrice')" width="80" align="left" prop="h"
-          show-overflow-tooltip label="原价">
+          show-overflow-tooltip label="项目价">
           <template #default="{ row }">
             <el-text>
               <CurrencyType />
