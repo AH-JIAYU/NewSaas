@@ -259,9 +259,9 @@ onMounted(async () => {
                     <el-option v-for="item in data.vipGroupList" :key="item.memberGroupId" :label="item.memberGroupName"
                       :value="item.memberGroupId" />
                   </el-select> -->
-                  <el-tree style="max-width: 600px" ref="treeRef" :data="data.departmentList" show-checkbox
+                  <!-- <el-tree style="max-width: 600px" ref="treeRef" :data="data.departmentList" show-checkbox
                     check-strictly node-key="id" :default-expanded-keys="[]" default-expand-all :props="defaultProps"
-                    @check-change="handleNodeClick" />
+                    @check-change="handleNodeClick" /> -->
                 </el-form-item>
               </el-col>
             </el-row>
