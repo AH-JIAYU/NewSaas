@@ -18,10 +18,10 @@ export default {
   // 项目分配回显-当项目状态等于已分配调用此接口,如果是未分配不需要调用此接口
   getProjectAllocation: (data: any) => api.post("project/getProjectAllocation", data),
 
-  // 项目选中的国家id集合查询国家列表 "countryIdList": []
+  // 项目选中的区域id集合查询区域列表 "countryIdList": []
   getProjectCountryList: (data: any) =>
     api.post("project/getProjectCountryList", data),
-  // 根据国家id查询题库目录
+  // 根据区域id查询题库目录
   getProjectCategoryList: (data: any) =>
     api.post("project/getProjectCategoryList", data),
   // 根据题库目录问卷名称id查询具体的问题和答案列表

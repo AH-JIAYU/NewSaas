@@ -33,9 +33,9 @@ interface Dict {
 const usePositionManage = usePositionManageStore();
 // 职位数据
 const positionManageList = ref<any>();
-// 国家
+// 区域
 const useStoreCountry = useBasicDictionaryStore();
-// 国家数据
+// 区域数据
 const filterCountry = ref<any>([]);
 // 部门
 const departmentStore = useDepartmentStore();
@@ -61,7 +61,7 @@ const columns = ref<any>([
     checked: true,
   },
   // { label: "姓名", prop: "name", sortable: true, checked: true },
-  // { label: "国家", prop: "country", sortable: true, checked: true },
+  // { label: "区域", prop: "country", sortable: true, checked: true },
   { label: "电话号码", prop: "phoneNumber", sortable: true, checked: true },
   { label: "邮箱", prop: "email", sortable: true, checked: true },
   { label: "部门", prop: "departmentId", sortable: true, checked: true },
@@ -341,7 +341,7 @@ onMounted(async () => {
   try {
     // loading加载开始
     dataForm.value.loading = true;
-    // 国家
+    // 区域
     filterCountry.value = await useStoreCountry.getCountry();
     // 部门
     departmentList.value = await departmentStore?.getDepartment() || [];

@@ -51,7 +51,7 @@ const columns = ref<Array<Object>>([
     prop: "supplierAccord",
   },
   {
-    label: "国家",
+    label: "区域",
     checked: true,
     sortable: true,
     prop: "countryAffiliationName",
@@ -306,7 +306,7 @@ const formOption={
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('countryAffiliationName')" align="left"
-          prop="countryAffiliationName" show-overflow-tooltip label="国家"> <template #default="{ row }">
+          prop="countryAffiliationName" show-overflow-tooltip label="区域"> <template #default="{ row }">
             <el-tag type="primary">{{ row.countryAffiliationName }}</el-tag>
           </template>
         </el-table-column>

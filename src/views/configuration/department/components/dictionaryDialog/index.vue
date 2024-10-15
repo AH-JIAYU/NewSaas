@@ -150,19 +150,19 @@ async function onSubmit() {
               const obj = {
                 id: item.id,
                 userId: item.userId,
-                commission: item.commission,
-                commissionTime: item.commissionTime,
-                commissionStatus: item.commissionStatus,
-                commissionType: item.commissionType,
+                commission: item.commission || 0,
+                commissionTime: item.commissionTime || 0,
+                commissionStatus: item.commissionStatus || 0,
+                commissionType: item.commissionType || 0,
               }
               form.value.organizationalStructurePersonList.push(obj)
             } else {
               const obj = {
                 userId: item.id,
-                commission: item.commission,
-                commissionTime: item.commissionTime,
-                commissionStatus: item.commissionStatus,
-                commissionType: item.commissionType,
+                commission: item.commission || 0,
+                commissionTime: item.commissionTime || 0,
+                commissionStatus: item.commissionStatus || 0,
+                commissionType: item.commissionType || 0,
               }
               form.value.organizationalStructurePersonList.push(obj)
             }
@@ -188,7 +188,6 @@ async function onSubmit() {
           } else {
             response = await api.edit(params);
           }
-
           const { status } = response;
           if (status === 1) {
             ElMessage.success({
@@ -338,7 +337,7 @@ onMounted(async () => {
   align-items: center;
   justify-content: flex-start;
   margin-bottom: 1rem;
-  margin-left: 7.0625rem;
+  margin-left: 4.0625rem;
 
   .center {
     display: flex;
@@ -394,6 +393,10 @@ onMounted(async () => {
     width: 5rem;
     padding: 0;
     background-color: #fff;
+  }
+
+  .el-select {
+    min-width: 6.5625rem;
   }
 
   .el-tag {

@@ -16,7 +16,7 @@ import empty from '@/assets/images/empty.png'
 defineOptions({
   name: 'manager',
 })
-// 国家
+// 区域
 const useStoreCountry = useBasicDictionaryStore()
 const filterCountry = ref<any>([])
 // 角色码
@@ -61,7 +61,7 @@ const data = ref<any>({
   // 列表数据
   dataList: [],
 })
-// 筛选国家
+// 筛选区域
 const list = ref<any>()
 onMounted(async () => {
   getDataList()
@@ -275,7 +275,7 @@ function onDel(row: any) {
             </el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="mobile" label="国家" width="150" align="left">
+        <ElTableColumn prop="mobile" label="区域" width="150" align="left">
           <template #default="{ row }">
             <div v-for="item in filterCountry" :key="item.id" class="mx-1">
               <el-tag type="primary" v-if="item.code === row.country" class="mx-1">

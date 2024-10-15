@@ -12,7 +12,7 @@ defineOptions({
 const avatarStore = useAvatarStore();
 //基础字典
 const basicDictionaryStore = useBasicDictionaryStore();
-// 国家list
+// 区域list
 const countryList = ref<any>([]);
 const countryData = ref<any>();
 // editRef

@@ -66,7 +66,7 @@ const columns = ref([
   { prop: "allocationType", label: "分配类型", checked: true, sotrtable: true },
   { prop: "doMoneyPrice", label: "原价", checked: true, sotrtable: true },
   { prop: "ir", label: "IR/NIR", checked: true, sotrtable: true },
-  { prop: "countryIdList", label: "国家地区", checked: true, sotrtable: true },
+  { prop: "countryIdList", label: "区域地区", checked: true, sotrtable: true },
   {
     prop: "allocationStatus",
     label: "分配状态",
@@ -87,7 +87,7 @@ const search = ref<any>({
   name: "", // 	项目名称模糊匹配
   projectIdentification: "", // 	项目标识模糊查询
   clientId: "", // 	所属客户编号Id
-  countryId: [], // 所属国家编号Id
+  countryId: [], // 所属区域编号Id
   createName: "", // 	创建人-模糊查询
   allocation: "", // 	分配状态:1已经分配 2:未分配
   allocationStatus: "", // 	分配类型: 1:自动分配 2:供应商 3:会员组
@@ -205,7 +205,7 @@ function onReset() {
     name: "", // 	项目名称模糊匹配
     projectIdentification: "", // 	项目标识模糊查询
     clientId: "", // 	所属客户编号Id
-    countryId: [], // 所属国家编号Id
+    countryId: [], // 所属区域编号Id
     createName: "", // 	创建人-模糊查询
     allocation: "", // 	分配状态:1已经分配 2:未分配
     allocationStatus: "", // 	分配类型: 1:自动分配 2:供应商 3:会员组
@@ -246,7 +246,7 @@ const selectable = (row: any) => {
     .map((item: any) => item.projectId);
   return !filterDataId.includes(row.projectId);
 };
-const countryList: any = ref([]); //所有国家一维
+const countryList: any = ref([]); //所有区域一维
 const customerList: any = ref([]); //客户列表
 // 具体的位置信息
 const comCountryId = computed(() => (countryIdList: any) => {
@@ -292,7 +292,7 @@ onMounted(async () => {
       show: true,
       type: "select",
       modelName: "countryId",
-      placeholder: "国家地区",
+      placeholder: "区域地区",
       option: "global",
       optionLabel: "chineseName",
       optionValue: "id",
@@ -706,7 +706,7 @@ const formOption = {
           show-overflow-tooltip
           prop="countryIdList"
           align="left"
-          label="国家"
+          label="区域"
           width="80"
         >
           <template #default="{ row }">

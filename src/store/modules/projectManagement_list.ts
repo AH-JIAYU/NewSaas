@@ -16,7 +16,7 @@ const useProjectManagementListStore = defineStore(
       name: "", //项目名称
       projectIdentification: "", // 项目标识
       clientId: null, //	所属客户编号id(客户表主键)
-      countryIdList: [], //所属国家编号id(国家表主键)
+      countryIdList: [], //所属区域编号id(区域表主键)
       doMoneyPrice: null, //原价-美元
       num: null, //配额
       minimumDuration: null, //最小时长/分-这么问卷需要做多长时间,没有到设定的分钟,甄别
@@ -48,7 +48,7 @@ const useProjectManagementListStore = defineStore(
         configurationInformation: {
           // 问题初始数据
           initialProblem: {
-            countryId: null, //问卷对应国家id
+            countryId: null, //问卷对应区域id
             projectProblemCategoryId: null, //问题类别id
             projectQuotaQuestionType: null, //问题类型:1:总控问题 2:租户自己问题
             projectProblemId: null, //	前置问卷问题id
@@ -58,7 +58,7 @@ const useProjectManagementListStore = defineStore(
             projectAnswerIdList: [], //	前置问卷答案id,
           },
 
-          configurationCountryList: null, // 配置信息-国家
+          configurationCountryList: null, // 配置信息-区域
           projectCategoryList: null, //题库目录
           ProjectProblemInfoList: [], // 问题列表 - 显示
         },
@@ -75,7 +75,7 @@ const useProjectManagementListStore = defineStore(
         val: '所属客户'
       },
       countryIdList: {
-        val: '所属国家'
+        val: '所属区域'
       },
       doMoneyPrice: {
         val: '原价'
@@ -155,7 +155,7 @@ const useProjectManagementListStore = defineStore(
     };
     // 问题 答案 初始数据
     const initialProblem = {
-      countryId: null, //问卷对应国家id
+      countryId: null, //问卷对应区域id
       projectProblemCategoryId: null, //问题类别id
       projectQuotaQuestionType: null, //问题类型:1:总控问题 2:租户自己问题
       projectProblemId: null, //	前置问卷问题id

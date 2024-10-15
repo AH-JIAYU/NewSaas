@@ -55,7 +55,7 @@ const columns = ref([
   //   sortable: true,
   //   checked: true,
   // },
-  { prop: "memberName", label: "所属组", sortable: true, checked: true },
+  { prop: "memberName", label: "部门", sortable: true, checked: true },
   { prop: "allocationType", label: "分配类型", sortable: true, checked: true },
   {
     prop: "doMoneyPrice",
@@ -69,7 +69,7 @@ const columns = ref([
     sortable: true,
     checked: true,
   },
-  { prop: "ipBelong", label: "国家/IP", sortable: true, checked: true },
+  { prop: "ipBelong", label: "区域/IP", sortable: true, checked: true },
   { prop: "surveyTime", label: "调查时间", sortable: true, checked: true },
   { prop: "surveyStatus", label: "调查状态", sortable: true, checked: true },
   { prop: "viceStatus", label: "副状态", sortable: true, checked: true },
@@ -280,7 +280,7 @@ const formOption={
           </template>
         </el-table-column> -->
         <el-table-column v-if="checkList.includes('memberName')" width="150" align="left" prop="memberName"
-          show-overflow-tooltip label="所属组">
+          show-overflow-tooltip label="部门">
           <template #default="{ row }">
             <div v-if="row.memberName" class="hoverSvg">
               <el-text style="font-weight: 700;color: #333333;">{{ row.memberName.split('/')[0] }}</el-text>
@@ -328,7 +328,7 @@ const formOption={
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('ipBelong')" align="left" width="130" prop="ipBelong"
-          show-overflow-tooltip label="国家/IP">
+          show-overflow-tooltip label="区域/IP">
           <template #default="{ row }">
             <div v-if="row.ipBelong" class="hoverSvg">
               <el-tag style="font-weight: 700;">{{ row.ipBelong.split("/")[1]

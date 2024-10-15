@@ -14,7 +14,7 @@ const tenantStaffStore = useTenantStaffStore();
 const staffList = ref<any>([]);
 // 职位
 const positionManageList = ref<any>();
-// 国家
+// 区域
 const useStoreCountry = useBasicDictionaryStore();
 const country = ref();
 // 角色码
@@ -56,7 +56,7 @@ const form = ref<any>({
   phone: "",
   // 邮箱
   email: "",
-  // 国家
+  // 区域
   country: "",
   // 类型 phone/email
   type: "",
@@ -198,6 +198,7 @@ function onSubmit() {
               center: true,
             });
             emits("success");
+            emits("getList");
             onCancel();
           });
         }
@@ -216,41 +217,22 @@ const flattenDeep = (arr: any) => {
     []
   );
 };
-
-const handleNodeClick = (nodeData: any, checked: any) => {
+// 树选中事件
+const handleNodeClick = (nodeData:any, checked:any) => {
   if (checked) {
-    // 如果选中该节点，禁用所有其他节点
-    disableAllNodes(nodeData.id);
+    // 选中新的节点时，取消其他选中的节点
+    const checkedKeys = treeRef.value.getCheckedKeys(); // 获取当前所有选中的节点
+    checkedKeys.forEach((key:any) => {
+      if (key !== nodeData.id) {
+        treeRef.value.setChecked(key, false); // 取消选中其他节点
+      }
+    });
+    // 更新当前选中的节点 ID
+    departmentId.value = [nodeData.id]; // 只保留当前选中节点 ID
   } else {
-    // 如果取消选中，恢复所有节点为可选
-    enableAllNodes();
+    // 如果取消选中节点，更新 departmentId
+    departmentId.value = departmentId.value.filter((id:any) => id !== nodeData.id);
   }
-};
-
-// 禁用所有节点（除了选中的节点）
-const disableAllNodes = (selectedId: any) => {
-  const traverse = (nodes: any) => {
-    nodes.forEach((node: any) => {
-      node.disabled = node.id !== selectedId; // 仅将非选中节点禁用
-      if (node.children) {
-        traverse(node.children); // 递归处理子节点
-      }
-    });
-  };
-  traverse(departmentList.value);
-};
-
-// 恢复所有节点为可选
-const enableAllNodes = () => {
-  const traverse = (nodes: any) => {
-    nodes.forEach((node: any) => {
-      node.disabled = false; // 恢复为可选
-      if (node.children) {
-        traverse(node.children); // 递归处理子节点
-      }
-    });
-  };
-  traverse(departmentList.value);
 };
 
 onMounted(async () => {
@@ -272,12 +254,12 @@ onMounted(async () => {
   const res = await apiDep.list({ name: '' })
   // 部门
   departmentList.value = res.data
-  // 国家
+  // 区域
   country.value = await useStoreCountry.getCountry();
   // 默认先择对应的部门,并禁用其他部门
-  if (departmentId.value.length > 0) {
-    disableAllNodes(departmentId.value[0]);
-  }
+  // if (departmentId.value.length > 0) {
+  //   disableAllNodes(departmentId.value[0]);
+  // }
   // 编辑
   if (props.id !== "" && props.row) {
     formRules.value.password = [];
@@ -317,10 +299,10 @@ onMounted(async () => {
             </el-form-item>
           </el-col>
           <!-- <el-col :span="8">
-            <el-form-item label="国家" prop="country">
+            <el-form-item label="区域" prop="country">
               <ElSelect
                 v-model="form.country"
-                placeholder="请选择国家"
+                placeholder="请选择区域"
                 clearable
                 filterable
                 tabindex="2"

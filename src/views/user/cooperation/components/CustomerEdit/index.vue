@@ -137,7 +137,7 @@ defineExpose({
         >
           <el-table-column prop="name" label="用户名" />
           <el-table-column prop="tenantName" label="公司名称" />
-          <el-table-column prop="country" label="国家" />
+          <el-table-column prop="country" label="区域" />
           <el-table-column label="电子邮箱/手机号">
             <template #default="{ row }">
               <span v-if="row.phone">{{ row.phone }}</span>

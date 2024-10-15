@@ -16,7 +16,7 @@ const data = ref<any>({
   tableData: [],//表格
   staffList:[],//用户
 });
-const countryList: any = ref([]); //所有国家一维
+const countryList: any = ref([]); //所有区域一维
 
 // 显隐
 async function showEdit(row: any) {
@@ -70,7 +70,7 @@ defineExpose({
         <el-table-column   show-overflow-tooltip prop="projectIdentification" width="100" align="left"
           label="项目名称"></el-table-column>
         <el-table-column  show-overflow-tooltip prop="countryIdList"
-          align="left" label="国家" width="100">
+          align="left" label="区域" width="100">
           <template #default="{ row }">
             <template v-if="row.countryIdList">
               <template v-if="row.countryIdList.length === basicDictionaryStore.country.length">

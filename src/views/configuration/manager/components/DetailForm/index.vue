@@ -30,7 +30,7 @@ const form = ref<any>({
   phone: '',
   // 用户名
   name: '',
-  // 国家
+  // 区域
   country: '',
   // 密码
   password: '',
@@ -203,8 +203,8 @@ function onCancel() {
       <ElFormItem label="用户名" prop="name">
         <ElInput v-model="form.name" placeholder="请输入用户名" />
       </ElFormItem>
-      <ElFormItem label="国家" prop="country">
-        <ElSelect v-model="form.country" placeholder="请选择国家" clearable filterable tabindex="2">
+      <ElFormItem label="区域" prop="country">
+        <ElSelect v-model="form.country" placeholder="请选择区域" clearable filterable tabindex="2">
           <ElOption v-for="item in country" :label="item.chineseName" :value="item.code"></ElOption>
         </ElSelect>
       </ElFormItem>

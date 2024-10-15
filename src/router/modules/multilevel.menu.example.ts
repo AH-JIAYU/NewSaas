@@ -443,7 +443,7 @@ const routes: any = [
   //           component: () =>
   //             import("@/views/otherFunctions/nationalTable/list.vue"),
   //           meta: {
-  //             title: "国家对照表",
+  //             title: "区域对照表",
   //           },
   //         },
   //         {

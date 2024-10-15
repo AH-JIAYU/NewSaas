@@ -15,7 +15,7 @@ const FormSearchStore = useFormSearchStore(); //筛选项配置
 const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
 const sortRef = ref<any>()//排序组件ref
 const formSearchList = ref<any>([])
-const countryList = ref<any>([])//国家
+const countryList = ref<any>([])//区域
 
 const searchTypes: any = {
   "department": 0,
@@ -84,7 +84,7 @@ const showLength = computed(() => {
 })
 watch(
   () => props.formSearchList,
-  (newVal, oleVal) => { 
+  (newVal, oleVal) => {
     // @ts-ignore
     const newFormSearchList = cloneDeep(findCurrent() ?? newVal)
     newFormSearchList.forEach(async (item: any) => {

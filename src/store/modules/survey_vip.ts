@@ -16,7 +16,7 @@ const useSurveyVipStore = defineStore(
     const initialTopTabsData = {
       memberNickname: "", //  	会员昵称,确保唯一性
       memberLevelId: "", // 会员等级表主键
-      subordinateCountryId: "", // 所属国家id
+      subordinateCountryId: "", // 所属区域id
       memberName: "", // 会员姓名
       memberPhone: "", // 会员手机号
       emailAddress: "", // 电子邮箱

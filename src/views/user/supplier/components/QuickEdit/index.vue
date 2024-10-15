@@ -27,7 +27,7 @@ const data = ref<any>({
       { required: true, message: "请选择会员等级", trigger: "change" },
     ],
     subordinateCountryId: [
-      { required: true, message: "请选择国家", trigger: "change" },
+      { required: true, message: "请选择区域", trigger: "change" },
     ],
     supplierLevelId: [
       { required: true, message: "请选择供应商等级", trigger: "change" },
@@ -65,7 +65,7 @@ async function showEdit(row: any, FormType: any) {
 async function onSubmit() {
   data.value.loading = true;
   formRef.value.validate(async (valid: any) => {
-    if (valid) { 
+    if (valid) {
       const { status } = await api.edit(data.value.formData);
       status === 1 &&
         ElMessage.success({

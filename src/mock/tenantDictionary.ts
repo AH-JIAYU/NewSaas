@@ -4,7 +4,7 @@ import { defineFakeRoute } from "vite-plugin-fake-server/client";
 const dictionaryList = [
   {
     id: 1,
-    label: "国家",
+    label: "区域",
     code: "test",
     items: [
       {

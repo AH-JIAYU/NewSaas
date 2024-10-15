@@ -35,7 +35,7 @@ const rules = reactive<any>({
     { required: true, message: "请选择会员等级", trigger: "change" },
   ],
   subordinateCountryId: [
-    { required: true, message: "请选择国家", trigger: "change" },
+    { required: true, message: "请选择区域", trigger: "change" },
   ],
   supplierLevelId: [
     { required: true, message: "请选择供应商等级", trigger: "change" },
@@ -87,7 +87,7 @@ const changeCountryId = (val: any) => {
     }
   }
 };
-// 所属国家全选
+// 所属区域全选
 const selectAll = () => {
   props.leftTab.relevanceCountryIdList = [];
   if (data.checked) {
@@ -107,10 +107,10 @@ const changeRelevanceCountryIdList = () => {
 };
 // 需要用到的数据
 const data = reactive<any>({
-  checked: false, //所属国家的全选按钮
+  checked: false, //所属区域的全选按钮
   relatedCustomers: [], // 关联客户
   payMethod: userSupplier.payMethod, // 付款方式
-  countryList: [], // 国家
+  countryList: [], // 区域
   supplierLevelList: [], // 供应商等级
 });
 
@@ -179,7 +179,7 @@ nextTick(() => {
             </el-row>
             <el-row :gutter="10">
               <el-col :span="8">
-                <el-form-item label="所属国家" prop="subordinateCountryId">
+                <el-form-item label="所属区域" prop="subordinateCountryId">
                   <el-select clearable filterable v-model="props.leftTab.subordinateCountryId"
                     @change="changeCountryId">
                     <el-option v-for="item in data.countryList" :key="item.id" :value="item.id"

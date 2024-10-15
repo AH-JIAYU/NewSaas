@@ -8,7 +8,7 @@ import empty from "@/assets/images/empty.png";
 defineOptions({
   name: "memberSurveyRecords",
 });
-// 国家
+// 区域
 const useStoreCountry = useBasicDictionaryStore();
 // 客户
 const customerStore = useUserCustomerStore();
@@ -128,7 +128,7 @@ const data = reactive<any>({
   ],
   //客户列表
   customerList: [],
-  // 国家
+  // 区域
   countryList: [],
   // 会员
   vipList: [],
@@ -473,7 +473,7 @@ const formOption = {
           prop="ipBelong"
           show-overflow-tooltip
           width="150"
-          label="IP/国家"
+          label="IP/区域"
         >
           <template #default="{ row }">
             <el-tag type="primary"> {{ row.ipBelong.split("/")[1] }} </el-tag>

@@ -246,7 +246,7 @@ onBeforeUnmount(() => {
           </template>
         </ElTableColumn>
         <!-- <ElTableColumn v-if="data.checkList.includes('groupId')" show-overflow-tooltip align="left" prop="groupId"
-          width="150" label="所属组">
+          width="150" label="部门">
           <template #default="{ row }">
             <el-text v-if="row.groupId">
               <el-text v-for="item in groupManageList">

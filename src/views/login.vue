@@ -251,7 +251,7 @@ const typeList = [
   { label: "公司", value: "company" },
   // { label: "个人", value: "personal" },
 ];
-// 国家list
+// 区域list
 const countryList = ref<any>([]);
 const registerForm = ref<any>({
   // 账号
@@ -264,7 +264,7 @@ const registerForm = ref<any>({
   phoneNumber: "",
   // 验证码
   code: "",
-  //国家
+  //区域
   country: "",
   // 注册方式 phone/email
   type: "phone",
@@ -319,7 +319,7 @@ const registerRules = ref<FormRules>({
     { validator: validatePhoneRegistered, trigger: "blur" },
   ],
   code: [{ required: true, trigger: "blur", message: "请输入验证码" }],
-  country: [{ required: true, trigger: "change", message: "请选择国家" }],
+  country: [{ required: true, trigger: "change", message: "请选择区域" }],
   name: [{ required: true, trigger: "blur", message: "请输入用户名" }],
   password: [
     { required: true, trigger: "blur", message: "请输入密码" },
@@ -349,7 +349,7 @@ const registerSendCode = debounce(async (params: any) => {
 }, 1000)
 // 获取验证码
 const mobileVerificationCode = async () => {
-  // 首先，验证国家选择
+  // 首先，验证区域选择
   const countryValid = await registerFormRef.value.validateField('country');
   registerFormRef.value.validateField(
     registerForm.value.country === "CN" ? "phoneNumber" : "email",
@@ -560,7 +560,7 @@ watch(
           email: "", //邮箱
           phoneNumber: "", //手机号码
           code: "", // 验证码
-          country: "", //国家
+          country: "", //区域
           type: "phone", // 注册方式 phone/email
           // isInvitation: 2, // 租户邀约
           agreeToTheAgreement: false,
@@ -579,12 +579,12 @@ watch(
         };
         break;
     }
-    // 注册 获取国家
+    // 注册 获取区域
     if (newValue === "register") {
       const res = await apiCountry.itemlist({
         page: 1,
         limit: -1,
-        id: "32", // 国家
+        id: "32", // 区域
       });
       countryList.value = res.data.records;
     }
@@ -729,7 +729,7 @@ const agreements = (val: any) => {
             </ElInput>
           </ElFormItem>
           <ElFormItem prop="country">
-            <ElSelect v-model="registerForm.country" placeholder="国家" clearable filterable tabindex="3">
+            <ElSelect v-model="registerForm.country" placeholder="区域" clearable filterable tabindex="3">
               <template #prefix>
                 <SvgIcon name="i-mdi:format-list-bulleted-type" />
               </template>

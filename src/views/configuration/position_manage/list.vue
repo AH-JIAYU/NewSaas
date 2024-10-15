@@ -34,12 +34,12 @@ const checkList = ref<any>([]);
 const border = ref(false);
 const isFullscreen = ref(false);
 const lineHeight = ref<any>("default");
-  const QuickEditRef = ref(); //快速编辑
-  const current = ref<any>()//表格当前选中
+const QuickEditRef = ref(); //快速编辑
+const current = ref<any>()//表格当前选中
 const stripe = ref(false);
 const selectRows = ref<any>([]);
-  const formSearchList = ref<any>()//表单排序配置
-const formSearchName=ref<string>('formSearch-position_manage')// 表单排序name
+const formSearchList = ref<any>()//表单排序配置
+const formSearchName = ref<string>('formSearch-position_manage')// 表单排序name
 // 发票状态
 const invoiceStatusList = [
   { lable: "启用", value: 1 },
@@ -115,6 +115,21 @@ function quickEdit(row: any, type: any) {
 function setSelectRows(value: any) {
   selectRows.value = value;
 }
+// 删除部门
+function deleteData(row: any) {
+  ElMessageBox.confirm(`确认删除「${row.name}」吗？`, "确认信息").then(
+    async () => {
+      const res = await api.delete({ id: row.id })
+      if (res.status === 1) {
+        ElMessage.success({
+          message: "删除成功",
+          center: true,
+        });
+        fetchData();
+      }
+    }
+  );
+}
 // 重置数据
 function onReset() {
   Object.assign(queryForm, {
@@ -167,13 +182,13 @@ onMounted(() => {
   });
   fetchData();
   formSearchList.value = [
-    {index: 1, show: true, type: 'input', modelName: 'id', placeholder: '职位ID'},
-    {index: 2, show: true, type: 'input', modelName: 'name', placeholder: '职位名称'},
-    {index: 3, show: true, type: 'select', modelName: 'active', placeholder: '状态', option: 'active', optionLabel: 'lable', optionValue: 'value'}
-]
+    { index: 1, show: true, type: 'input', modelName: 'id', placeholder: '职位ID' },
+    { index: 2, show: true, type: 'input', modelName: 'name', placeholder: '职位名称' },
+    { index: 3, show: true, type: 'select', modelName: 'active', placeholder: '状态', option: 'active', optionLabel: 'lable', optionValue: 'value' }
+  ]
 });
-const formOption={
-  active:()=> invoiceStatusList
+const formOption = {
+  active: () => invoiceStatusList
 }
 
 </script>
@@ -183,7 +198,8 @@ const formOption={
     'absolute-container': tableAutoHeight,
   }" v-loading="listLoading">
     <PageMain>
-      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="queryForm" :formOption="formOption" />
+      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange"
+        @onReset="onReset" :model="queryForm" :formOption="formOption" />
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>
@@ -200,31 +216,29 @@ const formOption={
         </FormRightPanel>
       </el-row>
       <el-table ref="tableSortRef" v-loading="false" style="margin-top: 10px" row-key="id" :data="list" :border="border"
-        :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows"  highlight-current-row
- @current-change="handleCurrentChange">
+        :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows" highlight-current-row
+        @current-change="handleCurrentChange">
         <el-table-column align="left" type="selection" />
-        <el-table-column v-if="checkList.includes('id')" prop="id" show-overflow-tooltip align="left" label="职位ID" >
-          <template #default="{row}">
+        <el-table-column v-if="checkList.includes('id')" prop="id" show-overflow-tooltip align="left" label="职位ID">
+          <template #default="{ row }">
             <div class="copyId tableSmall">
               <div class="id oneLine  ">ID: {{ row.id }}</div>
               <copy class="copy" :content="row.id" />
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('name')" prop="name" show-overflow-tooltip align="left"
-          label="职位名称" >
-          <template #default="{row}">
-            <div class="tableBig">{{row.name}}</div>
+        <el-table-column v-if="checkList.includes('name')" prop="name" show-overflow-tooltip align="left" label="职位名称">
+          <template #default="{ row }">
+            <div class="tableBig">{{ row.name }}</div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('count')" prop="count" show-overflow-tooltip align="left"
-          label="账户数">
+        <el-table-column v-if="checkList.includes('count')" prop="count" show-overflow-tooltip align="left" label="账户数">
           <template #default="{ row }">
             <div class="tableBig">{{ row.count ? row.count : "-" }}</div>
           </template></el-table-column>
         <el-table-column v-if="checkList.includes('remark')" prop="remark" show-overflow-tooltip align="left"
           label="备注">
-          <template #default="{row}">
+          <template #default="{ row }">
             <div class="flex-s  ">
               <div class="oneLine tableBig" style="width: calc(100% - 20px);">
                 {{ row.remark ? row.remark : "-" }}
@@ -238,6 +252,9 @@ const formOption={
           <template #default="{ row }">
             <el-button size="small" plain type="primary" @click="editData(row)">
               编辑
+            </el-button>
+            <el-button size="small" plain type="danger" @click="deleteData(row)">
+              删除
             </el-button>
           </template>
         </el-table-column>
@@ -327,8 +344,8 @@ const formOption={
     display: block !important;
   }
 }
+
 .el-table__row:hover .edit {
   display: block;
 }
-
 </style>

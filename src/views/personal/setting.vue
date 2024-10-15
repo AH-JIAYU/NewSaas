@@ -27,7 +27,7 @@ const emits = defineEmits(["success"]);
 const Url = import.meta.env.VITE_APP_API_BASEURL + "/api/user/uploadAvatar";
 //基础字典
 const basicDictionaryStore = useBasicDictionaryStore();
-// 国家list
+// 区域list
 const countryList = ref<any>([]);
 // loading
 const loading = ref(false);
@@ -182,7 +182,7 @@ function userSubmit() {
             delete userForm.value.country;
             delete userForm.value.avatar;
           }
-          // 国家是否是中国
+          // 区域是否是中国
           if (userForm.value.country === "CN") {
             delete userForm.value.email;
           } else {
@@ -368,7 +368,7 @@ defineExpose({ showEdit });
             <ElFormItem label="用户名">
               <ElInput disabled v-model="userForm.name" placeholder="请输入你的用户名" />
             </ElFormItem>
-            <ElFormItem label="国家">
+            <ElFormItem label="区域">
               <ElSelect v-model="userForm.country" disabled>
                 <ElOption v-for="item in countryList" :label="item.chineseName" :value="item.code" />
               </ElSelect>

@@ -18,7 +18,7 @@ const EditRef = ref(); // 快捷操作：新增会员等级 Ref
 const data = reactive<any>({
   vipLevelList: [], // 会员等级
   vipGroupList: [], // 会员组
-  countryList: [], // 国家
+  countryList: [], // 区域
 });
 // 校验
 const rules = reactive<any>({
@@ -30,7 +30,7 @@ const rules = reactive<any>({
     { required: true, message: "请选择会员等级", trigger: "change" },
   ],
   subordinateCountryId: [
-    { required: true, message: "请选择国家", trigger: "change" },
+    { required: true, message: "请选择区域", trigger: "change" },
   ],
 });
 
@@ -82,7 +82,7 @@ const changeCountryId = (val: any) => {
 const getLevelNameList = async () => {
   data.vipLevelList = await surveyVipLevelStore.getLevelNameList();
 }
-// 获取会员等级 会员组 国家
+// 获取会员等级 会员组 区域
 const getList = async () => {
   await getLevelNameList()
   data.vipGroupList = await surveyVipGroupStore.getGroupNameList();
@@ -125,7 +125,7 @@ onMounted(async () => {
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="所属国家" prop="subordinateCountryId">
+                <el-form-item label="所属区域" prop="subordinateCountryId">
                   <el-select clearable filterable v-model="localToptTab.subordinateCountryId" @change="changeCountryId">
                     <el-option v-for="item in data.countryList" :key="item.id" :value="item.id"
                       :label="item.chineseName"></el-option>

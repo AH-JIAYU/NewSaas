@@ -35,7 +35,7 @@ const data = ref<any>({
     countryIdList: [
       {
         required: true,
-        message: "请选择所属国家",
+        message: "请选择所属区域",
         trigger: "change",
       },
     ],
@@ -116,7 +116,7 @@ function closeHandler() {
   data.value.formData = {}
 };
 
-// // 获取 客户 国家
+// // 获取 客户 区域
 const getList = async () => {
   await customerStore.getCustomerList();
   await basicDictionaryStore.getCountry();

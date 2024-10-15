@@ -78,7 +78,7 @@ defineExpose({
     </el-form-item>
   </el-col>
   <el-col :span="8">
-    <el-form-item label="所属国家:">
+    <el-form-item label="所属区域:">
       {{
       detailData.subordinateCountryName
       ? detailData.subordinateCountryName
@@ -136,7 +136,7 @@ defineExpose({
       </el-form-item>
     </el-col>
     <el-col :span="8">
-      <el-form-item label="关联国家:">
+      <el-form-item label="关联区域:">
         {{
         detailData.relevanceCountryName
         ? detailData.relevanceCountryName

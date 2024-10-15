@@ -105,13 +105,13 @@ onMounted(() => {
             class="search-form"
           >
             <el-form-item label="">
-              <el-input placeholder="国家名称" />
+              <el-input placeholder="区域名称" />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-input placeholder="国家编码" />
+              <el-input placeholder="区域编码" />
             </el-form-item>
             <el-form-item v-show="!fold" label="">
-              <el-input placeholder="国家序号" />
+              <el-input placeholder="区域序号" />
             </el-form-item>
             <ElFormItem>
               <ElButton type="primary" @click="currentChange()">
@@ -173,19 +173,19 @@ onMounted(() => {
           prop="a"
           show-overflow-tooltip
           align="left"
-          label="国家编码"
+          label="区域编码"
         />
         <el-table-column
           prop="b"
           show-overflow-tooltip
           align="left"
-          label="国家(中文)"
+          label="区域(中文)"
         />
         <el-table-column
           prop="c"
           show-overflow-tooltip
           align="left"
-          label="国家(英文)"
+          label="区域(英文)"
         />
         <template #empty>
           <el-empty :image="empty" :image-size="300" />

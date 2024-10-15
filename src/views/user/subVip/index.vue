@@ -44,7 +44,7 @@ const columns = ref([
   },
   { label: "B2B", prop: "b2bStatus", sortable: true, checked: true },
   {
-    label: "所属组",
+    label: "部门",
     prop: "memberChildGroupName",
     sortable: true,
     checked: true,
@@ -64,7 +64,7 @@ const queryForm = ref<any>({
   memberName: "", //子会员姓名
   tenantSupplierId: "", //供应商ID
   b2bStatus: "", //B2B
-  memberChildGroupName: "", //所属组
+  memberChildGroupName: "", //部门
   memberChildStatus: "", //子会员状态
   createUserName: "", //创建人
   time: [], //创建日期
@@ -136,7 +136,7 @@ function queryData() {
     memberName: "", //子会员姓名
     tenantSupplierId: "", //供应商ID
     b2bStatus: "", //B2B
-    memberChildGroupName: "", //所属组
+    memberChildGroupName: "", //部门
     memberChildStatus: "", //子会员状态
     createUserName: "", //创建人
     time: [], //创建日期
@@ -321,7 +321,7 @@ const formOption = {
           </template>
         </ElTableColumn>
         <el-table-column v-if="checkList.includes('memberChildGroupName')" align="left" prop="memberChildGroupName"
-          show-overflow-tooltip label="所属组">
+          show-overflow-tooltip label="部门">
           <template #default="{ row }">
             <div v-if="row.memberChildGroupId" class="copyId tableSmall">
               <div class="id oneLine ">ID: {{ row.memberChildGroupId }}</div>

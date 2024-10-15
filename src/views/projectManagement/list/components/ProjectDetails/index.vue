@@ -29,9 +29,9 @@ const logDetailsRef = ref();
 const active = ref(1);
 const data = ref<any>({
   form: {}, // 表格
-  // 配置信息 国家和问卷
+  // 配置信息 区域和问卷
   // initialProblem: {
-  //   countryId: "", // 国家
+  //   countryId: "", // 区域
   //   projectQuotaQuestionType: "", // 问题类型
   // },
   imgUrl: [], // 图片预览
@@ -39,7 +39,7 @@ const data = ref<any>({
   allocationStatus: "", //分配状态:1:未分配 2:已分配
   projectType: 1, //项目类型 1:内部新增 2:租户分配   为租户时需要隐藏客户、前置、操作日志
   srcList: [], // 图片预览
-  countryList: [], // 国家
+  countryList: [], // 区域
 });
 const imgList = ref<any>();
 const plugins = [
@@ -93,21 +93,21 @@ async function showEdit(row: any, projectType: any) {
   dialogTableVisible.value = true;
 }
 
-// 回显国家和问卷
+// 回显区域和问卷
 const getCountryQuestion = async () => {
   if (data.value.form.projectQuotaInfoList.length) {
-    // 获取国家
+    // 获取区域
     const resCountry = await api.getProjectCountryList({
       countryIdList: data.value.form.countryIdList,
     });
     // 获取问卷
     const params = {
-      countryId: data.value.form.projectQuotaInfoList[0].countryId, // 国家
+      countryId: data.value.form.projectQuotaInfoList[0].countryId, // 区域
       projectQuotaQuestionType:
         data.value.form.projectQuotaInfoList[0].projectQuotaQuestionType, // 问题类型
     };
     const resQuestionnaire = await api.getProjectCategoryList(params);
-    // 查找国家
+    // 查找区域
     const countryData = findData(
       resCountry.data.getProjectCountryListInfoList,
       "countryId",
@@ -127,7 +127,7 @@ const getCountryQuestion = async () => {
 const findData = (arr: any, keyName: any, id: any) => {
   return arr.find((item: any) => item[keyName] === id);
 };
-// 回显国家
+// 回显区域
 const comCountryId = computed(() => (countryIdList: any) => {
   const list = data.value.countryList
     .filter((item: any) => countryIdList.includes(item.id))
@@ -345,7 +345,7 @@ defineExpose({ showEdit });
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="所属国家 :">
+              <el-form-item label="所属区域 :">
                 <el-text class="mx-1">
                   <template
                     v-if="comCountryId(data.form.countryIdList).length > 4"
@@ -497,7 +497,7 @@ defineExpose({ showEdit });
             <div class="peizjo-header">
               <span>配置信息</span>
               <span style="margin-left: 50px" v-if="data.form.countryName"
-                >国家：{{ data.form.countryName }}</span
+                >区域：{{ data.form.countryName }}</span
               >
               <span
                 style="margin-left: 30px"
@@ -513,7 +513,7 @@ defineExpose({ showEdit });
             "
           >
             <el-col :span="8">
-              <!-- <el-form-item label="国家 :">
+              <!-- <el-form-item label="区域 :">
                 <el-text class="mx-1">
                   {{ data.form.countryName ? data.form.countryName : "-" }}
                 </el-text>

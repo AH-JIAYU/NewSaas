@@ -61,7 +61,7 @@ const data = ref<any>({
   },
   // 列表数据
   dataList: [],
-  // 国家列表
+  // 区域列表
   countryList: [],
 
   rules: {
@@ -110,7 +110,7 @@ function currentChange(page = 1) {
 function sortChange({ prop, order }: { prop: string; order: string }) {
   onSortChange(prop, order).then(() => getDataList());
 }
-// 新增国家
+// 新增区域
 function onCreate(row?: any) {
   data.value.editProps.id = "";
   data.value.editProps.countryId = row ? row.countryId : "";
@@ -161,7 +161,7 @@ async function changeIsDefault(item: any) {
   const { status } = await submitLoading(api.update(item));
   status === 1 &&
     ElMessage.success({
-      message: "修改「默认国家」成功",
+      message: "修改「默认区域」成功",
       center: true,
     });
   getDataList();
@@ -207,7 +207,7 @@ function EditSurvey(row: any) {
     data.value.formModeProps.visible = true;
   }
 }
-// 删除国家
+// 删除区域
 function onDelCountry(row: any) {
   ElMessageBox.confirm(`确认删除「${row.countryId}」吗？`, "确认信息")
     .then(async () => {
@@ -245,7 +245,7 @@ function onDelProject(row: any) {
 // 重置数据
 function onReset() {
   Object.assign(data.value.search, {
-    // 国家id
+    // 区域id
     countryId: '',
   });
   getDataList();
@@ -260,7 +260,7 @@ onMounted(async () => {
     });
   }
   formSearchList.value = [
-    { index: 1, show: true, type: 'select', modelName: 'countryId', placeholder: '国家', option: 'global', optionLabel: 'chineseName', optionValue: 'id' }
+    { index: 1, show: true, type: 'select', modelName: 'countryId', placeholder: '区域', option: 'global', optionLabel: 'chineseName', optionValue: 'id' }
   ]
 });
 
@@ -354,7 +354,7 @@ onBeforeUnmount(() => {
                 :inactive-value="2" inline-prompt active-text="启用" inactive-text="禁用" />
             </template>
           </ElTableColumn>
-          <ElTableColumn prop="countryName" label="国家/标题" width="500" align="left">
+          <ElTableColumn prop="countryName" label="区域/标题" width="500" align="left">
             <template #default="{ row }">
               <el-tag type="primary">{{ row.countryName }}</el-tag>
             </template>

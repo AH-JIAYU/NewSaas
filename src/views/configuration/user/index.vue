@@ -7,14 +7,12 @@ meta:
 import { ElMessage, ElMessageBox } from "element-plus";
 import type Node from "element-plus/es/components/tree/src/model/node";
 import { ref } from "vue";
-import DictionaryItemDia from "./components/dictionaryItemDialog/index.vue";
-import Detail from "./components/Detail/index.vue";
 import api from "@/api/modules/configuration_manager";
-import apiDep from "@/api/modules/department";
-import useDepartmentStore from "@/store/modules/department";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary";
 import usePositionManageStore from "@/store/modules/position_manage";
 import empty from '@/assets/images/empty.png'
+import DictionaryItemDia from "./components/dictionaryItemDialog/index.vue";
+import Detail from "./components/Detail/index.vue";
 
 defineOptions({
   name: "user",
@@ -23,14 +21,11 @@ defineOptions({
 const usePositionManage = usePositionManageStore();
 // 职位数据
 const positionManageList = ref<any>();
-// 国家
+// 区域
 const useStoreCountry = useBasicDictionaryStore();
-// 国家数据
+// 区域数据
 const filterCountry = ref<any>([]);
-// 部门
-const departmentStore = useDepartmentStore();
-// 部门数据
-const departmentList = ref<any>();
+// 分页
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
 interface Dict {
@@ -53,7 +48,7 @@ const columns = ref<any>([
     checked: true,
   },
   // { label: "姓名", prop: "name", sortable: true, checked: true },
-  // { label: "国家", prop: "country", sortable: true, checked: true },
+  // { label: "区域", prop: "country", sortable: true, checked: true },
   { label: "电话号码", prop: "phoneNumber", sortable: true, checked: true },
   { label: "邮箱", prop: "email", sortable: true, checked: true },
   { label: "部门", prop: "departmentId", sortable: true, checked: true },
@@ -150,10 +145,8 @@ onMounted(async () => {
   try {
     // loading加载开始
     dataForm.value.loading = true;
-    // 国家
+    // 区域
     filterCountry.value = await useStoreCountry.getCountry();
-    // 部门
-    departmentList.value = await departmentStore?.getDepartment() || [];
     // 职位
     positionManageList.value = await usePositionManage?.getPositionManage() || [];
     // 获取列表数据
@@ -329,8 +322,8 @@ function onReset() {
                 @keydown.enter="getUserList" />
               <ElInput v-model="userForm.search.userName" placeholder="用户名" clearable style="width: 12.5rem"
                 @keydown.enter="getUserList" />
-              <el-select v-model="userForm.search.active" value-key="" placeholder="状态" style="width: 12.5rem"
-                clearable filterable @change="getUserList">
+              <el-select v-model="userForm.search.active" value-key="" placeholder="状态" style="width: 12.5rem" clearable
+                filterable @change="getUserList">
                 <el-option v-for="item in activeList" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
               </el-select>
@@ -356,16 +349,16 @@ function onReset() {
               </el-col>
               <el-col style="display: flex; justify-content: flex-end" :span="14">
                 <el-button size="default" @click=""> 导出 </el-button>
-                <TabelControl v-model:border="userForm.border"
-                  v-model:tableAutoHeight="userForm.tableAutoHeight" v-model:checkList="userForm.checkList"
-                  v-model:columns="columns" v-model:line-height="userForm.lineHeight"
-                  v-model:stripe="userForm.stripe" style="margin-left: .75rem" @query-data="getUserList" />
+                <TabelControl v-model:border="userForm.border" v-model:tableAutoHeight="userForm.tableAutoHeight"
+                  v-model:checkList="userForm.checkList" v-model:columns="columns"
+                  v-model:line-height="userForm.lineHeight" v-model:stripe="userForm.stripe" style="margin-left: .75rem"
+                  @query-data="getUserList" />
               </el-col>
             </el-row>
-            <ElTable ref="userItemRef" :data="userForm.dataList" :border="userForm.border"
-              :size="userForm.lineHeight" :stripe="userForm.stripe" highlight-current-row height="100%"
-              @sort-change="sortChange" @selection-change="userForm.selectionDataList = $event" row-key="id"
-              default-expand-all @select="selectChange">
+            <ElTable ref="userItemRef" :data="userForm.dataList" :border="userForm.border" :size="userForm.lineHeight"
+              :stripe="userForm.stripe" highlight-current-row height="100%" @sort-change="sortChange"
+              @selection-change="userForm.selectionDataList = $event" row-key="id" default-expand-all
+              @select="selectChange">
               <ElTableColumn type="selection" align="left" fixed />
               <ElTableColumn v-if="userForm.checkList.includes('active')" align="left" prop="active" label="状态">
                 <template #default="scope">
@@ -373,8 +366,7 @@ function onReset() {
                     :before-change="() => onChangeStatus(scope.row)" />
                 </template>
               </ElTableColumn>
-              <ElTableColumn v-if="userForm.checkList.includes('id')" align="left" width="180" prop="id"
-                label="员工ID">
+              <ElTableColumn v-if="userForm.checkList.includes('id')" align="left" width="180" prop="id" label="员工ID">
                 <template #default="{ row }">
                   <div class="copyId tableSmall">
                     <div class="id oneLine ">ID: {{ row.id }}</div>
@@ -382,8 +374,9 @@ function onReset() {
                   </div>
                 </template>
               </ElTableColumn>
-              <ElTableColumn v-if="userForm.checkList.includes('userName')" align="left" width="130"
-                prop="userName" label="用户名"><template #default="{ row }">
+              <ElTableColumn v-if="userForm.checkList.includes('userName')" align="left" width="130" prop="userName"
+                label="用户名">
+                <template #default="{ row }">
                   <el-text class="tableBig">
                     {{ row.userName ? row.userName : "-" }}
                   </el-text>
@@ -397,8 +390,9 @@ function onReset() {
                   </el-text>
                 </template>
               </ElTableColumn> -->
-              <ElTableColumn v-if="userForm.checkList.includes('phoneNumber')" align="left" width="170"
-                prop="phone" label="电话号码"><template #default="{ row }">
+              <ElTableColumn v-if="userForm.checkList.includes('phoneNumber')" align="left" width="170" prop="phone"
+                label="电话号码">
+                <template #default="{ row }">
                   <el-text class="tableBig">
                     {{ row.phoneNumber ? row.phoneNumber : "-" }}
                   </el-text>
@@ -415,18 +409,12 @@ function onReset() {
               <ElTableColumn v-if="userForm.checkList.includes('departmentId')" align="left" prop="departmentId"
                 label="部门">
                 <template #default="{ row }">
-                  <el-text v-if="row.departmentId" class="tableBig">
-                    <el-text v-for="item in departmentList">
-                      <el-text v-if="row.departmentId === item.id">
-                        {{ item.name ? item.name : "-" }}
-                      </el-text>
-                    </el-text>
+                  <el-text class="tableBig">
+                    {{ row.organizationalStructureName ? row.organizationalStructureName : '-' }}
                   </el-text>
-                  <el-text v-else class="tableBig">-</el-text>
                 </template>
               </ElTableColumn>
-              <ElTableColumn v-if="userForm.checkList.includes('positionId')" align="left" prop="positionId"
-                label="职位">
+              <ElTableColumn v-if="userForm.checkList.includes('positionId')" align="left" prop="positionId" label="职位">
                 <template #default="{ row }">
                   <el-text v-if="row.positionId" class="tableBig">
                     <el-text v-for="item in positionManageList">
@@ -459,10 +447,9 @@ function onReset() {
         </PageMain>
 
       </div>
-      <DictionaryItemDia v-if="userForm.dialog.visible" :id="userForm.dialog.id"
-        v-model="userForm.dialog.visible" :catalogue-id="userForm.search.catalogueId"
-        :parent-id="userForm.dialog.parentId" :level="userForm.dialog.level" :tree="dataForm.tree"
-        :dataList="userForm.dataList" :row="userForm.row" @success="getUserList" />
+      <DictionaryItemDia v-if="userForm.dialog.visible" :id="userForm.dialog.id" v-model="userForm.dialog.visible"
+        :catalogue-id="userForm.search.catalogueId" :parent-id="userForm.dialog.parentId" :level="userForm.dialog.level"
+        :tree="dataForm.tree" :dataList="userForm.dataList" :row="userForm.row" @success="getUserList" />
       <Detail ref="detailRef" />
     </div>
   </div>

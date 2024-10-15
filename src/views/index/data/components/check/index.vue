@@ -33,7 +33,7 @@ defineExpose({
     @close="close"
   >
     <el-table :data="tableData" border style="width: 100%;">
-      <el-table-column align="left" prop="name" label="国家" width="180" />
+      <el-table-column align="left" prop="name" label="区域" width="180" />
       <el-table-column align="left" prop="cname" label="参与数" width="180" />
       <el-table-column align="left" prop="fz" label="完成数" />
       <el-table-column align="left" prop="num1" label="完成金额" />

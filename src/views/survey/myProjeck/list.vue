@@ -20,7 +20,7 @@ const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
 const customerStore = useUserCustomerStore(); // 客户
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
-const countryList: any = ref([]); //所有国家一维
+const countryList: any = ref([]); //所有区域一维
 const customerList: any = ref([]); //客户列表
 // 货币类型
 const countryType = ref<any>();
@@ -74,9 +74,9 @@ const columns = ref<any>([
     sortabel: true,
     checked: true,
   },
-  { prop: "doMoneyPrice", label: "原价", sortabel: true, checked: true },
-  { prop: "memberPrice", label: "会员价", sortabel: true, checked: true },
-  { prop: "countryNameList", label: "国家", sortabel: true, checked: true },
+  { prop: "doMoneyPrice", label: "项目价", sortabel: true, checked: true },
+  { prop: "memberPrice", label: "成本价(会员)", sortabel: true, checked: true },
+  { prop: "countryNameList", label: "区域", sortabel: true, checked: true },
   { prop: "ir", label: "IR/NIR", sortabel: true, checked: true },
   { prop: "memberStatus", label: "分配", sortabel: true, checked: true },
   { prop: "createTime", label: "创建时间", sortabel: true, checked: true },
@@ -87,7 +87,7 @@ const queryForm = reactive<any>({
   projectName: "", //项目名称-模糊查询
   projectIdentification: "", //	项目标识模糊查询
   clientId: "", //	所属客户编号Id
-  countryId: [], //所属国家编号Id
+  countryId: [], //所属区域编号Id
   b2bOrB2cStatus: "", //1:b2b的项目 2:b2c的项目,不传查询所有
   time: [], // 时间
   beginTime: "", //开始时间
@@ -99,7 +99,7 @@ const addAllocationEditRef = ref();
 function check(row: any) {
   detailRef.value.showEdit(row);
 }
-// 会员价
+// 成本价(会员)
 function membershipPrice(row: any) {
   checkMembershipPriceRef.value.showEdit(row);
 }
@@ -127,7 +127,7 @@ function onReset() {
     projectName: "", //项目名称-模糊查询
     projectIdentification: "", //	项目标识模糊查询
     clientId: "", //	所属客户编号Id
-    countryId: [], //所属国家编号Id
+    countryId: [], //所属区域编号Id
     b2bOrB2cStatus: null, //1:b2b的项目 2:b2c的项目,不传查询所有
     time: [], // 时间
     beginTime: "", //开始时间
@@ -196,7 +196,7 @@ onMounted(async () => {
     { index: 1, show: true, type: 'input', modelName: 'projectId', placeholder: '项目ID' },
     { index: 2, show: true, type: 'input', modelName: 'projectName', placeholder: '项目名称' },
     { index: 3, show: true, type: 'input', modelName: 'projectIdentification', placeholder: '项目标识' },
-    { index: 4, show: true, type: 'select', modelName: 'countryId', placeholder: '国家地区', option: 'global', optionLabel: 'chineseName', optionValue: 'id' },
+    { index: 4, show: true, type: 'select', modelName: 'countryId', placeholder: '区域地区', option: 'global', optionLabel: 'chineseName', optionValue: 'id' },
     { index: 5, show: true, type: 'select', modelName: 'clientId', placeholder: '客户简称', option: 'clientId', optionLabel: 'customerAccord', optionValue: 'tenantCustomerId' },
     { index: 6, show: true, type: 'select', modelName: 'b2bOrB2cStatus', placeholder: 'B2B/B2C', option: 'b2bOrB2cStatus', optionLabel: 'label', optionValue: 'value' },
     { index: 7, show: true, type: 'datetimerange', modelName: 'time', startPlaceHolder: '创建开始日期', endPlaceHolder: '创建结束日期' },
@@ -273,7 +273,7 @@ const formOption={
             </p>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('doMoneyPrice')" show-overflow-tooltip align="left" label="原价">
+        <el-table-column v-if="checkList.includes('doMoneyPrice')" show-overflow-tooltip align="left" label="项目价">
           <template #default="{ row }">
             <el-text v-if="countryType === 3" class="mx-1">暂无数据</el-text>
             <el-text v-else class="mx-1">
@@ -286,7 +286,7 @@ const formOption={
             </el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('memberPrice')" show-overflow-tooltip align="left" label="会员价">
+        <el-table-column v-if="checkList.includes('memberPrice')" show-overflow-tooltip align="left" label="成本价(会员)">
           <template #default="{ row }">
             <el-link v-if="row.getMemberGroupNameInfoList.length" size="small" plain type="primary"
               @click="membershipPrice(row)">
@@ -295,7 +295,7 @@ const formOption={
             <el-text v-else> - </el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('countryNameList')" show-overflow-tooltip align="left" label="国家">
+        <el-table-column v-if="checkList.includes('countryNameList')" show-overflow-tooltip align="left" label="区域">
           <template #default="{ row }">
             <template v-if="row.countryNameList">
               <template v-if="row.countryNameList.length === basicDictionaryStore.country.length">

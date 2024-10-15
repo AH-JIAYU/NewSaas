@@ -21,7 +21,7 @@ const useUserSupplierStore = defineStore(
     // 供应商初始数据
     const initialTopTabsData = {
       supplierAccord: "",
-      // subordinateCountryId: "", // 所属国家id
+      // subordinateCountryId: "", // 所属区域id
       countryType: "",
       // supplierLevelId: "", // 供应商等级
       // supplierName: "",   // 供应商姓名
@@ -31,7 +31,7 @@ const useUserSupplierStore = defineStore(
       b2bStatus: 1, // B2B:1:关闭 2:开启
       b2cStatus: 2, // 	B2C:1:关闭 2:开启  原型默认开启
       supplierStatus: 2, // 	供应商状态:1:关闭 2:开启 3:待审核
-      // relevanceCountryIdList: "", // 关联国家id
+      // relevanceCountryIdList: "", // 关联区域id
       // relevanceCustomerId: 0, // 关联客户id
       // payMethod: 0, // 付款方式
       // accountName: "", // 账户名称

@@ -71,7 +71,7 @@ function initializeLeftTabsData(data: any) {
     configurationInformation: {
       // 问题初始数据
       initialProblem: {
-        countryId: null, //问卷对应国家id
+        countryId: null, //问卷对应区域id
         projectProblemCategoryId: null, //问题类别id
         projectQuotaQuestionType: null, //问题类型:1:总控问题 2:租户自己问题
         projectProblemId: null, //	前置问卷问题id
@@ -81,7 +81,7 @@ function initializeLeftTabsData(data: any) {
         projectAnswerIdList: [], //	前置问卷答案id,
       },
 
-      configurationCountryList: null, // 配置信息-国家
+      configurationCountryList: null, // 配置信息-区域
       projectCategoryList: null, //题库目录
       ProjectProblemInfoList: [], // 问题列表 - 显示
     },
@@ -104,7 +104,7 @@ function initializeLeftTabsData(data: any) {
         configurationInformation: {
           // 问题初始数据
           initialProblem: {
-            countryId: null, //问卷对应国家id
+            countryId: null, //问卷对应区域id
             projectProblemCategoryId: null, //问题类别id
             projectQuotaQuestionType: null, //问题类型:1:总控问题 2:租户自己问题
             projectProblemId: null, //	前置问卷问题id
@@ -114,7 +114,7 @@ function initializeLeftTabsData(data: any) {
             projectAnswerIdList: [], //	前置问卷答案id,
           },
 
-          configurationCountryList: null, // 配置信息-国家
+          configurationCountryList: null, // 配置信息-区域
           projectCategoryList: null, //题库目录
           ProjectProblemInfoList: [], // 问题列表 - 显示
         },
@@ -244,7 +244,7 @@ function closeHandler() {
   }
 }
 
-// // 获取 客户 国家
+// // 获取 客户 区域
 const getList = async () => {
   await customerStore.getCustomerList();
   await basicDictionaryStore.getCountry();

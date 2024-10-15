@@ -38,6 +38,8 @@ watch(
   (newValue) => {
     if (newValue) {
       logo.value = newValue;
+    }else {
+      logo.value = ''
     }
   },{deep: true}
 );

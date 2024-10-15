@@ -44,10 +44,10 @@ const editRef = ref<any>(); // 组件Ref 快捷操作： 新增客户
 const fold = ref(!props.tabIndex ? true : false); // 折叠 描述配额
 const Url = `${import.meta.env.VITE_APP_API_BASEURL}/api/project/uploadQiniu`;
 let data = ref<any>({
-  checked: false, //所属国家的全选按钮
+  checked: false, //所属区域的全选按钮
   //基础设置
   basicSettings: {
-    countryList: [], // 国家
+    countryList: [], // 区域
     customerList: [], // 客户
     B2BTypeList: [], // 项目类型
     // 配置 项目级联选择器
@@ -101,7 +101,7 @@ const rules = reactive<any>({
   countryIdList: [
     {
       required: true,
-      message: "请选择所属国家",
+      message: "请选择所属区域",
       trigger: "change",
     },
   ],
@@ -162,7 +162,7 @@ const changeClient = (val: any) => {
   localToptTab.value.isProfile = findData.antecedentQuestionnaire === 2 ? 1 : 2;
 };
 
-// 所属国家全选
+// 所属区域全选
 const selectAll = () => {
   localToptTab.value.countryIdList = [];
   if (data.value.checked) {
@@ -252,7 +252,7 @@ const changeProfile = (val: any) => {
 };
 //#endregion
 
-// 所属国家改变重新获取 配置信息中的国家
+// 所属区域改变重新获取 配置信息中的区域
 const changeCountryId = () => {
   localToptTab.value.data.configurationInformation.configurationCountryList =
     null;
@@ -262,7 +262,7 @@ const changeCountryId = () => {
       basicDictionaryStore.country.length,
   );
 };
-// 配置国家改变 重新获取题库目录
+// 配置区域改变 重新获取题库目录
 const changeConfigurationCountryId = () => {
   localToptTab.value.data.configurationInformation.projectCategoryList = null; // 题库目录
   localToptTab.value.data.configurationInformation.initialProblem.projectProblemCategoryId =
@@ -281,7 +281,7 @@ const clearData = (judge?: boolean) => {
   }
 };
 
-// 切换tab 获取国家集合
+// 切换tab 获取区域集合
 const changeTab = async (val: any, judge?: boolean) => {
   if (
     val === "configurationInformation" &&
@@ -293,10 +293,10 @@ const changeTab = async (val: any, judge?: boolean) => {
         const res = await api.getProjectCountryList({
           countryIdList: localToptTab.value.countryIdList,
         });
-        // 配置-国家
+        // 配置-区域
         localToptTab.value.data.configurationInformation.configurationCountryList =
           res.data.getProjectCountryListInfoList;
-        // 开启默认国际后，只会有一个国家，直接回显
+        // 开启默认国际后，只会有一个区域，直接回显
         if (res.data.getProjectCountryListInfoList.length === 1) {
           localToptTab.value.data.configurationInformation.initialProblem.countryId =
             res.data.getProjectCountryListInfoList[0].countryId;
@@ -317,7 +317,7 @@ const changeTab = async (val: any, judge?: boolean) => {
           setTimeout(() => {
             formRef.value.scrollToField("countryIdList");
           }); // 延迟一段时间，确保元素已经渲染到DOM中
-          ElMessage.warning({ message: "请先选择所属国家", center: true });
+          ElMessage.warning({ message: "请先选择所属区域", center: true });
         });
       }
     });
@@ -325,7 +325,7 @@ const changeTab = async (val: any, judge?: boolean) => {
 };
 // 获取题库目录
 const getProjectCategoryList = async () => {
-  // 如果配置中的国家不存在就请求，反正不请
+  // 如果配置中的区域不存在就请求，反正不请
   if (
     localToptTab.value.data.configurationInformation.initialProblem.countryId
   ) {
@@ -349,7 +349,7 @@ const getProjectCategoryList = async () => {
     }
   } else {
     ElMessage.warning({
-      message: "请先选择配置信息下的国家",
+      message: "请先选择配置信息下的区域",
       center: true,
     });
   }
@@ -444,7 +444,7 @@ const getCustomerList = async () => {
 const AddCustomers = () => {
   editRef.value.showEdit();
 };
-// 获取 客户 国家 项目类型
+// 获取 客户 区域 项目类型
 const getList = async () => {
   await getCustomerList();
   data.value.basicSettings.countryList =
@@ -456,7 +456,7 @@ const getList = async () => {
 const showProjectQuotaInfoList = async () => {
   if (localToptTab.value.projectQuotaInfoList.length) {
     localToptTab.value.data.configurationInformation.initialProblem.countryId =
-      localToptTab.value.projectQuotaInfoList[0].countryId; // 国家id
+      localToptTab.value.projectQuotaInfoList[0].countryId; // 区域id
     localToptTab.value.data.configurationInformation.initialProblem.projectQuotaQuestionType =
       localToptTab.value.projectQuotaInfoList[0].projectQuotaQuestionType; // 问卷类型
     localToptTab.value.data.configurationInformation.initialProblem.projectProblemCategoryId =
@@ -473,9 +473,9 @@ const showProjectQuotaInfoList = async () => {
   }
 };
 /**
- * 举例： 显示的问题list(接口获取的数据/project/getProjectProblemList)[爱好，性别，国家]
+ * 举例： 显示的问题list(接口获取的数据/project/getProjectProblemList)[爱好，性别，区域]
  * 新增时  提交的问题list(本地处理的数据projectQuotaInfoList)的每一项的绑定值 projectAnswerIdList都为空 不影响
- * 编辑时  提交的问题list(本地处理的数据projectQuotaInfoList) 返回[ 国家，性别，爱好 ]  如果顺序和接口的顺序一致则不影响 如果不一致无法回显和更新
+ * 编辑时  提交的问题list(本地处理的数据projectQuotaInfoList) 返回[ 区域，性别，爱好 ]  如果顺序和接口的顺序一致则不影响 如果不一致无法回显和更新
  * 之前的写法 是v-model直接绑定对应的下标
  * 由于顺序不一样所有编辑时(新增不受影响)会影响数据回显 和更新
  * 更换为 调用v-model的底层原理  modelValue  @update:modelValue 并传递 问题id和下标 来判断，
@@ -520,7 +520,7 @@ watch(
 
 onMounted(async () => {
   fileList.value = [];
-  // 获取客户 国家 项目类型
+  // 获取客户 区域 项目类型
   await getList();
   await showProjectQuotaInfoList();
 });
@@ -643,11 +643,11 @@ nextTick(() => {
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="所属国家" prop="countryIdList">
+              <el-form-item label="所属区域" prop="countryIdList">
                 <ElSelect
                   class="placeholderColor"
                   v-model="localToptTab.countryIdList"
-                  placeholder="国家"
+                  placeholder="区域"
                   clearable
                   filterable
                   multiple
@@ -949,7 +949,7 @@ nextTick(() => {
           </template>
           <el-row :gutter="20">
             <el-col :span="6">
-              <el-form-item label="选择国家">
+              <el-form-item label="选择区域">
                 <el-select
                   v-model="
                     localToptTab.data.configurationInformation.initialProblem

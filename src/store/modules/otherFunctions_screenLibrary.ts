@@ -2,8 +2,8 @@ const useOtherFunctionsScreenLibraryStore = defineStore(
   // 唯一ID
   'otherFunctionsScreenLibrary',
   () => {
-    const countryId = ref() // 国家id
-    
+    const countryId = ref() // 区域id
+
     return {
       countryId,
     }

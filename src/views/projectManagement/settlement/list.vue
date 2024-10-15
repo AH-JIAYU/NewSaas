@@ -17,7 +17,7 @@ defineOptions({
 
 // 时间
 const { format } = useTimeago();
-//国家
+//区域
 const basicDictionaryStore = useBasicDictionaryStore();
 const countryList = ref<any>();
 // 客户
@@ -57,7 +57,7 @@ const columns = ref<any>([
     checked: true,
   },
   { label: "原价", prop: "projectAmount", sortable: true, checked: true },
-  { label: "所属国家", prop: "countryId", sortable: true, checked: true },
+  { label: "所属区域", prop: "countryId", sortable: true, checked: true },
   {
     label: "系统/审核完成数",
     prop: "systemDone",
@@ -93,7 +93,7 @@ const queryForm = reactive<any>({
   customerId: null,
   // 项目标识
   projectIdentification: "",
-  // 国家id
+  // 区域id
   countryId: "",
   // 创建人id
   createUserId: null,
@@ -190,7 +190,7 @@ function onReset() {
     customerId: null,
     // 项目标识
     projectIdentification: "",
-    // 国家id
+    // 区域id
     countryId: "",
     // 创建人id
     createUserId: null,
@@ -300,7 +300,7 @@ onMounted(async () => {
       show: true,
       type: "select",
       modelName: "countryData",
-      placeholder: "国家",
+      placeholder: "区域",
       option: "global",
       optionLabel: "chineseName",
       optionValue: "id",
@@ -491,7 +491,7 @@ function handleMoreOperating(command: string, row: any) {
           v-if="checkList.includes('countryId')"
           show-overflow-tooltip
           align="left"
-          label="国家"
+          label="区域"
         >
           <template #default="{ row }">
             <template v-if="row.countryId">

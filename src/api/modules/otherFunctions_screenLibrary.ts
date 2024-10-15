@@ -9,9 +9,9 @@ export default {
 
   edit: (data: any) =>
     api.post("projectProblem/updateProjectProblemCategory", data),
-  // 修改默认国家
+  // 修改默认区域
   update: (data: any) => api.post("projectProblem/updateCountryDefault", data),
-  // 删除租户问卷名称或者国家
+  // 删除租户问卷名称或者区域
   delete: (data: any) =>
     api.post("projectProblem/deleteProjectProblemCategory", data),
   // 删除问题或者答案 批量

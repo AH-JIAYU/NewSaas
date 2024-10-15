@@ -4,7 +4,7 @@ const useBasicDictionaryStore = defineStore(
   "basicDictionary",
   () => {
     const dict = ref() // 字典目录
-    const country = ref([]); // 国家
+    const country = ref([]); // 区域
     const B2BType = ref([]); // 项目类型
     // 获取字典目录
     const getDict = async () => {
@@ -14,13 +14,13 @@ const useBasicDictionaryStore = defineStore(
       }
       return dict.value
     }
-    // 获取国家
+    // 获取区域
     const getCountry = async () => {
       if (!country.value.length) {
         const params: any = {
           page: 1,
           limit: -1,
-          id: "32", // 国家
+          id: "32", // 区域
         };
         const res = await api.itemlist(params);
         country.value = res.data.records;

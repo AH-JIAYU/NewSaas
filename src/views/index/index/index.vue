@@ -28,7 +28,7 @@ const data = ref<any>({
   dataCenterCustomerVOS: [], //客户总揽
   dataCenterSupplierCompletedQuantities: [], //	供应商完成数
   dataCenterSupplierTurnovers: [], //	供应商营业额排名
-  // 国家
+  // 区域
   countryList: [],
 });
 
@@ -218,7 +218,7 @@ const typeChange = () => {
 const filterTodoList = computed(() => {
   return notificationStore.todoList.filter((item: any) => item.isReadAlready === 1)
 })
-// 完成数据排行 国家字段
+// 完成数据排行 区域字段
 const filterCountry = (row: any) => {
   const findData = data.value.countryList.find((item: any) => item.id === row.countryId)
   return findData?.chineseName
@@ -567,7 +567,7 @@ onMounted(async () => {
                     {{ row.b2CProportion * 100 }}%
                   </template>
                 </el-table-column>
-                <el-table-column align="left" label="所属国家">
+                <el-table-column align="left" label="所属区域">
                   <template #default="{ row }">
                     <span v-if="String(row) !== '{}'">{{ filterCountry(row) }}</span>
                   </template>

@@ -16,7 +16,7 @@ defineOptions({
   name: "site_setting",
 });
 
-const configurationSiteSettingStore= useConfigurationSiteSettingStore()//站点设置
+const configurationSiteSettingStore = useConfigurationSiteSettingStore()//站点设置
 // token
 const userStore = useUserStore();
 // detailRef
@@ -126,8 +126,8 @@ const formRules = ref<FormRules>({
   ],
   address: [
     { required: false, message: '请输入内容', trigger: 'blur' },
-     { max: 50, message: '最多输入 50 字', trigger: 'blur' }
-    ],
+    { max: 50, message: '最多输入 50 字', trigger: 'blur' }
+  ],
 });
 onMounted(() => {
   loading.value = true;
@@ -190,6 +190,7 @@ const token = userStore.token;
 const headers = ref({ Token: token });
 const dialogImageUrl = ref("");
 const dialogVisible = ref(false);
+const uploadRef = ref<any>()
 // 上传
 const fileList = ref<any>([]);
 // 删除
@@ -250,6 +251,9 @@ function onSubmit() {
           if (form.value.topLevelDomainName) {
             form.value.topLevelDomainName = form.value.topLevelDomainName.replace(/^https?:\/\//, '');
           }
+          if (fileList.value.length) {
+            uploadRef.value.submit();
+          }
           const res = await api.edit(form.value)
           loading.value = false;
           if (res.status === 1) {
@@ -266,7 +270,6 @@ function onSubmit() {
         }
       }
     });
-  // }
 }
 </script>
 
@@ -298,7 +301,7 @@ function onSubmit() {
               </el-col>
               <el-col :span="24">
                 <el-form-item label="网站关键字">
-                <div class="domainNames">
+                  <div class="domainNames">
                     <el-tooltip class="tooltips " content="设定网站关键字，在浏览器中输入该关键字即可搜索到该网站" placement="top">
                       <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
                     </el-tooltip>
@@ -308,7 +311,7 @@ function onSubmit() {
               </el-col>
               <el-col :span="24">
                 <el-form-item label="网站描述">
-                <div class="domainName">
+                  <div class="domainName">
                     <el-tooltip class="tooltips " content="描述该网址功能及意义，可对外宣传使用" placement="top">
                       <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
                     </el-tooltip>
@@ -344,9 +347,10 @@ function onSubmit() {
                 justify-content: center;
                 align-items: center;
               " label="">
-                  <el-upload :class="{ hide_box: fileList.length }" drag v-model:file-list="fileList" :headers="headers"
-                    :action="Url" list-type="picture-card" :limit="1" :on-preview="handlePictureCardPreview"
-                    :on-remove="handleRemove" :on-success="handleSuccess" :on-exceed="handleExceed">
+                  <el-upload :class="{ hide_box: fileList.length }" ref="uploadRef" drag v-model:file-list="fileList"
+                    :headers="headers" :action="Url" :auto-upload="false" list-type="picture-card" :limit="1"
+                    :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :on-success="handleSuccess"
+                    :on-exceed="handleExceed">
                     <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80" fill="none">
                       <g id="Frame">
                         <path id="Vector"
@@ -539,19 +543,21 @@ function onSubmit() {
     position: relative;
   }
 }
+
 .domainName {
   position: absolute;
   left: -5.3125rem;
   top: -1px;
   color: #606266;
 }
+
 .domainNames {
   position: absolute;
   left: -6.125rem;
   top: -1px;
   color: #606266;
 }
+
 // :deep() {
 //   background-color: #fafafa;
-// }
-</style>
+// }</style>

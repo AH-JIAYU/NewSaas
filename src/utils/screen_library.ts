@@ -9,8 +9,8 @@ export async function customComponents() {
   return [
     // {
     //   name: 'country',
-    //   title: '国家下拉框',
-    //   defaultQuestionTitle: '国家下拉框',
+    //   title: '区域下拉框',
+    //   defaultQuestionTitle: '区域下拉框',
     //   questionJSON: {
     //     type: 'dropdown',
     //     placeholder: 'Select a country...',
@@ -81,13 +81,13 @@ async function questionFun(
     }
   //
   if (!countryType.id) return null
-  // 答案  根据当前row的国家id请求字典数据
+  // 答案  根据当前row的区域id请求字典数据
   const { data } = await apiDictionary.itemlist(countryType)
   // 答案
   const answer: any = data?.records
   // 请求的问题
   const res = await basicDictionaryStore.getDict()
-  // 问题 对应国家下的问题
+  // 问题 对应区域下的问题
   const problem: any = res[0].children[otherFunctionsScreenLibraryStore.countryId === '343' ? 0 : 1].children
   // 定义需要的数据格式
   const question: any = {

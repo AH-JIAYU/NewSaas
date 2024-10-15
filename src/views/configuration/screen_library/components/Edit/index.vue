@@ -9,7 +9,7 @@ import useStagedDataStore from "@/store/modules/stagedData"; // 暂存
 const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
 const stagedDataStore = useStagedDataStore(); // 暂存
 const props = defineProps(["id", "countryId", "row"]);
-const countryList = ref<any>([]); //国家
+const countryList = ref<any>([]); //区域
 const emits = defineEmits<{
   success: [];
 }>();
@@ -27,7 +27,7 @@ const form = ref<any>({
 // 表单校验
 const formRules = ref<any>({
   categoryName: [{ required: true, message: "请输入名称", trigger: "blur" }],
-  countryId: [{ required: true, message: "请选择国家", trigger: "blur" }],
+  countryId: [{ required: true, message: "请选择区域", trigger: "blur" }],
 });
 // 确定
 async function onSubmit() {
@@ -87,7 +87,7 @@ onMounted(async () => {
         <ElFormItem label="名称" prop="categoryName">
           <ElInput v-model="form.categoryName" placeholder="请输入名称" />
         </ElFormItem>
-        <ElFormItem label="国家" prop="countryId">
+        <ElFormItem label="区域" prop="countryId">
           <el-select filterable v-model="form.countryId" placeholder="Select">
             <ElOption
               v-for="item in countryList"
