@@ -26,14 +26,14 @@ const data = ref<any>({
       { required: true, message: "请输入客户简称", trigger: "blur" },
       { min: 2, max: 50, message: "内容在2-50个字之间", trigger: "blur" },
     ],
-    chargeId: [{ required: true, message: "请选择负责人", trigger: "change" }],
+    chargeId: [{ required: true, message: "请选择PM", trigger: "change" }],
   },
 });
 
 const TypeList: any = {
   customerAccord: "客户名称",
   customerShortName: "客户简称",
-  chargeName: "负责人",
+  chargeName: "PM",
 };
 
 // 显隐
@@ -46,7 +46,7 @@ async function showEdit(row: any, FormType: any) {
   data.value.loading = false;
   getTenantStaffList();
 }
-// 获取负责人/用户
+// 获取PM/用户
 const getTenantStaffList = async () => {
   const res = await apiUser.getTenantStaffList();
   data.value.staffList = res.data;
@@ -106,11 +106,11 @@ defineExpose({
           </el-form-item>
         </template>
         <template v-if="data.type === 'chargeName'">
-          <el-form-item label="负责人" prop="chargeId">
+          <el-form-item label="PM" prop="chargeId">
             <el-select
               v-model="data.formData.chargeId"
               value-key=""
-              placeholder="请选择负责人"
+              placeholder="请选择PM"
               clearable
               filterable
             >

@@ -140,7 +140,7 @@ defineExpose({
     </el-form-item>
   </el-col>
   <el-col :span="8">
-    <el-form-item label="负责人:">
+    <el-form-item label="PM:">
       <el-text class="mx-1">
         {{ detailData.chargeName ? detailData.chargeName : "-" }}
       </el-text>

@@ -74,7 +74,7 @@ const columns = ref<any>([
     sortabel: true,
     checked: true,
   },
-  { prop: "doMoneyPrice", label: "原价", sortabel: true, checked: true },
+  { prop: "doMoneyPrice", label: "项目价", sortabel: true, checked: true },
   { prop: "memberPrice", label: "会员价", sortabel: true, checked: true },
   { prop: "countryNameList", label: "国家", sortabel: true, checked: true },
   { prop: "ir", label: "IR/NIR", sortabel: true, checked: true },
@@ -273,7 +273,7 @@ const formOption={
             </p>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('doMoneyPrice')" show-overflow-tooltip align="left" label="原价">
+        <el-table-column v-if="checkList.includes('doMoneyPrice')" show-overflow-tooltip align="left" label="项目价">
           <template #default="{ row }">
             <el-text v-if="countryType === 3" class="mx-1">暂无数据</el-text>
             <el-text v-else class="mx-1">

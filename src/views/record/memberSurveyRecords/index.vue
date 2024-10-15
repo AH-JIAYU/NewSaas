@@ -75,7 +75,7 @@ const columns = ref([
   { prop: "allocationType", label: "分配类型", sortable: true, checked: true },
   {
     prop: "doMoneyPrice",
-    label: "原价",
+    label: "项目价",
     sortable: true,
     checked: true,
   },
@@ -526,7 +526,7 @@ const formOption = {
           show-overflow-tooltip
           width="120"
           fixed="right"
-          label="价格"
+          label="项目价"
         >
           <template #default="{ row }">
             <div class="tableBig">
@@ -541,7 +541,7 @@ const formOption = {
           show-overflow-tooltip
           width="120"
           fixed="right"
-          label="供应商价"
+          label="成本价"
         >
           <template #default="{ row }">
             <div class="tableBig" style="color: #fd8989">

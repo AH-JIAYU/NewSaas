@@ -170,7 +170,7 @@ onMounted(() => {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('additionRatio')" align="left" prop="additionRatio"
-          show-overflow-tooltip label="加成比例(百分比)">
+          show-overflow-tooltip label="价格比例">
           <template #default="{ row }">
             <p style="font-weight: 700;">{{ row.additionRatio }}%</p>
           </template>

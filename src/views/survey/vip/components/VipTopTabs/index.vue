@@ -4,6 +4,7 @@ import edit from "@/views/survey/vipLevel/components/Edit/index.vue"; // 快捷�
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
 import useSurveyVipLevelStore from "@/store/modules/survey_vipLevel"; //会员等级
 import useSurveyVipGroupStore from "@/store/modules/survey_vipGroup"; //会员组
+import apiDep from "@/api/modules/department";
 const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
 const surveyVipLevelStore = useSurveyVipLevelStore(); //会员等级
 const surveyVipGroupStore = useSurveyVipGroupStore(); //会员组
@@ -17,9 +18,16 @@ const activeName = ref("basicSettings"); // tabs
 const EditRef = ref(); // 快捷操作：新增会员等级 Ref
 const data = reactive<any>({
   vipLevelList: [], // 会员等级
-  vipGroupList: [], // 会员组
+  // vipGroupList: [], // 会员组
+  departmentList: [],//部门
   countryList: [], // 国家
 });
+// 部门配置
+const defaultProps: any = {
+  children: "children",
+  label: "name",
+  // disabled : "distribution",
+};
 // 校验
 const rules = reactive<any>({
   memberNickname: [
@@ -77,7 +85,42 @@ const changeCountryId = (val: any) => {
     }
   }
 };
-
+// 部门change事件
+const handleNodeClick = (nodeData: any, checked: any) => {
+  if (checked) {
+    localToptTab.value.memberGroupId = nodeData.id
+    // 如果选中该节点，禁用所有其他节点
+    disableAllNodes(nodeData.id);
+  } else {
+    localToptTab.value.memberGroupId = ''
+    // 如果取消选中，恢复所有节点为可选
+    enableAllNodes();
+  }
+};
+// 禁用所有节点（除了选中的节点）
+const disableAllNodes = (selectedId: any) => {
+  const traverse = (nodes: any) => {
+    nodes.forEach((node: any) => {
+      node.disabled = node.id !== selectedId; // 仅将非选中节点禁用
+      if (node.children) {
+        traverse(node.children); // 递归处理子节点
+      }
+    });
+  };
+  traverse(data.departmentList);
+};
+// 恢复所有节点为可选
+const enableAllNodes = () => {
+  const traverse = (nodes: any) => {
+    nodes.forEach((node: any) => {
+      node.disabled = false; // 恢复为可选
+      if (node.children) {
+        traverse(node.children); // 递归处理子节点
+      }
+    });
+  };
+  traverse(data.departmentList);
+};
 // 获取会员等级
 const getLevelNameList = async () => {
   data.vipLevelList = await surveyVipLevelStore.getLevelNameList();
@@ -85,7 +128,11 @@ const getLevelNameList = async () => {
 // 获取会员等级 会员组 国家
 const getList = async () => {
   await getLevelNameList()
-  data.vipGroupList = await surveyVipGroupStore.getGroupNameList();
+  // 部门
+  const res = await apiDep.list({ name: '' });
+  data.departmentList = res.data;
+  // data.vipGroupList = await surveyVipGroupStore.getGroupNameList();
+
   data.countryList = await basicDictionaryStore.getCountry();
 };
 // 使用 InstanceType 来获取 ElForm 实例的类型
@@ -200,7 +247,7 @@ onMounted(async () => {
                         <el-button type="primary" link @click="AddVipLevel" size="small">
                           快捷新增
                           <SvgIcon name="ant-design:plus-outlined" color="#fff"
-                    style="background-color: var(--el-color-primary);border-radius: 50%;padding: 2px;margin:0 2px" />
+                            style="background-color: var(--el-color-primary);border-radius: 50%;padding: 2px;margin:0 2px" />
                         </el-button>
                       </div>
                     </template>
@@ -208,11 +255,14 @@ onMounted(async () => {
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="会员组">
-                  <el-select clearable filterable v-model="localToptTab.memberGroupId">
+                <el-form-item label="部门">
+                  <!-- <el-select clearable filterable v-model="localToptTab.memberGroupId">
                     <el-option v-for="item in data.vipGroupList" :key="item.memberGroupId" :label="item.memberGroupName"
                       :value="item.memberGroupId" />
-                  </el-select>
+                  </el-select> -->
+                  <el-tree style="max-width: 600px" ref="treeRef" :data="data.departmentList" show-checkbox
+                    check-strictly node-key="id" :default-expanded-keys="[]" default-expand-all :props="defaultProps"
+                    @check-change="handleNodeClick" />
                 </el-form-item>
               </el-col>
             </el-row>

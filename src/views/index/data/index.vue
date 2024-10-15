@@ -27,7 +27,7 @@ const columns = ref<any>([
     sortable: true,
     checked: true,
   },
-  { label: "负责人", prop: "chargeName", sortable: true, checked: true },
+  { label: "PM", prop: "chargeName", sortable: true, checked: true },
   {
     label: "关联项目数量",
     prop: "relationProjectTotal",
@@ -146,7 +146,7 @@ const getDataChange = () => {
         sortable: true,
         checked: true,
       },
-      { label: "负责人", prop: "chargeName", sortable: true, checked: true },
+      { label: "PM", prop: "chargeName", sortable: true, checked: true },
       {
         label: "关联项目数量",
         prop: "relationProjectTotal",
@@ -194,7 +194,7 @@ const getDataChange = () => {
         sortable: true,
         checked: true,
       },
-      { label: "负责人", prop: "chargeName", sortable: true, checked: true },
+      { label: "PM", prop: "chargeName", sortable: true, checked: true },
       {
         label: "系统完成数",
         prop: "systemDone",
@@ -275,7 +275,7 @@ onMounted(() => {
             <el-table-column v-if="checkList.includes('customerShortName')" show-overflow-tooltip align="left"
               prop="customerShortName" label="客户简称" width="100" />
             <el-table-column v-if="checkList.includes('chargeName')" show-overflow-tooltip align="left"
-              prop="chargeName" label="负责人"><template #default="{ row }">
+              prop="chargeName" label="PM"><template #default="{ row }">
                 {{ row.chargeName ? row.chargeName : "-" }}
               </template>
             </el-table-column>
@@ -337,7 +337,7 @@ onMounted(() => {
               </template>
             </el-table-column>
             <el-table-column v-if="checkList.includes('chargeName')" show-overflow-tooltip align="left"
-              prop="chargeName" label="负责人"><template #default="{ row }">
+              prop="chargeName" label="PM"><template #default="{ row }">
                 {{ row.chargeName ? row.chargeName : "-" }}
               </template>
             </el-table-column>

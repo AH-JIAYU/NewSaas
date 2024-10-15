@@ -376,7 +376,7 @@ defineExpose({ showEdit });
               </el-form-item>
             </el-col>
             <el-col :span="8" v-if="data.projectType === 1">
-              <el-form-item label="原价 :">
+              <el-form-item label="项目价 :">
                 <el-text v-if="data.form.currencyType === 1" class="mx-1">
                   {{
                     data.form.doMoneyPrice ? data.form.doMoneyPrice + "$" : "-"

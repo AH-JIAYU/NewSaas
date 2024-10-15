@@ -18,12 +18,12 @@ const data = ref<any>({
   formData: {}, //表单
   staffList: [], //用户
   rules: {
-    chargeId: [{ required: true, message: "请选择负责人", trigger: "change" }],
+    chargeId: [{ required: true, message: "请选择PM", trigger: "change" }],
   },
 });
 
 const TypeList: any = {
-  chargeUserId: "负责人",
+  chargeUserId: "PM",
 };
 
 // 显隐
@@ -38,7 +38,7 @@ async function showEdit(row: any, FormType: any) {
   data.value.dialogTableVisible = true;
   data.value.loading = false;
 }
-// 获取负责人/用户
+// 获取PM/用户
 const getTenantStaffList = async () => {
   const res = await apiUser.getTenantStaffList();
   data.value.staffList = res.data;
@@ -99,7 +99,7 @@ defineExpose({
         label-position="right"
       >
         <template v-if="data.type === 'chargeUserId'">
-          <el-form-item label="负责人" prop="chargeUserId">
+          <el-form-item label="PM" prop="chargeUserId">
             <el-select
               v-model="data.formData.chargeUserId"
               clearable

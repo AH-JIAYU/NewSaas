@@ -56,7 +56,7 @@ const columns = ref<any>([
     sortable: true,
     checked: true,
   },
-  { label: "原价", prop: "projectAmount", sortable: true, checked: true },
+  { label: "项目价", prop: "projectAmount", sortable: true, checked: true },
   { label: "所属国家", prop: "countryId", sortable: true, checked: true },
   {
     label: "系统/审核完成数",
@@ -480,7 +480,7 @@ function handleMoreOperating(command: string, row: any) {
           v-if="checkList.includes('projectAmount')"
           show-overflow-tooltip
           align="left"
-          label="原价"
+          label="项目价"
           width="80"
         >
           <template #default="{ row }">

@@ -111,7 +111,7 @@ const rules = reactive<any>({
     { validator: validateUrlRegistered, trigger: "blur" },
   ],
   releaseTime: [{ validator: validateReleaseTime, trigger: "blur" }],
-  doMoneyPrice: [{ required: true, message: "请输入原价", trigger: "blur" }],
+  doMoneyPrice: [{ required: true, message: "请输入项目价", trigger: "blur" }],
   num: [{ required: true, message: "请输入配额", trigger: "blur" }],
   minimumDuration: [
     { required: true, message: "请输入最小分长", trigger: "blur" },
@@ -674,7 +674,7 @@ nextTick(() => {
           </el-row>
           <el-row :gutter="20">
             <el-col :span="6">
-              <el-form-item label="原价" prop="doMoneyPrice">
+              <el-form-item label="项目价" prop="doMoneyPrice">
                 <el-input-number
                   style="height: 2rem"
                   v-model="localToptTab.doMoneyPrice"

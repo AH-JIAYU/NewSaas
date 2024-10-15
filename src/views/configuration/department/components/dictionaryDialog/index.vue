@@ -43,7 +43,7 @@ const visible = defineModel<boolean>({
 });
 // 弹窗标题
 const title = computed(() => (props.id === "" ? "新增部门" : "编辑部门"));
-// 部门负责人list
+// 部门PMlist
 const filteredUsers = ref<any>([])
 // formRef
 const formRef = ref<FormInstance>();

@@ -92,7 +92,7 @@ defineExpose({
             </template>
           </template>
         </el-table-column>
-        <el-table-column   show-overflow-tooltip align="left" label="原价">
+        <el-table-column   show-overflow-tooltip align="left" label="项目价">
           <template #default="{ row }">
             <CurrencyType />{{ row.doMoneyPrice || 0 }}
           </template>

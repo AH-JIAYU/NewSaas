@@ -164,21 +164,21 @@ onMounted(() => {
           </template>
         </ElTableColumn>
         <el-table-column v-if="checkList.includes('levelName')" align="left" prop="levelName" show-overflow-tooltip
-          label="等级名称" >
-          <template #default="{row}">
-            <div class="tableBig">{{row.levelName}}</div>
+          label="等级名称">
+          <template #default="{ row }">
+            <div class="tableBig">{{ row.levelName }}</div>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('additionRatio')" align="left" prop="additionRatio"
-          show-overflow-tooltip label="加成比例(百分比)"  >
-          <template #default="{row}">
-            <div class="tableBig">{{row.additionRatio}}%</div>
+          show-overflow-tooltip label="价格比例">
+          <template #default="{ row }">
+            <div class="tableBig">{{ row.additionRatio }}%</div>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('memberQuantity')" align="left" prop="memberQuantity"
-          show-overflow-tooltip label="成员数量"  >
-          <template #default="{row}">
-            <div class="tableBig">{{row.memberQuantity}}</div>
+          show-overflow-tooltip label="成员数量">
+          <template #default="{ row }">
+            <div class="tableBig">{{ row.memberQuantity }}</div>
           </template>
         </el-table-column>
         <el-table-column align="left" fixed="right" show-overflow-tooltip label="操作">

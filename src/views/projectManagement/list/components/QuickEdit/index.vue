@@ -40,7 +40,7 @@ const data = ref<any>({
       },
     ],
     clientId: [{ required: true, message: "请选择所属客户", trigger: "change" }],
-    doMoneyPrice: [{ required: true, message: "请输入原价", trigger: "blur" }],
+    doMoneyPrice: [{ required: true, message: "请输入项目价", trigger: "blur" }],
     num: [{ required: true, message: "请输入配额", trigger: "blur" }],
     minimumDuration: [
       { required: true, message: "请输入最小分长", trigger: "blur" },
@@ -53,7 +53,7 @@ const TypeList: any = {
   PCNL: '参数',
   customer: '客户',
   name: '名称/标识',
-  doMoneyPrice: '原价',
+  doMoneyPrice: '项目价',
   ir: "IR",
   remark: '备注',
 };
@@ -182,7 +182,7 @@ defineExpose({
         </template>
 
         <template v-if="data.type === 'doMoneyPrice'">
-          <el-form-item label="原价" prop="doMoneyPrice">
+          <el-form-item label="项目价" prop="doMoneyPrice">
             <el-input style="width: 100%;" v-model="data.formData.doMoneyPrice" type='number' :min="1" :precision="1"
               :step="0.1" controls-position="right">
               <template #suffix>

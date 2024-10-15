@@ -26,7 +26,7 @@ const form = ref<any>({
   projectId: "",
   // 客户id
   clientId: "",
-  // 原价
+  // 项目价
   doMoneyPrice: "",
   // 结算完成数
   settlementDone: "",
@@ -126,7 +126,7 @@ function closeHandler() {
     projectId: "",
     // 客户id
     clientId: "",
-    // 原价
+    // 项目价
     doMoneyPrice: "",
     // 结算完成数
     settlementDone: "",
@@ -161,7 +161,7 @@ defineExpose({ showEdit });
                 :label="item.customerAccord" />
             </el-select>
           </el-form-item>
-          <el-form-item prop="doMoneyPrice" label="原价">
+          <el-form-item prop="doMoneyPrice" label="项目价">
             <el-input v-model="form.doMoneyPrice" :disabled="!!form.id" placeholder="" clearable @change="" />
           </el-form-item>
           <el-form-item label="系统完成数">

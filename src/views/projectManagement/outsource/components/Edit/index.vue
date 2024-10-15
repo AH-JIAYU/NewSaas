@@ -232,7 +232,7 @@ defineExpose({ showEdit });
                 </div>
                 <div class="price flex-b">
                   <p>
-                    原价:
+                    项目价:
                     <CurrencyType />{{ item.doMoneyPrice }}
                   </p>
                   <p>

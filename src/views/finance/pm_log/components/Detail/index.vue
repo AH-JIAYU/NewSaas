@@ -161,7 +161,7 @@ defineExpose({
           <el-text>{{ row.projectId ? row.projectId : "-" }}</el-text>
         </template>
 </ElTableColumn>
-<ElTableColumn show-overflow-tooltip align="left" prop="" label="负责人">
+<ElTableColumn show-overflow-tooltip align="left" prop="" label="PM">
   <template #default="{ row }">
           <el-text>{{row.userName ? row.userName : '-'}}</el-text>
           <!-- <el-text v-if="row.balanceType == 2">可用金额</el-text> -->

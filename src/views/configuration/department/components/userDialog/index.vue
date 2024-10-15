@@ -389,7 +389,7 @@ onMounted(async () => {
         <template #header>
           <div class="card-header">
             <div class="leftTitle">
-              部门信息<span v-if="form.enableChargePerson" style="margin-left: 20px; font-size: 14px">负责人:<el-text
+              部门信息<span v-if="form.enableChargePerson" style="margin-left: 20px; font-size: 14px">PM:<el-text
                   v-for="item in staffList" :key="item.id">
                   <el-text v-if="item.id === form.id">
                     {{ item.name }}
