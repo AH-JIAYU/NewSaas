@@ -22,7 +22,7 @@ const roleStore = useTenantRoleStore();
 // 角色
 const munulevs = ref();
 // 部门数据
-const departmentList = ref<any>();
+const departmentList = ref<any>([]);
 // 禁用修改密码
 const disabled = ref(false);
 // 判断手机号或邮箱是否变动
@@ -368,7 +368,7 @@ onMounted(async () => {
         </template>
         <el-row :gutter="24">
           <el-form-item label="分配部门:">
-            <el-tree v-if="!!departmentList" style="max-width: 600px" ref="treeRef" :data="departmentList" show-checkbox check-strictly
+            <el-tree v-if="departmentList.length > 0" style="max-width: 600px" ref="treeRef" :data="departmentList" show-checkbox check-strictly
               node-key="id" :default-expanded-keys="[]" :default-checked-keys="departmentId" default-expand-all
               :props="defaultProps" @check-change="handleNodeClick" />
               <el-text v-else>暂无数据</el-text>
