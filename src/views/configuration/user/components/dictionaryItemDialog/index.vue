@@ -243,7 +243,9 @@ onMounted(async () => {
   munulevs.value = await roleStore.getRole();
   // 部门
   const res = await apiDep.list({ name: '' });
-  departmentList.value = res.data;
+  if(res.data) {
+    departmentList.value = res.data;
+  }
   // 区域
   country.value = await useStoreCountry.getCountry();
 

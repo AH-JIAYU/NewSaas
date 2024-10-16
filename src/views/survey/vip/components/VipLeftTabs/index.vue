@@ -30,6 +30,13 @@ function addLeftTab() {
   localLeftTab.value.push({
     ...surveyVipStore.initialTopTabsData,
   });
+  const orgStructureId = localLeftTab.value[0].organizationalStructureId;
+  localLeftTab.value.forEach((item: any) => {
+    // 检查是否存在 organizationalStructureId，且值是否为 undefined 或空字符串
+    if (!item.hasOwnProperty('organizationalStructureId')) {
+      item.organizationalStructureId = orgStructureId; // 添加字段并赋值
+    }
+  });
 }
 // 删除
 function tabremove(tabIndexs: any) {

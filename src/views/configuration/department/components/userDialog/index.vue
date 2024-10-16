@@ -252,8 +252,10 @@ onMounted(async () => {
   // 角色
   munulevs.value = await roleStore.getRole();
   const res = await apiDep.list({ name: '' })
-  // 部门
+  if(res.data) {
+      // 部门
   departmentList.value = res.data
+  }
   // 区域
   country.value = await useStoreCountry.getCountry();
   // 默认先择对应的部门,并禁用其他部门

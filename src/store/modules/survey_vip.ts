@@ -25,6 +25,7 @@ const useSurveyVipStore = defineStore(
       memberStatus: 2, // 会员状态:   原型默认 开启
       exemptionTrial: 1, // 免审状态:   原型默认 关闭
       randomStatus: 1, // 随机状态:1关闭 2开启
+      organizationalStructureId:null,//部门id
     };
     const getNickNameList = async () => {
       if (!NickNameList.value) {
