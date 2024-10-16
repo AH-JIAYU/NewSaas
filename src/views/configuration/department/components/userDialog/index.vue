@@ -376,7 +376,7 @@ onMounted(async () => {
               部门信息<span v-if="form.enableChargePerson" style="margin-left: 20px; font-size: 14px">PM:<el-text
                   v-for="item in staffList" :key="item.id">
                   <el-text v-if="item.id === form.id">
-                    {{ item.name }}
+                    {{ item.userName }}
                   </el-text>
                 </el-text></span>
             </div>
