@@ -150,19 +150,19 @@ async function onSubmit() {
               const obj = {
                 id: item.id,
                 userId: item.userId,
-                commission: item.commission || 0,
-                commissionTime: item.commissionTime || 0,
-                commissionStatus: item.commissionStatus || 0,
-                commissionType: item.commissionType || 0,
+                commission: item.commission,
+                commissionTime: item.commissionTime,
+                commissionStatus: item.commissionStatus,
+                commissionType: item.commissionType,
               }
               form.value.organizationalStructurePersonList.push(obj)
             } else {
               const obj = {
                 userId: item.id,
-                commission: item.commission || 0,
-                commissionTime: item.commissionTime || 0,
-                commissionStatus: item.commissionStatus || 0,
-                commissionType: item.commissionType || 0,
+                commission: item.commission,
+                commissionTime: item.commissionTime,
+                commissionStatus: item.commissionStatus,
+                commissionType: item.commissionType,
               }
               form.value.organizationalStructurePersonList.push(obj)
             }
