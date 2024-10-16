@@ -4,7 +4,7 @@ import edit from "@/views/survey/vipLevel/components/Edit/index.vue"; // 快捷�
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
 import useSurveyVipLevelStore from "@/store/modules/survey_vipLevel"; //会员等级
 import useSurveyVipGroupStore from "@/store/modules/survey_vipGroup"; //会员组
-import apiDep from "@/api/modules/department";
+import apiDep from "@/api/modules/survey_vip_department";
 const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
 const surveyVipLevelStore = useSurveyVipLevelStore(); //会员等级
 const surveyVipGroupStore = useSurveyVipGroupStore(); //会员组
@@ -14,6 +14,12 @@ const props = defineProps({
   leftTab: Object,
   tabIndex: Number,
 });
+// 获取树
+const treeRef = ref<any>()
+// 树绑定的id
+const departmentId = ref<any>([])
+// 部门数据
+const departmentList = ref<any>([]);
 const activeName = ref("basicSettings"); // tabs
 const EditRef = ref(); // 快捷操作：新增会员等级 Ref
 const data = reactive<any>({
@@ -84,41 +90,31 @@ const changeCountryId = (val: any) => {
     }
   }
 };
-// 部门change事件
+// 树的事件
 const handleNodeClick = (nodeData: any, checked: any) => {
   if (checked) {
-    localToptTab.value.memberGroupId = nodeData.id
-    // 如果选中该节点，禁用所有其他节点
-    disableAllNodes(nodeData.id);
+    // 选中新的节点时，取消其他选中的节点
+    const checkedKeys = treeRef.value.getCheckedKeys(); // 获取当前所有选中的节点
+    checkedKeys.forEach((key: any) => {
+      if (key !== nodeData.id) {
+        treeRef.value.setChecked(key, false); // 取消选中其他节点
+      }
+    });
+    // 更新当前选中的节点 ID
+    departmentId.value = [nodeData.id]; // 只保留当前选中节点 ID
   } else {
-    localToptTab.value.memberGroupId = ''
-    // 如果取消选中，恢复所有节点为可选
-    enableAllNodes();
+    // 如果取消选中节点，更新 departmentId
+    departmentId.value = departmentId.value.filter((id: any) => id !== nodeData.id);
   }
-};
-// 禁用所有节点（除了选中的节点）
-const disableAllNodes = (selectedId: any) => {
-  const traverse = (nodes: any) => {
-    nodes.forEach((node: any) => {
-      node.disabled = node.id !== selectedId; // 仅将非选中节点禁用
-      if (node.children) {
-        traverse(node.children); // 递归处理子节点
-      }
-    });
-  };
-  traverse(data.departmentList);
-};
-// 恢复所有节点为可选
-const enableAllNodes = () => {
-  const traverse = (nodes: any) => {
-    nodes.forEach((node: any) => {
-      node.disabled = false; // 恢复为可选
-      if (node.children) {
-        traverse(node.children); // 递归处理子节点
-      }
-    });
-  };
-  traverse(data.departmentList);
+  // 同步选中的路由id
+  departmentId.value = treeRef.value!.getCheckedKeys(false);
+  //  获取选中的所有子节点
+  const tree = treeRef.value.getCheckedKeys();
+  // 获取所有半选的主节点
+  const halltree = treeRef.value.getHalfCheckedKeys();
+  // 组合一下
+  const organizationalStructureId = tree.concat(halltree);
+  localToptTab.value.organizationalStructureId = organizationalStructureId[0];
 };
 // 获取会员等级
 const getLevelNameList = async () => {
@@ -129,7 +125,7 @@ const getList = async () => {
   await getLevelNameList()
   // 部门
   const res = await apiDep.list({ name: '' });
-  data.departmentList = res.data;
+  departmentList.value = res.data;
   // data.vipGroupList = await surveyVipGroupStore.getGroupNameList();
 
   data.countryList = await basicDictionaryStore.getCountry();
@@ -138,6 +134,10 @@ const getList = async () => {
 const formRef = ref(null);
 // 注入主组件中的提供者
 const localToptTab = ref<any>(props.leftTab);
+departmentId.value = []
+if (localToptTab.value.organizationalStructureId) {
+  departmentId.value.push(localToptTab.value.organizationalStructureId)
+}
 nextTick(() => {
   // 表单验证方法
   validate(formRef.value);
@@ -253,17 +253,41 @@ onMounted(async () => {
                   </el-select>
                 </el-form-item>
               </el-col>
-              <el-col :span="8">
+              <!-- <el-col :span="8">
                 <el-form-item label="部门">
-                  <!-- <el-select clearable filterable v-model="localToptTab.memberGroupId">
+                  <el-select clearable filterable v-model="localToptTab.memberGroupId">
                     <el-option v-for="item in data.vipGroupList" :key="item.memberGroupId" :label="item.memberGroupName"
                       :value="item.memberGroupId" />
-                  </el-select> -->
-                  <!-- <el-tree style="max-width: 600px" ref="treeRef" :data="data.departmentList" show-checkbox
+                  </el-select>
+                  <el-tree style="max-width: 600px" ref="treeRef" :data="data.departmentList" show-checkbox
                     check-strictly node-key="id" :default-expanded-keys="[]" default-expand-all :props="defaultProps"
-                    @check-change="handleNodeClick" /> -->
+                    @check-change="handleNodeClick" />
                 </el-form-item>
-              </el-col>
+              </el-col> -->
+            </el-row>
+          </el-card>
+          <el-card class="box-card">
+            <template #header>
+              <div class="card-header">
+                <div class="leftTitle">
+                  部门信息
+                  <!-- <span v-if="form.enableChargePerson" style="margin-left: 20px; font-size: 14px">负责人:<el-text
+                      v-for="item in staffList" :key="item.id">
+                      <el-text v-if="item.id === form.id">
+                        {{ item.name }}
+                      </el-text>
+                    </el-text></span> -->
+                </div>
+              </div>
+            </template>
+            <el-row :gutter="24">
+              <el-form-item label="分配部门:">
+                <el-tree v-if="departmentList.length > 0" style="max-width: 600px" ref="treeRef" :data="departmentList"
+                  show-checkbox check-strictly node-key="id" :default-expanded-keys="[]"
+                  :default-checked-keys="departmentId" default-expand-all :props="defaultProps"
+                  @check-change="handleNodeClick" />
+                <el-text v-else>暂无数据</el-text>
+              </el-form-item>
             </el-row>
           </el-card>
         </ElForm>

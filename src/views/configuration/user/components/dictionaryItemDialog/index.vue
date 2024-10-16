@@ -32,7 +32,7 @@ const props: any = defineProps(['catalogueId', 'parentId', 'id', 'tree', 'dataLi
 // 更新数据
 const emits = defineEmits(["success", "getList"]);
 // tree ref
-const treeRef = ref<any>();
+const treeRef = ref<any>(null);
 const visible = defineModel<boolean>({
   default: false,
 });
@@ -127,15 +127,17 @@ function onSubmit() {
     formRules.value.phoneNumber = []
     formRef.value.clearValidate('phoneNumber');
   }
-  // 同步选中的路由id
-  departmentId.value = treeRef.value!.getCheckedKeys(false);
-  //  获取选中的所有子节点
-  const tree = treeRef.value.getCheckedKeys();
-  // 获取所有半选的主节点
-  const halltree = treeRef.value.getHalfCheckedKeys();
-  // 组合一下
-  const organizationalStructureId = tree.concat(halltree);
-  form.value.organizationalStructureId = organizationalStructureId[0];
+  if (treeRef.value?.getCheckedKeys()) {
+    // 同步选中的路由id
+    departmentId.value = treeRef.value.getCheckedKeys(false);
+    // 获取选中的所有子节点
+    const tree = treeRef.value.getCheckedKeys();
+    // 获取所有半选的主节点
+    const halltree = treeRef.value.getHalfCheckedKeys();
+    // 组合一下
+    const organizationalStructureId = tree.concat(halltree);
+    form.value.organizationalStructureId = organizationalStructureId[0];
+  }
   if (!form.value.id) {
     formRef.value &&
       formRef.value.validate((valid: any) => {
@@ -217,11 +219,11 @@ const flattenDeep = (arr: any) => {
   );
 };
 // 树选中事件
-const handleNodeClick = (nodeData:any, checked:any) => {
+const handleNodeClick = (nodeData: any, checked: any) => {
   if (checked) {
     // 选中新的节点时，取消其他选中的节点
     const checkedKeys = treeRef.value.getCheckedKeys(); // 获取当前所有选中的节点
-    checkedKeys.forEach((key:any) => {
+    checkedKeys.forEach((key: any) => {
       if (key !== nodeData.id) {
         treeRef.value.setChecked(key, false); // 取消选中其他节点
       }
@@ -230,7 +232,7 @@ const handleNodeClick = (nodeData:any, checked:any) => {
     departmentId.value = [nodeData.id]; // 只保留当前选中节点 ID
   } else {
     // 如果取消选中节点，更新 departmentId
-    departmentId.value = departmentId.value.filter((id:any) => id !== nodeData.id);
+    departmentId.value = departmentId.value.filter((id: any) => id !== nodeData.id);
   }
 };
 onMounted(async () => {
@@ -243,7 +245,9 @@ onMounted(async () => {
   munulevs.value = await roleStore.getRole();
   // 部门
   const res = await apiDep.list({ name: '' });
-  departmentList.value = res.data;
+  if (res.data) {
+    departmentList.value = res.data;
+  }
   // 区域
   country.value = await useStoreCountry.getCountry();
 
@@ -253,7 +257,7 @@ onMounted(async () => {
     form.value = JSON.parse(props.row);
     // 确保 organizationalStructureId 是一个数组
     const orgId = form.value.organizationalStructureId;
-    if(orgId) {
+    if (orgId) {
       departmentId.value = Array.isArray(orgId) ? orgId : [orgId];
     }
     isEmail.value = form.value.email;
@@ -368,10 +372,11 @@ onMounted(async () => {
         </template>
         <el-row :gutter="24">
           <el-form-item label="分配部门:">
-            <el-tree v-if="departmentList.length > 0" style="max-width: 600px" ref="treeRef" :data="departmentList" show-checkbox check-strictly
-              node-key="id" :default-expanded-keys="[]" :default-checked-keys="departmentId" default-expand-all
-              :props="defaultProps" @check-change="handleNodeClick" />
-              <el-text v-else>暂无数据</el-text>
+            <el-tree v-if="departmentList.length > 0" style="max-width: 600px" ref="treeRef" :data="departmentList"
+              show-checkbox check-strictly node-key="id" :default-expanded-keys="[]"
+              :default-checked-keys="departmentId" default-expand-all :props="defaultProps"
+              @check-change="handleNodeClick" />
+            <el-text v-else>暂无数据</el-text>
           </el-form-item>
         </el-row>
       </el-card>

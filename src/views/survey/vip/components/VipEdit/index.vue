@@ -10,7 +10,7 @@ import useSurveyVipStore from "@/store/modules/survey_vip"; // 会员
 const stagedDataStore = useStagedDataStore(); // 暂存
 const surveyVipStore = useSurveyVipStore(); // 会员
 
-const emit = defineEmits(["fetch-data"]);
+const emit = defineEmits(["fetch-data","getList"]);
 const drawerisible = ref<boolean>(false);
 const title = ref<string>("");
 const LeftTabsRef = ref<any>(); // Ref
@@ -26,9 +26,10 @@ function pushData(data: any) {
 provide("validateTopTabs", pushData);
 let leftTabsData = reactive<any>([]); // 明确指定类型为 LeftTab[]
 // 显隐
-async function showEdit(row: any) {
+async function showEdit(row: any,depId:any) {
   if (!row) {
     title.value = "新增";
+    surveyVipStore.initialTopTabsData.organizationalStructureId = depId
     leftTabsData =
       stagedDataStore.surveyVip ||
       reactive([{ ...surveyVipStore.initialTopTabsData }]);
@@ -116,6 +117,7 @@ async function save() {
       surveyVipStore.NickNameList = null;
       close();
       emit("fetch-data");
+      emit("getList");
     } else {
       ElMessage.warning({
         message: "会员名称重复",

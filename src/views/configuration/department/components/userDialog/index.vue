@@ -252,8 +252,10 @@ onMounted(async () => {
   // 角色
   munulevs.value = await roleStore.getRole();
   const res = await apiDep.list({ name: '' })
-  // 部门
+  if(res.data) {
+      // 部门
   departmentList.value = res.data
+  }
   // 区域
   country.value = await useStoreCountry.getCountry();
   // 默认先择对应的部门,并禁用其他部门
@@ -374,7 +376,7 @@ onMounted(async () => {
               部门信息<span v-if="form.enableChargePerson" style="margin-left: 20px; font-size: 14px">PM:<el-text
                   v-for="item in staffList" :key="item.id">
                   <el-text v-if="item.id === form.id">
-                    {{ item.name }}
+                    {{ item.userName }}
                   </el-text>
                 </el-text></span>
             </div>
