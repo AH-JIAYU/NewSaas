@@ -255,6 +255,18 @@ onBeforeUnmount(() => {
         @selection-change="data.batch.selectionDataList = $event">
         <el-table-column align="left" prop="a" show-overflow-tooltip type="selection" />
         <ElTableColumn v-if="data.batch.enable" type="selection" show-overflow-tooltip align="left" fixed />
+        <ElTableColumn v-if="data.checkList.includes('randomIdentity')" show-overflow-tooltip width="200" align="left"
+          prop="randomIdentity" label="随机身份">
+          <template #default="{ row }">
+            <div v-if="row.randomIdentity" class="hoverSvg">
+              <p class="fineBom">ID：{{ row.randomIdentity }}</p>
+              <span class="c-fx">
+                <copy class="copy" :content="row.randomIdentity" />
+              </span>
+            </div>
+            <el-text v-else>-</el-text>
+          </template>
+        </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('memberId')" show-overflow-tooltip width="200" align="left"
           prop="memberId" label="会员ID">
           <template #default="{ row }">
@@ -279,18 +291,6 @@ onBeforeUnmount(() => {
               <p class="fineBom">ID：{{ row.projectId }}</p>
               <span class="c-fx">
                 <copy class="copy" :content="row.projectId" />
-              </span>
-            </div>
-            <el-text v-else>-</el-text>
-          </template>
-        </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('randomIdentity')" show-overflow-tooltip width="200" align="left"
-          prop="randomIdentity" label="随机身份">
-          <template #default="{ row }">
-            <div v-if="row.randomIdentity" class="hoverSvg">
-              <p class="fineBom">ID：{{ row.randomIdentity }}</p>
-              <span class="c-fx">
-                <copy class="copy" :content="row.randomIdentity" />
               </span>
             </div>
             <el-text v-else>-</el-text>

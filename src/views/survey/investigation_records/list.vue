@@ -230,19 +230,13 @@ const formOption={
       <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
         @selection-change="setSelectRows">
         <el-table-column align="left" type="selection" />
-        <el-table-column v-if="checkList.includes('projectName')" align="left" prop="projectName"
-          show-overflow-tooltip label="项目名称">
+        <el-table-column v-if="checkList.includes('randomIdentityId')" align="left" prop="randomIdentityId"
+          show-overflow-tooltip label="随机身份">
           <template #default="{ row }">
-            <el-text style="font-weight: 700;color: #333333;">{{ row.projectName ? row.projectName : "-" }}</el-text>
-          </template>
-        </el-table-column>
-        <el-table-column v-if="checkList.includes('projectId')" align="left" prop="projectId" show-overflow-tooltip
-          width="200" label="项目ID">
-          <template #default="{ row }">
-            <div v-if="row.projectId" class="hoverSvg">
-              <p class="fineBom">ID：{{ row.projectId }}</p>
+            <div v-if="row.randomIdentityId" class="hoverSvg">
+              <p class="fineBom">ID：{{ row.randomIdentityId }}</p>
               <span class="c-fx">
-                <copy class="copy" :content="row.projectId" />
+                <copy class="copy" :content="row.randomIdentityId" />
               </span>
             </div>
             <el-text v-else>-</el-text>
@@ -260,13 +254,19 @@ const formOption={
             <el-text v-else>-</el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('randomIdentityId')" align="left" prop="randomIdentityId"
-          show-overflow-tooltip label="随机身份">
+        <el-table-column v-if="checkList.includes('projectName')" align="left" prop="projectName"
+          show-overflow-tooltip label="项目名称">
           <template #default="{ row }">
-            <div v-if="row.randomIdentityId" class="hoverSvg">
-              <p class="fineBom">ID：{{ row.randomIdentityId }}</p>
+            <el-text style="font-weight: 700;color: #333333;">{{ row.projectName ? row.projectName : "-" }}</el-text>
+          </template>
+        </el-table-column>
+        <el-table-column v-if="checkList.includes('projectId')" align="left" prop="projectId" show-overflow-tooltip
+          width="200" label="项目ID">
+          <template #default="{ row }">
+            <div v-if="row.projectId" class="hoverSvg">
+              <p class="fineBom">ID：{{ row.projectId }}</p>
               <span class="c-fx">
-                <copy class="copy" :content="row.randomIdentityId" />
+                <copy class="copy" :content="row.projectId" />
               </span>
             </div>
             <el-text v-else>-</el-text>
