@@ -214,7 +214,7 @@ const handleSuccess: any = (uploadFile: any, uploadFiles: any) => {
 // 超出限制
 const handleExceed: any = async (uploadFile: any, uploadFiles: any) => {
   ElMessage.warning({
-    message: "只能上传一个,删除原文件后重新上传",
+    message: "最多可上传10个",
     center: true,
   });
 };
