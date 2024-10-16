@@ -33,7 +33,7 @@ const data = ref<any>({
 const TypeList: any = {
   customerAccord: "客户名称",
   customerShortName: "客户简称",
-  chargeName: "PM",
+  chargeId: "PM",
 };
 
 // 显隐
@@ -82,19 +82,8 @@ defineExpose({
 
 <template>
   <div>
-    <el-dialog
-      v-model="data.dialogTableVisible"
-      v-if="data.dialogTableVisible"
-      :title="data.title + '编辑'"
-      draggable
-    >
-      <el-form
-        ref="formRef"
-        :model="data.formData"
-        :rules="data.rules"
-        label-width="100"
-        label-position="right"
-      >
+    <el-dialog v-model="data.dialogTableVisible" v-if="data.dialogTableVisible" :title="data.title + '编辑'" draggable>
+      <el-form ref="formRef" :model="data.formData" :rules="data.rules" label-width="100" label-position="right">
         <template v-if="data.type === 'customerAccord'">
           <el-form-item label="客户名称" prop="customerAccord">
             <el-input v-model="data.formData.customerAccord" clearable />
@@ -105,21 +94,10 @@ defineExpose({
             <el-input v-model="data.formData.customerShortName" clearable />
           </el-form-item>
         </template>
-        <template v-if="data.type === 'chargeName'">
+        <template v-if="data.type === 'chargeId'">
           <el-form-item label="PM" prop="chargeId">
-            <el-select
-              v-model="data.formData.chargeId"
-              value-key=""
-              placeholder="请选择PM"
-              clearable
-              filterable
-            >
-              <el-option
-                v-for="item in data.staffList"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              />
+            <el-select v-model="data.formData.chargeId" value-key="" placeholder="请选择PM" clearable filterable>
+              <el-option v-for="item in data.staffList" :key="item.id" :label="item.userName" :value="item.id" />
             </el-select>
           </el-form-item>
         </template>
@@ -138,6 +116,7 @@ defineExpose({
 
 <style lang="scss" scoped>
 :deep {
+
   .el-drawer,
   .el-drawer__body,
   .el-tabs.el-tabs--left {

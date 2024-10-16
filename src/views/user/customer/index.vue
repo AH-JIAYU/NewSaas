@@ -48,7 +48,7 @@ const columns = ref([
     sortable: true,
     prop: "customerShortName",
   },
-  { label: "PM", checked: true, sortable: true, prop: "chargeName" },
+  { label: "PM", checked: true, sortable: true, prop: "chargeId" },
   { label: "关联项目数", checked: true, sortable: true, prop: "projectNumber" },
   { label: "客户状态", checked: true, sortable: true, prop: "customerStatus" },
   {
@@ -98,7 +98,7 @@ function quickEdit(row: any, type: any) {
   /**
    * customerAccord 客户名称
      customerShortName  客户简称
-     chargeName PM
+     chargeId PM
   */
   QuickEditRef.value.showEdit(row, type)
 }
@@ -261,17 +261,17 @@ const formOption={
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('chargeName')" align="left" prop="chargeName" show-overflow-tooltip
+        <el-table-column v-if="checkList.includes('chargeId')" align="left" prop="chargeId" show-overflow-tooltip
           label="PM"><template #default="{ row }">
             <div class="flex-c tableBig">
               <div class="oneLine" style="width: calc(100% - 20px);">
                 <el-text v-for="item in staffList" :key="item.id">
                   <el-text v-if="item.id === row.chargeId">
-                    {{ item.name }}
+                    {{ item.userName }}
                   </el-text>
                 </el-text>
               </div>
-              <SvgIcon @click="quickEdit(row, 'chargeName')"
+              <SvgIcon @click="quickEdit(row, 'chargeId')"
                 :class="{ edit: 'edit', current: row.tenantCustomerId === current }" name="i-ep:edit" color="#409eff" />
             </div>
 
