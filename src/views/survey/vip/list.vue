@@ -6,7 +6,7 @@ import vipPlusMinusPayments from "./components/vipPlusMinusPayments/index.vue";
 import { submitLoading } from "@/utils/apiLoading";
 import api from "@/api/modules/survey_vip";
 import useSurveyVipLevelStore from "@/store/modules/survey_vipLevel"; //会员等级
-import useSurveyVipGroupStore from "@/store/modules/survey_vipGroup"; //会员组
+import useSurveyVipGroupStore from "@/store/modules/survey_vipGroup"; //部门
 import useSurveyVipStore from "@/store/modules/survey_vip"; // 会员
 import empty from '@/assets/images/empty.png'
 import vipLevel from '@/views/survey/vipLevel/components/Edit/index.vue'
@@ -15,7 +15,7 @@ defineOptions({
   name: "vip",
 });
 const surveyVipLevelStore = useSurveyVipLevelStore(); //会员等级
-const surveyVipGroupStore = useSurveyVipGroupStore(); //会员组
+const surveyVipGroupStore = useSurveyVipGroupStore(); //部门
 const surveyVipStore = useSurveyVipStore(); // 会员
 const { pagination, getParams, onSizeChange, onCurrentChange } =
   usePagination(); // 分页
@@ -25,7 +25,7 @@ const listLoading = ref(false);
 const data = reactive<any>({
   list: [], // 列表
   vipLevelList: [], //会员等级
-  vipGroupList: [], // 会员组
+  vipGroupList: [], // 部门
 });
 // 编辑等级
 const vipLevelRef = ref<any>()
@@ -58,7 +58,7 @@ const columns = ref<Array<Object>>([
     checked: true,
     sprtable: true,
   },
-  { prop: "memberGroupName", label: "会员组", checked: true, sprtable: true },
+  { prop: "memberGroupName", label: "部门", checked: true, sprtable: true },
   { prop: "B2B|B2C", label: "B2B|B2C", checked: true, sprtable: true },
   { label: "可用余额", checked: true, sortable: true, prop: "availableBalance" },
   {
@@ -110,7 +110,7 @@ async function changeState(state: any, id: string) {
     ElMessage.success({
       message: "修改成功",
     });
-  // 数据改变 在会员组中需要重新请求
+  // 数据改变 在部门中需要重新请求
   surveyVipStore.NickNameList = null;
   queryData();
 }
@@ -125,7 +125,7 @@ const changeRandomState = async (state: any, id: string) => {
     ElMessage.success({
       message: "修改成功",
     });
-  // 数据改变 在会员组中需要重新请求
+  // 数据改变 在部门中需要重新请求
   surveyVipStore.NickNameList = null;
   queryData();
 }
@@ -198,7 +198,7 @@ onMounted(async () => {
   { index: 2, show: true, type: 'input', modelName: 'memberName', placeholder: '会员名称' },
   { index: 3, show: true, type: 'select', modelName: 'memberLevelId', placeholder: '会员等级', option: 'memberLevelId', optionLabel: 'levelNameOrAdditionRatio', optionValue: 'memberLevelId' },
   { index: 4, show: true, type: 'select', modelName: 'memberStatus', placeholder: '会员状态', option: 'memberStatus', optionLabel: 'label', optionValue: 'value' },
-  { index: 5, show: true, type: 'select', modelName: 'memberGroupId', placeholder: '所属会员组', option: 'memberGroupId', optionLabel: 'memberGroupName', optionValue: 'memberGroupId' },
+  { index: 5, show: true, type: 'select', modelName: 'memberGroupId', placeholder: '所属部门', option: 'memberGroupId', optionLabel: 'memberGroupName', optionValue: 'memberGroupId' },
   { index: 6, show: true, type: 'datetimerange', modelName: 'time', startPlaceHolder: '创建开始日期', endPlaceHolder: '创建结束日期' }
 ]
 });
@@ -284,7 +284,7 @@ const formOption={
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('memberGroupName')" align="left" prop="memberGroupName"
-          show-overflow-tooltip label="会员组"><template #default="{ row }">
+          show-overflow-tooltip label="部门"><template #default="{ row }">
             {{ row.memberGroupName ? row.memberGroupName : '-' }} </template></el-table-column>
         <el-table-column v-if="checkList.includes('B2B|B2C')" width="100" align="left" show-overflow-tooltip label="B2B/B2C">
           <template #default="{ row }">

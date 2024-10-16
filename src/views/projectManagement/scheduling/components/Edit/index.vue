@@ -26,12 +26,12 @@ const dialogTableVisible = ref(false);
 const data = reactive<any>({
   title: "", // 标题
   projectList: [], // 项目列表
-  memberGroupNameInfoList: [], // 会员组
+  memberGroupNameInfoList: [], // 部门
   supplierNameInfoList: [], // 供应商
   form: {
     projectId: "", //	项目id
-    groupSupplierId: [], // 供应商或者会员组id
-    dataType: "", // 数据类型:1:供应商 2:会员组
+    groupSupplierId: [], // 供应商或者部门id
+    dataType: "", // 数据类型:1:供应商 2:部门
     dispatchType: 1, // 	调度类型:1:指定关闭 2:指定价格
     doMoneyPrice: "", // 	价格(状态为指定价格时候才有),指定关闭不传
   },
@@ -64,7 +64,7 @@ async function showEdit(row: any, view?: any) {
       await changeProject(row.projectId);
       dialogTableVisible.value = true;
     }
-  } 
+  }
 }
 // 切换项目
 const changeProject = async (val: any) => {
@@ -98,8 +98,8 @@ function closeHandler() {
   formRef.value.resetFields();
   data.form = {
     projectId: "", //	项目id
-    groupSupplierId: [], // 供应商或者会员组id
-    dataType: "", // 数据类型:1:供应商 2:会员组
+    groupSupplierId: [], // 供应商或者部门id
+    dataType: "", // 数据类型:1:供应商 2:部门
     dispatchType: 1, // 	调度类型:1:指定关闭 2:指定价格
     doMoneyPrice: "", // 	价格(状态为指定价格时候才有),指定关闭不传
   };
@@ -157,7 +157,7 @@ defineExpose({ showEdit });
           <el-radio-group v-model="data.form.dispatchType" class="ml-4">
             <el-radio :value="1" size="large"> 指定关闭  <el-tooltip
           class="tooltips"
-          content="选中供应商或会员组，该供应商或会员组无法参与该项目"
+          content="选中供应商或部门，该供应商或部门无法参与该项目"
           placement="top"
         >
           <SvgIcon
@@ -228,7 +228,7 @@ defineExpose({ showEdit });
               @change="chagneDataType"
             >
               <el-radio :value="1" size="large"> 供应商 </el-radio>
-              <el-radio :value="2" size="large"> 会员组 </el-radio>
+              <el-radio :value="2" size="large"> 部门 </el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item
@@ -257,7 +257,7 @@ defineExpose({ showEdit });
           </el-form-item>
 
           <el-form-item
-            label="会员组"
+            label="部门"
             prop="groupSupplierId"
             v-if="
               data.memberGroupNameInfoList.length &&

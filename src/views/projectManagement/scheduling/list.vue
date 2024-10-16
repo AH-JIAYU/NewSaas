@@ -32,7 +32,7 @@ const columns = ref<any>([
   { sotrtable: true, checked: true, label: "项目价", prop: "moneyPrice" },
   { sotrtable: true, checked: true, label: "指定价格", prop: "doMoneyPrice" },
   { sotrtable: true, checked: true, label: "指定供应商", prop: "Supplier" },
-  { sotrtable: true, checked: true, label: "指定会员组", prop: "group" },
+  { sotrtable: true, checked: true, label: "指定部门", prop: "group" },
   { sotrtable: true, checked: true, label: "创建时间", prop: "createTime" },
 ]);
 // 查询参数
@@ -194,7 +194,7 @@ const formOption={
           <template #default="{ row }">
             <div class="specifyTheTarget">
               <el-button style="width:46px" v-if="row.dataType == 2" type="primary" size="small" class="p-1">{{
-    row.getGroupSupplierIdNameInfoList.length > 1 ? '×' + row.getGroupSupplierIdNameInfoList.length : '会员组'
+    row.getGroupSupplierIdNameInfoList.length > 1 ? '×' + row.getGroupSupplierIdNameInfoList.length : '部门'
   }}</el-button>
               <el-button style="width:46px" v-else-if="row.dataType === 1" type="warning" size="small" class="p-1">{{
     row.getGroupSupplierIdNameInfoList.length > 1 ? '×' + row.getGroupSupplierIdNameInfoList.length : '供应商'

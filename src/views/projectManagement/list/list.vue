@@ -90,7 +90,7 @@ const search = ref<any>({
   countryId: [], // 所属区域编号Id
   createName: "", // 	创建人-模糊查询
   allocation: "", // 	分配状态:1已经分配 2:未分配
-  allocationStatus: "", // 	分配类型: 1:自动分配 2:供应商 3:会员组
+  allocationStatus: "", // 	分配类型: 1:自动分配 2:供应商 3:部门
   status: "", // 	项目状态:1在线 2:离线
 }); // 搜索
 const list = ref<any>([]);
@@ -208,7 +208,7 @@ function onReset() {
     countryId: [], // 所属区域编号Id
     createName: "", // 	创建人-模糊查询
     allocation: "", // 	分配状态:1已经分配 2:未分配
-    allocationStatus: "", // 	分配类型: 1:自动分配 2:供应商 3:会员组
+    allocationStatus: "", // 	分配类型: 1:自动分配 2:供应商 3:部门
     status: "", // 	项目状态:1在线 2:离线
   };
   fetchData();
@@ -368,7 +368,7 @@ const formOption = {
   clientId: async () => await customerStore.getCustomerList(),
   allocationStatus: () => [
     { label: "供应商", value: 2 },
-    { label: "会员组", value: 3 },
+    { label: "部门", value: 3 },
     { label: "租户", value: 4 },
   ],
   status: () => [
@@ -640,7 +640,7 @@ const formOption = {
               @click="viewAllocations(row, 3)"
               type="success"
               v-else-if="row.allocationType === 3"
-              >会员组</el-button
+              >部门</el-button
             >
             <el-button
               class="tableBut"
