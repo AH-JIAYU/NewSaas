@@ -3,6 +3,7 @@ import { ElMessage } from "element-plus";
 import { submitLoading, obtainLoading } from "@/utils/apiLoading";
 import api from "@/api/modules/projectManagement";
 import cooperationApi from "@/api/modules/user_cooperation"; // 合作租户
+import apiDep from "@/api/modules/survey_vip_department";
 import useUserSupplierStore from "@/store/modules/user_supplier"; // 供应商
 import useSurveyVipGroupStore from "@/store/modules/survey_vipGroup"; //会员组
 const supplierStore = useUserSupplierStore(); // 供应商
@@ -17,11 +18,22 @@ const loading = ref<boolean>(false)
 // 弹框
 const dialogTableVisible = ref(false);
 const formRef = ref<any>(); // ref
+// 获取树
+const treeRef = ref<any>()
+// 树绑定的id
+const departmentId = ref<any>([])
+// 部门配置
+const defaultProps: any = {
+  children: "children",
+  label: "name",
+  // disabled : "distribution",
+};
 const data = ref<any>({
   title: "分配",
   list: [], // 表格
   tenantSupplierList: [], // 供应商
-  vipGroupList: [], // 会员组
+  // vipGroupList: [], // 会员组
+  departmentList: [],//会员部门
   tenantList: [], // 合作租户
   form: {
     projectId: "", // 项目id
@@ -65,14 +77,22 @@ async function showEdit(row: any, type: string) {
   data.value.tenantSupplierList = await obtainLoading(
     supplierStore.getTenantSupplierList(row.projectId)
   );
-  // 会员组列表
-  data.value.vipGroupList = await obtainLoading(
-    surveyVipGroupStore.getGroupNameList()
-  );
+  // // 会员组列表
+  // data.value.vipGroupList = await obtainLoading(
+  //   surveyVipGroupStore.getGroupNameList()
+  // );
+  // 会员部门列表
+  const resDep = await apiDep.list({ name: '' });
+  data.value.departmentList = resDep.data;
   // 合作租户列表
   const res = await obtainLoading(
     cooperationApi.getAllocationBindList({ projectId: row.projectId })
   );
+  // 回显会员部门选中的值
+  departmentId.value = []
+  if (data.value.form.groupSupplierIdList && data.value.form.allocationType === 3) {
+    departmentId.value = data.value.form.groupSupplierIdList
+  }
   data.value.tenantList = res.data.allocationBindInfoList;
   dialogTableVisible.value = true;
 }
@@ -98,6 +118,35 @@ function selectAllMember() {
     });
   }
 }
+
+// 树的事件
+const handleNodeClick = (nodeData: any, checked: any) => {
+  if (checked) {
+    // 选中新的节点时，取消其他选中的节点
+    // const checkedKeys = treeRef.value.getCheckedKeys(); // 获取当前所有选中的节点
+    // checkedKeys.forEach((key: any) => {
+    //   if (key !== nodeData.id) {
+    //     treeRef.value.setChecked(key, false); // 取消选中其他节点
+    //   }
+    // });
+    // 更新当前选中的节点 ID
+    departmentId.value = [nodeData.id]; // 只保留当前选中节点 ID
+  } else {
+    // 如果取消选中节点，更新 departmentId
+    departmentId.value = departmentId.value.filter((id: any) => id !== nodeData.id);
+  }
+  // 同步选中的路由id
+  departmentId.value = treeRef.value!.getCheckedKeys(false);
+  //  获取选中的所有子节点
+  const tree = treeRef.value.getCheckedKeys();
+  // 获取所有半选的主节点
+  const halltree = treeRef.value.getHalfCheckedKeys();
+  // 组合一下
+  const organizationalStructureId = tree.concat(halltree); 
+  // localToptTab.value.organizationalStructureId = organizationalStructureId[0];
+  data.value.form.groupSupplierIdList = organizationalStructureId
+};
+
 // 弹框关闭事件
 function closeHandler() {
   // 移除校验
@@ -151,7 +200,7 @@ defineExpose({ showEdit });
         <el-form-item label="分配目标">
           <el-radio-group v-model="data.form.allocationType" class="ml-4" @change="changeRadio">
             <el-radio :value="2" size="large"> 供应商 </el-radio>
-            <el-radio :value="3" size="large"> 会员组 </el-radio>
+            <el-radio :value="3" size="large"> 部门 </el-radio>
             <el-radio :value="4" size="large">租户 </el-radio>
             <el-radio :value="5" size="large" v-if="data.title === '重新分配'">
               取消分配
@@ -171,15 +220,20 @@ defineExpose({ showEdit });
           </el-select>
         </el-form-item>
         <el-form-item v-if="data.form.allocationType === 3 && data.form.allocationType !== 5
-      " label="会员组" prop="groupSupplierIdList">
-          <el-select v-model="data.form.groupSupplierIdList" placeholder="请选择会员组" clearable filterable multiple
+      " label="部门" prop="groupSupplierIdList">
+          <!-- <el-select v-model="data.form.groupSupplierIdList" placeholder="请选择部门" clearable filterable multiple
             collapse-tags>
             <template #header>
               <el-checkbox v-model="data.selectAll.member" @change="selectAllMember"
                 style="display: flex; height: unset">全选</el-checkbox>
             </template>
             <el-option v-for="item in data.vipGroupList" :label="item.memberGroupName" :value="item.memberGroupId" />
-          </el-select>
+          </el-select> -->
+          <el-tree v-if="data.departmentList.length > 0" style="max-width: 600px" ref="treeRef"
+            :data="data.departmentList" show-checkbox check-strictly node-key="id" :default-expanded-keys="[]"
+            :default-checked-keys="departmentId" default-expand-all :props="defaultProps"
+            @check-change="handleNodeClick" />
+          <el-text v-else>暂无数据</el-text>
         </el-form-item>
         <el-form-item v-if="data.form.allocationType === 4 && data.form.allocationType !== 5
       " label="租户" prop="groupSupplierIdList">
