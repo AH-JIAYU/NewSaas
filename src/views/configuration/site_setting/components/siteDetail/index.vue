@@ -9,6 +9,7 @@ import axios from "axios";
 import fileDtail from "../fileDtail/index.vue";
 
 const emits = defineEmits(['fetch-data'])
+const props = defineProps(['personalizedDomainName'])
 // 分页
 const { pagination, getParams, onSizeChange, onCurrentChange } = usePagination();
 const drawerisible = ref(false);
@@ -42,6 +43,8 @@ const form = ref<any>({
   // 主域名
   mainDomain: '',
 })
+// 检查顶级域名是否备案
+const checkDomainRecord = ref<any>({})
 // 其他域名及状态
 const statusForm = ref<any>({})
 // 上传
@@ -123,7 +126,7 @@ async function showEdit(row: any) {
       list.value = [row]
       form.value.certificateContent = row.certificateContent
       form.value.privateKeyContent = row.privateKeyContent
-      form.value.domain = row.personalizedDomainName
+      // form.value.domain = row.personalizedDomainName
       const match = row.personalizedDomainName.match(/tenant(\d+)\.surveysaas\.(com|net)/);
       if (match) {
         tenantId.value = match[1];
@@ -238,6 +241,15 @@ const handleSubmit = async () => {
   }
 
 };
+// 查看是否备案
+const getDomainRecord = async (val: any) => {
+  if (val) {
+    const res = await api.checkDomainRecord({ domainName: val })
+    checkDomainRecord.value = res.data
+    if (res.data.isKeepOnRecord === 1) form.value.domain = res.data.recordedName
+    emits('fetch-data')
+  }
+}
 // 验证
 const onSubmit = async (val: any) => {
   if (!fileList.value.tenantDomain) {
@@ -418,6 +430,12 @@ function handleClose() {
   })
   drawerisible.value = false;
 }
+watch(
+  () => props.personalizedDomainName,
+  (newval: any, oldval: any) => {
+    form.value.domain=newval
+  }
+)
 // 暴露
 defineExpose({
   showEdit,
@@ -502,53 +520,56 @@ defineExpose({
               <el-col :span="10">
                 <el-form-item label="顶级域名" prop="domain">
                   <el-input style="width: 14.5rem;" v-model="fileList.domain" :disabled="form.isAnalysis"
-                    placeholder="请输入顶级域名">
+                    placeholder="请输入顶级域名" @blur="getDomainRecord(fileList.domain)">
                     <template #append>
                       <copy class="copy" :content="fileList.domain" />
                     </template>
                   </el-input>
                 </el-form-item>
               </el-col>
-              <el-col :span="10">
-                <el-form-item label="指向域名">
-                  <!-- <el-input disabled style="width: 16.375rem;" v-model="form.domain" /> -->
-                  <div v-if="form.domain" class="hoverSvg">
-                    <p class="fineBom">{{ form.domain }}</p>
-                    <span class="c-fx">
-                      <copy class="copy" :content="form.domain" />
+              <template v-if="checkDomainRecord.isKeepOnRecord">
+                <el-col :span="10">
+                  <el-form-item label="指向域名">
+                    <!-- <el-input disabled style="width: 16.375rem;" v-model="form.domain" /> -->
+                    <div v-if="form.domain" class="hoverSvg">
+                      <p class="fineBom">{{ form.domain }}</p>
+                      <span class="c-fx">
+                        <copy class="copy" :content="form.domain" />
+                      </span>
+                    </div>
+                    <el-text v-else>-</el-text>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="2">
+                  <p v-if="!form.isAnalysis" class="svgRed">
+                    <span class="colorRed">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                        <g id="Group 18219">
+                          <circle id="Ellipse 84" cx="7" cy="7" r="7" fill="#FFD5D5" />
+                          <circle id="Ellipse 83" cx="7" cy="7" r="3.5" fill="#FF8181" />
+                        </g>
+                      </svg>
                     </span>
-                  </div>
-                  <el-text v-else>-</el-text>
-                </el-form-item>
-              </el-col>
-              <el-col :span="2">
-                <p v-if="!form.isAnalysis" class="svgRed">
-                  <span class="colorRed">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
-                      <g id="Group 18219">
-                        <circle id="Ellipse 84" cx="7" cy="7" r="7" fill="#FFD5D5" />
-                        <circle id="Ellipse 83" cx="7" cy="7" r="3.5" fill="#FF8181" />
-                      </g>
-                    </svg>
-                  </span>
-                  未生效
-                </p>
-                <p v-else class="svgGreen">
-                  <span class="colorGreen">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
-                      <g id="Group 18219">
-                        <circle id="Ellipse 84" cx="7" cy="7" r="7" fill="#DDFED5" />
-                        <circle id="Ellipse 83" cx="7" cy="7" r="3.5" fill="#01D83D" />
-                      </g>
-                    </svg>
-                  </span>
-                  已生效
-                </p>
-              </el-col>
-              <el-col style="display:flex; align-items: center;" :span="2">
-                <el-button v-show="!form.isAnalysis" style="margin-left: 1rem;background-color: #ff9d33;border: none;"
-                  size="small" type="primary" @click="onSubmit(1)">验证</el-button>
-              </el-col>
+                    未生效
+                  </p>
+                  <p v-else class="svgGreen">
+                    <span class="colorGreen">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                        <g id="Group 18219">
+                          <circle id="Ellipse 84" cx="7" cy="7" r="7" fill="#DDFED5" />
+                          <circle id="Ellipse 83" cx="7" cy="7" r="3.5" fill="#01D83D" />
+                        </g>
+                      </svg>
+                    </span>
+                    已生效
+                  </p>
+                </el-col>
+                <el-col style="display:flex; align-items: center;" :span="2">
+                  <el-button v-show="!form.isAnalysis" style="margin-left: 1rem;background-color: #ff9d33;border: none;"
+                    size="small" type="primary" @click="onSubmit(1)">验证</el-button>
+                </el-col>
+              </template>
+
             </div>
             <div class="f-xc" v-show="form.isAnalysis">
               <el-col :span="10">
@@ -714,7 +735,8 @@ defineExpose({
           </el-row>
         </el-form>
       </div>
-      <div v-show="!form.isHttpsStatus" style="display: flex;justify-content: space-between; height: 30px; margin-bottom: 1.5rem;">
+      <div v-show="!form.isHttpsStatus"
+        style="display: flex;justify-content: space-between; height: 30px; margin-bottom: 1.5rem;">
         <div>
           <!-- <el-button size="default" type="primary" @click="handleSubmits">确认</el-button>
           <el-button style="margin-left: 1rem;background-color: #aaaaaa;border: none;" size="default" type="primary"

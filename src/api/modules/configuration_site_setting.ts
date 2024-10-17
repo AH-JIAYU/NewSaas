@@ -19,4 +19,6 @@ export default {
   addAnalyzeSupplierBackground: (data: any) => api.post('record/addAnalyzeSupplierBackground', data),
   // 解析租户会员后台自定义域名
   addAnalyzeMemberBackground: (data: any) => api.post('record/addAnalyzeMemberBackground', data),
+  // 检查顶级域名是否备案
+  checkDomainRecord: (data: any) => api.post('record/checkDomainRecord', data),
 }
