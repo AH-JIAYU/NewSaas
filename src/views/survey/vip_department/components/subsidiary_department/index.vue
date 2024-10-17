@@ -2,7 +2,6 @@
 import type { FormInstance, FormRules } from "element-plus";
 import { ElMessage } from "element-plus";
 import api from "@/api/modules/survey_vip_department";
-// import apiUse from '@/api/modules/configuration_manager'
 
 // 用户数据
 const staffList = ref<any>([]);
@@ -86,18 +85,18 @@ async function onSubmit() {
                 id: item.id,
                 userId: item.userId,
                 commission: item.commission,
-                commissionTime: item.commissionTime,
+                commissionTime: item.commissionTime || 1,
                 commissionStatus: item.commissionStatus,
-                commissionType: item.commissionType,
+                commissionType: item.commissionType || 1,
               }
               form.value.organizationalStructurePersonList.push(obj)
             } else {
               const obj = {
                 userId: item.id,
                 commission: item.commission,
-                commissionTime: item.commissionTime,
+                commissionTime: item.commissionTime || 1,
                 commissionStatus: item.commissionStatus,
-                commissionType: item.commissionType,
+                commissionType: item.commissionType || 1,
               }
               form.value.organizationalStructurePersonList.push(obj)
             }
@@ -180,7 +179,7 @@ const handleClose = (tag: any) => {
 }
 
 // 切换增加或减少用户
-const handleChange = (val:any) => {
+const handleChange = (val: any) => {
   form.value.userIdList = val
   filteredUsers.value = staffList.value.filter((item: any) =>
     form.value?.userIdList.includes(item.id)
@@ -202,7 +201,7 @@ const handleChange = (val:any) => {
     // 数组去重
     const uniqueData = Array.from(new Map(result.map((item: any) => [item.id, item])).values());
     // 过滤 uniqueData，只保留在 val 中的 id
-    const filteredUniqueData = uniqueData.filter((item:any) => val.includes(item.id));
+    const filteredUniqueData = uniqueData.filter((item: any) => val.includes(item.id));
     // 赋值给循环数据
     filteredUsers.value = filteredUniqueData
     form.value.organizationalStructurePersonList = filteredUsers.value
@@ -254,12 +253,12 @@ onMounted(async () => {
       organizationalStructurePersonList.forEach((item: any) => {
         form.value.userIdList.push(item.userId)
       })
-    }else {
-      // 获取用户数据
-      // const { data } = await apiUse.queryAllNotEnableStaffList()
-      // if (data) {
-      //   staffList.value = data
-      // }
+    } else {
+      // 新增获取用户数据
+      const { data } = await api.queryMemberList()
+      if (data) {
+        staffList.value = data
+      }
     }
     // 调用方法并打印过滤后的用户
     filteredUsers.value = getFilteredUsers();
@@ -303,7 +302,8 @@ onMounted(async () => {
         <div class="mr checkbox-container">
           <el-text style="width:4.375rem;">开启提成</el-text>
           <!-- <el-checkbox v-model="item.commissionStatus" label="开启提成" size="large" /> -->
-          <el-switch v-model="item.commissionStatus" :active-value="1" :inactive-value="2" inline-prompt active-text="开启" inactive-text="关闭"  />
+          <el-switch v-model="item.commissionStatus" :active-value="1" :inactive-value="2" inline-prompt
+            active-text="开启" inactive-text="关闭" />
         </div>
         <div v-show="item.commissionStatus === 1" class="centers mr">
           <el-select v-model="item.commissionType" value-key="" placeholder="计提方式" clearable filterable>
@@ -311,8 +311,7 @@ onMounted(async () => {
           </el-select>
         </div>
         <div v-show="item.commissionStatus === 1" class="center mr">
-          <el-select class="select" v-model="item.commissionTime" value-key="" placeholder="计提时间" clearable
-            filterable>
+          <el-select class="select" v-model="item.commissionTime" value-key="" placeholder="计提时间" clearable filterable>
             <el-option v-for="item in commissionTypeList" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </div>
@@ -386,13 +385,11 @@ onMounted(async () => {
   }
 
   .el-input-group__append {
-    width:12rem;
+    width: 12rem;
     padding: 0;
     background-color: #fff;
   }
-  .el-tag {
-    width: 5rem;
-  }
+
   .el-tag.el-tag--info {
     background-color: #ecf5ff;
     color: #409eff;

@@ -13,12 +13,15 @@ const props = withDefaults(
     id?: string | number;
     tree: any[];
     row: string;
+    isClick: boolean;
   }>(),
   {
     parentId: "",
     id: "",
   }
 );
+// 判断用户是否点击部门更新接口
+const isClick = ref(false)
 // 计提时间
 const commissionTypeList = [
   { label: '完成计提', value: 1, },
@@ -34,9 +37,7 @@ const provisionMethod = [
 // loading
 const loading = ref<any>(false);
 // 更新数据
-const emits = defineEmits<{
-  getList: any;
-}>();
+const emits = defineEmits(["getList","getItmelist"])
 // 弹窗开关
 const visible = defineModel<boolean>({
   default: false,
@@ -180,8 +181,6 @@ async function onSubmit() {
           const params = {
             ...form.value
           }
-          console.log('params',params);
-
           // 删除多余的数据
           delete params.userIdList
           let response;
@@ -199,8 +198,13 @@ async function onSubmit() {
           } else {
             ElMessage.error("操作失败，请重试");
           }
-          // 更新列表
-          await emits("getList");
+          if (isClick.value) {
+            // 更新列表
+            await emits("getItmelist");
+            await emits("getList");
+          } else {
+            await emits("getList");
+          }
           // 关闭弹框
           onCancel();
         }
@@ -243,6 +247,7 @@ onMounted(async () => {
       form.value.id = id;
       form.value.name = name;
       form.value.remark = remark;
+      isClick.value = props.isClick
       // 获取用户数据
       const { data } = await apiUse.queryNotEnableStaffList({ organizationalStructureId: form.value.id })
       if (data) {

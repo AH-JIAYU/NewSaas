@@ -132,6 +132,7 @@ const dictionary = ref({
     visible: false,
     parentId: "" as Dict["id"],
     id: "" as Dict["id"],
+    isClick: false,
   },
   row: "",
   loading: false,
@@ -161,7 +162,7 @@ const dictionaryItem = ref<any>({
   loading: false,
   // 搜索
   search: {
-    organizationId: "" as Dict["id"],
+    organizationalStructureId: "" as Dict["id"],
   },
   // 列表数据
   dataList: [],
@@ -176,11 +177,11 @@ const dictionaryItem = ref<any>({
 });
 // 请求接口携带参数
 const queryForm = reactive<any>({
-  memberChileName: "",
-  memberChileId: "",
-  memberChildNickname: "",
+  memberId: null,
+  memberName: "",
+  memberLevelId: "",
   memberStatus: "",
-  memberGroupChildId: "",
+  memberGroupId: "",
   beginTime: "",
   endTime: "",
   time: [],
@@ -189,7 +190,7 @@ const queryForm = reactive<any>({
 async function getDictionaryList() {
   try {
     dictionary.value.loading = true;
-    // dictionaryItem.value.search.organizationId = "";
+    // dictionaryItem.value.search.organizationalStructureId = "";
     const params = {
       ...dictionary.value.search,
     };
@@ -240,6 +241,9 @@ function dictionaryEdit(node: Node, data: Dict) {
   dictionary.value.dialog.parentId = node.parent.data.id ?? "";
   dictionary.value.dialog.id = data.id;
   dictionary.value.dialog.visible = true;
+  if (dictionaryItem.value.search.organizationalStructureId) {
+    dictionary.value.dialog.isClick = true;
+  }
 }
 // 删除部门
 function dictionaryDelete(node: Node, data: any) {
@@ -250,11 +254,7 @@ function dictionaryDelete(node: Node, data: any) {
           message: "删除成功",
           center: true,
         });
-        const parent = node.parent;
-        const children: Dict[] = parent.data.children || parent.data;
-        const index = children.findIndex((d) => d.id === data.id);
-        children.splice(index, 1);
-        dictionary.value.tree = [...dictionary.value.tree];
+        getDictionaryList()
       });
     }
   );
@@ -266,11 +266,11 @@ function dictionaryClick(data: any) {
   if (data.id) {
     userForm.value.dialog.parentId = data.id
   }
-  dictionaryItem.value.search.organizationId = data.id;
+  dictionaryItem.value.search.organizationalStructureId = data.id;
 }
 // 监听id变化
 watch(
-  () => dictionaryItem.value.search.organizationId,
+  () => dictionaryItem.value.search.organizationalStructureId,
   () => {
     getDictionaryItemList();
   }
@@ -278,54 +278,26 @@ watch(
 // 获取部门项
 async function getDictionaryItemList() {
   try {
-    dictionaryItem.value.loading = true;
+    listLoading.value = true;
     const params = {
       ...dictionaryItem.value.search,
     };
     const res = await api.itemlist(params);
-    dictionaryItem.value.loading = false;
-    data.list = res.data;
-    dictionaryItem.value.dataList.forEach((item: any) => {
-      item.enableLoading = false;
-    });
-    pagination.value.total = res.data.length;
+    if (res.data) {
+      listLoading.value = false;
+      data.list = res.data;
+      dictionaryItem.value.dataList.forEach((item: any) => {
+        item.enableLoading = false;
+      });
+      pagination.value.total = res.data.length || 0;
+    }
   } catch (error) {
 
   } finally {
-    dictionaryItem.value.loading = false;
+    listLoading.value = false;
   }
 }
 
-// // 删除
-// function onDelete(row: any) {
-//   ElMessageBox.confirm(`确认删除「${row.name}」吗？`, "确认信息")
-//     .then(() => {
-//       api.delete([row.id]).then(() => {
-//         getDictionaryItemList();
-//         ElMessage.success({
-//           message: "删除成功",
-//           center: true,
-//         });
-//       });
-//     })
-//     .catch(() => { });
-// }
-// // 批量删除
-// function onDeleteMulti(rows: any[]) {
-//   const ids = rows.map((item) => item.id);
-//   ElMessageBox.confirm(`确认删除选中的 ${rows.length} 条数据吗？`, "确认信息")
-//     .then(() => {
-//       api.delete(ids).then(() => {
-//         getDictionaryItemList();
-//         ElMessage.success({
-//           message: "删除成功",
-//           center: true,
-//         });
-//       });
-//     })
-//     .catch(() => { });
-// }
-// const surveyVipGroupStore = useSurveyVipGroupStore(); // 部门
 const surveyVipStore = useSurveyVipStore(); // 会员
 // 时间
 const { format } = useTimeago();
@@ -389,7 +361,7 @@ const columns = ref<any>([
 
 // 添加
 function handleAdd(row: any) {
-  editRef.value.showEdit(null, dictionaryItem.value.search.organizationId);
+  editRef.value.showEdit(null, dictionaryItem.value.search.organizationalStructureId);
 }
 // 编辑
 function handleEdit(row: any) {
@@ -408,7 +380,7 @@ async function changeState(state: any, id: string) {
   const params = {
     memberChildId: id,
     memberStatus: state,
-    // organizationId:dictionaryItem.value.search.organizationId,
+    // organizationalStructureId:dictionaryItem.value.search.organizationalStructureId,
   };
   const { status } = await submitLoading(apiUser.changestatus(params));
   status === 1 &&
@@ -461,23 +433,23 @@ async function fetchData() {
     params.endTime = queryForm.time[1] || "";
   }
   const res = await apiUser.list(params);
-  data.list = res.data.getMemberChildInfoList;
+  data.list = res.data.getMemberInfoList;
   pagination.value.total = res.data.total;
   listLoading.value = false;
 }
 // 重置筛选数据
 function onReset() {
   Object.assign(queryForm, {
-    memberChileName: "",
-    memberChileId: "",
-    memberChildNickname: "",
+    memberId: null,
+    memberName: "",
+    memberLevelId: "",
     memberStatus: "",
-    memberGroupChildId: "",
+    memberGroupId: "",
     beginTime: "",
     endTime: "",
     time: [],
   });
-  queryData();
+  getDictionaryItemList();
 }
 // 表格-单选框
 function setSelectRows(val: any) {
@@ -489,23 +461,22 @@ onMounted(async () => {
       checkList.value.push(item.prop);
     }
   });
-  fetchData();
+  // fetchData();
   // data.vipGroupList = await surveyVipGroupStore.getGroupNameList();
-  formSearchList.value = [
-    { index: 1, show: true, type: 'input', modelName: 'memberChileId', placeholder: '会员ID' },
-    { index: 2, show: true, type: 'input', modelName: 'memberChildNickname', placeholder: '会员名称' },
-    { index: 3, show: true, type: 'input', modelName: 'memberChileName', placeholder: '子会姓名' },
-    {
-      index: 4, show: true, type: 'select', modelName: 'memberStatus', placeholder: '会员状态', option: [
-        { label: '关闭', value: 1 },
-        { label: '开启', value: 2 },
-        { label: '待审核', value: 3 }
-      ], optionLabel: 'label', optionValue: 'value'
-    },
-    { index: 5, show: true, type: 'select', modelName: 'memberGroupChildId', placeholder: '部门', option: data.vipGroupList, optionLabel: 'memberGroupChildName', optionValue: 'memberGroupChildId' },
-    { index: 6, show: true, type: 'datetimerange', modelName: 'time', startPlaceHolder: '创建开始日期', endPlaceHolder: '创建结束日期' }
-  ];
+  formSearchList.value =[
+  { index: 1, show: true, type: 'input', modelName: 'memberId', placeholder: '会员ID' },
+  { index: 2, show: true, type: 'input', modelName: 'memberName', placeholder: '会员名称' },
+  { index: 3, show: true, type: 'select', modelName: 'memberLevelId', placeholder: '会员等级', option: 'memberLevelId', optionLabel: 'levelNameOrAdditionRatio', optionValue: 'memberLevelId' },
+  { index: 4, show: true, type: 'select', modelName: 'memberStatus', placeholder: '会员状态', option: 'memberStatus', optionLabel: 'label', optionValue: 'value' },
+  { index: 5, show: true, type: 'select', modelName: 'memberGroupId', placeholder: '所属部门', option: 'memberGroupId', optionLabel: 'memberGroupName', optionValue: 'memberGroupId' },
+  { index: 6, show: true, type: 'datetimerange', modelName: 'time', startPlaceHolder: '创建开始日期', endPlaceHolder: '创建结束日期' }
+]
 });
+const formOption={
+  memberLevelId:()=> data.vipLevelList,
+  memberStatus:()=>[{ label: '关闭', value: 1 }, { label: '开启', value: 2 }],
+  memberGroupId:()=>data.vipGroupList,
+}
 </script>
 
 <template>
@@ -535,7 +506,7 @@ onMounted(async () => {
                     {{ data.name }}
                   </div>
                   <div class="code">
-                    {{ data?.organizationalStructurePersonList?.map((item: any) => item.name).join('，') }}
+                    {{ data?.organizationalStructurePersonList?.map((item: any) => item.userName).join('，') }}
                   </div>
                   <div class="actions">
                     <ElButtonGroup>
@@ -561,9 +532,9 @@ onMounted(async () => {
             </ElTree>
           </ElScrollbar>
         </template>
-        <div v-show="dictionaryItem.search.organizationId" class="dictionary-containers">
+        <div v-show="dictionaryItem.search.organizationalStructureId" class="dictionary-containers">
           <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange"
-            @onReset="onReset" :model="queryForm" />
+            @onReset="onReset" :model="queryForm" :formOption="formOption" />
           <ElDivider border-style="dashed" />
           <el-row style="margin:0;">
             <FormLeftPanel>
@@ -596,19 +567,19 @@ onMounted(async () => {
                   inactive-text="禁用" active-text="启用" @change="changeRandomState($event, row.memberChildId)" />
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('memberChildId')" align="left" prop="memberChildId"
+            <el-table-column v-if="checkList.includes('memberChildId')" align="left" prop="memberId"
               show-overflow-tooltip width="200" label="会员ID"><template #default="{ row }">
                 <p class="crudeTop"></p>
                 <div class="hoverSvg">
-                  <p class="fineSize">ID：{{ row.memberChildId }}</p>
-                  <copy class="copy" :content="row.memberChildId" />
+                  <p class="fineSize">ID：{{ row.memberId }}</p>
+                  <copy class="copy" :content="row.memberId" />
                 </div>
               </template>
             </el-table-column>
             <el-table-column v-if="checkList.includes('memberChildNickname')" width="100" align="left"
-              prop="memberChildNickname" show-overflow-tooltip label="会员名称">
+              prop="memberNickname" show-overflow-tooltip label="会员名称">
               <template #default="{ row }">
-                <p class="crudeTop">{{ row.memberChildNickname ? row.memberChildNickname : '-' }}</p>
+                <p class="crudeTop">{{ row.memberNickname ? row.memberNickname : '-' }}</p>
               </template>
             </el-table-column>
             <el-table-column v-if="checkList.includes('memberChildName')" width="100" align="left"
@@ -786,25 +757,25 @@ onMounted(async () => {
             :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
             background @size-change="sizeChange" @current-change="currentChange" />
         </div>
-        <div v-show="!dictionaryItem.search.organizationId" class="dictionary-container">
+        <div v-show="!dictionaryItem.search.organizationalStructureId" class="dictionary-container">
           <div class="empty">请在左侧新增或选择一个部门</div>
         </div>
       </LayoutContainer>
       <DictionaryDialog v-if="dictionary.dialog.visible" :id="dictionary.dialog.id" v-model="dictionary.dialog.visible"
         :row="dictionary.row" :parent-id="dictionary.dialog.parentId" :tree="dictionary.tree"
-        @get-list="getDictionaryList" />
+        :isClick="dictionary.dialog.isClick" @get-list="getDictionaryList" @get-Itmelist="getDictionaryItemList" />
       <subsidiaryDepartment v-if="subsidiaryDictionary.dialog.visible" :id="subsidiaryDictionary.dialog.id"
         v-model="subsidiaryDictionary.dialog.visible" :row="subsidiaryDictionary.row"
         :parent-id="subsidiaryDictionary.dialog.parentId" :name="subsidiaryDictionary.dialog.name"
         :tree="subsidiaryDictionary.tree" @get-list="getDictionaryList" />
       <DictionaryItemDia v-if="dictionaryItem.dialog.visible" :id="dictionaryItem.dialog.id"
-        v-model="dictionaryItem.dialog.visible" :catalogue-id="dictionaryItem.search.organizationId"
+        v-model="dictionaryItem.dialog.visible" :catalogue-id="dictionaryItem.search.organizationalStructureId"
         :parent-id="dictionaryItem.dialog.parentId" :level="dictionaryItem.dialog.level" :tree="dictionary.tree"
         :dataList="dictionaryItem.dataList" :row="dictionaryItem.row" @success="queryData" />
       <Detail ref="detailRef" />
       <VipEdit ref="editRef" @fetch-data="queryData" @get-list="getDictionaryList" />
       <vipPlusMinusPayments ref="vipPlusMinusPaymentsRef" @fetch-data="queryData" />
-      <vipLevel ref="subVipLevelRef" @query-data="queryData"  />
+      <vipLevel ref="subVipLevelRef" @query-data="queryData" />
     </div>
   </div>
 </template>
