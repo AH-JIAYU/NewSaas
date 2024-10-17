@@ -180,6 +180,8 @@ async function onSubmit() {
           const params = {
             ...form.value
           }
+          console.log('params',params);
+
           // 删除多余的数据
           delete params.userIdList
           let response;
@@ -197,7 +199,6 @@ async function onSubmit() {
           } else {
             ElMessage.error("操作失败，请重试");
           }
-
           // 更新列表
           await emits("getList");
           // 关闭弹框
