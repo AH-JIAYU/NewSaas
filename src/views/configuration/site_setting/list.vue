@@ -326,6 +326,7 @@ function onSubmit() {
                 </el-form-item>
               </el-col>
               <el-col :span="24">
+
                 <el-form-item label="顶级域名" prop="topLevelDomainName">
                   <el-text class="mx-1">{{ form.topLevelDomainName }}</el-text>
                   <div v-if="form.topLevelDomainName">
@@ -446,7 +447,7 @@ function onSubmit() {
         </el-form>
       </el-tabs>
     </PageMain>
-    <siteDetail ref="recordRef" @fetch-data="getDataList" />
+    <siteDetail ref="recordRef" @fetch-data="getDataList" :personalizedDomainName="analyzeRecords?.personalizedDomainName" />
   </div>
 </template>
 

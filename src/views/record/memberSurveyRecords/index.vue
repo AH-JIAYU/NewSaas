@@ -318,9 +318,8 @@ const formOption = {
         @selection-change="setSelectRows">
         <el-table-column align="left" type="selection" />
         <el-table-column v-if="checkList.includes('id')" align="left" prop="id" show-overflow-tooltip fixed="left"
-          label="点击ID"><template #default="{ row }">
-            <el-tag effect="dark" v-if="row.surveySource === 1" type="primary">内部人员</el-tag>
-            <el-tag effect="dark" v-else type="warning">外部人员</el-tag>
+          label="点击ID"><template #default="{ row }"> 
+            <el-tag effect="dark" v-if="row.surveySource === 2" type="warning">外部人员</el-tag>
             <div class="copyId flex-s  tableSmall">
               <div class="id oneLine ">ID: {{ row.id }}</div>
               <copy class="copy  edit" :content="row.id" />
