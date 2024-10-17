@@ -43,6 +43,8 @@ const defaultProps: any = {
   label: "name",
   // disabled : "distribution",
 };
+//loading
+const loading = ref<any>(false)
 const formRef = ref<any>();
 const flat = ref([]); // 扁平化
 // 表单
@@ -236,33 +238,40 @@ const handleNodeClick = (nodeData: any, checked: any) => {
   }
 };
 onMounted(async () => {
-  departmentId.value = [];
-  const { data } = await apiPos.list({ page: 1, limit: 10, id: null, name: "", active: null });
-  positionManageList.value = data.data;
-  // 用户
-  staffList.value = await tenantStaffStore.getStaff();
-  // 角色
-  munulevs.value = await roleStore.getRole();
-  // 部门
-  const res = await apiDep.list({ name: '' });
-  if (res.data) {
-    departmentList.value = res.data;
-  }
-  // 区域
-  country.value = await useStoreCountry.getCountry();
-
-  // 编辑
-  if (props.id !== "" && props.row) {
-    formRules.value.password = [];
-    form.value = JSON.parse(props.row);
-    // 确保 organizationalStructureId 是一个数组
-    const orgId = form.value.organizationalStructureId;
-    if (orgId) {
-      departmentId.value = Array.isArray(orgId) ? orgId : [orgId];
+  try {
+    loading.value = true;
+    departmentId.value = [];
+    const { data } = await apiPos.list({ page: 1, limit: 10, id: null, name: "", active: null });
+    positionManageList.value = data.data;
+    // 用户
+    staffList.value = await tenantStaffStore.getStaff();
+    // 角色
+    munulevs.value = await roleStore.getRole();
+    // 部门
+    const res = await apiDep.list({ name: '' });
+    if (res.data) {
+      departmentList.value = res.data;
     }
-    isEmail.value = form.value.email;
-    isPhone.value = form.value.phoneNumber;
-    disabled.value = true;
+    // 区域
+    country.value = await useStoreCountry.getCountry();
+    // 编辑
+    if (props.id !== "" && props.row) {
+      formRules.value.password = [];
+      form.value = JSON.parse(props.row);
+      // 确保 organizationalStructureId 是一个数组
+      const orgId = form.value.organizationalStructureId;
+      if (orgId) {
+        departmentId.value = Array.isArray(orgId) ? orgId : [orgId];
+      }
+      isEmail.value = form.value.email;
+      isPhone.value = form.value.phoneNumber;
+      disabled.value = true;
+    }
+    loading.value = false;
+  } catch (error) {
+
+  } finally {
+    loading.value = false;
   }
 });
 </script>
@@ -270,7 +279,7 @@ onMounted(async () => {
 <template>
   <ElDrawer v-model="visible" :title="title" size="60%" :close-on-click-modal="false" append-to-body destroy-on-close
     @closed="onCancel">
-    <ElForm ref="formRef" :model="form" :rules="formRules" label-width="100px" :validate-on-rule-change="false">
+    <ElForm v-loading="loading" ref="formRef" :model="form" :rules="formRules" label-width="100px" :validate-on-rule-change="false">
       <el-card class="box-card">
         <template #header>
           <div class="card-header">

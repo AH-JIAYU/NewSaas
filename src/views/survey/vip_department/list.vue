@@ -322,7 +322,7 @@ const formSearchName = ref<string>('formSearch-sub_vip')// 表单排序name
 const columns = ref<any>([
   { prop: "memberStatus", label: "会员状态", checked: true, sprtable: true },
   { prop: "randomStatus", label: "随机身份", checked: true, sprtable: true },
-  { prop: "memberChildId", label: "会员ID", checked: true, sprtable: true },
+  { prop: "memberId", label: "会员ID", checked: true, sprtable: true },
   {
     prop: "memberChildNickname",
     label: "会员名称",
@@ -365,7 +365,7 @@ function handleAdd(row: any) {
 }
 // 编辑
 function handleEdit(row: any) {
-  editRef.value.showEdit(row);
+  editRef.value.showEdit(row,dictionaryItem.value.search.organizationalStructureId);
 }
 // 加减款
 const plusMinusPayments = (row: any) => {
@@ -378,9 +378,8 @@ const editLevel = (row: any) => {
 // 切换状态
 async function changeState(state: any, id: string) {
   const params = {
-    memberChildId: id,
+    memberId: id,
     memberStatus: state,
-    // organizationalStructureId:dictionaryItem.value.search.organizationalStructureId,
   };
   const { status } = await submitLoading(apiUser.changestatus(params));
   status === 1 &&
@@ -389,12 +388,12 @@ async function changeState(state: any, id: string) {
     });
   // 数据改变 在部门中需要重新请求
   surveyVipStore.NickNameList = null;
-  queryData();
+  getDictionaryItemList();
 }
 // 随机身份
 const changeRandomState = async (state: any, id: string) => {
   const params = {
-    memberChildId: id,
+    memberId: id,
     randomStatus: state,
   };
   const { status } = await submitLoading(apiUser.changestatus(params));
@@ -404,7 +403,7 @@ const changeRandomState = async (state: any, id: string) => {
     });
   // 数据改变 在部门中需要重新请求
   surveyVipStore.NickNameList = null;
-  queryData();
+  getDictionaryItemList();
 }
 // 重置请求
 function queryData() {
@@ -426,7 +425,6 @@ async function fetchData() {
   const params = {
     ...getParams(),
     ...queryForm,
-    ...dictionaryItem.value.search,
   };
   if (queryForm.time && !!queryForm.time.length) {
     params.beginTime = queryForm.time[0] || "";
@@ -556,18 +554,18 @@ const formOption={
               <template #default="{ row }">
                 <ElSwitch v-if="row.memberStatus === 3" v-model="row.memberStatus" inline-prompt :inactive-value="3"
                   :active-value="2" inactive-text="启用" active-text="待审核"
-                  @change="changeState($event, row.memberChildId)" />
+                  @change="changeState($event, row.memberId)" />
                 <ElSwitch v-else v-model="row.memberStatus" inline-prompt :inactive-value="1" :active-value="2"
-                  inactive-text="禁用" active-text="启用" @change="changeState($event, row.memberChildId)" />
+                  inactive-text="禁用" active-text="启用" @change="changeState($event, row.memberId)" />
               </template>
             </el-table-column>
             <el-table-column align="left" v-if="checkList.includes('randomStatus')" show-overflow-tooltip label="随机身份">
               <template #default="{ row }">
                 <ElSwitch v-model="row.randomStatus" inline-prompt :inactive-value="1" :active-value="2"
-                  inactive-text="禁用" active-text="启用" @change="changeRandomState($event, row.memberChildId)" />
+                  inactive-text="禁用" active-text="启用" @change="changeRandomState($event, row.memberId)" />
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('memberChildId')" align="left" prop="memberId"
+            <el-table-column v-if="checkList.includes('memberId')" align="left" prop="memberId"
               show-overflow-tooltip width="200" label="会员ID"><template #default="{ row }">
                 <p class="crudeTop"></p>
                 <div class="hoverSvg">
@@ -609,9 +607,9 @@ const formOption={
                 <el-text v-else>-</el-text>
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('memberGroupChildName')" align="left" prop="memberGroupChildName"
+            <el-table-column v-if="checkList.includes('memberGroupChildName')" align="left" prop="memberGroupName"
               show-overflow-tooltip label="部门"><template #default="{ row }">
-                <p class="crudeTop">{{ row.memberGroupChildName ? row.memberGroupChildName : "-" }}</p>
+                <p class="crudeTop">{{ row.memberGroupName ? row.memberGroupName : "-" }}</p>
               </template>
             </el-table-column>
             <el-table-column v-if="checkList.includes('B2B|B2C')" width="100" align="left" show-overflow-tooltip
@@ -773,7 +771,7 @@ const formOption={
         :parent-id="dictionaryItem.dialog.parentId" :level="dictionaryItem.dialog.level" :tree="dictionary.tree"
         :dataList="dictionaryItem.dataList" :row="dictionaryItem.row" @success="queryData" />
       <Detail ref="detailRef" />
-      <VipEdit ref="editRef" @fetch-data="queryData" @get-list="getDictionaryList" />
+      <VipEdit ref="editRef" @fetch-data="queryData" @get-list="getDictionaryItemList" />
       <vipPlusMinusPayments ref="vipPlusMinusPaymentsRef" @fetch-data="queryData" />
       <vipLevel ref="subVipLevelRef" @query-data="queryData" />
     </div>

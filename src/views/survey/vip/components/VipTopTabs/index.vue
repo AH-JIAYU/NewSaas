@@ -14,6 +14,7 @@ const props = defineProps({
   leftTab: Object,
   tabIndex: Number,
 });
+const loading = ref(false)
 // 获取树
 const treeRef = ref<any>()
 // 树绑定的id
@@ -114,7 +115,7 @@ const handleNodeClick = (nodeData: any, checked: any) => {
   const halltree = treeRef.value.getHalfCheckedKeys();
   // 组合一下
   const organizationalStructureId = tree.concat(halltree);
-  localToptTab.value.organizationalStructureId = organizationalStructureId[0];
+  localToptTab.value.memberGroupId = organizationalStructureId[0];
 };
 // 获取会员等级
 const getLevelNameList = async () => {
@@ -135,8 +136,8 @@ const formRef = ref(null);
 // 注入主组件中的提供者
 const localToptTab = ref<any>(props.leftTab);
 departmentId.value = []
-if (localToptTab.value.organizationalStructureId) {
-  departmentId.value.push(localToptTab.value.organizationalStructureId)
+if (localToptTab.value.memberGroupId) {
+  departmentId.value.push(localToptTab.value.memberGroupId)
 }
 nextTick(() => {
   // 表单验证方法
@@ -148,14 +149,22 @@ const AddVipLevel = () => {
 }
 
 onMounted(async () => {
-  await getList();
-  changeCountryId(localToptTab.value.subordinateCountryId);
+  try {
+    loading.value = true;
+    await getList();
+    changeCountryId(localToptTab.value.subordinateCountryId);
+    loading.value = false;
+  } catch (error) {
+
+  } finally {
+    loading.value = false;
+  }
 });
 </script>
 
 <template>
   <div>
-    <el-tabs v-model="activeName">
+    <el-tabs v-loading="loading" v-model="activeName">
       <el-tab-pane label="会员信息" name="basicSettings">
         <ElForm ref="formRef" :model="localToptTab" :rules="rules" label-width="100px" :validate-on-rule-change="false">
           <el-card class="box-card">

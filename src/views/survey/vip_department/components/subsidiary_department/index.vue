@@ -84,7 +84,7 @@ async function onSubmit() {
               const obj = {
                 id: item.id,
                 userId: item.userId,
-                commission: item.commission,
+                commission: item.commission || 0,
                 commissionTime: item.commissionTime || 1,
                 commissionStatus: item.commissionStatus,
                 commissionType: item.commissionType || 1,
@@ -93,7 +93,7 @@ async function onSubmit() {
             } else {
               const obj = {
                 userId: item.id,
-                commission: item.commission,
+                commission: item.commission || 0,
                 commissionTime: item.commissionTime || 1,
                 commissionStatus: item.commissionStatus,
                 commissionType: item.commissionType || 1,

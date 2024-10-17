@@ -201,6 +201,33 @@ const handleRemove: any = async () => {
   });
   userStore.delLogo()
 };
+// 上传格式不正确删除
+const handleBeforeRemove = (file:any, fileList:any) => {
+  // 确保文件列表更新
+  fileList.value = fileList.filter((item:any) => item.uid !== file.uid); // 移除文件
+  return true; // 返回 true 以允许移除
+};
+// 上传文件是否符合
+const handleFileChange = (file: any, newFileList: any) => {
+  // 定义支持的文件扩展名
+  const supportedFormats = ['.jpg', '.jpeg', '.png'];
+  const fileExtension = file.name.slice((file.name.lastIndexOf(".") - 1 >>> 0) + 2).toLowerCase();
+  // 检查文件扩展名是否在支持的格式中
+  if (supportedFormats.includes(`.${fileExtension}`)) {
+    // 直接更新文件列表
+    fileList.value = [...newFileList]; // 使用扩展运算符确保更新
+  } else {
+    fileList.value = []; // 清空文件列表
+    // 强制 Vue 更新 UI
+    nextTick(() => {
+      fileList.value = []; // 确保 UI 刷新
+    });
+    return ElMessage({
+      type: "warning",
+      message: "上传文件类型不正确，仅支持 .jpg、.jpeg 和 .png 格式。",
+    });
+  }
+};
 // 上传图片成功
 const handleSuccess: any = (uploadFile: any, uploadFiles: any) => {
   if (uploadFile.status === -1) {
@@ -351,7 +378,7 @@ function onSubmit() {
                   <el-upload :class="{ hide_box: fileList.length }" ref="uploadRef" drag v-model:file-list="fileList"
                     :headers="headers" :action="Url" :auto-upload="false" list-type="picture-card" :limit="1"
                     :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :on-success="handleSuccess"
-                    :on-exceed="handleExceed">
+                    :on-change="handleFileChange" :on-exceed="handleExceed" :before-remove="handleBeforeRemove">
                     <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80" fill="none">
                       <g id="Frame">
                         <path id="Vector"
