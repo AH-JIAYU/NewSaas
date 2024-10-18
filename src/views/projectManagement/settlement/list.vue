@@ -470,8 +470,8 @@ function handleMoreOperating(command: string, row: any) {
             <div class="oneLine">
               <b class="tableBig">{{ row.customerName.split("/")[0] }}</b>
               <div class="oneLine" v-if="row.projectType !== 2">
-                <img :src="row.avatar" alt="" class="avatar" />
-                <span>{{ row.userName }}</span>
+                <!-- <img :src="row.avatar" alt="" class="avatar" /> -->
+                <span>PM：{{ row.userName }}</span>
               </div>
             </div>
           </template>
@@ -588,7 +588,7 @@ function handleMoreOperating(command: string, row: any) {
         </el-table-column>
         <el-table-column
           v-if="checkList.includes('nodeTime')"
-          width="150"
+          width="240"
           show-overflow-tooltip
           prop="nodeTime"
           align="left"
