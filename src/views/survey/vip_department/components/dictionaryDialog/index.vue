@@ -13,12 +13,15 @@ const props = withDefaults(
     id?: string | number;
     tree: any[];
     row: string;
+    isClick: boolean;
   }>(),
   {
     parentId: "",
     id: "",
   }
 );
+// 判断用户是否点击部门更新接口
+const isClick = ref(false)
 // 计提时间
 const commissionTypeList = [
   { label: '完成计提', value: 1, },
@@ -34,9 +37,7 @@ const provisionMethod = [
 // loading
 const loading = ref<any>(false);
 // 更新数据
-const emits = defineEmits<{
-  getList: any;
-}>();
+const emits = defineEmits(["getList", "getItmelist"])
 // 弹窗开关
 const visible = defineModel<boolean>({
   default: false,
@@ -150,19 +151,19 @@ async function onSubmit() {
               const obj = {
                 id: item.id,
                 userId: item.userId,
-                commission: item.commission || 0,
-                commissionTime: item.commissionTime || 0,
-                commissionStatus: item.commissionStatus || 0,
-                commissionType: item.commissionType || 0,
+                commission: item.commission,
+                commissionTime: item.commissionTime || 1,
+                commissionStatus: item.commissionStatus,
+                commissionType: item.commissionType || 1,
               }
               form.value.organizationalStructurePersonList.push(obj)
             } else {
               const obj = {
                 userId: item.id,
-                commission: item.commission || 0,
-                commissionTime: item.commissionTime || 0,
-                commissionStatus: item.commissionStatus || 0,
-                commissionType: item.commissionType || 0,
+                commission: item.commission,
+                commissionTime: item.commissionTime || 1,
+                commissionStatus: item.commissionStatus,
+                commissionType: item.commissionType || 1,
               }
               form.value.organizationalStructurePersonList.push(obj)
             }
@@ -199,10 +200,15 @@ async function onSubmit() {
               });
             loading.value = false;
           }
-          // 更新列表
-          await emits("getList");
+          if (isClick.value) {
+            // 更新列表
+            await emits("getItmelist");
+            await emits("getList");
+          } else {
+            await emits("getList");
+          }
           // 关闭弹框
-          onCancel();
+          onCancel()
         }
       });
   } catch (error) {
@@ -243,7 +249,9 @@ onMounted(async () => {
       form.value.id = id;
       form.value.name = name;
       form.value.remark = remark;
-      const { data } = await api.itemlist({ organizationId: form.value.id })
+      isClick.value = props.isClick
+      // 修改获取用户数据
+      const { data } = await api.queryMemberListByOrganizationIdToUpdate({ organizationalStructureId: form.value.id })
       if (data) {
         staffList.value = data
       }
@@ -256,11 +264,11 @@ onMounted(async () => {
         form.value.organizationalStructurePersonList = [];
       }
     } else {
-      // 获取用户数据
-      // const { data } = await apiUse.getTenantSupplierStaffListByNotEnableAndOrganizationIsNull()
-      // if (data) {
-      //   staffList.value = data
-      // }
+      // 新增获取用户数据
+      const { data } = await api.queryMemberList()
+      if (data) {
+        staffList.value = data
+      }
     }
     // 调用方法并打印过滤后的用户
     filteredUsers.value = getFilteredUsers();
@@ -286,7 +294,7 @@ onMounted(async () => {
       <ElFormItem label="部门主管" prop="">
         <el-select v-model="form.userIdList" value-key="" placeholder="请选择部门主管" multiple collapse-tags
           collapse-tags-tooltip clearable filterable @change="handleChange">
-          <el-option v-for="item in staffList" :key="item.value" :label="item.memberNickname" :value="item.id"
+          <el-option v-for="item in staffList" :key="item.value" :label="item.userName" :value="item.id"
             :disabled="item.enableChargePerson === 1">
           </el-option>
         </el-select>
@@ -296,7 +304,7 @@ onMounted(async () => {
       </ElFormItem>
       <div v-for="item in filteredUsers" :key="item.id" class="user">
         <div class="mr">
-          <el-tag type="primary" style="" closable @close="handleClose(item)">{{ item.userId ? item.name : item.memberNickname }}</el-tag>
+          <el-tag type="primary" style="" closable @close="handleClose(item)">{{ item.id ? item.userName : item.name }}</el-tag>
         </div>
         <div class="mr checkbox-container">
           <el-text style="width:4.375rem;">开启提成</el-text>
@@ -399,7 +407,6 @@ onMounted(async () => {
   .el-tag {
     min-width: 3rem;
   }
-
   .el-select {
     min-width: 6.5625rem;
   }

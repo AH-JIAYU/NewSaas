@@ -85,6 +85,8 @@ const defaultProps: any = {
   label: "name",
   // disabled : "distribution",
 };
+// listLoading
+const listLoading = ref(false);
 // userRef
 const userRef = ref();
 // 详情ref
@@ -154,6 +156,7 @@ const dictionary = ref({
     visible: false,
     parentId: "" as Dict["id"],
     id: "" as Dict["id"],
+    isClick: false,
   },
   row: "",
   loading: false,
@@ -251,6 +254,9 @@ function dictionaryEdit(node: Node, data: Dict) {
   dictionary.value.dialog.parentId = node.parent.data.id ?? "";
   dictionary.value.dialog.id = data.id;
   dictionary.value.dialog.visible = true;
+  if(dictionaryItem.value.search.organizationalStructureId) {
+    dictionary.value.dialog.isClick = true;
+  }
 }
 // 删除部门
 function dictionaryDelete(node: Node, data: any) {
@@ -261,11 +267,7 @@ function dictionaryDelete(node: Node, data: any) {
           message: "删除成功",
           center: true,
         });
-        const parent = node.parent;
-        const children: Dict[] = parent.data.children || parent.data;
-        const index = children.findIndex((d) => d.id === data.id);
-        children.splice(index, 1);
-        dictionary.value.tree = [...dictionary.value.tree];
+        getDictionaryList()
       });
     }
   );
@@ -289,22 +291,24 @@ watch(
 // 获取部门项
 async function getDictionaryItemList() {
   try {
-    dictionaryItem.value.loading = true;
+    listLoading.value = true;
     const params = {
       // ...getParams(),
       ...dictionaryItem.value.search,
     };
     const res = await api.itemlist(params);
-    dictionaryItem.value.loading = false;
-    userForm.value.dataList = res.data;
-    dictionaryItem.value.dataList.forEach((item: any) => {
-      item.enableLoading = false;
-    });
-    pagination.value.total = res.data.length;
+    if(res.data) {
+      listLoading.value = false;
+      userForm.value.dataList = res.data;
+      dictionaryItem.value.dataList.forEach((item: any) => {
+        item.enableLoading = false;
+      });
+      pagination.value.total = res.data.length || 0;
+    }
   } catch (error) {
 
   } finally {
-    dictionaryItem.value.loading = false;
+    listLoading.value = false;
   }
 }
 
@@ -569,7 +573,7 @@ function onReset() {
               </template>
             </ElButton>
           </ElSpace>
-          <ElTable ref="userItemRef" :data="userForm.dataList" :border="userForm.border" :size="userForm.lineHeight"
+          <ElTable v-loading="listLoading" ref="userItemRef" :data="userForm.dataList" :border="userForm.border" :size="userForm.lineHeight"
             :stripe="userForm.stripe" highlight-current-row height="100%" @sort-change="sortChangeUser"
             @selection-change="userForm.selectionDataList = $event" row-key="id" default-expand-all
             @select="selectChange">
@@ -660,8 +664,8 @@ function onReset() {
         </div>
       </LayoutContainer>
       <DictionaryDialog v-if="dictionary.dialog.visible" :id="dictionary.dialog.id" v-model="dictionary.dialog.visible"
-        :row="dictionary.row" :parent-id="dictionary.dialog.parentId" :tree="dictionary.tree"
-        @get-list="getDictionaryList" />
+        :row="dictionary.row" :parent-id="dictionary.dialog.parentId" :tree="dictionary.tree" :isClick="dictionary.dialog.isClick"
+        @get-list="getDictionaryList" @get-Itmelist="getDictionaryItemList" />
       <subsidiaryDepartment v-if="subsidiaryDictionary.dialog.visible" :id="subsidiaryDictionary.dialog.id"
         v-model="subsidiaryDictionary.dialog.visible" :row="subsidiaryDictionary.row"
         :parent-id="subsidiaryDictionary.dialog.parentId" :name="subsidiaryDictionary.dialog.name"
