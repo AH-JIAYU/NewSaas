@@ -374,7 +374,7 @@ function onReset() {
                   </div>
                 </template>
               </ElTableColumn>
-              <ElTableColumn v-if="userForm.checkList.includes('userName')" align="left" width="130" prop="userName"
+              <ElTableColumn v-if="userForm.checkList.includes('userName')" align="left"  prop="userName"
                 label="用户名">
                 <template #default="{ row }">
                   <el-text class="tableBig">

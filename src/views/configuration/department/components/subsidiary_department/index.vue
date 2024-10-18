@@ -69,17 +69,38 @@ const formRules = ref<FormRules>({
   name: [{ required: true, message: "请输入部门名称" }],
   commissionType: [{ required: true, message: "请选择计提方式", trigger: "change" }],
 });
+// 判断提成比例不为正整数
+function validateCommissions(users: any) {
+  for (const user of users) {
+    const commission = user.commission;
+
+    // 检查commission是否为正整数
+    if (!/^[1-9]\d*$/.test(commission)) {
+      return false;  // 发现非正整数时返回 false
+    }
+  }
+  return true;  // 所有提成比例均为正整数时返回 true
+}
 
 // 提交数据
 async function onSubmit() {
   try {
     formRef.value &&
-      formRef.value.validate(async (valid) => {
+      formRef.value.validate(async (valid: any) => {
         if (valid) {
           loading.value = true;
           // 将数据制空
           form.value.organizationalStructurePersonList = []
           // 筛选出需要的格式
+          const result = validateCommissions(filteredUsers.value)
+          if (!result) {
+            ElMessage.warning({
+              message: "提成比例必须是正整数",
+              center: true,
+            });
+            loading.value = false;
+            return
+          }
           filteredUsers.value.forEach((item: any) => {
             if (item.userId) {
               const obj = {
@@ -180,7 +201,7 @@ const handleClose = (tag: any) => {
 }
 
 // 切换增加或减少用户
-const handleChange = (val:any) => {
+const handleChange = (val: any) => {
   form.value.userIdList = val
   filteredUsers.value = staffList.value.filter((item: any) =>
     form.value?.userIdList.includes(item.id)
@@ -202,7 +223,7 @@ const handleChange = (val:any) => {
     // 数组去重
     const uniqueData = Array.from(new Map(result.map((item: any) => [item.id, item])).values());
     // 过滤 uniqueData，只保留在 val 中的 id
-    const filteredUniqueData = uniqueData.filter((item:any) => val.includes(item.id));
+    const filteredUniqueData = uniqueData.filter((item: any) => val.includes(item.id));
     // 赋值给循环数据
     filteredUsers.value = filteredUniqueData
     form.value.organizationalStructurePersonList = filteredUsers.value
@@ -254,7 +275,7 @@ onMounted(async () => {
       organizationalStructurePersonList.forEach((item: any) => {
         form.value.userIdList.push(item.userId)
       })
-    }else {
+    } else {
       // 获取用户数据
       const { data } = await apiUse.queryAllNotEnableStaffList()
       if (data) {
@@ -303,7 +324,8 @@ onMounted(async () => {
         <div class="mr checkbox-container">
           <el-text style="width:4.375rem;">开启提成</el-text>
           <!-- <el-checkbox v-model="item.commissionStatus" label="开启提成" size="large" /> -->
-          <el-switch v-model="item.commissionStatus" :active-value="1" :inactive-value="2" inline-prompt active-text="开启" inactive-text="关闭"  />
+          <el-switch v-model="item.commissionStatus" :active-value="1" :inactive-value="2" inline-prompt
+            active-text="开启" inactive-text="关闭" />
         </div>
         <div v-show="item.commissionStatus === 1" class="centers mr">
           <el-select v-model="item.commissionType" value-key="" placeholder="计提方式" clearable filterable>
@@ -311,13 +333,12 @@ onMounted(async () => {
           </el-select>
         </div>
         <div v-show="item.commissionStatus === 1" class="center mr">
-          <el-select class="select" v-model="item.commissionTime" value-key="" placeholder="计提时间" clearable
-            filterable>
+          <el-select class="select" v-model="item.commissionTime" value-key="" placeholder="计提时间" clearable filterable>
             <el-option v-for="item in commissionTypeList" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </div>
         <div v-show="item.commissionStatus === 1" class="center mr">
-          <ElInput v-model="item.commission" placeholder="提成比例" style="max-width: 25rem;" clearable >
+          <ElInput v-model="item.commission" placeholder="提成比例" style="max-width: 25rem;" clearable>
             <template #append>%</template>
           </ElInput>
         </div>
@@ -388,13 +409,15 @@ onMounted(async () => {
   }
 
   .el-input-group__append {
-    width:5rem;
+    width: 5rem;
     padding: 0;
     background-color: #fff;
   }
+
   .el-tag {
     width: 5rem;
   }
+
   .el-tag.el-tag--info {
     background-color: #ecf5ff;
     color: #409eff;

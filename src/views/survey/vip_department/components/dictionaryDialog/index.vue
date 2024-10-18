@@ -134,7 +134,17 @@ const handleChange = (val: any) => {
     form.value.organizationalStructurePersonList = filteredUsers.value
   }
 }
-const switchChange = (val: any) => {
+// 判断提成比例不为正整数
+function validateCommissions(users: any) {
+  for (const user of users) {
+    const commission = user.commission;
+
+    // 检查commission是否为正整数
+    if (!/^[1-9]\d*$/.test(commission)) {
+      return false;  // 发现非正整数时返回 false
+    }
+  }
+  return true;  // 所有提成比例均为正整数时返回 true
 }
 // 提交数据
 async function onSubmit() {
@@ -145,6 +155,16 @@ async function onSubmit() {
           loading.value = true;
           // 将数据制空
           form.value.organizationalStructurePersonList = []
+           // 筛选出需要的格式
+           const result = validateCommissions(filteredUsers.value)
+          if (!result) {
+            ElMessage.warning({
+              message: "提成比例必须是正整数",
+              center: true,
+            });
+            loading.value = false;
+            return
+          }
           // 筛选出需要的格式
           filteredUsers.value.forEach((item: any) => {
             if (item.userId) {
@@ -310,7 +330,7 @@ onMounted(async () => {
           <el-text style="width:4.375rem;">开启提成</el-text>
           <!-- <el-checkbox v-model="item.commissionStatus" label="开启提成" size="large" /> -->
           <el-switch v-model="item.commissionStatus" :active-value="1" :inactive-value="2" inline-prompt
-            active-text="开启" inactive-text="关闭" @change="switchChange" />
+            active-text="开启" inactive-text="关闭" />
         </div>
         <div v-show="item.commissionStatus === 1" class="centers mr">
           <el-select v-model="item.commissionType" value-key="" placeholder="计提方式" clearable filterable>
