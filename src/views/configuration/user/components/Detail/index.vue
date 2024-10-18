@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import api from "@/api/modules/configuration_manager";
+import apiDep from "@/api/modules/department";
 import useDepartmentStore from "@/store/modules/department";
 import useTenantRoleStore from "@/store/modules/tenant_role";
 import useTenantStaffStore from "@/store/modules/configuration_manager";
@@ -23,6 +24,12 @@ const munulevs = ref();
 const departmentStore = useDepartmentStore();
 // 部门数据
 const departmentList = ref<any>();
+const defaultProps: any = {
+  children: "children",
+  label: "name",
+  // disabled : "distribution",
+};
+const departmentId = ref<any>([]);
 const form = ref<any>({})
 const emit = defineEmits(["fetch-data"]);
 const drawerisible = ref<boolean>(false);
@@ -35,12 +42,15 @@ async function showEdit(row: any) {
   };
   const { status, data } = await api.list(params)
   detailData.value = data.data[0];
-
+  if(departmentId.value) {
+    departmentId.value.push(detailData.value.organizationalStructureId)
+  }
   drawerisible.value = true;
 }
 
 function close() {
   emit("fetch-data");
+  departmentId.value = []
   drawerisible.value = false;
 }
 
@@ -52,7 +62,10 @@ onMounted(async () => {
   // 角色
   munulevs.value = await roleStore.getRole();
   // 部门
-  departmentList.value = await departmentStore.getDepartment();
+  const res = await apiDep.list({ name: '' });
+  if (res.data) {
+    departmentList.value = res.data;
+  }
 });
 
 defineExpose({
@@ -124,8 +137,8 @@ defineExpose({
     <el-form-item label="手机号:">
       <el-text class="mx-1">
         {{
-        detailData?.phone
-        ? detailData.phone
+        detailData?.phoneNumber
+        ? detailData.phoneNumber
         : "-"
         }}
       </el-text>
@@ -140,11 +153,7 @@ defineExpose({
   </el-col>
   <el-col :span="6">
     <el-form-item label="部门:">
-      <el-text v-for="item in departmentList">
-        <el-text v-if="detailData.departmentId === item.id">
-          {{ item.name ? item.name : "-" }}
-        </el-text>
-      </el-text>
+      {{ detailData.organizationalStructureName ? detailData.organizationalStructureName : "-" }}
     </el-form-item>
   </el-col>
   <el-col :span="6">
@@ -191,25 +200,23 @@ defineExpose({
   <template #header>
           <div class="card-header">
             <div class="leftTitle">
-              小组信息<span style="margin-left: 20px; font-size: 14px"
-                >PM:<el-text v-for="item in staffList" :key="item.id">
-              <el-text v-if="item.id === form.director">
-                {{ item.name }}
-              </el-text>
-            </el-text></span
-              >
+              部门信息<span v-if="form.enableChargePerson" style="margin-left: 20px; font-size: 14px">负责人:<el-text
+                  v-for="item in staffList" :key="item.id">
+                  <el-text v-if="item.id === form.id">
+                    {{ item.name }}
+                  </el-text>
+                </el-text></span>
             </div>
           </div>
         </template>
-  <!-- <el-row :gutter="24">
-    <el-form-item label="分配小组:">
-      <el-radio-group v-if="groupManageList.length" v-model="form.groupId">
-        <el-radio v-for="item in groupManageList" :key="item.id" :value="item.id" :label="item.name"
-          disabled></el-radio>
-      </el-radio-group>
-      <el-text v-else>-</el-text>
+  <el-row :gutter="24">
+    <el-form-item label="分配部门:">
+      <el-tree v-if="departmentList.length > 0" style="max-width: 600px" ref="treeRef" :disabled="true" :data="departmentList"
+        show-checkbox check-strictly node-key="id" :default-expanded-keys="[]" :default-checked-keys="departmentId"
+        default-expand-all :props="defaultProps" @check-change="handleNodeClick" />
+      <el-text v-else>暂无数据</el-text>
     </el-form-item>
-  </el-row> -->
+  </el-row>
 </el-card>
 </el-form>
 </el-drawer>
