@@ -595,8 +595,8 @@ function handleMoreOperating(command: string, row: any) {
           label="节点"
         >
           <template #default="{ row }">
-            <div class="oneLine">
-              <el-text v-if="row.status === 1" class="mx-1 tableBig">
+            <div style="display: flex;" class="oneLine">
+              <el-text v-if="row.status === 1" class="mx-1 tableBig flex-c">
                 <el-button
                   style="margin-right: 5px"
                   size="small"
@@ -606,7 +606,7 @@ function handleMoreOperating(command: string, row: any) {
                 >
                 <el-text>{{ row.pendReviewTime }}</el-text>
               </el-text>
-              <el-text v-if="row.status === 3" class="mx-1 tableBig">
+              <el-text v-if="row.status === 3" class="mx-1 tableBig flex-c">
                 <el-button
                   style="margin-right: 6px"
                   size="small"
@@ -616,7 +616,7 @@ function handleMoreOperating(command: string, row: any) {
                 >
                 <el-text>{{ row.invoicedOutTime }}</el-text>
               </el-text>
-              <el-text v-if="row.status === 4" class="mx-1 tableBig">
+              <el-text v-if="row.status === 4" class="mx-1 tableBig flex-c">
                 <el-button
                   style="margin-right: 6px"
                   size="small"
@@ -626,7 +626,7 @@ function handleMoreOperating(command: string, row: any) {
                 >
                 <el-text>{{ row.settledTime }}</el-text>
               </el-text>
-              <el-text v-if="row.status === 2" class="mx-1 tableBig">
+              <el-text v-if="row.status === 2" class="mx-1 tableBig flex-c">
                 <el-button
                   style="margin-right: 6px"
                   size="small"
@@ -636,7 +636,7 @@ function handleMoreOperating(command: string, row: any) {
                 >
                 <el-text>{{ row.reviewTime }}</el-text>
               </el-text>
-              <el-text v-if="row.status === 5" class="mx-1 tableBig">
+              <el-text v-if="row.status === 5" class="mx-1 tableBig flex-c">
                 <el-button
                   style="margin-right: 6px"
                   size="small"
