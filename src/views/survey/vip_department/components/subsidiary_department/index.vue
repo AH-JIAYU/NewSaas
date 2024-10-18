@@ -72,13 +72,19 @@ const formRules = ref<FormRules>({
 function validateCommissions(users: any) {
   for (const user of users) {
     const commission = user.commission;
+    const commissionStatus = user.commissionStatus;
 
-    // 检查commission是否为正整数
-    if (!/^[1-9]\d*$/.test(commission)) {
-      return false;  // 发现非正整数时返回 false
+    // 如果 commissionStatus 等于 2，则跳过此用户的校验
+    if (commissionStatus === 2) {
+      continue; // 不进行校验，直接进入下一个用户
+    }
+
+    // 如果 commissionStatus 等于 1，检查 commission 是否为正整数
+    if (commissionStatus === 1 && !/^[1-9]\d*$/.test(commission)) {
+      return false; // 如果 commission 不是正整数，返回 false
     }
   }
-  return true;  // 所有提成比例均为正整数时返回 true
+  return true; // 所有需要校验的提成比例均为正整数时返回 true
 }
 // 提交数据
 async function onSubmit() {
