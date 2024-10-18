@@ -356,7 +356,7 @@ function onSubmit() {
 
                 <el-form-item label="顶级域名" prop="topLevelDomainName">
                   <el-text class="mx-1">{{ form.topLevelDomainName }}</el-text>
-                  <div v-if="form.topLevelDomainName">
+                  <div v-if="form.topLevelDomainName">  
                     <div v-if="isAnalysis">
                       <span class="green"></span><span style="margin-right: 10px;">已生效</span>
                     </div>

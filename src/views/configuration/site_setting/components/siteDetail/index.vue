@@ -243,11 +243,19 @@ const handleSubmit = async () => {
 };
 // 查看是否备案
 const getDomainRecord = async (val: any) => {
+  const domainName = /^([0-9a-zA-Z-]{1,}\.)+([a-zA-Z]{2,})$/
   if (val) {
-    const res = await api.checkDomainRecord({ domainName: val })
-    checkDomainRecord.value = res.data
-    if (res.data.isKeepOnRecord === 1) form.value.domain = res.data.recordedName
-    emits('fetch-data')
+    if (domainName.test(val)) {
+      const res = await api.checkDomainRecord({ domainName: val })
+      checkDomainRecord.value = res.data
+      if (res.data.isKeepOnRecord === 1) form.value.domain = res.data.recordedName
+      emits('fetch-data')
+    } else {
+      ElMessage({
+        type: "warning",
+        message: "请输入合法域名",
+      });
+    }
   }
 }
 // 验证
@@ -433,7 +441,7 @@ function handleClose() {
 watch(
   () => props.personalizedDomainName,
   (newval: any, oldval: any) => {
-    form.value.domain=newval
+    form.value.domain = newval
   }
 )
 // 暴露
