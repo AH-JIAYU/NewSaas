@@ -27,7 +27,8 @@ const useNotificationStore = defineStore(
     // 连接websocket
     function openSocket(userId: any) {
       return new Promise<void>((reslove, reject) => {
-        const socketUrl = import.meta.env.VITE_APP_API_BASEURL+"/api/websocket/" + userId;
+        // const socketUrl = import.meta.env.VITE_APP_API_BASEURL+"/api/websocket/" + userId;
+        const socketUrl = "ws://saas-api.surveysaas.com/api/websocket/" + userId;
 
         if (socket.value != null) {
           socket.value.close();
