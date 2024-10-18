@@ -65,7 +65,7 @@ const columns = ref([
   },
   {
     prop: "memberPrice",
-    label: "会员价",
+    label: "成本价(会员)",
     sortable: true,
     checked: true,
   },
@@ -279,7 +279,7 @@ const formOption={
               }}</el-text>
           </template>
         </el-table-column> -->
-        <el-table-column v-if="checkList.includes('memberName')" width="150" align="left" prop="memberName"
+        <el-table-column v-if="checkList.includes('memberName')" width="100" align="left" prop="memberName"
           show-overflow-tooltip label="部门">
           <template #default="{ row }">
             <div v-if="row.memberName" class="hoverSvg">
@@ -316,8 +316,8 @@ const formOption={
             </el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('memberPrice')" width="80" align="left" prop="h"
-          show-overflow-tooltip label="会员价">
+        <el-table-column v-if="checkList.includes('memberPrice')" width="110" align="left" prop="h"
+          show-overflow-tooltip label="成本价(会员)">
           <template #default="{ row }">
             <el-text>
               <CurrencyType />
@@ -327,7 +327,7 @@ const formOption={
             </el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('ipBelong')" align="left" width="130" prop="ipBelong"
+        <el-table-column v-if="checkList.includes('ipBelong')" align="left" width="150" prop="ipBelong"
           show-overflow-tooltip label="区域/IP">
           <template #default="{ row }">
             <div v-if="row.ipBelong" class="hoverSvg">
