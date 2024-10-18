@@ -80,8 +80,8 @@ const columns = ref([
     checked: true,
   },
   {
-    prop: "supplierPrice",
-    label: "供应商价",
+    prop: "memberPrice",
+    label: "成本价",
     sortable: true,
     checked: true,
   },
@@ -318,7 +318,7 @@ const formOption = {
         @selection-change="setSelectRows">
         <el-table-column align="left" type="selection" />
         <el-table-column v-if="checkList.includes('id')" align="left" prop="id" show-overflow-tooltip fixed="left"
-          label="点击ID"><template #default="{ row }"> 
+          label="点击ID"><template #default="{ row }">
             <el-tag effect="dark" v-if="row.surveySource === 2" type="warning">外部人员</el-tag>
             <div class="copyId flex-s  tableSmall">
               <div class="id oneLine ">ID: {{ row.id }}</div>
@@ -437,11 +437,11 @@ const formOption = {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('supplierPrice')" align="left" prop="supplierPrice"
+        <el-table-column v-if="checkList.includes('memberPrice')" align="left" prop="memberPrice"
           show-overflow-tooltip width="120" fixed="right" label="成本价">
           <template #default="{ row }">
             <div class="tableBig" style="color: #fd8989">
-              <CurrencyType />{{ row.supplierPrice || 0 }}
+              <CurrencyType />{{ row.memberPrice || 0 }}
             </div>
           </template>
         </el-table-column>
