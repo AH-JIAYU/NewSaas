@@ -126,7 +126,9 @@ const getList = async () => {
   await getLevelNameList()
   // 部门
   const res = await apiDep.list({ name: '' });
-  departmentList.value = res.data;
+  if(res.data) {
+    departmentList.value = res.data;
+  }
   // data.vipGroupList = await surveyVipGroupStore.getGroupNameList();
 
   data.countryList = await basicDictionaryStore.getCountry();
@@ -207,6 +209,24 @@ onMounted(async () => {
                   <el-input clearable value="123456" disabled />
                 </el-form-item>
               </el-col>
+              <el-col :span="8">
+                <el-form-item label="会员等级" prop="memberLevelId">
+                  <el-select clearable filterable v-model="localToptTab.memberLevelId">
+                    <el-option v-for="item in data.vipLevelList" :key="item.memberLevelId" :value="item.memberLevelId"
+                      :label="item.levelNameOrAdditionRatio"></el-option>
+                    <template #empty>
+                      <div style="display: flex;justify-content: space-between;align-items:center;padding:0 1rem;">
+                        暂无数据
+                        <el-button type="primary" link @click="AddVipLevel" size="small">
+                          快捷新增
+                          <SvgIcon name="ant-design:plus-outlined" color="#fff"
+                            style="background-color: var(--el-color-primary);border-radius: 50%;padding: 2px;margin:0 2px" />
+                        </el-button>
+                      </div>
+                    </template>
+                  </el-select>
+                </el-form-item>
+              </el-col>
             </el-row>
           </el-card>
           <el-card class="box-card">
@@ -242,27 +262,9 @@ onMounted(async () => {
                 </el-form-item>
               </el-col>
             </el-row>
-            <el-divider content-position="center" />
+            <!-- <el-divider content-position="center" />
             <el-row :gutter="20">
               <el-col :span="8">
-                <el-form-item label="会员等级" prop="memberLevelId">
-                  <el-select clearable filterable v-model="localToptTab.memberLevelId">
-                    <el-option v-for="item in data.vipLevelList" :key="item.memberLevelId" :value="item.memberLevelId"
-                      :label="item.levelNameOrAdditionRatio"></el-option>
-                    <template #empty>
-                      <div style="display: flex;justify-content: space-between;align-items:center;padding:0 1rem;">
-                        暂无数据
-                        <el-button type="primary" link @click="AddVipLevel" size="small">
-                          快捷新增
-                          <SvgIcon name="ant-design:plus-outlined" color="#fff"
-                            style="background-color: var(--el-color-primary);border-radius: 50%;padding: 2px;margin:0 2px" />
-                        </el-button>
-                      </div>
-                    </template>
-                  </el-select>
-                </el-form-item>
-              </el-col>
-              <!-- <el-col :span="8">
                 <el-form-item label="部门">
                   <el-select clearable filterable v-model="localToptTab.memberGroupId">
                     <el-option v-for="item in data.vipGroupList" :key="item.memberGroupId" :label="item.memberGroupName"
@@ -272,8 +274,8 @@ onMounted(async () => {
                     check-strictly node-key="id" :default-expanded-keys="[]" default-expand-all :props="defaultProps"
                     @check-change="handleNodeClick" />
                 </el-form-item>
-              </el-col> -->
-            </el-row>
+              </el-col>
+            </el-row> -->
           </el-card>
           <el-card class="box-card">
             <template #header>
