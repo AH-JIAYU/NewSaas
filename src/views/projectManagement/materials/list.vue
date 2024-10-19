@@ -26,8 +26,8 @@ const editsRef = ref();
 // 右侧工具栏配置变量
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const checkList = ref<any>([]);
-  const formSearchList = ref<any>()//表单排序配置
-const formSearchName=ref<string>('formSearch-materials')// 表单排序name
+const formSearchList = ref<any>()//表单排序配置
+const formSearchName = ref<string>('formSearch-materials')// 表单排序name
 const lineHeight = ref<any>("default");
 const stripe = ref(false);
 const selectRows = ref<any>([]);
@@ -216,7 +216,7 @@ onMounted(() => {
     { index: 1, show: true, type: 'input', modelName: 'memberChildId', placeholder: '会员ID' },
     { index: 2, show: true, type: 'input', modelName: 'projectId', placeholder: '项目ID' },
     { index: 3, show: true, type: 'input', modelName: 'projectName', placeholder: '项目名称' }
-]
+  ]
 });
 </script>
 
@@ -227,7 +227,8 @@ onMounted(() => {
     <PageMain>
       <el-tabs v-model="queryForm.type" @tab-change="getDataChange">
         <el-tab-pane label="会员素材" :name="1">
-          <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="queryForm" />
+          <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange"
+            @onReset="onReset" :model="queryForm" />
 
           <!-- <SearchBar :show-toggle="false">
             <template #default="{ fold, toggle }">
@@ -250,24 +251,24 @@ onMounted(() => {
                     <template #icon>
                       <SvgIcon name="i-ep:search" />
                     </template>
-                    筛选
-                  </ElButton>
-                  <ElButton @click="onReset">
-                    <template #icon>
+筛选
+</ElButton>
+<ElButton @click="onReset">
+  <template #icon>
                       <div class="i-grommet-icons:power-reset h-1em w-1em" />
                     </template>
-                    重置
-                  </ElButton>
-                  <ElButton link @click="toggle" disabled>
-                    <template #icon>
+  重置
+</ElButton>
+<ElButton link @click="toggle" disabled>
+  <template #icon>
                       <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
                     </template>
-                    {{ fold ? "展开" : "收起" }}
-                  </ElButton>
-                </ElFormItem>
-              </el-form>
-            </template>
-          </SearchBar> -->
+  {{ fold ? "展开" : "收起" }}
+</ElButton>
+</ElFormItem>
+</el-form>
+</template>
+</SearchBar> -->
           <ElDivider border-style="dashed" />
           <el-row :gutter="24">
             <FormLeftPanel />
@@ -282,12 +283,6 @@ onMounted(() => {
             :border="border" :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows" highlight-current-row
             @current-change="handleTabs1CurrentChange">
             <el-table-column align="left" type="selection" />
-            <el-table-column v-if="checkList.includes('memberChildName')" show-overflow-tooltip prop="memberChildName"
-              align="left" label="会员名称" >
-              <template #default="{row}">
-                <div class="tableBig">{{row.memberChildName}}</div>
-              </template>
-            </el-table-column>
             <el-table-column v-if="checkList.includes('memberChildId')" show-overflow-tooltip prop="memberChildId"
               align="left" label="会员ID">
               <template #default="{ row }">
@@ -297,15 +292,21 @@ onMounted(() => {
                 </div>
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('projectName')" show-overflow-tooltip prop="projectName"
-              align="left" label="项目名称" >
-              <template #default="{row}">
-                <div class="tableBig">{{row.projectName}}</div>
+            <el-table-column v-if="checkList.includes('memberChildName')" show-overflow-tooltip prop="memberChildName"
+              align="left" label="会员名称">
+              <template #default="{ row }">
+                <div class="tableBig">{{ row.memberChildName }}</div>
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip prop="projectId"
-              align="left" label="项目ID" >
-              <template  #default="{ row }">
+            <el-table-column v-if="checkList.includes('projectName')" show-overflow-tooltip prop="projectName"
+              align="left" label="项目名称">
+              <template #default="{ row }">
+                <div class="tableBig">{{ row.projectName }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip prop="projectId" align="left"
+              label="项目ID">
+              <template #default="{ row }">
                 <div class="copyId tableSmall">
                   <div class="id oneLine">ID: {{ row.projectId }}</div>
                   <copy class="copy" :content="row.projectId" />
@@ -326,8 +327,8 @@ onMounted(() => {
                   <div class="oneLine" style="width: calc(100% - 20px);">
                     {{ row.instructions ? row.instructions : "-" }}
                   </div>
-                  <SvgIcon   @click="quickEdit(row)"
-                    :class="{ edit: 'edit', current: row.projectId === tabs1Current }" name="i-ep:edit" color="#409eff" />
+                  <SvgIcon @click="quickEdit(row)" :class="{ edit: 'edit', current: row.projectId === tabs1Current }"
+                    name="i-ep:edit" color="#409eff" />
                 </div>
 
               </template>
@@ -403,14 +404,9 @@ onMounted(() => {
             :border="border" :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows" highlight-current-row
             @current-change="handleTabs2CurrentChange">
             <el-table-column type="selection" />
-            <el-table-column v-if="checkList.includes('memberChildName')" show-overflow-tooltip prop="memberChildName"
-              align="left" label="子会员名称" >
-              <template #default="{row}">
-                <div class="tableBig">{{row.memberChildName}}</div>
-              </template>
-            </el-table-column>
+
             <el-table-column v-if="checkList.includes('memberChildId')" show-overflow-tooltip prop="memberChildId"
-              align="left" label="子会员ID" >
+              align="left" label="子会员ID">
               <template #default="{ row }">
                 <div class="copyId tableSmall">
                   <div class="id oneLine">ID: {{ row.memberChildId }}</div>
@@ -418,14 +414,20 @@ onMounted(() => {
                 </div>
               </template>
             </el-table-column>
-              <el-table-column v-if="checkList.includes('projectName')" show-overflow-tooltip prop="projectName"
-              align="left" label="项目名称" >
-              <template #default="{row}">
-                <div class="tableBig">{{row.projectName}}</div>
+            <el-table-column v-if="checkList.includes('memberChildName')" show-overflow-tooltip prop="memberChildName"
+              align="left" label="子会员名称">
+              <template #default="{ row }">
+                <div class="tableBig">{{ row.memberChildName }}</div>
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip prop="projectId"
-              align="left" label="项目ID" >
+            <el-table-column v-if="checkList.includes('projectName')" show-overflow-tooltip prop="projectName"
+              align="left" label="项目名称">
+              <template #default="{ row }">
+                <div class="tableBig">{{ row.projectName }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip prop="projectId" align="left"
+              label="项目ID">
               <template #default="{ row }">
                 <div class="copyId tableSmall">
                   <div class="id oneLine">ID: {{ row.projectId }}</div>
@@ -443,14 +445,14 @@ onMounted(() => {
               </template>
             </el-table-column>
             <el-table-column v-if="checkList.includes('instructions')" show-overflow-tooltip prop="instructions"
-              align="left" label="说明" >
+              align="left" label="说明">
               <template #default="{ row }">
-          <div class="flex-c tableBig">
+                <div class="flex-c tableBig">
                   <div class="oneLine" style="width: calc(100% - 20px);">
                     {{ row.instructions ? row.instructions : "-" }}
                   </div>
-                  <SvgIcon   @click="quickEdit(row)"
-                    :class="{ edit: 'edit', current: row.projectId === tabs2Current }" name="i-ep:edit" color="#409eff" />
+                  <SvgIcon @click="quickEdit(row)" :class="{ edit: 'edit', current: row.projectId === tabs2Current }"
+                    name="i-ep:edit" color="#409eff" />
                 </div>
               </template>
 
@@ -558,6 +560,4 @@ onMounted(() => {
 .el-table__row:hover .edit {
   display: block;
 }
-
- 
 </style>

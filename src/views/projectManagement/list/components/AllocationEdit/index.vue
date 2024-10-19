@@ -123,12 +123,12 @@ function selectAllMember() {
 const handleNodeClick = (nodeData: any, checked: any) => {
   if (checked) {
     // 选中新的节点时，取消其他选中的节点
-    // const checkedKeys = treeRef.value.getCheckedKeys(); // 获取当前所有选中的节点
-    // checkedKeys.forEach((key: any) => {
-    //   if (key !== nodeData.id) {
-    //     treeRef.value.setChecked(key, false); // 取消选中其他节点
-    //   }
-    // });
+    const checkedKeys = treeRef.value.getCheckedKeys(); // 获取当前所有选中的节点
+    checkedKeys.forEach((key: any) => {
+      if (key !== nodeData.id) {
+        treeRef.value.setChecked(key, false); // 取消选中其他节点
+      }
+    });
     // 更新当前选中的节点 ID
     departmentId.value = [nodeData.id]; // 只保留当前选中节点 ID
   } else {
@@ -142,7 +142,7 @@ const handleNodeClick = (nodeData: any, checked: any) => {
   // 获取所有半选的主节点
   const halltree = treeRef.value.getHalfCheckedKeys();
   // 组合一下
-  const organizationalStructureId = tree.concat(halltree); 
+  const organizationalStructureId = tree.concat(halltree);
   // localToptTab.value.organizationalStructureId = organizationalStructureId[0];
   data.value.form.groupSupplierIdList = organizationalStructureId
 };
