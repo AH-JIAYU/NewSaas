@@ -10,7 +10,7 @@ import useSurveyVipStore from "@/store/modules/survey_vip"; // 会员
 const stagedDataStore = useStagedDataStore(); // 暂存
 const surveyVipStore = useSurveyVipStore(); // 会员
 
-const emit = defineEmits(["fetch-data","getList"]);
+const emit = defineEmits(["fetch-data","getList","getItemlist"]);
 const drawerisible = ref<boolean>(false);
 const title = ref<string>("");
 const LeftTabsRef = ref<any>(); // Ref
@@ -119,6 +119,7 @@ async function save() {
       }
       if(isClick.value) {
         emit("getList");
+        emit("getItemlist");
       }else {
         emit("fetch-data");
       }

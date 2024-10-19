@@ -254,7 +254,7 @@ function dictionaryEdit(node: Node, data: Dict) {
   dictionary.value.dialog.parentId = node.parent.data.id ?? "";
   dictionary.value.dialog.id = data.id;
   dictionary.value.dialog.visible = true;
-  if(dictionaryItem.value.search.organizationalStructureId) {
+  if (dictionaryItem.value.search.organizationalStructureId) {
     dictionary.value.dialog.isClick = true;
   }
 }
@@ -276,7 +276,7 @@ function dictionaryDelete(node: Node, data: any) {
 // 部门项详情
 function dictionaryClick(data: any) {
   pagination.value.page = 1;
-  if(data.id) {
+  if (data.id) {
     userForm.value.dialog.parentId = data.id
   }
   dictionaryItem.value.search.organizationalStructureId = data.id;
@@ -297,7 +297,7 @@ async function getDictionaryItemList() {
       ...dictionaryItem.value.search,
     };
     const res = await api.itemlist(params);
-    if(res.data) {
+    if (res.data) {
       listLoading.value = false;
       userForm.value.dataList = res.data;
       dictionaryItem.value.dataList.forEach((item: any) => {
@@ -454,21 +454,23 @@ const selectChange = (val: any) => {
 }
 // 重置密码
 function onResetPassword() {
-  const { name, id } = resetList.value
-  ElMessageBox.confirm(
-    `确认将「${name}」的密码重置为 “123456” 吗？`,
-    "确认信息"
-  )
-    .then(() => {
-      apiUser.reset({ id: id }).then(() => {
-        ElMessage.success({
-          message: "重置成功",
-          center: true,
+  if (resetList.value) {
+    const { userName, id } = resetList.value
+    ElMessageBox.confirm(
+      `确认将「${userName}」的密码重置为 “123456” 吗？`,
+      "确认信息"
+    )
+      .then(() => {
+        apiUser.reset({ id: id }).then(() => {
+          ElMessage.success({
+            message: "重置成功",
+            center: true,
+          });
+          getDictionaryItemList();
         });
-        getDictionaryItemList();
-      });
-    })
-    .catch(() => { });
+      })
+      .catch(() => { });
+  }
 }
 // 修改
 function edit(row: any) {
@@ -520,7 +522,7 @@ function onReset() {
                     {{ data.name }}
                   </div>
                   <div class="code">
-                    {{ data?.organizationalStructurePersonList?.map((item:any) => item.userName).join('，') }}
+                    {{ data?.organizationalStructurePersonList?.map((item: any) => item.userName).join('，') }}
                   </div>
                   <div class="actions">
                     <ElButtonGroup>
@@ -543,19 +545,8 @@ function onReset() {
                   </div>
                 </div>
               </template>
-            </ElTree>
-          </ElScrollbar>
-        </template>
-        <div v-show="dictionaryItem.search.organizationalStructureId" class="dictionary-container">
-          <ElSpace wrap>
-            <ElButton type="primary" @click="create()">
-              新增员工
-            </ElButton>
-            <ElButton @click="onResetPassword">
-              重置密码
-            </ElButton>
-            <ElSelect v-model="userForm.search.active" value-key="" placeholder="用户状态" style="width: 200px"
-              clearable filterable>
+              <!-- 查询 <ElSelect v-model="userForm.search.active" value-key="" placeholder="用户状态" style="width: 200px" clearable
+              filterable>
               <el-option v-for="item in activeList" :key="item.label" :label="item.label" :value="item.value" />
             </ElSelect>
             <ElInput v-model="userForm.search.id" placeholder="员工ID" clearable style="width: 200px"
@@ -571,12 +562,26 @@ function onReset() {
               <template #icon>
                 <SvgIcon name="i-ep:refresh" />
               </template>
+            </ElButton> -->
+            <!-- 分页 <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+            :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+            background @size-change="sizeChange" @current-change="currentChangeUser" /> -->
+            </ElTree>
+          </ElScrollbar>
+        </template>
+        <div v-show="dictionaryItem.search.organizationalStructureId" class="dictionary-container">
+          <ElSpace wrap>
+            <ElButton type="primary" @click="create()">
+              新增员工
+            </ElButton>
+            <ElButton @click="onResetPassword">
+              重置密码
             </ElButton>
           </ElSpace>
-          <ElTable v-loading="listLoading" ref="userItemRef" :data="userForm.dataList" :border="userForm.border" :size="userForm.lineHeight"
-            :stripe="userForm.stripe" highlight-current-row height="100%" @sort-change="sortChangeUser"
-            @selection-change="userForm.selectionDataList = $event" row-key="id" default-expand-all
-            @select="selectChange">
+          <ElTable v-loading="listLoading" ref="userItemRef" :data="userForm.dataList" :border="userForm.border"
+            :size="userForm.lineHeight" :stripe="userForm.stripe" highlight-current-row height="100%"
+            @sort-change="sortChangeUser" @selection-change="userForm.selectionDataList = $event" row-key="id"
+            default-expand-all @select="selectChange">
             <ElTableColumn type="selection" align="left" fixed />
             <ElTableColumn v-if="userForm.checkList.includes('active')" align="left" prop="active" label="状态">
               <template #default="scope">
@@ -626,7 +631,8 @@ function onReset() {
             <ElTableColumn v-if="userForm.checkList.includes('departmentId')" align="left" prop="departmentId"
               label="部门">
               <template #default="{ row }">
-                <el-text class="tableBig">{{ row.organizationalStructureName ? row.organizationalStructureName : "-" }}</el-text>
+                <el-text class="tableBig">{{ row.organizationalStructureName ? row.organizationalStructureName : "-"
+                  }}</el-text>
               </template>
             </ElTableColumn>
             <ElTableColumn v-if="userForm.checkList.includes('positionId')" align="left" prop="positionId" label="职位">
@@ -655,17 +661,14 @@ function onReset() {
               <el-empty :image="empty" :image-size="300" />
             </template>
           </ElTable>
-          <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
-            :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-            background @size-change="sizeChange" @current-change="currentChangeUser" />
         </div>
         <div v-show="!dictionaryItem.search.organizationalStructureId" class="dictionary-container">
           <div class="empty">请在左侧新增或选择一个部门</div>
         </div>
       </LayoutContainer>
       <DictionaryDialog v-if="dictionary.dialog.visible" :id="dictionary.dialog.id" v-model="dictionary.dialog.visible"
-        :row="dictionary.row" :parent-id="dictionary.dialog.parentId" :tree="dictionary.tree" :isClick="dictionary.dialog.isClick"
-        @get-list="getDictionaryList" @get-Itmelist="getDictionaryItemList" />
+        :row="dictionary.row" :parent-id="dictionary.dialog.parentId" :tree="dictionary.tree"
+        :isClick="dictionary.dialog.isClick" @get-list="getDictionaryList" @get-Itmelist="getDictionaryItemList" />
       <subsidiaryDepartment v-if="subsidiaryDictionary.dialog.visible" :id="subsidiaryDictionary.dialog.id"
         v-model="subsidiaryDictionary.dialog.visible" :row="subsidiaryDictionary.row"
         :parent-id="subsidiaryDictionary.dialog.parentId" :name="subsidiaryDictionary.dialog.name"
@@ -676,7 +679,8 @@ function onReset() {
         :dataList="dictionaryItem.dataList" :row="dictionaryItem.row" @success="getDictionaryItemList" />
       <userDialog v-if="userForm.dialog.visible" :id="userForm.dialog.id" v-model="userForm.dialog.visible"
         :catalogue-id="userForm.search.catalogueId" :parent-id="userForm.dialog.parentId" :level="userForm.dialog.level"
-        :tree="dataForm.tree" :dataList="userForm.dataList" :row="userForm.row" @success="getDictionaryItemList" @get-list="getDictionaryList" />
+        :tree="dataForm.tree" :dataList="userForm.dataList" :row="userForm.row" @success="getDictionaryItemList"
+        @get-list="getDictionaryList" />
       <Detail ref="detailRef" />
     </div>
   </div>

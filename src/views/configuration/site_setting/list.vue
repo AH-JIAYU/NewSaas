@@ -168,7 +168,6 @@ const getLogo = async () => {
         name: "file",
         url: res?.data?.logoUrl,
       });
-
   }
 }
 // 解析记录
@@ -215,7 +214,7 @@ const handleFileChange = (file: any, newFileList: any) => {
   // 检查文件扩展名是否在支持的格式中
   if (supportedFormats.includes(`.${fileExtension}`)) {
     // 直接更新文件列表
-    fileList.value = [...newFileList]; // 使用扩展运算符确保更新
+    // fileList.value = [...newFileList]; // 使用扩展运算符确保更新
   } else {
     fileList.value = []; // 清空文件列表
     // 强制 Vue 更新 UI

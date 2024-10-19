@@ -464,10 +464,7 @@ onMounted(async () => {
   formSearchList.value =[
   { index: 1, show: true, type: 'input', modelName: 'memberId', placeholder: '会员ID' },
   { index: 2, show: true, type: 'input', modelName: 'memberName', placeholder: '会员名称' },
-  { index: 3, show: true, type: 'select', modelName: 'memberLevelId', placeholder: '会员等级', option: 'memberLevelId', optionLabel: 'levelNameOrAdditionRatio', optionValue: 'memberLevelId' },
   { index: 4, show: true, type: 'select', modelName: 'memberStatus', placeholder: '会员状态', option: 'memberStatus', optionLabel: 'label', optionValue: 'value' },
-  { index: 5, show: true, type: 'select', modelName: 'memberGroupId', placeholder: '所属部门', option: 'memberGroupId', optionLabel: 'memberGroupName', optionValue: 'memberGroupId' },
-  { index: 6, show: true, type: 'datetimerange', modelName: 'time', startPlaceHolder: '创建开始日期', endPlaceHolder: '创建结束日期' }
 ]
 });
 const formOption={
@@ -771,7 +768,7 @@ const formOption={
         :parent-id="dictionaryItem.dialog.parentId" :level="dictionaryItem.dialog.level" :tree="dictionary.tree"
         :dataList="dictionaryItem.dataList" :row="dictionaryItem.row" @success="queryData" />
       <Detail ref="detailRef" />
-      <VipEdit ref="editRef" @fetch-data="queryData" @get-list="getDictionaryItemList" />
+      <VipEdit ref="editRef" @fetch-data="queryData" @get-list="getDictionaryList" @get-Itemlist="getDictionaryItemList" />
       <vipPlusMinusPayments ref="vipPlusMinusPaymentsRef" @fetch-data="queryData" />
       <vipLevel ref="subVipLevelRef" @query-data="queryData" />
     </div>

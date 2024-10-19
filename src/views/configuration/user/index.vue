@@ -267,9 +267,10 @@ const selectChange = (val: any) => {
 }
 // 重置密码
 function onResetPassword() {
-  const { name, id } = resetList.value
+  if(resetList.value) {
+    const { userName, id } = resetList.value
   ElMessageBox.confirm(
-    `确认将「${name}」的密码重置为 “123456” 吗？`,
+    `确认将「${userName}」的密码重置为 “123456” 吗？`,
     "确认信息"
   )
     .then(() => {
@@ -282,6 +283,8 @@ function onResetPassword() {
       });
     })
     .catch(() => { });
+  }
+
 }
 // 修改
 function onEdit(row: any) {
