@@ -4,6 +4,7 @@ import { ElMessage } from "element-plus";
 import api from "@/api/modules/configuration_manager";
 import apiDep from "@/api/modules/department";
 import apiPos from "@/api/modules/position_manage";
+import apiRole from '@/api/modules/configuration_role'
 import useTenantRoleStore from "@/store/modules/tenant_role";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary";
 import useTenantStaffStore from "@/store/modules/configuration_manager";
@@ -242,11 +243,16 @@ onMounted(async () => {
     loading.value = true;
     departmentId.value = [];
     const { data } = await apiPos.list({ page: 1, limit: 10, id: null, name: "", active: null });
-    positionManageList.value = data.data;
+    if(data) {
+      positionManageList.value = data.data;
+    }
     // 用户
     staffList.value = await tenantStaffStore.getStaff();
-    // 角色
-    munulevs.value = await roleStore.getRole();
+    const ress = await apiRole.list({id:null,name:''})
+    if(ress.data) {
+      // 角色
+    munulevs.value = ress.data
+    }
     // 部门
     const res = await apiDep.list({ name: '' });
     if (res.data) {
