@@ -182,14 +182,14 @@ defineExpose({
 </ElTableColumn>
 <ElTableColumn show-overflow-tooltip align="left" prop="addAndSubtraction" width="150" label="提成"><template
     #default="{ row }">
-          <!-- <el-text v-if="row.operationType === 2" type="danger" class="mx-1"
+          <el-text v-if="row.type === 2" type="danger" class="mx-1"
             >-<CurrencyType />{{ Math.abs(row.difference) }}</el-text
           >
           <el-text v-else type="success" class="mx-1">
             +<CurrencyType />{{ Math.abs(row.difference) }}</el-text
-          > -->
+          >
           <!-- <el-text class="mx-1">{{ row.difference ? row.difference : "-" }}</el-text> -->
-          <CurrencyType />{{ row.difference || 0 }}
+          <!-- <CurrencyType />{{ row.difference || 0 }} -->
         </template>
 </ElTableColumn>
 <ElTableColumn show-overflow-tooltip align="left" prop="afterBalance" width="150" label="变动后">
