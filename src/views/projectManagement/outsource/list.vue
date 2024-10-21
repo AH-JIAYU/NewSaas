@@ -335,6 +335,7 @@ const formOption = {
             @currentChange="currentChange"
             @onReset="onReset"
             :model="queryForm"
+            :formOption="formOption"
           />
           <ElDivider border-style="dashed" />
           <el-row :gutter="24">
