@@ -23,7 +23,7 @@ const props = withDefaults(
 const commissionTypeList = [
   { label: '完成计提', value: 1, },
   { label: '审核计提', value: 2, },
-  { label: '结算计提', value: 3, },
+  // { label: '结算计提', value: 3, },
 ]
 // 计提方式
 const provisionMethod = [

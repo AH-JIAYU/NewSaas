@@ -26,7 +26,7 @@ const isClick = ref(false)
 const commissionTypeList = [
   { label: '完成计提', value: 1, },
   { label: '审核计提', value: 2, },
-  { label: '结算计提', value: 3, },
+  // { label: '结算计提', value: 3, },
 ]
 // 计提方式
 const provisionMethod = [
@@ -156,7 +156,7 @@ function validateCommissions(users: any) {
 async function onSubmit() {
   try {
     formRef.value &&
-      formRef.value.validate(async (valid) => {
+    await formRef.value.validate(async (valid) => {
         if (valid) {
           loading.value = true;
           // 将数据制空
@@ -216,7 +216,6 @@ async function onSubmit() {
                 message: "新增成功",
                 center: true,
               });
-            loading.value = false;
           } else {
             const { status } = await api.edit(params);
             status === 1 &&
@@ -224,8 +223,8 @@ async function onSubmit() {
                 message: "编辑成功",
                 center: true,
               });
-            loading.value = false;
           }
+          loading.value = false;
           if (isClick.value) {
             // 更新列表
             await emits("getItmelist");
@@ -238,7 +237,6 @@ async function onSubmit() {
         }
       });
   } catch (error) {
-
   } finally {
     loading.value = false;
   }
@@ -313,6 +311,7 @@ onMounted(async () => {
 <template>
   <ElDialog v-model="visible" :title="title" style="width: 48rem;" :close-on-click-modal="false" append-to-body
     destroy-on-close @closed="onCancel">
+    {{ loading }}
     <ElForm v-loading="loading" ref="formRef" :model="form" :rules="formRules" label-width="7rem">
       <ElFormItem label="部门名称" prop="name">
         <ElInput v-model="form.name" placeholder="请输入部门名称" clearable />

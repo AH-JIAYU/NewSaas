@@ -290,6 +290,7 @@ watch(
 );
 // 获取部门项
 async function getDictionaryItemList() {
+  resetList.value = null
   try {
     listLoading.value = true;
     const params = {

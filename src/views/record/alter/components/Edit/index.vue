@@ -18,7 +18,7 @@ const formData = ref<any>({
   // 审核类型 1:按成功id 2:按失败id 3:全部通过 4:全部失败 5:数据冻结
   surveyType: null,
   // 副状态
-  viceType: null,
+  viceType: 0,
   type: "",
   // 备注
   remark: "",
@@ -77,7 +77,7 @@ async function onSubmit() {
           const type = formData.value.type.split(",");
           formData.value.surveyType = +type[0];
           if (type[1] === "null") {
-            formData.value.viceType = null;
+            formData.value.viceType = 0;
           } else {
             formData.value.viceType = +type[1];
           }
@@ -125,7 +125,7 @@ function closeHandler() {
     // 审核类型 1:按成功id 2:按失败id 3:全部通过 4:全部失败 5:数据冻结
     surveyType: null,
     // 副状态
-    viceType: null,
+    viceType: 0,
     // 备注
     remark: "",
     // 	需要修改的数据
