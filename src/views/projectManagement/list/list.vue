@@ -131,18 +131,26 @@ function quickEdit(row: any, type: any) {
 }
 // 修改状态
 async function changeStatus(row: any, val: any) {
-  const params = {
-    projectId: row.projectId,
-    isOnline: val,
-  };
-  const { status } = await submitLoading(api.changestatus(params));
-  status === 1 &&
-    ElMessage.success({
-      message: "修改「状态」成功",
+  if (row.projectType !== 2) {
+    const params = {
+      projectId: row.projectId,
+      isOnline: val,
+    };
+    const { status } = await submitLoading(api.changestatus(params));
+    status === 1 &&
+      ElMessage.success({
+        message: "修改「状态」成功",
+        center: true,
+      });
+
+    fetchData();
+  } else {
+    ElMessage.warning({
+      message: "外包项目不可以修改",
       center: true,
     });
-
-  fetchData();
+    fetchData();
+  }
 }
 // 项目详情
 function projectDetails(row: any) {
@@ -461,6 +469,7 @@ const formOption = {
               inactive-text="离线"
               :active-value="1"
               :inactive-value="2"
+              :disabled="row.projectType === 2"
             />
           </template>
         </el-table-column>
@@ -550,7 +559,7 @@ const formOption = {
                 <div class="oneLine">
                   <!-- <img :src="row.avatar" alt="" class="avatar" />
                   <span class="">{{ row.chargeName }}</span> -->
-                  PM：{{row.chargeName}}
+                  PM：{{ row.chargeName }}
                 </div>
               </div>
               <SvgIcon
