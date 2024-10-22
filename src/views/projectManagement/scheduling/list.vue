@@ -166,14 +166,33 @@ const formOption={
           width="180" label="项目ID">
           <template #default="{ row }">
             <div class="copyId tableSmall">
-              <div class="id oneLine">ID: {{ row.projectId }}</div>
-              <copy class="copy" :content="row.projectId" />
+              <div class="id oneLine">
+                <el-tooltip
+                  effect="dark"
+                  :content="row.projectId"
+                  placement="top-start"
+                >
+                  ID:{{ row.projectId }}
+                </el-tooltip>
+
+
+
+                <!-- ID: {{ row.projectId }} -->
+              </div>
+              <copy
+                :content="row.projectId"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.projectId === current,
+                }"
+              />
+              <!-- <copy class="copy" :content="row.projectId" /> -->
             </div>
           </template>
         </el-table-column>
 
         <el-table-column v-if="checkList.includes('moneyPrice')" show-overflow-tooltip prop="moneyPrice" align="left"
-          label="项目价">
+          label="项目价" width="96">
           <template #default="{ row }">
             <div class="tableBig">
               <CurrencyType />{{ row.moneyPrice || 0 }}
@@ -182,7 +201,7 @@ const formOption={
         </el-table-column>
 
         <el-table-column v-if="checkList.includes('doMoneyPrice')" show-overflow-tooltip prop="doMoneyPrice"
-          align="left" label="指定价格">
+          align="left" label="指定价格" width="96">
           <template #default="{ row }">
             <div class="tableBig">
               <CurrencyType />{{ row.doMoneyPrice || 0 }}
@@ -190,7 +209,7 @@ const formOption={
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('Supplier')" show-overflow-tooltip prop="groupSupplierId"
-          align="left" label="指定目标" width="350">
+          align="left" label="指定目标" width="400">
           <template #default="{ row }">
             <div class="specifyTheTarget">
               <el-button style="width:46px" v-if="row.dataType == 2" type="primary" size="small" class="p-1">{{
@@ -201,7 +220,15 @@ const formOption={
   }}</el-button>
               <b class='tableBig'>{{ row.getGroupSupplierIdNameInfoList[0].groupSupplierName }}</b>
               <span class="id tableSmall">ID: {{ row.getGroupSupplierIdNameInfoList[0].groupSupplierId }}</span>
-              <copy class="copy" :content="row.getGroupSupplierIdNameInfoList[0].groupSupplierId" />
+              <copy
+                :content="row.getGroupSupplierIdNameInfoList[0].groupSupplierId"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.projectId === current,
+                }"
+              />
+
+              <!-- <copy class="copy" :content="row.getGroupSupplierIdNameInfoList[0].groupSupplierId" /> -->
             </div>
           </template>
         </el-table-column>
@@ -233,6 +260,13 @@ const formOption={
 </template>
 
 <style scoped lang="scss">
+.rowCopy {
+  width: 20px;
+  display: none;
+}
+.el-table__row:hover .rowCopy {
+  display: block;
+}
 :deep {
   table {
     width: 100% !important;
@@ -313,9 +347,13 @@ const formOption={
 }
 
 
-
 .specifyTheTarget {
   @extend .flex-c;
+  // display: flex;
+  //   justify-content: start;
+  //   align-items: center;
+  //   width: 80%;
+
 
   .id,
   b {

@@ -451,7 +451,7 @@ const formOption = {
           show-overflow-tooltip
           prop="isOnline"
           align="left"
-          width="120"
+          width="84"
           label="状态"
         >
           <template #default="{ row }">
@@ -501,8 +501,23 @@ const formOption = {
               </el-button>
             </div>
             <div class="copyId tableSmall">
-              <div class="id oneLine">ID: {{ row.projectId }}</div>
-              <copy class="copy" :content="row.projectId" />
+              <div class="id oneLine">
+                <el-tooltip
+                  effect="dark"
+                  :content="row.projectId"
+                  placement="top-start"
+                >
+                  ID:{{ row.projectId }}
+                </el-tooltip>
+              </div>
+
+              <copy
+                :content="row.projectId"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.projectId === current,
+                }"
+              />
             </div>
           </template>
         </el-table-column>
@@ -553,7 +568,14 @@ const formOption = {
                 <div class="oneLine">
                   <!-- <img :src="row.avatar" alt="" class="avatar" />
                   <span class="">{{ row.chargeName }}</span> -->
-                  PM：{{ row.chargeName }}
+                  <el-tooltip
+                  effect="dark"
+                  :content="row.chargeName"
+                  placement="top-start"
+                >
+                PM：{{ row.chargeName }}
+                </el-tooltip>
+                  <!-- PM：{{ row.chargeName }} -->
                 </div>
               </div>
               <SvgIcon
@@ -895,6 +917,13 @@ const formOption = {
 }
 
 .el-table__row:hover .edit {
+  display: block;
+}
+.rowCopy {
+  width: 20px;
+  display: none;
+}
+.el-table__row:hover .rowCopy {
   display: block;
 }
 

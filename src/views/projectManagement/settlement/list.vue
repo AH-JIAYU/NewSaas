@@ -424,15 +424,33 @@ function handleMoreOperating(command: string, row: any) {
         <el-table-column align="left" type="selection" />
         <el-table-column
           v-if="checkList.includes('projectId')"
-          show-overflow-tooltip
+
           prop="projectId"
           align="left"
           label="项目"
         >
           <template #default="{ row }">
             <div class="copyId">
-              <div class="id oneLine tableSmall">ID: {{ row.projectId }}</div>
-              <copy class="copy" :content="row.projectId" />
+              <div class="id oneLine tableSmall">
+                <el-tooltip
+                  effect="dark"
+                  :content="row.projectId"
+                  placement="top-start"
+                >
+                  ID:{{ row.projectId }}
+                </el-tooltip>
+
+
+                <!-- ID: {{ row.projectId }} -->
+              </div>
+              <copy
+                :content="row.projectId"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.projectId === current,
+                }"
+              />
+              <!-- <copy class="copy" :content="row.projectId" /> -->
             </div>
           </template>
         </el-table-column>
@@ -736,6 +754,13 @@ function handleMoreOperating(command: string, row: any) {
 </template>
 
 <style scoped lang="scss">
+.rowCopy {
+  width: 20px;
+  display: none;
+}
+.el-table__row:hover .rowCopy {
+  display: block;
+}
 // 高度自适应
 .absolute-container {
   position: absolute;
