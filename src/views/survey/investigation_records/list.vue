@@ -353,8 +353,9 @@ const formOption={
           <template #default="{ row }">
             <el-tag effect="dark" style="background-color: #FB6868;border: none;" v-if="row.surveyStatus === 3"
               class="mx-1" type="primary">配额满</el-tag>
-            <el-tag effect="dark" style="background-color: #379AFF;border: none;" v-if="row.surveyStatus === 1"
-              class="mx-1" type="success">完成</el-tag>
+            <!-- <el-tag effect="dark" style="background-color: #379AFF;border: none;" v-if="row.surveyStatus === 1"
+              class="mx-1" type="success">完成</el-tag> -->
+              <el-text v-if="row.surveyStatus === 1">-</el-text>
             <el-tag effect="dark" style="background-color: #FB6868;border: none;" v-if="row.surveyStatus === 2"
               class="mx-1" type="danger">被甄别</el-tag>
             <el-tag effect="dark" style="background-color: #05C9BE;border: none;" v-if="row.surveyStatus === 4"
@@ -367,13 +368,13 @@ const formOption={
               </el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="checkList.includes('viceStatus')" align="left" show-overflow-tooltip prop="" label="副状态">
+        <ElTableColumn v-if="checkList.includes('viceStatus')" align="left" show-overflow-tooltip prop="" label="状态">
           <template #default="{ row }">
             <div v-if="row.viceStatus">
               <el-tag effect="dark" style="background-color: #74868b;border: none;" v-if="row.viceStatus === 1"
                 class="mx-1" type="success">待审</el-tag>
               <el-tag effect="dark" style="background-color: #475061;border: none;" v-if="row.viceStatus === 2"
-                class="mx-1" type="danger">免审</el-tag>
+                class="mx-1" type="danger">完成</el-tag>
               <el-tag effect="dark" style="background-color: #3e5c78;border: none;" v-if="row.viceStatus === 3"
                 class="mx-1" type="primary">过IR</el-tag>
               <el-tag effect="dark" style="background-color: #c8c7bc;border: none;" v-if="row.viceStatus === 4"
