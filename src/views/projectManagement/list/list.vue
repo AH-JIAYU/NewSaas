@@ -144,12 +144,6 @@ async function changeStatus(row: any, val: any) {
       });
 
     fetchData();
-  } else {
-    ElMessage.warning({
-      message: "外包项目不可以修改",
-      center: true,
-    });
-    fetchData();
   }
 }
 // 项目详情
@@ -462,24 +456,12 @@ const formOption = {
         >
           <template #default="{ row }">
             <ElSwitch
-              v-if="row.isOnline !== null"
               @change="changeStatus(row, $event)"
               inline-prompt
               v-model="row.isOnline"
               active-text="在线"
               inactive-text="离线"
               :active-value="1"
-              :inactive-value="2"
-              :disabled="row.projectType === 2"
-            />
-            <ElSwitch
-              v-else
-              @change="changeStatus(row, $event)"
-              inline-prompt
-              v-model="row.isOnline"
-              active-text="在线"
-              inactive-text="离线"
-              :active-value="null"
               :inactive-value="2"
               :disabled="row.projectType === 2"
             />
