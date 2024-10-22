@@ -144,12 +144,6 @@ async function changeStatus(row: any, val: any) {
       });
 
     fetchData();
-  } else {
-    ElMessage.warning({
-      message: "外包项目不可以修改",
-      center: true,
-    });
-    fetchData();
   }
 }
 // 项目详情
