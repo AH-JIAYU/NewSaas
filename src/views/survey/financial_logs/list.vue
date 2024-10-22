@@ -344,7 +344,7 @@ onBeforeUnmount(() => {
         <ElTableColumn v-if="data.checkList.includes('remark')" show-overflow-tooltip align="left" prop="remark"
           label="说明">
           <template #default="{ row }">
-            <el-text style="color:#333;font-weight: 700;">{{ row.remark[1] ? row.remark[1] : "-" }}</el-text>
+            <el-text style="color:#333;font-weight: 700;">{{ row.remark ? row.remark : "-" }}</el-text>
           </template>
         </ElTableColumn>
         <template #empty>

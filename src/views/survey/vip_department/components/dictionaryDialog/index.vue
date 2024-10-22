@@ -311,7 +311,6 @@ onMounted(async () => {
 <template>
   <ElDialog v-model="visible" :title="title" style="width: 48rem;" :close-on-click-modal="false" append-to-body
     destroy-on-close @closed="onCancel">
-    {{ loading }}
     <ElForm v-loading="loading" ref="formRef" :model="form" :rules="formRules" label-width="7rem">
       <ElFormItem label="部门名称" prop="name">
         <ElInput v-model="form.name" placeholder="请输入部门名称" clearable />

@@ -361,6 +361,10 @@ const formOption={
               class="mx-1" type="warning">安全终止</el-tag>
             <el-tag effect="dark" style="background-color: #E1E1E1;border: none;" v-if="row.surveyStatus === 5"
               class="mx-1">未完成</el-tag>
+              <el-text v-if="row.settlementRemarks">
+                <div v-if="row.settlementRemarks === '结算成功'" style="color:#4797fb;" class="i-healthicons:yes w-1.3em h-1.3em"></div>
+                <div v-if="row.settlementRemarks === '结算失败'" style="color:#f1756c;" class="i-healthicons:no w-1.3em h-1.3em"></div>
+              </el-text>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="checkList.includes('viceStatus')" align="left" show-overflow-tooltip prop="" label="副状态">
@@ -505,5 +509,10 @@ const formOption={
 .copySvg {
   width: 100%;
   height: 100%;
+}
+:deep {
+  .el-tag {
+    width: 4.125rem;
+  }
 }
 </style>
