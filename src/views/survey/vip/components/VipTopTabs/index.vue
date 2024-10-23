@@ -214,6 +214,14 @@ onMounted(async () => {
                   <el-select clearable filterable v-model="localToptTab.memberLevelId">
                     <el-option v-for="item in data.vipLevelList" :key="item.memberLevelId" :value="item.memberLevelId"
                       :label="item.levelNameOrAdditionRatio"></el-option>
+                      <el-button  @click="AddVipLevel" size="small"  class="buttonClass">
+                          快捷新增
+                          <SvgIcon
+                        name="ant-design:plus-outlined"
+                         style="border-radius: 50%;padding: 2px;margin:0 4px;border: 1px solid #409EFF;"
+                      />
+                        </el-button>
+
                     <template #empty>
                       <div style="display: flex;justify-content: space-between;align-items:center;padding:0 1rem;">
                         暂无数据
@@ -308,4 +316,25 @@ onMounted(async () => {
   </div>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.buttonClass {
+  text-align: center;
+  width: 100%;
+  margin: 0.75rem;
+  height: 2rem;
+  font-family: PingFang SC, PingFang SC;
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: #409eff;
+  line-height: 16px;
+  background: #f4f8ff;
+  border-radius: 4px 4px 4px 4px;
+  border: 1px solid #e9eef3;
+}
+/* 使按钮在下拉框展开时自适应宽度 */
+.el-select-dropdown .buttonClass {
+  width: calc(100% - 24px); /* 减去两边的 padding */
+
+}
+
+</style>
