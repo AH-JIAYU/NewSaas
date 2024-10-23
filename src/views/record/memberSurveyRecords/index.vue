@@ -534,9 +534,9 @@ function handleCurrentChange(val: any) {
               class="mx-1" type="warning">安全终止</el-tag>
             <el-tag effect="dark" style="background-color: #e1e1e1; border: none" v-if="row.surveyStatus === 5"
               class="mx-1">未完成</el-tag>
-            <el-text v-if="row.surveyStatus">
-              <div v-if="row.surveyStatus === 1" style="color:#4797fb;" class="i-healthicons:yes w-1.3em h-1.3em"></div>
-              <div v-if="row.surveyStatus === 2" style="color:#f1756c;" class="i-healthicons:no w-1.3em h-1.3em"></div>
+            <el-text v-if="row.settlementStatus">
+              <div v-if="row.settlementStatus === 1" style="color:#4797fb;" class="i-healthicons:yes w-1.3em h-1.3em"></div>
+              <div v-if="row.settlementStatus === 2" style="color:#f1756c;" class="i-healthicons:no w-1.3em h-1.3em"></div>
             </el-text>
           </template>
         </ElTableColumn>
