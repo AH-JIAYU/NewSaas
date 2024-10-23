@@ -915,6 +915,9 @@ const formOption = {
     display: block !important;
   }
 }
+.copyId  .current {
+    display: block !important;
+  }
 
 .el-table__row:hover .edit {
   display: block;

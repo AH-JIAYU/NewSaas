@@ -574,7 +574,7 @@ onMounted(() => {
                     :content="row.memberChildId"
                     :class="{
                       rowCopy: 'rowCopy',
-                      current: row.projectId === tabs1Current,
+                      current: row.projectId === tabs2Current,
                     }"
                   />
                   <!-- <copy class="copy" :content="row.memberChildId" /> -->
@@ -617,7 +617,7 @@ onMounted(() => {
                     :content="row.projectId"
                     :class="{
                       rowCopy: 'rowCopy',
-                      current: row.projectId === tabs1Current,
+                      current: row.projectId === tabs2Current,
                     }"
                   />
                   <!-- <copy class="copy" :content="row.projectId" /> -->
@@ -723,7 +723,9 @@ onMounted(() => {
 .copyId .projectId {
   font-size: 14px;
 }
-
+.copyId  .current {
+    display: block !important;
+  }
 // 高度自适应
 .absolute-container {
   position: absolute;

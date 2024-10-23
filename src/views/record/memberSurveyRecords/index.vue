@@ -297,6 +297,8 @@ const formOption = {
       value: index + 1,
     })),
 };
+
+
 </script>
 
 <template>
@@ -321,7 +323,8 @@ const formOption = {
           label="点击ID"><template #default="{ row }">
             <el-tag effect="dark" v-if="row.surveySource === 2" type="warning">外部人员</el-tag>
             <div class="copyId flex-s tableSmall">
-              <div class="id oneLine">ID: {{ row.id }}</div>
+              <div class="id oneLine idFont"> {{ row.id }}</div>
+
               <copy class="copy edit" :content="row.id" />
             </div>
           </template>
@@ -346,7 +349,7 @@ const formOption = {
             <div v-if="row.surveySource === 1">
               <div v-if="row.memberId">
                 <div class="copyId tableSmall flex-s">
-                  <div class="id oneLine">ID: {{ row.memberId }}</div>
+                  <div class="id oneLine idFont">{{ row.memberId }}</div>
 
                   <copy class="copy edit" :content="row.memberId" />
                 </div>
@@ -361,7 +364,7 @@ const formOption = {
             <div v-if="row.surveySource === 1">
               <div v-if="row.memberChildId">
                 <div class="copyId tableSmall flex-s">
-                  <div class="id oneLine">ID: {{ row.memberChildId }}</div>
+                  <div class="id oneLine idFont">{{ row.memberChildId }}</div>
 
                   <copy class="copy edit" :content="row.memberChildId" />
                 </div>
@@ -376,8 +379,8 @@ const formOption = {
           <template #default="{ row }">
             <div class="copyId tableSmall flex-s" v-if="row.surveySource === 1">
               <div class="oneLine">
-                <span v-if="row.tenantSupplierId" class="id oneLine">
-                  ID: {{ row.tenantSupplierId }}</span>
+                <span v-if="row.tenantSupplierId" class="id oneLine idFont">
+                 {{ row.tenantSupplierId }}</span>
                 <span v-else class="id"></span>
               </div>
               <copy class="copy edit" v-if="row.tenantSupplierId" :content="row.tenantSupplierId" />
@@ -389,7 +392,7 @@ const formOption = {
           <template #default="{ row }">
             <div class="tableBig oneLine">名称: {{ row.projectName }}</div>
             <div class="copyId tableSmall flex-s">
-              <div class="id oneLine">ID: {{ row.projectId }}</div>
+              <div class="id oneLine "> {{ row.projectId }}</div>
               <copy class="copy edit" v-if="row.projectId" :content="row.projectId" />
             </div>
           </template>
@@ -517,6 +520,16 @@ const formOption = {
 </template>
 
 <style scoped lang="scss">
+.idFont {
+  font-size: 14px;
+}
+.rowCopy {
+  width: 20px;
+  display: none;
+}
+.el-table__row:hover .rowCopy {
+  display: block;
+}
 // 高度自适应
 .absolute-container {
   position: absolute;

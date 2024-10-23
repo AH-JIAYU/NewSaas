@@ -246,7 +246,7 @@ const formOption={
       <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
         @selection-change="setSelectRows" highlight-current-row @current-change="handleCurrentChange">
         <el-table-column align="left" type="selection" />
-        <el-table-column v-if="checkList.includes('supplierStatus')" align="left" show-overflow-tooltip label="供应商状态">
+        <el-table-column v-if="checkList.includes('supplierStatus')" align="left" show-overflow-tooltip   label="供应商状态">
           <template #default="{ row }">
             <ElSwitch v-if="row.supplierStatus === 3" v-model="row.supplierStatus" inline-prompt :inactive-value="3"
               :active-value="2" inactive-text="待审核" active-text="启用"
@@ -256,10 +256,19 @@ const formOption={
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('supplierAccord')" align="left" prop="supplierAccord"
-          show-overflow-tooltip label="供应商名称">
+           label="供应商名称">
           <template #default="{ row }">
             <div class="flex-c tableBig">
-              <div class="oneLine" style="width: calc(100% - 20px);"> {{ row.supplierAccord }}</div>
+              <div class="oneLine" style="width: calc(100% - 20px);">
+                <el-tooltip
+                  effect="dark"
+                  :content="row.supplierAccord"
+                  placement="top-start"
+                >
+                  {{ row.supplierAccord }}
+                </el-tooltip>
+                <!-- {{ row.supplierAccord }} -->
+              </div>
               <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'supplierAccord')"
                 :class="{ edit: 'edit', current: row.tenantSupplierId === current }" name="i-ep:edit" color="#409eff" />
             </div>
@@ -269,9 +278,29 @@ const formOption={
         <el-table-column v-if="checkList.includes('tenantSupplierId')" align="left" prop="tenantSupplierId"
           width="180" show-overflow-tooltip label="供应商ID">
           <template #default="{ row }">
-            <div class="copyId tableSmall">
-              <div class="id oneLine ">ID: {{ row.tenantSupplierId }}</div>
-              <copy class="copy" :content="row.tenantSupplierId" />
+            <div class="copyId tableSmall tenantSupplierId">
+              <div class="id oneLine ">
+                <el-tooltip
+                  effect="dark"
+                  :content="row.tenantSupplierId"
+                  placement="top-start"
+                >
+                  {{ row.tenantSupplierId }}
+                </el-tooltip>
+
+
+
+                <!-- {{ row.tenantSupplierId }} -->
+
+              </div>
+              <copy
+                :content="row.tenantSupplierId"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.tenantSupplierId === current,
+                }"
+              />
+              <!-- <copy class="copy" :content="row.tenantSupplierId" /> -->
             </div>
           </template>
         </el-table-column>
@@ -457,6 +486,19 @@ const formOption={
 </template>
 
 <style scoped lang="scss">
+.tenantSupplierId {
+  font-size: 14px;
+}
+.copyId  .current {
+    display: block !important;
+  }
+.rowCopy {
+  width: 20px;
+  display: none;
+}
+.el-table__row:hover .rowCopy {
+  display: block;
+}
 // 高度自适应
 .absolute-container {
   position: absolute;

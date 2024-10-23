@@ -244,10 +244,17 @@ const formOption={
             show-overflow-tooltip label="客户编码">
           <template #default="{ row }">
             <div class="copyId tableSmall">
-              <div class="oneLine">
+              <div class="oneLine projectId">
                 {{ row.tenantCustomerId }}
               </div>
-              <copy />
+              <copy
+                :content="row.tenantCustomerId"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.tenantCustomerId === current,
+                }"
+              />
+              <!-- <copy /> -->
             </div>
           </template>
         </el-table-column>
@@ -354,6 +361,19 @@ const formOption={
 </template>
 
 <style scoped lang="scss">
+.copyId .projectId {
+  font-size:14px;
+}
+.copyId  .current {
+    display: block !important;
+  }
+.rowCopy {
+  width: 20px;
+  display: none;
+}
+.el-table__row:hover .rowCopy {
+  display: block;
+}
 // 高度自适应
 .absolute-container {
   position: absolute;

@@ -194,6 +194,7 @@ const formOption = {
         :border="border"
         :size="lineHeight"
         :stripe="stripe"
+        highlight-current-row
         @current-change="handleCurrentChange"
       >
         <el-table-column align="left" type="selection" />
@@ -388,6 +389,9 @@ const formOption = {
 </template>
 
 <style scoped lang="scss">
+.copyId  .current {
+    display: block !important;
+  }
 .copyId.projectId {
   font-size:14px;
 }
@@ -395,6 +399,9 @@ const formOption = {
   width: 20px;
   display: none;
 }
+.copyId  .current {
+    display: block !important;
+  }
 .el-table__row:hover .rowCopy {
   display: block;
 }

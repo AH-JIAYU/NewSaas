@@ -138,6 +138,7 @@ const formOption = {
 const current = ref<any>(); //表格当前选中
 
 function handleCurrentChange(val: any) {
+  console.log('是否选中')
   if (val) current.value = val.projectId;
   else current.value = "";
 }
@@ -187,6 +188,8 @@ function handleCurrentChange(val: any) {
             :border="border"
             :size="lineHeight"
             :stripe="stripe"
+            highlight-current-row
+            @current-change="handleCurrentChange"
           >
             <el-table-column align="left" type="selection" />
             <el-table-column
@@ -392,6 +395,7 @@ function handleCurrentChange(val: any) {
             :data="list"
             :border="border"
             :size="lineHeight"
+            highlight-current-row
             :stripe="stripe"
             @current-change="handleCurrentChange"
           >
@@ -570,7 +574,9 @@ function handleCurrentChange(val: any) {
 .projectId {
   font-size: 14px;
 }
-
+.copyId  .current {
+    display: block !important;
+  }
 .rowCopy {
   width: 20px;
   display: none;
