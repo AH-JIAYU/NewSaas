@@ -517,7 +517,7 @@ defineExpose({
           <p class="detail">1、登录域名注册商的网站，找到管理域名的控制面板或域名管理页面。</p>
           <p class="detail">2、在域名管理页面中，找到DNS设置、域名解析或类似的选项。</p>
           <p class="detail">3、添加相应的DNS记录来完成域名解析。注意<span>仅支持采用CNAME </span>记录来完成解析。</p>
-          <p class="detail bule">4、顶级域名请用一级域名；租户域名、供应商域名、会员域名，为顶级域名下的二级域名，HTTPS需要配置通配符证书</p>
+          <p class="detail bule">4、下面配置域名, 同属于一个域名下的二三级域名, HTTPS需要配置通配符证书</p>
         </div>
       </div>
       <div class="steps">
