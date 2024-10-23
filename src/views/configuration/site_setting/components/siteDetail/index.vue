@@ -528,7 +528,7 @@ defineExpose({
               <el-col :span="10">
                 <el-form-item label="官网域名" prop="domain">
                   <el-input style="width: 14.5rem;" v-model="fileList.domain" :disabled="form.isAnalysis"
-                    placeholder="请输入顶级域名" @blur="getDomainRecord(fileList.domain)">
+                    placeholder="请输入官网域名" @blur="getDomainRecord(fileList.domain)">
                     <template #append>
                       <copy class="copy" :content="fileList.domain" />
                     </template>
