@@ -344,8 +344,18 @@ const formOption={
         </el-table-column>
         <el-table-column v-if="checkList.includes('surveyTime')" align="left" show-overflow-tooltip label="调查时间">
           <template #default="{ row }">
-            <el-tag effect="plain" type="info"> {{ row.surveyTime ? row.surveyTime + "min" : 0 }}/
+            <el-tooltip
+              placement="top">
+              <template #content>
+                <div>
+                  <el-text style="color: #fff;">开始时间：{{row.surveyStartTime}}</el-text>
+                  <br>
+                  <el-text style="color: #fff;">结束时间：{{ row.surveyEndTime ? row.surveyEndTime : '-' }}</el-text>
+                </div>
+              </template>
+              <el-tag effect="plain" type="info"> {{ row.surveyTime ? row.surveyTime + "min" : 0 }}/
               {{ row.projectTime ? row.projectTime + "min" : 0 }} </el-tag>
+            </el-tooltip>
           </template>
         </el-table-column>
         <ElTableColumn v-if="checkList.includes('surveyStatus')" align="left" show-overflow-tooltip prop=""
@@ -368,37 +378,40 @@ const formOption={
               </el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="checkList.includes('viceStatus')" align="left" show-overflow-tooltip prop="" label="状态">
+        <ElTableColumn v-if="checkList.includes('viceStatus')" align="left" show-overflow-tooltip prop="" label="副状态">
           <template #default="{ row }">
-            <div v-if="row.viceStatus">
-              <el-tag effect="dark" style="background-color: #74868b;border: none;" v-if="row.viceStatus === 1"
-                class="mx-1" type="success">待审</el-tag>
-              <el-tag effect="dark" style="background-color: #475061;border: none;" v-if="row.viceStatus === 2"
-                class="mx-1" type="danger">完成</el-tag>
-              <el-tag effect="dark" style="background-color: #3e5c78;border: none;" v-if="row.viceStatus === 3"
-                class="mx-1" type="primary">过IR</el-tag>
-              <el-tag effect="dark" style="background-color: #c8c7bc;border: none;" v-if="row.viceStatus === 4"
-                class="mx-1" type="warning">时间过短</el-tag>
-              <el-tag effect="dark" style="background-color: #bcc8b8;border: none;" v-if="row.viceStatus === 5"
-                class="mx-1">超时完成</el-tag>
-              <el-tag effect="dark" style="background-color: #ded6cb;border: none;" v-if="row.viceStatus === 6"
-                class="mx-1">超量完成</el-tag>
-              <el-tag effect="dark" style="background-color: #03C239;border: none;" v-if="row.viceStatus === 7"
-                class="mx-1">审核成功</el-tag>
-              <el-tag effect="dark" style="background-color: #FB6868;border: none;" v-if="row.viceStatus === 8"
-                class="mx-1">审核失败</el-tag>
-              <el-tag effect="dark" style="background-color: #FB6868;border: none;" v-if="row.viceStatus === 9"
-                class="mx-1">数据冻结</el-tag>
-              <el-tag effect="dark" style="background-color: #6683a2;border: none;" v-if="row.viceStatus === 10"
-                class="mx-1">时间段过载</el-tag>
-              <el-tag effect="dark" style="background-color: #638d93;border: none;" v-if="row.viceStatus === 11"
-                class="mx-1">IP不一致</el-tag>
-              <el-tag effect="dark" style="background-color: #626a73;border: none;" v-if="row.viceStatus === 12"
-                class="mx-1">ID重复参与</el-tag>
-              <el-tag effect="dark" style="background-color: #03C239;border: none;" v-if="row.viceStatus === 13"
-                class="mx-1">和解</el-tag>
+            <div v-if="row.surveyStatus === 1">
+              <div v-if="row.viceStatus">
+                <el-tag effect="dark" style="background-color: #74868b; border: none" v-if="row.viceStatus === 1"
+                  class="mx-1" type="success">待审</el-tag>
+                <el-tag effect="dark" style="background-color: #475061; border: none" v-if="row.viceStatus === 2"
+                  class="mx-1" type="danger">完成</el-tag>
+                <el-tag effect="dark" style="background-color: #3e5c78; border: none" v-if="row.viceStatus === 3"
+                  class="mx-1" type="primary">过IR</el-tag>
+                <el-tag effect="dark" style="background-color: #c8c7bc; border: none" v-if="row.viceStatus === 4"
+                  class="mx-1" type="warning">时间过短</el-tag>
+                <el-tag effect="dark" style="background-color: #bcc8b8; border: none" v-if="row.viceStatus === 5"
+                  class="mx-1">超时完成</el-tag>
+                <el-tag effect="dark" style="background-color: #ded6cb; border: none" v-if="row.viceStatus === 6"
+                  class="mx-1">超量完成</el-tag>
+                <el-tag effect="dark" style="background-color: #03c239; border: none" v-if="row.viceStatus === 7"
+                  class="mx-1">审核成功</el-tag>
+                <el-tag effect="dark" style="background-color: #fb6868; border: none" v-if="row.viceStatus === 8"
+                  class="mx-1">审核失败</el-tag>
+                <el-tag effect="dark" style="background-color: #fb6868; border: none" v-if="row.viceStatus === 9"
+                  class="mx-1">数据冻结</el-tag>
+                <el-tag effect="dark" style="background-color: #6683a2; border: none" v-if="row.viceStatus === 10"
+                  class="mx-1">时间段过载</el-tag>
+                <el-tag effect="dark" style="background-color: #638d93; border: none" v-if="row.viceStatus === 11"
+                  class="mx-1">IP不一致</el-tag>
+                <el-tag effect="dark" style="background-color: #626a73; border: none" v-if="row.viceStatus === 12"
+                  class="mx-1">ID重复参与</el-tag>
+                <el-tag effect="dark" style="background-color: #03c239; border: none" v-if="row.viceStatus === 13"
+                  class="mx-1">和解</el-tag>
+              </div>
+              <el-text v-else></el-text>
             </div>
-            <el-text v-else>-</el-text>
+            <el-text v-else></el-text>
           </template>
         </ElTableColumn>
         <template #empty>

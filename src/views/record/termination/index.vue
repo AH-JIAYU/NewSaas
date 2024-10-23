@@ -245,9 +245,9 @@ const formOption = {
         <el-table-column v-if="checkList.includes('terminationTime')" label="终止时间" align="left" prop="terminationTime"
           show-overflow-tooltip>
           <template #default="{ row }">
-            <el-tag effect="plain" type="info">{{
-    format(row.terminationTime)
-  }}</el-tag>
+            <el-tooltip :content="row.createTime" placement="top">
+              <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>
+            </el-tooltip>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('notes')" align="left" prop="notes" show-overflow-tooltip width="280"

@@ -198,9 +198,9 @@ defineExpose({
         </template>
 </ElTableColumn>
 <ElTableColumn show-overflow-tooltip align="left" prop="createTime" label="时间"><template #default="{ row }">
-          <el-tag effect="plain" type="info">{{
-format(row.createTime)
-          }}</el-tag>
+          <el-tooltip :content="row.createTime" placement="top">
+                <el-tag effect="plain" type="info">{{format(row.createTime)}}</el-tag>
+              </el-tooltip>
         </template>
 </ElTableColumn>
 <template #empty>

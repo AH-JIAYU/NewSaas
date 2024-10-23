@@ -132,8 +132,8 @@ onMounted(() => {
     { index: 3, show: true, type: 'select', modelName: 'billStatus', placeholder: '状态', option: 'billStatus', optionLabel: 'label', optionValue: 'value' }
   ]
 });
-const formOption={
-  billStatus:()=>billStatusList
+const formOption = {
+  billStatus: () => billStatusList
 }
 </script>
 
@@ -143,7 +143,7 @@ const formOption={
   }">
     <PageMain>
       <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange"
-        @onReset="onReset" :model="queryForm"  :formOption="formOption" />
+        @onReset="onReset" :model="queryForm" :formOption="formOption" />
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel />
@@ -175,9 +175,9 @@ const formOption={
           label="供应商ID" />
         <el-table-column v-if="checkList.includes('billTime')" prop="billTime" show-overflow-tooltip align="left"
           label="账单日期"><template #default="{ row }">
-            <el-tag effect="plain" type="info">{{
-    format(row.billTime)
-  }}</el-tag>
+            <el-tooltip :content="row.billTime" placement="top">
+              <el-tag effect="plain" type="info">{{ format(row.billTime) }}</el-tag>
+            </el-tooltip>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('billAmount')" prop="billAmount" show-overflow-tooltip align="left"

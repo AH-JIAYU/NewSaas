@@ -16,7 +16,7 @@ defineOptions({
 });
 
 // 时间
-const { format } = useTimeago();
+// const { format } = useTimeago();
 //区域
 const basicDictionaryStore = useBasicDictionaryStore();
 const countryList = ref<any>();

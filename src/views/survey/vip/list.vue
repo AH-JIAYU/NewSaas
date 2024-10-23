@@ -397,11 +397,10 @@ const formOption={
         </el-table-column>
         <el-table-column v-if="checkList.includes('createTime')" align="left" prop="createTime" show-overflow-tooltip
           label="创建时间">
-
           <template #default="{ row }">
-            <el-tag effect="plain" type="info">{{
-    format(row.createTime)
-  }}</el-tag>
+            <el-tooltip :content="row.createTime" placement="top">
+                <el-tag effect="plain" type="info">{{format(row.createTime)}}</el-tag>
+              </el-tooltip>
           </template>
         </el-table-column>
         <el-table-column align="left" label="操作" fixed="right" show-overflow-tooltip width="180">

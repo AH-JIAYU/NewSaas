@@ -315,9 +315,9 @@ onMounted(() => {
             </el-table-column>
             <el-table-column v-if="checkList.includes('createTime')" show-overflow-tooltip prop="createTime"
               align="left" label="创建"><template #default="{ row }">
-                <el-tag effect="plain" type="info">{{
-    format(row.createTime)
-  }}</el-tag>
+                <el-tooltip :content="row.createTime" placement="top">
+                  <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>
+                </el-tooltip>
               </template>
             </el-table-column>
             <el-table-column v-if="checkList.includes('instructions')" show-overflow-tooltip prop="instructions"
@@ -439,9 +439,9 @@ onMounted(() => {
               prop="customerIdentification" align="left" label="客户简称/标识" />
             <el-table-column v-if="checkList.includes('createTime')" show-overflow-tooltip prop="createTime"
               align="left" label="创建"><template #default="{ row }">
-                <el-tag effect="plain" type="info">{{
-    format(row.createTime)
-  }}</el-tag>
+                <el-tooltip :content="row.createTime" placement="top">
+                  <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>
+                </el-tooltip>
               </template>
             </el-table-column>
             <el-table-column v-if="checkList.includes('instructions')" show-overflow-tooltip prop="instructions"

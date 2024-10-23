@@ -365,7 +365,7 @@ function handleAdd(row: any) {
 }
 // 编辑
 function handleEdit(row: any) {
-  editRef.value.showEdit(row,dictionaryItem.value.search.organizationalStructureId);
+  editRef.value.showEdit(row, dictionaryItem.value.search.organizationalStructureId);
 }
 // 加减款
 const plusMinusPayments = (row: any) => {
@@ -461,16 +461,16 @@ onMounted(async () => {
   });
   // fetchData();
   // data.vipGroupList = await surveyVipGroupStore.getGroupNameList();
-  formSearchList.value =[
-  { index: 1, show: true, type: 'input', modelName: 'memberId', placeholder: '会员ID' },
-  { index: 2, show: true, type: 'input', modelName: 'memberName', placeholder: '会员名称' },
-  { index: 4, show: true, type: 'select', modelName: 'memberStatus', placeholder: '会员状态', option: 'memberStatus', optionLabel: 'label', optionValue: 'value' },
-]
+  formSearchList.value = [
+    { index: 1, show: true, type: 'input', modelName: 'memberId', placeholder: '会员ID' },
+    { index: 2, show: true, type: 'input', modelName: 'memberName', placeholder: '会员名称' },
+    { index: 4, show: true, type: 'select', modelName: 'memberStatus', placeholder: '会员状态', option: 'memberStatus', optionLabel: 'label', optionValue: 'value' },
+  ]
 });
-const formOption={
-  memberLevelId:()=> data.vipLevelList,
-  memberStatus:()=>[{ label: '关闭', value: 1 }, { label: '开启', value: 2 }],
-  memberGroupId:()=>data.vipGroupList,
+const formOption = {
+  memberLevelId: () => data.vipLevelList,
+  memberStatus: () => [{ label: '关闭', value: 1 }, { label: '开启', value: 2 }],
+  memberGroupId: () => data.vipGroupList,
 }
 </script>
 
@@ -550,8 +550,7 @@ const formOption={
             <el-table-column v-if="checkList.includes('memberStatus')" align="left" show-overflow-tooltip label="会员状态">
               <template #default="{ row }">
                 <ElSwitch v-if="row.memberStatus === 3" v-model="row.memberStatus" inline-prompt :inactive-value="3"
-                  :active-value="2" inactive-text="启用" active-text="待审核"
-                  @change="changeState($event, row.memberId)" />
+                  :active-value="2" inactive-text="启用" active-text="待审核" @change="changeState($event, row.memberId)" />
                 <ElSwitch v-else v-model="row.memberStatus" inline-prompt :inactive-value="1" :active-value="2"
                   inactive-text="禁用" active-text="启用" @change="changeState($event, row.memberId)" />
               </template>
@@ -562,8 +561,8 @@ const formOption={
                   inactive-text="禁用" active-text="启用" @change="changeRandomState($event, row.memberId)" />
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('memberId')" align="left" prop="memberId"
-              show-overflow-tooltip width="200" label="会员ID"><template #default="{ row }">
+            <el-table-column v-if="checkList.includes('memberId')" align="left" prop="memberId" show-overflow-tooltip
+              width="200" label="会员ID"><template #default="{ row }">
                 <p class="crudeTop"></p>
                 <div class="hoverSvg">
                   <p class="fineSize">ID：{{ row.memberId }}</p>
@@ -727,11 +726,10 @@ const formOption={
             </el-table-column>
             <el-table-column v-if="checkList.includes('createTime')" align="left" prop="createTime"
               show-overflow-tooltip label="创建时间">
-
               <template #default="{ row }">
-                <el-tag effect="plain" type="info">{{
-              format(row.createTime)
-            }}</el-tag>
+                <el-tooltip :content="row.createTime" placement="top">
+                  <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>
+                </el-tooltip>
               </template>
             </el-table-column>
             <el-table-column align="left" label="操作" fixed="right" show-overflow-tooltip width="180">
@@ -768,7 +766,8 @@ const formOption={
         :parent-id="dictionaryItem.dialog.parentId" :level="dictionaryItem.dialog.level" :tree="dictionary.tree"
         :dataList="dictionaryItem.dataList" :row="dictionaryItem.row" @success="queryData" />
       <Detail ref="detailRef" />
-      <VipEdit ref="editRef" @fetch-data="queryData" @get-list="getDictionaryList" @get-Itemlist="getDictionaryItemList" />
+      <VipEdit ref="editRef" @fetch-data="queryData" @get-list="getDictionaryList"
+        @get-Itemlist="getDictionaryItemList" />
       <vipPlusMinusPayments ref="vipPlusMinusPaymentsRef" @fetch-data="queryData" />
       <vipLevel ref="subVipLevelRef" @query-data="queryData" />
     </div>

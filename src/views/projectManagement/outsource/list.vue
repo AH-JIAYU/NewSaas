@@ -10,7 +10,7 @@ defineOptions({
   name: "outsource",
 });
 const projectManagementOutsourceStore = useProjectManagementOutsourceStore();
-const { format } = useTimeago();
+// const { format } = useTimeago();
 const { pagination, getParams, onSizeChange, onCurrentChange } =
   usePagination(); // 分页
 const tableSortRef = ref("");

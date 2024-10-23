@@ -334,11 +334,10 @@ onBeforeUnmount(() => {
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('updateTime')" show-overflow-tooltip align="left"
           prop="updateTime" label="创建时间">
-
           <template #default="{ row }">
-            <el-tag effect="plain" type="info">{{
-    format(row.updateTime)
-  }}</el-tag>
+            <el-tooltip :content="row.updateTime" placement="top">
+                <el-tag effect="plain" type="info">{{format(row.updateTime)}}</el-tag>
+              </el-tooltip>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('remark')" show-overflow-tooltip align="left" prop="remark"
