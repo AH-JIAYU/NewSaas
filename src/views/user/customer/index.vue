@@ -224,7 +224,7 @@ const formOption={
         @selection-change="setSelectRows" highlight-current-row @current-change="handleCurrentChange">
         <el-table-column align="left" type="selection" />
         <ElTableColumn v-if="checkList.includes('customerStatus')" align="left" show-overflow-tooltip
-          prop="customerStatus" label="客户状态">
+          prop="customerStatus" label="客户状态"     width="84">
           <template #default="{ row }">
             <ElSwitch v-model="row.customerStatus" inline-prompt :inactive-value="1" :active-value="2" active-text="启用"
               inactive-text="禁用" @change="changeState($event, 1, row.tenantCustomerId)" />

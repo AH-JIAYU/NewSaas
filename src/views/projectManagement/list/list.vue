@@ -507,7 +507,7 @@ const formOption = {
                   :content="row.projectId"
                   placement="top-start"
                 >
-                  ID:{{ row.projectId }}
+                  {{ row.projectId }}
                 </el-tooltip>
               </div>
 
