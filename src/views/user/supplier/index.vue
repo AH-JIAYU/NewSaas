@@ -4,12 +4,12 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import customerEdit from "./components/SupplierEdit/index.vue";
 import customerDetail from "./components/SupplierDetail/index.vue";
 import plusMinusPayments from "./components/SupplierPlusMinusPayments/index.vue";
-import QuickEdit from './components/QuickEdit/index.vue'//快速编辑
+import QuickEdit from "./components/QuickEdit/index.vue"; //快速编辑
 import useConfigurationSupplierLevelStore from "@/store/modules/configuration_supplierLevel";
 import { submitLoading } from "@/utils/apiLoading";
 import api from "@/api/modules/user_supplier";
 import useUserSupplierStore from "@/store/modules/user_supplier"; // 供应商
-import empty from '@/assets/images/empty.png'
+import empty from "@/assets/images/empty.png";
 const supplierStore = useUserSupplierStore(); // 供应商
 
 defineOptions({
@@ -34,8 +34,8 @@ const stripe = ref<any>(false); // 表格控件-是否展示斑马条
 const lineHeight = ref<any>("default"); // 表格控件-控制表格大小
 const checkList = ref<Array<Object>>([]); // 表格-展示的列
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
-const formSearchList = ref<any>()//表单排序配置
-const formSearchName = ref<string>('formSearch-supplier')// 表单排序name
+const formSearchList = ref<any>(); //表单排序配置
+const formSearchName = ref<string>("formSearch-supplier"); // 表单排序name
 const columns = ref<Array<Object>>([
   // 表格控件-展示列
   {
@@ -56,7 +56,12 @@ const columns = ref<Array<Object>>([
     sortable: true,
     prop: "countryAffiliationName",
   },
-  { label: "可用余额", checked: true, sortable: true, prop: "balanceHumanLife" },
+  {
+    label: "可用余额",
+    checked: true,
+    sortable: true,
+    prop: "balanceHumanLife",
+  },
   {
     label: "待审金额",
     checked: true,
@@ -104,10 +109,10 @@ function handleEdit(row: any) {
 function handleCheck(row: any) {
   checkRef.value.showEdit(row);
 }
-const current = ref<any>()//表格当前选中
+const current = ref<any>(); //表格当前选中
 function handleCurrentChange(val: any) {
-  if (val) current.value = val.tenantSupplierId
-  else current.value = ''
+  if (val) current.value = val.tenantSupplierId;
+  else current.value = "";
 }
 // 快速编辑
 function quickEdit(row: any, type: any) {
@@ -117,7 +122,7 @@ function quickEdit(row: any, type: any) {
      settlementCycle:'结算周期'
     remark 备注
   */
-  QuickEditRef.value.showEdit(row, type)
+  QuickEditRef.value.showEdit(row, type);
 }
 // 切换状态
 async function changeState(state: any, id: string) {
@@ -133,7 +138,33 @@ async function changeState(state: any, id: string) {
   queryData();
   supplierStore.TenantSupplierList = null;
 }
+//列表修改b2b b2c
+const editBC = async (row: any, name: any, state: any) => {
+  let b2bStatus = row.b2bStatus;
+  let b2cStatus = row.b2cStatus;
+  if (name == "b2b") {
+    b2bStatus = state ==1 ? 2:1;
+    b2cStatus = b2bStatus ==1 ?2 :1;
+  }
 
+  if (name == "b2c") {
+    b2cStatus = state==1 ? 2:1;
+    b2bStatus = b2cStatus ==1 ?2 :1;
+  }
+
+  const params = {
+    b2bStatus:b2bStatus,
+    b2cStatus:b2cStatus,
+    status: row.status,
+    tenantSupplierId: row.tenantSupplierId,
+  };
+  const { status } = await submitLoading(api.changestatus(params));
+  status === 1 &&
+    ElMessage.success({
+      message: "修改成功",
+    });
+  queryData();
+};
 // 重置请求
 function queryData() {
   pagination.value.page = 1;
@@ -182,7 +213,6 @@ async function fetchData() {
     pagination.value.total = data.total;
     listLoading.value = false;
   } catch (error) {
-
   } finally {
     listLoading.value = false;
   }
@@ -193,9 +223,11 @@ function setSelectRows(val: any) {
 }
 // 获取供应商等级
 const supperLevel = computed(() => (id: any) => {
-  const findData = supplierLevelList.value.find((item: any) => item.tenantSupplierLevelId === id)
-  return findData?.levelNameOrAdditionRatio
-})
+  const findData = supplierLevelList.value.find(
+    (item: any) => item.tenantSupplierLevelId === id
+  );
+  return findData?.levelNameOrAdditionRatio;
+});
 onMounted(async () => {
   columns.value.forEach((item: any) => {
     if (item.checked) {
@@ -207,31 +239,81 @@ onMounted(async () => {
   queryData();
 
   formSearchList.value = [
-    { index: 1, show: true, type: 'input', modelName: 'tenantSupplierId', placeholder: '供应商ID' },
-    { index: 2, show: true, type: 'input', modelName: 'supplierAccord', placeholder: '供应商名称' },
-    { index: 3, show: true, type: 'input', modelName: 'supplierPhone', placeholder: '手机号码' },
-    { index: 4, show: true, type: 'input', modelName: 'accountName', placeholder: '账号名称' },
-    { index: 5, show: true, type: 'input', modelName: 'emailAddress', placeholder: '邮箱' },
     {
-      index: 6, show: true, type: 'select', modelName: 'supplierStatus', placeholder: '供应商状态',
-      option: 'supplierStatus', optionLabel: 'label', optionValue: 'value'
+      index: 1,
+      show: true,
+      type: "input",
+      modelName: "tenantSupplierId",
+      placeholder: "供应商ID",
     },
     {
-      index: 7, show: true, type: 'datetimerange', modelName: 'time',
-      startPlaceHolder: '创建开始日期', endPlaceHolder: '创建结束日期'
+      index: 2,
+      show: true,
+      type: "input",
+      modelName: "supplierAccord",
+      placeholder: "供应商名称",
+    },
+    {
+      index: 3,
+      show: true,
+      type: "input",
+      modelName: "supplierPhone",
+      placeholder: "手机号码",
+    },
+    {
+      index: 4,
+      show: true,
+      type: "input",
+      modelName: "accountName",
+      placeholder: "账号名称",
+    },
+    {
+      index: 5,
+      show: true,
+      type: "input",
+      modelName: "emailAddress",
+      placeholder: "邮箱",
+    },
+    {
+      index: 6,
+      show: true,
+      type: "select",
+      modelName: "supplierStatus",
+      placeholder: "供应商状态",
+      option: "supplierStatus",
+      optionLabel: "label",
+      optionValue: "value",
+    },
+    {
+      index: 7,
+      show: true,
+      type: "datetimerange",
+      modelName: "time",
+      startPlaceHolder: "创建开始日期",
+      endPlaceHolder: "创建结束日期",
     },
   ];
 });
 const formOption = {
-  supplierStatus: () => [{ label: '开启', value: 2 }, { label: '关闭', value: 1 }, { label: '待审批', value: 3 }]
-}
+  supplierStatus: () => [
+    { label: "开启", value: 2 },
+    { label: "关闭", value: 1 },
+    { label: "待审批", value: 3 },
+  ],
+};
 </script>
 
 <template>
   <div :class="{ 'absolute-container': tableAutoHeight }">
     <PageMain>
-      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange"
-        @onReset="onReset" :model="queryForm" :formOption="formOption" />
+      <FormSearch
+        :formSearchList="formSearchList"
+        :formSearchName="formSearchName"
+        @currentChange="currentChange"
+        @onReset="onReset"
+        :model="queryForm"
+        :formOption="formOption"
+      />
       <ElDivider border-style="dashed" />
       <el-row>
         <FormLeftPanel>
@@ -241,28 +323,67 @@ const formOption = {
         </FormLeftPanel>
         <FormRightPanel>
           <el-button size="default"> 导出 </el-button>
-          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
-            v-model:columns="columns" v-model:line-height="lineHeight" v-model:stripe="stripe" style="margin-left: 12px"
-            @query-data="queryData" />
+          <TabelControl
+            v-model:border="border"
+            v-model:tableAutoHeight="tableAutoHeight"
+            v-model:checkList="checkList"
+            v-model:columns="columns"
+            v-model:line-height="lineHeight"
+            v-model:stripe="stripe"
+            style="margin-left: 12px"
+            @query-data="queryData"
+          />
         </FormRightPanel>
       </el-row>
-      <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
-        @selection-change="setSelectRows" highlight-current-row @current-change="handleCurrentChange">
+      <el-table
+        v-loading="listLoading"
+        :border="border"
+        :data="list"
+        :size="lineHeight"
+        :stripe="stripe"
+        @selection-change="setSelectRows"
+        highlight-current-row
+        @current-change="handleCurrentChange"
+      >
         <el-table-column align="left" type="selection" />
-        <el-table-column v-if="checkList.includes('supplierStatus')" align="left" show-overflow-tooltip   label="供应商状态">
+        <el-table-column
+          v-if="checkList.includes('supplierStatus')"
+          align="left"
+          show-overflow-tooltip
+          label="供应商状态"
+        >
           <template #default="{ row }">
-            <ElSwitch v-if="row.supplierStatus === 3" v-model="row.supplierStatus" inline-prompt :inactive-value="3"
-              :active-value="2" inactive-text="待审核" active-text="启用"
-              @change="changeState($event, row.tenantSupplierId)" />
-            <ElSwitch v-else v-model="row.supplierStatus" inline-prompt :inactive-value="1" :active-value="2"
-              inactive-text="禁用" active-text="启用" @change="changeState($event, row.tenantSupplierId)" />
+            <ElSwitch
+              v-if="row.supplierStatus === 3"
+              v-model="row.supplierStatus"
+              inline-prompt
+              :inactive-value="3"
+              :active-value="2"
+              inactive-text="待审核"
+              active-text="启用"
+              @change="changeState($event, row.tenantSupplierId)"
+            />
+            <ElSwitch
+              v-else
+              v-model="row.supplierStatus"
+              inline-prompt
+              :inactive-value="1"
+              :active-value="2"
+              inactive-text="禁用"
+              active-text="启用"
+              @change="changeState($event, row.tenantSupplierId)"
+            />
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('supplierAccord')" align="left" prop="supplierAccord"
-           label="供应商名称">
+        <el-table-column
+          v-if="checkList.includes('supplierAccord')"
+          align="left"
+          prop="supplierAccord"
+          label="供应商名称"
+        >
           <template #default="{ row }">
             <div class="flex-c tableBig">
-              <div class="oneLine" style="width: calc(100% - 20px);">
+              <div class="oneLine" style="width: calc(100% - 20px)">
                 <el-tooltip
                   effect="dark"
                   :content="row.supplierAccord"
@@ -272,17 +393,30 @@ const formOption = {
                 </el-tooltip>
                 <!-- {{ row.supplierAccord }} -->
               </div>
-              <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'supplierAccord')"
-                :class="{ edit: 'edit', current: row.tenantSupplierId === current }" name="i-ep:edit" color="#409eff" />
+              <SvgIcon
+                v-if="row.projectType !== 2"
+                @click="quickEdit(row, 'supplierAccord')"
+                :class="{
+                  edit: 'edit',
+                  current: row.tenantSupplierId === current,
+                }"
+                name="i-ep:edit"
+                color="#409eff"
+              />
             </div>
-
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('tenantSupplierId')" align="left" prop="tenantSupplierId" width="180"
-          show-overflow-tooltip label="供应商ID">
+        <el-table-column
+          v-if="checkList.includes('tenantSupplierId')"
+          align="left"
+          prop="tenantSupplierId"
+          width="180"
+          show-overflow-tooltip
+          label="供应商ID"
+        >
           <template #default="{ row }">
             <div class="copyId tableSmall tenantSupplierId">
-              <div class="id oneLine ">
+              <div class="id oneLine">
                 <el-tooltip
                   effect="dark"
                   :content="row.tenantSupplierId"
@@ -291,10 +425,7 @@ const formOption = {
                   {{ row.tenantSupplierId }}
                 </el-tooltip>
 
-
-
                 <!-- {{ row.tenantSupplierId }} -->
-
               </div>
               <copy
                 :content="row.tenantSupplierId"
@@ -307,169 +438,353 @@ const formOption = {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('supplierLevelId')" align="left" prop="supplierLevelId"
-          show-overflow-tooltip label="供应商等级">
+        <el-table-column
+          v-if="checkList.includes('supplierLevelId')"
+          align="left"
+          prop="supplierLevelId"
+          show-overflow-tooltip
+          label="供应商等级"
+        >
           <template #default="{ row }">
             <div class="flex-c tableBig">
-              <div class="oneLine" style="width: calc(100% - 20px);"> {{ supperLevel(row.supplierLevelId) }}</div>
-              <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'supplierLevelId')"
-                :class="{ edit: 'edit', current: row.tenantSupplierId === current }" name="i-ep:edit" color="#409eff" />
+              <div class="oneLine" style="width: calc(100% - 20px)">
+                {{ supperLevel(row.supplierLevelId) }}
+              </div>
+              <SvgIcon
+                v-if="row.projectType !== 2"
+                @click="quickEdit(row, 'supplierLevelId')"
+                :class="{
+                  edit: 'edit',
+                  current: row.tenantSupplierId === current,
+                }"
+                name="i-ep:edit"
+                color="#409eff"
+              />
             </div>
-
           </template>
         </el-table-column>
 
-        <el-table-column v-if="checkList.includes('balanceHumanLife')" align="left" prop="balanceHumanLife"
-          show-overflow-tooltip label="可用余额">
+        <el-table-column
+          v-if="checkList.includes('balanceHumanLife')"
+          align="left"
+          prop="balanceHumanLife"
+          show-overflow-tooltip
+          label="可用余额"
+        >
           <template #default="{ row }">
             <div class="tableBig">
               <CurrencyType />{{ row.balanceHumanLife || 0 }}
             </div>
-
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('amountPendingTrial')" align="left" prop="amountPendingTrial"
-          show-overflow-tooltip label="待审金额">
+        <el-table-column
+          v-if="checkList.includes('amountPendingTrial')"
+          align="left"
+          prop="amountPendingTrial"
+          show-overflow-tooltip
+          label="待审金额"
+        >
           <template #default="{ row }">
             <div class="tableBig">
               <CurrencyType />{{ row.amountPendingTrial || 0 }}
             </div>
-
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('countryAffiliationName')" align="left" prop="countryAffiliationName"
-          show-overflow-tooltip label="区域"> <template #default="{ row }">
+        <el-table-column
+          v-if="checkList.includes('countryAffiliationName')"
+          align="left"
+          prop="countryAffiliationName"
+          show-overflow-tooltip
+          label="区域"
+        >
+          <template #default="{ row }">
             <el-tag type="primary">{{ row.countryAffiliationName }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('b2bStatus')" align="left" show-overflow-tooltip label="B2B/B2C">
+        <el-table-column
+          v-if="checkList.includes('b2bStatus')"
+          align="left"
+          show-overflow-tooltip
+          label="B2B/B2C"
+        >
           <template #default="{ row }">
-            <div class="flex-s" style="justify-content: center !important;">
-
-              <svg v-if="row.b2bStatus && row.b2bStatus === 2" width="15" height="14" viewBox="0 0 15 14" fill="none"
-                xmlns="http://www.w3.org/2000/svg">
+            <div class="flex-s" style="justify-content: center !important;cursor: pointer;">
+              <svg
+                v-if="row.b2bStatus && row.b2bStatus === 2"
+                width="15"
+                height="14"
+                viewBox="0 0 15 14"
+                fill="none"
+                @click="editBC(row, 'b2b', 2)"
+                xmlns="http://www.w3.org/2000/svg"
+              >
                 <g id="Frame" clip-path="url(#clip0_409_28184)">
-                  <path id="Vector"
+                  <path
+                    id="Vector"
                     d="M13.6223 13.2878H1.375C1.28477 13.2878 1.21094 13.214 1.21094 13.1237V0.876465C1.21094 0.78623 1.28477 0.712402 1.375 0.712402H13.6236C13.7139 0.712402 13.7877 0.78623 13.7877 0.876465V13.1251C13.7863 13.2153 13.7139 13.2878 13.6223 13.2878Z"
-                    fill="#409EFF" />
-                  <path id="Vector_2"
+                    fill="#409EFF"
+                  />
+                  <path
+                    id="Vector_2"
                     d="M12.3645 14H2.63555C1.4584 14 0.5 13.0416 0.5 11.8645V2.13555C0.5 0.958398 1.4584 0 2.63555 0H12.3645C13.5416 0 14.5 0.958398 14.5 2.13555V11.8645C14.5 13.0416 13.5416 14 12.3645 14ZM2.63555 1.42324C2.24316 1.42324 1.92324 1.74316 1.92324 2.13555V11.8645C1.92324 12.2568 2.24316 12.5768 2.63555 12.5768H12.3645C12.7568 12.5768 13.0768 12.2568 13.0768 11.8645V2.13555C13.0768 1.74316 12.7568 1.42324 12.3645 1.42324H2.63555Z"
-                    fill="#409EFF" />
-                  <path id="Vector_3"
+                    fill="#409EFF"
+                  />
+                  <path
+                    id="Vector_3"
                     d="M6.24753 11.0141C6.10124 11.0141 5.95359 10.969 5.82781 10.8774L2.39343 8.36725C2.07624 8.13483 2.00652 7.69049 2.23894 7.37194C2.47136 7.05475 2.91706 6.98502 3.23425 7.21744L6.14909 9.34752L11.663 3.22116C11.9255 2.92858 12.3766 2.90533 12.6678 3.16784C12.9591 3.43034 12.9837 3.88151 12.7212 4.17272L6.778 10.7762C6.63718 10.9335 6.44304 11.0141 6.24753 11.0141Z"
-                    fill="white" />
+                    fill="white"
+                  />
                 </g>
                 <defs>
                   <clipPath id="clip0_409_28184">
-                    <rect width="14" height="14" fill="white" transform="translate(0.5)" />
+                    <rect
+                      width="14"
+                      height="14"
+                      fill="white"
+                      transform="translate(0.5)"
+                    />
                   </clipPath>
                 </defs>
               </svg>
 
-              <svg v-else width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg
+                v-else
+                width="15"
+                height="14"
+                viewBox="0 0 15 14"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                @click="editBC(row, 'b2b', 1)"
+              >
                 <g id="Frame" clip-path="url(#clip0_409_28364)">
-                  <path id="Vector"
+                  <path
+                    id="Vector"
                     d="M13.6223 13.1901H1.375C1.3387 13.1901 1.30859 13.16 1.30859 13.1237V0.876465C1.30859 0.840165 1.3387 0.810059 1.375 0.810059H13.6236C13.6599 0.810059 13.69 0.840164 13.69 0.876465V13.1242C13.6892 13.1611 13.66 13.1901 13.6223 13.1901Z"
-                    stroke="#409EFF" stroke-width="0.195312" />
-                  <path id="Vector_2"
+                    stroke="#409EFF"
+                    stroke-width="0.195312"
+                  />
+                  <path
+                    id="Vector_2"
                     d="M12.3645 14H2.63555C1.4584 14 0.5 13.0416 0.5 11.8645V2.13555C0.5 0.958398 1.4584 0 2.63555 0H12.3645C13.5416 0 14.5 0.958398 14.5 2.13555V11.8645C14.5 13.0416 13.5416 14 12.3645 14ZM2.63555 1.42324C2.24316 1.42324 1.92324 1.74316 1.92324 2.13555V11.8645C1.92324 12.2568 2.24316 12.5768 2.63555 12.5768H12.3645C12.7568 12.5768 13.0768 12.2568 13.0768 11.8645V2.13555C13.0768 1.74316 12.7568 1.42324 12.3645 1.42324H2.63555Z"
-                    fill="#DCDCDC" />
+                    fill="#DCDCDC"
+                  />
                   <g id="Group 18190">
-                    <path id="Vector_3" d="M5 5L10 10" stroke="#DCDCDC" stroke-width="1.5" stroke-linecap="round"
-                      stroke-linejoin="round" />
-                    <path id="Vector_4" d="M5 10L10 5" stroke="#DCDCDC" stroke-width="1.5" stroke-linecap="round"
-                      stroke-linejoin="round" />
+                    <path
+                      id="Vector_3"
+                      d="M5 5L10 10"
+                      stroke="#DCDCDC"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      id="Vector_4"
+                      d="M5 10L10 5"
+                      stroke="#DCDCDC"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
                   </g>
                 </g>
                 <defs>
                   <clipPath id="clip0_409_28364">
-                    <rect width="14" height="14" fill="white" transform="translate(0.5)" />
+                    <rect
+                      width="14"
+                      height="14"
+                      fill="white"
+                      transform="translate(0.5)"
+                    />
                   </clipPath>
                 </defs>
               </svg>
               <span class="mx-1">/</span>
-              <svg v-if="row.b2cStatus && row.b2cStatus === 2" width="15" height="14" viewBox="0 0 15 14" fill="none"
-                xmlns="http://www.w3.org/2000/svg">
+              <svg
+                v-if="row.b2cStatus && row.b2cStatus === 2"
+                width="15"
+                height="14"
+                viewBox="0 0 15 14"
+                fill="none"
+                @click="editBC(row, 'b2c', 2)"
+                xmlns="http://www.w3.org/2000/svg"
+              >
                 <g id="Frame" clip-path="url(#clip0_409_28184)">
-                  <path id="Vector"
+                  <path
+                    id="Vector"
                     d="M13.6223 13.2878H1.375C1.28477 13.2878 1.21094 13.214 1.21094 13.1237V0.876465C1.21094 0.78623 1.28477 0.712402 1.375 0.712402H13.6236C13.7139 0.712402 13.7877 0.78623 13.7877 0.876465V13.1251C13.7863 13.2153 13.7139 13.2878 13.6223 13.2878Z"
-                    fill="#409EFF" />
-                  <path id="Vector_2"
+                    fill="#409EFF"
+                  />
+                  <path
+                    id="Vector_2"
                     d="M12.3645 14H2.63555C1.4584 14 0.5 13.0416 0.5 11.8645V2.13555C0.5 0.958398 1.4584 0 2.63555 0H12.3645C13.5416 0 14.5 0.958398 14.5 2.13555V11.8645C14.5 13.0416 13.5416 14 12.3645 14ZM2.63555 1.42324C2.24316 1.42324 1.92324 1.74316 1.92324 2.13555V11.8645C1.92324 12.2568 2.24316 12.5768 2.63555 12.5768H12.3645C12.7568 12.5768 13.0768 12.2568 13.0768 11.8645V2.13555C13.0768 1.74316 12.7568 1.42324 12.3645 1.42324H2.63555Z"
-                    fill="#409EFF" />
-                  <path id="Vector_3"
+                    fill="#409EFF"
+                  />
+                  <path
+                    id="Vector_3"
                     d="M6.24753 11.0141C6.10124 11.0141 5.95359 10.969 5.82781 10.8774L2.39343 8.36725C2.07624 8.13483 2.00652 7.69049 2.23894 7.37194C2.47136 7.05475 2.91706 6.98502 3.23425 7.21744L6.14909 9.34752L11.663 3.22116C11.9255 2.92858 12.3766 2.90533 12.6678 3.16784C12.9591 3.43034 12.9837 3.88151 12.7212 4.17272L6.778 10.7762C6.63718 10.9335 6.44304 11.0141 6.24753 11.0141Z"
-                    fill="white" />
+                    fill="white"
+                  />
                 </g>
                 <defs>
                   <clipPath id="clip0_409_28184">
-                    <rect width="14" height="14" fill="white" transform="translate(0.5)" />
+                    <rect
+                      width="14"
+                      height="14"
+                      fill="white"
+                      transform="translate(0.5)"
+                    />
                   </clipPath>
                 </defs>
               </svg>
-              <svg v-else width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg
+                v-else
+                width="15"
+                height="14"
+                viewBox="0 0 15 14"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                @click="editBC(row, 'b2c', 1)"
+              >
                 <g id="Frame" clip-path="url(#clip0_409_28364)">
-                  <path id="Vector"
+                  <path
+                    id="Vector"
                     d="M13.6223 13.1901H1.375C1.3387 13.1901 1.30859 13.16 1.30859 13.1237V0.876465C1.30859 0.840165 1.3387 0.810059 1.375 0.810059H13.6236C13.6599 0.810059 13.69 0.840164 13.69 0.876465V13.1242C13.6892 13.1611 13.66 13.1901 13.6223 13.1901Z"
-                    stroke="#409EFF" stroke-width="0.195312" />
-                  <path id="Vector_2"
+                    stroke="#409EFF"
+                    stroke-width="0.195312"
+                  />
+                  <path
+                    id="Vector_2"
                     d="M12.3645 14H2.63555C1.4584 14 0.5 13.0416 0.5 11.8645V2.13555C0.5 0.958398 1.4584 0 2.63555 0H12.3645C13.5416 0 14.5 0.958398 14.5 2.13555V11.8645C14.5 13.0416 13.5416 14 12.3645 14ZM2.63555 1.42324C2.24316 1.42324 1.92324 1.74316 1.92324 2.13555V11.8645C1.92324 12.2568 2.24316 12.5768 2.63555 12.5768H12.3645C12.7568 12.5768 13.0768 12.2568 13.0768 11.8645V2.13555C13.0768 1.74316 12.7568 1.42324 12.3645 1.42324H2.63555Z"
-                    fill="#DCDCDC" />
+                    fill="#DCDCDC"
+                  />
                   <g id="Group 18190">
-                    <path id="Vector_3" d="M5 5L10 10" stroke="#DCDCDC" stroke-width="1.5" stroke-linecap="round"
-                      stroke-linejoin="round" />
-                    <path id="Vector_4" d="M5 10L10 5" stroke="#DCDCDC" stroke-width="1.5" stroke-linecap="round"
-                      stroke-linejoin="round" />
+                    <path
+                      id="Vector_3"
+                      d="M5 5L10 10"
+                      stroke="#DCDCDC"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      id="Vector_4"
+                      d="M5 10L10 5"
+                      stroke="#DCDCDC"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
                   </g>
                 </g>
                 <defs>
                   <clipPath id="clip0_409_28364">
-                    <rect width="14" height="14" fill="white" transform="translate(0.5)" />
+                    <rect
+                      width="14"
+                      height="14"
+                      fill="white"
+                      transform="translate(0.5)"
+                    />
                   </clipPath>
                 </defs>
               </svg>
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('settlementCycle')" align="left" prop="settlementCycle"
-          show-overflow-tooltip label="结算周期"><template #default="{ row }">
+        <el-table-column
+          v-if="checkList.includes('settlementCycle')"
+          align="left"
+          prop="settlementCycle"
+          show-overflow-tooltip
+          label="结算周期"
+          ><template #default="{ row }">
             <div class="flex-c tableBig">
-              <div class="oneLine" style="width: calc(100% - 20px);"> {{ row.settlementCycle ? row.settlementCycle + "天"
-    : "-" }}</div>
-              <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'settlementCycle')"
-                :class="{ edit: 'edit', current: row.tenantSupplierId === current }" name="i-ep:edit" color="#409eff" />
+              <div class="oneLine" style="width: calc(100% - 20px)">
+                {{ row.settlementCycle ? row.settlementCycle + "天" : "-" }}
+              </div>
+              <SvgIcon
+                v-if="row.projectType !== 2"
+                @click="quickEdit(row, 'settlementCycle')"
+                :class="{
+                  edit: 'edit',
+                  current: row.tenantSupplierId === current,
+                }"
+                name="i-ep:edit"
+                color="#409eff"
+              />
             </div>
-
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('createTime')" align="left" prop="createTime" show-overflow-tooltip
-          label="创建">
+        <el-table-column
+          v-if="checkList.includes('createTime')"
+          align="left"
+          prop="createTime"
+          show-overflow-tooltip
+          label="创建"
+        >
           <template #default="{ row }">
             <el-tooltip :content="row.createTime" placement="top">
-              <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>
+              <el-tag effect="plain" type="info">{{
+                format(row.createTime)
+              }}</el-tag>
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('remark')" align="left" prop="remark" width="180" label="备注">
+        <el-table-column
+          v-if="checkList.includes('remark')"
+          align="left"
+          prop="remark"
+          width="180"
+          label="备注"
+        >
           <template #default="{ row }">
             <div class="flex-c tableBig">
-              <div class="oneLine" style="width: calc(100% - 20px);"> {{ row.remark }}</div>
-              <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'remark')"
-                :class="{ edit: 'edit', current: row.tenantSupplierId === current }" name="i-ep:edit" color="#409eff" />
+              <div class="oneLine" style="width: calc(100% - 20px)">
+                {{ row.remark }}
+              </div>
+              <SvgIcon
+                v-if="row.projectType !== 2"
+                @click="quickEdit(row, 'remark')"
+                :class="{
+                  edit: 'edit',
+                  current: row.tenantSupplierId === current,
+                }"
+                name="i-ep:edit"
+                color="#409eff"
+              />
             </div>
-
           </template>
         </el-table-column>
-        <el-table-column align="left" prop="i" label="操作" fixed="right" width="250">
+        <el-table-column
+          align="left"
+          prop="i"
+          label="操作"
+          fixed="right"
+          width="250"
+        >
           <template #default="{ row }">
             <ElSpace>
-              <el-button size="small" plain type="primary" @click="handlePlusMinusPayments(row)">
+              <el-button
+                size="small"
+                plain
+                type="primary"
+                @click="handlePlusMinusPayments(row)"
+              >
                 加减款
               </el-button>
-              <el-button size="small" plain type="warning" @click="handleEdit(row)">
+              <el-button
+                size="small"
+                plain
+                type="warning"
+                @click="handleEdit(row)"
+              >
                 编辑
               </el-button>
-              <el-button size="small" plain type="danger" @click="handleCheck(row)">
+              <el-button
+                size="small"
+                plain
+                type="danger"
+                @click="handleCheck(row)"
+              >
                 详情
               </el-button>
             </ElSpace>
@@ -479,9 +794,18 @@ const formOption = {
           <el-empty :image="empty" :image-size="300" />
         </template>
       </el-table>
-      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
-        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-        background @size-change="sizeChange" @current-change="currentChange" />
+      <ElPagination
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
+        :page-sizes="pagination.sizes"
+        :layout="pagination.layout"
+        :hide-on-single-page="false"
+        class="pagination"
+        background
+        @size-change="sizeChange"
+        @current-change="currentChange"
+      />
     </PageMain>
     <customerEdit ref="editRef" @fetch-data="fetchData" />
     <customerDetail ref="checkRef" @fetch-data="fetchData" />
@@ -492,11 +816,11 @@ const formOption = {
 
 <style scoped lang="scss">
 .tenantSupplierId {
-  font-size: .875rem;
+  font-size: 0.875rem;
 }
-.copyId  .current {
-    display: block !important;
-  }
+.copyId .current {
+  display: block !important;
+}
 .rowCopy {
   width: 20px;
   display: none;
@@ -556,7 +880,7 @@ const formOption = {
   align-items: center;
   width: 100%;
 
-  >div:nth-of-type(1) {
+  > div:nth-of-type(1) {
     width: calc(100% - 25px);
     flex-shrink: 0;
   }
