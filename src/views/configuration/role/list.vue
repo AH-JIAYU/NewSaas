@@ -212,8 +212,16 @@ onMounted(() => {
         <ElTableColumn prop="id" align="left" label="角色ID">
           <template #default="{ row }">
             <div class="copyId tableSmall">
-              <div class="id oneLine  ">ID: {{ row.id }}</div>
-              <copy class="copy" :content="row.id" />
+              <div class="id oneLine  idFont">
+                {{ row.id }}</div>
+                <copy
+                :content="row.id"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.id === current,
+                }"
+              />
+              <!-- <copy class="copy" :content="row.id" /> -->
             </div>
           </template>
         </ElTableColumn>
@@ -263,6 +271,22 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
+.copyId .idFont {
+  font-size:14px;
+}
+.copyId  .current {
+    display: block !important;
+  }
+.rowCopy {
+  width: 20px;
+  display: none;
+}
+.copyId  .current {
+    display: block !important;
+  }
+.el-table__row:hover .rowCopy {
+  display: block;
+}
 .absolute-container {
   position: absolute;
   display: flex;
