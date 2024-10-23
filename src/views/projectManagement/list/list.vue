@@ -207,7 +207,7 @@ function onReset() {
     name: "", // 	项目名称模糊匹配
     projectIdentification: "", // 	项目标识模糊查询
     clientId: "", // 	所属客户编号Id
-    countryId: [], // 所属区域编号Id
+    countryId: '', // 所属区域编号Id
     createName: "", // 	创建人-模糊查询
     allocation: "", // 	分配状态:1已经分配 2:未分配
     allocationStatus: "", // 	分配类型: 1:自动分配 2:供应商 3:部门
@@ -394,7 +394,7 @@ const formOption = {
       'absolute-container': tableAutoHeight,
     }"
   >
-    <PageMain class="hide-drawer-header">
+    <PageMain class="hide-drawer-header"> 
       <FormSearch
         :formSearchList="formSearchList"
         :formSearchName="formSearchName"
@@ -569,12 +569,12 @@ const formOption = {
                   <!-- <img :src="row.avatar" alt="" class="avatar" />
                   <span class="">{{ row.chargeName }}</span> -->
                   <el-tooltip
-                  effect="dark"
-                  :content="row.chargeName"
-                  placement="top-start"
-                >
-                PM：{{ row.chargeName }}
-                </el-tooltip>
+                    effect="dark"
+                    :content="row.chargeName"
+                    placement="top-start"
+                  >
+                    PM：{{ row.chargeName }}
+                  </el-tooltip>
                   <!-- PM：{{ row.chargeName }} -->
                 </div>
               </div>
@@ -915,9 +915,9 @@ const formOption = {
     display: block !important;
   }
 }
-.copyId  .current {
-    display: block !important;
-  }
+.copyId .current {
+  display: block !important;
+}
 
 .el-table__row:hover .edit {
   display: block;
