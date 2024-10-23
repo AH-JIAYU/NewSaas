@@ -222,8 +222,14 @@ const formOption = {
         <el-table-column v-if="checkList.includes('id')" prop="id" show-overflow-tooltip align="left" label="职位ID">
           <template #default="{ row }">
             <div class="copyId tableSmall">
-              <div class="id oneLine  ">ID: {{ row.id }}</div>
-              <copy class="copy" :content="row.id" />
+              <div class="id oneLine  idFont">{{ row.id }}</div>
+              <copy
+                :content="row.id"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.id === current,
+                }"
+              />
             </div>
           </template>
         </el-table-column>
@@ -275,7 +281,22 @@ const formOption = {
 .el-pagination {
   margin-top: 15px;
 }
-
+.copyId .idFont {
+  font-size:14px;
+}
+.copyId  .current {
+    display: block !important;
+  }
+.rowCopy {
+  width: 20px;
+  display: none;
+}
+.copyId  .current {
+    display: block !important;
+  }
+.el-table__row:hover .rowCopy {
+  display: block;
+}
 .absolute-container {
   position: absolute;
   display: flex;

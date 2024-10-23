@@ -232,7 +232,7 @@ const formOption={
           <template #default="{ row }">
             <p v-if="checkList.includes('projectName')" class="crudeTop">名称：{{ row.projectName }}</p>
             <div v-if="checkList.includes('projectId')" class="hoverSvg">
-              <p class="fineSize">ID：{{ row.projectId }}</p>
+              <p class="fineSize">{{ row.projectId }}</p>
               <copy class="copy" :content="row.projectId" />
             </div>
           </template>
@@ -252,7 +252,7 @@ const formOption={
             <el-tooltip class="box-item" effect="dark" :content="row.withoutUrl" placement="top">
               <!-- <el-button link type="primary" @click="copyUrl(row.withoutUrl)">复制</el-button> -->
               <div class="hoverSvg">
-              <p class="fineSize">{{ row.withoutUrl }}</p>
+              <p class="withoutUrlSize">{{ row.withoutUrl }}</p>
               <copy class="copy" :content="row.withoutUrl" />
             </div>
             </el-tooltip>
@@ -386,6 +386,19 @@ const formOption={
 </template>
 
 <style scoped lang="scss">
+.copyId  .current {
+    display: block !important;
+  }
+.rowCopy {
+  width: 20px;
+  display: none;
+}
+.copyId  .current {
+    display: block !important;
+  }
+.el-table__row:hover .rowCopy {
+  display: block;
+}
 .absolute-container {
   position: absolute;
   display: flex;
@@ -455,7 +468,13 @@ const formOption={
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
+.withoutUrlSize {
+  color: #333;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .hidden {
   white-space: nowrap;
   overflow: hidden;

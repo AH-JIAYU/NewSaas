@@ -297,6 +297,13 @@ const formOption = {
       value: index + 1,
     })),
 };
+const current = ref<any>(); //表格当前选中
+
+function handleCurrentChange(val: any) {
+  if (val) current.value = val.id;
+  else current.value = "";
+}
+
 </script>
 
 <template>
@@ -314,15 +321,22 @@ const formOption = {
             @query-data="queryData" />
         </FormRightPanel>
       </el-row>
-      <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
-        @selection-change="setSelectRows">
+      <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"  highlight-current-row
+        @selection-change="setSelectRows"         @current-change="handleCurrentChange">
         <el-table-column align="left" type="selection" />
         <el-table-column v-if="checkList.includes('id')" align="left" prop="id" show-overflow-tooltip fixed="left"
           label="点击ID"><template #default="{ row }">
             <el-tag effect="dark" v-if="row.surveySource === 2" type="warning">外部人员</el-tag>
             <div class="copyId flex-s tableSmall">
-              <div class="id oneLine">ID: {{ row.id }}</div>
-              <copy class="copy edit" :content="row.id" />
+              <div class="id oneLine idFont"> {{ row.id }}</div>
+              <copy
+                :content="row.id"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.id === current,
+                }"
+              />
+              <!-- <copy class="copy edit" :content="row.id" /> -->
             </div>
           </template>
         </el-table-column>
@@ -332,11 +346,18 @@ const formOption = {
             <div class="copyId flex-s tableSmall" v-if="row.surveySource === 1">
               <div class="oneLine">
                 <span v-if="row.randomIdentityId" class="id oneLine">
-                  ID: {{ row.randomIdentityId }}</span>
+                   {{ row.randomIdentityId }}</span>
                 <span v-else class="id"></span>
               </div>
-
-              <copy class="copy edit" v-if="row.randomIdentityId" :content="row.randomIdentityId" />
+              <copy
+              v-if="row.randomIdentityId"
+                :content="row.randomIdentityId"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.id === current,
+                }"
+              />
+              <!-- <copy class="copy edit" v-if="row.randomIdentityId" :content="row.randomIdentityId" /> -->
             </div>
           </template>
         </el-table-column>
@@ -346,9 +367,18 @@ const formOption = {
             <div v-if="row.surveySource === 1">
               <div v-if="row.memberId">
                 <div class="copyId tableSmall flex-s">
-                  <div class="id oneLine">ID: {{ row.memberId }}</div>
+                  <div class="id oneLine idFont">{{ row.memberId }}</div>
 
-                  <copy class="copy edit" :content="row.memberId" />
+                  <copy
+                :content="row.memberId"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.id === current,
+                }"
+              />
+
+
+                  <!-- <copy class="copy edit" :content="row.memberId" /> -->
                 </div>
               </div>
               <span v-else class="id"></span>
@@ -361,9 +391,16 @@ const formOption = {
             <div v-if="row.surveySource === 1">
               <div v-if="row.memberChildId">
                 <div class="copyId tableSmall flex-s">
-                  <div class="id oneLine">ID: {{ row.memberChildId }}</div>
+                  <div class="id oneLine idFont">{{ row.memberChildId }}</div>
+                  <copy
+                :content="row.memberChildId"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.id === current,
+                }"
+              />
 
-                  <copy class="copy edit" :content="row.memberChildId" />
+                  <!-- <copy class="copy edit" :content="row.memberChildId" /> -->
                 </div>
               </div>
               <span v-else class="id"></span>
@@ -376,11 +413,19 @@ const formOption = {
           <template #default="{ row }">
             <div class="copyId tableSmall flex-s" v-if="row.surveySource === 1">
               <div class="oneLine">
-                <span v-if="row.tenantSupplierId" class="id oneLine">
-                  ID: {{ row.tenantSupplierId }}</span>
+                <span v-if="row.tenantSupplierId" class="id oneLine idFont">
+                 {{ row.tenantSupplierId }}</span>
                 <span v-else class="id"></span>
               </div>
-              <copy class="copy edit" v-if="row.tenantSupplierId" :content="row.tenantSupplierId" />
+              <copy
+              v-if="row.tenantSupplierId"
+                :content="row.tenantSupplierId"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.id === current,
+                }"
+              />
+              <!-- <copy class="copy edit" v-if="row.tenantSupplierId" :content="row.tenantSupplierId" /> -->
             </div>
           </template>
         </el-table-column>
@@ -389,8 +434,16 @@ const formOption = {
           <template #default="{ row }">
             <div class="tableBig oneLine">名称: {{ row.projectName }}</div>
             <div class="copyId tableSmall flex-s">
-              <div class="id oneLine">ID: {{ row.projectId }}</div>
-              <copy class="copy edit" v-if="row.projectId" :content="row.projectId" />
+              <div class="id oneLine "> {{ row.projectId }}</div>
+              <copy
+              v-if="row.projectId"
+                :content="row.projectId"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.id === current,
+                }"
+              />
+              <!-- <copy class="copy edit" v-if="row.projectId" :content="row.projectId" /> -->
             </div>
           </template>
         </el-table-column>
@@ -408,7 +461,15 @@ const formOption = {
               <div class="id oneLine">
                 {{ row.ipBelong.split("/")[0] }}
               </div>
-              <copy class="copy edit" :content="row.ipBelong.split('/')[0]" />
+              <copy
+
+               :content="row.ipBelong.split('/')[0]"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.id === current,
+                }"
+              />
+              <!-- <copy class="copy edit" :content="row.ipBelong.split('/')[0]" /> -->
             </div>
           </template>
         </el-table-column>
@@ -517,6 +578,19 @@ const formOption = {
 </template>
 
 <style scoped lang="scss">
+.idFont {
+  font-size: 14px;
+}
+.copyId .idFont {
+  display: block !important;
+}
+.rowCopy {
+  width: 20px;
+  display: none;
+}
+.el-table__row:hover .rowCopy {
+  display: block;
+}
 // 高度自适应
 .absolute-container {
   position: absolute;

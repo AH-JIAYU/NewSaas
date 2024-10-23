@@ -507,7 +507,7 @@ const formOption = {
                   :content="row.projectId"
                   placement="top-start"
                 >
-                  ID:{{ row.projectId }}
+                  {{ row.projectId }}
                 </el-tooltip>
               </div>
 
@@ -915,6 +915,9 @@ const formOption = {
     display: block !important;
   }
 }
+.copyId  .current {
+    display: block !important;
+  }
 
 .el-table__row:hover .edit {
   display: block;

@@ -224,7 +224,7 @@ const formOption={
         @selection-change="setSelectRows" highlight-current-row @current-change="handleCurrentChange">
         <el-table-column align="left" type="selection" />
         <ElTableColumn v-if="checkList.includes('customerStatus')" align="left" show-overflow-tooltip
-          prop="customerStatus" label="客户状态">
+          prop="customerStatus" label="客户状态"     width="84">
           <template #default="{ row }">
             <ElSwitch v-model="row.customerStatus" inline-prompt :inactive-value="1" :active-value="2" active-text="启用"
               inactive-text="禁用" @change="changeState($event, 1, row.tenantCustomerId)" />
@@ -244,10 +244,17 @@ const formOption={
             show-overflow-tooltip label="客户编码">
           <template #default="{ row }">
             <div class="copyId tableSmall">
-              <div class="oneLine">
+              <div class="oneLine projectId">
                 {{ row.tenantCustomerId }}
               </div>
-              <copy />
+              <copy
+                :content="row.tenantCustomerId"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.tenantCustomerId === current,
+                }"
+              />
+              <!-- <copy /> -->
             </div>
           </template>
         </el-table-column>
@@ -354,6 +361,19 @@ const formOption={
 </template>
 
 <style scoped lang="scss">
+.copyId .projectId {
+  font-size:14px;
+}
+.copyId  .current {
+    display: block !important;
+  }
+.rowCopy {
+  width: 20px;
+  display: none;
+}
+.el-table__row:hover .rowCopy {
+  display: block;
+}
 // 高度自适应
 .absolute-container {
   position: absolute;

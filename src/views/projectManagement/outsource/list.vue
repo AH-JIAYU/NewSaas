@@ -135,6 +135,13 @@ const formOption = {
       value: index + 1,
     })),
 };
+const current = ref<any>(); //表格当前选中
+
+function handleCurrentChange(val: any) {
+  console.log('是否选中')
+  if (val) current.value = val.projectId;
+  else current.value = "";
+}
 </script>
 
 <template>
@@ -181,6 +188,8 @@ const formOption = {
             :border="border"
             :size="lineHeight"
             :stripe="stripe"
+            highlight-current-row
+            @current-change="handleCurrentChange"
           >
             <el-table-column align="left" type="selection" />
             <el-table-column
@@ -224,8 +233,15 @@ const formOption = {
             >
               <template #default="{ row }">
                 <div class="copyId tableSmall">
-                  <div class="id oneLine">ID: {{ row.tenantId }}</div>
-                  <copy class="copy" :content="row.tenantId" />
+                  <div class="id oneLine projectId">{{ row.tenantId }}</div>
+                  <copy
+                    :content="row.tenantId"
+                    :class="{
+                      rowCopy: 'rowCopy',
+                      current: row.projectId === current,
+                    }"
+                  />
+                  <!-- <copy class="copy" :content="row.tenantId" /> -->
                 </div>
               </template>
             </el-table-column>
@@ -250,8 +266,25 @@ const formOption = {
             >
               <template #default="{ row }">
                 <div class="copyId tableSmall">
-                  <div class="id oneLine">ID: {{ row.projectId }}</div>
-                  <copy class="copy" :content="row.projectId" />
+                  <div class="id oneLine projectId">
+                    <el-tooltip
+                      effect="dark"
+                      :content="row.projectId"
+                      placement="top-start"
+                    >
+                      {{ row.projectId }}
+                    </el-tooltip>
+
+                    <!-- {{ row.projectId }} -->
+                  </div>
+                  <copy
+                    :content="row.projectId"
+                    :class="{
+                      rowCopy: 'rowCopy',
+                      current: row.projectId === current,
+                    }"
+                  />
+                  <!-- <copy class="copy" :content="row.projectId" /> -->
                 </div>
               </template>
             </el-table-column>
@@ -362,7 +395,9 @@ const formOption = {
             :data="list"
             :border="border"
             :size="lineHeight"
+            highlight-current-row
             :stripe="stripe"
+            @current-change="handleCurrentChange"
           >
             <el-table-column align="left" type="selection" />
             <el-table-column
@@ -399,8 +434,17 @@ const formOption = {
               label="租户ID"
               ><template #default="{ row }">
                 <div class="copyId tableSmall">
-                  <div class="id oneLine">ID: {{ row.tenantId }}</div>
-                  <copy class="copy" :content="row.tenantId" />
+                  <div class="id oneLine projectId">
+                    {{ row.tenantId }}
+                  </div>
+                  <copy
+                    :content="row.tenantId"
+                    :class="{
+                      rowCopy: 'rowCopy',
+                      current: row.projectId === current,
+                    }"
+                  />
+                  <!-- <copy class="copy" :content="row.tenantId" /> -->
                 </div>
               </template>
             </el-table-column>
@@ -425,8 +469,24 @@ const formOption = {
             >
               <template #default="{ row }">
                 <div class="copyId tableSmall">
-                  <div class="id oneLine">ID: {{ row.projectId }}</div>
-                  <copy class="copy" :content="row.projectId" />
+                  <div class="id oneLine projectId">
+                    <el-tooltip
+                      effect="dark"
+                      :content="row.projectId"
+                      placement="top-start"
+                    >
+                      {{ row.projectId }}
+                    </el-tooltip>
+                    <!-- {{ row.projectId }} -->
+                  </div>
+                  <copy
+                    :content="row.projectId"
+                    :class="{
+                      rowCopy: 'rowCopy',
+                      current: row.projectId === current,
+                    }"
+                  />
+                  <!-- <copy class="copy" :content="row.projectId" /> -->
                 </div>
               </template>
             </el-table-column>
@@ -511,6 +571,19 @@ const formOption = {
 </template>
 
 <style scoped lang="scss">
+.projectId {
+  font-size: 14px;
+}
+.copyId  .current {
+    display: block !important;
+  }
+.rowCopy {
+  width: 20px;
+  display: none;
+}
+.el-table__row:hover .rowCopy {
+  display: block;
+}
 :deep {
   table {
     width: 100% !important;

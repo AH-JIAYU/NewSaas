@@ -244,13 +244,31 @@ onMounted(() => {
           align="left"
           prop="beInvitationTenantId"
           width="180"
-          show-overflow-tooltip
+
           label="租户id"
         >
           <template #default="{ row }">
             <div class="copyId tableSmall">
-              <div class="id oneLine">ID: {{ row.beInvitationTenantId }}</div>
-              <copy class="copy" :content="row.beInvitationTenantId" />
+              <div class="id oneLine beInvitationTenantId" >
+                <el-tooltip
+                  effect="dark"
+                  :content="row.beInvitationTenantId"
+                  placement="top-start"
+                >
+                  {{ row.beInvitationTenantId }}
+                </el-tooltip>
+
+
+                <!-- {{ row.beInvitationTenantId }} -->
+              </div>
+              <copy
+                :content="row.beInvitationTenantId"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.id === current,
+                }"
+              />
+              <!-- <copy class="copy" :content="row.beInvitationTenantId" /> -->
             </div>
           </template>
         </el-table-column>
@@ -380,6 +398,19 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
+.rowCopy {
+  width: 20px;
+  display: none;
+}
+.copyId  .current {
+    display: block !important;
+  }
+.el-table__row:hover .rowCopy {
+  display: block;
+}
+.beInvitationTenantId {
+  font-size: 14px;
+}
 // 高度自适应
 .absolute-container {
   position: absolute;
