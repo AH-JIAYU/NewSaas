@@ -508,7 +508,7 @@ const formOption = {
           label="B2B/B2C"
         >
           <template #default="{ row }">
-            <div class="flex-s" style="justify-content: center !important">
+            <div class="flex-s" style="justify-content: center !important;cursor: pointer;">
               <svg
                 v-if="row.b2bStatus && row.b2bStatus === 2"
                 width="15"
