@@ -369,8 +369,8 @@ function handleCurrentChange(val: any) {
               <el-tag style="font-weight: 700;">{{ row.ipBelong.split("/")[1]
                 }}</el-tag>
               &nbsp;&nbsp;
-              <p class="fineBom">{{ row.ipBelong.split("/")[0] }}</p>
-              <span class="c-fx">
+              <p class="fineBom">
+                {{ row.ipBelong.split("/")[0] }}</p>
                 <copy
               :content="row.ipBelong.split('/')[0]"
                 :class="{
@@ -379,7 +379,7 @@ function handleCurrentChange(val: any) {
                 }"
               />
                 <!-- <copy class="copy" :content="row.ipBelong.split('/')[0]" /> -->
-              </span>
+
             </div>
             <el-text v-else>-</el-text>
           </template>
