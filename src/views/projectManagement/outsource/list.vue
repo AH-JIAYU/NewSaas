@@ -572,7 +572,7 @@ function handleCurrentChange(val: any) {
 
 <style scoped lang="scss">
 .projectId {
-  font-size: 14px;
+  font-size: .875rem;
 }
 .copyId  .current {
     display: block !important;

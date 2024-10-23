@@ -1000,7 +1000,7 @@ function handleCurrentChange(val: any) {
 
 .fineSize {
   color: #333;
-  font-size: 14px;
+  font-size: .875rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

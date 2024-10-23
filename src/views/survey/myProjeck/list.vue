@@ -469,7 +469,7 @@ const formOption={
 
 .fineBom {
   color: #777;
-  font-size: 14px;
+  font-size: .875rem;
   white-space: nowrap;
   overflow: hidden;
   font-weight: 700;
@@ -485,7 +485,7 @@ const formOption={
 }
 .withoutUrlSize {
   color: #333;
-  font-size: 14px;
+  font-size: .875rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

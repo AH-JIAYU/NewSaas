@@ -272,7 +272,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .copyId .idFont {
-  font-size:14px;
+  font-size:.875rem;
 }
 .copyId  .current {
     display: block !important;

@@ -756,7 +756,7 @@ function handleMoreOperating(command: string, row: any) {
 
 <style scoped lang="scss">
 .copyId .projectId {
-  font-size:14px;
+  font-size:.875rem;
 }
 .rowCopy {
   width: 20px;

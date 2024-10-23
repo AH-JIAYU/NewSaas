@@ -380,7 +380,7 @@ function handleCurrentChange(val: any) {
 }
 .fineBom {
   text-align: left !important;
-  font-size: 14px;
+  font-size:.875rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

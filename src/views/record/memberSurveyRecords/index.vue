@@ -579,7 +579,7 @@ function handleCurrentChange(val: any) {
 
 <style scoped lang="scss">
 .idFont {
-  font-size: 14px;
+  font-size: .875rem;
 }
 .copyId .idFont {
   display: block !important;

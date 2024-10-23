@@ -501,7 +501,7 @@ function handleCurrentChange(val: any) {
 
 .fineBom {
   text-align: left !important;
-  font-size: 14px;
+  font-size: .875rem;
   font-weight: normal;
   white-space: nowrap;
   overflow: hidden;

@@ -409,7 +409,7 @@ onMounted(() => {
   display: block;
 }
 .beInvitationTenantId {
-  font-size: 14px;
+  font-size: .875rem;
 }
 // 高度自适应
 .absolute-container {

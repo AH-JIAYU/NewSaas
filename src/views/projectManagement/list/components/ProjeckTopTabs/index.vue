@@ -637,8 +637,18 @@ nextTick(() => {
                       <span v-show="item.rateAudit > item.practiceRateAudit">
                         审核率不合格
                       </span>
+
                     </span>
                   </el-option>
+                  <el-button
+
+                        size="small"
+                        class="buttonClass"
+                        @click="AddCustomers"
+                      >
+                        快捷新增
+                        <SvgIcon name="ant-design:plus-outlined"  style="margin-left: 4px"/>
+                      </el-button>
                   <template #empty>
                     <div
                       style="
@@ -1165,6 +1175,20 @@ nextTick(() => {
 </template>
 
 <style lang="scss" scoped>
+.buttonClass {
+  text-align: center;
+  width: 91%;
+  margin:12px;
+height: 32px;
+font-family: PingFang SC, PingFang SC;
+font-weight: 500;
+font-size: .875rem;
+color: #409EFF;
+line-height: 16px;
+background: #F4F8FF;
+border-radius: 4px 4px 4px 4px;
+border: 1px solid #E9EEF3;
+}
 .fx-c {
   display: flex;
   justify-content: space-between;

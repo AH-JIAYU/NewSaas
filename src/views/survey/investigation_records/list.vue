@@ -518,7 +518,7 @@ function handleCurrentChange(val: any) {
 }
 
 .fineBom {
-  font-size: 14px;
+  font-size:.875rem;
   color: #333333;
   white-space: nowrap;
   overflow: hidden;

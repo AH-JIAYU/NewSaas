@@ -393,7 +393,7 @@ const formOption = {
     display: block !important;
   }
 .copyId.projectId {
-  font-size:14px;
+  font-size:.875rem;
 }
 .rowCopy {
   width: 20px;
