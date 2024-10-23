@@ -321,21 +321,18 @@ function handleCurrentChange(val: any) {
             @query-data="queryData" />
         </FormRightPanel>
       </el-row>
-      <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"  highlight-current-row
-        @selection-change="setSelectRows"         @current-change="handleCurrentChange">
+      <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
+        highlight-current-row @selection-change="setSelectRows" @current-change="handleCurrentChange">
         <el-table-column align="left" type="selection" />
         <el-table-column v-if="checkList.includes('id')" width="200" align="left" prop="id" show-overflow-tooltip
           fixed="left" label="点击ID"><template #default="{ row }">
             <el-tag effect="dark" v-if="row.surveySource === 2" type="warning">外部人员</el-tag>
             <div class="copyId flex-s tableSmall">
               <div class="id oneLine idFont"> {{ row.id }}</div>
-              <copy
-                :content="row.id"
-                :class="{
-                  rowCopy: 'rowCopy',
-                  current: row.id === current,
-                }"
-              />
+              <copy :content="row.id" :class="{
+    rowCopy: 'rowCopy',
+    current: row.id === current,
+  }" />
               <!-- <copy class="copy edit" :content="row.id" /> -->
             </div>
           </template>
@@ -346,17 +343,13 @@ function handleCurrentChange(val: any) {
             <div class="copyId flex-s tableSmall" v-if="row.surveySource === 1">
               <div class="oneLine">
                 <span v-if="row.randomIdentityId" class="id oneLine">
-                   {{ row.randomIdentityId }}</span>
+                  {{ row.randomIdentityId }}</span>
                 <span v-else class="id"></span>
               </div>
-              <copy
-              v-if="row.randomIdentityId"
-                :content="row.randomIdentityId"
-                :class="{
-                  rowCopy: 'rowCopy',
-                  current: row.id === current,
-                }"
-              />
+              <copy v-if="row.randomIdentityId" :content="row.randomIdentityId" :class="{
+    rowCopy: 'rowCopy',
+    current: row.id === current,
+  }" />
               <!-- <copy class="copy edit" v-if="row.randomIdentityId" :content="row.randomIdentityId" /> -->
             </div>
           </template>
@@ -369,13 +362,10 @@ function handleCurrentChange(val: any) {
                 <div class="copyId tableSmall flex-s">
                   <div class="id oneLine idFont">{{ row.memberId }}</div>
 
-                  <copy
-                :content="row.memberId"
-                :class="{
-                  rowCopy: 'rowCopy',
-                  current: row.id === current,
-                }"
-              />
+                  <copy :content="row.memberId" :class="{
+    rowCopy: 'rowCopy',
+    current: row.id === current,
+  }" />
 
 
                   <!-- <copy class="copy edit" :content="row.memberId" /> -->
@@ -392,13 +382,10 @@ function handleCurrentChange(val: any) {
               <div v-if="row.memberChildId">
                 <div class="copyId tableSmall flex-s">
                   <div class="id oneLine idFont">{{ row.memberChildId }}</div>
-                  <copy
-                :content="row.memberChildId"
-                :class="{
-                  rowCopy: 'rowCopy',
-                  current: row.id === current,
-                }"
-              />
+                  <copy :content="row.memberChildId" :class="{
+    rowCopy: 'rowCopy',
+    current: row.id === current,
+  }" />
 
                   <!-- <copy class="copy edit" :content="row.memberChildId" /> -->
                 </div>
@@ -414,17 +401,13 @@ function handleCurrentChange(val: any) {
             <div class="copyId tableSmall flex-s" v-if="row.surveySource === 1">
               <div class="oneLine">
                 <span v-if="row.tenantSupplierId" class="id oneLine idFont">
-                 {{ row.tenantSupplierId }}</span>
+                  {{ row.tenantSupplierId }}</span>
                 <span v-else class="id"></span>
               </div>
-              <copy
-              v-if="row.tenantSupplierId"
-                :content="row.tenantSupplierId"
-                :class="{
-                  rowCopy: 'rowCopy',
-                  current: row.id === current,
-                }"
-              />
+              <copy v-if="row.tenantSupplierId" :content="row.tenantSupplierId" :class="{
+    rowCopy: 'rowCopy',
+    current: row.id === current,
+  }" />
               <!-- <copy class="copy edit" v-if="row.tenantSupplierId" :content="row.tenantSupplierId" /> -->
             </div>
           </template>
@@ -435,14 +418,10 @@ function handleCurrentChange(val: any) {
             <div class="tableBig oneLine">名称: {{ row.projectName }}</div>
             <div class="copyId tableSmall flex-s">
               <div class="id oneLine "> {{ row.projectId }}</div>
-              <copy
-              v-if="row.projectId"
-                :content="row.projectId"
-                :class="{
-                  rowCopy: 'rowCopy',
-                  current: row.id === current,
-                }"
-              />
+              <copy v-if="row.projectId" :content="row.projectId" :class="{
+    rowCopy: 'rowCopy',
+    current: row.id === current,
+  }" />
               <!-- <copy class="copy edit" v-if="row.projectId" :content="row.projectId" /> -->
             </div>
           </template>
@@ -461,14 +440,10 @@ function handleCurrentChange(val: any) {
               <div class="id oneLine">
                 {{ row.ipBelong.split("/")[0] }}
               </div>
-              <copy
-
-               :content="row.ipBelong.split('/')[0]"
-                :class="{
-                  rowCopy: 'rowCopy',
-                  current: row.id === current,
-                }"
-              />
+              <copy :content="row.ipBelong.split('/')[0]" :class="{
+    rowCopy: 'rowCopy',
+    current: row.id === current,
+  }" />
               <!-- <copy class="copy edit" :content="row.ipBelong.split('/')[0]" /> -->
             </div>
           </template>
@@ -522,7 +497,7 @@ function handleCurrentChange(val: any) {
           </template>
         </el-table-column>
         <ElTableColumn v-if="checkList.includes('surveyStatus')" align="left" show-overflow-tooltip fixed="right"
-          width="130" prop="" label="调查状态">
+          width="180" prop="" label="调查状态">
           <template #default="{ row }">
             <el-tag effect="dark" style="background-color: #fb6868; border: none" v-if="row.surveyStatus === 3"
               class="mx-1" type="primary">配额满</el-tag>
@@ -534,10 +509,14 @@ function handleCurrentChange(val: any) {
               class="mx-1" type="warning">安全终止</el-tag>
             <el-tag effect="dark" style="background-color: #e1e1e1; border: none" v-if="row.surveyStatus === 5"
               class="mx-1">未完成</el-tag>
-            <el-text v-if="row.settlementStatus">
-              <div v-if="row.settlementStatus === 1" style="color:#4797fb;" class="i-healthicons:yes w-1.3em h-1.3em"></div>
-              <div v-if="row.settlementStatus === 2" style="color:#f1756c;" class="i-healthicons:no w-1.3em h-1.3em"></div>
-            </el-text>
+              <div v-if="row.settlementStatus === 0 && row.surveyStatus === 1 && (row.viceStatus === 3 || row.viceStatus === 4 || row.viceStatus === 5 || row.viceStatus === 6)" style="color:#777;" class="i-healthicons:no w-1.3em h-1.3em"></div>
+            <div
+              v-if="row.settlementStatus === 1 && (row.viceStatus === 3 || row.viceStatus === 4 || row.viceStatus === 5 || row.viceStatus === 6)"
+              style="color:#4797fb;" class="i-healthicons:yes w-1.3em h-1.3em">
+            </div>
+            <div
+              v-if="row.settlementStatus === 2 && (row.viceStatus === 3 || row.viceStatus === 4 || row.viceStatus === 5 || row.viceStatus === 6)"
+              style="color:#f1756c;" class="i-healthicons:no w-1.3em h-1.3em"></div>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="checkList.includes('viceStatus')" align="left" show-overflow-tooltip fixed="right"
@@ -593,16 +572,20 @@ function handleCurrentChange(val: any) {
 .idFont {
   font-size: .875rem;
 }
+
 .copyId .idFont {
   display: block !important;
 }
+
 .rowCopy {
   width: 20px;
   display: none;
 }
+
 .el-table__row:hover .rowCopy {
   display: block;
 }
+
 // 高度自适应
 .absolute-container {
   position: absolute;
@@ -686,7 +669,7 @@ function handleCurrentChange(val: any) {
 
 :deep {
   .el-tag {
-    width: 4.125rem;
+    min-width: 4.125rem;
   }
 }
 </style>
