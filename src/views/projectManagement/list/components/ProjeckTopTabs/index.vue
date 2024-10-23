@@ -194,18 +194,39 @@ function isHieght() {
 const dialogImageUrl = ref("");
 const dialogVisible = ref(false);
 const fileList = ref<any>([]); // 上传
-
+// 是否是图片
+const isItAPicture = (file: any) => {
+  const fileSuffix = file.name.substring(file.name.lastIndexOf(".") + 1);
+  const whiteList = ["jpg", "jpeg", "png", "gif"];
+  // 是否 非图片格式
+  const isImage = whiteList.indexOf(fileSuffix) === -1;
+  return isImage;
+};
+// 上传前
+const beforeUpload = (file: any) => {
+  const isImage = isItAPicture(file);
+  if (isImage) {
+    ElMessage.warning({
+      message: "只能上传图片文件JPG，JPEG，PNG，GIF",
+      center: true,
+    });
+  }
+  return !isImage;
+};
 // 删除
 const handleRemove: any = async (uploadFile: any, uploadFiles: any) => {
   localToptTab.value.descriptionUrl = uploadFiles.map((item: any) => item.name);
-  const { status } = await fileApi.delete({
-    fileName: uploadFile.name,
-  });
-  status === 1 &&
-    ElMessage.success({
-      message: "删除成功",
-      center: true,
+  // 当上传前，判断格式不通过时，会走删除事件，过滤掉后图片并没有走上传接口，也就不需要走删除接口
+  if (!isItAPicture(uploadFile)) {
+    const { status } = await fileApi.delete({
+      fileName: uploadFile.name,
     });
+    status === 1 &&
+      ElMessage.success({
+        message: "删除成功",
+        center: true,
+      });
+  }
 };
 // 上传图片成功
 const handleSuccess: any = (uploadFile: any, uploadFiles: any) => {
@@ -616,8 +637,18 @@ nextTick(() => {
                       <span v-show="item.rateAudit > item.practiceRateAudit">
                         审核率不合格
                       </span>
+
                     </span>
                   </el-option>
+                  <el-button
+
+                        size="small"
+                        class="buttonClass"
+                        @click="AddCustomers"
+                      >
+                        快捷新增
+                        <SvgIcon name="ant-design:plus-outlined"  style="margin-left: 4px"/>
+                      </el-button>
                   <template #empty>
                     <div
                       style="
@@ -892,6 +923,8 @@ nextTick(() => {
                 list-type="picture-card"
                 :drag="true"
                 :limit="10"
+                accept=".png, .jpg, .jpeg, .gif"
+                :before-upload="beforeUpload"
                 :on-preview="handlePictureCardPreview"
                 :on-remove="handleRemove"
                 :on-success="handleSuccess"
@@ -1086,14 +1119,11 @@ nextTick(() => {
               <el-form-item label="" class="flex m-0">
                 <template #label>
                   <div>
-                    允许重复参与<el-tooltip
-                      class="tooltips"
-                      placement="top"
-                    >
-                    <template #content>
-                      <div>开启：ip和随机id都可以重复</div>
-                      <div>关闭：ip和随机id都不可以重复</div>
-                    </template>
+                    允许重复参与<el-tooltip class="tooltips" placement="top">
+                      <template #content>
+                        <div>开启：ip和随机id都可以重复</div>
+                        <div>关闭：ip和随机id都不可以重复</div>
+                      </template>
                       <SvgIcon class="SvgIcon2" name="i-ri:question-line" />
                     </el-tooltip>
                   </div>
@@ -1145,6 +1175,20 @@ nextTick(() => {
 </template>
 
 <style lang="scss" scoped>
+.buttonClass {
+  text-align: center;
+  width: 91%;
+  margin:12px;
+height: 32px;
+font-family: PingFang SC, PingFang SC;
+font-weight: 500;
+font-size: .875rem;
+color: #409EFF;
+line-height: 16px;
+background: #F4F8FF;
+border-radius: 4px 4px 4px 4px;
+border: 1px solid #E9EEF3;
+}
 .fx-c {
   display: flex;
   justify-content: space-between;

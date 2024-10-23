@@ -2,9 +2,9 @@
 import { reactive, ref } from "vue";
 import deletes from "./components/Delete/index.vue";
 import detail from "./components/Details/index.vue";
-import edit from './components/Edit/index.vue'
+import edit from "./components/Edit/index.vue";
 import api from "@/api/modules/projectManagement_materials";
-import empty from '@/assets/images/empty.png'
+import empty from "@/assets/images/empty.png";
 
 defineOptions({
   name: "materials",
@@ -26,8 +26,8 @@ const editsRef = ref();
 // 右侧工具栏配置变量
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const checkList = ref<any>([]);
-const formSearchList = ref<any>()//表单排序配置
-const formSearchName = ref<string>('formSearch-materials')// 表单排序name
+const formSearchList = ref<any>(); //表单排序配置
+const formSearchName = ref<string>("formSearch-materials"); // 表单排序name
 const lineHeight = ref<any>("default");
 const stripe = ref(false);
 const selectRows = ref<any>([]);
@@ -60,15 +60,15 @@ const queryForm = ref<any>({
 });
 const list = ref<any>([]);
 
-const tabs1Current = ref<any>()//表格当前选中
+const tabs1Current = ref<any>(); //表格当前选中
 function handleTabs1CurrentChange(val: any) {
-  if (val) tabs1Current.value = val.projectId
-  else tabs1Current.value = ''
+  if (val) tabs1Current.value = val.projectId;
+  else tabs1Current.value = "";
 }
-const tabs2Current = ref<any>()//表格当前选中
+const tabs2Current = ref<any>(); //表格当前选中
 function handleTabs2CurrentChange(val: any) {
-  if (val) tabs2Current.value = val.projectId
-  else tabs2Current.value = ''
+  if (val) tabs2Current.value = val.projectId;
+  else tabs2Current.value = "";
 }
 
 // 详情
@@ -79,9 +79,8 @@ function projectDetails(row: any) {
 }
 // 快捷编辑
 function quickEdit(row: any) {
-  editsRef.value.showEdit(row)
+  editsRef.value.showEdit(row);
 }
-
 
 // 删除数据
 function deleteData(row: any) {
@@ -123,14 +122,13 @@ async function fetchData() {
     pagination.value.total = res.data.total;
     listLoading.value = false;
   } catch (error) {
-
   } finally {
     listLoading.value = false;
   }
 }
 const getDataChange = () => {
   if (queryForm.value.type === 1) {
-    checkList.value = []
+    checkList.value = [];
     columns.value = [
       {
         label: "会员ID",
@@ -167,7 +165,7 @@ const getDataChange = () => {
     });
     fetchData();
   } else {
-    checkList.value = []
+    checkList.value = [];
     columns.value = [
       {
         label: "子会员ID",
@@ -213,22 +211,47 @@ onMounted(() => {
   });
   fetchData();
   formSearchList.value = [
-    { index: 1, show: true, type: 'input', modelName: 'memberChildId', placeholder: '会员ID' },
-    { index: 2, show: true, type: 'input', modelName: 'projectId', placeholder: '项目ID' },
-    { index: 3, show: true, type: 'input', modelName: 'projectName', placeholder: '项目名称' }
-  ]
+    {
+      index: 1,
+      show: true,
+      type: "input",
+      modelName: "memberChildId",
+      placeholder: "会员ID",
+    },
+    {
+      index: 2,
+      show: true,
+      type: "input",
+      modelName: "projectId",
+      placeholder: "项目ID",
+    },
+    {
+      index: 3,
+      show: true,
+      type: "input",
+      modelName: "projectName",
+      placeholder: "项目名称",
+    },
+  ];
 });
 </script>
 
 <template>
-  <div :class="{
-    'absolute-container': tableAutoHeight,
-  }">
+  <div
+    :class="{
+      'absolute-container': tableAutoHeight,
+    }"
+  >
     <PageMain>
       <el-tabs v-model="queryForm.type" @tab-change="getDataChange">
         <el-tab-pane label="会员素材" :name="1">
-          <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange"
-            @onReset="onReset" :model="queryForm" />
+          <FormSearch
+            :formSearchList="formSearchList"
+            :formSearchName="formSearchName"
+            @currentChange="currentChange"
+            @onReset="onReset"
+            :model="queryForm"
+          />
 
           <!-- <SearchBar :show-toggle="false">
             <template #default="{ fold, toggle }">
@@ -274,42 +297,95 @@ onMounted(() => {
             <FormLeftPanel />
             <FormRightPanel>
               <el-button size="default" @click=""> 导出 </el-button>
-              <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight"
-                v-model:checkList="checkList" v-model:columns="columns" v-model:line-height="lineHeight"
-                v-model:stripe="stripe" style="margin-left: 12px" @query-data="currentChange" />
+              <TabelControl
+                v-model:border="border"
+                v-model:tableAutoHeight="tableAutoHeight"
+                v-model:checkList="checkList"
+                v-model:columns="columns"
+                v-model:line-height="lineHeight"
+                v-model:stripe="stripe"
+                style="margin-left: 12px"
+                @query-data="currentChange"
+              />
             </FormRightPanel>
           </el-row>
-          <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="id" :data="list"
-            :border="border" :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows" highlight-current-row
-            @current-change="handleTabs1CurrentChange">
+          <el-table
+            ref="tableSortRef"
+            v-loading="listLoading"
+            style="margin-top: 10px"
+            row-key="id"
+            :data="list"
+            :border="border"
+            :size="lineHeight"
+            :stripe="stripe"
+            @selection-change="setSelectRows"
+            highlight-current-row
+            @current-change="handleTabs1CurrentChange"
+          >
             <el-table-column align="left" type="selection" />
-            <el-table-column v-if="checkList.includes('memberChildId')" show-overflow-tooltip prop="memberChildId"
-              align="left" label="会员ID">
+            <el-table-column
+              v-if="checkList.includes('memberChildId')"
+              show-overflow-tooltip
+              prop="memberChildId"
+              align="left"
+              label="会员ID"
+            >
               <template #default="{ row }">
                 <div class="copyId tableSmall">
-                  <div class="id oneLine">ID: {{ row.memberChildId }}</div>
-                  <copy class="copy" :content="row.memberChildId" />
+                  <div class="id oneLine projectId">
+                    {{ row.memberChildId }}
+                  </div>
+                  <copy
+                    :content="row.memberChildId"
+                    :class="{
+                      rowCopy: 'rowCopy',
+                      current: row.projectId === tabs1Current,
+                    }"
+                  />
+                  <!-- <copy class="copy" :content="row.memberChildId" /> -->
                 </div>
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('memberChildName')" show-overflow-tooltip prop="memberChildName"
-              align="left" label="会员名称">
+            <el-table-column
+              v-if="checkList.includes('memberChildName')"
+              show-overflow-tooltip
+              prop="memberChildName"
+              align="left"
+              label="会员名称"
+            >
               <template #default="{ row }">
                 <div class="tableBig">{{ row.memberChildName }}</div>
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('projectName')" show-overflow-tooltip prop="projectName"
-              align="left" label="项目名称">
+            <el-table-column
+              v-if="checkList.includes('projectName')"
+              show-overflow-tooltip
+              prop="projectName"
+              align="left"
+              label="项目名称"
+            >
               <template #default="{ row }">
                 <div class="tableBig">{{ row.projectName }}</div>
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip prop="projectId" align="left"
-              label="项目ID">
+            <el-table-column
+              v-if="checkList.includes('projectId')"
+              show-overflow-tooltip
+              prop="projectId"
+              align="left"
+              label="项目ID"
+            >
               <template #default="{ row }">
                 <div class="copyId tableSmall">
-                  <div class="id oneLine">ID: {{ row.projectId }}</div>
-                  <copy class="copy" :content="row.projectId" />
+                  <div class="id oneLine projectId">{{ row.projectId }}</div>
+                  <copy
+                    :content="row.memberChildId"
+                    :class="{
+                      rowCopy: 'rowCopy',
+                      current: row.projectId === tabs1Current,
+                    }"
+                  />
+                  <!-- <copy class="copy" :content="row.projectId" /> -->
                 </div>
               </template>
             </el-table-column>
@@ -320,26 +396,52 @@ onMounted(() => {
                 </el-tooltip>
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('instructions')" show-overflow-tooltip prop="instructions"
-              align="left" label="说明">
+            <el-table-column
+              v-if="checkList.includes('instructions')"
+              show-overflow-tooltip
+              prop="instructions"
+              align="left"
+              label="说明"
+            >
               <template #default="{ row }">
                 <div class="flex-c tableBig">
-                  <div class="oneLine" style="width: calc(100% - 20px);">
+                  <div class="oneLine" style="width: calc(100% - 20px)">
                     {{ row.instructions ? row.instructions : "-" }}
                   </div>
-                  <SvgIcon @click="quickEdit(row)" :class="{ edit: 'edit', current: row.projectId === tabs1Current }"
-                    name="i-ep:edit" color="#409eff" />
+                  <SvgIcon
+                    @click="quickEdit(row)"
+                    :class="{
+                      edit: 'edit',
+                      current: row.projectId === tabs1Current,
+                    }"
+                    name="i-ep:edit"
+                    color="#409eff"
+                  />
                 </div>
-
               </template>
             </el-table-column>
-            <el-table-column align="left" fixed="right" label="操作" width="240">
+            <el-table-column
+              align="left"
+              fixed="right"
+              label="操作"
+              width="240"
+            >
               <template #default="{ row }">
                 <ElSpace>
-                  <el-button type="primary" plain size="small" @click="projectDetails(row)">
+                  <el-button
+                    type="primary"
+                    plain
+                    size="small"
+                    @click="projectDetails(row)"
+                  >
                     查看
                   </el-button>
-                  <el-button type="danger" plain size="small" @click="deleteData(row)">
+                  <el-button
+                    type="danger"
+                    plain
+                    size="small"
+                    @click="deleteData(row)"
+                  >
                     删除
                   </el-button>
                 </ElSpace>
@@ -349,23 +451,50 @@ onMounted(() => {
               <el-empty :image="empty" :image-size="300" />
             </template>
           </el-table>
-          <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
-            :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-            background @size-change="sizeChange" @current-change="currentChange" />
+          <ElPagination
+            :current-page="pagination.page"
+            :total="pagination.total"
+            :page-size="pagination.size"
+            :page-sizes="pagination.sizes"
+            :layout="pagination.layout"
+            :hide-on-single-page="false"
+            class="pagination"
+            background
+            @size-change="sizeChange"
+            @current-change="currentChange"
+          />
         </el-tab-pane>
         <el-tab-pane label="子会员素材" :name="2">
           <SearchBar :show-toggle="false">
             <template #default="{ fold, toggle }">
-              <el-form :model="queryForm.select" size="default" label-width="100px" inline-message inline
-                class="search-form">
+              <el-form
+                :model="queryForm.select"
+                size="default"
+                label-width="100px"
+                inline-message
+                inline
+                class="search-form"
+              >
                 <el-form-item label="">
-                  <el-input v-model="queryForm.memberChildId" clearable placeholder="会员ID" />
+                  <el-input
+                    v-model="queryForm.memberChildId"
+                    clearable
+                    placeholder="会员ID"
+                  />
                 </el-form-item>
                 <el-form-item label="">
-                  <el-input v-model="queryForm.projectId" clearable placeholder="项目ID" />
+                  <el-input
+                    v-model="queryForm.projectId"
+                    clearable
+                    placeholder="项目ID"
+                  />
                 </el-form-item>
                 <el-form-item label="">
-                  <el-input v-model="queryForm.projectName" clearable placeholder="项目名称" />
+                  <el-input
+                    v-model="queryForm.projectName"
+                    clearable
+                    placeholder="项目名称"
+                  />
                 </el-form-item>
                 <ElFormItem>
                   <ElButton type="primary" @click="currentChange()">
@@ -382,7 +511,9 @@ onMounted(() => {
                   </ElButton>
                   <ElButton link @click="toggle" disabled>
                     <template #icon>
-                      <SvgIcon :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'" />
+                      <SvgIcon
+                        :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
+                      />
                     </template>
                     {{ fold ? "展开" : "收起" }}
                   </ElButton>
@@ -395,43 +526,96 @@ onMounted(() => {
             <FormLeftPanel />
             <FormRightPanel>
               <el-button size="default" @click=""> 导出 </el-button>
-              <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight"
-                v-model:checkList="checkList" v-model:columns="columns" v-model:line-height="lineHeight"
-                v-model:stripe="stripe" style="margin-left: 12px" @query-data="currentChange" />
+              <TabelControl
+                v-model:border="border"
+                v-model:tableAutoHeight="tableAutoHeight"
+                v-model:checkList="checkList"
+                v-model:columns="columns"
+                v-model:line-height="lineHeight"
+                v-model:stripe="stripe"
+                style="margin-left: 12px"
+                @query-data="currentChange"
+              />
             </FormRightPanel>
           </el-row>
-          <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="id" :data="list"
-            :border="border" :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows" highlight-current-row
-            @current-change="handleTabs2CurrentChange">
+          <el-table
+            ref="tableSortRef"
+            v-loading="listLoading"
+            style="margin-top: 10px"
+            row-key="id"
+            :data="list"
+            :border="border"
+            :size="lineHeight"
+            :stripe="stripe"
+            @selection-change="setSelectRows"
+            highlight-current-row
+            @current-change="handleTabs2CurrentChange"
+          >
             <el-table-column type="selection" />
 
-            <el-table-column v-if="checkList.includes('memberChildId')" show-overflow-tooltip prop="memberChildId"
-              align="left" label="子会员ID">
+            <el-table-column
+              v-if="checkList.includes('memberChildId')"
+              show-overflow-tooltip
+              prop="memberChildId"
+              align="left"
+              label="子会员ID"
+            >
               <template #default="{ row }">
                 <div class="copyId tableSmall">
-                  <div class="id oneLine">ID: {{ row.memberChildId }}</div>
-                  <copy class="copy" :content="row.memberChildId" />
+                  <div class="id oneLine projectId">
+                    {{ row.memberChildId }}
+                  </div>
+                  <copy
+                    :content="row.memberChildId"
+                    :class="{
+                      rowCopy: 'rowCopy',
+                      current: row.projectId === tabs2Current,
+                    }"
+                  />
+                  <!-- <copy class="copy" :content="row.memberChildId" /> -->
                 </div>
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('memberChildName')" show-overflow-tooltip prop="memberChildName"
-              align="left" label="子会员名称">
+            <el-table-column
+              v-if="checkList.includes('memberChildName')"
+              show-overflow-tooltip
+              prop="memberChildName"
+              align="left"
+              label="子会员名称"
+            >
               <template #default="{ row }">
                 <div class="tableBig">{{ row.memberChildName }}</div>
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('projectName')" show-overflow-tooltip prop="projectName"
-              align="left" label="项目名称">
+            <el-table-column
+              v-if="checkList.includes('projectName')"
+              show-overflow-tooltip
+              prop="projectName"
+              align="left"
+              label="项目名称"
+            >
               <template #default="{ row }">
                 <div class="tableBig">{{ row.projectName }}</div>
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip prop="projectId" align="left"
-              label="项目ID">
+            <el-table-column
+              v-if="checkList.includes('projectId')"
+              show-overflow-tooltip
+              prop="projectId"
+              align="left"
+              label="项目ID"
+            >
               <template #default="{ row }">
                 <div class="copyId tableSmall">
-                  <div class="id oneLine">ID: {{ row.projectId }}</div>
-                  <copy class="copy" :content="row.projectId" />
+                  <div class="id oneLine projectId">{{ row.projectId }}</div>
+                  <copy
+                    :content="row.projectId"
+                    :class="{
+                      rowCopy: 'rowCopy',
+                      current: row.projectId === tabs2Current,
+                    }"
+                  />
+                  <!-- <copy class="copy" :content="row.projectId" /> -->
                 </div>
               </template>
             </el-table-column>
@@ -444,26 +628,52 @@ onMounted(() => {
                 </el-tooltip>
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('instructions')" show-overflow-tooltip prop="instructions"
-              align="left" label="说明">
+            <el-table-column
+              v-if="checkList.includes('instructions')"
+              show-overflow-tooltip
+              prop="instructions"
+              align="left"
+              label="说明"
+            >
               <template #default="{ row }">
                 <div class="flex-c tableBig">
-                  <div class="oneLine" style="width: calc(100% - 20px);">
+                  <div class="oneLine" style="width: calc(100% - 20px)">
                     {{ row.instructions ? row.instructions : "-" }}
                   </div>
-                  <SvgIcon @click="quickEdit(row)" :class="{ edit: 'edit', current: row.projectId === tabs2Current }"
-                    name="i-ep:edit" color="#409eff" />
+                  <SvgIcon
+                    @click="quickEdit(row)"
+                    :class="{
+                      edit: 'edit',
+                      current: row.projectId === tabs2Current,
+                    }"
+                    name="i-ep:edit"
+                    color="#409eff"
+                  />
                 </div>
               </template>
-
             </el-table-column>
-            <el-table-column align="left" fixed="right" label="操作" width="240">
+            <el-table-column
+              align="left"
+              fixed="right"
+              label="操作"
+              width="240"
+            >
               <template #default="{ row }">
                 <ElSpace>
-                  <el-button type="primary" plain size="small" @click="projectDetails(row)">
+                  <el-button
+                    type="primary"
+                    plain
+                    size="small"
+                    @click="projectDetails(row)"
+                  >
                     查看
                   </el-button>
-                  <el-button type="danger" plain size="small" @click="deleteData(row)">
+                  <el-button
+                    type="danger"
+                    plain
+                    size="small"
+                    @click="deleteData(row)"
+                  >
                     删除
                   </el-button>
                 </ElSpace>
@@ -473,9 +683,18 @@ onMounted(() => {
               <el-empty :image="empty" :image-size="300" />
             </template>
           </el-table>
-          <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
-            :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-            background @size-change="sizeChange" @current-change="currentChange" />
+          <ElPagination
+            :current-page="pagination.page"
+            :total="pagination.total"
+            :page-size="pagination.size"
+            :page-sizes="pagination.sizes"
+            :layout="pagination.layout"
+            :hide-on-single-page="false"
+            class="pagination"
+            background
+            @size-change="sizeChange"
+            @current-change="currentChange"
+          />
         </el-tab-pane>
       </el-tabs>
       <deletes ref="deleteRef" />
@@ -486,6 +705,12 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
+.copyId .projectId {
+  font-size: .875rem;
+}
+.copyId  .current {
+    display: block !important;
+  }
 // 高度自适应
 .absolute-container {
   position: absolute;
@@ -538,7 +763,7 @@ onMounted(() => {
   align-items: center;
   width: 100%;
 
-  >div:nth-of-type(1) {
+  > div:nth-of-type(1) {
     width: calc(100% - 25px);
     flex-shrink: 0;
   }
@@ -556,7 +781,13 @@ onMounted(() => {
     display: block !important;
   }
 }
-
+.rowCopy {
+  width: 20px;
+  display: none;
+}
+.el-table__row:hover .rowCopy {
+  display: block;
+}
 .el-table__row:hover .edit {
   display: block;
 }

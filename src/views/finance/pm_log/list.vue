@@ -199,6 +199,12 @@ onBeforeUnmount(() => {
     eventBus.off("get-data-list");
   }
 });
+const current = ref<any>(); //表格当前选中
+
+function handleCurrentChange(val: any) {
+  if (val) current.value = val.organizationalStructureId;
+  else current.value = "";
+}
 </script>
 
 <template>
@@ -218,14 +224,21 @@ onBeforeUnmount(() => {
       </el-row>
       <ElTable v-loading="data.loading" :border="data.border" :size="data.lineHeight" :stripe="data.stripe" class="my-4"
         :data="data.dataList" highlight-current-row height="100%" @sort-change="sortChange"
-        @selection-change="data.batch.selectionDataList = $event">
+        @selection-change="data.batch.selectionDataList = $event"  @current-change="handleCurrentChange">
         <el-table-column align="left" type="selection" />
         <ElTableColumn v-if="data.batch.enable" type="selection" show-overflow-tooltip align="left" fixed />
         <ElTableColumn v-if="data.checkList.includes('id')" show-overflow-tooltip align="left" prop="id" label="部门ID">
           <template #default="{ row }">
             <div class="copyId tableSmall">
-              <div class="id oneLine ">ID: {{ row.organizationalStructureId }}</div>
-              <copy class="copy" :content="row.organizationalStructureId" />
+              <div class="id oneLine idFont">{{ row.organizationalStructureId }}</div>
+              <copy
+                :content="row.organizationalStructureId"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.organizationalStructureId === current,
+                }"
+              />
+              <!-- <copy class="copy" :content="row.organizationalStructureId" /> -->
             </div>
           </template>
         </ElTableColumn>
@@ -298,6 +311,22 @@ onBeforeUnmount(() => {
 </template>
 
 <style lang="scss" scoped>
+.copyId .idFont {
+  font-size:.875rem;
+}
+.copyId  .current {
+    display: block !important;
+  }
+.rowCopy {
+  width: 20px;
+  display: none;
+}
+.copyId  .current {
+    display: block !important;
+  }
+.el-table__row:hover .rowCopy {
+  display: block;
+}
 .absolute-container {
   position: absolute;
   width: 100%;

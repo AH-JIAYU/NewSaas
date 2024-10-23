@@ -152,7 +152,8 @@ const formOption={
         @selection-change="setSelectRows">
         <el-table-column align="left" type="selection" />
         <el-table-column v-if="checkList.includes('projectQuestionnaireClickId')" align="left"
-          prop="projectQuestionnaireClickId" show-overflow-tooltip label="点击ID"><template #default="{ row }">
+          prop="projectQuestionnaireClickId" show-overflow-tooltip label="点击ID">
+          <template #default="{ row }">
             {{
     row.projectQuestionnaireClickId
       ? row.projectQuestionnaireClickId

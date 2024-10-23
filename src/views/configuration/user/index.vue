@@ -307,6 +307,12 @@ function onReset() {
   });
   getUserList();
 }
+const current = ref<any>(); //表格当前选中
+
+function handleCurrentChange(val: any) {
+  if (val) current.value = val.id;
+  else current.value = "";
+}
 </script>
 
 <template>
@@ -359,11 +365,11 @@ function onReset() {
               </el-col>
             </el-row>
             <ElTable ref="userItemRef" :data="userForm.dataList" :border="userForm.border" :size="userForm.lineHeight"
-              :stripe="userForm.stripe" highlight-current-row height="100%" @sort-change="sortChange"
+              :stripe="userForm.stripe" highlight-current-row height="100%" @sort-change="sortChange"    @current-change="handleCurrentChange"
               @selection-change="userForm.selectionDataList = $event" row-key="id" default-expand-all
               @select="selectChange">
               <ElTableColumn type="selection" align="left" fixed />
-              <ElTableColumn v-if="userForm.checkList.includes('active')" align="left" prop="active" label="状态">
+              <ElTableColumn v-if="userForm.checkList.includes('active')" align="left" prop="active" label="状态" width="84">
                 <template #default="scope">
                   <ElSwitch v-model="scope.row.active" inline-prompt active-text="启用" inactive-text="禁用"
                     :before-change="() => onChangeStatus(scope.row)" />
@@ -372,8 +378,26 @@ function onReset() {
               <ElTableColumn v-if="userForm.checkList.includes('id')" align="left" width="180" prop="id" label="员工ID">
                 <template #default="{ row }">
                   <div class="copyId tableSmall">
-                    <div class="id oneLine ">ID: {{ row.id }}</div>
-                    <copy class="copy" :content="row.id" />
+                    <div class="id oneLine idFont">
+                      <el-tooltip
+                  effect="dark"
+                  :content="row.id"
+                  placement="top-start"
+                >
+                  {{ row.id }}
+                </el-tooltip>
+
+
+
+                      </div>
+                      <copy
+                :content="row.id"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.id === current,
+                }"
+              />
+
                   </div>
                 </template>
               </ElTableColumn>
@@ -459,6 +483,22 @@ function onReset() {
 </template>
 
 <style lang="scss" scoped>
+.copyId .idFont {
+font-size: .875rem;
+}
+.copyId  .current {
+    display: block !important;
+  }
+.rowCopy {
+  width: 20px;
+  display: none;
+}
+.copyId  .current {
+    display: block !important;
+  }
+.el-table__row:hover .rowCopy {
+  display: block;
+}
 .absolute-container {
   position: absolute;
   display: flex;

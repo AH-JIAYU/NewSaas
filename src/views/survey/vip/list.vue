@@ -207,6 +207,13 @@ const formOption={
   memberStatus:()=>[{ label: '关闭', value: 1 }, { label: '开启', value: 2 }],
   memberGroupId:()=>data.vipGroupList,
 }
+const current = ref<any>(); //表格当前选中
+
+function handleCurrentChange(val: any) {
+  if (val) current.value = val.memberId;
+  else current.value = "";
+  // console.log(current.value,'current.value')
+}
 </script>
 
 <template>
@@ -228,9 +235,9 @@ const formOption={
         </FormRightPanel>
       </el-row>
       <el-table v-loading="listLoading" :border="border" :data="data.list" :size="lineHeight" :stripe="stripe"
-        @selection-change="setSelectRows">
+        @selection-change="setSelectRows" @current-change="handleCurrentChange"    highlight-current-row>
         <el-table-column align="left" type="selection" />
-        <el-table-column align="left" v-if="checkList.includes('memberStatus')" show-overflow-tooltip label="会员状态">
+        <el-table-column align="left" v-if="checkList.includes('memberStatus')" show-overflow-tooltip label="会员状态" width="84">
           <template #default="{ row }">
             <ElSwitch v-if="row.memberStatus === 3" v-model="row.memberStatus" inline-prompt :inactive-value="3"
               :active-value="2" inactive-text="待审核" active-text="启用" @change="changeState($event, row.memberId)" />
@@ -238,7 +245,7 @@ const formOption={
               inactive-text="禁用" active-text="启用" @change="changeState($event, row.memberId)" />
           </template>
         </el-table-column>
-        <el-table-column align="left" v-if="checkList.includes('randomStatus')" show-overflow-tooltip label="随机身份">
+        <el-table-column align="left" v-if="checkList.includes('randomStatus')" show-overflow-tooltip label="随机身份" width="84">
           <template #default="{ row }">
             <ElSwitch v-model="row.randomStatus" inline-prompt :inactive-value="1" :active-value="2" inactive-text="禁用"
               active-text="启用" @change="changeRandomState($event, row.memberId)" />
@@ -248,9 +255,16 @@ const formOption={
           show-overflow-tooltip label="会员ID">
           <template #default="{ row }">
             <div v-if="row.memberId" class="hoverSvg">
-              <p class="fineBom">ID：{{ row.memberId }}</p>
+              <p class="fineBom">{{ row.memberId }}</p>
               <span class="c-fx">
-                <copy class="copy" :content="row.memberId" />
+                <copy
+                :content="row.memberId"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.memberId === current,
+                }"
+              />
+                <!-- <copy class="copy" :content="row.memberId" /> -->
               </span>
             </div>
             <el-text v-else>-</el-text>
@@ -428,6 +442,16 @@ const formOption={
 </template>
 
 <style scoped lang="scss">
+.rowCopy {
+  width: 20px;
+  display: none;
+}
+ .current {
+    display: block !important;
+  }
+.el-table__row:hover .rowCopy {
+  display: block;
+}
 // 高度自适应
 .absolute-container {
   position: absolute;
@@ -476,7 +500,7 @@ const formOption={
 
 .fineBom {
   text-align: left !important;
-  font-size: 12px;
+  font-size: .875rem;
   font-weight: normal;
   white-space: nowrap;
   overflow: hidden;

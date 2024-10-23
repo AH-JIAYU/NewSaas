@@ -115,6 +115,7 @@ function setSelectRows(value: any) {
 }
 
 const current = ref<any>(); //表格当前选中
+
 function handleCurrentChange(val: any) {
   if (val) current.value = val.projectId;
   else current.value = "";
@@ -431,13 +432,13 @@ function handleMoreOperating(command: string, row: any) {
         >
           <template #default="{ row }">
             <div class="copyId">
-              <div class="id oneLine tableSmall">
+              <div class="id oneLine tableSmall projectId">
                 <el-tooltip
                   effect="dark"
                   :content="row.projectId"
                   placement="top-start"
                 >
-                  ID:{{ row.projectId }}
+                  {{ row.projectId }}
                 </el-tooltip>
 
 
@@ -754,10 +755,16 @@ function handleMoreOperating(command: string, row: any) {
 </template>
 
 <style scoped lang="scss">
+.copyId .projectId {
+  font-size:.875rem;
+}
 .rowCopy {
   width: 20px;
   display: none;
 }
+.copyId  .current {
+    display: block !important;
+  }
 .el-table__row:hover .rowCopy {
   display: block;
 }

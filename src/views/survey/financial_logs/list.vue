@@ -234,6 +234,13 @@ onBeforeUnmount(() => {
     eventBus.off("get-data-list");
   }
 });
+const current = ref<any>(); //表格当前选中
+
+function handleCurrentChange(val: any) {
+  if (val) current.value = val.id;
+  else current.value = "";
+  // console.log(current.value,'current.value')
+}
 </script>
 
 <template>
@@ -251,7 +258,7 @@ onBeforeUnmount(() => {
         </FormRightPanel>
       </el-row>
       <ElTable v-loading="data.loading" :border="data.border" :size="data.lineHeight" :stripe="data.stripe" class="my-4"
-        :data="data.dataList" highlight-current-row height="100%" @sort-change="sortChange"
+        :data="data.dataList" highlight-current-row height="100%" @sort-change="sortChange"  @current-change="handleCurrentChange"
         @selection-change="data.batch.selectionDataList = $event">
         <el-table-column align="left" prop="a" show-overflow-tooltip type="selection" />
         <ElTableColumn v-if="data.batch.enable" type="selection" show-overflow-tooltip align="left" fixed />
@@ -259,9 +266,15 @@ onBeforeUnmount(() => {
           prop="randomIdentity" label="随机身份">
           <template #default="{ row }">
             <div v-if="row.randomIdentity" class="hoverSvg">
-              <p class="fineBom">ID：{{ row.randomIdentity }}</p>
+              <p class="fineBom">{{ row.randomIdentity }}</p>
               <span class="c-fx">
-                <copy class="copy" :content="row.randomIdentity" />
+                <copy
+                :content="row.randomIdentity"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.id === current,
+                }"/>
+                <!-- <copy class="copy" :content="row.randomIdentity" /> -->
               </span>
             </div>
             <el-text v-else>-</el-text>
@@ -271,9 +284,15 @@ onBeforeUnmount(() => {
           prop="memberId" label="会员ID">
           <template #default="{ row }">
             <div v-if="row.memberId" class="hoverSvg">
-              <p class="fineBom">ID：{{ row.memberId }}</p>
+              <p class="fineBom">{{ row.memberId }}</p>
               <span class="c-fx">
-                <copy class="copy" :content="row.memberId" />
+                <copy
+                :content="row.memberId"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.id === current,
+                }"/>
+                <!-- <copy class="copy" :content="row.memberId" /> -->
               </span>
             </div>
             <el-text v-else>-</el-text>
@@ -288,9 +307,15 @@ onBeforeUnmount(() => {
         <ElTableColumn v-if="data.checkList.includes('projectId')" show-overflow-tooltip width="200" align="left"
           prop="projectId" label="项目ID"><template #default="{ row }">
             <div v-if="row.projectId" class="hoverSvg">
-              <p class="fineBom">ID：{{ row.projectId }}</p>
+              <p class="fineBom">{{ row.projectId }}</p>
               <span class="c-fx">
-                <copy class="copy" :content="row.projectId" />
+                <copy
+                :content="row.projectId"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.id === current,
+                }"/>
+                <!-- <copy class="copy" :content="row.projectId" /> -->
               </span>
             </div>
             <el-text v-else>-</el-text>
@@ -358,6 +383,16 @@ onBeforeUnmount(() => {
 </template>
 
 <style lang="scss" scoped>
+.rowCopy {
+  width: 20px;
+  display: none;
+}
+.current {
+    display: block !important;
+  }
+.el-table__row:hover .rowCopy {
+  display: block;
+}
 .absolute-container {
   position: absolute;
   width: 100%;
@@ -404,7 +439,7 @@ onBeforeUnmount(() => {
 }
 .fineBom {
   text-align: left !important;
-  font-size: .75rem;
+  font-size: .875rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

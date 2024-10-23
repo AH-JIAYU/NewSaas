@@ -195,6 +195,13 @@ onBeforeUnmount(() => {
     eventBus.off("get-data-list");
   }
 });
+const current = ref<any>(); //表格当前选中
+
+function handleCurrentChange(val: any) {
+  if (val) current.value = val.id;
+  else current.value = "";
+  // console.log(current.value,'current.value')
+}
 </script>
 
 <template>
@@ -217,15 +224,21 @@ onBeforeUnmount(() => {
       </el-row>
       <ElTable v-loading="data.loading" :border="data.border" :size="data.lineHeight" :stripe="data.stripe" class="my-4"
         :data="data.dataList" highlight-current-row height="100%" @sort-change="sortChange"
-        @selection-change="data.batch.selectionDataList = $event">
+        @selection-change="data.batch.selectionDataList = $event"         @current-change="handleCurrentChange" >
         <el-table-column align="left" type="selection" />
         <ElTableColumn v-if="data.checkList.includes('memberId')" show-overflow-tooltip align="left" prop=""
           label="会员ID" width="200">
           <template #default="{ row }">
             <div v-if="row.memberId" class="hoverSvg">
-              <p class="fineBom">ID：{{ row.memberId }}</p>
+              <p class="fineBom">{{ row.memberId }}</p>
               <span class="c-fx">
-                <copy class="copy" :content="row.memberId" />
+                <copy
+                :content="row.memberId"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.id === current,
+                }"/>
+                <!-- <copy class="copy" :content="row.memberId" /> -->
               </span>
             </div>
             <el-text v-else>-</el-text>
@@ -309,6 +322,16 @@ onBeforeUnmount(() => {
 </template>
 
 <style lang="scss" scoped>
+.rowCopy {
+  width: 20px;
+  display: none;
+}
+ .current {
+    display: block !important;
+  }
+.el-table__row:hover .rowCopy {
+  display: block;
+}
 .absolute-container {
   position: absolute;
   width: 100%;
@@ -357,7 +380,7 @@ onBeforeUnmount(() => {
 }
 .fineBom {
   text-align: left !important;
-  font-size: .75rem;
+  font-size:.875rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

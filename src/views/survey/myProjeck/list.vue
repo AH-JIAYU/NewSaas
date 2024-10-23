@@ -226,15 +226,22 @@ const formOption = {
         </FormRightPanel>
       </el-row>
       <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="id" :data="list"
-        :border="border" :size="lineHeight" :stripe="stripe" @current-change="handleCurrentChange">
+        :border="border" :size="lineHeight" :stripe="stripe" @current-change="handleCurrentChange"         highlight-current-row>
         <el-table-column align="left" type="selection" />
         <el-table-column v-if="checkList.includes('project')" show-overflow-tooltip align="left"
           prop="projectIdentificationOrClientName" width="200" label="项目">
           <template #default="{ row }">
             <p v-if="checkList.includes('projectName')" class="crudeTop">名称：{{ row.projectName }}</p>
             <div v-if="checkList.includes('projectId')" class="hoverSvg">
-              <p class="fineSize">ID：{{ row.projectId }}</p>
-              <copy class="copy" :content="row.projectId" />
+              <p class="fineSize">{{ row.projectId }}</p>
+              <copy
+                :content="row.projectId"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.projectId === current,
+                }"
+              />
+              <!-- <copy class="copy" :content="row.projectId" /> -->
             </div>
           </template>
         </el-table-column>
@@ -253,9 +260,16 @@ const formOption = {
             <el-tooltip class="box-item" effect="dark" :content="row.withoutUrl" placement="top">
               <!-- <el-button link type="primary" @click="copyUrl(row.withoutUrl)">复制</el-button> -->
               <div class="hoverSvg">
-                <p class="fineSize">{{ row.withoutUrl }}</p>
-                <copy class="copy" :content="row.withoutUrl" />
-              </div>
+              <p class="withoutUrlSize">{{ row.withoutUrl }}</p>
+              <copy
+                :content="row.withoutUrl"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.projectId === current,
+                }"
+              />
+              <!-- <copy class="copy" :content="row.withoutUrl" /> -->
+            </div>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -386,6 +400,20 @@ const formOption = {
 </template>
 
 <style scoped lang="scss">
+.copyId .projectId {
+  font-size:14px;
+}
+
+.rowCopy {
+  width: 20px;
+  display: none;
+}
+ .current {
+    display: block !important;
+  }
+.el-table__row:hover .rowCopy {
+  display: block;
+}
 .absolute-container {
   position: absolute;
   display: flex;
@@ -441,7 +469,7 @@ const formOption = {
 
 .fineBom {
   color: #777;
-  font-size: 14px;
+  font-size: .875rem;
   white-space: nowrap;
   overflow: hidden;
   font-weight: 700;
@@ -455,7 +483,13 @@ const formOption = {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
+.withoutUrlSize {
+  color: #333;
+  font-size: .875rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .hidden {
   white-space: nowrap;
   overflow: hidden;

@@ -212,6 +212,12 @@ function currentChange(page = 1) {
 function sortChange({ prop, order }: { prop: string; order: string }) {
   onSortChange(prop, order).then(() => getDataList());
 }
+const current = ref<any>(); //表格当前选中
+
+function handleCurrentChange(val: any) {
+  if (val) current.value = val.projectOrMemberGroupId;
+  else current.value = "";
+}
 </script>
 
 <template>
@@ -269,7 +275,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
               </el-row>
               <ElTable v-loading="data.loading" :border="data.border" :size="data.lineHeight" :stripe="data.stripe"
                 class="my-4" :data="data.dataList" highlight-current-row height="100%" @sort-change="sortChange"
-                @selection-change="data.batch.selectionDataList = $event">
+                @selection-change="data.batch.selectionDataList = $event"   @current-change="handleCurrentChange">
                 <el-table-column align="left" type="selection" />
                 <ElTableColumn v-if="data.checkList.includes('projectOrMemberGroupName')" show-overflow-tooltip
                   align="left" prop="projectOrMemberGroupName" label="项目名称">
@@ -277,13 +283,20 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
                     <p class="weightColor">{{ row.projectOrMemberGroupName ? row.projectOrMemberGroupName : "-" }}</p>
                   </template>
                 </ElTableColumn>
-                <ElTableColumn v-if="data.checkList.includes('projectOrMemberGroupId')" show-overflow-tooltip
+                <ElTableColumn v-if="data.checkList.includes('projectOrMemberGroupId')"
                   align="left" prop="projectOrMemberGroupId" label="项目ID">
                   <template #default="{ row }">
                     <div v-if="row.projectOrMemberGroupId" class="hoverSvg">
-                      <p class="fineBom">ID：{{ row.projectOrMemberGroupId }}</p>
+                      <p class="fineBom">{{ row.projectOrMemberGroupId }}</p>
                       <span class="c-fx">
-                        <copy class="copy" :content="row.projectOrMemberGroupId" />
+                        <copy
+                :content="row.projectOrMemberGroupId"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.projectOrMemberGroupId === current,
+                }"
+              />
+
                       </span>
                     </div>
                     <el-text v-else>-</el-text>
@@ -370,7 +383,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
                   align="left" prop="projectOrMemberGroupId" label="会员ID">
                   <template #default="{ row }">
                     <div v-if="row.projectOrMemberGroupId" class="hoverSvg">
-                      <p class="fineBom">ID：{{ row.projectOrMemberGroupId }}</p>
+                      <p class="fineBom">{{ row.projectOrMemberGroupId }}</p>
                       <span class="c-fx">
                         <copy class="copy" :content="row.projectOrMemberGroupId" />
                       </span>
@@ -453,7 +466,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
                   align="left" prop="projectOrMemberGroupId" label="会员组ID">
                   <template #default="{ row }">
                     <div v-if="row.projectOrMemberGroupId" class="hoverSvg">
-                      <p class="fineBom">ID：{{ row.projectOrMemberGroupId }}</p>
+                      <p class="fineBom">{{ row.projectOrMemberGroupId }}</p>
                       <span class="c-fx">
                         <copy class="copy" :content="row.projectOrMemberGroupId" />
                       </span>
@@ -483,6 +496,16 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
 </template>
 
 <style lang="scss" scoped>
+.rowCopy {
+  width: 20px;
+  display: none;
+}
+ .current {
+    display: block !important;
+  }
+.el-table__row:hover .rowCopy {
+  display: block;
+}
 .absolute-container {
   position: absolute;
   width: 100%;
@@ -535,7 +558,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
 }
 
 .fineBom {
-  font-size: .75rem;
+  font-size: .875rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -544,7 +567,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
 .hoverSvg {
   display: flex;
   align-items: center;
-  justify-content: center;
+
 }
 
 .copy {
