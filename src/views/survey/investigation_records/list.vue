@@ -211,6 +211,13 @@ const formOption={
   customerId:()=> data.customerList,
   surveyStatus:()=> data.surveyStatusList,
 }
+const current = ref<any>(); //表格当前选中
+
+function handleCurrentChange(val: any) {
+  if (val) current.value = val.id;
+  else current.value = "";
+  // console.log(current.value,'current.value')
+}
 </script>
 <template>
   <div :class="{ 'absolute-container': tableAutoHeight }">
@@ -228,15 +235,22 @@ const formOption={
         </FormRightPanel>
       </el-row>
       <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
-        @selection-change="setSelectRows">
+        @selection-change="setSelectRows"         @current-change="handleCurrentChange"    highlight-current-row>
         <el-table-column align="left" type="selection" />
         <el-table-column v-if="checkList.includes('randomIdentityId')" align="left" prop="randomIdentityId"
           show-overflow-tooltip label="随机身份">
           <template #default="{ row }">
             <div v-if="row.randomIdentityId" class="hoverSvg">
-              <p class="fineBom">ID：{{ row.randomIdentityId }}</p>
+              <p class="fineBom">{{ row.randomIdentityId }}</p>
               <span class="c-fx">
-                <copy class="copy" :content="row.randomIdentityId" />
+                <copy
+                :content="row.randomIdentityId"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.id === current,
+                }"
+              />
+                <!-- <copy class="copy" :content="row.randomIdentityId" /> -->
               </span>
             </div>
             <el-text v-else>-</el-text>
@@ -246,9 +260,16 @@ const formOption={
           width="200" label="会员ID">
           <template #default="{ row }">
             <div v-if="row.memberId" class="hoverSvg">
-              <p class="fineBom">ID：{{ row.memberId }}</p>
+              <p class="fineBom">{{ row.memberId }}</p>
               <span class="c-fx">
-                <copy class="copy" :content="row.memberId" />
+                <copy
+                :content="row.memberId"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.id === current,
+                }"
+              />
+                <!-- <copy class="copy" :content="row.memberId" /> -->
               </span>
             </div>
             <el-text v-else>-</el-text>
@@ -264,9 +285,16 @@ const formOption={
           width="200" label="项目ID">
           <template #default="{ row }">
             <div v-if="row.projectId" class="hoverSvg">
-              <p class="fineBom">ID：{{ row.projectId }}</p>
+              <p class="fineBom">{{ row.projectId }}</p>
               <span class="c-fx">
-                <copy class="copy" :content="row.projectId" />
+                <copy
+                :content="row.projectId"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.id === current,
+                }"
+              />
+                <!-- <copy class="copy" :content="row.projectId" /> -->
               </span>
             </div>
             <el-text v-else>-</el-text>
@@ -285,9 +313,16 @@ const formOption={
             <div v-if="row.memberName" class="hoverSvg">
               <el-text style="font-weight: 700;color: #333333;">{{ row.memberName.split('/')[0] }}</el-text>
               &nbsp;&nbsp;
-              <p class="fineBom">ID：{{ row.memberName.split('/')[1] }}</p>
+              <p class="fineBom">{{ row.memberName.split('/')[1] }}</p>
               <span class="c-fx">
-                <copy class="copy" :content="row.memberName.split('/')[1]" />
+                <copy
+                :content="row.memberName.split('/')[1]"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.id === current,
+                }"
+              />
+                <!-- <copy class="copy" :content="row.memberName.split('/')[1]" /> -->
               </span>
             </div>
             <el-text v-else>-</el-text>
@@ -336,7 +371,14 @@ const formOption={
               &nbsp;&nbsp;
               <p class="fineBom">{{ row.ipBelong.split("/")[0] }}</p>
               <span class="c-fx">
-                <copy class="copy" :content="row.ipBelong.split('/')[0]" />
+                <copy
+              :content="row.ipBelong.split('/')[0]"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.id === current,
+                }"
+              />
+                <!-- <copy class="copy" :content="row.ipBelong.split('/')[0]" /> -->
               </span>
             </div>
             <el-text v-else>-</el-text>
@@ -413,6 +455,16 @@ const formOption={
 </template>
 
 <style scoped lang="scss">
+.rowCopy {
+  width: 20px;
+  display: none;
+}
+ .current {
+    display: block !important;
+  }
+.el-table__row:hover .rowCopy {
+  display: block;
+}
 // 高度自适应
 .absolute-container {
   position: absolute;
@@ -466,7 +518,7 @@ const formOption={
 }
 
 .fineBom {
-  font-size: 12px;
+  font-size: 14px;
   color: #333333;
   white-space: nowrap;
   overflow: hidden;
