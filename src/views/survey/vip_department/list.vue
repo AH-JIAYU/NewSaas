@@ -472,6 +472,13 @@ const formOption={
   memberStatus:()=>[{ label: '关闭', value: 1 }, { label: '开启', value: 2 }],
   memberGroupId:()=>data.vipGroupList,
 }
+const current = ref<any>(); //表格当前选中
+
+function handleCurrentChange(val: any) {
+  if (val) current.value = val.memberId;
+  else current.value = "";
+  // console.log(current.value,'current.value')
+}
 </script>
 
 <template>
@@ -545,7 +552,7 @@ const formOption={
             </FormRightPanel>
           </el-row>
           <el-table v-loading="listLoading" :border="border" :data="data.list" :size="lineHeight" :stripe="stripe"
-            @selection-change="setSelectRows">
+            @selection-change="setSelectRows"     @current-change="handleCurrentChange"     highlight-current-row>
             <el-table-column type="selection" align="left" />
             <el-table-column v-if="checkList.includes('memberStatus')" align="left" show-overflow-tooltip label="会员状态">
               <template #default="{ row }">
@@ -566,8 +573,15 @@ const formOption={
               show-overflow-tooltip width="200" label="会员ID"><template #default="{ row }">
                 <p class="crudeTop"></p>
                 <div class="hoverSvg">
-                  <p class="fineSize">ID：{{ row.memberId }}</p>
-                  <copy class="copy" :content="row.memberId" />
+                  <p class="fineSize">{{ row.memberId }}</p>
+                  <copy
+                :content="row.memberId"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.memberId === current,
+                }"
+              />
+
                 </div>
               </template>
             </el-table-column>
@@ -776,6 +790,16 @@ const formOption={
 </template>
 
 <style lang="scss" scoped>
+.rowCopy {
+  width: 20px;
+  display: none;
+}
+.current {
+    display: block !important;
+  }
+.el-table__row:hover .rowCopy {
+  display: block;
+}
 .absolute-container {
   position: absolute;
   display: flex;
@@ -976,7 +1000,7 @@ const formOption={
 
 .fineSize {
   color: #333;
-  font-size: 12px;
+  font-size: 14px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

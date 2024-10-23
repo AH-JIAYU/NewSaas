@@ -758,9 +758,6 @@ function handleMoreOperating(command: string, row: any) {
 .copyId .projectId {
   font-size:14px;
 }
-.copyId  .current {
-    display: block !important;
-  }
 .rowCopy {
   width: 20px;
   display: none;
