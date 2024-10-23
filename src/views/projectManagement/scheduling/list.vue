@@ -252,7 +252,7 @@ const formOption = {
                 :content="row.projectId"
                 :class="{
                   rowCopy: 'rowCopy',
-                  current: row.projectId === 'current',
+                  current: row.projectId === current,
                 }"
               />
               <!-- <copy class="copy" :content="row.projectId" /> -->
@@ -337,7 +337,7 @@ const formOption = {
                 :content="row.getGroupSupplierIdNameInfoList[0].groupSupplierId"
                 :class="{
                   rowCopy: 'rowCopy',
-                  current: row.projectId === 'current',
+                  current: row.projectId === current,
                 }"
               />
 
