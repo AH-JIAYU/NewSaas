@@ -298,6 +298,9 @@ defineExpose({ showEdit });
                 }}</span>
               </div>
               <div class="rightStatus">
+                <span :class="
+                    data.isOnline === 1 ? 'isOnlineSpanTrue' : 'isOnlineSpanFalse'
+                  "></span>
                 <div
                   :class="
                     data.isOnline === 1 ? 'isOnlineTrue' : 'isOnlineFalse'
@@ -733,62 +736,84 @@ defineExpose({ showEdit });
 
   .leftTitle {
     .spanStatus {
-      width: 60px !important;
-      height: 20px !important;
-      background: var(--el-color-primary);
+//       width: 49px !important;
+// height: 23px !important;
+background: #409EFF;
+border-radius: 4px;
+      // width: 60px !important;
+      // height: 20px !important;
+      // background: var(--el-color-primary);
       color: var(--el-color-white);
-      padding: 0 8px;
+      padding: 8px;
       font-size: 0.875rem;
       border-radius: 0.125rem;
     }
   }
+  .isOnlineSpanTrue {
+    background: #03c239;
+    width: .625rem;
+    height: .625rem;
+    display: block;
+    border-radius: 50%;
+    border: 1px solid #03c239;
+  }
+  .isOnlineSpanFalse {
+    background: #d8261a;
+      width:.625rem;
+    height: .625rem;
+    display: block;
+    border-radius: 50%;
+    border: 1px solid #d8261a;
+    }
 
   .rightStatus {
     position: relative;
-    width: 128px;
+    // width: 128px;
+    width: 80px;
+
 
     > div {
-      width: 120px;
-      height: 2.2rem;
-      line-height: 2.2rem;
-      text-align: center;
-      border-radius: 0.3rem;
-      color: #fff;
+      // width: 120px;
+      // height: 2.2rem;
+      // line-height: 2.2rem;
+      // text-align: center;
+      // border-radius: 0.3rem;
+      // color: #fff;
       position: absolute;
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%);
-      font-size: 20.8px;
+      font-size: 1.125rem;
 
-      &::before {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        width: 60%;
-        border-radius: 50%;
-        transform: translate(-50%, -50%);
-        aspect-ratio: 1 / 1;
-        content: "";
-      }
+      // &::before {
+      //   position: absolute;
+      //   left: 50%;
+      //   top: 50%;
+      //   width: 60%;
+      //   border-radius: 50%;
+      //   transform: translate(-50%, -50%);
+      //   aspect-ratio: 1 / 1;
+      //   content: "";
+      // }
 
-      &::after {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        width: 50%;
-        border-radius: 50%;
-        transform: translate(-50%, -50%);
-        aspect-ratio: 1 / 1;
-        content: "";
-      }
+      // &::after {
+      //   position: absolute;
+      //   left: 50%;
+      //   top: 50%;
+      //   width: 50%;
+      //   border-radius: 50%;
+      //   transform: translate(-50%, -50%);
+      //   aspect-ratio: 1 / 1;
+      //   content: "";
+      // }
     }
 
     > div.isOnlineTrue {
-      background-color: #03c239;
+      color: #03c239;
     }
 
     > div.isOnlineFalse {
-      background-color: #d8261a;
+      color: #d8261a;
     }
   }
 }
