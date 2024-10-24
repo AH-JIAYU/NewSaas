@@ -375,7 +375,7 @@ function handleCurrentChange(val: any) {
                     :before-change="() => onChangeStatus(scope.row)" />
                 </template>
               </ElTableColumn>
-              <ElTableColumn v-if="userForm.checkList.includes('id')" align="left" width="180" prop="id" label="员工ID">
+              <ElTableColumn v-if="userForm.checkList.includes('id')" align="left" width="280" prop="id" label="员工ID">
                 <template #default="{ row }">
                   <div class="copyId tableSmall">
                     <div class="id oneLine idFont">

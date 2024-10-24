@@ -243,9 +243,9 @@ onMounted(() => {
           v-if="checkList.includes('beInvitationTenantId')"
           align="left"
           prop="beInvitationTenantId"
-          width="180"
+          width="280"
 
-          label="租户id"
+          label="租户ID"
         >
           <template #default="{ row }">
             <div class="copyId tableSmall">

@@ -250,8 +250,8 @@ function handleCurrentChange(val: any) {
             <p class="weightColor">{{ row.memberName ? row.memberName : "-" }}</p>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('billTime')" show-overflow-tooltip align="left" prop="billTime"
-          label="账单日期" />
+        <ElTableColumn v-if="data.checkList.includes('billTime')"  align="left" prop="billTime" show-overflow-tooltip
+          label="账单日期" width="180"/>
         <ElTableColumn v-if="data.checkList.includes('billAmount')" show-overflow-tooltip align="left"
           prop="billAmount" label="账单金额">
           <template #default="{ row }">
@@ -277,7 +277,7 @@ function handleCurrentChange(val: any) {
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('payTime')" show-overflow-tooltip align="left" prop="payTime"
-          label="支付时间" >
+          label="支付时间" width="180">
           <template #default="{ row }">
             {{ row.payTime ? row.payTime : '-' }}
           </template>
