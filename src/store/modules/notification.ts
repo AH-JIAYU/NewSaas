@@ -13,9 +13,10 @@ const useNotificationStore = defineStore(
     const messageList = ref<any>([]);
     // 待办
     const todo = ref(0);
+    const todoUnread = ref(0);//未读待办
     const todoList = ref<any>([]);
     // 总计
-    const total = computed(() => message.value + todo.value);
+    const total = computed(() => message.value + todoUnread.value);
     const auditTypeList = ["合作邀约"];//消息类型
     //websocket
     const socket = ref<any>();
@@ -159,10 +160,16 @@ const useNotificationStore = defineStore(
     // 获取未读待办数
     async function getUnreadTodo() {
       const res = await api.getTenantAuditList({});
-      todoList.value = res.data.tenantAuditInfoList;
+      todoList.value = res.data.tenantAuditInfoList.filter(
+        (item: any) => item.auditStatus === 1
+      );
       // 未读的待办数
-      todo.value = todoList.value.filter(
+      todoUnread.value = todoList.value.filter(
         (item: any) => item.isReadAlready === 1
+      ).length;
+      // 待办
+      todo.value = todoList.value.filter(
+        (item: any) => item.auditStatus === 1
       ).length;
     }
     return {
@@ -171,6 +178,7 @@ const useNotificationStore = defineStore(
       messageList,
       todoList,
       total,
+      todoUnread,
       socket,
       auditTypeList,
       toBreakOff,

@@ -51,7 +51,7 @@ const cooperation = (row: any) => {
         },
         {
           label: `待办 ${
-            notificationStore.todo > 0 ? `(${notificationStore.todo})` : ''
+            notificationStore.todoUnread > 0 ? `(${notificationStore.todoUnread})` : ''
           }`,
           value: 'todo',
         },
