@@ -70,17 +70,17 @@ const readButNotRead = async (val: any) => {
 };
 const filterMessageList = computed(() => {
   return notificationStore.messageList.filter(
-    (item: any) => item.isReadAlready === data.value.ReadAlready,
+    (item: any) => item.isReadAlready === data.value.ReadAlready
   );
 });
 const filterTodoList = computed(() => {
   if (data.value.ReadAlready === 1) {
     return notificationStore.todoList.filter(
-      (item: any) => item.auditStatus === 1,
+      (item: any) => item.auditStatus === 1
     );
   } else {
     return notificationStore.todoList.filter(
-      (item: any) => item.auditStatus !== 1,
+      (item: any) => item.auditStatus !== 1
     );
   }
 });
@@ -93,12 +93,12 @@ onMounted(() => {
   if (route.query.id) {
     if (Number(route.query.type) === 1) {
       const findData = notificationStore.messageList.find(
-        (item: any) => item.id === route.query.id,
+        (item: any) => item.id === route.query.id
       );
       findData && showEditNews(findData);
     } else if (Number(route.query.type) === 2) {
       const findData = notificationStore.todoList.find(
-        (item: any) => item.id === route.query.id,
+        (item: any) => item.id === route.query.id
       );
       findData && showEditCooperation(findData);
     }
@@ -113,10 +113,13 @@ onMounted(() => {
         <div class="left">
           <el-tabs v-model="data.tabs" @tab-change="changeTabs">
             <el-tab-pane label="消息" name="news">
+              <template #label>
+                <span class="custom-tab-label">消息</span>
+              </template>
               <div class="buttons">
                 <button
                   :class="data.ReadAlready === 1 ? 'unread' : ''"
-                  @click="readButNotRead(1)"
+                  @click="readButNotRead(1)" style="height: 28px;"
                 >
                   未读{{
                     notificationStore.message < 100
@@ -127,7 +130,7 @@ onMounted(() => {
                 <button
                   :class="data.ReadAlready === 2 ? 'read' : ''"
                   read
-                  @click="readButNotRead(2)"
+                  @click="readButNotRead(2)" style="height: 28px;"
                 >
                   已读
                 </button>
@@ -179,6 +182,9 @@ onMounted(() => {
               </OverlayScrollbarsComponent>
             </el-tab-pane>
             <el-tab-pane label="代办" name="cooperation">
+              <template #label>
+                <span class="custom-tab-label">代办</span>
+              </template>
               <div class="buttons">
                 <button
                   :class="data.ReadAlready === 1 ? 'unread' : ''"
@@ -269,6 +275,55 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
+.el-tabs__nav-wrap {
+  .el-tabs__item {
+    .custom-tab-label {
+      /* 字体样式 */
+
+      color: #fff;
+      display: inline-block;
+      padding: 12px; /* 内边距 */
+    }
+
+  }
+
+}
+
+:deep(.el-tabs__active-bar)  {
+    background-color: transparent !important;
+  }
+:deep(.el-tabs__item) {
+    padding: 0px 0rem;
+}
+/* 选中状态下的样式 */
+.el-tabs__nav-wrap {
+  .el-tabs__item.is-active {
+    .custom-tab-label {
+    margin-left: 2px;
+      /* 蓝色背景图 */
+      /* 去掉选中后的下划线 */
+      background-image: url("/src/assets/images/new_actived.png"); /* 更改为实际路径 */
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 100% 29px;
+    }
+  }
+}
+
+/* 未选中状态下的样式 */
+.el-tabs__nav-wrap {
+  .el-tabs__item {
+    .custom-tab-label {
+
+      /* 蓝色背景图 */
+      background-image: url("/src/assets/images/new_noActived.png"); /* 更改为实际路径 */
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 100% 29px;
+    }
+  }
+}
+
 .select {
   background: #f3f9ff !important;
 }
@@ -387,9 +442,7 @@ onMounted(() => {
       }
 
       .time {
-        font-family:
-          PingFang SC,
-          PingFang SC;
+        font-family: PingFang SC, PingFang SC;
         font-weight: 500;
         font-size: 0.75rem;
         color: #333333;
@@ -398,9 +451,7 @@ onMounted(() => {
 
       .date {
         --at-apply: text-sm line-clamp-2;
-        font-family:
-          PingFang SC,
-          PingFang SC;
+        font-family: PingFang SC, PingFang SC;
         font-weight: 600;
         font-size: 0.875rem;
         color: #0f0f0f;
