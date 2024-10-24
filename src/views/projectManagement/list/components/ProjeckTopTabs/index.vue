@@ -645,10 +645,11 @@ nextTick(() => {
                     @click="AddCustomers"
                   >
                     快捷新增
-                    <SvgIcon
+                    <div class="i-ic:round-plus w-1.3em h-1.3em"></div>
+                    <!-- <SvgIcon
                       name="ant-design:plus-outlined"
                   style="border-radius: 50%;padding: 2px;margin:0 4px;border: 1px solid #409EFF;"
-                    />
+                    /> -->
                   </el-button>
                   <template #empty>
                     <div
@@ -667,7 +668,8 @@ nextTick(() => {
                         @click="AddCustomers"
                       >
                         快捷新增
-                        <SvgIcon name="ant-design:plus-outlined" />
+                        <div class="i-ic:round-plus w-1.3em h-1.3em"></div>
+                        <!-- <SvgIcon name="ant-design:plus-outlined" /> -->
                       </el-button>
                     </div>
                   </template>

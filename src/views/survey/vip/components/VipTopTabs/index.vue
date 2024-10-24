@@ -216,10 +216,11 @@ onMounted(async () => {
                       :label="item.levelNameOrAdditionRatio"></el-option>
                       <el-button  @click="AddVipLevel" size="small"  class="buttonClass">
                           快捷新增
-                          <SvgIcon
+                          <div class="i-ic:round-plus w-1.3em h-1.3em"></div>
+                          <!-- <SvgIcon
                         name="ant-design:plus-outlined"
                          style="border-radius: 50%;padding: 2px;margin:0 4px;border: 1px solid #409EFF;"
-                      />
+                      /> -->
                         </el-button>
 
                     <template #empty>
@@ -227,8 +228,9 @@ onMounted(async () => {
                         暂无数据
                         <el-button type="primary" link @click="AddVipLevel" size="small">
                           快捷新增
-                          <SvgIcon name="ant-design:plus-outlined" color="#fff"
-                            style="background-color: var(--el-color-primary);border-radius: 50%;padding: 2px;margin:0 2px" />
+                          <div class="i-ic:round-plus w-1.3em h-1.3em"></div>
+                          <!-- <SvgIcon name="ant-design:plus-outlined" color="#fff"
+                            style="background-color: var(--el-color-primary);border-radius: 50%;padding: 2px;margin:0 2px" /> -->
                         </el-button>
                       </div>
                     </template>

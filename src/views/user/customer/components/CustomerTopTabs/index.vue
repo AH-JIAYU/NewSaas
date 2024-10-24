@@ -139,8 +139,9 @@ nextTick(() => {
                     <el-option v-for="item in staffList" :key="item.id" :label="item.userName" :value="item.id" />
                     <el-button  class="buttonClass" @click="dictionaryItemVisible = true" size="small">
                           快捷新增
-                          <SvgIcon name="ant-design:plus-outlined"
-                          style="border-radius: 50%;padding: 2px;margin:0 4px;border: 1px solid #409EFF;"/>
+                          <div class="i-ic:round-plus w-1.3em h-1.3em"></div>
+                          <!-- <SvgIcon name="ant-design:plus-outlined"
+                          style="border-radius: 50%;padding: 2px;margin:0 4px;border: 1px solid #409EFF;"/> -->
                         </el-button>
 
                     <template #empty>
@@ -148,8 +149,9 @@ nextTick(() => {
                         暂无数据
                         <el-button type="primary" link @click="dictionaryItemVisible = true" size="small">
                           快捷新增
-                          <SvgIcon name="ant-design:plus-outlined" color="#fff"
-                            style="background-color: var(--el-color-primary);border-radius: 50%;padding: 2px;margin:0 2px" />
+                          <div class="i-ic:round-plus w-1.3em h-1.3em"></div>
+                          <!-- <SvgIcon name="ant-design:plus-outlined" color="#fff"
+                            style="background-color: var(--el-color-primary);border-radius: 50%;padding: 2px;margin:0 2px" /> -->
                         </el-button>
                       </div>
                     </template>
