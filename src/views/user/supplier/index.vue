@@ -164,6 +164,7 @@ const editBC = async (row: any, name: any, state: any) => {
       message: "修改成功",
     });
   queryData();
+  supplierStore.TenantSupplierList = null;
 };
 // 重置请求
 function queryData() {
