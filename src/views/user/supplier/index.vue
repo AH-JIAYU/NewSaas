@@ -144,12 +144,12 @@ const editBC = async (row: any, name: any, state: any) => {
   let b2cStatus = row.b2cStatus;
   if (name == "b2b") {
     b2bStatus = state ==1 ? 2:1;
-    b2cStatus = b2bStatus ==1 ?2 :1;
+    // b2cStatus = b2bStatus ==1 ?2 :1;
   }
 
   if (name == "b2c") {
     b2cStatus = state==1 ? 2:1;
-    b2bStatus = b2cStatus ==1 ?2 :1;
+    // b2bStatus = b2cStatus ==1 ?2 :1;
   }
 
   const params = {
@@ -164,6 +164,7 @@ const editBC = async (row: any, name: any, state: any) => {
       message: "修改成功",
     });
   queryData();
+  supplierStore.TenantSupplierList = null;
 };
 // 重置请求
 function queryData() {

@@ -2,6 +2,7 @@
 //  #region 引入
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
 import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
+import customerApi from "@/api/modules/user_customer";
 import fileApi from "@/api/modules/file";
 import { cloneDeep } from "lodash-es";
 import { Editor } from "@bytemd/vue-next";
@@ -459,7 +460,11 @@ const setAnswerValue = (type: number, index: number) => {
 
 // 获取客户
 const getCustomerList = async () => {
-  data.value.basicSettings.customerList = await customerStore.getCustomerList();
+  // data.value.basicSettings.customerList = await customerStore.getCustomerList();
+  // 新增时获取，判断客户是否超出限额
+  const res = await customerApi.getCustomerList({});
+  data.value.basicSettings.customerList =
+    res.data.getTenantCustomerAccordInfoList;
 };
 // 快捷操作：新增客户
 const AddCustomers = () => {
@@ -624,7 +629,12 @@ nextTick(() => {
                     :key="item.tenantCustomerId"
                     :value="item.tenantCustomerId"
                     :label="item.customerAccord"
-                    :disabled="item.isReveal === 1"
+                    :disabled="
+                      item.isReveal === 1 ||
+                      (item.turnover &&
+                        item.practiceTurnover &&
+                        item.turnover <= item.practiceTurnover)
+                    "
                   >
                     <span style="float: left">{{ item.customerAccord }}</span>
                     <span

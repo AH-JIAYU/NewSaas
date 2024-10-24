@@ -114,6 +114,39 @@ async function changeState(state: any, id: string) {
   surveyVipStore.NickNameList = null;
   queryData();
 }
+
+//切换供应商
+async function editBC(row: any, name: any, state: any) {
+  let b2bStatus = row.b2bStatus;
+  let b2cStatus = row.b2cStatus;
+  if (name == "b2b") {
+    b2bStatus = state ==1 ? 2:1;
+    // b2cStatus = b2bStatus ==1 ?2 :1;
+  }
+
+  if (name == "b2c") {
+    b2cStatus = state==1 ? 2:1;
+    // b2bStatus = b2cStatus ==1 ?2 :1;
+  }
+
+  const params = {
+    memberId: row.memberId,
+    memberStatus: state,
+    b2bStatus:b2bStatus,
+    b2cStatus:b2cStatus,
+  };
+  const { status } = await submitLoading(api.changestatus(params));
+  status === 1 &&
+    ElMessage.success({
+      message: "修改成功",
+    });
+  // 数据改变 在部门中需要重新请求
+  surveyVipStore.NickNameList = null;
+  queryData();
+}
+
+
+
 // 随机身份
 const changeRandomState = async (state: any, id: string) => {
   const params = {
@@ -302,9 +335,9 @@ function handleCurrentChange(val: any) {
             {{ row.memberGroupName ? row.memberGroupName : '-' }} </template></el-table-column>
         <el-table-column v-if="checkList.includes('B2B|B2C')" width="100" align="left" show-overflow-tooltip label="B2B/B2C">
           <template #default="{ row }">
-            <div class="isB2b">
+            <div class="isB2b " style="cursor: pointer;">
               <el-text v-if="row.b2bStatus && row.b2bStatus === 2" class="mx-1 c-fx">
-              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="14" viewBox="0 0 15 14" fill="none">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="14" viewBox="0 0 15 14" fill="none"     @click="editBC(row, 'b2b', 2)">
                 <g id="Frame" clip-path="url(#clip0_450_45359)">
                   <path id="Vector"
                     d="M13.6223 13.2878H1.375C1.28477 13.2878 1.21094 13.214 1.21094 13.1237V0.876465C1.21094 0.78623 1.28477 0.712402 1.375 0.712402H13.6236C13.7139 0.712402 13.7877 0.78623 13.7877 0.876465V13.1251C13.7863 13.2153 13.7139 13.2878 13.6223 13.2878Z"
@@ -324,7 +357,7 @@ function handleCurrentChange(val: any) {
               </svg>
             </el-text>
             <el-text v-else class="mx-1 c-fx">
-              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="14" viewBox="0 0 15 14" fill="none">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="14" viewBox="0 0 15 14" fill="none"     @click="editBC(row, 'b2b', 1)">
                 <g id="Frame" clip-path="url(#clip0_450_45352)">
                   <path id="Vector"
                     d="M13.6223 13.1901H1.375C1.3387 13.1901 1.30859 13.16 1.30859 13.1237V0.876465C1.30859 0.840165 1.3387 0.810059 1.375 0.810059H13.6236C13.6599 0.810059 13.69 0.840164 13.69 0.876465V13.1242C13.6892 13.1611 13.66 13.1901 13.6223 13.1901Z"
@@ -348,7 +381,7 @@ function handleCurrentChange(val: any) {
             </el-text>
 /
             <el-text v-if="row.b2cStatus && row.b2cStatus === 2" class="mx-1 c-fx">
-              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="14" viewBox="0 0 15 14" fill="none">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="14" viewBox="0 0 15 14" fill="none"    @click="editBC(row, 'b2c', 2)">
                 <g id="Frame" clip-path="url(#clip0_450_45359)">
                   <path id="Vector"
                     d="M13.6223 13.2878H1.375C1.28477 13.2878 1.21094 13.214 1.21094 13.1237V0.876465C1.21094 0.78623 1.28477 0.712402 1.375 0.712402H13.6236C13.7139 0.712402 13.7877 0.78623 13.7877 0.876465V13.1251C13.7863 13.2153 13.7139 13.2878 13.6223 13.2878Z"
@@ -368,7 +401,7 @@ function handleCurrentChange(val: any) {
               </svg>
             </el-text>
             <el-text v-else class="mx-1 c-fx">
-              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="14" viewBox="0 0 15 14" fill="none">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="14" viewBox="0 0 15 14" fill="none"  @click="editBC(row, 'b2c', 1)">
                 <g id="Frame" clip-path="url(#clip0_450_45352)">
                   <path id="Vector"
                     d="M13.6223 13.1901H1.375C1.3387 13.1901 1.30859 13.16 1.30859 13.1237V0.876465C1.30859 0.840165 1.3387 0.810059 1.375 0.810059H13.6236C13.6599 0.810059 13.69 0.840164 13.69 0.876465V13.1242C13.6892 13.1611 13.66 13.1901 13.6223 13.1901Z"
