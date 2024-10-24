@@ -535,7 +535,7 @@ defineExpose({
                   </el-input>
                 </el-form-item>
               </el-col>
-              <template v-if="checkDomainRecord.isKeepOnRecord">
+              <template v-if="checkDomainRecord.isKeepOnRecord || form.isAnalysis">
                 <el-col :span="10">
                   <el-form-item label="指向域名">
                     <!-- <el-input disabled style="width: 16.375rem;" v-model="form.domain" /> -->

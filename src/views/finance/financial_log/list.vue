@@ -28,6 +28,13 @@ const columns = ref<any>([
     checked: true, // 默认展示
   },
   {
+    label: "点击ID",
+    prop: "clientId",
+    sortable: true,
+    disableCheck: false, // 不可更改
+    checked: true, // 默认展示
+  },
+  {
     label: "项目ID",
     prop: "projectId",
     sortable: true,
@@ -243,6 +250,12 @@ onBeforeUnmount(() => {
         @selection-change="data.batch.selectionDataList = $event" >
         <el-table-column align="left" type="selection" />
         <ElTableColumn v-if="data.batch.enable" type="selection" show-overflow-tooltip align="left" fixed />
+        <ElTableColumn v-if="data.checkList.includes('clientId')" show-overflow-tooltip align="left" prop="clientId"
+          label="点击ID">
+          <template #default="{ row }">
+            <el-text>{{ row.clientId ? row.clientId : "-" }}</el-text>
+          </template>
+        </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('typeId')" show-overflow-tooltip align="left" prop=""
           label="供应商ID/内部调查站">
           <template #default="{ row }">

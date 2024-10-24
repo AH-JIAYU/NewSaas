@@ -29,7 +29,7 @@ const stripe = ref(false);
 const columns = ref<any>([
   { sotrtable: true, checked: true, label: "租户ID", prop: "tenantId" },
   { sotrtable: true, checked: true, label: "租户名称", prop: "tenantName" },
-  { sotrtable: true, checked: true, label: "项目id", prop: "projectId" },
+  { sotrtable: true, checked: true, label: "项目ID", prop: "projectId" },
   { sotrtable: true, checked: true, label: "项目名称", prop: "projectName" },
   {
     sotrtable: true,
@@ -107,7 +107,7 @@ onMounted(() => {
       show: true,
       type: "input",
       modelName: "tenantId",
-      placeholder: "租户id",
+      placeholder: "租户ID",
     },
     {
       index: 2,
@@ -138,7 +138,6 @@ const formOption = {
 const current = ref<any>(); //表格当前选中
 
 function handleCurrentChange(val: any) {
-  console.log('是否选中')
   if (val) current.value = val.projectId;
   else current.value = "";
 }

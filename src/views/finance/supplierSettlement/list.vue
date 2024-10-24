@@ -59,8 +59,8 @@ function setSelectRows(value: any) {
 // 重置数据
 function onReset() {
   Object.assign(queryForm.value, {
-    supplierId: 0, //	供应商id
-    billStatus: 0, //账单状态: 1:待收票 2:待支付 3:已支付 4:已拒绝
+    supplierId: '', //	供应商id
+    billStatus: null, //账单状态: 1:待收票 2:待支付 3:已支付 4:已拒绝
     time: [],
     beginTime: "", //开始时间
     endTime: "", //	结束时间

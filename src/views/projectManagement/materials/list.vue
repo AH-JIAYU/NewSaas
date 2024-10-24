@@ -379,7 +379,7 @@ onMounted(() => {
                 <div class="copyId tableSmall">
                   <div class="id oneLine projectId">{{ row.projectId }}</div>
                   <copy
-                    :content="row.memberChildId"
+                    :content="row.projectId"
                     :class="{
                       rowCopy: 'rowCopy',
                       current: row.projectId === tabs1Current,

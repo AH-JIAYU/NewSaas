@@ -194,7 +194,9 @@ function getDataList() {
 // 重置筛选数据
 function onReset() {
   Object.assign(data.value.search, {
-    title: "",
+    type: 1, // tab切换
+    projectOrMemberGroupId: "", //项目Id/会员id/会员组id
+    projectOrMemberGroupName: "", //	项目名称/会员名称/会员组名称
   });
   getDataList();
 }
