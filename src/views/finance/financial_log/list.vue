@@ -259,7 +259,7 @@ onBeforeUnmount(() => {
         <ElTableColumn v-if="data.checkList.includes('typeId')" show-overflow-tooltip align="left" prop=""
           label="供应商ID/内部调查站">
           <template #default="{ row }">
-            <el-text v-if="row.typeId == 1"  class="fontColor">内部调查站</el-text>
+            <el-text v-if="row.typeId == 1"  class="fontColor tableBig">内部调查站</el-text>
             <el-text v-else  class="fontColor">{{ row.typeId ? row.typeId : "-" }}</el-text>
           </template>
         </ElTableColumn>
@@ -283,7 +283,7 @@ onBeforeUnmount(() => {
                 parseStatusString(row.remark)[1]
               }`
             }}</el-text> -->
-            <el-text class="mx-1 fontColor" >{{ row.remark ? row.remark : "-" }}</el-text>
+            <el-text class="mx-1 fontColor tableBig" >{{ row.remark ? row.remark : "-" }}</el-text>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('beforeBalance')" show-overflow-tooltip align="left"
