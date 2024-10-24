@@ -30,7 +30,10 @@ const globalSettings: Settings.all = globalConfiguration||{
   },
   "topbar": {
       "mode": "fixed"
-  }
+  },
+  "home": {
+    "enable": false,
+  },
 }
 export default defaultsDeep(
   globalSettings,

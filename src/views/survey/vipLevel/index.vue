@@ -178,7 +178,6 @@ onMounted(() => {
         <el-table-column v-if="checkList.includes('memberQuantity')" align="left" prop="memberQuantity"
           show-overflow-tooltip label="成员数量">
           <template #default="{ row }">
-
             <span style="display: inline-block" class="tableBig">
               {{   row.memberQuantity ? row.memberQuantity : 0 }}
             </span>
