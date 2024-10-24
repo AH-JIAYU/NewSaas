@@ -54,8 +54,8 @@ defineExpose({
 
 <template>
   <div>
-    <el-dialog v-model="data.dialogTableVisible" v-if="data.dialogTableVisible" title="查看" draggable>
-      <el-table  v-loading="data.loading"   row-key="projectId" :data="data.tableData"  highlight-current-row height="100%">
+    <el-dialog v-model="data.dialogTableVisible" v-if="data.dialogTableVisible" style="min-height: 500px;" title="查看" draggable>
+      <el-table  v-loading="data.loading"   row-key="projectId" :data="data.tableData"  highlight-current-row height="450px">
         <el-table-column align="left" type="index" />
         <el-table-column  width="200" align="left" label="项目ID"><template
             #default="{ row }">
@@ -102,7 +102,6 @@ defineExpose({
         <div style="text-align:center">
           <el-button type="primary"  @click="closeHandler" >关闭</el-button>
         </div>
-
       </template>
     </el-dialog>
   </div>
@@ -114,6 +113,9 @@ defineExpose({
   .el-drawer__body,
   .el-tabs.el-tabs--left {
     overflow: visible !important;
+  }
+  .el-table--fit .el-table__inner-wrapper:before {
+    width: 0;
   }
 }
 

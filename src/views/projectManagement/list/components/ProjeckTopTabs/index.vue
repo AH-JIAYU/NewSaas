@@ -158,7 +158,7 @@ function handleChangeTime() {
 // 同步客户的前置问卷开关
 const changeClient = (val: any) => {
   const findData = data.value.basicSettings.customerList.find(
-    (item: any) => item.tenantCustomerId === val,
+    (item: any) => item.tenantCustomerId === val
   );
   localToptTab.value.isProfile = findData.antecedentQuestionnaire === 2 ? 1 : 2;
 };
@@ -281,7 +281,7 @@ const changeCountryId = () => {
   // 反选
   data.value.checked = Boolean(
     localToptTab.value.countryIdList.length ===
-      basicDictionaryStore.country.length,
+      basicDictionaryStore.country.length
   );
 };
 // 配置区域改变 重新获取题库目录
@@ -366,7 +366,7 @@ const getProjectCategoryList = async () => {
 
       localToptTab.value.data.configurationInformation.projectCategoryList =
         res.data.getProjectCategoryInfoList.filter(
-          (item: any) => item.status === 1,
+          (item: any) => item.status === 1
         );
     }
   } else {
@@ -384,7 +384,7 @@ const getProjectProblemList = async (id: string | number, judge: boolean) => {
     setTimeout(async () => {
       const { projectProblemCategoryName, ...params } =
         localToptTab.value.data.configurationInformation.projectCategoryList.find(
-          (item: any) => item.projectProblemCategoryId === id,
+          (item: any) => item.projectProblemCategoryId === id
         );
       const res = await api.getProjectProblemList(params);
       //问题列表 - 显示的数据
@@ -395,7 +395,7 @@ const getProjectProblemList = async (id: string | number, judge: boolean) => {
             getProjectAnswerInfoList: item.getProjectAnswerInfoList.sort(
               (a: any, b: any) =>
                 a.answerValue.replace(/^[a-zA-Z]+/, "") -
-                b.answerValue.replace(/^[a-zA-Z]+/, ""),
+                b.answerValue.replace(/^[a-zA-Z]+/, "")
             ),
           };
         });
@@ -415,7 +415,7 @@ const getProjectProblemList = async (id: string | number, judge: boolean) => {
           i++
         ) {
           const item = cloneDeep(
-            localToptTab.value.data.configurationInformation.initialProblem,
+            localToptTab.value.data.configurationInformation.initialProblem
           );
           // 问题id
           item.projectProblemId =
@@ -493,7 +493,7 @@ const showProjectQuotaInfoList = async () => {
       await getProjectProblemList(
         localToptTab.value.data.configurationInformation.initialProblem
           .projectProblemCategoryId,
-        true,
+        true
       );
     }, 100);
   }
@@ -515,7 +515,7 @@ const customModel = (id: any, index: any) => {
           .projectAnswerIdList;
       } else {
         const data = localToptTab.value.projectQuotaInfoList.find(
-          (item: any) => item.projectProblemId === id,
+          (item: any) => item.projectProblemId === id
         );
         return data.projectAnswerIdList;
       }
@@ -526,7 +526,7 @@ const customModel = (id: any, index: any) => {
           newValue;
       } else {
         const data = localToptTab.value.projectQuotaInfoList.find(
-          (item: any) => item.projectProblemId === id,
+          (item: any) => item.projectProblemId === id
         );
         data.projectAnswerIdList = newValue;
       }
@@ -541,7 +541,7 @@ watch(
   (newVal, oleVal) => {
     localToptTab.value = newVal;
   },
-  { deep: true },
+  { deep: true }
 );
 
 onMounted(async () => {
@@ -649,6 +649,18 @@ nextTick(() => {
                       </span>
                     </span>
                   </el-option>
+                  <el-button
+                    size="small"
+                    class="buttonClass"
+                    @click="AddCustomers"
+                  >
+                    快捷新增
+                    <div class="i-ic:round-plus w-1.3em h-1.3em"></div>
+                    <!-- <SvgIcon
+                      name="ant-design:plus-outlined"
+                  style="border-radius: 50%;padding: 2px;margin:0 4px;border: 1px solid #409EFF;"
+                    /> -->
+                  </el-button>
                   <template #empty>
                     <div
                       style="
@@ -666,7 +678,8 @@ nextTick(() => {
                         @click="AddCustomers"
                       >
                         快捷新增
-                        <SvgIcon name="ant-design:plus-outlined" />
+                        <div class="i-ic:round-plus w-1.3em h-1.3em"></div>
+                        <!-- <SvgIcon name="ant-design:plus-outlined" /> -->
                       </el-button>
                     </div>
                   </template>
@@ -1175,6 +1188,25 @@ nextTick(() => {
 </template>
 
 <style lang="scss" scoped>
+.buttonClass {
+  text-align: center;
+  width: 100%;
+  margin: 0.75rem;
+  height: 2rem;
+  font-family: PingFang SC, PingFang SC;
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: #409eff;
+  line-height: 16px;
+  background: #f4f8ff;
+  border-radius: 4px 4px 4px 4px;
+  border: 1px solid #e9eef3;
+}
+/* 使按钮在下拉框展开时自适应宽度 */
+.el-select-dropdown .buttonClass {
+  width: calc(100% - 24px); /* 减去两边的 padding */
+
+}
 .fx-c {
   display: flex;
   justify-content: space-between;

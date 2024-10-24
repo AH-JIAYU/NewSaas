@@ -178,9 +178,22 @@ onMounted(() => {
         <el-table-column v-if="checkList.includes('memberQuantity')" align="left" prop="memberQuantity"
           show-overflow-tooltip label="成员数量">
           <template #default="{ row }">
-            <el-text class="buleBorder" type="primary" >{{
+
+            <span style="display: inline-block" class="tableBig">
+              {{   row.memberQuantity ? row.memberQuantity : 0 }}
+            </span>
+            <el-button v-if="row.memberQuantity" text type="primary" size="small" class="p-1"
+              >
+              <SvgIcon name="mdi:cursor-default-click" size="16px" color="#409eff" />
+            </el-button>
+
+
+
+
+
+            <!-- <el-text class="buleBorder" type="primary" >{{
     row.memberQuantity ? row.memberQuantity : 0
-  }}</el-text>
+  }}</el-text> -->
           </template>
         </el-table-column>
         <el-table-column align="left" fixed="right" show-overflow-tooltip label="操作">

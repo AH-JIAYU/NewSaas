@@ -28,7 +28,7 @@ const lineHeight = ref<any>("default"); // 表格控件-控制表格大小
 const checkList = ref<Array<Object>>([]); // 表格-展示的列
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const formSearchList = ref<any>()//表单排序配置
-const formSearchName=ref<string>('formSearch-vipGroup')// 表单排序name
+const formSearchName = ref<string>('formSearch-vipGroup')// 表单排序name
 const columns = ref<Array<Object>>([
   // 表格控件-展示列
   {
@@ -172,22 +172,23 @@ onMounted(() => {
   });
   queryData();
   formSearchList.value = [
-  { index: 1, show: true, type: 'input', modelName: 'memberGroupId', placeholder: '会员组ID' },
-  { index: 2, show: true, type: 'input', modelName: 'memberGroupName', placeholder: '会员组名称' },
-  { index: 3, show: true, type: 'input', modelName: 'groupLeaderMemberName', placeholder: '组长ID、组长名称' },
-  { index: 4, show: true, type: 'select', modelName: 'groupStatus', placeholder: '会员组状态', option: 'groupStatus',optionLabel: 'label', optionValue: 'value' },
-  { index: 5, show: true, type: 'datetimerange', modelName: 'time', startPlaceHolder: '创建开始日期', endPlaceHolder: '创建结束日期' }
-]
+    { index: 1, show: true, type: 'input', modelName: 'memberGroupId', placeholder: '会员组ID' },
+    { index: 2, show: true, type: 'input', modelName: 'memberGroupName', placeholder: '会员组名称' },
+    { index: 3, show: true, type: 'input', modelName: 'groupLeaderMemberName', placeholder: '组长ID、组长名称' },
+    { index: 4, show: true, type: 'select', modelName: 'groupStatus', placeholder: '会员组状态', option: 'groupStatus', optionLabel: 'label', optionValue: 'value' },
+    { index: 5, show: true, type: 'datetimerange', modelName: 'time', startPlaceHolder: '创建开始日期', endPlaceHolder: '创建结束日期' }
+  ]
 });
-const formOption={
-  groupStatus:()=> [{ label: '关闭', value: 1 }, { label: '开启', value: 2 }]
+const formOption = {
+  groupStatus: () => [{ label: '关闭', value: 1 }, { label: '开启', value: 2 }]
 }
 </script>
 
 <template>
   <div :class="{ 'absolute-container': tableAutoHeight }">
     <PageMain>
-      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="queryForm"  :formOption="formOption" />
+      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange"
+        @onReset="onReset" :model="queryForm" :formOption="formOption" />
       <ElDivider border-style="dashed" />
       <el-row>
         <FormLeftPanel>
@@ -204,8 +205,8 @@ const formOption={
       </el-row>
       <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe">
         <el-table-column align="left" type="selection" />
-        <el-table-column v-if="checkList.includes('groupStatus')" align="left" prop="groupStatus"
-          show-overflow-tooltip label="组状态">
+        <el-table-column v-if="checkList.includes('groupStatus')" align="left" prop="groupStatus" show-overflow-tooltip
+          label="组状态">
           <template #default="{ row }">
             <ElSwitch v-model="row.groupStatus" inline-prompt :inactive-value="1" :active-value="2" inactive-text="禁用"
               active-text="启用" @change="changeState($event, row.memberGroupId)" />
@@ -215,7 +216,7 @@ const formOption={
           show-overflow-tooltip label="会员组ID">
           <template #default="{ row }">
             <div v-if="row.memberGroupId" class="hoverSvg">
-              <p class="fineBom">ID：{{ row.memberGroupId }}</p>
+              <p class="fineBom">{{ row.memberGroupId }}</p>
               <span class="c-fx">
                 <copy class="copy" :content="row.memberGroupId" />
               </span>
@@ -234,7 +235,7 @@ const formOption={
           <template #default="{ row }">
             <div v-if="row.groupLeaderMemberName" class="hoverSvg">
               <div class="weightColor">{{ row.groupLeaderMemberName.split('/')[0] }}</div> &nbsp;&nbsp;
-              <p class="fineBom">ID：{{ row.groupLeaderMemberName.split('/')[1] }}</p>
+              <p class="fineBom">{{ row.groupLeaderMemberName.split('/')[1] }}</p>
               <span class="c-fx">
                 <copy class="copy" :content="row.groupLeaderMemberName.split('/')[1]" />
               </span>
@@ -245,26 +246,25 @@ const formOption={
         <el-table-column v-if="checkList.includes('memberNumber')" width="100" align="left" prop="memberNumber"
           show-overflow-tooltip label="成员">
           <template #default="{ row }">
-            <el-text class="buleBorder" type="primary" >{{
-          row.memberNumber ? row.memberNumber : 0
-        }}</el-text>
+            <el-text class="buleBorder" type="primary">{{
+    row.memberNumber ? row.memberNumber : 0
+  }}</el-text>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('projectNumber')" width="100" align="left" prop="projectNumber"
           show-overflow-tooltip label="项目数">
           <template #default="{ row }">
             <el-text class="buleBorder" type="primary" @click="handleCheck(row)">{{
-          row.projectNumber ? row.projectNumber : 0
-        }}</el-text>
+    row.projectNumber ? row.projectNumber : 0
+  }}</el-text>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('createTime')" align="left" prop="createTime" show-overflow-tooltip
           label="创建时间">
-
           <template #default="{ row }">
-            <el-tag effect="plain" type="info">{{
-    format(row.createTime)
-  }}</el-tag>
+            <el-tooltip :content="row.createTime" placement="top">
+              <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>
+            </el-tooltip>
           </template>
         </el-table-column>
         <el-table-column align="left" prop="i" label="操作" fixed="right" show-overflow-tooltip width="180">
@@ -371,6 +371,7 @@ const formOption={
     color: #333;
   }
 }
+
 .headerIcon {
   display: flex;
   align-items: center;
@@ -386,10 +387,12 @@ const formOption={
   align-items: center;
   justify-content: center;
 }
+
 .copySvg {
   width: 100%;
   height: 100%;
 }
+
 .buleBorder {
   border-bottom: 1px solid #409EFF;
 }

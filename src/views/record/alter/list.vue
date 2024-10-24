@@ -31,8 +31,8 @@ const isFullscreen = ref(false);
 const lineHeight = ref<any>("default");
 const stripe = ref(false);
 const selectRows = ref<any>([]);
-  const formSearchList = ref<any>()//表单排序配置
-const formSearchName=ref<string>('formSearch-alter')// 表单排序name
+const formSearchList = ref<any>()//表单排序配置
+const formSearchName = ref<string>('formSearch-alter')// 表单排序name
 const statusType = [
   { label: "完成", value: "1,0" },
   { label: "审核通过", value: "1,7" },
@@ -109,10 +109,10 @@ function currentChange(page = 1) {
 async function fetchData() {
   try {
     listLoading.value = true;
-    if(queryForm.type) {
-    const type = queryForm.type.split(',')
-    queryForm.surveyType = type[0]
-    queryForm.viceType = type[1]
+    if (queryForm.type) {
+      const type = queryForm.type.split(',')
+      queryForm.surveyType = type[0]
+      queryForm.viceType = type[1]
     }
     const { data } = await api.list(queryForm);
     list.value = data.tenantUpdateRecordVOBuilders;
@@ -133,14 +133,15 @@ onMounted(async () => {
     }
   });
   fetchData();
-  formSearchList.value =  [
+  formSearchList.value = [
     { index: 1, show: true, type: 'input', modelName: 'createUserName', placeholder: '操作人' },
-    { index: 2, show: true, type: 'select', modelName: 'type', placeholder: '变更状态',option: 'type',optionLabel: 'label', optionValue: 'value'
+    {
+      index: 2, show: true, type: 'select', modelName: 'type', placeholder: '变更状态', option: 'type', optionLabel: 'label', optionValue: 'value'
     },
-];
+  ];
 });
-const formOption={
-  type:()=>statusType.map((item:any) => ({ label: item.label, value: item.value }))
+const formOption = {
+  type: () => statusType.map((item: any) => ({ label: item.label, value: item.value }))
 }
 </script>
 
@@ -149,7 +150,8 @@ const formOption={
     'absolute-container': tableAutoHeight,
   }">
     <PageMain>
-      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="queryForm"  :formOption="formOption"/>
+      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange"
+        @onReset="onReset" :model="queryForm" :formOption="formOption" />
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>
@@ -204,9 +206,9 @@ const formOption={
         </el-table-column>
         <el-table-column v-if="checkList.includes('createTime')" prop="createTime" show-overflow-tooltip align="left"
           label="创建时间"><template #default="{ row }">
-            <el-tag effect="plain" type="info">{{
-    format(row.createTime)
-  }}</el-tag>
+            <el-tooltip :content="row.createTime" placement="top">
+              <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>
+            </el-tooltip>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('remark')" prop="remark" show-overflow-tooltip align="left"

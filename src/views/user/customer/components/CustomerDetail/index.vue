@@ -54,6 +54,9 @@ defineExpose({
           <div class="card-header">
             <div class="leftTitle">基本信息</div>
             <div class="rightStatus">
+              <span :class="
+                    detailData.customerStatus === 1 ? 'isOnlineSpanFalse' : 'isOnlineSpanTrue'
+                  "></span>
               <div
                 :class="
                   detailData.customerStatus === 1
@@ -270,24 +273,45 @@ defineExpose({
       border-radius: 3.125rem;
     }
   }
-
+  .isOnlineSpanTrue {
+    background: #03c239;
+    width: .625rem;
+    height: .625rem;
+    display: block;
+    border-radius: 50%;
+    border: 1px solid #03c239;
+  }
+  .isOnlineSpanFalse {
+    background: #d8261a;
+      width:.625rem;
+    height: .625rem;
+    display: block;
+    border-radius: 50%;
+    border: 1px solid #d8261a;
+    }
   .rightStatus {
     position: relative;
+    // width: 128px;
+    width: 80px;
 
     >div {
-      width: 100px;
-      text-align: center;
-      border-radius: 0.3rem;
-      color: #fff;
-      font-size: 20.8px;
+      // width: 100px;
+      // text-align: center;
+      // border-radius: 0.3rem;
+      // color: #fff;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.125rem;
     }
 
     >div.isOnlineTrue {
-      background-color: #03C239;
+      color: #03C239;
     }
 
     >div.isOnlineFalse {
-      background-color: #d8261a;
+      color: #d8261a;
     }
   }
 }

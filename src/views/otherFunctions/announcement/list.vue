@@ -22,7 +22,7 @@ const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
 const tabbar = useTabbar();
 const settingsStore = useSettingsStore();
 const formSearchList = ref<any>()//表单排序配置
-const formSearchName=ref<string>('formSearch-announcement')// 表单排序name
+const formSearchName = ref<string>('formSearch-announcement')// 表单排序name
 // 表格控件-展示列
 const columns = ref([
   {
@@ -255,10 +255,10 @@ onMounted(() => {
   formSearchList.value = [
     { index: 1, show: true, type: 'input', modelName: 'title', placeholder: '请输入标题' },
     { index: 2, show: true, type: 'select', modelName: 'type', placeholder: '请选择类型', option: 'type', optionLabel: 'label', optionValue: 'value' }
-]
+  ]
 });
-const formOption={
-  type:()=>type
+const formOption = {
+  type: () => type
 }
 onBeforeUnmount(() => {
   if (data.value.formMode === "router") {
@@ -270,7 +270,8 @@ onBeforeUnmount(() => {
 <template>
   <div :class="{ 'absolute-container': data.tableAutoHeight }">
     <PageMain>
-      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="data.search"  :formOption="formOption" />
+      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange"
+        @onReset="onReset" :model="data.search" :formOption="formOption" />
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>
@@ -304,8 +305,7 @@ onBeforeUnmount(() => {
             </el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('type')" align="left" show-overflow-tooltip prop="type"
-          label="类型">
+        <ElTableColumn v-if="data.checkList.includes('type')" align="left" show-overflow-tooltip prop="type" label="类型">
           <template #default="{ row }">
             <el-text class="tableBig">
               {{ type[row.type - 1].label }}
@@ -314,11 +314,11 @@ onBeforeUnmount(() => {
         </ElTableColumn>
 
         <ElTableColumn v-if="data.checkList.includes('createTime')" label="创建时间" align="left" show-overflow-tooltip
-          prop="createTime"  >
+          prop="createTime">
           <template #default="{ row }">
-            <el-tag effect="plain" type="info">{{
-    format(row.createTime)
-  }}</el-tag>
+            <el-tooltip :content="row.createTime" placement="top">
+              <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>
+            </el-tooltip>
           </template>
         </ElTableColumn>
         <ElTableColumn label="操作" width="300" align="left" fixed="right">
@@ -398,6 +398,7 @@ onBeforeUnmount(() => {
     }
   }
 }
+
 .flex-s {
   display: flex;
   justify-content: start;

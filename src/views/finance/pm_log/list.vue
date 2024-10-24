@@ -16,7 +16,7 @@ const usePositionManage = usePositionManageStore();
 // 职位数据
 const positionManageList = ref<any>();
 // 时间
-const { format } = useTimeago();
+// const { format } = useTimeago();
 const router = useRouter();
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
@@ -312,7 +312,7 @@ function handleCurrentChange(val: any) {
 
 <style lang="scss" scoped>
 .copyId .idFont {
-  font-size:14px;
+  font-size:.875rem;
 }
 .copyId  .current {
     display: block !important;

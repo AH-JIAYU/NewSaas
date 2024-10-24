@@ -36,7 +36,7 @@ const border = ref(false);
 const checkList = ref<any>([]);
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const formSearchList = ref<any>()//表单排序配置
-const formSearchName=ref<string>('formSearch-myProjeck')// 表单排序name
+const formSearchName = ref<string>('formSearch-myProjeck')// 表单排序name
 // 表格控件-控制全屏
 const lineHeight = ref<any>("default");
 const stripe = ref(false);
@@ -147,9 +147,9 @@ async function fetchData() {
       params.beginTime = queryForm.time[0] || "";
       params.endTime = queryForm.time[1] || "";
     }
-    if(!Array.isArray(queryForm.countryId)&&queryForm.countryId){
+    if (!Array.isArray(queryForm.countryId) && queryForm.countryId) {
       params.countryId = [queryForm.countryId];
-    }else{
+    } else {
       params.countryId = []
     }
     const res = await api.list(params);
@@ -200,11 +200,11 @@ onMounted(async () => {
     { index: 5, show: true, type: 'select', modelName: 'clientId', placeholder: '客户简称', option: 'clientId', optionLabel: 'customerAccord', optionValue: 'tenantCustomerId' },
     { index: 6, show: true, type: 'select', modelName: 'b2bOrB2cStatus', placeholder: 'B2B/B2C', option: 'b2bOrB2cStatus', optionLabel: 'label', optionValue: 'value' },
     { index: 7, show: true, type: 'datetimerange', modelName: 'time', startPlaceHolder: '创建开始日期', endPlaceHolder: '创建结束日期' },
-];
+  ];
 });
-const formOption={
-  clientId: ()=> customerList.value,
-  b2bOrB2cStatus:()=>[{ label: 'B2B', value: 1 }, { label: 'B2C', value: 2 }],
+const formOption = {
+  clientId: () => customerList.value,
+  b2bOrB2cStatus: () => [{ label: 'B2B', value: 1 }, { label: 'B2C', value: 2 }],
 }
 </script>
 
@@ -213,7 +213,8 @@ const formOption={
     'absolute-container': tableAutoHeight,
   }">
     <PageMain>
-      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="queryForm"  :formOption="formOption"/>
+      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange"
+        @onReset="onReset" :model="queryForm" :formOption="formOption" />
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel />
@@ -361,11 +362,10 @@ const formOption={
         </el-table-column> -->
         <el-table-column v-if="checkList.includes('createTime')" show-overflow-tooltip prop="createTime" align="left"
           label="创建时间">
-
           <template #default="{ row }">
-            <el-tag effect="plain" type="info">{{
-    format(row.createTime)
-  }}</el-tag>
+            <el-tooltip :content="row.createTime" placement="top">
+              <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>
+            </el-tooltip>
           </template>
         </el-table-column>
         <el-table-column align="left" fixed="right" label="操作" width="200">
@@ -469,7 +469,7 @@ const formOption={
 
 .fineBom {
   color: #777;
-  font-size: 14px;
+  font-size: .875rem;
   white-space: nowrap;
   overflow: hidden;
   font-weight: 700;
@@ -485,7 +485,7 @@ const formOption={
 }
 .withoutUrlSize {
   color: #333;
-  font-size: 14px;
+  font-size: .875rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -549,5 +549,4 @@ const formOption={
 // .copySvg {
 //   width: 100%;
 //   height: 100%;
-// }
-</style>
+// }</style>

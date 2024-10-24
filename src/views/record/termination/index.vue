@@ -445,9 +445,9 @@ function handleCurrentChange(val: any) {
           show-overflow-tooltip
         >
           <template #default="{ row }">
-            <el-tag effect="plain" type="info">{{
-              format(row.terminationTime)
-            }}</el-tag>
+            <el-tooltip :content="row.createTime" placement="top">
+              <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>
+            </el-tooltip>
           </template>
         </el-table-column>
         <el-table-column
@@ -488,7 +488,7 @@ function handleCurrentChange(val: any) {
 
 <style scoped lang="scss">
 .copyId .projectId {
-  font-size: 14px;
+  font-size: .875rem;
 }
 .copyId .current {
   display: block !important;

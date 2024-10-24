@@ -22,6 +22,13 @@ const formSearchName=ref<string>('formSearch-financialLogs')// 表单排序name
 const columns = ref([
   // 表格控件-展示列
   {
+    label: "点击ID",
+    prop: "clientId",
+    sortable: true,
+    disableCheck: false, // 不可更改
+    checked: true, // 默认展示
+  },
+  {
     label: "会员ID",
     prop: "memberId",
     sortable: true,
@@ -262,6 +269,23 @@ function handleCurrentChange(val: any) {
         @selection-change="data.batch.selectionDataList = $event">
         <el-table-column align="left" prop="a" show-overflow-tooltip type="selection" />
         <ElTableColumn v-if="data.batch.enable" type="selection" show-overflow-tooltip align="left" fixed />
+        <ElTableColumn v-if="data.checkList.includes('clientId')" show-overflow-tooltip width="200" align="left"
+          prop="clientId" label="点击ID">
+          <template #default="{ row }">
+            <div v-if="row.clientId" class="hoverSvg">
+              <p class="fineBom">{{ row.clientId }}</p>
+              <span class="c-fx">
+                <copy
+                :content="row.clientId"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.id === current,
+                }"/>
+              </span>
+            </div>
+            <el-text v-else>-</el-text>
+          </template>
+        </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('randomIdentity')" show-overflow-tooltip width="200" align="left"
           prop="randomIdentity" label="随机身份">
           <template #default="{ row }">
@@ -359,11 +383,10 @@ function handleCurrentChange(val: any) {
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('updateTime')" show-overflow-tooltip align="left"
           prop="updateTime" label="创建时间">
-
           <template #default="{ row }">
-            <el-tag effect="plain" type="info">{{
-    format(row.updateTime)
-  }}</el-tag>
+            <el-tooltip :content="row.updateTime" placement="top">
+                <el-tag effect="plain" type="info">{{format(row.updateTime)}}</el-tag>
+              </el-tooltip>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('remark')" show-overflow-tooltip align="left" prop="remark"
@@ -440,7 +463,7 @@ function handleCurrentChange(val: any) {
 }
 .fineBom {
   text-align: left !important;
-  font-size: 14px;
+  font-size: .875rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

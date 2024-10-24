@@ -776,15 +776,15 @@ const formOption = {
           v-if="checkList.includes('create')"
           prop="createTime"
           align="left"
-          width="100"
+          width="120"
           label="创建"
           show-overflow-tooltip
           ><template #default="{ row }">
             <div>
               <div class="tableBig oneLine">{{ row.createName }}</div>
-              <el-tag effect="plain" type="info">{{
-                format(row.createTime)
-              }}</el-tag>
+              <el-tooltip :content="row.createTime" placement="top">
+                <el-tag effect="plain" type="info">{{format(row.createTime)}}</el-tag>
+              </el-tooltip>
             </div>
           </template>
         </el-table-column>
@@ -809,7 +809,7 @@ const formOption = {
             </div>
           </template>
         </el-table-column>
-        <el-table-column align="left" fixed="right" label="操作" width="240">
+        <el-table-column align="left" fixed="right" label="操作" width="230">
           <template #default="{ row }">
             <el-button
               v-if="row.allocationStatus === 1"

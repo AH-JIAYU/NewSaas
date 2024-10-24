@@ -16,7 +16,7 @@ defineOptions({
 });
 
 // 时间
-const { format } = useTimeago();
+// const { format } = useTimeago();
 //区域
 const basicDictionaryStore = useBasicDictionaryStore();
 const countryList = ref<any>();
@@ -756,7 +756,7 @@ function handleMoreOperating(command: string, row: any) {
 
 <style scoped lang="scss">
 .copyId .projectId {
-  font-size:14px;
+  font-size:.875rem;
 }
 .rowCopy {
   width: 20px;

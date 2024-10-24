@@ -379,7 +379,7 @@ onMounted(() => {
                 <div class="copyId tableSmall">
                   <div class="id oneLine projectId">{{ row.projectId }}</div>
                   <copy
-                    :content="row.memberChildId"
+                    :content="row.projectId"
                     :class="{
                       rowCopy: 'rowCopy',
                       current: row.projectId === tabs1Current,
@@ -389,16 +389,11 @@ onMounted(() => {
                 </div>
               </template>
             </el-table-column>
-            <el-table-column
-              v-if="checkList.includes('createTime')"
-              show-overflow-tooltip
-              prop="createTime"
-              align="left"
-              label="创建"
-              ><template #default="{ row }">
-                <el-tag effect="plain" type="info">{{
-                  format(row.createTime)
-                }}</el-tag>
+            <el-table-column v-if="checkList.includes('createTime')" show-overflow-tooltip prop="createTime"
+              align="left" label="创建"><template #default="{ row }">
+                <el-tooltip :content="row.createTime" placement="top">
+                  <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>
+                </el-tooltip>
               </template>
             </el-table-column>
             <el-table-column
@@ -624,23 +619,13 @@ onMounted(() => {
                 </div>
               </template>
             </el-table-column>
-            <el-table-column
-              v-if="checkList.includes('customerIdentification')"
-              show-overflow-tooltip
-              prop="customerIdentification"
-              align="left"
-              label="客户简称/标识"
-            />
-            <el-table-column
-              v-if="checkList.includes('createTime')"
-              show-overflow-tooltip
-              prop="createTime"
-              align="left"
-              label="创建"
-              ><template #default="{ row }">
-                <el-tag effect="plain" type="info">{{
-                  format(row.createTime)
-                }}</el-tag>
+            <el-table-column v-if="checkList.includes('customerIdentification')" show-overflow-tooltip
+              prop="customerIdentification" align="left" label="客户简称/标识" />
+            <el-table-column v-if="checkList.includes('createTime')" show-overflow-tooltip prop="createTime"
+              align="left" label="创建"><template #default="{ row }">
+                <el-tooltip :content="row.createTime" placement="top">
+                  <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>
+                </el-tooltip>
               </template>
             </el-table-column>
             <el-table-column
@@ -721,7 +706,7 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .copyId .projectId {
-  font-size: 14px;
+  font-size: .875rem;
 }
 .copyId  .current {
     display: block !important;

@@ -517,7 +517,7 @@ defineExpose({
           <p class="detail">1、登录域名注册商的网站，找到管理域名的控制面板或域名管理页面。</p>
           <p class="detail">2、在域名管理页面中，找到DNS设置、域名解析或类似的选项。</p>
           <p class="detail">3、添加相应的DNS记录来完成域名解析。注意<span>仅支持采用CNAME </span>记录来完成解析。</p>
-          <p class="detail bule">4、顶级域名请用一级域名；租户域名、供应商域名、会员域名，为顶级域名下的二级域名，HTTPS需要配置通配符证书</p>
+          <p class="detail bule">4、下面配置域名, 同属于一个域名下的二三级域名, HTTPS需要配置通配符证书</p>
         </div>
       </div>
       <div class="steps">
@@ -526,16 +526,16 @@ defineExpose({
           <el-row style="margin: 0 !important" :gutter="20">
             <div class="f-xc">
               <el-col :span="10">
-                <el-form-item label="顶级域名" prop="domain">
+                <el-form-item label="官网域名" prop="domain">
                   <el-input style="width: 14.5rem;" v-model="fileList.domain" :disabled="form.isAnalysis"
-                    placeholder="请输入顶级域名" @blur="getDomainRecord(fileList.domain)">
+                    placeholder="请输入官网域名" @blur="getDomainRecord(fileList.domain)">
                     <template #append>
                       <copy class="copy" :content="fileList.domain" />
                     </template>
                   </el-input>
                 </el-form-item>
               </el-col>
-              <template v-if="checkDomainRecord.isKeepOnRecord">
+              <template v-if="checkDomainRecord.isKeepOnRecord || form.isAnalysis">
                 <el-col :span="10">
                   <el-form-item label="指向域名">
                     <!-- <el-input disabled style="width: 16.375rem;" v-model="form.domain" /> -->
