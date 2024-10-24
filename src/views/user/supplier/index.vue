@@ -82,6 +82,12 @@ const columns = ref<Array<Object>>([
     sortable: true,
     prop: "supplierStatus",
   },
+  {
+    label: "调查系统",
+    checked: true,
+    sortable: true,
+    prop: "surveySystem",
+  },
   { label: "创建时间", checked: true, sortable: true, prop: "createTime" },
   { label: "备注", checked: true, sortable: true, prop: "remark" },
 ]);
@@ -377,6 +383,26 @@ const formOption = {
           </template>
         </el-table-column>
         <el-table-column
+          v-if="checkList.includes('surveySystem')"
+          align="left"
+          show-overflow-tooltip
+          label="调查状态"
+        >
+          <template #default="{ row }">
+
+            <ElSwitch
+
+              v-model="row.surveySystem"
+              inline-prompt
+              :inactive-value="1"
+              :active-value="2"
+              inactive-text="禁用"
+              active-text="启用"
+              @change="changeState($event, row.tenantSupplierId)"
+            />
+          </template>
+        </el-table-column>
+        <el-table-column
           v-if="checkList.includes('supplierAccord')"
           align="left"
           prop="supplierAccord"
@@ -445,10 +471,12 @@ const formOption = {
           prop="supplierLevelId"
           show-overflow-tooltip
           label="供应商等级"
+           width="130"
         >
           <template #default="{ row }">
             <div class="flex-c tableBig">
-              <div class="oneLine" style="width: calc(100% - 20px)">
+              <!-- style="width: calc(100% - 20px)" -->
+              <div class="oneLine" >
                 {{ supperLevel(row.supplierLevelId) }}
               </div>
               <SvgIcon

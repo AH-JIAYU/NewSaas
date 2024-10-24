@@ -259,7 +259,7 @@ onBeforeUnmount(() => {
         <ElTableColumn v-if="data.checkList.includes('typeId')" show-overflow-tooltip align="left" prop=""
           label="供应商ID/内部调查站">
           <template #default="{ row }">
-            <el-text v-if="row.typeId == 1"  class="fontColor">内部调查站</el-text>
+            <el-text v-if="row.typeId == 1"  class="fontColor tableBig">内部调查站</el-text>
             <el-text v-else  class="fontColor">{{ row.typeId ? row.typeId : "-" }}</el-text>
           </template>
         </ElTableColumn>
@@ -271,8 +271,11 @@ onBeforeUnmount(() => {
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('type')" show-overflow-tooltip align="left" prop="" label="类型">
           <template #default="{ row }">
-            <el-text v-if="row.type == 1"  class="fontColor">待审金额</el-text>
-            <el-text v-if="row.type == 2"  class="fontColor">可用金额</el-text>
+            <el-tag v-if="row.type === 1" type="warning" effect="dark">待审余额</el-tag>
+            <el-tag v-if="row.type === 2" type="primary" effect="dark">可用余额</el-tag>
+
+            <!-- <el-text v-if="row.type == 1"  class="fontColor">待审金额</el-text>
+            <el-text v-if="row.type == 2"  class="fontColor">可用金额</el-text> -->
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('remark')" show-overflow-tooltip align="left" prop="remark"
@@ -283,13 +286,13 @@ onBeforeUnmount(() => {
                 parseStatusString(row.remark)[1]
               }`
             }}</el-text> -->
-            <el-text class="mx-1 fontColor" >{{ row.remark ? row.remark : "-" }}</el-text>
+            <el-text class="mx-1 fontColor tableBig" >{{ row.remark ? row.remark : "-" }}</el-text>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('beforeBalance')" show-overflow-tooltip align="left"
           prop="beforeBalance" width="150" label="变动前">
           <template #default="{ row }">
-            <CurrencyType /><el-text class="fontColor">{{ row.beforeBalance || 0 }}</el-text>
+            <CurrencyType /><el-text class="fontColor tableBig">{{ row.beforeBalance || 0 }}</el-text>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('addAndSubtraction')" show-overflow-tooltip align="left"
@@ -306,7 +309,7 @@ onBeforeUnmount(() => {
         <ElTableColumn v-if="data.checkList.includes('afterBalance')" show-overflow-tooltip align="left"
           prop="afterBalance" width="150" label="变动后">
           <template #default="{ row }">
-            <CurrencyType /><el-text class="fontColor">{{ row.afterBalance || 0 }}</el-text>
+            <CurrencyType /><el-text class="fontColor tableBig">{{ row.afterBalance || 0 }}</el-text>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('createTime')" show-overflow-tooltip align="left"
@@ -326,8 +329,13 @@ onBeforeUnmount(() => {
 </template>
 
 <style lang="scss" scoped>
+ /* 自定义标签背景 */
+ .el-tag--dark.el-tag--warning {
+    background-color: #FFAC54 !important;
+  }
+
 .fontColor {
-  color: #333333;
+  color: #333333 !important;
 }
 .absolute-container {
   position: absolute;

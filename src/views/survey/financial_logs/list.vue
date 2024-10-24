@@ -407,6 +407,9 @@ function handleCurrentChange(val: any) {
 </template>
 
 <style lang="scss" scoped>
+ .el-tag--dark.el-tag--warning {
+    background-color: #FFAC54 !important;
+  }
 .rowCopy {
   width: 20px;
   display: none;

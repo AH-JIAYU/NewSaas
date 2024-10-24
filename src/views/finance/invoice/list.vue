@@ -415,7 +415,7 @@ onMounted(() => {
           label="客户简称"
         >
           <template #default="{ row }">
-            <el-text class="fontColor">{{
+            <el-text class="fontColor tableBig">{{
               row.tenantCustomerShortName
             }}</el-text>
           </template>
@@ -441,7 +441,7 @@ onMounted(() => {
         >
           <template #default="{ row }">
             <CurrencyType />
-            <el-text class="fontColor">{{ row.invoiceAmount || 0 }}</el-text>
+            <el-text class="fontColor tableBig">{{ row.invoiceAmount || 0 }}</el-text>
           </template></el-table-column
         >
         <el-table-column
@@ -452,7 +452,7 @@ onMounted(() => {
           label="手续费(税)"
         >
           <template #default="{ row }">
-            <CurrencyType />{{ row.invoiceTax || 0 }}
+            <CurrencyType /><el-text class="fontColor tableBig">{{ row.invoiceTax || 0 }}</el-text>
           </template></el-table-column
         >
         <el-table-column
@@ -463,7 +463,7 @@ onMounted(() => {
           label="实收款"
         >
           <template #default="{ row }">
-            <CurrencyType /><el-text class="fontColor">{{
+            <CurrencyType /><el-text class="fontColor tableBig">{{
               row.actualReceipts || 0
             }}</el-text>
           </template></el-table-column
@@ -502,16 +502,16 @@ onMounted(() => {
           label="状态"
         >
           <template #default="{ row }">
-            <el-text v-if="row.invoiceStatus === 1" class="mx-1 fontColor" type="info"
+            <el-text v-if="row.invoiceStatus === 1" class="mx-1  color1 tableBig"
               >未收款</el-text
             >
-            <el-text v-if="row.invoiceStatus === 2" class="mx-1 fontColor" type="warning"
+            <el-text v-if="row.invoiceStatus === 2" class="mx-1  color2 tableBig"
               >部分收款</el-text
             >
-            <el-text v-if="row.invoiceStatus === 3" class="mx-1 fontColor" type="success"
+            <el-text v-if="row.invoiceStatus === 3" class="mx-1  color3 tableBig"
               >已完结</el-text
             >
-            <el-text v-if="row.invoiceStatus === 4" class="mx-1 fontColor" type="danger"
+            <el-text v-if="row.invoiceStatus === 4" class="mx-1  color4 tableBig"
               >坏账</el-text
             >
           </template>
@@ -521,7 +521,13 @@ onMounted(() => {
           prop="remark"
           align="left"
           label="备注"
-        />
+        >
+        <template #default="{ row }">
+        <el-text class="mx-1  tableBig"
+              >{{ row.remark }}</el-text
+            >
+            </template>
+        </el-table-column>
         <el-table-column align="left" fixed="right" label="操作" width="170">
           <template #default="{ row }">
             <el-button size="small" plain type="primary" @click="editData(row)">
@@ -555,7 +561,19 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .fontColor {
-  color: #333333;
+  color: #333333 !important;
+}
+.color1 {
+  color:#FFB365 !important;
+}
+.color2 {
+  color:#409EFF !important;
+}
+.color3 {
+  color:#03C239 !important;
+}
+.color4{
+  color:#FB6868 !important;
 }
 .el-pagination {
   margin-top: 15px;
