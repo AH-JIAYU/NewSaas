@@ -445,8 +445,8 @@ function handleCurrentChange(val: any) {
           show-overflow-tooltip
         >
           <template #default="{ row }">
-            <el-tooltip :content="row.createTime" placement="top">
-              <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>
+            <el-tooltip :content="row.terminationTime" placement="top">
+              <el-tag effect="plain" type="info">{{ format(row.terminationTime) }}</el-tag>
             </el-tooltip>
           </template>
         </el-table-column>

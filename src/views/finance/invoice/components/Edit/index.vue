@@ -59,6 +59,25 @@ const form = ref<any>({
 const formRules = ref<FormRules>({
   invoiceCode: [{ required: true, trigger: "blur", message: "请输入发票编号" }],
   tenantCustomerId: [{ required: true, trigger: "change", message: "请选择客户" }],
+  invoiceStatus: [{ required: true, trigger: "change", message: "请选择发票状态" }],
+  invoiceAmount: [
+    { required: true, trigger: "blur", message: "请输入发票金额" },
+    {
+      validator: (rule, value, callback) => {
+        // 正则表达式：只允许数字和最多一个小数点
+        const pattern = /^\d+(\.\d{1,10})?$/;
+        if (!value) {
+          callback(new Error("请输入发票金额"));
+        } else if (!pattern.test(value)) {
+          callback(new Error("格式不正确，请输入有效的金额"));
+        } else {
+          callback(); // 验证通过
+        }
+      },
+      trigger: "blur"
+    }
+  ],
+  invoiceDate: [{ required: true, trigger: "change", message: "请选择开票日期" }],
 });
 // 提交数据
 function onSubmit() {
@@ -165,13 +184,37 @@ onMounted(async () => {
   defaultTime.value = new Date();
   await getCustomerList()
 });
+const close = () => {
+  formRef.value.resetFields();
+  Object.assign(form.value, {
+    id: null,
+    // 客户id
+    tenantCustomerId: "",
+    // 发票编号
+    invoiceCode: "",
+    // 发票金额
+    invoiceAmount: null,
+    // 税
+    invoiceTax: null,
+    // 实际收款
+    actualReceipts: null,
+    // 发票状态 （未收款、部分收款、已完结、坏账）
+    invoiceStatus: null,
+    // 开票日期
+    invoiceDate: "",
+    // 收款日期
+    paymentDate: "",
+    // 备注
+    remark: "",
+  })
+}
 // 暴露方法
 defineExpose({ showEdit });
 </script>
 
 <template>
   <div v-loading="loading">
-    <el-dialog v-model="dialogTableVisible" :title="title" width="700">
+    <el-dialog v-model="dialogTableVisible" :title="title" width="700" @close="close">
       <el-form ref="formRef" label-width="7rem" :model="form" :rules="formRules" :inline="false">
         <el-form-item label="客户简称" prop="tenantCustomerId">
           <el-select v-model="form.tenantCustomerId" placeholder="请选择客户" clearable filterable>
@@ -192,21 +235,21 @@ defineExpose({ showEdit });
         <el-form-item prop="invoiceCode" label="发票编号">
           <el-input v-model="form.invoiceCode" placeholder="请输入发票编号" clearable />
         </el-form-item>
-        <el-form-item label="发票金额">
-          <el-input v-model.number="form.invoiceAmount" placeholder="请输入发票金额" clearable />
+        <el-form-item prop="invoiceAmount" label="发票金额">
+          <el-input v-model="form.invoiceAmount" placeholder="请输入发票金额" clearable />
         </el-form-item>
         <el-form-item label="手续费(税)">
-          <el-input v-model.number="form.invoiceTax" placeholder="请输入手续费" clearable />
+          <el-input v-model="form.invoiceTax" placeholder="请输入手续费" clearable />
         </el-form-item>
         <el-form-item label="实际收款">
-          <el-input v-model.number="form.actualReceipts" placeholder="请输入实际收款" clearable />
+          <el-input v-model="form.actualReceipts" placeholder="请输入实际收款" clearable />
         </el-form-item>
-        <el-form-item label="发票状态">
+        <el-form-item prop="invoiceStatus" label="发票状态">
           <el-select v-model="form.invoiceStatus" placeholder="请选择发票状态" clearable filterable>
             <ElOption v-for="item in invoiceStatusList" :label="item.lable" :value="item.value"></ElOption>
           </el-select>
         </el-form-item>
-        <el-form-item style="width: 100%" label="开票日期">
+        <el-form-item style="width: 100%" prop="invoiceDate" label="开票日期">
           <el-date-picker v-model="form.invoiceDate" :default-time="defaultTime" type="datetime" placeholder="请选择开票日期"
             value-format="YYYY-MM-DD hh:mm:ss" />
         </el-form-item>
