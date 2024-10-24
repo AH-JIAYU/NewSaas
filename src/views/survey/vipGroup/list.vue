@@ -216,7 +216,7 @@ const formOption = {
           show-overflow-tooltip label="会员组ID">
           <template #default="{ row }">
             <div v-if="row.memberGroupId" class="hoverSvg">
-              <p class="fineBom">ID：{{ row.memberGroupId }}</p>
+              <p class="fineBom">{{ row.memberGroupId }}</p>
               <span class="c-fx">
                 <copy class="copy" :content="row.memberGroupId" />
               </span>
@@ -235,7 +235,7 @@ const formOption = {
           <template #default="{ row }">
             <div v-if="row.groupLeaderMemberName" class="hoverSvg">
               <div class="weightColor">{{ row.groupLeaderMemberName.split('/')[0] }}</div> &nbsp;&nbsp;
-              <p class="fineBom">ID：{{ row.groupLeaderMemberName.split('/')[1] }}</p>
+              <p class="fineBom">{{ row.groupLeaderMemberName.split('/')[1] }}</p>
               <span class="c-fx">
                 <copy class="copy" :content="row.groupLeaderMemberName.split('/')[1]" />
               </span>

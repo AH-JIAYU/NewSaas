@@ -167,8 +167,7 @@ nextTick(() => {
                         暂无数据
                         <el-button type="primary" link size="small" @click="addSupplierLevel">
                           快捷新增
-                          <SvgIcon name="ant-design:plus-outlined" color="#fff"
-                            style="background-color: var(--el-color-primary);border-radius: 50%;padding: 2px;margin:0 2px" />
+                          <div class="i-ic:round-plus w-1.3em h-1.3em"></div>
                         </el-button>
                       </div>
                     </template>
@@ -180,10 +179,7 @@ nextTick(() => {
                       @click="addSupplierLevel"
                     >
                       快捷新增
-                      <SvgIcon
-                        name="ant-design:plus-outlined"
-                       style="border-radius: 50%;padding: 2px;margin:0 4px;border: 1px solid #409EFF;"
-                      />
+                      <div class="i-ic:round-plus w-1.3em h-1.3em"></div>
                     </el-button>
                   </el-select>
                 </el-form-item>
