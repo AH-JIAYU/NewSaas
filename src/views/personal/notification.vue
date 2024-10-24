@@ -9,7 +9,7 @@ import useNotificationStore from "@/store/modules/notification"; //消息中心
 import { OverlayScrollbarsComponent } from "overlayscrollbars-vue";
 import news from "./notification-news.vue";
 import cooperation from "./notification-cooperation.vue";
-import empty from '@/assets/images/empty.png'
+import empty from "@/assets/images/empty.png";
 defineOptions({
   name: "PersonalNotification",
 });
@@ -31,8 +31,7 @@ function showEditNews(row: any) {
   // data.value.type = 1;
   nextTick(() => {
     newsRef.value?.showEdit(row);
-  })
-
+  });
 }
 
 // 待办
@@ -41,7 +40,7 @@ function showEditCooperation(row: any) {
   // data.value.type = 2;
   nextTick(() => {
     cooperationRef.value.showEdit(row);
-  })
+  });
 }
 // 切换消息或待办
 const changeTabs = async () => {
@@ -49,12 +48,12 @@ const changeTabs = async () => {
   data.value.selectId = "";
   // 默认显示未读
   data.value.ReadAlready = 1;
-  if (data.value.tabs === 'news') {
+  if (data.value.tabs === "news") {
     await notificationStore.getUnreadMessage(); // 重新获取消息列表
-  } else if (data.value.tabs === 'cooperation') {
+  } else if (data.value.tabs === "cooperation") {
     await notificationStore.getUnreadTodo(); // 重新获取待办列表
   }
-}
+};
 // 已读后清除右侧详情
 async function delSelectId() {
   // 清除右侧组件
@@ -62,34 +61,44 @@ async function delSelectId() {
 }
 // 切换已读未读
 const readButNotRead = async (val: any) => {
-  data.value.ReadAlready = val
-  if (data.value.tabs === 'news') {
+  data.value.ReadAlready = val;
+  if (data.value.tabs === "news") {
     await notificationStore.getUnreadMessage(); // 重新获取消息列表
-  } else if (data.value.tabs === 'cooperation') {
+  } else if (data.value.tabs === "cooperation") {
     await notificationStore.getUnreadTodo(); // 重新获取待办列表
   }
-}
+};
 const filterMessageList = computed(() => {
-  return notificationStore.messageList.filter((item: any) => item.isReadAlready === data.value.ReadAlready)
-})
+  return notificationStore.messageList.filter(
+    (item: any) => item.isReadAlready === data.value.ReadAlready,
+  );
+});
 const filterTodoList = computed(() => {
-  return notificationStore.todoList.filter((item: any) => item.isReadAlready === data.value.ReadAlready)
-})
+  if (data.value.ReadAlready === 1) {
+    return notificationStore.todoList.filter(
+      (item: any) => item.auditStatus === 1,
+    );
+  } else {
+    return notificationStore.todoList.filter(
+      (item: any) => item.auditStatus !== 1,
+    );
+  }
+});
 
 onMounted(() => {
   // 查看websocket状态
-  notificationStore.isItConnected()
+  notificationStore.isItConnected();
   // 从铃铛的消息列表点进来会直接展示这条消息
   data.value.tabs = route.query.type == 2 ? "cooperation" : "news";
   if (route.query.id) {
     if (Number(route.query.type) === 1) {
       const findData = notificationStore.messageList.find(
-        (item: any) => item.id === route.query.id
+        (item: any) => item.id === route.query.id,
       );
       findData && showEditNews(findData);
     } else if (Number(route.query.type) === 2) {
       const findData = notificationStore.todoList.find(
-        (item: any) => item.id === route.query.id
+        (item: any) => item.id === route.query.id,
       );
       findData && showEditCooperation(findData);
     }
@@ -105,25 +114,54 @@ onMounted(() => {
           <el-tabs v-model="data.tabs" @tab-change="changeTabs">
             <el-tab-pane label="消息" name="news">
               <div class="buttons">
-                <button :class="data.ReadAlready === 1 ? 'unread' : ''" @click="readButNotRead(1)">未读{{
-            notificationStore.message < 100 ? `(${notificationStore.message})` : '99+' }}</button>
-                    <button :class="data.ReadAlready === 2 ? 'read' : ''" read @click="readButNotRead(2)">已读</button>
+                <button
+                  :class="data.ReadAlready === 1 ? 'unread' : ''"
+                  @click="readButNotRead(1)"
+                >
+                  未读{{
+                    notificationStore.message < 100
+                      ? `(${notificationStore.message})`
+                      : "99+"
+                  }}
+                </button>
+                <button
+                  :class="data.ReadAlready === 2 ? 'read' : ''"
+                  read
+                  @click="readButNotRead(2)"
+                >
+                  已读
+                </button>
               </div>
-              <OverlayScrollbarsComponent :options="{
-            scrollbars: { autoHide: 'leave', autoHideDelay: 300 },
-          }" defer class="list">
+              <OverlayScrollbarsComponent
+                :options="{
+                  scrollbars: { autoHide: 'leave', autoHideDelay: 300 },
+                }"
+                defer
+                class="list"
+              >
                 <template v-if="filterMessageList.length">
-                  <div :class="{
-            item: 'item',
-            select: item.id === data.selectId,
-          }" v-for="item in filterMessageList" @click="showEditNews(item)">
+                  <div
+                    :class="{
+                      item: 'item',
+                      select: item.id === data.selectId,
+                    }"
+                    v-for="item in filterMessageList"
+                    @click="showEditNews(item)"
+                  >
                     <div class="info">
-                      <div class=" time">
+                      <div class="time">
                         <!-- 未读标识 -->
-                        <span v-if="item.isReadAlready === 1" class="new"></span>
+                        <span
+                          v-if="item.isReadAlready === 1"
+                          class="new"
+                        ></span>
                         <!-- 合作邀约 -->
                         <span class="auditType">
-                          {{ notificationStore.auditTypeList[item.auditType - 1] || "" }}
+                          {{
+                            notificationStore.auditTypeList[
+                              item.auditType - 1
+                            ] || ""
+                          }}
                         </span>
                         <span class="time">
                           {{ item.createTime }}
@@ -142,26 +180,55 @@ onMounted(() => {
             </el-tab-pane>
             <el-tab-pane label="代办" name="cooperation">
               <div class="buttons">
-                <button :class="data.ReadAlready === 1 ? 'unread' : ''" @click="readButNotRead(1)">待办{{
-            notificationStore.todo < 100 ? `(${notificationStore.todo})` : '99+' }}</button>
-                    <button :class="data.ReadAlready === 2 ? 'read' : ''" read @click="readButNotRead(2)">已办</button>
+                <button
+                  :class="data.ReadAlready === 1 ? 'unread' : ''"
+                  @click="readButNotRead(1)"
+                >
+                  待办{{
+                    notificationStore.todo < 100
+                      ? `(${notificationStore.todo})`
+                      : "99+"
+                  }}
+                </button>
+                <button
+                  :class="data.ReadAlready === 2 ? 'read' : ''"
+                  read
+                  @click="readButNotRead(2)"
+                >
+                  已办
+                </button>
               </div>
 
-              <OverlayScrollbarsComponent :options="{
-            scrollbars: { autoHide: 'leave', autoHideDelay: 300 },
-          }" defer class="list">
+              <OverlayScrollbarsComponent
+                :options="{
+                  scrollbars: { autoHide: 'leave', autoHideDelay: 300 },
+                }"
+                defer
+                class="list"
+              >
                 <template v-if="filterTodoList.length">
-                  <div :class="{
-            item: 'item',
-            select: item.id === data.selectId,
-          }" v-for="item in filterTodoList" @click="showEditCooperation(item)">
+                  <div
+                    :class="{
+                      item: 'item',
+                      select: item.id === data.selectId,
+                    }"
+                    v-for="item in filterTodoList"
+                    @click="showEditCooperation(item)"
+                  >
                     <div class="info">
-                      <div class=" time">
+                      <div class="time">
                         <!-- 未读标识 -->
-                        <span v-if="item.isReadAlready === 1" class="new"></span>
+                        <span
+                          v-if="item.isReadAlready === 1"
+                          class="new"
+                        ></span>
                         <!-- 合作邀约 -->
                         <span class="auditType">
-                          {{ notificationStore.auditTypeList[item.auditType - 1] || "" }}
+                          {{
+                            notificationStore.auditTypeList[
+                              item.auditType - 1
+                            ] || ""
+                          }}
                         </span>
                         <span class="time">
                           {{ item.createTime }}
@@ -169,8 +236,10 @@ onMounted(() => {
                       </div>
                       <div class="data">
                         您好，我是{{
-            item.invitationName || "-"
-          }}诚挚邀请您与我们一同协作共赢！若有疑问请联系{{ item.phoneOrEmail }}。
+                          item.invitationName || "-"
+                        }}诚挚邀请您与我们一同协作共赢！若有疑问请联系{{
+                          item.phoneOrEmail
+                        }}。
                       </div>
                     </div>
                   </div>
@@ -183,18 +252,25 @@ onMounted(() => {
           </el-tabs>
         </div>
         <div v-show="data.selectId" class="right" v-if="data.selectId">
-          <news v-if="data.tabs === 'news'" ref="newsRef" @delSelectId="delSelectId"></news>
-          <cooperation v-if="data.tabs === 'cooperation'" ref="cooperationRef" @delSelectId="delSelectId"></cooperation>
+          <news
+            v-if="data.tabs === 'news'"
+            ref="newsRef"
+            @delSelectId="delSelectId"
+          ></news>
+          <cooperation
+            v-if="data.tabs === 'cooperation'"
+            ref="cooperationRef"
+            @delSelectId="delSelectId"
+          ></cooperation>
         </div>
       </div>
     </PageMain>
-
   </div>
 </template>
 
 <style scoped lang="scss">
 .select {
-  background: #F3F9FF !important;
+  background: #f3f9ff !important;
 }
 
 .absolute-container {
@@ -215,8 +291,7 @@ onMounted(() => {
     flex-shrink: 0;
     display: flex;
 
-
-    :deep(>.main-container) {
+    :deep(> .main-container) {
       display: flex;
       flex: 1;
       flex-direction: column;
@@ -236,7 +311,7 @@ onMounted(() => {
         background-color: var(--g-container-bg);
         height: 100%;
         overflow: auto;
-        border-radius: .5rem;
+        border-radius: 0.5rem;
 
         :deep(.el-tabs) {
           height: 100%;
@@ -260,9 +335,7 @@ onMounted(() => {
         }
       }
     }
-
   }
-
 }
 
 // :deep {
@@ -277,11 +350,11 @@ onMounted(() => {
 
   button {
     border: none;
-    padding: .25rem .375rem;
-    margin-right: .25rem;
+    padding: 0.25rem 0.375rem;
+    margin-right: 0.25rem;
     color: #fff;
     background-color: #d9d9d9;
-    border-radius: .25rem;
+    border-radius: 0.25rem;
   }
 
   .unread {
@@ -291,7 +364,6 @@ onMounted(() => {
   .read {
     background: #00c738;
   }
-
 }
 
 .list {
@@ -299,40 +371,42 @@ onMounted(() => {
   padding: 0 1rem;
 
   .item {
-
     background: #fff;
-    border-radius: .5rem;
+    border-radius: 0.5rem;
     border: 1px solid rgba(170, 170, 170, 0.5);
     padding: 1rem;
     margin-bottom: 1rem;
 
     .info {
       .auditType {
-        background: #409EFF;
-        border-radius: .25rem;
+        background: #409eff;
+        border-radius: 0.25rem;
         color: #fff;
-        padding: .125rem .5rem;
-        margin: 0 .3125rem;
+        padding: 0.125rem 0.5rem;
+        margin: 0 0.3125rem;
       }
 
       .time {
-        font-family: PingFang SC, PingFang SC;
+        font-family:
+          PingFang SC,
+          PingFang SC;
         font-weight: 500;
-        font-size: .75rem;
+        font-size: 0.75rem;
         color: #333333;
         margin-bottom: 1rem;
       }
 
       .date {
         --at-apply: text-sm line-clamp-2;
-        font-family: PingFang SC, PingFang SC;
+        font-family:
+          PingFang SC,
+          PingFang SC;
         font-weight: 600;
-        font-size: .875rem;
-        color: #0F0F0F;
+        font-size: 0.875rem;
+        color: #0f0f0f;
       }
     }
   }
-
 
   // .item {
   // --at-apply: flex m-1 items-start gap-3 px-3 py-4 cursor-pointer border-b-width-1 last:border-b-width-0 border-b-solid border-b-stone-2 dark:border-b-stone-7 hover:bg-stone-1 dark:hover:bg-dark/50;
@@ -371,7 +445,5 @@ onMounted(() => {
     border-radius: 50%;
     background-color: red;
   }
-
-
 }
 </style>
