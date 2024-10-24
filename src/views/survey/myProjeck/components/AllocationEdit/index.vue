@@ -90,7 +90,7 @@ const handleNodeClick = (nodeData: any, checked: any) => {
   const halltree = treeRef.value.getHalfCheckedKeys();
   // 组合一下
   const organizationalStructureId = tree.concat(halltree);
-  data.value.form.groupSupplierIdList = organizationalStructureId[0];
+  data.value.form.groupSupplierIdList = organizationalStructureId;
 };
 // 提交数据
 function onSubmit() {

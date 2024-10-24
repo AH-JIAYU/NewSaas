@@ -340,7 +340,7 @@ const formOption = {
         <el-table-column v-if="checkList.includes('memberStatus')" show-overflow-tooltip align="left" label="分配">
           <template #default="{ row }">
             <el-tag style="background-color: #05C9BE;color: #fff;" v-if="row.getMemberGroupNameInfoList.length">
-              会员组
+              部门
             </el-tag>
             <el-tag effect="plain" type="info" v-else> 未分配 </el-tag>
           </template>
