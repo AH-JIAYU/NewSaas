@@ -52,6 +52,7 @@ const columns = ref<any>([
   { label: "电话号码", prop: "phoneNumber", sortable: true, checked: true },
   { label: "邮箱", prop: "email", sortable: true, checked: true },
   { label: "部门", prop: "departmentId", sortable: true, checked: true },
+  { label: "角色", prop: "role", sortable: true, checked: true },
   { label: "职位", prop: "positionId", sortable: true, checked: true },
   { label: "小组", prop: "groupId", sortable: true, checked: true },
   { label: "状态", prop: "active", sortable: true, checked: true },
@@ -438,6 +439,14 @@ function handleCurrentChange(val: any) {
                 <template #default="{ row }">
                   <el-text class="tableBig">
                     {{ row.organizationalStructureName ? row.organizationalStructureName : '-' }}
+                  </el-text>
+                </template>
+              </ElTableColumn>
+              <ElTableColumn v-if="userForm.checkList.includes('role')" align="left" prop="role"
+                label="角色">
+                <template #default="{ row }">
+                  <el-text class="tableBig">
+                    {{ row.role ? row.role : '-' }}
                   </el-text>
                 </template>
               </ElTableColumn>

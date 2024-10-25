@@ -279,6 +279,7 @@ function handleCurrentChange(val: any) {
           align="left"
           show-overflow-tooltip
           prop="memberChildStatus"
+           width="100"
           label="状态"
         >
           <template #default="{ row }">

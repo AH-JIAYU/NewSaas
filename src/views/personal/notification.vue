@@ -119,7 +119,7 @@ onMounted(() => {
               <div class="buttons">
                 <button
                   :class="data.ReadAlready === 1 ? 'unread' : ''"
-                  @click="readButNotRead(1)" style="height: 28px;"
+                  @click="readButNotRead(1)" style="height: 28px;font-size: 14px;"
                 >
                   未读{{
                     notificationStore.message < 100
@@ -130,7 +130,7 @@ onMounted(() => {
                 <button
                   :class="data.ReadAlready === 2 ? 'read' : ''"
                   read
-                  @click="readButNotRead(2)" style="height: 28px;"
+                  @click="readButNotRead(2)" style="height: 28px;font-size: 14px;"
                 >
                   已读
                 </button>
@@ -188,7 +188,7 @@ onMounted(() => {
               <div class="buttons">
                 <button
                   :class="data.ReadAlready === 1 ? 'unread' : ''"
-                  @click="readButNotRead(1)"
+                  @click="readButNotRead(1)"  style="height: 28px;font-size: 14px;"
                 >
                   待办{{
                     notificationStore.todo < 100
@@ -199,7 +199,7 @@ onMounted(() => {
                 <button
                   :class="data.ReadAlready === 2 ? 'read' : ''"
                   read
-                  @click="readButNotRead(2)"
+                  @click="readButNotRead(2)" style="height: 28px;font-size: 14px;"
                 >
                   已办
                 </button>
