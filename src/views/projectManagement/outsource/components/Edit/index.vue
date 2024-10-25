@@ -5,7 +5,7 @@ import { cloneDeep } from "lodash-es";
 import useProjectManagementOutsourceStore from "@/store/modules/projectManagement_outsource";
 import { throttle } from "lodash-es";
 import { Right } from "@element-plus/icons-vue";
-import empty from '@/assets/images/empty.png'
+import empty from "@/assets/images/empty.png";
 defineOptions({
   name: "Edit",
 });
@@ -36,7 +36,7 @@ async function showEdit(row: any, source: number = 0) {
   }
   // 过滤数据（删除与当前租户id相同的数据之前的所有数据，包括当前的数据）
   const findDataIndex = resList.findIndex(
-    (item: any) => item.allocationTenantId === res.data.currentTenantId
+    (item: any) => item.allocationTenantId === res.data.currentTenantId,
   );
   resList.splice(0, findDataIndex); //删除上级
   const type1List = resList.filter((item: any) => item.type === 1);
@@ -45,14 +45,14 @@ async function showEdit(row: any, source: number = 0) {
   const tenantMeasurementInfoList = [...type1List];
   if (type2List.length) {
     const memberGroupOrSupperIdList = type2List.map(
-      (item: any) => item.memberGroupOrSupperId
+      (item: any) => item.memberGroupOrSupperId,
     );
     type2List[0].length = type2List.length;
     type2List[0].memberGroupOrSupperIdList = memberGroupOrSupperIdList;
     tenantMeasurementInfoList.push(type2List[0]);
   } else if (type3List.length) {
     const memberGroupOrSupperIdList = type3List.map(
-      (item: any) => item.memberGroupOrSupperId
+      (item: any) => item.memberGroupOrSupperId,
     );
     type3List[0].length = type3List.length;
     type3List[0].memberGroupOrSupperIdList = memberGroupOrSupperIdList;
@@ -98,11 +98,11 @@ const getClickList = async (row: any, index: any) => {
   // 后期换成后端过滤
   if (row.type === 2) {
     data.value.clickIdList = data.value.clickIdList.filter(
-      (item: any) => item.peopleType === 2
+      (item: any) => item.peopleType === 2,
     );
   } else if (row.type === 3) {
     data.value.clickIdList = data.value.clickIdList.filter(
-      (item: any) => item.peopleType === 1
+      (item: any) => item.peopleType === 1,
     );
   }
 };
@@ -233,7 +233,8 @@ defineExpose({ showEdit });
                 <div class="price flex-b">
                   <p>
                     项目价:
-                    <CurrencyType />{{ item.doMoneyPrice }}
+                    {{ item.currencyType === 1 ? "$" : "￥" }}
+                    {{ item.doMoneyPrice }}
                   </p>
                   <p>
                     参数:
@@ -386,7 +387,9 @@ defineExpose({ showEdit });
             }
 
             .tenantName {
-              font-family: PingFang SC, PingFang SC;
+              font-family:
+                PingFang SC,
+                PingFang SC;
               font-weight: 600;
               font-size: 1rem;
               color: #0f0f0f;
@@ -434,7 +437,9 @@ defineExpose({ showEdit });
         border-radius: 0.5rem;
 
         .supplierName {
-          font-family: PingFang SC, PingFang SC;
+          font-family:
+            PingFang SC,
+            PingFang SC;
           font-weight: 600;
           font-size: 1rem;
           color: #0f0f0f;
@@ -472,7 +477,7 @@ defineExpose({ showEdit });
       min-height: 60vh;
       display: flex;
       justify-content: center;
-      align-items:center;
+      align-items: center;
     }
   }
 }

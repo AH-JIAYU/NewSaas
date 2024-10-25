@@ -96,8 +96,8 @@ const props = defineProps(['Difference', 'type'])
     line-height: 3.125rem;
     font-family: DINPro, DINPro;
     font-weight: 500;
-    font-size: 1rem;
-    color: #0F0F0F;
+    font-size: 0.875rem;
+    color: #333333;
     text-align: center;
     font-style: normal;
     text-transform: none;

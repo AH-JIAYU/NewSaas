@@ -150,6 +150,20 @@ async function changeState(state: any, id: string, name: string) {
   queryData();
   supplierStore.TenantSupplierList = null;
 }
+//切换调查系统状态
+async function changeSystem(state: any, id: string) {
+  const params = {
+    surveySystem: state,
+    tenantSupplierId: id,
+  };
+  const { status } = await submitLoading(api.changestatus(params));
+  status === 1 &&
+    ElMessage.success({
+      message: "修改成功",
+    });
+  queryData();
+  supplierStore.TenantSupplierList = null;
+}
 //列表修改b2b b2c
 const editBC = async (row: any, name: any, state: any) => {
   let b2bStatus = row.b2bStatus;
@@ -161,7 +175,6 @@ const editBC = async (row: any, name: any, state: any) => {
   if (name == "b2c") {
     b2cStatus = state == 1 ? 2 : 1;
   }
-
   const params = {
     b2bStatus: b2bStatus,
     b2cStatus: b2cStatus,
@@ -336,8 +349,13 @@ const formOption = {
       <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
         @selection-change="setSelectRows" highlight-current-row @current-change="handleCurrentChange">
         <el-table-column align="left" type="selection" />
-        <el-table-column v-if="checkList.includes('supplierStatus')" align="left" width="100" show-overflow-tooltip
-          label="供应商状态">
+        <el-table-column
+          v-if="checkList.includes('supplierStatus')"
+          align="left"
+          show-overflow-tooltip
+          label="供应商状态"
+          width="100"
+        >
           <template #default="{ row }">
             <ElSwitch v-if="row.supplierStatus === 3" v-model="row.supplierStatus" inline-prompt :inactive-value="3"
               :active-value="2" inactive-text="待审核" active-text="启用"
@@ -349,12 +367,26 @@ const formOption = {
         </el-table-column>
         <el-table-column v-if="checkList.includes('surveySystem')" align="left" show-overflow-tooltip label="调查状态">
           <template #default="{ row }">
-            <ElSwitch v-model="row.surveySystem" inline-prompt :inactive-value="1" :active-value="2" inactive-text="禁用"
-              active-text="启用" @change="changeState($event, row.tenantSupplierId, 'surveySystem')" />
+
+            <ElSwitch
+
+              v-model="row.surveySystem"
+              inline-prompt
+              :inactive-value="1"
+              :active-value="2"
+              inactive-text="禁用"
+              active-text="启用"
+              @change="changeSystem($event, row.tenantSupplierId)"
+            />
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('supplierAccord')" align="left" width="100" prop="supplierAccord"
-          label="供应商名称">
+        <el-table-column
+          v-if="checkList.includes('supplierAccord')"
+          align="left"
+          prop="supplierAccord"
+          label="供应商名称"
+               width="150"
+        >
           <template #default="{ row }">
             <div class="flex-c tableBig">
               <div class="oneLine" style="width: calc(100% - 20px)">
@@ -363,15 +395,37 @@ const formOption = {
                 </el-tooltip>
                 <!-- {{ row.supplierAccord }} -->
               </div>
-              <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'supplierAccord')" :class="{
-    edit: 'edit',
-    current: row.tenantSupplierId === current,
-  }" name="i-ep:edit" color="#409eff" />
+              <copy
+               v-if="row.projectType !== 2"
+                :content="row.supplierAccord"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.tenantSupplierId === current,
+                }"
+              />
+
+<!--
+              <SvgIcon
+                v-if="row.projectType !== 2"
+                @click="quickEdit(row, 'supplierAccord')"
+                :class="{
+                  edit: 'edit',
+                  current: row.tenantSupplierId === current,
+                }"
+                name="i-ep:edit"
+                color="#409eff"
+              /> -->
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('tenantSupplierId')" align="left" prop="tenantSupplierId" width="180"
-          show-overflow-tooltip label="供应商ID">
+        <el-table-column
+          v-if="checkList.includes('tenantSupplierId')"
+          align="left"
+          prop="tenantSupplierId"
+          width="200"
+          show-overflow-tooltip
+          label="供应商ID"
+        >
           <template #default="{ row }">
             <div class="copyId tableSmall tenantSupplierId">
               <div class="id oneLine">
@@ -389,8 +443,14 @@ const formOption = {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('supplierLevelId')" align="left" prop="supplierLevelId"
-          show-overflow-tooltip label="供应商等级" width="130">
+        <el-table-column
+          v-if="checkList.includes('supplierLevelId')"
+          align="left"
+          prop="supplierLevelId"
+          show-overflow-tooltip
+          label="供应商等级"
+           width="160"
+        >
           <template #default="{ row }">
             <div class="flex-c tableBig">
               <!-- style="width: calc(100% - 20px)" -->
@@ -405,8 +465,14 @@ const formOption = {
           </template>
         </el-table-column>
 
-        <el-table-column v-if="checkList.includes('balanceHumanLife')" align="left" prop="balanceHumanLife"
-          show-overflow-tooltip label="可用余额">
+        <el-table-column
+          v-if="checkList.includes('balanceHumanLife')"
+          align="left"
+          prop="balanceHumanLife"
+          show-overflow-tooltip
+
+          label="可用余额"
+        >
           <template #default="{ row }">
             <div class="tableBig">
               <CurrencyType />{{ row.balanceHumanLife || 0 }}
@@ -427,7 +493,13 @@ const formOption = {
             <el-tag type="primary">{{ row.countryAffiliationName }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('b2bStatus')" align="left" show-overflow-tooltip label="B2B/B2C">
+        <el-table-column
+          v-if="checkList.includes('b2bStatus')"
+          align="left"
+          show-overflow-tooltip
+          width="100"
+          label="B2B/B2C"
+        >
           <template #default="{ row }">
             <div class="flex-s" style="justify-content: center !important;cursor: pointer;">
               <svg v-if="row.b2bStatus && row.b2bStatus === 2" width="15" height="14" viewBox="0 0 15 14" fill="none"
@@ -517,7 +589,7 @@ const formOption = {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('settlementCycle')" align="left" prop="settlementCycle"
+        <el-table-column v-if="checkList.includes('settlementCycle')" align="left" width="100" prop="settlementCycle"
           show-overflow-tooltip label="结算周期"><template #default="{ row }">
             <div class="flex-c tableBig">
               <div class="oneLine" style="width: calc(100% - 20px)">
@@ -540,7 +612,7 @@ const formOption = {
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('remark')" align="left" prop="remark" width="180" label="备注">
+        <el-table-column v-if="checkList.includes('remark')" align="left" prop="remark" width="135" label="备注">
           <template #default="{ row }">
             <div class="flex-c tableBig">
               <div class="oneLine" style="width: calc(100% - 20px)">
@@ -553,7 +625,7 @@ const formOption = {
             </div>
           </template>
         </el-table-column>
-        <el-table-column align="left" prop="i" label="操作" fixed="right" width="250">
+        <el-table-column align="left" prop="i" label="操作" fixed="right" width="210">
           <template #default="{ row }">
             <ElSpace>
               <el-button size="small" plain type="primary" @click="handlePlusMinusPayments(row)">

@@ -42,6 +42,7 @@ const columns = ref<any>([
 
 // 查询参数
 const queryForm = reactive<any>({
+  projectId:'', //项目id
   tenantId: "", //租户id
   tenantName: "", //	租户名称
   projectStatus: "", //	1:进行中(在线) 2:已完成(审核通过) 3:离线
@@ -102,22 +103,29 @@ onMounted(() => {
   });
   fetchData();
   formSearchList.value = [
-    {
+  {
       index: 1,
+      show: true,
+      type: "input",
+      modelName: "projectId",
+      placeholder: "项目ID",
+    },
+    {
+      index: 2,
       show: true,
       type: "input",
       modelName: "tenantId",
       placeholder: "租户ID",
     },
     {
-      index: 2,
+      index: 3,
       show: true,
       type: "input",
       modelName: "tenantName",
       placeholder: "租户名称",
     },
     {
-      index: 3,
+      index: 4,
       show: true,
       type: "select",
       modelName: "projectStatus",
@@ -196,6 +204,7 @@ function handleCurrentChange(val: any) {
               show-overflow-tooltip
               prop="projectStatus"
               align="left"
+               width="140"
               label="状态"
             >
               <template #default="{ row }">
@@ -228,6 +237,7 @@ function handleCurrentChange(val: any) {
               show-overflow-tooltip
               prop="tenantId"
               align="left"
+                 width="280"
               label="租户ID"
             >
               <template #default="{ row }">
@@ -260,7 +270,7 @@ function handleCurrentChange(val: any) {
               show-overflow-tooltip
               prop="projectId"
               align="left"
-              width="180"
+              width="280"
               label="项目ID"
             >
               <template #default="{ row }">
@@ -405,6 +415,7 @@ function handleCurrentChange(val: any) {
               prop="projectStatus"
               align="left"
               label="状态"
+              width="140"
             >
               <template #default="{ row }">
                 <span class="tableBig">{{
@@ -431,6 +442,7 @@ function handleCurrentChange(val: any) {
               prop="tenantId"
               align="left"
               label="租户ID"
+              width="280"
               ><template #default="{ row }">
                 <div class="copyId tableSmall">
                   <div class="id oneLine projectId">
@@ -463,7 +475,7 @@ function handleCurrentChange(val: any) {
               show-overflow-tooltip
               prop="projectId"
               align="left"
-              width="180"
+              width="280"
               label="项目ID"
             >
               <template #default="{ row }">

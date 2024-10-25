@@ -235,8 +235,15 @@ const formOption={
           <template #default="{ row }">
             <div class="flex-c tableBig">
               <div class="oneLine" style="width: calc(100% - 20px);"> {{ row.customerAccord }} </div>
-              <SvgIcon @click="quickEdit(row, 'customerAccord')"
-                :class="{ edit: 'edit', current: row.tenantCustomerId === current }" name="i-ep:edit" color="#409eff" />
+              <copy
+                :content="row.customerAccord"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.tenantCustomerId === current,
+                }"
+              />
+              <!-- <SvgIcon @click="quickEdit(row, 'customerAccord')"
+                :class="{ edit: 'edit', current: row.tenantCustomerId === current }" name="i-ep:edit" color="#409eff" /> -->
             </div>
           </template>
         </el-table-column>
@@ -259,7 +266,7 @@ const formOption={
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('customerShortName')" align="left" prop="customerShortName"
-          show-overflow-tooltip label="客户简称" width="100">
+          show-overflow-tooltip label="客户简称" width="150">
           <template #default="{ row }">
             <div class="flex-c tableBig">
               <div class="oneLine" style="width: calc(100% - 20px);"> {{ row.customerShortName }} </div>

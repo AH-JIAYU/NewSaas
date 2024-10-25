@@ -826,7 +826,7 @@ onMounted(async () => {
   font-family: PingFang SC, PingFang SC;
   font-weight: 600;
   font-size: 1.125rem;
-  color: #0F0F0F;
+  color: #333333;
   line-height: 1.5625rem;
   text-align: left;
   font-style: normal;
@@ -918,7 +918,7 @@ onMounted(async () => {
           font-family: PingFang SC, PingFang SC;
           font-weight: 400;
           font-size: .875rem;
-          color: #0F0F0F;
+          color: #333333;
           line-height: 1rem;
           text-align: left;
           font-style: normal;
@@ -932,7 +932,7 @@ onMounted(async () => {
           font-family: DINPro, DINPro;
           font-weight: 500;
           font-size: 1.75rem;
-          color: #0F0F0F;
+          color: #333333;
           text-align: left;
           font-style: normal;
           text-transform: none;
@@ -967,7 +967,7 @@ onMounted(async () => {
             font-family: DINPro, DINPro;
             font-weight: 500;
             font-size: 1rem;
-            color: #0F0F0F;
+            color: #333333;
             text-align: left;
             font-style: normal;
             text-transform: none;
@@ -1034,7 +1034,7 @@ onMounted(async () => {
           font-family: PingFang SC, PingFang SC;
           font-weight: 400;
           font-size: .875rem;
-          color: #0F0F0F;
+          color: #333333;
           line-height: 1rem;
           text-align: left;
           font-style: normal;
@@ -1047,7 +1047,7 @@ onMounted(async () => {
           font-family: DINPro, DINPro;
           font-weight: 500;
           font-size: 1.75rem;
-          color: #0F0F0F;
+          color: #333333;
           text-align: left;
           font-style: normal;
           text-transform: none;
@@ -1080,9 +1080,9 @@ onMounted(async () => {
             height: 1.3125rem;
             font-family: DINPro, DINPro;
             font-weight: 500;
-            font-size: 1rem;
-            color: #0F0F0F;
-            line-height: 1.3125rem;
+            font-size: .875rem;
+            color: #333333;
+            line-height: 1.25rem;
             text-align: left;
             font-style: normal;
             text-transform: none;

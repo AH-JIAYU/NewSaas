@@ -473,6 +473,7 @@ onMounted(() => {
           prop="invoiceDate"
           show-overflow-tooltip
           align="left"
+              width="180"
           label="开票日期"
         >
         <template #default="{ row }">
@@ -486,6 +487,7 @@ onMounted(() => {
           prop="paymentDate"
           show-overflow-tooltip
           align="left"
+                width="180"
           label="收款日期"
         >
         <template #default="{ row }">

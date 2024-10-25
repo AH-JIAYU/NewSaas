@@ -751,7 +751,7 @@ nextTick(() => {
                   <div>
                     最小分长<el-tooltip
                       class="tooltips"
-                      content="这份问卷需要做到多少分钟"
+                      content="该问卷最少要做多少分钟才被识别为合格"
                       placement="top"
                     >
                       <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
@@ -792,9 +792,19 @@ nextTick(() => {
                   <div>
                     URL<el-tooltip
                       class="tooltips"
-                      content="仅支持URL后缀为[uid]的链接。"
+
                       placement="top"
                     >
+                    <template #content>
+                      <div>
+                        <div>
+                          请参考如下链接<br />{{ url }}
+                        </div>
+                        <div style="margin-top: 4px">
+                          若链接后缀不是[uid]，那可能无法校验通过呦~
+                        </div>
+                      </div>
+                      </template>
                       <SvgIcon class="SvgIcon2" name="i-ri:question-line" />
                     </el-tooltip>
                   </div>

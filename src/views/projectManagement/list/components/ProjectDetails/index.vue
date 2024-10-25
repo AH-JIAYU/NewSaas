@@ -422,8 +422,7 @@ defineExpose({ showEdit });
               <el-form-item label="URL :">
                 <el-text class="mx-1">
                   {{ data.form.uidUrl ? data.form.uidUrl : "-" }}
-                </el-text>
-                <el-button
+                  <el-button
                   type="primary"
                   style="margin-left: auto"
                   @click="copyTextToClipboard(data.form.uidUrl)"
@@ -431,6 +430,8 @@ defineExpose({ showEdit });
                 >
                   复制
                 </el-button>
+                </el-text>
+
               </el-form-item>
             </el-col>
           </el-row>
@@ -445,24 +446,24 @@ defineExpose({ showEdit });
             <el-col :span="8">
               <el-form-item label="置顶 :">
                 <el-text class="mx-1">
-                  <div v-if="data.form.isPinned === 1" class="open">开</div>
-                  <div v-else class="close">关</div>
+                  <div v-if="data.form.isPinned === 1" class="open">开启</div>
+                  <div v-else class="close">关闭</div>
                 </el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="在线 :">
                 <el-text class="mx-1">
-                  <div v-if="data.form.isOnline === 1" class="open">开</div>
-                  <div v-else class="close">关</div>
+                  <div v-if="data.form.isOnline === 1" class="open">开启</div>
+                  <div v-else class="close">关闭</div>
                 </el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="资料 :">
                 <el-text class="mx-1">
-                  <div v-if="data.form.isProfile === 2" class="open">开</div>
-                  <div v-else class="close">关</div>
+                  <div v-if="data.form.isProfile === 2" class="open">开启</div>
+                  <div v-else class="close">关闭</div>
                 </el-text>
               </el-form-item>
             </el-col>
@@ -472,7 +473,7 @@ defineExpose({ showEdit });
                   <div v-if="data.form.isPinned === 1" class="open">
                     {{ data.form.projectType.join(",") }}
                   </div>
-                  <div v-else class="close">关</div>
+                  <div v-else class="close">关闭</div>
                 </el-text>
               </el-form-item>
             </el-col>
@@ -482,7 +483,7 @@ defineExpose({ showEdit });
                   <div v-if="data.form.isTimeReleases === 2" class="open">
                     开
                   </div>
-                  <div v-else class="close">关</div>
+                  <div v-else class="close">关闭</div>
                 </el-text>
               </el-form-item>
             </el-col>
@@ -736,40 +737,46 @@ defineExpose({ showEdit });
 
   .leftTitle {
     .spanStatus {
-//       width: 49px !important;
-// height: 23px !important;
+      width: 49px !important;
+height: 23px !important;
 background: #409EFF;
 border-radius: 4px;
-      // width: 60px !important;
-      // height: 20px !important;
-      // background: var(--el-color-primary);
       color: var(--el-color-white);
-      padding: 8px;
+      padding: 4px 8px;
+      font-size: 11px;
       font-size: 0.875rem;
-      border-radius: 0.125rem;
+      border-radius: .25rem;
     }
   }
   .isOnlineSpanTrue {
     background: #03c239;
-    width: .625rem;
-    height: .625rem;
-    display: block;
+    // background: url('/src/assets/images/lineCricle.png');
+    // background-size:100% 100%;
+    width: .5625rem;
+    height: .5625rem;
+    // display: block;
+    // background-position: center;
     border-radius: 50%;
     border: 1px solid #03c239;
+    box-shadow: #03c239 0px 0px 10px;
   }
+
   .isOnlineSpanFalse {
     background: #d8261a;
-      width:.625rem;
-    height: .625rem;
+      width:.5625rem;
+    height: .5625rem;
     display: block;
     border-radius: 50%;
     border: 1px solid #d8261a;
+    box-shadow: #d8261a 0px 0px 10px;
     }
 
   .rightStatus {
-    position: relative;
+    // position: relative;
     // width: 128px;
     width: 80px;
+    display: flex;
+    align-items: baseline;
 
 
     > div {
@@ -779,11 +786,11 @@ border-radius: 4px;
       // text-align: center;
       // border-radius: 0.3rem;
       // color: #fff;
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 1.125rem;
+      // position: absolute;
+      // left: 50%;
+      // top: 50%;
+      // transform: translate(-50%, -50%);
+      // font-size: 1.125rem;
 
       // &::before {
       //   position: absolute;
@@ -810,10 +817,12 @@ border-radius: 4px;
 
     > div.isOnlineTrue {
       color: #03c239;
+      margin-left: 6px;
     }
 
     > div.isOnlineFalse {
       color: #d8261a;
+      margin-left: 6px;
     }
   }
 }
