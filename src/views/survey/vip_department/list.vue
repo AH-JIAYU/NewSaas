@@ -390,6 +390,33 @@ async function changeState(state: any, id: string) {
   surveyVipStore.NickNameList = null;
   getDictionaryItemList();
 }
+//切换供应商
+async function editBC(row: any, name: any, state: any) {
+   let b2bStatus = row.b2bStatus;
+  let b2cStatus = row.b2cStatus;
+  if (name == "b2b") {
+    b2bStatus = state ==1 ? 2:1;
+  }
+
+  if (name == "b2c") {
+    b2cStatus = state==1 ? 2:1;
+  }
+
+  const params = {
+    memberId: row.memberId,
+    memberStatus: state,
+    b2bStatus:b2bStatus,
+    b2cStatus:b2cStatus,
+  };
+  const { status } = await submitLoading(apiUser.changestatus(params));
+  status === 1 &&
+    ElMessage.success({
+      message: "修改成功",
+    });
+  // 数据改变 在部门中需要重新请求
+  surveyVipStore.NickNameList = null;
+  getDictionaryItemList();
+}
 // 随机身份
 const changeRandomState = async (state: any, id: string) => {
   const params = {
@@ -554,7 +581,7 @@ function handleCurrentChange(val: any) {
           <el-table v-loading="listLoading" :border="border" :data="data.list" :size="lineHeight" :stripe="stripe"
             @selection-change="setSelectRows"     @current-change="handleCurrentChange"     highlight-current-row>
             <el-table-column type="selection" align="left" />
-            <el-table-column v-if="checkList.includes('memberStatus')" align="left" show-overflow-tooltip label="会员状态">
+            <el-table-column v-if="checkList.includes('memberStatus')" align="left" show-overflow-tooltip label="会员状态" width="84">
               <template #default="{ row }">
                 <ElSwitch v-if="row.memberStatus === 3" v-model="row.memberStatus" inline-prompt :inactive-value="3"
                   :active-value="2" inactive-text="启用" active-text="待审核" @change="changeState($event, row.memberId)" />
@@ -562,7 +589,7 @@ function handleCurrentChange(val: any) {
                   inactive-text="禁用" active-text="启用" @change="changeState($event, row.memberId)" />
               </template>
             </el-table-column>
-            <el-table-column align="left" v-if="checkList.includes('randomStatus')" show-overflow-tooltip label="随机身份">
+            <el-table-column align="left" v-if="checkList.includes('randomStatus')" show-overflow-tooltip label="随机身份" width="84">
               <template #default="{ row }">
                 <ElSwitch v-model="row.randomStatus" inline-prompt :inactive-value="1" :active-value="2"
                   inactive-text="禁用" active-text="启用" @change="changeRandomState($event, row.memberId)" />
@@ -584,18 +611,18 @@ function handleCurrentChange(val: any) {
                 </div>
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('memberChildNickname')" width="100" align="left"
+            <el-table-column v-if="checkList.includes('memberChildNickname')" width="120" align="left"
               prop="memberNickname" show-overflow-tooltip label="会员名称">
               <template #default="{ row }">
                 <p class="crudeTop">{{ row.memberNickname ? row.memberNickname : '-' }}</p>
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('memberChildName')" width="100" align="left"
+            <el-table-column v-if="checkList.includes('memberChildName')" width="120" align="left"
               prop="memberChildName" show-overflow-tooltip label="会员姓名"><template #default="{ row }">
                 <p class="crudeTop">{{ row.memberChildName ? row.memberChildName : "-" }}</p>
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('memberLevelName')" width="100" align="left"
+            <el-table-column v-if="checkList.includes('memberLevelName')" width="120" align="left"
               prop="memberLevelName" show-overflow-tooltip label="会员等级">
               <template #default="{ row }">
                 <div v-if="row.memberLevelName" class="editSvg">
@@ -618,16 +645,16 @@ function handleCurrentChange(val: any) {
               </template>
             </el-table-column>
             <el-table-column v-if="checkList.includes('memberGroupChildName')" align="left" prop="memberGroupName"
-              show-overflow-tooltip label="部门"><template #default="{ row }">
+              show-overflow-tooltip label="部门"  width="120"><template #default="{ row }">
                 <p class="crudeTop">{{ row.memberGroupName ? row.memberGroupName : "-" }}</p>
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('B2B|B2C')" width="100" align="left" show-overflow-tooltip
-              label="B2B/B2C">
+            <el-table-column v-if="checkList.includes('B2B|B2C')" width="120" align="left" show-overflow-tooltip
+              label="B2B/B2C" >
               <template #default="{ row }">
-                <div class="isB2b">
+                <div class="isB2b" style="cursor: pointer;">
                   <el-text v-if="row.b2bStatus && row.b2bStatus === 2" class="mx-1 c-fx">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="14" viewBox="0 0 15 14" fill="none">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="14" viewBox="0 0 15 14" fill="none" @click="editBC(row, 'b2b', 2)">
                       <g id="Frame" clip-path="url(#clip0_450_45359)">
                         <path id="Vector"
                           d="M13.6223 13.2878H1.375C1.28477 13.2878 1.21094 13.214 1.21094 13.1237V0.876465C1.21094 0.78623 1.28477 0.712402 1.375 0.712402H13.6236C13.7139 0.712402 13.7877 0.78623 13.7877 0.876465V13.1251C13.7863 13.2153 13.7139 13.2878 13.6223 13.2878Z"
@@ -647,7 +674,7 @@ function handleCurrentChange(val: any) {
                     </svg>
                   </el-text>
                   <el-text v-else class="mx-1 c-fx">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="14" viewBox="0 0 15 14" fill="none">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="14" viewBox="0 0 15 14" fill="none" @click="editBC(row, 'b2b', 1)">
                       <g id="Frame" clip-path="url(#clip0_450_45352)">
                         <path id="Vector"
                           d="M13.6223 13.1901H1.375C1.3387 13.1901 1.30859 13.16 1.30859 13.1237V0.876465C1.30859 0.840165 1.3387 0.810059 1.375 0.810059H13.6236C13.6599 0.810059 13.69 0.840164 13.69 0.876465V13.1242C13.6892 13.1611 13.66 13.1901 13.6223 13.1901Z"
@@ -671,7 +698,7 @@ function handleCurrentChange(val: any) {
                   </el-text>
                   /
                   <el-text v-if="row.b2cStatus && row.b2cStatus === 2" class="mx-1 c-fx">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="14" viewBox="0 0 15 14" fill="none">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="14" viewBox="0 0 15 14" fill="none" @click="editBC(row, 'b2c', 2)">
                       <g id="Frame" clip-path="url(#clip0_450_45359)">
                         <path id="Vector"
                           d="M13.6223 13.2878H1.375C1.28477 13.2878 1.21094 13.214 1.21094 13.1237V0.876465C1.21094 0.78623 1.28477 0.712402 1.375 0.712402H13.6236C13.7139 0.712402 13.7877 0.78623 13.7877 0.876465V13.1251C13.7863 13.2153 13.7139 13.2878 13.6223 13.2878Z"
@@ -691,7 +718,7 @@ function handleCurrentChange(val: any) {
                     </svg>
                   </el-text>
                   <el-text v-else class="mx-1 c-fx">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="14" viewBox="0 0 15 14" fill="none">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="14" viewBox="0 0 15 14" fill="none" @click="editBC(row, 'b2c', 1)">
                       <g id="Frame" clip-path="url(#clip0_450_45352)">
                         <path id="Vector"
                           d="M13.6223 13.1901H1.375C1.3387 13.1901 1.30859 13.16 1.30859 13.1237V0.876465C1.30859 0.840165 1.3387 0.810059 1.375 0.810059H13.6236C13.6599 0.810059 13.69 0.840164 13.69 0.876465V13.1242C13.6892 13.1611 13.66 13.1901 13.6223 13.1901Z"
@@ -717,7 +744,7 @@ function handleCurrentChange(val: any) {
               </template>
             </el-table-column>
             <el-table-column v-if="checkList.includes('availableBalance')" align="left" prop="availableBalance"
-              show-overflow-tooltip label="可用余额">
+              show-overflow-tooltip label="可用余额"  width="110">
               <template #default="{ row }">
                 <p class="crudeTop">
                   <CurrencyType />{{ row.availableBalance || 0 }}
