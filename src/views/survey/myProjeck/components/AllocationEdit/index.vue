@@ -27,6 +27,7 @@ const dialogTableVisible = ref(false);
 const formRef = ref<any>(); // ref
 const data = ref<any>({
   list: [], // 表格
+  title: null,
   vipGroupList: [], // 供应商
   form: {
     projectId: "", // 项目id
@@ -45,7 +46,7 @@ const rules = ref<any>({
   ],
 });
 // 显隐
-async function showEdit(row: any) {
+async function showEdit(row: any, type: string) {
   data.value.list = [{ ...row }]; // 表格
   // 分配
   data.value.form.projectId = row.projectId; // 项目id
@@ -53,6 +54,11 @@ async function showEdit(row: any) {
   data.value.vipGroupList = await obtainLoading(
     surveyVipGroupStore.getGroupNameList()
   );
+  if (type === "reassign") {
+    data.value.title = "重新分配";
+  }else {
+    data.value.title = "分配";
+  }
   dialogTableVisible.value = true;
 }
 // 弹框关闭事件
@@ -107,7 +113,10 @@ function onSubmit() {
     }
   });
 }
-
+// 切换分配
+function changeRadio() {
+  data.value.form.groupSupplierIdList = [];
+}
 onMounted(async () => {
   // 部门
   const res = await apiDep.list({ name: '' });
@@ -121,7 +130,7 @@ defineExpose({ showEdit });
 
 <template>
   <div>
-    <el-dialog v-model="dialogTableVisible" title="分配" width="700" :before-close="closeHandler">
+    <el-dialog v-model="dialogTableVisible" :title="data.title" width="700" :before-close="closeHandler">
       <el-table :data="data.list" v-loading="false" row-key="id">
         <el-table-column align="left" show-overflow-tooltip label="项目编码" prop="projectId" />
         <el-table-column align="left" show-overflow-tooltip label="项目名称" prop="projectName" />
@@ -134,7 +143,15 @@ defineExpose({ showEdit });
       </el-table>
       <el-form ref="formRef" label-width="6rem" :rules="rules" :model="data.form" :inline="false"
         style="margin-top: 1.25rem;">
-        <el-form-item label="部门" prop="">
+        <el-form-item label="分配目标">
+          <el-radio-group v-model="data.form.allocationType" class="ml-4" @change="changeRadio">
+            <el-radio :value="3" size="large"> 部门 </el-radio>
+            <el-radio :value="5" size="large" v-if="data.title === '重新分配'">
+              取消分配
+            </el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item v-if="data.form.allocationType === 3 && data.form.allocationType !== 5" label="部门" prop="">
           <el-tree v-if="departmentList.length > 0" style="max-width: 600px" ref="treeRef" :data="departmentList"
             show-checkbox check-strictly node-key="id" :default-expanded-keys="[]" :default-checked-keys="departmentId"
             default-expand-all :props="defaultProps" @check-change="handleNodeClick" />

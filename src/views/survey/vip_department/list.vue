@@ -738,7 +738,7 @@ function handleCurrentChange(val: any) {
                 </p>
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('createTime')" align="left" prop="createTime"
+            <el-table-column v-if="checkList.includes('createTime')" width="100" align="left" prop="createTime"
               show-overflow-tooltip label="创建时间">
               <template #default="{ row }">
                 <el-tooltip :content="row.createTime" placement="top">
