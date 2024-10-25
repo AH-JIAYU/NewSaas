@@ -89,10 +89,12 @@ const flattenDeep = (arr: any) => {
 };
 onMounted(() => {
   if (props.id !== "") {
-    const { id, englishName, chineseName } = JSON.parse(props.row);
+    const { id, englishName, chineseName,code,remark } = JSON.parse(props.row);
     form.value.id = id;
     form.value.chineseName = chineseName;
     form.value.englishName = englishName;
+    form.value.code = code;
+    form.value.remark = remark;
   }
   flat.value = flattenDeep(props.tree);
 });

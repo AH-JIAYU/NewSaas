@@ -823,7 +823,7 @@ defineExpose({
           </el-tooltip>
           <!-- 若上传证书网址格式默认绑定HTTPS -->
         </div>
-        <el-form-item label="">
+        <el-form-item label="默认开启 HTTPS">
           <el-switch v-model="fileList.forceHttps"
             :disabled="!fileList.certificate.length && !fileList.private_key.length && !form.isUploadSSLCert"
             inline-prompt :active-value="2" :inactive-value="1" active-text="开启" inactive-text="关闭" />

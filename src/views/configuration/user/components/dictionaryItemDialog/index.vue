@@ -348,16 +348,12 @@ onMounted(async () => {
             </el-form-item>
           </el-col>
           <!-- <el-text><el-button type="primary" link size="default" @click="routerPosition">职位管理</el-button></el-text> -->
-          <!-- <el-col :span="8">
-            <el-form-item label="密码" prop="password">
-              <ElInput
-                :disabled="disabled"
-                v-model="form.password"
-                placeholder="如要修改密码请前往个人中心"
-              />
+          <el-col :span="8">
+            <el-form-item label="初始密码" prop="">
+              <el-text>123456</el-text>
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <!-- <el-col :span="8">
             <el-form-item label="是否启用" prop="active">
               <el-switch
                 v-model="form.active"
