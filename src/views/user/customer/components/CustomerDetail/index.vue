@@ -264,54 +264,92 @@ defineExpose({
 
   .leftTitle {
     .spanStatus {
-      width: 60px !important;
-      height: 20px !important;
-      background: var(--el-color-primary);
+      width: 49px !important;
+height: 23px !important;
+background: #409EFF;
+border-radius: 4px;
       color: var(--el-color-white);
-      padding: 0 8px;
+      padding: 4px 8px;
+      font-size: 11px;
       font-size: 0.875rem;
-      border-radius: 3.125rem;
+      border-radius: .25rem;
     }
   }
   .isOnlineSpanTrue {
     background: #03c239;
-    width: .625rem;
-    height: .625rem;
-    display: block;
+    // background: url('/src/assets/images/lineCricle.png');
+    // background-size:100% 100%;
+    width: .5625rem;
+    height: .5625rem;
+    // display: block;
+    // background-position: center;
     border-radius: 50%;
     border: 1px solid #03c239;
+    box-shadow: #03c239 0px 0px 10px;
   }
+
   .isOnlineSpanFalse {
     background: #d8261a;
-      width:.625rem;
-    height: .625rem;
+      width:.5625rem;
+    height: .5625rem;
     display: block;
     border-radius: 50%;
     border: 1px solid #d8261a;
+    box-shadow: #d8261a 0px 0px 10px;
     }
+
   .rightStatus {
-    position: relative;
+    // position: relative;
     // width: 128px;
     width: 80px;
+    display: flex;
+    align-items: baseline;
 
-    >div {
-      // width: 100px;
+
+    > div {
+      // width: 120px;
+      // height: 2.2rem;
+      // line-height: 2.2rem;
       // text-align: center;
       // border-radius: 0.3rem;
       // color: #fff;
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 1.125rem;
+      // position: absolute;
+      // left: 50%;
+      // top: 50%;
+      // transform: translate(-50%, -50%);
+      // font-size: 1.125rem;
+
+      // &::before {
+      //   position: absolute;
+      //   left: 50%;
+      //   top: 50%;
+      //   width: 60%;
+      //   border-radius: 50%;
+      //   transform: translate(-50%, -50%);
+      //   aspect-ratio: 1 / 1;
+      //   content: "";
+      // }
+
+      // &::after {
+      //   position: absolute;
+      //   left: 50%;
+      //   top: 50%;
+      //   width: 50%;
+      //   border-radius: 50%;
+      //   transform: translate(-50%, -50%);
+      //   aspect-ratio: 1 / 1;
+      //   content: "";
+      // }
     }
 
-    >div.isOnlineTrue {
-      color: #03C239;
+    > div.isOnlineTrue {
+      color: #03c239;
+      margin-left: 6px;
     }
 
-    >div.isOnlineFalse {
+    > div.isOnlineFalse {
       color: #d8261a;
+      margin-left: 6px;
     }
   }
 }

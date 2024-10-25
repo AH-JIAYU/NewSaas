@@ -78,7 +78,7 @@ const validateTopLevelDomainName = (rule: any, value: any, callback: any) => {
 // 校验
 const formRules = ref<FormRules>({
   domain: [
-    { required: true, message: "请输入顶级域名", trigger: "blur" },
+    { required: true, message: "请输入官网域名", trigger: "blur" },
     { validator: validateTopLevelDomainName, trigger: "submit" },
   ],
   tenantDomain: [

@@ -131,7 +131,6 @@ async function editBC(row: any, name: any, state: any) {
 
   const params = {
     memberId: row.memberId,
-    memberStatus: state,
     b2bStatus:b2bStatus,
     b2cStatus:b2cStatus,
   };

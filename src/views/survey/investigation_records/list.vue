@@ -207,9 +207,9 @@ onMounted(async () => {
     { index: 7, show: true, type: 'select', modelName: 'surveyStatus', placeholder: '调查状态', option: 'surveyStatus', optionLabel: 'label', optionValue: 'value' },
   ];
 });
-const formOption={
-  customerId:()=> data.customerList,
-  surveyStatus:()=> data.surveyStatusList,
+const formOption = {
+  customerId: () => data.customerList,
+  surveyStatus: () => data.surveyStatusList,
 }
 const current = ref<any>(); //表格当前选中
 
@@ -223,7 +223,7 @@ function handleCurrentChange(val: any) {
   <div :class="{ 'absolute-container': tableAutoHeight }">
     <PageMain>
       <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange"
-        @onReset="onReset" :model="queryForm"  :formOption="formOption"/>
+        @onReset="onReset" :model="queryForm" :formOption="formOption" />
       <ElDivider border-style="dashed" />
       <el-row>
         <FormLeftPanel />
@@ -235,7 +235,7 @@ function handleCurrentChange(val: any) {
         </FormRightPanel>
       </el-row>
       <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
-        @selection-change="setSelectRows"         @current-change="handleCurrentChange"    highlight-current-row>
+        @selection-change="setSelectRows" @current-change="handleCurrentChange" highlight-current-row>
         <el-table-column align="left" type="selection" />
         <el-table-column v-if="checkList.includes('randomIdentityId')" align="left" prop="randomIdentityId"
           show-overflow-tooltip label="随机身份">
@@ -243,13 +243,10 @@ function handleCurrentChange(val: any) {
             <div v-if="row.randomIdentityId" class="hoverSvg">
               <p class="fineBom">{{ row.randomIdentityId }}</p>
               <span class="c-fx">
-                <copy
-                :content="row.randomIdentityId"
-                :class="{
-                  rowCopy: 'rowCopy',
-                  current: row.id === current,
-                }"
-              />
+                <copy :content="row.randomIdentityId" :class="{
+    rowCopy: 'rowCopy',
+    current: row.id === current,
+  }" />
                 <!-- <copy class="copy" :content="row.randomIdentityId" /> -->
               </span>
             </div>
@@ -262,21 +259,18 @@ function handleCurrentChange(val: any) {
             <div v-if="row.memberId" class="hoverSvg">
               <p class="fineBom">{{ row.memberId }}</p>
               <span class="c-fx">
-                <copy
-                :content="row.memberId"
-                :class="{
-                  rowCopy: 'rowCopy',
-                  current: row.id === current,
-                }"
-              />
+                <copy :content="row.memberId" :class="{
+    rowCopy: 'rowCopy',
+    current: row.id === current,
+  }" />
                 <!-- <copy class="copy" :content="row.memberId" /> -->
               </span>
             </div>
             <el-text v-else>-</el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('projectName')" align="left" prop="projectName"
-          show-overflow-tooltip label="项目名称">
+        <el-table-column v-if="checkList.includes('projectName')" align="left" prop="projectName" show-overflow-tooltip
+          label="项目名称">
           <template #default="{ row }">
             <el-text style="font-weight: 700;color: #333333;">{{ row.projectName ? row.projectName : "-" }}</el-text>
           </template>
@@ -287,13 +281,10 @@ function handleCurrentChange(val: any) {
             <div v-if="row.projectId" class="hoverSvg">
               <p class="fineBom">{{ row.projectId }}</p>
               <span class="c-fx">
-                <copy
-                :content="row.projectId"
-                :class="{
-                  rowCopy: 'rowCopy',
-                  current: row.id === current,
-                }"
-              />
+                <copy :content="row.projectId" :class="{
+    rowCopy: 'rowCopy',
+    current: row.id === current,
+  }" />
                 <!-- <copy class="copy" :content="row.projectId" /> -->
               </span>
             </div>
@@ -315,13 +306,10 @@ function handleCurrentChange(val: any) {
               &nbsp;&nbsp;
               <p class="fineBom">{{ row.memberName.split('/')[1] }}</p>
               <span class="c-fx">
-                <copy
-                :content="row.memberName.split('/')[1]"
-                :class="{
-                  rowCopy: 'rowCopy',
-                  current: row.id === current,
-                }"
-              />
+                <copy :content="row.memberName.split('/')[1]" :class="{
+    rowCopy: 'rowCopy',
+    current: row.id === current,
+  }" />
                 <!-- <copy class="copy" :content="row.memberName.split('/')[1]" /> -->
               </span>
             </div>
@@ -371,14 +359,11 @@ function handleCurrentChange(val: any) {
               &nbsp;&nbsp;
               <p class="fineBom">
                 {{ row.ipBelong.split("/")[0] }}</p>
-                <copy
-              :content="row.ipBelong.split('/')[0]"
-                :class="{
-                  rowCopy: 'rowCopy',
-                  current: row.id === current,
-                }"
-              />
-                <!-- <copy class="copy" :content="row.ipBelong.split('/')[0]" /> -->
+              <copy :content="row.ipBelong.split('/')[0]" :class="{
+    rowCopy: 'rowCopy',
+    current: row.id === current,
+  }" />
+              <!-- <copy class="copy" :content="row.ipBelong.split('/')[0]" /> -->
 
             </div>
             <el-text v-else>-</el-text>
@@ -386,17 +371,16 @@ function handleCurrentChange(val: any) {
         </el-table-column>
         <el-table-column v-if="checkList.includes('surveyTime')" align="left" show-overflow-tooltip label="调查时间">
           <template #default="{ row }">
-            <el-tooltip
-              placement="top">
+            <el-tooltip placement="top">
               <template #content>
                 <div>
-                  <el-text style="color: #fff;">开始时间：{{row.surveyStartTime}}</el-text>
+                  <el-text style="color: #fff;">开始时间：{{ row.surveyStartTime }}</el-text>
                   <br>
                   <el-text style="color: #fff;">结束时间：{{ row.surveyEndTime ? row.surveyEndTime : '-' }}</el-text>
                 </div>
               </template>
               <el-tag effect="plain" type="info"> {{ row.surveyTime ? row.surveyTime + "min" : 0 }}/
-              {{ row.projectTime ? row.projectTime + "min" : 0 }} </el-tag>
+                {{ row.projectTime ? row.projectTime + "min" : 0 }} </el-tag>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -407,20 +391,47 @@ function handleCurrentChange(val: any) {
               class="mx-1" type="primary">配额满</el-tag>
             <!-- <el-tag effect="dark" style="background-color: #379AFF;border: none;" v-if="row.surveyStatus === 1"
               class="mx-1" type="success">完成</el-tag> -->
-              <el-text v-if="row.surveyStatus === 1">-</el-text>
             <el-tag effect="dark" style="background-color: #FB6868;border: none;" v-if="row.surveyStatus === 2"
               class="mx-1" type="danger">被甄别</el-tag>
             <el-tag effect="dark" style="background-color: #05C9BE;border: none;" v-if="row.surveyStatus === 4"
               class="mx-1" type="warning">安全终止</el-tag>
             <el-tag effect="dark" style="background-color: #E1E1E1;border: none;" v-if="row.surveyStatus === 5"
               class="mx-1">未完成</el-tag>
-              <el-text v-if="row.settlementRemarks">
-                <div v-if="row.settlementRemarks === '结算成功'" style="color:#4797fb;" class="i-healthicons:yes w-1.3em h-1.3em"></div>
-                <div v-if="row.settlementRemarks === '结算失败'" style="color:#f1756c;" class="i-healthicons:no w-1.3em h-1.3em"></div>
-              </el-text>
+            <el-tag effect="dark" style="background-color: #74868b; border: none"
+              v-if="row.surveyStatus === 1 && row.viceStatus === 1" class="mx-1" type="success">待审</el-tag>
+            <el-tag effect="dark" style="background-color: #475061; border: none"
+              v-if="row.surveyStatus === 1 && row.viceStatus === 2" class="mx-1" type="danger">完成</el-tag>
+            <el-tag effect="dark" style="background-color: #3e5c78; border: none"
+              v-if="row.surveyStatus === 1 && row.viceStatus === 3" class="mx-1" type="primary">过IR</el-tag>
+            <el-tag effect="dark" style="background-color: #c8c7bc; border: none"
+              v-if="row.surveyStatus === 1 && row.viceStatus === 4" class="mx-1" type="warning">时间过短</el-tag>
+            <el-tag effect="dark" style="background-color: #bcc8b8; border: none"
+              v-if="row.surveyStatus === 1 && row.viceStatus === 5" class="mx-1">超时完成</el-tag>
+            <el-tag effect="dark" style="background-color: #ded6cb; border: none"
+              v-if="row.surveyStatus === 1 && row.viceStatus === 6" class="mx-1">超量完成</el-tag>
+            <el-tag effect="dark" style="background-color: #03c239; border: none"
+              v-if="row.surveyStatus === 1 && row.viceStatus === 7" class="mx-1">审核成功</el-tag>
+            <el-tag effect="dark" style="background-color: #fb6868; border: none"
+              v-if="row.surveyStatus === 1 && row.viceStatus === 8" class="mx-1">审核失败</el-tag>
+            <el-tag effect="dark" style="background-color: #fb6868; border: none"
+              v-if="row.surveyStatus === 1 && row.viceStatus === 9" class="mx-1">数据冻结</el-tag>
+            <el-tag effect="dark" style="background-color: #6683a2; border: none"
+              v-if="row.surveyStatus === 1 && row.viceStatus === 10" class="mx-1">时间段过载</el-tag>
+            <el-tag effect="dark" style="background-color: #638d93; border: none"
+              v-if="row.surveyStatus === 1 && row.viceStatus === 11" class="mx-1">IP不一致</el-tag>
+            <el-tag effect="dark" style="background-color: #626a73; border: none"
+              v-if="row.surveyStatus === 1 && row.viceStatus === 12" class="mx-1">ID重复参与</el-tag>
+            <el-tag effect="dark" style="background-color: #03c239; border: none"
+              v-if="row.surveyStatus === 1 && row.viceStatus === 13" class="mx-1">和解</el-tag>
+            <el-text v-if="row.settlementRemarks">
+              <div v-if="row.settlementRemarks === '结算成功'" style="color:#4797fb;"
+                class="i-healthicons:yes w-1.3em h-1.3em"></div>
+              <div v-if="row.settlementRemarks === '结算失败'" style="color:#f1756c;"
+                class="i-healthicons:no w-1.3em h-1.3em"></div>
+            </el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="checkList.includes('viceStatus')" align="left" show-overflow-tooltip prop="" label="副状态">
+        <!-- <ElTableColumn v-if="checkList.includes('viceStatus')" align="left" show-overflow-tooltip prop="" label="副状态">
           <template #default="{ row }">
             <div v-if="row.surveyStatus === 1">
               <div v-if="row.viceStatus">
@@ -455,7 +466,7 @@ function handleCurrentChange(val: any) {
             </div>
             <el-text v-else></el-text>
           </template>
-        </ElTableColumn>
+        </ElTableColumn> -->
         <template #empty>
           <el-empty :image="empty" :image-size="300" />
         </template>
@@ -472,12 +483,15 @@ function handleCurrentChange(val: any) {
   width: 20px;
   display: none;
 }
- .current {
-    display: block !important;
-  }
+
+.current {
+  display: block !important;
+}
+
 .el-table__row:hover .rowCopy {
   display: block;
 }
+
 // 高度自适应
 .absolute-container {
   position: absolute;
@@ -531,7 +545,7 @@ function handleCurrentChange(val: any) {
 }
 
 .fineBom {
-  font-size:.875rem;
+  font-size: .875rem;
   color: #333333;
   white-space: nowrap;
   overflow: hidden;
@@ -576,6 +590,7 @@ function handleCurrentChange(val: any) {
   width: 100%;
   height: 100%;
 }
+
 :deep {
   .el-tag {
     width: 4.125rem;
