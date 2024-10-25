@@ -421,7 +421,7 @@ const formOption = {
           align="left"
           prop="supplierAccord"
           label="供应商名称"
-               width="150"
+               width="240"
         >
           <template #default="{ row }">
             <div class="flex-c tableBig">
