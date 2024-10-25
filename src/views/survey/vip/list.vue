@@ -131,7 +131,6 @@ async function editBC(row: any, name: any, state: any) {
 
   const params = {
     memberId: row.memberId,
-    memberStatus: state,
     b2bStatus:b2bStatus,
     b2cStatus:b2cStatus,
   };
@@ -381,7 +380,7 @@ function handleCurrentChange(val: any) {
             </el-text>
 /
             <el-text v-if="row.b2cStatus && row.b2cStatus === 2" class="mx-1 c-fx">
-              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="14" viewBox="0 0 15 14" fill="none"    >
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="14" viewBox="0 0 15 14" fill="none"    @click="editBC(row, 'b2c', 2)">
                 <g id="Frame" clip-path="url(#clip0_450_45359)">
                   <path id="Vector"
                     d="M13.6223 13.2878H1.375C1.28477 13.2878 1.21094 13.214 1.21094 13.1237V0.876465C1.21094 0.78623 1.28477 0.712402 1.375 0.712402H13.6236C13.7139 0.712402 13.7877 0.78623 13.7877 0.876465V13.1251C13.7863 13.2153 13.7139 13.2878 13.6223 13.2878Z"

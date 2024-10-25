@@ -144,6 +144,20 @@ async function changeState(state: any, id: string) {
   queryData();
   supplierStore.TenantSupplierList = null;
 }
+//切换调查系统状态
+async function changeSystem(state: any, id: string) {
+  const params = {
+    surveySystem: state,
+    tenantSupplierId: id,
+  };
+  const { status } = await submitLoading(api.changestatus(params));
+  status === 1 &&
+    ElMessage.success({
+      message: "修改成功",
+    });
+  queryData();
+  supplierStore.TenantSupplierList = null;
+}
 //列表修改b2b b2c
 const editBC = async (row: any, name: any, state: any) => {
   let b2bStatus = row.b2bStatus;
@@ -161,7 +175,6 @@ const editBC = async (row: any, name: any, state: any) => {
   const params = {
     b2bStatus:b2bStatus,
     b2cStatus:b2cStatus,
-    status: row.status,
     tenantSupplierId: row.tenantSupplierId,
   };
   const { status } = await submitLoading(api.changestatus(params));
@@ -358,6 +371,7 @@ const formOption = {
           align="left"
           show-overflow-tooltip
           label="供应商状态"
+          width="100"
         >
           <template #default="{ row }">
             <ElSwitch
@@ -398,7 +412,7 @@ const formOption = {
               :active-value="2"
               inactive-text="禁用"
               active-text="启用"
-              @change="changeState($event, row.tenantSupplierId)"
+              @change="changeSystem($event, row.tenantSupplierId)"
             />
           </template>
         </el-table-column>
@@ -407,6 +421,7 @@ const formOption = {
           align="left"
           prop="supplierAccord"
           label="供应商名称"
+               width="150"
         >
           <template #default="{ row }">
             <div class="flex-c tableBig">
@@ -420,6 +435,16 @@ const formOption = {
                 </el-tooltip>
                 <!-- {{ row.supplierAccord }} -->
               </div>
+              <copy
+               v-if="row.projectType !== 2"
+                :content="row.supplierAccord"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.tenantSupplierId === current,
+                }"
+              />
+
+<!--
               <SvgIcon
                 v-if="row.projectType !== 2"
                 @click="quickEdit(row, 'supplierAccord')"
@@ -429,7 +454,7 @@ const formOption = {
                 }"
                 name="i-ep:edit"
                 color="#409eff"
-              />
+              /> -->
             </div>
           </template>
         </el-table-column>
@@ -437,7 +462,7 @@ const formOption = {
           v-if="checkList.includes('tenantSupplierId')"
           align="left"
           prop="tenantSupplierId"
-          width="180"
+          width="240"
           show-overflow-tooltip
           label="供应商ID"
         >
@@ -471,7 +496,7 @@ const formOption = {
           prop="supplierLevelId"
           show-overflow-tooltip
           label="供应商等级"
-           width="130"
+           width="160"
         >
           <template #default="{ row }">
             <div class="flex-c tableBig">
@@ -498,6 +523,7 @@ const formOption = {
           align="left"
           prop="balanceHumanLife"
           show-overflow-tooltip
+
           label="可用余额"
         >
           <template #default="{ row }">
@@ -534,6 +560,7 @@ const formOption = {
           v-if="checkList.includes('b2bStatus')"
           align="left"
           show-overflow-tooltip
+          width="100"
           label="B2B/B2C"
         >
           <template #default="{ row }">
