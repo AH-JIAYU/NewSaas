@@ -752,8 +752,8 @@ border-radius: 4px;
     background: #03c239;
     // background: url('/src/assets/images/lineCricle.png');
     // background-size:100% 100%;
-    width: .625rem;
-    height: .625rem;
+    width: .5625rem;
+    height: .5625rem;
     // display: block;
     // background-position: center;
     border-radius: 50%;
@@ -763,8 +763,8 @@ border-radius: 4px;
 
   .isOnlineSpanFalse {
     background: #d8261a;
-      width:.625rem;
-    height: .625rem;
+      width:.5625rem;
+    height: .5625rem;
     display: block;
     border-radius: 50%;
     border: 1px solid #d8261a;
