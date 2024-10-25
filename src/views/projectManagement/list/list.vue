@@ -394,7 +394,7 @@ const formOption = {
       'absolute-container': tableAutoHeight,
     }"
   >
-    <PageMain class="hide-drawer-header"> 
+    <PageMain class="hide-drawer-header">
       <FormSearch
         :formSearchList="formSearchList"
         :formSearchName="formSearchName"
@@ -675,7 +675,7 @@ const formOption = {
               v-else-if="row.allocationType === 4"
               >租户</el-button
             >
-            <el-button class="tableBut" size="small" plain v-else type="info">
+            <el-button  size="small"  v-else class="tableBut">
               未分配</el-button
             >
           </template>

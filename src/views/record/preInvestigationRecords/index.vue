@@ -237,9 +237,20 @@ const formOption={
         <el-table-column v-if="checkList.includes('allocationType')" align="left" show-overflow-tooltip width="100"
           label="分配类型">
           <template #default="{ row }">
-            <el-text v-if="row.allocationType === 3" type="primary">会员组</el-text>
-            <el-text v-if="row.allocationType === 2" type="success">供应商</el-text>
-            <el-text v-if="row.allocationType === 1" type="warning">未分配</el-text>
+            <!-- <el-button  size="small" v-if="row.allocationType === 3" type="primary" class="tableBut">会员组</el-button>
+            <el-button  size="small" v-if="row.allocationType === 2"   type="danger" class="tableBut">供应商</el-button>
+            <el-button  size="small" v-if="row.allocationType === 1" class="tableBut">未分配</el-button> -->
+
+            <el-tag effect="plain" type="info" v-if="row.allocationType === 1"
+              class="mx-1">未分配</el-tag>
+            <el-tag effect="dark" style="background-color: #fb6868; border: none" v-if="row.allocationType === 2"
+              class="mx-1" type="primary">供应商</el-tag>
+            <el-tag effect="dark" style="background-color: #05c9be; border: none" v-if="row.allocationType === 3"
+              class="mx-1" type="warning">会员组</el-tag>
+
+
+
+
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('passNumber')" align="left" show-overflow-tooltip label="通过数/提交数">
@@ -276,6 +287,9 @@ const formOption={
 </template>
 
 <style scoped lang="scss">
+.tableBut {
+  width: 3.75rem;
+}
 // 高度自适应
 .absolute-container {
   position: absolute;

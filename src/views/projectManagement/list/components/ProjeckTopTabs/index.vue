@@ -804,10 +804,6 @@ nextTick(() => {
                           若链接后缀不是[uid]，那可能无法校验通过呦~
                         </div>
                       </div>
-
-
-
-
                       </template>
                       <SvgIcon class="SvgIcon2" name="i-ri:question-line" />
                     </el-tooltip>
