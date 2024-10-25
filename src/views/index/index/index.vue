@@ -929,7 +929,7 @@ onMounted(async () => {
           // width: 14.5625rem;
           height: 3.125rem;
           line-height: 3.125rem;
-          font-family: DINPro, DINPro;
+          font-family: D-DIN Exp;
           font-weight: 500;
           font-size: 1.75rem;
           color: #333333;
@@ -964,7 +964,7 @@ onMounted(async () => {
             width: 2rem;
             height: 3.125rem;
             line-height: 3.125rem;
-            font-family: DINPro, DINPro;
+            font-family: D-DIN Exp;
             font-weight: 500;
             font-size: 1rem;
             color: #333333;
@@ -1044,7 +1044,7 @@ onMounted(async () => {
         .quantity-num {
           height: 3.125rem;
           line-height: 3.125rem;
-          font-family: DINPro, DINPro;
+          font-family: D-DIN Exp;
           font-weight: 500;
           font-size: 1.75rem;
           color: #333333;
@@ -1078,7 +1078,7 @@ onMounted(async () => {
           .quantity-num {
             width: 1.625rem;
             height: 1.3125rem;
-            font-family: DINPro, DINPro;
+            font-family: D-DIN Exp;
             font-weight: 500;
             font-size: .875rem;
             color: #333333;
