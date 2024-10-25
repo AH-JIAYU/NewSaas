@@ -285,7 +285,7 @@ border-radius: 4px;
     // width: 128px;
     width: 80px;
     display: flex;
-    align-items: center;
+    align-items: baseline;
 
 
     > div {
