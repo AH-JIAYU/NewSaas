@@ -182,10 +182,10 @@ const formOption = {
               class="mx-1">完成</el-text>
             <el-text type="success" v-if="row.beforeSurveyType === 1 && row.beforeViceType === 7"
               class="mx-1">审核通过</el-text>
-            <el-text type="warning" v-if="row.beforeSurveyType === 1 && row.beforeViceType === 8"
+            <el-text type="danger" v-if="row.beforeSurveyType === 1 && row.beforeViceType === 8"
               class="mx-1">审核失败</el-text>
             <el-text v-if="row.beforeSurveyType === 1 && row.beforeViceType === 9" class="mx-1">数据冻结</el-text>
-            <el-text type="danger" v-if="row.beforeSurveyType === 2" class="mx-1">被甄别</el-text>
+            <el-text type="warning" v-if="row.beforeSurveyType === 2" class="mx-1">被甄别</el-text>
             <el-text type="primary" v-if="row.beforeSurveyType === 3" class="mx-1">配额满</el-text>
             <el-text type="success" v-if="row.beforeViceType === 13" class="mx-1">和解</el-text>
           </template>
@@ -197,10 +197,10 @@ const formOption = {
               class="mx-1">完成</el-text>
             <el-text type="success" v-if="row.afterSurveyType === 1 && row.afterViceType === 7"
               class="mx-1">审核通过</el-text>
-            <el-text type="warning" v-if="row.afterSurveyType === 1 && row.afterViceType === 8"
+            <el-text type="danger" v-if="row.afterSurveyType === 1 && row.afterViceType === 8"
               class="mx-1">审核失败</el-text>
             <el-text v-if="row.afterSurveyType === 1 && row.afterViceType === 9" class="mx-1">数据冻结</el-text>
-            <el-text type="danger" v-if="row.afterSurveyType === 2" class="mx-1">被甄别</el-text>
+            <el-text type="warning" v-if="row.afterSurveyType === 2" class="mx-1">被甄别</el-text>
             <el-text type="primary" v-if="row.afterSurveyType === 3" class="mx-1">配额满</el-text>
           </template>
         </el-table-column>
