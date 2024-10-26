@@ -80,7 +80,7 @@ const props = defineProps(['Difference', 'type'])
   .compare-hui {
     width: 2.625rem;
     height: 1.25rem;
-    font-family: PingFang SC, PingFang SC;
+    font-family: D-DIN Exp;
     font-weight: 400;
     font-size: .875rem;
     color: #777777;
@@ -94,7 +94,7 @@ const props = defineProps(['Difference', 'type'])
     width: 2rem;
     height: 3.125rem;
     line-height: 3.125rem;
-    font-family: DINPro, DINPro;
+    font-family: D-DIN Exp;
     font-weight: 500;
     font-size: 0.875rem;
     color: #333333;
