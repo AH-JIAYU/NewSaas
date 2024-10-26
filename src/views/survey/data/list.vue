@@ -465,7 +465,7 @@ function getDataList() {
       font-family: PingFang SC, PingFang SC;
       font-weight: 500;
       font-size: .8748rem;
-      color: #777777;
+      color: #333333;
       line-height: .9996rem;
       text-align: left;
       font-style: normal;
@@ -520,7 +520,7 @@ function getDataList() {
           font-size: .75rem
             /* 12/16 */
           ;
-          color: #777777;
+          color: #333333;
           line-height: .8748rem;
           text-align: left;
           font-style: normal;

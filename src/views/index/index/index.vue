@@ -1637,7 +1637,7 @@ onMounted(async () => {
             font-family: PingFang SC, PingFang SC;
             font-weight: 400;
             font-size: .875rem;
-            color: #777777;
+            color: #333333;
             line-height: 1.25rem;
             text-align: left;
             font-style: normal;
@@ -1752,7 +1752,7 @@ onMounted(async () => {
             font-family: PingFang SC, PingFang SC;
             font-weight: 400;
             font-size: .875rem;
-            color: #777777;
+            color: #333333;
             line-height: 1.25rem;
             text-align: left;
             font-style: normal;
