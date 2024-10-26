@@ -959,8 +959,9 @@ onMounted(async () => {
                 :data="data.dataCenterSupplierCompletedQuantities"
                 style="width: 100%"
               >
-                <el-table-column type="index" label="序号" width="60">
-                  <template #default="{ row, $index }">
+                <el-table-column type="index" label="序号" width="60" align="center">
+                  <template #default="{ $index }">
+                    <div class="center-image">
                     <img
                       v-if="$index ==0"
                       src="../../../assets/images/num1.png"
@@ -980,6 +981,7 @@ onMounted(async () => {
 
                     />
                     <span v-else  class="number-font">{{ $index + 1 }}</span>
+                    </div>
                   </template>
                 </el-table-column>
 
@@ -1050,27 +1052,30 @@ onMounted(async () => {
                 :data="data.dataCenterSupplierTurnovers"
                 style="width: 100%"
               >
-                <el-table-column type="index" label="序号" width="60" >
-                  <template #default="{ row, $index }">
-                    <img
+                <el-table-column type="index" label="序号" width="60" align="center">
+                  <template #default="{ $index }">
+                    <div class="center-image">
+                      <img
                       v-if="$index ==0"
                       src="../../../assets/images/num1.png"
-                      alt=""
+                      style="width: 20px; height: 20px;margin: 0 auto"
 
                     />
                     <img
                       v-else-if="$index ==1"
                       src="../../../assets/images/num2.png"
-                      alt=""
+                      style="width: 20px; height: 20px;margin: 0 auto"
 
                     />
                     <img
                     v-else-if="$index ==2"
                       src="../../../assets/images/num3.png"
-                      alt=""
+                      style="width: 20px; height: 20px;margin: 0 auto"
 
                     />
                     <span v-else class="number-font">{{ $index + 1 }}</span>
+                    </div>
+
                   </template>
                 </el-table-column>
                 <el-table-column align="left" prop="name" label="供应商名称"
@@ -1475,6 +1480,13 @@ onMounted(async () => {
 .number-font {
   font-family: D-DIN Exp; /* 选择字体 */
 }
+  .center-image {
+  display: flex; /* 使用 Flexbox 布局 */
+  justify-content: center; /* 水平居中 */
+  align-items: center; /* 垂直居中 */
+  width: 100%; /* 单元格宽度 */
+  height: 100%; /* 单元格高度 */
+  }
 // 去除表格色块 线
 :deep {
 
