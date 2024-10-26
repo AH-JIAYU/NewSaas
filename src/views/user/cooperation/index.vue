@@ -311,7 +311,7 @@ onMounted(() => {
           label="价格比例"
         >
           <template #default="{ row }">
-            <div class="tableBig">{{ row.priceRatio }} %</div>
+            <div class="tableBig">{{ row.priceRatio }}%</div>
           </template>
         </el-table-column>
         <el-table-column
