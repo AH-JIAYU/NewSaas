@@ -1058,20 +1058,14 @@ onMounted(async () => {
                       <img
                       v-if="$index ==0"
                       src="../../../assets/images/num1.png"
-                      style="width: 20px; height: 20px;margin: 0 auto"
-
                     />
                     <img
                       v-else-if="$index ==1"
                       src="../../../assets/images/num2.png"
-                      style="width: 20px; height: 20px;margin: 0 auto"
-
                     />
                     <img
                     v-else-if="$index ==2"
                       src="../../../assets/images/num3.png"
-                      style="width: 20px; height: 20px;margin: 0 auto"
-
                     />
                     <span v-else class="number-font">{{ $index + 1 }}</span>
                     </div>
