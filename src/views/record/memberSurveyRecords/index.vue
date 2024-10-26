@@ -441,9 +441,9 @@ function handleCurrentChange(val: any) {
                 {{ row.ipBelong.split("/")[0] }}
               </div>
               <copy :content="row.ipBelong.split('/')[0]" :class="{
-    rowCopy: 'rowCopy',
-    current: row.id === current,
-  }" />
+                rowCopy: 'rowCopy',
+                current: row.id === current,
+              }" />
               <!-- <copy class="copy edit" :content="row.ipBelong.split('/')[0]" /> -->
             </div>
           </template>
