@@ -310,6 +310,11 @@ function onSubmit() {
             <el-row :gutter="20">
               <el-col :span="3">
                 <el-form-item label="注册开关">
+                  <div class="domainNamess">
+                    <el-tooltip class="tooltips " content="注册开关、注册审核，进行变更后，需要点击【确认】才可生效" placement="top">
+                      <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
+                    </el-tooltip>
+                  </div>
                   <el-switch v-model="form.registerOffOrOn" active-text="开启" inline-prompt inactive-text="关闭"
                     :active-value="true" :inactive-value="false" />
                 </el-form-item>
@@ -346,13 +351,13 @@ function onSubmit() {
                 </el-form-item>
               </el-col>
               <el-col :span="24">
-                <el-form-item label="域名配置" prop="">
+                <el-form-item label="默认官网域名" prop="">
                   <el-text class="mx-1">{{ form.personalizedDomainName }}</el-text>
                   <el-button class="copy" type="primary" plain size="small" @click="copyToClipboard">复制</el-button>
                 </el-form-item>
               </el-col>
               <el-col :span="24">
-                <el-form-item label="官网域名" prop="topLevelDomainName">
+                <el-form-item label="域名配置" prop="topLevelDomainName">
                   <el-text class="mx-1">{{ form.topLevelDomainName }}</el-text>
                   <div v-if="form.topLevelDomainName">
                     <div v-if="isAnalysis">
@@ -584,6 +589,14 @@ function onSubmit() {
   color: #606266;
 }
 
+.domainNamess {
+  position: absolute;
+  left: -5.3125rem;
+  top: -1px;
+  color: #606266;
+}
+
 // :deep() {
 //   background-color: #fafafa;
-// }</style>
+// }
+</style>

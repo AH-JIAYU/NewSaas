@@ -385,7 +385,7 @@ const formOption = {
           align="left"
           prop="supplierAccord"
           label="供应商名称"
-               width="150"
+          width="220"
         >
           <template #default="{ row }">
             <div class="flex-c tableBig">
@@ -470,7 +470,7 @@ const formOption = {
           align="left"
           prop="balanceHumanLife"
           show-overflow-tooltip
-
+          width="100"
           label="可用余额"
         >
           <template #default="{ row }">
@@ -479,7 +479,7 @@ const formOption = {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('amountPendingTrial')" align="left" prop="amountPendingTrial"
+        <el-table-column v-if="checkList.includes('amountPendingTrial')" width="100" align="left" prop="amountPendingTrial"
           show-overflow-tooltip label="待审金额">
           <template #default="{ row }">
             <div class="tableBig">
@@ -487,7 +487,7 @@ const formOption = {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('countryAffiliationName')" align="left" prop="countryAffiliationName"
+        <el-table-column v-if="checkList.includes('countryAffiliationName')" width="100" align="left" prop="countryAffiliationName"
           show-overflow-tooltip label="区域">
           <template #default="{ row }">
             <el-tag type="primary">{{ row.countryAffiliationName }}</el-tag>
@@ -612,7 +612,7 @@ const formOption = {
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('remark')" align="left" prop="remark" width="135" label="备注">
+        <el-table-column v-if="checkList.includes('remark')" align="left" prop="remark" width="180" label="备注">
           <template #default="{ row }">
             <div class="flex-c tableBig">
               <div class="oneLine" style="width: calc(100% - 20px)">
@@ -625,7 +625,7 @@ const formOption = {
             </div>
           </template>
         </el-table-column>
-        <el-table-column align="left" prop="i" label="操作" fixed="right" width="210">
+        <el-table-column align="left" prop="i" label="操作" fixed="right" width="250">
           <template #default="{ row }">
             <ElSpace>
               <el-button size="small" plain type="primary" @click="handlePlusMinusPayments(row)">
