@@ -1072,7 +1072,7 @@ onMounted(async () => {
 
                   </template>
                 </el-table-column>
-                <el-table-column align="left" prop="name" label="供应商名称"
+                <el-table-column align="left" prop="name" width="220" label="供应商名称"
                   ><template #default="{ row }">
                     {{ row.name ? row.name : "-" }}
                   </template>
