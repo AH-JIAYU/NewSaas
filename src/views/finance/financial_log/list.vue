@@ -298,11 +298,11 @@ onBeforeUnmount(() => {
         <ElTableColumn v-if="data.checkList.includes('addAndSubtraction')" show-overflow-tooltip align="left"
           prop="addAndSubtraction" width="150" label="加减款"><template #default="{ row }">
             <el-text v-if="row.operationType === 2" type="danger" class="mx-1 ">-
-              <CurrencyType />{{ Math.abs(row.addAndSubtraction) }}
+              <CurrencyType /><el-text class="fontColor tableBig">{{ Math.abs(row.addAndSubtraction) }}</el-text>
             </el-text>
             <el-text v-else type="success" class="mx-1 ">
               +
-              <CurrencyType />{{ Math.abs(row.addAndSubtraction) }}
+              <CurrencyType /><el-text class="fontColor tableBig">{{ Math.abs(row.addAndSubtraction) }}</el-text>
             </el-text>
           </template>
         </ElTableColumn>
