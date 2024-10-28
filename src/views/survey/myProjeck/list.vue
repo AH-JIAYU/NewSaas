@@ -105,7 +105,6 @@ function membershipPrice(row: any) {
 }
 // 配额
 // function tested(row: any) {
-//   console.log("测查");
 // }
 // 分配
 function distribution(row: any) {

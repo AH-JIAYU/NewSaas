@@ -153,6 +153,7 @@ onMounted(async () => {
                 v-if="item.type === 'select'"
                 v-model="props.model[item.modelName]"
                 clearable
+                filterable
                 :placeholder="item.placeholder"
                 @change="currentChange()"
               >

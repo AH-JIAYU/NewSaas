@@ -216,7 +216,6 @@ const current = ref<any>(); //表格当前选中
 function handleCurrentChange(val: any) {
   if (val) current.value = val.id;
   else current.value = "";
-  // console.log(current.value,'current.value')
 }
 </script>
 <template>

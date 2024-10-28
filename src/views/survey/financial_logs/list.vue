@@ -212,6 +212,17 @@ function currentChange(page = 1) {
 function sortChange({ prop, order }: { prop: string; order: string }) {
   onSortChange(prop, order).then(() => getDataList());
 }
+
+// 函数来格式化余额
+const formatRemarkWithBalance = (remark:any) => {
+  const match = remark.match(/[-+]?\d*\.?\d+/);
+  if (match) {
+    const balance = parseFloat(match[0]).toFixed(2);
+    return remark.replace(match[0], balance); // 替换原余额
+  }
+  return remark; // 如果没有找到余额，返回原字符串
+};
+
 onMounted(() => {
   getDataList();
   if (data.value.formMode === "router") {
@@ -246,7 +257,6 @@ const current = ref<any>(); //表格当前选中
 function handleCurrentChange(val: any) {
   if (val) current.value = val.id;
   else current.value = "";
-  // console.log(current.value,'current.value')
 }
 </script>
 
@@ -392,7 +402,7 @@ function handleCurrentChange(val: any) {
         <ElTableColumn v-if="data.checkList.includes('remark')" show-overflow-tooltip align="left" prop="remark"
           label="说明"  fixed="right">
           <template #default="{ row }">
-            <el-text style="color:#333333">{{ row.remark ? row.remark : "-" }}</el-text>
+            <el-text style="color:#333;font-weight: 700;">{{ formatRemarkWithBalance(row.remark) ||  "-" }}</el-text>
           </template>
         </ElTableColumn>
         <template #empty>

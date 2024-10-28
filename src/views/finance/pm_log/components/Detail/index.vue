@@ -153,40 +153,40 @@ defineExpose({
       >
         <template #default="{ row }">
           <!-- <el-text v-if="row.typeId == 1">内部调查站</el-text> -->
-          <el-text >{{ row.clientId ? row.clientId : "-" }}</el-text>
+          <el-text class="color3">{{ row.clientId ? row.clientId : "-" }}</el-text>
         </template>
 </ElTableColumn>
 <ElTableColumn show-overflow-tooltip align="left" prop="projectId" label="项目ID">
   <template #default="{ row }">
-          <el-text>{{ row.projectId ? row.projectId : "-" }}</el-text>
+          <el-text class="color3">{{ row.projectId ? row.projectId : "-" }}</el-text>
         </template>
 </ElTableColumn>
 <ElTableColumn show-overflow-tooltip align="left" prop="" label="PM">
   <template #default="{ row }">
-          <el-text>{{row.userName ? row.userName : '-'}}</el-text>
+          <el-text class="color3">{{row.userName ? row.userName : '-'}}</el-text>
           <!-- <el-text v-if="row.balanceType == 2">可用金额</el-text> -->
         </template>
 </ElTableColumn>
 <ElTableColumn show-overflow-tooltip align="left" prop="remark" label="业绩"><template #default="{ row }">
-          <el-text class="mx-1">{{ row.doMoney ? row.doMoney : "-" }}</el-text>
+          <el-text class="mx-1 color3">{{ row.doMoney ? row.doMoney : "-" }}</el-text>
         </template>
 </ElTableColumn>
 <ElTableColumn show-overflow-tooltip align="left" prop="remark" label="说明"><template #default="{ row }">
-          <el-text class="mx-1">{{ row.remark ? row.remark : "-" }}</el-text>
+          <el-text class="mx-1 color3">{{ row.remark ? row.remark : "-" }}</el-text>
         </template>
 </ElTableColumn>
 <ElTableColumn show-overflow-tooltip align="left" prop="beforeBalance" width="150" label="变动前">
   <template #default="{ row }">
-          <CurrencyType />{{ row.beforeBalance || 0 }}
+          <CurrencyType /><el-text class="mx-1 color3">{{ row.beforeBalance || 0 }}</el-text>
         </template>
 </ElTableColumn>
 <ElTableColumn show-overflow-tooltip align="left" prop="addAndSubtraction" width="150" label="提成"><template
     #default="{ row }">
-          <el-text v-if="row.type === 2" type="danger" class="mx-1"
-            >-<CurrencyType />{{ Math.abs(row.difference) }}</el-text
+          <el-text v-if="row.type === 2" type="" class="mx-1 color3"
+            ><div class="minusSign i-iconamoon:sign-minus-bold w-1em h-1em"></div><CurrencyType />{{ Math.abs(row.difference) }}</el-text
           >
-          <el-text v-else type="success" class="mx-1">
-            +<CurrencyType />{{ Math.abs(row.difference) }}</el-text
+          <el-text v-else type="" class="mx-1 color3">
+            <div class="plusSpan i-typcn:plus w-1em h-1em"></div><CurrencyType />{{ Math.abs(row.difference) }}</el-text
           >
           <!-- <el-text class="mx-1">{{ row.difference ? row.difference : "-" }}</el-text> -->
           <!-- <CurrencyType />{{ row.difference || 0 }} -->
@@ -194,7 +194,7 @@ defineExpose({
 </ElTableColumn>
 <ElTableColumn show-overflow-tooltip align="left" prop="afterBalance" width="150" label="变动后">
   <template #default="{ row }">
-          <CurrencyType />{{ row.afterBalance || 0 }}
+          <CurrencyType /><el-text class="color3">{{ row.afterBalance || 0 }}</el-text>
         </template>
 </ElTableColumn>
 <ElTableColumn show-overflow-tooltip align="left" prop="createTime" label="时间"><template #default="{ row }">
@@ -277,5 +277,12 @@ defineExpose({
       }
     }
   }
+}
+
+.plusSpan {
+  color: #35cd61;
+}
+.minusSign {
+  color: #fb6868;
 }
 </style>

@@ -959,7 +959,7 @@ onMounted(async () => {
                 :data="data.dataCenterSupplierCompletedQuantities"
                 style="width: 100%"
               >
-                <el-table-column type="index" label="序号" width="60" align="center">
+                <el-table-column type="index" label="序号" width="55" align="center">
                   <template #default="{ $index }">
                     <div class="center-image">
                     <img
@@ -996,6 +996,7 @@ onMounted(async () => {
                 <el-table-column
                   align="left"
                   prop="completedQuantity"
+                  width="80"
                   label="完成数量"
                 >
                   <template #default="{ row }">
@@ -1009,6 +1010,7 @@ onMounted(async () => {
                 <el-table-column
                   align="left"
                   prop="completedAmount"
+                  width="85"
                   label="完成金额"
                   ><template #default="{ row }">
                     <span class="table-red">
@@ -1019,17 +1021,17 @@ onMounted(async () => {
                   </template>
                 </el-table-column>
 
-                <el-table-column align="left" prop="b2BProportion" label="B2B">
+                <el-table-column align="left" prop="b2BProportion" width="70" label="B2B">
                   <template #default="{ row }">
                     <span class="number-font">{{ row.b2BProportion * 100 }}</span>%
                   </template>
                 </el-table-column>
-                <el-table-column align="left" prop="b2CProportion" label="B2C">
+                <el-table-column align="left" prop="b2CProportion" width="70" label="B2C">
                   <template #default="{ row }">
                     <span class="number-font">{{ row.b2CProportion * 100 }}</span>%
                   </template>
                 </el-table-column>
-                <el-table-column align="left" label="所属区域">
+                <el-table-column width="80" align="left" label="所属区域">
                   <template #default="{ row }">
                     <span v-if="String(row) !== '{}'">{{
                       filterCountry(row)
