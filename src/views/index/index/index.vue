@@ -1084,7 +1084,7 @@ onMounted(async () => {
                   label="日"
                 >
                   <template #default="{ row }">
-                    <CurrencyType /><span class="number-font">{{ row.dayTurnover ? row.dayTurnover : 0 }}</span>
+                    <span class="number-font">{{ row.dayTurnover ? row.dayTurnover : 0 }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column
@@ -1094,7 +1094,7 @@ onMounted(async () => {
                   label="月"
                 >
                   <template #default="{ row }">
-                    <CurrencyType /><span class="number-font">{{
+                    <span class="number-font">{{
                       row.monthTurnover ? row.monthTurnover : 0
                     }}</span>
                   </template>
@@ -1106,7 +1106,7 @@ onMounted(async () => {
                   label="年"
                 >
                   <template #default="{ row }">
-                    <CurrencyType /><span class="number-font">{{
+                    <span class="number-font">{{
                       row.yearTurnover ? row.yearTurnover : 0
                     }}</span>
                   </template>

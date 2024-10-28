@@ -281,10 +281,11 @@ function onDeleteMulti(rows: any[]) {
           <ElSpace wrap>
             <ElButton type="primary" @click="onCreate()">
               <template #icon>
-                <SvgIcon name="i-ep:plus" />
+
+                <SvgIcon name="i-ep:plus" style="color: white;"/>
               </template>
             </ElButton>
-            <ElButton type="danger" :disabled="!dictionaryItem.selectionDataList.length"
+            <ElButton type="danger" :disabled="!dictionaryItem.selectionDataList.length" style="background-color: #FB6868;"
               @click="onDeleteMulti(dictionaryItem.selectionDataList)">
               <template #icon>
                 <SvgIcon name="i-ep:delete" />

@@ -305,6 +305,7 @@ function getDataList() {
 /* 自定义数字字体样式 */
 .number-font {
   font-family: D-DIN Exp; /* 选择字体 */
+
 }
   .center-image {
   display: flex; /* 使用 Flexbox 布局 */
