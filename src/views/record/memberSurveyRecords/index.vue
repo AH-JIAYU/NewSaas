@@ -342,7 +342,7 @@ function handleCurrentChange(val: any) {
           <template #default="{ row }">
             <div class="copyId flex-s tableSmall" v-if="row.surveySource === 1">
               <div class="oneLine">
-                <span v-if="row.randomIdentityId" class="id oneLine">
+                <span v-if="row.randomIdentityId" class="id oneLine idFont">
                   {{ row.randomIdentityId }}</span>
                 <span v-else class="id"></span>
               </div>

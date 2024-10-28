@@ -6,6 +6,7 @@ import projectReview from "./components/ProjectReview/index.vue";
 import settlementEdit from "./components/SettlementEdit/index.vue";
 import refundDetail from "./components/RefundDetails/index.vue";
 import Settlement from "./components/AddSettlement/index.vue";
+import StatusDetail from "./components/StatusDetail/index.vue";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary";
 import useUserCustomerStore from "@/store/modules/user_customer";
 import useTenantStaffStore from "@/store/modules/configuration_manager";
@@ -38,6 +39,7 @@ const addSettlementRef = ref();
 const auditingRef = ref();
 const editRef = ref();
 const refundRef = ref();
+const StatusDetailRef = ref();
 // 右侧工具栏配置变量
 // 表格控件-高度自适应
 const tableAutoHeight = ref(false);
@@ -364,6 +366,10 @@ function handleMoreOperating(command: string, row: any) {
       break;
   }
 }
+//状态详情
+function handleMoreStatus(row:any) {
+  StatusDetailRef.value.showEdit(JSON.stringify(row));
+}
 </script>
 
 <template>
@@ -606,12 +612,12 @@ function handleMoreOperating(command: string, row: any) {
           </template>
         </el-table-column>
         <el-table-column
-          v-if="checkList.includes('nodeTime')"
-          width="240"
+          v-if="checkList.includes('status')"
+          width="80"
           show-overflow-tooltip
-          prop="nodeTime"
+          prop="status"
           align="left"
-          label="节点"
+          label="状态"
         >
           <template #default="{ row }">
             <div style="display: flex;" class="oneLine">
@@ -621,9 +627,10 @@ function handleMoreOperating(command: string, row: any) {
                   size="small"
                   class="p-1"
                   type="warning"
+                   @click="handleMoreStatus(row)"
                   >待审核</el-button
                 >
-                <el-text>{{ row.pendReviewTime }}</el-text>
+                <!-- <el-text>{{ row.pendReviewTime }}</el-text> -->
               </el-text>
               <el-text v-if="row.status === 3" class="mx-1 tableBig flex-c">
                 <el-button
@@ -631,9 +638,10 @@ function handleMoreOperating(command: string, row: any) {
                   size="small"
                   class="p-1"
                   type="success"
+                     @click="handleMoreStatus(row)"
                   >已开票</el-button
                 >
-                <el-text>{{ row.invoicedOutTime }}</el-text>
+                <!-- <el-text>{{ row.invoicedOutTime }}</el-text> -->
               </el-text>
               <el-text v-if="row.status === 4" class="mx-1 tableBig flex-c">
                 <el-button
@@ -641,9 +649,10 @@ function handleMoreOperating(command: string, row: any) {
                   size="small"
                   class="p-1"
                   type="info"
+                     @click="handleMoreStatus(row)"
                   >已结算</el-button
                 >
-                <el-text>{{ row.settledTime }}</el-text>
+                <!-- <el-text>{{ row.settledTime }}</el-text> -->
               </el-text>
               <el-text v-if="row.status === 2" class="mx-1 tableBig flex-c">
                 <el-button
@@ -651,9 +660,10 @@ function handleMoreOperating(command: string, row: any) {
                   size="small"
                   class="p-1"
                   type="primary"
+                     @click="handleMoreStatus(row)"
                   >已审核</el-button
                 >
-                <el-text>{{ row.reviewTime }}</el-text>
+                <!-- <el-text>{{ row.reviewTime }}</el-text> -->
               </el-text>
               <el-text v-if="row.status === 5" class="mx-1 tableBig flex-c">
                 <el-button
@@ -661,13 +671,31 @@ function handleMoreOperating(command: string, row: any) {
                   size="small"
                   class="p-1"
                   type="danger"
+                     @click="handleMoreStatus(row)"
                   >已冻结</el-button
                 >
-                <el-text>{{ row.frozenTime }}</el-text>
+                <!-- <el-text>{{ row.frozenTime }}</el-text> -->
               </el-text>
             </div>
           </template>
         </el-table-column>
+
+        <el-table-column
+          v-if="checkList.includes('nodeTime')"
+          show-overflow-tooltip
+          align="left"
+          label="时间"
+          width="160"
+        >
+          <template #default="{ row }">
+            <el-text style="color:#333333" v-if="row.status ===1">{{ row.pendReviewTime }}</el-text>
+            <el-text style="color:#333333" v-if="row.status ===2">{{ row.reviewTime }}</el-text>
+            <el-text style="color:#333333" v-if="row.status ===3">{{ row.invoicedOutTime }}</el-text>
+            <el-text style="color:#333333" v-if="row.status ===4">{{ row.settledTime }}</el-text>
+            <el-text style="color:#333333" v-if="row.status ===5">{{ row.frozenTime }}</el-text>
+          </template>
+        </el-table-column>
+
         <el-table-column
           v-if="checkList.includes('remark')"
           show-overflow-tooltip
@@ -749,6 +777,7 @@ function handleMoreOperating(command: string, row: any) {
       <projectReview @success="fetchData" ref="auditingRef" />
       <settlementEdit @success="fetchData" ref="editRef" />
       <refundDetail ref="refundRef" />
+      <StatusDetail ref="StatusDetailRef" />
       <Settlement @success="fetchData" ref="addSettlementRef" />
     </PageMain>
   </div>
