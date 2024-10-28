@@ -142,6 +142,7 @@ async function getDataList() {
     configurationSiteSettingStore.setSiteConfig(data)
     if (data) {
       form.value = data || form.value;
+      if(form.value.minimumAmount === 0) form.value.minimumAmount = null;
       analyzeRecords.value = form.value
       userStore.setWebName(data.webName)
       userStore.setDescription(data.description)

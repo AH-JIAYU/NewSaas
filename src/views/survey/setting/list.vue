@@ -90,6 +90,7 @@ async function getDataList() {
     loading.value = true;
     const { data } = await api.list();
     form.value = data || form.value;
+    if(form.value.minimumAmount === 0) form.value.minimumAmount = null;
     loading.value = false;
   } catch (error) {
 

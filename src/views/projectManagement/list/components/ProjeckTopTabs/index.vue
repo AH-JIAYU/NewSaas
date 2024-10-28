@@ -638,10 +638,10 @@ nextTick(() => {
                   >
                     <span style="float: left">{{ item.customerAccord }}</span>
                     <span
-                      style="float: right; color: red; font-size: 13px"
+                      style="float: right; color: #fb6868; font-size: 13px"
                       v-show="item.isReveal === 1"
                     >
-                      <span v-show="item.turnover < item.practiceTurover">
+                      <span v-show="item.practiceTurnover > item.turnover">
                         营业额超限
                       </span>
                       <span v-show="item.rateAudit > item.practiceRateAudit">

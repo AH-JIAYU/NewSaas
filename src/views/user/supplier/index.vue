@@ -593,7 +593,7 @@ const formOption = {
           show-overflow-tooltip label="结算周期"><template #default="{ row }">
             <div class="flex-c tableBig">
               <div class="oneLine" style="width: calc(100% - 20px)">
-                {{ row.settlementCycle ? row.settlementCycle + "net" : "-" }}
+                {{ row.settlementCycle ?  "net " + row.settlementCycle : "-" }}
               </div>
               <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'settlementCycle')" :class="{
     edit: 'edit',

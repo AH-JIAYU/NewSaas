@@ -199,6 +199,16 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
   onSortChange(prop, order).then(() => getDataList());
 }
 
+// 函数来格式化余额
+const formatRemarkWithBalance = (remark:any) => {
+  const match = remark.match(/[-+]?\d*\.?\d+/);
+  if (match) {
+    const balance = parseFloat(match[0]).toFixed(2);
+    return remark.replace(match[0], balance); // 替换原余额
+  }
+  return remark; // 如果没有找到余额，返回原字符串
+};
+
 onMounted(() => {
   getDataList();
   if (data.value.formMode === "router") {
@@ -278,7 +288,7 @@ onBeforeUnmount(() => {
             <el-text v-if="row.type == 2"  class="fontColor">可用金额</el-text> -->
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('remark')" show-overflow-tooltip align="left" prop="remark"
+        <ElTableColumn v-if="data.checkList.includes('remark')" width="260" show-overflow-tooltip align="left" prop="remark"
           label="说明">
           <template #default="{ row }">
             <!-- <el-text v-if="!row.remark.includes('余额')" class="mx-1">{{
@@ -286,17 +296,17 @@ onBeforeUnmount(() => {
                 parseStatusString(row.remark)[1]
               }`
             }}</el-text> -->
-            <el-text class="mx-1 fontColor tableBig" >{{ row.remark ? row.remark : "-" }}</el-text>
+            <el-text class="mx-1 fontColor tableBig" >{{ formatRemarkWithBalance(row.remark) || "-" }}</el-text>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('beforeBalance')" show-overflow-tooltip align="left"
-          prop="beforeBalance" width="150" label="变动前">
+          prop="beforeBalance" width="130" label="变动前">
           <template #default="{ row }">
             <CurrencyType /><el-text class="fontColor tableBig">{{ row.beforeBalance || 0 }}</el-text>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('addAndSubtraction')" show-overflow-tooltip align="left"
-          prop="addAndSubtraction" width="150" label="加减款"><template #default="{ row }">
+          prop="addAndSubtraction" width="130" label="加减款"><template #default="{ row }">
             <el-text v-if="row.operationType === 2" type="danger" class="mx-1 ">-
               <CurrencyType />{{ Math.abs(row.addAndSubtraction) }}
             </el-text>
@@ -307,7 +317,7 @@ onBeforeUnmount(() => {
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('afterBalance')" show-overflow-tooltip align="left"
-          prop="afterBalance" width="150" label="变动后">
+          prop="afterBalance" width="130" label="变动后">
           <template #default="{ row }">
             <CurrencyType /><el-text class="fontColor tableBig">{{ row.afterBalance || 0 }}</el-text>
           </template>

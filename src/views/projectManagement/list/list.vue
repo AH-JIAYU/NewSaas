@@ -230,7 +230,6 @@ async function fetchData() {
       params.beginTime = search.value.time[0] || "";
       params.endTime = search.value.time[1] || "";
     }
-
     const { data } = await api.list(params);
     countryType.value = data.currencyType;
     list.value = data.getChildrenProjectInfoList;
