@@ -315,7 +315,7 @@ onMounted(async () => {
       modelName: "customerId",
       placeholder: "客户简称",
       option: "customerId",
-      optionLabel: "tenantCustomerId",
+      optionLabel: "customerAccord",
       optionValue: "tenantCustomerId",
     },
     {

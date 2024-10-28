@@ -309,13 +309,13 @@ onBeforeUnmount(() => {
           prop="addAndSubtraction" width="150" label="加减款"><template #default="{ row }">
             <p class="plus" v-if="row.operationType === 1" style="font-weight: 700;">
                 <div class="plusSpan i-majesticons:plus-line w-1em h-1em"></div>
-              <el-text>
+              <el-text class="tableBig">
                 <CurrencyType />{{ Math.abs(row.addAndSubtraction) }}
               </el-text>
             </p>
             <p class="plus" v-if="row.operationType === 2" style="font-weight: 700;">
                 <div class="minusSign i-iconamoon:sign-minus-bold w-1em h-1em"></div>
-              <el-text>
+              <el-text class="tableBig">
                 <CurrencyType />{{ Math.abs(row.addAndSubtraction) }}
               </el-text>
             </p>
