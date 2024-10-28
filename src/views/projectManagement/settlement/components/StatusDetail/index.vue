@@ -39,7 +39,7 @@ defineExpose({ showEdit });
 
               <div v-if="form.pendReviewTime">
                 <el-button
-
+                class="button-p"
                   type="warning"
                   >待审核</el-button
                 >
@@ -48,13 +48,14 @@ defineExpose({ showEdit });
               <div v-if="form.invoicedOutTime" style="margin-top:20px;">
                 <el-button
                   type="success"
+                      class="button-p"
                   >已开票</el-button
                 >
                 <div class="font-num">{{ form.invoicedOutTime }}</div>
               </div>
               <div v-if="form.settledTime" style="margin-top:20px;">
                 <el-button
-
+    class="button-p"
                   type="info"
                   >已结算</el-button
                 >
@@ -62,6 +63,7 @@ defineExpose({ showEdit });
               </div>
               <div v-if="form.reviewTime" style="margin-top:20px;">
                 <el-button
+                    class="button-p"
                   type="primary"
                   >已审核</el-button
                 >
@@ -70,6 +72,7 @@ defineExpose({ showEdit });
               <div v-if="form.frozenTim" style="margin-top:20px;">
                 <el-button
                   type="danger"
+                      class="button-p"
                   >已冻结</el-button
                 >
                 <div class="font-num">{{ form.frozenTime }}</div>
@@ -85,7 +88,12 @@ defineExpose({ showEdit });
 </template>
 <style scoped lang="scss">
 .font-num {
-  font-size: .875rem;
+  font-size: .75rem;
   margin-top:15px;
+}
+.button-p {
+  width: 2.75rem;
+  height: 1.3125rem;
+  font-size: .75rem;
 }
 </style>
