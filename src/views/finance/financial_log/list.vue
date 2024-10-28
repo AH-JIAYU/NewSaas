@@ -297,13 +297,30 @@ onBeforeUnmount(() => {
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('addAndSubtraction')" show-overflow-tooltip align="left"
           prop="addAndSubtraction" width="150" label="加减款"><template #default="{ row }">
-            <el-text v-if="row.operationType === 2" type="danger" class="mx-1 ">-
+            <p class="plus" v-if="row.operationType === 1" style="font-weight: 700;">
+                <div class="plusSpan i-majesticons:plus-line w-1em h-1em"></div>
+              <el-text>
+                <CurrencyType />{{ Math.abs(row.addAndSubtraction) }}
+              </el-text>
+            </p>
+            <p class="plus" v-if="row.operationType === 2" style="font-weight: 700;">
+                <div class="minusSign i-iconamoon:sign-minus-bold w-1em h-1em"></div>
+              <el-text>
+                <CurrencyType />{{ Math.abs(row.addAndSubtraction) }}
+              </el-text>
+            </p>
+
+
+
+
+
+            <!-- <el-text v-if="row.operationType === 2" type="danger" class="mx-1 ">-
               <CurrencyType /><el-text class="fontColor tableBig">{{ Math.abs(row.addAndSubtraction) }}</el-text>
             </el-text>
             <el-text v-else type="success" class="mx-1 ">
               +
               <CurrencyType /><el-text class="fontColor tableBig">{{ Math.abs(row.addAndSubtraction) }}</el-text>
-            </el-text>
+            </el-text> -->
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('afterBalance')" show-overflow-tooltip align="left"
@@ -329,6 +346,19 @@ onBeforeUnmount(() => {
 </template>
 
 <style lang="scss" scoped>
+:deep {
+  tbody {
+    color: #333;
+  }
+  .plusSpan {
+    margin-top: -4px;
+    color: #03c239;
+  }
+  .minusSign {
+    margin-top: -4px;
+    color: #fd8989;
+  }
+}
  /* 自定义标签背景 */
  .el-tag--dark.el-tag--warning {
     background-color: #FFAC54 !important;
