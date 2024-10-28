@@ -279,12 +279,13 @@ function onDeleteMulti(rows: any[]) {
         </template>
         <div v-show="dictionaryItem.search.catalogueId" class="dictionary-container">
           <ElSpace wrap>
-            <ElButton type="primary" @click="onCreate()">
-              <template #icon>
 
-                <SvgIcon name="i-ep:plus" style="color: white;"/>
-              </template>
-            </ElButton>
+              <div  class="button-bule" @click="onCreate()">
+
+                <div class="i-ic:round-plus w-1.3em h-1.3em" style="color: white;"></div>
+                </div>
+
+
             <ElButton type="danger" :disabled="!dictionaryItem.selectionDataList.length" style="background-color: #FB6868;"
               @click="onDeleteMulti(dictionaryItem.selectionDataList)">
               <template #icon>
@@ -351,6 +352,18 @@ function onDeleteMulti(rows: any[]) {
 </template>
 
 <style lang="scss" scoped>
+.button-bule {
+    background-color: #409EFF;
+    border: 1px solid #409EFF;
+    width: 46px;
+    height: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    cursor: pointer;
+
+}
 .absolute-container {
   position: absolute;
   display: flex;
