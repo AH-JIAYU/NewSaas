@@ -180,24 +180,24 @@ function getDataList() {
                     v-else-if="$index ==2"
                       src="../../../assets/images/num3.png"
                     />
-                    <span v-else class="number-font">{{ $index + 1 }}</span>
+                    <span v-else class="number-font font-c">{{ $index + 1 }}</span>
                     </div>
 
                   </template>
                 </el-table-column>
             <el-table-column show-overflow-tooltip align="left" prop="memberId" label="会员ID">
               <template #default="{ row }">
-                <span style="color: #333333;">{{ row.memberId ? row.memberId : '-' }}</span>
+                <span class="font-c">{{ row.memberId ? row.memberId : '-' }}</span>
               </template>
             </el-table-column>
             <el-table-column show-overflow-tooltip align="left" prop="memberName" label="会员名称">
               <template #default="{ row }">
-                <span style="color: #FF2D2D;">{{ row.memberName ? row.memberName : '-' }}</span>
+                <span class="font-c">{{ row.memberName ? row.memberName : '-' }}</span>
               </template>
             </el-table-column>
             <el-table-column show-overflow-tooltip align="left" prop="completedQuantity" label="完成数量">
               <template #default="{ row }">
-                <span style="color: #00C738;" class="number-font">{{ row.completedQuantity ? row.completedQuantity : '-' }}</span>
+                <span class="number-font font-c">{{ row.completedQuantity ? row.completedQuantity : '-' }}</span>
               </template>
             </el-table-column>
             <template #empty>
@@ -223,29 +223,29 @@ function getDataList() {
                     v-else-if="$index ==2"
                       src="../../../assets/images/num3.png"
                     />
-                    <span v-else class="number-font">{{ $index + 1 }}</span>
+                    <span v-else class="number-font font-c">{{ $index + 1 }}</span>
                     </div>
 
                   </template>
                 </el-table-column>
             <el-table-column show-overflow-tooltip align="left" prop="memberId" label="会员ID">
               <template #default="{ row }">
-                <span style="color: #333333;">{{ row.memberId ? row.memberId : '-' }}</span>
+                <span class="font-c">{{ row.memberId ? row.memberId : '-' }}</span>
               </template>
             </el-table-column>
             <el-table-column show-overflow-tooltip align="left" prop="memberName" label="会员名称">
               <template #default="{ row }">
-                <span style="color: #FB6060;">{{ row.memberName ? row.memberName : '-' }}</span>
+                <span class="font-c">{{ row.memberName ? row.memberName : '-' }}</span>
               </template>
             </el-table-column>
             <el-table-column show-overflow-tooltip align="left" prop="completedQuantity" label="退款数">
               <template #default="{ row }">
-                <span style="color: #00C738;" class="number-font">{{ row.completedQuantity ? row.completedQuantity : '-' }}</span>
+                <span  class="number-font font-c">{{ row.completedQuantity ? row.completedQuantity : '-' }}</span>
               </template>
             </el-table-column>
             <el-table-column show-overflow-tooltip align="left" prop="refund" label="退款金额">
               <template #default="{ row }">
-                <span style="color: #333333;" class="number-font">{{ row.refund ? row.refund : 0 }}</span>
+                <span  class="number-font font-c">{{ row.refund ? row.refund : 0 }}</span>
               </template>
             </el-table-column>
             <template #empty>
@@ -271,24 +271,24 @@ function getDataList() {
                     v-else-if="$index ==2"
                       src="../../../assets/images/num3.png"
                     />
-                    <span v-else class="number-font">{{ $index + 1 }}</span>
+                    <span v-else class="number-font font-c">{{ $index + 1 }}</span>
                     </div>
 
                   </template>
                 </el-table-column>
             <el-table-column show-overflow-tooltip align="left" prop="memberId" label="会员ID">
               <template #default="{ row }">
-                <span style="color: #333333;" class="number-font">{{ row.memberId ? row.memberId : '-' }}</span>
+                <span class="font-c">{{ row.memberId ? row.memberId : '-' }}</span>
               </template>
             </el-table-column>
             <el-table-column show-overflow-tooltip align="left" prop="memberName" label="会员名称">
               <template #default="{ row }">
-                <span style="color: #FB6060;">{{ row.memberName ? row.memberName : '-' }}</span>
+                <span class="font-c">{{ row.memberName ? row.memberName : '-' }}</span>
               </template>
             </el-table-column>
             <el-table-column show-overflow-tooltip align="left" prop="price" label="今日收入">
               <template #default="{ row }">
-                <span style="color: #00C738;" class="number-font">{{ row.price ? row.price : 0 }}</span>
+                <span  class="number-font font-c">{{ row.price ? row.price : 0 }}</span>
               </template>
             </el-table-column>
             <template #empty>
@@ -302,6 +302,9 @@ function getDataList() {
 </template>
 
 <style lang="scss" scoped>
+.font-c {
+  color: #333333
+}
 /* 自定义数字字体样式 */
 .number-font {
   font-family: D-DIN Exp; /* 选择字体 */
