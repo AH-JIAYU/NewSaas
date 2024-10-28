@@ -278,4 +278,11 @@ defineExpose({
     }
   }
 }
+
+.plusSpan {
+  color: #35cd61;
+}
+.minusSign {
+  color: #fb6868;
+}
 </style>
