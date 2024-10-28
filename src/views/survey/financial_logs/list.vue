@@ -323,9 +323,9 @@ function handleCurrentChange(val: any) {
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('memberName')" show-overflow-tooltip align="left" prop="memberName"
-          label="会员名称">
+          label="会员名称" width="200">
           <template #default="{ row }">
-            <p class="weightColor">{{ row.memberName ? row.memberName : "-" }}</p>
+            <p>{{ row.memberName ? row.memberName : "-" }}</p>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('projectId')" show-overflow-tooltip width="200" align="left"
@@ -346,28 +346,28 @@ function handleCurrentChange(val: any) {
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('type')" show-overflow-tooltip width="120" align="left"
-          prop="type" label="类型">
+          prop="type" label="类型"  fixed="right">
           <template #default="{ row }">
             <el-tag v-if="row.type === 1" type="warning" effect="dark">待审余额</el-tag>
             <el-tag v-if="row.type === 2" type="primary" effect="dark">可用余额</el-tag>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('beforeBalance')" show-overflow-tooltip align="left"
-          prop="beforeBalance" label="变动前" width="120">
+          prop="beforeBalance" label="变动前" width="120"  fixed="right">
           <template #default="{ row }">
-            <p style="font-weight: 700;"><CurrencyType />{{ row.beforeBalance || 0 }}</p>
+            <p><CurrencyType />{{ row.beforeBalance || 0 }}</p>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('difference')" show-overflow-tooltip align="left"
-          prop="difference" label="加减款" width="120">
+          prop="difference" label="加减款" width="120"  fixed="right">
           <template #default="{ row }">
-            <p class="plus" v-if="row.operationType === 1" style="font-weight: 700;">
+            <p class="plus" v-if="row.operationType === 1" >
                 <div class="plusSpan i-majesticons:plus-line w-1em h-1em"></div>
               <el-text>
                 <CurrencyType />{{ Math.abs(row.difference) }}
               </el-text>
             </p>
-            <p class="plus" v-if="row.operationType === 2" style="font-weight: 700;">
+            <p class="plus" v-if="row.operationType === 2" >
                 <div class="minusSign i-iconamoon:sign-minus-bold w-1em h-1em"></div>
               <el-text>
                 <CurrencyType />{{ Math.abs(row.difference) }}
@@ -376,13 +376,13 @@ function handleCurrentChange(val: any) {
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('afterBalance')" show-overflow-tooltip align="left"
-          prop="afterBalance" label="变动后" width="120">
+          prop="afterBalance" label="变动后" width="120"  fixed="right">
           <template #default="{ row }">
-            <p style="font-weight: 700;"> <CurrencyType />{{ row.afterBalance || 0 }}</p>
+            <p > <CurrencyType />{{ row.afterBalance || 0 }}</p>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('updateTime')" show-overflow-tooltip align="left"
-          prop="updateTime" label="创建时间">
+          prop="updateTime" label="创建时间"  fixed="right" width="120">
           <template #default="{ row }">
             <el-tooltip :content="row.updateTime" placement="top">
                 <el-tag effect="plain" type="info">{{format(row.updateTime)}}</el-tag>
@@ -390,9 +390,9 @@ function handleCurrentChange(val: any) {
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('remark')" show-overflow-tooltip align="left" prop="remark"
-          label="说明">
+          label="说明"  fixed="right">
           <template #default="{ row }">
-            <el-text style="color:#333;font-weight: 700;">{{ row.remark ? row.remark : "-" }}</el-text>
+            <el-text style="color:#333333">{{ row.remark ? row.remark : "-" }}</el-text>
           </template>
         </ElTableColumn>
         <template #empty>

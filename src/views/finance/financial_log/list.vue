@@ -251,20 +251,20 @@ onBeforeUnmount(() => {
         <el-table-column align="left" type="selection" />
         <ElTableColumn v-if="data.batch.enable" type="selection" show-overflow-tooltip align="left" fixed />
         <ElTableColumn v-if="data.checkList.includes('clientId')" show-overflow-tooltip align="left" prop="clientId"
-          label="点击ID">
+          label="点击ID" width="200">
           <template #default="{ row }">
             <el-text>{{ row.clientId ? row.clientId : "-" }}</el-text>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('typeId')" show-overflow-tooltip align="left" prop=""
-          label="供应商ID/内部调查站">
+          label="供应商ID/内部调查站" width="200">
           <template #default="{ row }">
-            <el-text v-if="row.typeId == 1"  class="fontColor tableBig">内部调查站</el-text>
+            <el-text v-if="row.typeId == 1"  class="fontColor">内部调查站</el-text>
             <el-text v-else  class="fontColor">{{ row.typeId ? row.typeId : "-" }}</el-text>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('projectId')" show-overflow-tooltip align="left" prop="projectId"
-          label="项目ID">
+          label="项目ID" width="200">
           <template #default="{ row }">
             <el-text  class="fontColor">{{ row.projectId ? row.projectId : "-" }}</el-text>
           </template>
@@ -279,31 +279,31 @@ onBeforeUnmount(() => {
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('remark')" show-overflow-tooltip align="left" prop="remark"
-          label="说明">
+          label="说明" width="200">
           <template #default="{ row }">
             <!-- <el-text v-if="!row.remark.includes('余额')" class="mx-1">{{
               `记录变更:${parseStatusString(row.remark)[0]}变更为${
                 parseStatusString(row.remark)[1]
               }`
             }}</el-text> -->
-            <el-text class="mx-1 fontColor tableBig" >{{ row.remark ? row.remark : "-" }}</el-text>
+            <el-text class="mx-1 fontColor" >{{ row.remark ? row.remark : "-" }}</el-text>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('beforeBalance')" show-overflow-tooltip align="left"
-          prop="beforeBalance" width="150" label="变动前">
+          prop="beforeBalance" width="150" label="变动前" fixed="right">
           <template #default="{ row }">
-            <CurrencyType /><el-text class="fontColor tableBig">{{ row.beforeBalance || 0 }}</el-text>
+            <CurrencyType /><el-text class="fontColor">{{ row.beforeBalance || 0 }}</el-text>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('addAndSubtraction')" show-overflow-tooltip align="left"
-          prop="addAndSubtraction" width="150" label="加减款"><template #default="{ row }">
-            <p class="plus" v-if="row.operationType === 1" style="font-weight: 700;">
+          prop="addAndSubtraction" width="150" label="加减款" fixed="right"><template #default="{ row }">
+            <p class="plus" v-if="row.operationType === 1" >
                 <div class="plusSpan i-majesticons:plus-line w-1em h-1em"></div>
               <el-text>
                 <CurrencyType />{{ Math.abs(row.addAndSubtraction) }}
               </el-text>
             </p>
-            <p class="plus" v-if="row.operationType === 2" style="font-weight: 700;">
+            <p class="plus" v-if="row.operationType === 2">
                 <div class="minusSign i-iconamoon:sign-minus-bold w-1em h-1em"></div>
               <el-text>
                 <CurrencyType />{{ Math.abs(row.addAndSubtraction) }}
@@ -324,13 +324,13 @@ onBeforeUnmount(() => {
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('afterBalance')" show-overflow-tooltip align="left"
-          prop="afterBalance" width="150" label="变动后">
+          prop="afterBalance" width="150" label="变动后" fixed="right">
           <template #default="{ row }">
-            <CurrencyType /><el-text class="fontColor tableBig">{{ row.afterBalance || 0 }}</el-text>
+            <CurrencyType /><el-text class="fontColor">{{ row.afterBalance || 0 }}</el-text>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('createTime')" show-overflow-tooltip align="left"
-          prop="createTime" label="时间"><template #default="{ row }">
+          prop="createTime" label="时间" fixed="right"><template #default="{ row }">
             <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>
           </template>
         </ElTableColumn>
