@@ -227,7 +227,7 @@ const formatDateRange = (timestamps: any) => {
     return formatDate(singleDate);
   } else if (timestamps.length === 2) {
     const [startTimestamp, endTimestamp] = timestamps.map(
-      (ts: any) => new Date(parseInt(ts)),
+      (ts: any) => new Date(parseInt(ts))
     );
     return `${formatDate(startTimestamp)} - ${formatDate(endTimestamp)}`;
   }
@@ -368,7 +368,7 @@ function handleMoreOperating(command: string, row: any) {
   }
 }
 //状态详情
-function handleMoreStatus(row:any) {
+function handleMoreStatus(row: any) {
   StatusDetailRef.value.showEdit(JSON.stringify(row));
 }
 </script>
@@ -432,7 +432,6 @@ function handleMoreStatus(row:any) {
         <el-table-column align="left" type="selection" />
         <el-table-column
           v-if="checkList.includes('projectId')"
-
           prop="projectId"
           align="left"
           label="项目"
@@ -447,7 +446,6 @@ function handleMoreStatus(row:any) {
                 >
                   {{ row.projectId }}
                 </el-tooltip>
-
 
                 <!-- ID: {{ row.projectId }} -->
               </div>
@@ -621,14 +619,14 @@ function handleMoreStatus(row:any) {
           label="状态"
         >
           <template #default="{ row }">
-            <div style="display: flex;" class="oneLine">
+            <div style="display: flex" class="oneLine">
               <el-text v-if="row.status === 1" class="mx-1 tableBig flex-c">
                 <el-button
                   style="margin-right: 5px"
                   size="small"
                   class="p-1"
                   type="warning"
-                   @click="handleMoreStatus(row)"
+                  @click="handleMoreStatus(row)"
                   >待审核</el-button
                 >
                 <!-- <el-text>{{ row.pendReviewTime }}</el-text> -->
@@ -639,7 +637,7 @@ function handleMoreStatus(row:any) {
                   size="small"
                   class="p-1"
                   type="success"
-                     @click="handleMoreStatus(row)"
+                  @click="handleMoreStatus(row)"
                   >已开票</el-button
                 >
                 <!-- <el-text>{{ row.invoicedOutTime }}</el-text> -->
@@ -650,7 +648,7 @@ function handleMoreStatus(row:any) {
                   size="small"
                   class="p-1"
                   type="info"
-                     @click="handleMoreStatus(row)"
+                  @click="handleMoreStatus(row)"
                   >已结算</el-button
                 >
                 <!-- <el-text>{{ row.settledTime }}</el-text> -->
@@ -661,7 +659,7 @@ function handleMoreStatus(row:any) {
                   size="small"
                   class="p-1"
                   type="primary"
-                     @click="handleMoreStatus(row)"
+                  @click="handleMoreStatus(row)"
                   >已审核</el-button
                 >
                 <!-- <el-text>{{ row.reviewTime }}</el-text> -->
@@ -672,7 +670,7 @@ function handleMoreStatus(row:any) {
                   size="small"
                   class="p-1"
                   type="danger"
-                     @click="handleMoreStatus(row)"
+                  @click="handleMoreStatus(row)"
                   >已冻结</el-button
                 >
                 <!-- <el-text>{{ row.frozenTime }}</el-text> -->
@@ -689,23 +687,51 @@ function handleMoreStatus(row:any) {
           width="160"
         >
           <template #default="{ row }">
-            <el-tooltip :content="row.pendReviewTime" placement="top" v-if="row.status ===1">
-                <el-tag effect="plain" type="info" >{{format(row.pendReviewTime)}}</el-tag>
-
-              </el-tooltip>
-              <el-tooltip :content="row.reviewTime" placement="top" v-if="row.status ===2">
-                <el-tag effect="plain" type="info">{{format(row.reviewTime)}}</el-tag>
-              </el-tooltip>
-              <el-tooltip :content="row.invoicedOutTime" placement="top" v-if="row.status ===3">
-                <el-tag effect="plain" type="info" v-if="row.status ===3">{{format(row.invoicedOutTime)}}</el-tag>
-              </el-tooltip>
-              <el-tooltip :content="row.settledTime" placement="top" v-if="row.status ===4">
-                <el-tag effect="plain" type="info" v-if="row.status ===4">{{format(row.settledTime)}}</el-tag>
-
-              </el-tooltip>
-              <el-tooltip :content="row.frozenTime" placement="top" v-if="row.status ===5">
-                <el-tag effect="plain" type="info" v-if="row.status ===5">{{format(row.frozenTime)}}</el-tag>
-              </el-tooltip>
+            <el-tooltip
+              :content="row.pendReviewTime"
+              placement="top"
+              v-if="row.status === 1"
+            >
+              <el-tag effect="plain" type="info">{{
+                format(row.pendReviewTime)
+              }}</el-tag>
+            </el-tooltip>
+            <el-tooltip
+              :content="row.reviewTime"
+              placement="top"
+              v-if="row.status === 2"
+            >
+              <el-tag effect="plain" type="info">{{
+                format(row.reviewTime)
+              }}</el-tag>
+            </el-tooltip>
+            <el-tooltip
+              :content="row.invoicedOutTime"
+              placement="top"
+              v-if="row.status === 3"
+            >
+              <el-tag effect="plain" type="info" v-if="row.status === 3">{{
+                format(row.invoicedOutTime)
+              }}</el-tag>
+            </el-tooltip>
+            <el-tooltip
+              :content="row.settledTime"
+              placement="top"
+              v-if="row.status === 4"
+            >
+              <el-tag effect="plain" type="info" v-if="row.status === 4">{{
+                format(row.settledTime)
+              }}</el-tag>
+            </el-tooltip>
+            <el-tooltip
+              :content="row.frozenTime"
+              placement="top"
+              v-if="row.status === 5"
+            >
+              <el-tag effect="plain" type="info" v-if="row.status === 5">{{
+                format(row.frozenTime)
+              }}</el-tag>
+            </el-tooltip>
           </template>
         </el-table-column>
 
@@ -798,15 +824,15 @@ function handleMoreStatus(row:any) {
 
 <style scoped lang="scss">
 .copyId .projectId {
-  font-size:.875rem;
+  font-size: 0.875rem;
 }
 .rowCopy {
   width: 20px;
   display: none;
 }
-.copyId  .current {
-    display: block !important;
-  }
+.copyId .current {
+  display: block !important;
+}
 .el-table__row:hover .rowCopy {
   display: block;
 }
