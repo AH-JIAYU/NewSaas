@@ -273,7 +273,6 @@ nextTick(() => {
                   <div>
                     <el-tooltip
                       class="tooltips"
-
                       placement="top"
                     >
                     <template #content>
@@ -287,11 +286,6 @@ nextTick(() => {
                     授权区域
                   </div>
                 </template>
-
-
-
-
-
                   <el-select @change="changeRelevanceCountryIdList" v-model="props.leftTab.relevanceCountryIdList"
                     clearable filterable multiple collapse-tags>
                     <template #header>
@@ -353,6 +347,8 @@ nextTick(() => {
                   <el-select v-model="props.leftTab.settlementCycle">
                     <el-option label="net 30" :value="30"></el-option>
                     <el-option label="net 60" :value="60"></el-option>
+                    <el-option label="net 90" :value="90"></el-option>
+                    <el-option label="net 180" :value="180"></el-option>
                   </el-select>
                 </el-form-item>
               </el-col>
