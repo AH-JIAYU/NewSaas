@@ -284,14 +284,14 @@ onMounted(() => {
 
             <el-table-column v-if="checkList.includes('chargeName')" show-overflow-tooltip align="left"
               prop="chargeName" label="PM"><template #default="{ row }">
-                <span class="tableBig"> {{ row.chargeName ? row.chargeName : "-" }}</span>
+                <span> {{ row.chargeName ? row.chargeName : "-" }}</span>
 
               </template>
             </el-table-column>
             <el-table-column v-if="checkList.includes('relationProjectTotal')" show-overflow-tooltip align="left"
               prop="relationProjectTotal" label="关联项目数量" >
               <template #default="{ row }">
-                <span class="tableBig">  {{ row.relationProjectTotal  }}</span>
+                <span class="fontC-System">  {{ row.relationProjectTotal  }}</span>
 
               </template>
 </el-table-column>
@@ -299,7 +299,7 @@ onMounted(() => {
             <el-table-column v-if="checkList.includes('participateProjectTotal')" show-overflow-tooltip align="left"
               prop="participateProjectTotal" label="参与项目数量" >
               <template #default="{ row }">
-                <span class="tableBig">  {{ row.participateProjectTotal  }}</span>
+                <span class="fontC-System">  {{ row.participateProjectTotal  }}</span>
 
               </template>
               </el-table-column>
@@ -307,20 +307,20 @@ onMounted(() => {
             <el-table-column v-if="checkList.includes('settlementProjectTotal')" show-overflow-tooltip align="left"
               prop="settlementProjectTotal" label="结算项目数量" >
               <template #default="{ row }">
-                <span class="tableBig">  {{ row.settlementProjectTotal  }}</span>
+                <span class="fontC-System">  {{ row.settlementProjectTotal  }}</span>
 
               </template>
               </el-table-column>
 
             <el-table-column v-if="checkList.includes('settlementAmount')" show-overflow-tooltip align="left"
               prop="settlementAmount" label="结算项目金额"><template #default="{ row }">
-                  <span class="tableBig"> {{ row.settlementAmount  }}</span>
+                  <span class="fontC-System"> {{ row.settlementAmount  }}</span>
               </template>
             </el-table-column>
             <el-table-column v-if="checkList.includes('turnover')" show-overflow-tooltip align="left" prop="turnover"
               label="项目营业额" >
               <template #default="{ row }">
-                <span class="tableBig">  {{ row.turnover  }}</span>
+                <span class="fontC-System">  {{ row.turnover  }}</span>
 
               </template>
               </el-table-column>
@@ -372,13 +372,13 @@ onMounted(() => {
             </el-table-column>
             <el-table-column v-if="checkList.includes('chargeName')" show-overflow-tooltip align="left"
               prop="chargeName" label="PM"><template #default="{ row }">
-                <span class="tableBig">{{ row.chargeName ? row.chargeName : "-" }}</span>
+                <span class="fontC-System">{{ row.chargeName ? row.chargeName : "-" }}</span>
               </template>
             </el-table-column>
             <el-table-column v-if="checkList.includes('systemDone')" show-overflow-tooltip align="left"
               prop="systemDone" label="系统完成数" >
               <template #default="{ row }">
-                <span class="tableBig">  {{ row.systemDone  }}</span>
+                <span class="fontC-System">  {{ row.systemDone  }}</span>
 
               </template>
               </el-table-column>
@@ -389,7 +389,7 @@ onMounted(() => {
             <el-table-column v-if="checkList.includes('settlementDone')" show-overflow-tooltip align="left"
               prop="settlementDone" label="结算完成单数" >
               <template #default="{ row }">
-                <span class="tableBig">  {{ row.settlementDone  }}</span>
+                <span class="fontC-System">  {{ row.settlementDone  }}</span>
 
               </template>
               </el-table-column>
@@ -402,7 +402,7 @@ onMounted(() => {
             <el-table-column v-if="checkList.includes('settlementRatioPercent')" show-overflow-tooltip align="left"
               prop="settlementRatioPercent" label="审核率" >
               <template #default="{ row }">
-                <span class="tableBig">  {{ row.settlementRatioPercent  }}</span>
+                <span class="fontC-System">  {{ row.settlementRatioPercent  }}</span>
 
               </template>
               </el-table-column>

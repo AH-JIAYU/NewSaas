@@ -462,7 +462,7 @@ function handleCurrentChange(val: any) {
         <el-table-column v-if="checkList.includes('doMoneyPrice')" align="left" prop="doMoneyPrice"
           show-overflow-tooltip width="120" fixed="right" label="项目价">
           <template #default="{ row }">
-            <div class="tableBig">
+            <div class="fontC-System">
               <CurrencyType />{{ row.doMoneyPrice || 0 }}
             </div>
           </template>
@@ -470,7 +470,7 @@ function handleCurrentChange(val: any) {
         <el-table-column v-if="checkList.includes('memberPrice')" align="left" prop="memberPrice" show-overflow-tooltip
           width="120" fixed="right" label="成本价">
           <template #default="{ row }">
-            <div class="tableBig" style="color: #fd8989">
+            <div class="fontC-System" style="color: #fd8989">
               <CurrencyType />
               <template v-if="row.memberId"> {{ row.memberPrice || 0 }} </template>
               <template v-else> {{ row.supplierPrice || 0 }} </template>

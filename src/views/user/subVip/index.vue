@@ -391,7 +391,7 @@ function handleCurrentChange(val: any) {
           label="	可用余额"
         >
           <template #default="{ row }">
-            <div class="tableBig">
+            <div class="fontC-System">
               <CurrencyType />{{ row.availableBalance || 0 }}
             </div>
           </template>
@@ -404,7 +404,7 @@ function handleCurrentChange(val: any) {
           label="	待审余额"
         >
           <template #default="{ row }">
-            <div class="tableBig">
+            <div class="fontC-System">
               <CurrencyType />{{ row.pendingBalance || 0 }}
             </div>
           </template>
@@ -451,7 +451,7 @@ function handleCurrentChange(val: any) {
           show-overflow-tooltip
           label="创建人"
           ><template #default="{ row }">
-            <div class="tableBig">
+            <div class="fontC-System">
               {{ row.createUserName ? row.createUserName : "-" }}
             </div>
           </template>

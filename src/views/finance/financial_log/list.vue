@@ -296,7 +296,7 @@ onBeforeUnmount(() => {
                 parseStatusString(row.remark)[1]
               }`
             }}</el-text> -->
-            <el-text class="mx-1 fontColor tableBig" >{{ formatRemarkWithBalance(row.remark) || "-" }}</el-text>
+            <el-text class="mx-1 fontColor fontC-System" >{{ formatRemarkWithBalance(row.remark) || "-" }}</el-text>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('beforeBalance')" show-overflow-tooltip align="left"
@@ -309,13 +309,13 @@ onBeforeUnmount(() => {
           prop="addAndSubtraction" width="150" label="加减款" fixed="right"><template #default="{ row }">
             <p class="plus" v-if="row.operationType === 1" >
                 <div class="plusSpan i-majesticons:plus-line w-1em h-1em"></div>
-              <el-text class="tableBig">
+              <el-text class="fontC-System">
                 <CurrencyType />{{ Math.abs(row.addAndSubtraction) }}
               </el-text>
             </p>
             <p class="plus" v-if="row.operationType === 2">
                 <div class="minusSign i-iconamoon:sign-minus-bold w-1em h-1em"></div>
-              <el-text class="tableBig">
+              <el-text class="fontC-System">
                 <CurrencyType />{{ Math.abs(row.addAndSubtraction) }}
               </el-text>
             </p>

@@ -452,9 +452,9 @@ const formOption = {
            width="160"
         >
           <template #default="{ row }">
-            <div class="flex-c tableBig">
+            <div class="flex-c">
               <!-- style="width: calc(100% - 20px)" -->
-              <div class="oneLine">
+              <div class="fontC-System">
                 {{ supperLevel(row.supplierLevelId) }}
               </div>
               <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'supplierLevelId')" :class="{
@@ -474,7 +474,7 @@ const formOption = {
           label="可用余额"
         >
           <template #default="{ row }">
-            <div class="tableBig">
+            <div class="fontC-System">
               <CurrencyType />{{ row.balanceHumanLife || 0 }}
             </div>
           </template>
@@ -482,7 +482,7 @@ const formOption = {
         <el-table-column v-if="checkList.includes('amountPendingTrial')" width="100" align="left" prop="amountPendingTrial"
           show-overflow-tooltip label="待审金额">
           <template #default="{ row }">
-            <div class="tableBig">
+            <div class="fontC-System">
               <CurrencyType />{{ row.amountPendingTrial || 0 }}
             </div>
           </template>
@@ -591,7 +591,7 @@ const formOption = {
         </el-table-column>
         <el-table-column v-if="checkList.includes('settlementCycle')" align="left" width="100" prop="settlementCycle"
           show-overflow-tooltip label="结算周期"><template #default="{ row }">
-            <div class="flex-c tableBig">
+            <div class="flex-c fontC-System">
               <div class="oneLine" style="width: calc(100% - 20px)">
                 {{ row.settlementCycle ?  "net " + row.settlementCycle : "-" }}
               </div>
@@ -614,7 +614,7 @@ const formOption = {
         </el-table-column>
         <el-table-column v-if="checkList.includes('remark')" align="left" prop="remark" width="180" label="备注">
           <template #default="{ row }">
-            <div class="flex-c tableBig">
+            <div class="flex-c fontC-System">
               <div class="oneLine" style="width: calc(100% - 20px)">
                 {{ row.remark }}
               </div>

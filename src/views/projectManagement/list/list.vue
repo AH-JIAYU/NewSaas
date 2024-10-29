@@ -689,7 +689,7 @@ const formOption = {
         >
           <template #default="{ row }">
             <div class="flex-c">
-              <div class="oneLine tableBig" style="width: calc(100% - 1.25rem)">
+              <div class="oneLine fontC-System" style="width: calc(100% - 1.25rem)">
                 <CurrencyType />{{ row.doMoneyPrice || 0 }}
               </div>
               <SvgIcon
@@ -712,7 +712,7 @@ const formOption = {
         >
           <template #default="{ row }">
             <div class="flex-c">
-              <div class="oneLine tableBig" style="width: calc(100% - 1.25rem)">
+              <div class="oneLine fontC-System" style="width: calc(100% - 1.25rem)">
                 {{ row.ir ? row.ir : 0 }}/{{ row.nir ? row.nir : 0 }}
               </div>
               <SvgIcon
@@ -780,7 +780,7 @@ const formOption = {
           show-overflow-tooltip
           ><template #default="{ row }">
             <div>
-              <div class="tableBig oneLine">{{ row.createName }}</div>
+              <div class="fontC-System oneLine">{{ row.createName }}</div>
               <el-tooltip :content="row.createTime" placement="top">
                 <el-tag effect="plain" type="info">{{format(row.createTime)}}</el-tag>
               </el-tooltip>
@@ -795,7 +795,7 @@ const formOption = {
           label="备注"
           ><template #default="{ row }">
             <div class="flex-c">
-              <div class="oneLine tableBig" style="width: calc(100% - 1.25rem)">
+              <div class="oneLine fontC-System" style="width: calc(100% - 1.25rem)">
                 {{ row.remark ? row.remark : "-" }}
               </div>
               <SvgIcon

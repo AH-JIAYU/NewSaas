@@ -404,7 +404,7 @@ onMounted(() => {
               label="说明"
             >
               <template #default="{ row }">
-                <div class="flex-c tableBig">
+                <div class="flex-c fontC-System">
                   <div class="oneLine" style="width: calc(100% - 20px)">
                     {{ row.instructions ? row.instructions : "-" }}
                   </div>

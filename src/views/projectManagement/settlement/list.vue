@@ -509,7 +509,7 @@ function handleMoreStatus(row:any) {
           width="80"
         >
           <template #default="{ row }">
-            <div class="tableBig">
+            <div class="fontC-System">
               <CurrencyType />{{ row.projectAmount || 0 }}
             </div>
           </template>
@@ -593,7 +593,7 @@ function handleMoreStatus(row:any) {
           label="结算PO号"
         >
           <template #default="{ row }">
-            <div class="flex-c tableBig">
+            <div class="flex-c fontC-System">
               <div class="oneLine" style="width: calc(100% - 40px)">
                 {{ row.settlementPo ? row.settlementPo : "-" }}
               </div>
@@ -704,7 +704,7 @@ function handleMoreStatus(row:any) {
           label="备注"
         >
           <template #default="{ row }">
-            <div class="flex-c tableBig">
+            <div class="flex-c fontC-System">
               <div class="oneLine" style="width: calc(100% - 20px)">
                 {{ row.remark ? row.remark : "-" }}
               </div>

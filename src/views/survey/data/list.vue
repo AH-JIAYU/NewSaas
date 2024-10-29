@@ -308,6 +308,7 @@ function getDataList() {
 /* 自定义数字字体样式 */
 .number-font {
   font-family: D-DIN Exp; /* 选择字体 */
+  font-size: .875rem;
 
 }
   .center-image {
@@ -499,7 +500,7 @@ function getDataList() {
       .showDataSpanRight {
         margin-left: 1.1256rem;
         display: inline-block;
-        width: 4.3752rem;
+        // width: 4.3752rem;
         height: 16.992px;
         line-height: 1.062rem
           /* 16.992/16 */
@@ -521,7 +522,7 @@ function getDataList() {
           height: 16.992px;
           font-family: PingFang SC, PingFang SC;
           font-weight: 400;
-          font-size: .75rem
+          font-size: .875rem
             /* 12/16 */
           ;
           color: #333333;
