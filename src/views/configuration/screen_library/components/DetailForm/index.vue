@@ -52,7 +52,30 @@ const creatorOptions: ICreatorOptions = {
   showTranslationTab: true,
 };
 let creator: any;
+
+// 显示浏览器缩放比例框
+function showZoomLevelBox() {
+  // 触发键盘事件来显示缩放比例框
+  const event = new KeyboardEvent('keydown', { key: 'i', ctrlKey: true, bubbles: true, cancelable: true });
+  document.dispatchEvent(event);
+}
+// 设置浏览器缩放比例
+function setZoom(zoomLevel: number) {
+  document.body.style.zoom = zoomLevel.toString();
+  // document.body.style.transform = `scale(${zoomLevel})`;
+}
+
+// 还原浏览器缩放比例
+function resetZoom() {
+  // document.body.style.transform = '';
+  document.body.removeAttribute('style');
+}
+onUnmounted(()=> {
+  resetZoom(); // 还原缩放
+})
 onMounted(async () => {
+  setZoom(0.9); // 设置缩放为 90%
+  // showZoomLevelBox()
   // 清空自定义问题
   ComponentCollection.Instance.clear();
   // #region 模板
