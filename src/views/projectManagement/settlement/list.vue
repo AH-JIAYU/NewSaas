@@ -210,7 +210,8 @@ function onReset() {
   countryData.value = [];
   fetchData();
 }
-
+// 时间
+const { format } = useTimeago();
 // 格式化日期范围的方法
 const formatDateRange = (timestamps: any) => {
   if (!timestamps || timestamps.length === 0) return "";
@@ -688,11 +689,23 @@ function handleMoreStatus(row:any) {
           width="160"
         >
           <template #default="{ row }">
-            <el-text style="color:#333333" v-if="row.status ===1">{{ row.pendReviewTime }}</el-text>
-            <el-text style="color:#333333" v-if="row.status ===2">{{ row.reviewTime }}</el-text>
-            <el-text style="color:#333333" v-if="row.status ===3">{{ row.invoicedOutTime }}</el-text>
-            <el-text style="color:#333333" v-if="row.status ===4">{{ row.settledTime }}</el-text>
-            <el-text style="color:#333333" v-if="row.status ===5">{{ row.frozenTime }}</el-text>
+            <el-tooltip :content="row.pendReviewTime" placement="top" v-if="row.status ===1">
+                <el-tag effect="plain" type="info" >{{format(row.pendReviewTime)}}</el-tag>
+
+              </el-tooltip>
+              <el-tooltip :content="row.reviewTime" placement="top" v-if="row.status ===2">
+                <el-tag effect="plain" type="info">{{format(row.reviewTime)}}</el-tag>
+              </el-tooltip>
+              <el-tooltip :content="row.invoicedOutTime" placement="top" v-if="row.status ===3">
+                <el-tag effect="plain" type="info" v-if="row.status ===3">{{format(row.invoicedOutTime)}}</el-tag>
+              </el-tooltip>
+              <el-tooltip :content="row.settledTime" placement="top" v-if="row.status ===4">
+                <el-tag effect="plain" type="info" v-if="row.status ===4">{{format(row.settledTime)}}</el-tag>
+
+              </el-tooltip>
+              <el-tooltip :content="row.frozenTime" placement="top" v-if="row.status ===5">
+                <el-tag effect="plain" type="info" v-if="row.status ===5">{{format(row.frozenTime)}}</el-tag>
+              </el-tooltip>
           </template>
         </el-table-column>
 

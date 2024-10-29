@@ -307,7 +307,7 @@ onBeforeUnmount(() => {
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('type')" align="left" show-overflow-tooltip prop="type" label="类型">
           <template #default="{ row }">
-            <el-text class="tableBig">
+            <el-text class="fontC-System">
               {{ type[row.type - 1].label }}
             </el-text>
           </template>

@@ -400,9 +400,9 @@ function handleCurrentChange(val: any) {
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('remark')" show-overflow-tooltip align="left" prop="remark"
-          label="说明"  fixed="right">
+          label="说明"  fixed="right" width="200">
           <template #default="{ row }">
-            <el-text style="color:#333;font-weight: 700;">{{ formatRemarkWithBalance(row.remark) ||  "-" }}</el-text>
+            <el-text class="fontC-System">{{ formatRemarkWithBalance(row.remark) ||  "-" }}</el-text>
           </template>
         </ElTableColumn>
         <template #empty>

@@ -255,31 +255,31 @@ function handleCurrentChange(val: any) {
         <ElTableColumn v-if="data.checkList.includes('billAmount')" show-overflow-tooltip align="left"
           prop="billAmount" label="账单金额">
           <template #default="{ row }">
-            <p style="font-weight: 700;">
-              <CurrencyType />{{ row.billAmount || 0 }}
+            <p >
+              <CurrencyType /><span class="fontC-System">{{ row.billAmount || 0 }}</span>
             </p>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('taxesFees')" show-overflow-tooltip align="left" prop="taxesFees"
           label="税">
           <template #default="{ row }">
-            <p style="font-weight: 700;">
-              <CurrencyType />{{ row.taxesFees || 0 }}
+            <p>
+              <CurrencyType /><span class="fontC-System">{{ row.taxesFees || 0 }}</span>
             </p>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('payAmount')" show-overflow-tooltip align="left" prop="payAmount"
           label="实际金额">
           <template #default="{ row }">
-            <p style="font-weight: 700;">
-              <CurrencyType />{{ row.payAmount || 0 }}
+            <p>
+              <CurrencyType /><span class="fontC-System">{{ row.payAmount || 0 }}</span>
             </p>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('payTime')" show-overflow-tooltip align="left" prop="payTime"
           label="支付时间" width="180">
           <template #default="{ row }">
-            {{ row.payTime ? row.payTime : '-' }}
+            <span class="fontC-System">{{ row.payTime ? row.payTime : '-' }}</span>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('billStatus')" align="left" show-overflow-tooltip prop=""
@@ -293,7 +293,7 @@ function handleCurrentChange(val: any) {
         <ElTableColumn v-if="data.checkList.includes('notes')" show-overflow-tooltip align="left" prop="notes"
           label="说明">
           <template #default="{ row }">
-            <el-text style="color:#333;font-weight: 700;"> {{ row.notes ? row.notes : "-" }}</el-text>
+            <el-text class="fontC-System"> {{ row.notes ? row.notes : "-" }}</el-text>
           </template>
         </ElTableColumn>
         <el-table-column align="left" prop="i" label="操作" fixed="right" show-overflow-tooltip width="260">

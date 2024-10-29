@@ -252,10 +252,10 @@ function handleCurrentChange(val: any) {
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('name')" show-overflow-tooltip align="left" prop="name" label="主管">
           <template #default="{ row }">
-            <el-text v-if="row.userList.length" class="tableBig">
+            <el-text v-if="row.userList.length" class="fontC-System">
               {{ row.userList?.map((item: any) => item.name).join('，') }}
             </el-text>
-            <el-text v-else class="tableBig">-</el-text>
+            <el-text v-else class="fontC-System">-</el-text>
           </template>
         </ElTableColumn>
         <!-- <ElTableColumn v-if="data.checkList.includes('groupId')" show-overflow-tooltip align="left" prop="groupId"
@@ -276,14 +276,14 @@ function handleCurrentChange(val: any) {
         <ElTableColumn v-if="data.checkList.includes('totalPerformance')" show-overflow-tooltip align="left"
           prop="positionId" label="总业绩">
           <template #default="{ row }">
-            <el-text class="tableBig">
+            <el-text class="fontC-System">
               <CurrencyType />{{ row.totalPerformance || 0 }}
             </el-text>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('commission')" show-overflow-tooltip align="left"
           prop="pendingBalance" label="提成"><template #default="{ row }">
-            <el-text class="tableBig">
+            <el-text class="fontC-System">
               <CurrencyType />{{ row.commission || 0 }}
             </el-text>
           </template>

@@ -301,7 +301,7 @@ function handleCurrentChange(val: any) {
           show-overflow-tooltip label="部门">
           <template #default="{ row }">
             <div v-if="row.memberName" class="hoverSvg">
-              <el-text style="font-weight: 700;color: #333333;">{{ row.memberName.split('/')[0] }}</el-text>
+              <el-text style="color: #333333;">{{ row.memberName.split('/')[0] }}</el-text>
               &nbsp;&nbsp;
               <p class="fineBom">{{ row.memberName.split('/')[1] }}</p>
               <span class="c-fx">
@@ -333,7 +333,7 @@ function handleCurrentChange(val: any) {
             <el-text>
               <CurrencyType />
             </el-text>
-            <el-text style="color: #333333;font-weight: 700;">
+            <el-text style="color: #333333;">
               {{ row.doMoneyPrice || 0 }}
             </el-text>
           </template>
@@ -344,7 +344,7 @@ function handleCurrentChange(val: any) {
             <el-text>
               <CurrencyType />
             </el-text>
-            <el-text style="color: #333333;font-weight: 700;">
+            <el-text style="color: #333333;">
               {{ row.memberPrice || 0 }}
             </el-text>
           </template>
@@ -353,7 +353,7 @@ function handleCurrentChange(val: any) {
           show-overflow-tooltip label="区域/IP">
           <template #default="{ row }">
             <div v-if="row.ipBelong" class="hoverSvg">
-              <el-tag style="font-weight: 700;">{{ row.ipBelong.split("/")[1]
+              <el-tag >{{ row.ipBelong.split("/")[1]
                 }}</el-tag>
               &nbsp;&nbsp;
               <p class="fineBom">

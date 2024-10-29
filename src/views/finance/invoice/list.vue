@@ -441,7 +441,7 @@ onMounted(() => {
         >
           <template #default="{ row }">
             <CurrencyType />
-            <el-text class="fontColor tableBig">{{ row.invoiceAmount || 0 }}</el-text>
+            <el-text class="fontColor">{{ row.invoiceAmount || 0 }}</el-text>
           </template></el-table-column
         >
         <el-table-column
@@ -452,7 +452,7 @@ onMounted(() => {
           label="手续费(税)"
         >
           <template #default="{ row }">
-            <CurrencyType /><el-text class="fontColor tableBig">{{ row.invoiceTax || 0 }}</el-text>
+            <CurrencyType /><el-text class="fontColor">{{ row.invoiceTax || 0 }}</el-text>
           </template></el-table-column
         >
         <el-table-column
@@ -463,7 +463,7 @@ onMounted(() => {
           label="实收款"
         >
           <template #default="{ row }">
-            <CurrencyType /><el-text class="fontColor tableBig">{{
+            <CurrencyType /><el-text class="fontColor">{{
               row.actualReceipts || 0
             }}</el-text>
           </template></el-table-column
@@ -504,16 +504,16 @@ onMounted(() => {
           label="状态"
         >
           <template #default="{ row }">
-            <el-text v-if="row.invoiceStatus === 1" class="mx-1  color1 tableBig"
+            <el-text v-if="row.invoiceStatus === 1" class="mx-1  color1 fontC-System"
               >未收款</el-text
             >
-            <el-text v-if="row.invoiceStatus === 2" class="mx-1  color2 tableBig"
+            <el-text v-if="row.invoiceStatus === 2" class="mx-1  color2 fontC-System"
               >部分收款</el-text
             >
-            <el-text v-if="row.invoiceStatus === 3" class="mx-1  color3 tableBig"
+            <el-text v-if="row.invoiceStatus === 3" class="mx-1  color3 fontC-System"
               >已完结</el-text
             >
-            <el-text v-if="row.invoiceStatus === 4" class="mx-1  color4 tableBig"
+            <el-text v-if="row.invoiceStatus === 4" class="mx-1  color4 fontC-System"
               >坏账</el-text
             >
           </template>
@@ -525,7 +525,7 @@ onMounted(() => {
           label="备注"
         >
         <template #default="{ row }">
-        <el-text class="mx-1  tableBig"
+        <el-text class="mx-1  fontC-System"
               >{{ row.remark }}</el-text
             >
             </template>
