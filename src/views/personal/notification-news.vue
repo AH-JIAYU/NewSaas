@@ -60,7 +60,7 @@ defineExpose({
     font-family: PingFang SC, PingFang SC;
     font-weight: 600;
     font-size: 1.125rem;
-    color: #0F0F0F;
+    color: #333333;
     margin-top: 0 !important;
     display: flex;
     justify-content: star;
@@ -81,7 +81,7 @@ defineExpose({
     flex: 1;
     font-family: PingFang SC, PingFang SC;
     padding: 0 1rem;
-    color: #0F0F0F;
+    color: #333333;
 
 
     .content {
