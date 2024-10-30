@@ -322,9 +322,10 @@ const formOption={
         <el-table-column v-if="checkList.includes('turnover')" align="left" prop="turnover" show-overflow-tooltip
           label="客户营业限额/月">
           <template #default="{ row }">
-            <div class="tableBig">
-              <CurrencyType />{{ row.turnover || 0 }}
+            <div v-if="row.turnover > 0" class="tableBig">
+              <CurrencyType />{{ row.turnover }}
             </div>
+            <el-text class="tableBig" v-else>-</el-text>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('rateAudit')" align="left" prop="rateAudit" show-overflow-tooltip
@@ -334,9 +335,6 @@ const formOption={
             </div>
           </template>
         </el-table-column>
-
-
-
         <el-table-column align="left" fixed="right" prop="i" label="操作" width="200">
           <template #default="{ row }">
             <ElSpace>

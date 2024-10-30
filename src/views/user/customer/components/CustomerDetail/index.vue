@@ -4,15 +4,20 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import customerDetailDetail from "../CustomerDetailDetail/index.vue";
 import api from "@/api/modules/user_customer";
 import { obtainLoading } from "@/utils/apiLoading";
+import useTenantStaffStore from "@/store/modules/configuration_manager";
 
 const emit = defineEmits(["fetch-data"]);
 const drawerisible = ref<boolean>(false);
+const tenantStaffStore = useTenantStaffStore()
 const checkRef = ref<any>();
 const detailData = ref<any>(); // 详情数据
+const userList = ref<any>([])
 async function showEdit(row: any) {
   const params = {
     tenantCustomerId: row.tenantCustomerId,
   };
+
+  userList.value = await tenantStaffStore.getStaff()
   const { status, data } = await obtainLoading(api.detail(params));
   detailData.value = data;
 
@@ -78,7 +83,7 @@ defineExpose({
         ? detailData.tenantCustomerId
         : "-"
         }}
-              <copy class="copy" :content="detailData.tenantCustomerId " />
+        <copy class="copy" :content="detailData.tenantCustomerId " />
       </el-text>
     </el-form-item>
   </el-col>
@@ -95,7 +100,7 @@ defineExpose({
     <el-form-item label="客户简称:">
       <el-text class="mx-1">
         {{
-        detailData.customerShortName ? detailData.customerAccord : "-"
+        detailData.customerShortName ? detailData.customerShortName : "-"
         }}
       </el-text>
     </el-form-item>
@@ -144,8 +149,10 @@ defineExpose({
   </el-col>
   <el-col :span="8">
     <el-form-item label="PM:">
-      <el-text class="mx-1">
-        {{ detailData.chargeName ? detailData.chargeName : "-" }}
+      <el-text v-for="item in userList" :key="item.id">
+        <el-text v-if="detailData.chargeId === item.id" class="mx-1">
+          {{ item.userName }}
+        </el-text>
       </el-text>
     </el-form-item>
   </el-col>
@@ -174,7 +181,7 @@ defineExpose({
       <el-form-item label="客户状态:">
         <el-text class="mx-1">
           <div v-if="detailData.customerStatus === 1" class="close">关闭</div>
-        <div v-else class="open">开启</div>
+          <div v-else class="open">开启</div>
         </el-text>
       </el-form-item>
     </el-col>
@@ -182,7 +189,7 @@ defineExpose({
       <el-form-item label="资料:">
         <el-text class="mx-1">
           <div v-if="detailData.antecedentQuestionnaire === 1" class="close">关闭</div>
-        <div v-else class="open">开启</div>
+          <div v-else class="open">开启</div>
         </el-text>
       </el-form-item>
     </el-col>
@@ -190,7 +197,7 @@ defineExpose({
       <el-form-item label="风险控制:">
         <el-text class="mx-1">
           <div v-if="detailData.riskControl === 1" class="close">关闭</div>
-        <div v-else class="open">开启</div>
+          <div v-else class="open">开启</div>
         </el-text>
       </el-form-item>
     </el-col>
@@ -253,10 +260,11 @@ defineExpose({
 </template>
 
 <style scoped lang="scss">
-  .el-card {
-    margin: 10px 0;
-    padding-top: 10px;
-  }
+.el-card {
+  margin: 10px 0;
+  padding-top: 10px;
+}
+
 .card-header {
   display: flex;
   justify-content: space-between;
@@ -265,9 +273,9 @@ defineExpose({
   .leftTitle {
     .spanStatus {
       width: 49px !important;
-height: 23px !important;
-background: #409EFF;
-border-radius: 4px;
+      height: 23px !important;
+      background: #409EFF;
+      border-radius: 4px;
       color: var(--el-color-white);
       padding: 4px 8px;
       font-size: 11px;
@@ -275,6 +283,7 @@ border-radius: 4px;
       border-radius: .25rem;
     }
   }
+
   .isOnlineSpanTrue {
     background: #03c239;
     // background: url('/src/assets/images/lineCricle.png');
@@ -290,13 +299,13 @@ border-radius: 4px;
 
   .isOnlineSpanFalse {
     background: #d8261a;
-      width:.5625rem;
+    width: .5625rem;
     height: .5625rem;
     display: block;
     border-radius: 50%;
     border: 1px solid #d8261a;
     box-shadow: #d8261a 0px 0px 10px;
-    }
+  }
 
   .rightStatus {
     // position: relative;
@@ -306,7 +315,7 @@ border-radius: 4px;
     align-items: baseline;
 
 
-    > div {
+    >div {
       // width: 120px;
       // height: 2.2rem;
       // line-height: 2.2rem;
@@ -342,17 +351,18 @@ border-radius: 4px;
       // }
     }
 
-    > div.isOnlineTrue {
+    >div.isOnlineTrue {
       color: #03c239;
       margin-left: 6px;
     }
 
-    > div.isOnlineFalse {
+    >div.isOnlineFalse {
       color: #d8261a;
       margin-left: 6px;
     }
   }
 }
+
 .open {
   color: #409eff;
 }

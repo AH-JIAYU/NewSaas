@@ -5,6 +5,7 @@ import { throttle,debounce } from "lodash-es";
 import Message from "vue-m-message";
 import useSettingsStore from "@/store/modules/settings";
 import useUserStore from "@/store/modules/user";
+import logo from "./modules/logo";
 
 const api: any = axios.create({
   baseURL:
