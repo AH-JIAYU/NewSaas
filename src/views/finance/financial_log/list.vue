@@ -296,7 +296,7 @@ onBeforeUnmount(() => {
                 parseStatusString(row.remark)[1]
               }`
             }}</el-text> -->
-            <el-text class="mx-1 fontColor tableBig" >{{ formatRemarkWithBalance(row.remark) || "-" }}</el-text>
+            <el-text class="mx-1 fontColor fontC-System" >{{ formatRemarkWithBalance(row.remark) || "-" }}</el-text>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('beforeBalance')" show-overflow-tooltip align="left"

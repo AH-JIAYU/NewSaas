@@ -356,7 +356,7 @@ function handleCurrentChange(val: any) {
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('type')" show-overflow-tooltip width="120" align="left"
-          prop="type" label="类型" >
+          prop="type" label="类型" fixed="right">
           <template #default="{ row }">
             <el-tag v-if="row.type === 1" type="warning" effect="dark">待审余额</el-tag>
             <el-tag v-if="row.type === 2" type="primary" effect="dark">可用余额</el-tag>
@@ -400,9 +400,9 @@ function handleCurrentChange(val: any) {
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('remark')" show-overflow-tooltip align="left" prop="remark"
-          label="说明"  fixed="right">
+          label="说明"  fixed="right" width="200">
           <template #default="{ row }">
-            <el-text style="color:#333;font-weight: 700;">{{ formatRemarkWithBalance(row.remark) ||  "-" }}</el-text>
+            <el-text class="fontC-System">{{ formatRemarkWithBalance(row.remark) ||  "-" }}</el-text>
           </template>
         </ElTableColumn>
         <template #empty>

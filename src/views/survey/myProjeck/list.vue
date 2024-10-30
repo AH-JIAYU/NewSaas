@@ -294,7 +294,7 @@ const formOption = {
               <el-text style="color: #FD8989;">
                 <CurrencyType />
               </el-text>
-              <el-text style="color: #333333;font-weight: 700;font-family: DINPro-Medium;">
+              <el-text style="color: #333333;font-family: DINPro-Medium;">
                 {{ row.doMoneyPrice || 0 }}
               </el-text>
             </el-text>
@@ -332,7 +332,7 @@ const formOption = {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('ir')" show-overflow-tooltip align="left" label="IR/NIR">
-          <template #default="{ row }"><el-text style="color: #333333;font-weight: 700;font-family: DINPro-Medium;">
+          <template #default="{ row }"><el-text style="color: #333333;font-family: DINPro-Medium;">
               {{ row.ir ? row.ir : '-' }} / {{ row.nir ? row.nir : 0 }}
             </el-text></template>
         </el-table-column>

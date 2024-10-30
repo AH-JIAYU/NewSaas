@@ -421,7 +421,7 @@ function handleCurrentChange(val: any) {
               <ElTableColumn v-if="userForm.checkList.includes('phoneNumber')" align="left" width="170" prop="phone"
                 label="电话号码">
                 <template #default="{ row }">
-                  <el-text class="tableBig">
+                  <el-text class="fontC-System">
                     {{ row.phoneNumber ? row.phoneNumber : "-" }}
                   </el-text>
                 </template>
@@ -429,7 +429,7 @@ function handleCurrentChange(val: any) {
               <ElTableColumn v-if="userForm.checkList.includes('email')" align="left" width="180" prop="email"
                 label="邮箱">
                 <template #default="{ row }">
-                  <el-text class="tableBig">
+                  <el-text class="fontC-System">
                     {{ row.email ? row.email : "-" }}
                   </el-text>
                 </template>
@@ -437,7 +437,7 @@ function handleCurrentChange(val: any) {
               <ElTableColumn v-if="userForm.checkList.includes('departmentId')" align="left" prop="departmentId"
                 label="部门">
                 <template #default="{ row }">
-                  <el-text class="tableBig">
+                  <el-text class="fontC-System">
                     {{ row.organizationalStructureName ? row.organizationalStructureName : '-' }}
                   </el-text>
                 </template>
@@ -445,21 +445,21 @@ function handleCurrentChange(val: any) {
               <ElTableColumn v-if="userForm.checkList.includes('role')" align="left" prop="role"
                 label="角色">
                 <template #default="{ row }">
-                  <el-text class="tableBig">
+                  <el-text class="fontC-System">
                     {{ row.role ? row.role : '-' }}
                   </el-text>
                 </template>
               </ElTableColumn>
               <ElTableColumn v-if="userForm.checkList.includes('positionId')" align="left" prop="positionId" label="职位">
                 <template #default="{ row }">
-                  <el-text v-if="row.positionId" class="tableBig">
+                  <el-text v-if="row.positionId" class="fontC-System">
                     <el-text v-for="item in positionManageList">
                       <el-text v-if="row.positionId === item.id">
                         {{ item.name ? item.name : "-" }}
                       </el-text>
                     </el-text>
                   </el-text>
-                  <el-text v-else class="tableBig">-</el-text>
+                  <el-text v-else class="fontC-System">-</el-text>
                 </template>
               </ElTableColumn>
               <ElTableColumn label="操作" fixed="right" width="200" align="left">

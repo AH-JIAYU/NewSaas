@@ -268,7 +268,24 @@ nextTick(() => {
                     multiple
                     collapse-tags -->
               <el-col :span="8">
-                <el-form-item label="地区">
+                <el-form-item>
+                  <template #label>
+                  <div>
+                    <el-tooltip
+                      class="tooltips"
+                      placement="top"
+                    >
+                    <template #content>
+                      <div>
+                        为供应商设定筛选条件，更高效匹配合适项目<br/>
+                        例:仅选中【法国】，该供应商只能做【法国】的项目
+                      </div>
+                      </template>
+                      <SvgIcon class="SvgIcon2" name="i-ri:question-line" />
+                    </el-tooltip>
+                    授权区域
+                  </div>
+                </template>
                   <el-select @change="changeRelevanceCountryIdList" v-model="props.leftTab.relevanceCountryIdList"
                     clearable filterable multiple collapse-tags>
                     <template #header>
@@ -330,6 +347,8 @@ nextTick(() => {
                   <el-select v-model="props.leftTab.settlementCycle">
                     <el-option label="net 30" :value="30"></el-option>
                     <el-option label="net 60" :value="60"></el-option>
+                    <el-option label="net 90" :value="90"></el-option>
+                    <el-option label="net 180" :value="180"></el-option>
                   </el-select>
                 </el-form-item>
               </el-col>

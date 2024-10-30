@@ -552,8 +552,8 @@ function handleCurrentChange(val: any) {
   }
 }
 .weightColor {
-  color: #333;
-  font-weight: 700;
+  color: #333333;
+
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

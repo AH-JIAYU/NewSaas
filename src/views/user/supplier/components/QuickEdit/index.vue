@@ -117,7 +117,9 @@ defineExpose({
           <el-form-item label="结算周期">
             <el-select v-model="data.formData.settlementCycle">
               <el-option label="net 30" :value="30"></el-option>
-              <el-option label="net 60" :value="60"></el-option>
+                    <el-option label="net 60" :value="60"></el-option>
+                    <el-option label="net 90" :value="90"></el-option>
+                    <el-option label="net 180" :value="180"></el-option>
             </el-select>
           </el-form-item>
         </template>

@@ -277,10 +277,10 @@ const formOption={
         </el-table-column>
         <el-table-column v-if="checkList.includes('chargeId')" align="left" prop="chargeId" show-overflow-tooltip
           label="PM"><template #default="{ row }">
-            <div class="flex-c tableBig">
+            <div class="flex-c ">
               <div class="oneLine" style="width: calc(100% - 20px);">
                 <el-text v-for="item in staffList" :key="item.id">
-                  <el-text v-if="item.id === row.chargeId">
+                  <el-text v-if="item.id === row.chargeId" class="fontC-System">
                     {{ item.userName }}
                   </el-text>
                 </el-text>
@@ -295,7 +295,7 @@ const formOption={
         <el-table-column v-if="checkList.includes('projectNumber')" align="left" prop="turnover" show-overflow-tooltip
           label="关联项目数">
           <template #default="{ row }">
-            <span style="display: inline-block" class="tableBig">
+            <span style="display: inline-block" class="fontC-System">
               {{ row.projectNumber || 0 }}
             </span>
             <el-button v-if="row.projectNumber" text type="primary" size="small" class="p-1"
@@ -330,7 +330,7 @@ const formOption={
         </el-table-column>
         <el-table-column v-if="checkList.includes('rateAudit')" align="left" prop="rateAudit" show-overflow-tooltip
           label="审核率Min值"><template #default="{ row }">
-            <div class="tableBig">
+            <div class="fontC-System">
               {{ row.rateAudit ? row.rateAudit : "-" }}
             </div>
           </template>

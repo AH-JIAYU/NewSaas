@@ -302,10 +302,16 @@ function handleCurrentChange(val: any) {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('memberNickname')" align="left" prop="memberNickname"
-          show-overflow-tooltip label="会员名称" />
+          show-overflow-tooltip label="会员名称" >
+
+
+          <template #default="{ row }">
+            <span class="tableBig">{{ row.memberNickname }}</span>
+          </template>
+</el-table-column>
         <el-table-column v-if="checkList.includes('memberName')" align="left" prop="memberName" show-overflow-tooltip
           label="会员姓名"><template #default="{ row }">
-            {{ row.memberName ? row.memberName : '-' }} </template></el-table-column>
+            <span class="tableBig">{{ row.memberName ? row.memberName : '-' }} </span></template></el-table-column>
         <el-table-column v-if="checkList.includes('memberLevelName')" align="left" prop="memberLevelName"
           show-overflow-tooltip label="会员等级">
           <template #default="{ row }">
@@ -589,8 +595,8 @@ function handleCurrentChange(val: any) {
 
 :deep {
   tbody {
-    color: #333;
-    font-weight: 700;
+    color: #333333;
+    // font-weight: 700;
   }
 }
 

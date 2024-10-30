@@ -232,13 +232,13 @@ onMounted(() => {
         </ElTableColumn>
         <ElTableColumn prop="count" align="left" label="账户数">
           <template #default="{ row }">
-            <div class="tableBig">{{ row.count }}</div>
+            <div class="fontC-System">{{ row.count }}</div>
           </template>
         </ElTableColumn>
         <ElTableColumn prop="remark" align="left" label="备注">
           <template #default="{ row }">
             <div class="flex-s  ">
-              <div class="oneLine tableBig" style="width: calc(100% - 20px);">
+              <div class="oneLine fontC-System" style="width: calc(100% - 20px);">
                 {{ row.remark ? row.remark : "-" }}
               </div>
               <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'remark')"

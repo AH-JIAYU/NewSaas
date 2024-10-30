@@ -6,10 +6,13 @@ const props = defineProps(["currencyType"]);
 defineOptions({
   name: "CurrencyType",
 });
+console.log(props.currencyType,'props.currencyType')
+console.log(userStore.currencyType,'userStore.currencyType')
 </script>
 
 <template>
   <template v-if="props.currencyType">
+
     <template v-if="Number(props.currencyType) !== 3">
       {{ Number(props.currencyType) === 1 ? "" : "￥" }}
       <el-text v-if="Number(props.currencyType) === 1">
@@ -47,3 +50,5 @@ defineOptions({
     </template>
   </template>
 </template>
+
+

@@ -459,7 +459,7 @@ function handleCurrentChange(val: any) {
           label="说明"
         >
           <template #default="{ row }">
-            <div class="tableBig oneLine">
+            <div class="fontC-System oneLine">
               {{ row.notes }}
             </div>
           </template>

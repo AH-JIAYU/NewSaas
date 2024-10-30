@@ -177,7 +177,7 @@ const formOption = {
         <el-table-column v-if="checkList.includes('dispatchType')" show-overflow-tooltip prop="dispatchType"
           align="left" label="类型">
           <template #default="{ row }">
-            <div class="tableBig">
+            <div class="fontC-System">
               <el-text v-if="row.dispatchType === 1" type="primary">指定关闭</el-text>
               <el-text v-else type="danger">指定价格</el-text>
             </div>
@@ -214,7 +214,7 @@ const formOption = {
         <el-table-column v-if="checkList.includes('moneyPrice')" show-overflow-tooltip prop="moneyPrice" align="left"
           label="项目价" width="96">
           <template #default="{ row }">
-            <div class="tableBig">
+            <div class="fontC-System">
               <CurrencyType />{{ row.moneyPrice || 0 }}
             </div>
           </template>
@@ -223,7 +223,7 @@ const formOption = {
         <el-table-column v-if="checkList.includes('doMoneyPrice')" show-overflow-tooltip prop="doMoneyPrice"
           align="left" label="指定价格" width="96">
           <template #default="{ row }">
-            <div class="tableBig">
+            <div class="fontC-System">
               <CurrencyType />{{ row.doMoneyPrice || 0 }}
             </div>
           </template>

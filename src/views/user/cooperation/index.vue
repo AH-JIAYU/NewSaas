@@ -233,7 +233,7 @@ onMounted(() => {
           width="100"
         >
           <template #default="{ row }">
-            <div class="tableBig">
+            <div class="fontC-System">
               <el-text v-if="row.bindStatus === 2" type="success">合作</el-text>
               <el-text v-if="row.bindStatus === 4" type="danger">解约</el-text>
             </div>
@@ -292,7 +292,7 @@ onMounted(() => {
         >
           <template #default="{ row }">
             <div class="flex-s">
-              <div class="tableBig">{{ row.userName }}</div>
+              <div class="fontC-System">{{ row.userName }}</div>
               <SvgIcon
                 v-if="row.projectType !== 2"
                 @click="quickEdit(row, 'chargeUserId')"
@@ -311,7 +311,7 @@ onMounted(() => {
           label="价格比例"
         >
           <template #default="{ row }">
-            <div class="tableBig">{{ row.priceRatio }}%</div>
+            <div class="fontC-System">{{ row.priceRatio }}%</div>
           </template>
         </el-table-column>
         <el-table-column
@@ -322,7 +322,7 @@ onMounted(() => {
           label="待审金额"
         >
           <template #default="{ row }">
-            <div class="tableBig">
+            <div class="fontC-System">
               <CurrencyType />{{ row.pendBalance || 0 }}
             </div>
           </template>
@@ -335,7 +335,7 @@ onMounted(() => {
           label="可用金额"
         >
           <template #default="{ row }">
-            <div class="tableBig">
+            <div class="fontC-System">
               <CurrencyType />{{ row.availableBalance || 0 }}
             </div>
           </template>
