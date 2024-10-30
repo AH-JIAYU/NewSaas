@@ -205,18 +205,18 @@ const formOption={
               <el-table-column width="55" />
               <el-table-column width="300" prop="memberChildName" label="名称+ID" align="left">
                 <template #default="scope">
-                  <el-text>
+                  <el-text class="fontC-System">
                     {{ scope.row.memberChildName }}
                   </el-text>
                   <br />
-                  <el-text v-show="scope.row.randomIdentityId" type="danger">随机id:{{ scope.row.randomIdentityId
+                  <el-text v-show="scope.row.randomIdentityId" type="danger" class="fontC-System">随机id:{{ scope.row.randomIdentityId
                     }}</el-text>
                 </template>
               </el-table-column>
               <ElTableColumn prop="status" label="状态" align="left">
                 <template #default="scope">
-                  <el-text v-if="scope.row.status === 1" type="success">前置问卷通过</el-text>
-                  <el-text v-else type="danger">前置问卷未通过</el-text>
+                  <el-text v-if="scope.row.status === 1" type="success" class="fontC-System">前置问卷通过</el-text>
+                  <el-text v-else type="danger" class="fontC-System">前置问卷未通过</el-text>
                 </template>
               </ElTableColumn>
               <ElTableColumn width="200" align="left" fixed="right" label="操作">
@@ -347,6 +347,10 @@ const formOption={
 
 // 表格
 :deep {
+  tbody {
+    color: #333333;
+    // font-weight: 700;
+  }
   .hide-table-header thead {
     display: none !important;
   }
