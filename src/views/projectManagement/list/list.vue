@@ -470,7 +470,7 @@ const formOption = {
           v-if="checkList.includes('projectType')"
           align="left"
           label="项目"
-          width="150"
+          width="180"
         >
           <template #default="{ row }">
             <div>
@@ -526,18 +526,18 @@ const formOption = {
           prop="name"
           align="left"
           label="名称/标识"
-          width="150"
+          width="180"
           ><template #default="{ row }">
             <div class="flex-c">
               <div class="oneLine" style="width: calc(100% - 1.25rem)">
                 <b class="oneLine tableBig"
-                  >名:
+                  >
                   <span :class="row.isB2b === 2 ? 'red' : ''">{{
                     row.name
                   }}</span></b
                 >
                 <div class="oneLine">
-                  标:
+
                   <span :class="row.isB2b === 2 ? 'red' : ''">{{
                     row.clientName.split("/")[1]
                   }}</span>
@@ -559,7 +559,7 @@ const formOption = {
           show-overflow-tooltip
           align="left"
           label="客户"
-          width="120"
+           width="180"
           ><template #default="{ row }">
             <div class="flex-c">
               <div class="oneLine" style="width: calc(100% - 1.25rem)">
@@ -591,7 +591,7 @@ const formOption = {
           v-if="checkList.includes('PCNL')"
           align="left"
           label="参数"
-          width="200"
+            width="180"
         >
           <template #default="{ row }">
             <div class="flex-c">
@@ -770,23 +770,6 @@ const formOption = {
             </template>
           </template>
         </el-table-column>
-
-        <el-table-column
-          v-if="checkList.includes('create')"
-          prop="createTime"
-          align="left"
-          width="120"
-          label="创建"
-          show-overflow-tooltip
-          ><template #default="{ row }">
-            <div>
-              <div class="fontC-System oneLine">{{ row.createName }}</div>
-              <el-tooltip :content="row.createTime" placement="top">
-                <el-tag effect="plain" type="info">{{format(row.createTime)}}</el-tag>
-              </el-tooltip>
-            </div>
-          </template>
-        </el-table-column>
         <el-table-column
           v-if="checkList.includes('remark')"
           show-overflow-tooltip
@@ -805,6 +788,22 @@ const formOption = {
                 name="i-ep:edit"
                 color="#409eff"
               />
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="checkList.includes('create')"
+          prop="createTime"
+          align="left"
+          width="120"
+          label="创建"
+          show-overflow-tooltip
+          ><template #default="{ row }">
+            <div>
+              <div class="fontC-System oneLine">{{ row.createName }}</div>
+              <el-tooltip :content="row.createTime" placement="top">
+                <el-tag effect="plain" type="info">{{format(row.createTime)}}</el-tag>
+              </el-tooltip>
             </div>
           </template>
         </el-table-column>
