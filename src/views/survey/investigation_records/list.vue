@@ -237,7 +237,7 @@ function handleCurrentChange(val: any) {
         @selection-change="setSelectRows" @current-change="handleCurrentChange" highlight-current-row>
         <el-table-column align="left" type="selection" />
         <el-table-column v-if="checkList.includes('randomIdentityId')" align="left" prop="randomIdentityId"
-          show-overflow-tooltip label="随机身份">
+          show-overflow-tooltip label="随机身份" width="200">
           <template #default="{ row }">
             <div v-if="row.randomIdentityId" class="hoverSvg">
               <p class="fineBom">{{ row.randomIdentityId }}</p>
@@ -297,7 +297,7 @@ function handleCurrentChange(val: any) {
               }}</el-text>
           </template>
         </el-table-column> -->
-        <el-table-column v-if="checkList.includes('memberName')" width="120" align="left" prop="memberName"
+        <el-table-column v-if="checkList.includes('memberName')" width="100" align="left" prop="memberName"
           show-overflow-tooltip label="部门">
           <template #default="{ row }">
             <div v-if="row.memberName" class="hoverSvg">
