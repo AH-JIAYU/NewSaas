@@ -314,7 +314,7 @@ onBeforeUnmount(() => {
                       </el-form-item>
                     </template>
                     <template v-else>
-                      <el-text class="tableBig">{{ scope.row.categoryName }}</el-text>
+                      <el-text class="fontC-System">{{ scope.row.categoryName }}</el-text>
                     </template>
                   </template>
                 </el-table-column>

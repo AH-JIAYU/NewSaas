@@ -233,7 +233,16 @@ const formOption={
         <el-table-column width="300" v-if="checkList.includes('projectId')" align="left" prop="projectId"
           show-overflow-tooltip label="项目ID" />
         <el-table-column v-if="checkList.includes('projectName')" align="left" prop="projectName"
-          show-overflow-tooltip label="项目名称" />
+          show-overflow-tooltip label="项目名称" >
+          <template #default="{ row }">
+            <div class="tableBig">
+              {{ row.projectName }}
+              </div>
+              </template>
+              </el-table-column>
+
+
+
         <el-table-column v-if="checkList.includes('allocationType')" align="left" show-overflow-tooltip width="100"
           label="分配类型">
           <template #default="{ row }">

@@ -166,7 +166,7 @@ onMounted(() => {
         <el-table-column v-if="checkList.includes('levelName')" align="left" prop="levelName" show-overflow-tooltip
           label="等级名称">
           <template #default="{ row }">
-            <p class="fontC-System">{{ row.levelName }}</p>
+            <p class="tableBig">{{ row.levelName }}</p>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('additionRatio')" align="left" prop="additionRatio"
