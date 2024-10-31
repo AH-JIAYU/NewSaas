@@ -1532,7 +1532,7 @@ onMounted(async () => {
   .blue {
     display: inline-block;
     position: relative;
-    width: 1.25rem;
+    width: 1rem;
     height: 1.5625rem;
   }
 
