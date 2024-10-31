@@ -297,4 +297,10 @@ const formOption = {
     }
   }
 }
+:deep {
+  tbody {
+    color: #333333;
+    // font-weight: 700;
+  }
+}
 </style>

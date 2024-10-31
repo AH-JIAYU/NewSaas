@@ -276,15 +276,15 @@ function handleCurrentChange(val: any) {
         <ElTableColumn v-if="data.checkList.includes('totalPerformance')" show-overflow-tooltip align="left"
           prop="positionId" label="总业绩">
           <template #default="{ row }">
-            <el-text class="fontC-System">
-              <CurrencyType />{{ row.totalPerformance || 0 }}
+            <el-text >
+              <CurrencyType /><span class="fontC-System">{{ row.totalPerformance || 0 }}</span>
             </el-text>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('commission')" show-overflow-tooltip align="left"
           prop="pendingBalance" label="提成"><template #default="{ row }">
-            <el-text class="fontC-System">
-              <CurrencyType />{{ row.commission || 0 }}
+            <el-text>
+              <CurrencyType /><span class="fontC-System">{{ row.commission || 0 }}</span>
             </el-text>
           </template>
         </ElTableColumn>

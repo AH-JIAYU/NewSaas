@@ -263,7 +263,7 @@ onBeforeUnmount(() => {
         <ElTableColumn v-if="data.checkList.includes('clientId')" show-overflow-tooltip align="left" prop="clientId"
           label="点击ID" width="200">
           <template #default="{ row }">
-            <el-text>{{ row.clientId ? row.clientId : "-" }}</el-text>
+            <el-text class="fontColor">{{ row.clientId ? row.clientId : "-" }}</el-text>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('typeId')" show-overflow-tooltip align="left" prop=""

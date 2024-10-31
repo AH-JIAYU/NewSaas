@@ -561,7 +561,7 @@ function handleMoreStatus(row: any) {
           align="left"
           label="系统/审核完成数"
           ><template #default="{ row }">
-            <div class="flex-c tableBig">
+            <div class="flex-c">
               <div class="oneLine" style="width: calc(100% - 20px)">
                 <el-text>{{ row.systemDone ? row.systemDone : 0 }}</el-text>
                 /<el-text class="mx-1" type="success">{{

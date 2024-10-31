@@ -248,7 +248,7 @@ const formOption = {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('projectIdentificationOrClientName')" show-overflow-tooltip
-          prop="projectIdentificationOrClientName" width="180" align="left" label="名称/标识">
+          prop="projectIdentificationOrClientName" width="200" align="left" label="名称/标识">
           <template #default="{ row }">
             <p v-if="checkList.includes('projectIdentification')" class="crudeTop">
               名称：{{ row.projectIdentification }}</p>
@@ -257,7 +257,7 @@ const formOption = {
     row.clientName }}</span></p>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('withoutUrl')" width="150" prop="withoutUrl" align="left" label="URL">
+        <el-table-column v-if="checkList.includes('withoutUrl')" width="260" prop="withoutUrl" align="left" label="URL">
           <template #default="{ row }">
             <el-tooltip class="box-item" effect="dark" :content="row.withoutUrl" placement="top">
               <!-- <el-button link type="primary" @click="copyUrl(row.withoutUrl)">复制</el-button> -->
@@ -272,7 +272,7 @@ const formOption = {
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('participation')" show-overflow-tooltip width="200" align="left"
+        <el-table-column v-if="checkList.includes('participation')" show-overflow-tooltip width="180" align="left"
           label="参数">
           <template #default="{ row }">
             <p class="parameter oneLine"><el-text class="mx-1 oneLine" style="color:#FB6868;" type="danger">参与：{{
@@ -300,7 +300,7 @@ const formOption = {
             </el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('memberPrice')" show-overflow-tooltip align="left" label="成本价(会员)">
+        <el-table-column v-if="checkList.includes('memberPrice')" show-overflow-tooltip align="left" label="成本价(会员)" width="130">
           <template #default="{ row }">
             <el-link v-if="row.getMemberGroupNameInfoList.length" size="small" plain type="primary"
               @click="membershipPrice(row)">

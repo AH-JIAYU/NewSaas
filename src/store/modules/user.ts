@@ -28,6 +28,7 @@ const useUserStore = defineStore(
     const token = ref(storage.local.get("token") ?? "");
     const avatar = ref(storage.local.get("avatar") ?? "");
     const userId = ref(storage.local.get("userId") ?? "");
+    const tenantId= ref(storage.local.get("tenantId") ?? "");
     const permissions = ref<string[]>([]);
     const logo = ref<any>(storage.local.get("logo") ?? "");//logo
     const webName = ref<any>(storage.local.get("webName") ?? "");// 网站名称
@@ -77,6 +78,9 @@ const useUserStore = defineStore(
       storage.local.set("webName", res.data.webName);
       storage.local.set("keyWords", res.data.keyWords);
       storage.local.set("description", res.data.description);
+      storage.local.set("tenantId", res.data.tenantId);
+
+      // storage.local.set("tend", res.data.description);
       webName.value = res.data.webName;
       keyWords.value = res.data.keyWords;
       description.value = res.data.description;
@@ -85,6 +89,7 @@ const useUserStore = defineStore(
       token.value = res.data.token;
       avatar.value = res.data.avatar;
       userId.value = res.data.userId;
+      tenantId.value = res.data.tenantId,
       notificationStore.websocketreconnect;
     }
     // 登出
@@ -108,10 +113,12 @@ const useUserStore = defineStore(
       storage.local.remove("avatar");
       storage.local.remove("userId");
       storage.local.remove("tabbarPinData");
+      storage.local.remove("tenantId");
       account.value = "";
       token.value = "";
       avatar.value = "";
       userId.value = "";
+      tenantId.value = "";
       permissions.value = [];
       logo.value = '';
       webName.value = '';
@@ -167,6 +174,16 @@ const useUserStore = defineStore(
     function delDescription() {
       description.value = ''
       storage.local.remove("description")
+    }
+      // 存 租户id
+      function setTenantId(val: any) {
+        tenantId.value = val
+        storage.local.set("tenantId", val)
+      }
+    //删除被动租户id
+    function delTenantId() {
+      TenantId.value = ''
+      storage.local.remove("TenantId")
     }
     // 存 description
     function setDescription(val: any) {
@@ -357,6 +374,8 @@ const useUserStore = defineStore(
       delLogo,
       delWebName,
       delDescription,
+      delTenantId,
+      setTenantId,
       delkeyWords,
       setLogo,
       setWebName,
