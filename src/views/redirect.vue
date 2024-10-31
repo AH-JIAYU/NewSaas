@@ -41,7 +41,7 @@ onMounted(async () => {
     // const ip = res.ip;
     const status: any = route.query.status;
     const uid: any = route.query.uid;
-    const tid: any = storage.local.get("tenantId");
+    const tid: any = route.query.tid;
     const params = {
       tid:tid,
       uid: uid,
