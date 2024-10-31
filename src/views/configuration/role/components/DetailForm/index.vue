@@ -14,7 +14,7 @@ const routeStore = useRouteStore();
 const roleButton = useRoleButtonStore();
 // 加载
 const loading = ref(false);
-const formRef = ref<FormInstance>();
+const formRef = ref<any>();
 // tree ref
 const treeRef = ref<any>();
 // 路由
@@ -114,44 +114,44 @@ const handleNodeClick = (nodeData: any) => {
 // 暴露
 defineExpose({
   submit() {
-    const params = cloneDeep(form.value)
-    // 同步选中的路由id
-    params.menuId = treeRef.value!.getCheckedKeys(false);
-    return new Promise<void>((resolve) => {
-      //  获取选中的所有子节点
-      const tree = treeRef.value.getCheckedKeys();
-      // 获取所有半选的主节点
-      const halltree = treeRef.value.getHalfCheckedKeys();
-      // 组合一下
-      const menupath = tree.concat(halltree);
-      params.menuId = menupath;
-      // return;
-      if (params.id === "") {
-        formRef.value &&
-          formRef.value.validate((valid: any) => {
-            if (valid) {
-              api.create(params).then(() => {
-                ElMessage.success({
-                  message: "新增成功",
-                  center: true,
-                });
-                resolve();
-              });
+    loading.value = true; // 开始加载
+    const params = cloneDeep(form.value);
+
+    return new Promise<void>((resolve, reject) => {
+      try {
+        // 同步选中的路由id
+        params.menuId = treeRef.value!.getCheckedKeys(false);
+
+        // 获取选中的所有子节点
+        const tree = treeRef.value.getCheckedKeys();
+        // 获取所有半选的主节点
+        const halltree = treeRef.value.getHalfCheckedKeys();
+        // 组合一下
+        const menupath = tree.concat(halltree);
+        params.menuId = menupath;
+        formRef.value.validate(async (valid: any) => {
+          if (!valid) {
+            loading.value = false; // 验证不通过，停止加载
+            return reject(new Error("验证不通过"));
+          }
+          try {
+            if (params.id === "") {
+              await api.create(params);
+              ElMessage.success({ message: "新增成功", center: true });
+            } else {
+              await api.edit(params);
+              ElMessage.success({ message: "编辑成功", center: true });
             }
-          });
-      } else {
-        formRef.value &&
-          formRef.value.validate((valid: any) => {
-            if (valid) {
-              api.edit(params).then(() => {
-                ElMessage.success({
-                  message: "编辑成功",
-                  center: true,
-                });
-                resolve();
-              });
-            }
-          });
+            resolve();
+          } catch (error) {
+            reject(error); // 处理 API 错误
+          } finally {
+            loading.value = false; // 最终停止加载
+          }
+        });
+      } catch (error) {
+        loading.value = false; // 捕获错误，停止加载
+        reject(error);
       }
     });
   },

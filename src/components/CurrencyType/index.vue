@@ -6,8 +6,6 @@ const props = defineProps(["currencyType"]);
 defineOptions({
   name: "CurrencyType",
 });
-console.log(props.currencyType,'props.currencyType')
-console.log(userStore.currencyType,'userStore.currencyType')
 </script>
 
 <template>

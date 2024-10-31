@@ -19,7 +19,7 @@ const title = computed(() => props.id === '' ? '新增角色' : '编辑角色')
 // 提交
 function onSubmit() {
   // submit() 为组件内部方法
-  if (isClicked.value) return; // 如果已点击，则退出
+  // if (isClicked.value) return; // 如果已点击，则退出
   isClicked.value = true; // 设置为已点击状态
   formRef.value.submit().then(() => {
     emits('success')
