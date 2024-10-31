@@ -449,7 +449,7 @@ function handleCurrentChange(val: any) {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('allocationType')" align="left" show-overflow-tooltip width="100"
-          label="分配类型">
+          label="分配类型" fixed="right">
           <template #default="{ row }">
             <el-tag effect="plain" type="info" v-if="row.allocationType === 1"
               class="mx-1">未分配</el-tag>

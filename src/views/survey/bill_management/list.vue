@@ -284,7 +284,7 @@ function handleCurrentChange(val: any) {
         <ElTableColumn v-if="data.checkList.includes('billStatus')" align="left" show-overflow-tooltip prop=""
           label="账单状态">
           <template #default="{ row }">
-            <el-tag v-if="row.billStatus === 1" type="warning" effect="dark">待支付</el-tag>
+            <el-tag v-if="row.billStatus === 1" type="warning" effect="dark" style="background-color:#FFAC54">待支付</el-tag>
             <el-tag v-if="row.billStatus === 2" type="success" effect="dark">已支付</el-tag>
             <el-tag v-if="row.billStatus === 3" type="danger" effect="dark">已拒绝</el-tag>
           </template>

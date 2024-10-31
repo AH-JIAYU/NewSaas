@@ -957,7 +957,7 @@ onMounted(async () => {
               </div>
               <el-table
                 :data="data.dataCenterSupplierCompletedQuantities"
-                style="width: 100%"
+                style="width: 100%;margin-top: 1rem"
               >
                 <el-table-column type="index" label="序号" width="55" align="center">
                   <template #default="{ $index }">
@@ -1052,7 +1052,7 @@ onMounted(async () => {
               </div>
               <el-table
                 :data="data.dataCenterSupplierTurnovers"
-                style="width: 100%"
+                style="width: 100%;margin-top: 1rem"
               >
                 <el-table-column type="index" label="序号" width="60" align="center">
                   <template #default="{ $index }">

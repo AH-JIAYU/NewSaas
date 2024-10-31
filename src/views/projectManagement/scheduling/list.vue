@@ -233,7 +233,7 @@ const formOption = {
           <template #default="{ row }">
             <div class="specifyTheTarget">
 
-              <el-button style="width: 46px" v-if="row.dataType == 2" type="primary" size="small" class="p-1">{{
+              <el-button style="width: 46px;background-color:#FFAC54" v-if="row.dataType == 2" type="primary" size="small" class="p-1" >{{
     row.getGroupSupplierIdNameInfoList.length > 1
       ? "×" + row.getGroupSupplierIdNameInfoList.length
       : "部门"
