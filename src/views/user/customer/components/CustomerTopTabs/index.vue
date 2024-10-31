@@ -269,7 +269,7 @@ const tenantId = storage.local.get("tenantId");
                 <el-form-item label="配额满重定向">
                   {{redirectUrl}}
                   <span>
-                    {{`/redirect?tid=${tenantId}&status=c&uid=[uid]`}}
+                    {{`/redirect?tid=${tenantId}&status=q&uid=[uid]`}}
                   </span>
                   <template v-if="localToptTab.tenantCustomerConfigInfoList[0].encryptionId
       ">
@@ -281,7 +281,7 @@ const tenantId = storage.local.get("tenantId");
                 <el-form-item label="被甄别重定向">
                   {{redirectUrl}}
                   <span>
-                    {{`/redirect?tid=${tenantId}&status=c&uid=[uid]`}}
+                    {{`/redirect?tid=${tenantId}&status=s&uid=[uid]`}}
                   </span>
                   <template v-if="localToptTab.tenantCustomerConfigInfoList[0].encryptionId
       ">
@@ -293,7 +293,7 @@ const tenantId = storage.local.get("tenantId");
                 <el-form-item label="安全重定向">
                   {{redirectUrl}}
                   <span>
-                    {{`/redirect?tid=${tenantId}&status=c&uid=[uid]`}}
+                    {{`/redirect?tid=${tenantId}&status=t&uid=[uid]`}}
                   </span>
                   <template v-if="localToptTab.tenantCustomerConfigInfoList[0].encryptionId
       ">
@@ -354,19 +354,19 @@ const tenantId = storage.local.get("tenantId");
               </el-col>
               <el-col :span="24">
                 <el-form-item label="配额满回调">
-                 {{serverSideUrl}} <span>{{`/callback/serviceCallback?tid=${tenantId}&status=c&uid=[uid]`}}</span><template v-if="localToptTab.tenantCustomerConfigInfoList[1].encryptionId
+                 {{serverSideUrl}} <span>{{`/callback/serviceCallback?tid=${tenantId}&status=q&uid=[uid]`}}</span><template v-if="localToptTab.tenantCustomerConfigInfoList[1].encryptionId
       "><span v-pre>&hash=[hash]</span></template>
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="被甄别回调">
-                 {{serverSideUrl}} <span>{{`/callback/serviceCallback?tid=${tenantId}&status=c&uid=[uid]`}}</span><template v-if="localToptTab.tenantCustomerConfigInfoList[1].encryptionId
+                 {{serverSideUrl}} <span>{{`/callback/serviceCallback?tid=${tenantId}&status=s&uid=[uid]`}}</span><template v-if="localToptTab.tenantCustomerConfigInfoList[1].encryptionId
       "><span v-pre>&hash=[hash]</span></template>
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="安全终止回调">
-                 {{serverSideUrl}} <span>{{`/callback/serviceCallback?tid=${tenantId}&status=c&uid=[uid]`}}</span><template v-if="localToptTab.tenantCustomerConfigInfoList[1].encryptionId
+                 {{serverSideUrl}} <span>{{`/callback/serviceCallback?tid=${tenantId}&status=t&uid=[uid]`}}</span><template v-if="localToptTab.tenantCustomerConfigInfoList[1].encryptionId
       "><span v-pre>&hash=[hash]</span></template>
                 </el-form-item>
               </el-col>
