@@ -41,9 +41,7 @@ onMounted(async () => {
     // const ip = res.ip;
     const status: any = route.query.status;
     const uid: any = route.query.uid;
-    const tid: any = route.query.tid;
     const params = {
-      tid:tid,
       uid: uid,
       status: status,
       // ip: ip,
