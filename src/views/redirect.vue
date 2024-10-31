@@ -19,6 +19,7 @@
 // import statements from "./statements";
 // import request from "@/utils/request";
 import api from "@/api/modules/redirect";
+import storage from "@/utils/storage";
 const route = useRoute();
 // const loading=
 const data = ref<any>({
@@ -40,7 +41,9 @@ onMounted(async () => {
     // const ip = res.ip;
     const status: any = route.query.status;
     const uid: any = route.query.uid;
+    const tid: any = storage.local.get("tenantId");
     const params = {
+      tid:tid,
       uid: uid,
       status: status,
       // ip: ip,
