@@ -38,9 +38,11 @@ const getList = async () => {
   try {
     loading.value = true;
     const res = await api.getMemberBillAvailableBalance({});
-    data.value.memberSettlementInfoList =
+    if(res.data) {
+      data.value.memberSettlementInfoList =
       res.data.memberBillAvailableBalanceInfoList;
-    form.value.minimumAmount = res.data.minimumAmount;
+      form.value.minimumAmount = res.data.minimumAmount;
+    }
     loading.value = false;
   } catch (error) {
 
@@ -50,9 +52,13 @@ const getList = async () => {
 };
 // 修改换指定会员
 const changeMemberSettlement = (val: any) => {
+  // 首先清空 addMemberSettlementInfoList
+  form.value.addMemberSettlementInfoList = [];
+  // 根据选中的值生成新的 selectArray
   const selectArray = data.value.memberSettlementInfoList.filter((item: any) =>
     val.includes(item.id)
   );
+  // 将选中的项目添加到 addMemberSettlementInfoList
   for (let i = 0; i < selectArray.length; i++) {
     form.value.addMemberSettlementInfoList.push(selectArray[i]);
   }
@@ -61,6 +67,7 @@ const changeMemberSettlement = (val: any) => {
 onMounted(async () => {
   await getList();
 });
+
 defineExpose({
   submit() {
     return new Promise<void>((resolve) => {
@@ -115,7 +122,7 @@ defineExpose({
           </el-select>
         </ElFormItem>
         <ElFormItem label="最低结算额度">
-          <ElInput disabled placeholder="" value="111" />
+          <ElInput disabled placeholder="" :value="form.minimumAmount" />
         </ElFormItem>
         <template v-for="item in form.addMemberSettlementInfoList">
           <ElFormItem label="">
