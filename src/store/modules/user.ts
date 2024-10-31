@@ -182,8 +182,8 @@ const useUserStore = defineStore(
       }
     //删除被动租户id
     function delTenantId() {
-      TenantId.value = ''
-      storage.local.remove("TenantId")
+      tenantId.value = ''
+      storage.local.remove("tenantId")
     }
     // 存 description
     function setDescription(val: any) {
