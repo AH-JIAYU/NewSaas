@@ -391,7 +391,7 @@ defineExpose({ showEdit });
             <ElFormItem v-if="userForm.country === 'CN'" prop="phone" label="手机号码">
               <ElInput v-model="userForm.phone" placeholder="请输入你的手机号码" disabled @change="handleChange" />
             </ElFormItem>
-            <ElFormItem v-else prop="email" label="电子邮箱">
+            <ElFormItem v-else prop="" label="电子邮箱">
               <ElInput v-model="userForm.email" placeholder="请输入你的电子邮箱" disabled @change="handleChange" />
             </ElFormItem>
             <ElFormItem prop="isInvitation" label="合作邀约">
