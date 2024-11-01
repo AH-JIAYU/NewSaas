@@ -464,14 +464,14 @@ function handleMoreStatus(row: any) {
           v-if="checkList.includes('projectName')"
           show-overflow-tooltip
           prop="projectName"
+          width="220"
           align="left"
           label="名称/标识"
         >
           <template #default="{ row }">
             <div>
-              <b class="oneLine tableBig"
-                >名: {{ row.projectName ? row.projectName : "-" }}</b
-              >
+              <p class="oneLine tableBig"
+                >名: {{ row.projectName ? row.projectName : "-" }}</p>
               <div class="oneLine">
                 标:
                 {{
@@ -487,6 +487,7 @@ function handleMoreStatus(row: any) {
           v-if="checkList.includes('customerName')"
           show-overflow-tooltip
           prop="customerName"
+          width="140"
           align="left"
           label="客户"
         >
@@ -517,6 +518,7 @@ function handleMoreStatus(row: any) {
           v-if="checkList.includes('countryId')"
           show-overflow-tooltip
           align="left"
+          width="100"
           label="区域"
         >
           <template #default="{ row }">
@@ -612,7 +614,7 @@ function handleMoreStatus(row: any) {
         </el-table-column>
         <el-table-column
           v-if="checkList.includes('status')"
-          width="80"
+          width="100"
           show-overflow-tooltip
           prop="status"
           align="left"
@@ -685,7 +687,7 @@ function handleMoreStatus(row: any) {
           show-overflow-tooltip
           align="left"
           label="时间"
-          width="160"
+          width="120"
         >
           <template #default="{ row }">
             <el-tooltip

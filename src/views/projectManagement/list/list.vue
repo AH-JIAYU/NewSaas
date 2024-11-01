@@ -527,18 +527,16 @@ const formOption = {
           prop="name"
           align="left"
           label="名称/标识"
-          width="180"
+          width="220"
           ><template #default="{ row }">
             <div class="flex-c">
               <div class="oneLine" style="width: calc(100% - 1.25rem)">
-                <b class="oneLine tableBig"
+                <p class="oneLine tableBig"
                   >
                   <span :class="row.isB2b === 2 ? 'red' : ''">{{
                     row.name
-                  }}</span></b
-                >
+                  }}</span></p>
                 <div class="oneLine">
-
                   <span :class="row.isB2b === 2 ? 'red' : ''">{{
                     row.clientName.split("/")[1]
                   }}</span>
@@ -560,7 +558,7 @@ const formOption = {
           show-overflow-tooltip
           align="left"
           label="客户"
-           width="180"
+           width="140"
           ><template #default="{ row }">
             <div class="flex-c">
               <div class="oneLine" style="width: calc(100% - 1.25rem)">
@@ -776,6 +774,7 @@ const formOption = {
           show-overflow-tooltip
           prop="remark"
           align="left"
+          width="150"
           label="备注"
           ><template #default="{ row }">
             <div class="flex-c">
