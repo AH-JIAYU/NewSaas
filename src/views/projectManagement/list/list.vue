@@ -479,6 +479,7 @@ const formOption = {
                 size="small"
                 type="warning"
                 v-if="row.projectType === 2"
+                style="background-color:#FFAC54"
                 >外包</el-button
               >
               <el-button class="p-1" size="small" type="primary" v-else

@@ -336,8 +336,8 @@ const formOption = {
               {{ row.ir ? row.ir : '-' }} / {{ row.nir ? row.nir : 0 }}
             </el-text></template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('memberStatus')" show-overflow-tooltip align="left" label="分配">
-          <template #default="{ row }">
+        <el-table-column v-if="checkList.includes('memberStatus')" show-overflow-tooltip align="left" label="分配" width="90">
+          <template #default="{ row }" >
             <el-tag style="background-color: #05C9BE;color: #fff;" v-if="row.getMemberGroupNameInfoList.length">
               部门
             </el-tag>
@@ -360,7 +360,7 @@ const formOption = {
           </template>
         </el-table-column> -->
         <el-table-column v-if="checkList.includes('createTime')" show-overflow-tooltip prop="createTime" align="left"
-          label="创建时间">
+          label="创建时间" width="110">
           <template #default="{ row }">
             <el-tooltip :content="row.createTime" placement="top">
               <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>

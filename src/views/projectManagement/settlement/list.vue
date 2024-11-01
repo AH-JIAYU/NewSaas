@@ -622,10 +622,11 @@ function handleMoreStatus(row: any) {
             <div style="display: flex" class="oneLine">
               <el-text v-if="row.status === 1" class="mx-1 tableBig flex-c">
                 <el-button
-                  style="margin-right: 5px"
+                  style="margin-right: 5px;background-color:#FFAC54"
                   size="small"
                   class="p-1"
                   type="warning"
+
                   @click="handleMoreStatus(row)"
                   >待审核</el-button
                 >
