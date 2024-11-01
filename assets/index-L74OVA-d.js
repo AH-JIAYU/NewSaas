@@ -1,0 +1,9 @@
+
+/**
+ * 由 Fantastic-admin 提供技术支持
+ * Powered by Fantastic-admin
+ * Gitee  https://fantastic-admin.gitee.io
+ * Github https://fantastic-admin.github.io
+ */
+
+import{_ as o}from"./index.vue_vue_type_script_setup_true_lang-Bl3qPd9D.js";import"./user_customer-CVX875_E.js";import"./index-rMvYzWnu.js";import"./apiLoading-Jj3C-scY.js";export{o as default};
