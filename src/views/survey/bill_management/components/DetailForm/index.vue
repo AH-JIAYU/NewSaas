@@ -38,9 +38,9 @@ const getList = async () => {
   try {
     loading.value = true;
     const res = await api.getMemberBillAvailableBalance({});
-    if(res.data) {
+    if (res.data) {
       data.value.memberSettlementInfoList =
-      res.data.memberBillAvailableBalanceInfoList;
+        res.data.memberBillAvailableBalanceInfoList;
       form.value.minimumAmount = res.data.minimumAmount;
     }
     loading.value = false;
@@ -73,21 +73,31 @@ defineExpose({
     return new Promise<void>((resolve) => {
       formRef.value &&
         formRef.value.validate((valid) => {
+          const judge = form.value.addMemberSettlementInfoList.every((item: any) => {
+            return typeof (item.settlementAmount) === "number" && item.settlementAmount >= form.value.minimumAmount
+          })
           if (valid) {
-            try {
-              loading.value = true;
-              api.create(form.value).then(() => {
-                loading.value = false;
-                ElMessage.success({
-                  message: "新增成功",
-                  center: true,
+            if (judge && form.value.settlementAmount >= form.value.minimumAmount) {
+              try {
+                loading.value = true;
+                api.create(form.value).then(() => {
+                  loading.value = false;
+                  ElMessage.success({
+                    message: "新增成功",
+                    center: true,
+                  });
+                  resolve();
                 });
-                resolve();
-              });
-            } catch (error) {
+              } catch (error) {
 
-            } finally {
-              loading.value = false;
+              } finally {
+                loading.value = false;
+              }
+            } else {
+              ElMessage.warning({
+                message: "“结算金额”小于“最低结算金额”",
+                center: true,
+              });
             }
           }
         });
@@ -98,7 +108,7 @@ defineExpose({
 
 <template>
   <div v-loading="loading">
-    <ElForm ref="formRef" :model="form" :rules="formRules" label-width="9rem" >
+    <ElForm ref="formRef" :model="form" :rules="formRules" label-width="9rem">
       <ElFormItem label="结算方式">
         <el-radio-group v-model="form.settlementType">
           <el-radio :value="1" size="large"> 全部结算 </el-radio>

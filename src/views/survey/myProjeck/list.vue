@@ -236,7 +236,7 @@ const formOption = {
         <el-table-column v-if="checkList.includes('project')" show-overflow-tooltip align="left"
           prop="projectIdentificationOrClientName" width="200" label="项目">
           <template #default="{ row }">
-            <p v-if="checkList.includes('projectName')" class="crudeTop">名称：{{ row.projectName }}</p>
+            <!-- <p v-if="checkList.includes('projectName')" class="crudeTop">名称：{{ row.projectName }}</p> -->
             <div v-if="checkList.includes('projectId')" class="hoverSvg">
               <p class="fineSize">{{ row.projectId }}</p>
               <copy :content="row.projectId" :class="{
@@ -250,10 +250,10 @@ const formOption = {
         <el-table-column v-if="checkList.includes('projectIdentificationOrClientName')" show-overflow-tooltip
           prop="projectIdentificationOrClientName" width="200" align="left" label="名称/标识">
           <template #default="{ row }">
-            <p v-if="checkList.includes('projectIdentification')" class="crudeTop">
-              名称：{{ row.projectIdentification }}</p>
+            <p v-if="checkList.includes('projectName')" class="crudeTop">
+             {{ row.projectName }}</p>
             <p v-if="checkList.includes('projectIdClientName')"
-              style="text-align: left !important;font-weight: 700;color: #777;">标：<span class="fineBom">{{
+              style="text-align: left !important;font-weight: 700;color: #777;"><span class="fineBom">{{
     row.clientName }}</span></p>
           </template>
         </el-table-column>
@@ -482,8 +482,8 @@ const formOption = {
 }
 
 .fineSize {
-  color: #333;
-  font-size: 12px;
+  color: #333333;
+  font-size: .875rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
