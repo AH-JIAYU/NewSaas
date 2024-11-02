@@ -471,9 +471,8 @@ function handleMoreStatus(row: any) {
           <template #default="{ row }">
             <div>
               <p class="oneLine tableBig"
-                >名: {{ row.projectName ? row.projectName : "-" }}</p>
+                >{{ row.projectName ? row.projectName : "-" }}</p>
               <div class="oneLine">
-                标:
                 {{
                   row.customerName.split("/")[1] !== "null"
                     ? row.customerName.split("/")[1]
