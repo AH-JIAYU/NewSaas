@@ -15,7 +15,7 @@ import DownLoad from "@/utils/download";
 import { ElMessage } from "element-plus";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
 import useUserCustomerStore from "@/store/modules/user_customer";
-
+import asteriskImage from '@/assets/images/asterisk.png';
 defineOptions({
   name: "ProjectDetails",
 });
@@ -540,7 +540,22 @@ defineExpose({ showEdit });
               :gutter="10"
               v-for="item in data.form.projectQuotaInfoList"
             >
-              <el-form-item label-width="200px" :label="item.keyValue + ' :'">
+              <div class="quotaInfoDiv">
+                <!-- 问题 -->
+                <div :class="{bottom :!item.answerValueList}">
+                  <img :src="asteriskImage" >
+                  <span class="tableBig">{{ item.keyValue }}</span>
+                </div>
+
+                <!-- 答案 -->
+                <div class="answer" v-if="
+                    item.answerValueList && item.answerValueList[0] !== 'null'
+                  ">
+                  {{ item.answerValueList.join(", ") }}
+                </div>
+
+              </div>
+              <!-- <el-form-item label-width="200px" :label="item.keyValue + ' :'">
                 <el-text
                   class="mx-1"
                   v-if="
@@ -550,7 +565,7 @@ defineExpose({ showEdit });
                   {{ item.answerValueList.join(", ") }}
                 </el-text>
                 <el-text class="mx-1" v-else> - </el-text>
-              </el-form-item>
+              </el-form-item> -->
             </el-col>
           </el-row>
         </el-card>
@@ -709,6 +724,23 @@ defineExpose({ showEdit });
 </template>
 
 <style scoped lang="scss">
+.quotaInfoDiv {
+  border-bottom: 1px dashed #d5d5d5;
+  margin-bottom: 3.125rem;
+}
+.quotaInfoDiv .bottom {
+  margin-bottom:1rem;
+}
+.quotaInfoDiv .answer {
+  background: #F5FAFF;
+border-radius: 4px 4px 4px 4px;
+font-weight: 400;
+font-size: 14px;
+color: #686C70;
+padding:1rem;
+margin-top: 1rem;
+margin-bottom:1rem;
+}
 .radius {
   min-height: 160px;
   width: 100%;
@@ -848,9 +880,9 @@ border-radius: 4px;
       margin: 0;
     }
 
-    .el-col:nth-of-type(n + 3) {
-      border-bottom: 1px dashed #d5d5d5;
-    }
+    // .el-col:nth-of-type(n + 3) {
+    //   border-bottom: 1px dashed #d5d5d5;
+    // }
 
     .el-form-item__label {
       align-items: flex-start;
