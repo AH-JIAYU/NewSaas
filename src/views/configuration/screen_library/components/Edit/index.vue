@@ -69,48 +69,22 @@ onMounted(async () => {
 
 <template>
   <div>
-    <ElDialog
-      v-model="visible"
-      :title="title"
-      width="50%"
-      :close-on-click-modal="false"
-      append-to-body
-      destroy-on-close
-      @close="onCancel"
-    >
-      <ElForm
-        ref="formRef"
-        :model="form"
-        :rules="formRules"
-        label-width="5rem"
-      >
+    <ElDialog v-model="visible" :title="title" width="50%" :close-on-click-modal="false" append-to-body destroy-on-close
+      @close="onCancel">
+      <ElForm ref="formRef" :model="form" :rules="formRules" label-width="5rem">
+        <ElFormItem label="区域" prop="countryId">
+          <el-select filterable v-model="form.countryId" placeholder="Select">
+            <ElOption v-for="item in countryList" :label="item.chineseName" :value="item.id"></ElOption>
+          </el-select>
+        </ElFormItem>
         <ElFormItem label="名称" prop="categoryName">
           <ElInput v-model="form.categoryName" placeholder="请输入名称" />
         </ElFormItem>
-        <ElFormItem label="区域" prop="countryId">
-          <el-select filterable v-model="form.countryId" placeholder="Select">
-            <ElOption
-              v-for="item in countryList"
-              :label="item.chineseName"
-              :value="item.id"
-            ></ElOption>
-          </el-select>
-        </ElFormItem>
         <ElFormItem label="状态">
-          <ElSwitch
-            v-model="form.status"
-            :active-value="1"
-            :inactive-value="2"
-            placeholder="请输入状态"
-          />
+          <ElSwitch v-model="form.status" :active-value="1" :inactive-value="2" placeholder="请输入状态" />
         </ElFormItem>
         <ElFormItem label="默认" v-if="!form.projectProblemCategoryId">
-          <ElSwitch
-            v-model="form.isDefault"
-            :active-value="1"
-            :inactive-value="2"
-            placeholder="请输入默认"
-          />
+          <ElSwitch v-model="form.isDefault" :active-value="1" :inactive-value="2" placeholder="请输入默认" />
         </ElFormItem>
       </ElForm>
       <template #footer>
