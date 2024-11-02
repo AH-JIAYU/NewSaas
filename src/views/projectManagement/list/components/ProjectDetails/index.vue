@@ -500,14 +500,22 @@ defineExpose({ showEdit });
           <template #header>
             <div class="peizjo-header">
               <span>配置信息</span>
-              <span style="margin-left: 50px" v-if="data.form.countryName"
+              <span
+                style="margin-left: 50px;font-weight: 700;margin-right: 10px;"
+                v-if="data.form.projectProblemCategoryName"
+                >问卷名称：{{ data.form.projectProblemCategoryName }}</span
+              >
+              <el-button type="primary" plain size="small" v-if="data.form.countryName">{{ data.form.countryName }}</el-button>
+
+
+              <!-- <span style="margin-left: 50px" v-if="data.form.countryName"
                 >区域：{{ data.form.countryName }}</span
               >
               <span
                 style="margin-left: 30px"
                 v-if="data.form.projectProblemCategoryName"
                 >问卷：{{ data.form.projectProblemCategoryName }}</span
-              >
+              > -->
             </div>
           </template>
           <el-row
@@ -726,7 +734,7 @@ defineExpose({ showEdit });
 <style scoped lang="scss">
 .quotaInfoDiv {
   border-bottom: 1px dashed #d5d5d5;
-  margin-bottom: 3.125rem;
+  margin-bottom: .875rem;
 }
 .quotaInfoDiv .bottom {
   margin-bottom:1rem;
