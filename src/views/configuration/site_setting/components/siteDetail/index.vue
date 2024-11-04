@@ -458,13 +458,13 @@ defineExpose({
           <div class="stepTopL">
             <span></span>
             <h3>核心步骤</h3>
-            <div style="display: flex;
+            <!-- 若上传证书网址格式默认绑定HTTPS -->
+            <!-- <div style="display: flex;
               align-items: center; margin-left: .25rem; margin-top: -0.125rem; color: #333;">
               <el-tooltip class="tooltips" content="核心步骤" placement="top">
                 <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
               </el-tooltip>
-              <!-- 若上传证书网址格式默认绑定HTTPS -->
-            </div>
+            </div> -->
           </div>
 
           <div v-if="form.isHttpsStatus" class="stepTopR">
@@ -745,14 +745,27 @@ defineExpose({
       </div>
       <div v-show="!form.isHttpsStatus"
         style="display: flex;justify-content: space-between; height: 30px; margin-bottom: 1.5rem;">
-        <div>
+        <div style="display: flex;">
+          <el-form-item style="width: 8.25rem; margin-right: 1.5rem;" label="开启HTTPS上传">
+            <el-checkbox v-model="form.isChecked" size="large" />
+          </el-form-item>
+          <div style="display: flex;
+          align-items: center; margin-left: 4px;color: #333;">
+            <el-tooltip class="tooltips" content="证书上传成功后,支持开启此功能" placement="top">
+              <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
+            </el-tooltip>
+            <!-- 若上传证书网址格式默认绑定HTTPS -->
+          </div>
+          <el-form-item label="默认开启 HTTPS">
+            <el-switch v-model="fileList.forceHttps"
+              :disabled="!fileList.certificate.length && !fileList.private_key.length && !form.isUploadSSLCert"
+              inline-prompt :active-value="2" :inactive-value="1" active-text="开启" inactive-text="关闭" />
+          </el-form-item>
           <!-- <el-button size="default" type="primary" @click="handleSubmits">确认</el-button>
           <el-button style="margin-left: 1rem;background-color: #aaaaaa;border: none;" size="default" type="primary"
             @click="">已确认</el-button> -->
         </div>
-        <el-form-item style="width: 8.25rem;" label="开启HTTPS上传">
-          <el-checkbox v-model="form.isChecked" size="large" />
-        </el-form-item>
+
       </div>
       <div v-show="form.isChecked" class="update">
         <div class="title">
@@ -811,30 +824,27 @@ defineExpose({
                 </template>
               </el-upload>
             </el-form-item>
+            <el-form-item>
+              <el-button style="margin-right: 1.5rem;" type="primary" size="default"
+                @click="handleSubmit">确认</el-button>
+            </el-form-item>
           </el-form>
         </div>
       </div>
-      <div v-show="form.isChecked" style="display: flex; height: 30px; margin-bottom: 1.5rem">
-        <el-button style="margin-right: 1.5rem;" type="primary" size="default" @click="handleSubmit">确认</el-button>
-        <div style="display: flex;
-          align-items: center; margin-right: 4px;color: #333;">
-          <el-tooltip class="tooltips" content="证书上传成功后,支持开启此功能" placement="top">
-            <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
-          </el-tooltip>
-          <!-- 若上传证书网址格式默认绑定HTTPS -->
-        </div>
-        <el-form-item label="默认开启 HTTPS">
-          <el-switch v-model="fileList.forceHttps"
-            :disabled="!fileList.certificate.length && !fileList.private_key.length && !form.isUploadSSLCert"
-            inline-prompt :active-value="2" :inactive-value="1" active-text="开启" inactive-text="关闭" />
-        </el-form-item>
+      <div v-show="form.isChecked" style="display: flex; height: 30px;">
+
       </div>
-      <div class="footer">
+      <!-- <div class="footer">
+
+      </div> -->
+      <fileDtail ref="fileDtailRef" />
+    </div>
+    <template #footer>
+      <div style="display: flex; justify-content: center;">
         <el-button style="width: 7.75rem; height: 2rem; background-color: #fff;color: #58aaff;" type="primary"
           size="default" @click="drawerisible = false">关闭</el-button>
       </div>
-      <fileDtail ref="fileDtailRef" />
-    </div>
+    </template>
   </el-dialog>
 </template>
 
@@ -874,7 +884,7 @@ defineExpose({
   min-height: 14.875rem;
   background: #FFFFFF;
   margin-top: 1.5rem;
-  // box-shadow: 0px 1px .5rem 0px rgba(198, 198, 198, 0.6);
+  box-shadow: 0px 1px .5rem 0px rgba(198, 198, 198, 0.6);
   border-radius: .5rem .5rem .5rem .5rem;
   padding: 1rem 1rem 1.5rem 1rem;
 }
@@ -1194,6 +1204,7 @@ defineExpose({
   }
 
   .upload-demo {
+    width: 9.125rem;
     margin-right: 2.375rem;
   }
 
