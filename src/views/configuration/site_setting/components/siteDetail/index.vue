@@ -749,14 +749,14 @@ defineExpose({
           <el-form-item style="width: 8.25rem; margin-right: 1.5rem;" label="开启HTTPS上传">
             <el-checkbox v-model="form.isChecked" size="large" />
           </el-form-item>
-          <div style="display: flex;
+          <div v-show="form.isChecked" style="display: flex;
           align-items: center; margin-left: 4px;color: #333;">
             <el-tooltip class="tooltips" content="证书上传成功后,支持开启此功能" placement="top">
               <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
             </el-tooltip>
             <!-- 若上传证书网址格式默认绑定HTTPS -->
           </div>
-          <el-form-item label="默认开启 HTTPS">
+          <el-form-item v-show="form.isChecked" label="默认开启 HTTPS">
             <el-switch v-model="fileList.forceHttps"
               :disabled="!fileList.certificate.length && !fileList.private_key.length && !form.isUploadSSLCert"
               inline-prompt :active-value="2" :inactive-value="1" active-text="开启" inactive-text="关闭" />
