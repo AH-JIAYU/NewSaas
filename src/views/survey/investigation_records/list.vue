@@ -327,7 +327,7 @@ function handleCurrentChange(val: any) {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('allocationType')" align="left" show-overflow-tooltip width="100"
-          label="分配类型">
+          label="分配类型" fixed="right">
           <template #default="{ row }">
             <el-tag effect="plain" type="info" v-if="row.allocationType === 1"> 未分配 </el-tag>
             <el-tag style="background-color: #626aef;color: #fff;" v-if="row.allocationType === 2">
@@ -339,7 +339,7 @@ function handleCurrentChange(val: any) {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('doMoneyPrice')" width="80" align="left" prop="h"
-          show-overflow-tooltip label="项目价">
+          show-overflow-tooltip label="项目价" fixed="right">
           <template #default="{ row }">
             <el-text>
               <CurrencyType />
@@ -350,7 +350,7 @@ function handleCurrentChange(val: any) {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('memberPrice')" width="110" align="left" prop="h"
-          show-overflow-tooltip label="成本价(会员)">
+          show-overflow-tooltip label="成本价(会员)" fixed="right">
           <template #default="{ row }">
             <el-text>
               <CurrencyType />
@@ -361,7 +361,7 @@ function handleCurrentChange(val: any) {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('ipBelong')" align="left" width="150" prop="ipBelong"
-          show-overflow-tooltip label="区域/IP">
+          show-overflow-tooltip label="区域/IP" fixed="right">
           <template #default="{ row }">
             <div v-if="row.ipBelong" class="hoverSvg">
               <el-tag >{{ row.ipBelong.split("/")[1]
@@ -379,7 +379,7 @@ function handleCurrentChange(val: any) {
             <el-text v-else>-</el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('surveyTime')" align="left" show-overflow-tooltip label="调查时间">
+        <el-table-column v-if="checkList.includes('surveyTime')" align="left" show-overflow-tooltip label="调查时间" fixed="right">
           <template #default="{ row }">
             <el-tooltip placement="top">
               <template #content>
@@ -398,7 +398,7 @@ function handleCurrentChange(val: any) {
           label="调查状态">
           <template #default="{ row }">
             <el-tag effect="dark" style="background-color: #FB6868;border: none;" v-if="row.surveyStatus === 3"
-              class="mx-1" type="primary">配额满</el-tag>
+              class="mx-1" type="primary" fixed="right">配额满</el-tag>
             <!-- <el-tag effect="dark" style="background-color: #379AFF;border: none;" v-if="row.surveyStatus === 1"
               class="mx-1" type="success">完成</el-tag> -->
             <el-tag effect="dark" style="background-color: #FB6868;border: none;" v-if="row.surveyStatus === 2"
