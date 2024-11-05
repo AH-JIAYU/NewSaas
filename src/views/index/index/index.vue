@@ -209,9 +209,9 @@ async function getList() {
   data.value.dataCenterCustomerVOS = dataCenterCustomerVOS;
   // 完成数据排名,剔除完成数量为0的数据，completedQuantity
   data.value.dataCenterSupplierCompletedQuantities =
-    dataCenterSupplierCompletedQuantities.filter(item => item.completedQuantity && item.completedQuantity !=0);
+    dataCenterSupplierCompletedQuantities.filter((item:any) => item.completedQuantity && item.completedQuantity !=0);
   //供应商营业额排行,剔除年为0的数据yearTurnover
-  data.value.dataCenterSupplierTurnovers =  dataCenterSupplierTurnovers.filter(item => item.yearTurnover && item.yearTurnover !=0);;
+  data.value.dataCenterSupplierTurnovers =  dataCenterSupplierTurnovers.filter((item:any) => item.yearTurnover && item.yearTurnover !=0);;
 }
 // 切换年月日
 const typeChange = () => {

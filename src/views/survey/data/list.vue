@@ -92,10 +92,10 @@ function getDataList() {
 
       // 退款额排名，剔除退款数为0的，completedQuantity
       data.value.memberDataCenterRefundVOList =
-        res.data.memberDataCenterRefundVOList.filter(item => item.completedQuantity && item.completedQuantity!=0);
+        res.data.memberDataCenterRefundVOList.filter((item:any) => item.completedQuantity && item.completedQuantity!=0);
       // 业绩排名，剔除收入为0的，price
       data.value.memberDataCenterPriceVOList =
-        res.data.memberDataCenterPriceVOList.filter(item => item.price && item.price !=0);
+        res.data.memberDataCenterPriceVOList.filter((item:any) => item.price && item.price !=0);
       // 数据总揽
       data.value.dataScreening = res.data.memberDataCenterOverallOverviewVOList;
       pagination.value.total = res.data.total;
