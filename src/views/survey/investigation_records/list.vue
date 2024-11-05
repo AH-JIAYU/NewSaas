@@ -41,7 +41,7 @@ const columns = ref([
     sortable: true,
     checked: true,
   },
-  { prop: "clientId", label: "点击ID", sortable: true, checked: true },
+  { prop: "id", label: "点击ID", sortable: true, checked: true },
   { prop: "projectId", label: "项目ID", sortable: true, checked: true },
 
   { prop: "memberId", label: "会员ID", sortable: true, checked: true },
@@ -79,7 +79,7 @@ const columns = ref([
 const queryForm = reactive<any>({
   //会员id
   memberId: "",
-  clientId:'',
+  id:'',
   //随机身份id
   randomIdentityId: "",
   //会员组id
@@ -175,7 +175,7 @@ function onReset() {
   Object.assign(queryForm, {
     //会员id
     memberId: "",
-    clientId:'',
+    id:'',
     //随机身份id
     randomIdentityId: "",
     //会员组id
@@ -209,7 +209,7 @@ onMounted(async () => {
     { index: 5, show: true, type: 'select', modelName: 'customerId', placeholder: '客户简称', option: 'customerId', optionLabel: 'customerAccord', optionValue: 'tenantCustomerId' },
     { index: 6, show: true, type: 'input', modelName: 'ip', placeholder: 'IP地址' },
     { index: 7, show: true, type: 'select', modelName: 'surveyStatus', placeholder: '调查状态', option: 'surveyStatus', optionLabel: 'label', optionValue: 'value' },
-    { index: 8, show: true, type: 'input', modelName: 'clientId', placeholder: '点击ID', event: 'keydown.enter'},
+    { index: 8, show: true, type: 'input', modelName: 'id', placeholder: '点击ID', event: 'keydown.enter'},
   ];
 });
 const formOption = {
@@ -241,10 +241,10 @@ function handleCurrentChange(val: any) {
       <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
         @selection-change="setSelectRows" @current-change="handleCurrentChange" highlight-current-row>
         <el-table-column align="left" type="selection" />
-        <el-table-column v-if="checkList.includes('clientId')" show-overflow-tooltip align="left" prop="clientId"
+        <el-table-column v-if="checkList.includes('id')" show-overflow-tooltip align="left" prop="id"
           label="点击ID" width="200">
           <template #default="{ row }">
-            <el-text class="fontColor">{{ row.clientId ? row.clientId : "-" }}</el-text>
+            <el-text class="fontColor">{{ row.id ? row.id : "-" }}</el-text>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('randomIdentityId')" align="left" prop="randomIdentityId"
