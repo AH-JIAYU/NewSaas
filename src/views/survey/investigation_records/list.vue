@@ -361,7 +361,7 @@ function handleCurrentChange(val: any) {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('ipBelong')" align="left" width="150" prop="ipBelong"
-          show-overflow-tooltip label="区域/IP" fixed="right" width="150">
+          show-overflow-tooltip label="区域/IP" fixed="right">
           <template #default="{ row }">
             <div v-if="row.ipBelong" class="hoverSvg">
               <el-tag >{{ row.ipBelong.split("/")[1]
