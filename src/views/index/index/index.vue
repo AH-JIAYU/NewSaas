@@ -994,7 +994,7 @@ onMounted(async () => {
                   prop="supplierName"
                   label="供应商名称"
                   ><template #default="{ row }">
-                    {{ row.supplierName ? row.supplierName : "-" }}
+                   <span class="font-c">{{ row.supplierName ? row.supplierName : "-" }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column
@@ -1033,7 +1033,7 @@ onMounted(async () => {
                   label="B2B"
                 >
                   <template #default="{ row }">
-                    <span class="number-font">{{
+                    <span class="number-font font-c">{{
                       row.b2BProportion * 100
                     }}</span
                     >%
@@ -1046,7 +1046,7 @@ onMounted(async () => {
                   label="B2C"
                 >
                   <template #default="{ row }">
-                    <span class="number-font">{{
+                    <span class="number-font font-c">{{
                       row.b2CProportion * 100
                     }}</span
                     >%
@@ -1054,7 +1054,7 @@ onMounted(async () => {
                 </el-table-column>
                 <el-table-column width="80" align="left" label="所属区域">
                   <template #default="{ row }">
-                    <span v-if="String(row) !== '{}'">{{
+                    <span v-if="String(row) !== '{}'" class="font-c">{{
                       filterCountry(row)
                     }}</span>
                   </template>
@@ -1105,7 +1105,7 @@ onMounted(async () => {
                   width="220"
                   label="供应商名称"
                   ><template #default="{ row }">
-                    {{ row.name ? row.name : "-" }}
+                    <span class="font-c">{{ row.name ? row.name : "-" }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column
@@ -1115,7 +1115,7 @@ onMounted(async () => {
                   label="日"
                 >
                   <template #default="{ row }">
-                    <span class="number-font">{{
+                    <span class="number-font font-c">{{
                       row.dayTurnover ? row.dayTurnover : 0
                     }}</span>
                   </template>
@@ -1127,7 +1127,7 @@ onMounted(async () => {
                   label="月"
                 >
                   <template #default="{ row }">
-                    <span class="number-font">{{
+                    <span class="number-font font-c">{{
                       row.monthTurnover ? row.monthTurnover : 0
                     }}</span>
                   </template>
@@ -1139,7 +1139,7 @@ onMounted(async () => {
                   label="年"
                 >
                   <template #default="{ row }">
-                    <span class="number-font">{{
+                    <span class="number-font font-c">{{
                       row.yearTurnover ? row.yearTurnover : 0
                     }}</span>
                   </template>
@@ -1506,6 +1506,9 @@ onMounted(async () => {
 /* 自定义数字字体样式 */
 .number-font {
   font-family: D-DIN Exp; /* 选择字体 */
+}
+.font-c {
+  color: #333333
 }
   .center-image {
   display: flex; /* 使用 Flexbox 布局 */
@@ -1875,7 +1878,7 @@ onMounted(async () => {
   }
 
   th .cell {
-    color: #202020 !important;
+    color: #333333 !important;
   }
 
   .el-table {
@@ -1888,11 +1891,11 @@ onMounted(async () => {
 }
 
 .table-red {
-  color: red;
+  color: #FB6868;
 }
 
 .table-green {
-  color: green;
+  color: #03C239;
 }
 
 
