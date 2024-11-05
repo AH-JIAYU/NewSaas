@@ -344,7 +344,7 @@ function handleCurrentChange(val: any) {
               <div class="oneLine">
                 <span v-if="row.randomIdentityId" class="id oneLine idFont">
                   {{ row.randomIdentityId  ? row.randomIdentityId : '-' }}</span>
-                <span v-else class="id"></span>
+                <span v-else class="id">-</span>
               </div>
               <copy v-if="row.randomIdentityId" :content="row.randomIdentityId" :class="{
     rowCopy: 'rowCopy',
@@ -361,17 +361,15 @@ function handleCurrentChange(val: any) {
               <div v-if="row.memberId">
                 <div class="copyId tableSmall flex-s">
                   <div class="id oneLine idFont">{{ row.memberId  ? row.memberId : '-' }}</div>
-
                   <copy :content="row.memberId" :class="{
-    rowCopy: 'rowCopy',
-    current: row.id === current,
-  }" />
-
+                      rowCopy: 'rowCopy',
+                      current: row.id === current,
+                    }" />
 
                   <!-- <copy class="copy edit" :content="row.memberId" /> -->
                 </div>
               </div>
-              <span v-else class="id"></span>
+              <span v-else class="id">-</span>
             </div>
           </template>
         </el-table-column>
@@ -390,7 +388,7 @@ function handleCurrentChange(val: any) {
                   <!-- <copy class="copy edit" :content="row.memberChildId" /> -->
                 </div>
               </div>
-              <span v-else class="id"></span>
+              <span v-else class="id">-</span>
             </div>
           </template>
         </el-table-column>
@@ -402,7 +400,7 @@ function handleCurrentChange(val: any) {
               <div class="oneLine">
                 <span v-if="row.tenantSupplierId" class="id oneLine idFont">
                   {{ row.tenantSupplierId  ? row.tenantSupplierId : '-' }}</span>
-                <span v-else class="id"></span>
+                <span v-else class="id">-</span>
               </div>
               <copy v-if="row.tenantSupplierId" :content="row.tenantSupplierId" :class="{
     rowCopy: 'rowCopy',
