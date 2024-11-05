@@ -252,9 +252,9 @@ const formOption = {
           <template #default="{ row }">
             <p v-if="checkList.includes('projectName')" class="crudeTop">
              {{ row.projectName }}</p>
-            <p v-if="checkList.includes('projectIdClientName')"
+            <p v-if="checkList.includes('projectIdentification')"
               style="text-align: left !important;font-weight: 700;color: #777;"><span class="fineBom">{{
-    row.clientName }}</span></p>
+      row.projectIdentification }}</span></p>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('withoutUrl')" width="260" prop="withoutUrl" align="left" label="URL">
