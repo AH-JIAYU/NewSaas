@@ -328,7 +328,7 @@ function handleCurrentChange(val: any) {
           fixed="left" label="点击ID"><template #default="{ row }">
             <el-tag effect="dark" v-if="row.surveySource === 2" type="warning">外部人员</el-tag>
             <div class="copyId flex-s tableSmall">
-              <div class="id oneLine idFont"> {{ row.id }}</div>
+              <div class="id oneLine idFont"> {{ row.id ? row.id : '-' }}</div>
               <copy :content="row.id" :class="{
     rowCopy: 'rowCopy',
     current: row.id === current,
@@ -343,7 +343,7 @@ function handleCurrentChange(val: any) {
             <div class="copyId flex-s tableSmall" v-if="row.surveySource === 1">
               <div class="oneLine">
                 <span v-if="row.randomIdentityId" class="id oneLine idFont">
-                  {{ row.randomIdentityId }}</span>
+                  {{ row.randomIdentityId  ? row.randomIdentityId : '-' }}</span>
                 <span v-else class="id"></span>
               </div>
               <copy v-if="row.randomIdentityId" :content="row.randomIdentityId" :class="{
@@ -360,7 +360,7 @@ function handleCurrentChange(val: any) {
             <div v-if="row.surveySource === 1">
               <div v-if="row.memberId">
                 <div class="copyId tableSmall flex-s">
-                  <div class="id oneLine idFont">{{ row.memberId }}</div>
+                  <div class="id oneLine idFont">{{ row.memberId  ? row.memberId : '-' }}</div>
 
                   <copy :content="row.memberId" :class="{
     rowCopy: 'rowCopy',
@@ -381,7 +381,7 @@ function handleCurrentChange(val: any) {
             <div v-if="row.surveySource === 1">
               <div v-if="row.memberChildId">
                 <div class="copyId tableSmall flex-s">
-                  <div class="id oneLine idFont">{{ row.memberChildId }}</div>
+                  <div class="id oneLine idFont">{{ row.memberChildId  ? row.memberChildId : '-' }}</div>
                   <copy :content="row.memberChildId" :class="{
     rowCopy: 'rowCopy',
     current: row.id === current,
@@ -401,7 +401,7 @@ function handleCurrentChange(val: any) {
             <div class="copyId tableSmall flex-s" v-if="row.surveySource === 1">
               <div class="oneLine">
                 <span v-if="row.tenantSupplierId" class="id oneLine idFont">
-                  {{ row.tenantSupplierId }}</span>
+                  {{ row.tenantSupplierId  ? row.tenantSupplierId : '-' }}</span>
                 <span v-else class="id"></span>
               </div>
               <copy v-if="row.tenantSupplierId" :content="row.tenantSupplierId" :class="{
@@ -417,7 +417,7 @@ function handleCurrentChange(val: any) {
           <template #default="{ row }">
             <div class="tableBig oneLine">名称: {{ row.projectName }}</div>
             <div class="copyId tableSmall flex-s">
-              <div class="id oneLine "> {{ row.projectId }}</div>
+              <div class="id oneLine "> {{ row.projectId  ? row.projectId : '-' }}</div>
               <copy v-if="row.projectId" :content="row.projectId" :class="{
     rowCopy: 'rowCopy',
     current: row.id === current,
@@ -429,16 +429,16 @@ function handleCurrentChange(val: any) {
         <el-table-column v-if="checkList.includes('customerShortName')" align="left" prop="customerShortName"
           show-overflow-tooltip width="100" label="客户简称">
           <template #default="{ row }">
-            <div class="tableBig">{{ row.customerShortName }}</div>
+            <div class="tableBig">{{ row.customerShortName ? row.customerShortName : '-' }}</div>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('ipBelong')" align="left" prop="ipBelong" show-overflow-tooltip
           width="150" label="IP/区域">
           <template #default="{ row }">
-            <el-tag type="primary"> {{ row.ipBelong.split("/")[1] }} </el-tag>
+            <el-tag type="primary"> {{ row.ipBelong.split("/")[1]  ? row.ipBelong.split("/")[1] : '-' }} </el-tag>
             <div class="copyId tableSmall flex-s">
               <div class="id oneLine">
-                {{ row.ipBelong.split("/")[0] }}
+                {{ row.ipBelong.split("/")[0]  ? row.ipBelong.split("/")[0] : '-' }}
               </div>
               <copy :content="row.ipBelong.split('/')[0]" :class="{
                 rowCopy: 'rowCopy',
@@ -484,7 +484,7 @@ function handleCurrentChange(val: any) {
             <el-tooltip placement="top">
               <template #content>
                 <div>
-                  <el-text style="color: #fff;">开始时间：{{ row.surveyStartTime }}</el-text>
+                  <el-text style="color: #fff;">开始时间：{{ row.surveyStartTime ? row.surveyStartTime : '-' }}</el-text>
                   <br>
                   <el-text style="color: #fff;">结束时间：{{ row.surveyEndTime ? row.surveyEndTime : '-' }}</el-text>
                 </div>
