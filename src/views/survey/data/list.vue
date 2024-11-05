@@ -85,15 +85,17 @@ function getDataList() {
     };
     api.dataList(params).then((res: any) => {
       data.value.loading = false;
-      // 完成数排名
-      data.value.memberDataCenterCompletedVOList =
-        res.data.memberDataCenterCompletedVOList;
-      // 退款额排名
+      //items.filter(item => item.name && item.name.trim() !== '');
+      // 完成数排名,剔除完成数量为0的，completedQuantity
+
+      data.value.memberDataCenterCompletedVOList = res.data.memberDataCenterCompletedVOList.filter(item => item.completedQuantity && item.completedQuantity !=0);
+
+      // 退款额排名，剔除退款数为0的，completedQuantity
       data.value.memberDataCenterRefundVOList =
-        res.data.memberDataCenterRefundVOList;
-      // 业绩排名
+        res.data.memberDataCenterRefundVOList.filter(item => item.completedQuantity && item.completedQuantity!=0);
+      // 业绩排名，剔除收入为0的，price
       data.value.memberDataCenterPriceVOList =
-        res.data.memberDataCenterPriceVOList;
+        res.data.memberDataCenterPriceVOList.filter(item => item.price && item.price !=0);
       // 数据总揽
       data.value.dataScreening = res.data.memberDataCenterOverallOverviewVOList;
       pagination.value.total = res.data.total;
@@ -286,7 +288,7 @@ function getDataList() {
                 <span class="font-c">{{ row.memberName ? row.memberName : '-' }}</span>
               </template>
             </el-table-column>
-            <el-table-column show-overflow-tooltip align="left" prop="price" label="今日收入">
+            <el-table-column show-overflow-tooltip align="left" prop="price" label="业绩">
               <template #default="{ row }">
                 <span  class="number-font font-c">{{ row.price ? row.price : 0 }}</span>
               </template>

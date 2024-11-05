@@ -724,7 +724,13 @@ defineExpose({ showEdit });
         </el-card>
       </ElForm>
       <template #footer>
-        <el-button type="primary" @click="closeHandler"> 取消 </el-button>
+        <div class="flex-c">
+          <el-button type="primary" @click="closeHandler"> 关闭 </el-button>
+
+
+        </div>
+
+
       </template>
     </el-drawer>
     <logDetails ref="logDetailsRef" />
@@ -732,6 +738,11 @@ defineExpose({ showEdit });
 </template>
 
 <style scoped lang="scss">
+.flex-c {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .quotaInfoDiv {
   border-bottom: 1px dashed #d5d5d5;
   margin-bottom: .875rem;

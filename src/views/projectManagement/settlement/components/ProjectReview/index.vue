@@ -242,7 +242,7 @@ defineExpose({ showEdit });
         </el-row>
       </el-form>
       <template #footer>
-        <div style="flex: auto">
+        <div class="flex-c">
           <el-button @click="dialogTableVisible = false"> 取消 </el-button>
           <el-button type="primary" @click="onSubmit"> 确定 </el-button>
         </div>
@@ -252,6 +252,11 @@ defineExpose({ showEdit });
 </template>
 
 <style lang="scss" scoped>
+.flex-c {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .shenhe {
   width: 100%;
   border: 1px solid #ebeef5;
