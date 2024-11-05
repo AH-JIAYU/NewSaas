@@ -79,6 +79,7 @@ const columns = ref([
 const queryForm = reactive<any>({
   //会员id
   memberId: "",
+  clientId:'',
   //随机身份id
   randomIdentityId: "",
   //会员组id
@@ -174,6 +175,7 @@ function onReset() {
   Object.assign(queryForm, {
     //会员id
     memberId: "",
+    clientId:'',
     //随机身份id
     randomIdentityId: "",
     //会员组id
@@ -207,6 +209,7 @@ onMounted(async () => {
     { index: 5, show: true, type: 'select', modelName: 'customerId', placeholder: '客户简称', option: 'customerId', optionLabel: 'customerAccord', optionValue: 'tenantCustomerId' },
     { index: 6, show: true, type: 'input', modelName: 'ip', placeholder: 'IP地址' },
     { index: 7, show: true, type: 'select', modelName: 'surveyStatus', placeholder: '调查状态', option: 'surveyStatus', optionLabel: 'label', optionValue: 'value' },
+    { index: 8, show: true, type: 'input', modelName: 'clientId', placeholder: '点击ID', event: 'keydown.enter'},
   ];
 });
 const formOption = {
