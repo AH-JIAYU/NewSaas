@@ -41,7 +41,9 @@ const columns = ref([
     sortable: true,
     checked: true,
   },
+  { prop: "clientId", label: "点击ID", sortable: true, checked: true },
   { prop: "projectId", label: "项目ID", sortable: true, checked: true },
+
   { prop: "memberId", label: "会员ID", sortable: true, checked: true },
   {
     prop: "randomIdentityId",
@@ -236,6 +238,12 @@ function handleCurrentChange(val: any) {
       <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
         @selection-change="setSelectRows" @current-change="handleCurrentChange" highlight-current-row>
         <el-table-column align="left" type="selection" />
+        <el-table-column v-if="checkList.includes('clientId')" show-overflow-tooltip align="left" prop="clientId"
+          label="点击ID" width="200">
+          <template #default="{ row }">
+            <el-text class="fontColor">{{ row.clientId ? row.clientId : "-" }}</el-text>
+          </template>
+        </el-table-column>
         <el-table-column v-if="checkList.includes('randomIdentityId')" align="left" prop="randomIdentityId"
           show-overflow-tooltip label="随机身份" width="200">
           <template #default="{ row }">
