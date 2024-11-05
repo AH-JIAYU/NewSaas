@@ -181,10 +181,10 @@ onMounted(() => {
             <span style="display: inline-block" class="fontC-System">
               {{   row.memberQuantity ? row.memberQuantity : 0 }}
             </span>
-            <el-button v-if="row.memberQuantity" text type="primary" size="small" class="p-1"
+            <!-- <el-button v-if="row.memberQuantity" text type="primary" size="small" class="p-1"
               >
               <SvgIcon name="mdi:cursor-default-click" size="16px" color="#409eff" />
-            </el-button>
+            </el-button> -->
 
 
 
