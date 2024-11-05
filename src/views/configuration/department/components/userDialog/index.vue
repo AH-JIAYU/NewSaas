@@ -413,13 +413,20 @@ onMounted(async () => {
       </el-card>
     </ElForm>
     <template #footer>
+      <div class="flex-c">
       <ElButton size="large" @click="onCancel"> 取消 </ElButton>
       <ElButton type="primary" size="large" @click="onSubmit"> 确定 </ElButton>
+      </div>
     </template>
   </ElDrawer>
 </template>
 
 <style lang="scss" scoped>
+.flex-c {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 :deep(.el-cascader) {
   width: 100%;
 }

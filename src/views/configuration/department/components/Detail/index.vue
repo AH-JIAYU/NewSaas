@@ -212,10 +212,24 @@ defineExpose({
   </el-row> -->
 </el-card>
 </el-form>
+<template #footer>
+        <div class="flex-c">
+          <el-button type="primary" @click="close"> 关闭 </el-button>
+
+
+        </div>
+
+
+      </template>
 </el-drawer>
 </template>
 
 <style scoped lang="scss">
+.flex-c {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .card-header {
   display: flex;
   justify-content: space-between;

@@ -288,7 +288,7 @@ function getDataList() {
                 <span class="font-c">{{ row.memberName ? row.memberName : '-' }}</span>
               </template>
             </el-table-column>
-            <el-table-column show-overflow-tooltip align="left" prop="price" label="今日收入">
+            <el-table-column show-overflow-tooltip align="left" prop="price" label="业绩">
               <template #default="{ row }">
                 <span  class="number-font font-c">{{ row.price ? row.price : 0 }}</span>
               </template>

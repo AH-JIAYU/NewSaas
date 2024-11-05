@@ -163,13 +163,25 @@ defineExpose({
         :validate-all="validateAll"
       />
       <template #footer>
-        <el-button @click="close"> 取消 </el-button>
+        <div class="flex-c">
+          <el-button @click="close"> 取消 </el-button>
         <el-button v-if="title === '新增'" type="warning" @click="staging">
           暂存
         </el-button>
         <el-button type="primary" @click="save"> 确定 </el-button>
+
+
+        </div>
+
       </template>
     </el-drawer>
   </div>
 </template>
-@/store/modules/user_supplier
+<style scoped lang="scss">
+.flex-c {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+</style>

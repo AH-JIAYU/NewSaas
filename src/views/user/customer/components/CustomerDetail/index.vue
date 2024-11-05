@@ -251,7 +251,7 @@ defineExpose({
 </el-card>
 </el-form>
 <template #footer>
-      <div style="flex: auto">
+      <div class='flex-c'>
         <el-button type="primary" @click="close">关闭</el-button>
       </div>
     </template>
@@ -260,6 +260,11 @@ defineExpose({
 </template>
 
 <style scoped lang="scss">
+.flex-c {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .el-card {
   margin: 10px 0;
   padding-top: 10px;

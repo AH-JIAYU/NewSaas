@@ -231,7 +231,7 @@ defineExpose({
 </el-form>
 <SupplierDetailDetail ref="checkRef" />
 <template #footer>
-      <div style="flex: auto">
+      <div class="flex-c">
         <el-button type="primary" @click="close">关闭</el-button>
       </div>
     </template>
@@ -239,6 +239,11 @@ defineExpose({
 </template>
 
 <style scoped lang="scss">
+.flex-c {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .card-header {
   display: flex;
   justify-content: space-between;
