@@ -207,9 +207,11 @@ async function getList() {
   data.value.dataCenterOverViewVO = dataCenterOverViewVO;
   data.value.dataCenterTurnoverVO = dataCenterTurnoverVO;
   data.value.dataCenterCustomerVOS = dataCenterCustomerVOS;
+  // 完成数据排名,剔除完成数量为0的数据，completedQuantity
   data.value.dataCenterSupplierCompletedQuantities =
-    dataCenterSupplierCompletedQuantities;
-  data.value.dataCenterSupplierTurnovers = dataCenterSupplierTurnovers;
+    dataCenterSupplierCompletedQuantities.filter(item => item.completedQuantity && item.completedQuantity !=0);
+  //供应商营业额排行,剔除年为0的数据yearTurnover
+  data.value.dataCenterSupplierTurnovers =  dataCenterSupplierTurnovers.filter(item => item.yearTurnover && item.yearTurnover !=0);;
 }
 // 切换年月日
 const typeChange = () => {
@@ -957,30 +959,32 @@ onMounted(async () => {
               </div>
               <el-table
                 :data="data.dataCenterSupplierCompletedQuantities"
-                style="width: 100%;margin-top: 1rem"
+                style="width: 100%; margin-top: 1rem"
               >
-                <el-table-column type="index" label="序号" width="55" align="center">
+                <el-table-column
+                  type="index"
+                  label="序号"
+                  width="55"
+                  align="center"
+                >
                   <template #default="{ $index }">
                     <div class="center-image">
-                    <img
-                      v-if="$index ==0"
-                      src="../../../assets/images/num1.png"
-                      alt=""
-
-                    />
-                    <img
-                    v-else-if="$index ==1"
-                      src="../../../assets/images/num2.png"
-                      alt=""
-
-                    />
-                    <img
-                    v-else-if="$index ==2"
-                      src="../../../assets/images/num3.png"
-                      alt=""
-
-                    />
-                    <span v-else  class="number-font">{{ $index + 1 }}</span>
+                      <img
+                        v-if="$index == 0"
+                        src="../../../assets/images/num1.png"
+                        alt=""
+                      />
+                      <img
+                        v-else-if="$index == 1"
+                        src="../../../assets/images/num2.png"
+                        alt=""
+                      />
+                      <img
+                        v-else-if="$index == 2"
+                        src="../../../assets/images/num3.png"
+                        alt=""
+                      />
+                      <span v-else class="number-font">{{ $index + 1 }}</span>
                     </div>
                   </template>
                 </el-table-column>
@@ -1014,21 +1018,38 @@ onMounted(async () => {
                   label="完成金额"
                   ><template #default="{ row }">
                     <span class="table-red">
-                      <CurrencyType />    <span class="number-font">{{
+                      <CurrencyType />
+                      <span class="number-font">{{
                         row.completedAmount ? row.completedAmount : "0"
                       }}</span>
                     </span>
                   </template>
                 </el-table-column>
 
-                <el-table-column align="left" prop="b2BProportion" width="70" label="B2B">
+                <el-table-column
+                  align="left"
+                  prop="b2BProportion"
+                  width="70"
+                  label="B2B"
+                >
                   <template #default="{ row }">
-                    <span class="number-font">{{ row.b2BProportion * 100 }}</span>%
+                    <span class="number-font">{{
+                      row.b2BProportion * 100
+                    }}</span
+                    >%
                   </template>
                 </el-table-column>
-                <el-table-column align="left" prop="b2CProportion" width="70" label="B2C">
+                <el-table-column
+                  align="left"
+                  prop="b2CProportion"
+                  width="70"
+                  label="B2C"
+                >
                   <template #default="{ row }">
-                    <span class="number-font">{{ row.b2CProportion * 100 }}</span>%
+                    <span class="number-font">{{
+                      row.b2CProportion * 100
+                    }}</span
+                    >%
                   </template>
                 </el-table-column>
                 <el-table-column width="80" align="left" label="所属区域">
@@ -1052,29 +1073,37 @@ onMounted(async () => {
               </div>
               <el-table
                 :data="data.dataCenterSupplierTurnovers"
-                style="width: 100%;margin-top: 1rem"
+                style="width: 100%; margin-top: 1rem"
               >
-                <el-table-column type="index" label="序号" width="60" align="center">
+                <el-table-column
+                  type="index"
+                  label="序号"
+                  width="60"
+                  align="center"
+                >
                   <template #default="{ $index }">
                     <div class="center-image">
                       <img
-                      v-if="$index ==0"
-                      src="../../../assets/images/num1.png"
-                    />
-                    <img
-                      v-else-if="$index ==1"
-                      src="../../../assets/images/num2.png"
-                    />
-                    <img
-                    v-else-if="$index ==2"
-                      src="../../../assets/images/num3.png"
-                    />
-                    <span v-else class="number-font">{{ $index + 1 }}</span>
+                        v-if="$index == 0"
+                        src="../../../assets/images/num1.png"
+                      />
+                      <img
+                        v-else-if="$index == 1"
+                        src="../../../assets/images/num2.png"
+                      />
+                      <img
+                        v-else-if="$index == 2"
+                        src="../../../assets/images/num3.png"
+                      />
+                      <span v-else class="number-font">{{ $index + 1 }}</span>
                     </div>
-
                   </template>
                 </el-table-column>
-                <el-table-column align="left" prop="name" width="220" label="供应商名称"
+                <el-table-column
+                  align="left"
+                  prop="name"
+                  width="220"
+                  label="供应商名称"
                   ><template #default="{ row }">
                     {{ row.name ? row.name : "-" }}
                   </template>
@@ -1086,7 +1115,9 @@ onMounted(async () => {
                   label="日"
                 >
                   <template #default="{ row }">
-                    <span class="number-font">{{ row.dayTurnover ? row.dayTurnover : 0 }}</span>
+                    <span class="number-font">{{
+                      row.dayTurnover ? row.dayTurnover : 0
+                    }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column
