@@ -77,7 +77,7 @@ onMounted(async () => {
             <ElOption v-for="item in countryList" :label="item.chineseName" :value="item.id"></ElOption>
           </el-select>
         </ElFormItem>
-        <ElFormItem label="名称" prop="categoryName">
+        <ElFormItem label="问卷标题" prop="categoryName">
           <ElInput v-model="form.categoryName" placeholder="请输入名称" />
         </ElFormItem>
         <ElFormItem label="状态">
