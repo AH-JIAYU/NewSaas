@@ -395,7 +395,7 @@ function handleCurrentChange(val: any) {
           </template>
         </el-table-column>
         <ElTableColumn v-if="checkList.includes('surveyStatus')" align="left" show-overflow-tooltip prop=""
-          label="调查状态">
+          label="调查状态" width="100" fixed="right">
           <template #default="{ row }">
             <el-tag effect="dark" style="background-color: #FB6868;border: none;" v-if="row.surveyStatus === 3"
               class="mx-1" type="primary" fixed="right">配额满</el-tag>
