@@ -261,7 +261,7 @@ const tenantId = storage.local.get("tenantId");
                   </span>
                   <template v-if="localToptTab.tenantCustomerConfigInfoList[0].encryptionId
       ">
-                    <span v-pre>&hash =[hash]</span>
+                    <span v-pre>&hash=[hash]</span>
                   </template>
                 </el-form-item>
               </el-col>
