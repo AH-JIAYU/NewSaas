@@ -3,6 +3,7 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import { reactive, ref } from "vue";
 import { Plus } from "@element-plus/icons-vue";
 import edit from "./components/Edit/index.vue";
+import allocationEdit from "../list/components/AllocationEdit/index.vue";
 import api from "@/api/modules/projectManagement_outsource";
 import useProjectManagementOutsourceStore from "@/store/modules/projectManagement_outsource";
 import empty from "@/assets/images/empty.png";
@@ -14,6 +15,8 @@ const projectManagementOutsourceStore = useProjectManagementOutsourceStore();
 const { pagination, getParams, onSizeChange, onCurrentChange } =
   usePagination(); // 分页
 const tableSortRef = ref("");
+// 获取组件变量
+const addAllocationEditRef = ref();
 // loading加载
 const listLoading = ref<boolean>(true);
 const border = ref(false);
@@ -29,6 +32,8 @@ const stripe = ref(false);
 const columns = ref<any>([
   { sotrtable: true, checked: true, label: "租户ID", prop: "tenantId" },
   { sotrtable: true, checked: true, label: "租户名称", prop: "tenantName" },
+  { sotrtable: true, checked: true, label: "分配", prop: "allocationType" },
+  { sotrtable: true, checked: true, label: "项目价", prop: "doMoneyPrice" },
   { sotrtable: true, checked: true, label: "项目ID", prop: "projectId" },
   { sotrtable: true, checked: true, label: "项目名称", prop: "projectName" },
   {
@@ -42,14 +47,22 @@ const columns = ref<any>([
 
 // 查询参数
 const queryForm = reactive<any>({
-  projectId:'', //项目id
+  projectId: "", //项目id
   tenantId: "", //租户id
   tenantName: "", //	租户名称
   projectStatus: "", //	1:进行中(在线) 2:已完成(审核通过) 3:离线
   type: 2,
 });
 const list = ref<any>([]);
-
+// 分配
+function distribution(row: any) {
+  row.name = row.tenantName;
+  addAllocationEditRef.value.showEdit(row, "distribution");
+}
+// 重新分配
+function reassign(row: any) {
+  addAllocationEditRef.value.showEdit(row, "reassign");
+}
 // 详情
 function editData(row: any) {
   editRef.value.showEdit(row, queryForm.type === 2 ? 1 : 0);
@@ -103,7 +116,7 @@ onMounted(() => {
   });
   fetchData();
   formSearchList.value = [
-  {
+    {
       index: 1,
       show: true,
       type: "input",
@@ -204,7 +217,7 @@ function handleCurrentChange(val: any) {
               show-overflow-tooltip
               prop="projectStatus"
               align="left"
-               width="140"
+              width="140"
               label="状态"
             >
               <template #default="{ row }">
@@ -237,7 +250,7 @@ function handleCurrentChange(val: any) {
               show-overflow-tooltip
               prop="tenantId"
               align="left"
-                 width="280"
+              width="280"
               label="租户ID"
             >
               <template #default="{ row }">
@@ -460,6 +473,62 @@ function handleCurrentChange(val: any) {
               </template>
             </el-table-column>
             <el-table-column
+              v-if="checkList.includes('allocationType')"
+              align="left"
+              label="分配"
+              width="90"
+            >
+              <template #default="{ row }">
+                <el-button
+                  class="tableBut"
+                  size="small"
+                  @click="viewAllocations(row, 1)"
+                  type="danger"
+                  v-if="row.allocationType === 1"
+                  plain
+                  >自动分配</el-button
+                >
+                <el-button
+                  class="tableBut"
+                  size="small"
+                  @click="viewAllocations(row, 2)"
+                  type="danger"
+                  v-else-if="row.allocationType === 2"
+                  >供应商</el-button
+                >
+                <el-button
+                  class="tableBut"
+                  size="small"
+                  @click="viewAllocations(row, 3)"
+                  type="success"
+                  v-else-if="row.allocationType === 3"
+                  >部门</el-button
+                >
+                <el-button
+                  class="tableBut"
+                  size="small"
+                  @click="viewAllocations(row, 4)"
+                  type="primary"
+                  v-else-if="row.allocationType === 4"
+                  >租户</el-button
+                >
+                <el-button size="small" v-else class="tableBut">
+                  未分配</el-button
+                >
+              </template>
+            </el-table-column>
+            <el-table-column
+              v-if="checkList.includes('doMoneyPrice')"
+              show-overflow-tooltip
+              align="left"
+              label="项目价"
+              width="100"
+            >
+              <template #default="{ row }">
+                <div><CurrencyType />{{ row.doMoneyPrice || 0 }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column
               v-if="checkList.includes('projectName')"
               show-overflow-tooltip
               prop="projectName"
@@ -548,6 +617,26 @@ function handleCurrentChange(val: any) {
             >
               <template #default="{ row }">
                 <el-button
+                  v-if="row.allocationStatus === 1"
+                  plain
+                  :disabled="row.isOnline === 2"
+                  type="primary"
+                  size="small"
+                  @click="distribution(row)"
+                >
+                  分配
+                </el-button>
+                <el-button
+                  v-else
+                  plain
+                  type="primary"
+                  :disabled="row.isOnline === 2"
+                  size="small"
+                  @click="reassign(row)"
+                >
+                  重新分配
+                </el-button>
+                <el-button
                   type="primary"
                   plain
                   size="small"
@@ -575,7 +664,7 @@ function handleCurrentChange(val: any) {
           />
         </el-tab-pane>
       </el-tabs>
-
+      <allocationEdit ref="addAllocationEditRef" @fetchData="fetchData" />
       <edit ref="editRef" @fetch-data="fetchData" />
     </PageMain>
   </div>
@@ -583,11 +672,11 @@ function handleCurrentChange(val: any) {
 
 <style scoped lang="scss">
 .projectId {
-  font-size: .875rem;
+  font-size: 0.875rem;
 }
-.copyId  .current {
-    display: block !important;
-  }
+.copyId .current {
+  display: block !important;
+}
 .rowCopy {
   width: 20px;
   display: none;
