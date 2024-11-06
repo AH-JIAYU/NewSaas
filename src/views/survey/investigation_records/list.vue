@@ -379,7 +379,7 @@ function handleCurrentChange(val: any) {
             <el-text v-else>-</el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('surveyTime')" align="left" show-overflow-tooltip label="调查时间" fixed="right">
+        <el-table-column v-if="checkList.includes('surveyTime')" align="left" show-overflow-tooltip label="调查时间" width="120" fixed="right">
           <template #default="{ row }">
             <el-tooltip placement="top">
               <template #content>
