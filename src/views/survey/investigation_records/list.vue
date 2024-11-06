@@ -241,7 +241,7 @@ function handleCurrentChange(val: any) {
       <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
         @selection-change="setSelectRows" @current-change="handleCurrentChange" highlight-current-row>
         <el-table-column align="left" type="selection" />
-        <el-table-column v-if="checkList.includes('id')" show-overflow-tooltip align="left" prop="id"
+        <el-table-column v-if="checkList.includes('id')" show-overflow-tooltip align="left" prop="id" fixed="left"
           label="点击ID" width="200">
           <template #default="{ row }">
             <el-text class="fontColor">{{ row.id ? row.id : "-" }}</el-text>
