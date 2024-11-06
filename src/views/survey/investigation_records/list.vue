@@ -308,7 +308,7 @@ function handleCurrentChange(val: any) {
               }}</el-text>
           </template>
         </el-table-column> -->
-        <el-table-column v-if="checkList.includes('memberName')" width="100" align="left" prop="memberName"
+        <el-table-column v-if="checkList.includes('memberName')" width="200" align="left" prop="memberName"
           show-overflow-tooltip label="部门">
           <template #default="{ row }">
             <div v-if="row.memberName" class="hoverSvg">
