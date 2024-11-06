@@ -482,7 +482,6 @@ function handleCurrentChange(val: any) {
                 <el-button
                   class="tableBut"
                   size="small"
-                  @click="viewAllocations(row, 1)"
                   type="danger"
                   v-if="row.allocationType === 1"
                   plain
@@ -491,7 +490,6 @@ function handleCurrentChange(val: any) {
                 <el-button
                   class="tableBut"
                   size="small"
-                  @click="viewAllocations(row, 2)"
                   type="danger"
                   v-else-if="row.allocationType === 2"
                   >供应商</el-button
@@ -499,7 +497,6 @@ function handleCurrentChange(val: any) {
                 <el-button
                   class="tableBut"
                   size="small"
-                  @click="viewAllocations(row, 3)"
                   type="success"
                   v-else-if="row.allocationType === 3"
                   >部门</el-button
@@ -507,7 +504,6 @@ function handleCurrentChange(val: any) {
                 <el-button
                   class="tableBut"
                   size="small"
-                  @click="viewAllocations(row, 4)"
                   type="primary"
                   v-else-if="row.allocationType === 4"
                   >租户</el-button
