@@ -84,7 +84,8 @@ defineExpose({ showEdit })
       <p class="Big">展示效果 <span class="Small"> 长按筛选项，可拖拽调整展示顺序 </span> </p>
       <div class="grid tagGrid">
         <template v-for="item in data.formSearchSelectList" :key="item.modelName">
-          <el-tag v-if="item.show" class="gridItem" closable type="primary" @close="onChangeShow(item)">
+          <el-tag v-if="item.show" class="gridItem" closable type="primary" @close="onChangeShow(item)"
+            style="cursor: pointer;">
             {{ item.placeholder ?? `${item.startPlaceHolder}-${item.endPlaceHolder}` }}
           </el-tag>
         </template>
