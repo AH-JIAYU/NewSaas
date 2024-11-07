@@ -62,6 +62,7 @@ const form = ref<any>({
   type: "",
   // 密码
   password: "123456",
+  roleList: [],
   // 角色
   role: "",
   // 是否启用
@@ -116,7 +117,13 @@ const formRules = ref<FormRules>({
   phone: [{ validator: validatePhone, trigger: "blur" },],
   email: [{ validator: validateEmail, trigger: "blur" },],
 });
-
+// 处理选中项变化的逻辑，确保最多只能选择一个
+const handleCheckboxChange = (newValue: any) => {
+  if (Array.isArray(newValue) && newValue.length > 1) {
+    // 只有一个选项可以被选中，取最后一个选中的
+    form.value.roleList = [newValue[newValue.length - 1]]
+  }
+}
 // 提交数据
 function onSubmit() {
   if (!form.value.email) {
@@ -136,6 +143,12 @@ function onSubmit() {
   // 组合一下
   const organizationalStructureId = tree.concat(halltree);
   form.value.organizationalStructureId = organizationalStructureId[0];
+  if (form.value.roleList.length > 0) {
+    form.value.role = form.value.roleList[0]
+    delete form.value.roleList
+  } else {
+    form.value.role = ''
+  }
   if (!form.value.id) {
     formRef.value &&
       formRef.value.validate((valid: any) => {
@@ -266,6 +279,7 @@ onMounted(async () => {
   if (props.id !== "" && props.row) {
     formRules.value.password = [];
     form.value = JSON.parse(props.row);
+    form.value.roleList = [form.value.role]
     // 确保 organizationalStructureId 是一个数组，如果是 null 则初始化为空数组
     if (!departmentId.value) {
       departmentId.value = [];
@@ -403,12 +417,20 @@ onMounted(async () => {
         </template>
         <el-row :gutter="24">
           <el-form-item label="分配角色:">
+            <el-checkbox-group v-if="munulevs?.length" v-model="form.roleList" @change="handleCheckboxChange">
+              <el-checkbox v-for="item in munulevs" :key="item.id" :label="item.roleName" :value="item.roleName">
+                {{ item.roleName }}
+              </el-checkbox>
+            </el-checkbox-group>
+            <el-text v-else>暂无数据</el-text>
+          </el-form-item>
+          <!-- <el-form-item label="分配角色:">
             <el-radio-group v-if="munulevs?.length" v-model="form.role">
               <el-radio v-for="item in munulevs" :key="item.id" :value="item.roleName"
                 :label="item.roleName"></el-radio>
             </el-radio-group>
             <el-text v-else>暂无数据</el-text>
-          </el-form-item>
+          </el-form-item> -->
         </el-row>
       </el-card>
     </ElForm>
@@ -429,5 +451,8 @@ onMounted(async () => {
 }
 :deep(.el-cascader) {
   width: 100%;
+}
+:deep(.el-tree-node) {
+  margin-bottom:.5rem;
 }
 </style>

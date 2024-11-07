@@ -458,4 +458,7 @@ onMounted(async () => {
 :deep(.el-cascader) {
   width: 100%;
 }
+:deep(.el-tree-node) {
+  margin-bottom:.5rem;
+}
 </style>
