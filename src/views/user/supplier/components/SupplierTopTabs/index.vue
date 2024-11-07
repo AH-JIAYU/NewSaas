@@ -121,11 +121,31 @@ const getSupplierLevelList = async () => {
     await configurationSupplierLevelStore.getLevelNameList();
   changeCountryId(props.leftTab.subordinateCountryId);
 }
+const dataList = ref<any>([])
+  const filterMethod = (query: string, item: any) => {
+  // 如果 item.initial 存在，且 query 为空，则直接返回 true，表示不过滤
+  if (!query) return true;
+  // 对 query 和 item.initial 进行忽略大小写的比较
+  return item.label && item.label.toLowerCase().includes(query.toLowerCase());
+};
+
+const generateData = (val: any) => {
+  val.forEach((city: any) => {
+    dataList.value.push({
+      label: city.chineseName,
+      key: city.id,
+      initial: city.code,
+    });
+  });
+};
 
 onMounted(async () => {
+  // 异步数据加载
   data.relatedCustomers = await customerStore.getCustomerList();
   data.countryList = await basicDictionaryStore.getCountry();
-  await getSupplierLevelList()
+  await getSupplierLevelList();
+  // 更新 dataList
+  generateData(data.countryList);
 });
 nextTick(() => {
   // 表单验证方法
@@ -173,11 +193,7 @@ nextTick(() => {
                     </template>
                     <el-option v-for="item in data.supplierLevelList" :key="item.tenantSupplierLevelId"
                       :value="item.tenantSupplierLevelId" :label="item.levelNameOrAdditionRatio"></el-option>
-                      <el-button
-                      size="small"
-                    class="buttonClass"
-                      @click="addSupplierLevel"
-                    >
+                    <el-button size="small" class="buttonClass" @click="addSupplierLevel">
                       快捷新增
                       <div class="i-ic:round-plus w-1.3em h-1.3em"></div>
                     </el-button>
@@ -270,23 +286,20 @@ nextTick(() => {
               <el-col :span="8">
                 <el-form-item>
                   <template #label>
-                  <div>
-                    <el-tooltip
-                      class="tooltips"
-                      placement="top"
-                    >
-                    <template #content>
-                      <div>
-                        为供应商设定筛选条件，更高效匹配合适项目<br/>
-                        例:仅选中【法国】，该供应商只能做【法国】的项目
-                      </div>
-                      </template>
-                      <SvgIcon class="SvgIcon2" name="i-ri:question-line" />
-                    </el-tooltip>
-                    授权区域
-                  </div>
-                </template>
-                  <el-select @change="changeRelevanceCountryIdList" v-model="props.leftTab.relevanceCountryIdList"
+                    <div>
+                      <el-tooltip class="tooltips" placement="top">
+                        <template #content>
+                          <div>
+                            为供应商设定筛选条件，更高效匹配合适项目<br />
+                            例:仅选中【法国】，该供应商只能做【法国】的项目
+                          </div>
+                        </template>
+                        <SvgIcon class="SvgIcon2" name="i-ri:question-line" />
+                      </el-tooltip>
+                      授权区域
+                    </div>
+                  </template>
+                  <!-- <el-select @change="changeRelevanceCountryIdList" v-model="props.leftTab.relevanceCountryIdList"
                     clearable filterable multiple collapse-tags>
                     <template #header>
                       <el-checkbox v-model="data.checked" @change="selectAll"
@@ -294,7 +307,9 @@ nextTick(() => {
                     </template>
                     <el-option v-for="item in data.countryList" :key="item.id" :value="item.id"
                       :label="item.chineseName"></el-option>
-                  </el-select>
+                  </el-select> -->
+                  <el-transfer v-model="props.leftTab.relevanceCountryIdList" filterable :filter-method="filterMethod"
+                    filter-placeholder="输入查询国家" :data="dataList" :titles="['未选择国家', '已选择国家']" />
                 </el-form-item>
               </el-col>
               <!-- <el-col :span="8">
@@ -376,9 +391,22 @@ nextTick(() => {
   border-radius: 4px 4px 4px 4px;
   border: 1px solid #e9eef3;
 }
+
 /* 使按钮在下拉框展开时自适应宽度 */
 .el-select-dropdown .buttonClass {
-  width: calc(100% - 24px); /* 减去两边的 padding */
+  width: calc(100% - 24px);
+  /* 减去两边的 padding */
 
+}
+
+.el-transfer {
+  display: flex;
+}
+
+:deep {
+  .el-transfer__buttons {
+    display: flex;
+    align-items: center;
+  }
 }
 </style>

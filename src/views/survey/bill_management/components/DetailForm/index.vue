@@ -32,6 +32,18 @@ const data = ref<any>({
 });
 const formRules = ref<FormRules>({
   // 校验
+  settlementAmount: [
+    {
+      required: true,
+      message: '请输入正数，且最多两位小数',
+      trigger: 'blur'
+    },
+    {
+      pattern: /^(?!0(\.0+)?$)(\d+(\.\d{1,2})?)$/,  // 正数且最多两位小数
+      message: '请输入有效的正数，且最多两位小数',
+      trigger: 'blur'
+    }
+  ]
 });
 // 获取最低结算金额
 const getList = async () => {
@@ -76,6 +88,20 @@ defineExpose({
           const judge = form.value.addMemberSettlementInfoList.every((item: any) => {
             return typeof (item.settlementAmount) === "number" && item.settlementAmount >= form.value.minimumAmount
           })
+          if (form.value.settlementType === 2) {
+            for (let item of form.value.addMemberSettlementInfoList) {
+              if (item.settlementAmount <= 0) {
+                ElMessage.warning({
+                  message: "结算金额需要输入正数",
+                  center: true,
+                });
+                return;  // 直接停止整个 submit 函数的执行
+              }
+            }
+            form.value.settlementAmount = '';
+          } else {
+            form.value.addMemberSettlementInfoList = []
+          }
           if (valid) {
             if (judge && form.value.settlementAmount >= form.value.minimumAmount) {
               try {
@@ -119,7 +145,7 @@ defineExpose({
         <ElFormItem label="最低结算额度">
           <ElInput disabled placeholder="" :value="form.minimumAmount" />
         </ElFormItem>
-        <ElFormItem label="结算金额">
+        <ElFormItem label="结算金额" prop="settlementAmount">
           <ElInput v-model="form.settlementAmount" placeholder="" />
         </ElFormItem>
       </template>

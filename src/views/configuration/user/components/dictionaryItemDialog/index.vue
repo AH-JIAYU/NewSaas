@@ -65,6 +65,7 @@ const form = ref<any>({
   type: "",
   // 密码
   password: "123456",
+  roleList: [],
   // 角色
   role: "",
   // 是否启用
@@ -120,6 +121,14 @@ const formRules = ref<FormRules>({
   email: [{ validator: validateEmail, trigger: "blur" },],
 });
 
+// 处理选中项变化的逻辑，确保最多只能选择一个
+const handleCheckboxChange = (newValue: any) => {
+  if (Array.isArray(newValue) && newValue.length > 1) {
+    // 只有一个选项可以被选中，取最后一个选中的
+    form.value.roleList = [newValue[newValue.length - 1]]
+  }
+}
+
 // 提交数据
 function onSubmit() {
   if (!form.value.email) {
@@ -140,6 +149,12 @@ function onSubmit() {
     // 组合一下
     const organizationalStructureId = tree.concat(halltree);
     form.value.organizationalStructureId = organizationalStructureId[0];
+  }
+  if (form.value.roleList.length > 0) {
+    form.value.role = form.value.roleList[0]
+    delete form.value.roleList
+  } else {
+    form.value.role = ''
   }
   if (!form.value.id) {
     formRef.value &&
@@ -243,15 +258,15 @@ onMounted(async () => {
     loading.value = true;
     departmentId.value = [];
     const { data } = await apiPos.list({ page: 1, limit: 10, id: null, name: "", active: null });
-    if(data) {
+    if (data) {
       positionManageList.value = data.data;
     }
     // 用户
     staffList.value = await tenantStaffStore.getStaff();
-    const ress = await apiRole.list({id:null,name:''})
-    if(ress.data) {
+    const ress = await apiRole.list({ id: null, name: '' })
+    if (ress.data) {
       // 角色
-    munulevs.value = ress.data
+      munulevs.value = ress.data
     }
     // 部门
     const res = await apiDep.list({ name: '' });
@@ -264,6 +279,7 @@ onMounted(async () => {
     if (props.id !== "" && props.row) {
       formRules.value.password = [];
       form.value = JSON.parse(props.row);
+      form.value.roleList = [form.value.role]
       // 确保 organizationalStructureId 是一个数组
       const orgId = form.value.organizationalStructureId;
       if (orgId) {
@@ -285,7 +301,8 @@ onMounted(async () => {
 <template>
   <ElDrawer v-model="visible" :title="title" size="60%" :close-on-click-modal="false" append-to-body destroy-on-close
     @closed="onCancel">
-    <ElForm v-loading="loading" ref="formRef" :model="form" :rules="formRules" label-width="100px" :validate-on-rule-change="false">
+    <ElForm v-loading="loading" ref="formRef" :model="form" :rules="formRules" label-width="100px"
+      :validate-on-rule-change="false">
       <el-card class="box-card">
         <template #header>
           <div class="card-header">
@@ -398,11 +415,25 @@ onMounted(async () => {
           </div>
         </template>
         <el-row :gutter="24">
-          <el-form-item label="分配角色:">
+          <!-- <el-form-item label="分配角色:">
             <el-radio-group v-if="munulevs?.length" v-model="form.role">
               <el-radio v-for="item in munulevs" :key="item.id" :value="item.roleName"
                 :label="item.roleName"></el-radio>
             </el-radio-group>
+            <el-text v-else>暂无数据</el-text>
+          </el-form-item> -->
+          <!-- <el-checkbox-group v-if="munulevs?.length" v-model="form.roleList" @change="handleCheckboxChange">
+            <el-checkbox v-for="item in munulevs" :key="item.id" :label="item.roleName" :value="item.roleName">
+              {{ item.roleName }}
+            </el-checkbox>
+          </el-checkbox-group>
+          <el-text v-else>暂无数据</el-text> -->
+          <el-form-item label="分配角色:">
+            <el-checkbox-group v-if="munulevs?.length" v-model="form.roleList" @change="handleCheckboxChange">
+              <el-checkbox v-for="item in munulevs" :key="item.id" :label="item.roleName" :value="item.roleName">
+                {{ item.roleName }}
+              </el-checkbox>
+            </el-checkbox-group>
             <el-text v-else>暂无数据</el-text>
           </el-form-item>
         </el-row>
@@ -410,8 +441,8 @@ onMounted(async () => {
     </ElForm>
     <template #footer>
       <div class="flex-c">
-      <ElButton size="large" @click="onCancel"> 取消 </ElButton>
-      <ElButton type="primary" size="large" @click="onSubmit"> 确定 </ElButton>
+        <ElButton size="large" @click="onCancel"> 取消 </ElButton>
+        <ElButton type="primary" size="large" @click="onSubmit"> 确定 </ElButton>
       </div>
     </template>
   </ElDrawer>
@@ -423,6 +454,7 @@ onMounted(async () => {
   justify-content: center;
   align-items: center;
 }
+
 :deep(.el-cascader) {
   width: 100%;
 }
