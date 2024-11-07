@@ -127,6 +127,7 @@ function echarts2() {
     label: {
       //饼图文字的显示
       show: true, //默认  显示文字
+
     },
     series: [
       {
@@ -140,6 +141,7 @@ function echarts2() {
           show: true,
         },
       },
+
     ],
     graphic: [
       {
@@ -159,10 +161,12 @@ function echarts2() {
           // },
           {
             type: "text",
+            top: 'center',              // 描述怎么根据父元素进行定位。top 和 bottom 只有一个可以生效。如果指定 top 或 bottom，则 shape 里的 y、cy 等定位属性不再生效。『父元素』是指：如果是顶层元素，父元素是 echarts 图表容器。如果是 group 的子元素，父元素就是 group 元素。
+	        left: 'center',
             style: {
               text: Data.length,
-              textAlign: "center",
-              textVerticalAlign: "middle",
+              // textAlign: "center",
+              // textVerticalAlign: "middle",
               fontSize: 30,
               fill: "#000", //合计颜色
             },
