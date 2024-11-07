@@ -213,6 +213,19 @@ nextTick(() => {
                 </el-form-item>
               </el-col>
               <el-col :span="8">
+                <el-form-item label="结算周期">
+                  <el-select v-model="props.leftTab.settlementCycle">
+                    <el-option label="net 30" :value="30"></el-option>
+                    <el-option label="net 60" :value="60"></el-option>
+                    <el-option label="net 90" :value="90"></el-option>
+                    <el-option label="net 180" :value="180"></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+
+            </el-row>
+            <el-row :gutter="10">
+              <el-col :span="8">
                 <el-form-item v-if="props.leftTab.type === 'company'" label="公司名称">
                   <el-input clearable v-model="props.leftTab.companyName" />
                 </el-form-item>
@@ -222,13 +235,13 @@ nextTick(() => {
                   <el-input clearable v-model="props.leftTab.legalPersonName" />
                 </el-form-item>
               </el-col>
-            </el-row>
-            <el-row :gutter="10">
+
               <el-col :span="8">
                 <el-form-item v-if="props.leftTab.type === 'company'" label="公司税号" prop="">
                   <el-input clearable v-model="props.leftTab.taxID" />
                 </el-form-item>
               </el-col>
+
             </el-row>
           </el-card>
           <el-card class="box-card">
