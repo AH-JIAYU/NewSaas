@@ -64,6 +64,7 @@ const form = ref<any>({
   qqCode: "",
   // 公司地址
   address: "",
+  projectOutAlias:'' , //外包项目别名
 });
 // 自定义校验手机号
 const validatePhone = (rule: any, value: any, callback: any) => {
@@ -355,6 +356,11 @@ function onSubmit() {
                 <el-form-item label="默认官网域名" prop="">
                   <el-text class="mx-1">{{ form.personalizedDomainName }}</el-text>
                   <el-button class="copy" type="primary" plain size="small" @click="copyToClipboard">复制</el-button>
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="外包项目别名">
+                  <el-input v-model="form.projectOutAlias" style="width: 22.4375rem" />
                 </el-form-item>
               </el-col>
               <el-col :span="24">

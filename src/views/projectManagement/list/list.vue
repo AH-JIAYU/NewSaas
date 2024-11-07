@@ -91,7 +91,7 @@ const search = ref<any>({
   createName: "", // 	创建人-模糊查询
   allocation: "", // 	分配状态:1已经分配 2:未分配
   allocationStatus: "", // 	分配类型: 1:自动分配 2:供应商 3:部门
-  status: "", // 	项目状态:1在线 2:离线
+  // status: "", // 	项目状态:1在线 2:离线
 }); // 搜索
 const list = ref<any>([]);
 
@@ -207,11 +207,11 @@ function onReset() {
     name: "", // 	项目名称模糊匹配
     projectIdentification: "", // 	项目标识模糊查询
     clientId: "", // 	所属客户编号Id
-    countryId: '', // 所属区域编号Id
+    countryId: "", // 所属区域编号Id
     createName: "", // 	创建人-模糊查询
     allocation: "", // 	分配状态:1已经分配 2:未分配
     allocationStatus: "", // 	分配类型: 1:自动分配 2:供应商 3:部门
-    status: "", // 	项目状态:1在线 2:离线
+    // status: "", // 	项目状态:1在线 2:离线
   };
   fetchData();
 }
@@ -318,16 +318,16 @@ onMounted(async () => {
       optionLabel: "label",
       optionValue: "value",
     },
-    {
-      index: 7,
-      show: true,
-      type: "select",
-      modelName: "status",
-      placeholder: "项目状态",
-      option: "status",
-      optionLabel: "label",
-      optionValue: "value",
-    },
+    // {
+    //   index: 7,
+    //   show: true,
+    //   type: "select",
+    //   modelName: "status",
+    //   placeholder: "项目状态",
+    //   option: "status",
+    //   optionLabel: "label",
+    //   optionValue: "value",
+    // },
     {
       index: 8,
       show: true,
@@ -473,33 +473,6 @@ const formOption = {
           width="180"
         >
           <template #default="{ row }">
-            <div>
-              <el-button
-                class="p-1"
-                size="small"
-                type="warning"
-                v-if="row.projectType === 2"
-                style="background-color:#FFAC54"
-                >外包</el-button
-              >
-              <el-button class="p-1" size="small" type="primary" v-else
-                >自有</el-button
-              >
-              <el-button
-                class="p-1"
-                size="small"
-                text
-                type="primary"
-                v-if="row.projectLinkType === 2"
-                @click="outsourceDetails(row)"
-              >
-                <SvgIcon
-                  name="i-ri:share-forward-line"
-                  color="#409eff"
-                  size="1.25rem"
-                />
-              </el-button>
-            </div>
             <div class="copyId tableSmall">
               <div class="id oneLine">
                 <el-tooltip
@@ -531,11 +504,11 @@ const formOption = {
           ><template #default="{ row }">
             <div class="flex-c">
               <div class="oneLine" style="width: calc(100% - 1.25rem)">
-                <p class="oneLine tableBig"
-                  >
+                <p class="oneLine tableBig">
                   <span :class="row.isB2b === 2 ? 'red' : ''">{{
                     row.name
-                  }}</span></p>
+                  }}</span>
+                </p>
                 <div class="oneLine">
                   <span :class="row.isB2b === 2 ? 'red' : ''">{{
                     row.clientName.split("/")[1]
@@ -558,14 +531,12 @@ const formOption = {
           show-overflow-tooltip
           align="left"
           label="客户"
-           width="140"
+          width="140"
           ><template #default="{ row }">
             <div class="flex-c">
               <div class="oneLine" style="width: calc(100% - 1.25rem)">
                 <b class="tableBig">{{ row.clientName.split("/")[0] }}</b>
                 <div class="oneLine">
-                  <!-- <img :src="row.avatar" alt="" class="avatar" />
-                  <span class="">{{ row.chargeName }}</span> -->
                   <el-tooltip
                     effect="dark"
                     :content="row.chargeName"
@@ -573,7 +544,6 @@ const formOption = {
                   >
                     PM：{{ row.chargeName }}
                   </el-tooltip>
-                  <!-- PM：{{ row.chargeName }} -->
                 </div>
               </div>
               <SvgIcon
@@ -590,7 +560,7 @@ const formOption = {
           v-if="checkList.includes('PCNL')"
           align="left"
           label="参数"
-            width="180"
+          width="180"
         >
           <template #default="{ row }">
             <div class="flex-c">
@@ -673,9 +643,7 @@ const formOption = {
               v-else-if="row.allocationType === 4"
               >租户</el-button
             >
-            <el-button  size="small"  v-else class="tableBut">
-              未分配</el-button
-            >
+            <el-button size="small" v-else class="tableBut"> 未分配</el-button>
           </template>
         </el-table-column>
 
@@ -688,7 +656,10 @@ const formOption = {
         >
           <template #default="{ row }">
             <div class="flex-c">
-              <div class="oneLine fontC-System" style="width: calc(100% - 1.25rem)">
+              <div
+                class="oneLine fontC-System"
+                style="width: calc(100% - 1.25rem)"
+              >
                 <CurrencyType />{{ row.doMoneyPrice || 0 }}
               </div>
               <SvgIcon
@@ -711,7 +682,10 @@ const formOption = {
         >
           <template #default="{ row }">
             <div class="flex-c">
-              <div class="oneLine fontC-System" style="width: calc(100% - 1.25rem)">
+              <div
+                class="oneLine fontC-System"
+                style="width: calc(100% - 1.25rem)"
+              >
                 {{ row.ir ? row.ir : 0 }}/{{ row.nir ? row.nir : 0 }}
               </div>
               <SvgIcon
@@ -778,7 +752,10 @@ const formOption = {
           label="备注"
           ><template #default="{ row }">
             <div class="flex-c">
-              <div class="oneLine fontC-System" style="width: calc(100% - 1.25rem)">
+              <div
+                class="oneLine fontC-System"
+                style="width: calc(100% - 1.25rem)"
+              >
                 {{ row.remark ? row.remark : "-" }}
               </div>
               <SvgIcon
@@ -802,7 +779,9 @@ const formOption = {
             <div>
               <div class="fontC-System oneLine">{{ row.createName }}</div>
               <el-tooltip :content="row.createTime" placement="top">
-                <el-tag effect="plain" type="info">{{format(row.createTime)}}</el-tag>
+                <el-tag effect="plain" type="info">{{
+                  format(row.createTime)
+                }}</el-tag>
               </el-tooltip>
             </div>
           </template>

@@ -109,7 +109,7 @@ defineExpose({ activeLeftTab });
 
 <template>
   <div>
-    <el-button :class="props.title === '新增' ? 'button' : 'button hideButton'" :disabled="localLeftTab.length > 29 ||
+    <el-button :class="props.title === '新增' ? 'button' : 'button'" :disabled="localLeftTab.length > 29 ||
       (props.title === '编辑' && localLeftTab[0].parentId !== '0')
       " @click="addLeftTab()">
       新增
@@ -119,12 +119,16 @@ defineExpose({ activeLeftTab });
       <el-tab-pane v-for="(leftTab, index) in localLeftTab" :key="index" style="position: relative"
         :closable="localLeftTab.length !== 1" :name="index">
         <template #label>
-          <div :class="props.validateAll[index] &&
+          <div  class="flex-c"  :class="props.validateAll[index] &&
         props.validateAll[index] === 'rejected'
         ? 'validateRejected'
         : ''
       ">
-            {{ leftTab.name || "项目名称" }}
+
+      <img src="../../../../../assets/images/main.png" alt="" style="margin-right: 5px;width: 16px;height: 16px;"  v-if="index ==0">
+
+              <span> {{ leftTab.name || "项目名称" }}</span>
+
           </div>
         </template>
         <div style="
@@ -180,5 +184,11 @@ defineExpose({ activeLeftTab });
   .editHideCloseButton .is-icon-close {
     display: none !important;
   }
+}
+.flex-c {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 </style>

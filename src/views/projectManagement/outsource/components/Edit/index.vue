@@ -34,25 +34,34 @@ async function showEdit(row: any, source: number = 0) {
   if (res.data.tenantMeasurementInfo) {
     resList.unshift(res.data.tenantMeasurementInfo);
   }
+
   // 过滤数据（删除与当前租户id相同的数据之前的所有数据，包括当前的数据）
   const findDataIndex = resList.findIndex(
-    (item: any) => item.allocationTenantId === res.data.currentTenantId,
+    (item: any) => item.allocationTenantId === res.data.currentTenantId
   );
   resList.splice(0, findDataIndex); //删除上级
+  // 删除下级 allocationHierarchy
+  const findDataIndex1 = resList.findIndex(
+    (item: any) => item.allocationTenantId === res.data.currentTenantId
+  );
+  const HfindDataIndex =  resList[findDataIndex1].allocationHierarchy  //当前租户所在层级
+  resList.splice(HfindDataIndex+1);
+
+
   const type1List = resList.filter((item: any) => item.type === 1);
   const type2List = resList.filter((item: any) => item.type === 2);
   const type3List = resList.filter((item: any) => item.type === 3);
   const tenantMeasurementInfoList = [...type1List];
   if (type2List.length) {
     const memberGroupOrSupperIdList = type2List.map(
-      (item: any) => item.memberGroupOrSupperId,
+      (item: any) => item.memberGroupOrSupperId
     );
     type2List[0].length = type2List.length;
     type2List[0].memberGroupOrSupperIdList = memberGroupOrSupperIdList;
     tenantMeasurementInfoList.push(type2List[0]);
   } else if (type3List.length) {
     const memberGroupOrSupperIdList = type3List.map(
-      (item: any) => item.memberGroupOrSupperId,
+      (item: any) => item.memberGroupOrSupperId
     );
     type3List[0].length = type3List.length;
     type3List[0].memberGroupOrSupperIdList = memberGroupOrSupperIdList;
@@ -84,6 +93,7 @@ const getClickListBefore = (index: any) => {
 };
 // 获取点击id
 const getClickList = async (row: any, index: any) => {
+  if(row.totality ==0) return;
   data.value.select = data.value.select === index ? "" : index;
   data.value.clickIdList = [];
   const params = {
@@ -98,11 +108,11 @@ const getClickList = async (row: any, index: any) => {
   // 后期换成后端过滤
   if (row.type === 2) {
     data.value.clickIdList = data.value.clickIdList.filter(
-      (item: any) => item.peopleType === 2,
+      (item: any) => item.peopleType === 2
     );
   } else if (row.type === 3) {
     data.value.clickIdList = data.value.clickIdList.filter(
-      (item: any) => item.peopleType === 1,
+      (item: any) => item.peopleType === 1
     );
   }
 };
@@ -181,83 +191,86 @@ defineExpose({ showEdit });
             </div>
           </div>
           <div
-            class="link"
             v-for="(item, index) in data.tenantMeasurementInfoList"
             :key="item.allocationTenantId"
           >
-            <!-- 步骤 -->
-            <div class="step">
-              <!-- 点 -->
-              <div class="spot"></div>
-              <!-- 线 -->
-              <div class="line"></div>
-            </div>
             <div
-              :class="{
-                'item box': true,
-                select: index === data.select,
-              }"
-              @click="getClickList(item, index)"
+                 class="link"
             >
-              <div class="item-left">
-                <div class="tenant">
-                  <template v-if="item?.length > 1">
-                    <p class="tenantName">
-                      已分配数：
-                      <span class="tenantLength">{{ item?.length }}</span>
-                      <span :class="'type' + item.type">
-                        {{
-                          projectManagementOutsourceStore.typeList[
-                            item.type - 1
-                          ]
-                        }}
-                      </span>
-                    </p>
-                  </template>
-                  <template v-else>
-                    <p>
-                      <span class="tenantName">{{ item.tenantName }}</span>
-                      <span :class="'type' + item.type">
-                        {{
-                          projectManagementOutsourceStore.typeList[
-                            item.type - 1
-                          ]
-                        }}
-                      </span>
-                    </p>
-                    <el-text type="info"
-                      >ID：{{ item.allocationTenantId }}</el-text
-                    >
-                  </template>
-                </div>
-                <div class="price flex-b">
-                  <p>
-                    项目价:
-                    {{ item.currencyType === 1 ? "$" : "￥" }}
-                    {{ item.doMoneyPrice }}
-                  </p>
-                  <p>
-                    参数:
-                    <el-text size="large"
-                      >{{ item.participationNumber || 0 }}
-                    </el-text>
-                    <el-text size="large"> / </el-text>
-                    <el-text type="success" size="large">
-                      {{ item.doneNumber || 0 }}
-                    </el-text>
-                    <el-text size="large"> / </el-text>
-                    <el-text type="warning" size="large">
-                      {{ item.num || 0 }}</el-text
-                    ><el-text size="large"> / </el-text>
-                    <el-text size="large">{{
-                      item.limitedQuantity || 0
-                    }}</el-text>
-                  </p>
-                </div>
+              <!-- 步骤 -->
+              <div class="step">
+                <!-- 点 -->
+                <div class="spot"></div>
+                <!-- 线 -->
+                <div class="line"></div>
               </div>
-              <div class="viewAll">
-                <el-button type="primary" circle size="small" :icon="Right">
-                </el-button>
+              <div
+                :class="{
+                  'item box': true,
+                  select: index === data.select,
+                }"
+                @click="getClickList(item, index)"
+              >
+                <div class="item-left">
+                  <div class="tenant">
+                    <template v-if="item?.length > 1">
+                      <p class="tenantName">
+                        已分配数：
+                        <span class="tenantLength">{{ item?.length }}</span>
+                        <span :class="'type' + item.type">
+                          {{
+                            projectManagementOutsourceStore.typeList[
+                              item.type - 1
+                            ]
+                          }}
+                        </span>
+                      </p>
+                    </template>
+                    <template v-else>
+                      <p>
+                        <span class="tenantName">{{ item.tenantName }}</span>
+                        <span :class="'type' + item.type">
+                          {{
+                            projectManagementOutsourceStore.typeList[
+                              item.type - 1
+                            ]
+                          }}
+                        </span>
+                      </p>
+                      <el-text type="info"
+                        >ID：{{ item.allocationTenantId }}</el-text
+                      >
+                    </template>
+                  </div>
+                  <div class="price flex-b">
+                    <p>
+                      项目价:
+                      {{ item.currencyType === 1 ? "$" : "￥" }}
+                      {{ item.doMoneyPrice }}
+                    </p>
+                    <p>
+                      参数:
+                      <el-text size="large"
+                        >{{ item.participationNumber || 0 }}
+                      </el-text>
+                      <el-text size="large"> / </el-text>
+                      <el-text type="success" size="large">
+                        {{ item.doneNumber || 0 }}
+                      </el-text>
+                      <el-text size="large"> / </el-text>
+                      <el-text type="warning" size="large">
+                        {{ item.num || 0 }}</el-text
+                      ><el-text size="large"> / </el-text>
+                      <el-text size="large">{{
+                        item.limitedQuantity || 0
+                      }}</el-text>
+                    </p>
+                  </div>
+                </div>
+                <div class="viewAll" v-if="item.totality !=0">
+                  <el-button type="primary" circle size="small" :icon="Right">
+                  </el-button>
+                </div>
               </div>
             </div>
           </div>
@@ -387,9 +400,7 @@ defineExpose({ showEdit });
             }
 
             .tenantName {
-              font-family:
-                PingFang SC,
-                PingFang SC;
+              font-family: PingFang SC, PingFang SC;
               font-weight: 600;
               font-size: 1rem;
               color: #0f0f0f;
@@ -413,7 +424,7 @@ defineExpose({ showEdit });
 
     .link:nth-last-child(1) {
       .line {
-        display: none;
+        // display: none;
       }
     }
   }
@@ -437,9 +448,7 @@ defineExpose({ showEdit });
         border-radius: 0.5rem;
 
         .supplierName {
-          font-family:
-            PingFang SC,
-            PingFang SC;
+          font-family: PingFang SC, PingFang SC;
           font-weight: 600;
           font-size: 1rem;
           color: #0f0f0f;

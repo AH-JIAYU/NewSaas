@@ -41,7 +41,9 @@ const columns = ref([
     sortable: true,
     checked: true,
   },
+  { prop: "id", label: "点击ID", sortable: true, checked: true },
   { prop: "projectId", label: "项目ID", sortable: true, checked: true },
+
   { prop: "memberId", label: "会员ID", sortable: true, checked: true },
   {
     prop: "randomIdentityId",
@@ -77,6 +79,7 @@ const columns = ref([
 const queryForm = reactive<any>({
   //会员id
   memberId: "",
+  id:'',
   //随机身份id
   randomIdentityId: "",
   //会员组id
@@ -172,6 +175,7 @@ function onReset() {
   Object.assign(queryForm, {
     //会员id
     memberId: "",
+    id:'',
     //随机身份id
     randomIdentityId: "",
     //会员组id
@@ -205,6 +209,7 @@ onMounted(async () => {
     { index: 5, show: true, type: 'select', modelName: 'customerId', placeholder: '客户简称', option: 'customerId', optionLabel: 'customerAccord', optionValue: 'tenantCustomerId' },
     { index: 6, show: true, type: 'input', modelName: 'ip', placeholder: 'IP地址' },
     { index: 7, show: true, type: 'select', modelName: 'surveyStatus', placeholder: '调查状态', option: 'surveyStatus', optionLabel: 'label', optionValue: 'value' },
+    { index: 8, show: true, type: 'input', modelName: 'id', placeholder: '点击ID', event: 'keydown.enter'},
   ];
 });
 const formOption = {
@@ -236,6 +241,12 @@ function handleCurrentChange(val: any) {
       <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
         @selection-change="setSelectRows" @current-change="handleCurrentChange" highlight-current-row>
         <el-table-column align="left" type="selection" />
+        <el-table-column v-if="checkList.includes('id')" show-overflow-tooltip align="left" prop="id" fixed="left"
+          label="点击ID" width="200">
+          <template #default="{ row }">
+            <el-text class="fontColor">{{ row.id ? row.id : "-" }}</el-text>
+          </template>
+        </el-table-column>
         <el-table-column v-if="checkList.includes('randomIdentityId')" align="left" prop="randomIdentityId"
           show-overflow-tooltip label="随机身份" width="200">
           <template #default="{ row }">
@@ -269,7 +280,7 @@ function handleCurrentChange(val: any) {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('projectName')" align="left" prop="projectName" show-overflow-tooltip
-          label="项目名称">
+          label="项目名称" width="200">
           <template #default="{ row }">
             <el-text style="font-weight: 700;color: #333333;">{{ row.projectName ? row.projectName : "-" }}</el-text>
           </template>
@@ -297,7 +308,7 @@ function handleCurrentChange(val: any) {
               }}</el-text>
           </template>
         </el-table-column> -->
-        <el-table-column v-if="checkList.includes('memberName')" width="100" align="left" prop="memberName"
+        <el-table-column v-if="checkList.includes('memberName')" width="200" align="left" prop="memberName"
           show-overflow-tooltip label="部门">
           <template #default="{ row }">
             <div v-if="row.memberName" class="hoverSvg">
@@ -316,7 +327,7 @@ function handleCurrentChange(val: any) {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('allocationType')" align="left" show-overflow-tooltip width="100"
-          label="分配类型">
+          label="分配类型" fixed="right">
           <template #default="{ row }">
             <el-tag effect="plain" type="info" v-if="row.allocationType === 1"> 未分配 </el-tag>
             <el-tag style="background-color: #626aef;color: #fff;" v-if="row.allocationType === 2">
@@ -327,8 +338,8 @@ function handleCurrentChange(val: any) {
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('doMoneyPrice')" width="80" align="left" prop="h"
-          show-overflow-tooltip label="项目价">
+        <el-table-column v-if="checkList.includes('doMoneyPrice')" width="120" align="left" prop="h"
+          show-overflow-tooltip label="项目价" fixed="right">
           <template #default="{ row }">
             <el-text>
               <CurrencyType />
@@ -338,8 +349,8 @@ function handleCurrentChange(val: any) {
             </el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('memberPrice')" width="110" align="left" prop="h"
-          show-overflow-tooltip label="成本价(会员)">
+        <el-table-column v-if="checkList.includes('memberPrice')" width="120" align="left" prop="h"
+          show-overflow-tooltip label="成本价(会员)" fixed="right">
           <template #default="{ row }">
             <el-text>
               <CurrencyType />
@@ -350,7 +361,7 @@ function handleCurrentChange(val: any) {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('ipBelong')" align="left" width="150" prop="ipBelong"
-          show-overflow-tooltip label="区域/IP">
+          show-overflow-tooltip label="区域/IP" fixed="right">
           <template #default="{ row }">
             <div v-if="row.ipBelong" class="hoverSvg">
               <el-tag >{{ row.ipBelong.split("/")[1]
@@ -368,7 +379,7 @@ function handleCurrentChange(val: any) {
             <el-text v-else>-</el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('surveyTime')" align="left" show-overflow-tooltip label="调查时间">
+        <el-table-column v-if="checkList.includes('surveyTime')" align="left" show-overflow-tooltip label="调查时间" width="120" fixed="right">
           <template #default="{ row }">
             <el-tooltip placement="top">
               <template #content>
@@ -384,10 +395,10 @@ function handleCurrentChange(val: any) {
           </template>
         </el-table-column>
         <ElTableColumn v-if="checkList.includes('surveyStatus')" align="left" show-overflow-tooltip prop=""
-          label="调查状态">
+          label="调查状态" width="100" fixed="right">
           <template #default="{ row }">
             <el-tag effect="dark" style="background-color: #FB6868;border: none;" v-if="row.surveyStatus === 3"
-              class="mx-1" type="primary">配额满</el-tag>
+              class="mx-1" type="primary" fixed="right">配额满</el-tag>
             <!-- <el-tag effect="dark" style="background-color: #379AFF;border: none;" v-if="row.surveyStatus === 1"
               class="mx-1" type="success">完成</el-tag> -->
             <el-tag effect="dark" style="background-color: #FB6868;border: none;" v-if="row.surveyStatus === 2"
