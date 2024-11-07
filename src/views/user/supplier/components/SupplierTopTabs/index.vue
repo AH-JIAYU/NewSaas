@@ -311,7 +311,7 @@ nextTick(() => {
               </el-col> -->
             </el-row>
           </el-card>
-          <el-card class="box-card">
+          <!-- <el-card class="box-card">
             <template #header>
               <div class="card-header">
                 <span>财务信息</span>
@@ -337,7 +337,7 @@ nextTick(() => {
                 </el-form-item>
               </el-col>
               <!-- 当付款方式为银行卡支付时显示 银行名称 -->
-              <el-col :span="8" v-if="props.leftTab.payMethod === 1">
+             <!-- <el-col :span="8" v-if="props.leftTab.payMethod === 1">
                 <el-form-item label="银行名称">
                   <el-input v-model="props.leftTab.bankName" />
                 </el-form-item>
@@ -353,7 +353,7 @@ nextTick(() => {
                 </el-form-item>
               </el-col>
             </el-row>
-          </el-card>
+          </el-card> -->
         </ElForm>
       </el-tab-pane>
     </el-tabs>
