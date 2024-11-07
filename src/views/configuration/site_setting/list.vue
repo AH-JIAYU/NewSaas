@@ -354,18 +354,13 @@ function onSubmit() {
               </el-col>
               <el-col :span="24">
                 <el-form-item label="默认官网域名" prop="">
-                  <el-text class="mx-1">{{ form.personalizedDomainName }}</el-text>
+                  <el-text class="mx-1" v-if="form.personalizedDomainName">{{ form.personalizedDomainName }}</el-text>
                   <el-button class="copy" type="primary" plain size="small" @click="copyToClipboard">复制</el-button>
                 </el-form-item>
               </el-col>
               <el-col :span="24">
-                <el-form-item label="外包项目别名">
-                  <el-input v-model="form.projectOutAlias" style="width: 22.4375rem" />
-                </el-form-item>
-              </el-col>
-              <el-col :span="24">
                 <el-form-item label="域名配置" prop="topLevelDomainName">
-                  <el-text class="mx-1">{{ form.topLevelDomainName }}</el-text>
+                  <el-text class="mx-1" v-if="form.topLevelDomainName">{{ form.topLevelDomainName }}</el-text>
                   <div v-if="form.topLevelDomainName">
                     <div v-if="isAnalysis">
                       <span class="green"></span><span style="margin-right: 10px;">已生效</span>
@@ -377,14 +372,16 @@ function onSubmit() {
                   <el-button class="copy" @click="record" type="primary" size="small" plain>CNAME配置</el-button>
                 </el-form-item>
               </el-col>
-              <el-col style="margin-bottom: 1rem;" :span="24"><span
-                  style="margin-left: 1.625rem; color: #606266; font-size: 14px;">网址Logo</span></el-col>
+              <!-- <el-col style="margin-bottom: 1rem;" :span="24">
+                <span
+                  style="margin-left: 1.625rem; color: #606266; font-size: 14px;">网址Logo</span>
+                </el-col> -->
               <el-col :span="24">
                 <ElFormItem style="
                 display: flex;
                 justify-content: center;
-                align-items: center;
-              " label="">
+
+              " label="网址Logo">
                   <el-upload :class="{ hide_box: fileList.length }" ref="uploadRef" drag v-model:file-list="fileList"
                     :headers="headers" :action="Url" :auto-upload="false" list-type="picture-card" :limit="1"
                     :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :on-success="handleSuccess"
@@ -412,6 +409,11 @@ function onSubmit() {
                     <img w-full :src="dialogImageUrl" alt="Preview Image" />
                   </el-dialog>
                 </ElFormItem>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="外包项目别名">
+                  <el-input v-model="form.projectOutAlias" style="width: 22.4375rem" />
+                </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item>
