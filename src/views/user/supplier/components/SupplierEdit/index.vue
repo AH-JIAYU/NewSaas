@@ -93,7 +93,6 @@ async function validate() {
 // 确定
 async function save() {
   // 校验
-  console.log("222");
   //删除财务信息，payMethod，accountName，collectionAccount，bankName，
   leftTabsData.forEach((item:any) => {
     delete item.payMethod;
