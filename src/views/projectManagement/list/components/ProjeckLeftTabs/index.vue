@@ -109,7 +109,7 @@ defineExpose({ activeLeftTab });
 
 <template>
   <div>
-    <el-button :class="props.title === '新增' ? 'button' : 'button hideButton'" :disabled="localLeftTab.length > 29 ||
+    <el-button :class="props.title === '新增' ? 'button' : 'button'" :disabled="localLeftTab.length > 29 ||
       (props.title === '编辑' && localLeftTab[0].parentId !== '0')
       " @click="addLeftTab()">
       新增
