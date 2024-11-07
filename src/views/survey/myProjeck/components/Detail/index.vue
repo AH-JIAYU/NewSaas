@@ -25,9 +25,7 @@ async function showEdit(row: any) {
       const res = await api.getQuotaProjectInfo({ projectId: row.projectId })
       form.value = res.data
       if (form.value.descriptionUrl !== '') {
-        console.log('form.value', form.value)
         const urlArr = form.value.descriptionUrl.split(',');
-        console.log('urlArr', urlArr)
         srcList.value = urlArr
         urlArr.map(async (item: any) => {
           const imgres: any = await fileApi.detail({
@@ -35,7 +33,6 @@ async function showEdit(row: any) {
           })
           imgUrl.value.push(imgres.data.fileUrl)
         })
-        console.log('srcList.value', srcList.value)
       }
       loading.value = false
     }
