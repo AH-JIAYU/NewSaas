@@ -9,7 +9,6 @@ const useSettingsStore = defineStore(
   'settings',
   () => {
     const settings = ref(settingsDefault)
-
     const prefersColorScheme = window.matchMedia('(prefers-color-scheme: dark)')
     const currentColorScheme = ref<Exclude<Settings.app['colorScheme'], ''>>()
     watch(() => settings.value.app.colorScheme, (val) => {

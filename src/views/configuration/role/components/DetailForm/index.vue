@@ -121,7 +121,6 @@ defineExpose({
       try {
         // 同步选中的路由id
         params.menuId = treeRef.value!.getCheckedKeys(false);
-
         // 获取选中的所有子节点
         const tree = treeRef.value.getCheckedKeys();
         // 获取所有半选的主节点
@@ -129,6 +128,7 @@ defineExpose({
         // 组合一下
         const menupath = tree.concat(halltree);
         params.menuId = menupath;
+        form.value.menuId = menupath
         formRef.value.validate(async (valid: any) => {
           if (!valid) {
             loading.value = false; // 验证不通过，停止加载

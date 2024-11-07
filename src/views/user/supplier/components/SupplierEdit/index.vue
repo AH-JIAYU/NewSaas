@@ -39,7 +39,7 @@ async function showEdit(row: any) {
         tenantSupplierId: row.tenantSupplierId,
       })
     );
-    data.countryType = data.subordinateCountryId === '343' ? 1 : 2;
+    data.countryType = data.subordinateCountryId === "343" ? 1 : 2;
     initializeLeftTabsData(data);
   }
   validateAll.value = [];
@@ -93,6 +93,14 @@ async function validate() {
 // 确定
 async function save() {
   // 校验
+  //删除财务信息，payMethod，accountName，collectionAccount，bankName，
+  leftTabsData.forEach((item:any) => {
+    delete item.payMethod;
+    delete item.accountName;
+    delete item.collectionAccount;
+    delete item.bankName;
+  });
+
   await validate();
   if (validateAll.value.every((item: any) => item === "fulfilled")) {
     // // 客户名称是否重复
@@ -109,7 +117,7 @@ async function save() {
           });
       } else {
         // // 更新接口
-        delete leftTabsData[0].getTenantCustomerOperationInfosList
+        delete leftTabsData[0].getTenantCustomerOperationInfosList;
         const { status } = await submitLoading(api.edit(leftTabsData[0]));
         status === 1 &&
           ElMessage.success({
@@ -165,14 +173,11 @@ defineExpose({
       <template #footer>
         <div class="flex-c">
           <el-button @click="close"> 取消 </el-button>
-        <el-button v-if="title === '新增'" type="warning" @click="staging">
-          暂存
-        </el-button>
-        <el-button type="primary" @click="save"> 确定 </el-button>
-
-
+          <el-button v-if="title === '新增'" type="warning" @click="staging">
+            暂存
+          </el-button>
+          <el-button type="primary" @click="save"> 确定 </el-button>
         </div>
-
       </template>
     </el-drawer>
   </div>
@@ -183,5 +188,4 @@ defineExpose({
   justify-content: center;
   align-items: center;
 }
-
 </style>

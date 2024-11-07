@@ -58,7 +58,6 @@ const rules = ref<any>({
 });
 // 显隐
 async function showEdit(row: any, type: string) {
-  console.log("row", row);
   data.value.list = [{ ...row }]; // 表格
   // 重新分配
   if (type === "reassign") {
