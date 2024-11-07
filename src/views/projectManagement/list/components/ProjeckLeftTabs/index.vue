@@ -119,16 +119,14 @@ defineExpose({ activeLeftTab });
       <el-tab-pane v-for="(leftTab, index) in localLeftTab" :key="index" style="position: relative"
         :closable="localLeftTab.length !== 1" :name="index">
         <template #label>
-          <div  class="flex-c"     :class="props.validateAll[index] &&
+          <div  class="flex-c"  :class="props.validateAll[index] &&
         props.validateAll[index] === 'rejected'
         ? 'validateRejected'
         : ''
       ">
-            <SvgIcon
-                style="margin-right: 5px;"
-                name="main"
-                v-if="index ==0"
-              />
+
+      <img src="../../../../../assets/images/main.png" alt="" style="margin-right: 5px;width: 16px;height: 16px;"  v-if="index ==0">
+
               <span> {{ leftTab.name || "项目名称" }}</span>
 
           </div>
@@ -189,7 +187,7 @@ defineExpose({ activeLeftTab });
 }
 .flex-c {
   display: flex;
-  justify-content: start;
+  justify-content: center;
   align-items: center;
   width: 100%;
 }
