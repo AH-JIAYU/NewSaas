@@ -119,12 +119,18 @@ defineExpose({ activeLeftTab });
       <el-tab-pane v-for="(leftTab, index) in localLeftTab" :key="index" style="position: relative"
         :closable="localLeftTab.length !== 1" :name="index">
         <template #label>
-          <div :class="props.validateAll[index] &&
+          <div  class="flex-c"     :class="props.validateAll[index] &&
         props.validateAll[index] === 'rejected'
         ? 'validateRejected'
         : ''
       ">
-            {{ leftTab.name || "项目名称" }}
+            <SvgIcon
+                style="margin-right: 5px;"
+                name="main"
+                v-if="index ==0"
+              />
+              <span> {{ leftTab.name || "项目名称" }}</span>
+
           </div>
         </template>
         <div style="
@@ -180,5 +186,11 @@ defineExpose({ activeLeftTab });
   .editHideCloseButton .is-icon-close {
     display: none !important;
   }
+}
+.flex-c {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  width: 100%;
 }
 </style>
