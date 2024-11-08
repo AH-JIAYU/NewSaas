@@ -85,45 +85,51 @@ defineExpose({
     return new Promise<void>((resolve) => {
       formRef.value &&
         formRef.value.validate((valid) => {
-          const judge = form.value.addMemberSettlementInfoList.every((item: any) => {
-            return typeof (item.settlementAmount) === "number" && item.settlementAmount >= form.value.minimumAmount
-          })
+          // const judge = form.value.addMemberSettlementInfoList.every((item: any) => {
+          //   return typeof (item.settlementAmount) === "number" && item.settlementAmount >= form.value.minimumAmount
+          // })
+          // if (form.value.settlementType === 2) {
+          //   for (let item of form.value.addMemberSettlementInfoList) {
+          //     if (item.settlementAmount <= 0) {
+          //       ElMessage.warning({
+          //         message: "结算金额需要输入正数",
+          //         center: true,
+          //       });
+          //       return;  // 直接停止整个 submit 函数的执行
+          //     }
+          //   }
+          //   form.value.settlementAmount = '';
+          // } else {
+          //   form.value.addMemberSettlementInfoList = []
+          // }
           if (form.value.settlementType === 2) {
             for (let item of form.value.addMemberSettlementInfoList) {
-              if (item.settlementAmount <= 0) {
-                ElMessage.warning({
-                  message: "结算金额需要输入正数",
-                  center: true,
-                });
-                return;  // 直接停止整个 submit 函数的执行
+              if (!item.settlementAmount) {
+                item.settlementAmount = form.value.minimumAmount
               }
             }
             form.value.settlementAmount = '';
           } else {
             form.value.addMemberSettlementInfoList = []
+            if (!form.value.settlementAmount) {
+              form.value.settlementAmount = form.value.minimumAmount
+            }
           }
           if (valid) {
-            if (judge && form.value.settlementAmount >= form.value.minimumAmount) {
-              try {
-                loading.value = true;
-                api.create(form.value).then(() => {
-                  loading.value = false;
-                  ElMessage.success({
-                    message: "新增成功",
-                    center: true,
-                  });
-                  resolve();
-                });
-              } catch (error) {
-
-              } finally {
+            try {
+              loading.value = true;
+              api.create(form.value).then(() => {
                 loading.value = false;
-              }
-            } else {
-              ElMessage.warning({
-                message: "“结算金额”小于“最低结算金额”",
-                center: true,
+                ElMessage.success({
+                  message: "新增成功",
+                  center: true,
+                });
+                resolve();
               });
+            } catch (error) {
+
+            } finally {
+              loading.value = false;
             }
           }
         });
@@ -145,7 +151,7 @@ defineExpose({
         <ElFormItem label="最低结算额度">
           <ElInput disabled placeholder="" :value="form.minimumAmount" />
         </ElFormItem>
-        <ElFormItem label="结算金额" prop="settlementAmount">
+        <ElFormItem label="结算金额">
           <ElInput v-model="form.settlementAmount" placeholder="" />
         </ElFormItem>
       </template>
