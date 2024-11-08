@@ -335,8 +335,18 @@ function handleCurrentChange(val: any) {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('memberGroupName')" align="left" prop="memberGroupName"
-          show-overflow-tooltip label="部门"><template #default="{ row }">
-            {{ row.memberGroupName ? row.memberGroupName : '-' }} </template></el-table-column>
+          show-overflow-tooltip label="部门">
+          <template #default="{ row }">
+            <div style="display: flex; align-items: center">
+                   <img src="../../../assets/images/guan.png" alt="" v-if="row.memberGroupName && row.enableChargePerson ==1" style="margin-right: 4px;width:18px;height: 18px;">
+                    <el-text class="fontC-System" >
+                      {{ row.memberGroupName ? row.memberGroupName : '-' }}
+                    </el-text>
+                  </div>
+          </template>
+
+
+          </el-table-column>
         <el-table-column v-if="checkList.includes('B2B|B2C')" width="100" align="left" show-overflow-tooltip label="B2B/B2C">
           <template #default="{ row }">
             <div class="isB2b " style="cursor: pointer;">
