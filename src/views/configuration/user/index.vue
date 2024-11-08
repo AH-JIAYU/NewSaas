@@ -10,7 +10,7 @@ import { ref } from "vue";
 import api from "@/api/modules/configuration_manager";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary";
 import usePositionManageStore from "@/store/modules/position_manage";
-import empty from '@/assets/images/empty.png'
+import empty from "@/assets/images/empty.png";
 import DictionaryItemDia from "./components/dictionaryItemDialog/index.vue";
 import Detail from "./components/Detail/index.vue";
 
@@ -94,7 +94,7 @@ const dataForm = ref<any>({
   loading: false,
 });
 // 重置密码数据
-const resetList = ref<any>()
+const resetList = ref<any>();
 // tableRef
 const userItemRef = ref();
 // 字典下的数据
@@ -130,7 +130,7 @@ const userForm = ref<any>({
   },
 });
 // 获取树
-const treeRef = ref<any>()
+const treeRef = ref<any>();
 // 获取用户
 async function getUserList() {
   const params = {
@@ -149,7 +149,8 @@ onMounted(async () => {
     // 区域
     filterCountry.value = await useStoreCountry.getCountry();
     // 职位
-    positionManageList.value = await usePositionManage?.getPositionManage() || [];
+    positionManageList.value =
+      (await usePositionManage?.getPositionManage()) || [];
     // 获取列表数据
     getUserList();
     columns.value.forEach((item: any) => {
@@ -160,7 +161,6 @@ onMounted(async () => {
     // loading加载结束
     dataForm.value.loading = false;
   } catch (error) {
-
   } finally {
     dataForm.value.loading = false;
   }
@@ -208,7 +208,6 @@ function onChangeStatus(row: any) {
               return resolve(false);
             });
         } catch (error) {
-
         } finally {
           dataForm.value.loading = false;
         }
@@ -222,29 +221,29 @@ function onChangeStatus(row: any) {
 function dictionaryClick(data: Dict) {
   pagination.value.page = 1;
   if (data?.children?.length) {
-    userForm.value.search.id = ''
-    userForm.value.search.departmentId = data.id
-    getUserList()
+    userForm.value.search.id = "";
+    userForm.value.search.departmentId = data.id;
+    getUserList();
   } else {
-    userForm.value.search.id = data.id
-    userForm.value.search.departmentId = ''
-    getUserList()
+    userForm.value.search.id = data.id;
+    userForm.value.search.departmentId = "";
+    getUserList();
   }
 }
 
 // 每页数量切换
 function sizeChange(size: number) {
   onSizeChange(size).then(() => {
-    userForm.value.search.limit = size
-    getUserList()
+    userForm.value.search.limit = size;
+    getUserList();
   });
 }
 
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
   onCurrentChange(page).then(() => {
-    userForm.value.search.page = page
-    getUserList()
+    userForm.value.search.page = page;
+    getUserList();
   });
 }
 
@@ -264,28 +263,27 @@ function onCreate(row?: any) {
 }
 // 选中列表
 const selectChange = (val: any) => {
-  resetList.value = val[0]
-}
+  resetList.value = val[0];
+};
 // 重置密码
 function onResetPassword() {
-  if(resetList.value) {
-    const { userName, id } = resetList.value
-  ElMessageBox.confirm(
-    `确认将「${userName}」的密码重置为 “123456” 吗？`,
-    "确认信息"
-  )
-    .then(() => {
-      api.reset({ id: id }).then(() => {
-        ElMessage.success({
-          message: "重置成功",
-          center: true,
+  if (resetList.value) {
+    const { userName, id } = resetList.value;
+    ElMessageBox.confirm(
+      `确认将「${userName}」的密码重置为 “123456” 吗？`,
+      "确认信息"
+    )
+      .then(() => {
+        api.reset({ id: id }).then(() => {
+          ElMessage.success({
+            message: "重置成功",
+            center: true,
+          });
+          getUserList();
         });
-        getUserList();
-      });
-    })
-    .catch(() => { });
+      })
+      .catch(() => {});
   }
-
 }
 // 修改
 function onEdit(row: any) {
@@ -321,20 +319,49 @@ function handleCurrentChange(val: any) {
     <div class="page-main">
       <div class="leftTree">
         <div v-if="dataForm.tree.length" class="leftData" :span="3">
-          <el-tree style="max-width: 37.5rem; min-height: 45.4375rem; padding: 10px;" :data="dataForm.tree"
-            ref="treeRef" node-key="id" default-expand-all :expand-on-click-node="false" :props="defaultProps"
-            @node-click="dictionaryClick" />
+          <el-tree
+            style="max-width: 37.5rem; min-height: 45.4375rem; padding: 10px"
+            :data="dataForm.tree"
+            ref="treeRef"
+            node-key="id"
+            default-expand-all
+            :expand-on-click-node="false"
+            :props="defaultProps"
+            @node-click="dictionaryClick"
+          />
         </div>
         <PageMain>
           <div v-loading="dataForm.loading" class="dataForm-container">
             <ElSpace>
-              <ElInput v-model="userForm.search.id" placeholder="员工ID" clearable style="width: 12.5rem"
-                @keydown.enter="getUserList" />
-              <ElInput v-model="userForm.search.userName" placeholder="用户名" clearable style="width: 12.5rem"
-                @keydown.enter="getUserList" />
-              <el-select v-model="userForm.search.active" value-key="" placeholder="状态" style="width: 12.5rem" clearable
-                filterable @change="getUserList">
-                <el-option v-for="item in activeList" :key="item.value" :label="item.label" :value="item.value">
+              <ElInput
+                v-model="userForm.search.id"
+                placeholder="员工ID"
+                clearable
+                style="width: 12.5rem"
+                @keydown.enter="getUserList"
+              />
+              <ElInput
+                v-model="userForm.search.userName"
+                placeholder="用户名"
+                clearable
+                style="width: 12.5rem"
+                @keydown.enter="getUserList"
+              />
+              <el-select
+                v-model="userForm.search.active"
+                value-key=""
+                placeholder="状态"
+                style="width: 12.5rem"
+                clearable
+                filterable
+                @change="getUserList"
+              >
+                <el-option
+                  v-for="item in activeList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
                 </el-option>
               </el-select>
               <ElButton type="primary" @click="getUserList">
@@ -348,62 +375,103 @@ function handleCurrentChange(val: any) {
                 </template>
               </ElButton>
             </ElSpace>
-            <el-row style="margin-bottom: .3125rem" :gutter="24">
-              <el-col style="margin-bottom: 1.5625rem;" :span="10">
+            <el-row style="margin-bottom: 0.3125rem" :gutter="24">
+              <el-col style="margin-bottom: 1.5625rem" :span="10">
                 <el-button type="primary" size="default" @click="onCreate">
                   新增
                 </el-button>
-                <el-button type="primary" size="default" @click="onResetPassword">
+                <el-button
+                  type="primary"
+                  size="default"
+                  @click="onResetPassword"
+                >
                   重置密码
                 </el-button>
               </el-col>
-              <el-col style="display: flex; justify-content: flex-end" :span="14">
+              <el-col
+                style="display: flex; justify-content: flex-end"
+                :span="14"
+              >
                 <el-button size="default" @click=""> 导出 </el-button>
-                <TabelControl v-model:border="userForm.border" v-model:tableAutoHeight="userForm.tableAutoHeight"
-                  v-model:checkList="userForm.checkList" v-model:columns="columns"
-                  v-model:line-height="userForm.lineHeight" v-model:stripe="userForm.stripe" style="margin-left: .75rem"
-                  @query-data="getUserList" />
+                <TabelControl
+                  v-model:border="userForm.border"
+                  v-model:tableAutoHeight="userForm.tableAutoHeight"
+                  v-model:checkList="userForm.checkList"
+                  v-model:columns="columns"
+                  v-model:line-height="userForm.lineHeight"
+                  v-model:stripe="userForm.stripe"
+                  style="margin-left: 0.75rem"
+                  @query-data="getUserList"
+                />
               </el-col>
             </el-row>
-            <ElTable ref="userItemRef" :data="userForm.dataList" :border="userForm.border" :size="userForm.lineHeight"
-              :stripe="userForm.stripe" highlight-current-row height="100%" @sort-change="sortChange"    @current-change="handleCurrentChange"
-              @selection-change="userForm.selectionDataList = $event" row-key="id" default-expand-all
-              @select="selectChange">
+            <ElTable
+              ref="userItemRef"
+              :data="userForm.dataList"
+              :border="userForm.border"
+              :size="userForm.lineHeight"
+              :stripe="userForm.stripe"
+              highlight-current-row
+              height="100%"
+              @sort-change="sortChange"
+              @current-change="handleCurrentChange"
+              @selection-change="userForm.selectionDataList = $event"
+              row-key="id"
+              default-expand-all
+              @select="selectChange"
+            >
               <ElTableColumn type="selection" align="left" fixed />
-              <ElTableColumn v-if="userForm.checkList.includes('active')" align="left" prop="active" label="状态" width="84">
+              <ElTableColumn
+                v-if="userForm.checkList.includes('active')"
+                align="left"
+                prop="active"
+                label="状态"
+                width="84"
+              >
                 <template #default="scope">
-                  <ElSwitch v-model="scope.row.active" inline-prompt active-text="启用" inactive-text="禁用"
-                    :before-change="() => onChangeStatus(scope.row)" />
+                  <ElSwitch
+                    v-model="scope.row.active"
+                    inline-prompt
+                    active-text="启用"
+                    inactive-text="禁用"
+                    :before-change="() => onChangeStatus(scope.row)"
+                  />
                 </template>
               </ElTableColumn>
-              <ElTableColumn v-if="userForm.checkList.includes('id')" align="left" width="280" prop="id" label="员工ID">
+              <ElTableColumn
+                v-if="userForm.checkList.includes('id')"
+                align="left"
+                width="280"
+                prop="id"
+                label="员工ID"
+              >
                 <template #default="{ row }">
                   <div class="copyId tableSmall">
                     <div class="id oneLine idFont">
                       <el-tooltip
-                  effect="dark"
-                  :content="row.id"
-                  placement="top-start"
-                >
-                  {{ row.id }}
-                </el-tooltip>
-
-
-
-                      </div>
-                      <copy
-                :content="row.id"
-                :class="{
-                  rowCopy: 'rowCopy',
-                  current: row.id === current,
-                }"
-              />
-
+                        effect="dark"
+                        :content="row.id"
+                        placement="top-start"
+                      >
+                        {{ row.id }}
+                      </el-tooltip>
+                    </div>
+                    <copy
+                      :content="row.id"
+                      :class="{
+                        rowCopy: 'rowCopy',
+                        current: row.id === current,
+                      }"
+                    />
                   </div>
                 </template>
               </ElTableColumn>
-              <ElTableColumn v-if="userForm.checkList.includes('userName')" align="left"  prop="userName"
-                label="用户名">
+              <ElTableColumn
+                v-if="userForm.checkList.includes('userName')"
+                align="left"
+                prop="userName"
+                label="用户名"
+              >
                 <template #default="{ row }">
                   <el-text class="tableBig">
                     {{ row.userName ? row.userName : "-" }}
@@ -418,39 +486,69 @@ function handleCurrentChange(val: any) {
                   </el-text>
                 </template>
               </ElTableColumn> -->
-              <ElTableColumn v-if="userForm.checkList.includes('phoneNumber')" align="left" width="170" prop="phone"
-                label="电话号码">
+              <ElTableColumn
+                v-if="userForm.checkList.includes('phoneNumber')"
+                align="left"
+                width="170"
+                prop="phone"
+                label="电话号码"
+              >
                 <template #default="{ row }">
                   <el-text class="fontC-System">
                     {{ row.phoneNumber ? row.phoneNumber : "-" }}
                   </el-text>
                 </template>
               </ElTableColumn>
-              <ElTableColumn v-if="userForm.checkList.includes('email')" align="left" width="180" prop="email"
-                label="邮箱">
+              <ElTableColumn
+                v-if="userForm.checkList.includes('email')"
+                align="left"
+                width="180"
+                prop="email"
+                label="邮箱"
+              >
                 <template #default="{ row }">
                   <el-text class="fontC-System">
                     {{ row.email ? row.email : "-" }}
                   </el-text>
                 </template>
               </ElTableColumn>
-              <ElTableColumn v-if="userForm.checkList.includes('departmentId')" align="left" prop="departmentId"
-                label="部门">
+              <ElTableColumn
+                v-if="userForm.checkList.includes('departmentId')"
+                align="left"
+                prop="departmentId"
+                label="部门"
+              >
+                <template #default="{ row }">
+                  <div style="display: flex; align-items: center">
+                   <img src="../../../assets/images/guan.png" alt="" v-if="row.organizationalStructureName" style="margin-right: 4px;width:18px;height: 18px;">
+                    <el-text class="fontC-System" >
+                      {{
+                        row.organizationalStructureName
+                          ? row.organizationalStructureName
+                          : "-"
+                      }}
+                    </el-text>
+                  </div>
+                </template>
+              </ElTableColumn>
+              <ElTableColumn
+                v-if="userForm.checkList.includes('role')"
+                align="left"
+                prop="role"
+                label="角色"
+              >
                 <template #default="{ row }">
                   <el-text class="fontC-System">
-                    {{ row.organizationalStructureName ? row.organizationalStructureName : '-' }}
+                    {{ row.role ? row.role : "-" }}
                   </el-text>
                 </template>
               </ElTableColumn>
-              <ElTableColumn v-if="userForm.checkList.includes('role')" align="left" prop="role"
-                label="角色">
-                <template #default="{ row }">
-                  <el-text class="fontC-System">
-                    {{ row.role ? row.role : '-' }}
-                  </el-text>
-                </template>
-              </ElTableColumn>
-              <ElTableColumn v-if="userForm.checkList.includes('positionId')" align="left" prop="positionId" label="职位">
+              <ElTableColumn
+                v-if="userForm.checkList.includes('positionId')"
+                align="left"
+                prop="positionId"
+                label="职位"
+              >
                 <template #default="{ row }">
                   <el-text v-if="row.positionId" class="fontC-System">
                     <el-text v-for="item in positionManageList">
@@ -462,12 +560,27 @@ function handleCurrentChange(val: any) {
                   <el-text v-else class="fontC-System">-</el-text>
                 </template>
               </ElTableColumn>
-              <ElTableColumn label="操作" fixed="right" width="200" align="left">
+              <ElTableColumn
+                label="操作"
+                fixed="right"
+                width="200"
+                align="left"
+              >
                 <template #default="scope">
-                  <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">
+                  <ElButton
+                    type="primary"
+                    size="small"
+                    plain
+                    @click="onEdit(scope.row)"
+                  >
                     编辑
                   </ElButton>
-                  <ElButton type="warning" size="small" plain @click="onDetail(scope.row)">
+                  <ElButton
+                    type="warning"
+                    size="small"
+                    plain
+                    @click="onDetail(scope.row)"
+                  >
                     详情
                   </ElButton>
                 </template>
@@ -476,16 +589,33 @@ function handleCurrentChange(val: any) {
                 <el-empty :image="empty" :image-size="300" />
               </template>
             </ElTable>
-            <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
-              :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-              background @size-change="sizeChange" @current-change="currentChange" />
+            <ElPagination
+              :current-page="pagination.page"
+              :total="pagination.total"
+              :page-size="pagination.size"
+              :page-sizes="pagination.sizes"
+              :layout="pagination.layout"
+              :hide-on-single-page="false"
+              class="pagination"
+              background
+              @size-change="sizeChange"
+              @current-change="currentChange"
+            />
           </div>
         </PageMain>
-
       </div>
-      <DictionaryItemDia v-if="userForm.dialog.visible" :id="userForm.dialog.id" v-model="userForm.dialog.visible"
-        :catalogue-id="userForm.search.catalogueId" :parent-id="userForm.dialog.parentId" :level="userForm.dialog.level"
-        :tree="dataForm.tree" :dataList="userForm.dataList" :row="userForm.row" @success="getUserList" />
+      <DictionaryItemDia
+        v-if="userForm.dialog.visible"
+        :id="userForm.dialog.id"
+        v-model="userForm.dialog.visible"
+        :catalogue-id="userForm.search.catalogueId"
+        :parent-id="userForm.dialog.parentId"
+        :level="userForm.dialog.level"
+        :tree="dataForm.tree"
+        :dataList="userForm.dataList"
+        :row="userForm.row"
+        @success="getUserList"
+      />
       <Detail ref="detailRef" />
     </div>
   </div>
@@ -493,18 +623,18 @@ function handleCurrentChange(val: any) {
 
 <style lang="scss" scoped>
 .copyId .idFont {
-font-size: .875rem;
+  font-size: 0.875rem;
 }
-.copyId  .current {
-    display: block !important;
-  }
+.copyId .current {
+  display: block !important;
+}
 .rowCopy {
   width: 20px;
   display: none;
 }
-.copyId  .current {
-    display: block !important;
-  }
+.copyId .current {
+  display: block !important;
+}
 .el-table__row:hover .rowCopy {
   display: block;
 }
@@ -546,7 +676,7 @@ font-size: .875rem;
     }
 
     .search {
-      margin: .9375rem 0;
+      margin: 0.9375rem 0;
     }
 
     .tree {
@@ -558,7 +688,7 @@ font-size: .875rem;
           height: 3.75rem;
         }
 
-        .is-current>.el-tree-node__content {
+        .is-current > .el-tree-node__content {
           background-color: var(--el-color-primary-light-9);
         }
 
@@ -572,14 +702,14 @@ font-size: .875rem;
           height: 100%;
 
           .label {
-            width: calc(100% - .625rem);
+            width: calc(100% - 0.625rem);
             color: var(--el-text-color-primary);
 
             @include text-overflow;
           }
 
           .code {
-            width: calc(100% - .625rem);
+            width: calc(100% - 0.625rem);
             color: var(--el-text-color-placeholder);
 
             @include text-overflow;
@@ -594,12 +724,12 @@ font-size: .875rem;
           .actions {
             position: absolute;
             top: 50%;
-            right: .625rem;
+            right: 0.625rem;
             display: none;
             transform: translateY(-50%);
 
             .el-button {
-              padding: .3125rem .5rem;
+              padding: 0.3125rem 0.5rem;
             }
           }
         }
@@ -626,7 +756,7 @@ font-size: .875rem;
     }
 
     .el-table {
-      margin: .9375rem 0;
+      margin: 0.9375rem 0;
     }
   }
 }
@@ -641,12 +771,10 @@ font-size: .875rem;
 
   .rightData {
     width: 86.2%;
-    padding: .625rem;
+    padding: 0.625rem;
     background-color: #fff;
   }
 }
-
-
 
 :deep(.page-main) {
   height: 100% !important;
@@ -658,7 +786,7 @@ font-size: .875rem;
   align-items: center;
   width: 100%;
 
-  >div:nth-of-type(1) {
+  > div:nth-of-type(1) {
     width: calc(100% - 25px);
     flex-shrink: 0;
   }

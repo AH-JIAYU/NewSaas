@@ -444,6 +444,7 @@ function handleCurrentChange(val: any) {
               prop="tenantName"
               align="left"
               label="租户名称"
+               width="200"
             >
               <template #default="{ row }">
                 <div class="tableBig">{{ row.tenantName }}</div>
@@ -476,7 +477,7 @@ function handleCurrentChange(val: any) {
               v-if="checkList.includes('allocationType')"
               align="left"
               label="分配"
-              width="90"
+               width="120"
             >
               <template #default="{ row }">
                 <el-button
@@ -518,7 +519,7 @@ function handleCurrentChange(val: any) {
               show-overflow-tooltip
               align="left"
               label="项目价"
-              width="100"
+              width="120"
             >
               <template #default="{ row }">
                 <div><CurrencyType />{{ row.doMoneyPrice || 0 }}</div>
@@ -530,6 +531,7 @@ function handleCurrentChange(val: any) {
               prop="projectName"
               align="left"
               label="项目名称"
+               width="200"
             >
               <template #default="{ row }">
                 <div class="tableBig">{{ row.projectName }}</div>

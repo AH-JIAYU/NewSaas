@@ -643,8 +643,12 @@ function handleCurrentChange(val: any) {
               </template>
             </el-table-column>
             <el-table-column v-if="checkList.includes('memberGroupChildName')" align="left" prop="memberGroupName"
-              show-overflow-tooltip label="部门"  width="120"><template #default="{ row }">
+              show-overflow-tooltip label="部门"  width="140">
+              <template #default="{ row }">
+                <div style="display: flex; align-items: center">
+                  <img src="../../../assets/images/guan.png" alt="" v-if="row.memberGroupName &&row.enableChargePerson ==1" style="margin-right: 4px;width:18px;height: 18px;">
                 <p class="crudeTop">{{ row.memberGroupName ? row.memberGroupName : "-" }}</p>
+                </div>
               </template>
             </el-table-column>
             <el-table-column v-if="checkList.includes('B2B|B2C')" width="120" align="left" show-overflow-tooltip
