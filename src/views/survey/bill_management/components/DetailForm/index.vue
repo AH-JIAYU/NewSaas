@@ -114,6 +114,13 @@ defineExpose({
                 });
                 return;  // 直接停止整个 submit 函数的执行
               }
+              if (item.settlementAmount < form.value.minimumAmount) {
+                ElMessage.warning({
+                  message: "结算金额小于最低结算金额",
+                  center: true,
+                });
+                return;  // 直接停止整个 submit 函数的执行
+              }
             }
             form.value.settlementAmount = '';
           } else {
