@@ -104,7 +104,7 @@ function userData(data1:any) {
   data.value.chargeUserId = data1.chargeUserId //负责人UserId
   data.value.departmentId = data1.departmentId//邀请方部门id
   data.value.chargeUserName = data1.chargeUserName
-  data.value.name = (data1.departmentName ?data1.departmentName:'') + (data.value.form.chargeUserName ?data.value.form.chargeUserName:'')
+  data.value.name = (data1.departmentName ?data1.departmentName:'') + (data.value.form.chargeUserName ?','+ data.value.form.chargeUserName:'')
 }
 defineExpose({
   showEdit,

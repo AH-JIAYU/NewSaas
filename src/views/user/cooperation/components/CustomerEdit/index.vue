@@ -128,14 +128,19 @@ defineExpose({
 //选择部门人
 const userRef = ref();
 function openUserDialog() {
-  userRef.value.showEdit();
+  let obj = {
+    chargeUserId: data.value.form.chargeUserId,
+    departmentId :data.value.form.departmentId,
+    chargeUserName:data.value.form.chargeUserName
+  }
+  userRef.value.showEdit(obj);
 }
 //勾选部门人回传数据
 function userData(data1:any) {
   data.value.form.chargeUserId = data1.chargeUserId //负责人UserId
   data.value.form.departmentId = data1.departmentId//邀请方部门id
   data.value.form.chargeUserName = data1.chargeUserName
-  data.value.form.name = (data1.departmentName ?data1.departmentName:'') + (data.value.form.chargeUserName ?data.value.form.chargeUserName:'')
+  data.value.form.name = (data1.departmentName ?data1.departmentName:'') + (data.value.form.chargeUserName ? ','+   data.value.form.chargeUserName:'')
 }
 </script>
 

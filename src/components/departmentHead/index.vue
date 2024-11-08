@@ -22,6 +22,7 @@ const defaultProps: any = {
 // 显隐
 async function showEdit(row: any) {
   await getTenantStaffList();
+  data.value.type =1;
   drawerisible.value = true;
   departmentId.value = [];
       // 部门
@@ -31,12 +32,18 @@ async function showEdit(row: any) {
 
     }
     //回显员工
-    // form.value.roleList = [form.value.role]
-          //回显部门 确保 organizationalStructureId 是一个数组
-      //     const orgId = form.value.organizationalStructureId;
-      // if (orgId) {
-      //   departmentId.value = Array.isArray(orgId) ? orgId : [orgId];
-      // }
+    if(row) {
+
+       //负责人UserId
+      if(row.chargeUserId){
+        data.value.roleList = [row.chargeUserId]
+        data.value.chargeUserName = row.chargeUserName
+        departmentId.value = [row.departmentId]
+      }
+
+    }
+
+
 }
 // 获取PM/用户
 const getTenantStaffList = async () => {

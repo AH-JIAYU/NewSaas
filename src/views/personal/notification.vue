@@ -275,7 +275,7 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
-.el-tabs__nav-wrap {
+.left .el-tabs__nav-wrap {
   .el-tabs__item {
     .custom-tab-label {
       /* 字体样式 */
@@ -289,14 +289,14 @@ onMounted(() => {
 
 }
 
-:deep(.el-tabs__active-bar)  {
+:deep(.left .el-tabs__active-bar)  {
     background-color: transparent !important;
   }
-:deep(.el-tabs__item) {
+:deep(.left .el-tabs__item) {
     padding: 0px 0rem;
 }
 /* 选中状态下的样式 */
-.el-tabs__nav-wrap {
+.left .el-tabs__nav-wrap {
   .el-tabs__item.is-active {
     .custom-tab-label {
     margin-left: 2px;
@@ -311,7 +311,7 @@ onMounted(() => {
 }
 
 /* 未选中状态下的样式 */
-.el-tabs__nav-wrap {
+.left .el-tabs__nav-wrap {
   .el-tabs__item {
     .custom-tab-label {
 

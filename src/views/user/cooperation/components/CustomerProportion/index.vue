@@ -45,7 +45,7 @@ async function showEdit(row: any) {
     );
     data.value.form.departmentName = findData1.name;
   }
-  data.value.form.name =(data.value.form.departmentName ? data.value.form.departmentName :'') + (data.value.form.chargeUserName ? data.value.form.chargeUserName:'')
+  data.value.form.name =(data.value.form.departmentName ? data.value.form.departmentName :'') + (data.value.form.chargeUserName ? ','+ data.value.form.chargeUserName:'')
   drawerisible.value = true;
 }
 
