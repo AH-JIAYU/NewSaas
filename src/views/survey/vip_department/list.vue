@@ -646,7 +646,7 @@ function handleCurrentChange(val: any) {
               show-overflow-tooltip label="部门"  width="140">
               <template #default="{ row }">
                 <div style="display: flex; align-items: center">
-                  <img src="@/assets/images/guan.png" alt="" v-if="row.memberGroupName &&row.enableChargePerson ==1" style="margin-right: 4px;width:18px;height: 18px;">
+                  <img src="@/assets/images/guan.png" alt="" v-if="row.memberGroupName &&row.enableChargePerson ==1" style="margin-right: 4px; margin-top: 2px; width:18px;height: 18px;">
                 <p class="crudeTop">{{ row.memberGroupName ? row.memberGroupName : "-" }}</p>
                 </div>
               </template>
