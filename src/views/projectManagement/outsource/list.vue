@@ -7,6 +7,7 @@ import allocationEdit from "../list/components/AllocationEdit/index.vue";
 import api from "@/api/modules/projectManagement_outsource";
 import useProjectManagementOutsourceStore from "@/store/modules/projectManagement_outsource";
 import empty from "@/assets/images/empty.png";
+import userDialog from "@/components/departmentHead/index.vue"; //部门人
 defineOptions({
   name: "outsource",
 });
@@ -15,6 +16,7 @@ const projectManagementOutsourceStore = useProjectManagementOutsourceStore();
 const { pagination, getParams, onSizeChange, onCurrentChange } =
   usePagination(); // 分页
 const tableSortRef = ref("");
+const tableSortRef2 = ref("");
 // 获取组件变量
 const addAllocationEditRef = ref();
 // loading加载
@@ -26,6 +28,7 @@ const editRef = ref();
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const checkList = ref<any>([]);
 const formSearchList = ref<any>(); //表单排序配置
+  const formSearchList2 = ref<any>(); //表单排序配置接收项目
 const formSearchName = ref<string>("formSearch-outsource"); // 表单排序name
 const lineHeight = ref<any>("default");
 const stripe = ref(false);
@@ -63,6 +66,8 @@ function distribution(row: any) {
 function reassign(row: any) {
   addAllocationEditRef.value.showEdit(row, "reassign");
 }
+
+//接收
 // 详情
 function editData(row: any) {
   editRef.value.showEdit(row, queryForm.type === 2 ? 1 : 0);
@@ -148,6 +153,49 @@ onMounted(() => {
       optionValue: "value",
     },
   ];
+  formSearchList2.value =  [
+    {
+      index: 1,
+      show: true,
+      type: "input",
+      modelName: "projectId",
+      placeholder: "项目ID",
+    },
+    {
+      index: 2,
+      show: true,
+      type: "input",
+      modelName: "tenantId",
+      placeholder: "租户ID",
+    },
+    {
+      index: 3,
+      show: true,
+      type: "input",
+      modelName: "tenantName",
+      placeholder: "租户名称",
+    },
+    {
+      index: 4,
+      show: true,
+      type: "select",
+      modelName: "projectStatus",
+      placeholder: "项目状态",
+      option: "projectStatus",
+      optionLabel: "label",
+      optionValue: "value",
+    },
+    {
+      index: 5,
+      show: true,
+      type: "select",
+      modelName: "projectStatus",
+      placeholder: "接收状态",
+      option: "projectStatus",
+      optionLabel: "label",
+      optionValue: "value",
+    },
+  ];
 });
 const formOption = {
   projectStatus: () =>
@@ -161,6 +209,29 @@ const current = ref<any>(); //表格当前选中
 function handleCurrentChange(val: any) {
   if (val) current.value = val.projectId;
   else current.value = "";
+}
+const userRef = ref()
+//接收-批量
+function addReceiveAll () {
+  userRef.value.showEdit();
+}
+//取消接收-批量
+function delReceiveAll() {
+  const selectList = tableSortRef2.value.getSelectionRows();
+  if (selectList.length !== 1) {
+    ElMessage.warning({
+      message: "请选择一个项目",
+      center: true,
+    });
+  }
+}
+//接收-单个
+function addReceive () {
+  userRef.value.showEdit();
+}
+//取消接收-单个
+function delreceive(row: any) {
+
 }
 </script>
 
@@ -385,7 +456,7 @@ function handleCurrentChange(val: any) {
         <el-tab-pane label="接收项目" :name="1">
           <FormSearch
             v-if="queryForm.type === 1"
-            :formSearchList="formSearchList"
+            :formSearchList="formSearchList2"
             :formSearchName="formSearchName"
             @currentChange="currentChange"
             @onReset="onReset"
@@ -394,7 +465,14 @@ function handleCurrentChange(val: any) {
           />
           <ElDivider border-style="dashed" />
           <el-row :gutter="24">
-            <FormLeftPanel> </FormLeftPanel>
+            <FormLeftPanel>
+          <el-button type="primary" size="default" @click="addReceiveAll">
+            接收
+          </el-button>
+          <el-button type="primary" size="default" @click="delReceiveAll">
+            取消接收
+          </el-button>
+        </FormLeftPanel>
             <FormRightPanel>
               <el-button size="default" @click=""> 导出 </el-button>
               <TabelControl
@@ -410,7 +488,7 @@ function handleCurrentChange(val: any) {
             </FormRightPanel>
           </el-row>
           <el-table
-            ref="tableSortRef"
+            ref="tableSortRef2"
             v-loading="listLoading"
             style="margin-top: 10px"
             row-key="id"
@@ -436,6 +514,19 @@ function handleCurrentChange(val: any) {
                     row.projectStatus - 1
                   ]
                 }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              v-if="checkList.includes('projectStatus')"
+              show-overflow-tooltip
+              prop="projectStatus"
+              align="left"
+              label="接收状态"
+              width="140"
+            >
+              <template #default="{ row }">
+                <span class="tableBig">接收状态
+                 </span>
               </template>
             </el-table-column>
             <el-table-column
@@ -606,7 +697,19 @@ function handleCurrentChange(val: any) {
                 >
               </template>
             </el-table-column>
-
+            <el-table-column
+              v-if="checkList.includes('projectName')"
+              show-overflow-tooltip
+              prop="projectName"
+              align="left"
+              label="负责部门/人"
+               width="200"
+               fixed="right"
+            >
+              <template #default="{ row }">
+                <div class="tableBig">{{ row.projectName }}</div>
+              </template>
+            </el-table-column>
             <el-table-column
               align="left"
               fixed="right"
@@ -614,7 +717,7 @@ function handleCurrentChange(val: any) {
               width="170"
             >
               <template #default="{ row }">
-                <el-button
+                <!-- <el-button
                   v-if="row.allocationStatus === 1"
                   plain
                   :disabled="row.isOnline === 2"
@@ -633,6 +736,26 @@ function handleCurrentChange(val: any) {
                   @click="reassign(row)"
                 >
                   重新分配
+                </el-button> -->
+                <el-button
+                  v-if="row.allocationStatus === 1"
+                  plain
+
+                  type="primary"
+                  size="small"
+                  @click="addReceive(row)"
+                >
+                  接收
+                </el-button>
+                <el-button
+                  v-else
+                  plain
+                  type="primary"
+
+                  size="small"
+                  @click="delreceive(row)"
+                >
+                  取消接收
                 </el-button>
                 <el-button
                   type="primary"
@@ -665,6 +788,7 @@ function handleCurrentChange(val: any) {
       <allocationEdit ref="addAllocationEditRef" @fetchData="fetchData" />
       <edit ref="editRef" @fetch-data="fetchData" />
     </PageMain>
+    <userDialog ref="userRef"/>
   </div>
 </template>
 

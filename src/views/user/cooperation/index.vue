@@ -3,6 +3,7 @@ import { onMounted } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import customerEdit from "./components/CustomerEdit/index.vue";
 import customerProportion from "./components/CustomerProportion/index.vue";
+
 import empty from "@/assets/images/empty.png";
 import api from "@/api/modules/user_cooperation";
 import QuickEdit from "./components/QuickEdit/index.vue"; //快速编辑
@@ -97,10 +98,12 @@ function termination(row: any) {
     })
     .catch(() => {});
 }
-//价格比例
+//合作配置
 function priceRatio(row: any) {
   proportionRef.value.showEdit(row);
 }
+
+
 
 // 查询
 const queryForm = reactive<any>({});
@@ -288,7 +291,7 @@ onMounted(() => {
           align="left"
           prop="userName"
           show-overflow-tooltip
-          label="PM"
+          label="负责部门/人"
         >
           <template #default="{ row }">
             <div class="flex-s">
@@ -360,11 +363,10 @@ onMounted(() => {
               </el-button>
               <el-button
                 size="small"
-                plain
-                type="primary"
+                type="danger"
                 @click="priceRatio(row)"
               >
-                价格比例
+              合作配置
               </el-button>
 
               <!-- <el-button type="warning" plain size="small">

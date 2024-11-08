@@ -3,7 +3,7 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import api from "@/api/modules/user_cooperation";
 import apiUser from "@/api/modules/configuration_manager";
 import storage from "@/utils/storage";
-
+import userDialog from "@/components/departmentHead/index.vue"; //部门人
 const emit = defineEmits(["fetch-data"]);
 const drawerisible = ref<boolean>(false);
 const title = ref<string>("");
@@ -12,6 +12,9 @@ const data = ref<any>({
   form: {},
   tenantUserList: [], //租户list
   tenantStaffList: [], // 员工列表
+  chargeUserId: null, //负责人UserId
+    departmentId: null, //邀请方部门id
+    chargeUserName: '', //负责人用户姓名
   rules: {
     beInvitationTenantId: [
       { required: true, message: "请选择租户", trigger: "change" },
@@ -19,15 +22,21 @@ const data = ref<any>({
     priceRatio: [
       { required: true, message: "请输入价格比例", trigger: "blur" },
     ],
-    chargeUserId: [
-      { required: true, message: "请选择PM", trigger: "change" },
+    sendProjectType: [
+      { required: true, message: "请选择发送项目", trigger: "change" },
     ],
+    receiveProjectType: [
+      { required: true, message: "请选择接收项目", trigger: "change" },
+    ],
+    // chargeUserId: [
+    //   { required: true, message: "请选择PM", trigger: "change" },
+    // ],
   },
 });
 // 显隐
 async function showEdit() {
   await getTenantUserList();
-  await getTenantStaffList();
+  // await getTenantStaffList();
   drawerisible.value = true;
 }
 // 获取租户列表
@@ -39,7 +48,7 @@ async function getTenantUserList() {
 // 筛选所选租户
 const dataList = computed(() => {
   const findData = data.value.tenantUserList.find(
-    (item: any) => item.tenantId === data.value.form.beInvitationTenantId,
+    (item: any) => item.tenantId === data.value.form.beInvitationTenantId
   );
   if (findData) {
     data.value.form.tenantName = findData.name;
@@ -59,35 +68,75 @@ function close() {
   data.value.form = {};
   formRef.value.resetFields();
 }
-const changeChargeUserId = (val: any) => {
-  if (val) {
-    const findData = data.value.tenantStaffList.find(
-      (item: any) => item.id === data.value.form.chargeUserId,
-    );
-    data.value.form.chargeUserName = findData.userName;
-  } else {
-    data.value.form.chargeUserId = "";
-    data.value.form.chargeUserName = "";
-  }
-};
+
 // // 确定
 async function save() {
   formRef.value.validate((valid: any) => {
     if (valid) {
-      api.addInvitationBind(data.value.form).then(() => {
-        ElMessage.success({
+      if(data.value.form.receiveProjectType ==2) {
+        //手动
+        data.value.form.chargeUserId = null; //负责人UserId
+        data.value.form.chargeUserName = '' //负责人用户姓名
+        data.value.form.departmentId = ''//邀请方部门id
+      }
+      api.addInvitationBind(data.value.form).then((res:any) => {
+        if(res.status == -1){
+          ElMessage.success({
+          message: res.error,
+          center: true,
+        });
+        } else {
+          ElMessage.success({
           message: "发送成功",
           center: true,
         });
         emit("fetch-data");
         close();
+        }
+
       });
     }
   });
 }
+//原始数据接口
+async function BindPriceRatio() {
+
+   await api.addInvitationBind(data.value.form);
+
+}
+// 项目分配方式接口
+async function BindUser() {
+  //
+  const { status } = await api.updateInvitationBindUser({
+    // chargeUserId: data.value.chargeUserId, //负责人UserId
+    // departmentId: data.value.departmentId, //邀请方部门id
+    // chargeUserName: data.value.chargeUserName, //负责人用户姓名
+    // sendProjectType: data.value.form.sendProjectType, //邀请方发送项目类型:1:自动 2:手动
+    // receiveProjectType: data.value.form.receiveProjectType, //邀请方接收项目类型:1:自动 2:手动
+  });
+  status === 1 &&
+    ElMessage.success({
+      message: "编辑成功",
+      center: true,
+    });
+}
+
+
 defineExpose({
   showEdit,
 });
+//选择部门人
+const userRef = ref();
+function openUserDialog() {
+  userRef.value.showEdit();
+}
+//勾选部门人回传数据
+function userData(data1:any) {
+  data.value.form.chargeUserId = data1.chargeUserId //负责人UserId
+  data.value.form.departmentId = data1.departmentId//邀请方部门id
+  data.value.form.chargeUserName = data1.chargeUserName
+  data.value.form.name = (data1.departmentName ?data1.departmentName:'') + (data.value.form.chargeUserName ?data.value.form.chargeUserName:'')
+}
 </script>
 
 <template>
@@ -151,7 +200,40 @@ defineExpose({
               ><template #append>%</template></el-input
             >
           </el-form-item>
-          <el-form-item label="PM" prop="chargeUserId">
+          <el-form-item
+            label="项目分配方式"
+            prop="sendProjectType"
+            label-width="7rem"
+          >
+            <div style="display: flex; justify-items: center">
+              <span style="margin-right: 15px">发送项目</span>
+              <el-radio-group v-model="data.form.sendProjectType">
+                <el-radio :value="1">自动</el-radio>
+                <el-radio :value="2">手动</el-radio>
+              </el-radio-group>
+            </div>
+          </el-form-item>
+          <el-form-item prop="receiveProjectType">
+            <div style="display: flex; justify-items: center">
+              <span style="margin-right: 15px">接收项目</span>
+
+              <el-radio-group v-model="data.form.receiveProjectType">
+                <el-radio :value="1">自动</el-radio>
+                <el-radio :value="2">手动</el-radio>
+              </el-radio-group>
+            </div>
+            <!-- 勾选自动出来 -->
+            <el-input
+              placeholder="请选择负责部门/PM"
+              clearable
+              style="width: 200px; margin-left: 25px"
+              @click="openUserDialog"
+              v-if="data.form.receiveProjectType ==1"
+              v-model="data.form.name"
+            >
+            </el-input>
+          </el-form-item>
+          <!-- <el-form-item label="PM" prop="chargeUserId">
             <el-select
               v-model="data.form.chargeUserId"
               clearable
@@ -175,7 +257,7 @@ defineExpose({
                 </span>
               </el-option>
             </el-select>
-          </el-form-item>
+          </el-form-item> -->
         </template>
       </ElForm>
       <template #footer>
@@ -183,6 +265,7 @@ defineExpose({
         <el-button type="primary" @click="save"> 发送邀约 </el-button>
       </template>
     </el-dialog>
+    <userDialog ref="userRef" @userData="userData"/>
   </div>
 </template>
 

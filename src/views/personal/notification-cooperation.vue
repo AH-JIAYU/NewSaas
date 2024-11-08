@@ -2,6 +2,7 @@
 import api from "@/api/modules/notification";
 import useNotificationStore from "@/store/modules/notification";
 import apiUser from "@/api/modules/configuration_manager";
+import userDialog from "@/components/departmentHead/index.vue"; //部门人
 defineOptions({
   name: "PersonalNotificationCooperation",
 });
@@ -14,13 +15,19 @@ const tenantStaffList = ref<any>([]); // PM
 const FormRef = ref<any>();
 const FormRules = {
   priceRatio: [{ required: true, message: "请输入价格比例", trigger: "blur" }],
-  beInvitationChargeUserId: [
-    { required: true, message: "请选择PM", trigger: "change" },
-  ],
+  sendProjectType: [
+      { required: true, message: "请选择发送项目", trigger: "change" },
+    ],
+    receiveProjectType: [
+      { required: true, message: "请选择接收项目", trigger: "change" },
+    ],
+  // beInvitationChargeUserId: [
+  //   { required: true, message: "请选择PM", trigger: "change" },
+  // ],
 };
 
 const showEdit = async (row: any) => {
-  await getTenantStaffList();
+  // await getTenantStaffList();
   data.value = row;
   read();
 };
@@ -63,12 +70,23 @@ const refuse = async () => {
 const agree = async () => {
   FormRef.value.validate(async (valid: any) => {
     if (valid) {
+      if(data.value.receiveProjectType ==2) {
+        //手动
+        data.value.chargeUserId = null; //负责人UserId
+        data.value.chargeUserName = '' //负责人用户姓名
+        data.value.departmentId = ''//邀请方部门id
+      }
       const params = {
         id: data.value.id,
         beInvitationChargeUserId: data.value.beInvitationChargeUserId,
         beInvitationChargeUserName: data.value.beInvitationChargeUserName,
         priceRatio: data.value.priceRatio,
         type: 3,
+         chargeUserId: data.value.chargeUserId, //负责人UserId
+    departmentId: data.value.departmentId, //邀请方部门id
+    chargeUserName: data.value.chargeUserName, //负责人用户姓名
+    sendProjectType: data.value.sendProjectType, //邀请方发送项目类型:1:自动 2:手动
+    receiveProjectType: data.value.receiveProjectType, //邀请方接收项目类型:1:自动 2:手动
       };
       emit("delSelectId");
       await api.updateTenantAudit(params); //修改该条数据待办状态
@@ -76,7 +94,18 @@ const agree = async () => {
     }
   });
 };
-
+//选择部门人
+const userRef = ref();
+function openUserDialog() {
+  userRef.value.showEdit();
+}
+//勾选部门人回传数据
+function userData(data1:any) {
+  data.value.chargeUserId = data1.chargeUserId //负责人UserId
+  data.value.departmentId = data1.departmentId//邀请方部门id
+  data.value.chargeUserName = data1.chargeUserName
+  data.value.name = (data1.departmentName ?data1.departmentName:'') + (data.value.form.chargeUserName ?data.value.form.chargeUserName:'')
+}
 defineExpose({
   showEdit,
 });
@@ -106,7 +135,45 @@ defineExpose({
             ><template #append>%</template></el-input
           >
         </el-form-item>
-        <el-form-item label="PM" prop="beInvitationChargeUserId">
+        <el-form-item
+            label="项目分配方式"
+            prop="sendProjectType"
+            label-width="7rem"
+          >
+            <div style="display: flex; justify-items: center">
+              <span style="margin-right: 15px">发送项目</span>
+              <el-radio-group v-model="data.sendProjectType">
+                <el-radio :value="1">自动</el-radio>
+                <el-radio :value="2">手动</el-radio>
+              </el-radio-group>
+            </div>
+          </el-form-item>
+          <el-form-item prop="receiveProjectType">
+            <div style="display: flex; justify-items: center">
+              <span style="margin-right: 15px">接收项目</span>
+
+              <el-radio-group v-model="data.receiveProjectType">
+                <el-radio :value="1">自动</el-radio>
+                <el-radio :value="2">手动</el-radio>
+              </el-radio-group>
+            </div>
+            <!-- 勾选自动出来 -->
+            <el-input
+              placeholder="请选择负责部门/PM"
+              clearable
+              style="width: 200px; margin-left: 25px"
+              @click="openUserDialog"
+              v-if="data.receiveProjectType ==1"
+              v-model="data.name"
+            >
+            </el-input>
+          </el-form-item>
+
+
+
+
+
+        <!-- <el-form-item label="PM" prop="beInvitationChargeUserId">
           <el-select
             v-model="data.beInvitationChargeUserId"
             clearable
@@ -130,7 +197,7 @@ defineExpose({
               </span>
             </el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
       </ElForm>
       <template #footer>
         <ElButton size="large" @click="dialogTableVisible = false">
@@ -139,6 +206,7 @@ defineExpose({
         <ElButton type="primary" size="large" @click="agree"> 确定 </ElButton>
       </template>
     </el-dialog>
+    <userDialog ref="userRef" @userData="userData"/>
   </div>
 </template>
 
