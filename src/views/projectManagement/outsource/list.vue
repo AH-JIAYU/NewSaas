@@ -217,13 +217,13 @@ function addReceiveAll () {
 }
 //取消接收-批量
 function delReceiveAll() {
-  const selectList = tableSortRef2.value.getSelectionRows();
-  if (selectList.length !== 1) {
-    ElMessage.warning({
-      message: "请选择一个项目",
-      center: true,
-    });
-  }
+  // const selectList = tableSortRef2.value.getSelectionRows();
+  // if (selectList.length !== 1) {
+  //   ElMessage.warning({
+  //     message: "请选择一个项目",
+  //     center: true,
+  //   });
+  // }
 }
 //接收-单个
 function addReceive () {
@@ -743,7 +743,7 @@ function delreceive(row: any) {
 
                   type="primary"
                   size="small"
-                  @click="addReceive(row)"
+                  @click="addReceive()"
                 >
                   接收
                 </el-button>
