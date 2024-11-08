@@ -33,11 +33,11 @@ const data = ref<any>({
 const formRules = ref<FormRules>({
   // 校验
   settlementAmount: [
-    // {
-    //   required: true,
-    //   message: '请输入正数，且最多两位小数',
-    //   trigger: 'blur'
-    // },
+    {
+      required: true,
+      message: '请输入正数，且最多两位小数',
+      trigger: 'blur'
+    },
     {
       pattern: /^(?!0(\.0+)?$)(\d+(\.\d{1,2})?)$/,  // 正数且最多两位小数
       message: '请输入有效的正数，且最多两位小数',
@@ -88,26 +88,12 @@ defineExpose({
           // const judge = form.value.addMemberSettlementInfoList.every((item: any) => {
           //   return typeof (item.settlementAmount) === "number" && item.settlementAmount >= form.value.minimumAmount
           // })
-          // if (form.value.settlementType === 2) {
-          //   for (let item of form.value.addMemberSettlementInfoList) {
-          //     if (item.settlementAmount <= 0) {
-          //       ElMessage.warning({
-          //         message: "结算金额需要输入正数",
-          //         center: true,
-          //       });
-          //       return;  // 直接停止整个 submit 函数的执行
-          //     }
-          //   }
-          //   form.value.settlementAmount = '';
-          // } else {
-          //   form.value.addMemberSettlementInfoList = []
-          // }
           if (form.value.settlementType === 2) {
             for (let item of form.value.addMemberSettlementInfoList) {
               if (!item.settlementAmount) {
                 item.settlementAmount = form.value.minimumAmount
               }
-              if (item.settlementAmount < 0) {
+              if (item.settlementAmount && item.settlementAmount <= 0) {
                 ElMessage.warning({
                   message: "结算金额需要输入正数",
                   center: true,
@@ -116,7 +102,7 @@ defineExpose({
               }
               if (item.settlementAmount < form.value.minimumAmount) {
                 ElMessage.warning({
-                  message: "结算金额小于最低结算金额",
+                  message: "结算金额 小于 最低结算金额",
                   center: true,
                 });
                 return;  // 直接停止整个 submit 函数的执行
@@ -127,6 +113,13 @@ defineExpose({
             form.value.addMemberSettlementInfoList = []
             if (!form.value.settlementAmount) {
               form.value.settlementAmount = form.value.minimumAmount
+            }
+            if (form.value.settlementAmount < form.value.minimumAmount) {
+              ElMessage.warning({
+                message: "结算金额 小于 最低结算金额",
+                center: true,
+              });
+              return;  // 直接停止整个 submit 函数的执行
             }
           }
           if (valid) {

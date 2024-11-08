@@ -44,6 +44,7 @@ const data = ref<any>({
   selectAll: {
     supplier: false, // 供应商
     member: false, // 会员
+    tenant: false, // 租户
   },
 });
 const rules = ref<any>({
@@ -102,6 +103,15 @@ async function showEdit(row: any, type: string) {
 // 切换分配
 function changeRadio() {
   data.value.form.groupSupplierIdList = [];
+}
+// 租户全选
+function selectAllTenant() {
+  data.value.form.groupSupplierIdList = [];
+  if (data.value.selectAll.tenant) {
+    data.value.tenantList.map((item: any) => {
+      data.value.form.groupSupplierIdList.push(item.beInvitationTenantId);
+    });
+  }
 }
 // 供应商全选
 function selectAllSupplier() {
@@ -317,8 +327,16 @@ defineExpose({ showEdit });
             filterable
             multiple
             collapse-tags
-            :multiple-limit="1"
           >
+          <!-- :multiple-limit="1" -->
+          <template #header>
+              <el-checkbox
+                v-model="data.selectAll.tenant"
+                @change="selectAllTenant"
+                style="display: flex; height: unset"
+                >全选</el-checkbox
+              >
+            </template>
             <el-option
               v-for="item in data.tenantList"
               :label="item.beInvitationTenantName"

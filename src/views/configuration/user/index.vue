@@ -520,7 +520,7 @@ function handleCurrentChange(val: any) {
               >
                 <template #default="{ row }">
                   <div style="display: flex; align-items: center">
-                   <img src="../../../assets/images/guan.png" alt="" v-if="row.organizationalStructureName" style="margin-right: 4px;width:18px;height: 18px;">
+                   <img src="@/assets/images/guan.png" alt="" v-if="row.enableChargePerson === 1" style="margin-right: 4px; margin-top: 2px; width:18px;height: 18px;">
                     <el-text class="fontC-System" >
                       {{
                         row.organizationalStructureName

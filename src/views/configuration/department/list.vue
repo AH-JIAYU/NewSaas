@@ -655,7 +655,7 @@ function handleCurrentChange(val: any) {
               label="部门">
               <template #default="{ row }">
                 <div style="display: flex; align-items: center">
-                  <img src="../../../assets/images/guan.png" style="margin-right: 4px;width:18px;height: 18px;" alt="" v-if="row.organizationalStructureName && row.enableChargePerson ==1">
+                  <img src="@/assets/images/guan.png" style="margin-right: 4px; margin-top: 2px; width:18px;height: 18px;" alt="" v-if="row.enableChargePerson === 1">
                 <el-text class="fontC-System" >{{ row.organizationalStructureName ? row.organizationalStructureName : "-"
                   }}</el-text>
                 </div>
