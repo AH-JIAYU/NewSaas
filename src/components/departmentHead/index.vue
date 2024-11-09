@@ -50,10 +50,9 @@ async function showEdit(row: any, name: any, project: any) {
   data.value.title = name;
 
   //项目外包-接收项目-接收选中的项目
-  if(project){
+  if (project) {
     data.value.project = project;
   }
-
 }
 // 获取PM/用户
 const getTenantStaffList = async () => {
@@ -143,8 +142,12 @@ function submit() {
     // departmentName:departmentName,
   };
   drawerisible.value = false;
-  emit("userData", obj,);
+  emit("userData", obj);
 }
+const activeNames = ref([]);
+const handleChange = (val: any) => {
+  activeNames.value = val;
+};
 </script>
 
 <template>
@@ -158,21 +161,25 @@ function submit() {
       :title="data.title"
       class="userClass"
     >
-      <div v-if="data.project.length !=0">
-        <el-badge :value="data.project.length" :max="99" class="item">
-          <span class="project-name">项目</span>
-        </el-badge>
-
-        <div class="project-content">
-          <div v-for="item in data.project" :key="item.id">
-            <div style="display: flex">
-              <span style="font-weight: 500;">{{ item.tenantName }}</span>
-              <span style="margin-left: 10px">ID:{{ item.tenantId }}</span
-              ><copy :content="item.tenantId" />
+      <div v-if="data.project.length != 0">
+        <el-collapse v-model="activeNames" @change="handleChange">
+          <el-collapse-item name="1">
+            <template #title>
+              <el-badge :value="data.project.length" :max="99" class="item">
+                <span class="project-name">项目</span>
+              </el-badge>
+            </template>
+            <div class="project-content">
+              <div v-for="item in data.project" :key="item.id">
+                <div style="display: flex">
+                  <span style="font-weight: 500">{{ item.tenantName }}</span>
+                  <span style="margin-left: 10px">ID:{{ item.tenantId }}</span
+                  ><copy :content="item.tenantId" />
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <el-divider></el-divider>
+          </el-collapse-item>
+        </el-collapse>
       </div>
 
       <el-tabs v-model="data.type" @tab-change="fetchData">
@@ -247,8 +254,11 @@ function submit() {
 }
 .project-name {
   font-weight: 500;
-font-size: 16px;
-color: #333333;
+  font-size: 16px;
+  color: #333333;
+}
+.project-content {
+  // margin-top: .625rem;
 }
 .flex-c {
   display: flex;

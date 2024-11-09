@@ -381,8 +381,8 @@ const formOption = {
     { label: "未分配", value: 2 },
   ],
   projectType: () => [
-    { label: "自有项目", value: 1 },
-    { label: "外包项目", value: 2 },
+    { label: "内部新增", value: 1 },
+    { label: "租户分配", value: 2 },
   ],
 };
 </script>
@@ -494,6 +494,25 @@ const formOption = {
             </div>
           </template>
         </el-table-column>
+        <el-table-column
+              v-if="checkList.includes('projectType')"
+              show-overflow-tooltip
+              prop="projectType"
+              align="left"
+              width="140"
+              label="项目类型"
+            >
+              <template #default="{ row }">
+                <span class="tableBig">
+                  <el-text v-if="row.projectType === 1" type="primary">
+                    内部新增</el-text
+                  >
+                  <el-text v-else-if="row.projectType === 2" type="info">
+                    租户分配</el-text
+                  >
+                </span>
+              </template>
+            </el-table-column>
         <el-table-column
           v-if="checkList.includes('name')"
           show-overflow-tooltip
