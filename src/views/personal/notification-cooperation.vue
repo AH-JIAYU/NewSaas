@@ -16,11 +16,11 @@ const FormRef = ref<any>();
 const FormRules = {
   priceRatio: [{ required: true, message: "请输入价格比例", trigger: "blur" }],
   sendProjectType: [
-      { required: true, message: "请选择发送项目", trigger: "change" },
-    ],
-    receiveProjectType: [
-      { required: true, message: "请选择接收项目", trigger: "change" },
-    ],
+    { required: true, message: "请选择发送项目", trigger: "change" },
+  ],
+  receiveProjectType: [
+    { required: true, message: "请选择接收项目", trigger: "change" },
+  ],
   // beInvitationChargeUserId: [
   //   { required: true, message: "请选择PM", trigger: "change" },
   // ],
@@ -39,7 +39,7 @@ const getTenantStaffList = async () => {
 const changeBeInvitationChargeUserId = (val: any) => {
   if (val) {
     const findData = tenantStaffList.value.find(
-      (item: any) => item.id === data.value.beInvitationChargeUserId,
+      (item: any) => item.id === data.value.beInvitationChargeUserId
     );
     data.value.beInvitationChargeUserName = findData.userName;
   } else {
@@ -70,23 +70,17 @@ const refuse = async () => {
 const agree = async () => {
   FormRef.value.validate(async (valid: any) => {
     if (valid) {
-      if(data.value.receiveProjectType ==2) {
-        //手动
-        data.value.chargeUserId = null; //负责人UserId
-        data.value.chargeUserName = '' //负责人用户姓名
-        data.value.departmentId = ''//邀请方部门id
-      }
       const params = {
         id: data.value.id,
         beInvitationChargeUserId: data.value.beInvitationChargeUserId,
         beInvitationChargeUserName: data.value.beInvitationChargeUserName,
         priceRatio: data.value.priceRatio,
         type: 3,
-         chargeUserId: data.value.chargeUserId, //负责人UserId
-         invitationType: data.value.invitationType, //邀请类型
-    chargeUserName: data.value.chargeUserName, //负责人用户姓名
-    sendProjectType: data.value.sendProjectType, //邀请方发送项目类型:1:自动 2:手动
-    receiveProjectType: data.value.receiveProjectType, //邀请方接收项目类型:1:自动 2:手动
+        chargeUserId: data.value.chargeUserId, //负责人UserId
+        invitationType: data.value.invitationType, //邀请类型
+        chargeUserName: data.value.chargeUserName, //负责人用户姓名
+        sendProjectType: data.value.sendProjectType.length[0], //邀请方发送项目类型:1:自动 2:手动
+        receiveProjectType: data.value.receiveProjectType[0], //邀请方接收项目类型:1:自动 2:手动
       };
       emit("delSelectId");
       await api.updateTenantAudit(params); //修改该条数据待办状态
@@ -100,12 +94,31 @@ function openUserDialog() {
   userRef.value.showEdit();
 }
 //勾选部门人回传数据
-function userData(data1:any) {
-  data.value.chargeUserId = data1.chargeUserId //负责人UserId
-  data.value.invitationType = data1.invitationType//邀请类型
-  data.value.chargeUserName = data1.chargeUserName
+function userData(data1: any) {
+  data.value.chargeUserId = data1.chargeUserId; //负责人UserId
+  data.value.invitationType = data1.invitationType; //邀请类型
+  data.value.chargeUserName = data1.chargeUserName;
   // data.value.name = (data1.departmentName ?data1.departmentName:'') + (data.value.form.chargeUserName ?','+ data.value.form.chargeUserName:'')
 }
+//发送项目勾选
+// 处理选中项变化的逻辑，确保最多只能选择一个
+const handleCheckboxChange1 = (newValue: any) => {
+  if (Array.isArray(newValue) && newValue.length > 1) {
+    // 只有一个选项可以被选中，取最后一个选中的
+    data.value.sendProjectType = [newValue[newValue.length - 1]];
+  }
+};
+//接收项目
+const handleCheckboxChange2 = (newValue: any) => {
+  if (Array.isArray(newValue) && newValue.length > 1) {
+    // 只有一个选项可以被选中，取最后一个选中的
+    data.value.receiveProjectType = [newValue[newValue.length - 1]];
+  }
+};
+const handleKeydown = (e: any) => {
+  // 阻止键盘输入
+  e.preventDefault();
+};
 defineExpose({
   showEdit,
 });
@@ -129,49 +142,65 @@ defineExpose({
       </div>
     </div>
     <el-dialog v-model="dialogTableVisible" title="添加PM">
-      <ElForm ref="FormRef" :rules="FormRules" :model="data" label-width="7rem">
+      <ElForm
+        ref="FormRef"
+        :rules="FormRules"
+        :model="data"
+        label-width="7rem"
+        labelPosition="left"
+      >
         <el-form-item label="价格比例" prop="priceRatio">
           <el-input v-model="data.priceRatio" clearable
             ><template #append>%</template></el-input
           >
         </el-form-item>
-        <el-form-item
-            label="项目分配方式"
-            prop="sendProjectType"
-            label-width="7rem"
-          >
-            <div style="display: flex; justify-items: center">
-              <span style="margin-right: 15px">发送项目</span>
-              <el-radio-group v-model="data.sendProjectType">
-                <el-radio :value="1">自动</el-radio>
-                <el-radio :value="2">手动</el-radio>
-              </el-radio-group>
-            </div>
-          </el-form-item>
-          <el-form-item prop="receiveProjectType">
-            <div style="display: flex; justify-items: center">
-              <span style="margin-right: 15px">接收项目</span>
+        <el-form-item label="项目分配方式" label-width="7rem"> </el-form-item>
 
-              <el-radio-group v-model="data.receiveProjectType">
-                <el-radio :value="1">自动</el-radio>
-                <el-radio :value="2">手动</el-radio>
-              </el-radio-group>
-            </div>
-            <!-- 勾选自动出来 -->
-            <el-input
-              placeholder="请选择负责部门/PM"
-              clearable
-              style="width: 200px; margin-left: 25px"
-              @click="openUserDialog"
-              v-if="data.receiveProjectType ==1"
-              v-model="data.chargeUserName"
+        <div style="display: flex" class="inviteDialog">
+          <el-form-item prop="sendProjectType">
+            <span slot="label" style="margin-right: 15px">
+              <el-tooltip effect="dark" content="1111111" placement="top-start">
+                <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
+              </el-tooltip>
+              <span style="color: #f56c6c">*</span>
+              发送项目
+            </span>
+
+            <el-checkbox-group
+              v-model="data.sendProjectType"
+              @change="handleCheckboxChange1"
             >
-            </el-input>
+              <el-checkbox :value="1"> 自动 </el-checkbox>
+              <el-checkbox :value="2"> 手动 </el-checkbox>
+            </el-checkbox-group>
           </el-form-item>
+          <el-form-item prop="receiveProjectType" style="margin-left: 40px">
+            <span slot="label" style="margin-right: 15px">
+              <el-tooltip effect="dark" content="1111111" placement="top-start">
+                <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
+              </el-tooltip>
+              <span style="color: #f56c6c">*</span>
+              接收项目
+            </span>
 
+            <el-checkbox-group
+              v-model="data.receiveProjectType"
+              @change="handleCheckboxChange2"
+            >
+              <el-checkbox :value="1"> 自动 </el-checkbox>
+              <el-checkbox :value="2"> 手动 </el-checkbox>
+            </el-checkbox-group>
+          </el-form-item>
+        </div>
 
-
-
+        <el-input
+          placeholder="请选择接收项目负责人"
+          @keydown="handleKeydown"
+          @click="openUserDialog"
+          v-if="data.receiveProjectType && data.receiveProjectType[0] == 1"
+          v-model="data.chargeUserName"
+        >
+        </el-input>
 
         <!-- <el-form-item label="PM" prop="beInvitationChargeUserId">
           <el-select
@@ -206,11 +235,14 @@ defineExpose({
         <ElButton type="primary" size="large" @click="agree"> 确定 </ElButton>
       </template>
     </el-dialog>
-    <userDialog ref="userRef" @userData="userData"/>
+    <userDialog ref="userRef" @userData="userData" />
   </div>
 </template>
 
 <style scoped lang="scss">
+:deep(.inviteDialog .el-form-item__content) {
+  margin-left: 0 !important;
+}
 .news {
   height: 100%;
   width: 100%;
@@ -226,9 +258,7 @@ defineExpose({
   }
 
   .type {
-    font-family:
-      PingFang SC,
-      PingFang SC;
+    font-family: PingFang SC, PingFang SC;
     font-weight: 600;
     font-size: 1.125rem;
     color: #0f0f0f;
@@ -249,9 +279,7 @@ defineExpose({
   .news-content {
     overflow-y: auto;
     flex: 1;
-    font-family:
-      PingFang SC,
-      PingFang SC;
+    font-family: PingFang SC, PingFang SC;
     padding: 0 1rem;
     color: #0f0f0f;
 

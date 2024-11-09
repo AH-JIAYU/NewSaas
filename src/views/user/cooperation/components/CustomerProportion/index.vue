@@ -25,14 +25,14 @@ const data = ref<any>({
 const departmentList = ref<any>([]);
 // 显隐
 async function showEdit(row: any) {
-  console.log(row,'rrrr')
   data.value.form.id = row.id;
   data.value.form.priceRatio = row.priceRatio;
-  data.value.form.sendProjectType = row.sendProjectType;
-  data.value.form.receiveProjectType = row.receiveProjectType;
+  data.value.form.sendProjectType = row.sendProjectType ? [row.sendProjectType]:null;
+  data.value.form.receiveProjectType = row.receiveProjectType ? [row.receiveProjectType]:null;
   data.value.form.chargeUserName = row.chargeUserName;
   data.value.form.invitationType = row.invitationType;
   data.value.form.chargeUserId = row.chargeUserId;
+
   // if (data.value.form.invitationType == 1) {
   //   //获取员工
   //   // 部门
@@ -63,55 +63,53 @@ function openUserDialog() {
   userRef.value.showEdit();
 }
 
-async function BindUser() {
-  //
-   if(data.value.form.receiveProjectType ==2) {
-        //手动
-        data.value.form.chargeUserId = null; //负责人UserId
-        data.value.form.chargeUserName = '' //负责人用户姓名
-        data.value.form.invitationType = ''//邀请类型
-      }
+async function BindUser(obj:any) {
   const { status } = await api.updateInvitationBindUser({
-    id:data.value.form.id,
-    chargeUserId: data.value.form.chargeUserId, //负责人UserId
-    invitationType: data.value.form.invitationType, //邀请类型
-    chargeUserName: data.value.form.chargeUserName, //负责人用户姓名
-    sendProjectType: data.value.form.sendProjectType, //邀请方发送项目类型:1:自动 2:手动
-    receiveProjectType: data.value.form.receiveProjectType, //邀请方接收项目类型:1:自动 2:手动
+    id: data.value.form.id,
+    chargeUserId: obj.chargeUserId, //负责人UserId
+    invitationType: obj.invitationType, //邀请类型
+    chargeUserName: obj.chargeUserName, //负责人用户姓名
+    sendProjectType: obj.sendProjectType, //邀请方发送项目类型:1:自动 2:手动
+    receiveProjectType: obj.receiveProjectType, //邀请方接收项目类型:1:自动 2:手动
   });
 }
 
 //修改价格的
 async function updatePri() {
-
   const { status1 } = await api.updateInvitationBind({
-   id:data.value.form.id,
-   priceRatio:data.value.form.priceRatio,
+    id: data.value.form.id,
+    priceRatio: data.value.form.priceRatio,
   });
   ElMessage.success({
-          message: "修改成功",
-          center: true,
-        });
-
-
+    message: "修改成功",
+    center: true,
+  });
 }
-
-
-
-
-
 
 // 确定
 async function save() {
   formRef.value.validate((valid: any) => {
     if (valid) {
-      if(data.value.form.receiveProjectType ==2) {
+      let obj = JSON.parse(JSON.stringify(data.value.form)); //深拷贝，不改变原数据
+
+      obj.sendProjectType =
+        data.value.form.sendProjectType.length != 0
+          ? data.value.form.sendProjectType[0]
+          : null;
+      obj.receiveProjectType =
+        data.value.form.receiveProjectType.length != 0
+          ? data.value.form.receiveProjectType[0]
+          : null;
+      if (obj.receiveProjectType == 2) {
         //手动
         data.value.form.chargeUserId = null; //负责人UserId
-        data.value.form.chargeUserName = '' //负责人用户姓名
-        data.value.form.departmentId = ''//邀请方部门id
+        data.value.form.chargeUserName = ""; //负责人用户姓名
+        data.value.form.departmentId = ""; //邀请方部门id
+        obj.chargeUserId = null; //负责人UserId
+        obj.chargeUserName = ""; //负责人用户姓名
+        obj.invitationType = ""; //邀请类型
       }
-      BindUser();
+      BindUser(obj);
       updatePri();
       emit("fetch-data");
       close();
@@ -126,7 +124,25 @@ async function save() {
     }
   });
 }
-
+//发送项目勾选
+// 处理选中项变化的逻辑，确保最多只能选择一个
+const handleCheckboxChange1 = (newValue: any) => {
+  if (Array.isArray(newValue) && newValue.length > 1) {
+    // 只有一个选项可以被选中，取最后一个选中的
+    data.value.form.sendProjectType = [newValue[newValue.length - 1]];
+  }
+};
+//接收项目
+const handleCheckboxChange2 = (newValue: any) => {
+  if (Array.isArray(newValue) && newValue.length > 1) {
+    // 只有一个选项可以被选中，取最后一个选中的
+    data.value.form.receiveProjectType = [newValue[newValue.length - 1]];
+  }
+};
+const handleKeydown = (e: any) => {
+  // 阻止键盘输入
+  e.preventDefault();
+};
 defineExpose({
   showEdit,
 });
@@ -147,45 +163,70 @@ defineExpose({
         :rules="data.rules"
         :model="data.form"
         label-width="7rem"
+        labelPosition="left"
       >
         <el-form-item label="价格比例" prop="priceRatio">
           <el-input v-model="data.form.priceRatio" clearable
             ><template #append>%</template></el-input
           >
         </el-form-item>
+
         <el-form-item
           label="项目分配方式"
-          prop="sendProjectType"
           label-width="7rem"
         >
-          <div style="display: flex; justify-items: center">
-            <span style="margin-right: 15px">发送项目</span>
-            <el-radio-group v-model="data.form.sendProjectType">
-              <el-radio :value="1">自动</el-radio>
-              <el-radio :value="2">手动</el-radio>
-            </el-radio-group>
-          </div>
         </el-form-item>
-        <el-form-item prop="receiveProjectType">
-          <div style="display: flex; justify-items: center">
-            <span style="margin-right: 15px">接收项目</span>
 
-            <el-radio-group v-model="data.form.receiveProjectType">
-              <el-radio :value="1">自动</el-radio>
-              <el-radio :value="2">手动</el-radio>
-            </el-radio-group>
-          </div>
-           <!-- 勾选自动出来 -->
-           <el-input
-              placeholder="请选择负责部门/PM"
-              clearable
-              style="width: 200px; margin-left: 25px"
-              @click="openUserDialog"
-              v-if="data.form.receiveProjectType ==1"
-              v-model="data.form.name"
+        <div
+          style="display: flex"
+          class="inviteDialog"
+        >
+          <el-form-item prop="sendProjectType">
+            <span slot="label" style="margin-right: 15px">
+              <el-tooltip effect="dark" content="1111111" placement="top-start">
+                <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
+              </el-tooltip>
+              <span style="color: #f56c6c">*</span>
+              发送项目
+            </span>
+
+            <el-checkbox-group
+              v-model="data.form.sendProjectType"
+              @change="handleCheckboxChange1"
             >
-            </el-input>
-        </el-form-item>
+              <el-checkbox :value="1"> 自动 </el-checkbox>
+              <el-checkbox :value="2"> 手动 </el-checkbox>
+            </el-checkbox-group>
+          </el-form-item>
+          <el-form-item prop="receiveProjectType" style="margin-left: 40px">
+            <span slot="label" style="margin-right: 15px">
+              <el-tooltip effect="dark" content="1111111" placement="top-start">
+                <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
+              </el-tooltip>
+              <span style="color: #f56c6c">*</span>
+              接收项目
+            </span>
+
+            <el-checkbox-group
+              v-model="data.form.receiveProjectType"
+              @change="handleCheckboxChange2"
+            >
+              <el-checkbox :value="1"> 自动 </el-checkbox>
+              <el-checkbox :value="2"> 手动 </el-checkbox>
+            </el-checkbox-group>
+          </el-form-item>
+        </div>
+
+        <el-input
+          placeholder="请选择接收项目负责人"
+          @keydown="handleKeydown"
+          @click="openUserDialog"
+          v-if="
+            data.form.receiveProjectType && data.form.receiveProjectType[0] == 1
+          "
+          v-model="data.form.chargeUserName"
+        >
+        </el-input>
       </ElForm>
 
       <template #footer>
@@ -198,4 +239,7 @@ defineExpose({
 </template>
 
 <style scoped lang="scss">
+:deep(.inviteDialog .el-form-item__content) {
+  margin-left: 0 !important;
+}
 </style>

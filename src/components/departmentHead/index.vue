@@ -99,7 +99,6 @@ const handleCheckboxChange = (newValue: any) => {
 
     departmentId.value = [];
     treeRef.value.setCheckedKeys([])
-    console.log(departmentId.value,'departmentId.value')
   }
 }
 defineExpose({
