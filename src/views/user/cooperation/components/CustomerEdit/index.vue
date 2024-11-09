@@ -21,6 +21,7 @@ const data = ref<any>({
     ],
     priceRatio: [
       { required: true, message: "请输入价格比例", trigger: "blur" },
+      { min: 0, max: 100, message: '请在0-100范围内输入', trigger: 'blur' },
     ],
     sendProjectType: [
       { required: true, message: "请选择发送项目", trigger: "change" },
