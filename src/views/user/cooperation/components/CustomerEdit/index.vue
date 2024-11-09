@@ -240,8 +240,9 @@ const handleKeydown = (e: any) => {
 
 
           <div style="display: flex" v-if="data.form.beInvitationTenantId"       class="inviteDialog">
-            <el-form-item prop="sendProjectType">
-              <span slot="label" style="margin-right:15px">
+            <el-form-item prop="sendProjectType" label-width="7rem">
+              <template #label >
+                <span>
                 <el-tooltip
                   effect="dark"
                   content="1111111"
@@ -249,9 +250,13 @@ const handleKeydown = (e: any) => {
                 >
                   <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
                 </el-tooltip>
-                <span style="color: #F56C6C;">*</span>
                 发送项目
               </span>
+
+              </template>
+
+
+
 
               <el-checkbox-group
                 v-model="data.form.sendProjectType"
@@ -262,7 +267,9 @@ const handleKeydown = (e: any) => {
               </el-checkbox-group>
             </el-form-item>
             <el-form-item prop="receiveProjectType" style="margin-left:40px">
-              <span slot="label" style="margin-right:15px">
+
+              <template #label >
+                <span>
                 <el-tooltip
                   effect="dark"
                   content="1111111"
@@ -270,9 +277,10 @@ const handleKeydown = (e: any) => {
                 >
                   <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
                 </el-tooltip>
-                <span style="color: #F56C6C;">*</span>
                 接收项目
               </span>
+
+              </template>
 
 
               <el-checkbox-group
@@ -310,8 +318,9 @@ const handleKeydown = (e: any) => {
   .el-dialog__body {
     min-height: 12.5rem !important;
   }
-}:deep(.inviteDialog .el-form-item__content){
-  margin-left: 0 !important;
 }
+// :deep(.inviteDialog .el-form-item__content){
+//   margin-left: 0 !important;
+// }
 
 </style>

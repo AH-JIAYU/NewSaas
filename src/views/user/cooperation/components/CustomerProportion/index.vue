@@ -181,14 +181,20 @@ defineExpose({
           style="display: flex"
           class="inviteDialog"
         >
-          <el-form-item prop="sendProjectType">
-            <span slot="label" style="margin-right: 15px">
-              <el-tooltip effect="dark" content="1111111" placement="top-start">
-                <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
-              </el-tooltip>
-              <span style="color: #f56c6c">*</span>
-              发送项目
-            </span>
+          <el-form-item prop="sendProjectType" label-width="7rem">
+            <template #label >
+                <span>
+                <el-tooltip
+                  effect="dark"
+                  content="1111111"
+                  placement="top-start"
+                >
+                  <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
+                </el-tooltip>
+                发送项目
+              </span>
+
+              </template>
 
             <el-checkbox-group
               v-model="data.form.sendProjectType"
@@ -199,13 +205,19 @@ defineExpose({
             </el-checkbox-group>
           </el-form-item>
           <el-form-item prop="receiveProjectType" style="margin-left: 40px">
-            <span slot="label" style="margin-right: 15px">
-              <el-tooltip effect="dark" content="1111111" placement="top-start">
-                <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
-              </el-tooltip>
-              <span style="color: #f56c6c">*</span>
-              接收项目
-            </span>
+            <template #label >
+                <span>
+                <el-tooltip
+                  effect="dark"
+                  content="1111111"
+                  placement="top-start"
+                >
+                  <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
+                </el-tooltip>
+                接收项目
+              </span>
+
+              </template>
 
             <el-checkbox-group
               v-model="data.form.receiveProjectType"

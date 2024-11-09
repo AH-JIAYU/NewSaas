@@ -467,9 +467,9 @@ function delreceive(row: any) {
           <el-row :gutter="24">
             <FormLeftPanel>
           <el-button type="primary" size="default" @click="addReceiveAll">
-            接收
+            接收项目
           </el-button>
-          <el-button type="primary" size="default" @click="delReceiveAll">
+          <el-button  size="default" @click="delReceiveAll">
             取消接收
           </el-button>
         </FormLeftPanel>
@@ -525,8 +525,21 @@ function delreceive(row: any) {
               width="140"
             >
               <template #default="{ row }">
-                <span class="tableBig">接收状态
-                 </span>
+<!--
+                  <el-text
+                  style="color: rgb(251, 104, 104)"
+                  class="oneLine"
+                  type="danger"
+                  >未接收</el-text
+                >
+                &ensp;
+                <el-text
+                  style="color: rgb(3, 194, 57)"
+                  class="oneLine"
+                  type="success"
+                  >已接收</el-text
+                > -->
+
               </template>
             </el-table-column>
             <el-table-column
@@ -750,7 +763,7 @@ function delreceive(row: any) {
                 <el-button
                   v-else
                   plain
-                  type="primary"
+                  type="danger"
 
                   size="small"
                   @click="delreceive(row)"
