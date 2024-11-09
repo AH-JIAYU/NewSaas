@@ -31,14 +31,19 @@ async function showEdit(row: any) {
       departmentList.value = res.data;
 
     }
-    //回显员工
+    //回显员工chargeUserId	负责人UserId或者部门id  invitationType	邀请方类型 1:员工userId 2: 部门id		false	chargeUserName	负责人用户姓名或者部门名称
     if(row) {
-
-       //负责人UserId
-      if(row.chargeUserId){
+      if(row.invitationType == 1){
+        //勾选的是负责人
+            if(row.chargeUserId){
         data.value.roleList = [row.chargeUserId]
         data.value.chargeUserName = row.chargeUserName
-        departmentId.value = [row.departmentId]
+
+      }
+      } else if(row.invitationType == 2){
+        //勾选是部门
+        departmentId.value = [row.chargeUserId];
+        data.value.chargeUserName = row.chargeUserName
       }
 
     }
@@ -50,22 +55,12 @@ const getTenantStaffList = async () => {
   const res = await apiUser.getTenantStaffList();
   data.value.tenantStaffList = res.data;
 };
-// const changeChargeUserId = (val: any) => {
-//   if (val) {
-//     const findData = data.value.tenantStaffList.find(
-//       (item: any) => item.id === data.value.form.chargeUserId,
-//     );
-//     data.value.form.chargeUserName = findData.userName;
-//   } else {
-//     data.value.form.chargeUserId = "";
-//     data.value.form.chargeUserName = "";
-//   }
-// };
+
 // 关闭
 function close() {
   drawerisible.value = false;
       // 同步选中的路由id
-      departmentId.value = treeRef.value.getCheckedKeys(false);
+      // departmentId.value = treeRef.value.getCheckedKeys(false);
 
 }
 // 树选中事件
@@ -84,6 +79,10 @@ const handleNodeClick = (nodeData: any, checked: any) => {
     // 如果取消选中节点，更新 departmentId
     departmentId.value = departmentId.value.filter((id: any) => id !== nodeData.id);
   }
+  if(departmentId.value.length) {
+    //如果勾选了部门，要把员工置空
+    data.value.roleList = []
+  }
 };
 const fetchData =()=> {
   //切换数据
@@ -93,6 +92,14 @@ const handleCheckboxChange = (newValue: any) => {
   if (Array.isArray(newValue) && newValue.length > 1) {
     // 只有一个选项可以被选中，取最后一个选中的
     data.value.roleList = [newValue[newValue.length - 1]]
+    //只能勾选部门或员工，如果勾选员工将部门置空
+
+  }
+  if(data.value.roleList.length !=0){
+
+    departmentId.value = [];
+    treeRef.value.setCheckedKeys([])
+    console.log(departmentId.value,'departmentId.value')
   }
 }
 defineExpose({
@@ -102,26 +109,33 @@ const emit = defineEmits(["userData"]);
 //点击确定，把值传给父元素
 function submit (){
   let chargeUserName ='';
-  let departmentName = '';
+  let chargeUserId = null;
+  let invitationType = null;
+  // let departmentName = '';
     if (data.value.roleList[0]){
       //获取员工名称
           const findData = data.value.tenantStaffList.find(
       (item: any) => item.id === data.value.roleList[0],
     );
     chargeUserName = findData.userName;
+    chargeUserId = data.value.roleList[0];
+    invitationType = 1;
     }
     if(departmentId.value[0]){
       //获取部门名称
       const findData1 = departmentList.value.find(
       (item: any) => item.id === departmentId.value[0],
     );
-    departmentName = findData1.name;
+    chargeUserName = findData1.name;
+    chargeUserId = departmentId.value[0];
+    invitationType = 2;
     }
   let obj = {
-    chargeUserId: data.value.roleList[0], //负责人UserId
+    chargeUserId: chargeUserId, //负责人UserId
     chargeUserName: chargeUserName, //负责人用户姓名
-    departmentId: departmentId.value[0], //邀请方部门id
-    departmentName:departmentName,
+    invitationType:invitationType,//类型，1员工，2部门
+    // departmentId: departmentId.value[0], //邀请方部门id
+    // departmentName:departmentName,
   }
   drawerisible.value = false;
   emit("userData", obj);

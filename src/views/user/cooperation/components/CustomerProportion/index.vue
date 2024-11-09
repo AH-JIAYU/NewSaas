@@ -31,21 +31,23 @@ async function showEdit(row: any) {
   data.value.form.sendProjectType = row.sendProjectType;
   data.value.form.receiveProjectType = row.receiveProjectType;
   data.value.form.chargeUserName = row.chargeUserName;
-  data.value.form.departmentId = row.departmentId;
+  data.value.form.invitationType = row.invitationType;
   data.value.form.chargeUserId = row.chargeUserId;
-  if (data.value.form.departmentId) {
-    //获取部门名称
-    // 部门
-    const res = await apiDep.list({ name: "" });
-    if (res.data) {
-      departmentList.value = res.data;
-    }
-    const findData1 = departmentList.value.find(
-      (item: any) => item.id === data.value.form.departmentId
-    );
-    data.value.form.departmentName = findData1.name;
-  }
-  data.value.form.name =(data.value.form.departmentName ? data.value.form.departmentName :'') + (data.value.form.chargeUserName ? ','+ data.value.form.chargeUserName:'')
+  // if (data.value.form.invitationType == 1) {
+  //   //获取员工
+  //   // 部门
+  //   const res = await apiDep.list({ name: "" });
+  //   if (res.data) {
+  //     departmentList.value = res.data;
+  //   }
+  //   const findData1 = departmentList.value.find(
+  //     (item: any) => item.id === data.value.form.departmentId
+  //   );
+  //   data.value.form.departmentName = findData1.name;
+  // } else if(data.value.form.invitationType == 2){
+  //   //获取部门
+  // }
+  // data.value.form.name =(data.value.form.departmentName ? data.value.form.departmentName :'') + (data.value.form.chargeUserName ? ','+ data.value.form.chargeUserName:'')
   drawerisible.value = true;
 }
 
@@ -63,10 +65,16 @@ function openUserDialog() {
 
 async function BindUser() {
   //
+   if(data.value.form.receiveProjectType ==2) {
+        //手动
+        data.value.form.chargeUserId = null; //负责人UserId
+        data.value.form.chargeUserName = '' //负责人用户姓名
+        data.value.form.invitationType = ''//邀请类型
+      }
   const { status } = await api.updateInvitationBindUser({
     id:data.value.form.id,
     chargeUserId: data.value.form.chargeUserId, //负责人UserId
-    departmentId: data.value.form.departmentId, //邀请方部门id
+    invitationType: data.value.form.invitationType, //邀请类型
     chargeUserName: data.value.form.chargeUserName, //负责人用户姓名
     sendProjectType: data.value.form.sendProjectType, //邀请方发送项目类型:1:自动 2:手动
     receiveProjectType: data.value.form.receiveProjectType, //邀请方接收项目类型:1:自动 2:手动

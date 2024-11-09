@@ -83,7 +83,7 @@ const agree = async () => {
         priceRatio: data.value.priceRatio,
         type: 3,
          chargeUserId: data.value.chargeUserId, //负责人UserId
-    departmentId: data.value.departmentId, //邀请方部门id
+         invitationType: data.value.invitationType, //邀请类型
     chargeUserName: data.value.chargeUserName, //负责人用户姓名
     sendProjectType: data.value.sendProjectType, //邀请方发送项目类型:1:自动 2:手动
     receiveProjectType: data.value.receiveProjectType, //邀请方接收项目类型:1:自动 2:手动
@@ -102,9 +102,9 @@ function openUserDialog() {
 //勾选部门人回传数据
 function userData(data1:any) {
   data.value.chargeUserId = data1.chargeUserId //负责人UserId
-  data.value.departmentId = data1.departmentId//邀请方部门id
+  data.value.invitationType = data1.invitationType//邀请类型
   data.value.chargeUserName = data1.chargeUserName
-  data.value.name = (data1.departmentName ?data1.departmentName:'') + (data.value.form.chargeUserName ?','+ data.value.form.chargeUserName:'')
+  // data.value.name = (data1.departmentName ?data1.departmentName:'') + (data.value.form.chargeUserName ?','+ data.value.form.chargeUserName:'')
 }
 defineExpose({
   showEdit,
@@ -164,7 +164,7 @@ defineExpose({
               style="width: 200px; margin-left: 25px"
               @click="openUserDialog"
               v-if="data.receiveProjectType ==1"
-              v-model="data.name"
+              v-model="data.chargeUserName"
             >
             </el-input>
           </el-form-item>

@@ -77,7 +77,7 @@ async function save() {
         //手动
         data.value.form.chargeUserId = null; //负责人UserId
         data.value.form.chargeUserName = '' //负责人用户姓名
-        data.value.form.departmentId = ''//邀请方部门id
+        data.value.form.invitationType = ''//邀请类型
       }
       api.addInvitationBind(data.value.form).then((res:any) => {
         if(res.status == -1){
@@ -130,17 +130,18 @@ const userRef = ref();
 function openUserDialog() {
   let obj = {
     chargeUserId: data.value.form.chargeUserId,
-    departmentId :data.value.form.departmentId,
+    invitationType :data.value.form.invitationType,
     chargeUserName:data.value.form.chargeUserName
   }
   userRef.value.showEdit(obj);
 }
 //勾选部门人回传数据
 function userData(data1:any) {
+
   data.value.form.chargeUserId = data1.chargeUserId //负责人UserId
-  data.value.form.departmentId = data1.departmentId//邀请方部门id
+  data.value.form.invitationType = data1.invitationType//邀请类型，1员工，2部门
   data.value.form.chargeUserName = data1.chargeUserName
-  data.value.form.name = (data1.departmentName ?data1.departmentName:'') + (data.value.form.chargeUserName ? ','+   data.value.form.chargeUserName:'')
+
 }
 </script>
 
@@ -234,7 +235,7 @@ function userData(data1:any) {
               style="width: 200px; margin-left: 25px"
               @click="openUserDialog"
               v-if="data.form.receiveProjectType ==1"
-              v-model="data.form.name"
+              v-model="data.form.chargeUserName"
             >
             </el-input>
           </el-form-item>
