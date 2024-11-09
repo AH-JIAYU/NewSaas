@@ -61,7 +61,7 @@ const columns = ref([
   },
   { label: "发送项目状态", checked: true, sortable: true, prop: "sendProjectType" },
   { label: "接收项目状态", checked: true, sortable: true, prop: "receiveProjectType" },
-  { label: "负责部门/人", checked: true, sortable: true, prop: "userName" },
+  { label: "负责部门/PM", checked: true, sortable: true, prop: "userName" },
 ]);
 
 const current = ref<any>(); //表格当前选中
@@ -324,7 +324,7 @@ onMounted(() => {
           align="left"
           prop="userName"
           show-overflow-tooltip
-          label="负责部门/人"
+          label="负责部门/PM"
         >
           <template #default="{ row }">
             <div class="flex-s">

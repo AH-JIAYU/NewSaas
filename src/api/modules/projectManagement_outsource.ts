@@ -10,4 +10,7 @@ export default {
   // 项目管理-项目外包-测查-点击查询
   getQuestionnaireClickList: (data: any) =>
     api.post("tenantBind/getQuestionnaireClickList", data),
+  //接收，取消接收
+  updateReceiveStatus: (data: any) =>
+    api.post("tenantBind/updateReceiveStatus", data),
 };

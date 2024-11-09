@@ -25,6 +25,7 @@ const listLoading = ref<boolean>(true);
 const border = ref(false);
 // 获取组件变量
 const editRef = ref();
+const data = ref<any>();
 // 右侧工具栏配置变量
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const checkList = ref<any>([]);
@@ -36,7 +37,7 @@ const stripe = ref(false);
 const columns = ref<any>([
   { sotrtable: true, checked: true, label: "租户ID", prop: "tenantId" },
   { sotrtable: true, checked: true, label: "接收状态", prop: "receiveStatus" },
-  { sotrtable: true, checked: true, label: "负责部门/人", prop: "userName" },
+  { sotrtable: true, checked: true, label: "负责部门/PM", prop: "userName" },
   { sotrtable: true, checked: true, label: "租户名称", prop: "tenantName" },
   { sotrtable: true, checked: true, label: "分配", prop: "allocationType" },
   { sotrtable: true, checked: true, label: "项目价", prop: "doMoneyPrice" },
@@ -201,19 +202,23 @@ onMounted(() => {
   ];
 });
 
-
-const receiveStatusList = [{
-  value:1,label:'自动（已接收）'
-},{
-  value:2,label:'手动（未接收）'
-}]
+const receiveStatusList = [
+  {
+    value: 1,
+    label: "自动（已接收）",
+  },
+  {
+    value: 2,
+    label: "手动（未接收）",
+  },
+];
 const formOption = {
   projectStatus: () =>
     projectManagementOutsourceStore.projectStatusList.map((item, index) => ({
       label: item,
       value: index + 1,
     })),
-    receiveStatus: () => receiveStatusList
+  receiveStatus: () => receiveStatusList,
 };
 const current = ref<any>(); //表格当前选中
 
@@ -232,7 +237,24 @@ function addReceiveAll() {
     });
   } else {
     //循环判断，如果勾选的数据有已接收的，给出提示，已接收的项目不能再次接收，请重新选择
-    userRef.value.showEdit( '',"接收",selectList);
+    let flagNum = selectList.length; //默认勾选的全部都是未接收的receiveStatus == 2
+    selectList.forEach((item: any) => {
+      if (item.receiveStatus == 1) {
+        //如果有已接收的，加数
+        flagNum++;
+      }
+    });
+    if (flagNum != selectList.length) {
+      ElMessage.warning({
+        message: "已接收的项目不能再次接收，请重新选择",
+        center: true,
+      });
+    } else {
+      data.value.receivingMode = "批量接收";
+      data.value.selectList = selectList;
+
+      userRef.value.showEdit("", "接收", selectList);
+    }
   }
 }
 //取消接收-批量
@@ -246,49 +268,109 @@ function delReceiveAll() {
     return;
   } else {
     //循环判断，如果勾选的数据有未接收的，给出提示，未接收的项目不能取消接收，请重新选择
-    ElMessageBox.confirm(`确认取消接收吗？`, "确认信息")
-      .then(() => {
-        try {
-          //     listLoading.value = true;= false
-          // apiUser.delete({ id: row.id }).then(() => {
-          //       listLoading.value = true; = false
-          //   fetchData();
-          //   ElMessage.success({
-          //     message: '删除成功',
-          //     center: true,
-          //   })
-          // })
-        } catch (error) {
-        } finally {
-          //     listLoading.value = true; = false
-        }
-      })
-      .catch(() => {});
+    let flagNum = selectList.length; //默认勾选的全部都是已接收的的receiveStatus == 1
+    selectList.forEach((item: any) => {
+      if (item.receiveStatus == 2) {
+        //如果有未接收的，加数
+        flagNum++;
+      }
+    });
+    if (flagNum != selectList.length) {
+      ElMessage.warning({
+        message: "未接收的项目不能取消接收，请重新选择",
+        center: true,
+      });
+    } else {
+      ElMessageBox.confirm(`确认取消接收吗？`, "确认信息")
+        .then(() => {
+          try {
+            listLoading.value = true;
+            let idList: any = [];
+            selectList.forEach((item: any) => {
+              idList.push(item.id);
+            });
+            let params = {
+              type: 2, //取消接收
+              idList: idList,
+            };
+            api.updateReceiveStatus(params).then(() => {
+              listLoading.value = false;
+              fetchData();
+              ElMessage.success({
+                message: "取消接收成功",
+                center: true,
+              });
+            });
+          } catch (error) {
+          } finally {
+            listLoading.value = false;
+          }
+        })
+        .catch(() => {});
+    }
   }
 }
 //接收-单个
-function addReceive(row:any) {
-  userRef.value.showEdit('',"接收",row);
+function addReceive(row: any) {
+  data.value.selectList = [row];
+  userRef.value.showEdit("", "接收", [row]);
 }
 //取消接收-单个
 function delreceive(row: any) {
-  ElMessageBox.confirm(`确认取消接收吗？`, '确认信息').then(() => {
-    try {
-      //     listLoading.value = true;= false
-      // apiUser.delete({ id: row.id }).then(() => {
-      //       listLoading.value = true; = false
-      //   fetchData();
-      //   ElMessage.success({
-      //     message: '删除成功',
-      //     center: true,
-      //   })
-      // })
-    } catch (error) {
-
-    } finally {
-      //     listLoading.value = true; = false
-    }
-  }).catch(() => { })
+  ElMessageBox.confirm(`确认取消接收吗？`, "确认信息")
+    .then(() => {
+      try {
+        listLoading.value = true;
+        let params = {
+          type: 2, //取消接收
+          idList: [row.id],
+        };
+        api.updateReceiveStatus(params).then(() => {
+          listLoading.value = false;
+          fetchData();
+          ElMessage.success({
+            message: "取消接收成功",
+            center: true,
+          });
+        });
+      } catch (error) {
+      } finally {
+        listLoading.value = false;
+      }
+    })
+    .catch(() => {});
+}
+//勾选部门人回传数据
+function userData(data1: any) {
+  data.value.chargeUserId = data1.chargeUserId; //负责人UserId
+  data.value.invitationType = data1.invitationType; //邀请类型，1员工，2部门
+  data.value.chargeUserName = data1.chargeUserName; //负责人名称
+  //判断是多选还是单选
+  let idList: any = [];
+  data.value.selectList.forEach((item: any) => {
+    idList.push(item.id);
+  });
+  try {
+    listLoading.value = true;
+    let params = {
+      type: 1, //接收
+      idList: idList,
+      userId: data1.chargeUserId,
+      userName: data1.chargeUserName,
+      allocationType: data1.invitationType,
+    };
+    api.updateReceiveStatus(params).then(() => {
+      listLoading.value = false;
+      fetchData();
+      ElMessage.success({
+        message: "接收成功",
+        center: true,
+      });
+    });
+  } catch (error) {
+  } finally {
+    listLoading.value = false;
+  }
 }
 </script>
 
@@ -581,11 +663,10 @@ function delreceive(row: any) {
               width="140"
             >
               <template #default="{ row }">
-
-                  <el-text
+                <el-text
                   style="color: rgb(251, 104, 104)"
                   class="oneLine"
-                  v-if="row.receiveStatus ==2"
+                  v-if="row.receiveStatus == 2"
                   type="danger"
                   >手动（未接收）</el-text
                 >
@@ -593,7 +674,7 @@ function delreceive(row: any) {
                 <el-text
                   style="color: rgb(3, 194, 57)"
                   class="oneLine"
-                   v-if="row.receiveStatus ==1"
+                  v-if="row.receiveStatus == 1"
                   type="success"
                   >自动（已接收）</el-text
                 >
@@ -772,7 +853,7 @@ function delreceive(row: any) {
               show-overflow-tooltip
               prop="userName"
               align="left"
-              label="负责部门/人"
+              label="负责部门/PM"
               width="140"
             >
               <template #default="{ row }">
@@ -806,17 +887,18 @@ function delreceive(row: any) {
                 >
                   重新分配
                 </el-button> -->
+                <!-- 1，已接收，2手动，未接收 -->
                 <el-button
-                  v-if="row.allocationStatus === 1"
+                  v-if="row.receiveStatus == 2"
                   plain
                   type="primary"
                   size="small"
-                  @click="addReceive()"
+                  @click="addReceive(row)"
                 >
                   接收
                 </el-button>
                 <el-button
-                  v-else
+                  v-if="row.receiveStatus == 1"
                   plain
                   type="danger"
                   size="small"
@@ -855,7 +937,7 @@ function delreceive(row: any) {
       <allocationEdit ref="addAllocationEditRef" @fetchData="fetchData" />
       <edit ref="editRef" @fetch-data="fetchData" />
     </PageMain>
-    <userDialog ref="userRef" />
+    <userDialog ref="userRef" @userData="userData" />
   </div>
 </template>
 

@@ -142,7 +142,7 @@ function submit() {
     // departmentName:departmentName,
   };
   drawerisible.value = false;
-  emit("userData", obj);
+  emit("userData", obj,);
 }
 </script>
 
