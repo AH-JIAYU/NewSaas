@@ -25,7 +25,12 @@ const listLoading = ref<boolean>(true);
 const border = ref(false);
 // 获取组件变量
 const editRef = ref();
-const data = ref<any>();
+const data = ref<any>(
+
+{
+  selectList:[]
+}
+);
 // 右侧工具栏配置变量
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const checkList = ref<any>([]);
