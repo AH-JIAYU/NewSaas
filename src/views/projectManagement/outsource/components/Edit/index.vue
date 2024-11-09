@@ -16,7 +16,7 @@ const dialogTableVisible = ref(false);
 const popoverRef = ref<any>(); //弹出框Ref
 const data = ref<any>({
   select: "",
-  currentTenantId: "", //当前租户id
+  currentTenantId: "", //当前合作商id
   tenantMeasurementInfoList: [], //测查列表
   clickIdList: [], //点击id列表
 });
@@ -35,7 +35,7 @@ async function showEdit(row: any, source: number = 0) {
     resList.unshift(res.data.tenantMeasurementInfo);
   }
 
-  // 过滤数据（删除与当前租户id相同的数据之前的所有数据，包括当前的数据）
+  // 过滤数据（删除与当前合作商id相同的数据之前的所有数据，包括当前的数据）
   const findDataIndex = resList.findIndex(
     (item: any) => item.allocationTenantId === res.data.currentTenantId
   );
@@ -44,7 +44,7 @@ async function showEdit(row: any, source: number = 0) {
   const findDataIndex1 = resList.findIndex(
     (item: any) => item.allocationTenantId === res.data.currentTenantId
   );
-  const HfindDataIndex =  resList[findDataIndex1].allocationHierarchy  //当前租户所在层级
+  const HfindDataIndex =  resList[findDataIndex1].allocationHierarchy  //当前合作商所在层级
   resList.splice(HfindDataIndex+1);
 
 
@@ -83,7 +83,7 @@ const getClickListBefore = (index: any) => {
       }
     });
   } else {
-    // 接受项目 popoverRef会比显示的链路list少一个，因为当前租户没有popoverRef
+    // 接受项目 popoverRef会比显示的链路list少一个，因为当前合作商没有popoverRef
     popoverRef.value.forEach((item: any, ind: any) => {
       if (ind !== index - 1) {
         item.hide();
@@ -154,7 +154,7 @@ function closeHandler() {
   dialogTableVisible.value = false;
   data.value = {
     select: "",
-    currentTenantId: "", //当前租户id
+    currentTenantId: "", //当前合作商id
     tenantMeasurementInfoList: [], //测查列表
     clickIdList: [], //点击id列表
   };

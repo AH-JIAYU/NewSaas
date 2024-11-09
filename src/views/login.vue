@@ -276,7 +276,7 @@ const registerForm = ref<any>({
   legalPersonName: "",
   // 税号
   taxID: "",
-  // 租户邀约
+  // 合作商邀约
   // isInvitation: 2,
 });
 // 自定义校验手机号
@@ -561,7 +561,7 @@ watch(
           code: "", // 验证码
           country: "", //区域
           type: "phone", // 注册方式 phone/email
-          // isInvitation: 2, // 租户邀约
+          // isInvitation: 2, // 合作商邀约
           agreeToTheAgreement: false,
         };
         break;
@@ -607,7 +607,7 @@ const agreements = (val: any) => {
         <!-- <img :src="logo" class="logo" />
         <img :src="banner" class="banner" /> -->
         <!--<h1 style="font-size: 3.125rem; font-weight: normal">欢迎</h1>
-        <h3 h1 style="font-size: 1.875rem; font-weight: normal">来到租户系统 !</h3>-->
+        <h3 h1 style="font-size: 1.875rem; font-weight: normal">来到合作商系统 !</h3>-->
       </div>
       <el-form v-show="formType === 'login'" ref="loginFormRef" :model="loginForm" :rules="loginRules"
         class="login-form" :validate-on-rule-change="false">

@@ -40,10 +40,10 @@ const formSearchName = ref<string>("formSearch-outsource"); // 表单排序name
 const lineHeight = ref<any>("default");
 const stripe = ref(false);
 const columns = ref<any>([
-  { sotrtable: true, checked: true, label: "租户ID", prop: "tenantId" },
+  { sotrtable: true, checked: true, label: "合作商ID", prop: "tenantId" },
   { sotrtable: true, checked: true, label: "接收状态", prop: "receiveStatus" },
   { sotrtable: true, checked: true, label: "负责部门/PM", prop: "userName" },
-  { sotrtable: true, checked: true, label: "租户名称", prop: "tenantName" },
+  { sotrtable: true, checked: true, label: "合作商名称", prop: "tenantName" },
   { sotrtable: true, checked: true, label: "分配", prop: "allocationType" },
   { sotrtable: true, checked: true, label: "项目价", prop: "doMoneyPrice" },
   { sotrtable: true, checked: true, label: "项目ID", prop: "projectId" },
@@ -60,8 +60,8 @@ const columns = ref<any>([
 // 查询参数
 const queryForm = reactive<any>({
   projectId: "", //项目id
-  tenantId: "", //租户id
-  tenantName: "", //	租户名称
+  tenantId: "", //合作商id
+  tenantName: "", //	合作商名称
   projectStatus: "", //	1:进行中(在线) 2:已完成(审核通过) 3:离线
   type: 2,
 });
@@ -93,8 +93,8 @@ function currentChange(page = 1) {
 // 重置数据
 function onReset() {
   Object.assign(queryForm, {
-    tenantId: "", //租户id
-    tenantName: "", //	租户名称
+    tenantId: "", //合作商id
+    tenantName: "", //	合作商名称
     projectStatus: "", //	1:进行中(在线) 2:已完成(审核通过) 3:离线
     type: 2,
   });
@@ -142,14 +142,14 @@ onMounted(() => {
       show: true,
       type: "input",
       modelName: "tenantId",
-      placeholder: "租户ID",
+      placeholder: "合作商ID",
     },
     {
       index: 3,
       show: true,
       type: "input",
       modelName: "tenantName",
-      placeholder: "租户名称",
+      placeholder: "合作商名称",
     },
     {
       index: 4,
@@ -175,14 +175,14 @@ onMounted(() => {
       show: true,
       type: "input",
       modelName: "tenantId",
-      placeholder: "租户ID",
+      placeholder: "合作商ID",
     },
     {
       index: 3,
       show: true,
       type: "input",
       modelName: "tenantName",
-      placeholder: "租户名称",
+      placeholder: "合作商名称",
     },
     {
       index: 4,
@@ -454,7 +454,7 @@ function userData(data1: any) {
               show-overflow-tooltip
               prop="tenantName"
               align="left"
-              label="租户名称"
+              label="合作商名称"
             >
               <template #default="{ row }">
                 <div class="tableBig">{{ row.tenantName }}</div>
@@ -466,7 +466,7 @@ function userData(data1: any) {
               prop="tenantId"
               align="left"
               width="280"
-              label="租户ID"
+              label="合作商ID"
             >
               <template #default="{ row }">
                 <div class="copyId tableSmall">
@@ -690,7 +690,7 @@ function userData(data1: any) {
               show-overflow-tooltip
               prop="tenantName"
               align="left"
-              label="租户名称"
+              label="合作商名称"
               width="200"
             >
               <template #default="{ row }">
@@ -702,7 +702,7 @@ function userData(data1: any) {
               show-overflow-tooltip
               prop="tenantId"
               align="left"
-              label="租户ID"
+              label="合作商ID"
               width="280"
               ><template #default="{ row }">
                 <div class="copyId tableSmall">
@@ -754,7 +754,7 @@ function userData(data1: any) {
                   size="small"
                   type="primary"
                   v-else-if="row.allocationType === 4"
-                  >租户</el-button
+                  >合作商</el-button
                 >
                 <el-button size="small" v-else class="tableBut">
                   未分配</el-button

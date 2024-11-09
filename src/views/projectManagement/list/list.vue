@@ -370,7 +370,7 @@ const formOption = {
   allocationStatus: () => [
     { label: "供应商", value: 2 },
     { label: "部门", value: 3 },
-    { label: "租户", value: 4 },
+    { label: "合作商", value: 4 },
   ],
   status: () => [
     { label: "在线", value: 1 },
@@ -382,7 +382,7 @@ const formOption = {
   ],
   projectType: () => [
     { label: "内部新增", value: 1 },
-    { label: "租户分配", value: 2 },
+    { label: "合作商分配", value: 2 },
   ],
 };
 </script>
@@ -508,7 +508,7 @@ const formOption = {
                     内部新增</el-text
                   >
                   <el-text v-else-if="row.projectType === 2" type="info">
-                    租户分配</el-text
+                    合作商分配</el-text
                   >
                 </span>
               </template>
@@ -660,7 +660,7 @@ const formOption = {
               @click="viewAllocations(row, 4)"
               type="primary"
               v-else-if="row.allocationType === 4"
-              >租户</el-button
+              >合作商</el-button
             >
             <el-button size="small" v-else class="tableBut"> 未分配</el-button>
           </template>

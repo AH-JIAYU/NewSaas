@@ -19,7 +19,7 @@ const formRef = ref()
 const fileDtailRef = ref()
 // listLoading
 const listLoading = ref<boolean>(false);
-// 获取租户id
+// 获取合作商id
 const tenantId = ref<any>();
 // 列表
 const list = ref<any>([]);
@@ -51,7 +51,7 @@ const statusForm = ref<any>({})
 const fileList = ref<any>({
   // 顶级域名
   domain: '',
-  // 租户域名
+  // 合作商域名
   tenantDomain: '',
   // 供应商域名
   supplierDomain: '',
@@ -82,7 +82,7 @@ const formRules = ref<FormRules>({
     { validator: validateTopLevelDomainName, trigger: "submit" },
   ],
   tenantDomain: [
-    { required: false, message: "请输入租户域名", trigger: "blur" },
+    { required: false, message: "请输入合作商域名", trigger: "blur" },
     { validator: validateTopLevelDomainName, trigger: "submit" },
   ],
   supplierDomain: [
@@ -337,7 +337,7 @@ const onSubmit = async (val: any) => {
           } else {
             return ElMessage({
               type: "warning",
-              message: '请输入租户域名',
+              message: '请输入合作商域名',
             });
           }
         } else if (val === 3) {
@@ -581,9 +581,9 @@ defineExpose({
             </div>
             <div class="f-xc" v-show="form.isAnalysis">
               <el-col :span="10">
-                <el-form-item label="租户后台域名" prop="tenantDomain">
+                <el-form-item label="合作商后台域名" prop="tenantDomain">
                   <el-input style="width: 14.5rem;" v-model="fileList.tenantDomain"
-                    :disabled="statusForm.tenantBackgroundStatus !== 1" placeholder="请输入租户域名">
+                    :disabled="statusForm.tenantBackgroundStatus !== 1" placeholder="请输入合作商域名">
                     <template #append>
                       <copy class="copy" :content="fileList.tenantDomain" />
                     </template>

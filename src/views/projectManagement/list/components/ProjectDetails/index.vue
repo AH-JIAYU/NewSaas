@@ -37,7 +37,7 @@ const data = ref<any>({
   imgUrl: [], // 图片预览
   isOnline: "", //	项目状态:1:在线 2:不在线
   allocationStatus: "", //分配状态:1:未分配 2:已分配
-  projectType: 1, //项目类型 1:内部新增 2:租户分配   为租户时需要隐藏客户、前置、操作日志
+  projectType: 1, //项目类型 1:内部新增 2:合作商分配   为合作商时需要隐藏客户、前置、操作日志
   srcList: [], // 图片预览
   countryList: [], // 区域
 });

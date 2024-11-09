@@ -2,7 +2,7 @@
 import { ElMessage } from "element-plus";
 import { submitLoading, obtainLoading } from "@/utils/apiLoading";
 import api from "@/api/modules/projectManagement";
-import cooperationApi from "@/api/modules/user_cooperation"; // 合作租户
+import cooperationApi from "@/api/modules/user_cooperation"; // 合作合作商
 import apiDep from "@/api/modules/survey_vip_department";
 import useUserSupplierStore from "@/store/modules/user_supplier"; // 供应商
 import useSurveyVipGroupStore from "@/store/modules/survey_vipGroup"; //会员组
@@ -34,7 +34,7 @@ const data = ref<any>({
   tenantSupplierList: [], // 供应商
   // vipGroupList: [], // 会员组
   departmentList: [], //会员部门
-  tenantList: [], // 合作租户
+  tenantList: [], // 合作合作商
   form: {
     projectId: "", // 项目id
     allocationType: 1, //	分配类型:1:自动分配 2:供应商 3:会员组
@@ -44,7 +44,7 @@ const data = ref<any>({
   selectAll: {
     supplier: false, // 供应商
     member: false, // 会员
-    tenant: false, // 租户
+    tenant: false, // 合作商
   },
 });
 const rules = ref<any>({
@@ -85,7 +85,7 @@ async function showEdit(row: any, type: string) {
   // 会员部门列表
   const resDep = await apiDep.list({ name: "" });
   data.value.departmentList = resDep.data;
-  // 合作租户列表
+  // 合作合作商列表
   const res = await obtainLoading(
     cooperationApi.getAllocationBindList({ projectId: row.projectId })
   );
@@ -104,7 +104,7 @@ async function showEdit(row: any, type: string) {
 function changeRadio() {
   data.value.form.groupSupplierIdList = [];
 }
-// 租户全选
+// 合作商全选
 function selectAllTenant() {
   data.value.form.groupSupplierIdList = [];
   if (data.value.selectAll.tenant) {
@@ -246,7 +246,7 @@ defineExpose({ showEdit });
           >
             <el-radio :value="2" size="large"> 供应商 </el-radio>
             <el-radio :value="3" size="large"> 部门 </el-radio>
-            <el-radio :value="4" size="large">租户 </el-radio>
+            <el-radio :value="4" size="large">合作商 </el-radio>
             <el-radio :value="5" size="large" v-if="data.title === '重新分配'">
               取消分配
             </el-radio>
@@ -317,12 +317,12 @@ defineExpose({ showEdit });
           v-if="
             data.form.allocationType === 4 && data.form.allocationType !== 5
           "
-          label="租户"
+          label="合作商"
           prop="groupSupplierIdList"
         >
           <el-select
             v-model="data.form.groupSupplierIdList"
-            placeholder="请选择租户"
+            placeholder="请选择合作商"
             clearable
             filterable
             multiple

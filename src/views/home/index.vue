@@ -216,7 +216,7 @@ onMounted(async () => {
         <div class="box_8 flex-col justify-between">
           <div class="text-group_12 flex-col justify-between">
             <span class="text_20">多模态合作能力</span>
-            <span class="text_21">实现多级合作关系，打通租户与租户的合作壁垒，支持内部会员拓展，建立供应商、服务商亲密的合作关系，更好适应市场变化</span>
+            <span class="text_21">实现多级合作关系，打通合作商与合作商的合作壁垒，支持内部会员拓展，建立供应商、服务商亲密的合作关系，更好适应市场变化</span>
           </div>
           <div class="group_3 flex-row" @click="freeTrial">
             <div class="image-text_3 flex-row justify-between">

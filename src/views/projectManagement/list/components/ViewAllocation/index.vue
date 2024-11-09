@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ElMessage } from "element-plus";
-import cooperationApi from "@/api/modules/user_cooperation"; // 合作租户
+import cooperationApi from "@/api/modules/user_cooperation"; // 合作合作商
 
 defineOptions({
   name: "AllocationEdit",
@@ -15,7 +15,7 @@ const formRef = ref<any>();
 const data = ref<any>({
   list: [], // 表格
   type: "", //类型
-  typeList: ["自动分配", "供应商", "会员组", "租户"],
+  typeList: ["自动分配", "供应商", "会员组", "合作商"],
 });
 
 // 显隐
@@ -51,7 +51,7 @@ defineExpose({ showEdit });
         }}</el-button>
       <el-button size="small" type="success" v-else-if="data.type === 3">会员组{{ data.list.length > 1 ? data.list.length : ''
         }}</el-button>
-      <el-button size="small" type="primary" v-else-if="data.type === 4">租户</el-button>
+      <el-button size="small" type="primary" v-else-if="data.type === 4">合作商</el-button>
 
       <div class="idList">
         <div class="item"  v-for="item in data.list">

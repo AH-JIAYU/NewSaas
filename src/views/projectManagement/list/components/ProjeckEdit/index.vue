@@ -73,7 +73,7 @@ function initializeLeftTabsData(data: any) {
       initialProblem: {
         countryId: null, //问卷对应区域id
         projectProblemCategoryId: null, //问题类别id
-        projectQuotaQuestionType: null, //问题类型:1:总控问题 2:租户自己问题
+        projectQuotaQuestionType: null, //问题类型:1:总控问题 2:合作商自己问题
         projectProblemId: null, //	前置问卷问题id
         keyValue: "", //	前置问卷问题
         questionType: null, // 问题类型    type: 1 输入框 2单选 3复选 4下拉
@@ -106,7 +106,7 @@ function initializeLeftTabsData(data: any) {
           initialProblem: {
             countryId: null, //问卷对应区域id
             projectProblemCategoryId: null, //问题类别id
-            projectQuotaQuestionType: null, //问题类型:1:总控问题 2:租户自己问题
+            projectQuotaQuestionType: null, //问题类型:1:总控问题 2:合作商自己问题
             projectProblemId: null, //	前置问卷问题id
             keyValue: "", //	前置问卷问题
             questionType: null, // 问题类型    type: 1 输入框 2单选 3复选 4下拉

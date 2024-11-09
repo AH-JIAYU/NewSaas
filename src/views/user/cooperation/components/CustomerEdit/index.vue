@@ -10,14 +10,14 @@ const title = ref<string>("");
 const formRef = ref<any>(); // Ref
 const data = ref<any>({
   form: {},
-  tenantUserList: [], //租户list
+  tenantUserList: [], //合作商list
   tenantStaffList: [], // 员工列表
   chargeUserId: null, //负责人UserId
   departmentId: null, //邀请方部门id
   chargeUserName: "", //负责人用户姓名
   rules: {
     beInvitationTenantId: [
-      { required: true, message: "请选择租户", trigger: "change" },
+      { required: true, message: "请选择合作商", trigger: "change" },
     ],
     priceRatio: [
       { required: true, message: "请输入价格比例", trigger: "blur" },
@@ -43,13 +43,13 @@ async function showEdit() {
   // await getTenantStaffList();
   drawerisible.value = true;
 }
-// 获取租户列表
+// 获取合作商列表
 async function getTenantUserList() {
   const res = await api.getTenantUserList({});
   data.value.tenantUserList = res.data.tenantUserInfoList;
 }
 
-// 筛选所选租户
+// 筛选所选合作商
 const dataList = computed(() => {
   const findData = data.value.tenantUserList.find(
     (item: any) => item.tenantId === data.value.form.beInvitationTenantId

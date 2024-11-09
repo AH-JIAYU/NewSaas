@@ -28,13 +28,13 @@ const checkList = ref<any>([]); // 表格控件-展示列
 const QuickEditRef = ref(); //快速编辑
 const columns = ref([
   {
-    label: "租户id",
+    label: "合作商id",
     checked: true,
     sortable: true,
     prop: "beInvitationTenantId",
   },
   {
-    label: "租户名称",
+    label: "合作商名称",
     checked: true,
     sortable: true,
     prop: "beInvitationTenantName",
@@ -281,7 +281,7 @@ onMounted(() => {
           prop="beInvitationTenantId"
           width="280"
 
-          label="租户ID"
+          label="合作商ID"
         >
           <template #default="{ row }">
             <div class="copyId tableSmall">
@@ -313,7 +313,7 @@ onMounted(() => {
           align="left"
           prop="beInvitationTenantName"
           show-overflow-tooltip
-          label="租户名称"
+          label="合作商名称"
         >
           <template #default="{ row }">
             <div class="tableBig">{{ row.beInvitationTenantName }}</div>

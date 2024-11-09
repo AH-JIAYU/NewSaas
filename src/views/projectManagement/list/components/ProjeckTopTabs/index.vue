@@ -330,7 +330,7 @@ const changeTab = async (val: any, judge?: boolean) => {
             cloneDeep(projectManagementListStore.initialProblem);
         }
 
-        // 问题类型:1:总控问题 2:租户自己问题
+        // 问题类型:1:总控问题 2:合作商自己问题
         localToptTab.value.data.configurationInformation.initialProblem.projectQuotaQuestionType =
           cloneDeep(res.data.projectQuotaQuestionType);
       } else {
@@ -359,7 +359,7 @@ const getProjectCategoryList = async () => {
             .countryId,
         projectQuotaQuestionType:
           localToptTab.value.data.configurationInformation.initialProblem
-            .projectQuotaQuestionType, //问题类型:1:总控问题 2:租户自己问题
+            .projectQuotaQuestionType, //问题类型:1:总控问题 2:合作商自己问题
       };
 
       const res = await api.getProjectCategoryList(params);
