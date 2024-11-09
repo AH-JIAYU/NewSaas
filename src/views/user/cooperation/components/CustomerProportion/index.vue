@@ -60,7 +60,7 @@ function close() {
 //选择部门人
 const userRef = ref();
 function openUserDialog() {
-  userRef.value.showEdit();
+  userRef.value.showEdit('','请选择负责部门/人');
 }
 
 async function BindUser(obj:any) {

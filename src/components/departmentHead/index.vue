@@ -14,13 +14,15 @@ const data = ref<any>({
   type: 1,
   tenantStaffList: [], // 员工列表
   roleList: [], //选择的员工
+  title:''
 });
 const defaultProps: any = {
   children: "children",
   label: "name",
 };
-// 显隐
-async function showEdit(row: any) {
+// 显隐 ,row,回显的勾选数据，name为弹出框名称，project为选中的项目名称数据
+async function showEdit(row: any,name:any,project:any) {
+
   await getTenantStaffList();
   data.value.type = 1;
   drawerisible.value = true;
@@ -44,6 +46,9 @@ async function showEdit(row: any) {
       data.value.chargeUserName = row.chargeUserName;
     }
   }
+
+    data.value.title = name;
+
 }
 // 获取PM/用户
 const getTenantStaffList = async () => {
@@ -144,7 +149,7 @@ function submit() {
       destroy-on-close
       draggable
       width="30%"
-      title="请选择负责部门/人"
+      :title="data.title"
       class="userClass"
     >
       <el-tabs v-model="data.type" @tab-change="fetchData">

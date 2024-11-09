@@ -15,8 +15,8 @@ const projectManagementOutsourceStore = useProjectManagementOutsourceStore();
 // const { format } = useTimeago();
 const { pagination, getParams, onSizeChange, onCurrentChange } =
   usePagination(); // 分页
-const tableSortRef = ref("");
-const tableSortRef2 = ref("");
+const tableSortRef = ref();
+const tableSortRef2 = ref();
 // 获取组件变量
 const addAllocationEditRef = ref();
 // loading加载
@@ -28,7 +28,7 @@ const editRef = ref();
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const checkList = ref<any>([]);
 const formSearchList = ref<any>(); //表单排序配置
-  const formSearchList2 = ref<any>(); //表单排序配置接收项目
+const formSearchList2 = ref<any>(); //表单排序配置接收项目
 const formSearchName = ref<string>("formSearch-outsource"); // 表单排序name
 const lineHeight = ref<any>("default");
 const stripe = ref(false);
@@ -153,7 +153,7 @@ onMounted(() => {
       optionValue: "value",
     },
   ];
-  formSearchList2.value =  [
+  formSearchList2.value = [
     {
       index: 1,
       show: true,
@@ -210,28 +210,73 @@ function handleCurrentChange(val: any) {
   if (val) current.value = val.projectId;
   else current.value = "";
 }
-const userRef = ref()
+const userRef = ref();
 //接收-批量
-function addReceiveAll () {
-  userRef.value.showEdit();
+function addReceiveAll() {
+  userRef.value.showEdit("接收");
+  const selectList = tableSortRef2.value.getSelectionRows();
+  if (selectList.length !== 1) {
+    ElMessage.warning({
+      message: "请选择一个项目",
+      center: true,
+    });
+  } else {
+    //循环判断，如果勾选的数据有已接收的，给出提示，已接收的项目不能再次接收，请重新选择
+  }
 }
 //取消接收-批量
 function delReceiveAll() {
-  // const selectList = tableSortRef2.value.getSelectionRows();
-  // if (selectList.length !== 1) {
-  //   ElMessage.warning({
-  //     message: "请选择一个项目",
-  //     center: true,
-  //   });
-  // }
+  const selectList = tableSortRef2.value.getSelectionRows();
+  if (selectList.length !== 1) {
+    ElMessage.warning({
+      message: "请选择一个项目",
+      center: true,
+    });
+  } else {
+    //循环判断，如果勾选的数据有未接收的，给出提示，未接收的项目不能取消接收，请重新选择
+    ElMessageBox.confirm(`确认取消接收吗？`, "确认信息")
+      .then(() => {
+        try {
+          //     listLoading.value = true;= false
+          // apiUser.delete({ id: row.id }).then(() => {
+          //       listLoading.value = true; = false
+          //   fetchData();
+          //   ElMessage.success({
+          //     message: '删除成功',
+          //     center: true,
+          //   })
+          // })
+        } catch (error) {
+        } finally {
+          //     listLoading.value = true; = false
+        }
+      })
+      .catch(() => {});
+  }
 }
 //接收-单个
-function addReceive () {
-  userRef.value.showEdit();
+function addReceive() {
+  userRef.value.showEdit("接收");
 }
 //取消接收-单个
 function delreceive(row: any) {
+  ElMessageBox.confirm(`确认取消接收吗？`, '确认信息').then(() => {
+    try {
+      //     listLoading.value = true;= false
+      // apiUser.delete({ id: row.id }).then(() => {
+      //       listLoading.value = true; = false
+      //   fetchData();
+      //   ElMessage.success({
+      //     message: '删除成功',
+      //     center: true,
+      //   })
+      // })
+    } catch (error) {
 
+    } finally {
+      //     listLoading.value = true; = false
+    }
+  }).catch(() => { })
 }
 </script>
 
@@ -466,13 +511,13 @@ function delreceive(row: any) {
           <ElDivider border-style="dashed" />
           <el-row :gutter="24">
             <FormLeftPanel>
-          <el-button type="primary" size="default" @click="addReceiveAll">
-            接收项目
-          </el-button>
-          <el-button  size="default" @click="delReceiveAll">
-            取消接收
-          </el-button>
-        </FormLeftPanel>
+              <el-button type="primary" size="default" @click="addReceiveAll">
+                接收项目
+              </el-button>
+              <el-button size="default" @click="delReceiveAll">
+                取消接收
+              </el-button>
+            </FormLeftPanel>
             <FormRightPanel>
               <el-button size="default" @click=""> 导出 </el-button>
               <TabelControl
@@ -489,7 +534,6 @@ function delreceive(row: any) {
           </el-row>
           <el-table
             ref="tableSortRef2"
-            v-loading="listLoading"
             style="margin-top: 10px"
             row-key="id"
             :data="list"
@@ -525,7 +569,7 @@ function delreceive(row: any) {
               width="140"
             >
               <template #default="{ row }">
-<!--
+                <!--
                   <el-text
                   style="color: rgb(251, 104, 104)"
                   class="oneLine"
@@ -539,7 +583,6 @@ function delreceive(row: any) {
                   type="success"
                   >已接收</el-text
                 > -->
-
               </template>
             </el-table-column>
             <el-table-column
@@ -548,7 +591,7 @@ function delreceive(row: any) {
               prop="tenantName"
               align="left"
               label="租户名称"
-               width="200"
+              width="200"
             >
               <template #default="{ row }">
                 <div class="tableBig">{{ row.tenantName }}</div>
@@ -581,7 +624,7 @@ function delreceive(row: any) {
               v-if="checkList.includes('allocationType')"
               align="left"
               label="分配"
-               width="120"
+              width="120"
             >
               <template #default="{ row }">
                 <el-button
@@ -635,7 +678,7 @@ function delreceive(row: any) {
               prop="projectName"
               align="left"
               label="项目名称"
-               width="200"
+              width="200"
             >
               <template #default="{ row }">
                 <div class="tableBig">{{ row.projectName }}</div>
@@ -716,8 +759,8 @@ function delreceive(row: any) {
               prop="projectName"
               align="left"
               label="负责部门/人"
-               width="200"
-               fixed="right"
+              width="200"
+              fixed="right"
             >
               <template #default="{ row }">
                 <div class="tableBig">{{ row.projectName }}</div>
@@ -753,7 +796,6 @@ function delreceive(row: any) {
                 <el-button
                   v-if="row.allocationStatus === 1"
                   plain
-
                   type="primary"
                   size="small"
                   @click="addReceive()"
@@ -764,7 +806,6 @@ function delreceive(row: any) {
                   v-else
                   plain
                   type="danger"
-
                   size="small"
                   @click="delreceive(row)"
                 >
@@ -801,7 +842,7 @@ function delreceive(row: any) {
       <allocationEdit ref="addAllocationEditRef" @fetchData="fetchData" />
       <edit ref="editRef" @fetch-data="fetchData" />
     </PageMain>
-    <userDialog ref="userRef"/>
+    <userDialog ref="userRef" />
   </div>
 </template>
 

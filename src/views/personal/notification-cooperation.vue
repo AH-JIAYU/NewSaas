@@ -91,7 +91,7 @@ const agree = async () => {
 //选择部门人
 const userRef = ref();
 function openUserDialog() {
-  userRef.value.showEdit();
+  userRef.value.showEdit('','请选择负责部门/人');
 }
 //勾选部门人回传数据
 function userData(data1: any) {

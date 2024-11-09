@@ -144,7 +144,7 @@ function openUserDialog() {
     invitationType: data.value.form.invitationType,
     chargeUserName: data.value.form.chargeUserName,
   };
-  userRef.value.showEdit(obj);
+  userRef.value.showEdit(obj,'请选择负责部门/人');
 }
 //勾选部门人回传数据
 function userData(data1: any) {
