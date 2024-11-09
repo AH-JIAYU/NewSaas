@@ -45,6 +45,7 @@ async function showEdit(row: any, name: any, project: any) {
       departmentId.value = [row.chargeUserId];
       data.value.chargeUserName = row.chargeUserName;
     }
+
   }
 
   data.value.title = name;
@@ -87,6 +88,11 @@ const handleNodeClick = (nodeData: any, checked: any) => {
   if (departmentId.value.length) {
     //如果勾选了部门，要把员工置空
     data.value.roleList = [];
+    const checkedNodes = treeRef.value.getCheckedNodes();
+    data.value.chargeUserName = checkedNodes.map((node: any) => node.name)[0];
+    // console.log(data.value.chargeUserName,'data.value.chargeUserName')
+  } else {
+    data.value.chargeUserName = ''
   }
 };
 const fetchData = () => {
@@ -102,6 +108,12 @@ const handleCheckboxChange = (newValue: any) => {
   if (data.value.roleList.length != 0) {
     departmentId.value = [];
     treeRef.value.setCheckedKeys([]);
+    let findData = data.value.tenantStaffList.find(
+      (item: any) => item.id === data.value.roleList[0]
+    );
+   data.value.chargeUserName = findData.userName;
+  } else {
+    data.value.chargeUserName = ''
   }
 };
 defineExpose({
@@ -134,6 +146,7 @@ function submit() {
     invitationType = 2;
     //
   }
+  data.value.chargeUserName = chargeUserName;
   let obj = {
     chargeUserId: chargeUserId, //负责人UserId
     chargeUserName: chargeUserName, //负责人用户姓名
@@ -237,6 +250,11 @@ const handleChange = (val: any) => {
           </el-checkbox-group>
         </el-tab-pane>
       </el-tabs>
+
+      <div v-if="data.chargeUserName">
+        <div class="i-ic:sharp-info w-1.5em h-1.5em" style="color: #FFB667;"></div>
+        <span style="margin-left: .5rem">{{ data.chargeUserName ||'' }}</span>
+      </div>
 
       <template #footer>
         <div class="flex-c">
