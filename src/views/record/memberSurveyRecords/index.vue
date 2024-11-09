@@ -45,6 +45,12 @@ const columns = ref([
     sortable: true,
     checked: true,
   },
+  {
+    prop: "tenantId",
+    label: "租户ID",
+    sortable: true,
+    checked: true,
+  },
   { prop: "memberId", label: "会员ID", sortable: true, checked: true },
   {
     prop: "tenantSupplierId",
@@ -279,6 +285,13 @@ onMounted(async () => {
       optionLabel: "label",
       optionValue: "value",
     },
+    {
+      index: 11,
+      show: true,
+      type: "input",
+      modelName: "tenantId",
+      placeholder: "租户ID",
+    },
   ];
 });
 const formOption = {
@@ -321,12 +334,14 @@ function handleCurrentChange(val: any) {
             @query-data="queryData" />
         </FormRightPanel>
       </el-row>
+      <!-- 外包会员，点击id，随机身份，租户id，会员id，子会员id，供应商id，项目，ip区域，分配类型，调查时间，调查状态，副状态 -->
       <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
         highlight-current-row @selection-change="setSelectRows" @current-change="handleCurrentChange">
         <el-table-column align="left" type="selection" />
         <el-table-column v-if="checkList.includes('id')" width="200" align="left" prop="id" show-overflow-tooltip
           fixed="left" label="点击ID"><template #default="{ row }">
-            <el-tag effect="dark" v-if="row.surveySource === 2" type="warning">外部人员</el-tag>
+            <el-tag effect="dark" v-if="row.surveySource === 2" type="warning">外部会员</el-tag>
+            <el-tag effect="dark" v-if="row.surveySource === 3" type="primary">外包会员</el-tag>
             <div class="copyId flex-s tableSmall">
               <div class="id oneLine idFont"> {{ row.id ? row.id : '-' }}</div>
               <copy :content="row.id" :class="{
@@ -337,10 +352,24 @@ function handleCurrentChange(val: any) {
             </div>
           </template>
         </el-table-column>
+        <el-table-column v-if="checkList.includes('projectId')" width="200" align="left" prop="projectId"
+          show-overflow-tooltip label="项目">
+          <template #default="{ row }">
+            <div class="tableBig oneLine">名称: {{ row.projectName }}</div>
+            <div class="copyId tableSmall flex-s">
+              <div class="id oneLine "> {{ row.projectId  ? row.projectId : '-' }}</div>
+              <copy v-if="row.projectId" :content="row.projectId" :class="{
+    rowCopy: 'rowCopy',
+    current: row.id === current,
+  }" />
+              <!-- <copy class="copy edit" v-if="row.projectId" :content="row.projectId" /> -->
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column v-if="checkList.includes('randomIdentityId')" width="200" align="left" prop="randomIdentityId"
           show-overflow-tooltip label="随机身份">
           <template #default="{ row }">
-            <div class="copyId flex-s tableSmall" v-if="row.surveySource === 1">
+            <div class="copyId flex-s tableSmall" v-if="row.surveySource === 1 && row.surveySource === 3">
               <div class="oneLine">
                 <span v-if="row.randomIdentityId" class="id oneLine idFont">
                   {{ row.randomIdentityId  ? row.randomIdentityId : '-' }}</span>
@@ -354,10 +383,12 @@ function handleCurrentChange(val: any) {
             </div>
           </template>
         </el-table-column>
+
+
         <el-table-column v-if="checkList.includes('surveySource')" width="200" align="left" prop="memberId"
-          show-overflow-tooltip label="会员">
+          show-overflow-tooltip label="会员ID">
           <template #default="{ row }">
-            <div v-if="row.surveySource === 1">
+            <div v-if="row.surveySource === 1 || row.surveySource === 3">
               <div v-if="row.memberId">
                 <div class="copyId tableSmall flex-s">
                   <div class="id oneLine idFont">{{ row.memberId  ? row.memberId : '-' }}</div>
@@ -376,7 +407,7 @@ function handleCurrentChange(val: any) {
         <el-table-column v-if="checkList.includes('memberChildId')" width="200" align="left" prop="memberChildId"
           show-overflow-tooltip label="子会员ID">
           <template #default="{ row }">
-            <div v-if="row.surveySource === 1">
+            <div v-if="row.surveySource === 1 || row.surveySource === 3">
               <div v-if="row.memberChildId">
                 <div class="copyId tableSmall flex-s">
                   <div class="id oneLine idFont">{{ row.memberChildId  ? row.memberChildId : '-' }}</div>
@@ -396,7 +427,7 @@ function handleCurrentChange(val: any) {
         <el-table-column v-if="checkList.includes('tenantSupplierId')" width="200" align="left" prop="tenantSupplierId"
           show-overflow-tooltip label="供应商ID">
           <template #default="{ row }">
-            <div class="copyId tableSmall flex-s" v-if="row.surveySource === 1">
+            <div class="copyId tableSmall flex-s" v-if="row.surveySource === 1 || row.surveySource === 3">
               <div class="oneLine">
                 <span v-if="row.tenantSupplierId" class="id oneLine idFont">
                   {{ row.tenantSupplierId  ? row.tenantSupplierId : '-' }}</span>
@@ -410,24 +441,21 @@ function handleCurrentChange(val: any) {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('projectId')" width="200" align="left" prop="projectId"
-          show-overflow-tooltip label="项目">
-          <template #default="{ row }">
-            <div class="tableBig oneLine">名称: {{ row.projectName }}</div>
-            <div class="copyId tableSmall flex-s">
-              <div class="id oneLine "> {{ row.projectId  ? row.projectId : '-' }}</div>
-              <copy v-if="row.projectId" :content="row.projectId" :class="{
+        <el-table-column v-if="checkList.includes('tenantId')" width="200" align="left" prop="tenantId" show-overflow-tooltip
+           label="租户ID"><template #default="{ row }">
+            <div class="copyId flex-s tableSmall" v-if="row.surveySource === 3">
+              <div class="id oneLine idFont"> {{ row.tenantId ? row.tenantId : '-' }}</div>
+              <copy :content="row.tenantId" :class="{
     rowCopy: 'rowCopy',
     current: row.id === current,
   }" />
-              <!-- <copy class="copy edit" v-if="row.projectId" :content="row.projectId" /> -->
             </div>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('customerShortName')" align="left" prop="customerShortName"
           show-overflow-tooltip width="100" label="客户简称">
           <template #default="{ row }">
-            <div class="tableBig">{{ row.customerShortName ? row.customerShortName : '-' }}</div>
+            <div class="tableBig" v-if="row.surveySource !== 3">{{ row.customerShortName ? row.customerShortName : '-' }}</div>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('ipBelong')" align="left" prop="ipBelong" show-overflow-tooltip
@@ -460,7 +488,7 @@ function handleCurrentChange(val: any) {
         <el-table-column v-if="checkList.includes('doMoneyPrice')" align="left" prop="doMoneyPrice"
           show-overflow-tooltip width="120" fixed="right" label="项目价">
           <template #default="{ row }">
-            <div class="fontC-System">
+            <div class="fontC-System" v-if="row.surveySource != 3">
               <CurrencyType />{{ row.doMoneyPrice || 0 }}
             </div>
           </template>
@@ -468,7 +496,7 @@ function handleCurrentChange(val: any) {
         <el-table-column v-if="checkList.includes('memberPrice')" align="left" prop="memberPrice" show-overflow-tooltip
           width="120" fixed="right" label="成本价">
           <template #default="{ row }">
-            <div class="fontC-System" style="color: #fd8989">
+            <div class="fontC-System" style="color: #fd8989" v-if="row.surveySource != 3">
               <CurrencyType />
               <template v-if="row.memberId"> {{ row.memberPrice || 0 }} </template>
               <template v-else> {{ row.supplierPrice || 0 }} </template>
