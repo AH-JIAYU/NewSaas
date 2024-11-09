@@ -24,10 +24,10 @@ const data = ref<any>({
       // { min: 0, max: 100, message: '请在0-100范围内输入', trigger: 'change"' },
     ],
     sendProjectType: [
-      { required: true, message: "请选择发送项目", trigger: "change" },
+      { required: true, message: "请选择发送项目", trigger: "change" }
     ],
     receiveProjectType: [
-      { required: true, message: "请选择接收项目", trigger: "change" },
+      { required: true, message: "请选择接收项目", trigger: "change" }
     ],
     // chargeUserName: [
     //   { required: true, message: "请选择接收项目负责人", trigger: "change" },
