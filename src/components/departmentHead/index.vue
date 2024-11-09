@@ -161,12 +161,14 @@ const handleChange = (val: any) => {
       :title="data.title"
       class="userClass"
     >
-      <div v-if="data.project.length != 0">
+    <!-- v-if="data.project.length != 0" -->
+      <div >
         <el-collapse v-model="activeNames" @change="handleChange">
           <el-collapse-item name="1">
             <template #title>
+              <span class="project-name">项目</span>
               <el-badge :value="data.project.length" :max="99" class="item">
-                <span class="project-name">项目</span>
+
               </el-badge>
             </template>
             <div class="project-content">
@@ -182,7 +184,7 @@ const handleChange = (val: any) => {
         </el-collapse>
       </div>
 
-      <el-tabs v-model="data.type" @tab-change="fetchData">
+      <el-tabs v-model="data.type" @tab-change="fetchData" class="tabs-user">
         <el-tab-pane label="部门" :name="1">
           <template #label>
             <span class="custom-tab-label">部门</span>
@@ -252,13 +254,24 @@ const handleChange = (val: any) => {
   height: 12.5rem;
   overflow: auto;
 }
+:deep(.userClass  .el-collapse){
+  border-top: none !important;
+
+}
 .project-name {
   font-weight: 500;
   font-size: 16px;
   color: #333333;
 }
+.tabs-user {
+  margin-top:.9375rem;
+
+}
 .project-content {
   // margin-top: .625rem;
+  height: 150px;
+  overflow:auto;
+
 }
 .flex-c {
   display: flex;
@@ -276,6 +289,9 @@ const handleChange = (val: any) => {
       padding: 0.3125rem 0.9375rem; /* 内边距 */
     }
   }
+}
+.userClass .el-tabs__item.is-top:nth-child(2)  {
+  margin-left: 0 !important;
 }
 :deep(.userClass .el-tree-node.is-checked > .el-tree-node__content) {
   background: #e3f1ff;
