@@ -245,7 +245,7 @@ defineExpose({ showEdit });
             @change="changeRadio"
           >
             <el-radio :value="2" size="large"> 供应商 </el-radio>
-            <el-radio :value="3" size="large"> 部门 </el-radio>
+            <el-radio :value="3" size="large"> 内部站 </el-radio>
             <el-radio :value="4" size="large">合作商 </el-radio>
             <el-radio :value="5" size="large" v-if="data.title === '重新分配'">
               取消分配
