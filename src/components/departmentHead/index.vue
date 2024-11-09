@@ -161,8 +161,7 @@ const handleChange = (val: any) => {
       :title="data.title"
       class="userClass"
     >
-    <!-- v-if="data.project.length != 0" -->
-      <div >
+      <div v-if="data.project.length != 0">
         <el-collapse v-model="activeNames" @change="handleChange">
           <el-collapse-item name="1">
             <template #title>
