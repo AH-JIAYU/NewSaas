@@ -14,15 +14,15 @@ const data = ref<any>({
   type: 1,
   tenantStaffList: [], // 员工列表
   roleList: [], //选择的员工
-  title:''
+  title: "",
+  project: [], //选中的项目
 });
 const defaultProps: any = {
   children: "children",
   label: "name",
 };
 // 显隐 ,row,回显的勾选数据，name为弹出框名称，project为选中的项目名称数据
-async function showEdit(row: any,name:any,project:any) {
-
+async function showEdit(row: any, name: any, project: any) {
   await getTenantStaffList();
   data.value.type = 1;
   drawerisible.value = true;
@@ -47,7 +47,12 @@ async function showEdit(row: any,name:any,project:any) {
     }
   }
 
-    data.value.title = name;
+  data.value.title = name;
+
+  //项目外包-接收项目-接收选中的项目
+  if(project){
+    data.value.project = project;
+  }
 
 }
 // 获取PM/用户
@@ -122,10 +127,10 @@ function submit() {
   // console.log(departmentList.value,'departmentList.value')
   if (departmentId.value[0]) {
     //获取部门名称
-      // 获取所有选中的节点
-      const checkedNodes = treeRef.value.getCheckedNodes();
-      // 提取选中节点的名称
-      chargeUserName = checkedNodes.map((node:any) => node.name)[0];
+    // 获取所有选中的节点
+    const checkedNodes = treeRef.value.getCheckedNodes();
+    // 提取选中节点的名称
+    chargeUserName = checkedNodes.map((node: any) => node.name)[0];
     chargeUserId = departmentId.value[0];
     invitationType = 2;
   }
@@ -152,6 +157,23 @@ function submit() {
       :title="data.title"
       class="userClass"
     >
+      <div v-if="data.project.length !=0">
+        <el-badge :value="data.project.length" :max="99" class="item">
+          <span class="project-name">项目</span>
+        </el-badge>
+
+        <div class="project-content">
+          <div v-for="item in data.project" :key="item.id">
+            <div style="display: flex">
+              <span style="font-weight: 500;">{{ item.tenantName }}</span>
+              <span style="margin-left: 10px">ID:{{ item.tenantId }}</span
+              ><copy :content="item.tenantId" />
+            </div>
+          </div>
+        </div>
+        <el-divider></el-divider>
+      </div>
+
       <el-tabs v-model="data.type" @tab-change="fetchData">
         <el-tab-pane label="部门" :name="1">
           <template #label>
@@ -182,7 +204,7 @@ function submit() {
             :props="defaultProps"
             @check-change="handleNodeClick"
             :check-on-click-node="true"
-            :expand-on-click-node = 'false'
+            :expand-on-click-node="false"
           />
           <el-text v-else>暂无数据</el-text>
         </el-tab-pane>
@@ -221,6 +243,11 @@ function submit() {
 :deep(.userClass .el-tabs__content) {
   height: 12.5rem;
   overflow: auto;
+}
+.project-name {
+  font-weight: 500;
+font-size: 16px;
+color: #333333;
 }
 .flex-c {
   display: flex;

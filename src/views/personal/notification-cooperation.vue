@@ -72,14 +72,14 @@ const agree = async () => {
     if (valid) {
       const params = {
         id: data.value.id,
-        beInvitationChargeUserId: data.value.beInvitationChargeUserId,
-        beInvitationChargeUserName: data.value.beInvitationChargeUserName,
+        // beInvitationChargeUserId: data.value.beInvitationChargeUserId,
+        // beInvitationChargeUserName: data.value.beInvitationChargeUserName,
         priceRatio: data.value.priceRatio,
         type: 3,
-        chargeUserId: data.value.chargeUserId, //负责人UserId
-        invitationType: data.value.invitationType, //邀请类型
-        chargeUserName: data.value.chargeUserName, //负责人用户姓名
-        sendProjectType: data.value.sendProjectType.length[0], //邀请方发送项目类型:1:自动 2:手动
+        beInvitationChargeUserId: data.value.chargeUserId, //负责人UserId
+        beInvitationType: data.value.invitationType, //邀请类型
+        beInvitationChargeUserName: data.value.chargeUserName, //负责人用户姓名
+        sendProjectType: data.value.sendProjectType[0], //邀请方发送项目类型:1:自动 2:手动
         receiveProjectType: data.value.receiveProjectType[0], //邀请方接收项目类型:1:自动 2:手动
       };
       emit("delSelectId");

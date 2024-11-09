@@ -59,6 +59,9 @@ const columns = ref([
     sortable: true,
     prop: "availableBalance",
   },
+  { label: "发送项目状态", checked: true, sortable: true, prop: "sendProjectType" },
+  { label: "接收项目状态", checked: true, sortable: true, prop: "receiveProjectType" },
+  { label: "负责部门/人", checked: true, sortable: true, prop: "userName" },
 ]);
 
 const current = ref<any>(); //表格当前选中
@@ -239,6 +242,36 @@ onMounted(() => {
             <div class="fontC-System">
               <el-text v-if="row.bindStatus === 2" type="success">合作</el-text>
               <el-text v-if="row.bindStatus === 4" type="danger">解约</el-text>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="checkList.includes('bindStatus')"
+          align="left"
+          prop="sendProjectType"
+          show-overflow-tooltip
+          label="发送项目状态"
+          width="120"
+        >
+          <template #default="{ row }">
+            <div class="fontC-System">
+              <el-text v-if="row.sendProjectType === 1" type="success">自动</el-text>
+              <el-text v-if="row.sendProjectType === 2" type="danger">手动</el-text>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="checkList.includes('receiveProjectType')"
+          align="left"
+          prop="receiveProjectType"
+          show-overflow-tooltip
+          label="接收项目状态"
+          width="120"
+        >
+          <template #default="{ row }">
+            <div class="fontC-System">
+              <el-text v-if="row.receiveProjectType === 1" type="success">自动</el-text>
+              <el-text v-if="row.receiveProjectType === 2" type="danger">手动</el-text>
             </div>
           </template>
         </el-table-column>

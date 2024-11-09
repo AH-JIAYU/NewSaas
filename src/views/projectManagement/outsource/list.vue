@@ -8,6 +8,7 @@ import api from "@/api/modules/projectManagement_outsource";
 import useProjectManagementOutsourceStore from "@/store/modules/projectManagement_outsource";
 import empty from "@/assets/images/empty.png";
 import userDialog from "@/components/departmentHead/index.vue"; //部门人
+import { rowKey } from "element-plus/es/components/table-v2/src/common.mjs";
 defineOptions({
   name: "outsource",
 });
@@ -34,6 +35,8 @@ const lineHeight = ref<any>("default");
 const stripe = ref(false);
 const columns = ref<any>([
   { sotrtable: true, checked: true, label: "租户ID", prop: "tenantId" },
+  { sotrtable: true, checked: true, label: "接收状态", prop: "receiveStatus" },
+  { sotrtable: true, checked: true, label: "负责部门/人", prop: "userName" },
   { sotrtable: true, checked: true, label: "租户名称", prop: "tenantName" },
   { sotrtable: true, checked: true, label: "分配", prop: "allocationType" },
   { sotrtable: true, checked: true, label: "项目价", prop: "doMoneyPrice" },
@@ -189,20 +192,28 @@ onMounted(() => {
       index: 5,
       show: true,
       type: "select",
-      modelName: "projectStatus",
+      modelName: "receiveStatus",
       placeholder: "接收状态",
-      option: "projectStatus",
+      option: "receiveStatus",
       optionLabel: "label",
       optionValue: "value",
     },
   ];
 });
+
+
+const receiveStatusList = [{
+  value:1,label:'自动（已接收）'
+},{
+  value:2,label:'手动（未接收）'
+}]
 const formOption = {
   projectStatus: () =>
     projectManagementOutsourceStore.projectStatusList.map((item, index) => ({
       label: item,
       value: index + 1,
     })),
+    receiveStatus: () => receiveStatusList
 };
 const current = ref<any>(); //表格当前选中
 
@@ -213,7 +224,6 @@ function handleCurrentChange(val: any) {
 const userRef = ref();
 //接收-批量
 function addReceiveAll() {
-  userRef.value.showEdit("接收");
   const selectList = tableSortRef2.value.getSelectionRows();
   if (selectList.length !== 1) {
     ElMessage.warning({
@@ -222,6 +232,7 @@ function addReceiveAll() {
     });
   } else {
     //循环判断，如果勾选的数据有已接收的，给出提示，已接收的项目不能再次接收，请重新选择
+    userRef.value.showEdit( '',"接收",selectList);
   }
 }
 //取消接收-批量
@@ -232,6 +243,7 @@ function delReceiveAll() {
       message: "请选择一个项目",
       center: true,
     });
+    return;
   } else {
     //循环判断，如果勾选的数据有未接收的，给出提示，未接收的项目不能取消接收，请重新选择
     ElMessageBox.confirm(`确认取消接收吗？`, "确认信息")
@@ -255,8 +267,8 @@ function delReceiveAll() {
   }
 }
 //接收-单个
-function addReceive() {
-  userRef.value.showEdit("接收");
+function addReceive(row:any) {
+  userRef.value.showEdit('',"接收",row);
 }
 //取消接收-单个
 function delreceive(row: any) {
@@ -331,7 +343,7 @@ function delreceive(row: any) {
             <el-table-column
               v-if="checkList.includes('projectStatus')"
               show-overflow-tooltip
-              prop="projectStatus"
+              prop="receiveStatus"
               align="left"
               width="140"
               label="状态"
@@ -561,28 +573,30 @@ function delreceive(row: any) {
               </template>
             </el-table-column>
             <el-table-column
-              v-if="checkList.includes('projectStatus')"
+              v-if="checkList.includes('receiveStatus')"
               show-overflow-tooltip
-              prop="projectStatus"
+              prop="receiveStatus"
               align="left"
               label="接收状态"
               width="140"
             >
               <template #default="{ row }">
-                <!--
+
                   <el-text
                   style="color: rgb(251, 104, 104)"
                   class="oneLine"
+                  v-if="row.receiveStatus ==2"
                   type="danger"
-                  >未接收</el-text
+                  >手动（未接收）</el-text
                 >
                 &ensp;
                 <el-text
                   style="color: rgb(3, 194, 57)"
                   class="oneLine"
+                   v-if="row.receiveStatus ==1"
                   type="success"
-                  >已接收</el-text
-                > -->
+                  >自动（已接收）</el-text
+                >
               </template>
             </el-table-column>
             <el-table-column
@@ -754,23 +768,22 @@ function delreceive(row: any) {
               </template>
             </el-table-column>
             <el-table-column
-              v-if="checkList.includes('projectName')"
+              v-if="checkList.includes('userName')"
               show-overflow-tooltip
-              prop="projectName"
+              prop="userName"
               align="left"
               label="负责部门/人"
-              width="200"
-              fixed="right"
+              width="140"
             >
               <template #default="{ row }">
-                <div class="tableBig">{{ row.projectName }}</div>
+                <div class="tableBig">{{ row.userName }}</div>
               </template>
             </el-table-column>
             <el-table-column
               align="left"
               fixed="right"
               label="操作"
-              width="170"
+              width="160"
             >
               <template #default="{ row }">
                 <!-- <el-button

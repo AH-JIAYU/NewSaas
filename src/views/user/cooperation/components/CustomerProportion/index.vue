@@ -29,9 +29,9 @@ async function showEdit(row: any) {
   data.value.form.priceRatio = row.priceRatio;
   data.value.form.sendProjectType = row.sendProjectType ? [row.sendProjectType]:null;
   data.value.form.receiveProjectType = row.receiveProjectType ? [row.receiveProjectType]:null;
-  data.value.form.chargeUserName = row.chargeUserName;
+  data.value.form.chargeUserName = row.userName;
   data.value.form.invitationType = row.invitationType;
-  data.value.form.chargeUserId = row.chargeUserId;
+  data.value.form.chargeUserId = row.userId;
 
   // if (data.value.form.invitationType == 1) {
   //   //获取员工
