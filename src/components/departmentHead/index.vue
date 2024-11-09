@@ -133,6 +133,7 @@ function submit() {
     chargeUserName = checkedNodes.map((node: any) => node.name)[0];
     chargeUserId = departmentId.value[0];
     invitationType = 2;
+    //
   }
   let obj = {
     chargeUserId: chargeUserId, //负责人UserId

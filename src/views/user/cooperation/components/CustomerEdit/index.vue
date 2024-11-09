@@ -28,6 +28,9 @@ const data = ref<any>({
     receiveProjectType: [
       { required: true, message: "请选择接收项目", trigger: "change" },
     ],
+    // chargeUserName: [
+    //   { required: true, message: "请选择接收项目负责人", trigger: "change" },
+    // ],
     // chargeUserId: [
     //   { required: true, message: "请选择PM", trigger: "change" },
     // ],
@@ -74,7 +77,14 @@ async function save() {
   formRef.value.validate((valid: any) => {
     if (valid) {
       let obj = JSON.parse(JSON.stringify(data.value.form)); //深拷贝，不改变原数据
-
+        //如果obj.receiveProjectType == 1，，必须要选人
+        if(obj.receiveProjectType == 1 && !obj.chargeUserId){
+          ElMessage.warning({
+            message: "请选择接收项目负责人",
+            center: true,
+          });
+        return;
+        }
       obj.sendProjectType =
         data.value.form.sendProjectType.length != 0
           ? data.value.form.sendProjectType[0]
@@ -112,26 +122,8 @@ async function save() {
     }
   });
 }
-//原始数据接口
-async function BindPriceRatio() {
-  await api.addInvitationBind(data.value.form);
-}
-// 项目分配方式接口
-async function BindUser() {
-  //
-  const { status } = await api.updateInvitationBindUser({
-    // chargeUserId: data.value.chargeUserId, //负责人UserId
-    // departmentId: data.value.departmentId, //邀请方部门id
-    // chargeUserName: data.value.chargeUserName, //负责人用户姓名
-    // sendProjectType: data.value.form.sendProjectType, //邀请方发送项目类型:1:自动 2:手动
-    // receiveProjectType: data.value.form.receiveProjectType, //邀请方接收项目类型:1:自动 2:手动
-  });
-  status === 1 &&
-    ElMessage.success({
-      message: "编辑成功",
-      center: true,
-    });
-}
+
+
 
 defineExpose({
   showEdit,
@@ -292,8 +284,7 @@ const handleKeydown = (e: any) => {
               </el-checkbox-group>
             </el-form-item>
           </div>
-
-        <el-input
+            <el-input
           placeholder="请选择接收项目负责人"
           @keydown="handleKeydown"
           @click="openUserDialog"
@@ -303,6 +294,7 @@ const handleKeydown = (e: any) => {
           v-model="data.form.chargeUserName"
         >
         </el-input>
+
       </ElForm>
       <template #footer>
         <el-button @click="close"> 关闭 </el-button>
