@@ -220,7 +220,7 @@ defineExpose({
         </el-button>
       </div>
     </div>
-    <el-dialog v-model="dialogTableVisible" title="添加PM">
+    <el-dialog v-model="dialogTableVisible" title="添加PM" class="hezuoDrawer">
       <ElForm
         ref="FormRef"
         :rules="data.rules"
@@ -352,8 +352,20 @@ defineExpose({
 </template>
 
 <style scoped lang="scss">
+:deep(.hezuoDrawer .el-select-dropdown__item.is-hovering){
+  background: white !important;
+}
+:deep(.hezuoDrawer .el-select-dropdown__item.is-selected){
+  font-weight: 100 !important;
+}
 :deep(.inviteDialog .el-form-item__content) {
   margin-left: 0 !important;
+}
+:deep(.el-select-dropdown__item.is-hovering){
+  background: white;
+}
+:deep(.el-select-dropdown__item.is-selected){
+  font-weight: 100;
 }
 .news {
   height: 100%;

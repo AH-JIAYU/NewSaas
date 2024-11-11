@@ -227,6 +227,7 @@ defineExpose({
       draggable
       width="40%"
       title="合作配置"
+      class="hezuoDrawer"
     >
       <ElForm
         ref="formRef"
@@ -342,5 +343,11 @@ defineExpose({
 }
 :deep(.el-form label, .el-tree-node__label, .checkbox__label) {
   color: #333333;
+}
+:deep(.hezuoDrawer .el-select-dropdown__item.is-hovering){
+  background: white !important;
+}
+:deep(.hezuoDrawer .el-select-dropdown__item.is-selected){
+  font-weight: 100 !important;
 }
 </style>

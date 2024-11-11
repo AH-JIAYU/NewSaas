@@ -389,10 +389,16 @@ const handleKeydown = (e: any) => {
 </template>
 
 <style scoped lang="scss">
+:deep(.el-select-dropdown__item.is-hovering){
+  background: white;
+}
 :deep {
   .el-dialog__body {
     min-height: 12.5rem !important;
   }
+}
+:deep(.el-select-dropdown__item.is-selected){
+  font-weight: 100;
 }
 .fontColor {
   color: #333333 !important;
