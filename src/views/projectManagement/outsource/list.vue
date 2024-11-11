@@ -7,7 +7,8 @@ import allocationEdit from "../list/components/AllocationEdit/index.vue";
 import api from "@/api/modules/projectManagement_outsource";
 import useProjectManagementOutsourceStore from "@/store/modules/projectManagement_outsource";
 import empty from "@/assets/images/empty.png";
-import userDialog from "@/components/departmentHead/index.vue"; //部门人
+// import userDialog from "@/components/departmentHead/index.vue"; //部门人
+import userDialog from "./components/userPM/index.vue";
 import { rowKey } from "element-plus/es/components/table-v2/src/common.mjs";
 defineOptions({
   name: "outsource",

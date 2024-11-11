@@ -4,6 +4,7 @@ import api from "@/api/modules/user_cooperation";
 import { obtainLoading, submitLoading } from "@/utils/apiLoading";
 import apiDep from "@/api/modules/department";
 import apiUser from "@/api/modules/configuration_manager";
+import DictionaryItemDia from "@/views/configuration/user/components/dictionaryItemDialog/index.vue";
 import role from "@/mock/role";
 const drawerisible = ref<boolean>(false);
 const departmentId = ref<any>([]);
@@ -16,43 +17,31 @@ const data = ref<any>({
   roleList: [], //选择的员工
   title: "",
   project: [], //选中的项目
+  form: {
+    chargeUserId: null,
+    chargeUserName: "",
+  },
 });
 const defaultProps: any = {
   children: "children",
   label: "name",
 };
+const rules = reactive<any>({
+  chargeUserId: [{ required: true, message: "请选择PM", trigger: "change" }],
+});
+const dictionaryItemVisible = ref<any>(false); // PM组件显隐
 // 显隐 ,row,回显的勾选数据，name为弹出框名称，project为选中的项目名称数据
 async function showEdit(row: any, name: any, project: any) {
   await getTenantStaffList();
   data.value.type = 1;
   drawerisible.value = true;
   departmentId.value = [];
-  // 部门
-  const res = await apiDep.list({ name: "" });
-  if (res.data) {
-    departmentList.value = res.data;
-  }
-  //回显员工chargeUserId	负责人UserId或者部门id  invitationType	邀请方类型 1:员工userId 2: 部门id		false	chargeUserName	负责人用户姓名或者部门名称
-  if (row) {
-    if (row.invitationType == 1) {
-      //勾选的是负责人
-
-        data.value.roleList = row.chargeUserId ?[row.chargeUserId]:[];
-        data.value.chargeUserName = row.chargeUserName ?row.chargeUserName:'';
-
-    } else if (row.invitationType == 2) {
-      //勾选是部门
-      departmentId.value = row.chargeUserId ?[row.chargeUserId]:[];
-      data.value.chargeUserName = row.chargeUserName ?row.chargeUserName:'';
-    }
-
-  }
-
   data.value.title = name;
-
   //项目外包-接收项目-接收选中的项目
   if (project) {
     data.value.project = project;
+    // data.value.chargeUserName =project.chargeUserName;
+    // data.value.chargeUserId = project.chargeUserId;
   }
 }
 // 获取PM/用户
@@ -64,106 +53,31 @@ const getTenantStaffList = async () => {
 // 关闭
 function close() {
   drawerisible.value = false;
+  formRef.value.resetFields();
   // 同步选中的路由id
   // departmentId.value = treeRef.value.getCheckedKeys(false);
 }
-// 树选中事件
-const handleNodeClick = (nodeData: any, checked: any) => {
-  if (checked) {
-    // 选中新的节点时，取消其他选中的节点
-    const checkedKeys = treeRef.value.getCheckedKeys(); // 获取当前所有选中的节点
-    checkedKeys.forEach((key: any) => {
-      if (key !== nodeData.id) {
-        treeRef.value.setChecked(key, false); // 取消选中其他节点
-      }
-    });
-    // 更新当前选中的节点 ID
-    departmentId.value = [nodeData.id]; // 只保留当前选中节点 ID
-  } else {
-    // 如果取消选中节点，更新 departmentId
-    departmentId.value = departmentId.value.filter(
-      (id: any) => id !== nodeData.id
-    );
-  }
-  if (departmentId.value.length) {
-    //如果勾选了部门，要把员工置空
-    data.value.roleList = [];
-    const checkedNodes = treeRef.value.getCheckedNodes();
-    data.value.chargeUserName = checkedNodes.map((node: any) => node.name)[0];
-    // console.log(data.value.chargeUserName,'data.value.chargeUserName')
-  } else {
-    // data.value.chargeUserName = ''
-  }
-  if(departmentId.value.length ==0 && data.value.roleList.length ==0){
-    data.value.chargeUserName = ''
-  }
-};
-const fetchData = () => {
-  //切换数据
-};
-// 处理选中项变化的逻辑，确保最多只能选择一个
-const handleCheckboxChange = (newValue: any) => {
-  // console.log(newValue,'newValue')
-  if (Array.isArray(newValue) && newValue.length > 1) {
-    // 只有一个选项可以被选中，取最后一个选中的
-    data.value.roleList = [newValue[newValue.length - 1]];
-    //只能勾选部门或员工，如果勾选员工将部门置空
-  }
-  if (data.value.roleList.length != 0) {
-    departmentId.value = [];
-    treeRef.value.setCheckedKeys([]);
-    let findData = data.value.tenantStaffList.find(
-      (item: any) => item.id === data.value.roleList[0]
-    );
-   data.value.chargeUserName = findData.userName;
-  } else {
-    // data.value.chargeUserName = ''
-  }
-  if(departmentId.value.length ==0 && data.value.roleList.length ==0){
-    data.value.chargeUserName = ''
-  }
 
-};
 defineExpose({
   showEdit,
 });
 const emit = defineEmits(["userData"]);
+const formRef = ref<any>(); // Ref
 //点击确定，把值传给父元素
 function submit() {
-  let chargeUserName = "";
-  let chargeUserId = null;
-  let invitationType = null;
-  if (data.value.roleList[0]) {
-    //获取员工名称
-    let findData = data.value.tenantStaffList.find(
-      (item: any) => item.id === data.value.roleList[0]
-    );
-    chargeUserName = findData.userName;
-    chargeUserId = data.value.roleList[0];
-    invitationType = 1;
-  }
-  // console.log(departmentId.value,'departmentId.value')
-  // console.log(departmentList.value,'departmentList.value')
-  if (departmentId.value[0]) {
-    //获取部门名称
-    // 获取所有选中的节点
-    const checkedNodes = treeRef.value.getCheckedNodes();
-    // 提取选中节点的名称
-    chargeUserName = checkedNodes.map((node: any) => node.name)[0];
-    chargeUserId = departmentId.value[0];
-    invitationType = 2;
-    //
-  }
-  data.value.chargeUserName = chargeUserName;
-  let obj = {
-    chargeUserId: chargeUserId, //负责人UserId
-    chargeUserName: chargeUserName, //负责人用户姓名
-    invitationType: invitationType, //类型，1员工，2部门
-    // departmentId: departmentId.value[0], //邀请方部门id
-    // departmentName:departmentName,
-  };
-  drawerisible.value = false;
-  emit("userData", obj);
+  formRef.value.validate((valid: any) => {
+    if (valid) {
+      let obj = {
+        chargeUserId: data.value.form.chargeUserId, //负责人UserId
+        chargeUserName: data.value.chargeUserName, //负责人用户姓名
+        invitationType: data.value.invitationType, //类型，1员工，2部门
+        // departmentId: departmentId.value[0], //邀请方部门id
+        // departmentName:departmentName,
+      };
+      drawerisible.value = false;
+      emit("userData", obj);
+    }
+  });
 }
 const activeNames = ref([]);
 const handleChange = (val: any) => {
@@ -182,14 +96,16 @@ const handleChange = (val: any) => {
       :title="data.title"
       class="userClass"
     >
-
-      <div v-if="data.project.length != 0" style="margin-top:-2.1875rem">
-        <el-collapse v-model="activeNames" @change="handleChange"  v-if="data.project.length >1" >
+      <div v-if="data.project.length != 0" style="margin-top: -2.1875rem">
+        <el-collapse
+          v-model="activeNames"
+          @change="handleChange"
+          v-if="data.project.length > 1"
+        >
           <el-collapse-item name="1">
             <template #title>
               <span class="project-name">项目</span>
               <el-badge :value="data.project.length" :max="99" class="item">
-
               </el-badge>
             </template>
             <div class="project-content">
@@ -203,11 +119,60 @@ const handleChange = (val: any) => {
             </div>
           </el-collapse-item>
         </el-collapse>
-
       </div>
-      
+      <ElForm
+        ref="formRef"
+        :rules="rules"
+        :model="data.form"
+        label-width="100px"
+      >
+        <el-form-item label="PM" prop="chargeUserId">
+          <el-select
+            v-model="data.form.chargeUserId"
+            value-key=""
+            placeholder="请选择PM"
+            clearable
+            filterable
+          >
+            <el-option
+              v-for="item in data.tenantStaffList"
+              :key="item.id"
+              :label="item.userName"
+              :value="item.id"
+            />
+            <el-button
+              class="buttonClass"
+              @click="dictionaryItemVisible = true"
+              size="small"
+            >
+              快捷新增
+              <div class="i-ic:round-plus w-1.3em h-1.3em"></div>
+            </el-button>
 
-
+            <template #empty>
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  padding: 0 1rem;
+                "
+              >
+                暂无数据
+                <el-button
+                  type="primary"
+                  link
+                  @click="dictionaryItemVisible = true"
+                  size="small"
+                >
+                  快捷新增
+                  <div class="i-ic:round-plus w-1.3em h-1.3em"></div>
+                </el-button>
+              </div>
+            </template>
+          </el-select>
+        </el-form-item>
+      </ElForm>
 
       <template #footer>
         <div class="flex-c">
@@ -215,23 +180,49 @@ const handleChange = (val: any) => {
           <el-button type="primary" @click="submit"> 确认 </el-button>
         </div>
       </template>
+      <DictionaryItemDia
+        v-if="dictionaryItemVisible"
+        v-model="dictionaryItemVisible"
+        @success="getTenantStaffList"
+      />
     </el-dialog>
   </div>
 </template>
 
 <style scoped lang="scss">
-.checkBox{
+.buttonClass {
+  text-align: center;
+  margin: 0.75rem;
+  width: 100%;
+  height: 2rem;
+  font-family: PingFang SC, PingFang SC;
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: #409eff;
+  line-height: 16px;
+  background: #f4f8ff;
+  border-radius: 4px 4px 4px 4px;
+  border: 1px solid #e9eef3;
+}
+
+/* 使按钮在下拉框展开时自适应宽度 */
+.el-select-dropdown .buttonClass {
+  width: calc(100% - 24px);
+  /* 减去两边的 padding */
+
+}
+.checkBox {
   display: flex;
-    align-items: center;
-    justify-content:start;margin-left: 1.25rem
+  align-items: center;
+  justify-content: start;
+  margin-left: 1.25rem;
 }
 :deep(.userClass .el-tabs__content) {
   height: 12.5rem;
   overflow: auto;
 }
-:deep(.userClass  .el-collapse){
+:deep(.userClass .el-collapse) {
   border-top: none !important;
-
 }
 .project-name {
   font-weight: 500;
@@ -239,14 +230,12 @@ const handleChange = (val: any) => {
   color: #333333;
 }
 .tabs-user {
-  margin-top:.9375rem;
-
+  margin-top: 0.9375rem;
 }
 .project-content {
   // margin-top: .625rem;
   height: 150px;
-  overflow:auto;
-
+  overflow: auto;
 }
 .flex-c {
   display: flex;
@@ -265,7 +254,7 @@ const handleChange = (val: any) => {
     }
   }
 }
-.userClass .el-tabs__item.is-top:nth-child(2)  {
+.userClass .el-tabs__item.is-top:nth-child(2) {
   margin-left: 0 !important;
 }
 :deep(.userClass .el-tree-node.is-checked > .el-tree-node__content) {
