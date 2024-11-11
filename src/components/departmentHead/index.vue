@@ -206,7 +206,7 @@ const handleChange = (val: any) => {
 
       </div>
 
-      <el-tabs v-model="data.type" @tab-change="fetchData" class="tabs-user">
+      <el-tabs v-model="data.type" @tab-change="fetchData" class="tabs-user" style="margin-top:-1.5625rem;">
         <el-tab-pane label="部门" :name="1">
           <template #label>
             <span class="custom-tab-label">部门</span>

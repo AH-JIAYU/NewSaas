@@ -37,6 +37,7 @@ async function showEdit(row: any, name: any, project: any) {
   drawerisible.value = true;
   departmentId.value = [];
   data.value.title = name;
+  data.value.invitationType = 1;  //员工
   //项目外包-接收项目-接收选中的项目
   if (project) {
     data.value.project = project;
@@ -67,9 +68,14 @@ const formRef = ref<any>(); // Ref
 function submit() {
   formRef.value.validate((valid: any) => {
     if (valid) {
+      let chargeUserName = '';
+      let findData = data.value.tenantStaffList.find(
+      (item: any) => item.id === data.value.form.chargeUserId
+    );
+    chargeUserName = findData.userName;
       let obj = {
         chargeUserId: data.value.form.chargeUserId, //负责人UserId
-        chargeUserName: data.value.chargeUserName, //负责人用户姓名
+        chargeUserName: chargeUserName, //负责人用户姓名
         invitationType: data.value.invitationType, //类型，1员工，2部门
         // departmentId: departmentId.value[0], //邀请方部门id
         // departmentName:departmentName,
