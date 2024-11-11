@@ -245,10 +245,14 @@ const handleKeydown = (e: any) => {
           </el-form-item>
         </template>
         <el-form-item
-          label="项目分配方式"
+
           label-width="7rem"
           v-if="data.form.beInvitationTenantId"
         >
+        <template #label>
+          <span style="font-weight: 700;font-size: 15px;">项目分配方式</span>
+        </template>
+
         </el-form-item>
 
         <div
@@ -327,7 +331,10 @@ const handleKeydown = (e: any) => {
     min-height: 12.5rem !important;
   }
 }
-// :deep(.inviteDialog .el-form-item__content){
-//   margin-left: 0 !important;
+.fontColor {
+  color: #333333 !important;
+}
+// :deep(.inviteDialog ){
+//   color: #333333 !important;
 // }
 </style>

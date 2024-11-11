@@ -673,7 +673,7 @@ function userData(data1: any) {
                   class="oneLine"
                   v-if="row.receiveStatus == 2"
                   type="danger"
-                  >手动（未接收）</el-text
+                  >未接收</el-text
                 >
                 &ensp;
                 <el-text
@@ -681,7 +681,7 @@ function userData(data1: any) {
                   class="oneLine"
                   v-if="row.receiveStatus == 1"
                   type="success"
-                  >自动（已接收）</el-text
+                  >已接收</el-text
                 >
               </template>
             </el-table-column>
