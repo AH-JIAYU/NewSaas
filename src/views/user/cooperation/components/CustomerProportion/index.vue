@@ -234,7 +234,7 @@ defineExpose({
         :rules="data.rules"
         :model="data.form"
         label-width="7rem"
-        labelPosition="left"
+        labelPosition="right"
       >
         <el-form-item label="价格比例" prop="priceRatio">
           <el-input v-model="data.form.priceRatio" clearable

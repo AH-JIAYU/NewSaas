@@ -237,6 +237,7 @@ const handleKeydown = (e: any) => {
       draggable
       width="30%"
       title="邀约公司"
+
     >
       <ElForm
         ref="formRef"
@@ -244,6 +245,7 @@ const handleKeydown = (e: any) => {
         :model="data.form"
         label-width="7rem"
         labelPosition="left"
+              class="hezuoDrawer"
       >
         <el-form-item label="公司名称" prop="beInvitationTenantId">
           <el-select v-model="data.form.beInvitationTenantId" clearable>
@@ -389,16 +391,18 @@ const handleKeydown = (e: any) => {
 </template>
 
 <style scoped lang="scss">
-:deep(.el-select-dropdown__item.is-hovering){
-  background: white;
-}
+
 :deep {
   .el-dialog__body {
     min-height: 12.5rem !important;
   }
 }
+:deep(.el-select-dropdown__item.is-selected.is-hovering){
+  background-color: white !important;
+  padding:0 !important
+}
 :deep(.el-select-dropdown__item.is-selected){
-  font-weight: 100;
+  font-weight: 100 !important;
 }
 .fontColor {
   color: #333333 !important;

@@ -204,34 +204,29 @@ const changeSendProjectType = (name: any, row: any) => {
   if (
     (row.sendProjectType == 1 && name == "手动") ||
     (row.sendProjectType == 2 && name == "自动")
-  )
-  {
-    ElMessageBox.confirm(`确认将发送项目状态改为${name}吗？`, "确认信息")
-      .then(() => {
-        try {
-          listLoading.value = true;
-          let params = {
-            id: row.id,
-            chargeUserId: row.userId, //负责人UserId
-            invitationType: row.invitationType, //邀请类型
-            chargeUserName: row.userName, //负责人用户姓名
-            sendProjectType: row.sendProjectType ==1 ? 2 :1, //邀请方发送项目类型:1:自动 2:手动
-            receiveProjectType: row.receiveProjectType, //邀请方接收项目类型:1:自动 2:手动
-          };
-          api.updateInvitationBindUser(params).then(() => {
-            listLoading.value = false;
-            queryData();
-            ElMessage.success({
-              message: "修改成功",
-              center: true,
-            });
-          });
-        } catch (error) {
-        } finally {
-          listLoading.value = false;
-        }
-      })
-      .catch(() => {});
+  ) {
+    try {
+      listLoading.value = true;
+      let params = {
+        id: row.id,
+        chargeUserId: row.userId, //负责人UserId
+        invitationType: row.invitationType, //邀请类型
+        chargeUserName: row.userName, //负责人用户姓名
+        sendProjectType: row.sendProjectType == 1 ? 2 : 1, //邀请方发送项目类型:1:自动 2:手动
+        receiveProjectType: row.receiveProjectType, //邀请方接收项目类型:1:自动 2:手动
+      };
+      api.updateInvitationBindUser(params).then(() => {
+        listLoading.value = false;
+        queryData();
+        ElMessage.success({
+          message: "修改成功",
+          center: true,
+        });
+      });
+    } catch (error) {
+    } finally {
+      listLoading.value = false;
+    }
   }
 };
 //选择部门人
@@ -239,78 +234,69 @@ const userRef = ref();
 const id = ref(null);
 //列表切换接收项目状态
 const changeReceiveProjectType = (name: any, row: any) => {
-  id.value = row.id ; //获取列表id
+  id.value = row.id; //获取列表id
   //切换成自动需要选择负责人
   //判断当前发送状态，如果当前是自动，1,点击手动才调接口，如果当前是手动2，点击自动，弹出选择部门负责人才调接口
   let obj = JSON.parse(JSON.stringify(row)); //深拷贝，不改变原数据
 
   if (row.receiveProjectType == 1 && name == "手动") {
-    ElMessageBox.confirm(`确认将接收项目状态改为${name}吗？`, "确认信息")
-      .then(() => {
-        try {
-          listLoading.value = true;
-          let params = {
-            id: row.id,
-            chargeUserId: row.userId, //负责人UserId
-            invitationType: row.invitationType, //邀请类型
-            chargeUserName: row.userName, //负责人用户姓名
-            sendProjectType: row.sendProjectType, //邀请方发送项目类型:1:自动 2:手动
-            receiveProjectType: row.receiveProjectType ==1 ? 2 :1, //邀请方接收项目类型:1:自动 2:手动
-          };
-          api.updateInvitationBindUser(params).then(() => {
-            listLoading.value = false;
-            queryData();
-            ElMessage.success({
-              message: "修改成功",
-              center: true,
-            });
-          });
-        } catch (error) {
-        } finally {
-          listLoading.value = false;
-        }
-      })
-      .catch(() => {});
+    try {
+      listLoading.value = true;
+      let params = {
+        id: row.id,
+        chargeUserId: row.userId, //负责人UserId
+        invitationType: row.invitationType, //邀请类型
+        chargeUserName: row.userName, //负责人用户姓名
+        sendProjectType: row.sendProjectType, //邀请方发送项目类型:1:自动 2:手动
+        receiveProjectType: row.receiveProjectType == 1 ? 2 : 1, //邀请方接收项目类型:1:自动 2:手动
+      };
+      api.updateInvitationBindUser(params).then(() => {
+        listLoading.value = false;
+        queryData();
+        ElMessage.success({
+          message: "修改成功",
+          center: true,
+        });
+      });
+    } catch (error) {
+    } finally {
+      listLoading.value = false;
+    }
   } else if (row.receiveProjectType == 2 && name == "自动") {
     //弹出部门负责人
     let obj = {
       chargeUserId: row.userId,
       invitationType: row.invitationType,
       chargeUserName: row.userName,
-      id:row.id,
+      id: row.id,
     };
     userRef.value.showEdit(obj, "请选择负责部门/人");
   }
 };
 //勾选部门人回传数据
 function userData(data1: any) {
-  ElMessageBox.confirm(`确认将接收项目状态改为自动吗？`, "确认信息")
-      .then(() => {
-        try {
-          listLoading.value = true;
-          let params = {
-            id: id.value,
-            chargeUserId: data1.chargeUserId, //负责人UserId
-            invitationType: data1.invitationType, //邀请类型
-            chargeUserName: data1.chargeUserName, //负责人用户姓名
-            sendProjectType: data1.sendProjectType, //邀请方发送项目类型:1:自动 2:手动
-            receiveProjectType: data1.receiveProjectType ==1 ? 2 :1, //邀请方接收项目类型:1:自动 2:手动
-          };
-          api.updateInvitationBindUser(params).then(() => {
-            listLoading.value = false;
-            queryData();
-            ElMessage.success({
-              message: "修改成功",
-              center: true,
-            });
-          });
-        } catch (error) {
-        } finally {
-          listLoading.value = false;
-        }
-      })
-      .catch(() => {});
-
+  try {
+    listLoading.value = true;
+    let params = {
+      id: id.value,
+      chargeUserId: data1.chargeUserId, //负责人UserId
+      invitationType: data1.invitationType, //邀请类型
+      chargeUserName: data1.chargeUserName, //负责人用户姓名
+      sendProjectType: data1.sendProjectType, //邀请方发送项目类型:1:自动 2:手动
+      receiveProjectType: data1.receiveProjectType == 1 ? 2 : 1, //邀请方接收项目类型:1:自动 2:手动
+    };
+    api.updateInvitationBindUser(params).then(() => {
+      listLoading.value = false;
+      queryData();
+      ElMessage.success({
+        message: "修改成功",
+        center: true,
+      });
+    });
+  } catch (error) {
+  } finally {
+    listLoading.value = false;
+  }
 }
 </script>
 
@@ -464,7 +450,7 @@ function userData(data1: any) {
           align="left"
           prop="userName"
           show-overflow-tooltip
-          label="负责部门/PM"
+          label="负责部门"
         >
           <template #default="{ row }">
             <div class="flex-s">
@@ -565,7 +551,7 @@ function userData(data1: any) {
       <customerProportion ref="proportionRef" @fetch-data="queryData" />
     </PageMain>
     <QuickEdit ref="QuickEditRef" @fetchData="fetchData" />
-    <userDialog ref="userRef" @userData="userData"/>
+    <userDialog ref="userRef" @userData="userData" />
   </div>
 </template>
 
