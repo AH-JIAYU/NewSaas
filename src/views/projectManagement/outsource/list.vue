@@ -378,6 +378,30 @@ function userData(data1: any) {
     listLoading.value = false;
   }
 }
+//拒绝
+const downReceive =(row:any)=> {
+  ElMessageBox.confirm(`确认拒绝项目吗？`, "确认信息")
+      .then(() => {
+        try {
+          // listLoading.value = true;
+
+          // api.updateInvitationBindUser(params).then(() => {
+          //   listLoading.value = false;
+          //   queryData();
+          //   ElMessage.success({
+          //     message: "修改成功",
+          //     center: true,
+          //   });
+          // });
+        } catch (error) {
+        } finally {
+          // listLoading.value = false;
+        }
+      })
+      .catch(() => {
+
+      });
+}
 </script>
 
 <template>
@@ -676,7 +700,6 @@ function userData(data1: any) {
                   type="danger"
                   >未接收</el-text
                 >
-                &ensp;
                 <el-text
                   style="color: rgb(3, 194, 57)"
                   class="oneLine"
@@ -870,7 +893,7 @@ function userData(data1: any) {
               align="left"
               fixed="right"
               label="操作"
-              width="160"
+              width="220"
             >
               <template #default="{ row }">
                 <!-- <el-button
@@ -911,6 +934,15 @@ function userData(data1: any) {
                   @click="delreceive(row)"
                 >
                   取消接收
+                </el-button>
+                <el-button down
+                  v-if="row.receiveStatus == 2"
+                  plain
+                  type="danger"
+                  size="small"
+                  @click="downReceive(row)"
+                >
+                  拒绝
                 </el-button>
                 <el-button
                   type="primary"

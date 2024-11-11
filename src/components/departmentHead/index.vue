@@ -272,7 +272,7 @@ const handleChange = (val: any) => {
         </el-tab-pane>
       </el-tabs>
 
-      <div v-if="data.chargeUserName">
+      <div v-if="data.chargeUserName" style="display: flex;align-items: center;">
         <div class="i-ic:sharp-info w-1.5em h-1.5em" style="color: #FFB667;"></div>
         <span style="margin-left: .5rem">{{ data.chargeUserName ||'' }}</span>
       </div>
@@ -288,6 +288,9 @@ const handleChange = (val: any) => {
 </template>
 
 <style scoped lang="scss">
+:deep(.el-tree-node__label,.checkbox__label){
+  color: #333333 !important;
+}
 .checkBox{
   display: flex;
     align-items: center;

@@ -250,7 +250,7 @@ const handleKeydown = (e: any) => {
           v-if="data.form.beInvitationTenantId"
         >
         <template #label>
-          <span style="font-weight: 700;font-size: 15px;">项目分配方式</span>
+          <span style="font-weight: 700;font-size: 0.9375rem;">项目分配方式</span>
         </template>
 
         </el-form-item>
@@ -265,7 +265,7 @@ const handleKeydown = (e: any) => {
               <span>
                 <el-tooltip
                   effect="dark"
-                  content="1111111"
+                  content=""
                   placement="top-start"
                 >
                   <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
@@ -287,7 +287,7 @@ const handleKeydown = (e: any) => {
               <span>
                 <el-tooltip
                   effect="dark"
-                  content="1111111"
+                  content=""
                   placement="top-start"
                 >
                   <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
@@ -333,6 +333,9 @@ const handleKeydown = (e: any) => {
 }
 .fontColor {
   color: #333333 !important;
+}
+:deep(.el-form label,.el-tree-node__label,.checkbox__label){
+  color: #333333;
 }
 // :deep(.inviteDialog ){
 //   color: #333333 !important;
