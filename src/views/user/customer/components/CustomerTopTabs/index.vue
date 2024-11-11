@@ -4,6 +4,7 @@ import { defineProps, ref } from "vue";
 import api from "@/api/modules/user_customer";
 import DictionaryItemDia from "@/views/configuration/user/components/dictionaryItemDialog/index.vue";
 import apiUser from '@/api/modules/configuration_manager'
+import apiPos from "@/api/modules/position_manage";
 import useConfigurationSiteSettingStore from '@/store/modules/configuration_siteSetting'//站点设置
 import storage from "@/utils/storage";
 const configurationSiteSettingStore = useConfigurationSiteSettingStore()//站点设置
@@ -27,10 +28,32 @@ const rules = reactive<any>({
     { min: 2, max: 50, message: "内容在2-50个字之间", trigger: "blur" },
   ],
   chargeId: [
-    { required: true, message: "请选择PM", trigger: "change" },
+    { required: true, message: "请选择负责人", trigger: "change" },
   ],
 });
-
+const radio1 = ref<any>('all')
+const positionList = ref<any>([])
+// 查询参数
+const queryForm = reactive<any>({
+  // 分页页码
+  page: 1,
+  // 每页数量
+  limit: 10,
+  id: null,
+  // 职位名称
+  name: "",
+  // 是否启用 1启用 2停用
+  active: null,
+});
+const queryUserForm = reactive<any>({
+  page: 1,
+  limit: 10,
+  id: "",
+  userName: "",
+  active: null,
+  departmentId: null,
+  positionId: null,
+});
 const activeName = ref("basicSettings");
 const isEncryption = ref(false);
 const secretKeyConfigList = ref<any>([]);
@@ -67,7 +90,28 @@ const changeCustomerConfigInfo = async (val: any, index: number) => {
 // 获取PM/用户
 const getTenantStaffList = async () => {
   const { data } = await apiUser.getTenantStaffList()
-  staffList.value = data
+  const res = await apiPos.list(queryForm);
+  if (res.data) {
+    positionList.value = res.data.data
+  }
+  if (data) {
+    staffList.value = data
+  }
+}
+
+const handerRadioChange = async (val: any) => {
+  if (val !== 'all') {
+    queryUserForm.positionId = val
+    const { data } = await apiUser.list(queryUserForm)
+    if (data) {
+      staffList.value = data.data
+    }
+  } else {
+    const { data } = await apiUser.getTenantStaffList()
+    if (data) {
+      staffList.value = data
+    }
+  }
 }
 
 onBeforeMount(async () => {
@@ -135,9 +179,15 @@ const tenantId = storage.local.get("anotherName");
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="PM" prop="chargeId">
-
-                  <el-select v-model="localToptTab.chargeId" value-key="" placeholder="请选择PM" clearable filterable>
+                <el-form-item label="负责人" prop="chargeId">
+                  <el-select v-model="localToptTab.chargeId" value-key="" placeholder="请选择负责人" clearable filterable>
+                    <template #header>
+                      <el-radio-group v-model="radio1" size="large" style="max-width: 27.875rem;" @change="handerRadioChange">
+                        <el-radio-button label="全部" value="all" />
+                        <el-radio-button v-for="item in positionList" :key="item.id" :label="item.name"
+                          :value="item.id" />
+                      </el-radio-group>
+                    </template>
                     <el-option v-for="item in staffList" :key="item.id" :label="item.userName" :value="item.id" />
                     <el-button class="buttonClass" @click="dictionaryItemVisible = true" size="small">
                       快捷新增
@@ -378,7 +428,8 @@ const tenantId = storage.local.get("anotherName");
                   <copy
                     v-if="localToptTab.tenantCustomerConfigInfoList[0].encryptionId && localToptTab.tenantCustomerConfigInfoList[0].isEncryption === 1"
                     :content="`${serverSideUrl}/callback/serviceCallback?tid=${tenantId}&status=c&uid=[uid]&hash=[hash]`" />
-                  <copy v-else :content="`${serverSideUrl}/callback/serviceCallback?tid=${tenantId}&status=c&uid=[uid]`" />
+                  <copy v-else
+                    :content="`${serverSideUrl}/callback/serviceCallback?tid=${tenantId}&status=c&uid=[uid]`" />
                 </el-form-item>
               </el-col>
               <el-col :span="24">
@@ -390,7 +441,8 @@ const tenantId = storage.local.get("anotherName");
                   <copy
                     v-if="localToptTab.tenantCustomerConfigInfoList[0].encryptionId && localToptTab.tenantCustomerConfigInfoList[0].isEncryption === 1"
                     :content="`${serverSideUrl}/callback/serviceCallback?tid=${tenantId}&status=q&uid=[uid]&hash=[hash]`" />
-                  <copy v-else :content="`${serverSideUrl}/callback/serviceCallback?tid=${tenantId}&status=q&uid=[uid]`" />
+                  <copy v-else
+                    :content="`${serverSideUrl}/callback/serviceCallback?tid=${tenantId}&status=q&uid=[uid]`" />
                 </el-form-item>
               </el-col>
               <el-col :span="24">
@@ -402,7 +454,8 @@ const tenantId = storage.local.get("anotherName");
                   <copy
                     v-if="localToptTab.tenantCustomerConfigInfoList[0].encryptionId && localToptTab.tenantCustomerConfigInfoList[0].isEncryption === 1"
                     :content="`${serverSideUrl}/callback/serviceCallback?tid=${tenantId}&status=s&uid=[uid]&hash=[hash]`" />
-                  <copy v-else :content="`${serverSideUrl}/callback/serviceCallback?tid=${tenantId}&status=s&uid=[uid]`" />
+                  <copy v-else
+                    :content="`${serverSideUrl}/callback/serviceCallback?tid=${tenantId}&status=s&uid=[uid]`" />
                 </el-form-item>
               </el-col>
               <el-col :span="24">
@@ -414,7 +467,8 @@ const tenantId = storage.local.get("anotherName");
                   <copy
                     v-if="localToptTab.tenantCustomerConfigInfoList[0].encryptionId && localToptTab.tenantCustomerConfigInfoList[0].isEncryption === 1"
                     :content="`${serverSideUrl}/callback/serviceCallback?tid=${tenantId}&status=t&uid=[uid]&hash=[hash]`" />
-                  <copy v-else :content="`${serverSideUrl}/callback/serviceCallback?tid=${tenantId}&status=t&uid=[uid]`" />
+                  <copy v-else
+                    :content="`${serverSideUrl}/callback/serviceCallback?tid=${tenantId}&status=t&uid=[uid]`" />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -440,7 +494,48 @@ const tenantId = storage.local.get("anotherName");
   .el-input-number {
     width: 100%;
   }
+
+  .el-select-dropdown__header {
+    width: 416px !important;
+  }
 }
+
+:deep(.el-popper) {
+  width: 25.375rem;
+}
+
+:deep(.el-radio-button__inner) {
+  border: none !important;
+}
+
+:deep(.el-select-dropdown__header) {
+  width: 416px !important;
+  border-bottom: none !important;
+}
+
+:deep(.el-radio-button__inner) {
+  height: 1.875rem;
+  width: 4.625rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none !important;
+  border-radius: 20px !important;
+}
+
+// .el-radio-button__inner {
+//   border: none!important;
+//   border-radius: 20px !important;
+// }
+
+// .el-radio-button:first-child .el-radio-button__inner {
+//   border: none!important;
+//   border-radius: 0 !important;
+// }
+
+// .el-radio-button:last-child .el-radio-button__inner {
+//   border-radius: 0 !important;
+// }
 
 .buttonClass {
   text-align: center;
