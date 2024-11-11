@@ -3,6 +3,8 @@ import api from "@/api/modules/notification";
 import useNotificationStore from "@/store/modules/notification";
 import apiUser from "@/api/modules/configuration_manager";
 import userDialog from "@/components/departmentHead/index.vue"; //部门人
+import apiDep from "@/api/modules/department";
+import { ElMessage, ElMessageBox } from "element-plus";
 defineOptions({
   name: "PersonalNotificationCooperation",
 });
@@ -10,7 +12,7 @@ const emit = defineEmits(["delSelectId"]);
 const notificationStore = useNotificationStore();
 const validateNumberRange = (rule: any, value: any, callback: any) => {
   const regex = /^(100|[1-9]?\d)$/;
-  if(regex.test(value) == false){
+  if (regex.test(value) == false) {
     return callback(new Error("请输入 0 到 100 之间的数字"));
   }
   callback(); // 校验通过
@@ -42,11 +44,62 @@ const dialogTableVisible = ref<any>(false); // 同意合作-PM弹框
 const tenantStaffList = ref<any>([]); // PM
 
 const FormRef = ref<any>();
-
+  const defaultProps: any = {
+  children: "children",
+  label: "name",
+};
 const showEdit = async (row: any) => {
   // await getTenantStaffList();
+  data.value.chargeUserId = "";
   data.value = row;
+  // 部门
+  const res = await apiDep.list({ name: "" });
+  if (res.data) {
+    departmentList.value = res.data;
+  }
   read();
+};
+// 部门数据
+const departmentList = ref<any>([]);
+const selectTreeRef = ref();
+const treeRef = ref();
+// 树选中事件
+const handleNodeClick = (nodeData: any, checked: any) => {
+  data.value.chargeUserId = ''
+  if (checked) {
+    // 选中新的节点时，取消其他选中的节点
+    const checkedKeys = treeRef.value.getCheckedKeys(); // 获取当前所有选中的节点
+    checkedKeys.forEach((key: any) => {
+      if (key !== nodeData.id) {
+        treeRef.value.setChecked(key, false); // 取消选中其他节点
+      }
+    });
+    // 更新当前选中的节点 ID
+    data.value.chargeUserId = nodeData.id; // 只保留当前选中节点 ID
+    const checkedNodes = treeRef.value.getCheckedNodes();
+    data.value.chargeUserName = checkedNodes.map(
+      (node: any) => node.name
+    )[0];
+    // 关闭下拉框
+    setTimeout(() => {
+      selectTreeRef.value.blur(); // 失去焦点，关闭下拉框
+    }, 100);
+    // console.log(data.value.form.chargeUserName,'data.value.form.chargeUserName')
+  } else {
+    // 如果取消选中节点，更新 chargeUserId
+    data.value.chargeUserId = [data.value.chargeUserId].filter(
+      (id: any) => id !== nodeData.id
+    );
+    if (data.value.chargeUserId.length == 0) {
+      data.value.chargeUserId = "";
+    }
+  }
+
+  if (!data.value.chargeUserId) {
+    data.value.chargeUserName = "";
+  }
+  console.log(data.value.chargeUserName, "data.value.form.chargeUserName");
+  console.log(data.value.chargeUserId, "data.value.form.chargeUserId");
 };
 // 获取PM/用户
 const getTenantStaffList = async () => {
@@ -87,6 +140,14 @@ const refuse = async () => {
 const agree = async () => {
   FormRef.value.validate(async (valid: any) => {
     if (valid) {
+      //如果obj.receiveProjectType == 1，，必须要选人
+      if (data.value.receiveProjectType == 1 && !data.value.chargeUserId) {
+        ElMessage.warning({
+          message: "请选择接收项目负责人",
+          center: true,
+        });
+        return;
+      }
       const params = {
         id: data.value.id,
         // beInvitationChargeUserId: data.value.beInvitationChargeUserId,
@@ -94,11 +155,12 @@ const agree = async () => {
         priceRatio: data.value.priceRatio,
         type: 3,
         beInvitationChargeUserId: data.value.chargeUserId, //负责人UserId
-        beInvitationType: data.value.invitationType, //邀请类型
+        beInvitationType: 2, //邀请类型 ,目前只有部门，先写死
         beInvitationChargeUserName: data.value.chargeUserName, //负责人用户姓名
         sendProjectType: data.value.sendProjectType[0], //邀请方发送项目类型:1:自动 2:手动
         receiveProjectType: data.value.receiveProjectType[0], //邀请方接收项目类型:1:自动 2:手动
       };
+
       emit("delSelectId");
       await api.updateTenantAudit(params); //修改该条数据待办状态
       await notificationStore.getUnreadTodo(); // 重新获取待办列表
@@ -173,30 +235,26 @@ defineExpose({
         </el-form-item>
         <el-form-item label="项目分配方式" label-width="7rem"> </el-form-item>
 
-        <div style="display: flex" class="inviteDialog">
-          <el-form-item prop="sendProjectType" label-width="7rem">
-            <template #label>
-              <span>
-                <el-tooltip
-                  effect="dark"
-                  content="1111111"
-                  placement="top-start"
-                >
-                  <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
-                </el-tooltip>
-                发送项目
-              </span>
-            </template>
+        <el-form-item prop="sendProjectType" label-width="7rem">
+          <template #label>
+            <span>
+              <el-tooltip effect="dark" content="1111111" placement="top-start">
+                <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
+              </el-tooltip>
+              发送项目
+            </span>
+          </template>
 
-            <el-checkbox-group
-              v-model="data.sendProjectType"
-              @change="handleCheckboxChange1"
-            >
-              <el-checkbox :value="1"> 自动 </el-checkbox>
-              <el-checkbox :value="2"> 手动 </el-checkbox>
-            </el-checkbox-group>
-          </el-form-item>
-          <el-form-item prop="receiveProjectType" style="margin-left: 40px">
+          <el-checkbox-group
+            v-model="data.sendProjectType"
+            @change="handleCheckboxChange1"
+          >
+            <el-checkbox :value="1"> 自动 </el-checkbox>
+            <el-checkbox :value="2"> 手动 </el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
+        <div style="display: flex;">
+          <el-form-item prop="receiveProjectType">
             <template #label>
               <span>
                 <el-tooltip
@@ -218,16 +276,43 @@ defineExpose({
               <el-checkbox :value="2"> 手动 </el-checkbox>
             </el-checkbox-group>
           </el-form-item>
+          <el-select
+              v-if="data.receiveProjectType == 1"
+              v-model="data.chargeUserName"
+              placeholder="请选择部门"
+              ref="selectTreeRef"
+              style="width: 15.625rem;margin-left: 1.5625rem;"
+            >
+              <el-option :value="data.chargeUserId" style="height: auto">
+                <el-tree
+                  v-if="departmentList.length > 0"
+                  ref="treeRef"
+                  :disabled="true"
+                  :data="departmentList"
+                  show-checkbox
+                  check-strictly
+                  node-key="id"
+                  :default-expanded-keys="[]"
+                  :default-checked-keys="[data.chargeUserId]"
+                  default-expand-all
+                  :props="defaultProps"
+                  @check-change="handleNodeClick"
+                  :check-on-click-node="true"
+                  :expand-on-click-node="false"
+                />
+                <el-text v-else>暂无数据</el-text>
+              </el-option>
+            </el-select>
         </div>
 
-        <el-input
+        <!-- <el-input
           placeholder="请选择接收项目负责人"
           @keydown="handleKeydown"
           @click="openUserDialog"
           v-if="data.receiveProjectType && data.receiveProjectType[0] == 1"
           v-model="data.chargeUserName"
         >
-        </el-input>
+        </el-input> -->
 
         <!-- <el-form-item label="PM" prop="beInvitationChargeUserId">
           <el-select

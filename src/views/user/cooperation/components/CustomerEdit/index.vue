@@ -5,13 +5,18 @@ import apiUser from "@/api/modules/configuration_manager";
 import storage from "@/utils/storage";
 import userDialog from "@/components/departmentHead/index.vue"; //部门人
 const emit = defineEmits(["fetch-data"]);
+import apiDep from "@/api/modules/department";
 const drawerisible = ref<boolean>(false);
 const title = ref<string>("");
+const treeRef = ref();
 const formRef = ref<any>(); // Ref
-
+const defaultProps: any = {
+  children: "children",
+  label: "name",
+};
 const validateNumberRange = (rule: any, value: any, callback: any) => {
   const regex = /^(100|[1-9]?\d)$/;
-  if(regex.test(value) == false){
+  if (regex.test(value) == false) {
     return callback(new Error("请输入 0 到 100 之间的数字"));
   }
   callback(); // 校验通过
@@ -28,7 +33,7 @@ const data = ref<any>({
       { required: true, message: "请选择合作商", trigger: "change" },
     ],
     priceRatio: [
-      { required: true, message: "请输入价格比例", trigger: "blur" },
+      { required: true, message: "请输入", trigger: "blur" },
       {
         type: "number",
         trigger: "blur",
@@ -50,13 +55,58 @@ const data = ref<any>({
     // ],
   },
 });
-
+// 部门数据
+const departmentList = ref<any>([]);
+const selectTreeRef = ref();
 // 显隐
 async function showEdit() {
+  data.value.form.chargeUserId = "";
   await getTenantUserList();
   // await getTenantStaffList();
   drawerisible.value = true;
+  // 部门
+  const res = await apiDep.list({ name: "" });
+  if (res.data) {
+    departmentList.value = res.data;
+  }
+  // console.log(departmentList.value, "departmentList.valu");
 }
+// 树选中事件
+const handleNodeClick = (nodeData: any, checked: any) => {
+  if (checked) {
+    // 选中新的节点时，取消其他选中的节点
+    const checkedKeys = treeRef.value.getCheckedKeys(); // 获取当前所有选中的节点
+    checkedKeys.forEach((key: any) => {
+      if (key !== nodeData.id) {
+        treeRef.value.setChecked(key, false); // 取消选中其他节点
+      }
+    });
+    // 更新当前选中的节点 ID
+    data.value.form.chargeUserId = nodeData.id; // 只保留当前选中节点 ID
+    const checkedNodes = treeRef.value.getCheckedNodes();
+    data.value.form.chargeUserName = checkedNodes.map(
+      (node: any) => node.name
+    )[0];
+    // 关闭下拉框
+    setTimeout(() => {
+      selectTreeRef.value.blur(); // 失去焦点，关闭下拉框
+    }, 100);
+    // console.log(data.value.form.chargeUserName,'data.value.form.chargeUserName')
+  } else {
+    // 如果取消选中节点，更新 chargeUserId
+    data.value.form.chargeUserId = [data.value.form.chargeUserId].filter(
+      (id: any) => id !== nodeData.id
+    );
+    if(data.value.form.chargeUserId.length ==0){
+      data.value.form.chargeUserId = ''
+    }
+  }
+  if(!data.value.form.chargeUserId){
+    data.value.form.chargeUserName =''
+  }
+  console.log(data.value.form.chargeUserName,'data.value.form.chargeUserName')
+  console.log(data.value.form.chargeUserId, "data.value.form.chargeUserId");
+};
 // 获取合作商列表
 async function getTenantUserList() {
   const res = await api.getTenantUserList({});
@@ -108,17 +158,17 @@ async function save() {
         data.value.form.receiveProjectType.length != 0
           ? data.value.form.receiveProjectType[0]
           : null;
+          obj.invitationType = 2 ;
       if (obj.receiveProjectType == 2) {
         //手动
         data.value.form.chargeUserId = null; //负责人UserId
         data.value.form.chargeUserName = ""; //负责人用户姓名
-        data.value.form.invitationType = ""; //邀请类型
 
         obj.chargeUserId = null; //负责人UserId
         obj.chargeUserName = ""; //负责人用户姓名
-        obj.invitationType = ""; //邀请类型
+        obj.invitationType = '';
       }
-
+      obj.invitationType = 2; //固定传部门
       api.addInvitationBind(obj).then((res: any) => {
         if (res.status == -1) {
           ElMessage.success({
@@ -216,7 +266,16 @@ const handleKeydown = (e: any) => {
             </el-option>
           </el-select>
         </el-form-item>
-
+        <template v-if="data.form.beInvitationTenantId">
+          <el-form-item label="价格比例" prop="priceRatio">
+            <el-input
+              v-model="data.form.priceRatio"
+              clearable
+              placeholder="请输入0-100之间的数字"
+              ><template #append>%</template></el-input
+            >
+          </el-form-item>
+        </template>
         <el-table
           v-if="dataList.length"
           :data="dataList"
@@ -234,40 +293,19 @@ const handleKeydown = (e: any) => {
             </template>
           </el-table-column>
         </el-table>
-        <template v-if="data.form.beInvitationTenantId">
-          <el-form-item label="价格比例" prop="priceRatio">
-            <el-input
-              v-model="data.form.priceRatio"
-              clearable
-              placeholder="请输入0-100之间的数字"
-              ><template #append>%</template></el-input
+        <el-form-item label-width="7rem" v-if="data.form.beInvitationTenantId">
+          <template #label>
+            <span style="font-weight: 700; font-size: 0.9375rem"
+              >项目分配方式</span
             >
-          </el-form-item>
-        </template>
-        <el-form-item
-
-          label-width="7rem"
-          v-if="data.form.beInvitationTenantId"
-        >
-        <template #label>
-          <span style="font-weight: 700;font-size: 0.9375rem;">项目分配方式</span>
-        </template>
-
+          </template>
         </el-form-item>
 
-        <div
-          style="display: flex"
-          v-if="data.form.beInvitationTenantId"
-          class="inviteDialog"
-        >
+        <div v-if="data.form.beInvitationTenantId">
           <el-form-item prop="sendProjectType" label-width="7rem">
             <template #label>
               <span>
-                <el-tooltip
-                  effect="dark"
-                  content=""
-                  placement="top-start"
-                >
+                <el-tooltip effect="dark" content="" placement="top-start">
                   <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
                 </el-tooltip>
                 发送项目
@@ -282,30 +320,55 @@ const handleKeydown = (e: any) => {
               <el-checkbox :value="2"> 手动 </el-checkbox>
             </el-checkbox-group>
           </el-form-item>
-          <el-form-item prop="receiveProjectType" style="margin-left: 40px">
-            <template #label>
-              <span>
-                <el-tooltip
-                  effect="dark"
-                  content=""
-                  placement="top-start"
-                >
-                  <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
-                </el-tooltip>
-                接收项目
-              </span>
-            </template>
+          <div style="display: flex">
+            <el-form-item prop="receiveProjectType" label-width="7rem">
+              <template #label>
+                <span>
+                  <el-tooltip effect="dark" content="" placement="top-start">
+                    <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
+                  </el-tooltip>
+                  接收项目
+                </span>
+              </template>
 
-            <el-checkbox-group
-              v-model="data.form.receiveProjectType"
-              @change="handleCheckboxChange2"
+              <el-checkbox-group
+                v-model="data.form.receiveProjectType"
+                @change="handleCheckboxChange2"
+              >
+                <el-checkbox :value="1"> 自动 </el-checkbox>
+                <el-checkbox :value="2"> 手动 </el-checkbox>
+              </el-checkbox-group>
+            </el-form-item>
+            <el-select
+              v-if="data.form.receiveProjectType == 1"
+              v-model="data.form.chargeUserName"
+              placeholder="请选择部门"
+              ref="selectTreeRef"
+              style="width: 15.625rem;margin-left: 1.5625rem;"
             >
-              <el-checkbox :value="1"> 自动 </el-checkbox>
-              <el-checkbox :value="2"> 手动 </el-checkbox>
-            </el-checkbox-group>
-          </el-form-item>
+              <el-option :value="data.form.chargeUserId" style="height: auto">
+                <el-tree
+                  v-if="departmentList.length > 0"
+                  ref="treeRef"
+                  :disabled="true"
+                  :data="departmentList"
+                  show-checkbox
+                  check-strictly
+                  node-key="id"
+                  :default-expanded-keys="[]"
+                  :default-checked-keys="[data.form.chargeUserId]"
+                  default-expand-all
+                  :props="defaultProps"
+                  @check-change="handleNodeClick"
+                  :check-on-click-node="true"
+                  :expand-on-click-node="false"
+                />
+                <el-text v-else>暂无数据</el-text>
+              </el-option>
+            </el-select>
+          </div>
         </div>
-        <el-input
+        <!-- <el-input
           placeholder="请选择接收项目负责人"
           @keydown="handleKeydown"
           @click="openUserDialog"
@@ -314,7 +377,7 @@ const handleKeydown = (e: any) => {
           "
           v-model="data.form.chargeUserName"
         >
-        </el-input>
+        </el-input> -->
       </ElForm>
       <template #footer>
         <el-button @click="close"> 关闭 </el-button>
@@ -334,9 +397,19 @@ const handleKeydown = (e: any) => {
 .fontColor {
   color: #333333 !important;
 }
-:deep(.el-form label,.el-tree-node__label,.checkbox__label){
+:deep(.el-form label, .el-tree-node__label, .checkbox__label) {
   color: #333333;
 }
+:deep(.userClass .el-tree-node.is-checked > .el-tree-node__content) {
+  background: #e3f1ff;
+  font-weight: 400;
+  font-size: 14px;
+  color: #409eff;
+}
+:deep(.userClass .el-tree-node) {
+  margin-top: 8px;
+}
+
 // :deep(.inviteDialog ){
 //   color: #333333 !important;
 // }

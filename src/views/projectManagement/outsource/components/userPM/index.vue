@@ -132,11 +132,11 @@ const handleChange = (val: any) => {
         :model="data.form"
         label-width="100px"
       >
-        <el-form-item label="PM" prop="chargeUserId">
+        <el-form-item label="负责人" prop="chargeUserId">
           <el-select
             v-model="data.form.chargeUserId"
             value-key=""
-            placeholder="请选择PM"
+            placeholder="请选择负责人"
             clearable
             filterable
           >

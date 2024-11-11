@@ -882,7 +882,7 @@ const downReceive =(row:any)=> {
               show-overflow-tooltip
               prop="userName"
               align="left"
-              label="PM"
+              label="负责人"
               width="140"
             >
               <template #default="{ row }">
