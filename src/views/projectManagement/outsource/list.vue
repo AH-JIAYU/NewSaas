@@ -700,7 +700,6 @@ const downReceive =(row:any)=> {
                   type="danger"
                   >未接收</el-text
                 >
-                &ensp;
                 <el-text
                   style="color: rgb(3, 194, 57)"
                   class="oneLine"
