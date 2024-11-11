@@ -3,7 +3,7 @@ import { onMounted } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import customerEdit from "./components/CustomerEdit/index.vue";
 import customerProportion from "./components/CustomerProportion/index.vue";
-
+import userDialog from "@/components/departmentHead/index.vue"; //部门人
 import empty from "@/assets/images/empty.png";
 import api from "@/api/modules/user_cooperation";
 import QuickEdit from "./components/QuickEdit/index.vue"; //快速编辑
@@ -204,17 +204,18 @@ const changeSendProjectType = (name: any, row: any) => {
   if (
     (row.sendProjectType == 1 && name == "手动") ||
     (row.sendProjectType == 2 && name == "自动")
-  ) {
+  )
+  {
     ElMessageBox.confirm(`确认将发送状态改为${name}吗？`, "确认信息")
       .then(() => {
         try {
           listLoading.value = true;
           let params = {
             id: row.id,
-            chargeUserId: row.chargeUserId, //负责人UserId
+            chargeUserId: row.userId, //负责人UserId
             invitationType: row.invitationType, //邀请类型
-            chargeUserName: row.chargeUserName, //负责人用户姓名
-            sendProjectType: !row.sendProjectType, //邀请方发送项目类型:1:自动 2:手动
+            chargeUserName: row.userName, //负责人用户姓名
+            sendProjectType: row.sendProjectType ==1 ? 2 :1, //邀请方发送项目类型:1:自动 2:手动
             receiveProjectType: row.receiveProjectType, //邀请方接收项目类型:1:自动 2:手动
           };
           api.updateInvitationBindUser(params).then(() => {
@@ -235,13 +236,14 @@ const changeSendProjectType = (name: any, row: any) => {
 };
 //选择部门人
 const userRef = ref();
+const id = ref(null);
 //列表切换接收项目状态
 const changeReceiveProjectType = (name: any, row: any) => {
+  id.value = row.id ; //获取列表id
   //切换成自动需要选择负责人
   //判断当前发送状态，如果当前是自动，1,点击手动才调接口，如果当前是手动2，点击自动，弹出选择部门负责人才调接口
   let obj = JSON.parse(JSON.stringify(row)); //深拷贝，不改变原数据
 
-  obj.receiveProjectType = !row.receiveProjectType;
   if (row.receiveProjectType == 1 && name == "手动") {
     ElMessageBox.confirm(`确认将接收状态改为${name}吗？`, "确认信息")
       .then(() => {
@@ -249,11 +251,11 @@ const changeReceiveProjectType = (name: any, row: any) => {
           listLoading.value = true;
           let params = {
             id: row.id,
-            chargeUserId: row.chargeUserId, //负责人UserId
+            chargeUserId: row.userId, //负责人UserId
             invitationType: row.invitationType, //邀请类型
-            chargeUserName: row.chargeUserName, //负责人用户姓名
+            chargeUserName: row.userName, //负责人用户姓名
             sendProjectType: row.sendProjectType, //邀请方发送项目类型:1:自动 2:手动
-            receiveProjectType: !row.receiveProjectType, //邀请方接收项目类型:1:自动 2:手动
+            receiveProjectType: row.receiveProjectType ==1 ? 2 :1, //邀请方接收项目类型:1:自动 2:手动
           };
           api.updateInvitationBindUser(params).then(() => {
             listLoading.value = false;
@@ -282,17 +284,17 @@ const changeReceiveProjectType = (name: any, row: any) => {
 };
 //勾选部门人回传数据
 function userData(data1: any) {
-  ElMessageBox.confirm(`确认将接收状态改为${name}吗？`, "确认信息")
+  ElMessageBox.confirm(`确认将接收状态改为自动吗？`, "确认信息")
       .then(() => {
         try {
           listLoading.value = true;
           let params = {
-            id: data1.id,
+            id: id.value,
             chargeUserId: data1.chargeUserId, //负责人UserId
             invitationType: data1.invitationType, //邀请类型
             chargeUserName: data1.chargeUserName, //负责人用户姓名
             sendProjectType: data1.sendProjectType, //邀请方发送项目类型:1:自动 2:手动
-            receiveProjectType: !data1.receiveProjectType, //邀请方接收项目类型:1:自动 2:手动
+            receiveProjectType: data1.receiveProjectType ==1 ? 2 :1, //邀请方接收项目类型:1:自动 2:手动
           };
           api.updateInvitationBindUser(params).then(() => {
             listLoading.value = false;
@@ -308,9 +310,7 @@ function userData(data1: any) {
         }
       })
       .catch(() => {});
-  // data.value.form.chargeUserId = data1.chargeUserId; //负责人UserId
-  // data.value.form.invitationType = data1.invitationType; //邀请类型，1员工，2部门
-  // data.value.form.chargeUserName = data1.chargeUserName;
+
 }
 </script>
 
