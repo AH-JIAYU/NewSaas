@@ -16,6 +16,15 @@ const data = ref<any>({
   roleList: [], //选择的员工
   title: "",
   project: [], //选中的项目
+  form:{
+    chargeId:null,
+  }
+});
+const rules = reactive<any>({
+
+  chargeId: [
+    { required: true, message: "请选择PM", trigger: "change" },
+  ],
 });
 const defaultProps: any = {
   children: "children",
@@ -37,15 +46,13 @@ async function showEdit(row: any, name: any, project: any) {
     if (row.invitationType == 1) {
       //勾选的是负责人
 
-        data.value.roleList = row.chargeUserId ?[row.chargeUserId]:[];
-        data.value.chargeUserName = row.chargeUserName ?row.chargeUserName:'';
-
+      data.value.roleList = row.chargeUserId ? [row.chargeUserId] : [];
+      data.value.chargeUserName = row.chargeUserName ? row.chargeUserName : "";
     } else if (row.invitationType == 2) {
       //勾选是部门
-      departmentId.value = row.chargeUserId ?[row.chargeUserId]:[];
-      data.value.chargeUserName = row.chargeUserName ?row.chargeUserName:'';
+      departmentId.value = row.chargeUserId ? [row.chargeUserId] : [];
+      data.value.chargeUserName = row.chargeUserName ? row.chargeUserName : "";
     }
-
   }
 
   data.value.title = name;
@@ -94,8 +101,8 @@ const handleNodeClick = (nodeData: any, checked: any) => {
   } else {
     // data.value.chargeUserName = ''
   }
-  if(departmentId.value.length ==0 && data.value.roleList.length ==0){
-    data.value.chargeUserName = ''
+  if (departmentId.value.length == 0 && data.value.roleList.length == 0) {
+    data.value.chargeUserName = "";
   }
 };
 const fetchData = () => {
@@ -115,14 +122,13 @@ const handleCheckboxChange = (newValue: any) => {
     let findData = data.value.tenantStaffList.find(
       (item: any) => item.id === data.value.roleList[0]
     );
-   data.value.chargeUserName = findData.userName;
+    data.value.chargeUserName = findData.userName;
   } else {
     // data.value.chargeUserName = ''
   }
-  if(departmentId.value.length ==0 && data.value.roleList.length ==0){
-    data.value.chargeUserName = ''
+  if (departmentId.value.length == 0 && data.value.roleList.length == 0) {
+    data.value.chargeUserName = "";
   }
-
 };
 defineExpose({
   showEdit,
@@ -169,6 +175,7 @@ const activeNames = ref([]);
 const handleChange = (val: any) => {
   activeNames.value = val;
 };
+const dictionaryItemVisible = ref<any>(false); // PM组件显隐
 </script>
 
 <template>
@@ -182,13 +189,18 @@ const handleChange = (val: any) => {
       :title="data.title"
       class="userClass"
     >
-      <div v-if="data.project.length != 0" style="margin-top:-2.1875rem">
-        <el-collapse v-model="activeNames" @change="handleChange">
+      <!-- 如果是从项目外包-接收项目这边进来，只需要展示pm下拉选 -->
+      <div v-if="data.project.length != 0">
+        <el-collapse
+          v-model="activeNames"
+          @change="handleChange"
+          v-if="data.project.length > 1"
+          style="margin-top: -2.1875rem"
+        >
           <el-collapse-item name="1">
             <template #title>
               <span class="project-name">项目</span>
-              <el-badge :value="data.project.length" :max="99" class="item" v-if="data.project.length >1">
-
+              <el-badge :value="data.project.length" :max="99" class="item">
               </el-badge>
             </template>
             <div class="project-content">
@@ -202,77 +214,141 @@ const handleChange = (val: any) => {
             </div>
           </el-collapse-item>
         </el-collapse>
+        <!-- <div>
+          <ElForm
+            ref="formRef"
+            :rules="rules"
+            :model="data.form"
+            label-width="100px"
+          >
+            <el-form-item label="PM" prop="chargeId">
+              <el-select
+                v-model="data.form.chargeId"
+                value-key=""
+                placeholder="请选择PM"
+                clearable
+                filterable
+              >
+                <el-option
+                  v-for="item in data.tenantStaffList"
+                  :key="item.id"
+                  :label="item.userName"
+                  :value="item.id"
+                />
+                <el-button
+                  class="buttonClass"
+                  @click="dictionaryItemVisible = true"
+                  size="small"
+                >
+                  快捷新增
+                  <div class="i-ic:round-plus w-1.3em h-1.3em"></div>
+                </el-button>
+
+                <template #empty>
+                  <div
+                    style="
+                      display: flex;
+                      justify-content: space-between;
+                      align-items: center;
+                      padding: 0 1rem;
+                    "
+                  >
+                    暂无数据
+                    <el-button
+                      type="primary"
+                      link
+                      @click="dictionaryItemVisible = true"
+                      size="small"
+                    >
+                      快捷新增
+                      <div class="i-ic:round-plus w-1.3em h-1.3em"></div>
+                    </el-button>
+                  </div>
+                </template>
+              </el-select>
+            </el-form-item>
+          </ElForm>
+        </div> -->
+
       </div>
-
-      <el-tabs v-model="data.type" @tab-change="fetchData" class="tabs-user">
-        <el-tab-pane label="部门" :name="1">
-          <template #label>
-            <span class="custom-tab-label">部门</span>
-          </template>
-          <div
-            style="
-              color: #333333;
-              font-weight: 500;
-              font-size: 14px;
-              margin-bottom: 10px;
-            "
-          >
-            分配部门
-          </div>
-          <el-tree
-            v-if="departmentList.length > 0"
-            style="max-width: 600px"
-            ref="treeRef"
-            :disabled="true"
-            :data="departmentList"
-            show-checkbox
-            check-strictly
-            node-key="id"
-            :default-expanded-keys="[]"
-            :default-checked-keys="departmentId"
-            default-expand-all
-            :props="defaultProps"
-            @check-change="handleNodeClick"
-            :check-on-click-node="true"
-            :expand-on-click-node="false"
-          />
-          <el-text v-else>暂无数据</el-text>
-        </el-tab-pane>
-        <el-tab-pane :name="2">
-          <template #label>
-            <span class="custom-tab-label" style="margin-left: 20px">员工</span>
-          </template>
-          <div
-            style="
-              color: #333333;
-              font-weight: 500;
-              font-size: 14px;
-              margin-bottom: 10px;
-            "
-          >
-            分配员工
-          </div>
-          <el-checkbox-group
-            v-if="data.tenantStaffList?.length"
-            @change="handleCheckboxChange"
-            v-model="data.roleList"
-          >
-            <el-checkbox
-              v-for="item in data.tenantStaffList"
-              :key="item.id"
-              :value="item.id"
-              :label="item.userName"
-              class="checkBox"
+      <div>
+        <el-tabs v-model="data.type" @tab-change="fetchData" class="tabs-user">
+          <el-tab-pane label="部门" :name="1">
+            <template #label>
+              <span class="custom-tab-label">部门</span>
+            </template>
+            <div
+              style="
+                color: #333333;
+                font-weight: 500;
+                font-size: 14px;
+                margin-bottom: 10px;
+              "
             >
-              {{ item.userName }}
-            </el-checkbox>
-          </el-checkbox-group>
-        </el-tab-pane>
-      </el-tabs>
+              分配部门
+            </div>
+            <el-tree
+              v-if="departmentList.length > 0"
+              style="max-width: 600px"
+              ref="treeRef"
+              :disabled="true"
+              :data="departmentList"
+              show-checkbox
+              check-strictly
+              node-key="id"
+              :default-expanded-keys="[]"
+              :default-checked-keys="departmentId"
+              default-expand-all
+              :props="defaultProps"
+              @check-change="handleNodeClick"
+              :check-on-click-node="true"
+              :expand-on-click-node="false"
+            />
+            <el-text v-else>暂无数据</el-text>
+          </el-tab-pane>
+          <el-tab-pane :name="2">
+            <template #label>
+              <span class="custom-tab-label" style="margin-left: 20px"
+                >员工</span
+              >
+            </template>
+            <div
+              style="
+                color: #333333;
+                font-weight: 500;
+                font-size: 14px;
+                margin-bottom: 10px;
+              "
+            >
+              分配员工
+            </div>
+            <el-checkbox-group
+              v-if="data.tenantStaffList?.length"
+              @change="handleCheckboxChange"
+              v-model="data.roleList"
+            >
+              <el-checkbox
+                v-for="item in data.tenantStaffList"
+                :key="item.id"
+                :value="item.id"
+                :label="item.userName"
+                class="checkBox"
+              >
+                {{ item.userName }}
+              </el-checkbox>
+            </el-checkbox-group>
+          </el-tab-pane>
+        </el-tabs>
 
-      <div v-if="data.chargeUserName">
-        <div class="i-ic:sharp-info w-1.5em h-1.5em" style="color: #FFB667;"></div>
-        <span style="margin-left: .5rem">{{ data.chargeUserName ||'' }}</span>
+        <div v-if="data.chargeUserName">
+          <div
+            class="i-ic:sharp-info w-1.5em h-1.5em"
+            style="color: #ffb667"
+          ></div>
+          <span style="margin-left: 0.5rem">{{
+            data.chargeUserName || ""
+          }}</span>
+        </div>
       </div>
 
       <template #footer>
@@ -282,22 +358,48 @@ const handleChange = (val: any) => {
         </div>
       </template>
     </el-dialog>
+    <DictionaryItemDia
+      v-if="dictionaryItemVisible"
+      v-model="dictionaryItemVisible"
+      @success="getTenantStaffList"
+    />
   </div>
 </template>
 
 <style scoped lang="scss">
-.checkBox{
+.buttonClass {
+  text-align: center;
+  margin: 0.75rem;
+  width: 100%;
+  height: 2rem;
+  font-family: PingFang SC, PingFang SC;
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: #409eff;
+  line-height: 16px;
+  background: #f4f8ff;
+  border-radius: 4px 4px 4px 4px;
+  border: 1px solid #e9eef3;
+}
+
+/* 使按钮在下拉框展开时自适应宽度 */
+.el-select-dropdown .buttonClass {
+  width: calc(100% - 24px);
+  /* 减去两边的 padding */
+
+}
+.checkBox {
   display: flex;
-    align-items: center;
-    justify-content:start;margin-left: 1.25rem
+  align-items: center;
+  justify-content: start;
+  margin-left: 1.25rem;
 }
 :deep(.userClass .el-tabs__content) {
   height: 12.5rem;
   overflow: auto;
 }
-:deep(.userClass  .el-collapse){
+:deep(.userClass .el-collapse) {
   border-top: none !important;
-
 }
 .project-name {
   font-weight: 500;
@@ -305,14 +407,12 @@ const handleChange = (val: any) => {
   color: #333333;
 }
 .tabs-user {
-  margin-top:.9375rem;
-
+  margin-top: 0.9375rem;
 }
 .project-content {
   // margin-top: .625rem;
   height: 150px;
-  overflow:auto;
-
+  overflow: auto;
 }
 .flex-c {
   display: flex;
@@ -331,7 +431,7 @@ const handleChange = (val: any) => {
     }
   }
 }
-.userClass .el-tabs__item.is-top:nth-child(2)  {
+.userClass .el-tabs__item.is-top:nth-child(2) {
   margin-left: 0 !important;
 }
 :deep(.userClass .el-tree-node.is-checked > .el-tree-node__content) {
@@ -366,4 +466,4 @@ const handleChange = (val: any) => {
     }
   }
 }
-</style>
+</styl>

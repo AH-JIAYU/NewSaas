@@ -42,7 +42,7 @@ const stripe = ref(false);
 const columns = ref<any>([
   { sotrtable: true, checked: true, label: "合作商ID", prop: "tenantId" },
   { sotrtable: true, checked: true, label: "接收状态", prop: "receiveStatus" },
-  { sotrtable: true, checked: true, label: "负责部门/PM", prop: "userName" },
+  { sotrtable: true, checked: true, label: "PM", prop: "userName" },
   { sotrtable: true, checked: true, label: "合作商名称", prop: "tenantName" },
   { sotrtable: true, checked: true, label: "分配", prop: "allocationType" },
   { sotrtable: true, checked: true, label: "项目价", prop: "doMoneyPrice" },
@@ -858,7 +858,7 @@ function userData(data1: any) {
               show-overflow-tooltip
               prop="userName"
               align="left"
-              label="负责部门/PM"
+              label="PM"
               width="140"
             >
               <template #default="{ row }">
