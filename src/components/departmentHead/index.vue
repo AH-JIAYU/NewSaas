@@ -92,6 +92,9 @@ const handleNodeClick = (nodeData: any, checked: any) => {
     data.value.chargeUserName = checkedNodes.map((node: any) => node.name)[0];
     // console.log(data.value.chargeUserName,'data.value.chargeUserName')
   } else {
+    // data.value.chargeUserName = ''
+  }
+  if(departmentId.value.length ==0 && data.value.roleList.length ==0){
     data.value.chargeUserName = ''
   }
 };
@@ -100,6 +103,7 @@ const fetchData = () => {
 };
 // 处理选中项变化的逻辑，确保最多只能选择一个
 const handleCheckboxChange = (newValue: any) => {
+  console.log(newValue,'newValue')
   if (Array.isArray(newValue) && newValue.length > 1) {
     // 只有一个选项可以被选中，取最后一个选中的
     data.value.roleList = [newValue[newValue.length - 1]];
@@ -113,8 +117,12 @@ const handleCheckboxChange = (newValue: any) => {
     );
    data.value.chargeUserName = findData.userName;
   } else {
+    // data.value.chargeUserName = ''
+  }
+  if(departmentId.value.length ==0 && data.value.roleList.length ==0){
     data.value.chargeUserName = ''
   }
+
 };
 defineExpose({
   showEdit,
