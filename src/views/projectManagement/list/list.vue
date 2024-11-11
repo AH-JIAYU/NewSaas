@@ -478,7 +478,7 @@ const formOption = {
                   <el-text v-if="row.projectType === 1" type="primary">
                     内部新增</el-text
                   >
-                  <el-text v-else-if="row.projectType === 2" type="info">
+                  <el-text v-else-if="row.projectType === 2" style="color: #ffac54;" >
                     合作商分配</el-text
                   >
                 </span>
