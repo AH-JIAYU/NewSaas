@@ -11,11 +11,22 @@ const notificationStore = useNotificationStore();
 const data = ref<any>({});
 const dialogTableVisible = ref<any>(false); // 同意合作-PM弹框
 const tenantStaffList = ref<any>([]); // PM
-
+  const validateNumberRange = (rule: any, value: any, callback: any) => {
+  const regex = /^(100|[1-9]?\d)$/;
+  if(regex.test(value) == false){
+    return callback(new Error("请输入 0 到 100 之间的数字"));
+  }
+  callback(); // 校验通过
+};
 const FormRef = ref<any>();
 const FormRules = {
   priceRatio: [{ required: true, message: "请输入价格比例", trigger: "blur" } ,
    //{ min: 0, max: 100, message: '请在0-100范围内输入', trigger: 'blur' },
+   {
+        type: "number",
+        trigger: "blur",
+        validator: validateNumberRange,
+      },
    ],
 
   sendProjectType: [

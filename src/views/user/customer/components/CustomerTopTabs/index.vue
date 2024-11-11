@@ -88,6 +88,7 @@ nextTick(() => {
   // 表单验证方法
   validate(formRef.value);
 });
+//storage.local.get("anotherName")
 const tenantId = storage.local.get("tenantId");
 </script>
 

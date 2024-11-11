@@ -7,11 +7,24 @@ const emit = defineEmits(["fetch-data"]);
 import apiDep from "@/api/modules/department";
 const drawerisible = ref<boolean>(false);
 const formRef = ref<any>(); // Ref
+
+const validateNumberRange = (rule: any, value: any, callback: any) => {
+  const regex = /^(100|[1-9]?\d)$/;
+  if(regex.test(value) == false){
+    return callback(new Error("请输入 0 到 100 之间的数字"));
+  }
+  callback(); // 校验通过
+};
 const data = ref<any>({
   form: {},
   rules: {
     priceRatio: [
       { required: true, message: "请输入价格比例", trigger: "blur" },
+      {
+        type: "number",
+        trigger: "blur",
+        validator: validateNumberRange,
+      },
     //{ min: 0, max: 100, message: '请在0-100范围内输入', trigger: 'blur' },
     ],
     sendProjectType: [
@@ -61,7 +74,7 @@ function close() {
 //选择部门人
 const userRef = ref();
 function openUserDialog() {
-  userRef.value.showEdit('','请选择负责部门/人');
+  userRef.value.showEdit(data.value.form,'请选择负责部门/人');
 }
 
 async function BindUser(obj:any) {
@@ -140,6 +153,12 @@ const handleCheckboxChange2 = (newValue: any) => {
     data.value.form.receiveProjectType = [newValue[newValue.length - 1]];
   }
 };
+//勾选部门人回传数据
+function userData(data1: any) {
+  data.value.form.chargeUserId = data1.chargeUserId; //负责人UserId
+  data.value.form.invitationType = data1.invitationType; //邀请类型，1员工，2部门
+  data.value.form.chargeUserName = data1.chargeUserName;
+}
 const handleKeydown = (e: any) => {
   // 阻止键盘输入
   e.preventDefault();
@@ -247,7 +266,7 @@ defineExpose({
         <el-button type="primary" @click="save"> 确认 </el-button>
       </template>
     </el-dialog>
-    <userDialog ref="userRef" />
+    <userDialog ref="userRef" @userData="userData"/>
   </div>
 </template>
 

@@ -36,14 +36,14 @@ async function showEdit(row: any, name: any, project: any) {
   if (row) {
     if (row.invitationType == 1) {
       //勾选的是负责人
-      if (row.chargeUserId) {
-        data.value.roleList = [row.chargeUserId];
-        data.value.chargeUserName = row.chargeUserName;
-      }
+
+        data.value.roleList = row.chargeUserId ?[row.chargeUserId]:[];
+        data.value.chargeUserName = row.chargeUserName ?row.chargeUserName:'';
+
     } else if (row.invitationType == 2) {
       //勾选是部门
-      departmentId.value = [row.chargeUserId];
-      data.value.chargeUserName = row.chargeUserName;
+      departmentId.value = row.chargeUserId ?[row.chargeUserId]:[];
+      data.value.chargeUserName = row.chargeUserName ?row.chargeUserName:'';
     }
 
   }
