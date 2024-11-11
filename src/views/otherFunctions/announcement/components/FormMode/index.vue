@@ -34,24 +34,35 @@ function onCancel() {
     <ElDialog v-if="props.mode === 'dialog'" v-model="visible" :title="title" width="600px" :close-on-click-modal="false" append-to-body destroy-on-close>
       <DetailForm ref="formRef" v-bind="props" />
       <template #footer>
+        <div class="flex-c">
         <ElButton size="large" @click="onCancel">
           取消
         </ElButton>
         <ElButton type="primary" size="large" @click="onSubmit">
           确定
         </ElButton>
+        </div>
       </template>
     </ElDialog>
     <ElDrawer v-else-if="props.mode === 'drawer'" v-model="visible" :title="title" size="60%" :close-on-click-modal="false" destroy-on-close>
       <DetailForm ref="formRef" v-bind="props" />
       <template #footer>
+        <div class="flex-c">
         <ElButton size="large" @click="onCancel">
           取消
         </ElButton>
         <ElButton type="primary" size="large" @click="onSubmit">
           确定
         </ElButton>
+      </div>
       </template>
     </ElDrawer>
   </div>
 </template>
+<style lang="scss" scoped>
+.flex-c {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+</style>
