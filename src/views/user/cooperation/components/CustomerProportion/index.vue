@@ -195,7 +195,7 @@ defineExpose({
           label-width="7rem"
         >
         <template #label>
-          <span style="font-weight: 700;font-size: 15px;">项目分配方式</span>
+          <span style="font-weight: 700;font-size: 0.9375rem;">项目分配方式</span>
         </template>
         </el-form-item>
 
