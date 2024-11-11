@@ -8,26 +8,40 @@ defineOptions({
 });
 const emit = defineEmits(["delSelectId"]);
 const notificationStore = useNotificationStore();
-const data = ref<any>({});
+const validateNumberRange = (rule: any, value: any, callback: any) => {
+  const regex = /^(100|[1-9]?\d)$/;
+  if(regex.test(value) == false){
+    return callback(new Error("请输入 0 到 100 之间的数字"));
+  }
+  callback(); // 校验通过
+};
+const data = ref<any>({
+  rules: {
+    priceRatio: [
+      { required: true, message: "请输入价格比例", trigger: "blur" },
+      //{ min: 0, max: 100, message: '请在0-100范围内输入', trigger: 'blur' },
+      {
+        type: "number",
+        trigger: "blur",
+        validator: validateNumberRange,
+      },
+    ],
+
+    sendProjectType: [
+      { required: true, message: "请选择发送项目", trigger: "change" },
+    ],
+    receiveProjectType: [
+      { required: true, message: "请选择接收项目", trigger: "change" },
+    ],
+    // beInvitationChargeUserId: [
+    //   { required: true, message: "请选择PM", trigger: "change" },
+    // ],
+  },
+});
 const dialogTableVisible = ref<any>(false); // 同意合作-PM弹框
 const tenantStaffList = ref<any>([]); // PM
 
 const FormRef = ref<any>();
-const FormRules = {
-  priceRatio: [{ required: true, message: "请输入价格比例", trigger: "blur" } ,
-   //{ min: 0, max: 100, message: '请在0-100范围内输入', trigger: 'blur' },
-   ],
-
-  sendProjectType: [
-    { required: true, message: "请选择发送项目", trigger: "change" },
-  ],
-  receiveProjectType: [
-    { required: true, message: "请选择接收项目", trigger: "change" },
-  ],
-  // beInvitationChargeUserId: [
-  //   { required: true, message: "请选择PM", trigger: "change" },
-  // ],
-};
 
 const showEdit = async (row: any) => {
   // await getTenantStaffList();
@@ -94,7 +108,7 @@ const agree = async () => {
 //选择部门人
 const userRef = ref();
 function openUserDialog() {
-  userRef.value.showEdit('','请选择负责部门/人');
+  userRef.value.showEdit("", "请选择负责部门/人");
 }
 //勾选部门人回传数据
 function userData(data1: any) {
@@ -147,7 +161,7 @@ defineExpose({
     <el-dialog v-model="dialogTableVisible" title="添加PM">
       <ElForm
         ref="FormRef"
-        :rules="FormRules"
+        :rules="data.rules"
         :model="data"
         label-width="7rem"
         labelPosition="left"
@@ -159,10 +173,10 @@ defineExpose({
         </el-form-item>
         <el-form-item label="项目分配方式" label-width="7rem"> </el-form-item>
 
-        <div style="display: flex" class="inviteDialog" >
+        <div style="display: flex" class="inviteDialog">
           <el-form-item prop="sendProjectType" label-width="7rem">
-            <template #label >
-                <span>
+            <template #label>
+              <span>
                 <el-tooltip
                   effect="dark"
                   content="1111111"
@@ -172,8 +186,7 @@ defineExpose({
                 </el-tooltip>
                 发送项目
               </span>
-
-              </template>
+            </template>
 
             <el-checkbox-group
               v-model="data.sendProjectType"
@@ -184,8 +197,8 @@ defineExpose({
             </el-checkbox-group>
           </el-form-item>
           <el-form-item prop="receiveProjectType" style="margin-left: 40px">
-            <template #label >
-                <span>
+            <template #label>
+              <span>
                 <el-tooltip
                   effect="dark"
                   content="1111111"
@@ -195,8 +208,7 @@ defineExpose({
                 </el-tooltip>
                 接收项目
               </span>
-
-              </template>
+            </template>
 
             <el-checkbox-group
               v-model="data.receiveProjectType"

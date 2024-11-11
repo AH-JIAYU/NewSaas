@@ -7,7 +7,8 @@ import allocationEdit from "../list/components/AllocationEdit/index.vue";
 import api from "@/api/modules/projectManagement_outsource";
 import useProjectManagementOutsourceStore from "@/store/modules/projectManagement_outsource";
 import empty from "@/assets/images/empty.png";
-import userDialog from "@/components/departmentHead/index.vue"; //部门人
+// import userDialog from "@/components/departmentHead/index.vue"; //部门人
+import userDialog from "./components/userPM/index.vue";
 import { rowKey } from "element-plus/es/components/table-v2/src/common.mjs";
 defineOptions({
   name: "outsource",
@@ -42,7 +43,7 @@ const stripe = ref(false);
 const columns = ref<any>([
   { sotrtable: true, checked: true, label: "合作商ID", prop: "tenantId" },
   { sotrtable: true, checked: true, label: "接收状态", prop: "receiveStatus" },
-  { sotrtable: true, checked: true, label: "负责部门/PM", prop: "userName" },
+  { sotrtable: true, checked: true, label: "PM", prop: "userName" },
   { sotrtable: true, checked: true, label: "合作商名称", prop: "tenantName" },
   { sotrtable: true, checked: true, label: "分配", prop: "allocationType" },
   { sotrtable: true, checked: true, label: "项目价", prop: "doMoneyPrice" },
@@ -673,7 +674,7 @@ function userData(data1: any) {
                   class="oneLine"
                   v-if="row.receiveStatus == 2"
                   type="danger"
-                  >手动（未接收）</el-text
+                  >未接收</el-text
                 >
                 &ensp;
                 <el-text
@@ -681,7 +682,7 @@ function userData(data1: any) {
                   class="oneLine"
                   v-if="row.receiveStatus == 1"
                   type="success"
-                  >自动（已接收）</el-text
+                  >已接收</el-text
                 >
               </template>
             </el-table-column>
@@ -858,7 +859,7 @@ function userData(data1: any) {
               show-overflow-tooltip
               prop="userName"
               align="left"
-              label="负责部门/PM"
+              label="PM"
               width="140"
             >
               <template #default="{ row }">

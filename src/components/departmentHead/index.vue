@@ -36,14 +36,14 @@ async function showEdit(row: any, name: any, project: any) {
   if (row) {
     if (row.invitationType == 1) {
       //勾选的是负责人
-      if (row.chargeUserId) {
-        data.value.roleList = [row.chargeUserId];
-        data.value.chargeUserName = row.chargeUserName;
-      }
+
+        data.value.roleList = row.chargeUserId ?[row.chargeUserId]:[];
+        data.value.chargeUserName = row.chargeUserName ?row.chargeUserName:'';
+
     } else if (row.invitationType == 2) {
       //勾选是部门
-      departmentId.value = [row.chargeUserId];
-      data.value.chargeUserName = row.chargeUserName;
+      departmentId.value = row.chargeUserId ?[row.chargeUserId]:[];
+      data.value.chargeUserName = row.chargeUserName ?row.chargeUserName:'';
     }
 
   }
@@ -92,6 +92,9 @@ const handleNodeClick = (nodeData: any, checked: any) => {
     data.value.chargeUserName = checkedNodes.map((node: any) => node.name)[0];
     // console.log(data.value.chargeUserName,'data.value.chargeUserName')
   } else {
+    // data.value.chargeUserName = ''
+  }
+  if(departmentId.value.length ==0 && data.value.roleList.length ==0){
     data.value.chargeUserName = ''
   }
 };
@@ -100,6 +103,7 @@ const fetchData = () => {
 };
 // 处理选中项变化的逻辑，确保最多只能选择一个
 const handleCheckboxChange = (newValue: any) => {
+  // console.log(newValue,'newValue')
   if (Array.isArray(newValue) && newValue.length > 1) {
     // 只有一个选项可以被选中，取最后一个选中的
     data.value.roleList = [newValue[newValue.length - 1]];
@@ -113,8 +117,12 @@ const handleCheckboxChange = (newValue: any) => {
     );
    data.value.chargeUserName = findData.userName;
   } else {
+    // data.value.chargeUserName = ''
+  }
+  if(departmentId.value.length ==0 && data.value.roleList.length ==0){
     data.value.chargeUserName = ''
   }
+
 };
 defineExpose({
   showEdit,
@@ -174,12 +182,13 @@ const handleChange = (val: any) => {
       :title="data.title"
       class="userClass"
     >
-      <div v-if="data.project.length != 0">
+
+      <div v-if="data.project.length != 0" style="margin-top:-2.1875rem">
         <el-collapse v-model="activeNames" @change="handleChange">
           <el-collapse-item name="1">
             <template #title>
               <span class="project-name">项目</span>
-              <el-badge :value="data.project.length" :max="99" class="item">
+              <el-badge :value="data.project.length" :max="99" class="item" v-if="data.project.length >1">
 
               </el-badge>
             </template>
@@ -194,9 +203,10 @@ const handleChange = (val: any) => {
             </div>
           </el-collapse-item>
         </el-collapse>
+
       </div>
 
-      <el-tabs v-model="data.type" @tab-change="fetchData" class="tabs-user">
+      <el-tabs v-model="data.type" @tab-change="fetchData" class="tabs-user" style="margin-top:-1.5625rem;">
         <el-tab-pane label="部门" :name="1">
           <template #label>
             <span class="custom-tab-label">部门</span>
@@ -234,6 +244,16 @@ const handleChange = (val: any) => {
           <template #label>
             <span class="custom-tab-label" style="margin-left: 20px">员工</span>
           </template>
+          <div
+            style="
+              color: #333333;
+              font-weight: 500;
+              font-size: 14px;
+              margin-bottom: 10px;
+            "
+          >
+            分配员工
+          </div>
           <el-checkbox-group
             v-if="data.tenantStaffList?.length"
             @change="handleCheckboxChange"
@@ -244,6 +264,7 @@ const handleChange = (val: any) => {
               :key="item.id"
               :value="item.id"
               :label="item.userName"
+              class="checkBox"
             >
               {{ item.userName }}
             </el-checkbox>
@@ -267,6 +288,11 @@ const handleChange = (val: any) => {
 </template>
 
 <style scoped lang="scss">
+.checkBox{
+  display: flex;
+    align-items: center;
+    justify-content:start;margin-left: 1.25rem
+}
 :deep(.userClass .el-tabs__content) {
   height: 12.5rem;
   overflow: auto;

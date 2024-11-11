@@ -59,8 +59,13 @@ const columns = ref([
     sortable: true,
     prop: "availableBalance",
   },
-  { label: "发送项目状态", checked: true, sortable: true, prop: "sendProjectType" },
-  { label: "接收项目状态", checked: true, sortable: true, prop: "receiveProjectType" },
+  { label: "发送项目", checked: true, sortable: true, prop: "sendProjectType" },
+  {
+    label: "接收项目",
+    checked: true,
+    sortable: true,
+    prop: "receiveProjectType",
+  },
   { label: "负责部门/PM", checked: true, sortable: true, prop: "userName" },
 ]);
 
@@ -105,8 +110,6 @@ function termination(row: any) {
 function priceRatio(row: any) {
   proportionRef.value.showEdit(row);
 }
-
-
 
 // 查询
 const queryForm = reactive<any>({});
@@ -153,11 +156,11 @@ function setSelectRows(val: any) {
 const tableList = computed(() => {
   // 合作状态
   const cooperationList = list.value.filter(
-    (item: any) => item.bindStatus === 2,
+    (item: any) => item.bindStatus === 2
   );
   // 解约状态
   let terminationOfContractList = list.value.filter(
-    (item: any) => item.bindStatus === 4,
+    (item: any) => item.bindStatus === 4
   );
   // 解约去重
   terminationOfContractList = Array.from(
@@ -165,12 +168,12 @@ const tableList = computed(() => {
       terminationOfContractList.map((item: any) => [
         item.beInvitationTenantId,
         item,
-      ]),
-    ).values(),
+      ])
+    ).values()
   );
   // 合作的列表的id集合
   const cooperationIdList = cooperationList.map(
-    (item: any) => item.beInvitationTenantId,
+    (item: any) => item.beInvitationTenantId
   );
   terminationOfContractList.forEach((item: any) => {
     if (!cooperationIdList.includes(item.beInvitationTenantId)) {
@@ -194,6 +197,121 @@ onMounted(() => {
   });
   queryData();
 });
+
+//列表切换发送项目状态
+const changeSendProjectType = (name: any, row: any) => {
+  //判断当前发送状态，如果当前是自动，1,点击手动才调接口，如果当前是手动2，点击自动才调接口
+  if (
+    (row.sendProjectType == 1 && name == "手动") ||
+    (row.sendProjectType == 2 && name == "自动")
+  ) {
+    ElMessageBox.confirm(`确认将发送状态改为${name}吗？`, "确认信息")
+      .then(() => {
+        try {
+          listLoading.value = true;
+          let params = {
+            id: row.id,
+            chargeUserId: row.chargeUserId, //负责人UserId
+            invitationType: row.invitationType, //邀请类型
+            chargeUserName: row.chargeUserName, //负责人用户姓名
+            sendProjectType: !row.sendProjectType, //邀请方发送项目类型:1:自动 2:手动
+            receiveProjectType: row.receiveProjectType, //邀请方接收项目类型:1:自动 2:手动
+          };
+          api.updateInvitationBindUser(params).then(() => {
+            listLoading.value = false;
+            queryData();
+            ElMessage.success({
+              message: "修改成功",
+              center: true,
+            });
+          });
+        } catch (error) {
+        } finally {
+          listLoading.value = false;
+        }
+      })
+      .catch(() => {});
+  }
+};
+//选择部门人
+const userRef = ref();
+//列表切换接收项目状态
+const changeReceiveProjectType = (name: any, row: any) => {
+  //切换成自动需要选择负责人
+  //判断当前发送状态，如果当前是自动，1,点击手动才调接口，如果当前是手动2，点击自动，弹出选择部门负责人才调接口
+  let obj = JSON.parse(JSON.stringify(row)); //深拷贝，不改变原数据
+
+  obj.receiveProjectType = !row.receiveProjectType;
+  if (row.receiveProjectType == 1 && name == "手动") {
+    ElMessageBox.confirm(`确认将接收状态改为${name}吗？`, "确认信息")
+      .then(() => {
+        try {
+          listLoading.value = true;
+          let params = {
+            id: row.id,
+            chargeUserId: row.chargeUserId, //负责人UserId
+            invitationType: row.invitationType, //邀请类型
+            chargeUserName: row.chargeUserName, //负责人用户姓名
+            sendProjectType: row.sendProjectType, //邀请方发送项目类型:1:自动 2:手动
+            receiveProjectType: !row.receiveProjectType, //邀请方接收项目类型:1:自动 2:手动
+          };
+          api.updateInvitationBindUser(params).then(() => {
+            listLoading.value = false;
+            queryData();
+            ElMessage.success({
+              message: "修改成功",
+              center: true,
+            });
+          });
+        } catch (error) {
+        } finally {
+          listLoading.value = false;
+        }
+      })
+      .catch(() => {});
+  } else if (row.receiveProjectType == 2 && name == "自动") {
+    //弹出部门负责人
+    let obj = {
+      chargeUserId: row.userId,
+      invitationType: row.invitationType,
+      chargeUserName: row.userName,
+      id:row.id,
+    };
+    userRef.value.showEdit(obj, "请选择负责部门/人");
+  }
+};
+//勾选部门人回传数据
+function userData(data1: any) {
+  ElMessageBox.confirm(`确认将接收状态改为${name}吗？`, "确认信息")
+      .then(() => {
+        try {
+          listLoading.value = true;
+          let params = {
+            id: data1.id,
+            chargeUserId: data1.chargeUserId, //负责人UserId
+            invitationType: data1.invitationType, //邀请类型
+            chargeUserName: data1.chargeUserName, //负责人用户姓名
+            sendProjectType: data1.sendProjectType, //邀请方发送项目类型:1:自动 2:手动
+            receiveProjectType: !data1.receiveProjectType, //邀请方接收项目类型:1:自动 2:手动
+          };
+          api.updateInvitationBindUser(params).then(() => {
+            listLoading.value = false;
+            queryData();
+            ElMessage.success({
+              message: "修改成功",
+              center: true,
+            });
+          });
+        } catch (error) {
+        } finally {
+          listLoading.value = false;
+        }
+      })
+      .catch(() => {});
+  // data.value.form.chargeUserId = data1.chargeUserId; //负责人UserId
+  // data.value.form.invitationType = data1.invitationType; //邀请类型，1员工，2部门
+  // data.value.form.chargeUserName = data1.chargeUserName;
+}
 </script>
 
 <template>
@@ -250,14 +368,26 @@ onMounted(() => {
           align="left"
           prop="sendProjectType"
           show-overflow-tooltip
-          label="发送项目状态"
-          width="120"
+          label="发送项目"
+          width="160"
         >
           <template #default="{ row }">
-            <div class="fontC-System">
+            <!-- <div class="fontC-System">
               <el-text v-if="row.sendProjectType === 1" type="success">自动</el-text>
               <el-text v-if="row.sendProjectType === 2" type="danger">手动</el-text>
-            </div>
+            </div> -->
+            <el-button
+              :type="row.sendProjectType === 1 ? 'primary' : ''"
+              size="small"
+              @click="changeSendProjectType('自动', row)"
+              >自动
+            </el-button>
+            <el-button
+              :type="row.sendProjectType === 2 ? 'primary' : ''"
+              size="small"
+              @click="changeSendProjectType('手动', row)"
+              >手动</el-button
+            >
           </template>
         </el-table-column>
         <el-table-column
@@ -265,14 +395,26 @@ onMounted(() => {
           align="left"
           prop="receiveProjectType"
           show-overflow-tooltip
-          label="接收项目状态"
-          width="120"
+          label="接收项目"
+          width="160"
         >
           <template #default="{ row }">
-            <div class="fontC-System">
+            <el-button
+              :type="row.receiveProjectType === 1 ? 'primary' : ''"
+              size="small"
+              @click="changeReceiveProjectType('自动', row)"
+              >自动
+            </el-button>
+            <el-button
+              :type="row.receiveProjectType === 2 ? 'primary' : ''"
+              size="small"
+              @click="changeReceiveProjectType('手动', row)"
+              >手动</el-button
+            >
+            <!-- <div class="fontC-System">
               <el-text v-if="row.receiveProjectType === 1" type="success">自动</el-text>
               <el-text v-if="row.receiveProjectType === 2" type="danger">手动</el-text>
-            </div>
+            </div> -->
           </template>
         </el-table-column>
         <el-table-column
@@ -280,12 +422,11 @@ onMounted(() => {
           align="left"
           prop="beInvitationTenantId"
           width="280"
-
           label="合作商ID"
         >
           <template #default="{ row }">
             <div class="copyId tableSmall">
-              <div class="id oneLine beInvitationTenantId" >
+              <div class="id oneLine beInvitationTenantId">
                 <el-tooltip
                   effect="dark"
                   :content="row.beInvitationTenantId"
@@ -293,7 +434,6 @@ onMounted(() => {
                 >
                   {{ row.beInvitationTenantId }}
                 </el-tooltip>
-
 
                 <!-- {{ row.beInvitationTenantId }} -->
               </div>
@@ -394,12 +534,8 @@ onMounted(() => {
               >
                 终止合作
               </el-button>
-              <el-button
-                size="small"
-                type="danger"
-                @click="priceRatio(row)"
-              >
-              合作配置
+              <el-button size="small" type="danger" @click="priceRatio(row)">
+                合作配置
               </el-button>
 
               <!-- <el-button type="warning" plain size="small">
@@ -429,6 +565,7 @@ onMounted(() => {
       <customerProportion ref="proportionRef" @fetch-data="queryData" />
     </PageMain>
     <QuickEdit ref="QuickEditRef" @fetchData="fetchData" />
+    <userDialog ref="userRef" @userData="userData"/>
   </div>
 </template>
 
@@ -437,14 +574,14 @@ onMounted(() => {
   width: 20px;
   display: none;
 }
-.copyId  .current {
-    display: block !important;
-  }
+.copyId .current {
+  display: block !important;
+}
 .el-table__row:hover .rowCopy {
   display: block;
 }
 .beInvitationTenantId {
-  font-size: .875rem;
+  font-size: 0.875rem;
 }
 // 高度自适应
 .absolute-container {

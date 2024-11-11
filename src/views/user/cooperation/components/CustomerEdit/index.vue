@@ -8,6 +8,14 @@ const emit = defineEmits(["fetch-data"]);
 const drawerisible = ref<boolean>(false);
 const title = ref<string>("");
 const formRef = ref<any>(); // Ref
+
+const validateNumberRange = (rule: any, value: any, callback: any) => {
+  const regex = /^(100|[1-9]?\d)$/;
+  if(regex.test(value) == false){
+    return callback(new Error("请输入 0 到 100 之间的数字"));
+  }
+  callback(); // 校验通过
+};
 const data = ref<any>({
   form: {},
   tenantUserList: [], //合作商list
@@ -21,13 +29,18 @@ const data = ref<any>({
     ],
     priceRatio: [
       { required: true, message: "请输入价格比例", trigger: "blur" },
+      {
+        type: "number",
+        trigger: "blur",
+        validator: validateNumberRange,
+      },
       // { min: 0, max: 100, message: '请在0-100范围内输入', trigger: 'change"' },
     ],
     sendProjectType: [
-      { required: true, message: "请选择发送项目", trigger: "change" }
+      { required: true, message: "请选择发送项目", trigger: "change" },
     ],
     receiveProjectType: [
-      { required: true, message: "请选择接收项目", trigger: "change" }
+      { required: true, message: "请选择接收项目", trigger: "change" },
     ],
     // chargeUserName: [
     //   { required: true, message: "请选择接收项目负责人", trigger: "change" },
@@ -37,6 +50,7 @@ const data = ref<any>({
     // ],
   },
 });
+
 // 显隐
 async function showEdit() {
   await getTenantUserList();
@@ -78,14 +92,14 @@ async function save() {
   formRef.value.validate((valid: any) => {
     if (valid) {
       let obj = JSON.parse(JSON.stringify(data.value.form)); //深拷贝，不改变原数据
-        //如果obj.receiveProjectType == 1，，必须要选人
-        if(obj.receiveProjectType == 1 && !obj.chargeUserId){
-          ElMessage.warning({
-            message: "请选择接收项目负责人",
-            center: true,
-          });
+      //如果obj.receiveProjectType == 1，，必须要选人
+      if (obj.receiveProjectType == 1 && !obj.chargeUserId) {
+        ElMessage.warning({
+          message: "请选择接收项目负责人",
+          center: true,
+        });
         return;
-        }
+      }
       obj.sendProjectType =
         data.value.form.sendProjectType.length != 0
           ? data.value.form.sendProjectType[0]
@@ -124,8 +138,6 @@ async function save() {
   });
 }
 
-
-
 defineExpose({
   showEdit,
 });
@@ -137,7 +149,7 @@ function openUserDialog() {
     invitationType: data.value.form.invitationType,
     chargeUserName: data.value.form.chargeUserName,
   };
-  userRef.value.showEdit(obj,'请选择负责部门/人');
+  userRef.value.showEdit(obj, "请选择负责部门/人");
 }
 //勾选部门人回传数据
 function userData(data1: any) {
@@ -181,7 +193,7 @@ const handleKeydown = (e: any) => {
         :rules="data.rules"
         :model="data.form"
         label-width="7rem"
-        labelPosition ='left'
+        labelPosition="left"
       >
         <el-form-item label="公司名称" prop="beInvitationTenantId">
           <el-select v-model="data.form.beInvitationTenantId" clearable>
@@ -224,18 +236,33 @@ const handleKeydown = (e: any) => {
         </el-table>
         <template v-if="data.form.beInvitationTenantId">
           <el-form-item label="价格比例" prop="priceRatio">
-            <el-input v-model="data.form.priceRatio" clearable
+            <el-input
+              v-model="data.form.priceRatio"
+              clearable
+              placeholder="请输入0-100之间的数字"
               ><template #append>%</template></el-input
             >
           </el-form-item>
         </template>
-        <el-form-item label="项目分配方式" label-width="7rem" v-if="data.form.beInvitationTenantId"> </el-form-item>
+        <el-form-item
 
+          label-width="7rem"
+          v-if="data.form.beInvitationTenantId"
+        >
+        <template #label>
+          <span style="font-weight: 700;font-size: 15px;">项目分配方式</span>
+        </template>
 
-          <div style="display: flex" v-if="data.form.beInvitationTenantId"       class="inviteDialog">
-            <el-form-item prop="sendProjectType" label-width="7rem">
-              <template #label >
-                <span>
+        </el-form-item>
+
+        <div
+          style="display: flex"
+          v-if="data.form.beInvitationTenantId"
+          class="inviteDialog"
+        >
+          <el-form-item prop="sendProjectType" label-width="7rem">
+            <template #label>
+              <span>
                 <el-tooltip
                   effect="dark"
                   content="1111111"
@@ -245,24 +272,19 @@ const handleKeydown = (e: any) => {
                 </el-tooltip>
                 发送项目
               </span>
+            </template>
 
-              </template>
-
-
-
-
-              <el-checkbox-group
-                v-model="data.form.sendProjectType"
-                @change="handleCheckboxChange1"
-              >
-                <el-checkbox :value="1"> 自动 </el-checkbox>
-                <el-checkbox :value="2"> 手动 </el-checkbox>
-              </el-checkbox-group>
-            </el-form-item>
-            <el-form-item prop="receiveProjectType" style="margin-left:40px">
-
-              <template #label >
-                <span>
+            <el-checkbox-group
+              v-model="data.form.sendProjectType"
+              @change="handleCheckboxChange1"
+            >
+              <el-checkbox :value="1"> 自动 </el-checkbox>
+              <el-checkbox :value="2"> 手动 </el-checkbox>
+            </el-checkbox-group>
+          </el-form-item>
+          <el-form-item prop="receiveProjectType" style="margin-left: 40px">
+            <template #label>
+              <span>
                 <el-tooltip
                   effect="dark"
                   content="1111111"
@@ -272,20 +294,18 @@ const handleKeydown = (e: any) => {
                 </el-tooltip>
                 接收项目
               </span>
+            </template>
 
-              </template>
-
-
-              <el-checkbox-group
-                v-model="data.form.receiveProjectType"
-                @change="handleCheckboxChange2"
-              >
-                <el-checkbox :value="1"> 自动 </el-checkbox>
-                <el-checkbox :value="2"> 手动 </el-checkbox>
-              </el-checkbox-group>
-            </el-form-item>
-          </div>
-            <el-input
+            <el-checkbox-group
+              v-model="data.form.receiveProjectType"
+              @change="handleCheckboxChange2"
+            >
+              <el-checkbox :value="1"> 自动 </el-checkbox>
+              <el-checkbox :value="2"> 手动 </el-checkbox>
+            </el-checkbox-group>
+          </el-form-item>
+        </div>
+        <el-input
           placeholder="请选择接收项目负责人"
           @keydown="handleKeydown"
           @click="openUserDialog"
@@ -295,7 +315,6 @@ const handleKeydown = (e: any) => {
           v-model="data.form.chargeUserName"
         >
         </el-input>
-
       </ElForm>
       <template #footer>
         <el-button @click="close"> 关闭 </el-button>
@@ -312,8 +331,10 @@ const handleKeydown = (e: any) => {
     min-height: 12.5rem !important;
   }
 }
-// :deep(.inviteDialog .el-form-item__content){
-//   margin-left: 0 !important;
+.fontColor {
+  color: #333333 !important;
+}
+// :deep(.inviteDialog ){
+//   color: #333333 !important;
 // }
-
 </style>
