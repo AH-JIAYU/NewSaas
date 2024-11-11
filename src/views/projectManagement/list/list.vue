@@ -48,7 +48,7 @@ const formSearchList = ref<any>(); //表单排序配置
 const formSearchName = ref<string>("formSearch-list"); // 表单排序name
 const stripe = ref(false);
 const columns = ref([
-  { prop: "projectType", label: "项目类型", checked: true, sotrtable: true },
+  // { prop: "projectType", label: "项目类型", checked: true, sotrtable: true },
   { prop: "projectId", label: "项目ID", checked: true, sotrtable: true },
   { prop: "name", label: "项目名称", checked: true, sotrtable: true },
   {
@@ -59,7 +59,7 @@ const columns = ref([
   },
   {
     prop: "PCNL",
-    label: "参与/完成/配额/限量",
+    label: "参数",
     checked: true,
     sotrtable: true,
   },
@@ -345,16 +345,16 @@ onMounted(async () => {
       optionLabel: "label",
       optionValue: "value",
     },
-    {
-      index: 10,
-      show: true,
-      type: "select",
-      modelName: "projectType",
-      placeholder: "项目类型",
-      option: "projectType",
-      optionLabel: "label",
-      optionValue: "value",
-    },
+    // {
+    //   index: 10,
+    //   show: true,
+    //   type: "select",
+    //   modelName: "projectType",
+    //   placeholder: "项目类型",
+    //   option: "projectType",
+    //   optionLabel: "label",
+    //   optionValue: "value",
+    // },
     {
       index: 11,
       show: true,
@@ -467,12 +467,22 @@ const formOption = {
           </template>
         </el-table-column>
         <el-table-column
-          v-if="checkList.includes('projectType')"
+          v-if="checkList.includes('projectId')"
           align="left"
           label="项目"
           width="180"
         >
           <template #default="{ row }">
+            <p>
+              <span class="tableBig">
+                  <el-text v-if="row.projectType === 1" type="primary">
+                    内部新增</el-text
+                  >
+                  <el-text v-else-if="row.projectType === 2" type="info">
+                    合作商分配</el-text
+                  >
+                </span>
+            </p>
             <div class="copyId tableSmall">
               <div class="id oneLine">
                 <el-tooltip
@@ -483,7 +493,6 @@ const formOption = {
                   {{ row.projectId }}
                 </el-tooltip>
               </div>
-
               <copy
                 :content="row.projectId"
                 :class="{
@@ -494,7 +503,7 @@ const formOption = {
             </div>
           </template>
         </el-table-column>
-        <el-table-column
+        <!-- <el-table-column
               v-if="checkList.includes('projectType')"
               show-overflow-tooltip
               prop="projectType"
@@ -512,7 +521,7 @@ const formOption = {
                   >
                 </span>
               </template>
-            </el-table-column>
+            </el-table-column> -->
         <el-table-column
           v-if="checkList.includes('name')"
           show-overflow-tooltip

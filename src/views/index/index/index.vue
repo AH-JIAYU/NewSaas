@@ -1236,12 +1236,19 @@ onMounted(async () => {
                 <div>
                   <!-- 数量 -->
                   <p class="quantity-title">项目营业额</p>
-                  <div class="quantity-num">
+                  <div class="quantity-number">
+                    <el-tooltip
+                      class="box-item"
+                      effect="dark"
+                      :content="data.dataCenterOverViewVO?.projectTurnover ? data.dataCenterOverViewVO?.projectTurnover : 0"
+                      placement="top"
+                    >
                     {{
                       data.dataCenterOverViewVO?.projectTurnover
                         ? data.dataCenterOverViewVO?.projectTurnover
                         : 0
                     }}
+                    </el-tooltip>
                   </div>
                 </div>
               </div>
@@ -1341,12 +1348,19 @@ onMounted(async () => {
                 <div>
                   <!-- 数量 -->
                   <p class="quantity-title">项目盈利额</p>
-                  <div class="quantity-num">
+                  <div class="quantity-number">
+                    <el-tooltip
+                      class="box-item"
+                      effect="dark"
+                      :content="data.dataCenterOverViewVO?.projectProfitability ? data.dataCenterOverViewVO?.projectProfitability : 0"
+                      placement="top"
+                    >
                     {{
                       data.dataCenterOverViewVO?.projectProfitability
                         ? data.dataCenterOverViewVO?.projectProfitability
                         : 0
                     }}
+                    </el-tooltip>
                   </div>
                 </div>
               </div>
@@ -1436,12 +1450,19 @@ onMounted(async () => {
                 <div>
                   <!-- 数量 -->
                   <p class="quantity-title">项目退款额</p>
-                  <div class="quantity-num">
+                  <div class="quantity-number">
+                    <el-tooltip
+                      class="box-item"
+                      effect="dark"
+                      :content="data.dataCenterOverViewVO?.projectRefundAmount ? data.dataCenterOverViewVO?.projectRefundAmount : 0"
+                      placement="top"
+                    >
                     {{
                       data.dataCenterOverViewVO?.projectRefundAmount
                         ? data.dataCenterOverViewVO?.projectRefundAmount
                         : 0
                     }}
+                    </el-tooltip>
                   </div>
                 </div>
               </div>
@@ -1775,6 +1796,22 @@ onMounted(async () => {
           text-align: left;
           font-style: normal;
           text-transform: none;
+        }
+
+        .quantity-number {
+          width: 4.625rem;
+          height: 3.125rem;
+          line-height: 3.125rem;
+          font-family: D-DIN Exp;
+          font-weight: 500;
+          font-size: 1.75rem;
+          color: #333333;
+          text-align: left;
+          font-style: normal;
+          text-transform: none;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
 
         .compare {
