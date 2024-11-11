@@ -192,9 +192,11 @@ defineExpose({
         </el-form-item>
 
         <el-form-item
-          label="项目分配方式"
           label-width="7rem"
         >
+        <template #label>
+          <span style="font-weight: 700;font-size: 15px;">项目分配方式</span>
+        </template>
         </el-form-item>
 
         <div
@@ -206,7 +208,7 @@ defineExpose({
                 <span>
                 <el-tooltip
                   effect="dark"
-                  content="1111111"
+                  content=""
                   placement="top-start"
                 >
                   <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
@@ -229,7 +231,7 @@ defineExpose({
                 <span>
                 <el-tooltip
                   effect="dark"
-                  content="1111111"
+                  content=""
                   placement="top-start"
                 >
                   <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
@@ -273,5 +275,8 @@ defineExpose({
 <style scoped lang="scss">
 :deep(.inviteDialog .el-form-item__content) {
   margin-left: 0 !important;
+}
+:deep(.el-form label,.el-tree-node__label,.checkbox__label){
+  color: #333333;
 }
 </style>

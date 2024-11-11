@@ -206,7 +206,7 @@ const changeSendProjectType = (name: any, row: any) => {
     (row.sendProjectType == 2 && name == "自动")
   )
   {
-    ElMessageBox.confirm(`确认将发送状态改为${name}吗？`, "确认信息")
+    ElMessageBox.confirm(`确认将发送项目状态改为${name}吗？`, "确认信息")
       .then(() => {
         try {
           listLoading.value = true;
@@ -245,7 +245,7 @@ const changeReceiveProjectType = (name: any, row: any) => {
   let obj = JSON.parse(JSON.stringify(row)); //深拷贝，不改变原数据
 
   if (row.receiveProjectType == 1 && name == "手动") {
-    ElMessageBox.confirm(`确认将接收状态改为${name}吗？`, "确认信息")
+    ElMessageBox.confirm(`确认将接收项目状态改为${name}吗？`, "确认信息")
       .then(() => {
         try {
           listLoading.value = true;
@@ -284,7 +284,7 @@ const changeReceiveProjectType = (name: any, row: any) => {
 };
 //勾选部门人回传数据
 function userData(data1: any) {
-  ElMessageBox.confirm(`确认将接收状态改为自动吗？`, "确认信息")
+  ElMessageBox.confirm(`确认将接收项目状态改为自动吗？`, "确认信息")
       .then(() => {
         try {
           listLoading.value = true;
@@ -421,7 +421,7 @@ function userData(data1: any) {
           v-if="checkList.includes('beInvitationTenantId')"
           align="left"
           prop="beInvitationTenantId"
-          width="280"
+          width="200"
           label="合作商ID"
         >
           <template #default="{ row }">
@@ -453,7 +453,7 @@ function userData(data1: any) {
           align="left"
           prop="beInvitationTenantName"
           show-overflow-tooltip
-          label="合作商名称"
+          label="合作商公司名称"
         >
           <template #default="{ row }">
             <div class="tableBig">{{ row.beInvitationTenantName }}</div>

@@ -288,6 +288,9 @@ const handleChange = (val: any) => {
 </template>
 
 <style scoped lang="scss">
+:deep(.el-tree-node__label,.checkbox__label){
+  color: #333333 !important;
+}
 .checkBox{
   display: flex;
     align-items: center;
