@@ -184,11 +184,11 @@ const handleChange = (val: any) => {
     >
 
       <div v-if="data.project.length != 0" style="margin-top:-2.1875rem">
-        <el-collapse v-model="activeNames" @change="handleChange">
+        <el-collapse v-model="activeNames" @change="handleChange"  v-if="data.project.length >1" >
           <el-collapse-item name="1">
             <template #title>
               <span class="project-name">项目</span>
-              <el-badge :value="data.project.length" :max="99" class="item" v-if="data.project.length >1">
+              <el-badge :value="data.project.length" :max="99" class="item">
 
               </el-badge>
             </template>
@@ -205,77 +205,9 @@ const handleChange = (val: any) => {
         </el-collapse>
 
       </div>
+      
 
-      <el-tabs v-model="data.type" @tab-change="fetchData" class="tabs-user">
-        <el-tab-pane label="部门" :name="1">
-          <template #label>
-            <span class="custom-tab-label">部门</span>
-          </template>
-          <div
-            style="
-              color: #333333;
-              font-weight: 500;
-              font-size: 14px;
-              margin-bottom: 10px;
-            "
-          >
-            分配部门
-          </div>
-          <el-tree
-            v-if="departmentList.length > 0"
-            style="max-width: 600px"
-            ref="treeRef"
-            :disabled="true"
-            :data="departmentList"
-            show-checkbox
-            check-strictly
-            node-key="id"
-            :default-expanded-keys="[]"
-            :default-checked-keys="departmentId"
-            default-expand-all
-            :props="defaultProps"
-            @check-change="handleNodeClick"
-            :check-on-click-node="true"
-            :expand-on-click-node="false"
-          />
-          <el-text v-else>暂无数据</el-text>
-        </el-tab-pane>
-        <el-tab-pane :name="2">
-          <template #label>
-            <span class="custom-tab-label" style="margin-left: 20px">员工</span>
-          </template>
-          <div
-            style="
-              color: #333333;
-              font-weight: 500;
-              font-size: 14px;
-              margin-bottom: 10px;
-            "
-          >
-            分配员工
-          </div>
-          <el-checkbox-group
-            v-if="data.tenantStaffList?.length"
-            @change="handleCheckboxChange"
-            v-model="data.roleList"
-          >
-            <el-checkbox
-              v-for="item in data.tenantStaffList"
-              :key="item.id"
-              :value="item.id"
-              :label="item.userName"
-              class="checkBox"
-            >
-              {{ item.userName }}
-            </el-checkbox>
-          </el-checkbox-group>
-        </el-tab-pane>
-      </el-tabs>
 
-      <div v-if="data.chargeUserName">
-        <div class="i-ic:sharp-info w-1.5em h-1.5em" style="color: #FFB667;"></div>
-        <span style="margin-left: .5rem">{{ data.chargeUserName ||'' }}</span>
-      </div>
 
       <template #footer>
         <div class="flex-c">
