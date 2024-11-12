@@ -242,7 +242,7 @@ const handleKeydown = (e: any) => {
       draggable
       width="30%"
       title="邀约公司"
-
+      class="yaoyueDrawer"
     >
       <ElForm
         ref="formRef"
@@ -402,13 +402,13 @@ const handleKeydown = (e: any) => {
     min-height: 12.5rem !important;
   }
 }
-:deep(.el-select-dropdown__item.is-selected.is-hovering){
-  background-color: white !important;
-  padding:0 !important
-}
+
 :deep(.el-select-dropdown__item.is-selected){
   font-weight: 100 !important;
 }
+// :deep(.el-tree){
+//   padding: 0 -32px 0 -20px !important;
+// }
 .fontColor {
   color: #333333 !important;
 }

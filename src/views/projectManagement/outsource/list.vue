@@ -932,7 +932,7 @@ const downReceive =(row:any)=> {
                 <el-button
                   v-if="row.receiveStatus == 1"
                   plain
-                  type="danger"
+                   type="primary"
                   size="small"
                   @click="delreceive(row)"
                 >
@@ -948,7 +948,7 @@ const downReceive =(row:any)=> {
                   拒绝
                 </el-button>
                 <el-button
-                  type="primary"
+                  type="warning"
                   plain
                   size="small"
                   @click="editData(row)"
