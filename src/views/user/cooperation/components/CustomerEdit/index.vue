@@ -73,6 +73,7 @@ async function showEdit() {
 }
 // 树选中事件
 const handleNodeClick = (nodeData: any, checked: any) => {
+  // console.log(nodeData,checked,'ccc')
   if (checked) {
     // 选中新的节点时，取消其他选中的节点
     const checkedKeys = treeRef.value.getCheckedKeys(); // 获取当前所有选中的节点
@@ -83,28 +84,26 @@ const handleNodeClick = (nodeData: any, checked: any) => {
     });
     // 更新当前选中的节点 ID
     data.value.form.chargeUserId = nodeData.id; // 只保留当前选中节点 ID
-    const checkedNodes = treeRef.value.getCheckedNodes();
-    data.value.form.chargeUserName = checkedNodes.map(
-      (node: any) => node.name
-    )[0];
+    // const checkedNodes = treeRef.value.getCheckedNodes();
+    data.value.form.chargeUserName = nodeData.name;
     // 关闭下拉框
-    setTimeout(() => {
-      selectTreeRef.value.blur(); // 失去焦点，关闭下拉框
-    }, 100);
+    // setTimeout(() => {
+    //   selectTreeRef.value.blur(); // 失去焦点，关闭下拉框
+    // }, 100);
     // console.log(data.value.form.chargeUserName,'data.value.form.chargeUserName')
   } else {
     // 如果取消选中节点，更新 chargeUserId
     data.value.form.chargeUserId = [data.value.form.chargeUserId].filter(
       (id: any) => id !== nodeData.id
     );
-    if(data.value.form.chargeUserId.length ==0){
-      data.value.form.chargeUserId = ''
+    if (data.value.form.chargeUserId.length == 0) {
+      data.value.form.chargeUserId = "";
     }
   }
-  if(!data.value.form.chargeUserId){
-    data.value.form.chargeUserName =''
+  if (!data.value.form.chargeUserId) {
+    data.value.form.chargeUserName = "";
   }
-  console.log(data.value.form.chargeUserName,'data.value.form.chargeUserName')
+  console.log(data.value.form.chargeUserName, "data.value.form.chargeUserName");
   console.log(data.value.form.chargeUserId, "data.value.form.chargeUserId");
 };
 // 获取合作商列表
@@ -142,14 +141,14 @@ async function save() {
   formRef.value.validate((valid: any) => {
     if (valid) {
       let obj = JSON.parse(JSON.stringify(data.value.form)); //深拷贝，不改变原数据
-       //判断如果为数组改为字符串，data.value.form.chargeUserId
-       if (Array.isArray(obj.chargeUserId)) {
+      //判断如果为数组改为字符串，data.value.form.chargeUserId
+      if (Array.isArray(obj.chargeUserId)) {
         obj.chargeUserId = obj.chargeUserId[0];
       }
       //如果obj.receiveProjectType == 1，，必须要选人
       if (obj.receiveProjectType == 1 && !obj.chargeUserId) {
         ElMessage.warning({
-          message: "请选择接收项目负责人",
+          message: "请选择部门",
           center: true,
         });
         return;
@@ -163,7 +162,7 @@ async function save() {
         data.value.form.receiveProjectType.length != 0
           ? data.value.form.receiveProjectType[0]
           : null;
-          obj.invitationType = 2 ;
+      obj.invitationType = 2;
       if (obj.receiveProjectType == 2) {
         //手动
         data.value.form.chargeUserId = null; //负责人UserId
@@ -171,7 +170,7 @@ async function save() {
 
         obj.chargeUserId = null; //负责人UserId
         obj.chargeUserName = ""; //负责人用户姓名
-        obj.invitationType = '';
+        obj.invitationType = "";
       }
       obj.invitationType = 2; //固定传部门
       api.addInvitationBind(obj).then((res: any) => {
@@ -204,7 +203,7 @@ function openUserDialog() {
     invitationType: data.value.form.invitationType,
     chargeUserName: data.value.form.chargeUserName,
   };
-  userRef.value.showEdit(obj, "请选择负责部门/人");
+  userRef.value.showEdit(obj, "请选择部门");
 }
 //勾选部门人回传数据
 function userData(data1: any) {
@@ -242,7 +241,7 @@ const handleKeydown = (e: any) => {
       draggable
       width="30%"
       title="邀约公司"
-
+      class="yaoyueDrawer"
     >
       <ElForm
         ref="formRef"
@@ -250,7 +249,7 @@ const handleKeydown = (e: any) => {
         :model="data.form"
         label-width="7rem"
         labelPosition="left"
-              class="hezuoDrawer"
+        class="hezuoDrawer"
       >
         <el-form-item label="公司名称" prop="beInvitationTenantId">
           <el-select v-model="data.form.beInvitationTenantId" clearable>
@@ -328,7 +327,7 @@ const handleKeydown = (e: any) => {
             </el-checkbox-group>
           </el-form-item>
           <div style="display: flex">
-            <el-form-item prop="receiveProjectType" label-width="7rem">
+            <el-form-item prop="receiveProjectType" label-width="7rem" style="margin-right: 1.5625rem">
               <template #label>
                 <span>
                   <el-tooltip effect="dark" content="" placement="top-start">
@@ -346,13 +345,33 @@ const handleKeydown = (e: any) => {
                 <el-checkbox :value="2"> 手动 </el-checkbox>
               </el-checkbox-group>
             </el-form-item>
-            <el-select
+
+            <el-tree-select
+             v-if="data.form.receiveProjectType == 1"
+              placeholder="请选择部门"
+              ref="treeRef"
+              v-model="data.form.chargeUserId"
+              :data="departmentList"
+              check-strictly
+              show-checkbox
+              default-expand-all
+              node-key="id"
+                style="width: 15.625rem;"
+              :props="defaultProps"
+              @check-change="handleNodeClick"
+              :check-on-click-node="true"
+              :expand-on-click-node="false"
+            />
+
+            <!-- <el-select
               v-if="data.form.receiveProjectType == 1"
               v-model="data.form.chargeUserName"
               placeholder="请选择部门"
               ref="selectTreeRef"
+                          class="selectTree"
               style="width: 15.625rem;margin-left: 1.5625rem;"
             >
+
               <el-option :value="data.form.chargeUserId" style="height: auto">
                 <el-tree
                   v-if="departmentList.length > 0"
@@ -372,7 +391,7 @@ const handleKeydown = (e: any) => {
                 />
                 <el-text v-else>暂无数据</el-text>
               </el-option>
-            </el-select>
+            </el-select> -->
           </div>
         </div>
         <!-- <el-input
@@ -396,19 +415,13 @@ const handleKeydown = (e: any) => {
 </template>
 
 <style scoped lang="scss">
-
 :deep {
   .el-dialog__body {
     min-height: 12.5rem !important;
   }
 }
-:deep(.el-select-dropdown__item.is-selected.is-hovering){
-  background-color: white !important;
-  padding:0 !important
-}
-:deep(.el-select-dropdown__item.is-selected){
-  font-weight: 100 !important;
-}
+
+
 .fontColor {
   color: #333333 !important;
 }

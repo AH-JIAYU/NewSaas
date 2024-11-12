@@ -26,12 +26,9 @@ const listLoading = ref<boolean>(true);
 const border = ref(false);
 // 获取组件变量
 const editRef = ref();
-const data = ref<any>(
-
-{
-  selectList:[]
-}
-);
+const data = ref<any>({
+  selectList: [],
+});
 // 右侧工具栏配置变量
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const checkList = ref<any>([]);
@@ -379,10 +376,10 @@ function userData(data1: any) {
   }
 }
 //拒绝
-const downReceive =(row:any)=> {
+const downReceive = (row: any) => {
   ElMessageBox.confirm(`确认拒绝项目吗？`, "确认信息")
-      .then(() => {
-        try {
+    .then(() => {
+      try {
         listLoading.value = true;
         let params = {
           type: 3, //拒绝
@@ -400,11 +397,9 @@ const downReceive =(row:any)=> {
       } finally {
         listLoading.value = false;
       }
-      })
-      .catch(() => {
-
-      });
-}
+    })
+    .catch(() => {});
+};
 </script>
 
 <template>
@@ -680,11 +675,23 @@ const downReceive =(row:any)=> {
               width="140"
             >
               <template #default="{ row }">
-                <span class="tableBig">{{
+                <span class="tableBig">
+                  <el-text v-if="row.projectStatus === 1" type="primary">
+                    进行中(在线)</el-text
+                  >
+                  <el-text v-else-if="row.projectStatus === 2" type="warning">
+                    已完成(审核通过)</el-text
+                  >
+                  <el-text v-else-if="row.projectStatus === 3" type="info">
+                    离线</el-text
+                  >
+                </span>
+                <!-- <span class="tableBig">{{
                   projectManagementOutsourceStore.projectStatusList[
                     row.projectStatus - 1
                   ]
-                }}</span>
+                }}
+                </span>-->
               </template>
             </el-table-column>
             <el-table-column
@@ -713,18 +720,98 @@ const downReceive =(row:any)=> {
               </template>
             </el-table-column>
             <el-table-column
-              v-if="checkList.includes('tenantName')"
               show-overflow-tooltip
               prop="tenantName"
               align="left"
-              label="合作商名称"
+              label="合作商"
               width="200"
             >
               <template #default="{ row }">
-                <div class="tableBig">{{ row.tenantName }}</div>
+                <div class="tableBig" v-if="checkList.includes('tenantName')">
+                  {{ row.tenantName }}
+                </div>
+                <div
+                  class="copyId tableSmall"
+                  v-if="checkList.includes('tenantId')"
+                >
+                  <div class="id oneLine projectId" style="font-size: 12px">
+                    {{ row.tenantId }}
+                  </div>
+                  <copy
+                    :content="row.tenantId"
+                    :class="{
+                      rowCopy: 'rowCopy',
+                      current: row.projectId === current,
+                    }"
+                  />
+                </div>
               </template>
             </el-table-column>
             <el-table-column
+              show-overflow-tooltip
+              prop="projectName"
+              align="left"
+              label="项目"
+              width="200"
+            >
+              <template #default="{ row }">
+                <div class="tableBig" v-if="checkList.includes('projectName')">
+                  {{ row.projectName }}
+                </div>
+                <div
+                  class="copyId tableSmall"
+                  v-if="checkList.includes('projectId')"
+                >
+                  <div class="id oneLine projectId" style="font-size: 12px">
+                    <el-tooltip
+                      effect="dark"
+                      :content="row.projectId"
+                      placement="top-start"
+                    >
+                      {{ row.projectId }}
+                    </el-tooltip>
+                  </div>
+                  <copy
+                    :content="row.projectId"
+                    :class="{
+                      rowCopy: 'rowCopy',
+                      current: row.projectId === current,
+                    }"
+                  />
+                </div>
+              </template>
+            </el-table-column>
+            <!-- <el-table-column
+              v-if="checkList.includes('projectId')"
+              show-overflow-tooltip
+              prop="projectId"
+              align="left"
+              width="280"
+              label="项目ID"
+            >
+              <template #default="{ row }">
+                <div class="copyId tableSmall">
+                  <div class="id oneLine projectId">
+                    <el-tooltip
+                      effect="dark"
+                      :content="row.projectId"
+                      placement="top-start"
+                    >
+                      {{ row.projectId }}
+                    </el-tooltip>
+                  </div>
+                  <copy
+                    :content="row.projectId"
+                    :class="{
+                      rowCopy: 'rowCopy',
+                      current: row.projectId === current,
+                    }"
+                  />
+                </div>
+              </template>
+            </el-table-column> -->
+
+            <!-- <el-table-column
               v-if="checkList.includes('tenantId')"
               show-overflow-tooltip
               prop="tenantId"
@@ -743,10 +830,9 @@ const downReceive =(row:any)=> {
                       current: row.projectId === current,
                     }"
                   />
-                  <!-- <copy class="copy" :content="row.tenantId" /> -->
                 </div>
               </template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column
               v-if="checkList.includes('allocationType')"
               align="left"
@@ -799,49 +885,7 @@ const downReceive =(row:any)=> {
                 <div><CurrencyType />{{ row.doMoneyPrice || 0 }}</div>
               </template>
             </el-table-column>
-            <el-table-column
-              v-if="checkList.includes('projectName')"
-              show-overflow-tooltip
-              prop="projectName"
-              align="left"
-              label="项目名称"
-              width="200"
-            >
-              <template #default="{ row }">
-                <div class="tableBig">{{ row.projectName }}</div>
-              </template>
-            </el-table-column>
-            <el-table-column
-              v-if="checkList.includes('projectId')"
-              show-overflow-tooltip
-              prop="projectId"
-              align="left"
-              width="280"
-              label="项目ID"
-            >
-              <template #default="{ row }">
-                <div class="copyId tableSmall">
-                  <div class="id oneLine projectId">
-                    <el-tooltip
-                      effect="dark"
-                      :content="row.projectId"
-                      placement="top-start"
-                    >
-                      {{ row.projectId }}
-                    </el-tooltip>
-                    <!-- {{ row.projectId }} -->
-                  </div>
-                  <copy
-                    :content="row.projectId"
-                    :class="{
-                      rowCopy: 'rowCopy',
-                      current: row.projectId === current,
-                    }"
-                  />
-                  <!-- <copy class="copy" :content="row.projectId" /> -->
-                </div>
-              </template>
-            </el-table-column>
+
             <el-table-column
               v-if="checkList.includes('participationNumber')"
               show-overflow-tooltip
@@ -889,7 +933,21 @@ const downReceive =(row:any)=> {
               width="140"
             >
               <template #default="{ row }">
-                <div class="tableBig">{{ row.userName }}</div>
+                <div class="flex-c">
+                  <div class="oneLine" style="width: calc(100% - 1.25rem)">
+                    <div class="tableBig">{{ row.userName }}</div>
+                  </div>
+                  <SvgIcon
+                    v-if="row.receiveStatus == 1"
+                    @click="addReceive(row)"
+                    :class="{
+                      edit: 'edit',
+                      current: row.projectId === current,
+                    }"
+                    name="i-ep:edit"
+                    color="#409eff"
+                  />
+                </div>
               </template>
             </el-table-column>
             <el-table-column
@@ -932,13 +990,14 @@ const downReceive =(row:any)=> {
                 <el-button
                   v-if="row.receiveStatus == 1"
                   plain
-                  type="danger"
+                  type="primary"
                   size="small"
                   @click="delreceive(row)"
                 >
                   取消接收
                 </el-button>
-                <el-button down
+                <el-button
+                  down
                   v-if="row.receiveStatus == 2"
                   plain
                   type="danger"
@@ -948,7 +1007,7 @@ const downReceive =(row:any)=> {
                   拒绝
                 </el-button>
                 <el-button
-                  type="primary"
+                  type="warning"
                   plain
                   size="small"
                   @click="editData(row)"
@@ -1049,7 +1108,9 @@ const downReceive =(row:any)=> {
     }
   }
 }
-
+.el-table__row:hover .edit {
+  display: block;
+}
 .flex-c {
   display: flex;
   justify-content: start;

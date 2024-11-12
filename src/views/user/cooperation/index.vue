@@ -516,17 +516,16 @@ function userData(data1: any) {
         >
           <template #default="{ row }">
             <ElSpace>
+              <el-button size="small" type="primary" plain @click="priceRatio(row)">
+                合作配置
+              </el-button>
               <el-button
                 v-if="row.bindStatus === 2"
-                type="danger"
-                plain
+                type="danger" plain
                 size="small"
                 @click="termination(row)"
               >
                 终止合作
-              </el-button>
-              <el-button size="small" type="danger" @click="priceRatio(row)">
-                合作配置
               </el-button>
 
               <!-- <el-button type="warning" plain size="small">
