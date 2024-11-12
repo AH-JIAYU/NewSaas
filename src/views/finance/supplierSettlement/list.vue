@@ -171,12 +171,12 @@ const formOption = {
             <el-row :gutter="20" style="margin: 10px 0">
               <el-col :span="1"> </el-col>
               <el-col :span="3">
-                付款方式: <el-text class="fontColor">{{ payMethod[props.row.billStatus - 1].label }}</el-text>
+                <el-text class="fontColor">付款方式: {{ payMethod[props.row.billStatus - 1].label }}</el-text>
               </el-col>
-              <el-col :span="3">账户名称: <el-text class="fontColor">{{ props.row.accountName ? props.row.accountName : '-' }}</el-text></el-col>
-              <el-col :span="3">收款账号: <el-text class="fontColor">{{ props.row.collectionAccount ? props.row.collectionAccount : '-' }}</el-text></el-col>
-              <el-col :span="3">银行名称: <el-text class="fontColor">{{ props.row.bankName ? props.row.bankName : '-' }}</el-text></el-col>
-              <el-col :span="3">结算周期: <el-text class="fontColor">{{ props.row.settlementCycle ? props.row.settlementCycle : '-' }}</el-text></el-col>
+              <el-col :span="3"><el-text class="fontColor">账户名称: {{ props.row.accountName ? props.row.accountName : '-' }}</el-text></el-col>
+              <el-col :span="3"><el-text class="fontColor">收款账号: {{ props.row.collectionAccount ? props.row.collectionAccount : '-' }}</el-text></el-col>
+              <el-col :span="3"><el-text class="fontColor">银行名称: {{ props.row.bankName ? props.row.bankName : '-' }}</el-text></el-col>
+              <el-col :span="3"><el-text class="fontColor">结算周期: {{ props.row.settlementCycle ? props.row.settlementCycle : '-' }}</el-text></el-col>
             </el-row>
           </template>
         </el-table-column>
