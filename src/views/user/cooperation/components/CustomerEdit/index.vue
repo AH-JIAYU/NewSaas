@@ -327,7 +327,7 @@ const handleKeydown = (e: any) => {
             </el-checkbox-group>
           </el-form-item>
           <div style="display: flex">
-            <el-form-item prop="receiveProjectType" label-width="7rem">
+            <el-form-item prop="receiveProjectType" label-width="7rem" style="margin-right: 1.5625rem">
               <template #label>
                 <span>
                   <el-tooltip effect="dark" content="" placement="top-start">
@@ -356,7 +356,7 @@ const handleKeydown = (e: any) => {
               show-checkbox
               default-expand-all
               node-key="id"
-                style="width: 15.625rem;margin-left: 1.5625rem;"
+                style="width: 15.625rem;"
               :props="defaultProps"
               @check-change="handleNodeClick"
               :check-on-click-node="true"

@@ -255,7 +255,7 @@ defineExpose({
           </el-checkbox-group>
         </el-form-item>
         <div style="display: flex">
-          <el-form-item prop="receiveProjectType">
+          <el-form-item prop="receiveProjectType" style="margin-right: 1.5625rem">
             <template #label>
               <span>
                 <el-tooltip
@@ -290,7 +290,7 @@ defineExpose({
               :props="defaultProps"
               @check-change="handleNodeClick"
               :check-on-click-node="true"
-                  style="width: 15.625rem;margin-left: 1.5625rem;"
+                  style="width: 15.625rem;"
               :expand-on-click-node="false"
             />
           <!-- <el-select
