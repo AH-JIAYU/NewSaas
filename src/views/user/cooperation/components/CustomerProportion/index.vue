@@ -173,7 +173,10 @@ async function save() {
 
       BindUser(obj);
       updatePri();
-      emit("fetch-data");
+      setTimeout(() => {
+        emit("fetch-data");
+      }, 1000);
+
       close();
       // api.updateInvitationBind(data.value.form).then(() => {
       //   ElMessage.success({
