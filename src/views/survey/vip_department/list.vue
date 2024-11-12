@@ -646,7 +646,12 @@ function handleCurrentChange(val: any) {
               show-overflow-tooltip label="部门"  width="140">
               <template #default="{ row }">
                 <div style="display: flex; align-items: center">
-                  <img src="@/assets/images/guan.png" alt="" v-if="row.memberGroupName &&row.enableChargePerson ==1" style="margin-right: 4px; margin-top: 2px; width:18px;height: 18px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" v-if="row.enableChargePerson === 1" style="margin-top: 2px; margin-right: 7px;" width="20" height="20" viewBox="0 0 20 20" fill="none">
+<g id="Group 18384">
+<circle id="Ellipse 105" cx="10" cy="10" r="10" fill="#F8BB4F"/>
+<path id="ç®¡" d="M13.9946 9.3605V12.1892H7.43481V12.9031H14.6277V16.4995H13.3481V16.0146H7.43481V16.486H6.15517V9.3605H13.9946ZM7.43481 14.8831H13.3481V13.9133H7.43481V14.8831ZM7.43481 11.1655H12.7419V10.3842H7.43481V11.1655ZM15.8534 7.67677V10.2495H14.6008V8.75436H5.52209V10.2495H4.2694V7.67677H9.48222C9.37446 7.40738 9.25323 7.16492 9.13201 6.9494L10.2635 6.76083L10.0345 6.61266C10.6541 5.80447 11.1121 4.9424 11.3815 4.01298L12.6072 4.28238C12.5264 4.51136 12.4591 4.72688 12.3782 4.9424H16.1228V6.06039H13.9273C14.1428 6.35673 14.3179 6.65307 14.4661 6.92246L13.3346 7.34003C13.1191 6.90899 12.8631 6.47796 12.5668 6.06039H11.8799C11.6509 6.5049 11.3949 6.92246 11.1121 7.29962L10.4655 6.88206C10.5733 7.12451 10.6676 7.39391 10.7753 7.67677H15.8534ZM6.08782 6.06039C5.79149 6.54531 5.46821 7.00328 5.118 7.42085L4 6.72042C4.78125 5.88529 5.33351 4.96934 5.67026 3.99951L6.89601 4.26891C6.81519 4.4979 6.72091 4.72688 6.64009 4.9424H10.0345V6.06039H8.01401C8.25647 6.39714 8.47198 6.72042 8.63362 7.03022L7.46175 7.47473C7.23276 6.98981 6.97683 6.51837 6.6805 6.06039H6.08782Z" fill="white"/>
+</g>
+</svg>
                 <p class="crudeTop">{{ row.memberGroupName ? row.memberGroupName : "-" }}</p>
                 </div>
               </template>
