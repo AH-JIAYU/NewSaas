@@ -49,19 +49,27 @@ function closeHandler() {
 defineExpose({
   showEdit,
 });
-
+const current = ref<any>(); //表格当前选中
+function handleCurrentChange(val: any) {
+  if (val) current.value = val.projectId;
+  else current.value = "";
+}
 </script>
 
 <template>
   <div>
     <el-dialog v-model="data.dialogTableVisible" v-if="data.dialogTableVisible" style="min-height: 500px;" title="查看" draggable>
-      <el-table  v-loading="data.loading"   row-key="projectId" :data="data.tableData"  highlight-current-row height="450px">
+      <el-table  v-loading="data.loading"   row-key="projectId" :data="data.tableData"  highlight-current-row height="450px"
+        @current-change="handleCurrentChange">
         <el-table-column align="left" type="index" />
         <el-table-column  width="200" align="left" label="项目ID"><template
             #default="{ row }">
             <div class="copyId">
               <div class="id oneLine ">ID: {{ row.projectId }}</div>
-              <copy class="copy" :content="row.projectId" />
+              <copy class="copy" :content="row.projectId" :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.projectId === current,
+                }"/>
             </div>
           </template>
         </el-table-column>
@@ -118,7 +126,13 @@ defineExpose({
     width: 0;
   }
 }
-
+.rowCopy {
+  width: 20px;
+  display: none;
+}
+.el-table__row:hover .rowCopy {
+  display: block;
+}
 .flex-c {
   display: flex;
   justify-content: start;
@@ -143,5 +157,7 @@ defineExpose({
     display: block !important;
   }
 }
-
+.copyId .current {
+  display: block !important;
+}
 </style>
