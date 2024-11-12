@@ -474,22 +474,16 @@ const formOption = {
         >
           <template #default="{ row }">
             <p>
-              <span class="tableBig">
-                <el-tag
-                  v-if="row.projectType === 1"
-                  type="primary"
-                  effect="dark"
-                >
-                  内部新增</el-tag
-                >
-                <el-tag
-                  v-else-if="row.projectType === 2"
-                  type="warning"
-                  effect="dark"
-                >
-                  合作商分配</el-tag
-                >
-              </span>
+              <el-tag v-if="row.projectType === 1" type="primary" effect="dark">
+                内部新增</el-tag
+              >
+              <el-tag
+                v-else-if="row.projectType === 2"
+                type="warning"
+                effect="dark"
+              >
+                合作商分配</el-tag
+              >
             </p>
             <div class="copyId tableSmall">
               <div class="id oneLine">
