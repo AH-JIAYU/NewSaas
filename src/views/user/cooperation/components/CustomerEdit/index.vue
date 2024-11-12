@@ -142,6 +142,10 @@ async function save() {
   formRef.value.validate((valid: any) => {
     if (valid) {
       let obj = JSON.parse(JSON.stringify(data.value.form)); //深拷贝，不改变原数据
+       //判断如果为数组改为字符串，data.value.form.chargeUserId
+       if (Array.isArray(obj.chargeUserId)) {
+        obj.chargeUserId = obj.chargeUserId[0];
+      }
       //如果obj.receiveProjectType == 1，，必须要选人
       if (obj.receiveProjectType == 1 && !obj.chargeUserId) {
         ElMessage.warning({
@@ -150,6 +154,7 @@ async function save() {
         });
         return;
       }
+
       obj.sendProjectType =
         data.value.form.sendProjectType.length != 0
           ? data.value.form.sendProjectType[0]

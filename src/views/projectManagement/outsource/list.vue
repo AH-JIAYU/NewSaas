@@ -383,20 +383,23 @@ const downReceive =(row:any)=> {
   ElMessageBox.confirm(`确认拒绝项目吗？`, "确认信息")
       .then(() => {
         try {
-          // listLoading.value = true;
-
-          // api.updateInvitationBindUser(params).then(() => {
-          //   listLoading.value = false;
-          //   queryData();
-          //   ElMessage.success({
-          //     message: "修改成功",
-          //     center: true,
-          //   });
-          // });
-        } catch (error) {
-        } finally {
-          // listLoading.value = false;
-        }
+        listLoading.value = true;
+        let params = {
+          type: 3, //拒绝
+          idList: [row.id],
+        };
+        api.updateReceiveStatus(params).then(() => {
+          listLoading.value = false;
+          fetchData();
+          ElMessage.success({
+            message: "拒绝成功",
+            center: true,
+          });
+        });
+      } catch (error) {
+      } finally {
+        listLoading.value = false;
+      }
       })
       .catch(() => {
 

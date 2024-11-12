@@ -3,7 +3,7 @@ import { onMounted } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import customerEdit from "./components/CustomerEdit/index.vue";
 import customerProportion from "./components/CustomerProportion/index.vue";
-import userDialog from "@/components/departmentHead/index.vue"; //部门人
+import userPM from "./components/userPM/index.vue"; //部门人
 import empty from "@/assets/images/empty.png";
 import api from "@/api/modules/user_cooperation";
 import QuickEdit from "./components/QuickEdit/index.vue"; //快速编辑
@@ -285,6 +285,11 @@ function userData(data1: any) {
       sendProjectType: data1.sendProjectType, //邀请方发送项目类型:1:自动 2:手动
       receiveProjectType: data1.receiveProjectType == 1 ? 2 : 1, //邀请方接收项目类型:1:自动 2:手动
     };
+
+       //判断如果为数组改为字符串，data.value.form.chargeUserId
+       if (Array.isArray(params.chargeUserId)) {
+        params.chargeUserId = params.chargeUserId[0];
+       }
     api.updateInvitationBindUser(params).then(() => {
       listLoading.value = false;
       queryData();
@@ -551,7 +556,7 @@ function userData(data1: any) {
       <customerProportion ref="proportionRef" @fetch-data="queryData" />
     </PageMain>
     <QuickEdit ref="QuickEditRef" @fetchData="fetchData" />
-    <userDialog ref="userRef" @userData="userData" />
+    <userPM ref="userRef" @userData="userData" />
   </div>
 </template>
 
