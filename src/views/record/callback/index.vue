@@ -44,8 +44,8 @@ const columns = ref([
 ]);
 // 会员类型
 const memberType = [
-  { label: "内部", value: 1 },
-  { label: "外部", value: 2 },
+  { label: "内部会员", value: 1 },
+  { label: "外部会员", value: 2 },
 ];
 const queryForm = reactive<any>({
   // 请求接口携带参数

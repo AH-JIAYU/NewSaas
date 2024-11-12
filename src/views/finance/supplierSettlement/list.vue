@@ -35,6 +35,7 @@ const payMethod = userSupplier.payMethod; // 付款方式
 const formSearchList = ref<any>()//表单排序配置
 const formSearchName = ref<string>('formSearch-supplierSettlement')// 表单排序name
 const columns = ref<any>([
+  { label: "供应商名称", prop: "supplierName", sortable: true, checked: true },
   { label: "供应商ID", prop: "supplierId", sortable: true, checked: true },
   { label: "账单日期", prop: "billTime", sortable: true, checked: true },
   { label: "账单金额", prop: "billAmount", sortable: true, checked: true },
@@ -172,46 +173,56 @@ const formOption = {
               <el-col :span="3">
                 付款方式: {{ payMethod[props.row.billStatus - 1].label }}
               </el-col>
-              <el-col :span="3">账户名称: {{ props.row.accountName }}</el-col>
-              <el-col :span="3">收款账号: {{ props.row.collectionAccount }}</el-col>
-              <el-col :span="3">银行名称: {{ props.row.bankName }}</el-col>
-              <el-col :span="3">结算周期: {{ props.row.settlementCycle }}</el-col>
+              <el-col :span="3">账户名称: {{ props.row.accountName ? props.row.accountName : '-' }}</el-col>
+              <el-col :span="3">收款账号: {{ props.row.collectionAccount ? props.row.collectionAccount : '-' }}</el-col>
+              <el-col :span="3">银行名称: {{ props.row.bankName ? props.row.bankName : '-' }}</el-col>
+              <el-col :span="3">结算周期: {{ props.row.settlementCycle ? props.row.settlementCycle : '-' }}</el-col>
             </el-row>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('supplierId')" prop="supplierId" show-overflow-tooltip align="left"
-          label="供应商ID" />
+          label="供应商ID" >
+          <template #default="{ row }">
+            <el-text class="fontColor">{{ row.supplierId ? row.supplierId : "-" }}</el-text>
+          </template>
+        </el-table-column>
+          <el-table-column v-if="checkList.includes('supplierName')" prop="supplierName" show-overflow-tooltip align="left"
+          label="供应商名称" >
+          <template #default="{ row }">
+            <el-text class="fontColor">{{ row.supplierName ? row.supplierName : "-" }}</el-text>
+          </template>
+        </el-table-column>
         <el-table-column v-if="checkList.includes('billTime')" prop="billTime" show-overflow-tooltip align="left"
           label="账单日期"><template #default="{ row }">
-            <el-tooltip :content="row.billTime" placement="top">
-              <el-tag effect="plain" type="info">{{ format(row.billTime) }}</el-tag>
-            </el-tooltip>
+            <!-- <el-tooltip :content="row.billTime" placement="top">
+              <el-tag effect="plain" type="info">{{ row.billTime ? row.billTime : '-'}}</el-tag>
+            </el-tooltip> -->
+            <el-text class="fontColor">{{ row.billTime ? row.billTime : '-'}}</el-text>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('billAmount')" prop="billAmount" show-overflow-tooltip align="left"
           label="账单金额">
           <template #default="{ row }">
-            <CurrencyType />{{ row.billAmount || 0 }}
+            <el-text class="fontColor"><CurrencyType />{{ row.billAmount || 0 }}</el-text>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('taxesFees')" prop="taxesFees" show-overflow-tooltip align="left"
           label="税费">
           <template #default="{ row }">
-            <CurrencyType />{{ row.taxesFees || 0 }}
+            <el-text class="fontColor"><CurrencyType />{{ row.taxesFees || 0 }}</el-text>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('payAmount')" prop="payAmount" show-overflow-tooltip align="left"
           label="实付金额">
           <template #default="{ row }">
-            <CurrencyType />{{ row.payAmount || 0 }}
+            <el-text class="fontColor"><CurrencyType />{{ row.payAmount || 0 }}</el-text>
           </template>
         </el-table-column>
         <ElTableColumn v-if="checkList.includes('billStatus')" align="left" show-overflow-tooltip prop="" label="状态">
           <template #default="{ row }">
-            {{ billStatusList[row.billStatus - 1] }}
+            <el-text class="fontColor">{{ billStatusList[row.billStatus - 1].label }}</el-text>
           </template>
         </ElTableColumn>
-
         <el-table-column align="left" fixed="right" label="操作" width="170">
           <template #default="{ row }">
             <template v-if="row.billStatus === 1">
@@ -288,5 +299,9 @@ const formOption = {
       }
     }
   }
+}
+
+.fontColor {
+  color: #333333 !important;
 }
 </style>

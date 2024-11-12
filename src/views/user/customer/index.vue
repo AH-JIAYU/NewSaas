@@ -247,6 +247,16 @@ const formOption={
             </div>
           </template>
         </el-table-column>
+        <el-table-column v-if="checkList.includes('customerShortName')" align="left" prop="customerShortName"
+          show-overflow-tooltip label="客户简称" width="150">
+          <template #default="{ row }">
+            <div class="flex-c tableBig">
+              <div class="oneLine" style="width: calc(100% - 20px);"> {{ row.customerShortName }} </div>
+              <SvgIcon @click="quickEdit(row, 'customerShortName')"
+                :class="{ edit: 'edit', current: row.tenantCustomerId === current }" name="i-ep:edit" color="#409eff" />
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column v-if="checkList.includes('tenantCustomerId')" align="left" prop="tenantCustomerId"
             show-overflow-tooltip label="客户编码">
           <template #default="{ row }">
@@ -262,16 +272,6 @@ const formOption={
                 }"
               />
               <!-- <copy /> -->
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column v-if="checkList.includes('customerShortName')" align="left" prop="customerShortName"
-          show-overflow-tooltip label="客户简称" width="150">
-          <template #default="{ row }">
-            <div class="flex-c tableBig">
-              <div class="oneLine" style="width: calc(100% - 20px);"> {{ row.customerShortName }} </div>
-              <SvgIcon @click="quickEdit(row, 'customerShortName')"
-                :class="{ edit: 'edit', current: row.tenantCustomerId === current }" name="i-ep:edit" color="#409eff" />
             </div>
           </template>
         </el-table-column>
