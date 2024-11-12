@@ -51,7 +51,7 @@ const queryForm = reactive<any>({
 const questionnaireDetailsRef = ref<any>();
 const data = reactive<any>({
   // 分配类型
-  allocationTypeList: ["未分配", "供应商", "会员组"],
+  allocationTypeList: ["未分配", "供应商", "内部站"],
   // 调查状态
   surveyStatusList: ["完成", "被甄别", "配额满", "安全终止", "未完成"],
   // 副状态
@@ -255,11 +255,9 @@ const formOption={
             <el-tag effect="dark" style="background-color: #fb6868; border: none" v-if="row.allocationType === 2"
               class="mx-1" type="primary">供应商</el-tag>
             <el-tag effect="dark" style="background-color: #05c9be; border: none" v-if="row.allocationType === 3"
-              class="mx-1" type="warning">会员组</el-tag>
-
-
-
-
+              class="mx-1" type="warning">内部站</el-tag>
+            <el-tag effect="dark" style="background-color: #ffac54; border: none" v-if="row.allocationType === 4"
+              class="mx-1" type="warning">合作商</el-tag>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('passNumber')" align="left" show-overflow-tooltip label="通过数/提交数">
