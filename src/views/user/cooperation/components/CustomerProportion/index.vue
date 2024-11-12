@@ -254,7 +254,11 @@ defineExpose({
         <el-form-item prop="sendProjectType" label-width="7rem">
           <template #label>
             <span>
-              <el-tooltip effect="dark" content="" placement="top-start">
+              <el-tooltip effect="dark"  placement="top-start">
+                <template #content>
+                          <div>自动：您所创建的项目，自动分配给该合作商</div>
+                          <div>手动：您所创建的项目，需要手动分配分配给该合作商</div>
+                        </template>
                 <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
               </el-tooltip>
               发送项目
@@ -273,7 +277,11 @@ defineExpose({
           <el-form-item prop="receiveProjectType" style="margin-right: 1.5625rem">
             <template #label>
               <span>
-                <el-tooltip effect="dark" content="" placement="top-start">
+                <el-tooltip effect="dark"  placement="top-start">
+                  <template #content>
+                          <div>自动：合作商分配给您的项目，全部自动接收</div>
+                          <div>手动：合作商分配给您的项目，手动选择接收</div>
+                        </template>
                   <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
                 </el-tooltip>
                 接收项目
