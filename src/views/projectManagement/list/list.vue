@@ -369,7 +369,7 @@ const formOption = {
   clientId: async () => await customerStore.getCustomerList(),
   allocationStatus: () => [
     { label: "供应商", value: 2 },
-    { label: "部门", value: 3 },
+    { label: "内部站", value: 3 },
     { label: "合作商", value: 4 },
   ],
   status: () => [
@@ -661,7 +661,7 @@ const formOption = {
               @click="viewAllocations(row, 3)"
               type="success"
               v-else-if="row.allocationType === 3"
-              >部门</el-button
+              >内部站</el-button
             >
             <el-button
               class="tableBut"

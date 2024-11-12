@@ -107,6 +107,10 @@ const queryForm = reactive<any>({
   ip: "", //ip-模糊查询
   surveyStatus: "", //调查状态:1 C=完成 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
   randomIdentityId: "", //随机身份id
+   // 租户id
+   tenantId: "",
+   // 会员类型
+   memberType: "",
 });
 
 const data = reactive<any>({
@@ -193,6 +197,10 @@ function onReset() {
     ip: "", //ip-模糊查询
     surveyStatus: "", //调查状态:1 C=完成 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
     randomIdentityId: "", //随机身份id
+    // 租户id
+    tenantId: "",
+    // 会员类型
+    memberType: "",
   });
   fetchData();
 }
@@ -224,9 +232,9 @@ onMounted(async () => {
       index: 3,
       show: true,
       type: "select",
-      modelName: "surveySource",
+      modelName: "memberType",
       placeholder: "会员类型",
-      option: "surveySource",
+      option: "memberType",
       optionLabel: "label",
       optionValue: "value",
     },
@@ -295,9 +303,10 @@ onMounted(async () => {
   ];
 });
 const formOption = {
-  surveySource: () => [
-    { label: "内部会员", value: 1 },
-    { label: "外部会员", value: 2 },
+  memberType: () => [
+    { label: "外部会员", value: 1 },
+    { label: "内部会员", value: 2 },
+    { label: "外包会员", value: 3 },
   ],
   surveyStatus: () =>
     data.surveyStatusList.map((item: any, index: any) => ({
@@ -340,8 +349,9 @@ function handleCurrentChange(val: any) {
         <el-table-column align="left" type="selection" />
         <el-table-column v-if="checkList.includes('id')" width="200" align="left" prop="id" show-overflow-tooltip
           fixed="left" label="点击ID"><template #default="{ row }">
+            <el-tag effect="dark" v-if="row.surveySource === 1" type="primary">内部会员</el-tag>
             <el-tag effect="dark" v-if="row.surveySource === 2" type="warning">外部会员</el-tag>
-            <el-tag effect="dark" v-if="row.surveySource === 3" type="primary">外包会员</el-tag>
+            <el-tag effect="dark" v-if="row.surveySource === 3" style="background-color: #aed500; border: none;">外包会员</el-tag>
             <div class="copyId flex-s tableSmall">
               <div class="id oneLine idFont"> {{ row.id ? row.id : '-' }}</div>
               <copy :content="row.id" :class="{
@@ -383,8 +393,17 @@ function handleCurrentChange(val: any) {
             </div>
           </template>
         </el-table-column>
-
-
+        <el-table-column v-if="checkList.includes('tenantId')" width="200" align="left" prop="tenantId" show-overflow-tooltip
+           label="租户ID"><template #default="{ row }">
+            <div class="copyId flex-s tableSmall" v-if="row.surveySource === 3">
+              <div class="id oneLine idFont"> {{ row.tenantId ? row.tenantId : '-' }}</div>
+              <copy :content="row.tenantId" :class="{
+    rowCopy: 'rowCopy',
+    current: row.id === current,
+  }" />
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column v-if="checkList.includes('surveySource')" width="200" align="left" prop="memberId"
           show-overflow-tooltip label="会员ID">
           <template #default="{ row }">
@@ -441,17 +460,6 @@ function handleCurrentChange(val: any) {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('tenantId')" width="200" align="left" prop="tenantId" show-overflow-tooltip
-           label="租户ID"><template #default="{ row }">
-            <div class="copyId flex-s tableSmall" v-if="row.surveySource === 3">
-              <div class="id oneLine idFont"> {{ row.tenantId ? row.tenantId : '-' }}</div>
-              <copy :content="row.tenantId" :class="{
-    rowCopy: 'rowCopy',
-    current: row.id === current,
-  }" />
-            </div>
-          </template>
-        </el-table-column>
         <el-table-column v-if="checkList.includes('customerShortName')" align="left" prop="customerShortName"
           show-overflow-tooltip width="100" label="客户简称">
           <template #default="{ row }">
@@ -482,7 +490,9 @@ function handleCurrentChange(val: any) {
             <el-tag effect="dark" style="background-color: #fb6868; border: none" v-if="row.allocationType === 2"
               class="mx-1" type="primary">供应商</el-tag>
             <el-tag effect="dark" style="background-color: #05c9be; border: none" v-if="row.allocationType === 3"
-              class="mx-1" type="warning">会员组</el-tag>
+              class="mx-1" type="warning">内部站</el-tag>
+            <el-tag effect="dark" style="background-color: #ffac54; border: none" v-if="row.allocationType === 4"
+              class="mx-1" type="warning">合作商</el-tag>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('doMoneyPrice')" align="left" prop="doMoneyPrice"

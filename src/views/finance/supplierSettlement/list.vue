@@ -92,6 +92,13 @@ async function fetchData() {
     listLoading.value = false;
   }
 }
+// 手动生成结算（一月一次）
+const settlement = async () => {
+  const {data} = await api.settlement({})
+  if(data) {
+    fetchData()
+  }
+}
 
 // 修改状态
 async function changeStatus(id: any, type: any) {
@@ -146,8 +153,9 @@ const formOption = {
         @onReset="onReset" :model="queryForm" :formOption="formOption" />
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
-        <FormLeftPanel />
-
+        <FormLeftPanel>
+          <el-button size="default" type="primary" @click="settlement"> 手动结算 </el-button>
+        </FormLeftPanel>
         <FormRightPanel>
           <el-button size="default" @click=""> 导出 </el-button>
           <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"

@@ -5,4 +5,6 @@ export default {
   list: (data: any) => api.post("bill/getTenantSupplierBillList", data),
   // 供应商账单状态修改
   changestatus: (data: any) => api.post("bill/updateTenantSupplierBill", data),
+  // 模拟结算
+  settlement: (data: any) => api.post("bill/addTenantSupplierBill", data),
 };
