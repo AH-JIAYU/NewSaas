@@ -78,14 +78,12 @@ const handleNodeClick = (nodeData: any, checked: any) => {
     });
     // 更新当前选中的节点 ID
     data.value.form.chargeUserId = nodeData.id; // 只保留当前选中节点 ID
-    const checkedNodes = treeRef.value.getCheckedNodes();
-    data.value.form.chargeUserName = checkedNodes.map(
-      (node: any) => node.name
-    )[0];
+    // const checkedNodes = treeRef.value.getCheckedNodes();
+    data.value.form.chargeUserName = nodeData.name;
     // 关闭下拉框
-    setTimeout(() => {
-      selectTreeRef.value.blur(); // 失去焦点，关闭下拉框
-    }, 100);
+    // setTimeout(() => {
+    //   selectTreeRef.value.blur(); // 失去焦点，关闭下拉框
+    // }, 100);
     // console.log(data.value.form.chargeUserName,'data.value.form.chargeUserName')
   } else {
     // 如果取消选中节点，更新 chargeUserId
@@ -149,7 +147,7 @@ async function save() {
       }
       if (obj.receiveProjectType == 1 && !obj.chargeUserId) {
         ElMessage.warning({
-          message: "请选择接收项目负责人",
+          message: "请选择部门",
           center: true,
         });
         return;
@@ -287,7 +285,23 @@ defineExpose({
               <el-checkbox :value="2"> 手动 </el-checkbox>
             </el-checkbox-group>
           </el-form-item>
-          <el-select
+          <el-tree-select
+              placeholder="请选择部门"
+                 v-if="data.form.receiveProjectType == 1"
+              ref="treeRef"
+              v-model="data.form.chargeUserId"
+              :data="departmentList"
+              check-strictly
+              show-checkbox
+              default-expand-all
+              node-key="id"
+              :props="defaultProps"
+              @check-change="handleNodeClick"
+              :check-on-click-node="true"
+                  style="width: 15.625rem;margin-left: 1.5625rem;"
+              :expand-on-click-node="false"
+            />
+          <!-- <el-select
             v-if="data.form.receiveProjectType == 1"
             v-model="data.form.chargeUserName"
             placeholder="请选择部门"
@@ -313,7 +327,7 @@ defineExpose({
               />
               <el-text v-else>暂无数据</el-text>
             </el-option>
-          </el-select>
+          </el-select> -->
         </div>
 
         <!-- <el-input

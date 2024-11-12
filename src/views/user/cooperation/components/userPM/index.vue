@@ -101,14 +101,12 @@ const handleNodeClick = (nodeData: any, checked: any) => {
     });
     // 更新当前选中的节点 ID
     data.value.form.chargeUserId = nodeData.id; // 只保留当前选中节点 ID
-    const checkedNodes = treeRef.value.getCheckedNodes();
-    data.value.form.chargeUserName = checkedNodes.map(
-      (node: any) => node.name
-    )[0];
+    // const checkedNodes = treeRef.value.getCheckedNodes();
+    data.value.form.chargeUserName = nodeData.name;
     // 关闭下拉框
-    setTimeout(() => {
-      selectTreeRef.value.blur(); // 失去焦点，关闭下拉框
-    }, 100);
+    // setTimeout(() => {
+    //   selectTreeRef.value.blur(); // 失去焦点，关闭下拉框
+    // }, 100);
     // console.log(data.value.form.chargeUserName,'data.value.form.chargeUserName')
   } else {
     // 如果取消选中节点，更新 chargeUserId
@@ -143,8 +141,22 @@ const handleNodeClick = (nodeData: any, checked: any) => {
         :rules="rules"
         :model="data.form"
       >
-        <el-form-item label="负责人" prop="chargeUserId">
-          <el-select
+        <el-form-item label="部门" prop="chargeUserId">
+          <el-tree-select
+              placeholder="请选择部门"
+              ref="treeRef"
+              v-model="data.form.chargeUserId"
+              :data="departmentList"
+              check-strictly
+              show-checkbox
+              default-expand-all
+              node-key="id"
+              :props="defaultProps"
+              @check-change="handleNodeClick"
+              :check-on-click-node="true"
+              :expand-on-click-node="false"
+            />
+          <!-- <el-select
             v-model="data.form.chargeUserName"
             placeholder="请选择负责人"
             ref="selectTreeRef"
@@ -168,7 +180,7 @@ const handleNodeClick = (nodeData: any, checked: any) => {
               />
               <el-text v-else>暂无数据</el-text>
             </el-option>
-          </el-select>
+          </el-select> -->
         </el-form-item>
       </ElForm>
 
