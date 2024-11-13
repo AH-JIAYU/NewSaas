@@ -159,7 +159,7 @@ defineExpose({
           </el-collapse-item>
         </el-collapse>
       </div>
-      <ElForm ref="formRef" :rules="rules" :model="data.form" label-width="100px">
+      <ElForm ref="formRef" :rules="rules" :model="data.form" style="margin-top: 0.625rem;">
         <el-form-item label="负责人" prop="chargeUserId">
           <el-select v-model="data.form.chargeUserId" value-key="" placeholder="请选择负责人" clearable filterable>
             <template #header>
