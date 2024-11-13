@@ -56,6 +56,7 @@ const rules = reactive<any>({
 const dictionaryItemVisible = ref<any>(false); // PM组件显隐
 // 显隐 ,row,回显的勾选数据，name为弹出框名称，project为选中的项目名称数据
 async function showEdit(row: any, name: any, project: any) {
+  data.value.form.chargeUserId = project[0].userId
   await getTenantStaffList();
   data.value.type = 1;
   drawerisible.value = true;
@@ -93,6 +94,37 @@ const getTenantStaffList = async () => {
 function close() {
   drawerisible.value = false;
   formRef.value.resetFields();
+  Object.assign(data.value, {
+    type: 1,
+    tenantStaffList: [], // 员工列表
+    roleList: [], //选择的员工
+    title: "",
+    project: [], //选中的项目
+    form: {
+      chargeUserId: null,
+      chargeUserName: "",
+    },
+  })
+  Object.assign(queryUserForm, {
+    page: 1,
+    limit: 10,
+    id: "",
+    userName: "",
+    active: null,
+    departmentId: null,
+    positionId: null,
+  })
+  Object.assign(queryForm, {
+    // 分页页码
+    page: 1,
+    // 每页数量
+    limit: 10,
+    id: null,
+    // 职位名称
+    name: "",
+    // 是否启用 1启用 2停用
+    active: null,
+  })
   // 同步选中的路由id
   // departmentId.value = treeRef.value.getCheckedKeys(false);
 }
@@ -115,7 +147,7 @@ function submit() {
         // departmentId: departmentId.value[0], //邀请方部门id
         // departmentName:departmentName,
       };
-      drawerisible.value = false;
+      close()
       emit("userData", obj);
     }
   });

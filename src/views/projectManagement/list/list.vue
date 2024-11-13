@@ -474,16 +474,22 @@ const formOption = {
         >
           <template #default="{ row }">
             <p>
-              <el-tag v-if="row.projectType === 1" type="primary" effect="dark">
-                内部新增</el-tag
-              >
-              <el-tag
-                v-else-if="row.projectType === 2"
-                type="warning"
-                effect="dark"
-              >
-                合作商分配</el-tag
-              >
+              <span class="tableBig">
+                <el-tag
+                  v-if="row.projectType === 1"
+                  type="primary"
+                  effect="dark"
+                >
+                  内部新增</el-tag
+                >
+                <el-tag
+                  v-else-if="row.projectType === 2"
+                  type="warning"
+                  effect="dark"
+                >
+                  合作商分配</el-tag
+                >
+              </span>
             </p>
             <div class="copyId tableSmall">
               <div class="id oneLine">
@@ -567,7 +573,7 @@ const formOption = {
               <div class="oneLine" style="width: calc(100% - 1.25rem)">
                 <b class="tableBig">{{ row.clientName.split("/")[0] }}</b>
                 <div class="oneLine">PM：{{ row.chargeName }}</div>
-              </div>
+     </div>
               <SvgIcon
                 v-if="row.projectType !== 2"
                 @click="quickEdit(row, 'customer')"

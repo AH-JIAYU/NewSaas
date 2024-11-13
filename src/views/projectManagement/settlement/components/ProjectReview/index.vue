@@ -81,10 +81,10 @@ async function onSubmit() {
           ) {
             formData.value.projectSettlementBuilderList =
               formData.value.arr.split("\n") || [];
-            delete formData.value.arr;
           } else {
             formData.value.projectSettlementBuilderList = [];
           }
+          delete formData.value.arr;
           const { status } = await api.review(formData.value);
           if (status === 1) {
             // 更新列表

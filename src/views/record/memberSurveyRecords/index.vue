@@ -111,6 +111,8 @@ const queryForm = reactive<any>({
    tenantId: "",
    // 会员类型
    memberType: "",
+    // 点击id
+   id: "",
 });
 
 const data = reactive<any>({
@@ -201,6 +203,8 @@ function onReset() {
     tenantId: "",
     // 会员类型
     memberType: "",
+    // 点击id
+    id: "",
   });
   fetchData();
 }
@@ -218,18 +222,25 @@ onMounted(async () => {
       index: 1,
       show: true,
       type: "input",
+      modelName: "id",
+      placeholder: "点击ID",
+    },
+    {
+      index: 2,
+      show: true,
+      type: "input",
       modelName: "projectId",
       placeholder: "项目ID",
     },
     {
-      index: 2,
+      index: 3,
       show: true,
       type: "input",
       modelName: "projectName",
       placeholder: "项目名称",
     },
     {
-      index: 3,
+      index: 4,
       show: true,
       type: "select",
       modelName: "memberType",
@@ -239,42 +250,42 @@ onMounted(async () => {
       optionValue: "value",
     },
     {
-      index: 4,
+      index: 5,
       show: true,
       type: "input",
       modelName: "memberId",
       placeholder: "会员ID",
     },
     {
-      index: 5,
+      index: 6,
       show: true,
       type: "input",
       modelName: "memberChildId",
       placeholder: "子会员ID",
     },
     {
-      index: 6,
+      index: 7,
       show: true,
       type: "input",
       modelName: "randomIdentityId",
       placeholder: "随机身份",
     },
     {
-      index: 7,
+      index: 8,
       show: true,
       type: "input",
       modelName: "tenantSupplierId",
       placeholder: "供应商ID",
     },
     {
-      index: 8,
+      index: 9,
       show: true,
       type: "input",
       modelName: "ip",
       placeholder: "IP地址",
     },
     {
-      index: 9,
+      index: 10,
       show: true,
       type: "select",
       modelName: "surveyStatus",
@@ -284,7 +295,7 @@ onMounted(async () => {
       optionValue: "value",
     },
     {
-      index: 10,
+      index: 11,
       show: true,
       type: "select",
       modelName: "viceStatus",
@@ -294,7 +305,7 @@ onMounted(async () => {
       optionValue: "value",
     },
     {
-      index: 11,
+      index: 12,
       show: true,
       type: "input",
       modelName: "tenantId",
@@ -379,28 +390,28 @@ function handleCurrentChange(val: any) {
         <el-table-column v-if="checkList.includes('randomIdentityId')" width="200" align="left" prop="randomIdentityId"
           show-overflow-tooltip label="随机身份">
           <template #default="{ row }">
-            <div class="copyId flex-s tableSmall" v-if="row.surveySource === 1 && row.surveySource === 3">
-              <div class="oneLine">
-                <span v-if="row.randomIdentityId" class="id oneLine idFont">
+            <div class="copyId flex-s tableSmall" v-if="row.surveySource !== 3">
+              <div class="oneLine color3">
+                <span class="id oneLine idFont">
                   {{ row.randomIdentityId  ? row.randomIdentityId : '-' }}</span>
-                <span v-else class="id">-</span>
               </div>
               <copy v-if="row.randomIdentityId" :content="row.randomIdentityId" :class="{
-    rowCopy: 'rowCopy',
-    current: row.id === current,
-  }" />
+                rowCopy: 'rowCopy',
+                current: row.id === current,
+              }" />
               <!-- <copy class="copy edit" v-if="row.randomIdentityId" :content="row.randomIdentityId" /> -->
             </div>
+            <span v-else>-</span>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('tenantId')" width="200" align="left" prop="tenantId" show-overflow-tooltip
            label="租户ID"><template #default="{ row }">
-            <div class="copyId flex-s tableSmall" v-if="row.surveySource === 3">
+            <div class="copyId flex-s tableSmall color3">
               <div class="id oneLine idFont"> {{ row.tenantId ? row.tenantId : '-' }}</div>
               <copy :content="row.tenantId" :class="{
-    rowCopy: 'rowCopy',
-    current: row.id === current,
-  }" />
+                rowCopy: 'rowCopy',
+                current: row.id === current,
+              }" />
             </div>
           </template>
         </el-table-column>
@@ -464,6 +475,7 @@ function handleCurrentChange(val: any) {
           show-overflow-tooltip width="100" label="客户简称">
           <template #default="{ row }">
             <div class="tableBig" v-if="row.surveySource !== 3">{{ row.customerShortName ? row.customerShortName : '-' }}</div>
+            <span v-else>-</span>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('ipBelong')" align="left" prop="ipBelong" show-overflow-tooltip
@@ -607,6 +619,10 @@ function handleCurrentChange(val: any) {
 <style scoped lang="scss">
 .idFont {
   font-size: .875rem;
+}
+
+.color3 {
+  color: #333;
 }
 
 .copyId .idFont {
