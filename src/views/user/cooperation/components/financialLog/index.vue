@@ -1,267 +1,291 @@
 <script setup lang="ts">
-import { cloneDeep } from "lodash-es";
+import { ref } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
-import api from "@/api/modules/user_customer";
-
+import api from "@/api/modules/financial_pm_log";
+import apiUse from "@/api/modules/configuration_manager";
 import empty from "@/assets/images/empty.png";
-defineOptions({
-  name: "financialLog",
-});
+
 // 时间
 const { format } = useTimeago();
+const emit = defineEmits(["fetch-data"]);
+const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
+  usePagination();
+// 用户数据
+const staffList = ref<any>([]);
+// 表单数据
 const data = ref<any>({
-  dialogTableVisible: false,
-  title: "",
-  type: "",
   loading: false,
   activeName: "myFinancial",
   tableAutoHeight: false, // 表格是否自适应高度
   border: false, // 表格控件-是否展示边框
   stripe: false, // 表格控件-是否展示斑马条
   lineHeight: "default", // 表格控件-控制表格大小
-  // 列表数据
-  dataList: [],
   checkList: [],
+  search: {
+    // 分页页码
+    page: 1,
+    // 每页数量
+    limit: 10,
+    // 用户id
+    userId: null,
+    // 组织架构id
+    organizationalStructureId: null,
+  },
 });
+const drawerisible = ref<boolean>(false);
+// 详情数据
+const detailData = ref<any>();
+// 编辑
 
-// 表格控件-展示列
-const columns = ref<any>([
-  {
-    label: "点击ID",
-    prop: "clientId",
-    sortable: true,
-    disableCheck: false, // 不可更改
-    checked: true, // 默认展示
-  },
-  {
-    label: "项目ID",
-    prop: "projectId",
-    sortable: true,
-    disableCheck: false, // 不可更改
-    checked: true, // 默认展示
-  },
-  {
-    label: "类型",
-    prop: "type",
-    sortable: true,
-    disableCheck: false, // 不可更改
-    checked: true, // 默认展示
-  },
-  {
-    label: "说明",
-    prop: "remark",
-    sortable: true,
-    disableCheck: false, // 不可更改
-    checked: true, // 默认展示
-  },
-  {
-    label: "变动前",
-    prop: "beforeBalance",
-    sortable: true,
-    disableCheck: false, // 不可更改
-    checked: true, // 默认展示
-  },
-  {
-    label: "加减款",
-    prop: "addAndSubtraction",
-    sortable: true,
-    disableCheck: false, // 不可更改
-    checked: true, // 默认展示
-  },
-  {
-    label: "变动后",
-    prop: "afterBalance",
-    sortable: true,
-    disableCheck: false, // 不可更改
-    checked: true, // 默认展示
-  },
-  {
-    label: "时间",
-    prop: "createTime",
-    sortable: true,
-    disableCheck: false, // 不可更改
-    checked: true, // 默认展示
-  },
-]);
-const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
-  usePagination();
-// 显隐
+// 加减款
 async function showEdit(row: any) {
-  data.value.loading = true;
-  data.value.dialogTableVisible = true;
-  getDataList();
-  columns.value.forEach((item: any) => {
-    if (item.checked) {
-      data.value.checkList.push(item.prop);
-    }
-  });
+  if (row.organizationalStructureId) {
+    data.value.search.organizationalStructureId = row.organizationalStructureId;
+    await getDataList();
+    const ress = await apiUse.queryNotEnableStaffList({
+      organizationalStructureId: data.value.search.organizationalStructureId,
+    });
+    staffList.value = ress.data;
+  }
+  drawerisible.value = true;
 }
-function getDataList() {
+// 获取列表数据
+const getDataList = async () => {
   try {
     data.value.loading = true;
     const params = {
-      ...getParams(),
       ...data.value.search,
     };
-    api.list(params).then((res: any) => {
-      data.value.loading = false;
-      data.value.dataList = res.data.tenantFinancialRecordInfoList;
-      pagination.value.total = +res.data.total;
-    });
+    const res = await api.getStaffFinancial(params);
+    detailData.value = res.data.userList;
+    pagination.value.total = +res.data.total;
+    data.value.loading = false;
   } catch (error) {
   } finally {
     data.value.loading = false;
   }
-}
-// 函数来格式化余额
-const formatRemarkWithBalance = (remark: any) => {
-  const match = remark.match(/[-+]?\d*\.?\d+/);
-  if (match) {
-    const balance = parseFloat(match[0]).toFixed(2);
-    return remark.replace(match[0], balance); // 替换原余额
-  }
-  return remark; // 如果没有找到余额，返回原字符串
 };
-
-// 弹框关闭事件
-function closeHandler() {
-  data.value.dialogTableVisible = false;
-  data.value.tableData = [];
+// 每页数量切换
+function sizeChange(size: number) {
+  onSizeChange(size).then(() => {
+    data.value.search.limit = size;
+    getDataList();
+  });
 }
 
-onMounted(async () => {});
+// 当前页码切换（翻页）
+function currentChange(page = 1) {
+  onCurrentChange(page).then(() => {
+    data.value.search.page = page;
+    getDataList();
+  });
+}
+function close() {
+  emit("fetch-data");
+  Object.assign(data.value.search, {
+    // 分页页码
+    page: 1,
+    // 每页数量
+    limit: 10,
+    // 用户id
+    userId: null,
+    // 组织架构id
+    organizationalStructureId: null,
+  });
+  drawerisible.value = false;
+}
 
-// 暴露方法
 defineExpose({
   showEdit,
 });
-// 字段排序
-function sortChange({ prop, order }: { prop: string; order: string }) {
-  onSortChange(prop, order).then(() => getDataList());
-}
 </script>
 
-<template>
-  <div>
-    <el-dialog v-model="data.dialogTableVisible"   title="财务日志" draggable >
-      <ElTable v-loading="data.loading" :border="data.border" :size="data.lineHeight" :stripe="data.stripe" class="my-4"
-        :data="data.dataList" highlight-current-row height="100%" style="min-height: 370px;" sort-change="sortChange"
-        >
-        <ElTableColumn v-if="data.checkList.includes('clientId')" show-overflow-tooltip align="left" prop="clientId"
-          label="点击ID" width="200">
-          <template #default="{ row }">
-            <el-text class="fontColor">{{ row.clientId ? row.clientId : "-" }}</el-text>
-          </template>
-        </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('projectId')" show-overflow-tooltip align="left" prop="projectId"
-          label="项目ID" width="200">
-          <template #default="{ row }">
-            <el-text  class="fontColor">{{ row.projectId ? row.projectId : "-" }}</el-text>
-          </template>
-        </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('type')" show-overflow-tooltip align="left" prop="" label="类型">
-          <template #default="{ row }">
-            <el-tag v-if="row.type === 1" type="warning" effect="dark">待审余额</el-tag>
-            <el-tag v-if="row.type === 2" type="primary" effect="dark">可用余额</el-tag>
-          </template>
-        </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('remark')" width="260" show-overflow-tooltip align="left" prop="remark"
-          label="说明">
-          <template #default="{ row }">
-            <el-text class="mx-1 fontColor fontC-System" >{{ formatRemarkWithBalance(row.remark) || "-" }}</el-text>
-          </template>
-        </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('beforeBalance')" show-overflow-tooltip align="left"
-          prop="beforeBalance" width="130" label="变动前" >
-          <template #default="{ row }">
-            <CurrencyType /><el-text class="fontColor">{{ row.beforeBalance || 0 }}</el-text>
-          </template>
-        </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('addAndSubtraction')" show-overflow-tooltip align="left"
-          prop="addAndSubtraction" width="150" label="加减款" ><template #default="{ row }">
-            <p class="plus" v-if="row.operationType === 1" >
-                <div class="plusSpan i-majesticons:plus-line w-1em h-1em"></div>
-              <el-text class="color3">
-                <CurrencyType />{{ Math.abs(row.addAndSubtraction) }}
-              </el-text>
-            </p>
-            <p class="plus" v-if="row.operationType === 2">
-                <div class="minusSign i-iconamoon:sign-minus-bold w-1em h-1em"></div>
-              <el-text class="color3">
-                <CurrencyType />{{ Math.abs(row.addAndSubtraction) }}
-              </el-text>
-            </p>
-          </template>
-        </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('afterBalance')" show-overflow-tooltip align="left"
-          prop="afterBalance" width="130" label="变动后" >
-          <template #default="{ row }">
-            <CurrencyType /><el-text class="fontColor">{{ row.afterBalance || 0 }}</el-text>
-          </template>
-        </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('createTime')" show-overflow-tooltip align="left"
-          prop="createTime" label="时间" ><template #default="{ row }" >
-            <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>
-          </template>
-        </ElTableColumn>
-        <template #empty>
-          <el-empty :image="empty" :image-size="300" />
-        </template>
-      </ElTable>
+<template lang="">
+  <el-drawer
+    v-model="drawerisible"
+    v-loading="data.loading"
+    append-to-body
+    :close-on-click-modal="false"
+    destroy-on-close
+    draggable
+    size="70%"
+    title="财务日志"
+    @close="close"
+  >
+    <ElDivider border-style="dashed" />
+    <ElForm
+      :model="data.search"
+      size="default"
+      label-width="100px"
+      inline-message
+      inline
+      class="search-form"
+    >
+      <ElFormItem>
+        <el-select style="width:10.5rem" v-model="data.search.userId" placeholder="请选择员工" clearable filterable @change="currentChange()">
+        <el-option v-for="item in staffList"
+        :key="item.id"
+        :label="item.userName"
+        :value="item.id">
+        </el-option>
+        </el-select>
+      </ElFormItem>
+    </ElForm>
+    <ElTable
+      v-loading="data.loading"
+      :border="data.border"
+      :size="data.lineHeight"
+      :stripe="data.stripe"
+      class="my-4"
+      :data="detailData"
+      highlight-current-row
+      @sort-change="sortChange"
+      @selection-change="data.batch.selectionDataList = $event"
+    >
 
-      <template #footer  >
-        <div style="text-align:center">
-          <el-button type="primary"  @click="closeHandler" >关闭</el-button>
-        </div>
+      <ElTableColumn
+        show-overflow-tooltip
+        align="left"
+        prop=""
+        label="点击ID"
+      >
+        <template #default="{ row }">
+          <el-text class="color3">{{ row.clientId ? row.clientId : "-" }}</el-text>
+        </template>
+</ElTableColumn>
+<ElTableColumn show-overflow-tooltip align="left" prop="projectId" label="项目ID">
+  <template #default="{ row }">
+  <el-text class="color3">{{ row.projectId ? row.projectId : "-" }}</el-text>
+</template>
+</ElTableColumn>
+
+<ElTableColumn  show-overflow-tooltip width="120" align="left"
+          prop="type" label="类型">
+          <template #default="{ row }">
+  <el-tag v-if="row.type === 1" type="warning" effect="dark">待审余额</el-tag>
+  <el-tag v-if="row.type === 2" type="primary" effect="dark">可用余额</el-tag>
+</template>
+        </ElTableColumn>
+
+<ElTableColumn show-overflow-tooltip align="left" prop="remark" label="说明"><template #default="{ row }">
+  <el-text class="mx-1 color3">{{ row.remark ? row.remark : "-" }}</el-text>
+</template>
+</ElTableColumn>
+<ElTableColumn show-overflow-tooltip align="left" prop="beforeBalance" width="150" label="变动前">
+  <template #default="{ row }">
+  <CurrencyType /><el-text class="mx-1 color3">{{
+    row.beforeBalance || 0
+  }}</el-text>
+</template>
+</ElTableColumn>
+<ElTableColumn  show-overflow-tooltip align="left"
+          prop="difference" label="加减款" width="120">
+          <template #default="{ row }">
+            <p class="plus color3" v-if="row.operationType === 1" >
+                <div class="plusSpan i-majesticons:plus-line w-1em h-1em"></div>
+              <el-text>
+                <CurrencyType />{{ Math.abs(row.difference) }}
+              </el-text>
+            </p>
+            <p class="plus color3" v-if="row.operationType === 2" >
+                <div class="minusSign i-iconamoon:sign-minus-bold w-1em h-1em"></div>
+              <el-text>
+                <CurrencyType />{{ Math.abs(row.difference) }}
+              </el-text>
+            </p>
+          </template>
+        </ElTableColumn>
+<ElTableColumn show-overflow-tooltip align="left" prop="afterBalance" width="150" label="变动后">
+  <template #default="{ row }">
+  <CurrencyType /><el-text class="color3">{{ row.afterBalance || 0 }}</el-text>
+</template>
+</ElTableColumn>
+<ElTableColumn show-overflow-tooltip align="left" prop="createTime" label="时间"><template #default="{ row }">
+  <el-tooltip :content="row.createTime" placement="top">
+    <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>
+  </el-tooltip>
+</template>
+</ElTableColumn>
+<template #empty>
+          <el-empty :image="empty" :image-size="300" />
       </template>
-    </el-dialog>
-  </div>
+</ElTable>
+<ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+  :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination" background
+  @size-change="sizeChange" @current-change="currentChange" />
+</el-drawer>
 </template>
 
-<style lang="scss" scoped>
-
-:deep {
-  .el-drawer,
-  .el-drawer__body,
-  .el-tabs.el-tabs--left {
-    overflow: visible !important;
-  }
-  .el-table--fit .el-table__inner-wrapper:before {
-    width: 0;
-  }
-}
-.rowCopy {
-  width: 20px;
-  display: none;
-}
-.el-table__row:hover .rowCopy {
-  display: block;
-}
-.flex-c {
+<style scoped lang="scss">
+.card-header {
   display: flex;
-  justify-content: start;
+  justify-content: space-between;
   align-items: center;
-  width: 100%;
 
-  > div:nth-of-type(1) {
-    width: calc(100% - 25px);
-    flex-shrink: 0;
-  }
+  .rightStatus {
+    position: relative;
+    width: 128px;
 
-  .edit {
-    width: 20px;
-    height: 20px;
-    margin-left: 5px;
-    flex-shrink: 0;
-    display: none;
-    cursor: pointer;
-  }
+    >div {
+      width: 120px;
+      height: 2.2rem;
+      line-height: 2.2rem;
+      text-align: center;
+      border-radius: 0.3rem;
+      color: #fff;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 20.8px;
 
-  .current {
-    display: block !important;
+      &::before {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 60%;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        aspect-ratio: 1 / 1;
+        content: "";
+      }
+
+      &::after {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 50%;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        aspect-ratio: 1 / 1;
+        content: "";
+      }
+    }
+
+    >div.isOnlineTrue {
+      background-color: #70b51a;
+
+      &::after,
+      &::before {
+        border: 1px #70b51a dashed;
+      }
+    }
+
+    >div.isOnlineFalse {
+      background-color: #d8261a;
+
+      &::after,
+      &::before {
+        border: 1px #d8261a dashed;
+      }
+    }
   }
 }
-.copyId .current {
-  display: block !important;
+
+.plusSpan {
+  color: #35cd61;
+}
+.minusSign {
+  color: #fb6868;
 }
 </style>
