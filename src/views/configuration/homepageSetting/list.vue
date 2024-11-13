@@ -149,32 +149,6 @@ onBeforeUnmount(() => {
 <template>
   <div :class="{ 'absolute-container': data.tableAutoHeight }">
     <PageMain>
-      <div style="font-size: 1.5rem;">通用模板</div>
-      <ElTable v-loading="data.loading" class="my-4" :data="data.controlDataList" stripe highlight-current-row
-        height="100%" @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
-        <ElTableColumn v-if="data.batch.enable" type="selection" align="left" fixed />
-        <ElTableColumn prop="title" label="标题" />
-        <ElTableColumn prop="isSet" align="left" width="100" label="是否默认">
-          <template #default="{ row }">
-            {{ row.isSet ? '是' : '否' }}
-          </template>
-        </ElTableColumn>
-        <ElTableColumn label="操作" width="250" align="left" fixed="right">
-          <template #default="scope">
-            <ElButton v-if="!scope.row.isSet" type="primary" size="small" plain @click="setHomePage(scope.row)">
-              设置为主页
-            </ElButton>
-            <ElButton type="primary" size="small" plain @click="homePage(scope.row, '查看')">
-              查看
-            </ElButton>
-          </template>
-        </ElTableColumn>
-        <template #empty>
-          <el-empty :image="empty" :image-size="300" />
-        </template>
-      </ElTable>
-    </PageMain>
-    <PageMain>
       <div style="font-size: 1.5rem;">自定义模板</div>
       <ElDivider border-style="dashed" />
       <ElSpace wrap>
@@ -228,6 +202,32 @@ onBeforeUnmount(() => {
       <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
         :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
         background @size-change="sizeChange" @current-change="currentChange" />
+    </PageMain>
+    <PageMain>
+      <div style="font-size: 1.5rem;">通用模板</div>
+      <ElTable v-loading="data.loading" class="my-4" :data="data.controlDataList" stripe highlight-current-row
+        height="100%" @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
+        <ElTableColumn v-if="data.batch.enable" type="selection" align="left" fixed />
+        <ElTableColumn prop="title" label="标题" />
+        <ElTableColumn prop="isSet" align="left" width="100" label="是否默认">
+          <template #default="{ row }">
+            {{ row.isSet ? '是' : '否' }}
+          </template>
+        </ElTableColumn>
+        <ElTableColumn label="操作" width="250" align="left" fixed="right">
+          <template #default="scope">
+            <ElButton v-if="!scope.row.isSet" type="primary" size="small" plain @click="setHomePage(scope.row)">
+              设置为主页
+            </ElButton>
+            <ElButton type="primary" size="small" plain @click="homePage(scope.row, '查看')">
+              查看
+            </ElButton>
+          </template>
+        </ElTableColumn>
+        <template #empty>
+          <el-empty :image="empty" :image-size="300" />
+        </template>
+      </ElTable>
     </PageMain>
     <FormMode v-if="data.formMode === 'dialog' || data.formMode === 'drawer'" :id="data.formModeProps.id"
       :row="data.formModeProps.row" v-model="data.formModeProps.visible" :mode="data.formMode" @success="getDataList" />

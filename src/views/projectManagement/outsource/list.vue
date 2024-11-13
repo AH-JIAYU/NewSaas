@@ -233,11 +233,13 @@ const userRef = ref();
 //接收-批量
 function addReceiveAll() {
   const selectList = tableSortRef2.value.getSelectionRows();
-  if (selectList.length !== 1) {
+  console.log(selectList.length,'selectList')
+  if (selectList.length ==0) {
     ElMessage.warning({
       message: "请选择一个项目",
       center: true,
     });
+    return;
   } else {
     //循环判断，如果勾选的数据有已接收的，给出提示，已接收的项目不能再次接收，请重新选择
     let flagNum = selectList.length; //默认勾选的全部都是未接收的receiveStatus == 2
@@ -263,7 +265,7 @@ function addReceiveAll() {
 //取消接收-批量
 function delReceiveAll() {
   const selectList = tableSortRef2.value.getSelectionRows();
-  if (selectList.length !== 1) {
+  if (selectList.length !== 0) {
     ElMessage.warning({
       message: "请选择一个项目",
       center: true,

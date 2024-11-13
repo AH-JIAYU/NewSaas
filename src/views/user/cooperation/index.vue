@@ -3,6 +3,7 @@ import { onMounted } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import customerEdit from "./components/CustomerEdit/index.vue";
 import customerProportion from "./components/CustomerProportion/index.vue";
+import financialLog from "./components/financialLog/index.vue";
 import userPM from "./components/userPM/index.vue"; //部门人
 import empty from "@/assets/images/empty.png";
 import api from "@/api/modules/user_cooperation";
@@ -105,6 +106,11 @@ function termination(row: any) {
       fetchData();
     })
     .catch(() => {});
+}
+const financialLogRef = ref()
+//财务日志
+function openLog(row:any){
+  financialLogRef.value.showEdit(row);
 }
 //合作配置
 function priceRatio(row: any) {
@@ -512,7 +518,7 @@ function userData(data1: any) {
           fixed="right"
           prop="i"
           label="操作"
-          width="200"
+          width="280"
         >
           <template #default="{ row }">
             <ElSpace>
@@ -528,10 +534,10 @@ function userData(data1: any) {
                 终止合作
               </el-button>
 
-              <!-- <el-button type="warning" plain size="small">
+            <el-button type="warning" plain size="small" @click="openLog(row)">
                 财务日志
               </el-button>
-              <el-button type="danger" plain size="small"> 加减款 </el-button>-->
+                <!-- <el-button type="danger" plain size="small"> 加减款 </el-button>-->
             </ElSpace>
           </template>
         </el-table-column>
@@ -553,6 +559,7 @@ function userData(data1: any) {
       />
       <customerEdit ref="editRef" @fetch-data="queryData" />
       <customerProportion ref="proportionRef" @fetch-data="queryData" />
+      <financialLog ref="financialLogRef" @fetch-data="queryData" />
     </PageMain>
     <QuickEdit ref="QuickEditRef" @fetchData="fetchData" />
     <userPM ref="userRef" @userData="userData" />

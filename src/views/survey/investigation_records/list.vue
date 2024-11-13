@@ -247,6 +247,12 @@ function handleCurrentChange(val: any) {
             <el-text class="fontColor">{{ row.id ? row.id : "-" }}</el-text>
           </template>
         </el-table-column>
+        <el-table-column v-if="checkList.includes('projectName')" align="left" prop="projectName" show-overflow-tooltip
+          label="项目名称" width="200">
+          <template #default="{ row }">
+            <el-text style="font-weight: 700;color: #333333;">{{ row.projectName ? row.projectName : "-" }}</el-text>
+          </template>
+        </el-table-column>
         <el-table-column v-if="checkList.includes('randomIdentityId')" align="left" prop="randomIdentityId"
           show-overflow-tooltip label="随机身份" width="200">
           <template #default="{ row }">
@@ -279,12 +285,7 @@ function handleCurrentChange(val: any) {
             <el-text v-else>-</el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('projectName')" align="left" prop="projectName" show-overflow-tooltip
-          label="项目名称" width="200">
-          <template #default="{ row }">
-            <el-text style="font-weight: 700;color: #333333;">{{ row.projectName ? row.projectName : "-" }}</el-text>
-          </template>
-        </el-table-column>
+
         <el-table-column v-if="checkList.includes('projectId')" align="left" prop="projectId" show-overflow-tooltip
           width="200" label="项目ID">
           <template #default="{ row }">

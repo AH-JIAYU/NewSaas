@@ -225,7 +225,8 @@ onMounted(() => {
     { index: 1, show: true, type: 'input', modelName: 'supplierId', placeholder: '供应商ID' },
     { index: 2, show: true, type: 'input', modelName: 'projectId', placeholder: '项目ID' },
     { index: 3, show: true, type: 'select', modelName: 'operationType', placeholder: '加减款', option: 'operationType', optionLabel: 'label', optionValue: 'value' },
-    { index: 4, show: true, type: 'select', modelName: 'type', placeholder: '类型', option: 'type', optionLabel: 'label', optionValue: 'value' }
+    { index: 4, show: true, type: 'select', modelName: 'type', placeholder: '类型', option: 'type', optionLabel: 'label', optionValue: 'value' },
+    { index: 5, show: true, type: 'input', modelName: 'TenantId', placeholder: '合作商ID' },
   ]
 });
 const formOption={
@@ -267,7 +268,7 @@ onBeforeUnmount(() => {
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('typeId')" show-overflow-tooltip align="left" prop=""
-          label="供应商ID/内部调查站" width="200">
+          label="供应商/内部站/合作商" width="200">
           <template #default="{ row }">
             <el-text v-if="row.typeId == 1"  class="fontColor">内部调查站</el-text>
             <el-text v-else  class="fontColor">{{ row.typeId ? row.typeId : "-" }}</el-text>
