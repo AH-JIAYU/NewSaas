@@ -18,6 +18,8 @@ export default {
 
   // 项目结算-开票或者结算状态修改
   InvoicingSettlementEdit: (data: any) => api.post('projectSettlement/updateProjectSettlementStatus', data, ),
+  // 获取审核进度
+  getSettlementWebSocket: (data:any) => api.get(`settlement-socket/getSettlementWebSocket?projectId=${data}` ),
 
   delete: (id: number | string) => api.post('menu/delete', {
     id,

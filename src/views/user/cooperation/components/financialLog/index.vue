@@ -38,8 +38,6 @@ const detailData = ref<any>();
 
 // 加减款
 async function showEdit(row: any) {
-  console.log('row', row);
-
   if (row.beInvitationTenantId) {
     data.value.search.allocationTenantId = row.beInvitationTenantId;
     await getDataList();

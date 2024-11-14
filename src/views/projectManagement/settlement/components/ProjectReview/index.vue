@@ -3,10 +3,12 @@ import { ref } from "vue";
 import { ElMessage } from "element-plus";
 import type { FormInstance, FormRules } from "element-plus";
 import api from "@/api/modules/project_settlement";
+import progressDetails from '../progressDetails/index.vue'
 
 defineOptions({
   name: "ProjectReview",
 });
+const progressDetailsRef = ref<any>();
 // 更新数据
 const emits = defineEmits(["success"]);
 // loading
@@ -85,8 +87,14 @@ async function onSubmit() {
             formData.value.projectSettlementBuilderList = [];
           }
           delete formData.value.arr;
+          // progressDetailsRef.value.showEdit(form.value.projectId)
           const { status } = await api.review(formData.value);
           if (status === 1) {
+            const channelObj = new BroadcastChannel("televiseChannel");
+            // 发送消息
+            channelObj.postMessage("我在子页面提交了,需要刷新列表");
+            // console.log(2222222222);
+            // progressDetailsRef.value.showEdit(form.value.projectId)
             // 更新列表
             emits("success");
             // 关闭加载
@@ -97,7 +105,9 @@ async function onSubmit() {
               center: true,
             });
             // 执行关闭弹框事件
-            closeHandler();
+            setTimeout(() => {
+              closeHandler();
+            }, 3000);
           } else {
             ElMessage.error({
               message: "操作失败，请联系工作人员",
@@ -146,50 +156,25 @@ defineExpose({ showEdit });
 
 <template>
   <div>
-    <el-drawer
-      v-model="dialogTableVisible"
-      title="项目审核"
-      size="50%"
-      :before-close="closeHandler"
-    >
-      <el-form
-        ref="formRef"
-        :model="formData"
-        :rules="formRules"
-        label-width="174px"
-        :inline="false"
-        v-loading="loading"
-      >
+    <el-drawer v-model="dialogTableVisible" title="项目审核" size="50%" :before-close="closeHandler">
+      <el-form ref="formRef" :model="formData" :rules="formRules" label-width="174px" :inline="false"
+        v-loading="loading">
         <el-row style="margin: 0" :gutter="20">
           <div class="border">
             <p class="pp">项目ID</p>
             <p class="neip">
-              <el-input
-                v-model="form.projectId"
-                placeholder="请输入项目ID"
-                disabled
-                clearable
-              ></el-input>
+              <el-input v-model="form.projectId" placeholder="请输入项目ID" disabled clearable></el-input>
             </p>
           </div>
           <div class="border">
             <p class="pp">项目名称</p>
             <p class="neip">
-              <el-input
-                v-model="form.projectName"
-                disabled
-                placeholder="请输入项目名称"
-                clearable
-              ></el-input>
+              <el-input v-model="form.projectName" disabled placeholder="请输入项目名称" clearable></el-input>
             </p>
           </div>
         </el-row>
         <div class="shenhe">
-          <el-form-item
-            prop="settlementType"
-            style="display: flex; align-items: center"
-            label="审核方式"
-          >
+          <el-form-item prop="settlementType" style="display: flex; align-items: center" label="审核方式">
             <el-radio-group v-model="formData.settlementType">
               <el-radio :value="1" size="large"> 按成功ID </el-radio>
               <el-radio :value="2" size="large"> 按失败ID </el-radio>
@@ -201,43 +186,23 @@ defineExpose({ showEdit });
         </div>
         <div class="beizhu">
           <el-form-item label="备注">
-            <el-input
-              class="custom-input"
-              v-model="formData.remark"
-              placeholder=""
-              clearable
-            />
+            <el-input class="custom-input" v-model="formData.remark" placeholder="" clearable />
           </el-form-item>
         </div>
         <div class="po">
           <el-form-item v-if="checked" label="结算PO号">
-            <el-input
-              v-model="formData.po"
-              class="custom-input"
-              placeholder=""
-              clearable
-              @change=""
-            />
+            <el-input v-model="formData.po" class="custom-input" placeholder="" clearable @change="" />
           </el-form-item>
         </div>
         <el-row style="margin: 0" :gutter="20">
           <el-col :span="20"> </el-col>
           <el-col :span="4">
-            <el-checkbox v-model="checked" label="填写结算PO号" size="large"
-          /></el-col>
+            <el-checkbox v-model="checked" label="填写结算PO号" size="large" /></el-col>
         </el-row>
-        <el-row
-          v-if="formData.settlementType === 1 || formData.settlementType === 2"
-          style="margin: 0; width: 100%"
-          :gutter="20"
-        >
+        <el-row v-if="formData.settlementType === 1 || formData.settlementType === 2" style="margin: 0; width: 100%"
+          :gutter="20">
           <el-form-item style="width: 100%" prop="arr">
-            <el-input
-              v-model="formData.arr"
-              placeholder="请粘贴ID，每行一个,多个请回车换行"
-              type="textarea"
-              :rows="15"
-            />
+            <el-input v-model="formData.arr" placeholder="请粘贴ID，每行一个,多个请回车换行" type="textarea" :rows="15" />
           </el-form-item>
         </el-row>
       </el-form>
@@ -247,6 +212,7 @@ defineExpose({ showEdit });
           <el-button type="primary" @click="onSubmit"> 确定 </el-button>
         </div>
       </template>
+      <progressDetails ref="progressDetailsRef" />
     </el-drawer>
   </div>
 </template>
@@ -257,6 +223,7 @@ defineExpose({ showEdit });
   justify-content: center;
   align-items: center;
 }
+
 .shenhe {
   width: 100%;
   border: 1px solid #ebeef5;
