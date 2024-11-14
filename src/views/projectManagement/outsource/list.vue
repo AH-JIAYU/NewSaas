@@ -61,6 +61,7 @@ const queryForm = reactive<any>({
   tenantId: "", //合作商id
   tenantName: "", //	合作商名称
   projectStatus: "", //	1:进行中(在线) 2:已完成(审核通过) 3:离线
+  receiveStatus:'' ,//1.自动已接收，2.手动未接收
   type: 2,
 });
 const list = ref<any>([]);
