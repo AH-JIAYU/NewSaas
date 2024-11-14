@@ -238,6 +238,12 @@ onBeforeUnmount(() => {
     eventBus.off("get-data-list");
   }
 });
+const current = ref<any>(); //表格当前选中
+
+function handleCurrentChange(val: any) {
+  if (val) current.value = val.id;
+  else current.value = "";
+}
 
 </script>
 
@@ -258,14 +264,24 @@ onBeforeUnmount(() => {
       </el-row>
       <ElTable v-loading="data.loading" :border="data.border" :size="data.lineHeight" :stripe="data.stripe" class="my-4"
         :data="data.dataList" highlight-current-row height="100%" style="min-height: 370px;" sort-change="sortChange"
-        @selection-change="data.batch.selectionDataList = $event" >
+        @selection-change="data.batch.selectionDataList = $event"   @current-change="handleCurrentChange">
         <el-table-column align="left" type="selection" />
         <ElTableColumn v-if="data.batch.enable" type="selection" show-overflow-tooltip align="left" fixed />
         <ElTableColumn v-if="data.checkList.includes('clientId')" show-overflow-tooltip align="left" prop="clientId"
           label="点击ID" width="200">
           <template #default="{ row }">
-            <el-text class="fontColor">{{ row.clientId ? row.clientId : "-" }}</el-text>
-          </template>
+                <div class="copyId tableSmall">
+                  <div class="id oneLine projectId fontColor">{{ row.clientId ? row.clientId : "-" }}</div>
+                  <!-- <copy
+                    :content="row.clientId"
+                    :class="{
+                      rowCopy: 'rowCopy',
+                      current: row.id === current,
+                    }"
+                  /> -->
+                </div>
+              </template>
+
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('typeId')" show-overflow-tooltip align="left" prop=""
           label="供应商/内部站/合作商" width="200">
@@ -277,8 +293,18 @@ onBeforeUnmount(() => {
         <ElTableColumn v-if="data.checkList.includes('projectId')" show-overflow-tooltip align="left" prop="projectId"
           label="项目ID" width="200">
           <template #default="{ row }">
-            <el-text  class="fontColor">{{ row.projectId ? row.projectId : "-" }}</el-text>
-          </template>
+                <div class="copyId tableSmall">
+                  <div class="id oneLine projectId fontColor">{{ row.projectId ? row.projectId : "-" }}</div>
+                  <!-- <copy
+                    :content="row.projectId"
+                    :class="{
+                      rowCopy: 'rowCopy',
+                      current: row.id === current,
+                    }"
+                  /> -->
+                </div>
+              </template>
+
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('type')" show-overflow-tooltip align="left" prop="" label="类型">
           <template #default="{ row }">
@@ -357,6 +383,16 @@ onBeforeUnmount(() => {
 </template>
 
 <style lang="scss" scoped>
+.projectId {
+  font-size: 0.875rem;
+}
+.copyId .current {
+  display: block !important;
+}
+.rowCopy {
+  width: 20px;
+  display: none;
+}
 :deep {
   tbody {
     color: #333;
