@@ -3,20 +3,20 @@ import eventBus from "@/utils/eventBus";
 import api from "@/api/modules/financial_log";
 import useSettingsStore from "@/store/modules/settings";
 import { ref } from "vue";
-import empty from '@/assets/images/empty.png'
+import empty from "@/assets/images/empty.png";
 
 defineOptions({
   name: "financial_log",
 });
 // 时间
-const { format } = useTimeago()
+const { format } = useTimeago();
 const router = useRouter();
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
 const tabbar = useTabbar();
 const settingsStore = useSettingsStore();
-const formSearchList = ref<any>()//表单排序配置
-const formSearchName = ref<string>('formSearch-financial_log')// 表单排序name
+const formSearchList = ref<any>(); //表单排序配置
+const formSearchName = ref<string>("formSearch-financial_log"); // 表单排序name
 // 表格控件-展示列
 const columns = ref<any>([
   // 表格控件-展示列
@@ -152,7 +152,6 @@ function getDataList() {
       pagination.value.total = +res.data.total;
     });
   } catch (error) {
-
   } finally {
     data.value.loading = false;
   }
@@ -200,7 +199,7 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
 }
 
 // 函数来格式化余额
-const formatRemarkWithBalance = (remark:any) => {
+const formatRemarkWithBalance = (remark: any) => {
   const match = remark.match(/[-+]?\d*\.?\d+/);
   if (match) {
     const balance = parseFloat(match[0]).toFixed(2);
@@ -222,17 +221,53 @@ onMounted(() => {
     }
   });
   formSearchList.value = [
-    { index: 1, show: true, type: 'input', modelName: 'supplierId', placeholder: '供应商ID' },
-    { index: 2, show: true, type: 'input', modelName: 'projectId', placeholder: '项目ID' },
-    { index: 3, show: true, type: 'select', modelName: 'operationType', placeholder: '加减款', option: 'operationType', optionLabel: 'label', optionValue: 'value' },
-    { index: 4, show: true, type: 'select', modelName: 'type', placeholder: '类型', option: 'type', optionLabel: 'label', optionValue: 'value' },
-    { index: 5, show: true, type: 'input', modelName: 'TenantId', placeholder: '合作商ID' },
-  ]
+    {
+      index: 1,
+      show: true,
+      type: "input",
+      modelName: "supplierId",
+      placeholder: "供应商ID",
+    },
+    {
+      index: 2,
+      show: true,
+      type: "input",
+      modelName: "projectId",
+      placeholder: "项目ID",
+    },
+    {
+      index: 3,
+      show: true,
+      type: "select",
+      modelName: "operationType",
+      placeholder: "加减款",
+      option: "operationType",
+      optionLabel: "label",
+      optionValue: "value",
+    },
+    {
+      index: 4,
+      show: true,
+      type: "select",
+      modelName: "type",
+      placeholder: "类型",
+      option: "type",
+      optionLabel: "label",
+      optionValue: "value",
+    },
+    {
+      index: 5,
+      show: true,
+      type: "input",
+      modelName: "TenantId",
+      placeholder: "合作商ID",
+    },
+  ];
 });
-const formOption={
-  operationType:()=>payments,
-  type:()=>paymentsType,
-}
+const formOption = {
+  operationType: () => payments,
+  type: () => paymentsType,
+};
 onBeforeUnmount(() => {
   if (data.value.formMode === "router") {
     eventBus.off("get-data-list");
@@ -244,7 +279,6 @@ function handleCurrentChange(val: any) {
   if (val) current.value = val.id;
   else current.value = "";
 }
-
 </script>
 
 <template>
@@ -287,7 +321,18 @@ function handleCurrentChange(val: any) {
           label="供应商/内部站/合作商" width="200">
           <template #default="{ row }">
             <el-text v-if="row.typeId == 1"  class="fontColor">内部调查站</el-text>
-            <el-text v-else  class="fontColor">{{ row.typeId ? row.typeId : "-" }}</el-text>
+
+              <div class="copyId tableSmall fontColor projectId" v-else>
+              {{ row.typeId ? row.typeId : "-" }}
+              <copy
+                    :content="row.clientId"
+                    :class="{
+                      rowCopy: 'rowCopy',
+                      current: row.id === current,
+                    }"
+                  />
+              </div>
+
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('projectId')" show-overflow-tooltip align="left" prop="projectId"
@@ -386,12 +431,15 @@ function handleCurrentChange(val: any) {
 .projectId {
   font-size: 0.875rem;
 }
-.copyId .current {
+.current {
   display: block !important;
 }
 .rowCopy {
   width: 20px;
   display: none;
+}
+.el-table__row:hover .rowCopy {
+  display: block;
 }
 :deep {
   tbody {
@@ -406,10 +454,10 @@ function handleCurrentChange(val: any) {
     color: #fd8989;
   }
 }
- /* 自定义标签背景 */
- .el-tag--dark.el-tag--warning {
-    background-color: #FFAC54 !important;
-  }
+/* 自定义标签背景 */
+.el-tag--dark.el-tag--warning {
+  background-color: #ffac54 !important;
+}
 
 .fontColor {
   color: #333333 !important;
@@ -456,7 +504,5 @@ function handleCurrentChange(val: any) {
       }
     }
   }
-
-
 }
 </style>
