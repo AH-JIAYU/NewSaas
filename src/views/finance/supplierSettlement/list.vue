@@ -143,6 +143,12 @@ onMounted(() => {
 const formOption = {
   billStatus: () => billStatusList
 }
+const current = ref<any>(); //表格当前选中
+
+function handleCurrentChange(val: any) {
+  if (val) current.value = val.id;
+  else current.value = "";
+}
 </script>
 
 <template>
@@ -165,7 +171,7 @@ const formOption = {
         </FormRightPanel>
       </el-row>
       <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="id" :data="list"
-        :border="border" :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows">
+        :border="border" :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows"  highlight-current-row  @current-change="handleCurrentChange">
         <el-table-column type="expand">
           <template #default="props">
             <el-row :gutter="20" style="margin: 10px 0">
@@ -180,11 +186,25 @@ const formOption = {
             </el-row>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('supplierId')" prop="supplierId" show-overflow-tooltip align="left"
+        <el-table-column v-if="checkList.includes('supplierId')" show-overflow-tooltip align="left"
           label="供应商ID" >
-          <template #default="{ row }">
-            <el-text class="fontColor">{{ row.supplierId ? row.supplierId : "-" }}</el-text>
-          </template>
+
+            <template #default="{ row }">
+                <div class="copyId tableSmall">
+                  <div class="id oneLine projectId fontColor">{{ row.supplierId ? row.supplierId : "-" }}</div>
+                  <copy
+                    :content="row.supplierId"
+                    :class="{
+                      rowCopy: 'rowCopy',
+                      current: row.id === current,
+                    }"
+                  />
+                </div>
+              </template>
+
+
+
+
         </el-table-column>
           <el-table-column v-if="checkList.includes('supplierName')" prop="supplierName" show-overflow-tooltip align="left"
           label="供应商名称" >
@@ -253,6 +273,19 @@ const formOption = {
 </template>
 
 <style scoped lang="scss">
+.projectId {
+  font-size: 0.875rem;
+}
+.copyId .current {
+  display: block !important;
+}
+.rowCopy {
+  width: 20px;
+  display: none;
+}
+.el-table__row:hover .rowCopy {
+  display: block;
+}
 .el-pagination {
   margin-top: 15px;
 }

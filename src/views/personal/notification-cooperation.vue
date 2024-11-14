@@ -242,7 +242,7 @@ defineExpose({
               <el-tooltip effect="dark"  placement="top-start">
                 <template #content>
                           <div>自动：您所创建的项目，自动分配给该合作商</div>
-                          <div>手动：您所创建的项目，需要手动分配分配给该合作商</div>
+                          <div>手动：您所创建的项目，需要手动分配给该合作商</div>
                         </template>
                 <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
               </el-tooltip>

@@ -143,6 +143,12 @@ onMounted(async () => {
 const formOption = {
   type: () => statusType.map((item: any) => ({ label: item.label, value: item.value }))
 }
+const current = ref<any>(); //表格当前选中
+
+function handleCurrentChange(val: any) {
+  if (val) current.value = val.id;
+  else current.value = "";
+}
 </script>
 
 <template>
@@ -168,11 +174,27 @@ const formOption = {
         </FormRightPanel>
       </el-row>
       <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="id" :data="list"
-        :border="border" :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows">
+        :border="border" :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows"           highlight-current-row  @current-change="handleCurrentChange">
         <el-table-column align="left" type="selection" />
         <!-- <el-table-column type="index" align="left" label="序号" width="55" /> -->
         <el-table-column v-if="checkList.includes('projectClickId')" prop="projectClickId" show-overflow-tooltip
-          align="left" label="点击ID" />
+          align="left" label="点击ID" >
+
+
+          <template #default="{ row }">
+                <div class="copyId tableSmall">
+                  <div class="id oneLine projectId">{{ row.projectClickId }}</div>
+                  <copy
+                    :content="row.projectClickId"
+                    :class="{
+                      rowCopy: 'rowCopy',
+                      current: row.id === current,
+                    }"
+                  />
+                </div>
+              </template>
+        </el-table-column>
+
         <el-table-column v-if="checkList.includes('beforeType')" prop="beforeType" show-overflow-tooltip align="left"
           label="变更前">
           <template #default="{ row }">
@@ -250,6 +272,19 @@ const formOption = {
 </template>
 
 <style scoped lang="scss">
+.projectId {
+  font-size: 0.875rem;
+}
+.copyId .current {
+  display: block !important;
+}
+.rowCopy {
+  width: 20px;
+  display: none;
+}
+.el-table__row:hover .rowCopy {
+  display: block;
+}
 .el-pagination {
   margin-top: 15px;
 }
