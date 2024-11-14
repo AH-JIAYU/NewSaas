@@ -61,7 +61,7 @@ const columns = ref<any>([
   },
   {
     label: "加减款",
-    prop: "addAndSubtraction",
+    prop: "difference",
     sortable: true,
     disableCheck: false, // 不可更改
     checked: true, // 默认展示
@@ -287,26 +287,26 @@ onBeforeUnmount(() => {
             <CurrencyType /><el-text class="fontColor">{{ row.beforeBalance || 0 }}</el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('addAndSubtraction')" show-overflow-tooltip align="left"
-          prop="addAndSubtraction" width="150" label="加减款" fixed="right"><template #default="{ row }">
+        <ElTableColumn v-if="data.checkList.includes('difference')" show-overflow-tooltip align="left"
+          prop="difference" width="150" label="加减款" fixed="right"><template #default="{ row }">
             <p class="plus" v-if="row.operationType === 1">
             <div class="plusSpan i-majesticons:plus-line w-1em h-1em"></div>
             <el-text class="color3">
-              <CurrencyType />{{ Math.abs(row.addAndSubtraction) }}
+              <CurrencyType />{{ Math.abs(row.difference) }}
             </el-text>
             </p>
             <p class="plus" v-if="row.operationType === 2">
             <div class="minusSign i-iconamoon:sign-minus-bold w-1em h-1em"></div>
             <el-text class="color3">
-              <CurrencyType />{{ Math.abs(row.addAndSubtraction) }}
+              <CurrencyType />{{ Math.abs(row.difference) }}
             </el-text>
             </p>
             <!-- <el-text v-if="row.operationType === 2" type="danger" class="mx-1 ">-
-              <CurrencyType /><el-text class="fontColor tableBig">{{ Math.abs(row.addAndSubtraction) }}</el-text>
+              <CurrencyType /><el-text class="fontColor tableBig">{{ Math.abs(row.difference) }}</el-text>
             </el-text>
             <el-text v-else type="success" class="mx-1 ">
               +
-              <CurrencyType /><el-text class="fontColor tableBig">{{ Math.abs(row.addAndSubtraction) }}</el-text>
+              <CurrencyType /><el-text class="fontColor tableBig">{{ Math.abs(row.difference) }}</el-text>
             </el-text> -->
           </template>
         </ElTableColumn>
