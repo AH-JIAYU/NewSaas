@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
-import api from "@/api/modules/financial_pm_log";
+import api from "@/api/modules/user_cooperation";
 import apiUse from "@/api/modules/configuration_manager";
 import empty from "@/assets/images/empty.png";
 
@@ -22,14 +22,13 @@ const data = ref<any>({
   lineHeight: "default", // 表格控件-控制表格大小
   checkList: [],
   search: {
-    // 分页页码
     page: 1,
-    // 每页数量
     limit: 10,
-    // 用户id
-    userId: null,
-    // 组织架构id
-    organizationalStructureId: null,
+    allocationTenantId: null,
+    projectId: null,
+    clickId: null,
+    operationType: null,
+    type: null,
   },
 });
 const drawerisible = ref<boolean>(false);
@@ -39,13 +38,15 @@ const detailData = ref<any>();
 
 // 加减款
 async function showEdit(row: any) {
-  if (row.organizationalStructureId) {
-    data.value.search.organizationalStructureId = row.organizationalStructureId;
+  console.log('row', row);
+
+  if (row.beInvitationTenantId) {
+    data.value.search.allocationTenantId = row.beInvitationTenantId;
     await getDataList();
-    const ress = await apiUse.queryNotEnableStaffList({
-      organizationalStructureId: data.value.search.organizationalStructureId,
-    });
-    staffList.value = ress.data;
+    // const ress = await apiUse.queryNotEnableStaffList({
+    //   organizationalStructureId: data.value.search.organizationalStructureId,
+    // });
+    // staffList.value = ress.data;
   }
   drawerisible.value = true;
 }
@@ -56,8 +57,8 @@ const getDataList = async () => {
     const params = {
       ...data.value.search,
     };
-    const res = await api.getStaffFinancial(params);
-    detailData.value = res.data.userList;
+    const res = await api.queryCompanyRecordQueryAmount(params);
+    detailData.value = res.data.items;
     pagination.value.total = +res.data.total;
     data.value.loading = false;
   } catch (error) {
@@ -113,7 +114,7 @@ defineExpose({
     @close="close"
   >
     <ElDivider border-style="dashed" />
-    <ElForm
+    <!-- <ElForm
       :model="data.search"
       size="default"
       label-width="100px"
@@ -130,7 +131,7 @@ defineExpose({
         </el-option>
         </el-select>
       </ElFormItem>
-    </ElForm>
+    </ElForm> -->
     <ElTable
       v-loading="data.loading"
       :border="data.border"
@@ -159,13 +160,12 @@ defineExpose({
 </template>
 </ElTableColumn>
 
-<ElTableColumn  show-overflow-tooltip width="120" align="left"
-          prop="type" label="类型">
-          <template #default="{ row }">
+<ElTableColumn show-overflow-tooltip width="120" align="left" prop="type" label="类型">
+  <template #default="{ row }">
   <el-tag v-if="row.type === 1" type="warning" effect="dark">待审余额</el-tag>
   <el-tag v-if="row.type === 2" type="primary" effect="dark">可用余额</el-tag>
 </template>
-        </ElTableColumn>
+</ElTableColumn>
 
 <ElTableColumn show-overflow-tooltip align="left" prop="remark" label="说明"><template #default="{ row }">
   <el-text class="mx-1 color3">{{ row.remark ? row.remark : "-" }}</el-text>
@@ -178,9 +178,8 @@ defineExpose({
   }}</el-text>
 </template>
 </ElTableColumn>
-<ElTableColumn  show-overflow-tooltip align="left"
-          prop="difference" label="加减款" width="120">
-          <template #default="{ row }">
+<ElTableColumn show-overflow-tooltip align="left" prop="difference" label="加减款" width="120">
+  <template #default="{ row }">
             <p class="plus color3" v-if="row.operationType === 1" >
                 <div class="plusSpan i-majesticons:plus-line w-1em h-1em"></div>
               <el-text>
@@ -194,7 +193,7 @@ defineExpose({
               </el-text>
             </p>
           </template>
-        </ElTableColumn>
+</ElTableColumn>
 <ElTableColumn show-overflow-tooltip align="left" prop="afterBalance" width="150" label="变动后">
   <template #default="{ row }">
   <CurrencyType /><el-text class="color3">{{ row.afterBalance || 0 }}</el-text>
@@ -202,7 +201,7 @@ defineExpose({
 </ElTableColumn>
 <ElTableColumn show-overflow-tooltip align="left" prop="createTime" label="时间"><template #default="{ row }">
   <el-tooltip :content="row.createTime" placement="top">
-    <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>
+    <el-tag effect="plain" type="info">{{ format(row.updateTime) }}</el-tag>
   </el-tooltip>
 </template>
 </ElTableColumn>
@@ -285,6 +284,7 @@ defineExpose({
 .plusSpan {
   color: #35cd61;
 }
+
 .minusSign {
   color: #fb6868;
 }

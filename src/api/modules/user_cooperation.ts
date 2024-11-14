@@ -14,12 +14,12 @@ export default {
   updateRescindTenant: (data: any) => api.post("tenantBind/updateRescindTenant", data),
   // 修改租户负责人
   updateInvitationBindUser: (data: any) => api.post("tenantBind/updateInvitationBindUser", data),
-
-
   // 项目列表用
   // 项目分配-查询合作租户列表
   getAllocationBindList: (data: any) => api.post("tenantBind/getAllocationBindList", data),
   // 项目分配-查询合作租户列表
   getTenantSupplierMemberNameInfo: (data: any) => api.post("tenantBind/getTenantSupplierMemberNameInfo", data),
+  // 查询公司财务日志
+  queryCompanyRecordQueryAmount: (data: any) => api.post("financial-record/queryCompanyRecordQueryAmount", data),
 
 };
