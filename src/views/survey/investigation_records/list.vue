@@ -3,7 +3,7 @@ import { onMounted } from "vue";
 import api from "@/api/modules/investigation_records";
 import { ElMessage } from "element-plus";
 import useUserCustomerStore from "@/store/modules/user_customer";
-import empty from '@/assets/images/empty.png'
+import empty from "@/assets/images/empty.png";
 
 defineOptions({
   name: "investigation_records",
@@ -31,8 +31,8 @@ const lineHeight = ref<any>("default");
 const tableAutoHeight = ref(false);
 // 货币类型
 const currencyType = ref<any>();
-const formSearchList = ref<any>()//表单排序配置
-const formSearchName = ref<string>('formSearch-investigation_records')// 表单排序name
+const formSearchList = ref<any>(); //表单排序配置
+const formSearchName = ref<string>("formSearch-investigation_records"); // 表单排序name
 // 表格控件-展示列
 const columns = ref([
   {
@@ -79,7 +79,7 @@ const columns = ref([
 const queryForm = reactive<any>({
   //会员id
   memberId: "",
-  id:'',
+  id: "",
   //随机身份id
   randomIdentityId: "",
   //会员组id
@@ -101,11 +101,11 @@ const data = reactive<any>({
   allocationTypeList: ["未分配", "供应商", "会员组"],
   // 调查状态
   surveyStatusList: [
-    { label: '完成', value: 1 },
-    { label: '被甄别', value: 2 },
-    { label: '配额满', value: 3 },
-    { label: '安全终止', value: 4 },
-    { label: '未完成', value: 5 },
+    { label: "完成", value: 1 },
+    { label: "被甄别", value: 2 },
+    { label: "配额满", value: 3 },
+    { label: "安全终止", value: 4 },
+    { label: "未完成", value: 5 },
   ],
   // 副状态
   viceStatusList: [
@@ -121,7 +121,7 @@ const data = reactive<any>({
     "时间段过载",
     "ip不一致",
     "id重复参与",
-    '和解',
+    "和解",
   ],
   //客户列表
   customerList: [],
@@ -161,7 +161,6 @@ async function fetchData() {
     pagination.value.total = data.total;
     listLoading.value = false;
   } catch (error) {
-
   } finally {
     listLoading.value = false;
   }
@@ -175,7 +174,7 @@ function onReset() {
   Object.assign(queryForm, {
     //会员id
     memberId: "",
-    id:'',
+    id: "",
     //随机身份id
     randomIdentityId: "",
     //会员组id
@@ -202,20 +201,78 @@ onMounted(async () => {
   });
   fetchData();
   formSearchList.value = [
-    { index: 1, show: true, type: 'input', modelName: 'memberId', placeholder: '会员ID' },
-    { index: 2, show: true, type: 'input', modelName: 'randomIdentityId', placeholder: '随机身份', event: 'keydown.enter' },
-    { index: 3, show: true, type: 'input', modelName: 'projectId', placeholder: '项目ID', event: 'keydown.enter' },
-    { index: 4, show: true, type: 'input', modelName: 'projectName', placeholder: '项目名称', event: 'keydown.enter' },
-    { index: 5, show: true, type: 'select', modelName: 'customerId', placeholder: '客户简称', option: 'customerId', optionLabel: 'customerAccord', optionValue: 'tenantCustomerId' },
-    { index: 6, show: true, type: 'input', modelName: 'ip', placeholder: 'IP地址' },
-    { index: 7, show: true, type: 'select', modelName: 'surveyStatus', placeholder: '调查状态', option: 'surveyStatus', optionLabel: 'label', optionValue: 'value' },
-    { index: 8, show: true, type: 'input', modelName: 'id', placeholder: '点击ID', event: 'keydown.enter'},
+    {
+      index: 1,
+      show: true,
+      type: "input",
+      modelName: "memberId",
+      placeholder: "会员ID",
+    },
+    {
+      index: 2,
+      show: true,
+      type: "input",
+      modelName: "randomIdentityId",
+      placeholder: "随机身份",
+      event: "keydown.enter",
+    },
+    {
+      index: 3,
+      show: true,
+      type: "input",
+      modelName: "projectId",
+      placeholder: "项目ID",
+      event: "keydown.enter",
+    },
+    {
+      index: 4,
+      show: true,
+      type: "input",
+      modelName: "projectName",
+      placeholder: "项目名称",
+      event: "keydown.enter",
+    },
+    {
+      index: 5,
+      show: true,
+      type: "select",
+      modelName: "customerId",
+      placeholder: "客户简称",
+      option: "customerId",
+      optionLabel: "customerAccord",
+      optionValue: "tenantCustomerId",
+    },
+    {
+      index: 6,
+      show: true,
+      type: "input",
+      modelName: "ip",
+      placeholder: "IP地址",
+    },
+    {
+      index: 7,
+      show: true,
+      type: "select",
+      modelName: "surveyStatus",
+      placeholder: "调查状态",
+      option: "surveyStatus",
+      optionLabel: "label",
+      optionValue: "value",
+    },
+    {
+      index: 8,
+      show: true,
+      type: "input",
+      modelName: "id",
+      placeholder: "点击ID",
+      event: "keydown.enter",
+    },
   ];
 });
 const formOption = {
   customerId: () => data.customerList,
   surveyStatus: () => data.surveyStatusList,
-}
+};
 const current = ref<any>(); //表格当前选中
 
 function handleCurrentChange(val: any) {
@@ -226,59 +283,124 @@ function handleCurrentChange(val: any) {
 <template>
   <div :class="{ 'absolute-container': tableAutoHeight }">
     <PageMain>
-      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange"
-        @onReset="onReset" :model="queryForm" :formOption="formOption" />
+      <FormSearch
+        :formSearchList="formSearchList"
+        :formSearchName="formSearchName"
+        @currentChange="currentChange"
+        @onReset="onReset"
+        :model="queryForm"
+        :formOption="formOption"
+      />
       <ElDivider border-style="dashed" />
       <el-row>
         <FormLeftPanel />
         <FormRightPanel>
           <el-button size="default"> 导出 </el-button>
-          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
-            v-model:columns="columns" v-model:line-height="lineHeight" v-model:stripe="stripe" style="margin-left: 12px"
-            @query-data="queryData" />
+          <TabelControl
+            v-model:border="border"
+            v-model:tableAutoHeight="tableAutoHeight"
+            v-model:checkList="checkList"
+            v-model:columns="columns"
+            v-model:line-height="lineHeight"
+            v-model:stripe="stripe"
+            style="margin-left: 12px"
+            @query-data="queryData"
+          />
         </FormRightPanel>
       </el-row>
-      <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
-        @selection-change="setSelectRows" @current-change="handleCurrentChange" highlight-current-row>
+      <el-table
+        v-loading="listLoading"
+        :border="border"
+        :data="list"
+        :size="lineHeight"
+        :stripe="stripe"
+        @selection-change="setSelectRows"
+        @current-change="handleCurrentChange"
+        highlight-current-row
+      >
         <el-table-column align="left" type="selection" />
-        <el-table-column v-if="checkList.includes('id')" show-overflow-tooltip align="left" prop="id" fixed="left"
-          label="点击ID" width="200">
+        <el-table-column
+          v-if="checkList.includes('id')"
+          show-overflow-tooltip
+          align="left"
+          prop="id"
+          fixed="left"
+          label="点击ID"
+          width="200"
+        >
           <template #default="{ row }">
+            <div  class="hoverSvg">
             <el-text class="fontColor">{{ row.id ? row.id : "-" }}</el-text>
+            <span class="c-fx">
+              <copy
+                :content="row.randomIdentityId"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.id === current,
+                }"
+              />
+            </span>
+            </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('projectName')" align="left" prop="projectName" show-overflow-tooltip
-          label="项目名称" width="200">
+        <el-table-column
+          v-if="checkList.includes('projectName')"
+          align="left"
+          prop="projectName"
+          show-overflow-tooltip
+          label="项目名称"
+          width="200"
+        >
           <template #default="{ row }">
-            <el-text style="font-weight: 700;color: #333333;">{{ row.projectName ? row.projectName : "-" }}</el-text>
+            <el-text style="font-weight: 700; color: #333333">{{
+              row.projectName ? row.projectName : "-"
+            }}</el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('randomIdentityId')" align="left" prop="randomIdentityId"
-          show-overflow-tooltip label="随机身份" width="200">
+        <el-table-column
+          v-if="checkList.includes('randomIdentityId')"
+          align="left"
+          prop="randomIdentityId"
+          show-overflow-tooltip
+          label="随机身份"
+          width="200"
+        >
           <template #default="{ row }">
             <div v-if="row.randomIdentityId" class="hoverSvg">
               <p class="fineBom">{{ row.randomIdentityId }}</p>
               <span class="c-fx">
-                <copy :content="row.randomIdentityId" :class="{
-    rowCopy: 'rowCopy',
-    current: row.id === current,
-  }" />
+                <copy
+                  :content="row.randomIdentityId"
+                  :class="{
+                    rowCopy: 'rowCopy',
+                    current: row.id === current,
+                  }"
+                />
                 <!-- <copy class="copy" :content="row.randomIdentityId" /> -->
               </span>
             </div>
             <el-text v-else>-</el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('memberId')" align="left" prop="memberId" show-overflow-tooltip
-          width="200" label="会员ID">
+        <el-table-column
+          v-if="checkList.includes('memberId')"
+          align="left"
+          prop="memberId"
+          show-overflow-tooltip
+          width="200"
+          label="会员ID"
+        >
           <template #default="{ row }">
             <div v-if="row.memberId" class="hoverSvg">
               <p class="fineBom">{{ row.memberId }}</p>
               <span class="c-fx">
-                <copy :content="row.memberId" :class="{
-    rowCopy: 'rowCopy',
-    current: row.id === current,
-  }" />
+                <copy
+                  :content="row.memberId"
+                  :class="{
+                    rowCopy: 'rowCopy',
+                    current: row.id === current,
+                  }"
+                />
                 <!-- <copy class="copy" :content="row.memberId" /> -->
               </span>
             </div>
@@ -286,16 +408,25 @@ function handleCurrentChange(val: any) {
           </template>
         </el-table-column>
 
-        <el-table-column v-if="checkList.includes('projectId')" align="left" prop="projectId" show-overflow-tooltip
-          width="200" label="项目ID">
+        <el-table-column
+          v-if="checkList.includes('projectId')"
+          align="left"
+          prop="projectId"
+          show-overflow-tooltip
+          width="200"
+          label="项目ID"
+        >
           <template #default="{ row }">
             <div v-if="row.projectId" class="hoverSvg">
               <p class="fineBom">{{ row.projectId }}</p>
               <span class="c-fx">
-                <copy :content="row.projectId" :class="{
-    rowCopy: 'rowCopy',
-    current: row.id === current,
-  }" />
+                <copy
+                  :content="row.projectId"
+                  :class="{
+                    rowCopy: 'rowCopy',
+                    current: row.id === current,
+                  }"
+                />
                 <!-- <copy class="copy" :content="row.projectId" /> -->
               </span>
             </div>
@@ -309,136 +440,305 @@ function handleCurrentChange(val: any) {
               }}</el-text>
           </template>
         </el-table-column> -->
-        <el-table-column v-if="checkList.includes('memberName')" width="200" align="left" prop="memberName"
-          show-overflow-tooltip label="部门">
+        <el-table-column
+          v-if="checkList.includes('memberName')"
+          width="200"
+          align="left"
+          prop="memberName"
+          show-overflow-tooltip
+          label="部门"
+        >
           <template #default="{ row }">
             <div v-if="row.memberName" class="hoverSvg">
-              <el-text style="color: #333333;">{{ row.memberName.split('/')[0] }}</el-text>
+              <el-text style="color: #333333">{{
+                row.memberName.split("/")[0]
+              }}</el-text>
               &nbsp;&nbsp;
-              <p class="fineBom">{{ row.memberName.split('/')[1] }}</p>
+              <p class="fineBom">{{ row.memberName.split("/")[1] }}</p>
               <span class="c-fx">
-                <copy :content="row.memberName.split('/')[1]" :class="{
-    rowCopy: 'rowCopy',
-    current: row.id === current,
-  }" />
+                <copy
+                  :content="row.memberName.split('/')[1]"
+                  :class="{
+                    rowCopy: 'rowCopy',
+                    current: row.id === current,
+                  }"
+                />
                 <!-- <copy class="copy" :content="row.memberName.split('/')[1]" /> -->
               </span>
             </div>
             <el-text v-else>-</el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('allocationType')" align="left" show-overflow-tooltip width="100"
-          label="分配类型" fixed="right">
+        <el-table-column
+          v-if="checkList.includes('allocationType')"
+          align="left"
+          show-overflow-tooltip
+          width="100"
+          label="分配类型"
+          fixed="right"
+        >
           <template #default="{ row }">
-            <el-tag effect="plain" type="info" v-if="row.allocationType === 1"> 未分配 </el-tag>
-            <el-tag style="background-color: #626aef;color: #fff;" v-if="row.allocationType === 2">
+            <el-tag effect="plain" type="info" v-if="row.allocationType === 1">
+              未分配
+            </el-tag>
+            <el-tag
+              style="background-color: #626aef; color: #fff"
+              v-if="row.allocationType === 2"
+            >
               供应商
             </el-tag>
-            <el-tag style="background-color: #05C9BE;color: #fff;" v-if="row.allocationType === 3">
+            <el-tag
+              style="background-color: #05c9be; color: #fff"
+              v-if="row.allocationType === 3"
+            >
               会员组
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('doMoneyPrice')" width="120" align="left" prop="h"
-          show-overflow-tooltip label="项目价" fixed="right">
+        <el-table-column
+          v-if="checkList.includes('doMoneyPrice')"
+          width="120"
+          align="left"
+          prop="h"
+          show-overflow-tooltip
+          label="项目价"
+          fixed="right"
+        >
           <template #default="{ row }">
             <el-text>
               <CurrencyType />
             </el-text>
-            <el-text style="color: #333333;">
+            <el-text style="color: #333333">
               {{ row.doMoneyPrice || 0 }}
             </el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('memberPrice')" width="120" align="left" prop="h"
-          show-overflow-tooltip label="成本价(会员)" fixed="right">
+        <el-table-column
+          v-if="checkList.includes('memberPrice')"
+          width="120"
+          align="left"
+          prop="h"
+          show-overflow-tooltip
+          label="成本价(会员)"
+          fixed="right"
+        >
           <template #default="{ row }">
             <el-text>
               <CurrencyType />
             </el-text>
-            <el-text style="color: #333333;">
+            <el-text style="color: #333333">
               {{ row.memberPrice || 0 }}
             </el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('ipBelong')" align="left" width="150" prop="ipBelong"
-          show-overflow-tooltip label="区域/IP" fixed="right">
+        <el-table-column
+          v-if="checkList.includes('ipBelong')"
+          align="left"
+          width="150"
+          prop="ipBelong"
+          show-overflow-tooltip
+          label="区域/IP"
+          fixed="right"
+        >
           <template #default="{ row }">
             <div v-if="row.ipBelong" class="hoverSvg">
-              <el-tag >{{ row.ipBelong.split("/")[1]
-                }}</el-tag>
+              <el-tag>{{ row.ipBelong.split("/")[1] }}</el-tag>
               &nbsp;&nbsp;
               <p class="fineBom">
-                {{ row.ipBelong.split("/")[0] }}</p>
-              <copy :content="row.ipBelong.split('/')[0]" :class="{
-    rowCopy: 'rowCopy',
-    current: row.id === current,
-  }" />
+                {{ row.ipBelong.split("/")[0] }}
+              </p>
+              <copy
+                :content="row.ipBelong.split('/')[0]"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.id === current,
+                }"
+              />
               <!-- <copy class="copy" :content="row.ipBelong.split('/')[0]" /> -->
-
             </div>
             <el-text v-else>-</el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('surveyTime')" align="left" show-overflow-tooltip label="调查时间" width="120" fixed="right">
+        <el-table-column
+          v-if="checkList.includes('surveyTime')"
+          align="left"
+          show-overflow-tooltip
+          label="调查时间"
+          width="120"
+          fixed="right"
+        >
           <template #default="{ row }">
             <el-tooltip placement="top">
               <template #content>
                 <div>
-                  <el-text style="color: #fff;">开始时间：{{ row.surveyStartTime }}</el-text>
-                  <br>
-                  <el-text style="color: #fff;">结束时间：{{ row.surveyEndTime ? row.surveyEndTime : '-' }}</el-text>
+                  <el-text style="color: #fff"
+                    >开始时间：{{ row.surveyStartTime }}</el-text
+                  >
+                  <br />
+                  <el-text style="color: #fff"
+                    >结束时间：{{
+                      row.surveyEndTime ? row.surveyEndTime : "-"
+                    }}</el-text
+                  >
                 </div>
               </template>
-              <el-tag effect="plain" type="info"> {{ row.surveyTime ? row.surveyTime + "min" : 0 }}/
-                {{ row.projectTime ? row.projectTime + "min" : 0 }} </el-tag>
+              <el-tag effect="plain" type="info">
+                {{ row.surveyTime ? row.surveyTime + "min" : 0 }}/
+                {{ row.projectTime ? row.projectTime + "min" : 0 }}
+              </el-tag>
             </el-tooltip>
           </template>
         </el-table-column>
-        <ElTableColumn v-if="checkList.includes('surveyStatus')" align="left" show-overflow-tooltip prop=""
-          label="调查状态" width="100" fixed="right">
+        <ElTableColumn
+          v-if="checkList.includes('surveyStatus')"
+          align="left"
+          show-overflow-tooltip
+          prop=""
+          label="调查状态"
+          width="100"
+          fixed="right"
+        >
           <template #default="{ row }">
-            <el-tag effect="dark" style="background-color: #FB6868;border: none;" v-if="row.surveyStatus === 3"
-              class="mx-1" type="primary" fixed="right">配额满</el-tag>
+            <el-tag
+              effect="dark"
+              style="background-color: #fb6868; border: none"
+              v-if="row.surveyStatus === 3"
+              class="mx-1"
+              type="primary"
+              fixed="right"
+              >配额满</el-tag
+            >
             <!-- <el-tag effect="dark" style="background-color: #379AFF;border: none;" v-if="row.surveyStatus === 1"
               class="mx-1" type="success">完成</el-tag> -->
-            <el-tag effect="dark" style="background-color: #FB6868;border: none;" v-if="row.surveyStatus === 2"
-              class="mx-1" type="danger">被甄别</el-tag>
-            <el-tag effect="dark" style="background-color: #05C9BE;border: none;" v-if="row.surveyStatus === 4"
-              class="mx-1" type="warning">安全终止</el-tag>
-            <el-tag effect="dark" style="background-color: #E1E1E1;border: none;" v-if="row.surveyStatus === 5"
-              class="mx-1">未完成</el-tag>
-            <el-tag effect="dark" style="background-color: #74868b; border: none"
-              v-if="row.surveyStatus === 1 && row.viceStatus === 1" class="mx-1" type="success">待审</el-tag>
-            <el-tag effect="dark" style="background-color: #475061; border: none"
-              v-if="row.surveyStatus === 1 && row.viceStatus === 2" class="mx-1" type="danger">完成</el-tag>
-            <el-tag effect="dark" style="background-color: #3e5c78; border: none"
-              v-if="row.surveyStatus === 1 && row.viceStatus === 3" class="mx-1" type="primary">过IR</el-tag>
-            <el-tag effect="dark" style="background-color: #c8c7bc; border: none"
-              v-if="row.surveyStatus === 1 && row.viceStatus === 4" class="mx-1" type="warning">时间过短</el-tag>
-            <el-tag effect="dark" style="background-color: #bcc8b8; border: none"
-              v-if="row.surveyStatus === 1 && row.viceStatus === 5" class="mx-1">超时完成</el-tag>
-            <el-tag effect="dark" style="background-color: #ded6cb; border: none"
-              v-if="row.surveyStatus === 1 && row.viceStatus === 6" class="mx-1">超量完成</el-tag>
-            <el-tag effect="dark" style="background-color: #03c239; border: none"
-              v-if="row.surveyStatus === 1 && row.viceStatus === 7" class="mx-1">审核成功</el-tag>
-            <el-tag effect="dark" style="background-color: #fb6868; border: none"
-              v-if="row.surveyStatus === 1 && row.viceStatus === 8" class="mx-1">审核失败</el-tag>
-            <el-tag effect="dark" style="background-color: #fb6868; border: none"
-              v-if="row.surveyStatus === 1 && row.viceStatus === 9" class="mx-1">数据冻结</el-tag>
-            <el-tag effect="dark" style="background-color: #6683a2; border: none"
-              v-if="row.surveyStatus === 1 && row.viceStatus === 10" class="mx-1">时间段过载</el-tag>
-            <el-tag effect="dark" style="background-color: #638d93; border: none"
-              v-if="row.surveyStatus === 1 && row.viceStatus === 11" class="mx-1">IP不一致</el-tag>
-            <el-tag effect="dark" style="background-color: #626a73; border: none"
-              v-if="row.surveyStatus === 1 && row.viceStatus === 12" class="mx-1">ID重复参与</el-tag>
-            <el-tag effect="dark" style="background-color: #03c239; border: none"
-              v-if="row.surveyStatus === 1 && row.viceStatus === 13" class="mx-1">和解</el-tag>
+            <el-tag
+              effect="dark"
+              style="background-color: #fb6868; border: none"
+              v-if="row.surveyStatus === 2"
+              class="mx-1"
+              type="danger"
+              >被甄别</el-tag
+            >
+            <el-tag
+              effect="dark"
+              style="background-color: #05c9be; border: none"
+              v-if="row.surveyStatus === 4"
+              class="mx-1"
+              type="warning"
+              >安全终止</el-tag
+            >
+            <el-tag
+              effect="dark"
+              style="background-color: #e1e1e1; border: none"
+              v-if="row.surveyStatus === 5"
+              class="mx-1"
+              >未完成</el-tag
+            >
+            <el-tag
+              effect="dark"
+              style="background-color: #74868b; border: none"
+              v-if="row.surveyStatus === 1 && row.viceStatus === 1"
+              class="mx-1"
+              type="success"
+              >待审</el-tag
+            >
+            <el-tag
+              effect="dark"
+              style="background-color: #475061; border: none"
+              v-if="row.surveyStatus === 1 && row.viceStatus === 2"
+              class="mx-1"
+              type="danger"
+              >完成</el-tag
+            >
+            <el-tag
+              effect="dark"
+              style="background-color: #3e5c78; border: none"
+              v-if="row.surveyStatus === 1 && row.viceStatus === 3"
+              class="mx-1"
+              type="primary"
+              >过IR</el-tag
+            >
+            <el-tag
+              effect="dark"
+              style="background-color: #c8c7bc; border: none"
+              v-if="row.surveyStatus === 1 && row.viceStatus === 4"
+              class="mx-1"
+              type="warning"
+              >时间过短</el-tag
+            >
+            <el-tag
+              effect="dark"
+              style="background-color: #bcc8b8; border: none"
+              v-if="row.surveyStatus === 1 && row.viceStatus === 5"
+              class="mx-1"
+              >超时完成</el-tag
+            >
+            <el-tag
+              effect="dark"
+              style="background-color: #ded6cb; border: none"
+              v-if="row.surveyStatus === 1 && row.viceStatus === 6"
+              class="mx-1"
+              >超量完成</el-tag
+            >
+            <el-tag
+              effect="dark"
+              style="background-color: #03c239; border: none"
+              v-if="row.surveyStatus === 1 && row.viceStatus === 7"
+              class="mx-1"
+              >审核成功</el-tag
+            >
+            <el-tag
+              effect="dark"
+              style="background-color: #fb6868; border: none"
+              v-if="row.surveyStatus === 1 && row.viceStatus === 8"
+              class="mx-1"
+              >审核失败</el-tag
+            >
+            <el-tag
+              effect="dark"
+              style="background-color: #fb6868; border: none"
+              v-if="row.surveyStatus === 1 && row.viceStatus === 9"
+              class="mx-1"
+              >数据冻结</el-tag
+            >
+            <el-tag
+              effect="dark"
+              style="background-color: #6683a2; border: none"
+              v-if="row.surveyStatus === 1 && row.viceStatus === 10"
+              class="mx-1"
+              >时间段过载</el-tag
+            >
+            <el-tag
+              effect="dark"
+              style="background-color: #638d93; border: none"
+              v-if="row.surveyStatus === 1 && row.viceStatus === 11"
+              class="mx-1"
+              >IP不一致</el-tag
+            >
+            <el-tag
+              effect="dark"
+              style="background-color: #626a73; border: none"
+              v-if="row.surveyStatus === 1 && row.viceStatus === 12"
+              class="mx-1"
+              >ID重复参与</el-tag
+            >
+            <el-tag
+              effect="dark"
+              style="background-color: #03c239; border: none"
+              v-if="row.surveyStatus === 1 && row.viceStatus === 13"
+              class="mx-1"
+              >和解</el-tag
+            >
             <el-text v-if="row.settlementRemarks">
-              <div v-if="row.settlementRemarks === '结算成功'" style="color:#4797fb;"
-                class="i-healthicons:yes w-1.3em h-1.3em"></div>
-              <div v-if="row.settlementRemarks === '结算失败'" style="color:#f1756c;"
-                class="i-healthicons:no w-1.3em h-1.3em"></div>
+              <div
+                v-if="row.settlementRemarks === '结算成功'"
+                style="color: #4797fb"
+                class="i-healthicons:yes w-1.3em h-1.3em"
+              ></div>
+              <div
+                v-if="row.settlementRemarks === '结算失败'"
+                style="color: #f1756c"
+                class="i-healthicons:no w-1.3em h-1.3em"
+              ></div>
             </el-text>
           </template>
         </ElTableColumn>
@@ -482,9 +782,18 @@ function handleCurrentChange(val: any) {
           <el-empty :image="empty" :image-size="300" />
         </template>
       </el-table>
-      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
-        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-        background @size-change="sizeChange" @current-change="currentChange" />
+      <ElPagination
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
+        :page-sizes="pagination.sizes"
+        :layout="pagination.layout"
+        :hide-on-single-page="false"
+        class="pagination"
+        background
+        @size-change="sizeChange"
+        @current-change="currentChange"
+      />
     </PageMain>
   </div>
 </template>
@@ -556,7 +865,7 @@ function handleCurrentChange(val: any) {
 }
 
 .fineBom {
-  font-size: .875rem;
+  font-size: 0.875rem;
   color: #333333;
   white-space: nowrap;
   overflow: hidden;

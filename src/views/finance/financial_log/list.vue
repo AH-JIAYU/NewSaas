@@ -272,13 +272,13 @@ function handleCurrentChange(val: any) {
           <template #default="{ row }">
                 <div class="copyId tableSmall">
                   <div class="id oneLine projectId fontColor">{{ row.clientId ? row.clientId : "-" }}</div>
-                  <!-- <copy
+                  <copy
                     :content="row.clientId"
                     :class="{
                       rowCopy: 'rowCopy',
                       current: row.id === current,
                     }"
-                  /> -->
+                  />
                 </div>
               </template>
 
@@ -295,13 +295,13 @@ function handleCurrentChange(val: any) {
           <template #default="{ row }">
                 <div class="copyId tableSmall">
                   <div class="id oneLine projectId fontColor">{{ row.projectId ? row.projectId : "-" }}</div>
-                  <!-- <copy
+                  <copy
                     :content="row.projectId"
                     :class="{
                       rowCopy: 'rowCopy',
                       current: row.id === current,
                     }"
-                  /> -->
+                  />
                 </div>
               </template>
 
