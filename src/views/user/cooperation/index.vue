@@ -364,7 +364,6 @@ function userData(data1: any) {
           v-if="checkList.includes('bindStatus')"
           align="left"
           prop="sendProjectType"
-          show-overflow-tooltip
           label="发送项目"
           width="160"
         >
@@ -391,7 +390,6 @@ function userData(data1: any) {
           v-if="checkList.includes('receiveProjectType')"
           align="left"
           prop="receiveProjectType"
-          show-overflow-tooltip
           label="接收项目"
           width="160"
         >
