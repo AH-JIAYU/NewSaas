@@ -242,7 +242,7 @@ function handleCurrentChange(val: any) {
           align="left" label="操作人"><template #default="{ row }">
             <div v-for="item in userList" :key="item.id">
               <el-text v-if="item.id === row.createUserId">
-                {{ item.name }}</el-text>
+                {{ item.userName }}</el-text>
             </div>
           </template>
         </el-table-column>
