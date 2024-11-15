@@ -1,0 +1,9 @@
+
+/**
+ * 由 Fantastic-admin 提供技术支持
+ * Powered by Fantastic-admin
+ * Gitee  https://fantastic-admin.gitee.io
+ * Github https://fantastic-admin.github.io
+ */
+
+import{_ as x}from"./index-CG3RAyvu.js";import{d as E,H as B,I as k,v as R,r as w,a as n,o as S,b as h,f as e,w as t,g as s,i as c,x as y,_ as F,av as M,ao as z,L as D}from"./index-DzpGFSc8.js";import{D as I}from"./index-B_0B6IUN.js";import{u as L}from"./useTabbar-B7BPHie8.js";const N=E({name:"ConfigurationApplicationCenterDetail",__name:"detail",setup(T){const l=B(),_=k(),m=L(),r=R(),i=w();function u(){i.value.submit().then(()=>{y.emit("get-data-list"),o()})}function f(){o()}function o(){r.settings.tabbar.enable&&r.settings.tabbar.mergeTabsBy!=="activeMenu"?m.close({name:"pagesExampleGeneralFormModeList"}):_.push({name:"pagesExampleGeneralFormModeList"})}return($,A)=>{const p=F,a=n("ElButton"),d=M,g=n("ElCol"),b=n("ElRow"),C=z,v=x;return S(),h("div",null,[e(d,{title:c(l).name==="routerName"?"新增应用中心":"编辑应用中心"},{default:t(()=>[e(a,{size:"default",round:"",onClick:o},{icon:t(()=>[e(p,{name:"i-ep:arrow-left"})]),default:t(()=>[s(" 返回 ")]),_:1})]),_:1},8,["title"]),e(C,null,{default:t(()=>[e(b,null,{default:t(()=>[e(g,{md:24,lg:16},{default:t(()=>[e(I,{id:c(l).params.id,ref_key:"formRef",ref:i},null,8,["id"])]),_:1})]),_:1})]),_:1}),e(v,null,{default:t(()=>[e(a,{type:"primary",size:"large",onClick:u},{default:t(()=>[s(" 提交 ")]),_:1}),e(a,{size:"large",onClick:f},{default:t(()=>[s(" 取消 ")]),_:1})]),_:1})])}}}),j=D(N,[["__scopeId","data-v-6f9be788"]]);export{j as default};
