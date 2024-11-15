@@ -19,7 +19,7 @@ const columns = ref<any>([
   // 表格控件-展示列
   {
     label: "点击ID",
-    prop: "clientId",
+    prop: "clickId",
     sortable: true,
     disableCheck: false, // 不可更改
     checked: true, // 默认展示
@@ -242,10 +242,10 @@ onBeforeUnmount(() => {
         @selection-change="data.batch.selectionDataList = $event">
         <el-table-column align="left" type="selection" />
         <ElTableColumn v-if="data.batch.enable" type="selection" show-overflow-tooltip align="left" fixed />
-        <ElTableColumn v-if="data.checkList.includes('clientId')" show-overflow-tooltip align="left" prop="clientId"
+        <ElTableColumn v-if="data.checkList.includes('clickId')" show-overflow-tooltip align="left" prop="clickId"
           label="点击ID" width="200">
           <template #default="{ row }">
-            <el-text class="fontColor">{{ row.clientId ? row.clientId : "-" }}</el-text>
+            <el-text class="fontColor">{{ row.clickId ? row.clickId : "-" }}</el-text>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('typeId')" show-overflow-tooltip align="left" prop=""
