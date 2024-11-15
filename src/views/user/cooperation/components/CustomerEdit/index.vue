@@ -69,11 +69,9 @@ async function showEdit() {
   if (res.data) {
     departmentList.value = res.data;
   }
-  // console.log(departmentList.value, "departmentList.valu");
 }
 // 树选中事件
 const handleNodeClick = (nodeData: any, checked: any) => {
-  // console.log(nodeData,checked,'ccc')
   if (checked) {
     // 选中新的节点时，取消其他选中的节点
     const checkedKeys = treeRef.value.getCheckedKeys(); // 获取当前所有选中的节点
@@ -90,7 +88,6 @@ const handleNodeClick = (nodeData: any, checked: any) => {
     // setTimeout(() => {
     //   selectTreeRef.value.blur(); // 失去焦点，关闭下拉框
     // }, 100);
-    // console.log(data.value.form.chargeUserName,'data.value.form.chargeUserName')
   } else {
     // 如果取消选中节点，更新 chargeUserId
     data.value.form.chargeUserId = [data.value.form.chargeUserId].filter(
@@ -103,8 +100,6 @@ const handleNodeClick = (nodeData: any, checked: any) => {
   if (!data.value.form.chargeUserId) {
     data.value.form.chargeUserName = "";
   }
-  console.log(data.value.form.chargeUserName, "data.value.form.chargeUserName");
-  console.log(data.value.form.chargeUserId, "data.value.form.chargeUserId");
 };
 // 获取合作商列表
 async function getTenantUserList() {

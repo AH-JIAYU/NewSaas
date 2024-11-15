@@ -4,7 +4,7 @@
       <!-- 只显示一个进度条 -->
       <el-progress :percentage="progress.percentage" :text-inside="true"
         :status="progress.percentage === 100 ? 'success' : 'warning'"></el-progress>
-      <p>任务进度: {{ progress.current }}/{{ progress.count }}</p>
+      <p style="margin-top: .625rem;">任务进度: {{ progress.current }}/{{ progress.count }}</p>
     </el-dialog>
   </div>
 </template>
@@ -46,6 +46,8 @@ async function showEdit(row: any) {
               dialogTableVisible.value = false;
             },1000)
           }
+        }else {
+          clearInterval(intervalId); // 如果请求失败，停止定时器
         }
       } catch (error) {
         console.error('接口请求失败:', error);
@@ -59,7 +61,6 @@ const channelObj = new BroadcastChannel("televiseChannel");
 channelObj.onmessage = function () {
   setTimeout(async () => {
     console.log(11111111111111);
-
     clearInterval(intervalId);
     dialogTableVisible.value = false;
   }, 1000);

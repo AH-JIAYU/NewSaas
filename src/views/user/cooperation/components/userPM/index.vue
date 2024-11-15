@@ -107,7 +107,6 @@ const handleNodeClick = (nodeData: any, checked: any) => {
     // setTimeout(() => {
     //   selectTreeRef.value.blur(); // 失去焦点，关闭下拉框
     // }, 100);
-    // console.log(data.value.form.chargeUserName,'data.value.form.chargeUserName')
   } else {
     // 如果取消选中节点，更新 chargeUserId
     data.value.form.chargeUserId = [data.value.form.chargeUserId].filter(
@@ -120,8 +119,6 @@ const handleNodeClick = (nodeData: any, checked: any) => {
   if(!data.value.form.chargeUserId){
     data.value.form.chargeUserName =''
   }
-  console.log(data.value.form.chargeUserName,'data.value.form.chargeUserName')
-  console.log(data.value.form.chargeUserId, "data.value.form.chargeUserId");
 };
 </script>
 

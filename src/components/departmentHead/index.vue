@@ -90,7 +90,6 @@ const handleNodeClick = (nodeData: any, checked: any) => {
     data.value.roleList = [];
     const checkedNodes = treeRef.value.getCheckedNodes();
     data.value.chargeUserName = checkedNodes.map((node: any) => node.name)[0];
-    // console.log(data.value.chargeUserName,'data.value.chargeUserName')
   } else {
     // data.value.chargeUserName = ''
   }
@@ -103,7 +102,6 @@ const fetchData = () => {
 };
 // 处理选中项变化的逻辑，确保最多只能选择一个
 const handleCheckboxChange = (newValue: any) => {
-  // console.log(newValue,'newValue')
   if (Array.isArray(newValue) && newValue.length > 1) {
     // 只有一个选项可以被选中，取最后一个选中的
     data.value.roleList = [newValue[newValue.length - 1]];
@@ -142,8 +140,6 @@ function submit() {
     chargeUserId = data.value.roleList[0];
     invitationType = 1;
   }
-  // console.log(departmentId.value,'departmentId.value')
-  // console.log(departmentList.value,'departmentList.value')
   if (departmentId.value[0]) {
     //获取部门名称
     // 获取所有选中的节点

@@ -234,7 +234,6 @@ const userRef = ref();
 //接收-批量
 function addReceiveAll() {
   const selectList = tableSortRef2.value.getSelectionRows();
-  console.log(selectList.length,'selectList')
   if (selectList.length ==0) {
     ElMessage.warning({
       message: "请选择一个项目",

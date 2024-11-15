@@ -94,7 +94,6 @@ async function onSubmit() {
             // 发送消息
             channelObj.postMessage("我在子页面提交了,需要刷新列表");
             // console.log(2222222222);
-            // progressDetailsRef.value.showEdit(form.value.projectId)
             // 更新列表
             emits("success");
             // 关闭加载
