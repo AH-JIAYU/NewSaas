@@ -103,10 +103,11 @@ async function onSubmit() {
               message: "操作成功",
               center: true,
             });
+            closeHandler();
             // 执行关闭弹框事件
-            setTimeout(() => {
-              closeHandler();
-            }, 3000);
+            // setTimeout(() => {
+
+            // }, 3000);
           } else {
             ElMessage.error({
               message: "操作失败，请联系工作人员",

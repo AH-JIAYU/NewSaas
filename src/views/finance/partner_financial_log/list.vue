@@ -204,6 +204,7 @@ onMounted(() => {
     }
   });
   formSearchList.value = [
+    { index: 1, show: true, type: 'input', modelName: 'clickId', placeholder: '点击ID' },
     { index: 1, show: true, type: 'input', modelName: 'allocationTenantId', placeholder: '合作商ID' },
     { index: 2, show: true, type: 'input', modelName: 'projectId', placeholder: '项目ID' },
     { index: 3, show: true, type: 'select', modelName: 'operationType', placeholder: '加减款', option: 'operationType', optionLabel: 'label', optionValue: 'value' },

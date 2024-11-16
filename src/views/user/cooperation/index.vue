@@ -29,7 +29,7 @@ const checkList = ref<any>([]); // 表格控件-展示列
 const QuickEditRef = ref(); //快速编辑
 const columns = ref([
   {
-    label: "合作商id",
+    label: "合作商ID",
     checked: true,
     sortable: true,
     prop: "beInvitationTenantId",
@@ -59,6 +59,13 @@ const columns = ref([
     checked: true,
     sortable: true,
     prop: "availableBalance",
+  },
+  { label: "个人待审金额", checked: true, sortable: true, prop: "personalPendBalance" },
+  {
+    label: "个人可用金额",
+    checked: true,
+    sortable: true,
+    prop: "personalAvailableBalance",
   },
   { label: "发送项目", checked: true, sortable: true, prop: "sendProjectType" },
   {
@@ -448,6 +455,7 @@ function userData(data1: any) {
           align="left"
           prop="beInvitationTenantName"
           show-overflow-tooltip
+          width="130"
           label="合作商公司名称"
         >
           <template #default="{ row }">
@@ -458,12 +466,13 @@ function userData(data1: any) {
           v-if="checkList.includes('userName')"
           align="left"
           prop="userName"
+          width="100"
           show-overflow-tooltip
           label="负责部门"
         >
           <template #default="{ row }">
             <div class="flex-s">
-              <div class="fontC-System">{{ row.userName }}</div>
+              <div class="fontC-System">{{ row.userName ? row.userName : '-' }}</div>
               <SvgIcon
                 v-if="row.projectType !== 2"
                 @click="quickEdit(row, 'chargeUserId')"
@@ -508,6 +517,34 @@ function userData(data1: any) {
           <template #default="{ row }">
             <div class="fontC-System">
               <CurrencyType />{{ row.availableBalance || 0 }}
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="checkList.includes('personalPendBalance')"
+          align="left"
+          prop="personalPendBalance"
+          show-overflow-tooltip
+          width="120"
+          label="个人待审金额"
+        >
+          <template #default="{ row }">
+            <div class="fontC-System">
+              <CurrencyType />{{ row.personalPendBalance || 0 }}
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="checkList.includes('personalAvailableBalance')"
+          align="left"
+          width="120"
+          prop="personalAvailableBalance"
+          show-overflow-tooltip
+          label="个人可用金额"
+        >
+          <template #default="{ row }">
+            <div class="fontC-System">
+              <CurrencyType />{{ row.personalAvailableBalance || 0 }}
             </div>
           </template>
         </el-table-column>
