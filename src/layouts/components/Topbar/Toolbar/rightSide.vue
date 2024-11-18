@@ -105,7 +105,7 @@ const logout =()=> {
                 class="padding-8"
               >
                 <div>
-                  <img src="../../../../assets/images/member.png" />
+                  <img src="@/assets/images/member.png" />
                   <span class="color2" style="margin-left: 0.5rem">试用版</span>
                 </div>
                 <div class="font-w font-s12 margin-t8">到期时间:</div>
@@ -117,19 +117,19 @@ const logout =()=> {
           </div>
           <div class="item-2 padding-8 " >
             <div class=" padding-t12 flex-item " @click="getPerson">
-              <img src="../../../../assets/images/geren.png" style="width: 1rem;height: 1rem;margin-left: 0.5rem;" />
+              <img src="@/assets/images/geren.png" style="width: 1rem;height: 1rem;margin-left: 0.5rem;" />
               <span style="margin-left: 0.5rem" class="color1 hover-item">个人中心</span>
             </div>
             <div class=" padding-t12  flex-item " @click="getSite">
-              <img src="../../../../assets/images/dizhi.png" style="width: 1rem;height: 1rem;margin-left: 0.5rem;" />
+              <img src="@/assets/images/dizhi.png" style="width: 1rem;height: 1rem;margin-left: 0.5rem;" />
               <span style="margin-left: 0.5rem" class="color1 hover-item"> 站点设置</span>
             </div>
             <div class=" padding-t12  flex-item ">
-              <img src="../../../../assets/images/kefu.png" style="width: 1rem;height: 1rem;margin-left: 0.5rem;" />
+              <img src="@/assets/images/kefu.png" style="width: 1rem;height: 1rem;margin-left: 0.5rem;" />
               <span style="margin-left: 0.5rem" class="color1 hover-item"> 官方客服</span>
             </div>
             <div class=" padding-t12  flex-item " @click="getTenantry">
-              <img src="../../../../assets/images/hezuozuhu.png" style="width: 1rem;height: 1rem;margin-left: 0.5rem;" />
+              <img src="@/assets/images/hezuozuhu.png" style="width: 1rem;height: 1rem;margin-left: 0.5rem;" />
               <span style="margin-left: 0.5rem" class="color1 hover-item"> 合作租户</span>
             </div>
           </div>
@@ -139,7 +139,7 @@ const logout =()=> {
             @click="logout"
           >
           <div class=" flex-item padding-t4 padding-b4">
-            <img src="../../../../assets/images/logout.png"   style="width: 1rem;height: 1rem;margin-left: 0.5rem;"/>
+            <img src="@/assets/images/logout.png"   style="width: 1rem;height: 1rem;margin-left: 0.5rem;"/>
             <span style="margin-left: 0.5rem" class="color1 hover-item"> 退出登录</span>
           </div>
 
