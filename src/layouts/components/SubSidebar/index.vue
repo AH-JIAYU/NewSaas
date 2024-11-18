@@ -4,7 +4,7 @@ import Logo from "../Logo/index.vue";
 import Menu from "../Menu/index.vue";
 import useSettingsStore from "@/store/modules/settings";
 import useMenuStore from "@/store/modules/menu";
-
+import useUserStore from "@/store/modules/user";
 defineOptions({
   name: "SubSidebar",
 });
@@ -13,7 +13,7 @@ const route = useRoute();
 
 const settingsStore = useSettingsStore();
 const menuStore = useMenuStore();
-
+const userStore: any = useUserStore();
 const subSidebarRef = ref();
 const showShadowTop = ref(false);
 const showShadowBottom = ref(false);
@@ -24,7 +24,15 @@ function onSidebarScroll() {
   const scrollHeight = subSidebarRef.value.scrollHeight;
   showShadowBottom.value = Math.ceil(scrollTop + clientHeight) < scrollHeight;
 }
-
+const avatarError = ref(false);
+watch(
+  () => userStore.avatar,
+  () => {
+    if (avatarError.value) {
+      avatarError.value = false;
+    }
+  }
+);
 const enableSidebar = computed(() => {
   return (
     settingsStore.mode === "mobile" ||
@@ -91,6 +99,10 @@ const isCollapse = computed(() => {
   }
   return settingsStore.settings.menu.subMenuCollapse;
 });
+//跳转到官网
+const getWebsite =()=> {
+  window.open('https://www.surveysaas.com/', '_blank')
+}
 </script>
 
 <template>
@@ -157,10 +169,21 @@ const isCollapse = computed(() => {
 
       <div class="version-info-item" style="border-top: 1px solid rgba(170,170,170,0.3);">
         <div style=" padding:1rem;" class="version-info-flex-1">
-          <img src="@/assets/images/tu1.png" style="width: 32px;height: 32px;"/>
+          <img
+                v-if="userStore.avatar && !avatarError"
+                :src="userStore.avatar"
+                :onerror="() => (avatarError = true)"
+                class="h-[30px] w-[30px] rounded-full"
+              />
+              <SvgIcon
+                v-else
+                name="i-carbon:user-avatar-filled-alt"
+                :size="24"
+                class="text-gray-400"
+              />
           <div class="version-info-flex-2">
             <img src="@/assets/images/tu2.png" style="width: 20px;height: 20px;"/>
-          <img src="@/assets/images/tu3.png" style="width: 20px;height: 20px;margin-left: 1rem;"/>
+          <img src="@/assets/images/tu3.png" style="width: 20px;height: 20px;margin-left: 1rem;cursor: pointer;" @click="getWebsite"/>
 
           </div>
 
