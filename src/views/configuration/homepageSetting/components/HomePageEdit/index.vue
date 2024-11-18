@@ -1,10 +1,18 @@
 <template>
-  <el-drawer v-if="state.dialogFormVisible" v-model="state.dialogFormVisible" :title="state.title" size="80%"
-    @opened="onDialogOpened" @close="close">
-    <div ref="formRef"></div>
+  <el-drawer
+    v-if="state.dialogFormVisible"
+    v-model="state.dialogFormVisible"
+    :title="state.title"
+    size="80%"
+    @opened="onDialogOpened"
+    @close="close"
+  >
+    <div ref="formRef" id="gjs"></div>
     <template #footer>
       <el-button @click="close">取 消</el-button>
-      <el-button v-if="state.title === '编辑'" type="primary" @click="save">确 定</el-button>
+      <el-button v-if="state.title === '编辑'" type="primary" @click="save"
+        >确 定</el-button
+      >
     </template>
   </el-drawer>
 </template>
@@ -24,13 +32,14 @@ import zh from "grapesjs/locale/zh";
 import { updataText, customBlock, htmlJsList } from "@/utils/homePage";
 import api from "@/api/modules/configuration_homepageSetting";
 const emits = defineEmits(["fetch-data"]);
-
+import useUserStore from "@/store/modules/user";
 const state = reactive<any>({
   title: "",
   dialogFormVisible: false,
   form: {},
 });
-
+// token
+const userStore = useUserStore();
 const editorRef = ref<any>(null);
 const formRef = ref<any>(null);
 
@@ -73,6 +82,25 @@ const onDialogOpened = async () => {
         },
       ],
     },
+
+    //自定义上传图片
+    // assetManager: {
+    //   uploadFile: async (e: any) => {
+    //     const file = e.target.files[0];
+    //     if (file) {
+    //       try {
+    //         // 调用自定义接口上传图片
+    //         const url = await uploadImage(file);
+    //         // console.log(url,'rrrr')
+    //         // 将上传后的图片添加到 Grapes.js 的资源管理器中
+    //         editorRef.value.AssetManager.add(url);
+    //       } catch (error) {
+    //         console.error("Image upload failed", error);
+    //       }
+    //     }
+    //   },
+    // },
+
     //   blockManager: {
     //   appendTo: 'basic',
     //   blocks: [
@@ -92,9 +120,31 @@ const onDialogOpened = async () => {
     //   ],
     // }
   });
+  // 请求头
+  // const token = userStore.token;
+  // const headers = ref({ Token: token });
+  // 接口地址
+  // const Url = import.meta.env.VITE_APP_API_BASEURL + "/api/user/uploadAvatar";
+  // 模拟上传图片的函数
+  // const uploadImage = async (file: any) => {
+  //   const formData = new FormData();
+  //   console.log(file,'fff')
+  //   formData.append('file', file);
+
+
+  //   fetch("https://example.com/uploadFiles", {
+  //     method: "post",
+  //     body: formData,
+  //   })
+  //     .then((response) => response.json())
+  //     .then((result) => {
+  //       return result;  // 返回图片的 URL 字符串
+  //     })
+  //     .catch((error) => {});
+  // };
   // 通过事件改变框架的文本内容为中文
-  editorRef.value.on('block:custom', (props: any) => {
-    updataText(props.blocks)
+  editorRef.value.on("block:custom", (props: any) => {
+    updataText(props.blocks);
   });
   // 批量添加自定义块
   customBlock.forEach((item: any) => {
@@ -161,8 +211,36 @@ defineExpose({
 });
 </script>
 
-<style>
+<style scoped>
 .gjs-layer-name {
   height: 20px;
 }
+/* #gjs {
+  border: none;
+}
+
+
+:deep(.gjs-one-bg ){
+  background-color: #78366a;
+}
+
+:deep(.gjs-two-color) {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+:deep(.gjs-three-bg) {
+  background-color: #ec5896;
+  color: white;
+}
+
+:deep(.gjs-four-color,
+.gjs-four-color-h:hover) {
+  color: #ec5896;
+}
+:deep(:root){
+  --gjs-primary-color: #78366a;
+  --gjs-secondary-color: rgba(255, 255, 255, 0.7);
+  --gjs-tertiary-color: #ec5896;
+  --gjs-quaternary-color: #ec5896;
+} */
 </style>

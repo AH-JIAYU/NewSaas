@@ -33,6 +33,7 @@ const useUserStore = defineStore(
     const permissions = ref<string[]>([]);
     const logo = ref<any>(storage.local.get("logo") ?? "");//logo
     const webName = ref<any>(storage.local.get("webName") ?? "");// 网站名称
+    const name = ref<any>(storage.local.get("name") ?? "");// 用户名
     const keyWords = ref<any>(storage.local.get("keyWords") ?? "");//网站关键字
     const description = ref<any>(storage.local.get("description") ?? "");//网站描述
     const topLevelDomainName = ref<any>(storage.local.get("topLevelDomainName") ?? "");// 顶级域名
@@ -71,18 +72,22 @@ const useUserStore = defineStore(
             break;
         }
       }
+      console.log(res,'res')
+
       storage.local.set("account", res.data.account);
       storage.local.set("token", res.data.token);
       storage.local.set("avatar", res.data.avatar);
       storage.local.set("userId", res.data.userId);
       storage.local.set("logo", res.data.logo);
       storage.local.set("webName", res.data.webName);
+      storage.local.set("name", res.data.name);
       storage.local.set("keyWords", res.data.keyWords);
       storage.local.set("description", res.data.description);
       storage.local.set("tenantId", res.data.tenantId);
       storage.local.set("anotherName", res.data.anotherName);
       // storage.local.set("tend", res.data.description);
       webName.value = res.data.webName;
+      name.value = res.data.name;
       keyWords.value = res.data.keyWords;
       description.value = res.data.description;
       logo.value = res.data.logo;
@@ -108,6 +113,7 @@ const useUserStore = defineStore(
       }
       storage.local.remove("logo");
       storage.local.remove("webName");
+      storage.local.remove("name");
       storage.local.remove("description");
       storage.local.remove("keyWords");
       storage.local.remove("account");
@@ -126,6 +132,7 @@ const useUserStore = defineStore(
       permissions.value = [];
       logo.value = '';
       webName.value = '';
+      name.value = '';
       description.value = '';
       keyWords.value = '';
       tabbarStore.clean();
@@ -163,6 +170,16 @@ const useUserStore = defineStore(
     function setWebName(val: any) {
       webName.value = val
       storage.local.set("webName", val)
+    }
+     // 删除本地和store里的网站名称
+     function delname() {
+      name.value = ''
+      storage.local.remove("name")
+    }
+    // 存 name
+    function setname(val: any) {
+      name.value = val
+      storage.local.set("name", val)
     }
     // 删除本地和store里的keyWords
     function delkeyWords() {
@@ -378,6 +395,9 @@ const useUserStore = defineStore(
       permissions,
       logo,
       webName,
+      name,
+      tenantId,
+      anotherName,
       description,
       keyWords,
       topLevelDomainName,
@@ -387,6 +407,7 @@ const useUserStore = defineStore(
       login,
       delLogo,
       delWebName,
+      delname,
       delDescription,
       delTenantId,
       setTenantId,
@@ -395,6 +416,7 @@ const useUserStore = defineStore(
       delanotherName,
       setLogo,
       setWebName,
+      setname,
       setkeyWords,
       setDescription,
       logout,
