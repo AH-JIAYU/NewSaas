@@ -496,7 +496,7 @@ const formOption = {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('PCNL')" align="left" label="参数" width="180">
+        <el-table-column v-if="checkList.includes('PCNL')" align="left" label="参数" width="200">
           <template #default="{ row }">
             <div class="flex-c">
               <el-tooltip class="box-item" effect="dark" :content="row.participation" placement="top-start">

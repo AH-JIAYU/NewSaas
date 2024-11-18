@@ -1,5 +1,5 @@
 //#region 改变文本
-export const locale_zh:any = {
+export const locale_zh: any = {
   "attributes": {
     "Link Block": "链接块",
     "Quote": "引用",
@@ -37,26 +37,28 @@ export const locale_zh:any = {
   }
 }
 
- export const updataText=(list:any)=>{
-  list.forEach((item:any) => {
+export const updataText = (list: any) => {
+  list.forEach((item: any) => {
     // 替换块的文字
-    // attributes里有的lable只有文字有点是html代码片段
+    // attributes里有的label只有文字有点是html代码片段
     if (item.attributes.label?.includes('gjs-block-label')) {
       const match = item.attributes.label?.match(/<div class="gjs-block-label">\s*(.*?)\s*<\/div>/);
-      item.attributes.label=item.attributes.label?.replace(new RegExp(match[1], 'g'), locale_zh.attributes[match[1]]);
+      item.attributes.label = item.attributes.label?.replace(new RegExp(match[1], 'g'), locale_zh.attributes[match[1]]);
     } else {
-      item.attributes.label=locale_zh.attributes[item.attributes.label] ??item.attributes.label
+      item.attributes.label = locale_zh.attributes[item.attributes.label] ?? item.attributes.label;
     }
     // 替换类别的文字
-    item.changed.category.attributes.label= locale_zh.changed[item.changed.category.attributes.label] ?? item.changed.category.attributes.label
+    if (item.changed?.category?.attributes?.label) {
+      item.changed.category.attributes.label = locale_zh.changed?.[item.changed.category.attributes.label] ?? item.changed.category.attributes.label;
+    }
   });
+};
 
-}
 //#endregion
 
 
 //#region 添加自定义块
-const footerHtml=`
+const footerHtml = `
 <div>
 <style>
 
@@ -223,7 +225,7 @@ const footerHtml=`
 </div>
 `
 
-const wxHtml=`<body>
+const wxHtml = `<body>
 <style type="text/css">
     * {
         margin:0;
@@ -599,21 +601,51 @@ const wxHtml=`<body>
 <div class="banquan"><a href="http://www.psdhtml.cn/index.php?c=thread&fid=18?wx01sy" target="_blank"><img src="http://cdn.psdhtml.cn/wx_images/wx_lxidw7.svg" width="1000" height="36"></a></div>
 </body>
 `
-
-export const customBlock=[
+const colorBlocksHtml = `
+<div class="square_div">
+`
+export const customBlock = [
   {
-    id:'Custom-footerHtml', // 唯一标识
+    id: 'Custom-footerHtml', // 唯一标识
     label: '自定义footer', //标题
     content: footerHtml, // 块的内容
     category: 'Custom',// 块的位置 （那个类别下）
   },
   {
-    id:'Custom-wxHtml', // 唯一标识
+    id: 'Custom-wxHtml', // 唯一标识
     label: '微信', //标题
     content: wxHtml, // 块的内容
     category: 'Custom',// 块的位置 （那个类别下）
   },
-
-
+  {
+    id: 'color-blocks', // 唯一标识
+    label: '自定义色块', //标题
+    content: { type: 'color-blocks' }, // 块的内容
+    category: 'Custom',// 块的位置 （那个类别下）
+  },
 ]
+
 //#endregion
+
+const colotBlocks = () => {
+  alert('这是一个色块')
+}
+
+// 定义js
+export const htmlJsList = [
+  {
+    id: 'color-blocks', // 唯一标识
+    model: {
+      defaults: {
+        // 使用 script 来执行 JavaScript 函数
+        script: colotBlocks,
+        // Add some style, just to make the component visible
+        style: {
+          width: '100px',
+          height: '100px',
+          background: 'red',
+        },
+      },
+    },
+  }
+]

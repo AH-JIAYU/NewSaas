@@ -247,7 +247,6 @@ defineExpose({
             >
           </template>
         </el-form-item>
-
         <el-form-item prop="sendProjectType" label-width="7rem">
           <template #label>
             <span>
@@ -261,7 +260,6 @@ defineExpose({
               发送项目
             </span>
           </template>
-
           <el-checkbox-group
             v-model="data.form.sendProjectType"
             @change="handleCheckboxChange1"

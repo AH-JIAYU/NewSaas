@@ -21,7 +21,7 @@ import "grapesjs/dist/css/grapes.min.css";
 import "grapesjs/dist/grapes.min.js";
 // @ts-ignore
 import zh from "grapesjs/locale/zh";
-import {updataText ,customBlock} from "@/utils/homePage";
+import { updataText, customBlock, htmlJsList } from "@/utils/homePage";
 import api from "@/api/modules/configuration_homepageSetting";
 const emits = defineEmits(["fetch-data"]);
 
@@ -97,9 +97,38 @@ const onDialogOpened = async () => {
     updataText(props.blocks)
   });
   // 批量添加自定义块
-  customBlock.forEach((item:any)=>{
-      editorRef.value.Blocks.add(item.id,  item);
+  customBlock.forEach((item: any) => {
+    editorRef.value.Blocks.add(item.id, item);
   })
+    // 添加自定义js组件类型
+    htmlJsList.forEach((item) => {
+    editorRef.value.Components.addType(item.id, item);
+  });
+
+
+  // const script = function () {
+  //   alert('Hi');
+  // };
+
+  // editorRef.value.Components.addType('comp-with-js', {
+  //   model: {
+  //     defaults: {
+  //       script,
+  //       style: {
+  //         width: '100px',
+  //         height: '100px',
+  //         background: 'red',
+  //       },
+  //     },
+  //   },
+  // });
+
+  // // Create a block for the component, so we can drop it easily
+  // editorRef.value.Blocks.add('test-block', {
+  //   label: '色块',
+  //   attributes: { class: 'fa fa-text' },
+  //   content: { type: 'comp-with-js' },
+  // });
 };
 
 const save = async () => {

@@ -48,7 +48,7 @@ const redirect = ref(
 
 //#region 登录
 const loginFormRef = ref<any>();
-const loginType = ref("code"); // 登录方式
+const loginType = ref("password"); // 登录方式
 const loginCode = ref<any>("获取验证码");
 const loginGetCaptcha = ref(false); // 验证码按钮是否禁用
 const loginForm = ref<any>({
@@ -98,7 +98,7 @@ const loginRules = ref<any>({
 
 onMounted(async () => {
   const { data } = await api.getTenantConfig();
-  isRegister.value = data.register;
+  isRegister.value = data?.register;
   if (route.query.isRegister && route.query.isRegister === 'true') {
     formType.value = 'register'
   }
@@ -614,8 +614,8 @@ const agreements = (val: any) => {
         <div class="title-container">
           <div class="fx-c">
             <el-radio-group v-model="loginType" size="large" @change="resetCheck">
-              <el-radio-button label="验证码登录" value="code" />
               <el-radio-button label="密码登录" value="password" />
+              <el-radio-button label="验证码登录" value="code" />
             </el-radio-group>
           </div>
         </div>
