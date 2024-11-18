@@ -197,8 +197,8 @@ defineExpose({
   <CurrencyType /><el-text class="color3">{{ row.afterBalance || 0 }}</el-text>
 </template>
 </ElTableColumn>
-<ElTableColumn show-overflow-tooltip align="left" prop="createTime" label="时间"><template #default="{ row }">
-  <el-tooltip :content="row.createTime" placement="top">
+<ElTableColumn show-overflow-tooltip align="left" prop="updateTime" label="时间"><template #default="{ row }">
+  <el-tooltip :content="row.updateTime" placement="top">
     <el-tag effect="plain" type="info">{{ format(row.updateTime) }}</el-tag>
   </el-tooltip>
 </template>

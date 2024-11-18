@@ -134,7 +134,7 @@ function echarts2() {
         name: "访问来源",
         type: "pie",
         radius: ["30%", "50%"],
-        center: "center",
+        center: ['50%', '48%'],  // 确保环形图居中
         text: "省市公司",
         data: Data,
         label: {
@@ -144,36 +144,27 @@ function echarts2() {
 
     ],
     graphic: [
+  {
+    type: "group",
+    left: "center", // 相对于图表容器居中
+    top: "center", // 相对于图表容器居中
+    children: [
       {
-        type: "group",
-        left: "center",
-        top: "center",
-        bounding: "raw",
-        children: [
-          // {
-          //   type: "text",
-          //   style: {
-          //     text: `合计: `,
-          //     fontSize: 14,
-          //     textAlign: "center",
-          //     textVerticalAlign: "bottom",
-          //   },
-          // },
-          {
-            type: "text",
-            top: 'center',              // 描述怎么根据父元素进行定位。top 和 bottom 只有一个可以生效。如果指定 top 或 bottom，则 shape 里的 y、cy 等定位属性不再生效。『父元素』是指：如果是顶层元素，父元素是 echarts 图表容器。如果是 group 的子元素，父元素就是 group 元素。
-	        left: 'center',
-            style: {
-              text: Data.length,
-              // textAlign: "center",
-              // textVerticalAlign: "middle",
-              fontSize: 30,
-              fill: "#000", //合计颜色
-            },
-          },
-        ],
+        type: "text",
+        left: "center",  // 使文本水平居中
+        top: "center",   // 使文本垂直居中
+        style: {
+          text: Data.length,
+          fontSize: 30,
+          fill: "#000", // 合计颜色
+          textAlign: "center", // 水平居中
+          textVerticalAlign: "middle", // 垂直居中
+        },
+        z: 10, // 设置较高的 z 层级，确保文本不被其他元素遮挡
       },
     ],
+  },
+]
   };
   // 传入数据
   chart2.setOption(option);
