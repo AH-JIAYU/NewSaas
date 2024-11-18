@@ -59,7 +59,8 @@ const logout =()=> {
 <template>
   <div class="flex items-center">
     <Tools mode="right-side" />
-    <el-dropdown>
+    <!-- trigger="click" -->
+    <el-dropdown  >
       <span class="el-dropdown-link">
         <div class="flex-center gap-1" style="  cursor: pointer;">
           <img
@@ -81,7 +82,7 @@ const logout =()=> {
       <template #dropdown>
         <el-dropdown-menu class="drop-item">
           <div class="item-1">
-            <div class="flex-item gap-1">
+            <div class="flex-item gap-1" style="padding-top: 1rem;">
               <img
                 v-if="userStore.avatar && !avatarError"
                 :src="userStore.avatar"
@@ -95,7 +96,7 @@ const logout =()=> {
                 class="text-gray-400"
               />
               <div>
-                <div class="font-w">{{ userStore.name ? userStore.name :userStore.account }}</div>
+                <div class="font-w font-s16">{{ userStore.name ? userStore.name :userStore.account }}</div>
                 <div class="font-s12 color1">ID: {{ userStore.tenantId }}</div>
               </div>
             </div>
@@ -106,30 +107,30 @@ const logout =()=> {
               >
                 <div>
                   <img src="@/assets/images/member.png" />
-                  <span class="color2" style="margin-left: 0.5rem">试用版</span>
+                  <span class="color2 font-w" style="margin-left: 0.5rem">试用版</span>
                 </div>
-                <div class="font-w font-s12 margin-t8">到期时间:</div>
+                <div class="font-w font-s14 margin-t8">到期时间:</div>
               </div>
-              <div class="padding-8">
-                <span class="color2 font-w500">升级版本</span>
+              <div style="padding:16px .5rem;">
+                <span class="color2 font-w" >升级版本</span>
               </div>
             </div>
           </div>
           <div class="item-2 padding-8 " >
-            <div class=" padding-t12 flex-item " @click="getPerson">
-              <img src="@/assets/images/geren.png" style="width: 1rem;height: 1rem;margin-left: 0.5rem;" />
+            <div class=" padding-t16 flex-item " @click="getPerson">
+              <img src="@/assets/images/geren.png" style="width: 1.25rem;height: 1.25rem;margin-left: 0.5rem;" />
               <span style="margin-left: 0.5rem" class="color1 hover-item">个人中心</span>
             </div>
-            <div class=" padding-t12  flex-item " @click="getSite">
-              <img src="@/assets/images/dizhi.png" style="width: 1rem;height: 1rem;margin-left: 0.5rem;" />
+            <div class=" padding-t16  flex-item " @click="getSite">
+              <img src="@/assets/images/dizhi.png" style="width: 1.25rem;height: 1.25rem;margin-left: 0.5rem;" />
               <span style="margin-left: 0.5rem" class="color1 hover-item"> 站点设置</span>
             </div>
-            <div class=" padding-t12  flex-item ">
-              <img src="@/assets/images/kefu.png" style="width: 1rem;height: 1rem;margin-left: 0.5rem;" />
+            <div class=" padding-t16  flex-item ">
+              <img src="@/assets/images/kefu.png" style="width: 1.25rem;height: 1.25rem;margin-left: 0.5rem;" />
               <span style="margin-left: 0.5rem" class="color1 hover-item"> 官方客服</span>
             </div>
-            <div class=" padding-t12  flex-item " @click="getTenantry">
-              <img src="@/assets/images/hezuozuhu.png" style="width: 1rem;height: 1rem;margin-left: 0.5rem;" />
+            <div class=" padding-t16  flex-item padding-b16" @click="getTenantry">
+              <img src="@/assets/images/hezuozuhu.png" style="width: 1.25rem;height: 1.25rem;margin-left: 0.5rem;" />
               <span style="margin-left: 0.5rem" class="color1 hover-item"> 合作租户</span>
             </div>
           </div>
@@ -138,8 +139,8 @@ const logout =()=> {
             style="border-top: 1px solid rgba(139, 160, 191, 0.3)"
             @click="logout"
           >
-          <div class=" flex-item padding-t4 padding-b4">
-            <img src="@/assets/images/logout.png"   style="width: 1rem;height: 1rem;margin-left: 0.5rem;"/>
+          <div class=" flex-item padding-t4" style="padding:1rem 0 0.5rem 0;">
+            <img src="@/assets/images/logout.png"   style="width: 1.25rem;height: 1.25rem;margin-left: 0.5rem;"/>
             <span style="margin-left: 0.5rem" class="color1 hover-item"> 退出登录</span>
           </div>
 
@@ -229,14 +230,20 @@ const logout =()=> {
 .parging-l8 {
   padding-left: 0.5rem;
 }
+.font-s16 {
+  font-size: 16px;
+}
 .margin-t8 {
   margin-top: 0.5rem;
 }
 .padding-l16 {
   padding-left: 1rem;
 }
-.padding-t12 {
-  padding-top: .75rem;
+.padding-t16 {
+  padding-top: 1rem;
+}
+.padding-b16 {
+  padding-bottom: .75rem;
 }
 .padding-b4 {
   padding-bottom: .25rem;
