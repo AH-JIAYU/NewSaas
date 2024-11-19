@@ -149,7 +149,7 @@ defineExpose({
         label="点击ID"
       >
         <template #default="{ row }">
-          <el-text class="color3">{{ row.clientId ? row.clientId : "-" }}</el-text>
+          <el-text class="color3">{{ row.clickId ? row.clickId : "-" }}</el-text>
         </template>
 </ElTableColumn>
 <ElTableColumn show-overflow-tooltip align="left" prop="projectId" label="项目ID">

@@ -112,11 +112,11 @@ function termination(row: any) {
         });
       fetchData();
     })
-    .catch(() => {});
+    .catch(() => { });
 }
 const financialLogRef = ref()
 //财务日志
-function openLog(row:any){
+function openLog(row: any) {
   financialLogRef.value.showEdit(row);
 }
 //合作配置
@@ -299,10 +299,10 @@ function userData(data1: any) {
       receiveProjectType: data1.receiveProjectType == 1 ? 2 : 1, //邀请方接收项目类型:1:自动 2:手动
     };
 
-       //判断如果为数组改为字符串，data.value.form.chargeUserId
-       if (Array.isArray(params.chargeUserId)) {
-        params.chargeUserId = params.chargeUserId[0];
-       }
+    //判断如果为数组改为字符串，data.value.form.chargeUserId
+    if (Array.isArray(params.chargeUserId)) {
+      params.chargeUserId = params.chargeUserId[0];
+    }
     api.updateInvitationBindUser(params).then(() => {
       listLoading.value = false;
       queryData();
@@ -329,37 +329,16 @@ function userData(data1: any) {
         </FormLeftPanel>
         <FormRightPanel>
           <el-button size="default"> 导出 </el-button>
-          <TabelControl
-            v-model:border="border"
-            v-model:tableAutoHeight="tableAutoHeight"
-            v-model:checkList="checkList"
-            v-model:columns="columns"
-            v-model:line-height="lineHeight"
-            v-model:stripe="stripe"
-            style="margin-left: 12px"
-            @query-data="queryData"
-          />
+          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
+            v-model:columns="columns" v-model:line-height="lineHeight" v-model:stripe="stripe" style="margin-left: 12px"
+            @query-data="queryData" />
         </FormRightPanel>
       </el-row>
-      <el-table
-        v-loading="listLoading"
-        :border="border"
-        :data="tableList"
-        :size="lineHeight"
-        :stripe="stripe"
-        @selection-change="setSelectRows"
-        highlight-current-row
-        @current-change="handleCurrentChange"
-      >
+      <el-table v-loading="listLoading" :border="border" :data="tableList" :size="lineHeight" :stripe="stripe"
+        @selection-change="setSelectRows" highlight-current-row @current-change="handleCurrentChange">
         <el-table-column align="left" type="selection" />
-        <el-table-column
-          v-if="checkList.includes('bindStatus')"
-          align="left"
-          prop="bindStatus"
-          show-overflow-tooltip
-          label="状态"
-          width="100"
-        >
+        <el-table-column v-if="checkList.includes('bindStatus')" align="left" prop="bindStatus" show-overflow-tooltip
+          label="状态" width="60">
           <template #default="{ row }">
             <div class="fontC-System">
               <el-text v-if="row.bindStatus === 2" type="success">合作</el-text>
@@ -367,208 +346,137 @@ function userData(data1: any) {
             </div>
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('bindStatus')"
-          align="left"
-          prop="sendProjectType"
-          label="发送项目"
-          width="160"
-        >
+        <el-table-column v-if="checkList.includes('bindStatus')" align="left" prop="sendProjectType" label="发送项目"
+          width="160">
           <template #default="{ row }">
             <!-- <div class="fontC-System">
               <el-text v-if="row.sendProjectType === 1" type="success">自动</el-text>
               <el-text v-if="row.sendProjectType === 2" type="danger">手动</el-text>
             </div> -->
-            <el-button
-              :type="row.sendProjectType === 1 ? 'primary' : ''"
-              size="small"
-              @click="changeSendProjectType('自动', row)"
-              >自动
+            <el-button :type="row.sendProjectType === 1 ? 'primary' : ''" size="small"
+              @click="changeSendProjectType('自动', row)">自动
             </el-button>
-            <el-button
-              :type="row.sendProjectType === 2 ? 'primary' : ''"
-              size="small"
-              @click="changeSendProjectType('手动', row)"
-              >手动</el-button
-            >
+            <el-button :type="row.sendProjectType === 2 ? 'primary' : ''" size="small"
+              @click="changeSendProjectType('手动', row)">手动</el-button>
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('receiveProjectType')"
-          align="left"
-          prop="receiveProjectType"
-          label="接收项目"
-          width="160"
-        >
+        <el-table-column v-if="checkList.includes('receiveProjectType')" align="left" prop="receiveProjectType"
+          label="接收项目" width="160">
           <template #default="{ row }">
-            <el-button
-              :type="row.receiveProjectType === 1 ? 'primary' : ''"
-              size="small"
-              @click="changeReceiveProjectType('自动', row)"
-              >自动
+            <el-button :type="row.receiveProjectType === 1 ? 'primary' : ''" size="small"
+              @click="changeReceiveProjectType('自动', row)">自动
             </el-button>
-            <el-button
-              :type="row.receiveProjectType === 2 ? 'primary' : ''"
-              size="small"
-              @click="changeReceiveProjectType('手动', row)"
-              >手动</el-button
-            >
+            <el-button :type="row.receiveProjectType === 2 ? 'primary' : ''" size="small"
+              @click="changeReceiveProjectType('手动', row)">手动</el-button>
             <!-- <div class="fontC-System">
               <el-text v-if="row.receiveProjectType === 1" type="success">自动</el-text>
               <el-text v-if="row.receiveProjectType === 2" type="danger">手动</el-text>
             </div> -->
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('beInvitationTenantId')"
-          align="left"
-          prop="beInvitationTenantId"
-          width="200"
-          label="合作商ID"
-        >
+        <el-table-column v-if="checkList.includes('beInvitationTenantId')" align="left" prop="beInvitationTenantId"
+          width="200" label="合作商ID">
           <template #default="{ row }">
             <div class="copyId tableSmall">
               <div class="id oneLine beInvitationTenantId">
-                <el-tooltip
-                  effect="dark"
-                  :content="row.beInvitationTenantId"
-                  placement="top-start"
-                >
+                <el-tooltip effect="dark" :content="row.beInvitationTenantId" placement="top-start">
                   {{ row.beInvitationTenantId }}
                 </el-tooltip>
 
                 <!-- {{ row.beInvitationTenantId }} -->
               </div>
-              <copy
-                :content="row.beInvitationTenantId"
-                :class="{
-                  rowCopy: 'rowCopy',
-                  current: row.id === current,
-                }"
-              />
+              <copy :content="row.beInvitationTenantId" :class="{
+    rowCopy: 'rowCopy',
+    current: row.id === current,
+  }" />
               <!-- <copy class="copy" :content="row.beInvitationTenantId" /> -->
             </div>
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('beInvitationTenantName')"
-          align="left"
-          prop="beInvitationTenantName"
-          show-overflow-tooltip
-          label="合作商公司名称"
-        >
+        <el-table-column v-if="checkList.includes('beInvitationTenantName')" align="left" prop="beInvitationTenantName"
+          show-overflow-tooltip width="130" label="合作商公司名称">
           <template #default="{ row }">
             <div class="tableBig">{{ row.beInvitationTenantName }}</div>
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('userName')"
-          align="left"
-          prop="userName"
-          show-overflow-tooltip
-          label="负责部门"
-        >
+        <el-table-column v-if="checkList.includes('userName')" align="left" prop="userName" width="100"
+          show-overflow-tooltip label="负责部门">
           <template #default="{ row }">
             <div class="flex-s">
               <div class="fontC-System">{{ row.userName ? row.userName : '-' }}</div>
-              <SvgIcon
-                v-if="row.projectType !== 2"
-                @click="quickEdit(row, 'chargeUserId')"
-                :class="{ edit: 'edit', current: row.id === current }"
-                name="i-ep:edit"
-                color="#409eff"
-              />
+              <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'chargeUserId')"
+                :class="{ edit: 'edit', current: row.id === current }" name="i-ep:edit" color="#409eff" />
             </div>
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('priceRatio')"
-          align="left"
-          prop="priceRatio"
-          show-overflow-tooltip
-          label="价格比例"
-        >
+        <el-table-column v-if="checkList.includes('priceRatio')" align="left" prop="priceRatio" show-overflow-tooltip
+          label="价格比例">
           <template #default="{ row }">
             <div class="fontC-System">{{ row.priceRatio }}%</div>
           </template>
         </el-table-column>
-        <!-- <el-table-column
-          v-if="checkList.includes('pendBalance')"
-          align="left"
-          prop="pendBalance"
-          show-overflow-tooltip
-          label="待审金额"
-        >
+        <el-table-column v-if="checkList.includes('pendBalance')" align="left" prop="pendBalance" width="95" show-overflow-tooltip
+          label="待审金额">
+          <template #header>
+            <div style="display: flex;" class="table-header">
+              <span>待审金额</span>
+              <el-tooltip  class="tooltips" content="待审金额或可用金额,是您需要给该公司支付的佣金" placement="top">
+                <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
+              </el-tooltip>
+            </div>
+          </template>
           <template #default="{ row }">
             <div class="fontC-System">
               <CurrencyType />{{ row.pendBalance || 0 }}
             </div>
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('availableBalance')"
-          align="left"
-          prop="availableBalance"
-          show-overflow-tooltip
-          label="可用金额"
-        >
+        <el-table-column v-if="checkList.includes('availableBalance')" align="left" prop="availableBalance"
+          show-overflow-tooltip label="可用金额">
           <template #default="{ row }">
             <div class="fontC-System">
               <CurrencyType />{{ row.availableBalance || 0 }}
             </div>
           </template>
-        </el-table-column> -->
-        <el-table-column
-          v-if="checkList.includes('personalPendBalance')"
-          align="left"
-          prop="personalPendBalance"
-          show-overflow-tooltip
-          label="个人待审金额"
-        >
+        </el-table-column>
+        <el-table-column v-if="checkList.includes('personalPendBalance')" align="left" prop="personalPendBalance"
+          show-overflow-tooltip width="125" label="个人待审金额">
+          <template #header>
+            <div class="table-header">
+              <span>个人待审金额</span>
+              <el-tooltip class="tooltips" content="个人待审金额或个人可用金额,是您在该公司赚取的佣金，他需要支付给您的佣金" placement="top">
+                <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
+              </el-tooltip>
+            </div>
+          </template>
           <template #default="{ row }">
             <div class="fontC-System">
               <CurrencyType />{{ row.personalPendBalance || 0 }}
             </div>
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('personalAvailableBalance')"
-          align="left"
-          prop="personalAvailableBalance"
-          show-overflow-tooltip
-          label="个人可用金额"
-        >
+        <el-table-column v-if="checkList.includes('personalAvailableBalance')" align="left" width="120"
+          prop="personalAvailableBalance" show-overflow-tooltip label="个人可用金额">
           <template #default="{ row }">
             <div class="fontC-System">
               <CurrencyType />{{ row.personalAvailableBalance || 0 }}
             </div>
           </template>
         </el-table-column>
-        <el-table-column
-          align="left"
-          fixed="right"
-          prop="i"
-          label="操作"
-          width="280"
-        >
+        <el-table-column align="left" fixed="right" prop="i" label="操作" width="280">
           <template #default="{ row }">
             <ElSpace>
               <el-button size="small" type="primary" plain @click="priceRatio(row)">
                 合作配置
               </el-button>
-              <el-button
-                v-if="row.bindStatus === 2"
-                type="danger" plain
-                size="small"
-                @click="termination(row)"
-              >
+              <el-button v-if="row.bindStatus === 2" type="danger" plain size="small" @click="termination(row)">
                 终止合作
               </el-button>
 
-            <el-button type="warning" plain size="small" @click="openLog(row)">
+              <el-button type="warning" plain size="small" @click="openLog(row)">
                 财务日志
               </el-button>
-                <!-- <el-button type="danger" plain size="small"> 加减款 </el-button>-->
+              <!-- <el-button type="danger" plain size="small"> 加减款 </el-button>-->
             </ElSpace>
           </template>
         </el-table-column>
@@ -576,18 +484,9 @@ function userData(data1: any) {
           <el-empty :image="empty" :image-size="300" />
         </template>
       </el-table>
-      <ElPagination
-        :current-page="pagination.page"
-        :total="pagination.total"
-        :page-size="pagination.size"
-        :page-sizes="pagination.sizes"
-        :layout="pagination.layout"
-        :hide-on-single-page="false"
-        class="pagination"
-        background
-        @size-change="sizeChange"
-        @current-change="currentChange"
-      />
+      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+        background @size-change="sizeChange" @current-change="currentChange" />
       <customerEdit ref="editRef" @fetch-data="queryData" />
       <customerProportion ref="proportionRef" @fetch-data="queryData" />
       <financialLog ref="financialLogRef" @fetch-data="queryData" />
@@ -602,15 +501,19 @@ function userData(data1: any) {
   width: 20px;
   display: none;
 }
+
 .copyId .current {
   display: block !important;
 }
+
 .el-table__row:hover .rowCopy {
   display: block;
 }
+
 .beInvitationTenantId {
   font-size: 0.875rem;
 }
+
 // 高度自适应
 .absolute-container {
   position: absolute;
@@ -663,7 +566,7 @@ function userData(data1: any) {
   align-items: center;
   width: 100%;
 
-  > div:nth-of-type(1) {
+  >div:nth-of-type(1) {
     width: calc(100% - 25px);
     flex-shrink: 0;
   }
@@ -681,7 +584,15 @@ function userData(data1: any) {
     display: block !important;
   }
 }
+
 .el-table__row:hover .edit {
   display: block;
+}
+
+:deep {
+  .table-header {
+    display: flex;
+    align-items: center;
+  }
 }
 </style>

@@ -62,3 +62,10 @@ const to = computed(() => settingsStore.settings.home.enable ? settingsStore.set
     <span v-if="showTitle" class="block truncate font-bold">{{ title }}</span>
   </RouterLink>
 </template>
+
+
+<style lang="scss" scoped>
+  img {
+    border-radius: 7px;
+  }
+</style>
