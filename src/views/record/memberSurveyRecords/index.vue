@@ -671,7 +671,7 @@ function handleCurrentChange(val: any) {
           label="项目价"
         >
           <template #default="{ row }">
-            <div class="fontC-System" v-if="row.surveySource != 3">
+            <div class="fontC-System">
               <CurrencyType />{{ row.doMoneyPrice || 0 }}
             </div>
           </template>
@@ -689,7 +689,6 @@ function handleCurrentChange(val: any) {
             <div
               class="fontC-System"
               style="color: #fd8989"
-              v-if="row.surveySource != 3"
             >
               <CurrencyType />
               <template v-if="row.memberId">
