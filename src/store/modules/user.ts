@@ -32,6 +32,8 @@ const useUserStore = defineStore(
     const anotherName= ref(storage.local.get("anotherName") ?? "");
     const permissions = ref<string[]>([]);
     const logo = ref<any>(storage.local.get("logo") ?? "");//logo
+    const expirationTime = ref<any>(storage.local.get("expirationTime") ?? "");//到期时间
+    const domain = ref<any>(storage.local.get("domain") ?? "");//租户首页网址
     const webName = ref<any>(storage.local.get("webName") ?? "");// 网站名称
     const name = ref<any>(storage.local.get("name") ?? "");// 用户名
     const keyWords = ref<any>(storage.local.get("keyWords") ?? "");//网站关键字
@@ -72,13 +74,13 @@ const useUserStore = defineStore(
             break;
         }
       }
-      console.log(res,'res')
-
       storage.local.set("account", res.data.account);
       storage.local.set("token", res.data.token);
       storage.local.set("avatar", res.data.avatar);
       storage.local.set("userId", res.data.userId);
       storage.local.set("logo", res.data.logo);
+      storage.local.set("expirationTime", res.data.expirationTime);
+      storage.local.set("domain", res.data.domain);
       storage.local.set("webName", res.data.webName);
       storage.local.set("name", res.data.name);
       storage.local.set("keyWords", res.data.keyWords);
@@ -87,6 +89,8 @@ const useUserStore = defineStore(
       storage.local.set("anotherName", res.data.anotherName);
       // storage.local.set("tend", res.data.description);
       webName.value = res.data.webName;
+      expirationTime.value = res.data.expirationTime;
+      domain.value = res.data.domain;
       name.value = res.data.name;
       keyWords.value = res.data.keyWords;
       description.value = res.data.description;
@@ -113,6 +117,8 @@ const useUserStore = defineStore(
       }
       storage.local.remove("logo");
       storage.local.remove("webName");
+      storage.local.remove("expirationTime");
+      storage.local.remove("domain");
       storage.local.remove("name");
       storage.local.remove("description");
       storage.local.remove("keyWords");
@@ -132,6 +138,8 @@ const useUserStore = defineStore(
       permissions.value = [];
       logo.value = '';
       webName.value = '';
+      expirationTime.value = '';
+      domain.value = '';
       name.value = '';
       description.value = '';
       keyWords.value = '';
@@ -395,6 +403,8 @@ const useUserStore = defineStore(
       permissions,
       logo,
       webName,
+      expirationTime,
+      domain,
       name,
       tenantId,
       anotherName,

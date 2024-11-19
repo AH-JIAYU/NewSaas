@@ -5,12 +5,15 @@ import Menu from "../Menu/index.vue";
 import useSettingsStore from "@/store/modules/settings";
 import useMenuStore from "@/store/modules/menu";
 import useUserStore from "@/store/modules/user";
+import projectEdit from "@/views/projectManagement/list/components/ProjeckEdit/index.vue"; //快捷操作： 新增项目
 defineOptions({
   name: "SubSidebar",
 });
 
 const route = useRoute();
-
+const router = useRouter();
+// 组件Ref 快捷操作： 新增客户
+const editRef = ref<any>();
 const settingsStore = useSettingsStore();
 const menuStore = useMenuStore();
 const userStore: any = useUserStore();
@@ -99,139 +102,133 @@ const isCollapse = computed(() => {
   }
   return settingsStore.settings.menu.subMenuCollapse;
 });
+const createTime = (time: any) => {
+  // 将字符串转化为 Date 对象
+  const targetDate: any = new Date(time);
+  // 获取当前日期
+  const currentDate: any = new Date();
+  // 获取两个日期的时间戳差值（单位为毫秒）
+  const timeDiff: any = targetDate - currentDate;
+  // 计算天数差，1天 = 24小时 * 60分钟 * 60秒 * 1000毫秒
+  const dayDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+
+  return dayDiff
+}
+// 快捷操作：新增客户
+const AddProject = () => {
+  editRef.value.showEdit();
+};
 //跳转到官网
-const getWebsite =()=> {
-  window.open('https://www.surveysaas.com/', '_blank')
+const getWebsite = (val: any) => {
+  if (val === 1) {
+    window.open('https://www.surveysaas.com/', '_blank')
+  } else {
+    window.open(`https://${userStore.domain}`, '_blank')
+  }
+}
+// 跳转用户
+const pushUser = () => {
+  router.push('/configuration/user')
 }
 </script>
 
 <template>
-  <div
-    v-if="enableSidebar"
-    class="sub-sidebar-container"
-    :class="{
-      'is-collapse': isCollapse,
-      'shadow-side':
-        settingsStore.isHoverSidebar &&
-        settingsStore.settings.menu.subMenuAutoCollapse &&
-        settingsStore.settings.menu.subMenuCollapse,
-    }"
-  >
-    <Logo
-      :show-logo="settingsStore.settings.menu.menuMode === 'single'"
-      class="sidebar-logo"
-      :class="{
-        'sidebar-logo-bg': settingsStore.settings.menu.menuMode === 'single',
-      }"
-    />
-    <div
-      ref="subSidebarRef"
-      class="sub-sidebar flex-1 transition-shadow-300"
-      :class="{
-        'shadow-top': showShadowTop,
-        'shadow-bottom': showShadowBottom,
-      }"
-      @scroll="onSidebarScroll"
-    >
+  <div v-if="enableSidebar" class="sub-sidebar-container" :class="{
+    'is-collapse': isCollapse,
+    'shadow-side':
+      settingsStore.isHoverSidebar &&
+      settingsStore.settings.menu.subMenuAutoCollapse &&
+      settingsStore.settings.menu.subMenuCollapse,
+  }">
+    <Logo :show-logo="settingsStore.settings.menu.menuMode === 'single'" class="sidebar-logo" :class="{
+    'sidebar-logo-bg': settingsStore.settings.menu.menuMode === 'single',
+  }" />
+    <div ref="subSidebarRef" class="sub-sidebar flex-1 transition-shadow-300" :class="{
+    'shadow-top': showShadowTop,
+    'shadow-bottom': showShadowBottom,
+  }" @scroll="onSidebarScroll">
       <div ref="menuRef">
         <TransitionGroup name="sub-sidebar">
-          <template
-            v-for="(mainItem, mainIndex) in menuStore.allMenus"
-            :key="mainIndex"
-          >
+          <template v-for="(mainItem, mainIndex) in menuStore.allMenus" :key="mainIndex">
             <div v-show="mainIndex === menuStore.actived">
-              <Menu
-                :menu="mainItem.children"
-                :value="route.meta.activeMenu || route.path"
-                :default-openeds="menuStore.defaultOpenedPaths"
-                :always-openeds="menuStore.alwaysOpenedPaths"
-                :accordion="settingsStore.settings.menu.subMenuUniqueOpened"
-                :collapse="isCollapse"
-                :rounded="settingsStore.settings.menu.isRounded"
-                :direction="settingsStore.settings.app.direction"
-                class="menu"
-              />
+              <Menu :menu="mainItem.children" :value="route.meta.activeMenu || route.path"
+                :default-openeds="menuStore.defaultOpenedPaths" :always-openeds="menuStore.alwaysOpenedPaths"
+                :accordion="settingsStore.settings.menu.subMenuUniqueOpened" :collapse="isCollapse"
+                :rounded="settingsStore.settings.menu.isRounded" :direction="settingsStore.settings.app.direction"
+                class="menu" />
             </div>
           </template>
         </TransitionGroup>
       </div>
     </div>
     <!-- 版本信息 -->
-    <div class="version-info">
-      <div class="version-info-item" style="  padding:1rem;">
+    <div v-show="!isCollapse" class="version-info">
+      <div class="version-info-item" style="padding:1rem;">
         <img src="@/assets/images/member.png" />
-        <span class=" version-info-color" style="margin-left: 0.5rem" >试用版</span>
+        <span class=" version-info-color" style="margin-left: 0.5rem">试用版</span>
       </div>
-      <div class="font-w font-s12 margin-t8 version-info-w" style="padding-left:1rem; ">到期时间:</div>
+      <div class="font-w font-s12 margin-t8 version-info-w" style="padding-left:1rem; ">到期时间：{{
+      createTime(userStore.expirationTime) }}天</div>
       <div style="padding-left:1rem;padding-right:1rem;display: flex;margin-top: 1rem;">
         <el-button type="primary" style="width: 90%;flex: 1;">立即升级</el-button>
       </div>
 
       <div class="version-info-item" style="border-top: 1px solid rgba(170,170,170,0.3);">
         <div style=" padding:1rem;" class="version-info-flex-1">
-          <img
-                v-if="userStore.avatar && !avatarError"
-                :src="userStore.avatar"
-                :onerror="() => (avatarError = true)"
-                class="h-[30px] w-[30px] rounded-full"
-              />
-              <SvgIcon
-                v-else
-                name="i-carbon:user-avatar-filled-alt"
-                :size="24"
-                class="text-gray-400"
-              />
-          <div class="version-info-flex-2">
-            <img src="@/assets/images/tu2.png" style="width: 20px;height: 20px;"/>
-          <img src="@/assets/images/tu3.png" style="width: 20px;height: 20px;margin-left: 1rem;cursor: pointer;" @click="getWebsite"/>
-
+          <!-- <img v-if="userStore.avatar && !avatarError" :src="userStore.avatar" :onerror="() => (avatarError = true)"
+            class="h-[30px] w-[30px] rounded-full" /> -->
+          <!-- <SvgIcon v-else name="i-carbon:user-avatar-filled-alt" :size="24" class="text-gray-400" /> -->
+          <div style="border-right: 1px solid #c6c6c6; width: 50%;" class="version-info-flex-2">
+            <el-tooltip class="box-item" effect="dark" content="新增项目" placement="top-start">
+              <img src="@/assets/images/tu4.png" style="width: 24px;height: 24px;cursor: pointer;"
+                @click="AddProject" />
+            </el-tooltip>
+            <el-tooltip class="box-item" effect="dark" content="用户管理" placement="top-start">
+              <img src="@/assets/images/tu2.png" style="width: 24px;height: 24px;margin-left: 1.875rem;cursor: pointer;"
+                @click="pushUser" />
+            </el-tooltip>
           </div>
-
+          <div style="width: 50%;" class="version-info-flex-2">
+            <el-tooltip class="box-item" effect="dark" content="个人官网" placement="top-start">
+              <img src="@/assets/images/tu5.png" style="width: 24px;height: 24px;cursor: pointer;margin-left: 1rem;"
+                @click="getWebsite(2)" />
+            </el-tooltip>
+            <el-tooltip class="box-item" effect="dark" content="平台官网" placement="top-start">
+              <img src="@/assets/images/tu3.png" style="width: 24px;height: 24px;margin-left: 1.875rem;cursor: pointer;"
+                @click="getWebsite(1)" />
+            </el-tooltip>
+          </div>
         </div>
-
       </div>
     </div>
-    <div
-      v-if="settingsStore.mode === 'pc'"
-      class="relative flex items-center px-4 py-3"
-      :class="{
-        'justify-center': isCollapse,
-        'justify-between':
-          !isCollapse &&
-          settingsStore.settings.menu.enableSubMenuCollapseButton,
-        'justify-end':
-          !isCollapse &&
-          !settingsStore.settings.menu.enableSubMenuCollapseButton,
-      }"
-    >
-      <span
-        v-show="
-          !isCollapse ||
-          (isCollapse &&
-            !settingsStore.settings.menu.enableSubMenuCollapseButton)
-        "
-        class="flex-center cursor-pointer rounded bg-stone-1 p-2 transition dark:bg-stone-9 hover:bg-stone-2 dark:hover:bg-stone-8"
-        @click="settingsStore.toggleSidebarAutoCollapse()"
-      >
-        <SvgIcon
-          :name="
-            settingsStore.settings.menu.subMenuAutoCollapse
-              ? 'i-lucide:pin-off'
-              : 'i-lucide:pin'
-          "
-        />
+    <div v-if="settingsStore.mode === 'pc'" class="relative flex items-center px-4 py-3" :class="{
+    'justify-center': isCollapse,
+    'justify-between':
+      !isCollapse &&
+      settingsStore.settings.menu.enableSubMenuCollapseButton,
+    'justify-end':
+      !isCollapse &&
+      !settingsStore.settings.menu.enableSubMenuCollapseButton,
+  }">
+      <span v-show="!isCollapse ||
+    (isCollapse &&
+      !settingsStore.settings.menu.enableSubMenuCollapseButton)
+    " class="flex-center cursor-pointer rounded bg-stone-1 p-2 transition dark:bg-stone-9 hover:bg-stone-2 dark:hover:bg-stone-8"
+        @click="settingsStore.toggleSidebarAutoCollapse()">
+        <SvgIcon :name="settingsStore.settings.menu.subMenuAutoCollapse
+    ? 'i-lucide:pin-off'
+    : 'i-lucide:pin'
+    " />
       </span>
-      <span
-        v-show="settingsStore.settings.menu.enableSubMenuCollapseButton"
+      <span v-show="settingsStore.settings.menu.enableSubMenuCollapseButton"
         class="flex-center cursor-pointer rounded bg-stone-1 p-2 transition dark:bg-stone-9 hover:bg-stone-2 dark:hover:bg-stone-8"
         :class="{
-          '-rotate-z-180': settingsStore.settings.menu.subMenuCollapse,
-        }"
-        @click="settingsStore.toggleSidebarCollapse()"
-      >
+    '-rotate-z-180': settingsStore.settings.menu.subMenuCollapse,
+  }" @click="settingsStore.toggleSidebarCollapse()">
         <SvgIcon name="toolbar-collapse" />
       </span>
     </div>
+    <projectEdit ref="editRef" />
   </div>
 </template>
 
@@ -239,27 +236,32 @@ const getWebsite =()=> {
 .version-info {
   font-weight: 500;
   font-size: 14px;
-  color: #333333 ;
+  color: #333333;
 }
+
 .version-info-item {
   margin-top: 1rem;
 }
+
 .version-info-color {
   font-weight: 500;
-font-size: 14px;
-color: #409EFF;
+  font-size: 14px;
+  color: #409EFF;
 }
+
 .version-info-w {
   font-family: Source Han Sans CN, Source Han Sans CN;
-font-weight: 500;
-color: #333333;
-line-height: 14px;
+  font-weight: 500;
+  color: #333333;
+  line-height: 14px;
 }
+
 .version-info-flex-1 {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+
 .version-info-flex-2 {
   display: flex;
   align-items: center;

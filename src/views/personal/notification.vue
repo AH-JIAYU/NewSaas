@@ -11,7 +11,7 @@ import news from "./notification-news.vue";
 import cooperation from "./notification-cooperation.vue";
 import empty from "@/assets/images/empty.png";
 defineOptions({
-  name: "PersonalNotification",
+  name: "personalNotification",
 });
 
 const notificationStore = useNotificationStore(); //消息中心
