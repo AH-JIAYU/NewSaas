@@ -780,7 +780,7 @@ function handleCurrentChange(val: any) {
               class="mx-1"
               >未完成</el-tag
             >
-            <div
+            <!-- <div
               v-if="
                 row.settlementStatus === 0 &&
                 row.surveyStatus === 1 &&
@@ -791,7 +791,7 @@ function handleCurrentChange(val: any) {
               "
               style="color: #777"
               class="i-healthicons:no w-1.3em h-1.3em"
-            ></div>
+            ></div> -->
             <div
               v-if="
                 row.settlementStatus === 1 &&
