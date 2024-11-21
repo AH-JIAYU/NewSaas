@@ -33,6 +33,7 @@ const useUserStore = defineStore(
     const permissions = ref<string[]>([]);
     const logo = ref<any>(storage.local.get("logo") ?? "");//logo
     const expirationTime = ref<any>(storage.local.get("expirationTime") ?? "");//到期时间
+    const tenantName = ref<any>(storage.local.get("tenantName") ?? "");//租户公司名称
     const domain = ref<any>(storage.local.get("domain") ?? "");//租户首页网址
     const webName = ref<any>(storage.local.get("webName") ?? "");// 网站名称
     const name = ref<any>(storage.local.get("name") ?? "");// 用户名
@@ -80,6 +81,7 @@ const useUserStore = defineStore(
       storage.local.set("userId", res.data.userId);
       storage.local.set("logo", res.data.logo);
       storage.local.set("expirationTime", res.data.expirationTime);
+      storage.local.set("tenantName", res.data.tenantName);
       storage.local.set("domain", res.data.domain);
       storage.local.set("webName", res.data.webName);
       storage.local.set("name", res.data.name);
@@ -90,6 +92,7 @@ const useUserStore = defineStore(
       // storage.local.set("tend", res.data.description);
       webName.value = res.data.webName;
       expirationTime.value = res.data.expirationTime;
+      tenantName.value = res.data.tenantName;
       domain.value = res.data.domain;
       name.value = res.data.name;
       keyWords.value = res.data.keyWords;
@@ -118,6 +121,7 @@ const useUserStore = defineStore(
       storage.local.remove("logo");
       storage.local.remove("webName");
       storage.local.remove("expirationTime");
+      storage.local.remove("tenantName");
       storage.local.remove("domain");
       storage.local.remove("name");
       storage.local.remove("description");
@@ -139,6 +143,7 @@ const useUserStore = defineStore(
       logo.value = '';
       webName.value = '';
       expirationTime.value = '';
+      tenantName.value = '';
       domain.value = '';
       name.value = '';
       description.value = '';
@@ -404,6 +409,7 @@ const useUserStore = defineStore(
       logo,
       webName,
       expirationTime,
+      tenantName,
       domain,
       name,
       tenantId,

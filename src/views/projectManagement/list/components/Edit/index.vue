@@ -110,7 +110,7 @@ function onSubmit() {
   formRef.value &&
     formRef.value.validate(async (valid: any) => {
       if (valid) {
-        if (data.title === "新增") {
+        if (data.title === "新增" || data.title === "调度") {
           const { status } = await submitLoading(api.create(data.form));
           status === 1 &&
             ElMessage.success({
@@ -123,7 +123,6 @@ function onSubmit() {
               message: "修改成功",
             });
         }
-
         closeHandler();
         emits("fetch-data");
       }

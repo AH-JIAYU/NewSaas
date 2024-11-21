@@ -64,6 +64,7 @@ const columns = ref([
     sotrtable: true,
   },
   { prop: "allocationType", label: "分配类型", checked: true, sotrtable: true },
+  { prop: "originalPrice", label: "原始价", checked: true, sotrtable: true },
   { prop: "doMoneyPrice", label: "项目价", checked: true, sotrtable: true },
   { prop: "ir", label: "IR/NIR", checked: true, sotrtable: true },
   { prop: "countryIdList", label: "区域地区", checked: true, sotrtable: true },
@@ -536,7 +537,17 @@ const formOption = {
             <el-button size="small" v-else class="tableBut"> 未分配</el-button>
           </template>
         </el-table-column>
-
+        <el-table-column v-if="checkList.includes('originalPrice')" show-overflow-tooltip align="left" label="原始价"
+          width="100">
+          <template #default="{ row }">
+            <div class="flex-c">
+              <div v-if="row.originalPrice" class="oneLine fontC-System" style="width: calc(100% - 1.25rem)">
+                <CurrencyType />{{ row.originalPrice || 0 }}
+              </div>
+              <span v-else>-</span>
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column v-if="checkList.includes('doMoneyPrice')" show-overflow-tooltip align="left" label="项目价"
           width="100">
           <template #default="{ row }">

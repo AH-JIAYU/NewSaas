@@ -9,17 +9,17 @@ export default function appInfo(): Plugin {
     async buildStart() {
       const { bold, green, magenta, bgGreen, underline } = picocolors
       // eslint-disable-next-line no-console
-      console.log(
-        boxen(
-          `${bold(green(`由 ${bgGreen('Fantastic-admin')} 驱动`))}\n\n${underline('https://fantastic-admin.gitee.io')}\n\n当前使用：${magenta('专业版')}`,
-          {
-            padding: 1,
-            margin: 1,
-            borderStyle: 'double',
-            textAlignment: 'center',
-          },
-        ),
-      )
+      // console.log(
+      //   boxen(
+      //     `${bold(green(`由 ${bgGreen('Fantastic-admin')} 驱动`))}\n\n${underline('https://fantastic-admin.gitee.io')}\n\n当前使用：${magenta('专业版')}`,
+      //     {
+      //       padding: 1,
+      //       margin: 1,
+      //       borderStyle: 'double',
+      //       textAlignment: 'center',
+      //     },
+      //   ),
+      // )
     },
   }
 }

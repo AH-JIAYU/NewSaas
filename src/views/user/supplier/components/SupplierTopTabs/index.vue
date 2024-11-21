@@ -87,6 +87,12 @@ const changeCountryId = (val: any) => {
     }
   }
 };
+
+// 如果没有国家制空
+if(!props.leftTab.relevanceCountryIdList) {
+  props.leftTab.relevanceCountryIdList = []
+}
+
 // 所属区域全选
 const selectAll = () => {
   props.leftTab.relevanceCountryIdList = [];

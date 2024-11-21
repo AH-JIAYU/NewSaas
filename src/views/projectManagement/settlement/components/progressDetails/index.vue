@@ -30,10 +30,10 @@ async function showEdit(row: any) {
       try {
         // 请求接口获取进度数据
         const { data } = await api.getSettlementWebSocket(row);
-        console.log('data111', data);
+        // console.log('data111', data);
 
         if (data && data.current !== undefined && data.count !== undefined) {
-          console.log('data222', data);
+          // console.log('data222', data);
           // 更新进度条
           progress.value.current = data.current;
           progress.value.count = data.count;
@@ -60,7 +60,7 @@ const channelObj = new BroadcastChannel("televiseChannel");
 // 监听消息事件 -如果子组件提交-1000后自动刷新页面
 channelObj.onmessage = function () {
   setTimeout(async () => {
-    console.log(11111111111111);
+    // console.log(11111111111111);
     clearInterval(intervalId);
     dialogTableVisible.value = false;
   }, 1000);
