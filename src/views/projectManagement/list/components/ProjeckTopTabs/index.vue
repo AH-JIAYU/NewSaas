@@ -76,6 +76,11 @@ let data = ref<any>({
     },
   },
 });
+if (userStore.currencyType === 1) {
+  localToptTab.value.currencyType = 'USD'
+} else if (userStore.currencyType === 2) {
+  localToptTab.value.currencyType = 'CNY'
+}
 // 自定义校验邮箱
 const validateUrlRegistered = (rule: any, value: any, callback: any) => {
   // 网址格式
@@ -693,8 +698,8 @@ nextTick(() => {
               <el-form-item label="币种" prop="currencyType">
                 <el-button v-if="!userStore.originalExchangeRate" type="primary" link
                   @click="setExchangeRate">未设置汇率，点击设置>></el-button>
-                <el-select v-else v-model="localToptTab.currencyType" :disabled="!!localToptTab.projectId" value-key="" style="width: 22.4375rem"
-                  placeholder="请选择币种" clearable filterable>
+                <el-select v-else v-model="localToptTab.currencyType" :disabled="!!localToptTab.projectId" value-key=""
+                  style="width: 22.4375rem" placeholder="请选择币种" clearable filterable>
                   <el-option v-for="item in currencyList" :key="item.value" :label="item.label" :value="item.value">
                   </el-option>
                 </el-select>

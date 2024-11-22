@@ -26,8 +26,8 @@ const typeList = [
   { label: "个人", value: "personal" },
 ];
 const currencyList = [
-  { label: '美元', value: 1 },
-  { label: '人民币', value: 2 },
+  { label: '美元', value: 'USD' },
+  { label: '人民币', value: 'CNY' },
 ]
 // 校验
 const rules = reactive<any>({
@@ -68,11 +68,15 @@ const validateEmail = (rule: any, value: any, callback: any) => {
     callback();
   }
 };
+
 // 动态新增校验
 const changeCountryId = (val: any) => {
   if (val) {
     props.leftTab.countryType = val === "343" ? 1 : 2;
     if (val === "343") {
+      if(!props.leftTab.tenantSupplierId) {
+        props.leftTab.currencyType = 'CNY'
+      }
       if (rules.emailAddress) {
         delete rules.emailAddress;
       }
@@ -81,6 +85,9 @@ const changeCountryId = (val: any) => {
         { validator: validatePhone, trigger: "blur" },
       ];
     } else {
+      if(!props.leftTab.tenantSupplierId) {
+        props.leftTab.currencyType = 'USD'
+      }
       if (rules.supplierPhone) {
         delete rules.supplierPhone;
       }
@@ -250,7 +257,7 @@ nextTick(() => {
               </el-col>
               <el-col :span="8">
                 <el-form-item label="结算币种" prop="">
-                  <el-select v-model="props.leftTab.currency" value-key="" style="width: 22.4375rem" placeholder="请选择币种"
+                  <el-select v-model="props.leftTab.currencyType" value-key="" :disabled="!!props.leftTab.tenantSupplierId" style="width: 22.4375rem" placeholder="请选择币种"
                     clearable filterable @change="">
                     <el-option v-for="item in currencyList" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>

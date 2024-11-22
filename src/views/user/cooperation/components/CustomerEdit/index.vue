@@ -74,6 +74,7 @@ const departmentList = ref<any>([]);
 const selectTreeRef = ref();
 // 显隐
 async function showEdit() {
+  data.value.form.exchangeRate = userStore.originalExchangeRate
   data.value.form.chargeUserId = "";
   await getTenantUserList();
   // await getTenantStaffList();
@@ -398,7 +399,7 @@ const handleKeydown = (e: any) => {
                 </svg>
               </el-col>
               <el-col style="padding: 0;" :span="11">
-                <el-input v-if="tenantPartnersCurrencyType === 1" style="border: none;" v-model="data.form.exchangeRate" placeholder="请输入换算金额" clearable>
+                <el-input v-if="tenantPartnersCurrencyType === 1" style="border: none;" v-model="data.form.exchangeRate" disabled placeholder="请输入换算金额" clearable>
                   <template #prefix>
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
                       <g id="Frame">
@@ -425,7 +426,7 @@ const handleKeydown = (e: any) => {
                     </svg>
                   </template>
                 </el-input>
-                <el-input v-if="tenantPartnersCurrencyType === 2" style="border: none;" v-model="data.form.exchangeRate" placeholder="请输入换算金额" clearable>
+                <el-input v-if="tenantPartnersCurrencyType === 2" style="border: none;" v-model="data.form.exchangeRate" disabled placeholder="请输入换算金额" clearable>
                   <template #prefix>
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
                       <g id="Frame">
