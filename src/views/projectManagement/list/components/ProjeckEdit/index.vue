@@ -8,10 +8,12 @@ import useStagedDataStore from "@/store/modules/stagedData"; // 暂存
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
 import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
 import api from "@/api/modules/projectManagement";
+import useUserStore from "@/store/modules/user"; // 用户汇率
 
 defineOptions({
   name: "ProjeckEdit",
 });
+const userStore = useUserStore()
 const projectManagementListStore = useProjectManagementListStore(); //项目
 const stagedDataStore = useStagedDataStore(); // 暂存
 const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
@@ -201,6 +203,19 @@ async function onSubmit() {
       const params = await processingData();
       setTimeout(async () => {
         if (title.value === "新增") {
+          if(userStore.currencyType === 2 && params.currencyType ==='CNY') {
+            params.exchangeRate = 1
+            params.memberPrice = params.doMoneyPrice
+          }else if(userStore.currencyType === 1 && params.currencyType ==='USD'){
+            params.exchangeRate = 1
+            params.memberPrice = params.doMoneyPrice
+          }else if(userStore.currencyType === 2 && params.currencyType ==='USD'){
+            params.exchangeRate = userStore.originalExchangeRate
+            params.memberPrice = (params.doMoneyPrice * userStore.originalExchangeRate)
+          }else if(userStore.currencyType === 1 && params.currencyType ==='CNY'){
+            params.exchangeRate = userStore.originalExchangeRate
+            params.memberPrice = (params.doMoneyPrice / userStore.originalExchangeRate)
+          }
           const { status } = await api.create(params);
           status === 1 &&
             ElMessage.success({

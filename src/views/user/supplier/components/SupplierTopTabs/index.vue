@@ -25,6 +25,10 @@ const typeList = [
   { label: "公司", value: "company" },
   { label: "个人", value: "personal" },
 ];
+const currencyList = [
+  { label: '美元', value: 1 },
+  { label: '人民币', value: 2 },
+]
 // 校验
 const rules = reactive<any>({
   supplierAccord: [
@@ -244,7 +248,15 @@ nextTick(() => {
                   </el-select>
                 </el-form-item>
               </el-col>
-
+              <el-col :span="8">
+                <el-form-item label="结算币种" prop="">
+                  <el-select v-model="props.leftTab.currency" value-key="" style="width: 22.4375rem" placeholder="请选择币种"
+                    clearable filterable @change="">
+                    <el-option v-for="item in currencyList" :key="item.value" :label="item.label" :value="item.value">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
             </el-row>
             <el-row :gutter="10">
               <el-col :span="8">

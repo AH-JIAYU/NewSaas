@@ -15,7 +15,10 @@ import useConfigurationSiteSettingStore from '@/store/modules/configuration_site
 defineOptions({
   name: "site_setting",
 });
-
+const currencyList = [
+  { label: '美元', value: 'USD' },
+  { label: '人民币', value: 'CNY' },
+]
 const configurationSiteSettingStore = useConfigurationSiteSettingStore()//站点设置
 // token
 const userStore = useUserStore();
@@ -64,7 +67,7 @@ const form = ref<any>({
   qqCode: "",
   // 公司地址
   address: "",
-  projectOutAlias:'' , //外包项目别名
+  projectOutAlias: '', //外包项目别名
 });
 // 自定义校验手机号
 const validatePhone = (rule: any, value: any, callback: any) => {
@@ -129,6 +132,10 @@ const formRules = ref<FormRules>({
     { required: false, message: '请输入内容', trigger: 'blur' },
     { max: 50, message: '最多输入 50 字', trigger: 'blur' }
   ],
+  exchangeRate: [
+    { required: false, message: '请输入美元汇率', trigger: 'blur' },
+    {pattern: /^(?!0(\.0+)?$)(\d+(\.\d{1,2})?)$/, message: '请输入一个有效的数字，不能小于0，最多保留两位小数', trigger: 'blur' }
+  ],
 });
 onMounted(() => {
   loading.value = true;
@@ -143,8 +150,9 @@ async function getDataList() {
     configurationSiteSettingStore.setSiteConfig(data)
     if (data) {
       form.value = data || form.value;
-      if(form.value.minimumAmount === 0) form.value.minimumAmount = null;
+      if (form.value.minimumAmount === 0) form.value.minimumAmount = null;
       analyzeRecords.value = form.value
+      userStore.originalExchangeRate = form.value.exchangeRate
       userStore.setWebName(data.webName)
       userStore.setDescription(data.description)
       userStore.setkeyWords(data.keyWords)
@@ -203,9 +211,9 @@ const handleRemove: any = async () => {
   userStore.delLogo()
 };
 // 上传格式不正确删除
-const handleBeforeRemove = (file:any, fileList:any) => {
+const handleBeforeRemove = (file: any, fileList: any) => {
   // 确保文件列表更新
-  fileList.value = fileList.filter((item:any) => item.uid !== file.uid); // 移除文件
+  fileList.value = fileList.filter((item: any) => item.uid !== file.uid); // 移除文件
   return true; // 返回 true 以允许移除
 };
 // 上传文件是否符合
@@ -380,7 +388,6 @@ function onSubmit() {
                 <ElFormItem style="
                 display: flex;
                 justify-content: center;
-
               " label="网址Logo">
                   <el-upload :class="{ hide_box: fileList.length }" ref="uploadRef" drag v-model:file-list="fileList"
                     :headers="headers" :action="Url" :auto-upload="false" list-type="picture-card" :limit="1"
@@ -436,6 +443,20 @@ function onSubmit() {
 </el-form-item>
 </el-col> -->
               <el-col :span="24">
+                <el-form-item label="默认币种" prop="">
+                  <el-select v-model="form.currencyType" value-key="" style="width: 22.4375rem" placeholder="请选择币种"
+                    clearable filterable @change="">
+                    <el-option v-for="item in currencyList" :key="item.value" :label="item.label" :value="item.value">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="美元汇率" prop="exchangeRate">
+                  <el-input v-model="form.exchangeRate" style="width: 22.4375rem" placeholder="" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
                 <el-form-item label="最低结算金额" prop="">
                   <el-input v-model.number="form.minimumAmount" style="width: 22.4375rem" placeholder="" />
                 </el-form-item>
@@ -486,7 +507,8 @@ function onSubmit() {
         </el-form>
       </el-tabs>
     </PageMain>
-    <siteDetail ref="recordRef" @fetch-data="getDataList" :personalizedDomainName="analyzeRecords?.personalizedDomainName" />
+    <siteDetail ref="recordRef" @fetch-data="getDataList"
+      :personalizedDomainName="analyzeRecords?.personalizedDomainName" />
   </div>
 </template>
 
@@ -607,5 +629,4 @@ function onSubmit() {
 
 // :deep() {
 //   background-color: #fafafa;
-// }
-</style>
+// }</style>

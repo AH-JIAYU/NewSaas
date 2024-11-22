@@ -21,4 +21,6 @@ export default {
   addAnalyzeMemberBackground: (data: any) => api.post('record/addAnalyzeMemberBackground', data),
   // 检查顶级域名是否备案
   checkDomainRecord: (data: any) => api.post('record/checkDomainRecord', data),
+  // 修改租户货币类型和汇率
+  updateWebConfig: (data: any) => api.post('project/updateWebConfig', data),
 }

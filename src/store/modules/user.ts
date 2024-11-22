@@ -33,6 +33,7 @@ const useUserStore = defineStore(
     const permissions = ref<string[]>([]);
     const logo = ref<any>(storage.local.get("logo") ?? "");//logo
     const expirationTime = ref<any>(storage.local.get("expirationTime") ?? "");//到期时间
+    const originalExchangeRate = ref<any>(storage.local.get("originalExchangeRate") ?? "");//到期时间
     const tenantName = ref<any>(storage.local.get("tenantName") ?? "");//租户公司名称
     const domain = ref<any>(storage.local.get("domain") ?? "");//租户首页网址
     const webName = ref<any>(storage.local.get("webName") ?? "");// 网站名称
@@ -121,6 +122,7 @@ const useUserStore = defineStore(
       storage.local.remove("logo");
       storage.local.remove("webName");
       storage.local.remove("expirationTime");
+      storage.local.remove("originalExchangeRate");
       storage.local.remove("tenantName");
       storage.local.remove("domain");
       storage.local.remove("name");
@@ -143,6 +145,7 @@ const useUserStore = defineStore(
       logo.value = '';
       webName.value = '';
       expirationTime.value = '';
+      originalExchangeRate.value = '';
       tenantName.value = '';
       domain.value = '';
       name.value = '';
@@ -244,6 +247,7 @@ const useUserStore = defineStore(
     async function getCurrencyType() {
       const res = await apiUser.getCurrencyType();
       currencyType.value = res.data.currencyType;
+      originalExchangeRate.value = res.data.exchangeRate
     }
     // 获取汇率
     async function getExchangeRate() {
@@ -409,6 +413,7 @@ const useUserStore = defineStore(
       logo,
       webName,
       expirationTime,
+      originalExchangeRate,
       tenantName,
       domain,
       name,
