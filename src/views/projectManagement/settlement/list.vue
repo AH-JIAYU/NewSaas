@@ -273,11 +273,17 @@ async function fetchData() {
 // 导出
 async function onExport() {
   try {
-    const params = {
-      page: 1,
-      limit: 10,
-      type: "export"
-    }
+    let params = { ...queryForm };
+    params.page = 0;
+    params.limit = -1;
+    params.type = "export";
+
+    // const params = {
+    //   page: 0,
+    //   limit: -1,
+    //   type: "export",
+
+    // }
     const list = await api.list(params);
     const name = "项目结算列表.xlsx";
     console.log('list',list);

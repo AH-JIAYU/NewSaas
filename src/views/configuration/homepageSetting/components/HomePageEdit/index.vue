@@ -101,6 +101,7 @@ const onDialogOpened = async () => {
     //   },
     // },
 
+
     //   blockManager: {
     //   appendTo: 'basic',
     //   blocks: [
@@ -146,7 +147,7 @@ const onDialogOpened = async () => {
   editorRef.value.on("block:custom", (props: any) => {
     updataText(props.blocks);
   });
-  // 批量添加自定义块
+  // // 批量添加自定义块
   customBlock.forEach((item: any) => {
     editorRef.value.Blocks.add(item.id, item);
   })
