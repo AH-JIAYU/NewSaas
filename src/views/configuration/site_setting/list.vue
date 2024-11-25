@@ -19,6 +19,7 @@ const currencyList = [
   { label: '美元', value: 'USD' },
   { label: '人民币', value: 'CNY' },
 ]
+const currencyType = ref<any>()
 const configurationSiteSettingStore = useConfigurationSiteSettingStore()//站点设置
 // token
 const userStore = useUserStore();
@@ -150,6 +151,7 @@ async function getDataList() {
     configurationSiteSettingStore.setSiteConfig(data)
     if (data) {
       form.value = data || form.value;
+      currencyType.value = data.currencyType
       if (form.value.minimumAmount === 0) form.value.minimumAmount = null;
       analyzeRecords.value = form.value
       userStore.originalExchangeRate = form.value.exchangeRate
@@ -289,6 +291,11 @@ function onSubmit() {
           }
           if (fileList.value.length) {
             uploadRef.value.submit();
+          }
+          if(form.value.currencyType === 'USD') {
+            userStore.currencyType = 1
+          }else {
+            userStore.currencyType = 2
           }
           const res = await api.edit(form.value)
           loading.value = false;
@@ -453,7 +460,36 @@ function onSubmit() {
               </el-col>
               <el-col :span="24">
                 <el-form-item label="美元汇率" prop="exchangeRate">
-                  <el-input v-model="form.exchangeRate" style="width: 22.4375rem" placeholder="" />
+                  <div class="exchangeRate">
+                    <div class="left">
+                      <div class="top">USD $ - 美元</div>
+                      <div class="bottom">1</div>
+                    </div>
+                    <div class="center">
+                      <div class="i-icon-park-solid:right-two w-1em h-1em"></div>
+                    </div>
+                    <div class="right">
+                      <div class="top">CNY ￥ - 人民币</div>
+                      <div class="bottom">
+                        <el-input v-model="form.exchangeRate" style="width: 22.4375rem" placeholder="请输入1美元对人民币的汇率" clearable />
+                      </div>
+                    </div>
+                  </div>
+                  <!-- <div v-if="currencyType === 'CNY'" class="exchangeRate">
+                    <div class="left">
+                      <div class="top">CNY ￥ - 人民币</div>
+                      <div class="bottom">1</div>
+                    </div>
+                    <div class="center">
+                      <div class="i-icon-park-solid:right-two w-1em h-1em"></div>
+                    </div>
+                    <div class="right">
+                      <div class="top">USD $ - 美元</div>
+                      <div class="bottom">
+                        <el-input v-model="form.exchangeRate" style="width: 22.4375rem" placeholder="请输入1人民币对美元的汇率" clearable />
+                      </div>
+                    </div>
+                  </div> -->
                 </el-form-item>
               </el-col>
               <el-col :span="24">
@@ -627,6 +663,59 @@ function onSubmit() {
   color: #606266;
 }
 
-// :deep() {
-//   background-color: #fafafa;
-// }</style>
+:deep(.el-input__wrapper) {
+  border: none;
+}
+.exchangeRate {
+  display:flex;
+  width: 22.4375rem;
+  .left {
+    width: 30%;
+    border: 1px solid #c1c5cd;
+    border-radius: 4px;
+    .top {
+      display:flex;
+      justify-content: center;
+      align-items: center;
+      border-bottom: 1px solid #f2f2f2 ;
+    }
+    .bottom {
+      display:flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #dddddd;
+    }
+  }
+  .center {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    width: 8%;
+  }
+  .right {
+    width: 62%;
+    border: 1px solid #c1c5cd;
+    border-radius: 4px;
+    .top {
+      display:flex;
+      justify-content: center;
+      align-items: center;
+      border-bottom: 1px solid #f2f2f2;
+    }
+    .bottom {
+      display:flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .right .el-input__wrapper {
+      box-shadow: none;
+    }
+  }
+}
+:deep(.right .el-input__wrapper) {
+  box-shadow: none;
+}
+:deep(.right .el-input__inner) {
+  text-align: center;
+}
+</style>

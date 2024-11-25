@@ -12,6 +12,7 @@ import useUserCustomerStore from "@/store/modules/user_customer";
 import useTenantStaffStore from "@/store/modules/configuration_manager";
 import api from "@/api/modules/project_settlement";
 import empty from "@/assets/images/empty.png";
+import fileExport from "@/utils/flie_export";
 defineOptions({
   name: "settlement",
 });
@@ -108,6 +109,8 @@ const queryForm = reactive<any>({
   startTime: "",
   // 结束时间
   endTime: "",
+  allocationStatus: "",
+  type: "search",
 });
 // 表格数据
 const list = ref<any>([]);
@@ -267,6 +270,23 @@ async function fetchData() {
     listLoading.value = false;
   }
 }
+// 导出
+async function onExport() {
+  try {
+    const params = {
+      page: 1,
+      limit: 10,
+      type: "export"
+    }
+    const list = await api.list(params);
+    const name = "项目结算列表.xlsx";
+    console.log('list',list);
+    return
+    await fileExport(list, name);
+  } catch (error) {
+    console.error("导出失败", error);
+  }
+}
 onMounted(async () => {
   countryList.value = await basicDictionaryStore.getCountry();
   customerList.value = await customerStore.getCustomerList();
@@ -394,7 +414,7 @@ function handleMoreStatus(row: any) {
           </el-button>
         </FormLeftPanel>
         <FormRightPanel>
-          <el-button size="default" @click=""> 导出 </el-button>
+          <el-button size="default" @click="onExport"> 导出 </el-button>
           <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
             v-model:columns="columns" v-model:line-height="lineHeight" v-model:stripe="stripe"
             style="margin-left: 0.75rem" @query-data="currentChange" />

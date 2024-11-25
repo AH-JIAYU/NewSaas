@@ -155,14 +155,14 @@ async function save() {
       if (tenantCurrencyType === tenantPartnersCurrencyType.value) {
         obj.exchangeRate = 1
       }
-      if(tenantCurrencyType === 1) {
+      if (tenantCurrencyType === 1) {
         obj.currencyType = 'USD';
-      }else if(tenantCurrencyType === 2){
+      } else if (tenantCurrencyType === 2) {
         obj.currencyType = 'CNY';
       }
-      if(tenantPartnersCurrencyType.value === 1) {
+      if (tenantPartnersCurrencyType.value === 1) {
         obj.beCurrencyType = 'USD';
-      }else if(tenantPartnersCurrencyType.value === 2){
+      } else if (tenantPartnersCurrencyType.value === 2) {
         obj.beCurrencyType = 'CNY';
       }
       //判断如果为数组改为字符串，data.value.form.chargeUserId
@@ -177,15 +177,14 @@ async function save() {
         });
         return;
       }
-
-      obj.sendProjectType =
-        data.value.form.sendProjectType.length != 0
-          ? data.value.form.sendProjectType[0]
-          : null;
-      obj.receiveProjectType =
-        data.value.form.receiveProjectType.length != 0
-          ? data.value.form.receiveProjectType[0]
-          : null;
+      // obj.sendProjectType =
+      //   data.value.form.sendProjectType.length != 0
+      //     ? data.value.form.sendProjectType[0]
+      //     : null;
+      // obj.receiveProjectType =
+      //   data.value.form.receiveProjectType.length != 0
+      //     ? data.value.form.receiveProjectType[0]
+      //     : null;
       obj.invitationType = 2;
       if (obj.receiveProjectType == 2) {
         //手动
@@ -254,12 +253,35 @@ const handleKeydown = (e: any) => {
   // 阻止键盘输入
   e.preventDefault();
 };
+
+// 发送
+const sendProjectType = ref<any>(null)
+// 接收
+const receiveProjectType = ref<any>(null)
+//列表切换发送项目状态
+const changeSendProjectType = (name: any, row: any) => {
+  if (row) {
+    if (name === '发送') {
+      sendProjectType.value = row
+      data.value.form.sendProjectType = row
+    } else {
+      receiveProjectType.value = row
+      data.value.form.receiveProjectType = row
+    }
+  }
+};
+const handleClose = () => {
+  sendProjectType.value = null
+  receiveProjectType.value = null
+  data.value.form.sendProjectType = null;
+  data.value.form.receiveProjectType = null;
+}
 </script>
 
 <template>
   <div>
     <el-dialog v-model="drawerisible" :close-on-click-modal="false" destroy-on-close draggable width="30%" title="邀约公司"
-      class="yaoyueDrawer">
+      class="yaoyueDrawer" @close="handleClose">
       <ElForm ref="formRef" :rules="data.rules" :model="data.form" label-width="7rem" labelPosition="left"
         class="hezuoDrawer">
         <el-form-item label="公司名称" prop="beInvitationTenantId">
@@ -284,7 +306,7 @@ const handleKeydown = (e: any) => {
                 #append>%</template></el-input>
           </el-form-item>
         </template>
-        <el-table v-if="dataList.length" :data="dataList" border stripe style="margin-bottom: 18px">
+        <el-table v-if="dataList.length" :data="dataList" stripe style="margin-bottom: 18px">
           <el-table-column prop="name" label="用户名" />
           <el-table-column prop="tenantName" label="公司名称" />
           <el-table-column prop="country" label="区域" />
@@ -295,7 +317,7 @@ const handleKeydown = (e: any) => {
             </template>
           </el-table-column>
         </el-table>
-        <el-form-item label-width="7.5rem" v-if="data.form.beInvitationTenantId">
+        <!-- <el-form-item label-width="7.5rem" v-if="data.form.beInvitationTenantId">
           <template #label>
             <div style="display: flex;align-items: center;">
               <span
@@ -303,19 +325,19 @@ const handleKeydown = (e: any) => {
               <span style="font-weight: 700; font-size: 0.9375rem">项目分配方式</span>
             </div>
           </template>
-        </el-form-item>
+        </el-form-item> -->
         <div v-if="data.form.beInvitationTenantId">
-          <el-form-item v-show="tenantCurrencyType !== tenantPartnersCurrencyType" prop="exchangeRate"
+          <!-- <el-form-item v-show="tenantCurrencyType !== tenantPartnersCurrencyType" prop="exchangeRate"
             label-width="7rem">
             <template #label>
               <span style="color: #333;">
                 <el-tooltip effect="dark" placement="top-start">
                   <template #content>
-                    <!-- <div>尊贵的{{ data.form.tenantName }}</div>
+                    <div>尊贵的{{ data.form.tenantName }}</div>
                     <div>您好，我是QQB诚挚邀请您与我们一同协作共赢！</div>
                     <div>代替邀约方公司名称货币类型为{{ tenantCurrencyType === 1 ? '美元' : '人民币' }}，与您的货币类型{{
-      tenantPartnersCurrencyType
-        === 1 ? '美元' : '人民币' }}汇率换算为1：100，请您悉知。</div> -->
+                      tenantPartnersCurrencyType
+                        === 1 ? '美元' : '人民币' }}汇率换算为1：100，请您悉知。</div>
                   </template>
                   <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
                 </el-tooltip>
@@ -324,7 +346,6 @@ const handleKeydown = (e: any) => {
             </template>
             <el-row class="radiusInput" style="margin: 0;" :gutter="20">
               <el-col style="padding: 0;" :span="11">
-                <!-- v-if="tenantCurrencyType === 2" -->
                 <el-input v-if="tenantCurrencyType === 2" style="border: none;" v-model="moneyDefault" disabled
                   placeholder="">
                   <template #prefix>
@@ -399,7 +420,8 @@ const handleKeydown = (e: any) => {
                 </svg>
               </el-col>
               <el-col style="padding: 0;" :span="11">
-                <el-input v-if="tenantPartnersCurrencyType === 1" style="border: none;" v-model="data.form.exchangeRate" disabled placeholder="请输入换算金额" clearable>
+                <el-input v-if="tenantPartnersCurrencyType === 1" style="border: none;" v-model="data.form.exchangeRate"
+                  disabled placeholder="请输入换算金额" clearable>
                   <template #prefix>
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
                       <g id="Frame">
@@ -426,7 +448,8 @@ const handleKeydown = (e: any) => {
                     </svg>
                   </template>
                 </el-input>
-                <el-input v-if="tenantPartnersCurrencyType === 2" style="border: none;" v-model="data.form.exchangeRate" disabled placeholder="请输入换算金额" clearable>
+                <el-input v-if="tenantPartnersCurrencyType === 2" style="border: none;" v-model="data.form.exchangeRate"
+                  disabled placeholder="请输入换算金额" clearable>
                   <template #prefix>
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
                       <g id="Frame">
@@ -457,10 +480,14 @@ const handleKeydown = (e: any) => {
                 </el-input>
               </el-col>
             </el-row>
-          </el-form-item>
-          <el-form-item prop="sendProjectType" label-width="7rem">
+          </el-form-item> -->
+          <el-form-item prop="sendProjectType" label-width="7rem" style="display: flex;
+            flex-wrap: nowrap;
+            flex-direction: column;">
             <template #label>
-              <span>
+              <span style="display: flex
+;
+    align-items: center;">
                 <el-tooltip effect="dark" placement="top-start">
                   <template #content>
                     <div>自动：您所创建的项目，自动分配给该合作商</div>
@@ -471,15 +498,27 @@ const handleKeydown = (e: any) => {
                 发送项目
               </span>
             </template>
-            <el-checkbox-group v-model="data.form.sendProjectType" @change="handleCheckboxChange1">
-              <el-checkbox :value="1"> 自动 </el-checkbox>
-              <el-checkbox :value="2"> 手动 </el-checkbox>
-            </el-checkbox-group>
+            <!-- <el-checkbox-group v-model="data.form.sendProjectType" @change="handleCheckboxChange1">
+              <el-checkbox-button :value="1"> 自动 </el-checkbox-button>
+              <el-checkbox :value="2" border > 手动 </el-checkbox>
+            </el-checkbox-group> -->
+            <div style="margin-top: 6px;margin-bottom: 0px;">
+              <el-button :type="sendProjectType === 1 ? 'primary' : ''" size="small"
+                @click="changeSendProjectType('发送', 1)">自动
+              </el-button>
+              <el-button :type="sendProjectType === 2 ? 'primary' : ''" size="small"
+                @click="changeSendProjectType('发送', 2)">手动</el-button>
+            </div>
           </el-form-item>
-          <div style="display: flex">
-            <el-form-item prop="receiveProjectType" label-width="7rem" style="margin-right: 1.5625rem">
+          <div style="display: flex;flex-direction: column;">
+            <el-form-item prop="receiveProjectType" label-width="7rem" style="margin-right: 1.5625rem;display: flex
+;
+    flex-wrap: nowrap;
+    flex-direction: column;">
               <template #label>
-                <span>
+                <span style="display: flex
+;
+    align-items: center;">
                   <el-tooltip effect="dark" placement="top-start">
                     <template #content>
                       <div>自动：合作商分配给您的项目，全部自动接收</div>
@@ -490,13 +529,18 @@ const handleKeydown = (e: any) => {
                   接收项目
                 </span>
               </template>
-
-              <el-checkbox-group v-model="data.form.receiveProjectType" @change="handleCheckboxChange2">
+              <!-- <el-checkbox-group v-model="data.form.receiveProjectType" @change="handleCheckboxChange2">
                 <el-checkbox :value="1"> 自动 </el-checkbox>
                 <el-checkbox :value="2"> 手动 </el-checkbox>
-              </el-checkbox-group>
+              </el-checkbox-group> -->
+              <div>
+                <el-button :type="receiveProjectType === 1 ? 'primary' : ''" size="small"
+                  @click="changeSendProjectType('接收', 1)">自动
+                </el-button>
+                <el-button :type="receiveProjectType === 2 ? 'primary' : ''" size="small"
+                  @click="changeSendProjectType('接收', 2)">手动</el-button>
+              </div>
             </el-form-item>
-
             <el-tree-select v-if="data.form.receiveProjectType == 1" placeholder="请选择部门" ref="treeRef"
               v-model="data.form.chargeUserId" :data="departmentList" check-strictly show-checkbox default-expand-all
               node-key="id" style="width: 15.625rem;" :props="defaultProps" @check-change="handleNodeClick"
@@ -615,5 +659,4 @@ const handleKeydown = (e: any) => {
 
 // :deep(.inviteDialog ){
 //   color: #333333 !important;
-// }
-</style>
+// }</style>
