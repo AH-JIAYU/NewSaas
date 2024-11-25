@@ -20,8 +20,8 @@ export default {
   InvoicingSettlementEdit: (data: any) => api.post('projectSettlement/updateProjectSettlementStatus', data, ),
   // 获取审核进度
   getSettlementWebSocket: (data:any) => api.get(`settlement-socket/getSettlementWebSocket?projectId=${data}` ),
-  //修改项目结算
-  exportProjectSettlementList: (data: any) => api.post('projectSettlement/exportProjectSettlementList', data, ),
+  //导出项目结算
+  exportProjectSettlementList: (data: any) => api.post('projectSettlement/exportProjectSettlementList', data, { responseType: 'blob' }),
 
   delete: (id: number | string) => api.post('menu/delete', {
     id,
