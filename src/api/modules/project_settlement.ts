@@ -21,7 +21,7 @@ export default {
   // 获取审核进度
   getSettlementWebSocket: (data:any) => api.get(`settlement-socket/getSettlementWebSocket?projectId=${data}` ),
   //导出项目结算
-  exportProjectSettlementList: (data: any) => api.post('projectSettlement/exportProjectSettlementList', data, ),
+  exportProjectSettlementList: (data: any) => api.post('projectSettlement/exportProjectSettlementList', data, { responseType: 'blob' }),
 
   delete: (id: number | string) => api.post('menu/delete', {
     id,
