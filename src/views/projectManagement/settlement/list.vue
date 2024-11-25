@@ -274,6 +274,19 @@ async function fetchData() {
 async function onExport() {
   try {
     let params = { ...queryForm };
+        //#region 转换查询的数据格式
+        if (Array.isArray(queryForm.countryId)) {
+      params.countryId = params.countryId.join(",");
+    }
+    if (queryForm.time && !!queryForm.time.length) {
+      params.beginTime = params.time[0] || "";
+      params.endTime = params.time[1] || "";
+    }
+    if (queryForm.settlementStatus) {
+      params.settlementStatus = [params.settlementStatus];
+    } else {
+      params.settlementStatus = [];
+    }
     params.page = 0;
     params.limit = -1;
     params.type = "export";
