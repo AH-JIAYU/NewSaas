@@ -135,7 +135,7 @@ const formRules = ref<FormRules>({
   ],
   exchangeRate: [
     { required: false, message: '请输入美元汇率', trigger: 'blur' },
-    {pattern: /^(?!0(\.0+)?$)(\d+(\.\d{1,2})?)$/, message: '请输入一个有效的数字，不能小于0，最多保留两位小数', trigger: 'blur' }
+    { pattern: /^(?!0(\.0+)?$)(\d+(\.\d{1,2})?)$/, message: '请输入一个有效的数字，不能小于0，最多保留两位小数', trigger: 'blur' }
   ],
 });
 onMounted(() => {
@@ -263,6 +263,15 @@ const handlePictureCardPreview: UploadProps["onPreview"] = (uploadFile) => {
   dialogImageUrl.value = uploadFile.url!;
   dialogVisible.value = true;
 };
+
+// 切换币种
+const currencyTypeChange = (val: any) => {
+  if (val) {
+    currencyType.value = val
+    form.value.exchangeRate = ''
+  }
+}
+
 // 提交数据
 function onSubmit() {
   if (form.value.email === '' || form.value.email === null) {
@@ -292,9 +301,9 @@ function onSubmit() {
           if (fileList.value.length) {
             uploadRef.value.submit();
           }
-          if(form.value.currencyType === 'USD') {
+          if (form.value.currencyType === 'USD') {
             userStore.currencyType = 1
-          }else {
+          } else {
             userStore.currencyType = 2
           }
           const res = await api.edit(form.value)
@@ -452,33 +461,47 @@ function onSubmit() {
               <el-col :span="24">
                 <el-form-item label="默认币种" prop="">
                   <el-select v-model="form.currencyType" value-key="" style="width: 22.4375rem" placeholder="请选择币种"
-                    clearable filterable @change="">
+                    clearable filterable @change="currencyTypeChange">
                     <el-option v-for="item in currencyList" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
                   </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="24">
-                <el-form-item label="美元汇率" prop="exchangeRate">
-                  <div class="exchangeRate">
-                    <div class="left">
-                      <div class="top">USD $ - 美元</div>
-                      <div class="bottom">1</div>
-                    </div>
-                    <div class="center">
-                      <div class="i-icon-park-solid:right-two w-1em h-1em"></div>
-                    </div>
-                    <div class="right">
-                      <div class="top">CNY ￥ - 人民币</div>
-                      <div class="bottom">
-                        <el-input v-model="form.exchangeRate" style="width: 22.4375rem" placeholder="请输入1美元对人民币的汇率" clearable />
+                <el-form-item style="display: flex;" label="汇率" prop="exchangeRate">
+                  <div>
+                    <div style="margin-bottom: 10px;" v-if="currencyType === 'USD'" class="exchangeRate">
+                      <div class="left">
+                        <div style="width: 119.86px;" class="top">1 美元 (USD) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=</div>
                       </div>
+                      <div class="right">
+                        <div class="bottom">
+                          <el-input v-model="form.exchangeRate" style="width: 7.4375rem" placeholder="请输入数值"
+                            clearable />
+                          人民币 (CNY)
+                        </div>
+                      </div>
+                    </div>
+                    <div v-if="currencyType === 'CNY'" class="exchangeRate">
+                      <div class="left">
+                        <div class="top">1 人民币 (CNY) &nbsp;&nbsp;=</div>
+                      </div>
+                      <div class="right">
+                        <div class="bottom">
+                          <el-input v-model="form.exchangeRate" style="width: 7.4375rem" placeholder="请输入数值"
+                            clearable />
+                          美元 (USD)
+                        </div>
+                      </div>
+                    </div>
+                    <div v-if="currencyType === 'CNY' && form.exchangeRate >= 1" class="tips">
+                      <div style="color: orange;margin-right: 5px;" class="i-ic:round-warning w-1.3em h-1.3em"></div>
+                      请再三确认,当前市场1人民币对美元的汇率
                     </div>
                   </div>
                   <!-- <div v-if="currencyType === 'CNY'" class="exchangeRate">
                     <div class="left">
-                      <div class="top">CNY ￥ - 人民币</div>
-                      <div class="bottom">1</div>
+                      <div class="top">人民币(CNY)</div>
                     </div>
                     <div class="center">
                       <div class="i-icon-park-solid:right-two w-1em h-1em"></div>
@@ -491,6 +514,8 @@ function onSubmit() {
                     </div>
                   </div> -->
                 </el-form-item>
+              </el-col>
+              <el-col :span="24">
               </el-col>
               <el-col :span="24">
                 <el-form-item label="最低结算金额" prop="">
@@ -666,55 +691,82 @@ function onSubmit() {
 :deep(.el-input__wrapper) {
   border: none;
 }
+
 .exchangeRate {
-  display:flex;
+  display: flex;
   width: 22.4375rem;
+  height: 2.25rem;
+  border: 1px solid #dcdfe6;
+  border-radius: 4px;
+  align-items: center;
+  padding: 0 1rem;
+
   .left {
-    width: 30%;
-    border: 1px solid #c1c5cd;
-    border-radius: 4px;
-    .top {
-      display:flex;
-      justify-content: center;
-      align-items: center;
-      border-bottom: 1px solid #f2f2f2 ;
-    }
-    .bottom {
-      display:flex;
-      justify-content: center;
-      align-items: center;
-      background-color: #dddddd;
-    }
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // width: 30%;
+    // border: 1px solid #c1c5cd;
+    // border-radius: 4px;
+    // .top {
+    //   display:flex;
+    //   justify-content: center;
+    //   align-items: center;
+    //   border-bottom: 1px solid #f2f2f2 ;
+    // }
+    // .bottom {
+    //   display:flex;
+    //   justify-content: center;
+    //   align-items: center;
+    //   background-color: #dddddd;
+    // }
   }
+
   .center {
-    display:flex;
+    display: flex;
     justify-content: center;
     align-items: center;
     width: 8%;
   }
+
   .right {
-    width: 62%;
-    border: 1px solid #c1c5cd;
-    border-radius: 4px;
-    .top {
-      display:flex;
-      justify-content: center;
-      align-items: center;
-      border-bottom: 1px solid #f2f2f2;
-    }
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    // width: 62%;
+    // border: 1px solid #c1c5cd;
+    // border-radius: 4px;
+    // .top {
+    //   display:flex;
+    //   justify-content: center;
+    //   align-items: center;
+    //   border-bottom: 1px solid #f2f2f2;
+    // }
     .bottom {
-      display:flex;
+      display: flex;
       justify-content: center;
       align-items: center;
     }
-    .right .el-input__wrapper {
-      box-shadow: none;
-    }
+
+    // .right .el-input__wrapper {
+    //   box-shadow: none;
+    // }
   }
 }
+
+.tips {
+  display: flex;
+  align-items: center;
+  height: 1.25rem;
+  color: orange;
+  font-size: 12px;
+}
+
 :deep(.right .el-input__wrapper) {
   box-shadow: none;
 }
+
 :deep(.right .el-input__inner) {
   text-align: center;
 }
