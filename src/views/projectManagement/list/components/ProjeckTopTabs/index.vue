@@ -17,6 +17,7 @@ import {
   UploadFilled,
   QuestionFilled,
 } from "@element-plus/icons-vue";
+import storage from "@/utils/storage";
 import api from "@/api/modules/projectManagement";
 import useProjectManagementListStore from "@/store/modules/projectManagement_list"; // 项目
 import customerEdit from "@/views/user/customer/components/CustomerEdit/index.vue"; //快捷操作： 新增客户
@@ -35,6 +36,9 @@ const currencyList = [
   { label: '美元', value: 'USD' },
   { label: '人民币', value: 'CNY' },
 ]
+// 储存第一次输入美元汇率
+const currencyTypeRes = ref<any>()
+currencyTypeRes.value = storage.local.get("currencyTypeRes")
 const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
 const customerStore = useUserCustomerStore(); // 客户
 const projectManagementListStore = useProjectManagementListStore(); //项目
@@ -709,7 +713,7 @@ nextTick(() => {
               <el-form-item label="汇率" prop="exchangeRate">
                 <!-- <el-input-number style="height: 2rem" v-model="localToptTab.exchangeRate" :min="1" :precision="1"
                   :step="0.1" controls-position="right" size="large" /> -->
-                  <el-text v-if="localToptTab.currencyType === 'USD'">1美元 = {{userStore.originalExchangeRate}}人民币</el-text>
+                  <el-text v-if="localToptTab.currencyType === 'USD'">1美元 = {{currencyTypeRes}}人民币</el-text>
                   <el-text v-if="localToptTab.currencyType === 'CNY'">1人民币 = {{userStore.originalExchangeRate}}美元</el-text>
               </el-form-item>
             </el-col>
