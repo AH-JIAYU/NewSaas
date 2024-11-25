@@ -207,23 +207,19 @@ async function onSubmit() {
       const params = await processingData();
       setTimeout(async () => {
         if (title.value === "新增") {
-          if(userStore.currencyType === 2 && params.currencyType ==='USD') {
-            params.exchangeRate = currencyTypeRes.value
-          }else {
+          if(userStore.currencyType === 2 && params.currencyType ==='CNY') {
+            params.memberPrice = params.doMoneyPrice
             params.exchangeRate = userStore.originalExchangeRate
+          }else if(userStore.currencyType === 1 && params.currencyType ==='USD'){
+            params.memberPrice = params.doMoneyPrice
+            params.exchangeRate = userStore.originalExchangeRate
+          }else if(userStore.currencyType === 2 && params.currencyType ==='USD'){
+            params.exchangeRate = currencyTypeRes.value
+            params.memberPrice = (params.doMoneyPrice * userStore.originalExchangeRate)
+          }else if(userStore.currencyType === 1 && params.currencyType ==='CNY'){
+            params.exchangeRate = (1 / currencyTypeRes.value).toFixed(2)
+            params.memberPrice = (params.doMoneyPrice / userStore.originalExchangeRate)
           }
-          // if(userStore.currencyType === 2 && params.currencyType ==='CNY') {
-          //   params.memberPrice = params.doMoneyPrice
-          // }else if(userStore.currencyType === 1 && params.currencyType ==='USD'){
-          //   params.memberPrice = params.doMoneyPrice
-          // }else if(userStore.currencyType === 2 && params.currencyType ==='USD'){
-          //   params.exchangeRate = userStore.originalExchangeRate
-          //   params.memberPrice = (params.doMoneyPrice * userStore.originalExchangeRate)
-          // }else if(userStore.currencyType === 1 && params.currencyType ==='CNY'){
-          //   params.exchangeRate = userStore.originalExchangeRate
-          //   params.memberPrice = (params.doMoneyPrice / userStore.originalExchangeRate)
-          // }
-          // params.exchangeRate = userStore.originalExchangeRate
           const { status } = await api.create(params);
           status === 1 &&
             ElMessage.success({

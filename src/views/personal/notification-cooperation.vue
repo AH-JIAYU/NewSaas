@@ -65,8 +65,14 @@ const showEdit = async (row: any) => {
   // await getTenantStaffList();
   data.value.chargeUserId = "";
   data.value = row;
-  data.value.exchangeRate = userStore.originalExchangeRate
   tenantPartnersCurrencyType.value = row.currencyType
+  if (tenantCurrencyType === tenantPartnersCurrencyType.value) {
+    data.value.exchangeRate = 1
+  } else if (tenantCurrencyType === 1 && tenantPartnersCurrencyType.value === 2) {
+    data.value.exchangeRate = userStore.originalExchangeRate
+  } else if (tenantCurrencyType === 2 && tenantPartnersCurrencyType.value === 1) {
+    data.value.exchangeRate = (1 / userStore.originalExchangeRate).toFixed(2)
+  }
   // 部门
   const res = await apiDep.list({ name: "" });
   if (res.data) {
@@ -220,11 +226,13 @@ defineExpose({
   <div class="news p-4">
     <div class="type"><span></span> 合作邀约</div>
     <div class="news-content">
-      <div class="content">尊贵的{{  data.beInvitedName }}</div>
+      <div class="content">尊贵的{{ data.beInvitedName }}</div>
       <div class="time">
         <div>您好，我是{{ data.invitationName }}诚挚邀请您与我们一同协作共赢！</div>
-        <div>{{ data.invitationName }}货币类型为{{ tenantPartnersCurrencyType === 1 ? '美元' : '人民币' }}，与您的货币类型{{ tenantCurrencyType === 1 ?
-        '美元' : '人民币' }}汇率换算为{{ tenantCurrencyType === tenantPartnersCurrencyType ? '1: 1' : `1: ${data.exchangeRate}`}}，请您悉知。</div>
+        <div>{{ data.invitationName }}货币类型为{{ tenantPartnersCurrencyType === 1 ? '美元' : '人民币' }}，与您的货币类型{{
+        tenantCurrencyType === 1 ?
+          '美元' : '人民币' }}汇率换算为{{ tenantCurrencyType === tenantPartnersCurrencyType ? '1: 1' : `1:
+          ${data.exchangeRate}` }}，请您悉知。</div>
         <!-- 您好，我是{{
         data.invitationName || "-"
       }}诚挚邀请您与我们一同协作共赢！若有疑问请联系{{ data.phoneOrEmail }}。 -->
