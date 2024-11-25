@@ -7,14 +7,15 @@ defineOptions({
 });
 // 下拉列表
 const listArr = [
-  { label: '供应商', value: 1 },
-  { label: '合作商', value: 2 },
-  { label: '内部站', value: 3 },
+  { label: '内部站', value: 1 },
+  { label: '供应商', value: 2 },
+  { label: '合作商', value: 3 },
+  //1.内部站 2.供应商 3.合作商
 ]
 // 搜索
-const qyeryForm = reactive<any>({
-  select: [],
-  input: ''
+const queryForm = reactive<any>({
+  type: [],
+  id: ''
 })
 // 查看弹框
 const dialogVisible = ref<any>(false)
@@ -29,15 +30,12 @@ async function showEdit(row: any) {
   try {
     loading.value = true;
     form.value = JSON.parse(row);
-    const res = await api.detail({ projectSettlementId: form.value.projectId });
-    data.value = res.data;
-    // list.value = res.data.result;
-    list.value = [
-      { a: 111, b: 222, c: 333, d: 444, e: 555, f: 666 },
-      { a: 111, b: 222, c: 333, d: 444, e: 555, f: 666 },
-      { a: 111, b: 222, c: 333, d: 444, e: 555, f: 666 },
-      { a: 111, b: 222, c: 333, d: 444, e: 555, f: 666 },
-    ]
+    console.log(row,'rrrr')
+
+    const res = await api.getProjectSettlementDetails({ projectId: form.value.projectId ,type:queryForm.type,id:queryForm.id});
+    // data.value = res.data;
+    list.value = res.data.examineDetailsList;
+
     loading.value = false;
     dialogTableVisible.value = true;
   } catch (error) {
@@ -80,7 +78,7 @@ defineExpose({ showEdit });
                 stroke-linejoin="round" />
             </g>
           </svg>
-          审核成功：100
+          审核成功：
         </div>
         <div class="right">
           <svg style="margin-right: 8px;" xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17"
@@ -99,12 +97,12 @@ defineExpose({ showEdit });
         </div>
       </div>
       <el-row style="margin: 1rem 0;" :gutter="20">
-        <el-form style="width: 100%; height: 2rem; display: flex;" :model="qyeryForm" ref="form" label-width="43px"
+        <el-form style="width: 100%; height: 2rem; display: flex;" :model="queryForm" ref="form" label-width="43px"
           :inline="false">
           <el-col :span="11">
             <el-form-item label="来源">
-              <el-select v-model="qyeryForm.select" value-key="" placeholder="请选择来源类型" multiple clearable filterable
-                @change="">
+              <el-select v-model="queryForm.type" value-key="" placeholder="请选择来源类型" multiple clearable filterable
+                >
                 <el-option v-for="item in listArr" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
               </el-select>
@@ -112,7 +110,7 @@ defineExpose({ showEdit });
           </el-col>
           <el-col :span="11">
             <el-form-item label="搜索">
-              <el-input v-model="qyeryForm.input" placeholder="请输入搜索供应商/供应商ID">
+              <el-input v-model="queryForm.id" placeholder="请输入搜索供应商/供应商ID">
                 <template #prefix>
                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
                     <g id="Search (æç´¢)">
@@ -153,32 +151,60 @@ defineExpose({ showEdit });
 </el-row> -->
       <el-table v-loading="loading" :data="list" row-key="id">
         <!-- <el-table-column type="index" align="left" label="序号" width="55" /> -->
-        <el-table-column align="left" prop="supplierId" label="来源">
+        <el-table-column align="left" prop="projectId" label="来源">
           <template #default="{ row }">
-            {{ row.account ? row.account : "-" }}
+            <div>
+              <el-tag
+              effect="dark"
+              style="background-color: #fb6868; border: none"
+              v-if="row.type === 2"
+              class="mx-1"
+              type="primary"
+              >供应商</el-tag
+            >
+            <el-tag
+              effect="dark"
+              style="background-color: #05c9be; border: none"
+              v-if="row.type === 1"
+              class="mx-1"
+              type="warning"
+              >内部站</el-tag
+            >
+            <el-tag
+              effect="dark"
+              style="background-color: #ffac54; border: none"
+              v-if="row.allocationType === 3"
+              class="mx-1"
+              type="warning"
+              >合作商</el-tag
+            >
+            </div>
+            <div>
+              ID:{{ row.projectId }}
+            </div>
           </template>
         </el-table-column>
-        <el-table-column align="left" prop="supplierId" label="失败数量">
+        <el-table-column align="left" prop="examineFailList" label="失败数量">
           <template #default="{ row }">
-            {{ row.b ? row.b : "-" }}
+            {{ row.examineFailList ? row.examineFailList.length : "-" }}
           </template>
         </el-table-column>
-        <el-table-column align="left" prop="supplierId" label="通过数量">
+        <el-table-column align="left" prop="examineSuccessList" label="通过数量">
           <template #default="{ row }">
-            {{ row.c ? row.c : "-" }}
+            {{ row.examineSuccessList ? row.examineSuccessList : "-" }}
           </template>
         </el-table-column>
-        <el-table-column align="left" prop="supplierId" label="单价">
+        <el-table-column align="left" prop="unitPrice" label="单价">
           <template #default="{ row }">
-            {{ row.d ? row.d : "-" }}
+            {{ row.unitPrice ? row.unitPrice : "-" }}
           </template>
         </el-table-column>
-        <el-table-column align="left" prop="supplierId" label="支付总额">
+        <el-table-column align="left" prop="price" label="支付总额">
           <template #default="{ row }">
-            {{ row.e ? row.e : "-" }}
+            {{ row.price ? row.price : "-" }}
           </template>
         </el-table-column>
-        <el-table-column align="left" prop="supplierId" label="操作">
+        <el-table-column align="left"  label="操作">
           <template #default="{ row }">
             <el-button type="primary" plain size="small" @click="see(row)">查看</el-button>
             <el-button type="warning" plain size="small" @click="exportExcl(row)">导出</el-button>
