@@ -8,7 +8,6 @@ import userPM from "./components/userPM/index.vue"; //部门人
 import empty from "@/assets/images/empty.png";
 import api from "@/api/modules/user_cooperation";
 import QuickEdit from "./components/QuickEdit/index.vue"; //快速编辑
-
 defineOptions({
   name: "cooperation",
 });
