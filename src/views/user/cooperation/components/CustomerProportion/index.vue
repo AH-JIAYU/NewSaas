@@ -252,7 +252,7 @@ defineExpose({
             </div>
           </template>
         </el-form-item>
-        <el-form-item v-show="tenantCurrencyType !== tenantPartnersCurrencyType" prop="exchangeRate" label-width="7rem">
+        <!-- <el-form-item v-show="tenantCurrencyType !== tenantPartnersCurrencyType" prop="exchangeRate" label-width="7rem">
           <template #label>
             <span style="color: #333;">
               <el-tooltip effect="dark" placement="top-start">
@@ -267,7 +267,6 @@ defineExpose({
           </template>
           <el-row class="radiusInput" style="margin: 0;" :gutter="20">
             <el-col style="padding: 0;" :span="11">
-              <!-- v-if="tenantCurrencyType === 2" -->
               <el-input v-if="tenantCurrencyType === 2" style="border: none;" v-model="moneyDefault" disabled
                 placeholder="">
                 <template #prefix>
@@ -401,7 +400,7 @@ defineExpose({
               </el-input>
             </el-col>
           </el-row>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item prop="sendProjectType" label-width="7rem">
           <template #label>
             <span>

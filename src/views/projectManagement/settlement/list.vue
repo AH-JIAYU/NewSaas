@@ -294,7 +294,6 @@ async function onExport() {
     const list = await api.exportProjectSettlementList(params);
 
     const name = "项目结算列表.xlsx";
-
     await fileExport(list, name);
 
   } catch (error) {

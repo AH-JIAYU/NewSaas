@@ -10,6 +10,7 @@ import useClipboard from "vue-clipboard3";
 import { AnyFn } from "@vueuse/core";
 import useUserStore from "@/store/modules/user";
 import siteDetail from "./components/siteDetail/index.vue"
+import storage from "@/utils/storage";
 import useConfigurationSiteSettingStore from '@/store/modules/configuration_siteSetting'//站点设置
 
 defineOptions({
@@ -19,6 +20,9 @@ const currencyList = [
   { label: '美元', value: 'USD' },
   { label: '人民币', value: 'CNY' },
 ]
+// 储存第一次输入美元汇率
+const currencyTypeRes = ref<any>()
+// 货币类型
 const currencyType = ref<any>()
 const configurationSiteSettingStore = useConfigurationSiteSettingStore()//站点设置
 // token
@@ -152,6 +156,12 @@ async function getDataList() {
     if (data) {
       form.value = data || form.value;
       currencyType.value = data.currencyType
+      currencyTypeRes.value = storage.local.get("currencyTypeRes")
+      // if(data.currencyType === 'USD') {
+
+      //   console.log(' currencyTypeRes.value', currencyTypeRes.value);
+      //   form.value.exchangeRate = storage.local.get("currencyTypeRes")
+      // }
       if (form.value.minimumAmount === 0) form.value.minimumAmount = null;
       analyzeRecords.value = form.value
       userStore.originalExchangeRate = form.value.exchangeRate
@@ -268,7 +278,6 @@ const handlePictureCardPreview: UploadProps["onPreview"] = (uploadFile) => {
 const currencyTypeChange = (val: any) => {
   if (val) {
     currencyType.value = val
-    form.value.exchangeRate = ''
   }
 }
 
@@ -303,12 +312,18 @@ function onSubmit() {
           }
           if (form.value.currencyType === 'USD') {
             userStore.currencyType = 1
+            form.value.exchangeRate = currencyTypeRes.value
+            storage.local.remove("currencyTypeRes");
+            storage.local.set('currencyTypeRes',currencyTypeRes.value.toString());
           } else {
             userStore.currencyType = 2
+            form.value.exchangeRate = currencyTypeRes.value
+            form.value.exchangeRate = (1 / form.value.exchangeRate).toFixed(2).toString();
           }
           const res = await api.edit(form.value)
           loading.value = false;
           if (res.status === 1) {
+            await userStore.getCurrencyType()
             getDataList();
             ElMessage.success({
               message: "修改成功",
@@ -468,21 +483,22 @@ function onSubmit() {
                 </el-form-item>
               </el-col>
               <el-col :span="24">
-                <el-form-item style="display: flex;" label="汇率" prop="exchangeRate">
+                <el-form-item style="display: flex;" label="美元汇率" prop="exchangeRate">
                   <div>
-                    <div style="margin-bottom: 10px;" v-if="currencyType === 'USD'" class="exchangeRate">
+                    <!-- style="margin-bottom: 10px;" -->
+                    <div class="exchangeRate">
                       <div class="left">
                         <div style="width: 119.86px;" class="top">1 美元 (USD) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=</div>
                       </div>
                       <div class="right">
                         <div class="bottom">
-                          <el-input v-model="form.exchangeRate" style="width: 7.4375rem" placeholder="请输入数值"
+                          <el-input v-model="currencyTypeRes" style="width: 7.4375rem" placeholder="请输入数值"
                             clearable />
                           人民币 (CNY)
                         </div>
                       </div>
                     </div>
-                    <div v-if="currencyType === 'CNY'" class="exchangeRate">
+                    <!-- <div v-if="currencyType === 'CNY'" class="exchangeRate">
                       <div class="left">
                         <div class="top">1 人民币 (CNY) &nbsp;&nbsp;=</div>
                       </div>
@@ -497,7 +513,7 @@ function onSubmit() {
                     <div v-if="currencyType === 'CNY' && form.exchangeRate >= 1" class="tips">
                       <div style="color: orange;margin-right: 5px;" class="i-ic:round-warning w-1.3em h-1.3em"></div>
                       请再三确认,当前市场1人民币对美元的汇率
-                    </div>
+                    </div> -->
                   </div>
                   <!-- <div v-if="currencyType === 'CNY'" class="exchangeRate">
                     <div class="left">

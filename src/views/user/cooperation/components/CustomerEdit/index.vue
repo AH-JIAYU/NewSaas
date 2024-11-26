@@ -196,6 +196,7 @@ async function save() {
         obj.invitationType = "";
       }
       obj.invitationType = 2; //固定传部门
+      // return
       api.addInvitationBind(obj).then((res: any) => {
         if (res.status == -1) {
           ElMessage.success({
