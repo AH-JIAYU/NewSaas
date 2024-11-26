@@ -27,20 +27,16 @@ const examineSuccess = ref<any>(0); //成功条数
 const examineFail = ref<any>(0); //失败条数
 // 弹框开关变量
 const dialogTableVisible = ref(false);
-const projectId = ref();  //项目id
+const id = ref(); //项目id
 // 获取数据
 async function showEdit(row: any) {
+  examineSuccess.value = 0;
+  examineFail.value = 0;
   try {
     loading.value = true;
     form.value = JSON.parse(row);
-    projectId.value = form.value.projectId;
-    const res = await api.getProjectSettlementDetails({
-      projectId: form.value.projectId,
-      type: queryForm.type,
-      id: queryForm.id,
-    });
-    // data.value = res.data;
-    list.value = res.data.examineDetailsList;
+    id.value = form.value.projectId;
+    getData();
 
     loading.value = false;
     dialogTableVisible.value = true;
@@ -50,26 +46,52 @@ async function showEdit(row: any) {
   }
 }
 
-async function getData(){
-  console.log(form.value,'form.value')
-    const res = await api.getProjectSettlementDetails({
-      projectId: projectId.value,
-      type: queryForm.type,
-      id: queryForm.id,
+async function getData() {
+  examineSuccess.value = 0;
+  examineFail.value = 0;
+  const res = await api.getProjectSettlementDetails({
+    projectId: id.value,
+    type: queryForm.type,
+    id: queryForm.id,
+  });
+
+  //获取总条数
+  if (res.data.length == 0) {
+    examineSuccess.value = 0;
+    examineFail.value = 0;
+  } else {
+    //根据来源过滤去重
+
+    if (queryForm.type.length != 0) {
+      list.value = res.data.filter((item: any) =>
+        queryForm.type.includes(item.type)
+      );
+    } else {
+      list.value = res.data;
+    }
+
+
+    list.value.forEach((item: any) => {
+      if (item.failCount != 0 && item.failCount != null) {
+        examineFail.value += Number(item.failCount);
+      }
+      if (item.successCount != 0 && item.successCount != null) {
+        examineSuccess.value += Number(item.successCount);
+      }
     });
-    list.value = res.data.examineDetailsList;
+  }
 }
 
-
-
-const detailSuccessList = ref<any>([])
-const detailFailList = ref<any>([])
+const detailSuccessList = ref<any>([]);
+const detailFailList = ref<any>([]);
 // 查看
 const see = (row: any) => {
   dialogVisible.value = true;
 
-  detailSuccessList.value = row.examineSuccessList ?row.examineSuccessList :[];
-  detailFailList.value = row.examineFailList ?row.examineFailList :[];
+  detailSuccessList.value = row.examineSuccessList
+    ? row.examineSuccessList
+    : [];
+  detailFailList.value = row.examineFailList ? row.examineFailList : [];
   // console.log(detailSuccessList.value,detailFailList.value,'vvv')
 };
 // 导出
@@ -79,13 +101,12 @@ function closeHandler() {
   // // 重置表单
   Object.assign(form, {});
   Object.assign(list, []);
-  Object.assign(data, {});
   dialogTableVisible.value = false;
 }
 const current = ref<any>(); //表格当前选中
 
 function handleCurrentChange(val: any) {
-  if (val) current.value = val.projectId;
+  if (val) current.value = val.id;
   else current.value = "";
 }
 defineExpose({ showEdit });
@@ -195,7 +216,7 @@ defineExpose({ showEdit });
               <el-input
                 v-model="queryForm.id"
                 placeholder="请输入搜索供应商/供应商ID"
-                 @change="getData"
+                @change="getData"
               >
                 <template #prefix>
                   <svg
@@ -234,9 +255,9 @@ defineExpose({ showEdit });
       </el-row>
       <!-- <el-row style="width: 100%; margin-left: 2px; margin-bottom: 20px" :gutter="20">
         <el-table :data="[form]" v-loading="loading" bordered>
-          <el-table-column label="项目ID" prop="projectId" fixed="left">
+          <el-table-column label="项目ID" prop="id" fixed="left">
             <template #default="{ row }">
-              {{ row.projectId ? row.projectId : "-" }}
+              {{ row.id ? row.id : "-" }}
             </template>
 </el-table-column>
 <el-table-column label="项目名称" prop="projectName">
@@ -258,73 +279,62 @@ defineExpose({ showEdit });
         @current-change="handleCurrentChange"
         highlight-current-row
       >
-        <el-table-column align="left" prop="projectId" label="来源">
+        <el-table-column align="left" prop="id" label="来源" width="200">
           <template #default="{ row }">
-            <div>
-              <el-tag
-                effect="dark"
-                style="background-color: #FB6868; border: none"
-                v-if="row.type === 2"
-                class="mx-1"
-                type="primary"
-                >供应商</el-tag
-              >
-              <el-tag
-                effect="dark"
-                style="background: #FFAC54; border: none"
-                v-else-if="row.type === 1"
-                class="mx-1"
-                type="warning"
-                >内部站</el-tag
-              >
-              <el-tag
-                effect="dark"
-                style="background-color: #379AFF; border: none"
-                v-else-if="row.type === 3"
-                class="mx-1"
-                type="warning"
-                >合作商</el-tag
-              >
-            </div>
-            <div class="copyId tableSmall">
+            <p>
+              <span class="tableBig">
+                <el-tag
+                  effect="dark"
+                  style="background-color: #fb6868; border: none"
+                  v-if="row.type === 2"
+                  type="primary"
+                  >供应商</el-tag
+                >
+                <el-tag
+                  effect="dark"
+                  style="background: #ffac54; border: none"
+                  v-else-if="row.type === 1"
+                  type="warning"
+                  >内部站</el-tag
+                >
+                <el-tag
+                  effect="dark"
+                  style="background-color: #379aff; border: none"
+                  v-else-if="row.type === 3"
+                  type="warning"
+                  >合作商</el-tag
+                >
+              </span>
+            </p>
+
+            <div class="copyId tableSmall" v-if="row.type != 1">
               <div class="id oneLine">
                 <el-tooltip
                   effect="dark"
-                  :content="row.projectId"
+                  :content="row.id"
                   placement="top-start"
                 >
-                  {{ row.projectId }}
+                  {{ row.id }}
                 </el-tooltip>
               </div>
-              <copy
-              v-if="row.projectId"
-                :content="row.projectId"
-                :class="{
-                  rowCopy: 'rowCopy',
-                  current: row.projectId === current,
-                }"
-              />
+              <copy v-if="row.id" :content="row.id" />
             </div>
           </template>
         </el-table-column>
-        <el-table-column align="left" prop="examineFailList" label="失败数量">
+        <el-table-column align="left" prop="failCount" label="失败数量">
           <template #default="{ row }">
-            {{ row.examineFailList ? row.examineFailList.length : 0 }}
+            {{ row.failCount ? row.failCount : 0 }}
           </template>
         </el-table-column>
-        <el-table-column
-          align="left"
-          prop="examineSuccessList"
-          label="通过数量"
-        >
+        <el-table-column align="left" prop="successCount" label="通过数量">
           <template #default="{ row }">
-            {{ row.examineSuccessList ? row.examineSuccessList.length : 0 }}
+            {{ row.successCount ? row.successCount : 0 }}
           </template>
         </el-table-column>
         <el-table-column align="left" prop="unitPrice" label="单价">
           <template #default="{ row }">
             <!-- 内部站,单价需要有个查看按钮， -->
-            <div class="fontC-System">
+            <div class="fontC-System" v-if="row.type != 1">
               <svg
                 v-if="row.currencyType === 'USD'"
                 xmlns="http://www.w3.org/2000/svg"
@@ -354,6 +364,9 @@ defineExpose({ showEdit });
                 />
               </svg>
               <CurrencyType v-if="!row.currencyType" />{{ row.unitPrice || 0 }}
+            </div>
+            <div v-else>
+              {{ "-" }}
             </div>
           </template>
         </el-table-column>
@@ -414,21 +427,28 @@ defineExpose({ showEdit });
         <div class="top">
           <p>审核通过×{{ detailSuccessList.length }}</p>
           <div class="list-item">
-            <div v-for="item in detailSuccessList" class="copyText" :key="item.clickId">
-            <span>ID：{{ item.clickId }} </span>
-            <copy :content="item.clickId" />
+            <div
+              v-for="item in detailSuccessList"
+              class="copyText"
+              :key="item.clickId"
+            >
+              <span>ID：{{ item.clickId }} </span>
+              <copy :content="item.clickId" />
+            </div>
           </div>
-          </div>
-
         </div>
         <div class="bottom">
           <p>审核失败×{{ detailFailList.length }}</p>
           <div class="list-item">
-          <div v-for="item in detailFailList" class="copyText" :key="item.clickId">
-            <span>ID：{{ item.clickId }} </span>
-            <copy :content="item.clickId" />
+            <div
+              v-for="item in detailFailList"
+              class="copyText"
+              :key="item.clickId"
+            >
+              <span>ID：{{ item.clickId }} </span>
+              <copy :content="item.clickId" />
+            </div>
           </div>
-        </div>
         </div>
         <template #footer>
           <div class="dialog-footer">
@@ -446,7 +466,7 @@ defineExpose({ showEdit });
 </template>
 
 <style lang="scss" scoped>
-.copyId .projectId {
+.copyId .id {
   font-size: 0.875rem;
 }
 
@@ -542,9 +562,9 @@ defineExpose({ showEdit });
   min-height: 300px;
 }
 .list-item {
-    height: 12.5rem;
-    overflow:auto;
-  }
+  height: 12.5rem;
+  overflow: auto;
+}
 .top {
   width: 42rem;
   // min-height: 7.625rem;
