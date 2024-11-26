@@ -60,7 +60,12 @@ const columns = ref([
     sortable: true,
     prop: "availableBalance",
   },
-  { label: "个人待审金额", checked: true, sortable: true, prop: "personalPendBalance" },
+  {
+    label: "个人待审金额",
+    checked: true,
+    sortable: true,
+    prop: "personalPendBalance",
+  },
   {
     label: "个人可用金额",
     checked: true,
@@ -112,9 +117,9 @@ function termination(row: any) {
         });
       fetchData();
     })
-    .catch(() => { });
+    .catch(() => {});
 }
-const financialLogRef = ref()
+const financialLogRef = ref();
 //财务日志
 function openLog(row: any) {
   financialLogRef.value.showEdit(row);
@@ -329,16 +334,37 @@ function userData(data1: any) {
         </FormLeftPanel>
         <FormRightPanel>
           <el-button size="default"> 导出 </el-button>
-          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
-            v-model:columns="columns" v-model:line-height="lineHeight" v-model:stripe="stripe" style="margin-left: 12px"
-            @query-data="queryData" />
+          <TabelControl
+            v-model:border="border"
+            v-model:tableAutoHeight="tableAutoHeight"
+            v-model:checkList="checkList"
+            v-model:columns="columns"
+            v-model:line-height="lineHeight"
+            v-model:stripe="stripe"
+            style="margin-left: 12px"
+            @query-data="queryData"
+          />
         </FormRightPanel>
       </el-row>
-      <el-table v-loading="listLoading" :border="border" :data="tableList" :size="lineHeight" :stripe="stripe"
-        @selection-change="setSelectRows" highlight-current-row @current-change="handleCurrentChange">
+      <el-table
+        v-loading="listLoading"
+        :border="border"
+        :data="tableList"
+        :size="lineHeight"
+        :stripe="stripe"
+        @selection-change="setSelectRows"
+        highlight-current-row
+        @current-change="handleCurrentChange"
+      >
         <el-table-column align="left" type="selection" />
-        <el-table-column v-if="checkList.includes('bindStatus')" align="left" prop="bindStatus" show-overflow-tooltip
-          label="状态" width="60">
+        <el-table-column
+          v-if="checkList.includes('bindStatus')"
+          align="left"
+          prop="bindStatus"
+          show-overflow-tooltip
+          label="状态"
+          width="60"
+        >
           <template #default="{ row }">
             <div class="fontC-System">
               <el-text v-if="row.bindStatus === 2" type="success">合作</el-text>
@@ -346,174 +372,348 @@ function userData(data1: any) {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('bindStatus')" align="left" prop="sendProjectType" label="发送项目"
-          width="160">
+        <el-table-column
+          v-if="checkList.includes('bindStatus')"
+          align="left"
+          prop="sendProjectType"
+          label="发送项目"
+          width="160"
+        >
           <template #default="{ row }">
             <!-- <div class="fontC-System">
               <el-text v-if="row.sendProjectType === 1" type="success">自动</el-text>
               <el-text v-if="row.sendProjectType === 2" type="danger">手动</el-text>
             </div> -->
-            <el-button :type="row.sendProjectType === 1 ? 'primary' : ''" size="small"
-              @click="changeSendProjectType('自动', row)">自动
+            <el-button
+              :type="row.sendProjectType === 1 ? 'primary' : ''"
+              size="small"
+              @click="changeSendProjectType('自动', row)"
+              >自动
             </el-button>
-            <el-button :type="row.sendProjectType === 2 ? 'primary' : ''" size="small"
-              @click="changeSendProjectType('手动', row)">手动</el-button>
+            <el-button
+              :type="row.sendProjectType === 2 ? 'primary' : ''"
+              size="small"
+              @click="changeSendProjectType('手动', row)"
+              >手动</el-button
+            >
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('receiveProjectType')" align="left" prop="receiveProjectType"
-          label="接收项目" width="160">
+        <el-table-column
+          v-if="checkList.includes('receiveProjectType')"
+          align="left"
+          prop="receiveProjectType"
+          label="接收项目"
+          width="160"
+        >
           <template #default="{ row }">
-            <el-button :type="row.receiveProjectType === 1 ? 'primary' : ''" size="small"
-              @click="changeReceiveProjectType('自动', row)">自动
+            <el-button
+              :type="row.receiveProjectType === 1 ? 'primary' : ''"
+              size="small"
+              @click="changeReceiveProjectType('自动', row)"
+              >自动
             </el-button>
-            <el-button :type="row.receiveProjectType === 2 ? 'primary' : ''" size="small"
-              @click="changeReceiveProjectType('手动', row)">手动</el-button>
+            <el-button
+              :type="row.receiveProjectType === 2 ? 'primary' : ''"
+              size="small"
+              @click="changeReceiveProjectType('手动', row)"
+              >手动</el-button
+            >
             <!-- <div class="fontC-System">
               <el-text v-if="row.receiveProjectType === 1" type="success">自动</el-text>
               <el-text v-if="row.receiveProjectType === 2" type="danger">手动</el-text>
             </div> -->
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('beInvitationTenantId')" align="left" prop="beInvitationTenantId"
-          width="200" label="合作商ID">
+        <el-table-column
+          v-if="checkList.includes('beInvitationTenantId')"
+          align="left"
+          prop="beInvitationTenantId"
+          width="200"
+          label="合作商公司"
+        >
           <template #default="{ row }">
+            <div class="tableBig">{{ row.beInvitationTenantName }}</div>
             <div class="copyId tableSmall">
               <div class="id oneLine beInvitationTenantId">
-                <el-tooltip effect="dark" :content="row.beInvitationTenantId" placement="top-start">
+                <el-tooltip
+                  effect="dark"
+                  :content="row.beInvitationTenantId"
+                  placement="top-start"
+                >
                   {{ row.beInvitationTenantId }}
                 </el-tooltip>
 
                 <!-- {{ row.beInvitationTenantId }} -->
               </div>
-              <copy :content="row.beInvitationTenantId" :class="{
-    rowCopy: 'rowCopy',
-    current: row.id === current,
-  }" />
+              <copy
+                :content="row.beInvitationTenantId"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.id === current,
+                }"
+              />
               <!-- <copy class="copy" :content="row.beInvitationTenantId" /> -->
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('beInvitationTenantName')" align="left" prop="beInvitationTenantName"
+        <!-- <el-table-column v-if="checkList.includes('beInvitationTenantName')" align="left" prop="beInvitationTenantName"
           show-overflow-tooltip width="130" label="合作商公司名称">
           <template #default="{ row }">
             <div class="tableBig">{{ row.beInvitationTenantName }}</div>
           </template>
-        </el-table-column>
-        <el-table-column v-if="checkList.includes('userName')" align="left" prop="userName" width="100"
-          show-overflow-tooltip label="负责部门">
+        </el-table-column> -->
+        <el-table-column
+          v-if="checkList.includes('userName')"
+          align="left"
+          prop="userName"
+          show-overflow-tooltip
+          label="负责部门"
+        >
           <template #default="{ row }">
             <div class="flex-s">
-              <div class="fontC-System">{{ row.userName ? row.userName : '-' }}</div>
-              <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'chargeUserId')"
-                :class="{ edit: 'edit', current: row.id === current }" name="i-ep:edit" color="#409eff" />
+              <div class="fontC-System">
+                {{ row.userName ? row.userName : "-" }}
+              </div>
+              <SvgIcon
+                v-if="row.projectType !== 2"
+                @click="quickEdit(row, 'chargeUserId')"
+                :class="{ edit: 'edit', current: row.id === current }"
+                name="i-ep:edit"
+                color="#409eff"
+              />
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('priceRatio')" align="left" prop="priceRatio" show-overflow-tooltip
-          label="价格比例">
+        <el-table-column
+          v-if="checkList.includes('priceRatio')"
+          align="left"
+          prop="priceRatio"
+          show-overflow-tooltip
+          label="价格比例"
+        >
           <template #default="{ row }">
             <div class="fontC-System">{{ row.priceRatio }}%</div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('pendBalance')" align="left" prop="pendBalance" width="95" show-overflow-tooltip
-          label="待审金额">
-          <template #header>
-            <div style="display: flex;" class="table-header">
-              <span>待审金额</span>
-              <el-tooltip  class="tooltips" content="待审金额或可用金额,是您需要给该公司支付的佣金" placement="top">
-                <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
-              </el-tooltip>
-            </div>
-          </template>
+        <el-table-column
+          v-if="checkList.includes('pendBalance')"
+          align="left"
+          prop="pendBalance"
+          show-overflow-tooltip
+          label="业绩(合作商)"
+        >
           <template #default="{ row }">
-            <div class="fontC-System">
-              <svg v-if="row.currencyType === 'USD'" xmlns="http://www.w3.org/2000/svg" width="7" height="12" viewBox="0 0 7 12" fill="none">
-              <path id="Vector"
-                d="M2.83487 12V11.0864C2.23394 11.0106 1.82794 10.876 1.45186 10.6825C1.07578 10.489 0.750979 10.1763 0.477227 9.74469C0.203474 9.31305 0.0443987 8.78572 0 8.16248L1.20826 7.9355C1.30181 8.58082 1.46634 9.05473 1.70235 9.35745C2.04044 9.78458 2.36334 9.87195 2.83511 9.92086V6.24645C2.34102 6.1529 1.91817 5.96177 1.402 5.67235C1.01927 5.45867 0.724387 5.16284 0.517589 4.78462C0.310553 4.4064 0.207273 3.97689 0.207273 3.4961C0.207273 2.64161 0.509754 1.94974 1.11519 1.42005C1.52 1.06414 2.03854 0.791105 2.83534 0.711092V0H3.83087V0.711092C4.52962 0.777809 4.87792 1.03755 5.28748 1.38016C5.81267 1.81631 6.12868 2.41486 6.23553 3.17581L4.99379 3.36267C4.92256 2.8909 4.77251 2.5312 4.5498 2.27787C4.44272 2.15607 4.22239 1.86071 3.83087 1.78046V5.24522C4.43607 5.39646 4.631 5.51446 4.82688 5.59899C5.20082 5.76376 5.50544 5.96391 5.74144 6.19968C5.97721 6.43568 6.1586 6.71608 6.28562 7.04088C6.41241 7.36568 6.4758 7.7173 6.4758 8.09552C6.4758 8.9277 6.21107 9.62194 5.68137 10.1782C5.15168 10.7345 4.67207 11.0327 3.83087 11.0729V11.9998H2.83487V12ZM2.83487 1.76716C2.36761 1.83839 2.08152 2.02525 1.81227 2.32797C1.54303 2.63068 1.40841 2.98896 1.40841 3.40279C1.40841 3.81235 1.52285 4.15496 1.75221 4.43085C1.98132 4.70698 2.28736 4.92707 2.83487 5.09184V1.76716ZM3.8304 9.93463C4.29765 9.87693 4.46504 9.79953 4.78295 9.46429C5.03747 9.19576 5.24024 8.68767 5.24024 8.17601C5.24024 7.73986 5.13221 7.38942 4.91639 7.12469C4.70057 6.85996 4.47549 6.62301 3.83016 6.41383V9.93463H3.8304Z"
-                fill="#333333" />
-            </svg>
-            <svg v-if="row.currencyType === 'CNY'" xmlns="http://www.w3.org/2000/svg" width="9" height="10" viewBox="0 0 9 10" fill="none">
-              <path id="Vector"
-                d="M8.79096 0L5.5738 4.56065H8.10931V5.56885H5.15558V6.95736H8.10931V7.97816H5.15558V10H3.63591V7.97816H0.574054V6.95736H3.63591V5.56885H0.574054V4.56065H3.18642L0 0H1.7134C3.20235 2.26497 4.10624 3.70177 4.42676 4.30931H4.45749C4.56617 4.05905 4.86361 3.55523 5.34877 2.79785L7.17085 0H8.79096Z"
-                fill="#333333" />
-            </svg>
-              <CurrencyType v-if="!row.currencyType" />{{ row.pendBalance || 0 }}
+            <div>
+              <div class="fontC-System">
+                <span>待审金额</span>
+
+                <el-tooltip
+                  class="tooltips"
+                  content="待审金额或可用金额,是您需要给该公司支付的佣金"
+                  placement="top"
+                >
+                  <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
+                </el-tooltip>
+                <span style="margin: 0 6px">:</span>
+
+                <svg
+                  v-if="row.currencyType === 'USD'"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="7"
+                  height="12"
+                  viewBox="0 0 7 12"
+                  fill="none"
+                >
+                  <path
+                    id="Vector"
+                    d="M2.83487 12V11.0864C2.23394 11.0106 1.82794 10.876 1.45186 10.6825C1.07578 10.489 0.750979 10.1763 0.477227 9.74469C0.203474 9.31305 0.0443987 8.78572 0 8.16248L1.20826 7.9355C1.30181 8.58082 1.46634 9.05473 1.70235 9.35745C2.04044 9.78458 2.36334 9.87195 2.83511 9.92086V6.24645C2.34102 6.1529 1.91817 5.96177 1.402 5.67235C1.01927 5.45867 0.724387 5.16284 0.517589 4.78462C0.310553 4.4064 0.207273 3.97689 0.207273 3.4961C0.207273 2.64161 0.509754 1.94974 1.11519 1.42005C1.52 1.06414 2.03854 0.791105 2.83534 0.711092V0H3.83087V0.711092C4.52962 0.777809 4.87792 1.03755 5.28748 1.38016C5.81267 1.81631 6.12868 2.41486 6.23553 3.17581L4.99379 3.36267C4.92256 2.8909 4.77251 2.5312 4.5498 2.27787C4.44272 2.15607 4.22239 1.86071 3.83087 1.78046V5.24522C4.43607 5.39646 4.631 5.51446 4.82688 5.59899C5.20082 5.76376 5.50544 5.96391 5.74144 6.19968C5.97721 6.43568 6.1586 6.71608 6.28562 7.04088C6.41241 7.36568 6.4758 7.7173 6.4758 8.09552C6.4758 8.9277 6.21107 9.62194 5.68137 10.1782C5.15168 10.7345 4.67207 11.0327 3.83087 11.0729V11.9998H2.83487V12ZM2.83487 1.76716C2.36761 1.83839 2.08152 2.02525 1.81227 2.32797C1.54303 2.63068 1.40841 2.98896 1.40841 3.40279C1.40841 3.81235 1.52285 4.15496 1.75221 4.43085C1.98132 4.70698 2.28736 4.92707 2.83487 5.09184V1.76716ZM3.8304 9.93463C4.29765 9.87693 4.46504 9.79953 4.78295 9.46429C5.03747 9.19576 5.24024 8.68767 5.24024 8.17601C5.24024 7.73986 5.13221 7.38942 4.91639 7.12469C4.70057 6.85996 4.47549 6.62301 3.83016 6.41383V9.93463H3.8304Z"
+                    fill="#333333"
+                  />
+                </svg>
+                <svg
+                  v-if="row.currencyType === 'CNY'"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="9"
+                  height="10"
+                  viewBox="0 0 9 10"
+                  fill="none"
+                >
+                  <path
+                    id="Vector"
+                    d="M8.79096 0L5.5738 4.56065H8.10931V5.56885H5.15558V6.95736H8.10931V7.97816H5.15558V10H3.63591V7.97816H0.574054V6.95736H3.63591V5.56885H0.574054V4.56065H3.18642L0 0H1.7134C3.20235 2.26497 4.10624 3.70177 4.42676 4.30931H4.45749C4.56617 4.05905 4.86361 3.55523 5.34877 2.79785L7.17085 0H8.79096Z"
+                    fill="#333333"
+                  />
+                </svg>
+                <CurrencyType v-if="!row.currencyType" />{{
+                  row.pendBalance || 0
+                }}
+              </div>
+              <div class="fontC-System">
+                <span>可用金额</span>
+                <span style="margin: 0 6px">:</span>
+                <svg
+                  v-if="row.currencyType === 'USD'"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="7"
+                  height="12"
+                  viewBox="0 0 7 12"
+                  fill="none"
+                >
+                  <path
+                    id="Vector"
+                    d="M2.83487 12V11.0864C2.23394 11.0106 1.82794 10.876 1.45186 10.6825C1.07578 10.489 0.750979 10.1763 0.477227 9.74469C0.203474 9.31305 0.0443987 8.78572 0 8.16248L1.20826 7.9355C1.30181 8.58082 1.46634 9.05473 1.70235 9.35745C2.04044 9.78458 2.36334 9.87195 2.83511 9.92086V6.24645C2.34102 6.1529 1.91817 5.96177 1.402 5.67235C1.01927 5.45867 0.724387 5.16284 0.517589 4.78462C0.310553 4.4064 0.207273 3.97689 0.207273 3.4961C0.207273 2.64161 0.509754 1.94974 1.11519 1.42005C1.52 1.06414 2.03854 0.791105 2.83534 0.711092V0H3.83087V0.711092C4.52962 0.777809 4.87792 1.03755 5.28748 1.38016C5.81267 1.81631 6.12868 2.41486 6.23553 3.17581L4.99379 3.36267C4.92256 2.8909 4.77251 2.5312 4.5498 2.27787C4.44272 2.15607 4.22239 1.86071 3.83087 1.78046V5.24522C4.43607 5.39646 4.631 5.51446 4.82688 5.59899C5.20082 5.76376 5.50544 5.96391 5.74144 6.19968C5.97721 6.43568 6.1586 6.71608 6.28562 7.04088C6.41241 7.36568 6.4758 7.7173 6.4758 8.09552C6.4758 8.9277 6.21107 9.62194 5.68137 10.1782C5.15168 10.7345 4.67207 11.0327 3.83087 11.0729V11.9998H2.83487V12ZM2.83487 1.76716C2.36761 1.83839 2.08152 2.02525 1.81227 2.32797C1.54303 2.63068 1.40841 2.98896 1.40841 3.40279C1.40841 3.81235 1.52285 4.15496 1.75221 4.43085C1.98132 4.70698 2.28736 4.92707 2.83487 5.09184V1.76716ZM3.8304 9.93463C4.29765 9.87693 4.46504 9.79953 4.78295 9.46429C5.03747 9.19576 5.24024 8.68767 5.24024 8.17601C5.24024 7.73986 5.13221 7.38942 4.91639 7.12469C4.70057 6.85996 4.47549 6.62301 3.83016 6.41383V9.93463H3.8304Z"
+                    fill="#333333"
+                  />
+                </svg>
+                <svg
+                  v-if="row.currencyType === 'CNY'"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="9"
+                  height="10"
+                  viewBox="0 0 9 10"
+                  fill="none"
+                >
+                  <path
+                    id="Vector"
+                    d="M8.79096 0L5.5738 4.56065H8.10931V5.56885H5.15558V6.95736H8.10931V7.97816H5.15558V10H3.63591V7.97816H0.574054V6.95736H3.63591V5.56885H0.574054V4.56065H3.18642L0 0H1.7134C3.20235 2.26497 4.10624 3.70177 4.42676 4.30931H4.45749C4.56617 4.05905 4.86361 3.55523 5.34877 2.79785L7.17085 0H8.79096Z"
+                    fill="#333333"
+                  />
+                </svg>
+                <CurrencyType v-if="!row.currencyType" />{{
+                  row.availableBalance || 0
+                }}
+              </div>
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('availableBalance')" align="left" prop="availableBalance"
-          show-overflow-tooltip label="可用金额">
+        <el-table-column
+          v-if="checkList.includes('personalPendBalance')"
+          align="left"
+          prop="personalPendBalance"
+          show-overflow-tooltip
+          label="业绩(我的)"
+        >
           <template #default="{ row }">
-            <div class="fontC-System">
-              <svg v-if="row.currencyType === 'USD'" xmlns="http://www.w3.org/2000/svg" width="7" height="12" viewBox="0 0 7 12" fill="none">
-              <path id="Vector"
-                d="M2.83487 12V11.0864C2.23394 11.0106 1.82794 10.876 1.45186 10.6825C1.07578 10.489 0.750979 10.1763 0.477227 9.74469C0.203474 9.31305 0.0443987 8.78572 0 8.16248L1.20826 7.9355C1.30181 8.58082 1.46634 9.05473 1.70235 9.35745C2.04044 9.78458 2.36334 9.87195 2.83511 9.92086V6.24645C2.34102 6.1529 1.91817 5.96177 1.402 5.67235C1.01927 5.45867 0.724387 5.16284 0.517589 4.78462C0.310553 4.4064 0.207273 3.97689 0.207273 3.4961C0.207273 2.64161 0.509754 1.94974 1.11519 1.42005C1.52 1.06414 2.03854 0.791105 2.83534 0.711092V0H3.83087V0.711092C4.52962 0.777809 4.87792 1.03755 5.28748 1.38016C5.81267 1.81631 6.12868 2.41486 6.23553 3.17581L4.99379 3.36267C4.92256 2.8909 4.77251 2.5312 4.5498 2.27787C4.44272 2.15607 4.22239 1.86071 3.83087 1.78046V5.24522C4.43607 5.39646 4.631 5.51446 4.82688 5.59899C5.20082 5.76376 5.50544 5.96391 5.74144 6.19968C5.97721 6.43568 6.1586 6.71608 6.28562 7.04088C6.41241 7.36568 6.4758 7.7173 6.4758 8.09552C6.4758 8.9277 6.21107 9.62194 5.68137 10.1782C5.15168 10.7345 4.67207 11.0327 3.83087 11.0729V11.9998H2.83487V12ZM2.83487 1.76716C2.36761 1.83839 2.08152 2.02525 1.81227 2.32797C1.54303 2.63068 1.40841 2.98896 1.40841 3.40279C1.40841 3.81235 1.52285 4.15496 1.75221 4.43085C1.98132 4.70698 2.28736 4.92707 2.83487 5.09184V1.76716ZM3.8304 9.93463C4.29765 9.87693 4.46504 9.79953 4.78295 9.46429C5.03747 9.19576 5.24024 8.68767 5.24024 8.17601C5.24024 7.73986 5.13221 7.38942 4.91639 7.12469C4.70057 6.85996 4.47549 6.62301 3.83016 6.41383V9.93463H3.8304Z"
-                fill="#333333" />
-            </svg>
-            <svg v-if="row.currencyType === 'CNY'" xmlns="http://www.w3.org/2000/svg" width="9" height="10" viewBox="0 0 9 10" fill="none">
-              <path id="Vector"
-                d="M8.79096 0L5.5738 4.56065H8.10931V5.56885H5.15558V6.95736H8.10931V7.97816H5.15558V10H3.63591V7.97816H0.574054V6.95736H3.63591V5.56885H0.574054V4.56065H3.18642L0 0H1.7134C3.20235 2.26497 4.10624 3.70177 4.42676 4.30931H4.45749C4.56617 4.05905 4.86361 3.55523 5.34877 2.79785L7.17085 0H8.79096Z"
-                fill="#333333" />
-            </svg>
-              <CurrencyType v-if="!row.currencyType" />{{ row.availableBalance || 0 }}
+            <div>
+              <div class="fontC-System">
+                <span>待审金额</span>
+
+                <el-tooltip
+                  class="tooltips"
+                  content="个人待审金额或个人可用金额,是您在该公司赚取的佣金，他需要支付给您的佣金"
+                  placement="top"
+                >
+                  <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
+                </el-tooltip>
+                <span style="margin: 0 6px">:</span>
+
+                <svg
+                  v-if="row.personalCurrencyType === 'USD'"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="7"
+                  height="12"
+                  viewBox="0 0 7 12"
+                  fill="none"
+                >
+                  <path
+                    id="Vector"
+                    d="M2.83487 12V11.0864C2.23394 11.0106 1.82794 10.876 1.45186 10.6825C1.07578 10.489 0.750979 10.1763 0.477227 9.74469C0.203474 9.31305 0.0443987 8.78572 0 8.16248L1.20826 7.9355C1.30181 8.58082 1.46634 9.05473 1.70235 9.35745C2.04044 9.78458 2.36334 9.87195 2.83511 9.92086V6.24645C2.34102 6.1529 1.91817 5.96177 1.402 5.67235C1.01927 5.45867 0.724387 5.16284 0.517589 4.78462C0.310553 4.4064 0.207273 3.97689 0.207273 3.4961C0.207273 2.64161 0.509754 1.94974 1.11519 1.42005C1.52 1.06414 2.03854 0.791105 2.83534 0.711092V0H3.83087V0.711092C4.52962 0.777809 4.87792 1.03755 5.28748 1.38016C5.81267 1.81631 6.12868 2.41486 6.23553 3.17581L4.99379 3.36267C4.92256 2.8909 4.77251 2.5312 4.5498 2.27787C4.44272 2.15607 4.22239 1.86071 3.83087 1.78046V5.24522C4.43607 5.39646 4.631 5.51446 4.82688 5.59899C5.20082 5.76376 5.50544 5.96391 5.74144 6.19968C5.97721 6.43568 6.1586 6.71608 6.28562 7.04088C6.41241 7.36568 6.4758 7.7173 6.4758 8.09552C6.4758 8.9277 6.21107 9.62194 5.68137 10.1782C5.15168 10.7345 4.67207 11.0327 3.83087 11.0729V11.9998H2.83487V12ZM2.83487 1.76716C2.36761 1.83839 2.08152 2.02525 1.81227 2.32797C1.54303 2.63068 1.40841 2.98896 1.40841 3.40279C1.40841 3.81235 1.52285 4.15496 1.75221 4.43085C1.98132 4.70698 2.28736 4.92707 2.83487 5.09184V1.76716ZM3.8304 9.93463C4.29765 9.87693 4.46504 9.79953 4.78295 9.46429C5.03747 9.19576 5.24024 8.68767 5.24024 8.17601C5.24024 7.73986 5.13221 7.38942 4.91639 7.12469C4.70057 6.85996 4.47549 6.62301 3.83016 6.41383V9.93463H3.8304Z"
+                    fill="#333333"
+                  />
+                </svg>
+                <svg
+                  v-if="row.personalCurrencyType === 'CNY'"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="9"
+                  height="10"
+                  viewBox="0 0 9 10"
+                  fill="none"
+                >
+                  <path
+                    id="Vector"
+                    d="M8.79096 0L5.5738 4.56065H8.10931V5.56885H5.15558V6.95736H8.10931V7.97816H5.15558V10H3.63591V7.97816H0.574054V6.95736H3.63591V5.56885H0.574054V4.56065H3.18642L0 0H1.7134C3.20235 2.26497 4.10624 3.70177 4.42676 4.30931H4.45749C4.56617 4.05905 4.86361 3.55523 5.34877 2.79785L7.17085 0H8.79096Z"
+                    fill="#333333"
+                  />
+                </svg>
+                <CurrencyType v-if="!row.personalCurrencyType" />{{
+                  row.personalPendBalance || 0
+                }}
+              </div>
+              <div class="fontC-System">
+                <span>可用金额</span>
+
+                <span style="margin: 0 6px">:</span>
+                <svg
+                  v-if="row.personalCurrencyType === 'USD'"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="7"
+                  height="12"
+                  viewBox="0 0 7 12"
+                  fill="none"
+                >
+                  <path
+                    id="Vector"
+                    d="M2.83487 12V11.0864C2.23394 11.0106 1.82794 10.876 1.45186 10.6825C1.07578 10.489 0.750979 10.1763 0.477227 9.74469C0.203474 9.31305 0.0443987 8.78572 0 8.16248L1.20826 7.9355C1.30181 8.58082 1.46634 9.05473 1.70235 9.35745C2.04044 9.78458 2.36334 9.87195 2.83511 9.92086V6.24645C2.34102 6.1529 1.91817 5.96177 1.402 5.67235C1.01927 5.45867 0.724387 5.16284 0.517589 4.78462C0.310553 4.4064 0.207273 3.97689 0.207273 3.4961C0.207273 2.64161 0.509754 1.94974 1.11519 1.42005C1.52 1.06414 2.03854 0.791105 2.83534 0.711092V0H3.83087V0.711092C4.52962 0.777809 4.87792 1.03755 5.28748 1.38016C5.81267 1.81631 6.12868 2.41486 6.23553 3.17581L4.99379 3.36267C4.92256 2.8909 4.77251 2.5312 4.5498 2.27787C4.44272 2.15607 4.22239 1.86071 3.83087 1.78046V5.24522C4.43607 5.39646 4.631 5.51446 4.82688 5.59899C5.20082 5.76376 5.50544 5.96391 5.74144 6.19968C5.97721 6.43568 6.1586 6.71608 6.28562 7.04088C6.41241 7.36568 6.4758 7.7173 6.4758 8.09552C6.4758 8.9277 6.21107 9.62194 5.68137 10.1782C5.15168 10.7345 4.67207 11.0327 3.83087 11.0729V11.9998H2.83487V12ZM2.83487 1.76716C2.36761 1.83839 2.08152 2.02525 1.81227 2.32797C1.54303 2.63068 1.40841 2.98896 1.40841 3.40279C1.40841 3.81235 1.52285 4.15496 1.75221 4.43085C1.98132 4.70698 2.28736 4.92707 2.83487 5.09184V1.76716ZM3.8304 9.93463C4.29765 9.87693 4.46504 9.79953 4.78295 9.46429C5.03747 9.19576 5.24024 8.68767 5.24024 8.17601C5.24024 7.73986 5.13221 7.38942 4.91639 7.12469C4.70057 6.85996 4.47549 6.62301 3.83016 6.41383V9.93463H3.8304Z"
+                    fill="#333333"
+                  />
+                </svg>
+                <svg
+                  v-if="row.personalCurrencyType === 'CNY'"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="9"
+                  height="10"
+                  viewBox="0 0 9 10"
+                  fill="none"
+                >
+                  <path
+                    id="Vector"
+                    d="M8.79096 0L5.5738 4.56065H8.10931V5.56885H5.15558V6.95736H8.10931V7.97816H5.15558V10H3.63591V7.97816H0.574054V6.95736H3.63591V5.56885H0.574054V4.56065H3.18642L0 0H1.7134C3.20235 2.26497 4.10624 3.70177 4.42676 4.30931H4.45749C4.56617 4.05905 4.86361 3.55523 5.34877 2.79785L7.17085 0H8.79096Z"
+                    fill="#333333"
+                  />
+                </svg>
+                <CurrencyType v-if="!row.personalCurrencyType" />{{
+                  row.personalAvailableBalance || 0
+                }}
+              </div>
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('personalPendBalance')" align="left" prop="personalPendBalance"
-          show-overflow-tooltip width="125" label="个人待审金额">
-          <template #header>
-            <div class="table-header">
-              <span>个人待审金额</span>
-              <el-tooltip class="tooltips" content="个人待审金额或个人可用金额,是您在该公司赚取的佣金，他需要支付给您的佣金" placement="top">
-                <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
-              </el-tooltip>
-            </div>
-          </template>
-          <template #default="{ row }">
-            <div class="fontC-System">
-              <svg v-if="row.personalCurrencyType === 'USD'" xmlns="http://www.w3.org/2000/svg" width="7" height="12" viewBox="0 0 7 12" fill="none">
-              <path id="Vector"
-                d="M2.83487 12V11.0864C2.23394 11.0106 1.82794 10.876 1.45186 10.6825C1.07578 10.489 0.750979 10.1763 0.477227 9.74469C0.203474 9.31305 0.0443987 8.78572 0 8.16248L1.20826 7.9355C1.30181 8.58082 1.46634 9.05473 1.70235 9.35745C2.04044 9.78458 2.36334 9.87195 2.83511 9.92086V6.24645C2.34102 6.1529 1.91817 5.96177 1.402 5.67235C1.01927 5.45867 0.724387 5.16284 0.517589 4.78462C0.310553 4.4064 0.207273 3.97689 0.207273 3.4961C0.207273 2.64161 0.509754 1.94974 1.11519 1.42005C1.52 1.06414 2.03854 0.791105 2.83534 0.711092V0H3.83087V0.711092C4.52962 0.777809 4.87792 1.03755 5.28748 1.38016C5.81267 1.81631 6.12868 2.41486 6.23553 3.17581L4.99379 3.36267C4.92256 2.8909 4.77251 2.5312 4.5498 2.27787C4.44272 2.15607 4.22239 1.86071 3.83087 1.78046V5.24522C4.43607 5.39646 4.631 5.51446 4.82688 5.59899C5.20082 5.76376 5.50544 5.96391 5.74144 6.19968C5.97721 6.43568 6.1586 6.71608 6.28562 7.04088C6.41241 7.36568 6.4758 7.7173 6.4758 8.09552C6.4758 8.9277 6.21107 9.62194 5.68137 10.1782C5.15168 10.7345 4.67207 11.0327 3.83087 11.0729V11.9998H2.83487V12ZM2.83487 1.76716C2.36761 1.83839 2.08152 2.02525 1.81227 2.32797C1.54303 2.63068 1.40841 2.98896 1.40841 3.40279C1.40841 3.81235 1.52285 4.15496 1.75221 4.43085C1.98132 4.70698 2.28736 4.92707 2.83487 5.09184V1.76716ZM3.8304 9.93463C4.29765 9.87693 4.46504 9.79953 4.78295 9.46429C5.03747 9.19576 5.24024 8.68767 5.24024 8.17601C5.24024 7.73986 5.13221 7.38942 4.91639 7.12469C4.70057 6.85996 4.47549 6.62301 3.83016 6.41383V9.93463H3.8304Z"
-                fill="#333333" />
-            </svg>
-            <svg v-if="row.personalCurrencyType === 'CNY'" xmlns="http://www.w3.org/2000/svg" width="9" height="10" viewBox="0 0 9 10" fill="none">
-              <path id="Vector"
-                d="M8.79096 0L5.5738 4.56065H8.10931V5.56885H5.15558V6.95736H8.10931V7.97816H5.15558V10H3.63591V7.97816H0.574054V6.95736H3.63591V5.56885H0.574054V4.56065H3.18642L0 0H1.7134C3.20235 2.26497 4.10624 3.70177 4.42676 4.30931H4.45749C4.56617 4.05905 4.86361 3.55523 5.34877 2.79785L7.17085 0H8.79096Z"
-                fill="#333333" />
-            </svg>
-              <CurrencyType v-if="!row.personalCurrencyType" />{{ row.personalPendBalance || 0 }}
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column v-if="checkList.includes('personalAvailableBalance')" align="left" width="120"
-          prop="personalAvailableBalance" show-overflow-tooltip label="个人可用金额">
-          <template #default="{ row }">
-            <div class="fontC-System">
-              <svg v-if="row.personalCurrencyType === 'USD'" xmlns="http://www.w3.org/2000/svg" width="7" height="12" viewBox="0 0 7 12" fill="none">
-              <path id="Vector"
-                d="M2.83487 12V11.0864C2.23394 11.0106 1.82794 10.876 1.45186 10.6825C1.07578 10.489 0.750979 10.1763 0.477227 9.74469C0.203474 9.31305 0.0443987 8.78572 0 8.16248L1.20826 7.9355C1.30181 8.58082 1.46634 9.05473 1.70235 9.35745C2.04044 9.78458 2.36334 9.87195 2.83511 9.92086V6.24645C2.34102 6.1529 1.91817 5.96177 1.402 5.67235C1.01927 5.45867 0.724387 5.16284 0.517589 4.78462C0.310553 4.4064 0.207273 3.97689 0.207273 3.4961C0.207273 2.64161 0.509754 1.94974 1.11519 1.42005C1.52 1.06414 2.03854 0.791105 2.83534 0.711092V0H3.83087V0.711092C4.52962 0.777809 4.87792 1.03755 5.28748 1.38016C5.81267 1.81631 6.12868 2.41486 6.23553 3.17581L4.99379 3.36267C4.92256 2.8909 4.77251 2.5312 4.5498 2.27787C4.44272 2.15607 4.22239 1.86071 3.83087 1.78046V5.24522C4.43607 5.39646 4.631 5.51446 4.82688 5.59899C5.20082 5.76376 5.50544 5.96391 5.74144 6.19968C5.97721 6.43568 6.1586 6.71608 6.28562 7.04088C6.41241 7.36568 6.4758 7.7173 6.4758 8.09552C6.4758 8.9277 6.21107 9.62194 5.68137 10.1782C5.15168 10.7345 4.67207 11.0327 3.83087 11.0729V11.9998H2.83487V12ZM2.83487 1.76716C2.36761 1.83839 2.08152 2.02525 1.81227 2.32797C1.54303 2.63068 1.40841 2.98896 1.40841 3.40279C1.40841 3.81235 1.52285 4.15496 1.75221 4.43085C1.98132 4.70698 2.28736 4.92707 2.83487 5.09184V1.76716ZM3.8304 9.93463C4.29765 9.87693 4.46504 9.79953 4.78295 9.46429C5.03747 9.19576 5.24024 8.68767 5.24024 8.17601C5.24024 7.73986 5.13221 7.38942 4.91639 7.12469C4.70057 6.85996 4.47549 6.62301 3.83016 6.41383V9.93463H3.8304Z"
-                fill="#333333" />
-            </svg>
-            <svg v-if="row.personalCurrencyType === 'CNY'" xmlns="http://www.w3.org/2000/svg" width="9" height="10" viewBox="0 0 9 10" fill="none">
-              <path id="Vector"
-                d="M8.79096 0L5.5738 4.56065H8.10931V5.56885H5.15558V6.95736H8.10931V7.97816H5.15558V10H3.63591V7.97816H0.574054V6.95736H3.63591V5.56885H0.574054V4.56065H3.18642L0 0H1.7134C3.20235 2.26497 4.10624 3.70177 4.42676 4.30931H4.45749C4.56617 4.05905 4.86361 3.55523 5.34877 2.79785L7.17085 0H8.79096Z"
-                fill="#333333" />
-            </svg>
-              <CurrencyType v-if="!row.personalCurrencyType" />{{ row.personalAvailableBalance || 0 }}
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column align="left" fixed="right" prop="i" label="操作" width="280">
+
+
+
+        <el-table-column
+          align="left"
+          fixed="right"
+          prop="i"
+          label="操作"
+          width="280"
+        >
           <template #default="{ row }">
             <ElSpace>
-              <el-button size="small" type="primary" plain @click="priceRatio(row)">
+              <el-button
+                size="small"
+                type="primary"
+                plain
+                @click="priceRatio(row)"
+              >
                 合作配置
               </el-button>
-              <el-button v-if="row.bindStatus === 2" type="danger" plain size="small" @click="termination(row)">
+              <el-button
+                v-if="row.bindStatus === 2"
+                type="danger"
+                plain
+                size="small"
+                @click="termination(row)"
+              >
                 终止合作
               </el-button>
 
-              <el-button type="warning" plain size="small" @click="openLog(row)">
+              <el-button
+                type="warning"
+                plain
+                size="small"
+                @click="openLog(row)"
+              >
                 财务日志
               </el-button>
               <!-- <el-button type="danger" plain size="small"> 加减款 </el-button>-->
@@ -524,9 +724,18 @@ function userData(data1: any) {
           <el-empty :image="empty" :image-size="300" />
         </template>
       </el-table>
-      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
-        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-        background @size-change="sizeChange" @current-change="currentChange" />
+      <ElPagination
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
+        :page-sizes="pagination.sizes"
+        :layout="pagination.layout"
+        :hide-on-single-page="false"
+        class="pagination"
+        background
+        @size-change="sizeChange"
+        @current-change="currentChange"
+      />
       <customerEdit ref="editRef" @fetch-data="queryData" />
       <customerProportion ref="proportionRef" @fetch-data="queryData" />
       <financialLog ref="financialLogRef" @fetch-data="queryData" />
@@ -606,7 +815,7 @@ function userData(data1: any) {
   align-items: center;
   width: 100%;
 
-  >div:nth-of-type(1) {
+  > div:nth-of-type(1) {
     width: calc(100% - 25px);
     flex-shrink: 0;
   }

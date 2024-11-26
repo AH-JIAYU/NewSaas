@@ -18,12 +18,16 @@ export default {
 
   // 项目结算-开票或者结算状态修改
   InvoicingSettlementEdit: (data: any) => api.post('projectSettlement/updateProjectSettlementStatus', data, ),
+
+  //项目结算详情
+  getProjectSettlementDetails: (data: any) => api.post('projectSettlement/getProjectSettlementDetails', data, ),
   // 获取审核进度
   getSettlementWebSocket: (data:any) => api.get(`settlement-socket/getSettlementWebSocket?projectId=${data}` ),
-  //导出项目结算
-  exportProjectSettlementList: (data: any) => api.post('projectSettlement/exportProjectSettlementList', data, { responseType: 'blob' }),
 
-  delete: (id: number | string) => api.post('menu/delete', {
+ // 导出项目结算
+ exportProjectSettlementList: (data: any) => api.post('projectSettlement/exportProjectSettlementList', data,{ responseType: 'blob' }),
+
+ delete: (id: number | string) => api.post('menu/delete', {
     id,
   }, {
     baseURL: '/mock/',
