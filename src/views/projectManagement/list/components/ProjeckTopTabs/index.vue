@@ -713,8 +713,8 @@ nextTick(() => {
               <el-form-item label="汇率" prop="exchangeRate">
                 <!-- <el-input-number style="height: 2rem" v-model="localToptTab.exchangeRate" :min="1" :precision="1"
                   :step="0.1" controls-position="right" size="large" /> -->
-                  <el-text v-if="localToptTab.currencyType === 'USD'">1美元 = {{currencyTypeRes}}人民币</el-text>
-                  <el-text v-if="localToptTab.currencyType === 'CNY'">1人民币 = {{(1 / currencyTypeRes).toFixed(2)}}美元</el-text>
+                  <el-text v-if="localToptTab.currencyType === 'USD'">1美元 = {{userStore.originalExchangeRate}}人民币</el-text>
+                  <el-text v-if="localToptTab.currencyType === 'CNY'">1人民币 = {{(userStore.originalExchangeRate).toFixed(2)}}美元</el-text>
               </el-form-item>
             </el-col>
           </el-row>

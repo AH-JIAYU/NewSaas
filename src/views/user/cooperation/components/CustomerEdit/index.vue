@@ -129,7 +129,7 @@ const dataList = computed(() => {
   );
   if (findData) {
     tenantPartnersCurrencyType.value = findData.currencyType
-    data.value.form.tenantName = findData.name;
+    data.value.form.tenantName = findData.tenantName;
     data.value.form.phoneOrEmail = storage.local.get("account");
     return [findData];
   }
@@ -512,14 +512,9 @@ const handleClose = () => {
             </div>
           </el-form-item>
           <div style="display: flex;flex-direction: column;">
-            <el-form-item prop="receiveProjectType" label-width="7rem" style="margin-right: 1.5625rem;display: flex
-;
-    flex-wrap: nowrap;
-    flex-direction: column;">
+            <el-form-item prop="receiveProjectType" label-width="7rem" style="margin-right: 1.5625rem;display: flex;flex-wrap: nowrap;flex-direction: column;">
               <template #label>
-                <span style="display: flex
-;
-    align-items: center;">
+                <span style="display: flex;align-items: center;">
                   <el-tooltip effect="dark" placement="top-start">
                     <template #content>
                       <div>自动：合作商分配给您的项目，全部自动接收</div>
@@ -662,4 +657,5 @@ const handleClose = () => {
 
 // :deep(.inviteDialog ){
 //   color: #333333 !important;
-// }</style>
+// }
+</style>

@@ -683,7 +683,7 @@ function handleCurrentChange(val: any) {
                     d="M8.79096 0L5.5738 4.56065H8.10931V5.56885H5.15558V6.95736H8.10931V7.97816H5.15558V10H3.63591V7.97816H0.574054V6.95736H3.63591V5.56885H0.574054V4.56065H3.18642L0 0H1.7134C3.20235 2.26497 4.10624 3.70177 4.42676 4.30931H4.45749C4.56617 4.05905 4.86361 3.55523 5.34877 2.79785L7.17085 0H8.79096Z"
                     fill="#333333" />
                 </svg>
-                <CurrencyType v-if="!row.currencyType" />{{ row.doMoneyPrice || 0 }}
+                <CurrencyType v-if="!row.currencyType" />{{ (row.doMoneyPrice ?? 0).toFixed(2) || 0 }}
               <!-- <CurrencyType />{{ row.doMoneyPrice || 0 }} -->
             </div>
           </template>
@@ -716,9 +716,9 @@ function handleCurrentChange(val: any) {
                 <CurrencyType v-if="!row.currencyType" />
               <!-- <CurrencyType /> -->
               <template v-if="row.memberId">
-                {{ row.memberPrice || 0 }}
+                {{ (row.memberPrice ?? 0).toFixed(2) || 0 }}
               </template>
-              <template v-else> {{ row.supplierPrice || 0 }} </template>
+              <template v-else> {{ (row.supplierPrice ?? 0).toFixed(2) || 0 }} </template>
             </div>
           </template>
         </el-table-column>
