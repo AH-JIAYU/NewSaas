@@ -111,6 +111,11 @@ defineExpose({
       {{ detailData.emailAddress ? detailData.emailAddress : "-" }}
     </el-form-item>
   </el-col>
+  <el-col :span="8">
+    <el-form-item label="结算币种:">
+      {{ detailData.currencyType === 'USD' ? '美元' : "人民币" }}
+    </el-form-item>
+  </el-col>
 </el-row>
 </el-card>
 <el-card class="box-card">

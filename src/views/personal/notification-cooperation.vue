@@ -176,8 +176,8 @@ const agree = async () => {
         beInvitationChargeUserId: data.value.chargeUserId, //负责人UserId
         beInvitationType: 2, //邀请类型 ,目前只有部门，先写死
         beInvitationChargeUserName: data.value.chargeUserName, //负责人用户姓名
-        sendProjectType: data.value.sendProjectType[0], //邀请方发送项目类型:1:自动 2:手动
-        receiveProjectType: data.value.receiveProjectType[0], //邀请方接收项目类型:1:自动 2:手动
+        sendProjectType: data.value.sendProjectType, //邀请方发送项目类型:1:自动 2:手动
+        receiveProjectType: data.value.receiveProjectType, //邀请方接收项目类型:1:自动 2:手动
         exchangeRate: data.value.exchangeRate, //汇率
       };
       emit("delSelectId");
@@ -217,6 +217,29 @@ const handleKeydown = (e: any) => {
   // 阻止键盘输入
   e.preventDefault();
 };
+
+// 发送
+const sendProjectType = ref<any>(null)
+// 接收
+const receiveProjectType = ref<any>(null)
+//列表切换发送项目状态
+const changeSendProjectType = (name: any, row: any) => {
+  if (row) {
+    if (name === '发送') {
+      sendProjectType.value = row
+      data.value.sendProjectType = row
+    } else {
+      receiveProjectType.value = row
+      data.value.receiveProjectType = row
+    }
+  }
+};
+const handleClose = () => {
+  sendProjectType.value = null
+  receiveProjectType.value = null
+  data.value.sendProjectType = null;
+  data.value.receiveProjectType = null;
+}
 defineExpose({
   showEdit,
 });
@@ -228,14 +251,14 @@ defineExpose({
     <div class="news-content">
       <div class="content">尊贵的{{ data.beInvitedName }}</div>
       <div class="time">
-        <div>您好，我是{{ data.invitationName }}诚挚邀请您与我们一同协作共赢！</div>
-        <div>{{ data.invitationName }}货币类型为{{ tenantPartnersCurrencyType === 1 ? '美元' : '人民币' }}，与您的货币类型{{
+        <div>您好！</div>
+        <div>我是{{ data.invitationName }},诚挚邀请贵司与我们合作,实现共赢！</div>
+        <div>我方货币类型为{{ tenantPartnersCurrencyType === 1 ? '美元' : '人民币' }}，达成合作后我方发布项目以
+        {{ tenantPartnersCurrencyType === 1 ? '美元' : '人民币' }} 计价，望悉知。</div>
+          <!-- ，与您的货币类型{{
         tenantCurrencyType === 1 ?
           '美元' : '人民币' }}汇率换算为{{ tenantCurrencyType === tenantPartnersCurrencyType ? '1: 1' : `1:
-          ${data.exchangeRate}` }}，请您悉知。</div>
-        <!-- 您好，我是{{
-        data.invitationName || "-"
-      }}诚挚邀请您与我们一同协作共赢！若有疑问请联系{{ data.phoneOrEmail }}。 -->
+          ${data.exchangeRate}` }}，请您悉知。 -->
       </div>
       <div class="footer" v-if="data.auditStatus === 1">
         <el-button @click="refuse">拒绝合作</el-button>
@@ -244,7 +267,7 @@ defineExpose({
         </el-button>
       </div>
     </div>
-    <el-dialog v-model="dialogTableVisible" title="合作配置" class="hezuoDrawer">
+    <el-dialog v-model="dialogTableVisible" title="合作配置" class="hezuoDrawer" @close="handleClose">
       <ElForm ref="FormRef" :rules="data.rules" :model="data" label-width="7rem" labelPosition="left">
         <el-form-item label="价格比例" prop="priceRatio">
           <el-input v-model="data.priceRatio" clearable><template #append>%</template></el-input>
@@ -405,9 +428,11 @@ defineExpose({
             </el-col>
           </el-row>
         </el-form-item> -->
-        <el-form-item prop="sendProjectType" label-width="7rem">
+        <el-form-item prop="sendProjectType" label-width="7rem" style="display: flex;
+            flex-wrap: nowrap;
+            flex-direction: column;">
           <template #label>
-            <span>
+            <span style="display: flex;align-items: center;">
               <el-tooltip effect="dark" placement="top-start">
                 <template #content>
                   <div>自动：您所创建的项目，自动分配给该合作商</div>
@@ -418,32 +443,36 @@ defineExpose({
               发送项目
             </span>
           </template>
-
-          <el-checkbox-group v-model="data.sendProjectType" @change="handleCheckboxChange1">
-            <el-checkbox :value="1"> 自动 </el-checkbox>
-            <el-checkbox :value="2"> 手动 </el-checkbox>
-          </el-checkbox-group>
+          <div style="margin-top: 6px;margin-bottom: 0px;">
+            <el-button :type="sendProjectType === 1 ? 'primary' : ''" size="small"
+              @click="changeSendProjectType('发送', 1)">自动
+            </el-button>
+            <el-button :type="sendProjectType === 2 ? 'primary' : ''" size="small"
+              @click="changeSendProjectType('发送', 2)">手动</el-button>
+          </div>
         </el-form-item>
-        <div style="display: flex">
-          <el-form-item prop="receiveProjectType" style="margin-right: 1.5625rem">
-            <template #label>
-              <span>
-                <el-tooltip effect="dark" placement="top-start">
-                  <template #content>
-                    <div>自动：合作商分配给您的项目，全部自动接收</div>
-                    <div>手动：合作商分配给您的项目，手动选择接收</div>
-                  </template>
-                  <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
-                </el-tooltip>
-                接收项目
-              </span>
-            </template>
-
-            <el-checkbox-group v-model="data.receiveProjectType" @change="handleCheckboxChange2">
-              <el-checkbox :value="1"> 自动 </el-checkbox>
-              <el-checkbox :value="2"> 手动 </el-checkbox>
-            </el-checkbox-group>
-          </el-form-item>
+        <div style="display: flex;flex-direction: column;">
+          <el-form-item prop="receiveProjectType" label-width="7rem" style="margin-right: 1.5625rem;display: flex;flex-wrap: nowrap;flex-direction: column;">
+              <template #label>
+                <span style="display: flex;align-items: center;">
+                  <el-tooltip effect="dark" placement="top-start">
+                    <template #content>
+                      <div>自动：合作商分配给您的项目，全部自动接收</div>
+                      <div>手动：合作商分配给您的项目，手动选择接收</div>
+                    </template>
+                    <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
+                  </el-tooltip>
+                  接收项目
+                </span>
+              </template>
+              <div>
+                <el-button :type="receiveProjectType === 1 ? 'primary' : ''" size="small"
+                  @click="changeSendProjectType('接收', 1)">自动
+                </el-button>
+                <el-button :type="receiveProjectType === 2 ? 'primary' : ''" size="small"
+                  @click="changeSendProjectType('接收', 2)">手动</el-button>
+              </div>
+            </el-form-item>
           <el-tree-select placeholder="请选择部门" v-if="data.receiveProjectType == 1" ref="treeRef"
             v-model="data.chargeUserId" :data="departmentList" check-strictly show-checkbox default-expand-all
             node-key="id" :props="defaultProps" @check-change="handleNodeClick" :check-on-click-node="true"

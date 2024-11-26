@@ -58,6 +58,7 @@ async function showEdit(row: any) {
   data.value.form.chargeUserId = "";
   data.value.form.id = row.id;
   data.value.form.exchangeRate = row.exchangeRate
+
   if (row.currencyType === 'USD') {
     tenantPartnersCurrencyType.value = 1
   } else if (row.currencyType === 'CNY') {
@@ -65,11 +66,9 @@ async function showEdit(row: any) {
   }
   data.value.form.priceRatio = row.priceRatio;
   data.value.form.sendProjectType = row.sendProjectType
-    ? [row.sendProjectType]
-    : null;
+  sendProjectType.value = row.sendProjectType
   data.value.form.receiveProjectType = row.receiveProjectType
-    ? [row.receiveProjectType]
-    : null;
+  receiveProjectType.value = row.receiveProjectType
   data.value.form.chargeUserName = row.userName;
   data.value.form.invitationType = row.invitationType;
   data.value.form.chargeUserId = row.userId;
@@ -83,7 +82,6 @@ async function showEdit(row: any) {
 }
 // 树选中事件
 const handleNodeClick = (nodeData: any, checked: any) => {
-
   if (checked) {
     // 选中新的节点时，取消其他选中的节点
     const checkedKeys = treeRef.value.getCheckedKeys(); // 获取当前所有选中的节点
@@ -169,15 +167,8 @@ async function save() {
         });
         return;
       }
-
-      obj.sendProjectType =
-        data.value.form.sendProjectType.length != 0
-          ? data.value.form.sendProjectType[0]
-          : null;
-      obj.receiveProjectType =
-        data.value.form.receiveProjectType.length != 0
-          ? data.value.form.receiveProjectType[0]
-          : null;
+      obj.sendProjectType = sendProjectType.value
+      obj.receiveProjectType = receiveProjectType.value
       obj.invitationType = 2;
       if (obj.receiveProjectType == 2) {
         //手动
@@ -230,6 +221,29 @@ const handleKeydown = (e: any) => {
   // 阻止键盘输入
   e.preventDefault();
 };
+
+// 发送
+const sendProjectType = ref<any>(null)
+// 接收
+const receiveProjectType = ref<any>(null)
+//列表切换发送项目状态
+const changeSendProjectType = (name: any, row: any) => {
+  if (row) {
+    if (name === '发送') {
+      sendProjectType.value = row
+      data.value.form.sendProjectType = row
+    } else {
+      receiveProjectType.value = row
+      data.value.form.receiveProjectType = row
+    }
+  }
+};
+const handleClose = () => {
+  sendProjectType.value = null
+  receiveProjectType.value = null
+  data.value.form.sendProjectType = null;
+  data.value.form.receiveProjectType = null;
+}
 defineExpose({
   showEdit,
 });
@@ -238,7 +252,7 @@ defineExpose({
 <template>
   <div>
     <el-dialog v-model="drawerisible" :close-on-click-modal="false" destroy-on-close draggable width="40%" title="合作配置"
-      class="hezuoDrawer">
+      class="hezuoDrawer" @close="handleClose">
       <ElForm ref="formRef" :rules="data.rules" :model="data.form" label-width="7rem" labelPosition="right">
         <el-form-item label="价格比例" prop="priceRatio">
           <el-input v-model="data.form.priceRatio" clearable><template #append>%</template></el-input>
@@ -401,9 +415,11 @@ defineExpose({
             </el-col>
           </el-row>
         </el-form-item> -->
-        <el-form-item prop="sendProjectType" label-width="7rem">
+        <el-form-item prop="sendProjectType" label-width="7rem" style="display: flex;
+            flex-wrap: nowrap;
+            flex-direction: column;">
           <template #label>
-            <span>
+            <span style="display: flex;align-items: center;">
               <el-tooltip effect="dark" placement="top-start">
                 <template #content>
                   <div>自动：您所创建的项目，自动分配给该合作商</div>
@@ -414,31 +430,38 @@ defineExpose({
               发送项目
             </span>
           </template>
-          <el-checkbox-group v-model="data.form.sendProjectType" @change="handleCheckboxChange1">
-            <el-checkbox :value="1"> 自动 </el-checkbox>
-            <el-checkbox :value="2"> 手动 </el-checkbox>
-          </el-checkbox-group>
+          <div style="margin-top: 6px;margin-bottom: 0px;">
+            <el-button :type="sendProjectType === 1 ? 'primary' : ''" size="small"
+              @click="changeSendProjectType('发送', 1)">自动
+            </el-button>
+            <el-button :type="sendProjectType === 2 ? 'primary' : ''" size="small"
+              @click="changeSendProjectType('发送', 2)">手动</el-button>
+          </div>
         </el-form-item>
-        <div style="display: flex">
-          <el-form-item prop="receiveProjectType" style="margin-right: 1.5625rem">
-            <template #label>
-              <span>
-                <el-tooltip effect="dark" placement="top-start">
-                  <template #content>
-                    <div>自动：合作商分配给您的项目，全部自动接收</div>
-                    <div>手动：合作商分配给您的项目，手动选择接收</div>
-                  </template>
-                  <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
-                </el-tooltip>
-                接收项目
-              </span>
-            </template>
-
-            <el-checkbox-group v-model="data.form.receiveProjectType" @change="handleCheckboxChange2">
-              <el-checkbox :value="1"> 自动 </el-checkbox>
-              <el-checkbox :value="2"> 手动 </el-checkbox>
-            </el-checkbox-group>
-          </el-form-item>
+        <div style="display: flex;flex-direction: column;">
+          <el-form-item prop="receiveProjectType" label-width="7rem" style="margin-right: 1.5625rem;display: flex;flex-wrap: nowrap;flex-direction: column;">
+              <template #label>
+                <span style="display: flex;align-items: center;">
+                  <el-tooltip effect="dark" placement="top-start">
+                    <template #content>
+                      <div>自动：合作商分配给您的项目，全部自动接收</div>
+                      <div>手动：合作商分配给您的项目，手动选择接收</div>
+                    </template>
+                    <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
+                  </el-tooltip>
+                  接收项目
+                </span>
+              </template>
+              <div>
+                <el-button :type="receiveProjectType === 1 ? 'primary' : ''" size="small"
+                  @click="changeSendProjectType('接收', 1)">自动
+                </el-button>
+                <el-button :type="receiveProjectType === 2 ? 'primary' : ''" size="small"
+                  @click="changeSendProjectType('接收', 2)">手动</el-button>
+                <el-button :type="receiveProjectType === 3 ? 'primary' : ''" size="small"
+                  @click="changeSendProjectType('接收', 3)">拒绝</el-button>
+              </div>
+            </el-form-item>
           <el-tree-select placeholder="请选择部门" v-if="data.form.receiveProjectType == 1" ref="treeRef"
             v-model="data.form.chargeUserId" :data="departmentList" check-strictly show-checkbox default-expand-all
             node-key="id" :props="defaultProps" @check-change="handleNodeClick" :check-on-click-node="true"
@@ -516,5 +539,23 @@ defineExpose({
   /* 强制应用圆角样式 */
   padding: 5px !important;
   /* 强制修改内边距 */
+}
+
+/* 修改 .radiusInput 下的 el-input__wrapper 样式 */
+.radiusInput .el-input__wrapper {
+  border-radius: 8px !important;
+  /* 强制应用圆角样式 */
+  border: 1px solid #ccc !important;
+  /* 强制应用边框样式 */
+  padding: 5px !important;
+  /* 强制修改内边距 */
+}
+
+/* 修改 .radiusInput 下的 el-input__inner 样式 */
+.radiusInput .el-input__inner {
+  padding: 10px !important;
+  /* 强制修改输入框内的文本区域的内边距 */
+  border-radius: 6px !important;
+  /* 强制修改输入框内部的圆角 */
 }
 </style>

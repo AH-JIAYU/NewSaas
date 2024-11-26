@@ -157,11 +157,9 @@ async function getDataList() {
       form.value = data || form.value;
       currencyType.value = data.currencyType
       currencyTypeRes.value = storage.local.get("currencyTypeRes")
-      // if(data.currencyType === 'USD') {
-
-      //   console.log(' currencyTypeRes.value', currencyTypeRes.value);
-      //   form.value.exchangeRate = storage.local.get("currencyTypeRes")
-      // }
+      if (data.currencyType === 'USD') {
+        currencyTypeRes.value = data.exchangeRate
+      }
       if (form.value.minimumAmount === 0) form.value.minimumAmount = null;
       analyzeRecords.value = form.value
       userStore.originalExchangeRate = form.value.exchangeRate
@@ -314,12 +312,18 @@ function onSubmit() {
             userStore.currencyType = 1
             form.value.exchangeRate = currencyTypeRes.value
             storage.local.remove("currencyTypeRes");
-            storage.local.set('currencyTypeRes',currencyTypeRes.value.toString());
+            storage.local.set('currencyTypeRes', currencyTypeRes.value.toString());
           } else {
             userStore.currencyType = 2
-            form.value.exchangeRate = currencyTypeRes.value
-            form.value.exchangeRate = (1 / form.value.exchangeRate).toFixed(2).toString();
+            if (currencyTypeRes.value) {
+              storage.local.remove("currencyTypeRes");
+              storage.local.set('currencyTypeRes', currencyTypeRes.value.toString());
+              form.value.exchangeRate = currencyTypeRes.value
+              form.value.exchangeRate = (1 / form.value.exchangeRate).toFixed(2).toString();
+            }
+
           }
+          // return
           const res = await api.edit(form.value)
           loading.value = false;
           if (res.status === 1) {
@@ -492,8 +496,7 @@ function onSubmit() {
                       </div>
                       <div class="right">
                         <div class="bottom">
-                          <el-input v-model="currencyTypeRes" style="width: 7.4375rem" placeholder="请输入数值"
-                            clearable />
+                          <el-input v-model="currencyTypeRes" style="width: 7.4375rem" placeholder="请输入数值" clearable />
                           人民币 (CNY)
                         </div>
                       </div>
