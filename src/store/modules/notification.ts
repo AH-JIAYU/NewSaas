@@ -11,10 +11,15 @@ const useNotificationStore = defineStore(
     // 消息
     const message = ref(0);
     const messageList = ref<any>([]);
+    // 已读
+    const readAlreadyMessageUnread = ref<any>(0);
+    const readAlreadyMessageList = ref<any>([]);
     // 待办
     const todo = ref(0);
     const todoUnread = ref(0);//未读待办
     const todoList = ref<any>([]);
+    const readAlreadyUnread = ref(0);//已读已办
+    const readAlreadyList = ref<any>([]);
     // 总计
     const total = computed(() => message.value + todoUnread.value);
     const auditTypeList = ["合作邀约"];//消息类型
@@ -151,10 +156,21 @@ const useNotificationStore = defineStore(
     // 获取未读消息数
     async function getUnreadMessage() {
       const res = await api.getTenantMessageList({});
-      messageList.value = res.data.tenantMessageInfoList;
+      // 未读消息
+      messageList.value = res.data.tenantMessageInfoList.filter(
+        (item: any) => item.isReadAlready === 1
+      );
+      // 已读消息
+      readAlreadyMessageList.value = res.data.tenantMessageInfoList.filter(
+        (item: any) => item.isReadAlready !== 1
+      );
       // 未读的消息数
       message.value = messageList.value.filter(
         (item: any) => item.isReadAlready === 1
+      ).length;
+      // 未读的消息数
+      readAlreadyMessageUnread.value = readAlreadyMessageList.value.filter(
+        (item: any) => item.isReadAlready !== 1
       ).length;
     }
     // 获取未读待办数
@@ -162,6 +178,9 @@ const useNotificationStore = defineStore(
       const res = await api.getTenantAuditList({});
       todoList.value = res.data.tenantAuditInfoList.filter(
         (item: any) => item.auditStatus === 1
+      );
+      readAlreadyList.value = res.data.tenantAuditInfoList.filter(
+        (item: any) => item.auditStatus !== 1
       );
       // 未读的待办数
       todoUnread.value = todoList.value.filter(
@@ -171,12 +190,20 @@ const useNotificationStore = defineStore(
       todo.value = todoList.value.filter(
         (item: any) => item.auditStatus === 1
       ).length;
+      // 已办
+      readAlreadyUnread.value = readAlreadyList.value.filter(
+        (item: any) => item.auditStatus !== 1
+      ).length;
     }
     return {
       message,
       todo,
       messageList,
+      readAlreadyMessageList,
+      readAlreadyMessageUnread,
       todoList,
+      readAlreadyList,
+      readAlreadyUnread,
       total,
       todoUnread,
       socket,

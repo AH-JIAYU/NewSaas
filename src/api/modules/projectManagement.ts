@@ -27,4 +27,6 @@ export default {
   // 根据题库目录问卷名称id查询具体的问题和答案列表
   getProjectProblemList: (data: any) =>
     api.post("/project/getProjectProblemList", data),
+  // 汇率切换计算
+  updateExchangeRate: (data: any) => api.post("project/updateExchangeRate", data),
 };

@@ -38,7 +38,7 @@ const currencyList = [
 ]
 // 储存第一次输入美元汇率
 const currencyTypeRes = ref<any>()
-currencyTypeRes.value = storage.local.get("currencyTypeRes")
+currencyTypeRes.value = userStore.originalExchangeRate
 const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
 const customerStore = useUserCustomerStore(); // 客户
 const projectManagementListStore = useProjectManagementListStore(); //项目
@@ -587,6 +587,24 @@ const exchangeRateSubmit = async () => {
 
 }
 //#endregion
+// 切换币种
+const handleSelectChange = async (val: any) => {
+  const params = {
+    beforeCurrency:'',
+    oldCurrency: val,
+    exchangeRate:'',
+  }
+  if (val === 'USD') {
+    params.beforeCurrency = 'CNY'
+  } else if (val === 'CNY') {
+    params.beforeCurrency = 'USD'
+  }
+  params.exchangeRate = currencyTypeRes.value
+  const res = await api.updateExchangeRate(params)
+  if(res.data) {
+    currencyTypeRes.value = res.data.exchangeRate
+  }
+}
 
 // 如果父组件更新了 leftTab，反映这些更改到本地副本
 watch(
@@ -703,7 +721,7 @@ nextTick(() => {
                 <el-button v-if="!userStore.originalExchangeRate" type="primary" link
                   @click="setExchangeRate">未设置汇率，点击设置>></el-button>
                 <el-select v-else v-model="localToptTab.currencyType" :disabled="!!localToptTab.projectId" value-key=""
-                  style="width: 22.4375rem" placeholder="请选择币种" clearable filterable>
+                  style="width: 22.4375rem" placeholder="请选择币种" clearable filterable @change="handleSelectChange">
                   <el-option v-for="item in currencyList" :key="item.value" :label="item.label" :value="item.value">
                   </el-option>
                 </el-select>
@@ -713,8 +731,8 @@ nextTick(() => {
               <el-form-item label="汇率" prop="exchangeRate">
                 <!-- <el-input-number style="height: 2rem" v-model="localToptTab.exchangeRate" :min="1" :precision="1"
                   :step="0.1" controls-position="right" size="large" /> -->
-                  <el-text v-if="localToptTab.currencyType === 'USD'">1美元 = {{userStore.originalExchangeRate}}人民币</el-text>
-                  <el-text v-if="localToptTab.currencyType === 'CNY'">1人民币 = {{(userStore.originalExchangeRate).toFixed(2)}}美元</el-text>
+                <el-text v-if="localToptTab.currencyType === 'USD'">1美元 = {{ currencyTypeRes.toFixed(2) }}人民币</el-text>
+                <el-text v-if="localToptTab.currencyType === 'CNY'">1人民币 = {{ currencyTypeRes.toFixed(2) }}美元</el-text>
               </el-form-item>
             </el-col>
           </el-row>

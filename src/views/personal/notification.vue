@@ -69,9 +69,15 @@ const readButNotRead = async (val: any) => {
   }
 };
 const filterMessageList = computed(() => {
-  return notificationStore.messageList.filter(
+  if (data.value.ReadAlready === 1) {
+    return notificationStore.messageList.filter(
     (item: any) => item.isReadAlready === data.value.ReadAlready
   );
+  } else {
+    return notificationStore.readAlreadyMessageList.filter(
+      (item: any) => item.isReadAlready !== 1
+    );
+  }
 });
 const filterTodoList = computed(() => {
   if (data.value.ReadAlready === 1) {
@@ -79,7 +85,7 @@ const filterTodoList = computed(() => {
       (item: any) => item.auditStatus === 1
     );
   } else {
-    return notificationStore.todoList.filter(
+    return notificationStore.readAlreadyList.filter(
       (item: any) => item.auditStatus !== 1
     );
   }
@@ -132,7 +138,11 @@ onMounted(() => {
                   read
                   @click="readButNotRead(2)" style="height: 28px;font-size: 14px;"
                 >
-                  已读
+                  已读{{
+                    notificationStore.readAlreadyMessageUnread < 100
+                      ? `(${notificationStore.readAlreadyMessageUnread})`
+                      : "99+"
+                  }}
                 </button>
               </div>
               <OverlayScrollbarsComponent
@@ -201,7 +211,9 @@ onMounted(() => {
                   read
                   @click="readButNotRead(2)" style="height: 28px;font-size: 14px;"
                 >
-                  已办
+                  已办{{ notificationStore.readAlreadyUnread < 100
+                      ? `(${notificationStore.readAlreadyUnread})`
+                      : "99+" }}
                 </button>
               </div>
 
