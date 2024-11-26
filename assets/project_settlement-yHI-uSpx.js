@@ -1,0 +1,9 @@
+
+/**
+ * 由 Fantastic-admin 提供技术支持
+ * Powered by Fantastic-admin
+ * Gitee  https://fantastic-admin.gitee.io
+ * Github https://fantastic-admin.github.io
+ */
+
+import{k as e}from"./index-X2GS4PsQ.js";const n={list:t=>e.post("projectSettlement/getProjectSettlementList",t),review:t=>e.post("projectSettlement/projectSettlement",t),edit:t=>e.post("projectSettlement/updateProjectSettlement",t),detail:t=>e.post("projectSettlement/getProjectSettlementRefundList",t),omissionProject:t=>e.post("projectSettlement/insertProjectSettlement",t),InvoicingSettlementEdit:t=>e.post("projectSettlement/updateProjectSettlementStatus",t),getProjectSettlementDetails:t=>e.post("projectSettlement/getProjectSettlementDetails",t),getSettlementWebSocket:t=>e.get(`settlement-socket/getSettlementWebSocket?projectId=${t}`),exportProjectSettlementList:t=>e.post("projectSettlement/exportProjectSettlementList",t,{responseType:"blob"}),delete:t=>e.post("menu/delete",{id:t},{baseURL:"/mock/"})};export{n as a};
