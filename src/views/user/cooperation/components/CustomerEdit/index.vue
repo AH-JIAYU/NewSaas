@@ -540,6 +540,8 @@ const handleClose = () => {
                 </el-button>
                 <el-button :type="receiveProjectType === 2 ? 'primary' : ''" size="small"
                   @click="changeSendProjectType('接收', 2)">手动</el-button>
+                  <el-button :type="receiveProjectType === 3 ? 'primary' : ''" size="small"
+                  @click="changeSendProjectType('拒绝', 3)">拒绝</el-button>
               </div>
             </el-form-item>
             <el-tree-select v-if="data.form.receiveProjectType == 1" placeholder="请选择部门" ref="treeRef"

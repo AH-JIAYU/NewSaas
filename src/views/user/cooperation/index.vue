@@ -403,7 +403,7 @@ function userData(data1: any) {
           align="left"
           prop="receiveProjectType"
           label="接收项目"
-          width="160"
+          width="250"
         >
           <template #default="{ row }">
             <el-button
@@ -417,6 +417,12 @@ function userData(data1: any) {
               size="small"
               @click="changeReceiveProjectType('手动', row)"
               >手动</el-button
+            >
+            <el-button
+              :type="row.receiveProjectType === 3 ? 'primary' : ''"
+              size="small"
+              @click="changeReceiveProjectType('拒绝', row)"
+              >拒绝</el-button
             >
             <!-- <div class="fontC-System">
               <el-text v-if="row.receiveProjectType === 1" type="success">自动</el-text>
