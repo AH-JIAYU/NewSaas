@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import api from "@/api/modules/project_settlement";
 import empty from "@/assets/images/empty.png";
+import fileExport from "@/utils/flie_export";
 defineOptions({
   name: "RefundDetails",
 });
@@ -82,20 +83,52 @@ async function getData() {
   }
 }
 
-const detailSuccessList = ref<any>([]);
-const detailFailList = ref<any>([]);
+const detailList = ref<any>([]);
 // 查看
-const see = (row: any) => {
+async function see(row: any) {
   dialogVisible.value = true;
 
-  detailSuccessList.value = row.examineSuccessList
-    ? row.examineSuccessList
-    : [];
-  detailFailList.value = row.examineFailList ? row.examineFailList : [];
-  // console.log(detailSuccessList.value,detailFailList.value,'vvv')
+  const res = await api.getProjectSettlementClickIdDetails({
+    projectId: id.value,
+    type: row.type,
+    id: row.id,
+  });
+
+
+
+  detailList.value = res.data;
+
 };
 // 导出
-const exportExcl = (row: any) => {};
+async function exportExcl(row: any) {
+  try {
+    let params = { ...queryForm };
+    //#region 转换查询的数据格式
+    if (Array.isArray(queryForm.countryId)) {
+      params.countryId = params.countryId.join(",");
+    }
+    if (queryForm.time && !!queryForm.time.length) {
+      params.beginTime = params.time[0] || "";
+      params.endTime = params.time[1] || "";
+    }
+    if (queryForm.settlementStatus) {
+      params.settlementStatus = [params.settlementStatus];
+    } else {
+      params.settlementStatus = [];
+    }
+    params.page = 0;
+    params.limit = -1;
+    params.type = "export";
+
+    const list = await api.exportProjectSettlementList(params);
+
+    const name = "项目结算审核详情.xlsx";
+    await fileExport(list, name);
+
+  } catch (error) {
+    console.error("导出失败", error);
+  }
+};
 // 弹框关闭事件
 function closeHandler() {
   // // 重置表单
@@ -425,28 +458,28 @@ defineExpose({ showEdit });
       </el-table>
       <el-dialog v-model="dialogVisible" title="查看详情" width="300">
         <div class="top">
-          <p>审核通过×{{ detailSuccessList.length }}</p>
+          <p>审核通过×{{ detailList.successSize }}</p>
           <div class="list-item">
             <div
-              v-for="item in detailSuccessList"
+              v-for="item in detailList.successList	"
               class="copyText"
-              :key="item.clickId"
+              :key="item"
             >
-              <span>ID：{{ item.clickId }} </span>
-              <copy :content="item.clickId" />
+              <span>ID：{{ item }} </span>
+              <copy :content="item" />
             </div>
           </div>
         </div>
         <div class="bottom">
-          <p>审核失败×{{ detailFailList.length }}</p>
+          <p>审核失败×{{ detailList.failSize }}</p>
           <div class="list-item">
             <div
-              v-for="item in detailFailList"
+              v-for="item in detailList.failList"
               class="copyText"
-              :key="item.clickId"
+              :key="item"
             >
-              <span>ID：{{ item.clickId }} </span>
-              <copy :content="item.clickId" />
+              <span>ID：{{ item }} </span>
+              <copy :content="item" />
             </div>
           </div>
         </div>

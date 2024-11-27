@@ -8,7 +8,6 @@ import userPM from "./components/userPM/index.vue"; //部门人
 import empty from "@/assets/images/empty.png";
 import api from "@/api/modules/user_cooperation";
 import QuickEdit from "./components/QuickEdit/index.vue"; //快速编辑
-
 defineOptions({
   name: "cooperation",
 });
@@ -214,6 +213,7 @@ onMounted(() => {
     }
   });
   queryData();
+
 });
 
 //列表切换发送项目状态
@@ -403,7 +403,7 @@ function userData(data1: any) {
           align="left"
           prop="receiveProjectType"
           label="接收项目"
-          width="160"
+          width="250"
         >
           <template #default="{ row }">
             <el-button
@@ -417,6 +417,12 @@ function userData(data1: any) {
               size="small"
               @click="changeReceiveProjectType('手动', row)"
               >手动</el-button
+            >
+            <el-button
+              :type="row.receiveProjectType === 3 ? 'primary' : ''"
+              size="small"
+              @click="changeReceiveProjectType('拒绝', row)"
+              >拒绝</el-button
             >
             <!-- <div class="fontC-System">
               <el-text v-if="row.receiveProjectType === 1" type="success">自动</el-text>
@@ -502,18 +508,18 @@ function userData(data1: any) {
           show-overflow-tooltip
           label="业绩(合作商)"
         >
+        <template #header>
+            <div style="display: flex;" class="table-header">
+              <span>业绩(合作商)</span>
+              <el-tooltip  class="tooltips" content="待审金额或可用金额,是您需要给该公司支付的佣金" placement="top">
+                <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
+              </el-tooltip>
+            </div>
+          </template>
           <template #default="{ row }">
             <div>
               <div class="fontC-System">
                 <span>待审金额</span>
-
-                <el-tooltip
-                  class="tooltips"
-                  content="待审金额或可用金额,是您需要给该公司支付的佣金"
-                  placement="top"
-                >
-                  <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
-                </el-tooltip>
                 <span style="margin: 0 6px">:</span>
 
                 <svg
@@ -593,18 +599,18 @@ function userData(data1: any) {
           show-overflow-tooltip
           label="业绩(我的)"
         >
+        <template #header>
+            <div style="display: flex;" class="table-header">
+              <span>业绩(我的)</span>
+              <el-tooltip  class="tooltips" content="个人待审金额或个人可用金额,是您在该公司赚取的佣金，他需要支付给您的佣金" placement="top">
+                <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
+              </el-tooltip>
+            </div>
+          </template>
           <template #default="{ row }">
             <div>
               <div class="fontC-System">
                 <span>待审金额</span>
-
-                <el-tooltip
-                  class="tooltips"
-                  content="个人待审金额或个人可用金额,是您在该公司赚取的佣金，他需要支付给您的佣金"
-                  placement="top"
-                >
-                  <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
-                </el-tooltip>
                 <span style="margin: 0 6px">:</span>
 
                 <svg

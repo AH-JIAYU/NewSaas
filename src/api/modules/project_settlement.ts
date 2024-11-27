@@ -21,6 +21,10 @@ export default {
 
   //项目结算详情
   getProjectSettlementDetails: (data: any) => api.post('projectSettlement/getProjectSettlementDetails', data, ),
+
+  //项目结算点击ID详情
+  getProjectSettlementClickIdDetails: (data: any) => api.post('projectSettlement/getProjectSettlementClickIdDetails', data, ),
+
   // 获取审核进度
   getSettlementWebSocket: (data:any) => api.get(`settlement-socket/getSettlementWebSocket?projectId=${data}` ),
 
