@@ -37,8 +37,7 @@ const currencyList = [
   { label: '人民币', value: 'CNY' },
 ]
 // 储存第一次输入美元汇率
-const currencyTypeRes = ref<any>()
-currencyTypeRes.value = userStore.originalExchangeRate
+const currencyTypeRes = ref<any>(null)
 const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
 const customerStore = useUserCustomerStore(); // 客户
 const projectManagementListStore = useProjectManagementListStore(); //项目
@@ -135,7 +134,15 @@ const rules = reactive<any>({
     { required: true, message: "请输入最小分长", trigger: "blur" },
   ],
   ir: [{ required: true, message: "请输入配额", trigger: "blur" }],
+  exchangeRate: [
+    { required: true, message: "请输入汇率", trigger: "blur" },
+    { pattern: /^(?!0(\.0+)?$)(\d+(\.\d{1,2})?)$/, message: '请输入一个有效的数字，不能小于0，最多保留两位小数', trigger: 'blur' }
+  ],
 });
+if (userStore.originalExchangeRate) {
+  currencyTypeRes.value = userStore.originalExchangeRate
+  localToptTab.value.exchangeRate = userStore.originalExchangeRate
+}
 // #endregion
 
 // #region 方法
@@ -575,6 +582,7 @@ const setExchangeRate = () => {
 // 提交汇率
 const exchangeRateSubmit = async () => {
   await exchangeRateRef.value.validate()
+  localToptTab.value.exchangeRate = exchangeRateForm.value.exchangeRate
   const res = await apiSite.updateWebConfig(exchangeRateForm.value)
   if (res.data.flag) {
     await userStore.getCurrencyType()
@@ -590,9 +598,9 @@ const exchangeRateSubmit = async () => {
 // 切换币种
 const handleSelectChange = async (val: any) => {
   const params = {
-    beforeCurrency:'',
+    beforeCurrency: '',
     oldCurrency: val,
-    exchangeRate:'',
+    exchangeRate: '',
   }
   if (val === 'USD') {
     params.beforeCurrency = 'CNY'
@@ -601,7 +609,7 @@ const handleSelectChange = async (val: any) => {
   }
   params.exchangeRate = currencyTypeRes.value
   const res = await api.updateExchangeRate(params)
-  if(res.data) {
+  if (res.data) {
     currencyTypeRes.value = res.data.exchangeRate
   }
 }
@@ -728,11 +736,13 @@ nextTick(() => {
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="汇率" prop="exchangeRate">
-                <!-- <el-input-number style="height: 2rem" v-model="localToptTab.exchangeRate" :min="1" :precision="1"
+              <el-form-item label="汇率" prop="">
+                <!-- <el-input-number style="height: 2rem; display:none;" v-model="localToptTab.exchangeRate" :min="1" :precision="1"
                   :step="0.1" controls-position="right" size="large" /> -->
-                <el-text v-if="localToptTab.currencyType === 'USD'">1美元 = {{ currencyTypeRes.toFixed(2) }}人民币</el-text>
-                <el-text v-if="localToptTab.currencyType === 'CNY'">1人民币 = {{ currencyTypeRes.toFixed(2) }}美元</el-text>
+                <el-text v-if="localToptTab.currencyType === 'USD' && currencyTypeRes !== null">1美元 = {{
+    currencyTypeRes.toFixed(2) }}人民币</el-text>
+                <el-text v-if="localToptTab.currencyType === 'CNY' && currencyTypeRes !== null">1人民币 = {{
+    currencyTypeRes.toFixed(2) }}美元</el-text>
               </el-form-item>
             </el-col>
           </el-row>
@@ -1048,7 +1058,23 @@ nextTick(() => {
       <el-form :model="exchangeRateForm" ref="exchangeRateRef" :rules="exchangeRateRules" label-width="90px"
         :inline="false">
         <el-form-item label="美元汇率" prop="exchangeRate">
-          <el-input v-model="exchangeRateForm.exchangeRate"></el-input>
+          <div class="right">
+            <el-input v-model="exchangeRateForm.exchangeRate" placeholder="请输入数值" clearable>
+              <template #prefix>
+                <!-- 自定义 SVG 图标作为前缀图标 -->
+                <el-text style="color: #333;">
+                  1 美元 (USD)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
+                </el-text>
+              </template>
+
+              <template #suffix>
+                <!-- 自定义 SVG 图标作为后缀图标 -->
+                <el-text style="color: #333;">
+                  人民币 (CNY)
+                </el-text>
+              </template>
+            </el-input>
+          </div>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -1251,5 +1277,13 @@ tr:hover {
 
 .placeholderColor {
   --el-text-color-placeholder: #5d97ff;
+}
+
+// :deep(.right .el-input__wrapper) {
+//   box-shadow: none;
+// }
+
+:deep(.right .el-input__inner) {
+  text-align: center;
 }
 </style>

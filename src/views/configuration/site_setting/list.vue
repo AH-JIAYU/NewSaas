@@ -4,6 +4,7 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import { Plus } from "@element-plus/icons-vue";
 import { onMounted, ref } from "vue";
 import api from "@/api/modules/configuration_site_setting";
+import apiProject from "@/api/modules/projectManagement";
 import apiLogo from "@/api/modules/logo";
 import Message from 'vue-m-message'
 import useClipboard from "vue-clipboard3";
@@ -156,9 +157,10 @@ async function getDataList() {
     if (data) {
       form.value = data || form.value;
       currencyType.value = data.currencyType
-      currencyTypeRes.value = storage.local.get("currencyTypeRes")
       if (data.currencyType === 'USD') {
         currencyTypeRes.value = data.exchangeRate
+      }else {
+        currencyTypeRes.value = (1 / data.exchangeRate).toFixed(2)
       }
       if (form.value.minimumAmount === 0) form.value.minimumAmount = null;
       analyzeRecords.value = form.value
@@ -275,7 +277,12 @@ const handlePictureCardPreview: UploadProps["onPreview"] = (uploadFile) => {
 // 切换币种
 const currencyTypeChange = (val: any) => {
   if (val) {
-    currencyType.value = val
+    ElMessageBox.confirm(`当前系统的会员存在可用余额、待审金额，若切换币种会根据当前汇率直接计算。可能会因为国际汇率的变化，存在金额精度问题，请知悉！`, '确认信息').then(() => {
+      try {
+        currencyType.value = val
+      } catch (error) {
+      }
+    }).catch(() => { })
   }
 }
 
@@ -297,6 +304,13 @@ function onSubmit() {
     formRules.value.topLevelDomainName = []
     formRef.value.clearValidate('topLevelDomainName');
   }
+  if (!form.value.webName) {
+    ElMessage.warning({
+      message: "请输入网址名称",
+      center: true,
+    });
+    return;
+  }
   formRef.value &&
     formRef.value.validate(async (valid: any) => {
       if (valid) {
@@ -310,20 +324,16 @@ function onSubmit() {
           }
           if (form.value.currencyType === 'USD') {
             userStore.currencyType = 1
-            form.value.exchangeRate = currencyTypeRes.value
-            storage.local.remove("currencyTypeRes");
-            storage.local.set('currencyTypeRes', currencyTypeRes.value.toString());
+            if (currencyTypeRes.value) {
+              form.value.exchangeRate = currencyTypeRes.value
+            }
           } else {
             userStore.currencyType = 2
             if (currencyTypeRes.value) {
-              storage.local.remove("currencyTypeRes");
-              storage.local.set('currencyTypeRes', currencyTypeRes.value.toString());
               form.value.exchangeRate = currencyTypeRes.value
               form.value.exchangeRate = (1 / form.value.exchangeRate).toFixed(2).toString();
             }
-
           }
-          // return
           const res = await api.edit(form.value)
           loading.value = false;
           if (res.status === 1) {
@@ -490,9 +500,9 @@ function onSubmit() {
                 <el-form-item style="display: flex;" label="美元汇率" prop="exchangeRate">
                   <div>
                     <!-- style="margin-bottom: 10px;" -->
-                    <div class="exchangeRate">
+                    <!-- <div class="exchangeRate">
                       <div class="left">
-                        <div style="width: 119.86px;" class="top">1 美元 (USD) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=</div>
+                        <div style="width: 7.4912rem;" class="top">1 美元 (USD) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=</div>
                       </div>
                       <div class="right">
                         <div class="bottom">
@@ -500,6 +510,23 @@ function onSubmit() {
                           人民币 (CNY)
                         </div>
                       </div>
+                    </div> -->
+                    <div class="right">
+                      <el-input v-model="currencyTypeRes" style="width: 22.4375rem" placeholder="请输入数值" clearable>
+                        <template #prefix>
+                          <!-- 自定义 SVG 图标作为前缀图标 -->
+                          <el-text style="color: #333;">
+                            1 美元 (USD)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
+                          </el-text>
+                        </template>
+
+                        <template #suffix>
+                          <!-- 自定义 SVG 图标作为后缀图标 -->
+                          <el-text style="color: #333;">
+                            人民币 (CNY)
+                          </el-text>
+                        </template>
+                      </el-input>
                     </div>
                     <!-- <div v-if="currencyType === 'CNY'" class="exchangeRate">
                       <div class="left">
@@ -782,9 +809,9 @@ function onSubmit() {
   font-size: 12px;
 }
 
-:deep(.right .el-input__wrapper) {
-  box-shadow: none;
-}
+// :deep(.right .el-input__wrapper) {
+//   box-shadow: none;
+// }
 
 :deep(.right .el-input__inner) {
   text-align: center;

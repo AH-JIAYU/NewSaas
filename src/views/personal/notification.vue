@@ -10,10 +10,13 @@ import { OverlayScrollbarsComponent } from "overlayscrollbars-vue";
 import news from "./notification-news.vue";
 import cooperation from "./notification-cooperation.vue";
 import empty from "@/assets/images/empty.png";
+import useUserStore from "@/store/modules/user";
+
 defineOptions({
   name: "personalNotification",
 });
 
+const userStore: any = useUserStore();
 const notificationStore = useNotificationStore(); //消息中心
 const cooperationRef = ref<any>(); //合作邀约 Ref
 const newsRef = ref<any>(); //消息

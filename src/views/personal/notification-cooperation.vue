@@ -2,10 +2,11 @@
 import api from "@/api/modules/notification";
 import useNotificationStore from "@/store/modules/notification";
 import apiUser from "@/api/modules/configuration_manager";
-import userDialog from "@/components/departmentHead/index.vue"; //部门人
 import apiDep from "@/api/modules/department";
 import { ElMessage, ElMessageBox } from "element-plus";
 import useUserStore from "@/store/modules/user";
+import userDialog from "@/components/departmentHead/index.vue"; //部门人
+import exchangeRate from "./components/exchangeRate/index.vue";
 defineOptions({
   name: "PersonalNotificationCooperation",
 });
@@ -17,6 +18,7 @@ const tenantCurrencyType = userStore.currencyType
 const tenantPartnersCurrencyType = ref<any>()
 // 默认钱数
 const moneyDefault = ref<any>(1);
+const exchangeRateRef = ref<any>('')
 const emit = defineEmits(["delSelectId"]);
 const notificationStore = useNotificationStore();
 const validateNumberRange = (rule: any, value: any, callback: any) => {
@@ -66,13 +68,6 @@ const showEdit = async (row: any) => {
   data.value.chargeUserId = "";
   data.value = row;
   tenantPartnersCurrencyType.value = row.currencyType
-  if (tenantCurrencyType === tenantPartnersCurrencyType.value) {
-    data.value.exchangeRate = 1
-  } else if (tenantCurrencyType === 1 && tenantPartnersCurrencyType.value === 2) {
-    data.value.exchangeRate = userStore.originalExchangeRate
-  } else if (tenantCurrencyType === 2 && tenantPartnersCurrencyType.value === 1) {
-    data.value.exchangeRate = (1 / userStore.originalExchangeRate).toFixed(2)
-  }
   // 部门
   const res = await apiDep.list({ name: "" });
   if (res.data) {
@@ -167,6 +162,18 @@ const agree = async () => {
         });
         return;
       }
+      if (!userStore.originalExchangeRate) {
+        exchangeRateRef.value.showEdit()
+        return
+      }
+      // 判断币种是否一致
+      if (tenantCurrencyType === tenantPartnersCurrencyType.value) {
+        data.value.exchangeRate = 1
+      } else if (tenantCurrencyType === 1 && tenantPartnersCurrencyType.value === 2) {
+        data.value.exchangeRate = userStore.originalExchangeRate
+      } else if (tenantCurrencyType === 2 && tenantPartnersCurrencyType.value === 1) {
+        data.value.exchangeRate = (1 / userStore.originalExchangeRate).toFixed(2)
+      }
       const params = {
         id: data.value.id,
         // beInvitationChargeUserId: data.value.beInvitationChargeUserId,
@@ -240,6 +247,7 @@ const handleClose = () => {
   data.value.sendProjectType = null;
   data.value.receiveProjectType = null;
 }
+
 defineExpose({
   showEdit,
 });
@@ -252,10 +260,10 @@ defineExpose({
       <div class="content">尊贵的{{ data.beInvitedName }}</div>
       <div class="time">
         <div>您好！</div>
-        <div>我是{{ data.invitationName }},诚挚邀请贵司与我们合作,实现共赢！</div>
+        <div style="margin: .25rem 0;">我是{{ data.invitationName }},诚挚邀请贵司与我们合作,实现共赢！</div>
         <div>我方货币类型为{{ tenantPartnersCurrencyType === 1 ? '美元' : '人民币' }}，达成合作后我方发布项目以
-        {{ tenantPartnersCurrencyType === 1 ? '美元' : '人民币' }} 计价，望悉知。</div>
-          <!-- ，与您的货币类型{{
+          {{ tenantPartnersCurrencyType === 1 ? '美元' : '人民币' }} 计价，望悉知。</div>
+        <!-- ，与您的货币类型{{
         tenantCurrencyType === 1 ?
           '美元' : '人民币' }}汇率换算为{{ tenantCurrencyType === tenantPartnersCurrencyType ? '1: 1' : `1:
           ${data.exchangeRate}` }}，请您悉知。 -->
@@ -452,27 +460,28 @@ defineExpose({
           </div>
         </el-form-item>
         <div style="display: flex;flex-direction: column;">
-          <el-form-item prop="receiveProjectType" label-width="7rem" style="margin-right: 1.5625rem;display: flex;flex-wrap: nowrap;flex-direction: column;">
-              <template #label>
-                <span style="display: flex;align-items: center;">
-                  <el-tooltip effect="dark" placement="top-start">
-                    <template #content>
-                      <div>自动：合作商分配给您的项目，全部自动接收</div>
-                      <div>手动：合作商分配给您的项目，手动选择接收</div>
-                    </template>
-                    <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
-                  </el-tooltip>
-                  接收项目
-                </span>
-              </template>
-              <div>
-                <el-button :type="receiveProjectType === 1 ? 'primary' : ''" size="small"
-                  @click="changeSendProjectType('接收', 1)">自动
-                </el-button>
-                <el-button :type="receiveProjectType === 2 ? 'primary' : ''" size="small"
-                  @click="changeSendProjectType('接收', 2)">手动</el-button>
-              </div>
-            </el-form-item>
+          <el-form-item prop="receiveProjectType" label-width="7rem"
+            style="margin-right: 1.5625rem;display: flex;flex-wrap: nowrap;flex-direction: column;">
+            <template #label>
+              <span style="display: flex;align-items: center;">
+                <el-tooltip effect="dark" placement="top-start">
+                  <template #content>
+                    <div>自动：合作商分配给您的项目，全部自动接收</div>
+                    <div>手动：合作商分配给您的项目，手动选择接收</div>
+                  </template>
+                  <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
+                </el-tooltip>
+                接收项目
+              </span>
+            </template>
+            <div>
+              <el-button :type="receiveProjectType === 1 ? 'primary' : ''" size="small"
+                @click="changeSendProjectType('接收', 1)">自动
+              </el-button>
+              <el-button :type="receiveProjectType === 2 ? 'primary' : ''" size="small"
+                @click="changeSendProjectType('接收', 2)">手动</el-button>
+            </div>
+          </el-form-item>
           <el-tree-select placeholder="请选择部门" v-if="data.receiveProjectType == 1" ref="treeRef"
             v-model="data.chargeUserId" :data="departmentList" check-strictly show-checkbox default-expand-all
             node-key="id" :props="defaultProps" @check-change="handleNodeClick" :check-on-click-node="true"
@@ -549,6 +558,7 @@ defineExpose({
       </template>
     </el-dialog>
     <userDialog ref="userRef" @userData="userData" />
+    <exchangeRate ref="exchangeRateRef" @userData="userData" />
   </div>
 </template>
 

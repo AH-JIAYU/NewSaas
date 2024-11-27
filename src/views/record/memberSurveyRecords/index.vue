@@ -113,6 +113,7 @@ const queryForm = reactive<any>({
   memberType: "",
   // 点击id
   id: "",
+  viceStatus: "",
 });
 
 const data = reactive<any>({
@@ -205,6 +206,7 @@ function onReset() {
     memberType: "",
     // 点击id
     id: "",
+    viceStatus: "",
   });
   fetchData();
 }

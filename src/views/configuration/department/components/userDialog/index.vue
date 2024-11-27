@@ -4,6 +4,7 @@ import { ElMessage } from "element-plus";
 import api from "@/api/modules/configuration_manager";
 import apiDep from "@/api/modules/department";
 import apiPos from "@/api/modules/position_manage";
+import apiRole from '@/api/modules/configuration_role'
 import useTenantRoleStore from "@/store/modules/tenant_role";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary";
 import useTenantStaffStore from "@/store/modules/configuration_manager";
@@ -231,11 +232,11 @@ const flattenDeep = (arr: any) => {
   );
 };
 // 树选中事件
-const handleNodeClick = (nodeData:any, checked:any) => {
+const handleNodeClick = (nodeData: any, checked: any) => {
   if (checked) {
     // 选中新的节点时，取消其他选中的节点
     const checkedKeys = treeRef.value.getCheckedKeys(); // 获取当前所有选中的节点
-    checkedKeys.forEach((key:any) => {
+    checkedKeys.forEach((key: any) => {
       if (key !== nodeData.id) {
         treeRef.value.setChecked(key, false); // 取消选中其他节点
       }
@@ -244,7 +245,7 @@ const handleNodeClick = (nodeData:any, checked:any) => {
     departmentId.value = [nodeData.id]; // 只保留当前选中节点 ID
   } else {
     // 如果取消选中节点，更新 departmentId
-    departmentId.value = departmentId.value.filter((id:any) => id !== nodeData.id);
+    departmentId.value = departmentId.value.filter((id: any) => id !== nodeData.id);
   }
 };
 
@@ -263,11 +264,15 @@ onMounted(async () => {
   // 用户
   staffList.value = await tenantStaffStore.getStaff();
   // 角色
-  munulevs.value = await roleStore.getRole();
+  const ress = await apiRole.list({ id: null, name: '' })
+  if (ress.data) {
+    // 角色
+    munulevs.value = ress.data
+  }
   const res = await apiDep.list({ name: '' })
-  if(res.data) {
-      // 部门
-  departmentList.value = res.data
+  if (res.data) {
+    // 部门
+    departmentList.value = res.data
   }
   // 区域
   country.value = await useStoreCountry.getCountry();
@@ -436,8 +441,8 @@ onMounted(async () => {
     </ElForm>
     <template #footer>
       <div class="flex-c">
-      <ElButton size="large" @click="onCancel"> 取消 </ElButton>
-      <ElButton type="primary" size="large" @click="onSubmit"> 确定 </ElButton>
+        <ElButton size="large" @click="onCancel"> 取消 </ElButton>
+        <ElButton type="primary" size="large" @click="onSubmit"> 确定 </ElButton>
       </div>
     </template>
   </ElDrawer>
@@ -449,10 +454,12 @@ onMounted(async () => {
   justify-content: center;
   align-items: center;
 }
+
 :deep(.el-cascader) {
   width: 100%;
 }
+
 :deep(.el-tree-node) {
-  margin-bottom:.5rem;
+  margin-bottom: .5rem;
 }
 </style>
