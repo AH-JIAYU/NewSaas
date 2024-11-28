@@ -999,7 +999,7 @@ onMounted(async () => {
                   label="完成数量"
                 >
                   <template #default="{ row }">
-                    <span class="table-green number-font">
+                    <span class="font-c number-font">
                       {{
                         row.completedQuantity ? row.completedQuantity : "0"
                       }}</span
@@ -1012,7 +1012,7 @@ onMounted(async () => {
                   width="85"
                   label="完成金额"
                   ><template #default="{ row }">
-                    <span class="table-red">
+                    <span class="font-c">
                       <CurrencyType />
                       <span class="number-font">{{
                         row.completedAmount ? row.completedAmount : "0"
