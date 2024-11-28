@@ -124,7 +124,7 @@ defineExpose({ showEdit })
 
 .Small {
   font-size: 12px;
-  color: #949494;
+  color: #777777;
   margin-left: 5px;
 }
 </style>

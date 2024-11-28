@@ -522,7 +522,7 @@ defineExpose({
       </div>
       <div class="steps">
         <el-form style="margin: 0; width: 100%; height: 100%;" :model="fileList" ref="formRef" :rules="formRules"
-          label-width="120px" :inline="false">
+          :inline="false">
           <el-row style="margin: 0 !important" :gutter="20">
             <div class="f-xc">
               <el-col :span="10">

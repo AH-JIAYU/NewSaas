@@ -353,8 +353,8 @@ function handleCurrentChange(val: any) {
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('type')" show-overflow-tooltip align="left" prop="" label="类型">
           <template #default="{ row }">
-            <el-tag v-if="row.type === 1" type="warning" effect="dark">待审余额</el-tag>
-            <el-tag v-if="row.type === 2" type="primary" effect="dark">可用余额</el-tag>
+            <el-tag v-if="row.type === 1" type="warning" effect="dark" style="background-color: #FFAC54">待审余额</el-tag>
+            <el-tag v-if="row.type === 2" type="primary" effect="dark" >可用余额</el-tag>
 
             <!-- <el-text v-if="row.type == 1"  class="fontColor">待审金额</el-text>
             <el-text v-if="row.type == 2"  class="fontColor">可用金额</el-text> -->
@@ -407,8 +407,8 @@ function handleCurrentChange(val: any) {
                 d="M8.79096 0L5.5738 4.56065H8.10931V5.56885H5.15558V6.95736H8.10931V7.97816H5.15558V10H3.63591V7.97816H0.574054V6.95736H3.63591V5.56885H0.574054V4.56065H3.18642L0 0H1.7134C3.20235 2.26497 4.10624 3.70177 4.42676 4.30931H4.45749C4.56617 4.05905 4.86361 3.55523 5.34877 2.79785L7.17085 0H8.79096Z"
                 fill="#333333" />
             </svg>
-            <CurrencyType v-if="!row.currencyType"  />
-                {{ Math.abs(row.addAndSubtraction) }}
+            <CurrencyType v-if="!row.currencyType"  /><el-text class="fontColor">{{ Math.abs(row.addAndSubtraction) }}</el-text>
+
               </el-text>
             </p>
             <p class="plus" v-if="row.operationType === 2">
@@ -427,8 +427,8 @@ function handleCurrentChange(val: any) {
                 d="M8.79096 0L5.5738 4.56065H8.10931V5.56885H5.15558V6.95736H8.10931V7.97816H5.15558V10H3.63591V7.97816H0.574054V6.95736H3.63591V5.56885H0.574054V4.56065H3.18642L0 0H1.7134C3.20235 2.26497 4.10624 3.70177 4.42676 4.30931H4.45749C4.56617 4.05905 4.86361 3.55523 5.34877 2.79785L7.17085 0H8.79096Z"
                 fill="#333333" />
             </svg>
-              <CurrencyType v-if="!row.currencyType"  />
-                {{ Math.abs(row.addAndSubtraction) }}
+              <CurrencyType v-if="!row.currencyType"  /><el-text class="fontColor">{{ Math.abs(row.addAndSubtraction) }}</el-text>
+
               </el-text>
             </p>
             <!-- <el-text v-if="row.operationType === 2" type="danger" class="mx-1 ">-

@@ -178,8 +178,8 @@ const formOption = {
           align="left" label="类型">
           <template #default="{ row }">
             <div class="fontC-System">
-              <el-text v-if="row.dispatchType === 1" type="primary">指定关闭</el-text>
-              <el-text v-else type="danger">指定价格</el-text>
+              <el-text v-if="row.dispatchType === 1" type="primary" style="font-weight: 700;">指定关闭</el-text>
+              <el-text v-else type="danger" style="font-weight: 700;">指定价格</el-text>
             </div>
           </template>
         </el-table-column>
@@ -232,7 +232,7 @@ const formOption = {
           label="指定目标" width="400">
           <template #default="{ row }">
             <div class="specifyTheTarget">
-              <el-button style="width: 46px;" v-if="row.dataType == 2" type="warning" size="small" class="p-1">{{
+              <el-button style="width: 46px;background-color: #FFAC54" v-if="row.dataType == 2" type="warning" size="small" class="p-1" >{{
     row.getGroupSupplierIdNameInfoList.length > 1
       ? "×" + row.getGroupSupplierIdNameInfoList.length
       : "部门"
