@@ -180,12 +180,12 @@ defineExpose({ showEdit });
           <!-- 项目 -->
           <div class="project box">
             <div>
-              <el-text tag="b">{{
+              <el-text tag="b" style="color: #333333;">{{
                 data.tenantMeasurementInfoList[0]?.projectName
               }}</el-text>
             </div>
             <div>
-              <el-text type="info"
+              <el-text type="info" style="color: #333333;"
                 >ID：{{ data.tenantMeasurementInfoList[0]?.projectId }}</el-text
               >
             </div>
@@ -214,7 +214,7 @@ defineExpose({ showEdit });
                 <div class="item-left">
                   <div class="tenant">
                     <template v-if="item?.length > 1">
-                      <p class="tenantName">
+                      <p class="tenantName" style="color: #333333;">
                         已分配数：
                         <span class="tenantLength">{{ item?.length }}</span>
                         <span :class="'type' + item.type">
@@ -228,8 +228,8 @@ defineExpose({ showEdit });
                     </template>
                     <template v-else>
                       <p>
-                        <span class="tenantName">{{ item.tenantName }}</span>
-                        <span :class="'type' + item.type">
+                        <span class="tenantName" style="color: #333333;">{{ item.tenantName }}</span>
+                        <span :class="'type' + item.type" style="font-size: 14px;">
                           {{
                             projectManagementOutsourceStore.typeList[
                               item.type - 1
@@ -237,18 +237,18 @@ defineExpose({ showEdit });
                           }}
                         </span>
                       </p>
-                      <el-text type="info"
+                      <el-text type="info" style="color: #333333;"
                         >ID：{{ item.allocationTenantId }}</el-text
                       >
                     </template>
                   </div>
                   <div class="price flex-b">
-                    <p>
+                    <p style="color: #333333;">
                       项目价:
                       {{ item.currencyType === 1 ? "$" : "￥" }}
                       {{ item.doMoneyPrice }}
                     </p>
-                    <p>
+                    <p style="color: #333333;">
                       参数:
                       <el-text size="large"
                         >{{ item.participationNumber || 0 }}
@@ -281,8 +281,8 @@ defineExpose({ showEdit });
             <div class="clickIdItem" v-for="ite in data.clickIdList">
               <div class="clickIdItem-title">
                 <div>
-                  <span class="supplierName">{{ ite.supplierName }}</span>
-                  <span :class="'peopleType' + ite.peopleType">
+                  <span class="supplierName" style="color: #333333;">{{ ite.supplierName }}</span>
+                  <span :class="'peopleType' + ite.peopleType" style="color: #333333;">
                     {{
                       projectManagementOutsourceStore.peopleTypeList[
                         ite.peopleType - 1
@@ -291,14 +291,14 @@ defineExpose({ showEdit });
                   </span>
                 </div>
                 <div>
-                  <el-text type="info">ID： {{ ite.supplierId }}</el-text>
+                  <el-text type="info" style="color: #333333;">ID： {{ ite.supplierId }}</el-text>
                 </div>
               </div>
               <div class="clickIdItem-content">
                 <ul>
                   <li v-for="it in ite.list">
-                    <span> {{ it.projectQuestionnaireClickId }}</span>
-                    <span :class="'surveyStatus' + it.surveyStatus">{{
+                    <span style="color: #333333;"> {{ it.projectQuestionnaireClickId }}</span>
+                    <span :class="'surveyStatus' + it.surveyStatus" style="color: #333333;">{{
                       projectManagementOutsourceStore.surveyStatusList[
                         it.surveyStatus - 1
                       ]
