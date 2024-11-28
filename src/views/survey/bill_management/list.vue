@@ -184,7 +184,9 @@ onMounted(() => {
   formSearchList.value = [
   { index: 1, show: true, type: 'input', modelName: 'memberId', placeholder: '会员ID' },
   { index: 2, show: true, type: 'input', modelName: 'memberName', placeholder: '会员姓名' },
-  { index: 3, show: true, type: 'select', modelName: 'billStatus', placeholder: '账单状态', option: 'billStatus', optionLabel: 'label', optionValue: 'value' }
+  { index: 3, show: true, type: 'select', modelName: 'billStatus', placeholder: '账单状态', option: 'billStatus',
+  optionLabel: 'label', optionValue: 'value', // multiple:true,
+}
 ]
 });
 const formOption={

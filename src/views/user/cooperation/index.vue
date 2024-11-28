@@ -254,10 +254,11 @@ const id = ref(null);
 const changeReceiveProjectType = (name: any, row: any) => {
   id.value = row.id; //获取列表id
   //切换成自动需要选择负责人
-  //判断当前发送状态，如果当前是自动，1,点击手动才调接口，如果当前是手动2，点击自动，弹出选择部门负责人才调接口
+  //判断当前发送状态，如果当前是自动，1,点击手动才调接口，如果当前是手动2，点击自动，弹出选择部门负责人才调接口，
   let obj = JSON.parse(JSON.stringify(row)); //深拷贝，不改变原数据
+  console.log(row.receiveProjectType,'row.receiveProjectType')
+  if (name=='手动' || name=='拒绝') {
 
-  if (row.receiveProjectType == 1 && name == "手动") {
     try {
       listLoading.value = true;
       let params = {
@@ -266,7 +267,7 @@ const changeReceiveProjectType = (name: any, row: any) => {
         invitationType: row.invitationType, //邀请类型
         chargeUserName: row.userName, //负责人用户姓名
         sendProjectType: row.sendProjectType, //邀请方发送项目类型:1:自动 2:手动
-        receiveProjectType: row.receiveProjectType == 1 ? 2 : 1, //邀请方接收项目类型:1:自动 2:手动
+        receiveProjectType: name=='手动' ? 2 :3, //邀请方接收项目类型:1:自动 2:手动,3拒绝
       };
       api.updateInvitationBindUser(params).then(() => {
         listLoading.value = false;
@@ -280,7 +281,7 @@ const changeReceiveProjectType = (name: any, row: any) => {
     } finally {
       listLoading.value = false;
     }
-  } else if (row.receiveProjectType == 2 && name == "自动") {
+  } else if ( name == "自动") {
     //弹出部门负责人
     let obj = {
       chargeUserId: row.userId,
@@ -403,7 +404,7 @@ function userData(data1: any) {
           align="left"
           prop="receiveProjectType"
           label="接收项目"
-          width="250"
+          width="230"
         >
           <template #default="{ row }">
             <el-button
@@ -507,6 +508,7 @@ function userData(data1: any) {
           prop="pendBalance"
           show-overflow-tooltip
           label="业绩(合作商)"
+          width="200"
         >
         <template #header>
             <div style="display: flex;" class="table-header">
@@ -598,6 +600,7 @@ function userData(data1: any) {
           prop="personalPendBalance"
           show-overflow-tooltip
           label="业绩(我的)"
+           width="200"
         >
         <template #header>
             <div style="display: flex;" class="table-header">

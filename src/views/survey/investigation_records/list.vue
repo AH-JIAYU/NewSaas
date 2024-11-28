@@ -258,6 +258,7 @@ onMounted(async () => {
       option: "surveyStatus",
       optionLabel: "label",
       optionValue: "value",
+        // multiple:true,
     },
     {
       index: 8,

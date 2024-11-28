@@ -1232,10 +1232,6 @@ align-items: center;
     white-space: nowrap;
 
   }
-
-
-
-
     </style>
 
 

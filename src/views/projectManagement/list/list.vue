@@ -318,6 +318,7 @@ onMounted(async () => {
       option: "allocationStatus",
       optionLabel: "label",
       optionValue: "value",
+      // multiple:true,
     },
     // {
     //   index: 7,

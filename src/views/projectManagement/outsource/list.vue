@@ -159,6 +159,7 @@ onMounted(() => {
       option: "projectStatus",
       optionLabel: "label",
       optionValue: "value",
+      // multiple:true,
     },
   ];
   formSearchList2.value = [
@@ -192,6 +193,7 @@ onMounted(() => {
       option: "projectStatus",
       optionLabel: "label",
       optionValue: "value",
+      // multiple:true,
     },
     {
       index: 5,

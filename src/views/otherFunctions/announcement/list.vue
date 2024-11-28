@@ -254,7 +254,10 @@ onMounted(() => {
   });
   formSearchList.value = [
     { index: 1, show: true, type: 'input', modelName: 'title', placeholder: '请输入标题' },
-    { index: 2, show: true, type: 'select', modelName: 'type', placeholder: '请选择类型', option: 'type', optionLabel: 'label', optionValue: 'value' }
+    { index: 2, show: true, type: 'select', modelName: 'type', placeholder: '请选择类型', option: 'type', optionLabel: 'label',
+    optionValue: 'value',
+// multiple:true,
+   }
   ]
 });
 const formOption = {

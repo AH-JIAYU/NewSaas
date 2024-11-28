@@ -295,6 +295,7 @@ onMounted(() => {
                 />
               </el-select>
             </el-form-item>
+            <!-- multiple:true,-->
             <el-form-item label="">
               <el-select
                 v-model="queryForm.invoiceStatus"
@@ -302,6 +303,7 @@ onMounted(() => {
                 clearable
                 filterable
                 @change="currentChange()"
+
               >
                 <ElOption
                   v-for="item in invoiceStatusList"

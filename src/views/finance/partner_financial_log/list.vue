@@ -2,18 +2,18 @@
 import eventBus from "@/utils/eventBus";
 import api from "@/api/modules/user_cooperation";
 import { ref } from "vue";
-import empty from '@/assets/images/empty.png'
+import empty from "@/assets/images/empty.png";
 
 defineOptions({
   name: "financial_log",
 });
 // 时间
-const { format } = useTimeago()
+const { format } = useTimeago();
 const router = useRouter();
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
-const formSearchList = ref<any>()//表单排序配置
-const formSearchName = ref<string>('formSearch-financial_log')// 表单排序name
+const formSearchList = ref<any>(); //表单排序配置
+const formSearchName = ref<string>("formSearch-financial_log"); // 表单排序name
 // 表格控件-展示列
 const columns = ref<any>([
   // 表格控件-展示列
@@ -128,6 +128,7 @@ const data = ref<any>({
   },
   // 列表数据
   dataList: [],
+  type: 1,
 });
 async function getDataList() {
   try {
@@ -136,12 +137,20 @@ async function getDataList() {
       ...getParams(),
       ...data.value.search,
     };
-    const res = await api.queryCompanyRecordQueryAmount(params);
-    data.value.loading = false;
-    data.value.dataList = res.data.items;
-    pagination.value.total = +res.data.total;
+    if (data.value.type == 1) {
+      //业绩合作商调用
+      //queryBeCompanyRecordQueryAmount
+      const res = await api.queryBeCompanyRecordQueryAmount(params);
+      data.value.loading = false;
+      data.value.dataList = res.data.items;
+      pagination.value.total = +res.data.total;
+    } else {
+      const res = await api.queryCompanyRecordQueryAmount(params);
+      data.value.loading = false;
+      data.value.dataList = res.data.items;
+      pagination.value.total = +res.data.total;
+    }
   } catch (error) {
-
   } finally {
     data.value.loading = false;
   }
@@ -156,7 +165,7 @@ function onReset() {
     clickId: null,
     operationType: null,
     type: null,
-  },);
+  });
   getDataList();
 }
 
@@ -204,23 +213,58 @@ onMounted(() => {
     }
   });
   formSearchList.value = [
-    { index: 1, show: true, type: 'input', modelName: 'clickId', placeholder: '点击ID' },
-    { index: 1, show: true, type: 'input', modelName: 'allocationTenantId', placeholder: '合作商ID' },
-    { index: 2, show: true, type: 'input', modelName: 'projectId', placeholder: '项目ID' },
-    { index: 3, show: true, type: 'select', modelName: 'operationType', placeholder: '加减款', option: 'operationType', optionLabel: 'label', optionValue: 'value' },
-    { index: 4, show: true, type: 'select', modelName: 'type', placeholder: '类型', option: 'type', optionLabel: 'label', optionValue: 'value' },
-  ]
+    {
+      index: 1,
+      show: true,
+      type: "input",
+      modelName: "clickId",
+      placeholder: "点击ID",
+    },
+    {
+      index: 1,
+      show: true,
+      type: "input",
+      modelName: "allocationTenantId",
+      placeholder: "合作商ID",
+    },
+    {
+      index: 2,
+      show: true,
+      type: "input",
+      modelName: "projectId",
+      placeholder: "项目ID",
+    },
+    {
+      index: 3,
+      show: true,
+      type: "select",
+      modelName: "operationType",
+      placeholder: "加减款",
+      option: "operationType",
+      optionLabel: "label",
+      optionValue: "value",
+    },
+    {
+      index: 4,
+      show: true,
+      type: "select",
+      modelName: "type",
+      placeholder: "类型",
+      option: "type",
+      optionLabel: "label",
+      optionValue: "value",
+    },
+  ];
 });
 const formOption = {
   operationType: () => payments,
   type: () => paymentsType,
-}
+};
 onBeforeUnmount(() => {
   if (data.value.formMode === "router") {
     eventBus.off("get-data-list");
   }
 });
-
 </script>
 
 <template>
@@ -229,7 +273,7 @@ onBeforeUnmount(() => {
       <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange"
         @onReset="onReset" :model="data.search" :formOption="formOption" />
       <ElDivider border-style="dashed" />
-      <el-row>
+      <el-row style="margin: 0 !important;">
         <FormLeftPanel />
         <FormRightPanel>
           <el-button size="default"> 导出 </el-button>
@@ -238,6 +282,10 @@ onBeforeUnmount(() => {
             v-model:stripe="data.stripe" style="margin-left: 12px" @query-data="getDataList" />
         </FormRightPanel>
       </el-row>
+      <el-tabs v-model="data.type" @tab-change="getDataList">
+        <el-tab-pane label="业绩(合作商)" :name="1"></el-tab-pane>
+        <el-tab-pane label="业绩(我的)" :name="2"></el-tab-pane>
+        </el-tabs>
       <ElTable v-loading="data.loading" :border="data.border" :size="data.lineHeight" :stripe="data.stripe" class="my-4"
         :data="data.dataList" highlight-current-row height="100%" style="min-height: 370px;" sort-change="sortChange"
         @selection-change="data.batch.selectionDataList = $event">
@@ -392,7 +440,7 @@ onBeforeUnmount(() => {
 
 /* 自定义标签背景 */
 .el-tag--dark.el-tag--warning {
-  background-color: #FFAC54 !important;
+  background-color: #ffac54 !important;
 }
 
 .fontColor {
@@ -441,7 +489,5 @@ onBeforeUnmount(() => {
       }
     }
   }
-
-
 }
 </style>

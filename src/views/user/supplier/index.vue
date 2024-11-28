@@ -307,6 +307,7 @@ onMounted(async () => {
       option: "supplierStatus",
       optionLabel: "label",
       optionValue: "value",
+// multiple:true,
     },
     {
       index: 7,

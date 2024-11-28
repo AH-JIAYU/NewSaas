@@ -101,7 +101,7 @@ const queryForm = reactive<any>({
   // 创建人id
   createUserId: null,
   // 结算状态 1:待审核 2:已审核 3:已开票 4:已结算 5:已冻结
-  settlementStatus: "",
+  settlementStatus: [],
   // 时间类型 1:待审核 2:已审核 3:已开票 4:巳结算 5:已冻结
   timeType: "",
   time: [],
@@ -201,7 +201,7 @@ function onReset() {
     // 创建人id
     createUserId: null,
     // 结算状态 1:待审核 2:已审核 3:已开票 4:已结算 5:已冻结
-    settlementStatus: "",
+    settlementStatus: [],
     // 时间类型 1:待审核 2:已审核 3:已开票 4:巳结算 5:已冻结
     timeType: "",
     time: [],
@@ -255,11 +255,11 @@ async function fetchData() {
       params.beginTime = params.time[0] || "";
       params.endTime = params.time[1] || "";
     }
-    if (queryForm.settlementStatus) {
-      params.settlementStatus = [params.settlementStatus];
-    } else {
-      params.settlementStatus = [];
-    }
+    // if (queryForm.settlementStatus) {
+    //   params.settlementStatus = [params.settlementStatus];
+    // } else {
+    //   params.settlementStatus = [];
+    // }
     //#endregion
     const { data } = await api.list(params);
     list.value = data.projectSettlementList;
@@ -282,11 +282,11 @@ async function onExport() {
       params.beginTime = params.time[0] || "";
       params.endTime = params.time[1] || "";
     }
-    if (queryForm.settlementStatus) {
-      params.settlementStatus = [params.settlementStatus];
-    } else {
-      params.settlementStatus = [];
-    }
+    // if (queryForm.settlementStatus) {
+    //   params.settlementStatus = [params.settlementStatus];
+    // } else {
+    //   params.settlementStatus = [];
+    // }
     params.page = 0;
     params.limit = -1;
     params.type = "export";
@@ -361,6 +361,7 @@ onMounted(async () => {
       option: "settlementStatus",
       optionLabel: "label",
       optionValue: "value",
+      multiple:true,
     },
     // {
     //   index: 7,
