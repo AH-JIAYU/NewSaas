@@ -220,6 +220,7 @@ async function onSubmit() {
               message: "请设置汇率",
               center: true,
             });
+            return
           }
           const { status } = await api.create(params);
           status === 1 &&

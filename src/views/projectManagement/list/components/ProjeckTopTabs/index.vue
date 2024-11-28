@@ -138,6 +138,9 @@ if (userStore.originalExchangeRate) {
   currencyTypeRes.value = userStore.originalExchangeRate
   localToptTab.value.exchangeRate = userStore.originalExchangeRate
 }
+if (userStore.currencyType) {
+  localToptTab.value.currencyType = userStore.currencyType === 1 ? 'USD' : 'CNY'
+}
 // #endregion
 
 // #region 方法
@@ -581,6 +584,8 @@ const exchangeRateSubmit = async () => {
   const res = await apiSite.updateWebConfig(exchangeRateForm.value)
   if (res.data.flag) {
     await userStore.getCurrencyType()
+    currencyTypeRes.value = userStore.originalExchangeRate
+    localToptTab.value.currencyType = userStore.currencyType === 1 ? 'USD' : 'CNY'
     ElMessage.success({
       message: "修改成功",
       center: true,

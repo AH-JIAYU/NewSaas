@@ -6,8 +6,10 @@ import UseUserSupplier from "@/store/modules/user_supplier"; // 供应商
 import useConfigurationSupplierLevelStore from "@/store/modules/configuration_supplierLevel"; //供应商等级
 import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
+import useUserStore from "@/store/modules/user"; // 用户汇率
 
-
+// 用户信息
+const userStore = useUserStore()
 const userSupplier = UseUserSupplier(); // 供应商
 const configurationSupplierLevelStore = useConfigurationSupplierLevelStore(); //供应商等级
 const customerStore = useUserCustomerStore(); // 客户
@@ -255,7 +257,7 @@ nextTick(() => {
                   </el-select>
                 </el-form-item>
               </el-col>
-              <el-col :span="8">
+              <!-- <el-col :span="8">
                 <el-form-item label="结算币种" prop="">
                   <el-select v-model="props.leftTab.currencyType" value-key="" :disabled="!!props.leftTab.tenantSupplierId" style="width: 22.4375rem" placeholder="请选择币种"
                     clearable filterable @change="">
@@ -263,14 +265,14 @@ nextTick(() => {
                     </el-option>
                   </el-select>
                 </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row :gutter="10">
+              </el-col> -->
               <el-col :span="8">
                 <el-form-item v-if="props.leftTab.type === 'company'" label="公司名称">
                   <el-input clearable v-model="props.leftTab.companyName" />
                 </el-form-item>
               </el-col>
+            </el-row>
+            <el-row :gutter="10">
               <el-col :span="8">
                 <el-form-item v-if="props.leftTab.type === 'company'" label="法人姓名" prop="">
                   <el-input clearable v-model="props.leftTab.legalPersonName" />
