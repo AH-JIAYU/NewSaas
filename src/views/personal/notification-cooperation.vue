@@ -28,7 +28,34 @@ const validateNumberRange = (rule: any, value: any, callback: any) => {
   }
   callback(); // 校验通过
 };
+
+const rules  = ref<any>({
+    priceRatio: [
+      { required: true, message: "请输入价格比例", trigger: "blur" },
+      //{ min: 0, max: 100, message: '请在0-100范围内输入', trigger: 'blur' },
+      {
+        type: "number",
+        trigger: "blur",
+        validator: validateNumberRange,
+      },
+    ],
+
+    sendProjectType: [
+      { required: true, message: "请选择发送项目", trigger: "change" },
+    ],
+    receiveProjectType: [
+      { required: true, message: "请选择接收项目", trigger: "change" },
+    ],
+    exchangeRate: [
+      { required: true, message: '请输入汇率', trigger: 'blur' },
+      { pattern: /^(?!0(\.0+)?$)(\d+(\.\d{1,2})?)$/, message: '请输入一个有效的数字，不能小于0，最多保留两位小数', trigger: 'blur' }
+    ]
+    // beInvitationChargeUserId: [
+    //   { required: true, message: "请选择PM", trigger: "change" },
+    // ],
+  })
 const data = ref<any>({
+  priceRatio: null,
   rules: {
     priceRatio: [
       { required: true, message: "请输入价格比例", trigger: "blur" },
@@ -58,7 +85,7 @@ const data = ref<any>({
 const dialogTableVisible = ref<any>(false); // 同意合作-PM弹框
 const tenantStaffList = ref<any>([]); // PM
 
-const FormRef = ref<any>();
+const formRef = ref<any>('');
 const defaultProps: any = {
   children: "children",
   label: "name",
@@ -148,7 +175,7 @@ const refuse = async () => {
 };
 // 同意
 const agree = async () => {
-  FormRef.value.validate(async (valid: any) => {
+  formRef.value.validate(async (valid: any) => {
     if (valid) {
       //如果obj.receiveProjectType == 1，，必须要选人
       //判断如果为数组改为字符串，data.value.form.chargeUserId
@@ -276,7 +303,7 @@ defineExpose({
       </div>
     </div>
     <el-dialog v-model="dialogTableVisible" title="合作配置" class="hezuoDrawer" @close="handleClose">
-      <ElForm ref="FormRef" :rules="data.rules" :model="data" label-width="7rem" labelPosition="left">
+      <ElForm ref="formRef" :rules="rules" :model="data" label-width="7rem" labelPosition="left">
         <el-form-item label="价格比例" prop="priceRatio">
           <el-input v-model="data.priceRatio" clearable><template #append>%</template></el-input>
         </el-form-item>
