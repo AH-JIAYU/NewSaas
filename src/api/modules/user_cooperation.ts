@@ -19,7 +19,10 @@ export default {
   getAllocationBindList: (data: any) => api.post("tenantBind/getAllocationBindList", data),
   // 项目分配-查询合作租户列表
   getTenantSupplierMemberNameInfo: (data: any) => api.post("tenantBind/getTenantSupplierMemberNameInfo", data),
-  // 查询公司财务日志
+  // 查询公司财务日志 (自己是甲方调用该接口)
   queryCompanyRecordQueryAmount: (data: any) => api.post("financial-record/queryCompanyRecordQueryAmount", data),
+  //查询合作商财务日志(自己是乙方调用该接口)
+  queryBeCompanyRecordQueryAmount: (data: any) => api.post("financial-record/queryBeCompanyRecordQueryAmount", data),
+
 
 };
