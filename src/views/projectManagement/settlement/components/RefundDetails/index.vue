@@ -438,7 +438,7 @@ defineExpose({ showEdit });
                   fill="#333333"
                 />
               </svg>
-              <CurrencyType v-if="!row.currencyType" />{{ row.price || 0 }}
+              <CurrencyType v-if="!row.currencyType" />{{ row.totalPrice || 0 }}
             </div>
           </template>
         </el-table-column>
