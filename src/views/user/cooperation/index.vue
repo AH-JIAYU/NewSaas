@@ -507,6 +507,7 @@ function userData(data1: any) {
           prop="pendBalance"
           show-overflow-tooltip
           label="业绩(合作商)"
+          width="160"
         >
         <template #header>
             <div style="display: flex;" class="table-header">
@@ -598,6 +599,7 @@ function userData(data1: any) {
           prop="personalPendBalance"
           show-overflow-tooltip
           label="业绩(我的)"
+           width="160"
         >
         <template #header>
             <div style="display: flex;" class="table-header">
