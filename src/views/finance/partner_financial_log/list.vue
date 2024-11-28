@@ -137,7 +137,7 @@ async function getDataList() {
       ...getParams(),
       ...data.value.search,
     };
-    if (data.value.type == 1) {
+    if (data.value.type == 2) {
       //业绩合作商调用
       //queryBeCompanyRecordQueryAmount
       const res = await api.queryBeCompanyRecordQueryAmount(params);
