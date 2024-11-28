@@ -79,11 +79,6 @@ let data = ref<any>({
     },
   },
 });
-if (userStore.currencyType === 1) {
-  localToptTab.value.currencyType = 'USD'
-} else if (userStore.currencyType === 2) {
-  localToptTab.value.currencyType = 'CNY'
-}
 // 自定义校验邮箱
 const validateUrlRegistered = (rule: any, value: any, callback: any) => {
   // 网址格式
