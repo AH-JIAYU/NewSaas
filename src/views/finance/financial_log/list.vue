@@ -353,8 +353,8 @@ function handleCurrentChange(val: any) {
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('type')" show-overflow-tooltip align="left" prop="" label="类型">
           <template #default="{ row }">
-            <el-tag v-if="row.type === 1" type="warning" effect="dark">待审余额</el-tag>
-            <el-tag v-if="row.type === 2" type="primary" effect="dark">可用余额</el-tag>
+            <el-tag v-if="row.type === 1" type="warning" effect="dark" style="background-color: #FFAC54">待审余额</el-tag>
+            <el-tag v-if="row.type === 2" type="primary" effect="dark" >可用余额</el-tag>
 
             <!-- <el-text v-if="row.type == 1"  class="fontColor">待审金额</el-text>
             <el-text v-if="row.type == 2"  class="fontColor">可用金额</el-text> -->

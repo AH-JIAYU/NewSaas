@@ -689,7 +689,7 @@ function handleMoreStatus(row: any) {
             <div style="display: flex" class="oneLine">
               <el-text v-if="row.status === 1" class="mx-1 tableBig flex-c">
                 <el-button
-                  style="margin-right: 5px; background-color: #ffac54"
+                  style="margin-right: 5px; background-color: #FFAC54"
                   size="small"
                   class="p-1"
                   type="warning"

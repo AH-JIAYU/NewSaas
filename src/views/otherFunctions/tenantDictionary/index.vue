@@ -338,7 +338,7 @@ function onDeleteMulti(rows: any[]) {
                 <ElButton type="primary" size="small" plain @click="onCreate(scope.row)">
                   新增子项
                 </ElButton>
-                <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">
+                <ElButton type="warning" size="small" plain @click="onEdit(scope.row)">
                   编辑
                 </ElButton>
                 <ElButton type="danger" size="small" plain @click="onDelete(scope.row)">

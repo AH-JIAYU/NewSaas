@@ -430,7 +430,7 @@ const formOption = {
               <span class="tableBig">
                 <el-tag v-if="row.projectType === 1" type="primary" effect="dark">
                   内部新增</el-tag>
-                <el-tag v-else-if="row.projectType === 2" type="warning" effect="dark">
+                <el-tag v-else-if="row.projectType === 2" type="warning" effect="dark" style="background-color: #FFAC54;">
                   合作商分配</el-tag>
               </span>
             </p>
