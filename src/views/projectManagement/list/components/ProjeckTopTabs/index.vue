@@ -611,6 +611,7 @@ const handleSelectChange = async (val: any) => {
   const res = await api.updateExchangeRate(params)
   if (res.data) {
     currencyTypeRes.value = res.data.exchangeRate
+    localToptTab.value.exchangeRate = res.data.exchangeRate.toFixed(2)
   }
 }
 
