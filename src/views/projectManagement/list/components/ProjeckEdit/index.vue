@@ -207,13 +207,7 @@ async function onSubmit() {
       const params = await processingData();
       setTimeout(async () => {
         if (title.value === "新增") {
-          if(params.currencyType ==='CNY') {
-            params.exchangeRate = (1 / userStore.originalExchangeRate).toFixed(2)
-             params.memberPrice = (params.doMoneyPrice * params.exchangeRate).toFixed(2)
-          }else {
-            params.exchangeRate = userStore.originalExchangeRate
-            params.memberPrice = (params.doMoneyPrice * params.exchangeRate).toFixed(2)
-          }
+          params.memberPrice = (params.doMoneyPrice * params.exchangeRate).toFixed(2)
           params.minimumDuration = +params.minimumDuration
           if(!params.exchangeRate) {
             ElMessage.warning({
