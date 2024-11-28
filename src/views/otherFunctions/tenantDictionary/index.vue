@@ -301,12 +301,30 @@ function onDeleteMulti(rows: any[]) {
             </ElButton>
           </ElSpace>
           <ElTable ref="dictionaryItemRef" v-loading="dictionaryItem.loading" :data="dictionaryItem.dataList" stripe
-            highlight-current-row border height="100%" @sort-change="sortChange"
+            highlight-current-row  height="100%" @sort-change="sortChange"
             @selection-change="dictionaryItem.selectionDataList = $event" row-key="id" default-expand-all>
             <ElTableColumn type="selection" align="left" fixed />
-            <ElTableColumn prop="chineseName" label="中文名称" />
-            <ElTableColumn prop="englishName" label="英文名称" />
-            <ElTableColumn prop="remark" label="备注" />
+            <ElTableColumn prop="chineseName" label="中文名称" >
+              <template #default="{ row }">
+            <span style="color:#333333">{{ row.chineseName }}</span>
+          </template>
+
+
+            </ElTableColumn>
+            <ElTableColumn prop="englishName" label="英文名称" >
+             <template #default="{ row }">
+            <span style="color:#333333">{{ row.englishName }}</span>
+          </template>
+
+
+            </ElTableColumn>
+            <ElTableColumn prop="remark" label="备注" >
+              <template #default="{ row }">
+            <span style="color:#333333">{{ row.remark }}</span>
+          </template>
+
+
+            </ElTableColumn>
             <ElTableColumn label="键值" align="left" width="150">
               <template #default="scope">
                 <ElTag type="info">

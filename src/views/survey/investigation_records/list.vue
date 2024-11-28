@@ -303,7 +303,7 @@ function handleCurrentChange(val: any) {
           label="点击ID" width="200">
           <template #default="{ row }">
             <div class="hoverSvg">
-              <el-text class="fontColor">{{ row.id ? row.id : "-" }}</el-text>
+              <el-text style="color: #333333">{{ row.id ? row.id : "-" }}</el-text>
               <span class="c-fx">
                 <copy :content="row.randomIdentityId" :class="{
     rowCopy: 'rowCopy',

@@ -507,7 +507,7 @@ function handleMoreStatus(row: any) {
               <p class="oneLine tableBig">
                 {{ row.projectName ? row.projectName : "-" }}
               </p>
-              <div class="oneLine">
+              <div class="oneLine" style="color:#333333">
                 {{
                   row.customerName.split("/")[1] !== "null"
                     ? row.customerName.split("/")[1]
@@ -530,7 +530,7 @@ function handleMoreStatus(row: any) {
               <b class="tableBig">{{ row.customerName.split("/")[0] }}</b>
               <div class="oneLine" v-if="row.projectType !== 2">
                 <!-- <img :src="row.avatar" alt="" class="avatar" /> -->
-                <span>PM：{{ row.userName }}</span>
+                <span style="color:#333333">PM：{{ row.userName }}</span>
               </div>
             </div>
           </template>

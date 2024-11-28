@@ -475,7 +475,7 @@ const formOption = {
     row.name
   }}</span>
                 </p>
-                <div v-if="row.projectType === 1" class="oneLine">
+                <div v-if="row.projectType === 1" class="oneLine" style="color:#333333">
                   <span :class="row.isB2b === 2 ? 'red' : ''">{{
     row.clientName.split("/")[1]
   }}</span>
@@ -491,7 +491,7 @@ const formOption = {
             <div class="flex-c">
               <div class="oneLine" style="width: calc(100% - 1.25rem)">
                 <b class="tableBig">{{ row.clientName.split("/")[0] }}</b>
-                <div class="oneLine">PM：{{ row.chargeName }}</div>
+                <div class="oneLine" style="color:#333333">PM：{{ row.chargeName }}</div>
               </div>
               <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'customer')"
                 :class="{ edit: 'edit', current: row.projectId === current }" name="i-ep:edit" color="#409eff" />

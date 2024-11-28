@@ -178,8 +178,8 @@ const formOption = {
           align="left" label="类型">
           <template #default="{ row }">
             <div class="fontC-System">
-              <el-text v-if="row.dispatchType === 1" type="primary">指定关闭</el-text>
-              <el-text v-else type="danger">指定价格</el-text>
+              <el-text v-if="row.dispatchType === 1" type="primary" style="font-weight: 700;">指定关闭</el-text>
+              <el-text v-else type="danger" style="font-weight: 700;">指定价格</el-text>
             </div>
           </template>
         </el-table-column>

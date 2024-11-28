@@ -231,7 +231,7 @@ const formOption={
           </template>
         </ElTableColumn>
         <el-table-column v-if="checkList.includes('customerAccord')" align="left" prop="customerAccord"
-          show-overflow-tooltip label="客户名称">
+          show-overflow-tooltip label="客户名称" width="150">
           <template #default="{ row }">
             <div class="flex-c tableBig">
               <div class="oneLine" style="width: calc(100% - 20px);"> {{ row.customerAccord }} </div>
@@ -258,7 +258,7 @@ const formOption={
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('tenantCustomerId')" align="left" prop="tenantCustomerId"
-            show-overflow-tooltip label="客户编码">
+            show-overflow-tooltip label="客户编码" width="150">
           <template #default="{ row }">
             <div class="copyId tableSmall">
               <div class="oneLine projectId">

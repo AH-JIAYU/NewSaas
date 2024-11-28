@@ -129,6 +129,7 @@ const userForm = ref<any>({
     level: 1,
   },
 });
+const formSearchList = ref<any>()//表单排序配置
 // 获取树
 const treeRef = ref<any>();
 // 获取用户
@@ -142,7 +143,24 @@ async function getUserList() {
     pagination.value.total = +res.data.total;
   }
 }
+const formOption = {
+  activeList: () => activeList,
+};
 onMounted(async () => {
+  formSearchList.value = [
+    { index: 1, show: true, type: 'input', modelName: 'id', placeholder: '员工ID' },
+    { index: 2, show: true, type: 'input', modelName: 'userName', placeholder: '用户名' },
+    {
+      index: 3,
+      show: true,
+      type: "select",
+      modelName: "active",
+      placeholder: "状态",
+      option: "activeList",
+      optionLabel: "label",
+      optionValue: "value",
+    },
+  ]
   try {
     // loading加载开始
     dataForm.value.loading = true;
@@ -312,6 +330,7 @@ function handleCurrentChange(val: any) {
   if (val) current.value = val.id;
   else current.value = "";
 }
+const formSearchName = ref<string>("formSearch-user"); // 表单排序name
 </script>
 
 <template>
@@ -331,29 +350,35 @@ function handleCurrentChange(val: any) {
           />
         </div>
         <PageMain>
-          <div v-loading="dataForm.loading" class="dataForm-container">
-            <ElSpace>
+          <FormSearch :formSearchList="formSearchList"  @currentChange="currentChange"
+        @onReset="onReset" :model="userForm.search" :formOption="formOption" :formSearchName ='formSearchName'/>
+      <ElDivider border-style="dashed" />
+
+
+
+
+          <div v-loading="dataForm.loading">
+            <!-- <ElSpace>
               <ElInput
                 v-model="userForm.search.id"
                 placeholder="员工ID"
+
                 clearable
-                style="width: 12.5rem"
                 @keydown.enter="getUserList"
               />
               <ElInput
                 v-model="userForm.search.userName"
                 placeholder="用户名"
                 clearable
-                style="width: 12.5rem"
+
                 @keydown.enter="getUserList"
               />
               <el-select
                 v-model="userForm.search.active"
                 value-key=""
                 placeholder="状态"
-                style="width: 12.5rem"
                 clearable
-                filterable
+
                 @change="getUserList"
               >
                 <el-option
@@ -368,13 +393,15 @@ function handleCurrentChange(val: any) {
                 <template #icon>
                   <SvgIcon name="i-ep:search" />
                 </template>
+                筛选
               </ElButton>
               <ElButton @click="onReset">
                 <template #icon>
                   <SvgIcon name="i-ep:refresh" />
                 </template>
+                重置
               </ElButton>
-            </ElSpace>
+            </ElSpace> -->
             <el-row style="margin-bottom: 0.3125rem" :gutter="24">
               <el-col style="margin-bottom: 1.5625rem" :span="10">
                 <el-button type="primary" size="default" @click="onCreate">
