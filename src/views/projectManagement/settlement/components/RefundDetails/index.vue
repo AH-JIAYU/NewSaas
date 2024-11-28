@@ -71,7 +71,6 @@ async function getData() {
       list.value = res.data;
     }
 
-
     list.value.forEach((item: any) => {
       if (item.failCount != 0 && item.failCount != null) {
         examineFail.value += Number(item.failCount);
@@ -94,41 +93,44 @@ async function see(row: any) {
     id: row.id,
   });
 
-
-
   detailList.value = res.data;
-
-};
+}
 // 导出
 async function exportExcl(row: any) {
-  try {
-    let params = { ...queryForm };
-    //#region 转换查询的数据格式
-    if (Array.isArray(queryForm.countryId)) {
-      params.countryId = params.countryId.join(",");
-    }
-    if (queryForm.time && !!queryForm.time.length) {
-      params.beginTime = params.time[0] || "";
-      params.endTime = params.time[1] || "";
-    }
-    if (queryForm.settlementStatus) {
-      params.settlementStatus = [params.settlementStatus];
-    } else {
-      params.settlementStatus = [];
-    }
-    params.page = 0;
-    params.limit = -1;
-    params.type = "export";
+  if (row) {
+    //项目结算点击id详情导出
+    try {
+      let params = {
+        projectId: id.value,
+        type: row.type,
+        id: row.id,
+      };
 
-    const list = await api.exportProjectSettlementList(params);
+      const list = await api.exportProjectSettlementClickIdDetails(params);
 
-    const name = "项目结算审核详情.xlsx";
-    await fileExport(list, name);
+      const name = "项目结算点击id详情.xlsx";
+      await fileExport(list, name);
+    } catch (error) {
+      console.error("导出失败", error);
+    }
+  } else {
+    //项目详情导出
+    try {
+      let params = {
+        projectId: id.value,
+        type: queryForm.type,
+        id: queryForm.id,
+      };
 
-  } catch (error) {
-    console.error("导出失败", error);
+      const list = await api.exportProjectSettlementDetails(params);
+
+      const name = "项目结算详情.xlsx";
+      await fileExport(list, name);
+    } catch (error) {
+      console.error("导出失败", error);
+    }
   }
-};
+}
 // 弹框关闭事件
 function closeHandler() {
   // // 重置表单
@@ -282,7 +284,9 @@ defineExpose({ showEdit });
             </el-form-item>
           </el-col>
           <el-col :span="2">
-            <el-button type="primary" size="default">导出</el-button>
+            <el-button type="primary" size="default" @click="exportExcl('')"
+              >导出</el-button
+            >
           </el-col>
         </el-form>
       </el-row>
@@ -461,7 +465,7 @@ defineExpose({ showEdit });
           <p>审核通过×{{ detailList.successSize }}</p>
           <div class="list-item">
             <div
-              v-for="item in detailList.successList	"
+              v-for="item in detailList.successList"
               class="copyText"
               :key="item"
             >

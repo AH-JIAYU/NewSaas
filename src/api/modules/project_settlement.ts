@@ -31,6 +31,13 @@ export default {
  // 导出项目结算
  exportProjectSettlementList: (data: any) => api.post('projectSettlement/exportProjectSettlementList', data,{ responseType: 'blob' }),
 
+//项目结算详情导出/exportProjectSettlementDetails，
+exportProjectSettlementDetails: (data: any) => api.post('projectSettlement/exportProjectSettlementDetails', data,{ responseType: 'blob' }),
+
+//项目结算点击id详情导出/exportProjectSettlementClickIdDetails
+
+exportProjectSettlementClickIdDetails: (data: any) => api.post('projectSettlement/exportProjectSettlementClickIdDetails', data,{ responseType: 'blob' }),
+
  delete: (id: number | string) => api.post('menu/delete', {
     id,
   }, {
