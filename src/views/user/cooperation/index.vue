@@ -257,7 +257,7 @@ const changeReceiveProjectType = (name: any, row: any) => {
   //判断当前发送状态，如果当前是自动，1,点击手动才调接口，如果当前是手动2，点击自动，弹出选择部门负责人才调接口
   let obj = JSON.parse(JSON.stringify(row)); //深拷贝，不改变原数据
 
-  if (row.receiveProjectType == 1 && name == "手动") {
+  if (row.receiveProjectType != 2 && name == "手动") {
     try {
       listLoading.value = true;
       let params = {
@@ -418,12 +418,12 @@ function userData(data1: any) {
               @click="changeReceiveProjectType('手动', row)"
               >手动</el-button
             >
-            <el-button
+            <!-- <el-button
               :type="row.receiveProjectType === 3 ? 'primary' : ''"
               size="small"
               @click="changeReceiveProjectType('拒绝', row)"
               >拒绝</el-button
-            >
+            > -->
             <!-- <div class="fontC-System">
               <el-text v-if="row.receiveProjectType === 1" type="success">自动</el-text>
               <el-text v-if="row.receiveProjectType === 2" type="danger">手动</el-text>
