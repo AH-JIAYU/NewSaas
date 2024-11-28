@@ -407,7 +407,7 @@ defineExpose({ showEdit });
             </div>
           </template>
         </el-table-column>
-        <el-table-column align="left" prop="price" label="支付总额">
+        <el-table-column align="left" prop="totalPrice" label="支付总额">
           <template #default="{ row }">
             <div class="fontC-System">
               <svg
@@ -438,7 +438,7 @@ defineExpose({ showEdit });
                   fill="#333333"
                 />
               </svg>
-              <CurrencyType v-if="!row.currencyType" />{{ row.price || 0 }}
+              <CurrencyType v-if="!row.currencyType" />{{ row.totalPrice || 0 }}
             </div>
           </template>
         </el-table-column>

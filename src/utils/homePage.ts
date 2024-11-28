@@ -1,3 +1,12 @@
+import image1 from '@/assets/images/homePage/1.png';
+import image2 from '@/assets/images/homePage/2.png';
+import image3 from '@/assets/images/homePage/3.png';
+import image4 from '@/assets/images/homePage/4.png';
+import image5 from '@/assets/images/homePage/5.png';
+import image6 from '@/assets/images/homePage/6.png';
+import image7 from '@/assets/images/homePage/7.png';
+import image8 from '@/assets/images/homePage/8.png';
+
 //#region 改变文本
 export const locale_zh: any = {
   "attributes": {
@@ -601,28 +610,695 @@ const wxHtml = `<body>
 <div class="banquan"><a href="http://www.psdhtml.cn/index.php?c=thread&fid=18?wx01sy" target="_blank"><img src="http://cdn.psdhtml.cn/wx_images/wx_lxidw7.svg" width="1000" height="36"></a></div>
 </body>
 `
+
+const BCHtml1 = `<body>
+ <style type="text/css">
+ * {
+
+  margin: 0;
+  padding: 0;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.justify-between {
+  display: flex;
+  justify-content: space-around;
+}
+.page {
+  margin-bottom: 7.5rem;
+}
+.group_5 {
+
+  width: 100%;
+
+  background-image: linear-gradient(
+    180deg,
+    rgba(237, 244, 255, 1) 0,
+    rgba(255, 255, 255, 1) 100%
+  );
+}
+
+.block_4 {
+
+  margin-top: 198px;
+    margin-left: 11.25rem;
+}
+
+.box_10 {
+  height: 5.494rem;
+  margin-top: 1.92rem;
+}
+
+.text_36 {
+
+  color: rgba(51, 51, 51, 1);
+  font-size: 3rem;
+  font-family: Source Han Sans CN-Bold;
+  font-weight: 700;
+
+  white-space: nowrap;
+
+}
+
+.text_37 {
+  width: 21.227rem;
+
+    color: rgba(119, 119, 119, 1);
+    font-size: 1.5rem;
+    font-family: Source Han Sans CN-Medium;
+    font-weight: 500;
+
+    margin-top: 1rem;
+}
+.text-click {
+  cursor: pointer;
+}
+
+
+.text_38 {
+  background-color: rgba(32, 141, 255, 1);
+  border-radius: 4px;
+
+  margin-top: 2rem;
+  overflow-wrap: break-word;
+  color: rgba(255, 255, 255, 1);
+  font-size: 1.125rem;
+  font-family: Source Han Sans CN-Medium;
+  font-weight: 500;
+  white-space: nowrap;
+  display: inline-block;
+    width: 128px;
+    padding: 10px;
+    text-align: center;
+}
+
+.image_11 {
+  width: 32.5rem;
+  height: 32.5rem;
+}
+
+
+
+
+    </style>
+     <div class="page flex-col">
+      <div class="group_5 flex-col">
+        <div class="block_4 flex-row justify-between">
+          <div class="box_10 flex-col">
+            <span class="text_36">有偿问卷在家远程办公也能轻松赚钱</span>
+            <span class="text_37">做完问卷即得奖励</span>
+
+              <span class="text_38 text-click">申请免费试用</span>
+
+          </div>
+         <img
+         class="image_11"
+         referrerpolicy="no-referrer"
+         src=${image1}
+         />
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+
+</body>
+`
+
+const BCHtml2 = `<body>
+ <style type="text/css">
+  * {
+
+    margin: 0;
+    padding: 0;
+
+  }
+
+  .flex-col {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .justify-between {
+    display: flex;
+    justify-content: space-between;
+  }
+
+.text-group-1 {
+  padding-top: 4rem;
+  margin-bottom: 4rem;
+}
+
+
+  .block_1 {
+    width: 100%;
+  }
+
+  .box_5 {
+    background-color: rgba(248, 249, 251, 1);
+    width: 100%;
+    text-align: center;
+    padding-bottom: 4rem;
+  }
+  .box-5-margin {
+    margin-bottom: 7.5rem;
+  }
+
+ .group_2 {
+  display: flex;
+  justify-content: center;
+ }
+
+  .text_7 {
+
+
+    overflow-wrap: break-word;
+    color: rgba(119, 119, 119, 1);
+    font-size: 1.75rem;
+    font-family: Source Han Sans CN-Medium;
+    font-weight: 500;
+    text-align: left;
+    white-space: nowrap;
+
+  }
+
+  .text_8 {
+
+    overflow-wrap: break-word;
+    color: rgba(51, 51, 51, 1);
+    font-size: 3rem;
+    font-family: Source Han Sans CN-Medium;
+    font-weight: 500;
+    text-align: left;
+    white-space: nowrap;
+
+  }
+
+
+
+  .box_6 {
+    background-color: rgba(255, 255, 255, 1);
+    border-radius: 8px;
+     width: 21.25rem;
+    height: 23.75rem;
+    padding: 2.25rem 1.5rem 2.625rem 1.5rem;
+  }
+.box-margin {
+  margin: 0 2rem;
+}
+  .image_5 {
+    width: 7.5rem;
+    height:  7.5rem;
+  }
+
+
+
+  .text_9 {
+
+    overflow-wrap: break-word;
+    color: rgba(51, 51, 51, 1);
+    font-size: 1.5rem;
+    font-family: Source Han Sans CN-Medium;
+    font-weight: 500;
+    text-align: center;
+    white-space: nowrap;
+    margin: 1.5rem 0 1.5rem 0;
+
+  }
+
+  .text_10 {
+
+    height: 1.28rem;
+    overflow-wrap: break-word;
+    color: rgba(51, 51, 51, 1);
+    font-size: 1rem;
+    font-family: Source Han Sans CN-Regular;
+    font-weight: 500;
+    text-align: left;
+    margin-top: 0.427rem;
+  }
+
+  .text-wrapper_2 {
+    border: 1px solid rgba(68, 157, 250, 1);
+    width: 6rem;
+    height: 2.125rem;
+    border-radius: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: 0 auto;
+    margin-top: 2.5rem;
+  }
+
+  .text_11 {
+
+    overflow-wrap: break-word;
+    color: rgba(68, 157, 250, 1);
+    font-weight: 500;
+    font-family: PingFang SC-Medium;
+    font-weight: 500;
+    text-align: left;
+    white-space: nowrap;
+    line-height: 0.427rem;
+  }
+
+
+  .group_5 {
+    position: absolute;
+    left: 0;
+    top: -0.533rem;
+    width: 51.2rem;
+    height: 21.334rem;
+  }
+
+
+
+
+    </style>
+ <div class="box-5-margin">
+  <div class="box_5 ">
+    <div class="text-group_4 text-group-1">
+      <span class="text_8">简单三步即可填问卷赚钱</span>
+
+    </div>
+
+    <div class="group_2">
+      <div class="box_6">
+
+        <img class="image_5" referrerpolicy="no-referrer"
+
+           src=${image2}
+          />
+        <div class="text-group_5 flex-col justify-between">
+          <span class="text_9">注册</span>
+          <span class="text_10">
+            任何人都可以参加，注册步骤简单只需要30秒
+          </span>
+
+        </div>
+        <div class="text-wrapper_2 text_11 text-click">
+          马上注册
+        </div>
+      </div>
+      <div class="box_6 box-margin">
+        <img class="image_5" referrerpolicy="no-referrer"
+             src=${image3} />
+        <div class="text-group_5 flex-col justify-between">
+          <span class="text_9">问卷</span>
+          <span class="text_10">
+            将在问卷列表中收到问卷，请如实认真回答，并且您所回答内容是匿名的，请放心
+          </span>
+
+        </div>
+
+      </div>
+      <div class="box_6">
+        <img class="image_5" referrerpolicy="no-referrer"      src=${image4}
+         />
+        <div class="text-group_5 flex-col justify-between">
+          <span class="text_9">佣金</span>
+          <span class="text_10">
+            将在问卷列表中收到问卷，请如实认真回答，操作完成，佣金会在第一时间进入账号明细并且您所回答内容是匿名的，请放心
+          </span>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+
+
+
+</body>
+`
+const BCHtml3 = `<body>
+ <style type="text/css">
+   * {
+
+margin: 0;
+padding: 0;
+
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.justify-between {
+  display: flex;
+  justify-content: space-between;
+}
+
+
+
+
+.group_1 {
+  width: 100%;
+  background-color: white;
+}
+
+.block_1 {
+  background-color: white;
+}
+
+.box_1 {
+margin: 11.25rem 11.25rem 0 11.25rem;
+}
+
+.image_1 {
+  width: 41.125rem;
+  height: 27.375rem;
+}
+
+.text-group_1 {
+  margin-top: 5.375rem;
+  margin-left: 5rem;
+}
+
+.text_1 {
+
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 3rem;
+  font-family: Source Han Sans CN-Medium;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+
+}
+
+.paragraph_1 {
+
+  overflow-wrap: break-word;
+  color: rgba(119, 119, 119, 1);
+  font-size: 1.5rem;
+  font-family: Source Han Sans CN-Regular;
+  font-weight: 400;
+  text-align: left;
+  margin-top: 1rem;
+}
+
+.box_2 {
+
+  margin: 7.5rem 11.25rem;
+}
+
+.text-group_2 {
+  margin-top: 5.375rem;
+  margin-right: 5rem;
+}
+
+.text_2 {
+
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 3rem;
+  font-family: Source Han Sans CN-Medium;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.paragraph_2 {
+  overflow-wrap: break-word;
+  color: rgba(119, 119, 119, 1);
+  font-size: 1.5rem;
+  font-family: Source Han Sans CN-Regular;
+  font-weight: 400;
+  text-align: left;
+  margin-top: 1rem;
+}
+
+.image_2 {
+  width: 41.125rem;
+  height: 27.375rem;
+}
+
+.box_3 {
+  margin: 0 11.25rem 7.5rem 11.25rem;
+}
+
+.image_3 {
+  width: 41.125rem;
+  height: 27.375rem;
+}
+
+.text-group_3 {
+  margin-top: 5.375rem;
+  margin-left: 5rem;
+}
+
+.text_3 {
+
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 3rem;
+  font-family: Source Han Sans CN-Medium;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.text_4 {
+  overflow-wrap: break-word;
+  color: rgba(119, 119, 119, 1);
+  font-size: 1.5rem;
+  font-family: Source Han Sans CN-Regular;
+  font-weight: 400;
+  text-align: left;
+  margin-top: 1rem;
+}
+
+
+
+
+
+
+.group_2 {
+  width: 28.907rem;
+  height: 10.134rem;
+  margin: 1.707rem 0 0 11.147rem;
+}
+
+
+    </style>
+  <div class="group_1 flex-row">
+        <div class="block_1 flex-col">
+          <div class="box_1 flex-row justify-between">
+            <img
+            class="image_1"
+            referrerpolicy="no-referrer"
+            src=${image5}
+            />
+               <div class="text-group_1 flex-col">
+              <span class="text_3">在线赚钱</span>
+              <span class="text_4">
+                在该网站填写问卷就可轻松在线赚钱
+                <br />
+                我们已经优化系统来匹配最适配的问卷。问卷相关性越高，意味着可获奖金也更多。
+                当我们为您匹配到完美问卷后，请及时进行参与，每一份问卷的配额是有限的。
+                在该网站上赚钱趣味十足。公司参考您的意见来改善产品开发设计，这意味着您的意见非常宝贵。
+              </span>
+            </div>
+          </div>
+          <div class="box_2 flex-row justify-between">
+            <div class="text-group_2 flex-col ">
+              <span class="text_2">填问卷，在家办公</span>
+              <span class="text_4">
+                通过您的手机或电脑就可轻松参与问卷填写，您随时随地都可以在线填问卷，所以这是在家工作的理想选择。
+                <br />
+                这不需要花太多时间，您随时可以参与问卷，任何人都可以通过参与问卷的方式在家赚钱，您甚至可以在填写问卷的同时边做其他事。这是简单、有弹性的快速赚钱方法。
+                <br />
+                在家填写问卷是一件非常有意义的事，您的意见有助于公司设计更优质的产品和服务，问卷仅作为公司的产品调研使用。
+              </span>
+            </div>
+            <img
+            class="image_2"
+            referrerpolicy="no-referrer"  src=${image6} />
+          </div>
+          <div class="box_3 flex-row justify-between">
+            <img
+              class="image_3"
+              referrerpolicy="no-referrer" src=${image7} />
+            <div class="text-group_3 flex-col ">
+              <span class="text_3">在家工作您能赚多少?</span>
+              <span class="text_4">
+                您填写的每一份问卷都会获得奖金。这是一份有保障的兼职收入。让您轻松在家填问卷赚钱。我们提供最详细的市场问卷内容，您还可以在问卷邀请上查看每份问卷能赚到的奖金金额。
+              </span>
+            </div>
+          </div>
+
+
+
+        </div>
+
+      </div>
+
+
+
+
+
+
+
+</body>
+`
+
+
+const BCHtml4 = `
+
+<body>
+<style type="text/css">
+ * {
+
+    margin: 0;
+    padding: 0;
+
+  }
+
+  .flex-col {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .flex-row {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .box_4 {
+    display: flex;
+  justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 31.25rem;
+    background: url(${image8})  no-repeat;
+    background-size: 100% 100%;
+    margin: 0 0 0.027rem 0;
+  }
+
+  .text_5 {
+    overflow-wrap: break-word;
+    color: rgba(51, 51, 51, 1);
+    font-size: 3rem;
+    font-family: Source Han Sans CN-Medium;
+    font-weight: 500;
+    white-space: nowrap;
+
+  }
+
+  .text-wrapper_1 {
+    background-color: rgba(36, 144, 255, 1);
+    border-radius: 4px;
+    margin-top: 1.5rem;
+    width: 14rem;
+height: 4.9375rem;
+background: #2490FF;
+display: flex;
+justify-content: center;
+align-items: center;
+  }
+
+  .text_6 {
+
+    overflow-wrap: break-word;
+    color: rgba(255, 255, 255, 1);
+    font-weight: 500;
+    font-size: 2rem;
+    font-family: Source Han Sans CN-Medium;
+    font-weight: 500;
+    white-space: nowrap;
+
+  }
+
+
+
+
+    </style>
+
+
+
+  <div class="box_4 flex-col">
+    <span class="text_5">立即注册并体验功能</span>
+    <div class="text-wrapper_1 flex-col">
+      <span class="text_6 text-click">注册</span>
+    </div>
+  </div>
+
+
+
+
+</body>`
+
+
 const colorBlocksHtml = `
 <div class="square_div">
 `
 export const customBlock = [
+  // {
+  //   id: 'Custom-footerHtml', // 唯一标识
+  //   label: '自定义footer', //标题
+  //   content: footerHtml, // 块的内容
+  //   category: 'Custom',// 块的位置 （那个类别下）
+  // },
+  // {
+  //   id: 'Custom-wxHtml', // 唯一标识
+  //   label: '微信', //标题
+  //   content: wxHtml, // 块的内容
+  //   category: 'Custom',// 块的位置 （那个类别下）
+  // },
   {
-    id: 'Custom-footerHtml', // 唯一标识
-    label: '自定义footer', //标题
-    content: footerHtml, // 块的内容
+    id: 'B2C-Html1', // 唯一标识
+    label: 'B2C首页模板第一部分', //标题
+    content: BCHtml1, // 块的内容
     category: 'Custom',// 块的位置 （那个类别下）
   },
   {
-    id: 'Custom-wxHtml', // 唯一标识
-    label: '微信', //标题
-    content: wxHtml, // 块的内容
+    id: 'B2C-Html2', // 唯一标识
+    label: 'B2C首页模板第二部分', //标题
+    content: BCHtml2, // 块的内容
     category: 'Custom',// 块的位置 （那个类别下）
   },
   {
-    id: 'color-blocks', // 唯一标识
-    label: '自定义色块', //标题
-    content: { type: 'color-blocks' }, // 块的内容
+    id: 'B2C-Html3', // 唯一标识
+    label: 'B2C首页模板第三部分', //标题
+    content: BCHtml3, // 块的内容
     category: 'Custom',// 块的位置 （那个类别下）
   },
+  {
+    id: 'B2C-Html4', // 唯一标识
+    label: 'B2C首页模板第四部分', //标题
+    content: BCHtml4, // 块的内容
+    category: 'Custom',// 块的位置 （那个类别下）
+  },
+  // {
+  //   id: 'color-blocks', // 唯一标识
+  //   label: '自定义色块', //标题
+  //   content: { type: 'color-blocks' }, // 块的内容
+  //   category: 'Custom',// 块的位置 （那个类别下）
+  // },
 ]
 
 //#endregion
