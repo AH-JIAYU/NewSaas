@@ -250,6 +250,7 @@ onMounted(async () => {
       option: "memberType",
       optionLabel: "label",
       optionValue: "value",
+ // multiple:true,
     },
     {
       index: 5,
@@ -295,6 +296,7 @@ onMounted(async () => {
       option: "surveyStatus",
       optionLabel: "label",
       optionValue: "value",
+       // multiple:true,
     },
     {
       index: 11,
@@ -305,6 +307,7 @@ onMounted(async () => {
       option: "viceStatus",
       optionLabel: "label",
       optionValue: "value",
+       // multiple:true,
     },
     {
       index: 12,

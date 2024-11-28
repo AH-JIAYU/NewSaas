@@ -137,7 +137,9 @@ onMounted(() => {
   formSearchList.value = [
     { index: 1, show: true, type: 'input', modelName: 'supplierId', placeholder: '供应商ID' },
     { index: 2, show: true, type: 'datetimerange', modelName: 'time', startPlaceHolder: "创建开始日期", endPlaceHolder: "创建结束日期" },
-    { index: 3, show: true, type: 'select', modelName: 'billStatus', placeholder: '状态', option: 'billStatus', optionLabel: 'label', optionValue: 'value' }
+    { index: 3, show: true, type: 'select', modelName: 'billStatus', placeholder: '状态', option: 'billStatus', optionLabel: 'label', optionValue: 'value',
+    // multiple:true,
+     }
   ]
 });
 const formOption = {

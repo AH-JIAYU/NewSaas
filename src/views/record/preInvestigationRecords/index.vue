@@ -173,7 +173,7 @@ onMounted(async () => {
     { index: 2, show: true, type: 'input', modelName: 'projectName', placeholder: '项目名称' },
     { index: 3, show: true, type: 'select', modelName: 'allocationType', placeholder: '分配类型',
       option: 'allocationType',
-      optionLabel: 'label', optionValue: 'value'
+      optionLabel: 'label', optionValue: 'value',// multiple:true,
     },
 ];
 });
