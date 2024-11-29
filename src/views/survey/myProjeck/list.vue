@@ -307,7 +307,7 @@ const formOption = {
                 <CurrencyType />
               </el-text> -->
               <el-text style="color: #333333;">
-                {{ row.memberPrice || 0 }}
+                {{ row.doMoneyPrice || 0 }}
               </el-text>
             </el-text>
           </template>

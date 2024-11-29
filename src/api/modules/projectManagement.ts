@@ -29,4 +29,6 @@ export default {
     api.post("/project/getProjectProblemList", data),
   // 汇率切换计算
   updateExchangeRate: (data: any) => api.post("project/updateExchangeRate", data),
+  // 外包项目编辑项目详情(针对外包项目的编辑)
+  addOrUpdateProjectOutsideInfo: (data: any) => api.post("project/addOrUpdateProjectOutsideInfo", data),
 };
