@@ -62,6 +62,10 @@ const form = ref<any>({
   organizationalStructurePersonList: [],
   // 上级部门
   superior: '',
+  commission: null, //提成比例
+  commissionTime: null, //提成时间 1.完成计提 2.审核计提 3.收款计提
+  commissionStatus: 2, //	提成状态 1.开启计提规则 2.关闭计提规则
+  commissionType: null, //提成类型 1.项目价 2.成本价 3.毛利润
 });
 
 // 校验
@@ -98,37 +102,51 @@ async function onSubmit() {
           // 将数据制空
           form.value.organizationalStructurePersonList = []
           // 筛选出需要的格式
-          const result = validateCommissions(filteredUsers.value)
-          if (!result) {
+          // const result = validateCommissions(filteredUsers.value)
+          // if (!result) {
+          //   ElMessage.warning({
+          //     message: "提成比例必须是正整数",
+          //     center: true,
+          //   });
+          //   loading.value = false;
+          //   return
+          // }
+          if (
+            form.value.commissionStatus === 1 &&
+            !/^[1-9]\d*$/.test(form.value.commission)
+          ) {
             ElMessage.warning({
               message: "提成比例必须是正整数",
               center: true,
             });
             loading.value = false;
-            return
+            return;
           }
           filteredUsers.value.forEach((item: any) => {
             if (item.userId) {
               const obj = {
                 id: item.id,
                 userId: item.userId,
-                commission: item.commission || 0,
-                commissionTime: item.commissionTime || 1,
-                commissionStatus: item.commissionStatus,
-                commissionType: item.commissionType || 1,
+                // commission: item.commission || 0,
+                // commissionTime: item.commissionTime || 1,
+                // commissionStatus: item.commissionStatus,
+                // commissionType: item.commissionType || 1,
               }
               form.value.organizationalStructurePersonList.push(obj)
             } else {
               const obj = {
                 userId: item.id,
-                commission: item.commission || 0,
-                commissionTime: item.commissionTime || 1,
-                commissionStatus: item.commissionStatus,
-                commissionType: item.commissionType || 1,
+                // commission: item.commission || 0,
+                // commissionTime: item.commissionTime || 1,
+                // commissionStatus: item.commissionStatus,
+                // commissionType: item.commissionType || 1,
               }
               form.value.organizationalStructurePersonList.push(obj)
             }
           });
+          form.value.commission = form.value.commission || 0;
+          form.value.commissionTime = form.value.commissionTime || 1;
+          form.value.commissionType = form.value.commissionType || 1;
           // 去重
           const uniqueList = form.value.organizationalStructurePersonList.reduce((accumulator: any, current: any) => {
             const exists = accumulator.some((item: any) => item.userId === current.userId);
@@ -254,6 +272,10 @@ function onCancel() {
     organizationalStructurePersonList: [],
     // 上级部门
     superior: '',
+    commission: null, //提成比例
+    commissionTime: null, //提成时间 1.完成计提 2.审核计提 3.收款计提
+    commissionStatus: 2, //	提成状态 1.开启计提规则 2.关闭计提规则
+    commissionType: null, //提成类型 1.项目价 2.成本价 3.毛利润
   })
   visible.value = false;
 }
@@ -273,10 +295,17 @@ onMounted(async () => {
     loading.value = true;
     // 获取回显数据
     if (props.id !== "") {
-      const { id, name, remark, organizationalStructurePersonList } = JSON.parse(props.row);
+      const { id, name, remark, organizationalStructurePersonList,        commission,
+        commissionTime,
+        commissionStatus,
+        commissionType, } = JSON.parse(props.row);
       form.value.id = id;
       form.value.name = name;
       form.value.remark = remark;
+      form.value.commission = commission;
+      form.value.commissionTime = commissionTime;
+      form.value.commissionStatus = commissionStatus;
+      form.value.commissionType = commissionType;
       form.value.organizationalStructurePersonList = organizationalStructurePersonList;
       organizationalStructurePersonList.forEach((item: any) => {
         form.value.userIdList.push(item.userId)
@@ -323,28 +352,58 @@ onMounted(async () => {
       <ElFormItem label="备注">
         <ElInput v-model="form.remark" placeholder="请输入备注" clearable />
       </ElFormItem>
-      <div v-for="item in filteredUsers" :key="item.id" class="user">
-        <div class="mr">
-          <el-tag type="primary" closable @close="handleClose(item)">{{ item.userName }}</el-tag>
-        </div>
+      <div class="user">
         <div class="mr checkbox-container">
-          <el-text style="width:4.375rem;">开启提成</el-text>
-          <!-- <el-checkbox v-model="item.commissionStatus" label="开启提成" size="large" /> -->
-          <el-switch v-model="item.commissionStatus" :active-value="1" :inactive-value="2" inline-prompt
-            active-text="开启" inactive-text="关闭" />
+          <el-text style="width: 4.375rem">开启提成</el-text>
+          <el-switch
+            v-model="form.commissionStatus"
+            :active-value="1"
+            :inactive-value="2"
+            inline-prompt
+            active-text="开启"
+            inactive-text="关闭"
+          />
         </div>
-        <div v-show="item.commissionStatus === 1" class="centers mr">
-          <el-select v-model="item.commissionType" value-key="" placeholder="计提方式" clearable filterable>
-            <el-option v-for="item in provisionMethod" :key="item.value" :label="item.label" :value="item.value" />
+        <div v-show="form.commissionStatus === 1" class="centers mr">
+          <el-select
+            v-model="form.commissionType"
+            value-key=""
+            placeholder="计提方式"
+            clearable
+            filterable
+          >
+            <el-option
+              v-for="item in provisionMethod"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
           </el-select>
         </div>
-        <div v-show="item.commissionStatus === 1" class="center mr">
-          <el-select class="select" v-model="item.commissionTime" value-key="" placeholder="计提时间" clearable filterable>
-            <el-option v-for="item in commissionTypeList" :key="item.value" :label="item.label" :value="item.value" />
+        <div v-show="form.commissionStatus === 1" class="center mr">
+          <el-select
+            class="select"
+            v-model="form.commissionTime"
+            value-key=""
+            placeholder="计提时间"
+            clearable
+            filterable
+          >
+            <el-option
+              v-for="item in commissionTypeList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
           </el-select>
         </div>
-        <div v-show="item.commissionStatus === 1" class="center mr">
-          <ElInput v-model="item.commission" placeholder="提成比例" style="max-width: 25rem;" clearable>
+        <div v-show="form.commissionStatus === 1" class="center mr">
+          <ElInput
+            v-model="form.commission"
+            placeholder="提成比例"
+            style="max-width: 25rem"
+            clearable
+          >
             <template #append>%</template>
           </ElInput>
         </div>
