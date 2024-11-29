@@ -118,7 +118,7 @@ defineExpose({
       inline
       class="search-form"
     >
-      <ElFormItem>
+      <!-- <ElFormItem>
         <el-select style="width:10.5rem" v-model="data.search.userId" placeholder="请选择员工" clearable filterable @change="currentChange()">
         <el-option v-for="item in staffList"
         :key="item.id"
@@ -126,7 +126,7 @@ defineExpose({
         :value="item.id">
         </el-option>
         </el-select>
-      </ElFormItem>
+      </ElFormItem> -->
     </ElForm>
     <ElTable
       v-loading="data.loading"
@@ -161,12 +161,11 @@ defineExpose({
           <el-text class="color3">{{ row.projectId ? row.projectId : "-" }}</el-text>
         </template>
 </ElTableColumn>
-<ElTableColumn show-overflow-tooltip align="left" prop="" label="PM">
+<!-- <ElTableColumn show-overflow-tooltip align="left" prop="" label="PM">
   <template #default="{ row }">
           <el-text class="color3">{{row.userName ? row.userName : '-'}}</el-text>
-          <!-- <el-text v-if="row.balanceType == 2">可用金额</el-text> -->
         </template>
-</ElTableColumn>
+</ElTableColumn> -->
 <ElTableColumn show-overflow-tooltip align="left" prop="remark" label="业绩"><template #default="{ row }">
           <el-text class="mx-1 color3">{{ row.doMoney ? row.doMoney : "-" }}</el-text>
         </template>
