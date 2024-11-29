@@ -21,8 +21,6 @@ const currencyList = [
   { label: '美元', value: 'USD' },
   { label: '人民币', value: 'CNY' },
 ]
-// 储存第一次输入美元汇率
-const currencyTypeRes = ref<any>()
 // 货币类型
 const currencyType = ref<any>()
 const configurationSiteSettingStore = useConfigurationSiteSettingStore()//站点设置
@@ -73,7 +71,10 @@ const form = ref<any>({
   qqCode: "",
   // 公司地址
   address: "",
-  projectOutAlias: '', //外包项目别名
+  //外包项目别名
+  projectOutAlias: '',
+  // 默认美元对人民币币种
+  acquiesceExchangeRate: '',
 });
 // 自定义校验手机号
 const validatePhone = (rule: any, value: any, callback: any) => {
@@ -157,11 +158,6 @@ async function getDataList() {
     if (data) {
       form.value = data || form.value;
       currencyType.value = data.currencyType
-      if (data.currencyType === 'USD') {
-        currencyTypeRes.value = data.exchangeRate
-      }else {
-        currencyTypeRes.value = (1 / data.exchangeRate).toFixed(2)
-      }
       if (form.value.minimumAmount === 0) form.value.minimumAmount = null;
       analyzeRecords.value = form.value
       userStore.originalExchangeRate = form.value.exchangeRate
@@ -324,16 +320,17 @@ function onSubmit() {
           }
           if (form.value.currencyType === 'USD') {
             userStore.currencyType = 1
-            if (currencyTypeRes.value) {
-              form.value.exchangeRate = currencyTypeRes.value
+            if (form.value.acquiesceExchangeRate) {
+              form.value.exchangeRate = form.value.acquiesceExchangeRate
             }
           } else {
             userStore.currencyType = 2
-            if (currencyTypeRes.value) {
-              form.value.exchangeRate = currencyTypeRes.value
-              form.value.exchangeRate = (1 / form.value.exchangeRate).toFixed(2).toString();
+            if (form.value.acquiesceExchangeRate) {
+              form.value.exchangeRate = form.value.acquiesceExchangeRate
+              form.value.exchangeRate =  Math.floor((1 / form.value.exchangeRate) * 100) / 100
             }
           }
+          // return
           const res = await api.edit(form.value)
           loading.value = false;
           if (res.status === 1) {
@@ -512,7 +509,7 @@ function onSubmit() {
                       </div>
                     </div> -->
                     <div class="right">
-                      <el-input v-model="currencyTypeRes" style="width: 22.4375rem" placeholder="请输入数值" clearable>
+                      <el-input v-model="form.acquiesceExchangeRate" style="width: 22.4375rem" placeholder="请输入数值" clearable>
                         <template #prefix>
                           <!-- 自定义 SVG 图标作为前缀图标 -->
                           <el-text style="color: #333;">
