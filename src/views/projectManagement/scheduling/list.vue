@@ -192,7 +192,7 @@ const formOption = {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip prop="projectId" align="left"
-          width="180" label="项目ID">
+          label="项目ID" width="200">
           <template #default="{ row }">
             <div class="copyId tableSmall projectId">
               <div class="id oneLine">
@@ -212,7 +212,7 @@ const formOption = {
         </el-table-column>
 
         <el-table-column v-if="checkList.includes('moneyPrice')" show-overflow-tooltip prop="moneyPrice" align="left"
-          label="项目价" width="96">
+          label="项目价" >
           <template #default="{ row }">
             <div class="fontC-System">
               <CurrencyType />{{ row.moneyPrice || 0 }}
@@ -221,7 +221,7 @@ const formOption = {
         </el-table-column>
 
         <el-table-column v-if="checkList.includes('doMoneyPrice')" show-overflow-tooltip prop="doMoneyPrice"
-          align="left" label="指定价格" width="96">
+          align="left" label="指定价格" >
           <template #default="{ row }">
             <div class="fontC-System">
               <CurrencyType />{{ row.doMoneyPrice || 0 }}

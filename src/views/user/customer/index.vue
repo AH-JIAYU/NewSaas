@@ -234,7 +234,7 @@ const formOption={
           show-overflow-tooltip label="客户名称" width="150">
           <template #default="{ row }">
             <div class="flex-c tableBig">
-              <div class="oneLine" style="width: calc(100% - 20px);"> {{ row.customerAccord }} </div>
+              <div class="oneLine"> {{ row.customerAccord }} </div>
               <copy
                 :content="row.customerAccord"
                 :class="{
