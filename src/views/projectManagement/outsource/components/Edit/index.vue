@@ -282,7 +282,7 @@ defineExpose({ showEdit });
               <div class="clickIdItem-title">
                 <div>
                   <span class="supplierName" style="color: #333333;">{{ ite.supplierName }}</span>
-                  <span :class="'peopleType' + ite.peopleType" style="color: #333333;">
+                  <span :class="'peopleType' + ite.peopleType" style="font-size: 14px;">
                     {{
                       projectManagementOutsourceStore.peopleTypeList[
                         ite.peopleType - 1
@@ -298,7 +298,7 @@ defineExpose({ showEdit });
                 <ul>
                   <li v-for="it in ite.list">
                     <span style="color: #333333;"> {{ it.projectQuestionnaireClickId }}</span>
-                    <span :class="'surveyStatus' + it.surveyStatus" style="color: #333333;">{{
+                    <span :class="'surveyStatus' + it.surveyStatus" style="font-size: 14px;">{{
                       projectManagementOutsourceStore.surveyStatusList[
                         it.surveyStatus - 1
                       ]
