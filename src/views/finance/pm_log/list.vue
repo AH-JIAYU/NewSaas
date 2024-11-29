@@ -205,6 +205,13 @@ function handleCurrentChange(val: any) {
   if (val) current.value = val.organizationalStructureId;
   else current.value = "";
 }
+// 手动生成结算（一月一次）
+const settlement = async () => {
+  // const {data} = await api.settlement({})
+  // if(data) {
+  //   fetchData()
+  // }
+}
 </script>
 
 <template>
@@ -214,7 +221,16 @@ function handleCurrentChange(val: any) {
         @onReset="onReset" :model="data.search" :formOption="formOption" />
       <ElDivider border-style="dashed" />
       <el-row>
-        <FormLeftPanel />
+        <FormLeftPanel>
+          <el-button
+            style="margin-right: 10px"
+            type="primary"
+            size="default"
+            @click="settlement"
+          >
+            手动结算
+          </el-button>
+        </FormLeftPanel>
         <FormRightPanel>
           <el-button size="default"> 导出 </el-button>
           <TabelControl v-model:border="data.border" v-model:tableAutoHeight="data.tableAutoHeight"

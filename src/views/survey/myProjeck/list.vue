@@ -253,7 +253,7 @@ const formOption = {
             <p v-if="checkList.includes('projectName')" class="crudeTop">
              {{ row.projectName }}</p>
             <p v-if="checkList.includes('projectIdentification')"
-              style="text-align: left !important;font-weight: 700;color: #333333;"><span class="fineBom">{{
+              style="text-align: left !important;color: #333333;"><span class="fineBom">{{
       row.projectIdentification }}</span></p>
           </template>
         </el-table-column>
@@ -489,7 +489,6 @@ const formOption = {
   font-size: .875rem;
   white-space: nowrap;
   overflow: hidden;
-  font-weight: 700;
   text-overflow: ellipsis;
 }
 
