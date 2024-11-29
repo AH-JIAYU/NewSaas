@@ -14,9 +14,6 @@ import useUserStore from "@/store/modules/user"; // 用户汇率
 defineOptions({
   name: "ProjeckEdit",
 });
-// 储存第一次输入美元汇率
-const currencyTypeRes = ref<any>()
-currencyTypeRes.value = storage.local.get("currencyTypeRes")
 const userStore = useUserStore()
 const projectManagementListStore = useProjectManagementListStore(); //项目
 const stagedDataStore = useStagedDataStore(); // 暂存
@@ -56,8 +53,19 @@ async function showEdit(row: any) {
         stagedDataStore.projectManagementList || reactive([initialTopTabsData]);
     } else {
       title.value = "编辑";
-      const res = await api.detail({ projectId: row.projectId });
-      initializeLeftTabsData(res.data);
+      if (row.projectType === 2) {
+        initializeLeftTabsData(row);
+      } else {
+        const res = await api.detail({ projectId: row.projectId });
+        if (res.data) {
+          res.data.projectType = row.projectType
+          res.data.projectType = row.projectType
+          if (res.data.projectType === 2) {
+            res.data.doMoneyPrice = row.doMoneyPrice
+          }
+          initializeLeftTabsData(res.data);
+        }
+      }
     }
     dialogTableVisible.value = true;
     validateAll.value = [];
@@ -197,6 +205,28 @@ const processingData = async () => {
   masterData.projectInfoList = newLeftTabsData.slice(1);
   return masterData;
 };
+
+// 合作商项目编辑数据处理
+const processingDataObj = (data: any) => {
+  return {
+    projectOutsideInfoId: data.projectOutsideInfoId ?? null,
+    projectId: data.projectId,
+    doMoneyPrice: data.doMoneyPrice,
+    currencyType: data.currencyType,
+    exchangeRate: data.exchangeRate,
+    memberPrice: data.memberPrice,
+    num: data.num,
+    minimumDuration: data.minimumDuration,
+    ir: data.ir,
+    mutualExclusionId: data.mutualExclusionId,
+    remark: data.remark,
+    descriptionUrl: data.descriptionUrl,
+    richText: data.richText,
+    ipDifferenceDetection: data.ipDifferenceDetection,
+    limitedQuantity: data.limitedQuantity,
+    preNum: data.preNum,
+  }
+}
 // 提交数据
 async function onSubmit() {
   loading.value = true;
@@ -209,7 +239,7 @@ async function onSubmit() {
         if (title.value === "新增") {
           params.memberPrice = (params.doMoneyPrice * params.exchangeRate).toFixed(2)
           params.minimumDuration = +params.minimumDuration
-          if(!params.exchangeRate) {
+          if (!params.exchangeRate) {
             ElMessage.warning({
               message: "请设置汇率",
               center: true,
@@ -223,12 +253,22 @@ async function onSubmit() {
               center: true,
             });
         } else {
-          const { status } = await api.edit(params);
-          status === 1 &&
-            ElMessage.success({
-              message: "编辑成功",
-              center: true,
-            });
+          if (params.projectType === 2) {
+            const objParams = processingDataObj(params)
+            const { status } = await api.addOrUpdateProjectOutsideInfo(objParams);
+            status === 1 &&
+              ElMessage.success({
+                message: "编辑成功",
+                center: true,
+              });
+          } else {
+            const { status } = await api.edit(params);
+            status === 1 &&
+              ElMessage.success({
+                message: "编辑成功",
+                center: true,
+              });
+          }
         }
         emits("fetch-data");
         closeHandler();

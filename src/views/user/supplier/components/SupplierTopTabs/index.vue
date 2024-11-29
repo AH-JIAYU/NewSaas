@@ -77,7 +77,7 @@ const changeCountryId = (val: any) => {
     props.leftTab.countryType = val === "343" ? 1 : 2;
     if (val === "343") {
       if(!props.leftTab.tenantSupplierId) {
-        props.leftTab.currencyType = 'CNY'
+        props.leftTab.currencyType = userStore.currencyType === 1 ? 'USD' : 'CNY'
       }
       if (rules.emailAddress) {
         delete rules.emailAddress;
@@ -88,7 +88,7 @@ const changeCountryId = (val: any) => {
       ];
     } else {
       if(!props.leftTab.tenantSupplierId) {
-        props.leftTab.currencyType = 'USD'
+        props.leftTab.currencyType = userStore.currencyType === 1 ? 'USD' : 'CNY'
       }
       if (rules.supplierPhone) {
         delete rules.supplierPhone;
