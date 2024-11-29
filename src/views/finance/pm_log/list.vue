@@ -7,7 +7,7 @@ import Detail from "./components/Detail/index.vue";
 import usePositionManageStore from "@/store/modules/position_manage";
 import { ref } from "vue";
 import empty from '@/assets/images/empty.png'
-
+import { ElMessage, ElMessageBox } from 'element-plus'
 defineOptions({
   name: "financial_pm_log",
 });
@@ -207,10 +207,14 @@ function handleCurrentChange(val: any) {
 }
 // 手动生成结算（一月一次）
 const settlement = async () => {
-  // const {data} = await api.settlement({})
-  // if(data) {
-  //   fetchData()
-  // }
+  const {status} = await api.organizationalStructureSettlement({})
+  if(status ==1) {
+    ElMessage.success({
+        message: '手动结算成功',
+        center: true,
+      })
+    getDataList()
+  }
 }
 </script>
 

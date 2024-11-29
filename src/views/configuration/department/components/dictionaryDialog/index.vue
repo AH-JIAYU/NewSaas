@@ -383,6 +383,7 @@ onMounted(async () => {
       <ElFormItem label="部门名称" prop="name">
         <ElInput v-model="form.name" placeholder="请输入部门名称" clearable />
       </ElFormItem>
+      <!--             :disabled="item.enableChargePerson === 1" -->
       <ElFormItem label="部门主管" prop="">
         <el-select
           v-model="form.userIdList"
@@ -400,7 +401,7 @@ onMounted(async () => {
             :key="item.value"
             :label="item.userName"
             :value="item.id"
-            :disabled="item.enableChargePerson === 1"
+
           >
           </el-option>
         </el-select>
