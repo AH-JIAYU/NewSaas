@@ -426,7 +426,7 @@ onMounted(async () => {
   align-items: center;
   justify-content: flex-start;
   margin-bottom: 1rem;
-  margin-left: 7.0625rem;
+  margin-left: 4.0625rem;
 
   .center {
     display: flex;
