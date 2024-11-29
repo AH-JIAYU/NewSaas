@@ -114,9 +114,11 @@ const handleChange = (val: any) => {
   filteredUsers.value = staffList.value.filter((item: any) =>
     form.value?.userIdList.includes(item.id)
   );
+  console.log(form.value?.userIdList,'form.value?.userIdList')
   if (form.value?.userIdList.length) {
     // 合并数据
     const result: any = [];
+    console.log(form.value.organizationalStructurePersonList,'form.value.organizationalStructurePersonList')
     // 将 organizationalStructurePersonList 中的每个对象添加到结果中
     form.value.organizationalStructurePersonList.forEach((item: any) => {
       result.push(item);
@@ -333,10 +335,16 @@ onMounted(async () => {
       if (data) {
         staffList.value = data;
       }
+      form.value.organizationalStructurePersonList = [];
       if (organizationalStructurePersonList) {
-        form.value.organizationalStructurePersonList =
-          organizationalStructurePersonList;
-        organizationalStructurePersonList.forEach((item: any) => {
+        organizationalStructurePersonList.forEach((item:any) => {
+          if(item.enableChargePerson==1){
+            form.value.organizationalStructurePersonList.push(item)
+          }
+        })
+        // form.value.organizationalStructurePersonList =
+        //   organizationalStructurePersonList;
+        form.value.organizationalStructurePersonList.forEach((item: any) => {
           form.value.userIdList.push(item.userId);
         });
       } else {

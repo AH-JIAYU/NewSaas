@@ -529,16 +529,16 @@ function handleCurrentChange(val: any) {
                     {{ data.name }}
                   </div>
                   <div class="code">
-                    <!-- <template v-for="(item,index) in data?.organizationalStructurePersonList" :key="item.userId">
+                    <template v-for="(item,index) in data?.organizationalStructurePersonList" :key="item.userId">
                         <span v-if="item.enableChargePerson == 1">
                           {{ item.userName }}
-                          <span v-if="index !=data?.organizationalStructurePersonList.length-1">,</span>
+                          <span v-if="index != data?.organizationalStructurePersonList.length-1">,</span>
                         </span>
 
-                    </template> -->
+                    </template>
 
 
-                    {{ data?.organizationalStructurePersonList?.map((item: any) =>  item.userName).join('，') }}
+                    <!-- {{ data?.organizationalStructurePersonList?.forEach((item: any) =>  item.enableChargePerson == 1).join('，') }} -->
                   </div>
                   <div class="actions">
                     <ElButtonGroup>
