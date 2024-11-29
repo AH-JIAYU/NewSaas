@@ -629,7 +629,7 @@ function handleCurrentChange(val: any) {
                 </div>
               </template>
             </ElTableColumn>
-            <ElTableColumn v-if="userForm.checkList.includes('userName')" align="left" width="130" prop="userName"
+            <ElTableColumn v-if="userForm.checkList.includes('userName')" align="left" width="160" prop="userName"
               label="用户名">
               <template #default="{ row }">
                 <div style="display: flex; align-items: center">
