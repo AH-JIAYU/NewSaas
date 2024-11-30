@@ -82,12 +82,17 @@ async function fetchData() {
     if(queryForm.value.time.length ){
       queryForm.value.startTime = queryForm.value.time[0]
       queryForm.value.endTime = queryForm.value.time[1]
+    } else {
+      queryForm.value.time = []
+      queryForm.value.startTime = null
+      queryForm.value.endTime = null
     }
     const params = {
       ...getParams(),
       ...queryForm.value,
     };
     const res = await api.queryOrganizationalStructureSettlementRecordList(params);
+
     list.value = res.result;
     pagination.value.total = res.total ? Number(res.total):0;
     listLoading.value = false;
