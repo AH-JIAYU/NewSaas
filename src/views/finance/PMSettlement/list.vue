@@ -85,7 +85,7 @@ async function fetchData() {
     };
     const res = await api.queryOrganizationalStructureSettlementRecordList(params);
     list.value = res.result;
-    pagination.value.total = res.total;
+    pagination.value.total = res.total ? Number(res.total):0;
     listLoading.value = false;
   } catch (error) {
   } finally {
@@ -227,7 +227,6 @@ function handleCurrentChange(val: any) {
         :border="border"
         :size="lineHeight"
         :stripe="stripe"
-        @selection-change="setSelectRows"
         highlight-current-row
         @current-change="handleCurrentChange"
       >
