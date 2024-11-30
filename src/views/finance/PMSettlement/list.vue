@@ -105,8 +105,8 @@ const settlement = async () => {
 };
 
 // 修改状态
-async function changeStatus(id: any, type: any) {
-  const res = await api.organizationalStructureSettlementUpdate({ id, type });
+async function changeStatus(id: any, status: any) {
+  const res = await api.organizationalStructureSettlementUpdate({ id, status });
     res.status === 1 &&
       ElMessage.success({
         message: "操作成功",
