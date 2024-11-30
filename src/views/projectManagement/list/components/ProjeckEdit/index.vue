@@ -249,6 +249,7 @@ async function onSubmit() {
             });
         } else {
           if (params.projectType === 2) {
+            params.memberPrice = (params.doMoneyPrice * params.exchangeRate).toFixed(2)
             const objParams = processingDataObj(params)
             const { status } = await api.addOrUpdateProjectOutsideInfo(objParams);
             status === 1 &&

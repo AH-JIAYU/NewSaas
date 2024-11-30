@@ -302,7 +302,7 @@ function onSubmit() {
   }
   if (!form.value.webName) {
     ElMessage.warning({
-      message: "请输入网址名称",
+      message: "请输入网站名称",
       center: true,
     });
     return;
@@ -486,7 +486,7 @@ function onSubmit() {
 </el-col> -->
               <el-col :span="24">
                 <el-form-item label="默认币种" prop="">
-                  <el-select v-model="form.currencyType" value-key="" style="width: 22.4375rem" placeholder="请选择币种"
+                  <el-select v-model="form.currencyType" value-key="" style="width: 22.4375rem" disabled placeholder="请选择币种"
                     clearable filterable @change="currencyTypeChange">
                     <el-option v-for="item in currencyList" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
