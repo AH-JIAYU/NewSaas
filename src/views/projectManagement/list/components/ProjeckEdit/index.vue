@@ -58,11 +58,6 @@ async function showEdit(row: any) {
       } else {
         const res = await api.detail({ projectId: row.projectId });
         if (res.data) {
-          res.data.projectType = row.projectType
-          res.data.projectType = row.projectType
-          if (res.data.projectType === 2) {
-            res.data.doMoneyPrice = row.doMoneyPrice
-          }
           initializeLeftTabsData(res.data);
         }
       }
@@ -254,6 +249,7 @@ async function onSubmit() {
             });
         } else {
           if (params.projectType === 2) {
+            params.memberPrice = (params.doMoneyPrice * params.exchangeRate).toFixed(2)
             const objParams = processingDataObj(params)
             const { status } = await api.addOrUpdateProjectOutsideInfo(objParams);
             status === 1 &&

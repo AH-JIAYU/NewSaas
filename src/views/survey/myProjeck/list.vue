@@ -272,7 +272,7 @@ const formOption = {
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('participation')" show-overflow-tooltip width="180" align="left"
+        <el-table-column v-if="checkList.includes('participation')" show-overflow-tooltip width="200" align="left"
           label="参数">
           <template #default="{ row }">
             <p class="parameter oneLine"><el-text class="mx-1 oneLine" style="color:#FB6868;" type="danger">参与：{{
