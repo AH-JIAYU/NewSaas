@@ -79,6 +79,10 @@ function currentChange(page = 1) {
 async function fetchData() {
   try {
     listLoading.value = true;
+    if(queryForm.value.time.length ){
+      queryForm.value.startTime = queryForm.value.time[0]
+      queryForm.value.endTime = queryForm.value.time[1]
+    }
     const params = {
       ...getParams(),
       ...queryForm.value,
