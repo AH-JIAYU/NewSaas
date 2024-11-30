@@ -58,11 +58,6 @@ async function showEdit(row: any) {
       } else {
         const res = await api.detail({ projectId: row.projectId });
         if (res.data) {
-          res.data.projectType = row.projectType
-          res.data.projectType = row.projectType
-          if (res.data.projectType === 2) {
-            res.data.doMoneyPrice = row.doMoneyPrice
-          }
           initializeLeftTabsData(res.data);
         }
       }
