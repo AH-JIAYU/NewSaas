@@ -114,19 +114,19 @@ async function changeStatus(id: any, type: any) {
       inputPattern: /.{2,}/,
       inputErrorMessage: "请输理由-最少2为字符",
     }).then(async (value:any) => {
-      const res = await api.changestatus({ id, type, notes: value.value });
-      res.status === 1 &&
-        ElMessage.success({
-          message: "操作成功",
-        });
+      // const res = await api.changestatus({ id, type, notes: value.value });
+      // res.status === 1 &&
+      //   ElMessage.success({
+      //     message: "操作成功",
+      //   });
       fetchData();
     });
   } else {
-    const res = await api.changestatus({ id, type });
-    res.status === 1 &&
-      ElMessage.success({
-        message: "操作成功",
-      });
+    // const res = await api.changestatus({ id, type });
+    // res.status === 1 &&
+    //   ElMessage.success({
+    //     message: "操作成功",
+    //   });
     fetchData();
   }
 }

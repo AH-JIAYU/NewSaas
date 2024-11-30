@@ -866,7 +866,7 @@ nextTick(() => {
                   placeholder="请选择时间" :disabledDate="disabledDateFn" @change="handleChangeTime" />
               </el-form-item>
             </el-col>
-            <el-col :span="5" v-if="localToptTab.isB2b === 2">
+            <el-col :span="5" v-if="localToptTab.isB2b === 2 && localToptTab.projectType !== 2">
               <el-form-item label="项目类型">
                 <el-cascader :show-all-levels="false" v-model="localToptTab.projectType"
                   :props="data.basicSettings.B2BTypeProps" :options="data.basicSettings.B2BTypeList"
