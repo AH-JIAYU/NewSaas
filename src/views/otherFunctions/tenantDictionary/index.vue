@@ -327,9 +327,10 @@ function onDeleteMulti(rows: any[]) {
             </ElTableColumn>
             <ElTableColumn label="键值" align="left" width="150">
               <template #default="scope">
-                <ElTag type="info">
-                  {{ scope.row.code }}
-                </ElTag>
+          <el-button size="small"  plain >
+            {{ scope.row.code }}
+              </el-button>
+
               </template>
             </ElTableColumn>
 
