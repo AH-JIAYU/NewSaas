@@ -226,14 +226,14 @@ const settlement = async () => {
       <ElDivider border-style="dashed" />
       <el-row>
         <FormLeftPanel>
-          <el-button
+          <!-- <el-button
             style="margin-right: 10px"
             type="primary"
             size="default"
             @click="settlement"
           >
             手动结算
-          </el-button>
+          </el-button> -->
         </FormLeftPanel>
         <FormRightPanel>
           <el-button size="default"> 导出 </el-button>

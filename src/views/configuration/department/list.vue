@@ -529,10 +529,10 @@ function handleCurrentChange(val: any) {
                     {{ data.name }}
                   </div>
                   <div class="code">
-                    <template v-for="(item,index) in data?.organizationalStructurePersonList" :key="item.userId">
-                        <span v-if="item.enableChargePerson == 1">
+                    <template v-for="item in data?.organizationalStructurePersonList" :key="item.userId">
+                        <span v-if="item.enableChargePerson == 1" style="margin-right: 0.3rem;">
                           {{ item.userName }}
-                          <span v-if="index != data?.organizationalStructurePersonList.length-1">,</span>
+                          <!-- <span v-if="index != data?.organizationalStructurePersonList.length-1">,</span> -->
                         </span>
 
                     </template>
