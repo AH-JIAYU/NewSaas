@@ -491,7 +491,6 @@ const getCustomerList = async () => {
   const res = await customerApi.getCustomerList({});
   data.value.basicSettings.customerList =
     res.data.getTenantCustomerAccordInfoList;
-    console.log('data.value.basicSettings.customerList',data.value.basicSettings.customerList)
 };
 // 快捷操作：新增客户
 const AddCustomers = () => {
@@ -755,8 +754,8 @@ nextTick(() => {
           <el-row :gutter="20">
             <el-col :span="6">
               <el-form-item label="项目价" prop="doMoneyPrice">
-                <el-input-number style="height: 2rem" v-model="localToptTab.doMoneyPrice" :min="0.01" :precision="1"
-                  :step="0.1" controls-position="right" size="large" />
+                <el-input-number style="height: 2rem" v-model="localToptTab.doMoneyPrice" :min="0.01"
+                  :step="1" controls-position="right" size="large" />
               </el-form-item>
             </el-col>
             <el-col :span="6">
