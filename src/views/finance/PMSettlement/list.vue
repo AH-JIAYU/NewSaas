@@ -79,11 +79,20 @@ function currentChange(page = 1) {
 async function fetchData() {
   try {
     listLoading.value = true;
+    if(queryForm.value.time.length ){
+      queryForm.value.startTime = queryForm.value.time[0]
+      queryForm.value.endTime = queryForm.value.time[1]
+    } else {
+      queryForm.value.time = []
+      queryForm.value.startTime = null
+      queryForm.value.endTime = null
+    }
     const params = {
       ...getParams(),
       ...queryForm.value,
     };
     const res = await api.queryOrganizationalStructureSettlementRecordList(params);
+
     list.value = res.result;
     pagination.value.total = res.total ? Number(res.total):0;
     listLoading.value = false;
@@ -94,13 +103,18 @@ async function fetchData() {
 }
 // 手动生成结算（一月一次）
 const settlement = async () => {
-  const {status} = await api.organizationalStructureSettlement({})
+  const {status,error} = await api.organizationalStructureSettlement({})
   if(status ==1) {
     ElMessage.success({
         message: '手动结算成功',
         center: true,
       })
       fetchData()
+  } else {
+    ElMessage.success({
+        message: error,
+        center: true,
+      })
   }
 };
 
