@@ -491,6 +491,7 @@ const getCustomerList = async () => {
   const res = await customerApi.getCustomerList({});
   data.value.basicSettings.customerList =
     res.data.getTenantCustomerAccordInfoList;
+    console.log('data.value.basicSettings.customerList',data.value.basicSettings.customerList)
 };
 // 快捷操作：新增客户
 const AddCustomers = () => {
@@ -678,7 +679,7 @@ nextTick(() => {
                     :value="item.tenantCustomerId" :label="item.customerAccord" :disabled="item.isReveal === 1 ||
     (item.turnover &&
       item.practiceTurnover &&
-      item.turnover <= item.practiceTurnover)
+      item.turnover < item.practiceTurnover)
     ">
                     <span style="float: left">{{ item.customerAccord }}</span>
                     <span style="float: right; color: #fb6868; font-size: 13px" v-show="item.isReveal === 1">
@@ -754,7 +755,7 @@ nextTick(() => {
           <el-row :gutter="20">
             <el-col :span="6">
               <el-form-item label="项目价" prop="doMoneyPrice">
-                <el-input-number style="height: 2rem" v-model="localToptTab.doMoneyPrice" :min="1" :precision="1"
+                <el-input-number style="height: 2rem" v-model="localToptTab.doMoneyPrice" :min="0.01" :precision="1"
                   :step="0.1" controls-position="right" size="large" />
               </el-form-item>
             </el-col>

@@ -223,6 +223,11 @@ function onSubmit() {
               </el-col>
               <el-col :span="24">
                 <el-form-item label="最低结算金额" prop="confirmPassword">
+                  <div class="domainName"> 
+                    <el-tooltip class="tooltips " content="针对会员结算金额的配置" placement="top">
+                      <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
+                    </el-tooltip>
+                  </div>
                   <el-input v-model.number="form.minimumAmount" style="width: 18rem" placeholder="" />
                 </el-form-item>
               </el-col>
@@ -392,6 +397,13 @@ function onSubmit() {
   }
 
 
+}
+
+.domainName {
+  position: absolute;
+  left: -6.9375rem;
+  top: -1px;
+  color: #606266;
 }
 
 // :deep() {

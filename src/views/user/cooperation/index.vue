@@ -605,7 +605,7 @@ function userData(data1: any) {
         <template #header>
             <div style="display: flex;" class="table-header">
               <span>业绩(我的)</span>
-              <el-tooltip  class="tooltips" content="个人待审金额或个人可用金额,是您在该公司赚取的佣金，他需要支付给您的佣金" placement="top">
+              <el-tooltip  class="tooltips" content="待审金额或可用金额,是您在该公司赚取的佣金，他需要支付给您的佣金" placement="top">
                 <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
               </el-tooltip>
             </div>

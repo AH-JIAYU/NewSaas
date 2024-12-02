@@ -228,7 +228,7 @@ defineExpose({ showEdit });
               @change="chagneDataType"
             >
               <el-radio :value="1" size="large"> 供应商 </el-radio>
-              <el-radio :value="2" size="large"> 部门 </el-radio>
+              <el-radio :value="2" size="large"> 内部站 </el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item

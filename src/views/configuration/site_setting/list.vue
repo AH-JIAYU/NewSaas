@@ -356,7 +356,7 @@ function onSubmit() {
     <PageHeader title="站点设置管理" />
     <PageMain>
       <el-tabs v-model="activeTopTab">
-        <el-form ref="formRef" :model="form" :rules="formRules" label-width="100px" label-position="right"
+        <el-form ref="formRef" :model="form" :rules="formRules" label-width="110px" label-position="right"
           :inline="false">
           <el-tab-pane label="基础设置" name="基本设置">
             <el-row :gutter="20">
@@ -562,6 +562,11 @@ function onSubmit() {
               </el-col>
               <el-col :span="24">
                 <el-form-item label="最低结算金额" prop="">
+                  <div class="domainNamesss">
+                    <el-tooltip class="tooltips " content="针对供应商结算金额的配置" placement="top">
+                      <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
+                    </el-tooltip>
+                  </div>
                   <el-input v-model.number="form.minimumAmount" style="width: 22.4375rem" placeholder="" />
                 </el-form-item>
               </el-col>
@@ -727,6 +732,13 @@ function onSubmit() {
 .domainNamess {
   position: absolute;
   left: -5.3125rem;
+  top: -1px;
+  color: #606266;
+}
+
+.domainNamesss {
+  position: absolute;
+  left: -6.9375rem;
   top: -1px;
   color: #606266;
 }
