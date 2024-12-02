@@ -564,10 +564,15 @@ function handleCurrentChange(val: any) {
               </svg>
               <CurrencyType v-if="!row.memberCurrencyType" />
               <template v-if="row.surveySource === 1">
-                {{ (row.memberPrice ?? row.memberChildPrice).toFixed(2) || 0 }}
+                <el-text v-if="row.memberChildId">
+                  {{ (row.supplierPrice ?? 0) }}
+                </el-text>
+                <el-text v-if="row.memberId">
+                  {{ (row.memberPrice ?? 0) }}
+                </el-text>
               </template>
               <template v-if="row.surveySource === 3">
-                {{ (row.supplierPrice ?? row.memberPrice).toFixed(2) || 0 }}
+                {{ (row.supplierPrice ?? row.memberPrice) }}
               </template>
             </div>
           </template>
