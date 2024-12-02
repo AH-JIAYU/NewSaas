@@ -539,7 +539,7 @@ const formOption = {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('originalPrice')" show-overflow-tooltip align="left" label="原始价"
-          width="100">
+          width="110">
           <template #default="{ row }">
             <div class="flex-c">
               <div v-if="row.originalPrice" class="oneLine fontC-System" style="width: calc(100% - 1.25rem)">
@@ -554,14 +554,14 @@ const formOption = {
                     d="M8.79096 0L5.5738 4.56065H8.10931V5.56885H5.15558V6.95736H8.10931V7.97816H5.15558V10H3.63591V7.97816H0.574054V6.95736H3.63591V5.56885H0.574054V4.56065H3.18642L0 0H1.7134C3.20235 2.26497 4.10624 3.70177 4.42676 4.30931H4.45749C4.56617 4.05905 4.86361 3.55523 5.34877 2.79785L7.17085 0H8.79096Z"
                     fill="#333333" />
                 </svg>
-                <CurrencyType v-if="!row.beCurrencyType" />{{ row.originalPrice || 0 }}
+                <CurrencyType v-if="!row.beCurrencyType" />{{ row.originalPrice.toFixed(2) || 0 }}
               </div>
               <span v-else>-</span>
             </div>
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('doMoneyPrice')" show-overflow-tooltip align="left" label="项目价"
-          width="100">
+          width="110">
           <template #default="{ row }">
             <div class="flex-c">
               <div class="oneLine fontC-System" style="width: calc(100% - 1.25rem)">

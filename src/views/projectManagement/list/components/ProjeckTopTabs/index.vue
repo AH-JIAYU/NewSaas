@@ -996,7 +996,7 @@ nextTick(() => {
                 <template #label>
                   <div>小时<span class="red">准入</span>量</div>
                 </template>
-                <el-input-number style="height: 2rem" v-model="localToptTab.preNum" :min="1" :step="1" step-strictly
+                <el-input-number style="height: 2rem" v-model="localToptTab.preNum" :min="0" :step="1" step-strictly
                   controls-position="right" size="large" @keydown="handleInput" />
               </el-form-item>
             </el-col>
@@ -1006,7 +1006,7 @@ nextTick(() => {
                 <template #label>
                   <div>小时<span class="blue">完成</span>量</div>
                 </template>
-                <el-input-number style="height: 2rem" v-model="localToptTab.limitedQuantity" :min="1" :step="1"
+                <el-input-number style="height: 2rem" v-model="localToptTab.limitedQuantity" :min="0" :step="1"
                   step-strictly controls-position="right" size="large" @keydown="handleInput" />
               </el-form-item>
             </el-col>
