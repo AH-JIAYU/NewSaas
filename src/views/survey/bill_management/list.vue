@@ -56,7 +56,7 @@ const data = ref<any>({
     memberId: "", //会员id-不支持模糊查询
     memberName: "", //	支持模糊查询-会员id和名称只能传一个
     member: "",
-    billStatus: "", //账单状态: 1:待支付 2:已支付 3:已拒绝
+    billStatus: [], //账单状态: 1:待支付 2:已支付 3:已拒绝
   },
   // 账单状态
   billStatusList: [
@@ -105,7 +105,7 @@ function onReset() {
     memberId: "", //会员id-不支持模糊查询
     memberName: "", //	支持模糊查询-会员id和名称只能传一个
     member: "",
-    billStatus: "", //账单状态: 1:待支付 2:已支付 3:已拒绝
+    billStatus: [], //账单状态: 1:待支付 2:已支付 3:已拒绝
   });
   getDataList();
 }
@@ -185,7 +185,7 @@ onMounted(() => {
   { index: 1, show: true, type: 'input', modelName: 'memberId', placeholder: '会员ID' },
   { index: 2, show: true, type: 'input', modelName: 'memberName', placeholder: '会员姓名' },
   { index: 3, show: true, type: 'select', modelName: 'billStatus', placeholder: '账单状态', option: 'billStatus',
-  optionLabel: 'label', optionValue: 'value', // multiple:true,
+  optionLabel: 'label', optionValue: 'value',  multiple:true,
 }
 ]
 });

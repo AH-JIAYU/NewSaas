@@ -93,7 +93,7 @@ const queryForm = reactive<any>({
   //ip-模糊查询
   ip: "",
   //调查状态:1 C=完成 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
-  surveyStatus: "",
+  surveyStatus: [],
 });
 
 const data = reactive<any>({
@@ -188,7 +188,7 @@ function onReset() {
     //ip-模糊查询
     ip: "",
     //调查状态:1 C=完成 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
-    surveyStatus: "",
+    surveyStatus: [],
   });
   fetchData();
 }
@@ -258,7 +258,7 @@ onMounted(async () => {
       option: "surveyStatus",
       optionLabel: "label",
       optionValue: "value",
-      // multiple:true,
+      multiple:true,
     },
     {
       index: 8,

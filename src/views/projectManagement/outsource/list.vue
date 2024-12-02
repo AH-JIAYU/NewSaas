@@ -60,7 +60,7 @@ const queryForm = reactive<any>({
   projectId: "", //项目id
   tenantId: "", //合作商id
   tenantName: "", //	合作商名称
-  projectStatus: "", //	1:进行中(在线) 2:已完成(审核通过) 3:离线
+  projectStatus: [], //	1:进行中(在线) 2:已完成(审核通过) 3:离线
   receiveStatus: '',//1.自动已接收，2.手动未接收
   type: 1,
 });
@@ -94,7 +94,7 @@ function onReset() {
   Object.assign(queryForm, {
     tenantId: "", //合作商id
     tenantName: "", //	合作商名称
-    projectStatus: "", //	1:进行中(在线) 2:已完成(审核通过) 3:离线
+    projectStatus: [], //	1:进行中(在线) 2:已完成(审核通过) 3:离线
     type: 1,
   });
   fetchData();
@@ -159,7 +159,7 @@ onMounted(() => {
       option: "projectStatus",
       optionLabel: "label",
       optionValue: "value",
-      // multiple:true,
+      multiple:true,
     },
   ];
   formSearchList2.value = [
@@ -193,7 +193,7 @@ onMounted(() => {
       option: "projectStatus",
       optionLabel: "label",
       optionValue: "value",
-      // multiple:true,
+      multiple:true,
     },
     {
       index: 5,

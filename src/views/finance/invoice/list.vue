@@ -132,7 +132,7 @@ const queryForm = reactive<any>({
   // 客户id
   tenantCustomerId: "",
   // 发票状态
-  invoiceStatus: null,
+  invoiceStatus: [],
   // 开票日期开始
   invoiceDateStart: "",
   // 开票日期结束
@@ -190,7 +190,7 @@ function onReset() {
     // 客户id
     tenantCustomerId: "",
     // 发票状态
-    invoiceStatus: null,
+    invoiceStatus: [],
     // 开票日期开始
     invoiceDateStart: "",
     // 开票日期结束
@@ -295,7 +295,6 @@ onMounted(() => {
                 />
               </el-select>
             </el-form-item>
-            <!-- multiple:true,-->
             <el-form-item label="">
               <el-select
                 v-model="queryForm.invoiceStatus"
@@ -303,7 +302,7 @@ onMounted(() => {
                 clearable
                 filterable
                 @change="currentChange()"
-
+                :multiple=true
               >
                 <ElOption
                   v-for="item in invoiceStatusList"

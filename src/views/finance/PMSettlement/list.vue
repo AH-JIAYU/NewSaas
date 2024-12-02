@@ -46,7 +46,7 @@ const columns = ref<any>([
 // 查询参数
 const queryForm = ref<any>({
   organizationalStructureId: "", //	供应商id
-  status: null, //账单状态:  1:待支付 2:已支付 3:已拒绝
+  status: [], //账单状态:  1:待支付 2:已支付 3:已拒绝
   time: [],
   startTime: null, //开始时间
   endTime: null, //	结束时间
@@ -61,7 +61,7 @@ function setSelectRows(value: any) {
 function onReset() {
   Object.assign(queryForm.value, {
     organizationalStructureId: "", //	供应商id
-    status: null, //账单状态:  1:待支付 2:已支付 3:已拒绝
+    status: [], //账单状态:  1:待支付 2:已支付 3:已拒绝
     time: [],
     startTime: null, //开始时间
     endTime: null, //	结束时间
@@ -182,6 +182,7 @@ onMounted(() => {
       option: "status",
       optionLabel: "label",
       optionValue: "value",
+      multiple:true,
     },
   ];
 });

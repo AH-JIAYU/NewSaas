@@ -94,7 +94,7 @@ const data = ref<any>({
     page: 1,
     limit: 10,
     title: "",
-    type: null,
+    type: [],
   },
   // 批量操作
   batch: {
@@ -134,7 +134,7 @@ function getDataList() {
 function onReset() {
   Object.assign(data.value.search, {
     title: "",
-    type: null,
+    type: [],
   });
   getDataList();
 }
@@ -256,7 +256,7 @@ onMounted(() => {
     { index: 1, show: true, type: 'input', modelName: 'title', placeholder: '请输入标题' },
     { index: 2, show: true, type: 'select', modelName: 'type', placeholder: '请选择类型', option: 'type', optionLabel: 'label',
     optionValue: 'value',
-// multiple:true,
+multiple:true,
    }
   ]
 });

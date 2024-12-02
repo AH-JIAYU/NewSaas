@@ -42,7 +42,7 @@ const queryForm = reactive<any>({
   // memberGroupId: "", // 	会员组id
   projectId: "", // 	项目id
   projectName: "", // 	项目名称-模糊查询
-  allocationType: "",//分配类型
+  allocationType: [],//分配类型
   // customerId: "", // 	客户Id
   // ip: "", // 	ip-模糊查询
   // surveyStatus: "", // 调查状态:1 C=完成 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
@@ -153,7 +153,7 @@ function onReset() {
     // memberGroupId: "", // 	会员组id
     projectId: "", // 	项目id
     projectName: "", // 	项目名称-模糊查询
-    allocationType: '',//分配类型
+    allocationType: [],//分配类型
     // customerId: "", // 	客户Id
     // ip: "", // 	ip-模糊查询
     // surveyStatus: "", // 调查状态:1 C=完成 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
@@ -173,7 +173,7 @@ onMounted(async () => {
     { index: 2, show: true, type: 'input', modelName: 'projectName', placeholder: '项目名称' },
     { index: 3, show: true, type: 'select', modelName: 'allocationType', placeholder: '分配类型',
       option: 'allocationType',
-      optionLabel: 'label', optionValue: 'value',// multiple:true,
+      optionLabel: 'label', optionValue: 'value',multiple:true,
     },
 ];
 });

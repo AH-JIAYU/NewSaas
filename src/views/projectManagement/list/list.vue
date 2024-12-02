@@ -91,7 +91,7 @@ const search = ref<any>({
   countryId: [], // 所属区域编号Id
   createName: "", // 	创建人-模糊查询
   allocation: "", // 	分配状态:1已经分配 2:未分配
-  allocationStatus: "", // 	分配类型: 1:自动分配 2:供应商 3:部门
+  allocationStatus: [], // 	分配类型: 1:自动分配 2:供应商 3:部门
   // status: "", // 	项目状态:1在线 2:离线
 }); // 搜索
 const list = ref<any>([]);
@@ -211,7 +211,7 @@ function onReset() {
     countryId: "", // 所属区域编号Id
     createName: "", // 	创建人-模糊查询
     allocation: "", // 	分配状态:1已经分配 2:未分配
-    allocationStatus: "", // 	分配类型: 1:自动分配 2:供应商 3:部门
+    allocationStatus: [], // 	分配类型: 1:自动分配 2:供应商 3:部门
     // status: "", // 	项目状态:1在线 2:离线
   };
   fetchData();
@@ -318,7 +318,7 @@ onMounted(async () => {
       option: "allocationStatus",
       optionLabel: "label",
       optionValue: "value",
-      // multiple:true,
+      multiple:true,
     },
     // {
     //   index: 7,

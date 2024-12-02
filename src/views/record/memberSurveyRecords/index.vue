@@ -105,15 +105,15 @@ const queryForm = reactive<any>({
   projectName: "", //项目名称-模糊查询
   customerId: "", //客户Id
   ip: "", //ip-模糊查询
-  surveyStatus: "", //调查状态:1 C=完成 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
+  surveyStatus: [], //调查状态:1 C=完成 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
   randomIdentityId: "", //随机身份id
   // 租户id
   tenantId: "",
   // 会员类型
-  memberType: "",
+  memberType: '',
   // 点击id
   id: "",
-  viceStatus: "",
+  viceStatus: [],
 });
 
 const data = reactive<any>({
@@ -198,15 +198,15 @@ function onReset() {
     projectName: "", //项目名称-模糊查询
     customerId: "", //客户Id
     ip: "", //ip-模糊查询
-    surveyStatus: "", //调查状态:1 C=完成 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
+    surveyStatus: [], //调查状态:1 C=完成 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
     randomIdentityId: "", //随机身份id
     // 租户id
     tenantId: "",
     // 会员类型
-    memberType: "",
+    memberType: '',
     // 点击id
     id: "",
-    viceStatus: "",
+    viceStatus: [],
   });
   fetchData();
 }
@@ -250,7 +250,6 @@ onMounted(async () => {
       option: "memberType",
       optionLabel: "label",
       optionValue: "value",
-      // multiple:true,
     },
     {
       index: 5,
@@ -296,7 +295,7 @@ onMounted(async () => {
       option: "surveyStatus",
       optionLabel: "label",
       optionValue: "value",
-      // multiple:true,
+      multiple:true,
     },
     {
       index: 11,
@@ -307,7 +306,7 @@ onMounted(async () => {
       option: "viceStatus",
       optionLabel: "label",
       optionValue: "value",
-      // multiple:true,
+      multiple:true,
     },
     {
       index: 12,

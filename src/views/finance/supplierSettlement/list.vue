@@ -46,7 +46,7 @@ const columns = ref<any>([
 // 查询参数
 const queryForm = ref<any>({
   supplierId: "", //	供应商id
-  billStatus: "", //账单状态: 1:待收票 2:待支付 3:已支付 4:已拒绝
+  billStatus: [], //账单状态: 1:待收票 2:待支付 3:已支付 4:已拒绝
   time: [],
   beginTime: "", //开始时间
   endTime: "", //	结束时间
@@ -61,7 +61,7 @@ function setSelectRows(value: any) {
 function onReset() {
   Object.assign(queryForm.value, {
     supplierId: '', //	供应商id
-    billStatus: null, //账单状态: 1:待收票 2:待支付 3:已支付 4:已拒绝
+    billStatus: [], //账单状态: 1:待收票 2:待支付 3:已支付 4:已拒绝
     time: [],
     beginTime: "", //开始时间
     endTime: "", //	结束时间
@@ -138,7 +138,7 @@ onMounted(() => {
     { index: 1, show: true, type: 'input', modelName: 'supplierId', placeholder: '供应商ID' },
     { index: 2, show: true, type: 'datetimerange', modelName: 'time', startPlaceHolder: "创建开始日期", endPlaceHolder: "创建结束日期" },
     { index: 3, show: true, type: 'select', modelName: 'billStatus', placeholder: '状态', option: 'billStatus', optionLabel: 'label', optionValue: 'value',
-    // multiple:true,
+    multiple:true,
      }
   ]
 });
