@@ -103,13 +103,18 @@ async function fetchData() {
 }
 // 手动生成结算（一月一次）
 const settlement = async () => {
-  const {status} = await api.organizationalStructureSettlement({})
+  const {status,error} = await api.organizationalStructureSettlement({})
   if(status ==1) {
     ElMessage.success({
         message: '手动结算成功',
         center: true,
       })
       fetchData()
+  } else {
+    ElMessage.success({
+        message: error,
+        center: true,
+      })
   }
 };
 

@@ -123,7 +123,12 @@ onMounted(() => {
     destroy-on-close
     @closed="onCancel"
   >
-    <ElForm ref="formRef" :model="form" :rules="formRules" label-width="8.25rem">
+    <ElForm
+      ref="formRef"
+      :model="form"
+      :rules="formRules"
+      label-width="8.25rem"
+    >
       <ElFormItem label="所属字典">
         <ElCascader
           v-model="form.catalogueId"
@@ -171,13 +176,10 @@ onMounted(() => {
       </ElFormItem>
       <ElFormItem label="字典项键值" prop="code">
         <template #default="scope">
-          <el-button size="small"  plain >
+          <el-button size="small" plain>
             {{ scope.row.code }}
-              </el-button>
-
-              </template>
-
-
+          </el-button>
+        </template>
       </ElFormItem>
       <ElFormItem label="备注">
         <ElInput v-model="form.remark" placeholder="请输入备注" clearable />
