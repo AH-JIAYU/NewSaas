@@ -208,7 +208,7 @@ async function getDictionaryList() {
       ...dictionary.value.search,
     };
     const res = await api.list(params);
-    dictionary.value.tree = res.data;
+    dictionary.value.tree = sortTreeByTime(res.data);
     dictionary.value.loading = false;
   } catch (error) {
 
@@ -216,6 +216,27 @@ async function getDictionaryList() {
     dictionary.value.loading = false;
   }
 }
+// 递归排序函数
+const sortTreeByTime = (nodes:any) => {
+      // 先对当前层的节点进行排序
+      nodes.sort((a:any, b:any) => {
+        const timeA:any = new Date(a['createTime']);
+        const timeB:any = new Date(b['createTime']);
+        return  timeB - timeA ;
+      });
+
+      // nodes.sort((a:any, b:any) => new Date(b['createTime']) - new Date(a['createTime']));
+
+      // 然后递归处理每个子节点
+      nodes.forEach((node:any) => {
+        if (node.children && node.children.length > 0) {
+          sortTreeByTime(node.children);
+        }
+      });
+
+      return nodes;
+    };
+
 onMounted(() => {
   getDictionaryList();
 });
