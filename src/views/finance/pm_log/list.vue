@@ -114,7 +114,7 @@ async function getDataList() {
       ...data.value.search,
     };
     const res = await api.list(params)
-    data.value.dataList = res.data;
+    data.value.dataList = res.data.memberVOS;
       pagination.value.total = +res.data.total;
   } catch (error) {
 
