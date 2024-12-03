@@ -133,6 +133,16 @@ async function fetchData() {
       ...queryForm,
     };
     const { data } = await api.list(params);
+    //  projectId: "", // 	项目idprojectName: "", // 	项目名称-模糊查询，allocationType: [],//分配类型
+    // list.value = data.projectSurveyScreenInfoList.filter((item:any) => {
+    //     return (
+    //       (queryForm.value.projectId ? queryForm.value.projectId.includes(item.projectId) : true) &&
+    //       (queryForm.value.projectName ? queryForm.value.projectName.includes(item.projectName) : true) &&
+    //       (queryForm.value.allocationType ? queryForm.value.allocationType.includes(item.allocationType) : true)
+    //     );
+
+
+
     list.value = data.projectSurveyScreenInfoList;
     pagination.value.total = data.projectSurveyScreenInfoList.length;
     listLoading.value = false;
@@ -142,6 +152,8 @@ async function fetchData() {
     listLoading.value = false;
   }
 }
+
+
 // 表格-单选框
 function setSelectRows(val: string) {
   selectRows.value = val;
