@@ -605,6 +605,7 @@ defineExpose({ showEdit });
 .top {
   width: 42rem;
   // min-height: 7.625rem;
+  margin-bottom: .625rem;
   border-radius: 0px 0px 0px 0px;
 
   p {
