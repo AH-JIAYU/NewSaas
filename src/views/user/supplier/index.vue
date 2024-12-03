@@ -417,11 +417,10 @@ const formOption = {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('supplierLevelId')" align="left" prop="supplierLevelId"
-          show-overflow-tooltip label="供应商等级" width="160">
+          show-overflow-tooltip label="供应商等级" width="240">
           <template #default="{ row }">
-            <div class="flex-c">
-              <!-- style="width: calc(100% - 20px)" -->
-              <div class="fontC-System">
+            <div class="flex-c" >
+              <div class="fontC-System" style="width: calc(100% - 20px)">
                 {{ supperLevel(row.supplierLevelId) }}
               </div>
               <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'supplierLevelId')" :class="{
