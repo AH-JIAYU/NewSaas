@@ -181,6 +181,13 @@ async function save() {
         });
         return;
       }
+      if (!obj.exchangeRate) {
+        ElMessage.warning({
+          message: "请先设置汇率",
+          center: true,
+        });
+        return;
+      }
       // obj.sendProjectType =
       //   data.value.form.sendProjectType.length != 0
       //     ? data.value.form.sendProjectType[0]
