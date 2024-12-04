@@ -421,7 +421,12 @@ const formOption = {
           <template #default="{ row }">
             <div class="flex-c" >
               <div class="fontC-System" style="width: calc(100% - 20px)">
-                {{ supperLevel(row.supplierLevelId) }}
+                <el-text v-for="item in supplierLevelList">
+                  <el-text v-if="item.tenantSupplierLevelId === row.supplierLevelId">
+                    {{ item.levelNameOrAdditionRatio }}
+                  </el-text>
+                </el-text>
+                <!-- {{ supperLevel(row.supplierLevelId) }} -->
               </div>
               <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'supplierLevelId')" :class="{
     edit: 'edit',
