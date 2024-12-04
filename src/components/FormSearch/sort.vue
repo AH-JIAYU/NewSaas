@@ -53,6 +53,7 @@ const onChangeShow = (val: any) => {
   }
 }
 
+// 提交
 const onSubmit = () => {
   const showFalseList = data.value.formSearchList.filter((item: any) => !item.show)//未选中
   const setLocalFormSearchList = cloneDeep(data.value.formSearchSelectList) //选中
