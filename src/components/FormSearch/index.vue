@@ -66,7 +66,6 @@ const onSort = () => {
   sortRef.value.showEdit(
     // @ts-ignore
     findCurrent() ?? formSearchList.value,
-    formSearchList.value,
     getValue(),
   );
 };
