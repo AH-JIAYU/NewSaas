@@ -96,6 +96,7 @@ watch(
     const newFormSearchList = cloneDeep(findCurrent() ?? newVal);
     if (newFormSearchList) {
       newFormSearchList.forEach(async (item: any) => {
+
         if (item.option) {
           if (Array.isArray(item.option)) {
             item.options = item.options;
