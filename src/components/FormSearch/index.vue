@@ -15,6 +15,9 @@ const props = defineProps([
   "formSearchName",
   "formOption",
 ]);
+
+const copyformSearchList = ref<any>([])
+
 const emits = defineEmits(["current-change", "on-reset"]);
 const FormSearchStore = useFormSearchStore(); //筛选项配置
 const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
@@ -67,6 +70,7 @@ const onSort = () => {
     // @ts-ignore
     findCurrent() ?? formSearchList.value,
     getValue(),
+    copyformSearchList,
   );
 };
 // 查询当前页面对应的键值
@@ -94,6 +98,7 @@ watch(
   () => props.formSearchList,
   (newVal, oleVal) => {
     // @ts-ignore
+    copyformSearchList.value = cloneDeep(newVal);
     const newFormSearchList = cloneDeep(findCurrent() ?? newVal);
     if (newFormSearchList) {
       newFormSearchList.forEach(async (item: any) => {

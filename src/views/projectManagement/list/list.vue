@@ -94,6 +94,9 @@ const search = ref<any>({
   allocationStatus: [], // 	分配类型: 1:自动分配 2:供应商 3:部门
   // status: "", // 	项目状态:1在线 2:离线
 }); // 搜索
+
+console.log('search.value',search.value);
+
 const list = ref<any>([]);
 
 const current = ref<any>(); //表格当前选中

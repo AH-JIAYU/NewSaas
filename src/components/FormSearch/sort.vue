@@ -14,9 +14,12 @@ const data = ref<any>({
   formSearchSelectList: [],// 表单筛选选中
   formSearchName: '',//name
 })
+// 对比原始搜索数据
+const copyformSearchList = ref<any>([])
 
 // 表单筛选配置项  表单绑定值
-const showEdit = (list: any, name: string) => {
+const showEdit = (list: any, name: string, copy: any) => {
+  copyformSearchList.value = copy
   data.value.dialogTableVisible = true
   data.value.formSearchName = name
   const copyList = cloneDeep(list)
@@ -58,6 +61,18 @@ const onSubmit = () => {
     searchType: data.value.formSearchName,
     addSearchUserInfoList: setLocalFormSearchList
   }
+  params.addSearchUserInfoList = setLocalFormSearchList.map((item: any) => {
+    copyformSearchList.value.value.forEach((ite: any) => {
+      if (item.modelName === ite.modelName) {
+        // 在这里直接修改原始 item，或者返回新对象
+        item = {
+          ...item,
+          multiple: ite.multiple ? true : false,
+        };
+      }
+    });
+    return item;  // 返回修改后的 item
+  });
   // 存本地
   FormSearchStore.updateFormSearchConfig(params)
   data.value.dialogTableVisible = false
