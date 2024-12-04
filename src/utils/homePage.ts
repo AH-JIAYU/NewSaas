@@ -722,7 +722,7 @@ const BCHtml1 = `<body>
          <img
          class="image_11"
          referrerpolicy="no-referrer"
-         src=${image1}
+         src=
          />
         </div>
       </div>
@@ -900,7 +900,7 @@ const BCHtml2 = `<body>
 
         <img class="image_5" referrerpolicy="no-referrer"
 
-           src=${image2}
+           src=
           />
         <div class="text-group_5 flex-col justify-between">
           <span class="text_9">注册</span>
@@ -915,7 +915,7 @@ const BCHtml2 = `<body>
       </div>
       <div class="box_6 box-margin">
         <img class="image_5" referrerpolicy="no-referrer"
-             src=${image3} />
+             src= />
         <div class="text-group_5 flex-col justify-between">
           <span class="text_9">问卷</span>
           <span class="text_10">
@@ -926,7 +926,7 @@ const BCHtml2 = `<body>
 
       </div>
       <div class="box_6">
-        <img class="image_5" referrerpolicy="no-referrer"      src=${image4}
+        <img class="image_5" referrerpolicy="no-referrer"      src=
          />
         <div class="text-group_5 flex-col justify-between">
           <span class="text_9">佣金</span>
@@ -1137,12 +1137,12 @@ margin: 11.25rem 11.25rem 0 11.25rem;
             </div>
             <img
             class="image_2"
-            referrerpolicy="no-referrer"  src=${image6} />
+            referrerpolicy="no-referrer"  src= />
           </div>
           <div class="box_3 flex-row justify-between">
             <img
               class="image_3"
-              referrerpolicy="no-referrer" src=${image7} />
+              referrerpolicy="no-referrer" src= />
             <div class="text-group_3 flex-col ">
               <span class="text_3">在家工作您能赚多少?</span>
               <span class="text_4">
