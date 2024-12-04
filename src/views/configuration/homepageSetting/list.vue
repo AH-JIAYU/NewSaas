@@ -188,7 +188,7 @@ onBeforeUnmount(() => {
               编辑
             </ElButton>
             <ElButton type="primary" size="small" plain @click="homePage(scope.row)">
-              设计主页
+              设计
             </ElButton>
             <ElButton type="danger" size="small" plain @click="onDel(scope.row)">
               删除
@@ -219,8 +219,8 @@ onBeforeUnmount(() => {
             <ElButton v-if="!scope.row.isSet" type="primary" size="small" plain @click="setHomePage(scope.row)">
               设置为主页
             </ElButton>
-            <ElButton type="primary" size="small" plain @click="homePage(scope.row, '查看')">
-              查看
+            <ElButton type="primary" size="small" plain @click="homePage(scope.row)">
+              设计
             </ElButton>
           </template>
         </ElTableColumn>
