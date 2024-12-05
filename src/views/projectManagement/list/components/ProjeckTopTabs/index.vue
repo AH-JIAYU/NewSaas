@@ -614,8 +614,8 @@ const handleSelectChange = async (val: any) => {
   params.exchangeRate = currencyTypeRes.value
   const res = await api.updateExchangeRate(params)
   if (res.data) {
-    currencyTypeRes.value = res.data.exchangeRate
-    localToptTab.value.exchangeRate = res.data.exchangeRate.toFixed(2)
+    currencyTypeRes.value = Math.floor(res.data.exchangeRate * 100) / 100;
+    localToptTab.value.exchangeRate = Math.floor(res.data.exchangeRate * 100) / 100;
   }
 }
 
@@ -734,7 +734,7 @@ nextTick(() => {
                 <el-button v-if="!userStore.originalExchangeRate" type="primary" link
                   @click="setExchangeRate">未设置汇率，点击设置>></el-button>
                 <el-select v-else v-model="localToptTab.currencyType" :disabled="!!localToptTab.projectId" value-key=""
-                  style="width: 22.4375rem" placeholder="请选择币种" clearable filterable @change="handleSelectChange">
+                  style="width: 22.4375rem" placeholder="请选择币种" filterable @change="handleSelectChange">
                   <el-option v-for="item in currencyList" :key="item.value" :label="item.label" :value="item.value">
                   </el-option>
                 </el-select>
@@ -745,9 +745,9 @@ nextTick(() => {
                 <!-- <el-input-number style="height: 2rem; display:none;" v-model="localToptTab.exchangeRate" :min="1" :precision="1"
                   :step="0.1" controls-position="right" size="large" /> -->
                 <el-text v-if="localToptTab.currencyType === 'USD' && currencyTypeRes !== null">1美元 = {{
-    currencyTypeRes.toFixed(2) }}人民币</el-text>
+    currencyTypeRes }}人民币</el-text>
                 <el-text v-if="localToptTab.currencyType === 'CNY' && currencyTypeRes !== null">1人民币 = {{
-    currencyTypeRes.toFixed(2) }}美元</el-text>
+    currencyTypeRes }}美元</el-text>
               </el-form-item>
             </el-col>
           </el-row>
