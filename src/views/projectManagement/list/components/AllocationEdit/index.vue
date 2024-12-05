@@ -265,7 +265,7 @@ defineExpose({ showEdit });
                 style="display: flex; height: unset">全选</el-checkbox>
             </template>
             <el-option v-for="item in data.tenantList" :label="item.beInvitationTenantName"
-              :value="item.beInvitationTenantId" />
+              :value="item.beInvitationTenantId" :disabled="item.reveal === 1" />
           </el-select>
         </el-form-item>
       </el-form>
