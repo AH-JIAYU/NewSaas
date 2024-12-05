@@ -538,8 +538,8 @@ function handleMoreStatus(row: any) {
           v-if="checkList.includes('projectAmount')"
           show-overflow-tooltip
           align="left"
-          label="项目价"
-          width="80"
+          label="合作项目价"
+          width="100"
         >
           <template #default="{ row }">
             <div class="fontC-System">
