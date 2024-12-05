@@ -178,8 +178,6 @@ const subsidiaryDictionary = ref({
   row: "",
   loading: false,
 });
-// pagination.value.size = 20;
-// pagination.value.sizes = [20, 50, 100];
 const dictionaryItemRef = ref();
 // 部门下的数据
 const dictionaryItem = ref<any>({
@@ -203,7 +201,6 @@ const dictionaryItem = ref<any>({
 async function getDictionaryList() {
   try {
     dictionary.value.loading = true;
-    // dictionaryItem.value.search.organizationalStructureId = "";
     const params = {
       ...dictionary.value.search,
     };
@@ -224,9 +221,6 @@ const sortTreeByTime = (nodes:any) => {
         const timeB:any = new Date(b['createTime']);
         return  timeB - timeA ;
       });
-
-      // nodes.sort((a:any, b:any) => new Date(b['createTime']) - new Date(a['createTime']));
-
       // 然后递归处理每个子节点
       nodes.forEach((node:any) => {
         if (node.children && node.children.length > 0) {
@@ -498,7 +492,6 @@ function onResetPassword() {
 function edit(row: any) {
   userForm.value.row = JSON.stringify(row);
   userForm.value.dialog.id = row.id;
-  // userForm.value.dialog.parentId = row.parentId;
   userForm.value.dialog.visible = true;
 }
 // 详情
@@ -515,7 +508,8 @@ function onReset() {
   });
   getDictionaryItemList();
 }
-const current = ref<any>(); //表格当前选中
+//表格当前选中
+const current = ref<any>();
 
 function handleCurrentChange(val: any) {
   if (val) current.value = val.id;
@@ -553,13 +547,9 @@ function handleCurrentChange(val: any) {
                     <template v-for="item in data?.organizationalStructurePersonList" :key="item.userId">
                         <span v-if="item.enableChargePerson == 1" style="margin-right: 0.3rem;">
                           {{ item.userName }}
-                          <!-- <span v-if="index != data?.organizationalStructurePersonList.length-1">,</span> -->
                         </span>
 
                     </template>
-
-
-                    <!-- {{ data?.organizationalStructurePersonList?.forEach((item: any) =>  item.enableChargePerson == 1).join('，') }} -->
                   </div>
                   <div class="actions">
                     <ElButtonGroup>
@@ -582,27 +572,6 @@ function handleCurrentChange(val: any) {
                   </div>
                 </div>
               </template>
-              <!-- 查询 <ElSelect v-model="userForm.search.active" value-key="" placeholder="用户状态" style="width: 200px" clearable
-              filterable>
-              <el-option v-for="item in activeList" :key="item.label" :label="item.label" :value="item.value" />
-            </ElSelect>
-            <ElInput v-model="userForm.search.id" placeholder="员工ID" clearable style="width: 200px"
-              @keydown.enter="getDictionaryItemList" />
-            <ElInput v-model="userForm.search.userName" placeholder="用户名" clearable style="width: 200px"
-              @keydown.enter="getDictionaryItemList" />
-            <ElButton type="primary" @click="getDictionaryItemList">
-              <template #icon>
-                <SvgIcon name="i-ep:search" />
-              </template>
-            </ElButton>
-            <ElButton @click="onReset">
-              <template #icon>
-                <SvgIcon name="i-ep:refresh" />
-              </template>
-            </ElButton> -->
-            <!-- 分页 <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
-            :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-            background @size-change="sizeChange" @current-change="currentChangeUser" /> -->
             </ElTree>
           </ElScrollbar>
         </template>

@@ -232,6 +232,7 @@ async function fetchData() {
       params.beginTime = queryForm.time[0] || "";
       params.endTime = queryForm.time[1] || "";
     }
+    delete params.time
     const { data } = await api.list(params);
     list.value = data.getTenantSupplierInfoList;
     pagination.value.total = data.total;
@@ -376,24 +377,11 @@ const formOption = {
                 <el-tooltip effect="dark" :content="row.supplierAccord" placement="top-start">
                   {{ row.supplierAccord }}
                 </el-tooltip>
-                <!-- {{ row.supplierAccord }} -->
               </div>
               <copy v-if="row.projectType !== 2" :content="row.supplierAccord" :class="{
     rowCopy: 'rowCopy',
     current: row.tenantSupplierId === current,
   }" />
-
-              <!--
-              <SvgIcon
-                v-if="row.projectType !== 2"
-                @click="quickEdit(row, 'supplierAccord')"
-                :class="{
-                  edit: 'edit',
-                  current: row.tenantSupplierId === current,
-                }"
-                name="i-ep:edit"
-                color="#409eff"
-              /> -->
             </div>
           </template>
         </el-table-column>
@@ -405,14 +393,11 @@ const formOption = {
                 <el-tooltip effect="dark" :content="row.tenantSupplierId" placement="top-start">
                   {{ row.tenantSupplierId }}
                 </el-tooltip>
-
-                <!-- {{ row.tenantSupplierId }} -->
               </div>
               <copy :content="row.tenantSupplierId" :class="{
     rowCopy: 'rowCopy',
     current: row.tenantSupplierId === current,
   }" />
-              <!-- <copy class="copy" :content="row.tenantSupplierId" /> -->
             </div>
           </template>
         </el-table-column>
@@ -426,7 +411,6 @@ const formOption = {
                     {{ item.levelNameOrAdditionRatio }}
                   </el-text>
                 </el-text>
-                <!-- {{ supperLevel(row.supplierLevelId) }} -->
               </div>
               <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'supplierLevelId')" :class="{
     edit: 'edit',

@@ -320,23 +320,6 @@ onMounted(async () => {
               <el-input v-model="form.name" placeholder="请输入姓名" clearable />
             </el-form-item>
           </el-col>
-          <!-- <el-col :span="8">
-            <el-form-item label="区域" prop="country">
-              <ElSelect
-                v-model="form.country"
-                placeholder="请选择区域"
-                clearable
-                filterable
-                tabindex="2"
-              >
-                <ElOption
-                  v-for="item in country"
-                  :label="item.chineseName"
-                  :value="item.code"
-                ></ElOption>
-              </ElSelect>
-            </el-form-item>
-          </el-col> -->
           <el-col :span="8">
             <el-form-item label="手机号" prop="phoneNumber">
               <el-input v-model="form.phoneNumber" placeholder="请输入手机号" clearable />
@@ -347,15 +330,6 @@ onMounted(async () => {
               <el-input v-model="form.email" placeholder="请输入邮箱" clearable />
             </el-form-item>
           </el-col>
-          <!-- <el-col :span="8">
-            <el-form-item label="部门">
-              <el-select v-model="form.organizationalStructureId" placeholder="请选择部门" clearable filterable
-                @change="departmentChange">
-                <el-option v-for="item in departmentList" :key="item.id" :label="item.name" :value="item.id">
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-col> -->
           <el-col :span="8">
             <el-form-item label="职位" prop="">
               <el-select v-model="form.positionId" placeholder="请选择职位" clearable filterable @change="">
@@ -364,25 +338,11 @@ onMounted(async () => {
               </el-select>
             </el-form-item>
           </el-col>
-          <!-- <el-text><el-button type="primary" link size="default" @click="routerPosition">职位管理</el-button></el-text> -->
           <el-col :span="8">
             <el-form-item label="初始密码" prop="">
               <el-input clearable value="123456" disabled />
             </el-form-item>
           </el-col>
-          <!-- <el-col :span="8">
-            <el-form-item label="是否启用" prop="active">
-              <el-switch
-                v-model="form.active"
-                inline-prompt
-                active-text="开启"
-                inactive-text="关闭"
-                :active-value="true"
-                :inactive-value="false"
-              >
-              </el-switch>
-            </el-form-item>
-          </el-col> -->
         </el-row>
       </el-card>
       <el-card class="box-card">
@@ -390,12 +350,6 @@ onMounted(async () => {
           <div class="card-header">
             <div class="leftTitle">
               部门信息
-              <!-- <span v-if="form.enableChargePerson" style="margin-left: 20px; font-size: 14px">负责人:<el-text
-                  v-for="item in staffList" :key="item.id">
-                  <el-text v-if="item.id === form.id">
-                    {{ item.name }}
-                  </el-text>
-                </el-text></span> -->
             </div>
           </div>
         </template>
@@ -416,19 +370,6 @@ onMounted(async () => {
           </div>
         </template>
         <el-row :gutter="24">
-          <!-- <el-form-item label="分配角色:">
-            <el-radio-group v-if="munulevs?.length" v-model="form.role">
-              <el-radio v-for="item in munulevs" :key="item.id" :value="item.roleName"
-                :label="item.roleName"></el-radio>
-            </el-radio-group>
-            <el-text v-else>暂无数据</el-text>
-          </el-form-item> -->
-          <!-- <el-checkbox-group v-if="munulevs?.length" v-model="form.roleList" @change="handleCheckboxChange">
-            <el-checkbox v-for="item in munulevs" :key="item.id" :label="item.roleName" :value="item.roleName">
-              {{ item.roleName }}
-            </el-checkbox>
-          </el-checkbox-group>
-          <el-text v-else>暂无数据</el-text> -->
           <el-form-item label="分配角色:">
             <el-checkbox-group style="margin-left: 1.5rem;" v-if="munulevs?.length" v-model="form.roleList" @change="handleCheckboxChange">
               <el-checkbox v-for="item in munulevs" :key="item.id" :label="item.roleName" :value="item.roleName">

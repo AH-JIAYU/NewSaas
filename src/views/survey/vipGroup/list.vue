@@ -128,6 +128,7 @@ async function fetchData() {
       params.beginTime = queryForm.time[0] || "";
       params.endTime = queryForm.time[1] || "";
     }
+    delete params.time
     const { data } = await api.list(params);
     list.value = data.getMemberGroupInfoList;
     pagination.value.total = data.total;

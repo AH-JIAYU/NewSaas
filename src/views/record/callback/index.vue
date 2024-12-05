@@ -84,6 +84,7 @@ async function fetchData() {
       params.beginTime = queryForm.time[0] || "";
       params.endTime = queryForm.time[1] || "";
     }
+    delete params.time
     const res = await api.list(params);
     list.value = res.data.customerCallbackRecordInfoList;
     pagination.value.total = res.data.total;

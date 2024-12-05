@@ -156,6 +156,7 @@ async function fetchData() {
     } else {
       params.countryId = []
     }
+    delete params.time
     const res = await api.list(params);
     countryType.value = res.data.currencyType;
     list.value = res.data.getMemberProjectListInfoList;

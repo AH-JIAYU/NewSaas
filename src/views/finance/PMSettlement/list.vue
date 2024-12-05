@@ -91,6 +91,7 @@ async function fetchData() {
       ...getParams(),
       ...queryForm.value,
     };
+    delete params.time
     const res = await api.queryOrganizationalStructureSettlementRecordList(params);
 
     list.value = res.result;

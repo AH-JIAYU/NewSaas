@@ -255,6 +255,7 @@ async function fetchData() {
       params.beginTime = params.time[0] || "";
       params.endTime = params.time[1] || "";
     }
+    delete params.time
     // if (queryForm.settlementStatus) {
     //   params.settlementStatus = [params.settlementStatus];
     // } else {

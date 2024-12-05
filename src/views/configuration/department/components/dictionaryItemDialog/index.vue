@@ -2,6 +2,7 @@
 import type { FormInstance, FormRules } from "element-plus";
 import { ElMessage } from "element-plus";
 import api from "@/api/modules/tenantDictionary";
+
 // 父级传递的数据
 const props = withDefaults(
   defineProps<{

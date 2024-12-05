@@ -102,15 +102,6 @@ async function onSubmit() {
           // 将数据制空
           form.value.organizationalStructurePersonList = []
           // 筛选出需要的格式
-          // const result = validateCommissions(filteredUsers.value)
-          // if (!result) {
-          //   ElMessage.warning({
-          //     message: "提成比例必须是正整数",
-          //     center: true,
-          //   });
-          //   loading.value = false;
-          //   return
-          // }
           if (
             form.value.commissionStatus === 1 &&
             !/^[1-9]\d*$/.test(form.value.commission)
@@ -127,19 +118,11 @@ async function onSubmit() {
               const obj = {
                 id: item.id,
                 userId: item.userId,
-                // commission: item.commission || 0,
-                // commissionTime: item.commissionTime || 1,
-                // commissionStatus: item.commissionStatus,
-                // commissionType: item.commissionType || 1,
               }
               form.value.organizationalStructurePersonList.push(obj)
             } else {
               const obj = {
                 userId: item.id,
-                // commission: item.commission || 0,
-                // commissionTime: item.commissionTime || 1,
-                // commissionStatus: item.commissionStatus,
-                // commissionType: item.commissionType || 1,
               }
               form.value.organizationalStructurePersonList.push(obj)
             }

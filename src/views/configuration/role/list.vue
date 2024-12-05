@@ -221,7 +221,6 @@ onMounted(() => {
                   current: row.id === current,
                 }"
               />
-              <!-- <copy class="copy" :content="row.id" /> -->
             </div>
           </template>
         </ElTableColumn>

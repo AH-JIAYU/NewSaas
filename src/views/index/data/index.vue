@@ -115,6 +115,7 @@ async function getDataList() {
     params.overviewStart = params.overviewTime[0];
     params.overviewEnd = params.overviewTime[1];
   }
+  delete params.overviewTime
   if (data.value.activeName === "report") {
     api.reportList(params).then((res: any) => {
       data.value.loading = false;

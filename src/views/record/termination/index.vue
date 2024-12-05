@@ -97,6 +97,7 @@ async function fetchData() {
       params.beginTime = queryForm.value.time[0] || "";
       params.endTime = queryForm.value.time[1] || "";
     }
+    delete params.time
     const res = await api.list(params);
     list.value = res.data.projectTerminationScreenDetailInfoList;
     pagination.value.total = res.data.total;
