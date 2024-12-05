@@ -295,7 +295,6 @@ async function onExport() {
 
     const name = "项目结算列表.xlsx";
     await fileExport(list, name);
-
   } catch (error) {
     console.error("导出失败", error);
   }
@@ -361,7 +360,7 @@ onMounted(async () => {
       option: "settlementStatus",
       optionLabel: "label",
       optionValue: "value",
-      multiple:true,
+      multiple: true,
     },
     // {
     //   index: 7,
@@ -507,7 +506,7 @@ function handleMoreStatus(row: any) {
               <p class="oneLine tableBig">
                 {{ row.projectName ? row.projectName : "-" }}
               </p>
-              <div class="oneLine" style="color:#333333">
+              <div class="oneLine" style="color: #333333">
                 {{
                   row.customerName.split("/")[1] !== "null"
                     ? row.customerName.split("/")[1]
@@ -530,7 +529,7 @@ function handleMoreStatus(row: any) {
               <b class="tableBig">{{ row.customerName.split("/")[0] }}</b>
               <div class="oneLine" v-if="row.projectType !== 2">
                 <!-- <img :src="row.avatar" alt="" class="avatar" /> -->
-                <span style="color:#333333">PM：{{ row.userName }}</span>
+                <span style="color: #333333">PM：{{ row.userName }}</span>
               </div>
             </div>
           </template>
@@ -689,7 +688,7 @@ function handleMoreStatus(row: any) {
             <div style="display: flex" class="oneLine">
               <el-text v-if="row.status === 1" class="mx-1 tableBig flex-c">
                 <el-button
-                  style="margin-right: 5px; background-color: #FFAC54"
+                  style="margin-right: 5px; background-color: #ffac54"
                   size="small"
                   class="p-1"
                   type="warning"
@@ -852,9 +851,11 @@ function handleMoreStatus(row: any) {
               >
                 结算编辑
               </el-button>
+              <!-- 已审核2/已结算4/已开票3 -->
               <el-button
                 type="danger"
                 size="small"
+                v-if="row.status == 2 || row.status == 4 || row.status == 3"
                 plain
                 @click="handleMoreOperating('refundDetails', row)"
               >
