@@ -106,7 +106,6 @@ function homePage(row: any, title: any = "编辑") {
 }
 //设置为自定义模版
 async function homeMyPage(row: any) {
-  console.log(row,'rrr')
   const params = {
     "title":row.title,
     "css":row.css,
@@ -234,13 +233,16 @@ onBeforeUnmount(() => {
             {{ row.isSet ? '是' : '否' }}
           </template>
         </ElTableColumn>
-        <ElTableColumn label="操作" width="250" align="left" fixed="right">
+        <ElTableColumn label="操作" width="350" align="left" fixed="right">
           <template #default="scope">
             <ElButton v-if="!scope.row.isSet" type="primary" size="small" plain @click="setHomePage(scope.row)">
               设置为主页
             </ElButton>
             <ElButton type="primary" size="small" plain @click="homeMyPage(scope.row)">
               设置为自定义模版
+            </ElButton>
+            <ElButton type="primary" size="small" plain @click="homePage(scope.row,'')">
+              查看
             </ElButton>
           </template>
         </ElTableColumn>
