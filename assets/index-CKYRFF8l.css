@@ -1,0 +1,9 @@
+
+/**
+ * 由 Fantastic-admin 提供技术支持
+ * Powered by Fantastic-admin
+ * Gitee  https://fantastic-admin.gitee.io
+ * Github https://fantastic-admin.github.io
+ */
+
+.flex-c[data-v-4a19db51]{display:flex;justify-content:center;align-items:center}.card-header[data-v-4a19db51]{display:flex;justify-content:space-between;align-items:center}.card-header .rightStatus[data-v-4a19db51]{position:relative;width:128px}.card-header .rightStatus>div[data-v-4a19db51]{width:120px;height:2.2rem;line-height:2.2rem;text-align:center;border-radius:.3rem;color:#fff;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:20.8px}.card-header .rightStatus>div[data-v-4a19db51]:before{position:absolute;left:50%;top:50%;width:60%;border-radius:50%;transform:translate(-50%,-50%);aspect-ratio:1/1;content:""}.card-header .rightStatus>div[data-v-4a19db51]:after{position:absolute;left:50%;top:50%;width:50%;border-radius:50%;transform:translate(-50%,-50%);aspect-ratio:1/1;content:""}.card-header .rightStatus>div.isOnlineTrue[data-v-4a19db51]{background-color:#70b51a}.card-header .rightStatus>div.isOnlineTrue[data-v-4a19db51]:after,.card-header .rightStatus>div.isOnlineTrue[data-v-4a19db51]:before{border:1px #70b51a dashed}.card-header .rightStatus>div.isOnlineFalse[data-v-4a19db51]{background-color:#d8261a}.card-header .rightStatus>div.isOnlineFalse[data-v-4a19db51]:after,.card-header .rightStatus>div.isOnlineFalse[data-v-4a19db51]:before{border:1px #d8261a dashed}.avatar[data-v-4a19db51]{display:flex;justify-content:center;align-items:center;width:60px;height:60px;background-color:#638282;color:#fff;font-weight:700;border-radius:50%}
