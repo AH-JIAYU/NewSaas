@@ -200,7 +200,7 @@ function onSubmit() {
             active,
             type,
             role,
-            positionId,
+            positionId :form.value.positionId ? form.value.positionId:'',
             organizationalStructureId,
             userName,
           };
@@ -315,7 +315,7 @@ onMounted(async () => {
         <el-row :gutter="24">
           <el-col :span="8">
             <el-form-item label="用户名" prop="userName">
-              <el-input v-model="form.userName" :maxlength="20" placeholder="请输入用户名" clearable />
+              <el-input v-model="form.userName" :maxlength="20" placeholder="请输入用户名" clearable :disabled="props.id"/>
             </el-form-item>
           </el-col>
           <el-col :span="8">
