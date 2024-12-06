@@ -5,7 +5,7 @@ import cloneDeep from "lodash-es/cloneDeep";
 import api from "@/api/modules/configuration_role";
 import useRouteStore from "@/store/modules/route";
 import useRoleButtonStore from "@/store/modules/get_role_button";
-
+import { ElLoading } from "element-plus";
 // 父级传递数据
 const props = defineProps(["id", "row"]);
 // 路由 store
@@ -14,6 +14,7 @@ const routeStore = useRouteStore();
 const roleButton = useRoleButtonStore();
 // 加载
 const loading = ref(false);
+const loading1 = ref(false);
 const formRef = ref<any>();
 // tree ref
 const treeRef = ref<any>();
@@ -38,7 +39,7 @@ const form = ref<any>({
 const formRules = ref<FormRules>({
   roleName: [{ required: true, message: "请输入角色名称", trigger: "blur" }],
 });
-
+const loadingInstance = ref<any>(null);
 onMounted(async () => {
   try {
     loading.value = true;
@@ -61,37 +62,48 @@ onMounted(async () => {
     loading.value = false;
   }
 });
+const eleDivRef = ref();
 // 切换全选/取消全选
 const toggleCheckAll = () => {
-  if (form.value.checkAll) {
-    // 全选：将所有节点的key添加到checkedKeys中
-    form.value.menuId = [];
-    form.value.permission = [];
-    if (menuData.value.length) {
-      menuData.value.forEach((item: any) => {
-        form.value.menuId.push(item.id);
-      });
-    }
-    if (permissionData.value.length) {
-      permissionData.value.forEach((item: any) => {
-        form.value.permission.push(item.id);
-      });
-    }
+  loadingInstance.value = ElLoading.service({
+    target: eleDivRef.value, // 将加载效果应用于指定的元素
+    text: "正在加载中...",
+    spinner: "el-icon-loading",
+    background: "rgba(0, 0, 0, 0.7)",
+    customClass: "custom-target-loading",
+    lock: true, // 锁定界面，防止用户点击
+    fullscreen: true,
+  });
+  setTimeout(() => {
+    if (form.value.checkAll) {
+      // 全选：将所有节点的key添加到checkedKeys中
+      form.value.menuId = [];
+      form.value.permission = [];
+      if (menuData.value.length) {
+        menuData.value.forEach((item: any) => {
+          form.value.menuId.push(item.id);
+        });
+      }
+      if (permissionData.value.length) {
+        permissionData.value.forEach((item: any) => {
+          form.value.permission.push(item.id);
+        });
+      }
 
       treeRef.value.setCheckedNodes([
         ...form.value.permission,
         ...form.value.menuId,
       ]);
-
-  } else {
-    form.value.checkAll = false;
-    // 取消全选：清空checkedKeys
-    form.value.menuId = [];
-    form.value.permission = [];
-
+    } else {
+      form.value.checkAll = false;
+      // 取消全选：清空checkedKeys
+      form.value.menuId = [];
+      form.value.permission = [];
       treeRef.value.setCheckedNodes([]); // 清除所有勾选项
+    }
 
-  }
+    loadingInstance.value.close();
+  }, 2000);
 };
 
 // 回显form
@@ -204,7 +216,7 @@ defineExpose({
 </script>
 
 <template>
-  <div v-loading="loading">
+  <div v-loading="loading" ref="eleDivRef">
     <ElForm ref="formRef" :model="form" :rules="formRules" label-width="120px">
       <ElFormItem label="角色名称" prop="roleName">
         <ElInput v-model="form.roleName" placeholder="请输入角色名称" />
@@ -257,6 +269,10 @@ defineExpose({
 </template>
 
 <style lang="scss" scoped>
+/* 自定义目标元素上的加载效果 */
+.custom-target-loading .el-loading-mask {
+  background-color: rgba(0, 0, 0, 0.2) !important;
+}
 :deep {
   .el-tree {
     overflow: hidden;
