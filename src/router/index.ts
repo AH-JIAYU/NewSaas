@@ -211,7 +211,6 @@ router.afterEach((to, from) => {
     // 判断离开页面是否开启缓存，如果开启，则根据缓存规则判断是否需要清空 keep-alive 全局状态里离开页面的 name 信息
     if (from.meta.cache && !from.meta.iframe) {
       const componentName = from.matched.at(-1)?.components?.default.name;
-      console.log(from.meta.cache,'from.meta.cache')
       if (componentName) {
         // 通过 meta.cache 判断针对哪些页面进行缓存
         // switch (typeof from.meta.cache) {
