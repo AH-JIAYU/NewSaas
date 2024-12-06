@@ -18,9 +18,12 @@ import subsidiaryDepartment from "./components/subsidiary_department/index.vue";
 import DictionaryItemDia from "./components/dictionaryItemDialog/index.vue";
 import userDialog from "./components/userDialog/index.vue";
 import Detail from "@/views/configuration/department/components/Detail/index.vue";
+import { columns } from './components/configuration/index.ts'
+
 defineOptions({
   name: "department",
 });
+
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
 interface Dict {
@@ -47,45 +50,8 @@ interface Dict {
   code: string;
   children?: Dict[];
 }
-const columns = ref<any>([
-  {
-    label: "员工ID",
-    prop: "id",
-    sortable: true,
-    checked: true,
-  },
-  {
-    label: "用户名",
-    prop: "userName",
-    sortable: true,
-    checked: true,
-  },
-  // { label: "姓名", prop: "name", sortable: true, checked: true },
-  // { label: "区域", prop: "country", sortable: true, checked: true },
-  { label: "电话号码", prop: "phoneNumber", sortable: true, checked: true },
-  { label: "邮箱", prop: "email", sortable: true, checked: true },
-  { label: "部门", prop: "departmentId", sortable: true, checked: true },
-  { label: "职位", prop: "positionId", sortable: true, checked: true },
-  { label: "小组", prop: "groupId", sortable: true, checked: true },
-  { label: "状态", prop: "active", sortable: true, checked: true },
-]);
-// 状态
-const activeList: any = [
-  {
-    label: "启用",
-    value: true,
-  },
-  {
-    label: "禁用",
-    value: false,
-  },
-];
-const defaultProps: any = {
-  children: "children",
-  label: "name",
-  // disabled : "distribution",
-};
-// listLoading
+
+// listLoading加载
 const listLoading = ref(false);
 // userRef
 const userRef = ref();
@@ -143,8 +109,9 @@ const userForm = ref<any>({
     level: 1,
   },
 });
+
 const dictionaryRef = ref();
-// 部门
+// 部门数据
 const dictionary = ref({
   search: {
     name: "",
@@ -178,7 +145,6 @@ const subsidiaryDictionary = ref({
   row: "",
   loading: false,
 });
-const dictionaryItemRef = ref();
 // 部门下的数据
 const dictionaryItem = ref<any>({
   loading: false,
@@ -205,8 +171,10 @@ async function getDictionaryList() {
       ...dictionary.value.search,
     };
     const res = await api.list(params);
-    dictionary.value.tree = sortTreeByTime(res.data);
-    dictionary.value.loading = false;
+    if(res.data) {
+      dictionary.value.tree = sortTreeByTime(res.data);
+      dictionary.value.loading = false;
+    }
   } catch (error) {
 
   } finally {
@@ -214,38 +182,40 @@ async function getDictionaryList() {
   }
 }
 // 递归排序函数
-const sortTreeByTime = (nodes:any) => {
-      // 先对当前层的节点进行排序
-      nodes.sort((a:any, b:any) => {
-        const timeA:any = new Date(a['createTime']);
-        const timeB:any = new Date(b['createTime']);
-        return  timeA - timeB ;
-      });
-      // 然后递归处理每个子节点
-      nodes.forEach((node:any) => {
-        if (node.children && node.children.length > 0) {
-          sortTreeByTime(node.children);
-        }
-      });
-
-      return nodes;
-    };
+const sortTreeByTime = (nodes: any) => {
+  // 先对当前层的节点进行排序
+  nodes.sort((a: any, b: any) => {
+    const timeA: any = new Date(a['createTime']);
+    const timeB: any = new Date(b['createTime']);
+    return timeB - timeA;
+  });
+  // 然后递归处理每个子节点
+  nodes.forEach((node: any) => {
+    if (node.children && node.children.length > 0) {
+      sortTreeByTime(node.children);
+    }
+  });
+  return nodes;
+};
 
 onMounted(() => {
   getDictionaryList();
 });
+
 watch(
   () => dictionary.value.search,
   (val) => {
     dictionaryRef.value!.filter(val);
   }
 );
+
 function dictionaryFilter(value: string, data: Dict) {
   if (!value) {
     return true;
   }
   return data.label.includes(value);
 }
+
 // 新增部门
 function dictionaryAdd(data?: Dict) {
   dictionary.value.currentData = data;
@@ -296,6 +266,7 @@ function dictionaryClick(data: any) {
   }
   dictionaryItem.value.search.organizationalStructureId = data.id;
 }
+
 // 监听id变化
 watch(
   () => dictionaryItem.value.search.organizationalStructureId,
@@ -309,7 +280,6 @@ async function getDictionaryItemList() {
   try {
     listLoading.value = true;
     const params = {
-      // ...getParams(),
       ...dictionaryItem.value.search,
     };
     const res = await api.itemlist(params);
@@ -319,7 +289,7 @@ async function getDictionaryItemList() {
       dictionaryItem.value.dataList.forEach((item: any) => {
         item.enableLoading = false;
       });
-      pagination.value.total = res.data.length || 0;
+      pagination.value.total = res.data.length ? res.data.length : 0;
     }
   } catch (error) {
 
@@ -328,35 +298,6 @@ async function getDictionaryItemList() {
   }
 }
 
-// 删除
-function onDelete(row: any) {
-  ElMessageBox.confirm(`确认删除「${row.name}」吗？`, "确认信息")
-    .then(() => {
-      api.delete([row.id]).then(() => {
-        getDictionaryItemList();
-        ElMessage.success({
-          message: "删除成功",
-          center: true,
-        });
-      });
-    })
-    .catch(() => { });
-}
-// 批量删除
-function onDeleteMulti(rows: any[]) {
-  const ids = rows.map((item) => item.id);
-  ElMessageBox.confirm(`确认删除选中的 ${rows.length} 条数据吗？`, "确认信息")
-    .then(() => {
-      api.delete(ids).then(() => {
-        getDictionaryItemList();
-        ElMessage.success({
-          message: "删除成功",
-          center: true,
-        });
-      });
-    })
-    .catch(() => { });
-}
 onMounted(async () => {
   try {
     // loading加载开始
@@ -367,7 +308,7 @@ onMounted(async () => {
     departmentList.value = await departmentStore?.getDepartment() || [];
     // 职位
     positionManageList.value = await usePositionManage?.getPositionManage() || [];
-    columns.value.forEach((item: any) => {
+    columns.forEach((item: any) => {
       if (item.checked) {
         userForm.value.checkList.push(item.prop);
       }
@@ -454,6 +395,7 @@ function currentChangeUser(page = 1) {
 function sortChangeUser({ prop, order }: { prop: string; order: string }) {
   onSortChange(prop, order).then(() => getDictionaryItemList());
 }
+
 // 新增
 function create(row?: any) {
   userForm.value.dialog.id = "";
@@ -464,10 +406,12 @@ function create(row?: any) {
     userForm.value.dialog.level = Number(row.level) + 1;
   }
 }
+
 // 选中列表
 const selectChange = (val: any) => {
   resetList.value = val[0]
 }
+
 // 重置密码
 function onResetPassword() {
   if (resetList.value) {
@@ -494,10 +438,12 @@ function edit(row: any) {
   userForm.value.dialog.id = row.id;
   userForm.value.dialog.visible = true;
 }
+
 // 详情
 function onDetail(row: any) {
   detailRef.value.showEdit(row);
 }
+
 // 重置数据
 function onReset() {
   Object.assign(userForm.value.search, {
@@ -508,6 +454,7 @@ function onReset() {
   });
   getDictionaryItemList();
 }
+
 //表格当前选中
 const current = ref<any>();
 
@@ -545,9 +492,9 @@ function handleCurrentChange(val: any) {
                   </div>
                   <div class="code">
                     <template v-for="item in data?.organizationalStructurePersonList" :key="item.userId">
-                        <span v-if="item.enableChargePerson == 1" style="margin-right: 0.3rem;">
-                          {{ item.userName }}
-                        </span>
+                      <span v-if="item.enableChargePerson == 1" style="margin-right: 0.3rem;">
+                        {{ item.userName }}
+                      </span>
 
                     </template>
                   </div>
@@ -587,7 +534,7 @@ function handleCurrentChange(val: any) {
           <ElTable v-loading="listLoading" ref="userItemRef" :data="userForm.dataList" :border="userForm.border"
             :size="userForm.lineHeight" :stripe="userForm.stripe" highlight-current-row height="100%"
             @sort-change="sortChangeUser" @selection-change="userForm.selectionDataList = $event" row-key="id"
-            default-expand-all @select="selectChange"      @current-change="handleCurrentChange">
+            default-expand-all @select="selectChange" @current-change="handleCurrentChange">
             <ElTableColumn type="selection" align="left" fixed />
             <ElTableColumn v-if="userForm.checkList.includes('active')" align="left" prop="active" label="状态">
               <template #default="scope">
@@ -599,23 +546,16 @@ function handleCurrentChange(val: any) {
               <template #default="{ row }">
                 <div class="copyId tableSmall">
                   <div class="id oneLine idFont">
-                    <el-tooltip
-                  effect="dark"
-                  :content="row.id"
-                  placement="top-start"
-                >
-                  {{ row.id }}
-                </el-tooltip>
+                    <el-tooltip effect="dark" :content="row.id" placement="top-start">
+                      {{ row.id }}
+                    </el-tooltip>
 
 
                   </div>
-                  <copy
-                :content="row.id"
-                :class="{
-                  rowCopy: 'rowCopy',
-                  current: row.id === current,
-                }"
-              />
+                  <copy :content="row.id" :class="{
+              rowCopy: 'rowCopy',
+              current: row.id === current,
+            }" />
                 </div>
               </template>
             </ElTableColumn>
@@ -623,15 +563,18 @@ function handleCurrentChange(val: any) {
               label="用户名">
               <template #default="{ row }">
                 <div style="display: flex; align-items: center">
-                  <svg xmlns="http://www.w3.org/2000/svg" v-if="row.enableChargePerson === 1" style="margin-top: 2px; margin-right: 7px;" width="20" height="20" viewBox="0 0 20 20" fill="none">
-<g id="Group 18384">
-<circle id="Ellipse 105" cx="10" cy="10" r="10" fill="#F8BB4F"/>
-<path id="ç®¡" d="M13.9946 9.3605V12.1892H7.43481V12.9031H14.6277V16.4995H13.3481V16.0146H7.43481V16.486H6.15517V9.3605H13.9946ZM7.43481 14.8831H13.3481V13.9133H7.43481V14.8831ZM7.43481 11.1655H12.7419V10.3842H7.43481V11.1655ZM15.8534 7.67677V10.2495H14.6008V8.75436H5.52209V10.2495H4.2694V7.67677H9.48222C9.37446 7.40738 9.25323 7.16492 9.13201 6.9494L10.2635 6.76083L10.0345 6.61266C10.6541 5.80447 11.1121 4.9424 11.3815 4.01298L12.6072 4.28238C12.5264 4.51136 12.4591 4.72688 12.3782 4.9424H16.1228V6.06039H13.9273C14.1428 6.35673 14.3179 6.65307 14.4661 6.92246L13.3346 7.34003C13.1191 6.90899 12.8631 6.47796 12.5668 6.06039H11.8799C11.6509 6.5049 11.3949 6.92246 11.1121 7.29962L10.4655 6.88206C10.5733 7.12451 10.6676 7.39391 10.7753 7.67677H15.8534ZM6.08782 6.06039C5.79149 6.54531 5.46821 7.00328 5.118 7.42085L4 6.72042C4.78125 5.88529 5.33351 4.96934 5.67026 3.99951L6.89601 4.26891C6.81519 4.4979 6.72091 4.72688 6.64009 4.9424H10.0345V6.06039H8.01401C8.25647 6.39714 8.47198 6.72042 8.63362 7.03022L7.46175 7.47473C7.23276 6.98981 6.97683 6.51837 6.6805 6.06039H6.08782Z" fill="white"/>
-</g>
-</svg>
-                <el-text class="tableBig">
-                  {{ row.userName ? row.userName : "-" }}
-                </el-text>
+                  <svg xmlns="http://www.w3.org/2000/svg" v-if="row.enableChargePerson === 1"
+                    style="margin-top: 2px; margin-right: 7px;" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <g id="Group 18384">
+                      <circle id="Ellipse 105" cx="10" cy="10" r="10" fill="#F8BB4F" />
+                      <path id="ç®¡"
+                        d="M13.9946 9.3605V12.1892H7.43481V12.9031H14.6277V16.4995H13.3481V16.0146H7.43481V16.486H6.15517V9.3605H13.9946ZM7.43481 14.8831H13.3481V13.9133H7.43481V14.8831ZM7.43481 11.1655H12.7419V10.3842H7.43481V11.1655ZM15.8534 7.67677V10.2495H14.6008V8.75436H5.52209V10.2495H4.2694V7.67677H9.48222C9.37446 7.40738 9.25323 7.16492 9.13201 6.9494L10.2635 6.76083L10.0345 6.61266C10.6541 5.80447 11.1121 4.9424 11.3815 4.01298L12.6072 4.28238C12.5264 4.51136 12.4591 4.72688 12.3782 4.9424H16.1228V6.06039H13.9273C14.1428 6.35673 14.3179 6.65307 14.4661 6.92246L13.3346 7.34003C13.1191 6.90899 12.8631 6.47796 12.5668 6.06039H11.8799C11.6509 6.5049 11.3949 6.92246 11.1121 7.29962L10.4655 6.88206C10.5733 7.12451 10.6676 7.39391 10.7753 7.67677H15.8534ZM6.08782 6.06039C5.79149 6.54531 5.46821 7.00328 5.118 7.42085L4 6.72042C4.78125 5.88529 5.33351 4.96934 5.67026 3.99951L6.89601 4.26891C6.81519 4.4979 6.72091 4.72688 6.64009 4.9424H10.0345V6.06039H8.01401C8.25647 6.39714 8.47198 6.72042 8.63362 7.03022L7.46175 7.47473C7.23276 6.98981 6.97683 6.51837 6.6805 6.06039H6.08782Z"
+                        fill="white" />
+                    </g>
+                  </svg>
+                  <el-text class="tableBig">
+                    {{ row.userName ? row.userName : "-" }}
+                  </el-text>
                 </div>
               </template>
             </ElTableColumn>
@@ -662,7 +605,7 @@ function handleCurrentChange(val: any) {
               label="部门">
               <template #default="{ row }">
 
-                <el-text class="fontC-System" >{{ row.organizationalStructureName ? row.organizationalStructureName : "-"
+                <el-text class="fontC-System">{{ row.organizationalStructureName ? row.organizationalStructureName : "-"
                   }}</el-text>
 
               </template>
@@ -720,21 +663,26 @@ function handleCurrentChange(val: any) {
 
 <style lang="scss" scoped>
 .copyId .idFont {
-font-size: .875rem;
+  font-size: .875rem;
 }
-.copyId  .current {
-    display: block !important;
-  }
+
+.copyId .current {
+  display: block !important;
+}
+
 .rowCopy {
   width: 20px;
   display: none;
 }
-.copyId  .current {
-    display: block !important;
-  }
+
+.copyId .current {
+  display: block !important;
+}
+
 .el-table__row:hover .rowCopy {
   display: block;
 }
+
 .absolute-container {
   position: absolute;
   display: flex;

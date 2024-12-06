@@ -5,7 +5,6 @@ import api from "@/api/modules/configuration_manager";
 import apiDep from "@/api/modules/department";
 import apiPos from "@/api/modules/position_manage";
 import apiRole from '@/api/modules/configuration_role'
-import useTenantRoleStore from "@/store/modules/tenant_role";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary";
 import useTenantStaffStore from "@/store/modules/configuration_manager";
 
@@ -18,8 +17,6 @@ const positionManageList = ref<any>();
 // 区域
 const useStoreCountry = useBasicDictionaryStore();
 const country = ref();
-// 角色码
-const roleStore = useTenantRoleStore();
 // 角色
 const munulevs = ref();
 // 部门数据
@@ -29,23 +26,28 @@ const disabled = ref(false);
 // 判断手机号或邮箱是否变动
 const isEmail = ref<any>();
 const isPhone = ref<any>();
+// 父级传递数据
 const props: any = defineProps(['catalogueId', 'parentId', 'id', 'tree', 'dataList', 'row', 'level'])
 // 更新数据
 const emits = defineEmits(["success", "getList"]);
 // tree ref
 const treeRef = ref<any>();
+// 弹框开关
 const visible = defineModel<boolean>({
   default: false,
 });
 // 弹窗标题
 const title = computed(() => (props.id === "" ? "新增用户" : "编辑用户"));
+// 树的配置项
 const defaultProps: any = {
   children: "children",
   label: "name",
   // disabled : "distribution",
 };
+// formRef
 const formRef = ref<any>();
-const flat = ref([]); // 扁平化
+// 扁平化
+const flat = ref([]);
 // 表单
 const form = ref<any>({
   id: props.id,
@@ -73,7 +75,9 @@ const form = ref<any>({
   // 部门id
   organizationalStructureId: '',
 });
+// 部门id
 const departmentId = ref<any>([])
+
 // 自定义校验手机号
 const validatePhone = (rule: any, value: any, callback: any) => {
   const regExpPhone: any =
@@ -118,6 +122,7 @@ const formRules = ref<FormRules>({
   phone: [{ validator: validatePhone, trigger: "blur" },],
   email: [{ validator: validateEmail, trigger: "blur" },],
 });
+
 // 处理选中项变化的逻辑，确保最多只能选择一个
 const handleCheckboxChange = (newValue: any) => {
   if (Array.isArray(newValue) && newValue.length > 1) {
@@ -235,14 +240,17 @@ const flattenDeep = (arr: any) => {
 const handleNodeClick = (nodeData: any, checked: any) => {
   if (checked) {
     // 选中新的节点时，取消其他选中的节点
-    const checkedKeys = treeRef.value.getCheckedKeys(); // 获取当前所有选中的节点
+    // 获取当前所有选中的节点
+    const checkedKeys = treeRef.value.getCheckedKeys();
     checkedKeys.forEach((key: any) => {
       if (key !== nodeData.id) {
-        treeRef.value.setChecked(key, false); // 取消选中其他节点
+        // 取消选中其他节点
+        treeRef.value.setChecked(key, false);
       }
     });
     // 更新当前选中的节点 ID
-    departmentId.value = [nodeData.id]; // 只保留当前选中节点 ID
+    // 只保留当前选中节点 ID
+    departmentId.value = [nodeData.id];
   } else {
     // 如果取消选中节点，更新 departmentId
     departmentId.value = departmentId.value.filter((id: any) => id !== nodeData.id);
@@ -259,8 +267,10 @@ onMounted(async () => {
     name: "",
     active: null
   })
-  // 职位
-  positionManageList.value = data.data
+  if (data) {
+    // 职位
+    positionManageList.value = data.data
+  }
   // 用户
   staffList.value = await tenantStaffStore.getStaff();
   // 角色
@@ -276,10 +286,6 @@ onMounted(async () => {
   }
   // 区域
   country.value = await useStoreCountry.getCountry();
-  // 默认先择对应的部门,并禁用其他部门
-  // if (departmentId.value.length > 0) {
-  //   disableAllNodes(departmentId.value[0]);
-  // }
   // 编辑
   if (props.id !== "" && props.row) {
     formRules.value.password = [];
@@ -373,7 +379,8 @@ onMounted(async () => {
         </template>
         <el-row :gutter="24">
           <el-form-item label="分配角色:">
-            <el-checkbox-group style="margin-left: 1.5rem;" v-if="munulevs?.length" v-model="form.roleList" @change="handleCheckboxChange">
+            <el-checkbox-group style="margin-left: 1.5rem;" v-if="munulevs?.length" v-model="form.roleList"
+              @change="handleCheckboxChange">
               <el-checkbox v-for="item in munulevs" :key="item.id" :label="item.roleName" :value="item.roleName">
                 {{ item.roleName }}
               </el-checkbox>

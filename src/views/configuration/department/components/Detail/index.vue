@@ -28,12 +28,17 @@ const defaultProps: any = {
 };
 // 部门数据
 const departmentList = ref<any>();
+// 定义表单数据
 const form = ref<any>({})
+// 通知更新列表
 const emit = defineEmits(["fetch-data"]);
+// 弹框开关
 const drawerisible = ref<boolean>(false);
 // 详情数据
 const departmentId = ref<any>([]);
 const detailData = ref<any>();
+
+// 修改事件
 async function showEdit(row: any) {
   form.value = row
   const params = {
@@ -48,6 +53,7 @@ async function showEdit(row: any) {
   drawerisible.value = true;
 }
 
+// 关闭弹框事件
 function close() {
   emit("fetch-data");
   drawerisible.value = false;
@@ -237,11 +243,7 @@ defineExpose({
 <template #footer>
         <div class="flex-c">
           <el-button type="primary" @click="close"> 关闭 </el-button>
-
-
         </div>
-
-
       </template>
 </el-drawer>
 </template>
@@ -252,6 +254,7 @@ defineExpose({
   justify-content: center;
   align-items: center;
 }
+
 .card-header {
   display: flex;
   justify-content: space-between;

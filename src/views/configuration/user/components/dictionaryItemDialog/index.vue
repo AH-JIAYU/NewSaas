@@ -34,11 +34,13 @@ const props: any = defineProps(['catalogueId', 'parentId', 'id', 'tree', 'dataLi
 const emits = defineEmits(["success", "getList"]);
 // tree ref
 const treeRef = ref<any>(null);
+// 弹框开关
 const visible = defineModel<boolean>({
   default: false,
 });
 // 弹窗标题
 const title = computed(() => (props.id === "" ? "新增用户" : "编辑用户"));
+// 树配置项
 const defaultProps: any = {
   children: "children",
   label: "name",
@@ -47,7 +49,8 @@ const defaultProps: any = {
 //loading
 const loading = ref<any>(false)
 const formRef = ref<any>();
-const flat = ref([]); // 扁平化
+// 扁平化
+const flat = ref([]);
 // 表单
 const form = ref<any>({
   id: props.id,
@@ -242,14 +245,17 @@ const flattenDeep = (arr: any) => {
 const handleNodeClick = (nodeData: any, checked: any) => {
   if (checked) {
     // 选中新的节点时，取消其他选中的节点
-    const checkedKeys = treeRef.value.getCheckedKeys(); // 获取当前所有选中的节点
+    // 获取当前所有选中的节点
+    const checkedKeys = treeRef.value.getCheckedKeys();
     checkedKeys.forEach((key: any) => {
       if (key !== nodeData.id) {
-        treeRef.value.setChecked(key, false); // 取消选中其他节点
+        // 取消选中其他节点
+        treeRef.value.setChecked(key, false);
       }
     });
     // 更新当前选中的节点 ID
-    departmentId.value = [nodeData.id]; // 只保留当前选中节点 ID
+    // 只保留当前选中节点 ID
+    departmentId.value = [nodeData.id];
   } else {
     // 如果取消选中节点，更新 departmentId
     departmentId.value = departmentId.value.filter((id: any) => id !== nodeData.id);

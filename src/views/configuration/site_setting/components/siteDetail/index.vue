@@ -8,10 +8,13 @@ import api from "@/api/modules/configuration_site_setting";
 import axios from "axios";
 import fileDtail from "../fileDtail/index.vue";
 
+// 更新数据
 const emits = defineEmits(['fetch-data'])
+// 父级数据
 const props = defineProps(['personalizedDomainName'])
 // 分页
 const { pagination, getParams, onSizeChange, onCurrentChange } = usePagination();
+// 弹框开关
 const drawerisible = ref(false);
 // formRef
 const formRef = ref()
@@ -23,6 +26,7 @@ const listLoading = ref<boolean>(false);
 const tenantId = ref<any>();
 // 列表
 const list = ref<any>([]);
+// 定义表单
 const form = ref<any>({
   // 证书
   certificateContent: '',
@@ -126,12 +130,10 @@ async function showEdit(row: any) {
       list.value = [row]
       form.value.certificateContent = row.certificateContent
       form.value.privateKeyContent = row.privateKeyContent
-      // form.value.domain = row.personalizedDomainName
       const match = row.personalizedDomainName.match(/tenant(\d+)\.surveysaas\.(com|net)/);
       if (match) {
         tenantId.value = match[1];
       }
-      // fileList.value.forceHttps = row.forceHttps
       // 顶级域名是否生效
       form.value.isAnalysis = row.isAnalysis
       if (form.value.isAnalysis) {
@@ -206,11 +208,9 @@ const handleSubmit = async () => {
     listLoading.value = true;
     // 这里您可以处理提交的逻辑，包含上传的文件
     const payload = new FormData();
-
     if (fileList.value.certificate.length > 0) {
       payload.append('certificate', fileList.value.certificate[0].raw);
     }
-
     if (fileList.value.private_key.length > 0) {
       payload.append('private_key', fileList.value.private_key[0].raw);
     }

@@ -14,17 +14,23 @@ import empty from '@/assets/images/empty.png'
 defineOptions({
   name: "screen_library",
 });
-const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
-const otherFunctionsScreenLibraryStore = useOtherFunctionsScreenLibraryStore(); // 问卷
-const stagedDataStore = useStagedDataStore(); // 暂存
+
+//基础字典
+const basicDictionaryStore = useBasicDictionaryStore();
+// 问卷
+const otherFunctionsScreenLibraryStore = useOtherFunctionsScreenLibraryStore();
+// 暂存
+const stagedDataStore = useStagedDataStore();
 const router = useRouter();
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
 const tabbar = useTabbar();
 const settingsStore = useSettingsStore();
-const formSearchList = ref<any>()//表单排序配置
-const formSearchName = ref<string>('formSearch-screen_library')// 表单排序name
-
+//表单排序配置
+const formSearchList = ref<any>()
+// 表单排序name
+const formSearchName = ref<string>('formSearch-screen_library')
+// 定义数据
 const data = ref<any>({
   loading: false,
   // 表格是否自适应高度
@@ -81,16 +87,18 @@ function getDataList() {
       }),
     };
     api.list(params).then((res: any) => {
+      if (res.data && res.status === 1) {
+        data.value.dataList = res.data.getCountryListInfoList;
+        pagination.value.total = res.data.getCountryListInfoList.length;
+      }
       data.value.loading = false;
-      data.value.dataList = res.data.getCountryListInfoList;
-      pagination.value.total = res.data.getCountryListInfoList.length;
     });
   } catch (error) {
-
   } finally {
     data.value.loading = false;
   }
 }
+
 // 分页 后端(刘):这块不好做分页，所有返回全部数据，前端做分页
 const DataList = computed(() => {
   return data.value.dataList.slice(
@@ -98,18 +106,22 @@ const DataList = computed(() => {
     pagination.value.page * pagination.value.size
   );
 });
+
 // 每页数量切换
 function sizeChange(size: number) {
   onSizeChange(size).then(() => getDataList());
 }
+
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
   onCurrentChange(page).then(() => getDataList());
 }
+
 // 字段排序
 function sortChange({ prop, order }: { prop: string; order: string }) {
   onSortChange(prop, order).then(() => getDataList());
 }
+
 // 新增区域
 function onCreate(row?: any) {
   data.value.editProps.id = "";
@@ -117,6 +129,7 @@ function onCreate(row?: any) {
   data.value.editProps.row = "";
   data.value.editProps.visible = true;
 }
+
 // 新增问卷/标题
 function onCreateTiele(row: any) {
   row.getProjectProblemCategoryInfoList.unshift({
@@ -127,6 +140,7 @@ function onCreateTiele(row: any) {
     type: "add",
   });
 }
+
 // 新增
 function handleAdd(row: any, countryIndex: any, index: any) {
   formRef.value.validateField(
@@ -144,8 +158,8 @@ function handleAdd(row: any, countryIndex: any, index: any) {
       }
     }
   );
-  //
 }
+
 // 关闭新增那一行
 function cancel(row: any, index: number) {
   const fIndex = data.value.dataList.findIndex(
@@ -156,6 +170,7 @@ function cancel(row: any, index: number) {
     1
   );
 }
+
 // 修改默认
 async function changeIsDefault(item: any) {
   const { status } = await submitLoading(api.update(item));
@@ -167,6 +182,7 @@ async function changeIsDefault(item: any) {
   getDataList();
   stagedDataStore.projectManagementList = null;
 }
+
 // 修改状态
 async function changeStatus(item: any) {
   const { status } = await submitLoading(api.edit(item));
@@ -178,6 +194,7 @@ async function changeStatus(item: any) {
   getDataList();
   stagedDataStore.projectManagementList = null;
 }
+
 // 设计模板
 function EditSurvey(row: any) {
   otherFunctionsScreenLibraryStore.countryId = row.countryId;
@@ -207,6 +224,7 @@ function EditSurvey(row: any) {
     data.value.formModeProps.visible = true;
   }
 }
+
 // 删除区域
 function onDelCountry(row: any) {
   ElMessageBox.confirm(`确认删除「${row.countryId}」吗？`, "确认信息")
@@ -224,6 +242,7 @@ function onDelCountry(row: any) {
     .catch(() => { });
   stagedDataStore.projectManagementList = null;
 }
+
 // 删除标题
 function onDelProject(row: any) {
   ElMessageBox.confirm(`确认删除「${row.categoryName}」吗？`, "确认信息")
@@ -358,9 +377,7 @@ onBeforeUnmount(() => {
             <template #default="{ row }">
               <el-tag type="primary">{{ row.countryName }}</el-tag>
             </template>
-
           </ElTableColumn>
-
           <ElTableColumn label="操作" width="250" align="left" fixed="right">
             <template #default="scope">
               <ElButton type="primary" size="small" plain @click="onCreateTiele(scope.row)">
@@ -376,7 +393,6 @@ onBeforeUnmount(() => {
           </template>
         </ElTable>
       </el-form>
-
       <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
         :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
         background @size-change="sizeChange" @current-change="currentChange" />

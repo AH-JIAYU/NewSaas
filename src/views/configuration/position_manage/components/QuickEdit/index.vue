@@ -7,15 +7,18 @@ defineOptions({
   name: "RoleQuicEdit",
 });
 
+// 更新列表
 const emits = defineEmits(["fetch-data"]);
+// formRef
 const formRef = ref<any>()
+// 数据
 const data = ref<any>({
   dialogTableVisible: false,
   title: '',
   type: '',
   loading: '',
-  formData: {},//表单
-
+  //表单
+  formData: {},
 });
 
 const TypeList: any = {
@@ -31,15 +34,11 @@ async function showEdit(row: any, FormType: any) {
     data.value.formData = cloneDeep(row)
     data.value.dialogTableVisible = true;
     data.value.loading = false;
-
   } catch (error) {
-
   } finally {
     data.value.loading = false;
   }
-
 };
-
 
 // 提交数据
 async function onSubmit() {
@@ -58,20 +57,17 @@ async function onSubmit() {
     data.value.loading = false;
   })
 };
+
 // 弹框关闭事件
 function closeHandler() {
   data.value.dialogTableVisible = false;
   data.value.formData = {}
 };
 
-
-
-
 // 暴露方法
 defineExpose({
   showEdit,
 });
-
 </script>
 
 <template>

@@ -3,18 +3,26 @@ import { ElMessage } from "element-plus";
 import { cloneDeep } from "lodash-es";
 import { submitLoading } from "@/utils/apiLoading";
 import api from "@/api/modules/configuration_supplierLevel";
-import useConfigurationSupplierLevelStore from "@/store/modules/configuration_supplierLevel"; //供应商等级
+import useConfigurationSupplierLevelStore from "@/store/modules/configuration_supplierLevel";
 
-const configurationSupplierLevelStore = useConfigurationSupplierLevelStore(); //供应商等级
+//供应商等级
+const configurationSupplierLevelStore = useConfigurationSupplierLevelStore();
+// 更新列表
 const emits = defineEmits(["queryData"]);
+// 弹窗开关
 const dialogTableVisible = ref(false);
+// 标题
 const title = ref("");
-const form = ref(); // 表单
-const formRef = ref(); // 表单ref
+// 表单
+const form = ref();
+// 表单ref
+const formRef = ref();
+// 校验
 const rules = reactive({
   levelName: [{ required: true, message: "请输入名称", trigger: "blur" }],
   additionRatio: [{ required: true, message: "请输入比例", trigger: "blur" }],
 });
+
 // 显示弹框
 async function showEdit(row: any) {
   if (!row) {
@@ -26,11 +34,13 @@ async function showEdit(row: any) {
   }
   dialogTableVisible.value = true;
 }
+
 // 关闭
 function close() {
   formRef.value.resetFields();
   dialogTableVisible.value = false;
 }
+
 // 提交
 function onSubmit() {
   formRef.value.validate(async (valid: any) => {
@@ -57,6 +67,7 @@ function onSubmit() {
     }
   });
 }
+// 暴露事件
 defineExpose({ showEdit });
 </script>
 

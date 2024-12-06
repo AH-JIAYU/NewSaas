@@ -3,32 +3,42 @@ import type { DetailFormProps } from "../../types";
 import { ElMessage } from "element-plus";
 import { submitLoading } from "@/utils/apiLoading";
 import api from "@/api/modules/otherFunctions_screenLibrary";
-import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
-import useStagedDataStore from "@/store/modules/stagedData"; // 暂存
+//基础字典
+import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary";
+// 暂存
+import useStagedDataStore from "@/store/modules/stagedData";
 
-const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
-const stagedDataStore = useStagedDataStore(); // 暂存
+//基础字典
+const basicDictionaryStore = useBasicDictionaryStore();
+// 暂存
+const stagedDataStore = useStagedDataStore();
+// 父级传递数据
 const props = defineProps(["id", "countryId", "row"]);
-const countryList = ref<any>([]); //区域
+//区域
+const countryList = ref<any>([]);
 const emits = defineEmits<{
   success: [];
 }>();
-
+// 开关事件
 const visible = defineModel<boolean>({
   default: false,
 });
+// 标题
 const title = ref<string>("新增");
 const formRef = ref<any>();
+// 定义表单
 const form = ref<any>({
   countryId: props.countryId,
   status: 2,
   isDefault: 2,
 });
+
 // 表单校验
 const formRules = ref<any>({
   categoryName: [{ required: true, message: "请输入名称", trigger: "blur" }],
   countryId: [{ required: true, message: "请选择区域", trigger: "blur" }],
 });
+
 // 确定
 async function onSubmit() {
   if (!props.id) {
@@ -52,11 +62,13 @@ async function onSubmit() {
   emits("success");
   stagedDataStore.projectManagementList = null;
 }
+
 // 关闭
 function onCancel() {
   visible.value = false;
   form.value = {};
 }
+
 onMounted(async () => {
   countryList.value = await basicDictionaryStore.getCountry();
   title.value = "新增";

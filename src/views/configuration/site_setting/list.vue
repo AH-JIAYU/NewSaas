@@ -1,29 +1,29 @@
 <script setup lang="ts">
 import type { FormInstance, FormRules, UploadProps } from "element-plus";
 import { ElMessage, ElMessageBox } from "element-plus";
-import { Plus } from "@element-plus/icons-vue";
 import { onMounted, ref } from "vue";
 import api from "@/api/modules/configuration_site_setting";
-import apiProject from "@/api/modules/projectManagement";
 import apiLogo from "@/api/modules/logo";
 import Message from 'vue-m-message'
 import useClipboard from "vue-clipboard3";
 import { AnyFn } from "@vueuse/core";
 import useUserStore from "@/store/modules/user";
+import useConfigurationSiteSettingStore from '@/store/modules/configuration_siteSetting'
 import siteDetail from "./components/siteDetail/index.vue"
-import storage from "@/utils/storage";
-import useConfigurationSiteSettingStore from '@/store/modules/configuration_siteSetting'//站点设置
+
 
 defineOptions({
   name: "site_setting",
 });
+// 定义货币
 const currencyList = [
   { label: '美元', value: 'USD' },
   { label: '人民币', value: 'CNY' },
 ]
 // 货币类型
 const currencyType = ref<any>()
-const configurationSiteSettingStore = useConfigurationSiteSettingStore()//站点设置
+//站点设置
+const configurationSiteSettingStore = useConfigurationSiteSettingStore()
 // token
 const userStore = useUserStore();
 // detailRef
@@ -144,18 +144,20 @@ const formRules = ref<FormRules>({
     { pattern: /^(?!0(\.0+)?$)(\d+(\.\d{1,2})?)$/, message: '请输入一个有效的数字，不能小于0，最多保留两位小数', trigger: 'blur' }
   ],
 });
+
 onMounted(() => {
   loading.value = true;
   userStore.logo && (fileList.value = [{ name: 'logo', url: userStore.logo }])
   getDataList();
   loading.value = false;
 });
+
 // 获取数据
 async function getDataList() {
   try {
-    const { data } = await api.list();
+    const { data,status } = await api.list();
     configurationSiteSettingStore.setSiteConfig(data)
-    if (data) {
+    if (data && status === 1) {
       form.value = data || form.value;
       currencyType.value = data.currencyType
       if (form.value.minimumAmount === 0) form.value.minimumAmount = null;
@@ -167,15 +169,17 @@ async function getDataList() {
     }
     if (form.value.topLevelDomainName !== '' && form.value.topLevelDomainName !== null) {
       const res = await api.getTenantWebConfigQueryAnalysis({ url: form.value.topLevelDomainName })
-      isAnalysis.value = res.data.success
-      form.value.isAnalysis = res.data.success
+      if(res.data) {
+        isAnalysis.value = res.data.success
+        form.value.isAnalysis = res.data.success
+      }
     }
   } catch (error) {
-
   } finally {
     loading.value = false;
   }
 }
+
 // 获取logo
 const getLogo = async () => {
   fileList.value = []
@@ -188,10 +192,12 @@ const getLogo = async () => {
       });
   }
 }
+
 // 解析记录
 const record = () => {
   recordRef.value.showEdit(analyzeRecords.value)
 }
+
 // 复制地址
 const copyToClipboard = () => {
   const text = form.value.personalizedDomainName;
@@ -201,6 +207,7 @@ const copyToClipboard = () => {
     message: "复制成功",
   });
 };
+
 // #regin 上传文件
 // 请求头
 const token = userStore.token;
@@ -221,8 +228,10 @@ const handleRemove: any = async () => {
 // 上传格式不正确删除
 const handleBeforeRemove = (file: any, fileList: any) => {
   // 确保文件列表更新
-  fileList.value = fileList.filter((item: any) => item.uid !== file.uid); // 移除文件
-  return true; // 返回 true 以允许移除
+  // 移除文件
+  fileList.value = fileList.filter((item: any) => item.uid !== file.uid);
+  // 返回 true 以允许移除
+  return true;
 };
 // 上传文件是否符合
 const handleFileChange = (file: any, newFileList: any) => {
@@ -237,7 +246,8 @@ const handleFileChange = (file: any, newFileList: any) => {
     fileList.value = []; // 清空文件列表
     // 强制 Vue 更新 UI
     nextTick(() => {
-      fileList.value = []; // 确保 UI 刷新
+      // 确保 UI 刷新
+      fileList.value = [];
     });
     return ElMessage({
       type: "warning",
@@ -245,6 +255,7 @@ const handleFileChange = (file: any, newFileList: any) => {
     });
   }
 };
+
 // 上传图片成功
 const handleSuccess: any = (uploadFile: any, uploadFiles: any) => {
   if (uploadFile.status === -1) {
@@ -257,6 +268,7 @@ const handleSuccess: any = (uploadFile: any, uploadFiles: any) => {
     getLogo()
   }
 };
+
 // 超出限制
 const handleExceed: any = async () => {
   ElMessage.warning({
@@ -264,6 +276,7 @@ const handleExceed: any = async () => {
     center: true,
   });
 };
+
 // 查看
 const handlePictureCardPreview: UploadProps["onPreview"] = (uploadFile) => {
   dialogImageUrl.value = uploadFile.url!;
@@ -330,7 +343,6 @@ function onSubmit() {
               form.value.exchangeRate =  Math.floor((1 / form.value.exchangeRate) * 100) / 100
             }
           }
-          // return
           const res = await api.edit(form.value)
           loading.value = false;
           if (res.status === 1) {
@@ -422,10 +434,6 @@ function onSubmit() {
                   <el-button class="copy" @click="record" type="primary" size="small" plain>CNAME配置</el-button>
                 </el-form-item>
               </el-col>
-              <!-- <el-col style="margin-bottom: 1rem;" :span="24">
-                <span
-                  style="margin-left: 1.625rem; color: #606266; font-size: 14px;">网址Logo</span>
-                </el-col> -->
               <el-col :span="24">
                 <ElFormItem style="
                 display: flex;
@@ -496,18 +504,6 @@ function onSubmit() {
               <el-col :span="24">
                 <el-form-item style="display: flex;" label="美元汇率" prop="exchangeRate">
                   <div>
-                    <!-- style="margin-bottom: 10px;" -->
-                    <!-- <div class="exchangeRate">
-                      <div class="left">
-                        <div style="width: 7.4912rem;" class="top">1 美元 (USD) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=</div>
-                      </div>
-                      <div class="right">
-                        <div class="bottom">
-                          <el-input v-model="currencyTypeRes" style="width: 7.4375rem" placeholder="请输入数值" clearable />
-                          人民币 (CNY)
-                        </div>
-                      </div>
-                    </div> -->
                     <div class="right">
                       <el-input v-model="form.acquiesceExchangeRate" style="width: 22.4375rem" placeholder="请输入数值" clearable>
                         <template #prefix>
@@ -525,37 +521,7 @@ function onSubmit() {
                         </template>
                       </el-input>
                     </div>
-                    <!-- <div v-if="currencyType === 'CNY'" class="exchangeRate">
-                      <div class="left">
-                        <div class="top">1 人民币 (CNY) &nbsp;&nbsp;=</div>
-                      </div>
-                      <div class="right">
-                        <div class="bottom">
-                          <el-input v-model="form.exchangeRate" style="width: 7.4375rem" placeholder="请输入数值"
-                            clearable />
-                          美元 (USD)
-                        </div>
-                      </div>
-                    </div>
-                    <div v-if="currencyType === 'CNY' && form.exchangeRate >= 1" class="tips">
-                      <div style="color: orange;margin-right: 5px;" class="i-ic:round-warning w-1.3em h-1.3em"></div>
-                      请再三确认,当前市场1人民币对美元的汇率
-                    </div> -->
                   </div>
-                  <!-- <div v-if="currencyType === 'CNY'" class="exchangeRate">
-                    <div class="left">
-                      <div class="top">人民币(CNY)</div>
-                    </div>
-                    <div class="center">
-                      <div class="i-icon-park-solid:right-two w-1em h-1em"></div>
-                    </div>
-                    <div class="right">
-                      <div class="top">USD $ - 美元</div>
-                      <div class="bottom">
-                        <el-input v-model="form.exchangeRate" style="width: 22.4375rem" placeholder="请输入1人民币对美元的汇率" clearable />
-                      </div>
-                    </div>
-                  </div> -->
                 </el-form-item>
               </el-col>
               <el-col :span="24">

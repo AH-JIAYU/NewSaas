@@ -79,6 +79,7 @@ const columns = ref([
 const queryForm = reactive<any>({
   //会员id
   memberId: "",
+  // 点击id
   clickId: "",
   //随机身份id
   randomIdentityId: "",
@@ -174,6 +175,7 @@ function onReset() {
   Object.assign(queryForm, {
     //会员id
     memberId: "",
+    // 点击id
     clickId: "",
     //随机身份id
     randomIdentityId: "",

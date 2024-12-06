@@ -30,26 +30,31 @@ import "grapesjs/dist/grapes.min.js";
 import zh from "grapesjs/locale/zh";
 import { updataText, customBlock, htmlJsList } from "@/utils/homePage";
 import api from "@/api/modules/configuration_homepageSetting";
-const emits = defineEmits(["fetch-data"]);
 import useUserStore from "@/store/modules/user";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { resolve } from "path-browserify";
+
+// 表单数据
 const state = reactive<any>({
   title: "",
   dialogFormVisible: false,
   form: {},
 });
+// 更新列表
+const emits = defineEmits(["fetch-data"]);
 // token
 const userStore = useUserStore();
 const editorRef = ref<any>(null);
 const formRef = ref<any>(null);
 
+// 打开弹框
 const showEdit = (row: any, title: any = "编辑") => {
   state.title = title;
   state.form = row;
   state.dialogFormVisible = true;
 };
 
+// 打开grapesjs
 const onDialogOpened = async () => {
   await nextTick();
   editorRef.value = grapesjs.init({
@@ -188,6 +193,7 @@ const onDialogOpened = async () => {
   // });
 };
 
+// 提交
 const save = async () => {
   if (state.title === "编辑") {
     const html = editorRef.value.getHtml();
@@ -205,6 +211,7 @@ const save = async () => {
   }
 };
 
+// 关闭弹框
 const close = () => {
   if (editorRef.value) {
     editorRef.value.destroy();
@@ -213,6 +220,8 @@ const close = () => {
   state.form = {};
   state.dialogFormVisible = false;
 };
+
+// 暴露数据
 defineExpose({
   showEdit,
 });

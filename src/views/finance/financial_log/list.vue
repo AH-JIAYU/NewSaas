@@ -1,13 +1,15 @@
 <script setup lang="ts">
+import { ref } from "vue";
 import eventBus from "@/utils/eventBus";
 import api from "@/api/modules/financial_log";
 import useSettingsStore from "@/store/modules/settings";
-import { ref } from "vue";
 import empty from "@/assets/images/empty.png";
+import { columns, formSearchList } from './configuration/index.ts'
 
 defineOptions({
   name: "financial_log",
 });
+
 // 时间
 const { format } = useTimeago();
 const router = useRouter();
@@ -15,75 +17,8 @@ const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
 const tabbar = useTabbar();
 const settingsStore = useSettingsStore();
-const formSearchList = ref<any>(); //表单排序配置
-const formSearchName = ref<string>("formSearch-financial_log"); // 表单排序name
-// 表格控件-展示列
-const columns = ref<any>([
-  // 表格控件-展示列
-  {
-    label: "供应商ID/内部调查站",
-    prop: "typeId",
-    sortable: true,
-    disableCheck: false, // 不可更改
-    checked: true, // 默认展示
-  },
-  {
-    label: "点击ID",
-    prop: "clientId",
-    sortable: true,
-    disableCheck: false, // 不可更改
-    checked: true, // 默认展示
-  },
-  {
-    label: "项目ID",
-    prop: "projectId",
-    sortable: true,
-    disableCheck: false, // 不可更改
-    checked: true, // 默认展示
-  },
-  {
-    label: "类型",
-    prop: "type",
-    sortable: true,
-    disableCheck: false, // 不可更改
-    checked: true, // 默认展示
-  },
-  {
-    label: "说明",
-    prop: "remark",
-    sortable: true,
-    disableCheck: false, // 不可更改
-    checked: true, // 默认展示
-  },
-  {
-    label: "变动前",
-    prop: "beforeBalance",
-    sortable: true,
-    disableCheck: false, // 不可更改
-    checked: true, // 默认展示
-  },
-  {
-    label: "加减款",
-    prop: "addAndSubtraction",
-    sortable: true,
-    disableCheck: false, // 不可更改
-    checked: true, // 默认展示
-  },
-  {
-    label: "变动后",
-    prop: "afterBalance",
-    sortable: true,
-    disableCheck: false, // 不可更改
-    checked: true, // 默认展示
-  },
-  {
-    label: "时间",
-    prop: "createTime",
-    sortable: true,
-    disableCheck: false, // 不可更改
-    checked: true, // 默认展示
-  },
-]);
+// 表单排序name
+const formSearchName = ref<string>("formSearch-financial_log");
 // 加减款
 const payments = [
   { label: "加款", value: 1 },
@@ -215,54 +150,11 @@ onMounted(() => {
       getDataList();
     });
   }
-  columns.value.forEach((item: any) => {
+  columns.forEach((item: any) => {
     if (item.checked) {
       data.value.checkList.push(item.prop);
     }
   });
-  formSearchList.value = [
-    {
-      index: 1,
-      show: true,
-      type: "input",
-      modelName: "supplierId",
-      placeholder: "供应商ID",
-    },
-    {
-      index: 2,
-      show: true,
-      type: "input",
-      modelName: "projectId",
-      placeholder: "项目ID",
-    },
-    {
-      index: 3,
-      show: true,
-      type: "select",
-      modelName: "operationType",
-      placeholder: "加减款",
-      option: "operationType",
-      optionLabel: "label",
-      optionValue: "value",
-    },
-    {
-      index: 4,
-      show: true,
-      type: "select",
-      modelName: "type",
-      placeholder: "类型",
-      option: "type",
-      optionLabel: "label",
-      optionValue: "value",
-    },
-    {
-      index: 5,
-      show: true,
-      type: "input",
-      modelName: "TenantId",
-      placeholder: "合作商ID",
-    },
-  ];
 });
 const formOption = {
   operationType: () => payments,
@@ -355,19 +247,11 @@ function handleCurrentChange(val: any) {
           <template #default="{ row }">
             <el-tag v-if="row.type === 1" type="warning" effect="dark" style="background-color: #FFAC54">待审余额</el-tag>
             <el-tag v-if="row.type === 2" type="primary" effect="dark" >可用余额</el-tag>
-
-            <!-- <el-text v-if="row.type == 1"  class="fontColor">待审金额</el-text>
-            <el-text v-if="row.type == 2"  class="fontColor">可用金额</el-text> -->
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('remark')" width="260" show-overflow-tooltip align="left" prop="remark"
           label="说明">
           <template #default="{ row }">
-            <!-- <el-text v-if="!row.remark.includes('余额')" class="mx-1">{{
-              `记录变更:${parseStatusString(row.remark)[0]}变更为${
-                parseStatusString(row.remark)[1]
-              }`
-            }}</el-text> -->
             <el-text class="mx-1 fontColor fontC-System" >{{ formatRemarkWithBalance(row.remark) || "-" }}</el-text>
           </template>
         </ElTableColumn>

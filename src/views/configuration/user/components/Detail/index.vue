@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { ElMessage, ElMessageBox } from "element-plus";
 import api from "@/api/modules/configuration_manager";
 import apiDep from "@/api/modules/department";
 import useDepartmentStore from "@/store/modules/department";
@@ -20,35 +19,42 @@ const positionManageList = ref<any>();
 const roleStore = useTenantRoleStore();
 // 角色
 const munulevs = ref();
-// 部门
-const departmentStore = useDepartmentStore();
 // 部门数据
 const departmentList = ref<any>();
+// 树配置项
 const defaultProps: any = {
   children: "children",
   label: "name",
   // disabled : "distribution",
 };
+// 部门id
 const departmentId = ref<any>([]);
-const form = ref<any>({});
+// 定义表单
+const form = ref<any>({})
+// 更新列表
 const emit = defineEmits(["fetch-data"]);
+// 弹框开关
 const drawerisible = ref<boolean>(false);
 // 详情数据
 const detailData = ref<any>();
+// 修改表单
 async function showEdit(row: any) {
   form.value = row;
   form.value.roleList = [form.value.role];
   const params = {
     id: row.id,
   };
-  const { status, data } = await api.list(params);
-  detailData.value = data.data[0];
+  const { status, data } = await api.list(params)
+  if (data && status === 1) {
+    detailData.value = data.data[0];
+  }
   if (departmentId.value) {
-    departmentId.value.push(detailData.value.organizationalStructureId);
+    departmentId.value.push(detailData.value.organizationalStructureId)
   }
   drawerisible.value = true;
 }
 
+// 弹框关闭事件
 function close() {
   emit("fetch-data");
   departmentId.value = [];
@@ -71,8 +77,8 @@ onMounted(async () => {
     });
   }
 });
-// 弹框关闭事件
 
+// 暴露事件
 defineExpose({
   showEdit,
 });
@@ -221,9 +227,9 @@ defineExpose({
 </template>
   <el-row :gutter="24">
     <el-form-item label="分配部门:">
-      <el-tree v-if="departmentList.length > 0" style="max-width: 600px" ref="treeRef"  :data="departmentList"
-        show-checkbox check-strictly node-key="id" :default-expanded-keys="[]" :default-checked-keys="departmentId"
-        default-expand-all :props="defaultProps" />
+      <el-tree v-if="departmentList.length > 0" style="max-width: 600px" ref="treeRef" :disabled="true"
+        :data="departmentList" show-checkbox check-strictly node-key="id" :default-expanded-keys="[]"
+        :default-checked-keys="departmentId" default-expand-all :props="defaultProps" @check-change="handleNodeClick" />
       <el-text v-else>暂无数据</el-text>
     </el-form-item>
   </el-row>
@@ -232,11 +238,7 @@ defineExpose({
 <template #footer>
         <div class="flex-c">
           <el-button type="primary" @click="close"> 关闭 </el-button>
-
-
         </div>
-
-
       </template>
 </el-drawer>
 </template>
@@ -247,6 +249,7 @@ defineExpose({
   justify-content: center;
   align-items: center;
 }
+
 .card-header {
   display: flex;
   justify-content: space-between;

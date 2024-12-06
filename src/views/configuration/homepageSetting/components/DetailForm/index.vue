@@ -96,5 +96,5 @@ defineExpose({
 </template>
 
 <style lang="scss" scoped>
-// scss</style>
-@/api/modules/configuration_homepageSetting
+// scss
+</style>

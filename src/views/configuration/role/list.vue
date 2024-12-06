@@ -10,16 +10,21 @@ import empty from '@/assets/images/empty.png'
 defineOptions({
   name: "role",
 });
+
 // 路由
 const router = useRouter();
 // 分页
 const { pagination, onSizeChange, onCurrentChange, onSortChange } = usePagination();
 const tabbar = useTabbar();
-const QuickEditRef = ref(); //快速编辑
-const current = ref<any>()//表格当前选中
+//快速编辑
+const QuickEditRef = ref();
+//表格当前选中
+const current = ref<any>()
 const settingsStore = useSettingsStore();
-const formSearchList = ref<any>()//表单排序配置
-const formSearchName = ref<string>('formSearch-role')// 表单排序name
+//表单排序配置
+const formSearchList = ref<any>()
+// 表单排序name
+const formSearchName = ref<string>('formSearch-role')
 // 定义表单
 const data = ref<any>({
   loading: false,
@@ -54,11 +59,11 @@ const data = ref<any>({
   dataList: [],
 });
 
-
 function handleCurrentChange(val: any) {
   if (val) current.value = val.id
   else current.value = ''
 }
+
 // 快速编辑
 function quickEdit(row: any, type: any) {
   /**
@@ -66,7 +71,6 @@ function quickEdit(row: any, type: any) {
   */
   QuickEditRef.value.showEdit(row, type)
 }
-
 
 onBeforeUnmount(() => {
   if (data.value.formMode === "router") {
@@ -81,11 +85,12 @@ async function getDataList() {
       ...data.value.search
     }
     const res = await api.list(params)
+    if(res.data && res.status === 1) {
+      data.value.dataList = res.data;
+      pagination.value.total = +res.data.length;
+    }
     data.value.loading = false;
-    data.value.dataList = res.data;
-    pagination.value.total = res.data.length;
   } catch (error) {
-
   } finally {
     data.value.loading = false;
   }
@@ -94,6 +99,7 @@ async function getDataList() {
 function sortChange({ prop, order }: { prop: string; order: string }) {
   onSortChange(prop, order).then(() => getDataList());
 }
+
 // 每页数量切换
 function sizeChange(size: number) {
   onSizeChange(size).then(() => {
@@ -101,12 +107,14 @@ function sizeChange(size: number) {
     getDataList();
   });
 }
+
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
   onCurrentChange(page).then(() => {
     getDataList();
   });
 }
+
 // 重置数据
 function onReset() {
   Object.assign(data.value.search, {
@@ -137,6 +145,7 @@ function onCreate() {
     data.value.formModeProps.visible = true;
   }
 }
+
 // 修改
 function onEdit(row: any) {
   if (data.value.formMode === "router") {
