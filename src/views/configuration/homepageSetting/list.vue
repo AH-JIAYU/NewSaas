@@ -104,6 +104,24 @@ function onEdit(row: any) {
 function homePage(row: any, title: any = "编辑") {
   homePageRef.value.showEdit(row, title);
 }
+//设置为自定义模版
+async function homeMyPage(row: any) {
+  console.log(row,'rrr')
+  const params = {
+    "title":row.title,
+    "css":row.css,
+    "html":row.html,
+    "rawData":row.rawData
+  }
+
+  const res = await api.create(params);
+  res.status === 1 &&
+    ElMessage.success({
+      message: "设置成功",
+      center: true,
+    });
+  getDataList()
+}
 
 // 设计主页
 async function setHomePage(row: any) {
@@ -221,8 +239,8 @@ onBeforeUnmount(() => {
             <ElButton v-if="!scope.row.isSet" type="primary" size="small" plain @click="setHomePage(scope.row)">
               设置为主页
             </ElButton>
-            <ElButton type="primary" size="small" plain @click="homePage(scope.row)">
-              设计
+            <ElButton type="primary" size="small" plain @click="homeMyPage(scope.row)">
+              设置为自定义模版
             </ElButton>
           </template>
         </ElTableColumn>

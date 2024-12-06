@@ -97,9 +97,7 @@ const onDialogOpened = async () => {
           try {
             // 判断文件大小，单位是字节，250KB = 250 * 1024 字节
             const maxSize = 250 * 1024; // 250KB
-            console.log(file.size,maxSize,'file.size')
-            console.log(file.size > maxSize,'file.size > maxSize')
-            if (file.size > maxSize) {
+            if (Number(file.size) > Number(maxSize)) {
               ElMessage.warning({
                 message: "文件大小不能超过 250KB",
                 center: true,
@@ -141,15 +139,7 @@ const onDialogOpened = async () => {
     // }
   });
 
-  // 模拟上传图片的函数
-  const uploadImage = async (file: any) => {
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("id", state.form.id);
-    api.uploadHomePageTemplateImage(formData).then((res: any) => {
-      return res.data;
-    });
-  };
+
   // 通过事件改变框架的文本内容为中文
   editorRef.value.on("block:custom", (props: any) => {
     updataText(props.blocks);

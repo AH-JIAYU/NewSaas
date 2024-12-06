@@ -175,11 +175,12 @@ onMounted(() => {
         />
       </ElFormItem>
       <ElFormItem label="字典项键值" prop="code">
-        <template #default="scope">
+        <ElInput v-model="form.value" placeholder="请输入字典项键值" clearable />
+        <!-- <template #default="scope">
           <el-button size="small" plain>
             {{ scope.row.code }}
           </el-button>
-        </template>
+        </template> -->
       </ElFormItem>
       <ElFormItem label="备注">
         <ElInput v-model="form.remark" placeholder="请输入备注" clearable />
