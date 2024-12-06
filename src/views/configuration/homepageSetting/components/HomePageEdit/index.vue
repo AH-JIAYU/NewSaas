@@ -52,7 +52,6 @@ const showEdit = (row: any, title: any = "编辑") => {
   state.title = title;
   state.form = row;
   state.dialogFormVisible = true;
-  console.log('row')
 };
 
 // 打开grapesjs
