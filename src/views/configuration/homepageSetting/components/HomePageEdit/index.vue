@@ -102,7 +102,7 @@ const onDialogOpened = async () => {
                 message: "文件大小不能超过 250KB",
                 center: true,
               });
-              return
+              return;
             } else {
               // 调用自定义接口上传图片
               const formData = new FormData();
@@ -139,16 +139,29 @@ const onDialogOpened = async () => {
     // }
   });
 
-
   // 通过事件改变框架的文本内容为中文
   editorRef.value.on("block:custom", (props: any) => {
     updataText(props.blocks);
   });
 
   // 监听图片删除事件
-  // editorRef.value.assetManager.on("asset:remove", (asset:any) => {
-  //   console.log("删除图片:", asset);
-  // });
+  editorRef.value.on("asset:remove", (asset: any) => {
+    console.log("删除图片:", asset);
+    // 先从 Asset Manager 中移除图片
+    const asset1 = editorRef.value.AssetManager.getAll().find(
+      (a: any) => a.get("src") === asset.id
+    );
+
+    if (asset1) {
+      // 从 Asset Manager 中删除图片
+      editorRef.value.AssetManager.remove(asset);
+
+      // 然后从静态网页的服务器上删除图片
+      // deleteImageFromServer(src);
+    } else {
+      // console.log("未找到图片:", src);
+    }
+  });
   // // 批量添加自定义块
   customBlock.forEach((item: any) => {
     editorRef.value.Blocks.add(item.id, item);
