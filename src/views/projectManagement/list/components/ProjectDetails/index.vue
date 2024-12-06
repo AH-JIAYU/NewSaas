@@ -64,6 +64,7 @@ async function showEdit(row: any, projectType: any) {
   data.value.allocationStatus = row.allocationStatus;
   const res = await obtainLoading(api.detail({ projectId: row.projectId }));
   data.value.form = res.data;
+  active.value = res.data.projectSettlementStatusSet[0].settlementStatus
   data.value.form.projectSettlementStatusSet =
     data.value.form.projectSettlementStatusSet.reduce(
       (accumulator: any, currentValue: any) => {
@@ -76,7 +77,7 @@ async function showEdit(row: any, projectType: any) {
         return accumulator;
       },
       [],
-    );
+    ).sort((a: any, b: any) => a.settlementStatus - b.settlementStatus)
   imgList.value = data.value.form.descriptionUrl.split(",");
   if (imgList.value.length) {
     imgList.value.forEach(async (item: any) => {
@@ -174,115 +175,70 @@ defineExpose({ showEdit });
 
 <template>
   <div>
-    <el-drawer
-      v-model="dialogTableVisible"
-      append-to-body
-      :close-on-click-modal="false"
-      destroy-on-close
-      draggable
-      @close="closeHandler"
-      size="55%"
-      title="项目详情"
-    >
-      <template
-        v-if="
-          data.form.projectSettlementStatusSet &&
-          data.form.projectSettlementStatusSet.length !== 0
-        "
-        #header
-      >
+    <el-drawer v-model="dialogTableVisible" append-to-body :close-on-click-modal="false" destroy-on-close draggable
+      @close="closeHandler" size="55%" title="项目详情">
+      <template v-if="data.form.projectSettlementStatusSet &&
+      data.form.projectSettlementStatusSet.length !== 0
+      " #header>
         <el-row :gutter="20">
           <el-col :span="24">
-            <el-steps
-              style="max-width: 100%"
-              finish-status="success"
-              align-center
-              :active="data.form.projectSettlementStatusSet[0].settlementStatus"
-            >
-              <el-step
-                title="待审核"
-                description="2021-09-09 11:11:11"
-                :icon="CircleCheck"
-              />
-              <el-step
-                title="已审核"
-                :description="
-                  data.form.projectSettlementStatusSet[0].operationTime
-                "
-                :icon="
-                  data.form.projectSettlementStatusSet[0].settlementStatus >= 2
-                    ? CircleCheck
-                    : Position
-                "
-              />
-              <el-step
-                title="已开票"
-                description="2021-09-09 11:11:11"
-                :icon="active >= 3 ? CircleCheck : Position"
-              />
-              <el-step
-                title="已结算"
-                description="2021-09-09 11:11:11"
-                :icon="active >= 4 ? CircleCheck : Position"
-              />
-              <el-step
-                title="已冻结"
-                description="2021-09-09 11:11:11"
-                :icon="active >= 5 ? CircleCheck : Position"
-              />
+            <el-steps style="max-width: 100%" finish-status="success" align-center
+              :active="active">
+              <el-step title="待审核"
+                :description="active >= 1 ? data.form.projectSettlementStatusSet[0].operationTime : '-'" :icon="active >= 1
+      ? CircleCheck
+      : Position" />
+              <el-step title="已审核"
+                :description="active >= 2 ? data.form.projectSettlementStatusSet[1].operationTime : '-'" :icon="active >= 2
+      ? CircleCheck
+      : Position
+      " />
+              <el-step title="已开票" :description="active >= 3 ? data.form.projectSettlementStatusSet[2].operationTime : '-'" :icon="active >= 3 ? CircleCheck : Position" />
+              <el-step title="已结算" :description="active >= 4 ? data.form.projectSettlementStatusSet[3].operationTime : '-'" :icon="active >= 4 ? CircleCheck : Position" />
+              <el-step title="已冻结" :description="active >= 5 ? data.form.projectSettlementStatusSet[4].operationTime : '-'" :icon="active >= 5 ? CircleCheck : Position" />
             </el-steps>
           </el-col>
-          <el-row
-            style="width: 100%; margin-top: 0; font-size: 14px"
-            :gutter="20"
-          >
+          <el-row style="width: 100%; margin-top: 0; font-size: 14px" :gutter="20">
             <el-col :span="1"></el-col>
-            <el-col
-              :class="{
-                colorgreen:
-                  data.form.projectSettlementStatusSet[0].settlementStatus >= 1,
-              }"
-              :span="5"
-            >
+            <el-col :class="{
+      colorgreen:
+        active >= 1,
+    }" :span="5">
               <span style="margin-left: 25.5%">{{
-                data.form.projectSettlementStatusSet[0].operationName
-              }}</span>
+      active >= 1 ? data.form.projectSettlementStatusSet[0].operationName : '暂无'
+    }}</span>
             </el-col>
-            <el-col
-              :class="{
-                colorgreen:
-                  data.form.projectSettlementStatusSet[0].settlementStatus >= 2,
-              }"
-              :span="5"
-            >
-              <span style="margin-left: 19.5%">操作员</span>
+            <el-col :class="{
+        colorgreen:
+          active >= 2,
+      }" :span="5">
+              <span style="margin-left: 19.5%">
+                {{ active >= 2 ? data.form.projectSettlementStatusSet[1].operationName : '暂无' }}
+              </span>
             </el-col>
-            <el-col
-              :class="{
-                colorgreen:
-                  data.form.projectSettlementStatusSet[0].settlementStatus >= 3,
-              }"
-              :span="5"
-            >
-              <span style="margin-left: 12.5%">操作员</span>
+            <el-col :class="{
+      colorgreen:
+        active >= 3,
+    }" :span="5">
+              <span style="margin-left: 12.5%">
+                {{ active >= 3 ? data.form.projectSettlementStatusSet[2].operationName : '暂无' }}
+              </span>
             </el-col>
-            <el-col
-              :class="{
-                colorgreen:
-                  data.form.projectSettlementStatusSet[0].settlementStatus >= 4,
-              }"
-              :span="4"
-            >
-              <span style="margin-left: 8.5%">操作员</span>
+            <el-col :class="{
+      colorgreen:
+        active >= 4,
+    }" :span="4">
+              <span style="margin-left: 8.5%">
+                {{ active >= 4 ? data.form.projectSettlementStatusSet[3].operationName : '暂无' }}
+              </span>
             </el-col>
-            <el-col
-              :class="{
-                colorgreen:
-                  data.form.projectSettlementStatusSet[0].settlementStatus >= 5,
-              }"
-              :span="4"
-            >
-              <span style="margin-left: 28.5%">操作员</span>
+            <el-col :class="{
+      colorgreen:
+        active >= 5,
+    }" :span="4">
+              <span style="margin-left: 28.5%">
+                {{ active >= 5 ? data.form.projectSettlementStatusSet[4].operationName : '暂无' }}
+              </span>
             </el-col>
           </el-row>
         </el-row>
@@ -294,18 +250,14 @@ defineExpose({ showEdit });
               <div class="leftTitle">
                 基本信息
                 <span class="m-4 spanStatus">{{
-                  data.allocationStatus === 1 ? "未分配" : "已分配"
-                }}</span>
+      data.allocationStatus === 1 ? "未分配" : "已分配"
+    }}</span>
               </div>
               <div class="rightStatus">
-                <span :class="
-                    data.isOnline === 1 ? 'isOnlineSpanTrue' : 'isOnlineSpanFalse'
-                  "></span>
-                <div
-                  :class="
-                    data.isOnline === 1 ? 'isOnlineTrue' : 'isOnlineFalse'
-                  "
-                >
+                <span :class="data.isOnline === 1 ? 'isOnlineSpanTrue' : 'isOnlineSpanFalse'
+      "></span>
+                <div :class="data.isOnline === 1 ? 'isOnlineTrue' : 'isOnlineFalse'
+      ">
                   {{ data.isOnline === 1 ? "在线" : "离线" }}
                 </div>
               </div>
@@ -333,10 +285,10 @@ defineExpose({ showEdit });
               <el-form-item label="项目标识 :" prop="client_pid">
                 <el-text class="mx-1">
                   {{
-                    data.form.projectIdentification
-                      ? data.form.projectIdentification
-                      : "-"
-                  }}
+      data.form.projectIdentification
+        ? data.form.projectIdentification
+        : "-"
+    }}
                 </el-text>
               </el-form-item>
             </el-col>
@@ -350,9 +302,7 @@ defineExpose({ showEdit });
             <el-col :span="8">
               <el-form-item label="所属区域 :">
                 <el-text class="mx-1">
-                  <template
-                    v-if="comCountryId(data.form.countryIdList).length > 4"
-                  >
+                  <template v-if="comCountryId(data.form.countryIdList).length > 4">
                     <!-- <el-tooltip
                       class="box-item"
                       effect="dark"
@@ -360,18 +310,15 @@ defineExpose({ showEdit });
                       placement="top"
                     > -->
                     <el-link type="primary">{{
-                      comCountryId(data.form.countryIdList).length ===
-                      basicDictionaryStore.country.length
-                        ? "全球"
-                        : comCountryId(data.form.countryIdList).length
-                    }}</el-link>
+      comCountryId(data.form.countryIdList).length ===
+        basicDictionaryStore.country.length
+        ? "全球"
+        : comCountryId(data.form.countryIdList).length
+    }}</el-link>
                     <!-- </el-tooltip> -->
                   </template>
                   <template v-else>
-                    <span
-                      v-for="item in comCountryId(data.form.countryIdList)"
-                      :key="item"
-                    >
+                    <span v-for="item in comCountryId(data.form.countryIdList)" :key="item">
                       {{ item }}&ensp;
                     </span>
                   </template>
@@ -382,13 +329,13 @@ defineExpose({ showEdit });
               <el-form-item label="项目价 :">
                 <el-text v-if="data.form.currencyType === 1" class="mx-1">
                   {{
-                    data.form.doMoneyPrice ? data.form.doMoneyPrice + "$" : "-"
-                  }}
+      data.form.doMoneyPrice ? data.form.doMoneyPrice + "$" : "-"
+    }}
                 </el-text>
                 <el-text v-if="data.form.currencyType === 2" class="mx-1">
                   {{
-                    data.form.doMoneyPrice ? data.form.doMoneyPrice + "￥" : "-"
-                  }}
+      data.form.doMoneyPrice ? data.form.doMoneyPrice + "￥" : "-"
+    }}
                 </el-text>
               </el-form-item>
             </el-col>
@@ -403,10 +350,10 @@ defineExpose({ showEdit });
               <el-form-item label="最小时长 :">
                 <el-text class="mx-1">
                   {{
-                    data.form.minimumDuration
-                      ? data.form.minimumDuration + "min"
-                      : "-"
-                  }}
+      data.form.minimumDuration
+        ? data.form.minimumDuration + "min"
+        : "-"
+    }}
                 </el-text>
               </el-form-item>
             </el-col>
@@ -422,14 +369,10 @@ defineExpose({ showEdit });
               <el-form-item label="URL :">
                 <el-text class="mx-1">
                   {{ data.form.uidUrl ? data.form.uidUrl : "-" }}
-                  <el-button
-                  type="primary"
-                  style="margin-left: auto"
-                  @click="copyTextToClipboard(data.form.uidUrl)"
-                  link
-                >
-                  复制
-                </el-button>
+                  <el-button type="primary" style="margin-left: auto" @click="copyTextToClipboard(data.form.uidUrl)"
+                    link>
+                    复制
+                  </el-button>
                 </el-text>
 
               </el-form-item>
@@ -500,12 +443,10 @@ defineExpose({ showEdit });
           <template #header>
             <div class="peizjo-header">
               <span>配置信息</span>
-              <span
-                style="margin-left: 50px;font-weight: 700;margin-right: 10px;"
-                v-if="data.form.projectProblemCategoryName"
-                >问卷名称：{{ data.form.projectProblemCategoryName }}</span
-              >
-              <el-button type="primary" plain size="small" v-if="data.form.countryName">{{ data.form.countryName }}</el-button>
+              <span style="margin-left: 50px;font-weight: 700;margin-right: 10px;"
+                v-if="data.form.projectProblemCategoryName">问卷名称：{{ data.form.projectProblemCategoryName }}</span>
+              <el-button type="primary" plain size="small" v-if="data.form.countryName">{{ data.form.countryName
+                }}</el-button>
 
 
               <!-- <span style="margin-left: 50px" v-if="data.form.countryName"
@@ -518,12 +459,8 @@ defineExpose({ showEdit });
               > -->
             </div>
           </template>
-          <el-row
-            :gutter="10"
-            :class="
-              data.form.projectQuotaInfoList.length ? 'toConfigure' : 'isNone'
-            "
-          >
+          <el-row :gutter="10" :class="data.form.projectQuotaInfoList.length ? 'toConfigure' : 'isNone'
+      ">
             <el-col :span="8">
               <!-- <el-form-item label="区域 :">
                 <el-text class="mx-1">
@@ -542,23 +479,18 @@ defineExpose({ showEdit });
                 </el-text>
               </el-form-item> -->
             </el-col>
-            <el-col
-              :span="24"
-              :class="{ isNone: !data.form.projectQuotaInfoList.length }"
-              :gutter="10"
-              v-for="item in data.form.projectQuotaInfoList"
-            >
+            <el-col :span="24" :class="{ isNone: !data.form.projectQuotaInfoList.length }" :gutter="10"
+              v-for="item in data.form.projectQuotaInfoList">
               <div class="quotaInfoDiv">
                 <!-- 问题 -->
-                <div :class="{bottom :!item.answerValueList}">
-                  <img :src="asteriskImage" >
+                <div :class="{ bottom: !item.answerValueList }">
+                  <img :src="asteriskImage">
                   <span class="tableBig">{{ item.keyValue }}</span>
                 </div>
 
                 <!-- 答案 -->
-                <div class="answer" v-if="
-                    item.answerValueList && item.answerValueList[0] !== 'null'
-                  ">
+                <div class="answer" v-if="item.answerValueList && item.answerValueList[0] !== 'null'
+      ">
                   {{ item.answerValueList.join(", ") }}
                 </div>
 
@@ -595,18 +527,15 @@ defineExpose({ showEdit });
               <el-form-item label="小时完成量 :">
                 <el-text class="mx-1">
                   {{
-                    data.form.limitedQuantity ? data.form.limitedQuantity : "-"
-                  }}
+      data.form.limitedQuantity ? data.form.limitedQuantity : "-"
+    }}
                 </el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="重复参与:">
                 <el-text class="mx-1">
-                  <div
-                    v-if="data.form.ipDifferenceDetection === 1"
-                    class="open"
-                  >
+                  <div v-if="data.form.ipDifferenceDetection === 1" class="open">
                     开
                   </div>
                   <div v-else class="close">关</div>
@@ -644,29 +573,12 @@ defineExpose({ showEdit });
             </div>
           </template>
           <template v-if="data.form.descriptionUrl">
-            <div
-              v-for="item in data.srcList"
-              :key="item"
-              class="demo-image__preview"
-            >
-              <el-image
-                style="width: 6.25rem; height: 6.25rem"
-                :src="item"
-                :preview-src-list="item"
-                :zoom-rate="1.2"
-                :max-scale="7"
-                :min-scale="0.2"
-                :initial-index="0"
-                fit="cover"
-              />
+            <div v-for="item in data.srcList" :key="item" class="demo-image__preview">
+              <el-image style="width: 6.25rem; height: 6.25rem" :src="item" :preview-src-list="item" :zoom-rate="1.2"
+                :max-scale="7" :min-scale="0.2" :initial-index="0" fit="cover" />
             </div>
             <p v-for="(item, index) in imgList" :key="item">
-              <el-button
-                style="padding: 0"
-                type="primary"
-                text
-                @click="download(item, index)"
-              >
+              <el-button style="padding: 0" type="primary" text @click="download(item, index)">
                 {{ item }} 下载
               </el-button>
             </p>
@@ -686,21 +598,9 @@ defineExpose({ showEdit });
               <span>操作日志</span>
             </div>
           </template>
-          <el-table
-            :data="data.form.projectOperationInfoList"
-            style="width: 100%"
-          >
-            <el-table-column
-              align="left"
-              type="index"
-              width="80"
-              label="序号"
-            />
-            <el-table-column
-              align="left"
-              prop="operationTime"
-              label="操作时间"
-            />
+          <el-table :data="data.form.projectOperationInfoList" style="width: 100%">
+            <el-table-column align="left" type="index" width="80" label="序号" />
+            <el-table-column align="left" prop="operationTime" label="操作时间" />
             <el-table-column align="left" prop="operationName" label="操作人" />
             <el-table-column align="left" prop="operationType" label="操作事项">
               <template #default="{ row }">
@@ -709,12 +609,7 @@ defineExpose({ showEdit });
             </el-table-column>
             <el-table-column align="left" label="详情">
               <template #default="{ row }">
-                <el-button
-                  type="primary"
-                  link
-                  @click="details(row)"
-                  v-if="row.operationType !== 1"
-                >
+                <el-button type="primary" link @click="details(row)" v-if="row.operationType !== 1">
                   详情
                 </el-button>
                 <el-text v-else>-</el-text>
@@ -743,23 +638,27 @@ defineExpose({ showEdit });
   justify-content: center;
   align-items: center;
 }
+
 .quotaInfoDiv {
   border-bottom: 1px dashed #d5d5d5;
   margin-bottom: .875rem;
 }
+
 .quotaInfoDiv .bottom {
-  margin-bottom:1rem;
+  margin-bottom: 1rem;
 }
+
 .quotaInfoDiv .answer {
   background: #F5FAFF;
-border-radius: 4px 4px 4px 4px;
-font-weight: 400;
-font-size: 14px;
-color: #686C70;
-padding:1rem;
-margin-top: 1rem;
-margin-bottom:1rem;
+  border-radius: 4px 4px 4px 4px;
+  font-weight: 400;
+  font-size: 14px;
+  color: #686C70;
+  padding: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
+
 .radius {
   min-height: 160px;
   width: 100%;
@@ -789,9 +688,9 @@ margin-bottom:1rem;
   .leftTitle {
     .spanStatus {
       width: 49px !important;
-height: 23px !important;
-background: #409EFF;
-border-radius: 4px;
+      height: 23px !important;
+      background: #409EFF;
+      border-radius: 4px;
       color: var(--el-color-white);
       padding: 4px 8px;
       font-size: 11px;
@@ -799,6 +698,7 @@ border-radius: 4px;
       border-radius: .25rem;
     }
   }
+
   .isOnlineSpanTrue {
     background: #03c239;
     // background: url('/src/assets/images/lineCricle.png');
@@ -814,13 +714,13 @@ border-radius: 4px;
 
   .isOnlineSpanFalse {
     background: #d8261a;
-      width:.5625rem;
+    width: .5625rem;
     height: .5625rem;
     display: block;
     border-radius: 50%;
     border: 1px solid #d8261a;
     box-shadow: #d8261a 0px 0px 10px;
-    }
+  }
 
   .rightStatus {
     // position: relative;
@@ -830,7 +730,7 @@ border-radius: 4px;
     align-items: baseline;
 
 
-    > div {
+    >div {
       // width: 120px;
       // height: 2.2rem;
       // line-height: 2.2rem;
@@ -866,12 +766,12 @@ border-radius: 4px;
       // }
     }
 
-    > div.isOnlineTrue {
+    >div.isOnlineTrue {
       color: #03c239;
       margin-left: 6px;
     }
 
-    > div.isOnlineFalse {
+    >div.isOnlineFalse {
       color: #d8261a;
       margin-left: 6px;
     }
@@ -938,6 +838,7 @@ border-radius: 4px;
 .colorgreen {
   color: #7ecb57;
 }
+
 .open {
   color: #409eff;
 }

@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import type { FormInstance, FormRules } from "element-plus";
 import { ElMessage } from "element-plus";
+import cloneDeep from "lodash-es/cloneDeep";
 import api from "@/api/modules/configuration_role";
 import useRouteStore from "@/store/modules/route";
 import useRoleButtonStore from "@/store/modules/get_role_button";
-import cloneDeep from "lodash-es/cloneDeep";
 
 // 父级传递数据
 const props = defineProps(["id", "row"]);
@@ -114,9 +114,9 @@ const handleNodeClick = (nodeData: any) => {
 // 暴露
 defineExpose({
   submit() {
-    loading.value = true; // 开始加载
+    // 开始加载
+    loading.value = true;
     const params = cloneDeep(form.value);
-
     return new Promise<void>((resolve, reject) => {
       try {
         // 同步选中的路由id
@@ -131,7 +131,8 @@ defineExpose({
         form.value.menuId = menupath
         formRef.value.validate(async (valid: any) => {
           if (!valid) {
-            loading.value = false; // 验证不通过，停止加载
+            // 验证不通过，停止加载
+            loading.value = false;
             return reject(new Error("验证不通过"));
           }
           try {
@@ -144,13 +145,16 @@ defineExpose({
             }
             resolve();
           } catch (error) {
-            reject(error); // 处理 API 错误
+            // 处理 API 错误
+            reject(error);
           } finally {
-            loading.value = false; // 最终停止加载
+            // 最终停止加载
+            loading.value = false;
           }
         });
       } catch (error) {
-        loading.value = false; // 捕获错误，停止加载
+        // 捕获错误，停止加载
+        loading.value = false;
         reject(error);
       }
     });

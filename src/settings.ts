@@ -14,7 +14,8 @@ const globalSettings: Settings.all = globalConfiguration||{
   },
   "tabbar": {
       "style": "fashion",
-      "enable": true
+      "enable": true,
+      "mergeTabsBy": 'routeName',
   },
   "toolbar": {
       "favorites": true,

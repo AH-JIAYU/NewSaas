@@ -112,12 +112,19 @@ async function getChildList(row: any) {
   }
 }
 
+// 打开弹框
 function showEdit(row: any) {
   questionnaireDetailsRef.value.showEdit(row);
 }
-const DataList = computed(() => {
+
+const DataList:any = computed(() => {
   const filterData = list.value.filter((item: any) => {
-    if (item.projectId.includes(queryForm.projectId) && item.projectName.includes(queryForm.projectName) && (!queryForm.allocationType || item.allocationType === queryForm.allocationType)) return true
+    if (item.projectId.includes(queryForm.projectId) || item.projectName.includes(queryForm.projectName) || (queryForm.allocationType === item.allocationType))
+    {
+      return true
+    }else{
+      return false
+    }
   })
   return filterData.slice(
     (pagination.value.page - 1) * pagination.value.size,
@@ -132,19 +139,11 @@ async function fetchData() {
       ...getParams(),
       ...queryForm,
     };
-    const { data } = await api.list(params);
-    //  projectId: "", // 	项目idprojectName: "", // 	项目名称-模糊查询，allocationType: [],//分配类型
-    // list.value = data.projectSurveyScreenInfoList.filter((item:any) => {
-    //     return (
-    //       (queryForm.value.projectId ? queryForm.value.projectId.includes(item.projectId) : true) &&
-    //       (queryForm.value.projectName ? queryForm.value.projectName.includes(item.projectName) : true) &&
-    //       (queryForm.value.allocationType ? queryForm.value.allocationType.includes(item.allocationType) : true)
-    //     );
-
-
-
-    list.value = data.projectSurveyScreenInfoList;
-    pagination.value.total = data.projectSurveyScreenInfoList.length;
+    const { data,status } = await api.list(params);
+    if(data && status === 1) {
+      list.value = data.projectSurveyScreenInfoList;
+      pagination.value.total = data.projectSurveyScreenInfoList.length;
+    }
     listLoading.value = false;
   } catch (error) {
 
@@ -165,7 +164,7 @@ function onReset() {
     // memberGroupId: "", // 	会员组id
     projectId: "", // 	项目id
     projectName: "", // 	项目名称-模糊查询
-    allocationType: [],//分配类型
+    allocationType: '',//分配类型
     // customerId: "", // 	客户Id
     // ip: "", // 	ip-模糊查询
     // surveyStatus: "", // 调查状态:1 C=完成 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
@@ -197,7 +196,76 @@ const formOption={
 <template>
   <div :class="{ 'absolute-container': tableAutoHeight }">
     <PageMain>
-      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="queryForm"  :formOption="formOption"/>
+      <!-- <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="queryForm"  :formOption="formOption"/> -->
+      <SearchBar :show-toggle="false">
+        <template #default="{ fold, toggle }">
+          <ElForm
+            :model="queryForm"
+            size="default"
+            label-width="100px"
+            inline-message
+            inline
+            class="search-form"
+          >
+            <ElFormItem>
+              <ElInput
+                v-model="queryForm.projectId"
+                placeholder="项目ID"
+                clearable
+                @keydown.enter="DataList"
+                @clear="DataList"
+              />
+            </ElFormItem>
+            <ElFormItem>
+              <ElInput
+                v-model="queryForm.projectName"
+                placeholder="项目名称"
+                clearable
+                @keydown.enter="DataList"
+                @clear="DataList"
+              />
+            </ElFormItem>
+            <ElFormItem>
+              <el-select
+                v-model="queryForm.allocationType"
+                value-key=""
+                placeholder="分配类型"
+                clearable
+                filterable
+              >
+                <el-option
+                  v-for="(item,index) in data.allocationTypeList"
+                  :key="item"
+                  :label="item"
+                  :value="index + 1"
+                />
+              </el-select>
+            </ElFormItem>
+            <ElFormItem>
+              <ElButton type="primary" @click="DataList">
+                <template #icon>
+                  <SvgIcon name="i-ep:search" />
+                </template>
+                筛选
+              </ElButton>
+              <ElButton @click="onReset">
+                <template #icon>
+                  <div class="i-grommet-icons:power-reset h-1em w-1em" />
+                </template>
+                重置
+              </ElButton>
+              <ElButton link @click="toggle">
+                <template #icon>
+                  <SvgIcon
+                    :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
+                  />
+                </template>
+                {{ fold ? "展开" : "收起" }}
+              </ElButton>
+            </ElFormItem>
+          </ElForm>
+        </template>
+      </SearchBar>
       <ElDivider border-style="dashed" />
       <el-row>
         <FormLeftPanel />

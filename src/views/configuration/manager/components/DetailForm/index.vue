@@ -7,6 +7,7 @@ import useTenantRoleStore from '@/store/modules/tenant_role'
 
 // 禁用修改密码
 const disabled = ref(false)
+// 国家
 const useStoreCountry = useBasicDictionaryStore()
 // 角色码
 const roleStore = useTenantRoleStore()
@@ -94,6 +95,7 @@ const formRules = ref<FormRules>({
     { required: true, message: '请输入邮箱', trigger: 'blur' },
   ],
 })
+
 onMounted(async () => {
   try {
     loading.value = true
@@ -111,6 +113,7 @@ onMounted(async () => {
     loading.value = false
   }
 })
+
 const handleChange = (val: any) => {
   if (val !== form.value.phone || val !== form.value.email) {
     isTrue.value = true
@@ -191,6 +194,7 @@ defineExpose({
     })
   }, onCancel,
 })
+
 // 关闭弹框
 function onCancel() {
   form.value = {}

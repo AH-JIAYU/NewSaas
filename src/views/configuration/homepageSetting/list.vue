@@ -40,11 +40,13 @@ const data = ref({
     enable: false,
     selectionDataList: [],
   },
-  dataList: [], //自定义
-  controlDataList: [], // 通用
+  //自定义
+  dataList: [],
+  // 通用
+  controlDataList: [],
 });
 
-
+// 获取数据
 function getDataList() {
   try {
     data.value.loading = true;
@@ -54,9 +56,13 @@ function getDataList() {
     };
     api.list(params).then((res: any) => {
       data.value.loading = false;
-      data.value.controlDataList = res.data.controlData; //通用
-      data.value.dataList = res.data.data; //自定义
-      pagination.value.total = Number(res.data.total);
+      if(res.data && res.status === 1) {
+        //通用
+        data.value.controlDataList = res.data.controlData;
+        //自定义
+        data.value.dataList = res.data.data;
+        pagination.value.total = Number(res.data.total);
+      }
     });
   } catch (error) {
 
@@ -80,21 +86,25 @@ function sortChange({ prop, order }: { prop: string; order: string }) {
   onSortChange(prop, order).then(() => getDataList());
 }
 
+// 新增
 function onCreate() {
   data.value.formModeProps.id = "";
   data.value.formModeProps.row = "";
   data.value.formModeProps.visible = true;
 }
 
+// 修改
 function onEdit(row: any) {
   data.value.formModeProps.id = row.id;
   data.value.formModeProps.row = JSON.stringify(row);
   data.value.formModeProps.visible = true;
 }
+
 // 设计主页
 function homePage(row: any, title: any = "编辑") {
   homePageRef.value.showEdit(row, title);
 }
+
 // 设计主页
 async function setHomePage(row: any) {
   const res = await api.setHomePageTemplate({ templateId: row.id });
@@ -106,6 +116,7 @@ async function setHomePage(row: any) {
   getDataList()
 }
 
+// 删除
 function onDel(row: any) {
   ElMessageBox.confirm(`确认删除「${row.title}」吗？`, "确认信息")
     .then(() => {
@@ -119,15 +130,6 @@ function onDel(row: any) {
       });
     })
     .catch(() => { });
-}
-
-// 重置数据
-function onReset() {
-  Object.assign(data.value.search, {
-    // 模板标题
-    title: "",
-  });
-  getDataList();
 }
 
 onMounted(() => {

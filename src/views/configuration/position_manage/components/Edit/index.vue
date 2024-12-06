@@ -7,6 +7,7 @@ import api from "@/api/modules/position_manage";
 defineOptions({
   name: "Edit",
 });
+
 // 更新数据
 const emits = defineEmits(["success"]);
 // title
@@ -36,60 +37,7 @@ const formRules = ref<FormRules>({
     { required: true, trigger: "change", message: "请选择客户" },
   ],
 });
-// 提交数据
-function onSubmit() {
-  return new Promise<void>((resolve) => {
-    if (!form.value.id) {
-      formRef.value &&
-        formRef.value.validate((valid: any) => {
-          if (valid) {
-            try {
-              loading.value = true;
-              delete form.value.id;
-              api.create(form.value).then(() => {
-                loading.value = false;
-                ElMessage.success({
-                  message: "新增成功",
-                  center: true,
-                });
-                emits("success");
-                dialogTableVisible.value = false;
-                resolve();
-              });
-            } catch (error) {
 
-            } finally {
-              loading.value = false;
-            }
-          }
-        });
-    } else {
-      formRef.value &&
-        formRef.value.validate((valid: any) => {
-          if (valid) {
-            try {
-              loading.value = true;
-              const data = toRaw(form.value);
-              api.edit(data).then(() => {
-                loading.value = false;
-                ElMessage.success({
-                  message: "编辑成功",
-                  center: true,
-                });
-                emits("success");
-                dialogTableVisible.value = false;
-                resolve();
-              });
-            } catch (error) {
-
-            } finally {
-              loading.value = false;
-            }
-          }
-        });
-    }
-  });
-}
 // 获取数据
 async function showEdit(row: any) {
   try {
@@ -117,9 +65,55 @@ async function showEdit(row: any) {
     loading.value = false;
   }
 }
+
+// 提交数据
+function onSubmit() {
+  return new Promise<void>((resolve) => {
+    formRef.value &&
+      formRef.value.validate((valid: any) => {
+        if (valid) {
+          try {
+            loading.value = true;
+            if (!form.value.id) {
+              delete form.value.id;
+              api.create(form.value).then(() => {
+                loading.value = false;
+                ElMessage.success({
+                  message: "新增成功",
+                  center: true,
+                });
+                emits("success");
+                dialogTableVisible.value = false;
+                resolve();
+              });
+            } else {
+              const data = toRaw(form.value);
+              api.edit(data).then(() => {
+                loading.value = false;
+                ElMessage.success({
+                  message: "编辑成功",
+                  center: true,
+                });
+                emits("success");
+                dialogTableVisible.value = false;
+                resolve();
+              });
+            }
+          } catch (error) {
+
+          } finally {
+            loading.value = false;
+          }
+        }
+      });
+
+  });
+}
+
 onMounted(async () => {
   defaultTime.value = new Date();
 });
+
 // 暴露方法
 defineExpose({ showEdit });
 </script>
@@ -131,17 +125,6 @@ defineExpose({ showEdit });
         <el-form-item prop="name" label="职位名称">
           <el-input v-model="form.name" placeholder="请输入职位名称" clearable />
         </el-form-item>
-        <!-- <el-form-item label="职位日志">
-          <el-switch
-            v-model="form.active"
-            inline-prompt
-            active-text="启用"
-            inactive-text="禁用"
-            :active-value="1"
-            :inactive-value="2"
-          >
-          </el-switch>
-        </el-form-item> -->
         <el-form-item label="备注">
           <el-input v-model="form.remark" placeholder="备注说明" clearable :rows="5" type="textarea" />
         </el-form-item>

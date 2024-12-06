@@ -26,12 +26,13 @@ async function showEdit(row: any,val:any) {
     loading.value = false
   }
 }
+// 关闭弹框
 function close() {
   fileDtail.value = ''
   loadingDisible.value = false
 }
 
-// ... 这里可能还有其他逻辑 ...
+//暴露事件
 defineExpose({
   showEdit,
 })

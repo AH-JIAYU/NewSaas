@@ -23,22 +23,29 @@ const munulevs = ref();
 const departmentStore = useDepartmentStore();
 // 部门数据
 const departmentList = ref<any>();
+// 定义表单数据
 const form = ref<any>({})
+// 通知更新列表
 const emit = defineEmits(["fetch-data"]);
+// 弹框开关
 const drawerisible = ref<boolean>(false);
 // 详情数据
 const detailData = ref<any>();
+
+// 修改事件
 async function showEdit(row: any) {
   form.value = row
   const params = {
     id: row.id,
   };
   const { status, data } = await api.list(params)
-  detailData.value = data.data[0];
-
+  if (data && status === 1) {
+    detailData.value = data.data[0];
+  }
   drawerisible.value = true;
 }
 
+// 关闭弹框事件
 function close() {
   emit("fetch-data");
   drawerisible.value = false;
@@ -201,25 +208,12 @@ defineExpose({
             </div>
           </div>
         </template>
-  <!-- <el-row :gutter="24">
-    <el-form-item label="分配小组:">
-      <el-radio-group v-if="groupManageList.length" v-model="form.groupId">
-        <el-radio v-for="item in groupManageList" :key="item.id" :value="item.id" :label="item.name"
-          disabled></el-radio>
-      </el-radio-group>
-      <el-text v-else>-</el-text>
-    </el-form-item>
-  </el-row> -->
 </el-card>
 </el-form>
 <template #footer>
         <div class="flex-c">
           <el-button type="primary" @click="close"> 关闭 </el-button>
-
-
         </div>
-
-
       </template>
 </el-drawer>
 </template>
@@ -230,6 +224,7 @@ defineExpose({
   justify-content: center;
   align-items: center;
 }
+
 .card-header {
   display: flex;
   justify-content: space-between;

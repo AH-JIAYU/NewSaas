@@ -18,6 +18,7 @@ defineOptions({
 })
 // 区域
 const useStoreCountry = useBasicDictionaryStore()
+// 国家
 const filterCountry = ref<any>([])
 // 角色码
 const roleStore = useTenantRoleStore()
@@ -85,14 +86,15 @@ function getDataList() {
     data.value.loading = true
     apiUser.list(data.value.search).then((res: any) => {
       data.value.loading = false
-      data.value.dataList = res.data
-      pagination.value.total = res.data?.length
-      data.value.dataList.forEach((item: any) => {
-        item.statusLoading = false
-      })
+      if(res.data && res.status === 1) {
+        data.value.dataList = res.data
+        pagination.value.total = res.data?.length
+        data.value.dataList.forEach((item: any) => {
+          item.statusLoading = false
+        })
+      }
     })
   } catch (error) {
-
   } finally {
     data.value.loading = false
   }
@@ -106,18 +108,22 @@ function onReset() {
   })
   getDataList()
 }
+
 // 每页数量切换
 function sizeChange(size: number) {
   onSizeChange(size).then(() => getDataList())
 }
+
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
   onCurrentChange(page).then(() => getDataList())
 }
+
 // 字段排序
 function sortChange({ prop, order }: { prop: string, order: string }) {
   onSortChange(prop, order).then(() => getDataList())
 }
+
 // 新增
 function onCreate() {
   if (data.value.formMode === 'router') {
@@ -131,6 +137,7 @@ function onCreate() {
     data.value.formModeProps.visible = true
   }
 }
+
 // 修改
 function onEdit(row: any) {
   if (data.value.formMode === 'router') {
@@ -147,6 +154,7 @@ function onEdit(row: any) {
     data.value.formModeProps.visible = true
   }
 }
+
 // 开关事件
 function onChangeStatus(row: any) {
   return new Promise<boolean>((resolve) => {
@@ -250,7 +258,6 @@ function onDel(row: any) {
       </ElSpace>
       <ElTable v-loading="data.loading" class="my-4" :data="data.dataList" stripe highlight-current-row border
         height="100%" @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
-        <!-- <ElTableColumn v-if="data.batch.enable" type="selection" align="left" fixed /> -->
         <ElTableColumn prop="account" sortable label="帐号">
           <template #default="{ row }">
             <el-text v-if="row.country === 'CN'" class="mx-1">

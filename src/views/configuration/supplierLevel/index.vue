@@ -2,59 +2,53 @@
 import { nextTick, onMounted } from "vue";
 import { ElMessageBox, ElMessage } from "element-plus";
 import { submitLoading } from "@/utils/apiLoading";
-import Sortable from "sortablejs"; // 拖拽排序插件
+// 拖拽排序插件
+import Sortable from "sortablejs";
 import edit from "./components/Edit/index.vue";
-import useConfigurationSupplierLevelStore from "@/store/modules/configuration_supplierLevel"; //供应商等级
+//供应商等级
+import useConfigurationSupplierLevelStore from "@/store/modules/configuration_supplierLevel";
 import api from "@/api/modules/configuration_supplierLevel";
 import empty from '@/assets/images/empty.png'
+import { columns } from './components/configuration/index.ts'
 
 defineOptions({
   name: "supplierLevel",
 });
 
-const configurationSupplierLevelStore = useConfigurationSupplierLevelStore(); //供应商等级
+//供应商等级
+const configurationSupplierLevelStore = useConfigurationSupplierLevelStore();
+// 分页
 const { pagination, getParams, onSizeChange, onCurrentChange } =
-  usePagination(); // 分页
-
+  usePagination();
+// listLoading
 const listLoading = ref(false);
-const EditRef = ref(); // 组件ref 新增/编辑
-const list = ref<any>([]); // 列表
-const checkList = ref<any>([]); // 表格-展示的列
-const border = ref(false); // 表格控件-是否展示边框
-const stripe = ref(false); // 表格控件-是否展示斑马条
-const lineHeight = ref<any>("default"); // 表格控件-控制表格大小
-const tableAutoHeight = ref(false); // 表格控件-高度自适应
-const elTableRef = ref(); // 表格ref
-// 表格控件-展示列
-const columns = ref([
-  {
-    label: "等级名称",
-    prop: "levelName",
-    sortable: true,
-    disableCheck: false, // 不可更改
-    checked: true, // 默认展示
-  },
-  {
-    label: "加成比例%",
-    prop: "additionRatio",
-    sortable: true,
-    checked: true,
-  },
-  {
-    label: "成员数量",
-    prop: "memberQuantity",
-    sortable: true,
-    checked: true,
-  },
-]);
+// 组件ref 新增/编辑
+const EditRef = ref();
+// 列表
+const list = ref<any>([]);
+// 表格-展示的列
+const checkList = ref<any>([]);
+// 表格控件-是否展示边框
+const border = ref(false);
+// 表格控件-是否展示斑马条
+const stripe = ref(false);
+// 表格控件-控制表格大小
+const lineHeight = ref<any>("default");
+// 表格控件-高度自适应
+const tableAutoHeight = ref(false);
+// 表格ref
+const elTableRef = ref();
+
 // 新增
 function handleAdd() {
   EditRef.value.showEdit();
 }
+
 // 编辑
 function handleEdit(row: any) {
   EditRef.value.showEdit(row);
 }
+
 // 删除
 function handleDelete(row: any) {
   ElMessageBox.confirm(`您确定要删除当前项吗?`, "确认信息")
@@ -75,19 +69,23 @@ function handleDelete(row: any) {
     })
     .catch(() => { });
 }
+
 // 重置请求
 function queryData() {
   pagination.value.page = 1;
   fetchData();
 }
+
 // 每页数量切换
 function sizeChange(size: number) {
   onSizeChange(size).then(() => fetchData());
 }
+
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
   onCurrentChange(page).then(() => fetchData());
 }
+
 // 请求
 async function fetchData() {
   try {
@@ -95,9 +93,11 @@ async function fetchData() {
     const params: any = {
       ...getParams(),
     };
-    const { data } = await api.list(params);
-    list.value = data.getTenantSupplierLevelInfoList;
-    pagination.value.total = data.total;
+    const { data, status } = await api.list(params);
+    if (data && status === 1) {
+      list.value = data.getTenantSupplierLevelInfoList;
+      pagination.value.total = data.total;
+    }
     listLoading.value = false;
   } catch (error) {
 
@@ -125,7 +125,7 @@ function rowDrop() {
 }
 
 onMounted(() => {
-  columns.value.forEach((item: any) => {
+  columns.forEach((item: any) => {
     if (item.checked) {
       checkList.value.push(item.prop);
     }

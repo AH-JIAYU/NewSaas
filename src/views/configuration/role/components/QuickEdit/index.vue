@@ -7,8 +7,10 @@ defineOptions({
   name: "RoleQuicEdit",
 });
 
+// 更新列表
 const emits = defineEmits(["fetch-data"]);
 const formRef = ref<any>()
+// 定义数据
 const data = ref<any>({
   dialogTableVisible: false,
   title: '',
@@ -40,7 +42,6 @@ async function showEdit(row: any, FormType: any) {
 
 };
 
-
 // 提交数据
 async function onSubmit() {
   data.value.loading = true;
@@ -58,20 +59,17 @@ async function onSubmit() {
     data.value.loading = false;
   })
 };
+
 // 弹框关闭事件
 function closeHandler() {
   data.value.dialogTableVisible = false;
   data.value.formData = {}
 };
 
-
-
-
 // 暴露方法
 defineExpose({
   showEdit,
 });
-
 </script>
 
 <template>

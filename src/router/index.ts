@@ -33,7 +33,7 @@ const router = createRouter({
       : (constantRoutes as RouteRecordRaw[]),
 });
 
-router.beforeEach(async (to, from, next) => { 
+router.beforeEach(async (to, from, next) => {
   const settingsStore = useSettingsStore();
   const userStore = useUserStore();
   const routeStore = useRouteStore();
@@ -196,6 +196,8 @@ router.afterEach((to, from) => {
      * 处理普通页面的缓存
      */
     // 判断当前页面是否开启缓存，如果开启，则将当前页面的 name 信息存入 keep-alive 全局状态
+
+
     if (to.meta.cache && !to.meta.iframe) {
       const componentName = to.matched.at(-1)?.components?.default.name;
       if (componentName) {
