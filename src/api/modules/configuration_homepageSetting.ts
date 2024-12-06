@@ -11,4 +11,6 @@ export default {
   del: (data: any) => api.post('template/deleteHomePageTemplate', data),
   //删除
   setHomePageTemplate: (data: any) => api.post('template/setHomePageTemplate', data),
+    //上传图片
+    uploadHomePageTemplateImage: (data: any) => api.post('template/uploadHomePageTemplateImage', data),
 }
