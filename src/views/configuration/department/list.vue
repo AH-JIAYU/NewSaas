@@ -219,7 +219,7 @@ const sortTreeByTime = (nodes:any) => {
       nodes.sort((a:any, b:any) => {
         const timeA:any = new Date(a['createTime']);
         const timeB:any = new Date(b['createTime']);
-        return  timeB - timeA ;
+        return  timeA - timeB ;
       });
       // 然后递归处理每个子节点
       nodes.forEach((node:any) => {

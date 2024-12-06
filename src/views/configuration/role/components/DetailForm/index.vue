@@ -43,6 +43,14 @@ onMounted(async () => {
     loading.value = true;
     if (form.value.id !== "") {
       await getInfo();
+    } else {
+      //新增时，默认勾选全部，
+        // 获取扁平化后的1，2级路由
+  // const Level1AndLevel2List = await routeStore.obtainLevel1AndLevel2Routing();
+  // // menuId过滤后只保留第三级的路由，以免1，2级勾选，导致全选
+  // form.value.menuId = menuId.filter((item: any) => {
+  //   return !Level1AndLevel2List.some((ite: any) => ite.id === item);
+  // });
     }
     // 调用store的方法获取按钮权限，如果没有就调接口
     permissionData.value = await roleButton.getPermissions();

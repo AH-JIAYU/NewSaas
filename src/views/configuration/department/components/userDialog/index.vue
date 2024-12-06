@@ -146,9 +146,9 @@ function onSubmit() {
   form.value.organizationalStructureId = organizationalStructureId[0];
   if (form.value.roleList.length > 0) {
     form.value.role = form.value.roleList[0]
-    delete form.value.roleList
   } else {
     form.value.role = ''
+    form.value.roleList = []
   }
   if (!form.value.id) {
     formRef.value &&

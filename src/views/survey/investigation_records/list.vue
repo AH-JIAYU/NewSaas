@@ -194,7 +194,7 @@ function onReset() {
 }
 onMounted(async () => {
   data.customerList = await customerStore.getCustomerList();
-  columns.value.forEach((item) => {
+  columns.value.forEach((item:any) => {
     if (item.checked) {
       checkList.value.push(item.prop);
     }

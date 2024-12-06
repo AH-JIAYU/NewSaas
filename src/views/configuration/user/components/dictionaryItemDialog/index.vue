@@ -152,10 +152,11 @@ function onSubmit() {
   }
   if (form.value.roleList.length > 0) {
     form.value.role = form.value.roleList[0]
-    delete form.value.roleList
   } else {
     form.value.role = ''
+    form.value.roleList =[]
   }
+
   if (!form.value.id) {
     formRef.value &&
       formRef.value.validate((valid: any) => {
@@ -203,6 +204,7 @@ function onSubmit() {
             organizationalStructureId,
             userName,
           };
+
           if (isPhone.value === params.phoneNumber) {
             delete params.phoneNumber;
           }
@@ -276,6 +278,7 @@ onMounted(async () => {
     // 区域
     country.value = await useStoreCountry.getCountry();
     // 编辑
+    form.value.roleList = [];
     if (props.id !== "" && props.row) {
       formRules.value.password = [];
       form.value = JSON.parse(props.row);
