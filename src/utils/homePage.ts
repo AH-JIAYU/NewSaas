@@ -1111,7 +1111,7 @@ margin: 11.25rem 11.25rem 0 11.25rem;
             <img
             class="image_1"
             referrerpolicy="no-referrer"
-            src=${image5}
+            src=
             />
                <div class="text-group_1 flex-col">
               <span class="text_3">在线赚钱</span>
@@ -1194,7 +1194,7 @@ const BCHtml4 = `
     align-items: center;
     width: 100%;
     height: 31.25rem;
-    background: url(${image8})  no-repeat;
+    background: url(https://templates.surveysaas.com/660568572875948032/660555155398115328/a510fa97-a231-4008-a7e7-3234895f7681/1733476057428.png)  no-repeat;
     background-size: 100% 100%;
     margin: 0 0 0.027rem 0;
   }

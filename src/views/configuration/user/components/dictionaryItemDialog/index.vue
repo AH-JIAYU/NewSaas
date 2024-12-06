@@ -321,7 +321,7 @@ onMounted(async () => {
         <el-row :gutter="24">
           <el-col :span="8">
             <el-form-item label="用户名" prop="userName">
-              <el-input v-model="form.userName" :maxlength="20" placeholder="请输入用户名" clearable :disabled="props.id"/>
+              <el-input v-model="form.userName" :maxlength="20" placeholder="请输入用户名" clearable :disabled="props.id =='' ? false :true"/>
             </el-form-item>
           </el-col>
           <el-col :span="8">
