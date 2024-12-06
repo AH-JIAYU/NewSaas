@@ -64,7 +64,8 @@ async function showEdit(row: any, projectType: any) {
   data.value.allocationStatus = row.allocationStatus;
   const res = await obtainLoading(api.detail({ projectId: row.projectId }));
   data.value.form = res.data;
-  active.value = res.data.projectSettlementStatusSet[0].settlementStatus
+  console.log('res.data',res.data)
+  active.value = res.data.projectSettlementStatusSet.length > 0 ? res.data.projectSettlementStatusSet[0].settlementStatus : 0
   data.value.form.projectSettlementStatusSet =
     data.value.form.projectSettlementStatusSet.reduce(
       (accumulator: any, currentValue: any) => {
@@ -188,6 +189,7 @@ defineExpose({ showEdit });
                 :description="active >= 1 ? data.form.projectSettlementStatusSet[0].operationTime : '-'" :icon="active >= 1
       ? CircleCheck
       : Position" />
+      {{ data.form.projectSettlementStatusSet }}
               <el-step title="已审核"
                 :description="active >= 2 ? data.form.projectSettlementStatusSet[1].operationTime : '-'" :icon="active >= 2
       ? CircleCheck
