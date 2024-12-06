@@ -137,15 +137,12 @@ async function getDataList() {
       ...getParams(),
       ...data.value.search,
     };
-    console.log(typeof data.value.type, data.value.type)
     if (data.value.type == 2) {
       //业绩合作商调用
-      //queryBeCompanyRecordQueryAmount
-
       const res = await api.queryBeCompanyRecordQueryAmount(params);
       if (res && res.status === 1) {
         data.value.dataList = res.data && res.data.items ? res.data.items : [];
-        pagination.value.total = res.data ? res.data.total : 0;
+        pagination.value.total = res.data ? +res.data.total : 0;
       }
       data.value.loading = false;
 
@@ -153,7 +150,7 @@ async function getDataList() {
       const res = await api.queryCompanyRecordQueryAmount(params);
       if (res && res.status === 1) {
         data.value.dataList = res.data && res.data.items ? res.data.items : [];
-        pagination.value.total = res.data ? res.data.total : 0;
+        pagination.value.total = res.data ? +res.data.total : 0;
       }
       data.value.loading = false;
 
