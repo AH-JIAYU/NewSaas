@@ -27,6 +27,7 @@ const routeInfo = useRoute()
 
 const settingsStore = useSettingsStore()
 const keepAliveStore = useKeepAliveStore()
+
 const menuStore = useMenuStore()
 useWatermarkStore()
 

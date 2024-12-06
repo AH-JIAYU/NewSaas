@@ -211,7 +211,7 @@ onMounted(() => {
       <ElDivider border-style="dashed" />
       <ElSpace wrap>
         <ElButton type="primary" size="default" @click="onCreate">
-          新增角色管理
+          新增角色
         </ElButton>
       </ElSpace>
       <ElTable v-loading="data.loading" class="my-4" :data="data.dataList" stripe highlight-current-row height="100%"

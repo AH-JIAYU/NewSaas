@@ -39,7 +39,8 @@ const drawerisible = ref<boolean>(false);
 const detailData = ref<any>();
 // 修改表单
 async function showEdit(row: any) {
-  form.value = row
+  form.value = row;
+  form.value.roleList = [form.value.role];
   const params = {
     id: row.id,
   };
@@ -56,7 +57,7 @@ async function showEdit(row: any) {
 // 弹框关闭事件
 function close() {
   emit("fetch-data");
-  departmentId.value = []
+  departmentId.value = [];
   drawerisible.value = false;
 }
 
@@ -68,9 +69,12 @@ onMounted(async () => {
   // 角色
   munulevs.value = await roleStore.getRole();
   // 部门
-  const res = await apiDep.list({ name: '' });
+  const res = await apiDep.list({ name: "" });
   if (res.data) {
     departmentList.value = res.data;
+    departmentList.value.forEach((item: any) => {
+      item.disabled = true;
+    });
   }
 });
 
@@ -190,32 +194,37 @@ defineExpose({
 </el-card>
 <el-card class="box-card">
   <template #header>
-          <div class="card-header">
-            <div class="leftTitle">角色信息</div>
-          </div>
-        </template>
+  <div class="card-header">
+    <div class="leftTitle">角色信息</div>
+  </div>
+</template>
   <el-row :gutter="24">
     <el-form-item label="分配角色:">
-      <el-radio-group v-model="form.role">
-        <el-radio v-for="item in munulevs" :key="item.id" :value="item.roleName" :label="item.roleName"
-          disabled></el-radio>
-      </el-radio-group>
+      <el-checkbox-group style="margin-left: 1.5rem;" v-if="munulevs?.length" v-model="form.roleList" >
+              <el-checkbox v-for="item in munulevs" :key="item.id" :label="item.roleName" :value="item.roleName" disabled>
+                {{ item.roleName }}
+              </el-checkbox>
+            </el-checkbox-group>
+            <el-text v-else>暂无数据</el-text>
     </el-form-item>
   </el-row>
 </el-card>
 <el-card class="box-card">
   <template #header>
-          <div class="card-header">
-            <div class="leftTitle">
-              部门信息<span v-if="form.enableChargePerson" style="margin-left: 20px; font-size: 14px">负责人:<el-text
-                  v-for="item in staffList" :key="item.id">
-                  <el-text v-if="item.id === form.id">
-                    {{ item.name }}
-                  </el-text>
-                </el-text></span>
-            </div>
-          </div>
-        </template>
+  <div class="card-header">
+    <div class="leftTitle">
+      部门信息<span
+        v-if="form.enableChargePerson"
+        style="margin-left: 20px; font-size: 14px"
+        >负责人:<el-text v-for="item in staffList" :key="item.id">
+          <el-text v-if="item.id === form.id">
+            {{ item.name }}
+          </el-text>
+        </el-text></span
+      >
+    </div>
+  </div>
+</template>
   <el-row :gutter="24">
     <el-form-item label="分配部门:">
       <el-tree v-if="departmentList.length > 0" style="max-width: 600px" ref="treeRef" :disabled="true"
@@ -250,7 +259,7 @@ defineExpose({
     position: relative;
     width: 128px;
 
-    >div {
+    > div {
       width: 120px;
       height: 2.2rem;
       line-height: 2.2rem;
@@ -286,7 +295,7 @@ defineExpose({
       }
     }
 
-    >div.isOnlineTrue {
+    > div.isOnlineTrue {
       background-color: #70b51a;
 
       &::after,
@@ -295,7 +304,7 @@ defineExpose({
       }
     }
 
-    >div.isOnlineFalse {
+    > div.isOnlineFalse {
       background-color: #d8261a;
 
       &::after,

@@ -6,7 +6,7 @@ import useDepartmentStore from "@/store/modules/department";
 import useTenantRoleStore from "@/store/modules/tenant_role";
 import useTenantStaffStore from "@/store/modules/configuration_manager";
 import usePositionManageStore from "@/store/modules/position_manage";
-
+import apiDep from "@/api/modules/department";
 // 用户
 const tenantStaffStore = useTenantStaffStore();
 // 用户数据
@@ -21,6 +21,11 @@ const roleStore = useTenantRoleStore();
 const munulevs = ref();
 // 部门
 const departmentStore = useDepartmentStore();
+const defaultProps: any = {
+  children: "children",
+  label: "name",
+  // disabled : "distribution",
+};
 // 部门数据
 const departmentList = ref<any>();
 // 定义表单数据
@@ -30,6 +35,7 @@ const emit = defineEmits(["fetch-data"]);
 // 弹框开关
 const drawerisible = ref<boolean>(false);
 // 详情数据
+const departmentId = ref<any>([]);
 const detailData = ref<any>();
 
 // 修改事件
@@ -39,8 +45,10 @@ async function showEdit(row: any) {
     id: row.id,
   };
   const { status, data } = await api.list(params)
-  if (data && status === 1) {
-    detailData.value = data.data[0];
+  detailData.value = data.data[0];
+  form.value.roleList = [detailData.value.role]
+  if (departmentId.value) {
+    departmentId.value.push(detailData.value.organizationalStructureId);
   }
   drawerisible.value = true;
 }
@@ -52,6 +60,7 @@ function close() {
 }
 
 onMounted(async () => {
+  console.log('1111')
   // 职位
   positionManageList.value = await usePositionManage.getPositionManage();
   // 用户
@@ -59,7 +68,14 @@ onMounted(async () => {
   // 角色
   munulevs.value = await roleStore.getRole();
   // 部门
-  departmentList.value = await departmentStore.getDepartment();
+  // 部门
+  const res = await apiDep.list({ name: "" });
+  if (res.data) {
+    departmentList.value = res.data;
+    departmentList.value.forEach((item: any) => {
+      item.disabled = true;
+    });
+  }
 });
 
 defineExpose({
@@ -187,10 +203,16 @@ defineExpose({
         </template>
   <el-row :gutter="24">
     <el-form-item label="分配角色:">
-      <el-radio-group v-model="form.role">
+      <el-checkbox-group style="margin-left: 1.5rem;" v-if="munulevs?.length" v-model="form.roleList" >
+              <el-checkbox v-for="item in munulevs" :key="item.id" :label="item.roleName" :value="item.roleName" disabled>
+                {{ item.roleName }}
+              </el-checkbox>
+            </el-checkbox-group>
+            <el-text v-else>暂无数据</el-text>
+      <!-- <el-radio-group v-model="form.role">
         <el-radio v-for="item in munulevs" :key="item.id" :value="item.roleName" :label="item.roleName"
           disabled></el-radio>
-      </el-radio-group>
+      </el-radio-group> -->
     </el-form-item>
   </el-row>
 </el-card>
@@ -198,7 +220,7 @@ defineExpose({
   <template #header>
           <div class="card-header">
             <div class="leftTitle">
-              小组信息<span style="margin-left: 20px; font-size: 14px"
+              部门信息<span style="margin-left: 20px; font-size: 14px"
                 >PM:<el-text v-for="item in staffList" :key="item.id">
               <el-text v-if="item.id === form.director">
                 {{ item.name }}
@@ -208,6 +230,14 @@ defineExpose({
             </div>
           </div>
         </template>
+  <el-row :gutter="24">
+    <el-form-item label="分配部门:">
+      <el-tree v-if="departmentList.length > 0" style="max-width: 600px" ref="treeRef"  :data="departmentList"
+        show-checkbox check-strictly node-key="id" :default-expanded-keys="[]" :default-checked-keys="departmentId"
+        default-expand-all :props="defaultProps" />
+      <el-text v-else>暂无数据</el-text>
+    </el-form-item>
+  </el-row>
 </el-card>
 </el-form>
 <template #footer>

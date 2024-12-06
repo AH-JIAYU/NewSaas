@@ -101,6 +101,12 @@ async function save() {
         const dataList = {
           tenantCustomerInfoList: leftTabsData,
         };
+        if(leftTabsData.turnover.length ){
+          leftTabsData.turnover.forEach((item:any) => {
+            item.turnover = item.turnover ==0 ? null :item.turnover
+          })
+        }
+
         const { status } = await submitLoading(api.create(dataList));
         status === 1 &&
           ElMessage.success({
@@ -114,6 +120,8 @@ async function save() {
           leftTabsData[0].turnover = null;
           leftTabsData[0].rateAudit = null;
         }
+        leftTabsData[0].turnover = leftTabsData[0].turnover ==0 ? null :leftTabsData[0].turnover;
+        console.log(leftTabsData[0].turnover,'leftTabsData.turnover')
         const { status } = await submitLoading(api.edit(leftTabsData[0]));
         status === 1 &&
           ElMessage.success({

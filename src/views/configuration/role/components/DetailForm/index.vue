@@ -32,6 +32,7 @@ const form = ref<any>({
   roleName: "",
   // 备注
   remark: "",
+  checkAll: false, //全选
 });
 // 校验
 const formRules = ref<FormRules>({
@@ -41,33 +42,73 @@ const formRules = ref<FormRules>({
 onMounted(async () => {
   try {
     loading.value = true;
-    if (form.value.id !== "") {
-      await getInfo();
-    }
     // 调用store的方法获取按钮权限，如果没有就调接口
     permissionData.value = await roleButton.getPermissions();
     // 从store获取原始路由
     menuData.value = routeStore.routesRaw;
+
+    if (form.value.id !== "") {
+      await getInfo();
+    } else {
+      form.value.menuId = [];
+      form.value.permission = [];
+      form.value.checkAll = false;
+    }
+
     loading.value = false;
   } catch (error) {
-
   } finally {
     loading.value = false;
   }
 });
+// 切换全选/取消全选
+const toggleCheckAll = () => {
+  if (form.value.checkAll) {
+    // 全选：将所有节点的key添加到checkedKeys中
+    form.value.menuId = [];
+    form.value.permission = [];
+    if (menuData.value.length) {
+      menuData.value.forEach((item: any) => {
+        form.value.menuId.push(item.id);
+      });
+    }
+    if (permissionData.value.length) {
+      permissionData.value.forEach((item: any) => {
+        form.value.permission.push(item.id);
+      });
+    }
+
+      treeRef.value.setCheckedNodes([
+        ...form.value.permission,
+        ...form.value.menuId,
+      ]);
+
+  } else {
+    form.value.checkAll = false;
+    // 取消全选：清空checkedKeys
+    form.value.menuId = [];
+    form.value.permission = [];
+
+      treeRef.value.setCheckedNodes([]); // 清除所有勾选项
+
+  }
+};
 
 // 回显form
 async function getInfo() {
   loading.value = true;
   // 先回显除menuid的数据，以免直接赋值menuId后再过滤导致页面不更新
   const { menuId, ...newForm } = JSON.parse(props.row);
-  form.value = newForm
+  form.value = newForm;
   // 获取扁平化后的1，2级路由
   const Level1AndLevel2List = await routeStore.obtainLevel1AndLevel2Routing();
   // menuId过滤后只保留第三级的路由，以免1，2级勾选，导致全选
   form.value.menuId = menuId.filter((item: any) => {
     return !Level1AndLevel2List.some((ite: any) => ite.id === item);
   });
+  if (permissionData.value.length == form.value.permission.length) {
+    form.value.checkAll = true;
+  }
 
   loading.value = false;
 }
@@ -128,7 +169,7 @@ defineExpose({
         // 组合一下
         const menupath = tree.concat(halltree);
         params.menuId = menupath;
-        form.value.menuId = menupath
+        form.value.menuId = menupath;
         formRef.value.validate(async (valid: any) => {
           if (!valid) {
             // 验证不通过，停止加载
@@ -172,9 +213,23 @@ defineExpose({
         <ElInput v-model="form.remark" placeholder="请输入备注" />
       </ElFormItem>
       <ElFormItem label="权限" v-if="!loading">
-        <el-tree v-if="form.menuId" ref="treeRef" :data="menuData" style="width: 100%"
-          :default-checked-keys="form.menuId" :default-expanded-keys="[]" node-key="id" show-checkbox
-          @check-change="handleNodeClick" default-expand-all border>
+        <!-- 全选/取消全选的复选框 -->
+        <el-checkbox v-model="form.checkAll" @change="toggleCheckAll"
+          >全选/取消全选</el-checkbox
+        >
+        <el-tree
+          v-if="form.menuId"
+          ref="treeRef"
+          :data="menuData"
+          style="width: 100%"
+          :default-checked-keys="form.menuId"
+          :default-expanded-keys="[]"
+          node-key="id"
+          show-checkbox
+          @check-change="handleNodeClick"
+          default-expand-all
+          border
+        >
           <template #default="{ data }">
             <div class="custom-tree-node">
               <div class="menu">
@@ -183,7 +238,11 @@ defineExpose({
               <div class="permission">
                 <div v-if="rowPermission(data.id)?.length" class="permissions">
                   <ElCheckboxGroup v-model="form.permission">
-                    <ElCheckbox v-for="auth in rowPermission(data.id)" :key="auth.id" :value="auth.id">
+                    <ElCheckbox
+                      v-for="auth in rowPermission(data.id)"
+                      :key="auth.id"
+                      :value="auth.id"
+                    >
                       {{ auth.label }}
                     </ElCheckbox>
                   </ElCheckboxGroup>
@@ -256,8 +315,6 @@ defineExpose({
         min-width: 150px;
       }
     }
-
-
   }
 }
 </style>

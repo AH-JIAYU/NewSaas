@@ -155,10 +155,11 @@ function onSubmit() {
   }
   if (form.value.roleList.length > 0) {
     form.value.role = form.value.roleList[0]
-    delete form.value.roleList
   } else {
     form.value.role = ''
+    form.value.roleList =[]
   }
+
   if (!form.value.id) {
     formRef.value &&
       formRef.value.validate((valid: any) => {
@@ -202,10 +203,11 @@ function onSubmit() {
             active,
             type,
             role,
-            positionId,
+            positionId :form.value.positionId ? form.value.positionId:'',
             organizationalStructureId,
             userName,
           };
+
           if (isPhone.value === params.phoneNumber) {
             delete params.phoneNumber;
           }
@@ -282,6 +284,7 @@ onMounted(async () => {
     // 区域
     country.value = await useStoreCountry.getCountry();
     // 编辑
+    form.value.roleList = [];
     if (props.id !== "" && props.row) {
       formRules.value.password = [];
       form.value = JSON.parse(props.row);
@@ -318,7 +321,7 @@ onMounted(async () => {
         <el-row :gutter="24">
           <el-col :span="8">
             <el-form-item label="用户名" prop="userName">
-              <el-input v-model="form.userName" :maxlength="20" placeholder="请输入用户名" clearable />
+              <el-input v-model="form.userName" :maxlength="20" placeholder="请输入用户名" clearable :disabled="props.id"/>
             </el-form-item>
           </el-col>
           <el-col :span="8">

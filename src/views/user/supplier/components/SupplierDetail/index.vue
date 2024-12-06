@@ -31,6 +31,21 @@ const operationType = (type: number) => {
 defineExpose({
   showEdit,
 });
+//付款方式
+const payMethodList = [
+  {
+    value: 1,
+    label: "银行转账",
+  },
+  {
+    value: 2,
+    label: "支付宝",
+  },
+  {
+    value: 3,
+    label: "paypal",
+  },
+];
 </script>
 
 <template lang="">
@@ -111,11 +126,7 @@ defineExpose({
       {{ detailData.emailAddress ? detailData.emailAddress : "-" }}
     </el-form-item>
   </el-col>
-  <el-col :span="8">
-    <el-form-item label="结算币种:">
-      {{ detailData.currencyType === 'USD' ? '美元' : "人民币" }}
-    </el-form-item>
-  </el-col>
+
 </el-row>
 </el-card>
 <el-card class="box-card">
@@ -171,8 +182,13 @@ defineExpose({
         </template>
   <el-row :gutter="24">
     <el-col :span="8">
+    <el-form-item label="结算币种:">
+      {{ detailData.currencyType === 'USD' ? '美元' : "人民币" }}
+    </el-form-item>
+  </el-col>
+    <el-col :span="8">
       <el-form-item label="付款方式:">
-        {{ detailData.payMethod ? detailData.payMethod : "-" }}
+        {{ detailData.payMethod ? detailData.payMethod ===1 ? '银行转账': detailData.payMethod ===2 ? '支付宝' :'paypal'    : "-" }}
       </el-form-item>
     </el-col>
     <el-col :span="8">

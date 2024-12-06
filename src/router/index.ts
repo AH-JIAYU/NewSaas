@@ -214,18 +214,18 @@ router.afterEach((to, from) => {
       const componentName = from.matched.at(-1)?.components?.default.name;
       if (componentName) {
         // 通过 meta.cache 判断针对哪些页面进行缓存
-        switch (typeof from.meta.cache) {
-          case "string":
-            if (from.meta.cache !== to.name) {
-              keepAliveStore.remove(componentName);
-            }
-            break;
-          case "object":
-            if (!from.meta.cache.includes(to.name as string)) {
-              keepAliveStore.remove(componentName);
-            }
-            break;
-        }
+        // switch (typeof from.meta.cache) {
+        //   case "string":
+        //     if (from.meta.cache !== to.name) {
+        //       keepAliveStore.remove(componentName);
+        //     }
+        //     break;
+        //   case "object":
+        //     if (!from.meta.cache.includes(to.name as string)) {
+        //       keepAliveStore.remove(componentName);
+        //     }
+        //     break;
+        // }
         // 通过 meta.noCache 判断针对哪些页面不需要进行缓存
         if (from.meta.noCache) {
           switch (typeof from.meta.noCache) {
