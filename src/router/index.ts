@@ -33,7 +33,7 @@ const router = createRouter({
       : (constantRoutes as RouteRecordRaw[]),
 });
 
-router.beforeEach(async (to, from, next) => { 
+router.beforeEach(async (to, from, next) => {
   const settingsStore = useSettingsStore();
   const userStore = useUserStore();
   const routeStore = useRouteStore();
@@ -198,6 +198,7 @@ router.afterEach((to, from) => {
     // 判断当前页面是否开启缓存，如果开启，则将当前页面的 name 信息存入 keep-alive 全局状态
     if (to.meta.cache && !to.meta.iframe) {
       const componentName = to.matched.at(-1)?.components?.default.name;
+      console.log(to.meta.cache,'to.meta.cache')
       if (componentName) {
         keepAliveStore.add(componentName);
       } else {
@@ -210,20 +211,21 @@ router.afterEach((to, from) => {
     // 判断离开页面是否开启缓存，如果开启，则根据缓存规则判断是否需要清空 keep-alive 全局状态里离开页面的 name 信息
     if (from.meta.cache && !from.meta.iframe) {
       const componentName = from.matched.at(-1)?.components?.default.name;
+      console.log(from.meta.cache,'from.meta.cache')
       if (componentName) {
         // 通过 meta.cache 判断针对哪些页面进行缓存
-        switch (typeof from.meta.cache) {
-          case "string":
-            if (from.meta.cache !== to.name) {
-              keepAliveStore.remove(componentName);
-            }
-            break;
-          case "object":
-            if (!from.meta.cache.includes(to.name as string)) {
-              keepAliveStore.remove(componentName);
-            }
-            break;
-        }
+        // switch (typeof from.meta.cache) {
+        //   case "string":
+        //     if (from.meta.cache !== to.name) {
+        //       keepAliveStore.remove(componentName);
+        //     }
+        //     break;
+        //   case "object":
+        //     if (!from.meta.cache.includes(to.name as string)) {
+        //       keepAliveStore.remove(componentName);
+        //     }
+        //     break;
+        // }
         // 通过 meta.noCache 判断针对哪些页面不需要进行缓存
         if (from.meta.noCache) {
           switch (typeof from.meta.noCache) {
