@@ -1194,11 +1194,16 @@ const BCHtml4 = `
     align-items: center;
     width: 100%;
     height: 31.25rem;
-    background: url(https://templates.surveysaas.com/660568572875948032/660555155398115328/a510fa97-a231-4008-a7e7-3234895f7681/1733476057428.png)  no-repeat;
-    background-size: 100% 100%;
-    margin: 0 0 0.027rem 0;
+  position: relative;
   }
-
+  .box_4 img {
+    position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+  }
   .text_5 {
     overflow-wrap: break-word;
     color: rgba(51, 51, 51, 1);
@@ -1206,7 +1211,7 @@ const BCHtml4 = `
     font-family: Source Han Sans CN-Medium;
     font-weight: 500;
     white-space: nowrap;
-
+ z-index: 9999;
   }
 
   .text-wrapper_1 {
@@ -1219,6 +1224,7 @@ background: #2490FF;
 display: flex;
 justify-content: center;
 align-items: center;
+ z-index: 9999;
   }
 
   .text_6 {
@@ -1230,6 +1236,7 @@ align-items: center;
     font-family: Source Han Sans CN-Medium;
     font-weight: 500;
     white-space: nowrap;
+     z-index: 9999;
 
   }
     </style>
