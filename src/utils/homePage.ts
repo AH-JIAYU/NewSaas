@@ -1211,7 +1211,6 @@ const BCHtml4 = `
     font-family: Source Han Sans CN-Medium;
     font-weight: 500;
     white-space: nowrap;
- z-index: 9999;
   }
 
   .text-wrapper_1 {
@@ -1244,6 +1243,7 @@ align-items: center;
 
 
   <div class="box_4 flex-col">
+     <img src="" >
     <span class="text_5">立即注册并体验功能</span>
     <div class="text-wrapper_1 flex-col">
       <span class="text_6 text-click">注册</span>
