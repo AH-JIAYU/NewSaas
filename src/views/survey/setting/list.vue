@@ -4,6 +4,7 @@ import type { FormInstance, FormRules } from "element-plus";
 import api from "@/api/modules/survey_site_setting";
 import useClipboard from "vue-clipboard3";
 import { onMounted, ref } from "vue";
+import message from "vue-m-message/types/message";
 defineOptions({
   name: "setting",
 });
@@ -90,10 +91,9 @@ async function getDataList() {
     loading.value = true;
     const { data } = await api.list();
     form.value = data || form.value;
-    if(form.value.minimumAmount === 0) form.value.minimumAmount = null;
+    if (form.value.minimumAmount === 0) form.value.minimumAmount = null;
     loading.value = false;
   } catch (error) {
-
   } finally {
     loading.value = false;
   }
@@ -109,19 +109,25 @@ const copyToClipboard = () => {
 };
 // 联系我们
 function onSubmit() {
-  if (form.value.email === '') {
-    formRules.value.email = []
-    formRef.value.clearValidate('email');
+  if (form.value.email === "") {
+    formRules.value.email = [];
+    formRef.value.clearValidate("email");
   }
-  if (form.value.phone === '') {
-    formRules.value.phone = []
-    formRef.value.clearValidate('phone');
+  if (form.value.phone === "") {
+    formRules.value.phone = [];
+    formRef.value.clearValidate("phone");
   }
+
+  //如果form.minimumAmount,form.value.settlementDone.test('/^\d+$/')
+  // if (form.value.minimumAmount.test("/^d+$/")) {
+  //   ElMessage.warning("请输入有效的数字");
+  //   return;
+  // }
   // 新增
   if (!form.value.id) {
     // 校验
     formRef.value &&
-      formRef.value.validate((valid:any) => {
+      formRef.value.validate((valid: any) => {
         if (valid) {
           try {
             loading.value = true;
@@ -134,7 +140,6 @@ function onSubmit() {
               });
             });
           } catch (error) {
-
           } finally {
             loading.value = false;
           }
@@ -143,7 +148,7 @@ function onSubmit() {
   } else {
     // 修改
     formRef.value &&
-      formRef.value.validate((valid:any) => {
+      formRef.value.validate((valid: any) => {
         if (valid) {
           try {
             let {
@@ -191,7 +196,6 @@ function onSubmit() {
               }
             });
           } catch (error) {
-
           } finally {
             loading.value = false;
           }
@@ -204,43 +208,76 @@ function onSubmit() {
 <template>
   <div v-loading="loading">
     <PageMain>
-      <el-tabs v-model="activeTopTab" >
-        <el-form ref="formRef" :model="form" :rules="formRules" label-position="right" label-width="140px"
-          style="width: 500px">
+      <el-tabs v-model="activeTopTab">
+        <el-form
+          ref="formRef"
+          :model="form"
+          :rules="formRules"
+          label-position="right"
+          label-width="140px"
+          style="width: 500px"
+        >
           <el-tab-pane label="基础设置" name="基本设置">
             <el-row :gutter="20">
               <el-col :span="7">
                 <el-form-item label="注册开关">
-                  <el-switch v-model="form.registerOffOrOn" active-text="开启" inline-prompt inactive-text="关闭"
-                    :active-value="true" :inactive-value="false" />
+                  <el-switch
+                    v-model="form.registerOffOrOn"
+                    active-text="开启"
+                    inline-prompt
+                    inactive-text="关闭"
+                    :active-value="true"
+                    :inactive-value="false"
+                  />
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="注册审核">
-                  <el-switch v-model="form.registerExamineOffOrOn" active-text="开启" inline-prompt inactive-text="关闭"
-                    :active-value="true" :inactive-value="false" />
+                  <el-switch
+                    v-model="form.registerExamineOffOrOn"
+                    active-text="开启"
+                    inline-prompt
+                    inactive-text="关闭"
+                    :active-value="true"
+                    :inactive-value="false"
+                  />
                 </el-form-item>
               </el-col>
               <el-col :span="24">
-                <el-form-item label="最低结算金额" prop="confirmPassword">
-                  <div class="domainName"> 
-                    <el-tooltip class="tooltips " content="针对会员结算金额的配置" placement="top">
+                <el-form-item label="最低结算金额" prop="minimumAmount">
+                  <div class="domainName">
+                    <el-tooltip
+                      class="tooltips"
+                      content="针对会员结算金额的配置"
+                      placement="top"
+                    >
                       <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
                     </el-tooltip>
                   </div>
-                  <el-input v-model.number="form.minimumAmount" style="width: 18rem" placeholder="" />
+                  <el-input
+                    v-model.number="form.minimumAmount"
+                    style="width: 18rem"
+                    placeholder=""
+                  />
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="会员税点" prop="confirmPassword">
-                  <el-input v-model.number="form.taxPointsProportion" style="width: 18rem" placeholder=""><template
-                      #append>%</template>
+                  <el-input
+                    v-model.number="form.taxPointsProportion"
+                    style="width: 18rem"
+                    placeholder=""
+                    ><template #append>%</template>
                   </el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item label="调查限价" prop="confirmPassword">
-                  <el-input v-model.number="form.fixedPrice" style="width: 18rem" placeholder="" />
+                  <el-input
+                    v-model.number="form.fixedPrice"
+                    style="width: 18rem"
+                    placeholder=""
+                  />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -395,8 +432,6 @@ function onSubmit() {
       }
     }
   }
-
-
 }
 
 .domainName {

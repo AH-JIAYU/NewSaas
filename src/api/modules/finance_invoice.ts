@@ -9,4 +9,6 @@ export default {
   edit: (data: any) => api.post('tenant-invoice/updateById', data),
   // 删除
   delete: (data:any) => api.post('tenant-invoice/deleteById', data),
+  //客户下拉选
+  queryAllInvitation: (data: any) => api.post('tenantBind/queryAllInvitation', data),
 }
