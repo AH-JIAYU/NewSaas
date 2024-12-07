@@ -101,11 +101,14 @@ async function save() {
         const dataList = {
           tenantCustomerInfoList: leftTabsData,
         };
-        if(leftTabsData.turnover.length ){
+        if(leftTabsData.turnover){
+          if(leftTabsData.turnover.length ){
           leftTabsData.turnover.forEach((item:any) => {
             item.turnover = item.turnover ==0 ? null :item.turnover
           })
         }
+        }
+
 
         const { status } = await submitLoading(api.create(dataList));
         status === 1 &&

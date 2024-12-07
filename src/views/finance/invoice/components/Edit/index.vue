@@ -5,7 +5,7 @@ import { ref } from "vue";
 import api from "@/api/modules/finance_invoice";
 import useUserCustomerStore from "@/store/modules/user_customer";//客户
 import customerEdit from "@/views/user/customer/components/CustomerEdit/index.vue"; //快捷操作： 新增客户
-
+import userApi from "@/api/modules/user_cooperation";
 defineOptions({
   name: "Edit",
 });
@@ -178,6 +178,16 @@ const AddCustomers = () => {
 // 获取客户
 const getCustomerList = async () => {
   customerList.value = await customerStore.getCustomerList();
+  // const getCustomerList = await customerStore.getCustomerList();
+  // //tenantCustomerId,customerAccord
+  // const { data } = await userApi.list({    page: 1,
+  //   limit: -1});
+  // const tenantBindInfoList = data.tenantBindInfoList;
+//beInvitationTenantId   beInvitationTenantName
+
+"青青草原"
+  console.log(getCustomerList,'getCustomerList')
+  console.log(tenantBindInfoList,'tenantBindInfoList')
 }
 
 onMounted(async () => {
