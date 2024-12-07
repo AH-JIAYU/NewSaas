@@ -3,13 +3,13 @@ import { ElMessage } from "element-plus";
 import type { FormInstance, FormRules } from "element-plus";
 import { ref } from "vue";
 import api from "@/api/modules/finance_invoice";
-import useUserCustomerStore from "@/store/modules/user_customer";//客户
+import useUserCustomerStore from "@/store/modules/user_customer"; //客户
 import customerEdit from "@/views/user/customer/components/CustomerEdit/index.vue"; //快捷操作： 新增客户
 import userApi from "@/api/modules/user_cooperation";
 defineOptions({
   name: "Edit",
 });
-const customerStore = useUserCustomerStore();//客户
+const customerStore = useUserCustomerStore(); //客户
 // 更新数据
 const emits = defineEmits(["success"]);
 // title
@@ -58,8 +58,12 @@ const form = ref<any>({
 // 个人信息校验
 const formRules = ref<FormRules>({
   invoiceCode: [{ required: true, trigger: "blur", message: "请输入发票编号" }],
-  tenantCustomerId: [{ required: true, trigger: "change", message: "请选择客户" }],
-  invoiceStatus: [{ required: true, trigger: "change", message: "请选择发票状态" }],
+  tenantCustomerId: [
+    { required: true, trigger: "change", message: "请选择客户" },
+  ],
+  invoiceStatus: [
+    { required: true, trigger: "change", message: "请选择发票状态" },
+  ],
   invoiceAmount: [
     { required: true, trigger: "blur", message: "请输入发票金额" },
     {
@@ -74,10 +78,12 @@ const formRules = ref<FormRules>({
           callback(); // 验证通过
         }
       },
-      trigger: "blur"
-    }
+      trigger: "blur",
+    },
   ],
-  invoiceDate: [{ required: true, trigger: "change", message: "请选择开票日期" }],
+  invoiceDate: [
+    { required: true, trigger: "change", message: "请选择开票日期" },
+  ],
 });
 // 提交数据
 function onSubmit() {
@@ -100,7 +106,6 @@ function onSubmit() {
                 resolve();
               });
             } catch (error) {
-
             } finally {
               loading.value = false;
             }
@@ -124,7 +129,6 @@ function onSubmit() {
                 resolve();
               });
             } catch (error) {
-
             } finally {
               loading.value = false;
             }
@@ -135,6 +139,7 @@ function onSubmit() {
 }
 // 获取数据
 async function showEdit(row?: any) {
+
   try {
     loading.value = true;
     if (row) {
@@ -166,7 +171,6 @@ async function showEdit(row?: any) {
     loading.value = false;
     dialogTableVisible.value = true;
   } catch (error) {
-
   } finally {
     loading.value = false;
   }
@@ -174,24 +178,23 @@ async function showEdit(row?: any) {
 // 快捷操作：新增客户
 const AddCustomers = () => {
   editRef.value.showEdit();
-}
+};
 // 获取客户
 const getCustomerList = async () => {
-  customerList.value = await customerStore.getCustomerList();
-  // const getCustomerList = await customerStore.getCustomerList();
-  // //tenantCustomerId,customerAccord
-  // const { data } = await userApi.list({    page: 1,
-  //   limit: -1});
-  // const tenantBindInfoList = data.tenantBindInfoList;
-//beInvitationTenantId   beInvitationTenantName
+  // customerList.value = await customerStore.getCustomerList();
+  let getCustomerList:any = await customerStore.getCustomerList();
 
-  // console.log(getCustomerList,'getCustomerList')
-  // console.log(tenantBindInfoList,'tenantBindInfoList')
-}
+  const { data } = await api.queryAllInvitation({ page: 1, limit: -1} )
+  const tenantBindInfoList =
+    data && Array.isArray(data.tenantNameList) ? data.tenantNameList : [];
+
+  customerList.value = [...getCustomerList, ...tenantBindInfoList];
+  // console.log(customerList.value,'customerList.value')
+};
 
 onMounted(async () => {
   defaultTime.value = new Date();
-  await getCustomerList()
+  await getCustomerList();
 });
 const close = () => {
   formRef.value.resetFields();
@@ -215,59 +218,140 @@ const close = () => {
     paymentDate: "",
     // 备注
     remark: "",
-  })
-}
+  });
+};
 // 暴露方法
 defineExpose({ showEdit });
 </script>
 
 <template>
   <div v-loading="loading">
-    <el-dialog v-model="dialogTableVisible" :title="title" width="700" @close="close">
-      <el-form ref="formRef" label-width="7rem" :model="form" :rules="formRules" :inline="false">
+    <el-dialog
+      v-model="dialogTableVisible"
+      :title="title"
+      width="700"
+      @close="close"
+    >
+      <el-form
+        ref="formRef"
+        label-width="7rem"
+        :model="form"
+        :rules="formRules"
+        :inline="false"
+      >
         <el-form-item label="客户简称" prop="tenantCustomerId">
-          <el-select v-model="form.tenantCustomerId" placeholder="请选择客户" clearable filterable>
-            <el-option v-for="item in customerList" :key="item.tenantCustomerId" :value="item.tenantCustomerId"
-              :label="item.customerAccord" />
+          <el-select
+            v-model="form.tenantCustomerId"
+            placeholder="请选择客户"
+            clearable
+            filterable
+          >
+            <el-option
+              v-for="item in customerList"
+              :key="item.tenantCustomerId"
+              :value="item.tenantCustomerId"
+              :label="item.customerAccord"
+            />
             <template #empty>
-              <div style="display: flex;justify-content: space-between;align-items:center;padding:0 1rem;">
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  padding: 0 1rem;
+                "
+              >
                 暂无数据
-                <el-button type="primary" link size="small" @click="AddCustomers">
+                <el-button
+                  type="primary"
+                  link
+                  size="small"
+                  @click="AddCustomers"
+                >
                   快捷新增
-                  <SvgIcon name="ant-design:plus-outlined" color="#fff"
-                    style="background-color: var(--el-color-primary);border-radius: 50%;padding: .125rem;margin:0 .125rem" />
+                  <SvgIcon
+                    name="ant-design:plus-outlined"
+                    color="#fff"
+                    style="
+                      background-color: var(--el-color-primary);
+                      border-radius: 50%;
+                      padding: 0.125rem;
+                      margin: 0 0.125rem;
+                    "
+                  />
                 </el-button>
               </div>
             </template>
           </el-select>
         </el-form-item>
         <el-form-item prop="invoiceCode" label="发票编号">
-          <el-input v-model="form.invoiceCode" placeholder="请输入发票编号" clearable />
+          <el-input
+            v-model="form.invoiceCode"
+            placeholder="请输入发票编号"
+            clearable
+          />
         </el-form-item>
         <el-form-item prop="invoiceAmount" label="发票金额">
-          <el-input v-model="form.invoiceAmount" placeholder="请输入发票金额" clearable />
+          <el-input
+            v-model="form.invoiceAmount"
+            placeholder="请输入发票金额"
+            clearable
+          />
         </el-form-item>
         <el-form-item label="手续费(税)">
-          <el-input v-model="form.invoiceTax" placeholder="请输入手续费" clearable />
+          <el-input
+            v-model="form.invoiceTax"
+            placeholder="请输入手续费"
+            clearable
+          />
         </el-form-item>
         <el-form-item label="实际收款">
-          <el-input v-model="form.actualReceipts" placeholder="请输入实际收款" clearable />
+          <el-input
+            v-model="form.actualReceipts"
+            placeholder="请输入实际收款"
+            clearable
+          />
         </el-form-item>
         <el-form-item prop="invoiceStatus" label="发票状态">
-          <el-select v-model="form.invoiceStatus" placeholder="请选择发票状态" clearable filterable>
-            <ElOption v-for="item in invoiceStatusList" :label="item.lable" :value="item.value"></ElOption>
+          <el-select
+            v-model="form.invoiceStatus"
+            placeholder="请选择发票状态"
+            clearable
+            filterable
+          >
+            <ElOption
+              v-for="item in invoiceStatusList"
+              :label="item.lable"
+              :value="item.value"
+            ></ElOption>
           </el-select>
         </el-form-item>
         <el-form-item style="width: 100%" prop="invoiceDate" label="开票日期">
-          <el-date-picker v-model="form.invoiceDate" :default-time="defaultTime" type="datetime" placeholder="请选择开票日期"
-            value-format="YYYY-MM-DD hh:mm:ss" />
+          <el-date-picker
+            v-model="form.invoiceDate"
+            :default-time="defaultTime"
+            type="datetime"
+            placeholder="请选择开票日期"
+            value-format="YYYY-MM-DD hh:mm:ss"
+          />
         </el-form-item>
         <el-form-item label="收款日期">
-          <el-date-picker v-model="form.paymentDate" :default-time="defaultTime" type="datetime" placeholder="请选择收款日期"
-            value-format="YYYY-MM-DD hh:mm:ss" />
+          <el-date-picker
+            v-model="form.paymentDate"
+            :default-time="defaultTime"
+            type="datetime"
+            placeholder="请选择收款日期"
+            value-format="YYYY-MM-DD hh:mm:ss"
+          />
         </el-form-item>
         <el-form-item label="备注">
-          <el-input v-model="form.remark" placeholder="备注说明" clearable :rows="5" type="textarea" />
+          <el-input
+            v-model="form.remark"
+            placeholder="备注说明"
+            clearable
+            :rows="5"
+            type="textarea"
+          />
         </el-form-item>
       </el-form>
       <template #footer>
