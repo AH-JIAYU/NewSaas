@@ -87,7 +87,7 @@ const queryForm = reactive<any>({
   projectName: "", //项目名称-模糊查询
   projectIdentification: "", //	项目标识模糊查询
   clientId: "", //	所属客户编号Id
-  countryId: [], //所属区域编号Id
+  countryId1: '', //所属区域编号Id
   b2bOrB2cStatus: "", //1:b2b的项目 2:b2c的项目,不传查询所有
   time: [], // 时间
   beginTime: "", //开始时间
@@ -131,7 +131,7 @@ function onReset() {
     projectName: "", //项目名称-模糊查询
     projectIdentification: "", //	项目标识模糊查询
     clientId: "", //	所属客户编号Id
-    countryId: [], //所属区域编号Id
+    countryId1: '', //所属区域编号Id
     b2bOrB2cStatus: null, //1:b2b的项目 2:b2c的项目,不传查询所有
     time: [], // 时间
     beginTime: "", //开始时间
@@ -151,12 +151,13 @@ async function fetchData() {
       params.beginTime = queryForm.time[0] || "";
       params.endTime = queryForm.time[1] || "";
     }
-    if (!Array.isArray(queryForm.countryId) && queryForm.countryId) {
-      params.countryId = [queryForm.countryId];
+    if (!Array.isArray(queryForm.countryId1) && queryForm.countryId1) {
+      params.countryId = [queryForm.countryId1];
     } else {
       params.countryId = []
     }
     delete params.time
+    delete params.countryId1
     const res = await api.list(params);
     countryType.value = res.data.currencyType;
     list.value = res.data.getMemberProjectListInfoList;
@@ -201,7 +202,7 @@ onMounted(async () => {
     { index: 1, show: true, type: 'input', modelName: 'projectId', placeholder: '项目ID' },
     { index: 2, show: true, type: 'input', modelName: 'projectName', placeholder: '项目名称' },
     { index: 3, show: true, type: 'input', modelName: 'projectIdentification', placeholder: '项目标识' },
-    { index: 4, show: true, type: 'select', modelName: 'countryId', placeholder: '区域地区', option: 'global', optionLabel: 'chineseName', optionValue: 'id' },
+    { index: 4, show: true, type: 'select', modelName: 'countryId1', placeholder: '区域地区', option: 'global', optionLabel: 'chineseName', optionValue: 'id' },
     { index: 5, show: true, type: 'select', modelName: 'clientId', placeholder: '客户简称', option: 'clientId', optionLabel: 'customerAccord', optionValue: 'tenantCustomerId' },
     { index: 6, show: true, type: 'select', modelName: 'b2bOrB2cStatus', placeholder: 'B2B/B2C', option: 'b2bOrB2cStatus', optionLabel: 'label', optionValue: 'value' },
     { index: 7, show: true, type: 'datetimerange', modelName: 'time', startPlaceHolder: '创建开始日期', endPlaceHolder: '创建结束日期' },
