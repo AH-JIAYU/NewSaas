@@ -240,6 +240,7 @@ defineExpose({
           show-checkbox
           @check-change="handleNodeClick"
           default-expand-all
+
           border
         >
           <template #default="{ data }">

@@ -177,9 +177,9 @@ defineExpose({ showEdit });
             <el-input  maxlength="200" show-word-limit style="width: 100%" type="textarea" :rows="5" v-model="form.remark"   clearable   />
           </el-form-item>
           <el-form-item label="状态">
-            <el-select placeholder="结算状态" v-model="form.status" clearable filterable>
+            <el-select placeholder="结算状态" v-model="form.status" :clearable="form.id !=''? false :true" filterable>
               <el-option v-for="item in settlementStatusList" :key="item.value" :value="item.value"
-                :label="item.label"></el-option>
+                :label="item.label" :disabled="form.id !=''? true :false"></el-option>
             </el-select>
           </el-form-item>
         </template>

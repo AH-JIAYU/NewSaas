@@ -12,11 +12,16 @@ const title = ref("");
 const form = ref(); // 表单
 const formRef = ref(); // 表单ref
 const rules = reactive({
+
   levelName: [{ required: true, message: "请输入名称", trigger: "blur" }],
   additionRatio: [{ required: true, message: "请输入比例", trigger: "blur" }],
 });
+
+// 获取会员等级
+
 // 显示弹框
-async function showEdit(row: any) {
+async function showEdit(row: any,FormType:any) {
+
   if (!row) {
     title.value = "新增";
     form.value = {};
@@ -63,6 +68,7 @@ function onSubmit() {
     }
   });
 }
+
 defineExpose({ showEdit });
 </script>
 
@@ -75,7 +81,7 @@ defineExpose({ showEdit });
       label-width="7rem"
       :inline="false"
     >
-      <el-form-item label="等级名称" prop="levelName">
+     <el-form-item label="等级名称" prop="levelName">
         <el-input v-model="form.levelName" maxlength="100" />
       </el-form-item>
       <el-form-item label="价格比例" prop="additionRatio">
