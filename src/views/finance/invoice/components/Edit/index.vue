@@ -185,9 +185,8 @@ const getCustomerList = async () => {
   // const tenantBindInfoList = data.tenantBindInfoList;
 //beInvitationTenantId   beInvitationTenantName
 
-"青青草原"
-  console.log(getCustomerList,'getCustomerList')
-  console.log(tenantBindInfoList,'tenantBindInfoList')
+  // console.log(getCustomerList,'getCustomerList')
+  // console.log(tenantBindInfoList,'tenantBindInfoList')
 }
 
 onMounted(async () => {
