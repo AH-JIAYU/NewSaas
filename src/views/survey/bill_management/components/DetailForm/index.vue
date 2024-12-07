@@ -15,7 +15,7 @@ const form = ref<any>({
   // title: "",
   // radio: 0,
   minimumAmount: "",
-  settlementType: 1, //结算类型: 1:全部结算 2:指定结算
+  settlementType: 2, //结算类型: 1:全部结算 2:指定结算
   settlementAmount: "", //	结算类型为全部结算的时候需要填: 结算金额
   addMemberSettlementInfoList: [
     // //结算类型为 指定结算必填
@@ -85,29 +85,33 @@ defineExpose({
     return new Promise<void>((resolve) => {
       formRef.value &&
         formRef.value.validate((valid) => {
-          // const judge = form.value.addMemberSettlementInfoList.every((item: any) => {
-          //   return typeof (item.settlementAmount) === "number" && item.settlementAmount >= form.value.minimumAmount
-          // })
           if (form.value.settlementType === 2) {
             for (let item of form.value.addMemberSettlementInfoList) {
+              // 如果没有结算金额，则赋予最低金额
               if (!item.settlementAmount) {
-                item.settlementAmount = form.value.minimumAmount
+                item.settlementAmount = null
               }
-              if (item.settlementAmount && item.settlementAmount <= 0) {
+              // 正则校验结算金额，确保是正数且最多两位小数
+              const amountPattern = /^(?!0(\.0+)?$)(\d+(\.\d{1,2})?)$/;
+              if (!amountPattern.test(item.settlementAmount)) {
                 ElMessage.warning({
-                  message: "结算金额需要输入正数",
+                  message: "请输入有效的正数，且最多两位小数",
                   center: true,
                 });
-                return;  // 直接停止整个 submit 函数的执行
+                // 直接停止整个 submit 函数的执行
+                return;
               }
+              // 校验结算金额是否小于最低结算金额
               if (item.settlementAmount < form.value.minimumAmount) {
                 ElMessage.warning({
                   message: "结算金额 小于 最低结算金额",
                   center: true,
                 });
-                return;  // 直接停止整个 submit 函数的执行
+                // 直接停止整个 submit 函数的执行
+                return;
               }
             }
+            // 清空结算金额
             form.value.settlementAmount = '';
           } else {
             form.value.addMemberSettlementInfoList = []
@@ -119,7 +123,8 @@ defineExpose({
                 message: "结算金额 小于 最低结算金额",
                 center: true,
               });
-              return;  // 直接停止整个 submit 函数的执行
+              // 直接停止整个 submit 函数的执行
+              return;
             }
           }
           if (valid) {
@@ -150,8 +155,8 @@ defineExpose({
     <ElForm ref="formRef" :model="form" :rules="formRules" label-width="9rem">
       <ElFormItem label="结算方式">
         <el-radio-group v-model="form.settlementType">
-          <el-radio :value="1" size="large"> 全部结算 </el-radio>
           <el-radio :value="2" size="large"> 指定结算 </el-radio>
+          <el-radio :value="1" size="large"> 全部结算 </el-radio>
         </el-radio-group>
       </ElFormItem>
       <template v-if="form.settlementType === 1">
@@ -182,8 +187,7 @@ defineExpose({
             </p>
           </ElFormItem>
           <ElFormItem label="结算金额">
-            <ElInputNumber controls-position="right" v-model="item.settlementAmount" :max="item.availableBalance"
-              placeholder="" />
+              <ElInput v-model="item.settlementAmount" :max="item.availableBalance" placeholder="" />
           </ElFormItem>
         </template>
       </template>

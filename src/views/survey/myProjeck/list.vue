@@ -251,7 +251,7 @@ const formOption = {
         <el-table-column v-if="checkList.includes('projectIdentificationOrClientName')" show-overflow-tooltip
           prop="projectIdentificationOrClientName" width="200" align="left" label="名称/标识">
           <template #default="{ row }">
-            <p v-if="checkList.includes('projectName')" class="crudeTop">
+            <p v-if="checkList.includes('projectName')" :class="[row.isB2b === 2 ? 'redColor':'','crudeTop']" >
              {{ row.projectName }}</p>
             <p v-if="checkList.includes('projectIdentification')"
               style="text-align: left !important;color: #333333;"><span class="fineBom">{{
@@ -474,6 +474,10 @@ const formOption = {
       }
     }
   }
+}
+
+.redColor {
+  color:#fb6868 !important;
 }
 
 .crudeTop {

@@ -73,14 +73,14 @@ defineExpose({
         <el-link  style=" padding: 0; margin: 0;" :underline="false" type="primary"
         @click="download">{{ item }}下载</el-link>
       </div>
-      <el-row :gutter="20" :class="{ isNone: !form.descriptionUrl }">
+      <el-row :gutter="20" :class="{ isNone: !form.descriptionUrl && !form.richText}">
         <el-col :span="24">
           <div class="radius flex gap-2 p-2">
             <Viewer :value="form.richText" />
           </div>
         </el-col>
       </el-row>
-      <template v-if="!form.descriptionUrl">
+      <template v-if="!form.descriptionUrl && !form.richText">
         <el-empty :image="empty" :image-size="300" />
       </template>
     </el-dialog>

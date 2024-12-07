@@ -380,7 +380,7 @@ onMounted(async () => {
           </div>
         </template>
         <el-row :gutter="24">
-          <el-form-item label="分配角色:" prop="role">
+          <el-form-item label="分配角色:" prop="z">
             <el-checkbox-group style="margin-left: 1.5rem;" v-if="munulevs?.length" v-model="form.roleList"  @change="handleCheckboxChange">
               <el-checkbox v-for="item in munulevs" :key="item.id" :label="item.roleName" :value="item.roleName">
                 {{ item.roleName }}

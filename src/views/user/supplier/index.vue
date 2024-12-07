@@ -406,11 +406,7 @@ const formOption = {
           <template #default="{ row }">
             <div class="flex-c" >
               <div class="fontC-System" style="width: calc(100% - 20px)">
-                <el-text v-for="item in supplierLevelList">
-                  <el-text v-if="item.tenantSupplierLevelId === row.supplierLevelId">
-                    {{ item.levelNameOrAdditionRatio }}
-                  </el-text>
-                </el-text>
+                {{ row.supplierLevelName ? row.supplierLevelName : '-' }}
               </div>
               <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'supplierLevelId')" :class="{
     edit: 'edit',
@@ -424,7 +420,7 @@ const formOption = {
           show-overflow-tooltip width="100" label="可用余额">
           <template #default="{ row }">
             <div class="fontC-System">
-              <CurrencyType />{{ row.balanceHumanLife || 0 }}
+              <CurrencyType />{{ row.balanceHumanLife ? row.balanceHumanLife : 0 }}
             </div>
           </template>
         </el-table-column>
@@ -432,7 +428,7 @@ const formOption = {
           prop="amountPendingTrial" show-overflow-tooltip label="待审金额">
           <template #default="{ row }">
             <div class="fontC-System">
-              <CurrencyType />{{ row.amountPendingTrial || 0 }}
+              <CurrencyType />{{ row.amountPendingTrial ? row.amountPendingTrial : 0 }}
             </div>
           </template>
         </el-table-column>
@@ -465,7 +461,6 @@ const formOption = {
                   </clipPath>
                 </defs>
               </svg>
-
               <svg v-else width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg"
                 @click="editBC(row, 'b2b', 1)">
                 <g id="Frame" clip-path="url(#clip0_409_28364)">
