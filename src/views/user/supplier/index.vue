@@ -560,7 +560,7 @@ const formOption = {
           <template #default="{ row }">
             <div class="flex-c fontC-System">
               <div class="oneLine" style="width: calc(100% - 20px)">
-                {{ row.remark }}
+                {{ row.remark ? row.remark : '-' }}
               </div>
               <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'remark')" :class="{
     edit: 'edit',

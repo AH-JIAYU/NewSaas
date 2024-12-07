@@ -35,8 +35,16 @@ const form = ref<any>({
 
 // 校验
 const formRules = ref<FormRules>({
-  difference: [{ required: true, message: "请输入金额", trigger: "blur" }],
+  difference: [{ required: true, message: "请输入金额", trigger: "blur" },
+  // 正数且最多两位小数
+  {
+    pattern: /^(?!0(\.0+)?$)(\d+(\.\d{1,2})?)$/,
+    message: '请输入有效的正数，且最多两位小数',
+    trigger: 'blur'
+  }],
   remark: [{ required: true, message: "请输入说明", trigger: "blur" }],
+  operationType: [{ required: true, message: "请选择加减款", trigger: "change" }],
+  type: [{ required: true, message: "请选择类型", trigger: "change" }],
 });
 
 async function showEdit(row: any) {
@@ -48,23 +56,6 @@ async function showEdit(row: any) {
     dataList.value = JSON.parse(row);
     form.value.memberId = dataList.value.memberId;
   }
-}
-// 关闭弹框
-function close() {
-  // 重置数据
-  Object.assign(form.value, {
-    // 供应商id
-    memberId: null,
-    // 操作类型 1加款 2减款
-    operationType: null,
-    // 类型 1待审金额 2可用余额
-    type: null,
-    // 金额
-    difference: null,
-    // 说明
-    remark: "",
-  });
-  loadingDisible.value = false;
 }
 // 提交
 async function onSubmit() {
@@ -97,6 +88,42 @@ async function onSubmit() {
     });
 }
 
+// 发送
+const sendProjectType = ref<any>(null)
+// 接收
+const receiveProjectType = ref<any>(null)
+//列表切换发送项目状态
+const changeSendProjectType = (name: any, row: any) => {
+  if (row) {
+    if (name === '加款' || name === '减款') {
+      sendProjectType.value = row
+      form.value.operationType = row
+    } else if (name === '待审金额' || name === '可用金额') {
+      receiveProjectType.value = row
+      form.value.type = row
+    }
+  }
+};
+
+// 关闭弹框
+function close() {
+  // 重置数据
+  Object.assign(form.value, {
+    // 供应商id
+    memberId: null,
+    // 操作类型 1加款 2减款
+    operationType: null,
+    // 类型 1待审金额 2可用余额
+    type: null,
+    // 金额
+    difference: null,
+    // 说明
+    remark: "",
+  });
+  sendProjectType.value = null
+  receiveProjectType.value = null
+  loadingDisible.value = false;
+}
 // ... 这里可能还有其他逻辑 ...
 defineExpose({
   showEdit,
@@ -105,21 +132,27 @@ defineExpose({
 
 <template>
   <div v-loading="loading">
-    <el-dialog v-model="loadingDisible" title="加减款" append-to-body :close-on-click-modal="false" destroy-on-close draggable
-      width="35%" @close="close">
-      <el-form :model="form" :rules="formRules" ref="formRef" label-width="3.75rem" :inline="false">
+    <el-dialog v-model="loadingDisible" title="加减款" append-to-body :close-on-click-modal="false" destroy-on-close
+      draggable width="35%" @close="close">
+      <el-form :model="form" :rules="formRules" ref="formRef" label-width="5rem" :inline="false">
         <el-form-item label="会员ID"> {{ form.memberId }} </el-form-item>
-        <el-form-item label="加减款">
-          <el-select v-model="form.operationType" value-key="" placeholder="请选择加减款" clearable filterable>
-            <el-option v-for="item in operationTypeList" :key="item.value" :label="item.label" :value="item.value">
-            </el-option>
-          </el-select>
+        <el-form-item label="加减款" prop="operationType">
+          <div>
+            <el-button :type="sendProjectType === 1 ? 'primary' : ''" size="small"
+              @click="changeSendProjectType('加款', 1)">加款
+            </el-button>
+            <el-button :type="sendProjectType === 2 ? 'primary' : ''" size="small"
+              @click="changeSendProjectType('减款', 2)">减款</el-button>
+          </div>
         </el-form-item>
-        <el-form-item label="类型">
-          <el-select v-model="form.type" value-key="" placeholder="请选择类型" clearable filterable>
-            <el-option v-for="item in typeList" :key="item.value" :label="item.label" :value="item.value">
-            </el-option>
-          </el-select>
+        <el-form-item label="类型" prop="type">
+          <div>
+            <el-button :type="receiveProjectType === 1 ? 'primary' : ''" size="small"
+              @click="changeSendProjectType('待审金额', 1)">待审金额
+            </el-button>
+            <el-button :type="receiveProjectType === 2 ? 'primary' : ''" size="small"
+              @click="changeSendProjectType('可用金额', 2)">可用金额</el-button>
+          </div>
         </el-form-item>
         <el-form-item label="金额" prop="difference">
           <el-input v-model="form.difference"></el-input>

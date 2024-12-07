@@ -252,7 +252,7 @@ function handleCurrentChange(val: any) {
         <ElTableColumn v-if="data.checkList.includes('remark')" width="260" show-overflow-tooltip align="left" prop="remark"
           label="说明">
           <template #default="{ row }">
-            <el-text class="mx-1 fontColor fontC-System" >{{ formatRemarkWithBalance(row.remark) || "-" }}</el-text>
+            <el-text class="mx-1 fontColor fontC-System" >{{ row.remark ? row.remark : '-' }}</el-text>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('beforeBalance')" show-overflow-tooltip align="left"

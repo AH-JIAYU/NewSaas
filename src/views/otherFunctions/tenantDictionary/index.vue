@@ -320,10 +320,8 @@ function onDeleteMulti(rows: any[]) {
             </ElTableColumn>
             <ElTableColumn prop="remark" label="备注" >
               <template #default="{ row }">
-            <span style="color:#333333">{{ row.remark }}</span>
+            <span style="color:#333333">{{ row.remark ? row.remark : '-' }}</span>
           </template>
-
-
             </ElTableColumn>
             <ElTableColumn label="键值" align="left" width="150">
               <template #default="scope">

@@ -527,7 +527,7 @@ onMounted(() => {
         >
         <template #default="{ row }">
         <el-text class="mx-1  fontC-System"
-              >{{ row.remark }}</el-text
+              >{{ row.remark ? row.remark : '-' }}</el-text
             >
             </template>
         </el-table-column>

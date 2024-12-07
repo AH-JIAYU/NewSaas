@@ -319,20 +319,12 @@ onBeforeUnmount(() => {
           <template #default="{ row }">
             <el-tag v-if="row.type === 1" type="warning" effect="dark">待审余额</el-tag>
             <el-tag v-if="row.type === 2" type="primary" effect="dark">可用余额</el-tag>
-
-            <!-- <el-text v-if="row.type == 1"  class="fontColor">待审金额</el-text>
-            <el-text v-if="row.type == 2"  class="fontColor">可用金额</el-text> -->
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('remark')" width="260" show-overflow-tooltip align="left"
           prop="remark" label="说明">
           <template #default="{ row }">
-            <!-- <el-text v-if="!row.remark.includes('余额')" class="mx-1">{{
-              `记录变更:${parseStatusString(row.remark)[0]}变更为${
-                parseStatusString(row.remark)[1]
-              }`
-            }}</el-text> -->
-            <el-text class="mx-1 fontColor fontC-System">{{ formatRemarkWithBalance(row.remark) || "-" }}</el-text>
+            <el-text class="mx-1 fontColor fontC-System">{{ row.remark ? row.remark : '-' }}</el-text>
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('beforeBalance')" show-overflow-tooltip align="left"
