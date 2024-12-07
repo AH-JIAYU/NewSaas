@@ -115,6 +115,7 @@ const validateEmail = (rule: any, value: any, callback: any) => {
 const formRules = ref<FormRules>({
   userName: [{ required: true, message: "请输入用户名(1-20位字符)" }],
   positionId: [{ required: true, message: "请选择职位", trigger: "change" }],
+  role: [{ required: true, message: "请选择角色", trigger: "change" }],
   password: [
     { required: true, trigger: "blur", message: "请输入密码" },
     { min: 6, max: 18, trigger: "blur", message: "密码长度为6到18位" },
@@ -379,8 +380,8 @@ onMounted(async () => {
           </div>
         </template>
         <el-row :gutter="24">
-          <el-form-item label="分配角色:">
-            <el-checkbox-group style="margin-left: 1.5rem;" v-if="munulevs?.length" v-model="form.roleList" @change="handleCheckboxChange">
+          <el-form-item label="分配角色:" prop="role">
+            <el-checkbox-group style="margin-left: 1.5rem;" v-if="munulevs?.length" v-model="form.roleList"  @change="handleCheckboxChange">
               <el-checkbox v-for="item in munulevs" :key="item.id" :label="item.roleName" :value="item.roleName">
                 {{ item.roleName }}
               </el-checkbox>

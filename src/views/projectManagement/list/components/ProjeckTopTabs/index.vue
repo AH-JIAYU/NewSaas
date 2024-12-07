@@ -590,6 +590,22 @@ const exchangeRateSubmit = async () => {
     await userStore.getCurrencyType()
     currencyTypeRes.value = userStore.originalExchangeRate
     localToptTab.value.currencyType = userStore.currencyType === 1 ? 'USD' : 'CNY'
+    const params = {
+      beforeCurrency: '',
+      oldCurrency: localToptTab.value.currencyType,
+      exchangeRate: '',
+    }
+    if (localToptTab.value.currencyType === 'USD') {
+      params.beforeCurrency = 'CNY'
+    } else if (localToptTab.value.currencyType === 'CNY') {
+      params.beforeCurrency = 'USD'
+    }
+    params.exchangeRate = currencyTypeRes.value
+    const res = await api.updateExchangeRate(params)
+    if (res.data) {
+      currencyTypeRes.value = Math.floor(res.data.exchangeRate * 100) / 100;
+      localToptTab.value.exchangeRate = Math.floor(res.data.exchangeRate * 100) / 100;
+    }
     ElMessage.success({
       message: "修改成功",
       center: true,
@@ -661,7 +677,8 @@ nextTick(() => {
           <el-row :gutter="20">
             <el-col :span="6">
               <el-form-item label="项目名称" prop="name">
-                <el-input v-model.trim="localToptTab.name" :disabled="localToptTab.projectType === 2" clearable :maxlength="50" />
+                <el-input v-model.trim="localToptTab.name" :disabled="localToptTab.projectType === 2" clearable
+                  :maxlength="50" />
               </el-form-item>
             </el-col>
             <el-col v-if="localToptTab.projectType !== 2" :span="6">
@@ -672,8 +689,8 @@ nextTick(() => {
             <el-col v-if="localToptTab.projectType !== 2" :span="6">
               <!-- 单个 -->
               <el-form-item label="所属客户" prop="clientId">
-                <el-select class="placeholderColor" placeholder="Select" v-model="localToptTab.clientId" :disabled="localToptTab.projectType === 2" clearable
-                  @change="changeClient">
+                <el-select class="placeholderColor" placeholder="Select" v-model="localToptTab.clientId"
+                  :disabled="localToptTab.projectType === 2" clearable @change="changeClient">
                   <el-option v-for="item in data.basicSettings.customerList" :key="item.tenantCustomerId"
                     :value="item.tenantCustomerId" :label="item.customerAccord" :disabled="item.isReveal === 1 ||
     (item.turnover &&
@@ -718,8 +735,9 @@ nextTick(() => {
             </el-col>
             <el-col :span="6">
               <el-form-item label="所属区域" prop="countryIdList">
-                <ElSelect class="placeholderColor" v-model="localToptTab.countryIdList" :disabled="localToptTab.projectType === 2" placeholder="区域" clearable
-                  filterable multiple collapse-tags @change="changeCountryId">
+                <ElSelect class="placeholderColor" v-model="localToptTab.countryIdList"
+                  :disabled="localToptTab.projectType === 2" placeholder="区域" clearable filterable multiple
+                  collapse-tags @change="changeCountryId">
                   <template #header>
                     <el-checkbox v-model="data.checked" @change="selectAll"
                       style="display: flex; height: unset">全球</el-checkbox>
@@ -742,20 +760,16 @@ nextTick(() => {
             </el-col>
             <el-col :span="6">
               <el-form-item label="汇率" prop="">
-                <!-- <el-input-number style="height: 2rem; display:none;" v-model="localToptTab.exchangeRate" :min="1" :precision="1"
-                  :step="0.1" controls-position="right" size="large" /> -->
-                <el-text v-if="localToptTab.currencyType === 'USD' && currencyTypeRes !== null">1美元 = {{
-    currencyTypeRes }}人民币</el-text>
-                <el-text v-if="localToptTab.currencyType === 'CNY' && currencyTypeRes !== null">1人民币 = {{
-    currencyTypeRes }}美元</el-text>
+                <el-text v-if="currencyTypeRes !== null">{{localToptTab.currencyType === 'USD' ? '1美元' : '1人民币'}}  = {{
+    currencyTypeRes }}{{localToptTab.currencyType === 'USD' ? '人民币' : '美元'}}</el-text>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="20">
             <el-col :span="6">
               <el-form-item label="项目价" prop="doMoneyPrice">
-                <el-input-number style="height: 2rem" v-model="localToptTab.doMoneyPrice" :min="0.01"
-                  :step="1" controls-position="right" size="large" />
+                <el-input-number style="height: 2rem" v-model="localToptTab.doMoneyPrice" :min="0.01" :step="1"
+                  controls-position="right" size="large" />
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -830,31 +844,32 @@ nextTick(() => {
             <el-col :span="5">
               <el-form-item label="定时发布" class="flex">
                 <el-switch :active-value="2" :inactive-value="1" v-model="localToptTab.isTimeReleases"
-                :disabled="localToptTab.projectType === 2"
-                  @change="changeTimeReleases" />
+                  :disabled="localToptTab.projectType === 2" @change="changeTimeReleases" />
               </el-form-item>
             </el-col>
             <el-col :span="5">
               <el-form-item label="B2B" class="flex">
-                <el-switch :active-value="2" :inactive-value="1" v-model="localToptTab.isB2b" :disabled="localToptTab.projectType === 2" />
+                <el-switch :active-value="2" :inactive-value="1" v-model="localToptTab.isB2b"
+                  :disabled="localToptTab.projectType === 2" />
               </el-form-item>
             </el-col>
             <el-col :span="5">
               <el-form-item label="在线" class="flex">
-                <el-switch :active-value="1" :inactive-value="2" :disabled="localToptTab.isTimeReleases === 2 || localToptTab.projectType === 2"
+                <el-switch :active-value="1" :inactive-value="2"
+                  :disabled="localToptTab.isTimeReleases === 2 || localToptTab.projectType === 2"
                   v-model="localToptTab.isOnline" />
               </el-form-item>
             </el-col>
             <el-col :span="5">
               <el-form-item label="前置问卷" class="flex">
                 <el-switch :active-value="1" :inactive-value="2" v-model="localToptTab.isProfile"
-                :disabled="localToptTab.projectType === 2"
-                  @change="changeProfile" />
+                  :disabled="localToptTab.projectType === 2" @change="changeProfile" />
               </el-form-item>
             </el-col>
             <el-col :span="4">
               <el-form-item label="置顶" class="flex">
-                <el-switch :active-value="1" :inactive-value="2" v-model="localToptTab.isPinned" :disabled="localToptTab.projectType === 2" />
+                <el-switch :active-value="1" :inactive-value="2" v-model="localToptTab.isPinned"
+                  :disabled="localToptTab.projectType === 2" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -930,8 +945,7 @@ nextTick(() => {
         </el-card>
       </el-tab-pane>
       <el-tab-pane label="配置信息" name="configurationInformation"
-        v-if="(localToptTab.isProfile === 1 && !localToptTab.required) && localToptTab.projectType !== 2"
-        >
+        v-if="(localToptTab.isProfile === 1 && !localToptTab.required) && localToptTab.projectType !== 2">
         <el-card v-if="localToptTab.data">
           <template #header>
             <div class="card-header">配置信息</div>
@@ -941,7 +955,8 @@ nextTick(() => {
               <el-form-item label="选择区域">
                 <el-select v-model="localToptTab.data.configurationInformation.initialProblem
     .countryId
-    " filterable clearable placeholder="Select" :disabled="localToptTab.projectType === 2" @change="changeConfigurationCountryId">
+    " filterable clearable placeholder="Select" :disabled="localToptTab.projectType === 2"
+                  @change="changeConfigurationCountryId">
                   <ElOption v-for="item in localToptTab.data.configurationInformation
     .configurationCountryList" :label="item.countryName" :value="item.countryId"></ElOption>
                 </el-select>
@@ -951,7 +966,8 @@ nextTick(() => {
               <el-form-item label="问卷名称">
                 <el-select v-model="localToptTab.data.configurationInformation.initialProblem
     .projectProblemCategoryId
-    " clearable placeholder="Select" :disabled="localToptTab.projectType === 2" @focus="getProjectCategoryList" @change="getProjectProblemList">
+    " clearable placeholder="Select" :disabled="localToptTab.projectType === 2" @focus="getProjectCategoryList"
+                  @change="getProjectProblemList">
                   <el-option v-for="item in localToptTab.data.configurationInformation
     .projectCategoryList" :key="item.projectProblemCategoryId" :label="item.projectProblemCategoryName"
                     :value="item.projectProblemCategoryId" />
