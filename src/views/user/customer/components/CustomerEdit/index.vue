@@ -114,14 +114,12 @@ async function save() {
             center: true,
           });
       } else {
-        // // 更新接口
-
+        // 更新接口
         if (leftTabsData[0].riskControl === 1) {
           leftTabsData[0].turnover = null;
           leftTabsData[0].rateAudit = null;
         }
         leftTabsData[0].turnover = leftTabsData[0].turnover ==0 ? null :leftTabsData[0].turnover;
-        console.log(leftTabsData[0].turnover,'leftTabsData.turnover')
         const { status } = await submitLoading(api.edit(leftTabsData[0]));
         status === 1 &&
           ElMessage.success({
@@ -168,7 +166,6 @@ defineExpose({
         </el-button>
         <el-button type="primary" @click="save"> 确定 </el-button>
         </div>
-
       </template>
     </el-drawer>
   </div>

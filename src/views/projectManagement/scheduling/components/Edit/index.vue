@@ -20,6 +20,10 @@ const rules = reactive<any>({
   groupSupplierId: [
     { required: true, message: "请选择至少一个", trigger: "change" },
   ],
+  doMoneyPrice: [
+    { required: true, message: "请输入金额", trigger: "blur" },
+    { pattern: /^(?!0(\.0+)?$)(\d+(\.\d{1,2})?)$/, message: '请输入一个有效的数字，不能小于0，最多保留两位小数', trigger: 'blur' }
+  ],
 });
 // 弹框开关变量
 const dialogTableVisible = ref(false);
@@ -281,7 +285,7 @@ defineExpose({ showEdit });
             /></el-select>
           </el-form-item>
         </div>
-        <el-form-item v-if="data.form.dispatchType === 2" label="指定价格">
+        <el-form-item v-if="data.form.dispatchType === 2" label="指定价格" prop="doMoneyPrice">
           <el-input placeholder="" v-model="data.form.doMoneyPrice" clearable />
         </el-form-item>
       </el-form>

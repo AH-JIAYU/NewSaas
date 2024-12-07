@@ -18,7 +18,14 @@ const form = ref({
 });
 // 个人信息校验
 const formRules = ref<FormRules>({
-  projectId: [{ required: true, trigger: "blur", message: "请输入项目ID" }],
+  projectId: [
+    { required: true, trigger: "blur", message: "请输入项目ID" },
+    {
+      pattern: /^\d+$/,  // 允许输入0或正整数
+      message: '请输入纯数字',
+      trigger: 'blur'
+    }
+  ],
 });
 // 提交数据
 function onSubmit() {

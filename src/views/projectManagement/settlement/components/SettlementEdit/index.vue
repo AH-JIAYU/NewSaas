@@ -52,6 +52,22 @@ const formRules = ref<FormRules>({
   doMoneyPrice: [
     { required: true, message: "请选择所属客户", trigger: "blur" },
   ],
+  settlementDone: [
+    { required: true, message: "请输入结算完成数", trigger: "blur" },
+    {
+      pattern: /^\d+$/,  // 允许输入0或正整数
+      message: '请输入纯数字',
+      trigger: 'blur'
+    }
+  ],
+  systemDone: [
+    { required: true, message: "请输入系统完成数", trigger: "blur" },
+    {
+      pattern: /^\d+$/,  // 允许输入0或正整数
+      message: '请输入纯数字',
+      trigger: 'blur'
+    }
+  ],
 });
 // 结算状态
 const settlementStatusList = [
@@ -69,6 +85,13 @@ function onSubmit() {
     formRef.value.validate(async (valid: any) => {
       if (valid) {
         try {
+          if (!/^\d+$/.test(form.value.settlementDone) || !/^\d+$/.test(form.value.systemDone)) {
+            ElMessage.warning({
+              message: "系统或审核完成数请输入正整数",
+              center: true,
+            });
+            return;
+          }
           loading.value = true;
           const { status } = await api.edit(form.value);
           if (status === 1) {
@@ -100,8 +123,8 @@ function onSubmit() {
 }
 // 获取数据
 async function showEdit(row: any, FormType: any) {
-  title.value=(TypeList[FormType] || '') +'编辑'
-  type.value =FormType
+  title.value = (TypeList[FormType] || '') + '编辑'
+  type.value = FormType
   formData.value = JSON.parse(row);
   form.value.id = formData.value.id;
   form.value.projectId = formData.value.projectId;
@@ -150,7 +173,7 @@ defineExpose({ showEdit });
 <template>
   <div v-loading="loading">
     <el-dialog v-model="dialogTableVisible" :title="title" width="600" :before-close="closeHandler">
-      <el-form ref="formRef" :model="form" :rules="formRules" label-width="86px" :inline="false">
+      <el-form ref="formRef" :model="form" :rules="formRules" label-width="100px" :inline="false">
         <template v-if="!type">
           <el-form-item label="项目ID">
             <el-text class="mx-1">{{ form.projectId }}</el-text>
@@ -174,12 +197,13 @@ defineExpose({ showEdit });
             <el-input v-model="form.settlementPo" placeholder="" clearable @change="" />
           </el-form-item>
           <el-form-item label="备注">
-            <el-input  maxlength="200" show-word-limit style="width: 100%" type="textarea" :rows="5" v-model="form.remark"   clearable   />
+            <el-input maxlength="200" show-word-limit style="width: 100%" type="textarea" :rows="5"
+              v-model="form.remark" clearable />
           </el-form-item>
           <el-form-item label="状态">
-            <el-select placeholder="结算状态" v-model="form.status" :clearable="form.id !=''? false :true" filterable>
-              <el-option v-for="item in settlementStatusList" :key="item.value" :value="item.value"
-                :label="item.label" :disabled="form.id !=''? true :false"></el-option>
+            <el-select placeholder="结算状态" v-model="form.status" :clearable="form.id != '' ? false : true" filterable>
+              <el-option v-for="item in settlementStatusList" :key="item.value" :value="item.value" :label="item.label"
+                :disabled="form.id != '' ? true : false"></el-option>
             </el-select>
           </el-form-item>
         </template>
@@ -198,7 +222,8 @@ defineExpose({ showEdit });
         </template>
         <template v-if="type === 'remark'">
           <el-form-item label="备注">
-            <el-input  maxlength="200" show-word-limit style="width: 100%" type="textarea" :rows="5" v-model="form.remark"   clearable   />
+            <el-input maxlength="200" show-word-limit style="width: 100%" type="textarea" :rows="5"
+              v-model="form.remark" clearable />
           </el-form-item>
         </template>
 

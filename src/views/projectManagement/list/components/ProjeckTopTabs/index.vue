@@ -124,14 +124,21 @@ const rules = reactive<any>({
   ],
   releaseTime: [{ validator: validateReleaseTime, trigger: "blur" }],
   doMoneyPrice: [{ required: true, message: "请输入项目价", trigger: "blur" }],
-  num: [{ required: true, message: "请输入配额", trigger: "blur" }],
+  num: [
+    { required: true, message: "请输入配额", trigger: "blur" },
+    { pattern: /^(?!0(\.0+)?$)(\d+(\.\d{1,2})?)$/, message: '请输入大于0的数字，最多保留两位小数', trigger: 'blur' }
+  ],
   minimumDuration: [
     { required: true, message: "请输入最小分长", trigger: "blur" },
+    { pattern: /^(?!0(\.0+)?$)(\d+(\.\d{1,2})?)$/, message: '请输入大于0的数字，最多保留两位小数', trigger: 'blur' }
   ],
-  ir: [{ required: true, message: "请输入配额", trigger: "blur" }],
+  ir: [
+    { required: true, message: "请输入配额", trigger: "blur" },
+    { pattern: /^(?!0(\.0+)?$)(\d+(\.\d{1,2})?)$/, message: '请输入正整数', trigger: 'blur' }
+  ],
   exchangeRate: [
     { required: true, message: "请输入汇率", trigger: "blur" },
-    { pattern: /^(?!0(\.0+)?$)(\d+(\.\d{1,2})?)$/, message: '请输入一个有效的数字，不能小于0，最多保留两位小数', trigger: 'blur' }
+    { pattern: /^(?!0(\.0+)?$)(\d+(\.\d{1,2})?)$/, message: '请输入大于0的数字，最多保留两位小数', trigger: 'blur' }
   ],
 });
 
@@ -179,7 +186,9 @@ function handleChangeTime() {
     return (num < 10 ? "0" : "") + num;
   }
   // 设置Edit底部的定时发布时间
-  setAScheduledReleaseTime(localToptTab.value.releaseTime);
+  if(localToptTab.value.releaseTime) {
+    setAScheduledReleaseTime(localToptTab.value.releaseTime);
+  }
 }
 // 同步客户的前置问卷开关
 const changeClient = (val: any) => {
@@ -760,8 +769,8 @@ nextTick(() => {
             </el-col>
             <el-col :span="6">
               <el-form-item label="汇率" prop="">
-                <el-text v-if="currencyTypeRes !== null">{{localToptTab.currencyType === 'USD' ? '1美元' : '1人民币'}}  = {{
-    currencyTypeRes }}{{localToptTab.currencyType === 'USD' ? '人民币' : '美元'}}</el-text>
+                <el-text v-if="currencyTypeRes !== null">{{ localToptTab.currencyType === 'USD' ? '1美元' : '1人民币' }} = {{
+    currencyTypeRes }}{{ localToptTab.currencyType === 'USD' ? '人民币' : '美元' }}</el-text>
               </el-form-item>
             </el-col>
           </el-row>
@@ -787,16 +796,16 @@ nextTick(() => {
                     </el-tooltip>
                   </div>
                 </template>
-                <el-input style="height: 2rem; width: 100%" v-model="localToptTab.minimumDuration" :min="1" :step="1"
-                  step-strictly controls-position="right" size="large" @keydown="handleInput"><template #append> min
+                <el-input style="height: 2rem; width: 100%" v-model.number="localToptTab.minimumDuration" :min="1"
+                  :step="1" step-strictly controls-position="right" size="large" @keydown="handleInput"><template
+                    #append> min
                   </template>
                 </el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="IR" prop="ir">
-                <el-input v-model.number="localToptTab.ir" :min="1" :max="100" step="0.01"
-                  oninput="if(value>100)value=100;if(value.length>4)value=value.slice(0,4);if(value<0)value=0;value=Number(value).toFixed(1)">
+                <el-input v-model.number="localToptTab.ir" :min="1" :max="100" :step="0.01">
                   <template #append> % </template>
                 </el-input>
               </el-form-item>
