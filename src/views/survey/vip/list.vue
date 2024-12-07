@@ -9,7 +9,7 @@ import useSurveyVipLevelStore from "@/store/modules/survey_vipLevel"; //会员�
 import useSurveyVipGroupStore from "@/store/modules/survey_vipGroup"; //部门
 import useSurveyVipStore from "@/store/modules/survey_vip"; // 会员
 import empty from '@/assets/images/empty.png'
-import vipLevel from '@/views/survey/vipLevel/components/Edit/index.vue'
+import vipLevel from './components/Edit/index.vue'
 
 defineOptions({
   name: "vip",

@@ -15,7 +15,7 @@ import empty from '@/assets/images/empty.png'
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary";
 // import useSurveyVipGroupStore from "@/store/modules/survey_sub_vipGroup"; // 部门
 import useSurveyVipStore from "@/store/modules/survey_vip"; // 会员
-import vipLevel from '@/views/survey/vipLevel/components/Edit/index.vue'
+import vipLevel from './components/Edit/index.vue'
 import DictionaryDialog from "./components/dictionaryDialog/index.vue";
 import subsidiaryDepartment from "./components/subsidiary_department/index.vue";
 import DictionaryItemDia from "./components/dictionaryItemDialog/index.vue";
@@ -434,6 +434,7 @@ const changeRandomState = async (state: any, id: string) => {
 // 重置请求
 function queryData() {
   pagination.value.page = 1;
+  console.log('111')
   fetchData();
 }
 // 每页数量切换
@@ -820,7 +821,7 @@ function handleCurrentChange(val: any) {
       <VipEdit ref="editRef" @fetch-data="queryData" @get-list="getDictionaryList"
         @get-Itemlist="getDictionaryItemList" />
       <vipPlusMinusPayments ref="vipPlusMinusPaymentsRef" @fetch-data="queryData" />
-      <vipLevel ref="subVipLevelRef" @query-data="queryData" />
+      <vipLevel ref="subVipLevelRef" @query-data="getDictionaryItemList" />
     </div>
   </div>
 </template>
