@@ -171,10 +171,17 @@ function projectDetails(row: any) {
 function dispatch() {
   const selectList = tableSortRef.value.getSelectionRows();
   if (selectList.length !== 1) {
-    ElMessage.warning({
-      message: "请选择一个项目",
-      center: true,
-    });
+    if (selectList.length === 0) {
+      ElMessage.warning({
+        message: "请选择一个项目",
+        center: true,
+      });
+    } else {
+      ElMessage.warning({
+        message: "只能选择一个项目调度",
+        center: true,
+      });
+    }
   } else if (selectList[0].isOnline === 2) {
     ElMessage.warning({
       message: "离线不可调度",
@@ -493,7 +500,7 @@ const formOption = {
   }}</span>
                 </p>
                 <div v-if="row.projectType === 1" class="oneLine" style="color:#333333">
-                  <span :class="row.isB2b === 2 ? 'red' : ''">{{
+                  <span>{{
     row.clientName.split("/")[1]
   }}</span>
                 </div>

@@ -33,7 +33,6 @@ function syncProject() {
     parentId,
     name,
     projectIdentification,
-    clientId,
     countryIdList,
     uidUrl,
     ...syncdata

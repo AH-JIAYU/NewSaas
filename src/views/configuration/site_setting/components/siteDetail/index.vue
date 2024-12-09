@@ -134,6 +134,7 @@ async function showEdit(row: any) {
       if (match) {
         tenantId.value = match[1];
       }
+      // fileList.value.forceHttps = row.forceHttps
       // 顶级域名是否生效
       form.value.isAnalysis = row.isAnalysis
       if (form.value.isAnalysis) {
@@ -208,9 +209,11 @@ const handleSubmit = async () => {
     listLoading.value = true;
     // 这里您可以处理提交的逻辑，包含上传的文件
     const payload = new FormData();
+
     if (fileList.value.certificate.length > 0) {
       payload.append('certificate', fileList.value.certificate[0].raw);
     }
+
     if (fileList.value.private_key.length > 0) {
       payload.append('private_key', fileList.value.private_key[0].raw);
     }
