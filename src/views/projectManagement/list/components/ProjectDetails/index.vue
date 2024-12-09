@@ -435,7 +435,7 @@ defineExpose({ showEdit });
             <el-col :span="8">
               <el-form-item label="备注 :">
                 <el-text class="mx-1">
-                  {{ data.formNaNpxark ? data.formNaNpxark : "-" }}
+                  {{ data.form.remark ? data.form.remark : "-" }}
                 </el-text>
               </el-form-item>
             </el-col>
