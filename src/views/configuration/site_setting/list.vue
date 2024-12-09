@@ -10,6 +10,7 @@ import { AnyFn } from "@vueuse/core";
 import useUserStore from "@/store/modules/user";
 import useConfigurationSiteSettingStore from '@/store/modules/configuration_siteSetting'
 import siteDetail from "./components/siteDetail/index.vue"
+import logo from "@/api/modules/logo";
 
 
 defineOptions({
@@ -155,7 +156,7 @@ onMounted(() => {
 // 获取数据
 async function getDataList() {
   try {
-    const { data,status } = await api.list();
+    const { data, status } = await api.list();
     configurationSiteSettingStore.setSiteConfig(data)
     if (data && status === 1) {
       form.value = data || form.value;
@@ -169,7 +170,7 @@ async function getDataList() {
     }
     if (form.value.topLevelDomainName !== '' && form.value.topLevelDomainName !== null) {
       const res = await api.getTenantWebConfigQueryAnalysis({ url: form.value.topLevelDomainName })
-      if(res.data) {
+      if (res.data) {
         isAnalysis.value = res.data.success
         form.value.isAnalysis = res.data.success
       }
@@ -219,11 +220,14 @@ const uploadRef = ref<any>()
 const fileList = ref<any>([]);
 // 删除
 const handleRemove: any = async () => {
-  ElMessage.success({
-    message: "删除成功",
-    center: true,
-  });
-  userStore.delLogo()
+  const res = await apiLogo.deleteLogo()
+  if (res.status === 1) {
+    ElMessage.success({
+      message: "删除成功",
+      center: true,
+    });
+    userStore.delLogo()
+  }
 };
 // 上传格式不正确删除
 const handleBeforeRemove = (file: any, fileList: any) => {
@@ -340,7 +344,7 @@ function onSubmit() {
             userStore.currencyType = 2
             if (form.value.acquiesceExchangeRate) {
               form.value.exchangeRate = form.value.acquiesceExchangeRate
-              form.value.exchangeRate =  Math.floor((1 / form.value.exchangeRate) * 100) / 100
+              form.value.exchangeRate = Math.floor((1 / form.value.exchangeRate) * 100) / 100
             }
           }
           const res = await api.edit(form.value)
@@ -494,8 +498,8 @@ function onSubmit() {
 </el-col> -->
               <el-col :span="24">
                 <el-form-item label="默认币种" prop="">
-                  <el-select v-model="form.currencyType" value-key="" style="width: 22.4375rem" disabled placeholder="请选择币种"
-                    clearable filterable @change="currencyTypeChange">
+                  <el-select v-model="form.currencyType" value-key="" style="width: 22.4375rem" disabled
+                    placeholder="请选择币种" clearable filterable @change="currencyTypeChange">
                     <el-option v-for="item in currencyList" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
                   </el-select>
@@ -505,7 +509,8 @@ function onSubmit() {
                 <el-form-item style="display: flex;" label="美元汇率" prop="exchangeRate">
                   <div>
                     <div class="right">
-                      <el-input v-model="form.acquiesceExchangeRate" style="width: 22.4375rem" placeholder="请输入数值" clearable>
+                      <el-input v-model="form.acquiesceExchangeRate" style="width: 22.4375rem" placeholder="请输入数值"
+                        clearable>
                         <template #prefix>
                           <!-- 自定义 SVG 图标作为前缀图标 -->
                           <el-text style="color: #333;">

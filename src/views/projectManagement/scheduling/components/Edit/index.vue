@@ -50,7 +50,7 @@ async function showEdit(row: any, view?: any) {
     if (row) {
       data.title = "编辑";
       data.form = cloneDeep(row);
-      data.form.groupSupplierId=row.getGroupSupplierIdNameInfoList.map((item:any)=>item.groupSupplierId)
+      data.form.groupSupplierId = row.getGroupSupplierIdNameInfoList.map((item: any) => item.groupSupplierId)
       await changeProject(row.projectId);
     } else {
       data.title = "新增";
@@ -139,150 +139,64 @@ defineExpose({ showEdit });
 
 <template>
   <div>
-    <el-dialog
-      v-model="dialogTableVisible"
-      :title="data.title"
-      width="600"
-      :before-close="closeHandler"
-    >
-      <el-form
-        ref="formRef"
-        label-width="104px"
-        style="position: relative"
-        :model="data.form"
-        :rules="rules"
-        :inline="false"
-      >
-        <el-form-item
-          label="调度类型"
-          prop="dispatchType"
-          style="align-items: center"
-        >
+    <el-dialog v-model="dialogTableVisible" :title="data.title" width="600" :before-close="closeHandler">
+      <el-form ref="formRef" label-width="104px" style="position: relative" :model="data.form" :rules="rules"
+        :inline="false">
+        <el-form-item label="调度类型" prop="dispatchType" style="align-items: center">
           <el-radio-group v-model="data.form.dispatchType" class="ml-4">
-            <el-radio :value="1" size="large"> 指定关闭  <el-tooltip
-          class="tooltips"
-          content="选中供应商或部门，该供应商或部门无法参与该项目"
-          placement="top"
-        >
-          <SvgIcon
-
-            class="SvgIcon1"
-            name="i-ri:question-line"
-          />
-        </el-tooltip> </el-radio>
-            <el-radio :value="2" size="large"> 指定价格         <el-tooltip
-          class="tooltips"
-          content="举例:(选中供应商为：A供应商；指定价格为：100美元)则，A供应商下参与该项目的会员价格为100美元，无需通过会员等级进行计算"
-          placement="top"
-        >
-          <SvgIcon
-
-            class="SvgIcon1"
-            name="i-ri:question-line"
-          />
-        </el-tooltip></el-radio>
+            <el-radio :value="1" size="large"> 指定关闭 <el-tooltip class="tooltips" content="选中供应商或部门，该供应商或部门无法参与该项目"
+                placement="top">
+                <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
+              </el-tooltip> </el-radio>
+            <el-radio :value="2" size="large"> 指定价格 <el-tooltip class="tooltips"
+                content="举例:(选中供应商为：A供应商；指定价格为：100美元)则，A供应商下参与该项目的会员价格为100美元，无需通过会员等级进行计算" placement="top">
+                <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
+              </el-tooltip></el-radio>
           </el-radio-group>
         </el-form-item>
-
-
-        <el-form-item
-          label="项目ID/名称"
-          prop="projectId"
-          v-if="data.title === '新增'"
-        >
-          <el-select
-            placeholder=""
-            v-model="data.form.projectId"
-            clearable
-            filterable
-            @change="changeProject"
-          >
-            <el-option
-              v-for="item in data.projectList"
-              :key="item.projectId"
-              :label="item.projectName"
+        <el-form-item label="项目ID/名称" prop="projectId" v-if="data.title === '新增'">
+          <el-select placeholder="" v-model="data.form.projectId" clearable filterable @change="changeProject">
+            <el-option v-for="item in data.projectList" :key="item.projectId" :label="item.projectName"
               :value="item.projectId"
-            >
-              <span style="float: left">{{ item.projectName }}</span>
-              <span
-                style="
-                  float: right;
-                  color: var(--el-text-color-secondary);
-                  font-size: 13px;
-                "
-              >
+              style="display: flex; justify-content: space-between; align-items: center; position: relative;">
+              <span style="flex-shrink: 0;">
+                {{ item.projectName }}
+              </span>
+              <span style="position: absolute; left: 50%; transform: translateX(-50%);">
+                {{ item.projectType === 1 ? '内部新增' : '租户分配' }}
+              </span>
+              <span style="flex-shrink: 0; color: var(--el-text-color-secondary); font-size: 13px;">
                 {{ item.projectId }}
               </span>
+
             </el-option>
           </el-select>
         </el-form-item>
         <div v-show="data.form.projectId">
-          <el-form-item
-            prop="dataType"
-            label="调度目标"
-            style="align-items: center"
-            v-show="
-              data.supplierNameInfoList.length &&
-              data.memberGroupNameInfoList.length
-            "
-          >
-            <el-radio-group
-              v-model="data.form.dataType"
-              class="ml-4"
-              @change="chagneDataType"
-            >
+          <el-form-item prop="dataType" label="调度目标" style="align-items: center" v-show="data.supplierNameInfoList.length &&
+      data.memberGroupNameInfoList.length
+      ">
+            <el-radio-group v-model="data.form.dataType" class="ml-4" @change="chagneDataType">
               <el-radio :value="1" size="large"> 供应商 </el-radio>
               <el-radio :value="2" size="large"> 内部站 </el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item
-            label="供应商"
-            prop="groupSupplierId"
-            v-if="
-              data.supplierNameInfoList.length &&
-              data.form.dataType &&
-              data.form.dataType === 1
-            "
-          >
-            <el-select
-              placeholder=""
-              v-model="data.form.groupSupplierId"
-              clearable
-              filterable
-              multiple
-              collapse-tags
-            >
-              <el-option
-                v-for="item in data.supplierNameInfoList"
-                :key="item.projectId"
-                :label="item.supplierName"
-                :value="item.supplierId"
-            /></el-select>
+          <el-form-item label="供应商" prop="groupSupplierId" v-if="data.supplierNameInfoList.length &&
+      data.form.dataType &&
+      data.form.dataType === 1
+      ">
+            <el-select placeholder="" v-model="data.form.groupSupplierId" clearable filterable multiple collapse-tags>
+              <el-option v-for="item in data.supplierNameInfoList" :key="item.projectId" :label="item.supplierName"
+                :value="item.supplierId" /></el-select>
           </el-form-item>
 
-          <el-form-item
-            label="部门"
-            prop="groupSupplierId"
-            v-if="
-              data.memberGroupNameInfoList.length &&
-              data.form.dataType &&
-              data.form.dataType === 2
-            "
-          >
-            <el-select
-              placeholder=""
-              v-model="data.form.groupSupplierId"
-              clearable
-              filterable
-              multiple
-              collapse-tags
-            >
-              <el-option
-                v-for="item in data.memberGroupNameInfoList"
-                :key="item.projectId"
-                :label="item.memberGroupName"
-                :value="item.memberGroupId"
-            /></el-select>
+          <el-form-item label="部门" prop="groupSupplierId" v-if="data.memberGroupNameInfoList.length &&
+      data.form.dataType &&
+      data.form.dataType === 2
+      ">
+            <el-select placeholder="" v-model="data.form.groupSupplierId" clearable filterable multiple collapse-tags>
+              <el-option v-for="item in data.memberGroupNameInfoList" :key="item.projectId"
+                :label="item.memberGroupName" :value="item.memberGroupId" /></el-select>
           </el-form-item>
         </div>
         <el-form-item v-if="data.form.dispatchType === 2" label="指定价格" prop="doMoneyPrice">

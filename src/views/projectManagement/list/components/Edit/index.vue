@@ -203,6 +203,7 @@ defineExpose({ showEdit });
               :value="item.projectId"
             >
               <span style="float: left">{{ item.projectName }}</span>
+              <span style="float: center">{{ item.projectType === 1 ? '内部新增' : '租户分配' }}</span>
               <span
                 style="
                   float: right;
