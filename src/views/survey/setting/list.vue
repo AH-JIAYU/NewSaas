@@ -118,11 +118,15 @@ function onSubmit() {
     formRef.value.clearValidate("phone");
   }
 
-  //如果form.minimumAmount,form.value.settlementDone.test('/^\d+$/')
-  // if (form.value.minimumAmount.test("/^d+$/")) {
-  //   ElMessage.warning("请输入有效的数字");
-  //   return;
-  // }
+  if (!/^\d*$/.test(form.value.minimumAmount)) {
+    ElMessage.warning("请输入有效的数字");
+    return;
+  }
+  if (!/^\d*$/.test(form.value.taxPointsProportion)) {
+    ElMessage.warning("请输入有效的数字");
+    return;
+  }
+
   // 新增
   if (!form.value.id) {
     // 校验
@@ -262,7 +266,7 @@ function onSubmit() {
                 </el-form-item>
               </el-col>
               <el-col :span="24">
-                <el-form-item label="会员税点" prop="confirmPassword">
+                <el-form-item label="会员税点" prop="taxPointsProportion">
                   <el-input
                     v-model.number="form.taxPointsProportion"
                     style="width: 18rem"

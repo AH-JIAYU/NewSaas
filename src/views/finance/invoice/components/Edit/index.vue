@@ -88,6 +88,18 @@ const formRules = ref<FormRules>({
 // 提交数据
 function onSubmit() {
   return new Promise<void>((resolve) => {
+
+    if (!/^\d*$/.test(form.value.invoiceTax)) {
+    ElMessage.warning("请输入有效的数字");
+    return;
+  }
+  if (!/^\d*$/.test(form.value.actualReceipts)) {
+    ElMessage.warning("请输入有效的数字");
+    return;
+  }
+
+
+
     if (!form.value.id) {
       formRef.value &&
         formRef.value.validate((valid: any) => {
@@ -142,6 +154,7 @@ async function showEdit(row?: any) {
 
   try {
     loading.value = true;
+    await getCustomerList();
     if (row) {
       form.value = JSON.parse(row);
     } else {
@@ -194,7 +207,7 @@ const getCustomerList = async () => {
 
 onMounted(async () => {
   defaultTime.value = new Date();
-  await getCustomerList();
+
 });
 const close = () => {
   formRef.value.resetFields();
