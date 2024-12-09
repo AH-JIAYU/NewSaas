@@ -142,6 +142,7 @@ async function showEdit(row?: any) {
 
   try {
     loading.value = true;
+    await getCustomerList();
     if (row) {
       form.value = JSON.parse(row);
     } else {
@@ -194,7 +195,7 @@ const getCustomerList = async () => {
 
 onMounted(async () => {
   defaultTime.value = new Date();
-  await getCustomerList();
+
 });
 const close = () => {
   formRef.value.resetFields();
