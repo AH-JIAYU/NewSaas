@@ -325,6 +325,10 @@ function onSubmit() {
     ElMessage.warning("请输入有效的数字");
     return;
   }
+  if (form.value.taxRate && !/^\d*$/.test(form.value.taxRate)) {
+    ElMessage.warning("请输入有效的数字");
+    return;
+  }
   formRef.value &&
     formRef.value.validate(async (valid: any) => {
       if (valid) {
