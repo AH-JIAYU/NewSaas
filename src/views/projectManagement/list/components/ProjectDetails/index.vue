@@ -65,8 +65,6 @@ async function showEdit(row: any, projectType: any) {
   const res = await obtainLoading(api.detail({ projectId: row.projectId }));
   data.value.form = res.data;
   active.value = res.data.projectSettlementStatusSet.length > 0 ? res.data.projectSettlementStatusSet[0].settlementStatus : 0
-  console.log('active.value',active.value);
-
   data.value.form.projectSettlementStatusSet =
     data.value.form.projectSettlementStatusSet.reduce(
       (accumulator: any, currentValue: any) => {
@@ -203,7 +201,7 @@ defineExpose({ showEdit });
         active >= 1,
     }" :span="5">
               <span style="margin-left: 25.5%">{{
-      active >= 1 ? data.form?.projectSettlementStatusSet[0]?.operationName : '暂无'
+      active >= 1 ? data.form?.projectSettlementStatusSet[0]?.operationName : ''
     }}</span>
             </el-col>
             <el-col :class="{
@@ -211,7 +209,7 @@ defineExpose({ showEdit });
           active >= 2,
       }" :span="5">
               <span style="margin-left: 19.5%">
-                {{ active >= 2 ? data.form?.projectSettlementStatusSet[1]?.operationName : '暂无' }}
+                {{ active >= 2 ? data.form?.projectSettlementStatusSet[1]?.operationName : '' }}
               </span>
             </el-col>
             <el-col :class="{
@@ -219,7 +217,7 @@ defineExpose({ showEdit });
         active >= 3,
     }" :span="5">
               <span style="margin-left: 12.5%">
-                {{ active >= 3 ? data.form?.projectSettlementStatusSet[2]?.operationName : '暂无' }}
+                {{ active >= 3 ? data.form?.projectSettlementStatusSet[2]?.operationName : '' }}
               </span>
             </el-col>
             <el-col :class="{
@@ -227,7 +225,7 @@ defineExpose({ showEdit });
         active >= 4,
     }" :span="4">
               <span style="margin-left: 8.5%">
-                {{ active >= 4 ? data.form?.projectSettlementStatusSet[3]?.operationName : '暂无' }}
+                {{ active >= 4 ? data.form?.projectSettlementStatusSet[3]?.operationName : '' }}
               </span>
             </el-col>
             <el-col :class="{
@@ -235,7 +233,7 @@ defineExpose({ showEdit });
         active >= 5,
     }" :span="4">
               <span style="margin-left: 28.5%">
-                {{ active >= 5 ? data.form?.projectSettlementStatusSet[4]?.operationName : '暂无' }}
+                {{ active >= 5 ? data.form?.projectSettlementStatusSet[4]?.operationName : '' }}
               </span>
             </el-col>
           </el-row>
