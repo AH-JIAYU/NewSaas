@@ -313,11 +313,16 @@ function onSubmit() {
     formRules.value.topLevelDomainName = []
     formRef.value.clearValidate('topLevelDomainName');
   }
+
   if (!form.value.webName) {
     ElMessage.warning({
       message: "请输入网站名称",
       center: true,
     });
+    return;
+  }
+  if (form.value.minimumAmount && !/^\d*$/.test(form.value.minimumAmount)) {
+    ElMessage.warning("请输入有效的数字");
     return;
   }
   formRef.value &&

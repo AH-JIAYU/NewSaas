@@ -88,6 +88,18 @@ const formRules = ref<FormRules>({
 // 提交数据
 function onSubmit() {
   return new Promise<void>((resolve) => {
+
+    if (!/^\d*$/.test(form.value.invoiceTax)) {
+    ElMessage.warning("请输入有效的数字");
+    return;
+  }
+  if (!/^\d*$/.test(form.value.actualReceipts)) {
+    ElMessage.warning("请输入有效的数字");
+    return;
+  }
+
+
+
     if (!form.value.id) {
       formRef.value &&
         formRef.value.validate((valid: any) => {
