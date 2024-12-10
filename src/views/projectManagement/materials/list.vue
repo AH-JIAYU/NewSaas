@@ -322,7 +322,7 @@ onMounted(() => {
             highlight-current-row
             @current-change="handleTabs1CurrentChange"
           >
-            <el-table-column align="left" type="selection" />
+            <!-- <el-table-column align="left" type="selection" /> -->
             <el-table-column
               v-if="checkList.includes('memberChildId')"
               show-overflow-tooltip
@@ -551,7 +551,7 @@ onMounted(() => {
             highlight-current-row
             @current-change="handleTabs2CurrentChange"
           >
-            <el-table-column type="selection" />
+            <!-- <el-table-column type="selection" /> -->
 
             <el-table-column
               v-if="checkList.includes('memberChildId')"

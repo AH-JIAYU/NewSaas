@@ -506,7 +506,7 @@ function handleCurrentChange(val: any) {
   else current.value = "";
 }
 </script>
-
+<!--    <el-table-column type="selection" align="left" /> -->
 <template>
   <div class="absolute-container">
     <div class="page-main">
@@ -579,7 +579,7 @@ function handleCurrentChange(val: any) {
           </el-row>
           <el-table v-loading="listLoading" :border="border" :data="data.list" :size="lineHeight" :stripe="stripe"
             @selection-change="setSelectRows"     @current-change="handleCurrentChange"     highlight-current-row>
-            <el-table-column type="selection" align="left" />
+
             <el-table-column v-if="checkList.includes('memberStatus')" align="left" show-overflow-tooltip label="会员状态" width="84">
               <template #default="{ row }">
                 <ElSwitch v-if="row.memberStatus === 3" v-model="row.memberStatus" inline-prompt :inactive-value="3"

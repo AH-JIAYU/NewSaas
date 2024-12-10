@@ -350,7 +350,7 @@ const formOption = {
       </el-row>
       <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
         @selection-change="setSelectRows" highlight-current-row @current-change="handleCurrentChange">
-        <el-table-column align="left" type="selection" />
+        <!-- <el-table-column align="left" type="selection" /> -->
         <el-table-column v-if="checkList.includes('supplierStatus')" align="left" show-overflow-tooltip label="供应商状态"
           width="100">
           <template #default="{ row }">

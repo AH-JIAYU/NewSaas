@@ -360,7 +360,7 @@ function handleCurrentChange(val: any) {
       <!-- 外包会员，点击id，随机身份，租户id，会员id，子会员id，供应商id，项目，ip区域，分配类型，调查时间，调查状态，副状态 -->
       <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
         highlight-current-row @selection-change="setSelectRows" @current-change="handleCurrentChange">
-        <el-table-column align="left" type="selection" />
+        <!-- <el-table-column align="left" type="selection" /> -->
         <el-table-column v-if="checkList.includes('id')" width="200" align="left" prop="id" show-overflow-tooltip
           fixed="left" label="点击ID"><template #default="{ row }">
             <el-tag effect="dark" v-if="row.surveySource === 1" type="primary">内部会员</el-tag>

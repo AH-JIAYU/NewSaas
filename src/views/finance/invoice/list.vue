@@ -405,7 +405,7 @@ onMounted(() => {
         :stripe="stripe"
         @selection-change="setSelectRows"
       >
-        <el-table-column align="left" type="selection" />
+        <!-- <el-table-column align="left" type="selection" /> -->
         <!-- <el-table-column type="index" align="left" label="序号" width="55" /> -->
         <el-table-column
           v-if="checkList.includes('tenantCustomerShortName')"

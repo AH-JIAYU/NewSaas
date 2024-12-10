@@ -273,7 +273,7 @@ function handleCurrentChange(val: any) {
         @current-change="handleCurrentChange"
         @selection-change="setSelectRows"
       >
-        <el-table-column align="left" type="selection" />
+        <!-- <el-table-column align="left" type="selection" /> -->
         <ElTableColumn
           v-if="checkList.includes('memberChildStatus')"
           align="left"

@@ -192,7 +192,7 @@ const formOption = {
       <el-table ref="tableSortRef" v-loading="false" style="margin-top: 10px" row-key="id" :data="list" :border="border"
         :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows" highlight-current-row
         @current-change="handleCurrentChange">
-        <el-table-column align="left" type="selection" />
+        <!-- <el-table-column align="left" type="selection" /> -->
         <el-table-column v-if="checkList.includes('id')" prop="id" show-overflow-tooltip align="left" label="职位ID">
           <template #default="{ row }">
             <div class="copyId tableSmall">
