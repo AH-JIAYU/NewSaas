@@ -118,11 +118,11 @@ function onSubmit() {
     formRef.value.clearValidate("phone");
   }
 
-  if (!/^\d*$/.test(form.value.minimumAmount)) {
+  if (form.value.minimumAmount && !/^\d*$/.test(form.value.minimumAmount)) {
     ElMessage.warning("请输入有效的数字");
     return;
   }
-  if (!/^\d*$/.test(form.value.taxPointsProportion)) {
+  if (form.value.taxPointsProportion && !/^\d*$/.test(form.value.taxPointsProportion)) {
     ElMessage.warning("请输入有效的数字");
     return;
   }
