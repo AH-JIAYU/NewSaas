@@ -6,6 +6,7 @@ import api from "@/api/modules/configuration_role";
 import useRouteStore from "@/store/modules/route";
 import useRoleButtonStore from "@/store/modules/get_role_button";
 import { ElLoading } from "element-plus";
+import { active } from "sortablejs";
 // 父级传递数据
 const props = defineProps(["id", "row"]);
 // 路由 store
@@ -40,6 +41,7 @@ const formRules = ref<FormRules>({
   roleName: [{ required: true, message: "请输入角色名称", trigger: "blur" }],
 });
 const loadingInstance = ref<any>(null);
+
 onMounted(async () => {
   try {
     loading.value = true;
@@ -61,19 +63,25 @@ onMounted(async () => {
   } finally {
     loading.value = false;
   }
+    if ( permissionData.value.length == form.value.permission.length) {
+    form.value.checkAll = true;
+  }
+
+
 });
 const eleDivRef = ref();
 // 切换全选/取消全选
 const toggleCheckAll = () => {
   loadingInstance.value = ElLoading.service({
+    // target: document.body,  // 让 loading 居中显示在整个页面
     target: eleDivRef.value, // 将加载效果应用于指定的元素
-    text: "正在加载中...",
+    text: "请稍后...",
     spinner: "el-icon-loading",
     background: "rgba(0, 0, 0, 0.7)",
     customClass: "custom-target-loading",
     lock: true, // 锁定界面，防止用户点击
-    fullscreen: true,
   });
+
   setTimeout(() => {
     if (form.value.checkAll) {
       // 全选：将所有节点的key添加到checkedKeys中
@@ -106,6 +114,8 @@ const toggleCheckAll = () => {
   }, 2000);
 };
 
+
+
 // 回显form
 async function getInfo() {
   loading.value = true;
@@ -118,9 +128,8 @@ async function getInfo() {
   form.value.menuId = menuId.filter((item: any) => {
     return !Level1AndLevel2List.some((ite: any) => ite.id === item);
   });
-  if (permissionData.value.length == form.value.permission.length) {
-    form.value.checkAll = true;
-  }
+
+
 
   loading.value = false;
 }
@@ -162,6 +171,9 @@ const handleNodeClick = (nodeData: any) => {
         );
       }
     });
+  }
+  if ( permissionData.value.length == form.value.permission.length) {
+    form.value.checkAll = true;
   }
 };
 // 暴露
@@ -216,7 +228,7 @@ defineExpose({
 </script>
 
 <template>
-  <div v-loading="loading" ref="eleDivRef">
+  <div v-loading="loading" ref="eleDivRef" style="height: 90vh">
     <ElForm ref="formRef" :model="form" :rules="formRules" label-width="120px">
       <ElFormItem label="角色名称" prop="roleName">
         <ElInput v-model="form.roleName" placeholder="请输入角色名称" />
@@ -240,7 +252,6 @@ defineExpose({
           show-checkbox
           @check-change="handleNodeClick"
           default-expand-all
-
           border
         >
           <template #default="{ data }">
@@ -274,6 +285,10 @@ defineExpose({
 .custom-target-loading .el-loading-mask {
   background-color: rgba(0, 0, 0, 0.2) !important;
 }
+:deep(.el-loading-spinner .el-loading-text) {
+  font-size: 1rem !important;
+}
+
 :deep {
   .el-tree {
     overflow: hidden;
