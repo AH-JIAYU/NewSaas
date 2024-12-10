@@ -43,7 +43,7 @@ const formRules = ref<FormRules>({
     message: '请输入有效的正数，且最多两位小数',
     trigger: 'blur'
   }],
-  operationType: [{ required: true, message: "请选择加减款", trigger: "change" }],
+  type: [{ required: true, message: "请选择加减款", trigger: "change" }],
 });
 // 修改
 async function showEdit(row: any) {
@@ -105,7 +105,7 @@ const changeSendProjectType = (name: any, row: any) => {
   if (row) {
     if (name === '加款' || name === '减款') {
       sendProjectType.value = row
-      form.value.operationType = row
+      form.value.type = row
     } else if (name === '待审金额' || name === '可用金额') {
       receiveProjectType.value = row
       form.value.type = row
@@ -145,7 +145,7 @@ defineExpose({
       width="35%" @close="close">
       <el-form :model="form" :rules="formRules" ref="formRef" label-width="5rem" :inline="false">
         <el-form-item label="ID"> {{ isId }} </el-form-item>
-        <el-form-item label="加减款" prop="operationType">
+        <el-form-item label="加减款" prop="type">
           <div>
             <el-button :type="sendProjectType === 1 ? 'primary' : ''" size="small"
               @click="changeSendProjectType('加款', 1)">加款
@@ -161,7 +161,6 @@ defineExpose({
           <el-input v-model="form.remark" placeholder="请输入说明"></el-input>
         </el-form-item>
       </el-form>
-
       <template #footer>
         <el-button @click="close"> 取消 </el-button>
         <el-button type="primary" @click="onSubmit"> 确定 </el-button>
