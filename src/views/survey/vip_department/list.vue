@@ -434,7 +434,6 @@ const changeRandomState = async (state: any, id: string) => {
 // 重置请求
 function queryData() {
   pagination.value.page = 1;
-  console.log('111')
   fetchData();
 }
 // 每页数量切换

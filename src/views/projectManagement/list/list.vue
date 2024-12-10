@@ -187,14 +187,15 @@ function dispatch() {
       message: "离线不可调度",
       center: true,
     });
-  } else if (selectList[0].projectType === 2) {
-    ElMessage.warning({
-      message: "外包项目不可调度",
-      center: true,
-    });
   } else {
     schedulingRef.value.showEdit(selectList[0], "projectList");
   }
+  // else if (selectList[0].projectType === 2) {
+  //   ElMessage.warning({
+  //     message: "外包项目不可调度",
+  //     center: true,
+  //   });
+  // }
 }
 // 外包查看点击id
 function outsourceDetails(row: any) {
@@ -265,12 +266,12 @@ async function fetchData() {
   }
 }
 // 表格时候可勾选
-const selectable = (row: any) => {
-  const filterDataId = list.value
-    .filter((item: any) => item.projectType === 2)
-    .map((item: any) => item.projectId);
-  return !filterDataId.includes(row.projectId);
-};
+// const selectable = (row: any) => {
+//   const filterDataId = list.value
+//     .filter((item: any) => item.projectType === 2)
+//     .map((item: any) => item.projectId);
+//   return !filterDataId.includes(row.projectId);
+// };
 const countryList: any = ref([]); //所有区域一维
 const customerList: any = ref([]); //客户列表
 // 具体的位置信息
@@ -439,7 +440,8 @@ const formOption = {
       <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 0.625rem" row-key="projectId" :data="list"
         :tree-props="{ children: 'getChildrenProjectListInfoList' }" :border="border" :size="lineHeight"
         :stripe="stripe" highlight-current-row height="100%" @current-change="handleCurrentChange">
-        <el-table-column align="left" type="selection" :selectable="selectable" />
+        <!-- :selectable="selectable" -->
+        <el-table-column align="left" type="selection"  />
         <el-table-column v-if="checkList.includes('isOnline')" show-overflow-tooltip prop="isOnline" align="left"
           width="84" label="状态">
           <template #default="{ row }">

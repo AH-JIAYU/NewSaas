@@ -256,9 +256,7 @@ const changeReceiveProjectType = (name: any, row: any) => {
   //切换成自动需要选择负责人
   //判断当前发送状态，如果当前是自动，1,点击手动才调接口，如果当前是手动2，点击自动，弹出选择部门负责人才调接口，
   let obj = JSON.parse(JSON.stringify(row)); //深拷贝，不改变原数据
-  console.log(row.receiveProjectType,'row.receiveProjectType')
   if (name=='手动' || name=='拒绝') {
-
     try {
       listLoading.value = true;
       let params = {

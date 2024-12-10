@@ -146,7 +146,6 @@ const onDialogOpened = async () => {
 
   // 监听图片删除事件
   editorRef.value.on("asset:remove", (asset: any) => {
-    console.log("删除图片:", asset);
     // 先从 Asset Manager 中移除图片
     const asset1 = editorRef.value.AssetManager.getAll().find(
       (a: any) => a.get("src") === asset.id

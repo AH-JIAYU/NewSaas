@@ -60,7 +60,6 @@ function close() {
 }
 
 onMounted(async () => {
-  console.log('1111')
   // 职位
   positionManageList.value = await usePositionManage.getPositionManage();
   // 用户
