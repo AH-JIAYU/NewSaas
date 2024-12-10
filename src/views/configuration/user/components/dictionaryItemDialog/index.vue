@@ -39,7 +39,7 @@ const visible = defineModel<boolean>({
   default: false,
 });
 // 弹窗标题
-const title = computed(() => (props.id === "" ? "新增用户" : "编辑用户"));
+const title = computed(() => (!props.id  ? "新增用户" : "编辑用户"));
 // 树配置项
 const defaultProps: any = {
   children: "children",
@@ -50,6 +50,7 @@ const defaultProps: any = {
 const loading = ref<any>(false)
 const formRef = ref<any>();
 // 扁平化
+
 const flat = ref([]);
 // 表单
 const form = ref<any>({
@@ -322,7 +323,7 @@ onMounted(async () => {
         <el-row :gutter="24">
           <el-col :span="8">
             <el-form-item label="用户名" prop="userName">
-              <el-input v-model="form.userName" :maxlength="20" placeholder="请输入用户名" clearable :disabled="props.id =='' ? false :true"/>
+              <el-input v-model="form.userName" :maxlength="20" placeholder="请输入用户名" clearable :disabled="!props.id ? false :true"/>
             </el-form-item>
           </el-col>
           <el-col :span="8">
