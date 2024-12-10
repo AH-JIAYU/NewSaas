@@ -268,7 +268,7 @@ function handleCurrentChange(val: any) {
       </el-row>
       <el-table v-loading="listLoading" :border="border" :data="data.list" :size="lineHeight" :stripe="stripe"
         @selection-change="setSelectRows" @current-change="handleCurrentChange"    highlight-current-row>
-        <el-table-column align="left" type="selection" />
+        <!-- <el-table-column align="left" type="selection" /> -->
         <el-table-column align="left" v-if="checkList.includes('memberStatus')" show-overflow-tooltip label="会员状态" width="84">
           <template #default="{ row }">
             <ElSwitch v-if="row.memberStatus === 3" v-model="row.memberStatus" inline-prompt :inactive-value="3"

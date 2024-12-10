@@ -321,7 +321,7 @@ function handleCurrentChange(val: any) {
         @current-change="handleCurrentChange"
         highlight-current-row
       >
-        <el-table-column align="left" type="selection" />
+        <!-- <el-table-column align="left" type="selection" /> -->
         <el-table-column
           v-if="checkList.includes('id')"
           show-overflow-tooltip

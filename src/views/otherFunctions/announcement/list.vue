@@ -269,7 +269,7 @@ onBeforeUnmount(() => {
   }
 });
 </script>
-
+<!--  <el-table-column align="left" type="selection" /> -->
 <template>
   <div :class="{ 'absolute-container': data.tableAutoHeight }">
     <PageMain>
@@ -292,7 +292,7 @@ onBeforeUnmount(() => {
       <ElTable v-model:stripe="data.stripe" v-model:border="data.border" v-loading="data.loading"
         :size="data.lineHeight" class="my-4" :data="data.dataList" highlight-current-row height="100%"
         @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
-        <el-table-column align="left" type="selection" />
+
         <ElTableColumn v-if="data.checkList.includes('top')" align="left" show-overflow-tooltip prop="top" label="置顶" width="84">
           <template #default="{ row }">
             <el-switch v-model="row.top" :active-value="true" :inactive-value="false" inline-prompt active-text="开启"

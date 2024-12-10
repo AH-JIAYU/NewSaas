@@ -266,7 +266,7 @@ onMounted(() => {
             </FormRightPanel>
           </el-row>
           <el-table :data="data.list" :border="border" :size="lineHeight" :stripe="stripe" style="width: 100%">
-            <el-table-column align="left" type="selection" />
+            <!-- <el-table-column align="left" type="selection" /> -->
             <el-table-column v-if="checkList.includes('customerName')" show-overflow-tooltip align="left"
               prop="customerName" label="客户名称" width="180">
               <template #default="{ row }">
@@ -359,7 +359,7 @@ onMounted(() => {
           </el-row>
           <el-table class="el-table__row--striped" :data="data.list" :border="border" :size="lineHeight"
             :stripe="stripe" style="width: 100%">
-            <el-table-column align="left" type="selection" />
+            <!-- <el-table-column align="left" type="selection" /> -->
             <el-table-column v-if="checkList.includes('customerName')" show-overflow-tooltip align="left"
               prop="customerName" label="客户名称" width="180"><template #default="{ row }">
                 <span class="tableBig">{{ row.customerAccord ? row.customerAccord : "-" }}</span>

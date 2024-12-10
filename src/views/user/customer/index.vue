@@ -222,7 +222,7 @@ const formOption={
       </el-row>
       <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
         @selection-change="setSelectRows" highlight-current-row @current-change="handleCurrentChange">
-        <el-table-column align="left" type="selection" />
+        <!-- <el-table-column align="left" type="selection" /> -->
         <ElTableColumn v-if="checkList.includes('customerStatus')" align="left" show-overflow-tooltip
           prop="customerStatus" label="客户状态"     width="84">
           <template #default="{ row }">

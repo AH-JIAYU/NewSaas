@@ -173,7 +173,7 @@ const formOption = {
       <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="id" :data="list"
         :border="border" :size="lineHeight" :stripe="stripe" highlight-current-row
         @current-change="handleCurrentChange">
-        <el-table-column align="left" type="selection" />
+        <!-- <el-table-column align="left" type="selection" /> -->
         <el-table-column v-if="checkList.includes('dispatchType')" show-overflow-tooltip prop="dispatchType"
           align="left" label="类型">
           <template #default="{ row }">

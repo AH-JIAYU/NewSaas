@@ -355,7 +355,7 @@ function userData(data1: any) {
         highlight-current-row
         @current-change="handleCurrentChange"
       >
-        <el-table-column align="left" type="selection" />
+        <!-- <el-table-column align="left" type="selection" /> -->
         <el-table-column
           v-if="checkList.includes('bindStatus')"
           align="left"

@@ -234,7 +234,7 @@ const formOption = {
       <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="id" :data="list"
         :border="border" :size="lineHeight" :stripe="stripe" @current-change="handleCurrentChange"
         highlight-current-row>
-        <el-table-column align="left" type="selection" />
+        <!-- <el-table-column align="left" type="selection" /> -->
         <el-table-column v-if="checkList.includes('project')" show-overflow-tooltip align="left"
           prop="projectIdentificationOrClientName" width="200" label="项目">
           <template #default="{ row }">

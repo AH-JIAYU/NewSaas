@@ -175,7 +175,7 @@ function handleCurrentChange(val: any) {
       </el-row>
       <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="id" :data="list"
         :border="border" :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows"           highlight-current-row  @current-change="handleCurrentChange">
-        <el-table-column align="left" type="selection" />
+        <!-- <el-table-column align="left" type="selection" /> -->
         <!-- <el-table-column type="index" align="left" label="序号" width="55" /> -->
         <el-table-column v-if="checkList.includes('projectClickId')" prop="projectClickId" show-overflow-tooltip
           align="left" label="点击ID" >

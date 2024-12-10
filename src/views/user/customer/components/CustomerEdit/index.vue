@@ -96,12 +96,16 @@ async function save() {
   await validate();
   if (validateAll.value.every((item: any) => item === "fulfilled")) {
     // 客户名称是否重复
-    for (const item of leftTabsData) {
+
+
+
+      for (const item of leftTabsData) {
       let rateAudit = item.rateAudit
       // 正则匹配正整数
       const regex = /^[1-9]\d*$/;
       // 如果不符合正则，弹出警告并跳过当前项
-      if (!regex.test(rateAudit)) {
+
+      if (!regex.test(rateAudit) && item.riskControl ==2) {
         ElMessage.warning({
           message: "审核率必须是大于0的正整数",
           center: true,
@@ -109,6 +113,8 @@ async function save() {
         return;
       }
     }
+
+
 
     if (!hasDuplicateCustomer(leftTabsData)) {
       if (title.value === "新增") {

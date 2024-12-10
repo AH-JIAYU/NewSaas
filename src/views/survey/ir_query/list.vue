@@ -221,7 +221,7 @@ function handleCurrentChange(val: any) {
   else current.value = "";
 }
 </script>
-
+<!--  // <el-table-column align="left" type="selection" /> -->
 <template>
   <div :class="{ 'absolute-container': data.tableAutoHeight }">
     <PageMain>
@@ -278,7 +278,7 @@ function handleCurrentChange(val: any) {
               <ElTable v-loading="data.loading" :border="data.border" :size="data.lineHeight" :stripe="data.stripe"
                 class="my-4" :data="data.dataList" highlight-current-row height="100%" @sort-change="sortChange"
                 @selection-change="data.batch.selectionDataList = $event"   @current-change="handleCurrentChange">
-                <el-table-column align="left" type="selection" />
+
                 <ElTableColumn v-if="data.checkList.includes('projectOrMemberGroupName')" show-overflow-tooltip
                   align="left" prop="projectOrMemberGroupName" label="项目名称">
                   <template #default="{ row }">
@@ -374,7 +374,7 @@ function handleCurrentChange(val: any) {
               <ElTable v-loading="data.loading" :border="data.border" :size="data.lineHeight" :stripe="data.stripe"
                 class="my-4" :data="data.dataList" highlight-current-row height="100%" @sort-change="sortChange"
                 @selection-change="data.batch.selectionDataList = $event">
-                <el-table-column align="left" type="selection" />
+
                 <ElTableColumn v-if="data.checkList.includes('projectOrMemberGroupName')" show-overflow-tooltip
                   align="left" prop="projectOrMemberGroupName" label="会员姓名">
                   <template #default="{ row }">
@@ -457,7 +457,7 @@ function handleCurrentChange(val: any) {
               <ElTable v-loading="data.loading" :border="data.border" :size="data.lineHeight" :stripe="data.stripe"
                 class="my-4" :data="data.dataList" highlight-current-row height="100%" @sort-change="sortChange"
                 @selection-change="data.batch.selectionDataList = $event">
-                <el-table-column align="left" type="selection" />
+
                 <ElTableColumn v-if="data.checkList.includes('projectOrMemberGroupName')" show-overflow-tooltip
                   align="left" prop="projectOrMemberGroupName" label="会员组名称">
                   <template #default="{ row }">

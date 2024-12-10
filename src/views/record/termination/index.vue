@@ -230,7 +230,7 @@ function handleCurrentChange(val: any) {
         @current-change="handleCurrentChange"
         @selection-change="setSelectRows"
       >
-        <el-table-column align="left" type="selection" />
+        <!-- <el-table-column align="left" type="selection" /> -->
 
         <el-table-column
           v-if="checkList.includes('surveySource')"

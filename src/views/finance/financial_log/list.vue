@@ -172,7 +172,8 @@ function handleCurrentChange(val: any) {
   else current.value = "";
 }
 </script>
-
+<!--         // <el-table-column align="left" type="selection" />
+        // <ElTableColumn v-if="data.batch.enable" type="selection" show-overflow-tooltip align="left" fixed /> -->
 <template>
   <div :class="{ 'absolute-container': data.tableAutoHeight }">
     <PageMain>
@@ -191,8 +192,7 @@ function handleCurrentChange(val: any) {
       <ElTable v-loading="data.loading" :border="data.border" :size="data.lineHeight" :stripe="data.stripe" class="my-4"
         :data="data.dataList" highlight-current-row height="100%" style="min-height: 370px;" sort-change="sortChange"
         @selection-change="data.batch.selectionDataList = $event"   @current-change="handleCurrentChange">
-        <el-table-column align="left" type="selection" />
-        <ElTableColumn v-if="data.batch.enable" type="selection" show-overflow-tooltip align="left" fixed />
+
         <ElTableColumn v-if="data.checkList.includes('clientId')" show-overflow-tooltip align="left" prop="clientId"
           label="点击ID" width="200">
           <template #default="{ row }">
