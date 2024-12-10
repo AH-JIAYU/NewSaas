@@ -213,7 +213,8 @@ defineExpose({
   <template #header>
   <div class="card-header">
     <div class="leftTitle">
-      部门信息<span
+      部门信息
+      <!-- <span
         v-if="form.enableChargePerson"
         style="margin-left: 20px; font-size: 14px"
         >负责人:<el-text v-for="item in staffList" :key="item.id">
@@ -221,7 +222,7 @@ defineExpose({
             {{ item.name }}
           </el-text>
         </el-text></span
-      >
+      > -->
     </div>
   </div>
 </template>

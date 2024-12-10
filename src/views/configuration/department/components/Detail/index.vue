@@ -220,13 +220,14 @@ defineExpose({
   <template #header>
           <div class="card-header">
             <div class="leftTitle">
-              部门信息<span style="margin-left: 20px; font-size: 14px"
+              部门信息
+              <!-- <span style="margin-left: 20px; font-size: 14px"
                 >PM:<el-text v-for="item in staffList" :key="item.id">
               <el-text v-if="item.id === form.director">
                 {{ item.name }}
               </el-text>
             </el-text></span
-              >
+              > -->
             </div>
           </div>
         </template>
