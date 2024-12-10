@@ -98,7 +98,7 @@ const loginRules = ref<any>({
 
 onMounted(async () => {
   const { data } = await api.getTenantConfig();
-  isRegister.value = data?.register;
+  isRegister.value = data?.register === false ? false : true
   if (route.query.isRegister && route.query.isRegister === 'true') {
     formType.value = 'register'
   }
@@ -405,6 +405,7 @@ const handleRegister = debounce(async () => {
         } else {
           delete registerForm.value.phoneNumber;
         }
+        delete registerForm.value.agreeToTheAgreement;
         const { status } = await api.register(registerForm.value);
         if (status === 1) {
           ElMessage.success({
