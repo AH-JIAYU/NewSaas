@@ -140,7 +140,7 @@ const formRules = ref<FormRules>({
     { required: false, message: '请输入内容', trigger: 'blur' },
     { max: 50, message: '最多输入 50 字', trigger: 'blur' }
   ],
-  exchangeRate: [
+  acquiesceExchangeRate: [
     { required: false, message: '请输入美元汇率', trigger: 'blur' },
     { pattern: /^(?!0(\.0+)?$)(\d+(\.\d{1,2})?)$/, message: '请输入一个有效的数字，不能小于0，最多保留两位小数', trigger: 'blur' }
   ],
@@ -515,7 +515,7 @@ function onSubmit() {
                 </el-form-item>
               </el-col>
               <el-col :span="24">
-                <el-form-item style="display: flex;" label="美元汇率" prop="exchangeRate">
+                <el-form-item style="display: flex;" label="美元汇率" prop="acquiesceExchangeRate">
                   <div>
                     <div class="right">
                       <el-input v-model="form.acquiesceExchangeRate" style="width: 22.4375rem" placeholder="请输入数值"

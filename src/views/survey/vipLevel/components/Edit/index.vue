@@ -12,9 +12,11 @@ const title = ref("");
 const form = ref(); // 表单
 const formRef = ref(); // 表单ref
 const rules = reactive({
-
   levelName: [{ required: true, message: "请输入名称", trigger: "blur" }],
-  additionRatio: [{ required: true, message: "请输入比例", trigger: "blur" }],
+  additionRatio: [
+    { required: true, message: "请输入比例", trigger: "blur" },
+    { pattern: /^[0-9]+$/, message: '请输入0以上的正整数', trigger: 'blur' }
+  ],
 });
 
 // 获取会员等级
@@ -85,11 +87,11 @@ defineExpose({ showEdit });
         <el-input v-model="form.levelName" maxlength="100" />
       </el-form-item>
       <el-form-item label="价格比例" prop="additionRatio">
+        <!-- oninput="if(value>100)value=100;if(value.length>4)value=value.slice(0,4);if(value<0)value=0;" -->
         <el-input
           v-model.number="form.additionRatio"
           :min="1"
           :max="100"
-          oninput="if(value>100)value=100;if(value.length>4)value=value.slice(0,4);if(value<0)value=0;"
           type="number"
         >
           <template #append> % </template>

@@ -96,20 +96,27 @@ async function save() {
   await validate();
   if (validateAll.value.every((item: any) => item === "fulfilled")) {
     // 客户名称是否重复
+    leftTabsData.forEach((item: any) => {
+      if (Number(item.rateAudit) <= 0) {
+        ElMessage.warning({
+          message: "审核率Min值不能低于0",
+          center: true,
+        });
+        return
+      }
+    })
     if (!hasDuplicateCustomer(leftTabsData)) {
       if (title.value === "新增") {
         const dataList = {
           tenantCustomerInfoList: leftTabsData,
         };
-        if(leftTabsData.turnover){
-          if(leftTabsData.turnover.length ){
-          leftTabsData.turnover.forEach((item:any) => {
-            item.turnover = item.turnover ==0 ? null :item.turnover
-          })
+        if (leftTabsData.turnover) {
+          if (leftTabsData.turnover.length) {
+            leftTabsData.turnover.forEach((item: any) => {
+              item.turnover = item.turnover == 0 ? null : item.turnover
+            })
+          }
         }
-        }
-
-
         const { status } = await submitLoading(api.create(dataList));
         status === 1 &&
           ElMessage.success({
@@ -122,7 +129,7 @@ async function save() {
           leftTabsData[0].turnover = null;
           leftTabsData[0].rateAudit = null;
         }
-        leftTabsData[0].turnover = leftTabsData[0].turnover ==0 ? null :leftTabsData[0].turnover;
+        leftTabsData[0].turnover = leftTabsData[0].turnover == 0 ? null : leftTabsData[0].turnover;
         const { status } = await submitLoading(api.edit(leftTabsData[0]));
         status === 1 &&
           ElMessage.success({
@@ -164,21 +171,19 @@ defineExpose({
       <template #footer>
         <div class="flex-c">
           <el-button @click="close"> 取消 </el-button>
-        <el-button v-if="title === '新增'" type="warning" @click="staging">
-          暂存
-        </el-button>
-        <el-button type="primary" @click="save"> 确定 </el-button>
+          <el-button v-if="title === '新增'" type="warning" @click="staging">
+            暂存
+          </el-button>
+          <el-button type="primary" @click="save"> 确定 </el-button>
         </div>
       </template>
     </el-drawer>
   </div>
 </template>
-<style  scoped>
+<style scoped>
 .flex-c {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 </style>
-
-
