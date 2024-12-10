@@ -354,12 +354,13 @@ onMounted(async () => {
         <template #header>
           <div class="card-header">
             <div class="leftTitle">
-              部门信息<span v-if="form.enableChargePerson" style="margin-left: 20px; font-size: .875rem">PM:<el-text
+              部门信息
+              <!-- <span v-if="form.enableChargePerson" style="margin-left: 20px; font-size: .875rem">PM:<el-text
                   v-for="item in staffList" :key="item.id">
                   <el-text v-if="item.id === form.id">
                     {{ item.userName }}
                   </el-text>
-                </el-text></span>
+                </el-text></span> -->
             </div>
           </div>
         </template>
