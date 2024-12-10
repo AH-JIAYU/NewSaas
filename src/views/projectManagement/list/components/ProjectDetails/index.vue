@@ -64,12 +64,12 @@ async function showEdit(row: any, projectType: any) {
   data.value.allocationStatus = row.allocationStatus;
   const res = await obtainLoading(api.detail({ projectId: row.projectId }));
   data.value.form = res.data;
-  active.value = res.data.projectSettlementStatusSet.length > 0 ? res.data.projectSettlementStatusSet[0].settlementStatus : 0
-  data.value.form.projectSettlementStatusSet =
-    data.value.form.projectSettlementStatusSet.reduce(
+  active.value = res.data.projectOperationInfoList.length > 0 ? res.data.projectOperationInfoList.length : 0
+  data.value.form.projectOperationInfoList =
+    data.value.form.projectOperationInfoList.reduce(
       (accumulator: any, currentValue: any) => {
         let existing = accumulator.find(
-          (obj: any) => obj.settlementStatus === currentValue.settlementStatus,
+          (obj: any) => obj.operationType === currentValue.operationType,
         );
         if (!existing) {
           accumulator.push(currentValue);
@@ -77,7 +77,7 @@ async function showEdit(row: any, projectType: any) {
         return accumulator;
       },
       [],
-    ).sort((a: any, b: any) => a.settlementStatus - b.settlementStatus)
+    ).sort((a: any, b: any) => a.operationType - b.operationType)
   imgList.value = data.value.form.descriptionUrl.split(",");
   if (imgList.value.length) {
     imgList.value.forEach(async (item: any) => {
@@ -185,13 +185,13 @@ defineExpose({ showEdit });
             <el-steps style="max-width: 100%" finish-status="success" align-center
               :active="active">
               <el-step title="待审核"
-                :description="active >= 1 ? data.form?.projectSettlementStatusSet[0]?.operationTime : '-'" :icon="active >= 1
+                :description="active >= 1 ? data.form?.projectOperationInfoList[0]?.operationTime : '-'" :icon="active >= 1
       ? CircleCheck
       : Position" />
-              <el-step title="已审核" :description="active >= 2 ? data.form?.projectSettlementStatusSet[1]?.operationTime : '-'" :icon="active >= 2 ? CircleCheck : Position" />
-              <el-step title="已开票" :description="active >= 3 ? data.form?.projectSettlementStatusSet[2]?.operationTime : '-'" :icon="active >= 3 ? CircleCheck : Position" />
-              <el-step title="已结算" :description="active >= 4 ? data.form?.projectSettlementStatusSet[3]?.operationTime : '-'" :icon="active >= 4 ? CircleCheck : Position" />
-              <el-step title="已冻结" :description="active >= 5 ? data.form?.projectSettlementStatusSet[4]?.operationTime : '-'" :icon="active >= 5 ? CircleCheck : Position" />
+              <el-step title="已审核" :description="active >= 2 ? data.form?.projectOperationInfoList[1]?.operationTime : '-'" :icon="active >= 2 ? CircleCheck : Position" />
+              <el-step title="已开票" :description="active >= 3 ? data.form?.projectOperationInfoList[2]?.operationTime : '-'" :icon="active >= 3 ? CircleCheck : Position" />
+              <el-step title="已结算" :description="active >= 4 ? data.form?.projectOperationInfoList[3]?.operationTime : '-'" :icon="active >= 4 ? CircleCheck : Position" />
+              <el-step title="已冻结" :description="active >= 5 ? data.form?.projectOperationInfoList[4]?.operationTime : '-'" :icon="active >= 5 ? CircleCheck : Position" />
             </el-steps>
           </el-col>
           <el-row style="width: 100%; margin-top: 0; font-size: 14px" :gutter="20">
@@ -200,16 +200,16 @@ defineExpose({ showEdit });
       colorgreen:
         active >= 1,
     }" :span="5">
-              <span style="margin-left: 25.5%">{{
-      active >= 1 ? data.form?.projectSettlementStatusSet[0]?.operationName : ''
+              <span style="margin-left: 21.5%">{{
+      active >= 1 ? data.form?.projectOperationInfoList[0]?.operationName : ''
     }}</span>
             </el-col>
             <el-col :class="{
         colorgreen:
           active >= 2,
       }" :span="5">
-              <span style="margin-left: 19.5%">
-                {{ active >= 2 ? data.form?.projectSettlementStatusSet[1]?.operationName : '' }}
+              <span style="margin-left: 15.5%">
+                {{ active >= 2 ? data.form?.projectOperationInfoList[1]?.operationName : '' }}
               </span>
             </el-col>
             <el-col :class="{
@@ -217,7 +217,7 @@ defineExpose({ showEdit });
         active >= 3,
     }" :span="5">
               <span style="margin-left: 12.5%">
-                {{ active >= 3 ? data.form?.projectSettlementStatusSet[2]?.operationName : '' }}
+                {{ active >= 3 ? data.form?.projectOperationInfoList[2]?.operationName : '' }}
               </span>
             </el-col>
             <el-col :class="{
@@ -225,7 +225,7 @@ defineExpose({ showEdit });
         active >= 4,
     }" :span="4">
               <span style="margin-left: 8.5%">
-                {{ active >= 4 ? data.form?.projectSettlementStatusSet[3]?.operationName : '' }}
+                {{ active >= 4 ? data.form?.projectOperationInfoList[3]?.operationName : '' }}
               </span>
             </el-col>
             <el-col :class="{
@@ -233,7 +233,7 @@ defineExpose({ showEdit });
         active >= 5,
     }" :span="4">
               <span style="margin-left: 28.5%">
-                {{ active >= 5 ? data.form?.projectSettlementStatusSet[4]?.operationName : '' }}
+                {{ active >= 5 ? data.form?.projectOperationInfoList[4]?.operationName : '' }}
               </span>
             </el-col>
           </el-row>

@@ -113,6 +113,13 @@ function closeHandler() {
 function onSubmit() {
   formRef.value &&
     formRef.value.validate(async (valid: any) => {
+      if (!data.form.dataType) {
+        ElMessage.warning({
+          message: "请先维护基础数据，供应商数据和内部站部门数据",
+          center: true,
+        });
+        return
+      }
       if (valid) {
         if (data.title === "新增") {
           const { status } = await submitLoading(api.create(data.form));
@@ -127,7 +134,6 @@ function onSubmit() {
               message: "修改成功",
             });
         }
-
         closeHandler();
         emits("fetch-data");
       }
