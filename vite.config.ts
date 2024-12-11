@@ -20,7 +20,6 @@ export default async ({ mode, command }) => {
     base: '/',
     // 开发服务器选项 https://cn.vitejs.dev/config/#server-options
     server: {
-      host:true,
       open: true,
       port: 9000,
       proxy: {
