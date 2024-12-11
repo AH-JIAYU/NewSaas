@@ -107,6 +107,7 @@ function echarts2() {
   // const totalData = data.value.dataCenterCustomerVOS.map((item: any) => {
   //   return item.projectTotal;
   // });
+  console.log(Data,'Data')
   chart2 = echarts.init(chart2Ref.value);
   // 配置数据
   const option = {

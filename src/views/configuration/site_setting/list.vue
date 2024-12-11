@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { FormInstance, FormRules, UploadProps } from "element-plus";
 import { ElMessage, ElMessageBox } from "element-plus";
-import { onMounted, ref } from "vue";
+import { onMounted, ref,onActivated } from "vue";
 import api from "@/api/modules/configuration_site_setting";
 import apiLogo from "@/api/modules/logo";
 import Message from 'vue-m-message'
@@ -152,7 +152,12 @@ onMounted(() => {
   getDataList();
   loading.value = false;
 });
-
+onActivated(()=> {
+  loading.value = true;
+  userStore.logo && (fileList.value = [{ name: 'logo', url: userStore.logo }])
+  getDataList();
+  loading.value = false;
+})
 // 获取数据
 async function getDataList() {
   try {
