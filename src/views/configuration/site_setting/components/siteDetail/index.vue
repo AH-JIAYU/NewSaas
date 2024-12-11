@@ -82,19 +82,19 @@ const validateTopLevelDomainName = (rule: any, value: any, callback: any) => {
 // 校验
 const formRules = ref<FormRules>({
   domain: [
-    { required: true, message: "请输入官网域名", trigger: "blur" },
+    { required: true, message: "请输入域名", trigger: "blur" },
     { validator: validateTopLevelDomainName, trigger: "submit" },
   ],
   tenantDomain: [
-    { required: false, message: "请输入合作商域名", trigger: "blur" },
+    { required: false, message: "请输入域名", trigger: "blur" },
     { validator: validateTopLevelDomainName, trigger: "submit" },
   ],
   supplierDomain: [
-    { required: false, message: "请输入供应商域名", trigger: "blur" },
+    { required: false, message: "请输入域名", trigger: "blur" },
     { validator: validateTopLevelDomainName, trigger: "submit" },
   ],
   memberDomain: [
-    { required: false, message: "请输入会员域名", trigger: "blur" },
+    { required: false, message: "请输入域名", trigger: "blur" },
     { validator: validateTopLevelDomainName, trigger: "submit" },
   ],
 });
@@ -340,7 +340,7 @@ const onSubmit = async (val: any) => {
           } else {
             return ElMessage({
               type: "warning",
-              message: '请输入合作商域名',
+              message: '请输入域名',
             });
           }
         } else if (val === 3) {
@@ -366,7 +366,7 @@ const onSubmit = async (val: any) => {
           } else {
             return ElMessage({
               type: "warning",
-              message: '请输入供应商域名',
+              message: '请输入域名',
             });
           }
         } else if (val === 4) {
@@ -392,7 +392,7 @@ const onSubmit = async (val: any) => {
           } else {
             return ElMessage({
               type: "warning",
-              message: '请输入会员域名',
+              message: '请输入域名',
             });
           }
         }
@@ -530,6 +530,9 @@ defineExpose({
             <div class="f-xc">
               <el-col :span="10">
                 <el-form-item label="官网域名" prop="domain">
+                  <template #label>
+                      <span style="width: 4.6875rem; display: inline-block;">官网域名</span>
+                    </template>
                   <el-input style="width: 14.5rem;" v-model="fileList.domain" :disabled="form.isAnalysis"
                     placeholder="请输入官网域名" @blur="getDomainRecord(fileList.domain)">
                     <template #append>
@@ -584,9 +587,12 @@ defineExpose({
             </div>
             <div class="f-xc" v-show="form.isAnalysis">
               <el-col :span="10">
-                <el-form-item label="合作商后台域名" prop="tenantDomain">
+                <el-form-item label="后台管理系统" prop="tenantDomain">
+                  <template #label>
+                      <span style="width: 5.3125rem; display: inline-block;">后台管理系统</span>
+                    </template>
                   <el-input style="width: 14.5rem;" v-model="fileList.tenantDomain"
-                    :disabled="statusForm.tenantBackgroundStatus !== 1" placeholder="请输入合作商域名">
+                    :disabled="statusForm.tenantBackgroundStatus !== 1" placeholder="请输入域名">
                     <template #append>
                       <copy class="copy" :content="fileList.tenantDomain" />
                     </template>
@@ -637,9 +643,12 @@ defineExpose({
             </div>
             <div class="f-xc" v-show="form.isAnalysis">
               <el-col :span="10">
-                <el-form-item label="供应商后台域名" prop="supplierDomain">
+                <el-form-item label="供应商系统" prop="supplierDomain">
+                  <template #label>
+                      <span style="width: 5.3125rem; display: inline-block;">供应商系统</span>
+                    </template>
                   <el-input style="width: 14.5rem;" v-model="fileList.supplierDomain"
-                    :disabled="statusForm.supplierBackgroundStatus !== 1" placeholder="请输入供应商域名">
+                    :disabled="statusForm.supplierBackgroundStatus !== 1" placeholder="请输入域名">
                     <template #append>
                       <copy class="copy" :content="fileList.supplierDomain" />
                     </template>
@@ -690,9 +699,12 @@ defineExpose({
             </div>
             <div class="f-xc" v-show="form.isAnalysis">
               <el-col :span="10">
-                <el-form-item label="会员后台域名" prop="memberDomain">
+                <el-form-item label="调查站系统" prop="memberDomain">
+                  <template #label>
+                      <span style="width: 5.3125rem; display: inline-block;">调查站系统</span>
+                    </template>
                   <el-input style="width: 14.5rem;" v-model="fileList.memberDomain"
-                    :disabled="statusForm.memberBackgroundStatus !== 1" placeholder="请输入会员域名">
+                    :disabled="statusForm.memberBackgroundStatus !== 1" placeholder="请输入域名">
                     <template #append>
                       <copy class="copy" :content="fileList.memberDomain" />
                     </template>

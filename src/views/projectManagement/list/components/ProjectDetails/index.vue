@@ -182,16 +182,23 @@ defineExpose({ showEdit });
       " #header>
         <el-row :gutter="20">
           <el-col :span="24">
-            <el-steps style="max-width: 100%" finish-status="success" align-center
-              :active="active">
+            <el-steps style="max-width: 100%" finish-status="success" align-center :active="active">
               <el-step title="待审核"
-                :description="active >= 1 ? data.form?.projectSettlementStatusSet[0]?.operationTime : '-'" :icon="active >= 1
+                :description="active >= 1 ? data.form?.projectSettlementStatusSet[0]?.pendReviewTime : '-'" :icon="active >= 1
       ? CircleCheck
       : Position" />
-              <el-step title="已审核" :description="active >= 2 ? data.form?.projectSettlementStatusSet[1]?.operationTime : '-'" :icon="active >= 2 ? CircleCheck : Position" />
-              <el-step title="已开票" :description="active >= 3 ? data.form?.projectSettlementStatusSet[2]?.operationTime : '-'" :icon="active >= 3 ? CircleCheck : Position" />
-              <el-step title="已结算" :description="active >= 4 ? data.form?.projectSettlementStatusSet[3]?.operationTime : '-'" :icon="active >= 4 ? CircleCheck : Position" />
-              <el-step title="已冻结" :description="active >= 5 ? data.form?.projectSettlementStatusSet[4]?.operationTime : '-'" :icon="active >= 5 ? CircleCheck : Position" />
+              <el-step title="已审核"
+                :description="active >= 2 ? data.form?.projectSettlementStatusSet[0]?.reviewTime : '-'"
+                :icon="active >= 2 ? CircleCheck : Position" />
+              <el-step title="已开票"
+                :description="active >= 3 ? data.form?.projectSettlementStatusSet[0]?.invoicedOutTime : '-'"
+                :icon="active >= 3 ? CircleCheck : Position" />
+              <el-step title="已结算"
+                :description="active >= 4 ? data.form?.projectSettlementStatusSet[0]?.settledTime : '-'"
+                :icon="active >= 4 ? CircleCheck : Position" />
+              <el-step title="已冻结"
+                :description="active >= 5 ? data.form?.projectSettlementStatusSet[0]?.frozenTime : '-'"
+                :icon="active >= 5 ? CircleCheck : Position" />
             </el-steps>
           </el-col>
           <el-row style="width: 100%; margin-top: 0; font-size: 14px" :gutter="20">
@@ -209,7 +216,7 @@ defineExpose({ showEdit });
           active >= 2,
       }" :span="5">
               <span style="margin-left: 19.5%">
-                {{ active >= 2 ? data.form?.projectSettlementStatusSet[1]?.operationName : '' }}
+                {{ active >= 2 ? data.form?.projectSettlementStatusSet[0]?.operationName : '' }}
               </span>
             </el-col>
             <el-col :class="{
@@ -217,7 +224,7 @@ defineExpose({ showEdit });
         active >= 3,
     }" :span="5">
               <span style="margin-left: 12.5%">
-                {{ active >= 3 ? data.form?.projectSettlementStatusSet[2]?.operationName : '' }}
+                {{ active >= 3 ? data.form?.projectSettlementStatusSet[0]?.operationName : '' }}
               </span>
             </el-col>
             <el-col :class="{
@@ -225,7 +232,7 @@ defineExpose({ showEdit });
         active >= 4,
     }" :span="4">
               <span style="margin-left: 8.5%">
-                {{ active >= 4 ? data.form?.projectSettlementStatusSet[3]?.operationName : '' }}
+                {{ active >= 4 ? data.form?.projectSettlementStatusSet[0]?.operationName : '' }}
               </span>
             </el-col>
             <el-col :class="{
@@ -233,7 +240,7 @@ defineExpose({ showEdit });
         active >= 5,
     }" :span="4">
               <span style="margin-left: 28.5%">
-                {{ active >= 5 ? data.form?.projectSettlementStatusSet[4]?.operationName : '' }}
+                {{ active >= 5 ? data.form?.projectSettlementStatusSet[0]?.operationName : '' }}
               </span>
             </el-col>
           </el-row>
