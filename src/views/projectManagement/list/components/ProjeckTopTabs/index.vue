@@ -127,7 +127,7 @@ const rules = reactive<any>({
   doMoneyPrice: [
     { required: true, message: "请输入项目价", trigger: "blur" },
     { pattern: /^(?!0(\.0+)?$)(\d+(\.\d{1,2})?)$/, message: '请输入大于0的数字，最多保留两位小数', trigger: 'blur' }
-],
+  ],
   num: [
     { required: true, message: "请输入配额", trigger: "blur" },
     { pattern: /^[0-9]+$/, message: '请输入0以上的正整数', trigger: 'blur' }
@@ -147,15 +147,21 @@ const rules = reactive<any>({
 });
 
 // 租户汇率
-// if (userStore.originalExchangeRate) {
-//   currencyTypeRes.value = userStore.originalExchangeRate
-//   localToptTab.value.exchangeRate = userStore.originalExchangeRate
-// }
+if (!localToptTab.value.clientId) {
+  if (userStore.originalExchangeRate) {
+    currencyTypeRes.value = userStore.originalExchangeRate
+    localToptTab.value.exchangeRate = userStore.originalExchangeRate
+  }
+} else {
+  currencyTypeRes.value = 1
+}
 
 // 租户货币类型
-// if (userStore.currencyType) {
-//   localToptTab.value.currencyType = userStore.currencyType === 1 ? 'USD' : 'CNY'
-// }
+if (!localToptTab.value.clientId) {
+  if (userStore.currencyType) {
+    localToptTab.value.currencyType = userStore.currencyType === 1 ? 'USD' : 'CNY'
+  }
+}
 // #endregion
 
 // #region 方法
@@ -190,7 +196,7 @@ function handleChangeTime() {
     return (num < 10 ? "0" : "") + num;
   }
   // 设置Edit底部的定时发布时间
-  if(localToptTab.value.releaseTime) {
+  if (localToptTab.value.releaseTime) {
     setAScheduledReleaseTime(localToptTab.value.releaseTime);
   }
 }
@@ -774,21 +780,23 @@ nextTick(() => {
             <el-col :span="6">
               <!-- v-if="currencyTypeRes !== null" -->
               <el-form-item label="汇率" prop="">
-                <el-text >{{ localToptTab.currencyType === 'USD' ? '1美元' : '1人民币' }} = {{
-    localToptTab.exchangeRate }}{{ localToptTab.currencyType === 'USD' ? '人民币' : '美元' }}</el-text>
+                <el-text v-if="currencyTypeRes !== null">{{ localToptTab.currencyType === 'USD' ? '1美元' : '1人民币' }} = {{
+    localToptTab.exchangeRate ? localToptTab.exchangeRate : currencyTypeRes }}{{ localToptTab.currencyType
+    === 'USD'
+    ? '人民币' : '美元' }}</el-text>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="20">
             <el-col :span="6">
               <el-form-item label="项目价" prop="doMoneyPrice">
-                <el-input style="height: 2rem" v-model="localToptTab.doMoneyPrice"
-                  controls-position="right" size="large" />
+                <el-input style="height: 2rem" v-model="localToptTab.doMoneyPrice" controls-position="right"
+                  size="large" />
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="配额" prop="num">
-                <el-input style="height: 2rem" v-model="localToptTab.num"size="large" @keydown="handleInput" />
+                <el-input style="height: 2rem" v-model="localToptTab.num" size="large" @keydown="handleInput" />
               </el-form-item>
             </el-col>
             <el-col style="position: relative" :span="6">
