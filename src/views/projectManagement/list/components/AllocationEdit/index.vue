@@ -204,7 +204,16 @@ function onSubmit() {
     }
   });
 }
-
+//供应商，调查站，合作商，没有数据时，跳转-暂时没做
+const goRouter=(name:any)=> {
+    if(name == '供应商'){
+      //供应商列表，新增供应商
+    } else if(name == '调查站'){
+      //调查系统-部门管理-新增部门
+    }else if(name == '合作商'){
+      //客商管理-合作租户-邀约公司
+    }
+}
 onMounted(async () => {});
 // 暴露方法
 defineExpose({ showEdit });
@@ -214,7 +223,7 @@ defineExpose({ showEdit });
   <div>
     <el-dialog
       v-model="dialogTableVisible"
-      title="分配"
+      :title="data.title"
       width="700"
       :before-close="closeHandler"
     >
@@ -245,43 +254,119 @@ defineExpose({ showEdit });
         :rules="rules"
         :model="data.form"
         :inline="false"
-        label-position='left'
+        label-position="left"
         prop="groupSupplierIdList"
       >
-        <el-form-item style="margin-top: 1rem;">
+        <el-form-item style="margin-top: 1rem">
           <template #label>
             <span class="icon-class">
-              <img src="@/assets/images/gong.png" alt="" style="margin-right: 0.25rem;" >
-              供应商</span>
+              <img
+                src="@/assets/images/gong.png"
+                alt=""
+                style="margin-right: 0.25rem"
+              />
+              供应商</span
+            >
           </template>
-          <el-select v-model="data.form.groupSupplierIdList" placeholder="请先选择供应商数据" clearable filterable multiple
-          collapse-tags
-      collapse-tags-tooltip
-      :max-collapse-tags="10">
+          <el-select
+            v-model="data.form.groupSupplierIdList"
+            clearable
+            filterable
+            multiple
+            collapse-tags
+            collapse-tags-tooltip
+            :max-collapse-tags="10"
+            placeholder=""
+          >
             <template #header>
-              <el-checkbox v-model="data.selectAll.supplier" @change="selectAllSupplier"
-                style="display: flex; height: unset">全选</el-checkbox>
+              <el-checkbox
+                v-model="data.selectAll.supplier"
+                @change="selectAllSupplier"
+                style="display: flex; height: unset"
+                >全选</el-checkbox
+              >
             </template>
-            <el-option v-for="item in data.tenantSupplierList" :label="item.supplierAccord" :key="item.supplierAccord"
-              :value="item.tenantSupplierId" />
+            <template #prefix>
+              <span class="prefix-class" v-if="data.tenantSupplierList.length ==0" @click="goRouter('供应商')">
+                请先维护供应商数据
+                <img
+                src="@/assets/images/jiantou.png"
+                alt=""
+                style="margin-left: 0.25rem"
+              />
+              </span>
+              <span v-if="data.form.groupSupplierIdList.length ==0">请先选择供应商数据</span>
+            </template>
+            <el-option
+              v-for="item in data.tenantSupplierList"
+              :label="item.supplierAccord"
+              :key="item.supplierAccord"
+              :value="item.tenantSupplierId"
+            />
           </el-select>
         </el-form-item>
         <el-form-item>
           <template #label>
             <span class="icon-class">
-              <img src="@/assets/images/diao.png" alt="" style="margin-right: 0.25rem;">
-              调查站</span>
+              <img
+                src="@/assets/images/diao.png"
+                alt=""
+                style="margin-right: 0.25rem"
+              />
+              调查站</span
+            >
+          </template>
+
+          <el-tree-select
+            ref="treeRef"
+            v-model="data.form.chargeUserId"
+            :data="data.departmentList"
+            check-strictly
+            show-checkbox
+            default-expand-all
+            node-key="id"
+            :props="defaultProps"
+            @check-change="handleNodeClick"
+            :check-on-click-node="true"
+            :expand-on-click-node="false"
+            style="width: 37.625rem"
+            clearable
+            placeholder=""
+          >
+          <template #prefix>
+              <span class="prefix-class" v-if="data.departmentList.length ==0" @click="goRouter('调查站')">
+                请先维护调查站数据
+                <img
+                src="@/assets/images/jiantou.png"
+                alt=""
+                style="margin-left: 0.25rem"
+              />
+              </span>
+              <span v-if="!data.form.chargeUserId">请先选择调查站数据</span>
+            </template>
+
+        </el-tree-select>
+        </el-form-item>
+        <el-form-item>
+          <template #label>
+            <span class="icon-class">
+              <img
+                src="@/assets/images/he.png"
+                alt=""
+                style="margin-right: 0.25rem"
+              />
+              合作商</span
+            >
           </template>
           <el-select
             v-model="data.form.groupSupplierIdList"
-            placeholder=""
             clearable
             filterable
             multiple
             collapse-tags
-      collapse-tags-tooltip
-      :max-collapse-tags="10"
-            prop="groupSupplierIdList"
+            collapse-tags-tooltip
+            :max-collapse-tags="10"
+            placeholder=""
           >
             <template #header>
               <el-checkbox
@@ -291,6 +376,17 @@ defineExpose({ showEdit });
                 >全选</el-checkbox
               >
             </template>
+            <template #prefix>
+              <span class="prefix-class" v-if="data.tenantList.length ==0" @click="goRouter('合作商')">
+                请先维护合作商数据
+                <img
+                src="@/assets/images/jiantou.png"
+                alt=""
+                style="margin-left: 0.25rem"
+              />
+              </span>
+              <span v-if="data.form.groupSupplierIdList.length ==0">请先选择合作商数据</span>
+            </template>
             <el-option
               v-for="item in data.tenantList"
               :label="item.beInvitationTenantName"
@@ -299,28 +395,17 @@ defineExpose({ showEdit });
               :disabled="item.reveal === 1"
             />
           </el-select>
+
         </el-form-item>
-        <el-form-item>
+        <el-form-item v-if="data.title = '重新分配'">
           <template #label>
-            <span class="icon-class">
-              <img src="@/assets/images/he.png" alt="" style="margin-right: 0.25rem;">
-              合作商</span>
+            <el-button > 取消分配 </el-button>
           </template>
-          <el-select v-model="data.form.groupSupplierIdList" placeholder="请先选择合作商数据" clearable filterable multiple
-          collapse-tags
-      collapse-tags-tooltip
-      :max-collapse-tags="10">
-            <template #header>
-              <el-checkbox v-model="data.selectAll.tenant" @change="selectAllTenant"
-                style="display: flex; height: unset">全选</el-checkbox>
-            </template>
-            <el-option v-for="item in data.tenantList" :label="item.beInvitationTenantName" :key="item.beInvitationTenantName"
-              :value="item.beInvitationTenantId" :disabled="item.reveal === 1" />
-          </el-select>
+
         </el-form-item>
       </el-form>
 
-       <!-- <el-form ref="formRef" label-width="80px" :rules="rules" :model="data.form" :inline="false">
+      <!-- <el-form ref="formRef" label-width="80px" :rules="rules" :model="data.form" :inline="false">
         <el-form-item label="分配目标">
           <el-radio-group v-model="data.form.allocationType" class="ml-4" @change="changeRadio">
             <el-radio :value="2" size="large"> 供应商 </el-radio>
@@ -378,15 +463,25 @@ defineExpose({ showEdit });
 <style lang="scss" scoped>
 /* 修改选中后的标签样式 */
 :deep(.el-tag.el-tag--info) {
-background: #E7F3FF;
-border-radius: 4px 4px 4px 4px;
+  background: #e7f3ff;
+  border-radius: 4px 4px 4px 4px;
   font-size: 14px;
   font-weight: 400;
-font-size: 12px;
-color: #409EFF;
-line-height: 14px;
+  font-size: 12px;
+  color: #409eff;
+  line-height: 14px;
 }
-
+/* 更改省略号的样式 */
+:deep(.el-tag.el-tag--info .el-tag__close) {
+  color: #409eff;
+}
+.prefix-class {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #409eff;
+  cursor: pointer;
+}
 /* 鼠标悬停时改变标签样式 */
 // :deep(.el-tag.el-tag--info:hover){
 //   background-color: #66b1ff;  /* 鼠标悬停时的背景色 */

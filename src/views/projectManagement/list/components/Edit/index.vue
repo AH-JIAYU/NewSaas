@@ -218,8 +218,9 @@ defineExpose({ showEdit });
           <el-form-item  prop="groupSupplierId" v-if="data.memberGroupNameInfoList.length">
             <template #label>
                   <span class="icon-class">
-                    <img src="@/assets/images/nei.png" style="margin-right:0.25rem" />
-                    内部站</span>
+                    <!-- <img src="@/assets/images/nei.png" style="margin-right:0.25rem" />
+                    内部站-->
+                  </span>
                 </template>
             <el-select placeholder="" v-model="data.form.groupSupplierId" clearable filterable multiple collapse-tags>
               <el-option v-for="item in data.memberGroupNameInfoList" :key="item.projectId"
