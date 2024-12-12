@@ -223,7 +223,7 @@ defineExpose({ showEdit });
   <div>
     <el-dialog
       v-model="dialogTableVisible"
-      title="分配"
+      :title="data.title"
       width="700"
       :before-close="closeHandler"
     >
@@ -397,7 +397,7 @@ defineExpose({ showEdit });
           </el-select>
 
         </el-form-item>
-        <el-form-item>
+        <el-form-item v-if="data.title = '重新分配'">
           <template #label>
             <el-button > 取消分配 </el-button>
           </template>
