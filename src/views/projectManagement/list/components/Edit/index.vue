@@ -156,7 +156,7 @@ defineExpose({ showEdit });
 <template>
   <div>
     <el-dialog v-model="dialogTableVisible" :title="data.title" width="600" :before-close="closeHandler">
-      <el-form ref="formRef" label-width="130px" style="position: relative" :model="data.form" :rules="rules"
+      <!-- <el-form ref="formRef" label-width="130px" style="position: relative" :model="data.form" :rules="rules"
         :inline="false">
         <el-form-item label="指定类型" prop="dispatchType" style="align-items: center">
           <div style=" margin-bottom: 0px">
@@ -191,37 +191,26 @@ defineExpose({ showEdit });
           </el-select>
         </el-form-item>
         <div v-show="data.form.projectId">
-          <!-- <el-form-item prop="dataType" label="调度目标" style="align-items: center" v-show="data.supplierNameInfoList.length &&
-      data.memberGroupNameInfoList.length
-      ">
-            <el-radio-group v-model="data.form.dataType" class="ml-4" @change="chagneDataType">
-              <el-radio :value="1" size="large"> 供应商 </el-radio>
-              <el-radio :value="2" size="large"> 部门 </el-radio>
-            </el-radio-group>
-          </el-form-item> -->
           <el-form-item label="供应商" prop="groupSupplierId" v-if="data.supplierNameInfoList.length">
             <template #label>
-                  <span class="icon-class">
-                    <img src="@/assets/images/gong.png" style="margin-right:0.25rem" />
-                    供应商</span>
-                </template>
-
+              <span class="icon-class">
+                <img src="@/assets/images/gong.png" style="margin-right:0.25rem" />
+                供应商</span>
+            </template>
             <el-select placeholder="" v-model="data.form.groupSupplierId" clearable filterable multiple collapse-tags>
               <el-option v-for="item in data.supplierNameInfoList" :key="item.projectId" :label="item.supplierName"
                 :value="item.supplierId" /></el-select>
           </el-form-item>
-
           <el-form-item v-if="data.form.dispatchType === 2" label="调度价格" prop="doMoneyPrice">
-          <el-input placeholder="请输入调度价格" v-model="data.form.doMoneyPrice" clearable />
-        </el-form-item>
-
-          <el-form-item  prop="groupSupplierId" v-if="data.memberGroupNameInfoList.length">
+            <el-input placeholder="请输入调度价格" v-model="data.form.doMoneyPrice" clearable />
+          </el-form-item>
+          <el-form-item prop="groupSupplierId" v-if="data.memberGroupNameInfoList.length">
             <template #label>
-                  <span class="icon-class">
-                    <!-- <img src="@/assets/images/nei.png" style="margin-right:0.25rem" />
-                    内部站-->
-                  </span>
-                </template>
+              <span class="icon-class">
+                <img src="@/assets/images/nei.png" style="margin-right:0.25rem" />
+                内部站
+              </span>
+            </template>
             <el-select placeholder="" v-model="data.form.groupSupplierId" clearable filterable multiple collapse-tags>
               <el-option v-for="item in data.memberGroupNameInfoList" :key="item.projectId"
                 :label="item.memberGroupName" :value="item.memberGroupId" /></el-select>
@@ -230,7 +219,153 @@ defineExpose({ showEdit });
         <el-form-item v-if="data.form.dispatchType === 2" label="调度价格" prop="doMoneyPrice">
           <el-input placeholder="请输入调度价格" v-model="data.form.doMoneyPrice" clearable />
         </el-form-item>
+      </el-form> -->
+      <el-form
+        ref="formRef"
+        label-width="130px"
+        style="position: relative"
+        :model="data.form"
+        :rules="rules"
+        :inline="false"
+      >
+        <el-form-item
+          label="调度类型"
+          prop="dispatchType"
+          style="align-items: center"
+        >
+          <el-radio-group v-model="data.form.dispatchType" class="ml-4">
+            <el-radio :value="1" size="large">
+              <div>
+                指定关闭
+                <el-tooltip
+                  class="tooltips"
+                  content="选中供应商或部门，该供应商或部门无法参与该项目"
+                  placement="top"
+                >
+                  <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
+                </el-tooltip>
+              </div>
+            </el-radio>
+            <el-radio :value="2" size="large">
+              指定价格
+              <el-tooltip
+                class="tooltips"
+                content="举例:(选中供应商为：A供应商；指定价格为：100美元)则，A供应商下参与该项目的会员价格为100美元，无需通过会员等级进行计算"
+                placement="top"
+              >
+                <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
+              </el-tooltip>
+            </el-radio>
+          </el-radio-group>
+        </el-form-item>
+
+        <el-form-item
+          label="项目ID/名称"
+          prop="projectId"
+          v-if="data.title === '新增'"
+        >
+          <el-select
+            placeholder=""
+            v-model="data.form.projectId"
+            clearable
+            disabled
+            filterable
+            @change="changeProject"
+          >
+            <el-option
+              v-for="item in data.projectList"
+              :key="item.projectId"
+              :label="item.projectName"
+              :value="item.projectId"
+            >
+              <span style="float: left">{{ item.projectName }}</span>
+              <span style="float: center">{{ item.projectType === 1 ? '内部新增' : '租户分配' }}</span>
+              <span
+                style="
+                  float: right;
+                  color: var(--el-text-color-secondary);
+                  font-size: 13px;
+                "
+              >
+                {{ item.projectId }}
+              </span>
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <div v-show="data.form.projectId">
+          <el-form-item
+            prop="dataType"
+            label="调度目标"
+            style="align-items: center"
+            v-show="
+              data.supplierNameInfoList.length &&
+              data.memberGroupNameInfoList.length
+            "
+          >
+            <el-radio-group
+              v-model="data.form.dataType"
+              class="ml-4"
+              @change="chagneDataType"
+            >
+              <el-radio :value="1" size="large"> 供应商 </el-radio>
+              <el-radio :value="2" size="large"> 部门 </el-radio>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item
+            label="供应商"
+            prop="groupSupplierId"
+            v-if="
+              data.supplierNameInfoList.length &&
+              data.form.dataType &&
+              data.form.dataType === 1
+            "
+          >
+            <el-select
+              placeholder=""
+              v-model="data.form.groupSupplierId"
+              clearable
+              filterable
+              multiple
+              collapse-tags
+            >
+              <el-option
+                v-for="item in data.supplierNameInfoList"
+                :key="item.projectId"
+                :label="item.supplierName"
+                :value="item.supplierId"
+            /></el-select>
+          </el-form-item>
+
+          <el-form-item
+            label="部门"
+            prop="groupSupplierId"
+            v-if="
+              data.memberGroupNameInfoList.length &&
+              data.form.dataType &&
+              data.form.dataType === 2
+            "
+          >
+            <el-select
+              placeholder=""
+              v-model="data.form.groupSupplierId"
+              clearable
+              filterable
+              multiple
+              collapse-tags
+            >
+              <el-option
+                v-for="item in data.memberGroupNameInfoList"
+                :key="item.projectId"
+                :label="item.memberGroupName"
+                :value="item.memberGroupId"
+            /></el-select>
+          </el-form-item>
+        </div>
+        <el-form-item v-if="data.form.dispatchType === 2" label="指定价格" prop="doMoneyPrice">
+          <el-input placeholder="" v-model="data.form.doMoneyPrice" clearable />
+        </el-form-item>
       </el-form>
+
       <template #footer>
         <div style="flex: auto">
           <el-button @click="closeHandler"> 取消 </el-button>
@@ -243,10 +378,11 @@ defineExpose({ showEdit });
 
 <style scoped lang="scss">
 .icon-class {
-  display:flex;
+  display: flex;
   justify-content: center;
-  align-items:center;
+  align-items: center;
 }
+
 .tooltips {
   margin: 0 5px;
 }
