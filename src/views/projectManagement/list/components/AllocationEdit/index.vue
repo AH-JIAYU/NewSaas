@@ -206,7 +206,13 @@ function onSubmit() {
 }
 //供应商，调查站，合作商，没有数据时，跳转-暂时没做
 const goRouter=(name:any)=> {
-  
+    if(name == '供应商'){
+      //供应商列表，新增供应商
+    } else if(name == '调查站'){
+      //调查系统-部门管理-新增部门
+    }else if(name == '合作商'){
+      //客商管理-合作租户-邀约公司
+    }
 }
 onMounted(async () => {});
 // 暴露方法
