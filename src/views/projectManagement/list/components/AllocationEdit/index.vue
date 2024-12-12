@@ -398,7 +398,10 @@ defineExpose({ showEdit });
 
         </el-form-item>
         <el-form-item>
-          <el-button > 取消分配 </el-button>
+          <template #label>
+            <el-button > 取消分配 </el-button>
+          </template>
+
         </el-form-item>
       </el-form>
 
