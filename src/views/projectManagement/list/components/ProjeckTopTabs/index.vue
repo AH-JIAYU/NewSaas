@@ -146,15 +146,15 @@ const rules = reactive<any>({
 });
 
 // 租户汇率
-if (userStore.originalExchangeRate) {
-  currencyTypeRes.value = userStore.originalExchangeRate
-  localToptTab.value.exchangeRate = userStore.originalExchangeRate
-}
+// if (userStore.originalExchangeRate) {
+//   currencyTypeRes.value = userStore.originalExchangeRate
+//   localToptTab.value.exchangeRate = userStore.originalExchangeRate
+// }
 
 // 租户货币类型
-if (userStore.currencyType) {
-  localToptTab.value.currencyType = userStore.currencyType === 1 ? 'USD' : 'CNY'
-}
+// if (userStore.currencyType) {
+//   localToptTab.value.currencyType = userStore.currencyType === 1 ? 'USD' : 'CNY'
+// }
 // #endregion
 
 // #region 方法
@@ -771,9 +771,10 @@ nextTick(() => {
               </el-form-item>
             </el-col>
             <el-col :span="6">
+              <!-- v-if="currencyTypeRes !== null" -->
               <el-form-item label="汇率" prop="">
-                <el-text v-if="currencyTypeRes !== null">{{ localToptTab.currencyType === 'USD' ? '1美元' : '1人民币' }} = {{
-    currencyTypeRes }}{{ localToptTab.currencyType === 'USD' ? '人民币' : '美元' }}</el-text>
+                <el-text >{{ localToptTab.currencyType === 'USD' ? '1美元' : '1人民币' }} = {{
+    localToptTab.exchangeRate }}{{ localToptTab.currencyType === 'USD' ? '人民币' : '美元' }}</el-text>
               </el-form-item>
             </el-col>
           </el-row>

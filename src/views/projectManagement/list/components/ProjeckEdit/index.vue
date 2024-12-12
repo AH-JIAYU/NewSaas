@@ -14,7 +14,7 @@ import useUserStore from "@/store/modules/user"; // 用户汇率
 defineOptions({
   name: "ProjeckEdit",
 });
-const userStore = useUserStore()
+const userStore = useUserStore();
 const projectManagementListStore = useProjectManagementListStore(); //项目
 const stagedDataStore = useStagedDataStore(); // 暂存
 const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
@@ -22,9 +22,9 @@ const customerStore = useUserCustomerStore(); // 客户
 const emits = defineEmits(["fetch-data"]);
 const dialogTableVisible = ref<boolean>(false);
 const title = ref<string>("");
-const loading = ref<boolean>(false)
+const loading = ref<boolean>(false);
 const validateTopTabs = ref<any>([]); // 校验的promise数组
-const projectReleaseTime = ref<any>('')
+const projectReleaseTime = ref<any>("");
 const validateAll = ref<any>([]); // 校验结果，用于在leftTabs中的tabs中给予提示
 // 传递给孙组件,用于获取所有孙组件的Ref
 function pushData(data: any) {
@@ -32,7 +32,7 @@ function pushData(data: any) {
 }
 //当前项目定时发布时间
 function getProjectReleaseTime(data: any) {
-  projectReleaseTime.value = data
+  projectReleaseTime.value = data;
 }
 // 提供一个方法，孙组件可以使用这个方法来触发验证
 provide("validateTopTabs", pushData);
@@ -67,14 +67,12 @@ async function showEdit(row: any) {
     validateTopTabs.value = [];
     loading.value = false;
   } catch (error) {
-
   } finally {
     loading.value = false;
   }
 }
 // 编辑时 处理数据
 function initializeLeftTabsData(data: any) {
-
   // 编辑的时候回显默认值，不然会报错
   data.data = {
     configurationInformation: {
@@ -105,6 +103,7 @@ function initializeLeftTabsData(data: any) {
   }
 
   leftTabsData.push(newData);
+
   // // // 如果存在 children，为每个 child 创建一个 Tab
   if (projectInfoList && projectInfoList.length) {
     projectInfoList.forEach((child: any) => {
@@ -135,7 +134,7 @@ function initializeLeftTabsData(data: any) {
     });
   }
   // 存储编辑前的数据
-  projectManagementListStore.dataBeforeEditing = cloneDeep(leftTabsData)
+  projectManagementListStore.dataBeforeEditing = cloneDeep(leftTabsData);
 }
 // 暂存
 function staging() {
@@ -169,7 +168,10 @@ function hasDuplicateCustomer(projectList: any) {
 // 提交 处理数据
 const processingData = async () => {
   const newLeftTabsData = cloneDeep(leftTabsData);
-  await projectManagementListStore.compareProjectData(projectManagementListStore.dataBeforeEditing, newLeftTabsData)
+  await projectManagementListStore.compareProjectData(
+    projectManagementListStore.dataBeforeEditing,
+    newLeftTabsData
+  );
   // 将的单选的答案和id从''转换成[]
   await newLeftTabsData.forEach((element: any) => {
     element.descriptionUrl = element.descriptionUrl.join(",");
@@ -220,8 +222,8 @@ const processingDataObj = (data: any) => {
     ipDifferenceDetection: data.ipDifferenceDetection,
     limitedQuantity: data.limitedQuantity,
     preNum: data.preNum,
-  }
-}
+  };
+};
 // 提交数据
 async function onSubmit() {
   loading.value = true;
@@ -232,14 +234,16 @@ async function onSubmit() {
       const params = await processingData();
       setTimeout(async () => {
         if (title.value === "新增") {
-          params.memberPrice = (params.doMoneyPrice * params.exchangeRate).toFixed(2)
-          params.minimumDuration = +params.minimumDuration
+          params.memberPrice = (
+            params.doMoneyPrice * params.exchangeRate
+          ).toFixed(2);
+          params.minimumDuration = +params.minimumDuration;
           if (!params.exchangeRate) {
             ElMessage.warning({
               message: "请设置汇率",
               center: true,
             });
-            return
+            return;
           }
           const { status } = await api.create(params);
           status === 1 &&
@@ -249,9 +253,13 @@ async function onSubmit() {
             });
         } else {
           if (params.projectType === 2) {
-            params.memberPrice = (params.doMoneyPrice * params.exchangeRate).toFixed(2)
-            const objParams = processingDataObj(params)
-            const { status } = await api.addOrUpdateProjectOutsideInfo(objParams);
+            params.memberPrice = (
+              params.doMoneyPrice * params.exchangeRate
+            ).toFixed(2);
+            const objParams = processingDataObj(params);
+            const { status } = await api.addOrUpdateProjectOutsideInfo(
+              objParams
+            );
             status === 1 &&
               ElMessage.success({
                 message: "编辑成功",
@@ -268,8 +276,7 @@ async function onSubmit() {
         }
         emits("fetch-data");
         closeHandler();
-      }, 1000)
-
+      }, 1000);
     } else {
       ElMessage({ message: "项目名称重复", center: true });
     }
@@ -313,28 +320,50 @@ defineExpose({
 
 <template>
   <div>
-    <el-drawer v-model="dialogTableVisible" :class="title === '新增' || leftTabsData.length > 1
-      ? 'hide-drawer-header'
-      : 'edit-drawer'
-      " append-to-body :close-on-click-modal="false" destroy-on-close draggable size="70%">
-      <LeftTabs v-loading="loading" v-if="leftTabsData.length" @validate="validate" ref="LeftTabsRef"
-        :left-tabs-data="leftTabsData" :validate-top-tabs="validateTopTabs" :validate-all="validateAll"
-        :title="title" />
+    <el-drawer
+      v-model="dialogTableVisible"
+      :class="
+        title === '新增' || leftTabsData.length > 1
+          ? 'hide-drawer-header'
+          : 'edit-drawer'
+      "
+      append-to-body
+      :close-on-click-modal="false"
+      destroy-on-close
+      draggable
+      size="70%"
+    >
+      <LeftTabs
+        v-loading="loading"
+        v-if="leftTabsData.length"
+        @validate="validate"
+        ref="LeftTabsRef"
+        :left-tabs-data="leftTabsData"
+        :validate-top-tabs="validateTopTabs"
+        :validate-all="validateAll"
+        :title="title"
+      />
       <template #footer>
         <div class="flex-c">
-
           <el-button link v-show="projectReleaseTime">
-            <SvgIcon name="ant-design:clock-circle-outlined" /> &ensp; {{ projectReleaseTime }}
+            <SvgIcon name="ant-design:clock-circle-outlined" /> &ensp;
+            {{ projectReleaseTime }}
           </el-button>
-          <el-button type="primary" @click="onSubmit" :disabled="loading"> 发布项目 </el-button>
-          <el-button type="warning" v-show="title !== '编辑'" @click="staging" :disabled="loading">
+          <el-button type="primary" @click="onSubmit" :disabled="loading">
+            发布项目
+          </el-button>
+          <el-button
+            type="warning"
+            v-show="title !== '编辑'"
+            @click="staging"
+            :disabled="loading"
+          >
             暂存
           </el-button>
-          <el-button @click="closeHandler" :disabled="loading"> 取消 </el-button>
-
-
+          <el-button @click="closeHandler" :disabled="loading">
+            取消
+          </el-button>
         </div>
-
       </template>
     </el-drawer>
   </div>
@@ -342,7 +371,6 @@ defineExpose({
 
 <style lang="scss" scoped>
 :deep {
-
   .el-drawer,
   .el-drawer__body,
   .el-tabs.el-tabs--left {
