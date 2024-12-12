@@ -646,7 +646,7 @@ function handleCurrentChange(val: any) {
                 <el-tag effect="dark" style="background-color: #74868b; border: none" v-if="row.viceStatus === 1"
                   class="mx-1" type="success">待审</el-tag>
                 <el-tag effect="dark" style="background-color: #03c239; border: none" v-if="row.viceStatus === 2"
-                  class="mx-1" type="danger">完成</el-tag>
+                  class="mx-1" type="danger">免审</el-tag>
                 <el-tag effect="dark" style="background-color: #3e5c78; border: none" v-if="row.viceStatus === 3"
                   class="mx-1" type="primary">过IR</el-tag>
                 <el-tag effect="dark" style="background-color: #c8c7bc; border: none" v-if="row.viceStatus === 4"
