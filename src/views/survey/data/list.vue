@@ -146,7 +146,7 @@ function getDataList() {
             <span class="showDataSpanRight" v-if="data.search.type !== 'year'"><span class="dd"></span><span class="participate">{{data.search.type === 'month' ? '上月' : '昨日'}}：<span class="number-font">{{ data.dataScreening?.turnoverDifference || 0 }}</span></span></span>
           </div>
         </div>
-        <div class="showDataCol">
+        <!-- <div class="showDataCol">
           <p class="showDataP">待审金额</p>
           <div class="showDataCount">
             <span class="showDataSpanLeft number-font">{{ data.dataScreening?.pendingBalance || 0 }}</span>
@@ -159,7 +159,7 @@ function getDataList() {
             <span class="showDataSpanLeft number-font">{{ data.dataScreening?.availableBalance || 0 }}</span>
 
           </div>
-        </div>
+        </div> -->
       </div>
       <!-- 今日完成排名 & 供应商佣金排行 -->
       <div class="ranking">
