@@ -239,7 +239,7 @@ defineExpose({ showEdit });
           prop="clientName"
         />
       </el-table>
-      <!-- <el-form
+      <el-form
         ref="formRef"
         label-width="90px"
         :rules="rules"
@@ -255,7 +255,9 @@ defineExpose({ showEdit });
               供应商</span>
           </template>
           <el-select v-model="data.form.groupSupplierIdList" placeholder="请先选择供应商数据" clearable filterable multiple
-            collapse-tags="10">
+          collapse-tags
+      collapse-tags-tooltip
+      :max-collapse-tags="10">
             <template #header>
               <el-checkbox v-model="data.selectAll.supplier" @change="selectAllSupplier"
                 style="display: flex; height: unset">全选</el-checkbox>
@@ -277,6 +279,8 @@ defineExpose({ showEdit });
             filterable
             multiple
             collapse-tags
+      collapse-tags-tooltip
+      :max-collapse-tags="10"
             prop="groupSupplierIdList"
           >
             <template #header>
@@ -303,7 +307,9 @@ defineExpose({ showEdit });
               合作商</span>
           </template>
           <el-select v-model="data.form.groupSupplierIdList" placeholder="请先选择合作商数据" clearable filterable multiple
-            collapse-tags>
+          collapse-tags
+      collapse-tags-tooltip
+      :max-collapse-tags="10">
             <template #header>
               <el-checkbox v-model="data.selectAll.tenant" @change="selectAllTenant"
                 style="display: flex; height: unset">全选</el-checkbox>
@@ -312,9 +318,9 @@ defineExpose({ showEdit });
               :value="item.beInvitationTenantId" :disabled="item.reveal === 1" />
           </el-select>
         </el-form-item>
-      </el-form> -->
+      </el-form>
 
-       <el-form ref="formRef" label-width="80px" :rules="rules" :model="data.form" :inline="false">
+       <!-- <el-form ref="formRef" label-width="80px" :rules="rules" :model="data.form" :inline="false">
         <el-form-item label="分配目标">
           <el-radio-group v-model="data.form.allocationType" class="ml-4" @change="changeRadio">
             <el-radio :value="2" size="large"> 供应商 </el-radio>
@@ -357,7 +363,7 @@ defineExpose({ showEdit });
               :value="item.beInvitationTenantId" :disabled="item.reveal === 1" />
           </el-select>
         </el-form-item>
-    </el-form>
+    </el-form> -->
 
       <template #footer>
         <div style="flex: auto">
@@ -370,6 +376,22 @@ defineExpose({ showEdit });
 </template>
 
 <style lang="scss" scoped>
+/* 修改选中后的标签样式 */
+:deep(.el-tag.el-tag--info) {
+background: #E7F3FF;
+border-radius: 4px 4px 4px 4px;
+  font-size: 14px;
+  font-weight: 400;
+font-size: 12px;
+color: #409EFF;
+line-height: 14px;
+}
+
+/* 鼠标悬停时改变标签样式 */
+// :deep(.el-tag.el-tag--info:hover){
+//   background-color: #66b1ff;  /* 鼠标悬停时的背景色 */
+//   color: #ffffff;             /* 鼠标悬停时的文字颜色 */
+// }
 .icon-class {
   display: flex;
   justify-content: center;
