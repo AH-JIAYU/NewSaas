@@ -101,7 +101,6 @@ function initializeLeftTabsData(data: any) {
   } else {
     newData.descriptionUrl = [];
   }
-
   leftTabsData.push(newData);
 
   // // // 如果存在 children，为每个 child 创建一个 Tab
@@ -134,7 +133,8 @@ function initializeLeftTabsData(data: any) {
     });
   }
   // 存储编辑前的数据
-  projectManagementListStore.dataBeforeEditing = cloneDeep(leftTabsData);
+  projectManagementListStore.dataBeforeEditing = cloneDeep(leftTabsData)
+
 }
 // 暂存
 function staging() {
@@ -199,7 +199,12 @@ const processingData = async () => {
     );
   });
   let masterData = newLeftTabsData[0];
-  masterData.projectInfoList = newLeftTabsData.slice(1);
+  masterData.projectInfoList = newLeftTabsData.slice(1).map((item: any) => {
+    return {
+      ...item,
+      memberPrice: (item.doMoneyPrice * item.exchangeRate).toFixed(2)
+    }
+  });
   return masterData;
 };
 

@@ -273,7 +273,7 @@ function onResetPassword() {
           getUserList();
         });
       })
-      .catch(() => {});
+      .catch(() => { });
   } else {
     ElMessage.warning({
       message: "请选择用户",
@@ -316,26 +316,13 @@ function handleCurrentChange(val: any) {
     <div class="page-main">
       <div class="leftTree">
         <div v-if="dataForm.tree.length" class="leftData" :span="3">
-          <el-tree
-            style="max-width: 37.5rem; min-height: 45.4375rem; padding: 10px"
-            :data="dataForm.tree"
-            ref="treeRef"
-            node-key="id"
-            default-expand-all
-            :expand-on-click-node="false"
-            :props="defaultProps"
-            @node-click="dictionaryClick"
-          />
+          <el-tree style="max-width: 37.5rem; min-height: 45.4375rem; padding: 10px" :data="dataForm.tree" ref="treeRef"
+            node-key="id" default-expand-all :expand-on-click-node="false" :props="defaultProps"
+            @node-click="dictionaryClick" />
         </div>
         <PageMain>
-          <FormSearch
-            :formSearchList="formSearchList"
-            @currentChange="currentChange"
-            @onReset="onReset"
-            :model="userForm.search"
-            :formOption="formOption"
-            :formSearchName="formSearchName"
-          />
+          <FormSearch :formSearchList="formSearchList" @currentChange="currentChange" @onReset="onReset"
+            :model="userForm.search" :formOption="formOption" :formSearchName="formSearchName" />
           <ElDivider border-style="dashed" />
 
           <div v-loading="dataForm.loading">
@@ -388,98 +375,46 @@ function handleCurrentChange(val: any) {
                 <el-button type="primary" size="default" @click="onCreate">
                   新增
                 </el-button>
-                <el-button
-                  type="primary"
-                  size="default"
-                  @click="onResetPassword"
-                >
+                <el-button type="primary" size="default" @click="onResetPassword">
                   重置密码
                 </el-button>
               </el-col>
-              <el-col
-                style="display: flex; justify-content: flex-end"
-                :span="14"
-              >
+              <el-col style="display: flex; justify-content: flex-end" :span="14">
                 <el-button size="default" @click=""> 导出 </el-button>
-                <TabelControl
-                  v-model:border="userForm.border"
-                  v-model:tableAutoHeight="userForm.tableAutoHeight"
-                  v-model:checkList="userForm.checkList"
-                  v-model:columns="columns"
-                  v-model:line-height="userForm.lineHeight"
-                  v-model:stripe="userForm.stripe"
-                  style="margin-left: 0.75rem"
-                  @query-data="getUserList"
-                />
+                <TabelControl v-model:border="userForm.border" v-model:tableAutoHeight="userForm.tableAutoHeight"
+                  v-model:checkList="userForm.checkList" v-model:columns="columns"
+                  v-model:line-height="userForm.lineHeight" v-model:stripe="userForm.stripe"
+                  style="margin-left: 0.75rem" @query-data="getUserList" />
               </el-col>
             </el-row>
-            <ElTable
-              ref="userItemRef"
-              :data="userForm.dataList"
-              :border="userForm.border"
-              :size="userForm.lineHeight"
-              :stripe="userForm.stripe"
-              highlight-current-row
-              height="100%"
-              @sort-change="sortChange"
-              @current-change="handleCurrentChange"
-              @selection-change="userForm.selectionDataList = $event"
-              row-key="id"
-              default-expand-all
-              @select="selectChange"
-            >
+            <ElTable ref="userItemRef" :data="userForm.dataList" :border="userForm.border" :size="userForm.lineHeight"
+              :stripe="userForm.stripe" highlight-current-row height="100%" @sort-change="sortChange"
+              @current-change="handleCurrentChange" @selection-change="userForm.selectionDataList = $event" row-key="id"
+              default-expand-all @select="selectChange">
               <ElTableColumn type="selection" align="left" fixed />
-              <ElTableColumn
-                v-if="userForm.checkList.includes('active')"
-                align="left"
-                prop="active"
-                label="状态"
-                width="84"
-              >
+              <ElTableColumn v-if="userForm.checkList.includes('active')" align="left" prop="active" label="状态"
+                width="84">
                 <template #default="scope">
-                  <ElSwitch
-                    v-model="scope.row.active"
-                    inline-prompt
-                    active-text="启用"
-                    inactive-text="禁用"
-                    :before-change="() => onChangeStatus(scope.row)"
-                  />
+                  <ElSwitch v-model="scope.row.active" inline-prompt active-text="启用" inactive-text="禁用"
+                    :before-change="() => onChangeStatus(scope.row)" />
                 </template>
               </ElTableColumn>
-              <ElTableColumn
-                v-if="userForm.checkList.includes('id')"
-                align="left"
-                width="280"
-                prop="id"
-                label="员工ID"
-              >
+              <ElTableColumn v-if="userForm.checkList.includes('id')" align="left" width="280" prop="id" label="员工ID">
                 <template #default="{ row }">
                   <div class="copyId tableSmall">
                     <div class="id oneLine idFont">
-                      <el-tooltip
-                        effect="dark"
-                        :content="row.id"
-                        placement="top-start"
-                      >
+                      <el-tooltip effect="dark" :content="row.id" placement="top-start">
                         {{ row.id }}
                       </el-tooltip>
                     </div>
-                    <copy
-                      :content="row.id"
-                      :class="{
-                        rowCopy: 'rowCopy',
-                        current: row.id === current,
-                      }"
-                    />
+                    <copy :content="row.id" :class="{
+          rowCopy: 'rowCopy',
+          current: row.id === current,
+        }" />
                   </div>
                 </template>
               </ElTableColumn>
-              <ElTableColumn
-                v-if="userForm.checkList.includes('userName')"
-                align="left"
-                prop="userName"
-                label="用户名"
-              >
+              <ElTableColumn v-if="userForm.checkList.includes('userName')" align="left" prop="userName" label="用户名">
                 <template #default="{ row }">
                   <el-text class="tableBig">
                     {{ row.userName ? row.userName : "-" }}
@@ -494,124 +429,65 @@ function handleCurrentChange(val: any) {
                   </el-text>
                 </template>
               </ElTableColumn> -->
-              <ElTableColumn
-                v-if="userForm.checkList.includes('phoneNumber')"
-                align="left"
-                width="170"
-                prop="phone"
-                label="电话号码"
-              >
+              <ElTableColumn v-if="userForm.checkList.includes('phoneNumber')" align="left" width="170" prop="phone"
+                label="电话号码">
                 <template #default="{ row }">
                   <el-text class="fontC-System">
                     {{ row.phoneNumber ? row.phoneNumber : "-" }}
                   </el-text>
                 </template>
               </ElTableColumn>
-              <ElTableColumn
-                v-if="userForm.checkList.includes('email')"
-                align="left"
-                width="180"
-                prop="email"
-                label="邮箱"
-              >
+              <ElTableColumn v-if="userForm.checkList.includes('email')" align="left" width="180" prop="email"
+                label="邮箱">
                 <template #default="{ row }">
                   <el-text class="fontC-System">
                     {{ row.email ? row.email : "-" }}
                   </el-text>
                 </template>
               </ElTableColumn>
-              <ElTableColumn
-                v-if="userForm.checkList.includes('departmentId')"
-                align="left"
-                prop="departmentId"
-                label="部门"
-              >
+              <ElTableColumn v-if="userForm.checkList.includes('departmentId')" align="left" prop="departmentId"
+                label="部门">
                 <template #default="{ row }">
                   <div style="display: flex; align-items: center">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      v-if="row.enableChargePerson === 1"
-                      style="margin-top: 2px; margin-right: 7px"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 20 20"
-                      fill="none"
-                    >
+                    <svg xmlns="http://www.w3.org/2000/svg" v-if="row.enableChargePerson === 1"
+                      style="margin-top: 2px; margin-right: 7px" width="20" height="20" viewBox="0 0 20 20" fill="none">
                       <g id="Group 18384">
-                        <circle
-                          id="Ellipse 105"
-                          cx="10"
-                          cy="10"
-                          r="10"
-                          fill="#F8BB4F"
-                        />
-                        <path
-                          id="ç®¡"
+                        <circle id="Ellipse 105" cx="10" cy="10" r="10" fill="#F8BB4F" />
+                        <path id="ç®¡"
                           d="M13.9946 9.3605V12.1892H7.43481V12.9031H14.6277V16.4995H13.3481V16.0146H7.43481V16.486H6.15517V9.3605H13.9946ZM7.43481 14.8831H13.3481V13.9133H7.43481V14.8831ZM7.43481 11.1655H12.7419V10.3842H7.43481V11.1655ZM15.8534 7.67677V10.2495H14.6008V8.75436H5.52209V10.2495H4.2694V7.67677H9.48222C9.37446 7.40738 9.25323 7.16492 9.13201 6.9494L10.2635 6.76083L10.0345 6.61266C10.6541 5.80447 11.1121 4.9424 11.3815 4.01298L12.6072 4.28238C12.5264 4.51136 12.4591 4.72688 12.3782 4.9424H16.1228V6.06039H13.9273C14.1428 6.35673 14.3179 6.65307 14.4661 6.92246L13.3346 7.34003C13.1191 6.90899 12.8631 6.47796 12.5668 6.06039H11.8799C11.6509 6.5049 11.3949 6.92246 11.1121 7.29962L10.4655 6.88206C10.5733 7.12451 10.6676 7.39391 10.7753 7.67677H15.8534ZM6.08782 6.06039C5.79149 6.54531 5.46821 7.00328 5.118 7.42085L4 6.72042C4.78125 5.88529 5.33351 4.96934 5.67026 3.99951L6.89601 4.26891C6.81519 4.4979 6.72091 4.72688 6.64009 4.9424H10.0345V6.06039H8.01401C8.25647 6.39714 8.47198 6.72042 8.63362 7.03022L7.46175 7.47473C7.23276 6.98981 6.97683 6.51837 6.6805 6.06039H6.08782Z"
-                          fill="white"
-                        />
+                          fill="white" />
                       </g>
                     </svg>
                     <el-text class="fontC-System">
                       {{
-                        row.organizationalStructureName
-                          ? row.organizationalStructureName
-                          : "-"
-                      }}
+          row.organizationalStructureName
+            ? row.organizationalStructureName
+            : "-"
+        }}
                     </el-text>
                   </div>
                 </template>
               </ElTableColumn>
-              <ElTableColumn
-                v-if="userForm.checkList.includes('role')"
-                align="left"
-                prop="role"
-                label="角色"
-              >
+              <ElTableColumn v-if="userForm.checkList.includes('role')" align="left" prop="role" label="角色">
                 <template #default="{ row }">
                   <el-text class="fontC-System">
                     {{ row.role ? row.role : "-" }}
                   </el-text>
                 </template>
               </ElTableColumn>
-              <ElTableColumn
-                v-if="userForm.checkList.includes('positionId')"
-                align="left"
-                prop="positionId"
-                label="职位"
-              >
+              <ElTableColumn v-if="userForm.checkList.includes('positionId')" align="left" prop="positionId" label="职位">
                 <template #default="{ row }">
-                  <el-text v-if="row.positionId" class="fontC-System">
-                    <el-text v-for="item in positionManageList">
-                      <el-text v-if="row.positionId === item.id">
-                        {{ item.name ? item.name : "-" }}
-                      </el-text>
-                    </el-text>
+                  <el-text>
+                    {{ row.positionName ? row.positionName : "-" }}
                   </el-text>
-                  <el-text v-else class="fontC-System">-</el-text>
                 </template>
               </ElTableColumn>
-              <ElTableColumn
-                label="操作"
-                fixed="right"
-                width="200"
-                align="left"
-              >
+              <ElTableColumn label="操作" fixed="right" width="200" align="left">
                 <template #default="scope">
-                  <ElButton
-                    type="primary"
-                    size="small"
-                    plain
-                    @click="onEdit(scope.row)"
-                  >
+                  <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">
                     编辑
                   </ElButton>
-                  <ElButton
-                    type="warning"
-                    size="small"
-                    plain
-                    @click="onDetail(scope.row)"
-                  >
+                  <ElButton type="warning" size="small" plain @click="onDetail(scope.row)">
                     详情
                   </ElButton>
                 </template>
@@ -620,33 +496,15 @@ function handleCurrentChange(val: any) {
                 <el-empty :image="empty" :image-size="300" />
               </template>
             </ElTable>
-            <ElPagination
-              :current-page="pagination.page"
-              :total="pagination.total"
-              :page-size="pagination.size"
-              :page-sizes="pagination.sizes"
-              :layout="pagination.layout"
-              :hide-on-single-page="false"
-              class="pagination"
-              background
-              @size-change="sizeChange"
-              @current-change="currentChange"
-            />
+            <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+              :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+              background @size-change="sizeChange" @current-change="currentChange" />
           </div>
         </PageMain>
       </div>
-      <DictionaryItemDia
-        v-if="userForm.dialog.visible"
-        :id="userForm.dialog.id"
-        v-model="userForm.dialog.visible"
-        :catalogue-id="userForm.search.catalogueId"
-        :parent-id="userForm.dialog.parentId"
-        :level="userForm.dialog.level"
-        :tree="dataForm.tree"
-        :dataList="userForm.dataList"
-        :row="userForm.row"
-        @success="getUserList"
-      />
+      <DictionaryItemDia v-if="userForm.dialog.visible" :id="userForm.dialog.id" v-model="userForm.dialog.visible"
+        :catalogue-id="userForm.search.catalogueId" :parent-id="userForm.dialog.parentId" :level="userForm.dialog.level"
+        :tree="dataForm.tree" :dataList="userForm.dataList" :row="userForm.row" @success="getUserList" />
       <Detail ref="detailRef" />
     </div>
   </div>
@@ -724,7 +582,7 @@ function handleCurrentChange(val: any) {
           height: 3.75rem;
         }
 
-        .is-current > .el-tree-node__content {
+        .is-current>.el-tree-node__content {
           background-color: var(--el-color-primary-light-9);
         }
 
@@ -822,7 +680,7 @@ function handleCurrentChange(val: any) {
   align-items: center;
   width: 100%;
 
-  > div:nth-of-type(1) {
+  >div:nth-of-type(1) {
     width: calc(100% - 25px);
     flex-shrink: 0;
   }

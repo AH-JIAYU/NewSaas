@@ -169,10 +169,8 @@ defineExpose({
   </el-col>
   <el-col :span="6">
     <el-form-item label="职位:">
-      <el-text v-for="item in positionManageList">
-        <el-text v-if="detailData.positionId === item.id">
-          {{ item.name ? item.name : "-" }}
-        </el-text>
+      <el-text>
+        {{ detailData.positionName ? detailData.positionName : "-" }}
       </el-text>
     </el-form-item>
   </el-col>
@@ -200,12 +198,12 @@ defineExpose({
 </template>
   <el-row :gutter="24">
     <el-form-item label="分配角色:">
-      <el-checkbox-group style="margin-left: 1.5rem;" v-if="munulevs?.length" v-model="form.roleList" >
-              <el-checkbox v-for="item in munulevs" :key="item.id" :label="item.roleName" :value="item.roleName" disabled>
-                {{ item.roleName }}
-              </el-checkbox>
-            </el-checkbox-group>
-            <el-text v-else>暂无数据</el-text>
+      <el-checkbox-group style="margin-left: 1.5rem;" v-if="munulevs?.length" v-model="form.roleList">
+        <el-checkbox v-for="item in munulevs" :key="item.id" :label="item.roleName" :value="item.roleName" disabled>
+          {{ item.roleName }}
+        </el-checkbox>
+      </el-checkbox-group>
+      <el-text v-else>暂无数据</el-text>
     </el-form-item>
   </el-row>
 </el-card>
@@ -260,7 +258,7 @@ defineExpose({
     position: relative;
     width: 128px;
 
-    > div {
+    >div {
       width: 120px;
       height: 2.2rem;
       line-height: 2.2rem;
@@ -296,7 +294,7 @@ defineExpose({
       }
     }
 
-    > div.isOnlineTrue {
+    >div.isOnlineTrue {
       background-color: #70b51a;
 
       &::after,
@@ -305,7 +303,7 @@ defineExpose({
       }
     }
 
-    > div.isOnlineFalse {
+    >div.isOnlineFalse {
       background-color: #d8261a;
 
       &::after,

@@ -40,6 +40,7 @@ const columns = ref([
   { prop: "projectName", label: "项目名称", sortable: true, checked: true },
   { prop: "callbackUrl", label: "回调URL", sortable: true, checked: true },
   { prop: "subordinateUrl", label: "下级URL", sortable: true, checked: true },
+  { prop: "sourceUrl", label: "客户URL来源", sortable: true, checked: true },
   { prop: "callbackTime", label: "回调时间", sortable: true, checked: true },
 ]);
 // 会员类型
@@ -184,6 +185,11 @@ const formOption={
         <el-table-column v-if="checkList.includes('subordinateUrl')" align="left" prop="subordinateUrl"
           label="下级URL"><template #default="{ row }">
             {{ row.subordinateUrl ? row.subordinateUrl : '-' }}
+          </template>
+        </el-table-column>
+        <el-table-column v-if="checkList.includes('sourceUrl')" align="left" prop="sourceUrl"
+          label="客户URL来源"><template #default="{ row }">
+            {{ row.sourceUrl ? row.sourceUrl : '-' }}
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('callbackTime')" align="left" prop="callbackTime"

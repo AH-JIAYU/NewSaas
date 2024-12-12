@@ -612,14 +612,7 @@ function handleCurrentChange(val: any) {
             </ElTableColumn>
             <ElTableColumn v-if="userForm.checkList.includes('positionId')" align="left" prop="positionId" label="职位">
               <template #default="{ row }">
-                <el-text v-if="row.positionId" class="fontC-System">
-                  <el-text v-for="item in positionManageList">
-                    <el-text v-if="row.positionId === item.id">
-                      {{ item.name ? item.name : "-" }}
-                    </el-text>
-                  </el-text>
-                </el-text>
-                <el-text v-else class="fontC-System">-</el-text>
+                <el-text class="fontC-System">{{ row.positionName ? row.positionName : '-' }}</el-text>
               </template>
             </ElTableColumn>
             <ElTableColumn label="操作" fixed="right" width="200" align="left">

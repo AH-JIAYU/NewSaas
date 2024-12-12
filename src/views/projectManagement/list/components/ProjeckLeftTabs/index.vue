@@ -18,7 +18,6 @@ const settingsRef = ref();
 const localLeftTab = ref<any>(props.leftTabsData);
 const validateTopTabs = ref<any>(props.validateTopTabs);
 const topTabsRef = ref<any>(); // top Ref
-
 const tabIndex = ref(0);
 const activeLeftTab = ref(0);
 // 同步配置项

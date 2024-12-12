@@ -1,17 +1,18 @@
 <script setup lang="ts">
-import { useClipboard } from '@vueuse/core'
+import useClipboard from "vue-clipboard3";
 
 defineOptions({
   name: "Copy",
 });
 
-const { copy, copied } = useClipboard()
+// const { copy, copied } = useClipboard()
+const { toClipboard } = useClipboard();
 // 传值就按传的值显示
 const props = defineProps(["content"]);
 const showing = ref(false);
 // 复制
 const handleCopy = () => {
-  copy(props.content)
+  toClipboard(props.content)
   showing.value = true;
   setTimeout(() => {
     showing.value = false;
