@@ -395,6 +395,10 @@ defineExpose({ showEdit });
               :disabled="item.reveal === 1"
             />
           </el-select>
+
+        </el-form-item>
+        <el-form-item>
+          <el-button > 取消分配 </el-button>
         </el-form-item>
       </el-form>
 
