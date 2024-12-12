@@ -163,7 +163,7 @@ defineExpose({
         <ElFormItem label="最低结算额度">
           <ElInput disabled placeholder="" :value="form.minimumAmount" />
         </ElFormItem>
-        <ElFormItem label="结算金额" prop="settlementAmount">
+        <ElFormItem label="结算金额" prop="">
           <ElInput v-model="form.settlementAmount" placeholder="" />
         </ElFormItem>
       </template>

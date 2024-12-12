@@ -74,7 +74,6 @@ async function showEdit(row: any) {
 }
 // 编辑时 处理数据
 function initializeLeftTabsData(data: any) {
-
   // 编辑的时候回显默认值，不然会报错
   data.data = {
     configurationInformation: {
@@ -103,7 +102,6 @@ function initializeLeftTabsData(data: any) {
   } else {
     newData.descriptionUrl = [];
   }
-
   leftTabsData.push(newData);
   // // // 如果存在 children，为每个 child 创建一个 Tab
   if (projectInfoList && projectInfoList.length) {
@@ -136,6 +134,7 @@ function initializeLeftTabsData(data: any) {
   }
   // 存储编辑前的数据
   projectManagementListStore.dataBeforeEditing = cloneDeep(leftTabsData)
+
 }
 // 暂存
 function staging() {
@@ -197,7 +196,12 @@ const processingData = async () => {
     );
   });
   let masterData = newLeftTabsData[0];
-  masterData.projectInfoList = newLeftTabsData.slice(1);
+  masterData.projectInfoList = newLeftTabsData.slice(1).map((item: any) => {
+    return {
+      ...item,
+      memberPrice: (item.doMoneyPrice * item.exchangeRate).toFixed(2)
+    }
+  });
   return masterData;
 };
 

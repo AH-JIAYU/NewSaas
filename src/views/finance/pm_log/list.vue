@@ -278,21 +278,6 @@ const settlement = async () => {
             <el-text v-else class="fontC-System">-</el-text>
           </template>
         </ElTableColumn>
-        <!-- <ElTableColumn v-if="data.checkList.includes('groupId')" show-overflow-tooltip align="left" prop="groupId"
-          width="150" label="部门">
-          <template #default="{ row }">
-            <el-text v-if="row.groupId">
-              <el-text v-for="item in groupManageList">
-                <el-text v-if="row.groupId === item.id">
-                  <el-text class="tableBig">
-                    {{ item.name ? item.name : "-" }}
-                  </el-text>
-                </el-text>
-              </el-text>
-            </el-text>
-            <el-text v-else>-</el-text>
-          </template>
-        </ElTableColumn> -->
         <ElTableColumn v-if="data.checkList.includes('totalPerformance')" show-overflow-tooltip align="left"
           prop="positionId" label="总业绩">
           <template #default="{ row }">

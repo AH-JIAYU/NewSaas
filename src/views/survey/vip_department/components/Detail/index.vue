@@ -140,19 +140,14 @@ defineExpose({
   </el-col>
   <el-col :span="6">
     <el-form-item label="部门:">
-      <el-text v-for="item in departmentList">
-        <el-text v-if="detailData.departmentId === item.id">
-          {{ item.name ? item.name : "-" }}
-        </el-text>
+      {{ detailData.departmentName ? detailData.departmentName : "-" }}
       </el-text>
     </el-form-item>
   </el-col>
   <el-col :span="6">
     <el-form-item label="职位:">
-      <el-text v-for="item in positionManageList">
-        <el-text v-if="detailData.positionId === item.id">
-          {{ item.name ? item.name : "-" }}
-        </el-text>
+      <el-text>
+        {{ detailData.positionName ? detailData.positionName : "-" }}
       </el-text>
     </el-form-item>
   </el-col>

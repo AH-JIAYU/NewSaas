@@ -79,6 +79,7 @@ let data = ref<any>({
     },
   },
 });
+
 // 自定义校验邮箱
 const validateUrlRegistered = (rule: any, value: any, callback: any) => {
   // 网址格式
