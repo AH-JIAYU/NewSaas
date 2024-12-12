@@ -507,6 +507,8 @@ defineExpose({
               </el-button>
               <el-button :type="receiveProjectType === 2 ? 'primary' : ''" size="small"
                 @click="changeSendProjectType('接收', 2)">手动</el-button>
+                <el-button :type="receiveProjectType === 3 ? 'primary' : ''" size="small"
+                @click="changeSendProjectType('接收', 3)">拒绝</el-button>
             </div>
           </el-form-item>
           <el-tree-select placeholder="请选择部门" v-if="data.receiveProjectType == 1" ref="treeRef"

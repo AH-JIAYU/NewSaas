@@ -56,6 +56,7 @@ defineExpose({ showEdit });
       <div class="idList">
         <div class="item"  v-for="item in data.list">
             <b>{{  item.name}}</b> &ensp; <span>ID: {{ item.id }}</span><copy :content="item.id"/>
+            <!-- <el-button type="danger" size="small" style="margin-left: 1rem;">已拒绝</el-button> -->
         </div>
       </div>
 

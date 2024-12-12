@@ -152,8 +152,8 @@ function getDataList() {
             <span class="showDataSpanLeft number-font">{{ data.dataScreening?.pendingBalance || 0 }}</span>
 
           </div>
-        </div> -->
-        <!-- <div class="showDataCol">
+        </div>
+         <div class="showDataCol">
           <p class="showDataP">可用余额</p>
           <div class="showDataCount">
             <span class="showDataSpanLeft number-font">{{ data.dataScreening?.availableBalance || 0 }}</span>

@@ -124,6 +124,7 @@ onMounted(async () => {
     window.localStorage.setItem("survey-json", creator.text);
     callback(saveNo, true);
   };
+
   creator.onUploadFile.add((_: any, options: any) => {
     const formData = new FormData();
     options.files.forEach((file: File) => {

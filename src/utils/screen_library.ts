@@ -29,7 +29,7 @@ export async function customComponents() {
       '22',
       2,
     ),
-    await questionFun('age', '出生日期', 'text', 'placeholder', '14', '', 1, 'date'),
+    await questionFun('age', '出生日期', 'text', 'placeholder', '14', '19', 1, 'date'),
     await questionFun('gender', '性别', 'radiogroup', 'placeholder', '15', '20'),
     await questionFun('AHI', '家庭收入', 'radiogroup', 'placeholder', '4', '25', 2),
     await questionFun('education', '教育程度', 'radiogroup', 'placeholder', '2', '23'),
