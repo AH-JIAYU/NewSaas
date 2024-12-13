@@ -118,7 +118,7 @@ defineExpose({ showEdit });
       <el-button size="small" type="primary" v-else-if="data.type === 4"
         >合作商</el-button
       > -->
-
+      <div style="height: 21.875rem;overflow: auto">
       <div class="idList" v-if="data.supplierList.length != 0">
         <el-button size="small" type="danger"
           >供应商
@@ -146,6 +146,7 @@ defineExpose({ showEdit });
           <b>{{ item.name }}</b> &ensp; <span>ID: {{ item.id }}</span
           ><copy :content="item.id" />
         </div>
+      </div>
       </div>
 
       <template #footer>
