@@ -360,37 +360,15 @@ function viewAllocations(row: any) {
               {{ row.ir ? row.ir : '-' }} / {{ row.nir ? row.nir : 0 }}
             </el-text></template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('memberStatus')" show-overflow-tooltip align="left" label="分配"  width="230">
+        <el-table-column v-if="checkList.includes('memberStatus')" show-overflow-tooltip align="left" label="分配"  width="100">
           <template #default="{ row }">
             <el-button size="small" v-if="!row.allocationType" >
                 未分配</el-button
               >
             <div class="flex-c" v-if="row.allocationStatus==2" style="cursor: pointer;" >
-              <!-- <el-button
-                class="tableBut"
-                size="small"
-                @click="viewAllocations(row)"
-                type="danger"
-                v-if="row.allocationType?.includes(1)"
-                plain
-                >自动分配</el-button
-              > -->
-              <div @click="viewAllocations(row)"
-              style="width: calc(100% - 1.25rem);"  class=" parameter1">
-                <el-tag type="danger"  v-if="row.allocationType?.includes(2)" class="tag-with-image oneLine" >
-                  <img src="@/assets/images/gong.png" style="width: 0.9375rem;height: 0.9375rem;margin-right: 0.25rem;">
-                  <span>供应商</span>
-                  </el-tag>
-                <el-tag type="warning" v-if="row.allocationType?.includes(3)" class="tag-with-image oneLine">
+                <el-tag type="warning" v-if="row.allocationType?.includes(3)" class="tag-with-image " @click="viewAllocations(row)">
                   <img src="@/assets/images/nei.png" style="width: 0.9375rem;height: 0.9375rem;margin-right: 0.25rem;">
-                  内部站</el-tag>
-
-                <el-tag type="primary" v-if="row.allocationType?.includes(4)" class="tag-with-image oneLine">
-                  <img src="@/assets/images/he.png" style="width: 0.9375rem;height: 0.9375rem;margin-right: 0.25rem;">
-                  合作商</el-tag>
-              </div>
-
-
+                  部门</el-tag>
             </div>
             </template>
 
