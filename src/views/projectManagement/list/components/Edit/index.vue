@@ -248,7 +248,7 @@ defineExpose({ showEdit });
             multiple
             collapse-tags
             collapse-tags-tooltip
-            :max-collapse-tags="10"
+            :max-collapse-tags="8"
             placeholder="">
             <template #header>
               <el-checkbox
@@ -290,7 +290,7 @@ defineExpose({ showEdit });
             multiple
             collapse-tags
             collapse-tags-tooltip
-            :max-collapse-tags="10"
+            :max-collapse-tags="8"
             >
             <template #header>
               <el-checkbox
@@ -314,10 +314,11 @@ defineExpose({ showEdit });
               <el-option v-for="item in data.memberGroupNameInfoList" :key="item.projectId"
                 :label="item.memberGroupName" :value="item.memberGroupId" /></el-select>
           </el-form-item>
-        </div>
-        <el-form-item v-if="data.form.dispatchType === 2 && data.form.groupMemberId.length !=0" label="调度价格" prop="doMoneyPrice2">
+          <el-form-item v-if="data.form.dispatchType === 2 && data.form.groupMemberId.length !=0" label="调度价格" prop="doMoneyPrice2">
           <el-input placeholder="请输入调度价格" v-model="data.form.doMoneyPrice2" clearable />
         </el-form-item>
+        </div>
+
       </el-form> -->
       <el-form
         ref="formRef"

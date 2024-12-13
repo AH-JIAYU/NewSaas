@@ -22,7 +22,11 @@ const rules = reactive<any>({
   ],
   doMoneyPrice: [
     { required: true, message: "请输入金额", trigger: "blur" },
-    { pattern: /^(?!0(\.0+)?$)(\d+(\.\d{1,2})?)$/, message: '请输入一个有效的数字，不能小于0，最多保留两位小数', trigger: 'blur' }
+    {
+      pattern: /^(?!0(\.0+)?$)(\d+(\.\d{1,2})?)$/,
+      message: "请输入一个有效的数字，不能小于0，最多保留两位小数",
+      trigger: "blur",
+    },
   ],
 });
 // 弹框开关变量
@@ -39,6 +43,11 @@ const data = reactive<any>({
     dispatchType: 1, // 	调度类型:1:指定关闭 2:指定价格
     doMoneyPrice: "", // 	价格(状态为指定价格时候才有),指定关闭不传
   },
+  // 全选
+  selectAll: {
+    supplier: false, // 供应商
+    member: false, // 会员
+  },
 });
 
 // 显隐
@@ -50,7 +59,9 @@ async function showEdit(row: any, view?: any) {
     if (row) {
       data.title = "编辑";
       data.form = cloneDeep(row);
-      data.form.groupSupplierId = row.getGroupSupplierIdNameInfoList.map((item: any) => item.groupSupplierId)
+      data.form.groupSupplierId = row.getGroupSupplierIdNameInfoList.map(
+        (item: any) => item.groupSupplierId
+      );
       await changeProject(row.projectId);
     } else {
       data.title = "新增";
@@ -118,7 +129,7 @@ function onSubmit() {
           message: "请先维护基础数据，供应商数据和内部站部门数据",
           center: true,
         });
-        return
+        return;
       }
       if (valid) {
         if (data.title === "新增") {
@@ -139,13 +150,286 @@ function onSubmit() {
       }
     });
 }
+// 指定关闭
+const sendProjectType = ref<any>(1);
+//列表切换发送项目状态
+const changeSendProjectType = (name: any, row: any) => {
+  if (row) {
+    if (name === "指定关闭") {
+      sendProjectType.value = row;
+      data.form.dispatchType = row;
+    } else {
+      sendProjectType.value = row;
+      data.form.dispatchType = row;
+    }
+  }
+};
+
+// 供应商全选
+function selectAllSupplier() {
+  data.value.form.groupSupplierId = [];
+  if (data.value.selectAll.supplier) {
+    data.value.tenantSupplierList.map((item: any) => {
+      data.value.form.groupSupplierId.push(item.tenantSupplierId);
+    });
+  }
+}
+// 内部站全选
+function selectAllMember() {
+  data.value.form.groupMemberId = [];
+  if (data.value.selectAll.member) {
+    data.value.memberGroupNameInfoList.map((item: any) => {
+      data.value.form.groupMemberId.push(item.memberGroupId);
+    });
+  }
+}
+//供应商，调查站，合作商，没有数据时，跳转-暂时没做
+const goRouter = (name: any) => {
+  if (name == "供应商") {
+    //供应商列表，新增供应商
+  } else if (name == "内部站") {
+    //调查系统-部门管理-新增部门
+  }
+};
 // 暴露方法
 defineExpose({ showEdit });
 </script>
 
 <template>
   <div>
-    <el-dialog v-model="dialogTableVisible" :title="data.title" width="600" :before-close="closeHandler">
+    <el-dialog
+      v-model="dialogTableVisible"
+      :title="data.title"
+      width="600"
+      :before-close="closeHandler"
+    >
+      <!-- <el-form
+        ref="formRef"
+        label-width="104px"
+        style="position: relative"
+        :model="data.form"
+        :rules="rules"
+        :inline="false"
+      >
+        <el-form-item
+          label="调度类型"
+          prop="dispatchType"
+          style="align-items: center"
+        >
+          <div style="margin-bottom: 0px">
+            <el-button
+              style="margin-right: 4px"
+              :type="sendProjectType === 1 ? 'primary' : ''"
+              size="small"
+              @click="changeSendProjectType('指定关闭', 1)"
+              >指定关闭
+            </el-button>
+            <el-tooltip
+              class="tooltips"
+              content="选中供应商或部门，该供应商或部门无法参与该项目"
+              placement="top"
+            >
+              <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
+            </el-tooltip>
+            <el-button
+              style="margin-left: 1.5rem; margin-right: 4px"
+              :type="sendProjectType === 2 ? 'primary' : ''"
+              size="small"
+              @click="changeSendProjectType('指定价格', 2)"
+              >指定价格</el-button
+            >
+            <el-tooltip
+              class="tooltips"
+              content="举例:(选中供应商为：A供应商；指定价格为：100美元)则，A供应商下参与该项目的会员价格为100美元，无需通过会员等级进行计算"
+              placement="top"
+            >
+              <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
+            </el-tooltip>
+          </div>
+        </el-form-item>
+        <el-form-item
+          label="项目ID/名称"
+          prop="projectId"
+          v-if="data.title === '新增'"
+        >
+          <el-select
+            placeholder=""
+            v-model="data.form.projectId"
+            clearable
+            filterable
+            @change="changeProject"
+          >
+            <el-option
+              v-for="item in data.projectList"
+              :key="item.projectId"
+              :label="item.projectName"
+              :value="item.projectId"
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                position: relative;
+              "
+            >
+              <span style="flex-shrink: 0">
+                {{ item.projectName }}
+              </span>
+              <span
+                style="
+                  position: absolute;
+                  left: 50%;
+                  transform: translateX(-50%);
+                "
+              >
+                {{ item.projectType === 1 ? "内部新增" : "租户分配" }}
+              </span>
+              <span
+                style="
+                  flex-shrink: 0;
+                  color: var(--el-text-color-secondary);
+                  font-size: 13px;
+                "
+              >
+                {{ item.projectId }}
+              </span>
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <div v-show="data.form.projectId">
+          <el-form-item label="供应商">
+            <template #label>
+              <span class="icon-class">
+                <img
+                  src="@/assets/images/gong.png"
+                  style="margin-right: 0.25rem"
+                />
+                供应商</span
+              >
+            </template>
+            <el-select
+              v-model="data.form.groupSupplierId"
+              clearable
+              filterable
+              multiple
+              collapse-tags
+              collapse-tags-tooltip
+              :max-collapse-tags="8"
+              placeholder=""
+            >
+              <template #header>
+                <el-checkbox
+                  v-model="data.selectAll.supplier"
+                  @change="selectAllSupplier"
+                  style="display: flex; height: unset"
+                  >全选</el-checkbox
+                >
+              </template>
+              <template #prefix>
+                <span
+                  class="prefix-class"
+                  v-if="data.supplierNameInfoList.length == 0"
+                  @click="goRouter('供应商')"
+                >
+                  请先维护供应商数据
+                  <img
+                    src="@/assets/images/jiantou.png"
+                    alt=""
+                    style="margin-left: 0.25rem"
+                  />
+                </span>
+                <span v-if="data.form.groupSupplierId.length == 0"
+                  >请先选择供应商数据</span
+                >
+              </template>
+              <el-option
+                v-for="item in data.supplierNameInfoList"
+                :key="item.projectId"
+                :label="item.supplierName"
+                :value="item.supplierId"
+            /></el-select>
+          </el-form-item>
+          <div
+            v-if="
+              data.form.dispatchType === 2 &&
+              data.form.groupSupplierId.length != 0
+            "
+          >
+            <el-form-item label="调度价格" prop="doMoneyPrice1">
+              <el-input
+                placeholder="请输入调度价格"
+                v-model="data.form.doMoneyPrice1"
+                clearable
+              />
+            </el-form-item>
+          </div>
+
+          <el-form-item>
+            <template #label>
+              <span class="icon-class">
+                <img
+                  src="@/assets/images/nei.png"
+                  style="margin-right: 0.25rem"
+                />
+                内部站
+              </span>
+            </template>
+            <el-select
+              placeholder=""
+              v-model="data.form.groupMemberId"
+              filterable
+              multiple
+              collapse-tags
+              collapse-tags-tooltip
+              :max-collapse-tags="8"
+            >
+              <template #header>
+                <el-checkbox
+                  v-model="data.selectAll.member"
+                  @change="selectAllMember"
+                  style="display: flex; height: unset"
+                  >全选</el-checkbox
+                >
+              </template>
+              <template #prefix>
+                <span
+                  class="prefix-class"
+                  v-if="data.memberGroupNameInfoList.length == 0"
+                  @click="goRouter('内部站')"
+                >
+                  请先维护内部站数据
+                  <img
+                    src="@/assets/images/jiantou.png"
+                    alt=""
+                    style="margin-left: 0.25rem"
+                  />
+                </span>
+                <span v-if="data.form.groupMemberId.length == 0"
+                  >请先选择内部站数据</span
+                >
+              </template>
+              <el-option
+                v-for="item in data.memberGroupNameInfoList"
+                :key="item.projectId"
+                :label="item.memberGroupName"
+                :value="item.memberGroupId"
+            /></el-select>
+          </el-form-item>
+          <el-form-item
+            v-if="
+              data.form.dispatchType === 2 &&
+              data.form.groupMemberId.length != 0
+            "
+            label="调度价格"
+            prop="doMoneyPrice2"
+          >
+            <el-input
+              placeholder="请输入调度价格"
+              v-model="data.form.doMoneyPrice2"
+              clearable
+            />
+          </el-form-item>
+        </div>
+      </el-form> -->
       <el-form ref="formRef" label-width="104px" style="position: relative" :model="data.form" :rules="rules"
         :inline="false">
         <el-form-item label="调度类型" prop="dispatchType" style="align-items: center">
@@ -218,3 +502,35 @@ defineExpose({ showEdit });
     </el-dialog>
   </div>
 </template>
+<style scoped lang="scss">
+/* 修改选中后的标签样式 */
+:deep(.el-tag.el-tag--info) {
+  background: #e7f3ff;
+  border-radius: 4px 4px 4px 4px;
+  font-size: 14px;
+  font-weight: 400;
+  font-size: 12px;
+  color: #409eff;
+  line-height: 14px;
+}
+/* 更改省略号的样式 */
+:deep(.el-tag.el-tag--info .el-tag__close) {
+  color: #409eff;
+}
+.prefix-class {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #409eff;
+  cursor: pointer;
+}
+.icon-class {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tooltips {
+  margin: 0 5px;
+}
+</style>

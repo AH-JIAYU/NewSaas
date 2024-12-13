@@ -275,7 +275,7 @@ defineExpose({ showEdit });
             multiple
             collapse-tags
             collapse-tags-tooltip
-            :max-collapse-tags="10"
+            :max-collapse-tags="8"
             placeholder=""
           >
             <template #header>
@@ -365,7 +365,7 @@ defineExpose({ showEdit });
             multiple
             collapse-tags
             collapse-tags-tooltip
-            :max-collapse-tags="10"
+            :max-collapse-tags="8"
             placeholder=""
           >
             <template #header>
