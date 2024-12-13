@@ -3,6 +3,7 @@ import checkEdit from "./components/checkEdit/index.vue";
 import Detail from "./components/Detail/index.vue";
 import checkMembershipPrice from "./components/checkMembershipPrice/index.vue";
 import allocationEdit from "./components/AllocationEdit/index.vue";
+import ViewAllocation from "./components/ViewAllocation/index.vue";
 import api from "@/api/modules/survey_myProjeck";
 import { ElMessage } from "element-plus";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
@@ -212,6 +213,15 @@ const formOption = {
   clientId: () => customerList.value,
   b2bOrB2cStatus: () => [{ label: 'B2B', value: 1 }, { label: 'B2C', value: 2 }],
 }
+const viewAllocationsRef = ref()
+// 查看分配
+function viewAllocations(row: any, type: number) {
+  // const params = {
+  //   projectId: row.projectId,
+  //   type,
+  // };
+  // viewAllocationsRef.value.showEdit(params);
+}
 </script>
 
 <template>
@@ -352,7 +362,7 @@ const formOption = {
         </el-table-column>
         <el-table-column v-if="checkList.includes('memberStatus')" show-overflow-tooltip align="left" label="分配" width="90">
           <template #default="{ row }" >
-            <el-tag style="background-color: #05C9BE;color: #fff;" v-if="row.getMemberGroupNameInfoList.length">
+            <el-tag style="background-color: #05C9BE;color: #fff;cursor: pointer;" v-if="row.getMemberGroupNameInfoList.length" @click="viewAllocations(row, 1)">
               部门
             </el-tag>
             <el-tag effect="plain" type="info" v-else> 未分配 </el-tag>
@@ -409,6 +419,8 @@ const formOption = {
         background @size-change="sizeChange" @current-change="currentChange" />
     </PageMain>
     <checkEdit ref="CheckEditRef" />
+     <!-- 查看分配 -->
+    <ViewAllocation ref="viewAllocationsRef" />
     <Detail ref="detailRef" />
     <checkMembershipPrice ref="checkMembershipPriceRef" />
     <allocationEdit ref="addAllocationEditRef" @fetchData="fetchData" />
