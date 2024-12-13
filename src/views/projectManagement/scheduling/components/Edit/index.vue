@@ -167,22 +167,27 @@ const changeSendProjectType = (name: any, row: any) => {
 
 // 供应商全选
 function selectAllSupplier() {
-  data.value.form.groupSupplierId = [];
-  if (data.value.selectAll.supplier) {
-    data.value.tenantSupplierList.map((item: any) => {
-      data.value.form.groupSupplierId.push(item.tenantSupplierId);
+  data.form.groupSupplierId = [];
+  if (data.selectAll.supplier) {
+    data.supplierNameInfoList.map((item: any) => {
+      data.form.groupSupplierId.push(item.supplierId);
     });
   }
+  filteredSupplier.value = data.supplierNameInfoList.filter((item: any) => {
+    return data.form.groupSupplierId.includes(item.supplierId)
+
+  });
 }
 // 内部站全选
 function selectAllMember() {
-  data.value.form.groupMemberId = [];
-  if (data.value.selectAll.member) {
-    data.value.memberGroupNameInfoList.map((item: any) => {
-      data.value.form.groupMemberId.push(item.memberGroupId);
+  data.form.groupMemberId = [];
+  if (data.selectAll.member) {
+    data.memberGroupNameInfoList.map((item: any) => {
+      data.form.groupMemberId.push(item.memberGroupId);
     });
   }
 }
+
 //供应商，调查站，合作商，没有数据时，跳转-暂时没做
 const goRouter = (name: any) => {
   if (name == "供应商") {
@@ -191,6 +196,16 @@ const goRouter = (name: any) => {
     //调查系统-部门管理-新增部门
   }
 };
+// 选中的供应商list
+const filteredSupplier = ref<any>([]);
+//供应商勾选
+const handleSupplierChange = (val: any) => {
+  filteredSupplier.value = data.supplierNameInfoList.filter((item: any) => {
+    return val.includes(item.supplierId)
+
+  });
+};
+
 // 暴露方法
 defineExpose({ showEdit });
 </script>
@@ -315,6 +330,7 @@ defineExpose({ showEdit });
               collapse-tags-tooltip
               :max-collapse-tags="8"
               placeholder=""
+              @change="handleSupplierChange"
             >
               <template #header>
                 <el-checkbox
@@ -354,13 +370,15 @@ defineExpose({ showEdit });
               data.form.groupSupplierId.length != 0
             "
           >
-            <el-form-item label="调度价格" prop="doMoneyPrice1">
-              <el-input
-                placeholder="请输入调度价格"
-                v-model="data.form.doMoneyPrice1"
-                clearable
-              />
-            </el-form-item>
+            <div v-for="item in filteredSupplier" :key="item.id" class="user">
+              <el-form-item :label="item.supplierName" prop="doMoneyPrice1">
+                <el-input
+                  placeholder="请输入调度价格"
+                  v-model="data.form.doMoneyPrice1"
+                  clearable
+                />
+              </el-form-item>
+            </div>
           </div>
 
           <el-form-item>
@@ -430,7 +448,7 @@ defineExpose({ showEdit });
           </el-form-item>
         </div>
       </el-form> -->
-      <el-form ref="formRef" label-width="104px" style="position: relative" :model="data.form" :rules="rules"
+     <el-form ref="formRef" label-width="104px" style="position: relative" :model="data.form" :rules="rules"
         :inline="false">
         <el-form-item label="调度类型" prop="dispatchType" style="align-items: center">
           <el-radio-group v-model="data.form.dispatchType" class="ml-4">
