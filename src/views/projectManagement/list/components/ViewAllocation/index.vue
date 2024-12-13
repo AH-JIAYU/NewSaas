@@ -7,7 +7,7 @@ defineOptions({
 });
 const emits = defineEmits(["fetch-data"]);
 //loading
-const loading = ref<boolean>(false)
+const loading = ref<boolean>(false);
 // 弹框
 const dialogTableVisible = ref(false);
 // ref
@@ -16,19 +16,76 @@ const data = ref<any>({
   list: [], // 表格
   type: "", //类型
   typeList: ["自动分配", "供应商", "会员组", "合作商"],
+  supplierList: [], //供应商2
+  memberList: [], //内部站3
+  tenantList: [], //合作商4
+  results: [],
 });
+// 模拟异步接口调用
+const fetchData = async (url: any) => {
+  const { data } = await cooperationApi.getTenantSupplierMemberNameInfo(url);
 
+  return data;
+};
+// 顺序调用接口
+const fetchSequentialData = async (params: any) => {
+  for (let item of params.type) {
+    // 每次调用接口并等待返回
+    const data1 = await fetchData({
+      projectId: params.projectId,
+      type: item,
+    });
+    // console.log(data,'data',item)
+    // if(item ==2){
+    //   data.value.supplierList.push(data.getTenantSupplierMemberNameList)
+    //   console.log(data.value.supplierList,'data.value.supplierList')
+    // }
+    // if(item ==3){
+    //   data.value.memberList.push(data.getTenantSupplierMemberNameList)
+    // }
+    // if(item ==4){
+    //   data.value.tenantList.push(data.getTenantSupplierMemberNameList)
+    // }
+    data.value.results.push({
+      type: item,
+      getTenantSupplierMemberNameList: data1.getTenantSupplierMemberNameList,
+    }); // 将返回的数据添加到 results 数组
+    // console.log(data.value.results, "data.value.results");
+    data.value.results.forEach((item: any) => {
+      if (item.type == 2) {
+        data.value.supplierList = item.getTenantSupplierMemberNameList
+          ? item.getTenantSupplierMemberNameList
+          : [];
+      }
+      if (item.type == 3) {
+        data.value.memberList = item.getTenantSupplierMemberNameList
+          ? item.getTenantSupplierMemberNameList
+          : [];
+      }
+      if (item.type == 4) {
+        data.value.tenantList = item.getTenantSupplierMemberNameList
+          ? item.getTenantSupplierMemberNameList
+          : [];
+      }
+    });
+    // console.log(data.value.supplierList, "data.value.supplierList");
+    // console.log(data.value.memberList, "data.value.memberList");
+    // console.log(data.value.tenantList, "data.value.tenantList");
+  }
+};
 // 显隐
 async function showEdit(params: any) {
   try {
     loading.value = true;
-    const res = await cooperationApi.getTenantSupplierMemberNameInfo(params);
-    data.value.list = res.data.getTenantSupplierMemberNameList;
-    data.value.type = params.type;
+
+    fetchSequentialData(params);
+
+    // const res = await cooperationApi.getTenantSupplierMemberNameInfo(params);
+    // data.value.list = res.data.getTenantSupplierMemberNameList;
+    // data.value.type = params.type;
     loading.value = false;
     dialogTableVisible.value = true;
   } catch (error) {
-
   } finally {
     loading.value = false;
   }
@@ -39,24 +96,55 @@ function closeHandler() {
   dialogTableVisible.value = false;
 }
 
-onMounted(async () => { });
+onMounted(async () => {});
 // 暴露方法
 defineExpose({ showEdit });
 </script>
 
 <template>
   <div>
-    <el-dialog v-model="dialogTableVisible" title="分配" width="700" :before-close="closeHandler">
-      <el-button size="small" type="danger" v-if="data.type === 2">供应商 {{ data.list.length > 1 ? data.list.length : ''
-        }}</el-button>
-      <el-button size="small" type="success" v-else-if="data.type === 3">会员组{{ data.list.length > 1 ? data.list.length : ''
-        }}</el-button>
-      <el-button size="small" type="primary" v-else-if="data.type === 4">合作商</el-button>
+    <el-dialog
+      v-model="dialogTableVisible"
+      title="分配"
+      width="700"
+      :before-close="closeHandler"
+    >
+      <!-- <el-button size="small" type="danger" v-if="data.type === 2"
+        >供应商 {{ data.list.length > 1 ? data.list.length : "" }}</el-button
+      >
+      <el-button size="small" type="success" v-else-if="data.type === 3"
+        >会员组{{ data.list.length > 1 ? data.list.length : "" }}</el-button
+      >
+      <el-button size="small" type="primary" v-else-if="data.type === 4"
+        >合作商</el-button
+      > -->
 
-      <div class="idList">
-        <div class="item"  v-for="item in data.list">
-            <b>{{  item.name}}</b> &ensp; <span>ID: {{ item.id }}</span><copy :content="item.id"/>
-            <!-- <el-button type="danger" size="small" style="margin-left: 1rem;">已拒绝</el-button> -->
+      <div class="idList" v-if="data.supplierList.length != 0">
+        <el-button size="small" type="danger"
+          >供应商
+          {{ data.supplierList > 1 ? data.supplierList : "" }}</el-button
+        >
+        <div class="item" v-for="item in data.supplierList" :key="item.id">
+          <b>{{ item.name }}</b> &ensp; <span>ID: {{ item.id }}</span
+          ><copy :content="item.id" />
+        </div>
+      </div>
+      <div class="idList" v-if="data.memberList.length != 0">
+        <el-button size="small" type="success"
+          >会员组 {{ data.memberList > 1 ? data.memberList : "" }}</el-button
+        >
+        <div class="item" v-for="item in data.memberList" :key="item.id">
+          <b>{{ item.name }}</b> &ensp; <span>ID: {{ item.id }}</span
+          ><copy :content="item.id" />
+        </div>
+      </div>
+      <div class="idList" v-if="data.tenantList.length != 0">
+        <el-button size="small" type="primary"
+          >合作商 {{ data.tenantList > 1 ? data.tenantList : "" }}</el-button
+        >
+        <div class="item" v-for="item in data.tenantList" :key="item.id">
+          <b>{{ item.name }}</b> &ensp; <span>ID: {{ item.id }}</span
+          ><copy :content="item.id" />
         </div>
       </div>
 
@@ -75,9 +163,9 @@ defineExpose({ showEdit });
     align-items: center;
   }
 }
-.idList{
-  margin-top: 24px;
-  .item{
+.idList {
+  margin-top: 10px;
+  .item {
     margin: 16px 0;
     display: flex;
     justify-content: start;

@@ -215,12 +215,12 @@ const formOption = {
 }
 const viewAllocationsRef = ref()
 // 查看分配
-function viewAllocations(row: any, type: number) {
-  // const params = {
-  //   projectId: row.projectId,
-  //   type,
-  // };
-  // viewAllocationsRef.value.showEdit(params);
+function viewAllocations(row: any) {
+  const params = {
+    projectId: row.projectId,
+    type:row.allocationType,
+  };
+  viewAllocationsRef.value.showEdit(params);
 }
 </script>
 
@@ -360,13 +360,48 @@ function viewAllocations(row: any, type: number) {
               {{ row.ir ? row.ir : '-' }} / {{ row.nir ? row.nir : 0 }}
             </el-text></template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('memberStatus')" show-overflow-tooltip align="left" label="分配" width="90">
-          <template #default="{ row }" >
+        <el-table-column v-if="checkList.includes('memberStatus')" show-overflow-tooltip align="left" label="分配"  width="230">
+          <template #default="{ row }">
+            <el-button size="small" v-if="!row.allocationType" >
+                未分配</el-button
+              >
+            <div class="flex-c" v-if="row.allocationStatus==2" style="cursor: pointer;" >
+              <!-- <el-button
+                class="tableBut"
+                size="small"
+                @click="viewAllocations(row)"
+                type="danger"
+                v-if="row.allocationType?.includes(1)"
+                plain
+                >自动分配</el-button
+              > -->
+              <div @click="viewAllocations(row)"
+              style="width: calc(100% - 1.25rem);"  class=" parameter1">
+                <el-tag type="danger"  v-if="row.allocationType?.includes(2)" class="tag-with-image oneLine" >
+                  <img src="@/assets/images/gong.png" style="width: 0.9375rem;height: 0.9375rem;margin-right: 0.25rem;">
+                  <span>供应商</span>
+                  </el-tag>
+                <el-tag type="warning" v-if="row.allocationType?.includes(3)" class="tag-with-image oneLine">
+                  <img src="@/assets/images/nei.png" style="width: 0.9375rem;height: 0.9375rem;margin-right: 0.25rem;">
+                  内部站</el-tag>
+
+                <el-tag type="primary" v-if="row.allocationType?.includes(4)" class="tag-with-image oneLine">
+                  <img src="@/assets/images/he.png" style="width: 0.9375rem;height: 0.9375rem;margin-right: 0.25rem;">
+                  合作商</el-tag>
+              </div>
+
+
+            </div>
+            </template>
+
+
+
+          <!-- <template #default="{ row }" >
             <el-tag style="background-color: #05C9BE;color: #fff;cursor: pointer;" v-if="row.getMemberGroupNameInfoList.length" @click="viewAllocations(row, 1)">
               部门
             </el-tag>
             <el-tag effect="plain" type="info" v-else> 未分配 </el-tag>
-          </template>
+          </template> -->
         </el-table-column>
         <!-- <el-table-column v-if="checkList.includes('memberGroupName')" show-overflow-tooltip align="left" label="分配目标">
           <template #default="{ row }">
@@ -428,6 +463,16 @@ function viewAllocations(row: any, type: number) {
 </template>
 
 <style scoped lang="scss">
+.tag-with-image {
+  display: flex;          /* 使用flex布局 */
+  align-items: center;    /* 垂直居中对齐 */
+  justify-content: center;/* 水平居中对齐 */
+  margin-right: 0.5rem;      /* 每行标签之间的间距 */
+}
+:deep(.tag-with-image .el-tag__content){
+  display: flex;
+  align-items: center;
+}
 .copyId .projectId {
   font-size: 14px;
 }
@@ -560,7 +605,21 @@ function viewAllocations(row: any, type: number) {
     margin: 0 12px 0 0
   }
 }
+.parameter1 {
+  display: flex;
+  align-content: center;
+  flex-wrap: wrap;
 
+  .oneLine {
+    width: 40%;
+    text-align: left;
+    margin: 0 0.75rem 0.5rem 0;
+  }
+
+  .oneLine:nth-of-type(n + 3) {
+    margin: 0 0.75rem 0 0;
+  }
+}
 .text {
   display: inline-block;
   min-width: 4.375rem;

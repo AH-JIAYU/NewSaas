@@ -153,14 +153,14 @@ async function changeStatus(row: any, val: any) {
         type: 4, //取消接收
         idList: [row.projectId],
       };
-      const { status } = await apiOut.updateReceiveStatus(params)
-      status === 1 && ElMessage.success({
-        message: "取消接收成功",
-        center: true,
-      });
+      const { status } = await apiOut.updateReceiveStatus(params);
+      status === 1 &&
+        ElMessage.success({
+          message: "取消接收成功",
+          center: true,
+        });
       fetchData();
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 }
 // 项目详情
@@ -205,10 +205,10 @@ function outsourceDetails(row: any) {
   outsourceRef.value.showEdit(row, type);
 }
 // 查看分配
-function viewAllocations(row: any, type: number) {
+function viewAllocations(row: any) {
   const params = {
     projectId: row.projectId,
-    type,
+    type:row.allocationType,
   };
   viewAllocationsRef.value.showEdit(params);
 }
@@ -414,12 +414,20 @@ const formOption = {
 </script>
 
 <template>
-  <div :class="{
-    'absolute-container': tableAutoHeight,
-  }">
+  <div
+    :class="{
+      'absolute-container': tableAutoHeight,
+    }"
+  >
     <PageMain class="hide-drawer-header">
-      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange"
-        @onReset="onReset" :model="search" :formOption="formOption" />
+      <FormSearch
+        :formSearchList="formSearchList"
+        :formSearchName="formSearchName"
+        @currentChange="currentChange"
+        @onReset="onReset"
+        :model="search"
+        :formOption="formOption"
+      />
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>
@@ -432,44 +440,97 @@ const formOption = {
         </FormLeftPanel>
         <FormRightPanel>
           <el-button size="default" @click=""> 导出 </el-button>
-          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
-            v-model:columns="columns" v-model:line-height="lineHeight" v-model:stripe="stripe"
-            style="margin-left: 0.75rem" @query-data="currentChange" />
+          <TabelControl
+            v-model:border="border"
+            v-model:tableAutoHeight="tableAutoHeight"
+            v-model:checkList="checkList"
+            v-model:columns="columns"
+            v-model:line-height="lineHeight"
+            v-model:stripe="stripe"
+            style="margin-left: 0.75rem"
+            @query-data="currentChange"
+          />
         </FormRightPanel>
       </el-row>
-      <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 0.625rem" row-key="projectId" :data="list"
-        :tree-props="{ children: 'getChildrenProjectListInfoList' }" :border="border" :size="lineHeight"
-        :stripe="stripe" highlight-current-row height="100%" @current-change="handleCurrentChange">
+      <el-table
+        ref="tableSortRef"
+        v-loading="listLoading"
+        style="margin-top: 0.625rem"
+        row-key="projectId"
+        :data="list"
+        :tree-props="{ children: 'getChildrenProjectListInfoList' }"
+        :border="border"
+        :size="lineHeight"
+        :stripe="stripe"
+        highlight-current-row
+        height="100%"
+        @current-change="handleCurrentChange"
+      >
         <!-- :selectable="selectable" -->
-        <el-table-column align="left" type="selection"  />
-        <el-table-column v-if="checkList.includes('isOnline')" show-overflow-tooltip prop="isOnline" align="left"
-          width="84" label="状态">
+        <el-table-column align="left" type="selection" />
+        <el-table-column
+          v-if="checkList.includes('isOnline')"
+          show-overflow-tooltip
+          prop="isOnline"
+          align="left"
+          width="84"
+          label="状态"
+        >
           <template #default="{ row }">
-            <ElSwitch @change="changeStatus(row, $event)" inline-prompt v-model="row.isOnline" active-text="在线"
-              inactive-text="离线" :active-value="1" :inactive-value="2" />
+            <ElSwitch
+              @change="changeStatus(row, $event)"
+              inline-prompt
+              v-model="row.isOnline"
+              active-text="在线"
+              inactive-text="离线"
+              :active-value="1"
+              :inactive-value="2"
+            />
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('projectId')" align="left" label="项目" width="180">
+        <el-table-column
+          v-if="checkList.includes('projectId')"
+          align="left"
+          label="项目"
+          width="180"
+        >
           <template #default="{ row }">
             <p>
               <span class="tableBig">
-                <el-tag v-if="row.projectType === 1" type="primary" effect="dark">
-                  内部新增</el-tag>
-                <el-tag v-else-if="row.projectType === 2" type="warning" effect="dark"
-                  style="background-color: #FFAC54;">
-                  合作商分配</el-tag>
+                <el-tag
+                  v-if="row.projectType === 1"
+                  type="primary"
+                  effect="dark"
+                >
+                  内部新增</el-tag
+                >
+                <el-tag
+                  v-else-if="row.projectType === 2"
+                  type="warning"
+                  effect="dark"
+                  style="background-color: #ffac54"
+                >
+                  合作商分配</el-tag
+                >
               </span>
             </p>
             <div class="copyId tableSmall">
               <div class="id oneLine">
-                <el-tooltip effect="dark" :content="row.projectId" placement="top-start">
+                <el-tooltip
+                  effect="dark"
+                  :content="row.projectId"
+                  placement="top-start"
+                >
                   {{ row.projectId }}
                 </el-tooltip>
               </div>
-              <copy :content="row.projectId" :class="{
-    rowCopy: 'rowCopy',
-    current: row.projectId === current,
-  }" />
+              <copy
+                :content="row.projectId"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.projectId === current,
+                }"
+              />
             </div>
           </template>
         </el-table-column>
@@ -492,68 +553,163 @@ const formOption = {
                 </span>
               </template>
             </el-table-column> -->
-        <el-table-column v-if="checkList.includes('name')" show-overflow-tooltip prop="name" align="left" label="名称/标识"
-          width="220"><template #default="{ row }">
+        <el-table-column
+          v-if="checkList.includes('name')"
+          show-overflow-tooltip
+          prop="name"
+          align="left"
+          label="名称/标识"
+          width="220"
+          ><template #default="{ row }">
             <div class="flex-c">
               <div class="oneLine" style="width: calc(100% - 1.25rem)">
                 <p class="oneLine tableBig">
                   <span :class="row.isB2b === 2 ? 'red' : ''">{{
-    row.name
-  }}</span>
+                    row.name
+                  }}</span>
                 </p>
-                <div v-if="row.projectType === 1" class="oneLine" style="color:#333333">
-                  <span>{{
-    row.clientName.split("/")[1]
-  }}</span>
+                <div
+                  v-if="row.projectType === 1"
+                  class="oneLine"
+                  style="color: #333333"
+                >
+                  <span>{{ row.clientName.split("/")[1] }}</span>
                 </div>
               </div>
-              <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'name')"
-                :class="{ edit: 'edit', current: row.projectId === current }" name="i-ep:edit" color="#409eff" />
+              <SvgIcon
+                v-if="row.projectType !== 2"
+                @click="quickEdit(row, 'name')"
+                :class="{ edit: 'edit', current: row.projectId === current }"
+                name="i-ep:edit"
+                color="#409eff"
+              />
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('clientName')" prop="clientName" show-overflow-tooltip align="left"
-          label="客户" width="140"><template #default="{ row }">
+        <el-table-column
+          v-if="checkList.includes('clientName')"
+          prop="clientName"
+          show-overflow-tooltip
+          align="left"
+          label="客户"
+          width="140"
+          ><template #default="{ row }">
             <div class="flex-c">
               <div class="oneLine" style="width: calc(100% - 1.25rem)">
                 <b class="tableBig">{{ row.clientName.split("/")[0] }}</b>
-                <div class="oneLine" style="color:#333333">PM：{{ row.chargeName }}</div>
+                <div class="oneLine" style="color: #333333">
+                  PM：{{ row.chargeName }}
+                </div>
               </div>
-              <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'customer')"
-                :class="{ edit: 'edit', current: row.projectId === current }" name="i-ep:edit" color="#409eff" />
+              <SvgIcon
+                v-if="row.projectType !== 2"
+                @click="quickEdit(row, 'customer')"
+                :class="{ edit: 'edit', current: row.projectId === current }"
+                name="i-ep:edit"
+                color="#409eff"
+              />
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('PCNL')" align="left" label="参数" width="200">
+        <el-table-column
+          v-if="checkList.includes('PCNL')"
+          align="left"
+          label="参数"
+          width="200"
+        >
           <template #default="{ row }">
             <div class="flex-c">
-              <el-tooltip class="box-item" effect="dark" :content="row.participation" placement="top-start">
+              <el-tooltip
+                class="box-item"
+                effect="dark"
+                :content="row.participation"
+                placement="top-start"
+              >
                 <template #content>
-                  参与: {{ row.participation ? row.participation : '-' }}
-                  完成: {{ row.complete ? row.complete : '-' }}
-                  配额: {{ row.num ? row.num : '-' }}
-                  限量: {{ row.limitedQuantity ? row.limitedQuantity : '-' }}
+                  参与: {{ row.participation ? row.participation : "-" }} 完成:
+                  {{ row.complete ? row.complete : "-" }} 配额:
+                  {{ row.num ? row.num : "-" }} 限量:
+                  {{ row.limitedQuantity ? row.limitedQuantity : "-" }}
                 </template>
-                <div class="oneLine parameter" style="width: calc(100% - 1.25rem)">
-                  <el-text style="color: rgb(251, 104, 104)" class="oneLine" type="danger">参与: {{ row.participation || 0
-                    }}</el-text>
-                  <el-text style="color: rgb(3, 194, 57)" class="oneLine" type="success">完成: {{ row.complete || 0
-                    }}</el-text>
-                  <el-text style="color: rgb(255, 172, 84)" class="oneLine" type="warning">配额: {{ row.num || 0
-                    }}</el-text>
-                  <el-text style="color: rgb(170, 170, 170)" class="oneLine" type="info">限量: {{ row.limitedQuantity ||
-    "-"
-                    }}</el-text>
+                <div
+                  class="oneLine parameter"
+                  style="width: calc(100% - 1.25rem)"
+                >
+                  <el-text
+                    style="color: rgb(251, 104, 104)"
+                    class="oneLine"
+                    type="danger"
+                    >参与: {{ row.participation || 0 }}</el-text
+                  >
+                  <el-text
+                    style="color: rgb(3, 194, 57)"
+                    class="oneLine"
+                    type="success"
+                    >完成: {{ row.complete || 0 }}</el-text
+                  >
+                  <el-text
+                    style="color: rgb(255, 172, 84)"
+                    class="oneLine"
+                    type="warning"
+                    >配额: {{ row.num || 0 }}</el-text
+                  >
+                  <el-text
+                    style="color: rgb(170, 170, 170)"
+                    class="oneLine"
+                    type="info"
+                    >限量: {{ row.limitedQuantity || "-" }}</el-text
+                  >
                 </div>
               </el-tooltip>
-              <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'PCNL')"
-                :class="{ edit: 'edit', current: row.projectId === current }" name="i-ep:edit" color="#409eff" />
+              <SvgIcon
+                v-if="row.projectType !== 2"
+                @click="quickEdit(row, 'PCNL')"
+                :class="{ edit: 'edit', current: row.projectId === current }"
+                name="i-ep:edit"
+                color="#409eff"
+              />
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('allocationType')" align="left" label="分配" width="90">
+        <el-table-column
+          v-if="checkList.includes('allocationType')"
+          align="left"
+          label="分配"
+          width="230"
+        >
           <template #default="{ row }">
-            <el-button class="tableBut" size="small" @click="viewAllocations(row, 1)" type="danger"
+            <el-button size="small" v-if="row.allocationStatus==1" >
+                未分配</el-button
+              >
+            <div class="flex-c" v-if="row.allocationStatus==2" style="cursor: pointer;" >
+              <!-- <el-button
+                class="tableBut"
+                size="small"
+                @click="viewAllocations(row)"
+                type="danger"
+                v-if="row.allocationType?.includes(1)"
+                plain
+                >自动分配</el-button
+              > -->
+              <div @click="viewAllocations(row)"
+              style="width: calc(100% - 1.25rem);"  class=" parameter1">
+                <el-tag type="danger"  v-if="row.allocationType?.includes(2)" class="tag-with-image oneLine" >
+                  <img src="@/assets/images/gong.png" style="width: 0.9375rem;height: 0.9375rem;margin-right: 0.25rem;">
+                  <span>供应商</span>
+                  </el-tag>
+                <el-tag type="warning" v-if="row.allocationType?.includes(3)" class="tag-with-image oneLine">
+                  <img src="@/assets/images/nei.png" style="width: 0.9375rem;height: 0.9375rem;margin-right: 0.25rem;">
+                  内部站</el-tag>
+
+                <el-tag type="primary" v-if="row.allocationType?.includes(4)" class="tag-with-image oneLine">
+                  <img src="@/assets/images/he.png" style="width: 0.9375rem;height: 0.9375rem;margin-right: 0.25rem;">
+                  合作商</el-tag>
+              </div>
+
+
+            </div>
+
+            <!-- <el-button class="tableBut" size="small" @click="viewAllocations(row, 1)" type="danger"
               v-if="row.allocationType === 1" plain>自动分配</el-button>
             <el-button class="tableBut" size="small" @click="viewAllocations(row, 2)" type="danger"
               v-else-if="row.allocationType === 2">供应商</el-button>
@@ -561,129 +717,264 @@ const formOption = {
               v-else-if="row.allocationType === 3">内部站</el-button>
             <el-button class="tableBut" size="small" @click="viewAllocations(row, 4)" type="primary"
               v-else-if="row.allocationType === 4">合作商</el-button>
-            <el-button size="small" v-else class="tableBut"> 未分配</el-button>
+            <el-button size="small" v-else class="tableBut"> 未分配</el-button> -->
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('originalPrice')" show-overflow-tooltip align="left" label="原始价"
-          width="110">
+        <el-table-column
+          v-if="checkList.includes('originalPrice')"
+          show-overflow-tooltip
+          align="left"
+          label="原始价"
+          width="110"
+        >
           <template #default="{ row }">
             <div class="flex-c">
-              <div v-if="row.originalPrice" class="oneLine fontC-System" style="width: calc(100% - 1.25rem)">
-                <svg v-if="row.beCurrencyType === 'USD'" xmlns="http://www.w3.org/2000/svg" width="7" height="12"
-                  viewBox="0 0 7 12" fill="none">
-                  <path id="Vector"
+              <div
+                v-if="row.originalPrice"
+                class="oneLine fontC-System"
+                style="width: calc(100% - 1.25rem)"
+              >
+                <svg
+                  v-if="row.beCurrencyType === 'USD'"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="7"
+                  height="12"
+                  viewBox="0 0 7 12"
+                  fill="none"
+                >
+                  <path
+                    id="Vector"
                     d="M2.83487 12V11.0864C2.23394 11.0106 1.82794 10.876 1.45186 10.6825C1.07578 10.489 0.750979 10.1763 0.477227 9.74469C0.203474 9.31305 0.0443987 8.78572 0 8.16248L1.20826 7.9355C1.30181 8.58082 1.46634 9.05473 1.70235 9.35745C2.04044 9.78458 2.36334 9.87195 2.83511 9.92086V6.24645C2.34102 6.1529 1.91817 5.96177 1.402 5.67235C1.01927 5.45867 0.724387 5.16284 0.517589 4.78462C0.310553 4.4064 0.207273 3.97689 0.207273 3.4961C0.207273 2.64161 0.509754 1.94974 1.11519 1.42005C1.52 1.06414 2.03854 0.791105 2.83534 0.711092V0H3.83087V0.711092C4.52962 0.777809 4.87792 1.03755 5.28748 1.38016C5.81267 1.81631 6.12868 2.41486 6.23553 3.17581L4.99379 3.36267C4.92256 2.8909 4.77251 2.5312 4.5498 2.27787C4.44272 2.15607 4.22239 1.86071 3.83087 1.78046V5.24522C4.43607 5.39646 4.631 5.51446 4.82688 5.59899C5.20082 5.76376 5.50544 5.96391 5.74144 6.19968C5.97721 6.43568 6.1586 6.71608 6.28562 7.04088C6.41241 7.36568 6.4758 7.7173 6.4758 8.09552C6.4758 8.9277 6.21107 9.62194 5.68137 10.1782C5.15168 10.7345 4.67207 11.0327 3.83087 11.0729V11.9998H2.83487V12ZM2.83487 1.76716C2.36761 1.83839 2.08152 2.02525 1.81227 2.32797C1.54303 2.63068 1.40841 2.98896 1.40841 3.40279C1.40841 3.81235 1.52285 4.15496 1.75221 4.43085C1.98132 4.70698 2.28736 4.92707 2.83487 5.09184V1.76716ZM3.8304 9.93463C4.29765 9.87693 4.46504 9.79953 4.78295 9.46429C5.03747 9.19576 5.24024 8.68767 5.24024 8.17601C5.24024 7.73986 5.13221 7.38942 4.91639 7.12469C4.70057 6.85996 4.47549 6.62301 3.83016 6.41383V9.93463H3.8304Z"
-                    fill="#333333" />
+                    fill="#333333"
+                  />
                 </svg>
-                <svg v-if="row.beCurrencyType === 'CNY'" xmlns="http://www.w3.org/2000/svg" width="9" height="10"
-                  viewBox="0 0 9 10" fill="none">
-                  <path id="Vector"
+                <svg
+                  v-if="row.beCurrencyType === 'CNY'"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="9"
+                  height="10"
+                  viewBox="0 0 9 10"
+                  fill="none"
+                >
+                  <path
+                    id="Vector"
                     d="M8.79096 0L5.5738 4.56065H8.10931V5.56885H5.15558V6.95736H8.10931V7.97816H5.15558V10H3.63591V7.97816H0.574054V6.95736H3.63591V5.56885H0.574054V4.56065H3.18642L0 0H1.7134C3.20235 2.26497 4.10624 3.70177 4.42676 4.30931H4.45749C4.56617 4.05905 4.86361 3.55523 5.34877 2.79785L7.17085 0H8.79096Z"
-                    fill="#333333" />
+                    fill="#333333"
+                  />
                 </svg>
-                <CurrencyType v-if="!row.beCurrencyType" />{{ row.originalPrice.toFixed(2) || 0 }}
+                <CurrencyType v-if="!row.beCurrencyType" />{{
+                  row.originalPrice.toFixed(2) || 0
+                }}
               </div>
               <span v-else>-</span>
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('doMoneyPrice')" show-overflow-tooltip align="left" label="项目价"
-          width="110">
+        <el-table-column
+          v-if="checkList.includes('doMoneyPrice')"
+          show-overflow-tooltip
+          align="left"
+          label="项目价"
+          width="110"
+        >
           <template #default="{ row }">
             <div class="flex-c">
-              <div class="oneLine fontC-System" style="width: calc(100% - 1.25rem)">
-                <svg v-if="row.currencyType === 'USD'" xmlns="http://www.w3.org/2000/svg" width="7" height="12"
-                  viewBox="0 0 7 12" fill="none">
-                  <path id="Vector"
+              <div
+                class="oneLine fontC-System"
+                style="width: calc(100% - 1.25rem)"
+              >
+                <svg
+                  v-if="row.currencyType === 'USD'"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="7"
+                  height="12"
+                  viewBox="0 0 7 12"
+                  fill="none"
+                >
+                  <path
+                    id="Vector"
                     d="M2.83487 12V11.0864C2.23394 11.0106 1.82794 10.876 1.45186 10.6825C1.07578 10.489 0.750979 10.1763 0.477227 9.74469C0.203474 9.31305 0.0443987 8.78572 0 8.16248L1.20826 7.9355C1.30181 8.58082 1.46634 9.05473 1.70235 9.35745C2.04044 9.78458 2.36334 9.87195 2.83511 9.92086V6.24645C2.34102 6.1529 1.91817 5.96177 1.402 5.67235C1.01927 5.45867 0.724387 5.16284 0.517589 4.78462C0.310553 4.4064 0.207273 3.97689 0.207273 3.4961C0.207273 2.64161 0.509754 1.94974 1.11519 1.42005C1.52 1.06414 2.03854 0.791105 2.83534 0.711092V0H3.83087V0.711092C4.52962 0.777809 4.87792 1.03755 5.28748 1.38016C5.81267 1.81631 6.12868 2.41486 6.23553 3.17581L4.99379 3.36267C4.92256 2.8909 4.77251 2.5312 4.5498 2.27787C4.44272 2.15607 4.22239 1.86071 3.83087 1.78046V5.24522C4.43607 5.39646 4.631 5.51446 4.82688 5.59899C5.20082 5.76376 5.50544 5.96391 5.74144 6.19968C5.97721 6.43568 6.1586 6.71608 6.28562 7.04088C6.41241 7.36568 6.4758 7.7173 6.4758 8.09552C6.4758 8.9277 6.21107 9.62194 5.68137 10.1782C5.15168 10.7345 4.67207 11.0327 3.83087 11.0729V11.9998H2.83487V12ZM2.83487 1.76716C2.36761 1.83839 2.08152 2.02525 1.81227 2.32797C1.54303 2.63068 1.40841 2.98896 1.40841 3.40279C1.40841 3.81235 1.52285 4.15496 1.75221 4.43085C1.98132 4.70698 2.28736 4.92707 2.83487 5.09184V1.76716ZM3.8304 9.93463C4.29765 9.87693 4.46504 9.79953 4.78295 9.46429C5.03747 9.19576 5.24024 8.68767 5.24024 8.17601C5.24024 7.73986 5.13221 7.38942 4.91639 7.12469C4.70057 6.85996 4.47549 6.62301 3.83016 6.41383V9.93463H3.8304Z"
-                    fill="#333333" />
+                    fill="#333333"
+                  />
                 </svg>
-                <svg v-if="row.currencyType === 'CNY'" xmlns="http://www.w3.org/2000/svg" width="9" height="10"
-                  viewBox="0 0 9 10" fill="none">
-                  <path id="Vector"
+                <svg
+                  v-if="row.currencyType === 'CNY'"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="9"
+                  height="10"
+                  viewBox="0 0 9 10"
+                  fill="none"
+                >
+                  <path
+                    id="Vector"
                     d="M8.79096 0L5.5738 4.56065H8.10931V5.56885H5.15558V6.95736H8.10931V7.97816H5.15558V10H3.63591V7.97816H0.574054V6.95736H3.63591V5.56885H0.574054V4.56065H3.18642L0 0H1.7134C3.20235 2.26497 4.10624 3.70177 4.42676 4.30931H4.45749C4.56617 4.05905 4.86361 3.55523 5.34877 2.79785L7.17085 0H8.79096Z"
-                    fill="#333333" />
+                    fill="#333333"
+                  />
                 </svg>
-                <CurrencyType v-if="!row.currencyType" />{{ row.doMoneyPrice || 0 }}
+                <CurrencyType v-if="!row.currencyType" />{{
+                  row.doMoneyPrice || 0
+                }}
               </div>
-              <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'doMoneyPrice')"
-                :class="{ edit: 'edit', current: row.projectId === current }" name="i-ep:edit" color="#409eff" />
+              <SvgIcon
+                v-if="row.projectType !== 2"
+                @click="quickEdit(row, 'doMoneyPrice')"
+                :class="{ edit: 'edit', current: row.projectId === current }"
+                name="i-ep:edit"
+                color="#409eff"
+              />
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('ir')" show-overflow-tooltip prop="ir" align="left" label="IR/NIR"
-          width="120">
+        <el-table-column
+          v-if="checkList.includes('ir')"
+          show-overflow-tooltip
+          prop="ir"
+          align="left"
+          label="IR/NIR"
+          width="120"
+        >
           <template #default="{ row }">
             <div class="flex-c">
-              <div class="oneLine fontC-System" style="width: calc(100% - 1.25rem)">
+              <div
+                class="oneLine fontC-System"
+                style="width: calc(100% - 1.25rem)"
+              >
                 {{ row.ir ? row.ir : 0 }}/{{ row.nir ? row.nir : 0 }}
               </div>
-              <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'ir')"
-                :class="{ edit: 'edit', current: row.projectId === current }" name="i-ep:edit" color="#409eff" />
+              <SvgIcon
+                v-if="row.projectType !== 2"
+                @click="quickEdit(row, 'ir')"
+                :class="{ edit: 'edit', current: row.projectId === current }"
+                name="i-ep:edit"
+                color="#409eff"
+              />
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('countryIdList')" show-overflow-tooltip prop="countryIdList"
-          align="left" label="区域" width="80">
+        <el-table-column
+          v-if="checkList.includes('countryIdList')"
+          show-overflow-tooltip
+          prop="countryIdList"
+          align="left"
+          label="区域"
+          width="80"
+        >
           <template #default="{ row }">
             <template v-if="row.countryIdList">
-              <template v-if="row.countryIdList.length ===
-    basicDictionaryStore.country.length
-    ">
+              <template
+                v-if="
+                  row.countryIdList.length ===
+                  basicDictionaryStore.country.length
+                "
+              >
                 <el-tag type="primary">全球</el-tag>
               </template>
               <template v-else-if="comCountryId(row.countryIdList).length > 1">
-                <el-tooltip class="box-item" effect="dark" :content="comCountryId(row.countryIdList).join(',')"
-                  placement="top">
-                  <el-link type="primary"><el-tag type="primary">×{{ comCountryId(row.countryIdList).length
-                      }}</el-tag></el-link>
+                <el-tooltip
+                  class="box-item"
+                  effect="dark"
+                  :content="comCountryId(row.countryIdList).join(',')"
+                  placement="top"
+                >
+                  <el-link type="primary"
+                    ><el-tag type="primary"
+                      >×{{ comCountryId(row.countryIdList).length }}</el-tag
+                    ></el-link
+                  >
                 </el-tooltip>
               </template>
               <template v-else>
-                <el-tag v-for="item in comCountryId(row.countryIdList)" :key="item" type="primary">
+                <el-tag
+                  v-for="item in comCountryId(row.countryIdList)"
+                  :key="item"
+                  type="primary"
+                >
                   {{ item }}
                 </el-tag>
               </template>
             </template>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('remark')" show-overflow-tooltip prop="remark" align="left"
-          width="150" label="备注"><template #default="{ row }">
+        <el-table-column
+          v-if="checkList.includes('remark')"
+          show-overflow-tooltip
+          prop="remark"
+          align="left"
+          width="150"
+          label="备注"
+          ><template #default="{ row }">
             <div class="flex-c">
-              <div class="oneLine fontC-System" style="width: calc(100% - 1.25rem)">
+              <div
+                class="oneLine fontC-System"
+                style="width: calc(100% - 1.25rem)"
+              >
                 {{ row.remark ? row.remark : "-" }}
               </div>
-              <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'remark')"
-                :class="{ edit: 'edit', current: row.projectId === current }" name="i-ep:edit" color="#409eff" />
+              <SvgIcon
+                v-if="row.projectType !== 2"
+                @click="quickEdit(row, 'remark')"
+                :class="{ edit: 'edit', current: row.projectId === current }"
+                name="i-ep:edit"
+                color="#409eff"
+              />
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('create')" prop="createTime" align="left" width="120" label="创建"
-          show-overflow-tooltip><template #default="{ row }">
+        <el-table-column
+          v-if="checkList.includes('create')"
+          prop="createTime"
+          align="left"
+          width="120"
+          label="创建"
+          show-overflow-tooltip
+          ><template #default="{ row }">
             <div>
               <div class="fontC-System oneLine">{{ row.createName }}</div>
               <el-tooltip :content="row.createTime" placement="top">
                 <el-tag effect="plain" type="info">{{
-    format(row.createTime)
-  }}</el-tag>
+                  format(row.createTime)
+                }}</el-tag>
               </el-tooltip>
             </div>
           </template>
         </el-table-column>
         <el-table-column align="left" fixed="right" label="操作" width="230">
           <template #default="{ row }">
-            <el-button v-if="row.allocationStatus === 1" plain :disabled="row.isOnline === 2" type="primary"
-              size="small" @click="distribution(row)">
+            <el-button
+              v-if="row.allocationStatus === 1"
+              plain
+              :disabled="row.isOnline === 2"
+              type="primary"
+              size="small"
+              @click="distribution(row)"
+            >
               分配
             </el-button>
-            <el-button v-else plain type="primary" :disabled="row.isOnline === 2" size="small" @click="reassign(row)">
+            <el-button
+              v-else
+              plain
+              type="primary"
+              :disabled="row.isOnline === 2"
+              size="small"
+              @click="reassign(row)"
+            >
               重新分配
             </el-button>
             <!-- :disabled="row.projectType === 2" -->
-            <el-button type="warning" plain size="small" @click="projectEdit(row)">
+            <el-button
+              type="warning"
+              plain
+              size="small"
+              @click="projectEdit(row)"
+            >
               编辑
             </el-button>
-            <el-button type="danger" size="small" plain @click="projectDetails(row)">
+            <el-button
+              type="danger"
+              size="small"
+              plain
+              @click="projectDetails(row)"
+            >
               详情
             </el-button>
           </template>
@@ -692,9 +983,18 @@ const formOption = {
           <el-empty :image="empty" :image-size="300" />
         </template>
       </el-table>
-      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
-        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-        background @size-change="sizeChange" @current-change="currentChange" />
+      <ElPagination
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
+        :page-sizes="pagination.sizes"
+        :layout="pagination.layout"
+        :hide-on-single-page="false"
+        class="pagination"
+        background
+        @size-change="sizeChange"
+        @current-change="currentChange"
+      />
     </PageMain>
     <allocationEdit ref="addAllocationEditRef" @fetchData="fetchData" />
     <ProjeckEdit ref="addProjeckRef" @fetchData="fetchData" />
@@ -709,6 +1009,16 @@ const formOption = {
 </template>
 
 <style scoped lang="scss">
+.tag-with-image {
+  display: flex;          /* 使用flex布局 */
+  align-items: center;    /* 垂直居中对齐 */
+  justify-content: center;/* 水平居中对齐 */
+  margin-right: 0.5rem;      /* 每行标签之间的间距 */
+}
+:deep(.tag-with-image .el-tag__content){
+  display: flex;
+  align-items: center;
+}
 :deep {
   table {
     width: 100% !important;
@@ -726,7 +1036,7 @@ const formOption = {
   align-items: center;
   width: 100%;
 
-  >div:nth-of-type(1) {
+  > div:nth-of-type(1) {
     width: calc(100% - 1.5625rem);
     flex-shrink: 0;
   }
@@ -788,7 +1098,21 @@ const formOption = {
     margin: 0 0.75rem 0 0;
   }
 }
+.parameter1 {
+  display: flex;
+  align-content: center;
+  flex-wrap: wrap;
 
+  .oneLine {
+    width: 40%;
+    text-align: left;
+    margin: 0 0.75rem 0.5rem 0;
+  }
+
+  .oneLine:nth-of-type(n + 3) {
+    margin: 0 0.75rem 0 0;
+  }
+}
 .red {
   color: rgb(251, 104, 104);
 }
