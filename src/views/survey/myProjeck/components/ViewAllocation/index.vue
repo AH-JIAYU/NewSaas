@@ -118,37 +118,36 @@ defineExpose({ showEdit });
       <el-button size="small" type="primary" v-else-if="data.type === 4"
         >合作商</el-button
       > -->
-      <div style="height: 21.875rem;overflow: auto">
-        <div class="idList" v-if="data.supplierList.length != 0">
-        <el-button size="small" type="danger"
-          >供应商
-          {{ data.supplierList > 1 ? data.supplierList : "" }}</el-button
-        >
-        <div class="item" v-for="item in data.supplierList" :key="item.id">
-          <b>{{ item.name }}</b> &ensp; <span>ID: {{ item.id }}</span
-          ><copy :content="item.id" />
+      <div style="height: 21.875rem; overflow: auto">
+        <!-- <div class="idList" v-if="data.supplierList.length != 0">
+          <el-button size="small" type="danger"
+            >供应商
+            {{ data.supplierList > 1 ? data.supplierList : "" }}</el-button
+          >
+          <div class="item" v-for="item in data.supplierList" :key="item.id">
+            <b>{{ item.name }}</b> &ensp; <span>ID: {{ item.id }}</span
+            ><copy :content="item.id" />
+          </div>
+        </div> -->
+        <div class="idList" v-if="data.memberList.length != 0">
+          <el-button size="small" type="success"
+            >部门 {{ data.memberList > 1 ? data.memberList : "" }}</el-button
+          >
+          <div class="item" v-for="item in data.memberList" :key="item.id">
+            <b>{{ item.name }}</b> &ensp; <span>ID: {{ item.id }}</span
+            ><copy :content="item.id" />
+          </div>
         </div>
+        <!-- <div class="idList" v-if="data.tenantList.length != 0">
+          <el-button size="small" type="primary"
+            >合作商 {{ data.tenantList > 1 ? data.tenantList : "" }}</el-button
+          >
+          <div class="item" v-for="item in data.tenantList" :key="item.id">
+            <b>{{ item.name }}</b> &ensp; <span>ID: {{ item.id }}</span
+            ><copy :content="item.id" />
+          </div>
+        </div> -->
       </div>
-      <div class="idList" v-if="data.memberList.length != 0">
-        <el-button size="small" type="success"
-          >会员组 {{ data.memberList > 1 ? data.memberList : "" }}</el-button
-        >
-        <div class="item" v-for="item in data.memberList" :key="item.id">
-          <b>{{ item.name }}</b> &ensp; <span>ID: {{ item.id }}</span
-          ><copy :content="item.id" />
-        </div>
-      </div>
-      <div class="idList" v-if="data.tenantList.length != 0">
-        <el-button size="small" type="primary"
-          >合作商 {{ data.tenantList > 1 ? data.tenantList : "" }}</el-button
-        >
-        <div class="item" v-for="item in data.tenantList" :key="item.id">
-          <b>{{ item.name }}</b> &ensp; <span>ID: {{ item.id }}</span
-          ><copy :content="item.id" />
-        </div>
-      </div>
-      </div>
-
 
       <template #footer>
         <div style="flex: auto">
