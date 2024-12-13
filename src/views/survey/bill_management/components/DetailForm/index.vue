@@ -89,7 +89,7 @@ defineExpose({
             for (let item of form.value.addMemberSettlementInfoList) {
               // 如果没有结算金额，则赋予最低金额
               if (!item.settlementAmount) {
-                item.settlementAmount = null
+                item.settlementAmount = form.value.minimumAmount
               }
               // 正则校验结算金额，确保是正数且最多两位小数
               const amountPattern = /^(?!0(\.0+)?$)(\d+(\.\d{1,2})?)$/;
@@ -104,7 +104,15 @@ defineExpose({
               // 校验结算金额是否小于最低结算金额
               if (item.settlementAmount < form.value.minimumAmount) {
                 ElMessage.warning({
-                  message: "结算金额 小于 最低结算金额",
+                  message: "结算金额 必须大于 最低结算金额",
+                  center: true,
+                });
+                // 直接停止整个 submit 函数的执行
+                return;
+              }
+              if (item.settlementAmount > item.availableBalance) {
+                ElMessage.warning({
+                  message: "输入的结算金额 大于 可用余额",
                   center: true,
                 });
                 // 直接停止整个 submit 函数的执行
@@ -118,9 +126,9 @@ defineExpose({
             if (!form.value.settlementAmount) {
               form.value.settlementAmount = form.value.minimumAmount
             }
-            if (form.value.settlementAmount < form.value.minimumAmount) {
+            if (form.value.settlementAmount <= form.value.minimumAmount) {
               ElMessage.warning({
-                message: "结算金额 小于 最低结算金额",
+                message: "结算金额 必须大于 最低结算金额",
                 center: true,
               });
               // 直接停止整个 submit 函数的执行
