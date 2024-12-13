@@ -295,7 +295,7 @@ onMounted(async () => {
       option: "surveyStatus",
       optionLabel: "label",
       optionValue: "value",
-      multiple:true,
+      multiple: true,
     },
     {
       index: 11,
@@ -306,7 +306,7 @@ onMounted(async () => {
       option: "viceStatus",
       optionLabel: "label",
       optionValue: "value",
-      multiple:true,
+      multiple: true,
     },
     {
       index: 12,
@@ -512,16 +512,39 @@ function handleCurrentChange(val: any) {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('allocationType')" align="left" show-overflow-tooltip width="100"
+        <el-table-column v-if="checkList.includes('allocationType')" align="left" show-overflow-tooltip width="230"
           label="分配类型" fixed="right">
           <template #default="{ row }">
-            <el-tag effect="plain" type="info" v-if="row.allocationType === 1" class="mx-1">未分配</el-tag>
+            <!-- <el-tag effect="plain" type="info" v-if="row.allocationType === 1" class="mx-1">未分配</el-tag>
             <el-tag effect="dark" style="background-color: #fb6868; border: none" v-if="row.allocationType === 2"
               class="mx-1" type="primary">供应商</el-tag>
             <el-tag effect="dark" style="background-color: #05c9be; border: none" v-if="row.allocationType === 3"
               class="mx-1" type="warning">内部站</el-tag>
             <el-tag effect="dark" style="background-color: #ffac54; border: none" v-if="row.allocationType === 4"
-              class="mx-1" type="warning">合作商</el-tag>
+              class="mx-1" type="warning">合作商</el-tag> -->
+            <el-button size="small" v-if="row.allocationType?.includes(1)">
+              未分配</el-button>
+              <!-- <el-button
+                class="tableBut"
+                size="small"
+                @click="viewAllocations(row)"
+                type="danger"
+                v-if="row.allocationType?.includes(1)"
+                plain
+                >自动分配</el-button
+              > -->
+              <el-tag type="danger" v-if="row.allocationType?.includes(2)" class="tag-with-image oneLine">
+                <img src="@/assets/images/gong.png" style="width: 0.9375rem;height: 0.9375rem;margin-right: 0.25rem;">
+                <span>供应商</span>
+              </el-tag>
+              <el-tag type="warning" v-if="row.allocationType?.includes(3)" class="tag-with-image oneLine">
+                <img src="@/assets/images/nei.png" style="width: 0.9375rem;height: 0.9375rem;margin-right: 0.25rem;">
+                内部站</el-tag>
+
+              <el-tag type="primary" v-if="row.allocationType?.includes(4)" class="tag-with-image oneLine">
+                <img src="@/assets/images/he.png" style="width: 0.9375rem;height: 0.9375rem;margin-right: 0.25rem;">
+                合作商</el-tag>
+
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('doMoneyPrice')" align="left" prop="doMoneyPrice"
@@ -643,8 +666,8 @@ function handleCurrentChange(val: any) {
           <template #default="{ row }">
             <div v-if="row.surveyStatus === 1">
               <div v-if="row.viceStatus">
-                <el-tag effect="dark" style="background-color: #74868b; border: none" v-if="row.viceStatus === 1 || row.viceStatus === 2"
-                  class="mx-1" type="success">待审核</el-tag>
+                <el-tag effect="dark" style="background-color: #74868b; border: none"
+                  v-if="row.viceStatus === 1 || row.viceStatus === 2" class="mx-1" type="success">待审核</el-tag>
                 <!-- <el-tag effect="dark" style="background-color: #03c239; border: none" v-if="row.viceStatus === 2"
                   class="mx-1" type="danger">免审</el-tag> -->
                 <el-tag effect="dark" style="background-color: #3e5c78; border: none" v-if="row.viceStatus === 3"

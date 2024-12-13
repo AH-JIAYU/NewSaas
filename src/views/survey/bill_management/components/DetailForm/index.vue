@@ -154,6 +154,14 @@ defineExpose({
               // 直接停止整个 submit 函数的执行
               return;
             }
+            if (form.value.settlementAmount < form.value.minimumAmount) {
+              ElMessage.warning({
+                message: "结算金额 必须大于等于 最低结算金额",
+                center: true,
+              });
+              // 直接停止整个 submit 函数的执行
+              return;
+            }
           }
           if (valid) {
             try {
