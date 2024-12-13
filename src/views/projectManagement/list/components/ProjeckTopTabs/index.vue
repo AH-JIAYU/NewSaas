@@ -608,7 +608,12 @@ const exchangeRateSubmit = async () => {
   if (res.data.flag) {
     await userStore.getCurrencyType()
     currencyTypeRes.value = userStore.originalExchangeRate
+    localToptTab.value.exchangeRate = userStore.originalExchangeRate
     localToptTab.value.currencyType = userStore.currencyType === 1 ? 'USD' : 'CNY'
+    // if(userStore.currencyType !== 1) {
+    //   localToptTab.value.exchangeRate = Math.floor((1/userStore.originalExchangeRate) * 100) / 100;
+    //   currencyTypeRes.value = localToptTab.value.exchangeRate
+    // }
     const params = {
       beforeCurrency: '',
       oldCurrency: localToptTab.value.currencyType,

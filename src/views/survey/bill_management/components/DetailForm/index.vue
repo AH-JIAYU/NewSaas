@@ -101,30 +101,41 @@ defineExpose({
               }
               // 正则校验结算金额，确保是正数且最多两位小数
               const amountPattern = /^(?!0(\.0+)?$)(\d+(\.\d{1,2})?)$/;
-              if (!amountPattern.test(item.settlementAmount)) {
-                ElMessage.warning({
-                  message: "请输入有效的正数，且最多两位小数",
-                  center: true,
-                });
-                // 直接停止整个 submit 函数的执行
-                return;
-              }
-              // 校验结算金额是否小于最低结算金额
-              if (item.settlementAmount < form.value.minimumAmount) {
-                ElMessage.warning({
-                  message: "结算金额 必须大于等于 最低结算金额",
-                  center: true,
-                });
-                // 直接停止整个 submit 函数的执行
-                return;
-              }
-              if (item.settlementAmount > item.availableBalance) {
-                ElMessage.warning({
-                  message: "可用余额小于结算金额，不支持结算",
-                  center: true,
-                });
-                // 直接停止整个 submit 函数的执行
-                return;
+              if (item.settlementAmount) {
+                if (!amountPattern.test(item.settlementAmount)) {
+                  ElMessage.warning({
+                    message: "请输入有效的正数，且最多两位小数",
+                    center: true,
+                  });
+                  // 直接停止整个 submit 函数的执行
+                  return;
+                }
+                // 校验结算金额是否小于最低结算金额
+                if (item.settlementAmount < form.value.minimumAmount) {
+                  ElMessage.warning({
+                    message: "结算金额 必须大于等于 最低结算金额",
+                    center: true,
+                  });
+                  // 直接停止整个 submit 函数的执行
+                  return;
+                }
+                if (item.settlementAmount > item.availableBalance) {
+                  ElMessage.warning({
+                    message: "可用余额小于结算金额，不支持结算",
+                    center: true,
+                  });
+                  // 直接停止整个 submit 函数的执行
+                  return;
+                }
+              }else {
+                if (item.availableBalance == 0) {
+                  ElMessage.warning({
+                    message: "可用余额为0，不支持结算",
+                    center: true,
+                  });
+                  // 直接停止整个 submit 函数的执行
+                  return;
+                }
               }
             }
             // 清空结算金额
