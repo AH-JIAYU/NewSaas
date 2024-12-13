@@ -25,6 +25,7 @@ const form = ref<any>({
     //   settlementAmount: "", //	结算金额
     // },
   ],
+  memberSettlementInfoSelect: [],
 });
 const data = ref<any>({
   memberSettlementInfoList: [], // 指定结算获取会员可用余额列表
@@ -43,6 +44,13 @@ const formRules = ref<FormRules>({
       message: '请输入有效的正数，且最多两位小数',
       trigger: 'blur'
     }
+  ],
+  memberSettlementInfoSelect: [
+    {
+      required: true,
+      message: '请选择会员',
+      trigger: 'change'
+    },
   ]
 });
 // 获取最低结算金额
@@ -84,12 +92,12 @@ defineExpose({
   submit() {
     return new Promise<void>((resolve) => {
       formRef.value &&
-        formRef.value.validate((valid) => {
+        formRef.value.validate(async (valid) => {
           if (form.value.settlementType === 2) {
             for (let item of form.value.addMemberSettlementInfoList) {
               // 如果没有结算金额，则赋予最低金额
               if (!item.settlementAmount) {
-                item.settlementAmount = form.value.minimumAmount
+                item.settlementAmount = null
               }
               // 正则校验结算金额，确保是正数且最多两位小数
               const amountPattern = /^(?!0(\.0+)?$)(\d+(\.\d{1,2})?)$/;
@@ -104,7 +112,7 @@ defineExpose({
               // 校验结算金额是否小于最低结算金额
               if (item.settlementAmount < form.value.minimumAmount) {
                 ElMessage.warning({
-                  message: "结算金额 必须大于 最低结算金额",
+                  message: "结算金额 必须大于等于 最低结算金额",
                   center: true,
                 });
                 // 直接停止整个 submit 函数的执行
@@ -112,7 +120,7 @@ defineExpose({
               }
               if (item.settlementAmount > item.availableBalance) {
                 ElMessage.warning({
-                  message: "输入的结算金额 大于 可用余额",
+                  message: "可用余额小于结算金额，不支持结算",
                   center: true,
                 });
                 // 直接停止整个 submit 函数的执行
@@ -124,28 +132,29 @@ defineExpose({
           } else {
             form.value.addMemberSettlementInfoList = []
             if (!form.value.settlementAmount) {
-              form.value.settlementAmount = form.value.minimumAmount
+              form.value.settlementAmount = null
             }
-            if (form.value.settlementAmount <= form.value.minimumAmount) {
-              ElMessage.warning({
-                message: "结算金额 必须大于 最低结算金额",
-                center: true,
-              });
-              // 直接停止整个 submit 函数的执行
-              return;
-            }
+            delete form.value.memberSettlementInfoSelect
+            // if (form.value.settlementAmount < form.value.minimumAmount) {
+            //   ElMessage.warning({
+            //     message: "结算金额 必须大于 最低结算金额",
+            //     center: true,
+            //   });
+            //   // 直接停止整个 submit 函数的执行
+            //   return;
+            // }
           }
           if (valid) {
             try {
               loading.value = true;
-              api.create(form.value).then(() => {
-                loading.value = false;
+              const { status } = await api.create(form.value)
+              if (status === 1) {
                 ElMessage.success({
-                  message: "新增成功",
+                  message: "结算账单已生成",
                   center: true,
                 });
-                resolve();
-              });
+                resolve()
+              }
             } catch (error) {
 
             } finally {
@@ -176,8 +185,8 @@ defineExpose({
         </ElFormItem>
       </template>
       <template v-else>
-        <ElFormItem label="指定会员">
-          <el-select placeholder="Select" v-model="data.memberSettlementInfoSelect" clearable filterable multiple
+        <ElFormItem label="指定会员" prop="memberSettlementInfoSelect">
+          <el-select placeholder="Select" v-model="form.memberSettlementInfoSelect" clearable filterable multiple
             collapse-tags @change="changeMemberSettlement">
             <el-option v-for="item in data.memberSettlementInfoList" :key="item.id" :value="item.id"
               :label="item.memberName"></el-option>
@@ -195,7 +204,7 @@ defineExpose({
             </p>
           </ElFormItem>
           <ElFormItem label="结算金额">
-              <ElInput v-model="item.settlementAmount" :max="item.availableBalance" placeholder="" />
+            <ElInput v-model="item.settlementAmount" :max="item.availableBalance" placeholder="" />
           </ElFormItem>
         </template>
       </template>

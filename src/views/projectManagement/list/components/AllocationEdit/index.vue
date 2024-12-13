@@ -248,7 +248,7 @@ defineExpose({ showEdit });
           prop="clientName"
         />
       </el-table>
-      <el-form
+      <!-- <el-form
         ref="formRef"
         label-width="90px"
         :rules="rules"
@@ -275,7 +275,7 @@ defineExpose({ showEdit });
             multiple
             collapse-tags
             collapse-tags-tooltip
-            :max-collapse-tags="8"
+            :max-collapse-tags="10"
             placeholder=""
           >
             <template #header>
@@ -365,7 +365,7 @@ defineExpose({ showEdit });
             multiple
             collapse-tags
             collapse-tags-tooltip
-            :max-collapse-tags="8"
+            :max-collapse-tags="10"
             placeholder=""
           >
             <template #header>
@@ -403,9 +403,9 @@ defineExpose({ showEdit });
           </template>
 
         </el-form-item>
-      </el-form>
+      </el-form> -->
 
-      <!-- <el-form ref="formRef" label-width="80px" :rules="rules" :model="data.form" :inline="false">
+      <el-form ref="formRef" label-width="80px" :rules="rules" :model="data.form" :inline="false">
         <el-form-item label="分配目标">
           <el-radio-group v-model="data.form.allocationType" class="ml-4" @change="changeRadio">
             <el-radio :value="2" size="large"> 供应商 </el-radio>
@@ -448,7 +448,7 @@ defineExpose({ showEdit });
               :value="item.beInvitationTenantId" :disabled="item.reveal === 1" />
           </el-select>
         </el-form-item>
-    </el-form> -->
+    </el-form>
       <template #footer>
         <div style="flex: auto">
           <el-button @click="closeHandler"> 取消 </el-button>
