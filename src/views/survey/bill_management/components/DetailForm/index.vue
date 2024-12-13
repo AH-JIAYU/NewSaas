@@ -146,14 +146,14 @@ defineExpose({
               form.value.settlementAmount = null
             }
             delete form.value.memberSettlementInfoSelect
-            // if (form.value.settlementAmount < form.value.minimumAmount) {
-            //   ElMessage.warning({
-            //     message: "结算金额 必须大于 最低结算金额",
-            //     center: true,
-            //   });
-            //   // 直接停止整个 submit 函数的执行
-            //   return;
-            // }
+            if (form.value.settlementAmount == 0) {
+              ElMessage.warning({
+                message: "请输入有效的正数，且最多两位小数",
+                center: true,
+              });
+              // 直接停止整个 submit 函数的执行
+              return;
+            }
           }
           if (valid) {
             try {
