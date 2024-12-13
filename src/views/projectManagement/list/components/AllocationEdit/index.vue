@@ -49,6 +49,39 @@ const data = ref<any>({
     tenant: false, // 合作商
   },
 });
+// 租户分配
+const tenantObj = ref<any>({
+  // 项目id
+  projectId: null,
+  // 分配类型:1:自动分配 2:供应商 3:会员部门 4:租户分配 5:已分配项目变成未分配
+  allocationType: 4,
+  // 分配类型为:供应商传供应商id,分配类型为会员部门传会员部门Id,支持多选,分配给租户id(租户只能一个分配)allocationType等于5传空数组
+  groupSupplierIdList: [],
+  // 只有分配类型等于租户分配,并且是重新分配,然后用户删了了后端传的租户id,全部放在这里
+  deleteSet: []
+})
+// 供应商分配
+const supplierObj = ref<any>({
+  // 项目id
+  projectId: null,
+  // 分配类型:1:自动分配 2:供应商 3:会员部门 4:租户分配 5:已分配项目变成未分配
+  allocationType: 2,
+  // 分配类型为:供应商传供应商id,分配类型为会员部门传会员部门Id,支持多选,分配给租户id(租户只能一个分配)allocationType等于5传空数组
+  groupSupplierIdList: [],
+  // 只有分配类型等于租户分配,并且是重新分配,然后用户删了了后端传的租户id,全部放在这里
+  deleteSet: []
+})
+// 会员分配
+const memberObj = ref<any>({
+  // 项目id
+  projectId: null,
+  // 分配类型:1:自动分配 2:供应商 3:会员部门 4:租户分配 5:已分配项目变成未分配
+  allocationType: 3,
+  // 分配类型为:供应商传供应商id,分配类型为会员部门传会员部门Id,支持多选,分配给租户id(租户只能一个分配)allocationType等于5传空数组
+  groupSupplierIdList: [],
+  // 只有分配类型等于租户分配,并且是重新分配,然后用户删了了后端传的租户id,全部放在这里
+  deleteSet: []
+})
 const rules = ref<any>({
   groupSupplierIdList: [
     {
@@ -59,6 +92,8 @@ const rules = ref<any>({
     },
   ],
 });
+
+const tenantIdCopy = ref<any>()
 // 显隐
 async function showEdit(row: any, type: string) {
   data.value.list = [{ ...row }]; // 表格
@@ -68,14 +103,40 @@ async function showEdit(row: any, type: string) {
     const res = await obtainLoading(
       api.getProjectAllocation({ projectId: row.projectId })
     );
-    const { groupSupplierIdSet, ...form } = res.data;
-    data.value.form = form;
-    data.value.form.groupSupplierIdList = groupSupplierIdSet;
-    copyList.value = JSON.parse(JSON.stringify(groupSupplierIdSet));
+    data.value.form.projectId = row.projectId;
+    const { getProjectAllocationInfoList } = res.data;
+    getProjectAllocationInfoList.forEach((item: any) => {
+      if (item.allocationType === 2) {
+        supplierObj.value = {
+          allocationType: item.allocationType,
+          projectId: item.projectId,
+          groupSupplierIdList: item.groupSupplierIdSet
+        }
+      } else if (item.allocationType === 3) {
+        memberObj.value = {
+          allocationType: item.allocationType,
+          projectId: item.projectId,
+          groupSupplierIdList: item.groupSupplierIdSet
+        }
+      } else if (item.allocationType === 4) {
+        tenantObj.value = {
+          allocationType: item.allocationType,
+          projectId: item.projectId,
+          groupSupplierIdList: item.groupSupplierIdSet
+        }
+        tenantIdCopy.value = item.groupSupplierIdSet
+      }
+    })
+    // data.value.form = form;
+    // data.value.form.groupSupplierIdList = groupSupplierIdSet;
+    // copyList.value = JSON.parse(JSON.stringify(groupSupplierIdSet));
   } else {
     data.value.title = "分配";
     // 分配
     data.value.form.projectId = row.projectId; // 项目id
+    tenantObj.value.projectId = row.projectId; // 项目id
+    supplierObj.value.projectId = row.projectId; // 项目id
+    memberObj.value.projectId = row.projectId; // 项目id
   }
   // 供应商列表
   data.value.tenantSupplierList = await obtainLoading(
@@ -109,74 +170,137 @@ function changeRadio() {
 }
 // 合作商全选
 function selectAllTenant() {
-  data.value.form.groupSupplierIdList = [];
+  tenantObj.value.groupSupplierIdList = [];
   if (data.value.selectAll.tenant) {
     data.value.tenantList.map((item: any) => {
-      data.value.form.groupSupplierIdList.push(item.beInvitationTenantId);
+      tenantObj.value.groupSupplierIdList.push(item.beInvitationTenantId);
     });
   }
 }
 // 供应商全选
 function selectAllSupplier() {
-  data.value.form.groupSupplierIdList = [];
+  supplierObj.value.groupSupplierIdList = [];
   if (data.value.selectAll.supplier) {
     data.value.tenantSupplierList.map((item: any) => {
-      data.value.form.groupSupplierIdList.push(item.tenantSupplierId);
+      supplierObj.value.groupSupplierIdList.push(item.tenantSupplierId);
     });
   }
 }
-// 会员全选
-function selectAllMember() {
-  data.value.form.groupSupplierIdList = [];
-  if (data.value.selectAll.member) {
-    data.value.vipGroupList.map((item: any) => {
-      data.value.form.groupSupplierIdList.push(item.memberGroupId);
+const chalend = () => {
+  // 清空 groupSupplierIdList，确保每次全选时重新计算
+  memberObj.value.groupSupplierIdList = [];
+
+  // 遍历所有部门，递归获取所有节点 ID
+  data.value.departmentList.forEach((item: any) => {
+    // 递归处理每个部门的子节点
+    chalendHelper(item);
+  });
+
+  // 设置所有节点的 ID 到选中列表
+  treeRef.value.setCheckedKeys(memberObj.value.groupSupplierIdList);
+};
+
+// 递归处理每个节点及其子节点
+function chalendHelper(node: any) {
+  // 将当前节点的 ID 添加到 groupSupplierIdList
+  memberObj.value.groupSupplierIdList.push(node.id);
+
+  // 如果该节点有子节点，则继续递归
+  if (node.children && node.children.length) {
+    node.children.forEach((child: any) => {
+      chalendHelper(child);  // 递归处理每个子节点
     });
   }
 }
 
+// 会员全选
+function selectAllMember() {
+  // 清空选中的成员列表
+  memberObj.value.groupSupplierIdList = [];
+
+  if (data.value.selectAll.member) {
+    // 如果全选状态为 true，获取所有节点的 ID 并设置为已选中
+    chalend();  // 获取所有节点的 ID
+
+    // 使用 setCheckedKeys 设置选中的节点
+    treeRef.value.setCheckedKeys(memberObj.value.groupSupplierIdList);
+  } else {
+    // 否则取消选中
+    data.value.selectAll.member = false;
+    memberObj.value.groupSupplierIdList = [];  // 清空选中的 ID
+    treeRef.value.setCheckedKeys([]);  // 清除所有勾选项
+  }
+}
+
+
+
 // 树的事件
 const handleNodeClick = (nodeData: any, checked: any) => {
+  // 如果选中该节点，加入到当前选中的节点列表
   if (checked) {
-    // 选中新的节点时，取消其他选中的节点
-    const checkedKeys = treeRef.value.getCheckedKeys(); // 获取当前所有选中的节点
-    checkedKeys.forEach((key: any) => {
-      if (key !== nodeData.id) {
-        treeRef.value.setChecked(key, false); // 取消选中其他节点
-      }
-    });
-    // 更新当前选中的节点 ID
-    departmentId.value = [nodeData.id]; // 只保留当前选中节点 ID
+    if (!departmentId.value.includes(nodeData.id)) {
+      departmentId.value.push(nodeData.id); // 保持多个选中的节点
+    }
   } else {
-    // 如果取消选中节点，更新 departmentId
-    departmentId.value = departmentId.value.filter(
-      (id: any) => id !== nodeData.id
-    );
+    // 如果取消选中节点，移除对应的节点 ID
+    departmentId.value = departmentId.value.filter((id: any) => id !== nodeData.id);
   }
-  // 同步选中的路由id
-  departmentId.value = treeRef.value!.getCheckedKeys(false);
-  //  获取选中的所有子节点
-  const tree = treeRef.value.getCheckedKeys();
-  // 获取所有半选的主节点
-  const halltree = treeRef.value.getHalfCheckedKeys();
-  // 组合一下
-  const organizationalStructureId = tree.concat(halltree);
-  // localToptTab.value.organizationalStructureId = organizationalStructureId[0];
-  data.value.form.groupSupplierIdList = organizationalStructureId;
+  // 获取树的选中节点和半选节点
+  const checkedKeys = treeRef.value.getCheckedKeys(); // 获取选中的所有节点
+  const halfCheckedKeys = treeRef.value.getHalfCheckedKeys(); // 获取所有半选的节点
+  // 合并选中的节点和半选节点
+  const organizationalStructureId = [...checkedKeys, ...halfCheckedKeys];
+  // 更新组织结构 ID，确保同步到 memberObj
+  memberObj.value.groupSupplierIdList = organizationalStructureId;
 };
+
+// 是否取消分配
+const isAllocation = ref<any>(false)
+const sendProjectType = ref<any>(null)
+// 取消分配
+const cancelAllocation = (name: any, row: any) => {
+  if (row) {
+    if (name === "发送") {
+      sendProjectType.value = row;
+      colse()
+      isAllocation.value = true
+    }
+  }
+}
+
+const colse = () => {
+  Object.assign(tenantObj.value, {
+    projectId: null,
+    allocationType: 4,
+    groupSupplierIdList: [],
+    deleteSet: []
+  })
+  Object.assign(supplierObj.value, {
+    projectId: null,
+    allocationType: 2,
+    groupSupplierIdList: [],
+    deleteSet: []
+  })
+  Object.assign(memberObj.value, {
+    projectId: null,
+    allocationType: 3,
+    groupSupplierIdList: [],
+    deleteSet: []
+  })
+  data.value.selectAll.tenant = false;
+  data.value.selectAll.supplier = false;
+  data.value.selectAll.member = false;
+}
 
 // 弹框关闭事件
 function closeHandler() {
   // 移除校验
   formRef.value.resetFields();
   // // 重置表单
-  Object.assign(data.value.form, {
-    projectId: "",
-    allocationType: 1,
-    groupSupplierIdList: [],
-    deleteSet: [],
-  });
+  colse()
   dialogTableVisible.value = false;
+  isAllocation.value = false;
+  sendProjectType.value = null;
 }
 // 提交数据
 function onSubmit() {
@@ -184,11 +308,62 @@ function onSubmit() {
     if (valid) {
       try {
         loading.value = true;
-        const filteredTenants = copyList.value.filter(
-          (item: any) => !data.value.form.groupSupplierIdList.includes(item)
-        );
-        data.value.form.deleteSet = filteredTenants;
-        const { status } = await submitLoading(api.allocation(data.value.form));
+        let params: any = {
+          addProjectAllocationInfoList: []
+        }
+        if (tenantObj.value.groupSupplierIdList.length) {
+          tenantObj.value.projectId = data.value.form.projectId
+          params.addProjectAllocationInfoList.push(tenantObj.value)
+        }
+        if (supplierObj.value.groupSupplierIdList.length) {
+          supplierObj.value.projectId = data.value.form.projectId
+          params.addProjectAllocationInfoList.push(supplierObj.value)
+        }
+        if (memberObj.value.groupSupplierIdList.length) {
+          memberObj.value.projectId = data.value.form.projectId
+          params.addProjectAllocationInfoList.push(memberObj.value)
+        }
+        if (data.value.title !== '分配') {
+          params.addProjectAllocationInfoList.map((item: any) => {
+            if (!item.projectId) {
+              item.projectId = data.value.form.projectId
+            }
+            if (item.groupSupplierIdList.length) {
+              isAllocation.value = false
+            }
+            if (item.allocationType === 4) {
+              item.deleteSet = []
+              if (tenantIdCopy.value && tenantIdCopy.value.length) {
+                tenantIdCopy.value.filter((ite: any) => {
+                  item.groupSupplierIdList.map((it: any) => {
+                    if (ite !== it) {
+                      item.deleteSet.push(ite)
+                    }
+                  })
+                })
+              }
+            }
+          })
+        }
+        if (isAllocation.value) {
+          params = {
+            addProjectAllocationInfoList: [{
+              projectId: data.value.form.projectId,
+              allocationType: 5,
+              groupSupplierIdList: [],
+              deleteSet: []
+            }]
+          }
+        }
+        if (!params.addProjectAllocationInfoList.length) {
+          ElMessage.warning({
+            message: "至少选择一个分配目标",
+            center: true,
+          });
+          return
+        }
+        // return
+        const { status } = await submitLoading(api.allocation(params));
         loading.value = false;
         status === 1 &&
           ElMessage.success({
@@ -205,207 +380,112 @@ function onSubmit() {
   });
 }
 //供应商，调查站，合作商，没有数据时，跳转-暂时没做
-const goRouter=(name:any)=> {
-    if(name == '供应商'){
-      //供应商列表，新增供应商
-    } else if(name == '调查站'){
-      //调查系统-部门管理-新增部门
-    }else if(name == '合作商'){
-      //客商管理-合作租户-邀约公司
-    }
+const goRouter = (name: any) => {
+  if (name == '供应商') {
+    //供应商列表，新增供应商
+  } else if (name == '调查站') {
+    //调查系统-部门管理-新增部门
+  } else if (name == '合作商') {
+    //客商管理-合作租户-邀约公司
+  }
 }
-onMounted(async () => {});
+onMounted(async () => { });
 // 暴露方法
 defineExpose({ showEdit });
 </script>
 
 <template>
   <div>
-    <el-dialog
-      v-model="dialogTableVisible"
-      :title="data.title"
-      width="700"
-      :before-close="closeHandler"
-    >
+    <el-dialog v-model="dialogTableVisible" :title="data.title" width="700" :before-close="closeHandler">
       <el-table :data="data.list" v-loading="loading" row-key="id">
-        <el-table-column
-          align="left"
-          show-overflow-tooltip
-          label="项目名称"
-          prop="name"
-        />
-        <el-table-column
-          align="left"
-          show-overflow-tooltip
-          label="项目编码"
-          prop="projectId"
-        />
-        <el-table-column
-          align="left"
-          show-overflow-tooltip
-          label="客户简称"
-          width="100"
-          prop="clientName"
-        />
+        <el-table-column align="left" show-overflow-tooltip label="项目名称" prop="name" />
+        <el-table-column align="left" show-overflow-tooltip label="项目编码" prop="projectId" />
+        <el-table-column align="left" show-overflow-tooltip label="客户简称" width="100" prop="clientName" />
       </el-table>
-      <!-- <el-form
-        ref="formRef"
-        label-width="90px"
-        :rules="rules"
-        :model="data.form"
-        :inline="false"
-        label-position="left"
-        prop="groupSupplierIdList"
-      >
+      <el-form ref="formRef" label-width="90px" :rules="rules" :model="data.form" :inline="false" label-position="left"
+        prop="groupSupplierIdList">
         <el-form-item style="margin-top: 1rem">
           <template #label>
             <span class="icon-class">
-              <img
-                src="@/assets/images/gong.png"
-                alt=""
-                style="margin-right: 0.25rem"
-              />
-              供应商</span
-            >
+              <img src="@/assets/images/gong.png" alt="" style="margin-right: 0.25rem" />
+              供应商</span>
           </template>
-          <el-select
-            v-model="data.form.groupSupplierIdList"
-            clearable
-            filterable
-            multiple
-            collapse-tags
-            collapse-tags-tooltip
-            :max-collapse-tags="10"
-            placeholder=""
-          >
+          <el-select v-model="supplierObj.groupSupplierIdList" clearable filterable multiple collapse-tags
+            collapse-tags-tooltip :max-collapse-tags="10" placeholder="">
             <template #header>
-              <el-checkbox
-                v-model="data.selectAll.supplier"
-                @change="selectAllSupplier"
-                style="display: flex; height: unset"
-                >全选</el-checkbox
-              >
+              <el-checkbox v-model="data.selectAll.supplier" @change="selectAllSupplier"
+                style="display: flex; height: unset">全选</el-checkbox>
             </template>
             <template #prefix>
-              <span class="prefix-class" v-if="data.tenantSupplierList.length ==0" @click="goRouter('供应商')">
+              <span class="prefix-class" v-if="data.tenantSupplierList.length == 0" @click="goRouter('供应商')">
                 请先维护供应商数据
-                <img
-                src="@/assets/images/jiantou.png"
-                alt=""
-                style="margin-left: 0.25rem"
-              />
+                <img src="@/assets/images/jiantou.png" alt="" style="margin-left: 0.25rem" />
               </span>
-              <span v-if="data.form.groupSupplierIdList.length ==0">请先选择供应商数据</span>
+              <span v-if="supplierObj.groupSupplierIdList.length == 0">请先选择供应商数据</span>
             </template>
-            <el-option
-              v-for="item in data.tenantSupplierList"
-              :label="item.supplierAccord"
-              :key="item.supplierAccord"
-              :value="item.tenantSupplierId"
-            />
+            <el-option v-for="item in data.tenantSupplierList" :label="item.supplierAccord" :key="item.supplierAccord"
+              :value="item.tenantSupplierId" />
           </el-select>
         </el-form-item>
         <el-form-item>
           <template #label>
             <span class="icon-class">
-              <img
-                src="@/assets/images/diao.png"
-                alt=""
-                style="margin-right: 0.25rem"
-              />
-              调查站</span
-            >
+              <img src="@/assets/images/diao.png" alt="" style="margin-right: 0.25rem" />
+              调查站</span>
           </template>
-
-          <el-tree-select
-            ref="treeRef"
-            v-model="data.form.chargeUserId"
-            :data="data.departmentList"
-            check-strictly
-            show-checkbox
-            default-expand-all
-            node-key="id"
-            :props="defaultProps"
-            @check-change="handleNodeClick"
-            :check-on-click-node="true"
-            :expand-on-click-node="false"
-            style="width: 37.625rem"
-            clearable
-            placeholder=""
-          >
-          <template #prefix>
-              <span class="prefix-class" v-if="data.departmentList.length ==0" @click="goRouter('调查站')">
-                请先维护调查站数据
-                <img
-                src="@/assets/images/jiantou.png"
-                alt=""
-                style="margin-left: 0.25rem"
-              />
-              </span>
-              <span v-if="!data.form.chargeUserId">请先选择调查站数据</span>
-            </template>
-
-        </el-tree-select>
-        </el-form-item>
-        <el-form-item>
-          <template #label>
-            <span class="icon-class">
-              <img
-                src="@/assets/images/he.png"
-                alt=""
-                style="margin-right: 0.25rem"
-              />
-              合作商</span
-            >
-          </template>
-          <el-select
-            v-model="data.form.groupSupplierIdList"
-            clearable
-            filterable
-            multiple
-            collapse-tags
-            collapse-tags-tooltip
-            :max-collapse-tags="10"
-            placeholder=""
-          >
+          <el-tree-select ref="treeRef" v-model="memberObj.groupSupplierIdList" :data="data.departmentList"
+            show-checkbox default-expand-all node-key="id" :props="defaultProps" @check-change="handleNodeClick"
+            :check-strictly="true" :check-on-click-node="true" :multiple="true" :expand-on-click-node="false"
+            style="width: 37.625rem" clearable placeholder="">
             <template #header>
-              <el-checkbox
-                v-model="data.selectAll.tenant"
-                @change="selectAllTenant"
-                style="display: flex; height: unset"
-                >全选</el-checkbox
-              >
+              <el-checkbox v-model="data.selectAll.member" @change="selectAllMember"
+                style="display: flex; height: unset">全选</el-checkbox>
             </template>
             <template #prefix>
-              <span class="prefix-class" v-if="data.tenantList.length ==0" @click="goRouter('合作商')">
-                请先维护合作商数据
-                <img
-                src="@/assets/images/jiantou.png"
-                alt=""
-                style="margin-left: 0.25rem"
-              />
+              <span class="prefix-class" v-if="data.departmentList.length == 0" @click="goRouter('调查站')">
+                请先维护调查站数据
+                <img src="@/assets/images/jiantou.png" alt="" style="margin-left: 0.25rem" />
               </span>
-              <span v-if="data.form.groupSupplierIdList.length ==0">请先选择合作商数据</span>
+              <span v-if="!memberObj.groupSupplierIdList.length">请先选择调查站数据</span>
             </template>
-            <el-option
-              v-for="item in data.tenantList"
-              :label="item.beInvitationTenantName"
-              :key="item.beInvitationTenantName"
-              :value="item.beInvitationTenantId"
-              :disabled="item.reveal === 1"
-            />
+
+          </el-tree-select>
+        </el-form-item>
+        <el-form-item>
+          <template #label>
+            <span class="icon-class">
+              <img src="@/assets/images/he.png" alt="" style="margin-right: 0.25rem" />
+              合作商</span>
+          </template>
+          <el-select v-model="tenantObj.groupSupplierIdList" clearable filterable multiple collapse-tags
+            collapse-tags-tooltip :max-collapse-tags="10" placeholder="">
+            <template #header>
+              <el-checkbox v-model="data.selectAll.tenant" @change="selectAllTenant"
+                style="display: flex; height: unset">全选</el-checkbox>
+            </template>
+            <template #prefix>
+              <span class="prefix-class" v-if="data.tenantList.length == 0" @click="goRouter('合作商')">
+                请先维护合作商数据
+                <img src="@/assets/images/jiantou.png" alt="" style="margin-left: 0.25rem" />
+              </span>
+              <span v-if="tenantObj.groupSupplierIdList.length == 0">请先选择合作商数据</span>
+            </template>
+            <!-- :disabled="item.reveal === 1" -->
+            <el-option v-for="item in data.tenantList" :label="item.beInvitationTenantName"
+              :key="item.beInvitationTenantName" :value="item.beInvitationTenantId" />
           </el-select>
 
         </el-form-item>
-        <el-form-item v-if="data.title = '重新分配'">
+        <el-form-item v-if="data.title == '重新分配'">
           <template #label>
-            <el-button > 取消分配 </el-button>
+            <el-button :type="sendProjectType === 1 ? 'primary' : ''" @click="cancelAllocation('发送', 1)"> 取消分配
+            </el-button>
           </template>
 
         </el-form-item>
-      </el-form> -->
+      </el-form>
 
-      <el-form ref="formRef" label-width="80px" :rules="rules" :model="data.form" :inline="false">
+      <!-- <el-form ref="formRef" label-width="80px" :rules="rules" :model="data.form" :inline="false">
         <el-form-item label="分配目标">
           <el-radio-group v-model="data.form.allocationType" class="ml-4" @change="changeRadio">
             <el-radio :value="2" size="large"> 供应商 </el-radio>
@@ -448,7 +528,7 @@ defineExpose({ showEdit });
               :value="item.beInvitationTenantId" :disabled="item.reveal === 1" />
           </el-select>
         </el-form-item>
-    </el-form>
+    </el-form> -->
       <template #footer>
         <div style="flex: auto">
           <el-button @click="closeHandler"> 取消 </el-button>
@@ -470,10 +550,12 @@ defineExpose({ showEdit });
   color: #409eff;
   line-height: 14px;
 }
+
 /* 更改省略号的样式 */
 :deep(.el-tag.el-tag--info .el-tag__close) {
   color: #409eff;
 }
+
 .prefix-class {
   display: flex;
   justify-content: center;
@@ -481,6 +563,7 @@ defineExpose({ showEdit });
   color: #409eff;
   cursor: pointer;
 }
+
 /* 鼠标悬停时改变标签样式 */
 // :deep(.el-tag.el-tag--info:hover){
 //   background-color: #66b1ff;  /* 鼠标悬停时的背景色 */
@@ -491,6 +574,7 @@ defineExpose({ showEdit });
   justify-content: center;
   align-items: center;
 }
+
 :deep {
   .el-form-item.asterisk-left {
     align-items: center;

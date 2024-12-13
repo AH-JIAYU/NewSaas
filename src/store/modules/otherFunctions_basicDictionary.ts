@@ -32,10 +32,12 @@ const useBasicDictionaryStore = defineStore(
     const getB2BType = async () => {
       if (!B2BType.value.length) {
         const data = findDataById(await getDict(), "34");
-        data.children.forEach((item: any) => {
-          item.leaf = false; // 有子节点 可以展开
-        });
-        B2BType.value = data.children;
+        if (data && data.children) {
+          data.children.forEach((item: any) => {
+            item.leaf = false; // 有子节点 可以展开
+          });
+          B2BType.value = data.children;
+        }
       }
       return B2BType.value;
     };
@@ -71,17 +73,19 @@ const useBasicDictionaryStore = defineStore(
     };
     // 在字典目录中查找某一项
     function findDataById(data: any, targetId: any): any {
-      for (let item of data) {
-        if (item.id === targetId) {
-          return item;
-        } else if (Array.isArray(item.children)) {
-          const result = findDataById(item.children, targetId);
-          if (result) {
-            return result;
+      if (data) {
+        for (let item of data) {
+          if (item.id === targetId) {
+            return item;
+          } else if (Array.isArray(item.children)) {
+            const result = findDataById(item.children, targetId);
+            if (result) {
+              return result;
+            }
           }
         }
+        return null;
       }
-      return null;
     }
     // 给项目列表某个字段设置值
     function findAndModifyData(
