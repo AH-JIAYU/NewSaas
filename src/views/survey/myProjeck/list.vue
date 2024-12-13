@@ -216,11 +216,11 @@ const formOption = {
 const viewAllocationsRef = ref()
 // 查看分配
 function viewAllocations(row: any) {
-  // const params = {
-  //   projectId: row.projectId,
-  //   type,
-  // };
-  // viewAllocationsRef.value.showEdit(params);
+  const params = {
+    projectId: row.projectId,
+    type:row.allocationType,
+  };
+  viewAllocationsRef.value.showEdit(params);
 }
 </script>
 
@@ -362,7 +362,7 @@ function viewAllocations(row: any) {
         </el-table-column>
         <el-table-column v-if="checkList.includes('memberStatus')" show-overflow-tooltip align="left" label="分配"  width="230">
           <template #default="{ row }">
-            <el-button size="small" v-if="row.allocationStatus==1" >
+            <el-button size="small" v-if="!row.allocationType" >
                 未分配</el-button
               >
             <div class="flex-c" v-if="row.allocationStatus==2" style="cursor: pointer;" >
