@@ -34,6 +34,10 @@ const data = ref<any>({
     allocationType: 3, // 会员组固定
     groupSupplierIdList: [], //	分配类型为:供应商传供应商id,分配类型为会员组传会员组Id,支持多选
   },
+  // 全选
+  selectAll: {
+    member: false, // 会员
+  },
 });
 const rules = ref<any>({
   groupSupplierIdList: [
@@ -71,32 +75,89 @@ function closeHandler() {
     groupSupplierIdList: [],
   });
   dialogTableVisible.value = false;
+  Object.assign(memberObj.value, {
+    projectId: null,
+    allocationType: 3,
+    groupSupplierIdList: [],
+    deleteSet: []
+  })
+  data.value.selectAll.member = false;
 }
+// 会员分配
+const memberObj = ref<any>({
+  // 项目id
+  projectId: null,
+  // 分配类型:1:自动分配 2:供应商 3:会员部门 4:租户分配 5:已分配项目变成未分配
+  allocationType: 3,
+  // 分配类型为:供应商传供应商id,分配类型为会员部门传会员部门Id,支持多选,分配给租户id(租户只能一个分配)allocationType等于5传空数组
+  groupSupplierIdList: [],
+  // 只有分配类型等于租户分配,并且是重新分配,然后用户删了了后端传的租户id,全部放在这里
+  deleteSet: []
+})
+const chalend = () => {
+  // 清空 groupSupplierIdList，确保每次全选时重新计算
+  memberObj.value.groupSupplierIdList = [];
+
+  // 遍历所有部门，递归获取所有节点 ID
+  departmentList.value.forEach((item: any) => {
+    // 递归处理每个部门的子节点
+    chalendHelper(item);
+  });
+
+  // 设置所有节点的 ID 到选中列表
+  treeRef.value.setCheckedKeys(memberObj.value.groupSupplierIdList);
+};
+
+// 递归处理每个节点及其子节点
+function chalendHelper(node: any) {
+  // 将当前节点的 ID 添加到 groupSupplierIdList
+  memberObj.value.groupSupplierIdList.push(node.id);
+
+  // 如果该节点有子节点，则继续递归
+  if (node.children && node.children.length) {
+    node.children.forEach((child: any) => {
+      chalendHelper(child);  // 递归处理每个子节点
+    });
+  }
+}
+
+// 会员全选
+function selectAllMember() {
+  // 清空选中的成员列表
+  memberObj.value.groupSupplierIdList = [];
+
+  if (data.value.selectAll.member) {
+    // 如果全选状态为 true，获取所有节点的 ID 并设置为已选中
+    chalend();  // 获取所有节点的 ID
+
+    // 使用 setCheckedKeys 设置选中的节点
+    treeRef.value.setCheckedKeys(memberObj.value.groupSupplierIdList);
+  } else {
+    // 否则取消选中
+    data.value.selectAll.member = false;
+    memberObj.value.groupSupplierIdList = [];  // 清空选中的 ID
+    treeRef.value.setCheckedKeys([]);  // 清除所有勾选项
+  }
+}
+
 // 树的事件
 const handleNodeClick = (nodeData: any, checked: any) => {
-  if (checked) {
-    // 选中新的节点时，取消其他选中的节点
-    const checkedKeys = treeRef.value.getCheckedKeys(); // 获取当前所有选中的节点
-    checkedKeys.forEach((key: any) => {
-      if (key !== nodeData.id) {
-        treeRef.value.setChecked(key, false); // 取消选中其他节点
-      }
-    });
-    // 更新当前选中的节点 ID
-    departmentId.value = [nodeData.id]; // 只保留当前选中节点 ID
+   // 如果选中该节点，加入到当前选中的节点列表
+   if (checked) {
+    if (!departmentId.value.includes(nodeData.id)) {
+      departmentId.value.push(nodeData.id); // 保持多个选中的节点
+    }
   } else {
-    // 如果取消选中节点，更新 departmentId
+    // 如果取消选中节点，移除对应的节点 ID
     departmentId.value = departmentId.value.filter((id: any) => id !== nodeData.id);
   }
-  // 同步选中的路由id
-  departmentId.value = treeRef.value!.getCheckedKeys(false);
-  //  获取选中的所有子节点
-  const tree = treeRef.value.getCheckedKeys();
-  // 获取所有半选的主节点
-  const halltree = treeRef.value.getHalfCheckedKeys();
-  // 组合一下
-  const organizationalStructureId = tree.concat(halltree);
-  data.value.form.groupSupplierIdList = organizationalStructureId;
+  // 获取树的选中节点和半选节点
+  const checkedKeys = treeRef.value.getCheckedKeys(); // 获取选中的所有节点
+  const halfCheckedKeys = treeRef.value.getHalfCheckedKeys(); // 获取所有半选的节点
+  // 合并选中的节点和半选节点
+  const organizationalStructureId = [...checkedKeys, ...halfCheckedKeys];
+  // 更新组织结构 ID，确保同步到 memberObj
+  memberObj.value.groupSupplierIdList = organizationalStructureId;
 };
 // 提交数据
 function onSubmit() {
@@ -124,6 +185,30 @@ onMounted(async () => {
     departmentList.value = res.data;
   }
 });
+// 是否取消分配
+const isAllocation = ref<any>(false)
+const sendProjectType = ref<any>(null)
+// 取消分配
+const cancelAllocation = (name: any, row: any) => {
+  if (row) {
+    if (name === "发送") {
+      sendProjectType.value = row;
+      closeHandler();
+      isAllocation.value = true
+    }
+  }
+}
+//供应商，调查站，合作商，没有数据时，跳转-暂时没做
+const goRouter = (name: any) => {
+  if (name == '供应商') {
+    //供应商列表，新增供应商
+  } else if (name == '调查站') {
+    //调查系统-部门管理-新增部门
+  } else if (name == '合作商') {
+    //客商管理-合作租户-邀约公司
+  }
+}
+
 // 暴露方法
 defineExpose({ showEdit });
 </script>
@@ -141,7 +226,44 @@ defineExpose({ showEdit });
           </template>
         </el-table-column>
       </el-table>
-      <el-form ref="formRef" label-width="6rem" :rules="rules" :model="data.form" :inline="false"
+      <!-- <el-form ref="formRef" label-width="90px" :rules="rules" :model="data.form" :inline="false" label-position="left"
+        style="margin-top: 1.25rem;" v-if="data.form.allocationType === 3 && data.form.allocationType !== 5">
+        <el-form-item>
+          <template #label>
+            <span class="icon-class">
+              <img src="@/assets/images/diao.png" alt="" style="margin-right: 0.25rem" />
+              部门</span>
+          </template>
+          <el-tree-select ref="treeRef" v-model="memberObj.groupSupplierIdList" :data="departmentList"
+            show-checkbox default-expand-all node-key="id" :props="defaultProps" @check-change="handleNodeClick"
+            :check-strictly="true" :check-on-click-node="true" :multiple="true" :expand-on-click-node="false"
+            style="width: 37.625rem" clearable placeholder="">
+            <template #header>
+              <el-checkbox v-model="data.selectAll.member" @change="selectAllMember"
+                style="display: flex; height: unset">全选</el-checkbox>
+            </template>
+            <template #prefix>
+              <span class="prefix-class" v-if="departmentList.length == 0" @click="goRouter('调查站')">
+                请先维护调查站数据
+                <img src="@/assets/images/jiantou.png" alt="" style="margin-left: 0.25rem" />
+              </span>
+              <span v-if="!memberObj.groupSupplierIdList.length">请先选择调查站数据</span>
+            </template>
+
+          </el-tree-select>
+        </el-form-item>
+
+
+        <el-form-item v-if="data.title == '重新分配'">
+          <template #label>
+            <el-button :type="sendProjectType === 1 ? 'primary' : ''" @click="cancelAllocation('发送', 1)"> 取消分配
+            </el-button>
+          </template>
+
+        </el-form-item>
+      </el-form> -->
+
+     <el-form ref="formRef" label-width="6rem" :rules="rules" :model="data.form" :inline="false"
         style="margin-top: 1.25rem;">
         <el-form-item label="分配目标">
           <el-radio-group v-model="data.form.allocationType" class="ml-4" @change="changeRadio">
@@ -156,10 +278,6 @@ defineExpose({ showEdit });
             show-checkbox check-strictly node-key="id" :default-expanded-keys="[]" :default-checked-keys="departmentId"
             default-expand-all :props="defaultProps" @check-change="handleNodeClick" />
           <el-text v-else>暂无数据</el-text>
-          <!-- <el-select v-model="data.form.groupSupplierIdList" placeholder="请选择部门" clearable filterable multiple
-            collapse-tags>
-            <el-option v-for="item in data.vipGroupList" :label="item.memberGroupName" :value="item.memberGroupId" />
-          </el-select> -->
         </el-form-item>
       </el-form>
 
@@ -174,6 +292,35 @@ defineExpose({ showEdit });
 </template>
 
 <style lang="scss" scoped>
+/* 修改选中后的标签样式 */
+:deep(.el-tag.el-tag--info) {
+  background: #e7f3ff;
+  border-radius: 4px 4px 4px 4px;
+  font-size: 14px;
+  font-weight: 400;
+  font-size: 12px;
+  color: #409eff;
+  line-height: 14px;
+}
+
+/* 更改省略号的样式 */
+:deep(.el-tag.el-tag--info .el-tag__close) {
+  color: #409eff;
+}
+
+.prefix-class {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #409eff;
+  cursor: pointer;
+}
+.icon-class {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 :deep {
   .el-form-item.asterisk-left {
     align-items: center;
