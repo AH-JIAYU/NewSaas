@@ -38,6 +38,20 @@ const data = reactive<any>({
     dataType: "", // 数据类型:1:供应商 2:部门
     dispatchType: 1, // 	调度类型:1:指定关闭 2:指定价格
     doMoneyPrice: "", // 	价格(状态为指定价格时候才有),指定关闭不传
+
+  },
+  // form: {
+  //   projectId: "", //	项目id
+  //   groupSupplierId: [], // 供应商id
+  //   groupMemberId: [], // 内部站id
+  //   dispatchType: 1, // 	调度类型:1:指定关闭 2:指定价格
+  //   doMoneyPrice1: '', // 	价格(状态为指定价格时候才有),指定关闭不传,供应商价格
+  //   doMoneyPrice2: [], // 	价格(状态为指定价格时候才有),指定关闭不传，内部站价格
+  // },
+    // 全选
+    selectAll: {
+    supplier: false, // 供应商
+    member: false, // 会员
   },
 });
 
@@ -101,6 +115,12 @@ function closeHandler() {
   // 移除校验
   formRef.value.resetFields();
   data.form = {
+    // projectId: "", //	项目id
+    // groupSupplierId: [], // 供应商id
+    // groupMemberId: [], // 内部站id
+    // dispatchType: 1, // 	调度类型:1:指定关闭 2:指定价格
+    // doMoneyPrice1: '', // 	价格(状态为指定价格时候才有),指定关闭不传,供应商价格
+    // doMoneyPrice2: [], // 	价格(状态为指定价格时候才有),指定关闭不传，内部站价格
     projectId: "", //	项目id
     groupSupplierId: [], // 供应商或者部门id
     dataType: "", // 数据类型:1:供应商 2:部门
@@ -149,6 +169,32 @@ const changeSendProjectType = (name: any, row: any) => {
     }
   }
 };
+// 供应商全选
+function selectAllSupplier() {
+  data.value.form.groupSupplierId = [];
+  if (data.value.selectAll.supplier) {
+    data.value.tenantSupplierList.map((item: any) => {
+      data.value.form.groupSupplierId.push(item.tenantSupplierId);
+    });
+  }
+}
+// 内部站全选
+function selectAllMember() {
+  data.value.form.groupMemberId = [];
+  if (data.value.selectAll.member) {
+    data.value.memberGroupNameInfoList.map((item: any) => {
+      data.value.form.groupMemberId.push(item.memberGroupId);
+    });
+  }
+}
+//供应商，调查站，合作商，没有数据时，跳转-暂时没做
+const goRouter=(name:any)=> {
+    if(name == '供应商'){
+      //供应商列表，新增供应商
+    } else if(name == '内部站'){
+      //调查系统-部门管理-新增部门
+    }
+}
 // 暴露方法
 defineExpose({ showEdit });
 </script>
@@ -156,7 +202,7 @@ defineExpose({ showEdit });
 <template>
   <div>
     <el-dialog v-model="dialogTableVisible" :title="data.title" width="600" :before-close="closeHandler">
-      <!-- <el-form ref="formRef" label-width="130px" style="position: relative" :model="data.form" :rules="rules"
+       <!-- <el-form ref="formRef" label-width="130px" style="position: relative" :model="data.form" :rules="rules"
         :inline="false">
         <el-form-item label="指定类型" prop="dispatchType" style="align-items: center">
           <div style=" margin-bottom: 0px">
@@ -191,33 +237,86 @@ defineExpose({ showEdit });
           </el-select>
         </el-form-item>
         <div v-show="data.form.projectId">
-          <el-form-item label="供应商" prop="groupSupplierId" v-if="data.supplierNameInfoList.length">
+          <el-form-item label="供应商"  >
             <template #label>
               <span class="icon-class">
                 <img src="@/assets/images/gong.png" style="margin-right:0.25rem" />
                 供应商</span>
             </template>
-            <el-select placeholder="" v-model="data.form.groupSupplierId" clearable filterable multiple collapse-tags>
+            <el-select  v-model="data.form.groupSupplierId"   clearable
+            filterable
+            multiple
+            collapse-tags
+            collapse-tags-tooltip
+            :max-collapse-tags="10"
+            placeholder="">
+            <template #header>
+              <el-checkbox
+                v-model="data.selectAll.supplier"
+                @change="selectAllSupplier"
+                style="display: flex; height: unset"
+                >全选</el-checkbox
+              >
+
+            </template>
+            <template #prefix>
+              <span class="prefix-class" v-if="data.supplierNameInfoList.length ==0" @click="goRouter('供应商')">
+                请先维护供应商数据
+                <img
+                src="@/assets/images/jiantou.png"
+                alt=""
+                style="margin-left: 0.25rem"
+              />
+              </span>
+              <span v-if="data.form.groupSupplierId.length ==0">请先选择供应商数据</span>
+            </template>
               <el-option v-for="item in data.supplierNameInfoList" :key="item.projectId" :label="item.supplierName"
                 :value="item.supplierId" /></el-select>
           </el-form-item>
-          <el-form-item v-if="data.form.dispatchType === 2" label="调度价格" prop="doMoneyPrice">
-            <el-input placeholder="请输入调度价格" v-model="data.form.doMoneyPrice" clearable />
+          <div v-if="data.form.dispatchType === 2 && data.form.groupSupplierId.length !=0" >
+            <el-form-item  label="调度价格" prop="doMoneyPrice1" >
+            <el-input placeholder="请输入调度价格" v-model="data.form.doMoneyPrice1" clearable />
           </el-form-item>
-          <el-form-item prop="groupSupplierId" v-if="data.memberGroupNameInfoList.length">
+          </div>
+
+          <el-form-item  >
             <template #label>
               <span class="icon-class">
                 <img src="@/assets/images/nei.png" style="margin-right:0.25rem" />
                 内部站
               </span>
             </template>
-            <el-select placeholder="" v-model="data.form.groupSupplierId" clearable filterable multiple collapse-tags>
+            <el-select placeholder="" v-model="data.form.groupMemberId" filterable
+            multiple
+            collapse-tags
+            collapse-tags-tooltip
+            :max-collapse-tags="10"
+            >
+            <template #header>
+              <el-checkbox
+                v-model="data.selectAll.member"
+                @change="selectAllMember"
+                style="display: flex; height: unset"
+                >全选</el-checkbox
+              >
+            </template>
+            <template #prefix>
+              <span class="prefix-class" v-if="data.memberGroupNameInfoList.length ==0" @click="goRouter('内部站')">
+                请先维护内部站数据
+                <img
+                src="@/assets/images/jiantou.png"
+                alt=""
+                style="margin-left: 0.25rem"
+              />
+              </span>
+              <span v-if="data.form.groupMemberId.length ==0">请先选择内部站数据</span>
+            </template>
               <el-option v-for="item in data.memberGroupNameInfoList" :key="item.projectId"
                 :label="item.memberGroupName" :value="item.memberGroupId" /></el-select>
           </el-form-item>
         </div>
-        <el-form-item v-if="data.form.dispatchType === 2" label="调度价格" prop="doMoneyPrice">
-          <el-input placeholder="请输入调度价格" v-model="data.form.doMoneyPrice" clearable />
+        <el-form-item v-if="data.form.dispatchType === 2 && data.form.groupMemberId.length !=0" label="调度价格" prop="doMoneyPrice2">
+          <el-input placeholder="请输入调度价格" v-model="data.form.doMoneyPrice2" clearable />
         </el-form-item>
       </el-form> -->
       <el-form
@@ -377,6 +476,27 @@ defineExpose({ showEdit });
 </template>
 
 <style scoped lang="scss">
+/* 修改选中后的标签样式 */
+:deep(.el-tag.el-tag--info) {
+  background: #e7f3ff;
+  border-radius: 4px 4px 4px 4px;
+  font-size: 14px;
+  font-weight: 400;
+  font-size: 12px;
+  color: #409eff;
+  line-height: 14px;
+}
+/* 更改省略号的样式 */
+:deep(.el-tag.el-tag--info .el-tag__close) {
+  color: #409eff;
+}
+.prefix-class {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #409eff;
+  cursor: pointer;
+}
 .icon-class {
   display: flex;
   justify-content: center;
