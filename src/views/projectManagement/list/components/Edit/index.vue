@@ -177,6 +177,10 @@ function selectAllSupplier() {
       data.value.form.groupSupplierId.push(item.tenantSupplierId);
     });
   }
+  filteredSupplier.value = data.supplierNameInfoList.filter((item: any) => {
+    return data.value.form.groupSupplierId.includes(item.supplierId)
+
+  });
 }
 // 内部站全选
 function selectAllMember() {
@@ -195,6 +199,15 @@ const goRouter=(name:any)=> {
       //调查系统-部门管理-新增部门
     }
 }
+// 选中的供应商list
+const filteredSupplier = ref<any>([]);
+//供应商勾选
+const handleSupplierChange = (val: any) => {
+  filteredSupplier.value = data.supplierNameInfoList.filter((item: any) => {
+    return val.includes(item.supplierId)
+
+  });
+};
 // 暴露方法
 defineExpose({ showEdit });
 </script>
@@ -274,8 +287,15 @@ defineExpose({ showEdit });
                 :value="item.supplierId" /></el-select>
           </el-form-item>
           <div v-if="data.form.dispatchType === 2 && data.form.groupSupplierId.length !=0" >
-            <el-form-item  label="调度价格" prop="doMoneyPrice1" >
-            <el-input placeholder="请输入调度价格" v-model="data.form.doMoneyPrice1" clearable />
+           <div v-for="item in filteredSupplier" :key="item.id" class="user">
+              <el-form-item :label="item.supplierName" prop="doMoneyPrice1">
+                <el-input
+                  placeholder="请输入调度价格"
+                  v-model="data.form.doMoneyPrice1"
+                  clearable
+                />
+              </el-form-item>
+            </div>
           </el-form-item>
           </div>
 
