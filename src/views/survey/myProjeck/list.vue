@@ -366,7 +366,7 @@ function viewAllocations(row: any) {
                 未分配</el-button
               >
             <div class="flex-c" v-if="row.allocationStatus==2" style="cursor: pointer;" >
-                <el-tag type="warning" v-if="row.allocationType?.includes(3)" class="tag-with-image " @click="viewAllocations(row)">
+                <el-tag type="warning" v-if="row.allocationType?.includes(3)" class="tag-with-image" @click="viewAllocations(row)">
                   <img src="@/assets/images/nei.png" style="width: 0.9375rem;height: 0.9375rem;margin-right: 0.25rem;">
                   部门</el-tag>
             </div>

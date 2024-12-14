@@ -92,6 +92,8 @@ const rules = ref<any>({
     },
   ],
 });
+// 扁平化部门
+const depList = ref<any>([])
 
 const tenantIdCopy = ref<any>()
 // 显隐
@@ -142,13 +144,21 @@ async function showEdit(row: any, type: string) {
   data.value.tenantSupplierList = await obtainLoading(
     supplierStore.getTenantSupplierList(row.projectId)
   );
-  // // 会员组列表
-  // data.value.vipGroupList = await obtainLoading(
-  //   surveyVipGroupStore.getGroupNameList()
-  // );
+  if (data.value.tenantSupplierList.length == supplierObj.value.groupSupplierIdList.length) {
+    data.value.selectAll.supplier = true;
+  } else {
+    data.value.selectAll.supplier = false;
+  }
   // 会员部门列表
   const resDep = await apiDep.list({ name: "" });
   data.value.departmentList = resDep.data;
+  const departmentList = JSON.parse(JSON.stringify(resDep.data))
+  depList.value = flattenWithoutChildren(departmentList)
+  if (depList.value.length == memberObj.value.groupSupplierIdList.length) {
+    data.value.selectAll.member = true;
+  } else {
+    data.value.selectAll.member = false;
+  }
   // 合作合作商列表
   const res = await obtainLoading(
     cooperationApi.getAllocationBindList({ projectId: row.projectId })
@@ -162,12 +172,33 @@ async function showEdit(row: any, type: string) {
     departmentId.value = data.value.form.groupSupplierIdList;
   }
   data.value.tenantList = res.data.allocationBindInfoList;
+  if (data.value.tenantList.length == tenantObj.value.groupSupplierIdList.length) {
+    data.value.selectAll.tenant = true;
+  } else {
+    data.value.selectAll.tenant = false;
+  }
   dialogTableVisible.value = true;
 }
+
+// 扁平化会员部门
+const flattenWithoutChildren = (arr: any) => {
+  return arr.reduce((acc: any, val: any) => {
+    // 创建一个新对象，移除 children 字段
+    const { children, ...rest } = val;
+    // 将当前项添加到扁平化的数组中
+    acc.push(rest);
+    // 如果当前项有 children，则递归扁平化其 children 数组
+    if (val.children && val.children.length > 0) {
+      acc = acc.concat(flattenWithoutChildren(val.children));
+    }
+    return acc;
+  }, []);
+};
 // 切换分配
 function changeRadio() {
   data.value.form.groupSupplierIdList = [];
 }
+
 // 合作商全选
 function selectAllTenant() {
   tenantObj.value.groupSupplierIdList = [];
@@ -177,6 +208,7 @@ function selectAllTenant() {
     });
   }
 }
+
 // 供应商全选
 function selectAllSupplier() {
   supplierObj.value.groupSupplierIdList = [];
@@ -186,16 +218,32 @@ function selectAllSupplier() {
     });
   }
 }
+
+// 供应商切换事件
+const supplierChange = () => {
+  if (data.value.tenantSupplierList.length == supplierObj.value.groupSupplierIdList.length) {
+    data.value.selectAll.supplier = true;
+  } else {
+    data.value.selectAll.supplier = false;
+  }
+}
+// 合作商切换事件
+const tenantChange = () => {
+  if (data.value.tenantList.length == tenantObj.value.groupSupplierIdList.length) {
+    data.value.selectAll.tenant = true;
+  } else {
+    data.value.selectAll.tenant = false;
+  }
+}
+
 const chalend = () => {
   // 清空 groupSupplierIdList，确保每次全选时重新计算
   memberObj.value.groupSupplierIdList = [];
-
   // 遍历所有部门，递归获取所有节点 ID
   data.value.departmentList.forEach((item: any) => {
     // 递归处理每个部门的子节点
     chalendHelper(item);
   });
-
   // 设置所有节点的 ID 到选中列表
   treeRef.value.setCheckedKeys(memberObj.value.groupSupplierIdList);
 };
@@ -204,7 +252,6 @@ const chalend = () => {
 function chalendHelper(node: any) {
   // 将当前节点的 ID 添加到 groupSupplierIdList
   memberObj.value.groupSupplierIdList.push(node.id);
-
   // 如果该节点有子节点，则继续递归
   if (node.children && node.children.length) {
     node.children.forEach((child: any) => {
@@ -217,11 +264,9 @@ function chalendHelper(node: any) {
 function selectAllMember() {
   // 清空选中的成员列表
   memberObj.value.groupSupplierIdList = [];
-
   if (data.value.selectAll.member) {
     // 如果全选状态为 true，获取所有节点的 ID 并设置为已选中
     chalend();  // 获取所有节点的 ID
-
     // 使用 setCheckedKeys 设置选中的节点
     treeRef.value.setCheckedKeys(memberObj.value.groupSupplierIdList);
   } else {
@@ -231,8 +276,6 @@ function selectAllMember() {
     treeRef.value.setCheckedKeys([]);  // 清除所有勾选项
   }
 }
-
-
 
 // 树的事件
 const handleNodeClick = (nodeData: any, checked: any) => {
@@ -252,6 +295,11 @@ const handleNodeClick = (nodeData: any, checked: any) => {
   const organizationalStructureId = [...checkedKeys, ...halfCheckedKeys];
   // 更新组织结构 ID，确保同步到 memberObj
   memberObj.value.groupSupplierIdList = organizationalStructureId;
+  if (depList.value.length == organizationalStructureId.length) {
+    data.value.selectAll.member = true;
+  } else {
+    data.value.selectAll.member = false;
+  }
 };
 
 // 是否取消分配
@@ -263,7 +311,7 @@ const cancelAllocation = () => {
   // colse()
   if (sendProjectType.value) {
     isAllocation.value = true
-  }else {
+  } else {
     isAllocation.value = false
   }
 }
@@ -274,8 +322,8 @@ const colse = () => {
     allocationType: 4,
     groupSupplierIdList: [],
     deleteSet: []
-    })
-    Object.assign(supplierObj.value, {
+  })
+  Object.assign(supplierObj.value, {
     projectId: null,
     allocationType: 2,
     groupSupplierIdList: [],
@@ -412,7 +460,7 @@ defineExpose({ showEdit });
               供应商</span>
           </template>
           <el-select v-model="supplierObj.groupSupplierIdList" clearable filterable multiple collapse-tags
-            collapse-tags-tooltip :max-collapse-tags="10" placeholder="">
+            collapse-tags-tooltip :max-collapse-tags="10" placeholder="" @change="supplierChange">
             <template #header>
               <el-checkbox v-model="data.selectAll.supplier" @change="selectAllSupplier"
                 style="display: flex; height: unset">全选</el-checkbox>
@@ -460,7 +508,7 @@ defineExpose({ showEdit });
               合作商</span>
           </template>
           <el-select v-model="tenantObj.groupSupplierIdList" clearable filterable multiple collapse-tags
-            collapse-tags-tooltip :max-collapse-tags="10" placeholder="">
+            collapse-tags-tooltip :max-collapse-tags="10" placeholder="" @change="tenantChange">
             <template #header>
               <el-checkbox v-model="data.selectAll.tenant" @change="selectAllTenant"
                 style="display: flex; height: unset">全选</el-checkbox>
