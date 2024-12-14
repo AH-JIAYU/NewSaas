@@ -256,15 +256,15 @@ const handleNodeClick = (nodeData: any, checked: any) => {
 
 // 是否取消分配
 const isAllocation = ref<any>(false)
-const sendProjectType = ref<any>(null)
+const sendProjectType = ref<any>(false)
 // 取消分配
-const cancelAllocation = (name: any, row: any) => {
-  if (row) {
-    if (name === "取消分配") {
-      sendProjectType.value = row;
-      // colse()
-      isAllocation.value = true
-    }
+const cancelAllocation = () => {
+  sendProjectType.value = !sendProjectType.value;
+  // colse()
+  if (sendProjectType.value) {
+    isAllocation.value = true
+  }else {
+    isAllocation.value = false
   }
 }
 
@@ -274,8 +274,8 @@ const colse = () => {
     allocationType: 4,
     groupSupplierIdList: [],
     deleteSet: []
-  })
-  Object.assign(supplierObj.value, {
+    })
+    Object.assign(supplierObj.value, {
     projectId: null,
     allocationType: 2,
     groupSupplierIdList: [],
@@ -324,16 +324,13 @@ function onSubmit() {
           params.addProjectAllocationInfoList.push(memberObj.value)
         }
         if (data.value.title !== '分配') {
-          if(!params.addProjectAllocationInfoList.length) {
+          if (!params.addProjectAllocationInfoList.length) {
             isAllocation.value = true
           }
           params.addProjectAllocationInfoList.map((item: any) => {
             if (!item.projectId) {
               item.projectId = data.value.form.projectId
             }
-            // if (item.groupSupplierIdList.length) {
-            //   isAllocation.value = false
-            // }
             if (item.allocationType === 4) {
               item.deleteSet = []
               if (tenantIdCopy.value && tenantIdCopy.value.length) {
@@ -366,7 +363,6 @@ function onSubmit() {
             }]
           }
         }
-        console.log('params', params)
         // return
         const { status } = await submitLoading(api.allocation(params));
         loading.value = false;
@@ -422,11 +418,12 @@ defineExpose({ showEdit });
                 style="display: flex; height: unset">全选</el-checkbox>
             </template>
             <template #prefix>
-              <span class="prefix-class" v-if="data.tenantSupplierList.length == 0 " @click="goRouter('供应商')">
+              <span class="prefix-class" v-if="data.tenantSupplierList.length == 0" @click="goRouter('供应商')">
                 请先维护供应商数据
                 <img src="@/assets/images/jiantou.png" alt="" style="margin-left: 0.25rem" />
               </span>
-              <span v-if="supplierObj.groupSupplierIdList.length == 0 && data.tenantSupplierList.length != 0">请先选择供应商数据</span>
+              <span
+                v-if="supplierObj.groupSupplierIdList.length == 0 && data.tenantSupplierList.length != 0">请先选择供应商数据</span>
             </template>
             <el-option v-for="item in data.tenantSupplierList" :label="item.supplierAccord" :key="item.supplierAccord"
               :value="item.tenantSupplierId" />
@@ -447,7 +444,7 @@ defineExpose({ showEdit });
                 style="display: flex; height: unset">全选</el-checkbox>
             </template>
             <template #prefix>
-              <span class="prefix-class" v-if="data.departmentList.length == 0 " @click="goRouter('调查站')">
+              <span class="prefix-class" v-if="data.departmentList.length == 0" @click="goRouter('调查站')">
                 请先维护调查站数据
                 <img src="@/assets/images/jiantou.png" alt="" style="margin-left: 0.25rem" />
               </span>
@@ -469,11 +466,11 @@ defineExpose({ showEdit });
                 style="display: flex; height: unset">全选</el-checkbox>
             </template>
             <template #prefix>
-              <span class="prefix-class" v-if=" data.tenantList.length == 0" @click="goRouter('合作商')">
+              <span class="prefix-class" v-if="data.tenantList.length == 0" @click="goRouter('合作商')">
                 请先维护合作商数据
                 <img src="@/assets/images/jiantou.png" alt="" style="margin-left: 0.25rem" />
               </span>
-              <span v-if="tenantObj.groupSupplierIdList.length == 0  && data.tenantList.length != 0">请先选择合作商数据</span>
+              <span v-if="tenantObj.groupSupplierIdList.length == 0 && data.tenantList.length != 0">请先选择合作商数据</span>
             </template>
             <!-- :disabled="item.reveal === 1" -->
             <el-option v-for="item in data.tenantList" :label="item.beInvitationTenantName"
@@ -483,7 +480,8 @@ defineExpose({ showEdit });
         </el-form-item>
         <el-form-item v-if="data.title == '重新分配'">
           <template #label>
-            <el-button :type="sendProjectType === 1 ? 'primary' : ''" @click="cancelAllocation('发送', 1)" style="border-radius: 1.875rem;"> 取消分配
+            <el-button :type="sendProjectType ? 'primary' : ''" @click="cancelAllocation()"
+              style="border-radius: 1.875rem;"> 取消分配
             </el-button>
           </template>
 
@@ -555,9 +553,11 @@ defineExpose({ showEdit });
   color: #409eff;
   line-height: 14px;
 }
-:deep(.el-select__selection){
+
+:deep(.el-select__selection) {
   margin-left: -0.5rem;
 }
+
 /* 更改省略号的样式 */
 :deep(.el-tag.el-tag--info .el-tag__close) {
   color: #409eff;
