@@ -682,15 +682,6 @@ const formOption = {
                 未分配</el-button
               >
             <div class="flex-c" v-if="row.allocationStatus==2" style="cursor: pointer;" >
-              <!-- <el-button
-                class="tableBut"
-                size="small"
-                @click="viewAllocations(row)"
-                type="danger"
-                v-if="row.allocationType?.includes(1)"
-                plain
-                >自动分配</el-button
-              > -->
               <div @click="viewAllocations(row)"
               style="width: calc(100% - 1.25rem);"  class=" parameter1">
                 <el-tag type="danger"  v-if="row.allocationType?.includes(2)" class="tag-with-image oneLine" >

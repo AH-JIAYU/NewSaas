@@ -512,7 +512,7 @@ function handleCurrentChange(val: any) {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('allocationType')" align="left" show-overflow-tooltip width="230"
+        <!--<el-table-column v-if="checkList.includes('allocationType')" align="left" show-overflow-tooltip width="230"
           label="分配类型" fixed="right">
           <template #default="{ row }">
             <!-- <el-tag effect="plain" type="info" v-if="row.allocationType === 1" class="mx-1">未分配</el-tag>
@@ -521,32 +521,33 @@ function handleCurrentChange(val: any) {
             <el-tag effect="dark" style="background-color: #05c9be; border: none" v-if="row.allocationType === 3"
               class="mx-1" type="warning">内部站</el-tag>
             <el-tag effect="dark" style="background-color: #ffac54; border: none" v-if="row.allocationType === 4"
-              class="mx-1" type="warning">合作商</el-tag> -->
-            <el-button size="small" v-if="row.allocationType?.includes(1)">
-              未分配</el-button>
-              <!-- <el-button
-                class="tableBut"
-                size="small"
-                @click="viewAllocations(row)"
-                type="danger"
-                v-if="row.allocationType?.includes(1)"
-                plain
-                >自动分配</el-button
-              > -->
-              <el-tag type="danger" v-if="row.allocationType?.includes(2)" class="tag-with-image oneLine">
-                <img src="@/assets/images/gong.png" style="width: 0.9375rem;height: 0.9375rem;margin-right: 0.25rem;">
-                <span>供应商</span>
-              </el-tag>
-              <el-tag type="warning" v-if="row.allocationType?.includes(3)" class="tag-with-image oneLine">
-                <img src="@/assets/images/nei.png" style="width: 0.9375rem;height: 0.9375rem;margin-right: 0.25rem;">
-                内部站</el-tag>
+              class="mx-1" type="warning">合作商</el-tag>
+              <el-button size="small" v-if="row.allocationType?.includes(1)" >
+                未分配</el-button
+              >
+            <div class="flex-c"  style="cursor: pointer;" >
+              <div
+              style="width: calc(100% - 1.25rem);"  class="parameter1">
+                <el-tag type="danger"  v-if="row.allocationType?.includes(2)" class="tag-with-image oneLine" >
+                  <img src="@/assets/images/gong.png" style="width: 0.9375rem;height: 0.9375rem;margin-right: 0.25rem;">
+                  <span>供应商</span>
+                  </el-tag>
+                <el-tag type="warning" v-if="row.allocationType?.includes(3)" class="tag-with-image oneLine">
+                  <img src="@/assets/images/nei.png" style="width: 0.9375rem;height: 0.9375rem;margin-right: 0.25rem;">
+                  内部站</el-tag>
 
-              <el-tag type="primary" v-if="row.allocationType?.includes(4)" class="tag-with-image oneLine">
-                <img src="@/assets/images/he.png" style="width: 0.9375rem;height: 0.9375rem;margin-right: 0.25rem;">
-                合作商</el-tag>
+                <el-tag type="primary" v-if="row.allocationType?.includes(4)" class="tag-with-image oneLine">
+                  <img src="@/assets/images/he.png" style="width: 0.9375rem;height: 0.9375rem;margin-right: 0.25rem;">
+                  合作商</el-tag>
+              </div>
+
+
+            </div>
+
+
 
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column v-if="checkList.includes('doMoneyPrice')" align="left" prop="doMoneyPrice"
           show-overflow-tooltip width="120" fixed="right" label="项目价">
           <template #default="{ row }">
@@ -711,6 +712,31 @@ function handleCurrentChange(val: any) {
 </template>
 
 <style scoped lang="scss">
+.tag-with-image {
+  display: flex;          /* 使用flex布局 */
+  align-items: center;    /* 垂直居中对齐 */
+  justify-content: center;/* 水平居中对齐 */
+  margin-right: 0.5rem;      /* 每行标签之间的间距 */
+}
+:deep(.tag-with-image .el-tag__content){
+  display: flex;
+  align-items: center;
+}
+.parameter1 {
+  display: flex;
+  align-content: center;
+  flex-wrap: wrap;
+
+  .oneLine {
+    width: 40%;
+    text-align: left;
+    margin: 0 0.75rem 0.5rem 0;
+  }
+
+  .oneLine:nth-of-type(n + 3) {
+    margin: 0 0.75rem 0 0;
+  }
+}
 .idFont {
   font-size: 0.875rem;
 }
@@ -782,6 +808,7 @@ function handleCurrentChange(val: any) {
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
 }
 
 .flex-s {

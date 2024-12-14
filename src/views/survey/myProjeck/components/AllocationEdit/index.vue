@@ -265,11 +265,11 @@ const cancelAllocation = () => {
     isAllocation.value = false
   }
 }
-//供应商，调查站，合作商，没有数据时，跳转-暂时没做
+//供应商，部门，合作商，没有数据时，跳转-暂时没做
 const goRouter = (name: any) => {
   if (name == '供应商') {
     //供应商列表，新增供应商
-  } else if (name == '调查站') {
+  } else if (name == '部门') {
     //调查系统-部门管理-新增部门
   } else if (name == '合作商') {
     //客商管理-合作租户-邀约公司
@@ -310,11 +310,11 @@ defineExpose({ showEdit });
                 style="display: flex; height: unset">全选</el-checkbox>
             </template>
             <template #prefix>
-              <span class="prefix-class" v-if="departmentList.length == 0" @click="goRouter('调查站')">
-                请先维护调查站数据
+              <span class="prefix-class" v-if="departmentList.length == 0" @click="goRouter('部门')">
+                请先维护部门数据
                 <img src="@/assets/images/jiantou.png" alt="" style="margin-left: 0.25rem" />
               </span>
-              <span v-if="!memberObj.groupSupplierIdList.length && departmentList.length != 0">请先选择调查站数据</span>
+              <span v-if="!memberObj.groupSupplierIdList.length && departmentList.length != 0">请先选择部门数据</span>
             </template>
 
           </el-tree-select>

@@ -362,7 +362,7 @@ function viewAllocations(row: any) {
         </el-table-column>
         <el-table-column v-if="checkList.includes('memberStatus')" show-overflow-tooltip align="left" label="分配"  width="100">
           <template #default="{ row }">
-            <el-button size="small" v-if="!row.allocationType" >
+            <el-button size="small" v-if="row.allocationStatus==1" >
                 未分配</el-button
               >
             <div class="flex-c" v-if="row.allocationStatus==2" style="cursor: pointer;" >
