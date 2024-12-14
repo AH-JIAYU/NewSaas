@@ -29,23 +29,15 @@ const fetchData = async (url: any) => {
 };
 // 顺序调用接口
 const fetchSequentialData = async (params: any) => {
+  data.value.supplierList = []
+  data.value.memberList =[]
+  data.value.tenantList =[]
   for (let item of params.type) {
     // 每次调用接口并等待返回
     const data1 = await fetchData({
       projectId: params.projectId,
       type: item,
     });
-    // console.log(data,'data',item)
-    // if(item ==2){
-    //   data.value.supplierList.push(data.getTenantSupplierMemberNameList)
-    //   console.log(data.value.supplierList,'data.value.supplierList')
-    // }
-    // if(item ==3){
-    //   data.value.memberList.push(data.getTenantSupplierMemberNameList)
-    // }
-    // if(item ==4){
-    //   data.value.tenantList.push(data.getTenantSupplierMemberNameList)
-    // }
     data.value.results.push({
       type: item,
       getTenantSupplierMemberNameList: data1.getTenantSupplierMemberNameList,
