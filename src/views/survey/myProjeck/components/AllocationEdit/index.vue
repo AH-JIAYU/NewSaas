@@ -247,7 +247,7 @@ defineExpose({ showEdit });
                 请先维护调查站数据
                 <img src="@/assets/images/jiantou.png" alt="" style="margin-left: 0.25rem" />
               </span>
-              <span v-if="!memberObj.groupSupplierIdList.length">请先选择调查站数据</span>
+              <span v-if="!memberObj.groupSupplierIdList.length && departmentList.length != 0">请先选择调查站数据</span>
             </template>
 
           </el-tree-select>
@@ -256,7 +256,7 @@ defineExpose({ showEdit });
 
         <el-form-item v-if="data.title == '重新分配'">
           <template #label>
-            <el-button :type="sendProjectType === 1 ? 'primary' : ''" @click="cancelAllocation('发送', 1)"> 取消分配
+            <el-button :type="sendProjectType === 1 ? 'primary' : ''" @click="cancelAllocation('发送', 1)" style="border-radius: 1.875rem;"> 取消分配
             </el-button>
           </template>
 
@@ -307,7 +307,9 @@ defineExpose({ showEdit });
 :deep(.el-tag.el-tag--info .el-tag__close) {
   color: #409eff;
 }
-
+:deep(.el-select__selection){
+  margin-left: -0.5rem;
+}
 .prefix-class {
   display: flex;
   justify-content: center;

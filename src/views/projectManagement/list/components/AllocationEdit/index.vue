@@ -422,11 +422,11 @@ defineExpose({ showEdit });
                 style="display: flex; height: unset">全选</el-checkbox>
             </template>
             <template #prefix>
-              <span class="prefix-class" v-if="data.tenantSupplierList.length == 0" @click="goRouter('供应商')">
+              <span class="prefix-class" v-if="data.tenantSupplierList.length == 0 " @click="goRouter('供应商')">
                 请先维护供应商数据
                 <img src="@/assets/images/jiantou.png" alt="" style="margin-left: 0.25rem" />
               </span>
-              <span v-if="supplierObj.groupSupplierIdList.length == 0">请先选择供应商数据</span>
+              <span v-if="supplierObj.groupSupplierIdList.length == 0 && data.tenantSupplierList.length != 0">请先选择供应商数据</span>
             </template>
             <el-option v-for="item in data.tenantSupplierList" :label="item.supplierAccord" :key="item.supplierAccord"
               :value="item.tenantSupplierId" />
@@ -447,11 +447,11 @@ defineExpose({ showEdit });
                 style="display: flex; height: unset">全选</el-checkbox>
             </template>
             <template #prefix>
-              <span class="prefix-class" v-if="data.departmentList.length == 0" @click="goRouter('调查站')">
+              <span class="prefix-class" v-if="data.departmentList.length == 0 " @click="goRouter('调查站')">
                 请先维护调查站数据
                 <img src="@/assets/images/jiantou.png" alt="" style="margin-left: 0.25rem" />
               </span>
-              <span v-if="!memberObj.groupSupplierIdList.length">请先选择调查站数据</span>
+              <span v-if="!memberObj.groupSupplierIdList.length && data.departmentList.length != 0">请先选择调查站数据</span>
             </template>
 
           </el-tree-select>
@@ -469,11 +469,11 @@ defineExpose({ showEdit });
                 style="display: flex; height: unset">全选</el-checkbox>
             </template>
             <template #prefix>
-              <span class="prefix-class" v-if="data.tenantList.length == 0" @click="goRouter('合作商')">
+              <span class="prefix-class" v-if=" data.tenantList.length == 0" @click="goRouter('合作商')">
                 请先维护合作商数据
                 <img src="@/assets/images/jiantou.png" alt="" style="margin-left: 0.25rem" />
               </span>
-              <span v-if="tenantObj.groupSupplierIdList.length == 0">请先选择合作商数据</span>
+              <span v-if="tenantObj.groupSupplierIdList.length == 0  && data.tenantList.length != 0">请先选择合作商数据</span>
             </template>
             <!-- :disabled="item.reveal === 1" -->
             <el-option v-for="item in data.tenantList" :label="item.beInvitationTenantName"
@@ -483,7 +483,7 @@ defineExpose({ showEdit });
         </el-form-item>
         <el-form-item v-if="data.title == '重新分配'">
           <template #label>
-            <el-button :type="sendProjectType === 1 ? 'primary' : ''" @click="cancelAllocation('取消分配', 1)"> 取消分配
+            <el-button :type="sendProjectType === 1 ? 'primary' : ''" @click="cancelAllocation('发送', 1)" style="border-radius: 1.875rem;"> 取消分配
             </el-button>
           </template>
 
@@ -555,7 +555,9 @@ defineExpose({ showEdit });
   color: #409eff;
   line-height: 14px;
 }
-
+:deep(.el-select__selection){
+  margin-left: -0.5rem;
+}
 /* 更改省略号的样式 */
 :deep(.el-tag.el-tag--info .el-tag__close) {
   color: #409eff;
