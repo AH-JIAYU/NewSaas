@@ -247,7 +247,7 @@ defineExpose({ showEdit });
                 请先维护调查站数据
                 <img src="@/assets/images/jiantou.png" alt="" style="margin-left: 0.25rem" />
               </span>
-              <span v-if="!memberObj.groupSupplierIdList.length">请先选择调查站数据</span>
+              <span v-if="!memberObj.groupSupplierIdList.length && departmentList.length != 0">请先选择调查站数据</span>
             </template>
 
           </el-tree-select>
