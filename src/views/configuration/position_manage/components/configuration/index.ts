@@ -37,5 +37,5 @@ export const columns = [
 export const formSearchList = [
   { index: 1, show: true, type: 'input', modelName: 'id', placeholder: '职位ID' },
   { index: 2, show: true, type: 'input', modelName: 'name', placeholder: '职位名称' },
-  { index: 3, show: true, type: 'select', modelName: 'active', placeholder: '状态', option: 'active', optionLabel: 'lable', optionValue: 'value' }
+  // { index: 3, show: true, type: 'select', modelName: 'active', placeholder: '状态', option: 'active', optionLabel: 'lable', optionValue: 'value' }
 ]

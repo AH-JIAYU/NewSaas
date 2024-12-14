@@ -8,7 +8,9 @@ import useUserSupplierStore from "@/store/modules/user_supplier"; // 供应商
 import useSurveyVipGroupStore from "@/store/modules/survey_vipGroup"; //会员组
 const supplierStore = useUserSupplierStore(); // 供应商
 const surveyVipGroupStore = useSurveyVipGroupStore(); //会员组
-
+import DictionaryDialog from "@/views/survey/vip_department/components/dictionaryDialog/index.vue";
+import customerEdit from "@/views/user/supplier/components/SupplierEdit/index.vue";
+//@/views/user/supplier/SupplierEdit/index.vue
 defineOptions({
   name: "AllocationEdit",
 });
@@ -180,6 +182,7 @@ async function showEdit(row: any, type: string) {
   }
   dialogTableVisible.value = true;
 }
+
 
 // 扁平化会员部门
 const flattenWithoutChildren = (arr: any) => {
@@ -429,15 +432,65 @@ function onSubmit() {
     }
   });
 }
+interface Dict {
+  id: string | number;
+  label: string;
+  code: string;
+  children?: Dict[];
+}
+const dictionaryRef = ref();
+// 部门
+const dictionary = ref({
+  search: {
+    name: "",
+  },
+  tree: [] as Dict[],
+  currentNode: undefined as Node | undefined,
+  currentData: undefined as Dict | undefined,
+  dialog: {
+    visible: false,
+    parentId: "" as Dict["id"],
+    id: "" as Dict["id"],
+    isClick: false,
+  },
+  row: "",
+  loading: false,
+});
+const editRef = ref(); // 供应商管理
+const tenantRef = ref()// 邀约公司
 //供应商，调查站，合作商，没有数据时，跳转-暂时没做
-const goRouter = (name: any) => {
-  if (name == '供应商') {
-    //供应商列表，新增供应商
-  } else if (name == '调查站') {
-    //调查系统-部门管理-新增部门
-  } else if (name == '合作商') {
-    //客商管理-合作租户-邀约公司
-  }
+const goRouter = (name: any,data?: Dict) => {
+  // if (name == '供应商') {
+  //   //供应商列表，新增供应商
+  //   editRef.value.showEdit();
+  // } else if (name == '调查站') {
+  //   //调查系统-部门管理-新增部门
+  //   dictionary.value.currentData = data;
+  // dictionary.value.dialog.parentId =  "";
+  // dictionary.value.dialog.id = "";
+  // dictionary.value.dialog.visible = true;
+  // } else if (name == '合作商') {
+  //   //客商管理-合作租户-邀约公司
+  //   tenantRef.value.showEdit();
+  // }
+}
+//供应商管理
+const getSupplier =async()=> {
+  data.value.tenantSupplierList = await obtainLoading(
+    supplierStore.getTenantSupplierList(data.value.form.projectId)
+  );
+}
+//会员列表
+const getDictionaryList =async()=> {
+  const resDep = await apiDep.list({ name: "" });
+  data.value.departmentList = resDep.data;
+}
+//邀约公司
+const getCustomer =async()=> {
+  const res = await obtainLoading(
+    cooperationApi.getAllocationBindList({ projectId: data.value.form.projectId })
+  );
+   data.value.tenantList = res.data.allocationBindInfoList;
 }
 onMounted(async () => { });
 // 暴露方法
@@ -484,10 +537,10 @@ defineExpose({ showEdit });
               <img src="@/assets/images/diao.png" alt="" style="margin-right: 0.25rem" />
               调查站</span>
           </template>
-          <el-tree-select ref="treeRef" v-model="memberObj.groupSupplierIdList" :data="data.departmentList"
+          <el-tree-select ref="treeRef"      v-model="memberObj.groupSupplierIdList" :data="data.departmentList"
             show-checkbox default-expand-all node-key="id" :props="defaultProps" @check-change="handleNodeClick"
             :check-strictly="true" :check-on-click-node="true" :multiple="true" :expand-on-click-node="false"
-            style="width: 37.625rem" clearable placeholder="">
+            style="width: 37.625rem" clearable placeholder="" >
             <template #header>
               <el-checkbox v-model="data.selectAll.member" @change="selectAllMember"
                 style="display: flex; height: unset">全选</el-checkbox>
@@ -588,6 +641,14 @@ defineExpose({ showEdit });
         </div>
       </template>
     </el-dialog>
+    <!-- 供应商 -->
+    <customerEdit ref="editRef" @fetch-data="getSupplier" />
+     <!-- 调查站 -->
+    <DictionaryDialog v-if="dictionary.dialog.visible" :id="dictionary.dialog.id" v-model="dictionary.dialog.visible"
+        :row="dictionary.row" :parent-id="dictionary.dialog.parentId" :tree="dictionary.tree"
+        :isClick="dictionary.dialog.isClick" @get-list="getDictionaryList"/>
+    <!-- 合作商 -->
+
   </div>
 </template>
 

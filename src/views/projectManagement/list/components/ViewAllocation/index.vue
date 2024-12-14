@@ -120,7 +120,7 @@ defineExpose({ showEdit });
       </div>
       <div class="idList" v-if="data.memberList.length != 0">
         <el-button size="small" type="success"
-          >会员组 {{ data.memberList > 1 ? data.memberList : "" }}</el-button
+          >内部站 {{ data.memberList > 1 ? data.memberList : "" }}</el-button
         >
         <div class="item" v-for="item in data.memberList" :key="item.id">
           <b>{{ item.name }}</b> &ensp; <span>ID: {{ item.id }}</span
