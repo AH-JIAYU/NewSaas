@@ -10,7 +10,7 @@ import useSurveyVipGroupStore from "@/store/modules/survey_vipGroup"; //部门
 import useSurveyVipStore from "@/store/modules/survey_vip"; // 会员
 import empty from '@/assets/images/empty.png'
 import vipLevel from './components/Edit/index.vue'
-
+import apiDep from "@/api/modules/survey_vip_department";
 defineOptions({
   name: "vip",
 });
@@ -216,7 +216,44 @@ function onReset() {
 function setSelectRows(val: any) {
   selectRows.value = val;
 }
+const result = ref<any>([]);
+function flattenArray(arr: any) {
+  result.value = [];
+  function recurse(current: any) {
+    // 将当前元素添加到结果中
+    result.value.push({
+      id: current.id,
+      parentId: current.parentId,
+      weight: current.weight,
+      name: current.name,
+      remark: current.remark,
+      total: current.total,
+      organizationalStructurePersonList:
+        current.organizationalStructurePersonList,
+    });
+    // 如果有子元素，递归处理每个子元素
+    if (current.children && Array.isArray(current.children)) {
+      for (const child of current.children) {
+        recurse(child);
+      }
+    }
+  }
+  // 遍历输入数组的每个对象
+  for (const item of arr) {
+    recurse(item);
+  }
+  return result.value;
+}
 onMounted(async () => {
+  const res = await apiDep.list({ name: "" });
+  if (res.data) {
+    const vipGroupList = flattenArray(res.data);
+    data.vipGroupList = vipGroupList.map((item: any) => ({
+      memberGroupId: item.id,
+      name: item.name,
+    }));
+    console.log(data.vipGroupList,'data.vipGroupList')
+  }
   columns.value.forEach((item: any) => {
     if (item.checked) {
       checkList.value.push(item.prop);
@@ -224,14 +261,14 @@ onMounted(async () => {
   });
   fetchData();
   data.vipLevelList = await surveyVipLevelStore.getLevelNameList();
-  data.vipGroupList = await surveyVipGroupStore.getGroupNameList();
+  // data.vipGroupList = await surveyVipGroupStore.getGroupNameList();
 
   formSearchList.value =[
   { index: 1, show: true, type: 'input', modelName: 'memberId', placeholder: '会员ID' },
   { index: 2, show: true, type: 'input', modelName: 'memberName', placeholder: '会员名称' },
   { index: 3, show: true, type: 'select', modelName: 'memberLevelId', placeholder: '会员等级', option: 'memberLevelId', optionLabel: 'levelNameOrAdditionRatio', optionValue: 'memberLevelId' },
   { index: 4, show: true, type: 'select', modelName: 'memberStatus', placeholder: '会员状态', option: 'memberStatus', optionLabel: 'label', optionValue: 'value' },
-  { index: 5, show: true, type: 'select', modelName: 'memberGroupId', placeholder: '所属部门', option: 'memberGroupId', optionLabel: 'memberGroupName', optionValue: 'memberGroupId' },
+  { index: 5, show: true, type: 'select', modelName: 'memberGroupId', placeholder: '所属部门', option: 'memberGroupId', optionLabel: 'name', optionValue: 'memberGroupId' },
   { index: 6, show: true, type: 'datetimerange', modelName: 'time', startPlaceHolder: '创建开始日期', endPlaceHolder: '创建结束日期' }
 ]
 });
