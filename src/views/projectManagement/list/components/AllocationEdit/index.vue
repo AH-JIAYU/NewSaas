@@ -260,9 +260,9 @@ const sendProjectType = ref<any>(null)
 // 取消分配
 const cancelAllocation = (name: any, row: any) => {
   if (row) {
-    if (name === "发送") {
+    if (name === "取消分配") {
       sendProjectType.value = row;
-      colse()
+      // colse()
       isAllocation.value = true
     }
   }
@@ -324,13 +324,16 @@ function onSubmit() {
           params.addProjectAllocationInfoList.push(memberObj.value)
         }
         if (data.value.title !== '分配') {
+          if(!params.addProjectAllocationInfoList.length) {
+            isAllocation.value = true
+          }
           params.addProjectAllocationInfoList.map((item: any) => {
             if (!item.projectId) {
               item.projectId = data.value.form.projectId
             }
-            if (item.groupSupplierIdList.length) {
-              isAllocation.value = false
-            }
+            // if (item.groupSupplierIdList.length) {
+            //   isAllocation.value = false
+            // }
             if (item.allocationType === 4) {
               item.deleteSet = []
               if (tenantIdCopy.value && tenantIdCopy.value.length) {
@@ -344,6 +347,14 @@ function onSubmit() {
               }
             }
           })
+        } else {
+          if (!params.addProjectAllocationInfoList.length) {
+            ElMessage.warning({
+              message: "至少选择一个分配目标",
+              center: true,
+            });
+            return
+          }
         }
         if (isAllocation.value) {
           params = {
@@ -355,13 +366,7 @@ function onSubmit() {
             }]
           }
         }
-        if (!params.addProjectAllocationInfoList.length) {
-          ElMessage.warning({
-            message: "至少选择一个分配目标",
-            center: true,
-          });
-          return
-        }
+        console.log('params', params)
         // return
         const { status } = await submitLoading(api.allocation(params));
         loading.value = false;
@@ -478,7 +483,7 @@ defineExpose({ showEdit });
         </el-form-item>
         <el-form-item v-if="data.title == '重新分配'">
           <template #label>
-            <el-button :type="sendProjectType === 1 ? 'primary' : ''" @click="cancelAllocation('发送', 1)"> 取消分配
+            <el-button :type="sendProjectType === 1 ? 'primary' : ''" @click="cancelAllocation('取消分配', 1)"> 取消分配
             </el-button>
           </template>
 
