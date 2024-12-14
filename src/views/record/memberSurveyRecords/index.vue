@@ -512,7 +512,7 @@ function handleCurrentChange(val: any) {
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('allocationType')" align="left" show-overflow-tooltip width="230"
+        <!--<el-table-column v-if="checkList.includes('allocationType')" align="left" show-overflow-tooltip width="230"
           label="分配类型" fixed="right">
           <template #default="{ row }">
             <!-- <el-tag effect="plain" type="info" v-if="row.allocationType === 1" class="mx-1">未分配</el-tag>
@@ -521,7 +521,7 @@ function handleCurrentChange(val: any) {
             <el-tag effect="dark" style="background-color: #05c9be; border: none" v-if="row.allocationType === 3"
               class="mx-1" type="warning">内部站</el-tag>
             <el-tag effect="dark" style="background-color: #ffac54; border: none" v-if="row.allocationType === 4"
-              class="mx-1" type="warning">合作商</el-tag> -->
+              class="mx-1" type="warning">合作商</el-tag>
               <el-button size="small" v-if="row.allocationType?.includes(1)" >
                 未分配</el-button
               >
@@ -547,7 +547,7 @@ function handleCurrentChange(val: any) {
 
 
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column v-if="checkList.includes('doMoneyPrice')" align="left" prop="doMoneyPrice"
           show-overflow-tooltip width="120" fixed="right" label="项目价">
           <template #default="{ row }">

@@ -474,7 +474,7 @@ function handleCurrentChange(val: any) {
             <el-text v-else>-</el-text>
           </template>
         </el-table-column>
-        <el-table-column
+        <!-- <el-table-column
           v-if="checkList.includes('allocationType')"
           align="left"
           show-overflow-tooltip
@@ -499,7 +499,7 @@ function handleCurrentChange(val: any) {
               会员组
             </el-tag>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column
           v-if="checkList.includes('doMoneyPrice')"
           width="120"

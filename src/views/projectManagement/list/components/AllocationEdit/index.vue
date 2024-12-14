@@ -103,6 +103,7 @@ async function showEdit(row: any, type: string) {
     const res = await obtainLoading(
       api.getProjectAllocation({ projectId: row.projectId })
     );
+
     data.value.form.projectId = row.projectId;
     const { getProjectAllocationInfoList } = res.data;
     getProjectAllocationInfoList.forEach((item: any) => {
