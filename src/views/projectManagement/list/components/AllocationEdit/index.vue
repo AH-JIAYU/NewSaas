@@ -550,7 +550,9 @@ defineExpose({ showEdit });
   color: #409eff;
   line-height: 14px;
 }
-
+:deep(.el-select__selection){
+  margin-left: -0.5rem;
+}
 /* 更改省略号的样式 */
 :deep(.el-tag.el-tag--info .el-tag__close) {
   color: #409eff;

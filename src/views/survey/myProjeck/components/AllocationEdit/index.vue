@@ -307,7 +307,9 @@ defineExpose({ showEdit });
 :deep(.el-tag.el-tag--info .el-tag__close) {
   color: #409eff;
 }
-
+:deep(.el-select__selection){
+  margin-left: -0.5rem;
+}
 .prefix-class {
   display: flex;
   justify-content: center;
