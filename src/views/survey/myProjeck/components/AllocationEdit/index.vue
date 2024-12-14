@@ -256,7 +256,7 @@ defineExpose({ showEdit });
 
         <el-form-item v-if="data.title == '重新分配'">
           <template #label>
-            <el-button :type="sendProjectType === 1 ? 'primary' : ''" @click="cancelAllocation('发送', 1)"> 取消分配
+            <el-button :type="sendProjectType === 1 ? 'primary' : ''" @click="cancelAllocation('发送', 1)" style="border-radius: 1.875rem;"> 取消分配
             </el-button>
           </template>
 
