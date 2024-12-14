@@ -10,6 +10,8 @@ const supplierStore = useUserSupplierStore(); // 供应商
 const surveyVipGroupStore = useSurveyVipGroupStore(); //会员组
 import DictionaryDialog from "@/views/survey/vip_department/components/dictionaryDialog/index.vue";
 import customerEdit from "@/views/user/supplier/components/SupplierEdit/index.vue";
+
+import tenantEdit from "@/views/user/cooperation/components/CustomerEdit/index.vue";
 //@/views/user/supplier/SupplierEdit/index.vue
 defineOptions({
   name: "AllocationEdit",
@@ -60,8 +62,8 @@ const tenantObj = ref<any>({
   // 分配类型为:供应商传供应商id,分配类型为会员部门传会员部门Id,支持多选,分配给租户id(租户只能一个分配)allocationType等于5传空数组
   groupSupplierIdList: [],
   // 只有分配类型等于租户分配,并且是重新分配,然后用户删了了后端传的租户id,全部放在这里
-  deleteSet: []
-})
+  deleteSet: [],
+});
 // 供应商分配
 const supplierObj = ref<any>({
   // 项目id
@@ -71,8 +73,8 @@ const supplierObj = ref<any>({
   // 分配类型为:供应商传供应商id,分配类型为会员部门传会员部门Id,支持多选,分配给租户id(租户只能一个分配)allocationType等于5传空数组
   groupSupplierIdList: [],
   // 只有分配类型等于租户分配,并且是重新分配,然后用户删了了后端传的租户id,全部放在这里
-  deleteSet: []
-})
+  deleteSet: [],
+});
 // 会员分配
 const memberObj = ref<any>({
   // 项目id
@@ -82,8 +84,8 @@ const memberObj = ref<any>({
   // 分配类型为:供应商传供应商id,分配类型为会员部门传会员部门Id,支持多选,分配给租户id(租户只能一个分配)allocationType等于5传空数组
   groupSupplierIdList: [],
   // 只有分配类型等于租户分配,并且是重新分配,然后用户删了了后端传的租户id,全部放在这里
-  deleteSet: []
-})
+  deleteSet: [],
+});
 const rules = ref<any>({
   groupSupplierIdList: [
     {
@@ -95,9 +97,9 @@ const rules = ref<any>({
   ],
 });
 // 扁平化部门
-const depList = ref<any>([])
+const depList = ref<any>([]);
 
-const tenantIdCopy = ref<any>()
+const tenantIdCopy = ref<any>();
 // 显隐
 async function showEdit(row: any, type: string) {
   data.value.list = [{ ...row }]; // 表格
@@ -115,23 +117,23 @@ async function showEdit(row: any, type: string) {
         supplierObj.value = {
           allocationType: item.allocationType,
           projectId: item.projectId,
-          groupSupplierIdList: item.groupSupplierIdSet
-        }
+          groupSupplierIdList: item.groupSupplierIdSet,
+        };
       } else if (item.allocationType === 3) {
         memberObj.value = {
           allocationType: item.allocationType,
           projectId: item.projectId,
-          groupSupplierIdList: item.groupSupplierIdSet
-        }
+          groupSupplierIdList: item.groupSupplierIdSet,
+        };
       } else if (item.allocationType === 4) {
         tenantObj.value = {
           allocationType: item.allocationType,
           projectId: item.projectId,
-          groupSupplierIdList: item.groupSupplierIdSet
-        }
-        tenantIdCopy.value = item.groupSupplierIdSet
+          groupSupplierIdList: item.groupSupplierIdSet,
+        };
+        tenantIdCopy.value = item.groupSupplierIdSet;
       }
-    })
+    });
     // data.value.form = form;
     // data.value.form.groupSupplierIdList = groupSupplierIdSet;
     // copyList.value = JSON.parse(JSON.stringify(groupSupplierIdSet));
@@ -147,7 +149,10 @@ async function showEdit(row: any, type: string) {
   data.value.tenantSupplierList = await obtainLoading(
     supplierStore.getTenantSupplierList(row.projectId)
   );
-  if (data.value.tenantSupplierList.length == supplierObj.value.groupSupplierIdList.length) {
+  if (
+    data.value.tenantSupplierList.length ==
+    supplierObj.value.groupSupplierIdList.length
+  ) {
     data.value.selectAll.supplier = true;
   } else {
     data.value.selectAll.supplier = false;
@@ -155,8 +160,8 @@ async function showEdit(row: any, type: string) {
   // 会员部门列表
   const resDep = await apiDep.list({ name: "" });
   data.value.departmentList = resDep.data;
-  const departmentList = JSON.parse(JSON.stringify(resDep.data))
-  depList.value = flattenWithoutChildren(departmentList)
+  const departmentList = JSON.parse(JSON.stringify(resDep.data));
+  depList.value = flattenWithoutChildren(departmentList);
   if (depList.value.length == memberObj.value.groupSupplierIdList.length) {
     data.value.selectAll.member = true;
   } else {
@@ -175,14 +180,15 @@ async function showEdit(row: any, type: string) {
     departmentId.value = data.value.form.groupSupplierIdList;
   }
   data.value.tenantList = res.data.allocationBindInfoList;
-  if (data.value.tenantList.length == tenantObj.value.groupSupplierIdList.length) {
+  if (
+    data.value.tenantList.length == tenantObj.value.groupSupplierIdList.length
+  ) {
     data.value.selectAll.tenant = true;
   } else {
     data.value.selectAll.tenant = false;
   }
   dialogTableVisible.value = true;
 }
-
 
 // 扁平化会员部门
 const flattenWithoutChildren = (arr: any) => {
@@ -225,20 +231,25 @@ function selectAllSupplier() {
 
 // 供应商切换事件
 const supplierChange = () => {
-  if (data.value.tenantSupplierList.length == supplierObj.value.groupSupplierIdList.length) {
+  if (
+    data.value.tenantSupplierList.length ==
+    supplierObj.value.groupSupplierIdList.length
+  ) {
     data.value.selectAll.supplier = true;
   } else {
     data.value.selectAll.supplier = false;
   }
-}
+};
 // 合作商切换事件
 const tenantChange = () => {
-  if (data.value.tenantList.length == tenantObj.value.groupSupplierIdList.length) {
+  if (
+    data.value.tenantList.length == tenantObj.value.groupSupplierIdList.length
+  ) {
     data.value.selectAll.tenant = true;
   } else {
     data.value.selectAll.tenant = false;
   }
-}
+};
 
 const chalend = () => {
   // 清空 groupSupplierIdList，确保每次全选时重新计算
@@ -259,7 +270,7 @@ function chalendHelper(node: any) {
   // 如果该节点有子节点，则继续递归
   if (node.children && node.children.length) {
     node.children.forEach((child: any) => {
-      chalendHelper(child);  // 递归处理每个子节点
+      chalendHelper(child); // 递归处理每个子节点
     });
   }
 }
@@ -270,14 +281,14 @@ function selectAllMember() {
   memberObj.value.groupSupplierIdList = [];
   if (data.value.selectAll.member) {
     // 如果全选状态为 true，获取所有节点的 ID 并设置为已选中
-    chalend();  // 获取所有节点的 ID
+    chalend(); // 获取所有节点的 ID
     // 使用 setCheckedKeys 设置选中的节点
     treeRef.value.setCheckedKeys(memberObj.value.groupSupplierIdList);
   } else {
     // 否则取消选中
     data.value.selectAll.member = false;
-    memberObj.value.groupSupplierIdList = [];  // 清空选中的 ID
-    treeRef.value.setCheckedKeys([]);  // 清除所有勾选项
+    memberObj.value.groupSupplierIdList = []; // 清空选中的 ID
+    treeRef.value.setCheckedKeys([]); // 清除所有勾选项
   }
 }
 
@@ -290,7 +301,9 @@ const handleNodeClick = (nodeData: any, checked: any) => {
     }
   } else {
     // 如果取消选中节点，移除对应的节点 ID
-    departmentId.value = departmentId.value.filter((id: any) => id !== nodeData.id);
+    departmentId.value = departmentId.value.filter(
+      (id: any) => id !== nodeData.id
+    );
   }
   // 获取树的选中节点和半选节点
   const checkedKeys = treeRef.value.getCheckedKeys(); // 获取选中的所有节点
@@ -307,49 +320,49 @@ const handleNodeClick = (nodeData: any, checked: any) => {
 };
 
 // 是否取消分配
-const isAllocation = ref<any>(false)
-const sendProjectType = ref<any>(false)
+const isAllocation = ref<any>(false);
+const sendProjectType = ref<any>(false);
 // 取消分配
 const cancelAllocation = () => {
   sendProjectType.value = !sendProjectType.value;
   // colse()
   if (sendProjectType.value) {
-    isAllocation.value = true
+    isAllocation.value = true;
   } else {
-    isAllocation.value = false
+    isAllocation.value = false;
   }
-}
+};
 
 const colse = () => {
   Object.assign(tenantObj.value, {
     projectId: null,
     allocationType: 4,
     groupSupplierIdList: [],
-    deleteSet: []
-  })
+    deleteSet: [],
+  });
   Object.assign(supplierObj.value, {
     projectId: null,
     allocationType: 2,
     groupSupplierIdList: [],
-    deleteSet: []
-  })
+    deleteSet: [],
+  });
   Object.assign(memberObj.value, {
     projectId: null,
     allocationType: 3,
     groupSupplierIdList: [],
-    deleteSet: []
-  })
+    deleteSet: [],
+  });
   data.value.selectAll.tenant = false;
   data.value.selectAll.supplier = false;
   data.value.selectAll.member = false;
-}
+};
 
 // 弹框关闭事件
 function closeHandler() {
   // 移除校验
   formRef.value.resetFields();
   // // 重置表单
-  colse()
+  colse();
   dialogTableVisible.value = false;
   isAllocation.value = false;
   sendProjectType.value = null;
@@ -361,59 +374,61 @@ function onSubmit() {
       try {
         loading.value = true;
         let params: any = {
-          addProjectAllocationInfoList: []
-        }
+          addProjectAllocationInfoList: [],
+        };
         if (tenantObj.value.groupSupplierIdList.length) {
-          tenantObj.value.projectId = data.value.form.projectId
-          params.addProjectAllocationInfoList.push(tenantObj.value)
+          tenantObj.value.projectId = data.value.form.projectId;
+          params.addProjectAllocationInfoList.push(tenantObj.value);
         }
         if (supplierObj.value.groupSupplierIdList.length) {
-          supplierObj.value.projectId = data.value.form.projectId
-          params.addProjectAllocationInfoList.push(supplierObj.value)
+          supplierObj.value.projectId = data.value.form.projectId;
+          params.addProjectAllocationInfoList.push(supplierObj.value);
         }
         if (memberObj.value.groupSupplierIdList.length) {
-          memberObj.value.projectId = data.value.form.projectId
-          params.addProjectAllocationInfoList.push(memberObj.value)
+          memberObj.value.projectId = data.value.form.projectId;
+          params.addProjectAllocationInfoList.push(memberObj.value);
         }
-        if (data.value.title !== '分配') {
+        if (data.value.title !== "分配") {
           if (!params.addProjectAllocationInfoList.length) {
-            isAllocation.value = true
+            isAllocation.value = true;
           }
           params.addProjectAllocationInfoList.map((item: any) => {
             if (!item.projectId) {
-              item.projectId = data.value.form.projectId
+              item.projectId = data.value.form.projectId;
             }
             if (item.allocationType === 4) {
-              item.deleteSet = []
+              item.deleteSet = [];
               if (tenantIdCopy.value && tenantIdCopy.value.length) {
                 tenantIdCopy.value.filter((ite: any) => {
                   item.groupSupplierIdList.map((it: any) => {
                     if (ite !== it) {
-                      item.deleteSet.push(ite)
+                      item.deleteSet.push(ite);
                     }
-                  })
-                })
+                  });
+                });
               }
             }
-          })
+          });
         } else {
           if (!params.addProjectAllocationInfoList.length) {
             ElMessage.warning({
               message: "至少选择一个分配目标",
               center: true,
             });
-            return
+            return;
           }
         }
         if (isAllocation.value) {
           params = {
-            addProjectAllocationInfoList: [{
-              projectId: data.value.form.projectId,
-              allocationType: 5,
-              groupSupplierIdList: [],
-              deleteSet: []
-            }]
-          }
+            addProjectAllocationInfoList: [
+              {
+                projectId: data.value.form.projectId,
+                allocationType: 5,
+                groupSupplierIdList: [],
+                deleteSet: [],
+              },
+            ],
+          };
         }
         // return
         const { status } = await submitLoading(api.allocation(params));
@@ -457,136 +472,349 @@ const dictionary = ref({
   loading: false,
 });
 const editRef = ref(); // 供应商管理
-const tenantRef = ref()// 邀约公司
+const tenantRef = ref(); // 邀约公司
 //供应商，调查站，合作商，没有数据时，跳转-暂时没做
-const goRouter = (name: any,data?: Dict) => {
-  // if (name == '供应商') {
-  //   //供应商列表，新增供应商
-  //   editRef.value.showEdit();
-  // } else if (name == '调查站') {
-  //   //调查系统-部门管理-新增部门
-  //   dictionary.value.currentData = data;
-  // dictionary.value.dialog.parentId =  "";
-  // dictionary.value.dialog.id = "";
-  // dictionary.value.dialog.visible = true;
-  // } else if (name == '合作商') {
-  //   //客商管理-合作租户-邀约公司
-  //   tenantRef.value.showEdit();
-  // }
-}
+const goRouter = (name: any, data?: Dict) => {
+  if (name == "供应商") {
+    //供应商列表，新增供应商
+    editRef.value.showEdit();
+  } else if (name == "调查站") {
+    //调查系统-部门管理-新增部门
+    dictionary.value.currentData = data;
+    dictionary.value.dialog.parentId = "";
+    dictionary.value.dialog.id = "";
+    dictionary.value.dialog.visible = true;
+  } else if (name == "合作商") {
+    //客商管理-合作租户-邀约公司
+    // tenantRef.value.showEdit();
+  }
+};
 //供应商管理
-const getSupplier =async()=> {
+const getSupplier = async () => {
   data.value.tenantSupplierList = await obtainLoading(
     supplierStore.getTenantSupplierList(data.value.form.projectId)
   );
-}
+};
 //会员列表
-const getDictionaryList =async()=> {
+const getDictionaryList = async () => {
   const resDep = await apiDep.list({ name: "" });
   data.value.departmentList = resDep.data;
-}
+};
 //邀约公司
-const getCustomer =async()=> {
+const getCustomer = async () => {
   const res = await obtainLoading(
-    cooperationApi.getAllocationBindList({ projectId: data.value.form.projectId })
+    cooperationApi.getAllocationBindList({
+      projectId: data.value.form.projectId,
+    })
   );
-   data.value.tenantList = res.data.allocationBindInfoList;
-}
-onMounted(async () => { });
+  data.value.tenantList = res.data.allocationBindInfoList;
+};
+onMounted(async () => {});
 // 暴露方法
 defineExpose({ showEdit });
 </script>
 
 <template>
   <div>
-    <el-dialog v-model="dialogTableVisible" :title="data.title" width="700" :before-close="closeHandler">
+    <el-dialog
+      v-model="dialogTableVisible"
+      :title="data.title"
+      width="700"
+      :before-close="closeHandler"
+    >
       <el-table :data="data.list" v-loading="loading" row-key="id">
-        <el-table-column align="left" show-overflow-tooltip label="项目名称" prop="name" />
-        <el-table-column align="left" show-overflow-tooltip label="项目编码" prop="projectId" />
-        <el-table-column align="left" show-overflow-tooltip label="客户简称" width="100" prop="clientName" />
+        <el-table-column
+          align="left"
+          show-overflow-tooltip
+          label="项目名称"
+          prop="name"
+        />
+        <el-table-column
+          align="left"
+          show-overflow-tooltip
+          label="项目编码"
+          prop="projectId"
+        />
+        <el-table-column
+          align="left"
+          show-overflow-tooltip
+          label="客户简称"
+          width="100"
+          prop="clientName"
+        />
       </el-table>
-      <el-form ref="formRef" label-width="90px" :rules="rules" :model="data.form" :inline="false" label-position="left"
-        prop="groupSupplierIdList">
+      <el-form
+        ref="formRef"
+        label-width="90px"
+        :rules="rules"
+        :model="data.form"
+        :inline="false"
+        label-position="left"
+        prop="groupSupplierIdList"
+      >
         <el-form-item style="margin-top: 1rem">
           <template #label>
             <span class="icon-class">
-              <img src="@/assets/images/gong.png" alt="" style="margin-right: 0.25rem" />
-              供应商</span>
+              <img
+                src="@/assets/images/gong.png"
+                alt=""
+                style="margin-right: 0.25rem"
+              />
+              供应商</span
+            >
           </template>
-          <el-select v-model="supplierObj.groupSupplierIdList" clearable filterable multiple collapse-tags
-            collapse-tags-tooltip :max-collapse-tags="10" placeholder="" @change="supplierChange">
+          <el-select
+            v-model="supplierObj.groupSupplierIdList"
+            clearable
+            filterable
+            multiple
+            collapse-tags
+            collapse-tags-tooltip
+            :max-collapse-tags="10"
+            placeholder=""
+            @change="supplierChange"
+          >
             <template #header>
-              <el-checkbox v-model="data.selectAll.supplier" @change="selectAllSupplier"
-                style="display: flex; height: unset">全选</el-checkbox>
+              <el-checkbox
+                v-model="data.selectAll.supplier"
+                @change="selectAllSupplier"
+                style="display: flex; height: unset"
+                >全选</el-checkbox
+              >
             </template>
             <template #prefix>
-              <span class="prefix-class" v-if="data.tenantSupplierList.length == 0" @click="goRouter('供应商')">
+              <span
+                class="prefix-class"
+                v-if="data.tenantSupplierList.length == 0"
+              >
                 请先维护供应商数据
-                <img src="@/assets/images/jiantou.png" alt="" style="margin-left: 0.25rem" />
+                <img
+                  src="@/assets/images/jiantou.png"
+                  alt=""
+                  style="margin-left: 0.25rem"
+                />
               </span>
               <span
-                v-if="supplierObj.groupSupplierIdList.length == 0 && data.tenantSupplierList.length != 0">请先选择供应商数据</span>
+                v-if="
+                  supplierObj.groupSupplierIdList.length == 0 &&
+                  data.tenantSupplierList.length != 0
+                "
+                >请先选择供应商数据</span
+              >
             </template>
-            <el-option v-for="item in data.tenantSupplierList" :label="item.supplierAccord" :key="item.supplierAccord"
-              :value="item.tenantSupplierId" />
+            <el-option
+              v-for="item in data.tenantSupplierList"
+              :label="item.supplierAccord"
+              :key="item.supplierAccord"
+              :value="item.tenantSupplierId"
+            />
+            <template #empty>
+              <div
+
+              >
+
+                <el-button
+                  type="primary"
+                  link
+                  class="buttonClass"
+                  size="small"
+                  @click="goRouter('供应商')"
+                >
+                  快捷新增
+                  <SvgIcon
+                    name="ant-design:plus-outlined"
+                    color="#fff"
+                    style="
+                      background-color: var(--el-color-primary);
+                      border-radius: 50%;
+                      padding: 0.125rem;
+                      margin: 0 0.125rem;
+                    "
+                  />
+                </el-button>
+              </div>
+            </template>
           </el-select>
         </el-form-item>
         <el-form-item>
           <template #label>
             <span class="icon-class">
-              <img src="@/assets/images/diao.png" alt="" style="margin-right: 0.25rem" />
-              调查站</span>
+              <img
+                src="@/assets/images/diao.png"
+                alt=""
+                style="margin-right: 0.25rem"
+              />
+              调查站</span
+            >
           </template>
-          <el-tree-select ref="treeRef"      v-model="memberObj.groupSupplierIdList" :data="data.departmentList"
-            show-checkbox default-expand-all node-key="id" :props="defaultProps" @check-change="handleNodeClick"
-            :check-strictly="true" :check-on-click-node="true" :multiple="true" :expand-on-click-node="false"
-            style="width: 37.625rem" clearable placeholder="" >
+          <el-tree-select
+            ref="treeRef"
+            v-model="memberObj.groupSupplierIdList"
+            :data="data.departmentList"
+            show-checkbox
+            default-expand-all
+            node-key="id"
+            :props="defaultProps"
+            @check-change="handleNodeClick"
+            :check-strictly="true"
+            :check-on-click-node="true"
+            :multiple="true"
+            :expand-on-click-node="false"
+            style="width: 37.625rem"
+            clearable
+            placeholder=""
+          >
             <template #header>
-              <el-checkbox v-model="data.selectAll.member" @change="selectAllMember"
-                style="display: flex; height: unset">全选</el-checkbox>
+              <el-checkbox
+                v-model="data.selectAll.member"
+                @change="selectAllMember"
+                style="display: flex; height: unset"
+                >全选</el-checkbox
+              >
             </template>
             <template #prefix>
-              <span class="prefix-class" v-if="data.departmentList.length == 0" @click="goRouter('调查站')">
-                请先维护调查站数据
-                <img src="@/assets/images/jiantou.png" alt="" style="margin-left: 0.25rem" />
-              </span>
-              <span v-if="!memberObj.groupSupplierIdList.length && data.departmentList.length != 0">请先选择调查站数据</span>
-            </template>
+              <span
+                class="prefix-class"
+                v-if="data.departmentList.length == 0"
 
+              >
+                请先维护调查站数据
+                <img
+                  src="@/assets/images/jiantou.png"
+                  alt=""
+                  style="margin-left: 0.25rem"
+                />
+              </span>
+              <span
+                v-if="
+                  !memberObj.groupSupplierIdList.length &&
+                  data.departmentList.length != 0
+                "
+                >请先选择调查站数据</span
+              >
+            </template>
+            <template #empty>
+              <div
+
+              >
+
+                <el-button
+                  type="primary"
+                  link
+                  class="buttonClass"
+                  size="small"
+                   @click="goRouter('调查站')"
+                >
+                  快捷新增
+                  <SvgIcon
+                    name="ant-design:plus-outlined"
+                    color="#fff"
+                    style="
+                      background-color: var(--el-color-primary);
+                      border-radius: 50%;
+                      padding: 0.125rem;
+                      margin: 0 0.125rem;
+                    "
+                  />
+                </el-button>
+              </div>
+            </template>
           </el-tree-select>
         </el-form-item>
         <el-form-item>
           <template #label>
             <span class="icon-class">
-              <img src="@/assets/images/he.png" alt="" style="margin-right: 0.25rem" />
-              合作商</span>
+              <img
+                src="@/assets/images/he.png"
+                alt=""
+                style="margin-right: 0.25rem"
+              />
+              合作商</span
+            >
           </template>
-          <el-select v-model="tenantObj.groupSupplierIdList" clearable filterable multiple collapse-tags
-            collapse-tags-tooltip :max-collapse-tags="10" placeholder="" @change="tenantChange">
+          <el-select
+            v-model="tenantObj.groupSupplierIdList"
+            clearable
+            filterable
+            multiple
+            collapse-tags
+            collapse-tags-tooltip
+            :max-collapse-tags="10"
+            placeholder=""
+            @change="tenantChange"
+          >
             <template #header>
-              <el-checkbox v-model="data.selectAll.tenant" @change="selectAllTenant"
-                style="display: flex; height: unset">全选</el-checkbox>
+              <el-checkbox
+                v-model="data.selectAll.tenant"
+                @change="selectAllTenant"
+                style="display: flex; height: unset"
+                >全选</el-checkbox
+              >
             </template>
             <template #prefix>
-              <span class="prefix-class" v-if="data.tenantList.length == 0" @click="goRouter('合作商')">
+              <span
+                class="prefix-class"
+                v-if="data.tenantList.length == 0"
+              >
                 请先维护合作商数据
-                <img src="@/assets/images/jiantou.png" alt="" style="margin-left: 0.25rem" />
+                <img
+                  src="@/assets/images/jiantou.png"
+                  alt=""
+                  style="margin-left: 0.25rem"
+                />
               </span>
-              <span v-if="tenantObj.groupSupplierIdList.length == 0 && data.tenantList.length != 0">请先选择合作商数据</span>
+              <span
+                v-if="
+                  tenantObj.groupSupplierIdList.length == 0 &&
+                  data.tenantList.length != 0
+                "
+                >请先选择合作商数据</span
+              >
             </template>
             <!-- :disabled="item.reveal === 1" -->
-            <el-option v-for="item in data.tenantList" :label="item.beInvitationTenantName"
-              :key="item.beInvitationTenantName" :value="item.beInvitationTenantId" />
-          </el-select>
+            <el-option
+              v-for="item in data.tenantList"
+              :label="item.beInvitationTenantName"
+              :key="item.beInvitationTenantName"
+              :value="item.beInvitationTenantId"
+            />
+            <template #empty>
+              <div
+              >
 
+                <el-button
+                  type="primary"
+                  link
+                  class="buttonClass"
+                  size="small"
+                   @click="goRouter('合作商')"
+                >
+                  快捷新增
+                  <SvgIcon
+                    name="ant-design:plus-outlined"
+                    color="#fff"
+                    style="
+                      background-color: var(--el-color-primary);
+                      border-radius: 50%;
+                      padding: 0.125rem;
+                      margin: 0 0.125rem;
+                    "
+                  />
+                </el-button>
+              </div>
+            </template>
+          </el-select>
         </el-form-item>
         <el-form-item v-if="data.title == '重新分配'">
           <template #label>
-            <el-button :type="sendProjectType ? 'primary' : ''" @click="cancelAllocation()"
-              style="border-radius: 1.875rem;"> 取消分配
+            <el-button
+              :type="sendProjectType ? 'primary' : ''"
+              @click="cancelAllocation()"
+              style="border-radius: 1.875rem"
+            >
+              取消分配
             </el-button>
           </template>
-
         </el-form-item>
       </el-form>
 
@@ -643,16 +871,44 @@ defineExpose({ showEdit });
     </el-dialog>
     <!-- 供应商 -->
     <customerEdit ref="editRef" @fetch-data="getSupplier" />
-     <!-- 调查站 -->
-    <DictionaryDialog v-if="dictionary.dialog.visible" :id="dictionary.dialog.id" v-model="dictionary.dialog.visible"
-        :row="dictionary.row" :parent-id="dictionary.dialog.parentId" :tree="dictionary.tree"
-        :isClick="dictionary.dialog.isClick" @get-list="getDictionaryList"/>
+    <!-- 调查站 -->
+    <DictionaryDialog
+      v-if="dictionary.dialog.visible"
+      :id="dictionary.dialog.id"
+      v-model="dictionary.dialog.visible"
+      :row="dictionary.row"
+      :parent-id="dictionary.dialog.parentId"
+      :tree="dictionary.tree"
+      :isClick="dictionary.dialog.isClick"
+      @get-list="getDictionaryList"
+    />
     <!-- 合作商 -->
-
+    <tenantEdit ref="tenantRef" @fetch-data="getCustomer" />
   </div>
 </template>
 
 <style lang="scss" scoped>
+.buttonClass {
+  text-align: center;
+  margin: 0.75rem;
+  width: 100%;
+  height: 2rem;
+  font-family: PingFang SC, PingFang SC;
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: #409eff;
+  line-height: 16px;
+  background: #f4f8ff;
+  border-radius: 4px 4px 4px 4px;
+  border: 1px solid #e9eef3;
+}
+
+/* 使按钮在下拉框展开时自适应宽度 */
+.el-select-dropdown .buttonClass {
+  width: calc(100% - 24px);
+  /* 减去两边的 padding */
+
+}
 /* 修改选中后的标签样式 */
 :deep(.el-tag.el-tag--info) {
   background: #e7f3ff;
