@@ -220,7 +220,9 @@ function onSubmit() {
           return
         }
       }
+      let message = '分配成功'
       if (isAllocation.value) {
+        message = '取消分配成功'
         params = {
           addProjectAllocationInfoList: [{
             projectId: data.value.form.projectId,
@@ -234,7 +236,7 @@ function onSubmit() {
       const { status } = await submitLoading(api.allocation(params));
       status === 1 &&
         ElMessage.success({
-          message: "分配成功",
+          message: message,
           center: true,
         });
       closeHandler();
@@ -305,7 +307,7 @@ defineExpose({ showEdit });
             default-expand-all node-key="id" :props="defaultProps" @check-change="handleNodeClick"
             :check-strictly="true" :check-on-click-node="true" :multiple="true" :expand-on-click-node="false"
             style="width: 37.625rem" clearable placeholder="">
-            <template #header>
+            <template v-if="departmentList.length" #header>
               <el-checkbox v-model="data.selectAll.member" @change="selectAllMember"
                 style="display: flex; height: unset">全选</el-checkbox>
             </template>

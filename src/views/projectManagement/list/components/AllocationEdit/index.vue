@@ -402,7 +402,9 @@ function onSubmit() {
             return
           }
         }
+        let message = '分配成功'
         if (isAllocation.value) {
+          message = '取消分配成功'
           params = {
             addProjectAllocationInfoList: [{
               projectId: data.value.form.projectId,
@@ -417,7 +419,7 @@ function onSubmit() {
         loading.value = false;
         status === 1 &&
           ElMessage.success({
-            message: "分配成功",
+            message: message,
             center: true,
           });
         closeHandler();
@@ -462,7 +464,7 @@ defineExpose({ showEdit });
           </template>
           <el-select v-model="supplierObj.groupSupplierIdList" clearable filterable multiple collapse-tags
             collapse-tags-tooltip :max-collapse-tags="10" placeholder="" @change="supplierChange">
-            <template #header>
+            <template v-if="data.tenantSupplierList.length" #header>
               <el-checkbox v-model="data.selectAll.supplier" @change="selectAllSupplier"
                 style="display: flex; height: unset">全选</el-checkbox>
             </template>
@@ -488,7 +490,7 @@ defineExpose({ showEdit });
             show-checkbox default-expand-all node-key="id" :props="defaultProps" @check-change="handleNodeClick"
             :check-strictly="true" :check-on-click-node="true" :multiple="true" :expand-on-click-node="false"
             style="width: 37.625rem" clearable placeholder="">
-            <template #header>
+            <template v-if="data.departmentList.length" #header>
               <el-checkbox v-model="data.selectAll.member" @change="selectAllMember"
                 style="display: flex; height: unset">全选</el-checkbox>
             </template>
@@ -510,7 +512,7 @@ defineExpose({ showEdit });
           </template>
           <el-select v-model="tenantObj.groupSupplierIdList" clearable filterable multiple collapse-tags
             collapse-tags-tooltip :max-collapse-tags="10" placeholder="" @change="tenantChange">
-            <template #header>
+            <template v-if="data.tenantList.length" #header>
               <el-checkbox v-model="data.selectAll.tenant" @change="selectAllTenant"
                 style="display: flex; height: unset">全选</el-checkbox>
             </template>

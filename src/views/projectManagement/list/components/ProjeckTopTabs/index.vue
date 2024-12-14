@@ -610,30 +610,10 @@ const exchangeRateSubmit = async () => {
     currencyTypeRes.value = userStore.originalExchangeRate
     localToptTab.value.exchangeRate = userStore.originalExchangeRate
     localToptTab.value.currencyType = userStore.currencyType === 1 ? 'USD' : 'CNY'
-    // if(userStore.currencyType !== 1) {
-    //   localToptTab.value.exchangeRate = Math.floor((1/userStore.originalExchangeRate) * 100) / 100;
-    //   currencyTypeRes.value = localToptTab.value.exchangeRate
-    // }
-    const params = {
-      beforeCurrency: '',
-      oldCurrency: localToptTab.value.currencyType,
-      exchangeRate: '',
+    if(userStore.currencyType !== 1) {
+      localToptTab.value.exchangeRate = Math.floor((1/userStore.originalExchangeRate) * 100) / 100;
+      currencyTypeRes.value = localToptTab.value.exchangeRate
     }
-    if (localToptTab.value.currencyType === 'USD') {
-      params.beforeCurrency = 'CNY'
-    } else if (localToptTab.value.currencyType === 'CNY') {
-      params.beforeCurrency = 'USD'
-    }
-    params.exchangeRate = currencyTypeRes.value
-    const res = await api.updateExchangeRate(params)
-    if (res.data) {
-      currencyTypeRes.value = Math.floor(res.data.exchangeRate * 100) / 100;
-      localToptTab.value.exchangeRate = Math.floor(res.data.exchangeRate * 100) / 100;
-    }
-    ElMessage.success({
-      message: "修改成功",
-      center: true,
-    });
     dialogVisibleExchangeRate.value = false;
   }
 
