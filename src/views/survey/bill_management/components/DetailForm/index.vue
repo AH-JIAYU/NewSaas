@@ -110,6 +110,14 @@ defineExpose({
                   // 直接停止整个 submit 函数的执行
                   return;
                 }
+                if (!amountPattern.test(item.settlementAmount)) {
+                  ElMessage.warning({
+                    message: "请输入有效的正数，且最多两位小数",
+                    center: true,
+                  });
+                  // 直接停止整个 submit 函数的执行
+                  return;
+                }
                 // 校验结算金额是否小于最低结算金额
                 if (item.settlementAmount < form.value.minimumAmount) {
                   ElMessage.warning({
@@ -127,10 +135,18 @@ defineExpose({
                   // 直接停止整个 submit 函数的执行
                   return;
                 }
-              }else {
+              } else {
                 if (item.availableBalance == 0) {
                   ElMessage.warning({
                     message: "可用余额为0，不支持结算",
+                    center: true,
+                  });
+                  // 直接停止整个 submit 函数的执行
+                  return;
+                }
+                if (item.availableBalance < form.value.minimumAmount) {
+                  ElMessage.warning({
+                    message: "可用余额 必须大于等于 最低结算金额",
                     center: true,
                   });
                   // 直接停止整个 submit 函数的执行
@@ -141,26 +157,21 @@ defineExpose({
             // 清空结算金额
             form.value.settlementAmount = '';
           } else {
+            const amountPattern = /^(?!0(\.0+)?$)(\d+(\.\d{1,2})?)$/;
             form.value.addMemberSettlementInfoList = []
             if (!form.value.settlementAmount) {
               form.value.settlementAmount = null
             }
             delete form.value.memberSettlementInfoSelect
-            if (form.value.settlementAmount == 0) {
-              ElMessage.warning({
-                message: "请输入有效的正数，且最多两位小数",
-                center: true,
-              });
-              // 直接停止整个 submit 函数的执行
-              return;
-            }
-            if (form.value.settlementAmount < form.value.minimumAmount) {
-              ElMessage.warning({
-                message: "结算金额 必须大于等于 最低结算金额",
-                center: true,
-              });
-              // 直接停止整个 submit 函数的执行
-              return;
+            if (form.value.settlementAmount) {
+              if (!amountPattern.test(form.value.settlementAmount)) {
+                ElMessage.warning({
+                  message: "请输入有效的正数，且最多两位小数",
+                  center: true,
+                });
+                // 直接停止整个 submit 函数的执行
+                return;
+              }
             }
           }
           if (valid) {
