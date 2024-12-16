@@ -325,7 +325,7 @@ const sendProjectType = ref<any>(false);
 // 取消分配
 const cancelAllocation = () => {
   sendProjectType.value = !sendProjectType.value;
-  // colse()
+  colse()
   if (sendProjectType.value) {
     isAllocation.value = true;
   } else {

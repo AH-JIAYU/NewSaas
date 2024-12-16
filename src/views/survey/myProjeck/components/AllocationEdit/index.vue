@@ -109,15 +109,19 @@ function closeHandler() {
     groupSupplierIdList: [],
   });
   dialogTableVisible.value = false;
+  createClose()
+  isAllocation.value = false;
+  sendProjectType.value = false;
+  data.value.selectAll.member = false;
+}
+// 清空选择框数据
+const createClose = () => {
   Object.assign(memberObj.value, {
     projectId: null,
     allocationType: 3,
     groupSupplierIdList: [],
     deleteSet: []
   })
-  isAllocation.value = false;
-  sendProjectType.value = false;
-  data.value.selectAll.member = false;
 }
 // 会员分配
 const memberObj = ref<any>({
@@ -261,6 +265,7 @@ const sendProjectType = ref<any>(false)
 // 取消分配
 const cancelAllocation = () => {
   sendProjectType.value = !sendProjectType.value;
+  createClose()
   if (sendProjectType.value) {
     isAllocation.value = true
   } else {

@@ -324,7 +324,6 @@ function userData(data1: any) {
 
 <template>
   <div :class="{ 'absolute-container': tableAutoHeight }">
-    <PageMain>
       <el-row>
         <FormLeftPanel>
           <el-button type="primary" size="default" @click="handleAdd">
@@ -746,7 +745,6 @@ function userData(data1: any) {
       <customerEdit ref="editRef" @fetch-data="queryData" />
       <customerProportion ref="proportionRef" @fetch-data="queryData" />
       <financialLog ref="financialLogRef" @fetch-data="queryData" />
-    </PageMain>
     <QuickEdit ref="QuickEditRef" @fetchData="fetchData" />
     <userPM ref="userRef" @userData="userData" />
   </div>
