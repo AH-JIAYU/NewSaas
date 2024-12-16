@@ -50,10 +50,15 @@ function onCancel() {
     >
       <DetailForm ref="formRef" v-bind="props" @onSubmit="onSubmit" />
       <template #footer>
-        <ElButton size="large" @click="onCancel"> 取消 </ElButton>
-        <ElButton type="primary" size="large" @click="onSubmit">
+        <div style="flex: auto">
+          <el-button @click="onCancel"> 取消 </el-button>
+          <el-button type="primary" @click="onSubmit"> 确定 </el-button>
+        </div>
+<!--
+        <ElButton  @click="onCancel"> 取消 </ElButton>
+        <ElButton type="primary"  @click="onSubmit">
           确定
-        </ElButton>
+        </ElButton> -->
       </template>
     </ElDialog>
     <ElDrawer
@@ -66,10 +71,14 @@ function onCancel() {
     >
       <DetailForm ref="formRef" v-bind="props" @onSubmit="onSubmit" />
       <template #footer>
-        <ElButton size="large" @click="onCancel"> 取消 </ElButton>
-        <ElButton type="primary" size="large" @click="onSubmit">
+        <div style="flex: auto">
+          <el-button @click="onCancel"> 取消 </el-button>
+          <el-button type="primary" @click="onSubmit"> 确定 </el-button>
+        </div>
+        <!-- <ElButton  @click="onCancel"> 取消 </ElButton>
+        <ElButton type="primary"  @click="onSubmit">
           确定
-        </ElButton>
+        </ElButton> -->
       </template>
     </ElDrawer>
   </div>

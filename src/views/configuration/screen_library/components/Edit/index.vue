@@ -100,8 +100,8 @@ onMounted(async () => {
         </ElFormItem>
       </ElForm>
       <template #footer>
-        <ElButton size="large" @click="onCancel"> 取消 </ElButton>
-        <ElButton type="primary" size="large" @click="onSubmit">
+        <ElButton  @click="onCancel"> 取消 </ElButton>
+        <ElButton type="primary"  @click="onSubmit">
           确定
         </ElButton>
       </template>
