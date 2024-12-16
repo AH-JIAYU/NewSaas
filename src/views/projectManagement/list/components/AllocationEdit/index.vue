@@ -488,7 +488,7 @@ const goRouter = (name: any, data?: Dict) => {
     dictionary.value.dialog.visible = true;
   } else if (name == "合作商") {
     //客商管理-合作租户-邀约公司
-    // tenantRef.value.showEdit();
+    tenantRef.value.showEdit();
   }
 };
 //供应商管理
@@ -906,10 +906,15 @@ defineExpose({ showEdit });
   justify-content: center;
   align-items: center;
 }
-
-:deep {
-  .el-form-item.asterisk-left {
-    align-items: center;
-  }
+:deep(.el-button.is-link:hover) {
+  color: #409eff !important;
+  background: #f4f8ff !important;
+  border-radius: 4px 4px 4px 4px !important;
+  border: 1px solid #e9eef3 !important;
 }
+// :deep {
+//   .el-form-item.asterisk-left {
+//     align-items: center;
+//   }
+// }
 </style>

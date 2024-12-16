@@ -5,7 +5,7 @@ import api from "@/api/modules/projectManagement";
 import apiDep from "@/api/modules/survey_vip_department";
 import useSurveyVipGroupStore from "@/store/modules/survey_vipGroup"; //会员组
 const surveyVipGroupStore = useSurveyVipGroupStore(); //会员组
-
+import DictionaryDialog from "@/views/survey/vip_department/components/dictionaryDialog/index.vue";
 defineOptions({
   name: "AllocationEdit",
 });
@@ -267,17 +267,45 @@ const cancelAllocation = () => {
     isAllocation.value = false
   }
 }
+interface Dict {
+  id: string | number;
+  label: string;
+  code: string;
+  children?: Dict[];
+}
+const dictionaryRef = ref();
+// 部门
+const dictionary = ref({
+  search: {
+    name: "",
+  },
+  tree: [] as Dict[],
+  currentNode: undefined as Node | undefined,
+  currentData: undefined as Dict | undefined,
+  dialog: {
+    visible: false,
+    parentId: "" as Dict["id"],
+    id: "" as Dict["id"],
+    isClick: false,
+  },
+  row: "",
+  loading: false,
+});
 //供应商，部门，合作商，没有数据时，跳转-暂时没做
-const goRouter = (name: any) => {
-  if (name == '供应商') {
-    //供应商列表，新增供应商
-  } else if (name == '部门') {
+const goRouter = (name: any, data?: Dict) => {
+   if (name == '部门') {
     //调查系统-部门管理-新增部门
-  } else if (name == '合作商') {
-    //客商管理-合作租户-邀约公司
+    dictionary.value.currentData = data;
+    dictionary.value.dialog.parentId = "";
+    dictionary.value.dialog.id = "";
+    dictionary.value.dialog.visible = true;
   }
 }
-
+//会员列表
+const getDictionaryList = async () => {
+  const resDep = await apiDep.list({ name: "" });
+  departmentList.value = resDep.data;
+};
 // 暴露方法
 defineExpose({ showEdit });
 </script>
@@ -312,11 +340,37 @@ defineExpose({ showEdit });
                 style="display: flex; height: unset">全选</el-checkbox>
             </template>
             <template #prefix>
-              <span class="prefix-class" v-if="departmentList.length == 0" @click="goRouter('部门')">
+              <span class="prefix-class" v-if="departmentList.length == 0">
                 请先维护部门数据
                 <img src="@/assets/images/jiantou.png" alt="" style="margin-left: 0.25rem" />
               </span>
               <span v-if="!memberObj.groupSupplierIdList.length && departmentList.length != 0">请先选择部门数据</span>
+            </template>
+            <template #empty>
+              <div
+
+              >
+
+                <el-button
+                  type="primary"
+                  link
+                  class="buttonClass"
+                  size="small"
+                   @click="goRouter('部门')"
+                >
+                  快捷新增
+                  <SvgIcon
+                    name="ant-design:plus-outlined"
+                    color="#fff"
+                    style="
+                      background-color: var(--el-color-primary);
+                      border-radius: 50%;
+                      padding: 0.125rem;
+                      margin: 0 0.125rem;
+                    "
+                  />
+                </el-button>
+              </div>
             </template>
 
           </el-tree-select>
@@ -355,6 +409,17 @@ defineExpose({ showEdit });
         </div>
       </template>
     </el-dialog>
+     <!-- 调查站 -->
+     <DictionaryDialog
+      v-if="dictionary.dialog.visible"
+      :id="dictionary.dialog.id"
+      v-model="dictionary.dialog.visible"
+      :row="dictionary.row"
+      :parent-id="dictionary.dialog.parentId"
+      :tree="dictionary.tree"
+      :isClick="dictionary.dialog.isClick"
+      @get-list="getDictionaryList"
+    />
   </div>
 </template>
 
@@ -397,5 +462,32 @@ defineExpose({ showEdit });
   .el-form-item.asterisk-left {
     align-items: center;
   }
+}
+.buttonClass {
+  text-align: center;
+  margin: 0.75rem;
+  width: 100%;
+  height: 2rem;
+  font-family: PingFang SC, PingFang SC;
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: #409eff;
+  line-height: 16px;
+  background: #f4f8ff;
+  border-radius: 4px 4px 4px 4px;
+  border: 1px solid #e9eef3;
+}
+
+/* 使按钮在下拉框展开时自适应宽度 */
+.el-select-dropdown .buttonClass {
+  width: calc(100% - 24px);
+  /* 减去两边的 padding */
+
+}
+:deep(.el-button.is-link:hover) {
+  color: #409eff !important;
+  background: #f4f8ff !important;
+  border-radius: 4px 4px 4px 4px !important;
+  border: 1px solid #e9eef3 !important;
 }
 </style>
