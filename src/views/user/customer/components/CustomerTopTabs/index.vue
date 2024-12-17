@@ -402,8 +402,11 @@ const tenantId = storage.local.get("anotherName");
                 </el-col>
                 <el-col :span="24">
                   <el-form-item label="密钥">
-                    <el-input disabled v-model="localToptTab.tenantCustomerConfigInfoList[1].secretKey
-      " />
+                    <el-input disabled v-model="localToptTab.tenantCustomerConfigInfoList[1].secretKey" >
+                      <template #append>
+                        <copy class="copy" :content="localToptTab.tenantCustomerConfigInfoList[1].secretKey" />
+                      </template>
+                    </el-input>
                   </el-form-item>
                 </el-col>
               </template>
