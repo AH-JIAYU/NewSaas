@@ -196,7 +196,7 @@ function onReset() {
 }
 onMounted(async () => {
   data.customerList = await customerStore.getCustomerList();
-  columns.value.forEach((item:any) => {
+  columns.value.forEach((item: any) => {
     if (item.checked) {
       checkList.value.push(item.prop);
     }
@@ -260,7 +260,7 @@ onMounted(async () => {
       option: "surveyStatus",
       optionLabel: "label",
       optionValue: "value",
-      multiple:true,
+      multiple: true,
     },
     {
       index: 8,
@@ -353,13 +353,27 @@ function handleCurrentChange(val: any) {
           align="left"
           prop="projectName"
           show-overflow-tooltip
-          label="项目名称"
+          label="项目"
           width="200"
         >
           <template #default="{ row }">
             <el-text style="font-weight: 700; color: #333333">{{
               row.projectName ? row.projectName : "-"
             }}</el-text>
+
+            <div v-if="row.projectId" class="hoverSvg">
+              <p class="fineBom">{{ row.projectId ? row.projectId:'-'}}</p>
+              <span class="c-fx" v-if="row.projectId">
+                <copy
+                  :content="row.projectId"
+                  :class="{
+                    rowCopy: 'rowCopy',
+                    current: row.id === current,
+                  }"
+                />
+              </span>
+            </div>
+
           </template>
         </el-table-column>
         <el-table-column
@@ -393,9 +407,10 @@ function handleCurrentChange(val: any) {
           prop="memberId"
           show-overflow-tooltip
           width="200"
-          label="会员ID"
+          label="会员"
         >
           <template #default="{ row }">
+            <p  class="crudeTop strong">会员：{{ row.memberUserName ? row.memberUserName : '-' }}</p>
             <div v-if="row.memberId" class="hoverSvg">
               <p class="fineBom">{{ row.memberId }}</p>
               <span class="c-fx">
@@ -413,7 +428,7 @@ function handleCurrentChange(val: any) {
           </template>
         </el-table-column>
 
-        <el-table-column
+        <!-- <el-table-column
           v-if="checkList.includes('projectId')"
           align="left"
           prop="projectId"
@@ -432,12 +447,11 @@ function handleCurrentChange(val: any) {
                     current: row.id === current,
                   }"
                 />
-                <!-- <copy class="copy" :content="row.projectId" /> -->
               </span>
             </div>
             <el-text v-else>-</el-text>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <!-- <el-table-column v-if="checkList.includes('customerShortName')" align="left" prop="customerShortName"
           show-overflow-tooltip label="客户简称" width="100">
           <template #default="{ row }">
@@ -881,6 +895,16 @@ function handleCurrentChange(val: any) {
 
 .el-table__row:hover .rowCopy {
   display: block;
+}
+.crudeTop {
+  color: #333333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.strong {
+  font-weight: 700;
 }
 
 // 高度自适应
