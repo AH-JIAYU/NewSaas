@@ -84,7 +84,9 @@ const changeCustomerConfigInfo = async (val: any, index: number) => {
       (item: any) => item.id === val
     );
     const res = await api.generateKey({ type: findData.name });
-    localToptTab.value.tenantCustomerConfigInfoList[index].secretKey = res.data;
+    if(res.data && res.status === 1) {
+      localToptTab.value.tenantCustomerConfigInfoList[index].secretKey = res.data;
+    }
   }
 };
 // 获取PM/用户
@@ -290,8 +292,11 @@ const tenantId = storage.local.get("anotherName");
                 </el-col>
                 <el-col :span="24">
                   <el-form-item label="密钥">
-                    <el-input disabled v-model="localToptTab.tenantCustomerConfigInfoList[0].secretKey
-      " />
+                    <el-input disabled v-model="localToptTab.tenantCustomerConfigInfoList[0].secretKey">
+                      <template #append>
+                        <copy class="copy" :content="localToptTab.tenantCustomerConfigInfoList[0].secretKey" />
+                      </template>
+                    </el-input>
                   </el-form-item>
                 </el-col>
               </template>
@@ -399,8 +404,11 @@ const tenantId = storage.local.get("anotherName");
                 </el-col>
                 <el-col :span="24">
                   <el-form-item label="密钥">
-                    <el-input disabled v-model="localToptTab.tenantCustomerConfigInfoList[1].secretKey
-      " />
+                    <el-input disabled v-model="localToptTab.tenantCustomerConfigInfoList[1].secretKey" >
+                      <template #append>
+                        <copy class="copy" :content="localToptTab.tenantCustomerConfigInfoList[1].secretKey" />
+                      </template>
+                    </el-input>
                   </el-form-item>
                 </el-col>
               </template>
