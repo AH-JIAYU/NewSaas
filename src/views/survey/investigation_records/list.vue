@@ -393,7 +393,7 @@ function handleCurrentChange(val: any) {
           prop="memberId"
           show-overflow-tooltip
           width="200"
-          label="会员ID"
+          label="会员"
         >
           <template #default="{ row }">
             <div v-if="row.memberId" class="hoverSvg">
