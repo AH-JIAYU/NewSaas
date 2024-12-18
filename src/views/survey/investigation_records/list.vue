@@ -461,7 +461,6 @@ function handleCurrentChange(val: any) {
         </el-table-column> -->
         <el-table-column
           v-if="checkList.includes('memberName')"
-          width="200"
           align="left"
           prop="memberName"
           show-overflow-tooltip

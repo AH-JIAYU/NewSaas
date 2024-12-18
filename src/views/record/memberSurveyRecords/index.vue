@@ -455,7 +455,7 @@ function handleCurrentChange(val: any) {
           align="left"
           prop="customerShortName"
           show-overflow-tooltip
-          width="220"
+
           label="样本来源"
         >
           <template #default="{ row }">
@@ -648,7 +648,7 @@ function handleCurrentChange(val: any) {
           align="left"
           prop="customerShortName"
           show-overflow-tooltip
-          width="200"
+
           label="客户简称"
         >
           <!-- 乙方显示甲方公司名称甲方显示客户简称 -->
