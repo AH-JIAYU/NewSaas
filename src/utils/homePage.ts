@@ -716,7 +716,7 @@ const BCHtml1 = `<body>
             <span class="text_36">有偿问卷在家远程办公也能轻松赚钱</span>
             <span class="text_37">做完问卷即得奖励</span>
 
-              <span class="text_38 text-click">申请免费试用</span>
+
 
           </div>
          <img
@@ -909,9 +909,7 @@ const BCHtml2 = `<body>
           </span>
 
         </div>
-        <div class="text-wrapper_2 text_11 text-click">
-          马上注册
-        </div>
+
       </div>
       <div class="box_6 box-margin">
         <img class="image_5" referrerpolicy="no-referrer"
@@ -1211,15 +1209,14 @@ const BCHtml4 = `
     font-family: Source Han Sans CN-Medium;
     font-weight: 500;
     white-space: nowrap;
+ z-index: 9999;
   }
 
   .text-wrapper_1 {
-    background-color: rgba(36, 144, 255, 1);
-    border-radius: 4px;
     margin-top: 1.5rem;
     width: 14rem;
 height: 4.9375rem;
-background: #2490FF;
+
 display: flex;
 justify-content: center;
 align-items: center;
@@ -1229,24 +1226,27 @@ align-items: center;
   .text_6 {
 
     overflow-wrap: break-word;
-    color: rgba(255, 255, 255, 1);
     font-weight: 500;
     font-size: 2rem;
     font-family: Source Han Sans CN-Medium;
     font-weight: 500;
     white-space: nowrap;
-     z-index: 9999;
-
+ z-index: 9999;
+ color: #777777;
   }
+
+
+
+
     </style>
 
 
 
   <div class="box_4 flex-col">
-     <img src="" >
-    <span class="text_5">立即注册并体验功能</span>
+   <img src="" >
+    <span class="text_5">有偿问卷·轻松赚钱</span>
     <div class="text-wrapper_1 flex-col">
-      <span class="text_6 text-click">注册</span>
+      <span class="text_6">邀请您的参与</span>
     </div>
   </div>
 
