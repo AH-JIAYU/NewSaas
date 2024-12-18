@@ -431,7 +431,8 @@ const formOption = {
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>
-          <el-button type="primary" size="default" @click="addProject">
+          <!-- v-auth="'/list-insert-addProjectBtn'" -->
+          <el-button type="primary" v-auth="'/list-insert-addProjectBtn'" size="default" @click="addProject">
             新增项目
           </el-button>
           <el-button type="primary" size="default" @click="dispatch">
