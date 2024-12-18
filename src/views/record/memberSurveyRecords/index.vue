@@ -653,14 +653,9 @@ function handleCurrentChange(val: any) {
         >
           <!-- 乙方显示甲方公司名称甲方显示客户简称 -->
           <template #default="{ row }">
-            <div class="tableBig" v-if="row.surveySource  ==1 || row.surveySource  ==2">
+            <div class="tableBig">
               {{ row.customerShortName ? row.customerShortName : "-" }}
             </div>
-            <!-- 内部，直接展示公司名称 -->
-            <div class="tableBig" v-if="row.surveySource == 3">
-              {{ row.tenantName ? row.tenantName : "-" }}
-            </div>
-
           </template>
         </el-table-column>
         <el-table-column
