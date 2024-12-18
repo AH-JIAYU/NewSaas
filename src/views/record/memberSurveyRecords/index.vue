@@ -521,7 +521,7 @@ function handleCurrentChange(val: any) {
                       margin-right: 0.25rem;
                     "
                   />
-                  会员</el-tag
+                  会&nbsp;&nbsp;&nbsp;员</el-tag
                 >
                 <span>{{
                   row.memberChildName ? row.memberChildName : ""
@@ -785,7 +785,7 @@ function handleCurrentChange(val: any) {
           label="成本价"
         >
           <template #default="{ row }">
-            <div class="fontC-System" style="color: #fd8989">
+            <div class="fontC-System" >
               <svg
                 v-if="row.memberCurrencyType === 'USD'"
                 xmlns="http://www.w3.org/2000/svg"
