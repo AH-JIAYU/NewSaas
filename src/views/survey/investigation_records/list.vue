@@ -410,7 +410,7 @@ function handleCurrentChange(val: any) {
           label="会员"
         >
           <template #default="{ row }">
-            <p  class="crudeTop strong">会员：{{ row.memberUserName ? row.memberUserName : '-' }}</p>
+            <p  class="crudeTop strong">{{ row.memberUserName ? row.memberUserName : '-' }}</p>
             <div v-if="row.memberId" class="hoverSvg">
               <p class="fineBom">{{ row.memberId }}</p>
               <span class="c-fx">
