@@ -663,7 +663,7 @@ function handleCurrentChange(val: any) {
           align="left"
           prop="ipBelong"
           show-overflow-tooltip
-          width="200"
+          width="180"
           label="IP/区域"
         >
           <template #default="{ row }">
