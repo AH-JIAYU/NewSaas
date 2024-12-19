@@ -372,10 +372,10 @@ function handleCurrentChange(val: any) {
 </ElSpace> -->
             <el-row style="margin-bottom: 0.3125rem" :gutter="24">
               <el-col style="margin-bottom: 1.5625rem" :span="10">
-                <el-button type="primary" size="default" @click="onCreate">
+                <el-button type="primary" size="default" @click="onCreate" v-auth="'user-insert-insertStaff'">
                   新增
                 </el-button>
-                <el-button type="primary" size="default" @click="onResetPassword">
+                <el-button type="primary" size="default" @click="onResetPassword" v-auth="'user-get-resetPasswordStaff'">
                   重置密码
                 </el-button>
               </el-col>
@@ -484,10 +484,10 @@ function handleCurrentChange(val: any) {
               </ElTableColumn>
               <ElTableColumn label="操作" fixed="right" width="200" align="left">
                 <template #default="scope">
-                  <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">
+                  <ElButton type="primary" size="small" plain @click="onEdit(scope.row)" v-auth="'user-update-updateStaff'" >
                     编辑
                   </ElButton>
-                  <ElButton type="warning" size="small" plain @click="onDetail(scope.row)">
+                  <ElButton type="warning" size="small" plain @click="onDetail(scope.row)" v-auth="'user-get-getStaffList'">
                     详情
                   </ElButton>
                 </template>

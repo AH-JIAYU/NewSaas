@@ -142,7 +142,7 @@ onMounted(() => {
     <PageMain>
       <el-row>
         <FormLeftPanel>
-          <el-button size="default" type="primary" @click="handleAdd">
+          <el-button size="default" type="primary" @click="handleAdd" v-auth="'supplierLevel-get-addTenantSupplierLevel'">
             新增
           </el-button>
         </FormLeftPanel>
@@ -183,10 +183,10 @@ onMounted(() => {
         </el-table-column>
         <el-table-column align="left" fixed="right" show-overflow-tooltip label="操作">
           <template #default="{ row }">
-            <el-button size="small" plain type="primary" @click="handleEdit(row)">
+            <el-button size="small" plain type="primary" @click="handleEdit(row)" v-auth="'supplierLevel-update-updateTenantSupplierLevel'">
               编辑
             </el-button>
-            <el-button size="small" plain type="danger" v-if="row.isDelete === 1" @click="handleDelete(row)">
+            <el-button size="small" plain type="danger" v-if="row.isDelete === 1" @click="handleDelete(row)" v-auth="'supplierLevel-delete-deleteTenantSupplierLevel'">
               删除
             </el-button>
           </template>

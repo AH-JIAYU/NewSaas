@@ -438,7 +438,7 @@ function onSubmit() {
                   <el-button class="copy" type="primary" plain size="small" @click="copyToClipboard">复制</el-button>
                 </el-form-item>
               </el-col>
-              <el-col :span="24">
+              <el-col :span="24" v-auth="'site_setting-insert-setCname'">
                 <el-form-item label="域名配置" prop="topLevelDomainName">
                   <el-text class="mx-1" v-if="form.topLevelDomainName">{{ form.topLevelDomainName }}</el-text>
                   <div v-if="form.topLevelDomainName">
@@ -449,15 +449,15 @@ function onSubmit() {
                       <span class="red"></span><span style="margin-right: 10px;">未生效</span>
                     </div>
                   </div>
-                  <el-button class="copy" @click="record" type="primary" size="small" plain>CNAME配置</el-button>
+                  <el-button class="copy" @click="record" type="primary" size="small" plain >CNAME配置</el-button>
                 </el-form-item>
               </el-col>
-              <el-col :span="24">
+              <el-col :span="24" v-auth="'site_setting-update-upload'">
                 <ElFormItem style="
                 display: flex;
                 justify-content: center;
               " label="网址Logo">
-                  <el-upload :class="{ hide_box: fileList.length }" ref="uploadRef" drag v-model:file-list="fileList"
+                  <el-upload  :class="{ hide_box: fileList.length }" ref="uploadRef" drag v-model:file-list="fileList"
                     :headers="headers" :action="Url" :auto-upload="false" list-type="picture-card" :limit="1"
                     :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :on-success="handleSuccess"
                     :on-change="handleFileChange" :on-exceed="handleExceed" :before-remove="handleBeforeRemove">
@@ -492,7 +492,7 @@ function onSubmit() {
               </el-col>
               <el-col :span="24">
                 <el-form-item>
-                  <el-button type="primary" @click="onSubmit"> 确认 </el-button>
+                  <el-button type="primary" @click="onSubmit" v-auth="['site_setting-insert-insertSupplierConfig','site_setting-update-updateSupplierConfig']"> 确认 </el-button>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -564,7 +564,7 @@ function onSubmit() {
               </el-col>
               <el-col :span="24">
                 <el-form-item>
-                  <el-button type="primary" @click="onSubmit"> 确认 </el-button>
+                  <el-button type="primary" @click="onSubmit" v-auth="['site_setting-insert-insertSupplierConfig','site_setting-update-updateSupplierConfig']"> 确认 </el-button>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -593,7 +593,7 @@ function onSubmit() {
               </el-col>
               <el-col :span="24">
                 <el-form-item>
-                  <el-button type="primary" @click="onSubmit">确认</el-button>
+                  <el-button type="primary" @click="onSubmit" v-auth="['site_setting-insert-insertSupplierConfig','site_setting-update-updateSupplierConfig']">确认</el-button>
                 </el-form-item>
               </el-col>
             </el-row>

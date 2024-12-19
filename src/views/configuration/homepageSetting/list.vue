@@ -59,8 +59,12 @@ function getDataList() {
       if(res.data && res.status === 1) {
         //通用
         data.value.controlDataList = res.data.controlData;
+        data.value.controlDataList.forEach((item:any)=> {
+          item.isCommon = true;
+        })
         //自定义
         data.value.dataList = res.data.data;
+        data.value.dataList = [...data.value.dataList,...data.value.controlDataList]
         pagination.value.total = Number(res.data.total);
       }
     });
@@ -212,14 +216,14 @@ onBeforeUnmount(() => {
             <!-- <ElButton v-if="!scope.row.isSet" type="primary" size="small" plain @click="setHomePage(scope.row)">
               设置为主页
             </ElButton> -->
-            <ElButton type="primary" size="small" plain @click="homePage(scope.row)">
+            <ElButton type="primary" size="small" plain @click="homePage(scope.row)" >
               设计模板
             </ElButton>
-            <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">
+            <ElButton type="primary" size="small" plain @click="onEdit(scope.row)"  v-if="!scope.row.isCommon">
               编辑标题
             </ElButton>
             <!-- 通用模板不支持删除 -->
-            <ElButton type="danger" size="small" plain @click="onDel(scope.row)" v-if="!scope.row.isSet">
+            <ElButton type="danger" size="small" plain @click="onDel(scope.row)" v-if="!scope.row.isSet&& !scope.row.isCommon ">
               删除
             </ElButton>
           </template>
@@ -232,7 +236,7 @@ onBeforeUnmount(() => {
         :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
         background @size-change="sizeChange" @current-change="currentChange" />
     </PageMain>
-    <PageMain>
+    <!-- <PageMain>
       <div style="font-size: 1.5rem;">通用模板</div>
       <ElTable v-loading="data.loading" class="my-4" :data="data.controlDataList" stripe highlight-current-row
         height="100%" @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
@@ -260,7 +264,7 @@ onBeforeUnmount(() => {
           <el-empty :image="empty" :image-size="300" />
         </template>
       </ElTable>
-    </PageMain>
+    </PageMain> -->
     <FormMode v-if="data.formMode === 'dialog' || data.formMode === 'drawer'" :id="data.formModeProps.id"
       :row="data.formModeProps.row" v-model="data.formModeProps.visible" :mode="data.formMode" @success="getDataList" />
     <homePageEdit ref="homePageRef" @fetch-data="getDataList"></homePageEdit>

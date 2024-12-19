@@ -297,7 +297,7 @@ onBeforeUnmount(() => {
         @onReset="onReset" :model="data.search" />
       <ElDivider border-style="dashed" />
       <ElSpace wrap>
-        <ElButton type="primary" size="default" @click="onCreate">
+        <ElButton type="primary" size="default" @click="onCreate" v-auth="'screen_library-get-addProjectProblemCategory'">
           新增前置问卷库
         </ElButton>
       </ElSpace>
@@ -341,7 +341,7 @@ onBeforeUnmount(() => {
                 <ElTableColumn width="250" align="left" fixed="right" label="操作">
                   <template #default="scope">
                     <template v-if="scope.row.type === 'add'">
-                      <ElButton type="primary" size="small" plain @click="
+                      <ElButton v-auth="'screen_library-get-addProjectProblemCategory'" type="primary" size="small" plain @click="
     handleAdd(
       scope.row,
       scopeCountry.$index,
@@ -355,10 +355,10 @@ onBeforeUnmount(() => {
                       </ElButton>
                     </template>
                     <template v-else>
-                      <ElButton type="warning" size="small" plain @click="EditSurvey(scope.row)">
+                      <ElButton type="warning" size="small" plain @click="EditSurvey(scope.row)" v-auth="'screen_library-get-addProjectProblem'">
                         设计问卷
                       </ElButton>
-                      <ElButton type="danger" size="small" plain @click="onDelProject(scope.row)">
+                      <ElButton type="danger" size="small" plain @click="onDelProject(scope.row)" v-auth="'screen_library-delete-deleteProjectProblemCategory'">
                         删除
                       </ElButton>
                     </template>
@@ -380,10 +380,10 @@ onBeforeUnmount(() => {
           </ElTableColumn>
           <ElTableColumn label="操作" width="250" align="left" fixed="right">
             <template #default="scope">
-              <ElButton type="primary" size="small" plain @click="onCreateTiele(scope.row)">
+              <ElButton type="primary" size="small" plain @click="onCreateTiele(scope.row)" v-auth="'screen_library-get-addProjectProblemCategory'">
                 新增问卷
               </ElButton>
-              <ElButton type="danger" size="small" plain @click="onDelCountry(scope.row)">
+              <ElButton type="danger" size="small" plain @click="onDelCountry(scope.row)" v-auth="'screen_library-delete-deleteProjectProblemCategory'">
                 删除
               </ElButton>
             </template>
