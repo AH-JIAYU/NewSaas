@@ -197,18 +197,12 @@ onBeforeUnmount(() => {
           <!-- 可以使用，二次点击去掉使用 -->
           <template #default="{ row }">
             <el-button
-            v-if="row.isSet"
-              type="primary"
+              :type="row.isSet ?  'primary' :''"
               size="small"
+@click="setHomePage(row)"
+              >使用
+            </el-button>
 
-              >使用
-            </el-button>
-            <el-button
-            v-else
-              size="small"
-            @click="setHomePage(row)"
-              >使用
-            </el-button>
 
             <!-- {{ row.isSet ? '是' : '否' }} -->
           </template>
