@@ -3,6 +3,7 @@ import type { RecursiveRequired, Settings } from "#/global";
 import settingsDefault from "@/settings.default";
 // @ts-ignore
 const globalConfiguration: any =JSON.parse(localStorage.getItem('saas_systemDisposition'))
+
 const globalSettings: Settings.all = globalConfiguration||{
   "breadcrumb": {
       "style": "modern"

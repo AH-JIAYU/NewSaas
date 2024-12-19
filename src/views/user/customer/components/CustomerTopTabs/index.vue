@@ -84,7 +84,7 @@ const changeCustomerConfigInfo = async (val: any, index: number) => {
       (item: any) => item.id === val
     );
     const res = await api.generateKey({ type: findData.name });
-    if(res.data && res.status === 1) {
+    if (res.data && res.status === 1) {
       localToptTab.value.tenantCustomerConfigInfoList[index].secretKey = res.data;
     }
   }
@@ -184,7 +184,8 @@ const tenantId = storage.local.get("anotherName");
                 <el-form-item label="负责人" prop="chargeId">
                   <el-select v-model="localToptTab.chargeId" value-key="" placeholder="请选择负责人" clearable filterable>
                     <template #header>
-                      <el-radio-group v-model="radio1" size="large" style="max-width: 27.875rem;" @change="handerRadioChange">
+                      <el-radio-group v-model="radio1" size="large" style="max-width: 27.875rem;"
+                        @change="handerRadioChange">
                         <el-radio-button label="全部" value="all" />
                         <el-radio-button v-for="item in positionList" :key="item.id" :label="item.name"
                           :value="item.id" />
@@ -404,7 +405,7 @@ const tenantId = storage.local.get("anotherName");
                 </el-col>
                 <el-col :span="24">
                   <el-form-item label="密钥">
-                    <el-input disabled v-model="localToptTab.tenantCustomerConfigInfoList[1].secretKey" >
+                    <el-input disabled v-model="localToptTab.tenantCustomerConfigInfoList[1].secretKey">
                       <template #append>
                         <copy class="copy" :content="localToptTab.tenantCustomerConfigInfoList[1].secretKey" />
                       </template>
