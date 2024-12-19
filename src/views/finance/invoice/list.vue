@@ -374,6 +374,7 @@ onMounted(() => {
             type="primary"
             size="default"
             @click="addData"
+            v-auth="'invoice-insert-insertTenantInvoice'"
           >
             新增发票
           </el-button>
@@ -533,10 +534,10 @@ onMounted(() => {
         </el-table-column>
         <el-table-column align="left" fixed="right" label="操作" width="170">
           <template #default="{ row }">
-            <el-button size="small" plain type="primary" @click="editData(row)">
+            <el-button size="small" plain type="primary" @click="editData(row)"   v-auth="'invoice-update-updateById'">
               编辑
             </el-button>
-            <el-button size="small" plain type="danger" @click="onDel(row)">
+            <el-button size="small" plain type="danger" @click="onDel(row)"   v-auth="'invoice-delete-deleteById'">
               删除
             </el-button>
           </template>

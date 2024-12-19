@@ -294,10 +294,10 @@ const settlement = async () => {
           </template>
         </ElTableColumn>
         <ElTableColumn fixed="right" align="left" width="200" label="操作"><template #default="{ row }">
-            <ElButton type="primary" size="small" plain @click="financeLog(row)">
+            <ElButton type="primary" size="small" plain @click="financeLog(row)" v-auth="'pm_log-get-queryOrganizationalStructureRecordQueryAmount'">
               财务日志
             </ElButton>
-            <ElButton type="warning" size="small" plain @click="handlePlusMinusPayments(row)">
+            <ElButton type="warning" size="small" plain @click="handlePlusMinusPayments(row)" v-auth="'pm_log-insert-additionAndSubtraction'">
               加减款
             </ElButton>
           </template>

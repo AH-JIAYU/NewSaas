@@ -210,7 +210,7 @@ onMounted(() => {
         @onReset="onReset" :model="data.search" />
       <ElDivider border-style="dashed" />
       <ElSpace wrap>
-        <ElButton type="primary" size="default" @click="onCreate">
+        <ElButton type="primary" size="default" @click="onCreate" v-auth="'role-insert-insertRole'">
           新增角色
         </ElButton>
       </ElSpace>
@@ -249,17 +249,17 @@ onMounted(() => {
               <div class="oneLine fontC-System" style="width: calc(100% - 20px);">
                 {{ row.remark ? row.remark : "-" }}
               </div>
-              <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'remark')"
+              <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'remark')" v-auth="'role-update-updateRole'"
                 :class="{ edit: 'edit', current: row.id === current }" name="i-ep:edit" color="#409eff" />
             </div>
           </template>
         </ElTableColumn>
         <ElTableColumn label="操作" width="250" align="left" fixed="right">
           <template #default="scope">
-            <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">
+            <ElButton type="primary" size="small" plain @click="onEdit(scope.row)" v-auth="'role-update-updateRole'">
               编辑
             </ElButton>
-            <ElButton type="danger" size="small" plain @click="onDel(scope.row)">
+            <ElButton type="danger" size="small" plain @click="onDel(scope.row)" v-auth="'role-delete-deleteRole'">
               删除
             </ElButton>
           </template>

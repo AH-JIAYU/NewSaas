@@ -470,14 +470,14 @@ function handleCurrentChange(val: any) {
       <LayoutContainer hide-left-side-toggle>
         <template #leftSide>
           <ElButtonGroup class="btns">
-            <ElButton type="primary" class="add" @click="dictionaryAdd()">
+            <ElButton type="primary" class="add" @click="dictionaryAdd()" v-auth="'department-insert-insertOrganizationalStructure'">
               新增部门
             </ElButton>
           </ElButtonGroup>
           <ElInput v-model="dictionary.search.name" placeholder="请输入关键词筛选" clearable class="search"
             @keydown.enter="getDictionaryList">
             <template #append>
-              <ElButton @click="getDictionaryList">
+              <ElButton @click="getDictionaryList" >
                 <SvgIcon name="i-ep:search" />
               </ElButton>
             </template>
@@ -500,17 +500,17 @@ function handleCurrentChange(val: any) {
                   </div>
                   <div class="actions">
                     <ElButtonGroup>
-                      <ElButton type="primary" plain size="default" @click.stop="subsidiaryDictionaryAdd(data)">
+                      <ElButton type="primary" plain size="default" @click.stop="subsidiaryDictionaryAdd(data)" v-auth="'department-insert-insertOrganizationalStructure'">
                         <template #icon>
-                          <SvgIcon name="i-ep:plus" />
+                          <SvgIcon name="i-ep:plus"  />
                         </template>
                       </ElButton>
-                      <ElButton type="info" plain size="default" @click.stop="dictionaryEdit(node, data)">
+                      <ElButton type="info" plain size="default" @click.stop="dictionaryEdit(node, data)" v-auth="'department-update-updateOrganizationalStructure'">
                         <template #icon>
-                          <SvgIcon name="i-ep:edit" />
+                          <SvgIcon name="i-ep:edit"  />
                         </template>
                       </ElButton>
-                      <ElButton type="danger" plain size="default" @click.stop="dictionaryDelete(node, data)">
+                      <ElButton type="danger" plain size="default" @click.stop="dictionaryDelete(node, data)" v-auth="'department-delete-deleteOrganizationalStructure'">
                         <template #icon>
                           <SvgIcon name="i-ep:delete" />
                         </template>
@@ -524,10 +524,10 @@ function handleCurrentChange(val: any) {
         </template>
         <div v-show="dictionaryItem.search.organizationalStructureId" class="dictionary-container">
           <ElSpace wrap>
-            <ElButton type="primary" @click="create()">
+            <ElButton type="primary" @click="create()" v-auth="'department-insert-insertStaff'">
               新增员工
             </ElButton>
-            <ElButton @click="onResetPassword">
+            <ElButton @click="onResetPassword" v-auth="'department-update-resetPasswordStaff'">
               重置密码
             </ElButton>
           </ElSpace>
@@ -617,10 +617,10 @@ function handleCurrentChange(val: any) {
             </ElTableColumn>
             <ElTableColumn label="操作" fixed="right" width="200" align="left">
               <template #default="scope">
-                <ElButton type="primary" size="small" plain @click="edit(scope.row)">
+                <ElButton type="primary" size="small" plain @click="edit(scope.row)" v-auth="'department-update-updateStaff'">
                   编辑
                 </ElButton>
-                <ElButton type="warning" size="small" plain @click="onDetail(scope.row)">
+                <ElButton type="warning" size="small" plain @click="onDetail(scope.row)" v-auth="'department-get-getStaffList'">
                   详情
                 </ElButton>
               </template>

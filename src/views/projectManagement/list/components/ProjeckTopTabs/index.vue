@@ -699,7 +699,7 @@ const addProblem = () => {
   data.value.editProps.visible = true;
 };
 //获取区域
-const getProblemList = async() => {
+const getProblemList = async () => {
   const res = await api.getProjectCountryList({
     countryIdList: localToptTab.value.countryIdList,
   });
@@ -1036,6 +1036,37 @@ const getProblemList = async() => {
               <span>其他设置</span>
             </div>
           </template>
+          <!-- <el-row :gutter="20">
+            <el-col :span="5">
+              <el-form-item label="性别" class="flex">
+                <el-radio-group size="medium">
+                  <el-radio-button label="不限"></el-radio-button>
+                  <el-radio-button label="男"></el-radio-button>
+                  <el-radio-button label="女"></el-radio-button>
+                </el-radio-group>
+              </el-form-item>
+            </el-col>
+            <el-col :span="4">
+              <el-form-item label="年龄" class="flex">
+                <el-input clearable style="width: 2.5rem !important" />
+                <span style="margin:0 .25rem">-</span>
+                <el-input clearable style="width: 2.5rem !important" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="操作系统" class="flex">
+                <el-select placeholder="请选择操作系统" filterable> </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="1">
+
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="浏览器" class="flex">
+                <el-select placeholder="请选择浏览器" filterable> </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row> -->
           <el-row :gutter="20">
             <el-col :span="5">
               <el-form-item label="定时发布" class="flex">
@@ -1093,6 +1124,7 @@ const getProblemList = async() => {
               </el-form-item>
             </el-col>
           </el-row>
+
           <el-row :gutter="20">
             <!-- 定时发布开显示时间，关隐藏 -->
             <el-col :span="5" v-if="localToptTab.isTimeReleases === 2">
@@ -1265,10 +1297,13 @@ const getProblemList = async() => {
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="6"  v-if="
-                    localToptTab.data.configurationInformation.initialProblem
-                      .countryId
-                  ">
+            <el-col
+              :span="6"
+              v-if="
+                localToptTab.data.configurationInformation.initialProblem
+                  .countryId
+              "
+            >
               <el-form-item label="问卷名称">
                 <el-select
                   v-model="
@@ -1280,7 +1315,6 @@ const getProblemList = async() => {
                   :disabled="localToptTab.projectType === 2"
                   @focus="getProjectCategoryList"
                   @change="getProjectProblemList"
-
                 >
                   <el-option
                     v-for="item in localToptTab.data.configurationInformation

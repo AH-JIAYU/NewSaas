@@ -389,7 +389,7 @@ function handleCurrentChange(val: any) {
         <el-table-column v-if="checkList.includes('memberId')" align="left" prop="memberId" show-overflow-tooltip
           width="200" label="会员">
           <template #default="{ row }">
-            <p class="crudeTop strong">会员：{{ row.memberUserName ? row.memberUserName : '-' }}</p>
+            <p  class="crudeTop strong">{{ row.memberUserName ? row.memberUserName : '-' }}</p>
             <div v-if="row.memberId" class="hoverSvg">
               <p class="fineBom">{{ row.memberId }}</p>
               <span class="c-fx">
@@ -435,8 +435,13 @@ function handleCurrentChange(val: any) {
               }}</el-text>
           </template>
         </el-table-column> -->
-        <el-table-column v-if="checkList.includes('memberName')" width="200" align="left" prop="memberName"
-          show-overflow-tooltip label="部门">
+        <el-table-column
+          v-if="checkList.includes('memberName')"
+          align="left"
+          prop="memberName"
+          show-overflow-tooltip
+          label="部门"
+        >
           <template #default="{ row }">
             <div v-if="row.memberName" class="hoverSvg">
               <el-text style="color: #333333">{{

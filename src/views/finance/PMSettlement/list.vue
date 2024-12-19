@@ -216,7 +216,7 @@ function handleCurrentChange(val: any) {
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>
-          <el-button size="default" type="primary" @click="settlement">
+          <el-button size="default" type="primary" @click="settlement" v-auth="'PMSettlement-update-organizationalStructureSettlement'">
             手动结算
           </el-button>
         </FormLeftPanel>
@@ -342,14 +342,14 @@ function handleCurrentChange(val: any) {
         <el-table-column align="left" fixed="right" label="操作" width="170">
           <template #default="{ row }">
             <template v-if="row.status == '待支付'">
-              <el-button size="small" type="primary" plain @click="changeStatus(row.id, 'PAID')">
+              <el-button size="small" type="primary" plain @click="changeStatus(row.id, 'PAID')" v-auth="'PMSettlement-update-organizationalStructureSettlementUpdate'">
                 支付
               </el-button>
               <el-button
                 size="small"
                 plain
                 type="danger"
-
+v-auth="'PMSettlement-update-organizationalStructureSettlementUpdate'"
                 @click="changeStatus(row.id, 'REJECTED')"
               >
                 拒绝

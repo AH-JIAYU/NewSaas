@@ -39,7 +39,7 @@ function goBack() {
 
 <template>
   <div>
-    <PageHeader :title="route.name === 'routerName' ? '新增首页设置' : '编辑首页设置'">
+    <PageHeader :title="route.name === 'routerName' ? '新增首页设置' : '编辑标题'">
       <ElButton size="default" round @click="goBack">
         <template #icon>
           <SvgIcon name="i-ep:arrow-left" />

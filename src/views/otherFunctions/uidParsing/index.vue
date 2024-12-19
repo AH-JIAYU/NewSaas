@@ -50,7 +50,7 @@ async function ParsingEncryption() {
         </el-col>
         <el-col :xs="2" :sm="2" :md="2" :lg="2" :xl="2">
           <div class="flex-c">
-            <el-button type="primary" size="default" @click="ParsingEncryption">
+            <el-button type="primary" size="default" @click="ParsingEncryption" v-auth="'uidParsing-get-getAnalyzeUid'">
               解析<el-icon>
                 <DArrowRight />
               </el-icon>

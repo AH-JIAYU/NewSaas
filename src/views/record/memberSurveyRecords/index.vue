@@ -455,7 +455,7 @@ function handleCurrentChange(val: any) {
           align="left"
           prop="customerShortName"
           show-overflow-tooltip
-          width="220"
+ width="250"
           label="样本来源"
         >
           <template #default="{ row }">
@@ -521,7 +521,7 @@ function handleCurrentChange(val: any) {
                       margin-right: 0.25rem;
                     "
                   />
-                  会员</el-tag
+                  会&nbsp;&nbsp;&nbsp;员</el-tag
                 >
                 <span>{{
                   row.memberChildName ? row.memberChildName : ""
@@ -648,7 +648,7 @@ function handleCurrentChange(val: any) {
           align="left"
           prop="customerShortName"
           show-overflow-tooltip
-          width="200"
+
           label="客户简称"
         >
           <!-- 乙方显示甲方公司名称甲方显示客户简称 -->
@@ -663,7 +663,7 @@ function handleCurrentChange(val: any) {
           align="left"
           prop="ipBelong"
           show-overflow-tooltip
-          width="200"
+          width="180"
           label="IP/区域"
         >
           <template #default="{ row }">
@@ -785,7 +785,7 @@ function handleCurrentChange(val: any) {
           label="成本价"
         >
           <template #default="{ row }">
-            <div class="fontC-System" style="color: #fd8989">
+            <div class="fontC-System" >
               <svg
                 v-if="row.memberCurrencyType === 'USD'"
                 xmlns="http://www.w3.org/2000/svg"

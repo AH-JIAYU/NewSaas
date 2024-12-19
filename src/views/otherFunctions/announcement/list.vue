@@ -278,7 +278,7 @@ onBeforeUnmount(() => {
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>
-          <ElButton type="primary" size="default" @click="onCreate">
+          <ElButton type="primary" size="default" @click="onCreate" v-auth="'announcement-insert-insertNotice'">
             新增
           </ElButton>
         </FormLeftPanel>
@@ -326,10 +326,10 @@ onBeforeUnmount(() => {
         </ElTableColumn>
         <ElTableColumn label="操作" width="300" align="left" fixed="right">
           <template #default="scope">
-            <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">
+            <ElButton type="primary" size="small" plain @click="onEdit(scope.row)" v-auth="'announcement-update-updateNotice'">
               编辑
             </ElButton>
-            <ElButton type="danger" size="small" plain @click="onDel(scope.row)">
+            <ElButton type="danger" size="small" plain @click="onDel(scope.row)" v-auth="'announcement-delete-deleteNotice'">
               删除
             </ElButton>
           </template>

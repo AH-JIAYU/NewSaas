@@ -214,7 +214,7 @@ const activeName = ref('first')
             <ElDivider border-style="dashed" />
             <el-row>
               <FormLeftPanel>
-                <el-button type="primary" size="default" @click="handleAdd">
+                <el-button type="primary" size="default" @click="handleAdd" v-auth="'customer-get-addTenantCustomer'">
                   新增
                 </el-button>
               </FormLeftPanel>
@@ -339,13 +339,13 @@ const activeName = ref('first')
               <el-table-column align="left" fixed="right" prop="i" label="操作" width="200">
                 <template #default="{ row }">
                   <ElSpace>
-                    <el-button size="small" plain type="primary" @click="handleEdit(row)">
+                    <el-button size="small" plain type="primary" @click="handleEdit(row)" v-auth="'customer-update-updateTenantCustomer'">
                       编辑
                     </el-button>
-                    <el-button type="warning" plain size="small" @click="handleCheck(row)">
+                    <el-button type="warning" plain size="small" @click="handleCheck(row)" v-auth="'customer-get-getTenantCustomerInfo'">
                       详情
                     </el-button>
-                    <el-button type="danger" plain size="small" @click="handleDelete(row)">
+                    <el-button type="danger" plain size="small" @click="handleDelete(row)" v-auth="'customer-delete-deleteTenantCustomer'">
                       删除
                     </el-button>
                   </ElSpace>

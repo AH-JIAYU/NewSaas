@@ -178,7 +178,7 @@ const formOption = {
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>
-          <el-button style="margin-right: 10px" type="primary" size="default" @click="addData">
+          <el-button style="margin-right: 10px" type="primary" size="default" @click="addData" v-auth="'position_manage-insert-insertPosition'">
             新增职位
           </el-button>
         </FormLeftPanel>
@@ -224,16 +224,16 @@ const formOption = {
                 {{ row.remark ? row.remark : "-" }}
               </div>
               <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'remark')"
-                :class="{ edit: 'edit', current: row.id === current }" name="i-ep:edit" color="#409eff" />
+                :class="{ edit: 'edit', current: row.id === current }" name="i-ep:edit" color="#409eff" v-auth="'position_manage-update-updatePosition'" />
             </div>
           </template>
         </el-table-column>
         <el-table-column align="left" fixed="right" label="操作" width="170">
           <template #default="{ row }">
-            <el-button size="small" plain type="primary" @click="editData(row)">
+            <el-button size="small" plain type="primary" @click="editData(row)" v-auth="'position_manage-update-updatePosition'">
               编辑
             </el-button>
-            <el-button size="small" plain type="danger" @click="deleteData(row)">
+            <el-button size="small" plain type="danger" @click="deleteData(row)" v-auth="'position_manage-delete-deletePosition'">
               删除
             </el-button>
           </template>

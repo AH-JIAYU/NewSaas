@@ -158,7 +158,7 @@ const formOption = {
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>
-          <el-button type="primary" size="default" @click="addData">
+          <el-button type="primary" size="default" @click="addData"   v-auth="'scheduling-get-addProjectDispatch'">
             新增
           </el-button>
         </FormLeftPanel>
@@ -267,10 +267,10 @@ const formOption = {
         </el-table-column>
         <el-table-column align="left" fixed="right" label="操作" width="170">
           <template #default="{ row }">
-            <el-button type="primary" plain size="small" @click="editData(row)">
+            <el-button type="primary" plain size="small" @click="editData(row)" v-auth="'scheduling-update-updateProjectDispatch'">
               编辑
             </el-button>
-            <el-button type="danger" plain size="small" @click="onDel(row)">
+            <el-button type="danger" plain size="small" @click="onDel(row)" v-auth="'scheduling-delete-deleteProjectDispatch'">
               删除
             </el-button>
           </template>

@@ -20,7 +20,7 @@ const visible = defineModel<boolean>({
 const formRef = ref();
 
 const title = computed(() =>
-  props.id === "" ? "新增首页设置" : "编辑首页设置"
+  props.id === "" ? "新增首页设置" : "编辑标题"
 );
 
 function onSubmit() {
