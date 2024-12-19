@@ -300,10 +300,10 @@ function handleCurrentChange(val: any) {
         <el-table-column align="left" prop="i" label="操作" fixed="right" show-overflow-tooltip width="260">
           <template #default="{ row }">
             <template v-if="row.billStatus === 1">
-              <el-button size="small" plain type="primary" @click="paymentOperation(row.id, 1)" v-auth="'supplierSettlement-update-updateMemberBill'">
+              <el-button size="small" plain type="primary" @click="paymentOperation(row.id, 1)" v-auth="'billManagement-insert-updateMemberBill'">
                 支付
               </el-button>
-              <el-button size="small" plain type="danger" @click="paymentOperation(row.id, 2)" v-auth="'supplierSettlement-update-updateMemberBill'">
+              <el-button size="small" plain type="danger" @click="paymentOperation(row.id, 2)" v-auth="'billManagement-insert-updateMemberBill'">
                 拒绝支付
               </el-button>
             </template>

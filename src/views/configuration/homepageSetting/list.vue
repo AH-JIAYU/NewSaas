@@ -59,13 +59,10 @@ function getDataList() {
       if(res.data && res.status === 1) {
         //通用
         data.value.controlDataList = res.data.controlData;
-        data.value.controlDataList.forEach((item:any)=> {
-          item.isCommon = true;
-        })
+
         //自定义
         data.value.dataList = res.data.data;
-        data.value.dataList = [...data.value.dataList,...data.value.controlDataList]
-        pagination.value.total = Number(res.data.total);
+
       }
     });
   } catch (error) {
@@ -174,12 +171,41 @@ onBeforeUnmount(() => {
     <PageMain>
       <div style="font-size: 1.5rem;">官网首页模版库</div>
       <ElDivider border-style="dashed" />
+      <PageMain>
+      <div style="font-size: 1.5rem;">通用模板</div>
+      <ElTable v-loading="data.loading" class="my-4" :data="data.controlDataList" stripe highlight-current-row
+        height="100%" @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
+        <ElTableColumn v-if="data.batch.enable" type="selection" align="left" fixed />
+        <ElTableColumn prop="title" label="标题" />
+        <ElTableColumn prop="isSet" align="left" width="100" label="是否默认">
+          <template #default="{ row }">
+            {{ row.isSet ? '是' : '否' }}
+          </template>
+        </ElTableColumn>
+        <ElTableColumn label="操作" width="350" align="left" fixed="right">
+          <template #default="scope">
+            <ElButton v-if="!scope.row.isSet" type="primary" size="small" plain @click="setHomePage(scope.row)">
+              设置为主页
+            </ElButton>
+            <ElButton type="primary" size="small" plain @click="homeMyPage(scope.row)">
+              设置为自定义模版
+            </ElButton>
+            <ElButton type="primary" size="small" plain @click="homePage(scope.row,'')">
+              查看
+            </ElButton>
+          </template>
+        </ElTableColumn>
+        <template #empty>
+          <el-empty :image="empty" :image-size="300" />
+        </template>
+      </ElTable>
+    </PageMain>
       <ElSpace wrap>
         <ElButton type="primary" size="default" @click="onCreate">
           <template #icon>
             <SvgIcon name="i-ep:plus" />
           </template>
-          新增首页设置
+          新增模版
         </ElButton>
         <ElButton v-if="data.batch.enable" size="default" :disabled="!data.batch.selectionDataList.length">
           单个批量操作按钮
@@ -193,6 +219,8 @@ onBeforeUnmount(() => {
           </ElButton>
         </ElButtonGroup>
       </ElSpace>
+      <div style="font-size: 1.5rem;">官网首页模版库</div>
+
       <ElTable v-loading="data.loading" class="my-4" :data="data.dataList" stripe highlight-current-row
         height="100%" @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
         <ElTableColumn v-if="data.batch.enable" type="selection" align="left" fixed />
@@ -236,35 +264,7 @@ onBeforeUnmount(() => {
         :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
         background @size-change="sizeChange" @current-change="currentChange" />
     </PageMain>
-    <!-- <PageMain>
-      <div style="font-size: 1.5rem;">通用模板</div>
-      <ElTable v-loading="data.loading" class="my-4" :data="data.controlDataList" stripe highlight-current-row
-        height="100%" @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
-        <ElTableColumn v-if="data.batch.enable" type="selection" align="left" fixed />
-        <ElTableColumn prop="title" label="标题" />
-        <ElTableColumn prop="isSet" align="left" width="100" label="是否默认">
-          <template #default="{ row }">
-            {{ row.isSet ? '是' : '否' }}
-          </template>
-        </ElTableColumn>
-        <ElTableColumn label="操作" width="350" align="left" fixed="right">
-          <template #default="scope">
-            <ElButton v-if="!scope.row.isSet" type="primary" size="small" plain @click="setHomePage(scope.row)">
-              设置为主页
-            </ElButton>
-            <ElButton type="primary" size="small" plain @click="homeMyPage(scope.row)">
-              设置为自定义模版
-            </ElButton>
-            <ElButton type="primary" size="small" plain @click="homePage(scope.row,'')">
-              查看
-            </ElButton>
-          </template>
-        </ElTableColumn>
-        <template #empty>
-          <el-empty :image="empty" :image-size="300" />
-        </template>
-      </ElTable>
-    </PageMain> -->
+
     <FormMode v-if="data.formMode === 'dialog' || data.formMode === 'drawer'" :id="data.formModeProps.id"
       :row="data.formModeProps.row" v-model="data.formModeProps.visible" :mode="data.formMode" @success="getDataList" />
     <homePageEdit ref="homePageRef" @fetch-data="getDataList"></homePageEdit>

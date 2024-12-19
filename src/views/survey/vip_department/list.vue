@@ -513,7 +513,7 @@ function handleCurrentChange(val: any) {
       <LayoutContainer hide-left-side-toggle>
         <template #leftSide>
           <ElButtonGroup class="btns">
-            <ElButton type="primary" class="add" @click="dictionaryAdd()" v-auth="'department-insert-insertOrganizationalStructure'">
+            <ElButton type="primary" class="add" @click="dictionaryAdd()" v-auth="'department-insert-insertOrganizationalStructureMember'">
               新增部门
             </ElButton>
           </ElButtonGroup>
@@ -538,17 +538,17 @@ function handleCurrentChange(val: any) {
                   </div>
                   <div class="actions">
                     <ElButtonGroup>
-                      <ElButton type="primary" plain size="default" @click.stop="subsidiaryDictionaryAdd(data)" v-auth="'department-insert-insertOrganizationalStructure'">
+                      <ElButton type="primary" plain size="default" @click.stop="subsidiaryDictionaryAdd(data)" v-auth="'department-insert-insertOrganizationalStructureMember'">
                         <template #icon>
                           <SvgIcon name="i-ep:plus" />
                         </template>
                       </ElButton>
-                      <ElButton type="info" plain size="default" @click.stop="dictionaryEdit(node, data)" v-auth="'department-update-updateOrganizationalStructure'">
+                      <ElButton type="info" plain size="default" @click.stop="dictionaryEdit(node, data)" v-auth="'department-update-updateOrganizationalStructureMember'">
                         <template #icon>
                           <SvgIcon name="i-ep:edit" />
                         </template>
                       </ElButton>
-                      <ElButton type="danger" plain size="default" @click.stop="dictionaryDelete(node, data)" v-auth="'department-delete-deleteOrganizationalStructure'">
+                      <ElButton type="danger" plain size="default" @click.stop="dictionaryDelete(node, data)" v-auth="'department-delete-deleteOrganizationalStructureMember'">
                         <template #icon>
                           <SvgIcon name="i-ep:delete" />
                         </template>
@@ -788,7 +788,7 @@ function handleCurrentChange(val: any) {
                 <el-button size="small" plain type="primary" @click="plusMinusPayments(row)" v-auth="'vip-get-additionSubtractionMember'">
                   加减款
                 </el-button>
-                <el-button size="small" plain type="warning" @click="handleEdit(row)" v-auth="'vip-update-updateMember'">
+                <el-button size="small" plain type="warning" @click="handleEdit(row)" v-auth="'vipDepartment-update-updateMember'">
                   编辑
                 </el-button>
               </template>
