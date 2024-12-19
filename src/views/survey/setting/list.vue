@@ -307,7 +307,7 @@ function onSubmit() {
               <el-input v-model="form.externalSite" />
             </el-form-item> -->
             <el-form-item>
-              <el-button type="primary" @click="onSubmit"> 确认 </el-button>
+              <el-button type="primary" @click="onSubmit" v-auth="['setting-insert-insertMemberConfig','setting-update-updateMemberConfig']"> 确认 </el-button>
             </el-form-item>
           </el-tab-pane>
           <!-- <el-tab-pane label="高级设置" name="高级设置">

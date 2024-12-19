@@ -230,7 +230,7 @@ function onDeleteMulti(rows: any[]) {
       <LayoutContainer hide-left-side-toggle>
         <template #leftSide>
           <ElButtonGroup class="btns">
-            <ElButton type="primary" class="add" @click="dictionaryAdd()">
+            <ElButton type="primary" class="add" @click="dictionaryAdd()" v-auth="'tenantDictionary-insert-insertDict'">
               新增字典
             </ElButton>
           </ElButtonGroup>
@@ -255,17 +255,17 @@ function onDeleteMulti(rows: any[]) {
                   </div>
                   <div class="actions">
                     <ElButtonGroup>
-                      <ElButton type="primary" plain size="default" @click.stop="dictionaryAdd(data)">
+                      <ElButton type="primary" plain size="default" @click.stop="dictionaryAdd(data)" v-auth="'tenantDictionary-insert-insertDict'">
                         <template #icon>
                           <SvgIcon name="i-ep:plus" />
                         </template>
                       </ElButton>
-                      <ElButton type="info" plain size="default" @click.stop="dictionaryEdit(node, data)">
+                      <ElButton type="info" plain size="default" @click.stop="dictionaryEdit(node, data)" v-auth="'tenantDictionary-update-updateDictById'">
                         <template #icon>
                           <SvgIcon name="i-ep:edit" />
                         </template>
                       </ElButton>
-                      <ElButton type="danger" plain size="default" @click.stop="dictionaryDelete(node, data)">
+                      <ElButton type="danger" plain size="default" @click.stop="dictionaryDelete(node, data)" v-auth="'tenantDictionary-delete-deleteDictById'">
                         <template #icon>
                           <SvgIcon name="i-ep:delete" />
                         </template>
@@ -287,7 +287,7 @@ function onDeleteMulti(rows: any[]) {
 
 
             <ElButton type="danger" :disabled="!dictionaryItem.selectionDataList.length" style="background-color: #FB6868;"
-              @click="onDeleteMulti(dictionaryItem.selectionDataList)">
+              @click="onDeleteMulti(dictionaryItem.selectionDataList)" v-auth="'tenantDictionary-insert-insertDict'">
               <template #icon>
                 <SvgIcon name="i-ep:delete" />
               </template>
@@ -334,13 +334,13 @@ function onDeleteMulti(rows: any[]) {
 
             <ElTableColumn label="操作" width="250" align="left">
               <template #default="scope">
-                <ElButton type="primary" size="small" plain @click="onCreate(scope.row)">
+                <ElButton type="primary" size="small" plain @click="onCreate(scope.row)" v-auth="'tenantDictionary-insert-insertDictDataSource'">
                   新增子项
                 </ElButton>
-                <ElButton type="warning" size="small" plain @click="onEdit(scope.row)">
+                <ElButton type="warning" size="small" plain @click="onEdit(scope.row)" v-auth="'tenantDictionary-update-updateDictDataSource'">
                   编辑
                 </ElButton>
-                <ElButton type="danger" size="small" plain @click="onDelete(scope.row)">
+                <ElButton type="danger" size="small" plain @click="onDelete(scope.row)" v-auth="'tenantDictionary-delete-deleteDictDataSource'">
                   删除
                 </ElButton>
               </template>

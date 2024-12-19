@@ -163,7 +163,7 @@ function handleCurrentChange(val: any) {
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>
-          <el-button size="default" type="primary" @click="settlement"> 手动结算 </el-button>
+          <el-button size="default" type="primary" @click="settlement" v-auth="'supplierSettlement-get-addTenantSupplierBill'"> 手动结算 </el-button>
         </FormLeftPanel>
         <FormRightPanel>
           <el-button size="default" @click=""> 导出 </el-button>
@@ -248,15 +248,15 @@ function handleCurrentChange(val: any) {
         <el-table-column align="left" fixed="right" label="操作" width="170">
           <template #default="{ row }">
             <template v-if="row.billStatus === 1">
-              <el-button size="small" plain type="primary" @click="changeStatus(row.id, 1)">
+              <el-button size="small" plain type="primary" @click="changeStatus(row.id, 1)" v-auth="'supplierSettlement-update-updateTenantSupplierBill'">
                 确认收票
               </el-button>
             </template>
             <template v-else-if="row.billStatus === 2">
-              <el-button size="small" plain @click="changeStatus(row.id, 2)">
+              <el-button size="small" plain @click="changeStatus(row.id, 2)" v-auth="'supplierSettlement-update-updateTenantSupplierBill'">
                 支付
               </el-button>
-              <el-button size="small" plain type="danger" @click="changeStatus(row.id, 3)">
+              <el-button size="small" plain type="danger" @click="changeStatus(row.id, 3)" v-auth="'supplierSettlement-update-updateTenantSupplierBill'">
                 拒绝
               </el-button>
             </template>

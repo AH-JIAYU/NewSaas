@@ -408,16 +408,16 @@ function viewAllocations(row: any) {
           <template #default="{ row }">
             <ElSpace>
               <el-button type="primary" v-if="row.allocationStatus === 1" :disabled="row.isOnline === 2" plain
-                size="small" @click="distribution(row)">
+                size="small" @click="distribution(row)" v-auth="'myProjeck-get-addProjectAllocation'">
                 分配
               </el-button>
-              <el-button v-else plain type="primary" :disabled="row.isOnline === 2" size="small" @click="reassign(row)">
+              <el-button v-else plain type="primary" :disabled="row.isOnline === 2" size="small" @click="reassign(row)" v-auth="'myProjeck-get-addProjectAllocation'">
                 重新分配
               </el-button>
               <!-- <el-button type="primary" plain size="small" @click="tested(row)">
                 测查
               </el-button> -->
-              <el-button size="small" plain type="warning" @click="check(row)">
+              <el-button size="small" plain type="warning" @click="check(row)" v-auth="'myProjeck-get-getQuotaProjectInfo'">
                 配额
               </el-button>
             </ElSpace>

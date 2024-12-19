@@ -142,7 +142,7 @@ onMounted(() => {
     <PageMain>
       <el-row>
         <FormLeftPanel>
-          <el-button size="default" type="primary" @click="handleAdd">
+          <el-button size="default" type="primary" @click="handleAdd" v-auth="'vipLevel-get-addMemberLevel'">
             新增
           </el-button>
         </FormLeftPanel>
@@ -197,10 +197,10 @@ onMounted(() => {
         </el-table-column>
         <el-table-column align="left" fixed="right" show-overflow-tooltip label="操作">
           <template #default="{ row }">
-            <el-button size="small" plain type="primary" @click="handleEdit(row)">
+            <el-button size="small" plain type="primary" @click="handleEdit(row)" v-auth="'vipLevel-update-updateMemberLevel'">
               编辑
             </el-button>
-            <el-button size="small" plain type="danger" v-if="row.isDelete === 1" @click="handleDelete(row)">
+            <el-button size="small" plain type="danger" v-if="row.isDelete === 1" @click="handleDelete(row)" v-auth="'vipLevel-delete-deleteMemberLevel'">
               删除
             </el-button>
           </template>

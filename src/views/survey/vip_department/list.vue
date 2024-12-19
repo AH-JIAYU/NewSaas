@@ -513,7 +513,7 @@ function handleCurrentChange(val: any) {
       <LayoutContainer hide-left-side-toggle>
         <template #leftSide>
           <ElButtonGroup class="btns">
-            <ElButton type="primary" class="add" @click="dictionaryAdd()">
+            <ElButton type="primary" class="add" @click="dictionaryAdd()" v-auth="'department-insert-insertOrganizationalStructure'">
               新增部门
             </ElButton>
           </ElButtonGroup>
@@ -538,17 +538,17 @@ function handleCurrentChange(val: any) {
                   </div>
                   <div class="actions">
                     <ElButtonGroup>
-                      <ElButton type="primary" plain size="default" @click.stop="subsidiaryDictionaryAdd(data)">
+                      <ElButton type="primary" plain size="default" @click.stop="subsidiaryDictionaryAdd(data)" v-auth="'department-insert-insertOrganizationalStructure'">
                         <template #icon>
                           <SvgIcon name="i-ep:plus" />
                         </template>
                       </ElButton>
-                      <ElButton type="info" plain size="default" @click.stop="dictionaryEdit(node, data)">
+                      <ElButton type="info" plain size="default" @click.stop="dictionaryEdit(node, data)" v-auth="'department-update-updateOrganizationalStructure'">
                         <template #icon>
                           <SvgIcon name="i-ep:edit" />
                         </template>
                       </ElButton>
-                      <ElButton type="danger" plain size="default" @click.stop="dictionaryDelete(node, data)">
+                      <ElButton type="danger" plain size="default" @click.stop="dictionaryDelete(node, data)" v-auth="'department-delete-deleteOrganizationalStructure'">
                         <template #icon>
                           <SvgIcon name="i-ep:delete" />
                         </template>
@@ -566,7 +566,7 @@ function handleCurrentChange(val: any) {
           <ElDivider border-style="dashed" />
           <el-row style="margin:0;">
             <FormLeftPanel>
-              <el-button type="primary" size="default" @click="handleAdd">
+              <el-button type="primary" size="default" @click="handleAdd" v-auth="'vip-get-addMember'">
                 新增
               </el-button>
             </FormLeftPanel>
@@ -785,10 +785,10 @@ function handleCurrentChange(val: any) {
             </el-table-column>
             <el-table-column align="left" label="操作" fixed="right" show-overflow-tooltip width="180">
               <template #default="{ row }">
-                <el-button size="small" plain type="primary" @click="plusMinusPayments(row)">
+                <el-button size="small" plain type="primary" @click="plusMinusPayments(row)" v-auth="'vip-get-additionSubtractionMember'">
                   加减款
                 </el-button>
-                <el-button size="small" plain type="warning" @click="handleEdit(row)">
+                <el-button size="small" plain type="warning" @click="handleEdit(row)" v-auth="'vip-update-updateMember'">
                   编辑
                 </el-button>
               </template>

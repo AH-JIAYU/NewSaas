@@ -292,7 +292,7 @@ function handleCurrentChange(val: any) {
       <ElDivider border-style="dashed" />
       <el-row>
         <FormLeftPanel>
-          <el-button type="primary" size="default" @click="handleAdd">
+          <el-button type="primary" size="default" @click="handleAdd" v-auth="'vip-get-addMember'">
             新增
           </el-button>
         </FormLeftPanel>
@@ -511,10 +511,10 @@ function handleCurrentChange(val: any) {
         </el-table-column>
         <el-table-column align="left" label="操作" fixed="right" show-overflow-tooltip width="180">
           <template #default="{ row }">
-            <el-button size="small" plain type="primary" @click="plusMinusPayments(row)">
+            <el-button size="small" plain type="primary" @click="plusMinusPayments(row)" v-auth="'ip-get-additionSubtractionMember'">
               加减款
             </el-button>
-            <el-button size="small" plain type="warning" @click="handleEdit(row)">
+            <el-button size="small" plain type="warning" @click="handleEdit(row)" v-auth="'vip-update-updateMember'">
               编辑
             </el-button>
           </template>

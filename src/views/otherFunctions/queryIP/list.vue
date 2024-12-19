@@ -45,7 +45,7 @@ async function ParsingEncryption() {
         </el-col>
         <el-col :xs="2" :sm="2" :md="2" :lg="2" :xl="2">
           <div class="flex-c">
-            <el-button type="primary" size="default" @click="ParsingEncryption">
+            <el-button type="primary" size="default" @click="ParsingEncryption" v-auth="'queryIP-get-getIpInfo'">
               <div class="i-material-symbols-light:not-started-outline-rounded h-1.5em w-1.5em" />
               开始
             </el-button>
