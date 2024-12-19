@@ -168,7 +168,7 @@ onBeforeUnmount(() => {
 <template>
   <div :class="{ 'absolute-container': data.tableAutoHeight }">
     <PageMain>
-      <div style="font-size: 1.5rem;">自定义模板</div>
+      <div style="font-size: 1.5rem;">官网首页模版库</div>
       <ElDivider border-style="dashed" />
       <ElSpace wrap>
         <ElButton type="primary" size="default" @click="onCreate">
@@ -193,23 +193,39 @@ onBeforeUnmount(() => {
         height="100%" @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
         <ElTableColumn v-if="data.batch.enable" type="selection" align="left" fixed />
         <ElTableColumn prop="title" label="标题" />
-        <ElTableColumn prop="isSet" align="left" width="100" label="是否默认">
+        <ElTableColumn prop="isSet" align="left"  label="是否使用">
+          <!-- 可以使用，二次点击去掉使用 -->
           <template #default="{ row }">
-            {{ row.isSet ? '是' : '否' }}
+            <el-button
+            v-if="row.isSet"
+              type="primary"
+              size="small"
+
+              >使用
+            </el-button>
+            <el-button
+            v-else
+              size="small"
+            @click="setHomePage(row)"
+              >使用
+            </el-button>
+
+            <!-- {{ row.isSet ? '是' : '否' }} -->
           </template>
         </ElTableColumn>
         <ElTableColumn label="操作" width="350" align="left" fixed="right">
           <template #default="scope">
-            <ElButton v-if="!scope.row.isSet" type="primary" size="small" plain @click="setHomePage(scope.row)">
+            <!-- <ElButton v-if="!scope.row.isSet" type="primary" size="small" plain @click="setHomePage(scope.row)">
               设置为主页
+            </ElButton> -->
+            <ElButton type="primary" size="small" plain @click="homePage(scope.row)">
+              设计模板
             </ElButton>
             <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">
-              编辑
+              编辑标题
             </ElButton>
-            <ElButton type="primary" size="small" plain @click="homePage(scope.row)">
-              设计
-            </ElButton>
-            <ElButton type="danger" size="small" plain @click="onDel(scope.row)">
+            <!-- 通用模板不支持删除 -->
+            <ElButton type="danger" size="small" plain @click="onDel(scope.row)" v-if="!scope.row.isSet">
               删除
             </ElButton>
           </template>

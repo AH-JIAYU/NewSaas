@@ -48,7 +48,7 @@ const editorRef = ref<any>(null);
 const formRef = ref<any>(null);
 
 // 打开弹框
-const showEdit = (row: any, title: any = "编辑") => {
+const showEdit = (row: any, title: any = "设计模板") => {
   state.title = title;
   state.form = row;
   state.dialogFormVisible = true;

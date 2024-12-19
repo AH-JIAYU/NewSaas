@@ -455,7 +455,7 @@ function handleCurrentChange(val: any) {
           align="left"
           prop="customerShortName"
           show-overflow-tooltip
-
+ width="250"
           label="样本来源"
         >
           <template #default="{ row }">

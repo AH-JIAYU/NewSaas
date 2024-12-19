@@ -370,7 +370,7 @@ const formOption = {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('supplierAccord')" align="left" prop="supplierAccord" label="供应商名称"
-          width="220">
+          >
           <template #default="{ row }">
             <div class="flex-c tableBig">
               <div class="oneLine" style="width: calc(100% - 20px)">
@@ -402,7 +402,7 @@ const formOption = {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('supplierLevelId')" align="left" prop="supplierLevelId"
-          show-overflow-tooltip label="供应商等级" width="240">
+          show-overflow-tooltip label="供应商等级" >
           <template #default="{ row }">
             <div class="flex-c" >
               <div class="fontC-System" style="width: calc(100% - 20px)">
