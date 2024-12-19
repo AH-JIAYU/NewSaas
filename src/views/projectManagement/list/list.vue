@@ -432,10 +432,10 @@ const formOption = {
       <el-row :gutter="24">
         <FormLeftPanel>
           <!-- v-auth="'/list-insert-addProjectBtn'" -->
-          <el-button type="primary" v-auth="'/list-insert-addProjectBtn'" size="default" @click="addProject">
+          <el-button type="primary" v-auth="'/list-get-addProject'" size="default" @click="addProject" >
             新增项目
           </el-button>
-          <el-button type="primary" size="default" @click="dispatch">
+          <el-button type="primary" size="default" @click="dispatch" v-auth="'/list-get-addProjectDispatch'">
             调度
           </el-button>
         </FormLeftPanel>
@@ -583,6 +583,7 @@ const formOption = {
                 :class="{ edit: 'edit', current: row.projectId === current }"
                 name="i-ep:edit"
                 color="#409eff"
+                v-auth="'/list-update-updateProject'"
               />
             </div>
           </template>
@@ -608,6 +609,7 @@ const formOption = {
                 :class="{ edit: 'edit', current: row.projectId === current }"
                 name="i-ep:edit"
                 color="#409eff"
+                v-auth="'/list-update-updateProject'"
               />
             </div>
           </template>
@@ -668,6 +670,7 @@ const formOption = {
                 :class="{ edit: 'edit', current: row.projectId === current }"
                 name="i-ep:edit"
                 color="#409eff"
+                v-auth="'/list-update-updateProject'"
               />
             </div>
           </template>
@@ -813,6 +816,7 @@ const formOption = {
                 :class="{ edit: 'edit', current: row.projectId === current }"
                 name="i-ep:edit"
                 color="#409eff"
+                v-auth="'/list-update-updateProject'"
               />
             </div>
           </template>
@@ -939,6 +943,7 @@ const formOption = {
               type="primary"
               size="small"
               @click="distribution(row)"
+              v-auth="'/list-get-addProjectAllocation'"
             >
               分配
             </el-button>
@@ -949,6 +954,7 @@ const formOption = {
               :disabled="row.isOnline === 2"
               size="small"
               @click="reassign(row)"
+               v-auth="'/list-get-addProjectAllocation'"
             >
               重新分配
             </el-button>
@@ -958,6 +964,7 @@ const formOption = {
               plain
               size="small"
               @click="projectEdit(row)"
+              v-auth="'/list-update-updateProject'"
             >
               编辑
             </el-button>
@@ -966,6 +973,7 @@ const formOption = {
               size="small"
               plain
               @click="projectDetails(row)"
+              v-auth="'/list-get-getProject'"
             >
               详情
             </el-button>

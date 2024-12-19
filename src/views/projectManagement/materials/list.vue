@@ -433,6 +433,7 @@ onMounted(() => {
                     plain
                     size="small"
                     @click="projectDetails(row)"
+                    v-auth="'materials-get-getMaterials-btn'"
                   >
                     查看
                   </el-button>
@@ -441,6 +442,7 @@ onMounted(() => {
                     plain
                     size="small"
                     @click="deleteData(row)"
+                      v-auth="'materials-delete-deleteProjectMaterial'"
                   >
                     删除
                   </el-button>
@@ -665,6 +667,7 @@ onMounted(() => {
                     plain
                     size="small"
                     @click="projectDetails(row)"
+                     v-auth="'materials-get-getMaterials-btn'"
                   >
                     查看
                   </el-button>
@@ -673,6 +676,7 @@ onMounted(() => {
                     plain
                     size="small"
                     @click="deleteData(row)"
+                      v-auth="'materials-delete-deleteProjectMaterial'"
                   >
                     删除
                   </el-button>

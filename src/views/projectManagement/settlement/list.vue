@@ -427,13 +427,13 @@ function handleMoreStatus(row: any) {
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>
-          <el-button type="primary" size="default" @click="addSettlement">
+          <el-button type="primary" size="default" @click="addSettlement" v-auth="'settlement-insert-insertProjectSettlement'">
             新增结算
           </el-button>
-          <el-button type="primary" size="default" @click="invoicing(1)">
+          <el-button type="primary" size="default" @click="invoicing(1)" v-auth="'settlement-update-updateProjectSettlementStatus'">
             开票
           </el-button>
-          <el-button type="primary" size="default" @click="settlement(2)">
+          <el-button type="primary" size="default" @click="settlement(2)" v-auth="'settlement-update-updateProjectSettlementStatus'">
             结算
           </el-button>
         </FormLeftPanel>
@@ -641,6 +641,7 @@ function handleMoreStatus(row: any) {
                 :class="{ edit: 'edit', current: row.projectId === current }"
                 name="i-ep:edit"
                 color="#409eff"
+                  v-auth="'settlement-update-updateProjectSettlement'"
               />
             </div>
           </template>
@@ -674,6 +675,7 @@ function handleMoreStatus(row: any) {
                 :class="{ edit: 'edit', current: row.projectId === current }"
                 name="i-ep:edit"
                 color="#409eff"
+                  v-auth="'settlement-update-updateProjectSettlement'"
               />
             </div>
           </template>
@@ -820,6 +822,7 @@ function handleMoreStatus(row: any) {
                 :class="{ edit: 'edit', current: row.projectId === current }"
                 name="i-ep:edit"
                 color="#409eff"
+                  v-auth="'settlement-update-updateProjectSettlement'"
               />
             </div>
           </template>
@@ -833,6 +836,7 @@ function handleMoreStatus(row: any) {
                 size="small"
                 plain
                 @click="auditing(row)"
+                v-auth="'settlement-get-projectSettlement'"
               >
                 审核
               </el-button>
@@ -842,6 +846,7 @@ function handleMoreStatus(row: any) {
                 size="small"
                 plain
                 @click="handleMoreOperating('auditing', row)"
+                  v-auth="'settlement-get-projectSettlement'"
               >
                 重审
               </el-button>
@@ -850,6 +855,7 @@ function handleMoreStatus(row: any) {
                 size="small"
                 plain
                 @click="handleMoreOperating('edit', row)"
+                  v-auth="'settlement-update-updateProjectSettlement'"
               >
                 结算编辑
               </el-button>
@@ -860,6 +866,7 @@ function handleMoreStatus(row: any) {
                 v-if="row.status == 2 || row.status == 4 || row.status == 3"
                 plain
                 @click="handleMoreOperating('refundDetails', row)"
+                 v-auth="'settlement-get-getProjectSettlementDetails'"
               >
                 详情
               </el-button>

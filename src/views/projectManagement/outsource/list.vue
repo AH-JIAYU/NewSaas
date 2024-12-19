@@ -419,10 +419,10 @@ const downReceive = (row: any) => {
           <ElDivider border-style="dashed" />
           <el-row :gutter="24">
             <FormLeftPanel>
-              <el-button type="primary" size="default" @click="addReceiveAll">
+              <el-button type="primary" size="default" @click="addReceiveAll" v-auth="'outsource-update-updateReceiveStatus'">
                 接收项目
               </el-button>
-              <el-button size="default" @click="delReceiveAll">
+              <el-button size="default" @click="delReceiveAll" v-auth="'outsource-update-updateReceiveStatus'">
                 取消接收
               </el-button>
             </FormLeftPanel>
@@ -629,17 +629,17 @@ const downReceive = (row: any) => {
                   重新分配
                 </el-button> -->
                 <!-- 1，已接收，2手动，未接收 -->
-                <el-button v-if="row.receiveStatus == 2" plain type="primary" size="small" @click="addReceive(row)">
+                <el-button v-if="row.receiveStatus == 2" plain type="primary" size="small" @click="addReceive(row)" v-auth="'outsource-update-updateReceiveStatus'">
                   接收
                 </el-button>
-                <el-button v-if="row.receiveStatus == 1" plain type="primary" size="small" @click="delreceive(row)">
+                <el-button v-if="row.receiveStatus == 1" plain type="primary" size="small" @click="delreceive(row)" v-auth="'outsource-update-updateReceiveStatus'">
                   取消接收
                 </el-button>
                 <el-button down v-if="row.receiveStatus == 2" plain type="danger" size="small"
-                  @click="downReceive(row)">
+                  @click="downReceive(row)" v-auth="'outsource-update-updateReceiveStatus'">
                   拒绝
                 </el-button>
-                <el-button type="warning" plain size="small" @click="editData(row)">
+                <el-button type="warning" plain size="small" @click="editData(row)" v-auth="'outsource-get-getTenantMeasurementList'">
                   详情
                 </el-button>
               </template>
@@ -744,7 +744,7 @@ const downReceive = (row: any) => {
             </el-table-column>
             <el-table-column align="left" fixed="right" label="操作" width="170">
               <template #default="{ row }">
-                <el-button type="primary" plain size="small" @click="editData(row)">
+                <el-button type="primary" plain size="small" @click="editData(row)" v-auth="'outsource-get-getTenantMeasurementList'">
                   详情
                 </el-button>
               </template>

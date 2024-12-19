@@ -161,7 +161,7 @@ function handleCurrentChange(val: any) {
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>
-          <el-button style="margin-right: 10px" type="primary" size="default" @click="addData">
+          <el-button style="margin-right: 10px" type="primary" size="default" @click="addData"  v-auth="'alter-update-updateTenantUpdateRecord'">
             新增
           </el-button>
         </FormLeftPanel>

@@ -326,7 +326,7 @@ function userData(data1: any) {
   <div :class="{ 'absolute-container': tableAutoHeight }">
       <el-row>
         <FormLeftPanel>
-          <el-button type="primary" size="default" @click="handleAdd">
+          <el-button type="primary" size="default" @click="handleAdd" v-auth="'cooperation-get-addInvitationBind'">
             邀约公司
           </el-button>
         </FormLeftPanel>
@@ -484,6 +484,7 @@ function userData(data1: any) {
                 :class="{ edit: 'edit', current: row.id === current }"
                 name="i-ep:edit"
                 color="#409eff"
+                v-auth="'cooperation-update-updateInvitationBindUser'"
               />
             </div>
           </template>
@@ -701,6 +702,7 @@ function userData(data1: any) {
                 type="primary"
                 plain
                 @click="priceRatio(row)"
+                v-auth="'cooperation-update-updateInvitationBindUser'"
               >
                 合作配置
               </el-button>
@@ -710,6 +712,7 @@ function userData(data1: any) {
                 plain
                 size="small"
                 @click="termination(row)"
+                  v-auth="'cooperation-update-updateRescindTenant'"
               >
                 终止合作
               </el-button>
@@ -719,6 +722,7 @@ function userData(data1: any) {
                 plain
                 size="small"
                 @click="openLog(row)"
+                v-auth="'cooperation-get-queryCompanyRecordQueryAmount'"
               >
                 财务日志
               </el-button>

@@ -337,7 +337,7 @@ const formOption = {
       <ElDivider border-style="dashed" />
       <el-row>
         <FormLeftPanel>
-          <el-button type="primary" size="default" @click="handleAdd">
+          <el-button type="primary" size="default" @click="handleAdd"  v-auth="'supplier-get-addTenantSupplier'">
             新增
           </el-button>
         </FormLeftPanel>
@@ -411,7 +411,7 @@ const formOption = {
               <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'supplierLevelId')" :class="{
     edit: 'edit',
     current: row.tenantSupplierId === current,
-  }" name="i-ep:edit" color="#409eff" />
+  }" name="i-ep:edit" color="#409eff" v-auth="'supplier-update-updateTenantSupplier'" />
             </div>
           </template>
         </el-table-column>
@@ -537,7 +537,7 @@ const formOption = {
               <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'settlementCycle')" :class="{
     edit: 'edit',
     current: row.tenantSupplierId === current,
-  }" name="i-ep:edit" color="#409eff" />
+  }" name="i-ep:edit" color="#409eff" v-auth="'supplier-update-updateTenantSupplier'" />
             </div>
           </template>
         </el-table-column>
@@ -560,20 +560,20 @@ const formOption = {
               <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'remark')" :class="{
     edit: 'edit',
     current: row.tenantSupplierId === current,
-  }" name="i-ep:edit" color="#409eff" />
+  }" name="i-ep:edit" color="#409eff" v-auth="'supplier-update-updateTenantSupplier'"/>
             </div>
           </template>
         </el-table-column>
         <el-table-column align="left" prop="i" label="操作" fixed="right" width="250">
           <template #default="{ row }">
             <ElSpace>
-              <el-button size="small" plain type="primary" @click="handlePlusMinusPayments(row)">
+              <el-button size="small" plain type="primary" @click="handlePlusMinusPayments(row)" v-auth="'supplier-get-additionSubtractionSupplier'">
                 加减款
               </el-button>
-              <el-button size="small" plain type="warning" @click="handleEdit(row)">
+              <el-button size="small" plain type="warning" @click="handleEdit(row)" v-auth="'supplier-update-updateTenantSupplier'">
                 编辑
               </el-button>
-              <el-button size="small" plain type="danger" @click="handleCheck(row)">
+              <el-button size="small" plain type="danger" @click="handleCheck(row)" v-auth="'supplier-get-getTenantSupplierInfo'">
                 详情
               </el-button>
             </ElSpace>
