@@ -713,7 +713,8 @@ const BCHtml1 = `<body>
       <div class="group_5 flex-col">
         <div class="block_4 flex-row justify-between">
           <div class="box_10 flex-col">
-            <span class="text_36">有偿问卷在家远程办公也能轻松赚钱</span>
+              <span class="text_36">有偿问卷在家远程办公也能</span>
+            <span class="text_36">轻松赚钱</span>
             <span class="text_37">做完问卷即得奖励</span>
 
 
