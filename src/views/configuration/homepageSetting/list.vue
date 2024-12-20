@@ -181,10 +181,10 @@ onBeforeUnmount(() => {
         </ElTableColumn>
         <ElTableColumn label="操作" width="350" align="left" fixed="right">
           <template #default="scope">
-            <ElButton v-if="!scope.row.isSet" type="primary" size="small" plain @click="setHomePage(scope.row)">
+            <ElButton v-if="!scope.row.isSet" type="primary" size="small" plain @click="setHomePage(scope.row)" v-auth="'homepageSetting-get-setHomePageTemplate'">
               设为官网
             </ElButton>
-            <ElButton type="primary" size="small" plain @click="homeMyPage(scope.row)">
+            <ElButton type="primary" size="small" plain @click="homeMyPage(scope.row)" v-auth="'homepageSetting-update-updateHomePageTemplate'">
               设置为自定义模版
             </ElButton>
             <ElButton type="primary" size="small" plain @click="homePage(scope.row,'')">
@@ -201,7 +201,7 @@ onBeforeUnmount(() => {
       <div style="font-size: 1.5rem;">自定义模板</div>
       <ElDivider border-style="dashed" />
       <ElSpace wrap>
-        <ElButton type="primary" size="default" @click="onCreate">
+        <ElButton type="primary" size="default" @click="onCreate" v-auth="'homepageSetting-insert-insertHomePageTemplate'">
           <template #icon>
             <SvgIcon name="i-ep:plus" />
           </template>
@@ -234,16 +234,16 @@ onBeforeUnmount(() => {
         </ElTableColumn>
         <ElTableColumn label="操作" width="350" align="left" fixed="right">
           <template #default="scope">
-            <ElButton v-if="!scope.row.isSet" type="primary" size="small" plain @click="setHomePage(scope.row)">
+            <ElButton v-if="!scope.row.isSet" type="primary" size="small" plain @click="setHomePage(scope.row)" v-auth="'homepageSetting-get-setHomePageTemplate'">
               设置为主页
             </ElButton>
-            <ElButton type="primary" size="small" plain @click="homePage(scope.row)" >
+            <ElButton type="primary" size="small" plain @click="homePage(scope.row)" v-auth="'homepageSetting-update-updateHomePageTemplate'">
               设计模板
             </ElButton>
-            <ElButton type="primary" size="small" plain @click="onEdit(scope.row)">
+            <ElButton type="primary" size="small" plain @click="onEdit(scope.row)" v-auth="'homepageSetting-update-updateHomePageTemplate'">
               编辑标题
             </ElButton>
-            <ElButton type="danger" size="small" plain @click="onDel(scope.row)" v-if="!scope.row.isSet">
+            <ElButton type="danger" size="small" plain @click="onDel(scope.row)" v-if="!scope.row.isSet" v-auth="'homepageSetting-delete-deleteHomePageTemplate'">
               删除
             </ElButton>
           </template>
