@@ -174,7 +174,7 @@ onBeforeUnmount(() => {
         height="100%" @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
         <ElTableColumn v-if="data.batch.enable" type="selection" align="left" fixed />
         <ElTableColumn prop="title" label="标题" />
-        <ElTableColumn prop="isSet" align="left"  label="是否默认">
+        <ElTableColumn prop="isSet" align="left"  label="是否使用">
           <template #default="{ row }">
             {{ row.isSet ? '是' : '否' }}
           </template>
@@ -235,7 +235,7 @@ onBeforeUnmount(() => {
         <ElTableColumn label="操作" width="350" align="left" fixed="right">
           <template #default="scope">
             <ElButton v-if="!scope.row.isSet" type="primary" size="small" plain @click="setHomePage(scope.row)" v-auth="'homepageSetting-get-setHomePageTemplate'">
-              设置为主页
+              设为官网
             </ElButton>
             <ElButton type="primary" size="small" plain @click="homePage(scope.row)" v-auth="'homepageSetting-update-updateHomePageTemplate'">
               设计模板
