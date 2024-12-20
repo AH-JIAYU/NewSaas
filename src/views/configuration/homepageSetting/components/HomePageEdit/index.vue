@@ -10,7 +10,7 @@
     <div ref="formRef" id="gjs"></div>
     <template #footer>
       <el-button @click="close">取 消</el-button>
-      <el-button v-if="state.title === '编辑'" type="primary" @click="save"
+      <el-button v-if="state.title === '设计模板'" type="primary" @click="save"
         >确 定</el-button
       >
     </template>
@@ -197,7 +197,7 @@ const onDialogOpened = async () => {
 
 // 提交
 const save = async () => {
-  if (state.title === "编辑") {
+  if (state.title === "设计模板") {
     const html = editorRef.value.getHtml();
     const css = editorRef.value.getCss();
     const rawData = JSON.stringify(editorRef.value.getProjectData());

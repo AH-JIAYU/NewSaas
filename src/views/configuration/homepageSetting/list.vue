@@ -102,7 +102,7 @@ function onEdit(row: any) {
 }
 
 // 设计主页
-function homePage(row: any, title: any = "编辑") {
+function homePage(row: any, title: any = "设计模板") {
   homePageRef.value.showEdit(row, title);
 }
 //设置为自定义模版
