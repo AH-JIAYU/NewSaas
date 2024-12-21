@@ -713,7 +713,7 @@ const BCHtml1 = `<body>
       <div class="group_5 flex-col">
         <div class="block_4 flex-row justify-between">
           <div class="box_10 flex-col">
-              <span class="text_36">有偿问卷在家远程办公也能</span>
+            <span class="text_36">有偿问卷在家远程办公也能</span>
             <span class="text_36">轻松赚钱</span>
             <span class="text_37">做完问卷即得奖励</span>
 
@@ -1257,6 +1257,593 @@ align-items: center;
 </body>`
 
 
+
+const BBHtml1 = `<body>
+ <style type="text/css">
+ * {
+
+  margin: 0;
+  padding: 0;
+}
+.page1 img {
+    position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+
+      height: 100%;
+  }
+.page {
+  margin-bottom: 7.5rem;
+}
+
+
+.page1 {
+
+    display: flex;
+    height: 31.25rem;
+    position: relative;
+    padding-left: 7.5rem;
+    padding-top: 9.0625rem;
+}
+
+
+.text_36 {
+
+  color: rgba(51, 51, 51, 1);
+  font-size: 3rem;
+  font-family: Source Han Sans CN-Bold;
+  font-weight: 700;
+  z-index: 9999;
+  white-space: nowrap;
+
+}
+.text {
+  z-index: 9999;
+}
+
+
+
+
+
+
+
+
+    </style>
+    <div class="page flex-col">
+          <div class="page1">
+            <img src="" >
+          <div class="text">
+              <div class="text_36">海量调查项目待承接·开启</div>
+
+            <div class="text_36">共赢新篇章</div>
+            </div>
+          </div>
+    </div>
+
+
+
+
+
+
+
+</body>
+`
+
+const BBHtml2 = `<body>
+ <style type="text/css">
+  * {
+
+    margin: 0;
+    padding: 0;
+
+  }
+
+  .flex-col {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .justify-between {
+    display: flex;
+    justify-content: space-between;
+  }
+
+.text-group-1 {
+  padding-top: 4rem;
+  margin-bottom: 4rem;
+}
+
+
+  .block_1 {
+    width: 100%;
+  }
+
+  .box_5 {
+    background-color: rgba(248, 249, 251, 1);
+    width: 100%;
+    text-align: center;
+    padding-bottom: 4rem;
+  }
+  .box-5-margin {
+    margin-bottom: 7.5rem;
+  }
+
+ .group_2 {
+  display: flex;
+  justify-content: center;
+ }
+
+  .text_7 {
+
+
+    overflow-wrap: break-word;
+    color: rgba(119, 119, 119, 1);
+    font-size: 1.75rem;
+    font-family: Source Han Sans CN-Medium;
+    font-weight: 500;
+    text-align: left;
+    white-space: nowrap;
+
+  }
+
+  .text_8 {
+
+    overflow-wrap: break-word;
+    color: rgba(51, 51, 51, 1);
+    font-size: 3rem;
+    font-family: Source Han Sans CN-Medium;
+    font-weight: 500;
+    text-align: left;
+    white-space: nowrap;
+
+  }
+
+
+
+  .box_6 {
+    background-color: rgba(255, 255, 255, 1);
+    border-radius: 8px;
+     width: 21.25rem;
+    height: 23.75rem;
+    padding: 2.25rem 1.5rem 2.625rem 1.5rem;
+  }
+.box-margin {
+  margin: 0 2rem;
+}
+  .image_5 {
+    width: 7.5rem;
+    height:  7.5rem;
+  }
+
+
+
+  .text_9 {
+
+    overflow-wrap: break-word;
+    color: rgba(51, 51, 51, 1);
+    font-size: 1.5rem;
+    font-family: Source Han Sans CN-Medium;
+    font-weight: 500;
+    text-align: center;
+    white-space: nowrap;
+    margin: 1.5rem 0 1.5rem 0;
+
+  }
+
+  .text_10 {
+
+    height: 1.28rem;
+    overflow-wrap: break-word;
+    color: rgba(51, 51, 51, 1);
+    font-size: 1rem;
+    font-family: Source Han Sans CN-Regular;
+    font-weight: 500;
+    text-align: left;
+    margin-top: 0.427rem;
+  }
+
+  .text-wrapper_2 {
+    border: 1px solid rgba(68, 157, 250, 1);
+    width: 6rem;
+    height: 2.125rem;
+    border-radius: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: 0 auto;
+    margin-top: 2.5rem;
+  }
+
+  .text_11 {
+
+    overflow-wrap: break-word;
+    color: rgba(68, 157, 250, 1);
+    font-weight: 500;
+    font-family: PingFang SC-Medium;
+    font-weight: 500;
+    text-align: left;
+    white-space: nowrap;
+    line-height: 0.427rem;
+  }
+
+
+  .group_5 {
+    position: absolute;
+    left: 0;
+    top: -0.533rem;
+    width: 51.2rem;
+    height: 21.334rem;
+  }
+
+
+
+
+    </style>
+ <div class="box-5-margin">
+  <div class="box_5 ">
+    <div class="text-group_4 text-group-1">
+      <span class="text_8">简单三步即可成为供应商</span>
+
+    </div>
+
+    <div class="group_2">
+      <div class="box_6">
+
+        <img class="image_5" referrerpolicy="no-referrer"
+
+           src=
+          />
+        <div class="text-group_5 flex-col justify-between">
+          <span class="text_9">注册</span>
+          <span class="text_10">
+            任何人都可以参加，注册步骤简单只需要30秒
+          </span>
+
+        </div>
+
+      </div>
+      <div class="box_6 box-margin">
+        <img class="image_5" referrerpolicy="no-referrer"
+             src= />
+        <div class="text-group_5 flex-col justify-between">
+          <span class="text_9">会员</span>
+          <span class="text_10">
+            将您的会员进行录入系统，形成会员系统管控，会员操作尽在掌握之中
+          </span>
+
+        </div>
+
+      </div>
+      <div class="box_6">
+        <img class="image_5" referrerpolicy="no-referrer"      src=
+         />
+        <div class="text-group_5 flex-col justify-between">
+          <span class="text_9">项目</span>
+          <span class="text_10">
+           自动获取源源不断的调查项目，可自由分配给旗下的会员
+          </span>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+
+
+
+</body>
+`
+const BBHtml3 = `<body>
+ <style type="text/css">
+   * {
+
+margin: 0;
+padding: 0;
+
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.justify-between {
+  display: flex;
+  justify-content: space-between;
+}
+
+
+
+
+.group_1 {
+  width: 100%;
+  background-color: white;
+}
+
+.b2b3 {
+  background-color: #F8F9FB;
+  margin: 11.25rem;
+}
+
+.box_1 {
+margin: 11.25rem 11.25rem 0 11.25rem;
+}
+
+.image_1 {
+  width: 41.125rem;
+  height: 27.375rem;
+}
+
+.text-group_1 {
+  margin-top: 5.375rem;
+  margin-left: 5rem;
+}
+
+.text_1 {
+
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 3rem;
+  font-family: Source Han Sans CN-Medium;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+
+}
+
+.paragraph_1 {
+
+  overflow-wrap: break-word;
+  color: rgba(119, 119, 119, 1);
+  font-size: 1.5rem;
+  font-family: Source Han Sans CN-Regular;
+  font-weight: 400;
+  text-align: left;
+  margin-top: 1rem;
+}
+
+.box_2 {
+
+  margin: 7.5rem 11.25rem;
+}
+
+.text-group_2 {
+  margin-top: 5.375rem;
+  margin-right: 5rem;
+}
+
+.text_2 {
+
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 3rem;
+  font-family: Source Han Sans CN-Medium;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.paragraph_2 {
+  overflow-wrap: break-word;
+  color: rgba(119, 119, 119, 1);
+  font-size: 1.5rem;
+  font-family: Source Han Sans CN-Regular;
+  font-weight: 400;
+  text-align: left;
+  margin-top: 1rem;
+}
+
+.image_2 {
+  width: 41.125rem;
+  height: 27.375rem;
+}
+
+.box_3 {
+  margin: 4rem 1.5rem;
+}
+
+.image_3 {
+  width: 41.125rem;
+  height: 27.375rem;
+}
+
+.text-group_3 {
+  margin-top: 5.375rem;
+  margin-left: 5rem;
+}
+
+.text_3 {
+
+  overflow-wrap: break-word;
+  color: rgba(51, 51, 51, 1);
+  font-size: 3rem;
+  font-family: Source Han Sans CN-Medium;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.text_4 {
+  overflow-wrap: break-word;
+  color: rgba(119, 119, 119, 1);
+  font-size: 1.5rem;
+  font-family: Source Han Sans CN-Regular;
+  font-weight: 400;
+  text-align: left;
+  margin-top: 1rem;
+}
+
+
+
+
+
+
+.group_2 {
+  width: 28.907rem;
+  height: 10.134rem;
+  margin: 1.707rem 0 0 11.147rem;
+}
+
+
+    </style>
+  <div class="group_1 flex-row">
+        <div class="block_1 flex-col">
+          <div class="b2b3">
+          <div class="box_3 flex-row justify-between">
+            <img
+            class="image_1"
+            referrerpolicy="no-referrer"
+            src=
+            />
+               <div class="text-group_1 flex-col">
+              <span class="text_3">项目管理</span>
+              <span class="text_4">
+
+              您不需要创建项目，我们的客户会根据系统的数据匹配，给您分配
+              <br/>
+              最适配的问卷项目。问卷项目关联性高，也就意味着可获得更多专
+               <br/>
+              属项目。您也可以在次分配项目，支持自定义分配给指定的部门，
+               <br/>
+              进行项目的细分，让样本的质量越来越高，赚取的佣金就会越来越多。
+
+              </span>
+            </div>
+          </div>
+          <div class="box_3 flex-row justify-between">
+            <div class="text-group_2 flex-col ">
+              <span class="text_2">会员管理&nbsp;&nbsp;提升业绩与用户忠诚度的<br/>核心驱动力</span>
+              <span class="text_4">
+             通过会员的专属服务通道、优先响应机制，实时查看会员完成的调<br/>
+             查质量、定制的功能开关，给予指定会员的特权、会员佣金的财务<br/>
+             跟踪，保证财务对账的数据确定性。促进会员与您的黏性，从而达<br/>
+             成长期稳定的合作关系，提高会员数据的透明度。
+
+              </span>
+            </div>
+            <img
+            class="image_2"
+            referrerpolicy="no-referrer"  src= />
+          </div>
+          <div class="box_3 flex-row justify-between">
+            <img
+              class="image_3"
+              referrerpolicy="no-referrer" src= />
+            <div class="text-group_3 flex-col ">
+              <span class="text_3">数据中心</span>
+              <span class="text_4">
+
+              调查数据中心，展示多维度数据管理，支持查看您的收益以及会员<br/>
+              的收益，对每个项目的成本进行管控。根据会员的排行榜，了解部 <br/>
+              门与会员的绩效评估，明确工作成果和激励员工提高工作绩效
+
+              </span>
+            </div>
+          </div>
+          </div>
+
+
+
+        </div>
+
+      </div>
+
+
+
+
+
+
+
+</body>
+`
+
+
+const BBHtml4 = `
+
+<body>
+<style type="text/css">
+ * {
+
+    margin: 0;
+    padding: 0;
+
+  }
+
+  .flex-col {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .flex-row {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .box_4 {
+    display: flex;
+  justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 31.25rem;
+  position: relative;
+  }
+  .box_4 img {
+    position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+  }
+  .text_5 {
+    overflow-wrap: break-word;
+    color: #FFFFFF;
+    font-size: 3rem;
+    font-family: Source Han Sans CN-Medium;
+    font-weight: 500;
+    white-space: nowrap;
+ z-index: 9999;
+  }
+
+
+
+
+
+
+
+    </style>
+
+
+
+  <div class="box_4 flex-col">
+   <img src="" >
+    <span class="text_5">诚邀供应商·开启合作新篇章</span>
+  </div>
+
+
+
+
+</body>`
+
+
+
+
+
+
+
+
+
 const colorBlocksHtml = `
 <div class="square_div">
 `
@@ -1295,6 +1882,30 @@ export const customBlock = [
     id: 'B2C-Html4', // 唯一标识
     label: 'B2C首页模板第四部分', //标题
     content: BCHtml4, // 块的内容
+    category: 'Custom',// 块的位置 （那个类别下）
+  },
+  {
+    id: 'B2B-Html1', // 唯一标识
+    label: 'B2B首页模板第一部分', //标题
+    content: BBHtml1, // 块的内容
+    category: 'Custom',// 块的位置 （那个类别下）
+  },
+  {
+    id: 'B2B-Html2', // 唯一标识
+    label: 'B2B首页模板第二部分', //标题
+    content: BBHtml2, // 块的内容
+    category: 'Custom',// 块的位置 （那个类别下）
+  },
+  {
+    id: 'B2B-Html3', // 唯一标识
+    label: 'B2B首页模板第三部分', //标题
+    content: BBHtml3, // 块的内容
+    category: 'Custom',// 块的位置 （那个类别下）
+  },
+  {
+    id: 'B2B-Html4', // 唯一标识
+    label: 'B2B首页模板第四部分', //标题
+    content: BBHtml4, // 块的内容
     category: 'Custom',// 块的位置 （那个类别下）
   },
   // {
