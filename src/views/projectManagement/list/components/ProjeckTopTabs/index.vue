@@ -5,7 +5,7 @@ import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
 import customerApi from "@/api/modules/user_customer";
 import fileApi from "@/api/modules/file";
 import { cloneDeep } from "lodash-es";
-import { Editor } from "@bytemd/vue-next";
+// import { Editor } from "@bytemd/vue-next";
 import gfm from "@bytemd/plugin-gfm";
 import zhHans from "bytemd/locales/zh_Hans.json";
 import gfmLocale from "@bytemd/plugin-gfm/lib/locales/zh_Hans.json";
@@ -24,7 +24,8 @@ import customerEdit from "@/views/user/customer/components/CustomerEdit/index.vu
 import useUserStore from "@/store/modules/user"; // 用户汇率
 import apiSite from "@/api/modules/configuration_site_setting";
 import Edit from "@/views/configuration/screen_library/components/Edit/index.vue";
-
+// 引入 TinyMCE 编辑器组件
+import  UEditor  from '@/components/UEditor/index.vue';
 //  #endregion
 
 defineOptions({
@@ -243,14 +244,38 @@ const selectAll = () => {
     });
   }
 };
+const tinymceEditor = ref()
 // 富文本配置
 const plugins = [
   gfm({
     locale: gfmLocale,
   }),
 ];
+const editorConfig ={
+  selector: "#tinymceEditor",
+  height: 500,  // 设置编辑器的高度
+  width:600,
+        menubar: true,  // 不显示菜单栏
+        plugins: [
+          'advlist autolink lists link image charmap print preview anchor',
+          'searchreplace visualblocks code fullscreen',
+          'insertdatetime media table paste code help wordcount'
+        ],
+        toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+        paste_as_text: false,  // 粘贴时以纯文本形式处理
+        setup(editor:any) {
+          // 当编辑器内容改变时，更新 Vue 数据
+          editor.on('change', () => {
+            localToptTab.value.richText = editor.getContent();
+          });
+        }
+}
 // 富文本设置值
 function handleChange(v: string) {
+  localToptTab.value.richText = v;
+}
+//富文本框
+const changeEditorValue =(v: string)=> {
   localToptTab.value.richText = v;
 }
 // 同步
@@ -1221,16 +1246,20 @@ const getProblemList = async () => {
                 <img w-full :src="dialogImageUrl" alt="Preview Image" />
               </el-dialog>
             </el-form-item>
-            <el-row :gutter="20">
+            <el-row>
               <el-col :span="24">
-                <el-form-item label="项目描述">
+                <el-form-item label="项目描述" >
                   <!-- key解决富文本编译器   先新增  再编辑  富文本右侧值还在的问题    key值变了会刷新组件 -->
-                  <Editor
+                  <!-- <Editor
                     class="editor"
                     :value="localToptTab.richText"
                     :plugins="plugins"
                     :locale="zhHans"
                     @change="handleChange"
+                  /> -->
+                  <UEditor style="width: 100%"
+                    v-model="localToptTab.richText"
+                      @changeEditorValue="changeEditorValue"
                   />
                 </el-form-item>
               </el-col>
@@ -1526,6 +1555,9 @@ const getProblemList = async () => {
 </template>
 
 <style lang="scss" scoped>
+:deep(.tox-promotion){
+  display: none !important;
+}
 .buttonClass {
   text-align: center;
   width: 100%;

@@ -21,8 +21,8 @@ importers:
         specifier: ^2.3.15
         version: 2.3.18(@vue/compiler-sfc@3.4.36)(vue@3.4.36(typescript@5.5.4))
       '@tinymce/tinymce-vue':
-        specifier: ^5.1.1
-        version: 5.1.1(vue@3.4.36(typescript@5.5.4))
+        specifier: ^6.1.0
+        version: 6.1.0(tinymce@7.6.0)(vue@3.4.36(typescript@5.5.4))
       '@vueuse/core':
         specifier: ^10.9.0
         version: 10.11.0(vue@3.4.36(typescript@5.5.4))
@@ -135,8 +135,8 @@ importers:
         specifier: ^4.0.2
         version: 4.0.2
       tinymce:
-        specifier: ^7.0.1
-        version: 7.2.1
+        specifier: ^7.6.0
+        version: 7.6.0
       v-wave:
         specifier: ^2.0.0
         version: 2.0.0(rollup@4.20.0)(vue@3.4.36(typescript@5.5.4))
@@ -1681,10 +1681,14 @@ packages:
     peerDependencies:
       vue: ^2.7.0 || ^3.0.0
 
-  '@tinymce/tinymce-vue@5.1.1':
-    resolution: {integrity: sha512-iO57HOWesFOhsaqjA5Ea6sDvQBmJJH3/dq00Uvg7metlct2kLF+ctRgoDsetLt6gmeZ7COPftr814/XzqnJ/dg==}
+  '@tinymce/tinymce-vue@6.1.0':
+    resolution: {integrity: sha512-7JdaKMOaohuFWpjKwRmaZJbT/eNVUUYHG93R7+lUf7SUN+hSqd2spbuqZcki+tG9kaSAGd2ZmvJIsmzWDNAzpw==}
     peerDependencies:
+      tinymce: ^7.0.0 || ^6.0.0 || ^5.5.1
       vue: ^3.0.0
+    peerDependenciesMeta:
+      tinymce:
+        optional: true
 
   '@trysound/sax@0.2.0':
     resolution: {integrity: sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA==}
@@ -6192,11 +6196,8 @@ packages:
   tiny-emitter@2.1.0:
     resolution: {integrity: sha512-NB6Dk1A9xgQPMoGqC5CVXn123gWyte215ONT5Pp5a0yt4nlEoO1ZWeCwpncaekPHXO60i47ihFnZPiRPjRMq4Q==}
 
-  tinymce@6.8.4:
-    resolution: {integrity: sha512-okoJyxuPv1gzASxQDNgQbnUXOdAIyoOSXcXcZZu7tiW0PSKEdf3SdASxPBupRj+64/E3elHwVRnzSdo82Emqbg==}
-
-  tinymce@7.2.1:
-    resolution: {integrity: sha512-ADd1cvdIuq6NWyii0ZOZRuu+9sHIdQfcRNWBcBps2K8vy7OjlRkX6iw7zz1WlL9kY4z4L1DvIP+xOrVX/46aHA==}
+  tinymce@7.6.0:
+    resolution: {integrity: sha512-kUrklnD7H8JbpSDEGRh51GKK6Mrf+pR9neSDzUHvXKV+2oRtMB7sqfAtEOnM0/WKdstwaX0qoNCZNo2H1Y0EFA==}
 
   tippy.js@6.3.7:
     resolution: {integrity: sha512-E1d3oP2emgJ9dRQZdf3Kkn0qJgI6ZLpyS5z6ZkY1DF3kaQaBsGZsndEpHwx+eC+tYM41HaSNvNtLx8tU57FzTQ==}
@@ -8349,10 +8350,11 @@ snapshots:
       '@tanstack/virtual-core': 3.8.4
       vue: 3.4.36(typescript@5.5.4)
 
-  '@tinymce/tinymce-vue@5.1.1(vue@3.4.36(typescript@5.5.4))':
+  '@tinymce/tinymce-vue@6.1.0(tinymce@7.6.0)(vue@3.4.36(typescript@5.5.4))':
     dependencies:
-      tinymce: 6.8.4
       vue: 3.4.36(typescript@5.5.4)
+    optionalDependencies:
+      tinymce: 7.6.0
 
   '@trysound/sax@0.2.0': {}
 
@@ -13741,9 +13743,7 @@ snapshots:
 
   tiny-emitter@2.1.0: {}
 
-  tinymce@6.8.4: {}
-
-  tinymce@7.2.1: {}
+  tinymce@7.6.0: {}
 
   tippy.js@6.3.7:
     dependencies:
