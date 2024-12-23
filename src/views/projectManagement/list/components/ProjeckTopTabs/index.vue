@@ -1258,7 +1258,7 @@ const getProblemList = async () => {
                     @change="handleChange"
                   /> -->
                   <UEditor style="width: 100%"
-                    v-model="localToptTab.richText"
+                    :tinymceHtml="localToptTab.richText"
                       @changeEditorValue="changeEditorValue"
                   />
                 </el-form-item>
