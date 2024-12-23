@@ -137,7 +137,6 @@ const initTinymce = () => {
       progress: any
     ) => {
       const file = blobInfo.blob(); // 得到图片的file对象；
-      console.log(file.size, "file.size");  //10 * 1024 * 1024
       // 限制上传文件的大小为200M
       const MAX_SIZE = 10 * 1024 * 1024; // 10MB in bytes
       if (file.size > MAX_SIZE) {
@@ -182,7 +181,6 @@ const initTinymce = () => {
 
 // Initialize TinyMCE after CDN is loaded
 const init = () => {
-  console.log(tinymceCDN,'tinymceCDN')
   load(tinymceCDN, (err: any) => {
     if (err) {
       return;
