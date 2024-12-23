@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import tinymce from "tinymce/tinymce";
 // 使用该方法需要引入下面的数据
-import "tinymce/models/dom"; // 特别注意 tinymce 6.0.0 版本之后必须引入，否则不显示
+//import "tinymce/models/dom"; // 特别注意 tinymce 6.0.0 版本之后必须引入，否则不显示
 import "tinymce/themes/silver/theme";
 import Editor from "@tinymce/tinymce-vue"; // 引入组件
 import "tinymce/icons/default";
@@ -37,7 +37,7 @@ import "tinymce/plugins/save"; //保存
 import "tinymce/plugins/searchreplace"; //查询替换
 
 import "tinymce/plugins/wordcount"; //数字统计
-
+import "tinymce/plugins/paste"; //粘贴
 // 引入富文本编辑器主题的js和css
 import "tinymce/themes/silver/theme.min.js";
 import "tinymce/skins/ui/oxide/skin.min.css";
@@ -67,17 +67,14 @@ const init = {
   skin_url: "/tinymce/skins/ui/oxide",
   zIndex: 9999, // 确保下拉框的 z-index 足够高
   paste_as_text: false, // 粘贴时以纯文本形式处理
-  // plugins:
-  //       "wordcount visualchars visualblocks toc textpattern template tabfocus spellchecker searchreplace save quickbars print preview paste pagebreak noneditable nonbreaking media insertdatetime importcss imagetools image hr help fullscreen fullpage directionality codesample code charmap link code table lists advlist anchor autolink autoresize autosave", // 插件需要import进来
-  //     toolbar:
-  //       "formats undo redo paste print fontsizeselect fontselect template fullpage|wordcount ltr rtl visualchars visualblocks toc spellchecker searchreplace|save preview pagebreak nonbreaking|media image|outdent indent aligncenter alignleft alignright alignjustify lineheight  underline quicklink h2 h3 blockquote numlist bullist table removeformat forecolor backcolor bold italic  strikethrough hr charmap link insertdatetime|subscript superscript cut codesample code |anchor preview fullscreen",
+
   plugins:
-    "lists advlist importcss image code table advlist fullscreen link lists  ", // 富文本插件
+    "lists advlist importcss image code table advlist fullscreen link lists paste ", // 富文本插件
   fontsize_formats: "12px 14px 16px 18px 24px 36px 48px 56px 72px",
   font_formats:
     "微软雅黑=Microsoft YaHei,Helvetica Neue,PingFang SC,sans-serif;苹果苹方=PingFang SC,Microsoft YaHei,sans-serif;宋体=simsun,serif;仿宋体=FangSong,serif;黑体=SimHei,sans-serif;Arial=arial,helvetica,sans-serif;Arial Black=arial black,avant garde;Book Antiqua=book antiqua,palatino;",
   toolbar: [
-    "undo redo  | fontselect fontsizeselect fontfamily fontsize fontname bold italic underline strikethrough  h2 h3 |forecolor backcolor | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist |  image | codesample | fullscreen | preview ",
+    "formats undo redo  | fontselect fontsizeselect fontfamily fontsize fontname bold italic underline strikethrough  h2 h3 |ltr rtl forecolor backcolor | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist |  image | codesample | fullscreen | preview ",
   ],
 
   image_advtab: true, // 图像设置面板
