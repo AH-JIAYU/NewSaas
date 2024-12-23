@@ -34,6 +34,7 @@ async function showEdit(row: any) {
           imgUrl.value.push(imgres.data.fileUrl)
         })
       }
+      srcList.value = imgUrl.value
       loading.value = false
     }
   } catch (error) {
