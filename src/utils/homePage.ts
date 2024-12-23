@@ -1208,7 +1208,7 @@ const BCHtml4 = `
     color: rgba(51, 51, 51, 1);
     font-size: 3rem;
     font-family: Source Han Sans CN-Medium;
-    font-weight: 500;
+    font-weight: 700;
     white-space: nowrap;
  z-index: 9999;
   }
@@ -1216,7 +1216,7 @@ const BCHtml4 = `
   .text-wrapper_1 {
     margin-top: 1.5rem;
     width: 14rem;
-height: 4.9375rem;
+
 
 display: flex;
 justify-content: center;
@@ -1227,10 +1227,9 @@ align-items: center;
   .text_6 {
 
     overflow-wrap: break-word;
-    font-weight: 500;
     font-size: 2rem;
     font-family: Source Han Sans CN-Medium;
-    font-weight: 500;
+    font-weight: 700;
     white-space: nowrap;
  z-index: 9999;
  color: #777777;
@@ -1281,10 +1280,10 @@ const BBHtml1 = `<body>
 .page1 {
 
     display: flex;
-    height: 31.25rem;
+    height: 43.75rem;
     position: relative;
     padding-left: 7.5rem;
-    padding-top: 9.0625rem;
+    padding-top: 14.0625rem;
 }
 
 
@@ -1811,7 +1810,7 @@ const BBHtml4 = `
     color: #FFFFFF;
     font-size: 3rem;
     font-family: Source Han Sans CN-Medium;
-    font-weight: 500;
+    font-weight: 700;
     white-space: nowrap;
  z-index: 9999;
   }
