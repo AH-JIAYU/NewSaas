@@ -23,14 +23,13 @@ import {
   onDeactivated,
   onBeforeUnmount,
 } from "vue";
+import { ElMessage } from "element-plus";
 import plugins from "./plugins";
 import toolbar from "./toolbar";
 import load from "./dynamicLoadScript";
 import apiQinliu from "@/api/modules/file";
-const tinymceCDN =
-  "https://cdn.jsdelivr.net/npm/tinymce-all-in-one@4.9.3/tinymce.min.js";
+const tinymceCDN = "https://cdn.jsdelivr.net/npm/tinymce-all-in-one@4.9.3/tinymce.min.js";
 // const tinymceCDN = window.location.origin  + '/public/tinymce/tinymce.min.js'
-import { ElMessage } from "element-plus";
 
 const tinymceHtml = ref<any>("");
 
@@ -92,7 +91,9 @@ const emits = defineEmits<{
 }>();
 
 // Init TinyMCE editor
+// @ts-nocheck
 const initTinymce = () => {
+  // @ts-ignore
   window.tinymce.init({
     selector: `#${tinymceId}`,
     language: languageTypeList["zh"],
@@ -194,6 +195,7 @@ watch(
   () => props.value,
   (newVal) => {
     if (newVal !== tinymceHtml.value && hasInit.value) {
+      // @ts-ignore
       const tinymce = window.tinymce.get(tinymceId);
       if (tinymce) {
         tinymce.setContent(newVal);
