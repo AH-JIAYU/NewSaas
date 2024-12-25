@@ -899,7 +899,11 @@ defineExpose({ showEdit });
       <el-card class="box-card">
         <template #header>
           <div class="card-header font-s18">
-            <span>其他设置<span class="title-bg">2</span></span>
+            <span style="display: flex;align-items: center;">
+              其他设置
+              <span class="title-bg">2</span>
+            </span>
+
 
           </div>
         </template>
@@ -935,51 +939,52 @@ defineExpose({ showEdit });
             </el-col>
           </el-row> -->
         <el-row :gutter="10">
-          <el-col :span="4">
+          <el-col :span="3">
             <div :class=" data.form.isPinned === 1 ?'text-bg2' :'text-bgClose'">
               置顶 : <span>{{ data.form.isPinned === 1 ?'开启':'关闭' }}</span>
-              <img v-if="data.form.isPinned === 1" src="@/assets/images/open.png" style="width: 1.25rem;height: 1.25rem;margin-left: 0.3125rem;" />
-              <img v-else src="@/assets/images/close.png" style="width: 1.25rem;height: 1.25rem;margin-left: 0.3125rem;">
+              <img v-if="data.form.isPinned === 1" src="@/assets/images/open.png" style="width: 1rem;height: 1rem;margin-left: 0.3125rem;" />
+              <img v-else src="@/assets/images/close.png" style="width: 1rem;height: 1rem;margin-left: 0.3125rem;">
             </div>
           </el-col>
           <el-col :span="1"></el-col>
-          <el-col :span="4">
+          <el-col :span="3">
             <div label="在线 :" :class="data.form.isOnline === 1 ?'text-bg2' :'text-bgClose'">
 
               在线 : <span v-if="data.form.isOnline === 1" >{{ data.form.isOnline === 1?'开启':'关闭' }}</span>
 
-              <img v-if="data.form.isOnline === 1" src="@/assets/images/open.png" style="width: 1.25rem;height: 1.25rem;margin-left: 0.3125rem;" />
-              <img v-else src="@/assets/images/close.png" style="width: 1.25rem;height: 1.25rem;margin-left: 0.3125rem;">
+              <img v-if="data.form.isOnline === 1" src="@/assets/images/open.png" style="width: 1rem;height: 1rem;margin-left: 0.3125rem;" />
+              <img v-else src="@/assets/images/close.png" style="width: 1rem;height: 1rem;margin-left: 0.3125rem;">
             </div>
           </el-col>
           <el-col :span="1"></el-col>
-          <el-col :span="4">
+          <el-col :span="3">
             <div  :class="data.form.isProfile === 2 ?'text-bg2' :'text-bgClose'">
 
               资料 : <span >{{ data.form.isProfile === 2 ?'开启':'关闭' }}</span>
-              <img v-if="data.form.isProfile === 2" src="@/assets/images/open.png" style="width: 1.25rem;height: 1.25rem;margin-left: 0.3125rem;" />
-              <img v-else src="@/assets/images/close.png" style="width: 1.25rem;height: 1.25rem;margin-left: 0.3125rem;">
+              <img v-if="data.form.isProfile === 2" src="@/assets/images/open.png" style="width: 1rem;height: 1rem;margin-left: 0.3125rem;" />
+              <img v-else src="@/assets/images/close.png" style="width: 1rem;height: 1rem;margin-left: 0.3125rem;">
 
             </div>
           </el-col>
           <el-col :span="1"></el-col>
-          <el-col :span="4">
+          <el-col :span="3">
             <div  :class="data.form.isPinned === 1 ?'text-bg2' :'text-bgClose'">
 
               B2B : <span  >
                   {{ data.form.isPinned === 1 ? data.form.projectType.join(","):'关闭' }}
                 </span>
-                <img v-if="data.form.isPinned === 1" src="@/assets/images/open.png" style="width: 1.25rem;height: 1.25rem;margin-left: 0.3125rem;" />
-                <img v-else src="@/assets/images/close.png" style="width: 1.25rem;height: 1.25rem;margin-left: 0.3125rem;">
+                <img v-if="data.form.isPinned === 1" src="@/assets/images/open.png" style="width: 1rem;height: 1rem;margin-left: 0.3125rem;" />
+                <img v-else src="@/assets/images/close.png" style="width: 1rem;height: 1rem;margin-left: 0.3125rem;">
 
               </div>
           </el-col>
-          <el-col :span="5">
+          <el-col :span="1"></el-col>
+          <el-col :span="4">
             <div :class="data.form.isTimeReleases === 2 ?'text-bg2' :'text-bgClose'">
 
               定时发布 : <span >{{ data.form.isTimeReleases === 2 ?'开启':'关闭'}}</span>
-              <img v-if="data.form.isTimeReleases === 2" src="@/assets/images/open.png" style="width: 1.25rem;height: 1.25rem;margin-left: 0.3125rem;" />
-              <img v-else src="@/assets/images/close.png" style="width: 1.25rem;height: 1.25rem;margin-left: 0.3125rem;">
+              <img v-if="data.form.isTimeReleases === 2" src="@/assets/images/open.png" style="width: 1rem;height: 1rem;margin-left: 0.3125rem;" />
+              <img v-else src="@/assets/images/close.png" style="width: 1rem;height: 1rem;margin-left: 0.3125rem;">
 
             </div>
           </el-col>
@@ -1091,7 +1096,7 @@ defineExpose({ showEdit });
           </div>
         </template>
         <el-row :gutter="20">
-          <el-col :span="5">
+          <el-col :span="4">
             <div class="text-ye">
               小时准入量 :<span>{{ data.form.preNum ? data.form.preNum : "-" }}</span>
               <img src="@/assets/images/open-ye.png" alt="" v-if="data.form.preNum">
@@ -1099,7 +1104,7 @@ defineExpose({ showEdit });
 
           </el-col>
           <el-col :span="1"></el-col>
-          <el-col :span="5">
+          <el-col :span="4">
             <div class="text-bl">
               小时完成量 :<span>{{ data.form.limitedQuantity ? data.form.limitedQuantity : "-" }}</span>
               <img src="@/assets/images/open-bl.png" alt="" v-if="data.form.limitedQuantity">
@@ -1109,12 +1114,12 @@ defineExpose({ showEdit });
 
           </el-col>
           <el-col :span="1"></el-col>
-          <el-col :span="5">
+          <el-col :span="4">
             <div :class="data.form.ipDifferenceDetection === 1 ?'text-bg2' :'text-bgClose'">
 
               重复参与:<span >{{ data.form.ipDifferenceDetection === 1 ?'开启':'关闭'}}</span>
-<img v-if="data.form.ipDifferenceDetection === 1" src="@/assets/images/open.png" style="width: 1.25rem;height: 1.25rem;margin-left: 0.3125rem;" />
-<img v-else src="@/assets/images/close.png" style="width: 1.25rem;height: 1.25rem;margin-left: 0.3125rem;">
+<img v-if="data.form.ipDifferenceDetection === 1" src="@/assets/images/open.png" style="width: 1rem;height: 1rem;margin-left: 0.3125rem;" />
+<img v-else src="@/assets/images/close.png" style="width: 1rem;height: 1rem;margin-left: 0.3125rem;">
 
 </div>
 
@@ -1242,7 +1247,8 @@ defineExpose({ showEdit });
 <style scoped lang="scss">
 .box-card {
   border-radius: 0.5rem !important;
-  border: 1px solid #8ba0bf !important;
+  border: 0.5px solid #dde2e9 !important;
+  padding: 24px;
 }
 .text-bg2 {
   color: #409EFF;
@@ -1250,16 +1256,19 @@ defineExpose({ showEdit });
   border-radius: 0.25rem;
   padding: 0.25rem 0.75rem;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
+  font-size: 0.875rem;
 }
 .title-bg {
   color: #409EFF;
   background: #E7F3FF;
   border-radius: 0.25rem;
-  padding: 0.25rem;
   font-size: 0.875rem;
   margin-left: .3125rem;
-
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  text-align: center;
 }
 .text-bgClose {
   color: #B1B1B1 ;
@@ -1267,7 +1276,8 @@ defineExpose({ showEdit });
   border-radius: 0.25rem;
   padding: 0.25rem 0.75rem;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
+  font-size: 0.875rem;
 }
 .text-ye {
   color: #FEB468 ;
@@ -1275,7 +1285,8 @@ defineExpose({ showEdit });
   border-radius: 0.25rem;
   padding: 0.25rem 0.75rem;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
+  font-size: 0.875rem;
 }
 .text-bl {
   color: #03C239 ;
@@ -1283,7 +1294,8 @@ defineExpose({ showEdit });
   border-radius: 0.25rem;
   padding: 0.25rem 0.75rem;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
+  font-size: 0.875rem;
 }
 .text-bg {
   background: #F3F4F4;
@@ -1487,9 +1499,13 @@ defineExpose({ showEdit });
   z-index: 2000;
 }
 
+:deep(.el-drawer__body .el-card) {
+  box-shadow: none !important;
+}
 :deep(.el-card) {
   margin: 0.625rem 0;
   padding-top: 10px;
+
 }
 
 :deep(.editor) {
