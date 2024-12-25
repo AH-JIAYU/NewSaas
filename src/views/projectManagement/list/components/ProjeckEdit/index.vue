@@ -245,6 +245,13 @@ async function onSubmit() {
       params.browser = params.browser.join(",");
       params.operatingSystem = params.operatingSystem.join(",");
       setTimeout(async () => {
+        if (!params.endAge || !params.startAge) {
+        ElMessage.warning({
+          message: "年龄区间未填写完整",
+          center: true,
+        });
+        return;
+      }
         if (title.value === "新增") {
           params.memberPrice = (
             params.doMoneyPrice * params.exchangeRate
@@ -337,25 +344,11 @@ defineExpose({
           : 'edit-drawer'
       " -->
   <div>
-    <el-drawer
-      v-model="dialogTableVisible"
-      class="hide-drawer-header"
-      append-to-body
-      :close-on-click-modal="false"
-      destroy-on-close
-      draggable
-      size="70%"
-    >
-      <LeftTabs
-        v-loading="loading"
-        v-if="leftTabsData.length"
-        @validate="validate"
-        ref="LeftTabsRef"
-        :left-tabs-data="leftTabsData"
-        :validate-top-tabs="validateTopTabs"
-        :validate-all="validateAll"
-        :title="title"
-      />
+    <el-drawer v-model="dialogTableVisible" class="hide-drawer-header" append-to-body :close-on-click-modal="false"
+      destroy-on-close draggable size="70%">
+      <LeftTabs v-loading="loading" v-if="leftTabsData.length" @validate="validate" ref="LeftTabsRef"
+        :left-tabs-data="leftTabsData" :validate-top-tabs="validateTopTabs" :validate-all="validateAll"
+        :title="title" />
       <template #footer>
         <div class="flex-c">
           <el-button link v-show="projectReleaseTime">
@@ -365,12 +358,7 @@ defineExpose({
           <el-button type="primary" @click="onSubmit" :disabled="loading">
             发布项目
           </el-button>
-          <el-button
-            type="warning"
-            v-show="title !== '编辑'"
-            @click="staging"
-            :disabled="loading"
-          >
+          <el-button type="warning" v-show="title !== '编辑'" @click="staging" :disabled="loading">
             暂存
           </el-button>
           <el-button @click="closeHandler" :disabled="loading">
@@ -384,6 +372,7 @@ defineExpose({
 
 <style lang="scss" scoped>
 :deep {
+
   .el-drawer,
   .el-drawer__body,
   .el-tabs.el-tabs--left {
