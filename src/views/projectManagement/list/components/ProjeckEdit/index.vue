@@ -127,6 +127,8 @@ function initializeLeftTabsData(data: any) {
         },
       };
       child.descriptionUrl = child.descriptionUrl.split(",");
+      // child.operatingSystem = child.operatingSystem.split(",");
+      // child.browser = child.browser.split(",");
       leftTabsData.push({
         ...child,
       });
@@ -200,6 +202,8 @@ const processingData = async () => {
   });
   let masterData = newLeftTabsData[0];
   masterData.projectInfoList = newLeftTabsData.slice(1).map((item: any) => {
+    item.browser = item.browser.join(',');
+    item.operatingSystem = item.operatingSystem.join(',');
     return {
       ...item,
       memberPrice: (item.doMoneyPrice * item.exchangeRate).toFixed(2)
@@ -237,6 +241,9 @@ async function onSubmit() {
   if (validateAll.value.every((item: any) => item === "fulfilled")) {
     if (!hasDuplicateCustomer(leftTabsData)) {
       const params = await processingData();
+      // 操作系统(后端刘定义类型为字符串，前端提交转换)
+      params.browser = params.browser.join(",");
+      params.operatingSystem = params.operatingSystem.join(",");
       setTimeout(async () => {
         if (title.value === "新增") {
           params.memberPrice = (
@@ -324,14 +331,15 @@ defineExpose({
 </script>
 
 <template>
-  <div>
-    <el-drawer
-      v-model="dialogTableVisible"
-      :class="
+  <!-- :class="
         title === '新增' || leftTabsData.length > 1
           ? 'hide-drawer-header'
           : 'edit-drawer'
-      "
+      " -->
+  <div>
+    <el-drawer
+      v-model="dialogTableVisible"
+      class="hide-drawer-header"
       append-to-body
       :close-on-click-modal="false"
       destroy-on-close
