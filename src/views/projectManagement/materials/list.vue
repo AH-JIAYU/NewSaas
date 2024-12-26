@@ -409,6 +409,7 @@ onMounted(() => {
                     {{ row.instructions ? row.instructions : "-" }}
                   </div>
                   <SvgIcon
+                  v-auth="'materials-update-updateProjectMaterialInstructions'"
                     @click="quickEdit(row)"
                     :class="{
                       edit: 'edit',
@@ -643,6 +644,7 @@ onMounted(() => {
                     {{ row.instructions ? row.instructions : "-" }}
                   </div>
                   <SvgIcon
+                   v-auth="'materials-update-updateProjectMaterialInstructions'"
                     @click="quickEdit(row)"
                     :class="{
                       edit: 'edit',
