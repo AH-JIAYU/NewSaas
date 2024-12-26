@@ -97,15 +97,15 @@ async function showEdit(row: any, projectType: any) {
   }
   getCountryQuestion();
   dialogTableVisible.value = true;
-  nextTick(() => {
-    echarts1();
-    echarts2();
-  });
+  // nextTick(() => {
+  //   echarts1();
+  //   echarts2();
+  // });
 
-  window.addEventListener("resize", () => {
-    chart1.resize();
-    chart2.resize();
-  });
+  // window.addEventListener("resize", () => {
+  //   chart1.resize();
+  //   chart2.resize();
+  // });
 }
 
 // 回显区域和问卷
@@ -997,7 +997,7 @@ defineExpose({ showEdit });
         </el-row>
         <el-row>
 
-          <el-col :span="10">
+          <el-col :span="11">
             <div class="text-bg2">
 
               备注 : {{ data.form.remark ? data.form.remark : "-" }}
