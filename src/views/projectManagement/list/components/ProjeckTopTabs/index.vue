@@ -969,7 +969,8 @@ const getProblemList = async () => {
                     </el-tooltip>
                   </div>
                 </template>
-                <el-input clearable v-model.trim="localToptTab.uidUrl" :disabled="localToptTab.projectType === 2" />
+                <el-input v-if="localToptTab.projectType === 2" clearable :value="'**************************************'" :disabled="localToptTab.projectType === 2" />
+                <el-input v-else clearable v-model.trim="localToptTab.uidUrl" :disabled="localToptTab.projectType === 2" />
                 <el-text class="mx-1">{{ url }}</el-text>
               </el-form-item>
             </el-col>

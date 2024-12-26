@@ -107,7 +107,7 @@ async function save() {
       // 如果不符合正则，弹出警告并跳过当前项
       if ((!item.turnover && !item.rateAudit) && item.riskControl == 2) {
         ElMessage.warning({
-          message: "风险控制必填一项切是正整数",
+          message: "风险控制必填一项，且是正整数",
           center: true,
         });
         return;

@@ -41,6 +41,7 @@ const data = ref<any>({
   projectType: 1, //项目类型 1:内部新增 2:合作商分配   为合作商时需要隐藏客户、前置、操作日志
   srcList: [], // 图片预览
   countryList: [], // 区域
+  name:'', //项目名称
 });
 const imgList = ref<any>();
 const plugins = [
@@ -61,6 +62,7 @@ const dialogTableVisible = ref(false);
 // 显隐
 async function showEdit(row: any, projectType: any) {
   data.value.projectType = projectType; // 项目类型
+  data.value.name = row.name; // 项目类型
   data.value.isOnline = row.isOnline;
   data.value.allocationStatus = row.allocationStatus;
   const res = await obtainLoading(api.detail({ projectId: row.projectId }));
@@ -779,8 +781,11 @@ defineExpose({ showEdit });
           <el-row :gutter="10">
             <el-col :span="8">
               <el-form-item label="项目名称">
-                <el-text class=" text-bg">
+                <el-text v-if="data.projectType === 1" class=" text-bg">
                   {{ data.form.name ? data.form.name : "-" }}
+                </el-text>
+                <el-text v-else class=" text-bg">
+                  {{ data.name ? data.name : "-" }}
                 </el-text>
               </el-form-item>
             </el-col>
@@ -795,7 +800,7 @@ defineExpose({ showEdit });
               </el-form-item>
             </el-col>
 
-            <el-col :span="8">
+            <el-col v-if="data.projectType !== 2" :span="8">
               <el-form-item label="项目标识" prop="client_pid">
                 <el-text class=" text-bg">
                   {{
@@ -878,7 +883,7 @@ defineExpose({ showEdit });
                 </el-text>
               </el-form-item>
             </el-col>
-            <el-col :span="12">
+            <el-col v-if="data.projectType !== 2" :span="12">
               <el-form-item label="URL">
                 <el-text class="text-bg">
                   {{ data.form.uidUrl ? data.form.uidUrl : "-" }}
