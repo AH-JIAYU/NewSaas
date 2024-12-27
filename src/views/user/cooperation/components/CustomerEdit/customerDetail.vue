@@ -8,7 +8,7 @@ import { Calendar, Search } from "@element-plus/icons-vue";
 import apiDep from "@/api/modules/department";
 import useUserStore from "@/store/modules/user";
 import { handleError } from "vue";
-import customerEdit from "./components/CustomerEdit/index.vue";
+import customerEdit from "./index.vue";
 const userStore: any = useUserStore();
 
 const emit = defineEmits(["queryData"]);
