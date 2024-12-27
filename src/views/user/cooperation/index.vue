@@ -747,7 +747,7 @@ function userData(data1: any) {
         @size-change="sizeChange"
         @current-change="currentChange"
       />
-      <!-- <customerDetail ref="editRef" @fetch-data="queryData" /> -->
+      <!-- <customerDetail ref="editRef" @queryData="queryData" /> -->
       <customerEdit ref="editRef" @fetch-data="queryData" />
 
       <customerProportion ref="proportionRef" @fetch-data="queryData" />
