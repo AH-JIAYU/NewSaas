@@ -45,7 +45,6 @@ async function showEdit(row: any, FormType: any) {
     departmentList.value = res.data;
   }
 
-console.log(departmentList.value,'departmentList.value')
   data.value.title = TypeList[FormType];
   data.value.type = FormType;
   data.value.loading = true;

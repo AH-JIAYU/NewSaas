@@ -26,6 +26,12 @@ import apiSite from "@/api/modules/configuration_site_setting";
 import Edit from "@/views/configuration/screen_library/components/Edit/index.vue";
 // 引入 TinyMCE 编辑器组件
 import UEditor from '@/components/UEditor/index.vue';
+// 下载
+import DownLoad from '@/utils/download'
+// 导入图片
+import word from '@/assets/images/uploadFile/word.png'
+import xlsx from '@/assets/images/uploadFile/xlsx.png'
+import pdf from '@/assets/images/uploadFile/pdf.png'
 //  #endregion
 
 defineOptions({
@@ -342,7 +348,7 @@ const fileList = ref<any>([]); // 上传
 // 是否是图片
 const isItAPicture = (file: any) => {
   const fileSuffix = file.name.substring(file.name.lastIndexOf(".") + 1);
-  const whiteList = ["jpg", "jpeg", "png", "gif","doc","xls","pdf","xlsx","docx"];
+  const whiteList = ["jpg", "jpeg", "png", "gif", "doc", "xls", "pdf", "xlsx", "docx"];
   // 是否 非图片格式
   const isImage = whiteList.indexOf(fileSuffix) === -1;
   return isImage;
@@ -352,7 +358,7 @@ const beforeUpload = (file: any) => {
   const isImage = isItAPicture(file);
   if (isImage) {
     ElMessage.warning({
-      message: "只能上传图片文件JPG，JPEG，PNG，GIF",
+      message: "只能上传图片文件JPG，JPEG，PNG，GIF，DOC，XLS，PDF",
       center: true,
     });
   }
@@ -373,8 +379,29 @@ const handleRemove: any = async (uploadFile: any, uploadFiles: any) => {
       });
   }
 };
+const replaceImg = (list: any) => {
+  // 文件扩展名映射
+  const extensionMap: { [key: string]: string } = {
+    doc: word,
+    docx: word,
+    xls: xlsx,
+    xlsx: xlsx,
+    pdf: pdf,
+  };
+
+  // 遍历文件列表
+  list.map((item: any) => {
+    // 提取文件的扩展名 (忽略大小写)
+    const fileExtension = item.name.split('.').pop()?.toLowerCase();
+    // 如果扩展名在映射表中，替换url
+    if (fileExtension && extensionMap[fileExtension]) {
+      item.url = extensionMap[fileExtension];
+    }
+  });
+};
 // 上传图片成功
 const handleSuccess: any = (uploadFile: any, uploadFiles: any) => {
+  replaceImg(fileList.value)
   localToptTab.value.descriptionUrl.push(uploadFile.data.qiNiuUrl);
 };
 // 超出限制
@@ -401,10 +428,16 @@ const getUpLoad = async (file: any) => {
           name: item,
           url: res.data.fileUrl,
         });
+        replaceImg(fileList.value)
       }
     });
   }
 };
+
+// 下载
+async function download(val: any) {
+  await DownLoad(val, val.name)
+}
 // #endregion
 
 // 定时发布
@@ -969,8 +1002,10 @@ const getProblemList = async () => {
                     </el-tooltip>
                   </div>
                 </template>
-                <el-input v-if="localToptTab.projectType === 2" clearable :value="'**************************************'" :disabled="localToptTab.projectType === 2" />
-                <el-input v-else clearable v-model.trim="localToptTab.uidUrl" :disabled="localToptTab.projectType === 2" />
+                <el-input v-if="localToptTab.projectType === 2" clearable
+                  :value="'**************************************'" :disabled="localToptTab.projectType === 2" />
+                <el-input v-else clearable v-model.trim="localToptTab.uidUrl"
+                  :disabled="localToptTab.projectType === 2" />
                 <el-text class="mx-1">{{ url }}</el-text>
               </el-form-item>
             </el-col>
@@ -1000,15 +1035,18 @@ const getProblemList = async () => {
             </el-col>
             <el-col :span="4">
               <el-form-item label="年龄" class="flex" prop="startAge">
-                <el-input v-model.trim="localToptTab.startAge" :disabled="localToptTab.projectType === 2" style="width: 3rem !important" />
+                <el-input v-model.trim="localToptTab.startAge" :disabled="localToptTab.projectType === 2"
+                  style="width: 3rem !important" />
                 <span style="margin:0 .25rem">-</span>
-                <el-input v-model.trim="localToptTab.endAge" :disabled="localToptTab.projectType === 2" style="width: 3rem !important" />
+                <el-input v-model.trim="localToptTab.endAge" :disabled="localToptTab.projectType === 2"
+                  style="width: 3rem !important" />
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="操作系统" class="flex">
-                <el-select v-model.trim="localToptTab.operatingSystem" placeholder="请选择操作系统" :disabled="localToptTab.projectType === 2" multiple clearable
-                  filterable collapse-tags collapse-tags-tooltip :max-collapse-tags="1">
+                <el-select v-model.trim="localToptTab.operatingSystem" placeholder="请选择操作系统"
+                  :disabled="localToptTab.projectType === 2" multiple clearable filterable collapse-tags
+                  collapse-tags-tooltip :max-collapse-tags="1">
                   <el-option v-for="item in operatingSystemList" :key="item.value" :label="item.label"
                     :value="item.value">
                   </el-option>
@@ -1019,8 +1057,9 @@ const getProblemList = async () => {
             </el-col>
             <el-col :span="6">
               <el-form-item label="浏览器" class="flex">
-                <el-select v-model.trim="localToptTab.browser" placeholder="请选择浏览器" :disabled="localToptTab.projectType === 2" multiple clearable filterable
-                  collapse-tags collapse-tags-tooltip :max-collapse-tags="1">
+                <el-select v-model.trim="localToptTab.browser" placeholder="请选择浏览器"
+                  :disabled="localToptTab.projectType === 2" multiple clearable filterable collapse-tags
+                  collapse-tags-tooltip :max-collapse-tags="1">
                   <el-option v-for="item in browserList" :key="item.value" :label="item.label" :value="item.value">
                   </el-option>
                 </el-select>
@@ -1095,30 +1134,37 @@ const getProblemList = async () => {
             </div>
           </template>
           <div v-if="fold">
-            <el-form-item label="上传图片">
-              <el-upload v-model:file-list="fileList" :action="Url" list-type="picture-card" :drag="true" :limit="10"
-                accept=".png, .jpg, .jpeg, .gif" :before-upload="beforeUpload" :on-preview="handlePictureCardPreview"
-                :on-remove="handleRemove" :on-success="handleSuccess" :on-exceed="handleExceed">
-                <el-icon style="margin-bottom: none" class="el-icon--upload">
-                  <UploadFilled />
-                </el-icon>
-                <div class="el-upload__text">上传</div>
-                <template #tip>
-                  <div class="el-upload__tip">
-                    <el-text type="primary" size="small">
-                      支持上传JPG/JPEG/PNG图片，小于10MB
-                    </el-text>
-                  </div>
-                </template>
-              </el-upload>
-
-              <el-dialog v-model="dialogVisible" style="
+            <el-form-item label="上传图片/文件">
+              <div style="display: flex;flex-direction: column;align-items: flex-start;">
+                <el-upload v-model:file-list="fileList" :action="Url" list-type="picture-card" :drag="true" :limit="10"
+                  accept=".png, .jpg, .jpeg, .gif" :before-upload="beforeUpload" :on-preview="handlePictureCardPreview"
+                  :on-remove="handleRemove" :on-success="handleSuccess" :on-exceed="handleExceed">
+                  <el-icon style="margin-bottom: none" class="el-icon--upload">
+                    <UploadFilled />
+                  </el-icon>
+                  <div class="el-upload__text">上传</div>
+                  <template #tip>
+                    <div class="el-upload__tip">
+                      <el-text type="primary" size="small">
+                        支持上传JPG/JPEG/PNG图片DOC/XLS/PDF文件，小于10MB
+                      </el-text>
+                    </div>
+                  </template>
+                </el-upload>
+                <el-dialog v-model="dialogVisible" style="
                   z-index: 1000;
                   transform: translate(0);
                   position: relative;
                 ">
-                <img w-full :src="dialogImageUrl" alt="Preview Image" />
-              </el-dialog>
+                  <img w-full :src="dialogImageUrl" alt="Preview Image" />
+                </el-dialog>
+                <!-- <div v-for="item in fileList">
+                  <div class="i-f7:doc-text w-1rem h-1rem"></div>
+                  <el-link style=" padding: 0; margin: 0;" :underline="false" type="primary" @click="download(item)">
+                    {{ item.name }}下载
+                  </el-link>
+                </div> -->
+              </div>
             </el-form-item>
             <el-row>
               <el-col :span="24">
