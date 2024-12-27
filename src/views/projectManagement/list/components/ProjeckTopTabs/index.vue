@@ -25,7 +25,13 @@ import useUserStore from "@/store/modules/user"; // 用户汇率
 import apiSite from "@/api/modules/configuration_site_setting";
 import Edit from "@/views/configuration/screen_library/components/Edit/index.vue";
 // 引入 TinyMCE 编辑器组件
-import  UEditor  from '@/components/UEditor/index.vue';
+import UEditor from '@/components/UEditor/index.vue';
+// 下载
+import DownLoad from '@/utils/download'
+// 导入图片
+import word from '@/assets/images/uploadFile/word.png'
+import xlsx from '@/assets/images/uploadFile/xlsx.png'
+import pdf from '@/assets/images/uploadFile/pdf.png'
 //  #endregion
 
 defineOptions({
@@ -39,6 +45,24 @@ const currencyList = [
   { label: "美元", value: "USD" },
   { label: "人民币", value: "CNY" },
 ];
+// 操作系统
+const operatingSystemList = [
+  { label: "Windows", value: "1" },
+  { label: "Mac OS", value: "2" },
+  { label: "Linux", value: "3" },
+  { label: "Android", value: "4" },
+  { label: "其他", value: "5" },
+]
+// 浏览器
+const browserList = [
+  { label: "Chrome", value: "1" },
+  { label: "Safari", value: "2" },
+  { label: "Flrefox", value: "3" },
+  { label: "Edge", value: "4" },
+  { label: "Opera", value: "5" },
+  { label: "其他", value: "6" },
+]
+
 // 储存第一次输入美元汇率
 const currencyTypeRes = ref<any>(null);
 const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
@@ -170,6 +194,27 @@ const rules = reactive<any>({
       trigger: "blur",
     },
   ],
+  sex: [
+    { required: true, message: "请选择性别", trigger: "change" },
+  ],
+  startAge: [
+    { required: true, message: "请输入年龄", trigger: "blur" },
+    {
+      validator: (rule: any, value: any, callback: any) => {
+        // 判断值是否为空
+        if (!value) {
+          callback(new Error("请输入年龄"));
+        } else if (value < 18) {
+          callback(new Error("年龄不能小于18"));
+        } else if (value >= 99) {
+          callback(new Error("年龄不能大于或等于99"));
+        } else {
+          callback(); // 校验通过
+        }
+      },
+      trigger: "change"
+    }
+  ],
 });
 
 // 租户汇率
@@ -189,6 +234,15 @@ if (!localToptTab.value.clientId) {
       userStore.currencyType === 1 ? "USD" : "CNY";
   }
 }
+if (localToptTab.value.browser) {
+  // 浏览器
+  localToptTab.value.browser = localToptTab.value.browser.split(",")
+}
+if (localToptTab.value.operatingSystem) {
+  // 操作系统(后端刘定义类型为字符串，前端回显转换)
+  localToptTab.value.operatingSystem = localToptTab.value.operatingSystem.split(",")
+}
+
 // #endregion
 
 // #region 方法
@@ -251,31 +305,31 @@ const plugins = [
     locale: gfmLocale,
   }),
 ];
-const editorConfig ={
+const editorConfig = {
   selector: "#tinymceEditor",
   height: 500,  // 设置编辑器的高度
-  width:600,
-        menubar: true,  // 不显示菜单栏
-        plugins: [
-          'advlist autolink lists link image charmap print preview anchor',
-          'searchreplace visualblocks code fullscreen',
-          'insertdatetime media table paste code help wordcount'
-        ],
-        toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
-        paste_as_text: false,  // 粘贴时以纯文本形式处理
-        setup(editor:any) {
-          // 当编辑器内容改变时，更新 Vue 数据
-          editor.on('change', () => {
-            localToptTab.value.richText = editor.getContent();
-          });
-        }
+  width: 600,
+  menubar: true,  // 不显示菜单栏
+  plugins: [
+    'advlist autolink lists link image charmap print preview anchor',
+    'searchreplace visualblocks code fullscreen',
+    'insertdatetime media table paste code help wordcount'
+  ],
+  toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+  paste_as_text: false,  // 粘贴时以纯文本形式处理
+  setup(editor: any) {
+    // 当编辑器内容改变时，更新 Vue 数据
+    editor.on('change', () => {
+      localToptTab.value.richText = editor.getContent();
+    });
+  }
 }
 // 富文本设置值
 function handleChange(v: string) {
   localToptTab.value.richText = v;
 }
 //富文本框
-const changeEditorValue =(v: string)=> {
+const changeEditorValue = (v: string) => {
   localToptTab.value.richText = v;
 }
 // 同步
@@ -294,7 +348,7 @@ const fileList = ref<any>([]); // 上传
 // 是否是图片
 const isItAPicture = (file: any) => {
   const fileSuffix = file.name.substring(file.name.lastIndexOf(".") + 1);
-  const whiteList = ["jpg", "jpeg", "png", "gif"];
+  const whiteList = ["jpg", "jpeg", "png", "gif", "doc", "xls", "pdf", "xlsx", "docx"];
   // 是否 非图片格式
   const isImage = whiteList.indexOf(fileSuffix) === -1;
   return isImage;
@@ -304,7 +358,7 @@ const beforeUpload = (file: any) => {
   const isImage = isItAPicture(file);
   if (isImage) {
     ElMessage.warning({
-      message: "只能上传图片文件JPG，JPEG，PNG，GIF",
+      message: "只能上传图片文件JPG，JPEG，PNG，GIF，DOC，XLS，PDF",
       center: true,
     });
   }
@@ -325,8 +379,29 @@ const handleRemove: any = async (uploadFile: any, uploadFiles: any) => {
       });
   }
 };
+const replaceImg = (list: any) => {
+  // 文件扩展名映射
+  const extensionMap: { [key: string]: string } = {
+    doc: word,
+    docx: word,
+    xls: xlsx,
+    xlsx: xlsx,
+    pdf: pdf,
+  };
+
+  // 遍历文件列表
+  list.map((item: any) => {
+    // 提取文件的扩展名 (忽略大小写)
+    const fileExtension = item.name.split('.').pop()?.toLowerCase();
+    // 如果扩展名在映射表中，替换url
+    if (fileExtension && extensionMap[fileExtension]) {
+      item.url = extensionMap[fileExtension];
+    }
+  });
+};
 // 上传图片成功
 const handleSuccess: any = (uploadFile: any, uploadFiles: any) => {
+  replaceImg(fileList.value)
   localToptTab.value.descriptionUrl.push(uploadFile.data.qiNiuUrl);
 };
 // 超出限制
@@ -353,10 +428,16 @@ const getUpLoad = async (file: any) => {
           name: item,
           url: res.data.fileUrl,
         });
+        replaceImg(fileList.value)
       }
     });
   }
 };
+
+// 下载
+async function download(val: any) {
+  await DownLoad(val, val.name)
+}
 // #endregion
 
 // 定时发布
@@ -377,7 +458,7 @@ const changeCountryId = () => {
   // 反选
   data.value.checked = Boolean(
     localToptTab.value.countryIdList.length ===
-      basicDictionaryStore.country.length
+    basicDictionaryStore.country.length
   );
 };
 // 配置区域改变 重新获取题库目录
@@ -751,39 +832,18 @@ const getProblemList = async () => {
 </script>
 
 <template>
-  <ElForm
-    label-width="100px"
-    :rules="rules"
-    ref="formRef"
-    :model="localToptTab"
-    label-position="top"
-  >
+  <ElForm label-width="100px" :rules="rules" ref="formRef" :model="localToptTab" label-position="top">
     <el-tabs v-model="activeName" @tab-change="changeTab">
       <el-tab-pane label="基础设置" name="basicSettings">
         <el-card body-style="">
           <template #header>
-            <div
-              style="display: flex; justify-content: space-between"
-              class="card-header"
-            >
+            <div style="display: flex; justify-content: space-between" class="card-header">
               <div style="height: 32px; line-height: 32px">基础设置</div>
               <div>
-                <el-button
-                  v-if="props.tabIndex > 0"
-                  size="small"
-                  type="primary"
-                  round
-                  plain
-                  @click="syncProject"
-                >
+                <el-button v-if="props.tabIndex > 0" size="small" type="primary" round plain @click="syncProject">
                   同步数据
                 </el-button>
-                <el-switch
-                  v-model="localToptTab.required"
-                  :active-value="true"
-                  :inactive-value="false"
-                  class="ml-2"
-                />
+                <el-switch v-model="localToptTab.required" :active-value="true" :inactive-value="false" class="ml-2" />
                 只看必填
               </div>
             </div>
@@ -791,51 +851,28 @@ const getProblemList = async () => {
           <el-row :gutter="20">
             <el-col :span="6">
               <el-form-item label="项目名称" prop="name">
-                <el-input
-                  v-model.trim="localToptTab.name"
-                  :disabled="localToptTab.projectType === 2"
-                  clearable
-                  :maxlength="50"
-                />
+                <el-input v-model="localToptTab.name" :disabled="localToptTab.projectType === 2" clearable
+                  :maxlength="50" />
               </el-form-item>
             </el-col>
             <el-col v-if="localToptTab.projectType !== 2" :span="6">
               <el-form-item label="项目标识" prop="projectIdentification">
-                <el-input
-                  clearable
-                  v-model.trim="localToptTab.projectIdentification"
-                  :maxlength="100"
-                />
+                <el-input clearable v-model.trim="localToptTab.projectIdentification" :maxlength="100" />
               </el-form-item>
             </el-col>
             <el-col v-if="localToptTab.projectType !== 2" :span="6">
               <!-- 单个 -->
               <el-form-item label="所属客户" prop="clientId">
-                <el-select
-                  class="placeholderColor"
-                  placeholder="Select"
-                  v-model="localToptTab.clientId"
-                  :disabled="localToptTab.projectType === 2"
-                  clearable
-                  @change="changeClient"
-                >
-                  <el-option
-                    v-for="item in data.basicSettings.customerList"
-                    :key="item.tenantCustomerId"
-                    :value="item.tenantCustomerId"
-                    :label="item.customerAccord"
-                    :disabled="
-                      item.isReveal === 1 ||
-                      (item.turnover &&
-                        item.practiceTurnover &&
-                        item.turnover < item.practiceTurnover)
-                    "
-                  >
+                <el-select class="placeholderColor" placeholder="Select" v-model="localToptTab.clientId"
+                  :disabled="localToptTab.projectType === 2" clearable @change="changeClient">
+                  <el-option v-for="item in data.basicSettings.customerList" :key="item.tenantCustomerId"
+                    :value="item.tenantCustomerId" :label="item.customerAccord" :disabled="item.isReveal === 1 ||
+    (item.turnover &&
+      item.practiceTurnover &&
+      item.turnover < item.practiceTurnover)
+    ">
                     <span style="float: left">{{ item.customerAccord }}</span>
-                    <span
-                      style="float: right; color: #fb6868; font-size: 13px"
-                      v-show="item.isReveal === 1"
-                    >
+                    <span style="float: right; color: #fb6868; font-size: 13px" v-show="item.isReveal === 1">
                       <span v-show="item.practiceTurnover > item.turnover">
                         营业额超限
                       </span>
@@ -844,11 +881,7 @@ const getProblemList = async () => {
                       </span>
                     </span>
                   </el-option>
-                  <el-button
-                    size="small"
-                    class="buttonClass"
-                    @click="AddCustomers"
-                  >
+                  <el-button size="small" class="buttonClass" @click="AddCustomers">
                     快捷新增
                     <div class="i-ic:round-plus w-1.3em h-1.3em"></div>
                     <!-- <SvgIcon
@@ -857,21 +890,14 @@ const getProblemList = async () => {
                     /> -->
                   </el-button>
                   <template #empty>
-                    <div
-                      style="
+                    <div style="
                         display: flex;
                         justify-content: space-between;
                         align-items: center;
                         padding: 0 1rem;
-                      "
-                    >
+                      ">
                       暂无数据
-                      <el-button
-                        type="primary"
-                        link
-                        size="small"
-                        @click="AddCustomers"
-                      >
+                      <el-button type="primary" link size="small" @click="AddCustomers">
                         快捷新增
                         <div class="i-ic:round-plus w-1.3em h-1.3em"></div>
                         <!-- <SvgIcon name="ant-design:plus-outlined" /> -->
@@ -883,59 +909,25 @@ const getProblemList = async () => {
             </el-col>
             <el-col :span="6">
               <el-form-item label="所属区域" prop="countryIdList">
-                <ElSelect
-                  class="placeholderColor"
-                  v-model="localToptTab.countryIdList"
-                  :disabled="localToptTab.projectType === 2"
-                  placeholder="区域"
-                  clearable
-                  filterable
-                  multiple
-                  collapse-tags
-                  @change="changeCountryId"
-                >
+                <ElSelect class="placeholderColor" v-model="localToptTab.countryIdList"
+                  :disabled="localToptTab.projectType === 2" placeholder="区域" clearable filterable multiple
+                  collapse-tags @change="changeCountryId">
                   <template #header>
-                    <el-checkbox
-                      v-model="data.checked"
-                      @change="selectAll"
-                      style="display: flex; height: unset"
-                      >全球</el-checkbox
-                    >
+                    <el-checkbox v-model="data.checked" @change="selectAll"
+                      style="display: flex; height: unset">全球</el-checkbox>
                   </template>
-                  <ElOption
-                    v-for="item in data.basicSettings.countryList"
-                    :label="item.chineseName"
-                    :value="item.id"
-                  >
+                  <ElOption v-for="item in data.basicSettings.countryList" :label="item.chineseName" :value="item.id">
                   </ElOption>
                 </ElSelect>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="币种" prop="currencyType">
-                <el-button
-                  v-if="!userStore.originalExchangeRate"
-                  type="primary"
-                  link
-                  @click="setExchangeRate"
-                  >未设置汇率，点击设置>></el-button
-                >
-                <el-select
-                  v-else
-                  v-model="localToptTab.currencyType"
-                  :disabled="!!localToptTab.projectId"
-                  value-key=""
-                  style="width: 22.4375rem"
-                  placeholder="请选择币种"
-                  filterable
-                  @change="handleSelectChange"
-                >
-                  <el-option
-                    v-for="item in currencyList"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  >
+                <el-button v-if="!userStore.originalExchangeRate" type="primary" link
+                  @click="setExchangeRate">未设置汇率，点击设置>></el-button>
+                <el-select v-else v-model="localToptTab.currencyType" :disabled="!!localToptTab.projectId" value-key=""
+                  style="width: 22.4375rem" placeholder="请选择币种" filterable @change="handleSelectChange">
+                  <el-option v-for="item in currencyList" :key="item.value" :label="item.label" :value="item.value">
                   </el-option>
                 </el-select>
               </el-form-item>
@@ -943,66 +935,44 @@ const getProblemList = async () => {
             <el-col :span="6">
               <!-- v-if="currencyTypeRes !== null" -->
               <el-form-item label="汇率" prop="">
-                <el-text v-if="currencyTypeRes !== null"
-                  >{{
-                    localToptTab.currencyType === "USD" ? "1美元" : "1人民币"
-                  }}
+                <el-text v-if="currencyTypeRes !== null">{{
+    localToptTab.currencyType === "USD" ? "1美元" : "1人民币"
+  }}
                   =
                   {{
-                    localToptTab.exchangeRate
-                      ? localToptTab.exchangeRate
-                      : currencyTypeRes
-                  }}{{
-                    localToptTab.currencyType === "USD" ? "人民币" : "美元"
-                  }}</el-text
-                >
+      localToptTab.exchangeRate
+        ? localToptTab.exchangeRate
+        : currencyTypeRes
+    }}{{
+      localToptTab.currencyType === "USD" ? "人民币" : "美元"
+    }}</el-text>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="20">
             <el-col :span="6">
               <el-form-item label="项目价" prop="doMoneyPrice">
-                <el-input
-                  style="height: 2rem"
-                  v-model="localToptTab.doMoneyPrice"
-                  controls-position="right"
-                  size="large"
-                />
+                <el-input style="height: 2rem" v-model="localToptTab.doMoneyPrice" controls-position="right"
+                  size="large" />
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="配额" prop="num">
-                <el-input
-                  style="height: 2rem"
-                  v-model="localToptTab.num"
-                  size="large"
-                  @keydown="handleInput"
-                />
+                <el-input style="height: 2rem" v-model="localToptTab.num" size="large" @keydown="handleInput" />
               </el-form-item>
             </el-col>
             <el-col style="position: relative" :span="6">
               <el-form-item prop="minimumDuration">
                 <template #label>
                   <div>
-                    最小分长<el-tooltip
-                      class="tooltips"
-                      content="该问卷最少要做多少分钟才被识别为合格"
-                      placement="top"
-                    >
+                    最小分长<el-tooltip class="tooltips" content="该问卷最少要做多少分钟才被识别为合格" placement="top">
                       <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
                     </el-tooltip>
                   </div>
                 </template>
-                <el-input
-                  style="height: 2rem; width: 100%"
-                  v-model.number="localToptTab.minimumDuration"
-                  :min="1"
-                  :step="1"
-                  step-strictly
-                  controls-position="right"
-                  size="large"
-                  @keydown="handleInput"
-                  ><template #append> min </template>
+                <el-input style="height: 2rem; width: 100%" v-model.number="localToptTab.minimumDuration" :min="1"
+                  :step="1" step-strictly controls-position="right" size="large" @keydown="handleInput"><template
+                    #append> min </template>
                 </el-input>
               </el-form-item>
             </el-col>
@@ -1032,25 +1002,17 @@ const getProblemList = async () => {
                     </el-tooltip>
                   </div>
                 </template>
-                <el-input
-                  clearable
-                  v-model.trim="localToptTab.uidUrl"
-                  :disabled="localToptTab.projectType === 2"
-                />
+                <el-input v-if="localToptTab.projectType === 2" clearable
+                  :value="'**************************************'" :disabled="localToptTab.projectType === 2" />
+                <el-input v-else clearable v-model.trim="localToptTab.uidUrl"
+                  :disabled="localToptTab.projectType === 2" />
                 <el-text class="mx-1">{{ url }}</el-text>
               </el-form-item>
             </el-col>
-            <el-col
-              v-if="
-                localToptTab.mutualExclusion === 1 && !localToptTab.required
-              "
-              :span="12"
-            >
+            <el-col v-if="localToptTab.mutualExclusion === 1 && !localToptTab.required
+    " :span="12">
               <el-form-item label="互斥ID">
-                <el-input
-                  clearable
-                  v-model.trim="localToptTab.mutualExclusionId"
-                />
+                <el-input clearable v-model.trim="localToptTab.mutualExclusionId" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -1061,91 +1023,79 @@ const getProblemList = async () => {
               <span>其他设置</span>
             </div>
           </template>
-          <!-- <el-row :gutter="20">
+          <el-row :gutter="20">
             <el-col :span="5">
-              <el-form-item label="性别" class="flex">
-                <el-radio-group size="medium">
-                  <el-radio-button label="不限"></el-radio-button>
-                  <el-radio-button label="男"></el-radio-button>
-                  <el-radio-button label="女"></el-radio-button>
+              <el-form-item label="性别" class="flex" prop="sex">
+                <el-radio-group v-model="localToptTab.sex" :disabled="localToptTab.projectType === 2">
+                  <el-radio-button :value="1" label="不限"></el-radio-button>
+                  <el-radio-button :value="2" label="男"></el-radio-button>
+                  <el-radio-button :value="3" label="女"></el-radio-button>
                 </el-radio-group>
               </el-form-item>
             </el-col>
             <el-col :span="4">
-              <el-form-item label="年龄" class="flex">
-                <el-input clearable style="width: 2.5rem !important" />
+              <el-form-item label="年龄" class="flex" prop="startAge">
+                <el-input v-model.trim="localToptTab.startAge" :disabled="localToptTab.projectType === 2"
+                  style="width: 3rem !important" />
                 <span style="margin:0 .25rem">-</span>
-                <el-input clearable style="width: 2.5rem !important" />
+                <el-input v-model.trim="localToptTab.endAge" :disabled="localToptTab.projectType === 2"
+                  style="width: 3rem !important" />
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="操作系统" class="flex">
-                <el-select placeholder="请选择操作系统" filterable> </el-select>
+                <el-select v-model.trim="localToptTab.operatingSystem" placeholder="请选择操作系统"
+                  :disabled="localToptTab.projectType === 2" multiple clearable filterable collapse-tags
+                  collapse-tags-tooltip :max-collapse-tags="1">
+                  <el-option v-for="item in operatingSystemList" :key="item.value" :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="1">
-
             </el-col>
             <el-col :span="6">
               <el-form-item label="浏览器" class="flex">
-                <el-select placeholder="请选择浏览器" filterable> </el-select>
+                <el-select v-model.trim="localToptTab.browser" placeholder="请选择浏览器"
+                  :disabled="localToptTab.projectType === 2" multiple clearable filterable collapse-tags
+                  collapse-tags-tooltip :max-collapse-tags="1">
+                  <el-option v-for="item in browserList" :key="item.value" :label="item.label" :value="item.value">
+                  </el-option>
+                </el-select>
               </el-form-item>
             </el-col>
-          </el-row> -->
+          </el-row>
           <el-row :gutter="20">
             <el-col :span="5">
               <el-form-item label="定时发布" class="flex">
-                <el-switch
-                  :active-value="2"
-                  :inactive-value="1"
-                  v-model="localToptTab.isTimeReleases"
-                  :disabled="localToptTab.projectType === 2"
-                  @change="changeTimeReleases"
-                />
+                <el-switch :active-value="2" :inactive-value="1" v-model="localToptTab.isTimeReleases"
+                  :disabled="localToptTab.projectType === 2" @change="changeTimeReleases" />
               </el-form-item>
             </el-col>
             <el-col :span="5">
               <el-form-item label="B2B" class="flex">
-                <el-switch
-                  :active-value="2"
-                  :inactive-value="1"
-                  v-model="localToptTab.isB2b"
-                  :disabled="localToptTab.projectType === 2"
-                />
+                <el-switch :active-value="2" :inactive-value="1" v-model="localToptTab.isB2b"
+                  :disabled="localToptTab.projectType === 2" />
               </el-form-item>
             </el-col>
             <el-col :span="5">
               <el-form-item label="在线" class="flex">
-                <el-switch
-                  :active-value="1"
-                  :inactive-value="2"
-                  :disabled="
-                    localToptTab.isTimeReleases === 2 ||
-                    localToptTab.projectType === 2
-                  "
-                  v-model="localToptTab.isOnline"
-                />
+                <el-switch :active-value="1" :inactive-value="2" :disabled="localToptTab.isTimeReleases === 2 ||
+    localToptTab.projectType === 2
+    " v-model="localToptTab.isOnline" />
               </el-form-item>
             </el-col>
             <el-col :span="5">
               <el-form-item label="前置问卷" class="flex">
-                <el-switch
-                  :active-value="1"
-                  :inactive-value="2"
-                  v-model="localToptTab.isProfile"
-                  :disabled="localToptTab.projectType === 2"
-                  @change="changeProfile"
-                />
+                <el-switch :active-value="1" :inactive-value="2" v-model="localToptTab.isProfile"
+                  :disabled="localToptTab.projectType === 2" @change="changeProfile" />
               </el-form-item>
             </el-col>
             <el-col :span="4">
               <el-form-item label="置顶" class="flex">
-                <el-switch
-                  :active-value="1"
-                  :inactive-value="2"
-                  v-model="localToptTab.isPinned"
-                  :disabled="localToptTab.projectType === 2"
-                />
+                <el-switch :active-value="1" :inactive-value="2" v-model="localToptTab.isPinned"
+                  :disabled="localToptTab.projectType === 2" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -1154,53 +1104,29 @@ const getProblemList = async () => {
             <!-- 定时发布开显示时间，关隐藏 -->
             <el-col :span="5" v-if="localToptTab.isTimeReleases === 2">
               <el-form-item label="发布时间" prop="releaseTime">
-                <el-date-picker
-                  type="datetime"
-                  value-format="YYYY-MM-DD HH:mm:ss"
-                  v-model="localToptTab.releaseTime"
-                  placeholder="请选择时间"
-                  :disabledDate="disabledDateFn"
-                  @change="handleChangeTime"
-                />
+                <el-date-picker type="datetime" value-format="YYYY-MM-DD HH:mm:ss" v-model="localToptTab.releaseTime"
+                  placeholder="请选择时间" :disabledDate="disabledDateFn" @change="handleChangeTime" />
               </el-form-item>
             </el-col>
-            <el-col
-              :span="5"
-              v-if="localToptTab.isB2b === 2 && localToptTab.projectType !== 2"
-            >
+            <el-col :span="5" v-if="localToptTab.isB2b === 2 && localToptTab.projectType !== 2">
               <el-form-item label="项目类型">
-                <el-cascader
-                  :show-all-levels="false"
-                  v-model="localToptTab.projectType"
-                  :props="data.basicSettings.B2BTypeProps"
-                  :options="data.basicSettings.B2BTypeList"
-                  :collapse-tags="true"
-                  filterable
-                  clearable
-                />
+                <el-cascader :show-all-levels="false" v-model="localToptTab.projectType"
+                  :props="data.basicSettings.B2BTypeProps" :options="data.basicSettings.B2BTypeList"
+                  :collapse-tags="true" filterable clearable />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="24">
               <el-form-item label="备注">
-                <el-input
-                  maxlength="200"
-                  show-word-limit
-                  type="textarea"
-                  :rows="5"
-                  v-model="localToptTab.remark"
-                />
+                <el-input maxlength="200" show-word-limit type="textarea" :rows="5" v-model="localToptTab.remark" />
               </el-form-item>
             </el-col>
           </el-row>
         </el-card>
         <el-card v-if="!localToptTab.required">
           <template #header>
-            <div
-              style="display: flex; justify-content: space-between"
-              class="card-header"
-            >
+            <div style="display: flex; justify-content: space-between" class="card-header">
               <span>描述配额</span>
               <el-button type="primary" link size="default" @click="isHieght">
                 {{ fold ? "收起" : "展开" }}
@@ -1208,47 +1134,41 @@ const getProblemList = async () => {
             </div>
           </template>
           <div v-if="fold">
-            <el-form-item label="上传图片">
-              <el-upload
-                v-model:file-list="fileList"
-                :action="Url"
-                list-type="picture-card"
-                :drag="true"
-                :limit="10"
-                accept=".png, .jpg, .jpeg, .gif"
-                :before-upload="beforeUpload"
-                :on-preview="handlePictureCardPreview"
-                :on-remove="handleRemove"
-                :on-success="handleSuccess"
-                :on-exceed="handleExceed"
-              >
-                <el-icon style="margin-bottom: none" class="el-icon--upload">
-                  <UploadFilled />
-                </el-icon>
-                <div class="el-upload__text">上传</div>
-                <template #tip>
-                  <div class="el-upload__tip">
-                    <el-text type="primary" size="small">
-                      支持上传JPG/JPEG/PNG图片，小于10MB
-                    </el-text>
-                  </div>
-                </template>
-              </el-upload>
-
-              <el-dialog
-                v-model="dialogVisible"
-                style="
+            <el-form-item label="上传图片/文件">
+              <div style="display: flex;flex-direction: column;align-items: flex-start;">
+                <el-upload v-model:file-list="fileList" :action="Url" list-type="picture-card" :drag="true" :limit="10"
+                  accept=".png, .jpg, .jpeg, .gif" :before-upload="beforeUpload" :on-preview="handlePictureCardPreview"
+                  :on-remove="handleRemove" :on-success="handleSuccess" :on-exceed="handleExceed">
+                  <el-icon style="margin-bottom: none" class="el-icon--upload">
+                    <UploadFilled />
+                  </el-icon>
+                  <div class="el-upload__text">上传</div>
+                  <template #tip>
+                    <div class="el-upload__tip">
+                      <el-text type="primary" size="small">
+                        支持上传JPG/JPEG/PNG图片DOC/XLS/PDF文件，小于10MB
+                      </el-text>
+                    </div>
+                  </template>
+                </el-upload>
+                <el-dialog v-model="dialogVisible" style="
                   z-index: 1000;
                   transform: translate(0);
                   position: relative;
-                "
-              >
-                <img w-full :src="dialogImageUrl" alt="Preview Image" />
-              </el-dialog>
+                ">
+                  <img w-full :src="dialogImageUrl" alt="Preview Image" />
+                </el-dialog>
+                <!-- <div v-for="item in fileList">
+                  <div class="i-f7:doc-text w-1rem h-1rem"></div>
+                  <el-link style=" padding: 0; margin: 0;" :underline="false" type="primary" @click="download(item)">
+                    {{ item.name }}下载
+                  </el-link>
+                </div> -->
+              </div>
             </el-form-item>
             <el-row>
               <el-col :span="24">
-                <el-form-item label="项目描述" >
+                <el-form-item label="项目描述">
                   <!-- key解决富文本编译器   先新增  再编辑  富文本右侧值还在的问题    key值变了会刷新组件 -->
                   <!-- <Editor
                     class="editor"
@@ -1257,25 +1177,18 @@ const getProblemList = async () => {
                     :locale="zhHans"
                     @change="handleChange"
                   /> -->
-                  <UEditor style="width: 100%"
-                    :tinymceHtml="localToptTab.richText"
-                      @changeEditorValue="changeEditorValue"
-                  />
+                  <UEditor style="width: 100%" :tinymceHtml="localToptTab.richText"
+                    @changeEditorValue="changeEditorValue" />
                 </el-form-item>
               </el-col>
             </el-row>
           </div>
         </el-card>
       </el-tab-pane>
-      <el-tab-pane
-        label="配置信息"
-        name="configurationInformation"
-        v-if="
-          localToptTab.isProfile === 1 &&
-          !localToptTab.required &&
-          localToptTab.projectType !== 2
-        "
-      >
+      <el-tab-pane label="配置信息" name="configurationInformation" v-if="localToptTab.isProfile === 1 &&
+    !localToptTab.required &&
+    localToptTab.projectType !== 2
+    ">
         <el-card v-if="localToptTab.data">
           <template #header>
             <div class="card-header">配置信息</div>
@@ -1283,116 +1196,62 @@ const getProblemList = async () => {
           <el-row :gutter="20">
             <el-col :span="6">
               <el-form-item label="选择区域">
-                <el-select
-                  v-model="
-                    localToptTab.data.configurationInformation.initialProblem
-                      .countryId
-                  "
-                  filterable
-                  clearable
-                  placeholder="Select"
-                  :disabled="localToptTab.projectType === 2"
-                  @change="changeConfigurationCountryId"
-                >
-                  <ElOption
-                    v-for="item in localToptTab.data.configurationInformation
-                      .configurationCountryList"
-                    :label="item.countryName"
-                    :value="item.countryId"
-                  ></ElOption>
+                <el-select v-model="localToptTab.data.configurationInformation.initialProblem
+    .countryId
+    " filterable clearable placeholder="Select" :disabled="localToptTab.projectType === 2"
+                  @change="changeConfigurationCountryId">
+                  <ElOption v-for="item in localToptTab.data.configurationInformation
+    .configurationCountryList" :label="item.countryName" :value="item.countryId"></ElOption>
                   <template #empty>
                     <div>
-                      <el-button
-                        type="primary"
-                        link
-                        class="buttonClass"
-                        size="small"
-                        @click="addProblem"
-                      >
+                      <el-button type="primary" link class="buttonClass" size="small" @click="addProblem">
                         快捷新增
-                        <SvgIcon
-                          name="ant-design:plus-outlined"
-                          color="#fff"
-                          style="
+                        <SvgIcon name="ant-design:plus-outlined" color="#fff" style="
                             background-color: var(--el-color-primary);
                             border-radius: 50%;
                             padding: 0.125rem;
                             margin: 0 0.125rem;
-                          "
-                        />
+                          " />
                       </el-button>
                     </div>
                   </template>
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col
-              :span="6"
-              v-if="
-                localToptTab.data.configurationInformation.initialProblem
-                  .countryId
-              "
-            >
+            <el-col :span="6" v-if="localToptTab.data.configurationInformation.initialProblem
+    .countryId
+    ">
               <el-form-item label="问卷名称">
-                <el-select
-                  v-model="
-                    localToptTab.data.configurationInformation.initialProblem
-                      .projectProblemCategoryId
-                  "
-                  clearable
-                  placeholder="Select"
-                  :disabled="localToptTab.projectType === 2"
-                  @focus="getProjectCategoryList"
-                  @change="getProjectProblemList"
-                >
-                  <el-option
-                    v-for="item in localToptTab.data.configurationInformation
-                      .projectCategoryList"
-                    :key="item.projectProblemCategoryId"
-                    :label="item.projectProblemCategoryName"
-                    :value="item.projectProblemCategoryId"
-                  />
+                <el-select v-model="localToptTab.data.configurationInformation.initialProblem
+    .projectProblemCategoryId
+    " clearable placeholder="Select" :disabled="localToptTab.projectType === 2" @focus="getProjectCategoryList"
+                  @change="getProjectProblemList">
+                  <el-option v-for="item in localToptTab.data.configurationInformation
+    .projectCategoryList" :key="item.projectProblemCategoryId" :label="item.projectProblemCategoryName"
+                    :value="item.projectProblemCategoryId" />
                 </el-select>
               </el-form-item>
             </el-col>
           </el-row>
           <!-- 1 输入框 2单选 3复选 4下拉  -->
-          <template
-            v-if="
-              localToptTab.data.configurationInformation
-                .ProjectProblemInfoList &&
-              localToptTab.data.configurationInformation.ProjectProblemInfoList
-                .length &&
-              localToptTab.projectQuotaInfoList.length
-            "
-          >
-            <el-row
-              class="allocation"
-              :gutter="20"
-              v-for="(item, index) in localToptTab.data.configurationInformation
-                .ProjectProblemInfoList"
-            >
+          <template v-if="localToptTab.data.configurationInformation
+    .ProjectProblemInfoList &&
+    localToptTab.data.configurationInformation.ProjectProblemInfoList
+      .length &&
+    localToptTab.projectQuotaInfoList.length
+    ">
+            <el-row class="allocation" :gutter="20" v-for="(item, index) in localToptTab.data.configurationInformation
+    .ProjectProblemInfoList">
               <el-col :span="20"> 问题：{{ item.question }} </el-col>
               <el-col :span="20">
                 <el-form-item>
                   <!-- 1输入框 -->
-                  <el-input
-                    v-if="item.questionType === 1"
-                    disabled
-                    placeholder="输入框无法设置"
-                  ></el-input>
+                  <el-input v-if="item.questionType === 1" disabled placeholder="输入框无法设置"></el-input>
                   <!-- 3多选 值为[]-->
-                  <el-checkbox-group
-                    v-else
-                    :modelValue="customModel(item.id, index).get()"
-                    @update:modelValue="customModel(item.id, index).set($event)"
-                    @change="setAnswerValue(3, index)"
-                  >
-                    <el-checkbox
-                      :label="ite.anotherName"
-                      :value="ite.id"
-                      v-for="ite in item.getProjectAnswerInfoList"
-                    />
+                  <el-checkbox-group v-else :modelValue="customModel(item.id, index).get()"
+                    @update:modelValue="customModel(item.id, index).set($event)" @change="setAnswerValue(3, index)">
+                    <el-checkbox :label="ite.anotherName" :value="ite.id"
+                      v-for="ite in item.getProjectAnswerInfoList" />
                   </el-checkbox-group>
                 </el-form-item>
               </el-col>
@@ -1400,11 +1259,7 @@ const getProblemList = async () => {
           </template>
         </el-card>
       </el-tab-pane>
-      <el-tab-pane
-        label="安全信息"
-        name="securityInformation"
-        v-if="!localToptTab.required"
-      >
+      <el-tab-pane label="安全信息" name="securityInformation" v-if="!localToptTab.required">
         <el-card>
           <template #header>
             <div class="card-header">安全信息</div>
@@ -1415,16 +1270,8 @@ const getProblemList = async () => {
                 <template #label>
                   <div>小时<span class="red">准入</span>量</div>
                 </template>
-                <el-input-number
-                  style="height: 2rem"
-                  v-model="localToptTab.preNum"
-                  :min="1"
-                  :step="1"
-                  step-strictly
-                  controls-position="right"
-                  size="large"
-                  @keydown="handleInput"
-                />
+                <el-input-number style="height: 2rem" v-model="localToptTab.preNum" :min="1" :step="1" step-strictly
+                  controls-position="right" size="large" @keydown="handleInput" />
               </el-form-item>
             </el-col>
             <el-col :span="1"> </el-col>
@@ -1433,16 +1280,8 @@ const getProblemList = async () => {
                 <template #label>
                   <div>小时<span class="blue">完成</span>量</div>
                 </template>
-                <el-input-number
-                  style="height: 2rem"
-                  v-model="localToptTab.limitedQuantity"
-                  :min="1"
-                  :step="1"
-                  step-strictly
-                  controls-position="right"
-                  size="large"
-                  @keydown="handleInput"
-                />
+                <el-input-number style="height: 2rem" v-model="localToptTab.limitedQuantity" :min="1" :step="1"
+                  step-strictly controls-position="right" size="large" @keydown="handleInput" />
               </el-form-item>
             </el-col>
             <el-col :span="1"> </el-col>
@@ -1459,11 +1298,7 @@ const getProblemList = async () => {
                     </el-tooltip>
                   </div>
                 </template>
-                <el-switch
-                  v-model="localToptTab.ipDifferenceDetection"
-                  :active-value="1"
-                  :inactive-value="2"
-                />
+                <el-switch v-model="localToptTab.ipDifferenceDetection" :active-value="1" :inactive-value="2" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -1502,20 +1337,11 @@ const getProblemList = async () => {
       </el-tab-pane>
     </el-tabs>
     <el-dialog v-model="dialogVisibleExchangeRate" title="设置汇率" width="500">
-      <el-form
-        :model="exchangeRateForm"
-        ref="exchangeRateRef"
-        :rules="exchangeRateRules"
-        label-width="90px"
-        :inline="false"
-      >
+      <el-form :model="exchangeRateForm" ref="exchangeRateRef" :rules="exchangeRateRules" label-width="90px"
+        :inline="false">
         <el-form-item label="美元汇率" prop="exchangeRate">
           <div class="right">
-            <el-input
-              v-model="exchangeRateForm.exchangeRate"
-              placeholder="请输入数值"
-              clearable
-            >
+            <el-input v-model="exchangeRateForm.exchangeRate" placeholder="请输入数值" clearable>
               <template #prefix>
                 <!-- 自定义 SVG 图标作为前缀图标 -->
                 <el-text style="color: #333">
@@ -1543,21 +1369,16 @@ const getProblemList = async () => {
       </template>
     </el-dialog>
     <customerEdit ref="editRef" @fetch-data="getCustomerList" />
-    <Edit
-      v-if="data.editProps.visible"
-      :id="data.editProps.id"
-      :countryId="data.editProps.countryId"
-      v-model="data.editProps.visible"
-      :row="data.editProps.row"
-      @success="getProblemList"
-    ></Edit>
+    <Edit v-if="data.editProps.visible" :id="data.editProps.id" :countryId="data.editProps.countryId"
+      v-model="data.editProps.visible" :row="data.editProps.row" @success="getProblemList"></Edit>
   </ElForm>
 </template>
 
 <style lang="scss" scoped>
-:deep(.tox-promotion){
+:deep(.tox-promotion) {
   display: none !important;
 }
+
 .buttonClass {
   text-align: center;
   width: 100%;
@@ -1578,12 +1399,14 @@ const getProblemList = async () => {
   width: calc(100% - 24px);
   /* 减去两边的 padding */
 }
+
 :deep(.el-button.is-link:hover) {
   color: #409eff !important;
   background: #f4f8ff !important;
   border-radius: 4px 4px 4px 4px !important;
   border: 1px solid #e9eef3 !important;
 }
+
 .fx-c {
   display: flex;
   justify-content: space-between;
@@ -1650,6 +1473,7 @@ const getProblemList = async () => {
 }
 
 :deep {
+
   .el-input-number,
   .el-input,
   .el-select,

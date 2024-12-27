@@ -99,18 +99,36 @@ async function save() {
 
 
 
-      for (const item of leftTabsData) {
+    for (const item of leftTabsData) {
       let rateAudit = item.rateAudit
+      let turnover = item.turnover
       // 正则匹配正整数
       const regex = /^[1-9]\d*$/;
       // 如果不符合正则，弹出警告并跳过当前项
-
-      if (!regex.test(rateAudit) && item.riskControl ==2) {
+      if ((!item.turnover && !item.rateAudit) && item.riskControl == 2) {
         ElMessage.warning({
-          message: "审核率必须是大于0的正整数",
+          message: "风险控制必填一项，且是正整数",
           center: true,
         });
         return;
+      }
+      if (item.turnover || item.rateAudit) {
+
+      } else {
+        if (!regex.test(turnover)) {
+          ElMessage.warning({
+            message: "营业限额必须是大于0的正整数",
+            center: true,
+          });
+          return;
+        }
+        if (!regex.test(rateAudit)) {
+          ElMessage.warning({
+            message: "审核率必须是大于0的正整数",
+            center: true,
+          });
+          return;
+        }
       }
     }
 

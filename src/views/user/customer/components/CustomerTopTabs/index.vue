@@ -30,6 +30,17 @@ const rules = reactive<any>({
   chargeId: [
     { required: true, message: "请选择负责人", trigger: "change" },
   ],
+  rateAudit: [
+    { required: true, message: "请输入审核率Min值", trigger: "blur" },
+    { pattern: /^[1-9]\d*$/, message: "请输入有效的正整数", trigger: "blur" },
+    // 其他校验规则
+  ],
+  turnover: [
+    { required: true, message: "请输入营业限额/月", trigger: "blur" },
+    { pattern: /^[1-9]\d*$/, message: "请输入有效的正整数", trigger: "blur" },
+    // 其他校验规则
+  ],
+
 });
 const radio1 = ref<any>('all')
 const positionList = ref<any>([])
@@ -130,6 +141,13 @@ onBeforeMount(async () => {
 const formRef = ref(null);
 // 注入主组件中的提供者
 const localToptTab = ref<any>(props.leftTab);
+// 后端(潘)这里类型不好改，前端判断如果是返回0就给他制空
+if(localToptTab.value.rateAudit === 0) {
+  localToptTab.value.rateAudit = null;
+}
+if(localToptTab.value.turnover === 0) {
+  localToptTab.value.turnover = null;
+}
 nextTick(() => {
   // 表单验证方法
   validate(formRef.value);
@@ -140,7 +158,7 @@ const tenantId = storage.local.get("anotherName");
 
 <template>
   <div>
-    <ElForm ref="formRef" :rules="rules" :model="localToptTab" label-width="100px">
+    <ElForm ref="formRef" :rules="rules" :model="localToptTab" label-width="110px">
       <el-tabs v-model="activeName">
         <el-tab-pane label="基础设置" name="basicSettings">
           <el-card class="box-card">
@@ -251,13 +269,13 @@ const tenantId = storage.local.get("anotherName");
                 </el-form-item>
               </el-col>
               <el-col v-if="localToptTab.riskControl === 2" :span="12">
-                <el-form-item label="营业限额/月">
-                  <el-input-number v-model="localToptTab.turnover" controls-position="right" :min="0" />
+                <el-form-item label="营业限额/月" prop="">
+                  <el-input v-model="localToptTab.turnover" controls-position="right" />
                 </el-form-item>
               </el-col>
               <el-col v-if="localToptTab.riskControl === 2" :span="12">
-                <el-form-item label="审核率Min值">
-                  <el-input v-model="localToptTab.rateAudit" controls-position="right" :min="1" type="number">
+                <el-form-item label="审核率Min值" prop="">
+                  <el-input v-model="localToptTab.rateAudit" controls-position="right">
                     <template #append> % </template>
                   </el-input>
                 </el-form-item>

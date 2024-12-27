@@ -432,7 +432,7 @@ function handleCurrentChange(val: any) {
           label="项目"
         >
           <template #default="{ row }">
-            <div class="tableBig oneLine">名称: {{ row.projectName }}</div>
+            <div class="tableBig oneLine">{{ row.projectName }}</div>
             <div class="copyId tableSmall flex-s">
               <div class="id oneLine">
                 {{ row.projectId ? row.projectId : "-" }}

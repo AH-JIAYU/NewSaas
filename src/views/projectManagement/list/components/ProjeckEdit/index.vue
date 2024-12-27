@@ -127,6 +127,8 @@ function initializeLeftTabsData(data: any) {
         },
       };
       child.descriptionUrl = child.descriptionUrl.split(",");
+      // child.operatingSystem = child.operatingSystem.split(",");
+      // child.browser = child.browser.split(",");
       leftTabsData.push({
         ...child,
       });
@@ -200,6 +202,8 @@ const processingData = async () => {
   });
   let masterData = newLeftTabsData[0];
   masterData.projectInfoList = newLeftTabsData.slice(1).map((item: any) => {
+    item.browser = item.browser.join(',');
+    item.operatingSystem = item.operatingSystem.join(',');
     return {
       ...item,
       memberPrice: (item.doMoneyPrice * item.exchangeRate).toFixed(2)
@@ -237,7 +241,17 @@ async function onSubmit() {
   if (validateAll.value.every((item: any) => item === "fulfilled")) {
     if (!hasDuplicateCustomer(leftTabsData)) {
       const params = await processingData();
+      // 操作系统(后端刘定义类型为字符串，前端提交转换)
+      params.browser = params.browser.join(",");
+      params.operatingSystem = params.operatingSystem.join(",");
       setTimeout(async () => {
+        if (!params.endAge || !params.startAge) {
+        ElMessage.warning({
+          message: "年龄区间未填写完整",
+          center: true,
+        });
+        return;
+      }
         if (title.value === "新增") {
           params.memberPrice = (
             params.doMoneyPrice * params.exchangeRate
@@ -324,30 +338,17 @@ defineExpose({
 </script>
 
 <template>
-  <div>
-    <el-drawer
-      v-model="dialogTableVisible"
-      :class="
+  <!-- :class="
         title === '新增' || leftTabsData.length > 1
           ? 'hide-drawer-header'
           : 'edit-drawer'
-      "
-      append-to-body
-      :close-on-click-modal="false"
-      destroy-on-close
-      draggable
-      size="70%"
-    >
-      <LeftTabs
-        v-loading="loading"
-        v-if="leftTabsData.length"
-        @validate="validate"
-        ref="LeftTabsRef"
-        :left-tabs-data="leftTabsData"
-        :validate-top-tabs="validateTopTabs"
-        :validate-all="validateAll"
-        :title="title"
-      />
+      " -->
+  <div>
+    <el-drawer v-model="dialogTableVisible" class="hide-drawer-header" append-to-body :close-on-click-modal="false"
+      destroy-on-close draggable size="70%">
+      <LeftTabs v-loading="loading" v-if="leftTabsData.length" @validate="validate" ref="LeftTabsRef"
+        :left-tabs-data="leftTabsData" :validate-top-tabs="validateTopTabs" :validate-all="validateAll"
+        :title="title" />
       <template #footer>
         <div class="flex-c">
           <el-button link v-show="projectReleaseTime">
@@ -357,12 +358,7 @@ defineExpose({
           <el-button type="primary" @click="onSubmit" :disabled="loading">
             发布项目
           </el-button>
-          <el-button
-            type="warning"
-            v-show="title !== '编辑'"
-            @click="staging"
-            :disabled="loading"
-          >
+          <el-button type="warning" v-show="title !== '编辑'" @click="staging" :disabled="loading">
             暂存
           </el-button>
           <el-button @click="closeHandler" :disabled="loading">
@@ -376,6 +372,7 @@ defineExpose({
 
 <style lang="scss" scoped>
 :deep {
+
   .el-drawer,
   .el-drawer__body,
   .el-tabs.el-tabs--left {

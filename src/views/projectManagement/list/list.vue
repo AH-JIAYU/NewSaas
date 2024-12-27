@@ -93,7 +93,7 @@ const search = ref<any>({
   createName: "", // 	创建人-模糊查询
   allocation: "", // 	分配状态:1已经分配 2:未分配
   allocationStatus: [], // 	分配类型: 1:自动分配 2:供应商 3:部门
-  // status: "", // 	项目状态:1在线 2:离线
+   status: "", // 	项目状态:1在线 2:离线
 }); // 搜索
 
 const list = ref<any>([]);
@@ -236,7 +236,7 @@ function onReset() {
     createName: "", // 	创建人-模糊查询
     allocation: "", // 	分配状态:1已经分配 2:未分配
     allocationStatus: [], // 	分配类型: 1:自动分配 2:供应商 3:部门
-    // status: "", // 	项目状态:1在线 2:离线
+    status: "", // 	项目状态:1在线 2:离线
   };
   fetchData();
 }
@@ -371,16 +371,6 @@ onMounted(async () => {
       optionLabel: "label",
       optionValue: "value",
     },
-    // {
-    //   index: 10,
-    //   show: true,
-    //   type: "select",
-    //   modelName: "projectType",
-    //   placeholder: "项目类型",
-    //   option: "projectType",
-    //   optionLabel: "label",
-    //   optionValue: "value",
-    // },
     {
       index: 11,
       show: true,
@@ -388,6 +378,16 @@ onMounted(async () => {
       modelName: "time",
       startPlaceHolder: "创建开始日期",
       endPlaceHolder: "创建结束日期",
+    },
+    {
+      index: 12,
+      show: true,
+      type: "select",
+      modelName: "status",
+      placeholder: "在线/离线",
+      option: "isOnlineType",
+      optionLabel: "label",
+      optionValue: "value",
     },
   ];
 });
@@ -409,6 +409,10 @@ const formOption = {
   projectType: () => [
     { label: "内部新增", value: 1 },
     { label: "合作商分配", value: 2 },
+  ],
+  isOnlineType: () => [
+    { label: "在线", value: 1 },
+    { label: "离线", value: 2 },
   ],
 };
 </script>

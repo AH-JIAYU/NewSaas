@@ -2,6 +2,7 @@
 import { onMounted } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import customerEdit from "./components/CustomerEdit/index.vue";
+import customerDetail from "./components/CustomerEdit/customerDetail.vue";
 import customerProportion from "./components/CustomerProportion/index.vue";
 import financialLog from "./components/financialLog/index.vue";
 import userPM from "./components/userPM/index.vue"; //部门人
@@ -746,7 +747,9 @@ function userData(data1: any) {
         @size-change="sizeChange"
         @current-change="currentChange"
       />
+      <!-- <customerDetail ref="editRef" @queryData="queryData" /> -->
       <customerEdit ref="editRef" @fetch-data="queryData" />
+
       <customerProportion ref="proportionRef" @fetch-data="queryData" />
       <financialLog ref="financialLogRef" @fetch-data="queryData" />
     <QuickEdit ref="QuickEditRef" @fetchData="fetchData" />

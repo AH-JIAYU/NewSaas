@@ -116,17 +116,20 @@ defineExpose({ showEdit });
         <el-row :gutter="20">
           <el-col :span="8">
             <el-form-item label="项目ID">
-              <el-input disabled :value="data.showData.projectId" />
+              <!-- <el-input disabled :value="data.showData.projectId" /> -->
+              <el-text>{{data.showData.projectId}}</el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="项目名称">
-              <el-input disabled :value="data.showData.projectName" />
+              <!-- <el-input disabled :value="data.showData.projectName" /> -->
+              <el-text>{{data.showData.projectName}}</el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="会员名称">
-              <el-input disabled :value="data.showData.memberChildName" />
+              <!-- <el-input disabled :value="data.showData.memberChildName" /> -->
+              <el-text>{{data.showData.memberChildName}}</el-text>
             </el-form-item>
           </el-col>
         </el-row>

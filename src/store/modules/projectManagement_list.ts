@@ -25,6 +25,9 @@ const useProjectManagementListStore = defineStore(
       mutualExclusion: 1, //	互斥ID 1:开启 2:关闭
       mutualExclusionId: "", //	如果互斥id选择开启,需要传id值
       remark: "", //备注
+      sex: 1, //性别
+      startAge: 18, //性别
+      endAge: 99, //性别
       isPinned: 2, //	是否置顶:1:置顶 2:不置顶
       isOnline: 1, //	是否在线:1:在线 2:不在线
       isProfile: 2, //	是否资料:1:资料 2:不资料
