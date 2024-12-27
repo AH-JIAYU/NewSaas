@@ -52,6 +52,9 @@ const handleData = () => {};
 defineExpose({
   showEdit,
 });
+const openCooperation =(row:any)=> {
+
+}
 </script>
 
 <template>
@@ -120,7 +123,7 @@ defineExpose({
           </el-col>
           <el-col :span="6">
             <div style="height: 100%" class="flex-ab">
-              <!-- <div class="flex-a">
+              <div class="flex-a">
                   <img src="@/assets/images/keyaoyue.png" alt="" style="margin-right: 3px;">
                   <span class="color3 font-s14">可邀约</span>
               </div>
@@ -128,11 +131,12 @@ defineExpose({
                 type="primary"
               class="font-s14"
               style="margin-left: 1rem;"
+              @click="openCooperation(item)"
               >
                 申请合作
-              </el-button> -->
+              </el-button>
 
-              <div class="flex-a">
+              <!-- <div class="flex-a">
                 <img
                   src="@/assets/images/bukeyaoyue.png"
                   alt=""
@@ -146,7 +150,7 @@ defineExpose({
                 style="margin-left: 1rem"
               >
                 申请合作
-              </el-button>
+              </el-button> -->
               <!-- <div  class="flex-a">
                   <img src="@/assets/images/jujue.png" alt="" style="margin-right: 3px;">
                   <span class="color5 font-s14">拒绝邀约</span>
