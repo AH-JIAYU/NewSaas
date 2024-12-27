@@ -8,20 +8,21 @@ import { Calendar, Search } from "@element-plus/icons-vue";
 import apiDep from "@/api/modules/department";
 import useUserStore from "@/store/modules/user";
 import { handleError } from "vue";
-
+import customerEdit from "./components/CustomerEdit/index.vue";
 const userStore: any = useUserStore();
 
-const emit = defineEmits(["fetch-data"]);
+const emit = defineEmits(["queryData"]);
 const drawerisible = ref<boolean>(false);
 
 const data = ref<any>({
   searchData: "",
 });
-
+let interval = ref();
 // 显隐
 async function showEdit() {
   await getTenantUserList();
   drawerisible.value = true;
+  // interval.value = setInterval(updateCountdown, 1000); // 每秒调用一次
 }
 
 // 获取合作商列表
@@ -30,6 +31,10 @@ async function getTenantUserList() {
   data.value.tenantUserList = res.data.tenantUserInfoList;
 }
 
+const getTenantList = () => {
+  getTenantUserList();
+  emit("queryData");
+};
 // 筛选所选合作商
 // const dataList = computed(() => {
 //   const findData = data.value.tenantUserList.find(
@@ -51,9 +56,44 @@ const handleData = () => {};
 defineExpose({
   showEdit,
 });
-const openCooperation =(row:any)=> {
+const editRef = ref();
+const openCooperation = (row: any) => {
+  editRef.value.showEdit();
+};
+//倒计时
 
-}
+// 更新倒计时的函数
+const updateCountdown = () => {
+  // 设置一个目标时间：目标时间为当前时间加7天
+  const targetTime: any = new Date(); // 当前时间
+  targetTime.setDate(targetTime.getDate() + 7); // 目标时间为当前时间的7天后
+  // 计算倒计时相关的变量
+  const days = ref(0);
+  const hours = ref(0);
+  const minutes = ref(0);
+  const seconds = ref(0);
+  const isTimeUp = ref(false); // 判断倒计时是否结束
+
+  const now: any = new Date();
+  const timeLeft = targetTime - now; // 剩余时间
+
+  if (timeLeft <= 0) {
+    clearInterval(interval.value); // 清除定时器
+    isTimeUp.value = true; // 倒计时结束 // 调用接口
+  } else {
+    // 更新剩余时间
+    days.value = Math.floor(timeLeft / (1000 * 60 * 60 * 24)); // 剩余天数
+    hours.value = Math.floor(
+      (timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+    ); // 剩余小时
+    minutes.value = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60)); // 剩余分钟
+    seconds.value = Math.floor((timeLeft % (1000 * 60)) / 1000); // 剩余秒数
+  }
+};
+// 在组件销毁时清除定时器
+// onUnmounted(() => {
+//   clearInterval(interval.value);
+// });
 </script>
 
 <template>
@@ -123,14 +163,18 @@ const openCooperation =(row:any)=> {
           <el-col :span="6">
             <div style="height: 100%" class="flex-ab">
               <div class="flex-a">
-                  <img src="@/assets/images/keyaoyue.png" alt="" style="margin-right: 3px;">
-                  <span class="color3 font-s14">可邀约</span>
+                <img
+                  src="@/assets/images/keyaoyue.png"
+                  alt=""
+                  style="margin-right: 3px"
+                />
+                <span class="color3 font-s14">可邀约</span>
               </div>
               <el-button
                 type="primary"
-              class="font-s14"
-              style="margin-left: 1rem;"
-              @click="openCooperation(item)"
+                class="font-s14"
+                style="margin-left: 1rem"
+                @click="openCooperation(item)"
               >
                 申请合作
               </el-button>
@@ -166,6 +210,7 @@ const openCooperation =(row:any)=> {
         </el-row>
       </el-card>
     </el-drawer>
+    <customerEdit ref="editRef" @fetch-data="getTenantList" />
   </div>
 </template>
 
