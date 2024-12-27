@@ -28,7 +28,6 @@ async function showEdit() {
 async function getTenantUserList() {
   const res = await api.getTenantUserList({});
   data.value.tenantUserList = res.data.tenantUserInfoList;
-  console.log(data.value.tenantUserList, "data.value.tenantUserList");
 }
 
 // 筛选所选合作商

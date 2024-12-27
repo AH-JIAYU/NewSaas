@@ -13,6 +13,7 @@ const title = ref<string>('')
 const form = ref<any>({})
 const imgUrl = ref<any>([])
 const srcList = ref<any>([])
+const pictureList = ref<any>([])
 const loading = ref(false)
 
 // 回显
@@ -27,10 +28,14 @@ async function showEdit(row: any) {
       if (form.value.descriptionUrl !== '') {
         const urlArr = form.value.descriptionUrl.split(',');
         srcList.value = urlArr
+        const url = [".jpg", ".jpeg", ".png", ".gif"]
         urlArr.map(async (item: any) => {
           const imgres: any = await fileApi.detail({
             fileName: item,
           })
+          if (url.some(extension => imgres.data.fileUrl.includes(extension))) {
+            pictureList.value.push(imgres.data.fileUrl);
+          }
           imgUrl.value.push(imgres.data.fileUrl)
         })
       }
@@ -45,15 +50,22 @@ async function showEdit(row: any) {
 }
 
 // 下载
-async function download() {
-  await DownLoad(imgUrl.value, form.value.descriptionUrl)
+async function download(val: any) {
+  await DownLoad(val, form.value.descriptionUrl)
 }
 function close() {
   title.value = ''
   form.value = {}
   imgUrl.value = []
   srcList.value = []
+  pictureList.value = []
   loadingDisible.value = false
+}
+
+// 转码
+const decode = (val: any) => {
+  const decodedFileName = decodeURIComponent(val.split('/').pop().split('?')[0]);
+  return decodedFileName;
 }
 
 // ... 这里可能还有其他逻辑 ...
@@ -67,14 +79,17 @@ defineExpose({
     <el-dialog v-model="loadingDisible" append-to-body :close-on-click-modal="false" destroy-on-close :title="title"
       draggable width="50%" @close="close">
       <div v-if="form.descriptionUrl" class="demo-image__preview">
-        <el-image style="width: 6.25rem; height: 6.25rem;margin-right: 5px;" v-for="item in imgUrl" :src="item"
-          :preview-src-list="srcList" :zoom-rate="1.2" :max-scale="7" :min-scale="0.2" :initial-index="0" fit="cover" />
+        <el-image v-for="(item, index) in pictureList" :key="index"
+          style="width: 6.25rem; height: 6.25rem; margin-right: 5px;" :src="item" :preview-src-list="pictureList"
+          :zoom-rate="1.2" :max-scale="7" :min-scale="0.2" :initial-index="index" fit="cover"
+           />
       </div>
-      <div v-if="form.descriptionUrl" v-for="item in srcList" style="margin-bottom: 5px;">
-        <el-link  style=" padding: 0; margin: 0;" :underline="false" type="primary"
-        @click="download">{{ item }}下载</el-link>
+      <div v-if="form.descriptionUrl" v-for="item in srcList">
+        <div class="i-f7:doc-text w-1rem h-1rem"></div>
+        <el-link style=" padding: 0; margin: 0;" :underline="false" type="primary" @click="download(item)">{{ decode(item)
+          }}下载</el-link>
       </div>
-      <el-row :gutter="20" :class="{ isNone: !form.descriptionUrl && !form.richText}">
+      <el-row :gutter="20" :class="{ isNone: !form.descriptionUrl && !form.richText }">
         <el-col :span="24">
           <div class="radius flex gap-2 p-2">
             <Viewer :value="form.richText" />

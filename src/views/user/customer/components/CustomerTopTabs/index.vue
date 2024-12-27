@@ -141,6 +141,13 @@ onBeforeMount(async () => {
 const formRef = ref(null);
 // 注入主组件中的提供者
 const localToptTab = ref<any>(props.leftTab);
+// 后端(潘)这里类型不好改，前端判断如果是返回0就给他制空
+if(localToptTab.value.rateAudit === 0) {
+  localToptTab.value.rateAudit = null;
+}
+if(localToptTab.value.turnover === 0) {
+  localToptTab.value.turnover = null;
+}
 nextTick(() => {
   // 表单验证方法
   validate(formRef.value);

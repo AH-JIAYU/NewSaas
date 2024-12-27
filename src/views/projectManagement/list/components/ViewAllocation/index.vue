@@ -42,7 +42,6 @@ const fetchSequentialData = async (params: any) => {
       type: item,
       getTenantSupplierMemberNameList: data1.getTenantSupplierMemberNameList,
     }); // 将返回的数据添加到 results 数组
-    // console.log(data.value.results, "data.value.results");
     data.value.results.forEach((item: any) => {
       if (item.type == 2) {
         data.value.supplierList = item.getTenantSupplierMemberNameList
@@ -60,9 +59,6 @@ const fetchSequentialData = async (params: any) => {
           : [];
       }
     });
-    // console.log(data.value.supplierList, "data.value.supplierList");
-    // console.log(data.value.memberList, "data.value.memberList");
-    // console.log(data.value.tenantList, "data.value.tenantList");
   }
 };
 // 显隐
