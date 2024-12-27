@@ -141,7 +141,7 @@ const formRules = ref<FormRules>({
     { max: 50, message: '最多输入 50 字', trigger: 'blur' }
   ],
   acquiesceExchangeRate: [
-    { required: false, message: '请输入美元汇率', trigger: 'blur' },
+    { required: true, message: '请输入美元汇率', trigger: 'blur' },
     { pattern: /^(?!0(\.0+)?$)(\d+(\.\d{1,2})?)$/, message: '请输入一个有效的数字，不能小于0，最多保留两位小数', trigger: 'blur' }
   ],
 });
@@ -169,6 +169,9 @@ async function getDataList() {
       if (form.value.minimumAmount === 0) form.value.minimumAmount = null;
       analyzeRecords.value = form.value
       userStore.originalExchangeRate = form.value.exchangeRate
+      if(!form.value.acquiesceExchangeRate) {
+        form.value.acquiesceExchangeRate = form.value.exchangeRate
+      }
       userStore.setWebName(data.webName)
       userStore.setDescription(data.description)
       userStore.setkeyWords(data.keyWords)
@@ -326,6 +329,14 @@ function onSubmit() {
   if (!form.value.webName) {
     ElMessage.warning({
       message: "请输入网站名称",
+      center: true,
+    });
+    return;
+  }
+  // 后端(潘) 汇率需要必填，后端直接取这个字段进行乘除
+  if (!form.value.acquiesceExchangeRate) {
+    ElMessage.warning({
+      message: "请输入汇率",
       center: true,
     });
     return;
@@ -507,9 +518,9 @@ function onSubmit() {
                     placeholder=""
                   >
                     <template #append>%</template>
-</el-input>
-</el-form-item>
-</el-col> -->
+                      </el-input>
+                      </el-form-item>
+                      </el-col> -->
               <el-col :span="24">
                 <el-form-item label="默认币种" prop="">
                   <el-select v-model="form.currencyType" value-key="" style="width: 22.4375rem" disabled
