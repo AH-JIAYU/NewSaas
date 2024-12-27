@@ -51,7 +51,10 @@ async function showEdit(row: any) {
 
 // 下载
 async function download(val: any) {
-  await DownLoad(val, form.value.descriptionUrl)
+  if(val) {
+    const decodedFileName = decodeURIComponent(val.split('/').pop().split('?')[0]);
+    await DownLoad(val, decodedFileName)
+  }
 }
 function close() {
   title.value = ''
