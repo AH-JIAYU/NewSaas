@@ -135,6 +135,7 @@ const useUserStore = defineStore(
       storage.local.remove("tabbarPinData");
       storage.local.remove("tenantId");
       storage.local.remove("anotherName");
+      storage.local.remove("acquiesceExchangeRate")
       account.value = "";
       token.value = "";
       avatar.value = "";
@@ -248,6 +249,7 @@ const useUserStore = defineStore(
       const res = await apiUser.getCurrencyType();
       currencyType.value = res.data.currencyType;
       originalExchangeRate.value = res.data.exchangeRate
+      storage.local.set("acquiesceExchangeRate", res.data.acquiesceExchangeRate)
     }
     // 获取汇率
     async function getExchangeRate() {
