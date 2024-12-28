@@ -60,39 +60,56 @@ const editRef = ref();
 const openCooperation = (row: any) => {
   editRef.value.showEdit();
 };
+const timers: any = reactive({});
 //倒计时
+// 格式化时间为 "XX天 XX小时 XX分钟 XX秒"
+const formatTime = (timeLeft: any) => {
+  const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+  const hours = Math.floor(
+    (timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+  );
+  const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+  return `${hours}: ${minutes}: ${seconds}`;
+};
 
-// 更新倒计时的函数
-const updateCountdown = () => {
-  // 设置一个目标时间：目标时间为当前时间加7天
-  const targetTime: any = new Date(); // 当前时间
-  targetTime.setDate(targetTime.getDate() + 7); // 目标时间为当前时间的7天后
-  // 计算倒计时相关的变量
-  const days = ref(0);
-  const hours = ref(0);
-  const minutes = ref(0);
-  const seconds = ref(0);
-  const isTimeUp = ref(false); // 判断倒计时是否结束
-
+// 计算剩余时间并更新
+const updateRemainingTime = (item: any) => {
   const now: any = new Date();
-  const timeLeft = targetTime - now; // 剩余时间
+  const targetTime: any = new Date(item.startTime);
+  targetTime.setDate(targetTime.getDate() + 7); // 目标时间为开始时间 + 7天
+  const timeLeft = targetTime - now;
 
   if (timeLeft <= 0) {
-    clearInterval(interval.value); // 清除定时器
-    isTimeUp.value = true; // 倒计时结束 // 调用接口
+    getTenantUserList(); // 调用接口
+    return 0; // 如果时间已到，返回0
   } else {
-    // 更新剩余时间
-    days.value = Math.floor(timeLeft / (1000 * 60 * 60 * 24)); // 剩余天数
-    hours.value = Math.floor(
-      (timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-    ); // 剩余小时
-    minutes.value = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60)); // 剩余分钟
-    seconds.value = Math.floor((timeLeft % (1000 * 60)) / 1000); // 剩余秒数
+    return timeLeft; // 返回剩余时间
   }
 };
+
+// 每条数据定时器更新
+const startTimers = () => {
+  data.value.tenantUserList.forEach((item: any) => {
+    // 初始化每条数据的剩余时间
+    item.remainingTime = updateRemainingTime(item);
+
+    // 清除旧定时器
+    if (timers[item.id]) {
+      clearInterval(timers[item.id]);
+    }
+
+    // 每秒更新倒计时
+    timers[item.id] = setInterval(() => {
+      item.remainingTime = updateRemainingTime(item);
+    }, 1000);
+  });
+};
+
 // 在组件销毁时清除定时器
 // onUnmounted(() => {
-//   clearInterval(interval.value);
+// 清除所有定时器
+//Object.values(timers).forEach((timer:any) => clearInterval(timer));
 // });
 </script>
 
