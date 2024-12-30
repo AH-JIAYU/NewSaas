@@ -97,32 +97,28 @@ async function save() {
   if (validateAll.value.every((item: any) => item === "fulfilled")) {
     // 客户名称是否重复
 
-
-
     for (const item of leftTabsData) {
-      let rateAudit = item.rateAudit
-      let turnover = item.turnover
+      let rateAudit = item.rateAudit;
+      let turnover = item.turnover;
       // 正则匹配正整数
       const regex = /^[1-9]\d*$/;
       // 如果不符合正则，弹出警告并跳过当前项
-      if ((!item.turnover && !item.rateAudit) && item.riskControl == 2) {
-        ElMessage.warning({
-          message: "风险控制必填一项，且是正整数",
-          center: true,
-        });
-        return;
-      }
-      if (item.turnover || item.rateAudit) {
-
-      } else {
-        if (!regex.test(turnover)) {
+      if (item.riskControl == 2) {
+        if (!item.turnover && !item.rateAudit) {
+          ElMessage.warning({
+            message: "风险控制必填一项，且是正整数",
+            center: true,
+          });
+          return;
+        }
+        if (item.turnover && !regex.test(turnover)) {
           ElMessage.warning({
             message: "营业限额必须是大于0的正整数",
             center: true,
           });
           return;
         }
-        if (!regex.test(rateAudit)) {
+        if (item.rateAudit && !regex.test(rateAudit)) {
           ElMessage.warning({
             message: "审核率必须是大于0的正整数",
             center: true,
@@ -132,7 +128,32 @@ async function save() {
       }
     }
 
+    //   if ((!item.turnover && !item.rateAudit) && item.riskControl == 2) {
+    //     ElMessage.warning({
+    //       message: "风险控制必填一项，且是正整数",
+    //       center: true,
+    //     });
+    //     return;
+    //   }
+    //   if (item.turnover || item.rateAudit) {
 
+    //   } else {
+    //     if (item.riskControl ==2 && !regex.test(turnover)) {
+    //       ElMessage.warning({
+    //         message: "营业限额必须是大于0的正整数",
+    //         center: true,
+    //       });
+    //       return;
+    //     }
+    //     if (!regex.test(rateAudit)) {
+    //       ElMessage.warning({
+    //         message: "审核率必须是大于0的正整数",
+    //         center: true,
+    //       });
+    //       return;
+    //     }
+    //   }
+    // }
 
     if (!hasDuplicateCustomer(leftTabsData)) {
       if (title.value === "新增") {
@@ -142,8 +163,8 @@ async function save() {
         if (leftTabsData.turnover) {
           if (leftTabsData.turnover.length) {
             leftTabsData.turnover.forEach((item: any) => {
-              item.turnover = item.turnover == 0 ? null : item.turnover
-            })
+              item.turnover = item.turnover == 0 ? null : item.turnover;
+            });
           }
         }
         const { status } = await submitLoading(api.create(dataList));
@@ -158,7 +179,8 @@ async function save() {
           leftTabsData[0].turnover = null;
           leftTabsData[0].rateAudit = null;
         }
-        leftTabsData[0].turnover = leftTabsData[0].turnover == 0 ? null : leftTabsData[0].turnover;
+        leftTabsData[0].turnover =
+          leftTabsData[0].turnover == 0 ? null : leftTabsData[0].turnover;
         const { status } = await submitLoading(api.edit(leftTabsData[0]));
         status === 1 &&
           ElMessage.success({
@@ -193,10 +215,23 @@ defineExpose({
 
 <template>
   <div>
-    <el-drawer v-model="drawerisible" :class="title === '新增' ? 'hide-drawer-header' : 'edit-drawer'" append-to-body
-      :close-on-click-modal="false" destroy-on-close draggable size="70%">
-      <LeftTabs @validate="validate" ref="LeftTabsRef" :title="title" :left-tabs-data="leftTabsData"
-        :validate-top-tabs="validateTopTabs" :validate-all="validateAll" />
+    <el-drawer
+      v-model="drawerisible"
+      :class="title === '新增' ? 'hide-drawer-header' : 'edit-drawer'"
+      append-to-body
+      :close-on-click-modal="false"
+      destroy-on-close
+      draggable
+      size="70%"
+    >
+      <LeftTabs
+        @validate="validate"
+        ref="LeftTabsRef"
+        :title="title"
+        :left-tabs-data="leftTabsData"
+        :validate-top-tabs="validateTopTabs"
+        :validate-all="validateAll"
+      />
       <template #footer>
         <div class="flex-c">
           <el-button @click="close"> 取消 </el-button>
