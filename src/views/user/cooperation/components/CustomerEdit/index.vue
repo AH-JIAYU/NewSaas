@@ -39,9 +39,9 @@ const data = ref<any>({
   departmentId: null, //邀请方部门id
   chargeUserName: "", //负责人用户姓名
   rules: {
-    beInvitationTenantId: [
-      { required: true, message: "请选择合作商", trigger: "change" },
-    ],
+    // beInvitationTenantId: [
+    //   { required: true, message: "请选择合作商", trigger: "change" },
+    // ],
     priceRatio: [
       { required: true, message: "请输入价格比例", trigger: "blur" },
       {
@@ -77,10 +77,14 @@ const data = ref<any>({
 const departmentList = ref<any>([]);
 const selectTreeRef = ref();
 // 显隐
-async function showEdit() {
+async function showEdit(row:any) {
   data.value.form.exchangeRate = userStore.originalExchangeRate;
   data.value.form.chargeUserId = "";
-  await getTenantUserList();
+  tenantPartnersCurrencyType.value = row.currencyType;
+    data.value.form.tenantName = row.tenantName;
+    data.value.form.beInvitationTenantId = row.tenantId;
+    data.value.form.phoneOrEmail = storage.local.get("account");
+  // await getTenantUserList();
   // await getTenantStaffList();
   drawerisible.value = true;
   // 部门
@@ -127,18 +131,18 @@ async function getTenantUserList() {
 }
 
 // 筛选所选合作商
-const dataList = computed(() => {
-  const findData = data.value.tenantUserList.find(
-    (item: any) => item.tenantId === data.value.form.beInvitationTenantId
-  );
-  if (findData) {
-    tenantPartnersCurrencyType.value = findData.currencyType;
-    data.value.form.tenantName = findData.tenantName;
-    data.value.form.phoneOrEmail = storage.local.get("account");
-    return [findData];
-  }
-  return [];
-});
+// const dataList = computed(() => {
+//   const findData = data.value.tenantUserList.find(
+//     (item: any) => item.tenantId === data.value.form.beInvitationTenantId
+//   );
+//   if (findData) {
+//     tenantPartnersCurrencyType.value = findData.currencyType;
+//     data.value.form.tenantName = findData.tenantName;
+//     data.value.form.phoneOrEmail = storage.local.get("account");
+//     return [findData];
+//   }
+//   return [];
+// });
 // 获取PM/用户
 const getTenantStaffList = async () => {
   const res = await apiUser.getTenantStaffList();
@@ -310,7 +314,7 @@ const handleClose = () => {
         labelPosition="left"
         class="hezuoDrawer"
       >
-        <el-form-item label="公司名称" prop="beInvitationTenantId">
+        <!-- <el-form-item label="公司名称" prop="beInvitationTenantId">
           <el-select v-model="data.form.beInvitationTenantId" clearable>
             <el-option
               v-for="item in data.tenantUserList"
@@ -335,18 +339,9 @@ const handleClose = () => {
               </span>
             </el-option>
           </el-select>
-        </el-form-item>
-        <template v-if="data.form.beInvitationTenantId">
-          <el-form-item label="价格比例" prop="priceRatio">
-            <el-input
-              v-model="data.form.priceRatio"
-              clearable
-              placeholder="请输入0-100之间的数字"
-              ><template #append>%</template></el-input
-            >
-          </el-form-item>
-        </template>
-        <el-table
+        </el-form-item> -->
+
+        <!-- <el-table
           v-if="dataList.length"
           :data="dataList"
           stripe
@@ -361,7 +356,7 @@ const handleClose = () => {
               <span v-else>{{ row.email }}</span>
             </template>
           </el-table-column>
-        </el-table>
+        </el-table> -->
         <!-- <el-form-item label-width="7.5rem" v-if="data.form.beInvitationTenantId">
           <template #label>
             <div style="display: flex;align-items: center;">
@@ -526,6 +521,15 @@ const handleClose = () => {
               </el-col>
             </el-row>
           </el-form-item> -->
+
+          <el-form-item label="价格比例" prop="priceRatio">
+            <el-input
+              v-model="data.form.priceRatio"
+              clearable
+              placeholder="请输入0-100之间的数字"
+              ><template #append>%</template></el-input
+            >
+          </el-form-item>
           <el-form-item
             prop="sendProjectType"
             label-width="7rem"
