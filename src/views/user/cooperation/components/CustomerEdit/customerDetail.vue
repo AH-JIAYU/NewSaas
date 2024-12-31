@@ -17,9 +17,17 @@ const drawerisible = ref<boolean>(false);
 const data = ref<any>({
   companyName: "",
 });
-let interval = ref();
+const timers: any = reactive({});
 // 显隐
 async function showEdit() {
+  // 清除所有定时器
+  if (timers) {
+    Object.values(timers).forEach((timer: any) => {
+      if (timer) {
+        clearInterval(timer);
+      }
+    });
+  }
   await getTenantUserList();
   drawerisible.value = true;
 
@@ -66,22 +74,22 @@ const editRef = ref();
 const openCooperation = (row: any) => {
   editRef.value.showEdit(row);
 };
-const timers: any = reactive({});
+
 //倒计时
 // 格式化时间为 "XX天 XX小时 XX分钟 XX秒"
 const formatTime = (timeLeft: any) => {
   if (timeLeft <= 0) return "00:00:00";
-  let days:any = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-  days = days < 10 ? '0' + days : days;//补零
-  let hours:any = Math.floor(
+  let days: any = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+  days = days < 10 ? "0" + days : days; //补零
+  let hours: any = Math.floor(
     (timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
   );
-  hours = hours < 10 ? '0' + hours : hours;//补零
-  let minutes:any = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-  minutes = minutes < 10 ? '0' + minutes : minutes;//补零
+  hours = hours < 10 ? "0" + hours : hours; //补零
+  let minutes: any = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+  minutes = minutes < 10 ? "0" + minutes : minutes; //补零
 
-  let seconds:any = Math.floor((timeLeft % (1000 * 60)) / 1000);
-  seconds = seconds < 10 ? '0' + seconds : seconds;//补零
+  let seconds: any = Math.floor((timeLeft % (1000 * 60)) / 1000);
+  seconds = seconds < 10 ? "0" + seconds : seconds; //补零
   return `${hours}: ${minutes}: ${seconds}`;
 
   // const hours = String(Math.floor(timeLeft / 1000 / 60 / 60)).padStart(2, "0");
@@ -126,19 +134,10 @@ const startTimers = () => {
       }, 1000);
     }
   });
-  console.log(data.value.tenantUserList,'data.value.tenantUserList')
-  console.log(timers,'timers')
 };
 
 // 在组件销毁时清除定时器
-onUnmounted(() => {
-  // 清除所有定时器
-  Object.values(timers).forEach((timer: any) => {
-    if (timer) {
-      clearInterval(timer);
-    }
-  });
-});
+onUnmounted(() => {});
 </script>
 
 <template>
@@ -234,7 +233,10 @@ onUnmounted(() => {
                 <span class="color5 font-s14">拒绝邀约</span>
               </div>
               <!-- 未处理 ，同意(合作) -->
-              <div class="flex-a" v-if="item.invitationStatus == 1 || item.invitationStatus == 2">
+              <div
+                class="flex-a"
+                v-if="item.invitationStatus == 1 || item.invitationStatus == 2"
+              >
                 <img
                   src="@/assets/images/bukeyaoyue.png"
                   alt=""
