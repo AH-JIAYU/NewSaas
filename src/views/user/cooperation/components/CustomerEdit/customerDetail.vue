@@ -81,7 +81,7 @@ const formatTime = (timeLeft: any) => {
   minutes = minutes < 10 ? '0' + minutes : minutes;//补零
 
   let seconds:any = Math.floor((timeLeft % (1000 * 60)) / 1000);
-  minutes = minutes < 10 ? '0' + minutes : minutes;//补零
+  seconds = seconds < 10 ? '0' + seconds : seconds;//补零
   return `${hours}: ${minutes}: ${seconds}`;
 
   // const hours = String(Math.floor(timeLeft / 1000 / 60 / 60)).padStart(2, "0");
