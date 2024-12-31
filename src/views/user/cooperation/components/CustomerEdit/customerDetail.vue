@@ -15,21 +15,24 @@ const emit = defineEmits(["queryData"]);
 const drawerisible = ref<boolean>(false);
 
 const data = ref<any>({
-  companyName:'',
+  companyName: "",
 });
 let interval = ref();
 // 显隐
 async function showEdit() {
   await getTenantUserList();
   drawerisible.value = true;
-  startTimers();
+
   // interval.value = setInterval(updateCountdown, 1000); // 每秒调用一次
 }
 
 // 获取合作商列表
 async function getTenantUserList() {
-  const res = await api.getTenantUserList({companyName:data.value.companyName});
+  const res = await api.getTenantUserList({
+    companyName: data.value.companyName,
+  });
   data.value.tenantUserList = res.data.tenantUserInfoList;
+  startTimers();
 }
 
 const getTenantList = () => {
@@ -53,7 +56,9 @@ const getTenantList = () => {
 function close() {
   drawerisible.value = false;
 }
-const handleData = () => {};
+const handleData = async () => {
+  await getTenantUserList();
+};
 defineExpose({
   showEdit,
 });
@@ -65,13 +70,27 @@ const timers: any = reactive({});
 //倒计时
 // 格式化时间为 "XX天 XX小时 XX分钟 XX秒"
 const formatTime = (timeLeft: any) => {
-  const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-  const hours = Math.floor(
+  if (timeLeft <= 0) return "00:00:00";
+  let days:any = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+  days = days < 10 ? '0' + days : days;//补零
+  let hours:any = Math.floor(
     (timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
   );
-  const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-  const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+  hours = hours < 10 ? '0' + hours : hours;//补零
+  let minutes:any = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+  minutes = minutes < 10 ? '0' + minutes : minutes;//补零
+
+  let seconds:any = Math.floor((timeLeft % (1000 * 60)) / 1000);
+  minutes = minutes < 10 ? '0' + minutes : minutes;//补零
   return `${hours}: ${minutes}: ${seconds}`;
+
+  // const hours = String(Math.floor(timeLeft / 1000 / 60 / 60)).padStart(2, "0");
+  // const minutes = String(Math.floor((timeLeft / 1000 / 60) % 60)).padStart(
+  //   2,
+  //   "0"
+  // );
+  // const seconds = String(Math.floor((timeLeft / 1000) % 60)).padStart(2, "0");
+  // return `${hours}:${minutes}:${seconds}`;
 };
 
 // 计算剩余时间并更新
@@ -212,8 +231,8 @@ onUnmounted(() => {
                 />
                 <span class="color5 font-s14">拒绝邀约</span>
               </div>
-              <!-- 同意(合作) -->
-              <div class="flex-a" v-if="item.invitationStatus == 2">
+              <!-- 未处理 ，同意(合作) -->
+              <div class="flex-a" v-if="item.invitationStatus == 1 || item.invitationStatus == 2">
                 <img
                   src="@/assets/images/bukeyaoyue.png"
                   alt=""
@@ -222,14 +241,14 @@ onUnmounted(() => {
                 <span class="color4 font-s14">不可邀约</span>
               </div>
               <!-- 未处理 ，不可邀约-->
-              <div class="flex-a" v-if="item.invitationStatus == 1">
+              <!-- <div class="flex-a" v-if="item.invitationStatus == 1">
                 <img
                   src="@/assets/images/bukeyaoyue.png"
                   alt=""
                   style="margin-right: 3px"
                 />
                 <span class="color4 font-s14">未处理</span>
-              </div>
+              </div> -->
 
               <!-- 未邀约，拒绝1，解约成功 -->
               <el-button
