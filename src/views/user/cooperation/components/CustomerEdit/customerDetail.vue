@@ -126,6 +126,8 @@ const startTimers = () => {
       }, 1000);
     }
   });
+  console.log(data.value.tenantUserList,'data.value.tenantUserList')
+  console.log(timers,'timers')
 };
 
 // 在组件销毁时清除定时器
