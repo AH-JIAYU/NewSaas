@@ -20,14 +20,6 @@ const data = ref<any>({
 const timers: any = reactive({});
 // 显隐
 async function showEdit() {
-  // 清除所有定时器
-  if (timers) {
-    Object.values(timers).forEach((timer: any) => {
-      if (timer) {
-        clearInterval(timer);
-      }
-    });
-  }
   await getTenantUserList();
   drawerisible.value = true;
 
@@ -63,6 +55,14 @@ const getTenantList = () => {
 // 关闭
 function close() {
   drawerisible.value = false;
+    // 清除所有定时器
+    if (timers) {
+    Object.values(timers).forEach((timer: any) => {
+      if (timer) {
+        clearInterval(timer);
+      }
+    });
+  }
 }
 const handleData = async () => {
   await getTenantUserList();
