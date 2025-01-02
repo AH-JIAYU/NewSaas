@@ -944,7 +944,7 @@ defineExpose({ showEdit });
             </el-col>
           </el-row> -->
         <el-row :gutter="10">
-          <el-col :span="3">
+          <el-col :span="3.5">
             <div :class=" data.form.isPinned === 1 ?'text-bg2' :'text-bgClose'">
               置顶 : <span>{{ data.form.isPinned === 1 ?'开启':'关闭' }}</span>
               <img v-if="data.form.isPinned === 1" src="@/assets/images/open.png" style="width: 1rem;height: 1rem;margin-left: 0.3125rem;" />
@@ -952,7 +952,7 @@ defineExpose({ showEdit });
             </div>
           </el-col>
           <el-col :span="1"></el-col>
-          <el-col :span="3">
+          <el-col :span="3.5">
             <div label="在线 :" :class="data.form.isOnline === 1 ?'text-bg2' :'text-bgClose'">
 
               在线 : <span v-if="data.form.isOnline === 1" >{{ data.form.isOnline === 1?'开启':'关闭' }}</span>
@@ -962,7 +962,7 @@ defineExpose({ showEdit });
             </div>
           </el-col>
           <el-col :span="1"></el-col>
-          <el-col :span="3">
+          <el-col :span="3.5">
             <div  :class="data.form.isProfile === 2 ?'text-bg2' :'text-bgClose'">
 
               资料 : <span >{{ data.form.isProfile === 2 ?'开启':'关闭' }}</span>
