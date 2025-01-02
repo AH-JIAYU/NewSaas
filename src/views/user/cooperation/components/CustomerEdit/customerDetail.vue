@@ -172,7 +172,7 @@ onUnmounted(() => {});
               <img
                 :src="`${item.aratar}`"
                 alt=""
-                style="width: 3rem; height: 3rem"
+                style="width: 3rem; height: 3rem;    border-radius: 3.125rem"
                 v-if="item.aratar"
               />
               <div style="margin-left: 0.75rem">
