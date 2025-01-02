@@ -513,7 +513,7 @@ function handleCurrentChange(val: any) {
       <LayoutContainer hide-left-side-toggle>
         <template #leftSide>
           <ElButtonGroup class="btns">
-            <ElButton type="primary" class="add" @click="dictionaryAdd()" v-auth="'department-insert-insertOrganizationalStructureMember'">
+            <ElButton type="primary" class="add" @click="dictionaryAdd()" v-auth="'vipDepartment-insert-insertOrganizationalStructureMember'">
               新增部门
             </ElButton>
           </ElButtonGroup>
@@ -538,17 +538,17 @@ function handleCurrentChange(val: any) {
                   </div>
                   <div class="actions">
                     <ElButtonGroup>
-                      <ElButton type="primary" plain size="default" @click.stop="subsidiaryDictionaryAdd(data)" v-auth="'department-insert-insertOrganizationalStructureMember'">
+                      <ElButton type="primary" plain size="default" @click.stop="subsidiaryDictionaryAdd(data)" v-auth="'vipDepartment-insert-insertOrganizationalStructureMember'">
                         <template #icon>
                           <SvgIcon name="i-ep:plus" />
                         </template>
                       </ElButton>
-                      <ElButton type="info" plain size="default" @click.stop="dictionaryEdit(node, data)" v-auth="'department-update-updateOrganizationalStructureMember'">
+                      <ElButton type="info" plain size="default" @click.stop="dictionaryEdit(node, data)" v-auth="'vipDepartment-update-updateOrganizationalStructureMember'">
                         <template #icon>
                           <SvgIcon name="i-ep:edit" />
                         </template>
                       </ElButton>
-                      <ElButton type="danger" plain size="default" @click.stop="dictionaryDelete(node, data)" v-auth="'department-delete-deleteOrganizationalStructureMember'">
+                      <ElButton type="danger" plain size="default" @click.stop="dictionaryDelete(node, data)" v-auth="'vipDepartment-delete-deleteOrganizationalStructureMember'">
                         <template #icon>
                           <SvgIcon name="i-ep:delete" />
                         </template>
