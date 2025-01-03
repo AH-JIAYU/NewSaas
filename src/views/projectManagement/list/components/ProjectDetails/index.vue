@@ -70,18 +70,18 @@ async function showEdit(row: any, projectType: any) {
   data.value.allocationStatus = row.allocationStatus;
   const res = await obtainLoading(api.detail({ projectId: row.projectId }));
   data.value.form = res.data;
-  data.value.getProjectSystemTypeInfoList = res.data.getProjectSystemTypeInfoList;
-  //计算百分比
-  if(data.value.getProjectSystemTypeInfoList.length){
-    let sizeAll = 0 ;
-    let successSizeAll=0;
-    let settlementSizeAll = 0;
-    data.value.getProjectSystemTypeInfoList.forEach((item:any)=> {
-      sizeAll += item.sizeAll ? + item.sizeAll :0;
-      
-    })
-  }
-  data.value.getProjectBrowserTypeInfoList = res.data.getProjectBrowserTypeInfoList;
+  // data.value.getProjectSystemTypeInfoList = res.data.getProjectSystemTypeInfoList;
+  // //计算百分比
+  // if(data.value.getProjectSystemTypeInfoList.length){
+  //   let sizeAll = 0 ;
+  //   let successSizeAll=0;
+  //   let settlementSizeAll = 0;
+  //   data.value.getProjectSystemTypeInfoList.forEach((item:any)=> {
+  //     sizeAll += item.sizeAll ? + item.sizeAll :0;
+
+  //   })
+  // }
+  // data.value.getProjectBrowserTypeInfoList = res.data.getProjectBrowserTypeInfoList;
   active.value =
     res.data.projectSettlementStatusSet.length > 0
       ? res.data.projectSettlementStatusSet[0].settlementStatus
@@ -112,15 +112,15 @@ async function showEdit(row: any, projectType: any) {
   }
   getCountryQuestion();
   dialogTableVisible.value = true;
-  nextTick(() => {
-    echarts1();
-    echarts2();
-  });
+  // nextTick(() => {
+  //   echarts1();
+  //   echarts2();
+  // });
 
-  window.addEventListener("resize", () => {
-    chart1.resize();
-    chart2.resize();
-  });
+  // window.addEventListener("resize", () => {
+  //   chart1.resize();
+  //   chart2.resize();
+  // });
 }
 
 // 回显区域和问卷
@@ -468,7 +468,7 @@ defineExpose({ showEdit });
         </el-row>
       </template>
 
-      <el-card class="box-card">
+      <!-- <el-card class="box-card">
         <template #header>
           <div class="card-header">
             <div class="leftTitle font-s18">操作系统</div>
@@ -502,8 +502,8 @@ defineExpose({ showEdit });
                 label="操作系统"
               >
                 <template #default="{ row }">
-                  <span>{{ row.platform }}</span>
-                  <!-- <span
+
+                  <span
                     style="
                       background: #6fd195;
                       padding: 0.85rem;
@@ -562,7 +562,7 @@ defineExpose({ showEdit });
                     "
                     v-if="row.platform == 'iOS'"
                     >{{ row.platform }}</span
-                  > -->
+                  >
                 </template>
               </el-table-column>
               <el-table-column
@@ -624,8 +624,8 @@ defineExpose({ showEdit });
                 label="操作系统"
               >
                 <template #default="{ row }">
-                  <span>{{ row.type }}</span>
-                  <!-- <span
+
+                 <span
                     style="
                       background: #6fd195;
                       padding: 0.85rem;
@@ -684,7 +684,7 @@ defineExpose({ showEdit });
                     "
                     v-if="row.type == 'IOS'"
                     >{{ row.type }}</span
-                  > -->
+                  >
                 </template>
               </el-table-column>
               <el-table-column
@@ -711,7 +711,7 @@ defineExpose({ showEdit });
             </el-table>
           </div>
         </div>
-      </el-card>
+      </el-card> -->
       <el-card class="box-card">
         <template #header>
           <div class="card-header">
