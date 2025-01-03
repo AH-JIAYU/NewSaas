@@ -1,9 +1,0 @@
-
-/**
- * 由 Fantastic-admin 提供技术支持
- * Powered by Fantastic-admin
- * Gitee  https://fantastic-admin.gitee.io
- * Github https://fantastic-admin.github.io
- */
-
-const A="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAZ9JREFUOE+t1L8vA2EYB/Dvc4rWZDBUQjSxGvwDEuptYqgw4I7E0LeV+AeERSJhYzDoIKpnIGnRhFCDtkIYbDoaOtGEwU7Qe6RBQu567SW96ZJ7ns+9z487Qp0vqrOHiuDW7lmH4mpaBhAEoRXMeQbFIprYtDuEJRhL5bqUT74F4DUn85pUA3OVUEtwO5nNECAqnoSUfjnhv7J6bgLLpTY0Nj3alcWMnbAmQjWB+t55L7uUO9thMS6lJgZqAqP7aa+Hm5+qgDGpiZmawHJQtR5yifvCU4GbmsGfPl4D8JmTaEWqg4uOplwOjuppr7vFPU/gUQCtAO6ZsRHWxJ7jPdxJ5LqZMGbA8IHJ/QsQ8ElEhdL7RyoyPVSoWrKu6272dKwy0SwBLvvB8MbDa3FuKRR6+xv3bw/jyewBgDEH3/ehVMW4JRhPZEZAdOQA+w5lHpVa4PhPW75v44nsCQhB5yBOpSaGzWAyW15mi5+B/SsYKIZV0Vk3EMCzVEW7CYwdXAwqhrEAoIeBNtspM95AeAEjb7CyHpn050yg495VSPgCbGaIFVZZl44AAAAASUVORK5CYII=";export{A as _};
