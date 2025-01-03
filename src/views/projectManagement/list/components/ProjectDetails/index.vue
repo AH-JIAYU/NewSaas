@@ -71,10 +71,10 @@ function details(row: any) {
 const platformColor = [
   { platform: "Android", color: "#6FD195 " },
   { platform: "Linux", color: "#8979FF" },
-  { platform: "windows", color: "#FF928A" },
-  { platform: "macOS", color: "#3CC3DF" },
+  { platform: "Windows", color: "#FF928A" },
+  { platform: "MacOS", color: "#3CC3DF" },
   { platform: "其他", color: "#FFAE4C" },
-  { platform: "iOS", color: "#537FF1" },
+  { platform: "IOS", color: "#537FF1" },
 ];
 const typeColor = [
   { platform: "chrome", color: "#8979FF" },
@@ -155,94 +155,110 @@ async function showEdit(row: any, projectType: any) {
     res.data.getProjectSystemTypeInfoList;
   data.value.getProjectSystemTypeInfoPie = [];
   //计算百分比
-  if (data.value.getProjectSystemTypeInfoList.length != 0) {
-    let sizeAll = 0;
-    let successSizeAll = 0;
-    let settlementSizeAll = 0;
-    data.value.getProjectSystemTypeInfoList.forEach((item: any) => {
-      item.color = platformColor.filter(
-        (ele: any) => ele.platform == item.platform
-      )[0].color;
-      sizeAll += item.size ? +item.size : 0;
-      successSizeAll += item.successSize ? +item.successSize : 0;
-      settlementSizeAll += item.settlementSize ? +item.settlementSize : 0;
-      let obj = {
-        sizeRate: 0,
-        successSizeRate: 0,
-        settlementSizeRate: 0,
-        ...item,
-      };
-      data.value.getProjectSystemTypeInfoPie.push(obj);
-    });
-    data.value.getProjectSystemTypeInfoPie.forEach((item: any) => {
-      item.sizeRate = item.sizeAll ? (+item.size / sizeAll) * 100 : 0;
-      item.successSizeRate = item.successSizeAll
-        ? (+item.successSize / successSizeAll) * 100
-        : 0;
-      item.settlementSizeRate = item.settlementSizeAll
-        ? (+item.settlementSize / settlementSizeAll) * 100
-        : 0;
-    });
-  }
+  if (data.value.getProjectSystemTypeInfoList.length > 0) {
+  // 将所有平台名称的首字母大写（忽略 '其他'）
+  data.value.getProjectSystemTypeInfoList.forEach((item: any) => {
+    item.platform = item.platform !== '其他' ?
+      item.platform.charAt(0).toUpperCase() + item.platform.slice(1) :
+      item.platform;
+  });
+
+  // 使用 reduce 计算总和
+  const totals = data.value.getProjectSystemTypeInfoList.reduce((acc: any, item: any) => {
+    const colorObj = platformColor.find((ele: any) => ele.platform === item.platform);
+    item.color = colorObj ? colorObj.color : '#6FD195'; // 设置颜色
+
+    // 累加 size、successSize、settlementSize
+    acc.sizeAll += item.size ? +item.size : 0;
+    acc.successSizeAll += item.successSize ? +item.successSize : 0;
+    acc.settlementSizeAll += item.settlementSize ? +item.settlementSize : 0;
+
+    // 将每个 item 复制并推入新的数组
+    acc.pieData.push({ ...item });
+
+    return acc;
+  }, {
+    sizeAll: 0,
+    successSizeAll: 0,
+    settlementSizeAll: 0,
+    pieData: []  // 存储修改后的数据
+  });
+
+  // 计算每个项目的比例，并推送到 getProjectSystemTypeInfoPie
+  data.value.getProjectSystemTypeInfoPie = totals.pieData.map((item: any) => {
+    return {
+      ...item,
+      sizeRate: totals.sizeAll ? (+item.size / totals.sizeAll) * 100 : 0,
+      successSizeRate: totals.successSizeAll ? (+item.successSize / totals.successSizeAll) * 100 : 0,
+      settlementSizeRate: totals.settlementSizeAll ? (+item.settlementSize / totals.settlementSizeAll) * 100 : 0
+    };
+  });
+
+  // 可选：打印调试信息
+  // console.log(data.value.getProjectSystemTypeInfoPie, '饼图');
+}
+
+
+
+
   data.value.getProjectBrowserTypeInfoList =
     res.data.getProjectBrowserTypeInfoList;
-  if (data.value.getProjectBrowserTypeInfoList.length != 0) {
-    // 遍历b数组，将不在a数组中的对象推送到a中
-    typePriData.forEach((itemB: any) => {
-      // 使用some来判断a中是否已包含相同id的对象
-      const existsInA = data.value.getProjectBrowserTypeInfoList.some(
-        (itemA: any) => itemA.type === itemB.type
-      );
+    data.value.getProjectBrowserTypeInfoPie = []
+    if (data.value.getProjectBrowserTypeInfoList.length !== 0) {
+  // 遍历 typePriData，将不在 getProjectBrowserTypeInfoList 中的项推送到其中
+  typePriData.forEach((itemB: any) => {
+    const existsInA = data.value.getProjectBrowserTypeInfoList.some(
+      (itemA: any) => itemA.type === itemB.type
+    );
+    if (!existsInA) {
+      data.value.getProjectBrowserTypeInfoList.push(itemB);
+    }
+  });
 
-      // 如果a中没有该对象，则推送到a数组
-      if (!existsInA) {
-        data.value.getProjectBrowserTypeInfoList.push(itemB);
-      }
+  // 初始化各项总和
+  let sizeAll = 0, successSizeAll = 0, settlementSizeAll = 0;
+
+  // 处理每一项数据
+  data.value.getProjectBrowserTypeInfoList.forEach((item: any) => {
+    // 查找对应的颜色
+    const colorObj = typeColor.find((ele: any) => ele.platform === item.type);
+    item.color = colorObj ? colorObj.color : '#6FD195';  // 默认颜色
+
+    // 计算总和
+    sizeAll += item.size ? +item.size : 0;
+    successSizeAll += item.successSize ? +item.successSize : 0;
+    settlementSizeAll += item.settlementSize ? +item.settlementSize : 0;
+
+    // 将对象推送到 getProjectBrowserTypeInfoPie
+    data.value.getProjectBrowserTypeInfoPie.push({
+      ...item,
+      sizeRate: 0,
+      successSizeRate: 0,
+      settlementSizeRate: 0,
     });
-    let sizeAll = 0;
-    let successSizeAll = 0;
-    let settlementSizeAll = 0;
-    data.value.getProjectBrowserTypeInfoList.forEach((item: any) => {
-      item.color = typeColor.filter(
-        (ele: any) => ele.platform == item.type
-      )[0].color;
-      sizeAll += item.size ? +item.size : 0;
-      successSizeAll += item.successSize ? +item.successSize : 0;
-      settlementSizeAll += item.settlementSize ? +item.settlementSize : 0;
-      let obj = {
-        sizeRate: 0,
-        successSizeRate: 0,
-        settlementSizeRate: 0,
-        ...item,
-      };
-      data.value.getProjectBrowserTypeInfoPie.push(obj);
-    });
-    data.value.getProjectBrowserTypeInfoPie.forEach((item: any) => {
-      item.sizeRate = item.sizeAll ? (+item.size / sizeAll) * 100 : 0;
-      item.successSizeRate = item.successSizeAll
-        ? (+item.successSize / successSizeAll) * 100
-        : 0;
-      item.settlementSizeRate = item.settlementSizeAll
-        ? (+item.settlementSize / settlementSizeAll) * 100
-        : 0;
-    });
-  } else {
-    let newData: any = [];
-    typePriData.forEach((item1: any) => {
-      typeColor.forEach((item2: any) => {
-        let obj = {
-          color: "",
-          ...item1,
-        };
-        if (item1.type == item2.platform) {
-          obj.color = item2.color;
-          newData.push(obj);
-        }
-      });
-    });
-    data.value.getProjectBrowserTypeInfoList = newData;
-    data.value.getProjectBrowserTypeInfoPie = newData;
-  }
+  });
+
+  // 计算比例
+  data.value.getProjectBrowserTypeInfoPie.forEach((item: any) => {
+    item.sizeRate = sizeAll ? (+item.size / sizeAll) * 100 : 0;
+    item.successSizeRate = successSizeAll ? (+item.successSize / successSizeAll) * 100 : 0;
+    item.settlementSizeRate = settlementSizeAll ? (+item.settlementSize / settlementSizeAll) * 100 : 0;
+  });
+} else {
+  // 如果 getProjectBrowserTypeInfoList 为空，则重新构建数据
+  const newData = typePriData.map((item1: any) => {
+    const matchedColor = typeColor.find((item2: any) => item1.type === item2.platform);
+    return {
+      ...item1,
+      color: matchedColor ? matchedColor.color : '#6FD195',  // 默认颜色
+    };
+  });
+
+  // 更新数据
+  data.value.getProjectBrowserTypeInfoList = newData;
+  data.value.getProjectBrowserTypeInfoPie = newData;
+}
+
   // console.log(data.value.getProjectBrowserTypeInfoList,'data.value.getProjectBrowserTypeInfoList')
   active.value =
     res.data.projectSettlementStatusSet.length > 0
@@ -384,8 +400,12 @@ function echarts1() {
     }
     echartsData.push(obj);
   });
+  // 过滤掉 value 为 0 的项
+const filteredData = echartsData.filter((item:any) => item.value > 0);
 
-  const option = {
+// console.log(filteredData,'filteredData')
+
+  let option:any = {
     title: {
       left: "10%",
       text: "",
@@ -398,9 +418,8 @@ function echarts1() {
         name: "访问来源",
         type: "pie",
         radius: "90%", // 饼图半径
-
         // 数据内容
-        data: echartsData,
+        data: filteredData,
 
         // 饼图的标签配置
         label: {
@@ -424,6 +443,10 @@ function echarts1() {
       },
     ],
   };
+// 如果数据只有一项，修改 label 的显示位置
+if (filteredData.length === 1) {
+  option.series[0].label.normal.position = 'center';  // 将标签放置在中心
+}
   chart1.setOption(option);
 }
 // 客户总览
@@ -449,6 +472,8 @@ function echarts2() {
     }
     echartsData.push(obj);
   });
+    // 过滤掉 value 为 0 的项
+const filteredData = echartsData.filter((item:any) => item.value > 0);
   chart2 = echarts.init(chart2Ref.value);
   // 配置数据
   const option = {
@@ -466,7 +491,7 @@ function echarts2() {
         radius: "90%", // 饼图半径
 
         // 数据内容
-        data: echartsData,
+        data: filteredData,
 
         // 饼图的标签配置
         label: {
@@ -490,6 +515,10 @@ function echarts2() {
       },
     ],
   };
+  // 如果数据只有一项，修改 label 的显示位置
+if (filteredData.length === 1) {
+  option.series[0].label.normal.position = 'center';  // 将标签放置在中心
+}
   // 传入数据
   chart2.setOption(option);
 }
@@ -499,9 +528,11 @@ onMounted(async () => {
 });
 const getPlatform = (val: any) => {
   data.value.platform = val;
+  echarts1();
 };
 const getType = (val: any) => {
   data.value.type = val;
+  echarts2()
 };
 // 暴露方法
 defineExpose({ showEdit });
