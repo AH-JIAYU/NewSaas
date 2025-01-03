@@ -15,20 +15,24 @@ const emit = defineEmits(["queryData"]);
 const drawerisible = ref<boolean>(false);
 
 const data = ref<any>({
-  searchData: "",
+  companyName: "",
 });
-let interval = ref();
+const timers: any = reactive({});
 // 显隐
 async function showEdit() {
   await getTenantUserList();
   drawerisible.value = true;
+
   // interval.value = setInterval(updateCountdown, 1000); // 每秒调用一次
 }
 
 // 获取合作商列表
 async function getTenantUserList() {
-  const res = await api.getTenantUserList({});
+  const res = await api.getTenantUserList({
+    companyName: data.value.companyName,
+  });
   data.value.tenantUserList = res.data.tenantUserInfoList;
+  startTimers();
 }
 
 const getTenantList = () => {
@@ -51,32 +55,56 @@ const getTenantList = () => {
 // 关闭
 function close() {
   drawerisible.value = false;
+    // 清除所有定时器
+    if (timers) {
+    Object.values(timers).forEach((timer: any) => {
+      if (timer) {
+        clearInterval(timer);
+      }
+    });
+  }
 }
-const handleData = () => {};
+const handleData = async () => {
+  await getTenantUserList();
+};
 defineExpose({
   showEdit,
 });
 const editRef = ref();
 const openCooperation = (row: any) => {
-  editRef.value.showEdit();
+  editRef.value.showEdit(row);
 };
-const timers: any = reactive({});
+
 //倒计时
 // 格式化时间为 "XX天 XX小时 XX分钟 XX秒"
 const formatTime = (timeLeft: any) => {
-  const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-  const hours = Math.floor(
+  if (timeLeft <= 0) return "00:00:00";
+  let days: any = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+  days = days < 10 ? "0" + days : days; //补零
+  let hours: any = Math.floor(
     (timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
   );
-  const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-  const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+  hours = hours < 10 ? "0" + hours : hours; //补零
+  let minutes: any = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+  minutes = minutes < 10 ? "0" + minutes : minutes; //补零
+
+  let seconds: any = Math.floor((timeLeft % (1000 * 60)) / 1000);
+  seconds = seconds < 10 ? "0" + seconds : seconds; //补零
   return `${hours}: ${minutes}: ${seconds}`;
+
+  // const hours = String(Math.floor(timeLeft / 1000 / 60 / 60)).padStart(2, "0");
+  // const minutes = String(Math.floor((timeLeft / 1000 / 60) % 60)).padStart(
+  //   2,
+  //   "0"
+  // );
+  // const seconds = String(Math.floor((timeLeft / 1000) % 60)).padStart(2, "0");
+  // return `${hours}:${minutes}:${seconds}`;
 };
 
 // 计算剩余时间并更新
 const updateRemainingTime = (item: any) => {
   const now: any = new Date();
-  const targetTime: any = new Date(item.startTime);
+  const targetTime: any = new Date(item.refuseTime);
   targetTime.setDate(targetTime.getDate() + 7); // 目标时间为开始时间 + 7天
   const timeLeft = targetTime - now;
 
@@ -92,25 +120,24 @@ const updateRemainingTime = (item: any) => {
 const startTimers = () => {
   data.value.tenantUserList.forEach((item: any) => {
     // 初始化每条数据的剩余时间
-    item.remainingTime = updateRemainingTime(item);
-
-    // 清除旧定时器
-    if (timers[item.id]) {
-      clearInterval(timers[item.id]);
-    }
-
-    // 每秒更新倒计时
-    timers[item.id] = setInterval(() => {
+    if (item.refuse >= 2) {
       item.remainingTime = updateRemainingTime(item);
-    }, 1000);
+
+      // 清除旧定时器
+      if (timers[item.tenantId]) {
+        clearInterval(timers[item.tenantId]);
+      }
+
+      // 每秒更新倒计时
+      timers[item.tenantId] = setInterval(() => {
+        item.remainingTime = updateRemainingTime(item);
+      }, 1000);
+    }
   });
 };
 
 // 在组件销毁时清除定时器
-// onUnmounted(() => {
-// 清除所有定时器
-//Object.values(timers).forEach((timer:any) => clearInterval(timer));
-// });
+onUnmounted(() => {});
 </script>
 
 <template>
@@ -127,7 +154,7 @@ const startTimers = () => {
       :before-close="close"
     >
       <el-input
-        v-model="data.searchData"
+        v-model="data.companyName"
         placeholder="请输入搜索名称"
         style="width: 35%"
         @change="handleData"
@@ -143,9 +170,10 @@ const startTimers = () => {
           <el-col :span="8" class="">
             <div class="flex-a">
               <img
-                src="@/assets/images/user.png"
+                :src="`${item.aratar}`"
                 alt=""
-                style="width: 3rem; height: 3rem"
+                style="width: 3rem; height: 3rem;    border-radius: 3.125rem"
+                v-if="item.aratar"
               />
               <div style="margin-left: 0.75rem">
                 <div class="font-s16 color1">{{ item.tenantName }}</div>
@@ -159,27 +187,35 @@ const startTimers = () => {
             <div class="flex-a" style="height: 100%">
               <el-text class="info-text1 font-s14">{{ item.country }}</el-text>
               <el-text class="info-text2 font-s14">{{
-                item.country == "CN" ? "人民币" : "美元"
+                item.currencyType == "2" ? "人民币" : "美元"
               }}</el-text>
-              <el-text class="info-text3 font-s14 flex-a">
+              <el-text class="info-text3 font-s14 flex-a" v-if="item.hot">
                 <img
                   src="@/assets/images/remen.png"
                   style="margin-right: 3px"
                 />
                 热门合作商</el-text
               >
-              <el-text class="info-text4 font-s14 flex-a">
+              <el-text
+                class="info-text4 font-s14 flex-a"
+                v-if="item.versionName"
+              >
                 <img
                   src="@/assets/images/member.png"
                   style="margin-right: 3px; width: 14px; height: 14px"
                 />
-                试用版</el-text
+                {{ item.versionName }}</el-text
               >
             </div>
           </el-col>
+          <!-- 绑定状态:0:未邀约 1:未处理 2:同意(合作) 3:拒绝 4:解约成功(只有同意以后才有解约) -->
           <el-col :span="6">
             <div style="height: 100%" class="flex-ab">
-              <div class="flex-a">
+              <!-- 未邀约，解约成功 -->
+              <div
+                class="flex-a"
+                v-if="item.invitationStatus == 0 || item.invitationStatus == 4"
+              >
                 <img
                   src="@/assets/images/keyaoyue.png"
                   alt=""
@@ -187,7 +223,44 @@ const startTimers = () => {
                 />
                 <span class="color3 font-s14">可邀约</span>
               </div>
+              <!-- 拒绝邀约 -->
+              <div class="flex-a" v-if="item.invitationStatus == 3">
+                <img
+                  src="@/assets/images/jujue.png"
+                  alt=""
+                  style="margin-right: 3px"
+                />
+                <span class="color5 font-s14">拒绝邀约</span>
+              </div>
+              <!-- 未处理 ，同意(合作) -->
+              <div
+                class="flex-a"
+                v-if="item.invitationStatus == 1 || item.invitationStatus == 2"
+              >
+                <img
+                  src="@/assets/images/bukeyaoyue.png"
+                  alt=""
+                  style="margin-right: 3px"
+                />
+                <span class="color4 font-s14">不可邀约</span>
+              </div>
+              <!-- 未处理 ，不可邀约-->
+              <!-- <div class="flex-a" v-if="item.invitationStatus == 1">
+                <img
+                  src="@/assets/images/bukeyaoyue.png"
+                  alt=""
+                  style="margin-right: 3px"
+                />
+                <span class="color4 font-s14">未处理</span>
+              </div> -->
+
+              <!-- 未邀约，拒绝1，解约成功 -->
               <el-button
+                v-if="
+                  item.invitationStatus == 0 ||
+                  (item.invitationStatus == 3 && item.refuse < 2) ||
+                  item.invitationStatus == 4
+                "
                 type="primary"
                 class="font-s14"
                 style="margin-left: 1rem"
@@ -196,32 +269,24 @@ const startTimers = () => {
                 申请合作
               </el-button>
 
-              <!-- <div class="flex-a">
-                <img
-                  src="@/assets/images/bukeyaoyue.png"
-                  alt=""
-                  style="margin-right: 3px"
-                />
-                <span class="color4 font-s14">不可邀约</span>
-              </div>
+              <!-- 未处理，已合作 -->
               <el-button
+                v-if="item.invitationStatus == 1 || item.invitationStatus == 2"
                 type="info"
                 class="font-s14 bgcolor1"
                 style="margin-left: 1rem"
               >
                 申请合作
-              </el-button> -->
-              <!-- <div  class="flex-a">
-                  <img src="@/assets/images/jujue.png" alt="" style="margin-right: 3px;">
-                  <span class="color5 font-s14">拒绝邀约</span>
-              </div>
+              </el-button>
+              <!-- 拒绝2次之后展示倒计时 -->
               <el-button
+                v-if="item.invitationStatus == 3 && item.refuse >= 2"
                 type="info"
-              class="font-s14 bgcolor1"
-              style="margin-left: 1rem;"
+                class="font-s14 bgcolor1"
+                style="margin-left: 1rem"
               >
-                倒计时
-              </el-button> -->
+                {{ formatTime(item.remainingTime) }}
+              </el-button>
             </div>
           </el-col>
         </el-row>

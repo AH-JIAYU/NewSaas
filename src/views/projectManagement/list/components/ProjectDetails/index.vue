@@ -42,6 +42,9 @@ const data = ref<any>({
   srcList: [], // 图片预览
   countryList: [], // 区域
   name:'', //项目名称
+  getProjectSystemTypeInfoList:[],
+  getProjectBrowserTypeInfoList:[],
+  getProjectSystemTypeInfoPie:[],
 });
 const imgList = ref<any>();
 const plugins = [
@@ -67,6 +70,18 @@ async function showEdit(row: any, projectType: any) {
   data.value.allocationStatus = row.allocationStatus;
   const res = await obtainLoading(api.detail({ projectId: row.projectId }));
   data.value.form = res.data;
+  // data.value.getProjectSystemTypeInfoList = res.data.getProjectSystemTypeInfoList;
+  // //计算百分比
+  // if(data.value.getProjectSystemTypeInfoList.length){
+  //   let sizeAll = 0 ;
+  //   let successSizeAll=0;
+  //   let settlementSizeAll = 0;
+  //   data.value.getProjectSystemTypeInfoList.forEach((item:any)=> {
+  //     sizeAll += item.sizeAll ? + item.sizeAll :0;
+
+  //   })
+  // }
+  // data.value.getProjectBrowserTypeInfoList = res.data.getProjectBrowserTypeInfoList;
   active.value =
     res.data.projectSettlementStatusSet.length > 0
       ? res.data.projectSettlementStatusSet[0].settlementStatus
@@ -296,50 +311,7 @@ onMounted(async () => {
   data.value.countryList = await basicDictionaryStore.getCountry();
   customerList.value = await customerStore.getCustomerList();
 });
-const tableData = [
-  {
-    a1: "Linux",
-    a2: "1000",
-    a3: "1000",
-    a4: "1000",
-    a5: "1000",
-  },
-  {
-    a1: "Windows",
-    a2: "1000",
-    a3: "1000",
-    a4: "1000",
-    a5: "1000",
-  },
-  {
-    a1: "Max OS",
-    a2: "1000",
-    a3: "1000",
-    a4: "1000",
-    a5: "1000",
-  },
-  {
-    a1: "其他",
-    a2: "1000",
-    a3: "1000",
-    a4: "1000",
-    a5: "1000",
-  },
-  {
-    a1: "IOS",
-    a2: "1000",
-    a3: "1000",
-    a4: "1000",
-    a5: "1000",
-  },
-  {
-    a1: "Android",
-    a2: "1000",
-    a3: "1000",
-    a4: "1000",
-    a5: "1000",
-  },
-];
+
 
 // 暴露方法
 defineExpose({ showEdit });
@@ -513,7 +485,6 @@ defineExpose({ showEdit });
               <el-radio-button label="参与"></el-radio-button>
               <el-radio-button label="完成"></el-radio-button>
               <el-radio-button label="审核成功"></el-radio-button>
-              <el-radio-button label="审核失败"></el-radio-button>
             </el-radio-group>
           </div>
           <div>
@@ -521,7 +492,7 @@ defineExpose({ showEdit });
               border
               highlight-current-row
               height="100%"
-              :data="tableData"
+              :data="data.getProjectSystemTypeInfoList"
               width="100%"
             >
               <el-table-column
@@ -531,6 +502,7 @@ defineExpose({ showEdit });
                 label="操作系统"
               >
                 <template #default="{ row }">
+
                   <span
                     style="
                       background: #6fd195;
@@ -538,8 +510,8 @@ defineExpose({ showEdit });
                       border-radius: 1rem;
                       color: white;
                     "
-                    v-if="row.a1 == 'Android'"
-                    >{{ row.a1 }}</span
+                    v-if="row.platform == 'Android'"
+                    >{{ row.platform }}</span
                   >
                   <span
                     style="
@@ -548,8 +520,8 @@ defineExpose({ showEdit });
                       border-radius: 1rem;
                       color: white;
                     "
-                    v-if="row.a1 == 'Linux'"
-                    >{{ row.a1 }}</span
+                    v-if="row.platform == 'Linux'"
+                    >{{ row.platform }}</span
                   >
                   <span
                     style="
@@ -558,8 +530,8 @@ defineExpose({ showEdit });
                       border-radius: 1rem;
                       color: white;
                     "
-                    v-if="row.a1 == 'Windows'"
-                    >{{ row.a1 }}</span
+                    v-if="row.platform == 'windows'"
+                    >{{ row.platform }}</span
                   >
                   <span
                     style="
@@ -568,8 +540,8 @@ defineExpose({ showEdit });
                       border-radius: 1rem;
                       color: white;
                     "
-                    v-if="row.a1 == 'Max OS'"
-                    >{{ row.a1 }}</span
+                    v-if="row.platform == 'macOS'"
+                    >{{ row.platform }}</span
                   >
                   <span
                     style="
@@ -578,8 +550,8 @@ defineExpose({ showEdit });
                       border-radius: 1rem;
                       color: white;
                     "
-                    v-if="row.a1 == '其他'"
-                    >{{ row.a1 }}</span
+                    v-if="row.platform == '其他'"
+                    >{{ row.platform }}</span
                   >
                   <span
                     style="
@@ -588,36 +560,29 @@ defineExpose({ showEdit });
                       border-radius: 1rem;
                       color: white;
                     "
-                    v-if="row.a1 == 'IOS'"
-                    >{{ row.a1 }}</span
+                    v-if="row.platform == 'iOS'"
+                    >{{ row.platform }}</span
                   >
                 </template>
               </el-table-column>
               <el-table-column
-                prop="a2"
-                align="center"
+                prop="size"
+                 align="center"
                 label="参与"
                 width="120"
               >
               </el-table-column>
               <el-table-column
-                prop="a3"
+                prop="successSize"
                 align="center"
                 label="完成"
                 width="120"
               >
               </el-table-column>
               <el-table-column
-                prop="a4"
+                prop="settlementSize"
                 align="center"
                 label="审核通过"
-                width="120"
-              >
-              </el-table-column>
-              <el-table-column
-                prop="a5"
-                align="center"
-                label="审核失败"
                 width="120"
               >
               </el-table-column>
@@ -642,7 +607,6 @@ defineExpose({ showEdit });
               <el-radio-button label="参与"></el-radio-button>
               <el-radio-button label="完成"></el-radio-button>
               <el-radio-button label="审核成功"></el-radio-button>
-              <el-radio-button label="审核失败"></el-radio-button>
             </el-radio-group>
           </div>
           <div>
@@ -650,7 +614,7 @@ defineExpose({ showEdit });
               border
               highlight-current-row
               height="100%"
-              :data="tableData"
+              :data="data.getProjectBrowserTypeInfoList"
               width="100%"
             >
               <el-table-column
@@ -660,15 +624,16 @@ defineExpose({ showEdit });
                 label="操作系统"
               >
                 <template #default="{ row }">
-                  <span
+
+                 <span
                     style="
                       background: #6fd195;
                       padding: 0.85rem;
                       border-radius: 1rem;
                       color: white;
                     "
-                    v-if="row.a1 == 'Android'"
-                    >{{ row.a1 }}</span
+                    v-if="row.type == 'Android'"
+                    >{{ row.type }}</span
                   >
                   <span
                     style="
@@ -677,8 +642,8 @@ defineExpose({ showEdit });
                       border-radius: 1rem;
                       color: white;
                     "
-                    v-if="row.a1 == 'Linux'"
-                    >{{ row.a1 }}</span
+                    v-if="row.type == 'Linux'"
+                    >{{ row.type }}</span
                   >
                   <span
                     style="
@@ -687,8 +652,8 @@ defineExpose({ showEdit });
                       border-radius: 1rem;
                       color: white;
                     "
-                    v-if="row.a1 == 'Windows'"
-                    >{{ row.a1 }}</span
+                    v-if="row.type == 'Windows'"
+                    >{{ row.type }}</span
                   >
                   <span
                     style="
@@ -697,8 +662,8 @@ defineExpose({ showEdit });
                       border-radius: 1rem;
                       color: white;
                     "
-                    v-if="row.a1 == 'Max OS'"
-                    >{{ row.a1 }}</span
+                    v-if="row.type == 'Max OS'"
+                    >{{ row.type }}</span
                   >
                   <span
                     style="
@@ -707,8 +672,8 @@ defineExpose({ showEdit });
                       border-radius: 1rem;
                       color: white;
                     "
-                    v-if="row.a1 == '其他'"
-                    >{{ row.a1 }}</span
+                    v-if="row.type == '其他'"
+                    >{{ row.type }}</span
                   >
                   <span
                     style="
@@ -717,36 +682,29 @@ defineExpose({ showEdit });
                       border-radius: 1rem;
                       color: white;
                     "
-                    v-if="row.a1 == 'IOS'"
-                    >{{ row.a1 }}</span
+                    v-if="row.type == 'IOS'"
+                    >{{ row.type }}</span
                   >
                 </template>
               </el-table-column>
               <el-table-column
-                prop="a2"
+                prop="size"
                 align="center"
                 label="参与"
                 width="120"
               >
               </el-table-column>
               <el-table-column
-                prop="a3"
+                prop="successSize"
                 align="center"
                 label="完成"
                 width="120"
               >
               </el-table-column>
               <el-table-column
-                prop="a4"
+                prop="settlementSize"
                 align="center"
                 label="审核通过"
-                width="120"
-              >
-              </el-table-column>
-              <el-table-column
-                prop="a5"
-                align="center"
-                label="审核失败"
                 width="120"
               >
               </el-table-column>

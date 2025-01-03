@@ -785,12 +785,13 @@ watch(
   },
   { deep: true }
 );
-
+const acquiesceExchangeRate = ref<any>()
 onMounted(async () => {
   fileList.value = [];
   // 获取客户 区域 项目类型
   await getList();
   await showProjectQuotaInfoList();
+  acquiesceExchangeRate.value = storage.local.get("acquiesceExchangeRate")
 });
 defineExpose({ getUpLoad });
 nextTick(() => {
@@ -935,17 +936,8 @@ const getProblemList = async () => {
             <el-col :span="6">
               <!-- v-if="currencyTypeRes !== null" -->
               <el-form-item label="汇率" prop="">
-                <el-text v-if="currencyTypeRes !== null">{{
-    localToptTab.currencyType === "USD" ? "1美元" : "1人民币"
-  }}
-                  =
-                  {{
-      localToptTab.exchangeRate
-        ? localToptTab.exchangeRate
-        : currencyTypeRes
-    }}{{
-      localToptTab.currencyType === "USD" ? "人民币" : "美元"
-    }}</el-text>
+                <el-text v-if="currencyTypeRes !== null">
+                  1美元 =  {{acquiesceExchangeRate}}人民币</el-text>
               </el-form-item>
             </el-col>
           </el-row>
