@@ -1,5 +1,10 @@
 <script setup lang="ts">
-import { CircleCheck, Position, Select } from "@element-plus/icons-vue";
+import {
+  CircleCheck,
+  Platform,
+  Position,
+  Select,
+} from "@element-plus/icons-vue";
 // 配置富文本
 import { Editor, Viewer } from "@bytemd/vue-next";
 // 富文本编辑器配置
@@ -41,10 +46,13 @@ const data = ref<any>({
   projectType: 1, //项目类型 1:内部新增 2:合作商分配   为合作商时需要隐藏客户、前置、操作日志
   srcList: [], // 图片预览
   countryList: [], // 区域
-  name:'', //项目名称
-  getProjectSystemTypeInfoList:[],
-  getProjectBrowserTypeInfoList:[],
-  getProjectSystemTypeInfoPie:[],
+  name: "", //项目名称
+  getProjectSystemTypeInfoList: [],
+  getProjectBrowserTypeInfoList: [],
+  getProjectSystemTypeInfoPie: [],
+  getProjectBrowserTypeInfoPie: [],
+  platform: "size",
+  type: "size",
 });
 const imgList = ref<any>();
 const plugins = [
@@ -60,6 +68,79 @@ const operationTypeList: any = ["新增", "编辑", "分配", "调度"];
 function details(row: any) {
   logDetailsRef.value.showEdit(row);
 }
+const platformColor = [
+  { platform: "Android", color: "#6FD195 " },
+  { platform: "Linux", color: "#8979FF" },
+  { platform: "windows", color: "#FF928A" },
+  { platform: "macOS", color: "#3CC3DF" },
+  { platform: "其他", color: "#FFAE4C" },
+  { platform: "iOS", color: "#537FF1" },
+];
+const typeColor = [
+  { platform: "chrome", color: "#8979FF" },
+  { platform: "safari", color: "#FF928A" },
+  { platform: "firefox", color: "#3CC3DF" },
+  { platform: "opera", color: "#537FF1" },
+  { platform: "其他", color: "#FFAE4C" },
+  { platform: "edge", color: "#6FD195" },
+];
+const typePriData = [
+  {
+    type: "chrome",
+    settlementSize: 0,
+    successSize: 0,
+    size: 0,
+    sizeRate: 0,
+    successSizeRate: 0,
+    settlementSizeRate: 0,
+  },
+  {
+    type: "safari",
+    settlementSize: 0,
+    successSize: 0,
+    size: 0,
+    sizeRate: 0,
+    successSizeRate: 0,
+    settlementSizeRate: 0,
+  },
+  {
+    type: "firefox",
+    settlementSize: 0,
+    successSize: 0,
+    size: 0,
+    sizeRate: 0,
+    successSizeRate: 0,
+    settlementSizeRate: 0,
+  },
+  {
+    type: "opera",
+    settlementSize: 0,
+    successSize: 0,
+    size: 0,
+    sizeRate: 0,
+    successSizeRate: 0,
+    settlementSizeRate: 0,
+  },
+  {
+    type: "其他",
+    settlementSize: 0,
+    successSize: 0,
+    size: 0,
+    sizeRate: 0,
+    successSizeRate: 0,
+    settlementSizeRate: 0,
+  },
+  {
+    type: "edge",
+    settlementSize: 0,
+    successSize: 0,
+    size: 0,
+    sizeRate: 0,
+    successSizeRate: 0,
+    settlementSizeRate: 0,
+  },
+];
+
 // 弹框开关变量
 const dialogTableVisible = ref(false);
 // 显隐
@@ -70,18 +151,99 @@ async function showEdit(row: any, projectType: any) {
   data.value.allocationStatus = row.allocationStatus;
   const res = await obtainLoading(api.detail({ projectId: row.projectId }));
   data.value.form = res.data;
-  // data.value.getProjectSystemTypeInfoList = res.data.getProjectSystemTypeInfoList;
-  // //计算百分比
-  // if(data.value.getProjectSystemTypeInfoList.length){
-  //   let sizeAll = 0 ;
-  //   let successSizeAll=0;
-  //   let settlementSizeAll = 0;
-  //   data.value.getProjectSystemTypeInfoList.forEach((item:any)=> {
-  //     sizeAll += item.sizeAll ? + item.sizeAll :0;
+  data.value.getProjectSystemTypeInfoList =
+    res.data.getProjectSystemTypeInfoList;
+  data.value.getProjectSystemTypeInfoPie = [];
+  //计算百分比
+  if (data.value.getProjectSystemTypeInfoList.length != 0) {
+    let sizeAll = 0;
+    let successSizeAll = 0;
+    let settlementSizeAll = 0;
+    data.value.getProjectSystemTypeInfoList.forEach((item: any) => {
+      item.color = platformColor.filter(
+        (ele: any) => ele.platform == item.platform
+      )[0].color;
+      sizeAll += item.size ? +item.size : 0;
+      successSizeAll += item.successSize ? +item.successSize : 0;
+      settlementSizeAll += item.settlementSize ? +item.settlementSize : 0;
+      let obj = {
+        sizeRate: 0,
+        successSizeRate: 0,
+        settlementSizeRate: 0,
+        ...item,
+      };
+      data.value.getProjectSystemTypeInfoPie.push(obj);
+    });
+    data.value.getProjectSystemTypeInfoPie.forEach((item: any) => {
+      item.sizeRate = item.sizeAll ? (+item.size / sizeAll) * 100 : 0;
+      item.successSizeRate = item.successSizeAll
+        ? (+item.successSize / successSizeAll) * 100
+        : 0;
+      item.settlementSizeRate = item.settlementSizeAll
+        ? (+item.settlementSize / settlementSizeAll) * 100
+        : 0;
+    });
+  }
+  data.value.getProjectBrowserTypeInfoList =
+    res.data.getProjectBrowserTypeInfoList;
+  if (data.value.getProjectBrowserTypeInfoList.length != 0) {
+    // 遍历b数组，将不在a数组中的对象推送到a中
+    typePriData.forEach((itemB: any) => {
+      // 使用some来判断a中是否已包含相同id的对象
+      const existsInA = data.value.getProjectBrowserTypeInfoList.some(
+        (itemA: any) => itemA.type === itemB.type
+      );
 
-  //   })
-  // }
-  // data.value.getProjectBrowserTypeInfoList = res.data.getProjectBrowserTypeInfoList;
+      // 如果a中没有该对象，则推送到a数组
+      if (!existsInA) {
+        data.value.getProjectBrowserTypeInfoList.push(itemB);
+      }
+    });
+    let sizeAll = 0;
+    let successSizeAll = 0;
+    let settlementSizeAll = 0;
+    data.value.getProjectBrowserTypeInfoList.forEach((item: any) => {
+      item.color = typeColor.filter(
+        (ele: any) => ele.platform == item.type
+      )[0].color;
+      sizeAll += item.size ? +item.size : 0;
+      successSizeAll += item.successSize ? +item.successSize : 0;
+      settlementSizeAll += item.settlementSize ? +item.settlementSize : 0;
+      let obj = {
+        sizeRate: 0,
+        successSizeRate: 0,
+        settlementSizeRate: 0,
+        ...item,
+      };
+      data.value.getProjectBrowserTypeInfoPie.push(obj);
+    });
+    data.value.getProjectBrowserTypeInfoPie.forEach((item: any) => {
+      item.sizeRate = item.sizeAll ? (+item.size / sizeAll) * 100 : 0;
+      item.successSizeRate = item.successSizeAll
+        ? (+item.successSize / successSizeAll) * 100
+        : 0;
+      item.settlementSizeRate = item.settlementSizeAll
+        ? (+item.settlementSize / settlementSizeAll) * 100
+        : 0;
+    });
+  } else {
+    let newData: any = [];
+    typePriData.forEach((item1: any) => {
+      typeColor.forEach((item2: any) => {
+        let obj = {
+          color: "",
+          ...item1,
+        };
+        if (item1.type == item2.platform) {
+          obj.color = item2.color;
+          newData.push(obj);
+        }
+      });
+    });
+    data.value.getProjectBrowserTypeInfoList = newData;
+    data.value.getProjectBrowserTypeInfoPie = newData;
+  }
+  // console.log(data.value.getProjectBrowserTypeInfoList,'data.value.getProjectBrowserTypeInfoList')
   active.value =
     res.data.projectSettlementStatusSet.length > 0
       ? res.data.projectSettlementStatusSet[0].settlementStatus
@@ -112,15 +274,15 @@ async function showEdit(row: any, projectType: any) {
   }
   getCountryQuestion();
   dialogTableVisible.value = true;
-  // nextTick(() => {
-  //   echarts1();
-  //   echarts2();
-  // });
+  nextTick(() => {
+    echarts1();
+    echarts2();
+  });
 
-  // window.addEventListener("resize", () => {
-  //   chart1.resize();
-  //   chart2.resize();
-  // });
+  window.addEventListener("resize", () => {
+    chart1.resize();
+    chart2.resize();
+  });
 }
 
 // 回显区域和问卷
@@ -202,6 +364,26 @@ const chart2Ref = ref();
 // 营业额趋势
 function echarts1() {
   chart1 = echarts.init(chart1Ref.value);
+  let echartsData: any = [];
+  // console.log(
+  //   data.value.getProjectSystemTypeInfoPie,
+  //   "data.value.getProjectSystemTypeInfoPie"
+  // );
+  data.value.getProjectSystemTypeInfoPie.forEach((item: any) => {
+    let obj = {
+      value: "",
+      name: item.platform,
+      itemStyle: { color: item.color },
+    };
+    if (data.value.platform == "size") {
+      obj.value = item.sizeRate;
+    } else if (data.value.platform == "settlementSize") {
+      obj.value = item.settlementSizeRate;
+    } else if (data.value.platform == "successSize") {
+      obj.value = item.successSizeRate;
+    }
+    echartsData.push(obj);
+  });
 
   const option = {
     title: {
@@ -218,14 +400,7 @@ function echarts1() {
         radius: "90%", // 饼图半径
 
         // 数据内容
-        data: [
-          { value: 10, name: "Android", itemStyle: { color: "#6FD195 " } },
-          { value: 15, name: "Linux", itemStyle: { color: "#8979FF" } },
-          { value: 25, name: "Windows", itemStyle: { color: "#FF928A" } },
-          { value: 25, name: "Max OS", itemStyle: { color: "#3CC3DF" } },
-          { value: 15, name: "其他", itemStyle: { color: "#FFAE4C" } },
-          { value: 10, name: "IOS", itemStyle: { color: "#537FF1" } },
-        ],
+        data: echartsData,
 
         // 饼图的标签配置
         label: {
@@ -253,9 +428,27 @@ function echarts1() {
 }
 // 客户总览
 function echarts2() {
-  // const totalData = data.value.dataCenterCustomerVOS.map((item: any) => {
-  //   return item.projectTotal;
-  // });
+  chart1 = echarts.init(chart1Ref.value);
+  let echartsData: any = [];
+  // console.log(
+  //   data.value.getProjectBrowserTypeInfoPie,
+  //   "data.value.getProjectBrowserTypeInfoPie"
+  // );
+  data.value.getProjectBrowserTypeInfoPie.forEach((item: any) => {
+    let obj = {
+      value: "",
+      name: item.type,
+      itemStyle: { color: item.color },
+    };
+    if (data.value.type == "size") {
+      obj.value = item.sizeRate;
+    } else if (data.value.type == "settlementSize") {
+      obj.value = item.settlementSizeRate;
+    } else if (data.value.type == "successSize") {
+      obj.value = item.successSizeRate;
+    }
+    echartsData.push(obj);
+  });
   chart2 = echarts.init(chart2Ref.value);
   // 配置数据
   const option = {
@@ -273,14 +466,7 @@ function echarts2() {
         radius: "90%", // 饼图半径
 
         // 数据内容
-        data: [
-          { value: 10, name: "Android", itemStyle: { color: "#6FD195 " } },
-          { value: 15, name: "Linux", itemStyle: { color: "#8979FF" } },
-          { value: 25, name: "Windows", itemStyle: { color: "#FF928A" } },
-          { value: 25, name: "Max OS", itemStyle: { color: "#3CC3DF" } },
-          { value: 15, name: "其他", itemStyle: { color: "#FFAE4C" } },
-          { value: 10, name: "IOS", itemStyle: { color: "#537FF1" } },
-        ],
+        data: echartsData,
 
         // 饼图的标签配置
         label: {
@@ -311,8 +497,12 @@ onMounted(async () => {
   data.value.countryList = await basicDictionaryStore.getCountry();
   customerList.value = await customerStore.getCustomerList();
 });
-
-
+const getPlatform = (val: any) => {
+  data.value.platform = val;
+};
+const getType = (val: any) => {
+  data.value.type = val;
+};
 // 暴露方法
 defineExpose({ showEdit });
 </script>
@@ -468,7 +658,7 @@ defineExpose({ showEdit });
         </el-row>
       </template>
 
-      <!-- <el-card class="box-card">
+      <el-card class="box-card">
         <template #header>
           <div class="card-header">
             <div class="leftTitle font-s18">操作系统</div>
@@ -481,10 +671,16 @@ defineExpose({ showEdit });
               ref="chart1Ref"
               style="width: 100%; height: 18.625rem"
             />
-            <el-radio-group size="medium">
-              <el-radio-button label="参与"></el-radio-button>
-              <el-radio-button label="完成"></el-radio-button>
-              <el-radio-button label="审核成功"></el-radio-button>
+            <el-radio-group v-model="data.platform" @change="getPlatform">
+              <el-radio-button label="参与" value="size"></el-radio-button>
+              <el-radio-button
+                label="完成"
+                value="successSize"
+              ></el-radio-button>
+              <el-radio-button
+                label="审核成功"
+                value="settlementSize"
+              ></el-radio-button>
             </el-radio-group>
           </div>
           <div>
@@ -502,72 +698,20 @@ defineExpose({ showEdit });
                 label="操作系统"
               >
                 <template #default="{ row }">
-
                   <span
-                    style="
-                      background: #6fd195;
-                      padding: 0.85rem;
-                      border-radius: 1rem;
-                      color: white;
-                    "
-                    v-if="row.platform == 'Android'"
-                    >{{ row.platform }}</span
-                  >
-                  <span
-                    style="
-                      background: #8979ff;
-                      padding: 0.85rem;
-                      border-radius: 1rem;
-                      color: white;
-                    "
-                    v-if="row.platform == 'Linux'"
-                    >{{ row.platform }}</span
-                  >
-                  <span
-                    style="
-                      background: #ff928a;
-                      padding: 0.85rem;
-                      border-radius: 1rem;
-                      color: white;
-                    "
-                    v-if="row.platform == 'windows'"
-                    >{{ row.platform }}</span
-                  >
-                  <span
-                    style="
-                      background: #3cc3df;
-                      padding: 0.85rem;
-                      border-radius: 1rem;
-                      color: white;
-                    "
-                    v-if="row.platform == 'macOS'"
-                    >{{ row.platform }}</span
-                  >
-                  <span
-                    style="
-                      background: #ffae4c;
-                      padding: 0.85rem;
-                      border-radius: 1rem;
-                      color: white;
-                    "
-                    v-if="row.platform == '其他'"
-                    >{{ row.platform }}</span
-                  >
-                  <span
-                    style="
-                      background: #537ff1;
-                      padding: 0.85rem;
-                      border-radius: 1rem;
-                      color: white;
-                    "
-                    v-if="row.platform == 'iOS'"
+                    :style="{
+                      background: row.color,
+                      padding: '0.85rem',
+                      borderRadius: '1rem',
+                      color: 'white',
+                    }"
                     >{{ row.platform }}</span
                   >
                 </template>
               </el-table-column>
               <el-table-column
                 prop="size"
-                 align="center"
+                align="center"
                 label="参与"
                 width="120"
               >
@@ -603,10 +747,16 @@ defineExpose({ showEdit });
               ref="chart2Ref"
               style="width: 100%; height: 18.625rem"
             />
-            <el-radio-group size="medium">
-              <el-radio-button label="参与"></el-radio-button>
-              <el-radio-button label="完成"></el-radio-button>
-              <el-radio-button label="审核成功"></el-radio-button>
+            <el-radio-group v-model="data.type" @change="getType">
+              <el-radio-button label="参与" value="size"></el-radio-button>
+              <el-radio-button
+                label="完成"
+                value="successSize"
+              ></el-radio-button>
+              <el-radio-button
+                label="审核成功"
+                value="settlementSize"
+              ></el-radio-button>
             </el-radio-group>
           </div>
           <div>
@@ -624,65 +774,13 @@ defineExpose({ showEdit });
                 label="操作系统"
               >
                 <template #default="{ row }">
-
-                 <span
-                    style="
-                      background: #6fd195;
-                      padding: 0.85rem;
-                      border-radius: 1rem;
-                      color: white;
-                    "
-                    v-if="row.type == 'Android'"
-                    >{{ row.type }}</span
-                  >
                   <span
-                    style="
-                      background: #8979ff;
-                      padding: 0.85rem;
-                      border-radius: 1rem;
-                      color: white;
-                    "
-                    v-if="row.type == 'Linux'"
-                    >{{ row.type }}</span
-                  >
-                  <span
-                    style="
-                      background: #ff928a;
-                      padding: 0.85rem;
-                      border-radius: 1rem;
-                      color: white;
-                    "
-                    v-if="row.type == 'Windows'"
-                    >{{ row.type }}</span
-                  >
-                  <span
-                    style="
-                      background: #3cc3df;
-                      padding: 0.85rem;
-                      border-radius: 1rem;
-                      color: white;
-                    "
-                    v-if="row.type == 'Max OS'"
-                    >{{ row.type }}</span
-                  >
-                  <span
-                    style="
-                      background: #ffae4c;
-                      padding: 0.85rem;
-                      border-radius: 1rem;
-                      color: white;
-                    "
-                    v-if="row.type == '其他'"
-                    >{{ row.type }}</span
-                  >
-                  <span
-                    style="
-                      background: #537ff1;
-                      padding: 0.85rem;
-                      border-radius: 1rem;
-                      color: white;
-                    "
-                    v-if="row.type == 'IOS'"
+                    :style="{
+                      background: row.color,
+                      padding: '0.85rem',
+                      borderRadius: '1rem',
+                      color: 'white',
+                    }"
                     >{{ row.type }}</span
                   >
                 </template>
@@ -711,7 +809,7 @@ defineExpose({ showEdit });
             </el-table>
           </div>
         </div>
-      </el-card> -->
+      </el-card>
       <el-card class="box-card">
         <template #header>
           <div class="card-header">
@@ -739,10 +837,10 @@ defineExpose({ showEdit });
           <el-row :gutter="10">
             <el-col :span="8">
               <el-form-item label="项目名称">
-                <el-text v-if="data.projectType === 1" class=" text-bg">
+                <el-text v-if="data.projectType === 1" class="text-bg">
                   {{ data.form.name ? data.form.name : "-" }}
                 </el-text>
-                <el-text v-else class=" text-bg">
+                <el-text v-else class="text-bg">
                   {{ data.name ? data.name : "-" }}
                 </el-text>
               </el-form-item>
@@ -760,7 +858,7 @@ defineExpose({ showEdit });
 
             <el-col v-if="data.projectType !== 2" :span="8">
               <el-form-item label="项目标识" prop="client_pid">
-                <el-text class=" text-bg">
+                <el-text class="text-bg">
                   {{
                     data.form.projectIdentification
                       ? data.form.projectIdentification
@@ -778,7 +876,7 @@ defineExpose({ showEdit });
             </el-col>
             <el-col :span="8">
               <el-form-item label="所属区域">
-                <el-text class=" text-bg">
+                <el-text class="text-bg">
                   <template
                     v-if="comCountryId(data.form.countryIdList).length > 4"
                   >
@@ -803,7 +901,7 @@ defineExpose({ showEdit });
             </el-col>
             <el-col :span="8" v-if="data.projectType === 1">
               <el-form-item label="项目价">
-                <el-text v-if="data.form.currencyType === 1" class=" text-bg">
+                <el-text v-if="data.form.currencyType === 1" class="text-bg">
                   {{
                     data.form.doMoneyPrice ? data.form.doMoneyPrice + "$" : "-"
                   }}
@@ -824,7 +922,7 @@ defineExpose({ showEdit });
             </el-col>
             <el-col :span="8">
               <el-form-item label="最小时长">
-                <el-text class=" text-bg">
+                <el-text class="text-bg">
                   {{
                     data.form.minimumDuration
                       ? data.form.minimumDuration + "min"
@@ -862,12 +960,10 @@ defineExpose({ showEdit });
       <el-card class="box-card">
         <template #header>
           <div class="card-header font-s18">
-            <span style="display: flex;align-items: center;">
+            <span style="display: flex; align-items: center">
               其他设置
               <span class="title-bg">2</span>
             </span>
-
-
           </div>
         </template>
         <!-- <el-row :gutter="20">
@@ -903,63 +999,118 @@ defineExpose({ showEdit });
           </el-row> -->
         <el-row :gutter="10">
           <el-col :span="3.5">
-            <div :class=" data.form.isPinned === 1 ?'text-bg2' :'text-bgClose'">
-              置顶 : <span>{{ data.form.isPinned === 1 ?'开启':'关闭' }}</span>
-              <img v-if="data.form.isPinned === 1" src="@/assets/images/open.png" style="width: 1rem;height: 1rem;margin-left: 0.3125rem;" />
-              <img v-else src="@/assets/images/close.png" style="width: 1rem;height: 1rem;margin-left: 0.3125rem;">
+            <div
+              :class="data.form.isPinned === 1 ? 'text-bg2' : 'text-bgClose'"
+            >
+              置顶 :
+              <span>{{ data.form.isPinned === 1 ? "开启" : "关闭" }}</span>
+              <img
+                v-if="data.form.isPinned === 1"
+                src="@/assets/images/open.png"
+                style="width: 1rem; height: 1rem; margin-left: 0.3125rem"
+              />
+              <img
+                v-else
+                src="@/assets/images/close.png"
+                style="width: 1rem; height: 1rem; margin-left: 0.3125rem"
+              />
             </div>
           </el-col>
           <el-col :span="1"></el-col>
           <el-col :span="3.5">
-            <div label="在线 :" :class="data.form.isOnline === 1 ?'text-bg2' :'text-bgClose'">
+            <div
+              label="在线 :"
+              :class="data.form.isOnline === 1 ? 'text-bg2' : 'text-bgClose'"
+            >
+              在线 :
+              <span v-if="data.form.isOnline === 1">{{
+                data.form.isOnline === 1 ? "开启" : "关闭"
+              }}</span>
 
-              在线 : <span v-if="data.form.isOnline === 1" >{{ data.form.isOnline === 1?'开启':'关闭' }}</span>
-
-              <img v-if="data.form.isOnline === 1" src="@/assets/images/open.png" style="width: 1rem;height: 1rem;margin-left: 0.3125rem;" />
-              <img v-else src="@/assets/images/close.png" style="width: 1rem;height: 1rem;margin-left: 0.3125rem;">
+              <img
+                v-if="data.form.isOnline === 1"
+                src="@/assets/images/open.png"
+                style="width: 1rem; height: 1rem; margin-left: 0.3125rem"
+              />
+              <img
+                v-else
+                src="@/assets/images/close.png"
+                style="width: 1rem; height: 1rem; margin-left: 0.3125rem"
+              />
             </div>
           </el-col>
           <el-col :span="1"></el-col>
           <el-col :span="3">
-            <div  :class="data.form.isProfile === 2 ?'text-bg2' :'text-bgClose'">
-
-              资料 : <span >{{ data.form.isProfile === 2 ?'开启':'关闭' }}</span>
-              <img v-if="data.form.isProfile === 2" src="@/assets/images/open.png" style="width: 1rem;height: 1rem;margin-left: 0.3125rem;" />
-              <img v-else src="@/assets/images/close.png" style="width: 1rem;height: 1rem;margin-left: 0.3125rem;">
-
+            <div
+              :class="data.form.isProfile === 2 ? 'text-bg2' : 'text-bgClose'"
+            >
+              资料 :
+              <span>{{ data.form.isProfile === 2 ? "开启" : "关闭" }}</span>
+              <img
+                v-if="data.form.isProfile === 2"
+                src="@/assets/images/open.png"
+                style="width: 1rem; height: 1rem; margin-left: 0.3125rem"
+              />
+              <img
+                v-else
+                src="@/assets/images/close.png"
+                style="width: 1rem; height: 1rem; margin-left: 0.3125rem"
+              />
             </div>
           </el-col>
           <el-col :span="1"></el-col>
           <el-col :span="3">
-            <div  :class="data.form.isPinned === 1 ?'text-bg2' :'text-bgClose'">
-
-              B2B : <span  >
-                  {{ data.form.isPinned === 1 ? data.form.projectType.join(","):'关闭' }}
-                </span>
-                <img v-if="data.form.isPinned === 1" src="@/assets/images/open.png" style="width: 1rem;height: 1rem;margin-left: 0.3125rem;" />
-                <img v-else src="@/assets/images/close.png" style="width: 1rem;height: 1rem;margin-left: 0.3125rem;">
-
-              </div>
+            <div
+              :class="data.form.isPinned === 1 ? 'text-bg2' : 'text-bgClose'"
+            >
+              B2B :
+              <span>
+                {{
+                  data.form.isPinned === 1
+                    ? data.form.projectType.join(",")
+                    : "关闭"
+                }}
+              </span>
+              <img
+                v-if="data.form.isPinned === 1"
+                src="@/assets/images/open.png"
+                style="width: 1rem; height: 1rem; margin-left: 0.3125rem"
+              />
+              <img
+                v-else
+                src="@/assets/images/close.png"
+                style="width: 1rem; height: 1rem; margin-left: 0.3125rem"
+              />
+            </div>
           </el-col>
           <el-col :span="1"></el-col>
           <el-col :span="4">
-            <div :class="data.form.isTimeReleases === 2 ?'text-bg2' :'text-bgClose'">
-
-              定时发布 : <span >{{ data.form.isTimeReleases === 2 ?'开启':'关闭'}}</span>
-              <img v-if="data.form.isTimeReleases === 2" src="@/assets/images/open.png" style="width: 1rem;height: 1rem;margin-left: 0.3125rem;" />
-              <img v-else src="@/assets/images/close.png" style="width: 1rem;height: 1rem;margin-left: 0.3125rem;">
-
+            <div
+              :class="
+                data.form.isTimeReleases === 2 ? 'text-bg2' : 'text-bgClose'
+              "
+            >
+              定时发布 :
+              <span>{{
+                data.form.isTimeReleases === 2 ? "开启" : "关闭"
+              }}</span>
+              <img
+                v-if="data.form.isTimeReleases === 2"
+                src="@/assets/images/open.png"
+                style="width: 1rem; height: 1rem; margin-left: 0.3125rem"
+              />
+              <img
+                v-else
+                src="@/assets/images/close.png"
+                style="width: 1rem; height: 1rem; margin-left: 0.3125rem"
+              />
             </div>
           </el-col>
-
         </el-row>
         <el-row>
-
           <el-col :span="11">
             <div class="text-bg2">
-
               备注 : {{ data.form.remark ? data.form.remark : "-" }}
-
             </div>
           </el-col>
         </el-row>
@@ -967,7 +1118,9 @@ defineExpose({ showEdit });
       <el-card class="box-card" v-if="data.projectType === 1">
         <template #header>
           <div class="peizjo-header">
-            <span class="font-s18">配置信息<span class="title-bg">3</span></span>
+            <span class="font-s18"
+              >配置信息<span class="title-bg">3</span></span
+            >
             <span
               style="margin-left: 50px; font-weight: 700; margin-right: 10px"
               v-if="data.form.projectProblemCategoryName"
@@ -1061,31 +1214,52 @@ defineExpose({ showEdit });
         <el-row :gutter="20">
           <el-col :span="4">
             <div class="text-ye">
-              小时准入量 :<span>{{ data.form.preNum ? data.form.preNum : "-" }}</span>
-              <img src="@/assets/images/open-ye.png" alt="" v-if="data.form.preNum">
+              小时准入量 :<span>{{
+                data.form.preNum ? data.form.preNum : "-"
+              }}</span>
+              <img
+                src="@/assets/images/open-ye.png"
+                alt=""
+                v-if="data.form.preNum"
+              />
             </div>
-
           </el-col>
           <el-col :span="1"></el-col>
           <el-col :span="4">
             <div class="text-bl">
-              小时完成量 :<span>{{ data.form.limitedQuantity ? data.form.limitedQuantity : "-" }}</span>
-              <img src="@/assets/images/open-bl.png" alt="" v-if="data.form.limitedQuantity">
+              小时完成量 :<span>{{
+                data.form.limitedQuantity ? data.form.limitedQuantity : "-"
+              }}</span>
+              <img
+                src="@/assets/images/open-bl.png"
+                alt=""
+                v-if="data.form.limitedQuantity"
+              />
             </div>
-
-
-
           </el-col>
           <el-col :span="1"></el-col>
           <el-col :span="4">
-            <div :class="data.form.ipDifferenceDetection === 1 ?'text-bg2' :'text-bgClose'">
-
-              重复参与:<span >{{ data.form.ipDifferenceDetection === 1 ?'开启':'关闭'}}</span>
-<img v-if="data.form.ipDifferenceDetection === 1" src="@/assets/images/open.png" style="width: 1rem;height: 1rem;margin-left: 0.3125rem;" />
-<img v-else src="@/assets/images/close.png" style="width: 1rem;height: 1rem;margin-left: 0.3125rem;">
-
-</div>
-
+            <div
+              :class="
+                data.form.ipDifferenceDetection === 1
+                  ? 'text-bg2'
+                  : 'text-bgClose'
+              "
+            >
+              重复参与:<span>{{
+                data.form.ipDifferenceDetection === 1 ? "开启" : "关闭"
+              }}</span>
+              <img
+                v-if="data.form.ipDifferenceDetection === 1"
+                src="@/assets/images/open.png"
+                style="width: 1rem; height: 1rem; margin-left: 0.3125rem"
+              />
+              <img
+                v-else
+                src="@/assets/images/close.png"
+                style="width: 1rem; height: 1rem; margin-left: 0.3125rem"
+              />
+            </div>
 
             <!-- <el-form-item label="重复参与:">
               <el-text class="mx-1">
@@ -1214,8 +1388,8 @@ defineExpose({ showEdit });
   padding: 24px;
 }
 .text-bg2 {
-  color: #409EFF;
-  background: #E7F3FF;
+  color: #409eff;
+  background: #e7f3ff;
   border-radius: 0.25rem;
   padding: 0.25rem 0.75rem;
   display: flex;
@@ -1223,19 +1397,19 @@ defineExpose({ showEdit });
   font-size: 0.875rem;
 }
 .title-bg {
-  color: #409EFF;
-  background: #E7F3FF;
+  color: #409eff;
+  background: #e7f3ff;
   border-radius: 0.25rem;
   font-size: 0.875rem;
-  margin-left: .3125rem;
+  margin-left: 0.3125rem;
   width: 18px;
   height: 18px;
   display: inline-block;
   text-align: center;
 }
 .text-bgClose {
-  color: #B1B1B1 ;
-  background: #F3F4F4;
+  color: #b1b1b1;
+  background: #f3f4f4;
   border-radius: 0.25rem;
   padding: 0.25rem 0.75rem;
   display: flex;
@@ -1243,8 +1417,8 @@ defineExpose({ showEdit });
   font-size: 0.875rem;
 }
 .text-ye {
-  color: #FEB468 ;
-  background: #FFE7CE;
+  color: #feb468;
+  background: #ffe7ce;
   border-radius: 0.25rem;
   padding: 0.25rem 0.75rem;
   display: flex;
@@ -1252,8 +1426,8 @@ defineExpose({ showEdit });
   font-size: 0.875rem;
 }
 .text-bl {
-  color: #03C239 ;
-  background: #E2FFEA;
+  color: #03c239;
+  background: #e2ffea;
   border-radius: 0.25rem;
   padding: 0.25rem 0.75rem;
   display: flex;
@@ -1261,9 +1435,9 @@ defineExpose({ showEdit });
   font-size: 0.875rem;
 }
 .text-bg {
-  background: #F3F4F4;
+  background: #f3f4f4;
   border-radius: 0.3125rem;
-  padding: .25rem 0.625rem;
+  padding: 0.25rem 0.625rem;
   width: 100%;
 }
 .system-content {
@@ -1468,7 +1642,6 @@ defineExpose({ showEdit });
 :deep(.el-card) {
   margin: 0.625rem 0;
   padding-top: 10px;
-
 }
 
 :deep(.editor) {
