@@ -820,7 +820,9 @@ defineExpose({ showEdit });
               }}</span>
             </div>
             <div class="rightStatus">
-              <span
+              <img src="@/assets/images/online.png" alt="" v-if="data.isOnline === 1">
+              <img src="@/assets/images/Offline.png" alt="" v-else>
+              <!-- <span
                 :class="
                   data.isOnline === 1 ? 'isOnlineSpanTrue' : 'isOnlineSpanFalse'
                 "
@@ -829,7 +831,7 @@ defineExpose({ showEdit });
                 :class="data.isOnline === 1 ? 'isOnlineTrue' : 'isOnlineFalse'"
               >
                 {{ data.isOnline === 1 ? "在线" : "离线" }}
-              </div>
+              </div> -->
             </div>
           </div>
         </template>
