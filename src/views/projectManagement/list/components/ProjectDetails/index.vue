@@ -1079,23 +1079,6 @@ defineExpose({ showEdit });
               资料 : <span >{{ data.form.isProfile === 2 ?'开启':'关闭' }}</span>
               <img v-if="data.form.isProfile === 2" src="@/assets/images/open.png" style="width: 1rem;height: 1rem;margin-left: 0.3125rem;" />
               <img v-else src="@/assets/images/close.png" style="width: 1rem;height: 1rem;margin-left: 0.3125rem;">
-
-          <el-col :span="3">
-            <div
-              :class="data.form.isProfile === 2 ? 'text-bg2' : 'text-bgClose'"
-            >
-              资料 :
-              <span>{{ data.form.isProfile === 2 ? "开启" : "关闭" }}</span>
-              <img
-                v-if="data.form.isProfile === 2"
-                src="@/assets/images/open.png"
-                style="width: 1rem; height: 1rem; margin-left: 0.3125rem"
-              />
-              <img
-                v-else
-                src="@/assets/images/close.png"
-                style="width: 1rem; height: 1rem; margin-left: 0.3125rem"
-              />
             </div>
           </el-col>
           <el-col :span="1"></el-col>
