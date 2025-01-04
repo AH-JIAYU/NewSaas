@@ -153,10 +153,11 @@ async function changeStatus(row: any, val: any) {
         type: 4, //取消接收
         idList: [row.projectId],
       };
+      const msg = row.isOnline == 1?'接收成功':'取消接收成功'
       const { status } = await apiOut.updateReceiveStatus(params);
       status === 1 &&
         ElMessage.success({
-          message: "取消接收成功",
+          message: msg,
           center: true,
         });
       fetchData();
