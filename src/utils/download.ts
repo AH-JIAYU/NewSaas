@@ -1,6 +1,13 @@
+import useUserStore from "@/store/modules/user";
+const userStore = useUserStore();
 export default // 下载
 async function DownLoad(imgUrl: any, name: any) {
-  const response = await fetch(imgUrl);
+  const response = await fetch(imgUrl,{
+    method: 'GET',
+    headers: {
+      'Authorization': userStore.token  // 添加 Token 到请求头
+    }
+  });
   const blob = await response.blob();
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
