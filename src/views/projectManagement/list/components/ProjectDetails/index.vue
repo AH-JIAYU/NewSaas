@@ -732,55 +732,44 @@ defineExpose({ showEdit });
             </el-col>
             <el-col :span="1"></el-col>
             <el-col :span="16">
-              <el-table
-              border
-              highlight-current-row
-
-              :data="data.getProjectSystemTypeInfoList"
-              width="100%"
-            >
-              <el-table-column
-                align="center"
-
-                label="操作系统"
-              >
-                <template #default="{ row }">
-                  <span
-                    :style="{
-                      background: row.color,
-                      padding: '0.85rem',
-                      borderRadius: '1rem',
-                      color: 'white',
-                    }"
-                    >{{ row.platform }}</span
+              <div style="height: 330px" class="echart-table">
+                <el-table
+                  border
+                  highlight-current-row
+                  :data="data.getProjectSystemTypeInfoList"
+                  width="100%"
+                >
+                  <el-table-column align="center" label="操作系统">
+                    <template #default="{ row }">
+                      <span
+                        :style="{
+                          background: row.color,
+                          padding: '0.85rem',
+                          borderRadius: '1rem',
+                          color: 'white',
+                        }"
+                        >{{ row.platform }}</span
+                      >
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="size" align="center" label="参与">
+                  </el-table-column>
+                  <el-table-column
+                    prop="successSize"
+                    align="center"
+                    label="完成"
                   >
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="size"
-                align="center"
-                label="参与"
-
-              >
-              </el-table-column>
-              <el-table-column
-                prop="successSize"
-                align="center"
-                label="完成"
-
-              >
-              </el-table-column>
-              <el-table-column
-                prop="settlementSize"
-                align="center"
-                label="审核通过"
-
-              >
-              </el-table-column>
-            </el-table>
+                  </el-table-column>
+                  <el-table-column
+                    prop="settlementSize"
+                    align="center"
+                    label="审核通过"
+                  >
+                  </el-table-column>
+                </el-table>
+              </div>
             </el-col>
           </el-row>
-
         </div>
       </el-card>
       <el-card class="box-card">
@@ -793,62 +782,59 @@ defineExpose({ showEdit });
           <el-row>
             <el-col :span="7">
               <div
-              id="echarts2"
-              ref="chart2Ref"
-              style="width: 80%; height: 18.625rem"
-            />
-            <el-radio-group v-model="data.type" @change="getType">
-              <el-radio-button label="参与" value="size"></el-radio-button>
-              <el-radio-button
-                label="完成"
-                value="successSize"
-              ></el-radio-button>
-              <el-radio-button
-                label="审核成功"
-                value="settlementSize"
-              ></el-radio-button>
-            </el-radio-group>
+                id="echarts2"
+                ref="chart2Ref"
+                style="width: 80%; height: 18.625rem"
+              />
+              <el-radio-group v-model="data.type" @change="getType">
+                <el-radio-button label="参与" value="size"></el-radio-button>
+                <el-radio-button
+                  label="完成"
+                  value="successSize"
+                ></el-radio-button>
+                <el-radio-button
+                  label="审核成功"
+                  value="settlementSize"
+                ></el-radio-button>
+              </el-radio-group>
             </el-col>
             <el-col :span="1"></el-col>
             <el-col :span="16">
-              <el-table
-              border
-              highlight-current-row
+              <div style="height: 300px" class="echart-table">
+                <el-table
+                border
+                highlight-current-row
+                :data="data.getProjectBrowserTypeInfoList"
+                width="100%"
+              >
+                <el-table-column align="center" label="操作系统">
+                  <template #default="{ row }">
+                    <span
+                      :style="{
+                        background: row.color,
+                        padding: '0.85rem',
+                        borderRadius: '1rem',
+                        color: 'white',
+                      }"
+                      >{{ row.type }}</span
+                    >
+                  </template>
+                </el-table-column>
+                <el-table-column prop="size" align="center" label="参与">
+                </el-table-column>
+                <el-table-column prop="successSize" align="center" label="完成">
+                </el-table-column>
+                <el-table-column
+                  prop="settlementSize"
+                  align="center"
+                  label="审核通过"
+                >
+                </el-table-column>
+              </el-table>
+              </div>
 
-              :data="data.getProjectBrowserTypeInfoList"
-              width="100%"
-            >
-              <el-table-column
-                align="center"
-                label="操作系统"
-              >
-                <template #default="{ row }">
-                  <span
-                    :style="{
-                      background: row.color,
-                      padding: '0.85rem',
-                      borderRadius: '1rem',
-                      color: 'white',
-                    }"
-                    >{{ row.type }}</span
-                  >
-                </template>
-              </el-table-column>
-              <el-table-column prop="size" align="center" label="参与">
-              </el-table-column>
-              <el-table-column prop="successSize" align="center" label="完成">
-              </el-table-column>
-              <el-table-column
-                prop="settlementSize"
-                align="center"
-                label="审核通过"
-              >
-              </el-table-column>
-            </el-table>
             </el-col>
-</el-row>
-
-
+          </el-row>
         </div>
       </el-card>
       <el-card class="box-card">
@@ -1430,6 +1416,9 @@ defineExpose({ showEdit });
 </template>
 
 <style scoped lang="scss">
+:deep(.echart-table .el-table__body){
+  height: 18.125rem !important;
+}
 .box-card {
   border-radius: 0.5rem !important;
   border: 0.5px solid #dde2e9 !important;
