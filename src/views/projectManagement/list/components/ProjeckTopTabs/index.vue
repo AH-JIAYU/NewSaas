@@ -1150,12 +1150,14 @@ const getProblemList = async () => {
                 ">
                   <img w-full :src="dialogImageUrl" alt="Preview Image" />
                 </el-dialog>
-                <!-- <div v-for="item in fileList">
+                <div v-for="item in fileList" :key="item.name">
                   <div class="i-f7:doc-text w-1rem h-1rem"></div>
                   <el-link style=" padding: 0; margin: 0;" :underline="false" type="primary" @click="download(item)">
-                    {{ item.name }}下载
+                    {{ item.name }}
+                    <span style="margin-left:0.625rem">下载</span>
+
                   </el-link>
-                </div> -->
+                </div>
               </div>
             </el-form-item>
             <el-row>

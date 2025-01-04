@@ -1324,7 +1324,7 @@ defineExpose({ showEdit });
           </div>
         </template>
         <template v-if="data.form.descriptionUrl">
-          <div
+          <!-- <div
             v-for="item in data.srcList"
             :key="item"
             class="demo-image__preview"
@@ -1339,8 +1339,9 @@ defineExpose({ showEdit });
               :initial-index="0"
               fit="cover"
             />
-          </div>
-          <p v-for="(item, index) in imgList" :key="item">
+          </div> -->
+          <div v-for="(item, index) in imgList" :key="item">
+            <div class="i-f7:doc-text w-1rem h-1rem"></div>
             <el-button
               style="padding: 0"
               type="primary"
@@ -1349,7 +1350,7 @@ defineExpose({ showEdit });
             >
               {{ item }} 下载
             </el-button>
-          </p>
+          </div>
         </template>
         <el-row :class="{ isNone: !data.form.descriptionUrl }" :gutter="20">
           <el-col :span="24">
