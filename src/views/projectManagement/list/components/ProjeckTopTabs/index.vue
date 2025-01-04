@@ -1137,7 +1137,7 @@ const getProblemList = async () => {
                   <div class="el-upload__text">上传</div>
                   <template #tip>
                     <div class="el-upload__tip">
-                      <el-text type="primary" size="small">
+                      <el-text  size="small">
                         支持上传JPG/JPEG/PNG图片DOC/XLS/PDF文件，小于10MB
                       </el-text>
                     </div>
