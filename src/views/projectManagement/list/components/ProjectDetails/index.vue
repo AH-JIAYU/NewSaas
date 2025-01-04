@@ -156,108 +156,123 @@ async function showEdit(row: any, projectType: any) {
   data.value.getProjectSystemTypeInfoPie = [];
   //计算百分比
   if (data.value.getProjectSystemTypeInfoList.length > 0) {
-  // 将所有平台名称的首字母大写（忽略 '其他'）
-  data.value.getProjectSystemTypeInfoList.forEach((item: any) => {
-    item.platform = item.platform !== '其他' ?
-      item.platform.charAt(0).toUpperCase() + item.platform.slice(1) :
-      item.platform;
-  });
+    // 将所有平台名称的首字母大写（忽略 '其他'）
+    data.value.getProjectSystemTypeInfoList.forEach((item: any) => {
+      item.platform =
+        item.platform !== "其他"
+          ? item.platform.charAt(0).toUpperCase() + item.platform.slice(1)
+          : item.platform;
+    });
 
-  // 使用 reduce 计算总和
-  const totals = data.value.getProjectSystemTypeInfoList.reduce((acc: any, item: any) => {
-    const colorObj = platformColor.find((ele: any) => ele.platform === item.platform);
-    item.color = colorObj ? colorObj.color : '#6FD195'; // 设置颜色
+    // 使用 reduce 计算总和
+    const totals = data.value.getProjectSystemTypeInfoList.reduce(
+      (acc: any, item: any) => {
+        const colorObj = platformColor.find(
+          (ele: any) => ele.platform === item.platform
+        );
+        item.color = colorObj ? colorObj.color : "#6FD195"; // 设置颜色
 
-    // 累加 size、successSize、settlementSize
-    acc.sizeAll += item.size ? +item.size : 0;
-    acc.successSizeAll += item.successSize ? +item.successSize : 0;
-    acc.settlementSizeAll += item.settlementSize ? +item.settlementSize : 0;
+        // 累加 size、successSize、settlementSize
+        acc.sizeAll += item.size ? +item.size : 0;
+        acc.successSizeAll += item.successSize ? +item.successSize : 0;
+        acc.settlementSizeAll += item.settlementSize ? +item.settlementSize : 0;
 
-    // 将每个 item 复制并推入新的数组
-    acc.pieData.push({ ...item });
+        // 将每个 item 复制并推入新的数组
+        acc.pieData.push({ ...item });
 
-    return acc;
-  }, {
-    sizeAll: 0,
-    successSizeAll: 0,
-    settlementSizeAll: 0,
-    pieData: []  // 存储修改后的数据
-  });
+        return acc;
+      },
+      {
+        sizeAll: 0,
+        successSizeAll: 0,
+        settlementSizeAll: 0,
+        pieData: [], // 存储修改后的数据
+      }
+    );
 
-  // 计算每个项目的比例，并推送到 getProjectSystemTypeInfoPie
-  data.value.getProjectSystemTypeInfoPie = totals.pieData.map((item: any) => {
-    return {
-      ...item,
-      sizeRate: totals.sizeAll ? (+item.size / totals.sizeAll) * 100 : 0,
-      successSizeRate: totals.successSizeAll ? (+item.successSize / totals.successSizeAll) * 100 : 0,
-      settlementSizeRate: totals.settlementSizeAll ? (+item.settlementSize / totals.settlementSizeAll) * 100 : 0
-    };
-  });
+    // 计算每个项目的比例，并推送到 getProjectSystemTypeInfoPie
+    data.value.getProjectSystemTypeInfoPie = totals.pieData.map((item: any) => {
+      return {
+        ...item,
+        sizeRate: totals.sizeAll ? (+item.size / totals.sizeAll) * 100 : 0,
+        successSizeRate: totals.successSizeAll
+          ? (+item.successSize / totals.successSizeAll) * 100
+          : 0,
+        settlementSizeRate: totals.settlementSizeAll
+          ? (+item.settlementSize / totals.settlementSizeAll) * 100
+          : 0,
+      };
+    });
 
-  // 可选：打印调试信息
-  // console.log(data.value.getProjectSystemTypeInfoPie, '饼图');
-}
-
-
-
+    // 可选：打印调试信息
+    // console.log(data.value.getProjectSystemTypeInfoPie, '饼图');
+  }
 
   data.value.getProjectBrowserTypeInfoList =
     res.data.getProjectBrowserTypeInfoList;
-    data.value.getProjectBrowserTypeInfoPie = []
-    if (data.value.getProjectBrowserTypeInfoList.length !== 0) {
-  // 遍历 typePriData，将不在 getProjectBrowserTypeInfoList 中的项推送到其中
-  typePriData.forEach((itemB: any) => {
-    const existsInA = data.value.getProjectBrowserTypeInfoList.some(
-      (itemA: any) => itemA.type === itemB.type
-    );
-    if (!existsInA) {
-      data.value.getProjectBrowserTypeInfoList.push(itemB);
-    }
-  });
-
-  // 初始化各项总和
-  let sizeAll = 0, successSizeAll = 0, settlementSizeAll = 0;
-
-  // 处理每一项数据
-  data.value.getProjectBrowserTypeInfoList.forEach((item: any) => {
-    // 查找对应的颜色
-    const colorObj = typeColor.find((ele: any) => ele.platform === item.type);
-    item.color = colorObj ? colorObj.color : '#6FD195';  // 默认颜色
-
-    // 计算总和
-    sizeAll += item.size ? +item.size : 0;
-    successSizeAll += item.successSize ? +item.successSize : 0;
-    settlementSizeAll += item.settlementSize ? +item.settlementSize : 0;
-
-    // 将对象推送到 getProjectBrowserTypeInfoPie
-    data.value.getProjectBrowserTypeInfoPie.push({
-      ...item,
-      sizeRate: 0,
-      successSizeRate: 0,
-      settlementSizeRate: 0,
+  data.value.getProjectBrowserTypeInfoPie = [];
+  if (data.value.getProjectBrowserTypeInfoList.length !== 0) {
+    // 遍历 typePriData，将不在 getProjectBrowserTypeInfoList 中的项推送到其中
+    typePriData.forEach((itemB: any) => {
+      const existsInA = data.value.getProjectBrowserTypeInfoList.some(
+        (itemA: any) => itemA.type === itemB.type
+      );
+      if (!existsInA) {
+        data.value.getProjectBrowserTypeInfoList.push(itemB);
+      }
     });
-  });
 
-  // 计算比例
-  data.value.getProjectBrowserTypeInfoPie.forEach((item: any) => {
-    item.sizeRate = sizeAll ? (+item.size / sizeAll) * 100 : 0;
-    item.successSizeRate = successSizeAll ? (+item.successSize / successSizeAll) * 100 : 0;
-    item.settlementSizeRate = settlementSizeAll ? (+item.settlementSize / settlementSizeAll) * 100 : 0;
-  });
-} else {
-  // 如果 getProjectBrowserTypeInfoList 为空，则重新构建数据
-  const newData = typePriData.map((item1: any) => {
-    const matchedColor = typeColor.find((item2: any) => item1.type === item2.platform);
-    return {
-      ...item1,
-      color: matchedColor ? matchedColor.color : '#6FD195',  // 默认颜色
-    };
-  });
+    // 初始化各项总和
+    let sizeAll = 0,
+      successSizeAll = 0,
+      settlementSizeAll = 0;
 
-  // 更新数据
-  data.value.getProjectBrowserTypeInfoList = newData;
-  data.value.getProjectBrowserTypeInfoPie = newData;
-}
+    // 处理每一项数据
+    data.value.getProjectBrowserTypeInfoList.forEach((item: any) => {
+      // 查找对应的颜色
+      const colorObj = typeColor.find((ele: any) => ele.platform === item.type);
+      item.color = colorObj ? colorObj.color : "#6FD195"; // 默认颜色
+
+      // 计算总和
+      sizeAll += item.size ? +item.size : 0;
+      successSizeAll += item.successSize ? +item.successSize : 0;
+      settlementSizeAll += item.settlementSize ? +item.settlementSize : 0;
+
+      // 将对象推送到 getProjectBrowserTypeInfoPie
+      data.value.getProjectBrowserTypeInfoPie.push({
+        ...item,
+        sizeRate: 0,
+        successSizeRate: 0,
+        settlementSizeRate: 0,
+      });
+    });
+
+    // 计算比例
+    data.value.getProjectBrowserTypeInfoPie.forEach((item: any) => {
+      item.sizeRate = sizeAll ? (+item.size / sizeAll) * 100 : 0;
+      item.successSizeRate = successSizeAll
+        ? (+item.successSize / successSizeAll) * 100
+        : 0;
+      item.settlementSizeRate = settlementSizeAll
+        ? (+item.settlementSize / settlementSizeAll) * 100
+        : 0;
+    });
+  } else {
+    // 如果 getProjectBrowserTypeInfoList 为空，则重新构建数据
+    const newData = typePriData.map((item1: any) => {
+      const matchedColor = typeColor.find(
+        (item2: any) => item1.type === item2.platform
+      );
+      return {
+        ...item1,
+        color: matchedColor ? matchedColor.color : "#6FD195", // 默认颜色
+      };
+    });
+
+    // 更新数据
+    data.value.getProjectBrowserTypeInfoList = newData;
+    data.value.getProjectBrowserTypeInfoPie = newData;
+  }
 
   // console.log(data.value.getProjectBrowserTypeInfoList,'data.value.getProjectBrowserTypeInfoList')
   active.value =
@@ -401,11 +416,11 @@ function echarts1() {
     echartsData.push(obj);
   });
   // 过滤掉 value 为 0 的项
-const filteredData = echartsData.filter((item:any) => item.value > 0);
+  const filteredData = echartsData.filter((item: any) => item.value > 0);
 
-// console.log(filteredData,'filteredData')
+  // console.log(filteredData,'filteredData')
 
-  let option:any = {
+  let option: any = {
     title: {
       left: "10%",
       text: "",
@@ -443,10 +458,10 @@ const filteredData = echartsData.filter((item:any) => item.value > 0);
       },
     ],
   };
-// 如果数据只有一项，修改 label 的显示位置
-if (filteredData.length === 1) {
-  option.series[0].label.normal.position = 'center';  // 将标签放置在中心
-}
+  // 如果数据只有一项，修改 label 的显示位置
+  if (filteredData.length === 1) {
+    option.series[0].label.normal.position = "center"; // 将标签放置在中心
+  }
   chart1.setOption(option);
 }
 // 客户总览
@@ -472,8 +487,8 @@ function echarts2() {
     }
     echartsData.push(obj);
   });
-    // 过滤掉 value 为 0 的项
-const filteredData = echartsData.filter((item:any) => item.value > 0);
+  // 过滤掉 value 为 0 的项
+  const filteredData = echartsData.filter((item: any) => item.value > 0);
   chart2 = echarts.init(chart2Ref.value);
   // 配置数据
   const option = {
@@ -516,9 +531,9 @@ const filteredData = echartsData.filter((item:any) => item.value > 0);
     ],
   };
   // 如果数据只有一项，修改 label 的显示位置
-if (filteredData.length === 1) {
-  option.series[0].label.normal.position = 'center';  // 将标签放置在中心
-}
+  if (filteredData.length === 1) {
+    option.series[0].label.normal.position = "center"; // 将标签放置在中心
+  }
   // 传入数据
   chart2.setOption(option);
 }
@@ -532,7 +547,7 @@ const getPlatform = (val: any) => {
 };
 const getType = (val: any) => {
   data.value.type = val;
-  echarts2()
+  echarts2();
 };
 // 暴露方法
 defineExpose({ showEdit });
@@ -695,37 +710,38 @@ defineExpose({ showEdit });
             <div class="leftTitle font-s18">操作系统</div>
           </div>
         </template>
-        <div class="system-content">
-          <div>
-            <div
-              id="echarts1"
-              ref="chart1Ref"
-              style="width: 100%; height: 18.625rem"
-            />
-            <el-radio-group v-model="data.platform" @change="getPlatform">
-              <el-radio-button label="参与" value="size"></el-radio-button>
-              <el-radio-button
-                label="完成"
-                value="successSize"
-              ></el-radio-button>
-              <el-radio-button
-                label="审核成功"
-                value="settlementSize"
-              ></el-radio-button>
-            </el-radio-group>
-          </div>
-          <div>
-            <el-table
+        <div class="">
+          <el-row>
+            <el-col :span="7">
+              <div
+                id="echarts1"
+                ref="chart1Ref"
+                style="width: 80%; height: 18.625rem"
+              />
+              <el-radio-group v-model="data.platform" @change="getPlatform">
+                <el-radio-button label="参与" value="size"></el-radio-button>
+                <el-radio-button
+                  label="完成"
+                  value="successSize"
+                ></el-radio-button>
+                <el-radio-button
+                  label="审核成功"
+                  value="settlementSize"
+                ></el-radio-button>
+              </el-radio-group>
+            </el-col>
+            <el-col :span="1"></el-col>
+            <el-col :span="16">
+              <el-table
               border
               highlight-current-row
-              height="100%"
+
               :data="data.getProjectSystemTypeInfoList"
               width="100%"
             >
               <el-table-column
-                prop="a1"
                 align="center"
-                width="120"
+
                 label="操作系统"
               >
                 <template #default="{ row }">
@@ -744,25 +760,27 @@ defineExpose({ showEdit });
                 prop="size"
                 align="center"
                 label="参与"
-                width="120"
+
               >
               </el-table-column>
               <el-table-column
                 prop="successSize"
                 align="center"
                 label="完成"
-                width="120"
+
               >
               </el-table-column>
               <el-table-column
                 prop="settlementSize"
                 align="center"
                 label="审核通过"
-                width="120"
+
               >
               </el-table-column>
             </el-table>
-          </div>
+            </el-col>
+          </el-row>
+
         </div>
       </el-card>
       <el-card class="box-card">
@@ -771,12 +789,13 @@ defineExpose({ showEdit });
             <div class="leftTitle font-s18">浏览器</div>
           </div>
         </template>
-        <div class="system-content">
-          <div>
-            <div
+        <div class="">
+          <el-row>
+            <el-col :span="7">
+              <div
               id="echarts2"
               ref="chart2Ref"
-              style="width: 100%; height: 18.625rem"
+              style="width: 80%; height: 18.625rem"
             />
             <el-radio-group v-model="data.type" @change="getType">
               <el-radio-button label="参与" value="size"></el-radio-button>
@@ -789,19 +808,18 @@ defineExpose({ showEdit });
                 value="settlementSize"
               ></el-radio-button>
             </el-radio-group>
-          </div>
-          <div>
-            <el-table
+            </el-col>
+            <el-col :span="1"></el-col>
+            <el-col :span="16">
+              <el-table
               border
               highlight-current-row
-              height="100%"
+
               :data="data.getProjectBrowserTypeInfoList"
               width="100%"
             >
               <el-table-column
-                prop="a1"
                 align="center"
-                width="120"
                 label="操作系统"
               >
                 <template #default="{ row }">
@@ -816,29 +834,21 @@ defineExpose({ showEdit });
                   >
                 </template>
               </el-table-column>
-              <el-table-column
-                prop="size"
-                align="center"
-                label="参与"
-                width="120"
-              >
+              <el-table-column prop="size" align="center" label="参与">
               </el-table-column>
-              <el-table-column
-                prop="successSize"
-                align="center"
-                label="完成"
-                width="120"
-              >
+              <el-table-column prop="successSize" align="center" label="完成">
               </el-table-column>
               <el-table-column
                 prop="settlementSize"
                 align="center"
                 label="审核通过"
-                width="120"
               >
               </el-table-column>
             </el-table>
-          </div>
+            </el-col>
+</el-row>
+
+
         </div>
       </el-card>
       <el-card class="box-card">
@@ -851,8 +861,12 @@ defineExpose({ showEdit });
               }}</span>
             </div>
             <div class="rightStatus">
-              <img src="@/assets/images/online.png" alt="" v-if="data.isOnline === 1">
-              <img src="@/assets/images/Offline.png" alt="" v-else>
+              <img
+                src="@/assets/images/online.png"
+                alt=""
+                v-if="data.isOnline === 1"
+              />
+              <img src="@/assets/images/Offline.png" alt="" v-else />
               <!-- <span
                 :class="
                   data.isOnline === 1 ? 'isOnlineSpanTrue' : 'isOnlineSpanFalse'
@@ -1074,11 +1088,21 @@ defineExpose({ showEdit });
           </el-col>
           <el-col :span="1"></el-col>
           <el-col :span="3.5">
-            <div  :class="data.form.isProfile === 2 ?'text-bg2' :'text-bgClose'">
-
-              资料 : <span >{{ data.form.isProfile === 2 ?'开启':'关闭' }}</span>
-              <img v-if="data.form.isProfile === 2" src="@/assets/images/open.png" style="width: 1rem;height: 1rem;margin-left: 0.3125rem;" />
-              <img v-else src="@/assets/images/close.png" style="width: 1rem;height: 1rem;margin-left: 0.3125rem;">
+            <div
+              :class="data.form.isProfile === 2 ? 'text-bg2' : 'text-bgClose'"
+            >
+              资料 :
+              <span>{{ data.form.isProfile === 2 ? "开启" : "关闭" }}</span>
+              <img
+                v-if="data.form.isProfile === 2"
+                src="@/assets/images/open.png"
+                style="width: 1rem; height: 1rem; margin-left: 0.3125rem"
+              />
+              <img
+                v-else
+                src="@/assets/images/close.png"
+                style="width: 1rem; height: 1rem; margin-left: 0.3125rem"
+              />
             </div>
           </el-col>
           <el-col :span="1"></el-col>
