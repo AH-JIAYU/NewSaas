@@ -51,7 +51,7 @@ const stripe = ref(false);
 const columns = ref([
   // { prop: "projectType", label: "项目类型", checked: true, sotrtable: true },
   { prop: "projectId", label: "项目ID", checked: true, sotrtable: true },
-  { prop: "name", label: "项目名称", checked: true, sotrtable: true },
+  { prop: "name", label: "项目名称/别名", checked: true, sotrtable: true },
   {
     prop: "clientName",
     label: "客户名称/标识",
@@ -93,7 +93,7 @@ const search = ref<any>({
   createName: "", // 	创建人-模糊查询
   allocation: "", // 	分配状态:1已经分配 2:未分配
   allocationStatus: [], // 	分配类型: 1:自动分配 2:供应商 3:部门
-   status: "", // 	项目状态:1在线 2:离线
+   status: 1, // 	项目状态:1在线 2:离线
 }); // 搜索
 
 const list = ref<any>([]);
@@ -237,7 +237,7 @@ function onReset() {
     createName: "", // 	创建人-模糊查询
     allocation: "", // 	分配状态:1已经分配 2:未分配
     allocationStatus: [], // 	分配类型: 1:自动分配 2:供应商 3:部门
-    status: "", // 	项目状态:1在线 2:离线
+    status: 1, // 	项目状态:1在线 2:离线
   };
   fetchData();
 }
@@ -305,7 +305,7 @@ onMounted(async () => {
       show: true,
       type: "input",
       modelName: "name",
-      placeholder: "项目名称",
+      placeholder: "项目名称/别名",
     },
     {
       index: 3,
