@@ -6,19 +6,21 @@ import ViewAllocation from "./components/ViewAllocation/index.vue";
 import QuickEdit from "./components/QuickEdit/index.vue"; //快速编辑
 import scheduling from "./components/Edit/index.vue"; //项目调度
 import outsource from "@/views/projectManagement/outsource/components/Edit/index.vue"; //项目外包
-import { ElMessage, ElMessageBox } from "element-plus";
+import { ElMessage } from "element-plus";
 import api from "@/api/modules/projectManagement";
 import apiOut from "@/api/modules/projectManagement_outsource";
 import { obtainLoading, submitLoading } from "@/utils/apiLoading";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
 import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
 import useProjectManagementListStore from "@/store/modules/projectManagement_list"; // 项目
+import useDepartmentStore from '@/store/modules/department'
 import empty from "@/assets/images/empty.png";
-import storage from "@/utils/storage";
 
 defineOptions({
   name: "list",
 });
+
+const departmentStore = useDepartmentStore()
 // 时间
 const { format } = useTimeago();
 const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
@@ -352,6 +354,17 @@ onMounted(async () => {
       optionValue: "value",
       multiple: true,
     },
+    {
+      index: 6,
+      show: true,
+      type: "select",
+      modelName: "structureIdList",
+      placeholder: "部门",
+      option: "structureIdList",
+      optionLabel: "name",
+      optionValue: "id",
+      multiple: true,
+    },
     // {
     //   index: 7,
     //   show: true,
@@ -406,6 +419,7 @@ const formOption = {
     { label: "内部站", value: 3 },
     { label: "合作商", value: 4 },
   ],
+  structureIdList: async () => await departmentStore.getDepartment(),
   status: () => [
     { label: "在线", value: 1 },
     { label: "离线", value: 2 },

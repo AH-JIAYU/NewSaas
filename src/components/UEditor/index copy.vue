@@ -107,7 +107,6 @@ const init = {
         type: "error",
         duration: 5 * 1000,
       });
-      console.log("上传文件大小不得超过200M 当前文件" + cur_size + "M ");
       return false;
     }
     // 创建 FormData 对象
