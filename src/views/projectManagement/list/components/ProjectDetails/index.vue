@@ -22,6 +22,10 @@ import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDiction
 import useUserCustomerStore from "@/store/modules/user_customer";
 import asteriskImage from "@/assets/images/asterisk.png";
 import * as echarts from "echarts";
+// 导入图片
+import word from "@/assets/images/uploadFile/word.png";
+import xlsx from "@/assets/images/uploadFile/xlsx.png";
+import pdf from "@/assets/images/uploadFile/pdf.png";
 defineOptions({
   name: "ProjectDetails",
 });
@@ -140,7 +144,11 @@ const typePriData = [
     settlementSizeRate: 0,
   },
 ];
-
+// 定义一个正则表达式来匹配文件扩展名
+const getFileExtension = (filename: any) => {
+  const match = filename.match(/\.([a-zA-Z0-9]+)$/); // 提取文件名末尾的扩展名
+  return match ? match[1] : "";
+};
 // 弹框开关变量
 const dialogTableVisible = ref(false);
 // 显隐
@@ -279,6 +287,13 @@ async function showEdit(row: any, projectType: any) {
     res.data.projectSettlementStatusSet.length > 0
       ? res.data.projectSettlementStatusSet[0].settlementStatus
       : 0;
+      const extensionMap: { [key: string]: string } = {
+          doc: word,
+          docx: word,
+          xls: xlsx,
+          xlsx: xlsx,
+          pdf: pdf,
+        };
   data.value.form.projectSettlementStatusSet =
     data.value.form.projectSettlementStatusSet
       .reduce((accumulator: any, currentValue: any) => {
@@ -299,7 +314,7 @@ async function showEdit(row: any, projectType: any) {
           fileName: item,
         });
         data.value.imgUrl.push(imgres.data.fileUrl);
-        data.value.srcList.push(imgres.data.fileUrl);
+        data.value.srcList.push(extensionMap[getFileExtension(item)] ?extensionMap[getFileExtension(item)]:     imgres.data.fileUrl);
       }
     });
   }
@@ -1334,7 +1349,7 @@ defineExpose({ showEdit });
           </div>
         </template>
         <template v-if="data.form.descriptionUrl">
-          <!-- <div
+          <div
             v-for="item in data.srcList"
             :key="item"
             class="demo-image__preview"
@@ -1349,7 +1364,7 @@ defineExpose({ showEdit });
               :initial-index="0"
               fit="cover"
             />
-          </div> -->
+          </div>
           <div v-for="(item, index) in imgList" :key="item">
             <div class="i-f7:doc-text w-1rem h-1rem"></div>
             <el-button
