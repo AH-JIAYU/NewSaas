@@ -163,6 +163,9 @@ onMounted(async () => {
                 clearable
                 :multiple="item.multiple? true :false"
                 filterable
+                collapse-tags
+                collapse-tags-tooltip
+                :max-collapse-tags="2"
                 :placeholder="item.placeholder"
                 @change="currentChange()"
               >
