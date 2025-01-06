@@ -246,12 +246,12 @@ async function onSubmit() {
       params.operatingSystem = params.operatingSystem.join(",");
       setTimeout(async () => {
         if (!params.endAge || !params.startAge) {
-        ElMessage.warning({
-          message: "年龄区间未填写完整",
-          center: true,
-        });
-        return;
-      }
+          ElMessage.warning({
+            message: "年龄区间未填写完整",
+            center: true,
+          });
+          return;
+        }
         if (title.value === "新增") {
           params.memberPrice = (
             params.doMoneyPrice * params.exchangeRate

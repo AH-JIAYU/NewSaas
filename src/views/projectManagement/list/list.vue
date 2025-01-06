@@ -315,6 +315,13 @@ onMounted(async () => {
       placeholder: "项目标识",
     },
     {
+      index: 3,
+      show: true,
+      type: "input",
+      modelName: "projectAlias",
+      placeholder: "项目别名",
+    },
+    {
       index: 4,
       show: true,
       type: "select",
@@ -564,7 +571,7 @@ const formOption = {
           show-overflow-tooltip
           prop="name"
           align="left"
-          label="名称/标识"
+          label="名称/别名"
           width="220"
           ><template #default="{ row }">
             <div class="flex-c">
@@ -579,7 +586,7 @@ const formOption = {
                   class="oneLine"
                   style="color: #333333"
                 >
-                  <span>{{ row.clientName.split("/")[1] }}</span>
+                  <span>{{ row.projectAlias }}</span>
                 </div>
               </div>
               <SvgIcon
