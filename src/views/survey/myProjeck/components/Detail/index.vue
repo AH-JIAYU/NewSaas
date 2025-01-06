@@ -7,7 +7,10 @@ import api from "@/api/modules/survey_myProjeck";
 import fileApi from '@/api/modules/file'
 import DownLoad from '@/utils/download'
 import empty from '@/assets/images/empty.png'
-
+// 导入图片
+import word from "@/assets/images/uploadFile/word.png";
+import xlsx from "@/assets/images/uploadFile/xlsx.png";
+import pdf from "@/assets/images/uploadFile/pdf.png";
 const loadingDisible = ref<boolean>(false)
 const title = ref<string>('')
 const form = ref<any>({})
@@ -15,7 +18,11 @@ const imgUrl = ref<any>([])
 const srcList = ref<any>([])
 const pictureList = ref<any>([])
 const loading = ref(false)
-
+// 定义一个正则表达式来匹配文件扩展名
+const getFileExtension = (filename: any) => {
+  const match = filename.match(/\.([a-zA-Z0-9]+)$/); // 提取文件名末尾的扩展名
+  return match ? match[1] : "";
+};
 // 回显
 async function showEdit(row: any) {
   try {
@@ -25,20 +32,44 @@ async function showEdit(row: any) {
       loading.value = true
       const res = await api.getQuotaProjectInfo({ projectId: row.projectId })
       form.value = res.data
-      if (form.value.descriptionUrl !== '') {
-        const urlArr = form.value.descriptionUrl.split(',');
-        srcList.value = urlArr
-        const url = [".jpg", ".jpeg", ".png", ".gif"]
+      if (form.value.descriptionUrl !== "") {
+        const urlArr = form.value.descriptionUrl.split(",");
+        srcList.value = urlArr;
+
+        const extensionMap: { [key: string]: string } = {
+          doc: word,
+          docx: word,
+          xls: xlsx,
+          xlsx: xlsx,
+          pdf: pdf,
+        };
         urlArr.map(async (item: any) => {
           const imgres: any = await fileApi.detail({
             fileName: item,
-          })
-          if (url.some(extension => imgres.data.fileUrl.includes(extension))) {
-            pictureList.value.push(imgres.data.fileUrl);
-          }
-          imgUrl.value.push(imgres.data.fileUrl)
-        })
+          });
+          let obj = {
+            src: extensionMap[getFileExtension(item)] ?extensionMap[getFileExtension(item)]:     imgres.data.fileUrl,
+            src1:imgres.data.fileUrl,
+            name: getFileExtension(item),
+          };
+          pictureList.value.push(obj);
+          imgUrl.value.push(extensionMap[getFileExtension(item)] ?extensionMap[getFileExtension(item)]:     imgres.data.fileUrl);
+        });
       }
+      // if (form.value.descriptionUrl !== '') {
+      //   const urlArr = form.value.descriptionUrl.split(',');
+      //   srcList.value = urlArr
+      //   const url = [".jpg", ".jpeg", ".png", ".gif"]
+      //   urlArr.map(async (item: any) => {
+      //     const imgres: any = await fileApi.detail({
+      //       fileName: item,
+      //     })
+      //     if (url.some(extension => imgres.data.fileUrl.includes(extension))) {
+      //       pictureList.value.push(imgres.data.fileUrl);
+      //     }
+      //     imgUrl.value.push(imgres.data.fileUrl)
+      //   })
+      // }
       srcList.value = imgUrl.value
       loading.value = false
     }
@@ -81,6 +112,52 @@ defineExpose({
   <div v-loading="loading">
     <el-dialog v-model="loadingDisible" append-to-body :close-on-click-modal="false" destroy-on-close :title="title"
       draggable width="50%" @close="close">
+      <div class="titleClass" v-if="form.descriptionUrl">图片/文件</div>
+      <div
+        v-if="form.descriptionUrl"
+        class="demo-image__preview"
+        style="display: flex"
+      >
+        <div v-for="(item, index) in pictureList" :key="index">
+          <el-image
+            style="width: 6.25rem; height: 6.25rem; margin-right: 15px"
+            :src="item.src"
+            :preview-src-list="srcList"
+            :zoom-rate="1.2"
+            :max-scale="7"
+            :min-scale="0.2"
+            :initial-index="index"
+            fit="cover"
+          />
+          <!-- 图片名称和下载按钮 -->
+          <div class="image-info">
+            <div class="i-f7:doc-text w-1rem h-1rem"></div>
+            <el-link
+              style="padding: 0; margin: 0"
+              :underline="false"
+              type="primary"
+              @click="download(item.src1)"
+              >{{ item.name }}下载</el-link
+            >
+          </div>
+        </div>
+      </div>
+      <el-row
+        :gutter="20"
+        :class="{ isNone: !form.descriptionUrl && !form.richText }"
+      >
+        <el-col :span="24">
+          <div class="titleClass">描述</div>
+          <div class="radius flex gap-2 p-2">
+            <Viewer :value="form.richText" v-if="form.richText"/>
+          </div>
+        </el-col>
+      </el-row>
+
+
+
+
+      <!-- <div class="titleClass">图片/文件</div>
       <div v-if="form.descriptionUrl" class="demo-image__preview">
         <el-image v-for="(item, index) in pictureList" :key="index"
           style="width: 6.25rem; height: 6.25rem; margin-right: 5px;" :src="item" :preview-src-list="pictureList"
@@ -98,7 +175,7 @@ defineExpose({
             <Viewer :value="form.richText" />
           </div>
         </el-col>
-      </el-row>
+      </el-row>-->
       <template v-if="!form.descriptionUrl && !form.richText">
         <el-empty :image="empty" :image-size="300" />
       </template>
@@ -107,6 +184,17 @@ defineExpose({
 </template>
 
 <style scoped lang="scss">
+.titleClass {
+  font-family: Source Han Sans CN, Source Han Sans CN;
+  font-weight: 500;
+  font-size: 18px;
+  color: #333333;
+  line-height: 21px;
+  text-align: left;
+  font-style: normal;
+  text-transform: none;
+  margin-bottom: 16px;
+}
 .radius {
   width: 100%;
   min-height: 160px;
