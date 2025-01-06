@@ -287,13 +287,13 @@ async function showEdit(row: any, projectType: any) {
     res.data.projectSettlementStatusSet.length > 0
       ? res.data.projectSettlementStatusSet[0].settlementStatus
       : 0;
-      const extensionMap: { [key: string]: string } = {
-          doc: word,
-          docx: word,
-          xls: xlsx,
-          xlsx: xlsx,
-          pdf: pdf,
-        };
+  const extensionMap: { [key: string]: string } = {
+    doc: word,
+    docx: word,
+    xls: xlsx,
+    xlsx: xlsx,
+    pdf: pdf,
+  };
   data.value.form.projectSettlementStatusSet =
     data.value.form.projectSettlementStatusSet
       .reduce((accumulator: any, currentValue: any) => {
@@ -308,15 +308,28 @@ async function showEdit(row: any, projectType: any) {
       .sort((a: any, b: any) => a.settlementStatus - b.settlementStatus);
   imgList.value = data.value.form.descriptionUrl.split(",");
   if (imgList.value.length) {
-    imgList.value.forEach(async (item: any) => {
+    for (let item of imgList.value) {
       if (item) {
         const imgres: any = await fileApi.detail({
           fileName: item,
         });
         data.value.imgUrl.push(imgres.data.fileUrl);
-        data.value.srcList.push(extensionMap[getFileExtension(item)] ?extensionMap[getFileExtension(item)]:     imgres.data.fileUrl);
+        data.value.srcList.push(
+          extensionMap[getFileExtension(item)]
+            ? extensionMap[getFileExtension(item)]
+            : imgres.data.fileUrl
+        );
       }
-    });
+    }
+    // imgList.value.forEach(async (item: any) => {
+    //   if (item) {
+    //     const imgres: any = await fileApi.detail({
+    //       fileName: item,
+    //     });
+    //     data.value.imgUrl.push(imgres.data.fileUrl);
+    //     data.value.srcList.push(extensionMap[getFileExtension(item)] ?extensionMap[getFileExtension(item)]:     imgres.data.fileUrl);
+    //   }
+    // });
   }
   getCountryQuestion();
   dialogTableVisible.value = true;
@@ -817,37 +830,40 @@ defineExpose({ showEdit });
             <el-col :span="16">
               <div style="height: 300px" class="echart-table">
                 <el-table
-                border
-                highlight-current-row
-                :data="data.getProjectBrowserTypeInfoList"
-                width="100%"
-              >
-                <el-table-column align="center" label="操作系统">
-                  <template #default="{ row }">
-                    <span
-                      :style="{
-                        background: row.color,
-                        padding: '0.85rem',
-                        borderRadius: '1rem',
-                        color: 'white',
-                      }"
-                      >{{ row.type }}</span
-                    >
-                  </template>
-                </el-table-column>
-                <el-table-column prop="size" align="center" label="参与">
-                </el-table-column>
-                <el-table-column prop="successSize" align="center" label="完成">
-                </el-table-column>
-                <el-table-column
-                  prop="settlementSize"
-                  align="center"
-                  label="审核通过"
+                  border
+                  highlight-current-row
+                  :data="data.getProjectBrowserTypeInfoList"
+                  width="100%"
                 >
-                </el-table-column>
-              </el-table>
+                  <el-table-column align="center" label="操作系统">
+                    <template #default="{ row }">
+                      <span
+                        :style="{
+                          background: row.color,
+                          padding: '0.85rem',
+                          borderRadius: '1rem',
+                          color: 'white',
+                        }"
+                        >{{ row.type }}</span
+                      >
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="size" align="center" label="参与">
+                  </el-table-column>
+                  <el-table-column
+                    prop="successSize"
+                    align="center"
+                    label="完成"
+                  >
+                  </el-table-column>
+                  <el-table-column
+                    prop="settlementSize"
+                    align="center"
+                    label="审核通过"
+                  >
+                  </el-table-column>
+                </el-table>
               </div>
-
             </el-col>
           </el-row>
         </div>
@@ -1431,7 +1447,7 @@ defineExpose({ showEdit });
 </template>
 
 <style scoped lang="scss">
-:deep(.echart-table .el-table__body){
+:deep(.echart-table .el-table__body) {
   height: 18.125rem !important;
 }
 .box-card {

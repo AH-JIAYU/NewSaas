@@ -43,7 +43,7 @@ async function showEdit(row: any) {
           xlsx: xlsx,
           pdf: pdf,
         };
-        urlArr.map(async (item: any) => {
+        for (let item of urlArr) {
           const imgres: any = await fileApi.detail({
             fileName: item,
           });
@@ -54,7 +54,21 @@ async function showEdit(row: any) {
           };
           pictureList.value.push(obj);
           imgUrl.value.push(extensionMap[getFileExtension(item)] ?extensionMap[getFileExtension(item)]:     imgres.data.fileUrl);
-        });
+
+        }
+        // urlArr.map( async(item: any) => {
+        //   const imgres: any = await fileApi.detail({
+        //     fileName: item,
+        //   });
+        //   let obj = {
+        //     src: extensionMap[getFileExtension(item)] ?extensionMap[getFileExtension(item)]:     imgres.data.fileUrl,
+        //     src1:imgres.data.fileUrl,
+        //     name: getFileExtension(item),
+        //   };
+        //   pictureList.value.push(obj);
+        //   imgUrl.value.push(extensionMap[getFileExtension(item)] ?extensionMap[getFileExtension(item)]:     imgres.data.fileUrl);
+
+        // });
       }
       // if (form.value.descriptionUrl !== '') {
       //   const urlArr = form.value.descriptionUrl.split(',');
