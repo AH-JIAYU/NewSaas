@@ -130,9 +130,9 @@ defineExpose({
       <div
         v-if="form.descriptionUrl"
         class="demo-image__preview"
-        style="display: flex"
+        style="display: flex;flex-wrap: wrap;  "
       >
-        <div v-for="(item, index) in pictureList" :key="index">
+        <div v-for="(item, index) in pictureList" :key="index" style="margin-bottom: .8125rem;">
           <el-image
             style="width: 6.25rem; height: 6.25rem; margin-right: 15px"
             :src="item.src"
