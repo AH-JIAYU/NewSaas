@@ -648,8 +648,8 @@ function handleCurrentChange(val: any) {
           align="left"
           prop="customerShortName"
           show-overflow-tooltip
-
           label="客户简称"
+           width="180"
         >
           <!-- 乙方显示甲方公司名称甲方显示客户简称 -->
           <template #default="{ row }">
