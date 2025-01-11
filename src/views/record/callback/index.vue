@@ -206,7 +206,7 @@ const formOption={
         </el-table-column>
         <el-table-column v-if="checkList.includes('callbackStatus')" align="left" prop="callbackStatus"
           show-overflow-tooltip label="回调状态"><template #default="{ row }">
-            <el-text >{{ callbackStatus[row.callbackStatus - 1].label  }}</el-text>
+            <el-text >{{ row.callbackStatus ? callbackStatus[row.callbackStatus - 1].label:''  }}</el-text>
           </template>
         </el-table-column>
         <template #empty>
