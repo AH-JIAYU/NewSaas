@@ -42,11 +42,18 @@ const columns = ref([
   { prop: "subordinateUrl", label: "下级URL", sortable: true, checked: true },
   { prop: "sourceUrl", label: "客户URL来源", sortable: true, checked: true },
   { prop: "callbackTime", label: "回调时间", sortable: true, checked: true },
+  { prop: "callbackStatus", label: "回调状态", sortable: true, checked: true },
 ]);
 // 会员类型
 const memberType = [
   { label: "内部会员", value: 1 },
   { label: "外部会员", value: 2 },
+];
+//回调状态1:成功 2:回调id不对 3:加密hash不对
+const callbackStatus = [
+  { label: "成功", value: 1 },
+  { label: "回调id不对", value: 2 },
+  { label: "加密hash不对", value: 2 },
 ];
 const queryForm = reactive<any>({
   // 请求接口携带参数
@@ -195,6 +202,11 @@ const formOption={
         <el-table-column v-if="checkList.includes('callbackTime')" align="left" prop="callbackTime"
           show-overflow-tooltip label="回调时间"><template #default="{ row }">
             <el-tag effect="plain" type="info">{{ format(row.callbackTime) }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column v-if="checkList.includes('callbackStatus')" align="left" prop="callbackStatus"
+          show-overflow-tooltip label="回调状态"><template #default="{ row }">
+            <el-text >{{ callbackStatus[row.callbackStatus - 1].label  }}</el-text>
           </template>
         </el-table-column>
         <template #empty>
