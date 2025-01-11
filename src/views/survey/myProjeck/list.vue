@@ -181,7 +181,9 @@ const copyUrl = (text: any) => {
 //表格当前选中
 const current = ref<any>()
 function handleCurrentChange(val: any) {
-  current.value = val.projectId
+  if(val) {
+    current.value = val.projectId
+  }
 }
 // 具体的位置信息
 const comCountryId = computed(() => (countryIdList: any) => {
