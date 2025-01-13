@@ -193,6 +193,8 @@ const getAssetsImages = (fileName: any, type = "png") => {
   if (modules[path]) return modules[path].default;
   else {
     // 地址错误
+    const path2 = `/src/assets/images/redirect/100.png`;
+    return modules[path2].default;
     console.error("Error url is wrong path");
   }
 };
