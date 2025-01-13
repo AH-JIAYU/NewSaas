@@ -128,7 +128,7 @@ function handleDelete(row: any) {
 // 查询
 const queryForm = reactive<any>({
   customerShortName: "",
-  customerStatus: null,
+  customerStatus: 2,
   antecedentQuestionnaire: null,
 });
 // 获取PM/用户
@@ -148,7 +148,7 @@ function currentChange(page = 1) {
 function onReset() {
   Object.assign(queryForm, {
     customerShortName: "",
-    customerStatus: null,
+    customerStatus: 2,
     antecedentQuestionnaire: null,
   });
   queryData();
