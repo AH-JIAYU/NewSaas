@@ -65,7 +65,7 @@ const queryForm = ref<any>({
   tenantSupplierId: "", //供应商ID
   b2bStatus: "", //B2B
   memberChildGroupName: "", //部门
-  memberChildStatus: "", //子会员状态
+  memberChildStatus: 2, //子会员状态
   createUserName: "", //创建人
   time: [], //创建日期
 });
@@ -136,7 +136,7 @@ function queryData() {
     tenantSupplierId: "", //供应商ID
     b2bStatus: "", //B2B
     memberChildGroupName: "", //部门
-    memberChildStatus: "", //子会员状态
+    memberChildStatus: 2, //子会员状态
     createUserName: "", //创建人
     time: [], //创建日期
   });
