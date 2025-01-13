@@ -96,7 +96,7 @@ const userForm = ref<any>({
     limit: 10,
     id: "" as Dict["id"],
     userName: "",
-    active: null,
+    active: true,
     departmentId: null,
   },
   // 列表数据
@@ -298,7 +298,7 @@ function onReset() {
     id: "" as Dict["id"],
     userName: "",
     departmentId: null,
-    active: null,
+    active: true,
   });
   getUserList();
 }

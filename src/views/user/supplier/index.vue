@@ -99,7 +99,7 @@ const queryForm = reactive<any>({
   supplierAccord: "", // 供应商名称-模糊查询
   emailAddress: "", // 	电子邮箱
   accountName: "", // 	账户名称
-  supplierStatus: [], // 	供应商状态:1:关闭 2:开启 3:待审核
+  supplierStatus: [2], // 	供应商状态:1:关闭 2:开启 3:待审核
   time: [], // 时间日期选择器
 });
 
@@ -202,7 +202,7 @@ function onReset() {
     supplierAccord: "", // 供应商名称-模糊查询
     emailAddress: "", // 	电子邮箱
     accountName: "", // 	账户名称
-    supplierStatus: [], // 	供应商状态:1:关闭 2:开启 3:待审核
+    supplierStatus: [2], // 	供应商状态:1:关闭 2:开启 3:待审核
     time: [], // 时间日期选择器
   });
   fetchData();
