@@ -95,7 +95,8 @@ const search = ref<any>({
   createName: "", // 	创建人-模糊查询
   allocation: "", // 	分配状态:1已经分配 2:未分配
   allocationStatus: [], // 	分配类型: 1:自动分配 2:供应商 3:部门
-   status: 1, // 	项目状态:1在线 2:离线
+  status: 1, // 	项目状态:1在线 2:离线
+  departmentProject: 1, //1查所有2部门
 }); // 搜索
 
 const list = ref<any>([]);
@@ -240,6 +241,7 @@ function onReset() {
     allocation: "", // 	分配状态:1已经分配 2:未分配
     allocationStatus: [], // 	分配类型: 1:自动分配 2:供应商 3:部门
     status: 1, // 	项目状态:1在线 2:离线
+    departmentProject: 1, //1查所有2部门
   };
   fetchData();
 }
@@ -257,6 +259,11 @@ async function fetchData() {
     if (search.value.time && !!search.value.time.length) {
       params.beginTime = search.value.time[0] || "";
       params.endTime = search.value.time[1] || "";
+    }
+    if(checked1.value) {
+      params.departmentProject = 2
+    }else {
+      params.departmentProject = 1
     }
     const { data } = await api.list(params);
     countryType.value = data.currencyType;
@@ -437,6 +444,10 @@ const formOption = {
     { label: "离线", value: 2 },
   ],
 };
+const checked1 = ref<any>()
+const handleChange = () => {
+  fetchData();
+}
 </script>
 
 <template>
@@ -464,6 +475,7 @@ const formOption = {
           <el-button type="primary" size="default" @click="dispatch" v-auth="'/list-get-addProjectDispatch'">
             调度
           </el-button>
+          <el-checkbox style="margin-left:12px;" v-model="checked1" label="查询本部门项目列表" size="large" @change="handleChange" />
         </FormLeftPanel>
         <FormRightPanel>
           <el-button size="default" @click=""> 导出 </el-button>
