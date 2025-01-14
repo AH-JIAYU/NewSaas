@@ -45,17 +45,17 @@ api.interceptors.response.use(
      * 规则是当 status 为 1 时表示请求成功，为 0 时表示接口需要登录或者登录状态失效，需要重新登录
      * 请求出错时 error 会返回错误信息
      */
+    // console.log(response,'response')
     if (response.data.status === 1) {
       return Promise.resolve(response.data);
     } else if (response.data.status === -1) {
       debounceMsg('error', response.data.error, 4000)
       return Promise.reject(response.data);
     } else if (response.data.status === 0) {
-      // 赵改不了文字由前端做判断，显示对应提示
-      if (response.data.error === 'INVALID_TOKEN') {
+      if (response.data.error === 'token 无效') {
         debounceMsg('warning', '账号登录过期', 2000)
         useUserStore().logout(response.data.status);
-      } else if (response.data.error === 'KICK_OUT') {
+      } else if (response.data.error === 'token 已被顶下线') {
         debounceMsg('warning', '该账号已在别处登录', 2000)
         useUserStore().logout(response.data.status, 'login');
       } else {
