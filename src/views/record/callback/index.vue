@@ -50,11 +50,12 @@ const memberType = [
   { label: "外部会员", value: 2 },
 ];
 //回调状态1:成功 2:回调id不对 3:加密hash不对
-const callbackStatus = [
-  {label:"全部",value:0},
-  { label: "成功", value: 1 , type:"success"},
-  { label: "回调id不对", value: 2 , type:"warning"},
-  { label: "加密hash不对", value: 3 ,type:"danger"},
+type TagType = "success" | "warning" | "info" | "primary"| "danger";
+const callbackStatus: { label: string; value: number; type: TagType }[] = [
+  { label: "全部", value: 0, type:"info" },
+  { label: "成功", value: 1, type: "success" },
+  { label: "回调id不对", value: 2, type: "warning" },
+  { label: "加密hash不对", value: 3, type: "danger" },
 ];
 const queryForm = reactive<any>({
   // 请求接口携带参数
@@ -66,7 +67,7 @@ const queryForm = reactive<any>({
   projectName: "", //	项目名称
   memberChildId: "", //	子会员id/会员id
   tenantSupplierId: "", //	供应商id
-  callbackStatus:0,//回调状态
+  callbackStatus: 0,//回调状态
 });
 
 // 每页数量切换
@@ -116,7 +117,7 @@ function onReset() {
     projectName: "", //	项目名称
     memberChildId: "", //	子会员id/会员id
     tenantSupplierId: "", //	供应商id
-    callbackStatus:0,//回调状态
+    callbackStatus: 0,//回调状态
   });
   fetchData();
 }
@@ -172,7 +173,7 @@ const formOption = {
             {{
               row.projectQuestionnaireClickId
                 ? row.projectQuestionnaireClickId
-            : "-"
+                : "-"
             }}
           </template>
         </el-table-column>
@@ -208,8 +209,10 @@ const formOption = {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('callbackStatus')" align="left" prop="callbackStatus"
-          show-overflow-tooltip label="回调状态"><template #default="{ row }">
-            <el-tag v-if="row.callbackStatus && callbackStatus[row.callbackStatus]" :type="callbackStatus[row.callbackStatus].type">
+          show-overflow-tooltip label="回调状态">
+          <template #default="{ row }">
+            <el-tag v-if="row.callbackStatus && callbackStatus[row.callbackStatus]"
+              :type="callbackStatus[row.callbackStatus].type">
               {{ callbackStatus[row.callbackStatus].label }}
             </el-tag>
           </template>
