@@ -19,7 +19,7 @@ const stripe = ref(false); // 表格控件-是否展示斑马条
 const lineHeight = ref<any>("default"); // 表格控件-控制表格大小
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const formSearchList = ref<any>()//表单排序配置
-const formSearchName=ref<string>('formSearch-callback')// 表单排序name
+const formSearchName = ref<string>('formSearch-callback')// 表单排序name
 const columns = ref([
   // 表格控件-展示列
   {
@@ -51,9 +51,10 @@ const memberType = [
 ];
 //回调状态1:成功 2:回调id不对 3:加密hash不对
 const callbackStatus = [
-  { label: "成功", value: 1 },
-  { label: "回调id不对", value: 2 },
-  { label: "加密hash不对", value: 2 },
+  {label:"全部",value:0},
+  { label: "成功", value: 1 , type:"success"},
+  { label: "回调id不对", value: 2 , type:"warning"},
+  { label: "加密hash不对", value: 3 ,type:"danger"},
 ];
 const queryForm = reactive<any>({
   // 请求接口携带参数
@@ -65,6 +66,7 @@ const queryForm = reactive<any>({
   projectName: "", //	项目名称
   memberChildId: "", //	子会员id/会员id
   tenantSupplierId: "", //	供应商id
+  callbackStatus:0,//回调状态
 });
 
 // 每页数量切换
@@ -114,6 +116,7 @@ function onReset() {
     projectName: "", //	项目名称
     memberChildId: "", //	子会员id/会员id
     tenantSupplierId: "", //	供应商id
+    callbackStatus:0,//回调状态
   });
   fetchData();
 }
@@ -129,24 +132,27 @@ onMounted(async () => {
   });
   fetchData();
   formSearchList.value = [
-    {index: 1, show: true, type: 'input', modelName: 'tenantSupplierId', placeholder: '供应商ID'},
-    {index: 2, show: true, type: 'input', modelName: 'projectId', placeholder: '项目ID'},
-    {index: 3, show: true, type: 'input', modelName: 'projectQuestionnaireClickId', placeholder: '点击ID'},
-    {index: 4, show: true, type: 'select', modelName: 'surveySource', placeholder: '会员类型', option: 'surveySource', optionLabel: 'label', optionValue: 'value'},
-    {index: 5, show: true, type: 'input', modelName: 'projectName', placeholder: '项目名称'},
-    {index: 6, show: true, type: 'input', modelName: 'memberChildId', placeholder: '子会员ID/会员ID'},
-    {index: 7, show: true, type: 'datetimerange', modelName: 'time', startPlaceHolder: "创建开始日期", endPlaceHolder: "创建结束日期"}
-]
+    { index: 3, show: true, type: 'input', modelName: 'projectQuestionnaireClickId', placeholder: '点击ID' },
+    { index: 1, show: true, type: 'input', modelName: 'tenantSupplierId', placeholder: '供应商ID' },
+    { index: 2, show: true, type: 'input', modelName: 'projectId', placeholder: '项目ID' },
+    { index: 4, show: true, type: 'select', modelName: 'surveySource', placeholder: '会员类型', option: 'surveySource', optionLabel: 'label', optionValue: 'value' },
+    { index: 5, show: true, type: 'input', modelName: 'projectName', placeholder: '项目名称' },
+    { index: 6, show: true, type: 'input', modelName: 'memberChildId', placeholder: '子会员ID/会员ID' },
+    { index: 7, show: true, type: 'select', modelName: 'callbackStatus', placeholder: '回调状态', option: 'callbackStatus', optionLabel: 'label', optionValue: 'value' },
+    { index: 8, show: true, type: 'datetimerange', modelName: 'time', startPlaceHolder: "开始日期", endPlaceHolder: "结束日期" }
+  ]
 });
-const formOption={
-  surveySource:()=> memberType
+const formOption = {
+  surveySource: () => memberType,
+  callbackStatus: () => callbackStatus,
 }
 </script>
 
 <template>
   <div :class="{ 'absolute-container': tableAutoHeight }">
     <PageMain>
-      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="queryForm"  :formOption="formOption" />
+      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange"
+        @onReset="onReset" :model="queryForm" :formOption="formOption" />
       <ElDivider border-style="dashed" />
       <el-row>
         <FormLeftPanel />
@@ -164,38 +170,35 @@ const formOption={
           prop="projectQuestionnaireClickId" show-overflow-tooltip label="点击ID">
           <template #default="{ row }">
             {{
-    row.projectQuestionnaireClickId
-      ? row.projectQuestionnaireClickId
-      : "-"
-  }}
+              row.projectQuestionnaireClickId
+                ? row.projectQuestionnaireClickId
+            : "-"
+            }}
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('customerShortName')" align="left" prop="surveySource"
-          show-overflow-tooltip label="会员类型" width="100"><template #default="{ row }">
-            {{ memberType[row.surveySource - 1].label }}
+        <el-table-column label="项目" width="300" align="center">
+          <template #default="{ row }">
+            {{ row.customerShortName }} <br />
+            {{ row.projectName }} <br />
+            {{ row.projectId }}
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('customerShortName')" align="left" prop="customerShortName"
-          show-overflow-tooltip label="客户简称" />
-        <el-table-column v-if="checkList.includes('memberChildId')" align="left" show-overflow-tooltip
+        <el-table-column v-if="checkList.includes('memberChildId')" align="center" show-overflow-tooltip
           label="子会员ID/会员ID">
           <template #default="{ row }">
+            <p>{{ memberType[row.surveySource - 1].label }}</p>
             {{ row.memberChildId }} <br />
             {{ row.randomIdentityId }}
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('projectId')" align="left" prop="projectId" show-overflow-tooltip
-          label="项目ID" />
-        <el-table-column v-if="checkList.includes('projectName')" align="left" prop="projectName"
-          show-overflow-tooltip label="项目名称" />
         <el-table-column v-if="checkList.includes('callbackUrl')" align="left" prop="callbackUrl" label="回调URL" />
         <el-table-column v-if="checkList.includes('subordinateUrl')" align="left" prop="subordinateUrl"
           label="下级URL"><template #default="{ row }">
             {{ row.subordinateUrl ? row.subordinateUrl : '-' }}
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('sourceUrl')" align="left" prop="sourceUrl"
-          label="客户URL来源"><template #default="{ row }">
+        <el-table-column v-if="checkList.includes('sourceUrl')" align="left" prop="sourceUrl" label="客户URL来源"><template
+            #default="{ row }">
             {{ row.sourceUrl ? row.sourceUrl : '-' }}
           </template>
         </el-table-column>
@@ -206,11 +209,13 @@ const formOption={
         </el-table-column>
         <el-table-column v-if="checkList.includes('callbackStatus')" align="left" prop="callbackStatus"
           show-overflow-tooltip label="回调状态"><template #default="{ row }">
-            <el-text >{{ row.callbackStatus ? callbackStatus[row.callbackStatus - 1].label:''  }}</el-text>
+            <el-tag v-if="row.callbackStatus && callbackStatus[row.callbackStatus]" :type="callbackStatus[row.callbackStatus].type">
+              {{ callbackStatus[row.callbackStatus].label }}
+            </el-tag>
           </template>
         </el-table-column>
         <template #empty>
-            <el-empty :image="empty" :image-size="300" />
+          <el-empty :image="empty" :image-size="300" />
         </template>
       </el-table>
       <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
