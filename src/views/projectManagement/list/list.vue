@@ -13,14 +13,14 @@ import { obtainLoading, submitLoading } from "@/utils/apiLoading";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
 import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
 import useProjectManagementListStore from "@/store/modules/projectManagement_list"; // 项目
-import useDepartmentStore from '@/store/modules/department'
+import useDepartmentStore from "@/store/modules/department";
 import empty from "@/assets/images/empty.png";
 
 defineOptions({
   name: "list",
 });
 
-const departmentStore = useDepartmentStore()
+const departmentStore = useDepartmentStore();
 // 时间
 const { format } = useTimeago();
 const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
@@ -97,6 +97,7 @@ const search = ref<any>({
   allocationStatus: [], // 	分配类型: 1:自动分配 2:供应商 3:部门
   status: 1, // 	项目状态:1在线 2:离线
   departmentProject: 1, //1查所有2部门
+  structureIdList:[]
 }); // 搜索
 
 const list = ref<any>([]);
@@ -156,7 +157,7 @@ async function changeStatus(row: any, val: any) {
         type: 4, //取消接收
         idList: [row.projectId],
       };
-      const msg = row.isOnline == 1?'接收成功':'取消接收成功'
+      const msg = row.isOnline == 1 ? "接收成功" : "取消接收成功";
       const { status } = await apiOut.updateReceiveStatus(params);
       status === 1 &&
         ElMessage.success({
@@ -212,7 +213,7 @@ function outsourceDetails(row: any) {
 function viewAllocations(row: any) {
   const params = {
     projectId: row.projectId,
-    type:row.allocationType,
+    type: row.allocationType,
   };
   viewAllocationsRef.value.showEdit(params);
 }
@@ -242,11 +243,61 @@ function onReset() {
     allocationStatus: [], // 	分配类型: 1:自动分配 2:供应商 3:部门
     status: 1, // 	项目状态:1在线 2:离线
     departmentProject: 1, //1查所有2部门
+    structureIdList:[]
   };
   fetchData();
 }
+// 监听 allocationStatus 和 allocation 的变化
+watch(
+  () => search.value.allocationStatus,
+  (newValue:any) => {
+    if (newValue.length > 0) {
+      // 如果 allocationStatus 有值，清空 allocation
+      search.value.allocation = '';
+    }
+  }
+);
+
+watch(
+  () => search.value.allocation,
+  (newValue:any) => {
+    if (newValue) {
+      // 如果 allocation 有值，清空 allocationStatus
+      search.value.allocationStatus = [];
+    }
+  }
+);
+const checked1 = ref<any>();
+// 监听 departmentProject 和 structureIdList 的变化
+// 监听 departmentProject 的变化
+watch(
+  () => checked1.value,
+  (newValue:any) => {
+    if (newValue === 1) {
+
+      // 如果 departmentProject 为 1，清空 structureIdList
+      search.value.structureIdList = [];
+      // console.log(search.value.structureIdList,'监听departmentProject')
+    }
+  }
+);
+
+// 监听 structureIdList 的变化
+watch(
+  () => search.value.structureIdList,
+  (newValue:any) => {
+    if (newValue.length > 0) {
+      // 如果 structureIdList 有值，将 departmentProject 改为 1
+
+      checked1.value = '';
+      // console.log(checked1.value,'监听structureIdList')
+    }
+  }
+);
 // 获取集合
 async function fetchData() {
+
+
   try {
     listLoading.value = true;
     const params = {
@@ -260,11 +311,12 @@ async function fetchData() {
       params.beginTime = search.value.time[0] || "";
       params.endTime = search.value.time[1] || "";
     }
-    if(checked1.value) {
-      params.departmentProject = 2
-    }else {
-      params.departmentProject = 1
+    if (checked1.value) {
+      params.departmentProject = 2;
+    } else {
+      params.departmentProject = 1;
     }
+
     const { data } = await api.list(params);
     countryType.value = data.currencyType;
     list.value = data.getChildrenProjectInfoList;
@@ -444,10 +496,10 @@ const formOption = {
     { label: "离线", value: 2 },
   ],
 };
-const checked1 = ref<any>()
+
 const handleChange = () => {
   fetchData();
-}
+};
 </script>
 
 <template>
@@ -469,13 +521,31 @@ const handleChange = () => {
       <el-row :gutter="24">
         <FormLeftPanel>
           <!-- v-auth="'/list-insert-addProjectBtn'" -->
-          <el-button type="primary" v-auth="'/list-get-addProject'" size="default" @click="addProject" >
+          <el-button
+            type="primary"
+            v-auth="'/list-get-addProject'"
+            size="default"
+            @click="addProject"
+          >
             新增项目
           </el-button>
-          <el-button type="primary" size="default" @click="dispatch" v-auth="'/list-get-addProjectDispatch'">
+          <el-button
+            type="primary"
+            size="default"
+            @click="dispatch"
+            v-auth="'/list-get-addProjectDispatch'"
+          >
             调度
           </el-button>
-          <el-checkbox style="margin-left:12px;" v-model="checked1" label="查询本部门项目列表" size="large" @change="handleChange" />
+          <el-checkbox
+            style="margin-left: 12px"
+            v-model="checked1"
+            label="查询本部门项目列表"
+            size="large"
+            @change="handleChange"
+             :true-value="1"
+              :false-value="2"
+          />
         </FormLeftPanel>
         <FormRightPanel>
           <el-button size="default" @click=""> 导出 </el-button>
@@ -764,26 +834,66 @@ const handleChange = () => {
           width="230"
         >
           <template #default="{ row }">
-            <el-button size="small" v-if="row.allocationStatus==1" >
-                未分配</el-button
+            <el-button size="small" v-if="row.allocationStatus == 1">
+              未分配</el-button
+            >
+            <div
+              class="flex-c"
+              v-if="row.allocationStatus == 2"
+              style="cursor: pointer"
+            >
+              <div
+                @click="viewAllocations(row)"
+                style="width: calc(100% - 1.25rem)"
+                class="parameter1"
               >
-            <div class="flex-c" v-if="row.allocationStatus==2" style="cursor: pointer;" >
-              <div @click="viewAllocations(row)"
-              style="width: calc(100% - 1.25rem);"  class=" parameter1">
-                <el-tag type="danger"  v-if="row.allocationType?.includes(2)" class="tag-with-image oneLine" >
-                  <img src="@/assets/images/gong.png" style="width: 0.9375rem;height: 0.9375rem;margin-right: 0.25rem;">
+                <el-tag
+                  type="danger"
+                  v-if="row.allocationType?.includes(2)"
+                  class="tag-with-image oneLine"
+                >
+                  <img
+                    src="@/assets/images/gong.png"
+                    style="
+                      width: 0.9375rem;
+                      height: 0.9375rem;
+                      margin-right: 0.25rem;
+                    "
+                  />
                   <span>供应商</span>
-                  </el-tag>
-                <el-tag type="warning" v-if="row.allocationType?.includes(3)" class="tag-with-image oneLine">
-                  <img src="@/assets/images/nei.png" style="width: 0.9375rem;height: 0.9375rem;margin-right: 0.25rem;">
-                  内部站</el-tag>
+                </el-tag>
+                <el-tag
+                  type="warning"
+                  v-if="row.allocationType?.includes(3)"
+                  class="tag-with-image oneLine"
+                >
+                  <img
+                    src="@/assets/images/nei.png"
+                    style="
+                      width: 0.9375rem;
+                      height: 0.9375rem;
+                      margin-right: 0.25rem;
+                    "
+                  />
+                  内部站</el-tag
+                >
 
-                <el-tag type="primary" v-if="row.allocationType?.includes(4)" class="tag-with-image oneLine">
-                  <img src="@/assets/images/he.png" style="width: 0.9375rem;height: 0.9375rem;margin-right: 0.25rem;">
-                  合作商</el-tag>
+                <el-tag
+                  type="primary"
+                  v-if="row.allocationType?.includes(4)"
+                  class="tag-with-image oneLine"
+                >
+                  <img
+                    src="@/assets/images/he.png"
+                    style="
+                      width: 0.9375rem;
+                      height: 0.9375rem;
+                      margin-right: 0.25rem;
+                    "
+                  />
+                  合作商</el-tag
+                >
               </div>
-
-
             </div>
 
             <!-- <el-button class="tableBut" size="small" @click="viewAllocations(row, 1)" type="danger"
@@ -992,7 +1102,7 @@ const handleChange = () => {
               :disabled="row.isOnline === 2"
               size="small"
               @click="reassign(row)"
-               v-auth="'/list-get-addProjectAllocation'"
+              v-auth="'/list-get-addProjectAllocation'"
             >
               重新分配
             </el-button>
@@ -1048,12 +1158,12 @@ const handleChange = () => {
 
 <style scoped lang="scss">
 .tag-with-image {
-  display: flex;          /* 使用flex布局 */
-  align-items: center;    /* 垂直居中对齐 */
-  justify-content: center;/* 水平居中对齐 */
-  margin-right: 0.5rem;      /* 每行标签之间的间距 */
+  display: flex; /* 使用flex布局 */
+  align-items: center; /* 垂直居中对齐 */
+  justify-content: center; /* 水平居中对齐 */
+  margin-right: 0.5rem; /* 每行标签之间的间距 */
 }
-:deep(.tag-with-image .el-tag__content){
+:deep(.tag-with-image .el-tag__content) {
   display: flex;
   align-items: center;
 }
