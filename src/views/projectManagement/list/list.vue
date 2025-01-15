@@ -543,8 +543,6 @@ const handleChange = () => {
             label="查询本部门项目列表"
             size="large"
             @change="handleChange"
-             :true-value="1"
-              :false-value="2"
           />
         </FormLeftPanel>
         <FormRightPanel>
