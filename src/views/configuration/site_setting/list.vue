@@ -158,6 +158,18 @@ onActivated(()=> {
   getDataList();
   loading.value = false;
 })
+//获取自定义域名中间的租户id
+const urlNumSplit =(url:any)=> {
+  const regex = /(\D+)(\d+)\.(\S+)/;
+  const match = url.match(regex);
+
+if (match) {
+  const number = match[2];
+  console.log(number);  // 输出：692377470037889024
+} else {
+  console.log("没有匹配的数字");
+}
+}
 // 获取数据
 async function getDataList() {
   try {
