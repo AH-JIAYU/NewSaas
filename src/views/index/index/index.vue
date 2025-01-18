@@ -988,6 +988,7 @@ onMounted(async () => {
                   align="left"
                   prop="supplierName"
                   label="供应商名称"
+                  show-overflow-tooltip
                   ><template #default="{ row }">
                    <span class="font-c">{{ row.supplierName ? row.supplierName : "-" }}</span>
                   </template>
@@ -995,6 +996,7 @@ onMounted(async () => {
                 <el-table-column
                   align="left"
                   prop="completedQuantity"
+                  show-overflow-tooltip
                   width="80"
                   label="完成数量"
                 >
@@ -1010,6 +1012,7 @@ onMounted(async () => {
                   align="left"
                   prop="completedAmount"
                   width="85"
+                  show-overflow-tooltip
                   label="完成金额"
                   ><template #default="{ row }">
                     <span class="font-c">
@@ -1026,6 +1029,7 @@ onMounted(async () => {
                   prop="b2BProportion"
                   width="70"
                   label="B2B"
+                  show-overflow-tooltip
                 >
                   <template #default="{ row }">
                     <span class="number-font font-c">{{
@@ -1039,6 +1043,7 @@ onMounted(async () => {
                   prop="b2CProportion"
                   width="70"
                   label="B2C"
+                  show-overflow-tooltip
                 >
                   <template #default="{ row }">
                     <span class="number-font font-c">{{
@@ -1047,7 +1052,7 @@ onMounted(async () => {
                     >%
                   </template>
                 </el-table-column>
-                <el-table-column width="80" align="left" label="所属区域">
+                <el-table-column width="80" align="left" label="所属区域"  show-overflow-tooltip>
                   <template #default="{ row }">
                     <span v-if="String(row) !== '{}'" class="font-c">{{
                       filterCountry(row)
