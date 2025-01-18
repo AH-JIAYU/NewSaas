@@ -18,7 +18,7 @@ defineProps({
 <style>
 .right-panel {
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   place-content: center flex-end;
   align-items: center;
 }
