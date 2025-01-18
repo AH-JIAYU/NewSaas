@@ -1,0 +1,157 @@
+{
+  "app": {
+    "account": "account",
+    "captcha": "captcha",
+    "check": "Submit",
+    "goLogin": "go login",
+    "login": "Login",
+    "logout": "Logout",
+    "newPassword": "new password",
+    "password": "password",
+    "preferences": "Preferences",
+    "hotkeys": "Hotkeys Introduction",
+    "sendCaptcha": "send captcha",
+    "search": {
+      "text": "Search",
+      "type": {
+        "menu": "Search menus",
+        "tab": "Search tabs"
+      },
+      "input": "Support title, URL fuzzy query",
+      "empty": "Not found",
+      "up_down": "Choice",
+      "enter": "Enter",
+      "esc": "Exit"
+    },
+    "tabbar": {
+      "reload": "Reload",
+      "close": "Close",
+      "pin": "Pin",
+      "unpin": "Unpin",
+      "maximize": "Maximize",
+      "newWindow": "Open In New Window",
+      "searchTabs": "Search Tabs",
+      "closeOtherSide": "Close Otherside Tabs",
+      "closeLeftSide": "Close Leftside Tabs",
+      "closeRightSide": "Close Rightside Tabs"
+    }
+  },
+  "route": {
+    "undefined": "[ No title ]",
+    "home": "Home",
+    "login": "Login",
+    "personal": {
+      "notification": "Notification"
+    },
+    "multimenu": {
+      "root": "Multi-level navigation",
+      "page": "Navigation 1",
+      "level2": {
+        "root": "Navigation 2",
+        "page": "Navigation 2-1",
+        "level3": {
+          "root": "Navigation 3",
+          "page1": "Navigation 2-2-1",
+          "page2": "Navigation 2-2-2"
+        }
+      }
+    }
+  },
+  "project": {
+    "projectId": "project ID",
+    "name": "Name/Alias",
+    "area": "Area",
+    "CustomerAbbreviation": "Customer Abbreviation",
+    "AssignmentType": "Assignment Type",
+    "department": "Department",
+    "founder": "Founder",
+    "AssignmentStatus": "Assignment Status",
+    "CreationStartDate": "Creation Start Date",
+    "CreationEndDate": "Creation End Date",
+    "OnlineOffline": "Online/Offline",
+    "Online": "Online",
+    "Offline": "Offline",
+    "NewProject": "New Project",
+    "Dispatch": "Dispatch",
+    "QueryDepartmentList": "Query the project list of this department",
+    "export": "Export",
+    "status": "Status",
+    "project": "Project",
+    "client": "Client",
+    "parameter": "Parameter",
+    "assignment": "Assignment",
+    "originalPrice": "Original Price",
+    "projectPrice": "Project Price",
+    "operate": "Operate"
+  },
+  "formSearch": {
+    "sift": "Sift",
+    "reset": "Reset",
+    "sort": "Sort",
+    "expand": "Expand",
+    "collapse": "Collapse"
+  },
+  "tableControl": {
+    "zebraPattern": "Zebra Pattern",
+    "borders": "Borders",
+    "adaptive": "Highly Adaptive",
+    "large": "Large",
+    "medium": "Meddle",
+    "small": "Small"
+  },
+  "RecordsManagement": {
+    "clickID": "Click ID",
+    "projectID": "Project ID",
+    "projectName": "Project Name",
+    "vipType": "Vip Type",
+    "vipID": "Vip ID",
+    "subVipID": "Sub-Vip ID",
+    "randomIdentity": "Random Identity",
+    "vendorID": "Vendor ID",
+    "ipAddress": "IP Address",
+    "surveyStatus": "Survey Status",
+    "viceState": "Vice State",
+    "tenantID": "Tenant ID"
+  },
+  "newProject":{
+    "basicSettings":"Basic Settings",
+    "synchronizeData":"Synchronize Data",
+    "only":"Only view required fields",
+    "name": "Project Name",
+    "projectIdentification": "Project Identification",
+    "clientId": "Client",
+    "countryIdList": "Area",
+    "area":"Area",
+    "turnoverLimit":"Turnove rLimit",
+    "notQualified":"The audit rate is not qualified",
+    "quickAdd":"Quick Add",
+    "nodata":"No Data",
+    "global":"Global",
+    "currency":"Currency",
+    "toSet":"No exchange rate is set, click Settings",
+    "currencySelect":"Please select a currency",
+    "exchangeRate":"Exchange Rate",
+    "dollor":"Dollar",
+    "rmb":"RMB",
+    "projectPrice":"Project Price",
+    "quota":"Quota",
+    "latestTime":"What is the minimum number of minutes required for the questionnaire to be considered qualified",
+    "miniLength":"Minimum Minute Length",
+    "link":"Please refer to the link below",
+    "bandend":"If the link suffix is not [uid], it may not pass the check",
+    "exclusiveID":"Exclusive ID",
+    "otherSettings":"Other Settings",
+    "sex":"Sex",
+    "unlimited":"Unlimited",
+    "male":"Male",
+    "female":"Female",
+    "operatingSystem":"Operating System",
+    "systemSelect":"Select",
+    "browser":"Browser",
+    "browserSelect":"Please select browser",
+    "scheduledRelease":"Scheduled Release",
+    "online":"online",
+    "preRuestionnaire":"Pre-Ruestionnaire",
+    "pinned":"pinned"
+  }
+}
