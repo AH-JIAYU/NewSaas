@@ -46,8 +46,8 @@ const dialogVisibleExchangeRate = ref<any>(false);
 const { t } = useI18n();
 // #region 值
 const currencyList = [
-  { label: t('newProject.dollor'), value: "USD" },
-  { label: t('newProject.rmb'), value: "CNY" },
+  { label: "美元", value: "USD" },
+  { label: "人民币", value: "CNY" },
 ];
 // 操作系统
 const operatingSystemList = [
@@ -1574,7 +1574,7 @@ const getProblemList = async () => {
             <el-col :span="6">
               <el-form-item>
                 <template #label>
-                  <div>{{t('newProject.hourly')}}<span class="red">{{t('newProject.inflow')}}</span>{{t('newProject.num')}}</div>
+                  <div>{{t('')}}<span class="red">准入</span>量</div>
                 </template>
                 <el-input-number
                   style="height: 2rem"
@@ -1592,7 +1592,7 @@ const getProblemList = async () => {
             <el-col :span="6">
               <el-form-item>
                 <template #label>
-                  <div>{{t('newProject.hourly')}}<span class="blue">{{t('newProject.completion')}}</span>{{t('newProject.num')}}</div>
+                  <div>小时<span class="blue">完成</span>量</div>
                 </template>
                 <el-input-number
                   style="height: 2rem"
@@ -1611,10 +1611,10 @@ const getProblemList = async () => {
               <el-form-item label="" class="flex m-0">
                 <template #label>
                   <div>
-                    {{t('newProject.allowRepeat')}}<el-tooltip class="tooltips" placement="top">
+                    允许重复参与<el-tooltip class="tooltips" placement="top">
                       <template #content>
-                        <div>{{t('newProject.switchOn')}}</div>
-                        <div>{{t('newProject.switchOff')}}</div>
+                        <div>开启：ip和随机id都可以重复</div>
+                        <div>关闭：ip和随机id都不可以重复</div>
                       </template>
                       <SvgIcon class="SvgIcon2" name="i-ri:question-line" />
                     </el-tooltip>
@@ -1680,13 +1680,13 @@ const getProblemList = async () => {
               <template #prefix>
                 <!-- 自定义 SVG 图标作为前缀图标 -->
                 <el-text style="color: #333">
-                  1 {{t('newProject.dollor')}} (USD)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
+                  1 美元 (USD)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
                 </el-text>
               </template>
 
               <template #suffix>
                 <!-- 自定义 SVG 图标作为后缀图标 -->
-                <el-text style="color: #333"> {{t('newProject.rmb')}} (CNY) </el-text>
+                <el-text style="color: #333"> 人民币 (CNY) </el-text>
               </template>
             </el-input>
           </div>

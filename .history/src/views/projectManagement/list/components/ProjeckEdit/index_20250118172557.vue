@@ -362,7 +362,7 @@ defineExpose({
             {{t('projectEdit.releaseProject')}}
           </el-button>
           <el-button type="warning" v-show="title !== '编辑'" @click="staging" :disabled="loading">
-            {{t('projectEdit.temporaryStorage')}}
+            {{t('projectEdit.releaseProject')}}
           </el-button>
           <el-button @click="closeHandler" :disabled="loading">
             {{t('projectEdit.cancel')}}

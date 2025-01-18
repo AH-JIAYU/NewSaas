@@ -178,6 +178,6 @@
   "projectEdit":{
     "releaseProject": "发布项目",
     "temporaryStorage": "暂存",
-    "cancel": "取消"
+    "cancel": "Cancel"
   }
 }

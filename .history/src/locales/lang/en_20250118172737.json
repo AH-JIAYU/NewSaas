@@ -177,6 +177,7 @@
   "projectEdit": {
     "releaseProject": "Release Project",
     "temporaryStorage": "Temporary Storage",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "edit"
   }
 }

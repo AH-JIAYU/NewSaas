@@ -176,8 +176,6 @@
     "switchOff":"关闭：ip和随机id都不可以重复"
   },
   "projectEdit":{
-    "releaseProject": "发布项目",
-    "temporaryStorage": "暂存",
-    "cancel": "取消"
+    
   }
 }

@@ -167,17 +167,7 @@
     "download":"下载",
     "projectDescribe":"项目描述",
     "safetyInformation":"安全信息",
-    "hourly": "小时",
-    "inflow": "准入",
-    "num":"量",
-    "completion":"完成",
-    "allowRepeat":"允许重复参与",
-    "switchOn":"开启：ip和随机id都可以重复",
-    "switchOff":"关闭：ip和随机id都不可以重复"
-  },
-  "projectEdit":{
-    "releaseProject": "发布项目",
-    "temporaryStorage": "暂存",
-    "cancel": "取消"
+    "hours": "小时",
+    " inflow"
   }
 }

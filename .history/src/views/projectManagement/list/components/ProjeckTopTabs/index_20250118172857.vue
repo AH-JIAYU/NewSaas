@@ -46,8 +46,8 @@ const dialogVisibleExchangeRate = ref<any>(false);
 const { t } = useI18n();
 // #region 值
 const currencyList = [
-  { label: t('newProject.dollor'), value: "USD" },
-  { label: t('newProject.rmb'), value: "CNY" },
+  { label: "美元", value: "USD" },
+  { label: "人民币", value: "CNY" },
 ];
 // 操作系统
 const operatingSystemList = [
@@ -1680,7 +1680,7 @@ const getProblemList = async () => {
               <template #prefix>
                 <!-- 自定义 SVG 图标作为前缀图标 -->
                 <el-text style="color: #333">
-                  1 {{t('newProject.dollor')}} (USD)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
+                  1  (USD)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
                 </el-text>
               </template>
 

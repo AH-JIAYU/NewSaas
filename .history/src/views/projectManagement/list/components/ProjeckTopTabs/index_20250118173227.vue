@@ -47,7 +47,7 @@ const { t } = useI18n();
 // #region 值
 const currencyList = [
   { label: t('newProject.dollor'), value: "USD" },
-  { label: t('newProject.rmb'), value: "CNY" },
+  { label: "人民币", value: "CNY" },
 ];
 // 操作系统
 const operatingSystemList = [

@@ -359,13 +359,13 @@ defineExpose({
             {{ projectReleaseTime }}
           </el-button>
           <el-button type="primary" @click="onSubmit" :disabled="loading">
-            {{t('projectEdit.releaseProject')}}
+            {{t('projectEdit.')}}
           </el-button>
           <el-button type="warning" v-show="title !== '编辑'" @click="staging" :disabled="loading">
-            {{t('projectEdit.temporaryStorage')}}
+            暂存
           </el-button>
           <el-button @click="closeHandler" :disabled="loading">
-            {{t('projectEdit.cancel')}}
+            取消
           </el-button>
         </div>
       </template>

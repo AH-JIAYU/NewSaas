@@ -166,17 +166,9 @@
     "download": "download",
     "projectDescribe": "Project Describe",
     "safetyInformation": "Safety Information",
-    "hourly": "Hourly  ",
+    "hours": "Hourly  ",
     "inflow": "Inflow  ",
     "num": "",
-    "completion": "Completion",
-    "allowRepeat": "Allow Repeated Participation",
-    "switchOn": "On: The ip address and random id can be repeated",
-    "switchOff": "Off: The ip address and random id cannot be the same"
-  },
-  "projectEdit": {
-    "releaseProject": "Release Project",
-    "temporaryStorage": "Temporary Storage",
-    "cancel": "Cancel"
+    "completion":"Vompletion"
   }
 }
