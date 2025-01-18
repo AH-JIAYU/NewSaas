@@ -208,8 +208,8 @@ const record = () => {
 }
 
 // 复制地址
-const copyToClipboard = () => {
-  const text = form.value.personalizedDomainName;
+const copyToClipboard = (val:any) => {
+  const text = val;
   toClipboard(text);
   ElMessage({
     type: "success",
@@ -397,7 +397,7 @@ function onSubmit() {
     <PageHeader title="站点设置管理" />
     <PageMain>
       <el-tabs v-model="activeTopTab">
-        <el-form ref="formRef" :model="form" :rules="formRules" label-width="110px" label-position="right"
+        <el-form ref="formRef" :model="form" :rules="formRules" label-width="150px" label-position="right"
           :inline="false">
           <el-tab-pane label="基础设置" name="基本设置">
             <el-row :gutter="20">
@@ -443,10 +443,28 @@ function onSubmit() {
                   <el-input v-model="form.description" style="width: 22.4375rem" />
                 </el-form-item>
               </el-col>
-              <el-col :span="24">
+              <el-col :span="24" v-if="form.personalizedDomainName">
                 <el-form-item label="默认官网域名" prop="">
-                  <el-text class="mx-1" v-if="form.personalizedDomainName">{{ form.personalizedDomainName }}</el-text>
-                  <el-button class="copy" type="primary" plain size="small" @click="copyToClipboard">复制</el-button>
+                  <el-text class="mx-1">{{ form.personalizedDomainName }}</el-text>
+                  <el-button class="copy"  type="primary" plain size="small" @click="copyToClipboard(form.personalizedDomainName)">复制</el-button>
+                </el-form-item>
+              </el-col>
+              <el-col :span="24" v-if="form.personalizedDomainNameMember">
+                <el-form-item label="租户会员后台域名" prop="">
+                  <el-text class="mx-1" >{{ form.personalizedDomainNameMember }}</el-text>
+                  <el-button class="copy"  type="primary" plain size="small" @click="copyToClipboard(form.personalizedDomainNameMember)">复制</el-button>
+                </el-form-item>
+              </el-col>
+              <el-col :span="24" v-if="form.personalizedDomainNameSupplier">
+                <el-form-item label="租户供应商后台域名" prop="">
+                  <el-text class="mx-1" >{{ form.personalizedDomainNameSupplier }}</el-text>
+                  <el-button class="copy"  type="primary" plain size="small" @click="copyToClipboard(form.personalizedDomainNameSupplier)">复制</el-button>
+                </el-form-item>
+              </el-col>
+              <el-col :span="24" v-if="form.personalizedDomainNameTenant">
+                <el-form-item label="租户后台域名" prop="">
+                  <el-text class="mx-1" >{{ form.personalizedDomainNameTenant }}</el-text>
+                  <el-button class="copy"  type="primary" plain size="small" @click="copyToClipboard(form.personalizedDomainNameTenant)">复制</el-button>
                 </el-form-item>
               </el-col>
               <el-col :span="24" v-auth="'site_setting-insert-setCname'">
