@@ -8,149 +8,149 @@ import empty from "@/assets/images/empty.png";
 import { useI18n } from "vue-i18n";
 
 defineOptions({
-  name: "memberSurveyRecords",
-});
+  name: 'MemberSurveyRecords',
+})
 // 区域
-const useStoreCountry = useBasicDictionaryStore();
+const useStoreCountry = useBasicDictionaryStore()
 // 客户
-const customerStore = useUserCustomerStore();
+const customerStore = useUserCustomerStore()
 // 分页
 const { getParams, pagination, onSizeChange, onCurrentChange } =
   usePagination();
 // 国际化
 const { t } = useI18n();
 // listLoading
-const listLoading = ref(false);
+const listLoading = ref(false)
 // 列表
-const list = ref<Array<Object>>([]);
+const list = ref<Array<Object>>([])
 // 表格-选中行
-const selectRows = ref("");
+const selectRows = ref('')
 // 表格-展示的列
-const checkList = ref<Array<Object>>([]);
+const checkList = ref<Array<Object>>([])
 // 表格控件-是否展示边框
-const border = ref(false);
+const border = ref(false)
 // 表格控件-是否展示斑马条
-const stripe = ref(false);
+const stripe = ref(false)
 // 表格控件-控制表格大小
-const lineHeight = ref<any>("default");
+const lineHeight = ref<any>('default')
 // 表格控件-高度自适应
-const tableAutoHeight = ref(false);
+const tableAutoHeight = ref(false)
 // 货币类型
-const currencyType = ref<any>();
-const formSearchList = ref<any>(); //表单排序配置
-const formSearchName = ref<string>("formSearch-memberSurveyRecords"); // 表单排序name
+const currencyType = ref<any>()
+const formSearchList = ref<any>() // 表单排序配置
+const formSearchName = ref<string>('formSearch-memberSurveyRecords') // 表单排序name
 // 表格控件-展示列
 const columns = ref([
-  { prop: "id", label: "点击ID", sortable: true, checked: true },
-  { prop: "surveySource", label: "会员类型", sortable: true, checked: true },
+  { prop: 'id', label: '点击ID', sortable: true, checked: true },
+  { prop: 'surveySource', label: '会员类型', sortable: true, checked: true },
   {
-    prop: "memberChildId",
-    label: "子会员ID",
+    prop: 'memberChildId',
+    label: '子会员ID',
     sortable: true,
     checked: true,
   },
   {
-    prop: "tenantId",
-    label: "租户ID",
+    prop: 'tenantId',
+    label: '租户ID',
     sortable: true,
     checked: true,
   },
-  { prop: "memberId", label: "会员ID", sortable: true, checked: true },
+  { prop: 'memberId', label: '会员ID', sortable: true, checked: true },
   {
-    prop: "tenantSupplierId",
-    label: "供应商id",
-    sortable: true,
-    checked: true,
-  },
-
-  { prop: "projectId", label: "项目ID", sortable: true, checked: true },
-  {
-    prop: "randomIdentityId",
-    label: "随机身份",
-    sortable: true,
-    checked: true,
-  },
-  {
-    prop: "projectName",
-    label: "项目名称",
-    sortable: true,
-    checked: true,
-  },
-  {
-    prop: "sampleSource",
-    label: "样本来源",
+    prop: 'tenantSupplierId',
+    label: '供应商id',
     sortable: true,
     checked: true,
   },
 
+  { prop: 'projectId', label: '项目ID', sortable: true, checked: true },
   {
-    prop: "customerShortName",
-    label: "客户简称",
-    sortable: true,
-    checked: true,
-  },
-  { prop: "allocationType", label: "分配类型", sortable: true, checked: true },
-  {
-    prop: "doMoneyPrice",
-    label: "项目价",
+    prop: 'randomIdentityId',
+    label: '随机身份',
     sortable: true,
     checked: true,
   },
   {
-    prop: "memberPrice",
-    label: "成本价",
+    prop: 'projectName',
+    label: '项目名称',
     sortable: true,
     checked: true,
   },
-  { prop: "ipBelong", label: "IP/所属国", sortable: true, checked: true },
-  { prop: "surveyTime", label: "调查时间", sortable: true, checked: true },
-  { prop: "surveyStatus", label: "调查状态", sortable: true, checked: true },
-  { prop: "viceStatus", label: "副状态", sortable: true, checked: true },
-]);
+  {
+    prop: 'sampleSource',
+    label: '样本来源',
+    sortable: true,
+    checked: true,
+  },
+
+  {
+    prop: 'customerShortName',
+    label: '客户',
+    sortable: true,
+    checked: true,
+  },
+  { prop: 'allocationType', label: '分配类型', sortable: true, checked: true },
+  {
+    prop: 'doMoneyPrice',
+    label: '项目价',
+    sortable: true,
+    checked: true,
+  },
+  {
+    prop: 'memberPrice',
+    label: '成本价',
+    sortable: true,
+    checked: true,
+  },
+  { prop: 'ipBelong', label: 'IP/所属国', sortable: true, checked: true },
+  { prop: 'surveyTime', label: '时间', sortable: true, checked: true },
+  { prop: 'surveyStatus', label: '调查状态', sortable: true, checked: true },
+  { prop: 'viceStatus', label: '副状态', sortable: true, checked: true },
+])
 const queryForm = reactive<any>({
-  memberChildId: "", //	子会员id
-  memberId: "", //会员id
-  tenantSupplierId: "", //	供应商id
-  surveySource: "", //	调查来源 1:内部 2:外部
-  projectId: "", //项目id
-  projectName: "", //项目名称-模糊查询
-  customerId: "", //客户Id
-  ip: "", //ip-模糊查询
-  surveyStatus: [], //调查状态:1 C=完成 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
-  randomIdentityId: "", //随机身份id
+  memberChildId: '', //	子会员id
+  memberId: '', // 会员id
+  tenantSupplierId: '', //	供应商id
+  surveySource: '', //	调查来源 1:内部 2:外部
+  projectId: '', // 项目id
+  projectName: '', // 项目名称-模糊查询
+  customerId: '', // 客户Id
+  ip: '', // ip-模糊查询
+  surveyStatus: [], // 调查状态:1 C=完成 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
+  randomIdentityId: '', // 随机身份id
   // 租户id
-  tenantId: "",
+  tenantId: '',
   // 会员类型
-  memberType: "",
+  memberType: '',
   // 点击id
-  id: "",
+  id: '',
   viceStatus: [],
-});
+})
 
 const data = reactive<any>({
   // 会员类型
-  memberType: ["内部会员", "外部会员"],
+  memberType: ['内部会员', '外部会员'],
   // 分配类型
-  allocationTypeList: ["未分配", "供应商", "会员组"],
+  allocationTypeList: ['未分配', '供应商', '会员组'],
   // 调查状态
-  surveyStatusList: ["完成", "被甄别", "配额满", "安全终止", "未完成"],
+  surveyStatusList: ['完成', '被甄别', '配额满', '安全终止', '未完成'],
   // 副状态
   viceStatusList: [
-    "待审",
-    "免审",
-    "过IR",
-    "时间过短",
-    "超时完成",
-    "超量完成",
-    "审核成功",
-    "审核失败",
-    "数据冻结",
-    "时间段过载",
-    "ip不一致",
-    "id重复参与",
-    "和解",
+    '待审',
+    '免审',
+    '过IR',
+    '时间过短',
+    '超时完成',
+    '超量完成',
+    '审核成功',
+    '审核失败',
+    '数据冻结',
+    '时间段过载',
+    'ip不一致',
+    'id重复参与',
+    '和解',
   ],
-  //客户列表
+  // 客户列表
   customerList: [],
   // 区域
   countryList: [],
@@ -160,76 +160,78 @@ const data = reactive<any>({
   vipGroupList: [],
   // 供应商
   tenantSupplierList: [],
-});
+})
 
 // 重置请求
 function queryData() {
-  queryForm.pageNo = 1;
-  fetchData();
+  queryForm.pageNo = 1
+  fetchData()
 }
 // 每页数量切换
 function sizeChange(size: number) {
-  onSizeChange(size).then(() => fetchData());
+  onSizeChange(size).then(() => fetchData())
 }
 
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
-  onCurrentChange(page).then(() => fetchData());
+  onCurrentChange(page).then(() => fetchData())
 }
 // 请求
 async function fetchData() {
   try {
-    listLoading.value = true;
+    listLoading.value = true
     const params = {
       ...getParams(),
       ...queryForm,
-    };
-    const { data } = await api.list(params);
-    list.value = data.memberChildSurveyRecordInfoList;
-    currencyType.value = data.currencyType;
-    pagination.value.total = data.total;
-    listLoading.value = false;
-  } catch (error) {
-  } finally {
-    listLoading.value = false;
+    }
+    const { data } = await api.list(params)
+    list.value = data.memberChildSurveyRecordInfoList
+    currencyType.value = data.currencyType
+    pagination.value.total = data.total
+    listLoading.value = false
+  }
+  catch (error) {
+  }
+  finally {
+    listLoading.value = false
   }
 }
 // 表格-单选框
 function setSelectRows(val: string) {
-  selectRows.value = val;
+  selectRows.value = val
 }
 // 重置筛选数据
 function onReset() {
   Object.assign(queryForm, {
-    memberChildId: "",
-    memberId: "", //会员id
-    tenantSupplierId: "",
-    surveySource: "", //	调查来源 1:内部 2:外部
-    projectId: "", //项目id
-    projectName: "", //项目名称-模糊查询
-    customerId: "", //客户Id
-    ip: "", //ip-模糊查询
-    surveyStatus: [], //调查状态:1 C=完成 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
-    randomIdentityId: "", //随机身份id
+    memberChildId: '',
+    memberId: '', // 会员id
+    tenantSupplierId: '',
+    surveySource: '', //	调查来源 1:内部 2:外部
+    projectId: '', // 项目id
+    projectName: '', // 项目名称-模糊查询
+    customerId: '', // 客户Id
+    ip: '', // ip-模糊查询
+    surveyStatus: [], // 调查状态:1 C=完成 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
+    randomIdentityId: '', // 随机身份id
     // 租户id
-    tenantId: "",
+    tenantId: '',
     // 会员类型
-    memberType: "",
+    memberType: '',
     // 点击id
-    id: "",
+    id: '',
     viceStatus: [],
-  });
-  fetchData();
+  })
+  fetchData()
 }
 onMounted(async () => {
-  data.customerList = await customerStore.getCustomerList();
-  data.country = await useStoreCountry.getCountry();
+  data.customerList = await customerStore.getCustomerList()
+  data.country = await useStoreCountry.getCountry()
   columns.value.forEach((item) => {
     if (item.checked) {
-      checkList.value.push(item.prop);
+      checkList.value.push(item.prop)
     }
-  });
-  fetchData();
+  })
+  fetchData()
   formSearchList.value = [
     {
       index: 1,
@@ -326,13 +328,13 @@ onMounted(async () => {
       modelName: "tenantId",
       placeholder: computed(() => t("RecordsManagement.tenantID")),
     },
-  ];
-});
+  ]
+})
 const formOption = {
   memberType: () => [
-    { label: "外部会员", value: 1 },
-    { label: "内部会员", value: 2 },
-    { label: "外包会员", value: 3 },
+    { label: '外部会员', value: 1 },
+    { label: '内部会员', value: 2 },
+    { label: '外包会员', value: 3 },
   ],
   surveyStatus: () =>
     data.surveyStatusList.map((item: any, index: any) => ({
@@ -344,12 +346,12 @@ const formOption = {
       label: item,
       value: index + 1,
     })),
-};
-const current = ref<any>(); //表格当前选中
+}
+const current = ref<any>() // 表格当前选中
 
 function handleCurrentChange(val: any) {
-  if (val) current.value = val.id;
-  else current.value = "";
+  if (val) { current.value = val.id }
+  else { current.value = '' }
 }
 </script>
 
@@ -357,12 +359,8 @@ function handleCurrentChange(val: any) {
   <div :class="{ 'absolute-container': tableAutoHeight }">
     <PageMain>
       <FormSearch
-        :formSearchList="formSearchList"
-        :formSearchName="formSearchName"
-        @currentChange="currentChange"
-        @onReset="onReset"
-        :model="queryForm"
-        :formOption="formOption"
+        :form-search-list="formSearchList" :form-search-name="formSearchName" :model="queryForm"
+        :form-option="formOption" @current-change="currentChange" @on-reset="onReset"
       />
       <ElDivider border-style="dashed" />
       <el-row>
@@ -370,28 +368,16 @@ function handleCurrentChange(val: any) {
         <FormRightPanel>
           <el-button size="default"> {{ t('RecordsManagement.export') }} </el-button>
           <TabelControl
-            v-model:border="border"
-            v-model:tableAutoHeight="tableAutoHeight"
-            v-model:checkList="checkList"
-            v-model:columns="columns"
-            v-model:line-height="lineHeight"
-            v-model:stripe="stripe"
-            style="margin-left: 12px"
+            v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
+            v-model:columns="columns" v-model:line-height="lineHeight" v-model:stripe="stripe" style="margin-left: 12px"
             @query-data="queryData"
           />
         </FormRightPanel>
       </el-row>
       <!-- 外包会员，点击id，随机身份，租户id，会员id，子会员id，供应商id，项目，ip区域，分配类型，调查时间，调查状态，副状态 -->
       <el-table
-        v-loading="listLoading"
-        :border="border"
-        :data="list"
-        :size="lineHeight"
-        :stripe="stripe"
-        highlight-current-row
-        @selection-change="setSelectRows"
-        @current-change="handleCurrentChange"
-      >
+        v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
+        highlight-current-row @selection-change="setSelectRows" @current-change="handleCurrentChange">
         <!-- <el-table-column align="left" type="selection" /> -->
         <el-table-column
           v-if="checkList.includes('id')"
@@ -415,10 +401,11 @@ function handleCurrentChange(val: any) {
               >{{ t('RecordsManagement.outsourcingVip') }}</el-tag
             >
             <div class="copyId flex-s tableSmall">
-              <div class="id oneLine idFont">{{ row.id ? row.id : "-" }}</div>
+              <div class="id oneLine idFont">
+                {{ row.id ? row.id : "-" }}
+              </div>
               <copy
-                :content="row.id"
-                :class="{
+                :content="row.id" :class="{
                   rowCopy: 'rowCopy',
                   current: row.id === current,
                 }"
@@ -436,15 +423,15 @@ function handleCurrentChange(val: any) {
           :label="t('RecordsManagement.project')"
         >
           <template #default="{ row }">
-            <div class="tableBig oneLine">{{ row.projectName }}</div>
+            <div class="tableBig oneLine">
+              {{ row.projectName }}
+            </div>
             <div class="copyId tableSmall flex-s">
               <div class="id oneLine">
                 {{ row.projectId ? row.projectId : "-" }}
               </div>
               <copy
-                v-if="row.projectId"
-                :content="row.projectId"
-                :class="{
+                v-if="row.projectId" :content="row.projectId" :class="{
                   rowCopy: 'rowCopy',
                   current: row.id === current,
                 }"
@@ -453,7 +440,7 @@ function handleCurrentChange(val: any) {
             </div>
           </template>
         </el-table-column>
-        <!--  样本来源,内部1，外部2，外包3-->
+        <!--  样本来源,内部1，外部2，外包3 -->
         <el-table-column
           v-if="checkList.includes('sampleSource')"
           align="left"
@@ -475,8 +462,7 @@ function handleCurrentChange(val: any) {
                   style="color: #a0c205; background: #f7ffd1"
                 >
                   <img
-                    src="@/assets/images/huiyuan.png"
-                    style="
+                    src="@/assets/images/huiyuan.png" style="
                       width: 0.9375rem;
                       height: 0.9375rem;
                       margin-right: 0.25rem;
@@ -494,8 +480,7 @@ function handleCurrentChange(val: any) {
               >
                 <el-tag type="danger" class="tag-with-image">
                   <img
-                    src="@/assets/images/gong.png"
-                    style="
+                    src="@/assets/images/gong.png" style="
                       width: 0.9375rem;
                       height: 0.9375rem;
                       margin-right: 0.25rem;
@@ -518,8 +503,7 @@ function handleCurrentChange(val: any) {
                   style="color: #a0c205; background: #f7ffd1"
                 >
                   <img
-                    src="@/assets/images/huiyuan.png"
-                    style="
+                    src="@/assets/images/huiyuan.png" style="
                       width: 0.9375rem;
                       height: 0.9375rem;
                       margin-right: 0.25rem;
@@ -637,7 +621,6 @@ function handleCurrentChange(val: any) {
             </div>
           </template>
         </el-table-column> -->
-
         <el-table-column
           v-if="checkList.includes('customerShortName')"
           align="left"
@@ -648,8 +631,31 @@ function handleCurrentChange(val: any) {
         >
           <!-- 乙方显示甲方公司名称甲方显示客户简称 -->
           <template #default="{ row }">
-            <div class="tableBig">
-              {{ row.customerShortName ? row.customerShortName : "-" }}
+            <div class="fontC-System">
+              <svg
+                v-if="row.currencyType === 'USD'" xmlns="http://www.w3.org/2000/svg" width="7" height="12"
+                viewBox="0 0 7 12" fill="none"
+              >
+                <path
+                  id="Vector"
+                  d="M2.83487 12V11.0864C2.23394 11.0106 1.82794 10.876 1.45186 10.6825C1.07578 10.489 0.750979 10.1763 0.477227 9.74469C0.203474 9.31305 0.0443987 8.78572 0 8.16248L1.20826 7.9355C1.30181 8.58082 1.46634 9.05473 1.70235 9.35745C2.04044 9.78458 2.36334 9.87195 2.83511 9.92086V6.24645C2.34102 6.1529 1.91817 5.96177 1.402 5.67235C1.01927 5.45867 0.724387 5.16284 0.517589 4.78462C0.310553 4.4064 0.207273 3.97689 0.207273 3.4961C0.207273 2.64161 0.509754 1.94974 1.11519 1.42005C1.52 1.06414 2.03854 0.791105 2.83534 0.711092V0H3.83087V0.711092C4.52962 0.777809 4.87792 1.03755 5.28748 1.38016C5.81267 1.81631 6.12868 2.41486 6.23553 3.17581L4.99379 3.36267C4.92256 2.8909 4.77251 2.5312 4.5498 2.27787C4.44272 2.15607 4.22239 1.86071 3.83087 1.78046V5.24522C4.43607 5.39646 4.631 5.51446 4.82688 5.59899C5.20082 5.76376 5.50544 5.96391 5.74144 6.19968C5.97721 6.43568 6.1586 6.71608 6.28562 7.04088C6.41241 7.36568 6.4758 7.7173 6.4758 8.09552C6.4758 8.9277 6.21107 9.62194 5.68137 10.1782C5.15168 10.7345 4.67207 11.0327 3.83087 11.0729V11.9998H2.83487V12ZM2.83487 1.76716C2.36761 1.83839 2.08152 2.02525 1.81227 2.32797C1.54303 2.63068 1.40841 2.98896 1.40841 3.40279C1.40841 3.81235 1.52285 4.15496 1.75221 4.43085C1.98132 4.70698 2.28736 4.92707 2.83487 5.09184V1.76716ZM3.8304 9.93463C4.29765 9.87693 4.46504 9.79953 4.78295 9.46429C5.03747 9.19576 5.24024 8.68767 5.24024 8.17601C5.24024 7.73986 5.13221 7.38942 4.91639 7.12469C4.70057 6.85996 4.47549 6.62301 3.83016 6.41383V9.93463H3.8304Z"
+                  fill="#333333"
+                />
+              </svg>
+              <svg
+                v-if="row.currencyType === 'CNY'" xmlns="http://www.w3.org/2000/svg" width="9" height="10"
+                viewBox="0 0 9 10" fill="none"
+              >
+                <path
+                  id="Vector"
+                  d="M8.79096 0L5.5738 4.56065H8.10931V5.56885H5.15558V6.95736H8.10931V7.97816H5.15558V10H3.63591V7.97816H0.574054V6.95736H3.63591V5.56885H0.574054V4.56065H3.18642L0 0H1.7134C3.20235 2.26497 4.10624 3.70177 4.42676 4.30931H4.45749C4.56617 4.05905 4.86361 3.55523 5.34877 2.79785L7.17085 0H8.79096Z"
+                  fill="#333333"
+                />
+              </svg>
+              <CurrencyType v-if="!row.currencyType" />
+              {{
+                row.doMoneyPrice || 0
+              }}
             </div>
           </template>
         </el-table-column>
@@ -672,19 +678,16 @@ function handleCurrentChange(val: any) {
                 {{
                   row.ipBelong.split("/")[0] ? row.ipBelong.split("/")[0] : "-"
                 }}
-              </div>
-              <copy
-                :content="row.ipBelong.split('/')[0]"
-                :class="{
+                <!-- <copy :content="row.ipBelong.split('/')[0]" :class="{
                   rowCopy: 'rowCopy',
                   current: row.id === current,
-                }"
-              />
+                }" /> -->
+              </div>
               <!-- <copy class="copy edit" :content="row.ipBelong.split('/')[0]" /> -->
             </div>
           </template>
         </el-table-column>
-        <!--<el-table-column v-if="checkList.includes('allocationType')" align="left" show-overflow-tooltip width="230"
+        <!-- <el-table-column v-if="checkList.includes('allocationType')" align="left" show-overflow-tooltip width="230"
           label="分配类型" fixed="right">
           <template #default="{ row }">
             <el-tag effect="plain" type="info" v-if="row.allocationType === 1" class="mx-1">未分配</el-tag>
@@ -713,14 +716,11 @@ function handleCurrentChange(val: any) {
                   合作商</el-tag>
               </div>
 
-
             </div>
-
-
 
           </template>
         </el-table-column> -->
-        <el-table-column
+        <!-- <el-table-column
           v-if="checkList.includes('doMoneyPrice')"
           align="left"
           prop="doMoneyPrice"
@@ -764,8 +764,8 @@ function handleCurrentChange(val: any) {
               <!-- {{
                 (row.doMoneyPrice ?? 0).toFixed(2) || 0
               }} -->
-              <!-- <CurrencyType />{{ row.doMoneyPrice || 0 }} -->
-            </div>
+        <!-- <CurrencyType />{{ row.doMoneyPrice || 0 }} -->
+        <!-- </div>
           </template>
         </el-table-column>
         <el-table-column
@@ -812,8 +812,11 @@ function handleCurrentChange(val: any) {
                 <el-text v-if="row.memberChildId">
                   {{ row.supplierPrice ?? 0 }}
                 </el-text>
-                <el-text v-if="row.memberId">
-                  {{ row.memberPrice ?? 0 }}
+                <br>
+                <el-text>
+                  {{
+                    row.surveyEndTime ? row.surveyEndTime : ""
+                  }}
                 </el-text>
               </template>
               <template v-if="row.surveySource === 3">
@@ -848,13 +851,14 @@ function handleCurrentChange(val: any) {
                   >
                 </div>
               </template>
-              <el-tag effect="plain" type="info">
-                {{ row.surveyTime ? row.surveyTime + "min" : 0 }}/
-                {{ row.projectTime ? row.projectTime + "min" : 0 }}
-              </el-tag>
-            </el-tooltip>
+  <el-tag effect="plain" type="info">
+    {{ row.surveyTime ? `${row.surveyTime}min` : 0 }}/
+
+  </el-tag>
+  </el-tooltip> -->
           </template>
         </el-table-column>
+
         <ElTableColumn
           v-if="checkList.includes('surveyStatus')"
           align="left"
@@ -898,12 +902,12 @@ function handleCurrentChange(val: any) {
               >{{ t('RecordsManagement.safeTermination') }}</el-tag
             >
             <el-tag
-              effect="dark"
-              style="background-color: #e1e1e1; border: none"
-              v-if="row.surveyStatus === 5"
+              v-if="row.surveyStatus === 5" effect="dark" style="background-color: #e1e1e1; border: none"
               class="mx-1"
               >{{ t('RecordsManagement.uncompleted') }}</el-tag
             >
+              未完成
+            </el-tag>
             <!-- <div
               v-if="
                 row.settlementStatus === 0 &&
@@ -918,26 +922,22 @@ function handleCurrentChange(val: any) {
             ></div> -->
             <div
               v-if="
-                row.settlementStatus === 1 &&
-                (row.viceStatus === 3 ||
-                  row.viceStatus === 4 ||
-                  row.viceStatus === 5 ||
-                  row.viceStatus === 6)
-              "
-              style="color: #4797fb"
-              class="i-healthicons:yes w-1.3em h-1.3em"
-            ></div>
+                row.settlementStatus === 1
+                  && (row.viceStatus === 3
+                    || row.viceStatus === 4
+                    || row.viceStatus === 5
+                    || row.viceStatus === 6)
+              " style="color: #4797fb" class="i-healthicons:yes h-1.3em w-1.3em"
+            />
             <div
               v-if="
-                row.settlementStatus === 2 &&
-                (row.viceStatus === 3 ||
-                  row.viceStatus === 4 ||
-                  row.viceStatus === 5 ||
-                  row.viceStatus === 6)
-              "
-              style="color: #f1756c"
-              class="i-healthicons:no w-1.3em h-1.3em"
-            ></div>
+                row.settlementStatus === 2
+                  && (row.viceStatus === 3
+                    || row.viceStatus === 4
+                    || row.viceStatus === 5
+                    || row.viceStatus === 6)
+              " style="color: #f1756c" class="i-healthicons:no h-1.3em w-1.3em"
+            />
           </template>
         </ElTableColumn>
         <ElTableColumn
@@ -953,116 +953,109 @@ function handleCurrentChange(val: any) {
             <div v-if="row.surveyStatus === 1">
               <div v-if="row.viceStatus">
                 <el-tag
-                  effect="dark"
-                  style="background-color: #74868b; border: none"
-                  v-if="row.viceStatus === 1 || row.viceStatus === 2"
-                  class="mx-1"
-                  type="success"
-                  >待审核</el-tag
+                  v-if="row.viceStatus === 1 || row.viceStatus === 2" effect="dark"
+                  style="background-color: #74868b; border: none" class="mx-1" type="success"
                 >
+                  待审核
+                </el-tag>
                 <!-- <el-tag effect="dark" style="background-color: #03c239; border: none" v-if="row.viceStatus === 2"
                   class="mx-1" type="danger">免审</el-tag> -->
                 <el-tag
-                  effect="dark"
-                  style="background-color: #3e5c78; border: none"
-                  v-if="row.viceStatus === 3"
-                  class="mx-1"
-                  type="primary"
-                  >过IR</el-tag
+                  v-if="row.viceStatus === 3" effect="dark" style="background-color: #3e5c78; border: none"
+                  class="mx-1" type="primary"
                 >
+                  过IR
+                </el-tag>
                 <el-tag
-                  effect="dark"
-                  style="background-color: #c8c7bc; border: none"
-                  v-if="row.viceStatus === 4"
-                  class="mx-1"
-                  type="warning"
-                  >时间过短</el-tag
+                  v-if="row.viceStatus === 4" effect="dark" style="background-color: #c8c7bc; border: none"
+                  class="mx-1" type="warning"
                 >
+                  时间过短
+                </el-tag>
                 <el-tag
-                  effect="dark"
-                  style="background-color: #bcc8b8; border: none"
-                  v-if="row.viceStatus === 5"
+                  v-if="row.viceStatus === 5" effect="dark" style="background-color: #bcc8b8; border: none"
                   class="mx-1"
-                  >超时完成</el-tag
                 >
+                  超时完成
+                </el-tag>
                 <el-tag
-                  effect="dark"
-                  style="background-color: #ded6cb; border: none"
-                  v-if="row.viceStatus === 6"
+                  v-if="row.viceStatus === 6" effect="dark" style="background-color: #ded6cb; border: none"
                   class="mx-1"
-                  >超量完成</el-tag
                 >
+                  超量完成
+                </el-tag>
                 <el-tag
-                  effect="dark"
-                  style="background-color: #03c239; border: none"
-                  v-if="row.viceStatus === 7"
+                  v-if="row.viceStatus === 7" effect="dark" style="background-color: #03c239; border: none"
                   class="mx-1"
-                  >审核成功</el-tag
                 >
+                  审核成功
+                </el-tag>
                 <el-tag
-                  effect="dark"
-                  style="background-color: #fb6868; border: none"
-                  v-if="row.viceStatus === 8"
+                  v-if="row.viceStatus === 8" effect="dark" style="background-color: #fb6868; border: none"
                   class="mx-1"
-                  >审核失败</el-tag
                 >
+                  审核失败
+                </el-tag>
                 <el-tag
-                  effect="dark"
-                  style="background-color: #fb6868; border: none"
-                  v-if="row.viceStatus === 9"
+                  v-if="row.viceStatus === 9" effect="dark" style="background-color: #fb6868; border: none"
                   class="mx-1"
-                  >数据冻结</el-tag
                 >
+                  数据冻结
+                </el-tag>
                 <el-tag
-                  effect="dark"
-                  style="background-color: #6683a2; border: none"
-                  v-if="row.viceStatus === 10"
+                  v-if="row.viceStatus === 10" effect="dark" style="background-color: #6683a2; border: none"
                   class="mx-1"
-                  >时间段过载</el-tag
                 >
+                  时间段过载
+                </el-tag>
                 <el-tag
-                  effect="dark"
-                  style="background-color: #638d93; border: none"
-                  v-if="row.viceStatus === 11"
+                  v-if="row.viceStatus === 11" effect="dark" style="background-color: #638d93; border: none"
                   class="mx-1"
-                  >IP不一致</el-tag
                 >
+                  IP不一致
+                </el-tag>
                 <el-tag
-                  effect="dark"
-                  style="background-color: #626a73; border: none"
-                  v-if="row.viceStatus === 12"
+                  v-if="row.viceStatus === 12" effect="dark" style="background-color: #626a73; border: none"
                   class="mx-1"
-                  >ID重复参与</el-tag
                 >
+                  ID重复参与
+                </el-tag>
                 <el-tag
-                  effect="dark"
-                  style="background-color: #03c239; border: none"
-                  v-if="row.viceStatus === 13"
+                  v-if="row.viceStatus === 13" effect="dark" style="background-color: #03c239; border: none"
                   class="mx-1"
-                  >和解</el-tag
                 >
+                  和解
+                </el-tag>
               </div>
-              <el-text v-else>-</el-text>
+              <el-text v-else>
+                -
+              </el-text>
             </div>
-            <el-text v-else>-</el-text>
+            <el-text v-else>
+              -
+            </el-text>
           </template>
         </ElTableColumn>
+        <el-table-column
+          v-if="checkList.includes('customerShortName')" align="left" prop="customerShortName"
+          show-overflow-tooltip label="客户" width="100"
+        >
+          <!-- 乙方显示甲方公司名称甲方显示客户简称 -->
+          <template #default="{ row }">
+            <div class="tableBig oneLine">
+              {{ row.customerShortName ? row.customerShortName : "-" }}
+            </div>
+          </template>
+        </el-table-column>
         <template #empty>
           <el-empty :image="empty" :image-size="300" />
         </template>
       </el-table>
 
       <ElPagination
-        :current-page="pagination.page"
-        :total="pagination.total"
-        :page-size="pagination.size"
-        :page-sizes="pagination.sizes"
-        :layout="pagination.layout"
-        :hide-on-single-page="false"
-        class="pagination"
-        background
-        @size-change="sizeChange"
-        @current-change="currentChange"
+        :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
+        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
+        background @size-change="sizeChange" @current-change="currentChange"
       />
     </PageMain>
   </div>
@@ -1070,20 +1063,27 @@ function handleCurrentChange(val: any) {
 
 <style scoped lang="scss">
 .tag-with-image {
-  display: flex; /* 使用flex布局 */
-  align-items: center; /* 垂直居中对齐 */
-  justify-content: center; /* 水平居中对齐 */
-  margin-right: 0.5rem; /* 每行标签之间的间距 */
+  display: flex;
+  /* 使用flex布局 */
+  align-items: center;
+  /* 垂直居中对齐 */
+  justify-content: center;
+  /* 水平居中对齐 */
+  margin-right: 0.5rem;
+  /* 每行标签之间的间距 */
 }
+
 :deep(.tag-with-image .el-tag__content) {
   display: flex;
   align-items: center;
 }
+
 .oneLine2 {
   // width: 40%;
   text-align: left;
   margin: 0 0.75rem 0.125rem 0;
 }
+
 .parameter1 {
   display: flex;
   align-content: center;
@@ -1099,6 +1099,7 @@ function handleCurrentChange(val: any) {
     margin: 0 0.75rem 0 0;
   }
 }
+
 .idFont {
   font-size: 0.875rem;
 }
@@ -1179,7 +1180,7 @@ function handleCurrentChange(val: any) {
   align-items: center;
   width: 100%;
 
-  > div:nth-of-type(1) {
+  >div:nth-of-type(1) {
     width: calc(100% - 25px);
     flex-shrink: 0;
   }
@@ -1206,5 +1207,17 @@ function handleCurrentChange(val: any) {
   .el-tag {
     min-width: 4.125rem;
   }
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  /* 垂直居中对齐 */
+}
+
+.right-middle {
+  margin-left: auto;
+  /* 将元素推到右侧 */
+  margin-right: 0;
 }
 </style>
