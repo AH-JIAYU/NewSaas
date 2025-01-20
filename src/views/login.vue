@@ -239,7 +239,7 @@ const handleLogin = debounce(() => {
         }
         //如果是自定义域名，携带id，就传
         const currentUrl = window.location.href;
-        console.log(currentUrl,urlNumSplit(currentUrl))
+        // console.log(currentUrl,urlNumSplit(currentUrl))
         if(urlNumSplit(currentUrl)){
           params.tenantId = urlNumSplit(currentUrl);
         }
