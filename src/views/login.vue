@@ -95,7 +95,18 @@ const loginRules = ref<any>({
     },
   ],
 });
+//获取自定义域名中间的租户id
+const urlNumSplit = (url: any) => {
+  const regex = /(\D+)(\d+)\.(\S+)/;
+  const match = url.match(regex);
 
+  if (match) {
+    const number = match[2];
+    return  number
+  } else {
+    return  ''
+  }
+};
 onMounted(async () => {
   const { data } = await api.getTenantConfig();
   isRegister.value = data?.register === false ? false : true
@@ -217,6 +228,12 @@ const handleLogin = debounce(() => {
             // 手机号
             params.type = 2;
           }
+        }
+        //如果是自定义域名，携带id，就传
+        const currentUrl = window.location.href;
+        console.log(currentUrl,urlNumSplit(currentUrl))
+        if(urlNumSplit(currentUrl)){
+          params.tenantId = urlNumSplit(currentUrl);
         }
         loading.value = true;
         userStore
