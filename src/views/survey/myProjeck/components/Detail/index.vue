@@ -220,4 +220,9 @@ defineExpose({
 .isNone {
   display: none;
 }
+:deep {
+  .markdown-body {
+    overflow: hidden;
+  }
+}
 </style>

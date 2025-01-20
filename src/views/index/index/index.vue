@@ -988,6 +988,7 @@ onMounted(async () => {
                   align="left"
                   prop="supplierName"
                   label="供应商名称"
+                  show-overflow-tooltip
                   ><template #default="{ row }">
                    <span class="font-c">{{ row.supplierName ? row.supplierName : "-" }}</span>
                   </template>
@@ -995,7 +996,7 @@ onMounted(async () => {
                 <el-table-column
                   align="left"
                   prop="completedQuantity"
-                  width="80"
+                  show-overflow-tooltip
                   label="完成数量"
                 >
                   <template #default="{ row }">
@@ -1009,7 +1010,7 @@ onMounted(async () => {
                 <el-table-column
                   align="left"
                   prop="completedAmount"
-                  width="85"
+                  show-overflow-tooltip
                   label="完成金额"
                   ><template #default="{ row }">
                     <span class="font-c">
@@ -1024,8 +1025,8 @@ onMounted(async () => {
                 <el-table-column
                   align="left"
                   prop="b2BProportion"
-                  width="70"
                   label="B2B"
+                  show-overflow-tooltip
                 >
                   <template #default="{ row }">
                     <span class="number-font font-c">{{
@@ -1037,8 +1038,9 @@ onMounted(async () => {
                 <el-table-column
                   align="left"
                   prop="b2CProportion"
-                  width="70"
+
                   label="B2C"
+                  show-overflow-tooltip
                 >
                   <template #default="{ row }">
                     <span class="number-font font-c">{{
@@ -1047,13 +1049,13 @@ onMounted(async () => {
                     >%
                   </template>
                 </el-table-column>
-                <el-table-column width="80" align="left" label="所属区域">
+                <!-- <el-table-column width="80" align="left" label="所属区域"  show-overflow-tooltip>
                   <template #default="{ row }">
                     <span v-if="String(row) !== '{}'" class="font-c">{{
                       filterCountry(row)
                     }}</span>
                   </template>
-                </el-table-column>
+                </el-table-column> -->
                 <template #empty>
                   <el-empty :image="empty" :image-size="200" />
                 </template>

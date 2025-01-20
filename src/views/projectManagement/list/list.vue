@@ -55,35 +55,80 @@ const formSearchName = ref<string>("formSearch-list"); // 表单排序name
 const stripe = ref(false);
 const columns = ref([
   // { prop: "projectType", label: "项目类型", checked: true, sotrtable: true },
-  { prop: "projectId", label: "项目ID", checked: true, sotrtable: true },
-  { prop: "name", label: "项目名称/别名", checked: true, sotrtable: true },
+  {
+    prop: "projectId",
+    label: t("project.projectId"),
+    checked: true,
+    sotrtable: true,
+  },
+  { prop: "name", label: t("project.name"), checked: true, sotrtable: true },
   {
     prop: "clientName",
-    label: "客户名称/标识",
+    label: t("project.customer"),
     checked: true,
     sotrtable: true,
   },
   {
     prop: "PCNL",
-    label: "参数",
+    label: t("project.parameter"),
     checked: true,
     sotrtable: true,
   },
-  { prop: "allocationType", label: "分配类型", checked: true, sotrtable: true },
-  { prop: "originalPrice", label: "原始价", checked: true, sotrtable: true },
-  { prop: "doMoneyPrice", label: "项目价", checked: true, sotrtable: true },
+  {
+    prop: "allocationType",
+    label: t("project.AssignmentType"),
+    checked: true,
+    sotrtable: true,
+  },
+  {
+    prop: "originalPrice",
+    label: t("project.originalPrice"),
+    checked: true,
+    sotrtable: true,
+  },
+  {
+    prop: "doMoneyPrice",
+    label: t("project.projectPrice"),
+    checked: true,
+    sotrtable: true,
+  },
   { prop: "ir", label: "IR/NIR", checked: true, sotrtable: true },
-  { prop: "countryIdList", label: "区域地区", checked: true, sotrtable: true },
+  {
+    prop: "countryIdList",
+    label: t("project.area"),
+    checked: true,
+    sotrtable: true,
+  },
   {
     prop: "allocationStatus",
-    label: "分配状态",
+    label: t("project.AssignmentStatus"),
     checked: true,
     sotrtable: true,
   },
-  { prop: "isOnline", label: "项目状态", checked: true, sotrtable: true },
-  { prop: "remark", label: "备注", checked: true, sotrtable: true },
-  { prop: "create", label: "创建", checked: true, sotrtable: true },
-  { prop: "createTime", label: "创建时间", checked: true, sotrtable: true },
+  {
+    prop: "isOnline",
+    label: t("project.projectStatus"),
+    checked: true,
+    sotrtable: true,
+  },
+  {
+    prop: "remark",
+    label: t("project.remark"),
+    checked: true,
+    sotrtable: true,
+  },
+  {
+    prop: "create",
+    label: t("project.create"),
+    checked: true,
+    sotrtable: true,
+  },
+  {
+    prop: "createTime",
+    label: t("project.createTime"),
+    checked: true,
+    sotrtable: true,
+  },
 ]);
 
 const search = ref<any>({
@@ -480,8 +525,8 @@ const formOption = {
   ],
   structureIdList: async () => await departmentStore.getDepartment(),
   status: () => [
-    { label: t('project.Online'), value: 1 },
-    { label: t('project.Offline'), value: 2 },
+    { label: t("project.Online"), value: 1 },
+    { label: t("project.Offline"), value: 2 },
   ],
   allocation: () => [
     { label: "已分配", value: 1 },
@@ -492,8 +537,8 @@ const formOption = {
     { label: "合作商分配", value: 2 },
   ],
   isOnlineType: () => [
-    { label: t('project.Online'), value: 1 },
-    { label: t('project.Offline'), value: 2 },
+    { label: t("project.Online"), value: 1 },
+    { label: t("project.Offline"), value: 2 },
   ],
 };
 
@@ -546,7 +591,9 @@ const handleChange = () => {
           />
         </FormLeftPanel>
         <FormRightPanel>
-          <el-button size="default" @click=""> {{ t('project.export') }} </el-button>
+          <el-button size="default" @click="">
+            {{ t("project.export") }}
+          </el-button>
           <TabelControl
             v-model:border="border"
             v-model:tableAutoHeight="tableAutoHeight"
@@ -1080,7 +1127,12 @@ const handleChange = () => {
             </div>
           </template>
         </el-table-column>
-        <el-table-column align="left" fixed="right" :label="t('project.operate')" width="230">
+        <el-table-column
+          align="left"
+          fixed="right"
+          :label="t('project.operate')"
+          width="230"
+        >
           <template #default="{ row }">
             <el-button
               v-if="row.allocationStatus === 1"
