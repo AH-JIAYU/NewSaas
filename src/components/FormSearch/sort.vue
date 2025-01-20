@@ -92,7 +92,7 @@ defineExpose({ showEdit })
           <el-button round type="primary" size="default" @click="onSubmit">保存</el-button>
         </h4>
       </template>
-      <p class="Big">全部筛选项 <span class="Small"> 不被选中的筛选项将会被隐藏 </span> </p>
+      <p class="Big">全部筛选项 <span class="Small"> 不被选中的筛选项将会被 </span> </p>
       <div class="grid"><el-button :type="item.show ? 'primary' : ''" v-for="item in data.formSearchList"
           @click="onChangeShow(item)">{{ item.placeholder ??
       `${item.startPlaceHolder}-${item.endPlaceHolder}` }}</el-button>
