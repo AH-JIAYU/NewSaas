@@ -60,13 +60,14 @@ const useUserStore = defineStore(
       password: string;
       type: number;
       code: string;
+      tenantId: string;
     }) {
       let res: any;
       {
-        const { type, code, password, account } = data;
+        const { type, code, password, account,tenantId } = data;
         switch (type) {
           case 1:
-            res = await apiUser.loginBypassword({ account, password });
+            res = tenantId ? await apiUser.loginBypassword({ account, password,tenantId }):await apiUser.loginBypassword({ account, password });
             break;
           case 2:
             res = await apiUser.loginByPhone({ phone: account, code });

@@ -2,7 +2,7 @@ import api from "../index";
 
 export default {
   // 登录
-  loginBypassword: (data: { account: string; password: string }) =>
+  loginBypassword: (data:any) =>
     api.post("user/loginByAccount", data),
 
   // 手机号登录

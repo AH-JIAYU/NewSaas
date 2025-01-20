@@ -210,6 +210,14 @@ const loginCountdown = () => {
     }
   }, 1000);
 };
+// 获取 URL 地址中的数字部分
+function extractNumbersFromUrl() {
+  const url = window.location.href; // 获取当前的 URL 地址
+  const numbers = url.match(/\d+/g); // 使用正则表达式提取所有数字
+
+  // 如果有数字，返回第一个匹配的数字
+  return numbers ? numbers[0] : null;
+}
 // 登录
 const handleLogin = debounce(() => {
   loginFormRef.value &&
