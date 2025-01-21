@@ -11,8 +11,8 @@ defineOptions({
   name: "thirdconfig",
 });
 const activeName = ref('first')
-function handleClick(tab, event) {
-      console.log(tab, event)
+function handleClick(tab:any, event:any) {
+
     }
 </script>
 

@@ -1,123 +1,254 @@
-<route lang="yaml">
-  meta:
-    enabled: false
-  </route>
+
 <script setup lang="ts">
+import api from "@/api/modules/third";
+import type { FormInstance, FormRules, UploadProps } from "element-plus";
+import { ElMessage, ElMessageBox } from "element-plus";
 defineOptions({
   name: "Shortmsg",
 });
 const activeName = ref("first");
-const form1 = reactive({
-  accessKeyId: "",
-  accessKeySecret: "",
-  open: false,
-  sign: "",
+//阿里云
+const form1 = ref<any>({
+  accessKey: "",
+  secretKey: "",
+  templateId: "", //模版id
+  activeState: 0,
+  signName: "", //签名
+});
+const validateNumber = (rule: any, value: any, callback: any) => {
+  const regex = /[\u4e00-\u9fa5]/; // 匹配汉字的正则表达式
+  if (regex.test(value)) {
+    callback(new Error("不能输入汉字"));
+  } else {
+    callback();
+  }
+};
+// 校验
+const formRules1 = ref<FormRules>({
+  accessKey: [
+    { required: true, message: "请输入阿里云AccessKeyId", trigger: "blur" },
+    { validator: validateNumber, trigger: "blur" },
+  ],
+  secretKey: [
+    {
+      required: true,
+      trigger: "blur",
+      message: "请输入阿里云AccessKeySecret",
+    },
+    { validator: validateNumber, trigger: "blur" },
+  ],
+});
+const formRules2 = ref<FormRules>({
+  appId: [
+    { required: true, message: "请输入腾讯云appId", trigger: "blur" },
+    { validator: validateNumber, trigger: "blur" },
+  ],
+  accessKey: [
+    { required: true, message: "请输入腾讯云AccessKeyId", trigger: "blur" },
+    { validator: validateNumber, trigger: "blur" },
+  ],
+  secretKey: [
+    {
+      required: true,
+      trigger: "blur",
+      message: "请输入腾讯云AccessKeySecret",
+    },
+    { validator: validateNumber, trigger: "blur" },
+  ],
 });
 
-const form2 = reactive({
+//腾讯云
+const form2 = ref<any>({
   appId: "",
-  accessKeyId: "",
-  accessKeySecret: "",
-  open: false,
-  sign: "",
-  area: "",
+  accessKey: "",
+  secretKey: "",
+  activeState: 0,
+  signName: "", //签名
+  // area:'', //短信区域
 });
-const onSubmit = () => {};
+onMounted(() => {
+  getDataList();
+});
+// 获取数据
+async function getDataList() {
+  try {
+    const { data, status } = await api.smsGetConfigList();
+
+    if (data && status === 1) {
+      if (data.aliSmsConfig && data.aliSmsConfig != null) {
+        form1.value = data.aliSmsConfig;
+      }
+      if (data.tencentSmsConfig && data.tencentSmsConfig != null) {
+        form2.value = data.tencentSmsConfig;
+      }
+    }
+  } catch (error) {
+  } finally {
+  }
+}
+const formRef1 = ref();
+const formRef2 = ref();
+const onSubmit1 = () => {
+  formRef1.value &&
+    formRef1.value.validate(async (valid: any) => {
+      if (valid) {
+        try {
+          form1.value.activeState =
+            form1.value.activeState == 1 ? form1.value.activeState : "0";
+          const res = await api.smsUpdateAliConfig(form1.value);
+          if (res.status === 1) {
+            getDataList();
+            ElMessage.success({
+              message: "修改成功",
+              center: true,
+            });
+          }
+        } catch (error) {
+          console.log("error", error);
+        } finally {
+        }
+      }
+    });
+};
+const onSubmit2 = () => {
+  formRef2.value &&
+    formRef2.value.validate(async (valid: any) => {
+      if (valid) {
+        form2.value.activeState =
+          form2.value.activeState == 1 ? form2.value.activeState : "0";
+
+        try {
+          const res = await api.smsUpdateTencentConfig(form2.value);
+          if (res.status === 1) {
+            getDataList();
+            ElMessage.success({
+              message: "修改成功",
+              center: true,
+            });
+          }
+        } catch (error) {
+          console.log("error", error);
+        } finally {
+        }
+      }
+    });
+};
 </script>
 
 <template>
   <div style="margin-left: 30px">
     <el-tabs v-model="activeName">
       <el-tab-pane label="阿里云配置" name="first">
-        <ElForm
-          :model="form1"
-          label-width="120px"
-          label-position="right"
-          :inline="false"
-        >
-          <el-row :gutter="20">
-            <el-col :span="24">
-              <ElFormItem label="是否启用:">
-                <ElSwitch v-model="form1.open" />
-              </ElFormItem>
-            </el-col>
-            <el-col :span="24">
-              <ElFormItem label="AccessKeyId:">
-                <ElInput
-                  v-model="form1.accessKeyId"
-                  placeholder="请输入阿里云AccessKeyId"
-                  style="width: 22.4375rem"
-                />
-              </ElFormItem>
-            </el-col>
-            <el-col :span="24">
-              <ElFormItem label="AccessKeySecret:">
-                <ElInput
-                  v-model="form1.accessKeySecret"
-                  placeholder="请输入阿里云AccessKeySecret"
-                  style="width: 22.4375rem"
-                />
-              </ElFormItem>
-            </el-col>
-            <el-col :span="24">
-              <ElFormItem label="短信签名:">
-                <ElInput
-                  v-model="form1.sign"
-                  placeholder="短信签名"
-                  style="width: 22.4375rem"
-                />
-              </ElFormItem>
-            </el-col>
-            <el-col :span="24">
-              <ElButton type="primary" @click="onSubmit"> 确定 </ElButton>
-              <ElButton>取消</ElButton>
-            </el-col>
-          </el-row>
-        </ElForm>
+        <el-row :gutter="20">
+          <ElForm
+            :model="form1"
+            label-width="150px"
+            label-position="right"
+            :inline="false"
+            ref="formRef1"
+            :rules="formRules1"
+          >
+            <ElFormItem label="是否启用:">
+              <ElSwitch
+                v-model="form1.activeState"
+                active-value="1"
+                inactive-value="0"
+              />
+            </ElFormItem>
+
+            <ElFormItem label="AccessKeyId:" prop="accessKey">
+              <ElInput
+                v-model="form1.accessKey"
+                placeholder="请输入阿里云AccessKeyId"
+                style="width: 22.4375rem"
+              />
+            </ElFormItem>
+
+            <ElFormItem label="AccessKeySecret:" prop="secretKey">
+              <ElInput
+                v-model="form1.secretKey"
+                placeholder="请输入阿里云AccessKeySecret"
+                style="width: 22.4375rem"
+              />
+            </ElFormItem>
+
+            <ElFormItem label="templateId:">
+              <ElInput
+                v-model="form1.templateId"
+                placeholder="请输入阿里云templateId"
+                style="width: 22.4375rem"
+              />
+            </ElFormItem>
+
+            <ElFormItem label="短信签名:">
+              <ElInput
+                v-model="form1.signName"
+                placeholder="请输入阿里云短信签名"
+                style="width: 22.4375rem"
+              />
+            </ElFormItem>
+
+            <ElFormItem>
+              <ElButton type="primary" @click="onSubmit1"> 确定 </ElButton>
+              <!-- <ElButton>取消</ElButton> -->
+            </ElFormItem>
+          </ElForm>
+        </el-row>
       </el-tab-pane>
       <el-tab-pane label="腾讯云配置" name="second">
-        <ElRow >
-          <ElCol>
-            <ElForm :model="form2"    label-width="120px"
-          label-position="right"
-          :inline="false" >
-              <ElFormItem label="是否启用:">
-                <ElSwitch v-model="form2.open" />
-              </ElFormItem>
-              <ElFormItem label="SKD AppID:">
-                <ElInput
-                  v-model="form2.appId"
-                  placeholder="请输入腾讯云SKD AppID"
-                      style="width: 22.4375rem"
-                />
-              </ElFormItem>
-              <ElFormItem label="AccessKeyId:">
-                <ElInput
-                  v-model="form2.accessKeyId"
-                  placeholder="请输入腾讯云AccessKeyId"
-                      style="width: 22.4375rem"
-                />
-              </ElFormItem>
-              <ElFormItem label="AccessKeySecret:">
-                <ElInput
-                  v-model="form2.accessKeySecret"
-                  placeholder="请输入腾讯云AccessKeySecret"
-                      style="width: 22.4375rem"
-                />
-              </ElFormItem>
-              <ElFormItem label="腾讯云短信签名:">
-                <ElInput v-model="form2.sign" placeholder="腾讯云短信签名"     style="width: 22.4375rem"/>
-              </ElFormItem>
-              <ElFormItem label="短信区域:">
+        <el-row :gutter="20">
+          <ElForm
+            :model="form2"
+            label-width="150px"
+            ref="formRef2"
+            label-position="right"
+            :inline="false"
+            :rules="formRules2"
+          >
+            <ElFormItem label="是否启用:">
+              <ElSwitch
+                v-model="form2.activeState"
+                active-value="1"
+                inactive-value="0"
+              />
+            </ElFormItem>
+            <ElFormItem label="SKD AppID:" prop="appId">
+              <ElInput
+                v-model="form2.appId"
+                placeholder="请输入腾讯云SKD AppID"
+                style="width: 22.4375rem"
+              />
+            </ElFormItem>
+            <ElFormItem label="AccessKeyId:" prop="accessKey">
+              <ElInput
+                v-model="form2.accessKey"
+                placeholder="请输入腾讯云AccessKeyId"
+                style="width: 22.4375rem"
+              />
+            </ElFormItem>
+            <ElFormItem label="AccessKeySecret:" prop="secretKey">
+              <ElInput
+                v-model="form2.secretKey"
+                placeholder="请输入腾讯云AccessKeySecret"
+                style="width: 22.4375rem"
+              />
+            </ElFormItem>
+            <ElFormItem label="短信签名:">
+              <ElInput
+                v-model="form2.signName"
+                placeholder="请输入腾讯云短信签名"
+                style="width: 22.4375rem"
+              />
+            </ElFormItem>
+            <!-- <ElFormItem label="短信区域:">
                 <ElInput v-model="form2.area" placeholder="短信区域"     style="width: 22.4375rem"/>
-              </ElFormItem>
-              <ElFormItem>
-                <ElButton type="primary" @click="onSubmit"> 确定 </ElButton>
-                <ElButton>取消</ElButton>
-              </ElFormItem>
-            </ElForm>
-          </ElCol>
-        </ElRow>
+              </ElFormItem> -->
+            <ElFormItem>
+              <ElButton type="primary" @click="onSubmit2"> 确定 </ElButton>
+              <!-- <ElButton>取消</ElButton> -->
+            </ElFormItem>
+          </ElForm>
+        </el-row>
       </el-tab-pane>
     </el-tabs>
   </div>
