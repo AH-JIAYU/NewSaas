@@ -8,15 +8,15 @@ defineOptions({
   name: "ProjectReview",
 });
 // 列表数据
-const list = ref<any>([])
+const list = ref<any>([]);
 list.value = [
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-    { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
-  ]
+  { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+  { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+  { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+  { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+  { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+  { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, r: 9, i: 10, id: 1 },
+];
 // 更新数据
 const emits = defineEmits(["success"]);
 // loading
@@ -176,17 +176,12 @@ defineExpose({ showEdit });
           </el-form-item>
         </div>
       </el-form>
-      <el-table style="margin-top: 30px;" :data="list" border>
-          <el-table-column
-            align="left"
-            type="index"
-            label="序号"
-            width="80"
-          />
-          <el-table-column align="left" prop="a" label="ID" />
-          <el-table-column align="left" prop="b" label="初始状态" />
-          <el-table-column align="left" prop="b" label="变更状态" />
-        </el-table>
+      <el-table style="margin-top: 30px" :data="list" border>
+        <el-table-column align="left" type="index" label="序号" width="80" />
+        <el-table-column align="left" prop="a" label="ID" />
+        <el-table-column align="left" prop="b" label="初始状态" />
+        <el-table-column align="left" prop="b" label="变更状态" />
+      </el-table>
     </el-drawer>
   </div>
 </template>

@@ -4,7 +4,7 @@ import eventBus from "@/utils/eventBus";
 import api from "@/api/modules/survey_billManagement";
 import useSettingsStore from "@/store/modules/settings";
 import { ElMessage, ElMessageBox } from "element-plus";
-import empty from '@/assets/images/empty.png'
+import empty from "@/assets/images/empty.png";
 
 defineOptions({
   name: "billManagement",
@@ -15,8 +15,8 @@ const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
 const tabbar = useTabbar();
 const settingsStore = useSettingsStore();
-const formSearchList = ref<any>()//表单排序配置
-const formSearchName=ref<string>('formSearch-billManagement')// 表单排序name
+const formSearchList = ref<any>(); //表单排序配置
+const formSearchName = ref<string>("formSearch-billManagement"); // 表单排序name
 
 // 表格控件-展示列
 const columns = ref([
@@ -60,10 +60,10 @@ const data = ref<any>({
   },
   // 账单状态
   billStatusList: [
-  {label:'待支付',value:1},
-  {label:'已支付',value:2},
-  {label:'已拒绝',value:3},
-],
+    { label: "待支付", value: 1 },
+    { label: "已支付", value: 2 },
+    { label: "已拒绝", value: 3 },
+  ],
   // 批量操作
   batch: {
     enable: false,
@@ -94,7 +94,6 @@ function getDataList() {
       pagination.value.total = res.data.total;
     });
   } catch (error) {
-
   } finally {
     data.value.loading = false;
   }
@@ -182,16 +181,36 @@ onMounted(() => {
     });
   }
   formSearchList.value = [
-  { index: 1, show: true, type: 'input', modelName: 'memberId', placeholder: '会员ID' },
-  { index: 2, show: true, type: 'input', modelName: 'memberName', placeholder: '会员姓名' },
-  { index: 3, show: true, type: 'select', modelName: 'billStatus', placeholder: '账单状态', option: 'billStatus',
-  optionLabel: 'label', optionValue: 'value',  multiple:true,
-}
-]
+    {
+      index: 1,
+      show: true,
+      type: "input",
+      modelName: "memberId",
+      placeholder: "会员ID",
+    },
+    {
+      index: 2,
+      show: true,
+      type: "input",
+      modelName: "memberName",
+      placeholder: "会员姓名",
+    },
+    {
+      index: 3,
+      show: true,
+      type: "select",
+      modelName: "billStatus",
+      placeholder: "账单状态",
+      option: "billStatus",
+      optionLabel: "label",
+      optionValue: "value",
+      multiple: true,
+    },
+  ];
 });
-const formOption={
-  billStatus:()=>data.value.billStatusList
-}
+const formOption = {
+  billStatus: () => data.value.billStatusList,
+};
 onBeforeUnmount(() => {
   if (data.value.formMode === "router") {
     eventBus.off("get-data-list");
@@ -208,102 +227,221 @@ function handleCurrentChange(val: any) {
 <template>
   <div :class="{ 'absolute-container': data.tableAutoHeight }">
     <PageMain>
-      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange" @onReset="onReset" :model="data.search"  :formOption="formOption"/>
+      <FormSearch
+        :formSearchList="formSearchList"
+        :formSearchName="formSearchName"
+        @currentChange="currentChange"
+        @onReset="onReset"
+        :model="data.search"
+        :formOption="formOption"
+      />
       <ElDivider border-style="dashed" />
       <el-row>
         <FormLeftPanel>
-          <el-button size="default" type="primary" @click="onCreate" v-auth="'supplierSettlement-get-addMemberSettlement'">
+          <el-button
+            size="default"
+            type="primary"
+            @click="onCreate"
+            v-auth="'supplierSettlement-get-addMemberSettlement'"
+          >
             新增结算
           </el-button>
         </FormLeftPanel>
         <FormRightPanel>
           <el-button size="default"> 导出 </el-button>
-          <TabelControl v-model:border="data.border" v-model:tableAutoHeight="data.tableAutoHeight"
-            v-model:checkList="data.checkList" v-model:columns="columns" v-model:line-height="data.lineHeight"
-            v-model:stripe="data.stripe" style="margin-left: 12px" @query-data="getDataList" />
+          <TabelControl
+            v-model:border="data.border"
+            v-model:tableAutoHeight="data.tableAutoHeight"
+            v-model:checkList="data.checkList"
+            v-model:columns="columns"
+            v-model:line-height="data.lineHeight"
+            v-model:stripe="data.stripe"
+            style="margin-left: 12px"
+            @query-data="getDataList"
+          />
         </FormRightPanel>
       </el-row>
-      <ElTable v-loading="data.loading" :border="data.border" :size="data.lineHeight" :stripe="data.stripe" class="my-4"
-        :data="data.dataList" highlight-current-row height="100%" @sort-change="sortChange"
-        @selection-change="data.batch.selectionDataList = $event"         @current-change="handleCurrentChange" >
-
-        <ElTableColumn v-if="data.checkList.includes('memberId')" show-overflow-tooltip align="left" prop=""
-          label="会员ID" width="200">
+      <ElTable
+        v-loading="data.loading"
+        :border="data.border"
+        :size="data.lineHeight"
+        :stripe="data.stripe"
+        class="my-4"
+        :data="data.dataList"
+        highlight-current-row
+        height="100%"
+        @sort-change="sortChange"
+        @selection-change="data.batch.selectionDataList = $event"
+        @current-change="handleCurrentChange"
+      >
+        <ElTableColumn
+          v-if="data.checkList.includes('memberId')"
+          show-overflow-tooltip
+          align="left"
+          prop=""
+          label="会员ID"
+          width="200"
+        >
           <template #default="{ row }">
             <div v-if="row.memberId" class="hoverSvg">
               <p class="fineBom">{{ row.memberId }}</p>
               <span class="c-fx">
                 <copy
-                :content="row.memberId"
-                :class="{
-                  rowCopy: 'rowCopy',
-                  current: row.id === current,
-                }"/>
+                  :content="row.memberId"
+                  :class="{
+                    rowCopy: 'rowCopy',
+                    current: row.id === current,
+                  }"
+                />
                 <!-- <copy class="copy" :content="row.memberId" /> -->
               </span>
             </div>
             <el-text v-else>-</el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('memberName')" show-overflow-tooltip align="left" prop=""
-          label="会员名称" width="120">
+        <ElTableColumn
+          v-if="data.checkList.includes('memberName')"
+          show-overflow-tooltip
+          align="left"
+          prop=""
+          label="会员名称"
+          width="120"
+        >
           <template #default="{ row }">
-            <p class="weightColor">{{ row.memberName ? row.memberName : "-" }}</p>
-          </template>
-        </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('billTime')"  align="left" prop="billTime" show-overflow-tooltip
-          label="账单日期" width="180"/>
-        <ElTableColumn v-if="data.checkList.includes('billAmount')" show-overflow-tooltip align="left"
-          prop="billAmount" label="账单金额">
-          <template #default="{ row }">
-            <p >
-              <CurrencyType /><span class="fontC-System">{{ row.billAmount || 0 }}</span>
+            <p class="weightColor">
+              {{ row.memberName ? row.memberName : "-" }}
             </p>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('taxesFees')" show-overflow-tooltip align="left" prop="taxesFees"
-          label="税">
+        <ElTableColumn
+          v-if="data.checkList.includes('billTime')"
+          align="left"
+          prop="billTime"
+          show-overflow-tooltip
+          label="账单日期"
+          width="180"
+        />
+        <ElTableColumn
+          v-if="data.checkList.includes('billAmount')"
+          show-overflow-tooltip
+          align="left"
+          prop="billAmount"
+          label="账单金额"
+        >
           <template #default="{ row }">
             <p>
-              <CurrencyType /><span class="fontC-System">{{ row.taxesFees || 0 }}</span>
+              <CurrencyType /><span class="fontC-System">{{
+                row.billAmount || 0
+              }}</span>
             </p>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('payAmount')" show-overflow-tooltip align="left" prop="payAmount"
-          label="实际金额">
+        <ElTableColumn
+          v-if="data.checkList.includes('taxesFees')"
+          show-overflow-tooltip
+          align="left"
+          prop="taxesFees"
+          label="税"
+        >
           <template #default="{ row }">
             <p>
-              <CurrencyType /><span class="fontC-System">{{ row.payAmount || 0 }}</span>
+              <CurrencyType /><span class="fontC-System">{{
+                row.taxesFees || 0
+              }}</span>
             </p>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('payTime')" show-overflow-tooltip align="left" prop="payTime"
-          label="支付时间" width="180">
+        <ElTableColumn
+          v-if="data.checkList.includes('payAmount')"
+          show-overflow-tooltip
+          align="left"
+          prop="payAmount"
+          label="实际金额"
+        >
           <template #default="{ row }">
-            <span class="fontC-System">{{ row.payTime ? row.payTime : '-' }}</span>
+            <p>
+              <CurrencyType /><span class="fontC-System">{{
+                row.payAmount || 0
+              }}</span>
+            </p>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('billStatus')" align="left" show-overflow-tooltip prop=""
-          label="账单状态">
+        <ElTableColumn
+          v-if="data.checkList.includes('payTime')"
+          show-overflow-tooltip
+          align="left"
+          prop="payTime"
+          label="支付时间"
+          width="180"
+        >
           <template #default="{ row }">
-            <el-tag v-if="row.billStatus === 1" type="warning" effect="dark" style="background-color:#FFAC54">待支付</el-tag>
-            <el-tag v-if="row.billStatus === 2" type="success" effect="dark">已支付</el-tag>
-            <el-tag v-if="row.billStatus === 3" type="danger" effect="dark">已拒绝</el-tag>
+            <span class="fontC-System">{{
+              row.payTime ? row.payTime : "-"
+            }}</span>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('notes')" show-overflow-tooltip align="left" prop="notes"
-          label="说明">
+        <ElTableColumn
+          v-if="data.checkList.includes('billStatus')"
+          align="left"
+          show-overflow-tooltip
+          prop=""
+          label="账单状态"
+        >
           <template #default="{ row }">
-            <el-text class="fontC-System"> {{ row.notes ? row.notes : "-" }}</el-text>
+            <el-tag
+              v-if="row.billStatus === 1"
+              type="warning"
+              effect="dark"
+              style="background-color: #ffac54"
+              >待支付</el-tag
+            >
+            <el-tag v-if="row.billStatus === 2" type="success" effect="dark"
+              >已支付</el-tag
+            >
+            <el-tag v-if="row.billStatus === 3" type="danger" effect="dark"
+              >已拒绝</el-tag
+            >
           </template>
         </ElTableColumn>
-        <el-table-column align="left" prop="i" label="操作" fixed="right" show-overflow-tooltip width="260">
+        <ElTableColumn
+          v-if="data.checkList.includes('notes')"
+          show-overflow-tooltip
+          align="left"
+          prop="notes"
+          label="说明"
+        >
+          <template #default="{ row }">
+            <el-text class="fontC-System">
+              {{ row.notes ? row.notes : "-" }}</el-text
+            >
+          </template>
+        </ElTableColumn>
+        <el-table-column
+          align="left"
+          prop="i"
+          label="操作"
+          fixed="right"
+          show-overflow-tooltip
+          width="260"
+        >
           <template #default="{ row }">
             <template v-if="row.billStatus === 1">
-              <el-button size="small" plain type="primary" @click="paymentOperation(row.id, 1)" v-auth="'billManagement-insert-updateMemberBill'">
+              <el-button
+                size="small"
+                plain
+                type="primary"
+                @click="paymentOperation(row.id, 1)"
+                v-auth="'billManagement-insert-updateMemberBill'"
+              >
                 支付
               </el-button>
-              <el-button size="small" plain type="danger" @click="paymentOperation(row.id, 2)" v-auth="'billManagement-insert-updateMemberBill'">
+              <el-button
+                size="small"
+                plain
+                type="danger"
+                @click="paymentOperation(row.id, 2)"
+                v-auth="'billManagement-insert-updateMemberBill'"
+              >
                 拒绝支付
               </el-button>
             </template>
@@ -313,12 +451,26 @@ function handleCurrentChange(val: any) {
           <el-empty :image="empty" :image-size="300" />
         </template>
       </ElTable>
-      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
-        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-        background @size-change="sizeChange" @current-change="currentChange" />
+      <ElPagination
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
+        :page-sizes="pagination.sizes"
+        :layout="pagination.layout"
+        :hide-on-single-page="false"
+        class="pagination"
+        background
+        @size-change="sizeChange"
+        @current-change="currentChange"
+      />
     </PageMain>
-    <FormMode v-if="data.formMode === 'dialog' || data.formMode === 'drawer'" :id="data.formModeProps.id"
-      v-model="data.formModeProps.visible" :mode="data.formMode" @success="getDataList" />
+    <FormMode
+      v-if="data.formMode === 'dialog' || data.formMode === 'drawer'"
+      :id="data.formModeProps.id"
+      v-model="data.formModeProps.visible"
+      :mode="data.formMode"
+      @success="getDataList"
+    />
   </div>
 </template>
 
@@ -327,9 +479,9 @@ function handleCurrentChange(val: any) {
   width: 20px;
   display: none;
 }
- .current {
-    display: block !important;
-  }
+.current {
+  display: block !important;
+}
 .el-table__row:hover .rowCopy {
   display: block;
 }
@@ -381,7 +533,7 @@ function handleCurrentChange(val: any) {
 }
 .fineBom {
   text-align: left !important;
-  font-size:.875rem;
+  font-size: 0.875rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -396,9 +548,9 @@ function handleCurrentChange(val: any) {
   width: 25px;
 }
 .svg {
-  width: .875rem;
-  height: .875rem;
-  margin-left: .3125rem;
+  width: 0.875rem;
+  height: 0.875rem;
+  margin-left: 0.3125rem;
 }
 .weightColor {
   font-weight: 700;

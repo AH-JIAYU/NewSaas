@@ -39,12 +39,12 @@ const form = ref<any>({
   // 结算状态: 1:待审核 2:已审核 3:已开票 4:已结算 5:已冻结
   status: null,
 });
-const type = ref<any>('')
-const title = ref<any>('')
+const type = ref<any>("");
+const title = ref<any>("");
 const TypeList: any = {
-  systemDone: ' 系统/审核',
-  settlementPo: '结算PO号',
-  remark: '备注',
+  systemDone: " 系统/审核",
+  settlementPo: "结算PO号",
+  remark: "备注",
 };
 // 校验
 const formRules = ref<FormRules>({
@@ -55,18 +55,18 @@ const formRules = ref<FormRules>({
   settlementDone: [
     { required: true, message: "请输入结算完成数", trigger: "blur" },
     {
-      pattern: /^\d+$/,  // 允许输入0或正整数
-      message: '请输入纯数字',
-      trigger: 'blur'
-    }
+      pattern: /^\d+$/, // 允许输入0或正整数
+      message: "请输入纯数字",
+      trigger: "blur",
+    },
   ],
   systemDone: [
     { required: true, message: "请输入系统完成数", trigger: "blur" },
     {
-      pattern: /^\d+$/,  // 允许输入0或正整数
-      message: '请输入纯数字',
-      trigger: 'blur'
-    }
+      pattern: /^\d+$/, // 允许输入0或正整数
+      message: "请输入纯数字",
+      trigger: "blur",
+    },
   ],
 });
 // 结算状态
@@ -85,7 +85,10 @@ function onSubmit() {
     formRef.value.validate(async (valid: any) => {
       if (valid) {
         try {
-          if (!/^\d+$/.test(form.value.settlementDone) || !/^\d+$/.test(form.value.systemDone)) {
+          if (
+            !/^\d+$/.test(form.value.settlementDone) ||
+            !/^\d+$/.test(form.value.systemDone)
+          ) {
             ElMessage.warning({
               message: "系统或审核完成数请输入正整数",
               center: true,
@@ -114,7 +117,6 @@ function onSubmit() {
             });
           }
         } catch (error) {
-
         } finally {
           loading.value = false;
         }
@@ -123,8 +125,8 @@ function onSubmit() {
 }
 // 获取数据
 async function showEdit(row: any, FormType: any) {
-  title.value = (TypeList[FormType] || '') + '编辑'
-  type.value = FormType
+  title.value = (TypeList[FormType] || "") + "编辑";
+  type.value = FormType;
   formData.value = JSON.parse(row);
   form.value.id = formData.value.id;
   form.value.projectId = formData.value.projectId;
@@ -172,61 +174,141 @@ defineExpose({ showEdit });
 
 <template>
   <div v-loading="loading">
-    <el-dialog v-model="dialogTableVisible" :title="title" width="600" :before-close="closeHandler">
-      <el-form ref="formRef" :model="form" :rules="formRules" label-width="100px" :inline="false">
+    <el-dialog
+      v-model="dialogTableVisible"
+      :title="title"
+      width="600"
+      :before-close="closeHandler"
+    >
+      <el-form
+        ref="formRef"
+        :model="form"
+        :rules="formRules"
+        label-width="100px"
+        :inline="false"
+      >
         <template v-if="!type">
           <el-form-item label="项目ID">
             <el-text class="mx-1">{{ form.projectId }}</el-text>
           </el-form-item>
           <el-form-item prop="clientId" label="所属客户">
-            <el-select v-model="form.clientId" placeholder="请选择所属客户" :disabled="!!form.id" clearable filterable>
-              <el-option v-for="item in customerList" :key="item.tenantCustomerId" :value="item.tenantCustomerId"
-                :label="item.customerAccord" />
+            <el-select
+              v-model="form.clientId"
+              placeholder="请选择所属客户"
+              :disabled="!!form.id"
+              clearable
+              filterable
+            >
+              <el-option
+                v-for="item in customerList"
+                :key="item.tenantCustomerId"
+                :value="item.tenantCustomerId"
+                :label="item.customerAccord"
+              />
             </el-select>
           </el-form-item>
           <el-form-item prop="doMoneyPrice" label="项目价">
-            <el-input v-model="form.doMoneyPrice" :disabled="!!form.id" placeholder="" clearable @change="" />
+            <el-input
+              v-model="form.doMoneyPrice"
+              :disabled="!!form.id"
+              placeholder=""
+              clearable
+              @change=""
+            />
           </el-form-item>
           <el-form-item label="系统完成数">
-            <el-input v-model="form.systemDone" placeholder="" clearable @change="" />
+            <el-input
+              v-model="form.systemDone"
+              placeholder=""
+              clearable
+              @change=""
+            />
           </el-form-item>
           <el-form-item label="审核完成数">
-            <el-input v-model="form.settlementDone" placeholder="" clearable @change="" />
+            <el-input
+              v-model="form.settlementDone"
+              placeholder=""
+              clearable
+              @change=""
+            />
           </el-form-item>
-          <el-form-item label="结算PO号">
-            <el-input v-model="form.settlementPo" placeholder="" clearable @change="" />
+          <el-form-item label="结算">
+            <el-input
+              v-model="form.settlementPo"
+              placeholder=""
+              clearable
+              @change=""
+            />
           </el-form-item>
           <el-form-item label="备注">
-            <el-input maxlength="200" show-word-limit style="width: 100%" type="textarea" :rows="5"
-              v-model="form.remark" clearable />
+            <el-input
+              maxlength="200"
+              show-word-limit
+              style="width: 100%"
+              type="textarea"
+              :rows="5"
+              v-model="form.remark"
+              clearable
+            />
           </el-form-item>
           <el-form-item label="状态">
-            <el-select placeholder="结算状态" v-model="form.status" :clearable="form.id != '' ? false : true" filterable>
-              <el-option v-for="item in settlementStatusList" :key="item.value" :value="item.value" :label="item.label"
-                :disabled="form.id != '' ? true : false"></el-option>
+            <el-select
+              placeholder="结算状态"
+              v-model="form.status"
+              :clearable="form.id != '' ? false : true"
+              filterable
+            >
+              <el-option
+                v-for="item in settlementStatusList"
+                :key="item.value"
+                :value="item.value"
+                :label="item.label"
+                :disabled="form.id != '' ? true : false"
+              ></el-option>
             </el-select>
           </el-form-item>
         </template>
         <template v-if="type === 'systemDone'">
           <el-form-item label="系统完成数">
-            <el-input v-model="form.systemDone" placeholder="" clearable @change="" />
+            <el-input
+              v-model="form.systemDone"
+              placeholder=""
+              clearable
+              @change=""
+            />
           </el-form-item>
           <el-form-item label="审核完成数">
-            <el-input v-model="form.settlementDone" placeholder="" clearable @change="" />
+            <el-input
+              v-model="form.settlementDone"
+              placeholder=""
+              clearable
+              @change=""
+            />
           </el-form-item>
         </template>
         <template v-if="type === 'settlementPo'">
           <el-form-item label="结算PO号">
-            <el-input v-model="form.settlementPo" placeholder="" clearable @change="" />
+            <el-input
+              v-model="form.settlementPo"
+              placeholder=""
+              clearable
+              @change=""
+            />
           </el-form-item>
         </template>
         <template v-if="type === 'remark'">
           <el-form-item label="备注">
-            <el-input maxlength="200" show-word-limit style="width: 100%" type="textarea" :rows="5"
-              v-model="form.remark" clearable />
+            <el-input
+              maxlength="200"
+              show-word-limit
+              style="width: 100%"
+              type="textarea"
+              :rows="5"
+              v-model="form.remark"
+              clearable
+            />
           </el-form-item>
         </template>
-
       </el-form>
       <template #footer>
         <div style="flex: auto">

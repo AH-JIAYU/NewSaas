@@ -13,11 +13,13 @@ import useTenantStaffStore from "@/store/modules/configuration_manager";
 import api from "@/api/modules/project_settlement";
 import empty from "@/assets/images/empty.png";
 import fileExport from "@/utils/flie_export";
+import { useI18n } from "vue-i18n";
 
 defineOptions({
   name: "settlement",
 });
-
+// 国际化
+const { t } = useI18n();
 // 时间
 // const { format } = useTimeago();
 //区域
@@ -231,7 +233,7 @@ const formatDateRange = (timestamps: any) => {
     return formatDate(singleDate);
   } else if (timestamps.length === 2) {
     const [startTimestamp, endTimestamp] = timestamps.map(
-      (ts: any) => new Date(parseInt(ts))
+      (ts: any) => new Date(parseInt(ts)),
     );
     return `${formatDate(startTimestamp)} - ${formatDate(endTimestamp)}`;
   }
@@ -256,7 +258,7 @@ async function fetchData() {
       params.beginTime = params.time[0] || "";
       params.endTime = params.time[1] || "";
     }
-    delete params.time
+    delete params.time;
     // if (queryForm.settlementStatus) {
     //   params.settlementStatus = [params.settlementStatus];
     // } else {
@@ -317,28 +319,28 @@ onMounted(async () => {
       show: true,
       type: "input",
       modelName: "projectId",
-      placeholder: "项目ID",
+      placeholder: computed(() => t("settlement.projectID")),
     },
     {
       index: 2,
       show: true,
       type: "input",
       modelName: "projectName",
-      placeholder: "项目名称",
+      placeholder: computed(() => t("settlement.projectName")),
     },
     {
       index: 3,
       show: true,
       type: "input",
       modelName: "projectIdentification",
-      placeholder: "项目标识",
+      placeholder: computed(() => t("settlement.projectIdentification")),
     },
     {
       index: 4,
       show: true,
       type: "select",
       modelName: "countryData",
-      placeholder: "区域",
+      placeholder: computed(() => t("settlement.area")),
       option: "global",
       optionLabel: "chineseName",
       optionValue: "id",
@@ -348,7 +350,7 @@ onMounted(async () => {
       show: true,
       type: "select",
       modelName: "customerId",
-      placeholder: "客户简称",
+      placeholder: computed(() => t("settlement.customerAbbreviation")),
       option: "customerId",
       optionLabel: "customerAccord",
       optionValue: "tenantCustomerId",
@@ -358,7 +360,7 @@ onMounted(async () => {
       show: true,
       type: "select",
       modelName: "settlementStatus",
-      placeholder: "结算状态",
+      placeholder: computed(() => t("settlement.settlementStatus")),
       option: "settlementStatus",
       optionLabel: "label",
       optionValue: "value",
@@ -379,8 +381,8 @@ onMounted(async () => {
       show: true,
       type: "datetimerange",
       modelName: "time",
-      startPlaceHolder: "开始日期",
-      endPlaceHolder: "结束日期",
+      startPlaceHolder: computed(() => t("settlement.startDate")),
+      endPlaceHolder: computed(() => t("settlement.endDate")),
     },
   ];
 });
@@ -427,18 +429,35 @@ function handleMoreStatus(row: any) {
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>
-          <el-button type="primary" size="default" @click="addSettlement" v-auth="'settlement-insert-insertProjectSettlement'">
-            新增结算
+          <el-button
+            type="primary"
+            size="default"
+            @click="addSettlement"
+            v-auth="'settlement-insert-insertProjectSettlement'"
+          >
+            {{ t("settlement.newSettlement") }}
           </el-button>
-          <el-button type="primary" size="default" @click="invoicing(1)" v-auth="'settlement-update-updateProjectSettlementStatus'">
-            开票
+          <el-button
+            type="primary"
+            size="default"
+            @click="invoicing(1)"
+            v-auth="'settlement-update-updateProjectSettlementStatus'"
+          >
+            {{ t("settlement.makeOutAnInvoice") }}
           </el-button>
-          <el-button type="primary" size="default" @click="settlement(2)" v-auth="'settlement-update-updateProjectSettlementStatus'">
-            结算
+          <el-button
+            type="primary"
+            size="default"
+            @click="settlement(2)"
+            v-auth="'settlement-update-updateProjectSettlementStatus'"
+          >
+            {{ t("settlement.settleAnAccount") }}
           </el-button>
         </FormLeftPanel>
         <FormRightPanel>
-          <el-button size="default" @click="onExport"> 导出 </el-button>
+          <el-button size="default" @click="onExport">
+            {{ t("settlement.export") }}
+          </el-button>
           <TabelControl
             v-model:border="border"
             v-model:tableAutoHeight="tableAutoHeight"
@@ -469,7 +488,7 @@ function handleMoreStatus(row: any) {
           v-if="checkList.includes('projectId')"
           prop="projectId"
           align="left"
-          label="项目"
+          :label="t('settlement.project')"
         >
           <template #default="{ row }">
             <div class="copyId">
@@ -501,7 +520,7 @@ function handleMoreStatus(row: any) {
           prop="projectName"
           width="220"
           align="left"
-          label="名称/标识"
+          :label="t('settlement.name')"
         >
           <template #default="{ row }">
             <div>
@@ -524,7 +543,7 @@ function handleMoreStatus(row: any) {
           prop="customerName"
           width="140"
           align="left"
-          label="客户"
+          :label="t('settlement.customer')"
         >
           <template #default="{ row }">
             <div class="oneLine">
@@ -540,7 +559,7 @@ function handleMoreStatus(row: any) {
           v-if="checkList.includes('projectAmount')"
           show-overflow-tooltip
           align="left"
-          label="合作项目价"
+          :label="t('settlement.cooperativeProjectPrice')"
           width="100"
         >
           <template #default="{ row }">
@@ -585,7 +604,7 @@ function handleMoreStatus(row: any) {
           show-overflow-tooltip
           align="left"
           width="100"
-          label="区域"
+          :label="t('settlement.area')"
         >
           <template #default="{ row }">
             <template v-if="row.countryId">
@@ -594,7 +613,7 @@ function handleMoreStatus(row: any) {
                   row.countryId.length >= basicDictionaryStore.country.length
                 "
               >
-                <el-tag type="primary">全球</el-tag>
+                <el-tag type="primary">{{ t("settlement.global") }}</el-tag>
               </template>
               <template v-else-if="comCountryId(row.countryId).length > 1">
                 <el-tooltip
@@ -627,7 +646,7 @@ function handleMoreStatus(row: any) {
           show-overflow-tooltip
           prop="systemDone"
           align="left"
-          label="系统/审核完成数"
+          :label="t('settlement.auditCompletions')"
           ><template #default="{ row }">
             <div class="flex-c">
               <div class="oneLine" style="width: calc(100% - 20px)">
@@ -641,7 +660,7 @@ function handleMoreStatus(row: any) {
                 :class="{ edit: 'edit', current: row.projectId === current }"
                 name="i-ep:edit"
                 color="#409eff"
-                  v-auth="'settlement-update-updateProjectSettlement'"
+                v-auth="'settlement-update-updateProjectSettlement'"
               />
             </div>
           </template>
@@ -651,14 +670,14 @@ function handleMoreStatus(row: any) {
           show-overflow-tooltip
           prop="settlementDone"
           align="left"
-          label="结算完成数"
+          :label="t('settlement.settlementCompletions')"
         />
         <el-table-column
           v-if="checkList.includes('settlementPo')"
           show-overflow-tooltip
           prop="settlementPo"
           align="left"
-          label="结算PO号"
+          :label="t('settlement.clearingPO')"
         >
           <template #default="{ row }">
             <div class="flex-c fontC-System">
@@ -675,7 +694,7 @@ function handleMoreStatus(row: any) {
                 :class="{ edit: 'edit', current: row.projectId === current }"
                 name="i-ep:edit"
                 color="#409eff"
-                  v-auth="'settlement-update-updateProjectSettlement'"
+                v-auth="'settlement-update-updateProjectSettlement'"
               />
             </div>
           </template>
@@ -686,7 +705,7 @@ function handleMoreStatus(row: any) {
           show-overflow-tooltip
           prop="status"
           align="left"
-          label="状态"
+          :label="t('settlement.status')"
         >
           <template #default="{ row }">
             <div style="display: flex" class="oneLine">
@@ -697,7 +716,7 @@ function handleMoreStatus(row: any) {
                   class="p-1"
                   type="warning"
                   @click="handleMoreStatus(row)"
-                  >待审核</el-button
+                  >{{ t("settlement.toBeReviewed") }}</el-button
                 >
                 <!-- <el-text>{{ row.pendReviewTime }}</el-text> -->
               </el-text>
@@ -708,7 +727,7 @@ function handleMoreStatus(row: any) {
                   class="p-1"
                   type="success"
                   @click="handleMoreStatus(row)"
-                  >已开票</el-button
+                  >{{ t("settlement.invoiceHasBeenIssued") }}</el-button
                 >
                 <!-- <el-text>{{ row.invoicedOutTime }}</el-text> -->
               </el-text>
@@ -719,7 +738,7 @@ function handleMoreStatus(row: any) {
                   class="p-1"
                   type="info"
                   @click="handleMoreStatus(row)"
-                  >已结算</el-button
+                  >{{ t("settlement.haveAlreadySettled") }}</el-button
                 >
                 <!-- <el-text>{{ row.settledTime }}</el-text> -->
               </el-text>
@@ -730,7 +749,7 @@ function handleMoreStatus(row: any) {
                   class="p-1"
                   type="primary"
                   @click="handleMoreStatus(row)"
-                  >已审核</el-button
+                  >{{ t("settlement.audited") }}</el-button
                 >
                 <!-- <el-text>{{ row.reviewTime }}</el-text> -->
               </el-text>
@@ -741,7 +760,7 @@ function handleMoreStatus(row: any) {
                   class="p-1"
                   type="danger"
                   @click="handleMoreStatus(row)"
-                  >已冻结</el-button
+                  >{{ t("settlement.frozen") }}</el-button
                 >
                 <!-- <el-text>{{ row.frozenTime }}</el-text> -->
               </el-text>
@@ -753,7 +772,7 @@ function handleMoreStatus(row: any) {
           v-if="checkList.includes('nodeTime')"
           show-overflow-tooltip
           align="left"
-          label="时间"
+          :label="t('settlement.time')"
           width="120"
         >
           <template #default="{ row }">
@@ -810,7 +829,7 @@ function handleMoreStatus(row: any) {
           show-overflow-tooltip
           prop="remark"
           align="left"
-          label="备注"
+          :label="t('settlement.remark')"
         >
           <template #default="{ row }">
             <div class="flex-c fontC-System">
@@ -822,12 +841,17 @@ function handleMoreStatus(row: any) {
                 :class="{ edit: 'edit', current: row.projectId === current }"
                 name="i-ep:edit"
                 color="#409eff"
-                  v-auth="'settlement-update-updateProjectSettlement'"
+                v-auth="'settlement-update-updateProjectSettlement'"
               />
             </div>
           </template>
         </el-table-column>
-        <el-table-column align="left" fixed="right" label="操作" width="250">
+        <el-table-column
+          align="left"
+          fixed="right"
+          :label="t('settlement.controls')"
+          width="250"
+        >
           <template #default="{ row }">
             <ElSpace>
               <el-button
@@ -838,7 +862,7 @@ function handleMoreStatus(row: any) {
                 @click="auditing(row)"
                 v-auth="'settlement-get-projectSettlement'"
               >
-                审核
+                {{ t("settlement.examine") }}
               </el-button>
               <el-button
                 v-if="row.status === 5"
@@ -846,18 +870,18 @@ function handleMoreStatus(row: any) {
                 size="small"
                 plain
                 @click="handleMoreOperating('auditing', row)"
-                  v-auth="'settlement-get-projectSettlement'"
+                v-auth="'settlement-get-projectSettlement'"
               >
-                重审
+                {{ t("settlement.retrial") }}
               </el-button>
               <el-button
                 type="warning"
                 size="small"
                 plain
                 @click="handleMoreOperating('edit', row)"
-                  v-auth="'settlement-update-updateProjectSettlement'"
+                v-auth="'settlement-update-updateProjectSettlement'"
               >
-                结算编辑
+                {{ t("settlement.settlementEdit") }}
               </el-button>
               <!-- 已审核2/已结算4/已开票3 -->
               <el-button
@@ -866,9 +890,9 @@ function handleMoreStatus(row: any) {
                 v-if="row.status == 2 || row.status == 4 || row.status == 3"
                 plain
                 @click="handleMoreOperating('refundDetails', row)"
-                 v-auth="'settlement-get-getProjectSettlementDetails'"
+                v-auth="'settlement-get-getProjectSettlementDetails'"
               >
-                详情
+                {{ t("settlement.a") }}
               </el-button>
             </ElSpace>
           </template>
