@@ -1,284 +1,274 @@
+
 <script setup lang="ts">
-const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
-  usePagination();
-import qiniuForm from "./dialog/QiniuForm.vue";
 import api from "@/api/modules/third";
+import { ElMessage, ElMessageBox } from "element-plus";
+import type { FormInstance, FormRules, UploadProps } from "element-plus";
 defineOptions({
   name: "Qiniu",
 });
-
-const form1 = reactive({
-  accessKeyId: "",
-  accessKeySecret: "",
-  open: false,
-  sign: "",
-});
-const headerList = ref([
-  { label: "七牛云储存", value: "1" },
-  { label: "阿里云储存", value: "2" },
-  { label: "腾讯云储存", value: "3" },
-  { label: "华为云储存", value: "4" },
-]);
-
-const form2 = reactive({
-  appId: "",
-  accessKeyId: "",
-  accessKeySecret: "",
-  open: false,
-  sign: "",
-  area: "",
+const activeName = ref("first");
+//阿里云
+const form1 = ref<any>({
+  accessKeyId: "", //阿里云OSS访问密钥ID
+  accessKeySecret: "", //阿里云OSS访问密钥
+  bucketName: "", //阿里云OSS存储桶名称
+  activeState: 0,
+  domain: "", //阿里云OSS存储桶域名
+  region: "", //阿里云OSS存储区域
 });
 //七牛云
-const columns1 = ref([
-  {
-    prop: "bucket",
-    label: "储存空间名称",
-    checked: true,
-    sotrtable: true,
-  },
-  {
-    prop: "区域",
-    label: "region",
-    checked: true,
-    sotrtable: true,
-  },
-  {
-    prop: "domain",
-    label: "空间域名",
-    checked: true,
-    sotrtable: true,
-  },
-  {
-    prop: "status",
-    label: "使用状态",
-    checked: true,
-    sotrtable: true,
-  },
-  {
-    prop: "createTime",
-    label: "创建时间",
-    checked: true,
-    sotrtable: true,
-  },
-  {
-    prop: "updateTime",
-    label: "更新时间",
-    checked: true,
-    sotrtable: true,
-  },
-]);
-const levelLists = ref([]);
-const activeName = ref("1");
-const total = ref(0);
-const list = ref([]);
-function changeTab() {
-  // list.type = activeName;
-  // list.page = 1;
-  getlist();
-}
-const qiniuFormRef = ref();
-// loading加载
-const listLoading = ref<boolean>(false);
-const addStorageBtn = () => {
-  qiniuFormRef.value.showEdit(activeName);
-};
-function getlist() {
-  // api.getConfigList().then((res: any) => {
-  //   if (activeName.value == "1") {
-  //     levelLists.value == res.data && res.data.qiniuOssConfig
-  //       ? res.data.qiniuOssConfig
-  //       : [];
-  //   } else if (activeName.value == "2") {
-  //     levelLists.value == res.data && res.data.aliCloudOssConfig
-  //       ? res.data.aliCloudOssConfig
-  //       : [];
-  //   }
-  //   if (activeName.value == "3") {
-  //     levelLists.value == res.data && res.data.tencentCosConfig
-  //       ? res.data.tencentCosConfig
-  //       : [];
-  //   }
-  // });
-}
-onMounted(() => {
-  getlist();
+
+const form2 = ref<any>({
+  accessKey: "",
+  secretKey: "",
+  bucket: "", //七牛云存储bucket
+  activeState: 0,
+  domain: "", //七牛云存储域名
 });
-// 每页数量切换
-function sizeChange(size: number) {
-  onSizeChange(size).then(() => getlist());
+// 校验
+const formRules1 = ref<FormRules>({
+  accessKeyId: [
+    { required: true, message: "请输入阿里云AccessKeyId", trigger: "blur" },
+    {
+      pattern: /^[A-Za-z0-9]*$/,
+      message: "请输入字母、数字",
+      trigger: "blur",
+    },
+  ],
+  accessKeySecret: [
+    {
+      required: true,
+      trigger: "blur",
+      message: "请输入阿里云AccessKeySecret",
+    },
+    {
+      pattern: /^[A-Za-z0-9]*$/,
+      message: "请输入字母、数字",
+      trigger: "blur",
+    },
+  ],
+});
+const formRules2 = ref<FormRules>({
+  appId: [
+    { required: true, message: "请输入七牛云appId", trigger: "blur" },
+    {
+      pattern: /^[A-Za-z0-9]*$/,
+      message: "请输入字母、数字",
+      trigger: "blur",
+    },
+  ],
+  accessKey: [
+    { required: true, message: "请输入七牛云AccessKeyId", trigger: "blur" },
+    {
+      pattern: /^[A-Za-z0-9]*$/,
+      message: "请输入字母、数字",
+      trigger: "blur",
+    },
+  ],
+  secretKey: [
+    {
+      required: true,
+      trigger: "blur",
+      message: "请输入七牛云AccessKeySecret",
+    },
+    {
+      pattern: /^[A-Za-z0-9]*$/,
+      message: "请输入字母、数字",
+      trigger: "blur",
+    },
+  ],
+});
+const formRef1 = ref();
+const formRef2 = ref();
+const onSubmit1 = () => {
+  formRef1.value &&
+    formRef1.value.validate(async (valid: any) => {
+      if (valid) {
+        try {
+          form1.value.activeState =
+            form1.value.activeState == 1 ? form1.value.activeState : "0";
+          const res = await api.updateAliConfig(form1.value);
+          if (res.status === 1) {
+            getDataList();
+            ElMessage.success({
+              message: "修改成功",
+              center: true,
+            });
+          }
+        } catch (error) {
+          console.log("error", error);
+        } finally {
+        }
+      }
+    });
+};
+const onSubmit2 = () => {
+  formRef2.value &&
+    formRef2.value.validate(async (valid: any) => {
+      if (valid) {
+        try {
+          form2.value.activeState =
+            form2.value.activeState == 1 ? form2.value.activeState : "0";
+          const res = await api.updateQiniuConfig(form2.value);
+          if (res.status === 1) {
+            getDataList();
+            ElMessage.success({
+              message: "修改成功",
+              center: true,
+            });
+          }
+        } catch (error) {
+          console.log("error", error);
+        } finally {
+        }
+      }
+    });
+};
+onMounted(() => {
+  getDataList();
+});
+// 获取数据
+async function getDataList() {
+  try {
+    const { data, status } = await api.getConfigList();
+
+    if (data && status === 1) {
+      if (data.aliCloudOssConfig && data.aliCloudOssConfig != null) {
+        form1.value = data.aliCloudOssConfig;
+      }
+      if (data.qiniuOssConfig && data.qiniuOssConfig != null) {
+        form2.value = data.qiniuOssConfig;
+      }
+    }
+  } catch (error) {
+  } finally {
+  }
 }
-// 当前页码切换（翻页）
-function currentChange(page = 1) {
-  onCurrentChange(page).then(() => getlist());
-}
-const config = (row: any) => {};
-const edit = (row: any) => {};
-const del = (row: any) => {};
-const changeSwitch = (row: any) => {};
-//是否启用
-const changeState = (state: any) => {};
 </script>
 
 <template>
-  <div style="margin-left: 40px">
-    <ElFormItem label="是否启用:">
-      <ElSwitch v-model="form1.open" @change="changeState($event)" />
-    </ElFormItem>
-    <el-alert>
-      <p v-if="activeName === '1'">
-        七牛云开通方法：<a
-          href="https://doc.crmeb.com/single/v5/7792"
-          target="_blank"
-          >点击查看</a
-        >
-      </p>
-      <p v-if="activeName === '2'">
-        阿里云oss开通方法：<a
-          href="https://doc.crmeb.com/single/v5/7790"
-          target="_blank"
-          >点击查看</a
-        >
-      </p>
-      <p v-if="activeName === '3'">
-        腾讯云cos开通方法：<a
-          href="https://doc.crmeb.com/single/v5/7791"
-          target="_blank"
-          >点击查看</a
-        >
-      </p>
-      <p v-if="activeName === '4'">
-        华为云cos开通方法：<a
-          href="https://doc.crmeb.com/single/v5/8523"
-          target="_blank"
-          >点击查看</a
-        >
-      </p>
-
-      <p>第一步： 添加【存储空间】（空间名称不能重复）</p>
-      <p>第二步： 开启【使用状态】</p>
-      <template v-if="activeName == '2'">
-        <p>第三步（必选）： 选择云存储空间列表上的修改【空间域名操作】</p>
-        <p>
-          第四步（必选）：
-          选择云存储空间列表上的修改【CNAME配置】，打开后复制记录值到对应的平台解析
-        </p>
-      </template>
-      <template v-else>
-        <p>第三步（可选）： 选择云存储空间列表上的修改【空间域名操作】</p>
-        <p>
-          第四步（可选）：
-          选择云存储空间列表上的修改【CNAME配置】，打开后复制记录值到对应的平台解析
-        </p>
-      </template>
-    </el-alert>
-  </div>
   <div style="margin-left: 30px">
-    <el-tabs v-model="activeName" @tab-click="changeTab">
-      <el-tab-pane
-        :label="item.label"
-        :name="item.value.toString()"
-        v-for="(item, index) in headerList"
-        :key="index"
-      />
+    <el-tabs v-model="activeName">
+      <el-tab-pane label="阿里云配置" name="first">
+        <el-row :gutter="20">
+          <ElForm
+            :model="form1"
+            ref="formRef1"
+            label-width="150px"
+            label-position="right"
+            :inline="false"
+            :rules="formRules1"
+          >
+            <ElFormItem label="是否启用:">
+              <ElSwitch
+                v-model="form1.activeState"
+                active-value="1"
+                inactive-value="0"
+              />
+            </ElFormItem>
+
+            <ElFormItem label="AccessKeyId:" prop="accessKeyId">
+              <ElInput
+                v-model="form1.accessKeyId"
+                placeholder="请输入阿里云AccessKeyId"
+                style="width: 22.4375rem"
+              />
+            </ElFormItem>
+
+            <ElFormItem label="AccessKeySecret:" prop="accessKeySecret">
+              <ElInput
+                v-model="form1.accessKeySecret"
+                placeholder="请输入阿里云AccessKeySecret"
+                style="width: 22.4375rem"
+              />
+            </ElFormItem>
+
+            <ElFormItem label="空间名称:">
+              <ElInput
+                v-model="form1.bucketName"
+                placeholder="请输入阿里云空间名称"
+                style="width: 22.4375rem"
+              />
+            </ElFormItem>
+
+            <ElFormItem label="空间域名:">
+              <ElInput
+                v-model="form1.domain"
+                placeholder="请输入阿里云空间域名"
+                style="width: 22.4375rem"
+              />
+            </ElFormItem>
+
+            <ElFormItem label="空间区域:">
+              <ElInput
+                v-model="form1.region"
+                placeholder="请输入阿里云空间区域"
+                style="width: 22.4375rem"
+              />
+            </ElFormItem>
+            <ElFormItem>
+              <ElButton type="primary" @click="onSubmit1"> 确定 </ElButton>
+              <!-- <ElButton>取消</ElButton> -->
+            </ElFormItem>
+          </ElForm>
+        </el-row>
+      </el-tab-pane>
+      <el-tab-pane label="七牛云配置" name="second">
+        <el-row :gutter="20">
+          <ElForm
+            :model="form2"
+            label-width="150px"
+            label-position="right"
+            :inline="false"
+            ref="formRef2"
+            :rules="formRules2"
+          >
+            <ElFormItem label="是否启用:">
+              <ElSwitch
+                v-model="form2.activeState"
+                active-value="1"
+                inactive-value="0"
+              />
+            </ElFormItem>
+            <ElFormItem label="AccessKeyId:" prop="accessKey">
+              <ElInput
+                v-model="form2.accessKey"
+                placeholder="请输入七牛云AccessKeyId"
+                style="width: 22.4375rem"
+              />
+            </ElFormItem>
+            <ElFormItem label="AccessKeySecret:" prop="secretKey">
+              <ElInput
+                v-model="form2.secretKey"
+                placeholder="请输入七牛云AccessKeySecret"
+                style="width: 22.4375rem"
+              />
+            </ElFormItem>
+            <ElFormItem label="空间名称:">
+              <ElInput
+                v-model="form2.bucket"
+                placeholder="请输入七牛云存储空间"
+                style="width: 22.4375rem"
+              />
+            </ElFormItem>
+            <ElFormItem label="空间域名:">
+              <ElInput
+                v-model="form2.domain"
+                placeholder="请输入七牛云存储域名"
+                style="width: 22.4375rem"
+              />
+            </ElFormItem>
+            <ElFormItem>
+              <ElButton type="primary" @click="onSubmit2"> 确定 </ElButton>
+              <!-- <ElButton>取消</ElButton> -->
+            </ElFormItem>
+          </ElForm>
+        </el-row>
+      </el-tab-pane>
     </el-tabs>
   </div>
-  <div style="margin-left: 30px">
-    <el-card :bordered="false" shadow="never" class="ivu-mt">
-      <el-button type="primary" @click="addStorageBtn">添加存储空间</el-button>
-
-      <el-table
-        :data="levelLists"
-        ref="table"
-        class="mt14"
-        v-loading="listLoading"
-        highlight-current-row
-        no-userFrom-text="暂无数据"
-        no-filtered-userFrom-text="暂无筛选结果"
-      >
-        <el-table-column label="储存空间名称" min-width="120">
-          <template #default="{ row }">
-            <span>{{ row.bucket }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="区域" min-width="90">
-          <template #default="{ row }">
-            <span>{{ row.region }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="空间域名" min-width="130">
-          <template #default="{ row }">
-            <span>{{ row.domain }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="使用状态" min-width="90">
-          <template #default="{ row }">
-            <el-switch
-              class="defineSwitch"
-              :active-value="1"
-              :inactive-value="0"
-              v-model="row.status"
-              :value="row.status"
-              @change="changeSwitch(row)"
-              size="large"
-              active-text="开启"
-              inactive-text="关闭"
-            >
-            </el-switch>
-          </template>
-        </el-table-column>
-        <el-table-column label="创建时间" min-width="130">
-          <template #default="{ row }">
-            <span>{{ row._add_time }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="更新时间" min-width="130">
-          <template #default="{ row }">
-            <span>{{ row._update_time }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" fixed="right" width="220">
-          <template #default="{ row }">
-            <template v-if="row.domain && row.domain != row.cname">
-              <span class="btn" v-db-click @click="config(row)">CNAME配置</span>
-              <el-divider direction="vertical"></el-divider>
-            </template>
-            <span class="btn" v-db-click @click="edit(row)">修改空间域名</span>
-            <el-divider direction="vertical"></el-divider>
-            <span class="btn" v-db-click @click="del(row)">删除</span>
-          </template>
-        </el-table-column>
-      </el-table>
-      <!-- <div class="acea-row row-right page">
-        <ElPagination
-          :current-page="pagination.page"
-          :total="pagination.total"
-          :page-size="pagination.size"
-          :page-sizes="pagination.sizes"
-          :layout="pagination.layout"
-          :hide-on-single-page="false"
-          class="pagination"
-          background
-          @size-change="sizeChange"
-          @current-change="currentChange"
-        />
-      </div> -->
-    </el-card>
-  </div>
-  <qiniuForm ref="qiniuFormRef" @fetch-data="getlist"></qiniuForm>
 </template>
 
 <style lang="scss" scoped>
 // 样式
-.message ::v-deep .ivu-table-header thead tr th {
-  padding: 8px 16px;
-}
-
-.ivu-radio-wrapper {
-  margin-right: 15px;
-  font-size: 12px !important;
-}
-
-.message ::v-deep .ivu-tabs-tab {
-  border-radius: 0 !important;
-}
 </style>

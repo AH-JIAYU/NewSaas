@@ -15,4 +15,15 @@ export default {
   // 云存储-更新七牛云OSS存储配置
   updateQiniuConfig: (data: any) =>
     api.post("tenantStorageConfig/updateQiniuConfig", data),
+  //短信-启用指定类型的存储配置
+  smsEnableConfig: (data: any) =>
+    api.post("tenantSmsConfig/enableConfig", data),
+  //短信-短信配置列表
+  smsGetConfigList: () => api.post("tenantSmsConfig/getConfigList"),
+  //短信-阿里云短信配置
+  smsUpdateAliConfig: (data: any) =>
+    api.post("tenantSmsConfig/updateAliConfig", data),
+  //短信-腾讯云短信配置
+  smsUpdateTencentConfig: (data: any) =>
+    api.post("tenantSmsConfig/updateTencentConfig", data),
 };
