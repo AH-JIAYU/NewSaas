@@ -15,15 +15,19 @@ const form1 = ref<any>({
   activeState: 0,
   signName: "", //签名
 });
+const validateNumber = (rule: any, value: any, callback: any) => {
+  const regex = /[\u4e00-\u9fa5]/; // 匹配汉字的正则表达式
+  if (regex.test(value)) {
+    callback(new Error("不能输入汉字"));
+  } else {
+    callback();
+  }
+};
 // 校验
 const formRules1 = ref<FormRules>({
   accessKey: [
     { required: true, message: "请输入阿里云AccessKeyId", trigger: "blur" },
-    {
-      pattern: /^[A-Za-z0-9]*$/,
-      message: "请输入字母、数字",
-      trigger: "blur",
-    },
+    { validator: validateNumber, trigger: "blur" },
   ],
   secretKey: [
     {
@@ -31,29 +35,17 @@ const formRules1 = ref<FormRules>({
       trigger: "blur",
       message: "请输入阿里云AccessKeySecret",
     },
-    {
-      pattern: /^[A-Za-z0-9]*$/,
-      message: "请输入字母、数字",
-      trigger: "blur",
-    },
+    { validator: validateNumber, trigger: "blur" },
   ],
 });
 const formRules2 = ref<FormRules>({
   appId: [
     { required: true, message: "请输入腾讯云appId", trigger: "blur" },
-    {
-      pattern: /^[A-Za-z0-9]*$/,
-      message: "请输入字母、数字",
-      trigger: "blur",
-    },
+    { validator: validateNumber, trigger: "blur" },
   ],
   accessKey: [
     { required: true, message: "请输入腾讯云AccessKeyId", trigger: "blur" },
-    {
-      pattern: /^[A-Za-z0-9]*$/,
-      message: "请输入字母、数字",
-      trigger: "blur",
-    },
+    { validator: validateNumber, trigger: "blur" },
   ],
   secretKey: [
     {
@@ -61,13 +53,10 @@ const formRules2 = ref<FormRules>({
       trigger: "blur",
       message: "请输入腾讯云AccessKeySecret",
     },
-    {
-      pattern: /^[A-Za-z0-9]*$/,
-      message: "请输入字母、数字",
-      trigger: "blur",
-    },
+    { validator: validateNumber, trigger: "blur" },
   ],
 });
+
 //腾讯云
 const form2 = ref<any>({
   appId: "",
