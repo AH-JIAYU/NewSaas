@@ -41,71 +41,71 @@ const formSearchList = ref<any>(); //表单排序配置
 const formSearchName = ref<string>("formSearch-memberSurveyRecords"); // 表单排序name
 // 表格控件-展示列
 const columns = ref([
-  { prop: "id", label: "点击ID", sortable: true, checked: true },
-  { prop: "surveySource", label: "会员类型", sortable: true, checked: true },
+  { prop: "id", label: computed(() => t("RecordsManagement.clickID")), sortable: true, checked: true },
+  { prop: "surveySource", label: computed(() => t("RecordsManagement.vipType")), sortable: true, checked: true },
   {
     prop: "memberChildId",
-    label: "子会员ID",
+    label: computed(() => t("RecordsManagement.subVipID")),
     sortable: true,
     checked: true,
   },
   {
     prop: "tenantId",
-    label: "租户ID",
+    label: computed(() => t("RecordsManagement.tenantID")),
     sortable: true,
     checked: true,
   },
-  { prop: "memberId", label: "会员ID", sortable: true, checked: true },
+  { prop: "memberId", label: computed(() => t("RecordsManagement.vipID")), sortable: true, checked: true },
   {
     prop: "tenantSupplierId",
-    label: "供应商id",
+    label: computed(() => t("RecordsManagement.supplierID")),
     sortable: true,
     checked: true,
   },
 
-  { prop: "projectId", label: "项目ID", sortable: true, checked: true },
+  { prop: "projectId", label: computed(() => t("RecordsManagement.projectID")), sortable: true, checked: true },
   {
     prop: "randomIdentityId",
-    label: "随机身份",
+    label: computed(() => t("RecordsManagement.randomIdentity")),
     sortable: true,
     checked: true,
   },
   {
     prop: "projectName",
-    label: "项目名称",
+    label: computed(() => t("RecordsManagement.projectName")),
     sortable: true,
     checked: true,
   },
   {
     prop: "sampleSource",
-    label: "样本来源",
+    label: computed(() => t("RecordsManagement.sampleSource")),
     sortable: true,
     checked: true,
   },
 
   {
     prop: "customerShortName",
-    label: "客户简称",
+    label: computed(() => t("RecordsManagement.CustomerAbbreviation")),
     sortable: true,
     checked: true,
   },
-  { prop: "allocationType", label: "分配类型", sortable: true, checked: true },
+  { prop: "allocationType", label: computed(() => t("RecordsManagement.allocationType")), sortable: true, checked: true },
   {
     prop: "doMoneyPrice",
-    label: "项目价",
+    label: computed(() => t("RecordsManagement.projectPrice")),
     sortable: true,
     checked: true,
   },
   {
     prop: "memberPrice",
-    label: "成本价",
+    label: computed(() => t("RecordsManagement.costPrice")),
     sortable: true,
     checked: true,
   },
-  { prop: "ipBelong", label: "IP/所属国", sortable: true, checked: true },
-  { prop: "surveyTime", label: "调查时间", sortable: true, checked: true },
-  { prop: "surveyStatus", label: "调查状态", sortable: true, checked: true },
-  { prop: "viceStatus", label: "副状态", sortable: true, checked: true },
+  { prop: "ipBelong", label: computed(() => t("RecordsManagement.OwningCountry")), sortable: true, checked: true },
+  { prop: "surveyTime", label: computed(() => t("RecordsManagement.surveyTime")), sortable: true, checked: true },
+  { prop: "surveyStatus", label: computed(() => t("RecordsManagement.surveyStatus")), sortable: true, checked: true },
+  { prop: "viceStatus", label: computed(() => t("RecordsManagement.viceState")), sortable: true, checked: true },
 ]);
 const queryForm = reactive<any>({
   memberChildId: "", //	子会员id

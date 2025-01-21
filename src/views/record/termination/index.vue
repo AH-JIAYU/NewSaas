@@ -2,10 +2,13 @@
 import { onMounted } from "vue";
 import api from "@/api/modules/record_termination";
 import empty from "@/assets/images/empty.png";
+import { useI18n } from "vue-i18n";
 defineOptions({
   name: "termination",
 });
 
+// 国际化
+const { t } = useI18n();
 const { getParams, pagination, onSizeChange, onCurrentChange } =
   usePagination(); // 分页
 // 时间

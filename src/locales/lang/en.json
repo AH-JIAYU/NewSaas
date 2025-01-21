@@ -139,7 +139,9 @@
     "complete": "Complete",
     "beScreened": "Be Screened",
     "safeTermination": "Safe Termination",
-    "uncompleted": "Uncompleted"
+    "uncompleted": "Uncompleted",
+    "allocationType":"Allocation Type",
+    "OwningCountry":"IP/Owning Country"
   },
   "newProject": {
     "basicSettings": "Basic Settings",

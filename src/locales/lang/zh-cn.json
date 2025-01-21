@@ -140,7 +140,9 @@
     "complete": "完成",
     "beScreened": "被甄别",
     "safeTermination": "安全终止",
-    "uncompleted": "未完成"
+    "uncompleted": "未完成",
+    "allocationType":"分配类型",
+    "OwningCountry":"IP/所属国"
   },
   "newProject": {
     "basicSettings": "基础设置",
