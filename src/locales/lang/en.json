@@ -85,10 +85,29 @@
     "operate": "Operate",
     "projectName": "Project Name",
     "customer": "Customer Name",
-    "projectStatus":"Project Status",
-    "remark":"Remark",
-    "create":"Create",
-    "createTime":"Create Time"
+    "projectStatus": "Project Status",
+    "remark": "Remark",
+    "create": "Create",
+    "createTime": "Create Time",
+    "internalAddition": "Internal Addition",
+    "partnerAllocation": "Partner Allocation",
+    "supplier": "Supplier",
+    "internalStation": "Internal Station",
+    "partner": "Partner",
+    "assigned": "Assigned",
+    "undistributed": "Undistributed",
+    "participateIn": "P",
+    "complete": "C",
+    "quota": "Q",
+    "limited": "L",
+    "participateIn2": "Participate In",
+    "complete2": "Complete",
+    "quota2": "Quota",
+    "limited2": "Limited",
+    "distribution": "Distribution",
+    "reallocation": "Reallocation",
+    "editor": "Edit",
+    "details": "Details"
   },
   "formSearch": {
     "sift": "Sift",
@@ -140,8 +159,8 @@
     "beScreened": "Be Screened",
     "safeTermination": "Safe Termination",
     "uncompleted": "Uncompleted",
-    "allocationType":"Allocation Type",
-    "OwningCountry":"IP/Owning Country"
+    "allocationType": "Allocation Type",
+    "OwningCountry": "IP/Owning Country"
   },
   "newProject": {
     "basicSettings": "Basic Settings",
@@ -235,12 +254,12 @@
     "age": "Please enter your age",
     "bt18": "Can't be younger than 18",
     "lt99": "Age cannot be greater than or equal to 99",
-    "configurationInformation":"Configuration Information",
-    "areaSelect":"Selection area",
-    "quickAdd":"Quick Add",
-    "questionnaireName":"Questionnaire Name",
-    "question":"Question",
-    "inputDisabled":"The input field cannot be set"
+    "configurationInformation": "Configuration Information",
+    "areaSelect": "Selection area",
+    "quickAdd": "Quick Add",
+    "questionnaireName": "Questionnaire Name",
+    "question": "Question",
+    "inputDisabled": "The input field cannot be set"
   },
   "leftTabs": {
     "newCustomer": "New Customer",
@@ -297,15 +316,62 @@
     "changeSuccess": "Change success",
     "sameName": "The customer name already exists"
   },
-  "formRef":{
-    "areaSelect":"Please select a region first"
+  "formRef": {
+    "areaSelect": "Please select a region first"
   },
-  "sort":{
-    "sortSettings":"Set filter",
-    "save":"Save",
-    "allSort":"All filters",
-    "hide":"Filters that are not selected will be hidden",
-    "show":"Display effect",
-    "hold":"Long press the filter to drag and drop to adjust the display order"
+  "sort": {
+    "sortSettings": "Set filter",
+    "save": "Save",
+    "allSort": "All filters",
+    "hide": "Filters that are not selected will be hidden",
+    "show": "Display effect",
+    "hold": "Long press the filter to drag and drop to adjust the display order"
+  },
+  "quickEdit": {
+    "editor": "Edit",
+    "quota": "Quota",
+    "limited": "limit",
+    "hourComplete": "HourlyCompletion",
+    "hourLimited": "HourlyLimit",
+    "belong": "OwnedCustomer",
+    "transfinite": "TurnoverLimit",
+    "belowStandard": "The audit rate is not qualified",
+    "projectName": "ProjectName",
+    "projectIdentification": "ProjectIdentification",
+    "projectPrice": "ProjectPrice",
+    "remark": "Remark",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
+  },
+  "allocationEdit": {
+    "projectName": "Project Name",
+    "projectCode": "Project Code",
+    "CustomerAbbreviation": "Customer Abbreviation",
+    "selectAll": "Select All",
+    "quickAdd": "Quick Add",
+    "supplier": "Supplier",
+    "supplierMaintenance": "Please maintain vendor data first",
+    "supplierSelect": "Please select supplier data first",
+    "SurveyStation": "SurveyStation",
+    "SurveyStationMaintenance": "Please maintain the survey station data first",
+    "SurveyStationSelect": "Please select the survey station data first",
+    "partner": "Partner",
+    "partnerMaintenance": "Please maintain the partner data first",
+    "partnerSelect": "Please select the partner data first",
+    "unassign": "Unassign",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "leastOne": "Select at least one assignment target"
+  },
+  "projectDetail": {
+    "operatingSystem": "Operating System",
+    "browser": "Browser",
+    "carticipateIn": "Carticipate In",
+    "complete": "complete",
+    "successfulAudit": "Successful Audit",
+    "passTheAudit": "Pass The Audit",
+    "basicInformation": "Basic Information",
+    "undistributed": "Undistributed",
+    "assigned": "Assigned"
   }
 }

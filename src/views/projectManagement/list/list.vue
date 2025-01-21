@@ -61,7 +61,12 @@ const columns = ref([
     checked: true,
     sotrtable: true,
   },
-  { prop: "name", label: computed(() => t("project.name")), checked: true, sotrtable: true },
+  {
+    prop: "name",
+    label: computed(() => t("project.name")),
+    checked: true,
+    sotrtable: true,
+  },
   {
     prop: "clientName",
     label: computed(() => t("project.customer")),
@@ -125,7 +130,7 @@ const columns = ref([
   },
   {
     prop: "createTime",
-    label: computed(() => t("project.createTime")) ,
+    label: computed(() => t("project.createTime")),
     checked: true,
     sotrtable: true,
   },
@@ -519,9 +524,9 @@ onMounted(async () => {
 const formOption = {
   clientId: async () => await customerStore.getCustomerList(),
   allocationStatus: () => [
-    { label: "供应商", value: 2 },
-    { label: "内部站", value: 3 },
-    { label: "合作商", value: 4 },
+    { label: t("project.supplier"), value: 2 },
+    { label: t("project.internalStation"), value: 3 },
+    { label: t("project.partner"), value: 4 },
   ],
   structureIdList: async () => await departmentStore.getDepartment(),
   status: () => [
@@ -529,12 +534,12 @@ const formOption = {
     { label: t("project.Offline"), value: 2 },
   ],
   allocation: () => [
-    { label: "已分配", value: 1 },
-    { label: "未分配", value: 2 },
+    { label: t("project.assigned"), value: 1 },
+    { label: t("project.undistributed"), value: 2 },
   ],
   projectType: () => [
-    { label: "内部新增", value: 1 },
-    { label: "合作商分配", value: 2 },
+    { label: t("project.internalAddition"), value: 1 },
+    { label: t("project.partnerAllocation"), value: 2 },
   ],
   isOnlineType: () => [
     { label: t("project.Online"), value: 1 },
@@ -656,7 +661,7 @@ const handleChange = () => {
                   type="primary"
                   effect="dark"
                 >
-                  内部新增</el-tag
+                  {{ t("project.internalAddition") }}</el-tag
                 >
                 <el-tag
                   v-else-if="row.projectType === 2"
@@ -664,7 +669,7 @@ const handleChange = () => {
                   effect="dark"
                   style="background-color: #ffac54"
                 >
-                  合作商分配</el-tag
+                  {{ t("project.partnerAllocation") }}</el-tag
                 >
               </span>
             </p>
@@ -826,9 +831,12 @@ const handleChange = () => {
                 placement="top-start"
               >
                 <template #content>
-                  参与: {{ row.participation ? row.participation : "-" }} 完成:
-                  {{ row.complete ? row.complete : "-" }} 配额:
-                  {{ row.num ? row.num : "-" }} 限量:
+                  {{ t("project.participateIn2") }}:
+                  {{ row.participation ? row.participation : "-" }}
+                  {{ t("project.complete2") }}:
+                  {{ row.complete ? row.complete : "-" }}
+                  {{ t("project.quota2") }}: {{ row.num ? row.num : "-" }}
+                  {{ t("project.limited2") }}:
                   {{ row.limitedQuantity ? row.limitedQuantity : "-" }}
                 </template>
                 <div
@@ -839,25 +847,28 @@ const handleChange = () => {
                     style="color: rgb(251, 104, 104)"
                     class="oneLine"
                     type="danger"
-                    >参与: {{ row.participation || 0 }}</el-text
+                    >{{ t("project.participateIn") }}:
+                    {{ row.participation || 0 }}</el-text
                   >
                   <el-text
                     style="color: rgb(3, 194, 57)"
                     class="oneLine"
                     type="success"
-                    >完成: {{ row.complete || 0 }}</el-text
+                    >{{ t("project.complete") }}:
+                    {{ row.complete || 0 }}</el-text
                   >
                   <el-text
                     style="color: rgb(255, 172, 84)"
                     class="oneLine"
                     type="warning"
-                    >配额: {{ row.num || 0 }}</el-text
+                    >{{ t("project.quota") }}: {{ row.num || 0 }}</el-text
                   >
                   <el-text
                     style="color: rgb(170, 170, 170)"
                     class="oneLine"
                     type="info"
-                    >限量: {{ row.limitedQuantity || "-" }}</el-text
+                    >{{ t("project.limited") }}:
+                    {{ row.limitedQuantity || "-" }}</el-text
                   >
                 </div>
               </el-tooltip>
@@ -880,7 +891,7 @@ const handleChange = () => {
         >
           <template #default="{ row }">
             <el-button size="small" v-if="row.allocationStatus == 1">
-              未分配</el-button
+              {{ t("project.undistributed") }}</el-button
             >
             <div
               class="flex-c"
@@ -905,7 +916,7 @@ const handleChange = () => {
                       margin-right: 0.25rem;
                     "
                   />
-                  <span>供应商</span>
+                  <span>{{ t("project.supplier") }}</span>
                 </el-tag>
                 <el-tag
                   type="warning"
@@ -920,7 +931,7 @@ const handleChange = () => {
                       margin-right: 0.25rem;
                     "
                   />
-                  内部站</el-tag
+                  {{ t("project.internalStation") }}</el-tag
                 >
 
                 <el-tag
@@ -936,7 +947,7 @@ const handleChange = () => {
                       margin-right: 0.25rem;
                     "
                   />
-                  合作商</el-tag
+                  {{ t("project.partner") }}</el-tag
                 >
               </div>
             </div>
@@ -1090,7 +1101,7 @@ const handleChange = () => {
           prop="remark"
           align="left"
           width="150"
-          label="备注"
+          :label="t('project.remark')"
           ><template #default="{ row }">
             <div class="flex-c">
               <div
@@ -1114,7 +1125,7 @@ const handleChange = () => {
           prop="createTime"
           align="left"
           width="120"
-          label="创建"
+          :label="t('project.create')"
           show-overflow-tooltip
           ><template #default="{ row }">
             <div>
@@ -1131,7 +1142,7 @@ const handleChange = () => {
           align="left"
           fixed="right"
           :label="t('project.operate')"
-          width="230"
+          width="240"
         >
           <template #default="{ row }">
             <el-button
@@ -1143,7 +1154,7 @@ const handleChange = () => {
               @click="distribution(row)"
               v-auth="'/list-get-addProjectAllocation'"
             >
-              分配
+              {{ t("project.distribution") }}
             </el-button>
             <el-button
               v-else
@@ -1154,7 +1165,7 @@ const handleChange = () => {
               @click="reassign(row)"
               v-auth="'/list-get-addProjectAllocation'"
             >
-              重新分配
+              {{ t("project.reallocation") }}
             </el-button>
             <!-- :disabled="row.projectType === 2" -->
             <el-button
@@ -1164,7 +1175,7 @@ const handleChange = () => {
               @click="projectEdit(row)"
               v-auth="'/list-update-updateProject'"
             >
-              编辑
+              {{ t("project.editor") }}
             </el-button>
             <el-button
               type="danger"
@@ -1173,7 +1184,7 @@ const handleChange = () => {
               @click="projectDetails(row)"
               v-auth="'/list-get-getProject'"
             >
-              详情
+              {{ t("project.details") }}
             </el-button>
           </template>
         </el-table-column>
@@ -1208,15 +1219,21 @@ const handleChange = () => {
 
 <style scoped lang="scss">
 .tag-with-image {
-  display: flex; /* 使用flex布局 */
-  align-items: center; /* 垂直居中对齐 */
-  justify-content: center; /* 水平居中对齐 */
-  margin-right: 0.5rem; /* 每行标签之间的间距 */
+  display: flex;
+  /* 使用flex布局 */
+  align-items: center;
+  /* 垂直居中对齐 */
+  justify-content: center;
+  /* 水平居中对齐 */
+  margin-right: 0.5rem;
+  /* 每行标签之间的间距 */
 }
+
 :deep(.tag-with-image .el-tag__content) {
   display: flex;
   align-items: center;
 }
+
 :deep {
   table {
     width: 100% !important;
@@ -1296,6 +1313,7 @@ const handleChange = () => {
     margin: 0 0.75rem 0 0;
   }
 }
+
 .parameter1 {
   display: flex;
   align-content: center;
@@ -1311,6 +1329,7 @@ const handleChange = () => {
     margin: 0 0.75rem 0 0;
   }
 }
+
 .red {
   color: rgb(251, 104, 104);
 }
@@ -1365,5 +1384,10 @@ const handleChange = () => {
 
 .tableBut {
   width: 3.75rem;
+}
+
+.button-box {
+  display: flex;
+  flex-wrap: nowrap;
 }
 </style>

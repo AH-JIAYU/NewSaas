@@ -89,7 +89,26 @@
     "projectStatus": "项目状态",
     "remark": "备注",
     "create": "创建",
-    "createTime": "创建时间"
+    "createTime": "创建时间",
+    "internalAddition": "内部新增",
+    "partnerAllocation": "合作商分配",
+    "supplier": "供应商",
+    "internalStation": "内部站",
+    "partner": "合作商",
+    "assigned": "已分配",
+    "undistributed": "未分配",
+    "participateIn": "参与",
+    "complete": "完成",
+    "quota": "配额",
+    "limited": "限量",
+    "participateIn2": "参与",
+    "complete2": "完成",
+    "quota2": "配额",
+    "limited2": "限量",
+    "distribution": "分配",
+    "reallocation": "重新分配",
+    "editor": "编辑",
+    "details": "详情"
   },
   "formSearch": {
     "sift": "筛选",
@@ -141,8 +160,8 @@
     "beScreened": "被甄别",
     "safeTermination": "安全终止",
     "uncompleted": "未完成",
-    "allocationType":"分配类型",
-    "OwningCountry":"IP/所属国"
+    "allocationType": "分配类型",
+    "OwningCountry": "IP/所属国"
   },
   "newProject": {
     "basicSettings": "基础设置",
@@ -298,15 +317,62 @@
     "changeSuccess": "修改成功",
     "sameName": "客户名称重复"
   },
-  "formRef":{
-    "areaSelect":"请先选择所属区域"
+  "formRef": {
+    "areaSelect": "请先选择所属区域"
   },
-  "sort":{
-    "sortSettings":"设置筛选项",
-    "save":"保存",
-    "allSort":"全部筛选项",
-    "hide":"不被选中的筛选项将会被隐藏",
-    "show":"展示效果",
-    "hold":"长按筛选项，可拖拽调整展示顺序"
+  "sort": {
+    "sortSettings": "设置筛选项",
+    "save": "保存",
+    "allSort": "全部筛选项",
+    "hide": "不被选中的筛选项将会被隐藏",
+    "show": "展示效果",
+    "hold": "长按筛选项，可拖拽调整展示顺序"
+  },
+  "quickEdit": {
+    "editor": "编辑",
+    "quota": "配额",
+    "limited": "限量",
+    "hourComplete": "小时完成量",
+    "hourLimited": "每小时限量",
+    "belong": "所属客户",
+    "transfinite": "营业额超限",
+    "belowStandard": "审核率不合格",
+    "projectName": "项目名称",
+    "projectIdentification": "项目标识",
+    "projectPrice": "项目价",
+    "remark": "备注",
+    "cancel": "取消",
+    "confirm": "确定"
+  },
+  "allocationEdit": {
+    "projectName": "项目名称",
+    "projectCode": "项目编码",
+    "CustomerAbbreviation": "客户简称",
+    "selectAll": "全选",
+    "quickAdd": "快捷新增",
+    "supplier": "供应商",
+    "supplierMaintenance": "请先维护供应商数据",
+    "supplierSelect": "请先选择供应商数据",
+    "SurveyStation": "调查站",
+    "SurveyStationMaintenance": "请先维护调查站数据",
+    "SurveyStationSelect": "请先选择调查站数据",
+    "partner": "合作商",
+    "partnerMaintenance": "请先维护合作商数据",
+    "partnerSelect": "请先选择合作商数据",
+    "unassign": "取消分配",
+    "cancel": "取消",
+    "confirm": "确定",
+    "leastOne": "至少选择一个分配目标"
+  },
+  "projectDetail": {
+    "operatingSystem": "操作系统",
+    "browser": "浏览器",
+    "carticipateIn": "参与",
+    "complete": "完成",
+    "successfulAudit": "审核成功",
+    "passTheAudit": "审核通过",
+    "basicInformation": "基本信息",
+    "undistributed": "未分配",
+    "assigned": "已分配"
   }
 }

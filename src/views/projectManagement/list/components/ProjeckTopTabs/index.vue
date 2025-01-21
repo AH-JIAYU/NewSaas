@@ -46,8 +46,8 @@ const dialogVisibleExchangeRate = ref<any>(false);
 const { t } = useI18n();
 // #region 值
 const currencyList = [
-  { label: t('newProject.dollor'), value: "USD" },
-  { label: t('newProject.rmb'), value: "CNY" },
+  { label: t("newProject.dollor"), value: "USD" },
+  { label: t("newProject.rmb"), value: "CNY" },
 ];
 // 操作系统
 const operatingSystemList = [
@@ -124,92 +124,131 @@ const validateUrlRegistered = (rule: any, value: any, callback: any) => {
   const regExpUrl: any =
     /^(((ht|f)tps?):\/\/)?([^!@#$%^&*?.\s-]([^!@#$%^&*?.\s]{0,63}[^!@#$%^&*?.\s])?\.)+[a-z]{2,6}\/?/;
   if (!regExpUrl.test(localToptTab.value.uidUrl)) {
-    callback(new Error(t('projectTopTabs.validUrl')));
+    callback(new Error(t("projectTopTabs.validUrl")));
   }
   if (!localToptTab.value.uidUrl.includes("[uid]")) {
-    callback(new Error(t('projectTopTabs.incorrectFormat')));
+    callback(new Error(t("projectTopTabs.incorrectFormat")));
   }
   callback();
 };
 // 自定义校验发布时间
 const validateReleaseTime = (rule: any, value: any, callback: any) => {
   if (new Date(localToptTab.value.releaseTime).getTime() < Date.now()) {
-    callback(new Error(t('projectTopTabs.releaseTime')));
+    callback(new Error(t("projectTopTabs.releaseTime")));
   }
   callback();
 };
 // 校验
 const rules = reactive<any>({
   name: [
-    { required: true, message: t('projectTopTabs.projectName'), trigger: "blur" },
-    { min: 2, max: 50, message: t('projectTopTabs.2to50'), trigger: "blur" },
+    {
+      required: true,
+      message: t("projectTopTabs.projectName"),
+      trigger: "blur",
+    },
+    { min: 2, max: 50, message: t("projectTopTabs.2to50"), trigger: "blur" },
   ],
   projectIdentification: [
-    { max: 100, required: true, message: t('projectTopTabs.projectIdentification'), trigger: "blur" },
-    { min: 2, max: 100, message: t('projectTopTabs.2to100'), trigger: "blur" },
+    {
+      max: 100,
+      required: true,
+      message: t("projectTopTabs.projectIdentification"),
+      trigger: "blur",
+    },
+    { min: 2, max: 100, message: t("projectTopTabs.2to100"), trigger: "blur" },
   ],
   countryIdList: [
     {
       required: true,
-      message: t('projectTopTabs.area'),
+      message: t("projectTopTabs.area"),
       trigger: "change",
     },
   ],
-  clientId: [{ required: true, message: t('projectTopTabs.customer'), trigger: "change" }],
-  currencyType: [{ required: true, message: t('projectTopTabs.currency'), trigger: "change" }],
+  clientId: [
+    {
+      required: true,
+      message: t("projectTopTabs.customer"),
+      trigger: "change",
+    },
+  ],
+  currencyType: [
+    {
+      required: true,
+      message: t("projectTopTabs.currency"),
+      trigger: "change",
+    },
+  ],
   uidUrl: [
-    { required: true, message: t('projectTopTabs.url'), trigger: "blur" },
+    { required: true, message: t("projectTopTabs.url"), trigger: "blur" },
     { validator: validateUrlRegistered, trigger: "blur" },
   ],
   releaseTime: [{ validator: validateReleaseTime, trigger: "blur" }],
   doMoneyPrice: [
-    { required: true, message: t('projectTopTabs.projectPrice'), trigger: "blur" },
+    {
+      required: true,
+      message: t("projectTopTabs.projectPrice"),
+      trigger: "blur",
+    },
     {
       pattern: /^(?!0(\.0+)?$)(\d+(\.\d{1,2})?)$/,
-      message: t('projectTopTabs.bt0'),
+      message: t("projectTopTabs.bt0"),
       trigger: "blur",
     },
   ],
   num: [
-    { required: true, message: t('projectTopTabs.quota'), trigger: "blur" },
-    { pattern: /^[0-9]+$/, message: t('projectTopTabs.positiveInteger'), trigger: "blur" },
+    { required: true, message: t("projectTopTabs.quota"), trigger: "blur" },
+    {
+      pattern: /^[0-9]+$/,
+      message: t("projectTopTabs.positiveInteger"),
+      trigger: "blur",
+    },
   ],
   minimumDuration: [
-    { required: true, message: t('projectTopTabs.minimumLength'), trigger: "blur" },
+    {
+      required: true,
+      message: t("projectTopTabs.minimumLength"),
+      trigger: "blur",
+    },
     {
       pattern: /^(?!0(\.0+)?$)(\d+(\.\d{1,2})?)$/,
-      message: t('projectTopTabs.bt0'),
+      message: t("projectTopTabs.bt0"),
       trigger: "blur",
     },
   ],
   ir: [
-    { required: true, message: t('projectTopTabs.ir'), trigger: "blur" },
+    { required: true, message: t("projectTopTabs.ir"), trigger: "blur" },
     {
       pattern: /^(100|[1-9]?[0-9])$/,
-      message: t('projectTopTabs.0to100'),
+      message: t("projectTopTabs.0to100"),
       trigger: "blur",
     },
   ],
   exchangeRate: [
-    { required: true, message: t('projectTopTabs.exchangeRate'), trigger: "blur" },
+    {
+      required: true,
+      message: t("projectTopTabs.exchangeRate"),
+      trigger: "blur",
+    },
     {
       pattern: /^(?!0(\.0+)?$)(\d+(\.\d{1,2})?)$/,
-      message: t('projectTopTabs.bt0'),
+      message: t("projectTopTabs.bt0"),
       trigger: "blur",
     },
   ],
-  sex: [{ required: true, message: t('projectTopTabs.sex'), trigger: "change" }],
+  sex: [
+    { required: true, message: t("projectTopTabs.sex"), trigger: "change" },
+  ],
   startAge: [
-    { required: true, message: t('projectTopTabs.age'), trigger: "blur" },
+    { required: true, message: t("projectTopTabs.age"), trigger: "blur" },
     {
       validator: (rule: any, value: any, callback: any) => {
         // 判断值是否为空
         if (!value) {
-          callback(new Error(t('projectTopTabs.age')));
+          callback(new Error(t("projectTopTabs.age")));
         } else if (value < 18) {
-          callback(new Error(t('projectTopTabs.bt18')));
+          callback(new Error(t("projectTopTabs.bt18")));
         } else if (value >= 99) {
-          callback(new Error(t('projectTopTabs.lt99')));
+          callback(new Error(t("projectTopTabs.lt99")));
         } else {
           callback(); // 校验通过
         }
@@ -472,7 +511,7 @@ const changeCountryId = () => {
   // 反选
   data.value.checked = Boolean(
     localToptTab.value.countryIdList.length ===
-    basicDictionaryStore.country.length,
+      basicDictionaryStore.country.length,
   );
 };
 // 配置区域改变 重新获取题库目录
@@ -530,7 +569,7 @@ const changeTab = async (val: any, judge?: boolean) => {
           setTimeout(() => {
             formRef.value.scrollToField("countryIdList");
           }); // 延迟一段时间，确保元素已经渲染到DOM中
-          ElMessage.warning({ message: t('formRef.areaSelect'), center: true });
+          ElMessage.warning({ message: t("formRef.areaSelect"), center: true });
         });
       }
     });
@@ -847,59 +886,110 @@ const getProblemList = async () => {
 </script>
 
 <template>
-  <ElForm label-width="100px" :rules="rules" ref="formRef" :model="localToptTab" label-position="top">
+  <ElForm
+    label-width="100px"
+    :rules="rules"
+    ref="formRef"
+    :model="localToptTab"
+    label-position="top"
+  >
     <el-tabs v-model="activeName" @tab-change="changeTab">
       <el-tab-pane :label="t('newProject.basicSettings')" name="basicSettings">
         <el-card body-style="">
           <template #header>
-            <div style="display: flex; justify-content: space-between" class="card-header">
+            <div
+              style="display: flex; justify-content: space-between"
+              class="card-header"
+            >
               <div style="height: 32px; line-height: 32px">
-                {{ t('newProject.basicSettings') }}
+                {{ t("newProject.basicSettings") }}
               </div>
               <div>
-                <el-button v-if="props.tabIndex > 0" size="small" type="primary" round plain @click="syncProject">
-                  {{ t('newProject.synchronizeData') }}
+                <el-button
+                  v-if="props.tabIndex > 0"
+                  size="small"
+                  type="primary"
+                  round
+                  plain
+                  @click="syncProject"
+                >
+                  {{ t("newProject.synchronizeData") }}
                 </el-button>
-                <el-switch v-model="localToptTab.required" :active-value="true" :inactive-value="false" class="ml-2" />
-                {{ t('newProject.only') }}
+                <el-switch
+                  v-model="localToptTab.required"
+                  :active-value="true"
+                  :inactive-value="false"
+                  class="ml-2"
+                />
+                {{ t("newProject.only") }}
               </div>
             </div>
           </template>
           <el-row :gutter="20">
             <el-col :span="6">
               <el-form-item :label="t('newProject.name')" prop="name">
-                <el-input v-model="localToptTab.name" :disabled="localToptTab.projectType === 2" clearable
-                  :maxlength="50" />
+                <el-input
+                  v-model="localToptTab.name"
+                  :disabled="localToptTab.projectType === 2"
+                  clearable
+                  :maxlength="50"
+                />
               </el-form-item>
             </el-col>
             <el-col v-if="localToptTab.projectType !== 2" :span="6">
-              <el-form-item :label="t('newProject.projectIdentification')" prop="projectIdentification">
-                <el-input clearable v-model.trim="localToptTab.projectIdentification" :maxlength="100" />
+              <el-form-item
+                :label="t('newProject.projectIdentification')"
+                prop="projectIdentification"
+              >
+                <el-input
+                  clearable
+                  v-model.trim="localToptTab.projectIdentification"
+                  :maxlength="100"
+                />
               </el-form-item>
             </el-col>
             <el-col v-if="localToptTab.projectType !== 2" :span="6">
               <!-- 单个 -->
               <el-form-item :label="t('newProject.clientId')" prop="clientId">
-                <el-select class="placeholderColor" placeholder="Select" v-model="localToptTab.clientId"
-                  :disabled="localToptTab.projectType === 2" clearable @change="changeClient">
-                  <el-option v-for="item in data.basicSettings.customerList" :key="item.tenantCustomerId"
-                    :value="item.tenantCustomerId" :label="item.customerAccord" :disabled="item.isReveal === 1 ||
+                <el-select
+                  class="placeholderColor"
+                  placeholder="Select"
+                  v-model="localToptTab.clientId"
+                  :disabled="localToptTab.projectType === 2"
+                  clearable
+                  @change="changeClient"
+                >
+                  <el-option
+                    v-for="item in data.basicSettings.customerList"
+                    :key="item.tenantCustomerId"
+                    :value="item.tenantCustomerId"
+                    :label="item.customerAccord"
+                    :disabled="
+                      item.isReveal === 1 ||
                       (item.turnover &&
                         item.practiceTurnover &&
                         item.turnover < item.practiceTurnover)
-                      ">
+                    "
+                  >
                     <span style="float: left">{{ item.customerAccord }}</span>
-                    <span style="float: right; color: #fb6868; font-size: 13px" v-show="item.isReveal === 1">
+                    <span
+                      style="float: right; color: #fb6868; font-size: 13px"
+                      v-show="item.isReveal === 1"
+                    >
                       <span v-show="item.practiceTurnover > item.turnover">
-                        {{ t('newProject.turnoverLimit') }}
+                        {{ t("newProject.turnoverLimit") }}
                       </span>
                       <span v-show="item.rateAudit > item.practiceRateAudit">
-                        {{ t('newProject.notQualified') }}
+                        {{ t("newProject.notQualified") }}
                       </span>
                     </span>
                   </el-option>
-                  <el-button size="small" class="buttonClass" @click="AddCustomers">
-                    {{ t('newProject.notQualified') }}
+                  <el-button
+                    size="small"
+                    class="buttonClass"
+                    @click="AddCustomers"
+                  >
+                    {{ t("newProject.notQualified") }}
                     <div class="i-ic:round-plus w-1.3em h-1.3em"></div>
                     <!-- <SvgIcon
                       name="ant-design:plus-outlined"
@@ -907,15 +997,22 @@ const getProblemList = async () => {
                     /> -->
                   </el-button>
                   <template #empty>
-                    <div style="
+                    <div
+                      style="
                         display: flex;
                         justify-content: space-between;
                         align-items: center;
                         padding: 0 1rem;
-                      ">
-                      {{ t('newProject.nodata') }}
-                      <el-button type="primary" link size="small" @click="AddCustomers">
-                        {{ t('newProject.quickAdd') }}
+                      "
+                    >
+                      {{ t("newProject.nodata") }}
+                      <el-button
+                        type="primary"
+                        link
+                        size="small"
+                        @click="AddCustomers"
+                      >
+                        {{ t("newProject.quickAdd") }}
                         <div class="i-ic:round-plus w-1.3em h-1.3em"></div>
                         <!-- <SvgIcon name="ant-design:plus-outlined" /> -->
                       </el-button>
@@ -925,27 +1022,66 @@ const getProblemList = async () => {
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item :label="t('newProject.countryIdList')" prop="countryIdList">
-                <ElSelect class="placeholderColor" v-model="localToptTab.countryIdList"
-                  :disabled="localToptTab.projectType === 2" :placeholder="t('newProject.area')" clearable filterable
-                  multiple collapse-tags @change="changeCountryId">
+              <el-form-item
+                :label="t('newProject.countryIdList')"
+                prop="countryIdList"
+              >
+                <ElSelect
+                  class="placeholderColor"
+                  v-model="localToptTab.countryIdList"
+                  :disabled="localToptTab.projectType === 2"
+                  :placeholder="t('newProject.area')"
+                  clearable
+                  filterable
+                  multiple
+                  collapse-tags
+                  @change="changeCountryId"
+                >
                   <template #header>
-                    <el-checkbox v-model="data.checked" @change="selectAll" style="display: flex; height: unset">{{
-                      t('newProject.global') }}</el-checkbox>
+                    <el-checkbox
+                      v-model="data.checked"
+                      @change="selectAll"
+                      style="display: flex; height: unset"
+                      >{{ t("newProject.global") }}</el-checkbox
+                    >
                   </template>
-                  <ElOption v-for="item in data.basicSettings.countryList" :label="item.chineseName" :value="item.id">
+                  <ElOption
+                    v-for="item in data.basicSettings.countryList"
+                    :label="item.chineseName"
+                    :value="item.id"
+                  >
                   </ElOption>
                 </ElSelect>
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item :label="t('newProject.currency')" prop="currencyType">
-                <el-button v-if="!userStore.originalExchangeRate" type="primary" link @click="setExchangeRate">{{
-                  t('newProject.toSet') }}>></el-button>
-                <el-select v-else v-model="localToptTab.currencyType" :disabled="!!localToptTab.projectId" value-key=""
-                  style="width: 22.4375rem" :placeholder="t('newProject.currencySelect')" filterable
-                  @change="handleSelectChange">
-                  <el-option v-for="item in currencyList" :key="item.value" :label="item.label" :value="item.value">
+              <el-form-item
+                :label="t('newProject.currency')"
+                prop="currencyType"
+              >
+                <el-button
+                  v-if="!userStore.originalExchangeRate"
+                  type="primary"
+                  link
+                  @click="setExchangeRate"
+                  >{{ t("newProject.toSet") }}>></el-button
+                >
+                <el-select
+                  v-else
+                  v-model="localToptTab.currencyType"
+                  :disabled="!!localToptTab.projectId"
+                  value-key=""
+                  style="width: 22.4375rem"
+                  :placeholder="t('newProject.currencySelect')"
+                  filterable
+                  @change="handleSelectChange"
+                >
+                  <el-option
+                    v-for="item in currencyList"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  >
                   </el-option>
                 </el-select>
               </el-form-item>
@@ -954,35 +1090,60 @@ const getProblemList = async () => {
               <!-- v-if="currencyTypeRes !== null" -->
               <el-form-item :label="t('newProject.exchangeRate')" prop="">
                 <el-text v-if="currencyTypeRes !== null">
-                  1{{ t('newProject.dollor') }} = {{ acquiesceExchangeRate }}{{ t('newProject.rmb') }}</el-text>
+                  1{{ t("newProject.dollor") }} = {{ acquiesceExchangeRate
+                  }}{{ t("newProject.rmb") }}</el-text
+                >
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="20">
             <el-col :span="6">
-              <el-form-item :label="t('newProject.projectPrice')" prop="doMoneyPrice">
-                <el-input style="height: 2rem" v-model="localToptTab.doMoneyPrice" controls-position="right"
-                  size="large" />
+              <el-form-item
+                :label="t('newProject.projectPrice')"
+                prop="doMoneyPrice"
+              >
+                <el-input
+                  style="height: 2rem"
+                  v-model="localToptTab.doMoneyPrice"
+                  controls-position="right"
+                  size="large"
+                />
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item :label="t('newProject.quota')" prop="num">
-                <el-input style="height: 2rem" v-model="localToptTab.num" size="large" @keydown="handleInput" />
+                <el-input
+                  style="height: 2rem"
+                  v-model="localToptTab.num"
+                  size="large"
+                  @keydown="handleInput"
+                />
               </el-form-item>
             </el-col>
             <el-col style="position: relative" :span="6">
               <el-form-item prop="minimumDuration">
                 <template #label>
                   <div>
-                    {{ t('newProject.miniLength') }}<el-tooltip class="tooltips" :content="t('newProject.latestTime')"
-                      placement="top">
+                    {{ t("newProject.miniLength")
+                    }}<el-tooltip
+                      class="tooltips"
+                      :content="t('newProject.latestTime')"
+                      placement="top"
+                    >
                       <SvgIcon class="SvgIcon1" name="i-ri:question-line" />
                     </el-tooltip>
                   </div>
                 </template>
-                <el-input style="height: 2rem; width: 100%" v-model.number="localToptTab.minimumDuration" :min="1"
-                  :step="1" step-strictly controls-position="right" size="large" @keydown="handleInput"><template
-                    #append> min </template>
+                <el-input
+                  style="height: 2rem; width: 100%"
+                  v-model.number="localToptTab.minimumDuration"
+                  :min="1"
+                  :step="1"
+                  step-strictly
+                  controls-position="right"
+                  size="large"
+                  @keydown="handleInput"
+                  ><template #append> min </template>
                 </el-input>
               </el-form-item>
             </el-col>
@@ -1002,9 +1163,9 @@ const getProblemList = async () => {
                     URL<el-tooltip class="tooltips" placement="top">
                       <template #content>
                         <div>
-                          <div>{{ t('newProject.link') }}<br />{{ url }}</div>
+                          <div>{{ t("newProject.link") }}<br />{{ url }}</div>
                           <div style="margin-top: 4px">
-                            {{ t('newProject.bandend') }}
+                            {{ t("newProject.bandend") }}
                           </div>
                         </div>
                       </template>
@@ -1012,18 +1173,32 @@ const getProblemList = async () => {
                     </el-tooltip>
                   </div>
                 </template>
-                <el-input v-if="localToptTab.projectType === 2" clearable
-                  :value="'**************************************'" :disabled="localToptTab.projectType === 2" />
-                <el-input v-else clearable v-model.trim="localToptTab.uidUrl"
-                  :disabled="localToptTab.projectType === 2" />
+                <el-input
+                  v-if="localToptTab.projectType === 2"
+                  clearable
+                  :value="'**************************************'"
+                  :disabled="localToptTab.projectType === 2"
+                />
+                <el-input
+                  v-else
+                  clearable
+                  v-model.trim="localToptTab.uidUrl"
+                  :disabled="localToptTab.projectType === 2"
+                />
                 <el-text class="mx-1">{{ url }}</el-text>
               </el-form-item>
             </el-col>
-            <el-col v-if="
-              localToptTab.mutualExclusion === 1 && !localToptTab.required
-            " :span="12">
+            <el-col
+              v-if="
+                localToptTab.mutualExclusion === 1 && !localToptTab.required
+              "
+              :span="12"
+            >
               <el-form-item :label="t('newProject.exclusiveID')">
-                <el-input clearable v-model.trim="localToptTab.mutualExclusionId" />
+                <el-input
+                  clearable
+                  v-model.trim="localToptTab.mutualExclusionId"
+                />
               </el-form-item>
             </el-col>
           </el-row>
@@ -1031,36 +1206,73 @@ const getProblemList = async () => {
         <el-card v-if="!localToptTab.required">
           <template #header>
             <div class="card-header">
-              <span>{{ t('newProject.otherSettings') }}</span>
+              <span>{{ t("newProject.otherSettings") }}</span>
             </div>
           </template>
           <el-row :gutter="20">
             <el-col :span="5">
-              <el-form-item :label="t('newProject.sex')" class="flex" prop="sex">
-                <el-radio-group v-model="localToptTab.sex" :disabled="localToptTab.projectType === 2"
-                  class="sex-select">
-                  <el-radio-button :value="1" :label="t('newProject.unlimited')"></el-radio-button>
-                  <el-radio-button :value="2" :label="t('newProject.male')"></el-radio-button>
-                  <el-radio-button :value="3" :label="t('newProject.female')"></el-radio-button>
+              <el-form-item
+                :label="t('newProject.sex')"
+                class="flex"
+                prop="sex"
+              >
+                <el-radio-group
+                  v-model="localToptTab.sex"
+                  :disabled="localToptTab.projectType === 2"
+                  class="sex-select"
+                >
+                  <el-radio-button
+                    :value="1"
+                    :label="t('newProject.unlimited')"
+                  ></el-radio-button>
+                  <el-radio-button
+                    :value="2"
+                    :label="t('newProject.male')"
+                  ></el-radio-button>
+                  <el-radio-button
+                    :value="3"
+                    :label="t('newProject.female')"
+                  ></el-radio-button>
                 </el-radio-group>
               </el-form-item>
             </el-col>
             <el-col :span="4">
               <el-form-item label="年龄" class="flex" prop="startAge">
-                <el-input v-model.trim="localToptTab.startAge" :disabled="localToptTab.projectType === 2"
-                  style="width: 3rem !important" />
+                <el-input
+                  v-model.trim="localToptTab.startAge"
+                  :disabled="localToptTab.projectType === 2"
+                  style="width: 3rem !important"
+                />
                 <span style="margin: 0 0.25rem">-</span>
-                <el-input v-model.trim="localToptTab.endAge" :disabled="localToptTab.projectType === 2"
-                  style="width: 3rem !important" />
+                <el-input
+                  v-model.trim="localToptTab.endAge"
+                  :disabled="localToptTab.projectType === 2"
+                  style="width: 3rem !important"
+                />
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item :label="t('newProject.operatingSystem')" class="flex">
-                <el-select v-model.trim="localToptTab.operatingSystem" :placeholder="t('newProject.systemSelect')"
-                  :disabled="localToptTab.projectType === 2" multiple clearable filterable collapse-tags
-                  collapse-tags-tooltip :max-collapse-tags="1">
-                  <el-option v-for="item in operatingSystemList" :key="item.value" :label="item.label"
-                    :value="item.value">
+              <el-form-item
+                :label="t('newProject.operatingSystem')"
+                class="flex"
+              >
+                <el-select
+                  v-model.trim="localToptTab.operatingSystem"
+                  :placeholder="t('newProject.systemSelect')"
+                  :disabled="localToptTab.projectType === 2"
+                  multiple
+                  clearable
+                  filterable
+                  collapse-tags
+                  collapse-tags-tooltip
+                  :max-collapse-tags="1"
+                >
+                  <el-option
+                    v-for="item in operatingSystemList"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  >
                   </el-option>
                 </el-select>
               </el-form-item>
@@ -1068,10 +1280,23 @@ const getProblemList = async () => {
             <el-col :span="1"> </el-col>
             <el-col :span="6">
               <el-form-item :label="t('newProject.browser')" class="flex">
-                <el-select v-model.trim="localToptTab.browser" :placeholder="t('newProject.browserSelect')"
-                  :disabled="localToptTab.projectType === 2" multiple clearable filterable collapse-tags
-                  collapse-tags-tooltip :max-collapse-tags="1">
-                  <el-option v-for="item in browserList" :key="item.value" :label="item.label" :value="item.value">
+                <el-select
+                  v-model.trim="localToptTab.browser"
+                  :placeholder="t('newProject.browserSelect')"
+                  :disabled="localToptTab.projectType === 2"
+                  multiple
+                  clearable
+                  filterable
+                  collapse-tags
+                  collapse-tags-tooltip
+                  :max-collapse-tags="1"
+                >
+                  <el-option
+                    v-for="item in browserList"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  >
                   </el-option>
                 </el-select>
               </el-form-item>
@@ -1079,34 +1304,64 @@ const getProblemList = async () => {
           </el-row>
           <el-row :gutter="20">
             <el-col :span="5">
-              <el-form-item :label="t('newProject.scheduledRelease')" class="flex">
-                <el-switch :active-value="2" :inactive-value="1" v-model="localToptTab.isTimeReleases"
-                  :disabled="localToptTab.projectType === 2" @change="changeTimeReleases" />
+              <el-form-item
+                :label="t('newProject.scheduledRelease')"
+                class="flex"
+              >
+                <el-switch
+                  :active-value="2"
+                  :inactive-value="1"
+                  v-model="localToptTab.isTimeReleases"
+                  :disabled="localToptTab.projectType === 2"
+                  @change="changeTimeReleases"
+                />
               </el-form-item>
             </el-col>
             <el-col :span="5">
               <el-form-item label="B2B" class="flex">
-                <el-switch :active-value="2" :inactive-value="1" v-model="localToptTab.isB2b"
-                  :disabled="localToptTab.projectType === 2" />
+                <el-switch
+                  :active-value="2"
+                  :inactive-value="1"
+                  v-model="localToptTab.isB2b"
+                  :disabled="localToptTab.projectType === 2"
+                />
               </el-form-item>
             </el-col>
             <el-col :span="5">
               <el-form-item :label="t('newProject.online')" class="flex">
-                <el-switch :active-value="1" :inactive-value="2" :disabled="localToptTab.isTimeReleases === 2 ||
-                  localToptTab.projectType === 2
-                  " v-model="localToptTab.isOnline" />
+                <el-switch
+                  :active-value="1"
+                  :inactive-value="2"
+                  :disabled="
+                    localToptTab.isTimeReleases === 2 ||
+                    localToptTab.projectType === 2
+                  "
+                  v-model="localToptTab.isOnline"
+                />
               </el-form-item>
             </el-col>
             <el-col :span="5">
-              <el-form-item :label="t('newProject.preRuestionnaire')" class="flex">
-                <el-switch :active-value="1" :inactive-value="2" v-model="localToptTab.isProfile"
-                  :disabled="localToptTab.projectType === 2" @change="changeProfile" />
+              <el-form-item
+                :label="t('newProject.preRuestionnaire')"
+                class="flex"
+              >
+                <el-switch
+                  :active-value="1"
+                  :inactive-value="2"
+                  v-model="localToptTab.isProfile"
+                  :disabled="localToptTab.projectType === 2"
+                  @change="changeProfile"
+                />
               </el-form-item>
             </el-col>
             <el-col :span="4">
               <el-form-item :label="t('newProject.pinned')" class="flex">
-                <el-switch :active-value="1" :inactive-value="2" v-model="localToptTab.isPinned"
-                  :disabled="localToptTab.projectType === 2" />
+                <el-switch
+                  :active-value="1"
+                  :inactive-value="2"
+                  v-model="localToptTab.isPinned"
+                  :disabled="localToptTab.projectType === 2"
+                />
               </el-form-item>
             </el-col>
           </el-row>
@@ -1114,70 +1369,121 @@ const getProblemList = async () => {
           <el-row :gutter="20">
             <!-- 定时发布开显示时间，关隐藏 -->
             <el-col :span="5" v-if="localToptTab.isTimeReleases === 2">
-              <el-form-item :label="t('newProject.releaseTime')" prop="releaseTime">
-                <el-date-picker type="datetime" value-format="YYYY-MM-DD HH:mm:ss" v-model="localToptTab.releaseTime"
-                  :placeholder="t('newProject.timeSelect')" :disabledDate="disabledDateFn" @change="handleChangeTime" />
+              <el-form-item
+                :label="t('newProject.releaseTime')"
+                prop="releaseTime"
+              >
+                <el-date-picker
+                  type="datetime"
+                  value-format="YYYY-MM-DD HH:mm:ss"
+                  v-model="localToptTab.releaseTime"
+                  :placeholder="t('newProject.timeSelect')"
+                  :disabledDate="disabledDateFn"
+                  @change="handleChangeTime"
+                />
               </el-form-item>
             </el-col>
-            <el-col :span="5" v-if="localToptTab.isB2b === 2 && localToptTab.projectType !== 2">
+            <el-col
+              :span="5"
+              v-if="localToptTab.isB2b === 2 && localToptTab.projectType !== 2"
+            >
               <el-form-item :label="t('newProject.projectType')">
-                <el-cascader :show-all-levels="false" v-model="localToptTab.projectType"
-                  :props="data.basicSettings.B2BTypeProps" :options="data.basicSettings.B2BTypeList"
-                  :collapse-tags="true" filterable clearable />
+                <el-cascader
+                  :show-all-levels="false"
+                  v-model="localToptTab.projectType"
+                  :props="data.basicSettings.B2BTypeProps"
+                  :options="data.basicSettings.B2BTypeList"
+                  :collapse-tags="true"
+                  filterable
+                  clearable
+                />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="24">
               <el-form-item :label="t('newProject.remark')">
-                <el-input maxlength="200" show-word-limit type="textarea" :rows="5" v-model="localToptTab.remark" />
+                <el-input
+                  maxlength="200"
+                  show-word-limit
+                  type="textarea"
+                  :rows="5"
+                  v-model="localToptTab.remark"
+                />
               </el-form-item>
             </el-col>
           </el-row>
         </el-card>
         <el-card v-if="!localToptTab.required">
           <template #header>
-            <div style="display: flex; justify-content: space-between" class="card-header">
-              <span>{{ t('newProject.descriptionQuota') }}</span>
+            <div
+              style="display: flex; justify-content: space-between"
+              class="card-header"
+            >
+              <span>{{ t("newProject.descriptionQuota") }}</span>
               <el-button type="primary" link size="default" @click="isHieght">
-                {{ fold ? t('newProject.collapse') : t('newProject.expand') }}
+                {{ fold ? t("newProject.collapse") : t("newProject.expand") }}
               </el-button>
             </div>
           </template>
           <div v-if="fold">
             <el-form-item :label="t('newProject.uploadIF')">
-              <div style="
+              <div
+                style="
                   display: flex;
                   flex-direction: column;
                   align-items: flex-start;
-                ">
-                <el-upload v-model:file-list="fileList" :action="Url" list-type="picture-card" :drag="true" :limit="10"
-                  accept=".png, .jpg, .jpeg, .gif" :before-upload="beforeUpload" :on-preview="handlePictureCardPreview"
-                  :on-remove="handleRemove" :on-success="handleSuccess" :on-exceed="handleExceed">
+                "
+              >
+                <el-upload
+                  v-model:file-list="fileList"
+                  :action="Url"
+                  list-type="picture-card"
+                  :drag="true"
+                  :limit="10"
+                  accept=".png, .jpg, .jpeg, .gif"
+                  :before-upload="beforeUpload"
+                  :on-preview="handlePictureCardPreview"
+                  :on-remove="handleRemove"
+                  :on-success="handleSuccess"
+                  :on-exceed="handleExceed"
+                >
                   <el-icon style="margin-bottom: none" class="el-icon--upload">
                     <UploadFilled />
                   </el-icon>
-                  <div class="el-upload__text">{{ t('newProject.upload') }}</div>
+                  <div class="el-upload__text">
+                    {{ t("newProject.upload") }}
+                  </div>
                   <template #tip>
                     <div class="el-upload__tip">
                       <el-text size="small">
-                        {{ t('newProject.support') }}
+                        {{ t("newProject.support") }}
                       </el-text>
                     </div>
                   </template>
                 </el-upload>
-                <el-dialog v-model="dialogVisible" style="
+                <el-dialog
+                  v-model="dialogVisible"
+                  style="
                     z-index: 1000;
                     transform: translate(0);
                     position: relative;
-                  ">
+                  "
+                >
                   <img w-full :src="dialogImageUrl" alt="Preview Image" />
                 </el-dialog>
                 <div v-for="item in fileList" :key="item.name">
                   <div class="i-f7:doc-text w-1rem h-1rem"></div>
-                  <el-link style="padding: 0; margin: 0" :underline="false" type="primary" @click="download(item)">
+                  <el-link
+                    style="padding: 0; margin: 0"
+                    :underline="false"
+                    type="primary"
+                    @click="download(item)"
+                  >
                     {{ item.name }}
-                    <span style="margin-left: 0.625rem">{{ t('newProject.download') }}</span>
+                    <span style="margin-left: 0.625rem">{{
+                      t("newProject.download")
+                    }}</span>
                   </el-link>
                 </div>
               </div>
@@ -1193,85 +1499,147 @@ const getProblemList = async () => {
                     :locale="zhHans"
                     @change="handleChange"
                   /> -->
-                  <UEditor style="width: 100%" :tinymceHtml="localToptTab.richText"
-                    @changeEditorValue="changeEditorValue" />
+                  <UEditor
+                    style="width: 100%"
+                    :tinymceHtml="localToptTab.richText"
+                    @changeEditorValue="changeEditorValue"
+                  />
                 </el-form-item>
               </el-col>
             </el-row>
           </div>
         </el-card>
       </el-tab-pane>
-      <el-tab-pane :label="t('projectTopTabs.configurationInformation')" name="configurationInformation" v-if="
-        localToptTab.isProfile === 1 &&
-        !localToptTab.required &&
-        localToptTab.projectType !== 2
-      ">
+      <el-tab-pane
+        :label="t('projectTopTabs.configurationInformation')"
+        name="configurationInformation"
+        v-if="
+          localToptTab.isProfile === 1 &&
+          !localToptTab.required &&
+          localToptTab.projectType !== 2
+        "
+      >
         <el-card v-if="localToptTab.data">
           <template #header>
-            <div class="card-header">{{ t('projectTopTabs.configurationInformation') }}</div>
+            <div class="card-header">
+              {{ t("projectTopTabs.configurationInformation") }}
+            </div>
           </template>
           <el-row :gutter="20">
             <el-col :span="6">
               <el-form-item :label="t('projectTopTabs.areaSelect')">
-                <el-select v-model="localToptTab.data.configurationInformation.initialProblem
-                  .countryId
-                  " filterable clearable placeholder="Select" :disabled="localToptTab.projectType === 2"
-                  @change="changeConfigurationCountryId">
-                  <ElOption v-for="item in localToptTab.data.configurationInformation
-                    .configurationCountryList" :label="item.countryName" :value="item.countryId"></ElOption>
+                <el-select
+                  v-model="
+                    localToptTab.data.configurationInformation.initialProblem
+                      .countryId
+                  "
+                  filterable
+                  clearable
+                  placeholder="Select"
+                  :disabled="localToptTab.projectType === 2"
+                  @change="changeConfigurationCountryId"
+                >
+                  <ElOption
+                    v-for="item in localToptTab.data.configurationInformation
+                      .configurationCountryList"
+                    :label="item.countryName"
+                    :value="item.countryId"
+                  ></ElOption>
                   <template #empty>
                     <div>
-                      <el-button type="primary" link class="buttonClass" size="small" @click="addProblem">
-                        {{ t('projectTopTabs.quickAdd') }}
-                        <SvgIcon name="ant-design:plus-outlined" color="#fff" style="
+                      <el-button
+                        type="primary"
+                        link
+                        class="buttonClass"
+                        size="small"
+                        @click="addProblem"
+                      >
+                        {{ t("projectTopTabs.quickAdd") }}
+                        <SvgIcon
+                          name="ant-design:plus-outlined"
+                          color="#fff"
+                          style="
                             background-color: var(--el-color-primary);
                             border-radius: 50%;
                             padding: 0.125rem;
                             margin: 0 0.125rem;
-                          " />
+                          "
+                        />
                       </el-button>
                     </div>
                   </template>
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="6" v-if="
-              localToptTab.data.configurationInformation.initialProblem
-                .countryId
-            ">
+            <el-col
+              :span="6"
+              v-if="
+                localToptTab.data.configurationInformation.initialProblem
+                  .countryId
+              "
+            >
               <el-form-item :label="t('projectTopTabs.questionnaireName')">
-                <el-select v-model="localToptTab.data.configurationInformation.initialProblem
-                  .projectProblemCategoryId
-                  " clearable placeholder="Select" :disabled="localToptTab.projectType === 2"
-                  @focus="getProjectCategoryList" @change="getProjectProblemList">
-                  <el-option v-for="item in localToptTab.data.configurationInformation
-                    .projectCategoryList" :key="item.projectProblemCategoryId" :label="item.projectProblemCategoryName"
-                    :value="item.projectProblemCategoryId" />
+                <el-select
+                  v-model="
+                    localToptTab.data.configurationInformation.initialProblem
+                      .projectProblemCategoryId
+                  "
+                  clearable
+                  placeholder="Select"
+                  :disabled="localToptTab.projectType === 2"
+                  @focus="getProjectCategoryList"
+                  @change="getProjectProblemList"
+                >
+                  <el-option
+                    v-for="item in localToptTab.data.configurationInformation
+                      .projectCategoryList"
+                    :key="item.projectProblemCategoryId"
+                    :label="item.projectProblemCategoryName"
+                    :value="item.projectProblemCategoryId"
+                  />
                 </el-select>
               </el-form-item>
             </el-col>
           </el-row>
           <!-- 1 输入框 2单选 3复选 4下拉  -->
-          <template v-if="
-            localToptTab.data.configurationInformation
-              .ProjectProblemInfoList &&
-            localToptTab.data.configurationInformation.ProjectProblemInfoList
-              .length &&
-            localToptTab.projectQuotaInfoList.length
-          ">
-            <el-row class="allocation" :gutter="20" v-for="(item, index) in localToptTab.data.configurationInformation
-              .ProjectProblemInfoList">
-              <el-col :span="20"> {{ t('projectTopTabs.question') }}：{{ item.question }} </el-col>
+          <template
+            v-if="
+              localToptTab.data.configurationInformation
+                .ProjectProblemInfoList &&
+              localToptTab.data.configurationInformation.ProjectProblemInfoList
+                .length &&
+              localToptTab.projectQuotaInfoList.length
+            "
+          >
+            <el-row
+              class="allocation"
+              :gutter="20"
+              v-for="(item, index) in localToptTab.data.configurationInformation
+                .ProjectProblemInfoList"
+            >
+              <el-col :span="20">
+                {{ t("projectTopTabs.question") }}：{{ item.question }}
+              </el-col>
               <el-col :span="20">
                 <el-form-item>
                   <!-- 1输入框 -->
-                  <el-input v-if="item.questionType === 1" disabled
-                    :placeholder="t('projectTopTabs.inputDisabled')"></el-input>
+                  <el-input
+                    v-if="item.questionType === 1"
+                    disabled
+                    :placeholder="t('projectTopTabs.inputDisabled')"
+                  ></el-input>
                   <!-- 3多选 值为[]-->
-                  <el-checkbox-group v-else :modelValue="customModel(item.id, index).get()"
-                    @update:modelValue="customModel(item.id, index).set($event)" @change="setAnswerValue(3, index)">
-                    <el-checkbox :label="ite.anotherName" :value="ite.id"
-                      v-for="ite in item.getProjectAnswerInfoList" />
+                  <el-checkbox-group
+                    v-else
+                    :modelValue="customModel(item.id, index).get()"
+                    @update:modelValue="customModel(item.id, index).set($event)"
+                    @change="setAnswerValue(3, index)"
+                  >
+                    <el-checkbox
+                      :label="ite.anotherName"
+                      :value="ite.id"
+                      v-for="ite in item.getProjectAnswerInfoList"
+                    />
                   </el-checkbox-group>
                 </el-form-item>
               </el-col>
@@ -1279,31 +1647,59 @@ const getProblemList = async () => {
           </template>
         </el-card>
       </el-tab-pane>
-      <el-tab-pane :label="t('newProject.safetyInformation')" name="securityInformation" v-if="!localToptTab.required">
+      <el-tab-pane
+        :label="t('newProject.safetyInformation')"
+        name="securityInformation"
+        v-if="!localToptTab.required"
+      >
         <el-card>
           <template #header>
-            <div class="card-header">{{ t('newProject.safetyInformation') }}</div>
+            <div class="card-header">
+              {{ t("newProject.safetyInformation") }}
+            </div>
           </template>
           <el-row :gutter="20">
             <el-col :span="6">
               <el-form-item>
                 <template #label>
-                  <div>{{ t('newProject.hourly') }}<span class="red">{{ t('newProject.inflow') }}</span>{{
-                    t('newProject.num') }}</div>
+                  <div>
+                    {{ t("newProject.hourly")
+                    }}<span class="red">{{ t("newProject.inflow") }}</span
+                    >{{ t("newProject.num") }}
+                  </div>
                 </template>
-                <el-input-number style="height: 2rem" v-model="localToptTab.preNum" :min="1" :step="1" step-strictly
-                  controls-position="right" size="large" @keydown="handleInput" />
+                <el-input-number
+                  style="height: 2rem"
+                  v-model="localToptTab.preNum"
+                  :min="1"
+                  :step="1"
+                  step-strictly
+                  controls-position="right"
+                  size="large"
+                  @keydown="handleInput"
+                />
               </el-form-item>
             </el-col>
             <el-col :span="1"> </el-col>
             <el-col :span="6">
               <el-form-item>
                 <template #label>
-                  <div>{{ t('newProject.hourly') }}<span class="blue">{{ t('newProject.completion') }}</span>{{
-                    t('newProject.num') }}</div>
+                  <div>
+                    {{ t("newProject.hourly")
+                    }}<span class="blue">{{ t("newProject.completion") }}</span
+                    >{{ t("newProject.num") }}
+                  </div>
                 </template>
-                <el-input-number style="height: 2rem" v-model="localToptTab.limitedQuantity" :min="1" :step="1"
-                  step-strictly controls-position="right" size="large" @keydown="handleInput" />
+                <el-input-number
+                  style="height: 2rem"
+                  v-model="localToptTab.limitedQuantity"
+                  :min="1"
+                  :step="1"
+                  step-strictly
+                  controls-position="right"
+                  size="large"
+                  @keydown="handleInput"
+                />
               </el-form-item>
             </el-col>
             <el-col :span="1"> </el-col>
@@ -1311,16 +1707,21 @@ const getProblemList = async () => {
               <el-form-item label="" class="flex m-0">
                 <template #label>
                   <div>
-                    {{ t('newProject.allowRepeat') }}<el-tooltip class="tooltips" placement="top">
+                    {{ t("newProject.allowRepeat")
+                    }}<el-tooltip class="tooltips" placement="top">
                       <template #content>
-                        <div>{{ t('newProject.switchOn') }}</div>
-                        <div>{{ t('newProject.switchOff') }}</div>
+                        <div>{{ t("newProject.switchOn") }}</div>
+                        <div>{{ t("newProject.switchOff") }}</div>
                       </template>
                       <SvgIcon class="SvgIcon2" name="i-ri:question-line" />
                     </el-tooltip>
                   </div>
                 </template>
-                <el-switch v-model="localToptTab.ipDifferenceDetection" :active-value="1" :inactive-value="2" />
+                <el-switch
+                  v-model="localToptTab.ipDifferenceDetection"
+                  :active-value="1"
+                  :inactive-value="2"
+                />
               </el-form-item>
             </el-col>
           </el-row>
@@ -1359,21 +1760,34 @@ const getProblemList = async () => {
       </el-tab-pane>
     </el-tabs>
     <el-dialog v-model="dialogVisibleExchangeRate" title="设置汇率" width="500">
-      <el-form :model="exchangeRateForm" ref="exchangeRateRef" :rules="exchangeRateRules" label-width="90px"
-        :inline="false">
+      <el-form
+        :model="exchangeRateForm"
+        ref="exchangeRateRef"
+        :rules="exchangeRateRules"
+        label-width="90px"
+        :inline="false"
+      >
         <el-form-item label="美元汇率" prop="exchangeRate">
           <div class="right">
-            <el-input v-model="exchangeRateForm.exchangeRate" placeholder="请输入数值" clearable>
+            <el-input
+              v-model="exchangeRateForm.exchangeRate"
+              placeholder="请输入数值"
+              clearable
+            >
               <template #prefix>
                 <!-- 自定义 SVG 图标作为前缀图标 -->
                 <el-text style="color: #333">
-                  1 {{ t('newProject.dollor') }} (USD)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
+                  1
+                  {{ t("newProject.dollor") }}
+                  (USD)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
                 </el-text>
               </template>
 
               <template #suffix>
                 <!-- 自定义 SVG 图标作为后缀图标 -->
-                <el-text style="color: #333"> {{ t('newProject.rmb') }} (CNY) </el-text>
+                <el-text style="color: #333">
+                  {{ t("newProject.rmb") }} (CNY)
+                </el-text>
               </template>
             </el-input>
           </div>
@@ -1391,8 +1805,14 @@ const getProblemList = async () => {
       </template>
     </el-dialog>
     <customerEdit ref="editRef" @fetch-data="getCustomerList" />
-    <Edit v-if="data.editProps.visible" :id="data.editProps.id" :countryId="data.editProps.countryId"
-      v-model="data.editProps.visible" :row="data.editProps.row" @success="getProblemList"></Edit>
+    <Edit
+      v-if="data.editProps.visible"
+      :id="data.editProps.id"
+      :countryId="data.editProps.countryId"
+      v-model="data.editProps.visible"
+      :row="data.editProps.row"
+      @success="getProblemList"
+    ></Edit>
   </ElForm>
 </template>
 
@@ -1497,7 +1917,6 @@ const getProblemList = async () => {
 }
 
 :deep {
-
   .el-input-number,
   .el-input,
   .el-select,

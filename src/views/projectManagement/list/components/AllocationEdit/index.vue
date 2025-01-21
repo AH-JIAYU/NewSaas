@@ -12,6 +12,7 @@ import DictionaryDialog from "@/views/survey/vip_department/components/dictionar
 import customerEdit from "@/views/user/supplier/components/SupplierEdit/index.vue";
 
 import tenantEdit from "@/views/user/cooperation/components/CustomerEdit/index.vue";
+import { useI18n } from "vue-i18n";
 //@/views/user/supplier/SupplierEdit/index.vue
 defineOptions({
   name: "AllocationEdit",
@@ -19,6 +20,8 @@ defineOptions({
 const emits = defineEmits(["fetch-data"]);
 // loading
 const loading = ref<boolean>(false);
+// 国际化
+const { t } = useI18n();
 // 弹框
 const dialogTableVisible = ref(false);
 const formRef = ref<any>(); // ref
@@ -107,7 +110,7 @@ async function showEdit(row: any, type: string) {
   if (type === "reassign") {
     data.value.title = "重新分配";
     const res = await obtainLoading(
-      api.getProjectAllocation({ projectId: row.projectId })
+      api.getProjectAllocation({ projectId: row.projectId }),
     );
 
     data.value.form.projectId = row.projectId;
@@ -147,7 +150,7 @@ async function showEdit(row: any, type: string) {
   }
   // 供应商列表
   data.value.tenantSupplierList = await obtainLoading(
-    supplierStore.getTenantSupplierList(row.projectId)
+    supplierStore.getTenantSupplierList(row.projectId),
   );
   if (
     data.value.tenantSupplierList.length ==
@@ -169,7 +172,7 @@ async function showEdit(row: any, type: string) {
   }
   // 合作合作商列表
   const res = await obtainLoading(
-    cooperationApi.getAllocationBindList({ projectId: row.projectId })
+    cooperationApi.getAllocationBindList({ projectId: row.projectId }),
   );
   // 回显会员部门选中的值
   departmentId.value = [];
@@ -302,7 +305,7 @@ const handleNodeClick = (nodeData: any, checked: any) => {
   } else {
     // 如果取消选中节点，移除对应的节点 ID
     departmentId.value = departmentId.value.filter(
-      (id: any) => id !== nodeData.id
+      (id: any) => id !== nodeData.id,
     );
   }
   // 获取树的选中节点和半选节点
@@ -325,7 +328,7 @@ const sendProjectType = ref<any>(false);
 // 取消分配
 const cancelAllocation = () => {
   sendProjectType.value = !sendProjectType.value;
-  colse()
+  colse();
   if (sendProjectType.value) {
     isAllocation.value = true;
   } else {
@@ -412,15 +415,15 @@ function onSubmit() {
         } else {
           if (!params.addProjectAllocationInfoList.length) {
             ElMessage.warning({
-              message: "至少选择一个分配目标",
+              message: t("allocationEdit.leastOne"),
               center: true,
             });
             return;
           }
         }
-        let message = '分配成功'
+        let message = "分配成功";
         if (isAllocation.value) {
-          message = '取消分配成功'
+          message = "取消分配成功";
           params = {
             addProjectAllocationInfoList: [
               {
@@ -494,7 +497,7 @@ const goRouter = (name: any, data?: Dict) => {
 //供应商管理
 const getSupplier = async () => {
   data.value.tenantSupplierList = await obtainLoading(
-    supplierStore.getTenantSupplierList(data.value.form.projectId)
+    supplierStore.getTenantSupplierList(data.value.form.projectId),
   );
 };
 //会员列表
@@ -507,7 +510,7 @@ const getCustomer = async () => {
   const res = await obtainLoading(
     cooperationApi.getAllocationBindList({
       projectId: data.value.form.projectId,
-    })
+    }),
   );
   data.value.tenantList = res.data.allocationBindInfoList;
 };
@@ -528,19 +531,19 @@ defineExpose({ showEdit });
         <el-table-column
           align="left"
           show-overflow-tooltip
-          label="项目名称"
+          :label="t('allocationEdit.projectName')"
           prop="name"
         />
         <el-table-column
           align="left"
           show-overflow-tooltip
-          label="项目编码"
+          :label="t('allocationEdit.projectCode')"
           prop="projectId"
         />
         <el-table-column
           align="left"
           show-overflow-tooltip
-          label="客户简称"
+          :label="t('allocationEdit.CustomerAbbreviation')"
           width="100"
           prop="clientName"
         />
@@ -562,21 +565,35 @@ defineExpose({ showEdit });
                 alt=""
                 style="margin-right: 0.25rem"
               />
-              供应商</span
+              {{ t("allocationEdit.supplier") }}</span
             >
           </template>
-          <el-select v-model="supplierObj.groupSupplierIdList" clearable filterable multiple collapse-tags
-            collapse-tags-tooltip :max-collapse-tags="10" placeholder="" @change="supplierChange">
+          <el-select
+            v-model="supplierObj.groupSupplierIdList"
+            clearable
+            filterable
+            multiple
+            collapse-tags
+            collapse-tags-tooltip
+            :max-collapse-tags="10"
+            placeholder=""
+            @change="supplierChange"
+          >
             <template v-if="data.tenantSupplierList.length" #header>
-              <el-checkbox v-model="data.selectAll.supplier" @change="selectAllSupplier"
-                style="display: flex; height: unset">全选</el-checkbox>
+              <el-checkbox
+                v-model="data.selectAll.supplier"
+                @change="selectAllSupplier"
+                style="display: flex; height: unset"
+              >
+                {{ t("allocationEdit.selectAll") }}</el-checkbox
+              >
             </template>
             <template #prefix>
               <span
                 class="prefix-class"
                 v-if="data.tenantSupplierList.length == 0"
               >
-                请先维护供应商数据
+                {{ t("allocationEdit.supplierMaintenance") }}
                 <img
                   src="@/assets/images/jiantou.png"
                   alt=""
@@ -588,7 +605,7 @@ defineExpose({ showEdit });
                   supplierObj.groupSupplierIdList.length == 0 &&
                   data.tenantSupplierList.length != 0
                 "
-                >请先选择供应商数据</span
+                >{{ t("allocationEdit.supplierSelect") }}</span
               >
             </template>
             <el-option
@@ -598,10 +615,7 @@ defineExpose({ showEdit });
               :value="item.tenantSupplierId"
             />
             <template #empty>
-              <div
-
-              >
-
+              <div>
                 <el-button
                   type="primary"
                   link
@@ -609,7 +623,7 @@ defineExpose({ showEdit });
                   size="small"
                   @click="goRouter('供应商')"
                 >
-                  快捷新增
+                  {{ t("allocationEdit.quickAdd") }}
                   <SvgIcon
                     name="ant-design:plus-outlined"
                     color="#fff"
@@ -633,24 +647,38 @@ defineExpose({ showEdit });
                 alt=""
                 style="margin-right: 0.25rem"
               />
-              调查站</span
+              {{ t("allocationEdit.SurveyStation") }}</span
             >
           </template>
-          <el-tree-select ref="treeRef" v-model="memberObj.groupSupplierIdList" :data="data.departmentList"
-            show-checkbox default-expand-all node-key="id" :props="defaultProps" @check-change="handleNodeClick"
-            :check-strictly="true" :check-on-click-node="true" :multiple="true" :expand-on-click-node="false"
-            style="width: 37.625rem" clearable placeholder="">
+          <el-tree-select
+            ref="treeRef"
+            v-model="memberObj.groupSupplierIdList"
+            :data="data.departmentList"
+            show-checkbox
+            default-expand-all
+            node-key="id"
+            :props="defaultProps"
+            @check-change="handleNodeClick"
+            :check-strictly="true"
+            :check-on-click-node="true"
+            :multiple="true"
+            :expand-on-click-node="false"
+            style="width: 37.625rem"
+            clearable
+            placeholder=""
+          >
             <template v-if="data.departmentList.length" #header>
-              <el-checkbox v-model="data.selectAll.member" @change="selectAllMember"
-                style="display: flex; height: unset">全选</el-checkbox>
+              <el-checkbox
+                v-model="data.selectAll.member"
+                @change="selectAllMember"
+                style="display: flex; height: unset"
+              >
+                {{ t("allocationEdit.selectAll") }}</el-checkbox
+              >
             </template>
             <template #prefix>
-              <span
-                class="prefix-class"
-                v-if="data.departmentList.length == 0"
-
-              >
-                请先维护调查站数据
+              <span class="prefix-class" v-if="data.departmentList.length == 0">
+                {{ t("allocationEdit.SurveyStationMaintenance") }}
                 <img
                   src="@/assets/images/jiantou.png"
                   alt=""
@@ -662,22 +690,20 @@ defineExpose({ showEdit });
                   !memberObj.groupSupplierIdList.length &&
                   data.departmentList.length != 0
                 "
-                >请先选择调查站数据</span
+              >
+                {{ t("allocationEdit.SurveyStationSelect") }}</span
               >
             </template>
             <template #empty>
-              <div
-
-              >
-
+              <div>
                 <el-button
                   type="primary"
                   link
                   class="buttonClass"
                   size="small"
-                   @click="goRouter('调查站')"
+                  @click="goRouter('调查站')"
                 >
-                  快捷新增
+                  {{ t("allocationEdit.quickAdd") }}
                   <SvgIcon
                     name="ant-design:plus-outlined"
                     color="#fff"
@@ -701,21 +727,32 @@ defineExpose({ showEdit });
                 alt=""
                 style="margin-right: 0.25rem"
               />
-              合作商</span
+              {{ t("allocationEdit.partner") }}</span
             >
           </template>
-          <el-select v-model="tenantObj.groupSupplierIdList" clearable filterable multiple collapse-tags
-            collapse-tags-tooltip :max-collapse-tags="10" placeholder="" @change="tenantChange">
+          <el-select
+            v-model="tenantObj.groupSupplierIdList"
+            clearable
+            filterable
+            multiple
+            collapse-tags
+            collapse-tags-tooltip
+            :max-collapse-tags="10"
+            placeholder=""
+            @change="tenantChange"
+          >
             <template v-if="data.tenantList.length" #header>
-              <el-checkbox v-model="data.selectAll.tenant" @change="selectAllTenant"
-                style="display: flex; height: unset">全选</el-checkbox>
+              <el-checkbox
+                v-model="data.selectAll.tenant"
+                @change="selectAllTenant"
+                style="display: flex; height: unset"
+              >
+                {{ t("allocationEdit.selectAll") }}</el-checkbox
+              >
             </template>
             <template #prefix>
-              <span
-                class="prefix-class"
-                v-if="data.tenantList.length == 0"
-              >
-                请先维护合作商数据
+              <span class="prefix-class" v-if="data.tenantList.length == 0">
+                {{ t("allocationEdit.partnerMaintenance") }}
                 <img
                   src="@/assets/images/jiantou.png"
                   alt=""
@@ -727,7 +764,7 @@ defineExpose({ showEdit });
                   tenantObj.groupSupplierIdList.length == 0 &&
                   data.tenantList.length != 0
                 "
-                >请先选择合作商数据</span
+                >{{ t("allocationEdit.partnerSelect") }}</span
               >
             </template>
             <!-- :disabled="item.reveal === 1" -->
@@ -738,17 +775,15 @@ defineExpose({ showEdit });
               :value="item.beInvitationTenantId"
             />
             <template #empty>
-              <div
-              >
-
+              <div>
                 <el-button
                   type="primary"
                   link
                   class="buttonClass"
                   size="small"
-                   @click="goRouter('合作商')"
+                  @click="goRouter('合作商')"
                 >
-                  快捷新增
+                  {{ t("allocationEdit.quickAdd") }}
                   <SvgIcon
                     name="ant-design:plus-outlined"
                     color="#fff"
@@ -771,7 +806,7 @@ defineExpose({ showEdit });
               @click="cancelAllocation()"
               style="border-radius: 1.875rem"
             >
-              取消分配
+              {{ t("allocationEdit.unassign") }}
             </el-button>
           </template>
         </el-form-item>
@@ -823,8 +858,12 @@ defineExpose({ showEdit });
     </el-form> -->
       <template #footer>
         <div style="flex: auto">
-          <el-button @click="closeHandler"> 取消 </el-button>
-          <el-button type="primary" @click="onSubmit"> 确定 </el-button>
+          <el-button @click="closeHandler">
+            {{ t("allocationEdit.cancel") }}
+          </el-button>
+          <el-button type="primary" @click="onSubmit">
+            {{ t("allocationEdit.confirm") }}
+          </el-button>
         </div>
       </template>
     </el-dialog>
@@ -852,7 +891,9 @@ defineExpose({ showEdit });
   margin: 0.75rem;
   width: 100%;
   height: 2rem;
-  font-family: PingFang SC, PingFang SC;
+  font-family:
+    PingFang SC,
+    PingFang SC;
   font-weight: 500;
   font-size: 0.875rem;
   color: #409eff;
@@ -866,7 +907,6 @@ defineExpose({ showEdit });
 .el-select-dropdown .buttonClass {
   width: calc(100% - 24px);
   /* 减去两边的 padding */
-
 }
 /* 修改选中后的标签样式 */
 :deep(.el-tag.el-tag--info) {

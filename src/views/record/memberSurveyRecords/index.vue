@@ -41,8 +41,18 @@ const formSearchList = ref<any>(); //表单排序配置
 const formSearchName = ref<string>("formSearch-memberSurveyRecords"); // 表单排序name
 // 表格控件-展示列
 const columns = ref([
-  { prop: "id", label: computed(() => t("RecordsManagement.clickID")), sortable: true, checked: true },
-  { prop: "surveySource", label: computed(() => t("RecordsManagement.vipType")), sortable: true, checked: true },
+  {
+    prop: "id",
+    label: computed(() => t("RecordsManagement.clickID")),
+    sortable: true,
+    checked: true,
+  },
+  {
+    prop: "surveySource",
+    label: computed(() => t("RecordsManagement.vipType")),
+    sortable: true,
+    checked: true,
+  },
   {
     prop: "memberChildId",
     label: computed(() => t("RecordsManagement.subVipID")),
@@ -55,7 +65,12 @@ const columns = ref([
     sortable: true,
     checked: true,
   },
-  { prop: "memberId", label: computed(() => t("RecordsManagement.vipID")), sortable: true, checked: true },
+  {
+    prop: "memberId",
+    label: computed(() => t("RecordsManagement.vipID")),
+    sortable: true,
+    checked: true,
+  },
   {
     prop: "tenantSupplierId",
     label: computed(() => t("RecordsManagement.supplierID")),
@@ -63,7 +78,12 @@ const columns = ref([
     checked: true,
   },
 
-  { prop: "projectId", label: computed(() => t("RecordsManagement.projectID")), sortable: true, checked: true },
+  {
+    prop: "projectId",
+    label: computed(() => t("RecordsManagement.projectID")),
+    sortable: true,
+    checked: true,
+  },
   {
     prop: "randomIdentityId",
     label: computed(() => t("RecordsManagement.randomIdentity")),
@@ -89,7 +109,12 @@ const columns = ref([
     sortable: true,
     checked: true,
   },
-  { prop: "allocationType", label: computed(() => t("RecordsManagement.allocationType")), sortable: true, checked: true },
+  {
+    prop: "allocationType",
+    label: computed(() => t("RecordsManagement.allocationType")),
+    sortable: true,
+    checked: true,
+  },
   {
     prop: "doMoneyPrice",
     label: computed(() => t("RecordsManagement.projectPrice")),
@@ -102,10 +127,30 @@ const columns = ref([
     sortable: true,
     checked: true,
   },
-  { prop: "ipBelong", label: computed(() => t("RecordsManagement.OwningCountry")), sortable: true, checked: true },
-  { prop: "surveyTime", label: computed(() => t("RecordsManagement.surveyTime")), sortable: true, checked: true },
-  { prop: "surveyStatus", label: computed(() => t("RecordsManagement.surveyStatus")), sortable: true, checked: true },
-  { prop: "viceStatus", label: computed(() => t("RecordsManagement.viceState")), sortable: true, checked: true },
+  {
+    prop: "ipBelong",
+    label: computed(() => t("RecordsManagement.OwningCountry")),
+    sortable: true,
+    checked: true,
+  },
+  {
+    prop: "surveyTime",
+    label: computed(() => t("RecordsManagement.surveyTime")),
+    sortable: true,
+    checked: true,
+  },
+  {
+    prop: "surveyStatus",
+    label: computed(() => t("RecordsManagement.surveyStatus")),
+    sortable: true,
+    checked: true,
+  },
+  {
+    prop: "viceStatus",
+    label: computed(() => t("RecordsManagement.viceState")),
+    sortable: true,
+    checked: true,
+  },
 ]);
 const queryForm = reactive<any>({
   memberChildId: "", //	子会员id
@@ -368,7 +413,9 @@ function handleCurrentChange(val: any) {
       <el-row>
         <FormLeftPanel />
         <FormRightPanel>
-          <el-button size="default"> {{ t('RecordsManagement.export') }} </el-button>
+          <el-button size="default">
+            {{ t("RecordsManagement.export") }}
+          </el-button>
           <TabelControl
             v-model:border="border"
             v-model:tableAutoHeight="tableAutoHeight"
@@ -402,17 +449,23 @@ function handleCurrentChange(val: any) {
           fixed="left"
           :label="t('RecordsManagement.clickID')"
           ><template #default="{ row }">
-            <el-tag effect="dark" v-if="row.surveySource === 1" type="primary"
-              >{{ t('RecordsManagement.internalVip') }}</el-tag
+            <el-tag
+              effect="dark"
+              v-if="row.surveySource === 1"
+              type="primary"
+              >{{ t("RecordsManagement.internalVip") }}</el-tag
             >
-            <el-tag effect="dark" v-if="row.surveySource === 2" type="warning"
-              >{{ t('RecordsManagement.externalVip') }}</el-tag
+            <el-tag
+              effect="dark"
+              v-if="row.surveySource === 2"
+              type="warning"
+              >{{ t("RecordsManagement.externalVip") }}</el-tag
             >
             <el-tag
               effect="dark"
               v-if="row.surveySource === 3"
               style="background-color: #aed500; border: none"
-              >{{ t('RecordsManagement.outsourcingVip') }}</el-tag
+              >{{ t("RecordsManagement.outsourcingVip") }}</el-tag
             >
             <div class="copyId flex-s tableSmall">
               <div class="id oneLine idFont">{{ row.id ? row.id : "-" }}</div>
@@ -482,7 +535,7 @@ function handleCurrentChange(val: any) {
                       margin-right: 0.25rem;
                     "
                   />
-                  {{ t('RecordsManagement.internalStation') }}</el-tag
+                  {{ t("RecordsManagement.internalStation") }}</el-tag
                 >
                 <!-- 会员名称 -->
                 <span>{{ row.memberName ? row.memberName : "" }}</span>
@@ -501,7 +554,7 @@ function handleCurrentChange(val: any) {
                       margin-right: 0.25rem;
                     "
                   />
-                  <span>{{ t('RecordsManagement.supplier') }}</span>
+                  <span>{{ t("RecordsManagement.supplier") }}</span>
                 </el-tag>
                 <span>{{
                   row.tenantSupplierName ? row.tenantSupplierName : ""
@@ -525,7 +578,9 @@ function handleCurrentChange(val: any) {
                       margin-right: 0.25rem;
                     "
                   />
-                  {{ t('RecordsManagement.v') }}&nbsp;&nbsp;&nbsp;{{ t('RecordsManagement.ip') }}</el-tag
+                  {{ t("RecordsManagement.v") }}&nbsp;&nbsp;&nbsp;{{
+                    t("RecordsManagement.ip")
+                  }}</el-tag
                 >
                 <span>{{
                   row.memberChildName ? row.memberChildName : ""
@@ -836,13 +891,13 @@ function handleCurrentChange(val: any) {
               <template #content>
                 <div>
                   <el-text style="color: #fff"
-                    >{{ t('RecordsManagement.startTime') }}：{{
+                    >{{ t("RecordsManagement.startTime") }}：{{
                       row.surveyStartTime ? row.surveyStartTime : "-"
                     }}</el-text
                   >
                   <br />
                   <el-text style="color: #fff"
-                    >{{ t('RecordsManagement.endTime') }}：{{
+                    >{{ t("RecordsManagement.endTime") }}：{{
                       row.surveyEndTime ? row.surveyEndTime : "-"
                     }}</el-text
                   >
@@ -871,7 +926,7 @@ function handleCurrentChange(val: any) {
               v-if="row.surveyStatus === 3"
               class="mx-1"
               type="primary"
-              >{{ t('RecordsManagement.quotaReached') }}</el-tag
+              >{{ t("RecordsManagement.quotaReached") }}</el-tag
             >
             <el-tag
               effect="dark"
@@ -879,7 +934,7 @@ function handleCurrentChange(val: any) {
               v-if="row.surveyStatus === 1"
               class="mx-1"
               type="success"
-              >{{ t('RecordsManagement.complete') }}</el-tag
+              >{{ t("RecordsManagement.complete") }}</el-tag
             >
             <el-tag
               effect="dark"
@@ -887,7 +942,7 @@ function handleCurrentChange(val: any) {
               v-if="row.surveyStatus === 2"
               class="mx-1"
               type="danger"
-              >{{ t('RecordsManagement.beScreened') }}</el-tag
+              >{{ t("RecordsManagement.beScreened") }}</el-tag
             >
             <el-tag
               effect="dark"
@@ -895,14 +950,14 @@ function handleCurrentChange(val: any) {
               v-if="row.surveyStatus === 4"
               class="mx-1"
               type="warning"
-              >{{ t('RecordsManagement.safeTermination') }}</el-tag
+              >{{ t("RecordsManagement.safeTermination") }}</el-tag
             >
             <el-tag
               effect="dark"
               style="background-color: #e1e1e1; border: none"
               v-if="row.surveyStatus === 5"
               class="mx-1"
-              >{{ t('RecordsManagement.uncompleted') }}</el-tag
+              >{{ t("RecordsManagement.uncompleted") }}</el-tag
             >
             <!-- <div
               v-if="

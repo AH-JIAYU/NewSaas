@@ -26,9 +26,12 @@ import * as echarts from "echarts";
 import word from "@/assets/images/uploadFile/word.png";
 import xlsx from "@/assets/images/uploadFile/xlsx.png";
 import pdf from "@/assets/images/uploadFile/pdf.png";
+import { useI18n } from "vue-i18n";
 defineOptions({
   name: "ProjectDetails",
 });
+// 国际化
+const { t } = useI18n();
 // 客户
 const customerStore = useUserCustomerStore();
 // 客户列表
@@ -176,7 +179,7 @@ async function showEdit(row: any, projectType: any) {
     const totals = data.value.getProjectSystemTypeInfoList.reduce(
       (acc: any, item: any) => {
         const colorObj = platformColor.find(
-          (ele: any) => ele.platform === item.platform
+          (ele: any) => ele.platform === item.platform,
         );
         item.color = colorObj ? colorObj.color : "#6FD195"; // 设置颜色
 
@@ -195,7 +198,7 @@ async function showEdit(row: any, projectType: any) {
         successSizeAll: 0,
         settlementSizeAll: 0,
         pieData: [], // 存储修改后的数据
-      }
+      },
     );
 
     // 计算每个项目的比例，并推送到 getProjectSystemTypeInfoPie
@@ -223,7 +226,7 @@ async function showEdit(row: any, projectType: any) {
     // 遍历 typePriData，将不在 getProjectBrowserTypeInfoList 中的项推送到其中
     typePriData.forEach((itemB: any) => {
       const existsInA = data.value.getProjectBrowserTypeInfoList.some(
-        (itemA: any) => itemA.type === itemB.type
+        (itemA: any) => itemA.type === itemB.type,
       );
       if (!existsInA) {
         data.value.getProjectBrowserTypeInfoList.push(itemB);
@@ -269,7 +272,7 @@ async function showEdit(row: any, projectType: any) {
     // 如果 getProjectBrowserTypeInfoList 为空，则重新构建数据
     const newData = typePriData.map((item1: any) => {
       const matchedColor = typeColor.find(
-        (item2: any) => item1.type === item2.platform
+        (item2: any) => item1.type === item2.platform,
       );
       return {
         ...item1,
@@ -298,7 +301,7 @@ async function showEdit(row: any, projectType: any) {
     data.value.form.projectSettlementStatusSet
       .reduce((accumulator: any, currentValue: any) => {
         let existing = accumulator.find(
-          (obj: any) => obj.settlementStatus === currentValue.settlementStatus
+          (obj: any) => obj.settlementStatus === currentValue.settlementStatus,
         );
         if (!existing) {
           accumulator.push(currentValue);
@@ -317,7 +320,7 @@ async function showEdit(row: any, projectType: any) {
         data.value.srcList.push(
           extensionMap[getFileExtension(item)]
             ? extensionMap[getFileExtension(item)]
-            : imgres.data.fileUrl
+            : imgres.data.fileUrl,
         );
       }
     }
@@ -362,13 +365,13 @@ const getCountryQuestion = async () => {
     const countryData = findData(
       resCountry.data.getProjectCountryListInfoList,
       "countryId",
-      params.countryId
+      params.countryId,
     );
     // 查找问卷
     const questionnaireData = findData(
       resQuestionnaire.data.getProjectCategoryInfoList,
       "projectProblemCategoryId",
-      data.value.form.projectQuotaInfoList[0].projectProblemCategoryId
+      data.value.form.projectQuotaInfoList[0].projectProblemCategoryId,
     );
     data.value.form.countryName = countryData.countryName;
     data.value.form.projectProblemCategoryName =
@@ -412,7 +415,7 @@ function closeHandler() {
 // 根据id查找客户
 const getcustsmer = computed(() => {
   return customerList.value.find(
-    (item: any) => item.tenantCustomerId === data.value.form.clientId
+    (item: any) => item.tenantCustomerId === data.value.form.clientId,
   );
 });
 
@@ -735,7 +738,9 @@ defineExpose({ showEdit });
       <el-card class="box-card">
         <template #header>
           <div class="card-header">
-            <div class="leftTitle font-s18">操作系统</div>
+            <div class="leftTitle font-s18">
+              {{ t("projectDetail.operatingSystem") }}
+            </div>
           </div>
         </template>
         <div class="">
@@ -747,13 +752,16 @@ defineExpose({ showEdit });
                 style="width: 80%; height: 18.625rem"
               />
               <el-radio-group v-model="data.platform" @change="getPlatform">
-                <el-radio-button label="参与" value="size"></el-radio-button>
                 <el-radio-button
-                  label="完成"
+                  :label="t('projectDetail.carticipateIn')"
+                  value="size"
+                ></el-radio-button>
+                <el-radio-button
+                  :label="t('projectDetail.complete')"
                   value="successSize"
                 ></el-radio-button>
                 <el-radio-button
-                  label="审核成功"
+                  :label="t('projectDetail.successfulAudit')"
                   value="settlementSize"
                 ></el-radio-button>
               </el-radio-group>
@@ -780,18 +788,22 @@ defineExpose({ showEdit });
                       >
                     </template>
                   </el-table-column>
-                  <el-table-column prop="size" align="center" label="参与">
+                  <el-table-column
+                    prop="size"
+                    align="center"
+                    :label="t('projectDetail.carticipateIn')"
+                  >
                   </el-table-column>
                   <el-table-column
                     prop="successSize"
                     align="center"
-                    label="完成"
+                    :label="t('projectDetail.complete')"
                   >
                   </el-table-column>
                   <el-table-column
                     prop="settlementSize"
                     align="center"
-                    label="审核通过"
+                    :label="t('projectDetail.passTheAudit')"
                   >
                   </el-table-column>
                 </el-table>
@@ -803,7 +815,9 @@ defineExpose({ showEdit });
       <el-card class="box-card">
         <template #header>
           <div class="card-header">
-            <div class="leftTitle font-s18">浏览器</div>
+            <div class="leftTitle font-s18">
+              {{ t("projectDetail.browser") }}
+            </div>
           </div>
         </template>
         <div class="">
@@ -815,13 +829,16 @@ defineExpose({ showEdit });
                 style="width: 80%; height: 18.625rem"
               />
               <el-radio-group v-model="data.type" @change="getType">
-                <el-radio-button label="参与" value="size"></el-radio-button>
                 <el-radio-button
-                  label="完成"
+                  :label="t('projectDetail.carticipateIn')"
+                  value="size"
+                ></el-radio-button>
+                <el-radio-button
+                  :label="t('projectDetail.complete')"
                   value="successSize"
                 ></el-radio-button>
                 <el-radio-button
-                  label="审核成功"
+                  :label="t('projectDetail.successfulAudit')"
                   value="settlementSize"
                 ></el-radio-button>
               </el-radio-group>
@@ -848,18 +865,22 @@ defineExpose({ showEdit });
                       >
                     </template>
                   </el-table-column>
-                  <el-table-column prop="size" align="center" label="参与">
+                  <el-table-column
+                    prop="size"
+                    align="center"
+                    :label="t('projectDetail.carticipateIn')"
+                  >
                   </el-table-column>
                   <el-table-column
                     prop="successSize"
                     align="center"
-                    label="完成"
+                    :label="t('projectDetail.complete')"
                   >
                   </el-table-column>
                   <el-table-column
                     prop="settlementSize"
                     align="center"
-                    label="审核通过"
+                    :label="t('projectDetail.passTheAudit')"
                   >
                   </el-table-column>
                 </el-table>
@@ -872,9 +893,11 @@ defineExpose({ showEdit });
         <template #header>
           <div class="card-header">
             <div class="leftTitle font-s18">
-              基本信息
+              {{ t("projectDetail.basicInformation") }}
               <span class="m-4 spanStatus">{{
-                data.allocationStatus === 1 ? "未分配" : "已分配"
+                data.allocationStatus === 1
+                  ? t("projectDetail.undistributed")
+                  : t("projectDetail.assigned")
               }}</span>
             </div>
             <div class="rightStatus">
