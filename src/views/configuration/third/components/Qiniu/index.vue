@@ -235,14 +235,14 @@ async function getDataList() {
             <ElFormItem label="空间名称:">
               <ElInput
                 v-model="form2.bucket"
-                placeholder="请输入七牛云存储空间"
+                placeholder="请输入七牛云空间名称"
                 style="width: 22.4375rem"
               />
             </ElFormItem>
             <ElFormItem label="空间域名:">
               <ElInput
                 v-model="form2.domain"
-                placeholder="请输入七牛云存储域名"
+                placeholder="请输入七牛云空间域名"
                 style="width: 22.4375rem"
               />
             </ElFormItem>

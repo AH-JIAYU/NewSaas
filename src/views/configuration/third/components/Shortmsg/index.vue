@@ -183,7 +183,7 @@ const onSubmit2 = () => {
             <ElFormItem label="短信签名:">
               <ElInput
                 v-model="form1.signName"
-                placeholder="短信签名"
+                placeholder="请输入阿里云短信签名"
                 style="width: 22.4375rem"
               />
             </ElFormItem>
@@ -236,7 +236,7 @@ const onSubmit2 = () => {
             <ElFormItem label="短信签名:">
               <ElInput
                 v-model="form2.signName"
-                placeholder="腾讯云短信签名"
+                placeholder="请输入腾讯云短信签名"
                 style="width: 22.4375rem"
               />
             </ElFormItem>
