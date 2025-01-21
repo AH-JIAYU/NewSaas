@@ -3,10 +3,13 @@ import { ref } from "vue";
 import { ElMessage } from "element-plus";
 import type { FormInstance, FormRules } from "element-plus";
 import api from "@/api/modules/project_settlement";
+import { useI18n } from "vue-i18n";
 
 defineOptions({
   name: "AddSettlement",
 });
+// 国际化
+const { t } = useI18n();
 // 更新
 const emits = defineEmits(["success"]);
 const formRef = ref();
@@ -19,12 +22,12 @@ const form = ref({
 // 个人信息校验
 const formRules = ref<FormRules>({
   projectId: [
-    { required: true, trigger: "blur", message: "请输入项目ID" },
+    { required: true, trigger: "blur", message: t("addSettlement.enterID") },
     {
-      pattern: /^\d+$/,  // 允许输入0或正整数
-      message: '请输入纯数字',
-      trigger: 'blur'
-    }
+      pattern: /^\d+$/, // 允许输入0或正整数
+      message: t("addSettlement.num"),
+      trigger: "blur",
+    },
   ],
 });
 // 提交数据
@@ -38,12 +41,11 @@ function onSubmit() {
           emits("success");
           loading.value = false;
           ElMessage.success({
-            message: "操作成功",
+            message: "t('addSettlement.complete')",
             center: true,
           });
           closeHandler();
         } catch (error) {
-
         } finally {
           loading.value = false;
         }
@@ -68,16 +70,34 @@ defineExpose({ showEdit });
 
 <template>
   <div v-loading="loading">
-    <el-dialog v-model="dialogTableVisible" title="遗漏项目新增" width="700" :before-close="closeHandler">
-      <el-form ref="formRef" label-width="6.375rem" :model="form" :rules="formRules" :inline="false">
-        <el-form-item label="项目ID" prop="projectId">
-          <el-input v-model="form.projectId" placeholder="请输入项目ID" />
+    <el-dialog
+      v-model="dialogTableVisible"
+      :title="t('addSettlement.add')"
+      width="700"
+      :before-close="closeHandler"
+    >
+      <el-form
+        ref="formRef"
+        label-width="6.375rem"
+        :model="form"
+        :rules="formRules"
+        :inline="false"
+      >
+        <el-form-item :label="t('addSettlement.projectID')" prop="projectId">
+          <el-input
+            v-model="form.projectId"
+            :placeholder="t('addSettlement.enterID')"
+          />
         </el-form-item>
       </el-form>
       <template #footer>
         <div style="flex: auto">
-          <el-button @click="dialogTableVisible = false"> 取消 </el-button>
-          <el-button type="primary" @click="onSubmit"> 确定 </el-button>
+          <el-button @click="dialogTableVisible = false">
+            {{ t("addSettlement.cancel") }}
+          </el-button>
+          <el-button type="primary" @click="onSubmit">
+            {{ t("addSettlement.confirm") }}
+          </el-button>
         </div>
       </template>
     </el-dialog>

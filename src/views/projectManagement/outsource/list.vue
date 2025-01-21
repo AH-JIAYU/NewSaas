@@ -9,6 +9,7 @@ import useProjectManagementOutsourceStore from "@/store/modules/projectManagemen
 import empty from "@/assets/images/empty.png";
 // import userDialog from "@/components/departmentHead/index.vue"; //部门人
 import userDialog from "./components/userPM/index.vue";
+import { useI18n } from "vue-i18n";
 import { rowKey } from "element-plus/es/components/table-v2/src/common.mjs";
 defineOptions({
   name: "outsource",
@@ -29,6 +30,8 @@ const editRef = ref();
 const data = ref<any>({
   selectList: [],
 });
+// 国际化
+const { t } = useI18n();
 // 右侧工具栏配置变量
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const checkList = ref<any>([]);
@@ -38,21 +41,61 @@ const formSearchName = ref<string>("formSearch-outsource"); // 表单排序name
 const lineHeight = ref<any>("default");
 const stripe = ref(false);
 const columns = ref<any>([
-  { sotrtable: true, checked: true, label: "合作商ID", prop: "tenantId" },
-  { sotrtable: true, checked: true, label: "接收状态", prop: "receiveStatus" },
-  { sotrtable: true, checked: true, label: "PM", prop: "userName" },
-  { sotrtable: true, checked: true, label: "合作商名称", prop: "tenantName" },
-  { sotrtable: true, checked: true, label: "分配", prop: "allocationType" },
-  { sotrtable: true, checked: true, label: "项目价", prop: "doMoneyPrice" },
-  { sotrtable: true, checked: true, label: "项目ID", prop: "projectId" },
-  { sotrtable: true, checked: true, label: "项目名称", prop: "projectName" },
   {
     sotrtable: true,
     checked: true,
-    label: "参与/完成/配额/限量",
+    label: computed(() => t("outsource.partnerID")),
+    prop: "tenantId",
+  },
+  {
+    sotrtable: true,
+    checked: true,
+    label: computed(() => t("outsource.receivingStatus")),
+    prop: "receiveStatus",
+  },
+  { sotrtable: true, checked: true, label: "PM", prop: "userName" },
+  {
+    sotrtable: true,
+    checked: true,
+    label: computed(() => t("outsource.partnerName")),
+    prop: "tenantName",
+  },
+  {
+    sotrtable: true,
+    checked: true,
+    label: computed(() => t("outsource.distribution")),
+    prop: "allocationType",
+  },
+  {
+    sotrtable: true,
+    checked: true,
+    label: computed(() => t("outsource.projectPrice")),
+    prop: "doMoneyPrice",
+  },
+  {
+    sotrtable: true,
+    checked: true,
+    label: computed(() => t("outsource.projectID")),
+    prop: "projectId",
+  },
+  {
+    sotrtable: true,
+    checked: true,
+    label: computed(() => t("outsource.projectName")),
+    prop: "projectName",
+  },
+  {
+    sotrtable: true,
+    checked: true,
+    label: computed(() => t("outsource.participate")),
     prop: "participationNumber",
   },
-  { sotrtable: true, checked: true, label: "状态", prop: "projectStatus" },
+  {
+    sotrtable: true,
+    checked: true,
+    label: computed(() => t("outsource.status")),
+    prop: "projectStatus",
+  },
 ]);
 
 // 查询参数
@@ -61,7 +104,7 @@ const queryForm = reactive<any>({
   tenantId: "", //合作商id
   tenantName: "", //	合作商名称
   projectStatus: [], //	1:进行中(在线) 2:已完成(审核通过) 3:离线
-  receiveStatus: '',//1.自动已接收，2.手动未接收
+  receiveStatus: "", //1.自动已接收，2.手动未接收
   type: 1,
 });
 const list = ref<any>([]);
@@ -134,32 +177,32 @@ onMounted(() => {
       show: true,
       type: "input",
       modelName: "projectId",
-      placeholder: "项目ID",
+      placeholder: computed(() => t("outsource.projectID")),
     },
     {
       index: 2,
       show: true,
       type: "input",
       modelName: "tenantId",
-      placeholder: "合作商ID",
+      placeholder: computed(() => t("outsource.partnerID")),
     },
     {
       index: 3,
       show: true,
       type: "input",
       modelName: "tenantName",
-      placeholder: "合作商名称",
+      placeholder: computed(() => t("outsource.partnerName")),
     },
     {
       index: 4,
       show: true,
       type: "select",
       modelName: "projectStatus",
-      placeholder: "项目状态",
+      placeholder: computed(() => t("outsource.projectStatus")),
       option: "projectStatus",
       optionLabel: "label",
       optionValue: "value",
-      multiple:true,
+      multiple: true,
     },
   ];
   formSearchList2.value = [
@@ -168,39 +211,39 @@ onMounted(() => {
       show: true,
       type: "input",
       modelName: "projectId",
-      placeholder: "项目ID",
+      placeholder: computed(() => t("outsource.projectID")),
     },
     {
       index: 2,
       show: true,
       type: "input",
       modelName: "tenantId",
-      placeholder: "合作商ID",
+      placeholder: computed(() => t("outsource.partnerID")),
     },
     {
       index: 3,
       show: true,
       type: "input",
       modelName: "tenantName",
-      placeholder: "合作商名称",
+      placeholder: computed(() => t("outsource.partnerName")),
     },
     {
       index: 4,
       show: true,
       type: "select",
       modelName: "projectStatus",
-      placeholder: "项目状态",
+      placeholder: computed(() => t("outsource.projectStatus")),
       option: "projectStatus",
       optionLabel: "label",
       optionValue: "value",
-      multiple:true,
+      multiple: true,
     },
     {
       index: 5,
       show: true,
       type: "select",
       modelName: "receiveStatus",
-      placeholder: "接收状态",
+      placeholder: computed(() => t("outsource.receivingStatus")),
       option: "receiveStatus",
       optionLabel: "label",
       optionValue: "value",
@@ -211,11 +254,11 @@ onMounted(() => {
 const receiveStatusList = [
   {
     value: 1,
-    label: "自动（已接收）",
+    label: computed(() => t("outsource.auto")),
   },
   {
     value: 2,
-    label: "手动（未接收）",
+    label: computed(() => t("outsource.handle")),
   },
 ];
 const formOption = {
@@ -238,7 +281,7 @@ function addReceiveAll() {
   const selectList = tableSortRef2.value.getSelectionRows();
   if (selectList.length == 0) {
     ElMessage.warning({
-      message: "请选择一个项目",
+      message: t("outsource.projectSelect"),
       center: true,
     });
     return;
@@ -253,14 +296,14 @@ function addReceiveAll() {
     });
     if (flagNum != selectList.length) {
       ElMessage.warning({
-        message: "已接收的项目不能再次接收，请重新选择",
+        message: t("outsource.again1"),
         center: true,
       });
     } else {
-      data.value.receivingMode = "批量接收";
+      data.value.receivingMode = t("outsource.lotRecieve");
       data.value.selectList = selectList;
 
-      userRef.value.showEdit("", "接收", selectList);
+      userRef.value.showEdit("", t("outsource.recieve"), selectList);
     }
   }
 }
@@ -269,11 +312,10 @@ function delReceiveAll() {
   const selectList = tableSortRef2.value.getSelectionRows();
   if (selectList.length == 0) {
     ElMessage.warning({
-      message: "请选择一个项目",
+      message: t("outsource.projectSelect"),
       center: true,
     });
     return;
-
   } else {
     //循环判断，如果勾选的数据有未接收的，给出提示，未接收的项目不能取消接收，请重新选择
     let flagNum = selectList.length; //默认勾选的全部都是已接收的的receiveStatus == 1
@@ -285,11 +327,11 @@ function delReceiveAll() {
     });
     if (flagNum != selectList.length) {
       ElMessage.warning({
-        message: "未接收的项目不能取消接收，请重新选择",
+        message: t("outsource.again2"),
         center: true,
       });
     } else {
-      ElMessageBox.confirm(`确认取消接收吗？`, "确认信息")
+      ElMessageBox.confirm(t("outsource.ask"), t("outsource.confirmInfo"))
         .then(() => {
           try {
             listLoading.value = true;
@@ -305,7 +347,7 @@ function delReceiveAll() {
               listLoading.value = false;
               fetchData();
               ElMessage.success({
-                message: "取消接收成功",
+                message: t("outsource.cancelSuccess"),
                 center: true,
               });
             });
@@ -314,18 +356,18 @@ function delReceiveAll() {
             listLoading.value = false;
           }
         })
-        .catch(() => { });
+        .catch(() => {});
     }
   }
 }
 //接收-单个
 function addReceive(row: any) {
   data.value.selectList = [row];
-  userRef.value.showEdit("", "接收", [row]);
+  userRef.value.showEdit("", t("outsource.recieve"), [row]);
 }
 //取消接收-单个
 function delreceive(row: any) {
-  ElMessageBox.confirm(`确认取消接收吗？`, "确认信息")
+  ElMessageBox.confirm(t("outsource.ask"), t("outsource.confirmInfo"))
     .then(() => {
       try {
         listLoading.value = true;
@@ -337,7 +379,7 @@ function delreceive(row: any) {
           listLoading.value = false;
           fetchData();
           ElMessage.success({
-            message: "取消接收成功",
+            message: t("outsource.cancelSuccess"),
             center: true,
           });
         });
@@ -346,7 +388,7 @@ function delreceive(row: any) {
         listLoading.value = false;
       }
     })
-    .catch(() => { });
+    .catch(() => {});
 }
 //勾选部门人回传数据
 function userData(data1: any) {
@@ -371,7 +413,7 @@ function userData(data1: any) {
       listLoading.value = false;
       fetchData();
       ElMessage.success({
-        message: "接收成功",
+        message: t("outsource.recieveSuccess"),
         center: true,
       });
     });
@@ -382,7 +424,7 @@ function userData(data1: any) {
 }
 //拒绝
 const downReceive = (row: any) => {
-  ElMessageBox.confirm(`确认拒绝项目吗？`, "确认信息")
+  ElMessageBox.confirm(t("outsource.refuse"), t("outsource.confirmInfo"))
     .then(() => {
       try {
         listLoading.value = true;
@@ -394,7 +436,7 @@ const downReceive = (row: any) => {
           listLoading.value = false;
           fetchData();
           ElMessage.success({
-            message: "拒绝成功",
+            message: t("outsource.refuseSuccess"),
             center: true,
           });
         });
@@ -403,49 +445,94 @@ const downReceive = (row: any) => {
         listLoading.value = false;
       }
     })
-    .catch(() => { });
+    .catch(() => {});
 };
 </script>
 
 <template>
-  <div :class="{
-    'absolute-container': tableAutoHeight,
-  }">
+  <div
+    :class="{
+      'absolute-container': tableAutoHeight,
+    }"
+  >
     <PageMain>
       <el-tabs v-model="queryForm.type" @tab-change="fetchData">
-        <el-tab-pane label="接收项目" :name="1">
-          <FormSearch v-if="queryForm.type === 1" :formSearchList="formSearchList2" :formSearchName="formSearchName"
-            @currentChange="currentChange" @onReset="onReset" :model="queryForm" :formOption="formOption" />
+        <el-tab-pane :label="t('outsource.reciveProject')" :name="1">
+          <FormSearch
+            v-if="queryForm.type === 1"
+            :formSearchList="formSearchList2"
+            :formSearchName="formSearchName"
+            @currentChange="currentChange"
+            @onReset="onReset"
+            :model="queryForm"
+            :formOption="formOption"
+          />
           <ElDivider border-style="dashed" />
           <el-row :gutter="24">
             <FormLeftPanel>
-              <el-button type="primary" size="default" @click="addReceiveAll" v-auth="'outsource-update-updateReceiveStatus'">
-                接收项目
+              <el-button
+                type="primary"
+                size="default"
+                @click="addReceiveAll"
+                v-auth="'outsource-update-updateReceiveStatus'"
+              >
+                {{ t("outsource.reciveProject") }}
               </el-button>
-              <el-button size="default" @click="delReceiveAll" v-auth="'outsource-update-updateReceiveStatus'">
-                取消接收
+              <el-button
+                size="default"
+                @click="delReceiveAll"
+                v-auth="'outsource-update-updateReceiveStatus'"
+              >
+                {{ t("outsource.cancelRecieve") }}
               </el-button>
             </FormLeftPanel>
             <FormRightPanel>
-              <el-button size="default" @click=""> 导出 </el-button>
-              <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight"
-                v-model:checkList="checkList" v-model:columns="columns" v-model:line-height="lineHeight"
-                v-model:stripe="stripe" style="margin-left: 12px" @query-data="currentChange" />
+              <el-button size="default" @click="">
+                {{ t("outsource.export") }}
+              </el-button>
+              <TabelControl
+                v-model:border="border"
+                v-model:tableAutoHeight="tableAutoHeight"
+                v-model:checkList="checkList"
+                v-model:columns="columns"
+                v-model:line-height="lineHeight"
+                v-model:stripe="stripe"
+                style="margin-left: 12px"
+                @query-data="currentChange"
+              />
             </FormRightPanel>
           </el-row>
-          <el-table ref="tableSortRef2" style="margin-top: 10px" row-key="id" :data="list" :border="border"
-            :size="lineHeight" highlight-current-row :stripe="stripe" @current-change="handleCurrentChange">
+          <el-table
+            ref="tableSortRef2"
+            style="margin-top: 10px"
+            row-key="id"
+            :data="list"
+            :border="border"
+            :size="lineHeight"
+            highlight-current-row
+            :stripe="stripe"
+            @current-change="handleCurrentChange"
+          >
             <el-table-column align="left" type="selection" />
-            <el-table-column v-if="checkList.includes('projectStatus')" show-overflow-tooltip prop="projectStatus"
-              align="left" label="状态" width="140">
+            <el-table-column
+              v-if="checkList.includes('projectStatus')"
+              show-overflow-tooltip
+              prop="projectStatus"
+              align="left"
+              :label="t('outsource.status')"
+              width="140"
+            >
               <template #default="{ row }">
                 <span class="tableBig">
                   <el-text v-if="row.projectStatus === 1" type="primary">
-                    进行中(在线)</el-text>
+                    {{ t("outsource.underWay") }}</el-text
+                  >
                   <el-text v-else-if="row.projectStatus === 2" type="warning">
-                    已完成(审核通过)</el-text>
+                    {{ t("outsource.complete") }}</el-text
+                  >
                   <el-text v-else-if="row.projectStatus === 3" type="info">
-                    离线</el-text>
+                    {{ t("outsource.offline") }}</el-text
+                  >
                 </span>
                 <!-- <span class="tableBig">{{
                   projectManagementOutsourceStore.projectStatusList[
@@ -455,46 +542,90 @@ const downReceive = (row: any) => {
                 </span>-->
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('receiveStatus')" show-overflow-tooltip prop="receiveStatus"
-              align="left" label="接收状态" width="140">
+            <el-table-column
+              v-if="checkList.includes('receiveStatus')"
+              show-overflow-tooltip
+              prop="receiveStatus"
+              align="left"
+              :label="t('outsource.receivingStatus')"
+              width="140"
+            >
               <template #default="{ row }">
-                <el-text style="color: rgb(251, 104, 104)" class="oneLine" v-if="row.receiveStatus == 2"
-                  type="danger">未接收</el-text>
-                <el-text style="color: rgb(3, 194, 57)" class="oneLine" v-if="row.receiveStatus == 1"
-                  type="success">已接收</el-text>
+                <el-text
+                  style="color: rgb(251, 104, 104)"
+                  class="oneLine"
+                  v-if="row.receiveStatus == 2"
+                  type="danger"
+                  >{{ t("outsource.notReceive") }}</el-text
+                >
+                <el-text
+                  style="color: rgb(3, 194, 57)"
+                  class="oneLine"
+                  v-if="row.receiveStatus == 1"
+                  type="success"
+                  >{{ t("outsource.alreadyReceived") }}</el-text
+                >
               </template>
             </el-table-column>
-            <el-table-column show-overflow-tooltip prop="tenantName" align="left" label="合作商" width="200">
+            <el-table-column
+              show-overflow-tooltip
+              prop="tenantName"
+              align="left"
+              :label="t('outsource.partner')"
+              width="200"
+            >
               <template #default="{ row }">
                 <div class="tableBig" v-if="checkList.includes('tenantName')">
                   {{ row.tenantName }}
                 </div>
-                <div class="copyId tableSmall" v-if="checkList.includes('tenantId')">
+                <div
+                  class="copyId tableSmall"
+                  v-if="checkList.includes('tenantId')"
+                >
                   <div class="id oneLine projectId" style="font-size: 12px">
                     {{ row.tenantId }}
                   </div>
-                  <copy :content="row.tenantId" :class="{
-    rowCopy: 'rowCopy',
-    current: row.projectId === current,
-  }" />
+                  <copy
+                    :content="row.tenantId"
+                    :class="{
+                      rowCopy: 'rowCopy',
+                      current: row.projectId === current,
+                    }"
+                  />
                 </div>
               </template>
             </el-table-column>
-            <el-table-column show-overflow-tooltip prop="projectName" align="left" label="项目" width="200">
+            <el-table-column
+              show-overflow-tooltip
+              prop="projectName"
+              align="left"
+              :label="t('outsource.project')"
+              width="200"
+            >
               <template #default="{ row }">
                 <div class="tableBig" v-if="checkList.includes('projectName')">
                   {{ row.projectName }}
                 </div>
-                <div class="copyId tableSmall" v-if="checkList.includes('projectId')">
+                <div
+                  class="copyId tableSmall"
+                  v-if="checkList.includes('projectId')"
+                >
                   <div class="id oneLine projectId" style="font-size: 12px">
-                    <el-tooltip effect="dark" :content="row.projectId" placement="top-start">
+                    <el-tooltip
+                      effect="dark"
+                      :content="row.projectId"
+                      placement="top-start"
+                    >
                       {{ row.projectId }}
                     </el-tooltip>
                   </div>
-                  <copy :content="row.projectId" :class="{
-    rowCopy: 'rowCopy',
-    current: row.projectId === current,
-  }" />
+                  <copy
+                    :content="row.projectId"
+                    :class="{
+                      rowCopy: 'rowCopy',
+                      current: row.projectId === current,
+                    }"
+                  />
                 </div>
               </template>
             </el-table-column>
@@ -550,63 +681,141 @@ const downReceive = (row: any) => {
                 </div>
               </template>
             </el-table-column> -->
-            <el-table-column v-if="checkList.includes('allocationType')" align="left" label="分配" width="120">
+            <el-table-column
+              v-if="checkList.includes('allocationType')"
+              align="left"
+              :label="t('outsource.distribution')"
+              width="120"
+            >
               <template #default="{ row }">
-                <el-button class="tableBut" size="small" type="danger" v-if="row.allocationType === 1"
-                  plain>自动分配</el-button>
-                <el-button class="tableBut" size="small" type="danger"
-                  v-else-if="row.allocationType === 2">供应商</el-button>
-                <el-button class="tableBut" size="small" type="success"
-                  v-else-if="row.allocationType === 3">部门</el-button>
-                <el-button class="tableBut" size="small" type="primary"
-                  v-else-if="row.allocationType === 4">合作商</el-button>
+                <el-button
+                  class="tableBut"
+                  size="small"
+                  type="danger"
+                  v-if="row.allocationType === 1"
+                  plain
+                  >{{ t("outsource.automaticAllocation") }}</el-button
+                >
+                <el-button
+                  class="tableBut"
+                  size="small"
+                  type="danger"
+                  v-else-if="row.allocationType === 2"
+                  >{{ t("outsource.supplier") }}</el-button
+                >
+                <el-button
+                  class="tableBut"
+                  size="small"
+                  type="success"
+                  v-else-if="row.allocationType === 3"
+                  >{{ t("outsource.department") }}</el-button
+                >
+                <el-button
+                  class="tableBut"
+                  size="small"
+                  type="primary"
+                  v-else-if="row.allocationType === 4"
+                  >{{ t("outsource.partner") }}</el-button
+                >
                 <el-button size="small" v-else class="tableBut">
-                  未分配</el-button>
+                  {{ t("outsource.undistributed") }}</el-button
+                >
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('doMoneyPrice')" show-overflow-tooltip align="left" label="项目价"
-              width="120">
+            <el-table-column
+              v-if="checkList.includes('doMoneyPrice')"
+              show-overflow-tooltip
+              align="left"
+              :label="t('outsource.projectPrice')"
+              width="120"
+            >
               <template #default="{ row }">
-                <div>
-                  <CurrencyType />{{ row.doMoneyPrice || 0 }}
-                </div>
+                <div><CurrencyType />{{ row.doMoneyPrice || 0 }}</div>
               </template>
             </el-table-column>
 
-            <el-table-column v-if="checkList.includes('participationNumber')" show-overflow-tooltip
-              prop="participationNumber" align="left" label="参数" width="300">
+            <el-table-column
+              v-if="checkList.includes('participationNumber')"
+              show-overflow-tooltip
+              prop="participationNumber"
+              align="left"
+              :label="t('outsource.argument')"
+              width="300"
+            >
               <template #default="{ row }">
-                <el-text style="color: rgb(251, 104, 104)" class="oneLine" type="danger">参与: {{ row.participationNumber
-    || 0 }}</el-text>
+                <el-text
+                  style="color: rgb(251, 104, 104)"
+                  class="oneLine"
+                  type="danger"
+                  >{{ t("outsource.participateIn") }}
+                  {{ row.participationNumber || 0 }}</el-text
+                >
                 &ensp;
-                <el-text style="color: rgb(3, 194, 57)" class="oneLine" type="success">完成: {{ row.doneNumber || 0
-                  }}</el-text>
+                <el-text
+                  style="color: rgb(3, 194, 57)"
+                  class="oneLine"
+                  type="success"
+                  >{{ t("outsource.completed") }}
+                  {{ row.doneNumber || 0 }}</el-text
+                >
                 &ensp;
-                <el-text style="color: rgb(255, 172, 84)" class="oneLine" type="warning">配额: {{ row.num || 0
-                  }}</el-text>
+                <el-text
+                  style="color: rgb(255, 172, 84)"
+                  class="oneLine"
+                  type="warning"
+                  >{{ t("outsource.quota") }} {{ row.num || 0 }}</el-text
+                >
                 &ensp;
-                <el-text style="color: rgb(170, 170, 170)" class="oneLine" type="info">限量: {{ row.limitedQuantity || "-"
-                  }}</el-text>
+                <el-text
+                  style="color: rgb(170, 170, 170)"
+                  class="oneLine"
+                  type="info"
+                  >{{ t("outsource.limited") }}
+                  {{ row.limitedQuantity || "-" }}</el-text
+                >
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('userName')" show-overflow-tooltip prop="userName" align="left"
-              label="负责人" width="140">
+            <el-table-column
+              v-if="checkList.includes('userName')"
+              show-overflow-tooltip
+              prop="userName"
+              align="left"
+              :label="t('outsource.personInCharge')"
+              width="140"
+            >
               <template #default="{ row }">
                 <div class="flex-c">
                   <div class="oneLine" style="width: calc(100% - 1.25rem)">
-                    <el-tooltip class="box-item" effect="dark" :content="row.userName" placement="top-start">
-                      <div class="tableBig overflow">{{ row.userName ? row.userName : '-' }}</div>
+                    <el-tooltip
+                      class="box-item"
+                      effect="dark"
+                      :content="row.userName"
+                      placement="top-start"
+                    >
+                      <div class="tableBig overflow">
+                        {{ row.userName ? row.userName : "-" }}
+                      </div>
                     </el-tooltip>
-
                   </div>
-                  <SvgIcon v-if="row.receiveStatus == 1" @click="addReceive(row)" :class="{
-    edit: 'edit',
-    current: row.projectId === current,
-  }" name="i-ep:edit" color="#409eff" />
+                  <SvgIcon
+                    v-if="row.receiveStatus == 1"
+                    @click="addReceive(row)"
+                    :class="{
+                      edit: 'edit',
+                      current: row.projectId === current,
+                    }"
+                    name="i-ep:edit"
+                    color="#409eff"
+                  />
                 </div>
               </template>
             </el-table-column>
-            <el-table-column align="left" fixed="right" label="操作" width="220">
+            <el-table-column
+              align="left"
+              fixed="right"
+              :label="t('outsource.control')"
+              width="220"
+            >
               <template #default="{ row }">
                 <!-- <el-button
                   v-if="row.allocationStatus === 1"
@@ -629,18 +838,45 @@ const downReceive = (row: any) => {
                   重新分配
                 </el-button> -->
                 <!-- 1，已接收，2手动，未接收 -->
-                <el-button v-if="row.receiveStatus == 2" plain type="primary" size="small" @click="addReceive(row)" v-auth="'outsource-update-updateReceiveStatus'">
-                  接收
+                <el-button
+                  v-if="row.receiveStatus == 2"
+                  plain
+                  type="primary"
+                  size="small"
+                  @click="addReceive(row)"
+                  v-auth="'outsource-update-updateReceiveStatus'"
+                >
+                  {{ t("outsource.resieved") }}
                 </el-button>
-                <el-button v-if="row.receiveStatus == 1" plain type="primary" size="small" @click="delreceive(row)" v-auth="'outsource-update-updateReceiveStatus'">
-                  取消接收
+                <el-button
+                  v-if="row.receiveStatus == 1"
+                  plain
+                  type="primary"
+                  size="small"
+                  @click="delreceive(row)"
+                  v-auth="'outsource-update-updateReceiveStatus'"
+                >
+                  {{ t("outsource.cancelRecieve") }}
                 </el-button>
-                <el-button down v-if="row.receiveStatus == 2" plain type="danger" size="small"
-                  @click="downReceive(row)" v-auth="'outsource-update-updateReceiveStatus'">
-                  拒绝
+                <el-button
+                  down
+                  v-if="row.receiveStatus == 2"
+                  plain
+                  type="danger"
+                  size="small"
+                  @click="downReceive(row)"
+                  v-auth="'outsource-update-updateReceiveStatus'"
+                >
+                  {{ t("outsource.refused") }}
                 </el-button>
-                <el-button type="warning" plain size="small" @click="editData(row)" v-auth="'outsource-get-getTenantMeasurementList'">
-                  详情
+                <el-button
+                  type="warning"
+                  plain
+                  size="small"
+                  @click="editData(row)"
+                  v-auth="'outsource-get-getTenantMeasurementList'"
+                >
+                  {{ t("outsource.detail") }}
                 </el-button>
               </template>
             </el-table-column>
@@ -648,104 +884,216 @@ const downReceive = (row: any) => {
               <el-empty :image="empty" :image-size="300" />
             </template>
           </el-table>
-          <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
-            :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-            background @size-change="sizeChange" @current-change="currentChange" />
+          <ElPagination
+            :current-page="pagination.page"
+            :total="pagination.total"
+            :page-size="pagination.size"
+            :page-sizes="pagination.sizes"
+            :layout="pagination.layout"
+            :hide-on-single-page="false"
+            class="pagination"
+            background
+            @size-change="sizeChange"
+            @current-change="currentChange"
+          />
         </el-tab-pane>
-        <el-tab-pane label="外包项目" :name="2">
-          <FormSearch v-if="queryForm.type === 2" :formSearchList="formSearchList" :formSearchName="formSearchName"
-            @currentChange="currentChange" @onReset="onReset" :model="queryForm" :formOption="formOption" />
+        <el-tab-pane :label="t('outsource.outsourcingProject')" :name="2">
+          <FormSearch
+            v-if="queryForm.type === 2"
+            :formSearchList="formSearchList"
+            :formSearchName="formSearchName"
+            @currentChange="currentChange"
+            @onReset="onReset"
+            :model="queryForm"
+            :formOption="formOption"
+          />
           <ElDivider border-style="dashed" />
           <el-row :gutter="24">
             <FormLeftPanel> </FormLeftPanel>
             <FormRightPanel>
-              <el-button size="default" @click=""> 导出 </el-button>
-              <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight"
-                v-model:checkList="checkList" v-model:columns="columns" v-model:line-height="lineHeight"
-                v-model:stripe="stripe" style="margin-left: 12px" @query-data="currentChange" />
+              <el-button size="default" @click="">
+                {{ t("outsource.export") }}
+              </el-button>
+              <TabelControl
+                v-model:border="border"
+                v-model:tableAutoHeight="tableAutoHeight"
+                v-model:checkList="checkList"
+                v-model:columns="columns"
+                v-model:line-height="lineHeight"
+                v-model:stripe="stripe"
+                style="margin-left: 12px"
+                @query-data="currentChange"
+              />
             </FormRightPanel>
           </el-row>
-          <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="id" :data="list"
-            :border="border" :size="lineHeight" :stripe="stripe" highlight-current-row
-            @current-change="handleCurrentChange">
+          <el-table
+            ref="tableSortRef"
+            v-loading="listLoading"
+            style="margin-top: 10px"
+            row-key="id"
+            :data="list"
+            :border="border"
+            :size="lineHeight"
+            :stripe="stripe"
+            highlight-current-row
+            @current-change="handleCurrentChange"
+          >
             <el-table-column align="left" type="selection" />
-            <el-table-column v-if="checkList.includes('projectStatus')" show-overflow-tooltip prop="receiveStatus"
-              align="left" width="140" label="状态">
+            <el-table-column
+              v-if="checkList.includes('projectStatus')"
+              show-overflow-tooltip
+              prop="receiveStatus"
+              align="left"
+              width="140"
+              :label="t('outsource.status')"
+            >
               <template #default="{ row }">
                 <span class="tableBig">
                   <el-text v-if="row.projectStatus === 1" type="primary">
-                    进行中(在线)</el-text>
+                    {{ t("outsource.underWay") }}</el-text
+                  >
                   <el-text v-else-if="row.projectStatus === 2" type="warning">
-                    已完成(审核通过)</el-text>
+                    {{ t("outsource.complete") }}</el-text
+                  >
                   <el-text v-else-if="row.projectStatus === 3" type="info">
-                    离线</el-text>
+                    {{ t("outsource.offline") }}</el-text
+                  >
                 </span>
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('tenantName')" show-overflow-tooltip prop="tenantName"
-              align="left" label="合作商名称">
+            <el-table-column
+              v-if="checkList.includes('tenantName')"
+              show-overflow-tooltip
+              prop="tenantName"
+              align="left"
+              :label="t('outsource.partnerName')"
+            >
               <template #default="{ row }">
                 <div class="tableBig">{{ row.tenantName }}</div>
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('tenantId')" show-overflow-tooltip prop="tenantId" align="left"
-              width="280" label="合作商ID">
+            <el-table-column
+              v-if="checkList.includes('tenantId')"
+              show-overflow-tooltip
+              prop="tenantId"
+              align="left"
+              width="280"
+              :label="t('outsource.partnerID')"
+            >
               <template #default="{ row }">
                 <div class="copyId tableSmall">
                   <div class="id oneLine projectId">{{ row.tenantId }}</div>
-                  <copy :content="row.tenantId" :class="{
-    rowCopy: 'rowCopy',
-    current: row.projectId === current,
-  }" />
+                  <copy
+                    :content="row.tenantId"
+                    :class="{
+                      rowCopy: 'rowCopy',
+                      current: row.projectId === current,
+                    }"
+                  />
                   <!-- <copy class="copy" :content="row.tenantId" /> -->
                 </div>
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('projectName')" show-overflow-tooltip prop="projectName"
-              align="left" label="项目名称">
+            <el-table-column
+              v-if="checkList.includes('projectName')"
+              show-overflow-tooltip
+              prop="projectName"
+              align="left"
+              :label="t('outsource.projectName')"
+            >
               <template #default="{ row }">
                 <div class="tableBig oneLine">{{ row.projectName }}</div>
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip prop="projectId" align="left"
-              width="280" label="项目ID">
+            <el-table-column
+              v-if="checkList.includes('projectId')"
+              show-overflow-tooltip
+              prop="projectId"
+              align="left"
+              width="280"
+              :label="t('outsource.projectID')"
+            >
               <template #default="{ row }">
                 <div class="copyId tableSmall">
                   <div class="id oneLine projectId">
-                    <el-tooltip effect="dark" :content="row.projectId" placement="top-start">
+                    <el-tooltip
+                      effect="dark"
+                      :content="row.projectId"
+                      placement="top-start"
+                    >
                       {{ row.projectId }}
                     </el-tooltip>
 
                     <!-- {{ row.projectId }} -->
                   </div>
-                  <copy :content="row.projectId" :class="{
-    rowCopy: 'rowCopy',
-    current: row.projectId === current,
-  }" />
+                  <copy
+                    :content="row.projectId"
+                    :class="{
+                      rowCopy: 'rowCopy',
+                      current: row.projectId === current,
+                    }"
+                  />
                   <!-- <copy class="copy" :content="row.projectId" /> -->
                 </div>
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('participationNumber')" show-overflow-tooltip
-              prop="participationNumber" align="left" label="参数" width="300">
+            <el-table-column
+              v-if="checkList.includes('participationNumber')"
+              show-overflow-tooltip
+              prop="participationNumber"
+              align="left"
+              :label="t('outsource.argument')"
+              width="300"
+            >
               <template #default="{ row }">
-                <el-text style="color: rgb(251, 104, 104)" class="oneLine" type="danger">参与: {{ row.participationNumber
-    || 0 }}</el-text>
+                <el-text
+                  style="color: rgb(251, 104, 104)"
+                  class="oneLine"
+                  type="danger"
+                >
+                  {{ t("outsource.participateIn") }}
+                  {{ row.participationNumber || 0 }}</el-text
+                >
                 &ensp;
-                <el-text style="color: rgb(3, 194, 57)" class="oneLine" type="success">完成: {{ row.doneNumber || 0
-                  }}</el-text>
+                <el-text
+                  style="color: rgb(3, 194, 57)"
+                  class="oneLine"
+                  type="success"
+                  >{{ t("outsource.completed") }}
+                  {{ row.doneNumber || 0 }}</el-text
+                >
                 &ensp;
-                <el-text style="color: rgb(255, 172, 84)" class="oneLine" type="warning">配额: {{ row.num || 0
-                  }}</el-text>
+                <el-text
+                  style="color: rgb(255, 172, 84)"
+                  class="oneLine"
+                  type="warning"
+                  >{{ t("outsource.quota") }} {{ row.num || 0 }}</el-text
+                >
                 &ensp;
-                <el-text style="color: rgb(170, 170, 170)" class="oneLine" type="info">限量: {{ row.limitedQuantity || "-"
-                  }}</el-text>
+                <el-text
+                  style="color: rgb(170, 170, 170)"
+                  class="oneLine"
+                  type="info"
+                  >{{ t("outsource.limited") }}
+                  {{ row.limitedQuantity || "-" }}</el-text
+                >
               </template>
             </el-table-column>
-            <el-table-column align="left" fixed="right" label="操作" width="170">
+            <el-table-column
+              align="left"
+              fixed="right"
+              :label="t('outsource.control')"
+              width="170"
+            >
               <template #default="{ row }">
-                <el-button type="primary" plain size="small" @click="editData(row)" v-auth="'outsource-get-getTenantMeasurementList'">
-                  详情
+                <el-button
+                  type="primary"
+                  plain
+                  size="small"
+                  @click="editData(row)"
+                  v-auth="'outsource-get-getTenantMeasurementList'"
+                >
+                  {{ t("outsource.detail") }}
                 </el-button>
               </template>
             </el-table-column>
@@ -753,9 +1101,18 @@ const downReceive = (row: any) => {
               <el-empty :image="empty" :image-size="300" />
             </template>
           </el-table>
-          <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
-            :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-            background @size-change="sizeChange" @current-change="currentChange" />
+          <ElPagination
+            :current-page="pagination.page"
+            :total="pagination.total"
+            :page-size="pagination.size"
+            :page-sizes="pagination.sizes"
+            :layout="pagination.layout"
+            :hide-on-single-page="false"
+            class="pagination"
+            background
+            @size-change="sizeChange"
+            @current-change="currentChange"
+          />
         </el-tab-pane>
       </el-tabs>
       <allocationEdit ref="addAllocationEditRef" @fetchData="fetchData" />
@@ -847,7 +1204,7 @@ const downReceive = (row: any) => {
   align-items: center;
   width: 100%;
 
-  >div:nth-of-type(1) {
+  > div:nth-of-type(1) {
     width: calc(100% - 25px);
     flex-shrink: 0;
   }

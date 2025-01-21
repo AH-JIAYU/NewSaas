@@ -5,6 +5,7 @@ import { Plus } from "@element-plus/icons-vue";
 import edit from "./components/Edit/index.vue";
 import api from "@/api/modules/projectManagement_scheduling";
 import empty from "@/assets/images/empty.png";
+import { useI18n } from "vue-i18n";
 defineOptions({
   name: "scheduling",
 });
@@ -13,6 +14,8 @@ const { format } = useTimeago();
 const { pagination, getParams, onSizeChange, onCurrentChange } =
   usePagination(); // 分页
 const tableSortRef = ref("");
+// 国际化
+const { t } = useI18n();
 // loading加载
 const listLoading = ref<boolean>(false);
 const border = ref(false);
@@ -26,14 +29,54 @@ const formSearchName = ref<string>("formSearch-scheduling"); // 表单排序name
 const lineHeight = ref<any>("default");
 const stripe = ref(false);
 const columns = ref<any>([
-  { sotrtable: true, checked: true, label: "类型", prop: "dispatchType" },
-  { sotrtable: true, checked: true, label: "项目ID", prop: "projectId" },
-  { sotrtable: true, checked: true, label: "项目名称", prop: "projectName" },
-  { sotrtable: true, checked: true, label: "项目价", prop: "moneyPrice" },
-  { sotrtable: true, checked: true, label: "指定价格", prop: "doMoneyPrice" },
-  { sotrtable: true, checked: true, label: "指定供应商", prop: "Supplier" },
-  { sotrtable: true, checked: true, label: "指定部门", prop: "group" },
-  { sotrtable: true, checked: true, label: "创建时间", prop: "createTime" },
+  {
+    sotrtable: true,
+    checked: true,
+    label: computed(() => t("scheduling.type")),
+    prop: "dispatchType",
+  },
+  {
+    sotrtable: true,
+    checked: true,
+    label: computed(() => t("scheduling.projectID")),
+    prop: "projectId",
+  },
+  {
+    sotrtable: true,
+    checked: true,
+    label: computed(() => t("scheduling.projectName")),
+    prop: "projectName",
+  },
+  {
+    sotrtable: true,
+    checked: true,
+    label: computed(() => t("scheduling.projectPrice")),
+    prop: "moneyPrice",
+  },
+  {
+    sotrtable: true,
+    checked: true,
+    label: computed(() => t("scheduling.specifiedPrice")),
+    prop: "doMoneyPrice",
+  },
+  {
+    sotrtable: true,
+    checked: true,
+    label: computed(() => t("scheduling.designatedSupplier")),
+    prop: "Supplier",
+  },
+  {
+    sotrtable: true,
+    checked: true,
+    label: computed(() => t("scheduling.designatedDepartment")),
+    prop: "group",
+  },
+  {
+    sotrtable: true,
+    checked: true,
+    label: computed(() => t("scheduling.creationTime")),
+    prop: "createTime",
+  },
 ]);
 // 查询参数
 const queryForm = reactive<any>({
@@ -64,7 +107,7 @@ function onDel(row: any) {
           });
         });
     })
-    .catch(() => { });
+    .catch(() => {});
 }
 // 每页数量切换
 function sizeChange(size: number) {
@@ -118,21 +161,21 @@ onMounted(() => {
       show: true,
       type: "input",
       modelName: "projectId",
-      placeholder: "项目ID",
+      placeholder: computed(() => t("scheduling.projectID")),
     },
     {
       index: 2,
       show: true,
       type: "input",
       modelName: "projectName",
-      placeholder: "项目名称",
+      placeholder: computed(() => t("scheduling.projectName")),
     },
     {
       index: 3,
       show: true,
       type: "select",
       modelName: "dispatchType",
-      placeholder: "全部类型",
+      placeholder: computed(() => t("scheduling.allTypes")),
       option: "dispatchType",
       optionLabel: "label",
       optionValue: "value",
@@ -142,77 +185,143 @@ onMounted(() => {
 
 const formOption = {
   dispatchType: () => [
-    { label: "指定关闭", value: 1 },
-    { label: "指定价格", value: 2 },
+    { label: computed(() => t("scheduling.assignmentOff")), value: 1 },
+    { label: computed(() => t("scheduling.specifiedPrice")), value: 2 },
   ],
 };
 </script>
 
 <template>
-  <div :class="{
-    'absolute-container': tableAutoHeight,
-  }">
+  <div
+    :class="{
+      'absolute-container': tableAutoHeight,
+    }"
+  >
     <PageMain>
-      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange"
-        @onReset="onReset" :model="queryForm" :formOption="formOption" />
+      <FormSearch
+        :formSearchList="formSearchList"
+        :formSearchName="formSearchName"
+        @currentChange="currentChange"
+        @onReset="onReset"
+        :model="queryForm"
+        :formOption="formOption"
+      />
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>
-          <el-button type="primary" size="default" @click="addData"   v-auth="'scheduling-get-addProjectDispatch'">
-            新增
+          <el-button
+            type="primary"
+            size="default"
+            @click="addData"
+            v-auth="'scheduling-get-addProjectDispatch'"
+          >
+            {{ t("scheduling.add") }}
           </el-button>
         </FormLeftPanel>
 
         <FormRightPanel>
-          <el-button size="default" @click=""> 导出 </el-button>
-          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
-            v-model:columns="columns" v-model:line-height="lineHeight" v-model:stripe="stripe" style="margin-left: 12px"
-            @query-data="currentChange" />
+          <el-button size="default" @click="">
+            {{ t("scheduling.export") }}
+          </el-button>
+          <TabelControl
+            v-model:border="border"
+            v-model:tableAutoHeight="tableAutoHeight"
+            v-model:checkList="checkList"
+            v-model:columns="columns"
+            v-model:line-height="lineHeight"
+            v-model:stripe="stripe"
+            style="margin-left: 12px"
+            @query-data="currentChange"
+          />
         </FormRightPanel>
       </el-row>
-      <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="id" :data="list"
-        :border="border" :size="lineHeight" :stripe="stripe" highlight-current-row
-        @current-change="handleCurrentChange">
+      <el-table
+        ref="tableSortRef"
+        v-loading="listLoading"
+        style="margin-top: 10px"
+        row-key="id"
+        :data="list"
+        :border="border"
+        :size="lineHeight"
+        :stripe="stripe"
+        highlight-current-row
+        @current-change="handleCurrentChange"
+      >
         <!-- <el-table-column align="left" type="selection" /> -->
-        <el-table-column v-if="checkList.includes('dispatchType')" show-overflow-tooltip prop="dispatchType"
-          align="left" label="类型">
+        <el-table-column
+          v-if="checkList.includes('dispatchType')"
+          show-overflow-tooltip
+          prop="dispatchType"
+          align="left"
+          :label="t('scheduling.type')"
+        >
           <template #default="{ row }">
             <div class="fontC-System">
-              <el-text v-if="row.dispatchType === 1" type="primary" style="font-weight: 700;">指定关闭</el-text>
-              <el-text v-else type="danger" style="font-weight: 700;">指定价格</el-text>
+              <el-text
+                v-if="row.dispatchType === 1"
+                type="primary"
+                style="font-weight: 700"
+                >{{ t("scheduling.assignmentOff") }}</el-text
+              >
+              <el-text v-else type="danger" style="font-weight: 700">{{
+                t("scheduling.specifiedPrice")
+              }}</el-text>
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('projectName')" show-overflow-tooltip prop="projectName" align="left"
-          label="项目">
+        <el-table-column
+          v-if="checkList.includes('projectName')"
+          show-overflow-tooltip
+          prop="projectName"
+          align="left"
+          :label="t('scheduling.project')"
+        >
           <template #default="{ row }">
             <div class="tableBig oneLine">
               {{ row.projectName }}
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('projectId')" show-overflow-tooltip prop="projectId" align="left"
-          label="项目ID" width="200">
+        <el-table-column
+          v-if="checkList.includes('projectId')"
+          show-overflow-tooltip
+          prop="projectId"
+          align="left"
+          :label="t('scheduling.projectID')"
+          width="200"
+        >
           <template #default="{ row }">
             <div class="copyId tableSmall projectId">
               <div class="id oneLine">
-                <el-tooltip effect="dark" :content="row.projectId" placement="top-start">
+                <el-tooltip
+                  effect="dark"
+                  :content="row.projectId"
+                  placement="top-start"
+                >
                   {{ row.projectId }}
                 </el-tooltip>
 
                 <!-- ID: {{ row.projectId }} -->
               </div>
-              <copy :content="row.projectId" :class="{
-    rowCopy: 'rowCopy',
-    current: row.projectId === current,
-  }" />
+              <copy
+                :content="row.projectId"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.projectId === current,
+                }"
+              />
               <!-- <copy class="copy" :content="row.projectId" /> -->
             </div>
           </template>
         </el-table-column>
 
-        <el-table-column v-if="checkList.includes('moneyPrice')" show-overflow-tooltip prop="moneyPrice" align="left"
-          label="项目价" >
+        <el-table-column
+          v-if="checkList.includes('moneyPrice')"
+          show-overflow-tooltip
+          prop="moneyPrice"
+          align="left"
+          :label="t('scheduling.projectPrice')"
+        >
           <template #default="{ row }">
             <div class="fontC-System">
               <CurrencyType />{{ row.moneyPrice || 0 }}
@@ -220,58 +329,111 @@ const formOption = {
           </template>
         </el-table-column>
 
-        <el-table-column v-if="checkList.includes('doMoneyPrice')" show-overflow-tooltip prop="doMoneyPrice"
-          align="left" label="指定价格" >
+        <el-table-column
+          v-if="checkList.includes('doMoneyPrice')"
+          show-overflow-tooltip
+          prop="doMoneyPrice"
+          align="left"
+          :label="t('scheduling.specifiedPrice')"
+        >
           <template #default="{ row }">
             <div class="fontC-System">
               <CurrencyType />{{ row.doMoneyPrice || 0 }}
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('Supplier')" show-overflow-tooltip prop="groupSupplierId" align="left"
-          label="指定目标" width="400">
+        <el-table-column
+          v-if="checkList.includes('Supplier')"
+          show-overflow-tooltip
+          prop="groupSupplierId"
+          align="left"
+          :label="t('scheduling.targetAssignment')"
+          width="400"
+        >
           <template #default="{ row }">
             <div class="specifyTheTarget">
-              <el-button style="width: 46px;background-color: #FFAC54" v-if="row.dataType == 2" type="warning" size="small" class="p-1" >{{
-    row.getGroupSupplierIdNameInfoList.length > 1
-      ? "×" + row.getGroupSupplierIdNameInfoList.length
-      : "部门"
-  }}</el-button>
-              <el-button style="width: 46px" v-else-if="row.dataType === 1" type="warning" size="small" class="p-1">{{
-    row.getGroupSupplierIdNameInfoList.length > 1
-      ? "×" + row.getGroupSupplierIdNameInfoList.length
-      : "供应商"
-  }}</el-button>
+              <el-button
+                style="width: 46px; background-color: #ffac54"
+                v-if="row.dataType == 2"
+                type="warning"
+                size="small"
+                class="p-1"
+                >{{
+                  row.getGroupSupplierIdNameInfoList.length > 1
+                    ? "×" + row.getGroupSupplierIdNameInfoList.length
+                    : t("scheduling.department")
+                }}</el-button
+              >
+              <el-button
+                style="width: 46px"
+                v-else-if="row.dataType === 1"
+                type="warning"
+                size="small"
+                class="p-1"
+                >{{
+                  row.getGroupSupplierIdNameInfoList.length > 1
+                    ? "×" + row.getGroupSupplierIdNameInfoList.length
+                    : t("scheduling.supplier")
+                }}</el-button
+              >
               <b class="tableBig">{{
-      row.getGroupSupplierIdNameInfoList[0].groupSupplierName
-    }}</b>
-              <span class="id tableSmall " style="font-size:14px;">
+                row.getGroupSupplierIdNameInfoList[0].groupSupplierName
+              }}</b>
+              <span class="id tableSmall" style="font-size: 14px">
                 {{
-      row.getGroupSupplierIdNameInfoList[0].groupSupplierId
-    }}</span>
-              <copy :content="row.getGroupSupplierIdNameInfoList[0].groupSupplierId" :class="{
-    rowCopy: 'rowCopy',
-    current: row.projectId === current,
-  }" />
+                  row.getGroupSupplierIdNameInfoList[0].groupSupplierId
+                }}</span
+              >
+              <copy
+                :content="row.getGroupSupplierIdNameInfoList[0].groupSupplierId"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.projectId === current,
+                }"
+              />
 
               <!-- <copy class="copy" :content="row.getGroupSupplierIdNameInfoList[0].groupSupplierId" /> -->
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('createTime')" show-overflow-tooltip prop="createTime" align="left"
-          label="创建"><template #default="{ row }">
+        <el-table-column
+          v-if="checkList.includes('createTime')"
+          show-overflow-tooltip
+          prop="createTime"
+          align="left"
+          :label="t('scheduling.create')"
+          ><template #default="{ row }">
             <el-tooltip :content="row.createTime" placement="top">
-              <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>
+              <el-tag effect="plain" type="info">{{
+                format(row.createTime)
+              }}</el-tag>
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column align="left" fixed="right" label="操作" width="170">
+        <el-table-column
+          align="left"
+          fixed="right"
+          :label="t('scheduling.controls')"
+          width="170"
+        >
           <template #default="{ row }">
-            <el-button type="primary" plain size="small" @click="editData(row)" v-auth="'scheduling-update-updateProjectDispatch'">
-              编辑
+            <el-button
+              type="primary"
+              plain
+              size="small"
+              @click="editData(row)"
+              v-auth="'scheduling-update-updateProjectDispatch'"
+            >
+              {{ t("scheduling.edit") }}
             </el-button>
-            <el-button type="danger" plain size="small" @click="onDel(row)" v-auth="'scheduling-delete-deleteProjectDispatch'">
-              删除
+            <el-button
+              type="danger"
+              plain
+              size="small"
+              @click="onDel(row)"
+              v-auth="'scheduling-delete-deleteProjectDispatch'"
+            >
+              {{ t("scheduling.delete") }}
             </el-button>
           </template>
         </el-table-column>
@@ -279,9 +441,18 @@ const formOption = {
           <el-empty :image="empty" :image-size="300" />
         </template>
       </el-table>
-      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
-        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-        background @size-change="sizeChange" @current-change="currentChange" />
+      <ElPagination
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
+        :page-sizes="pagination.sizes"
+        :layout="pagination.layout"
+        :hide-on-single-page="false"
+        class="pagination"
+        background
+        @size-change="sizeChange"
+        @current-change="currentChange"
+      />
       <edit ref="editRef" @fetch-data="fetchData" />
     </PageMain>
   </div>
@@ -293,7 +464,7 @@ const formOption = {
 }
 
 .copyId.projectId {
-  font-size: .875rem;
+  font-size: 0.875rem;
 }
 
 .rowCopy {
@@ -369,7 +540,7 @@ const formOption = {
   align-items: center;
   width: 100%;
 
-  >div:nth-of-type(1) {
+  > div:nth-of-type(1) {
     width: calc(100% - 25px);
     flex-shrink: 0;
   }

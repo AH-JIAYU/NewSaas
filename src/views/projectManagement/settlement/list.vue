@@ -54,35 +54,75 @@ const lineHeight = ref<any>("default");
 const stripe = ref(false);
 const selectRows = ref<any>([]);
 const columns = ref<any>([
-  { label: "项目ID", prop: "projectId", sortable: true, checked: true },
-  { label: "项目名称", prop: "projectName", sortable: true, checked: true },
   {
-    label: "客户简称/标识",
+    label: computed(() => t("settlement.projectID")),
+    prop: "projectId",
+    sortable: true,
+    checked: true,
+  },
+  {
+    label: computed(() => t("settlement.projectName")),
+    prop: "projectName",
+    sortable: true,
+    checked: true,
+  },
+  {
+    label: computed(() => t("settlement.customerAbbreviation")),
     prop: "customerName",
     sortable: true,
     checked: true,
   },
-  { label: "项目价", prop: "projectAmount", sortable: true, checked: true },
-  { label: "所属国家", prop: "countryId", sortable: true, checked: true },
   {
-    label: "系统/审核完成数",
+    label: computed(() => t("settlement.projectPrice")),
+    prop: "projectAmount",
+    sortable: true,
+    checked: true,
+  },
+  {
+    label: computed(() => t("settlement.country")),
+    prop: "countryId",
+    sortable: true,
+    checked: true,
+  },
+  {
+    label: computed(() => t("settlement.auditCompletions")),
     prop: "systemDone",
     sortable: true,
     checked: true,
   },
-  { label: "结算PO号", prop: "settlementPo", sortable: true, checked: true },
-  { label: "结算状态", prop: "status", sortable: true, checked: true },
-  { label: "节点时间", prop: "nodeTime", sortable: true, checked: true },
-  { label: "备注", prop: "remark", sortable: true, checked: true },
+  {
+    label: computed(() => t("settlement.clearingPO")),
+    prop: "settlementPo",
+    sortable: true,
+    checked: true,
+  },
+  {
+    label: computed(() => t("settlement.settlementStatus")),
+    prop: "status",
+    sortable: true,
+    checked: true,
+  },
+  {
+    label: computed(() => t("settlement.nodeTime")),
+    prop: "nodeTime",
+    sortable: true,
+    checked: true,
+  },
+  {
+    label: computed(() => t("settlement.remark")),
+    prop: "remark",
+    sortable: true,
+    checked: true,
+  },
 ]);
 const formSearchList = ref<any>(); //表单排序配置
 const formSearchName = ref<string>("formSearch-settlement"); // 表单排序name
 const settlementStatusList = [
-  { label: "待审核", value: 1 },
-  { label: "已审核", value: 2 },
-  { label: "已开票", value: 3 },
-  { label: "已结算", value: 4 },
-  { label: "已冻结", value: 5 },
+  { label: computed(() => t("settlement.toBeReviewed")), value: 1 },
+  { label: computed(() => t("settlement.audited")), value: 2 },
+  { label: computed(() => t("settlement.invoiceHasBeenIssued")), value: 3 },
+  { label: computed(() => t("settlement.haveAlreadySettled")), value: 4 },
+  { label: computed(() => t("settlement.frozen")), value: 5 },
 ];
 
 // 查询参数
@@ -132,7 +172,7 @@ function handleCurrentChange(val: any) {
 // 开票
 function invoicing(row: any) {
   if (!selectRows.value.length) {
-    return ElMessage({ message: "请选择至少一条数据", type: "warning" });
+    return ElMessage({ message: t("settlement.leastOne"), type: "warning" });
   } else {
     invoicingRef.value.showEdit(row, selectRows.value);
   }
@@ -144,7 +184,7 @@ function addSettlement() {
 // 结算
 function settlement(row: any) {
   if (!selectRows.value.length) {
-    return ElMessage({ message: "请选择至少一条数据", type: "warning" });
+    return ElMessage({ message: t("settlement.leastOne"), type: "warning" });
   } else {
     invoicingRef.value.showEdit(row, selectRows.value);
   }

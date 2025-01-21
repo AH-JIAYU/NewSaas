@@ -5,11 +5,15 @@ import detail from "./components/Details/index.vue";
 import edit from "./components/Edit/index.vue";
 import api from "@/api/modules/projectManagement_materials";
 import empty from "@/assets/images/empty.png";
+import { useI18n } from "vue-i18n";
+import { translate } from "element-plus";
 
 defineOptions({
   name: "materials",
 });
 
+// 国际化
+const { t } = useI18n();
 // 时间
 const { format } = useTimeago();
 const { getParams, pagination, onSizeChange, onCurrentChange } =
@@ -32,23 +36,48 @@ const lineHeight = ref<any>("default");
 const stripe = ref(false);
 const selectRows = ref<any>([]);
 const columns = ref<any>([
-  { label: "会员ID", prop: "memberChildId", sotrtable: true, checked: true },
   {
-    label: "会员名称",
+    label: computed(() => t("materials.vipId")),
+    prop: "memberChildId",
+    sotrtable: true,
+    checked: true,
+  },
+  {
+    label: computed(() => t("materials.vipName")),
     prop: "memberChildName",
     sotrtable: true,
     checked: true,
   },
   {
-    label: "会员组ID",
+    label: computed(() => t("materials.vipGroupsId")),
     prop: "memberChildGroupId",
     sotrtable: true,
     checked: true,
   },
-  { label: "项目ID", prop: "projectId", sotrtable: true, checked: true },
-  { label: "项目名称", prop: "projectName", sotrtable: true, checked: true },
-  { label: "说明", prop: "instructions", sotrtable: true, checked: true },
-  { label: "创建时间", prop: "createTime", sotrtable: true, checked: true },
+  {
+    label: computed(() => t("materials.projectID")),
+    prop: "projectId",
+    sotrtable: true,
+    checked: true,
+  },
+  {
+    label: computed(() => t("materials.projectName")),
+    prop: "projectName",
+    sotrtable: true,
+    checked: true,
+  },
+  {
+    label: computed(() => t("materials.instructions")),
+    prop: "instructions",
+    sotrtable: true,
+    checked: true,
+  },
+  {
+    label: computed(() => t("materials.createTime")),
+    prop: "createTime",
+    sotrtable: true,
+    checked: true,
+  },
 ]);
 // 查询参数
 const queryForm = ref<any>({
@@ -168,32 +197,47 @@ const getDataChange = () => {
     checkList.value = [];
     columns.value = [
       {
-        label: "子会员ID",
+        label: computed(() => t("materials.subVipId")),
         prop: "memberChildId",
         sotrtable: true,
         checked: true,
       },
       {
-        label: "子会员名称",
+        label: computed(() => t("materials.subVipName")),
         prop: "memberChildName",
         sotrtable: true,
         checked: true,
       },
       {
-        label: "子会员组ID",
+        label: computed(() => t("materials.subVipGroupsId")),
         prop: "memberChildGroupId",
         sotrtable: true,
         checked: true,
       },
-      { label: "项目ID", prop: "projectId", sotrtable: true, checked: true },
       {
-        label: "项目名称",
+        label: computed(() => t("materials.projectID")),
+        prop: "projectId",
+        sotrtable: true,
+        checked: true,
+      },
+      {
+        label: computed(() => t("materials.projectName")),
         prop: "projectName",
         sotrtable: true,
         checked: true,
       },
-      { label: "说明", prop: "instructions", sotrtable: true, checked: true },
-      { label: "创建时间", prop: "createTime", sotrtable: true, checked: true },
+      {
+        label: computed(() => t("materials.instructions")),
+        prop: "instructions",
+        sotrtable: true,
+        checked: true,
+      },
+      {
+        label: computed(() => t("materials.createTime")),
+        prop: "createTime",
+        sotrtable: true,
+        checked: true,
+      },
     ];
     columns.value.forEach((item: any) => {
       if (item.checked) {
@@ -216,21 +260,21 @@ onMounted(() => {
       show: true,
       type: "input",
       modelName: "memberChildId",
-      placeholder: "会员ID",
+      placeholder: computed(() => t("materials.vipId")),
     },
     {
       index: 2,
       show: true,
       type: "input",
       modelName: "projectId",
-      placeholder: "项目ID",
+      placeholder: computed(() => t("materials.projectID")),
     },
     {
       index: 3,
       show: true,
       type: "input",
       modelName: "projectName",
-      placeholder: "项目名称",
+      placeholder: computed(() => t("materials.projectName")),
     },
   ];
 });
@@ -244,7 +288,7 @@ onMounted(() => {
   >
     <PageMain>
       <el-tabs v-model="queryForm.type" @tab-change="getDataChange">
-        <el-tab-pane label="会员素材" :name="1">
+        <el-tab-pane :label="t('materials.vipMaterial')" :name="1">
           <FormSearch
             :formSearchList="formSearchList"
             :formSearchName="formSearchName"
@@ -296,7 +340,9 @@ onMounted(() => {
           <el-row :gutter="24">
             <FormLeftPanel />
             <FormRightPanel>
-              <el-button size="default" @click=""> 导出 </el-button>
+              <el-button size="default" @click="">
+                {{ t("materials.export") }}
+              </el-button>
               <TabelControl
                 v-model:border="border"
                 v-model:tableAutoHeight="tableAutoHeight"
@@ -328,7 +374,7 @@ onMounted(() => {
               show-overflow-tooltip
               prop="memberChildId"
               align="left"
-              label="会员ID"
+              :label="t('materials.vipId')"
             >
               <template #default="{ row }">
                 <div class="copyId tableSmall">
@@ -351,7 +397,7 @@ onMounted(() => {
               show-overflow-tooltip
               prop="memberChildName"
               align="left"
-              label="会员名称"
+              :label="t('materials.vipName')"
             >
               <template #default="{ row }">
                 <div class="tableBig">{{ row.memberChildName }}</div>
@@ -362,7 +408,7 @@ onMounted(() => {
               show-overflow-tooltip
               prop="projectName"
               align="left"
-              label="项目名称"
+              :label="t('materials.projectName')"
             >
               <template #default="{ row }">
                 <div class="tableBig">{{ row.projectName }}</div>
@@ -373,7 +419,7 @@ onMounted(() => {
               show-overflow-tooltip
               prop="projectId"
               align="left"
-              label="项目ID"
+              :label="t('materials.projectID')"
             >
               <template #default="{ row }">
                 <div class="copyId tableSmall">
@@ -389,10 +435,17 @@ onMounted(() => {
                 </div>
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('createTime')" show-overflow-tooltip prop="createTime"
-              align="left" label="创建"><template #default="{ row }">
+            <el-table-column
+              v-if="checkList.includes('createTime')"
+              show-overflow-tooltip
+              prop="createTime"
+              align="left"
+              :label="t('materials.create')"
+              ><template #default="{ row }">
                 <el-tooltip :content="row.createTime" placement="top">
-                  <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>
+                  <el-tag effect="plain" type="info">{{
+                    format(row.createTime)
+                  }}</el-tag>
                 </el-tooltip>
               </template>
             </el-table-column>
@@ -401,7 +454,7 @@ onMounted(() => {
               show-overflow-tooltip
               prop="instructions"
               align="left"
-              label="说明"
+              :label="t('materials.instructions')"
             >
               <template #default="{ row }">
                 <div class="flex-c fontC-System">
@@ -409,7 +462,9 @@ onMounted(() => {
                     {{ row.instructions ? row.instructions : "-" }}
                   </div>
                   <SvgIcon
-                  v-auth="'materials-update-updateProjectMaterialInstructions'"
+                    v-auth="
+                      'materials-update-updateProjectMaterialInstructions'
+                    "
                     @click="quickEdit(row)"
                     :class="{
                       edit: 'edit',
@@ -424,7 +479,7 @@ onMounted(() => {
             <el-table-column
               align="left"
               fixed="right"
-              label="操作"
+              :label="t('materials.control')"
               width="240"
             >
               <template #default="{ row }">
@@ -436,16 +491,16 @@ onMounted(() => {
                     @click="projectDetails(row)"
                     v-auth="'materials-get-getMaterials-btn'"
                   >
-                    查看
+                    {{ t("materials.view") }}
                   </el-button>
                   <el-button
                     type="danger"
                     plain
                     size="small"
                     @click="deleteData(row)"
-                      v-auth="'materials-delete-deleteProjectMaterial'"
+                    v-auth="'materials-delete-deleteProjectMaterial'"
                   >
-                    删除
+                    {{ t("materials.delete") }}
                   </el-button>
                 </ElSpace>
               </template>
@@ -467,7 +522,7 @@ onMounted(() => {
             @current-change="currentChange"
           />
         </el-tab-pane>
-        <el-tab-pane label="子会员素材" :name="2">
+        <el-tab-pane :label="t('materials.subVipMaterial')" :name="2">
           <SearchBar :show-toggle="false">
             <template #default="{ fold, toggle }">
               <el-form
@@ -482,21 +537,21 @@ onMounted(() => {
                   <el-input
                     v-model="queryForm.memberChildId"
                     clearable
-                    placeholder="会员ID"
+                    :placeholder="t('materials.vipId')"
                   />
                 </el-form-item>
                 <el-form-item label="">
                   <el-input
                     v-model="queryForm.projectId"
                     clearable
-                    placeholder="项目ID"
+                    :placeholder="t('materials.projectID')"
                   />
                 </el-form-item>
                 <el-form-item label="">
                   <el-input
                     v-model="queryForm.projectName"
                     clearable
-                    placeholder="项目名称"
+                    :placeholder="t('materials.projectName')"
                   />
                 </el-form-item>
                 <ElFormItem>
@@ -504,13 +559,13 @@ onMounted(() => {
                     <template #icon>
                       <SvgIcon name="i-ep:search" />
                     </template>
-                    筛选
+                    {{ t("materials.sift") }}
                   </ElButton>
                   <ElButton @click="onReset">
                     <template #icon>
                       <div class="i-grommet-icons:power-reset h-1em w-1em" />
                     </template>
-                    重置
+                    {{ t("materials.reset") }}
                   </ElButton>
                   <ElButton link @click="toggle" disabled>
                     <template #icon>
@@ -518,7 +573,7 @@ onMounted(() => {
                         :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
                       />
                     </template>
-                    {{ fold ? "展开" : "收起" }}
+                    {{ fold ? t("materials.expand") : t("materials.collapse") }}
                   </ElButton>
                 </ElFormItem>
               </el-form>
@@ -528,7 +583,9 @@ onMounted(() => {
           <el-row :gutter="24">
             <FormLeftPanel />
             <FormRightPanel>
-              <el-button size="default" @click=""> 导出 </el-button>
+              <el-button size="default" @click="">
+                {{ t("materials.export") }}
+              </el-button>
               <TabelControl
                 v-model:border="border"
                 v-model:tableAutoHeight="tableAutoHeight"
@@ -561,7 +618,7 @@ onMounted(() => {
               show-overflow-tooltip
               prop="memberChildId"
               align="left"
-              label="子会员ID"
+              :label="t('materials.subVipId')"
             >
               <template #default="{ row }">
                 <div class="copyId tableSmall">
@@ -584,7 +641,7 @@ onMounted(() => {
               show-overflow-tooltip
               prop="memberChildName"
               align="left"
-              label="子会员名称"
+              :label="t('materials.subVipName')"
             >
               <template #default="{ row }">
                 <div class="tableBig">{{ row.memberChildName }}</div>
@@ -595,7 +652,7 @@ onMounted(() => {
               show-overflow-tooltip
               prop="projectName"
               align="left"
-              label="项目名称"
+              :label="t('materials.projectName')"
             >
               <template #default="{ row }">
                 <div class="tableBig">{{ row.projectName }}</div>
@@ -606,7 +663,7 @@ onMounted(() => {
               show-overflow-tooltip
               prop="projectId"
               align="left"
-              label="项目ID"
+              :label="t('materials.projectID')"
             >
               <template #default="{ row }">
                 <div class="copyId tableSmall">
@@ -622,12 +679,24 @@ onMounted(() => {
                 </div>
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('customerIdentification')" show-overflow-tooltip
-              prop="customerIdentification" align="left" label="客户简称/标识" />
-            <el-table-column v-if="checkList.includes('createTime')" show-overflow-tooltip prop="createTime"
-              align="left" label="创建"><template #default="{ row }">
+            <el-table-column
+              v-if="checkList.includes('customerIdentification')"
+              show-overflow-tooltip
+              prop="customerIdentification"
+              align="left"
+              :label="t('materials.customer')"
+            />
+            <el-table-column
+              v-if="checkList.includes('createTime')"
+              show-overflow-tooltip
+              prop="createTime"
+              align="left"
+              :label="t('materials.create')"
+              ><template #default="{ row }">
                 <el-tooltip :content="row.createTime" placement="top">
-                  <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>
+                  <el-tag effect="plain" type="info">{{
+                    format(row.createTime)
+                  }}</el-tag>
                 </el-tooltip>
               </template>
             </el-table-column>
@@ -636,7 +705,7 @@ onMounted(() => {
               show-overflow-tooltip
               prop="instructions"
               align="left"
-              label="说明"
+              :label="t('materials.instructions')"
             >
               <template #default="{ row }">
                 <div class="flex-c fontC-System">
@@ -644,7 +713,9 @@ onMounted(() => {
                     {{ row.instructions ? row.instructions : "-" }}
                   </div>
                   <SvgIcon
-                   v-auth="'materials-update-updateProjectMaterialInstructions'"
+                    v-auth="
+                      'materials-update-updateProjectMaterialInstructions'
+                    "
                     @click="quickEdit(row)"
                     :class="{
                       edit: 'edit',
@@ -659,7 +730,7 @@ onMounted(() => {
             <el-table-column
               align="left"
               fixed="right"
-              label="操作"
+              :label="t('materials.control')"
               width="240"
             >
               <template #default="{ row }">
@@ -669,7 +740,7 @@ onMounted(() => {
                     plain
                     size="small"
                     @click="projectDetails(row)"
-                     v-auth="'materials-get-getMaterials-btn'"
+                    v-auth="'materials-get-getMaterials-btn'"
                   >
                     查看
                   </el-button>
@@ -678,7 +749,7 @@ onMounted(() => {
                     plain
                     size="small"
                     @click="deleteData(row)"
-                      v-auth="'materials-delete-deleteProjectMaterial'"
+                    v-auth="'materials-delete-deleteProjectMaterial'"
                   >
                     删除
                   </el-button>
@@ -712,11 +783,11 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .copyId .projectId {
-  font-size: .875rem;
+  font-size: 0.875rem;
 }
-.copyId  .current {
-    display: block !important;
-  }
+.copyId .current {
+  display: block !important;
+}
 // 高度自适应
 .absolute-container {
   position: absolute;
