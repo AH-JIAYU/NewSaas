@@ -294,5 +294,16 @@
     "newSuccess": "New success",
     "changeSuccess": "Change success",
     "sameName": "The customer name already exists"
+  },
+  "formRef":{
+    "areaSelect":"Please select a region first"
+  },
+  "sort":{
+    "sortSettings":"Set filter",
+    "save":"Save",
+    "allSort":"All filters",
+    "hide":"Filters that are not selected will be hidden",
+    "show":"Display effect",
+    "hold":"Long press the filter to drag and drop to adjust the display order"
   }
 }

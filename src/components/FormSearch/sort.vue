@@ -3,6 +3,7 @@ import { cloneDeep } from "lodash-es";
 import Sortable from "sortablejs";
 import storage from "@/utils/storage";
 import useFormSearchStore from '@/store/modules/formSearch' // 筛选项配置
+import { useI18n } from "vue-i18n";
 defineOptions({
   name: 'FormSearchSort',
 })
@@ -16,6 +17,8 @@ const data = ref<any>({
 })
 // 对比原始搜索数据
 const copyformSearchList = ref<any>([])
+// 国际化
+const { t } = useI18n();
 
 // 表单筛选配置项  表单绑定值
 const showEdit = (list: any, name: string, copy: any) => {
@@ -88,16 +91,16 @@ defineExpose({ showEdit })
     <el-drawer v-model="data.dialogTableVisible" append-to-body destroy-on-close draggable size="50%">
       <template #header="{ close, titleId, titleClass }">
         <h4 :id="titleId" :class="titleClass" style="display:flex;justify-content:start;align-items:center">
-          设置筛选项 &ensp;
-          <el-button round type="primary" size="default" @click="onSubmit">保存</el-button>
+          {{ t('sort.sortSettings') }} &ensp;
+          <el-button round type="primary" size="default" @click="onSubmit">{{ t('sort.save') }}</el-button>
         </h4>
       </template>
-      <p class="Big">全部筛选项 <span class="Small"> 不被选中的筛选项将会被 </span> </p>
+      <p class="Big">{{ t('sort.allSort') }} <span class="Small"> {{ t('sort.hide') }} </span> </p>
       <div class="grid"><el-button :type="item.show ? 'primary' : ''" v-for="item in data.formSearchList"
           @click="onChangeShow(item)">{{ item.placeholder ??
       `${item.startPlaceHolder}-${item.endPlaceHolder}` }}</el-button>
       </div>
-      <p class="Big">展示效果 <span class="Small"> 长按筛选项，可拖拽调整展示顺序 </span> </p>
+      <p class="Big">{{ t('sort.show') }} <span class="Small"> {{ t('sort.hold') }} </span> </p>
       <div class="grid tagGrid">
         <template v-for="item in data.formSearchSelectList" :key="item.modelName">
           <el-tag v-if="item.show" class="gridItem" closable type="primary" @close="onChangeShow(item)"

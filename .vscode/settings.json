@@ -9,15 +9,19 @@
   // "editor.tokenColorCustomizations": {
   //   "comments": "#ff4f81" // 注释
   // },
-
-    //导入文件时是否携带文件的扩展名
-    "path-autocomplete.extensionOnlmport": true,
-    //配置@的路径提示
-    "path-autocomplete.pathMappings": {
-        "@": "${folder}/src"
-    },
+  //导入文件时是否携带文件的扩展名
+  "path-autocomplete.extensionOnlmport": true,
+  //配置@的路径提示
+  "path-autocomplete.pathMappings": {
+    "@": "${folder}/src"
+  },
   //配置eslint
-  "eslint.validate": ["javascript", "javascriptreact", "html", "vue"],
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "html",
+    "vue"
+  ],
   // "eslint.run": "onSave",
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
@@ -48,7 +52,7 @@
   },
   "[vue]": {
     // "editor.defaultFormatter": "Vue.volar"
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "vscode.typescript-language-features"
   },
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"

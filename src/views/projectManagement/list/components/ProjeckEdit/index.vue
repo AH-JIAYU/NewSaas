@@ -306,7 +306,7 @@ async function onSubmit() {
     // 跳转到第一个未通过校验的组件
     LeftTabsRef.value.activeLeftTab = validateAll.value.indexOf("rejected");
     ElMessage.warning({
-      message: "请完善表单",
+      message: t('projectEdit.perfect'),
       center: true,
     });
   }
