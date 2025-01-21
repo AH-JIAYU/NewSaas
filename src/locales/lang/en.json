@@ -564,5 +564,20 @@
     "refused": "Refuse",
     "resieved": "Resieve",
     "outsourcingProject": "Outsourcing Project"
+  },
+  "preRecords": {
+    "projectID": "Project ID",
+    "projectName": "Project Name",
+    "allocationType": "Allocation Type",
+    "number": "Number of passes/submissions",
+    "throughRate": "Through Rate",
+    "undistributed": "Undistributed",
+    "supplier": "Supplier",
+    "internalStation": "Internal Station",
+    "sift": "Sift",
+    "reset": "Reset",
+    "expand": "Expand",
+    "collapse": "Collapse",
+    "export": "Export"
   }
 }

@@ -3,7 +3,8 @@ import { onMounted } from "vue";
 import api from "@/api/modules/record_preInvestigationRecords";
 import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
 import questionnaireDetails from "./components/questionnaireDetails/index.vue";
-import empty from '@/assets/images/empty.png'
+import empty from "@/assets/images/empty.png";
+import { useI18n } from "vue-i18n"; // 国际化
 
 const customerStore = useUserCustomerStore(); // 客户
 
@@ -13,6 +14,7 @@ defineOptions({
 const { getParams, pagination, onSizeChange, onCurrentChange } =
   usePagination(); // 分页
 
+const { t } = useI18n(); // 国际化
 const listLoading = ref(false);
 const list = ref<Array<Object>>([]); // 列表
 const selectRows = ref(""); // 表格-选中行
@@ -21,28 +23,48 @@ const border = ref(false); // 表格控件-是否展示边框
 const stripe = ref(false); // 表格控件-是否展示斑马条
 const lineHeight = ref<any>("default"); // 表格控件-控制表格大小
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
-const formSearchList = ref<any>()//表单排序配置
-const formSearchName=ref<string>('formSearch-preInvestigationRecords')// 表单排序name
+const formSearchList = ref<any>(); //表单排序配置
+const formSearchName = ref<string>("formSearch-preInvestigationRecords"); // 表单排序name
 const columns = ref([
   // 表格控件-展示列
 
-  { prop: "projectId", label: "项目ID", sortable: true, checked: true },
   {
-    prop: "projectName",
-    label: "项目名称",
+    prop: "projectId",
+    label: computed(() => t("preRecords.projectID")),
     sortable: true,
     checked: true,
   },
-  { prop: "allocationType", label: "分配类型", sortable: true, checked: true },
-  { prop: "passNumber", label: "通过数/提交数", sortable: true, checked: true },
-  { prop: "passRate", label: "通过率", sortable: true, checked: true },
+  {
+    prop: "projectName",
+    label: computed(() => t("preRecords.projectName")),
+    sortable: true,
+    checked: true,
+  },
+  {
+    prop: "allocationType",
+    label: computed(() => t("preRecords.allocationType")),
+    sortable: true,
+    checked: true,
+  },
+  {
+    prop: "passNumber",
+    label: computed(() => t("preRecords.number")),
+    sortable: true,
+    checked: true,
+  },
+  {
+    prop: "passRate",
+    label: computed(() => t("preRecords.throughRate")),
+    sortable: true,
+    checked: true,
+  },
 ]);
 const queryForm = reactive<any>({
   // memberId: "", // 	会员id
   // memberGroupId: "", // 	会员组id
   projectId: "", // 	项目id
   projectName: "", // 	项目名称-模糊查询
-  allocationType: [],//分配类型
+  allocationType: [], //分配类型
   // customerId: "", // 	客户Id
   // ip: "", // 	ip-模糊查询
   // surveyStatus: "", // 调查状态:1 C=完成 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
@@ -51,7 +73,11 @@ const queryForm = reactive<any>({
 const questionnaireDetailsRef = ref<any>();
 const data = reactive<any>({
   // 分配类型
-  allocationTypeList: ["未分配", "供应商", "内部站"],
+  allocationTypeList: [
+    computed(() => t("preRecords.undistributed")),
+    computed(() => t("preRecords.supplier")),
+    computed(() => t("preRecords.internalStation")),
+  ],
   // 调查状态
   surveyStatusList: ["完成", "被甄别", "配额满", "安全终止", "未完成"],
   // 副状态
@@ -117,18 +143,21 @@ function showEdit(row: any) {
   questionnaireDetailsRef.value.showEdit(row);
 }
 
-const DataList:any = computed(() => {
+const DataList: any = computed(() => {
   const filterData = list.value.filter((item: any) => {
-    if (item.projectId.includes(queryForm.projectId) || item.projectName.includes(queryForm.projectName) || (queryForm.allocationType === item.allocationType))
-    {
-      return true
-    }else{
-      return false
+    if (
+      item.projectId.includes(queryForm.projectId) ||
+      item.projectName.includes(queryForm.projectName) ||
+      queryForm.allocationType === item.allocationType
+    ) {
+      return true;
+    } else {
+      return false;
     }
-  })
+  });
   return filterData.slice(
     (pagination.value.page - 1) * pagination.value.size,
-    pagination.value.page * pagination.value.size
+    pagination.value.page * pagination.value.size,
   );
 });
 // 请求
@@ -139,19 +168,17 @@ async function fetchData() {
       ...getParams(),
       ...queryForm,
     };
-    const { data,status } = await api.list(params);
-    if(data && status === 1) {
+    const { data, status } = await api.list(params);
+    if (data && status === 1) {
       list.value = data.projectSurveyScreenInfoList;
       pagination.value.total = data.projectSurveyScreenInfoList.length;
     }
     listLoading.value = false;
   } catch (error) {
-
   } finally {
     listLoading.value = false;
   }
 }
-
 
 // 表格-单选框
 function setSelectRows(val: string) {
@@ -164,7 +191,7 @@ function onReset() {
     // memberGroupId: "", // 	会员组id
     projectId: "", // 	项目id
     projectName: "", // 	项目名称-模糊查询
-    allocationType: '',//分配类型
+    allocationType: "", //分配类型
     // customerId: "", // 	客户Id
     // ip: "", // 	ip-模糊查询
     // surveyStatus: "", // 调查状态:1 C=完成 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
@@ -180,17 +207,40 @@ onMounted(async () => {
   });
   fetchData();
   formSearchList.value = [
-    { index: 1, show: true, type: 'input', modelName: 'projectId', placeholder: '项目ID' },
-    { index: 2, show: true, type: 'input', modelName: 'projectName', placeholder: '项目名称' },
-    { index: 3, show: true, type: 'select', modelName: 'allocationType', placeholder: '分配类型',
-      option: 'allocationType',
-      optionLabel: 'label', optionValue: 'value',multiple:true,
+    {
+      index: 1,
+      show: true,
+      type: "input",
+      modelName: "projectId",
+      placeholder: computed(() => t("preRecords.projectID")),
     },
-];
+    {
+      index: 2,
+      show: true,
+      type: "input",
+      modelName: "projectName",
+      placeholder: computed(() => t("preRecords.projectName")),
+    },
+    {
+      index: 3,
+      show: true,
+      type: "select",
+      modelName: "allocationType",
+      placeholder: computed(() => t("preRecords.allocationType")),
+      option: "allocationType",
+      optionLabel: "label",
+      optionValue: "value",
+      multiple: true,
+    },
+  ];
 });
-const formOption={
-  allocationType:()=> data.allocationTypeList.map((item:any, index:any) => ({ label: item, value: index + 1 }))
-}
+const formOption = {
+  allocationType: () =>
+    data.allocationTypeList.map((item: any, index: any) => ({
+      label: item,
+      value: index + 1,
+    })),
+};
 </script>
 
 <template>
@@ -210,7 +260,7 @@ const formOption={
             <ElFormItem>
               <ElInput
                 v-model="queryForm.projectId"
-                placeholder="项目ID"
+                :placeholder="t('preRecords.projectID')"
                 clearable
                 @keydown.enter="DataList"
                 @clear="DataList"
@@ -219,7 +269,7 @@ const formOption={
             <ElFormItem>
               <ElInput
                 v-model="queryForm.projectName"
-                placeholder="项目名称"
+                :placeholder="t('preRecords.projectName')"
                 clearable
                 @keydown.enter="DataList"
                 @clear="DataList"
@@ -229,12 +279,12 @@ const formOption={
               <el-select
                 v-model="queryForm.allocationType"
                 value-key=""
-                placeholder="分配类型"
+                :placeholder="t('preRecords.allocationType')"
                 clearable
                 filterable
               >
                 <el-option
-                  v-for="(item,index) in data.allocationTypeList"
+                  v-for="(item, index) in data.allocationTypeList"
                   :key="item"
                   :label="item"
                   :value="index + 1"
@@ -246,13 +296,13 @@ const formOption={
                 <template #icon>
                   <SvgIcon name="i-ep:search" />
                 </template>
-                筛选
+                {{ t("preRecords.sift") }}
               </ElButton>
               <ElButton @click="onReset">
                 <template #icon>
                   <div class="i-grommet-icons:power-reset h-1em w-1em" />
                 </template>
-                重置
+                {{ t("preRecords.reset") }}
               </ElButton>
               <ElButton link @click="toggle">
                 <template #icon>
@@ -260,7 +310,7 @@ const formOption={
                     :name="fold ? 'i-ep:caret-bottom' : 'i-ep:caret-top'"
                   />
                 </template>
-                {{ fold ? "展开" : "收起" }}
+                {{ fold ? t("preRecords.expand") : t("preRecords.collapse") }}
               </ElButton>
             </ElFormItem>
           </ElForm>
@@ -270,38 +320,84 @@ const formOption={
       <el-row>
         <FormLeftPanel />
         <FormRightPanel>
-          <el-button size="default"> 导出 </el-button>
-          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
-            v-model:columns="columns" v-model:line-height="lineHeight" v-model:stripe="stripe" style="margin-left: 12px"
-            @query-data="queryData" />
+          <el-button size="default"> {{ t("preRecords.export") }} </el-button>
+          <TabelControl
+            v-model:border="border"
+            v-model:tableAutoHeight="tableAutoHeight"
+            v-model:checkList="checkList"
+            v-model:columns="columns"
+            v-model:line-height="lineHeight"
+            v-model:stripe="stripe"
+            style="margin-left: 12px"
+            @query-data="queryData"
+          />
         </FormRightPanel>
       </el-row>
-      <el-table v-loading="listLoading" :border="border" :data="DataList" :size="lineHeight" :stripe="stripe"
-        row-key="id" :expand-row-keys="data.expandedRows" @expand-change="getChildList">
+      <el-table
+        v-loading="listLoading"
+        :border="border"
+        :data="DataList"
+        :size="lineHeight"
+        :stripe="stripe"
+        row-key="id"
+        :expand-row-keys="data.expandedRows"
+        @expand-change="getChildList"
+      >
         <el-table-column type="expand" width="55">
           <template #default="scopeCountry">
-            <el-table :data="scopeCountry.row.children" highlight-current-row class="hide-table-header" border
-              height="100%">
+            <el-table
+              :data="scopeCountry.row.children"
+              highlight-current-row
+              class="hide-table-header"
+              border
+              height="100%"
+            >
               <el-table-column width="55" />
-              <el-table-column width="300" prop="memberChildName" label="名称+ID" align="left">
+              <el-table-column
+                width="300"
+                prop="memberChildName"
+                label="名称+ID"
+                align="left"
+              >
                 <template #default="scope">
                   <el-text class="fontC-System">
                     {{ scope.row.memberChildName }}
                   </el-text>
                   <br />
-                  <el-text v-show="scope.row.randomIdentityId" type="danger" class="fontC-System">随机id:{{ scope.row.randomIdentityId
-                    }}</el-text>
+                  <el-text
+                    v-show="scope.row.randomIdentityId"
+                    type="danger"
+                    class="fontC-System"
+                    >随机id:{{ scope.row.randomIdentityId }}</el-text
+                  >
                 </template>
               </el-table-column>
               <ElTableColumn prop="status" label="状态" align="left">
                 <template #default="scope">
-                  <el-text v-if="scope.row.status === 1" type="success" class="fontC-System">前置问卷通过</el-text>
-                  <el-text v-else type="danger" class="fontC-System">前置问卷未通过</el-text>
+                  <el-text
+                    v-if="scope.row.status === 1"
+                    type="success"
+                    class="fontC-System"
+                    >前置问卷通过</el-text
+                  >
+                  <el-text v-else type="danger" class="fontC-System"
+                    >前置问卷未通过</el-text
+                  >
                 </template>
               </ElTableColumn>
-              <ElTableColumn width="200" align="left" fixed="right" label="操作">
+              <ElTableColumn
+                width="200"
+                align="left"
+                fixed="right"
+                label="操作"
+              >
                 <template #default="scope">
-                  <ElButton type="primary" size="small" plain @click="showEdit(scope.row)">
+                  <ElButton
+                    type="primary"
+                    size="small"
+                    plain
+                    @click="showEdit(scope.row)"
+                  >
                     查看问卷详情
                   </ElButton>
                 </template>
@@ -310,63 +406,131 @@ const formOption={
           </template>
         </el-table-column>
 
-        <el-table-column width="300" v-if="checkList.includes('projectId')" align="left" prop="projectId"
-          show-overflow-tooltip label="项目ID" />
-        <el-table-column v-if="checkList.includes('projectName')" align="left" prop="projectName"
-          show-overflow-tooltip label="项目名称" >
+        <el-table-column
+          width="300"
+          v-if="checkList.includes('projectId')"
+          align="left"
+          prop="projectId"
+          show-overflow-tooltip
+          label="项目ID"
+        />
+        <el-table-column
+          v-if="checkList.includes('projectName')"
+          align="left"
+          prop="projectName"
+          show-overflow-tooltip
+          label="项目名称"
+        >
           <template #default="{ row }">
             <div class="tableBig">
               {{ row.projectName }}
-              </div>
-              </template>
-              </el-table-column>
+            </div>
+          </template>
+        </el-table-column>
 
-
-
-        <el-table-column v-if="checkList.includes('allocationType')" align="left" show-overflow-tooltip width="100"
-          label="分配类型">
+        <el-table-column
+          v-if="checkList.includes('allocationType')"
+          align="left"
+          show-overflow-tooltip
+          width="100"
+          label="分配类型"
+        >
           <template #default="{ row }">
             <!-- <el-button  size="small" v-if="row.allocationType === 3" type="primary" class="tableBut">会员组</el-button>
             <el-button  size="small" v-if="row.allocationType === 2"   type="danger" class="tableBut">供应商</el-button>
             <el-button  size="small" v-if="row.allocationType === 1" class="tableBut">未分配</el-button> -->
 
-            <el-tag effect="plain" type="info" v-if="row.allocationType === 1"
-              class="mx-1">未分配</el-tag>
-            <el-tag effect="dark" style="background-color: #fb6868; border: none" v-if="row.allocationType === 2"
-              class="mx-1" type="primary">供应商</el-tag>
-            <el-tag effect="dark" style="background-color: #05c9be; border: none" v-if="row.allocationType === 3"
-              class="mx-1" type="warning">内部站</el-tag>
-            <el-tag effect="dark" style="background-color: #ffac54; border: none" v-if="row.allocationType === 4"
-              class="mx-1" type="warning">合作商</el-tag>
+            <el-tag
+              effect="plain"
+              type="info"
+              v-if="row.allocationType === 1"
+              class="mx-1"
+              >未分配</el-tag
+            >
+            <el-tag
+              effect="dark"
+              style="background-color: #fb6868; border: none"
+              v-if="row.allocationType === 2"
+              class="mx-1"
+              type="primary"
+              >供应商</el-tag
+            >
+            <el-tag
+              effect="dark"
+              style="background-color: #05c9be; border: none"
+              v-if="row.allocationType === 3"
+              class="mx-1"
+              type="warning"
+              >内部站</el-tag
+            >
+            <el-tag
+              effect="dark"
+              style="background-color: #ffac54; border: none"
+              v-if="row.allocationType === 4"
+              class="mx-1"
+              type="warning"
+              >合作商</el-tag
+            >
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('passNumber')" align="left" show-overflow-tooltip label="通过数/提交数">
+        <el-table-column
+          v-if="checkList.includes('passNumber')"
+          align="left"
+          show-overflow-tooltip
+          label="通过数/提交数"
+        >
           <template #default="{ row }">
             {{ row.passNumber || 0 }}/
             {{ row.submitNumber || 0 }}
           </template>
         </el-table-column>
-        <ElTableColumn v-if="checkList.includes('passRate')" align="left" show-overflow-tooltip prop="passRate"
-          label="通过率">
+        <ElTableColumn
+          v-if="checkList.includes('passRate')"
+          align="left"
+          show-overflow-tooltip
+          prop="passRate"
+          label="通过率"
+        >
           <template #default="{ row }">
             {{ row.passRate + "%" }}
           </template>
         </ElTableColumn>
-        <ElTableColumn align="left" show-overflow-tooltip prop="" fixed="right" label="操作" width="200">
+        <ElTableColumn
+          align="left"
+          show-overflow-tooltip
+          prop=""
+          fixed="right"
+          label="操作"
+          width="200"
+        >
           <template #default="{ row }">
-            <el-button plain type="primary" size="small" @click="getChildList(row)">
+            <el-button
+              plain
+              type="primary"
+              size="small"
+              @click="getChildList(row)"
+            >
               {{ data.expandedRows.includes(row.id) ? "收起" : "展开" }}
             </el-button>
           </template>
         </ElTableColumn>
         <template #empty>
-            <el-empty :image="empty" :image-size="300" />
+          <el-empty :image="empty" :image-size="300" />
         </template>
       </el-table>
 
-      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
-        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-        background @size-change="sizeChange" @current-change="currentChange" />
+      <ElPagination
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
+        :page-sizes="pagination.sizes"
+        :layout="pagination.layout"
+        :hide-on-single-page="false"
+        class="pagination"
+        background
+        @size-change="sizeChange"
+        @current-change="currentChange"
+      />
     </PageMain>
 
     <questionnaireDetails ref="questionnaireDetailsRef"></questionnaireDetails>
@@ -437,7 +601,7 @@ const formOption={
     padding: 0 !important;
     border: none;
 
-    tbody>tr:nth-last-of-type(1) {
+    tbody > tr:nth-last-of-type(1) {
       td {
         border-bottom: none !important;
       }
