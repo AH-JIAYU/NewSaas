@@ -923,7 +923,7 @@ defineExpose({ showEdit });
         <ElForm label-position="top">
           <el-row :gutter="10">
             <el-col :span="8">
-              <el-form-item label="项目名称">
+              <el-form-item :label="t('projectDetail.projectName')">
                 <el-text v-if="data.projectType === 1" class="text-bg">
                   {{ data.form.name ? data.form.name : "-" }}
                 </el-text>
@@ -933,7 +933,7 @@ defineExpose({ showEdit });
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="项目ID">
+              <el-form-item :label="t('projectDetail.projectID')">
                 <div class="copyId text-bg">
                   <el-text class="">
                     {{ data.form.projectId ? data.form.projectId : "-" }}
@@ -944,7 +944,10 @@ defineExpose({ showEdit });
             </el-col>
 
             <el-col v-if="data.projectType !== 2" :span="8">
-              <el-form-item label="项目标识" prop="client_pid">
+              <el-form-item
+                :label="t('projectDetail.projectIdentification')"
+                prop="client_pid"
+              >
                 <el-text class="text-bg">
                   {{
                     data.form.projectIdentification
@@ -955,14 +958,14 @@ defineExpose({ showEdit });
               </el-form-item>
             </el-col>
             <el-col :span="8" v-if="data.projectType === 1">
-              <el-form-item label="所属客户">
+              <el-form-item :label="t('projectDetail.belong')">
                 <el-text class="text-bg">
                   {{ getcustsmer?.customerAccord }}
                 </el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="所属区域">
+              <el-form-item :label="t('projectDetail.countryIdList')">
                 <el-text class="text-bg">
                   <template
                     v-if="comCountryId(data.form.countryIdList).length > 4"
@@ -987,7 +990,7 @@ defineExpose({ showEdit });
               </el-form-item>
             </el-col>
             <el-col :span="8" v-if="data.projectType === 1">
-              <el-form-item label="项目价">
+              <el-form-item :label="t('projectDetail.projectPrice')">
                 <el-text v-if="data.form.currencyType === 1" class="text-bg">
                   {{
                     data.form.doMoneyPrice ? data.form.doMoneyPrice + "$" : "-"
@@ -1001,14 +1004,14 @@ defineExpose({ showEdit });
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="配额">
+              <el-form-item :label="t('projectDetail.quota')">
                 <el-text class="text-bg">
                   {{ data.form.num ? data.form.num : "-" }}
                 </el-text>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="最小时长">
+              <el-form-item :label="t('projectDetail.minTime')">
                 <el-text class="text-bg">
                   {{
                     data.form.minimumDuration
@@ -1036,7 +1039,7 @@ defineExpose({ showEdit });
                     @click="copyTextToClipboard(data.form.uidUrl)"
                     link
                   >
-                    复制
+                    {{ t("projectDetail.copy") }}
                   </el-button>
                 </el-text>
               </el-form-item>
@@ -1048,7 +1051,7 @@ defineExpose({ showEdit });
         <template #header>
           <div class="card-header font-s18">
             <span style="display: flex; align-items: center">
-              其他设置
+              {{ t("projectDetail.otherSettings") }}
               <span class="title-bg">2</span>
             </span>
           </div>
@@ -1089,8 +1092,12 @@ defineExpose({ showEdit });
             <div
               :class="data.form.isPinned === 1 ? 'text-bg2' : 'text-bgClose'"
             >
-              置顶 :
-              <span>{{ data.form.isPinned === 1 ? "开启" : "关闭" }}</span>
+              {{ t("projectDetail.pinned") }}
+              <span>{{
+                data.form.isPinned === 1
+                  ? t("projectDetail.on")
+                  : t("projectDetail.off")
+              }}</span>
               <img
                 v-if="data.form.isPinned === 1"
                 src="@/assets/images/open.png"
@@ -1106,12 +1113,14 @@ defineExpose({ showEdit });
           <el-col :span="1"></el-col>
           <el-col :span="3.5">
             <div
-              label="在线 :"
+              :label="t('projectDetail.online')"
               :class="data.form.isOnline === 1 ? 'text-bg2' : 'text-bgClose'"
             >
-              在线 :
+              {{ t("projectDetail.online") }}
               <span v-if="data.form.isOnline === 1">{{
-                data.form.isOnline === 1 ? "开启" : "关闭"
+                data.form.isOnline === 1
+                  ? t("projectDetail.on")
+                  : t("projectDetail.off")
               }}</span>
 
               <img
@@ -1131,8 +1140,12 @@ defineExpose({ showEdit });
             <div
               :class="data.form.isProfile === 2 ? 'text-bg2' : 'text-bgClose'"
             >
-              资料 :
-              <span>{{ data.form.isProfile === 2 ? "开启" : "关闭" }}</span>
+              {{ t("projectDetail.profile") }}
+              <span>{{
+                data.form.isProfile === 2
+                  ? t("projectDetail.on")
+                  : t("projectDetail.off")
+              }}</span>
               <img
                 v-if="data.form.isProfile === 2"
                 src="@/assets/images/open.png"
@@ -1155,7 +1168,7 @@ defineExpose({ showEdit });
                 {{
                   data.form.isPinned === 1
                     ? data.form.projectType.join(",")
-                    : "关闭"
+                    : t("projectDetail.off")
                 }}
               </span>
               <img
@@ -1177,9 +1190,11 @@ defineExpose({ showEdit });
                 data.form.isTimeReleases === 2 ? 'text-bg2' : 'text-bgClose'
               "
             >
-              定时发布 :
+              {{ t("projectDetail.scheduledRelease") }}
               <span>{{
-                data.form.isTimeReleases === 2 ? "开启" : "关闭"
+                data.form.isTimeReleases === 2
+                  ? t("projectDetail.on")
+                  : t("projectDetail.off")
               }}</span>
               <img
                 v-if="data.form.isTimeReleases === 2"
@@ -1197,7 +1212,8 @@ defineExpose({ showEdit });
         <el-row>
           <el-col :span="11">
             <div class="text-bg2">
-              备注 : {{ data.form.remark ? data.form.remark : "-" }}
+              {{ t("projectDetail.remark") }}
+              {{ data.form.remark ? data.form.remark : "-" }}
             </div>
           </el-col>
         </el-row>
@@ -1206,12 +1222,14 @@ defineExpose({ showEdit });
         <template #header>
           <div class="peizjo-header">
             <span class="font-s18"
-              >配置信息<span class="title-bg">3</span></span
+              >{{ t("projectDetail.configurationInformation")
+              }}<span class="title-bg">3</span></span
             >
             <span
               style="margin-left: 50px; font-weight: 700; margin-right: 10px"
               v-if="data.form.projectProblemCategoryName"
-              >问卷名称：{{ data.form.projectProblemCategoryName }}</span
+              >{{ t("projectDetail.questionnaireName")
+              }}{{ data.form.projectProblemCategoryName }}</span
             >
             <el-button
               type="primary"
@@ -1295,15 +1313,17 @@ defineExpose({ showEdit });
       <el-card class="box-card">
         <template #header>
           <div class="card-header font-s18">
-            <span>安全信息<span class="title-bg">4</span></span>
+            <span
+              >{{ t("projectDetail.safetyInformation")
+              }}<span class="title-bg">4</span></span
+            >
           </div>
         </template>
         <el-row :gutter="20">
           <el-col :span="4">
             <div class="text-ye">
-              小时准入量 :<span>{{
-                data.form.preNum ? data.form.preNum : "-"
-              }}</span>
+              {{ t("projectDetail.hourlyInflow")
+              }}<span>{{ data.form.preNum ? data.form.preNum : "-" }}</span>
               <img
                 src="@/assets/images/open-ye.png"
                 alt=""
@@ -1314,7 +1334,8 @@ defineExpose({ showEdit });
           <el-col :span="1"></el-col>
           <el-col :span="4">
             <div class="text-bl">
-              小时完成量 :<span>{{
+              {{ t("projectDetail.hourlyCompletion")
+              }}<span>{{
                 data.form.limitedQuantity ? data.form.limitedQuantity : "-"
               }}</span>
               <img
@@ -1333,8 +1354,11 @@ defineExpose({ showEdit });
                   : 'text-bgClose'
               "
             >
-              重复参与:<span>{{
-                data.form.ipDifferenceDetection === 1 ? "开启" : "关闭"
+              {{ t("projectDetail.repeatedParticipation")
+              }}<span>{{
+                data.form.ipDifferenceDetection === 1
+                  ? t("projectDetail.on")
+                  : t("projectDetail.off")
               }}</span>
               <img
                 v-if="data.form.ipDifferenceDetection === 1"
@@ -1384,7 +1408,10 @@ defineExpose({ showEdit });
       <el-card v-if="data.form.descriptionUrl" class="box-card">
         <template #header>
           <div class="card-header font-s18">
-            <span>描述配额<span class="title-bg">5</span></span>
+            <span
+              >{{ t("projectDetail.quotaDescription")
+              }}<span class="title-bg">5</span></span
+            >
           </div>
         </template>
         <template v-if="data.form.descriptionUrl">
@@ -1412,7 +1439,7 @@ defineExpose({ showEdit });
               text
               @click="download(item, index)"
             >
-              {{ item }} 下载
+              {{ item }} {{ t("projectDetail.download") }}
             </el-button>
           </div>
         </template>
@@ -1428,22 +1455,42 @@ defineExpose({ showEdit });
       <el-card class="box-card" v-if="data.projectType === 1">
         <template #header>
           <div class="card-header font-s18">
-            <span>操作日志<span class="title-bg">6</span></span>
+            <span
+              >{{ t("projectDetail.operationLog")
+              }}<span class="title-bg">6</span></span
+            >
           </div>
         </template>
         <el-table
           :data="data.form.projectOperationInfoList"
           style="width: 100%"
         >
-          <el-table-column align="left" type="index" width="80" label="序号" />
-          <el-table-column align="left" prop="operationTime" label="操作时间" />
-          <el-table-column align="left" prop="operationName" label="操作人" />
-          <el-table-column align="left" prop="operationType" label="操作事项">
+          <el-table-column
+            align="left"
+            type="index"
+            width="80"
+            :label="t('projectDetail.serialNumber')"
+          />
+          <el-table-column
+            align="left"
+            prop="operationTime"
+            :label="t('projectDetail.operatingTime')"
+          />
+          <el-table-column
+            align="left"
+            prop="operationName"
+            :label="t('projectDetail.operator')"
+          />
+          <el-table-column
+            align="left"
+            prop="operationType"
+            :label="t('projectDetail.operationalMatters')"
+          >
             <template #default="{ row }">
               {{ operationTypeList[row.operationType - 1] }}
             </template>
           </el-table-column>
-          <el-table-column align="left" label="详情">
+          <el-table-column align="left" :label="t('projectDetail.detail')">
             <template #default="{ row }">
               <el-button
                 type="primary"
@@ -1451,7 +1498,7 @@ defineExpose({ showEdit });
                 @click="details(row)"
                 v-if="row.operationType !== 1"
               >
-                详情
+                {{ t("projectDetail.detail") }}
               </el-button>
               <el-text v-else>-</el-text>
             </template>
@@ -1461,7 +1508,9 @@ defineExpose({ showEdit });
 
       <template #footer>
         <div class="flex-c">
-          <el-button type="primary" @click="closeHandler"> 关闭 </el-button>
+          <el-button type="primary" @click="closeHandler">
+            {{ t("projectDetail.close") }}
+          </el-button>
         </div>
       </template>
     </el-drawer>
