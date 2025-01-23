@@ -657,5 +657,29 @@
     "vipType": "会员类型",
     "CreationStartDate": "创建开始日期",
     "CreationEndDate": "创建结束日期"
+  },
+  "callback": {
+    "export": "导出",
+    "clickID": "点击ID",
+    "vipType": "会员类型",
+    "customerAbbreviation": "客户简称",
+    "vipSubVipId": "子会员ID/会员ID",
+    "projectID": "项目ID",
+    "projectName": "项目名称",
+    "callbackUrl": "回调URL",
+    "subordinateUrl": "下级URL",
+    "source": "客户URL来源",
+    "callbackTime": "回调时间",
+    "callbackStatus": "回调状态",
+    "internalVip": "内部会员",
+    "externalVip": "外部会员",
+    "all": "全部",
+    "success": "成功",
+    "idWrong": "回调id不对",
+    "hashWrong": "加密hash不对",
+    "supplierID": "供应商ID",
+    "startDate": "开始日期",
+    "endDate": "结束日期",
+    "project": "项目"
   }
 }

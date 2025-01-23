@@ -656,5 +656,29 @@
     "vipType": "Vip Type",
     "CreationStartDate": "Creation Start Date",
     "CreationEndDate": "Creation End Date"
+  },
+  "callback": {
+    "export": "Export",
+    "clickID": "Click ID",
+    "vipType": "Vip Type",
+    "customerAbbreviation": "Customer Abbreviation",
+    "vipSubVipId": "Vip ID / Sub VIP ID",
+    "projectID": "Project ID",
+    "projectName": "Project Name",
+    "callbackUrl": "Callback URL",
+    "subordinateUrl": "Subordinate URL",
+    "source": "Customer URL source",
+    "callbackTime": "Callback Time",
+    "callbackStatus": "Callback Status",
+    "internalVip": "Internal Vip",
+    "externalVip": "External Vip",
+    "all": "All",
+    "success": "Success",
+    "idWrong": "The callback id is incorrect",
+    "hashWrong": "The callback hash is incorrect",
+    "supplierID": "Supplier ID",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "project": "Project"
   }
 }

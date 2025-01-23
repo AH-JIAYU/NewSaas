@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 import api from "@/api/modules/record_callback";
-import empty from '@/assets/images/empty.png'
+import empty from "@/assets/images/empty.png";
+import { useI18n } from "vue-i18n";
 defineOptions({
   name: "callback",
 });
 
 const { pagination, getParams, onSizeChange, onCurrentChange } =
   usePagination(); // 分页
+const { t } = useI18n(); // 国际化
 // 时间
-const { format } = useTimeago()
+const { format } = useTimeago();
 const listLoading = ref(false);
 const list = ref<Array<Object>>([]); // 列表
 const selectRows = ref(""); // 表格-选中行
@@ -18,44 +20,89 @@ const border = ref(false); // 表格控件-是否展示边框
 const stripe = ref(false); // 表格控件-是否展示斑马条
 const lineHeight = ref<any>("default"); // 表格控件-控制表格大小
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
-const formSearchList = ref<any>()//表单排序配置
-const formSearchName = ref<string>('formSearch-callback')// 表单排序name
+const formSearchList = ref<any>(); //表单排序配置
+const formSearchName = ref<string>("formSearch-callback"); // 表单排序name
 const columns = ref([
   // 表格控件-展示列
   {
     prop: "projectQuestionnaireClickId",
-    label: "点击ID",
+    label: computed(() => t("callback.clickID")),
     sortable: true,
     checked: true,
   },
-  { label: "会员类型", prop: "surveySource", sortable: true, checked: true },
+  {
+    label: computed(() => t("callback.vipType")),
+    prop: "surveySource",
+    sortable: true,
+    checked: true,
+  },
   {
     prop: "customerShortName",
-    label: "客户简称",
+    label: computed(() => t("callback.customerAbbreviation")),
     sortable: true,
     checked: true,
   },
-  { prop: "memberChildId", label: "子会员ID/会员ID", sortable: true, checked: true },
-  { prop: "projectId", label: "项目ID", sortable: true, checked: true },
-  { prop: "projectName", label: "项目名称", sortable: true, checked: true },
-  { prop: "callbackUrl", label: "回调URL", sortable: true, checked: true },
-  { prop: "subordinateUrl", label: "下级URL", sortable: true, checked: true },
-  { prop: "sourceUrl", label: "客户URL来源", sortable: true, checked: true },
-  { prop: "callbackTime", label: "回调时间", sortable: true, checked: true },
-  { prop: "callbackStatus", label: "回调状态", sortable: true, checked: true },
+  {
+    prop: "memberChildId",
+    label: computed(() => t("callback.vipSubVipId")),
+    sortable: true,
+    checked: true,
+  },
+  {
+    prop: "projectId",
+    label: computed(() => t("callback.projectID")),
+    sortable: true,
+    checked: true,
+  },
+  {
+    prop: "projectName",
+    label: computed(() => t("callback.projectName")),
+    sortable: true,
+    checked: true,
+  },
+  {
+    prop: "callbackUrl",
+    label: computed(() => t("callback.callbackUrl")),
+    sortable: true,
+    checked: true,
+  },
+  {
+    prop: "subordinateUrl",
+    label: computed(() => t("callback.subordinateUrl")),
+    sortable: true,
+    checked: true,
+  },
+  {
+    prop: "sourceUrl",
+    label: computed(() => t("callback.source")),
+    sortable: true,
+    checked: true,
+  },
+  {
+    prop: "callbackTime",
+    label: computed(() => t("callback.callbackTime")),
+    sortable: true,
+    checked: true,
+  },
+  {
+    prop: "callbackStatus",
+    label: computed(() => t("callback.callbackStatus")),
+    sortable: true,
+    checked: true,
+  },
 ]);
 // 会员类型
 const memberType = [
-  { label: "内部会员", value: 1 },
-  { label: "外部会员", value: 2 },
+  { label: computed(() => t("callback.internalVip")), value: 1 },
+  { label: computed(() => t("callback.externalVip")), value: 2 },
 ];
 //回调状态1:成功 2:回调id不对 3:加密hash不对
-type TagType = "success" | "warning" | "info" | "primary"| "danger";
+type TagType = "success" | "warning" | "info" | "primary" | "danger";
 const callbackStatus: { label: string; value: number; type: TagType }[] = [
-  { label: "全部", value: 0, type:"info" },
-  { label: "成功", value: 1, type: "success" },
-  { label: "回调id不对", value: 2, type: "warning" },
-  { label: "加密hash不对", value: 3, type: "danger" },
+  { label: t("callback.all"), value: 0, type: "info" },
+  { label: t("callback.success"), value: 1, type: "success" },
+  { label: t("callback.idWrong"), value: 2, type: "warning" },
+  { label: t("callback.hashWrong"), value: 3, type: "danger" },
 ];
 const queryForm = reactive<any>({
   // 请求接口携带参数
@@ -67,7 +114,7 @@ const queryForm = reactive<any>({
   projectName: "", //	项目名称
   memberChildId: "", //	子会员id/会员id
   tenantSupplierId: "", //	供应商id
-  callbackStatus: 0,//回调状态
+  callbackStatus: 0, //回调状态
 });
 
 // 每页数量切换
@@ -95,13 +142,12 @@ async function fetchData() {
       params.beginTime = queryForm.time[0] || "";
       params.endTime = queryForm.time[1] || "";
     }
-    delete params.time
+    delete params.time;
     const res = await api.list(params);
     list.value = res.data.customerCallbackRecordInfoList;
     pagination.value.total = res.data.total;
     listLoading.value = false;
   } catch (error) {
-
   } finally {
     listLoading.value = false;
   }
@@ -117,7 +163,7 @@ function onReset() {
     projectName: "", //	项目名称
     memberChildId: "", //	子会员id/会员id
     tenantSupplierId: "", //	供应商id
-    callbackStatus: 0,//回调状态
+    callbackStatus: 0, //回调状态
   });
   fetchData();
 }
@@ -133,42 +179,121 @@ onMounted(async () => {
   });
   fetchData();
   formSearchList.value = [
-    { index: 3, show: true, type: 'input', modelName: 'projectQuestionnaireClickId', placeholder: '点击ID' },
-    { index: 1, show: true, type: 'input', modelName: 'tenantSupplierId', placeholder: '供应商ID' },
-    { index: 2, show: true, type: 'input', modelName: 'projectId', placeholder: '项目ID' },
-    { index: 4, show: true, type: 'select', modelName: 'surveySource', placeholder: '会员类型', option: 'surveySource', optionLabel: 'label', optionValue: 'value' },
-    { index: 5, show: true, type: 'input', modelName: 'projectName', placeholder: '项目名称' },
-    { index: 6, show: true, type: 'input', modelName: 'memberChildId', placeholder: '子会员ID/会员ID' },
-    { index: 7, show: true, type: 'select', modelName: 'callbackStatus', placeholder: '回调状态', option: 'callbackStatus', optionLabel: 'label', optionValue: 'value' },
-    { index: 8, show: true, type: 'datetimerange', modelName: 'time', startPlaceHolder: "开始日期", endPlaceHolder: "结束日期" }
-  ]
+    {
+      index: 3,
+      show: true,
+      type: "input",
+      modelName: "projectQuestionnaireClickId",
+      placeholder: computed(() => t("callback.clickID")),
+    },
+    {
+      index: 1,
+      show: true,
+      type: "input",
+      modelName: "tenantSupplierId",
+      placeholder: computed(() => t("callback.supplierID")),
+    },
+    {
+      index: 2,
+      show: true,
+      type: "input",
+      modelName: "projectId",
+      placeholder: computed(() => t("callback.projectID")),
+    },
+    {
+      index: 4,
+      show: true,
+      type: "select",
+      modelName: "surveySource",
+      placeholder: computed(() => t("callback.vipType")),
+      option: "surveySource",
+      optionLabel: "label",
+      optionValue: "value",
+    },
+    {
+      index: 5,
+      show: true,
+      type: "input",
+      modelName: "projectName",
+      placeholder: computed(() => t("callback.projectName")),
+    },
+    {
+      index: 6,
+      show: true,
+      type: "input",
+      modelName: "memberChildId",
+      placeholder: computed(() => t("callback.vipSubVipId")),
+    },
+    {
+      index: 7,
+      show: true,
+      type: "select",
+      modelName: "callbackStatus",
+      placeholder: computed(() => t("callback.callbackStatus")),
+      option: "callbackStatus",
+      optionLabel: "label",
+      optionValue: "value",
+    },
+    {
+      index: 8,
+      show: true,
+      type: "datetimerange",
+      modelName: "time",
+      startPlaceHolder: computed(() => t("callback.startDate")),
+      endPlaceHolder: computed(() => t("callback.endDate")),
+    },
+  ];
 });
 const formOption = {
   surveySource: () => memberType,
   callbackStatus: () => callbackStatus,
-}
+};
 </script>
 
 <template>
   <div :class="{ 'absolute-container': tableAutoHeight }">
     <PageMain>
-      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange"
-        @onReset="onReset" :model="queryForm" :formOption="formOption" />
+      <FormSearch
+        :formSearchList="formSearchList"
+        :formSearchName="formSearchName"
+        @currentChange="currentChange"
+        @onReset="onReset"
+        :model="queryForm"
+        :formOption="formOption"
+      />
       <ElDivider border-style="dashed" />
       <el-row>
         <FormLeftPanel />
         <FormRightPanel>
-          <el-button size="default"> 导出 </el-button>
-          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
-            v-model:columns="columns" v-model:line-height="lineHeight" v-model:stripe="stripe" style="margin-left: 12px"
-            @query-data="queryData" />
+          <el-button size="default"> {{ t("callback.export") }} </el-button>
+          <TabelControl
+            v-model:border="border"
+            v-model:tableAutoHeight="tableAutoHeight"
+            v-model:checkList="checkList"
+            v-model:columns="columns"
+            v-model:line-height="lineHeight"
+            v-model:stripe="stripe"
+            style="margin-left: 12px"
+            @query-data="queryData"
+          />
         </FormRightPanel>
       </el-row>
-      <el-table v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="stripe"
-        @selection-change="setSelectRows">
+      <el-table
+        v-loading="listLoading"
+        :border="border"
+        :data="list"
+        :size="lineHeight"
+        :stripe="stripe"
+        @selection-change="setSelectRows"
+      >
         <!-- <el-table-column align="left" type="selection" /> -->
-        <el-table-column v-if="checkList.includes('projectQuestionnaireClickId')" align="left"
-          prop="projectQuestionnaireClickId" show-overflow-tooltip label="点击ID">
+        <el-table-column
+          v-if="checkList.includes('projectQuestionnaireClickId')"
+          align="left"
+          prop="projectQuestionnaireClickId"
+          show-overflow-tooltip
+          :label="t('callback.clickID')"
+        >
           <template #default="{ row }">
             {{
               row.projectQuestionnaireClickId
@@ -177,42 +302,77 @@ const formOption = {
             }}
           </template>
         </el-table-column>
-        <el-table-column label="项目" width="300" align="center">
+        <el-table-column
+          :label="t('callback.project')"
+          width="300"
+          align="center"
+        >
           <template #default="{ row }">
             {{ row.customerShortName }} <br />
             {{ row.projectName }} <br />
             {{ row.projectId }}
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('memberChildId')" align="center" show-overflow-tooltip
-          label="子会员ID/会员ID">
+        <el-table-column
+          v-if="checkList.includes('memberChildId')"
+          align="center"
+          show-overflow-tooltip
+          :label="t('callback.vipSubVipId')"
+        >
           <template #default="{ row }">
             <p>{{ memberType[row.surveySource - 1].label }}</p>
             {{ row.memberChildId }} <br />
             {{ row.randomIdentityId }}
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('callbackUrl')" align="left" prop="callbackUrl" label="回调URL" />
-        <el-table-column v-if="checkList.includes('subordinateUrl')" align="left" prop="subordinateUrl"
-          label="下级URL"><template #default="{ row }">
-            {{ row.subordinateUrl ? row.subordinateUrl : '-' }}
+        <el-table-column
+          v-if="checkList.includes('callbackUrl')"
+          align="left"
+          prop="callbackUrl"
+          :label="t('callback.callbackUrl')"
+        />
+        <el-table-column
+          v-if="checkList.includes('subordinateUrl')"
+          align="left"
+          prop="subordinateUrl"
+          :label="t('callback.subordinateUrl')"
+          ><template #default="{ row }">
+            {{ row.subordinateUrl ? row.subordinateUrl : "-" }}
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('sourceUrl')" align="left" prop="sourceUrl" label="客户URL来源"><template
-            #default="{ row }">
-            {{ row.sourceUrl ? row.sourceUrl : '-' }}
+        <el-table-column
+          v-if="checkList.includes('sourceUrl')"
+          align="left"
+          prop="sourceUrl"
+          :label="t('callback.source')"
+          ><template #default="{ row }">
+            {{ row.sourceUrl ? row.sourceUrl : "-" }}
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('callbackTime')" align="left" prop="callbackTime"
-          show-overflow-tooltip label="回调时间"><template #default="{ row }">
-            <el-tag effect="plain" type="info">{{ format(row.callbackTime) }}</el-tag>
+        <el-table-column
+          v-if="checkList.includes('callbackTime')"
+          align="left"
+          prop="callbackTime"
+          show-overflow-tooltip
+          :label="t('callback.callbackTime')"
+          ><template #default="{ row }">
+            <el-tag effect="plain" type="info">{{
+              format(row.callbackTime)
+            }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('callbackStatus')" align="left" prop="callbackStatus"
-          show-overflow-tooltip label="回调状态">
+        <el-table-column
+          v-if="checkList.includes('callbackStatus')"
+          align="left"
+          prop="callbackStatus"
+          show-overflow-tooltip
+          :label="t('callback.callbackStatus')"
+        >
           <template #default="{ row }">
-            <el-tag v-if="row.callbackStatus && callbackStatus[row.callbackStatus]"
-              :type="callbackStatus[row.callbackStatus].type">
+            <el-tag
+              v-if="row.callbackStatus && callbackStatus[row.callbackStatus]"
+              :type="callbackStatus[row.callbackStatus].type"
+            >
               {{ callbackStatus[row.callbackStatus].label }}
             </el-tag>
           </template>
@@ -221,9 +381,18 @@ const formOption = {
           <el-empty :image="empty" :image-size="300" />
         </template>
       </el-table>
-      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
-        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-        background @size-change="sizeChange" @current-change="currentChange" />
+      <ElPagination
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
+        :page-sizes="pagination.sizes"
+        :layout="pagination.layout"
+        :hide-on-single-page="false"
+        class="pagination"
+        background
+        @size-change="sizeChange"
+        @current-change="currentChange"
+      />
     </PageMain>
   </div>
 </template>

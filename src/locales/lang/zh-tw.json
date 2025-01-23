@@ -657,5 +657,29 @@
     "vipType": "會員類型",
     "CreationStartDate": "建立開始日期",
     "CreationEndDate": "建立結束日期"
+  },
+  "callback": {
+    "export": "匯出",
+    "clickID": "點擊ID",
+    "vipType": "會員類型",
+    "customerAbbreviation": "客戶簡稱",
+    "vipSubVipId": "子會員ID/會員ID",
+    "projectID": "專案ID",
+    "projectName": "項目名稱",
+    "callbackUrl": "回調URL",
+    "subordinateUrl": "下級URL",
+    "source": "客戶URL來源",
+    "callbackTime": "回調時間",
+    "callbackStatus": "回呼狀態",
+    "internalVip": "內部會員",
+    "externalVip": "外部會員",
+    "all": "全部",
+    "success": "成功",
+    "idWrong": "回調id不對",
+    "hashWrong": "加密hash不對",
+    "supplierID": "供應商ID",
+    "startDate": "開始日期",
+    "endDate": "結束日期",
+    "project": "專案"
   }
 }
