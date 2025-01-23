@@ -5,10 +5,13 @@ import Edit from "./components/Edit/index.vue";
 import Detail from "./components/Detail/index.vue";
 import api from "@/api/modules/alter";
 import apiUser from "@/api/modules/configuration_manager";
-import empty from '@/assets/images/empty.png'
+import empty from "@/assets/images/empty.png";
+import { useI18n } from "vue-i18n";
 defineOptions({
   name: "alter",
 });
+// 国际化
+const { t } = useI18n();
 // 时间
 const { format } = useTimeago();
 // 分页
@@ -31,23 +34,53 @@ const isFullscreen = ref(false);
 const lineHeight = ref<any>("default");
 const stripe = ref(false);
 const selectRows = ref<any>([]);
-const formSearchList = ref<any>()//表单排序配置
-const formSearchName = ref<string>('formSearch-alter')// 表单排序name
+const formSearchList = ref<any>(); //表单排序配置
+const formSearchName = ref<string>("formSearch-alter"); // 表单排序name
 const statusType = [
-  { label: "完成", value: "1,0" },
-  { label: "审核通过", value: "1,7" },
-  { label: "审核失败", value: "1,8" },
-  { label: "数据冻结", value: "1,9" },
-  { label: "被甄别", value: "2,null" },
-  { label: "配额满", value: "3,null" },
+  { label: computed(() => t("alter.complete")), value: "1,0" },
+  { label: computed(() => t("alter.passTheAudit")), value: "1,7" },
+  { label: computed(() => t("alter.auditFailure")), value: "1,8" },
+  { label: computed(() => t("alter.dataFreezing")), value: "1,9" },
+  { label: computed(() => t("alter.beScreened")), value: "2,null" },
+  { label: computed(() => t("alter.quotaReached")), value: "3,null" },
 ];
 const columns = ref<any>([
-  { prop: "projectClickId", label: "点击ID", sortable: true, checked: true },
-  { prop: "beforeType", label: "变更前", sortable: true, checked: true },
-  { prop: "afterType", label: "变更后", sortable: true, checked: true },
-  { prop: "createTime", label: "创建时间", sortable: true, checked: true },
-  { prop: "remark", label: "备注", sortable: true, checked: true },
-  { prop: "createUserId", label: "操作人", sortable: true, checked: true },
+  {
+    prop: "projectClickId",
+    label: computed(() => t("alter.clickID")),
+    sortable: true,
+    checked: true,
+  },
+  {
+    prop: "beforeType",
+    label: computed(() => t("alter.beforeChange")),
+    sortable: true,
+    checked: true,
+  },
+  {
+    prop: "afterType",
+    label: computed(() => t("alter.afterChange")),
+    sortable: true,
+    checked: true,
+  },
+  {
+    prop: "createTime",
+    label: computed(() => t("alter.createTime")),
+    sortable: true,
+    checked: true,
+  },
+  {
+    prop: "remark",
+    label: computed(() => t("alter.remark")),
+    sortable: true,
+    checked: true,
+  },
+  {
+    prop: "createUserId",
+    label: computed(() => t("alter.operator")),
+    sortable: true,
+    checked: true,
+  },
 ]);
 // 查询参数
 const queryForm = reactive<any>({
@@ -110,16 +143,15 @@ async function fetchData() {
   try {
     listLoading.value = true;
     if (queryForm.type) {
-      const type = queryForm.type.split(',')
-      queryForm.surveyType = type[0]
-      queryForm.viceType = type[1]
+      const type = queryForm.type.split(",");
+      queryForm.surveyType = type[0];
+      queryForm.viceType = type[1];
     }
     const { data } = await api.list(queryForm);
     list.value = data.tenantUpdateRecordVOBuilders;
     pagination.value.total = +data.total;
     listLoading.value = false;
   } catch (error) {
-
   } finally {
     listLoading.value = false;
   }
@@ -134,15 +166,29 @@ onMounted(async () => {
   });
   fetchData();
   formSearchList.value = [
-    { index: 1, show: true, type: 'input', modelName: 'createUserName', placeholder: '操作人' },
     {
-      index: 2, show: true, type: 'select', modelName: 'type', placeholder: '变更状态', option: 'type', optionLabel: 'label', optionValue: 'value'
+      index: 1,
+      show: true,
+      type: "input",
+      modelName: "createUserName",
+      placeholder: computed(() => t("alter.operator")),
+    },
+    {
+      index: 2,
+      show: true,
+      type: "select",
+      modelName: "type",
+      placeholder: computed(() => t("alter.changeStatus")),
+      option: "type",
+      optionLabel: "label",
+      optionValue: "value",
     },
   ];
 });
 const formOption = {
-  type: () => statusType.map((item: any) => ({ label: item.label, value: item.value }))
-}
+  type: () =>
+    statusType.map((item: any) => ({ label: item.label, value: item.value })),
+};
 const current = ref<any>(); //表格当前选中
 
 function handleCurrentChange(val: any) {
@@ -152,97 +198,224 @@ function handleCurrentChange(val: any) {
 </script>
 
 <template>
-  <div v-loading="listLoading" :class="{
-    'absolute-container': tableAutoHeight,
-  }">
+  <div
+    v-loading="listLoading"
+    :class="{
+      'absolute-container': tableAutoHeight,
+    }"
+  >
     <PageMain>
-      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange"
-        @onReset="onReset" :model="queryForm" :formOption="formOption" />
+      <FormSearch
+        :formSearchList="formSearchList"
+        :formSearchName="formSearchName"
+        @currentChange="currentChange"
+        @onReset="onReset"
+        :model="queryForm"
+        :formOption="formOption"
+      />
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>
-          <el-button style="margin-right: 10px" type="primary" size="default" @click="addData"  v-auth="'alter-update-updateTenantUpdateRecord'">
-            新增
+          <el-button
+            style="margin-right: 10px"
+            type="primary"
+            size="default"
+            @click="addData"
+            v-auth="'alter-update-updateTenantUpdateRecord'"
+          >
+            {{ t("alter.new") }}
           </el-button>
         </FormLeftPanel>
 
         <FormRightPanel>
-          <el-button size="default" @click=""> 导出 </el-button>
-          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
-            v-model:columns="columns" v-model:line-height="lineHeight" v-model:stripe="stripe" style="margin-left: 12px"
-            @query-data="currentChange" />
+          <el-button size="default" @click="">
+            {{ t("alter.export") }}
+          </el-button>
+          <TabelControl
+            v-model:border="border"
+            v-model:tableAutoHeight="tableAutoHeight"
+            v-model:checkList="checkList"
+            v-model:columns="columns"
+            v-model:line-height="lineHeight"
+            v-model:stripe="stripe"
+            style="margin-left: 12px"
+            @query-data="currentChange"
+          />
         </FormRightPanel>
       </el-row>
-      <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="id" :data="list"
-        :border="border" :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows"           highlight-current-row  @current-change="handleCurrentChange">
+      <el-table
+        ref="tableSortRef"
+        v-loading="listLoading"
+        style="margin-top: 10px"
+        row-key="id"
+        :data="list"
+        :border="border"
+        :size="lineHeight"
+        :stripe="stripe"
+        @selection-change="setSelectRows"
+        highlight-current-row
+        @current-change="handleCurrentChange"
+      >
         <!-- <el-table-column align="left" type="selection" /> -->
         <!-- <el-table-column type="index" align="left" label="序号" width="55" /> -->
-        <el-table-column v-if="checkList.includes('projectClickId')" prop="projectClickId" show-overflow-tooltip
-          align="left" label="点击ID" >
-
-
+        <el-table-column
+          v-if="checkList.includes('projectClickId')"
+          prop="projectClickId"
+          show-overflow-tooltip
+          align="left"
+          :label="t('alter.clickID')"
+        >
           <template #default="{ row }">
-                <div class="copyId tableSmall">
-                  <div class="id oneLine projectId">{{ row.projectClickId }}</div>
-                  <copy
-                    :content="row.projectClickId"
-                    :class="{
-                      rowCopy: 'rowCopy',
-                      current: row.id === current,
-                    }"
-                  />
-                </div>
-              </template>
-        </el-table-column>
-
-        <el-table-column v-if="checkList.includes('beforeType')" prop="beforeType" show-overflow-tooltip align="left"
-          label="变更前">
-          <template #default="{ row }">
-            <el-text type="info" v-if="row.beforeSurveyType === 5 && row.beforeViceType === 0"
-              class="mx-1">未完成</el-text>
-            <el-text type="success" v-if="row.beforeSurveyType === 1 && row.beforeViceType === 0"
-              class="mx-1">完成</el-text>
-            <el-text type="success" v-if="row.beforeSurveyType === 1 && row.beforeViceType === 7"
-              class="mx-1">审核通过</el-text>
-            <el-text type="danger" v-if="row.beforeSurveyType === 1 && row.beforeViceType === 8"
-              class="mx-1">审核失败</el-text>
-            <el-text v-if="row.beforeSurveyType === 1 && row.beforeViceType === 9" class="mx-1">数据冻结</el-text>
-            <el-text type="warning" v-if="row.beforeSurveyType === 2" class="mx-1">被甄别</el-text>
-            <el-text type="primary" v-if="row.beforeSurveyType === 3" class="mx-1">配额满</el-text>
-            <el-text type="success" v-if="row.beforeViceType === 13" class="mx-1">和解</el-text>
+            <div class="copyId tableSmall">
+              <div class="id oneLine projectId">{{ row.projectClickId }}</div>
+              <copy
+                :content="row.projectClickId"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.id === current,
+                }"
+              />
+            </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('afterType')" prop="afterType" show-overflow-tooltip align="left"
-          label="变更后">
+
+        <el-table-column
+          v-if="checkList.includes('beforeType')"
+          prop="beforeType"
+          show-overflow-tooltip
+          align="left"
+          :label="t('alter.beforeChange')"
+        >
           <template #default="{ row }">
-            <el-text type="success" v-if="row.afterSurveyType === 1 && row.afterViceType === 0"
-              class="mx-1">完成</el-text>
-            <el-text type="success" v-if="row.afterSurveyType === 1 && row.afterViceType === 7"
-              class="mx-1">审核通过</el-text>
-            <el-text type="danger" v-if="row.afterSurveyType === 1 && row.afterViceType === 8"
-              class="mx-1">审核失败</el-text>
-            <el-text v-if="row.afterSurveyType === 1 && row.afterViceType === 9" class="mx-1">数据冻结</el-text>
-            <el-text type="warning" v-if="row.afterSurveyType === 2" class="mx-1">被甄别</el-text>
-            <el-text type="primary" v-if="row.afterSurveyType === 3" class="mx-1">配额满</el-text>
+            <el-text
+              type="info"
+              v-if="row.beforeSurveyType === 5 && row.beforeViceType === 0"
+              class="mx-1"
+              >{{ t("alter.uncompleted") }}</el-text
+            >
+            <el-text
+              type="success"
+              v-if="row.beforeSurveyType === 1 && row.beforeViceType === 0"
+              class="mx-1"
+              >{{ t("alter.complete") }}</el-text
+            >
+            <el-text
+              type="success"
+              v-if="row.beforeSurveyType === 1 && row.beforeViceType === 7"
+              class="mx-1"
+              >{{ t("alter.passTheAudit") }}</el-text
+            >
+            <el-text
+              type="danger"
+              v-if="row.beforeSurveyType === 1 && row.beforeViceType === 8"
+              class="mx-1"
+              >{{ t("alter.auditFailure") }}</el-text
+            >
+            <el-text
+              v-if="row.beforeSurveyType === 1 && row.beforeViceType === 9"
+              class="mx-1"
+              >{{ t("alter.dataFreezing") }}</el-text
+            >
+            <el-text
+              type="warning"
+              v-if="row.beforeSurveyType === 2"
+              class="mx-1"
+              >{{ t("alter.beScreened") }}</el-text
+            >
+            <el-text
+              type="primary"
+              v-if="row.beforeSurveyType === 3"
+              class="mx-1"
+              >{{ t("alter.quotaReached") }}</el-text
+            >
+            <el-text
+              type="success"
+              v-if="row.beforeViceType === 13"
+              class="mx-1"
+              >{{ t("alter.reconciliation") }}</el-text
+            >
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('createTime')" prop="createTime" show-overflow-tooltip align="left"
-          label="创建时间"><template #default="{ row }">
+        <el-table-column
+          v-if="checkList.includes('afterType')"
+          prop="afterType"
+          show-overflow-tooltip
+          align="left"
+          :label="t('alter.afterChange')"
+        >
+          <template #default="{ row }">
+            <el-text
+              type="success"
+              v-if="row.afterSurveyType === 1 && row.afterViceType === 0"
+              class="mx-1"
+              >{{ t("alter.complete") }}</el-text
+            >
+            <el-text
+              type="success"
+              v-if="row.afterSurveyType === 1 && row.afterViceType === 7"
+              class="mx-1"
+              >{{ t("alter.passTheAudit") }}</el-text
+            >
+            <el-text
+              type="danger"
+              v-if="row.afterSurveyType === 1 && row.afterViceType === 8"
+              class="mx-1"
+              >{{ t("alter.auditFailure") }}</el-text
+            >
+            <el-text
+              v-if="row.afterSurveyType === 1 && row.afterViceType === 9"
+              class="mx-1"
+              >{{ t("alter.dataFreezing") }}</el-text
+            >
+            <el-text
+              type="warning"
+              v-if="row.afterSurveyType === 2"
+              class="mx-1"
+              >{{ t("alter.beScreened") }}</el-text
+            >
+            <el-text
+              type="primary"
+              v-if="row.afterSurveyType === 3"
+              class="mx-1"
+              >{{ t("alter.quotaReached") }}</el-text
+            >
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="checkList.includes('createTime')"
+          prop="createTime"
+          show-overflow-tooltip
+          align="left"
+          :label="t('alter.createTime')"
+          ><template #default="{ row }">
             <el-tooltip :content="row.createTime" placement="top">
-              <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>
+              <el-tag effect="plain" type="info">{{
+                format(row.createTime)
+              }}</el-tag>
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('remark')" prop="remark" show-overflow-tooltip align="left"
-          label="备注"><template #default="{ row }">
+        <el-table-column
+          v-if="checkList.includes('remark')"
+          prop="remark"
+          show-overflow-tooltip
+          align="left"
+          :label="t('alter.remark')"
+          ><template #default="{ row }">
             {{ row.remark ? row.remark : "-" }}
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('createUserId')" prop="createUserId" show-overflow-tooltip
-          align="left" label="操作人"><template #default="{ row }">
+        <el-table-column
+          v-if="checkList.includes('createUserId')"
+          prop="createUserId"
+          show-overflow-tooltip
+          align="left"
+          :label="t('alter.operator')"
+          ><template #default="{ row }">
             <div v-for="item in userList" :key="item.id">
               <el-text v-if="item.id === row.createUserId">
-                {{ item.userName }}</el-text>
+                {{ item.userName }}</el-text
+              >
             </div>
           </template>
         </el-table-column>
@@ -262,9 +435,18 @@ function handleCurrentChange(val: any) {
           <el-empty :image="empty" :image-size="300" />
         </template>
       </el-table>
-      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
-        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-        background @size-change="sizeChange" @current-change="currentChange" />
+      <ElPagination
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
+        :page-sizes="pagination.sizes"
+        :layout="pagination.layout"
+        :hide-on-single-page="false"
+        class="pagination"
+        background
+        @size-change="sizeChange"
+        @current-change="currentChange"
+      />
       <Edit @success="fetchData" ref="editRef" />
       <Detail ref="detailRef" />
     </PageMain>
