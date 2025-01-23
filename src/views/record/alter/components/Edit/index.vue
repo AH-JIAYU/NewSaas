@@ -3,10 +3,13 @@ import { ref } from "vue";
 import { ElMessage } from "element-plus";
 import type { FormInstance, FormRules } from "element-plus";
 import api from "@/api/modules/alter";
+import { useI18n } from "vue-i18n";
 
 defineOptions({
   name: "ProjectReview",
 });
+// 国际化
+const { t } = useI18n();
 // 更新数据
 const emits = defineEmits(["success"]);
 // loading
@@ -43,16 +46,22 @@ const validateNumberInput = (rule: any, value: any, callback: any) => {
   // 使用正则表达式检查输入是否为数字和换行符
   const regex = /^[\d\n]*$/;
   if (!regex.test(value)) {
-    callback(new Error("请输入数字，支持换行"));
+    callback(new Error(t("recordChange.numEnter")));
   } else {
     callback();
   }
 };
 // 校验
 const formRules = ref<FormRules>({
-  type: [{ required: true, message: "请选择审核方式", trigger: "change" }],
+  type: [
+    {
+      required: true,
+      message: t("recordChange.chooseType"),
+      trigger: "change",
+    },
+  ],
   arr: [
-    { required: true, message: "请输入至少一个ID", trigger: "blur" },
+    { required: true, message: t("recordChange.idEnter"), trigger: "blur" },
     {
       validator: validateNumberInput,
       trigger: "blur",
@@ -93,14 +102,14 @@ async function onSubmit() {
             loading.value = false;
             // 提示成功
             ElMessage.success({
-              message: "操作成功",
+              message: t("recordChange.success"),
               center: true,
             });
             // 执行关闭弹框事件
             closeHandler();
           } else {
             ElMessage.error({
-              message: "操作失败，请联系工作人员",
+              message: t("recordChange.failure"),
               center: true,
             });
           }
@@ -110,7 +119,7 @@ async function onSubmit() {
         }
       } else {
         ElMessage({
-          message: "请检查必填项,或数据格式不正确",
+          message: t("recordChange.check"),
           type: "warning",
         });
       }
@@ -140,36 +149,77 @@ defineExpose({ showEdit });
 
 <template>
   <div>
-    <el-drawer v-model="dialogTableVisible" title="记录变更" size="50%" :before-close="closeHandler">
-      <el-form ref="formRef" :model="formData" :rules="formRules" label-width="174px" :inline="false"
-        v-loading="loading">
+    <el-drawer
+      v-model="dialogTableVisible"
+      :title="t('recordChange.recordChange')"
+      size="50%"
+      :before-close="closeHandler"
+    >
+      <el-form
+        ref="formRef"
+        :model="formData"
+        :rules="formRules"
+        label-width="174px"
+        :inline="false"
+        v-loading="loading"
+      >
         <div class="shenhe">
-          <el-form-item prop="type" style="display: flex; align-items: center" label="变更状态">
+          <el-form-item
+            prop="type"
+            style="display: flex; align-items: center"
+            :label="t('recordChange.changeStatus')"
+          >
             <el-radio-group v-model="formData.type">
-              <el-radio value="1,0" size="large"> 完成 </el-radio>
-              <el-radio value="1,7" size="large"> 审核通过 </el-radio>
-              <el-radio value="1,8" size="large"> 审核失败 </el-radio>
-              <el-radio value="1,9" size="large"> 数据冻结 </el-radio>
-              <el-radio value="2,null" size="large"> 被甄别 </el-radio>
-              <el-radio value="3,null" size="large"> 配额满 </el-radio>
+              <el-radio value="1,0" size="large">
+                {{ t("recordChange.complete") }}
+              </el-radio>
+              <el-radio value="1,7" size="large">
+                {{ t("recordChange.passTheAudit") }}
+              </el-radio>
+              <el-radio value="1,8" size="large">
+                {{ t("recordChange.auditFailure") }}
+              </el-radio>
+              <el-radio value="1,9" size="large">
+                {{ t("recordChange.dataFreezing") }}
+              </el-radio>
+              <el-radio value="2,null" size="large">
+                {{ t("recordChange.beScreened") }}
+              </el-radio>
+              <el-radio value="3,null" size="large">
+                {{ t("recordChange.quotaReached") }}
+              </el-radio>
             </el-radio-group>
           </el-form-item>
         </div>
         <div class="beizhu">
-          <el-form-item label="备注">
-            <el-input class="custom-input" v-model="formData.remark" placeholder="" clearable />
+          <el-form-item :label="t('recordChange.remark')">
+            <el-input
+              class="custom-input"
+              v-model="formData.remark"
+              placeholder=""
+              clearable
+            />
           </el-form-item>
         </div>
         <div style="margin-top: 10px">
           <el-form-item prop="arr">
-            <el-input v-model="formData.arr" placeholder="请粘贴ID，每行一个,多个请回车换行" type="textarea" :rows="15" />
+            <el-input
+              v-model="formData.arr"
+              :placeholder="t('recordChange.paste')"
+              type="textarea"
+              :rows="15"
+            />
           </el-form-item>
         </div>
       </el-form>
       <template #footer>
         <div class="flex-c">
-          <el-button @click="dialogTableVisible = false"> 取消 </el-button>
-          <el-button type="primary" @click="onSubmit"> 确定 </el-button>
+          <el-button @click="dialogTableVisible = false">
+            {{ t("recordChange.cancel") }}
+          </el-button>
+          <el-button type="primary" @click="onSubmit">
+            {{ t("recordChange.confirm") }}
+          </el-button>
         </div>
       </template>
     </el-drawer>

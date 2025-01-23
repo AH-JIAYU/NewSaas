@@ -412,14 +412,14 @@ const formOption = {
           align="left"
           prop="projectId"
           show-overflow-tooltip
-          label="项目ID"
+          :label="t('preRecords.projectID')"
         />
         <el-table-column
           v-if="checkList.includes('projectName')"
           align="left"
           prop="projectName"
           show-overflow-tooltip
-          label="项目名称"
+          :label="t('preRecords.projectName')"
         >
           <template #default="{ row }">
             <div class="tableBig">
@@ -433,7 +433,7 @@ const formOption = {
           align="left"
           show-overflow-tooltip
           width="100"
-          label="分配类型"
+          :label="t('preRecords.allocationType')"
         >
           <template #default="{ row }">
             <!-- <el-button  size="small" v-if="row.allocationType === 3" type="primary" class="tableBut">会员组</el-button>
@@ -445,7 +445,7 @@ const formOption = {
               type="info"
               v-if="row.allocationType === 1"
               class="mx-1"
-              >未分配</el-tag
+              >{{ t("preRecords.undistributed") }}</el-tag
             >
             <el-tag
               effect="dark"
@@ -453,7 +453,7 @@ const formOption = {
               v-if="row.allocationType === 2"
               class="mx-1"
               type="primary"
-              >供应商</el-tag
+              >{{ t("preRecords.supplier") }}</el-tag
             >
             <el-tag
               effect="dark"
@@ -461,7 +461,7 @@ const formOption = {
               v-if="row.allocationType === 3"
               class="mx-1"
               type="warning"
-              >内部站</el-tag
+              >{{ t("preRecords.internalStation") }}</el-tag
             >
             <el-tag
               effect="dark"
@@ -469,7 +469,7 @@ const formOption = {
               v-if="row.allocationType === 4"
               class="mx-1"
               type="warning"
-              >合作商</el-tag
+              >{{ t("preRecords.partner") }}</el-tag
             >
           </template>
         </el-table-column>
@@ -477,7 +477,7 @@ const formOption = {
           v-if="checkList.includes('passNumber')"
           align="left"
           show-overflow-tooltip
-          label="通过数/提交数"
+          :label="t('preRecords.allocationType')"
         >
           <template #default="{ row }">
             {{ row.passNumber || 0 }}/
@@ -489,7 +489,7 @@ const formOption = {
           align="left"
           show-overflow-tooltip
           prop="passRate"
-          label="通过率"
+          :label="t('preRecords.throughRate')"
         >
           <template #default="{ row }">
             {{ row.passRate + "%" }}
@@ -500,7 +500,7 @@ const formOption = {
           show-overflow-tooltip
           prop=""
           fixed="right"
-          label="操作"
+          :label="t('preRecords.control')"
           width="200"
         >
           <template #default="{ row }">

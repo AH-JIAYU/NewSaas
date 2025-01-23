@@ -26,40 +26,65 @@ const formSearchList = ref<any>(); //表单排序配置
 const formSearchName = ref<string>("formSearch-termination"); // 表单排序name
 const columns = ref([
   // 表格控件-展示列
-  { label: "会员", prop: "surveySource", sortable: true, checked: true },
   {
-    label: "会员ID",
+    label: computed(() => t("termination.vip")),
+    prop: "surveySource",
+    sortable: true,
+    checked: true,
+  },
+  {
+    label: computed(() => t("termination.vipID")),
     prop: "memberChildId",
     sortable: true,
     checked: true,
   },
   {
-    label: "子会员ID",
+    label: computed(() => t("termination.subVipId")),
     prop: "supplierMemberChildId",
     sortable: true,
     checked: true,
   },
   {
-    label: "供应商ID",
+    label: computed(() => t("termination.supplierID")),
     prop: "tenantSupplierId",
     sortable: true,
     checked: true,
   },
-  { label: "项目ID", prop: "projectId", sortable: true, checked: true },
   {
-    label: "项目名称",
+    label: computed(() => t("termination.projectID")),
+    prop: "projectId",
+    sortable: true,
+    checked: true,
+  },
+  {
+    label: computed(() => t("termination.projectName")),
     prop: "projectName",
     sortable: true,
     checked: true,
   },
-  { label: "IP/所属国", prop: "ipBelong", sortable: true, checked: true },
-  { label: "说明", prop: "notes", sortable: true, checked: true },
-  { label: "终止时间", prop: "terminationTime", sortable: true, checked: true },
+  {
+    label: computed(() => t("termination.ipCountry")),
+    prop: "ipBelong",
+    sortable: true,
+    checked: true,
+  },
+  {
+    label: computed(() => t("termination.instructions")),
+    prop: "notes",
+    sortable: true,
+    checked: true,
+  },
+  {
+    label: computed(() => t("termination.endTime")),
+    prop: "terminationTime",
+    sortable: true,
+    checked: true,
+  },
 ]);
 // 会员类型
 const memberType = [
-  { label: "内部会员", value: 1 },
-  { label: "外部会员", value: 2 },
+  { label: computed(() => t("termination.internalVip")), value: 1 },
+  { label: computed(() => t("termination.externalVip")), value: 2 },
 ];
 const queryForm = ref<any>({
   // 请求接口携带参数
@@ -100,7 +125,7 @@ async function fetchData() {
       params.beginTime = queryForm.value.time[0] || "";
       params.endTime = queryForm.value.time[1] || "";
     }
-    delete params.time
+    delete params.time;
     const res = await api.list(params);
     list.value = res.data.projectTerminationScreenDetailInfoList;
     pagination.value.total = res.data.total;
@@ -141,21 +166,21 @@ onMounted(() => {
       show: true,
       type: "input",
       modelName: "tenantSupplierId",
-      placeholder: "供应商ID",
+      placeholder: computed(() => t("termination.supplierID")),
     },
     {
       index: 2,
       show: true,
       type: "input",
       modelName: "projectId",
-      placeholder: "项目ID",
+      placeholder: computed(() => t("termination.projectID")),
     },
     {
       index: 3,
       show: true,
       type: "select",
       modelName: "surveySource",
-      placeholder: "会员类型",
+      placeholder: computed(() => t("termination.vipType")),
       option: "surveySource",
       optionLabel: "label",
       optionValue: "value",
@@ -165,22 +190,22 @@ onMounted(() => {
       show: true,
       type: "input",
       modelName: "projectName",
-      placeholder: "项目名称",
+      placeholder: computed(() => t("termination.projectName")),
     },
     {
       index: 5,
       show: true,
       type: "input",
       modelName: "ipBelong",
-      placeholder: "IP/所属国",
+      placeholder: computed(() => t("termination.ipCountry")),
     },
     {
       index: 6,
       show: true,
       type: "datetimerange",
       modelName: "time",
-      startPlaceHolder: "创建开始日期",
-      endPlaceHolder: "创建结束日期",
+      startPlaceHolder: computed(() => t("termination.CreationStartDate")),
+      endPlaceHolder: computed(() => t("termination.CreationEndDate")),
     },
   ];
 });
@@ -210,7 +235,7 @@ function handleCurrentChange(val: any) {
       <el-row>
         <FormLeftPanel />
         <FormRightPanel>
-          <el-button size="default"> 导出 </el-button>
+          <el-button size="default"> {{ t("termination.export") }} </el-button>
           <TabelControl
             v-model:border="border"
             v-model:tableAutoHeight="tableAutoHeight"
@@ -241,21 +266,21 @@ function handleCurrentChange(val: any) {
           prop="surveySource"
           show-overflow-tooltip
           width="120"
-          label="会员"
+          :label="t('termination.vip')"
           ><template #default="{ row }">
             <el-button
               class="p-1"
               size="small"
               v-if="row.surveySource === 1"
               type="primary"
-              >内部会员</el-button
+              >{{ t("termination.internalVip") }}</el-button
             >
             <el-button
               class="p-1"
               size="small"
               v-if="row.surveySource === 2"
               type="warning"
-              >外部会员</el-button
+              >{{ t("termination.externalVip") }}</el-button
             >
           </template>
         </el-table-column>
@@ -264,7 +289,7 @@ function handleCurrentChange(val: any) {
           align="left"
           prop="projectName"
           show-overflow-tooltip
-          label="项目名称"
+          :label="t('termination.projectName')"
         >
           <template #default="{ row }">
             <div class="tableBig oneLine">
@@ -277,7 +302,7 @@ function handleCurrentChange(val: any) {
           align="left"
           prop="projectId"
           width="180"
-          label="项目ID"
+          :label="t('termination.projectID')"
         >
           <template #default="{ row }">
             <div class="copyId tableSmall">
@@ -309,7 +334,7 @@ function handleCurrentChange(val: any) {
           prop=""
           width="180"
           show-overflow-tooltip
-          label="会员ID"
+          :label="t('termination.vipID')"
         >
           <template #default="{ row }">
             <div class="copyId tableSmall">
@@ -338,28 +363,27 @@ function handleCurrentChange(val: any) {
           v-if="checkList.includes('supplierMemberChildId')"
           align="left"
           prop=""
-
           width="180"
-          label="子会员ID"
+          :label="t('termination.subVipId')"
         >
           <template #default="{ row }">
             <div class="copyId tableSmall">
               <div class="id oneLine projectId">
                 <el-text v-if="row.peopleType !== 1">
                   <el-tooltip
-                  effect="dark"
-                  :content="row.memberChildId"
-                  placement="top-start"
-                >
-                  {{ row.memberChildId }}
-                </el-tooltip>
+                    effect="dark"
+                    :content="row.memberChildId"
+                    placement="top-start"
+                  >
+                    {{ row.memberChildId }}
+                  </el-tooltip>
                   <!-- ID: {{ row.memberChildId }} -->
                 </el-text>
                 <el-text v-else> - </el-text>
               </div>
 
               <copy
-                 v-if="row.peopleType !== 1"
+                v-if="row.peopleType !== 1"
                 :content="row.memberChildId"
                 :class="{
                   rowCopy: 'rowCopy',
@@ -380,25 +404,25 @@ function handleCurrentChange(val: any) {
           prop="tenantSupplierId"
           width="180"
           show-overflow-tooltip
-          label="供应商ID"
+          :label="t('termination.supplierID')"
         >
           <template #default="{ row }">
             <div class="copyId tableSmall">
               <div class="id oneLine projectId">
                 <el-text v-if="row.tenantSupplierId">
                   <el-tooltip
-                  effect="dark"
-                  :content="row.tenantSupplierId"
-                  placement="top-start"
-                >
-                  {{ row.tenantSupplierId }}
-                </el-tooltip>
+                    effect="dark"
+                    :content="row.tenantSupplierId"
+                    placement="top-start"
+                  >
+                    {{ row.tenantSupplierId }}
+                  </el-tooltip>
                   <!-- {{ row.memberChildId }} -->
                 </el-text>
                 <el-text v-else> - </el-text>
               </div>
               <copy
-              v-if="row.tenantSupplierId"
+                v-if="row.tenantSupplierId"
                 :content="row.tenantSupplierId"
                 :class="{
                   rowCopy: 'rowCopy',
@@ -418,7 +442,7 @@ function handleCurrentChange(val: any) {
           align="left"
           prop="ipBelong"
           show-overflow-tooltip
-          label="IP/所属国"
+          :label="t('termination.ipCountry')"
           width="220"
         >
           <template #default="{ row }">
@@ -430,7 +454,6 @@ function handleCurrentChange(val: any) {
                 {{ row.ipBelong.split("/")[0] }}
               </div>
               <copy
-
                 :content="row.ipBelong.split('/')[0]"
                 :class="{
                   rowCopy: 'rowCopy',
@@ -443,14 +466,16 @@ function handleCurrentChange(val: any) {
         </el-table-column>
         <el-table-column
           v-if="checkList.includes('terminationTime')"
-          label="终止时间"
+          :label="t('termination.endTime')"
           align="left"
           prop="terminationTime"
           show-overflow-tooltip
         >
           <template #default="{ row }">
             <el-tooltip :content="row.terminationTime" placement="top">
-              <el-tag effect="plain" type="info">{{ format(row.terminationTime) }}</el-tag>
+              <el-tag effect="plain" type="info">{{
+                format(row.terminationTime)
+              }}</el-tag>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -460,7 +485,7 @@ function handleCurrentChange(val: any) {
           prop="notes"
           show-overflow-tooltip
           width="280"
-          label="说明"
+          :label="t('termination.instructions')"
         >
           <template #default="{ row }">
             <div class="fontC-System oneLine">
@@ -492,7 +517,7 @@ function handleCurrentChange(val: any) {
 
 <style scoped lang="scss">
 .copyId .projectId {
-  font-size: .875rem;
+  font-size: 0.875rem;
 }
 .copyId .current {
   display: block !important;

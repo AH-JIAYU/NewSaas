@@ -199,7 +199,7 @@ async function changeStatus(row: any, val: any) {
     const { status } = await submitLoading(api.changestatus(params));
     status === 1 &&
       ElMessage.success({
-        message: "修改「状态」成功",
+        message: t("project.changeSuccess"),
         center: true,
       });
 
@@ -210,7 +210,10 @@ async function changeStatus(row: any, val: any) {
         type: 4, //取消接收
         idList: [row.projectId],
       };
-      const msg = row.isOnline == 1 ? "接收成功" : "取消接收成功";
+      const msg =
+        row.isOnline == 1
+          ? t("project.recieveSuccess")
+          : t("project.cancelSuccess");
       const { status } = await apiOut.updateReceiveStatus(params);
       status === 1 &&
         ElMessage.success({
@@ -231,18 +234,18 @@ function dispatch() {
   if (selectList.length !== 1) {
     if (selectList.length === 0) {
       ElMessage.warning({
-        message: "请选择一个项目",
+        message: t("project.projectSelect"),
         center: true,
       });
     } else {
       ElMessage.warning({
-        message: "只能选择一个项目调度",
+        message: t("project.onlyOne"),
         center: true,
       });
     }
   } else if (selectList[0].isOnline === 2) {
     ElMessage.warning({
-      message: "离线不可调度",
+      message: t("project.OfflineUnschedulable"),
       center: true,
     });
   } else {
