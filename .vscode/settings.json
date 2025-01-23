@@ -21,5 +21,10 @@
   "prettier.trailingComma": "all",
   "prettier.bracketSpacing": true,
   "prettier.arrowParens": "always",
-  "prettier.endOfLine": "auto"
+  "prettier.endOfLine": "auto",
+  "i18n-ally.localesPaths": [
+    "src/locales",
+    "public/tinymce/langs",
+    "src/locales/lang"
+  ]
 }

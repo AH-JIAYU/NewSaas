@@ -11,11 +11,13 @@ import news from "./notification-news.vue";
 import cooperation from "./notification-cooperation.vue";
 import empty from "@/assets/images/empty.png";
 import useUserStore from "@/store/modules/user";
+import { useI18n } from "vue-i18n";
 
 defineOptions({
   name: "personalNotification",
 });
-
+// 国际化
+const { t } = useI18n();
 const userStore: any = useUserStore();
 const notificationStore = useNotificationStore(); //消息中心
 const cooperationRef = ref<any>(); //合作邀约 Ref
@@ -74,22 +76,22 @@ const readButNotRead = async (val: any) => {
 const filterMessageList = computed(() => {
   if (data.value.ReadAlready === 1) {
     return notificationStore.messageList.filter(
-    (item: any) => item.isReadAlready === data.value.ReadAlready
-  );
+      (item: any) => item.isReadAlready === data.value.ReadAlready,
+    );
   } else {
     return notificationStore.readAlreadyMessageList.filter(
-      (item: any) => item.isReadAlready !== 1
+      (item: any) => item.isReadAlready !== 1,
     );
   }
 });
 const filterTodoList = computed(() => {
   if (data.value.ReadAlready === 1) {
     return notificationStore.todoList.filter(
-      (item: any) => item.auditStatus === 1
+      (item: any) => item.auditStatus === 1,
     );
   } else {
     return notificationStore.readAlreadyList.filter(
-      (item: any) => item.auditStatus !== 1
+      (item: any) => item.auditStatus !== 1,
     );
   }
 });
@@ -102,12 +104,12 @@ onMounted(() => {
   if (route.query.id) {
     if (Number(route.query.type) === 1) {
       const findData = notificationStore.messageList.find(
-        (item: any) => item.id === route.query.id
+        (item: any) => item.id === route.query.id,
       );
       findData && showEditNews(findData);
     } else if (Number(route.query.type) === 2) {
       const findData = notificationStore.todoList.find(
-        (item: any) => item.id === route.query.id
+        (item: any) => item.id === route.query.id,
       );
       findData && showEditCooperation(findData);
     }
@@ -123,14 +125,18 @@ onMounted(() => {
           <el-tabs v-model="data.tabs" @tab-change="changeTabs">
             <el-tab-pane label="消息" name="news">
               <template #label>
-                <span class="custom-tab-label">消息</span>
+                <span class="custom-tab-label">{{
+                  t("notification.message")
+                }}</span>
               </template>
               <div class="buttons">
                 <button
                   :class="data.ReadAlready === 1 ? 'unread' : ''"
-                  @click="readButNotRead(1)" style="height: 28px;font-size: 14px;"
+                  @click="readButNotRead(1)"
+                  style="height: 28px; font-size: 14px"
                 >
-                  未读{{
+                  {{ t("notification.unread")
+                  }}{{
                     notificationStore.message < 100
                       ? `(${notificationStore.message})`
                       : "99+"
@@ -139,9 +145,11 @@ onMounted(() => {
                 <button
                   :class="data.ReadAlready === 2 ? 'read' : ''"
                   read
-                  @click="readButNotRead(2)" style="height: 28px;font-size: 14px;"
+                  @click="readButNotRead(2)"
+                  style="height: 28px; font-size: 14px"
                 >
-                  已读{{
+                  {{ t("notification.read")
+                  }}{{
                     notificationStore.readAlreadyMessageUnread < 100
                       ? `(${notificationStore.readAlreadyMessageUnread})`
                       : "99+"
@@ -196,14 +204,18 @@ onMounted(() => {
             </el-tab-pane>
             <el-tab-pane label="代办" name="cooperation">
               <template #label>
-                <span class="custom-tab-label">代办</span>
+                <span class="custom-tab-label">{{
+                  t("notification.waitToBeDone")
+                }}</span>
               </template>
               <div class="buttons">
                 <button
                   :class="data.ReadAlready === 1 ? 'unread' : ''"
-                  @click="readButNotRead(1)"  style="height: 28px;font-size: 14px;"
+                  @click="readButNotRead(1)"
+                  style="height: 28px; font-size: 14px"
                 >
-                  待办{{
+                  {{ t("notification.waitToBeDone")
+                  }}{{
                     notificationStore.todo < 100
                       ? `(${notificationStore.todo})`
                       : "99+"
@@ -212,11 +224,15 @@ onMounted(() => {
                 <button
                   :class="data.ReadAlready === 2 ? 'read' : ''"
                   read
-                  @click="readButNotRead(2)" style="height: 28px;font-size: 14px;"
+                  @click="readButNotRead(2)"
+                  style="height: 28px; font-size: 14px"
                 >
-                  已办{{ notificationStore.readAlreadyUnread < 100
+                  {{ t("notification.haveDone")
+                  }}{{
+                    notificationStore.readAlreadyUnread < 100
                       ? `(${notificationStore.readAlreadyUnread})`
-                      : "99+" }}
+                      : "99+"
+                  }}
                 </button>
               </div>
 
@@ -299,22 +315,20 @@ onMounted(() => {
       display: inline-block;
       padding: 12px; /* 内边距 */
     }
-
   }
-
 }
 
-:deep(.left .el-tabs__active-bar)  {
-    background-color: transparent !important;
-  }
+:deep(.left .el-tabs__active-bar) {
+  background-color: transparent !important;
+}
 :deep(.left .el-tabs__item) {
-    padding: 0px 0rem;
+  padding: 0px 0rem;
 }
 /* 选中状态下的样式 */
 .left .el-tabs__nav-wrap {
   .el-tabs__item.is-active {
     .custom-tab-label {
-    margin-left: 2px;
+      margin-left: 2px;
       /* 蓝色背景图 */
       /* 去掉选中后的下划线 */
       background-image: url("/src/assets/images/new_actived.png"); /* 更改为实际路径 */
@@ -329,7 +343,6 @@ onMounted(() => {
 .left .el-tabs__nav-wrap {
   .el-tabs__item {
     .custom-tab-label {
-
       /* 蓝色背景图 */
       background-image: url("/src/assets/images/new_noActived.png"); /* 更改为实际路径 */
       background-repeat: no-repeat;
@@ -457,7 +470,9 @@ onMounted(() => {
       }
 
       .time {
-        font-family: PingFang SC, PingFang SC;
+        font-family:
+          PingFang SC,
+          PingFang SC;
         font-weight: 500;
         font-size: 0.75rem;
         color: #333333;
@@ -466,7 +481,9 @@ onMounted(() => {
 
       .date {
         --at-apply: text-sm line-clamp-2;
-        font-family: PingFang SC, PingFang SC;
+        font-family:
+          PingFang SC,
+          PingFang SC;
         font-weight: 600;
         font-size: 0.875rem;
         color: #0f0f0f;

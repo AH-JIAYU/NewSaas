@@ -2,12 +2,14 @@
 import api from "@/api/modules/customer_report";
 import { Back } from "@element-plus/icons-vue";
 import { h, ref, shallowRef } from "vue";
-import empty from '@/assets/images/empty.png'
+import empty from "@/assets/images/empty.png";
+import { useI18n } from "vue-i18n";
 
 defineOptions({
   name: "dataCenter",
 });
-
+// 国际化
+const { t } = useI18n();
 // 分页
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
@@ -20,39 +22,49 @@ const tableAutoHeight = ref(false);
 const lineHeight = ref<any>("default");
 const stripe = ref(false);
 const columns = ref<any>([
-  { label: "客户名称", prop: "customerName", sortable: true, checked: true },
   {
-    label: "客户简称",
+    label: computed(() => t("datacenter.customer")),
+    prop: "customerName",
+    sortable: true,
+    checked: true,
+  },
+  {
+    label: computed(() => t("datacenter.CustomerAbbreviation")),
     prop: "customerShortName",
     sortable: true,
     checked: true,
   },
   { label: "PM", prop: "chargeName", sortable: true, checked: true },
   {
-    label: "关联项目数量",
+    label: computed(() => t("datacenter.noAssociatedProject")),
     prop: "relationProjectTotal",
     sortable: true,
     checked: true,
   },
   {
-    label: "参与项目数量",
+    label: computed(() => t("datacenter.noProjectsInvolved")),
     prop: "participateProjectTotal",
     sortable: true,
     checked: true,
   },
   {
-    label: "结算项目数量",
+    label: computed(() => t("datacenter.noSettlementProject")),
     prop: "settlementProjectTotal",
     sortable: true,
     checked: true,
   },
   {
-    label: "结算项目金额",
+    label: computed(() => t("datacenter.settlementAmount")),
     prop: "settlementAmount",
     sortable: true,
     checked: true,
   },
-  { label: "项目营业额", prop: "turnover", sortable: true, checked: true },
+  {
+    label: computed(() => t("datacenter.projectTurnover")),
+    prop: "turnover",
+    sortable: true,
+    checked: true,
+  },
 ]);
 // 时间
 const timeArr = ref<any>([]);
@@ -115,7 +127,7 @@ async function getDataList() {
     params.overviewStart = params.overviewTime[0];
     params.overviewEnd = params.overviewTime[1];
   }
-  delete params.overviewTime
+  delete params.overviewTime;
   if (data.value.activeName === "report") {
     api.reportList(params).then((res: any) => {
       data.value.loading = false;
@@ -131,9 +143,9 @@ async function getDataList() {
   }
 }
 const getDataChange = () => {
-  data.value.queryForm.type = 3
+  data.value.queryForm.type = 3;
   if (data.value.activeName === "report") {
-    checkList.value = []
+    checkList.value = [];
     columns.value = [
       {
         label: "客户名称",
@@ -179,37 +191,37 @@ const getDataChange = () => {
         checkList.value.push(item.prop);
       }
     });
-    getDataList()
+    getDataList();
   } else {
-    checkList.value = []
+    checkList.value = [];
     columns.value = [
       {
-        label: "客户名称",
+        label: computed(() => t("datacenter.customer")),
         prop: "customerName",
         sortable: true,
         checked: true,
       },
       {
-        label: "客户简称",
+        label: computed(() => t("datacenter.CustomerAbbreviation")),
         prop: "customerShortName",
         sortable: true,
         checked: true,
       },
       { label: "PM", prop: "chargeName", sortable: true, checked: true },
       {
-        label: "系统完成数",
+        label: computed(() => t("datacenter.systemCompletions")),
         prop: "systemDone",
         sortable: true,
         checked: true,
       },
       {
-        label: "结算完成单数",
+        label: computed(() => t("datacenter.closingNumber")),
         prop: "settlementDone",
         sortable: true,
         checked: true,
       },
       {
-        label: "审核率",
+        label: computed(() => t("datacenter.reviewRate")),
         prop: "settlementRatioPercent",
         sortable: true,
         checked: true,
@@ -220,7 +232,7 @@ const getDataChange = () => {
         checkList.value.push(item.prop);
       }
     });
-    getDataList()
+    getDataList();
   }
 };
 onMounted(() => {
@@ -234,188 +246,358 @@ onMounted(() => {
 </script>
 
 <template>
-  <div :class="{
-    'absolute-container': tableAutoHeight,
-  }">
+  <div
+    :class="{
+      'absolute-container': tableAutoHeight,
+    }"
+  >
     <PageMain>
       <el-tabs v-model="data.activeName" @tab-change="getDataChange">
-        <el-tab-pane label="客户报告" name="report">
+        <el-tab-pane :label="t('datacenter.customerReport')" name="report">
           <el-row class="fx-b">
-            <div style="width: 200px; height: 33px">
-              <el-radio-group v-if="data.queryForm.type !== 4" v-model="data.queryForm.type" @change="getDataList">
-                <el-radio-button label="日" :value="3" />
-                <el-radio-button label="月" :value="2" />
-                <el-radio-button label="年" :value="1" />
-                <el-radio-button label="搜索" :value="4" />
+            <div style="width: 300px; height: 33px">
+              <el-radio-group
+                v-if="data.queryForm.type !== 4"
+                v-model="data.queryForm.type"
+                @change="getDataList"
+              >
+                <el-radio-button :label="t('datacenter.day')" :value="3" />
+                <el-radio-button :label="t('datacenter.month')" :value="2" />
+                <el-radio-button :label="t('datacenter.year')" :value="1" />
+                <el-radio-button :label="t('datacenter.search')" :value="4" />
               </el-radio-group>
               <div v-else class="fx-b">
-                <el-button size="default" class="btn" style="width: 32px !important" :icon="Back" @click="back" />
-                <el-date-picker v-model="data.queryForm.overviewTime" type="datetimerange"
-                  value-format="YYYY-MM-DD hh:mm:ss" unlink-panels range-separator="-" start-placeholder="开始"
-                  end-placeholder="结束" size="default" :prefix-icon="customPrefix" @change="timeChange" />
-                <el-button type="primary" class="btn" style="width: 59px" size="default" @click="currentChange()">
-                  搜索
+                <el-button
+                  size="default"
+                  class="btn"
+                  style="width: 32px !important"
+                  :icon="Back"
+                  @click="back"
+                />
+                <el-date-picker
+                  v-model="data.queryForm.overviewTime"
+                  type="datetimerange"
+                  value-format="YYYY-MM-DD hh:mm:ss"
+                  unlink-panels
+                  range-separator="-"
+                  :start-placeholder="t('datacenter.start')"
+                  :end-placeholder="t('datacenter.finish')"
+                  size="default"
+                  :prefix-icon="customPrefix"
+                  @change="timeChange"
+                />
+                <el-button
+                  type="primary"
+                  class="btn"
+                  style="width: 59px"
+                  size="default"
+                  @click="currentChange()"
+                >
+                  {{ t("datacenter.search") }}
                 </el-button>
               </div>
             </div>
             <FormRightPanel>
-              <el-button style="" size="default" @click=""> 导出 </el-button>
-              <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight"
-                v-model:checkList="checkList" v-model:columns="columns" v-model:line-height="lineHeight"
-                v-model:stripe="stripe" style="margin-left: 12px" @query-data="currentChange" />
+              <el-button style="" size="default" @click="">
+                {{ t("datacenter.export") }}
+              </el-button>
+              <TabelControl
+                v-model:border="border"
+                v-model:tableAutoHeight="tableAutoHeight"
+                v-model:checkList="checkList"
+                v-model:columns="columns"
+                v-model:line-height="lineHeight"
+                v-model:stripe="stripe"
+                style="margin-left: 12px"
+                @query-data="currentChange"
+              />
             </FormRightPanel>
           </el-row>
-          <el-table :data="data.list" :border="border" :size="lineHeight" :stripe="stripe" style="width: 100%">
+          <el-table
+            :data="data.list"
+            :border="border"
+            :size="lineHeight"
+            :stripe="stripe"
+            style="width: 100%"
+          >
             <!-- <el-table-column align="left" type="selection" /> -->
-            <el-table-column v-if="checkList.includes('customerName')" show-overflow-tooltip align="left"
-              prop="customerName" label="客户名称" width="180">
+            <el-table-column
+              v-if="checkList.includes('customerName')"
+              show-overflow-tooltip
+              align="left"
+              prop="customerName"
+              :label="t('datacenter.customer')"
+              width="180"
+            >
               <template #default="{ row }">
-                <span class="tableBig">  {{ row.customerAccord ? row.customerAccord : "-" }}</span>
-
+                <span class="tableBig">
+                  {{ row.customerAccord ? row.customerAccord : "-" }}</span
+                >
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('customerShortName')" show-overflow-tooltip align="left"
-              prop="customerShortName" label="客户简称" width="100" >
+            <el-table-column
+              v-if="checkList.includes('customerShortName')"
+              show-overflow-tooltip
+              align="left"
+              prop="customerShortName"
+              :label="t('datacenter.CustomerAbbreviation')"
+              width="100"
+            >
               <template #default="{ row }">
-                <span class="tableBig">  {{ row.customerShortName ? row.customerShortName : "-" }}</span>
-
+                <span class="tableBig">
+                  {{
+                    row.customerShortName ? row.customerShortName : "-"
+                  }}</span
+                >
               </template>
-</el-table-column>
+            </el-table-column>
 
-
-            <el-table-column v-if="checkList.includes('chargeName')" show-overflow-tooltip align="left"
-              prop="chargeName" label="PM"><template #default="{ row }">
+            <el-table-column
+              v-if="checkList.includes('chargeName')"
+              show-overflow-tooltip
+              align="left"
+              prop="chargeName"
+              label="PM"
+              ><template #default="{ row }">
                 <span> {{ row.chargeName ? row.chargeName : "-" }}</span>
-
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('relationProjectTotal')" show-overflow-tooltip align="left"
-              prop="relationProjectTotal" label="关联项目数量" >
+            <el-table-column
+              v-if="checkList.includes('relationProjectTotal')"
+              show-overflow-tooltip
+              align="left"
+              prop="relationProjectTotal"
+              :label="t('datacenter.noAssociatedProject')"
+            >
               <template #default="{ row }">
-                <span class="fontC-System">  {{ row.relationProjectTotal  }}</span>
-
-              </template>
-</el-table-column>
-
-            <el-table-column v-if="checkList.includes('participateProjectTotal')" show-overflow-tooltip align="left"
-              prop="participateProjectTotal" label="参与项目数量" >
-              <template #default="{ row }">
-                <span class="fontC-System">  {{ row.participateProjectTotal  }}</span>
-
-              </template>
-              </el-table-column>
-
-            <el-table-column v-if="checkList.includes('settlementProjectTotal')" show-overflow-tooltip align="left"
-              prop="settlementProjectTotal" label="结算项目数量" >
-              <template #default="{ row }">
-                <span class="fontC-System">  {{ row.settlementProjectTotal  }}</span>
-
-              </template>
-              </el-table-column>
-
-            <el-table-column v-if="checkList.includes('settlementAmount')" show-overflow-tooltip align="left"
-              prop="settlementAmount" label="结算项目金额"><template #default="{ row }">
-                  <span class="fontC-System"> {{ row.settlementAmount  }}</span>
+                <span class="fontC-System">
+                  {{ row.relationProjectTotal }}</span
+                >
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('turnover')" show-overflow-tooltip align="left" prop="turnover"
-              label="项目营业额" >
-              <template #default="{ row }">
-                <span class="fontC-System">  {{ row.turnover  }}</span>
 
+            <el-table-column
+              v-if="checkList.includes('participateProjectTotal')"
+              show-overflow-tooltip
+              align="left"
+              prop="participateProjectTotal"
+              :label="t('datacenter.noProjectsInvolved')"
+            >
+              <template #default="{ row }">
+                <span class="fontC-System">
+                  {{ row.participateProjectTotal }}</span
+                >
               </template>
-              </el-table-column>
+            </el-table-column>
+
+            <el-table-column
+              v-if="checkList.includes('settlementProjectTotal')"
+              show-overflow-tooltip
+              align="left"
+              prop="settlementProjectTotal"
+              :label="t('datacenter.noSettlementProject')"
+            >
+              <template #default="{ row }">
+                <span class="fontC-System">
+                  {{ row.settlementProjectTotal }}</span
+                >
+              </template>
+            </el-table-column>
+
+            <el-table-column
+              v-if="checkList.includes('settlementAmount')"
+              show-overflow-tooltip
+              align="left"
+              prop="settlementAmount"
+              :label="t('datacenter.settlementAmount')"
+              ><template #default="{ row }">
+                <span class="fontC-System"> {{ row.settlementAmount }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              v-if="checkList.includes('turnover')"
+              show-overflow-tooltip
+              align="left"
+              prop="turnover"
+              :label="t('datacenter.projectTurnover')"
+            >
+              <template #default="{ row }">
+                <span class="fontC-System"> {{ row.turnover }}</span>
+              </template>
+            </el-table-column>
 
             <template #empty>
               <el-empty :image="empty" :image-size="300" />
             </template>
           </el-table>
         </el-tab-pane>
-        <el-tab-pane label="客户审核" name="auditing">
+        <el-tab-pane :label="t('datacenter.customerAudit')" name="auditing">
           <el-row class="fx-b">
-            <div style="width: 200px; height: 33px">
-              <el-radio-group v-if="data.queryForm.type !== 4" v-model="data.queryForm.type" @change="getDataList">
-                <el-radio-button label="日" :value="3" />
-                <el-radio-button label="月" :value="2" />
-                <el-radio-button label="年" :value="1" />
-                <el-radio-button label="搜索" :value="4" />
+            <div style="width: 300px; height: 33px">
+              <el-radio-group
+                v-if="data.queryForm.type !== 4"
+                v-model="data.queryForm.type"
+                @change="getDataList"
+              >
+                <el-radio-button :label="t('datacenter.day')" :value="3" />
+                <el-radio-button :label="t('datacenter.month')" :value="2" />
+                <el-radio-button :label="t('datacenter.year')" :value="1" />
+                <el-radio-button :label="t('datacenter.search')" :value="4" />
               </el-radio-group>
               <div v-else class="fx-b">
-                <el-button size="default" class="btn" style="width: 32px !important" :icon="Back" @click="back" />
-                <el-date-picker v-model="data.queryForm.overviewTime" type="datetimerange"
-                  value-format="YYYY-MM-DD hh:mm:ss" unlink-panels range-separator="-" start-placeholder="开始"
-                  end-placeholder="结束" size="default" :prefix-icon="customPrefix" @change="timeChange" />
-                <el-button type="primary" class="btn" style="width: 59px" size="default" @click="currentChange()">
-                  搜索
+                <el-button
+                  size="default"
+                  class="btn"
+                  style="width: 32px !important"
+                  :icon="Back"
+                  @click="back"
+                />
+                <el-date-picker
+                  v-model="data.queryForm.overviewTime"
+                  type="datetimerange"
+                  value-format="YYYY-MM-DD hh:mm:ss"
+                  unlink-panels
+                  range-separator="-"
+                  :start-placeholder="t('datacenter.start')"
+                  :end-placeholder="t('datacenter.finish')"
+                  size="default"
+                  :prefix-icon="customPrefix"
+                  @change="timeChange"
+                />
+                <el-button
+                  type="primary"
+                  class="btn"
+                  style="width: 59px"
+                  size="default"
+                  @click="currentChange()"
+                >
+                  {{ t("datacenter.search") }}
                 </el-button>
               </div>
             </div>
             <FormRightPanel>
-              <el-button style="" size="default" @click=""> 导出 </el-button>
-              <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight"
-                v-model:checkList="checkList" v-model:columns="columns" v-model:line-height="lineHeight"
-                v-model:stripe="stripe" style="margin-left: 12px" @query-data="currentChange" />
+              <el-button style="" size="default" @click="">
+                {{ t("datacenter.export") }}
+              </el-button>
+              <TabelControl
+                v-model:border="border"
+                v-model:tableAutoHeight="tableAutoHeight"
+                v-model:checkList="checkList"
+                v-model:columns="columns"
+                v-model:line-height="lineHeight"
+                v-model:stripe="stripe"
+                style="margin-left: 12px"
+                @query-data="currentChange"
+              />
             </FormRightPanel>
           </el-row>
-          <el-table class="el-table__row--striped" :data="data.list" :border="border" :size="lineHeight"
-            :stripe="stripe" style="width: 100%">
+          <el-table
+            class="el-table__row--striped"
+            :data="data.list"
+            :border="border"
+            :size="lineHeight"
+            :stripe="stripe"
+            style="width: 100%"
+          >
             <!-- <el-table-column align="left" type="selection" /> -->
-            <el-table-column v-if="checkList.includes('customerName')" show-overflow-tooltip align="left"
-              prop="customerName" label="客户名称" width="180"><template #default="{ row }">
-                <span class="tableBig">{{ row.customerAccord ? row.customerAccord : "-" }}</span>
-
+            <el-table-column
+              v-if="checkList.includes('customerName')"
+              show-overflow-tooltip
+              align="left"
+              prop="customerName"
+              :label="t('datacenter.customer')"
+              width="180"
+              ><template #default="{ row }">
+                <span class="tableBig">{{
+                  row.customerAccord ? row.customerAccord : "-"
+                }}</span>
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('customerShortName')" show-overflow-tooltip align="left"
-              prop="customerShortName" label="客户简称" width="100"><template #default="{ row }">
-                  <span class="tableBig">{{ row.customerShortName ? row.customerShortName : "-" }}</span>
+            <el-table-column
+              v-if="checkList.includes('customerShortName')"
+              show-overflow-tooltip
+              align="left"
+              prop="customerShortName"
+              :label="t('datacenter.CustomerAbbreviation')"
+              width="100"
+              ><template #default="{ row }">
+                <span class="tableBig">{{
+                  row.customerShortName ? row.customerShortName : "-"
+                }}</span>
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('chargeName')" show-overflow-tooltip align="left"
-              prop="chargeName" label="PM"><template #default="{ row }">
-                <span class="fontC-System">{{ row.chargeName ? row.chargeName : "-" }}</span>
+            <el-table-column
+              v-if="checkList.includes('chargeName')"
+              show-overflow-tooltip
+              align="left"
+              prop="chargeName"
+              label="PM"
+              ><template #default="{ row }">
+                <span class="fontC-System">{{
+                  row.chargeName ? row.chargeName : "-"
+                }}</span>
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('systemDone')" show-overflow-tooltip align="left"
-              prop="systemDone" label="系统完成数" >
+            <el-table-column
+              v-if="checkList.includes('systemDone')"
+              show-overflow-tooltip
+              align="left"
+              prop="systemDone"
+              :label="t('datacenter.systemCompletions')"
+            >
               <template #default="{ row }">
-                <span class="fontC-System">  {{ row.systemDone  }}</span>
-
+                <span class="fontC-System"> {{ row.systemDone }}</span>
               </template>
-              </el-table-column>
+            </el-table-column>
 
-
-
-
-            <el-table-column v-if="checkList.includes('settlementDone')" show-overflow-tooltip align="left"
-              prop="settlementDone" label="结算完成单数" >
+            <el-table-column
+              v-if="checkList.includes('settlementDone')"
+              show-overflow-tooltip
+              align="left"
+              prop="settlementDone"
+              :label="t('datacenter.closingNumber')"
+            >
               <template #default="{ row }">
-                <span class="fontC-System">  {{ row.settlementDone  }}</span>
-
+                <span class="fontC-System"> {{ row.settlementDone }}</span>
               </template>
-              </el-table-column>
+            </el-table-column>
             <!-- <el-table-column
               show-overflow-tooltip
               align="left"
               prop="num3"
               label="审核成功"
             /> -->
-            <el-table-column v-if="checkList.includes('settlementRatioPercent')" show-overflow-tooltip align="left"
-              prop="settlementRatioPercent" label="审核率" >
+            <el-table-column
+              v-if="checkList.includes('settlementRatioPercent')"
+              show-overflow-tooltip
+              align="left"
+              prop="settlementRatioPercent"
+              :label="t('datacenter.reviewRate')"
+            >
               <template #default="{ row }">
-                <span class="fontC-System">  {{ row.settlementRatioPercent  }}</span>
-
+                <span class="fontC-System">
+                  {{ row.settlementRatioPercent }}</span
+                >
               </template>
-              </el-table-column>
+            </el-table-column>
             <template #empty>
               <el-empty :image="empty" :image-size="300" />
             </template>
           </el-table>
         </el-tab-pane>
       </el-tabs>
-      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
-        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-        background @size-change="sizeChange" @current-change="currentChange" />
+      <ElPagination
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
+        :page-sizes="pagination.sizes"
+        :layout="pagination.layout"
+        :hide-on-single-page="false"
+        class="pagination"
+        background
+        @size-change="sizeChange"
+        @current-change="currentChange"
+      />
     </PageMain>
   </div>
 </template>

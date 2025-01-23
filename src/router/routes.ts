@@ -105,8 +105,26 @@ const systemRoutes: RouteRecordRaw[] = [
           cache: "personalEditPassword",
         },
       },
+      {
+        path: "/list",
+        name: "list",
+        component: () => import("@/views/projectManagement/list/list.vue"),
+        meta: {
+          title: "项目列表",
+          i18n: $t("route.projectManagement.projectlist"),
+        }
+      },
+      {
+        path: "/settlement",
+        name: "settlement",
+        component: () => import("@/views/projectManagement/settlement/list.vue"),
+        meta: {
+          title: "项目结算",
+          i18n: $t("route.projectManagement.projectlist"),
+        }
+      }
     ],
-  },
+  }
 ];
 
 // 动态路由（异步路由、导航栏路由）

@@ -42,7 +42,12 @@
     "home": "主页",
     "login": "登录",
     "personal": {
-      "notification": "通知中心"
+      "notification": "通知中心",
+      "setting": "个人中心"
+    },
+    "projectManagement": {
+      "projectlist": "项目列表",
+      "settlement": "项目结算"
     },
     "multimenu": {
       "root": "多级导航",
@@ -57,6 +62,60 @@
         }
       }
     }
+  },
+  "home": {
+    "day": "日",
+    "month": "月",
+    "year": "年",
+    "releaseProjectAmount": "发布项目数额",
+    "yesterday": "较昨日",
+    "lastMonth": "较上月",
+    "fair": "持平",
+    "beReviewed": "待审核项目数额",
+    "beenReviewed": "已审核项目数额",
+    "completedProjects": "已完结项目数额",
+    "turnoverTrend": "营业额趋势",
+    "customerOverview": " 客户总览",
+    "all": "全部",
+    "cdRanking": "完成数据排名",
+    "serialNumber": "序号",
+    "supplierName": "供应商名称",
+    "completedQuantity": "完成数量",
+    "completionAmount": "完成金额",
+    "stRanking": "供应商营业额排行",
+    "turnoverDetail": "营业额明细",
+    "projectTurnover": "项目营业额",
+    "projectProfit": "项目盈利额",
+    "projectRefund": "项目退款额",
+    "backlogCenter": "待办中心"
+  },
+  "datacenter": {
+    "export": "导出",
+    "customer": "客户名称",
+    "CustomerAbbreviation": "客户简称",
+    "noAssociatedProject": "关联项目数量",
+    "noProjectsInvolved": "参与项目数量",
+    "noSettlementProject": "结算项目数量",
+    "settlementAmount": "结算项目金额",
+    "projectTurnover": "项目营业额",
+    "systemCompletions": "系统完成数",
+    "closingNumber": "结算完成单数",
+    "reviewRate": "审核率",
+    "customerReport": "客户报告",
+    "customerAudit": "客户审核",
+    "day": "日",
+    "month": "月",
+    "year": "年",
+    "search": "搜索",
+    "start": "开始",
+    "finish": "结束"
+  },
+  "notification": {
+    "message": "消息",
+    "unread": "未读",
+    "read": "已读",
+    "waitToBeDone": "待办",
+    "haveDone": "已办"
   },
   "project": {
     "projectId": "项目ID",

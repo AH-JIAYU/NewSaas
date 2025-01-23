@@ -13,9 +13,11 @@ import risingAndFalling from "./components/risingAndFalling.vue"; // 较昨日
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
 import useNotificationStore from "@/store/modules/notification"; //消息中心
 import empty from "@/assets/images/empty.png";
+import { useI18n } from "vue-i18n";
 defineOptions({
   name: "homePage",
 });
+const { t } = useI18n(); // 国际化
 const notificationStore = useNotificationStore(); //消息中心
 const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
 const router = useRouter();
@@ -127,44 +129,42 @@ function echarts2() {
     label: {
       //饼图文字的显示
       show: true, //默认  显示文字
-
     },
     series: [
       {
         name: "访问来源",
         type: "pie",
         radius: ["30%", "50%"],
-        center: ['50%', '48%'],  // 确保环形图居中
+        center: ["50%", "48%"], // 确保环形图居中
         text: "省市公司",
         data: Data,
         label: {
           show: true,
         },
       },
-
     ],
     graphic: [
-  {
-    type: "group",
-    left: "center", // 相对于图表容器居中
-    top: "center", // 相对于图表容器居中
-    children: [
       {
-        type: "text",
-        left: "center",  // 使文本水平居中
-        top: "center",   // 使文本垂直居中
-        style: {
-          text: Data.length,
-          fontSize: 30,
-          fill: "#000", // 合计颜色
-          textAlign: "center", // 水平居中
-          textVerticalAlign: "middle", // 垂直居中
-        },
-        z: 10, // 设置较高的 z 层级，确保文本不被其他元素遮挡
+        type: "group",
+        left: "center", // 相对于图表容器居中
+        top: "center", // 相对于图表容器居中
+        children: [
+          {
+            type: "text",
+            left: "center", // 使文本水平居中
+            top: "center", // 使文本垂直居中
+            style: {
+              text: Data.length,
+              fontSize: 30,
+              fill: "#000", // 合计颜色
+              textAlign: "center", // 水平居中
+              textVerticalAlign: "middle", // 垂直居中
+            },
+            z: 10, // 设置较高的 z 层级，确保文本不被其他元素遮挡
+          },
+        ],
       },
     ],
-  },
-]
   };
   // 传入数据
   chart2.setOption(option);
@@ -204,9 +204,13 @@ async function getList() {
   data.value.dataCenterCustomerVOS = dataCenterCustomerVOS;
   // 完成数据排名,剔除完成数量为0的数据，completedQuantity
   data.value.dataCenterSupplierCompletedQuantities =
-    dataCenterSupplierCompletedQuantities.filter((item:any) => item.completedQuantity && item.completedQuantity !=0);
+    dataCenterSupplierCompletedQuantities.filter(
+      (item: any) => item.completedQuantity && item.completedQuantity != 0,
+    );
   //供应商营业额排行,剔除年为0的数据yearTurnover
-  data.value.dataCenterSupplierTurnovers =  dataCenterSupplierTurnovers.filter((item:any) => item.yearTurnover && item.yearTurnover !=0);;
+  data.value.dataCenterSupplierTurnovers = dataCenterSupplierTurnovers.filter(
+    (item: any) => item.yearTurnover && item.yearTurnover != 0,
+  );
 }
 // 切换年月日
 const typeChange = () => {
@@ -215,13 +219,13 @@ const typeChange = () => {
 //过滤未读待办
 const filterTodoList = computed(() => {
   return notificationStore.todoList.filter(
-    (item: any) => item.isReadAlready === 1
+    (item: any) => item.isReadAlready === 1,
   );
 });
 // 完成数据排行 区域字段
 const filterCountry = (row: any) => {
   const findData = data.value.countryList.find(
-    (item: any) => item.id === row.countryId
+    (item: any) => item.id === row.countryId,
   );
   return findData?.chineseName;
 };
@@ -253,9 +257,9 @@ onMounted(async () => {
     <PageMain style="background: transparent">
       <el-row style="margin: 0 0 1rem 0">
         <el-radio-group v-model="data.search.type" @change="typeChange">
-          <el-radio-button label="日" value="day" />
-          <el-radio-button label="月" value="month" />
-          <el-radio-button label="年" value="year" />
+          <el-radio-button :label="t('home.day')" value="day" />
+          <el-radio-button :label="t('home.month')" value="month" />
+          <el-radio-button :label="t('home.year')" value="year" />
         </el-radio-group>
       </el-row>
       <div class="row">
@@ -476,7 +480,9 @@ onMounted(async () => {
 
               <div>
                 <!-- 数量 -->
-                <p class="quantity-title">发布项目数额</p>
+                <p class="quantity-title">
+                  {{ t("home.releaseProjectAmount") }}
+                </p>
                 <div class="quantity-num">
                   {{
                     data.dataCenterOverViewVO?.projectTotal
@@ -604,7 +610,7 @@ onMounted(async () => {
               </svg>
               <div>
                 <!-- 数量 -->
-                <p class="quantity-title">待审核项目数额</p>
+                <p class="quantity-title">{{ t("home.beReviewed") }}</p>
                 <div class="quantity-num">
                   {{
                     data.dataCenterOverViewVO
@@ -743,7 +749,7 @@ onMounted(async () => {
 
               <div>
                 <!-- 数量 -->
-                <p class="quantity-title">已审核项目数额</p>
+                <p class="quantity-title">{{ t("home.beenReviewed") }}</p>
                 <div class="quantity-num">
                   {{
                     data.dataCenterOverViewVO?.projectSettlementConfirmedTotal
@@ -887,7 +893,7 @@ onMounted(async () => {
 
               <div>
                 <!-- 数量 -->
-                <p class="quantity-title">已完结项目数额</p>
+                <p class="quantity-title">{{ t("home.completedProjects") }}</p>
                 <div class="quantity-num">
                   {{
                     data.dataCenterOverViewVO?.projectSettlementCompleteTotal
@@ -915,7 +921,7 @@ onMounted(async () => {
               <div class="itemBoxTitle">
                 <div>
                   <span class="blue"> </span>
-                  营业额趋势
+                  {{ t("home.turnoverTrend") }}
                 </div>
               </div>
               <div
@@ -928,10 +934,10 @@ onMounted(async () => {
               <div class="itemBoxTitle">
                 <div>
                   <span class="blue"> </span>
-                  客户总览
+                  {{ t("home.customerOverview") }}
                 </div>
                 <el-button type="info" link @click="router.push('/datacenter')">
-                  全部
+                  {{ t("home.all") }}
                   <SvgIcon name="i-ant-design:right-outlined" class="icon" />
                 </el-button>
               </div>
@@ -949,7 +955,7 @@ onMounted(async () => {
               <div class="itemBoxTitle">
                 <div>
                   <span class="blue"> </span>
-                  完成数据排名
+                  {{ t("home.cdRanking") }}
                 </div>
               </div>
               <el-table
@@ -958,7 +964,7 @@ onMounted(async () => {
               >
                 <el-table-column
                   type="index"
-                  label="序号"
+                  :label="t('home.serialNumber')"
                   width="55"
                   align="center"
                 >
@@ -987,17 +993,19 @@ onMounted(async () => {
                 <el-table-column
                   align="left"
                   prop="supplierName"
-                  label="供应商名称"
+                  :label="t('home.supplierName')"
                   show-overflow-tooltip
                   ><template #default="{ row }">
-                   <span class="font-c">{{ row.supplierName ? row.supplierName : "-" }}</span>
+                    <span class="font-c">{{
+                      row.supplierName ? row.supplierName : "-"
+                    }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column
                   align="left"
                   prop="completedQuantity"
                   show-overflow-tooltip
-                  label="完成数量"
+                  :label="t('home.completedQuantity')"
                 >
                   <template #default="{ row }">
                     <span class="font-c number-font">
@@ -1011,7 +1019,7 @@ onMounted(async () => {
                   align="left"
                   prop="completedAmount"
                   show-overflow-tooltip
-                  label="完成金额"
+                  :label="t('home.completionAmount')"
                   ><template #default="{ row }">
                     <span class="font-c">
                       <CurrencyType />
@@ -1038,7 +1046,6 @@ onMounted(async () => {
                 <el-table-column
                   align="left"
                   prop="b2CProportion"
-
                   label="B2C"
                   show-overflow-tooltip
                 >
@@ -1065,7 +1072,7 @@ onMounted(async () => {
               <div class="itemBoxTitle">
                 <div>
                   <span class="blue"> </span>
-                  供应商营业额排行
+                  {{ t("home.stRanking") }}
                 </div>
               </div>
               <el-table
@@ -1074,7 +1081,7 @@ onMounted(async () => {
               >
                 <el-table-column
                   type="index"
-                  label="序号"
+                  :label="t('home.serialNumber')"
                   width="60"
                   align="center"
                 >
@@ -1100,7 +1107,7 @@ onMounted(async () => {
                   align="left"
                   prop="name"
                   width="220"
-                  label="供应商名称"
+                  :label="t('home.supplierName')"
                   ><template #default="{ row }">
                     <span class="font-c">{{ row.name ? row.name : "-" }}</span>
                   </template>
@@ -1109,7 +1116,7 @@ onMounted(async () => {
                   sortable
                   align="left"
                   prop="dayTurnover"
-                  label="日"
+                  :label="t('home.day')"
                 >
                   <template #default="{ row }">
                     <span class="number-font font-c">{{
@@ -1121,7 +1128,7 @@ onMounted(async () => {
                   sortable
                   align="left"
                   prop="monthTurnover"
-                  label="月"
+                  :label="t('home.month')"
                 >
                   <template #default="{ row }">
                     <span class="number-font font-c">{{
@@ -1133,7 +1140,7 @@ onMounted(async () => {
                   sortable
                   align="left"
                   prop="yearTurnover"
-                  label="年"
+                  :label="t('home.year')"
                 >
                   <template #default="{ row }">
                     <span class="number-font font-c">{{
@@ -1150,7 +1157,7 @@ onMounted(async () => {
         </div>
         <div class="rightBox">
           <div class="itemBox">
-            <div class="itemBoxTitle">营业额明细</div>
+            <div class="itemBoxTitle">{{ t("home.turnoverDetail") }}</div>
             <!--营业额明细  -->
             <div class="revenueDetails">
               <div class="itemBox">
@@ -1228,19 +1235,23 @@ onMounted(async () => {
 
                 <div>
                   <!-- 数量 -->
-                  <p class="quantity-title">项目营业额</p>
+                  <p class="quantity-title">{{ t("home.projectTurnover") }}</p>
                   <div class="quantity-number">
                     <el-tooltip
                       class="box-item"
                       effect="dark"
-                      :content="data.dataCenterOverViewVO?.projectTurnover ? data.dataCenterOverViewVO?.projectTurnover : 0"
+                      :content="
+                        data.dataCenterOverViewVO?.projectTurnover
+                          ? data.dataCenterOverViewVO?.projectTurnover
+                          : 0
+                      "
                       placement="top"
                     >
-                    {{
-                      data.dataCenterOverViewVO?.projectTurnover
-                        ? data.dataCenterOverViewVO?.projectTurnover
-                        : 0
-                    }}
+                      {{
+                        data.dataCenterOverViewVO?.projectTurnover
+                          ? data.dataCenterOverViewVO?.projectTurnover
+                          : 0
+                      }}
                     </el-tooltip>
                   </div>
                 </div>
@@ -1340,19 +1351,23 @@ onMounted(async () => {
 
                 <div>
                   <!-- 数量 -->
-                  <p class="quantity-title">项目盈利额</p>
+                  <p class="quantity-title">{{ t("home.projectProfit") }}</p>
                   <div class="quantity-number">
                     <el-tooltip
                       class="box-item"
                       effect="dark"
-                      :content="data.dataCenterOverViewVO?.projectProfitability ? data.dataCenterOverViewVO?.projectProfitability : 0"
+                      :content="
+                        data.dataCenterOverViewVO?.projectProfitability
+                          ? data.dataCenterOverViewVO?.projectProfitability
+                          : 0
+                      "
                       placement="top"
                     >
-                    {{
-                      data.dataCenterOverViewVO?.projectProfitability
-                        ? data.dataCenterOverViewVO?.projectProfitability
-                        : 0
-                    }}
+                      {{
+                        data.dataCenterOverViewVO?.projectProfitability
+                          ? data.dataCenterOverViewVO?.projectProfitability
+                          : 0
+                      }}
                     </el-tooltip>
                   </div>
                 </div>
@@ -1442,19 +1457,23 @@ onMounted(async () => {
 
                 <div>
                   <!-- 数量 -->
-                  <p class="quantity-title">项目退款额</p>
+                  <p class="quantity-title">{{ t("home.projectRefund") }}</p>
                   <div class="quantity-number">
                     <el-tooltip
                       class="box-item"
                       effect="dark"
-                      :content="data.dataCenterOverViewVO?.projectRefundAmount ? data.dataCenterOverViewVO?.projectRefundAmount : 0"
+                      :content="
+                        data.dataCenterOverViewVO?.projectRefundAmount
+                          ? data.dataCenterOverViewVO?.projectRefundAmount
+                          : 0
+                      "
                       placement="top"
                     >
-                    {{
-                      data.dataCenterOverViewVO?.projectRefundAmount
-                        ? data.dataCenterOverViewVO?.projectRefundAmount
-                        : 0
-                    }}
+                      {{
+                        data.dataCenterOverViewVO?.projectRefundAmount
+                          ? data.dataCenterOverViewVO?.projectRefundAmount
+                          : 0
+                      }}
                     </el-tooltip>
                   </div>
                 </div>
@@ -1463,7 +1482,7 @@ onMounted(async () => {
           </div>
           <div class="toDoCenter itemBox">
             <div class="itemBoxTitle">
-              待办中心
+              {{ t("home.backlogCenter") }}
               <el-button
                 type="info"
                 link
@@ -1526,18 +1545,17 @@ onMounted(async () => {
   font-family: D-DIN Exp; /* 选择字体 */
 }
 .font-c {
-  color: #333333
+  color: #333333;
 }
-  .center-image {
+.center-image {
   display: flex; /* 使用 Flexbox 布局 */
   justify-content: center; /* 水平居中 */
   align-items: center; /* 垂直居中 */
   width: 100%; /* 单元格宽度 */
   height: 100%; /* 单元格高度 */
-  }
+}
 // 去除表格色块 线
 :deep {
-
   .el-table td.el-table__cell,
   .el-table th.el-table__cell.is-leaf {
     border-bottom: none;
@@ -1553,7 +1571,7 @@ onMounted(async () => {
 }
 
 .itemBox {
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 0.5rem 0.5rem 0.5rem 0.5rem;
   padding: 1rem;
   box-sizing: border-box;
@@ -1561,7 +1579,9 @@ onMounted(async () => {
 
 .itemBoxTitle {
   height: 1.5625rem;
-  font-family: PingFang SC, PingFang SC;
+  font-family:
+    PingFang SC,
+    PingFang SC;
   font-weight: 600;
   font-size: 1.125rem;
   color: #333333;
@@ -1570,12 +1590,12 @@ onMounted(async () => {
   font-style: normal;
   text-transform: none;
   position: relative;
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
 
-  >div {
+  > div {
     display: flex;
     justify-content: start;
     align-items: center;
@@ -1589,14 +1609,14 @@ onMounted(async () => {
   }
 
   .blue::after {
-    content: '';
+    content: "";
     position: absolute;
     left: 0;
     top: 50%;
     transform: translateY(-50%);
-    width: .625rem;
-    height: .625rem;
-    background: #409EFF;
+    width: 0.625rem;
+    height: 0.625rem;
+    background: #409eff;
     border-radius: 50%;
     margin-right: 1.25rem;
   }
@@ -1604,7 +1624,6 @@ onMounted(async () => {
   .hui {
     color: #7f7f7f;
   }
-
 }
 
 .fx-b {
@@ -1644,18 +1663,20 @@ onMounted(async () => {
       flex: 1;
       padding: 1.5rem;
 
-      >svg {
-        margin-right: .5rem
+      > svg {
+        margin-right: 0.5rem;
       }
 
-      >div {
+      > div {
         flex: 1;
 
         .quantity-title {
           min-height: 1.25rem;
-          font-family: PingFang SC, PingFang SC;
+          font-family:
+            PingFang SC,
+            PingFang SC;
           font-weight: 400;
-          font-size: .875rem;
+          font-size: 0.875rem;
           color: #333333;
           line-height: 1rem;
           text-align: left;
@@ -1679,7 +1700,7 @@ onMounted(async () => {
         .compare {
           max-width: 7.375rem;
           height: 1.8125rem;
-          background: #F0F5FA;
+          background: #f0f5fa;
           border-radius: 6.25rem 6.25rem 6.25rem 6.25rem;
           display: flex;
           justify-content: center;
@@ -1688,9 +1709,11 @@ onMounted(async () => {
           .compare-hui {
             width: 2.625rem;
             height: 1.25rem;
-            font-family: PingFang SC, PingFang SC;
+            font-family:
+              PingFang SC,
+              PingFang SC;
             font-weight: 400;
-            font-size: .875rem;
+            font-size: 0.875rem;
             color: #333333;
             line-height: 1.25rem;
             text-align: left;
@@ -1710,8 +1733,6 @@ onMounted(async () => {
             font-style: normal;
             text-transform: none;
           }
-
-
         }
       }
     }
@@ -1719,15 +1740,14 @@ onMounted(async () => {
 
   // 图标
   .echarts {
-
     // 营业额趋势
     .revenueTrend {
-      width: calc(75% - .25rem);
+      width: calc(75% - 0.25rem);
     }
 
     // 客户总览
     .customerOverview {
-      width: calc(25% - .75rem);
+      width: calc(25% - 0.75rem);
     }
   }
 
@@ -1736,9 +1756,8 @@ onMounted(async () => {
 
     .completionRanking,
     .supplierRevenueRanking {
-      width: calc(50% - .5rem);
+      width: calc(50% - 0.5rem);
     }
-
   }
 }
 
@@ -1760,18 +1779,20 @@ onMounted(async () => {
       height: 5.75rem;
       padding: 1rem 0;
 
-      >svg {
-        margin-right: .5rem
+      > svg {
+        margin-right: 0.5rem;
       }
 
-      >div {
+      > div {
         flex: 1;
 
         .quantity-title {
           min-height: 1.25rem;
-          font-family: PingFang SC, PingFang SC;
+          font-family:
+            PingFang SC,
+            PingFang SC;
           font-weight: 400;
-          font-size: .875rem;
+          font-size: 0.875rem;
           color: #333333;
           line-height: 1rem;
           text-align: left;
@@ -1810,7 +1831,7 @@ onMounted(async () => {
         .compare {
           max-width: 7.375rem;
           height: 1.8125rem;
-          background: #F0F5FA;
+          background: #f0f5fa;
           border-radius: 6.25rem 6.25rem 6.25rem 6.25rem;
           display: flex;
           justify-content: center;
@@ -1819,9 +1840,11 @@ onMounted(async () => {
           .compare-hui {
             width: 2.625rem;
             height: 1.25rem;
-            font-family: PingFang SC, PingFang SC;
+            font-family:
+              PingFang SC,
+              PingFang SC;
             font-weight: 400;
-            font-size: .875rem;
+            font-size: 0.875rem;
             color: #333333;
             line-height: 1.25rem;
             text-align: left;
@@ -1834,13 +1857,12 @@ onMounted(async () => {
             height: 1.3125rem;
             font-family: D-DIN Exp;
             font-weight: 500;
-            font-size: .875rem;
+            font-size: 0.875rem;
             color: #333333;
             line-height: 1.25rem;
             text-align: left;
             font-style: normal;
             text-transform: none;
-
           }
         }
       }
@@ -1853,18 +1875,21 @@ onMounted(async () => {
   }
 
   .list {
-    --at-apply: border-block-width-1 border-block-solid border-block-stone-2 dark:border-block-stone-7;
+    --at-apply: border-block-width-1 border-block-solid border-block-stone-2
+      dark: border-block-stone-7;
 
     .item {
       --at-apply: flex m-1 items-start gap-3 px-3 py-4 cursor-pointe;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background-color: #FFF8F8;
-      margin-bottom: .75rem;
-      font-size: .75rem;
-      font-family: PingFang SC, PingFang SC;
-      padding: .625rem 1rem;
+      background-color: #fff8f8;
+      margin-bottom: 0.75rem;
+      font-size: 0.75rem;
+      font-family:
+        PingFang SC,
+        PingFang SC;
+      padding: 0.625rem 1rem;
 
       .item-left {
         display: flex;
@@ -1886,29 +1911,26 @@ onMounted(async () => {
     .new {
       border-radius: 50%;
       background-color: red;
-      margin: 0 .3125rem;
+      margin: 0 0.3125rem;
     }
 
     .read {
-      width: .375rem;
-      height: .375rem;
-      margin: 0 .3125rem;
+      width: 0.375rem;
+      height: 0.375rem;
+      margin: 0 0.3125rem;
     }
   }
 }
 
-
 :deep {
-
   // 单选框背景色
   .el-radio-button__inner {
     background-color: transparent;
     width: 2.125rem;
     height: 2rem;
     line-height: 2rem;
-    font-size: .875rem;
+    font-size: 0.875rem;
     padding: 0 !important;
-
   }
 
   th .cell {
@@ -1917,21 +1939,19 @@ onMounted(async () => {
 
   .el-table {
     // height: calc(20.4375rem - 2rem - 1.5625rem - 0.5rem)
-    height: 300px
+    height: 300px;
   }
 
   // 表格
-
 }
 
 .table-red {
-  color: #FB6868;
+  color: #fb6868;
 }
 
 .table-green {
-  color: #03C239;
+  color: #03c239;
 }
-
 
 :deep(.el-card__body) {
   min-height: 25rem;

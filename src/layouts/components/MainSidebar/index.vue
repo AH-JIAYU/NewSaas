@@ -1,61 +1,102 @@
 <script setup lang="ts">
-import Logo from '../Logo/index.vue'
-import Menu from '../Menu/index.vue'
-import useSettingsStore from '@/store/modules/settings'
-import useMenuStore from '@/store/modules/menu'
-import { i18nTitleInjectionKey } from '@/utils/injectionKeys'
+import Logo from "../Logo/index.vue";
+import Menu from "../Menu/index.vue";
+import useSettingsStore from "@/store/modules/settings";
+import useMenuStore from "@/store/modules/menu";
+import { i18nTitleInjectionKey } from "@/utils/injectionKeys";
 
 defineOptions({
-  name: 'MainSidebar',
-})
+  name: "MainSidebar",
+});
 
-const route = useRoute()
+const route = useRoute();
 
-const settingsStore = useSettingsStore()
-const menuStore = useMenuStore()
+const settingsStore = useSettingsStore();
+const menuStore = useMenuStore();
 
-const { switchTo } = useMenu()
+const { switchTo } = useMenu();
 
-const generateI18nTitle = inject(i18nTitleInjectionKey, Function, true)
+const generateI18nTitle = inject(i18nTitleInjectionKey, Function, true);
 
 function iconName(isActive: boolean, icon?: string, activeIcon?: string) {
-  let name
+  let name;
   if ((!isActive && icon) || (isActive && !activeIcon)) {
-    name = icon
+    name = icon;
+  } else if (isActive && activeIcon) {
+    name = activeIcon;
   }
-  else if (isActive && activeIcon) {
-    name = activeIcon
-  }
-  return name
+  return name;
 }
 </script>
 
 <template>
   <Transition name="main-sidebar">
-    <div v-if="['side', 'only-side'].includes(settingsStore.settings.menu.menuMode) || (settingsStore.mode === 'mobile' && settingsStore.settings.menu.menuMode !== 'single')" class="main-sidebar-container">
+    <div
+      v-if="
+        ['side', 'only-side'].includes(settingsStore.settings.menu.menuMode) ||
+        (settingsStore.mode === 'mobile' &&
+          settingsStore.settings.menu.menuMode !== 'single')
+      "
+      class="main-sidebar-container"
+    >
       <Logo :show-title="false" class="sidebar-logo" />
       <!-- 侧边栏模式（含主导航） -->
       <div
-        v-if="settingsStore.settings.menu.menuMode === 'side' || (settingsStore.mode === 'mobile' && settingsStore.settings.menu.menuMode !== 'single')" class="menu flex flex-col of-hidden transition-all" :class="{
-          [`menu-active-${settingsStore.settings.menu.menuActiveStyle}`]: settingsStore.settings.menu.menuActiveStyle !== '',
+        v-if="
+          settingsStore.settings.menu.menuMode === 'side' ||
+          (settingsStore.mode === 'mobile' &&
+            settingsStore.settings.menu.menuMode !== 'single')
+        "
+        class="menu flex flex-col of-hidden transition-all"
+        :class="{
+          [`menu-active-${settingsStore.settings.menu.menuActiveStyle}`]:
+            settingsStore.settings.menu.menuActiveStyle !== '',
         }"
       >
         <template v-for="(item, index) in menuStore.allMenus" :key="index">
           <div
-            class="menu-item relative transition-all" :class="{
-              'active': index === menuStore.actived,
+            class="menu-item relative transition-all"
+            :class="{
+              active: index === menuStore.actived,
               'px-2 py-1': settingsStore.settings.menu.isRounded,
             }"
           >
             <div
-              v-if="item.children && item.children.length !== 0" class="group menu-item-container h-full w-full flex cursor-pointer items-center justify-between gap-1 py-4 text-[var(--g-main-sidebar-menu-color)] transition-all hover:(bg-[var(--g-main-sidebar-menu-hover-bg)] text-[var(--g-main-sidebar-menu-hover-color)]) px-2!" :class="{
-                'text-[var(--g-main-sidebar-menu-active-color)]! bg-[var(--g-main-sidebar-menu-active-bg)]!': index === menuStore.actived,
+              v-if="item.children && item.children.length !== 0"
+              class="group menu-item-container h-full w-full flex cursor-pointer items-center justify-between gap-1 py-4 text-[var(--g-main-sidebar-menu-color)] transition-all hover:(bg-[var(--g-main-sidebar-menu-hover-bg)] text-[var(--g-main-sidebar-menu-hover-color)]) px-2!"
+              :class="{
+                'text-[var(--g-main-sidebar-menu-active-color)]! bg-[var(--g-main-sidebar-menu-active-bg)]!':
+                  index === menuStore.actived,
                 'rounded-2': settingsStore.settings.menu.isRounded,
-              }" :title="generateI18nTitle(item.meta?.i18n, item.meta?.title)" @click="switchTo(index)"
+              }"
+              :title="generateI18nTitle(item.meta?.i18n, item.meta?.title)"
+              @click="switchTo(index)"
             >
-              <div class="w-full inline-flex flex-1 flex-col items-center justify-center gap-1">
-                <SvgIcon v-if="iconName(index === menuStore.actived, item.meta?.icon, item.meta?.activeIcon)" :name="iconName(index === menuStore.actived, item.meta?.icon, item.meta?.activeIcon)!" :size="20" class="menu-item-container-icon transition-transform group-hover:scale-120" async />
-                <span class="w-full flex-1 truncate text-center text-sm transition-height transition-opacity transition-width">
+              <div
+                class="w-full inline-flex flex-1 flex-col items-center justify-center gap-1"
+              >
+                <SvgIcon
+                  v-if="
+                    iconName(
+                      index === menuStore.actived,
+                      item.meta?.icon,
+                      item.meta?.activeIcon,
+                    )
+                  "
+                  :name="
+                    iconName(
+                      index === menuStore.actived,
+                      item.meta?.icon,
+                      item.meta?.activeIcon,
+                    )!
+                  "
+                  :size="20"
+                  class="menu-item-container-icon transition-transform group-hover:scale-120"
+                  async
+                />
+                <span
+                  class="w-full flex-1 truncate text-center text-sm transition-height transition-opacity transition-width"
+                >
                   {{ generateI18nTitle(item.meta?.i18n, item.meta?.title) }}
                 </span>
               </div>
@@ -65,8 +106,17 @@ function iconName(isActive: boolean, icon?: string, activeIcon?: string) {
       </div>
       <!-- 侧边栏精简模式 -->
       <Menu
-        v-else-if="settingsStore.settings.menu.menuMode === 'only-side'" :menu="menuStore.allMenus" :value="route.meta.activeMenu || route.path" show-collapse-name collapse :rounded="settingsStore.settings.menu.isRounded" :direction="settingsStore.settings.app.direction" class="menu" :class="{
-          [`menu-active-${settingsStore.settings.menu.menuActiveStyle}`]: settingsStore.settings.menu.menuActiveStyle !== '',
+        v-else-if="settingsStore.settings.menu.menuMode === 'only-side'"
+        :menu="menuStore.allMenus"
+        :value="route.meta.activeMenu || route.path"
+        show-collapse-name
+        collapse
+        :rounded="settingsStore.settings.menu.isRounded"
+        :direction="settingsStore.settings.app.direction"
+        class="menu"
+        :class="{
+          [`menu-active-${settingsStore.settings.menu.menuActiveStyle}`]:
+            settingsStore.settings.menu.menuActiveStyle !== '',
         }"
       />
     </div>
@@ -83,7 +133,10 @@ function iconName(isActive: boolean, icon?: string, activeIcon?: string) {
   color: var(--g-main-sidebar-menu-color);
   background-color: var(--g-main-sidebar-bg);
   box-shadow: 1px 0 0 0 var(--g-border-color);
-  transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+  transition:
+    background-color 0.3s,
+    color 0.3s,
+    box-shadow 0.3s;
 
   .sidebar-logo {
     background-color: var(--g-main-sidebar-bg);

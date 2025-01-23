@@ -1,134 +1,175 @@
 <script setup lang="ts">
-import hotkeys from 'hotkeys-js'
-import { useTimeoutFn } from '@vueuse/core'
-import Header from './components/Header/index.vue'
-import MainSidebar from './components/MainSidebar/index.vue'
-import SubSidebar from './components/SubSidebar/index.vue'
-import Topbar from './components/Topbar/index.vue'
-import Search from './components/Search/index.vue'
-import Preferences from './components/Preferences/index.vue'
-import HotkeysIntro from './components/HotkeysIntro/index.vue'
-import AppSetting from './components/AppSetting/index.vue'
-import IframeView from './components/views/iframe.vue'
-import LinkView from './components/views/link.vue'
-import Copyright from './components/Copyright/index.vue'
-import BackTop from './components/BackTop/index.vue'
-import useSettingsStore from '@/store/modules/settings'
-import useKeepAliveStore from '@/store/modules/keepAlive'
-import useMenuStore from '@/store/modules/menu'
-import useWatermarkStore from '@/store/modules/watermark'
-import eventBus from '@/utils/eventBus'
+import hotkeys from "hotkeys-js";
+import { useTimeoutFn } from "@vueuse/core";
+import Header from "./components/Header/index.vue";
+import MainSidebar from "./components/MainSidebar/index.vue";
+import SubSidebar from "./components/SubSidebar/index.vue";
+import Topbar from "./components/Topbar/index.vue";
+import Search from "./components/Search/index.vue";
+import Preferences from "./components/Preferences/index.vue";
+import HotkeysIntro from "./components/HotkeysIntro/index.vue";
+import AppSetting from "./components/AppSetting/index.vue";
+import IframeView from "./components/views/iframe.vue";
+import LinkView from "./components/views/link.vue";
+import Copyright from "./components/Copyright/index.vue";
+import BackTop from "./components/BackTop/index.vue";
+import useSettingsStore from "@/store/modules/settings";
+import useKeepAliveStore from "@/store/modules/keepAlive";
+import useMenuStore from "@/store/modules/menu";
+import useWatermarkStore from "@/store/modules/watermark";
+import eventBus from "@/utils/eventBus";
 
 defineOptions({
-  name: 'Layout',
-})
+  name: "Layout",
+});
 
-const routeInfo = useRoute()
+const routeInfo = useRoute();
 
-const settingsStore = useSettingsStore()
-const keepAliveStore = useKeepAliveStore()
+const settingsStore = useSettingsStore();
+const keepAliveStore = useKeepAliveStore();
 
-const menuStore = useMenuStore()
-useWatermarkStore()
+const menuStore = useMenuStore();
+useWatermarkStore();
 
-const mainPage = useMainPage()
-const menu = useMenu()
+const mainPage = useMainPage();
+const menu = useMenu();
 
-const isIframe = computed(() => !!routeInfo.meta.iframe)
-const isLink = computed(() => !!routeInfo.meta.link)
+const isIframe = computed(() => !!routeInfo.meta.iframe);
+const isLink = computed(() => !!routeInfo.meta.link);
 
-watch(() => settingsStore.settings.menu.subMenuCollapse, (val) => {
-  if (settingsStore.mode === 'mobile') {
-    if (!val) {
-      document.body.classList.add('overflow-hidden')
+watch(
+  () => settingsStore.settings.menu.subMenuCollapse,
+  (val) => {
+    if (settingsStore.mode === "mobile") {
+      if (!val) {
+        document.body.classList.add("overflow-hidden");
+      } else {
+        document.body.classList.remove("overflow-hidden");
+      }
     }
-    else {
-      document.body.classList.remove('overflow-hidden')
-    }
-  }
-})
+  },
+);
 
-watch(() => routeInfo.path, () => {
-  if (settingsStore.mode === 'mobile') {
-    settingsStore.$patch((state) => {
-      state.settings.menu.subMenuCollapse = true
-    })
-  }
-})
+watch(
+  () => routeInfo.path,
+  () => {
+    if (settingsStore.mode === "mobile") {
+      settingsStore.$patch((state) => {
+        state.settings.menu.subMenuCollapse = true;
+      });
+    }
+  },
+);
 
 onMounted(() => {
-  hotkeys('f5', (e) => {
+  hotkeys("f5", (e) => {
     if (settingsStore.settings.toolbar.pageReload) {
-      e.preventDefault()
-      mainPage.reload()
+      e.preventDefault();
+      mainPage.reload();
     }
-  })
-  hotkeys('alt+`', (e) => {
+  });
+  hotkeys("alt+`", (e) => {
     if (settingsStore.settings.menu.enableHotkeys) {
-      e.preventDefault()
-      menu.switchTo(menuStore.actived + 1 < menuStore.allMenus.length ? menuStore.actived + 1 : 0)
+      e.preventDefault();
+      menu.switchTo(
+        menuStore.actived + 1 < menuStore.allMenus.length
+          ? menuStore.actived + 1
+          : 0,
+      );
     }
-  })
-  hotkeys('alt+up,alt+down', (e, handle) => {
-    e.preventDefault()
+  });
+  hotkeys("alt+up,alt+down", (e, handle) => {
+    e.preventDefault();
     switch (handle.key) {
-      case 'alt+up':
-        mainPage.maximize(true)
-        break
-      case 'alt+down':
-        mainPage.maximize(false)
-        break
+      case "alt+up":
+        mainPage.maximize(true);
+        break;
+      case "alt+down":
+        mainPage.maximize(false);
+        break;
     }
-  })
-})
+  });
+});
 onUnmounted(() => {
-  hotkeys.unbind('f5')
-  hotkeys.unbind('alt+`')
-  hotkeys.unbind('alt+up,alt+down')
-})
+  hotkeys.unbind("f5");
+  hotkeys.unbind("alt+`");
+  hotkeys.unbind("alt+up,alt+down");
+});
 
-let timeout: (() => void) | undefined
+let timeout: (() => void) | undefined;
 function handleMouseenter() {
-  timeout?.()
-  settingsStore.setHoverSidebar(true)
+  timeout?.();
+  settingsStore.setHoverSidebar(true);
 }
 function handleMouseleave() {
-  timeout?.()
-    ; ({ stop: timeout } = useTimeoutFn(() => {
-      settingsStore.setHoverSidebar(false)
-    }, 300))
+  timeout?.();
+  ({ stop: timeout } = useTimeoutFn(() => {
+    settingsStore.setHoverSidebar(false);
+  }, 300));
 }
 
-const enableAppSetting = import.meta.env.VITE_APP_SETTING === 'true'
+const enableAppSetting = import.meta.env.VITE_APP_SETTING === "true";
 </script>
 
 <template>
   <div class="layout">
-    <div id="app-main" :class="{ 'main-page-maximize': settingsStore.mainPageMaximizeStatus }">
+    <div
+      id="app-main"
+      :class="{ 'main-page-maximize': settingsStore.mainPageMaximizeStatus }"
+    >
       <Header />
       <div class="wrapper">
-        <div class="sidebar-container"
-          :class="{ show: settingsStore.mode === 'mobile' && !settingsStore.settings.menu.subMenuCollapse }"
-          @mouseenter="handleMouseenter" @mouseleave="handleMouseleave">
+        <div
+          class="sidebar-container"
+          :class="{
+            show:
+              settingsStore.mode === 'mobile' &&
+              !settingsStore.settings.menu.subMenuCollapse,
+          }"
+          @mouseenter="handleMouseenter"
+          @mouseleave="handleMouseleave"
+        >
           <MainSidebar />
           <SubSidebar />
         </div>
-        <div class="sidebar-mask"
-          :class="{ show: settingsStore.mode === 'mobile' && !settingsStore.settings.menu.subMenuCollapse }"
-          @click="settingsStore.toggleSidebarCollapse()" />
-        <div class="main-container" :style="{ 'padding-bottom': routeInfo.meta.paddingBottom }">
+        <div
+          class="sidebar-mask"
+          :class="{
+            show:
+              settingsStore.mode === 'mobile' &&
+              !settingsStore.settings.menu.subMenuCollapse,
+          }"
+          @click="settingsStore.toggleSidebarCollapse()"
+        />
+        <div
+          class="main-container"
+          :style="{ 'padding-bottom': routeInfo.meta.paddingBottom }"
+        >
           <Topbar />
           <div class="main">
-            <div v-show="settingsStore.mainPageMaximizeStatus" class="exit-main-page-maximize"
-              @click="settingsStore.setMainPageMaximize()">
+            <div
+              v-show="settingsStore.mainPageMaximizeStatus"
+              class="exit-main-page-maximize"
+              @click="settingsStore.setMainPageMaximize()"
+            >
               <SvgIcon name="i-ri:logout-box-line" />
             </div>
             <RouterView v-slot="{ Component, route }">
               <Transition
-                :name="settingsStore.settings.mainPage.enableTransition ? settingsStore.settings.mainPage.transitionMode : ''"
-                mode="out-in" appear>
+                :name="
+                  settingsStore.settings.mainPage.enableTransition
+                    ? settingsStore.settings.mainPage.transitionMode
+                    : ''
+                "
+                mode="out-in"
+                appear
+              >
                 <KeepAlive :include="keepAliveStore.list">
-                  <component :is="Component" v-show="!(isIframe || isLink)" :key="route.fullPath" />
+                  <component
+                    :is="Component"
+                    v-show="!(isIframe || isLink)"
+                    :key="route.fullPath"
+                  />
                 </KeepAlive>
               </Transition>
             </RouterView>
@@ -143,7 +184,10 @@ const enableAppSetting = import.meta.env.VITE_APP_SETTING === 'true'
     <Preferences v-if="settingsStore.settings.userPreferences.enable" />
     <HotkeysIntro />
     <template v-if="enableAppSetting">
-      <div class="app-setting" @click="eventBus.emit('global-app-setting-toggle')">
+      <div
+        class="app-setting"
+        @click="eventBus.emit('global-app-setting-toggle')"
+      >
         <SvgIcon name="i-uiw:setting-o" class="icon" />
       </div>
       <AppSetting />
@@ -183,10 +227,14 @@ const enableAppSetting = import.meta.env.VITE_APP_SETTING === 'true'
   }
 
   .sidebar-container {
-    transform: translateX(calc((var(--g-main-sidebar-width) + var(--g-sub-sidebar-width)) * -1));
+    transform: translateX(
+      calc((var(--g-main-sidebar-width) + var(--g-sub-sidebar-width)) * -1)
+    );
 
     [dir="rtl"] & {
-      transform: translateX(calc(var(--g-main-sidebar-width) + var(--g-sub-sidebar-width)));
+      transform: translateX(
+        calc(var(--g-main-sidebar-width) + var(--g-sub-sidebar-width))
+      );
     }
 
     &.show {
@@ -223,7 +271,6 @@ const enableAppSetting = import.meta.env.VITE_APP_SETTING === 'true'
 
   // 当前标签页全屏
   &.main-page-maximize {
-
     header,
     .sidebar-container {
       display: none;
@@ -264,9 +311,17 @@ const enableAppSetting = import.meta.env.VITE_APP_SETTING === 'true'
     bottom: 0;
     z-index: 1010;
     display: flex;
-    width: calc(var(--g-main-sidebar-actual-width) + var(--g-sub-sidebar-actual-width));
-    box-shadow: -1px 0 0 0 var(--g-border-color), 1px 0 0 0 var(--g-border-color);
-    transition: width 0.3s, transform 0.3s, box-shadow 0.3s, top 0.3s;
+    width: calc(
+      var(--g-main-sidebar-actual-width) + var(--g-sub-sidebar-actual-width)
+    );
+    box-shadow:
+      -1px 0 0 0 var(--g-border-color),
+      1px 0 0 0 var(--g-border-color);
+    transition:
+      width 0.3s,
+      transform 0.3s,
+      box-shadow 0.3s,
+      top 0.3s;
 
     &:has(> .main-sidebar-container.main-sidebar-enter-active),
     &:has(> .main-sidebar-container.main-sidebar-leave-active) {
@@ -294,7 +349,8 @@ const enableAppSetting = import.meta.env.VITE_APP_SETTING === 'true'
     }
   }
 
-  .main-sidebar-container:not(.main-sidebar-leave-active)+.sub-sidebar-container {
+  .main-sidebar-container:not(.main-sidebar-leave-active)
+    + .sub-sidebar-container {
     inset-inline-start: var(--g-main-sidebar-width);
   }
 
@@ -302,10 +358,17 @@ const enableAppSetting = import.meta.env.VITE_APP_SETTING === 'true'
     display: flex;
     flex-direction: column;
     min-height: 100%;
-    margin-inline-start: calc(var(--g-main-sidebar-actual-width) + var(--g-sub-sidebar-actual-width));
+    margin-inline-start: calc(
+      var(--g-main-sidebar-actual-width) + var(--g-sub-sidebar-actual-width)
+    );
     background-color: var(--g-bg);
-    box-shadow: -1px 0 0 0 var(--g-border-color), 1px 0 0 0 var(--g-border-color);
-    transition: margin-inline-start 0.3s, background-color 0.3s, box-shadow 0.3s;
+    box-shadow:
+      -1px 0 0 0 var(--g-border-color),
+      1px 0 0 0 var(--g-border-color);
+    transition:
+      margin-inline-start 0.3s,
+      background-color 0.3s,
+      box-shadow 0.3s;
 
     .main {
       position: relative;
@@ -315,7 +378,8 @@ const enableAppSetting = import.meta.env.VITE_APP_SETTING === 'true'
       transition: 0.3s;
 
       .exit-main-page-maximize {
-        --at-apply: bg-stone-7 dark:bg-stone-3 text-stone-3 dark:text-stone-7 op-50 hover:op-100 transition-opacity;
+        --at-apply: bg-stone-7 dark: bg-stone-3 text-stone-3 dark: text-stone-7
+          op-50 hover: op-100 transition-opacity;
 
         position: fixed;
         top: -40px;
@@ -334,21 +398,21 @@ const enableAppSetting = import.meta.env.VITE_APP_SETTING === 'true'
       }
     }
 
-    .topbar-container.has-tabbar+.main {
+    .topbar-container.has-tabbar + .main {
       margin: var(--g-tabbar-height) 0 0;
     }
 
-    .topbar-container.has-toolbar+.main {
+    .topbar-container.has-toolbar + .main {
       margin: var(--g-toolbar-height) 0 0;
     }
 
-    .topbar-container.has-tabbar.has-toolbar+.main {
+    .topbar-container.has-tabbar.has-toolbar + .main {
       margin: calc(var(--g-tabbar-height) + var(--g-toolbar-height)) 0 0;
     }
   }
 }
 
-header:not(.header-leave-active)+.wrapper {
+header:not(.header-leave-active) + .wrapper {
   padding-top: var(--g-header-height);
 
   .sidebar-container {
@@ -367,7 +431,7 @@ header:not(.header-leave-active)+.wrapper {
 }
 
 .app-setting {
-  --at-apply: dark:text-dark bg-ui-primary;
+  --at-apply: dark: text-dark bg-ui-primary;
   color: var(--g-sub-sidebar-menu-active-color);
   position: fixed;
   inset-inline-end: 0;

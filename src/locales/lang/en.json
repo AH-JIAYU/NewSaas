@@ -41,7 +41,12 @@
     "home": "Home",
     "login": "Login",
     "personal": {
-      "notification": "Notification"
+      "notification": "Notification",
+      "setting": "Setting"
+    },
+    "projectManagement": {
+      "projectlist": "Projectlist",
+      "settlement": "Settlement"
     },
     "multimenu": {
       "root": "Multi-level navigation",
@@ -56,6 +61,60 @@
         }
       }
     }
+  },
+  "home": {
+    "day": "Day",
+    "month": "Mon",
+    "year": "Year",
+    "releaseProjectAmount": "Release Project Amount",
+    "yesterday": "VsYday",
+    "lastMonth": "MoM",
+    "fair": "Fair",
+    "beReviewed": "Number of items to be reviewed",
+    "beenReviewed": "The project amount has been reviewed",
+    "completedProjects": "Number of completed projects",
+    "turnoverTrend": "Turnover Trend",
+    "customerOverview": " Customer Overview",
+    "all": "All",
+    "cdRanking": "Complete Data Ranking",
+    "serialNumber": "No.",
+    "supplierName": "Supplier Name",
+    "completedQuantity": "Completed Quantity",
+    "completionAmount": "Completion Amount",
+    "stRanking": "Supplier turnover ranking",
+    "turnoverDetail": "Turnover Detail",
+    "projectTurnover": "Project Turnover",
+    "projectProfit": "Project Profit",
+    "projectRefund": "Project Refund",
+    "backlogCenter": "Backlog Center"
+  },
+  "datacenter": {
+    "export": "Export",
+    "customer": "Customer Name",
+    "CustomerAbbreviation": "Customer Abbreviation",
+    "noAssociatedProject": "Number Of Associated Project",
+    "noProjectsInvolved": "Number Of Projects Involved",
+    "noSettlementProject": "Number Of Settlement Project",
+    "settlementAmount": "Settlement Amount",
+    "projectTurnover": "Project Turnover",
+    "systemCompletions": "System Completions",
+    "closingNumber": "Closing Number",
+    "reviewRate": "Review Rate",
+    "customerReport": "Customer Report",
+    "customerAudit": "Customer Audit",
+    "day": "Day",
+    "month": "Mon",
+    "year": "Year",
+    "search": "Search",
+    "start": "Start",
+    "finish": "Finish"
+  },
+  "notification": {
+    "message": "Message",
+    "unread": "Unread",
+    "read": "Read",
+    "waitToBeDone": "Wait To Be Done",
+    "haveDone": "Have Done"
   },
   "project": {
     "projectId": "project ID",

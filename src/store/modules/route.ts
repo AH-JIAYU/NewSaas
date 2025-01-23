@@ -265,7 +265,7 @@ const useRouteStore = defineStore(
     }
     // 生成路由（后端获取）
     async function generateRoutesAtBack() {
-      await apiApp.routeList().then((res:any) => {
+      await apiApp.routeList().then((res: any) => {
         // 设置 routes 数据
         const dataList = converDeprecatedAttribute(convertSingleRoutes(formatBackRoutes(res.data) as any))
         // 将路由数据放入递归函数中排序
@@ -276,7 +276,7 @@ const useRouteStore = defineStore(
           tabbarStore.initPermanentTab()
         }
       }).catch(() => {
-        useUserStore().logout(null,'')
+        useUserStore().logout(null, '')
       })
     }
     // 生成路由（文件系统生成）
