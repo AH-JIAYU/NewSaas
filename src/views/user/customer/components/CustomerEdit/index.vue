@@ -172,7 +172,7 @@ async function save() {
         const { status } = await submitLoading(api.create(dataList));
         status === 1 &&
           ElMessage.success({
-            message: "新增成功",
+            message: t("customerEdit.addSuccess"),
             center: true,
           });
       } else {
@@ -186,7 +186,7 @@ async function save() {
         const { status } = await submitLoading(api.edit(leftTabsData[0]));
         status === 1 &&
           ElMessage.success({
-            message: "修改成功",
+            message: t("customerEdit.changeSuccess"),
             center: true,
           });
       }
@@ -197,7 +197,7 @@ async function save() {
       close();
     } else {
       ElMessage.warning({
-        message: "客户名称重复",
+        message: t("customerEdit.sameName"),
         center: true,
       });
     }
@@ -205,7 +205,7 @@ async function save() {
     // 跳转到第一个未通过校验的组件
     LeftTabsRef.value.activeLeftTab = validateAll.value.indexOf("rejected");
     ElMessage.warning({
-      message: "请完善表单",
+      message: t("customerEdit.perfect"),
       center: true,
     });
   }
@@ -236,11 +236,13 @@ defineExpose({
       />
       <template #footer>
         <div class="flex-c">
-          <el-button @click="close"> {{ t('projectEdit.cancel') }} </el-button>
+          <el-button @click="close"> {{ t("projectEdit.cancel") }} </el-button>
           <el-button v-if="title === '新增'" type="warning" @click="staging">
-            {{ t('projectEdit.temporaryStorage') }}
+            {{ t("projectEdit.temporaryStorage") }}
           </el-button>
-          <el-button type="primary" @click="save"> {{ t('projectEdit.confirm') }} </el-button>
+          <el-button type="primary" @click="save">
+            {{ t("projectEdit.confirm") }}
+          </el-button>
         </div>
       </template>
     </el-drawer>

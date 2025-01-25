@@ -41,13 +41,67 @@
     "undefined": "[ 无标题 ]",
     "home": "主页",
     "login": "登录",
+    "datacenter": "客户报告",
     "personal": {
       "notification": "通知中心",
       "setting": "个人中心"
     },
     "projectManagement": {
       "projectlist": "项目列表",
-      "settlement": "项目结算"
+      "settlement": "项目结算",
+      "projectscheduling": "项目调度",
+      "projectmaterials": "项目素材",
+      "projectoutsource": "项目外包"
+    },
+    "user": {
+      "customerlist": "客户列表",
+      "supplierlist": "供应商列表",
+      "subVip": "子会员列表"
+    },
+    "record": {
+      "memberSurveyRecords": "调查记录",
+      "preInvestigationRecords": "前置记录",
+      "alter": "记录变更",
+      "termination": "终止记录",
+      "callback": "回调记录"
+    },
+    "configuration": {
+      "user": "用户管理",
+      "department": "部门管理",
+      "role": "角色管理",
+      "positionmanage": "职位管理",
+      "supplierLevel": "供应商等级",
+      "screenlibrary": "前置问卷库",
+      "sitesetting": "站点设置",
+      "homepageSetting": "站点模板",
+      "thirdconfig": "第三方配置"
+    },
+    "finance": {
+      "financiallog": "财务日志",
+      "partnerfinanciallog": "合作财务商日志",
+      "supplierSettlement": "供应商结算",
+      "PMSettlement": "部门结算",
+      "pmlog": "部门提成",
+      "invoice": "发票管理"
+    },
+    "otherFunctions": {
+      "announcement": "文章公告",
+      "basicDictionary": "基础字典",
+      "tenantDictionary": "租户字典",
+      "queryIP": "IP查询",
+      "uidParsing": "UID解析"
+    },
+    "survey": {
+      "surveydata": "数据中心",
+      "myProjeck": "我的项目",
+      "investigationrecords": "调查记录",
+      "vip": "会员管理",
+      "vipDepartment": "部门管理",
+      "vipLevel": "会员等级",
+      "irQuery": "IR查询",
+      "financialLogs": "财务日志",
+      "billManagement": "账单管理",
+      "setting": "站点设置"
     },
     "multimenu": {
       "root": "多级导航",
@@ -371,7 +425,13 @@
     "successfulCallback": "成功回调",
     "fullQuotaCallback": "配额满回调",
     "beScreenedForCallbacks": "被甄别回调",
-    "securityTerminationCallback": "安全终止回调"
+    "securityTerminationCallback": "安全终止回调",
+    "enterName": "请输入客户名称",
+    "2to50": "内容在2-50个字之间",
+    "enterShortName": "请输入客户简称",
+    "enterMin": "请输入审核率Min值",
+    "enterNum": "请输入有效的正整数",
+    "enterLimit": "请输入营业限额/月"
   },
   "customerEdit": {
     "perfect": "请完善表单",
@@ -380,7 +440,10 @@
     "reviewRate": "审核率必须是大于0的正整数",
     "newSuccess": "新增成功",
     "changeSuccess": "修改成功",
-    "sameName": "客户名称重复"
+    "sameName": "客户名称重复",
+    "new": "新增",
+    "edit": "编辑",
+    "addSuccess": "新增成功"
   },
   "formRef": {
     "areaSelect": "请先选择所属区域"
@@ -407,7 +470,14 @@
     "projectPrice": "项目价",
     "remark": "备注",
     "cancel": "取消",
-    "confirm": "确定"
+    "confirm": "确定",
+    "customerName": "客户名称",
+    "customerShortName": "客户简称",
+    "pmSelect": "请选择PM",
+    "editSucess": "编辑成功",
+    "enterName": "请输入客户名称",
+    "2to50": "内容在2-50个字之间",
+    "enterShortName": "请输入客户简称"
   },
   "allocationEdit": {
     "projectName": "项目名称",
@@ -740,5 +810,93 @@
     "startDate": "开始日期",
     "endDate": "结束日期",
     "project": "项目"
+  },
+  "common": {
+    "export": "导出",
+    "new": "新增",
+    "edit": "编辑",
+    "detail": "详情",
+    "delete": "删除",
+    "confirm": "确定",
+    "cancel": "取消",
+    "create": "创建",
+    "remark": "备注",
+    "control": "操作"
+  },
+  "customer": {
+    "myCustomer": "我的客户",
+    "cooperativeMerchant": "合作商户",
+    "customerCode": "客户编码",
+    "customerName": "客户名称",
+    "noAssociatedProject": "关联项目数",
+    "riskControl": "风险控制",
+    "limit": "客户营业限额/月",
+    "rateMin": "审核率Min值",
+    "customerShortName": "客户简称",
+    "customerStatus": "客户状态",
+    "antecedentQuestionnaire": "前置问卷",
+    "forbidden": "禁用",
+    "enable": "启用",
+    "editSucess": "修改成功",
+    "delConfirm": "您确定要删除当前项吗?",
+    "delMessage": "确认信息",
+    "delSuccess": "删除成功",
+    "control": "操作",
+    "invite": "邀约公司",
+    "partnerID": "合作商ID",
+    "partnerName": "合作商名称",
+    "status": "状态",
+    "priceRatio": "价格比例",
+    "amountPendingTrial": "待审金额",
+    "amountAvailable": "可用金额",
+    "individualAmountPendingTrial": "个人待审金额",
+    "personalAvailableAmount": "个人可用金额",
+    "sendProject": "发送项目",
+    "receivingProject": "接收项目",
+    "department/PM": "负责部门/PM",
+    "configuration": "是否确认进行解约",
+    "stop": "终止合作",
+    "instructions": "说明",
+    "lt500": "不能超过500个字符",
+    "terminatedCooperation": "已终止合作",
+    "handle": "手动",
+    "auto": "自动",
+    "refuse": "拒绝",
+    "select": "请选择负责部门/人",
+    "cooperation": "合作",
+    "rescindContract": "解约",
+    "partnerCompany": "合作商公司",
+    "department": "负责部门",
+    "performance": "业绩(合作商)",
+    "performanceMyself": "业绩(我的)",
+    "cooperativeAllocation": "合作配置",
+    "financialLogs": "财务日志",
+    "tips1": "待审金额或可用金额,是您需要给该公司支付的佣金",
+    "tips2": "待审金额或可用金额,是您在该公司赚取的佣金，他需要支付给您的佣金"
+  },
+  "supplier": {
+    "supplierID": "供应商ID",
+    "supplierName": "供应商名称",
+    "area": "区域",
+    "availableBalance": "可用余额",
+    "amountPendingTrial": "待审金额",
+    "supplierLevel": "供应商等级",
+    "settlementCycle": "结算周期",
+    "supplierStatus": "供应商状态",
+    "surveySystem": "调查系统",
+    "createTime": "创建时间",
+    "remark": "备注",
+    "phoneNumber": "手机号码",
+    "email": "邮箱",
+    "CreationStartDate": "创建开始日期",
+    "CreationEndDate": "创建结束日期",
+    "on": "开启",
+    "off": "关闭",
+    "pendingApproval": "待审批",
+    "toBeReviewed": "待审核",
+    "enable": "启用",
+    "disabled": "禁用",
+    "surveyStatus": "调查状态",
+    "plusOrMinus": "加减款"
   }
 }

@@ -23,8 +23,8 @@ const data = ref<any>({
     chargeUserName: "",
   },
 });
-const radio1 = ref<any>('all')
-const positionList = ref<any>([])
+const radio1 = ref<any>("all");
+const positionList = ref<any>([]);
 // 查询参数
 const queryForm = reactive<any>({
   // 分页页码
@@ -51,18 +51,20 @@ const defaultProps: any = {
   label: "name",
 };
 const rules = reactive<any>({
-  chargeUserId: [{ required: true, message: "请选择负责人", trigger: "change" }],
+  chargeUserId: [
+    { required: true, message: "请选择负责人", trigger: "change" },
+  ],
 });
 const dictionaryItemVisible = ref<any>(false); // PM组件显隐
 // 显隐 ,row,回显的勾选数据，name为弹出框名称，project为选中的项目名称数据
 async function showEdit(row: any, name: any, project: any) {
-  data.value.form.chargeUserId = project[0].userId
+  data.value.form.chargeUserId = project[0].userId;
   await getTenantStaffList();
   data.value.type = 1;
   drawerisible.value = true;
   departmentId.value = [];
   data.value.title = name;
-  data.value.invitationType = 1;  //员工
+  data.value.invitationType = 1; //员工
   //项目外包-接收项目-接收选中的项目
   if (project) {
     data.value.project = project;
@@ -71,19 +73,19 @@ async function showEdit(row: any, name: any, project: any) {
   }
 }
 const handerRadioChange = async (val: any) => {
-  if (val !== 'all') {
-    queryUserForm.positionId = val
-    const res = await apiUser.list(queryUserForm)
+  if (val !== "all") {
+    queryUserForm.positionId = val;
+    const res = await apiUser.list(queryUserForm);
     if (res.data) {
-      data.value.tenantStaffList = res.data.data
+      data.value.tenantStaffList = res.data.data;
     }
   } else {
-    const res = await apiUser.getTenantStaffList()
+    const res = await apiUser.getTenantStaffList();
     if (res.data) {
-      data.value.tenantStaffList = res.data
+      data.value.tenantStaffList = res.data;
     }
   }
-}
+};
 // 获取PM/用户
 const getTenantStaffList = async () => {
   const res = await apiUser.getTenantStaffList();
@@ -104,7 +106,7 @@ function close() {
       chargeUserId: null,
       chargeUserName: "",
     },
-  })
+  });
   Object.assign(queryUserForm, {
     page: 1,
     limit: 10,
@@ -113,7 +115,7 @@ function close() {
     active: null,
     departmentId: null,
     positionId: null,
-  })
+  });
   Object.assign(queryForm, {
     // 分页页码
     page: 1,
@@ -124,7 +126,7 @@ function close() {
     name: "",
     // 是否启用 1启用 2停用
     active: null,
-  })
+  });
   // 同步选中的路由id
   // departmentId.value = treeRef.value.getCheckedKeys(false);
 }
@@ -135,9 +137,9 @@ const formRef = ref<any>(); // Ref
 function submit() {
   formRef.value.validate((valid: any) => {
     if (valid) {
-      let chargeUserName = '';
+      let chargeUserName = "";
       let findData = data.value.tenantStaffList.find(
-        (item: any) => item.id === data.value.form.chargeUserId
+        (item: any) => item.id === data.value.form.chargeUserId,
       );
       chargeUserName = findData.userName;
       let obj = {
@@ -147,7 +149,7 @@ function submit() {
         // departmentId: departmentId.value[0], //邀请方部门id
         // departmentName:departmentName,
       };
-      close()
+      close();
       emit("userData", obj);
     }
   });
@@ -159,9 +161,9 @@ const handleChange = (val: any) => {
 onMounted(async () => {
   const res = await apiPos.list(queryForm);
   if (res.data) {
-    positionList.value = res.data.data
+    positionList.value = res.data.data;
   }
-})
+});
 defineExpose({
   showEdit,
 });
@@ -169,10 +171,21 @@ defineExpose({
 
 <template>
   <div>
-    <el-dialog v-model="drawerisible" :close-on-click-modal="false" destroy-on-close draggable width="30%"
-      :title="data.title" class="userClass">
+    <el-dialog
+      v-model="drawerisible"
+      :close-on-click-modal="false"
+      destroy-on-close
+      draggable
+      width="30%"
+      :title="data.title"
+      class="userClass"
+    >
       <div v-if="data.project.length != 0" style="margin-top: -2.1875rem">
-        <el-collapse v-model="activeNames" @change="handleChange" v-if="data.project.length > 1">
+        <el-collapse
+          v-model="activeNames"
+          @change="handleChange"
+          v-if="data.project.length > 1"
+        >
           <el-collapse-item name="1">
             <template #title>
               <span class="project-name">项目</span>
@@ -191,30 +204,67 @@ defineExpose({
           </el-collapse-item>
         </el-collapse>
       </div>
-      <ElForm ref="formRef" :rules="rules" :model="data.form" style="margin-top: 0.625rem;">
+      <ElForm
+        ref="formRef"
+        :rules="rules"
+        :model="data.form"
+        style="margin-top: 0.625rem"
+      >
         <el-form-item label="负责人" prop="chargeUserId">
-          <el-select v-model="data.form.chargeUserId" value-key="" placeholder="请选择负责人" clearable filterable>
+          <el-select
+            v-model="data.form.chargeUserId"
+            value-key=""
+            placeholder="请选择负责人"
+            clearable
+            filterable
+          >
             <template #header>
-              <el-radio-group v-model="radio1" size="large" style="max-width: 34.375rem" @change="handerRadioChange">
+              <el-radio-group
+                v-model="radio1"
+                size="large"
+                style="max-width: 34.375rem"
+                @change="handerRadioChange"
+              >
                 <el-radio-button label="全部" value="all" />
-                <el-radio-button v-for="item in positionList" :key="item.id" :label="item.name" :value="item.id" />
+                <el-radio-button
+                  v-for="item in positionList"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
+                />
               </el-radio-group>
             </template>
-            <el-option v-for="item in data.tenantStaffList" :key="item.id" :label="item.userName" :value="item.id" />
-            <el-button class="buttonClass" @click="dictionaryItemVisible = true" size="small">
+            <el-option
+              v-for="item in data.tenantStaffList"
+              :key="item.id"
+              :label="item.userName"
+              :value="item.id"
+            />
+            <el-button
+              class="buttonClass"
+              @click="dictionaryItemVisible = true"
+              size="small"
+            >
               快捷新增
               <div class="i-ic:round-plus w-1.3em h-1.3em"></div>
             </el-button>
 
             <template #empty>
-              <div style="
+              <div
+                style="
                   display: flex;
                   justify-content: space-between;
                   align-items: center;
                   padding: 0 1rem;
-                ">
+                "
+              >
                 暂无数据
-                <el-button type="primary" link @click="dictionaryItemVisible = true" size="small">
+                <el-button
+                  type="primary"
+                  link
+                  @click="dictionaryItemVisible = true"
+                  size="small"
+                >
                   快捷新增
                   <div class="i-ic:round-plus w-1.3em h-1.3em"></div>
                 </el-button>
@@ -230,7 +280,11 @@ defineExpose({
           <el-button type="primary" @click="submit"> 确认 </el-button>
         </div>
       </template>
-      <DictionaryItemDia v-if="dictionaryItemVisible" v-model="dictionaryItemVisible" @success="getTenantStaffList" />
+      <DictionaryItemDia
+        v-if="dictionaryItemVisible"
+        v-model="dictionaryItemVisible"
+        @success="getTenantStaffList"
+      />
     </el-dialog>
   </div>
 </template>
@@ -241,7 +295,9 @@ defineExpose({
   margin: 0.75rem;
   width: 100%;
   height: 2rem;
-  font-family: PingFang SC, PingFang SC;
+  font-family:
+    PingFang SC,
+    PingFang SC;
   font-weight: 500;
   font-size: 0.875rem;
   color: #409eff;
@@ -255,7 +311,6 @@ defineExpose({
 .el-select-dropdown .buttonClass {
   width: calc(100% - 24px);
   /* 减去两边的 padding */
-
 }
 
 .checkBox {

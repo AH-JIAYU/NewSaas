@@ -45,8 +45,61 @@
       "setting": "Setting"
     },
     "projectManagement": {
-      "projectlist": "Projectlist",
-      "settlement": "Settlement"
+      "projectlist": "Project List",
+      "settlement": "Settlement",
+      "projectscheduling": "Project Scheduling",
+      "projectmaterials": "Project Materials",
+      "projectoutsource": "Project Outsource"
+    },
+    "user": {
+      "customerlist": "Customer List",
+      "supplierlist": "Suppller List",
+      "subVip": "SubVip List"
+    },
+    "record": {
+      "memberSurveyRecords": "Member Survey Records",
+      "preInvestigationRecords": "Pre Investigation Records",
+      "alter": "Alter",
+      "termination": "Termination",
+      "callback": "Callback"
+    },
+    "configuration": {
+      "user": "User",
+      "department": "Department",
+      "role": "Role",
+      "positionmanage": "Position Manage",
+      "supplierLevel": "Supplier Level",
+      "screenlibrary": "Screen Library",
+      "sitesetting": "Site Setting",
+      "homepageSetting": "Homepage Setting",
+      "thirdconfig": "Third Config"
+    },
+    "finance": {
+      "financiallog": "Financial Log",
+      "partnerfinanciallog": "Partner Financial Log",
+      "supplierSettlement": "Supplier Settlement",
+      "PMSettlement": "PMSettlement",
+      "pmlog": "PM Log",
+      "invoice": "Invoice"
+    },
+    "otherFunctions": {
+      "announcement": "Announcement",
+      "basicDictionary": "BasicDictionary",
+      "tenantDictionary": "TenantDictionary",
+      "queryIP": "Query IP",
+      "uidParsing": "UID Parsing"
+    },
+    "survey": {
+      "surveydata": "Survey Data",
+      "myProjeck": "My Project",
+      "investigationrecords": "Investigation Records",
+      "vip": "Vip",
+      "vipDepartment": "Vip Department",
+      "vipLevel": "Vip Level",
+      "irQuery": "IR Query",
+      "financialLogs": "Financial Logs",
+      "billManagement": "Bill Management",
+      "setting": "Setting"
     },
     "multimenu": {
       "root": "Multi-level navigation",
@@ -265,7 +318,7 @@
     "browserSelect": "Please select browser",
     "scheduledRelease": "Scheduled Release",
     "online": "online",
-    "preRuestionnaire": "Pre-Ruestionnaire",
+    "preRuestionnaire": "Antecedent Questionnaire",
     "pinned": "Pinned",
     "releaseTime": "Release Time",
     "timeSelect": "Please select time",
@@ -348,7 +401,7 @@
     "settlementCycle": "SettlementCycle",
     "permissionInformation": "PermissionInformation",
     "customerStatus": "CustomerStatus",
-    "preQuestionnaire": "PreQuestionnaire",
+    "preQuestionnaire": "Antecedent Questionnaire",
     "riskControl": "RiskControl",
     "on": "ON",
     "off": "OFF",
@@ -370,7 +423,13 @@
     "successfulCallback": "SuccessfulCallback",
     "fullQuotaCallback": "FullQuotaCallback",
     "beScreenedForCallbacks": "BeScreenedForCallbacks",
-    "securityTerminationCallback": "SecurityTermination Callback"
+    "securityTerminationCallback": "SecurityTermination Callback",
+    "enterName": "Please enter the customer name",
+    "2to50": "The content is between 2 and 50 words",
+    "enterShortName": "Please enter customer short name",
+    "enterMin": "Please enter the audit rate Min value",
+    "enterNum": "Please enter a valid positive integer",
+    "enterLimit": "Please enter business limit/month"
   },
   "customerEdit": {
     "perfect": "Please complete the form",
@@ -379,7 +438,10 @@
     "reviewRate": "The audit rate must be a positive integer greater than 0",
     "newSuccess": "New success",
     "changeSuccess": "Change success",
-    "sameName": "The customer name already exists"
+    "sameName": "The customer name already exists",
+    "new": "New",
+    "edit": "Edit",
+    "addSuccess": "Add Success"
   },
   "formRef": {
     "areaSelect": "Please select a region first"
@@ -406,7 +468,14 @@
     "projectPrice": "ProjectPrice",
     "remark": "Remark",
     "cancel": "Cancel",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "customerName": "customerName",
+    "customerShortName": "Abbreviation",
+    "pmSelect": "Please select PM",
+    "editSucess": "Edit Sucess",
+    "enterName": "Please enter the customer name",
+    "2to50": "The content is between 2 and 50 words",
+    "enterShortName": "Please enter customer short name"
   },
   "allocationEdit": {
     "projectName": "Project Name",
@@ -739,5 +808,93 @@
     "startDate": "Start Date",
     "endDate": "End Date",
     "project": "Project"
+  },
+  "common": {
+    "export": "Export",
+    "new": "New",
+    "edit": "Edit",
+    "detail": "Detail",
+    "delete": "Delete",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "create": "Create",
+    "remark": "Remark",
+    "control": "Control"
+  },
+  "customer": {
+    "myCustomer": "My Customer",
+    "cooperativeMerchant": "Cooperative Merchant",
+    "customerCode": "Customer Code",
+    "customerName": "Customer Name",
+    "noAssociatedProject": "Number Of Associated Project",
+    "riskControl": "Risk Control",
+    "limit": "Customer business limit/month",
+    "rateMin": "Audit rate Min value",
+    "customerShortName": "Customer Abbreviation",
+    "customerStatus": "Status",
+    "antecedentQuestionnaire": "Antecedent Questionnaire",
+    "forbidden": "Disabled",
+    "enable": "Enable",
+    "editSucess": "Edit Sucess",
+    "delConfirm": "Are you sure you want to delete the current item?",
+    "delMessage": "Confirmation information",
+    "delSuccess": "Successfully deleted",
+    "control": "Control",
+    "invite": "Inviting Company",
+    "partnerID": "Partner ID",
+    "partnerName": "Partner Name",
+    "status": "Status",
+    "priceRatio": "Price Ratio",
+    "amountPendingTrial": "Aamount Pending Trial",
+    "amountAvailable": "Amount Available",
+    "individualAmountPendingTrial": "Individual Amount Pending Trial",
+    "personalAvailableAmount": "Personal Availabl eAmount",
+    "sendProject": "Send Project",
+    "receivingProject": "Receiving Project",
+    "department/PM": "Responsible for the department /PM",
+    "configuration": "Confirm whether to terminate the contract",
+    "stop": "Termination of cooperation",
+    "instructions": "Instructions",
+    "lt500": "The value cannot exceed 500 characters",
+    "terminatedCooperation": "Terminated Cooperation",
+    "handle": "Manual Operation",
+    "auto": "Auto",
+    "refuse": "Refuse",
+    "select": "Please select the responsible department/person",
+    "cooperation": "Cooperation",
+    "rescindContract": "Rescind A Contract",
+    "partnerCompany": "Partner Company",
+    "department": "Responsible Department",
+    "performance": "Performance(Partner)",
+    "performanceMyself": "performance(mine)",
+    "cooperativeAllocation": "Cooperative Allocation",
+    "financialLogs": "Financial Logs",
+    "tips1": "The pending amount, or available amount, is the commission you need to pay the company",
+    "tips2": "The pending amount, or available amount, is the commission you earned with the company and the commission he needs to pay you"
+  },
+  "supplier": {
+    "supplierID": "Supplier ID",
+    "supplierName": "Supplie rName",
+    "area": "Area",
+    "availableBalance": "Available Balance",
+    "amountPendingTrial": "Amount Pending Trial",
+    "supplierLevel": "Supplier Level",
+    "settlementCycle": "Settlement Cycle",
+    "supplierStatus": "Supplier Status",
+    "surveySystem": "Survey System",
+    "createTime": "Create Time",
+    "remark": "Remark",
+    "phoneNumber": "Phone Number",
+    "email": "Email",
+    "CreationStartDate": "Creation Start Date",
+    "CreationEndDate": "Creation End Date",
+    "on": "On",
+    "off": "Off",
+    "pendingApproval": "Pending Approval",
+    "toBeReviewed": "To Be Reviewed",
+    "enable": "Enable",
+    "disabled": "Disabled",
+    "surveyStatus": "Survey Status",
+    "plusOrMinus": "Plus Or Minus"
   }
 }

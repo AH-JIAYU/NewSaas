@@ -3,11 +3,13 @@ import { cloneDeep } from "lodash-es";
 import { ElMessage, ElMessageBox } from "element-plus";
 import api from "@/api/modules/user_customer";
 import apiUser from "@/api/modules/configuration_manager";
+import { useI18n } from "vue-i18n";
 
 defineOptions({
   name: "ProjeckEdit",
 });
 
+const { t } = useI18n();
 const emits = defineEmits(["fetch-data"]);
 const formRef = ref<any>();
 const data = ref<any>({
@@ -19,20 +21,44 @@ const data = ref<any>({
   staffList: [], //用户
   rules: {
     customerAccord: [
-      { required: true, message: "请输入客户名称", trigger: "blur" },
-      { min: 2, max: 50, message: "内容在2-50个字之间", trigger: "blur" },
+      {
+        required: true,
+        message: computed(() => t("quickEdit.enterName")),
+        trigger: "blur",
+      },
+      {
+        min: 2,
+        max: 50,
+        message: computed(() => t("quickEdit.2to50")),
+        trigger: "blur",
+      },
     ],
     customerShortName: [
-      { required: true, message: "请输入客户简称", trigger: "blur" },
-      { min: 2, max: 50, message: "内容在2-50个字之间", trigger: "blur" },
+      {
+        required: true,
+        message: computed(() => t("quickEdit.enterShortName")),
+        trigger: "blur",
+      },
+      {
+        min: 2,
+        max: 50,
+        message: computed(() => t("quickEdit.2to50")),
+        trigger: "blur",
+      },
     ],
-    chargeId: [{ required: true, message: "请选择PM", trigger: "change" }],
+    chargeId: [
+      {
+        required: true,
+        message: computed(() => t("quickEdit.pmSelect")),
+        trigger: "change",
+      },
+    ],
   },
 });
 
 const TypeList: any = {
-  customerAccord: "客户名称",
-  customerShortName: "客户简称",
+  customerAccord: computed(() => t("quickEdit.customerName")),
+  customerShortName: computed(() => t("quickEdit.customerShortName")),
   chargeId: "PM",
 };
 
@@ -60,7 +86,7 @@ async function onSubmit() {
       const { status } = await api.edit(data.value.formData);
       status === 1 &&
         ElMessage.success({
-          message: "编辑成功",
+          message: t("quickEdit.editSucess"),
           center: true,
         });
       emits("fetch-data");
@@ -82,32 +108,60 @@ defineExpose({
 
 <template>
   <div>
-    <el-dialog v-model="data.dialogTableVisible" v-if="data.dialogTableVisible" :title="data.title + '编辑'" draggable>
-      <el-form ref="formRef" :model="data.formData" :rules="data.rules" label-width="100" label-position="right">
+    <el-dialog
+      v-model="data.dialogTableVisible"
+      v-if="data.dialogTableVisible"
+      :title="data.title + t('quickEdit.editor')"
+      draggable
+    >
+      <el-form
+        ref="formRef"
+        :model="data.formData"
+        :rules="data.rules"
+        label-width="100"
+        label-position="right"
+      >
         <template v-if="data.type === 'customerAccord'">
-          <el-form-item label="客户名称" prop="customerAccord">
+          <el-form-item
+            :label="t('quickEdit.customerName')"
+            prop="customerAccord"
+          >
             <el-input v-model="data.formData.customerAccord" clearable />
           </el-form-item>
         </template>
         <template v-if="data.type === 'customerShortName'">
-          <el-form-item label="客户简称" prop="customerShortName">
+          <el-form-item
+            :label="t('quickEdit.customerShortName')"
+            prop="customerShortName"
+          >
             <el-input v-model="data.formData.customerShortName" clearable />
           </el-form-item>
         </template>
         <template v-if="data.type === 'chargeId'">
           <el-form-item label="PM" prop="chargeId">
-            <el-select v-model="data.formData.chargeId" value-key="" placeholder="请选择PM" clearable filterable>
-              <el-option v-for="item in data.staffList" :key="item.id" :label="item.userName" :value="item.id" />
+            <el-select
+              v-model="data.formData.chargeId"
+              value-key=""
+              :placeholder="t('quickEdit.pmSelect')"
+              clearable
+              filterable
+            >
+              <el-option
+                v-for="item in data.staffList"
+                :key="item.id"
+                :label="item.userName"
+                :value="item.id"
+              />
             </el-select>
           </el-form-item>
         </template>
       </el-form>
       <template #footer>
         <el-button @click="closeHandler" :disabled="data.loading">
-          取消
+          {{ t("quickEdit.cancel") }}
         </el-button>
         <el-button type="primary" @click="onSubmit" :disabled="data.loading">
-          确定
+          {{ t("quickEdit.confirm") }}
         </el-button>
       </template>
     </el-dialog>
@@ -116,7 +170,6 @@ defineExpose({
 
 <style lang="scss" scoped>
 :deep {
-
   .el-drawer,
   .el-drawer__body,
   .el-tabs.el-tabs--left {

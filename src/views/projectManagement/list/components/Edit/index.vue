@@ -22,7 +22,11 @@ const rules = reactive<any>({
   ],
   doMoneyPrice: [
     { required: true, message: "请输入金额", trigger: "blur" },
-    { pattern: /^(?!0(\.0+)?$)(\d+(\.\d{1,2})?)$/, message: '请输入一个有效的数字，不能小于0，最多保留两位小数', trigger: 'blur' }
+    {
+      pattern: /^(?!0(\.0+)?$)(\d+(\.\d{1,2})?)$/,
+      message: "请输入一个有效的数字，不能小于0，最多保留两位小数",
+      trigger: "blur",
+    },
   ],
 });
 // 弹框开关变量
@@ -38,7 +42,6 @@ const data = reactive<any>({
     dataType: "", // 数据类型:1:供应商 2:部门
     dispatchType: 1, // 	调度类型:1:指定关闭 2:指定价格
     doMoneyPrice: "", // 	价格(状态为指定价格时候才有),指定关闭不传
-
   },
   // form: {
   //   projectId: "", //	项目id
@@ -48,8 +51,8 @@ const data = reactive<any>({
   //   doMoneyPrice1: '', // 	价格(状态为指定价格时候才有),指定关闭不传,供应商价格
   //   doMoneyPrice2: [], // 	价格(状态为指定价格时候才有),指定关闭不传，内部站价格
   // },
-    // 全选
-    selectAll: {
+  // 全选
+  selectAll: {
     supplier: false, // 供应商
     member: false, // 会员
   },
@@ -87,7 +90,7 @@ async function showEdit(row: any, view?: any) {
 const changeProject = async (val: any) => {
   if (val) {
     const res = await obtainLoading(
-      api.getAllocationGroupOrSupplier({ projectId: val })
+      api.getAllocationGroupOrSupplier({ projectId: val }),
     );
     data.memberGroupNameInfoList =
       res.data.getAllocationMemberGroupNameInfoList;
@@ -178,8 +181,7 @@ function selectAllSupplier() {
     });
   }
   filteredSupplier.value = data.supplierNameInfoList.filter((item: any) => {
-    return data.value.form.groupSupplierId.includes(item.supplierId)
-
+    return data.value.form.groupSupplierId.includes(item.supplierId);
   });
 }
 // 内部站全选
@@ -192,20 +194,19 @@ function selectAllMember() {
   }
 }
 //供应商，调查站，合作商，没有数据时，跳转-暂时没做
-const goRouter=(name:any)=> {
-    if(name == '供应商'){
-      //供应商列表，新增供应商
-    } else if(name == '内部站'){
-      //调查系统-部门管理-新增部门
-    }
-}
+const goRouter = (name: any) => {
+  if (name == "供应商") {
+    //供应商列表，新增供应商
+  } else if (name == "内部站") {
+    //调查系统-部门管理-新增部门
+  }
+};
 // 选中的供应商list
 const filteredSupplier = ref<any>([]);
 //供应商勾选
 const handleSupplierChange = (val: any) => {
   filteredSupplier.value = data.supplierNameInfoList.filter((item: any) => {
-    return val.includes(item.supplierId)
-
+    return val.includes(item.supplierId);
   });
 };
 // 暴露方法
@@ -214,8 +215,13 @@ defineExpose({ showEdit });
 
 <template>
   <div>
-    <el-dialog v-model="dialogTableVisible" :title="data.title" width="600" :before-close="closeHandler">
-       <!-- <el-form ref="formRef" label-width="130px" style="position: relative" :model="data.form" :rules="rules"
+    <el-dialog
+      v-model="dialogTableVisible"
+      :title="data.title"
+      width="600"
+      :before-close="closeHandler"
+    >
+      <!-- <el-form ref="formRef" label-width="130px" style="position: relative" :model="data.form" :rules="rules"
         :inline="false">
         <el-form-item label="指定类型" prop="dispatchType" style="align-items: center">
           <div style=" margin-bottom: 0px">
@@ -399,7 +405,9 @@ defineExpose({ showEdit });
               :value="item.projectId"
             >
               <span style="float: left">{{ item.projectName }}</span>
-              <span style="float: center">{{ item.projectType === 1 ? '内部新增' : '租户分配' }}</span>
+              <span style="float: center">{{
+                item.projectType === 1 ? "内部新增" : "租户分配"
+              }}</span>
               <span
                 style="
                   float: right;
@@ -481,7 +489,11 @@ defineExpose({ showEdit });
             /></el-select>
           </el-form-item>
         </div>
-        <el-form-item v-if="data.form.dispatchType === 2" label="指定价格" prop="doMoneyPrice">
+        <el-form-item
+          v-if="data.form.dispatchType === 2"
+          label="指定价格"
+          prop="doMoneyPrice"
+        >
           <el-input placeholder="" v-model="data.form.doMoneyPrice" clearable />
         </el-form-item>
       </el-form>

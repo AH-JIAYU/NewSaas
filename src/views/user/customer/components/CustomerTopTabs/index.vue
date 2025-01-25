@@ -3,19 +3,19 @@ import { ElForm } from "element-plus";
 import { defineProps, ref } from "vue";
 import api from "@/api/modules/user_customer";
 import DictionaryItemDia from "@/views/configuration/user/components/dictionaryItemDialog/index.vue";
-import apiUser from '@/api/modules/configuration_manager'
+import apiUser from "@/api/modules/configuration_manager";
 import apiPos from "@/api/modules/position_manage";
-import useConfigurationSiteSettingStore from '@/store/modules/configuration_siteSetting'//站点设置
+import useConfigurationSiteSettingStore from "@/store/modules/configuration_siteSetting"; //站点设置
 import storage from "@/utils/storage";
 import { useI18n } from "vue-i18n";
-const configurationSiteSettingStore = useConfigurationSiteSettingStore()//站点设置
+const configurationSiteSettingStore = useConfigurationSiteSettingStore(); //站点设置
 // 如果希望默认展示第一个 Tab
 const props = defineProps({
   leftTab: Object,
   tabIndex: Number,
 });
-const redirectUrl = ref<any>()
-const serverSideUrl = ref<any>(`${import.meta.env.VITE_APP_API_BASEURL}/api`)
+const redirectUrl = ref<any>();
+const serverSideUrl = ref<any>(`${import.meta.env.VITE_APP_API_BASEURL}/api`);
 // 国际化
 const { t } = useI18n();
 // 用户数据
@@ -23,30 +23,45 @@ const staffList = ref<any>([]);
 const validate = inject<any>("validateTopTabs"); //注入Ref
 const rules = reactive<any>({
   customerAccord: [
-    { required: true, message: "请输入客户名称", trigger: "blur" },
-    { min: 2, max: 50, message: "内容在2-50个字之间", trigger: "blur" },
+    { required: true, message: t("newCustomer.enterName"), trigger: "blur" },
+    { min: 2, max: 50, message: t("newCustomer.2to50"), trigger: "blur" },
   ],
   customerShortName: [
-    { required: true, message: "请输入客户简称", trigger: "blur" },
-    { min: 2, max: 50, message: "内容在2-50个字之间", trigger: "blur" },
+    {
+      required: true,
+      message: t("newCustomer.enterShortName"),
+      trigger: "blur",
+    },
+    { min: 2, max: 50, message: t("newCustomer.2to50"), trigger: "blur" },
   ],
   chargeId: [
-    { required: true, message: "请选择负责人", trigger: "change" },
+    {
+      required: true,
+      message: t("newCustomer.chargeSelect"),
+      trigger: "change",
+    },
   ],
   rateAudit: [
-    { required: true, message: "请输入审核率Min值", trigger: "blur" },
-    { pattern: /^[1-9]\d*$/, message: "请输入有效的正整数", trigger: "blur" },
+    { required: true, message: t("newCustomer.enterMin"), trigger: "blur" },
+    {
+      pattern: /^[1-9]\d*$/,
+      message: t("newCustomer.enterNum"),
+      trigger: "blur",
+    },
     // 其他校验规则
   ],
   turnover: [
-    { required: true, message: "请输入营业限额/月", trigger: "blur" },
-    { pattern: /^[1-9]\d*$/, message: "请输入有效的正整数", trigger: "blur" },
+    { required: true, message: t("newCustomer.enterLimit"), trigger: "blur" },
+    {
+      pattern: /^[1-9]\d*$/,
+      message: t("newCustomer.enterNum"),
+      trigger: "blur",
+    },
     // 其他校验规则
   ],
-
 });
-const radio1 = ref<any>('all')
-const positionList = ref<any>([])
+const radio1 = ref<any>("all");
+const positionList = ref<any>([]);
 // 查询参数
 const queryForm = reactive<any>({
   // 分页页码
@@ -71,7 +86,7 @@ const queryUserForm = reactive<any>({
 const activeName = ref("basicSettings");
 const isEncryption = ref(false);
 const secretKeyConfigList = ref<any>([]);
-const dictionaryItemVisible = ref<any>(false) // PM组件显隐
+const dictionaryItemVisible = ref<any>(false); // PM组件显隐
 
 const changeConfigInfoList = (val: any) => {
   if (val) {
@@ -84,7 +99,7 @@ const changeConfigInfoList = (val: any) => {
   } else {
     const findDataIndex =
       localToptTab.value.tenantCustomerConfigInfoList.findIndex(
-        (item: any) => item.callbackWay === 1
+        (item: any) => item.callbackWay === 1,
       );
     if (findDataIndex !== -1) {
       localToptTab.value.tenantCustomerConfigInfoList.splice(findDataIndex, 1);
@@ -95,60 +110,61 @@ const changeConfigInfoList = (val: any) => {
 const changeCustomerConfigInfo = async (val: any, index: number) => {
   if (val) {
     const findData = secretKeyConfigList.value.find(
-      (item: any) => item.id === val
+      (item: any) => item.id === val,
     );
     const res = await api.generateKey({ type: findData.name });
     if (res.data && res.status === 1) {
-      localToptTab.value.tenantCustomerConfigInfoList[index].secretKey = res.data;
+      localToptTab.value.tenantCustomerConfigInfoList[index].secretKey =
+        res.data;
     }
   }
 };
 // 获取PM/用户
 const getTenantStaffList = async () => {
-  const { data } = await apiUser.getTenantStaffList()
+  const { data } = await apiUser.getTenantStaffList();
   const res = await apiPos.list(queryForm);
   if (res.data) {
-    positionList.value = res.data.data
+    positionList.value = res.data.data;
   }
   if (data) {
-    staffList.value = data
+    staffList.value = data;
   }
-}
+};
 
 const handerRadioChange = async (val: any) => {
-  if (val !== 'all') {
-    queryUserForm.positionId = val
-    const { data } = await apiUser.list(queryUserForm)
+  if (val !== "all") {
+    queryUserForm.positionId = val;
+    const { data } = await apiUser.list(queryUserForm);
     if (data) {
-      staffList.value = data.data
+      staffList.value = data.data;
     }
   } else {
-    const { data } = await apiUser.getTenantStaffList()
+    const { data } = await apiUser.getTenantStaffList();
     if (data) {
-      staffList.value = data
+      staffList.value = data;
     }
   }
-}
+};
 
 onBeforeMount(async () => {
-  await getTenantStaffList()
+  await getTenantStaffList();
   // staffList.value = staffList.value.filter((item:any) => item.distribution === 1)
   isEncryption.value =
     localToptTab.value.tenantCustomerConfigInfoList.length === 2;
   const res = await api.getTenantSecretKeyConfigList();
   secretKeyConfigList.value = res.data;
-  const siteRes = await configurationSiteSettingStore.getSiteConfig()
-  redirectUrl.value = `${siteRes.httpsStatus === 1 ? 'http' : 'https'}://${siteRes.topLevelDomainName ?? siteRes.personalizedDomainName}`
+  const siteRes = await configurationSiteSettingStore.getSiteConfig();
+  redirectUrl.value = `${siteRes.httpsStatus === 1 ? "http" : "https"}://${siteRes.topLevelDomainName ?? siteRes.personalizedDomainName}`;
 });
 // 使用 InstanceType 来获取 ElForm 实例的类型
 const formRef = ref(null);
 // 注入主组件中的提供者
 const localToptTab = ref<any>(props.leftTab);
 // 后端(潘)这里类型不好改，前端判断如果是返回0就给他制空
-if(localToptTab.value.rateAudit === 0) {
+if (localToptTab.value.rateAudit === 0) {
   localToptTab.value.rateAudit = null;
 }
-if(localToptTab.value.turnover === 0) {
+if (localToptTab.value.turnover === 0) {
   localToptTab.value.turnover = null;
 }
 nextTick(() => {
@@ -161,70 +177,140 @@ const tenantId = storage.local.get("anotherName");
 
 <template>
   <div>
-    <ElForm ref="formRef" :rules="rules" :model="localToptTab" label-width="110px">
+    <ElForm
+      ref="formRef"
+      :rules="rules"
+      :model="localToptTab"
+      label-width="110px"
+    >
       <el-tabs v-model="activeName">
-        <el-tab-pane :label="t('newCustomer.basicSettings')" name="basicSettings">
+        <el-tab-pane
+          :label="t('newCustomer.basicSettings')"
+          name="basicSettings"
+        >
           <el-card class="box-card">
             <template #header>
               <div class="card-header">
-                <span>{{ t('newCustomer.basicInformation') }}</span>
+                <span>{{ t("newCustomer.basicInformation") }}</span>
               </div>
             </template>
             <el-row :gutter="24">
               <el-col :span="12">
-                <el-form-item :label="t('newCustomer.customerAccord')" prop="customerAccord">
+                <el-form-item
+                  :label="t('newCustomer.customerAccord')"
+                  prop="customerAccord"
+                >
                   <el-input v-model="localToptTab.customerAccord" clearable />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item :label="t('newCustomer.customerShortName')" prop="customerShortName">
-                  <el-input v-model="localToptTab.customerShortName" clearable />
+                <el-form-item
+                  :label="t('newCustomer.customerShortName')"
+                  prop="customerShortName"
+                >
+                  <el-input
+                    v-model="localToptTab.customerShortName"
+                    clearable
+                  />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item :label="t('newCustomer.companyName')" prop="companyName">
+                <el-form-item
+                  :label="t('newCustomer.companyName')"
+                  prop="companyName"
+                >
                   <el-input v-model="localToptTab.companyName" clearable />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item :label="t('newCustomer.customerName')" prop="customerName">
+                <el-form-item
+                  :label="t('newCustomer.customerName')"
+                  prop="customerName"
+                >
                   <el-input v-model="localToptTab.customerName" clearable />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item :label="t('newCustomer.customerPhone')" prop="customerPhone">
+                <el-form-item
+                  :label="t('newCustomer.customerPhone')"
+                  prop="customerPhone"
+                >
                   <el-input v-model="localToptTab.customerPhone" clearable />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item :label="t('newCustomer.emailAddress')" prop="emailAddress">
+                <el-form-item
+                  :label="t('newCustomer.emailAddress')"
+                  prop="emailAddress"
+                >
                   <el-input v-model="localToptTab.emailAddress" clearable />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item :label="t('newCustomer.chargeId')" prop="chargeId">
-                  <el-select v-model="localToptTab.chargeId" value-key="" :placeholder="t('newCustomer.chargeSelect')" clearable filterable>
+                <el-form-item
+                  :label="t('newCustomer.chargeId')"
+                  prop="chargeId"
+                >
+                  <el-select
+                    v-model="localToptTab.chargeId"
+                    value-key=""
+                    :placeholder="t('newCustomer.chargeSelect')"
+                    clearable
+                    filterable
+                  >
                     <template #header>
-                      <el-radio-group v-model="radio1" size="large" style="max-width: 27.875rem;"
-                        @change="handerRadioChange">
-                        <el-radio-button :label="t('newCustomer.all')" value="all" />
-                        <el-radio-button v-for="item in positionList" :key="item.id" :label="item.name"
-                          :value="item.id" />
+                      <el-radio-group
+                        v-model="radio1"
+                        size="large"
+                        style="max-width: 27.875rem"
+                        @change="handerRadioChange"
+                      >
+                        <el-radio-button
+                          :label="t('newCustomer.all')"
+                          value="all"
+                        />
+                        <el-radio-button
+                          v-for="item in positionList"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id"
+                        />
                       </el-radio-group>
                     </template>
-                    <el-option v-for="item in staffList" :key="item.id" :label="item.userName" :value="item.id" />
-                    <el-button class="buttonClass" @click="dictionaryItemVisible = true" size="small">
-                      {{ t('newCustomer.quickAdd') }}
+                    <el-option
+                      v-for="item in staffList"
+                      :key="item.id"
+                      :label="item.userName"
+                      :value="item.id"
+                    />
+                    <el-button
+                      class="buttonClass"
+                      @click="dictionaryItemVisible = true"
+                      size="small"
+                    >
+                      {{ t("newCustomer.quickAdd") }}
                       <div class="i-ic:round-plus w-1.3em h-1.3em"></div>
                       <!-- <SvgIcon name="ant-design:plus-outlined"
                           style="border-radius: 50%;padding: 2px;margin:0 4px;border: 1px solid #409EFF;"/> -->
                     </el-button>
 
                     <template #empty>
-                      <div style="display: flex;justify-content: space-between;align-items:center;padding:0 1rem;">
-                        {{ t('newCustomer.nodata') }}
-                        <el-button type="primary" link @click="dictionaryItemVisible = true" size="small">
-                          {{ t('newCustomer.quickAdd') }}
+                      <div
+                        style="
+                          display: flex;
+                          justify-content: space-between;
+                          align-items: center;
+                          padding: 0 1rem;
+                        "
+                      >
+                        {{ t("newCustomer.nodata") }}
+                        <el-button
+                          type="primary"
+                          link
+                          @click="dictionaryItemVisible = true"
+                          size="small"
+                        >
+                          {{ t("newCustomer.quickAdd") }}
                           <div class="i-ic:round-plus w-1.3em h-1.3em"></div>
                           <!-- <SvgIcon name="ant-design:plus-outlined" color="#fff"
                             style="background-color: var(--el-color-primary);border-radius: 50%;padding: 2px;margin:0 2px" /> -->
@@ -235,7 +321,10 @@ const tenantId = storage.local.get("anotherName");
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item :label="t('newCustomer.settlementCycle')" prop="settlementCycle">
+                <el-form-item
+                  :label="t('newCustomer.settlementCycle')"
+                  prop="settlementCycle"
+                >
                   <el-select v-model="localToptTab.settlementCycle">
                     <el-option label="net 30" :value="30"></el-option>
                     <el-option label="net 60" :value="60"></el-option>
@@ -249,36 +338,60 @@ const tenantId = storage.local.get("anotherName");
           <el-card class="box-card">
             <template #header>
               <div class="card-header">
-                <span>{{ t('newCustomer.permissionInformation') }}</span>
+                <span>{{ t("newCustomer.permissionInformation") }}</span>
               </div>
             </template>
             <el-row :gutter="24">
               <el-col :span="4">
                 <el-form-item :label="t('newCustomer.customerStatus')">
-                  <el-switch v-model="localToptTab.customerStatus" :active-value="2" :inactive-value="1" inline-prompt
-                  :active-text="t('newCustomer.on')" :inactive-text="t('newCustomer.off')" />
+                  <el-switch
+                    v-model="localToptTab.customerStatus"
+                    :active-value="2"
+                    :inactive-value="1"
+                    inline-prompt
+                    :active-text="t('newCustomer.on')"
+                    :inactive-text="t('newCustomer.off')"
+                  />
                 </el-form-item>
               </el-col>
               <el-col :span="4">
                 <el-form-item :label="t('newCustomer.preQuestionnaire')">
-                  <el-switch v-model="localToptTab.antecedentQuestionnaire" :active-value="2" :inactive-value="1"
-                    inline-prompt :active-text="t('newCustomer.on')" :inactive-text="t('newCustomer.off')" />
+                  <el-switch
+                    v-model="localToptTab.antecedentQuestionnaire"
+                    :active-value="2"
+                    :inactive-value="1"
+                    inline-prompt
+                    :active-text="t('newCustomer.on')"
+                    :inactive-text="t('newCustomer.off')"
+                  />
                 </el-form-item>
               </el-col>
               <el-col :span="16">
                 <el-form-item :label="t('newCustomer.riskControl')">
-                  <el-switch v-model="localToptTab.riskControl" :active-value="2" :inactive-value="1" inline-prompt
-                  :active-text="t('newCustomer.on')" :inactive-text="t('newCustomer.off')" />
+                  <el-switch
+                    v-model="localToptTab.riskControl"
+                    :active-value="2"
+                    :inactive-value="1"
+                    inline-prompt
+                    :active-text="t('newCustomer.on')"
+                    :inactive-text="t('newCustomer.off')"
+                  />
                 </el-form-item>
               </el-col>
               <el-col v-if="localToptTab.riskControl === 2" :span="12">
                 <el-form-item :label="t('newCustomer.businessLimit')" prop="">
-                  <el-input v-model="localToptTab.turnover" controls-position="right" />
+                  <el-input
+                    v-model="localToptTab.turnover"
+                    controls-position="right"
+                  />
                 </el-form-item>
               </el-col>
               <el-col v-if="localToptTab.riskControl === 2" :span="12">
                 <el-form-item :label="t('newCustomer.minValue')" prop="">
-                  <el-input v-model="localToptTab.rateAudit" controls-position="right">
+                  <el-input
+                    v-model="localToptTab.rateAudit"
+                    controls-position="right"
+                  >
                     <template #append> % </template>
                   </el-input>
                 </el-form-item>
@@ -290,33 +403,64 @@ const tenantId = storage.local.get("anotherName");
           <el-card class="box-card">
             <template #header>
               <div class="card-header">
-                <span>{{ t('newCustomer.redirectionConfiguration') }}</span>
+                <span>{{ t("newCustomer.redirectionConfiguration") }}</span>
               </div>
             </template>
             <el-row :gutter="24">
               <el-col :span="24">
                 <el-form-item :label="t('newCustomer.encipher')">
-                  <el-switch v-model="localToptTab.tenantCustomerConfigInfoList[0].isEncryption
-      " :active-value="1" :inactive-value="2" inline-prompt :active-text="t('newCustomer.encipher')" :inactive-text="t('newCustomer.noEncryption')" />
+                  <el-switch
+                    v-model="
+                      localToptTab.tenantCustomerConfigInfoList[0].isEncryption
+                    "
+                    :active-value="1"
+                    :inactive-value="2"
+                    inline-prompt
+                    :active-text="t('newCustomer.encipher')"
+                    :inactive-text="t('newCustomer.noEncryption')"
+                  />
                 </el-form-item>
               </el-col>
-              <template v-if="localToptTab.tenantCustomerConfigInfoList[0].isEncryption ===
-      1
-      ">
+              <template
+                v-if="
+                  localToptTab.tenantCustomerConfigInfoList[0].isEncryption ===
+                  1
+                "
+              >
                 <el-col :span="24">
                   <el-form-item :label="t('newCustomer.encryptionMode')">
-                    <el-select @change="changeCustomerConfigInfo($event, 0)" clearable v-model="localToptTab.tenantCustomerConfigInfoList[0]
-      .encryptionId
-      ">
-                      <el-option v-for="item in secretKeyConfigList" :label="item.name" :value="item.id"></el-option>
+                    <el-select
+                      @change="changeCustomerConfigInfo($event, 0)"
+                      clearable
+                      v-model="
+                        localToptTab.tenantCustomerConfigInfoList[0]
+                          .encryptionId
+                      "
+                    >
+                      <el-option
+                        v-for="item in secretKeyConfigList"
+                        :label="item.name"
+                        :value="item.id"
+                      ></el-option>
                     </el-select>
                   </el-form-item>
                 </el-col>
                 <el-col :span="24">
                   <el-form-item :label="t('newCustomer.secretKey')">
-                    <el-input disabled v-model="localToptTab.tenantCustomerConfigInfoList[0].secretKey">
+                    <el-input
+                      disabled
+                      v-model="
+                        localToptTab.tenantCustomerConfigInfoList[0].secretKey
+                      "
+                    >
                       <template #append>
-                        <copy class="copy" :content="localToptTab.tenantCustomerConfigInfoList[0].secretKey" />
+                        <copy
+                          class="copy"
+                          :content="
+                            localToptTab.tenantCustomerConfigInfoList[0]
+                              .secretKey
+                          "
+                        />
                       </template>
                     </el-input>
                   </el-form-item>
@@ -325,8 +469,12 @@ const tenantId = storage.local.get("anotherName");
               <template v-else>
                 <el-col :span="24">
                   <el-form-item :label="t('newCustomer.ipWhitelist')">
-                    <el-input :placeholder="t('newCustomer.tip1')" v-model="localToptTab.tenantCustomerConfigInfoList[0].whitelistIp
-      " />
+                    <el-input
+                      :placeholder="t('newCustomer.tip1')"
+                      v-model="
+                        localToptTab.tenantCustomerConfigInfoList[0].whitelistIp
+                      "
+                    />
                   </el-form-item>
                 </el-col>
               </template>
@@ -338,13 +486,28 @@ const tenantId = storage.local.get("anotherName");
                     {{ `/redirect?tid=${tenantId}&status=c&uid=[uid]` }}
                   </span>
                   <template
-                    v-if="localToptTab.tenantCustomerConfigInfoList[0].encryptionId && localToptTab.tenantCustomerConfigInfoList[0].isEncryption === 1">
+                    v-if="
+                      localToptTab.tenantCustomerConfigInfoList[0]
+                        .encryptionId &&
+                      localToptTab.tenantCustomerConfigInfoList[0]
+                        .isEncryption === 1
+                    "
+                  >
                     <span v-pre>&hash=[hash]</span>
                   </template>
                   <copy
-                    v-if="localToptTab.tenantCustomerConfigInfoList[0].encryptionId && localToptTab.tenantCustomerConfigInfoList[0].isEncryption === 1"
-                    :content="`${redirectUrl}/redirect?tid=${tenantId}&status=c&uid=[uid]&hash=[hash]`" />
-                  <copy v-else :content="`${redirectUrl}/redirect?tid=${tenantId}&status=c&uid=[uid]`" />
+                    v-if="
+                      localToptTab.tenantCustomerConfigInfoList[0]
+                        .encryptionId &&
+                      localToptTab.tenantCustomerConfigInfoList[0]
+                        .isEncryption === 1
+                    "
+                    :content="`${redirectUrl}/redirect?tid=${tenantId}&status=c&uid=[uid]&hash=[hash]`"
+                  />
+                  <copy
+                    v-else
+                    :content="`${redirectUrl}/redirect?tid=${tenantId}&status=c&uid=[uid]`"
+                  />
                 </el-form-item>
               </el-col>
               <el-col :span="24">
@@ -354,13 +517,28 @@ const tenantId = storage.local.get("anotherName");
                     {{ `/redirect?tid=${tenantId}&status=q&uid=[uid]` }}
                   </span>
                   <template
-                    v-if="localToptTab.tenantCustomerConfigInfoList[0].encryptionId && localToptTab.tenantCustomerConfigInfoList[0].isEncryption === 1">
+                    v-if="
+                      localToptTab.tenantCustomerConfigInfoList[0]
+                        .encryptionId &&
+                      localToptTab.tenantCustomerConfigInfoList[0]
+                        .isEncryption === 1
+                    "
+                  >
                     <span v-pre>&hash=[hash]</span>
                   </template>
                   <copy
-                    v-if="localToptTab.tenantCustomerConfigInfoList[0].encryptionId && localToptTab.tenantCustomerConfigInfoList[0].isEncryption === 1"
-                    :content="`${redirectUrl}/redirect?tid=${tenantId}&status=q&uid=[uid]&hash=[hash]`" />
-                  <copy v-else :content="`${redirectUrl}/redirect?tid=${tenantId}&status=q&uid=[uid]`" />
+                    v-if="
+                      localToptTab.tenantCustomerConfigInfoList[0]
+                        .encryptionId &&
+                      localToptTab.tenantCustomerConfigInfoList[0]
+                        .isEncryption === 1
+                    "
+                    :content="`${redirectUrl}/redirect?tid=${tenantId}&status=q&uid=[uid]&hash=[hash]`"
+                  />
+                  <copy
+                    v-else
+                    :content="`${redirectUrl}/redirect?tid=${tenantId}&status=q&uid=[uid]`"
+                  />
                 </el-form-item>
               </el-col>
               <el-col :span="24">
@@ -370,13 +548,28 @@ const tenantId = storage.local.get("anotherName");
                     {{ `/redirect?tid=${tenantId}&status=s&uid=[uid]` }}
                   </span>
                   <template
-                    v-if="localToptTab.tenantCustomerConfigInfoList[0].encryptionId && localToptTab.tenantCustomerConfigInfoList[0].isEncryption === 1">
+                    v-if="
+                      localToptTab.tenantCustomerConfigInfoList[0]
+                        .encryptionId &&
+                      localToptTab.tenantCustomerConfigInfoList[0]
+                        .isEncryption === 1
+                    "
+                  >
                     <span v-pre>&hash=[hash]</span>
                   </template>
                   <copy
-                    v-if="localToptTab.tenantCustomerConfigInfoList[0].encryptionId && localToptTab.tenantCustomerConfigInfoList[0].isEncryption === 1"
-                    :content="`${redirectUrl}/redirect?tid=${tenantId}&status=s&uid=[uid]&hash=[hash]`" />
-                  <copy v-else :content="`${redirectUrl}/redirect?tid=${tenantId}&status=s&uid=[uid]`" />
+                    v-if="
+                      localToptTab.tenantCustomerConfigInfoList[0]
+                        .encryptionId &&
+                      localToptTab.tenantCustomerConfigInfoList[0]
+                        .isEncryption === 1
+                    "
+                    :content="`${redirectUrl}/redirect?tid=${tenantId}&status=s&uid=[uid]&hash=[hash]`"
+                  />
+                  <copy
+                    v-else
+                    :content="`${redirectUrl}/redirect?tid=${tenantId}&status=s&uid=[uid]`"
+                  />
                 </el-form-item>
               </el-col>
               <el-col :span="24">
@@ -386,13 +579,28 @@ const tenantId = storage.local.get("anotherName");
                     {{ `/redirect?tid=${tenantId}&status=t&uid=[uid]` }}
                   </span>
                   <template
-                    v-if="localToptTab.tenantCustomerConfigInfoList[0].encryptionId && localToptTab.tenantCustomerConfigInfoList[0].isEncryption === 1">
+                    v-if="
+                      localToptTab.tenantCustomerConfigInfoList[0]
+                        .encryptionId &&
+                      localToptTab.tenantCustomerConfigInfoList[0]
+                        .isEncryption === 1
+                    "
+                  >
                     <span v-pre>&hash=[hash]</span>
                   </template>
                   <copy
-                    v-if="localToptTab.tenantCustomerConfigInfoList[0].encryptionId && localToptTab.tenantCustomerConfigInfoList[0].isEncryption === 1"
-                    :content="`${redirectUrl}/redirect?tid=${tenantId}&status=t&uid=[uid]&hash=[hash]`" />
-                  <copy v-else :content="`${redirectUrl}/redirect?tid=${tenantId}&status=t&uid=[uid]`" />
+                    v-if="
+                      localToptTab.tenantCustomerConfigInfoList[0]
+                        .encryptionId &&
+                      localToptTab.tenantCustomerConfigInfoList[0]
+                        .isEncryption === 1
+                    "
+                    :content="`${redirectUrl}/redirect?tid=${tenantId}&status=t&uid=[uid]&hash=[hash]`"
+                  />
+                  <copy
+                    v-else
+                    :content="`${redirectUrl}/redirect?tid=${tenantId}&status=t&uid=[uid]`"
+                  />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -400,35 +608,73 @@ const tenantId = storage.local.get("anotherName");
           <el-card class="box-card">
             <template #header>
               <div class="card-header">
-                <el-checkbox v-model="isEncryption" size="large" @change="changeConfigInfoList">
-                  <span>{{ t('newCustomer.serverCallback') }}</span>
+                <el-checkbox
+                  v-model="isEncryption"
+                  size="large"
+                  @change="changeConfigInfoList"
+                >
+                  <span>{{ t("newCustomer.serverCallback") }}</span>
                 </el-checkbox>
               </div>
             </template>
-            <el-row :gutter="24" v-if="localToptTab.tenantCustomerConfigInfoList.length === 2">
+            <el-row
+              :gutter="24"
+              v-if="localToptTab.tenantCustomerConfigInfoList.length === 2"
+            >
               <el-col :span="24">
                 <el-form-item :label="t('newCustomer.encipher')">
-                  <el-switch v-model="localToptTab.tenantCustomerConfigInfoList[1].isEncryption
-      " :active-value="1" :inactive-value="2" inline-prompt :active-text="t('newCustomer.encipher')" :inactive-text="t('newCustomer.noEncryption')" />
+                  <el-switch
+                    v-model="
+                      localToptTab.tenantCustomerConfigInfoList[1].isEncryption
+                    "
+                    :active-value="1"
+                    :inactive-value="2"
+                    inline-prompt
+                    :active-text="t('newCustomer.encipher')"
+                    :inactive-text="t('newCustomer.noEncryption')"
+                  />
                 </el-form-item>
               </el-col>
-              <template v-if="localToptTab.tenantCustomerConfigInfoList[1].isEncryption ===
-      1
-      ">
+              <template
+                v-if="
+                  localToptTab.tenantCustomerConfigInfoList[1].isEncryption ===
+                  1
+                "
+              >
                 <el-col :span="24">
                   <el-form-item :label="t('newCustomer.encryptionMode')">
-                    <el-select @change="changeCustomerConfigInfo($event, 1)" clearable v-model="localToptTab.tenantCustomerConfigInfoList[1]
-      .encryptionId
-      ">
-                      <el-option v-for="item in secretKeyConfigList" :label="item.name" :value="item.id"></el-option>
+                    <el-select
+                      @change="changeCustomerConfigInfo($event, 1)"
+                      clearable
+                      v-model="
+                        localToptTab.tenantCustomerConfigInfoList[1]
+                          .encryptionId
+                      "
+                    >
+                      <el-option
+                        v-for="item in secretKeyConfigList"
+                        :label="item.name"
+                        :value="item.id"
+                      ></el-option>
                     </el-select>
                   </el-form-item>
                 </el-col>
                 <el-col :span="24">
                   <el-form-item :label="t('newCustomer.secretKey')">
-                    <el-input disabled v-model="localToptTab.tenantCustomerConfigInfoList[1].secretKey">
+                    <el-input
+                      disabled
+                      v-model="
+                        localToptTab.tenantCustomerConfigInfoList[1].secretKey
+                      "
+                    >
                       <template #append>
-                        <copy class="copy" :content="localToptTab.tenantCustomerConfigInfoList[1].secretKey" />
+                        <copy
+                          class="copy"
+                          :content="
+                            localToptTab.tenantCustomerConfigInfoList[1]
+                              .secretKey
+                          "
+                        />
                       </template>
                     </el-input>
                   </el-form-item>
@@ -437,8 +683,12 @@ const tenantId = storage.local.get("anotherName");
               <template v-else>
                 <el-col :span="24">
                   <el-form-item :label="t('newCustomer.ipWhitelist')">
-                    <el-input :placeholder="t('newCustomer.tip1')" v-model="localToptTab.tenantCustomerConfigInfoList[1].whitelistIp
-      " />
+                    <el-input
+                      :placeholder="t('newCustomer.tip1')"
+                      v-model="
+                        localToptTab.tenantCustomerConfigInfoList[1].whitelistIp
+                      "
+                    />
                   </el-form-item>
                 </el-col>
               </template>
@@ -447,58 +697,125 @@ const tenantId = storage.local.get("anotherName");
                 <el-form-item :label="t('newCustomer.successfulCallback')">
                   {{ serverSideUrl }}
                   <span>
-                    {{ `/callback/serviceCallback?tid=${tenantId}&status=c&uid=[uid]` }}
+                    {{
+                      `/callback/serviceCallback?tid=${tenantId}&status=c&uid=[uid]`
+                    }}
                   </span>
                   <template
-                    v-if="localToptTab.tenantCustomerConfigInfoList[1].encryptionId && localToptTab.tenantCustomerConfigInfoList[1].isEncryption === 1">
-                    <span v-pre>
-                      &hash=[hash]
-                    </span>
+                    v-if="
+                      localToptTab.tenantCustomerConfigInfoList[1]
+                        .encryptionId &&
+                      localToptTab.tenantCustomerConfigInfoList[1]
+                        .isEncryption === 1
+                    "
+                  >
+                    <span v-pre> &hash=[hash] </span>
                   </template>
                   <copy
-                    v-if="localToptTab.tenantCustomerConfigInfoList[0].encryptionId && localToptTab.tenantCustomerConfigInfoList[0].isEncryption === 1"
-                    :content="`${serverSideUrl}/callback/serviceCallback?tid=${tenantId}&status=c&uid=[uid]&hash=[hash]`" />
-                  <copy v-else
-                    :content="`${serverSideUrl}/callback/serviceCallback?tid=${tenantId}&status=c&uid=[uid]`" />
+                    v-if="
+                      localToptTab.tenantCustomerConfigInfoList[0]
+                        .encryptionId &&
+                      localToptTab.tenantCustomerConfigInfoList[0]
+                        .isEncryption === 1
+                    "
+                    :content="`${serverSideUrl}/callback/serviceCallback?tid=${tenantId}&status=c&uid=[uid]&hash=[hash]`"
+                  />
+                  <copy
+                    v-else
+                    :content="`${serverSideUrl}/callback/serviceCallback?tid=${tenantId}&status=c&uid=[uid]`"
+                  />
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item :label="t('newCustomer.fullQuotaCallback')">
                   {{ serverSideUrl }}
-                  <span>{{ `/callback/serviceCallback?tid=${tenantId}&status=q&uid=[uid]` }}</span><template
-                    v-if="localToptTab.tenantCustomerConfigInfoList[1].encryptionId && localToptTab.tenantCustomerConfigInfoList[1].isEncryption === 1"><span
-                      v-pre>&hash=[hash]</span></template>
+                  <span>{{
+                    `/callback/serviceCallback?tid=${tenantId}&status=q&uid=[uid]`
+                  }}</span
+                  ><template
+                    v-if="
+                      localToptTab.tenantCustomerConfigInfoList[1]
+                        .encryptionId &&
+                      localToptTab.tenantCustomerConfigInfoList[1]
+                        .isEncryption === 1
+                    "
+                    ><span v-pre>&hash=[hash]</span></template
+                  >
                   <copy
-                    v-if="localToptTab.tenantCustomerConfigInfoList[0].encryptionId && localToptTab.tenantCustomerConfigInfoList[0].isEncryption === 1"
-                    :content="`${serverSideUrl}/callback/serviceCallback?tid=${tenantId}&status=q&uid=[uid]&hash=[hash]`" />
-                  <copy v-else
-                    :content="`${serverSideUrl}/callback/serviceCallback?tid=${tenantId}&status=q&uid=[uid]`" />
+                    v-if="
+                      localToptTab.tenantCustomerConfigInfoList[0]
+                        .encryptionId &&
+                      localToptTab.tenantCustomerConfigInfoList[0]
+                        .isEncryption === 1
+                    "
+                    :content="`${serverSideUrl}/callback/serviceCallback?tid=${tenantId}&status=q&uid=[uid]&hash=[hash]`"
+                  />
+                  <copy
+                    v-else
+                    :content="`${serverSideUrl}/callback/serviceCallback?tid=${tenantId}&status=q&uid=[uid]`"
+                  />
                 </el-form-item>
               </el-col>
               <el-col :span="24">
                 <el-form-item :label="t('newCustomer.beScreenedForCallbacks')">
                   {{ serverSideUrl }}
-                  <span>{{ `/callback/serviceCallback?tid=${tenantId}&status=s&uid=[uid]` }}</span><template
-                    v-if="localToptTab.tenantCustomerConfigInfoList[1].encryptionId && localToptTab.tenantCustomerConfigInfoList[1].isEncryption === 1"><span
-                      v-pre>&hash=[hash]</span></template>
+                  <span>{{
+                    `/callback/serviceCallback?tid=${tenantId}&status=s&uid=[uid]`
+                  }}</span
+                  ><template
+                    v-if="
+                      localToptTab.tenantCustomerConfigInfoList[1]
+                        .encryptionId &&
+                      localToptTab.tenantCustomerConfigInfoList[1]
+                        .isEncryption === 1
+                    "
+                    ><span v-pre>&hash=[hash]</span></template
+                  >
                   <copy
-                    v-if="localToptTab.tenantCustomerConfigInfoList[0].encryptionId && localToptTab.tenantCustomerConfigInfoList[0].isEncryption === 1"
-                    :content="`${serverSideUrl}/callback/serviceCallback?tid=${tenantId}&status=s&uid=[uid]&hash=[hash]`" />
-                  <copy v-else
-                    :content="`${serverSideUrl}/callback/serviceCallback?tid=${tenantId}&status=s&uid=[uid]`" />
+                    v-if="
+                      localToptTab.tenantCustomerConfigInfoList[0]
+                        .encryptionId &&
+                      localToptTab.tenantCustomerConfigInfoList[0]
+                        .isEncryption === 1
+                    "
+                    :content="`${serverSideUrl}/callback/serviceCallback?tid=${tenantId}&status=s&uid=[uid]&hash=[hash]`"
+                  />
+                  <copy
+                    v-else
+                    :content="`${serverSideUrl}/callback/serviceCallback?tid=${tenantId}&status=s&uid=[uid]`"
+                  />
                 </el-form-item>
               </el-col>
               <el-col :span="24">
-                <el-form-item :label="t('newCustomer.securityTerminationCallback')">
+                <el-form-item
+                  :label="t('newCustomer.securityTerminationCallback')"
+                >
                   {{ serverSideUrl }}
-                  <span>{{ `/callback/serviceCallback?tid=${tenantId}&status=t&uid=[uid]` }}</span><template
-                    v-if="localToptTab.tenantCustomerConfigInfoList[1].encryptionId && localToptTab.tenantCustomerConfigInfoList[1].isEncryption === 1"><span
-                      v-pre>&hash=[hash]</span></template>
+                  <span>{{
+                    `/callback/serviceCallback?tid=${tenantId}&status=t&uid=[uid]`
+                  }}</span
+                  ><template
+                    v-if="
+                      localToptTab.tenantCustomerConfigInfoList[1]
+                        .encryptionId &&
+                      localToptTab.tenantCustomerConfigInfoList[1]
+                        .isEncryption === 1
+                    "
+                    ><span v-pre>&hash=[hash]</span></template
+                  >
                   <copy
-                    v-if="localToptTab.tenantCustomerConfigInfoList[0].encryptionId && localToptTab.tenantCustomerConfigInfoList[0].isEncryption === 1"
-                    :content="`${serverSideUrl}/callback/serviceCallback?tid=${tenantId}&status=t&uid=[uid]&hash=[hash]`" />
-                  <copy v-else
-                    :content="`${serverSideUrl}/callback/serviceCallback?tid=${tenantId}&status=t&uid=[uid]`" />
+                    v-if="
+                      localToptTab.tenantCustomerConfigInfoList[0]
+                        .encryptionId &&
+                      localToptTab.tenantCustomerConfigInfoList[0]
+                        .isEncryption === 1
+                    "
+                    :content="`${serverSideUrl}/callback/serviceCallback?tid=${tenantId}&status=t&uid=[uid]&hash=[hash]`"
+                  />
+                  <copy
+                    v-else
+                    :content="`${serverSideUrl}/callback/serviceCallback?tid=${tenantId}&status=t&uid=[uid]`"
+                  />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -506,7 +823,11 @@ const tenantId = storage.local.get("anotherName");
         </el-tab-pane>
       </el-tabs>
     </ElForm>
-    <DictionaryItemDia v-if="dictionaryItemVisible" v-model="dictionaryItemVisible" @success="getTenantStaffList" />
+    <DictionaryItemDia
+      v-if="dictionaryItemVisible"
+      v-model="dictionaryItemVisible"
+      @success="getTenantStaffList"
+    />
   </div>
 </template>
 
@@ -572,7 +893,9 @@ const tenantId = storage.local.get("anotherName");
   margin: 0.75rem;
   width: 100%;
   height: 2rem;
-  font-family: PingFang SC, PingFang SC;
+  font-family:
+    PingFang SC,
+    PingFang SC;
   font-weight: 500;
   font-size: 0.875rem;
   color: #409eff;
@@ -586,6 +909,5 @@ const tenantId = storage.local.get("anotherName");
 .el-select-dropdown .buttonClass {
   width: calc(100% - 24px);
   /* 减去两边的 padding */
-
 }
 </style>
