@@ -36,14 +36,14 @@ const banner = new URL("../assets/images/login-banner.png", import.meta.url)
   .href;
 const logo = new URL("../assets/images/logo.png", import.meta.url).href;
 const title = import.meta.env.VITE_APP_TITLE;
-const isDomain = ref<any>()
+const isDomain = ref<any>();
 
 // 表单类型，login 登录，register 注册，reset 重置密码
 const isRegister = ref<any>();
 const formType = ref("login");
 const loading = ref(false);
 const redirect = ref(
-  route.query.redirect?.toString() ?? settingsStore.settings.home.fullPath
+  route.query.redirect?.toString() ?? settingsStore.settings.home.fullPath,
 );
 
 //#region 登录
@@ -59,10 +59,9 @@ const loginForm = ref<any>({
 });
 // 自定义校验手机号
 const validatePhone = (rule: any, value: any, callback: any) => {
-  const regExpPhone: any =
-  /^(?:(?:\+|00)86)?1[3-9]\d{9}$/;
+  const regExpPhone: any = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/;
   if (!regExpPhone.test(value)) {
-    callback(new Error("请输入合法手机号"));
+    callback(new Error(t("app.rightPhone")));
   } else {
     callback();
   }
@@ -72,25 +71,44 @@ const validateEmail = (rule: any, value: any, callback: any) => {
   const regExpEmail: any =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   if (!regExpEmail.test(loginForm.value.account)) {
-    callback(new Error("请输入合法邮箱"));
+    callback(new Error(t("app.rightEmail")));
   } else {
     callback();
   }
 };
 const loginRules = ref<any>({
   account: [
-    { required: true, trigger: "blur", message: "请输入手机号/邮箱/用户名" },
+    {
+      required: true,
+      trigger: "blur",
+      message: computed(() => t("app.numberEnter")),
+    },
   ],
-  code: [{ required: true, trigger: "blur", message: "请输入验证码" }],
+  code: [
+    {
+      required: true,
+      trigger: "blur",
+      message: computed(() => t("app.captchaEnter")),
+    },
+  ],
   password: [
-    { required: true, trigger: "blur", message: "请输入密码" },
-    { min: 6, max: 18, trigger: "blur", message: "密码长度为6到18位" },
+    {
+      required: true,
+      trigger: "blur",
+      message: computed(() => t("app.pwdEnter")),
+    },
+    {
+      min: 6,
+      max: 18,
+      trigger: "blur",
+      message: computed(() => t("app.6to18")),
+    },
   ],
   agreeToTheAgreement: [
     {
       required: true,
       validator: (rule: any, value: any) => value === true,
-      message: "请阅读并勾选协议",
+      message: computed(() => t("app.readCheck")),
       trigger: "change",
     },
   ],
@@ -102,23 +120,23 @@ const urlNumSplit = (url: any) => {
 
   if (match) {
     const number = match[2];
-    return  number
+    return number;
   } else {
-    return  ''
+    return "";
   }
 };
 onMounted(async () => {
   const { data } = await api.getTenantConfig();
-  isRegister.value = data?.register === false ? false : true
-  if (route.query.isRegister && route.query.isRegister === 'true') {
-    formType.value = 'register'
+  isRegister.value = data?.register === false ? false : true;
+  if (route.query.isRegister && route.query.isRegister === "true") {
+    formType.value = "register";
   }
-  const res = await api.getTenantPageTemplate({})
-  isDomain.value = res.data.isDomain
-  if(res.data.isDomain === 1) {
-    userStore.webName = res.data.webName
-    userStore.description = res.data.description
-    userStore.keyWords = res.data.keyWords
+  const res = await api.getTenantPageTemplate({});
+  isDomain.value = res.data.isDomain;
+  if (res.data.isDomain === 1) {
+    userStore.webName = res.data.webName;
+    userStore.description = res.data.description;
+    userStore.keyWords = res.data.keyWords;
   }
 });
 // 动态表单校验
@@ -126,13 +144,13 @@ onMounted(async () => {
 //   // 手机号
 //   if (!loginForm.value.account.includes("@")) {
 //     loginRules.value.account = [
-//       { required: true, trigger: "blur", message: "请输入手机号/邮箱" },
+//       { required: true, trigger: "blur", message: computed(() => t("app.enterPhoneEmail")) },
 //       { validator: validatePhone, trigger: "blur" },
 //     ];
 //   } else {
 //     //邮箱
 //     loginRules.value.account = [
-//       { required: true, trigger: "blur", message: "请输入手机号/邮箱" },
+//       { required: true, trigger: "blur", message: computed(() => t("app.enterPhoneEmail")) },
 //       { validator: validateEmail, trigger: "blur" },
 //     ];
 //   }
@@ -142,19 +160,31 @@ const chengAccount = () => {
   if (account.includes("@")) {
     // 邮箱
     loginRules.value.account = [
-      { required: true, trigger: "blur", message: "请输入邮箱" },
+      {
+        required: true,
+        trigger: "blur",
+        message: computed(() => t("app.enterEmail")),
+      },
       { validator: validateEmail, trigger: "blur" },
     ];
   } else if (/^\d{11}$/.test(account)) {
     // 假设手机号是10位数字
     loginRules.value.account = [
-      { required: true, trigger: "blur", message: "请输入手机号" },
+      {
+        required: true,
+        trigger: "blur",
+        message: computed(() => t("app.enterPhone")),
+      },
       { validator: validatePhone, trigger: "blur" },
     ];
   } else if (account.trim() !== "") {
     // 用户名
     loginRules.value.account = [
-      { required: true, trigger: "blur", message: "请输入用户名" },
+      {
+        required: true,
+        trigger: "blur",
+        message: computed(() => t("app.enterAccount")),
+      },
     ];
   } else {
     // 不触发校验
@@ -165,11 +195,11 @@ const loginSendCode = debounce(async (params: any) => {
   const { status } = await api.sendCode(params);
   if (status === 1) {
     ElMessage.success({
-      message: "已发送",
+      message: computed(() => t("app.sendSuccess")),
     });
     loginCountdown();
   }
-}, 1000)
+}, 1000);
 // 获取验证码
 async function loginCaptcha() {
   loginFormRef.value.validateField("account", async (valid: any) => {
@@ -189,8 +219,8 @@ async function loginCaptcha() {
           type: "login_phone_number",
         };
       }
-      loginCode.value = '正在发送验证码';
-      await loginSendCode(params)
+      loginCode.value = t("app.sending");
+      await loginSendCode(params);
     }
   });
 }
@@ -201,7 +231,7 @@ const loginCountdown = () => {
   getPhoneInterval.value = setInterval(() => {
     if (n > 0) {
       n--;
-      loginCode.value = `请在${n}s后重新获取`;
+      loginCode.value = `${t("app.please")}${n}${t("app.getAgain")}`;
     } else {
       clearInterval(getPhoneInterval.value);
       loginCode.value = "获取验证码";
@@ -233,7 +263,7 @@ const handleLogin = debounce(() => {
         //如果是自定义域名，携带id，就传
         const currentUrl = window.location.href;
         // console.log(currentUrl,urlNumSplit(currentUrl))
-        if(urlNumSplit(currentUrl)){
+        if (urlNumSplit(currentUrl)) {
           params.tenantId = urlNumSplit(currentUrl);
         }
         loading.value = true;
@@ -299,11 +329,10 @@ const registerForm = ref<any>({
 });
 // 自定义校验手机号
 const validatePhoneRegistered = (rule: any, value: any, callback: any) => {
-  const regExpPhone: any =
-  /^(?:(?:\+|00)86)?1[3-9]\d{9}$/;
+  const regExpPhone: any = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/;
   if (!regExpPhone.test(registerForm.value.phoneNumber)) {
     //
-    callback(new Error("请输入合法手机号"));
+    callback(new Error(t("app.rightPhone")));
   } else {
     callback();
   }
@@ -313,43 +342,102 @@ const validateEmailRegistered = (rule: any, value: any, callback: any) => {
   const regExpEmail: any =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   if (!regExpEmail.test(registerForm.value.email)) {
-    callback(new Error("请输入合法邮箱"));
+    callback(new Error(t("app.rightEmail")));
   } else {
     callback();
   }
 };
 const registerRules = ref<FormRules>({
-  account: [{ required: true, trigger: "blur", message: "请输入用户名" }],
-  companyName: [{ required: true, trigger: "blur", message: "请输入公司名称" }],
+  account: [
+    {
+      required: true,
+      trigger: "blur",
+      message: computed(() => t("app.enterAccount")),
+    },
+  ],
+  companyName: [
+    {
+      required: true,
+      trigger: "blur",
+      message: computed(() => t("app.companyName")),
+    },
+  ],
   companyType: [
-    { required: true, trigger: "change", message: "请选择账户类型" },
+    {
+      required: true,
+      trigger: "change",
+      message: computed(() => t("app.accountType")),
+    },
   ],
   legalPersonName: [
-    { required: true, trigger: "blur", message: "请输入法人姓名" },
+    {
+      required: true,
+      trigger: "blur",
+      message: computed(() => t("app.enterLegalPerson")),
+    },
   ],
   email: [
-    { required: true, trigger: "blur", message: "请输入邮箱" },
+    {
+      required: true,
+      trigger: "blur",
+      message: computed(() => t("app.enterEmail")),
+    },
     { validator: validateEmailRegistered, trigger: "blur" },
   ],
   phoneNumber: [
-    { required: true, trigger: "blur", message: "请输入手机号码" },
+    {
+      required: true,
+      trigger: "blur",
+      message: computed(() => t("app.enterPhone")),
+    },
     { validator: validatePhoneRegistered, trigger: "blur" },
   ],
-  code: [{ required: true, trigger: "blur", message: "请输入验证码" }],
-  country: [{ required: true, trigger: "change", message: "请选择区域" }],
-  name: [{ required: true, trigger: "blur", message: "请输入用户名" }],
+  code: [
+    {
+      required: true,
+      trigger: "blur",
+      message: computed(() => t("app.captchaEnter")),
+    },
+  ],
+  country: [
+    {
+      required: true,
+      trigger: "change",
+      message: computed(() => t("app.areaSelect")),
+    },
+  ],
+  name: [
+    {
+      required: true,
+      trigger: "blur",
+      message: computed(() => t("app.enterAccount")),
+    },
+  ],
   password: [
-    { required: true, trigger: "blur", message: "请输入密码" },
-    { min: 6, max: 18, trigger: "blur", message: "密码长度为6到18位" },
+    {
+      required: true,
+      trigger: "blur",
+      message: computed(() => t("app.pwdEnter")),
+    },
+    {
+      min: 6,
+      max: 18,
+      trigger: "blur",
+      message: computed(() => t("app.6to18")),
+    },
   ],
   isInvitation: [
-    { required: true, trigger: "blur", message: "请选择合作邀约" },
+    {
+      required: true,
+      trigger: "blur",
+      message: computed(() => t("app.cooperationOfferSelect")),
+    },
   ],
   agreeToTheAgreement: [
     {
       required: true,
       validator: (rule: any, value: any) => value === true,
-      message: "请阅读并勾选协议",
+      message: computed(() => t("app.readCheck")),
       trigger: "change",
     },
   ],
@@ -359,15 +447,15 @@ const registerSendCode = debounce(async (params: any) => {
   const { status } = await api.sendCode(params);
   if (status === 1) {
     ElMessage.success({
-      message: "已发送",
+      message: computed(() => t("app.sendSuccess")),
     });
     countdown();
   }
-}, 1000)
+}, 1000);
 // 获取验证码
 const mobileVerificationCode = async () => {
   // 首先，验证区域选择
-  const countryValid = await registerFormRef.value.validateField('country');
+  const countryValid = await registerFormRef.value.validateField("country");
   registerFormRef.value.validateField(
     registerForm.value.country === "CN" ? "phoneNumber" : "email",
     async (valid: any) => {
@@ -376,19 +464,18 @@ const mobileVerificationCode = async () => {
           type: "register_phone_number", // 默认手机号
           email: registerForm.value.email,
           phone: registerForm.value.phoneNumber,
-          countryCode:registerForm.value.country,
+          countryCode: registerForm.value.country,
         };
         if (registerForm.value.country === "CN") {
-          phoneCode.value = `正在发送验证码`
-          await registerSendCode(params)
-
+          phoneCode.value = `正在发送验证码`;
+          await registerSendCode(params);
         } else {
           params.type = "register_email";
-          phoneCode.value = `正在发送验证码`
-          await registerSendCode(params)
+          phoneCode.value = `正在发送验证码`;
+          await registerSendCode(params);
         }
       }
-    }
+    },
   );
 };
 // 倒计时
@@ -398,7 +485,7 @@ const countdown = () => {
   getPhoneInterval.value = setInterval(() => {
     if (n > 0) {
       n--;
-      phoneCode.value = `请在${n}s后重新获取`;
+      phoneCode.value = `${t("app.please")}${n}${t("app.getAgain")}`;
     } else {
       clearInterval(getPhoneInterval.value);
       phoneCode.value = "获取验证码";
@@ -427,7 +514,7 @@ const handleRegister = debounce(async () => {
         const { status } = await api.register(registerForm.value);
         if (status === 1) {
           ElMessage.success({
-            message: "注册成功",
+            message: computed(() => t("app.signInSuccess")),
           });
           // 跳转登录 快捷方式
           formType.value = "login";
@@ -466,11 +553,32 @@ const validatePassword = (rule, value, callback) => {
 };
 // 校验
 const resetRules = ref<FormRules>({
-  info: [{ required: true, trigger: "blur", message: "请输入用户名" }],
-  code: [{ required: true, trigger: "blur", message: "请输入验证码" }],
+  info: [
+    {
+      required: true,
+      trigger: "blur",
+      message: computed(() => t("app.enterAccount")),
+    },
+  ],
+  code: [
+    {
+      required: true,
+      trigger: "blur",
+      message: computed(() => t("app.captchaEnter")),
+    },
+  ],
   newPassword: [
-    { required: true, trigger: "blur", message: "请输入新密码" },
-    { min: 6, max: 18, trigger: "blur", message: "密码长度为6到18位" },
+    {
+      required: true,
+      trigger: "blur",
+      message: computed(() => t("app.newPwdEnter")),
+    },
+    {
+      min: 6,
+      max: 18,
+      trigger: "blur",
+      message: computed(() => t("app.6to18")),
+    },
     { validator: validatePassword, trigger: "blur" },
   ],
 });
@@ -480,19 +588,19 @@ const resultVerificationCode = debounce(() => {
     !resetForm.value.info ? "info" : "",
     async (valid: any) => {
       if (valid) {
-        resultCode.value = `正在发送验证码`
+        resultCode.value = `正在发送验证码`;
         // 这里编写业务代码
-        const { status } = await api.forgetCode({ info: resetForm.value.info })
+        const { status } = await api.forgetCode({ info: resetForm.value.info });
         if (status === 1) {
           ElMessage.success({
-            message: "已发送",
+            message: computed(() => t("app.sendSuccess")),
           });
           resultCountdown();
         }
       }
-    }
+    },
   );
-}, 1000)
+}, 1000);
 // 修改密码
 const handleReset = debounce(() => {
   resetFormRef.value &&
@@ -502,7 +610,7 @@ const handleReset = debounce(() => {
         const { status } = await api.updatePassword(resetForm.value);
         if (status === 1) {
           ElMessage.success({
-            message: "修改成功",
+            message: computed(() => t("app.changeSuccess")),
           });
           // 跳转登录 快捷方式
           formType.value = "login";
@@ -512,7 +620,7 @@ const handleReset = debounce(() => {
         }
       }
     });
-}, 500)
+}, 500);
 // 倒计时
 const resultCountdown = () => {
   isReset.value = true;
@@ -540,9 +648,13 @@ onUnmounted(() => {
 // 重置校验
 const resetCheck = () => {
   loginRules.value.account = [
-    { required: true, trigger: "blur", message: "请输入手机号/邮箱/用户名" },
+    {
+      required: true,
+      trigger: "blur",
+      message: computed(() => t("app.numberEnter")),
+    },
   ];
-  loginForm.value.code = ''
+  loginForm.value.code = "";
   loginFormRef.value.resetFields();
 };
 
@@ -556,7 +668,7 @@ watch(
       case "login":
         resetCheck();
         clearInterval(getPhoneInterval.value);
-        loginCode.value = "获取验证码";
+        loginCode.value = t("app.getCaptcha");
         getPhoneInterval.value = null;
         loginGetCaptcha.value = false;
         loginForm.value = {
@@ -568,7 +680,7 @@ watch(
       case "register":
         registerFormRef.value.resetFields();
         clearInterval(getPhoneInterval.value);
-        phoneCode.value = "获取验证码";
+        phoneCode.value = t("app.getCaptcha");
         getPhoneInterval.value = null;
         isGetPhone.value = false;
         registerForm.value.agreeToTheAgreement = false;
@@ -606,7 +718,7 @@ watch(
       });
       countryList.value = res.data.records;
     }
-  }
+  },
 );
 const agreementRef = ref<any>();
 // 协议弹框
@@ -628,11 +740,21 @@ const agreements = (val: any) => {
         <!--<h1 style="font-size: 3.125rem; font-weight: normal">欢迎</h1>
         <h3 h1 style="font-size: 1.875rem; font-weight: normal">来到合作商系统 !</h3>-->
       </div>
-      <el-form v-show="formType === 'login'" ref="loginFormRef" :model="loginForm" :rules="loginRules"
-        class="login-form" :validate-on-rule-change="false">
+      <el-form
+        v-show="formType === 'login'"
+        ref="loginFormRef"
+        :model="loginForm"
+        :rules="loginRules"
+        class="login-form"
+        :validate-on-rule-change="false"
+      >
         <div class="title-container">
           <div class="fx-c">
-            <el-radio-group v-model="loginType" size="large" @change="resetCheck">
+            <el-radio-group
+              v-model="loginType"
+              size="large"
+              @change="resetCheck"
+            >
               <el-radio-button label="密码登录" value="password" />
               <el-radio-button label="验证码登录" value="code" />
             </el-radio-group>
@@ -640,27 +762,49 @@ const agreements = (val: any) => {
         </div>
         <div>
           <ElFormItem prop="account">
-            <ElInput v-model.trim="loginForm.account" :placeholder="t('app.account')" type="text" tabindex="1"
-              @blur="chengAccount">
+            <ElInput
+              v-model.trim="loginForm.account"
+              :placeholder="t('app.account')"
+              type="text"
+              tabindex="1"
+              @blur="chengAccount"
+            >
               <template #prefix>
                 <SvgIcon name="i-ri:user-3-fill" />
               </template>
               <template #append v-if="loginType === 'code'">
-                <el-button type="primary" :disabled="loginGetCaptcha" @click="loginCaptcha">{{ loginCode }}</el-button>
+                <el-button
+                  type="primary"
+                  :disabled="loginGetCaptcha"
+                  @click="loginCaptcha"
+                  >{{ loginCode }}</el-button
+                >
               </template>
             </ElInput>
           </ElFormItem>
           <ElFormItem prop="password" v-if="loginType === 'password'">
-            <ElInput v-model.trim="loginForm.password" type="password" :placeholder="t('app.password')" tabindex="2"
-              autocomplete="new-password" show-password @keyup.enter="handleLogin">
+            <ElInput
+              v-model.trim="loginForm.password"
+              type="password"
+              :placeholder="t('app.password')"
+              tabindex="2"
+              autocomplete="new-password"
+              show-password
+              @keyup.enter="handleLogin"
+            >
               <template #prefix>
                 <SvgIcon name="i-ri:lock-2-fill" />
               </template>
             </ElInput>
           </ElFormItem>
           <ElFormItem prop="code" v-if="loginType === 'code'">
-            <ElInput v-model.trim="loginForm.code" type="text" :placeholder="t('app.captcha')" tabindex="2"
-              @keyup.enter="handleLogin">
+            <ElInput
+              v-model.trim="loginForm.code"
+              type="text"
+              :placeholder="t('app.captcha')"
+              tabindex="2"
+              @keyup.enter="handleLogin"
+            >
               <template #prefix>
                 <SvgIcon name="i-ep:message" />
               </template>
@@ -669,43 +813,76 @@ const agreements = (val: any) => {
           <ElFormItem prop="agreeToTheAgreement" style="margin-bottom: 0.5rem">
             <div class="flex-bar" style="width: 100%; margin: 0">
               <ElCheckbox v-model="loginForm.agreeToTheAgreement" tabindex="3">
-                我已阅读并同意
-                <el-button type="primary" size="default" link @click="agreements(1)">《会员协议》</el-button>和<el-button
-                  type="primary" size="default" link @click="agreements(2)">《服务协议》</el-button>
+                {{ t("app.readAgree") }}
+                <el-button
+                  type="primary"
+                  size="default"
+                  link
+                  @click="agreements(1)"
+                  >{{ t("app.vipAgreement") }}</el-button
+                >{{ t("app.and")
+                }}<el-button
+                  type="primary"
+                  size="default"
+                  link
+                  @click="agreements(2)"
+                  >{{ t("app.serviceAgreement") }}</el-button
+                >
               </ElCheckbox>
             </div>
           </ElFormItem>
           <ElFormItem>
             <div class="flex-bar">
               <ElCheckbox v-model="loginForm.remember" tabindex="4">
-                保持登录
+                {{ t("app.keepLogin") }}
               </ElCheckbox>
-              <ElLink v-if="loginType === 'password'" type="primary" :underline="false" @click="formType = 'reset'">
-                忘记密码了?
+              <ElLink
+                v-if="loginType === 'password'"
+                type="primary"
+                :underline="false"
+                @click="formType = 'reset'"
+              >
+                {{ t("app.forgetPassword") }}
               </ElLink>
             </div>
           </ElFormItem>
         </div>
 
-        <ElButton :loading="loading" type="primary" size="large" style="width: 100%" @click.prevent="handleLogin"
-          tabindex="5">
+        <ElButton
+          :loading="loading"
+          type="primary"
+          size="large"
+          style="width: 100%"
+          @click.prevent="handleLogin"
+          tabindex="5"
+        >
           {{ t("app.login") }}
         </ElButton>
         <div v-if="isDomain !== 1" class="sub-link" v-show="isRegister">
-          <span class="text">还不是会员?</span>
-          <ElLink type="primary" :underline="false" @click="formType = 'register'">
-            立即注册
+          <span class="text">{{ t("app.notMember") }}</span>
+          <ElLink
+            type="primary"
+            :underline="false"
+            @click="formType = 'register'"
+          >
+            {{ t("app.register") }}
           </ElLink>
         </div>
       </el-form>
-      <ElForm v-show="formType === 'register'" ref="registerFormRef" :model="registerForm" :rules="registerRules"
-        class="login-form" auto-complete="on">
+      <ElForm
+        v-show="formType === 'register'"
+        ref="registerFormRef"
+        :model="registerForm"
+        :rules="registerRules"
+        class="login-form"
+        auto-complete="on"
+      >
         <div>
           <!-- <ElFormItem prop="companyType">
             <el-select
               v-model="registerForm.companyType"
               value-key=""
-              placeholder="账户类型"
+              :placeholder="t('app.AccountType')"
               clearable
               filterable
             >
@@ -725,7 +902,11 @@ const agreements = (val: any) => {
           </ElFormItem> -->
           <!-- v-if="registerForm.companyType === 'company'" -->
           <ElFormItem prop="companyName">
-            <ElInput v-model.trim="registerForm.companyName" placeholder="请输入公司名称" tabindex="1">
+            <ElInput
+              v-model.trim="registerForm.companyName"
+              :placeholder="t('app.CompanyName')"
+              tabindex="1"
+            >
               <template #prefix>
                 <SvgIcon name="i-mdi:greenhouse" />
               </template>
@@ -740,47 +921,83 @@ const agreements = (val: any) => {
             <ElInput v-model.trim="registerForm.legalPersonName" placeholder="请输入法人姓名" />
           </ElFormItem> -->
           <ElFormItem prop="name">
-            <ElInput v-model.trim="registerForm.name" placeholder="用户名" tabindex="2">
+            <ElInput
+              v-model.trim="registerForm.name"
+              :placeholder="t('app.Username')"
+              tabindex="2"
+            >
               <template #prefix>
                 <SvgIcon name="i-ri:user-3-fill" />
               </template>
             </ElInput>
           </ElFormItem>
           <ElFormItem prop="country">
-            <ElSelect v-model="registerForm.country" placeholder="区域" clearable filterable tabindex="3">
+            <ElSelect
+              v-model="registerForm.country"
+              :placeholder="t('app.Area')"
+              clearable
+              filterable
+              tabindex="3"
+            >
               <template #prefix>
                 <SvgIcon name="i-mdi:format-list-bulleted-type" />
               </template>
-              <ElOption v-for="item in countryList" :label="item.chineseName" :value="item.code"></ElOption>
+              <ElOption
+                v-for="item in countryList"
+                :label="item.chineseName"
+                :value="item.code"
+              ></ElOption>
             </ElSelect>
           </ElFormItem>
           <ElFormItem prop="phoneNumber" v-if="registerForm.country === 'CN'">
-            <ElInput v-model.trim="registerForm.phoneNumber" placeholder="手机号" tabindex="4">
+            <ElInput
+              v-model.trim="registerForm.phoneNumber"
+              :placeholder="t('app.PhoneNumber')"
+              tabindex="4"
+            >
               <template #prefix>
                 <SvgIcon name="i-ant-design:phone-outlined" />
               </template>
             </ElInput>
           </ElFormItem>
           <ElFormItem prop="email" v-else>
-            <ElInput v-model.trim="registerForm.email" placeholder="邮箱" tabindex="4">
+            <ElInput
+              v-model.trim="registerForm.email"
+              :placeholder="t('app.Email')"
+              tabindex="4"
+            >
               <template #prefix>
                 <SvgIcon name="i-mdi:email" />
               </template>
             </ElInput>
           </ElFormItem>
           <ElFormItem prop="code">
-            <ElInput v-model.trim="registerForm.code" placeholder="验证码" tabindex="5">
+            <ElInput
+              v-model.trim="registerForm.code"
+              :placeholder="t('app.captcha')"
+              tabindex="5"
+            >
               <template #prefix>
                 <SvgIcon name="i-ic:baseline-verified-user" />
               </template>
               <template #append>
-                <ElButton :disabled="isGetPhone" @click="mobileVerificationCode">
-                  {{ phoneCode }}</ElButton>
+                <ElButton
+                  :disabled="isGetPhone"
+                  @click="mobileVerificationCode"
+                >
+                  {{ phoneCode }}</ElButton
+                >
               </template>
             </ElInput>
           </ElFormItem>
           <ElFormItem prop="password">
-            <ElInput v-model.trim="registerForm.password" type="password" placeholder="密码" tabindex="6" show-password>
+            <ElInput
+              v-model.trim="registerForm.password"
+              type="password"
+              :placeholder="t('app.password')"
+              tabindex="6"
+              show-password
+            >
               <template #prefix>
                 <SvgIcon name="i-ri:lock-2-fill" />
               </template>
@@ -790,70 +1007,115 @@ const agreements = (val: any) => {
             <el-select
               v-model="registerForm.isInvitation"
               tabindex="7"
-              placeholder="是否开启合作邀约"
+              :placeholder="t('app.CooperationOffer')"
               filterable
             >
               <template #prefix>
                 <SvgIcon name="i-ant-design:container-outlined" />
               </template>
-              <el-option label="合作邀约开启" :value="2"> </el-option>
-              <el-option label="合作邀约关闭" :value="1"> </el-option>
+              <el-option :label="t('app.On')" :value="2"> </el-option>
+              <el-option :label="t('app.Off')" :value="1"> </el-option>
             </el-select>
           </ElFormItem> -->
           <ElFormItem prop="agreeToTheAgreement">
             <ElCheckbox v-model="registerForm.agreeToTheAgreement" tabindex="8">
-              我已阅读并同意
-              <el-button type="primary" size="default" link @click="agreements(1)">《会员协议》</el-button>和<el-button
-                type="primary" size="default" link @click="agreements(2)">《服务协议》</el-button>
+              {{ t("app.readAgree") }}
+              <el-button
+                type="primary"
+                size="default"
+                link
+                @click="agreements(1)"
+                >{{ t("app.vipAgreement") }}</el-button
+              >{{ t("app.and")
+              }}<el-button
+                type="primary"
+                size="default"
+                link
+                @click="agreements(2)"
+                >{{ t("app.serviceAgreement") }}</el-button
+              >
             </ElCheckbox>
           </ElFormItem>
         </div>
-        <ElButton tabindex="9" :loading="loading" type="primary" size="large" style="width: 100%; margin-top: 1.25rem"
-          @click.prevent="handleRegister">
-          注册
+        <ElButton
+          tabindex="9"
+          :loading="loading"
+          type="primary"
+          size="large"
+          style="width: 100%; margin-top: 1.25rem"
+          @click.prevent="handleRegister"
+        >
+          {{ t("app.Register") }}
         </ElButton>
         <div class="sub-link">
-          <span class="text">已经有帐号?</span>
+          <span class="text">{{ t("app.haveAccount") }}</span>
           <ElLink type="primary" :underline="false" @click="formType = 'login'">
-            去登录
+            {{ t("app.toLogin") }}
           </ElLink>
         </div>
       </ElForm>
-      <ElForm v-show="formType === 'reset'" ref="resetFormRef" :model="resetForm" :rules="resetRules"
-        class="login-form">
+      <ElForm
+        v-show="formType === 'reset'"
+        ref="resetFormRef"
+        :model="resetForm"
+        :rules="resetRules"
+        class="login-form"
+      >
         <div class="title-container">
-          <h3 class="title">忘记密码了? 🔒</h3>
+          <h3 class="title">{{ t("app.forgetPassword") }} 🔒</h3>
         </div>
         <div>
           <ElFormItem prop="info">
-            <ElInput v-model.trim="resetForm.info" :placeholder="t('app.account')" type="text" tabindex="1"
-              @blur="chengAccount">
+            <ElInput
+              v-model.trim="resetForm.info"
+              :placeholder="t('app.account')"
+              type="text"
+              tabindex="1"
+              @blur="chengAccount"
+            >
               <template #prefix>
                 <SvgIcon name="i-ri:user-3-fill" />
               </template>
             </ElInput>
           </ElFormItem>
           <ElFormItem prop="code">
-            <ElInput v-model.trim="resetForm.code" :placeholder="t('app.captcha')" type="text" tabindex="2">
+            <ElInput
+              v-model.trim="resetForm.code"
+              :placeholder="t('app.captcha')"
+              type="text"
+              tabindex="2"
+            >
               <template #prefix>
                 <SvgIcon name="i-ic:baseline-verified-user" />
               </template>
               <template #append>
-                <ElButton :disabled="isReset" @click="resultVerificationCode">{{ resultCode }}</ElButton>
+                <ElButton :disabled="isReset" @click="resultVerificationCode">{{
+                  resultCode
+                }}</ElButton>
               </template>
             </ElInput>
           </ElFormItem>
           <ElFormItem prop="newPassword">
-            <ElInput v-model.trim="resetForm.newPassword" type="password" :placeholder="t('app.newPassword')"
-              tabindex="3" show-password>
+            <ElInput
+              v-model.trim="resetForm.newPassword"
+              type="password"
+              :placeholder="t('app.newPassword')"
+              tabindex="3"
+              show-password
+            >
               <template #prefix>
                 <SvgIcon name="i-ri:lock-2-fill" />
               </template>
             </ElInput>
           </ElFormItem>
         </div>
-        <ElButton :loading="loading" type="primary" size="large" style="width: 100%; margin-top: 1.25rem"
-          @click.prevent="handleReset">
+        <ElButton
+          :loading="loading"
+          type="primary"
+          size="large"
+          style="width: 100%; margin-top: 1.25rem"
+          @click.prevent="handleReset"
+        >
           {{ t("app.check") }}
         </ElButton>
         <div class="sub-link">
@@ -941,7 +1203,8 @@ const agreements = (val: any) => {
   z-index: 0;
   width: 100%;
   height: 100%;
-  background: url("../assets/images/background.png") center center fixed no-repeat;
+  background: url("../assets/images/background.png") center center fixed
+    no-repeat;
   background-size: cover;
   // background: radial-gradient(
   //   circle at center,
@@ -1090,7 +1353,7 @@ const agreements = (val: any) => {
   align-items: center;
 }
 
-.el-button+.el-button {
+.el-button + .el-button {
   margin: 0;
 }
 </style>

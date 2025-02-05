@@ -30,7 +30,7 @@ const defaultProps: any = {
 // 部门id
 const departmentId = ref<any>([]);
 // 定义表单
-const form = ref<any>({})
+const form = ref<any>({});
 // 更新列表
 const emit = defineEmits(["fetch-data"]);
 // 弹框开关
@@ -44,12 +44,12 @@ async function showEdit(row: any) {
   const params = {
     id: row.id,
   };
-  const { status, data } = await api.list(params)
+  const { status, data } = await api.list(params);
   if (data && status === 1) {
     detailData.value = data.data[0];
   }
   if (departmentId.value) {
-    departmentId.value.push(detailData.value.organizationalStructureId)
+    departmentId.value.push(detailData.value.organizationalStructureId);
   }
   drawerisible.value = true;
 }
@@ -102,117 +102,133 @@ defineExpose({
             <div class="leftTitle">基本信息</div>
           </div>
         </template>
-<el-row :gutter="20">
-  <el-col :span="1"> </el-col>
-  <el-col style="
+        <el-row :gutter="20">
+          <el-col :span="1"> </el-col>
+          <el-col
+            style="
               display: flex;
               flex-direction: column;
               justify-content: center;
               align-items: flex-start;
-            " :span="1.5">
-    <el-avatar v-if="detailData.avatar" :size="50" :src="detailData.avatar" />
-    <div v-else class="avatar">{{detailData.name}}</div>
-  </el-col>
-  <el-col style="
+            "
+            :span="1.5"
+          >
+            <el-avatar
+              v-if="detailData.avatar"
+              :size="50"
+              :src="detailData.avatar"
+            />
+            <div v-else class="avatar">{{ detailData.name }}</div>
+          </el-col>
+          <el-col
+            style="
               display: flex;
               flex-direction: column;
               justify-content: center;
               align-items: flex-start;
-            " :span="6">
-    <p>{{detailData.userName}}</p>
-    <p style="font-size: 14px">账号:<span>{{detailData.userName}}</span></p>
-  </el-col>
-</el-row>
-<el-row :gutter="24">
-  <el-col :span="6">
-    <el-form-item label="员工ID:">
-      <el-text class="mx-1">
-        {{
-        detailData?.id
-        ? detailData.id
-        : "-"
-        }}
-      </el-text>
-    </el-form-item>
-  </el-col>
-  <el-col :span="6">
-    <el-form-item label="姓名:">
-      <el-text class="mx-1">
-        {{
-        detailData?.name ? detailData.name : "-"
-        }}
-      </el-text>
-    </el-form-item>
-  </el-col>
-  <el-col :span="6">
-    <el-form-item label="手机号:">
-      <el-text class="mx-1">
-        {{
-        detailData?.phoneNumber
-        ? detailData.phoneNumber
-        : "-"
-        }}
-      </el-text>
-    </el-form-item>
-  </el-col>
-  <el-col :span="6">
-    <el-form-item label="邮箱:">
-      <el-text class="mx-1">
-        {{ detailData?.email ? detailData.email : "-" }}
-      </el-text>
-    </el-form-item>
-  </el-col>
-  <el-col :span="6">
-    <el-form-item label="部门:">
-      {{ detailData.organizationalStructureName ? detailData.organizationalStructureName : "-" }}
-    </el-form-item>
-  </el-col>
-  <el-col :span="6">
-    <el-form-item label="职位:">
-      <el-text>
-        {{ detailData.positionName ? detailData.positionName : "-" }}
-      </el-text>
-    </el-form-item>
-  </el-col>
-  <el-col :span="6">
-    <el-form-item label="帐号状态:">
-      <el-text class="mx-1">
-        {{ detailData?.active ? "启用" : "禁用" }}
-      </el-text>
-    </el-form-item>
-  </el-col>
-  <el-col :span="6">
-    <el-form-item label="创建时间:">
-      <el-text class="mx-1">
-        {{ detailData?.createTime ? detailData.createTime : "-" }}
-      </el-text>
-    </el-form-item>
-  </el-col>
-</el-row>
-</el-card>
-<el-card class="box-card">
-  <template #header>
-  <div class="card-header">
-    <div class="leftTitle">角色信息</div>
-  </div>
-</template>
-  <el-row :gutter="24">
-    <el-form-item label="分配角色:">
-      <el-checkbox-group style="margin-left: 1.5rem;" v-if="munulevs?.length" v-model="form.roleList">
-        <el-checkbox v-for="item in munulevs" :key="item.id" :label="item.roleName" :value="item.roleName" disabled>
-          {{ item.roleName }}
-        </el-checkbox>
-      </el-checkbox-group>
-      <el-text v-else>暂无数据</el-text>
-    </el-form-item>
-  </el-row>
-</el-card>
-<el-card class="box-card">
-  <template #header>
-  <div class="card-header">
-    <div class="leftTitle">
-      部门信息
-      <!-- <span
+            "
+            :span="6"
+          >
+            <p>{{ detailData.userName }}</p>
+            <p style="font-size: 14px">
+              账号:<span>{{ detailData.userName }}</span>
+            </p>
+          </el-col>
+        </el-row>
+        <el-row :gutter="24">
+          <el-col :span="6">
+            <el-form-item label="员工ID:">
+              <el-text class="mx-1">
+                {{ detailData?.id ? detailData.id : "-" }}
+              </el-text>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="姓名:">
+              <el-text class="mx-1">
+                {{ detailData?.name ? detailData.name : "-" }}
+              </el-text>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="手机号:">
+              <el-text class="mx-1">
+                {{ detailData?.phoneNumber ? detailData.phoneNumber : "-" }}
+              </el-text>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="邮箱:">
+              <el-text class="mx-1">
+                {{ detailData?.email ? detailData.email : "-" }}
+              </el-text>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="部门:">
+              {{
+                detailData.organizationalStructureName
+                  ? detailData.organizationalStructureName
+                  : "-"
+              }}
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="职位:">
+              <el-text>
+                {{ detailData.positionName ? detailData.positionName : "-" }}
+              </el-text>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="帐号状态:">
+              <el-text class="mx-1">
+                {{ detailData?.active ? "启用" : "禁用" }}
+              </el-text>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="创建时间:">
+              <el-text class="mx-1">
+                {{ detailData?.createTime ? detailData.createTime : "-" }}
+              </el-text>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-card>
+      <el-card class="box-card">
+        <template #header>
+          <div class="card-header">
+            <div class="leftTitle">角色信息</div>
+          </div>
+        </template>
+        <el-row :gutter="24">
+          <el-form-item label="分配角色:">
+            <el-checkbox-group
+              style="margin-left: 1.5rem"
+              v-if="munulevs?.length"
+              v-model="form.roleList"
+            >
+              <el-checkbox
+                v-for="item in munulevs"
+                :key="item.id"
+                :label="item.roleName"
+                :value="item.roleName"
+                disabled
+              >
+                {{ item.roleName }}
+              </el-checkbox>
+            </el-checkbox-group>
+            <el-text v-else>暂无数据</el-text>
+          </el-form-item>
+        </el-row>
+      </el-card>
+      <el-card class="box-card">
+        <template #header>
+          <div class="card-header">
+            <div class="leftTitle">
+              部门信息
+              <!-- <span
         v-if="form.enableChargePerson"
         style="margin-left: 20px; font-size: 14px"
         >负责人:<el-text v-for="item in staffList" :key="item.id">
@@ -221,25 +237,37 @@ defineExpose({
           </el-text>
         </el-text></span
       > -->
-    </div>
-  </div>
-</template>
-  <el-row :gutter="24">
-    <el-form-item label="分配部门:">
-      <el-tree v-if="departmentList.length > 0" style="max-width: 600px" ref="treeRef" :disabled="true"
-        :data="departmentList" show-checkbox check-strictly node-key="id" :default-expanded-keys="[]"
-        :default-checked-keys="departmentId" default-expand-all :props="defaultProps" @check-change="handleNodeClick" />
-      <el-text v-else>暂无数据</el-text>
-    </el-form-item>
-  </el-row>
-</el-card>
-</el-form>
-<template #footer>
-        <div class="flex-c">
-          <el-button type="primary" @click="close"> 关闭 </el-button>
-        </div>
-      </template>
-</el-drawer>
+            </div>
+          </div>
+        </template>
+        <el-row :gutter="24">
+          <el-form-item label="分配部门:">
+            <el-tree
+              v-if="departmentList.length > 0"
+              style="max-width: 600px"
+              ref="treeRef"
+              :disabled="true"
+              :data="departmentList"
+              show-checkbox
+              check-strictly
+              node-key="id"
+              :default-expanded-keys="[]"
+              :default-checked-keys="departmentId"
+              default-expand-all
+              :props="defaultProps"
+              @check-change="handleNodeClick"
+            />
+            <el-text v-else>暂无数据</el-text>
+          </el-form-item>
+        </el-row>
+      </el-card>
+    </el-form>
+    <template #footer>
+      <div class="flex-c">
+        <el-button type="primary" @click="close"> 关闭 </el-button>
+      </div>
+    </template>
+  </el-drawer>
 </template>
 
 <style scoped lang="scss">
@@ -258,7 +286,7 @@ defineExpose({
     position: relative;
     width: 128px;
 
-    >div {
+    > div {
       width: 120px;
       height: 2.2rem;
       line-height: 2.2rem;
@@ -294,7 +322,7 @@ defineExpose({
       }
     }
 
-    >div.isOnlineTrue {
+    > div.isOnlineTrue {
       background-color: #70b51a;
 
       &::after,
@@ -303,7 +331,7 @@ defineExpose({
       }
     }
 
-    >div.isOnlineFalse {
+    > div.isOnlineFalse {
       background-color: #d8261a;
 
       &::after,

@@ -5,19 +5,21 @@ import customerDetailDetail from "../CustomerDetailDetail/index.vue";
 import api from "@/api/modules/user_customer";
 import { obtainLoading } from "@/utils/apiLoading";
 import useTenantStaffStore from "@/store/modules/configuration_manager";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 const emit = defineEmits(["fetch-data"]);
 const drawerisible = ref<boolean>(false);
-const tenantStaffStore = useTenantStaffStore()
+const tenantStaffStore = useTenantStaffStore();
 const checkRef = ref<any>();
 const detailData = ref<any>(); // 详情数据
-const userList = ref<any>([])
+const userList = ref<any>([]);
 async function showEdit(row: any) {
   const params = {
     tenantCustomerId: row.tenantCustomerId,
   };
 
-  userList.value = await tenantStaffStore.getStaff()
+  userList.value = await tenantStaffStore.getStaff();
   const { status, data } = await obtainLoading(api.detail(params));
   detailData.value = data;
 
@@ -29,11 +31,16 @@ function close() {
   drawerisible.value = false;
 }
 const handleCheck = (row: any) => {
-  checkRef.value.showEdit(row)
-}
+  checkRef.value.showEdit(row);
+};
 
 const operationType = (type: number) => {
-  const typeArray = ["新增", "编辑", "启用", "禁用"];
+  const typeArray = [
+    t("common.new"),
+    t("common.edit"),
+    t("common.enable"),
+    t("common.disable"),
+  ];
   return typeArray[type - 1];
 };
 
@@ -50,18 +57,24 @@ defineExpose({
     destroy-on-close
     draggable
     size="60%"
-    title="详情"
+    :title="t('customer.detail.detail')"
     @close="close"
   >
-    <el-form  label-position="right">
+    <el-form label-position="right">
       <el-card class="box-card">
         <template #header>
           <div class="card-header">
-            <div class="leftTitle">基本信息</div>
+            <div class="leftTitle">
+              {{ t("customer.detail.basicInformation") }}
+            </div>
             <div class="rightStatus">
-              <span :class="
-                    detailData.customerStatus === 1 ? 'isOnlineSpanFalse' : 'isOnlineSpanTrue'
-                  "></span>
+              <span
+                :class="
+                  detailData.customerStatus === 1
+                    ? 'isOnlineSpanFalse'
+                    : 'isOnlineSpanTrue'
+                "
+              ></span>
               <div
                 :class="
                   detailData.customerStatus === 1
@@ -69,194 +82,227 @@ defineExpose({
                     : 'isOnlineTrue'
                 "
               >
-                {{ detailData.customerStatus === 1 ? "禁用" : "启用" }}
+                {{
+                  detailData.customerStatus === 1
+                    ? t("customer.detail.disable")
+                    : t("customer.detail.enable")
+                }}
               </div>
             </div>
           </div>
         </template>
-<el-row :gutter="24">
-  <el-col :span="8">
-    <el-form-item label="客户编码:">
-      <el-text class="mx-1 copyId">
-        {{
-        detailData.tenantCustomerId
-        ? detailData.tenantCustomerId
-        : "-"
-        }}
-        <copy class="copy" :content="detailData.tenantCustomerId " />
-      </el-text>
-    </el-form-item>
-  </el-col>
-  <el-col :span="8">
-    <el-form-item label="客户名称:">
-      <el-text class="mx-1">
-        {{
-        detailData.customerAccord ? detailData.customerAccord : "-"
-        }}
-      </el-text>
-    </el-form-item>
-  </el-col>
-  <el-col :span="8">
-    <el-form-item label="客户简称:">
-      <el-text class="mx-1">
-        {{
-        detailData.customerShortName ? detailData.customerShortName : "-"
-        }}
-      </el-text>
-    </el-form-item>
-  </el-col>
-  <el-col :span="8">
-    <el-form-item label="公司名称:">
-      <el-text class="mx-1">
-        {{ detailData.companyName ? detailData.companyName : "-" }}
-      </el-text>
-    </el-form-item>
-  </el-col>
-  <el-col :span="8">
-    <el-form-item label="客户姓名:">
-      <el-text class="mx-1">
-        {{ detailData.customerName ? detailData.customerName : "-" }}
-      </el-text>
-    </el-form-item>
-  </el-col>
-  <el-col :span="8">
-    <el-form-item label="手机号码:">
-      <el-text class="mx-1">
-        {{ detailData.customerPhone ? detailData.customerPhone : "-" }}
-      </el-text>
-    </el-form-item>
-  </el-col>
-  <el-col :span="8">
-    <el-form-item label="电子邮箱:">
-      <el-text class="mx-1">
-        {{ detailData.emailAddress ? detailData.emailAddress : "-" }}
-      </el-text>
-    </el-form-item>
-  </el-col>
-  <el-col :span="8">
-    <el-form-item label="创建人:">
-      <el-text class="mx-1">
-        {{ detailData.createName ? detailData.createName : "-" }}
-      </el-text>
-    </el-form-item>
-  </el-col>
-  <el-col :span="8">
-    <el-form-item label="创建时间:">
-      <el-text class="mx-1">
-        {{ detailData.createTime ? detailData.createTime : "-" }}
-      </el-text>
-    </el-form-item>
-  </el-col>
-  <el-col :span="8">
-    <el-form-item label="PM:">
-      <el-text v-for="item in userList" :key="item.id">
-        <el-text v-if="detailData.chargeId === item.id" class="mx-1">
-          {{ item.userName }}
-        </el-text>
-      </el-text>
-    </el-form-item>
-  </el-col>
-  <el-col :span="8">
-    <el-form-item label="结算周期:">
-      <el-text class="mx-1">
-        {{
-        detailData.settlementCycle
-        ? detailData.settlementCycle + "天"
-        : "-"
-        }}
-      </el-text>
-    </el-form-item>
-  </el-col>
-</el-row>
-</el-card>
+        <el-row :gutter="24">
+          <el-col :span="8">
+            <el-form-item :label="t('customer.detail.tenantCustomerId')">
+              <el-text class="mx-1 copyId">
+                {{
+                  detailData.tenantCustomerId
+                    ? detailData.tenantCustomerId
+                    : "-"
+                }}
+                <copy class="copy" :content="detailData.tenantCustomerId" />
+              </el-text>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item :label="t('customer.detail.customerAccord')">
+              <el-text class="mx-1">
+                {{
+                  detailData.customerAccord ? detailData.customerAccord : "-"
+                }}
+              </el-text>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item :label="t('customer.detail.customerShortName')">
+              <el-text class="mx-1">
+                {{
+                  detailData.customerShortName
+                    ? detailData.customerShortName
+                    : "-"
+                }}
+              </el-text>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item :label="t('customer.detail.companyName')">
+              <el-text class="mx-1">
+                {{ detailData.companyName ? detailData.companyName : "-" }}
+              </el-text>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item :label="t('customer.detail.customerName')">
+              <el-text class="mx-1">
+                {{ detailData.customerName ? detailData.customerName : "-" }}
+              </el-text>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item :label="t('customer.detail.customerPhone')">
+              <el-text class="mx-1">
+                {{ detailData.customerPhone ? detailData.customerPhone : "-" }}
+              </el-text>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item :label="t('customer.detail.customerPhone')">
+              <el-text class="mx-1">
+                {{ detailData.emailAddress ? detailData.emailAddress : "-" }}
+              </el-text>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item :label="t('customer.detail.createName')">
+              <el-text class="mx-1">
+                {{ detailData.createName ? detailData.createName : "-" }}
+              </el-text>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item :label="t('customer.detail.createTime')">
+              <el-text class="mx-1">
+                {{ detailData.createTime ? detailData.createTime : "-" }}
+              </el-text>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="PM:">
+              <el-text v-for="item in userList" :key="item.id">
+                <el-text v-if="detailData.chargeId === item.id" class="mx-1">
+                  {{ item.userName }}
+                </el-text>
+              </el-text>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item :label="t('customer.detail.settlementCycle')">
+              <el-text class="mx-1">
+                {{
+                  detailData.settlementCycle
+                    ? detailData.settlementCycle + t("customer.detail.days")
+                    : "-"
+                }}
+              </el-text>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-card>
 
-<el-card class="box-card">
-  <template #header>
+      <el-card class="box-card">
+        <template #header>
           <div class="card-header">
-            <span>权限信息</span>
+            <span>{{ t("customer.detail.permissionInformation") }}</span>
           </div>
         </template>
-  <el-row :gutter="24">
-    <el-col :span="8">
-      <el-form-item label="客户状态:">
-        <el-text class="mx-1">
-          <div v-if="detailData.customerStatus === 1" class="close">关闭</div>
-          <div v-else class="open">开启</div>
-        </el-text>
-      </el-form-item>
-    </el-col>
-    <el-col :span="8">
-      <el-form-item label="资料:">
-        <el-text class="mx-1">
-          <div v-if="detailData.antecedentQuestionnaire === 1" class="close">关闭</div>
-          <div v-else class="open">开启</div>
-        </el-text>
-      </el-form-item>
-    </el-col>
-    <el-col :span="8">
-      <el-form-item label="风险控制:">
-        <el-text class="mx-1">
-          <div v-if="detailData.riskControl === 1" class="close">关闭</div>
-          <div v-else class="open">开启</div>
-        </el-text>
-      </el-form-item>
-    </el-col>
-    <el-col :span="8">
-      <el-form-item label="营业限额/月:">
-        <el-text class="mx-1">
-          <CurrencyType />{{ detailData.turnover || 0 }}
-        </el-text>
-      </el-form-item>
-    </el-col>
-    <el-col :span="8">
-      <el-form-item label="审核率Min值:">
-        <el-text class="mx-1">
-          {{ detailData.turnover ? detailData.turnover + "%" : "-" }}
-        </el-text>
-      </el-form-item>
-    </el-col>
-  </el-row>
-</el-card>
+        <el-row :gutter="24">
+          <el-col :span="8">
+            <el-form-item :label="t('customer.detail.customerStatus')">
+              <el-text class="mx-1">
+                <div v-if="detailData.customerStatus === 1" class="close">
+                  {{ t("common.off") }}
+                </div>
+                <div v-else class="open">{{ t("common.on") }}</div>
+              </el-text>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item :label="t('customer.detail.antecedentQuestionnaire')">
+              <el-text class="mx-1">
+                <div
+                  v-if="detailData.antecedentQuestionnaire === 1"
+                  class="close"
+                >
+                  {{ t("common.off") }}
+                </div>
+                <div v-else class="open">{{ t("common.on") }}</div>
+              </el-text>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item :label="t('customer.detail.riskControl')">
+              <el-text class="mx-1">
+                <div v-if="detailData.riskControl === 1" class="close">
+                  {{ t("common.off") }}
+                </div>
+                <div v-else class="open">{{ t("common.on") }}</div>
+              </el-text>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item :label="t('customer.detail.businessLimit')">
+              <el-text class="mx-1">
+                <CurrencyType />{{ detailData.turnover || 0 }}
+              </el-text>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item :label="t('customer.detail.rateMinValue')">
+              <el-text class="mx-1">
+                {{ detailData.turnover ? detailData.turnover + "%" : "-" }}
+              </el-text>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-card>
 
-<el-card class="box-card">
-  <template #header>
+      <el-card class="box-card">
+        <template #header>
           <div class="card-header">
-            <span>操作日志</span>
+            <span> {{ t("customer.detail.operationLog") }}</span>
           </div>
         </template>
-  <el-table :data="detailData.getTenantCustomerOperationInfoList">
-    <el-table-column align="left" type="index" label="序号" width="80" />
-    <el-table-column align="left" prop="createTime" label="操作时间" />
-    <el-table-column align="left" prop="createName" label="操作人" />
+        <el-table :data="detailData.getTenantCustomerOperationInfoList">
+          <el-table-column
+            align="left"
+            type="index"
+            :label="t('customer.detail.serialNumber')"
+            width="80"
+          />
+          <el-table-column
+            align="left"
+            prop="createTime"
+            :label="t('customer.detail.operatingTime')"
+          />
+          <el-table-column
+            align="left"
+            prop="createName"
+            :label="t('customer.detail.operator')"
+          />
 
-    <el-table-column align="left" label="操作事项">
-      <template #default="{ row }">
+          <el-table-column
+            align="left"
+            :label="t('customer.detail.operationalMatters')"
+          >
+            <template #default="{ row }">
               {{ operationType(row.operationType) }}
             </template>
-    </el-table-column>
-    <el-table-column align="left" label="详情">
-      <template #default="{ row }">
+          </el-table-column>
+          <el-table-column align="left" :label="t('customer.detail.detail')">
+            <template #default="{ row }">
               <el-button
                 type="primary"
                 link
                 @click="handleCheck(row)"
                 v-if="row.operationType === 2"
               >
-                详情
+                {{ t("customer.detail.detail") }}
               </el-button>
               <el-text v-else>-</el-text>
             </template>
-    </el-table-column>
-  </el-table>
-</el-card>
-</el-form>
-<template #footer>
-      <div class='flex-c'>
-        <el-button type="primary" @click="close">关闭</el-button>
+          </el-table-column>
+        </el-table>
+      </el-card>
+    </el-form>
+    <template #footer>
+      <div class="flex-c">
+        <el-button type="primary" @click="close">{{
+          t("common.off")
+        }}</el-button>
       </div>
     </template>
-<customerDetailDetail ref="checkRef" />
-</el-drawer>
+    <customerDetailDetail ref="checkRef" />
+  </el-drawer>
 </template>
 
 <style scoped lang="scss">
@@ -279,13 +325,13 @@ defineExpose({
     .spanStatus {
       width: 49px !important;
       height: 23px !important;
-      background: #409EFF;
+      background: #409eff;
       border-radius: 4px;
       color: var(--el-color-white);
       padding: 4px 8px;
       font-size: 11px;
       font-size: 0.875rem;
-      border-radius: .25rem;
+      border-radius: 0.25rem;
     }
   }
 
@@ -293,8 +339,8 @@ defineExpose({
     background: #03c239;
     // background: url('/src/assets/images/lineCricle.png');
     // background-size:100% 100%;
-    width: .5625rem;
-    height: .5625rem;
+    width: 0.5625rem;
+    height: 0.5625rem;
     // display: block;
     // background-position: center;
     border-radius: 50%;
@@ -304,8 +350,8 @@ defineExpose({
 
   .isOnlineSpanFalse {
     background: #d8261a;
-    width: .5625rem;
-    height: .5625rem;
+    width: 0.5625rem;
+    height: 0.5625rem;
     display: block;
     border-radius: 50%;
     border: 1px solid #d8261a;
@@ -319,8 +365,7 @@ defineExpose({
     display: flex;
     align-items: baseline;
 
-
-    >div {
+    > div {
       // width: 120px;
       // height: 2.2rem;
       // line-height: 2.2rem;
@@ -356,12 +401,12 @@ defineExpose({
       // }
     }
 
-    >div.isOnlineTrue {
+    > div.isOnlineTrue {
       color: #03c239;
       margin-left: 6px;
     }
 
-    >div.isOnlineFalse {
+    > div.isOnlineFalse {
       color: #d8261a;
       margin-left: 6px;
     }

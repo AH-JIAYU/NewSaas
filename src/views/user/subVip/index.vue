@@ -2,11 +2,13 @@
 import { onMounted } from "vue";
 import api from "@/api/modules/user_subVip";
 import empty from "@/assets/images/empty.png";
+import { useI18n } from "vue-i18n";
 defineOptions({
   name: "subVip",
 });
 
 const { pagination, onSizeChange, onCurrentChange } = usePagination(); // 分页
+const { t } = useI18n(); // 国际化
 // 时间
 const { format } = useTimeago();
 const listLoading = ref<boolean>(false);
@@ -21,42 +23,67 @@ const formSearchList = ref<any>(); //表单排序配置
 const formSearchName = ref<string>("formSearch-subVip"); // 表单排序name
 const columns = ref([
   // 表格控件-展示列
-  { label: "子会员ID", prop: "memberChildId", sortable: true, checked: true },
   {
-    label: "子会员名称",
+    label: computed(() => t("subvip.memberChildId")),
+    prop: "memberChildId",
+    sortable: true,
+    checked: true,
+  },
+  {
+    label: computed(() => t("subvip.memberNickname")),
     prop: "memberNickname",
     sortable: true,
     checked: true,
   },
-  { label: "子会员姓名", prop: "memberName", sortable: true, checked: true },
-  { label: "待审余额", prop: "pendingBalance", sortable: true, checked: true },
   {
-    label: "可用余额",
+    label: computed(() => t("subvip.memberName")),
+    prop: "memberName",
+    sortable: true,
+    checked: true,
+  },
+  {
+    label: computed(() => t("subvip.pendingBalance")),
+    prop: "pendingBalance",
+    sortable: true,
+    checked: true,
+  },
+  {
+    label: computed(() => t("subvip.availableBalance")),
     prop: "availableBalance",
     sortable: true,
     checked: true,
   },
   {
-    label: "供应商ID",
+    label: computed(() => t("subvip.tenantSupplierId")),
     prop: "tenantSupplierId",
     sortable: true,
     checked: true,
   },
   { label: "B2B", prop: "b2bStatus", sortable: true, checked: true },
   {
-    label: "部门",
+    label: computed(() => t("subvip.memberChildGroupName")),
     prop: "memberChildGroupName",
     sortable: true,
     checked: true,
   },
   {
-    label: "子会员状态",
+    label: computed(() => t("subvip.memberChildStatus")),
     prop: "memberChildStatus",
     sortable: true,
     checked: true,
   },
-  { label: "创建人", prop: "createUserName", sortable: true, checked: true },
-  { label: "创建日期", prop: "createTime", sortable: true, checked: true },
+  {
+    label: computed(() => t("subvip.createUserName")),
+    prop: "createUserName",
+    sortable: true,
+    checked: true,
+  },
+  {
+    label: computed(() => t("subvip.createTime")),
+    prop: "createTime",
+    sortable: true,
+    checked: true,
+  },
 ]);
 const queryForm = ref<any>({
   memberChildId: "", //子会员ID
@@ -101,12 +128,12 @@ const DataList = computed(() => {
         String(item.memberNickname).includes(queryForm.value.memberChildId)) &&
       String(item.memberName).includes(queryForm.value.memberName) &&
       String(item.tenantSupplierId).includes(
-        queryForm.value.tenantSupplierId
+        queryForm.value.tenantSupplierId,
       ) &&
       (item.b2bStatus === queryForm.value.b2bStatus ||
         !queryForm.value.b2bStatus) &&
       String(item.memberChildGroupName).includes(
-        queryForm.value.memberChildGroupName
+        queryForm.value.memberChildGroupName,
       ) &&
       (item.memberChildStatus === queryForm.value.memberChildStatus ||
         !queryForm.value.memberChildStatus) &&
@@ -123,7 +150,7 @@ const DataList = computed(() => {
   });
   return searchList.slice(
     (pagination.value.page - 1) * pagination.value.size,
-    pagination.value.page * pagination.value.size
+    pagination.value.page * pagination.value.size,
   );
 });
 // 重置请求
@@ -173,28 +200,28 @@ onMounted(() => {
       show: true,
       type: "input",
       modelName: "memberChildId",
-      placeholder: "子会员ID、子会员名称",
+      placeholder: computed(() => t("subvip.IDName")),
     },
     {
       index: 2,
       show: true,
       type: "input",
       modelName: "memberName",
-      placeholder: "子会员姓名",
+      placeholder: computed(() => t("subvip.memberName")),
     },
     {
       index: 3,
       show: true,
       type: "input",
       modelName: "tenantSupplierId",
-      placeholder: "供应商ID",
+      placeholder: computed(() => t("subvip.tenantSupplierId")),
     },
     {
       index: 4,
       show: true,
       type: "select",
       modelName: "memberChildStatus",
-      placeholder: "子会员状态",
+      placeholder: computed(() => t("subvip.memberChildStatus")),
       option: "memberChildStatus",
       optionLabel: "label",
       optionValue: "value",
@@ -214,19 +241,19 @@ onMounted(() => {
       show: true,
       type: "datetimerange",
       modelName: "time",
-      startPlaceHolder: "创建开始日期",
-      endPlaceHolder: "创建结束日期",
+      startPlaceHolder: computed(() => t("subvip.createStartTime")),
+      endPlaceHolder: computed(() => t("subvip.createEndTime")),
     },
   ];
 });
 const formOption = {
   memberChildStatus: () => [
-    { label: "启用", value: 2 },
-    { label: "禁用", value: 1 },
+    { label: computed(() => t("common.enable")), value: 2 },
+    { label: computed(() => t("common.disable")), value: 1 },
   ],
   b2bStatus: () => [
-    { label: "开启", value: 2 },
-    { label: "关闭", value: 1 },
+    { label: computed(() => t("common.on")), value: 2 },
+    { label: computed(() => t("common.off")), value: 1 },
   ],
 };
 const current = ref<any>(); //表格当前选中
@@ -251,7 +278,7 @@ function handleCurrentChange(val: any) {
       <el-row>
         <FormLeftPanel />
         <FormRightPanel>
-          <el-button size="default"> 导出 </el-button>
+          <el-button size="default"> {{ t("common.export") }} </el-button>
           <TabelControl
             v-model:border="border"
             v-model:tableAutoHeight="tableAutoHeight"
@@ -279,8 +306,8 @@ function handleCurrentChange(val: any) {
           align="left"
           show-overflow-tooltip
           prop="memberChildStatus"
-           width="100"
-          label="状态"
+          width="100"
+          :label="t('subvip.status')"
         >
           <template #default="{ row }">
             <div class="tableBig">
@@ -288,9 +315,11 @@ function handleCurrentChange(val: any) {
                 v-if="row.memberChildStatus !== 1"
                 effect="light"
                 type="success"
-                >启用</el-text
+                >{{ t("common.enable") }}</el-text
               >
-              <el-text v-else effect="light" type="danger">禁用</el-text>
+              <el-text v-else effect="light" type="danger">{{
+                t("common.disable")
+              }}</el-text>
             </div>
           </template>
         </ElTableColumn>
@@ -299,8 +328,7 @@ function handleCurrentChange(val: any) {
           align="left"
           prop="memberChildId"
           width="180"
-
-          label="子会员ID"
+          :label="t('subvip.memberChildId')"
         >
           <template #default="{ row }">
             <div class="copyId tableSmall">
@@ -310,7 +338,7 @@ function handleCurrentChange(val: any) {
                   :content="row.memberChildId"
                   placement="top-start"
                 >
-                {{ row.memberChildId }}
+                  {{ row.memberChildId }}
                 </el-tooltip>
                 <!-- {{ row.memberChildId }} -->
               </div>
@@ -330,22 +358,20 @@ function handleCurrentChange(val: any) {
           align="left"
           prop="tenantSupplierId"
           width="180"
-          label="供应商ID"
+          :label="t('subvip.tenantSupplierId')"
         >
           <template #default="{ row }">
             <div class="copyId tableSmall">
               <div class="id oneLine memberChildId">
-
                 <el-tooltip
                   effect="dark"
                   :content="row.tenantSupplierId"
                   placement="top-start"
                 >
-                {{ row.tenantSupplierId }}
+                  {{ row.tenantSupplierId }}
                 </el-tooltip>
 
                 <!-- {{ row.tenantSupplierId }} -->
-
               </div>
               <copy
                 :content="row.tenantSupplierId"
@@ -364,7 +390,7 @@ function handleCurrentChange(val: any) {
           align="left"
           prop="memberNickname"
           show-overflow-tooltip
-          label="子会员名称"
+          :label="t('subvip.memberNickname')"
         >
           <template #default="{ row }">
             <div class="tableBig">{{ row.memberNickname }}</div>
@@ -375,7 +401,7 @@ function handleCurrentChange(val: any) {
           align="left"
           prop="memberName"
           show-overflow-tooltip
-          label="子会员姓名"
+          :label="t('subvip.memberName')"
         >
           <template #default="{ row }">
             <div class="tableBig">
@@ -388,7 +414,7 @@ function handleCurrentChange(val: any) {
           align="left"
           prop="availableBalance"
           show-overflow-tooltip
-          label="	可用余额"
+          :label="t('subvip.availableBalance')"
         >
           <template #default="{ row }">
             <div class="fontC-System">
@@ -401,7 +427,7 @@ function handleCurrentChange(val: any) {
           align="left"
           prop="pendingBalance"
           show-overflow-tooltip
-          label="	待审余额"
+          :label="t('subvip.pendingBalance')"
         >
           <template #default="{ row }">
             <div class="fontC-System">
@@ -417,8 +443,16 @@ function handleCurrentChange(val: any) {
           label="B2B"
         >
           <template #default="{ row }">
-            <div v-if="row.b2bStatus && row.b2bStatus === 2" style="color: #67c23a;" class="i-fluent:checkmark-12-filled w-1.5em h-1.5em"></div>
-            <div v-else style="color: #fd8989;" class="i-iconamoon:close-bold w-1.5em h-1.5em"></div>
+            <div
+              v-if="row.b2bStatus && row.b2bStatus === 2"
+              style="color: #67c23a"
+              class="i-fluent:checkmark-12-filled w-1.5em h-1.5em"
+            ></div>
+            <div
+              v-else
+              style="color: #fd8989"
+              class="i-iconamoon:close-bold w-1.5em h-1.5em"
+            ></div>
           </template>
         </ElTableColumn>
         <el-table-column
@@ -426,11 +460,13 @@ function handleCurrentChange(val: any) {
           align="left"
           prop="memberChildGroupName"
           show-overflow-tooltip
-          label="部门"
+          :label="t('subvip.memberChildGroupName')"
         >
           <template #default="{ row }">
             <div v-if="row.memberChildGroupId" class="copyId tableSmall">
-              <div class="id oneLine memberChildId">{{ row.memberChildGroupId }}</div>
+              <div class="id oneLine memberChildId">
+                {{ row.memberChildGroupId }}
+              </div>
               <copy
                 :content="row.memberChildGroupId"
                 :class="{
@@ -449,7 +485,7 @@ function handleCurrentChange(val: any) {
           align="left"
           prop="createUserName"
           show-overflow-tooltip
-          label="创建人"
+          :label="t('subvip.createUserName')"
           ><template #default="{ row }">
             <div class="fontC-System">
               {{ row.createUserName ? row.createUserName : "-" }}
@@ -459,7 +495,7 @@ function handleCurrentChange(val: any) {
         <el-table-column
           v-if="checkList.includes('createTime')"
           align="left"
-          label="创建"
+          :label="t('common.create')"
           prop="createTime"
         >
           <template #default="{ row }">
@@ -490,11 +526,11 @@ function handleCurrentChange(val: any) {
 
 <style scoped lang="scss">
 .memberChildId {
-  font-size: .875rem;
+  font-size: 0.875rem;
 }
-.copyId  .current {
-    display: block !important;
-  }
+.copyId .current {
+  display: block !important;
+}
 .rowCopy {
   width: 20px;
   display: none;

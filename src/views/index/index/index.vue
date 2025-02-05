@@ -63,7 +63,7 @@ function echarts1() {
         var dotHtml2 =
           '<span style="display:inline-block;margin-right:.25rem;border-radius:.625rem;width:.625rem;height:.625rem;background-color:#f56a66;"></span>';
         return `
-        <div>${params[0].name}<br> ${dotHtml} 营业额: ${params[0].data.turnover} <br>${dotHtml2} 盈利额 ${params[0].data.profitAmount} </div>
+        <div>${params[0].name}<br> ${dotHtml} ${t("home.turnover")}: ${params[0].data.turnover} <br>${dotHtml2} ${t("home.marginOfProfit")} ${params[0].data.profitAmount} </div>
           `;
       },
     },
@@ -123,7 +123,7 @@ function echarts2() {
       //弹框
       trigger: "item",
       formatter(data: any) {
-        return `客户名称：${data.name} </br>项目结算: ${data.data.datas.com}</br > 审核率: ${data.data.datas.aud} `;
+        return `${t("home.customer")}：${data.name} </br>${t("home.projectSettlement")}: ${data.data.datas.com}</br > ${t("home.reviewRate")}: ${data.data.datas.aud} `;
       },
     },
     label: {

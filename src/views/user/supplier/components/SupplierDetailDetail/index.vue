@@ -28,11 +28,7 @@ defineExpose({ showEdit });
     </p>
     <el-table style="margin-top: 10px" border :data="editRecordList">
       <el-table-column align="left" type="index" label="序号" width="150" />
-      <el-table-column
-        align="left"
-        prop="operationContent"
-        label="操作内容"
-      />
+      <el-table-column align="left" prop="operationContent" label="操作内容" />
     </el-table>
   </el-dialog>
 </template>
