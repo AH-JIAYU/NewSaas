@@ -1,11 +1,3 @@
-import image1 from '@/assets/images/homePage/1.png';
-import image2 from '@/assets/images/homePage/2.png';
-import image3 from '@/assets/images/homePage/3.png';
-import image4 from '@/assets/images/homePage/4.png';
-import image5 from '@/assets/images/homePage/5.png';
-import image6 from '@/assets/images/homePage/6.png';
-import image7 from '@/assets/images/homePage/7.png';
-import image8 from '@/assets/images/homePage/8.png';
 
 //#region 改变文本
 export const locale_zh: any = {
@@ -1836,6 +1828,858 @@ const BBHtml4 = `
 </body>`
 
 
+const BBHtml =`
+<body>
+<style type="text/css">
+* {
+
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 3;
+    width: 100%;
+    height: 4rem;
+    background-color: #fff;
+    border-bottom: 1px solid #ebebeb;
+
+  }
+
+  .top-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #0f0f0f;
+    padding: 0 11.25rem 0 11.25rem;
+    height: 100%;
+  }
+  .top-nav p {
+    font-weight: bold;
+  }
+
+  .button-div button {
+   width: 5.3125rem;
+   cursor: pointer;
+    height: 2.25rem;
+    color: #fff;
+    background: #409eff;
+    border: 1px solid #409eff;
+    border-radius: 4px 4px 4px 4px;
+  }
+
+  .page1 img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+
+    height: 100%;
+  }
+
+  .page1 {
+
+    display: flex;
+    height: 31.25rem;
+    position: relative;
+    padding-left: 7.5rem;
+    padding-top: 9.0625rem;
+  }
+
+  .text_36 {
+
+    color: rgba(51, 51, 51, 1);
+    font-size: 3rem;
+    font-family: Source Han Sans CN-Bold;
+    font-weight: 700;
+    z-index: 9999;
+    white-space: nowrap;
+
+  }
+
+  .text {
+    z-index: 9999;
+  }
+
+  .flex-col {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .justify-between {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .text-group-1 {
+    padding-top: 4rem;
+    margin-bottom: 4rem;
+  }
+
+  .box_5 {
+    background-color: rgba(248, 249, 251, 1);
+    width: 100%;
+    text-align: center;
+    padding-bottom: 4rem;
+  }
+
+  .group_2 {
+    display: flex;
+    justify-content: center;
+    margin: 1.707rem 0 0 11.147rem;
+  }
+
+  .text_8 {
+
+    overflow-wrap: break-word;
+    color: rgba(51, 51, 51, 1);
+    font-size: 3rem;
+    font-family: Source Han Sans CN-Medium;
+    font-weight: 500;
+    text-align: left;
+    white-space: nowrap;
+
+  }
+
+
+
+  .box_6 {
+    background-color: rgba(255, 255, 255, 1);
+    border-radius: 8px;
+    width: 21.25rem;
+    height: 16.25rem;
+    padding: 2.25rem 1.5rem 2.625rem 1.5rem;
+  }
+
+  .box-margin {
+    margin: 0 2rem;
+  }
+
+  .image_5 {
+    width: 7.5rem;
+    height: 7.5rem;
+  }
+
+
+
+  .text_9 {
+
+    overflow-wrap: break-word;
+    color: rgba(51, 51, 51, 1);
+    font-size: 1.5rem;
+    font-family: Source Han Sans CN-Medium;
+    font-weight: 500;
+    text-align: center;
+    white-space: nowrap;
+    margin: 1.5rem 0 1.5rem 0;
+
+  }
+
+  .text_10 {
+
+    height: 1.28rem;
+    overflow-wrap: break-word;
+    color: rgba(51, 51, 51, 1);
+    font-size: 1rem;
+    font-family: Source Han Sans CN-Regular;
+    font-weight: 500;
+    text-align: left;
+    margin-top: 0.427rem;
+  }
+
+
+  .group_5 {
+    position: absolute;
+    left: 0;
+    top: -0.533rem;
+    width: 51.2rem;
+    height: 21.334rem;
+  }
+
+  .group_1 {
+    width: 100%;
+    background-color: white;
+  }
+
+
+  .b2b3 {
+    margin: 7.5rem 11.25rem;
+    background-color: #F8F9FB;
+  }
+
+  .image_1 {
+    width: 41.125rem;
+    height: 27.375rem;
+  }
+
+  .text-group_1 {
+    margin-top: 5.375rem;
+    margin-left: 5rem;
+  }
+
+  .text_1 {
+
+    overflow-wrap: break-word;
+    color: rgba(51, 51, 51, 1);
+    font-size: 3rem;
+    font-family: Source Han Sans CN-Medium;
+    font-weight: 500;
+    text-align: left;
+    white-space: nowrap;
+
+  }
+
+
+  .box_2 {
+
+    margin: 7.5rem 11.25rem;
+  }
+
+  .text-group_2 {
+    margin-top: 5.375rem;
+    margin-right: 5rem;
+  }
+
+  .text_2 {
+
+    overflow-wrap: break-word;
+    color: rgba(51, 51, 51, 1);
+    font-size: 3rem;
+    font-family: Source Han Sans CN-Medium;
+    font-weight: 500;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+
+  .image_2 {
+    width: 41.125rem;
+    height: 27.375rem;
+  }
+
+  .box_3 {
+    margin: 4rem 1.5rem;
+  }
+
+  .image_3 {
+    width: 41.125rem;
+    height: 27.375rem;
+  }
+
+  .text-group_3 {
+    margin-top: 5.375rem;
+    margin-left: 5rem;
+  }
+
+  .text_3 {
+
+    overflow-wrap: break-word;
+    color: rgba(51, 51, 51, 1);
+    font-size: 3rem;
+    font-family: Source Han Sans CN-Medium;
+    font-weight: 500;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  .text_4 {
+    overflow-wrap: break-word;
+    color: rgba(119, 119, 119, 1);
+    font-size: 1.5rem;
+    font-family: Source Han Sans CN-Regular;
+    font-weight: 400;
+    text-align: left;
+    margin-top: 1rem;
+  }
+  .box_4 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 31.25rem;
+    position: relative;
+  }
+  .box_4 img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .text_5 {
+    overflow-wrap: break-word;
+    color: rgba(51, 51, 51, 1);
+    font-size: 3rem;
+    font-family: Source Han Sans CN-Medium;
+    font-weight: 500;
+    white-space: nowrap;
+    z-index: 9999;
+  }
+    .margin-left {
+  margin-left: 15px;
+}
+</style>
+ <div class="page flex-col">
+    <div class="nav">
+      <div class="top-nav">
+        <p >租户官网</p>
+        <div class="button-div">
+         <button  id="my-button">供应商登录</button>
+          <button  class="margin-left" id="my-button2">会员登录</button>
+        </div>
+
+      </div>
+    </div>
+    <div class="page1">
+      <img src="">
+      <div class="text">
+        <div class="text_36">海量调查项目待承接·开启</div>
+
+        <div class="text_36">共赢新篇章</div>
+      </div>
+
+    </div>
+    <div class="box-5-margin">
+      <div class="box_5">
+        <div class="text-group_4 text-group-1">
+          <span class="text_8">简单三步即可成为供应商</span>
+
+        </div>
+
+        <div class="group_2">
+          <div class="box_6">
+
+            <img class="image_5" referrerpolicy="no-referrer" src="" />
+            <div class="text-group_5 flex-col justify-between">
+              <span class="text_9">注册</span>
+              <span class="text_10">
+                任何人都可以参加，注册步骤简单只需要30秒
+              </span>
+
+            </div>
+          </div>
+          <div class="box_6 box-margin">
+            <img class="image_5" referrerpolicy="no-referrer" src="" />
+            <div class="text-group_5 flex-col justify-between">
+              <span class="text_9">会员</span>
+              <span class="text_10">
+                将您的会员进行录入系统，形成会员系统管控，会员操作尽在掌握之中
+              </span>
+
+            </div>
+
+          </div>
+          <div class="box_6">
+            <img class="image_5" referrerpolicy="no-referrer" src="" />
+            <div class="text-group_5 flex-col justify-between">
+              <span class="text_9">项目</span>
+              <span class="text_10">
+                自动获取源源不断的调查项目，可自由分配给旗下的会员
+              </span>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="group_1 flex-row">
+      <div class="flex-col">
+        <div class="b2b3">
+          <div class="box_3 flex-row justify-between">
+            <img class="image_1" referrerpolicy="no-referrer" src="" />
+            <div class="text-group_1 flex-col">
+              <span class="text_3">项目管理</span>
+              <span class="text_4">
+
+                您不需要创建项目，我们的客户会根据系统的数据匹配，给您分配
+                <br />
+                最适配的问卷项目。问卷项目关联性高，也就意味着可获得更多专
+                <br />
+                属项目。您也可以在次分配项目，支持自定义分配给指定的部门，
+                <br />
+                进行项目的细分，让样本的质量越来越高，赚取的佣金就会越来越多。
+
+              </span>
+            </div>
+          </div>
+          <div class="box_3 flex-row justify-between">
+            <div class="text-group_2 flex-col ">
+              <span class="text_2">会员管理&nbsp;&nbsp;提升业绩与用户忠诚度的<br />核心驱动力</span>
+              <span class="text_4">
+                通过会员的专属服务通道、优先响应机制，实时查看会员完成的调<br />
+                查质量、定制的功能开关，给予指定会员的特权、会员佣金的财务<br />
+                跟踪，保证财务对账的数据确定性。促进会员与您的黏性，从而达<br />
+                成长期稳定的合作关系，提高会员数据的透明度。
+
+              </span>
+            </div>
+            <img class="image_2" referrerpolicy="no-referrer" src="" />
+          </div>
+          <div class="box_3 flex-row justify-between">
+            <img class="image_3" referrerpolicy="no-referrer" src="" />
+            <div class="text-group_3 flex-col ">
+              <span class="text_3">数据中心</span>
+              <span class="text_4">
+
+                调查数据中心，展示多维度数据管理，支持查看您的收益以及会员<br />
+                的收益，对每个项目的成本进行管控。根据会员的排行榜，了解部 <br />
+                门与会员的绩效评估，明确工作成果和激励员工提高工作绩效
+
+              </span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="box_4 flex-col">
+      <img src="">
+      <span class="text_5">诚邀供应商·开启合作新篇章</span>
+    </div>
+  </div>
+</body>
+`
+const BCHtml = `
+<body>
+<style type="text/css">
+* {
+
+    margin: 0;
+    padding: 0;
+  }
+.margin-left {
+  margin-left: 15px;
+}
+  .flex-col {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .flex-row {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .justify-between {
+    display: flex;
+    justify-content: space-around;
+  }
+
+  .nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 3;
+    width: 100%;
+    height: 4rem;
+    background-color: #fff;
+    border-bottom: 1px solid #ebebeb;
+
+  }
+
+  .top-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #0f0f0f;
+    padding: 0 11.25rem 0 11.25rem;
+    height: 100%;
+  }
+
+  .top-nav p {
+    font-weight: bold;
+  }
+
+  .button-div button {
+    width: 4rem;
+    height: 2.25rem;
+    cursor: pointer;
+    color: #fff;
+    background: #409eff;
+    border: 1px solid #409eff;
+    border-radius: 4px 4px 4px 4px;
+  }
+
+  .group_5 {
+
+    width: 100%;
+
+    background-image: linear-gradient(180deg,
+        rgba(237, 244, 255, 1) 0,
+        rgba(255, 255, 255, 1) 100%);
+  }
+
+  .block_4 {
+
+    margin-top: 198px;
+    margin-left: 11.25rem;
+  }
+
+  .box_10 {
+    height: 5.494rem;
+    margin-top: 1.92rem;
+  }
+
+  .text_36 {
+
+    color: rgba(51, 51, 51, 1);
+    font-size: 3rem;
+    font-family: Source Han Sans CN-Bold;
+    font-weight: 700;
+
+    white-space: nowrap;
+
+  }
+
+  .text_37 {
+    width: 21.227rem;
+
+    color: rgba(119, 119, 119, 1);
+    font-size: 1.5rem;
+    font-family: Source Han Sans CN-Medium;
+    font-weight: 500;
+
+    margin-top: 1rem;
+  }
+
+
+  .image_11 {
+    width: 32.5rem;
+    height: 32.5rem;
+  }
+
+  .text-group-1 {
+    padding-top: 4rem;
+    margin-bottom: 4rem;
+  }
+
+
+
+
+  .box_5 {
+    background-color: rgba(248, 249, 251, 1);
+    width: 100%;
+    text-align: center;
+    padding-bottom: 4rem;
+  }
+
+  .box-5-margin {
+    margin-bottom: 7.5rem;
+  }
+
+
+
+  .text_8 {
+
+    overflow-wrap: break-word;
+    color: rgba(51, 51, 51, 1);
+    font-size: 3rem;
+    font-family: Source Han Sans CN-Medium;
+    font-weight: 500;
+    text-align: left;
+    white-space: nowrap;
+
+  }
+
+
+
+  .box_6 {
+    background-color: rgba(255, 255, 255, 1);
+    border-radius: 8px;
+    width: 21.25rem;
+    height: 16.25rem;
+    padding: 2.25rem 1.5rem 2.625rem 1.5rem;
+  }
+
+  .box-margin {
+    margin: 0 2rem;
+  }
+
+  .image_5 {
+    width: 7.5rem;
+    height: 7.5rem;
+  }
+
+
+
+  .text_9 {
+
+    overflow-wrap: break-word;
+    color: rgba(51, 51, 51, 1);
+    font-size: 1.5rem;
+    font-family: Source Han Sans CN-Medium;
+    font-weight: 500;
+    text-align: center;
+    white-space: nowrap;
+    margin: 1.5rem 0 1.5rem 0;
+
+  }
+
+  .text_10 {
+
+    height: 1.28rem;
+    overflow-wrap: break-word;
+    color: rgba(51, 51, 51, 1);
+    font-size: 1rem;
+    font-family: Source Han Sans CN-Regular;
+    font-weight: 500;
+    text-align: left;
+    margin-top: 0.427rem;
+  }
+
+
+
+
+
+  .group_1 {
+    width: 100%;
+    background-color: white;
+  }
+
+  .block_1 {
+    background-color: white;
+    width: 100%;
+  }
+
+
+  .image_1 {
+    width: 41.125rem;
+    height: 27.375rem;
+  }
+
+  .text-group_1 {
+    margin-top: 5.375rem;
+    margin-left: 5rem;
+  }
+
+
+  .box_2 {
+
+    margin: 7.5rem 11.25rem;
+  }
+
+  .text-group_2 {
+    margin-top: 5.375rem;
+    margin-right: 5rem;
+  }
+
+  .text_2 {
+
+    overflow-wrap: break-word;
+    color: rgba(51, 51, 51, 1);
+    font-size: 3rem;
+    font-family: Source Han Sans CN-Medium;
+    font-weight: 500;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  .image_2 {
+    width: 41.125rem;
+    height: 27.375rem;
+  }
+
+  .box_3 {
+    margin: 0 11.25rem 7.5rem 11.25rem;
+  }
+
+  .image_3 {
+    width: 41.125rem;
+    height: 27.375rem;
+  }
+
+  .text-group_3 {
+    margin-top: 5.375rem;
+    margin-left: 5rem;
+  }
+
+  .text_3 {
+
+    overflow-wrap: break-word;
+    color: rgba(51, 51, 51, 1);
+    font-size: 3rem;
+    font-family: Source Han Sans CN-Medium;
+    font-weight: 500;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  .text_4 {
+    overflow-wrap: break-word;
+    color: rgba(119, 119, 119, 1);
+    font-size: 1.5rem;
+    font-family: Source Han Sans CN-Regular;
+    font-weight: 400;
+    text-align: left;
+    margin-top: 1rem;
+  }
+
+
+
+
+
+
+  .group_2 {
+    display: flex;
+    justify-content: center;
+    margin: 1.707rem 0 0 11.147rem;
+  }
+
+  .box_4 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 31.25rem;
+    position: relative;
+  }
+
+  .box_4 img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .text_5 {
+    overflow-wrap: break-word;
+    color: rgba(51, 51, 51, 1);
+    font-size: 3rem;
+    font-family: Source Han Sans CN-Medium;
+    font-weight: 500;
+    white-space: nowrap;
+    z-index: 9999;
+  }
+</style>
+<div class="page flex-col">
+    <div class="nav">
+      <div class="top-nav">
+        <p>供应商官网</p>
+        <div class="button-div">
+          <button  id="my-button">登录</button>
+          <button   class="margin-left" id="my-button">注册</button>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="group_5 flex-col">
+      <div class="block_4 flex-row justify-between">
+        <div class="box_10 flex-col">
+          <span class="text_36">有偿问卷在家远程办公也能</span>
+          <span class="text_36">轻松赚钱</span>
+          <span class="text_37">做完问卷即得奖励</span>
+
+
+
+        </div>
+        <img class="image_11" referrerpolicy="no-referrer" src=""/>
+      </div>
+    </div>
+    <div class="box-5-margin">
+      <div class="box_5 ">
+        <div class="text-group_4 text-group-1">
+          <span class="text_8">简单三步即可填问卷赚钱</span>
+
+        </div>
+
+        <div class="group_2">
+          <div class="box_6">
+
+            <img class="image_5" referrerpolicy="no-referrer" src="" />
+            <div class="text-group_5 flex-col justify-between">
+              <span class="text_9">注册</span>
+              <span class="text_10">
+                任何人都可以参加，注册步骤简单只需要30秒
+              </span>
+
+            </div>
+          </div>
+          <div class="box_6 box-margin">
+            <img class="image_5" referrerpolicy="no-referrer" src="" />
+            <div class="text-group_5 flex-col justify-between">
+              <span class="text_9">问卷</span>
+              <span class="text_10">
+                将在问卷列表中收到问卷，请如实认真回答，并且您所回答内容是匿名的，请放心
+              </span>
+
+            </div>
+
+          </div>
+          <div class="box_6">
+            <img class="image_5" referrerpolicy="no-referrer" src="" />
+            <div class="text-group_5 flex-col justify-between">
+              <span class="text_9">佣金</span>
+              <span class="text_10">
+                将在问卷列表中收到问卷，请如实认真回答，操作完成，佣金会在第一时间进入账号明细并且您所回答内容是匿名的，请放心
+              </span>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="group_1 flex-row">
+      <div class="block_1 flex-col">
+
+        <div class="box_3 flex-row justify-between">
+          <img class="image_1" referrerpolicy="no-referrer" src="" />
+          <div class="text-group_1 flex-col">
+            <span class="text_3">在线赚钱</span>
+            <span class="text_4">
+              在该网站填写问卷就可轻松在线赚钱
+              <br />
+              我们已经优化系统来匹配最适配的问卷。问卷相关性越高，意味着可获奖金也更多。
+              当我们为您匹配到完美问卷后，请及时进行参与，每一份问卷的配额是有限的。
+              在该网站上赚钱趣味十足。公司参考您的意见来改善产品开发设计，这意味着您的意见非常宝贵。
+            </span>
+          </div>
+        </div>
+        <div class="box_2 flex-row justify-between">
+          <div class="text-group_2 flex-col ">
+            <span class="text_2">填问卷，在家办公</span>
+            <span class="text_4">
+              通过您的手机或电脑就可轻松参与问卷填写，您随时随地都可以在线填问卷，所以这是在家工作的理想选择。
+              <br />
+              这不需要花太多时间，您随时可以参与问卷，任何人都可以通过参与问卷的方式在家赚钱，您甚至可以在填写问卷的同时边做其他事。这是简单、有弹性的快速赚钱方法。
+              <br />
+              在家填写问卷是一件非常有意义的事，您的意见有助于公司设计更优质的产品和服务，问卷仅作为公司的产品调研使用。
+            </span>
+          </div>
+          <img class="image_2" referrerpolicy="no-referrer" src="" />
+        </div>
+        <div class="box_3 flex-row justify-between">
+          <img class="image_3" referrerpolicy="no-referrer" src="" />
+          <div class="text-group_3 flex-col ">
+            <span class="text_3">在家工作您能赚多少?</span>
+            <span class="text_4">
+              您填写的每一份问卷都会获得奖金。这是一份有保障的兼职收入。让您轻松在家填问卷赚钱。我们提供最详细的市场问卷内容，您还可以在问卷邀请上查看每份问卷能赚到的奖金金额。
+            </span>
+          </div>
+        </div>
+
+
+
+      </div>
+
+    </div>
+    <div class="box_4 flex-col">
+      <img
+        src=""
+        alt="Background Image">
+      <span class="text_5">立即注册并体验功能</span>
+    </div>
+  </div>
+</body>
+`
 
 
 
@@ -1847,6 +2691,18 @@ const colorBlocksHtml = `
 <div class="square_div">
 `
 export const customBlock = [
+  {
+    id: 'B2b-Html', // 唯一标识
+    label: 'B2B模版', //标题
+    content: BBHtml, // 块的内容
+    category: 'Custom',// 块的位置 （那个类别下）
+  },
+  {
+    id: 'B2C-Html', // 唯一标识
+    label: 'B2C模版', //标题
+    content: BCHtml, // 块的内容
+    category: 'Custom',// 块的位置 （那个类别下）
+  },
   // {
   //   id: 'Custom-footerHtml', // 唯一标识
   //   label: '自定义footer', //标题
@@ -1859,54 +2715,54 @@ export const customBlock = [
   //   content: wxHtml, // 块的内容
   //   category: 'Custom',// 块的位置 （那个类别下）
   // },
-  {
-    id: 'B2C-Html1', // 唯一标识
-    label: 'B2C首页模板第一部分', //标题
-    content: BCHtml1, // 块的内容
-    category: 'Custom',// 块的位置 （那个类别下）
-  },
-  {
-    id: 'B2C-Html2', // 唯一标识
-    label: 'B2C首页模板第二部分', //标题
-    content: BCHtml2, // 块的内容
-    category: 'Custom',// 块的位置 （那个类别下）
-  },
-  {
-    id: 'B2C-Html3', // 唯一标识
-    label: 'B2C首页模板第三部分', //标题
-    content: BCHtml3, // 块的内容
-    category: 'Custom',// 块的位置 （那个类别下）
-  },
-  {
-    id: 'B2C-Html4', // 唯一标识
-    label: 'B2C首页模板第四部分', //标题
-    content: BCHtml4, // 块的内容
-    category: 'Custom',// 块的位置 （那个类别下）
-  },
-  {
-    id: 'B2B-Html1', // 唯一标识
-    label: 'B2B首页模板第一部分', //标题
-    content: BBHtml1, // 块的内容
-    category: 'Custom',// 块的位置 （那个类别下）
-  },
-  {
-    id: 'B2B-Html2', // 唯一标识
-    label: 'B2B首页模板第二部分', //标题
-    content: BBHtml2, // 块的内容
-    category: 'Custom',// 块的位置 （那个类别下）
-  },
-  {
-    id: 'B2B-Html3', // 唯一标识
-    label: 'B2B首页模板第三部分', //标题
-    content: BBHtml3, // 块的内容
-    category: 'Custom',// 块的位置 （那个类别下）
-  },
-  {
-    id: 'B2B-Html4', // 唯一标识
-    label: 'B2B首页模板第四部分', //标题
-    content: BBHtml4, // 块的内容
-    category: 'Custom',// 块的位置 （那个类别下）
-  },
+  // {
+  //   id: 'B2C-Html1', // 唯一标识
+  //   label: 'B2C首页模板第一部分', //标题
+  //   content: BCHtml1, // 块的内容
+  //   category: 'Custom',// 块的位置 （那个类别下）
+  // },
+  // {
+  //   id: 'B2C-Html2', // 唯一标识
+  //   label: 'B2C首页模板第二部分', //标题
+  //   content: BCHtml2, // 块的内容
+  //   category: 'Custom',// 块的位置 （那个类别下）
+  // },
+  // {
+  //   id: 'B2C-Html3', // 唯一标识
+  //   label: 'B2C首页模板第三部分', //标题
+  //   content: BCHtml3, // 块的内容
+  //   category: 'Custom',// 块的位置 （那个类别下）
+  // },
+  // {
+  //   id: 'B2C-Html4', // 唯一标识
+  //   label: 'B2C首页模板第四部分', //标题
+  //   content: BCHtml4, // 块的内容
+  //   category: 'Custom',// 块的位置 （那个类别下）
+  // },
+  // {
+  //   id: 'B2B-Html1', // 唯一标识
+  //   label: 'B2B首页模板第一部分', //标题
+  //   content: BBHtml1, // 块的内容
+  //   category: 'Custom',// 块的位置 （那个类别下）
+  // },
+  // {
+  //   id: 'B2B-Html2', // 唯一标识
+  //   label: 'B2B首页模板第二部分', //标题
+  //   content: BBHtml2, // 块的内容
+  //   category: 'Custom',// 块的位置 （那个类别下）
+  // },
+  // {
+  //   id: 'B2B-Html3', // 唯一标识
+  //   label: 'B2B首页模板第三部分', //标题
+  //   content: BBHtml3, // 块的内容
+  //   category: 'Custom',// 块的位置 （那个类别下）
+  // },
+  // {
+  //   id: 'B2B-Html4', // 唯一标识
+  //   label: 'B2B首页模板第四部分', //标题
+  //   content: BBHtml4, // 块的内容
+  //   category: 'Custom',// 块的位置 （那个类别下）
+  // },
   // {
   //   id: 'color-blocks', // 唯一标识
   //   label: '自定义色块', //标题
