@@ -1,0 +1,9 @@
+
+/**
+ * 由 Fantastic-admin 提供技术支持
+ * Powered by Fantastic-admin
+ * Gitee  https://fantastic-admin.gitee.io
+ * Github https://fantastic-admin.github.io
+ */
+
+import k from"./index-CltL_0m4.js";import{u as I}from"./survey_vip-DmlZKzVV.js";import{d as S,r as n,L as w,K as C,a2 as c,a as m,i as f,f as p,w as d,g as L,N,O as B,c as D,b as R,t as j,A as E}from"./index-5r5nO7Oz.js";const $=S({__name:"index",props:{leftTabsData:Array,validateTopTabs:Array,validateAll:Array,title:String},emits:["validate"],setup(T,{expose:_,emit:h}){const g=I(),s=T,V=h;n();const e=n(s.leftTabsData),x=n(s.validateTopTabs);e.value.forEach((l,a)=>{const u=n(null);w(`formRef${a}`,u)});const b=n(0),t=n(0);function y(){t.value=++b.value,e.value.push({...g.initialTopTabsData});const l=e.value[0].memberGroupId;e.value.forEach(a=>{a.hasOwnProperty("memberGroupId")||(a.memberGroupId=l)})}function A(l){e.value.splice(l,1),x.value.splice(l,1),t.value>=e.value.length&&(t.value=Math.max(0,e.value.length-1),b.value=Math.max(0,e.value.length-1))}return C(()=>t.value,(l,a)=>{s.validateAll.reduce((i,v,o)=>(v==="rejected"&&i.push(o),i),[]).includes(a)&&V("validate")}),_({activeLeftTab:t}),(l,a)=>{const u=c("el-button"),i=c("el-tab-pane"),v=c("el-tabs");return m(),f("div",null,[p(u,{class:"button",disabled:e.value.length>29||s.title!=="新增",onClick:a[0]||(a[0]=o=>y())},{default:d(()=>[L(" 新增会员 ")]),_:1},8,["disabled"]),p(v,{modelValue:t.value,"onUpdate:modelValue":a[1]||(a[1]=o=>t.value=o),"tab-position":"left",onTabRemove:A},{default:d(()=>[(m(!0),f(N,null,B(e.value,(o,r)=>(m(),D(i,{key:r,closable:e.value.length!==1,name:r},{label:d(()=>[R("div",{class:E(s.validateAll[r]&&s.validateAll[r]==="rejected"?"validateRejected":"")},j(o.memberNickname||"会员名称"),3)]),default:d(()=>[p(k,{"left-tab":o,"tab-index":r},null,8,["left-tab","tab-index"])]),_:2},1032,["closable","name"]))),128))]),_:1},8,["modelValue"])])}}});export{$ as _};
