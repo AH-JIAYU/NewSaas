@@ -2564,7 +2564,7 @@ const BCHtml = `
         <p>供应商官网</p>
         <div class="button-div">
           <button  id="my-button">登录</button>
-          <button   class="margin-left" id="my-button">注册</button>
+          <button   class="margin-left" id="my-button2">注册</button>
         </div>
 
       </div>
