@@ -195,11 +195,11 @@ function setSelectRows(val: any) {
 const tableList = computed(() => {
   // 合作状态
   const cooperationList = list.value.filter(
-    (item: any) => item.bindStatus === 2,
+    (item: any) => item.bindStatus === 2
   );
   // 解约状态
   let terminationOfContractList = list.value.filter(
-    (item: any) => item.bindStatus === 4,
+    (item: any) => item.bindStatus === 4
   );
   // 解约去重
   terminationOfContractList = Array.from(
@@ -207,12 +207,12 @@ const tableList = computed(() => {
       terminationOfContractList.map((item: any) => [
         item.beInvitationTenantId,
         item,
-      ]),
-    ).values(),
+      ])
+    ).values()
   );
   // 合作的列表的id集合
   const cooperationIdList = cooperationList.map(
-    (item: any) => item.beInvitationTenantId,
+    (item: any) => item.beInvitationTenantId
   );
   terminationOfContractList.forEach((item: any) => {
     if (!cooperationIdList.includes(item.beInvitationTenantId)) {
