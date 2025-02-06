@@ -247,7 +247,7 @@ nextTick(() => {
                     <el-option
                       v-for="item in typeList"
                       :key="item.value"
-                      :label="item.label"
+                      label="item.label"
                       :value="item.value"
                     >
                     </el-option>

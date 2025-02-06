@@ -2,7 +2,7 @@
 import { ElMessage, ElMessageBox } from "element-plus";
 import FormMode from "./components/FormMode/index.vue";
 import homePageEdit from "./components/HomePageEdit/index.vue";
-import empty from '@/assets/images/empty.png'
+import empty from "@/assets/images/empty.png";
 import eventBus from "@/utils/eventBus";
 import api from "@/api/modules/configuration_homepageSetting";
 
@@ -56,7 +56,7 @@ function getDataList() {
     };
     api.list(params).then((res: any) => {
       data.value.loading = false;
-      if(res.data && res.status === 1) {
+      if (res.data && res.status === 1) {
         //通用
         data.value.controlDataList = res.data.controlData;
 
@@ -66,7 +66,6 @@ function getDataList() {
       }
     });
   } catch (error) {
-
   } finally {
     data.value.loading = false;
   }
@@ -108,11 +107,11 @@ function homePage(row: any, title: any = "设计模板") {
 //设置为自定义模版
 async function homeMyPage(row: any) {
   const params = {
-    "title":row.title,
-    "css":row.css,
-    "html":row.html,
-    "rawData":row.rawData
-  }
+    title: row.title,
+    css: row.css,
+    html: row.html,
+    rawData: row.rawData,
+  };
 
   const res = await api.create(params);
   res.status === 1 &&
@@ -120,7 +119,7 @@ async function homeMyPage(row: any) {
       message: "设置成功",
       center: true,
     });
-  getDataList()
+  getDataList();
 }
 
 // 设计主页
@@ -131,7 +130,7 @@ async function setHomePage(row: any) {
       message: "设置成功",
       center: true,
     });
-  getDataList()
+  getDataList();
 }
 
 // 删除
@@ -147,7 +146,7 @@ function onDel(row: any) {
         getDataList();
       });
     })
-    .catch(() => { });
+    .catch(() => {});
 }
 
 onMounted(() => {
@@ -169,25 +168,56 @@ onBeforeUnmount(() => {
 <template>
   <div :class="{ 'absolute-container': data.tableAutoHeight }">
     <PageMain>
-      <div style="font-size: 1.5rem;">官方模板</div>
-      <ElTable v-loading="data.loading" class="my-4" :data="data.controlDataList" stripe highlight-current-row
-        height="100%" @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
-        <ElTableColumn v-if="data.batch.enable" type="selection" align="left" fixed />
+      <div style="font-size: 1.5rem">官方模板</div>
+      <ElTable
+        v-loading="data.loading"
+        class="my-4"
+        :data="data.controlDataList"
+        stripe
+        highlight-current-row
+        height="100%"
+        @sort-change="sortChange"
+        @selection-change="data.batch.selectionDataList = $event"
+      >
+        <ElTableColumn
+          v-if="data.batch.enable"
+          type="selection"
+          align="left"
+          fixed
+        />
         <ElTableColumn prop="title" label="标题" />
-        <ElTableColumn prop="isSet" align="left"  label="是否使用">
+        <ElTableColumn prop="isSet" align="left" label="是否使用">
           <template #default="{ row }">
-            {{ row.isSet ? '是' : '否' }}
+            {{ row.isSet ? "是" : "否" }}
           </template>
         </ElTableColumn>
         <ElTableColumn label="操作" width="350" align="left" fixed="right">
           <template #default="scope">
-            <ElButton v-if="!scope.row.isSet" type="primary" size="small" plain @click="setHomePage(scope.row)" v-auth="'homepageSetting-get-setHomePageTemplate'">
+            <ElButton
+              v-if="!scope.row.isSet"
+              type="primary"
+              size="small"
+              plain
+              @click="setHomePage(scope.row)"
+              v-auth="'homepageSetting-get-setHomePageTemplate'"
+            >
               设为官网
             </ElButton>
-            <ElButton type="primary" size="small" plain @click="homeMyPage(scope.row)" v-auth="'homepageSetting-update-updateHomePageTemplate'">
+            <ElButton
+              type="primary"
+              size="small"
+              plain
+              @click="homeMyPage(scope.row)"
+              v-auth="'homepageSetting-update-updateHomePageTemplate'"
+            >
               设置为自定义模版
             </ElButton>
-            <ElButton type="primary" size="small" plain @click="homePage(scope.row,'')">
+            <ElButton
+              type="primary"
+              size="small"
+              plain
+              @click="homePage(scope.row, '')"
+            >
               查看
             </ElButton>
           </template>
@@ -198,52 +228,103 @@ onBeforeUnmount(() => {
       </ElTable>
     </PageMain>
     <PageMain>
-      <div style="font-size: 1.5rem;">自定义模板</div>
+      <div style="font-size: 1.5rem">自定义模板</div>
       <ElDivider border-style="dashed" />
       <ElSpace wrap>
-        <ElButton type="primary" size="default" @click="onCreate" v-auth="'homepageSetting-insert-insertHomePageTemplate'">
+        <ElButton
+          type="primary"
+          size="default"
+          @click="onCreate"
+          v-auth="'homepageSetting-insert-insertHomePageTemplate'"
+        >
           <template #icon>
             <SvgIcon name="i-ep:plus" />
           </template>
           新增模板
         </ElButton>
-        <ElButton v-if="data.batch.enable" size="default" :disabled="!data.batch.selectionDataList.length">
+        <ElButton
+          v-if="data.batch.enable"
+          size="default"
+          :disabled="!data.batch.selectionDataList.length"
+        >
           单个批量操作按钮
         </ElButton>
         <ElButtonGroup v-if="data.batch.enable">
-          <ElButton size="default" :disabled="!data.batch.selectionDataList.length">
+          <ElButton
+            size="default"
+            :disabled="!data.batch.selectionDataList.length"
+          >
             批量操作按钮组1
           </ElButton>
-          <ElButton size="default" :disabled="!data.batch.selectionDataList.length">
+          <ElButton
+            size="default"
+            :disabled="!data.batch.selectionDataList.length"
+          >
             批量操作按钮组2
           </ElButton>
         </ElButtonGroup>
       </ElSpace>
-      <ElTable v-loading="data.loading" class="my-4" :data="data.dataList" stripe highlight-current-row
-        height="100%" @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event">
-        <ElTableColumn v-if="data.batch.enable" type="selection" align="left" fixed />
+      <ElTable
+        v-loading="data.loading"
+        class="my-4"
+        :data="data.dataList"
+        stripe
+        highlight-current-row
+        height="100%"
+        @sort-change="sortChange"
+        @selection-change="data.batch.selectionDataList = $event"
+      >
+        <ElTableColumn
+          v-if="data.batch.enable"
+          type="selection"
+          align="left"
+          fixed
+        />
         <ElTableColumn prop="title" label="标题" />
-        <ElTableColumn prop="isSet" align="left"  label="是否使用">
+        <ElTableColumn prop="isSet" align="left" label="是否使用">
           <!-- 可以使用，二次点击去掉使用 -->
           <template #default="{ row }">
-
-
-
-        {{ row.isSet ? '是' : '否' }}
+            {{ row.isSet ? "是" : "否" }}
           </template>
         </ElTableColumn>
         <ElTableColumn label="操作" width="350" align="left" fixed="right">
           <template #default="scope">
-            <ElButton v-if="!scope.row.isSet" type="primary" size="small" plain @click="setHomePage(scope.row)" v-auth="'homepageSetting-get-setHomePageTemplate'">
+            <ElButton
+              v-if="!scope.row.isSet"
+              type="primary"
+              size="small"
+              plain
+              @click="setHomePage(scope.row)"
+              v-auth="'homepageSetting-get-setHomePageTemplate'"
+            >
               设为官网
             </ElButton>
-            <ElButton type="primary" size="small" plain @click="homePage(scope.row)" v-auth="'homepageSetting-update-updateHomePageTemplate'">
+            <ElButton
+              type="primary"
+              size="small"
+              plain
+              @click="homePage(scope.row)"
+              v-auth="'homepageSetting-update-updateHomePageTemplate'"
+            >
               设计模板
             </ElButton>
-            <ElButton type="primary" size="small" plain @click="onEdit(scope.row)" v-auth="'homepageSetting-update-updateHomePageTemplate'">
+            <ElButton
+              type="primary"
+              size="small"
+              plain
+              @click="onEdit(scope.row)"
+              v-auth="'homepageSetting-update-updateHomePageTemplate'"
+            >
               编辑标题
             </ElButton>
-            <ElButton type="danger" size="small" plain @click="onDel(scope.row)" v-if="!scope.row.isSet" v-auth="'homepageSetting-delete-deleteHomePageTemplate'">
+            <ElButton
+              type="danger"
+              size="small"
+              plain
+              @click="onDel(scope.row)"
+              v-if="!scope.row.isSet"
+              v-auth="'homepageSetting-delete-deleteHomePageTemplate'"
+            >
               删除
             </ElButton>
           </template>
@@ -252,13 +333,28 @@ onBeforeUnmount(() => {
           <el-empty :image="empty" :image-size="300" />
         </template>
       </ElTable>
-      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
-        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-        background @size-change="sizeChange" @current-change="currentChange" />
+      <ElPagination
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
+        :page-sizes="pagination.sizes"
+        :layout="pagination.layout"
+        :hide-on-single-page="false"
+        class="pagination"
+        background
+        @size-change="sizeChange"
+        @current-change="currentChange"
+      />
     </PageMain>
 
-    <FormMode v-if="data.formMode === 'dialog' || data.formMode === 'drawer'" :id="data.formModeProps.id"
-      :row="data.formModeProps.row" v-model="data.formModeProps.visible" :mode="data.formMode" @success="getDataList" />
+    <FormMode
+      v-if="data.formMode === 'dialog' || data.formMode === 'drawer'"
+      :id="data.formModeProps.id"
+      :row="data.formModeProps.row"
+      v-model="data.formModeProps.visible"
+      :mode="data.formMode"
+      @success="getDataList"
+    />
     <homePageEdit ref="homePageRef" @fetch-data="getDataList"></homePageEdit>
   </div>
 </template>
@@ -307,6 +403,4 @@ onBeforeUnmount(() => {
     }
   }
 }
-
-
 </style>

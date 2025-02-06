@@ -22,6 +22,11 @@ const formRules = ref<FormRules>({
   title: [{ required: true, message: "请输入标题", trigger: "blur" }],
 });
 
+const template = ref<any>({
+  1: "B2B",
+  2: "B2C",
+});
+
 onMounted(() => {
   try {
     loading.value = true;
@@ -30,7 +35,6 @@ onMounted(() => {
       loading.value = false;
     }
   } catch (error) {
-
   } finally {
     loading.value = false;
   }
@@ -46,6 +50,8 @@ defineExpose({
               loading.value = true;
               const { id, ...params } = form.value;
               api.create(params).then((res: any) => {
+                console.log(params);
+
                 loading.value = false;
                 res.status === 1 &&
                   ElMessage.success({
@@ -55,7 +61,6 @@ defineExpose({
                 resolve();
               });
             } catch (error) {
-
             } finally {
               loading.value = false;
             }
@@ -72,11 +77,9 @@ defineExpose({
                 resolve();
               });
             } catch (error) {
-
             } finally {
               loading.value = false;
             }
-
           }
         }
       });
@@ -87,7 +90,12 @@ defineExpose({
 
 <template>
   <div v-loading="loading">
-    <ElForm ref="formRef" :model="form" :rules="formRules" label-width="3.75rem" >
+    <ElForm
+      ref="formRef"
+      :model="form"
+      :rules="formRules"
+      label-width="3.75rem"
+    >
       <ElFormItem label="标题" prop="title">
         <ElInput v-model="form.title" placeholder="请输入标题" />
       </ElFormItem>

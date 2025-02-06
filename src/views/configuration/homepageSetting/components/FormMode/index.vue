@@ -19,9 +19,7 @@ const visible = defineModel<boolean>({
 
 const formRef = ref();
 
-const title = computed(() =>
-  props.id === "" ? "新增首页设置" : "编辑标题"
-);
+const title = computed(() => (props.id === "" ? "新增首页设置" : "编辑标题"));
 
 function onSubmit() {
   // submit() 为组件内部方法
