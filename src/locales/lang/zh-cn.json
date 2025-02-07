@@ -841,6 +841,7 @@
   "callback": {
     "export": "导出",
     "clickID": "点击ID",
+    "clientID":"客户ID",
     "vipType": "会员类型",
     "customerAbbreviation": "客户简称",
     "vipSubVipId": "子会员ID/会员ID",

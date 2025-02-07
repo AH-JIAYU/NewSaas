@@ -839,6 +839,7 @@
   "callback": {
     "export": "Export",
     "clickID": "Click ID",
+    "clientID":"Client ID",
     "vipType": "Vip Type",
     "customerAbbreviation": "Customer Abbreviation",
     "vipSubVipId": "Vip ID / Sub VIP ID",
