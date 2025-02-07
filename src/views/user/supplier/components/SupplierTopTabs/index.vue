@@ -26,8 +26,8 @@ const props: any = defineProps({
 const formRef = ref(null);
 const form = ref<any>({});
 const typeList = [
-  { label: computed(() => t("supplier.new.company")), value: "company" },
-  { label: computed(() => t("supplier.new.personal")), value: "personal" },
+  { label: t("supplier.new.company"), value: "company" },
+  { label: t("supplier.new.personal"), value: "personal" },
 ];
 const currencyList = [
   { label: computed(() => t("supplier.new.USD")), value: "USD" },
@@ -247,7 +247,7 @@ nextTick(() => {
                     <el-option
                       v-for="item in typeList"
                       :key="item.value"
-                      label="item.label"
+                      :label="item.label"
                       :value="item.value"
                     >
                     </el-option>

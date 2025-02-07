@@ -191,6 +191,13 @@ onBeforeUnmount(() => {
             {{ row.isSet ? "是" : "否" }}
           </template>
         </ElTableColumn>
+        <ElTableColumn prop="isSet" align="left" label="模板类型">
+          <template #default="{ row }">
+            <span class="color3">{{
+              row.templateType == 1 ? "B2B" : "B2C"
+            }}</span>
+          </template>
+        </ElTableColumn>
         <ElTableColumn label="操作" width="350" align="left" fixed="right">
           <template #default="scope">
             <ElButton
@@ -285,6 +292,13 @@ onBeforeUnmount(() => {
           <!-- 可以使用，二次点击去掉使用 -->
           <template #default="{ row }">
             {{ row.isSet ? "是" : "否" }}
+          </template>
+        </ElTableColumn>
+        <ElTableColumn prop="isSet" align="left" label="模板类型">
+          <template #default="{ row }">
+            <span class="color3">{{
+              row.templateType == 1 ? "B2B" : "B2C"
+            }}</span>
           </template>
         </ElTableColumn>
         <ElTableColumn label="操作" width="350" align="left" fixed="right">
