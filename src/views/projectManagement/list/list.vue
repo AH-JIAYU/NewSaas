@@ -21,8 +21,8 @@ defineOptions({
   name: "list",
 });
 
+const aa="abc"
 const { t } = useI18n();
-
 const departmentStore = useDepartmentStore();
 // 时间
 const { format } = useTimeago();
