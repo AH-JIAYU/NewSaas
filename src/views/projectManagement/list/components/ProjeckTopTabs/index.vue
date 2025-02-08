@@ -245,7 +245,7 @@ const rules = reactive<any>({
         // 判断值是否为空
         if (!value) {
           callback(new Error(t("projectTopTabs.age")));
-        } else if (value < 18) {
+        } else if (value < 0) {
           callback(new Error(t("projectTopTabs.bt18")));
         } else if (value >= 99) {
           callback(new Error(t("projectTopTabs.lt99")));
