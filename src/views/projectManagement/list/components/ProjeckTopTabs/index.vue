@@ -268,23 +268,6 @@ if (!localToptTab.value.clientId) {
   currencyTypeRes.value = 1;
 }
 
-// 租户货币类型
-if (!localToptTab.value.clientId) {
-  if (userStore.currencyType) {
-    localToptTab.value.currencyType =
-      userStore.currencyType === 1 ? "USD" : "CNY";
-  }
-}
-if (localToptTab.value.browser) {
-  // 浏览器
-  localToptTab.value.browser = localToptTab.value.browser.split(",");
-}
-if (localToptTab.value.operatingSystem) {
-  // 操作系统(后端刘定义类型为字符串，前端回显转换)
-  localToptTab.value.operatingSystem =
-    localToptTab.value.operatingSystem.split(",");
-}
-
 // #endregion
 
 // #region 方法
@@ -326,7 +309,7 @@ function handleChangeTime() {
 // 同步客户的前置问卷开关
 const changeClient = (val: any) => {
   const findData = data.value.basicSettings.customerList.find(
-    (item: any) => item.tenantCustomerId === val,
+    (item: any) => item.tenantCustomerId === val
   );
   localToptTab.value.isProfile = findData.antecedentQuestionnaire === 2 ? 1 : 2;
 };
@@ -511,7 +494,7 @@ const changeCountryId = () => {
   // 反选
   data.value.checked = Boolean(
     localToptTab.value.countryIdList.length ===
-      basicDictionaryStore.country.length,
+      basicDictionaryStore.country.length
   );
 };
 // 配置区域改变 重新获取题库目录
@@ -596,7 +579,7 @@ const getProjectCategoryList = async () => {
 
       localToptTab.value.data.configurationInformation.projectCategoryList =
         res.data.getProjectCategoryInfoList.filter(
-          (item: any) => item.status === 1,
+          (item: any) => item.status === 1
         );
     }
   } else {
@@ -614,7 +597,7 @@ const getProjectProblemList = async (id: string | number, judge: boolean) => {
     setTimeout(async () => {
       const { projectProblemCategoryName, ...params } =
         localToptTab.value.data.configurationInformation.projectCategoryList.find(
-          (item: any) => item.projectProblemCategoryId === id,
+          (item: any) => item.projectProblemCategoryId === id
         );
       const res = await api.getProjectProblemList(params);
       //问题列表 - 显示的数据
@@ -625,7 +608,7 @@ const getProjectProblemList = async (id: string | number, judge: boolean) => {
             getProjectAnswerInfoList: item.getProjectAnswerInfoList.sort(
               (a: any, b: any) =>
                 a.answerValue.replace(/^[a-zA-Z]+/, "") -
-                b.answerValue.replace(/^[a-zA-Z]+/, ""),
+                b.answerValue.replace(/^[a-zA-Z]+/, "")
             ),
           };
         });
@@ -645,7 +628,7 @@ const getProjectProblemList = async (id: string | number, judge: boolean) => {
           i++
         ) {
           const item = cloneDeep(
-            localToptTab.value.data.configurationInformation.initialProblem,
+            localToptTab.value.data.configurationInformation.initialProblem
           );
           // 问题id
           item.projectProblemId =
@@ -723,7 +706,7 @@ const showProjectQuotaInfoList = async () => {
       await getProjectProblemList(
         localToptTab.value.data.configurationInformation.initialProblem
           .projectProblemCategoryId,
-        true,
+        true
       );
     }, 100);
   }
@@ -745,7 +728,7 @@ const customModel = (id: any, index: any) => {
           .projectAnswerIdList;
       } else {
         const data = localToptTab.value.projectQuotaInfoList.find(
-          (item: any) => item.projectProblemId === id,
+          (item: any) => item.projectProblemId === id
         );
         return data.projectAnswerIdList;
       }
@@ -756,7 +739,7 @@ const customModel = (id: any, index: any) => {
           newValue;
       } else {
         const data = localToptTab.value.projectQuotaInfoList.find(
-          (item: any) => item.projectProblemId === id,
+          (item: any) => item.projectProblemId === id
         );
         data.projectAnswerIdList = newValue;
       }
@@ -836,7 +819,7 @@ watch(
   (newVal, oleVal) => {
     localToptTab.value = newVal;
   },
-  { deep: true },
+  { deep: true }
 );
 const acquiesceExchangeRate = ref<any>();
 onMounted(async () => {
@@ -845,6 +828,23 @@ onMounted(async () => {
   await getList();
   await showProjectQuotaInfoList();
   acquiesceExchangeRate.value = storage.local.get("acquiesceExchangeRate");
+  // 租户货币类型
+  if (!localToptTab.value.clientId) {
+    if (userStore.currencyType) {
+      localToptTab.value.currencyType =
+        userStore.currencyType === 1 ? "USD" : "CNY";
+    }
+  }
+
+  if (localToptTab.value.browser.length) {
+    // 浏览器
+    localToptTab.value.browser = localToptTab.value.browser.split(",");
+  }
+  if (localToptTab.value.operatingSystem.length) {
+    // 操作系统(后端刘定义类型为字符串，前端回显转换)
+    localToptTab.value.operatingSystem =
+      localToptTab.value.operatingSystem.split(",");
+  }
 });
 defineExpose({ getUpLoad });
 nextTick(() => {
@@ -875,7 +875,7 @@ const getProblemList = async () => {
   if (!localToptTab.value.data.configurationInformation.initialProblem) {
     // 初始化 数据 问题
     localToptTab.value.data.configurationInformation.initialProblem = cloneDeep(
-      projectManagementListStore.initialProblem,
+      projectManagementListStore.initialProblem
     );
   }
 
@@ -1826,9 +1826,7 @@ const getProblemList = async () => {
   width: 100%;
   margin: 0.75rem;
   height: 2rem;
-  font-family:
-    PingFang SC,
-    PingFang SC;
+  font-family: PingFang SC, PingFang SC;
   font-weight: 500;
   font-size: 0.875rem;
   color: #409eff;
