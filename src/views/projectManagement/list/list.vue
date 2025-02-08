@@ -3,7 +3,7 @@ import allocationEdit from "./components/AllocationEdit/index.vue";
 import ProjeckEdit from "./components/ProjeckEdit/index.vue";
 import ProjectDetail from "./components/ProjectDetails/index.vue";
 import ViewAllocation from "./components/ViewAllocation/index.vue";
-import QuickEdit from "./components/QuickEdit/index.vue"; //快速编辑
+import QuickEdit from "./components/QuickEdit/index.vue"; //快速编辑0000000
 import scheduling from "./components/Edit/index.vue"; //项目调度
 import outsource from "@/views/projectManagement/outsource/components/Edit/index.vue"; //项目外包
 import { ElMessage } from "element-plus";
@@ -12,7 +12,7 @@ import apiOut from "@/api/modules/projectManagement_outsource";
 import { obtainLoading, submitLoading } from "@/utils/apiLoading";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
 import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
-import useProjectManagementListStore from "@/store/modules/projectManagement_list"; // 项目
+import useProjectManagementListStore from "@/store/modules/projectManagement_list"; // 项目8gfdgfd
 import useDepartmentStore from "@/store/modules/department";
 import empty from "@/assets/images/empty.png";
 import { useI18n } from "vue-i18n";
