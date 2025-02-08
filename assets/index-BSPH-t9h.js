@@ -1,9 +1,0 @@
-
-/**
- * 由 Fantastic-admin 提供技术支持
- * Powered by Fantastic-admin
- * Gitee  https://fantastic-admin.gitee.io
- * Github https://fantastic-admin.github.io
- */
-
-import{D as _}from"./index-DENYnhuV.js";import{d as b,B as k,C as w,r as D,E as z,a2 as c,a as m,i as M,c as y,w as e,b as V,f as o,g as n,G as v,h as g,j as N,y as h}from"./index-BitsiCFM.js";import"./index-B9rfqVVK.js";import"./index-iJRjh0Y-.js";import"./zh_Hans-CrfEz-Jr.js";const R={class:"flex-c"},F={class:"flex-c"},U=b({__name:"index",props:k(["id","row","mode"],{modelValue:{type:Boolean,default:!1},modelModifiers:{}}),emits:k(["success"],["update:modelValue"]),setup(u,{emit:C}){const l=u,x=C,t=w(u,"modelValue"),r=D(),f=z(()=>l.id===""?"新增文章公告":"编辑文章公告");function p(){r.value.submit().then(()=>{x("success"),d()})}function d(){t.value=!1}return(j,a)=>{const s=c("ElButton"),B=c("ElDialog"),E=c("ElDrawer");return m(),M("div",null,[l.mode==="dialog"?(m(),y(B,{key:0,modelValue:t.value,"onUpdate:modelValue":a[0]||(a[0]=i=>t.value=i),title:g(f),width:"600px","close-on-click-modal":!1,"append-to-body":"","destroy-on-close":""},{footer:e(()=>[V("div",R,[o(s,{size:"large",onClick:d},{default:e(()=>[n(" 取消 ")]),_:1}),o(s,{type:"primary",size:"large",onClick:p},{default:e(()=>[n(" 确定 ")]),_:1})])]),default:e(()=>[o(_,v({ref_key:"formRef",ref:r},l),null,16)]),_:1},8,["modelValue","title"])):l.mode==="drawer"?(m(),y(E,{key:1,modelValue:t.value,"onUpdate:modelValue":a[1]||(a[1]=i=>t.value=i),title:g(f),size:"60%","close-on-click-modal":!1,"destroy-on-close":""},{footer:e(()=>[V("div",F,[o(s,{size:"large",onClick:d},{default:e(()=>[n(" 取消 ")]),_:1}),o(s,{type:"primary",size:"large",onClick:p},{default:e(()=>[n(" 确定 ")]),_:1})])]),default:e(()=>[o(_,v({ref_key:"formRef",ref:r},l),null,16)]),_:1},8,["modelValue","title"])):N("",!0)])}}}),q=h(U,[["__scopeId","data-v-da36b6b2"]]);export{q as default};
