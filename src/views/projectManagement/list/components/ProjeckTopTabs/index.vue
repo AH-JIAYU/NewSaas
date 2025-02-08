@@ -258,16 +258,6 @@ const rules = reactive<any>({
   ],
 });
 
-// 租户汇率
-if (!localToptTab.value.clientId) {
-  if (userStore.originalExchangeRate) {
-    currencyTypeRes.value = userStore.originalExchangeRate;
-    localToptTab.value.exchangeRate = userStore.originalExchangeRate;
-  }
-} else {
-  currencyTypeRes.value = 1;
-}
-
 // #endregion
 
 // #region 方法
@@ -835,7 +825,15 @@ onMounted(async () => {
         userStore.currencyType === 1 ? "USD" : "CNY";
     }
   }
-
+  // 租户汇率
+  if (!localToptTab.value.clientId) {
+    if (userStore.originalExchangeRate) {
+      currencyTypeRes.value = userStore.originalExchangeRate;
+      localToptTab.value.exchangeRate = userStore.originalExchangeRate;
+    }
+  } else {
+    currencyTypeRes.value = 1;
+  }
   if (localToptTab.value.browser.length) {
     // 浏览器
     localToptTab.value.browser = localToptTab.value.browser.split(",");
