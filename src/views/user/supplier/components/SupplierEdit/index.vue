@@ -118,6 +118,7 @@ async function save() {
       } else {
         // // 更新接口
         delete leftTabsData[0].getTenantCustomerOperationInfosList;
+        console.log(leftTabsData[0].updateTenantSupplierCustomerInfoList);
 
         const { status } = await submitLoading(api.edit(leftTabsData[0]));
 

@@ -197,6 +197,8 @@ const data = reactive<any>({
   payMethod: userSupplier.payMethod, // 付款方式
   countryList: [], // 区域
   supplierLevelList: [], // 供应商等级
+});
+const data1 = reactive<any>({
   updateTenantSupplierCustomerInfoList: [],
 });
 
@@ -238,7 +240,7 @@ const queryForm = reactive<any>({
 onMounted(async () => {
   // 异步数据加载
   userList.value = [];
-  updateTenantSupplierCustomerInfoList.value = [];
+
   const { data } = await api.getCustomerCooperation({});
   const relatedCustomers = data?.getCustomerInfoLists || [];
   const getCooperationInfoLists = data?.getCooperationInfoLists || [];
@@ -264,11 +266,12 @@ onMounted(async () => {
   // 初始化客户授权列表
   if (!props.leftTab.updateTenantSupplierCustomerInfoList) {
     props.leftTab.updateTenantSupplierCustomerInfoList = [];
+    data1.updateTenantSupplierCustomerInfoList = [];
   } else {
     if (props.leftTab.updateTenantSupplierCustomerInfoList.length) {
       props.leftTab.updateTenantSupplierCustomerInfoList.forEach(
         (item1: any) => {
-          updateTenantSupplierCustomerInfoList.value.push(item1);
+          data1.updateTenantSupplierCustomerInfoList.push(item1);
         }
       );
     }
@@ -283,7 +286,7 @@ nextTick(() => {
   validate(formRef.value);
 });
 const customerChange = () => {
-  const updatedList = updateTenantSupplierCustomerInfoList.value
+  const updatedList = data1.updateTenantSupplierCustomerInfoList
     .map((key: any) => {
       const selectedItem = userList.value.find((item: any) => item.key === key);
       if (selectedItem) {
@@ -593,7 +596,7 @@ const customerChange = () => {
               <el-col :span="8">
                 <el-form-item>
                   <el-transfer
-                    v-model="updateTenantSupplierCustomerInfoList.value"
+                    v-model="props.leftTab.relevanceCustomerIdList"
                     filterable
                     :filter-method="filterMethod"
                     :filter-placeholder="t('supplier.new.enterQueryCountry')"
@@ -609,7 +612,7 @@ const customerChange = () => {
               <el-col :span="8">
                 <el-form-item>
                   <el-transfer
-                    v-model="props.leftTab.updateTenantSupplierCustomerInfoList"
+                    v-model="data1.updateTenantSupplierCustomerInfoList"
                     filterable
                     :filter-method="filterMethod"
                     filter-placeholder="输入查询客户"
