@@ -624,7 +624,7 @@ const activeName = ref("first");
 
 // 高度自适应
 .absolute-container {
-  position: absolute;
+  position: relative;
   display: flex;
   flex-direction: column;
   width: 100%;

@@ -3,28 +3,31 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import FormMode from "./components/FormMode/index.vue";
 import eventBus from "@/utils/eventBus";
 import api from "@/api/modules/configuration_role";
-import QuickEdit from './components/QuickEdit/index.vue'//快速编辑
+import QuickEdit from "./components/QuickEdit/index.vue"; //快速编辑
 import useSettingsStore from "@/store/modules/settings";
-import empty from '@/assets/images/empty.png'
+import empty from "@/assets/images/empty.png";
+import { useI18n } from "vue-i18n";
 
 defineOptions({
   name: "role",
 });
-
+// 国际化
+const { t } = useI18n();
 // 路由
 const router = useRouter();
 // 分页
-const { pagination, onSizeChange, onCurrentChange, onSortChange } = usePagination();
+const { pagination, onSizeChange, onCurrentChange, onSortChange } =
+  usePagination();
 const tabbar = useTabbar();
 //快速编辑
 const QuickEditRef = ref();
 //表格当前选中
-const current = ref<any>()
+const current = ref<any>();
 const settingsStore = useSettingsStore();
 //表单排序配置
-const formSearchList = ref<any>()
+const formSearchList = ref<any>();
 // 表单排序name
-const formSearchName = ref<string>('formSearch-role')
+const formSearchName = ref<string>("formSearch-role");
 // 定义表单
 const data = ref<any>({
   loading: false,
@@ -60,8 +63,8 @@ const data = ref<any>({
 });
 
 function handleCurrentChange(val: any) {
-  if (val) current.value = val.id
-  else current.value = ''
+  if (val) current.value = val.id;
+  else current.value = "";
 }
 
 // 快速编辑
@@ -69,7 +72,7 @@ function quickEdit(row: any, type: any) {
   /**
     备注 remark
   */
-  QuickEditRef.value.showEdit(row, type)
+  QuickEditRef.value.showEdit(row, type);
 }
 
 onBeforeUnmount(() => {
@@ -82,10 +85,10 @@ async function getDataList() {
   try {
     data.value.loading = true;
     const params = {
-      ...data.value.search
-    }
-    const res = await api.list(params)
-    if(res.data && res.status === 1) {
+      ...data.value.search,
+    };
+    const res = await api.list(params);
+    if (res.data && res.status === 1) {
       data.value.dataList = res.data;
       pagination.value.total = +res.data.length;
     }
@@ -185,7 +188,7 @@ function onDel(row: any) {
         });
       });
     })
-    .catch(() => { });
+    .catch(() => {});
 }
 
 onMounted(() => {
@@ -196,34 +199,69 @@ onMounted(() => {
     });
   }
   formSearchList.value = [
-    { index: 1, show: true, type: 'input', modelName: 'id', placeholder: '角色ID' },
-    { index: 2, show: true, type: 'input', modelName: 'name', placeholder: '角色名称' }
-  ]
+    {
+      index: 1,
+      show: true,
+      type: "input",
+      modelName: "id",
+      placeholder: computed(() => t("configuration.role.roleID")),
+    },
+    {
+      index: 2,
+      show: true,
+      type: "input",
+      modelName: "name",
+      placeholder: computed(() => t("configuration.role.roleName")),
+    },
+  ];
 });
-
 </script>
 
 <template>
   <div :class="{ 'absolute-container': data.tableAutoHeight }">
     <PageMain>
-      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange"
-        @onReset="onReset" :model="data.search" />
+      <FormSearch
+        :formSearchList="formSearchList"
+        :formSearchName="formSearchName"
+        @currentChange="currentChange"
+        @onReset="onReset"
+        :model="data.search"
+      />
       <ElDivider border-style="dashed" />
       <ElSpace wrap>
-        <ElButton type="primary" size="default" @click="onCreate" v-auth="'role-insert-insertRole'">
-          新增角色
+        <ElButton
+          type="primary"
+          size="default"
+          @click="onCreate"
+          v-auth="'role-insert-insertRole'"
+        >
+          {{ t("configuration.role.newRole") }}
         </ElButton>
       </ElSpace>
-      <ElTable v-loading="data.loading" class="my-4" :data="data.dataList" stripe highlight-current-row height="100%"
-        @sort-change="sortChange" @selection-change="data.batch.selectionDataList = $event"
-        @current-change="handleCurrentChange">
-        <ElTableColumn v-if="data.batch.enable" type="selection" align="left" fixed />
+      <ElTable
+        v-loading="data.loading"
+        class="my-4"
+        :data="data.dataList"
+        stripe
+        highlight-current-row
+        height="100%"
+        @sort-change="sortChange"
+        @selection-change="data.batch.selectionDataList = $event"
+        @current-change="handleCurrentChange"
+      >
+        <ElTableColumn
+          v-if="data.batch.enable"
+          type="selection"
+          align="left"
+          fixed
+        />
         <ElTableColumn prop="id" align="left" label="角色ID">
           <template #default="{ row }">
             <div class="copyId tableSmall">
-              <div class="id oneLine  idFont">
-                {{ row.id }}</div>
-                <copy
+              <div class="id oneLine idFont">
+                {{ row.id }}
+              </div>
+              <copy
                 :content="row.id"
                 :class="{
                   rowCopy: 'rowCopy',
@@ -245,21 +283,42 @@ onMounted(() => {
         </ElTableColumn>
         <ElTableColumn prop="remark" align="left" label="备注">
           <template #default="{ row }">
-            <div class="flex-s  ">
-              <div class="oneLine fontC-System" style="width: calc(100% - 20px);">
+            <div class="flex-s">
+              <div
+                class="oneLine fontC-System"
+                style="width: calc(100% - 20px)"
+              >
                 {{ row.remark ? row.remark : "-" }}
               </div>
-              <SvgIcon v-if="row.projectType !== 2" @click="quickEdit(row, 'remark')" v-auth="'role-update-updateRole'"
-                :class="{ edit: 'edit', current: row.id === current }" name="i-ep:edit" color="#409eff" />
+              <SvgIcon
+                v-if="row.projectType !== 2"
+                @click="quickEdit(row, 'remark')"
+                v-auth="'role-update-updateRole'"
+                :class="{ edit: 'edit', current: row.id === current }"
+                name="i-ep:edit"
+                color="#409eff"
+              />
             </div>
           </template>
         </ElTableColumn>
         <ElTableColumn label="操作" width="250" align="left" fixed="right">
           <template #default="scope">
-            <ElButton type="primary" size="small" plain @click="onEdit(scope.row)" v-auth="'role-update-updateRole'">
+            <ElButton
+              type="primary"
+              size="small"
+              plain
+              @click="onEdit(scope.row)"
+              v-auth="'role-update-updateRole'"
+            >
               编辑
             </ElButton>
-            <ElButton type="danger" size="small" plain @click="onDel(scope.row)" v-auth="'role-delete-deleteRole'">
+            <ElButton
+              type="danger"
+              size="small"
+              plain
+              @click="onDel(scope.row)"
+              v-auth="'role-delete-deleteRole'"
+            >
               删除
             </ElButton>
           </template>
@@ -268,30 +327,45 @@ onMounted(() => {
           <el-empty :image="empty" :image-size="300" />
         </template>
       </ElTable>
-      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
-        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-        background @size-change="sizeChange" @current-change="currentChange" />
+      <ElPagination
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
+        :page-sizes="pagination.sizes"
+        :layout="pagination.layout"
+        :hide-on-single-page="false"
+        class="pagination"
+        background
+        @size-change="sizeChange"
+        @current-change="currentChange"
+      />
     </PageMain>
-    <FormMode v-if="data.formMode === 'dialog' || data.formMode === 'drawer'" :id="data.formModeProps.id"
-      v-model="data.formModeProps.visible" :row="data.formModeProps.row" :mode="data.formMode" @success="getDataList" />
+    <FormMode
+      v-if="data.formMode === 'dialog' || data.formMode === 'drawer'"
+      :id="data.formModeProps.id"
+      v-model="data.formModeProps.visible"
+      :row="data.formModeProps.row"
+      :mode="data.formMode"
+      @success="getDataList"
+    />
     <QuickEdit ref="QuickEditRef" @fetchData="getDataList" />
   </div>
 </template>
 
 <style lang="scss" scoped>
 .copyId .idFont {
-  font-size:.875rem;
+  font-size: 0.875rem;
 }
-.copyId  .current {
-    display: block !important;
-  }
+.copyId .current {
+  display: block !important;
+}
 .rowCopy {
   width: 20px;
   display: none;
 }
-.copyId  .current {
-    display: block !important;
-  }
+.copyId .current {
+  display: block !important;
+}
 .el-table__row:hover .rowCopy {
   display: block;
 }
@@ -345,7 +419,7 @@ onMounted(() => {
   align-items: center;
   width: 100%;
 
-  >div:nth-of-type(1) {
+  > div:nth-of-type(1) {
     width: calc(100% - 25px);
     flex-shrink: 0;
   }

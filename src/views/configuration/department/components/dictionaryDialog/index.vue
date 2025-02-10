@@ -3,7 +3,10 @@ import type { FormInstance, FormRules } from "element-plus";
 import { ElMessage } from "element-plus";
 import api from "@/api/modules/department";
 import apiUse from "@/api/modules/configuration_manager";
+import { useI18n } from "vue-i18n";
 
+// 国际化
+const { t } = useI18n();
 // 用户数据
 const staffList = ref<any>([]);
 // 父级传递的数据
@@ -18,21 +21,39 @@ const props = withDefaults(
   {
     parentId: "",
     id: "",
-  }
+  },
 );
 // 判断用户是否点击部门更新接口
 const isClick = ref(false);
 // 计提时间
 const commissionTypeList = [
-  { label: "完成计提", value: 1 },
-  { label: "审核计提", value: 2 },
-  { label: "结算计提", value: 3 },
+  {
+    label: t("configuration.department.new.completeProvision"),
+    value: 1,
+  },
+  {
+    label: t("configuration.department.new.auditAccrual"),
+    value: 2,
+  },
+  {
+    label: t("configuration.department.new.settlementProvision"),
+    value: 3,
+  },
 ];
 // 计提方式
 const provisionMethod = [
-  { label: "按项目价", value: 1 },
-  { label: "按成本价", value: 2 },
-  { label: "按毛利润", value: 3 },
+  {
+    label: t("configuration.department.new.atProjectPrice"),
+    value: 1,
+  },
+  {
+    label: t("configuration.department.new.atcostPrice"),
+    value: 2,
+  },
+  {
+    label: t("configuration.department.new.grossProfit"),
+    value: 3,
+  },
 ];
 // loading
 const loading = ref<any>(false);
@@ -43,7 +64,11 @@ const visible = defineModel<boolean>({
   default: false,
 });
 // 弹窗标题
-const title = computed(() => (props.id === "" ? "新增部门" : "编辑部门"));
+const title = computed(() =>
+  props.id === ""
+    ? t("configuration.department.new.add")
+    : t("configuration.department.new.edit"),
+);
 // 部门PMlist
 const filteredUsers = ref<any>([]);
 // formRef
@@ -64,7 +89,7 @@ const form = ref<any>({
   commission: null,
   //提成时间 1.完成计提 2.审核计提 3.收款计提
   commissionTime: null,
-   //	提成状态 1.开启计提规则 2.关闭计提规则
+  //	提成状态 1.开启计提规则 2.关闭计提规则
   commissionStatus: 2,
   //提成类型 1.项目价 2.成本价 3.毛利润
   commissionType: null,
@@ -72,9 +97,18 @@ const form = ref<any>({
 
 // 校验
 const formRules = ref<FormRules>({
-  name: [{ required: true, message: "请输入部门名称" }],
+  name: [
+    {
+      required: true,
+      message: t("configuration.department.new.enterDepartmentName"),
+    },
+  ],
   commissionType: [
-    { required: true, message: "请选择计提方式", trigger: "change" },
+    {
+      required: true,
+      message: t("configuration.department.new.selectAccrualMethod"),
+      trigger: "change",
+    },
   ],
 });
 
@@ -92,22 +126,28 @@ async function onSubmit() {
             !/^[1-9]\d*$/.test(form.value.commission)
           ) {
             ElMessage.warning({
-              message: "提成比例必须是正整数",
+              message: t("configuration.department.new.rate"),
               center: true,
             });
             loading.value = false;
             return;
           }
-          form.value.commission = form.value.commission ? form.value.commission : 0;
-          form.value.commissionTime = form.value.commissionTime ? form.value.commissionTime : 1;
-          form.value.commissionType = form.value.commissionType ? form.value.commissionType : 1;
+          form.value.commission = form.value.commission
+            ? form.value.commission
+            : 0;
+          form.value.commissionTime = form.value.commissionTime
+            ? form.value.commissionTime
+            : 1;
+          form.value.commissionType = form.value.commissionType
+            ? form.value.commissionType
+            : 1;
           // 处理数据
           form.value.userIdList.map((item: any) => {
             const obj = {
               userId: item,
-            }
+            };
             form.value.organizationalStructurePersonList.push(obj);
-          })
+          });
           const params = {
             ...form.value,
           };
@@ -122,11 +162,13 @@ async function onSubmit() {
           const { status } = response;
           if (status === 1) {
             ElMessage.success({
-              message: form.value.id ? "编辑成功" : "新增成功",
+              message: form.value.id
+                ? t("common.editSuccess")
+                : t("common.addSuccess"),
               center: true,
             });
           } else {
-            ElMessage.error("操作失败，请重试");
+            ElMessage.error(t("configuration.department.new.failure"));
           }
           if (isClick.value) {
             // 更新列表
@@ -172,7 +214,7 @@ function onCancel() {
 // 获取选择的用户用于循环列表
 const getFilteredUsers = () => {
   return staffList.value.filter((item: any) =>
-    form.value?.userIdList.includes(item.id)
+    form.value?.userIdList.includes(item.id),
   );
 };
 onMounted(async () => {
@@ -209,9 +251,9 @@ onMounted(async () => {
       if (organizationalStructurePersonList) {
         organizationalStructurePersonList.forEach((item: any) => {
           if (item.enableChargePerson == 1) {
-            form.value.organizationalStructurePersonList.push(item)
+            form.value.organizationalStructurePersonList.push(item);
           }
-        })
+        });
         form.value.organizationalStructurePersonList.forEach((item: any) => {
           form.value.userIdList.push(item.userId);
         });
@@ -240,48 +282,132 @@ onMounted(async () => {
 </script>
 
 <template>
-  <ElDialog v-model="visible" :title="title" style="width: 48rem" :close-on-click-modal="false" append-to-body
-    destroy-on-close @closed="onCancel">
-    <ElForm v-loading="loading" ref="formRef" :model="form" :rules="formRules" label-width="7rem">
-      <ElFormItem label="部门名称" prop="name">
-        <ElInput v-model="form.name" placeholder="请输入部门名称" clearable />
+  <ElDialog
+    v-model="visible"
+    :title="title"
+    style="width: 48rem"
+    :close-on-click-modal="false"
+    append-to-body
+    destroy-on-close
+    @closed="onCancel"
+  >
+    <ElForm
+      v-loading="loading"
+      ref="formRef"
+      :model="form"
+      :rules="formRules"
+      label-width="7rem"
+    >
+      <ElFormItem
+        :label="t('configuration.department.new.departmentName')"
+        prop="name"
+      >
+        <ElInput
+          v-model="form.name"
+          :placeholder="t('configuration.department.new.enterDepartmentName')"
+          clearable
+        />
       </ElFormItem>
-      <ElFormItem label="部门主管" prop="">
-        <el-select v-model="form.userIdList" value-key="" placeholder="请选择部门主管" multiple collapse-tags
-          collapse-tags-tooltip clearable filterable>
-          <el-option v-for="item in staffList" :key="item.value" :label="item.userName" :value="item.id">
+      <ElFormItem
+        :label="t('configuration.department.new.departmentSupervisor')"
+        prop=""
+      >
+        <el-select
+          v-model="form.userIdList"
+          value-key=""
+          :placeholder="
+            t('configuration.department.new.selectDepartmentSupervisor')
+          "
+          multiple
+          collapse-tags
+          collapse-tags-tooltip
+          clearable
+          filterable
+        >
+          <el-option
+            v-for="item in staffList"
+            :key="item.value"
+            :label="item.userName"
+            :value="item.id"
+          >
           </el-option>
         </el-select>
       </ElFormItem>
-      <ElFormItem label="备注">
-        <ElInput v-model="form.remark" placeholder="请输入备注" clearable />
+      <ElFormItem :label="t('common.remark')">
+        <ElInput
+          v-model="form.remark"
+          :placeholder="t('configuration.department.new.enterRemark')"
+          clearable
+        />
       </ElFormItem>
       <div class="user">
         <div class="mr checkbox-container">
-          <el-text style="width: 4.375rem">开启提成</el-text>
-          <el-switch v-model="form.commissionStatus" :active-value="1" :inactive-value="2" inline-prompt
-            active-text="开启" inactive-text="关闭" />
+          <el-text style="width: 4.375rem">{{
+            t("configuration.department.new.openCommission")
+          }}</el-text>
+          <el-switch
+            v-model="form.commissionStatus"
+            :active-value="1"
+            :inactive-value="2"
+            inline-prompt
+            :active-text="t('common.on')"
+            :inactive-text="t('common.off')"
+          />
         </div>
         <div v-show="form.commissionStatus === 1" class="centers mr">
-          <el-select v-model="form.commissionType" value-key="" placeholder="计提方式" clearable filterable>
-            <el-option v-for="item in provisionMethod" :key="item.value" :label="item.label" :value="item.value" />
+          <el-select
+            v-model="form.commissionType"
+            value-key=""
+            :placeholder="t('configuration.department.new.accrualMethod')"
+            clearable
+            filterable
+          >
+            <el-option
+              v-for="item in provisionMethod"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
           </el-select>
         </div>
         <div v-show="form.commissionStatus === 1" class="center mr">
-          <el-select class="select" v-model="form.commissionTime" value-key="" placeholder="计提时间" clearable filterable>
-            <el-option v-for="item in commissionTypeList" :key="item.value" :label="item.label" :value="item.value" />
+          <el-select
+            class="select"
+            v-model="form.commissionTime"
+            value-key=""
+            :placeholder="t('configuration.department.new.accrualTime')"
+            clearable
+            filterable
+          >
+            <el-option
+              v-for="item in commissionTypeList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
           </el-select>
         </div>
         <div v-show="form.commissionStatus === 1" class="center mr">
-          <ElInput v-model="form.commission" placeholder="提成比例" style="max-width: 25rem" clearable>
+          <ElInput
+            v-model="form.commission"
+            :placeholder="
+              t('configuration.department.new.percentageOfCommissions')
+            "
+            style="max-width: 25rem"
+            clearable
+          >
             <template #append>%</template>
           </ElInput>
         </div>
       </div>
     </ElForm>
     <template #footer>
-      <ElButton size="large" @click="onCancel"> 取消 </ElButton>
-      <ElButton type="primary" size="large" @click="onSubmit"> 确定 </ElButton>
+      <ElButton size="large" @click="onCancel">
+        {{ t("common.cancel") }}
+      </ElButton>
+      <ElButton type="primary" size="large" @click="onSubmit">
+        {{ t("common.confirm") }}
+      </ElButton>
     </template>
   </ElDialog>
 </template>

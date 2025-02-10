@@ -264,13 +264,13 @@ function onResetPassword() {
   if (resetList.value) {
     const { userName, id } = resetList.value;
     ElMessageBox.confirm(
-      `确认将「${userName}」的密码重置为 “123456” 吗？`,
-      "确认信息",
+      `${t("configuration.user.confirm")}${userName}${t("configuration.user.reset")}`,
+      t("configuration.user.confirmationInformation"),
     )
       .then(() => {
         api.reset({ id: id }).then(() => {
           ElMessage.success({
-            message: "重置成功",
+            message: t("configuration.user.resetSuccess"),
             center: true,
           });
           getUserList();
@@ -279,7 +279,7 @@ function onResetPassword() {
       .catch(() => {});
   } else {
     ElMessage.warning({
-      message: "请选择用户",
+      message: t("configuration.user.userSelect"),
       center: true,
     });
   }
@@ -377,15 +377,15 @@ function handleCurrentChange(val: any) {
                 <template #icon>
                   <SvgIcon name="i-ep:search" />
                 </template>
-筛选
-</ElButton>
-<ElButton @click="onReset">
-  <template #icon>
+                筛选
+              </ElButton>
+              <ElButton @click="onReset">
+                <template #icon>
                   <SvgIcon name="i-ep:refresh" />
                 </template>
-  重置
-</ElButton>
-</ElSpace> -->
+                重置
+              </ElButton>
+            </ElSpace> -->
             <el-row style="margin-bottom: 0.3125rem" :gutter="24">
               <el-col style="margin-bottom: 1.5625rem" :span="10">
                 <el-button
@@ -444,15 +444,15 @@ function handleCurrentChange(val: any) {
                 v-if="userForm.checkList.includes('active')"
                 align="left"
                 prop="active"
-                label="状态"
+                :label="t('configuration.user.status')"
                 width="84"
               >
                 <template #default="scope">
                   <ElSwitch
                     v-model="scope.row.active"
                     inline-prompt
-                    active-text="启用"
-                    inactive-text="禁用"
+                    :active-text="t('common.enable')"
+                    :inactive-text="t('common.disable')"
                     :before-change="() => onChangeStatus(scope.row)"
                   />
                 </template>
@@ -462,7 +462,7 @@ function handleCurrentChange(val: any) {
                 align="left"
                 width="280"
                 prop="id"
-                label="员工ID"
+                :label="t('configuration.user.id')"
               >
                 <template #default="{ row }">
                   <div class="copyId tableSmall">
@@ -489,7 +489,7 @@ function handleCurrentChange(val: any) {
                 v-if="userForm.checkList.includes('userName')"
                 align="left"
                 prop="userName"
-                label="用户名"
+                :label="t('configuration.user.username')"
               >
                 <template #default="{ row }">
                   <el-text class="tableBig">
@@ -498,7 +498,7 @@ function handleCurrentChange(val: any) {
                 </template>
               </ElTableColumn>
               <!-- <ElTableColumn v-if="dictionaryItem.checkList.includes('name')" align="left" width="130" prop="name"
-                label="姓名">
+                :label="t('configuration.user.name')">
                 <template #default="{ row }">
                   <el-text class="tableBig">
                     {{ row.name ? row.name : "-" }}
@@ -510,7 +510,7 @@ function handleCurrentChange(val: any) {
                 align="left"
                 width="170"
                 prop="phone"
-                label="电话号码"
+                :label="t('configuration.user.phonenumber')"
               >
                 <template #default="{ row }">
                   <el-text class="fontC-System">
@@ -523,7 +523,7 @@ function handleCurrentChange(val: any) {
                 align="left"
                 width="180"
                 prop="email"
-                label="邮箱"
+                :label="t('configuration.user.email')"
               >
                 <template #default="{ row }">
                   <el-text class="fontC-System">
@@ -535,7 +535,7 @@ function handleCurrentChange(val: any) {
                 v-if="userForm.checkList.includes('departmentId')"
                 align="left"
                 prop="departmentId"
-                label="部门"
+                :label="t('configuration.user.department')"
               >
                 <template #default="{ row }">
                   <div style="display: flex; align-items: center">
@@ -577,7 +577,7 @@ function handleCurrentChange(val: any) {
                 v-if="userForm.checkList.includes('role')"
                 align="left"
                 prop="role"
-                label="角色"
+                :label="t('configuration.user.role')"
               >
                 <template #default="{ row }">
                   <el-text class="fontC-System">
@@ -589,7 +589,7 @@ function handleCurrentChange(val: any) {
                 v-if="userForm.checkList.includes('positionId')"
                 align="left"
                 prop="positionId"
-                label="职位"
+                :label="t('configuration.user.position')"
               >
                 <template #default="{ row }">
                   <el-text>
@@ -598,7 +598,7 @@ function handleCurrentChange(val: any) {
                 </template>
               </ElTableColumn>
               <ElTableColumn
-                label="操作"
+                :label="t('common.control')"
                 fixed="right"
                 width="200"
                 align="left"
@@ -611,7 +611,7 @@ function handleCurrentChange(val: any) {
                     @click="onEdit(scope.row)"
                     v-auth="'user-update-updateStaff'"
                   >
-                    编辑
+                    {{ t("common.edit") }}
                   </ElButton>
                   <ElButton
                     type="warning"
@@ -620,7 +620,7 @@ function handleCurrentChange(val: any) {
                     @click="onDetail(scope.row)"
                     v-auth="'user-get-getStaffList'"
                   >
-                    详情
+                    {{ t("common.detail") }}
                   </ElButton>
                 </template>
               </ElTableColumn>

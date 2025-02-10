@@ -6,7 +6,10 @@ import useDepartmentStore from "@/store/modules/department";
 import useTenantRoleStore from "@/store/modules/tenant_role";
 import useTenantStaffStore from "@/store/modules/configuration_manager";
 import usePositionManageStore from "@/store/modules/position_manage";
+import { useI18n } from "vue-i18n";
 
+// 国际化
+const { t } = useI18n();
 // 用户
 const tenantStaffStore = useTenantStaffStore();
 // 用户数据
@@ -92,14 +95,16 @@ defineExpose({
     destroy-on-close
     draggable
     size="60%"
-    title="详情"
+    :title="t('common.detail')"
     @close="close"
   >
     <el-form label-width="100px" label-position="right">
       <el-card class="box-card">
         <template #header>
           <div class="card-header">
-            <div class="leftTitle">基本信息</div>
+            <div class="leftTitle">
+              {{ t("configuration.user.detail.basicInformation") }}
+            </div>
           </div>
         </template>
         <el-row :gutter="20">
@@ -131,41 +136,42 @@ defineExpose({
           >
             <p>{{ detailData.userName }}</p>
             <p style="font-size: 14px">
-              账号:<span>{{ detailData.userName }}</span>
+              {{ t("configuration.user.detail.account")
+              }}<span>{{ detailData.userName }}</span>
             </p>
           </el-col>
         </el-row>
         <el-row :gutter="24">
           <el-col :span="6">
-            <el-form-item label="员工ID:">
+            <el-form-item :label="t('configuration.user.detail.id')">
               <el-text class="mx-1">
                 {{ detailData?.id ? detailData.id : "-" }}
               </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="姓名:">
+            <el-form-item :label="t('configuration.user.detail.name')">
               <el-text class="mx-1">
                 {{ detailData?.name ? detailData.name : "-" }}
               </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="手机号:">
+            <el-form-item :label="t('configuration.user.detail.phoneNumber')">
               <el-text class="mx-1">
                 {{ detailData?.phoneNumber ? detailData.phoneNumber : "-" }}
               </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="邮箱:">
+            <el-form-item :label="t('configuration.user.detail.email')">
               <el-text class="mx-1">
                 {{ detailData?.email ? detailData.email : "-" }}
               </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="部门:">
+            <el-form-item :label="t('configuration.user.detail.department')">
               {{
                 detailData.organizationalStructureName
                   ? detailData.organizationalStructureName
@@ -174,21 +180,23 @@ defineExpose({
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="职位:">
+            <el-form-item :label="t('configuration.user.detail.position')">
               <el-text>
                 {{ detailData.positionName ? detailData.positionName : "-" }}
               </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="帐号状态:">
+            <el-form-item :label="t('configuration.user.detail.accountStatus')">
               <el-text class="mx-1">
-                {{ detailData?.active ? "启用" : "禁用" }}
+                {{
+                  detailData?.active ? t("common.enable") : t("common.disable")
+                }}
               </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="创建时间:">
+            <el-form-item :label="t('configuration.user.detail.createTime')">
               <el-text class="mx-1">
                 {{ detailData?.createTime ? detailData.createTime : "-" }}
               </el-text>
@@ -199,11 +207,13 @@ defineExpose({
       <el-card class="box-card">
         <template #header>
           <div class="card-header">
-            <div class="leftTitle">角色信息</div>
+            <div class="leftTitle">
+              {{ t("configuration.user.detail.roleInformation") }}
+            </div>
           </div>
         </template>
         <el-row :gutter="24">
-          <el-form-item label="分配角色:">
+          <el-form-item :label="t('configuration.user.detail.assignRoles')">
             <el-checkbox-group
               style="margin-left: 1.5rem"
               v-if="munulevs?.length"
@@ -219,7 +229,7 @@ defineExpose({
                 {{ item.roleName }}
               </el-checkbox>
             </el-checkbox-group>
-            <el-text v-else>暂无数据</el-text>
+            <el-text v-else>{{ t("common.nodata") }}</el-text>
           </el-form-item>
         </el-row>
       </el-card>
@@ -227,7 +237,7 @@ defineExpose({
         <template #header>
           <div class="card-header">
             <div class="leftTitle">
-              部门信息
+              {{ t("configuration.user.detail.departtmentInformation") }}
               <!-- <span
         v-if="form.enableChargePerson"
         style="margin-left: 20px; font-size: 14px"
@@ -241,7 +251,9 @@ defineExpose({
           </div>
         </template>
         <el-row :gutter="24">
-          <el-form-item label="分配部门:">
+          <el-form-item
+            :label="t('configuration.user.detail.assignDepartments')"
+          >
             <el-tree
               v-if="departmentList.length > 0"
               style="max-width: 600px"
@@ -257,14 +269,16 @@ defineExpose({
               :props="defaultProps"
               @check-change="handleNodeClick"
             />
-            <el-text v-else>暂无数据</el-text>
+            <el-text v-else>{{ t("common.nodata") }}</el-text>
           </el-form-item>
         </el-row>
       </el-card>
     </el-form>
     <template #footer>
       <div class="flex-c">
-        <el-button type="primary" @click="close"> 关闭 </el-button>
+        <el-button type="primary" @click="close">
+          {{ t("common.close") }}
+        </el-button>
       </div>
     </template>
   </el-drawer>

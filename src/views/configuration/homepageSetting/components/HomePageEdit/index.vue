@@ -95,11 +95,11 @@ const onDialogOpened = async () => {
         const file = e.target.files[0];
         if (file) {
           try {
-            // 判断文件大小，单位是字节，250KB = 250 * 1024 字节
-            const maxSize = 250 * 1024; // 250KB
+            // 判断文件大小，单位是字节，2MB = 2 * 1024 * 1024 字节
+            const maxSize = 2 * 1024 * 1024; // 10mb
             if (Number(file.size) > Number(maxSize)) {
               ElMessage.warning({
-                message: "文件大小不能超过 250KB",
+                message: "文件大小不能超过 2mb",
                 center: true,
               });
               return;
@@ -148,7 +148,7 @@ const onDialogOpened = async () => {
   editorRef.value.on("asset:remove", (asset: any) => {
     // 先从 Asset Manager 中移除图片
     const asset1 = editorRef.value.AssetManager.getAll().find(
-      (a: any) => a.get("src") === asset.id
+      (a: any) => a.get("src") === asset.id,
     );
 
     if (asset1) {

@@ -19,11 +19,13 @@ import DictionaryItemDia from "./components/dictionaryItemDialog/index.vue";
 import userDialog from "./components/userDialog/index.vue";
 import Detail from "@/views/configuration/department/components/Detail/index.vue";
 import { columns } from "./components/configuration/index.ts";
+import { useI18n } from "vue-i18n";
 
 defineOptions({
   name: "department",
 });
 
+const { t } = useI18n();
 const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
   usePagination();
 interface Dict {
@@ -471,12 +473,12 @@ function handleCurrentChange(val: any) {
               @click="dictionaryAdd()"
               v-auth="'department-insert-insertOrganizationalStructure'"
             >
-              新增部门
+              {{ t("configuration.department.newDepartment") }}
             </ElButton>
           </ElButtonGroup>
           <ElInput
             v-model="dictionary.search.name"
-            placeholder="请输入关键词筛选"
+            :placeholder="t('configuration.department.enterKeywork')"
             clearable
             class="search"
             @keydown.enter="getDictionaryList"
@@ -572,13 +574,13 @@ function handleCurrentChange(val: any) {
               @click="create()"
               v-auth="'department-insert-insertStaff'"
             >
-              新增员工
+              {{ t("configuration.department.newEmployee") }}
             </ElButton>
             <ElButton
               @click="onResetPassword"
               v-auth="'department-update-resetPasswordStaff'"
             >
-              重置密码
+              {{ t("common.resetPassword") }}
             </ElButton>
           </ElSpace>
           <ElTable
@@ -602,14 +604,14 @@ function handleCurrentChange(val: any) {
               v-if="userForm.checkList.includes('active')"
               align="left"
               prop="active"
-              label="状态"
+              :label="t('common.status')"
             >
               <template #default="scope">
                 <ElSwitch
                   v-model="scope.row.active"
                   inline-prompt
-                  active-text="启用"
-                  inactive-text="禁用"
+                  :active-text="t('common.enable')"
+                  :inactive-text="t('common.disable')"
                   :before-change="() => onChangeStatus(scope.row)"
                 />
               </template>
@@ -619,7 +621,7 @@ function handleCurrentChange(val: any) {
               align="left"
               width="180"
               prop="id"
-              label="员工ID"
+              :label="t('configuration.user.id')"
             >
               <template #default="{ row }">
                 <div class="copyId tableSmall">
@@ -647,7 +649,7 @@ function handleCurrentChange(val: any) {
               align="left"
               width="160"
               prop="userName"
-              label="用户名"
+              :label="t('configuration.user.username')"
             >
               <template #default="{ row }">
                 <div style="display: flex; align-items: center">
@@ -682,7 +684,7 @@ function handleCurrentChange(val: any) {
               </template>
             </ElTableColumn>
             <!-- <ElTableColumn v-if="dictionaryItem.checkList.includes('name')" align="left" width="130" prop="name"
-                label="姓名">
+              :label="t('configuration.user.detail.name')">
                 <template #default="{ row }">
                   <el-text class="tableBig">
                     {{ row.name ? row.name : "-" }}
@@ -694,7 +696,7 @@ function handleCurrentChange(val: any) {
               align="left"
               width="170"
               prop="phone"
-              label="电话号码"
+              :label="t('configuration.user.phonenumber')"
             >
               <template #default="{ row }">
                 <el-text class="fontC-System">
@@ -707,7 +709,7 @@ function handleCurrentChange(val: any) {
               align="left"
               width="180"
               prop="email"
-              label="邮箱"
+              :label="t('configuration.user.email')"
             >
               <template #default="{ row }">
                 <el-text class="fontC-System">
@@ -719,7 +721,7 @@ function handleCurrentChange(val: any) {
               v-if="userForm.checkList.includes('departmentId')"
               align="left"
               prop="departmentId"
-              label="部门"
+              :label="t('configuration.user.department')"
             >
               <template #default="{ row }">
                 <el-text class="fontC-System">{{
@@ -733,7 +735,7 @@ function handleCurrentChange(val: any) {
               v-if="userForm.checkList.includes('positionId')"
               align="left"
               prop="positionId"
-              label="职位"
+              :label="t('configuration.user.position')"
             >
               <template #default="{ row }">
                 <el-text class="fontC-System">{{
@@ -741,7 +743,12 @@ function handleCurrentChange(val: any) {
                 }}</el-text>
               </template>
             </ElTableColumn>
-            <ElTableColumn label="操作" fixed="right" width="200" align="left">
+            <ElTableColumn
+              :label="t('common.control')"
+              fixed="right"
+              width="200"
+              align="left"
+            >
               <template #default="scope">
                 <ElButton
                   type="primary"
@@ -750,7 +757,7 @@ function handleCurrentChange(val: any) {
                   @click="edit(scope.row)"
                   v-auth="'department-update-updateStaff'"
                 >
-                  编辑
+                  {{ t("common.edit") }}
                 </ElButton>
                 <ElButton
                   type="warning"
@@ -759,7 +766,7 @@ function handleCurrentChange(val: any) {
                   @click="onDetail(scope.row)"
                   v-auth="'department-get-getStaffList'"
                 >
-                  详情
+                  {{ t("common.detail") }}
                 </ElButton>
               </template>
             </ElTableColumn>
@@ -772,7 +779,9 @@ function handleCurrentChange(val: any) {
           v-show="!dictionaryItem.search.organizationalStructureId"
           class="dictionary-container"
         >
-          <div class="empty">请在左侧新增或选择一个部门</div>
+          <div class="empty">
+            {{ t("configuration.department.newOrSelect") }}
+          </div>
         </div>
       </LayoutContainer>
       <DictionaryDialog
