@@ -200,6 +200,7 @@ async function fetchData() {
     };
     const { data } = await api.list(params);
     list.value = data.getTenantCustomerInfoList;
+    console.log('客户列表',data)
     pagination.value.total = Number(data.total);
     listLoading.value = false;
   } catch (error) {

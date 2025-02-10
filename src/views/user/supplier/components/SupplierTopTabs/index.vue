@@ -5,6 +5,7 @@ import edit from "@/views/configuration/supplierLevel/components/Edit/index.vue"
 import UseUserSupplier from "@/store/modules/user_supplier"; // 供应商
 import useConfigurationSupplierLevelStore from "@/store/modules/configuration_supplierLevel"; //供应商等级
 import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
+import api from "@/api/modules/user_supplier";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
 import useUserStore from "@/store/modules/user"; // 用户汇率
 import { useI18n } from "vue-i18n"; // 国际化
@@ -18,6 +19,7 @@ const customerStore = useUserCustomerStore(); // 客户
 const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
 const validate = inject<any>("validateTopTabs"); //注入Ref
 const EditRef = ref(); // 组件ref 新增/编辑
+const listLoading = ref(false); // 加载
 // 如果希望默认展示第一个 Tab
 const props: any = defineProps({
   leftTab: Object,
@@ -141,6 +143,15 @@ const changeCountryId = (val: any) => {
 // 如果没有国家制空
 if (!props.leftTab.relevanceCountryIdList) {
   props.leftTab.relevanceCountryIdList = [];
+} else {
+  console.log(props.leftTab.relevanceCountryIdList);
+}
+
+// 初始化客户授权列表
+if (!props.leftTab.relevanceCustomerIdList) {
+  props.leftTab.relevanceCustomerIdList = [];
+} else {
+  console.log(props.leftTab.relevanceCustomerIdList);
 }
 
 // 所属区域全选
@@ -149,6 +160,18 @@ const selectAll = () => {
   if (data.checked) {
     data.countryList.map((item: any) => {
       props.leftTab.relevanceCountryIdList.push(item.id);
+      console.log(item.id)
+    });
+  }
+};
+
+// 授权客户全选
+const selectAllCustomer = () => {
+  props.leftTab.relevanceCustomerIdList = [];
+  if (data.checkedCustomer) {
+    data.relatedCustomers.map((item: any) => {
+      props.leftTab.relevanceCustomerIdList.push(item.tenantCustomerId);
+      console.log(item.tenantCustomerId);
     });
   }
 };
@@ -161,9 +184,17 @@ const addSupplierLevel = () => {
 const changeRelevanceCountryIdList = () => {
   data.checked = Boolean(
     props.leftTab.relevanceCountryIdList.length ===
-      basicDictionaryStore.country.length,
+    basicDictionaryStore.country.length,
   );
 };
+// 授权客户反选
+const changeRelevanceCustomerIdList = () => {
+  data.checkedCustomer = Boolean(
+    props.leftTab.relevanceCustomerIdList.length ===
+    data.relatedCustomers.length,
+  );
+};
+
 // 需要用到的数据
 const data = reactive<any>({
   checked: false, //所属区域的全选按钮
@@ -181,6 +212,7 @@ const getSupplierLevelList = async () => {
   changeCountryId(props.leftTab.subordinateCountryId);
 };
 const dataList = ref<any>([]);
+const userList = ref<any>([]);
 const filterMethod = (query: string, item: any) => {
   // 如果 item.initial 存在，且 query 为空，则直接返回 true，表示不过滤
   if (!query) return true;
@@ -188,6 +220,7 @@ const filterMethod = (query: string, item: any) => {
   return item.label && item.label.toLowerCase().includes(query.toLowerCase());
 };
 
+// 区域
 const generateData = (val: any) => {
   val.forEach((city: any) => {
     dataList.value.push({
@@ -198,33 +231,50 @@ const generateData = (val: any) => {
   });
 };
 
+// 客户
+const generateUserData = (val: any) => {
+  val.forEach((user: any) => {
+    userList.value.push({
+      label: user.customerAccord,
+      key: user.tenantCustomerId,
+    });
+  });
+};
+
+
+
+// 查询
+const queryForm = reactive<any>({
+  customerShortName: "",
+  customerStatus: 2,
+  antecedentQuestionnaire: null,
+});
+
 onMounted(async () => {
   // 异步数据加载
-  data.relatedCustomers = await customerStore.getCustomerList();
+  // data.relatedCustomers = await customerStore.getCustomerList();
+  data.relatedCustomers = await api.getCustomerCooperation({});
+
   data.countryList = await basicDictionaryStore.getCountry();
   await getSupplierLevelList();
   // 更新 dataList
   generateData(data.countryList);
+  // 更新userList
+  generateUserData(data.relatedCustomers);
 });
 nextTick(() => {
   // 表单验证方法
   validate(formRef.value);
 });
+// console.log("data.relatedCustomers", data.relatedCustomers);
+
 </script>
 <template>
   <div>
     <el-tabs v-model="activeName">
-      <el-tab-pane
-        :label="t('supplier.new.basicSettings')"
-        name="basicSettings"
-      >
-        <ElForm
-          ref="formRef"
-          :rules="rules"
-          :model="props.leftTab"
-          label-width="100px"
-          :validate-on-rule-change="false"
-        >
+      <el-tab-pane :label="t('supplier.new.basicSettings')" name="basicSettings">
+        <ElForm ref="formRef" :rules="rules" :model="props.leftTab" label-width="100px"
+          :validate-on-rule-change="false">
           <el-card class="box-card">
             <template #header>
               <div class="card-header">
@@ -233,77 +283,38 @@ nextTick(() => {
             </template>
             <el-row :gutter="10">
               <el-col :span="8">
-                <el-form-item
-                  :label="t('supplier.new.supplierType')"
-                  prop="type"
-                >
-                  <el-select
-                    v-model="props.leftTab.type"
-                    value-key=""
-                    placeholder=""
-                    clearable
-                    filterable
-                  >
-                    <el-option
-                      v-for="item in typeList"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value"
-                    >
+                <el-form-item :label="t('supplier.new.supplierType')" prop="type">
+                  <el-select v-model="props.leftTab.type" value-key="" placeholder="" clearable filterable>
+                    <el-option v-for="item in typeList" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
                   </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item
-                  :label="t('supplier.new.supplierAccord')"
-                  prop="supplierAccord"
-                >
+                <el-form-item :label="t('supplier.new.supplierAccord')" prop="supplierAccord">
                   <el-input v-model="props.leftTab.supplierAccord" clearable />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item
-                  :label="t('supplier.new.supplierLevel')"
-                  prop="supplierLevelId"
-                >
-                  <el-select
-                    clearable
-                    filterable
-                    v-model="props.leftTab.supplierLevelId"
-                  >
+                <el-form-item :label="t('supplier.new.supplierLevel')" prop="supplierLevelId">
+                  <el-select clearable filterable v-model="props.leftTab.supplierLevelId">
                     <template #empty>
-                      <div
-                        style="
+                      <div style="
                           display: flex;
                           justify-content: space-between;
                           align-items: center;
                           padding: 0 1rem;
-                        "
-                      >
+                        ">
                         {{ t("supplier.new.nodata") }}
-                        <el-button
-                          type="primary"
-                          link
-                          size="small"
-                          @click="addSupplierLevel"
-                        >
+                        <el-button type="primary" link size="small" @click="addSupplierLevel">
                           {{ t("supplier.new.quickAdd") }}
                           <div class="i-ic:round-plus w-1.3em h-1.3em"></div>
                         </el-button>
                       </div>
                     </template>
-                    <el-option
-                      v-for="item in data.supplierLevelList"
-                      :key="item.tenantSupplierLevelId"
-                      :value="item.tenantSupplierLevelId"
-                      :label="item.levelNameOrAdditionRatio"
-                    ></el-option>
-                    <el-button
-                      size="small"
-                      class="buttonClass"
-                      @click="addSupplierLevel"
-                    >
+                    <el-option v-for="item in data.supplierLevelList" :key="item.tenantSupplierLevelId"
+                      :value="item.tenantSupplierLevelId" :label="item.levelNameOrAdditionRatio"></el-option>
+                    <el-button size="small" class="buttonClass" @click="addSupplierLevel">
                       {{ t("supplier.new.quickAdd") }}
                       <div class="i-ic:round-plus w-1.3em h-1.3em"></div>
                     </el-button>
@@ -313,22 +324,11 @@ nextTick(() => {
             </el-row>
             <el-row :gutter="10">
               <el-col :span="8">
-                <el-form-item
-                  :label="t('supplier.new.area')"
-                  prop="subordinateCountryId"
-                >
-                  <el-select
-                    clearable
-                    filterable
-                    v-model="props.leftTab.subordinateCountryId"
-                    @change="changeCountryId"
-                  >
-                    <el-option
-                      v-for="item in data.countryList"
-                      :key="item.id"
-                      :value="item.id"
-                      :label="item.chineseName"
-                    ></el-option>
+                <el-form-item :label="t('supplier.new.area')" prop="subordinateCountryId">
+                  <el-select clearable filterable v-model="props.leftTab.subordinateCountryId"
+                    @change="changeCountryId">
+                    <el-option v-for="item in data.countryList" :key="item.id" :value="item.id"
+                      :label="item.chineseName"></el-option>
                   </el-select>
                 </el-form-item>
               </el-col>
@@ -338,20 +338,14 @@ nextTick(() => {
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item
-                  :label="t('supplier.new.supplierPhone')"
-                  prop="supplierPhone"
-                >
+                <el-form-item :label="t('supplier.new.supplierPhone')" prop="supplierPhone">
                   <el-input clearable v-model="props.leftTab.supplierPhone" />
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="10">
               <el-col :span="8">
-                <el-form-item
-                  :label="t('supplier.new.emailAddress')"
-                  prop="emailAddress"
-                >
+                <el-form-item :label="t('supplier.new.emailAddress')" prop="emailAddress">
                   <el-input clearable v-model="props.leftTab.emailAddress" />
                 </el-form-item>
               </el-col>
@@ -375,31 +369,21 @@ nextTick(() => {
                 </el-form-item>
               </el-col> -->
               <el-col :span="8">
-                <el-form-item
-                  v-if="props.leftTab.type === 'company'"
-                  :label="t('supplier.new.companyName')"
-                >
+                <el-form-item v-if="props.leftTab.type === 'company'" :label="t('supplier.new.companyName')">
                   <el-input clearable v-model="props.leftTab.companyName" />
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="10">
               <el-col :span="8">
-                <el-form-item
-                  v-if="props.leftTab.type === 'company'"
-                  :label="t('supplier.new.legalPersonName')"
-                  prop=""
-                >
+                <el-form-item v-if="props.leftTab.type === 'company'" :label="t('supplier.new.legalPersonName')"
+                  prop="">
                   <el-input clearable v-model="props.leftTab.legalPersonName" />
                 </el-form-item>
               </el-col>
 
               <el-col :span="8">
-                <el-form-item
-                  v-if="props.leftTab.type === 'company'"
-                  :label="t('supplier.new.taxID')"
-                  prop=""
-                >
+                <el-form-item v-if="props.leftTab.type === 'company'" :label="t('supplier.new.taxID')" prop="">
                   <el-input clearable v-model="props.leftTab.taxID" />
                 </el-form-item>
               </el-col>
@@ -414,50 +398,26 @@ nextTick(() => {
             <el-row :gutter="10">
               <el-col :span="3">
                 <el-form-item :label="t('supplier.new.surveySystem')">
-                  <ElSwitch
-                    v-model="props.leftTab.surveySystem"
-                    inline-prompt
-                    :inactive-value="1"
-                    :active-value="2"
-                    :active-text="t('common.enable')"
-                    :inactive-text="t('common.disable')"
-                  />
+                  <ElSwitch v-model="props.leftTab.surveySystem" inline-prompt :inactive-value="1" :active-value="2"
+                    :active-text="t('common.enable')" :inactive-text="t('common.disable')" />
                 </el-form-item>
               </el-col>
               <el-col :span="3">
                 <el-form-item label="B2B">
-                  <ElSwitch
-                    v-model="props.leftTab.b2bStatus"
-                    inline-prompt
-                    :inactive-value="1"
-                    :active-value="2"
-                    :active-text="t('common.enable')"
-                    :inactive-text="t('common.disable')"
-                  />
+                  <ElSwitch v-model="props.leftTab.b2bStatus" inline-prompt :inactive-value="1" :active-value="2"
+                    :active-text="t('common.enable')" :inactive-text="t('common.disable')" />
                 </el-form-item>
               </el-col>
               <el-col :span="4">
                 <el-form-item label="B2C">
-                  <ElSwitch
-                    v-model="props.leftTab.b2cStatus"
-                    inline-prompt
-                    :inactive-value="1"
-                    :active-value="2"
-                    :active-text="t('common.enable')"
-                    :inactive-text="t('common.disable')"
-                  />
+                  <ElSwitch v-model="props.leftTab.b2cStatus" inline-prompt :inactive-value="1" :active-value="2"
+                    :active-text="t('common.enable')" :inactive-text="t('common.disable')" />
                 </el-form-item>
               </el-col>
               <el-col :span="3">
                 <el-form-item :label="t('supplier.new.surveyStatus')">
-                  <ElSwitch
-                    v-model="props.leftTab.supplierStatus"
-                    inline-prompt
-                    :inactive-value="1"
-                    :active-value="2"
-                    :active-text="t('common.enable')"
-                    :inactive-text="t('common.disable')"
-                  />
+                  <ElSwitch v-model="props.leftTab.supplierStatus" inline-prompt :inactive-value="1" :active-value="2"
+                    :active-text="t('common.enable')" :inactive-text="t('common.disable')" />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -490,17 +450,11 @@ nextTick(() => {
                     <el-option v-for="item in data.countryList" :key="item.id" :value="item.id"
                       :label="item.chineseName"></el-option>
                   </el-select> -->
-                  <el-transfer
-                    v-model="props.leftTab.relevanceCountryIdList"
-                    filterable
-                    :filter-method="filterMethod"
-                    :filter-placeholder="t('supplier.new.enterQueryCountry')"
-                    :data="dataList"
-                    :titles="[
+                  <el-transfer v-model="props.leftTab.relevanceCountryIdList" filterable :filter-method="filterMethod"
+                    :filter-placeholder="t('supplier.new.enterQueryCountry')" :data="dataList" :titles="[
                       t('supplier.new.unselectedCountry'),
                       t('supplier.new.selectedCountries'),
-                    ]"
-                  />
+                    ]" />
                 </el-form-item>
               </el-col>
               <!-- <el-col :span="8">
@@ -515,6 +469,28 @@ nextTick(() => {
                   </el-select>
                 </el-form-item>
               </el-col> -->
+            </el-row>
+            <el-row :gutter="20">
+              <el-col :span="8">
+                <el-form-item>
+                  <template #label>
+                    <div>
+                      <el-tooltip class="tooltips" placement="top">
+                        <template #content>
+                          <div>
+                            为供应商设定筛选条件，更精准匹配合适项目<br />
+                            例：仅选中【客户1】，该供应商只能做【客户1】的项目
+                          </div>
+                        </template>
+                        <SvgIcon class="SvgIcon2" name="i-ri:question-line" />
+                      </el-tooltip>
+                      授权客户
+                    </div>
+                  </template>
+                  <el-transfer v-model="props.leftTab.relevanceCustomerIdList" filterable :filter-method="filterMethod"
+                    filter-placeholder="输入查询客户" :data="userList" :titles="['已选择客户', '未选择客户']" />
+                </el-form-item>
+              </el-col>
             </el-row>
           </el-card>
           <!-- <el-card class="box-card">

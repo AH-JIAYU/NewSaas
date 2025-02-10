@@ -1,18 +1,10 @@
 <template>
-  <el-drawer
-    v-if="state.dialogFormVisible"
-    v-model="state.dialogFormVisible"
-    :title="state.title"
-    size="80%"
-    @opened="onDialogOpened"
-    @close="close"
-  >
+  <el-drawer v-if="state.dialogFormVisible" v-model="state.dialogFormVisible" :title="state.title" size="100%"
+    @opened="onDialogOpened" @close="close">
     <div ref="formRef" id="gjs"></div>
     <template #footer>
       <el-button @click="close">取 消</el-button>
-      <el-button v-if="state.title === '设计模板'" type="primary" @click="save"
-        >确 定</el-button
-      >
+      <el-button v-if="state.title === '设计模板'" type="primary" @click="save">确 定</el-button>
     </template>
   </el-drawer>
 </template>
@@ -96,7 +88,7 @@ const onDialogOpened = async () => {
         if (file) {
           try {
             // 判断文件大小，单位是字节，2MB = 2 * 1024 * 1024 字节
-            const maxSize = 2 * 1024 * 1024; // 10mb
+            const maxSize = 2 * 1024 * 1024; // 2mb
             if (Number(file.size) > Number(maxSize)) {
               ElMessage.warning({
                 message: "文件大小不能超过 2mb",
@@ -233,6 +225,7 @@ defineExpose({
 .gjs-layer-name {
   height: 20px;
 }
+
 /* #gjs {
   border: none;
 }
