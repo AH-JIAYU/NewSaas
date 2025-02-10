@@ -110,8 +110,7 @@ async function save() {
           addTenantSupplierInfoList: leftTabsData,
         };
         const { status } = await submitLoading(api.create(dataList));
-        status === 1 &&
-          console.log('传入的客户', dataList);
+        status === 1 && console.log("传入的客户", dataList);
         ElMessage.success({
           message: "新增成功",
           center: true,
@@ -119,17 +118,9 @@ async function save() {
       } else {
         // // 更新接口
         delete leftTabsData[0].getTenantCustomerOperationInfosList;
+
         const { status } = await submitLoading(api.edit(leftTabsData[0]));
 
-        const dataList = {
-          addTenantSupplierInfoList: leftTabsData,
-        };
-        const customerId = dataList.addTenantSupplierInfoList[0].relevanceCustomerIdList;
-        console.log('customerId', customerId);
-        const res2 = await api.getTenantSupplierInfo({ tenantSupplierId: customerId })
-        console.log('res2', res2);
-
-        console.log('传入的客户', leftTabsData[0].relevanceCustomerIdList);
         status === 1 &&
           ElMessage.success({
             message: "修改成功",
@@ -155,8 +146,8 @@ async function save() {
 }
 onMounted(async () => {
   await customerStore.getCustomerList();
-  let id: any = []
-  const res = await api.getCustomerCooperation({ customerId: id })
+  let id: any = [];
+  const res = await api.getCustomerCooperation({ customerId: id });
   console.log("res", res);
 });
 defineExpose({
@@ -166,10 +157,24 @@ defineExpose({
 
 <template>
   <div>
-    <el-drawer v-model="drawerisible" :class="title === '新增' ? 'hide-drawer-header' : 'edit-drawer'" append-to-body
-      :close-on-click-modal="false" destroy-on-close draggable size="70%" title="">
-      <LeftTabs @validate="validate" ref="LeftTabsRef" :title="title" :left-tabs-data="leftTabsData"
-        :validate-top-tabs="validateTopTabs" :validate-all="validateAll" />
+    <el-drawer
+      v-model="drawerisible"
+      :class="title === '新增' ? 'hide-drawer-header' : 'edit-drawer'"
+      append-to-body
+      :close-on-click-modal="false"
+      destroy-on-close
+      draggable
+      size="70%"
+      title=""
+    >
+      <LeftTabs
+        @validate="validate"
+        ref="LeftTabsRef"
+        :title="title"
+        :left-tabs-data="leftTabsData"
+        :validate-top-tabs="validateTopTabs"
+        :validate-all="validateAll"
+      />
       <template #footer>
         <div class="flex-c">
           <el-button @click="close"> 取消 </el-button>
