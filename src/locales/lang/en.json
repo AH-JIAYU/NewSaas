@@ -421,7 +421,7 @@
     "exchangeRate": "Please enter exchange rate",
     "sex": "Please select gender",
     "age": "Please enter your age",
-    "bt18": "Can't be younger than 18",
+    "bt18": "Can't be younger than 0",
     "lt99": "Age cannot be greater than or equal to 99",
     "configurationInformation": "Configuration Information",
     "areaSelect": "Selection area",

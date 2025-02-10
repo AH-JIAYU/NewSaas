@@ -37,6 +37,12 @@ const columns = ref([
     checked: true,
   },
   {
+    label: computed(() => t("callback.clientID")),
+    prop: "clientId",
+    sortable: true,
+    checked: true,
+  },
+  {
     prop: "customerShortName",
     label: computed(() => t("callback.customerAbbreviation")),
     sortable: true,
@@ -332,6 +338,16 @@ const formOption = {
             <p>{{ memberType[row.surveySource - 1].label }}</p>
             {{ row.memberChildId }} <br />
             {{ row.randomIdentityId }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="checkList.includes('clientId')"
+          align="center"
+          show-overflow-tooltip
+          :label="t('callback.clientID')"
+        >
+          <template #default="{ row }">
+            {{ row.clientId }}
           </template>
         </el-table-column>
         <el-table-column

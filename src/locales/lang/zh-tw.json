@@ -423,7 +423,7 @@
     "exchangeRate": "請輸入匯率",
     "sex": "請選擇性別",
     "age": "請輸入年齡",
-    "bt18": "年齡不能小於18",
+    "bt18": "年齡不能小於0",
     "lt99": "年齡不能大於或等於99",
     "configurationInformation": "配置資訊",
     "areaSelect": "選擇區域",
