@@ -1,9 +1,0 @@
-
-/**
- * 由 Fantastic-admin 提供技术支持
- * Powered by Fantastic-admin
- * Gitee  https://fantastic-admin.gitee.io
- * Github https://fantastic-admin.github.io
- */
-
-import{d as g,u as w,v as b,r as p,ar as S,o as y,as as B,i as N,f as h,b as s,w as k,q as I,s as L,ap as C,a as R,g as T,t as V,h as $,_ as E,an as _}from"./index-DBku3IVP.js";const M={class:"absolute left-[50%] top-[50%] flex flex-col items-center justify-between lg:flex-row -translate-x-50% -translate-y-50% lg:gap-12"},P={class:"flex flex-col gap-4"},j=s("h1",{class:"m-0 text-6xl font-sans"}," 404 ",-1),q=s("div",{class:"desc mx-0 text-xl text-stone-5"}," 抱歉，你访问的页面不存在 ",-1),A=g({__name:"[...all]",setup(D){const c=I(),l=L(),v=w(),x=b(),o=p([]),a=p({inter:Number.NaN,countdown:5});S(()=>{a.value.inter&&window.clearInterval(a.value.inter)}),y(async()=>{const n=await B.routeList();if(n.data){const e=u(n.data);o.value=i(e)}v.settings.tabbar.enable&&x.remove(c.meta.activeMenu||c.fullPath),a.value.inter=window.setInterval(()=>{a.value.countdown--,a.value.countdown===0&&(a.value.inter&&window.clearInterval(a.value.inter),f())},1e3)});function u(n){return n.sort((e,t)=>e.sort-t.sort).map(e=>{const{path:t,sort:r,children:d,component:m}=e;return{path:t,sort:r,children:d?u(d):null,component:m}})}function i(n){let e=[];return n.forEach(t=>{t.path&&t.component!==""&&t.component!=="Layout"&&e.push(t.path),t.children&&t.children.length>0&&(e=e.concat(i(t.children)))}),e}function f(){o.value.length&&(o.value[0].includes("/")?l.push(o.value[0]):l.push(`/${o.value.length[0]}`))}return(n,e)=>{const t=E,r=C;return R(),N("div",M,[h(t,{name:"404",class:"text-[300px] lg:text-[400px]"}),s("div",P,[j,q,s("div",null,[h(r,{onClick:f},{default:k(()=>[T(V($(a).countdown)+" 秒后，返回首页 ",1)]),_:1})])])])}}});typeof _=="function"&&_(A);export{A as default};
