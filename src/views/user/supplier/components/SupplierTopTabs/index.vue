@@ -263,6 +263,7 @@ onMounted(async () => {
       });
     });
   }
+
   // 初始化客户授权列表
   if (!props.leftTab.updateTenantSupplierCustomerInfoList) {
     props.leftTab.updateTenantSupplierCustomerInfoList = [];
@@ -271,7 +272,9 @@ onMounted(async () => {
     if (props.leftTab.updateTenantSupplierCustomerInfoList.length) {
       props.leftTab.updateTenantSupplierCustomerInfoList.forEach(
         (item1: any) => {
-          data1.updateTenantSupplierCustomerInfoList.push(item1);
+          data1.updateTenantSupplierCustomerInfoList.push(
+            item1.tenantCustomerId
+          );
         }
       );
     }
@@ -554,73 +557,69 @@ const customerChange = () => {
               </el-col>
             </el-row>
             <el-row :gutter="24">
-              <el-col :span="8">
-                <el-form-item>
-                  <template #label>
-                    <div>
-                      <el-tooltip class="tooltips" placement="top">
-                        <template #content>
-                          <div>
-                            {{ t("supplier.new.tips1") }}<br />
-                            {{ t("supplier.new.example") }}
-                          </div>
-                        </template>
-                        <SvgIcon class="SvgIcon2" name="i-ri:question-line" />
-                      </el-tooltip>
-                      {{ t("supplier.new.authorizationArea") }}
-                    </div>
-                  </template>
-                </el-form-item>
+              <el-col :span="11">
+                <div>
+                  <el-form-item>
+                    <template #label>
+                      <div>
+                        <el-tooltip class="tooltips" placement="top">
+                          <template #content>
+                            <div>
+                              {{ t("supplier.new.tips1") }}<br />
+                              {{ t("supplier.new.example") }}
+                            </div>
+                          </template>
+                          <SvgIcon class="SvgIcon2" name="i-ri:question-line" />
+                        </el-tooltip>
+                        {{ t("supplier.new.authorizationArea") }}
+                      </div>
+                    </template>
+                  </el-form-item>
+                </div>
+
+                <el-transfer
+                  style="margin-left: 1.875rem"
+                  v-model="props.leftTab.relevanceCustomerIdList"
+                  filterable
+                  :filter-method="filterMethod"
+                  :filter-placeholder="t('supplier.new.enterQueryCountry')"
+                  :data="dataList"
+                  :titles="[
+                    t('supplier.new.unselectedCountry'),
+                    t('supplier.new.selectedCountries'),
+                  ]"
+                />
               </el-col>
-              <el-col :span="3"></el-col>
-              <el-col :span="8">
-                <el-form-item>
-                  <template #label>
-                    <div>
-                      <el-tooltip class="tooltips" placement="top">
-                        <template #content>
-                          <div>
-                            为供应商设定筛选条件，更精准匹配合适项目<br />
-                            例：仅选中【客户1】，该供应商只能做【客户1】的项目
-                          </div>
-                        </template>
-                        <SvgIcon class="SvgIcon2" name="i-ri:question-line" />
-                      </el-tooltip>
-                      分配客户
-                    </div>
-                  </template>
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row :gutter="24">
-              <el-col :span="8">
-                <el-form-item>
-                  <el-transfer
-                    v-model="props.leftTab.relevanceCustomerIdList"
-                    filterable
-                    :filter-method="filterMethod"
-                    :filter-placeholder="t('supplier.new.enterQueryCountry')"
-                    :data="dataList"
-                    :titles="[
-                      t('supplier.new.unselectedCountry'),
-                      t('supplier.new.selectedCountries'),
-                    ]"
-                  />
-                </el-form-item>
-              </el-col>
-              <el-col :span="3"></el-col>
-              <el-col :span="8">
-                <el-form-item>
-                  <el-transfer
-                    v-model="data1.updateTenantSupplierCustomerInfoList"
-                    filterable
-                    :filter-method="filterMethod"
-                    filter-placeholder="输入查询客户"
-                    :data="userList"
-                    @change="customerChange"
-                    :titles="['未选择客户', '已分配客户']"
-                  />
-                </el-form-item>
+              <el-col :span="11">
+                <div>
+                  <el-form-item>
+                    <template #label>
+                      <div>
+                        <el-tooltip class="tooltips" placement="top">
+                          <template #content>
+                            <div>
+                              为供应商设定筛选条件，更精准匹配合适项目<br />
+                              例：仅选中【客户1】，该供应商只能做【客户1】的项目
+                            </div>
+                          </template>
+                          <SvgIcon class="SvgIcon2" name="i-ri:question-line" />
+                        </el-tooltip>
+                        分配客户
+                      </div>
+                    </template>
+                  </el-form-item>
+                </div>
+
+                <el-transfer
+                  style="margin-left: 1.875rem"
+                  v-model="data1.updateTenantSupplierCustomerInfoList"
+                  filterable
+                  :filter-method="filterMethod"
+                  filter-placeholder="输入查询客户"
+                  :data="userList"
+                  @change="customerChange"
+                  :titles="['未选择客户', '已分配客户']"
+                />
               </el-col>
             </el-row>
           </el-card>
