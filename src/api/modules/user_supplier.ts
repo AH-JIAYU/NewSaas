@@ -18,10 +18,4 @@ export default {
   // 供应商加减款
   getSupplierPlusMinusPaymentsList: (data: any) =>
     api.post("tenantSupplier/additionSubtractionSupplier", data),
-  // 客户列表集合
-  getCustomerCooperation: (data: any) =>
-    api.post("tenantSupplier/getCustomerCooperation", data),
-  // 合租租户列表集合
-  getTenantSupplierInfo: (data: any) =>
-    api.post("tenantSupplier/getTenantSupplierInfo", data),
 };

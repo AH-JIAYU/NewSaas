@@ -252,9 +252,7 @@ const queryForm = reactive<any>({
 
 onMounted(async () => {
   // 异步数据加载
-  // data.relatedCustomers = await customerStore.getCustomerList();
-  data.relatedCustomers = await api.getCustomerCooperation({});
-
+  data.relatedCustomers = await customerStore.getCustomerList();
   data.countryList = await basicDictionaryStore.getCountry();
   await getSupplierLevelList();
   // 更新 dataList

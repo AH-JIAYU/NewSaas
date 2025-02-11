@@ -111,11 +111,10 @@ async function save() {
         };
         const { status } = await submitLoading(api.create(dataList));
         status === 1 &&
-          console.log('传入的客户', dataList);
-        ElMessage.success({
-          message: "新增成功",
-          center: true,
-        });
+          ElMessage.success({
+            message: "新增成功",
+            center: true,
+          });
       } else {
         // // 更新接口
         delete leftTabsData[0].getTenantCustomerOperationInfosList;
@@ -124,12 +123,6 @@ async function save() {
         const dataList = {
           addTenantSupplierInfoList: leftTabsData,
         };
-        const customerId = dataList.addTenantSupplierInfoList[0].relevanceCustomerIdList;
-        console.log('customerId', customerId);
-        const res2 = await api.getTenantSupplierInfo({ tenantSupplierId: customerId })
-        console.log('res2', res2);
-
-        console.log('传入的客户', leftTabsData[0].relevanceCustomerIdList);
         status === 1 &&
           ElMessage.success({
             message: "修改成功",
@@ -155,9 +148,6 @@ async function save() {
 }
 onMounted(async () => {
   await customerStore.getCustomerList();
-  let id: any = []
-  const res = await api.getCustomerCooperation({ customerId: id })
-  console.log("res", res);
 });
 defineExpose({
   showEdit,
