@@ -16,35 +16,44 @@ const client = ref();
 const localLeftTab = ref<any>(props.leftTabsData);
 const validateTopTabs = ref<any>(props.validateTopTabs);
 
+// 创建一个唯一的key来存储每个tab的formRef
+const tabFormRefs = ref<Record<string, any>>({});
+
 // 为每个 tab 创建并提供一个唯一的 ref
-localLeftTab.value.forEach((tab: any, index: any) => {
-  const formRef = ref(null);
-  provide(`formRef${index}`, formRef);
-});
+// localLeftTab.value.forEach((tab: any, index: any) => {
+//   const formRef = ref(null);
+//   provide(`formRef${index}`, formRef);
+// });
 
 const tabIndex = ref(0);
 const activeLeftTab = ref(0);
 // 新增
 function addLeftTab() {
-  activeLeftTab.value = ++tabIndex.value;
-  localLeftTab.value.push({
-    ...surveyVipStore.initialTopTabsData,
-  });
-  const orgStructureId = localLeftTab.value[0].memberGroupId;
-  localLeftTab.value.forEach((item: any) => {
-    // 检查是否存在 memberGroupId，且值是否为 undefined 或空字符串
-    if (!item.hasOwnProperty('memberGroupId')) {
-      item.memberGroupId = orgStructureId; // 添加字段并赋值
-    }
-  });
+  if (localLeftTab.value.length < 30 || props.title === "添加") {
+    const newTab = {
+      // 初始化新tab的数据，这里可以根据需要添加更多字段
+      // ...(someInitialData || {}),
+    };
+    const key = `formRef${tabIndex.value}`;
+    tabFormRefs.value[key] = ref(null);
+    provide(key, tabFormRefs.value[key]);
+    localLeftTab.value.push(newTab);
+    validateTopTabs.value.push(null); // 假设validateTopTabs与localLeftTab一一对应，初始化时可设为null或其他默认值
+    tabIndex.value++;
+    // activeLeftTab.value = tabIndex.value - 1; // 激活新添加的tab
+  }
 }
 // 删除
 function tabremove(tabIndexs: any) {
+  delete tabFormRefs.value[`formRef${tabIndexs}`]; // 删除对应的formRef
   localLeftTab.value.splice(tabIndexs, 1);
   validateTopTabs.value.splice(tabIndexs, 1);
   if (activeLeftTab.value >= localLeftTab.value.length) {
     activeLeftTab.value = Math.max(0, localLeftTab.value.length - 1);
-    tabIndex.value = Math.max(0, localLeftTab.value.length - 1);
+  }
+  // 确保activeLeftTab指向一个有效的tab
+  if (localLeftTab.value.length === 0) {
+    activeLeftTab.value = 0;
   }
 }
 /**
@@ -64,12 +73,12 @@ watch(
         }
         return acc;
       },
-      []
+      [],
     );
     if (validateIndex.includes(oldVal)) {
       emits("validate");
     }
-  }
+  },
 );
 defineExpose({ activeLeftTab });
 </script>

@@ -200,6 +200,7 @@ async function fetchData() {
     };
     const { data } = await api.list(params);
     list.value = data.getTenantCustomerInfoList;
+    console.log('客户列表',data)
     pagination.value.total = Number(data.total);
     listLoading.value = false;
   } catch (error) {
@@ -624,7 +625,7 @@ const activeName = ref("first");
 
 // 高度自适应
 .absolute-container {
-  position: absolute;
+  position: relative;
   display: flex;
   flex-direction: column;
   width: 100%;

@@ -37,6 +37,12 @@ const columns = ref([
     checked: true,
   },
   {
+    label: computed(() => t("callback.clientID")),
+    prop: "clientId",
+    sortable: true,
+    checked: true,
+  },
+  {
     prop: "customerShortName",
     label: computed(() => t("callback.customerAbbreviation")),
     sortable: true,
@@ -114,6 +120,7 @@ const queryForm = reactive<any>({
   projectName: "", //	项目名称
   memberChildId: "", //	子会员id/会员id
   tenantSupplierId: "", //	供应商id
+  clientId: "", //客户id
   callbackStatus: 0, //回调状态
 });
 
@@ -164,6 +171,7 @@ function onReset() {
     memberChildId: "", //	子会员id/会员id
     tenantSupplierId: "", //	供应商id
     callbackStatus: 0, //回调状态
+    clientId: "",
   });
   fetchData();
 }
@@ -199,6 +207,13 @@ onMounted(async () => {
       type: "input",
       modelName: "projectId",
       placeholder: computed(() => t("callback.projectID")),
+    },
+    {
+      index: 3,
+      show: true,
+      type: "input",
+      modelName: "clientId",
+      placeholder: computed(() => t("callback.clientID")),
     },
     {
       index: 4,
@@ -323,6 +338,16 @@ const formOption = {
             <p>{{ memberType[row.surveySource - 1].label }}</p>
             {{ row.memberChildId }} <br />
             {{ row.randomIdentityId }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="checkList.includes('clientId')"
+          align="center"
+          show-overflow-tooltip
+          :label="t('callback.clientID')"
+        >
+          <template #default="{ row }">
+            {{ row.clientId }}
           </template>
         </el-table-column>
         <el-table-column

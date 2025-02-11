@@ -266,11 +266,11 @@ onMounted(() => {
         case 'alt+7':
         case 'alt+8':
         case 'alt+9':
-        {
-          const number = Number(handle.key.split('+')[1])
-          tabbarStore.list[number - 1]?.fullPath && router.push(tabbarStore.list[number - 1].fullPath)
-          break
-        }
+          {
+            const number = Number(handle.key.split('+')[1])
+            tabbarStore.list[number - 1]?.fullPath && router.push(tabbarStore.list[number - 1].fullPath)
+            break
+          }
         // 切换到最后一个标签页
         case 'alt+0':
           router.push(tabbarStore.list[tabbarStore.list.length - 1].fullPath)
@@ -286,27 +286,31 @@ onUnmounted(() => {
 
 <template>
   <div class="tabbar-container">
-    <div
-      ref="tabsRef" class="tabs" :class="{
-        'tabs-ontop': settingsStore.settings.topbar.switchTabbarAndToolbar,
-        [`tabs-${settingsStore.settings.tabbar.style}`]: settingsStore.settings.tabbar.style !== '',
-      }" @wheel.prevent="handlerMouserScroll"
-    >
-      <TransitionGroup ref="tabContainerRef" :name="!isDragging ? 'tabbar' : undefined" tag="div" class="tab-container" :class="{ dragging: isDragging }">
-        <div
-          v-for="(element, index) in tabbarStore.list" :key="settingsStore.settings.tabbar.mergeTabsBy === 'routeName' && element.routeName ? element.routeName : element.tabId"
+    <div ref="tabsRef" class="tabs" :class="{
+      'tabs-ontop': settingsStore.settings.topbar.switchTabbarAndToolbar,
+      [`tabs-${settingsStore.settings.tabbar.style}`]: settingsStore.settings.tabbar.style !== '',
+    }" @wheel.prevent="handlerMouserScroll">
+      <TransitionGroup ref="tabContainerRef" :name="!isDragging ? 'tabbar' : undefined" tag="div" class="tab-container"
+        :class="{ dragging: isDragging }">
+        <div v-for="(element, index) in tabbarStore.list"
+          :key="settingsStore.settings.tabbar.mergeTabsBy === 'routeName' && element.routeName ? element.routeName : element.tabId"
           ref="tabRef" :data-index="index" class="tab" :class="{
             'tab-ontop': settingsStore.settings.topbar.switchTabbarAndToolbar,
             'actived': element.tabId === activedTabId,
             'no-drag': element.isPermanent || element.isPin,
-          }" :title="element.customTitleList.find(item => item.fullPath === element.fullPath)?.title || generateI18nTitle(element.i18n, element.title)" @click="router.push(element.fullPath)" @dblclick="settingsStore.setMainPageMaximize()" @contextmenu="onTabbarContextmenu($event, element)"
-        >
+          }"
+          :title="element.customTitleList.find(item => item.fullPath === element.fullPath)?.title || generateI18nTitle(element.i18n, element.title)"
+          @click="router.push(element.fullPath)" @dblclick="settingsStore.setMainPageMaximize()"
+          @contextmenu="onTabbarContextmenu($event, element)">
           <div class="tab-dividers" />
           <div class="tab-background" />
           <div class="tab-content">
             <div :key="element.tabId" class="title">
-              <SvgIcon v-if="settingsStore.settings.tabbar.enableIcon && iconName(element.tabId === activedTabId, element.icon, element.activeIcon)" :name="iconName(element.tabId === activedTabId, element.icon, element.activeIcon)!" class="icon" />
-              {{ element.customTitleList.find(item => item.fullPath === element.fullPath)?.title || generateI18nTitle(element.i18n, element.title) }}
+              <SvgIcon
+                v-if="settingsStore.settings.tabbar.enableIcon && iconName(element.tabId === activedTabId, element.icon, element.activeIcon)"
+                :name="iconName(element.tabId === activedTabId, element.icon, element.activeIcon)!" class="icon" />
+              {{ element.customTitleList.find(item => item.fullPath === element.fullPath)?.title ||
+                generateI18nTitle(element.i18n, element.title) }}
             </div>
             <div v-if="!element.isPermanent && element.isPin" class="action-icon">
               <SvgIcon name="i-ri:pushpin-2-fill" @click.stop="tabbarStore.unPin(element.tabId)" @dblclick.stop />
@@ -416,11 +420,12 @@ onUnmounted(() => {
               content: none;
             }
 
-            & + .tab .tab-dividers::before {
+            &+.tab .tab-dividers::before {
               opacity: 0;
             }
 
             .tab-content {
+
               .title,
               .action-icon {
                 color: var(--g-tabbar-tab-hover-color);
@@ -458,11 +463,12 @@ onUnmounted(() => {
             content: none;
           }
 
-          & + .tab .tab-dividers::before {
+          &+.tab .tab-dividers::before {
             opacity: 0;
           }
 
           .tab-content {
+
             .title,
             .action-icon {
               color: var(--g-tabbar-tab-active-color);
@@ -522,6 +528,8 @@ onUnmounted(() => {
           pointer-events: all;
 
           .title {
+            justify-content: center; // 标签名居中
+            align-items: center; // 标签名居中
             display: flex;
             flex: 1;
             gap: 5px;
@@ -594,6 +602,8 @@ onUnmounted(() => {
             inset: 0;
             z-index: 9;
           }
+
+
         }
       }
     }
@@ -605,6 +615,7 @@ onUnmounted(() => {
         &:not(.dragging) {
           .tab:not(.actived):hover {
             .tab-background {
+
               &::before,
               &::after {
                 box-shadow: 0 0 0 20px var(--g-tabbar-tab-hover-bg);
@@ -654,6 +665,7 @@ onUnmounted(() => {
 
           &.actived {
             .tab-background {
+
               &::before,
               &::after {
                 box-shadow: 0 0 0 20px var(--g-container-bg);
@@ -749,6 +761,7 @@ onUnmounted(() => {
 
 // 标签栏动画
 .tabs {
+
   .tabbar-move,
   .tabbar-enter-active,
   .tabbar-leave-active {
@@ -762,6 +775,7 @@ onUnmounted(() => {
   }
 
   &.tabs-ontop {
+
     .tabbar-enter-from,
     .tabbar-leave-to {
       opacity: 0;

@@ -94,7 +94,7 @@ async function validate() {
 async function save() {
   // 校验
   //删除财务信息，payMethod，accountName，collectionAccount，bankName，
-  leftTabsData.forEach((item:any) => {
+  leftTabsData.forEach((item: any) => {
     delete item.payMethod;
     delete item.accountName;
     delete item.collectionAccount;
@@ -110,15 +110,18 @@ async function save() {
           addTenantSupplierInfoList: leftTabsData,
         };
         const { status } = await submitLoading(api.create(dataList));
-        status === 1 &&
-          ElMessage.success({
-            message: "新增成功",
-            center: true,
-          });
+        status === 1 && console.log("传入的客户", dataList);
+        ElMessage.success({
+          message: "新增成功",
+          center: true,
+        });
       } else {
         // // 更新接口
         delete leftTabsData[0].getTenantCustomerOperationInfosList;
+        console.log(leftTabsData[0].updateTenantSupplierCustomerInfoList);
+
         const { status } = await submitLoading(api.edit(leftTabsData[0]));
+
         status === 1 &&
           ElMessage.success({
             message: "修改成功",
@@ -144,6 +147,9 @@ async function save() {
 }
 onMounted(async () => {
   await customerStore.getCustomerList();
+  let id: any = [];
+  const res = await api.getCustomerCooperation({ customerId: id });
+  console.log("res", res);
 });
 defineExpose({
   showEdit,

@@ -302,7 +302,7 @@ const handleSuccess: any = (uploadFile: any, uploadFiles: any) => {
     });
     // 过滤上传失败的图片
     fileList.value = fileList.value.filter(
-      (item: any) => item.name !== uploadFiles.name
+      (item: any) => item.name !== uploadFiles.name,
     );
   } else {
     getLogo();
@@ -328,7 +328,7 @@ const currencyTypeChange = (val: any) => {
   if (val) {
     ElMessageBox.confirm(
       `当前系统的会员存在可用余额、待审金额，若切换币种会根据当前汇率直接计算。可能会因为国际汇率的变化，存在金额精度问题，请知悉！`,
-      "确认信息"
+      "确认信息",
     )
       .then(() => {
         try {
@@ -410,6 +410,7 @@ function onSubmit() {
             }
           }
           const res = await api.edit(form.value);
+          console.log(form.value);
           loading.value = false;
           if (res.status === 1) {
             await userStore.getCurrencyType();
