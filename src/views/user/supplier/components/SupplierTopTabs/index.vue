@@ -579,7 +579,7 @@ const customerChange = () => {
 
                 <el-transfer
                   style="margin-left: 1.875rem"
-                  v-model="props.leftTab.relevanceCustomerIdList"
+                  v-model="props.leftTab.relevanceCountryIdList"
                   filterable
                   :filter-method="filterMethod"
                   :filter-placeholder="t('supplier.new.enterQueryCountry')"
