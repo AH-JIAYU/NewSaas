@@ -900,6 +900,8 @@
     "antecedentQuestionnaire": "前置问卷",
     "forbidden": "禁用",
     "enable": "启用",
+    "Agree": "同意（合作）",
+    "Terminate": "解约",
     "editSucess": "修改成功",
     "delConfirm": "您确定要删除当前项吗?",
     "delMessage": "确认信息",

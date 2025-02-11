@@ -25,4 +25,7 @@ export default {
   getTenantSecretKeyConfigList: () => api.post('secret/getTenantSecretKeyConfigList'),
   //生成密钥
   generateKey: (data: any) => api.post('secret/generateKey', data),
+ //我的客户，合作商户合并
+  getBindCustomer: (data: any) => api.post("tenantCustomer/getBindCustomer", data),
+
 };
