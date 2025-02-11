@@ -195,7 +195,7 @@ function currentChange(page = 1) {
 function onReset() {
   Object.assign(queryForm, {
     customerShortName: "",
-    customerStatus: 2,
+    customerStatus: null,
     antecedentQuestionnaire: null,
   });
   queryData();
@@ -209,17 +209,11 @@ async function fetchData() {
   try {
     listLoading.value = true;
     const params = {
-      ...getParams(),
       ...queryForm,
     };
     const { data } = await api.getBindCustomer(params);
     list.value = data?.getBindCustomerInfoList || [];
-    //tenantCustomerId
-    list.value.forEach((item1: any) => {
-      if (item1.type == 2) {
-        item1.tenantCustomerId = item1.beInvitationTenantId;
-      }
-    });
+    filterData();
 
     listLoading.value = false;
   } catch (error) {
@@ -227,8 +221,12 @@ async function fetchData() {
     listLoading.value = false;
   }
 }
-// 过滤合作客户中解约客户去重问题
-const currentData = computed(() => {
+const filterData = () => {
+  list.value.forEach((item1: any) => {
+    if (item1.type == 2) {
+      item1.tenantCustomerId = item1.beInvitationTenantId;
+    }
+  });
   // 合作状态
   const cooperationList = list.value.filter(
     (item: any) => item.type == 2 && item.customerStatus == 2
@@ -262,15 +260,53 @@ const currentData = computed(() => {
       cooperationList.push(item);
     }
   });
+  list.value = cooperationList;
+};
+// 过滤合作客户中解约客户去重问题
+const currentData = computed(() => {
+  // 计算属性，根据过滤条件动态生成过滤后的列表
 
-  //根据筛选条件过滤
+  const filteredList = list.value.filter((item: any) => {
+    // 解析 customerStatus，获取前后两个值
+    const [typeValue, statusValue] =
+      queryForm.customerStatus != null
+        ? queryForm.customerStatus.split(",").map(Number)
+        : ["", ""];
 
-  console.log(cooperationList, "cooperationList1111");
+    // 判断各个过滤条件
+    const isMatchingShortName = queryForm.customerShortName
+      ? item.customerShortName == queryForm.customerShortName
+      : true;
+    const isMatchingAntecedentQuestionnaire = queryForm.antecedentQuestionnaire
+      ? item.antecedentQuestionnaire == queryForm.antecedentQuestionnaire
+      : true;
+    const isMatchingType = typeValue ? item.type == typeValue : true;
+
+    const isMatchingStatus = statusValue
+      ? item.customerStatus === statusValue
+      : true;
+    // console.log(isMatchingShortName, "isMatchingShortName");
+    // console.log(
+    //   isMatchingAntecedentQuestionnaire,
+    //   "isMatchingAntecedentQuestionnaire"
+    // );
+    // console.log(isMatchingType, "isMatchingType");
+    // console.log(isMatchingStatus, "isMatchingStatus");
+
+    // 满足所有条件
+    return (
+      isMatchingShortName &&
+      isMatchingAntecedentQuestionnaire &&
+      isMatchingType &&
+      isMatchingStatus
+    );
+  });
+
   const startIndex = (pagination.value.page - 1) * pagination.value.size;
   const endIndex = startIndex + pagination.value.size;
-  pagination.value.total = cooperationList.slice(startIndex, endIndex).length;
+  pagination.value.total = filteredList.slice(startIndex, endIndex).length;
 
-  return cooperationList.slice(startIndex, endIndex);
+  return filteredList.slice(startIndex, endIndex);
 });
 
 function setSelectRows(val: any) {
@@ -316,8 +352,8 @@ onMounted(async () => {
 });
 const formOption = {
   customerStatus: () => [
-    { label: computed(() => t("customer.forbidden")), value: 1 },
-    { label: computed(() => t("customer.enable")), value: 2 },
+    { label: computed(() => t("customer.forbidden")), value: "1,1" },
+    { label: computed(() => t("customer.enable")), value: "1,2" },
     { label: computed(() => t("customer.Agree")), value: "2,2" },
     { label: computed(() => t("customer.Terminate")), value: "2,4" },
   ],
