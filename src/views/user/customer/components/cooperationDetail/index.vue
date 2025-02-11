@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import customerDetailDetail from "../CustomerDetailDetail/index.vue";
+import financialLog from "../../../cooperation/components/financialLog/index.vue";
 import api from "@/api/modules/user_customer";
 import { obtainLoading } from "@/utils/apiLoading";
 import useTenantStaffStore from "@/store/modules/configuration_manager";
@@ -14,6 +15,7 @@ const tenantStaffStore = useTenantStaffStore();
 const checkRef = ref<any>();
 const detailData = ref<any>(); // 详情数据
 const userList = ref<any>([]);
+const financialLogRef = ref(); // 日志组件
 async function showEdit(row: any) {
   const params = {
     tenantCustomerId: row.tenantCustomerId,
@@ -24,6 +26,8 @@ async function showEdit(row: any) {
   detailData.value = data;
 
   drawerisible.value = true;
+  console.log(detailData.value);
+  console.log("row==>", row);
 }
 
 function close() {
@@ -32,8 +36,8 @@ function close() {
 }
 const handleCheck = (row: any) => {
   checkRef.value.showEdit(row);
+  financialLogRef.value.showEdit(row);
 };
-
 const operationType = (type: number) => {
   const typeArray = [
     t("common.new"),
@@ -64,9 +68,7 @@ defineExpose({
       <el-card class="box-card">
         <template #header>
           <div class="card-header">
-            <div class="leftTitle">
-              {{ t("customer.detail.basicInformation") }}
-            </div>
+            <div class="leftTitle">基本信息</div>
             <div class="rightStatus">
               <span
                 :class="
@@ -93,19 +95,15 @@ defineExpose({
         </template>
         <el-row :gutter="24">
           <el-col :span="8">
-            <el-form-item :label="t('customer.detail.tenantCustomerId')">
+            <el-form-item label="项目名称">
               <el-text class="mx-1 copyId">
-                {{
-                  detailData.tenantCustomerId
-                    ? detailData.tenantCustomerId
-                    : "-"
-                }}
+                {{ detailData.projectId ? detailData.projectId : "-" }}
                 <copy class="copy" :content="detailData.tenantCustomerId" />
               </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item :label="t('customer.detail.customerAccord')">
+            <el-form-item label="邀请方合作ID">
               <el-text class="mx-1">
                 {{
                   detailData.customerAccord ? detailData.customerAccord : "-"
@@ -114,7 +112,7 @@ defineExpose({
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item :label="t('customer.detail.customerShortName')">
+            <el-form-item label="负责部门">
               <el-text class="mx-1">
                 {{
                   detailData.customerShortName
@@ -125,64 +123,38 @@ defineExpose({
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item :label="t('customer.detail.companyName')">
+            <el-form-item label="价格比例">
               <el-text class="mx-1">
                 {{ detailData.companyName ? detailData.companyName : "-" }}
               </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item :label="t('customer.detail.customerName')">
+            <el-form-item label="业绩(合作商)可用余额">
               <el-text class="mx-1">
                 {{ detailData.customerName ? detailData.customerName : "-" }}
               </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item :label="t('customer.detail.customerPhone')">
+            <el-form-item label="业绩(我的)可用余额">
               <el-text class="mx-1">
                 {{ detailData.customerPhone ? detailData.customerPhone : "-" }}
               </el-text>
             </el-form-item>
           </el-col>
+          <el-col :span="8"> </el-col>
           <el-col :span="8">
-            <el-form-item :label="t('customer.detail.customerPhone')">
+            <el-form-item label="业绩(合作商)待审余额">
               <el-text class="mx-1">
                 {{ detailData.emailAddress ? detailData.emailAddress : "-" }}
               </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item :label="t('customer.detail.createName')">
+            <el-form-item label="业绩(我的)待审余额">
               <el-text class="mx-1">
                 {{ detailData.createName ? detailData.createName : "-" }}
-              </el-text>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item :label="t('customer.detail.createTime')">
-              <el-text class="mx-1">
-                {{ detailData.createTime ? detailData.createTime : "-" }}
-              </el-text>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="PM:">
-              <el-text v-for="item in userList" :key="item.id">
-                <el-text v-if="detailData.chargeId === item.id" class="mx-1">
-                  {{ item.userName }}
-                </el-text>
-              </el-text>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item :label="t('customer.detail.settlementCycle')">
-              <el-text class="mx-1">
-                {{
-                  detailData.settlementCycle
-                    ? detailData.settlementCycle + t("customer.detail.days")
-                    : "-"
-                }}
               </el-text>
             </el-form-item>
           </el-col>
@@ -192,61 +164,15 @@ defineExpose({
       <el-card class="box-card">
         <template #header>
           <div class="card-header">
-            <span>{{ t("customer.detail.permissionInformation") }}</span>
+            <span>财务日志</span>
           </div>
         </template>
         <el-row :gutter="24">
-          <el-col :span="8">
-            <el-form-item :label="t('customer.detail.customerStatus')">
-              <el-text class="mx-1">
-                <div v-if="detailData.customerStatus === 1" class="close">
-                  {{ t("common.off") }}
-                </div>
-                <div v-else class="open">{{ t("common.on") }}</div>
-              </el-text>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item :label="t('customer.detail.antecedentQuestionnaire')">
-              <el-text class="mx-1">
-                <div
-                  v-if="detailData.antecedentQuestionnaire === 1"
-                  class="close"
-                >
-                  {{ t("common.off") }}
-                </div>
-                <div v-else class="open">{{ t("common.on") }}</div>
-              </el-text>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item :label="t('customer.detail.riskControl')">
-              <el-text class="mx-1">
-                <div v-if="detailData.riskControl === 1" class="close">
-                  {{ t("common.off") }}
-                </div>
-                <div v-else class="open">{{ t("common.on") }}</div>
-              </el-text>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item :label="t('customer.detail.businessLimit')">
-              <el-text class="mx-1">
-                <CurrencyType />{{ detailData.turnover || 0 }}
-              </el-text>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item :label="t('customer.detail.rateMinValue')">
-              <el-text class="mx-1">
-                {{ detailData.turnover ? detailData.turnover + "%" : "-" }}
-              </el-text>
-            </el-form-item>
-          </el-col>
+          <financialLog ref="financialLogRef" />
         </el-row>
       </el-card>
 
-      <el-card class="box-card">
+      <!-- <el-card class="box-card">
         <template #header>
           <div class="card-header">
             <span> {{ t("customer.detail.operationLog") }}</span>
@@ -292,7 +218,7 @@ defineExpose({
             </template>
           </el-table-column>
         </el-table>
-      </el-card>
+      </el-card> -->
     </el-form>
     <template #footer>
       <div class="flex-c">

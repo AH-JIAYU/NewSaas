@@ -106,10 +106,11 @@ function handleAdd() {
 }
 //合作客户详情
 const cooperationDetaiRef = ref();
+
 // 编辑
 function handleEdit(row: Object) {
-  editRef.value.showEdit(row);
-  // cooperationDetaiRef.value.showEdit(row);  //合作商户详情
+  // editRef.value.showEdit(row);
+  cooperationDetaiRef.value.showEdit(row); //合作商户详情
 }
 // 切换状态
 async function changeState(state: any, type: number, id: string) {
@@ -129,7 +130,8 @@ async function changeState(state: any, type: number, id: string) {
 }
 // 查看
 function handleCheck(row: Object) {
-  checkRef.value.showEdit(row);
+  // checkRef.value.showEdit(row);
+  cooperationDetaiRef.value.showEdit(row);
 }
 function handleCurrentChange(val: any) {
   if (val) current.value = val.tenantCustomerId;
@@ -156,7 +158,7 @@ function handleDelete(row: any) {
       const { status } = await submitLoading(
         api.delete({
           tenantCustomerId: row.tenantCustomerId,
-        })
+        }),
       );
       status === 1 &&
         ElMessage.success({
@@ -696,7 +698,7 @@ function termination(row: any) {
       <customerEdit ref="editRef" @fetch-data="queryData" />
       <QuickEdit ref="QuickEditRef" @fetch-data="queryData" />
       <AssociatedProjects ref="AssociatedProjectsRef" @fetch-data="queryData" />
-      <customerDetail ref="checkRef" @fetch-data="queryData" />
+      <!-- <customerDetail ref="checkRef" @fetch-data="queryData" /> -->
       <cooperationDetail ref="cooperationDetaiRef" @fetch-data="queryData" />
       <addCooperation ref="addCooperationRef" @queryData="queryData" />
       <customerProportion ref="proportionRef" @fetch-data="queryData" />

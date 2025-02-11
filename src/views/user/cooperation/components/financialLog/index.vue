@@ -36,6 +36,14 @@ const drawerisible = ref<boolean>(false);
 const detailData = ref<any>();
 // 编辑
 
+const columns = ref([
+  {
+    label: "aaaa",
+    checked: true,
+    sortable: true,
+    prop: "tenantCustomerId",
+  }
+]);
 // 加减款
 async function showEdit(row: any) {
   if (row.beInvitationTenantId) {
@@ -48,6 +56,8 @@ async function showEdit(row: any) {
   }
   drawerisible.value = true;
 }
+
+
 // 获取列表数据
 const getDataList = async () => {
   try {
@@ -64,6 +74,10 @@ const getDataList = async () => {
     data.value.loading = false;
   }
 };
+
+onMounted(() => {
+  getDataList();
+});
 // 每页数量切换
 function sizeChange(size: number) {
   onSizeChange(size).then(() => {
