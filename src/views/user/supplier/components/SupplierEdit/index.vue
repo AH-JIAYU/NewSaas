@@ -110,19 +110,18 @@ async function save() {
           addTenantSupplierInfoList: leftTabsData,
         };
         const { status } = await submitLoading(api.create(dataList));
-        status === 1 &&
-          ElMessage.success({
-            message: "新增成功",
-            center: true,
-          });
+        status === 1 && console.log("传入的客户", dataList);
+        ElMessage.success({
+          message: "新增成功",
+          center: true,
+        });
       } else {
         // // 更新接口
         delete leftTabsData[0].getTenantCustomerOperationInfosList;
+        console.log(leftTabsData[0].updateTenantSupplierCustomerInfoList);
+
         const { status } = await submitLoading(api.edit(leftTabsData[0]));
 
-        const dataList = {
-          addTenantSupplierInfoList: leftTabsData,
-        };
         status === 1 &&
           ElMessage.success({
             message: "修改成功",
@@ -148,6 +147,9 @@ async function save() {
 }
 onMounted(async () => {
   await customerStore.getCustomerList();
+  let id: any = [];
+  const res = await api.getCustomerCooperation({ customerId: id });
+  console.log("res", res);
 });
 defineExpose({
   showEdit,
@@ -156,10 +158,24 @@ defineExpose({
 
 <template>
   <div>
-    <el-drawer v-model="drawerisible" :class="title === '新增' ? 'hide-drawer-header' : 'edit-drawer'" append-to-body
-      :close-on-click-modal="false" destroy-on-close draggable size="70%" title="">
-      <LeftTabs @validate="validate" ref="LeftTabsRef" :title="title" :left-tabs-data="leftTabsData"
-        :validate-top-tabs="validateTopTabs" :validate-all="validateAll" />
+    <el-drawer
+      v-model="drawerisible"
+      :class="title === '新增' ? 'hide-drawer-header' : 'edit-drawer'"
+      append-to-body
+      :close-on-click-modal="false"
+      destroy-on-close
+      draggable
+      size="70%"
+      title=""
+    >
+      <LeftTabs
+        @validate="validate"
+        ref="LeftTabsRef"
+        :title="title"
+        :left-tabs-data="leftTabsData"
+        :validate-top-tabs="validateTopTabs"
+        :validate-all="validateAll"
+      />
       <template #footer>
         <div class="flex-c">
           <el-button @click="close"> 取消 </el-button>

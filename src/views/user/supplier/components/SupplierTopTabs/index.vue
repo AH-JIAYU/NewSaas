@@ -147,30 +147,25 @@ if (!props.leftTab.relevanceCountryIdList) {
   console.log(props.leftTab.relevanceCountryIdList);
 }
 
-// 初始化客户授权列表
-if (!props.leftTab.relevanceCustomerIdList) {
-  props.leftTab.relevanceCustomerIdList = [];
-} else {
-  console.log(props.leftTab.relevanceCustomerIdList);
-}
-
 // 所属区域全选
 const selectAll = () => {
   props.leftTab.relevanceCountryIdList = [];
   if (data.checked) {
     data.countryList.map((item: any) => {
       props.leftTab.relevanceCountryIdList.push(item.id);
-      console.log(item.id)
+      console.log(item.id);
     });
   }
 };
 
 // 授权客户全选
 const selectAllCustomer = () => {
-  props.leftTab.relevanceCustomerIdList = [];
+  props.leftTab.updateTenantSupplierCustomerInfoList = [];
   if (data.checkedCustomer) {
     data.relatedCustomers.map((item: any) => {
-      props.leftTab.relevanceCustomerIdList.push(item.tenantCustomerId);
+      props.leftTab.updateTenantSupplierCustomerInfoList.push(
+        item.tenantCustomerId
+      );
       console.log(item.tenantCustomerId);
     });
   }
@@ -184,14 +179,14 @@ const addSupplierLevel = () => {
 const changeRelevanceCountryIdList = () => {
   data.checked = Boolean(
     props.leftTab.relevanceCountryIdList.length ===
-    basicDictionaryStore.country.length,
+    basicDictionaryStore.country.length
   );
 };
 // 授权客户反选
-const changeRelevanceCustomerIdList = () => {
+const changeupdateTenantSupplierCustomerInfoList = () => {
   data.checkedCustomer = Boolean(
-    props.leftTab.relevanceCustomerIdList.length ===
-    data.relatedCustomers.length,
+    props.leftTab.updateTenantSupplierCustomerInfoList.length ===
+    data.relatedCustomers.length
   );
 };
 
@@ -203,6 +198,9 @@ const data = reactive<any>({
   countryList: [], // 区域
   supplierLevelList: [], // 供应商等级
 });
+const data1 = reactive<any>({
+  updateTenantSupplierCustomerInfoList: [],
+});
 
 const activeName = ref("basicSettings");
 
@@ -212,6 +210,7 @@ const getSupplierLevelList = async () => {
   changeCountryId(props.leftTab.subordinateCountryId);
 };
 const dataList = ref<any>([]);
+const updateTenantSupplierCustomerInfoList = ref<any>([]);
 const userList = ref<any>([]);
 const filterMethod = (query: string, item: any) => {
   // 如果 item.initial 存在，且 query 为空，则直接返回 true，表示不过滤
@@ -231,18 +230,6 @@ const generateData = (val: any) => {
   });
 };
 
-// 客户
-const generateUserData = (val: any) => {
-  val.forEach((user: any) => {
-    userList.value.push({
-      label: user.customerAccord,
-      key: user.tenantCustomerId,
-    });
-  });
-};
-
-
-
 // 查询
 const queryForm = reactive<any>({
   customerShortName: "",
@@ -252,20 +239,72 @@ const queryForm = reactive<any>({
 
 onMounted(async () => {
   // 异步数据加载
-  data.relatedCustomers = await customerStore.getCustomerList();
+  userList.value = [];
+
+  const { data } = await api.getCustomerCooperation({});
+  const relatedCustomers = data?.getCustomerInfoLists || [];
+  const getCooperationInfoLists = data?.getCooperationInfoLists || [];
+  //1:客户表 2:外部租户
+  if (relatedCustomers.length != 0) {
+    relatedCustomers.forEach((item: any) => {
+      userList.value.push({
+        label: item.customerName,
+        key: item.customerId,
+        type: 1,
+      });
+    });
+  }
+  if (getCooperationInfoLists.length != 0) {
+    getCooperationInfoLists.forEach((item: any) => {
+      userList.value.push({
+        label: item.tenantName,
+        key: item.tenantId,
+        type: 2,
+      });
+    });
+  }
+
+  // 初始化客户授权列表
+  if (!props.leftTab.updateTenantSupplierCustomerInfoList) {
+    props.leftTab.updateTenantSupplierCustomerInfoList = [];
+    data1.updateTenantSupplierCustomerInfoList = [];
+  } else {
+    if (props.leftTab.updateTenantSupplierCustomerInfoList.length) {
+      props.leftTab.updateTenantSupplierCustomerInfoList.forEach(
+        (item1: any) => {
+          data1.updateTenantSupplierCustomerInfoList.push(
+            item1.tenantCustomerId
+          );
+        }
+      );
+    }
+  }
   data.countryList = await basicDictionaryStore.getCountry();
   await getSupplierLevelList();
   // 更新 dataList
   generateData(data.countryList);
-  // 更新userList
-  generateUserData(data.relatedCustomers);
 });
 nextTick(() => {
   // 表单验证方法
   validate(formRef.value);
 });
-// console.log("data.relatedCustomers", data.relatedCustomers);
+const customerChange = () => {
+  const updatedList = data1.updateTenantSupplierCustomerInfoList
+    .map((key: any) => {
+      const selectedItem = userList.value.find((item: any) => item.key === key);
+      if (selectedItem) {
+        return {
+          type: selectedItem.type,
+          tenantCustomerId: selectedItem.key,
+        };
+      }
+      return null;
+    })
+    .filter(Boolean); // 去除null值
+  props.leftTab.updateTenantSupplierCustomerInfoList = updatedList;
+};
 
+// console.log("data.relatedCustomers", data.relatedCustomers);
 </script>
 <template>
   <div>
@@ -419,75 +458,57 @@ nextTick(() => {
                 </el-form-item>
               </el-col>
             </el-row>
-            <el-row :gutter="20">
-              <!--                     filterable
-                    multiple
-                    collapse-tags -->
-              <el-col :span="8">
-                <el-form-item>
-                  <template #label>
-                    <div>
-                      <el-tooltip class="tooltips" placement="top">
-                        <template #content>
-                          <div>
-                            {{ t("supplier.new.tips1") }}<br />
-                            {{ t("supplier.new.example") }}
-                          </div>
-                        </template>
-                        <SvgIcon class="SvgIcon2" name="i-ri:question-line" />
-                      </el-tooltip>
-                      {{ t("supplier.new.authorizationArea") }}
-                    </div>
-                  </template>
-                  <!-- <el-select @change="changeRelevanceCountryIdList" v-model="props.leftTab.relevanceCountryIdList"
-                    clearable filterable multiple collapse-tags>
-                    <template #header>
-                      <el-checkbox v-model="data.checked" @change="selectAll"
-                        style="display: flex; height: unset">全球</el-checkbox>
+            <el-row :gutter="24">
+              <el-col :span="11">
+                <div>
+                  <el-form-item>
+                    <template #label>
+                      <div>
+                        <el-tooltip class="tooltips" placement="top">
+                          <template #content>
+                            <div>
+                              {{ t("supplier.new.tips1") }}<br />
+                              {{ t("supplier.new.example") }}
+                            </div>
+                          </template>
+                          <SvgIcon class="SvgIcon2" name="i-ri:question-line" />
+                        </el-tooltip>
+                        {{ t("supplier.new.authorizationArea") }}
+                      </div>
                     </template>
-                    <el-option v-for="item in data.countryList" :key="item.id" :value="item.id"
-                      :label="item.chineseName"></el-option>
-                  </el-select> -->
-                  <el-transfer v-model="props.leftTab.relevanceCountryIdList" filterable :filter-method="filterMethod"
-                    :filter-placeholder="t('supplier.new.enterQueryCountry')" :data="dataList" :titles="[
-                      t('supplier.new.unselectedCountry'),
-                      t('supplier.new.selectedCountries'),
-                    ]" />
-                </el-form-item>
+                  </el-form-item>
+                </div>
+
+                <el-transfer style="margin-left: 1.875rem" v-model="props.leftTab.relevanceCountryIdList" filterable
+                  :filter-method="filterMethod" :filter-placeholder="t('supplier.new.enterQueryCountry')"
+                  :data="dataList" :titles="[
+                    t('supplier.new.unselectedCountry'),
+                    t('supplier.new.selectedCountries'),
+                  ]" />
               </el-col>
-              <!-- <el-col :span="8">
-                <el-form-item label="关联客户">
-                  <el-select v-model="props.leftTab.relevanceCustomerId">
-                    <el-option
-                      v-for="item in data.relatedCustomers"
-                      :key="item.tenantCustomerId"
-                      :value="item.tenantCustomerId"
-                      :label="item.customerAccord"
-                    ></el-option>
-                  </el-select>
-                </el-form-item>
-              </el-col> -->
-            </el-row>
-            <el-row :gutter="20">
-              <el-col :span="8">
-                <el-form-item>
-                  <template #label>
-                    <div>
-                      <el-tooltip class="tooltips" placement="top">
-                        <template #content>
-                          <div>
-                            为供应商设定筛选条件，更精准匹配合适项目<br />
-                            例：仅选中【客户1】，该供应商只能做【客户1】的项目
-                          </div>
-                        </template>
-                        <SvgIcon class="SvgIcon2" name="i-ri:question-line" />
-                      </el-tooltip>
-                      授权客户
-                    </div>
-                  </template>
-                  <el-transfer v-model="props.leftTab.relevanceCustomerIdList" filterable :filter-method="filterMethod"
-                    filter-placeholder="输入查询客户" :data="userList" :titles="['已选择客户', '未选择客户']" />
-                </el-form-item>
+              <el-col :span="11">
+                <div>
+                  <el-form-item>
+                    <template #label>
+                      <div>
+                        <el-tooltip class="tooltips" placement="top">
+                          <template #content>
+                            <div>
+                              为供应商设定筛选条件，更精准匹配合适项目<br />
+                              例：仅选中【客户1】，该供应商只能做【客户1】的项目
+                            </div>
+                          </template>
+                          <SvgIcon class="SvgIcon2" name="i-ri:question-line" />
+                        </el-tooltip>
+                        分配客户
+                      </div>
+                    </template>
+                  </el-form-item>
+                </div>
+
+                <el-transfer style="margin-left: 1.875rem" v-model="data1.updateTenantSupplierCustomerInfoList"
+                  filterable :filter-method="filterMethod" filter-placeholder="输入查询客户" :data="userList"
+                  @change="customerChange" :titles="['未选择客户', '已分配客户']" />
               </el-col>
             </el-row>
           </el-card>
@@ -516,8 +537,8 @@ nextTick(() => {
                   <el-input v-model="props.leftTab.collectionAccount" />
                 </el-form-item>
               </el-col>
-              <!-- 当付款方式为银行卡支付时显示 银行名称 -->
-          <!-- <el-col :span="8" v-if="props.leftTab.payMethod === 1">
+
+         <el-col :span="8" v-if="props.leftTab.payMethod === 1">
                 <el-form-item label="银行名称">
                   <el-input v-model="props.leftTab.bankName" />
                 </el-form-item>
@@ -542,14 +563,16 @@ nextTick(() => {
 </template>
 
 <style scoped lang="scss">
+:deep(.el-form-item__content) {
+  margin-left: 0 !important;
+}
+
 .buttonClass {
   text-align: center;
   width: 100%;
   margin: 0.75rem;
   height: 2rem;
-  font-family:
-    PingFang SC,
-    PingFang SC;
+  font-family: PingFang SC, PingFang SC;
   font-weight: 500;
   font-size: 0.875rem;
   color: #409eff;
