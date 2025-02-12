@@ -35,7 +35,6 @@ const drawerisible = ref<boolean>(false);
 // 详情数据
 const detailData = ref<any>();
 // 编辑
-
 const columns = ref([
   {
     label: "点击ID",
