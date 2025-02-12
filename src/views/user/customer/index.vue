@@ -327,7 +327,6 @@ const currentData = computed(() => {
   const startIndex = (pagination.value.page - 1) * pagination.value.size;
   const endIndex = startIndex + pagination.value.size;
   pagination.value.total = filteredList.slice(startIndex, endIndex).length;
-  console.log(filteredList,'最终列表数据')
   return filteredList.slice(startIndex, endIndex);
 });
 
