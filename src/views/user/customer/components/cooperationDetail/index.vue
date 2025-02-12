@@ -102,7 +102,7 @@ defineExpose({
         </template>
         <el-row :gutter="24">
           <el-col :span="8">
-            <el-form-item label="项目名称">
+            <el-form-item label="项目名称：">
               <el-text class="mx-1 copyId">
                 {{ detailData.customerAccord ? detailData.customerAccord : "-" }}
                 <copy class="copy" :content="detailData.customerAccord" />
@@ -110,7 +110,7 @@ defineExpose({
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="邀请方合作ID">
+            <el-form-item label="邀请方合作ID：">
               <el-text class="mx-1">
                 {{
                   detailData.beInvitationTenantId ? detailData.beInvitationTenantId : "-"
@@ -119,7 +119,7 @@ defineExpose({
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="负责部门">
+            <el-form-item label="负责部门：">
               <el-text class="mx-1" v-if="detailData.chargeId">
                 <el-text v-for="item in staffList" :key="item.id">
                   <el-text v-if="item.id === detailData.chargeId" class="fontC-System">
@@ -135,14 +135,14 @@ defineExpose({
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="价格比例">
+            <el-form-item label="价格比例：">
               <el-text class="mx-1">
                 {{ detailData.priceRatio ? detailData.priceRatio : "-" }}
               </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="业绩(合作商)可用余额">
+            <el-form-item label="业绩(合作商)可用余额：">
               <el-text class="mx-1">
                 <svg
                 v-if="detailData.currencyType === 'USD'"
@@ -179,7 +179,7 @@ defineExpose({
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="业绩(我的)可用余额">
+            <el-form-item label="业绩(我的)可用余额：">
               <el-text class="mx-1">
 
 
@@ -220,7 +220,7 @@ defineExpose({
           </el-col>
           <el-col :span="8"> </el-col>
           <el-col :span="8">
-            <el-form-item label="业绩(合作商)待审余额">
+            <el-form-item label="业绩(合作商)待审余额：">
               <el-text class="mx-1">
                 <svg
                 v-if="detailData.currencyType === 'USD'"
@@ -257,7 +257,7 @@ defineExpose({
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="业绩(我的)待审余额">
+            <el-form-item label="业绩(我的)待审余额：">
               <el-text class="mx-1">
                 <svg
                 v-if="detailData.personalCurrencyType === 'USD'"
