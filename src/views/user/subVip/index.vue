@@ -348,6 +348,7 @@ function handleCurrentChange(val: any) {
                   rowCopy: 'rowCopy',
                   current: row.memberChildId === current,
                 }"
+                class="littleButton"
               />
               <!-- <copy class="copy" :content="row.memberChildId" /> -->
             </div>
@@ -379,6 +380,7 @@ function handleCurrentChange(val: any) {
                   rowCopy: 'rowCopy',
                   current: row.memberChildId === current,
                 }"
+                class="littleButton"
               />
               <!-- <copy class="copy" :content="row.tenantSupplierId" /> -->
             </div>
@@ -613,5 +615,10 @@ function handleCurrentChange(val: any) {
   .current {
     display: block !important;
   }
+}
+
+.littleButton {
+  position: absolute;
+  right: 10px;
 }
 </style>

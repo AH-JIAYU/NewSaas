@@ -481,6 +481,7 @@ function handleCurrentChange(val: any) {
                         rowCopy: 'rowCopy',
                         current: row.id === current,
                       }"
+                      class="littleButton"
                     />
                   </div>
                 </template>
@@ -847,5 +848,10 @@ function handleCurrentChange(val: any) {
   .current {
     display: block !important;
   }
+}
+
+.littleButton {
+  position: absolute;
+  right: 10px;
 }
 </style>

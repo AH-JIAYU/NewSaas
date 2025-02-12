@@ -5,17 +5,9 @@ import customerEdit from "./components/CustomerEdit/index.vue";
 import QuickEdit from "./components/QuickEdit/index.vue";
 import AssociatedProjects from "./components/AssociatedProjects/index.vue";
 import customerDetail from "./components/CustomerDetail/index.vue";
-import cooperationDetail from "./components/cooperationDetail/index.vue";
-
-import addCooperation from "@/views/user/cooperation/components/CustomerEdit/customerDetail.vue";
-import customerProportion from "@/views/user/cooperation/components/CustomerProportion/index.vue";
-import QuickEditCooperation from "@/views/user/cooperation/components/QuickEdit/index.vue";
-
-
 import { submitLoading } from "@/utils/apiLoading";
 import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
 import api from "@/api/modules/user_customer";
-import apiCooperation from "@/api/modules/user_cooperation";
 import apiUser from "@/api/modules/configuration_manager";
 import empty from "@/assets/images/empty.png";
 import cooperation from "@/views/user/cooperation/index.vue";
@@ -103,22 +95,16 @@ const columns = ref([
     prop: "rateAudit",
   },
 ]);
-
 // 新增
 function handleAdd() {
   editRef.value.showEdit();
 }
-//合作客户详情
-const cooperationDetaiRef = ref();
-
 // 编辑
-function handleEdit(row: any) {
+function handleEdit(row: Object) {
   editRef.value.showEdit(row);
 }
-
 // 切换状态
 async function changeState(state: any, type: number, id: string) {
-  console.log(state, "state");
   const params = {
     status: state,
     operationalType: type,
@@ -134,19 +120,13 @@ async function changeState(state: any, type: number, id: string) {
   queryData();
 }
 // 查看
-function handleCheck(row: any) {
-  if (row.type == 1) {
-    checkRef.value.showEdit(row);
-  } else {
-    cooperationDetaiRef.value.showEdit(row);
-  }
-
+function handleCheck(row: Object) {
+  checkRef.value.showEdit(row);
 }
 function handleCurrentChange(val: any) {
-  if (val) current.value = val.id;
+  if (val) current.value = val.tenantCustomerId;
   else current.value = "";
 }
-const QuickEditCooperationRef = ref()
 // 快速编辑
 function quickEdit(row: any, type: any) {
   /**
@@ -154,22 +134,7 @@ function quickEdit(row: any, type: any) {
      customerShortName  客户简称
      chargeId PM
   */
-
-
-    QuickEditRef.value.showEdit(row, type);
-}
-function quickEditChargeUserId(row: any, type: any) {
-  /**
-   * customerAccord 客户名称
-     customerShortName  客户简称
-     chargeId PM
-  */
-  if (row.type == 1) {
-    QuickEditRef.value.showEdit(row, type);
-  } else {
-    //合作商户
-    QuickEditCooperationRef.value.showEdit(row, 'chargeUserId');
-  }
+  QuickEditRef.value.showEdit(row, type);
 }
 // 查看关联项目数
 function associatedProjects(row: any) {
@@ -196,7 +161,7 @@ function handleDelete(row: any) {
 // 查询
 const queryForm = reactive<any>({
   customerShortName: "",
-  customerStatus: null,
+  customerStatus: 2,
   antecedentQuestionnaire: null,
 });
 // 获取PM / 用户;
@@ -216,7 +181,7 @@ function currentChange(page = 1) {
 function onReset() {
   Object.assign(queryForm, {
     customerShortName: "",
-    customerStatus: null,
+    customerStatus: 2,
     antecedentQuestionnaire: null,
   });
   queryData();
@@ -230,105 +195,19 @@ async function fetchData() {
   try {
     listLoading.value = true;
     const params = {
+      ...getParams(),
       ...queryForm,
     };
-    const { data } = await api.getBindCustomer(params);
-    list.value = data?.getBindCustomerInfoList || [];
-    filterData();
-
+    const { data } = await api.list(params);
+    list.value = data.getTenantCustomerInfoList;
+    console.log("客户列表", data);
+    pagination.value.total = Number(data.total);
     listLoading.value = false;
   } catch (error) {
   } finally {
     listLoading.value = false;
   }
 }
-const filterData = () => {
-  list.value.forEach((item1: any) => {
-    if (item1.type == 2) {
-      item1.tenantCustomerId = item1.beInvitationTenantId;
-    }
-  });
-  // 合作状态
-  const cooperationList = list.value.filter(
-    (item: any) => item.type == 2 && item.customerStatus == 2,
-  );
-
-  // 解约状态
-  let terminationOfContractList = list.value.filter(
-    (item: any) => item.type == 2 && item.customerStatus == 4,
-  );
-  // 解约去重
-  terminationOfContractList = Array.from(
-    new Map(
-      terminationOfContractList.map((item: any) => [
-        item.beInvitationTenantId,
-        item,
-      ]),
-    ).values(),
-  );
-  // 合作的列表的id集合
-  const cooperationIdList = cooperationList.map(
-    (item: any) => item.type == 2 && item.beInvitationTenantId,
-  );
-  terminationOfContractList.forEach((item: any) => {
-    if (!cooperationIdList.includes(item.beInvitationTenantId)) {
-      cooperationList.push(item);
-    }
-  });
-  //我的客户
-  list.value.forEach((item: any) => {
-    if (item.type == 1) {
-      cooperationList.push(item);
-    }
-  });
-  list.value = cooperationList;
-};
-// 过滤合作客户中解约客户去重问题
-const currentData = computed(() => {
-  // 计算属性，根据过滤条件动态生成过滤后的列表
-
-  const filteredList = list.value.filter((item: any) => {
-    // 解析 customerStatus，获取前后两个值
-    const [typeValue, statusValue] =
-      queryForm.customerStatus != null
-        ? queryForm.customerStatus.split(",").map(Number)
-        : ["", ""];
-
-    // 判断各个过滤条件
-    const isMatchingShortName = queryForm.customerShortName
-      ? item.customerShortName == queryForm.customerShortName
-      : true;
-    const isMatchingAntecedentQuestionnaire = queryForm.antecedentQuestionnaire
-      ? item.antecedentQuestionnaire == queryForm.antecedentQuestionnaire
-      : true;
-    const isMatchingType = typeValue ? item.type == typeValue : true;
-
-    const isMatchingStatus = statusValue
-      ? item.customerStatus === statusValue
-      : true;
-    // console.log(isMatchingShortName, "isMatchingShortName");
-    // console.log(
-    //   isMatchingAntecedentQuestionnaire,
-    //   "isMatchingAntecedentQuestionnaire"
-    // );
-    // console.log(isMatchingType, "isMatchingType");
-    // console.log(isMatchingStatus, "isMatchingStatus");
-
-    // 满足所有条件
-    return (
-      isMatchingShortName &&
-      isMatchingAntecedentQuestionnaire &&
-      isMatchingType &&
-      isMatchingStatus
-    );
-  });
-
-  const startIndex = (pagination.value.page - 1) * pagination.value.size;
-  const endIndex = startIndex + pagination.value.size;
-  pagination.value.total = filteredList.slice(startIndex, endIndex).length;
-  return filteredList.slice(startIndex, endIndex);
-});
-
 function setSelectRows(val: any) {
   selectRows.value = val;
 }
@@ -372,10 +251,8 @@ onMounted(async () => {
 });
 const formOption = {
   customerStatus: () => [
-    { label: computed(() => t("customer.forbidden")), value: "1,1" },
-    { label: computed(() => t("customer.enable")), value: "1,2" },
-    { label: computed(() => t("customer.Agree")), value: "2,2" },
-    { label: computed(() => t("customer.Terminate")), value: "2,4" },
+    { label: computed(() => t("customer.forbidden")), value: 1 },
+    { label: computed(() => t("customer.enable")), value: 2 },
   ],
   antecedentQuestionnaire: () => [
     { label: computed(() => t("customer.forbidden")), value: 1 },
@@ -383,442 +260,351 @@ const formOption = {
   ],
 };
 
-//以下是合作客户代码
-const proportionRef = ref(); //合作配置
-const addCooperationRef = ref(); //邀约公司
-//邀请合作
-function handleAddCooperation() {
-  addCooperationRef.value.showEdit();
-}
-//合作配置
-function priceRatio(row: any) {
-  proportionRef.value.showEdit(row);
-}
-//终止合作
-function termination(row: any) {
-  ElMessageBox.prompt(t("customer.configuration"), t("customer.stop"), {
-    confirmButtonText: t("common.confirm"),
-    cancelButtonText: t("common.cancel"),
-    inputPlaceholder: t("customer.instructions"),
-    inputPattern: /^.{0,500}$/,
-    inputErrorMessage: t("customer.lt500"),
-    type: "warning",
-  })
-    .then(async (val: any) => {
-      const {
-        data: { flag },
-      } = await apiCooperation.updateRescindTenant({
-        beInvitationTenantId: row.beInvitationTenantId,
-        remark: val.value,
-      });
-      flag &&
-        ElMessage({
-          type: "success",
-          message: t("customer.terminatedCooperation"),
-        });
-      fetchData();
-    })
-    .catch(() => {});
-}
+const activeName = ref("first");
 </script>
 
 <template>
   <PageMain>
-    <div :class="{ 'absolute-container': tableAutoHeight }">
-      <FormSearch
-        :formSearchList="formSearchList"
-        :formSearchName="formSearchName"
-        @currentChange="currentChange"
-        @onReset="onReset"
-        :model="queryForm"
-        :formOption="formOption"
-      />
-      <ElDivider border-style="dashed" />
-      <el-row>
-        <FormLeftPanel>
-          <el-button
-            type="primary"
-            size="default"
-            @click="handleAdd"
-            v-auth="'customer-get-addTenantCustomer'"
-          >
-            {{ t("common.new") }}
-          </el-button>
-          <el-button
-            type="primary"
-            size="default"
-            @click="handleAddCooperation"
-            v-auth="'cooperation-get-addInvitationBind'"
-          >
-            {{ t("customer.invite") }}
-          </el-button>
-        </FormLeftPanel>
-        <FormRightPanel>
-          <el-button size="default"> {{ t("common.export") }} </el-button>
-          <TabelControl
-            v-model:border="border"
-            v-model:tableAutoHeight="tableAutoHeight"
-            v-model:checkList="checkList"
-            v-model:columns="columns"
-            v-model:line-height="lineHeight"
-            v-model:stripe="stripe"
-            style="margin-left: 12px"
-            @query-data="queryData"
+    <el-tabs v-model="activeName" class="demo-tabs">
+      <el-tab-pane :label="t('customer.myCustomer')" name="first">
+        <div :class="{ 'absolute-container': tableAutoHeight }">
+          <FormSearch
+            :formSearchList="formSearchList"
+            :formSearchName="formSearchName"
+            @currentChange="currentChange"
+            @onReset="onReset"
+            :model="queryForm"
+            :formOption="formOption"
           />
-        </FormRightPanel>
-      </el-row>
-      <el-table
-        v-loading="listLoading"
-        :border="border"
-        :data="currentData"
-        :size="lineHeight"
-        :stripe="stripe"
-        @selection-change="setSelectRows"
-        highlight-current-row
-        @current-change="handleCurrentChange"
-      >
-        <ElTableColumn
-          v-if="checkList.includes('customerStatus')"
-          align="left"
-          show-overflow-tooltip
-          prop="customerStatus"
-          :label="t('customer.customerStatus')"
-          width="84"
-        >
-          <template #default="{ row }">
-            <!-- 我的客户 -->
-            <div
-              @click="changeState(row.customerStatus, 1, row.tenantCustomerId)"
+          <ElDivider border-style="dashed" />
+          <el-row>
+            <FormLeftPanel>
+              <el-button
+                type="primary"
+                size="default"
+                @click="handleAdd"
+                v-auth="'customer-get-addTenantCustomer'"
+              >
+                {{ t("common.new") }}
+              </el-button>
+            </FormLeftPanel>
+            <FormRightPanel>
+              <el-button size="default"> {{ t("common.export") }} </el-button>
+              <TabelControl
+                v-model:border="border"
+                v-model:tableAutoHeight="tableAutoHeight"
+                v-model:checkList="checkList"
+                v-model:columns="columns"
+                v-model:line-height="lineHeight"
+                v-model:stripe="stripe"
+                style="margin-left: 12px"
+                @query-data="queryData"
+              />
+            </FormRightPanel>
+          </el-row>
+          <el-table
+            v-loading="listLoading"
+            :border="border"
+            :data="list"
+            :size="lineHeight"
+            :stripe="stripe"
+            @selection-change="setSelectRows"
+            highlight-current-row
+            @current-change="handleCurrentChange"
+          >
+            <!-- <el-table-column align="left" type="selection" /> -->
+            <ElTableColumn
+              v-if="checkList.includes('customerStatus')"
+              align="left"
+              show-overflow-tooltip
+              prop="customerStatus"
+              :label="t('customer.customerStatus')"
+              width="84"
             >
-              <ElSwitch
-                v-if="row.type == 1"
-                v-model="row.customerStatus"
-                inline-prompt
-                :inactive-value="1"
-                :active-value="2"
-                :active-text="t('customer.enable')"
-                :inactive-text="t('customer.forbidden')"
-              />
-            </div>
+              <template #default="{ row }">
+                <ElSwitch
+                  v-model="row.customerStatus"
+                  inline-prompt
+                  :inactive-value="1"
+                  :active-value="2"
+                  :active-text="t('customer.enable')"
+                  :inactive-text="t('customer.forbidden')"
+                  @change="changeState($event, 1, row.tenantCustomerId)"
+                />
+              </template>
+            </ElTableColumn>
+            <el-table-column
+              v-if="checkList.includes('customerAccord')"
+              align="left"
+              prop="customerAccord"
+              show-overflow-tooltip
+              :label="t('customer.customerName')"
+              width="180"
+            >
+              <template #default="{ row }">
+                <div class="flex-c tableBig">
+                  <div class="oneLine">{{ row.customerAccord }}</div>
+                  <copy
+                    :content="row.customerAccord"
+                    :class="{
+                      rowCopy: 'rowCopy',
+                      current: row.tenantCustomerId === current,
+                    }"
+                    class="copyButton"
+                  />
+                  <SvgIcon
+                    @click="quickEdit(row, 'customerAccord')"
+                    :class="{
+                      edit: 'edit',
+                      current: row.tenantCustomerId === current,
+                    }"
+                    name="i-ep:edit"
+                    color="#409eff"
+                    class="editButton"
+                  />
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column
+              v-if="checkList.includes('customerShortName')"
+              align="left"
+              prop="customerShortName"
+              show-overflow-tooltip
+              :label="t('customer.customerShortName')"
+              width="150"
+            >
+              <template #default="{ row }">
+                <div class="flex-c tableBig">
+                  <div class="oneLine" style="width: calc(100% - 20px)">
+                    {{ row.customerShortName }}
+                  </div>
+                  <SvgIcon
+                    @click="quickEdit(row, 'customerShortName')"
+                    :class="{
+                      edit: 'edit',
+                      current: row.tenantCustomerId === current,
+                    }"
+                    name="i-ep:edit"
+                    color="#409eff"
+                  />
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column
+              v-if="checkList.includes('tenantCustomerId')"
+              align="left"
+              prop="tenantCustomerId"
+              show-overflow-tooltip
+              :label="t('customer.customerCode')"
+              width="150"
+            >
+              <template #default="{ row }">
+                <div class="copyId tableSmall">
+                  <div class="oneLine projectId">
+                    {{ row.tenantCustomerId }}
+                  </div>
+                  <copy
+                    :content="row.tenantCustomerId"
+                    :class="{
+                      rowCopy: 'rowCopy',
+                      current: row.tenantCustomerId === current,
+                    }"
+                    class="littleButton"
+                  />
+                  <!-- <copy /> -->
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column
+              v-if="checkList.includes('chargeId')"
+              align="left"
+              prop="chargeId"
+              show-overflow-tooltip
+              label="PM"
+              ><template #default="{ row }">
+                <div class="flex-c">
+                  <div class="oneLine" style="width: calc(100% - 20px)">
+                    <el-text v-for="item in staffList" :key="item.id">
+                      <el-text
+                        v-if="item.id === row.chargeId"
+                        class="fontC-System"
+                      >
+                        {{ item.userName }}
+                      </el-text>
+                    </el-text>
+                  </div>
+                  <SvgIcon
+                    @click="quickEdit(row, 'chargeId')"
+                    :class="{
+                      edit: 'edit',
+                      current: row.tenantCustomerId === current,
+                    }"
+                    name="i-ep:edit"
+                    color="#409eff"
+                  />
+                </div>
+              </template>
+            </el-table-column>
 
-            <!-- 合作商户 -->
-            <div class="fontC-System" v-if="row.type == 2">
-              <el-text v-if="row.customerStatus === 2" type="success">{{
-                t("customer.cooperation")
-              }}</el-text>
-              <el-text v-if="row.customerStatus === 4" type="danger">{{
-                t("customer.rescindContract")
-              }}</el-text>
-            </div>
-          </template>
-        </ElTableColumn>
-        <el-table-column
-          v-if="checkList.includes('customerAccord')"
-          align="left"
-          prop="customerAccord"
-          :label="t('customer.customerName')"
-          width="230"
-        >
-          <template #default="{ row }">
-            <div class="tableBig flex-c">
-              <div class="oneLine" style="width: calc(100% - 55px)">
-                {{ row.customerAccord }}
-              </div>
-              <copy
-                :content="row.customerAccord"
-                :class="{
-                  rowCopy: 'rowCopy',
-                  current: row.id === current,
-                }"
-              />
-              <SvgIcon
-                v-if="row.type == 1"
-                @click="quickEdit(row, 'customerAccord')"
-                :class="{
-                  edit: 'edit',
-                  current: row.id === current,
-                }"
-                name="i-ep:edit"
-                color="#409eff"
-              />
-            </div>
-            <div class="copyId tableSmall">
-              <div class="id oneLine beInvitationTenantId">
-                <el-tooltip
-                  effect="dark"
-                  :content="row.tenantCustomerId"
-                  placement="top-start"
+            <el-table-column
+              v-if="checkList.includes('projectNumber')"
+              align="left"
+              prop="turnover"
+              show-overflow-tooltip
+              :label="t('customer.noAssociatedProject')"
+            >
+              <template #default="{ row }">
+                <span style="display: inline-block" class="fontC-System">
+                  {{ row.projectNumber || 0 }}
+                </span>
+                <!-- <el-button
+                  v-if="row.projectNumber"
+                  text
+                  type="primary"
+                  size="small"
+                  class="p-1"
+                  @click="associatedProjects(row)"
                 >
-                  {{ row.tenantCustomerId }}
-                </el-tooltip>
-
-                <!-- {{ row.beInvitationTenantId }} -->
-              </div>
-              <copy
-                :content="row.tenantCustomerId"
-                :class="{
-                  rowCopy: 'rowCopy',
-                  current: row.id === current,
-                }"
-              />
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('customerShortName')"
-          align="left"
-          prop="customerShortName"
-          show-overflow-tooltip
-          :label="t('customer.customerShortName')"
-          width="150"
-        >
-          <template #default="{ row }">
-            <div class="flex-c tableBig">
-              <div class="oneLine" style="width: calc(100% - 20px)">
-                {{ row.customerShortName }}
-              </div>
-              <SvgIcon
-                v-if="row.customerShortName"
-                @click="quickEdit(row, 'customerShortName')"
-                :class="{
-                  edit: 'edit',
-                  current: row.id === current,
-                }"
-                name="i-ep:edit"
-                color="#409eff"
-              />
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('chargeId')"
-          align="left"
-          prop="chargeId"
-          show-overflow-tooltip
-          label="PM"
-          ><template #default="{ row }">
-            <!-- 我的客户 -->
-            <div class="flex-c">
-              <div class="oneLine">
-
-                    {{ row.chargeName }}
-
-              </div>
-              <SvgIcon
-                @click="quickEditChargeUserId(row, 'chargeId')"
-                :class="{
-                  edit: 'edit',
-                  current: row.id === current,
-                }"
-                name="i-ep:edit"
-                color="#409eff"
-              />
-            </div>
-          </template>
-        </el-table-column>
-
-        <el-table-column
-          v-if="checkList.includes('projectNumber')"
-          align="left"
-          prop="turnover"
-          show-overflow-tooltip
-          :label="t('customer.noAssociatedProject')"
-        >
-          <template #default="{ row }">
-            <span style="display: inline-block" class="fontC-System" v-if="row.type==1">
-              {{ row.projectNumber || 0 }}
-            </span>
-            <span v-else>-</span>
-          </template>
-        </el-table-column>
-        <ElTableColumn
-          v-if="checkList.includes('antecedentQuestionnaire')"
-          align="left"
-          show-overflow-tooltip
-          prop="antecedentQuestionnaire"
-          :label="t('customer.antecedentQuestionnaire')"
-        >
-          <template #default="{ row }">
-            <div
-            v-if="row.type == 1"
-              @click="
-                changeState(
-                  row.antecedentQuestionnaire,
-                  2,
-                  row.tenantCustomerId,
-                )
-              "
+                  <SvgIcon
+                    name="mdi:cursor-default-click"
+                    size="16px"
+                    color="#409eff"
+                  />
+                </el-button> -->
+              </template>
+            </el-table-column>
+            <ElTableColumn
+              v-if="checkList.includes('antecedentQuestionnaire')"
+              align="left"
+              show-overflow-tooltip
+              prop="antecedentQuestionnaire"
+              :label="t('customer.antecedentQuestionnaire')"
             >
-              <ElSwitch
-                v-model="row.antecedentQuestionnaire"
-                inline-prompt
-                :inactive-value="1"
-                :active-value="2"
-                :active-text="t('customer.enable')"
-                :inactive-text="t('customer.forbidden')"
-              />
-            </div>
-            <div v-else>
-              -
-            </div>
-            <!-- <ElSwitch
-              v-model="row.antecedentQuestionnaire"
-              inline-prompt
-              :inactive-value="1"
-              :active-value="2"
-              :active-text="t('customer.enable')"
-              :inactive-text="t('customer.forbidden')"
-              @change="changeState($event, 2, row.tenantCustomerId)"
-            /> -->
-          </template>
-        </ElTableColumn>
-        <ElTableColumn
-          v-if="checkList.includes('riskControl')"
-          align="left"
-          show-overflow-tooltip
-          prop="riskControl"
-          :label="t('customer.riskControl')"
-        >
-          <template #default="{ row }">
-            <div @click="changeState(row.riskControl, 3, row.tenantCustomerId)" v-if="row.type==1">
-              <ElSwitch
-                v-model="row.riskControl"
-                inline-prompt
-                :inactive-value="1"
-                :active-value="2"
-                :active-text="t('customer.enable')"
-                :inactive-text="t('customer.forbidden')"
-              />
-            </div>
-            <div v-else>
-              -
-            </div>
-            <!-- <ElSwitch
-              v-model="row.riskControl"
-              inline-prompt
-              :inactive-value="1"
-              :active-value="2"
-              :active-text="t('customer.enable')"
-              :inactive-text="t('customer.forbidden')"
-              @change="changeState($event, 3, row.tenantCustomerId)"
-            /> -->
-          </template>
-        </ElTableColumn>
-        <el-table-column
-          v-if="checkList.includes('turnover')"
-          align="left"
-          prop="turnover"
-          show-overflow-tooltip
-          :label="t('customer.limit')"
-        >
-          <template #default="{ row }">
-            <div v-if="row.turnover > 0" class="fontC-System">
-              <CurrencyType />{{ row.turnover }}
-            </div>
-            <el-text v-else class="fontC-System">-</el-text>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="checkList.includes('rateAudit')"
-          align="left"
-          prop="rateAudit"
-          show-overflow-tooltip
-          :label="t('customer.rateMin')"
-          ><template #default="{ row }">
-            <div class="fontC-System">
-              {{ row.rateAudit ? row.rateAudit : "-" }}
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column
-          align="left"
-          fixed="right"
-          prop="i"
-          :label="t('customer.control')"
-          width="240"
-        >
-          <!-- 我的客户：编辑，详情，删除，合作客户：详情，合作配置，终止合作 -->
-          <template #default="{ row }">
-            <ElSpace>
-              <el-button
-                v-if="row.type == 1"
-                size="small"
-                plain
-                type="primary"
-                @click="handleEdit(row)"
-                v-auth="'customer-update-updateTenantCustomer'"
-              >
-                {{ t("common.edit") }}
-              </el-button>
-              <el-button
-                type="warning"
-                plain
-                size="small"
-                @click="handleCheck(row)"
-                v-auth="'customer-get-getTenantCustomerInfo'"
-              >
-                {{ t("common.detail") }}
-              </el-button>
-              <el-button
-                v-if="row.type == 1"
-                type="danger"
-                plain
-                size="small"
-                @click="handleDelete(row)"
-                v-auth="'customer-delete-deleteTenantCustomer'"
-              >
-                {{ t("common.delete") }}
-              </el-button>
-
-              <el-button
-                v-if="row.type == 2"
-                size="small"
-                type="primary"
-                plain
-                @click="priceRatio(row)"
-                v-auth="'cooperation-update-updateInvitationBindUser'"
-              >
-                {{ t("customer.cooperativeAllocation") }}
-              </el-button>
-              <el-button
-                v-if="row.customerStatus === 2 && row.type == 2"
-                type="danger"
-                plain
-                size="small"
-                @click="termination(row)"
-                v-auth="'cooperation-update-updateRescindTenant'"
-              >
-                {{ t("customer.stop") }}
-              </el-button>
-            </ElSpace>
-          </template>
-        </el-table-column>
-        <template #empty>
-          <el-empty :image="empty" :image-size="300" />
-        </template>
-      </el-table>
-      <ElPagination
-        :current-page="pagination.page"
-        :total="pagination.total"
-        :page-size="pagination.size"
-        :page-sizes="pagination.sizes"
-        :layout="pagination.layout"
-        :hide-on-single-page="false"
-        class="pagination"
-        background
-        @size-change="sizeChange"
-        @current-change="currentChange"
-      />
-
-      <customerEdit ref="editRef" @fetch-data="queryData" />
-      <QuickEdit ref="QuickEditRef" @fetch-data="queryData" />
-      <AssociatedProjects ref="AssociatedProjectsRef" @fetch-data="queryData" />
-      <customerDetail ref="checkRef" @fetch-data="queryData" />
-      <cooperationDetail ref="cooperationDetaiRef" @fetch-data="queryData" />
-      <addCooperation ref="addCooperationRef" @queryData="queryData" />
-      <customerProportion ref="proportionRef" @fetch-data="queryData" />
-      <QuickEditCooperation ref="QuickEditCooperationRef" @fetchData="fetchData" />
-    </div>
+              <template #default="{ row }">
+                <ElSwitch
+                  v-model="row.antecedentQuestionnaire"
+                  inline-prompt
+                  :inactive-value="1"
+                  :active-value="2"
+                  :active-text="t('customer.enable')"
+                  :inactive-text="t('customer.forbidden')"
+                  @change="changeState($event, 2, row.tenantCustomerId)"
+                />
+              </template>
+            </ElTableColumn>
+            <ElTableColumn
+              v-if="checkList.includes('riskControl')"
+              align="left"
+              show-overflow-tooltip
+              prop="riskControl"
+              :label="t('customer.riskControl')"
+            >
+              <template #default="{ row }">
+                <ElSwitch
+                  v-model="row.riskControl"
+                  inline-prompt
+                  :inactive-value="1"
+                  :active-value="2"
+                  :active-text="t('customer.enable')"
+                  :inactive-text="t('customer.forbidden')"
+                  @change="changeState($event, 3, row.tenantCustomerId)"
+                />
+              </template>
+            </ElTableColumn>
+            <el-table-column
+              v-if="checkList.includes('turnover')"
+              align="left"
+              prop="turnover"
+              show-overflow-tooltip
+              :label="t('customer.limit')"
+            >
+              <template #default="{ row }">
+                <div v-if="row.turnover > 0" class="fontC-System">
+                  <CurrencyType />{{ row.turnover }}
+                </div>
+                <el-text v-else class="fontC-System">-</el-text>
+              </template>
+            </el-table-column>
+            <el-table-column
+              v-if="checkList.includes('rateAudit')"
+              align="left"
+              prop="rateAudit"
+              show-overflow-tooltip
+              :label="t('customer.rateMin')"
+              ><template #default="{ row }">
+                <div class="fontC-System">
+                  {{ row.rateAudit ? row.rateAudit : "-" }}
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="left"
+              fixed="right"
+              prop="i"
+              :label="t('customer.control')"
+              width="200"
+            >
+              <template #default="{ row }">
+                <ElSpace>
+                  <el-button
+                    size="small"
+                    plain
+                    type="primary"
+                    @click="handleEdit(row)"
+                    v-auth="'customer-update-updateTenantCustomer'"
+                  >
+                    {{ t("common.edit") }}
+                  </el-button>
+                  <el-button
+                    type="warning"
+                    plain
+                    size="small"
+                    @click="handleCheck(row)"
+                    v-auth="'customer-get-getTenantCustomerInfo'"
+                  >
+                    {{ t("common.detail") }}
+                  </el-button>
+                  <el-button
+                    type="danger"
+                    plain
+                    size="small"
+                    @click="handleDelete(row)"
+                    v-auth="'customer-delete-deleteTenantCustomer'"
+                  >
+                    {{ t("common.delete") }}
+                  </el-button>
+                </ElSpace>
+              </template>
+            </el-table-column>
+            <template #empty>
+              <el-empty :image="empty" :image-size="300" />
+            </template>
+          </el-table>
+          <ElPagination
+            :current-page="pagination.page"
+            :total="pagination.total"
+            :page-size="pagination.size"
+            :page-sizes="pagination.sizes"
+            :layout="pagination.layout"
+            :hide-on-single-page="false"
+            class="pagination"
+            background
+            @size-change="sizeChange"
+            @current-change="currentChange"
+          />
+          <customerEdit ref="editRef" @fetch-data="queryData" />
+          <QuickEdit ref="QuickEditRef" @fetch-data="queryData" />
+          <AssociatedProjects
+            ref="AssociatedProjectsRef"
+            @fetch-data="queryData"
+          />
+          <customerDetail ref="checkRef" @fetch-data="queryData" />
+        </div>
+      </el-tab-pane>
+      <el-tab-pane :label="t('customer.cooperativeMerchant')" name="second">
+        <cooperation />
+      </el-tab-pane>
+    </el-tabs>
   </PageMain>
 </template>
 
@@ -826,9 +612,7 @@ function termination(row: any) {
 .copyId .projectId {
   font-size: 0.875rem;
 }
-.beInvitationTenantId {
-  font-size: 0.875rem;
-}
+
 .copyId .current {
   display: block !important;
 }
@@ -915,5 +699,20 @@ function termination(row: any) {
   .current {
     display: block !important;
   }
+
+  .copyButton {
+    position: absolute;
+    right: 40px;
+  }
+
+  .editButton {
+    position: absolute;
+    right: 10px;
+  }
+}
+
+.littleButton {
+  position: absolute;
+  right: 10px;
 }
 </style>

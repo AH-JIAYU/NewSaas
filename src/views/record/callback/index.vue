@@ -110,6 +110,10 @@ const callbackStatus: { label: string; value: number; type: TagType }[] = [
   { label: t("callback.idWrong"), value: 2, type: "warning" },
   { label: t("callback.hashWrong"), value: 3, type: "danger" },
 ];
+
+// 回调自有客户
+const clientIdOptions: { label: string; value: string }[] = [];
+
 const queryForm = reactive<any>({
   // 请求接口携带参数
   time: [],
@@ -151,6 +155,22 @@ async function fetchData() {
     }
     delete params.time;
     const res = await api.list(params);
+    const ress = await api.getCustomerCooperation({});
+    console.log("ress", ress);
+
+    if (ress.data && ress.data.getCustomerInfoLists) {
+      // 清空原有数据
+      clientIdOptions.length = 0;
+      ress.data.getCustomerInfoLists.forEach(
+        (item: { customerName: string }) => {
+          clientIdOptions.push({
+            label: item.customerName,
+            value: item.customerName,
+          });
+        },
+      );
+    }
+
     list.value = res.data.customerCallbackRecordInfoList;
     pagination.value.total = res.data.total;
     listLoading.value = false;
@@ -179,6 +199,7 @@ function onReset() {
 function setSelectRows(val: string) {
   selectRows.value = val;
 }
+
 onMounted(async () => {
   columns.value.forEach((item) => {
     if (item.checked) {
@@ -211,9 +232,12 @@ onMounted(async () => {
     {
       index: 3,
       show: true,
-      type: "input",
-      modelName: "clientId",
+      type: "select",
+      modelName: "customerName",
       placeholder: computed(() => t("callback.clientID")),
+      option: "clientId",
+      optionLabel: "label",
+      optionValue: "value",
     },
     {
       index: 4,
@@ -262,6 +286,7 @@ onMounted(async () => {
 const formOption = {
   surveySource: () => memberType,
   callbackStatus: () => callbackStatus,
+  clientId: () => clientIdOptions, // 添加 clientId 选项列表
 };
 </script>
 

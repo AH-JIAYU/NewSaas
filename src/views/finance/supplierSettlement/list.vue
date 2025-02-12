@@ -2,7 +2,7 @@
 import { reactive, ref } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import api from "@/api/modules/finance_supplierSettlement";
-import empty from '@/assets/images/empty.png'
+import empty from "@/assets/images/empty.png";
 import UseUserSupplier from "@/store/modules/user_supplier"; // 供应商
 const userSupplier = UseUserSupplier(); // 供应商
 
@@ -27,13 +27,14 @@ const lineHeight = ref<any>("default");
 const stripe = ref(false);
 const selectRows = ref<any>([]);
 const billStatusList = [
-  { label: '待收票', value: 1 },
-  { label: '待支付', value: 2 },
-  { label: '已支付', value: 3 },
-  { label: '已拒绝', value: 4 },];
+  { label: "待收票", value: 1 },
+  { label: "待支付", value: 2 },
+  { label: "已支付", value: 3 },
+  { label: "已拒绝", value: 4 },
+];
 const payMethod = userSupplier.payMethod; // 付款方式
-const formSearchList = ref<any>()//表单排序配置
-const formSearchName = ref<string>('formSearch-supplierSettlement')// 表单排序name
+const formSearchList = ref<any>(); //表单排序配置
+const formSearchName = ref<string>("formSearch-supplierSettlement"); // 表单排序name
 const columns = ref<any>([
   { label: "供应商名称", prop: "supplierName", sortable: true, checked: true },
   { label: "供应商ID", prop: "supplierId", sortable: true, checked: true },
@@ -60,7 +61,7 @@ function setSelectRows(value: any) {
 // 重置数据
 function onReset() {
   Object.assign(queryForm.value, {
-    supplierId: '', //	供应商id
+    supplierId: "", //	供应商id
     billStatus: [], //账单状态: 1:待收票 2:待支付 3:已支付 4:已拒绝
     time: [],
     beginTime: "", //开始时间
@@ -88,18 +89,17 @@ async function fetchData() {
     pagination.value.total = res.data.total;
     listLoading.value = false;
   } catch (error) {
-
   } finally {
     listLoading.value = false;
   }
 }
 // 手动生成结算（一月一次）
 const settlement = async () => {
-  const {data} = await api.settlement({})
-  if(data) {
-    fetchData()
+  const { data } = await api.settlement({});
+  if (data) {
+    fetchData();
   }
-}
+};
 
 // 修改状态
 async function changeStatus(id: any, type: any) {
@@ -135,16 +135,37 @@ onMounted(() => {
   });
   fetchData();
   formSearchList.value = [
-    { index: 1, show: true, type: 'input', modelName: 'supplierId', placeholder: '供应商ID' },
-    { index: 2, show: true, type: 'datetimerange', modelName: 'time', startPlaceHolder: "创建开始日期", endPlaceHolder: "创建结束日期" },
-    { index: 3, show: true, type: 'select', modelName: 'billStatus', placeholder: '状态', option: 'billStatus', optionLabel: 'label', optionValue: 'value',
-    multiple:true,
-     }
-  ]
+    {
+      index: 1,
+      show: true,
+      type: "input",
+      modelName: "supplierId",
+      placeholder: "供应商ID",
+    },
+    {
+      index: 2,
+      show: true,
+      type: "datetimerange",
+      modelName: "time",
+      startPlaceHolder: "创建开始日期",
+      endPlaceHolder: "创建结束日期",
+    },
+    {
+      index: 3,
+      show: true,
+      type: "select",
+      modelName: "billStatus",
+      placeholder: "状态",
+      option: "billStatus",
+      optionLabel: "label",
+      optionValue: "value",
+      multiple: true,
+    },
+  ];
 });
 const formOption = {
-  billStatus: () => billStatusList
-}
+  billStatus: () => billStatusList,
+};
 const current = ref<any>(); //表格当前选中
 
 function handleCurrentChange(val: any) {
@@ -154,109 +175,235 @@ function handleCurrentChange(val: any) {
 </script>
 
 <template>
-  <div :class="{
-    'absolute-container': tableAutoHeight,
-  }">
+  <div
+    :class="{
+      'absolute-container': tableAutoHeight,
+    }"
+  >
     <PageMain>
-      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange"
-        @onReset="onReset" :model="queryForm" :formOption="formOption" />
+      <FormSearch
+        :formSearchList="formSearchList"
+        :formSearchName="formSearchName"
+        @currentChange="currentChange"
+        @onReset="onReset"
+        :model="queryForm"
+        :formOption="formOption"
+      />
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
         <FormLeftPanel>
-          <el-button size="default" type="primary" @click="settlement" v-auth="'supplierSettlement-get-addTenantSupplierBill'"> 手动结算 </el-button>
+          <el-button
+            size="default"
+            type="primary"
+            @click="settlement"
+            v-auth="'supplierSettlement-get-addTenantSupplierBill'"
+          >
+            手动结算
+          </el-button>
         </FormLeftPanel>
         <FormRightPanel>
           <el-button size="default" @click=""> 导出 </el-button>
-          <TabelControl v-model:border="border" v-model:tableAutoHeight="tableAutoHeight" v-model:checkList="checkList"
-            v-model:columns="columns" v-model:line-height="lineHeight" v-model:stripe="stripe" style="margin-left: 12px"
-            @query-data="currentChange" />
+          <TabelControl
+            v-model:border="border"
+            v-model:tableAutoHeight="tableAutoHeight"
+            v-model:checkList="checkList"
+            v-model:columns="columns"
+            v-model:line-height="lineHeight"
+            v-model:stripe="stripe"
+            style="margin-left: 12px"
+            @query-data="currentChange"
+          />
         </FormRightPanel>
       </el-row>
-      <el-table ref="tableSortRef" v-loading="listLoading" style="margin-top: 10px" row-key="id" :data="list"
-        :border="border" :size="lineHeight" :stripe="stripe" @selection-change="setSelectRows"  highlight-current-row  @current-change="handleCurrentChange">
+      <el-table
+        ref="tableSortRef"
+        v-loading="listLoading"
+        style="margin-top: 10px"
+        row-key="id"
+        :data="list"
+        :border="border"
+        :size="lineHeight"
+        :stripe="stripe"
+        @selection-change="setSelectRows"
+        highlight-current-row
+        @current-change="handleCurrentChange"
+      >
         <el-table-column type="expand">
           <template #default="props">
             <el-row :gutter="20" style="margin: 10px 0">
               <el-col :span="1"> </el-col>
               <el-col :span="3">
-                <el-text class="fontColor">付款方式: {{ payMethod[props.row.billStatus - 1].label }}</el-text>
+                <el-text class="fontColor"
+                  >付款方式:
+                  {{ payMethod[props.row.billStatus - 1].label }}</el-text
+                >
               </el-col>
-              <el-col :span="3"><el-text class="fontColor">账户名称: {{ props.row.accountName ? props.row.accountName : '-' }}</el-text></el-col>
-              <el-col :span="3"><el-text class="fontColor">收款账号: {{ props.row.collectionAccount ? props.row.collectionAccount : '-' }}</el-text></el-col>
-              <el-col :span="3"><el-text class="fontColor">银行名称: {{ props.row.bankName ? props.row.bankName : '-' }}</el-text></el-col>
-              <el-col :span="3"><el-text class="fontColor">结算周期: {{ props.row.settlementCycle ? props.row.settlementCycle : '-' }}</el-text></el-col>
+              <el-col :span="3"
+                ><el-text class="fontColor"
+                  >账户名称:
+                  {{
+                    props.row.accountName ? props.row.accountName : "-"
+                  }}</el-text
+                ></el-col
+              >
+              <el-col :span="3"
+                ><el-text class="fontColor"
+                  >收款账号:
+                  {{
+                    props.row.collectionAccount
+                      ? props.row.collectionAccount
+                      : "-"
+                  }}</el-text
+                ></el-col
+              >
+              <el-col :span="3"
+                ><el-text class="fontColor"
+                  >银行名称:
+                  {{ props.row.bankName ? props.row.bankName : "-" }}</el-text
+                ></el-col
+              >
+              <el-col :span="3"
+                ><el-text class="fontColor"
+                  >结算周期:
+                  {{
+                    props.row.settlementCycle ? props.row.settlementCycle : "-"
+                  }}</el-text
+                ></el-col
+              >
             </el-row>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('supplierId')" show-overflow-tooltip align="left"
-          label="供应商ID" >
-
-            <template #default="{ row }">
-                <div class="copyId tableSmall">
-                  <div class="id oneLine projectId fontColor">{{ row.supplierId ? row.supplierId : "-" }}</div>
-                  <copy
-                    :content="row.supplierId"
-                    :class="{
-                      rowCopy: 'rowCopy',
-                      current: row.id === current,
-                    }"
-                  />
-                </div>
-              </template>
-
-
-
-
-        </el-table-column>
-          <el-table-column v-if="checkList.includes('supplierName')" prop="supplierName" show-overflow-tooltip align="left"
-          label="供应商名称" >
+        <el-table-column
+          v-if="checkList.includes('supplierId')"
+          show-overflow-tooltip
+          align="left"
+          label="供应商ID"
+        >
           <template #default="{ row }">
-            <el-text class="fontColor">{{ row.supplierName ? row.supplierName : "-" }}</el-text>
+            <div class="copyId tableSmall">
+              <div class="id oneLine projectId fontColor">
+                {{ row.supplierId ? row.supplierId : "-" }}
+              </div>
+              <copy
+                :content="row.supplierId"
+                :class="{
+                  rowCopy: 'rowCopy',
+                  current: row.id === current,
+                }"
+                class="littleButton"
+              />
+            </div>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('billTime')" prop="billTime" show-overflow-tooltip align="left"
-          label="账单日期"><template #default="{ row }">
+        <el-table-column
+          v-if="checkList.includes('supplierName')"
+          prop="supplierName"
+          show-overflow-tooltip
+          align="left"
+          label="供应商名称"
+        >
+          <template #default="{ row }">
+            <el-text class="fontColor">{{
+              row.supplierName ? row.supplierName : "-"
+            }}</el-text>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="checkList.includes('billTime')"
+          prop="billTime"
+          show-overflow-tooltip
+          align="left"
+          label="账单日期"
+          ><template #default="{ row }">
             <!-- <el-tooltip :content="row.billTime" placement="top">
               <el-tag effect="plain" type="info">{{ row.billTime ? row.billTime : '-'}}</el-tag>
             </el-tooltip> -->
-            <el-text class="fontColor">{{ row.billTime ? row.billTime : '-'}}</el-text>
+            <el-text class="fontColor">{{
+              row.billTime ? row.billTime : "-"
+            }}</el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('billAmount')" prop="billAmount" show-overflow-tooltip align="left"
-          label="账单金额">
+        <el-table-column
+          v-if="checkList.includes('billAmount')"
+          prop="billAmount"
+          show-overflow-tooltip
+          align="left"
+          label="账单金额"
+        >
           <template #default="{ row }">
-            <el-text class="fontColor"><CurrencyType />{{ row.billAmount || 0 }}</el-text>
+            <el-text class="fontColor"
+              ><CurrencyType />{{ row.billAmount || 0 }}</el-text
+            >
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('taxesFees')" prop="taxesFees" show-overflow-tooltip align="left"
-          label="税费">
+        <el-table-column
+          v-if="checkList.includes('taxesFees')"
+          prop="taxesFees"
+          show-overflow-tooltip
+          align="left"
+          label="税费"
+        >
           <template #default="{ row }">
-            <el-text class="fontColor"><CurrencyType />{{ row.taxesFees || 0 }}</el-text>
+            <el-text class="fontColor"
+              ><CurrencyType />{{ row.taxesFees || 0 }}</el-text
+            >
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('payAmount')" prop="payAmount" show-overflow-tooltip align="left"
-          label="实付金额">
+        <el-table-column
+          v-if="checkList.includes('payAmount')"
+          prop="payAmount"
+          show-overflow-tooltip
+          align="left"
+          label="实付金额"
+        >
           <template #default="{ row }">
-            <el-text class="fontColor"><CurrencyType />{{ row.payAmount || 0 }}</el-text>
+            <el-text class="fontColor"
+              ><CurrencyType />{{ row.payAmount || 0 }}</el-text
+            >
           </template>
         </el-table-column>
-        <ElTableColumn v-if="checkList.includes('billStatus')" align="left" show-overflow-tooltip prop="" label="状态">
+        <ElTableColumn
+          v-if="checkList.includes('billStatus')"
+          align="left"
+          show-overflow-tooltip
+          prop=""
+          label="状态"
+        >
           <template #default="{ row }">
-            <el-text class="fontColor">{{ billStatusList[row.billStatus - 1].label }}</el-text>
+            <el-text class="fontColor">{{
+              billStatusList[row.billStatus - 1].label
+            }}</el-text>
           </template>
         </ElTableColumn>
         <el-table-column align="left" fixed="right" label="操作" width="170">
           <template #default="{ row }">
             <template v-if="row.billStatus === 1">
-              <el-button size="small" plain type="primary" @click="changeStatus(row.id, 1)" v-auth="'supplierSettlement-update-updateTenantSupplierBill'">
+              <el-button
+                size="small"
+                plain
+                type="primary"
+                @click="changeStatus(row.id, 1)"
+                v-auth="'supplierSettlement-update-updateTenantSupplierBill'"
+              >
                 确认收票
               </el-button>
             </template>
             <template v-else-if="row.billStatus === 2">
-              <el-button size="small" plain @click="changeStatus(row.id, 2)" v-auth="'supplierSettlement-update-updateTenantSupplierBill'">
+              <el-button
+                size="small"
+                plain
+                @click="changeStatus(row.id, 2)"
+                v-auth="'supplierSettlement-update-updateTenantSupplierBill'"
+              >
                 支付
               </el-button>
-              <el-button size="small" plain type="danger" @click="changeStatus(row.id, 3)" v-auth="'supplierSettlement-update-updateTenantSupplierBill'">
+              <el-button
+                size="small"
+                plain
+                type="danger"
+                @click="changeStatus(row.id, 3)"
+                v-auth="'supplierSettlement-update-updateTenantSupplierBill'"
+              >
                 拒绝
               </el-button>
             </template>
@@ -267,9 +414,18 @@ function handleCurrentChange(val: any) {
           <el-empty :image="empty" :image-size="300" />
         </template>
       </el-table>
-      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
-        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-        background @size-change="sizeChange" @current-change="currentChange" />
+      <ElPagination
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
+        :page-sizes="pagination.sizes"
+        :layout="pagination.layout"
+        :hide-on-single-page="false"
+        class="pagination"
+        background
+        @size-change="sizeChange"
+        @current-change="currentChange"
+      />
     </PageMain>
   </div>
 </template>
@@ -338,5 +494,10 @@ function handleCurrentChange(val: any) {
 
 .fontColor {
   color: #333333 !important;
+}
+
+.littleButton {
+  position: absolute;
+  right: 10px;
 }
 </style>

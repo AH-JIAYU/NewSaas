@@ -204,6 +204,7 @@ function handleCurrentChange(val: any) {
                       rowCopy: 'rowCopy',
                       current: row.id === current,
                     }"
+                    class="littleButton"
                   />
                 </div>
               </template>
@@ -222,6 +223,7 @@ function handleCurrentChange(val: any) {
                       rowCopy: 'rowCopy',
                       current: row.id === current,
                     }"
+                    class="littleButton"
                   />
               </div>
 
@@ -238,6 +240,7 @@ function handleCurrentChange(val: any) {
                       rowCopy: 'rowCopy',
                       current: row.id === current,
                     }"
+                    class="littleButton"
                   />
                 </div>
               </template>
@@ -437,5 +440,10 @@ function handleCurrentChange(val: any) {
       }
     }
   }
+}
+
+.littleButton {
+  position: absolute;
+  right: 10px;
 }
 </style>

@@ -591,6 +591,7 @@ const downReceive = (row: any) => {
                       rowCopy: 'rowCopy',
                       current: row.projectId === current,
                     }"
+                    class="littleButton"
                   />
                 </div>
               </template>
@@ -625,6 +626,7 @@ const downReceive = (row: any) => {
                       rowCopy: 'rowCopy',
                       current: row.projectId === current,
                     }"
+                    class="littleButton"
                   />
                 </div>
               </template>
@@ -1230,5 +1232,10 @@ const downReceive = (row: any) => {
   /* 隐藏超出容器的文本 */
   text-overflow: ellipsis;
   /* 使用省略号表示超出部分 */
+}
+
+.littleButton {
+  position: absolute;
+  right: 10px;
 }
 </style>

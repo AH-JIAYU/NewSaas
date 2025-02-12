@@ -267,6 +267,7 @@ onMounted(() => {
                   rowCopy: 'rowCopy',
                   current: row.id === current,
                 }"
+                class="littleButton"
               />
             </div>
           </template>
@@ -440,5 +441,10 @@ onMounted(() => {
 
 .el-table__row:hover .edit {
   display: block;
+}
+
+.littleButton {
+  position: absolute;
+  right: 20px;
 }
 </style>

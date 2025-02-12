@@ -21,7 +21,7 @@ defineOptions({
   name: "list",
 });
 
-const aa="abc"
+const aa = "abc";
 const { t } = useI18n();
 const departmentStore = useDepartmentStore();
 // 时间
@@ -692,6 +692,7 @@ const handleChange = () => {
                   rowCopy: 'rowCopy',
                   current: row.projectId === current,
                 }"
+                class="littleButton"
               />
             </div>
           </template>
@@ -1392,5 +1393,10 @@ const handleChange = () => {
 .button-box {
   display: flex;
   flex-wrap: nowrap;
+}
+
+.littleButton {
+  position: absolute;
+  right: 10px;
 }
 </style>

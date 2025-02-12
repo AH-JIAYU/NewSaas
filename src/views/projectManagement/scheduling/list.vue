@@ -309,6 +309,7 @@ const formOption = {
                   rowCopy: 'rowCopy',
                   current: row.projectId === current,
                 }"
+                class="littleButton"
               />
               <!-- <copy class="copy" :content="row.projectId" /> -->
             </div>
@@ -390,6 +391,7 @@ const formOption = {
                   rowCopy: 'rowCopy',
                   current: row.projectId === current,
                 }"
+                class="littleButton"
               />
 
               <!-- <copy class="copy" :content="row.getGroupSupplierIdNameInfoList[0].groupSupplierId" /> -->
@@ -574,5 +576,10 @@ const formOption = {
   .copy {
     width: 20px !important;
   }
+}
+
+.littleButton {
+  position: absolute;
+  right: 10px;
 }
 </style>
