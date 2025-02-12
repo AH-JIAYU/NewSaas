@@ -71,16 +71,28 @@ defineExpose({
           <div class="card-header">
             <div class="leftTitle">基本信息</div>
             <div class="rightStatus">
+              <span
+                :class="
+                  detailData.customerStatus === 4
+                    ? 'isOnlineSpanFalse'
+                    : 'isOnlineSpanTrue'
+                "
+              ></span>
               <div
                 :class="
-                  detailData.customerStatus === 1
+                  detailData.customerStatus === 4
                     ? 'isOnlineFalse'
                     : 'isOnlineTrue'
                 "
               >
-                {{ detailData.customerStatus === 1 ? "关闭" : "开启" }}
+                {{
+                  detailData.customerStatus === 4
+                    ? '解约'
+                    : "合作"
+                }}
               </div>
             </div>
+
           </div>
         </template>
         <el-row :gutter="24">
@@ -408,7 +420,7 @@ defineExpose({
   .rightStatus {
     // position: relative;
     // width: 128px;
-    width: 180px;
+
     display: flex;
     align-items: baseline;
     // background-color: #f2f2f2;

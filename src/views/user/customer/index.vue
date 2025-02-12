@@ -590,7 +590,6 @@ function termination(row: any) {
                 </el-text>
               </div>
               <SvgIcon
-                v-if="row.chargeId"
                 @click="quickEdit(row, 'chargeId')"
                 :class="{
                   edit: 'edit',
