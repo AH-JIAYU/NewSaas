@@ -115,17 +115,9 @@ defineExpose({
           </el-col>
           <el-col :span="8">
             <el-form-item label="负责部门：">
-              <el-text class="mx-1" v-if="detailData.chargeId">
-                <el-text v-for="item in staffList" :key="item.id">
-                  <el-text v-if="item.id === detailData.chargeId" class="fontC-System">
-                    {{ item.userName }}
-                  </el-text>
-                </el-text>
+              <el-text class="mx-1" >
 
-              </el-text>
-              <el-text class="mx-1" v-else>
-                {{'-'}}
-
+                {{ detailData.chargeName ? detailData.chargeName : "-"}}
               </el-text>
             </el-form-item>
           </el-col>

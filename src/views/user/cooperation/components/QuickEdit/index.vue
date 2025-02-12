@@ -18,7 +18,7 @@ const data = ref<any>({
   formData: {}, //表单
   staffList: [], //用户
   rules: {
-    chargeId: [{ required: true, message: "请选择PM", trigger: "change" }],
+    chargeUserId: [{ required: true, message: "请选择PM", trigger: "change" }],
   },
 });
 // 部门数据
@@ -48,11 +48,16 @@ async function showEdit(row: any, FormType: any) {
   data.value.title = TypeList[FormType];
   data.value.type = FormType;
   data.value.loading = true;
-  data.value.formData = cloneDeep(row);
-  data.value.formData.chargeUserName = row.userName;
-  data.value.formData.chargeUserId = row.userId;
+  // data.value.formData = cloneDeep(row);
+  data.value.formData.chargeUserName = row.chargeName;
+  data.value.formData.chargeUserId = row.chargeId;
+  data.value.formData.id = row.id;
+  data.value.formData.invitationType = row.invitationType;  //邀请方类型 1:userId 2: 部门id
+  data.value.formData.sendProjectType = row.sendProjectType;
+  data.value.formData.sendProjectType = row.sendProjectType;
   data.value.dialogTableVisible = true;
   data.value.loading = false;
+
 }
 // 扁平化会员部门
 const flattenWithoutChildren = (arr: any) => {
@@ -91,14 +96,19 @@ const handleNodeClick = (nodeData: any, checked: any) => {
     data.value.formData.chargeUserId = [data.value.formData.chargeUserId].filter(
       (id: any) => id !== nodeData.id
     );
+
     if (data.value.formData.chargeUserId.length == 0) {
       data.value.formData.chargeUserId = "";
     }
-  }
 
-  if (!data.value.formData.chargeUserId) {
-    data.value.formData.chargeUserName = "";
+
   }
+  if (Array.isArray(data.value.formData.chargeUserId)) {
+    data.value.formData.chargeUserId = data.value.formData.chargeUserId[0] ? data.value.formData.chargeUserId[0] :null;
+      }
+      if(!data.value.formData.chargeUserId) {
+        data.value.formData.chargeUserName = "";
+      }
 };
 // const changeChargeUserId = (val: any) => {
 //   if (val) {
@@ -119,6 +129,12 @@ async function onSubmit() {
             if (Array.isArray(obj.chargeUserId)) {
         obj.chargeUserId = obj.chargeUserId[0];
       }
+      // if(!obj.chargeUserId){
+      //   obj.chargeUserName = ''
+      //   obj.chargeUserId = '';
+      // }
+
+
       const { status } = await api.updateInvitationBindUser(
         obj,
       );
