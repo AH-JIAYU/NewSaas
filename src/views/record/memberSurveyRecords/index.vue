@@ -593,7 +593,7 @@ function handleCurrentChange(val: any) {
         </el-table-column> -->
         <el-table-column
           v-if="checkList.includes('doMoneyPrice')" align="left" prop="doMoneyPrice"
-          show-overflow-tooltip width="120"  label="项目价"
+          show-overflow-tooltip width="120"     :label="t('RecordsManagement.projectPrice')"
         >
           <template #default="{ row }">
             <div class="fontC-System">
@@ -617,16 +617,13 @@ function handleCurrentChange(val: any) {
                   fill="#333333"
                 />
               </svg>
-              <CurrencyType v-if="!row.currencyType" />
-              {{
-                row.doMoneyPrice || 0
-              }}
+              <CurrencyType v-if="!row.currencyType" />{{row.doMoneyPrice || 0}}
             </div>
           </template>
         </el-table-column>
         <el-table-column
           v-if="checkList.includes('memberPrice')" align="left" prop="memberPrice" width="120"
-          label="成本价"
+           :label="t('RecordsManagement.costPrice')"
         >
           <template #default="{ row }">
             <div class="fontC-System">
@@ -669,7 +666,7 @@ function handleCurrentChange(val: any) {
 
         <el-table-column
           v-if="checkList.includes('ipBelong')" align="left" prop="ipBelong" show-overflow-tooltip
-          width="180" label="IP/区域"
+          width="180" :label="t('RecordsManagement.IP-Area')"
         >
           <template #default="{ row }">
             <el-tag type="primary">
@@ -774,7 +771,7 @@ function handleCurrentChange(val: any) {
         <!-- </div>
           </template>
         </el-table-column> -->
-        <el-table-column v-if="checkList.includes('surveyTime')" width="210" align="left"  label="时间">
+        <el-table-column v-if="checkList.includes('surveyTime')" width="210" align="left"   :label="t('RecordsManagement.surveyTime')">
           <template #default="{ row }">
             <div class="container">
               <div>
@@ -810,7 +807,7 @@ function handleCurrentChange(val: any) {
 
         <ElTableColumn
           v-if="checkList.includes('surveyStatus')" align="left" show-overflow-tooltip
-          width="120" prop="" label="调查状态"
+          width="120" prop=""  :label="t('RecordsManagement.surveyStatus')"
         >
           <template #default="{ row }">
             <el-tag
@@ -877,7 +874,7 @@ function handleCurrentChange(val: any) {
         </ElTableColumn>
         <ElTableColumn
           v-if="checkList.includes('viceStatus')" align="left" show-overflow-tooltip
-          width="120" prop="" label="副状态"
+          width="120" prop="" :label="t('RecordsManagement.viceState')"
         >
           <template #default="{ row }">
             <div v-if="row.surveyStatus === 1">
@@ -968,7 +965,7 @@ function handleCurrentChange(val: any) {
         </ElTableColumn>
         <el-table-column
           v-if="checkList.includes('customerShortName')" align="left" prop="customerShortName"
-          show-overflow-tooltip label="客户" width="100"
+          show-overflow-tooltip  :label="t('RecordsManagement.CustomerAbbreviation')" width="100"
         >
           <!-- 乙方显示甲方公司名称甲方显示客户简称 -->
           <template #default="{ row }">
