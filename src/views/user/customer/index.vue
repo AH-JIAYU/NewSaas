@@ -110,11 +110,7 @@ const cooperationDetaiRef = ref();
 
 // 编辑
 function handleEdit(row: any) {
-  if (row.type == 1) {
-    editRef.value.showEdit(row);
-  } else {
-    cooperationDetaiRef.value.showEdit(row); //合作商户详情
-  }
+  editRef.value.showEdit(row);
 }
 
 // 切换状态
@@ -135,9 +131,14 @@ async function changeState(state: any, type: number, id: string) {
   queryData();
 }
 // 查看
-function handleCheck(row: Object) {
-  // checkRef.value.showEdit(row);
-  cooperationDetaiRef.value.showEdit(row);
+function handleCheck(row: any) {
+  if (row.type == 1) {
+    checkRef.value.showEdit(row);
+  } else {
+
+    cooperationDetaiRef.value.showEdit(row);
+  }
+
 }
 function handleCurrentChange(val: any) {
   if (val) current.value = val.id;
@@ -790,7 +791,7 @@ function termination(row: any) {
       <customerEdit ref="editRef" @fetch-data="queryData" />
       <QuickEdit ref="QuickEditRef" @fetch-data="queryData" />
       <AssociatedProjects ref="AssociatedProjectsRef" @fetch-data="queryData" />
-      <!-- <customerDetail ref="checkRef" @fetch-data="queryData" /> -->
+      <customerDetail ref="checkRef" @fetch-data="queryData" />
       <cooperationDetail ref="cooperationDetaiRef" @fetch-data="queryData" />
       <addCooperation ref="addCooperationRef" @queryData="queryData" />
       <customerProportion ref="proportionRef" @fetch-data="queryData" />
