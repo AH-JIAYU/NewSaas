@@ -138,7 +138,6 @@ function handleCheck(row: any) {
   if (row.type == 1) {
     checkRef.value.showEdit(row);
   } else {
-
     cooperationDetaiRef.value.showEdit(row);
   }
 
