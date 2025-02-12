@@ -148,7 +148,7 @@ function handleDelete(row: any) {
       const { status } = await submitLoading(
         api.delete({
           tenantCustomerId: row.tenantCustomerId,
-        }),
+        })
       );
       status === 1 &&
         ElMessage.success({
@@ -200,7 +200,7 @@ async function fetchData() {
     };
     const { data } = await api.list(params);
     list.value = data.getTenantCustomerInfoList;
-    console.log('客户列表',data)
+    console.log("客户列表", data);
     pagination.value.total = Number(data.total);
     listLoading.value = false;
   } catch (error) {

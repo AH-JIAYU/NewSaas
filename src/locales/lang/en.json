@@ -898,6 +898,8 @@
     "antecedentQuestionnaire": "Antecedent Questionnaire",
     "forbidden": "Disabled",
     "enable": "Enable",
+    "Agree": "Agree to cooperate",
+    "Terminate": "Terminate cooperation",
     "editSucess": "Edit Sucess",
     "delConfirm": "Are you sure you want to delete the current item?",
     "delMessage": "Confirmation information",

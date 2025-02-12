@@ -23,6 +23,7 @@ async function showEdit(row: any) {
 
   userList.value = await tenantStaffStore.getStaff();
   const { status, data } = await obtainLoading(api.detail(params));
+
   detailData.value = data;
 
   drawerisible.value = true;
@@ -60,7 +61,7 @@ defineExpose({
     :close-on-click-modal="false"
     destroy-on-close
     draggable
-    size="60%"
+    size="70%"
     :title="t('customer.detail.detail')"
     @close="close"
   >
@@ -84,11 +85,24 @@ defineExpose({
                     : 'isOnlineTrue'
                 "
               >
-                {{
-                  detailData.customerStatus === 1
-                    ? t("customer.detail.disable")
-                    : t("customer.detail.enable")
-                }}
+                {{ detailData.customerStatus === 1 ? "合作" : "终止合作" }}
+              </div>
+
+              <span
+                :class="
+                  detailData.customerStatus === 2
+                    ? 'isOnlineSpanFalse'
+                    : 'isOnlineSpanTrue'
+                "
+              ></span>
+              <div
+                :class="
+                  detailData.customerStatus === 2
+                    ? 'isOnlineFalse'
+                    : 'isOnlineTrue'
+                "
+              >
+                {{ detailData.customerStatus === 2 ? "合作" : "终止合作" }}
               </div>
             </div>
           </div>
@@ -167,7 +181,7 @@ defineExpose({
             <span>财务日志</span>
           </div>
         </template>
-        <el-row :gutter="24">
+        <el-row :gutter="24" class="financialLog">
           <financialLog ref="financialLogRef" />
         </el-row>
       </el-card>
@@ -195,7 +209,6 @@ defineExpose({
             prop="createName"
             :label="t('customer.detail.operator')"
           />
-
           <el-table-column
             align="left"
             :label="t('customer.detail.operationalMatters')"
@@ -240,6 +253,10 @@ defineExpose({
 .el-card {
   margin: 10px 0;
   padding-top: 10px;
+}
+
+.el-drawer {
+  overflow-y: hidden; // 添加这一行来隐藏右侧滚动条
 }
 
 .card-header {
@@ -287,9 +304,10 @@ defineExpose({
   .rightStatus {
     // position: relative;
     // width: 128px;
-    width: 80px;
+    width: 180px;
     display: flex;
     align-items: baseline;
+    justify-content: space-between;
 
     > div {
       // width: 120px;
@@ -345,5 +363,9 @@ defineExpose({
 
 .close {
   color: #e2e2e2;
+}
+
+.financialLog {
+  margin-top: -20px;
 }
 </style>
