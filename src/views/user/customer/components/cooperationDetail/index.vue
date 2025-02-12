@@ -73,26 +73,26 @@ defineExpose({
             <div class="rightStatus">
               <span
                 :class="
-                  detailData.customerStatus === 1
+                  detailData.customerStatus === 4
                     ? 'isOnlineSpanFalse'
                     : 'isOnlineSpanTrue'
                 "
               ></span>
               <div
                 :class="
-                  detailData.customerStatus === 1
+                  detailData.customerStatus === 4
                     ? 'isOnlineFalse'
                     : 'isOnlineTrue'
                 "
               >
-                {{ detailData.customerStatus === 1 ? "关闭" : "开启" }}
+                {{ detailData.customerStatus === 4 ? "解约" : "合作" }}
               </div>
             </div>
           </div>
         </template>
         <el-row :gutter="24">
           <el-col :span="8">
-            <el-form-item label="项目名称">
+            <el-form-item label="项目名称：">
               <el-text class="mx-1 copyId">
                 {{ detailData.projectId ? detailData.projectId : "-" }}
                 <copy class="copy" :content="detailData.tenantCustomerId" />
@@ -100,7 +100,7 @@ defineExpose({
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="邀请方合作ID">
+            <el-form-item label="邀请方合作ID：">
               <el-text class="mx-1">
                 {{
                   detailData.customerAccord ? detailData.customerAccord : "-"
@@ -109,32 +109,28 @@ defineExpose({
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="负责部门">
+            <el-form-item label="负责部门：">
               <el-text class="mx-1">
-                {{
-                  detailData.customerShortName
-                    ? detailData.customerShortName
-                    : "-"
-                }}
+                {{ detailData.chargeName ? detailData.chargeName : "-" }}
               </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="价格比例">
+            <el-form-item label="价格比例：">
               <el-text class="mx-1">
                 {{ detailData.companyName ? detailData.companyName : "-" }}
               </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="业绩(合作商)可用余额">
+            <el-form-item label="业绩(合作商)可用余额：">
               <el-text class="mx-1">
                 {{ detailData.customerName ? detailData.customerName : "-" }}
               </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="业绩(我的)可用余额">
+            <el-form-item label="业绩(我的)可用余额：">
               <el-text class="mx-1">
                 {{ detailData.customerPhone ? detailData.customerPhone : "-" }}
               </el-text>
@@ -142,14 +138,14 @@ defineExpose({
           </el-col>
           <el-col :span="8"> </el-col>
           <el-col :span="8">
-            <el-form-item label="业绩(合作商)待审余额">
+            <el-form-item label="业绩(合作商)待审余额：">
               <el-text class="mx-1">
                 {{ detailData.emailAddress ? detailData.emailAddress : "-" }}
               </el-text>
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="业绩(我的)待审余额">
+            <el-form-item label="业绩(我的)待审余额：">
               <el-text class="mx-1">
                 {{ detailData.createName ? detailData.createName : "-" }}
               </el-text>
@@ -287,7 +283,7 @@ defineExpose({
   .rightStatus {
     // position: relative;
     // width: 128px;
-    width: 180px;
+
     display: flex;
     align-items: baseline;
     // background-color: #f2f2f2;
