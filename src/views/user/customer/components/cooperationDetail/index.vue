@@ -78,24 +78,7 @@ defineExpose({
                     : 'isOnlineTrue'
                 "
               >
-                {{ detailData.customerStatus === 1 ? "合作" : "终止合作" }}
-              </div>
-
-              <span
-                :class="
-                  detailData.customerStatus === 2
-                    ? 'isOnlineSpanFalse'
-                    : 'isOnlineSpanTrue'
-                "
-              ></span>
-              <div
-                :class="
-                  detailData.customerStatus === 2
-                    ? 'isOnlineFalse'
-                    : 'isOnlineTrue'
-                "
-              >
-                {{ detailData.customerStatus === 2 ? "合作" : "终止合作" }}
+                {{ detailData.customerStatus === 1 ? "关闭" : "开启" }}
               </div>
             </div>
           </div>
@@ -428,6 +411,7 @@ defineExpose({
     width: 180px;
     display: flex;
     align-items: baseline;
+    // background-color: #f2f2f2;
     justify-content: space-between;
 
     > div {
