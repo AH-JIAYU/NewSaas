@@ -626,9 +626,10 @@ function termination(row: any) {
           :label="t('customer.noAssociatedProject')"
         >
           <template #default="{ row }">
-            <span style="display: inline-block" class="fontC-System">
+            <span style="display: inline-block" class="fontC-System" v-if="row.type==1">
               {{ row.projectNumber || 0 }}
             </span>
+            <span v-else>-</span>
           </template>
         </el-table-column>
         <ElTableColumn
@@ -640,6 +641,7 @@ function termination(row: any) {
         >
           <template #default="{ row }">
             <div
+            v-if="row.type == 1"
               @click="
                 changeState(
                   row.antecedentQuestionnaire,
@@ -656,6 +658,9 @@ function termination(row: any) {
                 :active-text="t('customer.enable')"
                 :inactive-text="t('customer.forbidden')"
               />
+            </div>
+            <div v-else>
+              -
             </div>
             <!-- <ElSwitch
               v-model="row.antecedentQuestionnaire"
@@ -676,7 +681,7 @@ function termination(row: any) {
           :label="t('customer.riskControl')"
         >
           <template #default="{ row }">
-            <div @click="changeState(row.riskControl, 3, row.tenantCustomerId)">
+            <div @click="changeState(row.riskControl, 3, row.tenantCustomerId)" v-if="row.type==1">
               <ElSwitch
                 v-model="row.riskControl"
                 inline-prompt
@@ -685,6 +690,9 @@ function termination(row: any) {
                 :active-text="t('customer.enable')"
                 :inactive-text="t('customer.forbidden')"
               />
+            </div>
+            <div v-else>
+              -
             </div>
             <!-- <ElSwitch
               v-model="row.riskControl"
