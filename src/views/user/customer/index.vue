@@ -9,6 +9,9 @@ import cooperationDetail from "./components/cooperationDetail/index.vue";
 
 import addCooperation from "@/views/user/cooperation/components/CustomerEdit/customerDetail.vue";
 import customerProportion from "@/views/user/cooperation/components/CustomerProportion/index.vue";
+import QuickEditCooperation from "@/views/user/cooperation/components/QuickEdit/index.vue";
+
+
 import { submitLoading } from "@/utils/apiLoading";
 import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
 import api from "@/api/modules/user_customer";
@@ -143,6 +146,7 @@ function handleCurrentChange(val: any) {
   if (val) current.value = val.id;
   else current.value = "";
 }
+const QuickEditCooperationRef = ref()
 // 快速编辑
 function quickEdit(row: any, type: any) {
   /**
@@ -150,7 +154,22 @@ function quickEdit(row: any, type: any) {
      customerShortName  客户简称
      chargeId PM
   */
-  QuickEditRef.value.showEdit(row, type);
+
+
+    QuickEditRef.value.showEdit(row, type);
+}
+function quickEditChargeUserId(row: any, type: any) {
+  /**
+   * customerAccord 客户名称
+     customerShortName  客户简称
+     chargeId PM
+  */
+  if (row.type == 1) {
+    QuickEditRef.value.showEdit(row, type);
+  } else {
+    //合作商户
+    QuickEditCooperationRef.value.showEdit(row, 'chargeUserId');
+  }
 }
 // 查看关联项目数
 function associatedProjects(row: any) {
@@ -307,7 +326,6 @@ const currentData = computed(() => {
   const startIndex = (pagination.value.page - 1) * pagination.value.size;
   const endIndex = startIndex + pagination.value.size;
   pagination.value.total = filteredList.slice(startIndex, endIndex).length;
-
   return filteredList.slice(startIndex, endIndex);
 });
 
@@ -315,7 +333,7 @@ function setSelectRows(val: any) {
   selectRows.value = val;
 }
 onMounted(async () => {
-  await getTenantStaffList();
+  // await getTenantStaffList();
   columns.value.forEach((item: any) => {
     if (item.checked) {
       checkList.value.push(item.prop);
@@ -581,16 +599,13 @@ function termination(row: any) {
           ><template #default="{ row }">
             <!-- 我的客户 -->
             <div class="flex-c">
-              <div class="oneLine" style="width: calc(100% - 20px)">
-                <el-text v-for="item in staffList" :key="item.id">
-                  <el-text v-if="item.id === row.chargeId" class="fontC-System">
-                    {{ item.userName }}
-                  </el-text>
-                </el-text>
+              <div class="oneLine">
+
+                    {{ row.chargeName }}
+
               </div>
               <SvgIcon
-                v-if="row.chargeId"
-                @click="quickEdit(row, 'chargeId')"
+                @click="quickEditChargeUserId(row, 'chargeId')"
                 :class="{
                   edit: 'edit',
                   current: row.id === current,
@@ -794,6 +809,7 @@ function termination(row: any) {
       <cooperationDetail ref="cooperationDetaiRef" @fetch-data="queryData" />
       <addCooperation ref="addCooperationRef" @queryData="queryData" />
       <customerProportion ref="proportionRef" @fetch-data="queryData" />
+      <QuickEditCooperation ref="QuickEditCooperationRef" @fetchData="fetchData" />
     </div>
   </PageMain>
 </template>
