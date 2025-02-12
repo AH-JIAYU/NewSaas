@@ -499,6 +499,7 @@ const formOption = {
                   rowCopy: 'rowCopy',
                   current: row.tenantSupplierId === current,
                 }"
+                class="littleButton"
               />
             </div>
           </template>
@@ -988,5 +989,10 @@ const formOption = {
 
 .el-table__row:hover .edit {
   display: block;
+}
+
+.littleButton {
+  position: absolute;
+  right: 10px;
 }
 </style>

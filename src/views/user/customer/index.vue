@@ -200,7 +200,7 @@ async function fetchData() {
     };
     const { data } = await api.list(params);
     list.value = data.getTenantCustomerInfoList;
-    console.log('客户列表',data)
+    console.log("客户列表", data);
     pagination.value.total = Number(data.total);
     listLoading.value = false;
   } catch (error) {
@@ -339,7 +339,7 @@ const activeName = ref("first");
               prop="customerAccord"
               show-overflow-tooltip
               :label="t('customer.customerName')"
-              width="150"
+              width="180"
             >
               <template #default="{ row }">
                 <div class="flex-c tableBig">
@@ -350,6 +350,7 @@ const activeName = ref("first");
                       rowCopy: 'rowCopy',
                       current: row.tenantCustomerId === current,
                     }"
+                    class="copyButton"
                   />
                   <SvgIcon
                     @click="quickEdit(row, 'customerAccord')"
@@ -359,6 +360,7 @@ const activeName = ref("first");
                     }"
                     name="i-ep:edit"
                     color="#409eff"
+                    class="editButton"
                   />
                 </div>
               </template>
@@ -407,6 +409,7 @@ const activeName = ref("first");
                       rowCopy: 'rowCopy',
                       current: row.tenantCustomerId === current,
                     }"
+                    class="littleButton"
                   />
                   <!-- <copy /> -->
                 </div>
@@ -696,5 +699,20 @@ const activeName = ref("first");
   .current {
     display: block !important;
   }
+
+  .copyButton {
+    position: absolute;
+    right: 40px;
+  }
+
+  .editButton {
+    position: absolute;
+    right: 10px;
+  }
+}
+
+.littleButton {
+  position: absolute;
+  right: 10px;
 }
 </style>

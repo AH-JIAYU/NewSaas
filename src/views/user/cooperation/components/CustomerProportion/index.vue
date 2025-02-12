@@ -69,9 +69,11 @@ async function showEdit(row: any) {
   sendProjectType.value = row.sendProjectType
   data.value.form.receiveProjectType = row.receiveProjectType
   receiveProjectType.value = row.receiveProjectType
-  data.value.form.chargeUserName = row.userName;
+  data.value.form.chargeUserName =row.chargeName
+  // data.value.form.chargeUserName = row.userName;
   data.value.form.invitationType = row.invitationType;
-  data.value.form.chargeUserId = row.userId;
+  data.value.form.chargeUserId = row.chargeId
+  // data.value.form.chargeUserId = row.userId;
   // 部门
   const res = await apiDep.list({ name: "" });
   if (res.data) {

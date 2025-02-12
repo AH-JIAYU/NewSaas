@@ -35,7 +35,56 @@ const drawerisible = ref<boolean>(false);
 // 详情数据
 const detailData = ref<any>();
 // 编辑
-
+const columns = ref([
+  {
+    label: "点击ID",
+    checked: true,
+    sortable: true,
+    prop: "clickId",
+  },
+  {
+    label: "项目ID",
+    checked: true,
+    sortable: true,
+    prop: "projectId",
+  },
+  {
+    label: "类型",
+    checked: true,
+    sortable: true,
+    prop: "type",
+  },
+  {
+    label: "说明",
+    checked: true,
+    sortable: true,
+    prop: "remark",
+  },
+  {
+    label: "变动前",
+    checked: true,
+    sortable: true,
+    prop: "beforeBalance",
+  },
+  {
+    label: "加减款",
+    checked: true,
+    sortable: true,
+    prop: "difference",
+  },
+  {
+    label: "变动后",
+    checked: true,
+    sortable: true,
+    prop: "afterBalance",
+  },
+  {
+    label: "时间",
+    checked: true,
+    sortable: true,
+    prop: "updateTime",
+  },
+]);
 // 加减款
 async function showEdit(row: any) {
   if (row.beInvitationTenantId) {
@@ -48,8 +97,12 @@ async function showEdit(row: any) {
   }
   drawerisible.value = true;
 }
+
+
 // 获取列表数据
 const getDataList = async () => {
+  console.log('financialLog挂载了');
+
   try {
     data.value.loading = true;
     const params = {
@@ -64,6 +117,10 @@ const getDataList = async () => {
     data.value.loading = false;
   }
 };
+
+onMounted(() => {
+  getDataList();
+});
 // 每页数量切换
 function sizeChange(size: number) {
   onSizeChange(size).then(() => {
@@ -100,18 +157,7 @@ defineExpose({
 </script>
 
 <template lang="">
-  <el-drawer
-    v-model="drawerisible"
-    v-loading="data.loading"
-    append-to-body
-    :close-on-click-modal="false"
-    destroy-on-close
-    draggable
-    size="70%"
-    title="财务日志"
-    @close="close"
-  >
-    <ElDivider border-style="dashed" />
+
     <!-- <ElForm
       :model="data.search"
       size="default"
@@ -248,7 +294,7 @@ defineExpose({
 <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
   :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination" background
   @size-change="sizeChange" @current-change="currentChange" />
-</el-drawer>
+
 </template>
 
 <style scoped lang="scss">

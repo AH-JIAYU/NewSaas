@@ -32,7 +32,7 @@ async function getTenantUserList() {
     companyName: data.value.companyName,
   });
   data.value.tenantUserList = res.data.tenantUserInfoList;
-  startTimers();
+  // startTimers();
 }
 
 const getTenantList = () => {
@@ -105,14 +105,28 @@ const formatTime = (timeLeft: any) => {
 const updateRemainingTime = (item: any) => {
   const now: any = new Date();
   const targetTime: any = new Date(item.refuseTime);
-  targetTime.setDate(targetTime.getDate() + 7); // 目标时间为开始时间 + 7天
-  const timeLeft = targetTime - now;
+  // targetTime.setDate(targetTime.getDate() + 7); // 目标时间为开始时间 + 7天
+  // const timeLeft = targetTime - now;
+  const diffTime = (now - targetTime) / (1000 * 60 * 60 * 24); // 计算天数差异
 
-  if (timeLeft <= 0) {
+console.log(diffTime,'diffTime')
+
+  if (diffTime <7) {
+
     getTenantUserList(); // 调用接口
     return 0; // 如果时间已到，返回0
   } else {
-    return timeLeft; // 返回剩余时间
+    data.value.tenantUserList.forEach((item: any) => {
+    // 初始化每条数据的剩余时间
+    if (item.refuse >= 2) {
+      // 清除旧定时器
+      if (timers[item.tenantId]) {
+        clearInterval(timers[item.tenantId]);
+      }
+    }
+  });
+    console.log(targetTime.setDate(targetTime.getDate() + 7) - now,'rerr')
+    return targetTime.setDate(targetTime.getDate() + 7) - now; // 返回剩余时间
   }
 };
 
@@ -137,7 +151,17 @@ const startTimers = () => {
 };
 
 // 在组件销毁时清除定时器
-onUnmounted(() => {});
+onUnmounted(() => {
+  // data.value.tenantUserList.forEach((item: any) => {
+  //   // 初始化每条数据的剩余时间
+
+  //     // 清除旧定时器
+  //     if (timers[item.tenantId]) {
+  //       clearInterval(timers[item.tenantId]);
+  //     }
+
+  // });
+});
 </script>
 
 <template>
@@ -254,11 +278,11 @@ onUnmounted(() => {});
                 <span class="color4 font-s14">未处理</span>
               </div> -->
 
-              <!-- 未邀约，拒绝1，解约成功 -->
+              <!-- 未邀约，拒绝1，解约成功 item.invitationStatus == 3 && item.refuse < 2-->
               <el-button
                 v-if="
                   item.invitationStatus == 0 ||
-                  (item.invitationStatus == 3 && item.refuse < 2) ||
+                  (item.invitationStatus == 3) ||
                   item.invitationStatus == 4
                 "
                 type="primary"
@@ -271,7 +295,7 @@ onUnmounted(() => {});
 
               <!-- 未处理，已合作 -->
               <el-button
-                v-if="item.invitationStatus == 1 || item.invitationStatus == 2"
+                v-if="item.invitationStatus == 1 || item.invitationStatus == 2  "
                 type="info"
                 class="font-s14 bgcolor1"
                 style="margin-left: 1rem"
@@ -279,14 +303,14 @@ onUnmounted(() => {});
                 申请合作
               </el-button>
               <!-- 拒绝2次之后展示倒计时 -->
-              <el-button
+              <!-- <el-button
                 v-if="item.invitationStatus == 3 && item.refuse >= 2"
                 type="info"
                 class="font-s14 bgcolor1"
                 style="margin-left: 1rem"
               >
                 {{ formatTime(item.remainingTime) }}
-              </el-button>
+              </el-button> -->
             </div>
           </el-col>
         </el-row>

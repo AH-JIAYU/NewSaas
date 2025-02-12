@@ -26,5 +26,8 @@
     "src/locales",
     "public/tinymce/langs",
     "src/locales/lang"
-  ]
+  ],
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }

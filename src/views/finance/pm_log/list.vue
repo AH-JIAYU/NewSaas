@@ -6,8 +6,8 @@ import plusMinusPayments from "./components/SupplierPlusMinusPayments/index.vue"
 import Detail from "./components/Detail/index.vue";
 import usePositionManageStore from "@/store/modules/position_manage";
 import { ref } from "vue";
-import empty from '@/assets/images/empty.png'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import empty from "@/assets/images/empty.png";
+import { ElMessage, ElMessageBox } from "element-plus";
 defineOptions({
   name: "financial_pm_log",
 });
@@ -25,9 +25,9 @@ const settingsStore = useSettingsStore();
 // 加减款 组件ref
 const plusMinusPaymentsRef = ref();
 // financeLogRef
-const financeLogRef = ref<any>()
-const formSearchList = ref<any>()//表单排序配置
-const formSearchName = ref<string>('formSearch-financial_pm_log')// 表单排序name
+const financeLogRef = ref<any>();
+const formSearchList = ref<any>(); //表单排序配置
+const formSearchName = ref<string>("formSearch-financial_pm_log"); // 表单排序name
 // 表格控件-展示列
 const columns = ref<any>([
   // 表格控件-展示列
@@ -96,7 +96,7 @@ const data = ref<any>({
     // 部门id
     organizationalStructureId: null,
     // 部门名称
-    organizationalStructureName: '',
+    organizationalStructureName: "",
   },
   // 批量操作
   batch: {
@@ -113,11 +113,10 @@ async function getDataList() {
       ...getParams(),
       ...data.value.search,
     };
-    const res = await api.list(params)
+    const res = await api.list(params);
     data.value.dataList = res.data.memberVOS;
-      pagination.value.total = +res.data.total;
+    pagination.value.total = +res.data.total;
   } catch (error) {
-
   } finally {
   }
 }
@@ -127,7 +126,7 @@ function handlePlusMinusPayments(row: any) {
 }
 // 财务日志
 function financeLog(row: any) {
-  financeLogRef.value.showEdit(row)
+  financeLogRef.value.showEdit(row);
 }
 // 重置筛选数据
 function onReset() {
@@ -139,7 +138,7 @@ function onReset() {
     // 部门id
     organizationalStructureId: null,
     // 部门名称
-    organizationalStructureName: '',
+    organizationalStructureName: "",
   });
   getDataList();
 }
@@ -168,12 +167,13 @@ onMounted(async () => {
   try {
     data.value.loading = true;
     // 职位
-    positionManageList.value = await usePositionManage?.getPositionManage() || [];
+    positionManageList.value =
+      (await usePositionManage?.getPositionManage()) || [];
     await getDataList();
     data.value.loading = false;
     if (data.value.formMode === "router") {
       eventBus.on("get-data-list", () => {
-       getDataList();
+        getDataList();
       });
     }
     columns.value.forEach((item: any) => {
@@ -182,18 +182,29 @@ onMounted(async () => {
       }
     });
     formSearchList.value = [
-      { index: 1, show: true, type: 'input', modelName: 'organizationalStructureId', placeholder: '部门ID' },
-      { index: 2, show: true, type: 'input', modelName: 'organizationalStructureName', placeholder: '部门名称' },
-    ]
+      {
+        index: 1,
+        show: true,
+        type: "input",
+        modelName: "organizationalStructureId",
+        placeholder: "部门ID",
+      },
+      {
+        index: 2,
+        show: true,
+        type: "input",
+        modelName: "organizationalStructureName",
+        placeholder: "部门名称",
+      },
+    ];
   } catch (error) {
-
   } finally {
     data.value.loading = false;
   }
 });
 const formOption = {
-  positionId: () => positionManageList.value
-}
+  positionId: () => positionManageList.value,
+};
 onBeforeUnmount(() => {
   if (data.value.formMode === "router") {
     eventBus.off("get-data-list");
@@ -207,23 +218,29 @@ function handleCurrentChange(val: any) {
 }
 // 手动生成结算（一月一次）
 const settlement = async () => {
-  const {status} = await api.organizationalStructureSettlement({})
-  if(status ==1) {
+  const { status } = await api.organizationalStructureSettlement({});
+  if (status == 1) {
     ElMessage.success({
-        message: '手动结算成功',
-        center: true,
-      })
-    getDataList()
+      message: "手动结算成功",
+      center: true,
+    });
+    getDataList();
   }
-}
+};
 </script>
 <!--   <el-table-column align="left" type="selection" />
         <ElTableColumn v-if="data.batch.enable" type="selection" show-overflow-tooltip align="left" fixed /> -->
 <template>
   <div :class="{ 'absolute-container': data.tableAutoHeight }">
     <PageMain>
-      <FormSearch :formSearchList="formSearchList" :formSearchName="formSearchName" @currentChange="currentChange"
-        @onReset="onReset" :model="data.search" :formOption="formOption" />
+      <FormSearch
+        :formSearchList="formSearchList"
+        :formSearchName="formSearchName"
+        @currentChange="currentChange"
+        @onReset="onReset"
+        :model="data.search"
+        :formOption="formOption"
+      />
       <ElDivider border-style="dashed" />
       <el-row>
         <FormLeftPanel>
@@ -238,66 +255,135 @@ const settlement = async () => {
         </FormLeftPanel>
         <FormRightPanel>
           <el-button size="default"> 导出 </el-button>
-          <TabelControl v-model:border="data.border" v-model:tableAutoHeight="data.tableAutoHeight"
-            v-model:checkList="data.checkList" v-model:columns="columns" v-model:line-height="data.lineHeight"
-            v-model:stripe="data.stripe" style="margin-left: 12px" @query-data="getDataList" />
+          <TabelControl
+            v-model:border="data.border"
+            v-model:tableAutoHeight="data.tableAutoHeight"
+            v-model:checkList="data.checkList"
+            v-model:columns="columns"
+            v-model:line-height="data.lineHeight"
+            v-model:stripe="data.stripe"
+            style="margin-left: 12px"
+            @query-data="getDataList"
+          />
         </FormRightPanel>
       </el-row>
-      <ElTable v-loading="data.loading" :border="data.border" :size="data.lineHeight" :stripe="data.stripe" class="my-4"
-        :data="data.dataList" highlight-current-row height="100%" @sort-change="sortChange"
-        @selection-change="data.batch.selectionDataList = $event"  @current-change="handleCurrentChange">
-
-        <ElTableColumn v-if="data.checkList.includes('id')" show-overflow-tooltip align="left" prop="id" label="部门ID">
+      <ElTable
+        v-loading="data.loading"
+        :border="data.border"
+        :size="data.lineHeight"
+        :stripe="data.stripe"
+        class="my-4"
+        :data="data.dataList"
+        highlight-current-row
+        height="100%"
+        @sort-change="sortChange"
+        @selection-change="data.batch.selectionDataList = $event"
+        @current-change="handleCurrentChange"
+      >
+        <ElTableColumn
+          v-if="data.checkList.includes('id')"
+          show-overflow-tooltip
+          align="left"
+          prop="id"
+          label="部门ID"
+        >
           <template #default="{ row }">
             <div class="copyId tableSmall">
-              <div class="id oneLine idFont">{{ row.organizationalStructureId }}</div>
+              <div class="id oneLine idFont">
+                {{ row.organizationalStructureId }}
+              </div>
               <copy
                 :content="row.organizationalStructureId"
                 :class="{
                   rowCopy: 'rowCopy',
                   current: row.organizationalStructureId === current,
                 }"
+                class="littleButton"
               />
               <!-- <copy class="copy" :content="row.organizationalStructureId" /> -->
             </div>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('organizationalStructureName')" show-overflow-tooltip align="left"
-          prop="userName" label="部门名称">
+        <ElTableColumn
+          v-if="data.checkList.includes('organizationalStructureName')"
+          show-overflow-tooltip
+          align="left"
+          prop="userName"
+          label="部门名称"
+        >
           <template #default="{ row }">
             <el-text class="tableBig">
-              {{ row.organizationalStructureName ? row.organizationalStructureName : '-' }}
+              {{
+                row.organizationalStructureName
+                  ? row.organizationalStructureName
+                  : "-"
+              }}
             </el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('name')" show-overflow-tooltip align="left" prop="name" label="主管">
+        <ElTableColumn
+          v-if="data.checkList.includes('name')"
+          show-overflow-tooltip
+          align="left"
+          prop="name"
+          label="主管"
+        >
           <template #default="{ row }">
             <el-text v-if="row.userList.length" class="fontC-System">
-              {{ row.userList?.map((item: any) => item.name).join('，') }}
+              {{ row.userList?.map((item: any) => item.name).join("，") }}
             </el-text>
             <el-text v-else class="fontC-System">-</el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('totalPerformance')" show-overflow-tooltip align="left"
-          prop="positionId" label="总业绩">
+        <ElTableColumn
+          v-if="data.checkList.includes('totalPerformance')"
+          show-overflow-tooltip
+          align="left"
+          prop="positionId"
+          label="总业绩"
+        >
           <template #default="{ row }">
-            <el-text >
-              <CurrencyType /><span class="fontC-System">{{ row.totalPerformance || 0 }}</span>
-            </el-text>
-          </template>
-        </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('commission')" show-overflow-tooltip align="left"
-          prop="pendingBalance" label="提成"><template #default="{ row }">
             <el-text>
-              <CurrencyType /><span class="fontC-System">{{ row.commission || 0 }}</span>
+              <CurrencyType /><span class="fontC-System">{{
+                row.totalPerformance || 0
+              }}</span>
             </el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn fixed="right" align="left" width="200" label="操作"><template #default="{ row }">
-            <ElButton type="primary" size="small" plain @click="financeLog(row)" v-auth="'pm_log-get-queryOrganizationalStructureRecordQueryAmount'">
+        <ElTableColumn
+          v-if="data.checkList.includes('commission')"
+          show-overflow-tooltip
+          align="left"
+          prop="pendingBalance"
+          label="提成"
+          ><template #default="{ row }">
+            <el-text>
+              <CurrencyType /><span class="fontC-System">{{
+                row.commission || 0
+              }}</span>
+            </el-text>
+          </template>
+        </ElTableColumn>
+        <ElTableColumn fixed="right" align="left" width="200" label="操作"
+          ><template #default="{ row }">
+            <ElButton
+              type="primary"
+              size="small"
+              plain
+              @click="financeLog(row)"
+              v-auth="
+                'pm_log-get-queryOrganizationalStructureRecordQueryAmount'
+              "
+            >
               财务日志
             </ElButton>
-            <ElButton type="warning" size="small" plain @click="handlePlusMinusPayments(row)" v-auth="'pm_log-insert-additionAndSubtraction'">
+            <ElButton
+              type="warning"
+              size="small"
+              plain
+              @click="handlePlusMinusPayments(row)"
+              v-auth="'pm_log-insert-additionAndSubtraction'"
+            >
               加减款
             </ElButton>
           </template>
@@ -306,9 +392,18 @@ const settlement = async () => {
           <el-empty :image="empty" :image-size="300" />
         </template>
       </ElTable>
-      <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
-        :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination"
-        background @size-change="sizeChange" @current-change="currentChange" />
+      <ElPagination
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
+        :page-sizes="pagination.sizes"
+        :layout="pagination.layout"
+        :hide-on-single-page="false"
+        class="pagination"
+        background
+        @size-change="sizeChange"
+        @current-change="currentChange"
+      />
     </PageMain>
     <plusMinusPayments ref="plusMinusPaymentsRef" @fetch-data="getDataList" />
     <Detail ref="financeLogRef" />
@@ -317,18 +412,18 @@ const settlement = async () => {
 
 <style lang="scss" scoped>
 .copyId .idFont {
-  font-size:.875rem;
+  font-size: 0.875rem;
 }
-.copyId  .current {
-    display: block !important;
-  }
+.copyId .current {
+  display: block !important;
+}
 .rowCopy {
   width: 20px;
   display: none;
 }
-.copyId  .current {
-    display: block !important;
-  }
+.copyId .current {
+  display: block !important;
+}
 .el-table__row:hover .rowCopy {
   display: block;
 }
@@ -374,11 +469,7 @@ const settlement = async () => {
       }
     }
   }
-
-
 }
-
-
 
 .flex-s {
   display: flex;
@@ -386,7 +477,7 @@ const settlement = async () => {
   align-items: center;
   width: 100%;
 
-  >div:nth-of-type(1) {
+  > div:nth-of-type(1) {
     width: calc(100% - 25px);
     flex-shrink: 0;
   }
@@ -403,5 +494,10 @@ const settlement = async () => {
   .current {
     display: block !important;
   }
+}
+
+.littleButton {
+  position: absolute;
+  right: 10px;
 }
 </style>
