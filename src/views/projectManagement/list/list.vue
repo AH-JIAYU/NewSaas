@@ -1,135 +1,178 @@
 <script setup lang="ts">
-import { ElMessage } from 'element-plus'
-import allocationEdit from './components/AllocationEdit/index.vue'
-import ProjeckEdit from './components/ProjeckEdit/index.vue'
-import ProjectDetail from './components/ProjectDetails/index.vue'
-import ViewAllocation from './components/ViewAllocation/index.vue'
-import QuickEdit from './components/QuickEdit/index.vue' // 快速编辑
-import scheduling from './components/Edit/index.vue' // 项目调度
-import outsource from '@/views/projectManagement/outsource/components/Edit/index.vue' // 项目外包
-import api from '@/api/modules/projectManagement'
-import apiOut from '@/api/modules/projectManagement_outsource'
-import { obtainLoading, submitLoading } from '@/utils/apiLoading'
-import useBasicDictionaryStore from '@/store/modules/otherFunctions_basicDictionary' // 基础字典
-import useUserCustomerStore from '@/store/modules/user_customer' // 客户
-import useProjectManagementListStore from '@/store/modules/projectManagement_list' // 项目
-import useDepartmentStore from '@/store/modules/department'
-import empty from '@/assets/images/empty.png'
+import { ElMessage } from "element-plus";
+import allocationEdit from "./components/AllocationEdit/index.vue";
+import ProjeckEdit from "./components/ProjeckEdit/index.vue";
+import ProjectDetail from "./components/ProjectDetails/index.vue";
+import ViewAllocation from "./components/ViewAllocation/index.vue";
+import QuickEdit from "./components/QuickEdit/index.vue"; // 快速编辑
+import scheduling from "./components/Edit/index.vue"; // 项目调度
+import outsource from "@/views/projectManagement/outsource/components/Edit/index.vue"; // 项目外包
+import api from "@/api/modules/projectManagement";
+import apiOut from "@/api/modules/projectManagement_outsource";
+import { obtainLoading, submitLoading } from "@/utils/apiLoading";
+import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; // 基础字典
+import useUserCustomerStore from "@/store/modules/user_customer"; // 客户
+import useProjectManagementListStore from "@/store/modules/projectManagement_list"; // 项目
+import useDepartmentStore from "@/store/modules/department";
+import empty from "@/assets/images/empty.png";
+import { useI18n } from "vue-i18n";
 
 defineOptions({
   name: "list",
 });
 
-const aa = "abc";
-const { t } = useI18n();
 const departmentStore = useDepartmentStore();
-  name: 'List',
-})
-import { useI18n } from "vue-i18n";
-const departmentStore = useDepartmentStore()
 // 时间
 const { t } = useI18n();
-const { format } = useTimeago()
-const basicDictionaryStore = useBasicDictionaryStore() // 基础字典
-const customerStore = useUserCustomerStore() // 客户
-const projectManagementListStore = useProjectManagementListStore() // 项目
-const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange }
-  = usePagination()
+const { format } = useTimeago();
+const basicDictionaryStore = useBasicDictionaryStore(); // 基础字典
+const customerStore = useUserCustomerStore(); // 客户
+const projectManagementListStore = useProjectManagementListStore(); // 项目
+const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
+  usePagination();
 // 货币类型
-const countryType = ref<any>()
-const tableSortRef = ref<any>()
+const countryType = ref<any>();
+const tableSortRef = ref<any>();
 // loading加载
-const listLoading = ref<boolean>(true)
+const listLoading = ref<boolean>(true);
 // 获取组件变量
-const addAllocationEditRef = ref()
-const addProjeckRef = ref()
-const projectDetailsRef = ref()
-const viewAllocationsRef = ref() // 查看分配
-const QuickEditRef = ref() // 快速编辑
-const schedulingRef = ref() // 调度
-const outsourceRef = ref() // 外包
+const addAllocationEditRef = ref();
+const addProjeckRef = ref();
+const projectDetailsRef = ref();
+const viewAllocationsRef = ref(); // 查看分配
+const QuickEditRef = ref(); // 快速编辑
+const schedulingRef = ref(); // 调度
+const outsourceRef = ref(); // 外包
 // 右侧工具栏配置变量
-const border = ref(false)
-const checkList = ref<any>([])
-const tableAutoHeight = ref(false) // 表格控件-高度自适应
+const border = ref(false);
+const checkList = ref<any>([]);
+const tableAutoHeight = ref(false); // 表格控件-高度自适应
 // 表格控件-控制全屏
-const lineHeight = ref<any>('default')
-const formSearchList = ref<any>() // 表单排序配置
-const formSearchName = ref<string>('formSearch-list') // 表单排序name
-const stripe = ref(false)
+const lineHeight = ref<any>("default");
+const formSearchList = ref<any>(); // 表单排序配置
+const formSearchName = ref<string>("formSearch-list"); // 表单排序name
+const stripe = ref(false);
 const columns = ref([
   // { prop: "projectType", label: "项目类型", checked: true, sotrtable: true },
-  { prop: 'projectId', label: computed(() => t("project.projectId")), checked: true, sotrtable: true },
-  { prop: 'name', label: computed(() => t("project.name")), checked: true, sotrtable: true },
   {
-    prop: 'clientName',
+    prop: "projectId",
+    label: computed(() => t("project.projectId")),
+    checked: true,
+    sotrtable: true,
+  },
+  {
+    prop: "name",
+    label: computed(() => t("project.name")),
+    checked: true,
+    sotrtable: true,
+  },
+  {
+    prop: "clientName",
     label: computed(() => t("project.customer")),
     checked: true,
     sotrtable: true,
   },
   {
-    prop: 'PCNL',
+    prop: "PCNL",
     label: computed(() => t("project.parameter")),
     checked: true,
     sotrtable: true,
   },
-  { prop: 'allocationType',  label: computed(() => t("project.AssignmentType")), checked: true, sotrtable: true },
-  // { prop: 'originalPrice', label: '原始价', checked: true, sotrtable: true },
-  { prop: 'doMoneyPrice',   label: computed(() => t("project.projectPrice")), checked: true, sotrtable: true },
-  { prop: 'ir', label: 'IR/NIR', checked: true, sotrtable: true },
-  { prop: 'countryIdList',  label: computed(() => t("project.area")), checked: true, sotrtable: true },
   {
-    prop: 'allocationStatus',
+    prop: "allocationType",
+    label: computed(() => t("project.AssignmentType")),
+    checked: true,
+    sotrtable: true,
+  },
+  // { prop: 'originalPrice', label: '原始价', checked: true, sotrtable: true },
+  {
+    prop: "doMoneyPrice",
+    label: computed(() => t("project.projectPrice")),
+    checked: true,
+    sotrtable: true,
+  },
+  { prop: "ir", label: "IR/NIR", checked: true, sotrtable: true },
+  {
+    prop: "countryIdList",
+    label: computed(() => t("project.area")),
+    checked: true,
+    sotrtable: true,
+  },
+  {
+    prop: "allocationStatus",
     label: computed(() => t("project.AssignmentStatus")),
     checked: true,
     sotrtable: true,
   },
-  { prop: 'isOnline',   label: computed(() => t("project.projectStatus")), checked: true, sotrtable: true },
-  { prop: 'remark',   label: computed(() => t("project.remark")), checked: true, sotrtable: true },
-  { prop: 'create',  label: computed(() => t("project.create")), checked: true, sotrtable: true },
-  { prop: 'createTime',    label: computed(() => t("project.createTime")), checked: true, sotrtable: true },
-])
+  {
+    prop: "isOnline",
+    label: computed(() => t("project.projectStatus")),
+    checked: true,
+    sotrtable: true,
+  },
+  {
+    prop: "remark",
+    label: computed(() => t("project.remark")),
+    checked: true,
+    sotrtable: true,
+  },
+  {
+    prop: "create",
+    label: computed(() => t("project.create")),
+    checked: true,
+    sotrtable: true,
+  },
+  {
+    prop: "createTime",
+    label: computed(() => t("project.createTime")),
+    checked: true,
+    sotrtable: true,
+  },
+]);
 
 const search = ref<any>({
   time: [], // 时间
-  beginTime: '', // 开始时间 格式:2024-03-01 00:00:00
-  endTime: '', // 	结束时间 格式:2024-03-30 23:59:59
-  projectId: '', // 	项目Id
-  name: '', // 	项目名称模糊匹配
-  projectIdentification: '', // 	项目标识模糊查询
-  clientId: '', // 	所属客户编号Id
+  beginTime: "", // 开始时间 格式:2024-03-01 00:00:00
+  endTime: "", // 	结束时间 格式:2024-03-30 23:59:59
+  projectId: "", // 	项目Id
+  name: "", // 	项目名称模糊匹配
+  projectIdentification: "", // 	项目标识模糊查询
+  clientId: "", // 	所属客户编号Id
   countryId: [], // 所属区域编号Id
-  createName: '', // 	创建人-模糊查询
-  allocation: '', // 	分配状态:1已经分配 2:未分配
+  createName: "", // 	创建人-模糊查询
+  allocation: "", // 	分配状态:1已经分配 2:未分配
   allocationStatus: [], // 	分配类型: 1:自动分配 2:供应商 3:部门
   status: 1, // 	项目状态:1在线 2:离线
   departmentProject: 1, // 1查所有2部门
   structureIdList: [],
-}) // 搜索
+}); // 搜索
 
-const list = ref<any>([])
+const list = ref<any>([]);
 
-const current = ref<any>() // 表格当前选中
+const current = ref<any>(); // 表格当前选中
 function handleCurrentChange(val: any) {
-  if (val) { current.value = val.projectId }
-  else { current.value = '' }
+  if (val) {
+    current.value = val.projectId;
+  } else {
+    current.value = "";
+  }
 }
 
 // 分配
 function distribution(row: any) {
-  addAllocationEditRef.value.showEdit(row, 'distribution')
+  addAllocationEditRef.value.showEdit(row, "distribution");
 }
 // 重新分配
 function reassign(row: any) {
-  addAllocationEditRef.value.showEdit(row, 'reassign')
+  addAllocationEditRef.value.showEdit(row, "reassign");
 }
 // 新增项目
 function addProject() {
-  addProjeckRef.value.showEdit()
+  addProjeckRef.value.showEdit();
 }
 // 编辑项目
 function projectEdit(row: any) {
-  addProjeckRef.value.showEdit(row)
+  addProjeckRef.value.showEdit(row);
 }
 // 快速编辑
 function quickEdit(row: any, type: any) {
@@ -141,7 +184,7 @@ function quickEdit(row: any, type: any) {
     IR ir
     备注 remark
    */
-  QuickEditRef.value.showEdit(row, type)
+  QuickEditRef.value.showEdit(row, type);
 }
 // 修改状态
 async function changeStatus(row: any, val: any) {
@@ -149,64 +192,61 @@ async function changeStatus(row: any, val: any) {
     const params = {
       projectId: row.projectId,
       isOnline: val,
-    }
-    const { status } = await submitLoading(api.changestatus(params))
-    status === 1
-    && ElMessage.success({
-      message: t("project.changeSuccess"),
-      center: true,
-    })
+    };
+    const { status } = await submitLoading(api.changestatus(params));
+    status === 1 &&
+      ElMessage.success({
+        message: t("project.changeSuccess"),
+        center: true,
+      });
 
-    fetchData()
-  }
-  else if (row.projectType === 2) {
+    fetchData();
+  } else if (row.projectType === 2) {
     try {
       const params = {
         type: 4, // 取消接收
         idList: [row.projectId],
-      }
-      const msg = row.isOnline == 1    ? t("project.recieveSuccess")
-      : t("project.cancelSuccess");
-      const { status } = await apiOut.updateReceiveStatus(params)
-      status === 1
-      && ElMessage.success({
-        message: msg,
-        center: true,
-      })
-      fetchData()
-    }
-    catch (error) { }
+      };
+      const msg =
+        row.isOnline == 1
+          ? t("project.recieveSuccess")
+          : t("project.cancelSuccess");
+      const { status } = await apiOut.updateReceiveStatus(params);
+      status === 1 &&
+        ElMessage.success({
+          message: msg,
+          center: true,
+        });
+      fetchData();
+    } catch (error) {}
   }
 }
 // 项目详情
 function projectDetails(row: any) {
-  projectDetailsRef.value.showEdit(row, row.projectType)
+  projectDetailsRef.value.showEdit(row, row.projectType);
 }
 // 项目调度 快捷操作
 function dispatch() {
-  const selectList = tableSortRef.value.getSelectionRows()
+  const selectList = tableSortRef.value.getSelectionRows();
   if (selectList.length !== 1) {
     if (selectList.length === 0) {
       ElMessage.warning({
         message: t("project.projectSelect"),
         center: true,
-      })
-    }
-    else {
+      });
+    } else {
       ElMessage.warning({
         message: t("project.onlyOne"),
         center: true,
-      })
+      });
     }
-  }
-  else if (selectList[0].isOnline === 2) {
+  } else if (selectList[0].isOnline === 2) {
     ElMessage.warning({
       message: t("project.OfflineUnschedulable"),
       center: true,
-    })
-  }
-  else {
-    schedulingRef.value.showEdit(selectList[0], 'projectList')
+    });
+  } else {
+    schedulingRef.value.showEdit(selectList[0], "projectList");
   }
   // else if (selectList[0].projectType === 2) {
   //   ElMessage.warning({
@@ -217,48 +257,52 @@ function dispatch() {
 }
 // 外包查看点击id
 function outsourceDetails(row: any) {
-  let type
-  if (row.allocationType === 4) { type = 0 }
-  if (row.projectType === 2) { type = 1 }
-  outsourceRef.value.showEdit(row, type)
+  let type;
+  if (row.allocationType === 4) {
+    type = 0;
+  }
+  if (row.projectType === 2) {
+    type = 1;
+  }
+  outsourceRef.value.showEdit(row, type);
 }
 // 查看分配
 function viewAllocations(row: any) {
   const params = {
     projectId: row.projectId,
     type: row.allocationType,
-  }
-  viewAllocationsRef.value.showEdit(params)
+  };
+  viewAllocationsRef.value.showEdit(params);
 }
 
 // 每页数量切换
 function sizeChange(size: number) {
-  onSizeChange(size).then(() => fetchData())
+  onSizeChange(size).then(() => fetchData());
 }
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
-  onCurrentChange(page).then(() => fetchData())
+  onCurrentChange(page).then(() => fetchData());
 }
 
 // 重置数据
 function onReset() {
   search.value = {
     time: [], // 时间
-    beginTime: '', // 开始时间 格式:2024-03-01 00:00:00
-    endTime: '', // 	结束时间 格式:2024-03-30 23:59:59
-    projectId: '', // 	项目Id
-    name: '', // 	项目名称模糊匹配
-    projectIdentification: '', // 	项目标识模糊查询
-    clientId: '', // 	所属客户编号Id
-    countryId: '', // 所属区域编号Id
-    createName: '', // 	创建人-模糊查询
-    allocation: '', // 	分配状态:1已经分配 2:未分配
+    beginTime: "", // 开始时间 格式:2024-03-01 00:00:00
+    endTime: "", // 	结束时间 格式:2024-03-30 23:59:59
+    projectId: "", // 	项目Id
+    name: "", // 	项目名称模糊匹配
+    projectIdentification: "", // 	项目标识模糊查询
+    clientId: "", // 	所属客户编号Id
+    countryId: "", // 所属区域编号Id
+    createName: "", // 	创建人-模糊查询
+    allocation: "", // 	分配状态:1已经分配 2:未分配
     allocationStatus: [], // 	分配类型: 1:自动分配 2:供应商 3:部门
     status: 1, // 	项目状态:1在线 2:离线
     departmentProject: 1, // 1查所有2部门
     structureIdList: [],
-  }
-  fetchData()
+  };
+  fetchData();
 }
 // 监听 allocationStatus 和 allocation 的变化
 watch(
@@ -266,21 +310,21 @@ watch(
   (newValue: any) => {
     if (newValue.length > 0) {
       // 如果 allocationStatus 有值，清空 allocation
-      search.value.allocation = ''
+      search.value.allocation = "";
     }
   },
-)
+);
 
 watch(
   () => search.value.allocation,
   (newValue: any) => {
     if (newValue) {
       // 如果 allocation 有值，清空 allocationStatus
-      search.value.allocationStatus = []
+      search.value.allocationStatus = [];
     }
   },
-)
-const checked1 = ref<any>()
+);
+const checked1 = ref<any>();
 // 监听 departmentProject 和 structureIdList 的变化
 // 监听 departmentProject 的变化
 watch(
@@ -288,11 +332,11 @@ watch(
   (newValue: any) => {
     if (newValue === 1) {
       // 如果 departmentProject 为 1，清空 structureIdList
-      search.value.structureIdList = []
+      search.value.structureIdList = [];
       // console.log(search.value.structureIdList,'监听departmentProject')
     }
   },
-)
+);
 
 // 监听 structureIdList 的变化
 watch(
@@ -301,43 +345,40 @@ watch(
     if (newValue.length > 0) {
       // 如果 structureIdList 有值，将 departmentProject 改为 1
 
-      checked1.value = ''
+      checked1.value = "";
       // console.log(checked1.value,'监听structureIdList')
     }
   },
-)
+);
 // 获取集合
 async function fetchData() {
   try {
-    listLoading.value = true
+    listLoading.value = true;
     const params = {
       ...getParams(),
       ...search.value,
-    }
+    };
     if (!Array.isArray(params.countryId)) {
-      params.countryId = params.countryId?.split(',')
+      params.countryId = params.countryId?.split(",");
     }
     if (search.value.time && !!search.value.time.length) {
-      params.beginTime = search.value.time[0] || ''
-      params.endTime = search.value.time[1] || ''
+      params.beginTime = search.value.time[0] || "";
+      params.endTime = search.value.time[1] || "";
     }
     if (checked1.value) {
-      params.departmentProject = 2
-    }
-    else {
-      params.departmentProject = 1
+      params.departmentProject = 2;
+    } else {
+      params.departmentProject = 1;
     }
 
-    const { data } = await api.list(params)
-    countryType.value = data.currencyType
-    list.value = data.getChildrenProjectInfoList
-    pagination.value.total = data.total
-    listLoading.value = false
-  }
-  catch (error) {
-  }
-  finally {
-    listLoading.value = false
+    const { data } = await api.list(params);
+    countryType.value = data.currencyType;
+    list.value = data.getChildrenProjectInfoList;
+    pagination.value.total = data.total;
+    listLoading.value = false;
+  } catch (error) {
+  } finally {
+    listLoading.value = false;
   }
 }
 // 表格时候可勾选
@@ -347,25 +388,25 @@ async function fetchData() {
 //     .map((item: any) => item.projectId);
 //   return !filterDataId.includes(row.projectId);
 // };
-const countryList: any = ref([]) // 所有区域一维
-const customerList: any = ref([]) // 客户列表
+const countryList: any = ref([]); // 所有区域一维
+const customerList: any = ref([]); // 客户列表
 // 具体的位置信息
 const comCountryId = computed(() => (countryIdList: any) => {
   const list = countryList.value
     .filter((item: any) => countryIdList.includes(item.id))
-    .map((item: any) => item.chineseName)
-  return list
-})
+    .map((item: any) => item.chineseName);
+  return list;
+});
 
 onMounted(async () => {
-  countryList.value = await basicDictionaryStore.getCountry()
-  customerList.value = await customerStore.getCustomerList()
+  countryList.value = await basicDictionaryStore.getCountry();
+  customerList.value = await customerStore.getCustomerList();
   columns.value.forEach((item: any) => {
     if (item.checked) {
-      checkList.value.push(item.prop)
+      checkList.value.push(item.prop);
     }
-  })
-  fetchData()
+  });
+  fetchData();
   formSearchList.value = [
     {
       index: 1,
@@ -483,35 +524,35 @@ onMounted(async () => {
       optionValue: "value",
     },
   ];
-})
+});
 const formOption = {
   clientId: async () => await customerStore.getCustomerList(),
   allocationStatus: () => [
-    { label: '供应商', value: 2 },
-    { label: '内部站', value: 3 },
-    { label: '合作商', value: 4 },
+    { label: "供应商", value: 2 },
+    { label: "内部站", value: 3 },
+    { label: "合作商", value: 4 },
   ],
   structureIdList: async () => await departmentStore.getDepartment(),
   status: () => [
-    { label: '在线', value: 1 },
-    { label: '离线', value: 2 },
+    { label: "在线", value: 1 },
+    { label: "离线", value: 2 },
   ],
   allocation: () => [
-    { label: '已分配', value: 1 },
-    { label: '未分配', value: 2 },
+    { label: "已分配", value: 1 },
+    { label: "未分配", value: 2 },
   ],
   projectType: () => [
-    { label: '内部新增', value: 1 },
-    { label: '合作商分配', value: 2 },
+    { label: "内部新增", value: 1 },
+    { label: "合作商分配", value: 2 },
   ],
   isOnlineType: () => [
-    { label: '在线', value: 1 },
-    { label: '离线', value: 2 },
+    { label: "在线", value: 1 },
+    { label: "离线", value: 2 },
   ],
-}
+};
 
 function handleChange() {
-  fetchData()
+  fetchData();
 }
 </script>
 
@@ -1410,10 +1451,5 @@ function handleChange() {
 .button-box {
   display: flex;
   flex-wrap: nowrap;
-}
-
-.littleButton {
-  position: absolute;
-  right: 10px;
 }
 </style>
