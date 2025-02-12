@@ -200,6 +200,7 @@ const data = reactive<any>({
 });
 const data1 = reactive<any>({
   updateTenantSupplierCustomerInfoList: [],
+  countryList:[]
 });
 
 const activeName = ref("basicSettings");
@@ -279,10 +280,10 @@ onMounted(async () => {
       );
     }
   }
-  data.countryList = await basicDictionaryStore.getCountry();
+  data1.countryList = await basicDictionaryStore.getCountry();
   await getSupplierLevelList();
   // 更新 dataList
-  generateData(data.countryList);
+  generateData(data1.countryList);
 });
 nextTick(() => {
   // 表单验证方法
@@ -364,7 +365,7 @@ const customerChange = () => {
                 <el-form-item :label="t('supplier.new.area')" prop="subordinateCountryId">
                   <el-select clearable filterable v-model="props.leftTab.subordinateCountryId"
                     @change="changeCountryId">
-                    <el-option v-for="item in data.countryList" :key="item.id" :value="item.id"
+                    <el-option v-for="item in data1.countryList" :key="item.id" :value="item.id"
                       :label="item.chineseName"></el-option>
                   </el-select>
                 </el-form-item>
