@@ -179,14 +179,14 @@ const addSupplierLevel = () => {
 const changeRelevanceCountryIdList = () => {
   data.checked = Boolean(
     props.leftTab.relevanceCountryIdList.length ===
-    basicDictionaryStore.country.length
+      basicDictionaryStore.country.length
   );
 };
 // 授权客户反选
 const changeupdateTenantSupplierCustomerInfoList = () => {
   data.checkedCustomer = Boolean(
     props.leftTab.updateTenantSupplierCustomerInfoList.length ===
-    data.relatedCustomers.length
+      data.relatedCustomers.length
   );
 };
 
@@ -200,6 +200,7 @@ const data = reactive<any>({
 });
 const data1 = reactive<any>({
   updateTenantSupplierCustomerInfoList: [],
+  countryList: [],
 });
 
 const activeName = ref("basicSettings");
@@ -279,10 +280,10 @@ onMounted(async () => {
       );
     }
   }
-  data.countryList = await basicDictionaryStore.getCountry();
+  data1.countryList = await basicDictionaryStore.getCountry();
   await getSupplierLevelList();
   // 更新 dataList
-  generateData(data.countryList);
+  generateData(data1.countryList);
 });
 nextTick(() => {
   // 表单验证方法
@@ -309,9 +310,17 @@ const customerChange = () => {
 <template>
   <div>
     <el-tabs v-model="activeName">
-      <el-tab-pane :label="t('supplier.new.basicSettings')" name="basicSettings">
-        <ElForm ref="formRef" :rules="rules" :model="props.leftTab" label-width="100px"
-          :validate-on-rule-change="false">
+      <el-tab-pane
+        :label="t('supplier.new.basicSettings')"
+        name="basicSettings"
+      >
+        <ElForm
+          ref="formRef"
+          :rules="rules"
+          :model="props.leftTab"
+          label-width="100px"
+          :validate-on-rule-change="false"
+        >
           <el-card class="box-card">
             <template #header>
               <div class="card-header">
@@ -320,38 +329,77 @@ const customerChange = () => {
             </template>
             <el-row :gutter="10">
               <el-col :span="8">
-                <el-form-item :label="t('supplier.new.supplierType')" prop="type">
-                  <el-select v-model="props.leftTab.type" value-key="" placeholder="" clearable filterable>
-                    <el-option v-for="item in typeList" :key="item.value" :label="item.label" :value="item.value">
+                <el-form-item
+                  :label="t('supplier.new.supplierType')"
+                  prop="type"
+                >
+                  <el-select
+                    v-model="props.leftTab.type"
+                    value-key=""
+                    placeholder=""
+                    clearable
+                    filterable
+                  >
+                    <el-option
+                      v-for="item in typeList"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    >
                     </el-option>
                   </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item :label="t('supplier.new.supplierAccord')" prop="supplierAccord">
+                <el-form-item
+                  :label="t('supplier.new.supplierAccord')"
+                  prop="supplierAccord"
+                >
                   <el-input v-model="props.leftTab.supplierAccord" clearable />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item :label="t('supplier.new.supplierLevel')" prop="supplierLevelId">
-                  <el-select clearable filterable v-model="props.leftTab.supplierLevelId">
+                <el-form-item
+                  :label="t('supplier.new.supplierLevel')"
+                  prop="supplierLevelId"
+                >
+                  <el-select
+                    clearable
+                    filterable
+                    v-model="props.leftTab.supplierLevelId"
+                  >
                     <template #empty>
-                      <div style="
+                      <div
+                        style="
                           display: flex;
                           justify-content: space-between;
                           align-items: center;
                           padding: 0 1rem;
-                        ">
+                        "
+                      >
                         {{ t("supplier.new.nodata") }}
-                        <el-button type="primary" link size="small" @click="addSupplierLevel">
+                        <el-button
+                          type="primary"
+                          link
+                          size="small"
+                          @click="addSupplierLevel"
+                        >
                           {{ t("supplier.new.quickAdd") }}
                           <div class="i-ic:round-plus w-1.3em h-1.3em"></div>
                         </el-button>
                       </div>
                     </template>
-                    <el-option v-for="item in data.supplierLevelList" :key="item.tenantSupplierLevelId"
-                      :value="item.tenantSupplierLevelId" :label="item.levelNameOrAdditionRatio"></el-option>
-                    <el-button size="small" class="buttonClass" @click="addSupplierLevel">
+                    <el-option
+                      v-for="item in data.supplierLevelList"
+                      :key="item.tenantSupplierLevelId"
+                      :value="item.tenantSupplierLevelId"
+                      :label="item.levelNameOrAdditionRatio"
+                    ></el-option>
+                    <el-button
+                      size="small"
+                      class="buttonClass"
+                      @click="addSupplierLevel"
+                    >
                       {{ t("supplier.new.quickAdd") }}
                       <div class="i-ic:round-plus w-1.3em h-1.3em"></div>
                     </el-button>
@@ -361,11 +409,22 @@ const customerChange = () => {
             </el-row>
             <el-row :gutter="10">
               <el-col :span="8">
-                <el-form-item :label="t('supplier.new.area')" prop="subordinateCountryId">
-                  <el-select clearable filterable v-model="props.leftTab.subordinateCountryId"
-                    @change="changeCountryId">
-                    <el-option v-for="item in data.countryList" :key="item.id" :value="item.id"
-                      :label="item.chineseName"></el-option>
+                <el-form-item
+                  :label="t('supplier.new.area')"
+                  prop="subordinateCountryId"
+                >
+                  <el-select
+                    clearable
+                    filterable
+                    v-model="props.leftTab.subordinateCountryId"
+                    @change="changeCountryId"
+                  >
+                    <el-option
+                      v-for="item in data1.countryList"
+                      :key="item.id"
+                      :value="item.id"
+                      :label="item.chineseName"
+                    ></el-option>
                   </el-select>
                 </el-form-item>
               </el-col>
@@ -375,14 +434,20 @@ const customerChange = () => {
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item :label="t('supplier.new.supplierPhone')" prop="supplierPhone">
+                <el-form-item
+                  :label="t('supplier.new.supplierPhone')"
+                  prop="supplierPhone"
+                >
                   <el-input clearable v-model="props.leftTab.supplierPhone" />
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="10">
               <el-col :span="8">
-                <el-form-item :label="t('supplier.new.emailAddress')" prop="emailAddress">
+                <el-form-item
+                  :label="t('supplier.new.emailAddress')"
+                  prop="emailAddress"
+                >
                   <el-input clearable v-model="props.leftTab.emailAddress" />
                 </el-form-item>
               </el-col>
@@ -406,21 +471,31 @@ const customerChange = () => {
                 </el-form-item>
               </el-col> -->
               <el-col :span="8">
-                <el-form-item v-if="props.leftTab.type === 'company'" :label="t('supplier.new.companyName')">
+                <el-form-item
+                  v-if="props.leftTab.type === 'company'"
+                  :label="t('supplier.new.companyName')"
+                >
                   <el-input clearable v-model="props.leftTab.companyName" />
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="10">
               <el-col :span="8">
-                <el-form-item v-if="props.leftTab.type === 'company'" :label="t('supplier.new.legalPersonName')"
-                  prop="">
+                <el-form-item
+                  v-if="props.leftTab.type === 'company'"
+                  :label="t('supplier.new.legalPersonName')"
+                  prop=""
+                >
                   <el-input clearable v-model="props.leftTab.legalPersonName" />
                 </el-form-item>
               </el-col>
 
               <el-col :span="8">
-                <el-form-item v-if="props.leftTab.type === 'company'" :label="t('supplier.new.taxID')" prop="">
+                <el-form-item
+                  v-if="props.leftTab.type === 'company'"
+                  :label="t('supplier.new.taxID')"
+                  prop=""
+                >
                   <el-input clearable v-model="props.leftTab.taxID" />
                 </el-form-item>
               </el-col>
@@ -435,26 +510,50 @@ const customerChange = () => {
             <el-row :gutter="10">
               <el-col :span="3">
                 <el-form-item :label="t('supplier.new.surveySystem')">
-                  <ElSwitch v-model="props.leftTab.surveySystem" inline-prompt :inactive-value="1" :active-value="2"
-                    :active-text="t('common.enable')" :inactive-text="t('common.disable')" />
+                  <ElSwitch
+                    v-model="props.leftTab.surveySystem"
+                    inline-prompt
+                    :inactive-value="1"
+                    :active-value="2"
+                    :active-text="t('common.enable')"
+                    :inactive-text="t('common.disable')"
+                  />
                 </el-form-item>
               </el-col>
               <el-col :span="3">
                 <el-form-item label="B2B">
-                  <ElSwitch v-model="props.leftTab.b2bStatus" inline-prompt :inactive-value="1" :active-value="2"
-                    :active-text="t('common.enable')" :inactive-text="t('common.disable')" />
+                  <ElSwitch
+                    v-model="props.leftTab.b2bStatus"
+                    inline-prompt
+                    :inactive-value="1"
+                    :active-value="2"
+                    :active-text="t('common.enable')"
+                    :inactive-text="t('common.disable')"
+                  />
                 </el-form-item>
               </el-col>
               <el-col :span="4">
                 <el-form-item label="B2C">
-                  <ElSwitch v-model="props.leftTab.b2cStatus" inline-prompt :inactive-value="1" :active-value="2"
-                    :active-text="t('common.enable')" :inactive-text="t('common.disable')" />
+                  <ElSwitch
+                    v-model="props.leftTab.b2cStatus"
+                    inline-prompt
+                    :inactive-value="1"
+                    :active-value="2"
+                    :active-text="t('common.enable')"
+                    :inactive-text="t('common.disable')"
+                  />
                 </el-form-item>
               </el-col>
               <el-col :span="3">
                 <el-form-item :label="t('supplier.new.surveyStatus')">
-                  <ElSwitch v-model="props.leftTab.supplierStatus" inline-prompt :inactive-value="1" :active-value="2"
-                    :active-text="t('common.enable')" :inactive-text="t('common.disable')" />
+                  <ElSwitch
+                    v-model="props.leftTab.supplierStatus"
+                    inline-prompt
+                    :inactive-value="1"
+                    :active-value="2"
+                    :active-text="t('common.enable')"
+                    :inactive-text="t('common.disable')"
+                  />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -479,12 +578,18 @@ const customerChange = () => {
                   </el-form-item>
                 </div>
 
-                <el-transfer style="margin-left: 1.875rem" v-model="props.leftTab.relevanceCountryIdList" filterable
-                  :filter-method="filterMethod" :filter-placeholder="t('supplier.new.enterQueryCountry')"
-                  :data="dataList" :titles="[
+                <el-transfer
+                  style="margin-left: 1.875rem"
+                  v-model="props.leftTab.relevanceCountryIdList"
+                  filterable
+                  :filter-method="filterMethod"
+                  :filter-placeholder="t('supplier.new.enterQueryCountry')"
+                  :data="dataList"
+                  :titles="[
                     t('supplier.new.unselectedCountry'),
                     t('supplier.new.selectedCountries'),
-                  ]" />
+                  ]"
+                />
               </el-col>
               <el-col :span="11">
                 <div>
@@ -506,9 +611,16 @@ const customerChange = () => {
                   </el-form-item>
                 </div>
 
-                <el-transfer style="margin-left: 1.875rem" v-model="data1.updateTenantSupplierCustomerInfoList"
-                  filterable :filter-method="filterMethod" filter-placeholder="输入查询客户" :data="userList"
-                  @change="customerChange" :titles="['未选择客户', '已分配客户']" />
+                <el-transfer
+                  style="margin-left: 1.875rem"
+                  v-model="data1.updateTenantSupplierCustomerInfoList"
+                  filterable
+                  :filter-method="filterMethod"
+                  filter-placeholder="输入查询客户"
+                  :data="userList"
+                  @change="customerChange"
+                  :titles="['未选择客户', '已分配客户']"
+                />
               </el-col>
             </el-row>
           </el-card>
