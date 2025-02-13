@@ -26,11 +26,11 @@ function setHandler() {
 }
 // 同步主项目
 function syncProject() {
-  // 过滤掉不需要同步的数据
+  // 过滤掉不需要同步的数据     name项目名称
   const {
     projectId,
     parentId,
-    name,
+
     projectIdentification,
     countryIdList,
     uidUrl,
