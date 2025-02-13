@@ -4,7 +4,6 @@ import type { FormInstance, FormRules } from "element-plus";
 import api from "@/api/modules/survey_site_setting";
 import useClipboard from "vue-clipboard3";
 import { onMounted, ref } from "vue";
-import message from "vue-m-message/types/message";
 defineOptions({
   name: "setting",
 });
