@@ -12,7 +12,7 @@ import useUserSupplierStore from "@/store/modules/user_supplier"; // 供应商
 import empty from "@/assets/images/empty.png";
 import { useI18n } from "vue-i18n"; // 国际化
 const supplierStore = useUserSupplierStore(); // 供应商
-
+import storage from "@/utils/storage";
 defineOptions({
   name: "supplier",
 });
@@ -344,6 +344,11 @@ const formOption = {
     { label: computed(() => t("supplier.pendingApproval")), value: 3 },
   ],
 };
+//免密登录
+const goSupplier = ()=> {
+  const tenantId = storage.local.get("tenantId")
+  // window.open(`http://localhost:9002/?tenantId =${tenantId}&isLogin=true`, '_blank');
+}
 </script>
 
 <template>
@@ -460,7 +465,8 @@ const formOption = {
                   :content="row.supplierAccord"
                   placement="top-start"
                 >
-                  {{ row.supplierAccord }}
+                <el-link type="primary" @click="goSupplier"> {{ row.supplierAccord }}</el-link>
+
                 </el-tooltip>
               </div>
               <copy

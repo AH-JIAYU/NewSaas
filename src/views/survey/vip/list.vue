@@ -11,6 +11,7 @@ import useSurveyVipStore from "@/store/modules/survey_vip"; // 会员
 import empty from '@/assets/images/empty.png'
 import vipLevel from './components/Edit/index.vue'
 import apiDep from "@/api/modules/survey_vip_department";
+import storage from "@/utils/storage";
 defineOptions({
   name: "vip",
 });
@@ -319,6 +320,11 @@ function handleCurrentChange(val: any) {
   if (val) current.value = val.memberId;
   else current.value = "";
 }
+
+const goSupplier = ()=> {
+  const tenantId = storage.local.get("tenantId")
+  // window.open(`http://localhost:9002/?tenantId =${tenantId}&isLogin=true`, '_blank');
+}
 </script>
 
 <template>
@@ -394,7 +400,10 @@ function handleCurrentChange(val: any) {
                     fill="white" />
                 </g>
               </svg>
-              <span class="tableBig">{{ row.memberNickname }}</span>
+              <span class="tableBig">
+                <el-link type="primary" @click="goSupplier"> {{ row.memberNickname }}</el-link>
+
+                </span>
             </div>
           </template>
         </el-table-column>
