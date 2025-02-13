@@ -111,8 +111,7 @@ const callbackStatus: { label: string; value: number; type: TagType }[] = [
   { label: t("callback.hashWrong"), value: 3, type: "danger" },
 ];
 
-// 回调自有客户
-const clientIdOptions: { label: string; value: string }[] = [];
+
 
 const queryForm = reactive<any>({
   // 请求接口携带参数
@@ -141,6 +140,36 @@ function queryData() {
   pagination.value.page = 1;
   fetchData();
 }
+// 回调自有客户
+const clientIdOptions: { label: string; value: string }[] = [];
+//回调记录
+const  getCustomer =async()=> {
+  clientIdOptions.length = 0;
+  const ress = await api.getCustomerCooperation({});
+
+if (ress.data && ress.data.getCooperationInfoLists ) {
+  ress.data.getCooperationInfoLists.forEach(
+    (item:any) => {
+      clientIdOptions.push({
+        label: item.tenantName,
+        value: item.tenantId,
+      });
+    },
+  );
+}
+if (ress.data && ress.data.getCustomerInfoLists ) {
+  ress.data.getCustomerInfoLists.forEach(
+    (item:any) => {
+      clientIdOptions.push({
+        label: item.customerName,
+        value: item.customerId,
+      });
+    },
+  );
+}
+
+}
+
 // 请求
 async function fetchData() {
   try {
@@ -155,21 +184,6 @@ async function fetchData() {
     }
     delete params.time;
     const res = await api.list(params);
-    const ress = await api.getCustomerCooperation({});
-    console.log("ress", ress);
-
-    if (ress.data && ress.data.getCustomerInfoLists) {
-      // 清空原有数据
-      clientIdOptions.length = 0;
-      ress.data.getCustomerInfoLists.forEach(
-        (item: { customerName: string }) => {
-          clientIdOptions.push({
-            label: item.customerName,
-            value: item.customerName,
-          });
-        },
-      );
-    }
 
     list.value = res.data.customerCallbackRecordInfoList;
     pagination.value.total = res.data.total;
@@ -206,6 +220,7 @@ onMounted(async () => {
       checkList.value.push(item.prop);
     }
   });
+  getCustomer()
   fetchData();
   formSearchList.value = [
     {
@@ -233,9 +248,9 @@ onMounted(async () => {
       index: 3,
       show: true,
       type: "select",
-      modelName: "customerName",
+      modelName: "clientId",
       placeholder: computed(() => t("callback.clientID")),
-      option: "clientId",
+      option: "clientIdOptions",
       optionLabel: "label",
       optionValue: "value",
     },
@@ -286,7 +301,7 @@ onMounted(async () => {
 const formOption = {
   surveySource: () => memberType,
   callbackStatus: () => callbackStatus,
-  clientId: () => clientIdOptions, // 添加 clientId 选项列表
+  clientIdOptions: () => clientIdOptions, // 添加 clientId 选项列表
 };
 </script>
 
