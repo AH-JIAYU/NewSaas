@@ -2,7 +2,7 @@
 import grapesjs from 'grapesjs'
 import basic from 'grapesjs-blocks-basic'
 import gjsForms from 'grapesjs-plugin-forms'
-import * as tabs from 'grapesjs-tabs'
+import * as tabs from 'grapesjs-tabs';
 import customCodePlugin from 'grapesjs-custom-code'
 import pluginCountdown from 'grapesjs-component-countdown'
 import parserPostCSS from 'grapesjs-parser-postcss'
@@ -10,7 +10,6 @@ import presetWebpage from 'grapesjs-preset-webpage'
 import pluginTooltip from 'grapesjs-tooltip'
 import imageEditor from 'grapesjs-tui-image-editor'
 import styleBg from 'grapesjs-style-bg'
-// @ts-expect-error
 import 'grapesjs/dist/css/grapes.min.css'
 import 'grapesjs/dist/grapes.min.js'
 // @ts-expect-error
