@@ -61,8 +61,8 @@ async function onDialogOpened() {
       styleBg,
     ],
     pluginsOpts: {
-      [basic]: { flexGrid: true },
-      [presetWebpage]: {
+      'basic': { flexGrid: true },
+      'presetWebpage': {
         modalImportTitle: 'Import Template',
         modalImportLabel: '<div style="margin-bottom: 10px; font-size: 13px;">Paste here your HTML/CSS and click Import</div>',
         modalImportContent(editor: { getHtml: () => any, getCss: () => any }) {
