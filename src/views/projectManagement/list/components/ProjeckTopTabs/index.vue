@@ -955,6 +955,7 @@ const getProblemList = async () => {
                   v-model="localToptTab.clientId"
                   :disabled="localToptTab.projectType === 2"
                   clearable
+                  filterable
                   @change="changeClient"
                 >
                   <el-option
