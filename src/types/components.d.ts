@@ -12,6 +12,7 @@ declare module 'vue' {
     Chip: typeof import('./../components/Chip/index.vue')['default']
     ColorfulCard: typeof import('./../components/ColorfulCard/index.vue')['default']
     ColorfulCard2: typeof import('./../components/ColorfulCard2/index.vue')['default']
+    copy: typeof import('./../components/UEditor/index copy.vue')['default']
     Copy: typeof import('./../components/Copy/index.vue')['default']
     CurrencyType: typeof import('./../components/CurrencyType/index.vue')['default']
     DepartmentHead: typeof import('./../components/departmentHead/index.vue')['default']

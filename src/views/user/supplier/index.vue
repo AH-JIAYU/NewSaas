@@ -254,6 +254,7 @@ async function fetchData() {
     list.value = data.getTenantSupplierInfoList;
     pagination.value.total = data.total;
     listLoading.value = false;
+    supplierBackgroundUrl.value = data.supplierBackgroundUrl ? data.supplierBackgroundUrl : import.meta.env.VITE_common_WEBSITE
   } catch (error) {
   } finally {
     listLoading.value = false;
@@ -270,6 +271,7 @@ const supperLevel = (id: any) => {
   );
   return findData?.levelNameOrAdditionRatio;
 };
+const supplierBackgroundUrl = ref()
 onMounted(async () => {
   columns.value.forEach((item: any) => {
     if (item.checked) {
@@ -344,10 +346,10 @@ const formOption = {
     { label: computed(() => t("supplier.pendingApproval")), value: 3 },
   ],
 };
-//免密登录
-const goSupplier = ()=> {
-  const tenantId = storage.local.get("tenantId")
-  // window.open(`http://localhost:9002/?tenantId =${tenantId}&isLogin=true`, '_blank');
+//免密登录 -管理员登录供应商
+const goSupplier = (row:any)=> {
+  const tenantId = storage.local.get("tenantId");
+  window.open(`${supplierBackgroundUrl.value}?loginType=2&tenantId=${tenantId}&name=${row.supplierAccord}&type=1`, '_blank');
 }
 </script>
 
@@ -465,7 +467,7 @@ const goSupplier = ()=> {
                   :content="row.supplierAccord"
                   placement="top-start"
                 >
-                <el-link type="primary" @click="goSupplier"> {{ row.supplierAccord }}</el-link>
+                <el-link type="primary" @click="goSupplier(row)"> {{ row.supplierAccord }}</el-link>
 
                 </el-tooltip>
               </div>
