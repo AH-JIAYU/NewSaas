@@ -26,6 +26,8 @@ import apiSite from "@/api/modules/configuration_site_setting";
 import Edit from "@/views/configuration/screen_library/components/Edit/index.vue";
 // 引入 TinyMCE 编辑器组件
 import UEditor from "@/components/UEditor/index.vue";
+
+import DingEditor from "@/components/DingEditor/index.vue";
 // 下载
 import DownLoad from "@/utils/download";
 // 导入图片
@@ -346,6 +348,9 @@ function handleChange(v: string) {
 }
 //富文本框
 const changeEditorValue = (v: string) => {
+  localToptTab.value.richText = v;
+};
+const changeDingEditor = (v: string) => {
   localToptTab.value.richText = v;
 };
 // 同步
@@ -1489,6 +1494,10 @@ const getProblemList = async () => {
             </el-form-item>
             <el-row>
               <el-col :span="24">
+                <el-form-item label="DingEditor">
+
+                <DingEditor :content="localToptTab.richText"    @changeDingEditor="changeDingEditor"/>
+                </el-form-item>
                 <el-form-item :label="t('newProject.projectDescribe')">
                   <!-- key解决富文本编译器   先新增  再编辑  富文本右侧值还在的问题    key值变了会刷新组件 -->
                   <!-- <Editor
@@ -1498,11 +1507,7 @@ const getProblemList = async () => {
                     :locale="zhHans"
                     @change="handleChange"
                   /> -->
-                  <UEditor
-                    style="width: 100%"
-                    :tinymceHtml="localToptTab.richText"
-                    @changeEditorValue="changeEditorValue"
-                  />
+
                 </el-form-item>
               </el-col>
             </el-row>

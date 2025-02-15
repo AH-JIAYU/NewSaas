@@ -16,6 +16,7 @@ declare module 'vue' {
     Copy: typeof import('./../components/Copy/index.vue')['default']
     CurrencyType: typeof import('./../components/CurrencyType/index.vue')['default']
     DepartmentHead: typeof import('./../components/departmentHead/index.vue')['default']
+    DingEditor: typeof import('./../components/DingEditor/index.vue')['default']
     FileUpload: typeof import('./../components/FileUpload/index.vue')['default']
     FixedActionBar: typeof import('./../components/FixedActionBar/index.vue')['default']
     FormLeftPanel: typeof import('./../components/FormLeftPanel/index.vue')['default']
@@ -59,5 +60,6 @@ declare module 'vue' {
     TableQuery: typeof import('./../components/tableQuery/index.vue')['default']
     Trend: typeof import('./../components/Trend/index.vue')['default']
     UEditor: typeof import('./../components/UEditor/index.vue')['default']
+    WangEditor: typeof import('./../components/wangEditor/index.vue')['default']
   }
 }
