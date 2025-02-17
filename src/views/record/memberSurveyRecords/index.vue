@@ -333,7 +333,7 @@ onMounted(async () => {
       show: true,
       type: "select",
       modelName: "customerShortName",
-      placeholder: computed(() => t("callback.clientID")),
+      placeholder: computed(() => t("callback.customerShortName")),
       option: "clientIdOptions",
       optionLabel: "label",
       optionValue: "value",
