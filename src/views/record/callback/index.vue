@@ -147,16 +147,16 @@ const  getCustomer =async()=> {
   clientIdOptions.length = 0;
   const ress = await api.getCustomerCooperation({});
 
-if (ress.data && ress.data.getCooperationInfoLists ) {
-  ress.data.getCooperationInfoLists.forEach(
-    (item:any) => {
-      clientIdOptions.push({
-        label: item.tenantName,
-        value: item.tenantId,
-      });
-    },
-  );
-}
+// if (ress.data && ress.data.getCooperationInfoLists ) {
+//   ress.data.getCooperationInfoLists.forEach(
+//     (item:any) => {
+//       clientIdOptions.push({
+//         label: item.tenantName,
+//         value: item.tenantId,
+//       });
+//     },
+//   );
+// }
 if (ress.data && ress.data.getCustomerInfoLists ) {
   ress.data.getCustomerInfoLists.forEach(
     (item:any) => {
