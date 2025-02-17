@@ -4,7 +4,7 @@ import api from '@/api/modules/record_memberSurveyRecords'
 import useUserCustomerStore from '@/store/modules/user_customer'
 import useBasicDictionaryStore from '@/store/modules/otherFunctions_basicDictionary'
 import empty from '@/assets/images/empty.png'
-
+import apiRecord from "@/api/modules/record_callback";
 defineOptions({
   name: 'MemberSurveyRecords',
 })
@@ -114,6 +114,7 @@ const queryForm = reactive<any>({
   projectId: '', // 项目id
   projectName: '', // 项目名称-模糊查询
   customerId: '', // 客户Id
+  customerShortName:'' ,//客户名称
   ip: '', // ip-模糊查询
   surveyStatus: [], // 调查状态:1 C=完成 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
   randomIdentityId: '', // 随机身份id
@@ -209,6 +210,7 @@ function onReset() {
     projectId: '', // 项目id
     projectName: '', // 项目名称-模糊查询
     customerId: '', // 客户Id
+    customerShortName:'', //客户名称
     ip: '', // ip-模糊查询
     surveyStatus: [], // 调查状态:1 C=完成 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
     randomIdentityId: '', // 随机身份id
@@ -225,6 +227,7 @@ function onReset() {
 onMounted(async () => {
   data.customerList = await customerStore.getCustomerList()
   data.country = await useStoreCountry.getCountry()
+  getCustomer()
   columns.value.forEach((item) => {
     if (item.checked) {
       checkList.value.push(item.prop)
@@ -327,8 +330,46 @@ onMounted(async () => {
       modelName: "tenantId",
       placeholder: computed(() => t("RecordsManagement.tenantID")),
     },
+    {
+      index: 13,
+      show: true,
+      type: "select",
+      modelName: "customerShortName",
+      placeholder: computed(() => t("callback.customerShortName")),
+      option: "clientIdOptions",
+      optionLabel: "label",
+      optionValue: "value",
+    },
   ];
 })
+const clientIdOptions: { label: string; value: string }[] = [];
+//回调记录
+const  getCustomer =async()=> {
+  clientIdOptions.length = 0;
+  const ress = await apiRecord.getCustomerCooperation({});
+
+if (ress.data && ress.data.getCooperationInfoLists ) {
+  ress.data.getCooperationInfoLists.forEach(
+    (item:any) => {
+      clientIdOptions.push({
+        label: item.tenantName,
+        value: item.tenantName,
+      });
+    },
+  );
+}
+if (ress.data && ress.data.getCustomerInfoLists ) {
+  ress.data.getCustomerInfoLists.forEach(
+    (item:any) => {
+      clientIdOptions.push({
+        label: item.customerName,
+        value: item.customerName,
+      });
+    },
+  );
+}
+
+}
 const formOption = {
   memberType: () => [
     { label: '外部会员', value: 1 },
@@ -345,6 +386,7 @@ const formOption = {
       label: item,
       value: index + 1,
     })),
+    clientIdOptions: () => clientIdOptions, // 添加 clientId 选项列表
 }
 const current = ref<any>() // 表格当前选中
 

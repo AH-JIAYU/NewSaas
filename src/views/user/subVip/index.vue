@@ -104,7 +104,7 @@ function sizeChange(size: number) {
 // 当前页码切换（翻页）
 function currentChange(page = 1) {
   // fetchData();
-  onCurrentChange(page);
+  onCurrentChange(page).then(() => fetchData());
 }
 // 分页 后端(刘):这块不好做分页，所有返回全部数据，前端做分页
 const DataList = computed(() => {

@@ -223,6 +223,7 @@ onMounted(async () => {
   });
   // 保存
   creator.saveSurveyFunc = (saveNo: number, callback: any) => {
+
     callback(saveNo, true);
     emits("onSubmit");
   };
@@ -251,9 +252,16 @@ defineExpose({
     return new Promise<void>(async (resolve) => {
       const toolboxJSON = ComponentCollection.Instance;
       const toolbox = creator.JSON;
-
+      if(!toolbox.pages){
+    ElMessage.warning({
+      message: '问卷调查为空，无法保存',
+      center: true,
+    });
+    return
+  }
       // 获取自定义问题的具体内容
       proces(toolbox, toolboxJSON);
+
       // 赋值JSON
       form.value.projectJson = JSON.stringify(toolbox);
       const locale = creator.JSON.locale || editorLocalization.currentLocale;
@@ -275,6 +283,8 @@ defineExpose({
           })
         );
       }
+
+
       // 编辑
       const { status } = await submitLoading(api.setSurvey(form.value));
       status === 1 &&

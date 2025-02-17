@@ -146,7 +146,7 @@ async function editBC(row: any, name: any, state: any) {
   surveyVipStore.NickNameList = null;
   queryData();
 }
-
+const memberBackgroundUrl = ref()
 // 选中列表
 const selectChange = (val: any) => {
   // resetList.value = val[0];
@@ -230,6 +230,7 @@ async function fetchData() {
     data.list = res.data.getMemberInfoList;
     pagination.value.total = res.data.total;
     listLoading.value = false;
+    memberBackgroundUrl.value = res.data.memberBackgroundUrl ? res.data.memberBackgroundUrl :import.meta.env.VITE_common_WEBSITE
   } catch (error) {
 
   } finally {
@@ -321,9 +322,9 @@ function handleCurrentChange(val: any) {
   else current.value = "";
 }
 
-const goSupplier = ()=> {
+const goSupplier = (row:any)=> {
   const tenantId = storage.local.get("tenantId")
-  // window.open(`http://localhost:9002/?tenantId =${tenantId}&isLogin=true`, '_blank');
+  window.open(`${memberBackgroundUrl.value}?loginType=2&tenantId=${tenantId}&name=${row.memberNickname}`, '_blank');
 }
 </script>
 
@@ -401,7 +402,7 @@ const goSupplier = ()=> {
                 </g>
               </svg>
               <span class="tableBig">
-                <el-link type="primary" @click="goSupplier"> {{ row.memberNickname }}</el-link>
+                <el-link type="primary" @click="goSupplier(row)"> {{ row.memberNickname }}</el-link>
 
                 </span>
             </div>
