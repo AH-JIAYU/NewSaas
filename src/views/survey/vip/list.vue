@@ -230,7 +230,7 @@ async function fetchData() {
     data.list = res.data.getMemberInfoList;
     pagination.value.total = res.data.total;
     listLoading.value = false;
-    memberBackgroundUrl.value = res.data.memberBackgroundUrl ? res.data.memberBackgroundUrl :import.meta.env.VITE_common_SUPPLIER
+    memberBackgroundUrl.value = res.data.memberBackgroundUrl ? res.data.memberBackgroundUrl :import.meta.env.VITE_common_WEBSITE
   } catch (error) {
 
   } finally {
