@@ -114,6 +114,7 @@ const queryForm = reactive<any>({
   projectId: '', // 项目id
   projectName: '', // 项目名称-模糊查询
   customerId: '', // 客户Id
+  customerShortName:'' ,//客户名称
   ip: '', // ip-模糊查询
   surveyStatus: [], // 调查状态:1 C=完成 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
   randomIdentityId: '', // 随机身份id
@@ -209,6 +210,7 @@ function onReset() {
     projectId: '', // 项目id
     projectName: '', // 项目名称-模糊查询
     customerId: '', // 客户Id
+    customerShortName:'', //客户名称
     ip: '', // ip-模糊查询
     surveyStatus: [], // 调查状态:1 C=完成 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
     randomIdentityId: '', // 随机身份id

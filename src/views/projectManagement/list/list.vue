@@ -16,7 +16,7 @@ import useProjectManagementListStore from "@/store/modules/projectManagement_lis
 import useDepartmentStore from "@/store/modules/department";
 import empty from "@/assets/images/empty.png";
 import { useI18n } from "vue-i18n";
-
+import apiRecord from "@/api/modules/record_callback";
 defineOptions({
   name: "list",
 });
@@ -406,6 +406,7 @@ onMounted(async () => {
       checkList.value.push(item.prop);
     }
   });
+  getCustomer()
   fetchData();
   formSearchList.value = [
     {
@@ -453,8 +454,8 @@ onMounted(async () => {
       modelName: "clientId",
       placeholder: computed(() => t("project.CustomerAbbreviation")),
       option: "clientId",
-      optionLabel: "customerAccord",
-      optionValue: "tenantCustomerId",
+      optionLabel: "label",
+      optionValue: "value",
     },
     {
       index: 6,
@@ -525,8 +526,37 @@ onMounted(async () => {
     },
   ];
 });
+const clientIdOptions: { label: string; value: string }[] = [];
+//回调记录
+const  getCustomer =async()=> {
+  clientIdOptions.length = 0;
+  const ress = await apiRecord.getCustomerCooperation({});
+
+if (ress.data && ress.data.getCooperationInfoLists ) {
+  ress.data.getCooperationInfoLists.forEach(
+    (item:any) => {
+      clientIdOptions.push({
+        label: item.tenantName,
+        value: item.tenantId,
+      });
+    },
+  );
+}
+
+if (ress.data && ress.data.getCustomerInfoLists ) {
+  ress.data.getCustomerInfoLists.forEach(
+    (item:any) => {
+      clientIdOptions.push({
+        label: item.customerName,
+        value: item.customerId,
+      });
+    },
+  );
+}
+
+}
 const formOption = {
-  clientId: async () => await customerStore.getCustomerList(),
+  clientId: () => clientIdOptions,
   allocationStatus: () => [
     { label: "供应商", value: 2 },
     { label: "内部站", value: 3 },

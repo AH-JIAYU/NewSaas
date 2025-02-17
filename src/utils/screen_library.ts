@@ -2,7 +2,7 @@
 import apiDictionary from "@/api/modules/basicDictionary";
 import useOtherFunctionsScreenLibraryStore from '@/store/modules/otherFunctions_screenLibrary' //  问卷
 import useBasicDictionaryStore from '@/store/modules/otherFunctions_basicDictionary' //  字典
-
+import { ElMessage } from "element-plus";
 const otherFunctionsScreenLibraryStore = useOtherFunctionsScreenLibraryStore() // 问卷
 const basicDictionaryStore = useBasicDictionaryStore() // 字典
 export async function customComponents() {
@@ -152,6 +152,9 @@ const typeMap: any = {
 };
 // 提交时 获取问题答案list
 export function convertData(originalData: any, locale: any) {
+  if(!originalData){
+    return
+  }
   const transformedData = originalData.flatMap((item: any) => {
     // 问题
     return item.elements.map((element: any) => {
@@ -206,6 +209,9 @@ export function convertData(originalData: any, locale: any) {
 
 // 提交时 获取type对应的json
 export function proces(toolbox: any, toolboxJSON: any) {
+  if(!toolbox.pages){
+    return
+  }
   toolbox.pages.forEach((item: any) => {
     item.elements.forEach((value: any) => {
       const data = toolboxJSON.customQuestionValues.find((ite: any) => ite.name === value.type)
