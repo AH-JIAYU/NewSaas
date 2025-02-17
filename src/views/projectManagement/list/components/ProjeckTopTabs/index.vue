@@ -86,6 +86,9 @@ const formRef = ref<any>(); // Ref 在edit中进行校验
 const editRef = ref<any>(); // 组件Ref 快捷操作： 新增客户
 const fold = ref(!props.tabIndex ? true : false); // 折叠 描述配额
 const Url = `${import.meta.env.VITE_APP_API_BASEURL}/api/project/uploadQiniu`;
+
+const token  = userStore.token;
+const headers = ref({ Token: token });
 let data = ref<any>({
   checked: false, //所属区域的全选按钮
   //基础设置
@@ -387,9 +390,42 @@ const beforeUpload = (file: any) => {
       message: "只能上传图片文件JPG，JPEG，PNG，GIF，DOC，XLS，PDF",
       center: true,
     });
+    return false;  // 如果是图片类型，就阻止上传
   }
-  return !isImage;
+  // 如果文件符合要求，执行自定义上传
+  // const formData = new FormData();
+  // formData.append("file", file);
+  // formData.append("token", token);  // 可以添加自定义的 token 或其他字段
+
+  // // 自定义上传方法
+  // uploadFile(formData);  // 上传文件
+
+  // // 阻止默认的上传行为
+  // return false;
 };
+// 自定义上传函数
+// const uploadFile = (formData: FormData) => {
+//   // 发送文件到服务器（可以使用 axios 或其他库）
+//   axios.post(url, formData, {
+//     headers: {
+//       "Content-Type": "multipart/form-data",  // 设置文件上传的 Content-Type
+//     },
+//   })
+//   .then((res:any) => {
+//     // 上传成功后的处理
+//     ElMessage.success({
+//       message: "上传成功！",
+//       center: true,
+//     });
+//   })
+//   .catch((error:any) => {
+//     // 上传失败后的处理
+//     ElMessage.error({
+//       message: "上传失败，请重试。",
+//       center: true,
+//     });
+//   });
+// };
 // 删除
 const handleRemove: any = async (uploadFile: any, uploadFiles: any) => {
   localToptTab.value.descriptionUrl = uploadFiles.map((item: any) => item.name);
@@ -1437,6 +1473,7 @@ const getProblemList = async () => {
                 <el-upload
                   v-model:file-list="fileList"
                   :action="Url"
+                  :headers="headers"
                   list-type="picture-card"
                   :drag="true"
                   :limit="10"
