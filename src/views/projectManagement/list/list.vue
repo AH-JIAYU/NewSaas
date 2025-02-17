@@ -1062,7 +1062,7 @@ function handleChange() {
               style="cursor: pointer"
             >
               <div
-                style="width: calc(100% - 1.25rem)"
+
                 class="parameter1"
                 @click="viewAllocations(row)"
               >
