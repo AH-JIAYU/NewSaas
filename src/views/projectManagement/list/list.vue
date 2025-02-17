@@ -725,8 +725,8 @@ function handleChange() {
         >
           <template #default="{ row }">
             <div class="flex-c">
-              <div class="oneLine" style="width: calc(100% - 1.25rem)">
-                <p class="oneLine tableBig">
+              <div style="width: calc(100% - 1.25rem)">
+                <p class="tableBig" style="white-space: normal;word-wrap: break-word;overflow-wrap: break-word;">
                   <span :class="row.isB2b === 2 ? 'red' : ''">{{
                     row.name
                   }}</span>
@@ -1036,7 +1036,7 @@ function handleChange() {
             </div>
           </template>
         </el-table-column>
-        <el-table-column :label="t('project.create')" width="200">
+        <el-table-column :label="t('project.createTime')" width="200">
           <template #default="{ row }">
             <div class="flex-c">
               {{ row.createTime }}
@@ -1060,25 +1060,13 @@ function handleChange() {
               v-if="row.allocationStatus == 2"
               class="flex-c"
               style="cursor: pointer"
+               @click="viewAllocations(row)"
             >
-              <div
-                style="width: calc(100% - 1.25rem)"
-                class="parameter1"
-                @click="viewAllocations(row)"
-              >
                 <el-tag
                   v-if="row.allocationType?.includes(2)"
                   type="danger"
                   class="tag-with-image oneLine"
                 >
-                  <img
-                    src="@/assets/images/gong.png"
-                    style="
-                      width: 0.9375rem;
-                      height: 0.9375rem;
-                      margin-right: 0.25rem;
-                    "
-                  />
                   <span>供应商</span>
                 </el-tag>
                 <el-tag
@@ -1086,14 +1074,6 @@ function handleChange() {
                   type="warning"
                   class="tag-with-image oneLine"
                 >
-                  <img
-                    src="@/assets/images/nei.png"
-                    style="
-                      width: 0.9375rem;
-                      height: 0.9375rem;
-                      margin-right: 0.25rem;
-                    "
-                  />
                   内部站
                 </el-tag>
 
@@ -1102,17 +1082,8 @@ function handleChange() {
                   type="primary"
                   class="tag-with-image oneLine"
                 >
-                  <img
-                    src="@/assets/images/he.png"
-                    style="
-                      width: 0.9375rem;
-                      height: 0.9375rem;
-                      margin-right: 0.25rem;
-                    "
-                  />
                   合作商
                 </el-tag>
-              </div>
             </div>
 
             <!-- <el-button class="tableBut" size="small" @click="viewAllocations(row, 1)" type="danger"
@@ -1181,23 +1152,16 @@ function handleChange() {
         </el-table-column>
         <el-table-column
           v-if="checkList.includes('create')"
-          prop="createTime"
+          prop="create"
           align="left"
           width="120"
           :label="t('project.create')"
           show-overflow-tooltip
         >
           <template #default="{ row }">
-            <div>
               <div class="fontC-System oneLine">
                 {{ row.createName }}
               </div>
-              <el-tooltip :content="row.createTime" placement="top">
-                <el-tag effect="plain" type="info">
-                  {{ format(row.createTime) }}
-                </el-tag>
-              </el-tooltip>
-            </div>
           </template>
         </el-table-column>
         <el-table-column
