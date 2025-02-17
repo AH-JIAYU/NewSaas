@@ -86,6 +86,9 @@ const formRef = ref<any>(); // Ref 在edit中进行校验
 const editRef = ref<any>(); // 组件Ref 快捷操作： 新增客户
 const fold = ref(!props.tabIndex ? true : false); // 折叠 描述配额
 const Url = `${import.meta.env.VITE_APP_API_BASEURL}/api/project/uploadQiniu`;
+
+const token  = userStore.token;
+const headers = ref({ Token: token });
 let data = ref<any>({
   checked: false, //所属区域的全选按钮
   //基础设置
@@ -379,17 +382,18 @@ const isItAPicture = (file: any) => {
   const isImage = whiteList.indexOf(fileSuffix) === -1;
   return isImage;
 };
-// 上传前
+// 上传前"jpg",
 const beforeUpload = (file: any) => {
   const isImage = isItAPicture(file);
   if (isImage) {
     ElMessage.warning({
-      message: "只能上传图片文件JPG，JPEG，PNG，GIF，DOC，XLS，PDF",
+      message: "只能上传图片文件JPG，JPEG，PNG，GIF，DOC，DOCX,XLS，PDF",
       center: true,
     });
+    return false;  // 如果是图片类型，就阻止上传
   }
-  return !isImage;
 };
+
 // 删除
 const handleRemove: any = async (uploadFile: any, uploadFiles: any) => {
   localToptTab.value.descriptionUrl = uploadFiles.map((item: any) => item.name);
@@ -955,6 +959,7 @@ const getProblemList = async () => {
                   v-model="localToptTab.clientId"
                   :disabled="localToptTab.projectType === 2"
                   clearable
+                  filterable
                   @change="changeClient"
                 >
                   <el-option
@@ -1436,6 +1441,7 @@ const getProblemList = async () => {
                 <el-upload
                   v-model:file-list="fileList"
                   :action="Url"
+                  :headers="headers"
                   list-type="picture-card"
                   :drag="true"
                   :limit="10"

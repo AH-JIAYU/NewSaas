@@ -198,6 +198,7 @@ defineExpose({
               placeholder="Select"
               v-model="data.formData.clientId"
               clearable
+              filterable
             >
               <el-option
                 v-for="item in data.customerList"
@@ -205,6 +206,7 @@ defineExpose({
                 :value="item.tenantCustomerId"
                 :label="item.customerAccord"
                 :disabled="item.isReveal === 1"
+
               >
                 <span style="float: left">{{ item.customerAccord }}</span>
                 <span
