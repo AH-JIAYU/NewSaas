@@ -186,11 +186,76 @@ function quickEdit(row: any, type: any) {
    */
   QuickEditRef.value.showEdit(row, type);
 }
+//上架，下架
+const isOnlineFn =async(type:any)=> {
+  const selectList = tableSortRef.value.getSelectionRows();
+    if (selectList.length === 0) {
+      ElMessage.warning({
+        message: t("project.projectSelect"),
+        center: true,
+      });
+      return
+    }
+    //projectType为1，
+    let paramsList1 = [];
+    let paramsList1Id:any = [];
+    let paramsList2 = [];
+    let paramsList2Id:any = [];
+    selectList.forEach((item:any) => {
+      if(item.projectType==1){
+        paramsList1.push(item);
+        paramsList1Id.push(item.projectId)
+      } else if(item.projectType==2){
+        paramsList2.push(item)
+        paramsList2Id.push(item.projectId)
+      }
+    })
+    //在线isOnline变离线传2，离线isOnline变在线传1，
+    if(paramsList1.length !=0){
+      const params = {
+      projectId: paramsList1Id,
+      isOnline: type =='上架'?1:2,
+    };
+    const { status } = await submitLoading(api.changestatus(params));
+    status === 1 &&
+      ElMessage.success({
+        message: t("project.changeSuccess"),
+        center: true,
+      });
+
+    fetchData();
+    }
+
+    if(paramsList2.length !=0){
+      try {
+      const params = {
+        type: 4, // 取消接收
+        idList: paramsList2Id,
+      };
+      const msg =
+        type=='上架'
+          ? t("project.recieveSuccess")
+          : t("project.cancelSuccess");
+      const { status } = await apiOut.updateReceiveStatus(params);
+      status === 1 &&
+        ElMessage.success({
+          message: msg,
+          center: true,
+        });
+      fetchData();
+    } catch (error) {}
+    }
+
+
+
+
+
+}
 // 修改状态
 async function changeStatus(row: any, val: any) {
   if (row.projectType === 1) {
     const params = {
-      projectId: row.projectId,
+      projectId: [row.projectId],
       isOnline: val,
     };
     const { status } = await submitLoading(api.changestatus(params));
@@ -620,6 +685,20 @@ function handleChange() {
             @click="dispatch"
           >
             调度
+          </el-button>
+          <el-button
+            type="warning"
+            size="default"
+            @click="isOnlineFn('上架')"
+          >
+            上架
+          </el-button>
+          <el-button
+            type="danger"
+            size="default"
+            @click="isOnlineFn('下架')"
+          >
+            下架
           </el-button>
           <el-checkbox
             v-model="checked1"
