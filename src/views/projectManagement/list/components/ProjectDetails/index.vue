@@ -991,14 +991,14 @@ defineExpose({ showEdit });
             </el-col>
             <el-col :span="8" v-if="data.projectType === 1">
               <el-form-item :label="t('projectDetail.projectPrice')">
-                <el-text v-if="data.form.currencyType === 1" class="text-bg">
+                <el-text v-if="data.form.currencyType === 'USD'" class="text-bg">
                   {{
-                    data.form.doMoneyPrice ? data.form.doMoneyPrice + "$" : "-"
+                    data.form.doMoneyPrice ?  "$" +data.form.doMoneyPrice  : "-"
                   }}
                 </el-text>
-                <el-text v-if="data.form.currencyType === 2" class="text-bg">
+                <el-text v-else-if="data.form.currencyType === 'CNY'" class="text-bg">
                   {{
-                    data.form.doMoneyPrice ? data.form.doMoneyPrice + "￥" : "-"
+                    data.form.doMoneyPrice ?  "￥" +data.form.doMoneyPrice  : "-"
                   }}
                 </el-text>
               </el-form-item>
