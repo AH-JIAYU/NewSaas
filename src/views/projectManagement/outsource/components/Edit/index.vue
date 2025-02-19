@@ -315,7 +315,7 @@ defineExpose({ showEdit });
       </div>
 
       <template #footer>
-        <div style="flex: auto">
+        <div class="flex-c">
           <el-button @click="closeHandler"> 取消 </el-button>
           <el-button type="primary" @click="onSubmit"> 确定 </el-button>
         </div>
@@ -324,6 +324,11 @@ defineExpose({ showEdit });
   </div>
 </template>
 <style lang="scss" scoped>
+.flex-c {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .select {
   background-color: var(--el-color-primary-light-9) !important;
   border: 1px solid #93c8ff !important;

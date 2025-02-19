@@ -149,7 +149,6 @@ onMounted(async () => {
   await customerStore.getCustomerList();
   let id: any = [];
   const res = await api.getCustomerCooperation({ customerId: id });
-  console.log("res", res);
 });
 defineExpose({
   showEdit,
