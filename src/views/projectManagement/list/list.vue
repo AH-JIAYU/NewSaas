@@ -1165,12 +1165,17 @@ function handleChange() {
             <el-button v-if="row.allocationStatus == 1" size="small">
               未分配
             </el-button>
+
             <div
               v-if="row.allocationStatus == 2"
               class="flex-c"
               style="cursor: pointer"
-               @click="viewAllocations(row)"
             >
+              <div
+
+                class="parameter1"
+                @click="viewAllocations(row)"
+              >
               <!-- 供应商标签  -->
                <div>
                   <el-tag
@@ -1178,6 +1183,14 @@ function handleChange() {
                   type="danger"
                   class="tag-with-image oneLine"
                 >
+                  <img
+                    src="@/assets/images/gong.png"
+                    style="
+                      width: 0.9375rem;
+                      height: 0.9375rem;
+                      margin-right: 0.25rem;
+                    "
+                  />
                   <span>供应商</span>
                 </el-tag>
                </div>
@@ -1189,6 +1202,14 @@ function handleChange() {
                   type="warning"
                   class="tag-with-image oneLine"
                 >
+                  <img
+                    src="@/assets/images/nei.png"
+                    style="
+                      width: 0.9375rem;
+                      height: 0.9375rem;
+                      margin-right: 0.25rem;
+                    "
+                  />
                   内部站
                 </el-tag>
                </div>
@@ -1200,9 +1221,18 @@ function handleChange() {
                   type="primary"
                   class="tag-with-image oneLine"
                 >
+                  <img
+                    src="@/assets/images/he.png"
+                    style="
+                      width: 0.9375rem;
+                      height: 0.9375rem;
+                      margin-right: 0.25rem;
+                    "
+                  />
                   合作商
                 </el-tag>
                </div>
+              </div>
             </div>
 
             <!-- <el-button class="tableBut" size="small" @click="viewAllocations(row, 1)" type="danger"
