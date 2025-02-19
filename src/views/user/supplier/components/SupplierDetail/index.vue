@@ -65,7 +65,14 @@ const payMethodList = [
           <div class="card-header">
             <div class="leftTitle">基本信息</div>
             <div class="rightStatus">
-              <span :class="
+              <img
+                src="@/assets/images/guanbi.png"
+                alt=""
+                v-if="detailData.supplierStatus === 1"
+              />
+              <img src="@/assets/images/kaiqi.png" alt="" v-else />
+
+              <!-- <span :class="
                     detailData.supplierStatus === 1 ? 'isOnlineSpanFalse' : 'isOnlineSpanTrue'
                   "></span>
               <div
@@ -76,7 +83,7 @@ const payMethodList = [
                 "
               >
                 {{ detailData.supplierStatus === 1 ? "关闭" : "开启" }}
-              </div>
+              </div> -->
             </div>
           </div>
         </template>

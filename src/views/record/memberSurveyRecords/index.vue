@@ -114,6 +114,7 @@ const queryForm = reactive<any>({
   projectId: '', // 项目id
   projectName: '', // 项目名称-模糊查询
   customerId: '', // 客户Id
+  customerShortName:'' ,//客户名称
   ip: '', // ip-模糊查询
   surveyStatus: [], // 调查状态:1 C=完成 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
   randomIdentityId: '', // 随机身份id
@@ -209,6 +210,7 @@ function onReset() {
     projectId: '', // 项目id
     projectName: '', // 项目名称-模糊查询
     customerId: '', // 客户Id
+    customerShortName:'', //客户名称
     ip: '', // ip-模糊查询
     surveyStatus: [], // 调查状态:1 C=完成 2 S=被甄别 3 Q=配额满 4 T=安全终止 5未完成
     randomIdentityId: '', // 随机身份id
@@ -231,6 +233,7 @@ onMounted(async () => {
       checkList.value.push(item.prop)
     }
   })
+
   fetchData()
   formSearchList.value = [
     {
@@ -422,7 +425,7 @@ function handleCurrentChange(val: any) {
       >
         <!-- <el-table-column align="left" type="selection" /> -->
         <el-table-column
-          v-if="checkList.includes('id')" width="200" align="left" prop="id" show-overflow-tooltip
+          v-if="checkList.includes('id')"  align="left" prop="id" show-overflow-tooltip
           fixed="left"  :label="t('RecordsManagement.clickID')"
         >
           <template #default="{ row }">
@@ -450,7 +453,7 @@ function handleCurrentChange(val: any) {
           </template>
         </el-table-column>
         <el-table-column
-          v-if="checkList.includes('projectId')" width="200" align="left" prop="projectId"
+          v-if="checkList.includes('projectId')"  align="left" prop="projectId"
           show-overflow-tooltip :label="t('RecordsManagement.project')"
         >
           <template #default="{ row }">
@@ -474,7 +477,7 @@ function handleCurrentChange(val: any) {
         <!--  样本来源,内部1，外部2，外包3 -->
         <el-table-column
           v-if="checkList.includes('sampleSource')" align="left" prop="customerShortName"
-          show-overflow-tooltip width="250" :label="t('RecordsManagement.sampleSource')"
+          show-overflow-tooltip  :label="t('RecordsManagement.sampleSource')"
         >
           <template #default="{ row }">
             <!-- 外包，样本来源显示、乙方的公司名称 -->
@@ -633,7 +636,7 @@ function handleCurrentChange(val: any) {
         </el-table-column> -->
         <el-table-column
           v-if="checkList.includes('doMoneyPrice')" align="left" prop="doMoneyPrice"
-          show-overflow-tooltip width="120"     :label="t('RecordsManagement.projectPrice')"
+          show-overflow-tooltip     :label="t('RecordsManagement.projectPrice')"
         >
           <template #default="{ row }">
             <div class="fontC-System">
@@ -662,7 +665,7 @@ function handleCurrentChange(val: any) {
           </template>
         </el-table-column>
         <el-table-column
-          v-if="checkList.includes('memberPrice')" align="left" prop="memberPrice" width="120"
+          v-if="checkList.includes('memberPrice')" align="left" prop="memberPrice"
            :label="t('RecordsManagement.costPrice')"
         >
           <template #default="{ row }">
@@ -706,7 +709,7 @@ function handleCurrentChange(val: any) {
 
         <el-table-column
           v-if="checkList.includes('ipBelong')" align="left" prop="ipBelong" show-overflow-tooltip
-          width="180" :label="t('RecordsManagement.IP-Area')"
+           :label="t('RecordsManagement.IP-Area')"
         >
           <template #default="{ row }">
             <el-tag type="primary">
@@ -811,7 +814,7 @@ function handleCurrentChange(val: any) {
         <!-- </div>
           </template>
         </el-table-column> -->
-        <el-table-column v-if="checkList.includes('surveyTime')" width="210" align="left"   :label="t('RecordsManagement.surveyTime')">
+        <el-table-column v-if="checkList.includes('surveyTime')"  align="left"   :label="t('RecordsManagement.surveyTime')">
           <template #default="{ row }">
             <div class="container">
               <div>
@@ -847,7 +850,7 @@ function handleCurrentChange(val: any) {
 
         <ElTableColumn
           v-if="checkList.includes('surveyStatus')" align="left" show-overflow-tooltip
-          width="120" prop=""  :label="t('RecordsManagement.surveyStatus')"
+          prop=""  :label="t('RecordsManagement.surveyStatus')"
         >
           <template #default="{ row }">
             <el-tag
@@ -914,7 +917,7 @@ function handleCurrentChange(val: any) {
         </ElTableColumn>
         <ElTableColumn
           v-if="checkList.includes('viceStatus')" align="left" show-overflow-tooltip
-          width="120" prop="" :label="t('RecordsManagement.viceState')"
+         prop="" :label="t('RecordsManagement.viceState')"
         >
           <template #default="{ row }">
             <div v-if="row.surveyStatus === 1">
@@ -1005,7 +1008,7 @@ function handleCurrentChange(val: any) {
         </ElTableColumn>
         <el-table-column
           v-if="checkList.includes('customerShortName')" align="left" prop="customerShortName"
-          show-overflow-tooltip  :label="t('RecordsManagement.CustomerAbbreviation')" width="100"
+          show-overflow-tooltip  :label="t('RecordsManagement.CustomerAbbreviation')"
         >
           <!-- 乙方显示甲方公司名称甲方显示客户简称 -->
           <template #default="{ row }">

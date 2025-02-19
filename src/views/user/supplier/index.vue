@@ -254,7 +254,7 @@ async function fetchData() {
     list.value = data.getTenantSupplierInfoList;
     pagination.value.total = data.total;
     listLoading.value = false;
-    supplierBackgroundUrl.value = data.supplierBackgroundUrl ? data.supplierBackgroundUrl : import.meta.env.VITE_common_SUPPLIER
+    supplierBackgroundUrl.value = data.supplierBackgroundUrl ? import.meta.env.VITE_common_HTTP + data.supplierBackgroundUrl : import.meta.env.VITE_common_SUPPLIER
   } catch (error) {
   } finally {
     listLoading.value = false;

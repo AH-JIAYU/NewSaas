@@ -16,7 +16,7 @@ import useProjectManagementListStore from "@/store/modules/projectManagement_lis
 import useDepartmentStore from "@/store/modules/department";
 import empty from "@/assets/images/empty.png";
 import { useI18n } from "vue-i18n";
-
+import apiRecord from "@/api/modules/record_callback";
 defineOptions({
   name: "list",
 });
@@ -186,11 +186,76 @@ function quickEdit(row: any, type: any) {
    */
   QuickEditRef.value.showEdit(row, type);
 }
+//上架，下架
+const isOnlineFn =async(type:any)=> {
+  const selectList = tableSortRef.value.getSelectionRows();
+    if (selectList.length === 0) {
+      ElMessage.warning({
+        message: t("project.projectSelect"),
+        center: true,
+      });
+      return
+    }
+    //projectType为1，
+    let paramsList1 = [];
+    let paramsList1Id:any = [];
+    let paramsList2 = [];
+    let paramsList2Id:any = [];
+    selectList.forEach((item:any) => {
+      if(item.projectType==1){
+        paramsList1.push(item);
+        paramsList1Id.push(item.projectId)
+      } else if(item.projectType==2){
+        paramsList2.push(item)
+        paramsList2Id.push(item.projectId)
+      }
+    })
+    //在线isOnline变离线传2，离线isOnline变在线传1，
+    if(paramsList1.length !=0){
+      const params = {
+      projectId: paramsList1Id,
+      isOnline: type =='上架'?1:2,
+    };
+    const { status } = await submitLoading(api.changestatus(params));
+    status === 1 &&
+      ElMessage.success({
+        message: t("project.changeSuccess"),
+        center: true,
+      });
+
+    fetchData();
+    }
+
+    if(paramsList2.length !=0){
+      try {
+      const params = {
+        type: 4, // 取消接收
+        idList: paramsList2Id,
+      };
+      const msg =
+        type=='上架'
+          ? t("project.recieveSuccess")
+          : t("project.cancelSuccess");
+      const { status } = await apiOut.updateReceiveStatus(params);
+      status === 1 &&
+        ElMessage.success({
+          message: msg,
+          center: true,
+        });
+      fetchData();
+    } catch (error) {}
+    }
+
+
+
+
+
+}
 // 修改状态
 async function changeStatus(row: any, val: any) {
   if (row.projectType === 1) {
     const params = {
-      projectId: row.projectId,
+      projectId: [row.projectId],
       isOnline: val,
     };
     const { status } = await submitLoading(api.changestatus(params));
@@ -406,6 +471,7 @@ onMounted(async () => {
       checkList.value.push(item.prop);
     }
   });
+  getCustomer()
   fetchData();
   formSearchList.value = [
     {
@@ -453,8 +519,8 @@ onMounted(async () => {
       modelName: "clientId",
       placeholder: computed(() => t("project.CustomerAbbreviation")),
       option: "clientId",
-      optionLabel: "customerAccord",
-      optionValue: "tenantCustomerId",
+      optionLabel: "label",
+      optionValue: "value",
     },
     {
       index: 6,
@@ -525,8 +591,37 @@ onMounted(async () => {
     },
   ];
 });
+const clientIdOptions: { label: string; value: string }[] = [];
+//回调记录
+const  getCustomer =async()=> {
+  clientIdOptions.length = 0;
+  const ress = await apiRecord.getCustomerCooperation({});
+
+if (ress.data && ress.data.getCooperationInfoLists ) {
+  ress.data.getCooperationInfoLists.forEach(
+    (item:any) => {
+      clientIdOptions.push({
+        label: item.tenantName,
+        value: item.tenantId,
+      });
+    },
+  );
+}
+
+if (ress.data && ress.data.getCustomerInfoLists ) {
+  ress.data.getCustomerInfoLists.forEach(
+    (item:any) => {
+      clientIdOptions.push({
+        label: item.customerName,
+        value: item.customerId,
+      });
+    },
+  );
+}
+
+}
 const formOption = {
-  clientId: async () => await customerStore.getCustomerList(),
+  clientId: () => clientIdOptions,
   allocationStatus: () => [
     { label: "供应商", value: 2 },
     { label: "内部站", value: 3 },
@@ -590,6 +685,20 @@ function handleChange() {
             @click="dispatch"
           >
             调度
+          </el-button>
+          <el-button
+            type="warning"
+            size="default"
+            @click="isOnlineFn('上架')"
+          >
+            上架
+          </el-button>
+          <el-button
+            type="danger"
+            size="default"
+            @click="isOnlineFn('下架')"
+          >
+            下架
           </el-button>
           <el-checkbox
             v-model="checked1"
@@ -725,8 +834,8 @@ function handleChange() {
         >
           <template #default="{ row }">
             <div class="flex-c">
-              <div class="oneLine" style="width: calc(100% - 1.25rem)">
-                <p class="oneLine tableBig">
+              <div style="width: calc(100% - 1.25rem)">
+                <p class="tableBig" style="white-space: normal;word-wrap: break-word;overflow-wrap: break-word;">
                   <span :class="row.isB2b === 2 ? 'red' : ''">{{
                     row.name
                   }}</span>
@@ -1036,7 +1145,7 @@ function handleChange() {
             </div>
           </template>
         </el-table-column>
-        <el-table-column :label="t('project.create')" width="200">
+        <el-table-column :label="t('project.createTime')" width="200">
           <template #default="{ row }">
             <div class="flex-c">
               {{ row.createTime }}
@@ -1060,12 +1169,8 @@ function handleChange() {
               v-if="row.allocationStatus == 2"
               class="flex-c"
               style="cursor: pointer"
+               @click="viewAllocations(row)"
             >
-              <div
-
-                class="parameter1"
-                @click="viewAllocations(row)"
-              >
               <!-- 供应商标签  -->
                <div>
                   <el-tag
@@ -1073,14 +1178,6 @@ function handleChange() {
                   type="danger"
                   class="tag-with-image oneLine"
                 >
-                  <img
-                    src="@/assets/images/gong.png"
-                    style="
-                      width: 0.9375rem;
-                      height: 0.9375rem;
-                      margin-right: 0.25rem;
-                    "
-                  />
                   <span>供应商</span>
                 </el-tag>
                </div>
@@ -1092,14 +1189,6 @@ function handleChange() {
                   type="warning"
                   class="tag-with-image oneLine"
                 >
-                  <img
-                    src="@/assets/images/nei.png"
-                    style="
-                      width: 0.9375rem;
-                      height: 0.9375rem;
-                      margin-right: 0.25rem;
-                    "
-                  />
                   内部站
                 </el-tag>
                </div>
@@ -1111,18 +1200,9 @@ function handleChange() {
                   type="primary"
                   class="tag-with-image oneLine"
                 >
-                  <img
-                    src="@/assets/images/he.png"
-                    style="
-                      width: 0.9375rem;
-                      height: 0.9375rem;
-                      margin-right: 0.25rem;
-                    "
-                  />
                   合作商
                 </el-tag>
                </div>
-              </div>
             </div>
 
             <!-- <el-button class="tableBut" size="small" @click="viewAllocations(row, 1)" type="danger"
@@ -1191,23 +1271,16 @@ function handleChange() {
         </el-table-column>
         <el-table-column
           v-if="checkList.includes('create')"
-          prop="createTime"
+          prop="create"
           align="left"
           width="120"
           :label="t('project.create')"
           show-overflow-tooltip
         >
           <template #default="{ row }">
-            <div>
               <div class="fontC-System oneLine">
                 {{ row.createName }}
               </div>
-              <el-tooltip :content="row.createTime" placement="top">
-                <el-tag effect="plain" type="info">
-                  {{ format(row.createTime) }}
-                </el-tag>
-              </el-tooltip>
-            </div>
           </template>
         </el-table-column>
         <el-table-column
