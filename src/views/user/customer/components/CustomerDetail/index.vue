@@ -68,7 +68,13 @@ defineExpose({
               {{ t("customer.detail.basicInformation") }}
             </div>
             <div class="rightStatus">
-              <span
+              <img src="@/assets/images/jinyong.png" alt="" v-if="detailData.customerStatus === 1" />
+              <img
+                src="@/assets/images/qiyong.png"
+                alt=""
+                v-else
+              />
+              <!-- <span
                 :class="
                   detailData.customerStatus === 1
                     ? 'isOnlineSpanFalse'
@@ -87,7 +93,7 @@ defineExpose({
                     ? t("customer.detail.disable")
                     : t("customer.detail.enable")
                 }}
-              </div>
+              </div> -->
             </div>
           </div>
         </template>
