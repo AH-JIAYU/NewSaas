@@ -837,6 +837,7 @@ function termination(row: any) {
 .rowCopy {
   width: 20px;
   display: none;
+  margin-right: 5px;
 }
 
 .el-table__row:hover .rowCopy {
@@ -895,7 +896,7 @@ function termination(row: any) {
 
 .flex-c {
   display: flex;
-  justify-content: start;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
 
@@ -907,7 +908,6 @@ function termination(row: any) {
   .edit {
     width: 20px;
     height: 20px;
-    margin-left: 5px;
     flex-shrink: 0;
     display: none;
     cursor: pointer;

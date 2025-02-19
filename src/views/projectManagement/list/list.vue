@@ -1050,7 +1050,7 @@ function handleChange() {
           v-if="checkList.includes('allocationType')"
           align="left"
           label="分配"
-          width="120"
+          width="180"
         >
           <template #default="{ row }">
             <el-button v-if="row.allocationStatus == 1" size="small">
@@ -1066,7 +1066,9 @@ function handleChange() {
                 class="parameter1"
                 @click="viewAllocations(row)"
               >
-                <el-tag
+              <!-- 供应商标签  -->
+               <div>
+                  <el-tag
                   v-if="row.allocationType?.includes(2)"
                   type="danger"
                   class="tag-with-image oneLine"
@@ -1081,6 +1083,10 @@ function handleChange() {
                   />
                   <span>供应商</span>
                 </el-tag>
+               </div>
+
+               <div>
+                 <!-- 内部站标签 -->
                 <el-tag
                   v-if="row.allocationType?.includes(3)"
                   type="warning"
@@ -1096,7 +1102,10 @@ function handleChange() {
                   />
                   内部站
                 </el-tag>
+               </div>
 
+               <div>
+                 <!-- 合作社标签 -->
                 <el-tag
                   v-if="row.allocationType?.includes(4)"
                   type="primary"
@@ -1112,6 +1121,7 @@ function handleChange() {
                   />
                   合作商
                 </el-tag>
+               </div>
               </div>
             </div>
 
@@ -1321,7 +1331,7 @@ function handleChange() {
   .edit {
     width: 1.25rem;
     height: 1.25rem;
-    margin-left: 0.3125rem;
+    // margin-left: 0.3125rem;
     flex-shrink: 0;
     display: none;
     cursor: pointer;
@@ -1377,18 +1387,24 @@ function handleChange() {
 }
 
 .parameter1 {
+  flex: 1 1 100%;
   display: flex;
   align-content: center;
   flex-wrap: wrap;
 
   .oneLine {
-    width: 40%;
+    // width: 40%;
     text-align: left;
     margin: 0 0.75rem 0.5rem 0;
   }
 
   .oneLine:nth-of-type(n + 3) {
     margin: 0 0.75rem 0 0;
+  }
+  div{
+    flex: 1 1 50%; /* 这将确保每个元素至少占据容器的50%宽度 */
+    min-width: 50%;
+    max-width: 50%;
   }
 }
 

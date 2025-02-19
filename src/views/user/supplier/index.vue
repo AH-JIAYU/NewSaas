@@ -1001,6 +1001,6 @@ const goSupplier = (row:any)=> {
 
 .littleButton {
   position: absolute;
-  right: 10px;
+  right: 15px;
 }
 </style>

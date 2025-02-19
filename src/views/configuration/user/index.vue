@@ -405,6 +405,7 @@ function handleCurrentChange(val: any) {
                   {{ t("common.resetPassword") }}
                 </el-button>
               </el-col>
+              <!-- 公共组件CR-表格控制 -->
               <el-col
                 style="display: flex; justify-content: flex-end"
                 :span="14"
@@ -852,6 +853,6 @@ function handleCurrentChange(val: any) {
 
 .littleButton {
   position: absolute;
-  right: 10px;
+  right: 15px;
 }
 </style>

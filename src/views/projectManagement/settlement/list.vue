@@ -1042,7 +1042,7 @@ function handleMoreStatus(row: any) {
 
 .flex-c {
   display: flex;
-  justify-content: start;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
 
@@ -1054,7 +1054,7 @@ function handleMoreStatus(row: any) {
   .edit {
     width: 20px;
     height: 20px;
-    margin-left: 5px;
+    // margin-left: 5px;
     flex-shrink: 0;
     display: none;
     cursor: pointer;
