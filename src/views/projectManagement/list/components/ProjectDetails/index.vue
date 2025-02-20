@@ -34,6 +34,8 @@ defineOptions({
 const { t } = useI18n();
 // 客户
 const customerStore = useUserCustomerStore();
+const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
+  usePagination();
 // 客户列表
 const customerList = ref<any>([]);
 const basicDictionaryStore = useBasicDictionaryStore(); //基础字典
@@ -60,6 +62,8 @@ const data = ref<any>({
   getProjectBrowserTypeInfoPie: [],
   platform: "size",
   type: "size",
+  projectId:'',
+  projectOperationInfoList:[] ,//操作日志
 });
 const imgList = ref<any>();
 const plugins = [
@@ -160,6 +164,7 @@ async function showEdit(row: any, projectType: any) {
   data.value.name = row.name; // 项目类型
   data.value.isOnline = row.isOnline;
   data.value.allocationStatus = row.allocationStatus;
+  data.value.projectId =row.projectId;
   const res = await obtainLoading(api.detail({ projectId: row.projectId }));
   data.value.form = res.data;
   data.value.getProjectSystemTypeInfoList =
@@ -336,6 +341,7 @@ async function showEdit(row: any, projectType: any) {
   }
   getCountryQuestion();
   dialogTableVisible.value = true;
+  getLog()
   nextTick(() => {
     echarts1();
     echarts2();
@@ -347,6 +353,24 @@ async function showEdit(row: any, projectType: any) {
   });
 }
 
+const getLog =()=> {
+  let params = {
+    projectId: data.value.projectId,
+    ...getParams(),
+  }
+  api.getProjectOperationList(params).then((res:any)=> {
+    data.value.projectOperationInfoList = res.data?.projectOperationInfoList || [];
+    pagination.value.total = res.data.total;
+  })
+}
+// 每页数量切换
+function sizeChange(size: number) {
+  onSizeChange(size).then(() => getLog());
+}
+// 当前页码切换（翻页）
+function currentChange(page = 1) {
+  onCurrentChange(page).then(() => getLog());
+}
 // 回显区域和问卷
 const getCountryQuestion = async () => {
   if (data.value.form.projectQuotaInfoList.length) {
@@ -1462,7 +1486,7 @@ defineExpose({ showEdit });
           </div>
         </template>
         <el-table
-          :data="data.form.projectOperationInfoList"
+          :data="data.projectOperationInfoList"
           style="width: 100%"
         >
           <el-table-column
@@ -1504,6 +1528,18 @@ defineExpose({ showEdit });
             </template>
           </el-table-column>
         </el-table>
+        <ElPagination
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
+        :page-sizes="pagination.sizes"
+        :layout="pagination.layout"
+        :hide-on-single-page="false"
+        class="pagination"
+        background
+        @size-change="sizeChange"
+        @current-change="currentChange"
+      />
       </el-card>
 
       <template #footer>

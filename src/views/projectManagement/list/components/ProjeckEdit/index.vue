@@ -98,13 +98,29 @@ function initializeLeftTabsData(data: any) {
   };
   leftTabsData = [];
   // 新增主数据作为第一个 Tab
-  const { projectInfoList, ...newData } = cloneDeep(data);
+  const { projectInfoList, ...newData} = cloneDeep(data);
+ if (newData.browser) {
+    // 浏览器
+    newData.browser = newData.browser.split(",");
+  }
+  if (newData.operatingSystem) {
+    // 操作系统(后端刘定义类型为字符串，前端回显转换)
+    newData.operatingSystem =
+    newData.operatingSystem.split(",");
+  }
+
+
   if (newData.descriptionUrl) {
     newData.descriptionUrl = newData.descriptionUrl.split(",");
   } else {
     newData.descriptionUrl = [];
   }
+
   leftTabsData.push(newData);
+  // leftTabsData.push(browser);
+  // leftTabsData.push(operatingSystem);
+
+
 
   // // // 如果存在 children，为每个 child 创建一个 Tab
   if (projectInfoList && projectInfoList.length) {
@@ -139,6 +155,7 @@ function initializeLeftTabsData(data: any) {
   }
   // 存储编辑前的数据
   projectManagementListStore.dataBeforeEditing = cloneDeep(leftTabsData)
+
 
 }
 // 暂存

@@ -17,6 +17,7 @@ import useDepartmentStore from "@/store/modules/department";
 import empty from "@/assets/images/empty.png";
 import { useI18n } from "vue-i18n";
 import apiRecord from "@/api/modules/record_callback";
+import { multiply } from "lodash-es";
 defineOptions({
   name: "list",
 });
@@ -137,7 +138,7 @@ const search = ref<any>({
   projectId: "", // 	项目Id
   name: "", // 	项目名称模糊匹配
   projectIdentification: "", // 	项目标识模糊查询
-  clientId: "", // 	所属客户编号Id
+  clientIdList: [], // 	所属客户编号Id
   countryId: [], // 所属区域编号Id
   createName: "", // 	创建人-模糊查询
   allocation: "", // 	分配状态:1已经分配 2:未分配
@@ -358,7 +359,7 @@ function onReset() {
     projectId: "", // 	项目Id
     name: "", // 	项目名称模糊匹配
     projectIdentification: "", // 	项目标识模糊查询
-    clientId: "", // 	所属客户编号Id
+    clientIdList: [], // 	所属客户编号Id
     countryId: "", // 所属区域编号Id
     createName: "", // 	创建人-模糊查询
     allocation: "", // 	分配状态:1已经分配 2:未分配
@@ -513,14 +514,15 @@ onMounted(async () => {
       optionValue: "id",
     },
     {
-      index: 55,
+      index: 5,
       show: true,
       type: "select",
-      modelName: "clientId",
+      modelName: "clientIdList",
       placeholder: computed(() => t("project.CustomerAbbreviation")),
       option: "clientId",
       optionLabel: "label",
       optionValue: "value",
+      multiple:true,
     },
     {
       index: 6,
@@ -641,6 +643,7 @@ const formOption = {
     { label: "合作商分配", value: 2 },
   ],
   isOnlineType: () => [
+  { label: "全部", value: 0 },
     { label: "在线", value: 1 },
     { label: "离线", value: 2 },
   ],
