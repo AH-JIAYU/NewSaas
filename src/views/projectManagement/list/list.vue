@@ -1177,9 +1177,8 @@ function handleChange() {
                 @click="viewAllocations(row)"
               >
               <!-- 供应商标签  -->
-               <div>
+               <div v-if="row.allocationType?.includes(2)">
                   <el-tag
-                  v-if="row.allocationType?.includes(2)"
                   type="danger"
                   class="tag-with-image oneLine"
                 >
@@ -1195,10 +1194,9 @@ function handleChange() {
                 </el-tag>
                </div>
 
-               <div>
+               <div v-if="row.allocationType?.includes(3)">
                  <!-- 内部站标签 -->
                 <el-tag
-                  v-if="row.allocationType?.includes(3)"
                   type="warning"
                   class="tag-with-image oneLine"
                 >
@@ -1214,10 +1212,9 @@ function handleChange() {
                 </el-tag>
                </div>
 
-               <div>
+               <div v-if="row.allocationType?.includes(4)">
                  <!-- 合作社标签 -->
                 <el-tag
-                  v-if="row.allocationType?.includes(4)"
                   type="primary"
                   class="tag-with-image oneLine"
                 >
