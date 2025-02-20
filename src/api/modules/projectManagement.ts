@@ -7,6 +7,11 @@ export default {
   detail: (data: any) => api.post("project/getProject", data),
   // 操作日志详情
   getProjectOperationRecordList: (data: any) => api.post("project/getProjectOperationRecordList", data),
+
+
+
+  getProjectOperationList: (data: any) => api.post("project/getProjectOperationList", data),
+
   // 新增
   create: (data: any) => api.post("project/addProject", data),
   // 编辑
