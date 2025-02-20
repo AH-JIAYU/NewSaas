@@ -812,9 +812,11 @@ watch(
   () => props.leftTab,
   (newVal, oleVal) => {
     localToptTab.value = newVal;
+    // console.log(localToptTab.value,'localToptTab.value')
   },
   { deep: true }
 );
+
 const acquiesceExchangeRate = ref<any>();
 onMounted(async () => {
   fileList.value = [];
@@ -838,15 +840,16 @@ onMounted(async () => {
   } else {
     currencyTypeRes.value = 1;
   }
-  if (localToptTab.value.browser.length) {
-    // 浏览器
-    localToptTab.value.browser = localToptTab.value.browser.split(",");
-  }
-  if (localToptTab.value.operatingSystem.length) {
-    // 操作系统(后端刘定义类型为字符串，前端回显转换)
-    localToptTab.value.operatingSystem =
-      localToptTab.value.operatingSystem.split(",");
-  }
+  // if (localToptTab.value.browser) {
+  //   // 浏览器
+  //   localToptTab.value.browser = localToptTab.value.browser.split(",");
+  // }
+  // if (localToptTab.value.operatingSystem) {
+  //   // 操作系统(后端刘定义类型为字符串，前端回显转换)
+  //   localToptTab.value.operatingSystem =
+  //     localToptTab.value.operatingSystem.split(",");
+  // }
+
 });
 defineExpose({ getUpLoad });
 nextTick(() => {
