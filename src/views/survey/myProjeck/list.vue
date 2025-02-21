@@ -33,14 +33,14 @@ const listLoading = ref<boolean>(true);
 const CheckEditRef = ref<any>();
 const checkMembershipPriceRef = ref<any>();
 // 右侧工具栏配置变量
-const border = ref(false);
+const border = ref(true);
 const checkList = ref<any>([]);
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const formSearchList = ref<any>()//表单排序配置
 const formSearchName = ref<string>('formSearch-myProjeck')// 表单排序name
 // 表格控件-控制全屏
 const lineHeight = ref<any>("default");
-const stripe = ref(false);
+const stripe = ref(true);
 const columns = ref<any>([
   { prop: "project", label: "项目", sortabel: true, checked: true },
   { prop: "projectId", label: "项目ID", sortabel: true, checked: true },

@@ -45,14 +45,14 @@ const QuickEditRef = ref(); // 快速编辑
 const schedulingRef = ref(); // 调度
 const outsourceRef = ref(); // 外包
 // 右侧工具栏配置变量
-const border = ref(false);
+const border = ref(true);
 const checkList = ref<any>([]);
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 // 表格控件-控制全屏
 const lineHeight = ref<any>("default");
 const formSearchList = ref<any>(); // 表单排序配置
 const formSearchName = ref<string>("formSearch-list"); // 表单排序name
-const stripe = ref(false);
+const stripe = ref(true);
 const columns = ref([
   // { prop: "projectType", label: "项目类型", checked: true, sotrtable: true },
   {

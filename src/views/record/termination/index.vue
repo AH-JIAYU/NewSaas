@@ -18,8 +18,8 @@ const list = ref<Array<Object>>([]); // 列表
 const selectRows = ref(""); // 表格-选中行
 const checkList = ref<Array<Object>>([]); // 表格-展示的列
 
-const border = ref(false); // 表格控件-是否展示边框
-const stripe = ref(false); // 表格控件-是否展示斑马条
+const border = ref(true); // 表格控件-是否展示边框
+const stripe = ref(true); // 表格控件-是否展示斑马条
 const lineHeight = ref<any>("default"); // 表格控件-控制表格大小
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const formSearchList = ref<any>(); //表单排序配置

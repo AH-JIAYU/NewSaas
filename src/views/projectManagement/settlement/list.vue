@@ -47,11 +47,11 @@ const StatusDetailRef = ref();
 // 右侧工具栏配置变量
 // 表格控件-高度自适应
 const tableAutoHeight = ref(false);
-const border = ref(false);
+const border = ref(true);
 const checkList = ref<any>([]);
 const isFullscreen = ref(false);
 const lineHeight = ref<any>("default");
-const stripe = ref(false);
+const stripe = ref(true);
 const selectRows = ref<any>([]);
 const columns = ref<any>([
   {

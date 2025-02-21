@@ -93,9 +93,9 @@ const userForm = ref<any>({
   // 表格是否自适应高度
   tableAutoHeight: false,
   // 表格控件-是否展示边框
-  border: false,
+  border: true,
   // 表格控件-是否展示斑马条
-  stripe: false,
+  stripe: true,
   // 表格控件-控制表格大小
   lineHeight: "default",
   checkList: [],

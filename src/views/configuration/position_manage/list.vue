@@ -33,13 +33,13 @@ const editRef = ref();
 const tableAutoHeight = ref(false);
 // 表格控件-高度自适应
 const checkList = ref<any>([]);
-const border = ref(false);
+const border = ref(true);
 const lineHeight = ref<any>("default");
 //快速编辑
 const QuickEditRef = ref();
 //表格当前选中
 const current = ref<any>();
-const stripe = ref(false);
+const stripe = ref(true);
 const selectRows = ref<any>([]);
 // 表单排序name
 const formSearchName = ref<string>("formSearch-position_manage");

@@ -24,7 +24,7 @@ const tableSortRef2 = ref();
 const addAllocationEditRef = ref();
 // loading加载
 const listLoading = ref<boolean>(true);
-const border = ref(false);
+const border = ref(true);
 // 获取组件变量
 const editRef = ref();
 const data = ref<any>({
@@ -39,7 +39,7 @@ const formSearchList = ref<any>(); //表单排序配置
 const formSearchList2 = ref<any>(); //表单排序配置接收项目
 const formSearchName = ref<string>("formSearch-outsource"); // 表单排序name
 const lineHeight = ref<any>("default");
-const stripe = ref(false);
+const stripe = ref(true);
 const columns = ref<any>([
   {
     sotrtable: true,

@@ -21,10 +21,10 @@ const editRef = ref();
 // 右侧工具栏配置变量
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const checkList = ref<any>([]);
-const border = ref(false);
+const border = ref(true);
 const isFullscreen = ref(false);
 const lineHeight = ref<any>("default");
-const stripe = ref(false);
+const stripe = ref(true);
 const selectRows = ref<any>([]);
 const billStatusList = [
   { label: "待收票", value: 1 },
