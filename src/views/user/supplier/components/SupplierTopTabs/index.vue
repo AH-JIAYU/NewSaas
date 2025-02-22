@@ -9,7 +9,7 @@ import api from "@/api/modules/user_supplier";
 import useBasicDictionaryStore from "@/store/modules/otherFunctions_basicDictionary"; //基础字典
 import useUserStore from "@/store/modules/user"; // 用户汇率
 import { useI18n } from "vue-i18n"; // 国际化
-
+import { ElMessage, ElMessageBox } from "element-plus";
 // 用户信息
 const userStore = useUserStore();
 const { t } = useI18n(); // 国际化
@@ -304,7 +304,19 @@ const customerChange = () => {
     .filter(Boolean); // 去除null值
   props.leftTab.updateTenantSupplierCustomerInfoList = updatedList;
 };
-
+const reFreshCode =()=> {
+  ElMessageBox.confirm(`确认重置密码吗？`, "确认信息")
+    .then(() => {
+      // api.delete(ids).then(() => {
+      //   getDictionaryItemList();
+      //   ElMessage.success({
+      //     message: "删除成功",
+      //     center: true,
+      //   });
+      // });
+    })
+    .catch(() => { });
+}
 // console.log("data.relatedCustomers", data.relatedCustomers);
 </script>
 <template>
@@ -461,15 +473,21 @@ const customerChange = () => {
                   </el-select>
                 </el-form-item>
               </el-col>
-              <!-- <el-col :span="8">
-                <el-form-item label="结算币种" prop="">
-                  <el-select v-model="props.leftTab.currencyType" value-key="" :disabled="!!props.leftTab.tenantSupplierId" style="width: 22.4375rem" placeholder="请选择币种"
-                    clearable filterable @change="">
-                    <el-option v-for="item in currencyList" :key="item.value" :label="item.label" :value="item.value">
-                    </el-option>
-                  </el-select>
-                </el-form-item>
-              </el-col> -->
+              <el-col :span="8">
+                <el-form-item label="初始密码">
+
+<el-input clearable value="123456" disabled style="width: 80%"/>
+<el-tooltip
+effect="dark"
+content="重置密码"
+placement="top-start"
+>
+<img src="@/assets/images/refresh.png" alt="" style="margin-left: 10px;cursor: pointer;" @click="reFreshCode">
+</el-tooltip>
+
+
+</el-form-item>
+              </el-col>
               <el-col :span="8">
                 <el-form-item
                   v-if="props.leftTab.type === 'company'"
