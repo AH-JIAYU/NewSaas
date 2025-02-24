@@ -2,18 +2,26 @@
 import { ElMessage } from "element-plus";
 import SupplierDetailDetail from "../SupplierDetailDetail/index.vue";
 import api from "@/api/modules/user_supplier";
+
 import { obtainLoading } from "@/utils/apiLoading";
 
 const emit = defineEmits(["fetch-data"]);
 const drawerisible = ref(false);
 const checkRef = ref<any>();
 const detailData = ref<any>(); // 详情数据
+  const form = ref<any>({
+    tenantSupplierId:''
+  })
 async function showEdit(row: any) {
   const params = {
     tenantSupplierId: row.tenantSupplierId,
+    getTenantCustomerOperationInfosList:[]
   };
+  form.value.tenantSupplierId =row.tenantSupplierId;
   const { status, data } = await obtainLoading(api.detail(params));
   detailData.value = data;
+
+  getLog()
 
   drawerisible.value = true;
 }
@@ -46,6 +54,26 @@ const payMethodList = [
     label: "paypal",
   },
 ];
+const { pagination, getParams, onSizeChange, onCurrentChange, onSortChange } =
+  usePagination();
+const getLog =()=> {
+  let params = {
+    tenantSupplierId: form.value.tenantSupplierId,
+    ...getParams(),
+  }
+  api.getOperationList(params).then((res:any)=> {
+    form.value.getTenantCustomerOperationInfosList = res.data?.getTenantCustomerOperationInfosList || [];
+    pagination.value.total = res.data.total;
+  })
+}
+// 每页数量切换
+function sizeChange(size: number) {
+  onSizeChange(size).then(() => getLog());
+}
+// 当前页码切换（翻页）
+function currentChange(page = 1) {
+  onCurrentChange(page).then(() => getLog());
+}
 </script>
 
 <template lang="">
@@ -232,7 +260,7 @@ const payMethodList = [
             <span>操作日志</span>
           </div>
         </template>
-  <el-table :data="detailData.getTenantCustomerOperationInfosList" stripe>
+  <el-table :data="form.getTenantCustomerOperationInfosList" stripe>
     <el-table-column align="left" type="index" label="序号" width="80" />
     <el-table-column align="left" prop="createTime" label="操作时间" />
     <el-table-column align="left" prop="createName" label="操作人" />
@@ -255,6 +283,18 @@ const payMethodList = [
             </template>
     </el-table-column>
   </el-table>
+  <ElPagination
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
+        :page-sizes="pagination.sizes"
+        :layout="pagination.layout"
+        :hide-on-single-page="false"
+        class="pagination"
+        background
+        @size-change="sizeChange"
+        @current-change="currentChange"
+      />
 </el-card>
 </el-form>
 <SupplierDetailDetail ref="checkRef" />
