@@ -307,7 +307,7 @@ const customerChange = () => {
 const reFreshCode =()=> {
   ElMessageBox.confirm(`确认重置密码吗？`, "确认信息")
     .then(() => {
-      api.supplierResetPassword({tenantSupplierId:props.leftTab.tenantSupplierId}).then(() => {
+      api.supplierResetPassword({supplierId:props.leftTab.tenantSupplierId}).then(() => {
         ElMessage.success({
           message: "重置密码成功",
           center: true,
