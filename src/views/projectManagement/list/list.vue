@@ -17,6 +17,7 @@ import useDepartmentStore from "@/store/modules/department";
 import empty from "@/assets/images/empty.png";
 import { useI18n } from "vue-i18n";
 import apiRecord from "@/api/modules/record_callback";
+import { multiply } from "lodash-es";
 defineOptions({
   name: "list",
 });
@@ -44,14 +45,14 @@ const QuickEditRef = ref(); // 快速编辑
 const schedulingRef = ref(); // 调度
 const outsourceRef = ref(); // 外包
 // 右侧工具栏配置变量
-const border = ref(false);
+const border = ref(true);
 const checkList = ref<any>([]);
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 // 表格控件-控制全屏
 const lineHeight = ref<any>("default");
 const formSearchList = ref<any>(); // 表单排序配置
 const formSearchName = ref<string>("formSearch-list"); // 表单排序name
-const stripe = ref(false);
+const stripe = ref(true);
 const columns = ref([
   // { prop: "projectType", label: "项目类型", checked: true, sotrtable: true },
   {
@@ -137,7 +138,7 @@ const search = ref<any>({
   projectId: "", // 	项目Id
   name: "", // 	项目名称模糊匹配
   projectIdentification: "", // 	项目标识模糊查询
-  clientId: "", // 	所属客户编号Id
+  clientIdList: [], // 	所属客户编号Id
   countryId: [], // 所属区域编号Id
   createName: "", // 	创建人-模糊查询
   allocation: "", // 	分配状态:1已经分配 2:未分配
@@ -186,11 +187,76 @@ function quickEdit(row: any, type: any) {
    */
   QuickEditRef.value.showEdit(row, type);
 }
+//上架，下架
+const isOnlineFn =async(type:any)=> {
+  const selectList = tableSortRef.value.getSelectionRows();
+    if (selectList.length === 0) {
+      ElMessage.warning({
+        message: t("project.projectSelect"),
+        center: true,
+      });
+      return
+    }
+    //projectType为1，
+    let paramsList1 = [];
+    let paramsList1Id:any = [];
+    let paramsList2 = [];
+    let paramsList2Id:any = [];
+    selectList.forEach((item:any) => {
+      if(item.projectType==1){
+        paramsList1.push(item);
+        paramsList1Id.push(item.projectId)
+      } else if(item.projectType==2){
+        paramsList2.push(item)
+        paramsList2Id.push(item.projectId)
+      }
+    })
+    //在线isOnline变离线传2，离线isOnline变在线传1，
+    if(paramsList1.length !=0){
+      const params = {
+      projectId: paramsList1Id,
+      isOnline: type =='上架'?1:2,
+    };
+    const { status } = await submitLoading(api.changestatus(params));
+    status === 1 &&
+      ElMessage.success({
+        message: t("project.changeSuccess"),
+        center: true,
+      });
+
+    fetchData();
+    }
+
+    if(paramsList2.length !=0){
+      try {
+      const params = {
+        type: 4, // 取消接收
+        idList: paramsList2Id,
+      };
+      const msg =
+        type=='上架'
+          ? t("project.recieveSuccess")
+          : t("project.cancelSuccess");
+      const { status } = await apiOut.updateReceiveStatus(params);
+      status === 1 &&
+        ElMessage.success({
+          message: msg,
+          center: true,
+        });
+      fetchData();
+    } catch (error) {}
+    }
+
+
+
+
+
+}
 // 修改状态
 async function changeStatus(row: any, val: any) {
   if (row.projectType === 1) {
     const params = {
-      projectId: row.projectId,
+      projectId: [row.projectId],
       isOnline: val,
     };
     const { status } = await submitLoading(api.changestatus(params));
@@ -293,7 +359,7 @@ function onReset() {
     projectId: "", // 	项目Id
     name: "", // 	项目名称模糊匹配
     projectIdentification: "", // 	项目标识模糊查询
-    clientId: "", // 	所属客户编号Id
+    clientIdList: [], // 	所属客户编号Id
     countryId: "", // 所属区域编号Id
     createName: "", // 	创建人-模糊查询
     allocation: "", // 	分配状态:1已经分配 2:未分配
@@ -448,14 +514,15 @@ onMounted(async () => {
       optionValue: "id",
     },
     {
-      index: 55,
+      index: 5,
       show: true,
       type: "select",
-      modelName: "clientId",
+      modelName: "clientIdList",
       placeholder: computed(() => t("project.CustomerAbbreviation")),
       option: "clientId",
       optionLabel: "label",
       optionValue: "value",
+      multiple:true,
     },
     {
       index: 6,
@@ -576,6 +643,7 @@ const formOption = {
     { label: "合作商分配", value: 2 },
   ],
   isOnlineType: () => [
+  { label: "全部", value: 0 },
     { label: "在线", value: 1 },
     { label: "离线", value: 2 },
   ],
@@ -620,6 +688,20 @@ function handleChange() {
             @click="dispatch"
           >
             调度
+          </el-button>
+          <el-button
+            type="warning"
+            size="default"
+            @click="isOnlineFn('上架')"
+          >
+            上架
+          </el-button>
+          <el-button
+            type="danger"
+            size="default"
+            @click="isOnlineFn('下架')"
+          >
+            下架
           </el-button>
           <el-checkbox
             v-model="checked1"
@@ -1080,40 +1162,77 @@ function handleChange() {
           v-if="checkList.includes('allocationType')"
           align="left"
           label="分配"
-          width="120"
+          width="180"
         >
           <template #default="{ row }">
             <el-button v-if="row.allocationStatus == 1" size="small">
               未分配
             </el-button>
+
             <div
               v-if="row.allocationStatus == 2"
               class="flex-c"
               style="cursor: pointer"
-               @click="viewAllocations(row)"
             >
-                <el-tag
-                  v-if="row.allocationType?.includes(2)"
+              <div
+
+                class="parameter1"
+                @click="viewAllocations(row)"
+              >
+              <!-- 供应商标签  -->
+               <div v-if="row.allocationType?.includes(2)">
+                  <el-tag
                   type="danger"
                   class="tag-with-image oneLine"
                 >
+                  <img
+                    src="@/assets/images/gong.png"
+                    style="
+                      width: 0.9375rem;
+                      height: 0.9375rem;
+                      margin-right: 0.25rem;
+                    "
+                  />
                   <span>供应商</span>
                 </el-tag>
+               </div>
+
+               <div v-if="row.allocationType?.includes(3)">
+                 <!-- 内部站标签 -->
                 <el-tag
-                  v-if="row.allocationType?.includes(3)"
                   type="warning"
                   class="tag-with-image oneLine"
                 >
+                  <img
+                    src="@/assets/images/nei.png"
+                    style="
+                      width: 0.9375rem;
+                      height: 0.9375rem;
+                      margin-right: 0.25rem;
+                    "
+                  />
                   内部站
                 </el-tag>
+               </div>
 
+               <div v-if="row.allocationType?.includes(4)">
+                 <!-- 合作社标签 -->
                 <el-tag
-                  v-if="row.allocationType?.includes(4)"
                   type="primary"
                   class="tag-with-image oneLine"
                 >
+                  <img
+                    src="@/assets/images/he.png"
+                    style="
+                      width: 0.9375rem;
+                      height: 0.9375rem;
+                      margin-right: 0.25rem;
+                    "
+                  />
                   合作商
                 </el-tag>
+               </div>
+              </div>
             </div>
 
             <!-- <el-button class="tableBut" size="small" @click="viewAllocations(row, 1)" type="danger"
@@ -1315,7 +1434,7 @@ function handleChange() {
   .edit {
     width: 1.25rem;
     height: 1.25rem;
-    margin-left: 0.3125rem;
+    // margin-left: 0.3125rem;
     flex-shrink: 0;
     display: none;
     cursor: pointer;
@@ -1371,18 +1490,24 @@ function handleChange() {
 }
 
 .parameter1 {
+  flex: 1 1 100%;
   display: flex;
   align-content: center;
   flex-wrap: wrap;
 
   .oneLine {
-    width: 40%;
+    // width: 40%;
     text-align: left;
     margin: 0 0.75rem 0.5rem 0;
   }
 
   .oneLine:nth-of-type(n + 3) {
     margin: 0 0.75rem 0 0;
+  }
+  div{
+    flex: 1 1 50%; /* 这将确保每个元素至少占据容器的50%宽度 */
+    min-width: 50%;
+    max-width: 50%;
   }
 }
 

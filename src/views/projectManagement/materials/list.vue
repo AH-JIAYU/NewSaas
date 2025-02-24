@@ -22,7 +22,7 @@ const { getParams, pagination, onSizeChange, onCurrentChange } =
 const tableSortRef = ref("");
 // loading加载
 const listLoading = ref<boolean>(false);
-const border = ref(false);
+const border = ref(true);
 // 获取组件变量
 const deleteRef = ref();
 const detailsRef = ref();
@@ -33,7 +33,7 @@ const checkList = ref<any>([]);
 const formSearchList = ref<any>(); //表单排序配置
 const formSearchName = ref<string>("formSearch-materials"); // 表单排序name
 const lineHeight = ref<any>("default");
-const stripe = ref(false);
+const stripe = ref(true);
 const selectRows = ref<any>([]);
 const columns = ref<any>([
   {

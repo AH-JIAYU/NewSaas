@@ -71,8 +71,8 @@ const data = ref<any>({
   loading: false,
   activeName: "myFinancial",
   tableAutoHeight: false, // 表格是否自适应高度
-  border: false, // 表格控件-是否展示边框
-  stripe: false, // 表格控件-是否展示斑马条
+  border: true, // 表格控件-是否展示边框
+  stripe: true, // 表格控件-是否展示斑马条
   lineHeight: "default", // 表格控件-控制表格大小
   checkList: [],
   /**
@@ -498,6 +498,6 @@ const settlement = async () => {
 
 .littleButton {
   position: absolute;
-  right: 10px;
+  right: 15px;
 }
 </style>

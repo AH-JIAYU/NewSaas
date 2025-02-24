@@ -619,6 +619,6 @@ function handleCurrentChange(val: any) {
 
 .littleButton {
   position: absolute;
-  right: 10px;
+  right: 15px;
 }
 </style>

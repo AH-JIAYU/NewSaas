@@ -18,7 +18,7 @@ const tableSortRef = ref("");
 const { t } = useI18n();
 // loading加载
 const listLoading = ref<boolean>(false);
-const border = ref(false);
+const border = ref(true);
 // 获取组件变量
 const editRef = ref();
 // 右侧工具栏配置变量
@@ -27,7 +27,7 @@ const checkList = ref<any>([]);
 const formSearchList = ref<any>(); //表单排序配置
 const formSearchName = ref<string>("formSearch-scheduling"); // 表单排序name
 const lineHeight = ref<any>("default");
-const stripe = ref(false);
+const stripe = ref(true);
 const columns = ref<any>([
   {
     sotrtable: true,
@@ -580,6 +580,6 @@ const formOption = {
 
 .littleButton {
   position: absolute;
-  right: 10px;
+  right: 15px;
 }
 </style>

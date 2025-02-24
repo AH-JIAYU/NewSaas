@@ -39,8 +39,8 @@ const QuickEditRef = ref(); //快速编辑
 const AssociatedProjectsRef = ref(); //查看关联项目数
 const current = ref<any>(); //表格当前选中
 const selectRows = ref(); // 表格选中行
-const border = ref(false); // 表格控件-边框
-const stripe = ref(false); // 表格控件-条纹
+const border = ref(true); // 表格控件-边框
+const stripe = ref(true); // 表格控件-条纹
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const lineHeight = ref<any>("default"); // 表格控件-大小
 const checkList = ref<any>([]); // 表格控件-展示列
@@ -837,6 +837,7 @@ function termination(row: any) {
 .rowCopy {
   width: 20px;
   display: none;
+  margin-right: 5px;
 }
 
 .el-table__row:hover .rowCopy {
@@ -895,7 +896,7 @@ function termination(row: any) {
 
 .flex-c {
   display: flex;
-  justify-content: start;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
 
@@ -907,7 +908,6 @@ function termination(row: any) {
   .edit {
     width: 20px;
     height: 20px;
-    margin-left: 5px;
     flex-shrink: 0;
     display: none;
     cursor: pointer;

@@ -24,4 +24,10 @@ export default {
   // 合租租户列表集合
   getTenantSupplierInfo: (data: any) =>
     api.post("tenantSupplier/getTenantSupplierInfo", data),
+  //操作日志  少一个total
+  getOperationList: (data: any) =>
+    api.post("tenantSupplier/getOperationList", data),
+  //重置密码
+  supplierResetPassword: (data: any) =>
+    api.post("tenantSupplier/supplierResetPassword", data),
 };

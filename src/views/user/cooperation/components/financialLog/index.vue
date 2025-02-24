@@ -17,8 +17,8 @@ const data = ref<any>({
   loading: false,
   activeName: "myFinancial",
   tableAutoHeight: false, // 表格是否自适应高度
-  border: false, // 表格控件-是否展示边框
-  stripe: false, // 表格控件-是否展示斑马条
+  border: true, // 表格控件-是否展示边框
+  stripe: true, // 表格控件-是否展示斑马条
   lineHeight: "default", // 表格控件-控制表格大小
   checkList: [],
   search: {
@@ -292,7 +292,7 @@ defineExpose({
       </template>
 </ElTable>
 <ElPagination :current-page="pagination.page" :total="pagination.total" :page-size="pagination.size"
-  :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" class="pagination" background
+  :page-sizes="pagination.sizes" :layout="pagination.layout" :hide-on-single-page="false" background
   @size-change="sizeChange" @current-change="currentChange" />
 
 </template>

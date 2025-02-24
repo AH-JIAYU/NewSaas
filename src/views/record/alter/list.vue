@@ -29,10 +29,10 @@ const detailRef = ref();
 // 表格控件-高度自适应
 const tableAutoHeight = ref(false);
 const checkList = ref<any>([]);
-const border = ref(false);
+const border = ref(true);
 const isFullscreen = ref(false);
 const lineHeight = ref<any>("default");
-const stripe = ref(false);
+const stripe = ref(true);
 const selectRows = ref<any>([]);
 const formSearchList = ref<any>(); //表单排序配置
 const formSearchName = ref<string>("formSearch-alter"); // 表单排序name

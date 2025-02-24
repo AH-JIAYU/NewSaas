@@ -87,9 +87,9 @@ const userForm = ref<any>({
   // 表格是否自适应高度
   tableAutoHeight: false,
   // 表格控件-是否展示边框
-  border: false,
+  border: true,
   // 表格控件-是否展示斑马条
-  stripe: false,
+  stripe: true,
   // 表格控件-控制表格大小
   lineHeight: "default",
   checkList: [],
@@ -251,18 +251,31 @@ function onCreate(row?: any) {
 }
 // 选中列表
 const selectChange = (val: any) => {
-  // resetList.value = val[0];
+
+   resetList.value = val;
+  // console.log(resetList.value,'resetList.value')
   // 只允许选中一个项
-  if (val.length > 1) {
-    userItemRef.value.clearSelection();
-    userItemRef.value.toggleRowSelection(val[val.length - 1]);
-  }
-  resetList.value = val[val.length - 1];
+  // if (val.length > 1) {
+  //   userItemRef.value.clearSelection();
+  //   userItemRef.value.toggleRowSelection(val[val.length - 1]);
+  // }
+  // resetList.value = val[val.length - 1];
 };
 // 重置密码
 function onResetPassword() {
+
+if(resetList.value.length >1){
+  ElMessage.warning({
+            message: '重置密码仅支持单个选择',
+            center: true,
+          });
+  return
+}
+
+
+
   if (resetList.value) {
-    const { userName, id } = resetList.value;
+    const { userName, id } = resetList.value [0];
     ElMessageBox.confirm(
       `${t("configuration.user.confirm")}${userName}${t("configuration.user.reset")}`,
       t("configuration.user.confirmationInformation"),
@@ -405,6 +418,7 @@ function handleCurrentChange(val: any) {
                   {{ t("common.resetPassword") }}
                 </el-button>
               </el-col>
+              <!-- 公共组件CR-表格控制 -->
               <el-col
                 style="display: flex; justify-content: flex-end"
                 :span="14"
@@ -852,6 +866,6 @@ function handleCurrentChange(val: any) {
 
 .littleButton {
   position: absolute;
-  right: 10px;
+  right: 15px;
 }
 </style>

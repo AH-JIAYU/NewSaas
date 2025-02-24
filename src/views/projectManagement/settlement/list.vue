@@ -47,11 +47,11 @@ const StatusDetailRef = ref();
 // 右侧工具栏配置变量
 // 表格控件-高度自适应
 const tableAutoHeight = ref(false);
-const border = ref(false);
+const border = ref(true);
 const checkList = ref<any>([]);
 const isFullscreen = ref(false);
 const lineHeight = ref<any>("default");
-const stripe = ref(false);
+const stripe = ref(true);
 const selectRows = ref<any>([]);
 const columns = ref<any>([
   {
@@ -1042,7 +1042,7 @@ function handleMoreStatus(row: any) {
 
 .flex-c {
   display: flex;
-  justify-content: start;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
 
@@ -1054,7 +1054,7 @@ function handleMoreStatus(row: any) {
   .edit {
     width: 20px;
     height: 20px;
-    margin-left: 5px;
+    // margin-left: 5px;
     flex-shrink: 0;
     display: none;
     cursor: pointer;

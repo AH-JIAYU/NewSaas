@@ -64,12 +64,19 @@ defineExpose({
     @close="close"
   >
     <el-form label-position="right">
-      <el-card class="box-card">
+      <el-card >
         <template #header>
           <div class="card-header">
             <div class="leftTitle">基本信息</div>
             <div class="rightStatus">
-              <span
+              <img src="@/assets/images/noCooperation.png" alt="" v-if="detailData.customerStatus === 4" />
+              <img
+                src="@/assets/images/cooperation.png"
+                alt=""
+                v-else
+              />
+
+              <!-- <span
                 :class="
                   detailData.customerStatus === 4
                     ? 'isOnlineSpanFalse'
@@ -84,7 +91,7 @@ defineExpose({
                 "
               >
                 {{ detailData.customerStatus === 4 ? "解约" : "合作" }}
-              </div>
+              </div> -->
             </div>
           </div>
         </template>
@@ -276,15 +283,15 @@ defineExpose({
         </el-row>
       </el-card>
 
-      <el-card class="box-card">
+      <el-card >
         <template #header>
           <div class="card-header">
             <span>财务日志</span>
           </div>
         </template>
-        <el-row :gutter="24" class="financialLog">
+
           <financialLog ref="financialLogRef" />
-        </el-row>
+
       </el-card>
 
       <!-- <el-card class="box-card">
@@ -351,10 +358,7 @@ defineExpose({
   justify-content: center;
   align-items: center;
 }
-.el-card {
-  margin: 10px 0;
-  padding-top: 10px;
-}
+
 
 .el-drawer {
   overflow-y: hidden; // 添加这一行来隐藏右侧滚动条
@@ -469,5 +473,15 @@ defineExpose({
 
 .financialLog {
   margin-top: -20px;
+}
+:deep(.el-drawer__body .el-card .el-card__body){
+  padding: 0  !important;
+}
+:deep(.el-drawer__body .el-card){
+  padding:24px 0 0 0 !important;
+  margin-bottom:0 !important;
+}
+:deep(.el-pagination){
+  margin:0 !important;
 }
 </style>
