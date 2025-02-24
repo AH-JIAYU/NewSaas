@@ -307,13 +307,12 @@ const customerChange = () => {
 const reFreshCode =()=> {
   ElMessageBox.confirm(`确认重置密码吗？`, "确认信息")
     .then(() => {
-      // api.delete(ids).then(() => {
-      //   getDictionaryItemList();
-      //   ElMessage.success({
-      //     message: "删除成功",
-      //     center: true,
-      //   });
-      // });
+      api.supplierResetPassword({tenantSupplierId:props.leftTab.tenantSupplierId}).then(() => {
+        ElMessage.success({
+          message: "重置密码成功",
+          center: true,
+        });
+      });
     })
     .catch(() => { });
 }

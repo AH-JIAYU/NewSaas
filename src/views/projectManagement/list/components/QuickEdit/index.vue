@@ -110,6 +110,7 @@ async function onSubmit() {
     if (valid) {
       const params = await processingData();
       const { status } = await api.edit(params);
+      console.log(params,'ppp')
       status === 1 &&
         ElMessage.success({
           message: "编辑成功",
