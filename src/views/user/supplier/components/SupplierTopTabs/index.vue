@@ -480,6 +480,7 @@ const reFreshCode =()=> {
 effect="dark"
 content="重置密码"
 placement="top-start"
+v-if="props.leftTab.tenantSupplierId"
 >
 <img src="@/assets/images/refresh.png" alt="" style="margin-left: 10px;cursor: pointer;" @click="reFreshCode">
 </el-tooltip>
