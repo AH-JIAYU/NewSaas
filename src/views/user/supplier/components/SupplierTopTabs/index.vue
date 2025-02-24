@@ -305,7 +305,7 @@ const customerChange = () => {
   props.leftTab.updateTenantSupplierCustomerInfoList = updatedList;
 };
 const reFreshCode =()=> {
-  ElMessageBox.confirm(`确认将密码重置为 “123456” 吗？`, "确认信息")
+  ElMessageBox.confirm(`确认将「${props.leftTab.supplierAccord}」的密码重置为 “123456” 吗？`, "确认信息")
     .then(() => {
       api.supplierResetPassword({supplierId:props.leftTab.tenantSupplierId}).then(() => {
         ElMessage.success({
