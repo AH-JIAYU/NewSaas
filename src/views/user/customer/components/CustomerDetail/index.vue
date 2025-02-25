@@ -152,7 +152,7 @@ defineExpose({
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item :label="t('customer.detail.customerPhone')">
+            <el-form-item :label="t('customer.detail.emailAddress')">
               <el-text class="mx-1">
                 {{ detailData.emailAddress ? detailData.emailAddress : "-" }}
               </el-text>
