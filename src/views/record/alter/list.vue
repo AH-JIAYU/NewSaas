@@ -146,6 +146,9 @@ async function fetchData() {
       const type = queryForm.type.split(",");
       queryForm.surveyType = type[0];
       queryForm.viceType = type[1];
+    } else{
+      queryForm.surveyType = null;
+      queryForm.viceType = null;
     }
     const { data } = await api.list(queryForm);
     list.value = data.tenantUpdateRecordVOBuilders;
