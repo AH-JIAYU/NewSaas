@@ -1678,7 +1678,7 @@ const getProblemList = async () => {
                 <el-input-number
                   style="height: 2rem"
                   v-model="localToptTab.preNum"
-                  :min="1"
+                  :min="0"
                   :step="1"
                   step-strictly
                   controls-position="right"
@@ -1700,7 +1700,7 @@ const getProblemList = async () => {
                 <el-input-number
                   style="height: 2rem"
                   v-model="localToptTab.limitedQuantity"
-                  :min="1"
+                  :min="0"
                   :step="1"
                   step-strictly
                   controls-position="right"
