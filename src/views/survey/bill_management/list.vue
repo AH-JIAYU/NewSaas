@@ -305,7 +305,7 @@ function handleCurrentChange(val: any) {
           align="left"
           prop=""
           label="会员名称"
-          width="120"
+          width="150"
         >
           <template #default="{ row }">
             <p class="weightColor">

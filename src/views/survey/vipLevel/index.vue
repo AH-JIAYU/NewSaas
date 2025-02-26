@@ -158,7 +158,7 @@ onMounted(() => {
         <ElTableColumn width="80" align="left" fixed>
           <template #header> 排序 </template>
           <template #default>
-            <ElTag type="info" class="w">
+            <ElTag type="info" class="sortable">
               <SvgIcon name="i-ep:d-caret" />
             </ElTag>
           </template>
