@@ -561,14 +561,20 @@ function handleCurrentChange(val: any) {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('surveyTime')" align="left"  label="调查时间"
-          width="180" fixed="right">
+          width="190" fixed="right">
           <template #default="{ row }">
-            <el-text style="color: black;">{{ row.surveyStartTime }}</el-text><br />
-            <el-tag effect="plain" type="info">
-                {{ row.surveyTime ? row.surveyTime + "min" : 0 }}/
-                {{ row.projectTime ? row.projectTime + "min" : 0 }}
-              </el-tag><br />
-            <el-text style="color: black">{{row.surveyEndTime ? row.surveyEndTime : ""}}</el-text>
+            <div class="container">
+              <div>
+                <el-text style="color: black;">{{ row.surveyStartTime }}</el-text><br />
+                <br>
+                <el-text style="color: black">{{row.surveyEndTime ? row.surveyEndTime : ""}}</el-text>
+              </div>
+              <div v-if="row.surveyTime > 0" class="right-middle">
+                <el-button size="small" type="warning" circle>
+                  {{ `${row.surveyTime}M` }}
+                </el-button>
+              </div>
+            </div>
           </template>
         </el-table-column>
         <ElTableColumn v-if="checkList.includes('surveyStatus')" align="left" show-overflow-tooltip prop="" label="调查状态"
@@ -714,7 +720,17 @@ function handleCurrentChange(val: any) {
     }
   }
 }
+.container {
+  display: flex;
+  align-items: center;
+  /* 垂直居中对齐 */
+}
 
+.right-middle {
+  margin-left: auto;
+  /* 将元素推到右侧 */
+  margin-right: 0;
+}
 .f-jc {
   display: flex;
   justify-content: center;

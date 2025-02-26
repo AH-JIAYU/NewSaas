@@ -814,7 +814,7 @@ function handleCurrentChange(val: any) {
         <!-- </div>
           </template>
         </el-table-column> -->
-        <el-table-column v-if="checkList.includes('surveyTime')"  align="left"   :label="t('RecordsManagement.surveyTime')">
+        <el-table-column v-if="checkList.includes('surveyTime')" width="190"  align="left"   :label="t('RecordsManagement.surveyTime')">
           <template #default="{ row }">
             <div class="container">
               <div>
