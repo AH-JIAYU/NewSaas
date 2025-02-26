@@ -302,17 +302,19 @@ onBeforeUnmount(() => {
             <el-text class="fontColor">{{ row.clickId ? row.clickId : "-" }}</el-text>
           </template>
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('typeId')" show-overflow-tooltip align="left" prop="" label="合作商"
+        <ElTableColumn v-if="data.checkList.includes('typeId')" show-overflow-tooltip align="left" prop="" label="合作商名称"
           width="200">
           <template #default="{ row }">
             <!-- <el-text v-if="row.typeId == 1" class="fontColor">内部调查站</el-text> -->
-            <el-text class="fontColor">{{ row.allocationTenantId ? row.allocationTenantId : "-" }}</el-text>
+            <el-text class="fontColor">{{ row.allocationTenantName ? row.allocationTenantName : "-" }}</el-text>
+            <!-- <el-text class="fontColor">{{ row.allocationTenantId ? row.allocationTenantId : "-" }}</el-text> -->
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('projectId')" show-overflow-tooltip align="left" prop="projectId"
-          label="项目ID" width="200">
+          label="项目名称" width="200">
           <template #default="{ row }">
-            <el-text class="fontColor">{{ row.projectId ? row.projectId : "-" }}</el-text>
+            <el-text class="fontColor">{{ row.projectName ? row.projectName : "-" }}</el-text>
+            <!-- <el-text class="fontColor">{{ row.projectId ? row.projectId : "-" }}</el-text> -->
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('type')" show-overflow-tooltip align="left" prop="" label="类型">
