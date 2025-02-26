@@ -1162,7 +1162,7 @@ const getProblemList = async () => {
             </el-col>
           </el-row>
           <el-row :gutter="20">
-            <el-col :span="12">
+            <el-col :span="24">
               <el-form-item prop="uidUrl">
                 <template #label>
                   <div>
@@ -1194,15 +1194,22 @@ const getProblemList = async () => {
                 <el-text class="mx-1">{{ url }}</el-text>
               </el-form-item>
             </el-col>
+
+          </el-row>
+          <el-row :gutter="20">
             <el-col
               v-if="
                 localToptTab.mutualExclusion === 1 && !localToptTab.required
               "
-              :span="12"
+              :span="24"
             >
               <el-form-item :label="t('newProject.exclusiveID')">
                 <el-input
                   clearable
+                  maxlength="300"
+                  show-word-limit
+                  type="textarea"
+                  :rows="3"
                   v-model.trim="localToptTab.mutualExclusionId"
                 />
               </el-form-item>

@@ -1053,14 +1053,31 @@ defineExpose({ showEdit });
                 </el-text>
               </el-form-item>
             </el-col>
-            <el-col v-if="data.projectType !== 2" :span="12">
+            <el-col v-if="data.projectType !== 2" :span="24">
               <el-form-item label="URL">
                 <el-text class="text-bg">
                   {{ data.form.uidUrl ? data.form.uidUrl : "-" }}
                   <el-button
+                    v-if="data.form.uidUrl"
                     type="primary"
                     style="margin-left: auto"
                     @click="copyTextToClipboard(data.form.uidUrl)"
+                    link
+                  >
+                    {{ t("projectDetail.copy") }}
+                  </el-button>
+                </el-text>
+              </el-form-item>
+            </el-col>
+            <el-col v-if=" data.form.mutualExclusion === 1 && !data.form.required" :span="24">
+              <el-form-item :label="t('newProject.exclusiveID')">
+                <el-text class="text-bg">
+                  {{ data.form.mutualExclusionId ? data.form.mutualExclusionId : "-" }}
+                  <el-button
+                  v-if="data.form.mutualExclusionId"
+                    type="primary"
+                    style="margin-left: auto"
+                    @click="copyTextToClipboard(data.form.mutualExclusionId)"
                     link
                   >
                     {{ t("projectDetail.copy") }}
