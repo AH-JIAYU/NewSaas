@@ -560,24 +560,15 @@ function handleCurrentChange(val: any) {
             <el-text v-else>-</el-text>
           </template>
         </el-table-column>
-        <el-table-column v-if="checkList.includes('surveyTime')" align="left" show-overflow-tooltip label="调查时间"
-          width="120" fixed="right">
+        <el-table-column v-if="checkList.includes('surveyTime')" align="left"  label="调查时间"
+          width="180" fixed="right">
           <template #default="{ row }">
-            <el-tooltip placement="top">
-              <template #content>
-                <div>
-                  <el-text style="color: #fff">开始时间：{{ row.surveyStartTime }}</el-text>
-                  <br />
-                  <el-text style="color: #fff">结束时间：{{
-    row.surveyEndTime ? row.surveyEndTime : "-"
-  }}</el-text>
-                </div>
-              </template>
-              <el-tag effect="plain" type="info">
+            <el-text style="color: black;">{{ row.surveyStartTime }}</el-text><br />
+            <el-tag effect="plain" type="info">
                 {{ row.surveyTime ? row.surveyTime + "min" : 0 }}/
                 {{ row.projectTime ? row.projectTime + "min" : 0 }}
-              </el-tag>
-            </el-tooltip>
+              </el-tag><br />
+            <el-text style="color: black">{{row.surveyEndTime ? row.surveyEndTime : ""}}</el-text>
           </template>
         </el-table-column>
         <ElTableColumn v-if="checkList.includes('surveyStatus')" align="left" show-overflow-tooltip prop="" label="调查状态"
