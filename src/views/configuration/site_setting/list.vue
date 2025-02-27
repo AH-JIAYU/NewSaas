@@ -436,20 +436,15 @@ const changeType = (num: any) => {
 <template>
   <div v-loading="loading">
     <PageMain>
-      <div style="font-size: 1.5rem; margin-bottom: 1.25rem">站点设置管理</div>
-
-      <el-button :type="data.type == 1 ? 'primary' : ''" @click="changeType(1)"
-        >基础设置
-      </el-button>
-      <el-button :type="data.type == 2 ? 'primary' : ''" @click="changeType(2)"
-        >高级设置</el-button
-      >
-      <el-button :type="data.type == 3 ? 'primary' : ''" @click="changeType(3)"
-        >联系我们</el-button
-      >
-    </PageMain>
-    <PageMain>
-      <el-tabs v-model="activeTopTab">
+        <el-button :type="data.type == 1 ? 'primary' : ''" @click="changeType(1)"
+          >基础设置
+        </el-button>
+        <el-button :type="data.type == 2 ? 'primary' : ''" @click="changeType(2)"
+          >高级设置</el-button
+        >
+        <el-button :type="data.type == 3 ? 'primary' : ''" @click="changeType(3)"
+          >联系我们</el-button>
+        <el-tabs v-model="activeTopTab">
         <el-form
           ref="formRef"
           :model="form"

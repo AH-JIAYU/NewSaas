@@ -82,9 +82,12 @@ function getDataList() {
       ...data.value.search,
     };
     api.list(params).then((res: any) => {
+
       data.value.loading = false;
       data.value.dataList = res.data.tenantFinancialRecordInfoList;
       pagination.value.total = +res.data.total;
+
+
     });
   } catch (error) {
   } finally {
@@ -246,20 +249,8 @@ function handleCurrentChange(val: any) {
               </template>
 
         </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('type')" show-overflow-tooltip align="left" prop="" label="类型">
-          <template #default="{ row }">
-            <el-tag v-if="row.type === 1" type="warning" effect="dark" style="background-color: #FFAC54">待审余额</el-tag>
-            <el-tag v-if="row.type === 2" type="primary" effect="dark" >可用余额</el-tag>
-          </template>
-        </ElTableColumn>
-        <ElTableColumn v-if="data.checkList.includes('remark')" width="260" show-overflow-tooltip align="left" prop="remark"
-          label="说明">
-          <template #default="{ row }">
-            <el-text class="mx-1 fontColor fontC-System" >{{ row.remark ? row.remark : '-' }}</el-text>
-          </template>
-        </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('beforeBalance')" show-overflow-tooltip align="left"
-          prop="beforeBalance" width="130" label="变动前" fixed="right">
+          prop="beforeBalance" width="130" label="变动前" >
           <template #default="{ row }">
             <svg v-if="row.currencyType === 'USD'" xmlns="http://www.w3.org/2000/svg" width="7" height="12"
               viewBox="0 0 7 12" fill="none">
@@ -277,7 +268,7 @@ function handleCurrentChange(val: any) {
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('addAndSubtraction')" show-overflow-tooltip align="left"
-          prop="addAndSubtraction" width="150" label="加减款" fixed="right"><template #default="{ row }">
+          prop="addAndSubtraction" width="150" label="加减款" ><template #default="{ row }">
             <p class="plus" v-if="row.operationType === 1" >
                 <div class="plusSpan i-majesticons:plus-line w-1em h-1em"></div>
               <el-text class="color3">
@@ -328,7 +319,7 @@ function handleCurrentChange(val: any) {
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('afterBalance')" show-overflow-tooltip align="left"
-          prop="afterBalance" width="130" label="变动后" fixed="right">
+          prop="afterBalance" width="130" label="变动后" >
           <template #default="{ row }">
             <!-- <CurrencyType /> -->
             <svg v-if="row.currencyType === 'USD'" xmlns="http://www.w3.org/2000/svg" width="7" height="12"
@@ -347,9 +338,22 @@ function handleCurrentChange(val: any) {
             <el-text class="fontColor">{{ row.afterBalance || 0 }}</el-text>
           </template>
         </ElTableColumn>
+        <ElTableColumn v-if="data.checkList.includes('type')" show-overflow-tooltip align="left" fixed="right" prop="" label="类型">
+          <template #default="{ row }">
+            <el-tag v-if="row.type === 1" type="warning" effect="dark" style="background-color: #FFAC54">待审余额</el-tag>
+            <el-tag v-if="row.type === 2" type="primary" effect="dark" >可用余额</el-tag>
+          </template>
+        </ElTableColumn>
+        <ElTableColumn v-if="data.checkList.includes('remark')" width="260" show-overflow-tooltip align="left" prop="remark"
+          label="说明" fixed="right">
+          <template #default="{ row }">
+            <el-text class="mx-1 fontColor fontC-System" >{{ row.remark ? row.remark : '-' }}</el-text>
+          </template>
+        </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('createTime')" show-overflow-tooltip align="left"
           prop="createTime" label="时间" fixed="right"><template #default="{ row }" >
-            <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>
+            <!-- <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag> -->
+            {{ row.createTime }}
           </template>
         </ElTableColumn>
         <template #empty>
