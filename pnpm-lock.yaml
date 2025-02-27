@@ -57,7 +57,7 @@ importers:
         specifier: 5.2.2
         version: 5.2.2(@nuxt/kit@3.12.4(rollup@4.20.0))(vue@3.4.36(typescript@5.5.4))
       grapesjs:
-        specifier: ^0.21.12
+        specifier: ^0.21.7
         version: 0.21.12
       grapesjs-advance-components:
         specifier: ^1.0.7

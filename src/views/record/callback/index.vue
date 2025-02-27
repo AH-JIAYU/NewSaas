@@ -420,10 +420,13 @@ const formOption = {
           prop="callbackTime"
           show-overflow-tooltip
           :label="t('callback.callbackTime')"
+          width="200"
+
           ><template #default="{ row }">
-            <el-tag effect="plain" type="info">{{
+           {{ row.callbackTime }}
+            <!-- <el-tag effect="plain" type="info">{{
               format(row.callbackTime)
-            }}</el-tag>
+            }}</el-tag> -->
           </template>
         </el-table-column>
         <el-table-column
@@ -433,6 +436,7 @@ const formOption = {
           show-overflow-tooltip
           :label="t('callback.callbackStatus')"
         >
+
           <template #default="{ row }">
             <el-tag
               v-if="row.callbackStatus && callbackStatus[row.callbackStatus]"
