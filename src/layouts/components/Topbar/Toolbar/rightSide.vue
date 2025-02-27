@@ -46,7 +46,7 @@ const getSite = () => {
 };
 //通知中心
 const getNotice = () => {
-  router.push({ name: "personalNotification" });
+  router.push({ name: "notification" });
 };
 //合作租户
 const getTenantry = () => {
