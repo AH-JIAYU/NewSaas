@@ -50,7 +50,7 @@ const getNotice = () => {
 };
 //合作租户
 const getTenantry = () => {
-  router.push({ name: "cooperation" });
+  router.push({ name: "customer" });
 };
 //退出登录
 const logout = () => {
