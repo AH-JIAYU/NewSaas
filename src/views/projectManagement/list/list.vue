@@ -764,7 +764,7 @@ function handleChange() {
         <el-table-column
           v-if="checkList.includes('projectId')"
           align="left"
-          :label="t('project.project')"
+          :label="t('project.projectId')"
           width="180"
         >
           <template #default="{ row }">

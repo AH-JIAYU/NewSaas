@@ -468,15 +468,12 @@ function handleCurrentChange(val: any) {
           v-if="checkList.includes('terminationTime')"
           :label="t('termination.endTime')"
           align="left"
+          width="180"
           prop="terminationTime"
           show-overflow-tooltip
         >
           <template #default="{ row }">
-            <el-tooltip :content="row.terminationTime" placement="top">
-              <el-tag effect="plain" type="info">{{
-                format(row.terminationTime)
-              }}</el-tag>
-            </el-tooltip>
+           {{row.terminationTime}}
           </template>
         </el-table-column>
         <el-table-column

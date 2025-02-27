@@ -497,13 +497,12 @@ function handleCurrentChange(val: any) {
         <el-table-column
           v-if="checkList.includes('createTime')"
           align="left"
-          :label="t('common.create')"
+          :label="t('supplier.createTime')"
           prop="createTime"
+          width="180"
         >
           <template #default="{ row }">
-            <el-tag effect="plain" type="info">{{
-              format(row.createTime)
-            }}</el-tag>
+            {{row.createTime}}
           </template>
         </el-table-column>
         <template #empty>

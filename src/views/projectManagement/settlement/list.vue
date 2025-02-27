@@ -528,7 +528,7 @@ function handleMoreStatus(row: any) {
           v-if="checkList.includes('projectId')"
           prop="projectId"
           align="left"
-          :label="t('settlement.project')"
+          :label="t('settlement.projectID')"
         >
           <template #default="{ row }">
             <div class="copyId">
@@ -810,57 +810,45 @@ function handleMoreStatus(row: any) {
 
         <el-table-column
           v-if="checkList.includes('nodeTime')"
-          show-overflow-tooltip
           align="left"
           :label="t('settlement.time')"
-          width="120"
+          width="180"
         >
           <template #default="{ row }">
-            <el-tooltip
-              :content="row.pendReviewTime"
-              placement="top"
-              v-if="row.status === 1"
-            >
-              <el-tag effect="plain" type="info">{{
+            <div v-if="row.status === 1">
+              <p>{{row.pendReviewTime}}</p>
+            <el-tag effect="plain" type="info">{{
                 format(row.pendReviewTime)
               }}</el-tag>
-            </el-tooltip>
-            <el-tooltip
-              :content="row.reviewTime"
-              placement="top"
-              v-if="row.status === 2"
-            >
+            </div>
+
+            <div v-if="row.status === 2">
+              <p>{{row.reviewTime}}</p>
               <el-tag effect="plain" type="info">{{
                 format(row.reviewTime)
               }}</el-tag>
-            </el-tooltip>
-            <el-tooltip
-              :content="row.invoicedOutTime"
-              placement="top"
-              v-if="row.status === 3"
-            >
+            </div>
+
+            <div v-if="row.status === 3">
+              <p>{{row.invoicedOutTime}}</p>
               <el-tag effect="plain" type="info" v-if="row.status === 3">{{
                 format(row.invoicedOutTime)
               }}</el-tag>
-            </el-tooltip>
-            <el-tooltip
-              :content="row.settledTime"
-              placement="top"
-              v-if="row.status === 4"
-            >
+            </div>
+
+            <div v-if="row.status === 4">
+              <p>{{row.settledTime}}</p>
               <el-tag effect="plain" type="info" v-if="row.status === 4">{{
                 format(row.settledTime)
               }}</el-tag>
-            </el-tooltip>
-            <el-tooltip
-              :content="row.frozenTime"
-              placement="top"
-              v-if="row.status === 5"
-            >
+            </div>
+
+            <div v-if="row.status === 5">
+              <p>{{row.frozenTime}}</p>
               <el-tag effect="plain" type="info" v-if="row.status === 5">{{
                 format(row.frozenTime)
               }}</el-tag>
-            </el-tooltip>
+            </div>
           </template>
         </el-table-column>
 

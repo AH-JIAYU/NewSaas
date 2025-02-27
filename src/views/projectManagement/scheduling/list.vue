@@ -274,7 +274,7 @@ const formOption = {
           show-overflow-tooltip
           prop="projectName"
           align="left"
-          :label="t('scheduling.project')"
+          :label="t('scheduling.projectName')"
         >
           <template #default="{ row }">
             <div class="tableBig oneLine">
@@ -380,6 +380,8 @@ const formOption = {
               <b class="tableBig">{{
                 row.getGroupSupplierIdNameInfoList[0].groupSupplierName
               }}</b>
+              <!-- <copy class="copy" :content="row.getGroupSupplierIdNameInfoList[0].groupSupplierId" /> -->
+            </div>
               <span class="id tableSmall" style="font-size: 14px">
                 {{
                   row.getGroupSupplierIdNameInfoList[0].groupSupplierId
@@ -391,11 +393,8 @@ const formOption = {
                   rowCopy: 'rowCopy',
                   current: row.projectId === current,
                 }"
-                class="littleButton"
+                class="littleButtonZDMB"
               />
-
-              <!-- <copy class="copy" :content="row.getGroupSupplierIdNameInfoList[0].groupSupplierId" /> -->
-            </div>
           </template>
         </el-table-column>
         <el-table-column
@@ -403,13 +402,15 @@ const formOption = {
           show-overflow-tooltip
           prop="createTime"
           align="left"
-          :label="t('scheduling.create')"
+          width="180"
+          :label="t('scheduling.creationTime')"
           ><template #default="{ row }">
-            <el-tooltip :content="row.createTime" placement="top">
+            {{row.createTime}}
+            <!-- <el-tooltip :content="row.createTime" placement="top">
               <el-tag effect="plain" type="info">{{
                 format(row.createTime)
               }}</el-tag>
-            </el-tooltip>
+            </el-tooltip> -->
           </template>
         </el-table-column>
         <el-table-column
@@ -581,5 +582,10 @@ const formOption = {
 .littleButton {
   position: absolute;
   right: 15px;
+}
+.littleButtonZDMB {
+  position: absolute;
+  right: 15px;
+  bottom:6px
 }
 </style>

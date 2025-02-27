@@ -391,11 +391,7 @@ function handleCurrentChange(val: any) {
           align="left"
           :label="t('alter.createTime')"
           ><template #default="{ row }">
-            <el-tooltip :content="row.createTime" placement="top">
-              <el-tag effect="plain" type="info">{{
-                format(row.createTime)
-              }}</el-tag>
-            </el-tooltip>
+           {{row.createTime}}
           </template>
         </el-table-column>
         <el-table-column

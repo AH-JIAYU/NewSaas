@@ -216,7 +216,20 @@ function handleCurrentChange(val: any) {
         <ElTableColumn v-if="data.checkList.includes('typeId')" show-overflow-tooltip align="left" prop=""
           label="供应商/内部站/合作商" width="200">
           <template #default="{ row }">
-            <el-text v-if="row.typeId == 1"  class="fontColor">内部调查站</el-text>
+
+
+<div class="copyId tableSmall fontColor projectId" >
+{{ row.name ? row.name : "-" }}
+<copy
+      :content="row.name"
+      :class="{
+        rowCopy: 'rowCopy',
+        current: row.id === current,
+      }"
+      class="littleButton"
+    />
+</div>
+            <!-- <el-text v-if="row.typeId == 1"  class="fontColor">内部调查站</el-text>
 
               <div class="copyId tableSmall fontColor projectId" v-else>
               {{ row.typeId ? row.typeId : "-" }}
@@ -228,15 +241,24 @@ function handleCurrentChange(val: any) {
                     }"
                     class="littleButton"
                   />
-              </div>
+              </div> -->
 
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('projectId')" show-overflow-tooltip align="left" prop="projectId"
-          label="项目ID" width="200">
+          label="项目名称" width="200">
           <template #default="{ row }">
                 <div class="copyId tableSmall">
-                  <div class="id oneLine projectId fontColor">{{ row.projectId ? row.projectId : "-" }}</div>
+                  <div class="id oneLine projectId fontColor">{{ row.projectName ? row.projectName : "-" }}</div>
+                  <copy
+                    :content="row.projectName"
+                    :class="{
+                      rowCopy: 'rowCopy',
+                      current: row.id === current,
+                    }"
+                    class="littleButton"
+                  />
+                  <!-- <div class="id oneLine projectId fontColor">{{ row.projectId ? row.projectId : "-" }}</div>
                   <copy
                     :content="row.projectId"
                     :class="{
@@ -244,7 +266,7 @@ function handleCurrentChange(val: any) {
                       current: row.id === current,
                     }"
                     class="littleButton"
-                  />
+                  /> -->
                 </div>
               </template>
 
