@@ -304,12 +304,12 @@ function handleCurrentChange(val: any) {
           show-overflow-tooltip
           align="left"
           prop=""
-          label="会员名称"
-          width="150"
+          label="会员名称/会员姓名"
+          width="160"
         >
           <template #default="{ row }">
             <p class="weightColor">
-              {{ row.memberName ? row.memberName : "-" }}
+              {{ row.memberNickname ? row.memberNickname : "" }}{{ row.memberName ? '/'+row.memberName : "" }}
             </p>
           </template>
         </ElTableColumn>
