@@ -493,7 +493,29 @@ const constantRoutes: RouteRecordRaw[] = [
 //     ],
 //   }
 // ];
-const systemRoutes: RouteRecordRaw[] = []
+const systemRoutes: RouteRecordRaw[] = [
+    {
+    path: "/",
+    component: () => import("@/layouts/index.vue"),
+    meta: {
+      title: () => useSettingsStore().settings.home.title,
+      breadcrumb: false,
+    },
+    children: [
+            {
+        path: "personal/setting",
+        name: "personalSetting",
+        component: () => import("@/views/personal/index.vue"),
+        meta: {
+          title: "个人中心",
+          i18n: $t("route.personal.setting"),
+          cache: "personalEditPassword",
+        },
+      },
+    ]
+  }
+
+]
 
 // 动态路由（异步路由、导航栏路由）
 const asyncRoutes: Route.recordMainRaw[] = [
