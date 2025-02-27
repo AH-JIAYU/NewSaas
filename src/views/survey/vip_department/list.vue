@@ -632,8 +632,8 @@ function handleCurrentChange(val: any) {
             <el-table-column v-if="checkList.includes('memberLevelName')" width="120" align="left"
               prop="memberLevelName" show-overflow-tooltip label="会员等级">
               <template #default="{ row }">
-                <div v-if="row.memberLevelName" class="editSvg">
-                  <p class="edit fontC-System">{{ row.memberLevelName ? row.memberLevelName : "-" }}</p>
+                <div v-if="row.memberLevelName" class="editSvg" style="align-items: center;">
+                  <p class="edit fontC-System" >{{ row.memberLevelName ? row.memberLevelName : "-" }}</p>
                   <span>
                     <svg @click="editLevel(row)" class="svgEdit" xmlns="http://www.w3.org/2000/svg" width="12"
                       height="12" viewBox="0 0 12 12" fill="none">

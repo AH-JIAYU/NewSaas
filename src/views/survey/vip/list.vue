@@ -560,10 +560,11 @@ const goSupplier = (row:any)=> {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('createTime')" align="left" prop="createTime" show-overflow-tooltip
-          label="创建时间">
+          label="创建时间" width="200">
           <template #default="{ row }">
             <el-tooltip :content="row.createTime" placement="top">
-              <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>
+              <!-- <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag> -->
+              {{ row.createTime ? row.createTime : "-" }}
             </el-tooltip>
           </template>
         </el-table-column>

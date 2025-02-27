@@ -67,7 +67,7 @@ const columns = ref<any>([
     checked: true,
   },
   {
-    label: "金额",
+    label: "发票金额",
     prop: "invoiceAmount",
     sortable: true,
     // 不可改变的
@@ -439,7 +439,7 @@ onMounted(() => {
           prop="invoiceAmount"
           show-overflow-tooltip
           align="left"
-          label="金额"
+          label="发票金额"
         >
           <template #default="{ row }">
             <CurrencyType />

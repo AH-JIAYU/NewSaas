@@ -352,7 +352,7 @@ function handleCurrentChange(val: any) {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('projectName')" align="left" prop="projectName" show-overflow-tooltip
-          label="项目" width="200">
+          label="项目名称/项目ID" width="200">
           <template #default="{ row }">
             <el-text style="font-weight: 700; color: #333333">{{
     row.projectName ? row.projectName : "-"
@@ -387,18 +387,15 @@ function handleCurrentChange(val: any) {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('memberId')" align="left" prop="memberId" show-overflow-tooltip
-          width="200" label="会员">
+          width="200" label="会员名称/会员ID">
           <template #default="{ row }">
             <p  class="crudeTop strong">{{ row.memberUserName ? row.memberUserName : '-' }}</p>
             <div v-if="row.memberId" class="hoverSvg">
-              <p class="fineBom">{{ row.memberId }}</p>
-              <span class="c-fx">
-                <copy :content="row.memberId" :class="{
-    rowCopy: 'rowCopy',
-    current: row.id === current,
-  }" />
+                <p class="fineBom">{{ row.memberId }}</p>
+                <span class="c-fx">
+                <copy :content="row.memberId" :class="{ rowCopy: 'rowCopy', current: row.id === current, }" />
                 <!-- <copy class="copy" :content="row.memberId" /> -->
-              </span>
+                </span>
             </div>
             <el-text v-else>-</el-text>
           </template>
@@ -440,21 +437,17 @@ function handleCurrentChange(val: any) {
           align="left"
           prop="memberName"
           show-overflow-tooltip
-          label="部门"
+          label="部门名称/部门ID"
         >
           <template #default="{ row }">
+             <p class="crudeTop strong" style="color: #333333">
+              {{ row.memberName ?  row.memberName.split("/")[0] : '-' }}
+              </p>
             <div v-if="row.memberName" class="hoverSvg">
-              <el-text style="color: #333333">{{
-    row.memberName.split("/")[0]
-  }}</el-text>
-              &nbsp;&nbsp;
               <p class="fineBom">{{ row.memberName.split("/")[1] }}</p>
               <span class="c-fx">
-                <copy :content="row.memberName.split('/')[1]" :class="{
-    rowCopy: 'rowCopy',
-    current: row.id === current,
-  }" />
-                <!-- <copy class="copy" :content="row.memberName.split('/')[1]" /> -->
+                 <copy :content="row.memberName.split('/')[1]" :class="{rowCopy: 'rowCopy',current: row.id === current,}" />
+                 <!-- <copy class="copy" :content="row.memberName.split('/')[1]" /> -->
               </span>
             </div>
             <el-text v-else>-</el-text>
@@ -545,9 +538,8 @@ function handleCurrentChange(val: any) {
         <el-table-column v-if="checkList.includes('ipBelong')" align="left" width="150" prop="ipBelong"
           show-overflow-tooltip label="区域/IP" fixed="right">
           <template #default="{ row }">
+            <el-tag >{{ row.ipBelong ? row.ipBelong.split("/")[1] : "-"}}</el-tag>
             <div v-if="row.ipBelong" class="hoverSvg">
-              <el-tag>{{ row.ipBelong.split("/")[1] }}</el-tag>
-              &nbsp;&nbsp;
               <p class="fineBom">
                 {{ row.ipBelong.split("/")[0] }}
               </p>

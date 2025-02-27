@@ -353,7 +353,7 @@ function handleCurrentChange(val: any) {
         <ElTableColumn v-if="data.checkList.includes('createTime')" show-overflow-tooltip align="left"
           prop="createTime" label="时间" fixed="right"><template #default="{ row }" >
             <!-- <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag> -->
-            {{ row.createTime }}
+            {{ row.createTime ? row.createTime : '-' }}
           </template>
         </ElTableColumn>
         <template #empty>

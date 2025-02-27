@@ -248,7 +248,7 @@ function viewAllocations(row: any) {
         highlight-current-row>
         <!-- <el-table-column align="left" type="selection" /> -->
         <el-table-column v-if="checkList.includes('project')" show-overflow-tooltip align="left"
-          prop="projectIdentificationOrClientName" width="200" label="项目">
+          prop="projectIdentificationOrClientName" width="200" label="项目ID">
           <template #default="{ row }">
             <!-- <p v-if="checkList.includes('projectName')" class="crudeTop">名称：{{ row.projectName }}</p> -->
             <div v-if="checkList.includes('projectId')" class="hoverSvg">
@@ -262,7 +262,7 @@ function viewAllocations(row: any) {
           </template>
         </el-table-column>
         <el-table-column v-if="checkList.includes('projectIdentificationOrClientName')" show-overflow-tooltip
-          prop="projectIdentificationOrClientName" width="200" align="left" label="名称/标识">
+          prop="projectIdentificationOrClientName" width="200" align="left" label="项目名称/项目标识">
           <template #default="{ row }">
             <p v-if="checkList.includes('projectName')" :class="[row.isB2b === 2 ? 'redColor':'','crudeTop']" >
              {{ row.projectName }}</p>
@@ -399,10 +399,11 @@ function viewAllocations(row: any) {
           </template>
         </el-table-column> -->
         <el-table-column v-if="checkList.includes('createTime')" show-overflow-tooltip prop="createTime" align="left"
-          label="创建时间" width="110">
+          label="创建时间" width="200">
           <template #default="{ row }">
             <el-tooltip :content="row.createTime" placement="top">
-              <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>
+              <!-- <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag> -->
+              {{ row.createTime ? row.createTime : '-' }}
             </el-tooltip>
           </template>
         </el-table-column>

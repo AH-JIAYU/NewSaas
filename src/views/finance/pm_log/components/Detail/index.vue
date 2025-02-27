@@ -170,10 +170,6 @@ defineExpose({
           <el-text class="mx-1 color3">{{ row.doMoney ? row.doMoney : "-" }}</el-text>
         </template>
 </ElTableColumn>
-<ElTableColumn show-overflow-tooltip align="left" prop="remark" label="说明"><template #default="{ row }">
-          <el-text class="mx-1 color3">{{ row.remark ? row.remark : "-" }}</el-text>
-        </template>
-</ElTableColumn>
 <ElTableColumn show-overflow-tooltip align="left" prop="beforeBalance" width="150" label="变动前">
   <template #default="{ row }">
           <CurrencyType /><el-text class="mx-1 color3">{{ row.beforeBalance || 0 }}</el-text>
@@ -196,9 +192,14 @@ defineExpose({
           <CurrencyType /><el-text class="color3">{{ row.afterBalance || 0 }}</el-text>
         </template>
 </ElTableColumn>
-<ElTableColumn show-overflow-tooltip align="left" prop="createTime" label="时间"><template #default="{ row }">
-          <el-tooltip :content="row.createTime" placement="top">
-                <el-tag effect="plain" type="info">{{format(row.createTime)}}</el-tag>
+<ElTableColumn show-overflow-tooltip align="left" prop="remark" label="说明"><template #default="{ row }">
+          <el-text class="mx-1 color3">{{ row.remark ? row.remark : "-" }}</el-text>
+        </template>
+</ElTableColumn>
+<ElTableColumn show-overflow-tooltip align="left" prop="createTime" width="200" label="时间"><template #default="{ row }">
+              <el-tooltip :content="row.createTime" placement="top"  >
+                <!-- <el-tag effect="plain" type="info">{{format(row.createTime)}}</el-tag> -->
+                {{  row.createTime ? row.createTime : "-" }}
               </el-tooltip>
         </template>
 </ElTableColumn>

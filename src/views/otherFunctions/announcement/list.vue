@@ -317,10 +317,11 @@ onBeforeUnmount(() => {
         </ElTableColumn>
 
         <ElTableColumn v-if="data.checkList.includes('createTime')" label="创建时间" align="left" show-overflow-tooltip
-          prop="createTime">
+          prop="createTime" width="200">
           <template #default="{ row }">
             <el-tooltip :content="row.createTime" placement="top">
-              <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>
+              <!-- <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag> -->
+              {{  row.createTime  ? row.createTime : '-' }}
             </el-tooltip>
           </template>
         </ElTableColumn>
