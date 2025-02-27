@@ -1069,7 +1069,7 @@ defineExpose({ showEdit });
                 </el-text>
               </el-form-item>
             </el-col>
-            <el-col v-if=" data.form.mutualExclusion === 1 && !data.form.required" :span="24">
+            <el-col v-if=" !data.form.required" :span="24">
               <el-form-item :label="t('newProject.exclusiveID')">
                 <el-text class="text-bg">
                   {{ data.form.mutualExclusionId ? data.form.mutualExclusionId : "-" }}
