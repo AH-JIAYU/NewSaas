@@ -246,7 +246,7 @@ function handleCurrentChange(val: any) {
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('projectId')" show-overflow-tooltip align="left" prop="projectId"
-          label="项目ID" width="200">
+          label="项目名称" width="200">
           <template #default="{ row }">
                 <div class="copyId tableSmall">
                   <div class="id oneLine projectId fontColor">{{ row.projectName ? row.projectName : "-" }}</div>
