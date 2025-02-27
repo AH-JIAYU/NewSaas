@@ -693,11 +693,12 @@ onMounted(() => {
               align="left"
               :label="t('materials.create')"
               ><template #default="{ row }">
-                <el-tooltip :content="row.createTime" placement="top">
+                {{row.createTime}}
+                <!-- <el-tooltip :content="row.createTime" placement="top">
                   <el-tag effect="plain" type="info">{{
                     format(row.createTime)
                   }}</el-tag>
-                </el-tooltip>
+                </el-tooltip> -->
               </template>
             </el-table-column>
             <el-table-column

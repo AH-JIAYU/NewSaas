@@ -804,17 +804,14 @@ const goSupplier = (row:any)=> {
         <el-table-column
           v-if="checkList.includes('createTime')"
           align="left"
-          width="100"
+          width="180"
           prop="createTime"
-          show-overflow-tooltip
-          :label="t('common.create')"
+          :label="t('supplier.createTime')"
         >
           <template #default="{ row }">
-            <el-tooltip :content="row.createTime" placement="top">
-              <el-tag effect="plain" type="info">{{
-                format(row.createTime)
-              }}</el-tag>
-            </el-tooltip>
+            <p>
+              {{ row.createTime }}
+            </p>
           </template>
         </el-table-column>
         <el-table-column

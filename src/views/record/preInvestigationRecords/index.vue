@@ -413,7 +413,7 @@ const formOption = {
           prop="projectId"
           show-overflow-tooltip
           :label="t('preRecords.projectID')"
-        />
+        ></el-table-column>
         <el-table-column
           v-if="checkList.includes('projectName')"
           align="left"
@@ -477,7 +477,7 @@ const formOption = {
           v-if="checkList.includes('passNumber')"
           align="left"
           show-overflow-tooltip
-          :label="t('preRecords.allocationType')"
+          :label="t('preRecords.number')"
         >
           <template #default="{ row }">
             {{ row.passNumber || 0 }}/
@@ -492,7 +492,7 @@ const formOption = {
           :label="t('preRecords.throughRate')"
         >
           <template #default="{ row }">
-            {{ row.passRate + "%" }}
+            {{ row.passRate.toFixed(2) + "%" }}
           </template>
         </ElTableColumn>
         <ElTableColumn
