@@ -1199,7 +1199,7 @@ const getProblemList = async () => {
           <el-row :gutter="20">
             <el-col
               v-if="
-                localToptTab.mutualExclusion === 1 && !localToptTab.required
+                 !localToptTab.required
               "
               :span="24"
             >
