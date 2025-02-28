@@ -21,6 +21,7 @@ import subsidiaryDepartment from "./components/subsidiary_department/index.vue";
 import DictionaryItemDia from "./components/dictionaryItemDialog/index.vue";
 import VipEdit from "../vip/components/VipEdit/index.vue";
 import vipPlusMinusPayments from "../vip/components/vipPlusMinusPayments/index.vue";
+import { create } from "sortablejs";
 // import Detail from "@/views/configuration/department/components/Detail/index.vue";
 defineOptions({
   name: "vipDepartment",
@@ -775,12 +776,10 @@ function handleCurrentChange(val: any) {
                 </p>
               </template>
             </el-table-column>
-            <el-table-column v-if="checkList.includes('createTime')" width="100" align="left" prop="createTime"
+            <el-table-column v-if="checkList.includes('createTime')" width="200" align="left" prop="createTime"
               show-overflow-tooltip label="创建时间">
               <template #default="{ row }">
-                <el-tooltip :content="row.createTime" placement="top">
-                  <el-tag effect="plain" type="info">{{ format(row.createTime) }}</el-tag>
-                </el-tooltip>
+                {{ row.createTime ? row.createTime : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="left" label="操作" fixed="right" show-overflow-tooltip width="180">
@@ -1071,7 +1070,7 @@ function handleCurrentChange(val: any) {
 .editSvg {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 
   span {
     display: flex;

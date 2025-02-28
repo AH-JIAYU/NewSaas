@@ -598,8 +598,9 @@ const changeType = (num: any) => {
                   </el-col>
 
                   <el-col :span="24">
-                    <el-form-item>
+                    <el-form-item >
                       <el-button
+                        style="margin-left: 25%; "
                         type="primary"
                         @click="onSubmit"
                         v-auth="[
