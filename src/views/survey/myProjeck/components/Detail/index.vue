@@ -32,7 +32,7 @@ async function showEdit(row: any) {
       loading.value = true
       const res = await api.getQuotaProjectInfo({ projectId: row.projectId })
       form.value = res.data
-      if (form.value.descriptionUrl !== "") {
+      if (form.value.descriptionUrl) {
         const urlArr = form.value.descriptionUrl.split(",");
         srcList.value = urlArr;
 
