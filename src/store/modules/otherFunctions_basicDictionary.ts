@@ -20,7 +20,6 @@ const useBasicDictionaryStore = defineStore(
     const getCustomer= async () => {
       if (!customerList.value.length) {
         const res = await customerApi.getCustomerList({});
-        console.log(res,'res')
         customerList.value = res.data.getTenantCustomerAccordInfoList;
       }
 
