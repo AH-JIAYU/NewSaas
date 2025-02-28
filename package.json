@@ -73,7 +73,7 @@
     "survey-creator-vue": "^1.9.131",
     "survey-vue3-ui": "^1.9.131",
     "timeago.js": "^4.0.2",
-    "tinymce": "^7.6.0",
+    "tinymce": "^4.9.3",
     "v-wave": "^2.0.0",
     "vconsole": "^3.15.1",
     "vue": "^3.4.21",

@@ -814,7 +814,7 @@ watch(
   () => props.leftTab,
   (newVal, oleVal) => {
     localToptTab.value = newVal;
-    // console.log(localToptTab.value,'localToptTab.value')
+    console.log(localToptTab.value,'localToptTab.value')
   },
   { deep: true }
 );
