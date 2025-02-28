@@ -24,7 +24,7 @@ const useSurveyVipStore = defineStore(
       b2cStatus: 2, // B2C:    原型默认 开启
       memberStatus: 2, // 会员状态:   原型默认 开启
       exemptionTrial: 1, // 免审状态:   原型默认 关闭
-      randomStatus: 1, // 随机状态:1关闭 2开启
+      randomStatus: 2, // 随机状态:1关闭 2开启
       memberGroupId:null,//部门id
     };
     const getNickNameList = async () => {
