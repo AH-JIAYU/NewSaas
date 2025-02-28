@@ -319,6 +319,7 @@ const checkList = ref<any>([]); // 表格-展示的列
 const tableAutoHeight = ref(false); // 表格控件-高度自适应
 const formSearchList = ref<any>()//表单排序配置
 const formSearchName = ref<string>('formSearch-sub_vip')// 表单排序name
+
 // 表格控件-展示列
 const columns = ref<any>([
   { prop: "memberStatus", label: "会员状态", checked: true, sprtable: true },
@@ -505,6 +506,23 @@ const current = ref<any>(); //表格当前选中
 function handleCurrentChange(val: any) {
   if (val) current.value = val.memberId;
   else current.value = "";
+}
+const getTime =(utcTime:any)=> {
+  if(!utcTime) return utcTime
+    // 将 UTC 时间解析为 Date 对象
+  const utcDate = new Date(utcTime);
+
+  // 获取本地时间的各个部分
+  const year = utcDate.getFullYear();
+  const month = String(utcDate.getMonth() + 1).padStart(2, '0');  // 月份从0开始，需加1
+  const day = String(utcDate.getDate()).padStart(2, '0');
+  const hour = String(utcDate.getHours()).padStart(2, '0');
+  const minute = String(utcDate.getMinutes()).padStart(2, '0');
+  const second = String(utcDate.getSeconds()).padStart(2, '0');
+
+  // 格式化为年月日时分秒的字符串
+  const localTime = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+  return localTime
 }
 </script>
 <!--    <el-table-column type="selection" align="left" /> -->
@@ -779,7 +797,7 @@ function handleCurrentChange(val: any) {
             <el-table-column v-if="checkList.includes('createTime')" width="200" align="left" prop="createTime"
               show-overflow-tooltip label="创建时间">
               <template #default="{ row }">
-                {{ row.createTime ? row.createTime : "-" }}
+                {{ row.createTime ? getTime(row.createTime) : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="left" label="操作" fixed="right" show-overflow-tooltip width="180">

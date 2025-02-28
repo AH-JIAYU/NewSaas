@@ -4,6 +4,7 @@ import api from "@/api/modules/survey_financialLogs";
 import { ElMessage } from "element-plus";
 import useSettingsStore from "@/store/modules/settings";
 import empty from '@/assets/images/empty.png'
+import { update } from "lodash-es";
 
 defineOptions({
   name: "financialLogs",
@@ -451,10 +452,11 @@ function handleCurrentChange(val: any) {
           </template>
         </ElTableColumn>
         <ElTableColumn v-if="data.checkList.includes('updateTime')" show-overflow-tooltip align="left"
-          prop="updateTime" label="创建时间"  fixed="right" width="120">
+          prop="updateTime" label="创建时间"  fixed="right" width="200">
           <template #default="{ row }">
             <el-tooltip :content="row.updateTime" placement="top">
-                <el-tag effect="plain" type="info">{{format(row.updateTime)}}</el-tag>
+                <!-- <el-tag effect="plain" type="info">{{format(row.updateTime)}}</el-tag> -->
+                {{ row.updateTime ? row.updateTime : '-' }}
               </el-tooltip>
           </template>
         </ElTableColumn>
