@@ -29,7 +29,7 @@ import toolbar from "./toolbar";
 import load from "./dynamicLoadScript";
 import apiQinliu from "@/api/modules/file";
 // const tinymceCDN = "https://cdn.jsdelivr.net/npm/tinymce-all-in-one@4.9.3/tinymce.min.js";
-let tinymceCDN = window.location.origin  + '/tinymce/tinymce.min.js';
+let tinymceCDN = window.location.origin  + '/public/tinymce/tinymce.min.js';
 
 const tinymceHtml = ref<any>("");
 
