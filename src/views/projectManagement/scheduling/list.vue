@@ -352,7 +352,16 @@ const formOption = {
           width="400"
         >
           <template #default="{ row }">
-            <div class="specifyTheTarget">
+              <el-tooltip
+                  effect="dark"
+                  placement="top-start"
+                >
+                <template #content>
+                <p v-for="item in row.getGroupSupplierIdNameInfoList">
+                  {{ item.groupSupplierId}}-{{ item.groupSupplierName }}
+                </p>
+              </template>
+              <div class="specifyTheTarget">
               <el-button
                 style="width: 46px; background-color: #ffac54"
                 v-if="row.dataType == 2"
@@ -380,21 +389,15 @@ const formOption = {
               <b class="tableBig">{{
                 row.getGroupSupplierIdNameInfoList[0].groupSupplierName
               }}</b>
+              <br />
               <!-- <copy class="copy" :content="row.getGroupSupplierIdNameInfoList[0].groupSupplierId" /> -->
-            </div>
               <span class="id tableSmall" style="font-size: 14px">
                 {{
                   row.getGroupSupplierIdNameInfoList[0].groupSupplierId
                 }}</span
               >
-              <copy
-                :content="row.getGroupSupplierIdNameInfoList[0].groupSupplierId"
-                :class="{
-                  rowCopy: 'rowCopy',
-                  current: row.projectId === current,
-                }"
-                class="littleButtonZDMB"
-              />
+            </div>
+           </el-tooltip>
           </template>
         </el-table-column>
         <el-table-column
