@@ -862,7 +862,7 @@
     "supplierID": "供应商ID",
     "startDate": "开始日期",
     "endDate": "结束日期",
-    "project": "项目简称/项目名称/项目ID"
+    "project": "客户简称/项目名称/项目ID"
   },
   "common": {
     "export": "导出",
