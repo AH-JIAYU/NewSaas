@@ -1,4 +1,5 @@
 import api from "@/api/modules/basicDictionary";
+import customerApi from "@/api/modules/user_customer";
 const useBasicDictionaryStore = defineStore(
   // 唯一ID
   "basicDictionary",
@@ -6,6 +7,7 @@ const useBasicDictionaryStore = defineStore(
     const dict = ref() // 字典目录
     const country = ref([]); // 区域
     const B2BType = ref([]); // 项目类型
+    const customerList = ref([]); //所属客户
     // 获取字典目录
     const getDict = async () => {
       if (!dict.value) {
@@ -14,6 +16,16 @@ const useBasicDictionaryStore = defineStore(
       }
       return dict.value
     }
+    //获取所属客户
+    const getCustomer= async () => {
+      if (!customerList.value.length) {
+        const res = await customerApi.getCustomerList({});
+        console.log(res,'res')
+        customerList.value = res.data.getTenantCustomerAccordInfoList;
+      }
+
+      return customerList.value;
+    };
     // 获取区域
     const getCountry = async () => {
       if (!country.value.length) {
@@ -118,6 +130,7 @@ const useBasicDictionaryStore = defineStore(
       getCountry,
       getB2BType,
       getB2BTypeItemChildren,
+      getCustomer
     };
   }
 );

@@ -679,7 +679,9 @@ const AddCustomers = () => {
 };
 // 获取 客户 区域 项目类型
 const getList = async () => {
-  await getCustomerList();
+
+    // await getCustomerList();
+    data.value.basicSettings.customerList = await basicDictionaryStore.getCustomer();
   data.value.basicSettings.countryList =
     await basicDictionaryStore.getCountry();
   data.value.basicSettings.B2BTypeList =
@@ -995,7 +997,7 @@ const getProblemList = async () => {
                     class="buttonClass"
                     @click="AddCustomers"
                   >
-                    {{ t("newProject.notQualified") }}
+                    {{ t("newProject.quickAdd") }}
                     <div class="i-ic:round-plus w-1.3em h-1.3em"></div>
                     <!-- <SvgIcon
                       name="ant-design:plus-outlined"
