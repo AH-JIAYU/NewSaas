@@ -12,6 +12,7 @@ declare module 'vue' {
     Chip: typeof import('./../components/Chip/index.vue')['default']
     ColorfulCard: typeof import('./../components/ColorfulCard/index.vue')['default']
     ColorfulCard2: typeof import('./../components/ColorfulCard2/index.vue')['default']
+    copy: typeof import('../components/UEditor/wangEditor.vue')['default']
     Copy: typeof import('./../components/Copy/index.vue')['default']
     CurrencyType: typeof import('./../components/CurrencyType/index.vue')['default']
     DepartmentHead: typeof import('./../components/departmentHead/index.vue')['default']
@@ -57,5 +58,6 @@ declare module 'vue' {
     TableQuery: typeof import('./../components/tableQuery/index.vue')['default']
     Trend: typeof import('./../components/Trend/index.vue')['default']
     UEditor: typeof import('./../components/UEditor/index.vue')['default']
+    WangEditor: typeof import('./../components/UEditor/wangEditor.vue')['default']
   }
 }
