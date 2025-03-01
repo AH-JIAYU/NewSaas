@@ -1,0 +1,9 @@
+
+/**
+ * 由 Fantastic-admin 提供技术支持
+ * Powered by Fantastic-admin
+ * Gitee  https://fantastic-admin.gitee.io
+ * Github https://fantastic-admin.github.io
+ */
+
+.flex-c[data-v-e5a25d0c]{display:flex;justify-content:center;align-items:center}.card-header[data-v-e5a25d0c]{display:flex;justify-content:space-between;align-items:center!important}.card-header .leftTitle .spanStatus[data-v-e5a25d0c]{width:49px!important;height:23px!important;background:#409eff;border-radius:4px;color:var(--el-color-white);padding:4px 8px;font-size:11px;font-size:.875rem;border-radius:.25rem}.card-header .isOnlineSpanTrue[data-v-e5a25d0c]{background:#03c239;width:.5625rem;height:.5625rem;border-radius:50%;border:1px solid #03c239;box-shadow:#03c239 0 0 10px}.card-header .isOnlineSpanFalse[data-v-e5a25d0c]{background:#d8261a;width:.5625rem;height:.5625rem;display:block;border-radius:50%;border:1px solid #d8261a;box-shadow:#d8261a 0 0 10px}.card-header .rightStatus[data-v-e5a25d0c]{width:80px;display:flex;align-items:baseline}.card-header .rightStatus>div.isOnlineTrue[data-v-e5a25d0c]{color:#03c239;margin-left:6px}.card-header .rightStatus>div.isOnlineFalse[data-v-e5a25d0c]{color:#d8261a;margin-left:6px}.status[data-v-e5a25d0c]{position:relative;width:8rem;z-index:999}.status>div[data-v-e5a25d0c]{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:1.3rem}.status>div[data-v-e5a25d0c]:nth-child(1){font-size:8rem}[data-v-e5a25d0c] .el-divider{margin:20px 0}[data-v-e5a25d0c] .el-card{margin:10px 0;padding-top:10px}[data-v-e5a25d0c] .card-header{display:flex;justify-content:space-between;align-items:end}[data-v-e5a25d0c] .el-drawer__header{border-bottom:1px solid #aaa!important}[data-v-e5a25d0c] .el-row,[data-v-e5a25d0c] .el-table{width:94%!important;margin:auto!important}.open[data-v-e5a25d0c]{color:#409eff}.close[data-v-e5a25d0c]{color:#e2e2e2}
