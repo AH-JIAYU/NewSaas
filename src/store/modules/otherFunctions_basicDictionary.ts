@@ -18,11 +18,8 @@ const useBasicDictionaryStore = defineStore(
     }
     //获取所属客户
     const getCustomer= async () => {
-      if (!customerList.value.length) {
         const res = await customerApi.getCustomerList({});
         customerList.value = res.data.getTenantCustomerAccordInfoList;
-      }
-
       return customerList.value;
     };
     // 获取区域
