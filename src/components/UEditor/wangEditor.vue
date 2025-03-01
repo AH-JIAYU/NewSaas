@@ -1,7 +1,8 @@
-<!-- <script setup lang="ts">
+<script setup lang="ts">
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
 
 import { onBeforeUnmount, onMounted, ref, shallowRef } from 'vue'
+// @ts-expect-error
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import apiQinliu from '@/api/modules/file'
 
@@ -114,7 +115,4 @@ function handleCreated(editor: Editor) {
 
 <style lang="scss" scoped>
 
-</style> -->
-
-<template>
-</template>
+</style>
