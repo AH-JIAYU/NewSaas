@@ -1175,7 +1175,10 @@ function handleCurrentChange(val: any) {
 
 :deep {
   .el-tag {
-    min-width: 4.125rem;
+    max-width: 6rem;
+    // min-width: 4.125rem;
+    // width: 4.125rem;
+
   }
 }
 
