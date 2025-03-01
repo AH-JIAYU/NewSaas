@@ -664,7 +664,7 @@ function handleCurrentChange(val: any) {
 </template>
 
 <style scoped lang="scss">
-.rowCopy {
+.el-table__row .rowCopy {
   width: 20px;
   display: none;
 }

@@ -1082,13 +1082,13 @@ function handleCurrentChange(val: any) {
   display: block !important;
 }
 
-.rowCopy {
+.el-table__row .rowCopy {
   width: 20px;
   display: none;
 }
 
-.el-table__row:hover .rowCopy {
-  display: block;
+.el-table__row:hover .rowCopy{
+   display: block;
 }
 
 // 高度自适应
