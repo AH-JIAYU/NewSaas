@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
 
 import { onBeforeUnmount, onMounted, ref, shallowRef } from 'vue'
@@ -78,4 +78,7 @@ function handleCreated(editor) {
 
 <style lang="scss" scoped>
 
-</style>
+</style> -->
+
+<template>
+</template>

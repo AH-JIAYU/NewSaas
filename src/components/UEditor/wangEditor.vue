@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
 
 import { onBeforeUnmount, onMounted, ref, shallowRef } from 'vue'
@@ -20,14 +20,11 @@ const props = defineProps({
 const emits = defineEmits<{
   (event: 'changeEditorValue', val: string): void
 }>()
-
-console.log('valueHtml', props.valueHtml)
-
 const valueHtml = ref<string>('')
-const mode = ref('default')
 // 编辑器实例，必须用 shallowRef
 const editorRef = shallowRef()
-
+// 定义 insertFn 的类型
+type InsertFn = (url: string, alt?: string, href?: string) => void
 const toolbarConfig = {}
 const editorConfig = {
   selector: `#${props.id}`,
@@ -48,7 +45,7 @@ const editorConfig = {
   },
   MENU_CONF: {
     uploadImage: {
-      async customUpload(file, insertFn) {
+      async customUpload(file: File, insertFn: InsertFn) {
         // 创建 FormData 对象
         const formData = new FormData()
         formData.append('file', file)
@@ -63,10 +60,8 @@ const editorConfig = {
                 }
               })
             }
-            else {
-
-            }
-          }).catch((error: any) => {})
+            else { }
+          }).catch((_error: any) => {})
       },
     },
   },
@@ -88,10 +83,9 @@ onBeforeUnmount(() => {
 //   },
 //   { immediate: true },
 // )
-function handleCreated(editor) {
+function handleCreated(editor: Editor) {
   editorRef.value = editor // 记录 editor 实例，重要！
   editor.setHtml(props.valueHtml)
-  console.log(editor.getHtml())
   // 监听编辑器内容变化并通知父组件（双向绑定）
   editor.on('change', () => {
     const html = editor.getHtml()
@@ -106,13 +100,13 @@ function handleCreated(editor) {
       style="border-bottom: 1px solid #ccc"
       :editor="editorRef"
       :default-config="toolbarConfig"
-      :mode="mode"
+      mode="default"
     />
     <Editor
       v-model="valueHtml"
       style="height: 500px; overflow-y: hidden;"
       :default-config="editorConfig"
-      :mode="mode"
+      mode="default"
       @on-created="handleCreated"
     />
   </div>
@@ -120,4 +114,7 @@ function handleCreated(editor) {
 
 <style lang="scss" scoped>
 
-</style>
+</style> -->
+
+<template>
+</template>
