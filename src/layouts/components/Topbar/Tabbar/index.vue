@@ -152,7 +152,10 @@ function onTabbarContextmenu(event: MouseEvent, routeItem: Tabbar.recordRaw) {
         label: t('app.tabbar.reload'),
         icon: 'i-ri:refresh-line',
         disabled: routeItem.tabId !== activedTabId.value,
-        onClick: () => mainPage.reload(),
+        onClick: () => {
+          // mainPage.reload()
+          router.push({ name: router.currentRoute.value.name, query: { reload: Date.now() } })
+        },
       },
       {
         label: t('app.tabbar.close'),
