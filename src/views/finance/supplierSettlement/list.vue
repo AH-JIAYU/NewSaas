@@ -370,9 +370,13 @@ function handleCurrentChange(val: any) {
           label="状态"
         >
           <template #default="{ row }">
-            <el-text class="fontColor">{{
+            <!-- <el-text class="fontColor">{{
               billStatusList[row.billStatus - 1].label
-            }}</el-text>
+            }}</el-text> -->
+             <el-tag v-if="row.billStatus === 1" type="warning" effect="dark" style="background-color: skyblue;">待收票</el-tag>
+            <el-tag v-if="row.billStatus === 2" type="warning" effect="dark" style="background-color: #FFAC54;">待支付</el-tag>
+            <el-tag v-if="row.billStatus === 3" type="success" effect="dark">已支付</el-tag>
+            <el-tag v-if="row.billStatus === 4" type="danger" effect="dark">已拒绝</el-tag>
           </template>
         </ElTableColumn>
         <el-table-column align="left" fixed="right" label="操作" width="170">
