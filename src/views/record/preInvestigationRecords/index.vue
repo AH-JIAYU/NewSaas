@@ -360,6 +360,7 @@ const formOption = {
                 align="left"
               >
                 <template #default="scope">
+                 <div style="padding-left: 20px;">
                   <el-text class="fontC-System">
                     {{ scope.row.memberChildName }}
                   </el-text>
@@ -370,6 +371,7 @@ const formOption = {
                     class="fontC-System"
                     >随机id:{{ scope.row.randomIdentityId }}</el-text
                   >
+                 </div>
                 </template>
               </el-table-column>
               <ElTableColumn prop="status" label="状态" align="left">
