@@ -506,18 +506,27 @@ onMounted(() => {
           label="状态"
         >
           <template #default="{ row }">
-            <el-text v-if="row.invoiceStatus === 1" class="mx-1  color1 fontC-System"
+            <el-tag v-if="row.invoiceStatus === 1" class="mx-1  fontC-System" effect="dark" style="background-color: #FFB365;border-color: white;color: white;"
+              >未收款</el-tag>
+
+            <!-- <el-text v-if="row.invoiceStatus === 1" class="mx-1  color1 fontC-System"
               >未收款</el-text
-            >
-            <el-text v-if="row.invoiceStatus === 2" class="mx-1  color2 fontC-System"
+            > -->
+            <el-tag v-if="row.invoiceStatus === 2" class="mx-1  fontC-System" effect="dark" style="background-color: #409EFF;border-color: white;color: white;"
+              >部分收款</el-tag>
+            <!-- <el-text v-if="row.invoiceStatus === 2" class="mx-1  color2 fontC-System"
               >部分收款</el-text
-            >
-            <el-text v-if="row.invoiceStatus === 3" class="mx-1  color3 fontC-System"
+            > -->
+            <el-tag v-if="row.invoiceStatus === 3" class="mx-1  fontC-System" effect="dark" style="background-color: #03C239;border-color: white;color: white;"
+            >已完结</el-tag>
+            <!-- <el-text v-if="row.invoiceStatus === 3" class="mx-1  color3 fontC-System"
               >已完结</el-text
-            >
-            <el-text v-if="row.invoiceStatus === 4" class="mx-1  color4 fontC-System"
+            > -->
+            <el-tag v-if="row.invoiceStatus === 4" class="mx-1  fontC-System" effect="dark" style="background-color: #FB6868;border-color: white;color: white;"
+            >坏账</el-tag>
+            <!-- <el-text v-if="row.invoiceStatus === 4" class="mx-1  color4 fontC-System"
               >坏账</el-text
-            >
+            > -->
           </template>
         </ElTableColumn>
         <el-table-column
