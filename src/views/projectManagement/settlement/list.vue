@@ -869,7 +869,7 @@ function handleMoreStatus(row: any) {
           v-if="checkList.includes('reviewTime')"
           show-overflow-tooltip
           prop="reviewTime"
-          width="140"
+          width="200"
           align="left"
           :label="t('settlement.reviewTime')"
         >
@@ -878,7 +878,7 @@ function handleMoreStatus(row: any) {
               <div>
                 <el-text>
                   {{
-                    row.checkIfThereIsAnExistence ? row.settlementTime : "-"
+                    row.checkIfThereIsAnExistence ? row.reviewTime : "-"
                   }}
                 </el-text>
               </div>
