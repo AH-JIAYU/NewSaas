@@ -821,7 +821,11 @@ function handleMoreStatus(row: any) {
             </div>
           </template>
         </el-table-column>
-
+        <!-- 创建时间 待审核1－－只有创建时间pendReviewTime；
+         已审核2：－－显示创建时间pendReviewTime和审核时间reviewTime；
+         已开票3：？？？显示创建时间pendReviewTime和审核时间reviewTime；开票时间invoicedOutTime
+         已结算4：显示创建时间pendReviewTime，审核时间reviewTime和结算时间settledTime；
+         已冻结5：显示创建时间pendReviewTime和冻结时间frozenTime-->
         <el-table-column
           v-if="checkList.includes('nodeTime')"
           align="left"
@@ -829,42 +833,29 @@ function handleMoreStatus(row: any) {
           width="180"
         >
           <template #default="{ row }">
-            <div v-if="row.status === 1">
+            <p>{{row.pendReviewTime}}</p>
+            <!-- <div v-if="row.status === 1">
               <p>{{row.pendReviewTime}}</p>
-            <!-- <el-tag effect="plain" type="info">{{
-                format(row.pendReviewTime)
-              }}</el-tag> -->
             </div>
 
             <div v-if="row.status === 2">
               <p>{{row.reviewTime}}</p>
-              <!-- <el-tag effect="plain" type="info">{{
-                format(row.reviewTime)
-              }}</el-tag> -->
             </div>
 
             <div v-if="row.status === 3">
               <p>{{row.invoicedOutTime}}</p>
-              <!-- <el-tag effect="plain" type="info" v-if="row.status === 3">{{
-                format(row.invoicedOutTime)
-              }}</el-tag> -->
             </div>
 
             <div v-if="row.status === 4">
               <p>{{row.settledTime}}</p>
-              <!-- <el-tag effect="plain" type="info" v-if="row.status === 4">{{
-                format(row.settledTime)
-              }}</el-tag> -->
             </div>
 
             <div v-if="row.status === 5">
               <p>{{row.frozenTime}}</p>
-              <!-- <el-tag effect="plain" type="info" v-if="row.status === 5">{{
-                format(row.frozenTime)
-              }}</el-tag> -->
-            </div>
+            </div> -->
           </template>
         </el-table-column>
+           <!-- 审核时间 -->
         <el-table-column
           v-if="checkList.includes('reviewTime')"
           show-overflow-tooltip
@@ -875,16 +866,89 @@ function handleMoreStatus(row: any) {
         >
           <template #default="{ row }">
             <div class="container">
-              <div>
-                <el-text>
+              <div v-if="row.status == 2 || row.status == 3|| row.status == 4">
+
                   {{
-                    row.checkIfThereIsAnExistence ? row.reviewTime : "-"
+                    row.reviewTime ? row.reviewTime : "-"
                   }}
-                </el-text>
+
+              </div>
+              <div v-else>
+                {{ "-" }}
               </div>
             </div>
           </template>
         </el-table-column>
+        <!-- 开票时间 -->
+        <el-table-column
+          v-if="checkList.includes('nodeTime')"
+          show-overflow-tooltip
+          width="200"
+          align="left"
+          :label="t('settlement.invoiceTime')"
+        >
+          <template #default="{ row }">
+            <div class="container">
+              <div v-if="row.status == 3">
+
+                  {{
+                    row.invoicedOutTime ? row.invoicedOutTime : "-"
+                  }}
+
+              </div>
+              <div v-else>
+                {{ "-" }}
+              </div>
+            </div>
+          </template>
+        </el-table-column>
+                <!-- 结算时间 -->
+                <el-table-column
+          v-if="checkList.includes('nodeTime')"
+          show-overflow-tooltip
+          width="200"
+          align="left"
+          :label="t('settlement.settledTime')"
+        >
+          <template #default="{ row }">
+            <div class="container">
+              <div v-if="row.status == 4">
+
+                  {{
+                    row.settledTime ? row.settledTime : "-"
+                  }}
+
+              </div>
+              <div v-else>
+                {{ "-" }}
+              </div>
+            </div>
+          </template>
+        </el-table-column>
+        <!-- 冻结时间 -->
+        <el-table-column
+          v-if="checkList.includes('nodeTime')"
+          show-overflow-tooltip
+          width="200"
+          align="left"
+          :label="t('settlement.frozenTime')"
+        >
+          <template #default="{ row }">
+            <div class="container">
+              <div v-if="row.status == 5">
+
+                  {{
+                    row.reviewTime ? row.reviewTime : "-"
+                  }}
+
+              </div>
+              <div v-else>
+                {{ "-" }}
+              </div>
+            </div>
+          </template>
+        </el-table-column>
+
         <el-table-column
           v-if="checkList.includes('remark')"
           show-overflow-tooltip
