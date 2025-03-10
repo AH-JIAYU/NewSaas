@@ -74,6 +74,7 @@ const columns = ref([
   },
   { prop: "ipBelong", label: "区域/IP", sortable: true, checked: true },
   { prop: "surveyTime", label: "调查时间", sortable: true, checked: true },
+  { prop: "reviewTime", label: "审核时间", sortable: true, checked: true },
   { prop: "surveyStatus", label: "调查状态", sortable: true, checked: true },
   { prop: "viceStatus", label: "副状态", sortable: true, checked: true },
 ]);
@@ -191,6 +192,14 @@ async function fetchData() {
     list.value = data.memberSurveyRecordInfoList;
     currencyType.value = data.currencyType;
     pagination.value.total = data.total;
+    let arr = [7,8,13]
+    list.value.forEach((item:any) => {
+        if(item.settlementTime && item.surveyStatus === 1 && arr.includes(Number(item.viceStatus))){
+                 item.checkIfThereIsAnExistence = true
+        }else{
+            item.checkIfThereIsAnExistence = false
+        }
+    } )
     listLoading.value = false;
   } catch (error) {
   } finally {
@@ -565,6 +574,19 @@ function handleCurrentChange(val: any) {
                 <el-button size="small" type="warning" circle>
                   {{ `${row.surveyTime}M` }}
                 </el-button>
+              </div>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column v-if="checkList.includes('reviewTime')"  width="100" fixed="right" align="left" show-overflow-tooltip prop=""  label="审核时间">
+          <template #default="{ row }">
+            <div class="container">
+              <div>
+                <el-text>
+                  {{
+                    row.checkIfThereIsAnExistence ? row.settlementTime : "-"
+                  }}
+                </el-text>
               </div>
             </div>
           </template>

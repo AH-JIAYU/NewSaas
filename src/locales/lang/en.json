@@ -329,7 +329,8 @@
     "safeTermination": "Safe Termination",
     "uncompleted": "Uncompleted",
     "allocationType": "Allocation Type",
-    "OwningCountry": "IP/Owning Country"
+    "OwningCountry": "IP/Owning Country",
+    "reviewTime":"Review Time"
   },
   "newProject": {
     "basicSettings": "Basic Settings",
@@ -546,7 +547,8 @@
     "unassign": "Unassign",
     "cancel": "Cancel",
     "confirm": "Confirm",
-    "leastOne": "Select at least one assignment target"
+    "leastOne": "Select at least one assignment target",
+     "reviewTime":"Review Time"
   },
   "projectDetail": {
     "operatingSystem": "Operating System",

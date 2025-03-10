@@ -114,6 +114,12 @@ const columns = ref<any>([
     sortable: true,
     checked: true,
   },
+  {
+    label: computed(() => t("settlement.reviewTime")),
+    prop: "reviewTime",
+    sortable: true,
+    checked: true,
+  },
 ]);
 const formSearchList = ref<any>(); //表单排序配置
 const formSearchName = ref<string>("formSearch-settlement"); // 表单排序name
@@ -307,6 +313,13 @@ async function fetchData() {
     //#endregion
     const { data } = await api.list(params);
     list.value = data.projectSettlementList;
+    list.value.forEach((item:any) => {
+        if(item.reviewTime && Number(item.status) === 2 ){
+           item.checkIfThereIsAnExistence = true
+        }else{
+            item.checkIfThereIsAnExistence = false
+        }
+    } )
     pagination.value.total = +data.total;
     listLoading.value = false;
   } catch (error) {
@@ -595,6 +608,7 @@ function handleMoreStatus(row: any) {
             </div>
           </template>
         </el-table-column>
+
         <el-table-column
           v-if="checkList.includes('projectAmount')"
           show-overflow-tooltip
@@ -817,41 +831,60 @@ function handleMoreStatus(row: any) {
           <template #default="{ row }">
             <div v-if="row.status === 1">
               <p>{{row.pendReviewTime}}</p>
-            <el-tag effect="plain" type="info">{{
+            <!-- <el-tag effect="plain" type="info">{{
                 format(row.pendReviewTime)
-              }}</el-tag>
+              }}</el-tag> -->
             </div>
 
             <div v-if="row.status === 2">
               <p>{{row.reviewTime}}</p>
-              <el-tag effect="plain" type="info">{{
+              <!-- <el-tag effect="plain" type="info">{{
                 format(row.reviewTime)
-              }}</el-tag>
+              }}</el-tag> -->
             </div>
 
             <div v-if="row.status === 3">
               <p>{{row.invoicedOutTime}}</p>
-              <el-tag effect="plain" type="info" v-if="row.status === 3">{{
+              <!-- <el-tag effect="plain" type="info" v-if="row.status === 3">{{
                 format(row.invoicedOutTime)
-              }}</el-tag>
+              }}</el-tag> -->
             </div>
 
             <div v-if="row.status === 4">
               <p>{{row.settledTime}}</p>
-              <el-tag effect="plain" type="info" v-if="row.status === 4">{{
+              <!-- <el-tag effect="plain" type="info" v-if="row.status === 4">{{
                 format(row.settledTime)
-              }}</el-tag>
+              }}</el-tag> -->
             </div>
 
             <div v-if="row.status === 5">
               <p>{{row.frozenTime}}</p>
-              <el-tag effect="plain" type="info" v-if="row.status === 5">{{
+              <!-- <el-tag effect="plain" type="info" v-if="row.status === 5">{{
                 format(row.frozenTime)
-              }}</el-tag>
+              }}</el-tag> -->
             </div>
           </template>
         </el-table-column>
-
+        <el-table-column
+          v-if="checkList.includes('reviewTime')"
+          show-overflow-tooltip
+          prop="reviewTime"
+          width="140"
+          align="left"
+          :label="t('settlement.reviewTime')"
+        >
+          <template #default="{ row }">
+            <div class="container">
+              <div>
+                <el-text>
+                  {{
+                    row.checkIfThereIsAnExistence ? row.settlementTime : "-"
+                  }}
+                </el-text>
+              </div>
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="checkList.includes('remark')"
           show-overflow-tooltip

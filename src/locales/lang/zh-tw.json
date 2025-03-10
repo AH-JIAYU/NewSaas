@@ -331,7 +331,8 @@
     "safeTermination": "安全終止",
     "uncompleted": "未完成",
     "allocationType": "分配類型",
-    "OwningCountry": "IP/所屬國"
+    "OwningCountry": "IP/所屬國",
+    "reviewTime": "審核時間"
   },
   "newProject": {
     "basicSettings": "基礎設定",
@@ -630,7 +631,8 @@
     "projectPrice": "項目價",
     "country": "所屬國家",
     "nodeTime": "節點時間",
-    "leastOne": "請選擇至少一筆數據"
+    "leastOne": "請選擇至少一筆數據",
+    "reviewTime": "審核時間"
   },
   "addSettlement": {
     "add": "遺漏項目新增",
