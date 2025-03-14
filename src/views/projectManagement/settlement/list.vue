@@ -392,7 +392,7 @@ onMounted(async () => {
       index: 4,
       show: true,
       type: "select",
-      modelName: "countryData",
+      modelName: "countryId",
       placeholder: computed(() => t("settlement.area")),
       option: "global",
       optionLabel: "chineseName",
