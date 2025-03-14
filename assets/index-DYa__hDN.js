@@ -1,9 +1,0 @@
-
-/**
- * 由 Fantastic-admin 提供技术支持
- * Powered by Fantastic-admin
- * Gitee  https://fantastic-admin.gitee.io
- * Github https://fantastic-admin.github.io
- */
-
-import{a as y}from"./configuration_site_setting-D3zfVa69.js";import{d as C,aB as k,r as i,$ as B,a as l,o as E,b as S,f as t,w as e,v as _,g as c,i as s,B as N,E as U,M as $}from"./index-fxjDEbzK.js";const M={class:"right"},T={class:"dialog-footer"},q=C({__name:"index",setup(D,{expose:m}){const p=k(),a=i(!1),u=i(""),n=i({exchangeRate:null}),g=B({exchangeRate:[{required:!0,message:"请输入汇率",trigger:"blur"},{pattern:/^(?!0(\.0+)?$)(\d+(\.\d{1,2})?)$/,message:"请输入一个有效的数字，不能小于0，最多保留两位小数",trigger:"blur"}]}),x=()=>{a.value=!0},R=async()=>{await u.value.validate(),(await y.updateWebConfig(n.value)).data.flag&&(await p.getCurrencyType(),U.success({message:"修改成功",center:!0}),a.value=!1)};return m({showEdit:x}),(h,o)=>{const d=l("el-text"),v=l("el-input"),b=l("el-form-item"),V=l("el-form"),f=l("el-button"),w=l("el-dialog");return E(),S("div",null,[t(w,{modelValue:s(a),"onUpdate:modelValue":o[2]||(o[2]=r=>N(a)?a.value=r:null),title:"设置汇率",width:"500"},{footer:e(()=>[_("div",T,[t(f,{type:"primary",onClick:R},{default:e(()=>[c(" 确认 ")]),_:1}),t(f,{onClick:o[1]||(o[1]=r=>a.value=!1)},{default:e(()=>[c(" 关闭 ")]),_:1})])]),default:e(()=>[t(V,{model:s(n),ref_key:"exchangeRateRef",ref:u,rules:s(g),"label-width":"90px",inline:!1},{default:e(()=>[t(b,{label:"美元汇率",prop:"exchangeRate"},{default:e(()=>[_("div",M,[t(v,{modelValue:s(n).exchangeRate,"onUpdate:modelValue":o[0]||(o[0]=r=>s(n).exchangeRate=r),placeholder:"请输入数值",clearable:""},{prefix:e(()=>[t(d,{style:{color:"#333"}},{default:e(()=>[c(" 1 美元 (USD)       = ")]),_:1})]),suffix:e(()=>[t(d,{style:{color:"#333"}},{default:e(()=>[c(" 人民币 (CNY) ")]),_:1})]),_:1},8,["modelValue"])])]),_:1})]),_:1},8,["model","rules"])]),_:1},8,["modelValue"])])}}}),W=$(q,[["__scopeId","data-v-ff0d283b"]]);export{W as default};
