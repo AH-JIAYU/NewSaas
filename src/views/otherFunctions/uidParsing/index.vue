@@ -9,6 +9,7 @@ defineOptions({
 // loading
 const loading = ref(false);
 // 定义表单
+const projectId = ref<any>('');
 const formIp = ref<any>([]);
 // 查询出ip回显
 const showIp = ref<any>("");
@@ -17,16 +18,24 @@ async function ParsingEncryption() {
   try {
     if (formIp.value && formIp.value.length === 0) {
       return ElMessage.warning({
-        message: "请至少输入一个IP",
+        message: "请至少输入一clickId",
         center: true,
       });
     }
+
+    if(!projectId.value){
+      return ElMessage.warning({
+        message: "请输入项目ID",
+        center: true,
+      });
+    }
+
     const arr = formIp.value.split("\n");
-    const res = await api.list({ uidList: arr });
+    const res = await api.list({ projectId:projectId.value,uidList: arr });
     const bbb: any = [];
     res.data.analyzeUidInfoList.forEach((item: any) => {
       bbb.push(
-        `${'UID:' + item.uid}-${item.peopleType === 1 ? '会员名称:' + item.name : '子会员名称:' + item.name}-${item.peopleType === 1 ? '会员ID:' +item.memberChildId : '子会员ID:' +item.memberChildId}-${item.peopleType === 1 ? '会员' : '子会员'}`
+        item.uid
       );
     });
     showIp.value = bbb.join("\n");
@@ -42,8 +51,13 @@ async function ParsingEncryption() {
       <el-row style="margin: 0;" :gutter="24">
         <el-col style="padding: 0;" :xs="10" :sm="10" :md="10" :lg="10" :xl="10">
           <el-input
+            v-model="projectId"
+            placeholder="请输入项目ID"
+            style="margin-bottom: 10px;"
+          />
+          <el-input
             v-model="formIp"
-            placeholder="请粘贴UID每行一个,多个请回车换行"
+            placeholder="请粘贴clickId每行一个,多个请回车换行"
             type="textarea"
             :rows="30"
           />
