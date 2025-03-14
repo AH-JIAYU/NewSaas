@@ -3,7 +3,7 @@ import { Model } from "survey-core";
 import "survey-core/defaultV2.min.css";
 import api from "@/api/modules/record_preInvestigationRecords";
 import { cloneDeep } from "lodash-es";
-
+import { ElMessage } from "element-plus";
 const data = reactive<any>({
   visible: false,
   survey: null,
@@ -34,6 +34,13 @@ const showEdit = async (row: any) => {
   const res = await api.getDetail({ id: row.id });
 
   const projectJson = cloneDeep(JSON.parse(res.data.projectJson));
+  console.log(projectJson,'projectJson')
+  if(!projectJson){
+    ElMessage.warning({
+              message: "无详情数据",
+              center: true,
+            });
+  }else{
   // 回显用户选择的答案
   projectJson.pages.forEach((item: any) => {
     item.elements.forEach((ite: any) => {
@@ -54,6 +61,7 @@ const showEdit = async (row: any) => {
     });
   });
 
+
   data.survey = new Model(JSON.stringify(projectJson));
   data.survey.showNavigationButtons = false;
   // 获取所有正确答案的集合
@@ -68,6 +76,13 @@ const showEdit = async (row: any) => {
   });
 
   data.visible = true;
+
+
+
+
+}
+
+
 };
 
 onMounted(async () => {});

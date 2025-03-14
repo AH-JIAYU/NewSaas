@@ -315,27 +315,18 @@ function handleCurrentChange(val: any) {
           label="状态"
         >
           <template #default="{ row }">
-
-            <el-text
-              style="color: rgb(255, 172, 84)"
-              class="oneLine"
-              type="warning"
+            <el-tag
               v-if="row.status == '待支付'"
-              >{{ row.status  }}</el-text
+              type="warning"
+              effect="dark"
+              style="background-color: #FFAC54"
+              >待支付</el-tag
             >
-            <el-text
-              style="color: rgb(3, 194, 57)"
-              class="oneLine"
-              type="success"
-              v-if="row.status == '已支付'"
-              >{{ row.status}}</el-text
+            <el-tag v-if="row.status == '已支付'" type="success" effect="dark"
+              >已支付</el-tag
             >
-            <el-text
-              style="color: rgb(251, 104, 104)"
-              class="oneLine"
-              type="danger"
-              v-if="row.status == '已拒绝'"
-              >{{ row.status }}</el-text
+            <el-tag  v-if="row.status == '已拒绝'" type="danger" effect="dark"
+              >已拒绝</el-tag
             >
           </template>
         </ElTableColumn>

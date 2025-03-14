@@ -920,7 +920,7 @@ function handleMoreStatus(row: any) {
                 @click="handleMoreOperating('refundDetails', row)"
                 v-auth="'settlement-get-getProjectSettlementDetails'"
               >
-                {{ t("settlement.a") }}
+                {{ t("settlement.details") }}
               </el-button>
             </ElSpace>
           </template>

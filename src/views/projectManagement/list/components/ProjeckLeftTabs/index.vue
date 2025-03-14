@@ -123,7 +123,7 @@ defineExpose({ activeLeftTab });
         : ''
       ">
 
-      <img src="../../../../../assets/images/main.png" alt="" style="margin-right: 5px;width: 16px;height: 16px;"  v-if="index ==0">
+      <img src="../../../../../assets/images/main.png" alt="" style="margin-right: 5px;width: 16px;height: 16px;"  v-if="leftTab.parentId=='0'">
 
               <span> {{ leftTab.name || "项目名称" }}</span>
 

@@ -521,7 +521,7 @@ const goSupplier = (row:any)=> {
         >
           <template #default="{ row }">
             <div class="flex-c">
-              <div class="fontC-System" style="width: calc(100% - 20px)">
+              <div class="fontC-System" style="width: calc(100% - 20px);overflow: hidden;">
                 {{ row.supplierLevelName ? row.supplierLevelName : "-" }}
               </div>
               <SvgIcon
@@ -784,7 +784,7 @@ const goSupplier = (row:any)=> {
           :label="t('supplier.settlementCycle')"
           ><template #default="{ row }">
             <div class="flex-c fontC-System">
-              <div class="oneLine" style="width: calc(100% - 20px)">
+              <div class="oneLine" style="width: calc(100% - 20px);">
                 {{ row.settlementCycle ? "net " + row.settlementCycle : "-" }}
               </div>
               <SvgIcon
