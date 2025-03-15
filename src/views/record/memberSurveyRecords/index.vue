@@ -88,6 +88,7 @@ const columns = ref([
     sortable: true,
     checked: true,
   },
+
   { prop: 'allocationType', label: computed(() => t("RecordsManagement.allocationType")), sortable: true, checked: true },
   {
     prop: 'doMoneyPrice',
@@ -105,6 +106,7 @@ const columns = ref([
   { prop: 'surveyTime', label: computed(() => t("RecordsManagement.surveyTime")), sortable: true, checked: true },
   { prop: 'surveyStatus', label: computed(() => t("RecordsManagement.surveyStatus")), sortable: true, checked: true },
   { prop: 'viceStatus', label: computed(() => t("RecordsManagement.viceState")), sortable: true, checked: true },
+  { prop: 'reviewTime', label: computed(() => t("RecordsManagement.reviewTime")), sortable: true, checked: true },
 ])
 const queryForm = reactive<any>({
   memberChildId: '', //	子会员id
@@ -188,6 +190,14 @@ async function fetchData() {
     list.value = data.memberChildSurveyRecordInfoList
     currencyType.value = data.currencyType
     pagination.value.total = data.total
+    let arr = [7,8,13]
+    list.value.forEach((item:any) => {
+        if(item.settlementTime && item.surveyStatus === 1 && arr.includes(Number(item.viceStatus))){
+                 item.checkIfThereIsAnExistence = true
+        }else{
+            item.checkIfThereIsAnExistence = false
+        }
+    } )
     listLoading.value = false
   }
   catch (error) {
@@ -845,6 +855,20 @@ function handleCurrentChange(val: any) {
 
   </el-tag>
   </el-tooltip> -->
+          </template>
+        </el-table-column>
+       <!-- 审核时间 -->
+        <el-table-column v-if="checkList.includes('reviewTime')" width="190"  align="left"   :label="t('RecordsManagement.reviewTime')">
+          <template #default="{ row }">
+            <div class="container">
+              <div>
+                <el-text>
+                  {{
+                    row.checkIfThereIsAnExistence ? row.settlementTime : "-"
+                  }}
+                </el-text>
+              </div>
+            </div>
           </template>
         </el-table-column>
 

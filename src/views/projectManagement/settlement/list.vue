@@ -114,6 +114,12 @@ const columns = ref<any>([
     sortable: true,
     checked: true,
   },
+  {
+    label: computed(() => t("settlement.reviewTime")),
+    prop: "reviewTime",
+    sortable: true,
+    checked: true,
+  },
 ]);
 const formSearchList = ref<any>(); //表单排序配置
 const formSearchName = ref<string>("formSearch-settlement"); // 表单排序name
@@ -307,6 +313,13 @@ async function fetchData() {
     //#endregion
     const { data } = await api.list(params);
     list.value = data.projectSettlementList;
+    list.value.forEach((item:any) => {
+        if(item.reviewTime && Number(item.status) === 2 ){
+           item.checkIfThereIsAnExistence = true
+        }else{
+            item.checkIfThereIsAnExistence = false
+        }
+    } )
     pagination.value.total = +data.total;
     listLoading.value = false;
   } catch (error) {
@@ -379,7 +392,7 @@ onMounted(async () => {
       index: 4,
       show: true,
       type: "select",
-      modelName: "countryData",
+      modelName: "countryId",
       placeholder: computed(() => t("settlement.area")),
       option: "global",
       optionLabel: "chineseName",
@@ -595,6 +608,7 @@ function handleMoreStatus(row: any) {
             </div>
           </template>
         </el-table-column>
+
         <el-table-column
           v-if="checkList.includes('projectAmount')"
           show-overflow-tooltip
@@ -808,47 +822,56 @@ function handleMoreStatus(row: any) {
           </template>
         </el-table-column>
 
+
+
+
+
+
+        <!-- 创建时间 待审核1－－只有创建时间pendReviewTime；
+         已审核2：－－显示创建时间pendReviewTime和审核时间reviewTime；
+         已开票3：？？？显示创建时间pendReviewTime和审核时间reviewTime；开票时间invoicedOutTime
+         已结算4：显示创建时间pendReviewTime，审核时间reviewTime和结算时间settledTime；
+         已冻结5：显示创建时间pendReviewTime和冻结时间frozenTime-->
+
+
         <el-table-column
           v-if="checkList.includes('nodeTime')"
           align="left"
           :label="t('settlement.time')"
-          width="180"
+          width="230"
         >
           <template #default="{ row }">
-            <div v-if="row.status === 1">
+
+            <p>创建：{{row.pendReviewTime}}</p>
+            <p v-if="row.status == 2 || row.status == 3|| row.status == 4">审核：{{row.reviewTime ?row.reviewTime:'-'}}</p>
+            <p v-if="row.status == 3">开票：{{row.invoicedOutTime?row.invoicedOutTime:'-'}}</p>
+            <p v-if="row.status == 4">结算：{{row.settledTime?row.settledTime:'-'}}</p>
+            <p v-if="row.status == 5">冻结：{{row.frozenTime?row.frozenTime:'-'}}</p>
+
+
+
+
+
+
+            <!-- <div v-if="row.status === 1">
               <p>{{row.pendReviewTime}}</p>
-            <el-tag effect="plain" type="info">{{
-                format(row.pendReviewTime)
-              }}</el-tag>
             </div>
 
             <div v-if="row.status === 2">
               <p>{{row.reviewTime}}</p>
-              <el-tag effect="plain" type="info">{{
-                format(row.reviewTime)
-              }}</el-tag>
             </div>
 
             <div v-if="row.status === 3">
               <p>{{row.invoicedOutTime}}</p>
-              <el-tag effect="plain" type="info" v-if="row.status === 3">{{
-                format(row.invoicedOutTime)
-              }}</el-tag>
             </div>
 
             <div v-if="row.status === 4">
               <p>{{row.settledTime}}</p>
-              <el-tag effect="plain" type="info" v-if="row.status === 4">{{
-                format(row.settledTime)
-              }}</el-tag>
             </div>
 
             <div v-if="row.status === 5">
               <p>{{row.frozenTime}}</p>
-              <el-tag effect="plain" type="info" v-if="row.status === 5">{{
-                format(row.frozenTime)
-              }}</el-tag>
-            </div>
+            </div> -->
           </template>
         </el-table-column>
 

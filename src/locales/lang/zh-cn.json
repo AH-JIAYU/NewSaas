@@ -331,7 +331,8 @@
     "safeTermination": "安全终止",
     "uncompleted": "未完成",
     "allocationType": "分配类型",
-    "OwningCountry": "IP/所属国"
+    "OwningCountry": "IP/所属国",
+    "reviewTime": "审核时间"
   },
   "newProject": {
     "basicSettings": "基础设置",
@@ -620,7 +621,10 @@
     "haveAlreadySettled": "已结算",
     "audited": "已审核",
     "frozen": "已冻结",
-    "time": "创建时间/时长",
+    "time": "时间",
+    "settledTime": "结算时间",
+    "frozenTime": "冻结时间",
+    "invoiceTime": "开票时间",
     "remark": "备注",
     "examine": "审核",
     "retrial": "重审",
@@ -630,7 +634,8 @@
     "projectPrice": "项目价",
     "country": "所属国家",
     "nodeTime": "节点时间",
-    "leastOne": "请选择至少一条数据"
+    "leastOne": "请选择至少一条数据",
+    "reviewTime": "审核时间"
   },
   "addSettlement": {
     "add": "遗漏项目新增",

@@ -109,4 +109,11 @@ export const formSearchList = [
     modelName: "TenantId",
     placeholder: "合作商ID",
   },
+  {
+    index: 6,
+    show: true,
+    type: "input",
+    modelName: "clientId",
+    placeholder: "点击ID",
+  },
 ];

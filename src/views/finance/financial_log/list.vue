@@ -65,6 +65,8 @@ const data = ref<any>({
     operationType: null,
     // 金额类型 1待审余额 2可用余额
     type: null,
+    // 点击ID
+    clientId:null,
   },
   // 批量操作
   batch: {
@@ -111,6 +113,8 @@ function onReset() {
     operationType: null,
     // 金额类型 1待审余额 2可用余额
     type: null,
+    // 点击ID
+    clientId:null
   });
   getDataList();
 }
