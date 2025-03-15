@@ -845,7 +845,10 @@ function handleMoreStatus(row: any) {
             <p>创建：{{row.pendReviewTime}}</p>
             <p v-if="row.status == 2 || row.status == 3|| row.status == 4">审核：{{row.reviewTime ?row.reviewTime:'-'}}</p>
             <p v-if="row.status == 3">开票：{{row.invoicedOutTime?row.invoicedOutTime:'-'}}</p>
-            <p v-if="row.status == 4">结算：{{row.settledTime?row.settledTime:'-'}}</p>
+            <p v-if="row.status == 4">
+              <div>开票：{{row.invoicedOutTime?row.invoicedOutTime:'-'}}</div>
+              <div>结算：{{row.settledTime?row.settledTime:'-'}}</div>
+              </p>
             <p v-if="row.status == 5">冻结：{{row.frozenTime?row.frozenTime:'-'}}</p>
 
 
