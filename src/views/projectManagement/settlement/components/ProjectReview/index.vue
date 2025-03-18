@@ -38,8 +38,10 @@ const formData = ref<any>({
 // 自定义校验
 const validateNumberInput = (rule: any, value: any, callback: any) => {
   // 使用正则表达式检查输入是否为数字和换行符
+  // 去除输入中的所有空格
+  const sanitizedValue = value.replace(/\s+/g, '');
   const regex = /^[\d\n]*$/;
-  if (!regex.test(value)) {
+  if (!regex.test(sanitizedValue)) {
     callback(new Error(t("recordChange.numEnter")));
   } else {
     callback();
@@ -90,7 +92,7 @@ async function onSubmit() {
             formData.value.settlementType === 2
           ) {
             formData.value.projectSettlementBuilderList =
-              formData.value.arr.split("\n") || [];
+              formData.value.arr.split("\n").map((line:any) => line.replace(/\s+/g, '')).filter((line: any) => line.length > 0) || [];
           } else {
             formData.value.projectSettlementBuilderList = [];
           }
