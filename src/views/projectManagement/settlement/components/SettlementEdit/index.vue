@@ -232,7 +232,7 @@ defineExpose({ showEdit });
               @change=""
             />
           </el-form-item>
-          <el-form-item label="结算">
+          <el-form-item label="结算PO号">
             <el-input
               v-model="form.settlementPo"
               placeholder=""
