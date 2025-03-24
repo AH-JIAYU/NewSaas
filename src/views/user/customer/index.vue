@@ -569,14 +569,20 @@ function termination(row: any) {
           v-if="checkList.includes('customerShortName')"
           align="left"
           prop="customerShortName"
-          show-overflow-tooltip
           :label="t('customer.customerShortName')"
           width="150"
         >
           <template #default="{ row }">
             <div class="flex-c tableBig">
               <div class="oneLine" style="width: calc(100% - 20px)">
+                <el-tooltip
+                  effect="dark"
+                  :content="row.customerShortName"
+                  placement="top-start"
+                >
                 {{ row.customerShortName }}
+                </el-tooltip>
+
               </div>
               <SvgIcon
                 v-if="row.customerShortName"
