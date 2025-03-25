@@ -89,11 +89,11 @@ const formRules = ref<FormRules>({
 function onSubmit() {
   return new Promise<void>((resolve) => {
 
-    if (!/^\d*$/.test(form.value.invoiceTax)) {
+    if (form.value.invoiceTax && !/^\d*$/.test(form.value.invoiceTax)) {
     ElMessage.warning("请输入有效的数字");
     return;
   }
-  if (!/^\d*$/.test(form.value.actualReceipts)) {
+  if (form.value.actualReceipts && !/^\d*$/.test(form.value.actualReceipts)) {
     ElMessage.warning("请输入有效的数字");
     return;
   }
