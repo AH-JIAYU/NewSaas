@@ -326,7 +326,7 @@ const currentData = computed(() => {
 
   const startIndex = (pagination.value.page - 1) * pagination.value.size;
   const endIndex = startIndex + pagination.value.size;
-  pagination.value.total = filteredList.slice(startIndex, endIndex).length;
+  pagination.value.total = filteredList.length;
   return filteredList.slice(startIndex, endIndex);
 });
 
