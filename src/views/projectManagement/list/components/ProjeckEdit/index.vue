@@ -261,6 +261,7 @@ async function onSubmit() {
   if (validateAll.value.every((item: any) => item === "fulfilled")) {
     if (!hasDuplicateCustomer(leftTabsData)) {
       const params = await processingData();
+
       // 操作系统(后端刘定义类型为字符串，前端提交转换)
       params.browser = params.browser.join(",");
       params.operatingSystem = params.operatingSystem.join(",");

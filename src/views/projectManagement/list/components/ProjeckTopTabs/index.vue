@@ -481,6 +481,12 @@ const changeTimeReleases = (val: any) => {
 const changeProfile = (val: any) => {
   if (val === 2) localToptTab.value.projectQuotaInfoList = [];
 };
+//切换b2b开关
+// const changeB2B =()=> {
+//   setTimeout(async () => {
+//             await getProjectCategoryList();
+//     }, 100);
+// }
 //#endregion
 
 // 所属区域改变重新获取 配置信息中的区域
@@ -514,35 +520,49 @@ const clearData = (judge?: boolean) => {
 
 // 切换tab 获取区域集合
 const changeTab = async (val: any, judge?: boolean) => {
-  if (
-    val === "configurationInformation" &&
-    !localToptTab.value.data.configurationInformation.configurationCountryList
-  ) {
+  //  val === "configurationInformation" &&
+    // !localToptTab.value.data.configurationInformation.configurationCountryList
+
+
     formRef.value.validateField(["countryIdList"], async (valid: any) => {
       if (valid) {
+        let countryIdList = null;
         clearData(judge || false);
+        if(localToptTab.value.countryIdList.length==1 && localToptTab.value.countryIdList[0] =='343'){
+    countryIdList =['343']
+  }  else {
+    countryIdList =['1']
+  }
+
+  // 配置-区域
+
         const res = await api.getProjectCountryList({
-          countryIdList: localToptTab.value.countryIdList,
+          countryIdList: countryIdList,
         });
+        res.data.getProjectCountryListInfoList  = res.data.getProjectCountryListInfoList.filter((item:any) => item !== null);
         // 配置-区域
         localToptTab.value.data.configurationInformation.configurationCountryList =
           res.data.getProjectCountryListInfoList;
-        // 开启默认国际后，只会有一个区域，直接回显
-        if (res.data.getProjectCountryListInfoList.length === 1) {
-          localToptTab.value.data.configurationInformation.initialProblem.countryId =
-            res.data.getProjectCountryListInfoList[0].countryId;
-        }
+
         // 编辑时 已经有初始数据
         if (!localToptTab.value.data.configurationInformation.initialProblem) {
           // 初始化 数据 问题
           localToptTab.value.data.configurationInformation.initialProblem =
             cloneDeep(projectManagementListStore.initialProblem);
         }
-
+        // 开启默认国际后，只会有一个区域，直接回显
+        if (res.data.getProjectCountryListInfoList.length === 1) {
+          localToptTab.value.data.configurationInformation.initialProblem.countryId =
+            res.data.getProjectCountryListInfoList[0].countryId;
+        }
+        // console.log(localToptTab.value.data.configurationInformation.initialProblem,'dddd')
         // 问题类型:1:总控问题 2:合作商自己问题
         localToptTab.value.data.configurationInformation.initialProblem.projectQuotaQuestionType =
           cloneDeep(res.data.projectQuotaQuestionType);
-          getProjectCategoryList()
+
+          setTimeout(async () => {
+            await getProjectCategoryList();
+    }, 100);
       } else {
         activeName.value = "basicSettings";
         nextTick(() => {
@@ -553,23 +573,28 @@ const changeTab = async (val: any, judge?: boolean) => {
         });
       }
     });
-  }
+
 };
 // 获取题库目录
 const getProjectCategoryList = async () => {
   // 如果配置中的区域不存在就请求，反正不请
+  console.log(localToptTab.value.data.configurationInformation.initialProblem.countryId,'localToptTab.value.data.configurationInformation.initialProblem.countryId')
   if (
     localToptTab.value.data.configurationInformation.initialProblem.countryId
   ) {
+
     // 就问卷就用 ,没有再请求
-    if (!localToptTab.value.data.configurationInformation.projectCategoryList) {
+    // if (!localToptTab.value.data.configurationInformation.projectCategoryList) {
       let countryId = null;
+      // console.log(localToptTab.value.data.configurationInformation.initialProblem
+      // .countryId,'idd')
   if(localToptTab.value.data.configurationInformation.initialProblem
   .countryId =='343'){
-    countryId =343
+    countryId ='343'
   }  else {
-    countryId =1
+    countryId ='1'
   }
+  // console.log(countryId,'countryId')
       const params = {
         countryId:countryId,
         projectQuotaQuestionType:
@@ -578,19 +603,27 @@ const getProjectCategoryList = async () => {
         babOrB2c :localToptTab.value.isB2b==1 ?2 :1
       };
 
-      const res = await api.getProjectCategoryList(params);
-
+      const res1 = await api.getProjectCategoryList(params);
+      res1.data.getProjectCategoryInfoList  = res1.data.getProjectCategoryInfoList.filter((item1:any) => item1 !== null);
       localToptTab.value.data.configurationInformation.projectCategoryList =
-        res.data.getProjectCategoryInfoList.filter(
-          (item: any) => item.status === 1
+        res1.data.getProjectCategoryInfoList.filter(
+          (item: any) => item.status == 1
         );
+        // console.log(localToptTab.value.data.configurationInformation.projectCategoryList,'localToptTab.value.data.configurationInformation.projectCategoryList')
       if(!localToptTab.value.data.configurationInformation.initialProblem
       .projectProblemCategoryId){
 
         localToptTab.value.data.configurationInformation.initialProblem
         .projectProblemCategoryId = localToptTab.value.data.configurationInformation.projectCategoryList[0].projectProblemCategoryId
+      } else {
+        const index = localToptTab.value.data.configurationInformation.projectCategoryList.findIndex((ite3:any) => ite3.projectProblemCategoryId == localToptTab.value.data.configurationInformation.initialProblem
+        .projectProblemCategoryId);
 
-
+// 如果没找到
+if (index == -1) {
+  localToptTab.value.data.configurationInformation.initialProblem
+      .projectProblemCategoryId = null;
+}
       }
 
       setTimeout(async () => {
@@ -600,7 +633,7 @@ const getProjectCategoryList = async () => {
         title.value == '新增'? false :true
       );
     }, 100);
-    }
+    // }
   } else {
     ElMessage.warning({
       message: "请先选择配置信息下的区域",
@@ -610,11 +643,13 @@ const getProjectCategoryList = async () => {
 };
 // 根据目录id查询问题和答案表
 const getProjectProblemList = async (id: string | number, judge: boolean) => {
-  console.log(id,judge,'切换数据')
+  // console.log(id,judge,'切换数据')
   // 选中值
   if (id) {
     // 置空数据
     setTimeout(async () => {
+
+      // console.log( localToptTab.value.data.configurationInformation.projectCategoryList,' localToptTab.value.data.configurationInformation.projectCategoryList')
       const { projectProblemCategoryName, ...params } =
         localToptTab.value.data.configurationInformation.projectCategoryList.find(
           (item: any) => item.projectProblemCategoryId === id
@@ -768,7 +803,7 @@ const showProjectQuotaInfoList = async () => {
     localToptTab.value.data.configurationInformation.initialProblem.projectProblemCategoryId =
       localToptTab.value.projectQuotaInfoList[0].projectProblemCategoryId; // 问卷id
     await changeTab("configurationInformation", true);
-    await getProjectCategoryList();
+    // await getProjectCategoryList();
     // setTimeout(async () => {
     //   await getProjectProblemList(
     //     localToptTab.value.data.configurationInformation.initialProblem
@@ -940,15 +975,18 @@ const addProblem = () => {
 const getProblemList = async () => {
   //如果是中国传343 其他传1
   let countryIdList = null;
+  // console.log(localToptTab.value.countryIdList,'localToptTab.value.countryIdList')
   if(localToptTab.value.countryIdList.length==1 && localToptTab.value.countryIdList[0] =='343'){
-    countryIdList =343
+    countryIdList =['343']
   }  else {
-    countryIdList =1
+    countryIdList =['1']
   }
   const res = await api.getProjectCountryList({
     countryIdList: countryIdList,
   });
+
   // 配置-区域
+  res.data.getProjectCountryListInfoList  = res.data.getProjectCountryListInfoList.filter((item:any) => item !== null);
   localToptTab.value.data.configurationInformation.configurationCountryList =
     res.data.getProjectCountryListInfoList;
   // 开启默认国际后，只会有一个区域，直接回显
@@ -956,6 +994,7 @@ const getProblemList = async () => {
     localToptTab.value.data.configurationInformation.initialProblem.countryId =
       res.data.getProjectCountryListInfoList[0].countryId;
   }
+
   // 编辑时 已经有初始数据
   if (!localToptTab.value.data.configurationInformation.initialProblem) {
     // 初始化 数据 问题
