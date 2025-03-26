@@ -610,6 +610,7 @@ const getProjectCategoryList = async () => {
 };
 // 根据目录id查询问题和答案表
 const getProjectProblemList = async (id: string | number, judge: boolean) => {
+  console.log(id,judge,'切换数据')
   // 选中值
   if (id) {
     // 置空数据
@@ -695,8 +696,11 @@ if (index !== -1) {
 
         // console.log(localToptTab.value.data.configurationInformation.ProjectProblemInfoList,'localToptTab.value.data.configurationInformation.ProjectProblemInfoList')
         if (!judge) {
+          localToptTab.value.projectQuotaInfoList = localToptTab.value.projectQuotaInfoList.filter((item1:any) => item1.
+          projectProblemCategoryId == id);
 
-        // console.log('走这里')
+        console.log(localToptTab.value.projectQuotaInfoList,'走这里')
+
         localToptTab.value.projectQuotaInfoList.forEach((ite:any)=> {
           if(ite.projectProblemCategoryId == id){
             if(ite.answerValueList.length ==0){
@@ -705,8 +709,6 @@ if (index !== -1) {
         ).getProjectAnswerInfoList;
               ite.answerValueList = ProjectProblemInfoList.map((ite2:any) => ite2.anotherName)
               ite.projectAnswerIdList = ProjectProblemInfoList.map((ite2:any) => ite2.id)
-            } else {
-
             }
           }
         })
