@@ -540,6 +540,7 @@ const changeTab = async (val: any, judge?: boolean) => {
         // 问题类型:1:总控问题 2:合作商自己问题
         localToptTab.value.data.configurationInformation.initialProblem.projectQuotaQuestionType =
           cloneDeep(res.data.projectQuotaQuestionType);
+          getProjectCategoryList()
       } else {
         activeName.value = "basicSettings";
         nextTick(() => {
@@ -560,10 +561,15 @@ const getProjectCategoryList = async () => {
   ) {
     // 就问卷就用 ,没有再请求
     if (!localToptTab.value.data.configurationInformation.projectCategoryList) {
+      let countryId = null;
+  if(localToptTab.value.data.configurationInformation.initialProblem
+  .countryId =='343'){
+    countryId =343
+  }  else {
+    countryId =1
+  }
       const params = {
-        countryId:
-          localToptTab.value.data.configurationInformation.initialProblem
-            .countryId,
+        countryId:countryId,
         projectQuotaQuestionType:
           localToptTab.value.data.configurationInformation.initialProblem
             .projectQuotaQuestionType, //问题类型:1:总控问题 2:合作商自己问题
@@ -576,6 +582,20 @@ const getProjectCategoryList = async () => {
         res.data.getProjectCategoryInfoList.filter(
           (item: any) => item.status === 1
         );
+        //如果没有，默认展示第一个问题id
+      if(!localToptTab.value.data.configurationInformation.initialProblem
+      .projectProblemCategoryId){
+        localToptTab.value.data.configurationInformation.initialProblem
+        .projectProblemCategoryId = localToptTab.value.data.configurationInformation.projectCategoryList[0].projectProblemCategoryId
+        setTimeout(async () => {
+      await getProjectProblemList(
+        localToptTab.value.data.configurationInformation.initialProblem
+        .projectProblemCategoryId,
+        false
+      );
+    }, 100);
+
+      }
     }
   } else {
     ElMessage.warning({
@@ -612,7 +632,9 @@ const getProjectProblemList = async (id: string | number, judge: boolean) => {
        * 如果不是编辑的时候正常清空提交和回显的数据
        * 编辑时不能清除,答案(提交list)是接口返回的
        */
+      console.log(judge,'judge')
       if (!judge) {
+        console.log('走这里')
         localToptTab.value.projectQuotaInfoList = []; //提交
         // 问题列表 - 提交的数据
         for (
@@ -643,7 +665,28 @@ const getProjectProblemList = async (id: string | number, judge: boolean) => {
           // 目录id
           item.projectProblemCategoryId = id;
           localToptTab.value.projectQuotaInfoList.push(item);
+
         }
+        // console.log(id,'iii')
+        // console.log(localToptTab.value.projectQuotaInfoList,'localToptTab.value.projectQuotaInfoList')
+
+        // console.log(localToptTab.value.data.configurationInformation.ProjectProblemInfoList,'localToptTab.value.data.configurationInformation.ProjectProblemInfoList')
+
+        localToptTab.value.projectQuotaInfoList.forEach((ite:any)=> {
+          if(ite.projectProblemCategoryId == id){
+            if(ite.answerValueList.length ==0){
+              const ProjectProblemInfoList = localToptTab.value.data.configurationInformation.ProjectProblemInfoList.find(
+          (item: any) => item.id === ite.projectProblemId
+        ).getProjectAnswerInfoList;
+        // console.log(ProjectProblemInfoList,'ProjectProblemInfoList')
+              ite.answerValueList = ProjectProblemInfoList.map((ite2:any) => ite2.anotherName)
+              ite.projectAnswerIdList = ProjectProblemInfoList.map((ite2:any) => ite2.id)
+            }
+          }
+        })
+      } else {
+        //我是编辑页面
+        console.log('我是编辑页面')
       }
     });
   } else {
