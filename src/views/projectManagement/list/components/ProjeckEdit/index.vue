@@ -367,7 +367,7 @@ defineExpose({
     <el-drawer v-model="dialogTableVisible" class="hide-drawer-header" append-to-body :close-on-click-modal="false"
       destroy-on-close draggable size="70%">
       <LeftTabs v-loading="loading" v-if="leftTabsData.length" @validate="validate" ref="LeftTabsRef"
-        :left-tabs-data="leftTabsData" :validate-top-tabs="validateTopTabs" :validate-all="validateAll"
+        :left-tabs-data="leftTabsData"     :validate-top-tabs="validateTopTabs" :validate-all="validateAll"
         :title="title" />
       <template #footer>
         <div class="flex-c">

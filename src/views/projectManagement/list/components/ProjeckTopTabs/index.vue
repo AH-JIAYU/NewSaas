@@ -74,10 +74,12 @@ const customerStore = useUserCustomerStore(); // 客户
 const projectManagementListStore = useProjectManagementListStore(); //项目
 const props: any = defineProps({
   leftTab: Object,
+  title:String,
   tabIndex: Number,
 });
 const emits = defineEmits(["sync-project"]);
 const localToptTab = ref<any>(props.leftTab);
+const title = ref<any>(props.title);
 const validate = inject<any>("validateTopTabs"); //注入Ref
 const setAScheduledReleaseTime = inject<any>("currentProjectTimeline"); //注入Ref 设置定时发布时间
 const url: string = "例：https://www.xxxx.com/8994343?uid=[uid]";
@@ -582,20 +584,22 @@ const getProjectCategoryList = async () => {
         res.data.getProjectCategoryInfoList.filter(
           (item: any) => item.status === 1
         );
-        //如果没有，默认展示第一个问题id
       if(!localToptTab.value.data.configurationInformation.initialProblem
       .projectProblemCategoryId){
+
         localToptTab.value.data.configurationInformation.initialProblem
         .projectProblemCategoryId = localToptTab.value.data.configurationInformation.projectCategoryList[0].projectProblemCategoryId
-        setTimeout(async () => {
+
+
+      }
+
+      setTimeout(async () => {
       await getProjectProblemList(
         localToptTab.value.data.configurationInformation.initialProblem
         .projectProblemCategoryId,
-        false
+        title.value == '新增'? false :true
       );
     }, 100);
-
-      }
     }
   } else {
     ElMessage.warning({
@@ -627,15 +631,16 @@ const getProjectProblemList = async (id: string | number, judge: boolean) => {
             ),
           };
         });
-
+      //  console.log(id,'id')
+      //   console.log(localToptTab.value.projectQuotaInfoList,'localToptTab.value.projectQuotaInfoList')
       /**
        * 如果不是编辑的时候正常清空提交和回显的数据
        * 编辑时不能清除,答案(提交list)是接口返回的
        */
-      console.log(judge,'judge')
-      if (!judge) {
-        console.log('走这里')
-        localToptTab.value.projectQuotaInfoList = []; //提交
+      // console.log(judge,'judge')
+
+
+        // localToptTab.value.projectQuotaInfoList = []; //提交
         // 问题列表 - 提交的数据
         for (
           let i = 0;
@@ -664,30 +669,50 @@ const getProjectProblemList = async (id: string | number, judge: boolean) => {
             ].questionType;
           // 目录id
           item.projectProblemCategoryId = id;
-          localToptTab.value.projectQuotaInfoList.push(item);
 
+          let projectProblemInfoList = localToptTab.value.projectQuotaInfoList.find(
+          (item1: any) => item1.projectProblemCategoryId === item.projectProblemCategoryId)
+          if(projectProblemInfoList){
+            item.answerValueList = projectProblemInfoList.answerValueList ||[];
+            item.projectAnswerIdList = projectProblemInfoList.projectAnswerIdList||[]
+          } else {
+            item.answerValueList = []
+            item.projectAnswerIdList = []
+          }
+
+          // 查找 a 中是否有 id 和 b 中 id 相同的对象
+const index = localToptTab.value.projectQuotaInfoList.findIndex((ite3:any) => ite3.keyValue === item.keyValue);
+
+// 如果找到了，删除对应的对象，并将 b 对象推入 a 数组
+if (index !== -1) {
+  localToptTab.value.projectQuotaInfoList.splice(index, 1); // 删除 a 中 id 匹配的对象
+}
+          localToptTab.value.projectQuotaInfoList.push(item);
         }
+
         // console.log(id,'iii')
         // console.log(localToptTab.value.projectQuotaInfoList,'localToptTab.value.projectQuotaInfoList')
 
         // console.log(localToptTab.value.data.configurationInformation.ProjectProblemInfoList,'localToptTab.value.data.configurationInformation.ProjectProblemInfoList')
+        if (!judge) {
 
+        // console.log('走这里')
         localToptTab.value.projectQuotaInfoList.forEach((ite:any)=> {
           if(ite.projectProblemCategoryId == id){
             if(ite.answerValueList.length ==0){
               const ProjectProblemInfoList = localToptTab.value.data.configurationInformation.ProjectProblemInfoList.find(
           (item: any) => item.id === ite.projectProblemId
         ).getProjectAnswerInfoList;
-        // console.log(ProjectProblemInfoList,'ProjectProblemInfoList')
               ite.answerValueList = ProjectProblemInfoList.map((ite2:any) => ite2.anotherName)
               ite.projectAnswerIdList = ProjectProblemInfoList.map((ite2:any) => ite2.id)
+            } else {
+
             }
           }
         })
-      } else {
-        //我是编辑页面
-        console.log('我是编辑页面')
       }
+
+
     });
   } else {
     // 未选中值（清空）
@@ -742,13 +767,13 @@ const showProjectQuotaInfoList = async () => {
       localToptTab.value.projectQuotaInfoList[0].projectProblemCategoryId; // 问卷id
     await changeTab("configurationInformation", true);
     await getProjectCategoryList();
-    setTimeout(async () => {
-      await getProjectProblemList(
-        localToptTab.value.data.configurationInformation.initialProblem
-          .projectProblemCategoryId,
-        true
-      );
-    }, 100);
+    // setTimeout(async () => {
+    //   await getProjectProblemList(
+    //     localToptTab.value.data.configurationInformation.initialProblem
+    //       .projectProblemCategoryId,
+    //     true
+    //   );
+    // }, 100);
   }
 };
 /**
@@ -774,6 +799,7 @@ const customModel = (id: any, index: any) => {
       }
     },
     set(newValue: any) {
+
       if (localToptTab.value.projectQuotaInfoList[index].id === id) {
         localToptTab.value.projectQuotaInfoList[index].projectAnswerIdList =
           newValue;

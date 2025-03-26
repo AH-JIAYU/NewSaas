@@ -164,7 +164,7 @@ defineExpose({ activeLeftTab });
         @click="setHandler"
       /> -->
         <!-- 在每个左侧 Tab 中使用 TopTabs 组件 -->
-        <TopTabs ref="topTabsRef" :left-tab="leftTab" :tab-index="index" @syncProject="syncProject" />
+        <TopTabs ref="topTabsRef" :left-tab="leftTab"  :title="props.title"    :tab-index="index" @syncProject="syncProject" />
       </el-tab-pane>
       <SyncSettings ref="settingsRef" />
     </el-tabs>
