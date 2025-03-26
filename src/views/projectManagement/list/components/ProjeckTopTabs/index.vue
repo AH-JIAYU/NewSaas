@@ -699,7 +699,7 @@ if (index !== -1) {
           localToptTab.value.projectQuotaInfoList = localToptTab.value.projectQuotaInfoList.filter((item1:any) => item1.
           projectProblemCategoryId == id);
 
-        console.log(localToptTab.value.projectQuotaInfoList,'走这里')
+        // console.log(localToptTab.value.projectQuotaInfoList,'走这里')
 
         localToptTab.value.projectQuotaInfoList.forEach((ite:any)=> {
           if(ite.projectProblemCategoryId == id){
