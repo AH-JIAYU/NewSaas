@@ -567,6 +567,7 @@ const getProjectCategoryList = async () => {
         projectQuotaQuestionType:
           localToptTab.value.data.configurationInformation.initialProblem
             .projectQuotaQuestionType, //问题类型:1:总控问题 2:合作商自己问题
+        babOrB2c :localToptTab.value.isB2b==1 ?2 :1
       };
 
       const res = await api.getProjectCategoryList(params);
@@ -866,8 +867,15 @@ const addProblem = () => {
 };
 //获取区域
 const getProblemList = async () => {
+  //如果是中国传343 其他传1
+  let countryIdList = null;
+  if(localToptTab.value.countryIdList.length==1 && localToptTab.value.countryIdList[0] =='343'){
+    countryIdList =343
+  }  else {
+    countryIdList =1
+  }
   const res = await api.getProjectCountryList({
-    countryIdList: localToptTab.value.countryIdList,
+    countryIdList: countryIdList,
   });
   // 配置-区域
   localToptTab.value.data.configurationInformation.configurationCountryList =
