@@ -527,7 +527,7 @@ const changeTab = async (val: any, judge?: boolean) => {
     formRef.value.validateField(["countryIdList"], async (valid: any) => {
       if (valid) {
         let countryIdList = null;
-        clearData(judge || false);
+        clearData(true);
         if(localToptTab.value.countryIdList.length==1 && localToptTab.value.countryIdList[0] =='343'){
     countryIdList =['343']
   }  else {
@@ -578,7 +578,6 @@ const changeTab = async (val: any, judge?: boolean) => {
 // 获取题库目录
 const getProjectCategoryList = async () => {
   // 如果配置中的区域不存在就请求，反正不请
-  console.log(localToptTab.value.data.configurationInformation.initialProblem.countryId,'localToptTab.value.data.configurationInformation.initialProblem.countryId')
   if (
     localToptTab.value.data.configurationInformation.initialProblem.countryId
   ) {
@@ -586,15 +585,12 @@ const getProjectCategoryList = async () => {
     // 就问卷就用 ,没有再请求
     // if (!localToptTab.value.data.configurationInformation.projectCategoryList) {
       let countryId = null;
-      // console.log(localToptTab.value.data.configurationInformation.initialProblem
-      // .countryId,'idd')
   if(localToptTab.value.data.configurationInformation.initialProblem
   .countryId =='343'){
     countryId ='343'
   }  else {
     countryId ='1'
   }
-  // console.log(countryId,'countryId')
       const params = {
         countryId:countryId,
         projectQuotaQuestionType:
@@ -667,17 +663,17 @@ const getProjectProblemList = async (id: string | number, judge: boolean) => {
             ),
           };
         });
-      //  console.log(id,'id')
-      //   console.log(localToptTab.value.projectQuotaInfoList,'localToptTab.value.projectQuotaInfoList')
+
+
       /**
        * 如果不是编辑的时候正常清空提交和回显的数据
        * 编辑时不能清除,答案(提交list)是接口返回的
        */
-      // console.log(judge,'judge')
 
 
         // localToptTab.value.projectQuotaInfoList = []; //提交
         // 问题列表 - 提交的数据
+        let itemNew = [];
         for (
           let i = 0;
           i <
@@ -705,9 +701,9 @@ const getProjectProblemList = async (id: string | number, judge: boolean) => {
             ].questionType;
           // 目录id
           item.projectProblemCategoryId = id;
-
           let projectProblemInfoList = localToptTab.value.projectQuotaInfoList.find(
-          (item1: any) => item1.projectProblemCategoryId === item.projectProblemCategoryId)
+          (item1: any) => item1.keyValue === item.keyValue)
+
           if(projectProblemInfoList){
             item.answerValueList = projectProblemInfoList.answerValueList ||[];
             item.projectAnswerIdList = projectProblemInfoList.projectAnswerIdList||[]
@@ -715,16 +711,19 @@ const getProjectProblemList = async (id: string | number, judge: boolean) => {
             item.answerValueList = []
             item.projectAnswerIdList = []
           }
+          itemNew.push(item)
 
           // 查找 a 中是否有 id 和 b 中 id 相同的对象
-const index = localToptTab.value.projectQuotaInfoList.findIndex((ite3:any) => ite3.keyValue === item.keyValue);
+//const index = localToptTab.value.projectQuotaInfoList.findIndex((ite3:any) => ite3.keyValue === item.keyValue);
 
 // 如果找到了，删除对应的对象，并将 b 对象推入 a 数组
-if (index !== -1) {
-  localToptTab.value.projectQuotaInfoList.splice(index, 1); // 删除 a 中 id 匹配的对象
-}
-          localToptTab.value.projectQuotaInfoList.push(item);
+//if (index !== -1) {
+ //// localToptTab.value.projectQuotaInfoList.splice(index, 1); // 删除 a 中 id 匹配的对象
+//}
+          //localToptTab.value.projectQuotaInfoList.push(item);
         }
+        console.log(itemNew,'itemNw')
+        localToptTab.value.projectQuotaInfoList = itemNew
 
         // console.log(id,'iii')
         // console.log(localToptTab.value.projectQuotaInfoList,'localToptTab.value.projectQuotaInfoList')
