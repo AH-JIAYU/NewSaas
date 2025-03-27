@@ -604,20 +604,24 @@ const getProjectCategoryList = async () => {
       };
 
       const res1 = await api.getProjectCategoryList(params);
-      localToptTab.value.data.configurationInformation.projectCategoryList  = res1.data.getProjectCategoryInfoList.filter((item1:any) => item1 !== null);
-      // localToptTab.value.data.configurationInformation.projectCategoryList =
-      //   res1.data.getProjectCategoryInfoList.filter(
-      //     (item: any) => item.status == 1
-      //   );
+      res1.data.getProjectCategoryInfoList  = res1.data.getProjectCategoryInfoList.filter((item1:any) => item1 !== null);
+      //启用状态
+      localToptTab.value.data.configurationInformation.projectCategoryList =
+        res1.data.getProjectCategoryInfoList.filter(
+          (item: any) => item.status == 1
+        );
+        //默认状态
  let projectCategoryList =localToptTab.value.data.configurationInformation.projectCategoryList.filter(
-        (item: any) => item.status == 1
+        (item: any) => item.isDefault == 1
          );
-
-
+          //总控下发前置问卷没有默认状态
+          if(projectCategoryList.length ==0){
+            projectCategoryList = localToptTab.value.data.configurationInformation.projectCategoryList[0]
+          }
          //如果没有id，则默认展示启用的id
         // console.log(localToptTab.value.data.configurationInformation.projectCategoryList,'localToptTab.value.data.configurationInformation.projectCategoryList')
       if(!localToptTab.value.data.configurationInformation.initialProblem
-      .projectProblemCategoryId &&projectCategoryList.length !=0){
+      .projectProblemCategoryId){
 
         localToptTab.value.data.configurationInformation.initialProblem
         .projectProblemCategoryId = projectCategoryList[0].projectProblemCategoryId
