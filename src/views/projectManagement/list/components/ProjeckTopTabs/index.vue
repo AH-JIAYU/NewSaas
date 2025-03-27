@@ -605,9 +605,9 @@ const getProjectCategoryList = async () => {
         res1.data.getProjectCategoryInfoList.filter(
           (item: any) => item.status == 1
         );
+
         // console.log(localToptTab.value.data.configurationInformation.projectCategoryList,'localToptTab.value.data.configurationInformation.projectCategoryList')
-      if(!localToptTab.value.data.configurationInformation.initialProblem
-      .projectProblemCategoryId){
+      if(localToptTab.value.data.configurationInformation.projectCategoryList.length ==1){
 
         localToptTab.value.data.configurationInformation.initialProblem
         .projectProblemCategoryId = localToptTab.value.data.configurationInformation.projectCategoryList[0].projectProblemCategoryId
@@ -722,7 +722,6 @@ const getProjectProblemList = async (id: string | number, judge: boolean) => {
 //}
           //localToptTab.value.projectQuotaInfoList.push(item);
         }
-        console.log(itemNew,'itemNw')
         localToptTab.value.projectQuotaInfoList = itemNew
 
         // console.log(id,'iii')
