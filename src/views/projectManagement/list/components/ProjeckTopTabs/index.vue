@@ -614,9 +614,10 @@ const getProjectCategoryList = async () => {
  let projectCategoryList =localToptTab.value.data.configurationInformation.projectCategoryList.filter(
         (item: any) => item.isDefault == 1
          );
+         console.log(projectCategoryList,'projectCategoryList')
           //总控下发前置问卷没有默认状态
           if(projectCategoryList.length ==0){
-            projectCategoryList = localToptTab.value.data.configurationInformation.projectCategoryList[0]
+            projectCategoryList = localToptTab.value.data.configurationInformation.projectCategoryList
           }
          //如果没有id，则默认展示启用的id
         // console.log(localToptTab.value.data.configurationInformation.projectCategoryList,'localToptTab.value.data.configurationInformation.projectCategoryList')
