@@ -614,7 +614,7 @@ const getProjectCategoryList = async () => {
  let projectCategoryList =localToptTab.value.data.configurationInformation.projectCategoryList.filter(
         (item: any) => item.isDefault == 1
          );
-         console.log(projectCategoryList,'projectCategoryList')
+        //  console.log(projectCategoryList,'projectCategoryList')
           //总控下发前置问卷没有默认状态
           if(projectCategoryList.length ==0){
             projectCategoryList = localToptTab.value.data.configurationInformation.projectCategoryList
