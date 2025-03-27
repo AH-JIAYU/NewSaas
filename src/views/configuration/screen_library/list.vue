@@ -146,6 +146,7 @@ function onCreateTiele(row: any) {
     status: 1,
     isDefault: row.isDefault,
     type: "add",
+    babOrB2c:row.babOrB2c,
   });
 }
 
@@ -347,11 +348,16 @@ onBeforeUnmount(() => {
                 </el-table-column>
                 <ElTableColumn prop="babOrB2c" label="B2C" align="left">
                   <template #default="scope">
-
+                    <template v-if="scope.row.type === 'add'">
                       <ElSwitch v-model="scope.row.babOrB2c" :active-value="2" :inactive-value="1" inline-prompt
+                        active-text="B2C" inactive-text="B2B" />
+                      </template>
+                      <template v-else>
+                        <ElSwitch v-model="scope.row.babOrB2c" :active-value="2" :inactive-value="1" inline-prompt
                         active-text="B2C" inactive-text="B2B" disabled/>
-
+                      </template>
                   </template>
+
                 </ElTableColumn>
 
                 <ElTableColumn width="250" align="left" fixed="right" label="操作">
@@ -396,7 +402,7 @@ onBeforeUnmount(() => {
             </template>
           </ElTableColumn>
           <ElTableColumn prop="babOrB2c" label="B2C" align="left">
-                  <template #default="scope">
+            <template #default="scope">
                     <template v-if="scope.row.type === 'add'">
                       <ElSwitch v-model="scope.row.babOrB2c" :active-value="2" :inactive-value="1" inline-prompt
                       active-text="B2C" inactive-text="B2B" disabled/>
