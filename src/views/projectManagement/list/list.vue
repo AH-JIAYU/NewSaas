@@ -663,7 +663,7 @@ const formOption = {
     { label: "离线", value: 2 },
   ],
   isbabOrB2c: () => [
-  { label: "全部", value: 0 },
+  { label: "B2B/B2C", value: 0 },
     { label: "B2B", value: 2 },
     { label: "B2C", value: 1 },
   ],
