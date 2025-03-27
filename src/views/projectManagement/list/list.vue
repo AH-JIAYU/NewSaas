@@ -146,6 +146,7 @@ const search = ref<any>({
   status: 1, // 	项目状态:1在线 2:离线
   departmentProject: 1, // 1查所有2部门
   structureIdList: [],
+  babOrB2c:0,
 }); // 搜索
 
 const list = ref<any>([]);
@@ -367,6 +368,7 @@ function onReset() {
     status: 1, // 	项目状态:1在线 2:离线
     departmentProject: 1, // 1查所有2部门
     structureIdList: [],
+    babOrB2c:0,
   };
   fetchData();
 }
@@ -424,6 +426,9 @@ async function fetchData() {
       ...getParams(),
       ...search.value,
     };
+    if(params.babOrB2c == 0){
+      delete params.babOrB2c
+    }
     if (!Array.isArray(params.countryId)) {
       params.countryId = params.countryId?.split(",");
     }
@@ -591,6 +596,16 @@ onMounted(async () => {
       optionLabel: "label",
       optionValue: "value",
     },
+    {
+      index: 13,
+      show: true,
+      type: "select",
+      modelName: "babOrB2c",
+      placeholder: '类型',
+      option: "isbabOrB2c",
+      optionLabel: "label",
+      optionValue: "value",
+    },
   ];
 });
 const clientIdOptions: { label: string; value: string }[] = [];
@@ -646,6 +661,11 @@ const formOption = {
   { label: "全部", value: 0 },
     { label: "在线", value: 1 },
     { label: "离线", value: 2 },
+  ],
+  isbabOrB2c: () => [
+  { label: "全部", value: 0 },
+    { label: "B2B", value: 2 },
+    { label: "B2C", value: 1 },
   ],
 };
 

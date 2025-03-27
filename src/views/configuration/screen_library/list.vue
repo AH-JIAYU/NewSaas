@@ -346,7 +346,7 @@ onBeforeUnmount(() => {
                     </template>
                   </template>
                 </el-table-column>
-                <ElTableColumn prop="babOrB2c" label="B2C" align="left">
+                <ElTableColumn prop="babOrB2c" label="类型" align="left">
                   <template #default="scope">
                     <template v-if="scope.row.type === 'add'">
                       <ElSwitch v-model="scope.row.babOrB2c" :active-value="2" :inactive-value="1" inline-prompt
@@ -401,7 +401,7 @@ onBeforeUnmount(() => {
               <el-tag type="primary">{{ row.countryName }}</el-tag>
             </template>
           </ElTableColumn>
-          <ElTableColumn prop="babOrB2c" label="B2C" align="left">
+          <ElTableColumn prop="babOrB2c" label="类型" align="left">
             <template #default="scope">
                     <template v-if="scope.row.type === 'add'">
                       <ElSwitch v-model="scope.row.babOrB2c" :active-value="2" :inactive-value="1" inline-prompt
