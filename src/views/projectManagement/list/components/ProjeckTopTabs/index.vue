@@ -575,6 +575,10 @@ const changeTab = async (val: any, judge?: boolean) => {
     });
 
 };
+const changeB2B = ()=> {
+  localToptTab.value.data.configurationInformation.initialProblem
+      .projectProblemCategoryId = null;
+}
 // 获取题库目录
 const getProjectCategoryList = async () => {
   // 如果配置中的区域不存在就请求，反正不请
@@ -600,17 +604,23 @@ const getProjectCategoryList = async () => {
       };
 
       const res1 = await api.getProjectCategoryList(params);
-      res1.data.getProjectCategoryInfoList  = res1.data.getProjectCategoryInfoList.filter((item1:any) => item1 !== null);
-      localToptTab.value.data.configurationInformation.projectCategoryList =
-        res1.data.getProjectCategoryInfoList.filter(
-          (item: any) => item.status == 1
-        );
+      localToptTab.value.data.configurationInformation.projectCategoryList  = res1.data.getProjectCategoryInfoList.filter((item1:any) => item1 !== null);
+      // localToptTab.value.data.configurationInformation.projectCategoryList =
+      //   res1.data.getProjectCategoryInfoList.filter(
+      //     (item: any) => item.status == 1
+      //   );
+ let projectCategoryList =localToptTab.value.data.configurationInformation.projectCategoryList.filter(
+        (item: any) => item.status == 1
+         );
 
+
+         //如果没有id，则默认展示启用的id
         // console.log(localToptTab.value.data.configurationInformation.projectCategoryList,'localToptTab.value.data.configurationInformation.projectCategoryList')
-      if(localToptTab.value.data.configurationInformation.projectCategoryList.length ==1){
+      if(!localToptTab.value.data.configurationInformation.initialProblem
+      .projectProblemCategoryId &&projectCategoryList.length !=0){
 
         localToptTab.value.data.configurationInformation.initialProblem
-        .projectProblemCategoryId = localToptTab.value.data.configurationInformation.projectCategoryList[0].projectProblemCategoryId
+        .projectProblemCategoryId = projectCategoryList[0].projectProblemCategoryId
       } else {
         const index = localToptTab.value.data.configurationInformation.projectCategoryList.findIndex((ite3:any) => ite3.projectProblemCategoryId == localToptTab.value.data.configurationInformation.initialProblem
         .projectProblemCategoryId);
@@ -1454,6 +1464,7 @@ const getProblemList = async () => {
                   :inactive-value="1"
                   v-model="localToptTab.isB2b"
                   :disabled="localToptTab.projectType === 2"
+                  @change="changeB2B"
                 />
               </el-form-item>
             </el-col>
