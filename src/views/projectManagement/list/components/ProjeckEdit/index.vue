@@ -204,11 +204,17 @@ const processingData = async () => {
     ) {
       element.isProfile = 2;
     }
+
     //data为配置信息中所需的数据
     if (element.data) {
       delete element.data;
     }
-    element.projectQuotaInfoList = element.projectQuotaInfoList.map(
+      //如果没有开启问卷，重置问题和答案
+      if(element.isProfile ==2){
+        element.projectQuotaInfoList = [];
+
+    } else {
+      element.projectQuotaInfoList = element.projectQuotaInfoList.map(
       (item: any) => {
         if (!Array.isArray(item.answerValueList)) {
           item.answerValueList = [];
@@ -219,8 +225,11 @@ const processingData = async () => {
         return item;
       }
     );
+    }
+
   });
   let masterData = newLeftTabsData[0];
+
   masterData.projectInfoList = newLeftTabsData.slice(1).map((item: any) => {
     item.browser = item.browser.join(',');
     item.operatingSystem = item.operatingSystem.join(',');
