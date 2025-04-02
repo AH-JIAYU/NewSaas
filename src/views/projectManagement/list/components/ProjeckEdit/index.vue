@@ -373,9 +373,9 @@ defineExpose({
           ? 'hide-drawer-header'
           : 'edit-drawer'
       " -->
-  <div>
-    <el-drawer v-model="dialogTableVisible" class="hide-drawer-header" append-to-body :close-on-click-modal="false"
-      destroy-on-close draggable size="70%">
+  <div >
+    <el-drawer v-model="dialogTableVisible" class="projectDrawer" append-to-body :close-on-click-modal="false"
+      destroy-on-close draggable size="75%">
       <LeftTabs v-loading="loading" v-if="leftTabsData.length" @validate="validate" ref="LeftTabsRef"
         :left-tabs-data="leftTabsData"     :validate-top-tabs="validateTopTabs" :validate-all="validateAll"
         :title="title" />
@@ -408,6 +408,7 @@ defineExpose({
   .el-tabs.el-tabs--left {
     overflow: visible !important;
   }
+
 }
 
 .flex-c {
