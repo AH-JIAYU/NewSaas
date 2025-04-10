@@ -306,7 +306,11 @@ const changeClient = (val: any) => {
   const findData = data.value.basicSettings.customerList.find(
     (item: any) => item.tenantCustomerId === val
   );
-  localToptTab.value.isProfile = findData.antecedentQuestionnaire === 2 ? 1 : 2;
+  localToptTab.value.isProfile = findData.antecedentQuestionnaire == 2 ? 1 : 2;
+  if(localToptTab.value.isProfile == 1 && localToptTab.value.countryIdList.length){
+    changeTab('',)
+  }
+
 };
 
 // 所属区域全选
@@ -480,6 +484,9 @@ const changeTimeReleases = (val: any) => {
 // 切换问卷如果关 清空问卷list
 const changeProfile = (val: any) => {
   if (val === 2) localToptTab.value.projectQuotaInfoList = [];
+  if(localToptTab.value.isProfile == 1 && localToptTab.value.countryIdList.length){
+    changeTab('',)
+  }
 };
 //切换b2b开关
 // const changeB2B =()=> {
@@ -498,6 +505,9 @@ const changeCountryId = () => {
     localToptTab.value.countryIdList.length ===
       basicDictionaryStore.country.length
   );
+  if(localToptTab.value.isProfile == 1 && localToptTab.value.countryIdList.length){
+    changeTab()
+  }
 };
 // 配置区域改变 重新获取题库目录
 const changeConfigurationCountryId = () => {
@@ -578,6 +588,9 @@ const changeTab = async (val: any, judge?: boolean) => {
 const changeB2B = ()=> {
   localToptTab.value.data.configurationInformation.initialProblem
       .projectProblemCategoryId = null;
+    if(localToptTab.value.isProfile == 1 && localToptTab.value.countryIdList.length){
+    changeTab('',)
+  }
 }
 // 获取题库目录
 const getProjectCategoryList = async () => {
