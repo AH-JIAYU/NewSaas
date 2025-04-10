@@ -34,7 +34,7 @@ const showEdit = async (row: any) => {
   const res = await api.getDetail({ id: row.id });
 
   const projectJson = cloneDeep(JSON.parse(res.data.projectJson));
-  console.log(projectJson,'projectJson')
+
   if(!projectJson){
     ElMessage.warning({
               message: "无详情数据",

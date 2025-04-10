@@ -488,6 +488,7 @@ const changeProfile = (val: any) => {
     changeTab('',)
   }
 };
+
 //切换b2b开关
 // const changeB2B =()=> {
 //   setTimeout(async () => {
@@ -506,7 +507,7 @@ const changeCountryId = () => {
       basicDictionaryStore.country.length
   );
   if(localToptTab.value.isProfile == 1 && localToptTab.value.countryIdList.length){
-    changeTab()
+    changeTab('',)
   }
 };
 // 配置区域改变 重新获取题库目录
