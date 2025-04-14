@@ -320,6 +320,9 @@ const selectAll = () => {
     data.value.basicSettings.countryList.map((item: any) => {
       localToptTab.value.countryIdList.push(item.id);
     });
+    if(localToptTab.value.isProfile == 1 && localToptTab.value.countryIdList.length){
+    changeTab('',)
+  }
   }
 };
 const tinymceEditor = ref();
