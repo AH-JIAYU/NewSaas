@@ -98,6 +98,9 @@ onMounted(async () => {
         <ElFormItem label="默认" v-if="!form.projectProblemCategoryId">
           <ElSwitch v-model="form.isDefault" :active-value="1" :inactive-value="2" placeholder="请输入默认" />
         </ElFormItem>
+        <ElFormItem label="B2C">
+          <ElSwitch v-model="form.babOrB2c" :active-value="2" :inactive-value="1"  />
+        </ElFormItem>
       </ElForm>
       <template #footer>
         <ElButton  @click="onCancel"> 取消 </ElButton>

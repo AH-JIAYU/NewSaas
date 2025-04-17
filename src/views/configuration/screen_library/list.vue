@@ -89,6 +89,14 @@ function getDataList() {
     api.list(params).then((res: any) => {
       if (res.data && res.status === 1) {
         data.value.dataList = res.data.getCountryListInfoList;
+        //babOrB2c
+        data.value.dataList.forEach((item:any) => {
+          if(item.getProjectProblemCategoryInfoList.length !=0){
+            item.getProjectProblemCategoryInfoList.forEach((item1:any) =>
+            item1.babOrB2c =item1.babOrB2c ==null ? 1:item1.babOrB2c
+          )
+          }
+        })
         pagination.value.total = res.data.getCountryListInfoList.length;
       }
       data.value.loading = false;
@@ -138,6 +146,7 @@ function onCreateTiele(row: any) {
     status: 1,
     isDefault: row.isDefault,
     type: "add",
+    babOrB2c:row.babOrB2c,
   });
 }
 
@@ -337,6 +346,19 @@ onBeforeUnmount(() => {
                     </template>
                   </template>
                 </el-table-column>
+                <ElTableColumn prop="babOrB2c" label="类型" align="left">
+                  <template #default="scope">
+                    <template v-if="scope.row.type === 'add'">
+                      <ElSwitch v-model="scope.row.babOrB2c" :active-value="2" :inactive-value="1" inline-prompt
+                        active-text="B2C" inactive-text="B2B" />
+                      </template>
+                      <template v-else>
+                        <ElSwitch v-model="scope.row.babOrB2c" :active-value="2" :inactive-value="1" inline-prompt
+                        active-text="B2C" inactive-text="B2B" disabled/>
+                      </template>
+                  </template>
+
+                </ElTableColumn>
 
                 <ElTableColumn width="250" align="left" fixed="right" label="操作">
                   <template #default="scope">
@@ -373,11 +395,20 @@ onBeforeUnmount(() => {
                 :inactive-value="2" inline-prompt active-text="启用" inactive-text="禁用" />
             </template>
           </ElTableColumn>
+
           <ElTableColumn prop="countryName" label="区域/标题" width="500" align="left">
             <template #default="{ row }">
               <el-tag type="primary">{{ row.countryName }}</el-tag>
             </template>
           </ElTableColumn>
+          <ElTableColumn prop="babOrB2c" label="类型" align="left">
+            <template #default="scope">
+                    <template v-if="scope.row.type === 'add'">
+                      <ElSwitch v-model="scope.row.babOrB2c" :active-value="2" :inactive-value="1" inline-prompt
+                      active-text="B2C" inactive-text="B2B" disabled/>
+                    </template>
+                  </template>
+                </ElTableColumn>
           <ElTableColumn label="操作" width="250" align="left" fixed="right">
             <template #default="scope">
               <ElButton type="primary" size="small" plain @click="onCreateTiele(scope.row)" v-auth="'screen_library-get-addProjectProblemCategory'">

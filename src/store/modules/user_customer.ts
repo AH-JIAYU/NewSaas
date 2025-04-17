@@ -23,7 +23,7 @@ const useUserCustomerStore = defineStore(
       chargeName: "", //负责人
       settlementCycle: null, //结算周期
       customerStatus: 2, //客户状态
-      antecedentQuestionnaire: 1, //前置问卷
+      antecedentQuestionnaire: 2, //前置问卷
       riskControl: 1, //风险控制
       turnover: null, //营业限额
       rateAudit: null, //审核Min值

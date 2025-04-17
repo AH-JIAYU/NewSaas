@@ -124,8 +124,14 @@ defineExpose({ activeLeftTab });
       ">
 
       <img src="../../../../../assets/images/main.png" alt="" style="margin-right: 5px;width: 16px;height: 16px;"  v-if="leftTab.parentId=='0'">
-
+      <el-tooltip
+        class="box-item"
+        effect="dark"
+        :content='leftTab.name || "项目名称"'
+        placement="top-start"
+      >
               <span> {{ leftTab.name || "项目名称" }}</span>
+              </el-tooltip>
 
           </div>
         </template>
@@ -164,7 +170,7 @@ defineExpose({ activeLeftTab });
         @click="setHandler"
       /> -->
         <!-- 在每个左侧 Tab 中使用 TopTabs 组件 -->
-        <TopTabs ref="topTabsRef" :left-tab="leftTab" :tab-index="index" @syncProject="syncProject" />
+        <TopTabs ref="topTabsRef" :left-tab="leftTab"  :title="props.title"    :tab-index="index" @syncProject="syncProject" />
       </el-tab-pane>
       <SyncSettings ref="settingsRef" />
     </el-tabs>
@@ -182,6 +188,14 @@ defineExpose({ activeLeftTab });
   .editHideCloseButton .is-icon-close {
     display: none !important;
   }
+  .hide-drawer-header.projectDrawer .el-tabs__item.is-left > div > span{
+    width: 100% !important;
+
+  }
+  .hide-drawer-header.projectDrawer .el-tabs__item.is-left > div {
+    width: 100% !important;
+  }
+
 }
 .flex-c {
   display: flex;

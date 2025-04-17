@@ -144,21 +144,39 @@ function showEdit(row: any) {
 }
 
 const DataList: any = computed(() => {
+
   const filterData = list.value.filter((item: any) => {
-    if (
-      item.projectId.includes(queryForm.projectId) ||
-      item.projectName.includes(queryForm.projectName) ||
-      queryForm.allocationType === item.allocationType
-    ) {
-      return true;
-    } else {
-      return false;
-    }
+    const isProjectId = queryForm.projectId
+      ? item.projectId == queryForm.projectId
+      : true;
+    const isProjectName = queryForm.projectName
+      ? item.projectName == queryForm.projectName
+      : true;
+    const isAllocationType = queryForm.allocationType ? item.allocationType == queryForm.allocationType : true;
+    return (
+      isProjectId &&
+      isProjectName &&
+      isAllocationType
+    );
+    // if (
+    //   item.projectId.includes(queryForm.projectId) ||
+    //   item.projectName.includes(queryForm.projectName) ||
+    //   queryForm.allocationType === item.allocationType
+    // ) {
+    //   return true;
+    // } else {
+    //   return false;
+    // }
   });
-  return filterData.slice(
-    (pagination.value.page - 1) * pagination.value.size,
-    pagination.value.page * pagination.value.size,
-  );
+
+  const startIndex = (pagination.value.page - 1) * pagination.value.size;
+  const endIndex = startIndex + pagination.value.size;
+  pagination.value.total = filterData.length;
+  return filterData.slice(startIndex, endIndex);
+  // return filterData.slice(
+  //   (pagination.value.page - 1) * pagination.value.size,
+  //   pagination.value.page * pagination.value.size,
+  // );
 });
 // 请求
 async function fetchData() {
@@ -292,7 +310,7 @@ const formOption = {
               </el-select>
             </ElFormItem>
             <ElFormItem>
-              <ElButton type="primary" @click="DataList">
+              <ElButton type="primary" @click="fetchData">
                 <template #icon>
                   <SvgIcon name="i-ep:search" />
                 </template>

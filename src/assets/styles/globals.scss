@@ -419,7 +419,143 @@ textarea {
   }
 }
 
+.projectDrawer {
+  .el-drawer__header {
+    height: 0;
+    padding: 0;
+    margin: 0 !important;
 
+    .el-drawer__close-btn {
+      position: fixed;
+      right: 20px;
+      top: 20px;
+      z-index: 9999999;
+    }
+  }
+
+  .el-drawer__header::after {
+    z-index: 0;
+    background-color: #edf6ff;
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 200px;
+    content: '';
+  }
+
+  .el-drawer__body {
+    padding-right: 11px;
+    z-index: 99999;
+    padding-left: 0;
+
+    .el-button.button {
+      position: sticky;
+      top: 0;
+      color: #fff;
+      background-color: #5d97ff !important;
+      width: 200px;
+      height: 40px;
+      margin-left: -1px;
+      transform: translateY(85px);
+      padding: 5px 15px;
+      border-radius: 0;
+      z-index: 999;
+    }
+  }
+
+  .el-tabs {
+    min-height: 90vh;
+  }
+
+  div:has(>.validateRejected) {
+    // box-shadow: 0 0 1px 1px red; // 校验未通过左侧边红
+    color: var(--el-color-white);
+    background-color: var(--el-color-danger) !important;
+  }
+
+  .el-tabs__content {
+    margin-left: 100px;
+  }
+
+  .el-tabs__content,
+  .el-tabs.el-tabs--left {
+    overflow: visible;
+  }
+
+  .el-tabs__header.is-top {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    background-color: #fff;
+    padding-left: 10px;
+    margin-left: 60px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    box-shadow: 5px 0px 5px #fff !important;
+  }
+
+  .el-tabs.el-tabs--top {
+    margin-left: 15px;
+  }
+
+  .el-tabs.el-tabs--left {
+    margin-top: -50px;
+
+    .el-tabs__header.is-left {
+      position: sticky;
+      top: 129px;
+      z-index: 999;
+      height: 60vh;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+  }
+
+  .el-tabs.el-tabs--left>.el-tabs__item.is-left {
+    height: 100vh;
+  }
+
+  .el-tabs__item.is-left {
+    margin: 5px 0;
+    background-color: #fafcfe;
+    width: 200px;
+    justify-content: center;
+
+    >div {
+      text-align: center;
+      width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      >span {
+        width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+  }
+
+
+
+  .el-tabs__nav-wrap.is-left::after {
+    width: 0 !important;
+  }
+
+  .el-tabs__nav-wrap.is-top::after {
+    width: 0 !important;
+  }
+
+  .el-tabs__item.is-top.is-active {
+    font-size: 16px;
+  }
+
+  .el-drawer__footer {
+    padding: 20px;
+  }
+}
 // 项目列表编辑
 .edit-drawer {
   .el-drawer__header {

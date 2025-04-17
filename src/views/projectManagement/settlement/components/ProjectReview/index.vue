@@ -239,8 +239,9 @@ defineExpose({ showEdit });
             />
           </el-form-item>
         </div>
+        <!-- v-if="checked" -->
         <div class="po">
-          <el-form-item v-if="checked" :label="t('recordChange.PONumber')">
+          <el-form-item  :label="t('recordChange.PONumber')">
             <el-input
               v-model="formData.po"
               class="custom-input"
@@ -250,7 +251,7 @@ defineExpose({ showEdit });
             />
           </el-form-item>
         </div>
-        <el-row style="margin: 0" :gutter="20">
+        <!-- <el-row style="margin: 0" :gutter="20">
           <el-col :span="20"> </el-col>
           <el-col :span="4">
             <el-checkbox
@@ -258,7 +259,7 @@ defineExpose({ showEdit });
               :label="t('recordChange.PONumberEnter')"
               size="large"
           /></el-col>
-        </el-row>
+        </el-row> -->
         <el-row
           v-if="formData.settlementType === 1 || formData.settlementType === 2"
           style="margin: 0; width: 100%"

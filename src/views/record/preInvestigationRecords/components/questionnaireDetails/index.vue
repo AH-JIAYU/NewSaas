@@ -34,7 +34,7 @@ const showEdit = async (row: any) => {
   const res = await api.getDetail({ id: row.id });
 
   const projectJson = cloneDeep(JSON.parse(res.data.projectJson));
-  console.log(projectJson,'projectJson')
+
   if(!projectJson){
     ElMessage.warning({
               message: "无详情数据",
@@ -42,13 +42,13 @@ const showEdit = async (row: any) => {
             });
   }else{
   // 回显用户选择的答案
+  console.log(projectJson.pages,'projectJson.pages')
   projectJson.pages.forEach((item: any) => {
     item.elements.forEach((ite: any) => {
       ite.readOnly = true; //设为只读
       const findData = res.data.projectSurveyScreenDetailInfoList.find(
         (value: any) => value.projectProblemId === ite.surveyId,
       );
-
       if (findData) {
         if (ite.type === "radiogroup") {
           const findDataRadio = ite.choices.filter((value: any) =>
@@ -56,6 +56,9 @@ const showEdit = async (row: any) => {
           );
           // 默认答案（用户选择的答案）
           ite.defaultValue = findDataRadio.map((value: any) => value.value);
+        }
+        if(ite.type == 'text'){
+          ite.defaultValue = findData.answerValue;
         }
       }
     });

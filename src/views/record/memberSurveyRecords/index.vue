@@ -5,6 +5,7 @@ import useUserCustomerStore from '@/store/modules/user_customer'
 import useBasicDictionaryStore from '@/store/modules/otherFunctions_basicDictionary'
 import empty from '@/assets/images/empty.png'
 import apiRecord from "@/api/modules/record_callback";
+import fileExport from "@/utils/flie_export";
 defineOptions({
   name: 'MemberSurveyRecords',
 })
@@ -405,6 +406,22 @@ function handleCurrentChange(val: any) {
   if (val) { current.value = val.id }
   else { current.value = '' }
 }
+// 导出
+async function onExport() {
+  // try {
+  //   let params = { ...queryForm };
+  //   params.page = 0;
+  //   params.limit = -1;
+  //   params.type = "export";
+
+  //   const list = await api.exportProjectSettlementList(params);
+
+  //   const name = "调查记录导出.xlsx";
+  //   await fileExport(list, name);
+  // } catch (error) {
+  //   console.error("导出失败", error);
+  // }
+}
 </script>
 
 <template>
@@ -418,7 +435,7 @@ function handleCurrentChange(val: any) {
       <el-row>
         <FormLeftPanel />
         <FormRightPanel>
-          <el-button size="default">
+          <el-button size="default" @click="onExport">
             导出
           </el-button>
           <TabelControl

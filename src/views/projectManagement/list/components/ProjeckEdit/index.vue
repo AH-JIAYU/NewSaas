@@ -204,11 +204,17 @@ const processingData = async () => {
     ) {
       element.isProfile = 2;
     }
+
     //data为配置信息中所需的数据
     if (element.data) {
       delete element.data;
     }
-    element.projectQuotaInfoList = element.projectQuotaInfoList.map(
+      //如果没有开启问卷，重置问题和答案
+      if(element.isProfile ==2){
+        element.projectQuotaInfoList = [];
+
+    } else {
+      element.projectQuotaInfoList = element.projectQuotaInfoList.map(
       (item: any) => {
         if (!Array.isArray(item.answerValueList)) {
           item.answerValueList = [];
@@ -219,8 +225,11 @@ const processingData = async () => {
         return item;
       }
     );
+    }
+
   });
   let masterData = newLeftTabsData[0];
+
   masterData.projectInfoList = newLeftTabsData.slice(1).map((item: any) => {
     item.browser = item.browser.join(',');
     item.operatingSystem = item.operatingSystem.join(',');
@@ -260,6 +269,7 @@ async function onSubmit() {
   // 校验通过
   if (validateAll.value.every((item: any) => item === "fulfilled")) {
     if (!hasDuplicateCustomer(leftTabsData)) {
+
       const params = await processingData();
       // 操作系统(后端刘定义类型为字符串，前端提交转换)
       params.browser = params.browser.join(",");
@@ -363,11 +373,11 @@ defineExpose({
           ? 'hide-drawer-header'
           : 'edit-drawer'
       " -->
-  <div>
-    <el-drawer v-model="dialogTableVisible" class="hide-drawer-header" append-to-body :close-on-click-modal="false"
-      destroy-on-close draggable size="70%">
+  <div >
+    <el-drawer v-model="dialogTableVisible" class="projectDrawer" append-to-body :close-on-click-modal="false"
+      destroy-on-close draggable size="75%">
       <LeftTabs v-loading="loading" v-if="leftTabsData.length" @validate="validate" ref="LeftTabsRef"
-        :left-tabs-data="leftTabsData" :validate-top-tabs="validateTopTabs" :validate-all="validateAll"
+        :left-tabs-data="leftTabsData"     :validate-top-tabs="validateTopTabs" :validate-all="validateAll"
         :title="title" />
       <template #footer>
         <div class="flex-c">
@@ -398,6 +408,7 @@ defineExpose({
   .el-tabs.el-tabs--left {
     overflow: visible !important;
   }
+
 }
 
 .flex-c {
