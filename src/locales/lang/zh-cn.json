@@ -175,6 +175,7 @@
     "beenReviewed": "已审核项目数额",
     "completedProjects": "已完结项目数额",
     "turnoverTrend": "营业额趋势",
+    "refundTrendChart": "退款走势图",
     "customerOverview": " 客户总览",
     "all": "全部",
     "cdRanking": "完成数据排名",
@@ -182,7 +183,7 @@
     "supplierName": "供应商名称",
     "completedQuantity": "完成数量",
     "completionAmount": "完成金额",
-    "stRanking": "供应商营业额排行",
+    "stRanking": "供应商TOP5",
     "turnoverDetail": "营业额明细",
     "projectTurnover": "项目营业额",
     "projectProfit": "项目盈利额",
@@ -192,7 +193,10 @@
     "marginOfProfit": "盈利额",
     "customer": "客户名称",
     "projectSettlement": "项目结算",
-    "reviewRate": "审核率"
+    "reviewRate": "审核率",
+    "realizeProfits": "实现利润",
+    "proportionOfClassB":"B类占比",
+    "currencyType":"货币类型"
   },
   "datacenter": {
     "export": "导出",
