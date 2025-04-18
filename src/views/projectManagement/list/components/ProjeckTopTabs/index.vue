@@ -757,26 +757,27 @@ const getProjectProblemList = async (id: string | number, judge: boolean) => {
         localToptTab.value.projectQuotaInfoList = itemNew
 
         // console.log(id,'iii')
-        // console.log(localToptTab.value.projectQuotaInfoList,'localToptTab.value.projectQuotaInfoList')
 
-        // console.log(localToptTab.value.data.configurationInformation.ProjectProblemInfoList,'localToptTab.value.data.configurationInformation.ProjectProblemInfoList')
+        console.log(localToptTab.value.projectQuotaInfoList,'localToptTab.value.projectQuotaInfoList')
+
+        console.log(localToptTab.value.data.configurationInformation.ProjectProblemInfoList,'localToptTab.value.data.configurationInformation.ProjectProblemInfoList')
         if (!judge) {
           localToptTab.value.projectQuotaInfoList = localToptTab.value.projectQuotaInfoList.filter((item1:any) => item1.
           projectProblemCategoryId == id);
 
         // console.log(localToptTab.value.projectQuotaInfoList,'走这里')
 
-        localToptTab.value.projectQuotaInfoList.forEach((ite:any)=> {
-          if(ite.projectProblemCategoryId == id){
-            if(ite.answerValueList.length ==0){
-              const ProjectProblemInfoList = localToptTab.value.data.configurationInformation.ProjectProblemInfoList.find(
-          (item: any) => item.id === ite.projectProblemId
-        ).getProjectAnswerInfoList;
-              ite.answerValueList = ProjectProblemInfoList.map((ite2:any) => ite2.anotherName)
-              ite.projectAnswerIdList = ProjectProblemInfoList.map((ite2:any) => ite2.id)
-            }
-          }
-        })
+        // localToptTab.value.projectQuotaInfoList.forEach((ite:any)=> {
+        //   if(ite.projectProblemCategoryId == id){
+        //     if(ite.answerValueList.length ==0){
+        //       const ProjectProblemInfoList = localToptTab.value.data.configurationInformation.ProjectProblemInfoList.find(
+        //   (item: any) => item.id === ite.projectProblemId
+        // ).getProjectAnswerInfoList;
+        //       ite.answerValueList = ProjectProblemInfoList.map((ite2:any) => ite2.anotherName)
+        //        ite.projectAnswerIdList = ProjectProblemInfoList.map((ite2:any) => ite2.id)
+        //     }
+        //   }
+        // })
       }
 
 
@@ -1789,8 +1790,9 @@ const getProblemList = async () => {
                   <!-- 1输入框 -->
                   <el-input
                     v-if="item.questionType === 1"
-                    disabled
-                    :placeholder="t('projectTopTabs.inputDisabled')"
+                    :modelValue="customModel(item.id, index).get()"
+                    @update:modelValue="customModel(item.id, index).set($event)"
+                    @change="setAnswerValue(3, index)"
                   ></el-input>
                   <!-- 3多选 值为[]-->
                   <el-checkbox-group
