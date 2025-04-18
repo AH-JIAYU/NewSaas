@@ -766,17 +766,34 @@ const getProjectProblemList = async (id: string | number, judge: boolean) => {
 
         // console.log(localToptTab.value.projectQuotaInfoList,'走这里')
 
-        localToptTab.value.projectQuotaInfoList.forEach((ite:any)=> {
-          if(ite.projectProblemCategoryId == id){
-            if(ite.answerValueList.length ==0){
-              const ProjectProblemInfoList = localToptTab.value.data.configurationInformation.ProjectProblemInfoList.find(
-          (item: any) => item.id === ite.projectProblemId
-        ).getProjectAnswerInfoList;
-              ite.answerValueList = ProjectProblemInfoList.map((ite2:any) => ite2.anotherName)
-              ite.projectAnswerIdList = ProjectProblemInfoList.map((ite2:any) => ite2.id)
-            }
-          }
+        // localToptTab.value.projectQuotaInfoList.forEach((ite:any)=> {
+        //   if(ite.projectProblemCategoryId == id){
+        //     if(ite.answerValueList.length ==0){
+        //       const ProjectProblemInfoList = localToptTab.value.data.configurationInformation.ProjectProblemInfoList.find(
+        //   (item: any) => item.id === ite.projectProblemId
+        // ).getProjectAnswerInfoList;
+        //       ite.answerValueList = ProjectProblemInfoList.map((ite2:any) => ite2.anotherName)
+        //       ite.projectAnswerIdList = ProjectProblemInfoList.map((ite2:any) => ite2.id)
+        //     }
+        //   }
+        // })
+      }else{
+        //  console.log( localToptTab.value,8989);
+
+         localToptTab.value.data.configurationInformation.ProjectProblemInfoList.forEach((item:any) => {
+             localToptTab.value.projectQuotaInfoList.forEach((ite:any) => {
+              // console.log(item,'item');
+              // console.log(ite,'ite');
+
+               if( item.getProjectAnswerInfoList.length == ite.projectAnswerIdList.length){
+                  ite.projectAnswerIdList = []
+                  ite.answerValueList = []
+               }
+             })
+
         })
+
+
       }
 
 

@@ -187,9 +187,48 @@ function hasDuplicateCustomer(projectList: any) {
   }
   return false; // 如果没有重复，则返回false
 }
+
+// const  questionnaireSurveyDefaultsToSelectingAll = (leftTabsDataVlaue:any)=>{
+//             leftTabsDataVlaue.data.configurationInformation.ProjectProblemInfoList.forEach((ite:any) => {
+//               leftTabsDataVlaue.projectQuotaInfoList.forEach((jte:any) => {
+//                 if(ite.id == jte.projectProblemId){
+//                     jte.answerValueList=ite.getProjectAnswerInfoList.map((ite2:any) => ite2.anotherName)
+//                     jte.projectAnswerIdList=ite.getProjectAnswerInfoList.map((ite2:any) => ite2.id)
+//                   }
+//               });
+//             })
+// }
+const questionnaireSurveyDefaultsToSelectingAll = (leftTabsDataValue: any) => {
+  leftTabsDataValue.data.configurationInformation.ProjectProblemInfoList.forEach((ite: any) => {
+    const jte = leftTabsDataValue.projectQuotaInfoList.find((item: any) => item.projectProblemId === ite.id);
+    if (jte) {
+      if (jte.answerValueList.length === 0 && jte.projectAnswerIdList.length === 0) {
+        jte.answerValueList = ite.getProjectAnswerInfoList.map((ite2: any) => ite2.anotherName);
+        jte.projectAnswerIdList = ite.getProjectAnswerInfoList.map((ite2: any) => ite2.id);
+      }
+    } else {
+      // 如果没有找到对应的 jte，创建一个新的
+      leftTabsDataValue.projectQuotaInfoList.push({
+        projectProblemId: ite.id,
+        answerValueList: ite.getProjectAnswerInfoList.map((ite2: any) => ite2.anotherName),
+        projectAnswerIdList: ite.getProjectAnswerInfoList.map((ite2: any) => ite2.id),
+      });
+    }
+  });
+};
 // 提交 处理数据
 const processingData = async () => {
-  const newLeftTabsData = cloneDeep(leftTabsData);
+  console.log(leftTabsData,'leftTabsData');
+
+  leftTabsData.forEach((item: any) => {
+    item.projectQuotaInfoList.forEach((i: any) => {
+      if (i.answerValueList.length === 0 && i.projectAnswerIdList.length === 0) {
+        questionnaireSurveyDefaultsToSelectingAll(item);
+      }
+    });
+  });
+  const newLeftTabsData = cloneDeep(leftTabsData); //接口参数
+  console.log(newLeftTabsData,'newLeftTabsData');
   await projectManagementListStore.compareProjectData(
     projectManagementListStore.dataBeforeEditing,
     newLeftTabsData
@@ -205,7 +244,7 @@ const processingData = async () => {
       element.isProfile = 2;
     }
 
-    //data为配置信息中所需的数据
+    // data为配置信息中所需的数据
     if (element.data) {
       delete element.data;
     }
