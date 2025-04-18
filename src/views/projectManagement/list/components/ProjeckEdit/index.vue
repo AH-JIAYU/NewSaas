@@ -188,16 +188,7 @@ function hasDuplicateCustomer(projectList: any) {
   return false; // 如果没有重复，则返回false
 }
 
-// const  questionnaireSurveyDefaultsToSelectingAll = (leftTabsDataVlaue:any)=>{
-//             leftTabsDataVlaue.data.configurationInformation.ProjectProblemInfoList.forEach((ite:any) => {
-//               leftTabsDataVlaue.projectQuotaInfoList.forEach((jte:any) => {
-//                 if(ite.id == jte.projectProblemId){
-//                     jte.answerValueList=ite.getProjectAnswerInfoList.map((ite2:any) => ite2.anotherName)
-//                     jte.projectAnswerIdList=ite.getProjectAnswerInfoList.map((ite2:any) => ite2.id)
-//                   }
-//               });
-//             })
-// }
+
 const questionnaireSurveyDefaultsToSelectingAll = (leftTabsDataValue: any) => {
   leftTabsDataValue.data.configurationInformation.ProjectProblemInfoList.forEach((ite: any) => {
     const jte = leftTabsDataValue.projectQuotaInfoList.find((item: any) => item.projectProblemId === ite.id);
@@ -218,17 +209,19 @@ const questionnaireSurveyDefaultsToSelectingAll = (leftTabsDataValue: any) => {
 };
 // 提交 处理数据
 const processingData = async () => {
-  console.log(leftTabsData,'leftTabsData');
-
   leftTabsData.forEach((item: any) => {
     item.projectQuotaInfoList.forEach((i: any) => {
       if (i.answerValueList.length === 0 && i.projectAnswerIdList.length === 0) {
         questionnaireSurveyDefaultsToSelectingAll(item);
       }
+      if(i.questionType == 1){
+          i.projectAnswerIdList =  i.answerValueList
+      }
+
     });
   });
+
   const newLeftTabsData = cloneDeep(leftTabsData); //接口参数
-  console.log(newLeftTabsData,'newLeftTabsData');
   await projectManagementListStore.compareProjectData(
     projectManagementListStore.dataBeforeEditing,
     newLeftTabsData

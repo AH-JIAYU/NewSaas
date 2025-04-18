@@ -758,9 +758,9 @@ const getProjectProblemList = async (id: string | number, judge: boolean) => {
 
         // console.log(id,'iii')
 
-        console.log(localToptTab.value.projectQuotaInfoList,'localToptTab.value.projectQuotaInfoList')
+        // console.log(localToptTab.value.projectQuotaInfoList,'localToptTab.value.projectQuotaInfoList')
 
-        console.log(localToptTab.value.data.configurationInformation.ProjectProblemInfoList,'localToptTab.value.data.configurationInformation.ProjectProblemInfoList')
+        // console.log(localToptTab.value.data.configurationInformation.ProjectProblemInfoList,'localToptTab.value.data.configurationInformation.ProjectProblemInfoList')
         if (!judge) {
           localToptTab.value.projectQuotaInfoList = localToptTab.value.projectQuotaInfoList.filter((item1:any) => item1.
           projectProblemCategoryId == id);
@@ -779,13 +779,8 @@ const getProjectProblemList = async (id: string | number, judge: boolean) => {
         //   }
         // })
       }else{
-        //  console.log( localToptTab.value,8989);
-
          localToptTab.value.data.configurationInformation.ProjectProblemInfoList.forEach((item:any) => {
              localToptTab.value.projectQuotaInfoList.forEach((ite:any) => {
-              // console.log(item,'item');
-              // console.log(ite,'ite');
-
                if( item.getProjectAnswerInfoList.length == ite.projectAnswerIdList.length){
                   ite.projectAnswerIdList = []
                   ite.answerValueList = []
@@ -817,17 +812,25 @@ const getProjectProblemList = async (id: string | number, judge: boolean) => {
 };
 // 设置 问题的答案和答案id  type: 1 输入框 2单选 3复选 4下拉
 const setAnswerValue = (type: number, index: number) => {
-  // 选择的id "" | []
-  let id: any =
-    localToptTab.value.projectQuotaInfoList[index].projectAnswerIdList;
-  // 答案列表 []
-  const answerList: any =
-    localToptTab.value.data.configurationInformation.ProjectProblemInfoList[
-      index
-    ].getProjectAnswerInfoList;
-  const filteredData = answerList.filter((item: any) => id.includes(item.id));
-  localToptTab.value.projectQuotaInfoList[index].answerValueList =
-    filteredData.map((item: any) => item.anotherName);
+
+  if(type == 1){
+      // 选择的id "" | []
+      let id: any = localToptTab.value.projectQuotaInfoList[index].projectAnswerIdList;
+      // 答案列表 []
+      localToptTab.value.projectQuotaInfoList[index].answerValueList.unshift(id)
+      if (localToptTab.value.projectQuotaInfoList[index].answerValueList.length > 0) {
+        localToptTab.value.projectQuotaInfoList[index].answerValueList = [localToptTab.value.projectQuotaInfoList[index].answerValueList[0]];
+      }
+
+  }else{
+      // 选择的id "" | []
+      let id: any = localToptTab.value.projectQuotaInfoList[index].projectAnswerIdList;
+      // 答案列表 []
+      const answerList: any =
+                      localToptTab.value.data.configurationInformation.ProjectProblemInfoList[index].getProjectAnswerInfoList;
+      const filteredData = answerList.filter((item: any) => id.includes(item.id));
+      localToptTab.value.projectQuotaInfoList[index].answerValueList = filteredData.map((item: any) => item.anotherName);
+      }
 };
 
 // 获取客户
@@ -1820,7 +1823,7 @@ const getProblemList = async () => {
                     v-if="item.questionType === 1"
                     :modelValue="customModel(item.id, index).get()"
                     @update:modelValue="customModel(item.id, index).set($event)"
-                    @change="setAnswerValue(3, index)"
+                    @change="setAnswerValue(1, index)"
                   ></el-input>
                   <!-- 3多选 值为[]-->
                   <el-checkbox-group
