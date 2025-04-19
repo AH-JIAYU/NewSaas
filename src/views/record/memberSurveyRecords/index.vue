@@ -408,19 +408,19 @@ function handleCurrentChange(val: any) {
 }
 // 导出
 async function onExport() {
-  // try {
-  //   let params = { ...queryForm };
-  //   params.page = 0;
-  //   params.limit = -1;
-  //   params.type = "export";
+  try {
+    const params = {
+      ...getParams(),
+      ...queryForm,
+    }
 
-  //   const list = await api.exportProjectSettlementList(params);
+    const list = await api.exportProjectSettlementList(params);
 
-  //   const name = "调查记录导出.xlsx";
-  //   await fileExport(list, name);
-  // } catch (error) {
-  //   console.error("导出失败", error);
-  // }
+    const name = "调查记录导出.xlsx";
+    await fileExport(list, name);
+  } catch (error) {
+    console.error("导出失败", error);
+  }
 }
 </script>
 
