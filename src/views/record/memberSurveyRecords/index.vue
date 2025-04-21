@@ -6,10 +6,12 @@ import useBasicDictionaryStore from '@/store/modules/otherFunctions_basicDiction
 import empty from '@/assets/images/empty.png'
 import apiRecord from "@/api/modules/record_callback";
 import fileExport from "@/utils/flie_export";
+import { ElMessage, ElMessageBox } from "element-plus";
 defineOptions({
   name: 'MemberSurveyRecords',
 })
 import { useI18n } from "vue-i18n";
+
 // 区域
 // 国际化
 const { t } = useI18n();
@@ -409,6 +411,10 @@ function handleCurrentChange(val: any) {
 // 导出
 async function onExport() {
   try {
+    if(pagination.value.total > 10000){
+      ElMessage.warning('数据超过10000条');
+      return
+    }
     const params = {
       ...getParams(),
       ...queryForm,
