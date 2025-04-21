@@ -1038,7 +1038,7 @@
                   >
                     <template #default="{ row }">
                       <span class="number-font font-c">{{
-                        row.b2BProportion * 100
+                        (row.b2BProportion * 100).toFixed(2)
                       }}</span
                       >%
                     </template>
@@ -1051,7 +1051,7 @@
                   >
                     <template #default="{ row }">
                       <span class="number-font font-c">{{
-                        row.b2CProportion * 100
+                        (row.b2CProportion * 100).toFixed(2)
                       }}</span
                       >%
                     </template>
