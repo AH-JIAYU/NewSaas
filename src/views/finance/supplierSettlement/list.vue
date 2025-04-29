@@ -4,6 +4,7 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import api from "@/api/modules/finance_supplierSettlement";
 import empty from "@/assets/images/empty.png";
 import UseUserSupplier from "@/store/modules/user_supplier"; // 供应商
+import fileExport from "@/utils/flie_export";
 const userSupplier = UseUserSupplier(); // 供应商
 
 defineOptions({
@@ -68,6 +69,7 @@ function onReset() {
     endTime: "", //	结束时间
   });
 }
+
 // 每页数量切换
 function sizeChange(size: number) {
   onSizeChange(size).then(() => fetchData());
@@ -78,6 +80,13 @@ function currentChange(page = 1) {
 }
 // 获取列表数据
 async function fetchData() {
+  if(queryForm.value.time ){
+    queryForm.value.beginTime = queryForm.value.time[0];
+    queryForm.value.endTime = queryForm.value.time[1];
+  }else{
+    queryForm.value.beginTime = "";
+    queryForm.value.endTime = "";
+  }
   try {
     listLoading.value = true;
     const params = {
@@ -164,7 +173,9 @@ onMounted(() => {
   ];
 });
 const formOption = {
+
   billStatus: () => billStatusList,
+
 };
 const current = ref<any>(); //表格当前选中
 
@@ -172,6 +183,26 @@ function handleCurrentChange(val: any) {
   if (val) current.value = val.id;
   else current.value = "";
 }
+// 导出
+ const exportData = async () => {
+  try {
+    if(pagination.value.total > 10000){
+      ElMessage.warning('数据超过10000条');
+      return
+    }
+    const params = {
+      ...getParams(),
+      ...queryForm.value,
+    }
+
+    const list = await api.getTenantSupplierBillExcelService(params);
+    const name = "供应商账单导出.xlsx";
+    await fileExport(list,name);
+  } catch (error) {
+    console.error("导出失败", error);
+  }
+};
+
 </script>
 
 <template>
@@ -188,6 +219,7 @@ function handleCurrentChange(val: any) {
         @onReset="onReset"
         :model="queryForm"
         :formOption="formOption"
+
       />
       <ElDivider border-style="dashed" />
       <el-row :gutter="24">
@@ -202,7 +234,7 @@ function handleCurrentChange(val: any) {
           </el-button>
         </FormLeftPanel>
         <FormRightPanel>
-          <el-button size="default" @click=""> 导出 </el-button>
+          <el-button size="default" @click="exportData"> 导出 </el-button>
           <TabelControl
             v-model:border="border"
             v-model:tableAutoHeight="tableAutoHeight"

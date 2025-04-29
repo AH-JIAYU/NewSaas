@@ -7,4 +7,6 @@ export default {
   changestatus: (data: any) => api.post("bill/updateTenantSupplierBill", data),
   // 模拟结算
   settlement: (data: any) => api.post("bill/addTenantSupplierBill", data),
+  // 导出
+  getTenantSupplierBillExcelService: (data: any) => api.post("bill/getTenantSupplierBillExcelService", data,{ responseType: 'blob',timeout:120000 }),
 };
