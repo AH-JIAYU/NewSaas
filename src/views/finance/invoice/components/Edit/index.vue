@@ -89,15 +89,15 @@ const formRules = ref<FormRules>({
 function onSubmit() {
   return new Promise<void>((resolve) => {
 
-    if (form.value.invoiceTax && !/^\d*$/.test(form.value.invoiceTax)) {
-    ElMessage.warning("请输入有效的数字");
-    return;
-  }
-  if (form.value.actualReceipts && !/^\d*$/.test(form.value.actualReceipts)) {
-    ElMessage.warning("请输入有效的数字");
-    return;
-  }
+    if (form.value.invoiceTax && !/^\d+(\.\d+)?$/.test(form.value.invoiceTax)) {
+      ElMessage.warning("税收要输入有效的数字");
+      return;
+    }
 
+    if (form.value.actualReceipts && !/^\d+(\.\d+)?$/.test(form.value.actualReceipts)) {
+      ElMessage.warning("实际收款需输入有效的数字");
+      return;
+    }
 
 
     if (!form.value.id) {
@@ -316,6 +316,7 @@ defineExpose({ showEdit });
             v-model="form.invoiceTax"
             placeholder="请输入手续费"
             clearable
+            type="number"
           />
         </el-form-item>
         <el-form-item label="实际收款">
@@ -323,6 +324,7 @@ defineExpose({ showEdit });
             v-model="form.actualReceipts"
             placeholder="请输入实际收款"
             clearable
+            type="number"
           />
         </el-form-item>
         <el-form-item prop="invoiceStatus" label="发票状态">
